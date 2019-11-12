@@ -193,10 +193,10 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.minApprovalDelta,
             transactionDTO.minRemovalDelta,
-            transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new MultisigCosignatoryModification(
-                modificationDTO.modificationAction,
-                PublicAccount.createFromPublicKey(modificationDTO.cosignatoryPublicKey, extractNetworkType(transactionDTO.version)),
-            )) : [],
+            transactionDTO.publicKeyAdditions ? transactionDTO.publicKeyAdditions.map((addition) =>
+                PublicAccount.createFromPublicKey(addition, extractNetworkType(transactionDTO.version))) : [],
+            transactionDTO.publicKeyDeletions ? transactionDTO.publicKeyDeletions.map((deletion) =>
+                PublicAccount.createFromPublicKey(deletion, extractNetworkType(transactionDTO.version))) : [],
             transactionDTO.signature,
             transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
                             extractNetworkType(transactionDTO.version)) : undefined,
@@ -284,11 +284,11 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
-            transactionDTO.restrictionType,
-            transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountRestrictionModification(
-                modificationDTO.modificationAction,
-                modificationDTO.value,
-            )) : [],
+            transactionDTO.restrictionFlags,
+            transactionDTO.restrictionAdditions ? transactionDTO.restrictionAdditions.map((addition) =>
+                extractRecipient(addition)) : [],
+            transactionDTO.restrictionDeletions ? transactionDTO.restrictionDeletions.map((deletion) =>
+                extractRecipient(deletion)) : [],
             transactionDTO.signature,
             transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
                             extractNetworkType(transactionDTO.version)) : undefined,
@@ -300,11 +300,9 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
-            transactionDTO.restrictionType,
-            transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountRestrictionModification(
-                modificationDTO.modificationAction,
-                modificationDTO.value,
-            )) : [],
+            transactionDTO.restrictionFlags,
+            transactionDTO.restrictionAdditions ? transactionDTO.restrictionAdditions : [],
+            transactionDTO.restrictionDeletions ? transactionDTO.restrictionDeletions : [],
             transactionDTO.signature,
             transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
                             extractNetworkType(transactionDTO.version)) : undefined,
@@ -316,11 +314,11 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
-            transactionDTO.restrictionType,
-            transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountRestrictionModification(
-                modificationDTO.modificationAction,
-                modificationDTO.value,
-            )) : [],
+            transactionDTO.restrictionFlags,
+            transactionDTO.restrictionAdditions ? transactionDTO.restrictionAdditions.map((addition) =>
+                UnresolvedMapping.toUnresolvedMosaic(addition)) : [],
+            transactionDTO.restrictionDeletions ? transactionDTO.restrictionDeletions.map((deletion) =>
+                UnresolvedMapping.toUnresolvedMosaic(deletion)) : [],
             transactionDTO.signature,
             transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
                             extractNetworkType(transactionDTO.version)) : undefined,

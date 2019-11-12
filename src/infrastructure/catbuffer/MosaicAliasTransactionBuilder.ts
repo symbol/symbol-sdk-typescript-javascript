@@ -27,6 +27,7 @@ import { KeyDto } from './KeyDto';
 import { MosaicAliasTransactionBodyBuilder } from './MosaicAliasTransactionBodyBuilder';
 import { MosaicIdDto } from './MosaicIdDto';
 import { NamespaceIdDto } from './NamespaceIdDto';
+import { NetworkTypeDto } from './NetworkTypeDto';
 import { SignatureDto } from './SignatureDto';
 import { TimestampDto } from './TimestampDto';
 import { TransactionBuilder } from './TransactionBuilder';
@@ -42,17 +43,18 @@ export class MosaicAliasTransactionBuilder extends TransactionBuilder {
      * @param signature Entity signature.
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
      * @param fee Transaction fee.
      * @param deadline Transaction deadline.
-     * @param aliasAction Alias action.
      * @param namespaceId Identifier of the namespace that will become an alias.
      * @param mosaicId Aliased mosaic identifier.
+     * @param aliasAction Alias action.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  aliasAction: AliasActionDto,  namespaceId: NamespaceIdDto,  mosaicId: MosaicIdDto) {
-        super(signature, signerPublicKey, version, type, fee, deadline);
-        this.mosaicAliasTransactionBody = new MosaicAliasTransactionBodyBuilder(aliasAction, namespaceId, mosaicId);
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  namespaceId: NamespaceIdDto,  mosaicId: MosaicIdDto,  aliasAction: AliasActionDto) {
+        super(signature, signerPublicKey, version, network, type, fee, deadline);
+        this.mosaicAliasTransactionBody = new MosaicAliasTransactionBodyBuilder(namespaceId, mosaicId, aliasAction);
     }
 
     /**
@@ -68,16 +70,7 @@ export class MosaicAliasTransactionBuilder extends TransactionBuilder {
         const mosaicAliasTransactionBody = MosaicAliasTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, mosaicAliasTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new MosaicAliasTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.type, superObject.fee, superObject.deadline, mosaicAliasTransactionBody.aliasAction, mosaicAliasTransactionBody.namespaceId, mosaicAliasTransactionBody.mosaicId);
-    }
-
-    /**
-     * Gets alias action.
-     *
-     * @return Alias action.
-     */
-    public getAliasAction(): AliasActionDto {
-        return this.mosaicAliasTransactionBody.getAliasAction();
+        return new MosaicAliasTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, superObject.fee, superObject.deadline, mosaicAliasTransactionBody.namespaceId, mosaicAliasTransactionBody.mosaicId, mosaicAliasTransactionBody.aliasAction);
     }
 
     /**
@@ -96,6 +89,15 @@ export class MosaicAliasTransactionBuilder extends TransactionBuilder {
      */
     public getMosaicId(): MosaicIdDto {
         return this.mosaicAliasTransactionBody.getMosaicId();
+    }
+
+    /**
+     * Gets alias action.
+     *
+     * @return Alias action.
+     */
+    public getAliasAction(): AliasActionDto {
+        return this.mosaicAliasTransactionBody.getAliasAction();
     }
 
     /**

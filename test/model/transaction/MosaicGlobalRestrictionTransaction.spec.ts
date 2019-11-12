@@ -15,6 +15,7 @@
  */
 
 import {expect} from 'chai';
+import {Convert} from '../../../src/core/format';
 import {Account} from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
@@ -24,7 +25,6 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicGlobalRestrictionTransaction} from '../../../src/model/transaction/MosaicGlobalRestrictionTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
-import {Convert} from "../../../src/core/format";
 
 describe('MosaicGlobalRestrictionTransaction', () => {
     let account: Account;
@@ -59,9 +59,9 @@ describe('MosaicGlobalRestrictionTransaction', () => {
         const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('010000000000000002000000000000000100000000000000090000000000000001080000000000000006');
+        )).to.be.equal('010000000000000002000000000000000100000000000000090000000000000008000000000000000106');
 
     });
 
@@ -92,11 +92,12 @@ describe('MosaicGlobalRestrictionTransaction', () => {
         const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('C51FB4C93FCA509502000000000000000100000000000000090000000000000001080000000000000006');
+        )).to.be.equal('C51FB4C93FCA509502000000000000000100000000000000090000000000000008000000000000000106');
 
-        expect(Convert.hexToUint8(mosaicGlobalRestrictionTransaction.serialize()).length).to.be.equal(mosaicGlobalRestrictionTransaction.size);
+        expect(Convert.hexToUint8(mosaicGlobalRestrictionTransaction.serialize()).length)
+            .to.be.equal(mosaicGlobalRestrictionTransaction.size);
 
     });
 
@@ -126,9 +127,9 @@ describe('MosaicGlobalRestrictionTransaction', () => {
         const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('0100000000000000C51FB4C93FCA50950100000000000000090000000000000001080000000000000006');
+        )).to.be.equal('0100000000000000C51FB4C93FCA50950100000000000000090000000000000008000000000000000106');
 
     });
 });

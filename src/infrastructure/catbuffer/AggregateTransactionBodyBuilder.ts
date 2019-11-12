@@ -20,9 +20,14 @@
 **/
 
 import { GeneratorUtils } from './GeneratorUtils';
+import { Hash256Dto } from './Hash256Dto';
 
 /** Binary layout for an aggregate transaction. */
 export class AggregateTransactionBodyBuilder {
+    /** Aggregate hash of an aggregate's transactions. */
+    transactionsHash: Hash256Dto;
+    /** Reserved padding to align end of AggregateTransactionHeader on 8-byte boundary. */
+    aggregateTransactionHeader_Reserved1: number;
     /** Sub-transaction data (transactions are variable sized and payload size is in bytes). */
     transactions: Uint8Array;
     /** Cosignatures data (fills remaining body space after transactions). */
@@ -31,10 +36,13 @@ export class AggregateTransactionBodyBuilder {
     /**
      * Constructor.
      *
+     * @param transactionsHash Aggregate hash of an aggregate's transactions.
      * @param transactions Sub-transaction data (transactions are variable sized and payload size is in bytes).
      * @param cosignatures Cosignatures data (fills remaining body space after transactions).
      */
-    public constructor(transactions: Uint8Array,  cosignatures: Uint8Array) {
+    public constructor(transactionsHash: Hash256Dto,  transactions: Uint8Array,  cosignatures: Uint8Array) {
+        this.transactionsHash = transactionsHash;
+        this.aggregateTransactionHeader_Reserved1 = 0;
         this.transactions = transactions;
         this.cosignatures = cosignatures;
     }
@@ -47,12 +55,35 @@ export class AggregateTransactionBodyBuilder {
      */
     public static loadFromBinary(payload: Uint8Array): AggregateTransactionBodyBuilder {
         const byteArray = Array.from(payload);
+        const transactionsHash = Hash256Dto.loadFromBinary(Uint8Array.from(byteArray));
+        byteArray.splice(0, transactionsHash.getSize());
         const payloadSize = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 4));
+        byteArray.splice(0, 4);
+        // tslint:disable-next-line: max-line-length
+        const aggregateTransactionHeader_Reserved1 = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 4));
         byteArray.splice(0, 4);
         const transactions = GeneratorUtils.getBytes(Uint8Array.from(byteArray), payloadSize);
         byteArray.splice(0, payloadSize);
         const cosignatures = Uint8Array.from(byteArray);
-        return new AggregateTransactionBodyBuilder(transactions, cosignatures);
+        return new AggregateTransactionBodyBuilder(transactionsHash, transactions, cosignatures);
+    }
+
+    /**
+     * Gets aggregate hash of an aggregate's transactions.
+     *
+     * @return Aggregate hash of an aggregate's transactions.
+     */
+    public getTransactionsHash(): Hash256Dto {
+        return this.transactionsHash;
+    }
+
+    /**
+     * Gets reserved padding to align end of AggregateTransactionHeader on 8-byte boundary.
+     *
+     * @return Reserved padding to align end of AggregateTransactionHeader on 8-byte boundary.
+     */
+    public getAggregateTransactionHeader_Reserved1(): number {
+        return this.aggregateTransactionHeader_Reserved1;
     }
 
     /**
@@ -80,7 +111,9 @@ export class AggregateTransactionBodyBuilder {
      */
     public getSize(): number {
         let size = 0;
+        size += this.transactionsHash.getSize();
         size += 4; // payloadSize
+        size += 4; // aggregateTransactionHeader_Reserved1
         size += this.transactions.length;
         size += this.cosignatures.length;
         return size;
@@ -93,8 +126,13 @@ export class AggregateTransactionBodyBuilder {
      */
     public serialize(): Uint8Array {
         let newArray = Uint8Array.from([]);
+        const transactionsHashBytes = this.transactionsHash.serialize();
+        newArray = GeneratorUtils.concatTypedArrays(newArray, transactionsHashBytes);
         const payloadSizeBytes = GeneratorUtils.uintToBuffer(this.transactions.length, 4);
         newArray = GeneratorUtils.concatTypedArrays(newArray, payloadSizeBytes);
+        // tslint:disable-next-line: max-line-length
+        const aggregateTransactionHeader_Reserved1Bytes = GeneratorUtils.uintToBuffer(this.getAggregateTransactionHeader_Reserved1(), 4);
+        newArray = GeneratorUtils.concatTypedArrays(newArray, aggregateTransactionHeader_Reserved1Bytes);
         newArray = GeneratorUtils.concatTypedArrays(newArray, this.transactions);
         newArray = GeneratorUtils.concatTypedArrays(newArray, this.cosignatures);
         return newArray;

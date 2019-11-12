@@ -27,6 +27,7 @@ import { KeyDto } from './KeyDto';
 import { NamespaceIdDto } from './NamespaceIdDto';
 import { NamespaceRegistrationTransactionBodyBuilder } from './NamespaceRegistrationTransactionBodyBuilder';
 import { NamespaceRegistrationTypeDto } from './NamespaceRegistrationTypeDto';
+import { NetworkTypeDto } from './NetworkTypeDto';
 
 /** Binary layout for an embedded namespace registration transaction. */
 export class EmbeddedNamespaceRegistrationTransactionBuilder extends EmbeddedTransactionBuilder {
@@ -38,6 +39,7 @@ export class EmbeddedNamespaceRegistrationTransactionBuilder extends EmbeddedTra
      *
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
      * @param duration Namespace duration.
      * @param parentId Parent namespace identifier.
@@ -45,8 +47,8 @@ export class EmbeddedNamespaceRegistrationTransactionBuilder extends EmbeddedTra
      * @param name Namespace name.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  id: NamespaceIdDto,  name: Uint8Array,  duration?: BlockDurationDto,  parentId?: NamespaceIdDto) {
-        super(signerPublicKey, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  id: NamespaceIdDto,  name: Uint8Array,  duration?: BlockDurationDto,  parentId?: NamespaceIdDto) {
+        super(signerPublicKey, version, network, type);
         if ((duration && parentId) || (!duration && !parentId)) {
             throw new Error('Invalid conditional parameters');
         }
@@ -68,16 +70,7 @@ export class EmbeddedNamespaceRegistrationTransactionBuilder extends EmbeddedTra
         const namespaceRegistrationTransactionBody = NamespaceRegistrationTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, namespaceRegistrationTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedNamespaceRegistrationTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, namespaceRegistrationTransactionBody.id, namespaceRegistrationTransactionBody.name, namespaceRegistrationTransactionBody.duration, namespaceRegistrationTransactionBody.parentId);
-    }
-
-    /**
-     * Gets namespace registration type.
-     *
-     * @return Namespace registration type.
-     */
-    public getRegistrationType(): NamespaceRegistrationTypeDto {
-        return this.namespaceRegistrationTransactionBody.getRegistrationType();
+        return new EmbeddedNamespaceRegistrationTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, namespaceRegistrationTransactionBody.id, namespaceRegistrationTransactionBody.name, namespaceRegistrationTransactionBody.duration, namespaceRegistrationTransactionBody.parentId);
     }
 
     /**
@@ -105,6 +98,15 @@ export class EmbeddedNamespaceRegistrationTransactionBuilder extends EmbeddedTra
      */
     public getId(): NamespaceIdDto {
         return this.namespaceRegistrationTransactionBody.getId();
+    }
+
+    /**
+     * Gets namespace registration type.
+     *
+     * @return Namespace registration type.
+     */
+    public getRegistrationType(): NamespaceRegistrationTypeDto {
+        return this.namespaceRegistrationTransactionBody.getRegistrationType();
     }
 
     /**

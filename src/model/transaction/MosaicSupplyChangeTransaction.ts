@@ -111,7 +111,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
         const builder = isEmbedded ? EmbeddedMosaicSupplyChangeTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             MosaicSupplyChangeTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const networkType = builder.getNetwork().valueOf();
         const transaction = MosaicSupplyChangeTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO(
                 (builder as MosaicSupplyChangeTransactionBuilder).getDeadline().timestamp),
@@ -154,12 +154,13 @@ export class MosaicSupplyChangeTransaction extends Transaction {
             new SignatureDto(signatureBuffer),
             new KeyDto(signerBuffer),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.MOSAIC_SUPPLY_CHANGE.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
             new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
-            this.action.valueOf(),
             new AmountDto(this.delta.toDTO()),
+            this.action.valueOf(),
         );
         return transactionBuilder.serialize();
     }
@@ -172,10 +173,11 @@ export class MosaicSupplyChangeTransaction extends Transaction {
         const transactionBuilder = new EmbeddedMosaicSupplyChangeTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.MOSAIC_SUPPLY_CHANGE.valueOf(),
             new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
-            this.action.valueOf(),
             new AmountDto(this.delta.toDTO()),
+            this.action.valueOf(),
         );
         return transactionBuilder.serialize();
     }

@@ -112,7 +112,7 @@ export class SecretProofTransaction extends Transaction {
         const builder = isEmbedded ? EmbeddedSecretProofTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             SecretProofTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const networkType = builder.getNetwork().valueOf();
         const transaction = SecretProofTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO(
                 (builder as SecretProofTransactionBuilder).getDeadline().timestamp),
@@ -178,11 +178,12 @@ export class SecretProofTransaction extends Transaction {
             new SignatureDto(signatureBuffer),
             new KeyDto(signerBuffer),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.SECRET_PROOF.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            this.hashType.valueOf(),
             new Hash256Dto(this.getSecretByte()),
+            this.hashType.valueOf(),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
             this.getProofByte(),
         );
@@ -197,9 +198,10 @@ export class SecretProofTransaction extends Transaction {
         const transactionBuilder = new EmbeddedSecretProofTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.SECRET_PROOF.valueOf(),
-            this.hashType.valueOf(),
             new Hash256Dto(this.getSecretByte()),
+            this.hashType.valueOf(),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
             this.getProofByte(),
         );

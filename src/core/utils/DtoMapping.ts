@@ -19,7 +19,7 @@ import { MosaicId } from '../../model/mosaic/MosaicId';
 import { AccountRestriction } from '../../model/restriction/AccountRestriction';
 import { AccountRestrictions } from '../../model/restriction/AccountRestrictions';
 import { AccountRestrictionsInfo } from '../../model/restriction/AccountRestrictionsInfo';
-import { AccountRestrictionType } from '../../model/restriction/AccountRestrictionType';
+import { AccountRestrictionFlags } from '../../model/restriction/AccountRestrictionType';
 
 export class DtoMapping {
 
@@ -33,24 +33,24 @@ export class DtoMapping {
             accountRestrictions.meta,
             new AccountRestrictions(Address.createFromEncoded(accountRestrictions.accountRestrictions.address),
                 accountRestrictions.accountRestrictions.restrictions.map((prop) => {
-                        switch (prop.restrictionType) {
-                            case AccountRestrictionType.AllowIncomingAddress:
-                            case AccountRestrictionType.BlockIncomingAddress:
-                            case AccountRestrictionType.AllowOutgoingAddress:
-                            case AccountRestrictionType.BlockOutgoingAddress:
-                                return new AccountRestriction(prop.restrictionType,
+                        switch (prop.restrictionFlags) {
+                            case AccountRestrictionFlags.AllowIncomingAddress:
+                            case AccountRestrictionFlags.BlockIncomingAddress:
+                            case AccountRestrictionFlags.AllowOutgoingAddress:
+                            case AccountRestrictionFlags.BlockOutgoingAddress:
+                                return new AccountRestriction(prop.restrictionFlags,
                                                             prop.values.map((value) => Address.createFromEncoded(value)));
-                            case AccountRestrictionType.AllowMosaic:
-                            case AccountRestrictionType.BlockMosaic:
-                                return new AccountRestriction(prop.restrictionType,
+                            case AccountRestrictionFlags.AllowMosaic:
+                            case AccountRestrictionFlags.BlockMosaic:
+                                return new AccountRestriction(prop.restrictionFlags,
                                                             prop.values.map((value) => new MosaicId(value)));
-                            case AccountRestrictionType.AllowIncomingTransactionType:
-                            case AccountRestrictionType.AllowOutgoingTransactionType:
-                            case AccountRestrictionType.BlockIncomingTransactionType:
-                            case AccountRestrictionType.BlockOutgoingTransactionType:
-                                return new AccountRestriction(prop.restrictionType, prop.values);
+                            case AccountRestrictionFlags.AllowIncomingTransactionType:
+                            case AccountRestrictionFlags.AllowOutgoingTransactionType:
+                            case AccountRestrictionFlags.BlockIncomingTransactionType:
+                            case AccountRestrictionFlags.BlockOutgoingTransactionType:
+                                return new AccountRestriction(prop.restrictionFlags, prop.values);
                             default:
-                                throw new Error(`Invalid restriction type: ${prop.restrictionType}`);
+                                throw new Error(`Invalid restriction type: ${prop.restrictionFlags}`);
                         }
                     })));
     }

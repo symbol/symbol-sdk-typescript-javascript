@@ -16,9 +16,6 @@
 
 import { Convert } from '../../core/format';
 import {
-    AccountOperationRestrictionModificationBuilder,
-} from '../../infrastructure/catbuffer/AccountOperationRestrictionModificationBuilder';
-import {
     AccountOperationRestrictionTransactionBuilder,
 } from '../../infrastructure/catbuffer/AccountOperationRestrictionTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -30,9 +27,8 @@ import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
-import { AccountRestrictionType } from '../restriction/AccountRestrictionType';
+import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
 import { UInt64 } from '../UInt64';
-import { AccountRestrictionModification } from './AccountRestrictionModification';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
@@ -45,23 +41,26 @@ export class AccountOperationRestrictionTransaction extends Transaction {
     /**
      * Create a modify account operation restriction type transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param restrictionType - The account restriction type.
-     * @param modifications - The array of modifications.
+     * @param restrictionFlags - The account restriction flags.
+     * @param restrictionAdditions - Account restriction additions.
+     * @param restrictionDeletions - Account restriction deletions.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {AccountOperationRestrictionTransaction}
      */
     public static create(deadline: Deadline,
-                         restrictionType: AccountRestrictionType,
-                         modifications: Array<AccountRestrictionModification<TransactionType>>,
+                         restrictionFlags: AccountRestrictionFlags,
+                         restrictionAdditions: TransactionType[],
+                         restrictionDeletions: TransactionType[],
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): AccountOperationRestrictionTransaction {
         return new AccountOperationRestrictionTransaction(networkType,
             TransactionVersion.MODIFY_ACCOUNT_RESTRICTION_ENTITY_TYPE,
             deadline,
             maxFee,
-            restrictionType,
-            modifications);
+            restrictionFlags,
+            restrictionAdditions,
+            restrictionDeletions);
     }
 
     /**
@@ -69,8 +68,9 @@ export class AccountOperationRestrictionTransaction extends Transaction {
      * @param version
      * @param deadline
      * @param maxFee
-     * @param restrictionType
-     * @param modifications
+     * @param restrictionFlags
+     * @param restrictionAdditions
+     * @param restrictionDeletions
      * @param signature
      * @param signer
      * @param transactionInfo
@@ -79,8 +79,9 @@ export class AccountOperationRestrictionTransaction extends Transaction {
                 version: number,
                 deadline: Deadline,
                 maxFee: UInt64,
-                public readonly restrictionType: AccountRestrictionType,
-                public readonly modifications: Array<AccountRestrictionModification<TransactionType>>,
+                public readonly restrictionFlags: AccountRestrictionFlags,
+                public readonly restrictionAdditions: TransactionType[],
+                public readonly restrictionDeletions: TransactionType[],
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
@@ -99,17 +100,13 @@ export class AccountOperationRestrictionTransaction extends Transaction {
         const builder = isEmbedded ? EmbeddedAccountOperationRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             AccountOperationRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signer = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const networkType = builder.getNetwork().valueOf();
         const transaction = AccountOperationRestrictionTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO(
                 (builder as AccountOperationRestrictionTransactionBuilder).getDeadline().timestamp),
-            builder.getRestrictionType().valueOf(),
-            builder.getModifications().map((modification) => {
-                return AccountRestrictionModification.createForOperation(
-                    modification.modificationAction.valueOf(),
-                    modification.value.valueOf(),
-                );
-            }),
+            builder.getRestrictionFlags().valueOf(),
+            builder.getRestrictionAdditions(),
+            builder.getRestrictionDeletions(),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountOperationRestrictionTransactionBuilder).fee.amount),
         );
@@ -126,15 +123,16 @@ export class AccountOperationRestrictionTransaction extends Transaction {
         const byteSize = super.size;
 
         // set static byte size fields
-        const byteRestrictionType = 1;
-        const byteModificationCount = 1;
+        const byteRestrictionType = 2;
+        const byteAdditionCount = 1;
+        const byteDeletionCount = 1;
+        const byteAccountRestrictionTransactionBody_Reserved1 = 4;
+        const byteRestrictionAdditions = 2 * this.restrictionAdditions.length;
+        const byteRestrictionDeletions = 2 * this.restrictionDeletions.length;
 
-        // each modification contains :
-        // - 1 byte for modificationAction
-        // - 2 bytes for the modification value (transaction type)
-        const byteModifications = 3 * this.modifications.length;
-
-        return byteSize + byteRestrictionType + byteModificationCount + byteModifications;
+        return byteSize + byteRestrictionType + byteAdditionCount + byteDeletionCount +
+               byteRestrictionAdditions + byteRestrictionDeletions +
+               byteAccountRestrictionTransactionBody_Reserved1;
     }
 
     /**
@@ -149,16 +147,13 @@ export class AccountOperationRestrictionTransaction extends Transaction {
             new SignatureDto(signatureBuffer),
             new KeyDto(signerBuffer),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.ACCOUNT_RESTRICTION_OPERATION.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            this.restrictionType.valueOf(),
-            this.modifications.map((modification) => {
-                return new AccountOperationRestrictionModificationBuilder(
-                    modification.modificationAction.valueOf(),
-                    modification.value.valueOf(),
-                );
-            }),
+            this.restrictionFlags.valueOf(),
+            this.restrictionAdditions,
+            this.restrictionDeletions,
         );
         return transactionBuilder.serialize();
     }
@@ -171,14 +166,11 @@ export class AccountOperationRestrictionTransaction extends Transaction {
         const transactionBuilder = new EmbeddedAccountOperationRestrictionTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.ACCOUNT_RESTRICTION_OPERATION.valueOf(),
-            this.restrictionType.valueOf(),
-            this.modifications.map((modification) => {
-                return new AccountOperationRestrictionModificationBuilder(
-                    modification.modificationAction.valueOf(),
-                    modification.value.valueOf(),
-                );
-            }),
+            this.restrictionFlags.valueOf(),
+            this.restrictionAdditions,
+            this.restrictionDeletions,
         );
         return transactionBuilder.serialize();
     }

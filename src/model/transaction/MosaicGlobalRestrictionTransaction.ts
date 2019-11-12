@@ -155,7 +155,7 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
         const builder = isEmbedded ? EmbeddedMosaicGlobalRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             MosaicGlobalRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const networkType = builder.getNetwork().valueOf();
         const transaction = MosaicGlobalRestrictionTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO(
                 (builder as MosaicGlobalRestrictionTransactionBuilder).getDeadline().timestamp),
@@ -208,6 +208,7 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
             new SignatureDto(signatureBuffer),
             new KeyDto(signerBuffer),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.MOSAIC_GLOBAL_RESTRICTION.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
@@ -215,8 +216,8 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
             new UnresolvedMosaicIdDto(this.referenceMosaicId.id.toDTO()),
             this.restrictionKey.toDTO(),
             this.previousRestrictionValue.toDTO(),
-            this.previousRestrictionType.valueOf(),
             this.newRestrictionValue.toDTO(),
+            this.previousRestrictionType.valueOf(),
             this.newRestrictionType.valueOf(),
         );
         return transactionBuilder.serialize();
@@ -230,13 +231,14 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
         const transactionBuilder = new EmbeddedMosaicGlobalRestrictionTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.MOSAIC_GLOBAL_RESTRICTION.valueOf(),
             new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
             new UnresolvedMosaicIdDto(this.referenceMosaicId.id.toDTO()),
             this.restrictionKey.toDTO(),
             this.previousRestrictionValue.toDTO(),
-            this.previousRestrictionType.valueOf(),
             this.newRestrictionValue.toDTO(),
+            this.previousRestrictionType.valueOf(),
             this.newRestrictionType.valueOf(),
         );
         return transactionBuilder.serialize();

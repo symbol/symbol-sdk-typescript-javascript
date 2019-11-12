@@ -33,10 +33,10 @@ export class MosaicGlobalRestrictionTransactionBodyBuilder {
     restrictionKey: number[];
     /** Previous restriction value. */
     previousRestrictionValue: number[];
-    /** Previous restriction type. */
-    previousRestrictionType: MosaicRestrictionTypeDto;
     /** New restriction value. */
     newRestrictionValue: number[];
+    /** Previous restriction type. */
+    previousRestrictionType: MosaicRestrictionTypeDto;
     /** New restriction type. */
     newRestrictionType: MosaicRestrictionTypeDto;
 
@@ -47,18 +47,18 @@ export class MosaicGlobalRestrictionTransactionBodyBuilder {
      * @param referenceMosaicId Identifier of the mosaic providing the restriction key.
      * @param restrictionKey Restriction key relative to the reference mosaic identifier.
      * @param previousRestrictionValue Previous restriction value.
-     * @param previousRestrictionType Previous restriction type.
      * @param newRestrictionValue New restriction value.
+     * @param previousRestrictionType Previous restriction type.
      * @param newRestrictionType New restriction type.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(mosaicId: UnresolvedMosaicIdDto,  referenceMosaicId: UnresolvedMosaicIdDto,  restrictionKey: number[],  previousRestrictionValue: number[],  previousRestrictionType: MosaicRestrictionTypeDto,  newRestrictionValue: number[],  newRestrictionType: MosaicRestrictionTypeDto) {
+    public constructor(mosaicId: UnresolvedMosaicIdDto,  referenceMosaicId: UnresolvedMosaicIdDto,  restrictionKey: number[],  previousRestrictionValue: number[],  newRestrictionValue: number[],  previousRestrictionType: MosaicRestrictionTypeDto,  newRestrictionType: MosaicRestrictionTypeDto) {
         this.mosaicId = mosaicId;
         this.referenceMosaicId = referenceMosaicId;
         this.restrictionKey = restrictionKey;
         this.previousRestrictionValue = previousRestrictionValue;
-        this.previousRestrictionType = previousRestrictionType;
         this.newRestrictionValue = newRestrictionValue;
+        this.previousRestrictionType = previousRestrictionType;
         this.newRestrictionType = newRestrictionType;
     }
 
@@ -78,14 +78,14 @@ export class MosaicGlobalRestrictionTransactionBodyBuilder {
         byteArray.splice(0, 8);
         const previousRestrictionValue = GeneratorUtils.bufferToUint64(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 8));
         byteArray.splice(0, 8);
-        const previousRestrictionType = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
-        byteArray.splice(0, 1);
         const newRestrictionValue = GeneratorUtils.bufferToUint64(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 8));
         byteArray.splice(0, 8);
+        const previousRestrictionType = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
+        byteArray.splice(0, 1);
         const newRestrictionType = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
         byteArray.splice(0, 1);
         // tslint:disable-next-line: max-line-length
-        return new MosaicGlobalRestrictionTransactionBodyBuilder(mosaicId, referenceMosaicId, restrictionKey, previousRestrictionValue, previousRestrictionType, newRestrictionValue, newRestrictionType);
+        return new MosaicGlobalRestrictionTransactionBodyBuilder(mosaicId, referenceMosaicId, restrictionKey, previousRestrictionValue, newRestrictionValue, previousRestrictionType, newRestrictionType);
     }
 
     /**
@@ -125,21 +125,21 @@ export class MosaicGlobalRestrictionTransactionBodyBuilder {
     }
 
     /**
-     * Gets previous restriction type.
-     *
-     * @return Previous restriction type.
-     */
-    public getPreviousRestrictionType(): MosaicRestrictionTypeDto {
-        return this.previousRestrictionType;
-    }
-
-    /**
      * Gets new restriction value.
      *
      * @return New restriction value.
      */
     public getNewRestrictionValue(): number[] {
         return this.newRestrictionValue;
+    }
+
+    /**
+     * Gets previous restriction type.
+     *
+     * @return Previous restriction type.
+     */
+    public getPreviousRestrictionType(): MosaicRestrictionTypeDto {
+        return this.previousRestrictionType;
     }
 
     /**
@@ -162,8 +162,8 @@ export class MosaicGlobalRestrictionTransactionBodyBuilder {
         size += this.referenceMosaicId.getSize();
         size += 8; // restrictionKey
         size += 8; // previousRestrictionValue
-        size += 1; // previousRestrictionType
         size += 8; // newRestrictionValue
+        size += 1; // previousRestrictionType
         size += 1; // newRestrictionType
         return size;
     }
@@ -183,10 +183,10 @@ export class MosaicGlobalRestrictionTransactionBodyBuilder {
         newArray = GeneratorUtils.concatTypedArrays(newArray, restrictionKeyBytes);
         const previousRestrictionValueBytes = GeneratorUtils.uint64ToBuffer(this.getPreviousRestrictionValue());
         newArray = GeneratorUtils.concatTypedArrays(newArray, previousRestrictionValueBytes);
-        const previousRestrictionTypeBytes = GeneratorUtils.uintToBuffer(this.previousRestrictionType, 1);
-        newArray = GeneratorUtils.concatTypedArrays(newArray, previousRestrictionTypeBytes);
         const newRestrictionValueBytes = GeneratorUtils.uint64ToBuffer(this.getNewRestrictionValue());
         newArray = GeneratorUtils.concatTypedArrays(newArray, newRestrictionValueBytes);
+        const previousRestrictionTypeBytes = GeneratorUtils.uintToBuffer(this.previousRestrictionType, 1);
+        newArray = GeneratorUtils.concatTypedArrays(newArray, previousRestrictionTypeBytes);
         const newRestrictionTypeBytes = GeneratorUtils.uintToBuffer(this.newRestrictionType, 1);
         newArray = GeneratorUtils.concatTypedArrays(newArray, newRestrictionTypeBytes);
         return newArray;

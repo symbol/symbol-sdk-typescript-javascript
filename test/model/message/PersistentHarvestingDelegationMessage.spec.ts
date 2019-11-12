@@ -88,7 +88,7 @@ describe('PersistentHarvestingDelegationMessage', () => {
         const signedTransaction = tx.signWith(sender, generationHash);
         const encryptMessage =
             PersistentHarvestingDelegationMessage
-                .createFromPayload(signedTransaction.payload.substring(298, signedTransaction.payload.length));
+                .createFromPayload(signedTransaction.payload.substring(322, signedTransaction.payload.length));
         const plainMessage =
             PersistentHarvestingDelegationMessage.decrypt(encryptMessage, recipient.privateKey, sender.publicKey, NetworkType.MIJIN_TEST);
         expect(plainMessage).to.be.equal(delegatedPrivateKey);

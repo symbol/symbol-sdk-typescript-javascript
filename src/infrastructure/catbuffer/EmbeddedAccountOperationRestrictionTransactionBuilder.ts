@@ -19,13 +19,12 @@
 *** along with Catapult. If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import { AccountOperationRestrictionModificationBuilder } from './AccountOperationRestrictionModificationBuilder';
 import { AccountOperationRestrictionTransactionBodyBuilder } from './AccountOperationRestrictionTransactionBodyBuilder';
-import { AccountRestrictionTypeDto } from './AccountRestrictionTypeDto';
 import { EmbeddedTransactionBuilder } from './EmbeddedTransactionBuilder';
 import { EntityTypeDto } from './EntityTypeDto';
 import { GeneratorUtils } from './GeneratorUtils';
 import { KeyDto } from './KeyDto';
+import { NetworkTypeDto } from './NetworkTypeDto';
 
 /** Binary layout for an embedded account operation restriction transaction. */
 export class EmbeddedAccountOperationRestrictionTransactionBuilder extends EmbeddedTransactionBuilder {
@@ -37,15 +36,17 @@ export class EmbeddedAccountOperationRestrictionTransactionBuilder extends Embed
      *
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
-     * @param restrictionType Account restriction type.
-     * @param modifications Account restriction modifications.
+     * @param restrictionFlags Account restriction flags.
+     * @param restrictionAdditions Account restriction additions.
+     * @param restrictionDeletions Account restriction deletions.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  restrictionType: AccountRestrictionTypeDto,  modifications: AccountOperationRestrictionModificationBuilder[]) {
-        super(signerPublicKey, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  restrictionFlags: number,  restrictionAdditions: number[],  restrictionDeletions: number[]) {
+        super(signerPublicKey, version, network, type);
         // tslint:disable-next-line: max-line-length
-        this.accountOperationRestrictionTransactionBody = new AccountOperationRestrictionTransactionBodyBuilder(restrictionType, modifications);
+        this.accountOperationRestrictionTransactionBody = new AccountOperationRestrictionTransactionBodyBuilder(restrictionFlags, restrictionAdditions, restrictionDeletions);
     }
 
     /**
@@ -62,25 +63,43 @@ export class EmbeddedAccountOperationRestrictionTransactionBuilder extends Embed
         const accountOperationRestrictionTransactionBody = AccountOperationRestrictionTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, accountOperationRestrictionTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedAccountOperationRestrictionTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, accountOperationRestrictionTransactionBody.restrictionType, accountOperationRestrictionTransactionBody.modifications);
+        return new EmbeddedAccountOperationRestrictionTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, accountOperationRestrictionTransactionBody.restrictionFlags, accountOperationRestrictionTransactionBody.restrictionAdditions, accountOperationRestrictionTransactionBody.restrictionDeletions);
     }
 
     /**
-     * Gets account restriction type.
+     * Gets account restriction flags.
      *
-     * @return Account restriction type.
+     * @return Account restriction flags.
      */
-    public getRestrictionType(): AccountRestrictionTypeDto {
-        return this.accountOperationRestrictionTransactionBody.getRestrictionType();
+    public getRestrictionFlags(): number {
+        return this.accountOperationRestrictionTransactionBody.getRestrictionFlags();
     }
 
     /**
-     * Gets account restriction modifications.
+     * Gets reserved padding to align restrictionAdditions on 8-byte boundary.
      *
-     * @return Account restriction modifications.
+     * @return Reserved padding to align restrictionAdditions on 8-byte boundary.
      */
-    public getModifications(): AccountOperationRestrictionModificationBuilder[] {
-        return this.accountOperationRestrictionTransactionBody.getModifications();
+    public getAccountRestrictionTransactionBody_Reserved1(): number {
+        return this.accountOperationRestrictionTransactionBody.getAccountRestrictionTransactionBody_Reserved1();
+    }
+
+    /**
+     * Gets account restriction additions.
+     *
+     * @return Account restriction additions.
+     */
+    public getRestrictionAdditions(): number[] {
+        return this.accountOperationRestrictionTransactionBody.getRestrictionAdditions();
+    }
+
+    /**
+     * Gets account restriction deletions.
+     *
+     * @return Account restriction deletions.
+     */
+    public getRestrictionDeletions(): number[] {
+        return this.accountOperationRestrictionTransactionBody.getRestrictionDeletions();
     }
 
     /**

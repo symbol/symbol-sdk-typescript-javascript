@@ -26,6 +26,7 @@ import { GeneratorUtils } from './GeneratorUtils';
 import { Hash256Dto } from './Hash256Dto';
 import { HashLockTransactionBodyBuilder } from './HashLockTransactionBodyBuilder';
 import { KeyDto } from './KeyDto';
+import { NetworkTypeDto } from './NetworkTypeDto';
 import { SignatureDto } from './SignatureDto';
 import { TimestampDto } from './TimestampDto';
 import { TransactionBuilder } from './TransactionBuilder';
@@ -42,6 +43,7 @@ export class HashLockTransactionBuilder extends TransactionBuilder {
      * @param signature Entity signature.
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
      * @param fee Transaction fee.
      * @param deadline Transaction deadline.
@@ -50,8 +52,8 @@ export class HashLockTransactionBuilder extends TransactionBuilder {
      * @param hash Lock hash.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  mosaic: UnresolvedMosaicBuilder,  duration: BlockDurationDto,  hash: Hash256Dto) {
-        super(signature, signerPublicKey, version, type, fee, deadline);
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  mosaic: UnresolvedMosaicBuilder,  duration: BlockDurationDto,  hash: Hash256Dto) {
+        super(signature, signerPublicKey, version, network, type, fee, deadline);
         this.hashLockTransactionBody = new HashLockTransactionBodyBuilder(mosaic, duration, hash);
     }
 
@@ -68,7 +70,7 @@ export class HashLockTransactionBuilder extends TransactionBuilder {
         const hashLockTransactionBody = HashLockTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, hashLockTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new HashLockTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.type, superObject.fee, superObject.deadline, hashLockTransactionBody.mosaic, hashLockTransactionBody.duration, hashLockTransactionBody.hash);
+        return new HashLockTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, superObject.fee, superObject.deadline, hashLockTransactionBody.mosaic, hashLockTransactionBody.duration, hashLockTransactionBody.hash);
     }
 
     /**

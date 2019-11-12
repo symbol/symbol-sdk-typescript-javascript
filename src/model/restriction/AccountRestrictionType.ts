@@ -26,15 +26,14 @@
 
  // !!This enum will be deprecated once catbuffer code applied.
 enum AccountRestrictionTypeEnum {
-    Address = 0x01,
-    Mosaic = 0x02,
-    TransactionType = 0x04,
-    Sentinel = 0x05,
-    Outgoing = 0x40,
-    Block = 0x80,
+    Address = 0x0001,
+    Mosaic = 0x0002,
+    TransactionType = 0x0004,
+    Outgoing = 0x4000,
+    Block = 0x8000,
 }
 
-export enum AccountRestrictionType {
+export enum AccountRestrictionFlags {
     /**
      * Allow only incoming transactions from a given address.
      */
@@ -89,9 +88,4 @@ export enum AccountRestrictionType {
     BlockOutgoingTransactionType = (AccountRestrictionTypeEnum.TransactionType +
                                                            AccountRestrictionTypeEnum.Block +
                                                            AccountRestrictionTypeEnum.Outgoing),
-
-    /**
-     * Account restriction sentinel.
-     */
-    Sentinel = AccountRestrictionTypeEnum.Sentinel,
 }

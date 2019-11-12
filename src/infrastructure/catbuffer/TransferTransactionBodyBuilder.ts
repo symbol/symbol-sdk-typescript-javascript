@@ -27,22 +27,25 @@ import { UnresolvedMosaicBuilder } from './UnresolvedMosaicBuilder';
 export class TransferTransactionBodyBuilder {
     /** Recipient address. */
     recipientAddress: UnresolvedAddressDto;
-    /** Attached message. */
-    message: Uint8Array;
+    /** Reserved padding to align mosaics on 8-byte boundary. */
+    transferTransactionBody_Reserved1: number;
     /** Attached mosaics. */
     mosaics: UnresolvedMosaicBuilder[];
+    /** Attached message. */
+    message: Uint8Array;
 
     /**
      * Constructor.
      *
      * @param recipientAddress Recipient address.
-     * @param message Attached message.
      * @param mosaics Attached mosaics.
+     * @param message Attached message.
      */
-    public constructor(recipientAddress: UnresolvedAddressDto,  message: Uint8Array,  mosaics: UnresolvedMosaicBuilder[]) {
+    public constructor(recipientAddress: UnresolvedAddressDto,  mosaics: UnresolvedMosaicBuilder[],  message: Uint8Array) {
         this.recipientAddress = recipientAddress;
-        this.message = message;
+        this.transferTransactionBody_Reserved1 = 0;
         this.mosaics = mosaics;
+        this.message = message;
     }
 
     /**
@@ -55,19 +58,22 @@ export class TransferTransactionBodyBuilder {
         const byteArray = Array.from(payload);
         const recipientAddress = UnresolvedAddressDto.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, recipientAddress.getSize());
-        const messageSize = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 2));
-        byteArray.splice(0, 2);
         const mosaicsCount = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
         byteArray.splice(0, 1);
-        const message = GeneratorUtils.getBytes(Uint8Array.from(byteArray), messageSize);
-        byteArray.splice(0, messageSize);
+        const messageSize = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 2));
+        byteArray.splice(0, 2);
+        // tslint:disable-next-line: max-line-length
+        const transferTransactionBody_Reserved1 = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 4));
+        byteArray.splice(0, 4);
         const mosaics: UnresolvedMosaicBuilder[] = [];
         for (let i = 0; i < mosaicsCount; i++) {
             const item = UnresolvedMosaicBuilder.loadFromBinary(Uint8Array.from(byteArray));
             mosaics.push(item);
             byteArray.splice(0, item.getSize());
         }
-        return new TransferTransactionBodyBuilder(recipientAddress, message, mosaics);
+        const message = GeneratorUtils.getBytes(Uint8Array.from(byteArray), messageSize);
+        byteArray.splice(0, messageSize);
+        return new TransferTransactionBodyBuilder(recipientAddress, mosaics, message);
     }
 
     /**
@@ -80,12 +86,12 @@ export class TransferTransactionBodyBuilder {
     }
 
     /**
-     * Gets attached message.
+     * Gets reserved padding to align mosaics on 8-byte boundary.
      *
-     * @return Attached message.
+     * @return Reserved padding to align mosaics on 8-byte boundary.
      */
-    public getMessage(): Uint8Array {
-        return this.message;
+    public getTransferTransactionBody_Reserved1(): number {
+        return this.transferTransactionBody_Reserved1;
     }
 
     /**
@@ -98,6 +104,15 @@ export class TransferTransactionBodyBuilder {
     }
 
     /**
+     * Gets attached message.
+     *
+     * @return Attached message.
+     */
+    public getMessage(): Uint8Array {
+        return this.message;
+    }
+
+    /**
      * Gets the size of the object.
      *
      * @return Size in bytes.
@@ -105,10 +120,11 @@ export class TransferTransactionBodyBuilder {
     public getSize(): number {
         let size = 0;
         size += this.recipientAddress.getSize();
-        size += 2; // messageSize
         size += 1; // mosaicsCount
-        size += this.message.length;
+        size += 2; // messageSize
+        size += 4; // transferTransactionBody_Reserved1
         this.mosaics.forEach((o) => size += o.getSize());
+        size += this.message.length;
         return size;
     }
 
@@ -121,15 +137,18 @@ export class TransferTransactionBodyBuilder {
         let newArray = Uint8Array.from([]);
         const recipientAddressBytes = this.recipientAddress.serialize();
         newArray = GeneratorUtils.concatTypedArrays(newArray, recipientAddressBytes);
-        const messageSizeBytes = GeneratorUtils.uintToBuffer(this.message.length, 2);
-        newArray = GeneratorUtils.concatTypedArrays(newArray, messageSizeBytes);
         const mosaicsCountBytes = GeneratorUtils.uintToBuffer(this.mosaics.length, 1);
         newArray = GeneratorUtils.concatTypedArrays(newArray, mosaicsCountBytes);
-        newArray = GeneratorUtils.concatTypedArrays(newArray, this.message);
+        const messageSizeBytes = GeneratorUtils.uintToBuffer(this.message.length, 2);
+        newArray = GeneratorUtils.concatTypedArrays(newArray, messageSizeBytes);
+        // tslint:disable-next-line: max-line-length
+        const transferTransactionBody_Reserved1Bytes = GeneratorUtils.uintToBuffer(this.getTransferTransactionBody_Reserved1(), 4);
+        newArray = GeneratorUtils.concatTypedArrays(newArray, transferTransactionBody_Reserved1Bytes);
         this.mosaics.forEach((item) => {
             const mosaicsBytes = item.serialize();
             newArray = GeneratorUtils.concatTypedArrays(newArray, mosaicsBytes);
         });
+        newArray = GeneratorUtils.concatTypedArrays(newArray, this.message);
         return newArray;
     }
 }

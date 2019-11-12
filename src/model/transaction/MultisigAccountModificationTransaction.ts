@@ -16,7 +16,6 @@
 
 import { Convert } from '../../core/format';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import { CosignatoryModificationBuilder } from '../../infrastructure/catbuffer/CosignatoryModificationBuilder';
 import {
     EmbeddedMultisigAccountModificationTransactionBuilder,
 } from '../../infrastructure/catbuffer/EmbeddedMultisigAccountModificationTransactionBuilder';
@@ -49,7 +48,8 @@ export class MultisigAccountModificationTransaction extends Transaction {
      * @param deadline - The deadline to include the transaction.
      * @param minApprovalDelta - The min approval relative change.
      * @param minRemovalDelta - The min removal relative change.
-     * @param modifications - The array of modifications.
+     * @param publicKeyAdditions - Cosignatory public key additions.
+     * @param publicKeyDeletions - Cosignatory public key deletions.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {MultisigAccountModificationTransaction}
@@ -57,7 +57,8 @@ export class MultisigAccountModificationTransaction extends Transaction {
     public static create(deadline: Deadline,
                          minApprovalDelta: number,
                          minRemovalDelta: number,
-                         modifications: MultisigCosignatoryModification[],
+                         publicKeyAdditions: PublicAccount[],
+                         publicKeyDeletions: PublicAccount[],
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): MultisigAccountModificationTransaction {
         return new MultisigAccountModificationTransaction(networkType,
@@ -66,7 +67,8 @@ export class MultisigAccountModificationTransaction extends Transaction {
             maxFee,
             minApprovalDelta,
             minRemovalDelta,
-            modifications);
+            publicKeyAdditions,
+            publicKeyDeletions);
     }
 
     /**
@@ -76,7 +78,8 @@ export class MultisigAccountModificationTransaction extends Transaction {
      * @param maxFee
      * @param minApprovalDelta
      * @param minRemovalDelta
-     * @param modifications
+     * @param publicKeyAdditions
+     * @param publicKeyDeletions
      * @param signature
      * @param signer
      * @param transactionInfo
@@ -96,9 +99,13 @@ export class MultisigAccountModificationTransaction extends Transaction {
                  */
                 public readonly minRemovalDelta: number,
                 /**
-                 * The array of cosigner accounts added or removed from the multi-signature account.
+                 * The Cosignatory public key additions.
                  */
-                public readonly modifications: MultisigCosignatoryModification[],
+                public readonly  publicKeyAdditions: PublicAccount[],
+                /**
+                 * The Cosignatory public key deletion.
+                 */
+                public readonly  publicKeyDeletions: PublicAccount[],
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
@@ -116,20 +123,17 @@ export class MultisigAccountModificationTransaction extends Transaction {
         const builder = isEmbedded ? EmbeddedMultisigAccountModificationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             MultisigAccountModificationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const networkType = builder.getNetwork().valueOf();
         const transaction = MultisigAccountModificationTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO(
                 (builder as MultisigAccountModificationTransactionBuilder).getDeadline().timestamp),
             builder.getMinApprovalDelta(),
             builder.getMinRemovalDelta(),
-            builder.getModifications().map((modification) => {
-                return new MultisigCosignatoryModification(
-                    modification.modificationAction.valueOf(),
-                    PublicAccount.createFromPublicKey(
-                        Convert.uint8ToHex(modification.cosignatoryPublicKey.key),
-                        networkType,
-                    ),
-                );
+            builder.getPublicKeyAdditions().map((addition) => {
+                return PublicAccount.createFromPublicKey(Convert.uint8ToHex(addition.getKey()), networkType);
+            }),
+            builder.getPublicKeyDeletions().map((deletion) => {
+                return PublicAccount.createFromPublicKey(Convert.uint8ToHex(deletion.getKey()), networkType);
             }),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MultisigAccountModificationTransactionBuilder).fee.amount),
@@ -150,14 +154,14 @@ export class MultisigAccountModificationTransaction extends Transaction {
         // set static byte size fields
         const byteRemovalDelta = 1;
         const byteApprovalDelta = 1;
-        const byteNumModifications = 1;
+        const byteAdditionCount = 1;
+        const byteDeletionCount = 1;
+        const bytePublicKeyAdditions = 32 * this.publicKeyAdditions.length;
+        const bytePublicKeyDeletions = 32 * this.publicKeyDeletions.length;
+        const byteReserved1 = 4;
 
-        // each modification contains :
-        // - 1 byte for modificationAction
-        // - 32 bytes for cosignatoryPublicKey
-        const byteModifications = 33 * this.modifications.length;
-
-        return byteSize + byteRemovalDelta + byteApprovalDelta + byteNumModifications + byteModifications;
+        return byteSize + byteRemovalDelta + byteApprovalDelta + byteAdditionCount +
+        byteDeletionCount + bytePublicKeyAdditions + bytePublicKeyDeletions + byteReserved1;
     }
 
     /**
@@ -172,16 +176,17 @@ export class MultisigAccountModificationTransaction extends Transaction {
             new SignatureDto(signatureBuffer),
             new KeyDto(signerBuffer),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.MODIFY_MULTISIG_ACCOUNT.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
             this.minRemovalDelta,
             this.minApprovalDelta,
-            this.modifications.map((modification) => {
-                return new CosignatoryModificationBuilder(
-                    modification.modificationAction.valueOf(),
-                    new KeyDto(Convert.hexToUint8(modification.cosignatoryPublicAccount.publicKey)),
-                );
+            this.publicKeyAdditions.map((addition) => {
+                return new KeyDto(Convert.hexToUint8(addition.publicKey));
+            }),
+            this.publicKeyDeletions.map((deletion) => {
+                return new KeyDto(Convert.hexToUint8(deletion.publicKey));
             }),
         );
         return transactionBuilder.serialize();
@@ -195,14 +200,15 @@ export class MultisigAccountModificationTransaction extends Transaction {
         const transactionBuilder = new EmbeddedMultisigAccountModificationTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.MODIFY_MULTISIG_ACCOUNT.valueOf(),
             this.minRemovalDelta,
             this.minApprovalDelta,
-            this.modifications.map((modification) => {
-                return new CosignatoryModificationBuilder(
-                    modification.modificationAction.valueOf(),
-                    new KeyDto(Convert.hexToUint8(modification.cosignatoryPublicAccount.publicKey)),
-                );
+            this.publicKeyAdditions.map((addition) => {
+                return new KeyDto(Convert.hexToUint8(addition.publicKey));
+            }),
+            this.publicKeyDeletions.map((deletion) => {
+                return new KeyDto(Convert.hexToUint8(deletion.publicKey));
             }),
         );
         return transactionBuilder.serialize();

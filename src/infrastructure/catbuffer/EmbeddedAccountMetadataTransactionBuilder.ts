@@ -24,6 +24,7 @@ import { EmbeddedTransactionBuilder } from './EmbeddedTransactionBuilder';
 import { EntityTypeDto } from './EntityTypeDto';
 import { GeneratorUtils } from './GeneratorUtils';
 import { KeyDto } from './KeyDto';
+import { NetworkTypeDto } from './NetworkTypeDto';
 
 /** Binary layout for an embedded account metadata transaction. */
 export class EmbeddedAccountMetadataTransactionBuilder extends EmbeddedTransactionBuilder {
@@ -35,6 +36,7 @@ export class EmbeddedAccountMetadataTransactionBuilder extends EmbeddedTransacti
      *
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
      * @param targetPublicKey Metadata target public key.
      * @param scopedMetadataKey Metadata key scoped to source, target and type.
@@ -44,8 +46,8 @@ export class EmbeddedAccountMetadataTransactionBuilder extends EmbeddedTransacti
      * @note when there is an existing value, new value is calculated as xor(previous-value, value).
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  targetPublicKey: KeyDto,  scopedMetadataKey: number[],  valueSizeDelta: number,  value: Uint8Array) {
-        super(signerPublicKey, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  targetPublicKey: KeyDto,  scopedMetadataKey: number[],  valueSizeDelta: number,  value: Uint8Array) {
+        super(signerPublicKey, version, network, type);
         // tslint:disable-next-line: max-line-length
         this.accountMetadataTransactionBody = new AccountMetadataTransactionBodyBuilder(targetPublicKey, scopedMetadataKey, valueSizeDelta, value);
     }
@@ -63,7 +65,7 @@ export class EmbeddedAccountMetadataTransactionBuilder extends EmbeddedTransacti
         const accountMetadataTransactionBody = AccountMetadataTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, accountMetadataTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedAccountMetadataTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, accountMetadataTransactionBody.targetPublicKey, accountMetadataTransactionBody.scopedMetadataKey, accountMetadataTransactionBody.valueSizeDelta, accountMetadataTransactionBody.value);
+        return new EmbeddedAccountMetadataTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, accountMetadataTransactionBody.targetPublicKey, accountMetadataTransactionBody.scopedMetadataKey, accountMetadataTransactionBody.valueSizeDelta, accountMetadataTransactionBody.value);
     }
 
     /**

@@ -20,8 +20,8 @@
 **/
 
 
-/** Enumeration of account restriction types. */
-export enum AccountRestrictionTypeDto {
+/** Enumeration of account restriction flags. */
+export enum AccountRestrictionFlagsDto {
     /** Restriction type is an address. */
     ADDRESS = 1,
     /** Restriction type is a mosaic identifier. */
@@ -29,7 +29,7 @@ export enum AccountRestrictionTypeDto {
     /** Restriction type is a transaction type. */
     TRANSACTION_TYPE = 4,
     /** Restriction is interpreted as outgoing. */
-    OUTGOING = 64,
+    OUTGOING = 16384,
     /** Restriction is interpreted as blocking operation. */
-    BLOCK = 128,
+    BLOCK = 32768,
 }

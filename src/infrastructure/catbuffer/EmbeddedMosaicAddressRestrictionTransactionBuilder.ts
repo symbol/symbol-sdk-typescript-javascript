@@ -24,6 +24,7 @@ import { EntityTypeDto } from './EntityTypeDto';
 import { GeneratorUtils } from './GeneratorUtils';
 import { KeyDto } from './KeyDto';
 import { MosaicAddressRestrictionTransactionBodyBuilder } from './MosaicAddressRestrictionTransactionBodyBuilder';
+import { NetworkTypeDto } from './NetworkTypeDto';
 import { UnresolvedAddressDto } from './UnresolvedAddressDto';
 import { UnresolvedMosaicIdDto } from './UnresolvedMosaicIdDto';
 
@@ -37,18 +38,19 @@ export class EmbeddedMosaicAddressRestrictionTransactionBuilder extends Embedded
      *
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
      * @param mosaicId Identifier of the mosaic to which the restriction applies.
      * @param restrictionKey Restriction key.
-     * @param targetAddress Address being restricted.
      * @param previousRestrictionValue Previous restriction value.
      * @param newRestrictionValue New restriction value.
+     * @param targetAddress Address being restricted.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  mosaicId: UnresolvedMosaicIdDto,  restrictionKey: number[],  targetAddress: UnresolvedAddressDto,  previousRestrictionValue: number[],  newRestrictionValue: number[]) {
-        super(signerPublicKey, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  mosaicId: UnresolvedMosaicIdDto,  restrictionKey: number[],  previousRestrictionValue: number[],  newRestrictionValue: number[],  targetAddress: UnresolvedAddressDto) {
+        super(signerPublicKey, version, network, type);
         // tslint:disable-next-line: max-line-length
-        this.mosaicAddressRestrictionTransactionBody = new MosaicAddressRestrictionTransactionBodyBuilder(mosaicId, restrictionKey, targetAddress, previousRestrictionValue, newRestrictionValue);
+        this.mosaicAddressRestrictionTransactionBody = new MosaicAddressRestrictionTransactionBodyBuilder(mosaicId, restrictionKey, previousRestrictionValue, newRestrictionValue, targetAddress);
     }
 
     /**
@@ -65,7 +67,7 @@ export class EmbeddedMosaicAddressRestrictionTransactionBuilder extends Embedded
         const mosaicAddressRestrictionTransactionBody = MosaicAddressRestrictionTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, mosaicAddressRestrictionTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedMosaicAddressRestrictionTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, mosaicAddressRestrictionTransactionBody.mosaicId, mosaicAddressRestrictionTransactionBody.restrictionKey, mosaicAddressRestrictionTransactionBody.targetAddress, mosaicAddressRestrictionTransactionBody.previousRestrictionValue, mosaicAddressRestrictionTransactionBody.newRestrictionValue);
+        return new EmbeddedMosaicAddressRestrictionTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, mosaicAddressRestrictionTransactionBody.mosaicId, mosaicAddressRestrictionTransactionBody.restrictionKey, mosaicAddressRestrictionTransactionBody.previousRestrictionValue, mosaicAddressRestrictionTransactionBody.newRestrictionValue, mosaicAddressRestrictionTransactionBody.targetAddress);
     }
 
     /**
@@ -87,15 +89,6 @@ export class EmbeddedMosaicAddressRestrictionTransactionBuilder extends Embedded
     }
 
     /**
-     * Gets address being restricted.
-     *
-     * @return Address being restricted.
-     */
-    public getTargetAddress(): UnresolvedAddressDto {
-        return this.mosaicAddressRestrictionTransactionBody.getTargetAddress();
-    }
-
-    /**
      * Gets previous restriction value.
      *
      * @return Previous restriction value.
@@ -111,6 +104,15 @@ export class EmbeddedMosaicAddressRestrictionTransactionBuilder extends Embedded
      */
     public getNewRestrictionValue(): number[] {
         return this.mosaicAddressRestrictionTransactionBody.getNewRestrictionValue();
+    }
+
+    /**
+     * Gets address being restricted.
+     *
+     * @return Address being restricted.
+     */
+    public getTargetAddress(): UnresolvedAddressDto {
+        return this.mosaicAddressRestrictionTransactionBody.getTargetAddress();
     }
 
     /**

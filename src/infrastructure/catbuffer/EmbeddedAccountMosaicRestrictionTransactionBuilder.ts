@@ -19,13 +19,13 @@
 *** along with Catapult. If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import { AccountMosaicRestrictionModificationBuilder } from './AccountMosaicRestrictionModificationBuilder';
 import { AccountMosaicRestrictionTransactionBodyBuilder } from './AccountMosaicRestrictionTransactionBodyBuilder';
-import { AccountRestrictionTypeDto } from './AccountRestrictionTypeDto';
 import { EmbeddedTransactionBuilder } from './EmbeddedTransactionBuilder';
 import { EntityTypeDto } from './EntityTypeDto';
 import { GeneratorUtils } from './GeneratorUtils';
 import { KeyDto } from './KeyDto';
+import { NetworkTypeDto } from './NetworkTypeDto';
+import { UnresolvedMosaicIdDto } from './UnresolvedMosaicIdDto';
 
 /** Binary layout for an embedded account mosaic restriction transaction. */
 export class EmbeddedAccountMosaicRestrictionTransactionBuilder extends EmbeddedTransactionBuilder {
@@ -37,15 +37,17 @@ export class EmbeddedAccountMosaicRestrictionTransactionBuilder extends Embedded
      *
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
-     * @param restrictionType Account restriction type.
-     * @param modifications Account restriction modifications.
+     * @param restrictionFlags Account restriction flags.
+     * @param restrictionAdditions Account restriction additions.
+     * @param restrictionDeletions Account restriction deletions.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  restrictionType: AccountRestrictionTypeDto,  modifications: AccountMosaicRestrictionModificationBuilder[]) {
-        super(signerPublicKey, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  restrictionFlags: number,  restrictionAdditions: UnresolvedMosaicIdDto[],  restrictionDeletions: UnresolvedMosaicIdDto[]) {
+        super(signerPublicKey, version, network, type);
         // tslint:disable-next-line: max-line-length
-        this.accountMosaicRestrictionTransactionBody = new AccountMosaicRestrictionTransactionBodyBuilder(restrictionType, modifications);
+        this.accountMosaicRestrictionTransactionBody = new AccountMosaicRestrictionTransactionBodyBuilder(restrictionFlags, restrictionAdditions, restrictionDeletions);
     }
 
     /**
@@ -62,25 +64,43 @@ export class EmbeddedAccountMosaicRestrictionTransactionBuilder extends Embedded
         const accountMosaicRestrictionTransactionBody = AccountMosaicRestrictionTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, accountMosaicRestrictionTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedAccountMosaicRestrictionTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, accountMosaicRestrictionTransactionBody.restrictionType, accountMosaicRestrictionTransactionBody.modifications);
+        return new EmbeddedAccountMosaicRestrictionTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, accountMosaicRestrictionTransactionBody.restrictionFlags, accountMosaicRestrictionTransactionBody.restrictionAdditions, accountMosaicRestrictionTransactionBody.restrictionDeletions);
     }
 
     /**
-     * Gets account restriction type.
+     * Gets account restriction flags.
      *
-     * @return Account restriction type.
+     * @return Account restriction flags.
      */
-    public getRestrictionType(): AccountRestrictionTypeDto {
-        return this.accountMosaicRestrictionTransactionBody.getRestrictionType();
+    public getRestrictionFlags(): number {
+        return this.accountMosaicRestrictionTransactionBody.getRestrictionFlags();
     }
 
     /**
-     * Gets account restriction modifications.
+     * Gets reserved padding to align restrictionAdditions on 8-byte boundary.
      *
-     * @return Account restriction modifications.
+     * @return Reserved padding to align restrictionAdditions on 8-byte boundary.
      */
-    public getModifications(): AccountMosaicRestrictionModificationBuilder[] {
-        return this.accountMosaicRestrictionTransactionBody.getModifications();
+    public getAccountRestrictionTransactionBody_Reserved1(): number {
+        return this.accountMosaicRestrictionTransactionBody.getAccountRestrictionTransactionBody_Reserved1();
+    }
+
+    /**
+     * Gets account restriction additions.
+     *
+     * @return Account restriction additions.
+     */
+    public getRestrictionAdditions(): UnresolvedMosaicIdDto[] {
+        return this.accountMosaicRestrictionTransactionBody.getRestrictionAdditions();
+    }
+
+    /**
+     * Gets account restriction deletions.
+     *
+     * @return Account restriction deletions.
+     */
+    public getRestrictionDeletions(): UnresolvedMosaicIdDto[] {
+        return this.accountMosaicRestrictionTransactionBody.getRestrictionDeletions();
     }
 
     /**

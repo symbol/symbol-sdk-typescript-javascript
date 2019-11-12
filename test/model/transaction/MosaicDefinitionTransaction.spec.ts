@@ -15,6 +15,7 @@
  */
 
 import {expect} from 'chai';
+import {Convert} from '../../../src/core/format';
 import {Account} from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicFlags} from '../../../src/model/mosaic/MosaicFlags';
@@ -24,7 +25,6 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicDefinitionTransaction} from '../../../src/model/transaction/MosaicDefinitionTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
-import {Convert} from "../../../src/core/format";
 
 describe('MosaicDefinitionTransaction', () => {
     let account: Account;
@@ -85,9 +85,9 @@ describe('MosaicDefinitionTransaction', () => {
         const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('E6DE84B801000000000000000703E803000000000000');
+        )).to.be.equal('0100000000000000E803000000000000E6DE84B80703');
 
     });
 
@@ -113,14 +113,14 @@ describe('MosaicDefinitionTransaction', () => {
         const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('E6DE84B801000000000000000003E803000000000000');
+        )).to.be.equal('0100000000000000E803000000000000E6DE84B80003');
 
     });
 
     describe('size', () => {
-        it('should return 142 for MosaicDefinition transaction byte size', () => {
+        it('should return 150 for MosaicDefinition transaction byte size', () => {
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
@@ -130,7 +130,7 @@ describe('MosaicDefinitionTransaction', () => {
                 UInt64.fromUint(1000),
                 NetworkType.MIJIN_TEST,
             );
-            expect(mosaicDefinitionTransaction.size).to.be.equal(142);
+            expect(mosaicDefinitionTransaction.size).to.be.equal(150);
             expect(Convert.hexToUint8(mosaicDefinitionTransaction.serialize()).length).to.be.equal(mosaicDefinitionTransaction.size);
         });
     });
@@ -155,10 +155,8 @@ describe('MosaicDefinitionTransaction', () => {
         const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('E6DE84B8010000000000000000030000000000000000');
-
-
+        )).to.be.equal('01000000000000000000000000000000E6DE84B80003');
     });
 });

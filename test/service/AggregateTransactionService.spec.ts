@@ -274,10 +274,8 @@ describe('AggregateTransactionService', () => {
             Deadline.create(1, ChronoUnit.HOURS),
             1,
             1,
-            [new MultisigCosignatoryModification(
-                CosignatoryModificationAction.Remove,
-                account1.publicAccount,
-            )],
+            [],
+            [account1.publicAccount],
             NetworkType.MIJIN_TEST,
         );
 

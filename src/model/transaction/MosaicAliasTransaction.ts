@@ -109,7 +109,7 @@ export class MosaicAliasTransaction extends Transaction {
         const builder = isEmbedded ? EmbeddedMosaicAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             MosaicAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const networkType = builder.getNetwork().valueOf();
         const transaction = MosaicAliasTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as MosaicAliasTransactionBuilder).getDeadline().timestamp),
             builder.getAliasAction().valueOf(),
@@ -151,12 +151,13 @@ export class MosaicAliasTransaction extends Transaction {
             new SignatureDto(signatureBuffer),
             new KeyDto(signerBuffer),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.MOSAIC_ALIAS.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            this.aliasAction.valueOf(),
             new NamespaceIdDto(this.namespaceId.id.toDTO()),
             new MosaicIdDto(this.mosaicId.id.toDTO()),
+            this.aliasAction.valueOf(),
         );
         return transactionBuilder.serialize();
     }
@@ -169,10 +170,11 @@ export class MosaicAliasTransaction extends Transaction {
         const transactionBuilder = new EmbeddedMosaicAliasTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.MOSAIC_ALIAS.valueOf(),
-            this.aliasAction.valueOf(),
             new NamespaceIdDto(this.namespaceId.id.toDTO()),
             new MosaicIdDto(this.mosaicId.id.toDTO()),
+            this.aliasAction.valueOf(),
         );
         return transactionBuilder.serialize();
     }

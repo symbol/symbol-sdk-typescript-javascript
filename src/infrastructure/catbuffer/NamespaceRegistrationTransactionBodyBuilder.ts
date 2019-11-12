@@ -26,14 +26,14 @@ import { NamespaceRegistrationTypeDto } from './NamespaceRegistrationTypeDto';
 
 /** Binary layout for a namespace registration transaction. */
 export class NamespaceRegistrationTransactionBodyBuilder {
-    /** Namespace registration type. */
-    registrationType: NamespaceRegistrationTypeDto;
     /** Namespace duration. */
     duration?: BlockDurationDto;
     /** Parent namespace identifier. */
     parentId?: NamespaceIdDto;
     /** Namespace identifier. */
     id: NamespaceIdDto;
+    /** Namespace registration type. */
+    registrationType: NamespaceRegistrationTypeDto;
     /** Namespace name. */
     name: Uint8Array;
 
@@ -69,34 +69,25 @@ export class NamespaceRegistrationTransactionBodyBuilder {
      */
     public static loadFromBinary(payload: Uint8Array): NamespaceRegistrationTransactionBodyBuilder {
         const byteArray = Array.from(payload);
-        const registrationType = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
-        byteArray.splice(0, 1);
-        let duration;
-        if (registrationType === NamespaceRegistrationTypeDto.ROOT) {
-            duration = BlockDurationDto.loadFromBinary(Uint8Array.from(byteArray));
-            byteArray.splice(0, duration.getSize());
-        }
-        let parentId;
-        if (registrationType === NamespaceRegistrationTypeDto.CHILD) {
-            parentId = NamespaceIdDto.loadFromBinary(Uint8Array.from(byteArray));
-            byteArray.splice(0, parentId.getSize());
-        }
+        const registrationTypeConditionBytes = Uint8Array.from(byteArray.slice(0, 8));
+        byteArray.splice(0, 8);
         const id = NamespaceIdDto.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, id.getSize());
+        const registrationType = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
+        byteArray.splice(0, 1);
         const nameSize = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
         byteArray.splice(0, 1);
         const name = GeneratorUtils.getBytes(Uint8Array.from(byteArray), nameSize);
         byteArray.splice(0, nameSize);
+        let duration;
+        if (registrationType === NamespaceRegistrationTypeDto.ROOT) {
+            duration = BlockDurationDto.loadFromBinary(registrationTypeConditionBytes);
+        }
+        let parentId;
+        if (registrationType === NamespaceRegistrationTypeDto.CHILD) {
+            parentId = NamespaceIdDto.loadFromBinary(registrationTypeConditionBytes);
+        }
         return new NamespaceRegistrationTransactionBodyBuilder(id, name, duration, parentId);
-    }
-
-    /**
-     * Gets namespace registration type.
-     *
-     * @return Namespace registration type.
-     */
-    public getRegistrationType(): NamespaceRegistrationTypeDto {
-        return this.registrationType;
     }
 
     /**
@@ -133,6 +124,15 @@ export class NamespaceRegistrationTransactionBodyBuilder {
     }
 
     /**
+     * Gets namespace registration type.
+     *
+     * @return Namespace registration type.
+     */
+    public getRegistrationType(): NamespaceRegistrationTypeDto {
+        return this.registrationType;
+    }
+
+    /**
      * Gets namespace name.
      *
      * @return Namespace name.
@@ -148,7 +148,6 @@ export class NamespaceRegistrationTransactionBodyBuilder {
      */
     public getSize(): number {
         let size = 0;
-        size += 1; // registrationType
         if (this.registrationType === NamespaceRegistrationTypeDto.ROOT) {
             size += this.duration!.getSize();
         }
@@ -156,6 +155,7 @@ export class NamespaceRegistrationTransactionBodyBuilder {
             size += this.parentId!.getSize();
         }
         size += this.id.getSize();
+        size += 1; // registrationType
         size += 1; // nameSize
         size += this.name.length;
         return size;
@@ -168,8 +168,6 @@ export class NamespaceRegistrationTransactionBodyBuilder {
      */
     public serialize(): Uint8Array {
         let newArray = Uint8Array.from([]);
-        const registrationTypeBytes = GeneratorUtils.uintToBuffer(this.registrationType, 1);
-        newArray = GeneratorUtils.concatTypedArrays(newArray, registrationTypeBytes);
         if (this.registrationType === NamespaceRegistrationTypeDto.ROOT) {
             const durationBytes = this.duration!.serialize();
             newArray = GeneratorUtils.concatTypedArrays(newArray, durationBytes);
@@ -180,6 +178,8 @@ export class NamespaceRegistrationTransactionBodyBuilder {
         }
         const idBytes = this.id.serialize();
         newArray = GeneratorUtils.concatTypedArrays(newArray, idBytes);
+        const registrationTypeBytes = GeneratorUtils.uintToBuffer(this.registrationType, 1);
+        newArray = GeneratorUtils.concatTypedArrays(newArray, registrationTypeBytes);
         const nameSizeBytes = GeneratorUtils.uintToBuffer(this.name.length, 1);
         newArray = GeneratorUtils.concatTypedArrays(newArray, nameSizeBytes);
         newArray = GeneratorUtils.concatTypedArrays(newArray, this.name);

@@ -20,10 +20,14 @@
 **/
 
 
-/** Enumeration of account restriction modification actions. */
-export enum AccountRestrictionModificationActionDto {
-    /** Remove account restriction value. */
-    DEL = 0,
-    /** Add account restriction value. */
-    ADD = 1,
+/** Enumeration of network types. */
+export enum NetworkTypeDto {
+    /** Public network. */
+    PUBLIC = 104,
+    /** Public test network. */
+    PUBLIC_TEST = 152,
+    /** Private network. */
+    MIJIN = 96,
+    /** Private test network. */
+    MIJIN_TEST = 144,
 }

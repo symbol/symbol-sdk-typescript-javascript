@@ -26,24 +26,24 @@ import { NamespaceIdDto } from './NamespaceIdDto';
 
 /** Binary layout for an address alias transaction. */
 export class AddressAliasTransactionBodyBuilder {
-    /** Alias action. */
-    aliasAction: AliasActionDto;
     /** Identifier of the namespace that will become an alias. */
     namespaceId: NamespaceIdDto;
     /** Aliased address. */
     address: AddressDto;
+    /** Alias action. */
+    aliasAction: AliasActionDto;
 
     /**
      * Constructor.
      *
-     * @param aliasAction Alias action.
      * @param namespaceId Identifier of the namespace that will become an alias.
      * @param address Aliased address.
+     * @param aliasAction Alias action.
      */
-    public constructor(aliasAction: AliasActionDto,  namespaceId: NamespaceIdDto,  address: AddressDto) {
-        this.aliasAction = aliasAction;
+    public constructor(namespaceId: NamespaceIdDto,  address: AddressDto,  aliasAction: AliasActionDto) {
         this.namespaceId = namespaceId;
         this.address = address;
+        this.aliasAction = aliasAction;
     }
 
     /**
@@ -54,22 +54,13 @@ export class AddressAliasTransactionBodyBuilder {
      */
     public static loadFromBinary(payload: Uint8Array): AddressAliasTransactionBodyBuilder {
         const byteArray = Array.from(payload);
-        const aliasAction = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
-        byteArray.splice(0, 1);
         const namespaceId = NamespaceIdDto.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, namespaceId.getSize());
         const address = AddressDto.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, address.getSize());
-        return new AddressAliasTransactionBodyBuilder(aliasAction, namespaceId, address);
-    }
-
-    /**
-     * Gets alias action.
-     *
-     * @return Alias action.
-     */
-    public getAliasAction(): AliasActionDto {
-        return this.aliasAction;
+        const aliasAction = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
+        byteArray.splice(0, 1);
+        return new AddressAliasTransactionBodyBuilder(namespaceId, address, aliasAction);
     }
 
     /**
@@ -91,15 +82,24 @@ export class AddressAliasTransactionBodyBuilder {
     }
 
     /**
+     * Gets alias action.
+     *
+     * @return Alias action.
+     */
+    public getAliasAction(): AliasActionDto {
+        return this.aliasAction;
+    }
+
+    /**
      * Gets the size of the object.
      *
      * @return Size in bytes.
      */
     public getSize(): number {
         let size = 0;
-        size += 1; // aliasAction
         size += this.namespaceId.getSize();
         size += this.address.getSize();
+        size += 1; // aliasAction
         return size;
     }
 
@@ -110,12 +110,12 @@ export class AddressAliasTransactionBodyBuilder {
      */
     public serialize(): Uint8Array {
         let newArray = Uint8Array.from([]);
-        const aliasActionBytes = GeneratorUtils.uintToBuffer(this.aliasAction, 1);
-        newArray = GeneratorUtils.concatTypedArrays(newArray, aliasActionBytes);
         const namespaceIdBytes = this.namespaceId.serialize();
         newArray = GeneratorUtils.concatTypedArrays(newArray, namespaceIdBytes);
         const addressBytes = this.address.serialize();
         newArray = GeneratorUtils.concatTypedArrays(newArray, addressBytes);
+        const aliasActionBytes = GeneratorUtils.uintToBuffer(this.aliasAction, 1);
+        newArray = GeneratorUtils.concatTypedArrays(newArray, aliasActionBytes);
         return newArray;
     }
 }

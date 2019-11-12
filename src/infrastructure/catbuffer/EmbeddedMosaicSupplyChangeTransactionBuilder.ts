@@ -26,6 +26,7 @@ import { GeneratorUtils } from './GeneratorUtils';
 import { KeyDto } from './KeyDto';
 import { MosaicSupplyChangeActionDto } from './MosaicSupplyChangeActionDto';
 import { MosaicSupplyChangeTransactionBodyBuilder } from './MosaicSupplyChangeTransactionBodyBuilder';
+import { NetworkTypeDto } from './NetworkTypeDto';
 import { UnresolvedMosaicIdDto } from './UnresolvedMosaicIdDto';
 
 /** Binary layout for an embedded mosaic supply change transaction. */
@@ -38,15 +39,16 @@ export class EmbeddedMosaicSupplyChangeTransactionBuilder extends EmbeddedTransa
      *
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
      * @param mosaicId Affected mosaic identifier.
-     * @param action Supply change action.
      * @param delta Change amount.
+     * @param action Supply change action.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  mosaicId: UnresolvedMosaicIdDto,  action: MosaicSupplyChangeActionDto,  delta: AmountDto) {
-        super(signerPublicKey, version, type);
-        this.mosaicSupplyChangeTransactionBody = new MosaicSupplyChangeTransactionBodyBuilder(mosaicId, action, delta);
+    public constructor(signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  mosaicId: UnresolvedMosaicIdDto,  delta: AmountDto,  action: MosaicSupplyChangeActionDto) {
+        super(signerPublicKey, version, network, type);
+        this.mosaicSupplyChangeTransactionBody = new MosaicSupplyChangeTransactionBodyBuilder(mosaicId, delta, action);
     }
 
     /**
@@ -63,7 +65,7 @@ export class EmbeddedMosaicSupplyChangeTransactionBuilder extends EmbeddedTransa
         const mosaicSupplyChangeTransactionBody = MosaicSupplyChangeTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, mosaicSupplyChangeTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedMosaicSupplyChangeTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, mosaicSupplyChangeTransactionBody.mosaicId, mosaicSupplyChangeTransactionBody.action, mosaicSupplyChangeTransactionBody.delta);
+        return new EmbeddedMosaicSupplyChangeTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, mosaicSupplyChangeTransactionBody.mosaicId, mosaicSupplyChangeTransactionBody.delta, mosaicSupplyChangeTransactionBody.action);
     }
 
     /**
@@ -76,21 +78,21 @@ export class EmbeddedMosaicSupplyChangeTransactionBuilder extends EmbeddedTransa
     }
 
     /**
-     * Gets supply change action.
-     *
-     * @return Supply change action.
-     */
-    public getAction(): MosaicSupplyChangeActionDto {
-        return this.mosaicSupplyChangeTransactionBody.getAction();
-    }
-
-    /**
      * Gets change amount.
      *
      * @return Change amount.
      */
     public getDelta(): AmountDto {
         return this.mosaicSupplyChangeTransactionBody.getDelta();
+    }
+
+    /**
+     * Gets supply change action.
+     *
+     * @return Supply change action.
+     */
+    public getAction(): MosaicSupplyChangeActionDto {
+        return this.mosaicSupplyChangeTransactionBody.getAction();
     }
 
     /**

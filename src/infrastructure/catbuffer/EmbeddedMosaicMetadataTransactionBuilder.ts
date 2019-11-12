@@ -24,6 +24,7 @@ import { EntityTypeDto } from './EntityTypeDto';
 import { GeneratorUtils } from './GeneratorUtils';
 import { KeyDto } from './KeyDto';
 import { MosaicMetadataTransactionBodyBuilder } from './MosaicMetadataTransactionBodyBuilder';
+import { NetworkTypeDto } from './NetworkTypeDto';
 import { UnresolvedMosaicIdDto } from './UnresolvedMosaicIdDto';
 
 /** Binary layout for an embedded mosaic metadata transaction. */
@@ -36,6 +37,7 @@ export class EmbeddedMosaicMetadataTransactionBuilder extends EmbeddedTransactio
      *
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
      * @param targetPublicKey Metadata target public key.
      * @param scopedMetadataKey Metadata key scoped to source, target and type.
@@ -46,8 +48,8 @@ export class EmbeddedMosaicMetadataTransactionBuilder extends EmbeddedTransactio
      * @note when there is an existing value, new value is calculated as xor(previous-value, value).
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  targetPublicKey: KeyDto,  scopedMetadataKey: number[],  targetMosaicId: UnresolvedMosaicIdDto,  valueSizeDelta: number,  value: Uint8Array) {
-        super(signerPublicKey, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  targetPublicKey: KeyDto,  scopedMetadataKey: number[],  targetMosaicId: UnresolvedMosaicIdDto,  valueSizeDelta: number,  value: Uint8Array) {
+        super(signerPublicKey, version, network, type);
         // tslint:disable-next-line: max-line-length
         this.mosaicMetadataTransactionBody = new MosaicMetadataTransactionBodyBuilder(targetPublicKey, scopedMetadataKey, targetMosaicId, valueSizeDelta, value);
     }
@@ -65,7 +67,7 @@ export class EmbeddedMosaicMetadataTransactionBuilder extends EmbeddedTransactio
         const mosaicMetadataTransactionBody = MosaicMetadataTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, mosaicMetadataTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedMosaicMetadataTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, mosaicMetadataTransactionBody.targetPublicKey, mosaicMetadataTransactionBody.scopedMetadataKey, mosaicMetadataTransactionBody.targetMosaicId, mosaicMetadataTransactionBody.valueSizeDelta, mosaicMetadataTransactionBody.value);
+        return new EmbeddedMosaicMetadataTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, mosaicMetadataTransactionBody.targetPublicKey, mosaicMetadataTransactionBody.scopedMetadataKey, mosaicMetadataTransactionBody.targetMosaicId, mosaicMetadataTransactionBody.valueSizeDelta, mosaicMetadataTransactionBody.value);
     }
 
     /**

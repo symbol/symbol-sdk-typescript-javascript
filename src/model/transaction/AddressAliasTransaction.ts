@@ -113,7 +113,7 @@ export class AddressAliasTransaction extends Transaction {
         const builder = isEmbedded ? EmbeddedAddressAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             AddressAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const networkType = builder.getNetwork().valueOf();
         const transaction = AddressAliasTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AddressAliasTransactionBuilder).getDeadline().timestamp),
             builder.getAliasAction().valueOf(),
@@ -156,12 +156,13 @@ export class AddressAliasTransaction extends Transaction {
             new SignatureDto(signatureBuffer),
             new KeyDto(signerBuffer),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.ADDRESS_ALIAS.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            this.aliasAction.valueOf(),
             new NamespaceIdDto(this.namespaceId.id.toDTO()),
             new AddressDto(RawAddress.stringToAddress(this.address.plain())),
+            this.aliasAction.valueOf(),
         );
         return transactionBuilder.serialize();
     }
@@ -174,10 +175,11 @@ export class AddressAliasTransaction extends Transaction {
         const transactionBuilder = new EmbeddedAddressAliasTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.ADDRESS_ALIAS.valueOf(),
-            this.aliasAction.valueOf(),
             new NamespaceIdDto(this.namespaceId.id.toDTO()),
             new AddressDto(RawAddress.stringToAddress(this.address.plain())),
+            this.aliasAction.valueOf(),
         );
         return transactionBuilder.serialize();
     }

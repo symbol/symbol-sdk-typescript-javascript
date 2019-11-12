@@ -25,6 +25,7 @@ import { GeneratorUtils } from './GeneratorUtils';
 import { KeyDto } from './KeyDto';
 import { MosaicGlobalRestrictionTransactionBodyBuilder } from './MosaicGlobalRestrictionTransactionBodyBuilder';
 import { MosaicRestrictionTypeDto } from './MosaicRestrictionTypeDto';
+import { NetworkTypeDto } from './NetworkTypeDto';
 import { SignatureDto } from './SignatureDto';
 import { TimestampDto } from './TimestampDto';
 import { TransactionBuilder } from './TransactionBuilder';
@@ -41,6 +42,7 @@ export class MosaicGlobalRestrictionTransactionBuilder extends TransactionBuilde
      * @param signature Entity signature.
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
      * @param fee Transaction fee.
      * @param deadline Transaction deadline.
@@ -48,15 +50,15 @@ export class MosaicGlobalRestrictionTransactionBuilder extends TransactionBuilde
      * @param referenceMosaicId Identifier of the mosaic providing the restriction key.
      * @param restrictionKey Restriction key relative to the reference mosaic identifier.
      * @param previousRestrictionValue Previous restriction value.
-     * @param previousRestrictionType Previous restriction type.
      * @param newRestrictionValue New restriction value.
+     * @param previousRestrictionType Previous restriction type.
      * @param newRestrictionType New restriction type.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  mosaicId: UnresolvedMosaicIdDto,  referenceMosaicId: UnresolvedMosaicIdDto,  restrictionKey: number[],  previousRestrictionValue: number[],  previousRestrictionType: MosaicRestrictionTypeDto,  newRestrictionValue: number[],  newRestrictionType: MosaicRestrictionTypeDto) {
-        super(signature, signerPublicKey, version, type, fee, deadline);
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  mosaicId: UnresolvedMosaicIdDto,  referenceMosaicId: UnresolvedMosaicIdDto,  restrictionKey: number[],  previousRestrictionValue: number[],  newRestrictionValue: number[],  previousRestrictionType: MosaicRestrictionTypeDto,  newRestrictionType: MosaicRestrictionTypeDto) {
+        super(signature, signerPublicKey, version, network, type, fee, deadline);
         // tslint:disable-next-line: max-line-length
-        this.mosaicGlobalRestrictionTransactionBody = new MosaicGlobalRestrictionTransactionBodyBuilder(mosaicId, referenceMosaicId, restrictionKey, previousRestrictionValue, previousRestrictionType, newRestrictionValue, newRestrictionType);
+        this.mosaicGlobalRestrictionTransactionBody = new MosaicGlobalRestrictionTransactionBodyBuilder(mosaicId, referenceMosaicId, restrictionKey, previousRestrictionValue, newRestrictionValue, previousRestrictionType, newRestrictionType);
     }
 
     /**
@@ -73,7 +75,7 @@ export class MosaicGlobalRestrictionTransactionBuilder extends TransactionBuilde
         const mosaicGlobalRestrictionTransactionBody = MosaicGlobalRestrictionTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, mosaicGlobalRestrictionTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new MosaicGlobalRestrictionTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.type, superObject.fee, superObject.deadline, mosaicGlobalRestrictionTransactionBody.mosaicId, mosaicGlobalRestrictionTransactionBody.referenceMosaicId, mosaicGlobalRestrictionTransactionBody.restrictionKey, mosaicGlobalRestrictionTransactionBody.previousRestrictionValue, mosaicGlobalRestrictionTransactionBody.previousRestrictionType, mosaicGlobalRestrictionTransactionBody.newRestrictionValue, mosaicGlobalRestrictionTransactionBody.newRestrictionType);
+        return new MosaicGlobalRestrictionTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, superObject.fee, superObject.deadline, mosaicGlobalRestrictionTransactionBody.mosaicId, mosaicGlobalRestrictionTransactionBody.referenceMosaicId, mosaicGlobalRestrictionTransactionBody.restrictionKey, mosaicGlobalRestrictionTransactionBody.previousRestrictionValue, mosaicGlobalRestrictionTransactionBody.newRestrictionValue, mosaicGlobalRestrictionTransactionBody.previousRestrictionType, mosaicGlobalRestrictionTransactionBody.newRestrictionType);
     }
 
     /**
@@ -113,21 +115,21 @@ export class MosaicGlobalRestrictionTransactionBuilder extends TransactionBuilde
     }
 
     /**
-     * Gets previous restriction type.
-     *
-     * @return Previous restriction type.
-     */
-    public getPreviousRestrictionType(): MosaicRestrictionTypeDto {
-        return this.mosaicGlobalRestrictionTransactionBody.getPreviousRestrictionType();
-    }
-
-    /**
      * Gets new restriction value.
      *
      * @return New restriction value.
      */
     public getNewRestrictionValue(): number[] {
         return this.mosaicGlobalRestrictionTransactionBody.getNewRestrictionValue();
+    }
+
+    /**
+     * Gets previous restriction type.
+     *
+     * @return Previous restriction type.
+     */
+    public getPreviousRestrictionType(): MosaicRestrictionTypeDto {
+        return this.mosaicGlobalRestrictionTransactionBody.getPreviousRestrictionType();
     }
 
     /**
