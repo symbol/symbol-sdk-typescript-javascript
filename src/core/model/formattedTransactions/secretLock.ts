@@ -7,8 +7,8 @@ export class FormattedSecretLock extends FormattedTransaction {
     dialogDetailMap: any
     icon: any
 
-    constructor(  tx: SecretLockTransaction,
-                  store: Store<AppState>) {
+    constructor(tx: SecretLockTransaction,
+                store: Store<AppState>) {
         super(tx, store)
         const {networkCurrency} = store.state.account
 

@@ -3,7 +3,7 @@ import {mapState} from "vuex"
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {formatNumber, renderMosaics} from '@/core/utils'
 import {FormattedTransaction, AppInfo, StoreAccount, TRANSACTIONS_CATEGORIES, AppWallet} from '@/core/model'
-import {defaultNetworkConfig} from '@/config'
+import {defaultNetworkConfig, explorerUrlHead} from '@/config'
 import {signTransaction} from '@/core/services'
 import TransactionModal from '@/components/transaction-modal/TransactionModal.vue'
 
@@ -26,7 +26,7 @@ export class TransactionListTs extends Vue {
     activeTransaction: FormattedTransaction = null
     NamespaceId = NamespaceId
 
-    @Prop({ default: null })
+    @Prop({default: null})
     mode: string
 
     get wallet() {
@@ -38,13 +38,13 @@ export class TransactionListTs extends Vue {
     }
 
     get transactionList() {
-      if (this.mode && this.mode === TRANSACTIONS_CATEGORIES.TO_COSIGN) {
-          const {wallet, transactionsToCosign} = this.activeAccount
-          const {publicKey} = wallet
-          return transactionsToCosign[publicKey] || []
-      }
+        if (this.mode && this.mode === TRANSACTIONS_CATEGORIES.TO_COSIGN) {
+            const {wallet, transactionsToCosign} = this.activeAccount
+            const {publicKey} = wallet
+            return transactionsToCosign[publicKey] || []
+        }
 
-      return this.activeAccount.transactionList
+        return this.activeAccount.transactionList
     }
 
     get mosaicList() {
@@ -60,11 +60,18 @@ export class TransactionListTs extends Vue {
     get currentHeight() {
         return this.app.chainStatus.currentHeight
     }
-    
+
     get namespaces() {
         return this.activeAccount.namespaces
     }
-    
+
+
+    getExplorerUrl(transactionHash) {
+        return explorerUrlHead + transactionHash
+
+    }
+
+
     get pageTitle() {
         return this.mode === TRANSACTIONS_CATEGORIES.TO_COSIGN
             ? 'Transactions_to_cosign'
@@ -122,7 +129,7 @@ export class TransactionListTs extends Vue {
                 store: this.$store,
             })
 
-            if(success) {
+            if (success) {
                 new AppWallet(this.wallet).announceTransaction(signedTransaction, this.activeAccount.node, this, signedLock)
             }
         } catch (error) {
@@ -131,12 +138,12 @@ export class TransactionListTs extends Vue {
     }
 
     transactionClicked(transaction: FormattedTransaction) {
-      this.activeTransaction = transaction
+        this.activeTransaction = transaction
 
-      if (this.mode === TRANSACTIONS_CATEGORIES.TO_COSIGN) {
-        return this.confirmViaTransactionConfirmation()
-      }
+        if (this.mode === TRANSACTIONS_CATEGORIES.TO_COSIGN) {
+            return this.confirmViaTransactionConfirmation()
+        }
 
-      this.showDialog = true
+        this.showDialog = true
     }
 }

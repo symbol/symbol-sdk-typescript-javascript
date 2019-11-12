@@ -140,6 +140,7 @@ export enum SpecialTxDetailsKeys {
     cosignatories = 'cosignatories',
     from = 'from',
     aims = 'aims',
+    hash='hash'
 }
 
 export enum TxDetailsKeysWithValueToTranslate {
