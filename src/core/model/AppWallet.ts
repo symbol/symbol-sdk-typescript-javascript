@@ -441,6 +441,7 @@ export class AppWallet {
 
     announceNormal(signedTransaction: SignedTransaction, node: string, that: any): void {
         const message = that.$t(Message.SUCCESS)
+        new Log('announceNormal', signedTransaction).create(that.$store)
         new TransactionHttp(node).announce(signedTransaction).subscribe(
             _ => that.$Notice.success({title: message}),
             error => console.error('announceNormal -> error', error),
