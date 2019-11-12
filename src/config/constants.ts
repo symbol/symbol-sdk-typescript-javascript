@@ -1,7 +1,7 @@
 import {TransactionType} from 'nem2-sdk'
 import {DefaultFee, NetworkCurrency} from '@/core/model'
 
-export const WALLET_VERSION = '0.8.5'
+export const WALLET_VERSION = '0.8.6'
 
 export const isWindows = require('./packge.ts').isWin32
 
