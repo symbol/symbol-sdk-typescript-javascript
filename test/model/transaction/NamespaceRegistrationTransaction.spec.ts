@@ -15,6 +15,7 @@
  */
 
 import {expect} from 'chai';
+import {Convert} from '../../../src/core/format';
 import {Account} from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
@@ -22,7 +23,6 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {NamespaceRegistrationTransaction} from '../../../src/model/transaction/NamespaceRegistrationTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
-import {Convert} from "../../../src/core/format";
 
 describe('NamespaceRegistrationTransaction', () => {
     let account: Account;
@@ -70,9 +70,9 @@ describe('NamespaceRegistrationTransaction', () => {
         const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('00E803000000000000CFCBE72D994BE69B13726F6F742D746573742D6E616D657370616365');
+        )).to.be.equal('E803000000000000CFCBE72D994BE69B0013726F6F742D746573742D6E616D657370616365');
 
     });
 
@@ -87,9 +87,9 @@ describe('NamespaceRegistrationTransaction', () => {
         const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('014DF55E7F6D8FB7FF924207DF2CA1BBF313726F6F742D746573742D6E616D657370616365');
+        )).to.be.equal('4DF55E7F6D8FB7FF924207DF2CA1BBF30113726F6F742D746573742D6E616D657370616365');
 
     });
 
@@ -104,20 +104,20 @@ describe('NamespaceRegistrationTransaction', () => {
         const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('014BFA5F372D55B384CFCBE72D994BE69B13726F6F742D746573742D6E616D657370616365');
+        )).to.be.equal('4BFA5F372D55B384CFCBE72D994BE69B0113726F6F742D746573742D6E616D657370616365');
     });
 
     describe('size', () => {
-        it('should return 176 for NamespaceRegistrationTransaction with name of 19 bytes', () => {
+        it('should return 165 for NamespaceRegistrationTransaction with name of 19 bytes', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 'root-test-namespace',
                 UInt64.fromUint(1000),
                 NetworkType.MIJIN_TEST,
             );
-            expect(registerNamespaceTransaction.size).to.be.equal(157);
+            expect(registerNamespaceTransaction.size).to.be.equal(165);
             expect(Convert.hexToUint8(registerNamespaceTransaction.serialize()).length).to.be.equal(registerNamespaceTransaction.size);
         });
     });

@@ -23,7 +23,9 @@ import { AggregateTransactionBodyBuilder } from './AggregateTransactionBodyBuild
 import { AmountDto } from './AmountDto';
 import { EntityTypeDto } from './EntityTypeDto';
 import { GeneratorUtils } from './GeneratorUtils';
+import { Hash256Dto } from './Hash256Dto';
 import { KeyDto } from './KeyDto';
+import { NetworkTypeDto } from './NetworkTypeDto';
 import { SignatureDto } from './SignatureDto';
 import { TimestampDto } from './TimestampDto';
 import { TransactionBuilder } from './TransactionBuilder';
@@ -39,16 +41,18 @@ export class AggregateCompleteTransactionBuilder extends TransactionBuilder {
      * @param signature Entity signature.
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
      * @param fee Transaction fee.
      * @param deadline Transaction deadline.
+     * @param transactionsHash Aggregate hash of an aggregate's transactions.
      * @param transactions Sub-transaction data (transactions are variable sized and payload size is in bytes).
      * @param cosignatures Cosignatures data (fills remaining body space after transactions).
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  transactions: Uint8Array,  cosignatures: Uint8Array) {
-        super(signature, signerPublicKey, version, type, fee, deadline);
-        this.aggregateTransactionBody = new AggregateTransactionBodyBuilder(transactions, cosignatures);
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  transactionsHash: Hash256Dto,  transactions: Uint8Array,  cosignatures: Uint8Array) {
+        super(signature, signerPublicKey, version, network, type, fee, deadline);
+        this.aggregateTransactionBody = new AggregateTransactionBodyBuilder(transactionsHash, transactions, cosignatures);
     }
 
     /**
@@ -64,7 +68,25 @@ export class AggregateCompleteTransactionBuilder extends TransactionBuilder {
         const aggregateTransactionBody = AggregateTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, aggregateTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new AggregateCompleteTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.type, superObject.fee, superObject.deadline, aggregateTransactionBody.transactions, aggregateTransactionBody.cosignatures);
+        return new AggregateCompleteTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, superObject.fee, superObject.deadline, aggregateTransactionBody.transactionsHash, aggregateTransactionBody.transactions, aggregateTransactionBody.cosignatures);
+    }
+
+    /**
+     * Gets aggregate hash of an aggregate's transactions.
+     *
+     * @return Aggregate hash of an aggregate's transactions.
+     */
+    public getTransactionsHash(): Hash256Dto {
+        return this.aggregateTransactionBody.getTransactionsHash();
+    }
+
+    /**
+     * Gets reserved padding to align end of AggregateTransactionHeader on 8-byte boundary.
+     *
+     * @return Reserved padding to align end of AggregateTransactionHeader on 8-byte boundary.
+     */
+    public getAggregateTransactionHeader_Reserved1(): number {
+        return this.aggregateTransactionBody.getAggregateTransactionHeader_Reserved1();
     }
 
     /**

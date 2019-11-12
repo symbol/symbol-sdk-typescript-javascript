@@ -119,7 +119,7 @@ export class AccountMetadataTransaction extends Transaction {
         const builder = isEmbedded ? EmbeddedAccountMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             AccountMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const networkType = builder.getNetwork().valueOf();
         const transaction = AccountMetadataTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AccountMetadataTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getTargetPublicKey().key),
@@ -164,6 +164,7 @@ export class AccountMetadataTransaction extends Transaction {
             new SignatureDto(signatureBuffer),
             new KeyDto(signerBuffer),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.ACCOUNT_METADATA_TRANSACTION.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
@@ -183,6 +184,7 @@ export class AccountMetadataTransaction extends Transaction {
         const transactionBuilder = new EmbeddedAccountMetadataTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.ACCOUNT_METADATA_TRANSACTION.valueOf(),
             new KeyDto(Convert.hexToUint8(this.targetPublicKey)),
             this.scopedMetadataKey.toDTO(),

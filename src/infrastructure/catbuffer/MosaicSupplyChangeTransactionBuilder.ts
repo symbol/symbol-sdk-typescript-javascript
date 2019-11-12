@@ -25,6 +25,7 @@ import { GeneratorUtils } from './GeneratorUtils';
 import { KeyDto } from './KeyDto';
 import { MosaicSupplyChangeActionDto } from './MosaicSupplyChangeActionDto';
 import { MosaicSupplyChangeTransactionBodyBuilder } from './MosaicSupplyChangeTransactionBodyBuilder';
+import { NetworkTypeDto } from './NetworkTypeDto';
 import { SignatureDto } from './SignatureDto';
 import { TimestampDto } from './TimestampDto';
 import { TransactionBuilder } from './TransactionBuilder';
@@ -41,17 +42,18 @@ export class MosaicSupplyChangeTransactionBuilder extends TransactionBuilder {
      * @param signature Entity signature.
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
      * @param fee Transaction fee.
      * @param deadline Transaction deadline.
      * @param mosaicId Affected mosaic identifier.
-     * @param action Supply change action.
      * @param delta Change amount.
+     * @param action Supply change action.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  mosaicId: UnresolvedMosaicIdDto,  action: MosaicSupplyChangeActionDto,  delta: AmountDto) {
-        super(signature, signerPublicKey, version, type, fee, deadline);
-        this.mosaicSupplyChangeTransactionBody = new MosaicSupplyChangeTransactionBodyBuilder(mosaicId, action, delta);
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  mosaicId: UnresolvedMosaicIdDto,  delta: AmountDto,  action: MosaicSupplyChangeActionDto) {
+        super(signature, signerPublicKey, version, network, type, fee, deadline);
+        this.mosaicSupplyChangeTransactionBody = new MosaicSupplyChangeTransactionBodyBuilder(mosaicId, delta, action);
     }
 
     /**
@@ -68,7 +70,7 @@ export class MosaicSupplyChangeTransactionBuilder extends TransactionBuilder {
         const mosaicSupplyChangeTransactionBody = MosaicSupplyChangeTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, mosaicSupplyChangeTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new MosaicSupplyChangeTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.type, superObject.fee, superObject.deadline, mosaicSupplyChangeTransactionBody.mosaicId, mosaicSupplyChangeTransactionBody.action, mosaicSupplyChangeTransactionBody.delta);
+        return new MosaicSupplyChangeTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, superObject.fee, superObject.deadline, mosaicSupplyChangeTransactionBody.mosaicId, mosaicSupplyChangeTransactionBody.delta, mosaicSupplyChangeTransactionBody.action);
     }
 
     /**
@@ -81,21 +83,21 @@ export class MosaicSupplyChangeTransactionBuilder extends TransactionBuilder {
     }
 
     /**
-     * Gets supply change action.
-     *
-     * @return Supply change action.
-     */
-    public getAction(): MosaicSupplyChangeActionDto {
-        return this.mosaicSupplyChangeTransactionBody.getAction();
-    }
-
-    /**
      * Gets change amount.
      *
      * @return Change amount.
      */
     public getDelta(): AmountDto {
         return this.mosaicSupplyChangeTransactionBody.getDelta();
+    }
+
+    /**
+     * Gets supply change action.
+     *
+     * @return Supply change action.
+     */
+    public getAction(): MosaicSupplyChangeActionDto {
+        return this.mosaicSupplyChangeTransactionBody.getAction();
     }
 
     /**

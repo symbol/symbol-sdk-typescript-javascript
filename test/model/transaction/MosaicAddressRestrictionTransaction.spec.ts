@@ -15,6 +15,7 @@
  */
 
 import {expect} from 'chai';
+import {Convert} from '../../../src/core/format';
 import {Account} from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
@@ -23,7 +24,6 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicAddressRestrictionTransaction} from '../../../src/model/transaction/MosaicAddressRestrictionTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
-import {Convert} from "../../../src/core/format";
 
 describe('MosaicAddressRestrictionTransaction', () => {
     let account: Account;
@@ -52,10 +52,10 @@ describe('MosaicAddressRestrictionTransaction', () => {
         const signedTransaction = mosaicAddressRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('0100000000000000010000000000000090A75B6B63D31BDA93808727940F24699AE' +
-                       'CDDF17C568508BA09000000000000000800000000000000');
+        )).to.be.equal('0100000000000000010000000000000009000000000000000800000000000000' +
+                       '90A75B6B63D31BDA93808727940F24699AECDDF17C568508BA');
     });
 
     it('should createComplete an MosaicAddressRestrictionTransaction use mosaic alias', () => {
@@ -78,10 +78,10 @@ describe('MosaicAddressRestrictionTransaction', () => {
         const signedTransaction = mosaicAddressRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('C51FB4C93FCA5095010000000000000090A75B6B63D31BDA93808727940F24699AE' +
-                       'CDDF17C568508BA09000000000000000800000000000000');
+        )).to.be.equal('C51FB4C93FCA5095010000000000000009000000000000000800000000000000' +
+                       '90A75B6B63D31BDA93808727940F24699AECDDF17C568508BA');
     });
 
     it('should createComplete an MosaicAddressRestrictionTransaction use address alias', () => {
@@ -105,10 +105,10 @@ describe('MosaicAddressRestrictionTransaction', () => {
         const signedTransaction = mosaicAddressRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('0100000000000000010000000000000091C51FB4C93FCA509500000000000000000' +
-                       '00000000000000009000000000000000800000000000000');
+        )).to.be.equal('0100000000000000010000000000000009000000000000000800000000000000' +
+                       '91C51FB4C93FCA509500000000000000000000000000000000');
     });
 
     it('should format targetAddress payload with 8 bytes binary namespaceId - targetAddressToString', () => {
@@ -128,10 +128,9 @@ describe('MosaicAddressRestrictionTransaction', () => {
         const signedTransaction = transaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
-            288,
-        )).to.be.equal('010000000000000001000000000000009151776168D24257');
-
+            256,
+            304,
+        )).to.be.equal('010000000000000001000000000000000900000000000000');
 
         expect(Convert.hexToUint8(transaction.serialize()).length).to.be.equal(transaction.size);
     });

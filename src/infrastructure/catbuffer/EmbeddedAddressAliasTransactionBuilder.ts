@@ -27,6 +27,7 @@ import { EntityTypeDto } from './EntityTypeDto';
 import { GeneratorUtils } from './GeneratorUtils';
 import { KeyDto } from './KeyDto';
 import { NamespaceIdDto } from './NamespaceIdDto';
+import { NetworkTypeDto } from './NetworkTypeDto';
 
 /** Binary layout for an embedded address alias transaction. */
 export class EmbeddedAddressAliasTransactionBuilder extends EmbeddedTransactionBuilder {
@@ -38,15 +39,16 @@ export class EmbeddedAddressAliasTransactionBuilder extends EmbeddedTransactionB
      *
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
-     * @param aliasAction Alias action.
      * @param namespaceId Identifier of the namespace that will become an alias.
      * @param address Aliased address.
+     * @param aliasAction Alias action.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  aliasAction: AliasActionDto,  namespaceId: NamespaceIdDto,  address: AddressDto) {
-        super(signerPublicKey, version, type);
-        this.addressAliasTransactionBody = new AddressAliasTransactionBodyBuilder(aliasAction, namespaceId, address);
+    public constructor(signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  namespaceId: NamespaceIdDto,  address: AddressDto,  aliasAction: AliasActionDto) {
+        super(signerPublicKey, version, network, type);
+        this.addressAliasTransactionBody = new AddressAliasTransactionBodyBuilder(namespaceId, address, aliasAction);
     }
 
     /**
@@ -62,16 +64,7 @@ export class EmbeddedAddressAliasTransactionBuilder extends EmbeddedTransactionB
         const addressAliasTransactionBody = AddressAliasTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, addressAliasTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedAddressAliasTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, addressAliasTransactionBody.aliasAction, addressAliasTransactionBody.namespaceId, addressAliasTransactionBody.address);
-    }
-
-    /**
-     * Gets alias action.
-     *
-     * @return Alias action.
-     */
-    public getAliasAction(): AliasActionDto {
-        return this.addressAliasTransactionBody.getAliasAction();
+        return new EmbeddedAddressAliasTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, addressAliasTransactionBody.namespaceId, addressAliasTransactionBody.address, addressAliasTransactionBody.aliasAction);
     }
 
     /**
@@ -90,6 +83,15 @@ export class EmbeddedAddressAliasTransactionBuilder extends EmbeddedTransactionB
      */
     public getAddress(): AddressDto {
         return this.addressAliasTransactionBody.getAddress();
+    }
+
+    /**
+     * Gets alias action.
+     *
+     * @return Alias action.
+     */
+    public getAliasAction(): AliasActionDto {
+        return this.addressAliasTransactionBody.getAliasAction();
     }
 
     /**

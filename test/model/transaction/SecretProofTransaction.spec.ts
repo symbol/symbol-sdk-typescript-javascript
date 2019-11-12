@@ -179,7 +179,7 @@ describe('SecretProofTransaction', () => {
     });
 
     describe('size', () => {
-        it('should return 212 for SecretProofTransaction with proof and secret both 32 bytes', () => {
+        it('should return 220 for SecretProofTransaction with proof and secret both 32 bytes', () => {
             const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
             const secretProofTransaction = SecretProofTransaction.create(
                 Deadline.create(),
@@ -189,7 +189,7 @@ describe('SecretProofTransaction', () => {
                 proof,
                 NetworkType.MIJIN_TEST,
             );
-            expect(secretProofTransaction.size).to.be.equal(212);
+            expect(secretProofTransaction.size).to.be.equal(220);
             expect(Convert.hexToUint8(secretProofTransaction.serialize()).length).to.be.equal(secretProofTransaction.size);
         });
     });
@@ -207,11 +207,11 @@ describe('SecretProofTransaction', () => {
 
         const signedTx = secretProofTransaction.signWith(account, generationHash);
         expect(signedTx.payload.substring(
-            240,
+            256,
             signedTx.payload.length,
         )).to.be.equal(
-            '009B3155B37159DA50AA52D5967C509B410F5A36A3B1E31ECB5AC76675D79B4A5E90A75B6B63D31BDA938' +
-            '08727940F24699AECDDF17C568508BA2000B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7');
+            '9B3155B37159DA50AA52D5967C509B410F5A36A3B1E31ECB5AC76675D79B4A5E20000090A75B6B63D31BDA93808727940F2' +
+            '4699AECDDF17C568508BAB778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7');
     });
 
     it('should be created with alias address', () => {

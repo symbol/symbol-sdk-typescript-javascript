@@ -89,12 +89,12 @@ export abstract class Transaction {
     public static createTransactionHash(transactionPayload: string, generationHashBuffer: number[], networkType: NetworkType): string {
         const byteBuffer = Array.from(Convert.hexToUint8(transactionPayload));
         const signingBytes = byteBuffer
-            .slice(4, 36)
+            .slice(8, 40)
             .concat(byteBuffer
-                .slice(4 + 64, 4 + 64 + 32))
+                .slice(4 + 4 + 64, 8 + 64 + 32 + 4))
             .concat(generationHashBuffer)
             .concat(byteBuffer
-                .splice(4 + 64 + 32, byteBuffer.length));
+                .splice(4 + 64 + 32 + 8, byteBuffer.length));
 
         const hash = new Uint8Array(32);
         const signSchema = SHA3Hasher.resolveSignSchema(networkType);
@@ -105,9 +105,8 @@ export abstract class Transaction {
 
     /**
      * @internal
-     * @param singer Optional singer for delegated aggregate complete transaction only.
      */
-    protected abstract generateBytes(signer?: PublicAccount): Uint8Array;
+    protected abstract generateBytes(): Uint8Array;
 
     /**
      * @internal
@@ -124,16 +123,17 @@ export abstract class Transaction {
     public signWith(account: Account, generationHash: string): SignedTransaction {
         const generationHashBytes = Array.from(Convert.hexToUint8(generationHash));
         const signSchema = SHA3Hasher.resolveSignSchema(account.networkType);
-        const byteBuffer = Array.from(this.generateBytes(account.publicAccount));
-        const signingBytes = generationHashBytes.concat(byteBuffer.slice(4 + 64 + 32));
+        const byteBuffer = Array.from(this.generateBytes());
+        const signingBytes = generationHashBytes.concat(byteBuffer.slice(4 + 64 + 32 + 8));
         const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(account.privateKey, signSchema);
         const signature = Array.from(KeyPair.sign(account, new Uint8Array(signingBytes), signSchema));
         const signedTransactionBuffer = byteBuffer
-            .splice(0, 4)
+            .splice(0, 8)
             .concat(signature)
             .concat(Array.from(keyPairEncoded.publicKey))
+            .concat(Array.from(new Uint8Array(4)))
             .concat(byteBuffer
-                .splice(64 + 32, byteBuffer.length));
+                .splice(64 + 32 + 4, byteBuffer.length));
         const payload = Convert.uint8ToHex(signedTransactionBuffer);
         return new SignedTransaction(
             payload,
@@ -165,10 +165,10 @@ export abstract class Transaction {
      * Convert an aggregate transaction to an inner transaction including transaction signer.
      * Signer is optional for `AggregateComplete` transaction `ONLY`.
      * If no signer provided, aggregate transaction signer will be delegated on signing
-     * @param signer - Innre transaction signer. (Optional for `AggregateComplete` transaction `ONLY`)
+     * @param signer - Innre transaction signer.
      * @returns InnerTransaction
      */
-    public toAggregate(signer?: PublicAccount): InnerTransaction {
+    public toAggregate(signer: PublicAccount): InnerTransaction {
         if (this.type === TransactionType.AGGREGATE_BONDED || this.type === TransactionType.AGGREGATE_COMPLETE) {
             throw new Error('Inner transaction cannot be an aggregated transaction.');
         }
@@ -252,9 +252,12 @@ export abstract class Transaction {
      */
     public get size(): number {
         const byteSize = 4 // size
+                        + 4 // verifiableEntityHeader_Reserved1
                         + 64 // signature
                         + 32 // signerPublicKey
-                        + 2 // version
+                        + 4 // entityBody_Reserved1
+                        + 1 // version
+                        + 1 // networkType
                         + 2 // type
                         + 8 // maxFee
                         + 8; // deadline

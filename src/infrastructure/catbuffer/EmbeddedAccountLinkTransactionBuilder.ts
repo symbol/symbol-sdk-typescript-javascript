@@ -25,6 +25,7 @@ import { EmbeddedTransactionBuilder } from './EmbeddedTransactionBuilder';
 import { EntityTypeDto } from './EntityTypeDto';
 import { GeneratorUtils } from './GeneratorUtils';
 import { KeyDto } from './KeyDto';
+import { NetworkTypeDto } from './NetworkTypeDto';
 
 /** Binary layout for an embedded account link transaction. */
 export class EmbeddedAccountLinkTransactionBuilder extends EmbeddedTransactionBuilder {
@@ -36,13 +37,14 @@ export class EmbeddedAccountLinkTransactionBuilder extends EmbeddedTransactionBu
      *
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
      * @param remotePublicKey Remote public key.
      * @param linkAction Account link action.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  remotePublicKey: KeyDto,  linkAction: AccountLinkActionDto) {
-        super(signerPublicKey, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  remotePublicKey: KeyDto,  linkAction: AccountLinkActionDto) {
+        super(signerPublicKey, version, network, type);
         this.accountLinkTransactionBody = new AccountLinkTransactionBodyBuilder(remotePublicKey, linkAction);
     }
 
@@ -59,7 +61,7 @@ export class EmbeddedAccountLinkTransactionBuilder extends EmbeddedTransactionBu
         const accountLinkTransactionBody = AccountLinkTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, accountLinkTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedAccountLinkTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, accountLinkTransactionBody.remotePublicKey, accountLinkTransactionBody.linkAction);
+        return new EmbeddedAccountLinkTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, accountLinkTransactionBody.remotePublicKey, accountLinkTransactionBody.linkAction);
     }
 
     /**

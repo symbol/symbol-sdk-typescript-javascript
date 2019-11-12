@@ -1,23 +1,23 @@
 // tslint:disable: jsdoc-format
 /**
- *** Copyright (c) 2016-present,
- *** Jaguar0625, gimre, BloodyRookie, Tech Bureau, Corp. All rights reserved.
- ***
- *** This file is part of Catapult.
- ***
- *** Catapult is free software: you can redistribute it and/or modify
- *** it under the terms of the GNU Lesser General Public License as published by
- *** the Free Software Foundation, either version 3 of the License, or
- *** (at your option) any later version.
- ***
- *** Catapult is distributed in the hope that it will be useful,
- *** but WITHOUT ANY WARRANTY; without even the implied warranty of
- *** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *** GNU Lesser General Public License for more details.
- ***
- *** You should have received a copy of the GNU Lesser General Public License
- *** along with Catapult. If not, see <http://www.gnu.org/licenses/>.
- **/
+*** Copyright (c) 2016-present,
+*** Jaguar0625, gimre, BloodyRookie, Tech Bureau, Corp. All rights reserved.
+***
+*** This file is part of Catapult.
+***
+*** Catapult is free software: you can redistribute it and/or modify
+*** it under the terms of the GNU Lesser General Public License as published by
+*** the Free Software Foundation, either version 3 of the License, or
+*** (at your option) any later version.
+***
+*** Catapult is distributed in the hope that it will be useful,
+*** but WITHOUT ANY WARRANTY; without even the implied warranty of
+*** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+*** GNU Lesser General Public License for more details.
+***
+*** You should have received a copy of the GNU Lesser General Public License
+*** along with Catapult. If not, see <http://www.gnu.org/licenses/>.
+**/
 
 /**
  * Generator utility class.
@@ -26,7 +26,7 @@ export class GeneratorUtils {
 
     /**
      * Convert a UInt8Array input into an array of 2 numbers.
-     * Numbers in the returned array are cast to UInt32.
+	 * Numbers in the returned array are cast to UInt32.
      * @param {Uint8Array} input A uint8 array.
      * @returns {number[]} The uint64 representation of the input.
      */
@@ -57,21 +57,22 @@ export class GeneratorUtils {
      */
     public static uintToBuffer(uintValue: number, bufferSize: number): Uint8Array {
         const buffer = new ArrayBuffer(bufferSize);
-        const dataView = new DataView(buffer);
-        try {
-            if (1 === bufferSize) {
-                dataView.setUint8(0, uintValue);
-            } else if (2 === bufferSize) {
-                dataView.setUint16(0, uintValue, true);
-            } else if (4 === bufferSize) {
-                dataView.setUint32(0, uintValue, true);
-            } else {
-                throw new Error('Unexpected bufferSize');
-            }
-            return new Uint8Array(buffer);
-        } catch (e) {
-            throw new Error(`Converting uint value ${uintValue} into buffer with error: ${e}`);
-        }
+		const dataView = new DataView(buffer);
+		try {
+			if (1 === bufferSize) {
+				dataView.setUint8(0, uintValue);
+			} else if (2 === bufferSize) {
+				dataView.setUint16(0, uintValue, true);
+			} else if (4 === bufferSize) {
+				dataView.setUint32(0, uintValue, true);
+			} else {
+				throw new Error('Unexpected bufferSize');
+			}
+			return new Uint8Array(buffer);
+		}
+		catch (e) {
+			throw new Error(`Converting uint value ${uintValue} into buffer with error: ${e}`);
+		}
     }
 
     /**
@@ -80,19 +81,20 @@ export class GeneratorUtils {
      * @returns {number}
      */
     public static bufferToUint(buffer: Uint8Array): number {
-        const dataView = new DataView(buffer.buffer);
-        try {
-            if (1 === buffer.byteLength) {
-                return dataView.getUint8(0);
-            } else if (2 === buffer.byteLength) {
-                return dataView.getUint16(0, true);
-            } else if (4 === buffer.byteLength) {
-                return dataView.getUint32(0, true);
-            }
-            throw new Error('Unexpected buffer size');
-        } catch (e) {
-            throw new Error(`Converting buffer into number with error: ${e}`);
-        }
+		const dataView = new DataView(buffer.buffer);
+		try {
+			if (1 === buffer.byteLength) {
+				return dataView.getUint8(0);
+			} else if (2 === buffer.byteLength) {
+				return dataView.getUint16(0, true);
+			} else if (4 === buffer.byteLength) {
+				return dataView.getUint32(0, true);
+			}
+			throw new Error('Unexpected buffer size');
+		}
+		catch (e) {
+			throw new Error(`Converting buffer into number with error: ${e}`);
+		}
     }
 
     /**

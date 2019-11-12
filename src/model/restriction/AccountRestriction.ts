@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { AccountRestrictionType } from './AccountRestrictionType';
+import { AccountRestrictionFlags } from './AccountRestrictionType';
 /**
  * Account restriction structure describes restriction information.
  */
@@ -22,14 +22,14 @@ export class AccountRestriction {
 
     /**
      * Constructor
-     * @param restrictionType
+     * @param restrictionFlags
      * @param values
      */
     constructor(
             /**
              * Account restriction type
              */
-            public readonly restrictionType: AccountRestrictionType,
+            public readonly restrictionFlags: AccountRestrictionFlags,
             /**
              * Restriction values.
              */

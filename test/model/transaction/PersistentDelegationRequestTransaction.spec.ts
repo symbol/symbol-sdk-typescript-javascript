@@ -85,7 +85,7 @@ describe('PersistentDelegationRequestTransaction', () => {
         const signedTransaction = persistentDelegationRequestTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
         ).includes(persistentDelegationRequestTransaction.message.payload)).to.be.true;
     });

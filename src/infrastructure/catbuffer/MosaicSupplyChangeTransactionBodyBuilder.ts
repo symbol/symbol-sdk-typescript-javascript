@@ -28,22 +28,22 @@ import { UnresolvedMosaicIdDto } from './UnresolvedMosaicIdDto';
 export class MosaicSupplyChangeTransactionBodyBuilder {
     /** Affected mosaic identifier. */
     mosaicId: UnresolvedMosaicIdDto;
-    /** Supply change action. */
-    action: MosaicSupplyChangeActionDto;
     /** Change amount. */
     delta: AmountDto;
+    /** Supply change action. */
+    action: MosaicSupplyChangeActionDto;
 
     /**
      * Constructor.
      *
      * @param mosaicId Affected mosaic identifier.
-     * @param action Supply change action.
      * @param delta Change amount.
+     * @param action Supply change action.
      */
-    public constructor(mosaicId: UnresolvedMosaicIdDto,  action: MosaicSupplyChangeActionDto,  delta: AmountDto) {
+    public constructor(mosaicId: UnresolvedMosaicIdDto,  delta: AmountDto,  action: MosaicSupplyChangeActionDto) {
         this.mosaicId = mosaicId;
-        this.action = action;
         this.delta = delta;
+        this.action = action;
     }
 
     /**
@@ -56,11 +56,11 @@ export class MosaicSupplyChangeTransactionBodyBuilder {
         const byteArray = Array.from(payload);
         const mosaicId = UnresolvedMosaicIdDto.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, mosaicId.getSize());
-        const action = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
-        byteArray.splice(0, 1);
         const delta = AmountDto.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, delta.getSize());
-        return new MosaicSupplyChangeTransactionBodyBuilder(mosaicId, action, delta);
+        const action = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
+        byteArray.splice(0, 1);
+        return new MosaicSupplyChangeTransactionBodyBuilder(mosaicId, delta, action);
     }
 
     /**
@@ -73,21 +73,21 @@ export class MosaicSupplyChangeTransactionBodyBuilder {
     }
 
     /**
-     * Gets supply change action.
-     *
-     * @return Supply change action.
-     */
-    public getAction(): MosaicSupplyChangeActionDto {
-        return this.action;
-    }
-
-    /**
      * Gets change amount.
      *
      * @return Change amount.
      */
     public getDelta(): AmountDto {
         return this.delta;
+    }
+
+    /**
+     * Gets supply change action.
+     *
+     * @return Supply change action.
+     */
+    public getAction(): MosaicSupplyChangeActionDto {
+        return this.action;
     }
 
     /**
@@ -98,8 +98,8 @@ export class MosaicSupplyChangeTransactionBodyBuilder {
     public getSize(): number {
         let size = 0;
         size += this.mosaicId.getSize();
-        size += 1; // action
         size += this.delta.getSize();
+        size += 1; // action
         return size;
     }
 
@@ -112,10 +112,10 @@ export class MosaicSupplyChangeTransactionBodyBuilder {
         let newArray = Uint8Array.from([]);
         const mosaicIdBytes = this.mosaicId.serialize();
         newArray = GeneratorUtils.concatTypedArrays(newArray, mosaicIdBytes);
-        const actionBytes = GeneratorUtils.uintToBuffer(this.action, 1);
-        newArray = GeneratorUtils.concatTypedArrays(newArray, actionBytes);
         const deltaBytes = this.delta.serialize();
         newArray = GeneratorUtils.concatTypedArrays(newArray, deltaBytes);
+        const actionBytes = GeneratorUtils.uintToBuffer(this.action, 1);
+        newArray = GeneratorUtils.concatTypedArrays(newArray, actionBytes);
         return newArray;
     }
 }

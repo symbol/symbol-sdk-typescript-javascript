@@ -110,10 +110,8 @@ export class TransactionUtils {
             Deadline.create(),
             2,
             1,
-            [new MultisigCosignatoryModification(
-                CosignatoryModificationAction.Add,
-                PublicAccount.createFromPublicKey(account.publicKey, NetworkType.MIJIN_TEST),
-            )],
+            [PublicAccount.createFromPublicKey(account.publicKey, NetworkType.MIJIN_TEST)],
+            [],
             NetworkType.MIJIN_TEST,
         );
         const signedTransaction = account.sign(modifyMultisig, generationHash);

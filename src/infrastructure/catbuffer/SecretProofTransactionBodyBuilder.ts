@@ -26,10 +26,10 @@ import { UnresolvedAddressDto } from './UnresolvedAddressDto';
 
 /** Binary layout for a secret proof transaction. */
 export class SecretProofTransactionBodyBuilder {
-    /** Hash algorithm. */
-    hashAlgorithm: LockHashAlgorithmDto;
     /** Secret. */
     secret: Hash256Dto;
+    /** Hash algorithm. */
+    hashAlgorithm: LockHashAlgorithmDto;
     /** Locked mosaic recipient address. */
     recipientAddress: UnresolvedAddressDto;
     /** Proof data. */
@@ -38,15 +38,15 @@ export class SecretProofTransactionBodyBuilder {
     /**
      * Constructor.
      *
-     * @param hashAlgorithm Hash algorithm.
      * @param secret Secret.
+     * @param hashAlgorithm Hash algorithm.
      * @param recipientAddress Locked mosaic recipient address.
      * @param proof Proof data.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(hashAlgorithm: LockHashAlgorithmDto,  secret: Hash256Dto,  recipientAddress: UnresolvedAddressDto,  proof: Uint8Array) {
-        this.hashAlgorithm = hashAlgorithm;
+    public constructor(secret: Hash256Dto,  hashAlgorithm: LockHashAlgorithmDto,  recipientAddress: UnresolvedAddressDto,  proof: Uint8Array) {
         this.secret = secret;
+        this.hashAlgorithm = hashAlgorithm;
         this.recipientAddress = recipientAddress;
         this.proof = proof;
     }
@@ -59,26 +59,17 @@ export class SecretProofTransactionBodyBuilder {
      */
     public static loadFromBinary(payload: Uint8Array): SecretProofTransactionBodyBuilder {
         const byteArray = Array.from(payload);
-        const hashAlgorithm = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
-        byteArray.splice(0, 1);
         const secret = Hash256Dto.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, secret.getSize());
-        const recipientAddress = UnresolvedAddressDto.loadFromBinary(Uint8Array.from(byteArray));
-        byteArray.splice(0, recipientAddress.getSize());
         const proofSize = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 2));
         byteArray.splice(0, 2);
+        const hashAlgorithm = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
+        byteArray.splice(0, 1);
+        const recipientAddress = UnresolvedAddressDto.loadFromBinary(Uint8Array.from(byteArray));
+        byteArray.splice(0, recipientAddress.getSize());
         const proof = GeneratorUtils.getBytes(Uint8Array.from(byteArray), proofSize);
         byteArray.splice(0, proofSize);
-        return new SecretProofTransactionBodyBuilder(hashAlgorithm, secret, recipientAddress, proof);
-    }
-
-    /**
-     * Gets hash algorithm.
-     *
-     * @return Hash algorithm.
-     */
-    public getHashAlgorithm(): LockHashAlgorithmDto {
-        return this.hashAlgorithm;
+        return new SecretProofTransactionBodyBuilder(secret, hashAlgorithm, recipientAddress, proof);
     }
 
     /**
@@ -88,6 +79,15 @@ export class SecretProofTransactionBodyBuilder {
      */
     public getSecret(): Hash256Dto {
         return this.secret;
+    }
+
+    /**
+     * Gets hash algorithm.
+     *
+     * @return Hash algorithm.
+     */
+    public getHashAlgorithm(): LockHashAlgorithmDto {
+        return this.hashAlgorithm;
     }
 
     /**
@@ -115,10 +115,10 @@ export class SecretProofTransactionBodyBuilder {
      */
     public getSize(): number {
         let size = 0;
-        size += 1; // hashAlgorithm
         size += this.secret.getSize();
-        size += this.recipientAddress.getSize();
         size += 2; // proofSize
+        size += 1; // hashAlgorithm
+        size += this.recipientAddress.getSize();
         size += this.proof.length;
         return size;
     }
@@ -130,14 +130,14 @@ export class SecretProofTransactionBodyBuilder {
      */
     public serialize(): Uint8Array {
         let newArray = Uint8Array.from([]);
-        const hashAlgorithmBytes = GeneratorUtils.uintToBuffer(this.hashAlgorithm, 1);
-        newArray = GeneratorUtils.concatTypedArrays(newArray, hashAlgorithmBytes);
         const secretBytes = this.secret.serialize();
         newArray = GeneratorUtils.concatTypedArrays(newArray, secretBytes);
-        const recipientAddressBytes = this.recipientAddress.serialize();
-        newArray = GeneratorUtils.concatTypedArrays(newArray, recipientAddressBytes);
         const proofSizeBytes = GeneratorUtils.uintToBuffer(this.proof.length, 2);
         newArray = GeneratorUtils.concatTypedArrays(newArray, proofSizeBytes);
+        const hashAlgorithmBytes = GeneratorUtils.uintToBuffer(this.hashAlgorithm, 1);
+        newArray = GeneratorUtils.concatTypedArrays(newArray, hashAlgorithmBytes);
+        const recipientAddressBytes = this.recipientAddress.serialize();
+        newArray = GeneratorUtils.concatTypedArrays(newArray, recipientAddressBytes);
         newArray = GeneratorUtils.concatTypedArrays(newArray, this.proof);
         return newArray;
     }

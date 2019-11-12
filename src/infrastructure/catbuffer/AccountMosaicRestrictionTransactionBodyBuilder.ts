@@ -19,27 +19,33 @@
 *** along with Catapult. If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import { AccountMosaicRestrictionModificationBuilder } from './AccountMosaicRestrictionModificationBuilder';
-import { AccountRestrictionTypeDto } from './AccountRestrictionTypeDto';
 import { GeneratorUtils } from './GeneratorUtils';
+import { UnresolvedMosaicIdDto } from './UnresolvedMosaicIdDto';
 
 /** Binary layout for an account mosaic restriction transaction. */
 export class AccountMosaicRestrictionTransactionBodyBuilder {
-    /** Account restriction type. */
-    restrictionType: AccountRestrictionTypeDto;
-    /** Account restriction modifications. */
-    modifications: AccountMosaicRestrictionModificationBuilder[];
+    /** Account restriction flags. */
+    restrictionFlags: number;
+    /** Reserved padding to align restrictionAdditions on 8-byte boundary. */
+    accountRestrictionTransactionBody_Reserved1: number;
+    /** Account restriction additions. */
+    restrictionAdditions: UnresolvedMosaicIdDto[];
+    /** Account restriction deletions. */
+    restrictionDeletions: UnresolvedMosaicIdDto[];
 
     /**
      * Constructor.
      *
-     * @param restrictionType Account restriction type.
-     * @param modifications Account restriction modifications.
+     * @param restrictionFlags Account restriction flags.
+     * @param restrictionAdditions Account restriction additions.
+     * @param restrictionDeletions Account restriction deletions.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(restrictionType: AccountRestrictionTypeDto,  modifications: AccountMosaicRestrictionModificationBuilder[]) {
-        this.restrictionType = restrictionType;
-        this.modifications = modifications;
+    public constructor(restrictionFlags: number,  restrictionAdditions: UnresolvedMosaicIdDto[],  restrictionDeletions: UnresolvedMosaicIdDto[]) {
+        this.restrictionFlags = restrictionFlags;
+        this.accountRestrictionTransactionBody_Reserved1 = 0;
+        this.restrictionAdditions = restrictionAdditions;
+        this.restrictionDeletions = restrictionDeletions;
     }
 
     /**
@@ -50,35 +56,64 @@ export class AccountMosaicRestrictionTransactionBodyBuilder {
      */
     public static loadFromBinary(payload: Uint8Array): AccountMosaicRestrictionTransactionBodyBuilder {
         const byteArray = Array.from(payload);
-        const restrictionType = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
+        const restrictionFlags = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 2));
+        byteArray.splice(0, 2);
+        const restrictionAdditionsCount = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
         byteArray.splice(0, 1);
-        const modificationsCount = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
+        const restrictionDeletionsCount = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
         byteArray.splice(0, 1);
-        const modifications: AccountMosaicRestrictionModificationBuilder[] = [];
-        for (let i = 0; i < modificationsCount; i++) {
-            const item = AccountMosaicRestrictionModificationBuilder.loadFromBinary(Uint8Array.from(byteArray));
-            modifications.push(item);
+        // tslint:disable-next-line: max-line-length
+        const accountRestrictionTransactionBody_Reserved1 = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 4));
+        byteArray.splice(0, 4);
+        const restrictionAdditions: UnresolvedMosaicIdDto[] = [];
+        for (let i = 0; i < restrictionAdditionsCount; i++) {
+            const item = UnresolvedMosaicIdDto.loadFromBinary(Uint8Array.from(byteArray));
+            restrictionAdditions.push(item);
             byteArray.splice(0, item.getSize());
         }
-        return new AccountMosaicRestrictionTransactionBodyBuilder(restrictionType, modifications);
+        const restrictionDeletions: UnresolvedMosaicIdDto[] = [];
+        for (let i = 0; i < restrictionDeletionsCount; i++) {
+            const item = UnresolvedMosaicIdDto.loadFromBinary(Uint8Array.from(byteArray));
+            restrictionDeletions.push(item);
+            byteArray.splice(0, item.getSize());
+        }
+        return new AccountMosaicRestrictionTransactionBodyBuilder(restrictionFlags, restrictionAdditions, restrictionDeletions);
     }
 
     /**
-     * Gets account restriction type.
+     * Gets account restriction flags.
      *
-     * @return Account restriction type.
+     * @return Account restriction flags.
      */
-    public getRestrictionType(): AccountRestrictionTypeDto {
-        return this.restrictionType;
+    public getRestrictionFlags(): number {
+        return this.restrictionFlags;
     }
 
     /**
-     * Gets account restriction modifications.
+     * Gets reserved padding to align restrictionAdditions on 8-byte boundary.
      *
-     * @return Account restriction modifications.
+     * @return Reserved padding to align restrictionAdditions on 8-byte boundary.
      */
-    public getModifications(): AccountMosaicRestrictionModificationBuilder[] {
-        return this.modifications;
+    public getAccountRestrictionTransactionBody_Reserved1(): number {
+        return this.accountRestrictionTransactionBody_Reserved1;
+    }
+
+    /**
+     * Gets account restriction additions.
+     *
+     * @return Account restriction additions.
+     */
+    public getRestrictionAdditions(): UnresolvedMosaicIdDto[] {
+        return this.restrictionAdditions;
+    }
+
+    /**
+     * Gets account restriction deletions.
+     *
+     * @return Account restriction deletions.
+     */
+    public getRestrictionDeletions(): UnresolvedMosaicIdDto[] {
+        return this.restrictionDeletions;
     }
 
     /**
@@ -88,9 +123,12 @@ export class AccountMosaicRestrictionTransactionBodyBuilder {
      */
     public getSize(): number {
         let size = 0;
-        size += 1; // restrictionType
-        size += 1; // modificationsCount
-        this.modifications.forEach((o) => size += o.getSize());
+        size += 2; // restrictionFlags
+        size += 1; // restrictionAdditionsCount
+        size += 1; // restrictionDeletionsCount
+        size += 4; // accountRestrictionTransactionBody_Reserved1
+        this.restrictionAdditions.forEach((o) => size += o.getSize());
+        this.restrictionDeletions.forEach((o) => size += o.getSize());
         return size;
     }
 
@@ -101,13 +139,22 @@ export class AccountMosaicRestrictionTransactionBodyBuilder {
      */
     public serialize(): Uint8Array {
         let newArray = Uint8Array.from([]);
-        const restrictionTypeBytes = GeneratorUtils.uintToBuffer(this.restrictionType, 1);
-        newArray = GeneratorUtils.concatTypedArrays(newArray, restrictionTypeBytes);
-        const modificationsCountBytes = GeneratorUtils.uintToBuffer(this.modifications.length, 1);
-        newArray = GeneratorUtils.concatTypedArrays(newArray, modificationsCountBytes);
-        this.modifications.forEach((item) => {
-            const modificationsBytes = item.serialize();
-            newArray = GeneratorUtils.concatTypedArrays(newArray, modificationsBytes);
+        const restrictionFlagsBytes = GeneratorUtils.uintToBuffer(this.getRestrictionFlags(), 2);
+        newArray = GeneratorUtils.concatTypedArrays(newArray, restrictionFlagsBytes);
+        const restrictionAdditionsCountBytes = GeneratorUtils.uintToBuffer(this.restrictionAdditions.length, 1);
+        newArray = GeneratorUtils.concatTypedArrays(newArray, restrictionAdditionsCountBytes);
+        const restrictionDeletionsCountBytes = GeneratorUtils.uintToBuffer(this.restrictionDeletions.length, 1);
+        newArray = GeneratorUtils.concatTypedArrays(newArray, restrictionDeletionsCountBytes);
+        // tslint:disable-next-line: max-line-length
+        const accountRestrictionTransactionBody_Reserved1Bytes = GeneratorUtils.uintToBuffer(this.getAccountRestrictionTransactionBody_Reserved1(), 4);
+        newArray = GeneratorUtils.concatTypedArrays(newArray, accountRestrictionTransactionBody_Reserved1Bytes);
+        this.restrictionAdditions.forEach((item) => {
+            const restrictionAdditionsBytes = item.serialize();
+            newArray = GeneratorUtils.concatTypedArrays(newArray, restrictionAdditionsBytes);
+        });
+        this.restrictionDeletions.forEach((item) => {
+            const restrictionDeletionsBytes = item.serialize();
+            newArray = GeneratorUtils.concatTypedArrays(newArray, restrictionDeletionsBytes);
         });
         return newArray;
     }

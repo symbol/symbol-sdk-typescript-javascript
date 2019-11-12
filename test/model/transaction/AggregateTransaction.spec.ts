@@ -16,6 +16,7 @@
 
 import {expect} from 'chai';
 import {ChronoUnit} from 'js-joda';
+import {Convert} from '../../../src/core/format';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
 import {CreateTransactionFromDTO} from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
 import { CreateTransactionFromPayload } from '../../../src/infrastructure/transaction/CreateTransactionFromPayload';
@@ -31,20 +32,17 @@ import {MosaicSupplyChangeAction} from '../../../src/model/mosaic/MosaicSupplyCh
 import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
 import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
 import {AggregateTransactionCosignature} from '../../../src/model/transaction/AggregateTransactionCosignature';
-import {CosignatoryModificationAction} from '../../../src/model/transaction/CosignatoryModificationAction';
 import { CosignatureSignedTransaction } from '../../../src/model/transaction/CosignatureSignedTransaction';
 import { CosignatureTransaction } from '../../../src/model/transaction/CosignatureTransaction';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicDefinitionTransaction} from '../../../src/model/transaction/MosaicDefinitionTransaction';
 import {MosaicSupplyChangeTransaction} from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
 import {MultisigAccountModificationTransaction} from '../../../src/model/transaction/MultisigAccountModificationTransaction';
-import {MultisigCosignatoryModification} from '../../../src/model/transaction/MultisigCosignatoryModification';
 import {NamespaceRegistrationTransaction} from '../../../src/model/transaction/NamespaceRegistrationTransaction';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import {TransferTransaction} from '../../../src/model/transaction/TransferTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {Cosignatory2Account, CosignatoryAccount, MultisigAccount, TestingAccount} from '../../conf/conf.spec';
-import {Convert} from "../../../src/core/format";
 
 describe('AggregateTransaction', () => {
     let account: Account;
@@ -110,62 +108,11 @@ describe('AggregateTransaction', () => {
             []);
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
-
-        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('CD000000');
-        expect(signedTransaction.payload.substring(240, 256)).to.be.equal('5100000051000000');
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('05010000');
         expect(signedTransaction.payload.substring(
-            320,
+            424,
             signedTransaction.payload.length,
-        )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000000746573742D6D657373616765');
-    });
-
-    it('should createComplete an AggregateTransaction object with delegated signer', () => {
-        const transferTransaction = TransferTransaction.create(
-            Deadline.create(1, ChronoUnit.HOURS),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
-            [],
-            PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
-        );
-
-        const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
-            [transferTransaction.toAggregate()],
-            NetworkType.MIJIN_TEST,
-            []);
-        expect(aggregateTransaction.innerTransactions[0].signer).to.be.undefined;
-
-        const signedTransaction = aggregateTransaction.signWith(account, generationHash);
-
-        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('CD000000');
-        expect(signedTransaction.payload.substring(240, 256)).to.be.equal('5100000051000000');
-        expect(signedTransaction.payload.substring(
-            320,
-            signedTransaction.payload.length,
-        )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000000746573742D6D657373616765');
-
-        const createdFromPayload = CreateTransactionFromPayload(signedTransaction.payload);
-        expect((createdFromPayload as AggregateTransaction).innerTransactions[0].signer!.publicKey)
-            .to.be.equal(account.publicKey);
-    });
-
-    it('should throw exception with delegated signer', () => {
-        expect(() => {
-            const transferTransaction = TransferTransaction.create(
-                Deadline.create(1, ChronoUnit.HOURS),
-                Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
-                [],
-                PlainMessage.create('test-message'),
-                NetworkType.MIJIN_TEST,
-            );
-            const aggregateTransaction = AggregateTransaction.createBonded(
-                Deadline.create(),
-                [transferTransaction.toAggregate()],
-                NetworkType.MIJIN_TEST,
-                []);
-
-            aggregateTransaction.signWith(account, generationHash);
-        }).to.throw(Error, 'InnerTransaction signer must be provide. Only AggregateComplete transaction can use delegated signer.');
+        )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142000D000000000000746573742D6D657373616765');
     });
 
     it('should createComplete an AggregateTransaction object with NamespaceRegistrationTransaction', () => {
@@ -184,14 +131,13 @@ describe('AggregateTransaction', () => {
         );
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
-
-        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('C9000000');
-        expect(signedTransaction.payload.substring(240, 256)).to.be.equal('4D0000004D000000');
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('FD000000');
+        expect(signedTransaction.payload.substring(320, 352)).to.be.equal('55000000000000005500000000000000');
 
         expect(signedTransaction.payload.substring(
-            320,
+            424,
             signedTransaction.payload.length,
-        )).to.be.equal('01904E4100E803000000000000CFCBE72D994BE69B13726F6F742D746573742D6E616D657370616365');
+        )).to.be.equal('01904E41E803000000000000CFCBE72D994BE69B0013726F6F742D746573742D6E616D657370616365');
     });
 
     it('should createComplete an AggregateTransaction object with MosaicDefinitionTransaction', () => {
@@ -214,12 +160,12 @@ describe('AggregateTransaction', () => {
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('BA000000');
-        expect(signedTransaction.payload.substring(240, 256)).to.be.equal('3E0000003E000000');
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('EE000000');
+        expect(signedTransaction.payload.substring(320, 352)).to.be.equal('46000000000000004600000000000000');
         expect(signedTransaction.payload.substring(
-            320,
+            424,
             signedTransaction.payload.length,
-        )).to.be.equal('01904D41E6DE84B801000000000000000703E803000000000000');
+        )).to.be.equal('01904D410100000000000000E803000000000000E6DE84B80703');
     });
 
     it('should createComplete an AggregateTransaction object with MosaicSupplyChangeTransaction', () => {
@@ -241,12 +187,12 @@ describe('AggregateTransaction', () => {
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('B5000000');
-        expect(signedTransaction.payload.substring(240, 256)).to.be.equal('3900000039000000');
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('E9000000');
+        expect(signedTransaction.payload.substring(320, 352)).to.be.equal('41000000000000004100000000000000');
         expect(signedTransaction.payload.substring(
-            320,
+            424,
             signedTransaction.payload.length,
-        )).to.be.equal('01904D424CCCD78612DDF5CA010A00000000000000');
+        )).to.be.equal('01904D424CCCD78612DDF5CA0A0000000000000001');
     });
 
     it('should createComplete an AggregateTransaction object with MultisigAccountModificationTransaction', () => {
@@ -254,16 +200,12 @@ describe('AggregateTransaction', () => {
             Deadline.create(),
             2,
             1,
-            [new MultisigCosignatoryModification(
-                CosignatoryModificationAction.Add,
-                PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
-                    NetworkType.MIJIN_TEST),
-            ),
-                new MultisigCosignatoryModification(
-                    CosignatoryModificationAction.Add,
-                    PublicAccount.createFromPublicKey('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
-                        NetworkType.MIJIN_TEST),
-                )],
+            [PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
+                NetworkType.MIJIN_TEST),
+             PublicAccount.createFromPublicKey('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
+                NetworkType.MIJIN_TEST),
+            ],
+            [],
             NetworkType.MIJIN_TEST,
         );
         const aggregateTransaction = AggregateTransaction.createComplete(
@@ -275,13 +217,13 @@ describe('AggregateTransaction', () => {
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('E9000000');
-        expect(signedTransaction.payload.substring(240, 256)).to.be.equal('6D0000006D000000');
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('20010000');
+        expect(signedTransaction.payload.substring(320, 352)).to.be.equal('78000000000000007800000000000000');
         expect(signedTransaction.payload.substring(
-            320,
+            424,
             signedTransaction.payload.length,
-        )).to.be.equal('0190554101020201B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC2401B1B5581FC81A69' +
-            '70DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4');
+        )).to.be.equal('019055410102020000000000B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6' +
+            'EC24B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4');
     });
 
     it('should createComplete an AggregateTransaction object with different cosignatories', () => {
@@ -303,13 +245,13 @@ describe('AggregateTransaction', () => {
             generationHash,
         );
 
-        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('2d010000');
-        expect(signedTransaction.payload.substring(240, 256)).to.be.equal('5100000051000000');
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('65010000');
+        expect(signedTransaction.payload.substring(320, 352)).to.be.equal('5D000000000000005D00000000000000');
         expect(signedTransaction.payload.substring(
-            320,
-            474,
-        )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000000746573742' +
-            'D6D65737361676568B3FBB18729C1FDE225C57F8CE080FA828F0067E451A3FD81FA628842B0B763');
+            424,
+            424 + 162,
+        )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142000D000000000000746573742D' +
+            '6D65737361676568B3FBB18729C1FDE225C57F8CE080FA828F0067E451A3FD81FA628842B0B763');
 
     });
 
@@ -331,13 +273,13 @@ describe('AggregateTransaction', () => {
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('CD000000');
-        expect(signedTransaction.payload.substring(240, 256)).to.be.equal('5100000051000000');
-        expect(signedTransaction.payload.substring(204, 208)).to.be.equal('4142');
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('05010000');
+        expect(signedTransaction.payload.substring(320, 352)).to.be.equal('5D000000000000005D00000000000000');
+        expect(signedTransaction.payload.substring(220, 224)).to.be.equal('4142');
         expect(signedTransaction.payload.substring(
-            320,
+            424,
             signedTransaction.payload.length,
-        )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000000746573742D6D657373616765');
+        )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142000D000000000000746573742D6D657373616765');
     });
 
     it('should validate if accounts have signed an aggregate transaction', () => {
@@ -578,7 +520,7 @@ describe('AggregateTransaction', () => {
     });
 
     describe('size', () => {
-        it('should return 282 for AggregateTransaction byte size with TransferTransaction with 1 mosaic and message NEM', () => {
+        it('should return 268 for AggregateTransaction byte size with TransferTransaction with 1 mosaic and message NEM', () => {
             const transaction = TransferTransaction.create(
                 Deadline.create(),
                 Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
@@ -596,7 +538,7 @@ describe('AggregateTransaction', () => {
             );
 
             expect(Convert.hexToUint8(aggregateTransaction.serialize()).length).to.be.equal(aggregateTransaction.size);
-            expect(aggregateTransaction.size).to.be.equal(212);
+            expect(aggregateTransaction.size).to.be.equal(268);
         });
     });
 });

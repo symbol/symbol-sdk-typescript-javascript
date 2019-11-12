@@ -19,8 +19,8 @@
 *** along with Catapult. If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import { CosignatoryModificationBuilder } from './CosignatoryModificationBuilder';
 import { GeneratorUtils } from './GeneratorUtils';
+import { KeyDto } from './KeyDto';
 
 /** Binary layout for a multisig account modification transaction. */
 export class MultisigAccountModificationTransactionBodyBuilder {
@@ -28,21 +28,28 @@ export class MultisigAccountModificationTransactionBodyBuilder {
     minRemovalDelta: number;
     /** Relative change of the minimal number of cosignatories required when approving a transaction. */
     minApprovalDelta: number;
-    /** Attached cosignatory modifications. */
-    modifications: CosignatoryModificationBuilder[];
+    /** Reserved padding to align publicKeyAdditions on 8-byte boundary. */
+    multisigAccountModificationTransactionBody_Reserved1: number;
+    /** Cosignatory public key additions. */
+    publicKeyAdditions: KeyDto[];
+    /** Cosignatory public key deletions. */
+    publicKeyDeletions: KeyDto[];
 
     /**
      * Constructor.
      *
      * @param minRemovalDelta Relative change of the minimal number of cosignatories required when removing an account.
      * @param minApprovalDelta Relative change of the minimal number of cosignatories required when approving a transaction.
-     * @param modifications Attached cosignatory modifications.
+     * @param publicKeyAdditions Cosignatory public key additions.
+     * @param publicKeyDeletions Cosignatory public key deletions.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(minRemovalDelta: number,  minApprovalDelta: number,  modifications: CosignatoryModificationBuilder[]) {
+    public constructor(minRemovalDelta: number,  minApprovalDelta: number,  publicKeyAdditions: KeyDto[],  publicKeyDeletions: KeyDto[]) {
         this.minRemovalDelta = minRemovalDelta;
         this.minApprovalDelta = minApprovalDelta;
-        this.modifications = modifications;
+        this.multisigAccountModificationTransactionBody_Reserved1 = 0;
+        this.publicKeyAdditions = publicKeyAdditions;
+        this.publicKeyDeletions = publicKeyDeletions;
     }
 
     /**
@@ -57,15 +64,27 @@ export class MultisigAccountModificationTransactionBodyBuilder {
         byteArray.splice(0, 1);
         const minApprovalDelta = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
         byteArray.splice(0, 1);
-        const modificationsCount = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
+        const publicKeyAdditionsCount = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
         byteArray.splice(0, 1);
-        const modifications: CosignatoryModificationBuilder[] = [];
-        for (let i = 0; i < modificationsCount; i++) {
-            const item = CosignatoryModificationBuilder.loadFromBinary(Uint8Array.from(byteArray));
-            modifications.push(item);
+        const publicKeyDeletionsCount = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
+        byteArray.splice(0, 1);
+        // tslint:disable-next-line: max-line-length
+        const multisigAccountModificationTransactionBody_Reserved1 = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 4));
+        byteArray.splice(0, 4);
+        const publicKeyAdditions: KeyDto[] = [];
+        for (let i = 0; i < publicKeyAdditionsCount; i++) {
+            const item = KeyDto.loadFromBinary(Uint8Array.from(byteArray));
+            publicKeyAdditions.push(item);
             byteArray.splice(0, item.getSize());
         }
-        return new MultisigAccountModificationTransactionBodyBuilder(minRemovalDelta, minApprovalDelta, modifications);
+        const publicKeyDeletions: KeyDto[] = [];
+        for (let i = 0; i < publicKeyDeletionsCount; i++) {
+            const item = KeyDto.loadFromBinary(Uint8Array.from(byteArray));
+            publicKeyDeletions.push(item);
+            byteArray.splice(0, item.getSize());
+        }
+        // tslint:disable-next-line: max-line-length
+        return new MultisigAccountModificationTransactionBodyBuilder(minRemovalDelta, minApprovalDelta, publicKeyAdditions, publicKeyDeletions);
     }
 
     /**
@@ -87,12 +106,30 @@ export class MultisigAccountModificationTransactionBodyBuilder {
     }
 
     /**
-     * Gets attached cosignatory modifications.
+     * Gets reserved padding to align publicKeyAdditions on 8-byte boundary.
      *
-     * @return Attached cosignatory modifications.
+     * @return Reserved padding to align publicKeyAdditions on 8-byte boundary.
      */
-    public getModifications(): CosignatoryModificationBuilder[] {
-        return this.modifications;
+    public getMultisigAccountModificationTransactionBody_Reserved1(): number {
+        return this.multisigAccountModificationTransactionBody_Reserved1;
+    }
+
+    /**
+     * Gets cosignatory public key additions.
+     *
+     * @return Cosignatory public key additions.
+     */
+    public getPublicKeyAdditions(): KeyDto[] {
+        return this.publicKeyAdditions;
+    }
+
+    /**
+     * Gets cosignatory public key deletions.
+     *
+     * @return Cosignatory public key deletions.
+     */
+    public getPublicKeyDeletions(): KeyDto[] {
+        return this.publicKeyDeletions;
     }
 
     /**
@@ -104,8 +141,11 @@ export class MultisigAccountModificationTransactionBodyBuilder {
         let size = 0;
         size += 1; // minRemovalDelta
         size += 1; // minApprovalDelta
-        size += 1; // modificationsCount
-        this.modifications.forEach((o) => size += o.getSize());
+        size += 1; // publicKeyAdditionsCount
+        size += 1; // publicKeyDeletionsCount
+        size += 4; // multisigAccountModificationTransactionBody_Reserved1
+        this.publicKeyAdditions.forEach((o) => size += o.getSize());
+        this.publicKeyDeletions.forEach((o) => size += o.getSize());
         return size;
     }
 
@@ -120,11 +160,20 @@ export class MultisigAccountModificationTransactionBodyBuilder {
         newArray = GeneratorUtils.concatTypedArrays(newArray, minRemovalDeltaBytes);
         const minApprovalDeltaBytes = GeneratorUtils.uintToBuffer(this.getMinApprovalDelta(), 1);
         newArray = GeneratorUtils.concatTypedArrays(newArray, minApprovalDeltaBytes);
-        const modificationsCountBytes = GeneratorUtils.uintToBuffer(this.modifications.length, 1);
-        newArray = GeneratorUtils.concatTypedArrays(newArray, modificationsCountBytes);
-        this.modifications.forEach((item) => {
-            const modificationsBytes = item.serialize();
-            newArray = GeneratorUtils.concatTypedArrays(newArray, modificationsBytes);
+        const publicKeyAdditionsCountBytes = GeneratorUtils.uintToBuffer(this.publicKeyAdditions.length, 1);
+        newArray = GeneratorUtils.concatTypedArrays(newArray, publicKeyAdditionsCountBytes);
+        const publicKeyDeletionsCountBytes = GeneratorUtils.uintToBuffer(this.publicKeyDeletions.length, 1);
+        newArray = GeneratorUtils.concatTypedArrays(newArray, publicKeyDeletionsCountBytes);
+        // tslint:disable-next-line: max-line-length
+        const multisigAccountModificationTransactionBody_Reserved1Bytes = GeneratorUtils.uintToBuffer(this.getMultisigAccountModificationTransactionBody_Reserved1(), 4);
+        newArray = GeneratorUtils.concatTypedArrays(newArray, multisigAccountModificationTransactionBody_Reserved1Bytes);
+        this.publicKeyAdditions.forEach((item) => {
+            const publicKeyAdditionsBytes = item.serialize();
+            newArray = GeneratorUtils.concatTypedArrays(newArray, publicKeyAdditionsBytes);
+        });
+        this.publicKeyDeletions.forEach((item) => {
+            const publicKeyDeletionsBytes = item.serialize();
+            newArray = GeneratorUtils.concatTypedArrays(newArray, publicKeyDeletionsBytes);
         });
         return newArray;
     }

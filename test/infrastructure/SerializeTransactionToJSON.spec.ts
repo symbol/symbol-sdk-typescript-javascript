@@ -29,14 +29,11 @@ import { MosaicSupplyChangeAction } from '../../src/model/mosaic/MosaicSupplyCha
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import { AccountRestrictionModificationAction } from '../../src/model/restriction/AccountRestrictionModificationAction';
-import { AccountRestrictionType } from '../../src/model/restriction/AccountRestrictionType';
+import { AccountRestrictionFlags } from '../../src/model/restriction/AccountRestrictionType';
 import { AccountLinkTransaction } from '../../src/model/transaction/AccountLinkTransaction';
-import { AccountRestrictionModification } from '../../src/model/transaction/AccountRestrictionModification';
 import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
-import { CosignatoryModificationAction } from '../../src/model/transaction/CosignatoryModificationAction';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { HashType } from '../../src/model/transaction/HashType';
 import { LinkAction } from '../../src/model/transaction/LinkAction';
@@ -45,7 +42,6 @@ import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasT
 import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
 import { MosaicSupplyChangeTransaction } from '../../src/model/transaction/MosaicSupplyChangeTransaction';
 import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
-import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { SecretLockTransaction } from '../../src/model/transaction/SecretLockTransaction';
 import { SecretProofTransaction } from '../../src/model/transaction/SecretProofTransaction';
@@ -77,62 +73,53 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create AccountRestrictionAddressTransaction', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
-            AccountRestrictionModificationAction.Add,
-            address,
-        );
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.AllowIncomingAddress,
-            [addressRestrictionFilter],
+            AccountRestrictionFlags.AllowIncomingAddress,
+            [address],
+            [],
             NetworkType.MIJIN_TEST,
         );
 
         const json = addressRestrictionTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_RESTRICTION_ADDRESS);
-        expect(json.transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowIncomingAddress);
-        expect(json.transaction.modifications.length).to.be.equal(1);
+        expect(json.transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowIncomingAddress);
+        expect(json.transaction.restrictionAdditions.length).to.be.equal(1);
     });
 
     it('should create AccountRestrictionMosaicTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
-        const mosaicRestrictionFilter = AccountRestrictionModification.createForMosaic(
-            AccountRestrictionModificationAction.Add,
-            mosaicId,
-        );
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.AllowMosaic,
-            [mosaicRestrictionFilter],
+            AccountRestrictionFlags.AllowMosaic,
+            [mosaicId],
+            [],
             NetworkType.MIJIN_TEST,
         );
 
         const json = mosaicRestrictionTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_RESTRICTION_MOSAIC);
-        expect(json.transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowMosaic);
-        expect(json.transaction.modifications.length).to.be.equal(1);
+        expect(json.transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowMosaic);
+        expect(json.transaction.restrictionAdditions.length).to.be.equal(1);
     });
 
     it('should create AccountRestrictionOperationTransaction', () => {
         const operation = TransactionType.ADDRESS_ALIAS;
-        const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
-            AccountRestrictionModificationAction.Add,
-            operation,
-        );
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.AllowIncomingTransactionType,
-            [operationRestrictionFilter],
+            AccountRestrictionFlags.AllowIncomingTransactionType,
+            [operation],
+            [],
             NetworkType.MIJIN_TEST,
         );
 
         const json = operationRestrictionTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_RESTRICTION_OPERATION);
-        expect(json.transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowIncomingTransactionType);
-        expect(json.transaction.modifications.length).to.be.equal(1);
+        expect(json.transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowIncomingTransactionType);
+        expect(json.transaction.restrictionAdditions.length).to.be.equal(1);
     });
 
     it('should create AddressAliasTransaction', () => {
@@ -289,11 +276,9 @@ describe('SerializeTransactionToJSON', () => {
             Deadline.create(),
             2,
             1,
-            [new MultisigCosignatoryModification(
-                CosignatoryModificationAction.Add,
-                PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
-                    NetworkType.MIJIN_TEST),
-            )],
+            [PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
+            NetworkType.MIJIN_TEST)],
+            [],
             NetworkType.MIJIN_TEST,
         );
 

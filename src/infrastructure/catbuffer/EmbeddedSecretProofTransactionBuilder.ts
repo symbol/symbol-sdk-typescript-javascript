@@ -25,6 +25,7 @@ import { GeneratorUtils } from './GeneratorUtils';
 import { Hash256Dto } from './Hash256Dto';
 import { KeyDto } from './KeyDto';
 import { LockHashAlgorithmDto } from './LockHashAlgorithmDto';
+import { NetworkTypeDto } from './NetworkTypeDto';
 import { SecretProofTransactionBodyBuilder } from './SecretProofTransactionBodyBuilder';
 import { UnresolvedAddressDto } from './UnresolvedAddressDto';
 
@@ -38,16 +39,17 @@ export class EmbeddedSecretProofTransactionBuilder extends EmbeddedTransactionBu
      *
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
-     * @param hashAlgorithm Hash algorithm.
      * @param secret Secret.
+     * @param hashAlgorithm Hash algorithm.
      * @param recipientAddress Locked mosaic recipient address.
      * @param proof Proof data.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  hashAlgorithm: LockHashAlgorithmDto,  secret: Hash256Dto,  recipientAddress: UnresolvedAddressDto,  proof: Uint8Array) {
-        super(signerPublicKey, version, type);
-        this.secretProofTransactionBody = new SecretProofTransactionBodyBuilder(hashAlgorithm, secret, recipientAddress, proof);
+    public constructor(signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  secret: Hash256Dto,  hashAlgorithm: LockHashAlgorithmDto,  recipientAddress: UnresolvedAddressDto,  proof: Uint8Array) {
+        super(signerPublicKey, version, network, type);
+        this.secretProofTransactionBody = new SecretProofTransactionBodyBuilder(secret, hashAlgorithm, recipientAddress, proof);
     }
 
     /**
@@ -63,16 +65,7 @@ export class EmbeddedSecretProofTransactionBuilder extends EmbeddedTransactionBu
         const secretProofTransactionBody = SecretProofTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, secretProofTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedSecretProofTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, secretProofTransactionBody.hashAlgorithm, secretProofTransactionBody.secret, secretProofTransactionBody.recipientAddress, secretProofTransactionBody.proof);
-    }
-
-    /**
-     * Gets hash algorithm.
-     *
-     * @return Hash algorithm.
-     */
-    public getHashAlgorithm(): LockHashAlgorithmDto {
-        return this.secretProofTransactionBody.getHashAlgorithm();
+        return new EmbeddedSecretProofTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, secretProofTransactionBody.secret, secretProofTransactionBody.hashAlgorithm, secretProofTransactionBody.recipientAddress, secretProofTransactionBody.proof);
     }
 
     /**
@@ -82,6 +75,15 @@ export class EmbeddedSecretProofTransactionBuilder extends EmbeddedTransactionBu
      */
     public getSecret(): Hash256Dto {
         return this.secretProofTransactionBody.getSecret();
+    }
+
+    /**
+     * Gets hash algorithm.
+     *
+     * @return Hash algorithm.
+     */
+    public getHashAlgorithm(): LockHashAlgorithmDto {
+        return this.secretProofTransactionBody.getHashAlgorithm();
     }
 
     /**

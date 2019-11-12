@@ -28,7 +28,7 @@ import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMos
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AccountRestrictionModificationAction } from '../../src/model/restriction/AccountRestrictionModificationAction';
-import { AccountRestrictionType } from '../../src/model/restriction/AccountRestrictionType';
+import { AccountRestrictionFlags } from '../../src/model/restriction/AccountRestrictionType';
 import { AccountRestrictionModification } from '../../src/model/transaction/AccountRestrictionModification';
 import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
@@ -200,10 +200,12 @@ describe('AccountHttp', () => {
                 Deadline.create(),
                 2,
                 1,
-                [   new MultisigCosignatoryModification(CosignatoryModificationAction.Add, cosignAccount1.publicAccount),
-                    new MultisigCosignatoryModification(CosignatoryModificationAction.Add, cosignAccount2.publicAccount),
-                    new MultisigCosignatoryModification(CosignatoryModificationAction.Add, cosignAccount3.publicAccount),
+                [
+                    cosignAccount1.publicAccount,
+                    cosignAccount2.publicAccount,
+                    cosignAccount3.publicAccount,
                 ],
+                [],
                 NetworkType.MIJIN_TEST,
             );
 
@@ -371,7 +373,8 @@ describe('AccountHttp', () => {
                 Deadline.create(),
                 -1,
                 0,
-                [   new MultisigCosignatoryModification(CosignatoryModificationAction.Remove, cosignAccount1.publicAccount),
+                [],
+                [   cosignAccount1.publicAccount,
                 ],
                 NetworkType.MIJIN_TEST,
             );
@@ -379,7 +382,9 @@ describe('AccountHttp', () => {
                 Deadline.create(),
                 0,
                 0,
-                [   new MultisigCosignatoryModification(CosignatoryModificationAction.Remove, cosignAccount2.publicAccount),
+                [],
+                [
+                    cosignAccount2.publicAccount,
                 ],
                 NetworkType.MIJIN_TEST,
             );
@@ -388,7 +393,9 @@ describe('AccountHttp', () => {
                 Deadline.create(),
                 -1,
                 -1,
-                [   new MultisigCosignatoryModification(CosignatoryModificationAction.Remove, cosignAccount3.publicAccount),
+                [],
+                [
+                    cosignAccount3.publicAccount,
                 ],
                 NetworkType.MIJIN_TEST,
             );

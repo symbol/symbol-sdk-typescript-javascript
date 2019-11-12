@@ -98,7 +98,7 @@ export class AccountLinkTransaction extends Transaction {
         const builder = isEmbedded ? EmbeddedAccountLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
                         AccountLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const networkType = builder.getNetwork().valueOf();
         const transaction = AccountLinkTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AccountLinkTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getRemotePublicKey().key),
@@ -138,6 +138,7 @@ export class AccountLinkTransaction extends Transaction {
             new SignatureDto(signatureBuffer),
             new KeyDto(signerBuffer),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.LINK_ACCOUNT.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
@@ -155,6 +156,7 @@ export class AccountLinkTransaction extends Transaction {
         const transactionBuilder = new EmbeddedAccountLinkTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.LINK_ACCOUNT.valueOf(),
             new KeyDto(Convert.hexToUint8(this.remotePublicKey)),
             this.linkAction.valueOf(),

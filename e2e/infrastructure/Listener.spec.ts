@@ -217,10 +217,11 @@ describe('Listener', () => {
                 Deadline.create(),
                 2,
                 1,
-                [   new MultisigCosignatoryModification(CosignatoryModificationAction.Add, cosignAccount1.publicAccount),
-                    new MultisigCosignatoryModification(CosignatoryModificationAction.Add, cosignAccount2.publicAccount),
-                    new MultisigCosignatoryModification(CosignatoryModificationAction.Add, cosignAccount3.publicAccount),
+                [   cosignAccount1.publicAccount,
+                    cosignAccount2.publicAccount,
+                    cosignAccount3.publicAccount,
                 ],
+                [],
                 NetworkType.MIJIN_TEST,
             );
 
@@ -361,16 +362,16 @@ describe('Listener', () => {
                 Deadline.create(),
                 -1,
                 0,
-                [   new MultisigCosignatoryModification(CosignatoryModificationAction.Remove, cosignAccount1.publicAccount),
-                ],
+                [],
+                [cosignAccount1.publicAccount],
                 NetworkType.MIJIN_TEST,
             );
             const removeCosigner2 = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
                 0,
                 0,
-                [   new MultisigCosignatoryModification(CosignatoryModificationAction.Remove, cosignAccount2.publicAccount),
-                ],
+                [],
+                [cosignAccount2.publicAccount],
                 NetworkType.MIJIN_TEST,
             );
 
@@ -378,8 +379,8 @@ describe('Listener', () => {
                 Deadline.create(),
                 -1,
                 -1,
-                [   new MultisigCosignatoryModification(CosignatoryModificationAction.Remove, cosignAccount3.publicAccount),
-                ],
+                [],
+                [cosignAccount3.publicAccount],
                 NetworkType.MIJIN_TEST,
             );
 
