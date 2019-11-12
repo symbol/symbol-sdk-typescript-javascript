@@ -285,8 +285,8 @@ export class MultisigTransactionFormTs extends Vue {
             transaction: this.transactionList[0],
             store: this.$store,
             lockParams: this.lockParams,
-        });
-        if(success) {
+        })
+        if (success) {
             new AppWallet(this.wallet).announceTransaction(signedTransaction, this.activeAccount.node, this, signedLock)
             this.initForm()
         }

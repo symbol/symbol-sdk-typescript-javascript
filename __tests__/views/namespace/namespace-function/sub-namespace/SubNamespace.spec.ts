@@ -100,6 +100,7 @@ describe('SubNamespace', () => {
         expect(namespaceRegistrationTransaction.registrationType).toBe(NamespaceRegistrationType.SubNamespace)
         expect(namespaceRegistrationTransaction.namespaceName).toBe('efg')
     })
+
     it('should not create a NamespaceRegistrationTransaction while sub namespace is invalid ', async () => {
         wrapper.setData({
             formItems: {
@@ -179,5 +180,41 @@ describe('SubNamespace', () => {
         expect(namespaceRegistrationTransaction.maxFee.compact()).toBe(getAbsoluteMosaicAmount(DEFAULT_FEES[FEE_GROUPS.TRIPLE][0].value, networkCurrency.divisibility))
         expect(namespaceRegistrationTransaction.registrationType).toBe(NamespaceRegistrationType.SubNamespace)
         expect(namespaceRegistrationTransaction.namespaceName).toBe('efg')
+    })
+
+    it('should not create a namespace transaction while the length of sub namespace name is longer than 64', async () => {
+        wrapper.setData({
+            formItems: {
+                rootNamespaceName: 'abc',
+                subNamespaceName: 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklm',
+                multisigPublicKey: '',
+                feeSpeed: FEE_SPEEDS.NORMAL,
+            }
+        })
+        wrapper.vm.submit()
+        await flushPromises()
+        expect(wrapper.vm.transactionList[0]).toBeUndefined()
+    })
+
+    it('should create a namespace transaction while the length of sub namespace name is 64', async () => {
+        wrapper.setData({
+            formItems: {
+                rootNamespaceName: 'abc',
+                subNamespaceName: 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl',
+                multisigPublicKey: '',
+                feeSpeed: FEE_SPEEDS.NORMAL,
+            }
+        })
+        wrapper.vm.submit()
+        await flushPromises()
+        const namespaceRegistrationTransaction = wrapper.vm.transactionList[0]
+        expect(namespaceRegistrationTransaction).toBeInstanceOf(NamespaceRegistrationTransaction)
+        expect(namespaceRegistrationTransaction.type).toBe(TransactionType.REGISTER_NAMESPACE)
+        expect(namespaceRegistrationTransaction.networkType).toBe(CosignWallet.networkType)
+        expect(namespaceRegistrationTransaction.version).not.toBeUndefined()
+        expect(namespaceRegistrationTransaction.deadline).not.toBeUndefined()
+        expect(namespaceRegistrationTransaction.maxFee.compact()).toBe(getAbsoluteMosaicAmount(DEFAULT_FEES[FEE_GROUPS.SINGLE][1].value, networkCurrency.divisibility))
+        expect(namespaceRegistrationTransaction.registrationType).toBe(NamespaceRegistrationType.SubNamespace)
+        expect(namespaceRegistrationTransaction.namespaceName).toBe('abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl')
     })
 })

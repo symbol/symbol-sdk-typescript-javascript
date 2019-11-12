@@ -208,7 +208,7 @@ describe('RootNamespace', () => {
         expect(wrapper.vm.transactionList[0]).toBeUndefined()
     })
 
-    it('should not create a normal namespace create transaction while namespace name is invalid', () => {
+    it('should not create a normal namespace transaction while namespace name is invalid', () => {
         wrapper.setData({
             formItems: {
                 duration: 1000,
