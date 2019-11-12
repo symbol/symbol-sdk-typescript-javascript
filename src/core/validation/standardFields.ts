@@ -38,7 +38,6 @@ export const standardFields = {
         hint: ['HINT_previous_password'],
         placeholder: 'PLACEHOLDER_previous_password'
     },
-
     newPassword: {
         default: '',
         label: 'LABEL_new_password',
@@ -164,7 +163,7 @@ export const standardFields = {
         label: 'generationHash',
         name: 'generationHash',
         type: 'text',
-        validation: `min:${GENERATION_HASH_LENGTH}|max:${GENERATION_HASH_LENGTH}`,
+        validation: `required: true|min:${GENERATION_HASH_LENGTH}|max:${GENERATION_HASH_LENGTH}`,
         hint: 'HINT_generationHash',
         placeholder: 'PLACEHOLDER_generationHash',
     },

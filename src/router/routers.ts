@@ -194,6 +194,13 @@ const routers = [
                         },
                         component: () => import('@/views/setting/setting-normal/SettingNormal.vue')
                     }, {
+                        path: '/offlineSetting',
+                        name: 'offlineSetting',
+                        meta: {
+                            title: 'offline_setting',
+                        },
+                        component: () => import('@/views/setting/offline-setting/OfflineSetting.vue')
+                    },{
                         path: '/settingPassword',
                         name: 'settingPassword',
                         meta: {

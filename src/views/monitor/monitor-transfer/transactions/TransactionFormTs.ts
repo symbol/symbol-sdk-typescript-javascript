@@ -315,7 +315,7 @@ export class TransactionFormTs extends Vue {
 
         // delegate the signing to the TransactionConfirmation workflow
         // the resolve value of this promise will contain the signed transaction
-        // if the user confirms successfullly
+        // if the user confirms successfully
         const {
             success,
             signedTransaction,

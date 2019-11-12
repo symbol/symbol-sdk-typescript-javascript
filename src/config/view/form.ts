@@ -3,6 +3,13 @@ import {FEE_SPEEDS} from '@/config'
 
 
 export const formDataConfig = {
+    offsetLineForm: {
+        generationHash: '',
+        mosaicId: '',
+        divisibility: 1,
+        ticker: 'XEM',
+        mosaicName: '',
+    },
     createAccountForm: {
         accountName: '',
         password: '',

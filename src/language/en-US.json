@@ -773,5 +773,10 @@
     "Node_URL": "Node URL",
     "Node_URL_Placeholder": "http://example.com:3000",
     "Nothing_was_found_at_this_address": "Nothing was found at this address",
-    "helper": "helper"
+    "helper": "helper",
+    "offline_setting": "Offline settings",
+    "generation_hash":"Generation hash",
+    "please_input_generation_hash": "Please input generation hash",
+    "please_input_mosaic_hex":"Please input mosaic hex",
+    "please_input_divisibility": "Please input divisibility"
 }
