@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="btns clear">
-        <Button class="prev left" type="default" @click="toBack">{{$t('previous')}}</Button>
+        <Button class="prev left" type="default" @click="$emit('toWalletDetails')">{{$t('previous')}}</Button>
         <Button class="next right" type="success" @click="changeTabs(1)">{{$t('next')}}</Button>
       </div>
     </div>

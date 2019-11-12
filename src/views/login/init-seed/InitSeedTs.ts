@@ -29,19 +29,13 @@ export class InitSeedTs extends Vue {
     createForm = {}
     walletCreated = false
     navList = walletFnNavConfig
-    showCheckPWDialog = false
 
     get accountName() {
         return this.activeAccount.accountName
     }
 
-
-    createNewMnemonic() {
-        this.showCheckPWDialog = true
-    }
-
     closeCheckPWDialog() {
-        this.showCheckPWDialog = false
+        this.goToPage(1)
     }
 
     isCreated() {
@@ -61,20 +55,12 @@ export class InitSeedTs extends Vue {
         this.$router.push('dashBoard')
     }
 
-    goToPage(item, index) {
-        for (let i in this.navList) {
-            if (this.navList[i].to == item.to) {
-                this.navList[i].active = true
-            } else {
-                this.navList[i].active = false
-            }
-        }
-        // create to input password
-        if (index == 0) {
-            this.showCheckPWDialog = true
-            return
-        }
-        this.pageIndex = index;
+    goToPage(index) {
+        const target = this.navList[index].to
+        this.navList.map(item => {
+            item.active = item.to == target
+        })
+        this.pageIndex = index
     }
 
     checkEnd(password) {
@@ -87,9 +73,8 @@ export class InitSeedTs extends Vue {
             seed,
         }
         this.pageIndex = -1
-        this.showCheckPWDialog = false
+        this.navList[0].active = false
     }
-
 
     created() {
         if (this.$route.params.seed) {
@@ -101,7 +86,6 @@ export class InitSeedTs extends Vue {
             return
         }
         const initType = Number(this.$route.params.initType) || 0
-        this.goToPage(this.navList[initType], initType)
+        this.goToPage(initType)
     }
-
 }

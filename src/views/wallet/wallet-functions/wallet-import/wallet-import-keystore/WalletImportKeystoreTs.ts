@@ -5,7 +5,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {networkTypeConfig} from '@/config/view/setting'
 import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
-import {cloneData} from "@/core/utils"
+import {cloneData, localRead} from "@/core/utils"
 
 @Component({
     computed: {
@@ -26,6 +26,16 @@ export class WalletImportKeystoreTs extends Vue {
     NetworkTypeList = networkTypeConfig
     formItem = cloneData(formDataConfig.importKeystoreConfig)
     showCheckPWDialog = false
+    NetworkType = NetworkType
+
+    get accountNetworkType() {
+        return JSON.parse(localRead('accountMap'))[this.accountName].currentNetType
+    }
+
+    get accountName() {
+        return this.activeAccount.accountName
+    }
+
 
     checkEnd(password) {
         if (!password) return
@@ -42,14 +52,15 @@ export class WalletImportKeystoreTs extends Vue {
     }
 
     importWallet(password) {
-        const {keystorePassword, networkType, keystoreStr} = this.formItem
+        const {accountNetworkType} = this
+        const {keystorePassword, keystoreStr} = this.formItem
         try {
             new AppWallet().createFromKeystore(
                 this.formItem.walletName,
                 new Password(password),
                 new Password(keystorePassword),
                 keystoreStr,
-                networkType,
+                accountNetworkType,
                 this.$store
             )
             this.toWalletDetails()
@@ -68,11 +79,9 @@ export class WalletImportKeystoreTs extends Vue {
     }
 
     checkForm() {
-        const {networkType, walletName, keystorePassword, keystoreStr} = this.formItem
-        if (!(networkType in NetworkType)) {
-            this.showErrorNotice(Message.PLEASE_SWITCH_NETWORK)
-            return false
-        }
+        const {accountNetworkType} = this
+        const {walletName, keystorePassword, keystoreStr} = this.formItem
+
         if (!walletName || walletName == '') {
             this.showErrorNotice(Message.WALLET_NAME_INPUT_ERROR)
             return false
@@ -98,10 +107,5 @@ export class WalletImportKeystoreTs extends Vue {
 
     initData() {
         this.formItem = cloneData(formDataConfig.importKeystoreConfig)
-    }
-
-    toBack() {
-        this.initData()
-        this.$emit('closeImport')
     }
 }

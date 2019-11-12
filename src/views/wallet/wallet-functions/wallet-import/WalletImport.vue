@@ -11,15 +11,11 @@
           {{$t('import')}}{{$t(currentHeadText)}}
         </div>
         <div class="main_view">
-          <WalletImportKeystore v-if="tabIndex === 1" @toWalletDetails="toWalletDetails"
-            @closeImport="closeImport">
+          <WalletImportKeystore v-if="tabIndex === 1" @toWalletDetails="$emit('toWalletDetails')">
           </WalletImportKeystore>
-          <WalletImportPrivatekey v-else-if="tabIndex === 0" @toWalletDetails="toWalletDetails"
-            @closeImport="closeImport">
+          <WalletImportPrivatekey v-else-if="tabIndex === 0" @toWalletDetails="$emit('toWalletDetails')">
           </WalletImportPrivatekey>
-          <AccountImportHardware v-else-if="$store.state.app._ENABLE_TREZOR_ && tabIndex === 2"
-            @toWalletDetails="toWalletDetails"
-            @closeImport="closeImport">
+          <AccountImportHardware v-else-if="$store.state.app._ENABLE_TREZOR_ && tabIndex === 2" @toWalletDetails="$emit('toWalletDetails')">
           </AccountImportHardware>
         </div>
       </div>

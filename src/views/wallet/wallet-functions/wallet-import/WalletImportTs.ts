@@ -1,9 +1,11 @@
 import {Component, Vue} from 'vue-property-decorator'
-import WalletImportKeystore from '@/views/wallet/wallet-functions/wallet-import/wallet-import-keystore/WalletImportKeystore.vue'
-import WalletImportPrivatekey from '@/views/wallet/wallet-functions/wallet-import/wallet-import-privatekey/WalletImportPrivatekey.vue'
+import WalletImportKeystore
+    from '@/views/wallet/wallet-functions/wallet-import/wallet-import-keystore/WalletImportKeystore.vue'
+import WalletImportPrivatekey
+    from '@/views/wallet/wallet-functions/wallet-import/wallet-import-privatekey/WalletImportPrivatekey.vue'
 import AccountImportHardware from '@/views/login/init-seed/account-import-hardware/AccountImportHardware.vue'
-import { networkTypeConfig } from '@/config/view/setting'
-import { walletImportNavigatorConfig } from '@/config/view/wallet'
+import {networkTypeConfig} from '@/config/view/setting'
+import {walletImportNavigatorConfig} from '@/config/view/wallet'
 
 @Component({
     components: {
@@ -56,13 +58,6 @@ export class WalletImportTs extends Vue {
         })
     }
 
-    toWalletDetails() {
-        this.$emit('toWalletDetails')
-    }
-
-    closeImport() {
-        this.$emit('closeImport')
-    }
 
     importWallet() {
         switch (this.currentTab) {

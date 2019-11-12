@@ -1,15 +1,11 @@
 <template>
   <div class="walletCreateWrap">
     <div class="createDiv">
-      <div class="createForm" @keyup.enter="submit" >
+      <div class="createForm" @keyup.enter="submit">
         <p class="formTit">{{$t('create_wallet')}}</p>
         <Form :model="formItem" label-position="top">
-          <FormItem :label="$t('choose_network')">
-            <p class="formItemTxt">
-              {{$t('In_the_nem2_ecosystem_you_can_build_your_own_home_wallet_or_private_network_wallet_or_test_the_network_such_as_Mainnet_Testnet_different_wallet_address_prefixes_generated_under_different_networks')}}</p>
-            <Select :placeholder="$t('choose_network')" v-model="formItem.currentNetType" required>
-              <Option :value="item.value" v-for="(item,index) in networkTypeList" :key="index">{{item.label}}</Option>
-            </Select>
+          <FormItem :label="$t('Only_one_type_of_wallet_can_be_created_in_one_account_If_you_want_to_use_a_wallet_with_different_network_types_please_create_an_account_of_another_network_type_first')">
+            <div class="account-network-type un_click radius">{{NetworkType[accountNetworkType]}}</div>
           </FormItem>
           <FormItem :label="$t('set_the_wallet_name')">
             <p class="formItemTxt">
@@ -23,7 +19,7 @@
           </FormItem>
           <FormItem>
             <div class="clear">
-              <Button class="prev" type="default" @click="toBack">{{$t('back')}}</Button>
+              <Button class="prev" type="default" @click="$emit('toWalletDetails')">{{$t('back')}}</Button>
               <Button class="right" type="success" @click="submit">{{$t('next')}}</Button>
             </div>
           </FormItem>

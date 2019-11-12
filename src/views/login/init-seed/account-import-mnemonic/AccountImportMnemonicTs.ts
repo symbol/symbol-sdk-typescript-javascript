@@ -1,11 +1,12 @@
-import {Message,formDataConfig} from "@/config/index.ts"
+import {Message, formDataConfig} from "@/config/index.ts"
 import {mapState} from 'vuex'
-import {Password} from "nem2-sdk"
+import {NetworkType, Password} from "nem2-sdk"
 import {Component, Vue} from 'vue-property-decorator'
 import {networkTypeConfig} from '@/config/view/setting'
-import { cloneData} from "@/core/utils"
+import {cloneData, localRead} from "@/core/utils"
 import {AppInfo, StoreAccount, AppWallet, AppAccounts} from "@/core/model"
 import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
+
 @Component({
     computed: {
         ...mapState({
@@ -21,9 +22,16 @@ export class AccountImportMnemonicTs extends Vue {
     activeAccount: StoreAccount
     app: AppInfo
     form = cloneData(formDataConfig.walletImportMnemonicForm)
-    NetworkTypeList = networkTypeConfig
-    account = {}
     showCheckPWDialog = false
+    NetworkType = NetworkType
+
+    get accountNetworkType() {
+        return JSON.parse(localRead('accountMap'))[this.accountName].currentNetType
+    }
+
+    get accountName() {
+        return this.activeAccount.accountName
+    }
 
     submit() {
         if (!this.checkImport()) return
@@ -43,19 +51,16 @@ export class AccountImportMnemonicTs extends Vue {
     }
 
     checkImport() {
-        if (this.form.networkType == 0) {
-            this.$Notice.error({
-                title: this.$t(Message.PLEASE_SWITCH_NETWORK) + ''
-            })
-            return false
-        }
-        if (!this.form.walletName || this.form.walletName == '') {
+        const {accountNetworkType} = this
+        const {walletName,mnemonic} = this.form
+
+        if (!walletName ||walletName == '') {
             this.$Notice.error({
                 title: this.$t(Message.WALLET_NAME_INPUT_ERROR) + ''
             })
             return false
         }
-        if (!this.form.mnemonic || this.form.mnemonic === '' || this.form.mnemonic.split(' ').length != 24) {
+        if (!mnemonic || this.form.mnemonic === '' || mnemonic.split(' ').length != 24) {
             this.$Notice.error({
                 title: this.$t(Message.MNEMONIC_INPUT_ERROR) + ''
             })
@@ -64,15 +69,15 @@ export class AccountImportMnemonicTs extends Vue {
         return true
     }
 
-    // TODO USE ACCOUNT NETWORK TYPE
     importWallet(password) {
-        const {walletName, mnemonic, networkType} = this.form
+        const {accountNetworkType} = this
+        const {walletName, mnemonic} = this.form
         try {
             new AppWallet().createFromMnemonic(
                 walletName,
                 new Password(password),
                 mnemonic,
-                networkType,
+                accountNetworkType,
                 this.$store
             )
             // TODO import 10 wallets or only used wallet

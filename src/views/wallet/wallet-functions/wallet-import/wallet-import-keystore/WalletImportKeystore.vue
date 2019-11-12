@@ -33,11 +33,9 @@
         </li>
 
         <li>
-          {{$t('choose_network')}}
-          <div class="gray_content">
-            <Select v-model="formItem.networkType" :placeholder="$t('choose_network')">
-              <Option v-for="item in NetworkTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
+          {{$t('Only_one_type_of_wallet_can_be_created_in_one_account_If_you_want_to_use_a_wallet_with_different_network_types_please_create_an_account_of_another_network_type_first')}}
+          <div class="gray_content un_click account-network-type">
+            {{NetworkType[accountNetworkType]}}
           </div>
         </li>
 
@@ -51,7 +49,7 @@
       </ul>
     </div>
     <div class="bottom_button ">
-      <span class="back left pointer" @click="toBack"> {{$t('back')}}</span>
+      <span class="back left pointer" @click="$emit('toWalletDetails')"> {{$t('back')}}</span>
       <span class="import right" @click="submit">{{$t('import')}}</span>
     </div>
 

@@ -18,12 +18,12 @@
 
         <li>
           <div class="title_info">
-          {{$t('choose_network')}}
+          {{$t('Only_one_type_of_wallet_can_be_created_in_one_account_If_you_want_to_use_a_wallet_with_different_network_types_please_create_an_account_of_another_network_type_first')}}
           </div>
           <div class="gray_content">
-            <Select v-model="form.networkType" :placeholder="$t('choose_network')">
-              <Option v-for="item in NetworkTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
+            <div class=" un_click account-network-type">
+              {{NetworkType[accountNetworkType]}}
+            </div>
           </div>
         </li>
         <li>
@@ -52,7 +52,6 @@
 </template>
 
 <script lang="ts">
-    //@ts-ignore
     import {AccountImportMnemonicTs} from '@/views/login/init-seed/account-import-mnemonic/AccountImportMnemonicTs.ts'
     import "./AccountImportMnemonic.less"
     export default class WalletImportMnemonic extends AccountImportMnemonicTs {

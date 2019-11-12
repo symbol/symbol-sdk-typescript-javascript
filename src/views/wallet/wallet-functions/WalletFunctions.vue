@@ -5,17 +5,27 @@
         <li :class="[item.active?'active':'','left']"
             v-for="(item,index) in navList"
             :key="index"
-            @click="goToPage(item,index)"
+            @click="goToPage(index)"
         >{{$t(item.name)}}
         </li>
       </ul>
     </div>
     <div class="walletFnContent">
-      <WalletCreate v-if="Index === 0 && !walletCreated" @isCreated="isCreated"
-                    @closeCreate="closeCreate"></WalletCreate>
-      <WalletCreated :createForm='createForm' @toWalletDetails="toWalletDetails" @closeCreated="closeCreated"
-                     v-if="walletCreated"></WalletCreated>
-      <WalletImport v-if="Index === 1" @toWalletDetails="toWalletDetails" @closeImport="closeImport"></WalletImport>
+      <WalletCreate
+              v-if="currentIndex === 0 && !walletCreated"
+              @isCreated="isCreated"
+              @toWalletDetails="$emit('toWalletDetails')"
+      ></WalletCreate>
+      <WalletCreated
+              :createForm='createForm'
+              @toWalletDetails="$emit('toWalletDetails')"
+              v-if="walletCreated"
+      ></WalletCreated>
+      <WalletImport
+              v-if="currentIndex === 1"
+              @toWalletDetails="$emit('toWalletDetails')"
+              @closeImport="closeImport"
+      ></WalletImport>
     </div>
   </div>
 </template>

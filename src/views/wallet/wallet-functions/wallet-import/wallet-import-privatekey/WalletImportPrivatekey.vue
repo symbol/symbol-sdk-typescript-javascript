@@ -11,23 +11,21 @@
             {{$t('Please_paste_the_private_key_string_in_the_input_box_below')}}
           </div>
           <div class="gray_content textarea">
-            <textarea class="absolute" v-model="form.privateKey" v-focus
+            <textarea class="absolute" v-model="formItems.privateKey" v-focus
                       :placeholder="$t('Paste_the_private_key_string_in_the_input_box')"/>
           </div>
         </li>
 
         <li>
-          {{$t('choose_network')}}
-          <div class="gray_content">
-            <Select v-model="form.networkType" :placeholder="$t('choose_network')">
-              <Option v-for="item in networkType" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
+          {{$t('Only_one_type_of_wallet_can_be_created_in_one_account_If_you_want_to_use_a_wallet_with_different_network_types_please_create_an_account_of_another_network_type_first')}}
+          <div class="gray_content un_click account-network-type">
+            {{NetworkType[accountNetworkType]}}
           </div>
         </li>
         <li>
           {{$t('set_the_wallet_name')}}
           <div class="gray_content">
-            <input class="absolute" type="text" v-model="form.walletName"
+            <input class="absolute" type="text" v-model="formItems.walletName"
                    :placeholder="$t('set_the_wallet_name')">
           </div>
         </li>
@@ -36,7 +34,7 @@
 
     </div>
     <div class="bottom_button ">
-      <span class="back left" @click="toBack"> {{$t('back')}}</span>
+      <span class="back left" @click="$emit('toWalletDetails')"> {{$t('back')}}</span>
       <span class="import right" @click="submit">{{$t('import')}}</span>
     </div>
     <CheckPasswordDialog

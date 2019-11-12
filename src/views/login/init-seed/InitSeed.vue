@@ -5,7 +5,7 @@
         <li :class="[item.active?'active':'','left']"
             v-for="(item,index) in navList"
             :key="index"
-            @click="goToPage(item,index)"
+            @click="goToPage(index)"
         >
           {{$t(item.name)}}
         </li>
@@ -33,7 +33,7 @@
       </AccountImportHardware>
     </div>
     <CheckPasswordDialog
-            :showCheckPWDialog="showCheckPWDialog"
+            :showCheckPWDialog="navList[0].active"
             :isOnlyCheckPassword="true"
             @closeCheckPWDialog="closeCheckPWDialog"
             @checkEnd="checkEnd"
