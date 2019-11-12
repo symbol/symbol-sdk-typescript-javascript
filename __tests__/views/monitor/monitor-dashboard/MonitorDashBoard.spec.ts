@@ -1,7 +1,6 @@
-import {shallowMount, config, mount, createLocalVue} from '@vue/test-utils'
+import {config, mount, createLocalVue} from '@vue/test-utils'
 import VueRouter from 'vue-router'
 import iView from 'view-design'
-// @ts-ignore
 import Monitor from '@/views/monitor/monitor-dashboard/MonitorDashBoard.vue'
 import vueStore from '@/store'
 // @ts-ignore

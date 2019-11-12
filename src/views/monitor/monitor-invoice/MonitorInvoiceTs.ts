@@ -45,6 +45,7 @@ export class MonitorInvoiceTs extends Vue {
         mosaicAmount: 0,
         remarks: '',
     }
+
     QRCode: string = failureIcon
     standardFields = standardFields
 

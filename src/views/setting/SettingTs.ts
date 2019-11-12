@@ -18,5 +18,4 @@ export class SettingTs extends Vue {
             name: n.name
         })
     }
-
 }
