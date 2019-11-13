@@ -33,8 +33,8 @@ export class MerkleHashBuilder {
         const hasher = this.hasherFactory(this.length, this.signSchema);
         hasher.reset();
 
-        hashes.forEach((hash) => {
-            hasher.update(hash);
+        hashes.forEach((hashVal: Uint8Array) => {
+            hasher.update(hashVal);
         });
 
         const hash = new Uint8Array(this.length);

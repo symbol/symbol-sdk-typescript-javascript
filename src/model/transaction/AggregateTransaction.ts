@@ -152,7 +152,7 @@ export class AggregateTransaction extends Transaction {
             const payloadSize = parseInt(Convert.uint8ToHex(Convert.hexToUint8(innerBinary.substring(0, 8)).reverse()), 16) * 2;
             const innerTransaction = innerBinary.substring(0, payloadSize);
             embeddedTransactionArray.push(innerTransaction);
-            innerBinary = innerBinary.substring(payloadSize);
+            innerBinary = innerBinary.substring(payloadSize).replace(/\b0+/g, '');
         }
 
         /**
