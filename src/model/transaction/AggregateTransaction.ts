@@ -312,7 +312,9 @@ export class AggregateTransaction extends Transaction {
         let transactions = Uint8Array.from([]);
         this.innerTransactions.forEach((transaction) => {
             const transactionByte = transaction.toAggregateTransactionBytes();
-            transactions = GeneratorUtils.concatTypedArrays(transactions, transactionByte);
+            const innerTransactionPadding = new Uint8Array(this.getInnerTransactionPaddingSize(transactionByte.length, 8));
+            const paddedTransactionByte = GeneratorUtils.concatTypedArrays(transactionByte, innerTransactionPadding);
+            transactions = GeneratorUtils.concatTypedArrays(transactions, paddedTransactionByte);
         });
 
         let cosignatures = Uint8Array.from([]);
@@ -371,18 +373,18 @@ export class AggregateTransaction extends Transaction {
         const { MerkleTree } = require('merkletreejs');
         const hashes: any[] = [];
         this.innerTransactions.forEach((transaction) => {
-            if (!transaction.signer) {
-                if (this.type === TransactionType.AGGREGATE_COMPLETE) {
-                    transaction = Object.assign({__proto__: Object.getPrototypeOf(transaction)}, transaction, {signer});
-                } else {
-                    throw new Error(
-                        'InnerTransaction signer must be provide. Only AggregateComplete transaction can use delegated signer.');
-                }
-            }
             hashes.push(Buffer.from(sha3_256.arrayBuffer(transaction.toAggregateTransactionBytes())));
         });
         const tree = new MerkleTree(hashes, sha3_256);
-        console.log('AggregatedHash', Convert.uint8ToHex(Uint8Array.from(tree.getRoot())));
         return Uint8Array.from(tree.getRoot());
+    }
+
+    /**
+     * Gets the padding size that rounds up \a size to the next multiple of \a alignment.
+     * @param size Inner transaction size
+     * @param alignment Next multiple alignment
+     */
+    private getInnerTransactionPaddingSize(size: number, alignment: number): number {
+        return 0 === size % alignment ? 0 : alignment - (size % alignment);
     }
 }
