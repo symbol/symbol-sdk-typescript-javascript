@@ -313,7 +313,6 @@
     "wallet_name": "Wallet name",
     "switch_point": "Switch Node",
     "current_point": "Current Node",
-    "please_enter_a_custom_nod_address": "Please enter a custom nod address",
     "point_null_error": "Node null error",
     "please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe": "Please enter your wallet password to ensure your own operation and keep your wallet safe.",
     "please_choose": "Please choose",
@@ -781,5 +780,6 @@
     "please_input_generation_hash": "Please input generation hash",
     "please_input_mosaic_hex":"Please input mosaic hex",
     "please_input_divisibility": "Please input divisibility",
-    "PRIVATE_KEY_INVALID_ERROR": "This private key is invalid."
+    "PRIVATE_KEY_INVALID_ERROR": "This private key is invalid.",
+    "please_enter_a_custom_nod_address": "Please enter a custom node URL"
 }

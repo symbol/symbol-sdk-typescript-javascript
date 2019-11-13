@@ -311,7 +311,6 @@
   "wallet_name": "账户名",
   "switch_point": "选择节点",
   "current_point": "当前节点",
-  "please_enter_a_custom_nod_address": "请输入节点地址",
   "point_null_error": "节点数据不可为空",
   "please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe": "请输入钱包密码，以确保为本人操作，保证你的钱包安全",
   "please_choose": "请选择",
@@ -740,5 +739,6 @@
   "inner": "内部交易",
   "Only_one_type_of_wallet_can_be_created_in_one_account_If_you_want_to_use_a_wallet_with_different_network_types_please_create_an_account_of_another_network_type_first":"一个账户中只能创建一种类型的钱包，若想使用不同网络类型的钱包，请先创建其他网络类型的账户。",
   "mnemonic_description": "助记符是一个由24个单词组成的种子文件。您可以通过导入此种子文件还原钱包。请妥善保管并保密。",
-  "PRIVATE_KEY_INVALID_ERROR": "该私钥不合法。"
+  "PRIVATE_KEY_INVALID_ERROR": "该私钥不合法。",
+  "please_enter_a_custom_nod_address": "请输入节点完整URL"
 }

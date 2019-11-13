@@ -27,6 +27,12 @@ export class KeystoreDialogTs extends Vue {
         return this.showKeystoreDialog
     }
 
+    set show(val){
+        if(!val){
+            this.$emit('closeKeystoreDialog')
+        }
+    }
+
     get getWallet() {
         return this.activeAccount.wallet
     }

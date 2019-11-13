@@ -126,8 +126,4 @@ export class WalletCreatedTs extends Vue {
     toWalletPage() {
         this.$emit('toWalletDetails')
     }
-
-    toBack() {
-        this.$emit('closeCreated')
-    }
 }

@@ -54,10 +54,6 @@ export class WalletTs extends Vue {
         this.$router.replace({path: '/walletPanel'})
     }
 
-    backToGuideInto() {
-        this.toMethod = false
-    }
-
     copyObj(obj) {
         const newObj: any = obj instanceof Array ? [] : {}
 

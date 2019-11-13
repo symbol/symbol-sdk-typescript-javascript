@@ -8,7 +8,7 @@ export const createMnemonic = () => {
 export const getPath = (int: number): string => {
     if (int === null || int === undefined) {
         throw new Error('invalid argument provided to getPath')
-    } 
+    }
     return  `m/44'/43'/${int}'/0'/0'`
 }
 

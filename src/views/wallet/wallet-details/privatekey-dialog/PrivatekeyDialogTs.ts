@@ -6,8 +6,8 @@ import {Message} from "@/config"
 import {mapState} from "vuex"
 import {AppWallet, StoreAccount} from "@/core/model"
 import failureIcon from "@/common/img/monitor/failure.png"
-import { of } from 'rxjs'
-import { pluck, concatMap } from 'rxjs/operators'
+import {of} from 'rxjs'
+import {pluck, concatMap} from 'rxjs/operators'
 
 @Component({
     computed: {
@@ -17,13 +17,13 @@ import { pluck, concatMap } from 'rxjs/operators'
     },
     subscriptions() {
         const qrCode$ = this
-            .$watchAsObservable('qrCodeArgs', { immediate: true })
+            .$watchAsObservable('qrCodeArgs', {immediate: true})
             .pipe(pluck('newValue'),
                 concatMap((args) => {
                     if (args instanceof AccountQR) return args.toBase64()
                     return of(failureIcon)
                 }))
-        return { qrCode$ }
+        return {qrCode$}
     }
 })
 export class PrivatekeyDialogTs extends Vue {
@@ -40,6 +40,12 @@ export class PrivatekeyDialogTs extends Vue {
 
     get show() {
         return this.showPrivatekeyDialog
+    }
+
+    set show(val) {
+        if (!val) {
+            this.$emit('closePrivatekeyDialog')
+        }
     }
 
     get getWallet() {

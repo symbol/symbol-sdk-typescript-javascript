@@ -17,19 +17,6 @@ export class WalletFunctionsTs extends Vue {
     walletCreated = false
     navList = walletFnNavConfig
 
-    isCreated(form) {
-        this.createForm = form
-        this.walletCreated = true
-    }
-
-    closeCreated() {
-        this.walletCreated = false
-    }
-
-    closeCreate() {
-        this.$emit('backToGuideInto')
-    }
-
     goToPage(index) {
         const target = this.navList[index].to
         this.navList = this.navList.map(item => {
@@ -39,7 +26,7 @@ export class WalletFunctionsTs extends Vue {
         this.currentIndex = index
     }
 
-    mounted(){
+    mounted() {
         this.goToPage(1)
     }
 }

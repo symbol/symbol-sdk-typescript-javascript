@@ -4,7 +4,7 @@ import {NetworkType, Password} from "nem2-sdk"
 import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {AppWallet, StoreAccount} from '@/core/model'
 import {mapState} from "vuex"
-import {createSubWalletByPathNumber, localRead} from "@/core/utils"
+import {createMnemonic, createSubWalletByPathNumber, localRead} from "@/core/utils"
 import {networkConfig} from '@/config/index.ts'
 @Component({
     components: {
@@ -63,10 +63,11 @@ export class WalletCreateTs extends Vue {
             return false
         }
         try {
-            createSubWalletByPathNumber(networkConfig.testMnemonicString, path)
+            createSubWalletByPathNumber(createMnemonic(), path)
             return true
         } catch (e) {
             this.$Notice.error({title: this.$t(Message.HD_WALLET_PATH_ERROR) + ''})
+            console.log(e)
             return false
         }
     }

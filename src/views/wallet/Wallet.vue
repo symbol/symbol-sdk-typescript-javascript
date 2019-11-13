@@ -12,10 +12,7 @@
       </div>
     </div>
     <div class="walletMethods" v-if="tabIndex!==-1">
-      <WalletFn
-              v-if="tabIndex!==-1"
-              @backToGuideInto="backToGuideInto"
-              @toWalletDetails="toWalletDetails"/>
+      <WalletFn v-if="tabIndex!==-1" @toWalletDetails="toWalletDetails"/>
     </div>
   </div>
 </template>
