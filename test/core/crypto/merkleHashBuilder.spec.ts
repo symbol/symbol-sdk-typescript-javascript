@@ -15,30 +15,29 @@
  */
 
 import { expect } from 'chai';
-import { MerkleHashBuilder, SHA3Hasher } from "../../../src/core/crypto";
-import { Convert } from "../../../src/core/format";
+import { MerkleHashBuilder, SHA3Hasher } from '../../../src/core/crypto';
+import { Convert } from '../../../src/core/format';
 
 describe('MerkleHashBuilder tests', () => {
     it('Zero Value', () => {
         // Arrange:
         const builder = new MerkleHashBuilder(SHA3Hasher.createHasher);
 
-        let rootHash = builder.getRootHash();
+        const rootHash = builder.getRootHash();
 
-        expect(Convert.uint8ToHex(rootHash)).equal("0000000000000000000000000000000000000000000000000000000000000000");
+        expect(Convert.uint8ToHex(rootHash)).equal('0000000000000000000000000000000000000000000000000000000000000000');
 
     });
-
 
     it('One Value', () => {
         // Arrange:
         const builder = new MerkleHashBuilder(SHA3Hasher.createHasher);
 
-        builder.update(Convert.hexToUint8("215B158F0BD416B596271BCE527CD9DC8E4A639CC271D896F9156AF6F441EEB9"));
+        builder.update(Convert.hexToUint8('215B158F0BD416B596271BCE527CD9DC8E4A639CC271D896F9156AF6F441EEB9'));
 
-        let rootHash = builder.getRootHash();
+        const rootHash = builder.getRootHash();
 
-        expect(Convert.uint8ToHex(rootHash)).equal("215B158F0BD416B596271BCE527CD9DC8E4A639CC271D896F9156AF6F441EEB9");
+        expect(Convert.uint8ToHex(rootHash)).equal('215B158F0BD416B596271BCE527CD9DC8E4A639CC271D896F9156AF6F441EEB9');
 
     });
 
@@ -46,12 +45,12 @@ describe('MerkleHashBuilder tests', () => {
         // Arrange:
         const builder = new MerkleHashBuilder(SHA3Hasher.createHasher);
 
-        builder.update(Convert.hexToUint8("215b158f0bd416b596271bce527cd9dc8e4a639cc271d896f9156af6f441eeb9"));
-        builder.update(Convert.hexToUint8("976c5ce6bf3f797113e5a3a094c7801c885daf783c50563ffd3ca6a5ef580e25"));
+        builder.update(Convert.hexToUint8('215b158f0bd416b596271bce527cd9dc8e4a639cc271d896f9156af6f441eeb9'));
+        builder.update(Convert.hexToUint8('976c5ce6bf3f797113e5a3a094c7801c885daf783c50563ffd3ca6a5ef580e25'));
 
-        let rootHash = builder.getRootHash();
+        const rootHash = builder.getRootHash();
 
-        expect(Convert.uint8ToHex(rootHash).toLocaleLowerCase()).equal("1c704e3ac99b124f92d2648649ec72c7a19ea4e2bb24f669b976180a295876fa");
+        expect(Convert.uint8ToHex(rootHash).toLocaleLowerCase()).equal('1c704e3ac99b124f92d2648649ec72c7a19ea4e2bb24f669b976180a295876fa');
 
     });
 
@@ -59,16 +58,14 @@ describe('MerkleHashBuilder tests', () => {
         // Arrange:
         const builder = new MerkleHashBuilder(SHA3Hasher.createHasher);
 
-        builder.update(Convert.hexToUint8("215b158f0bd416b596271bce527cd9dc8e4a639cc271d896f9156af6f441eeb9"));
-        builder.update(Convert.hexToUint8("976c5ce6bf3f797113e5a3a094c7801c885daf783c50563ffd3ca6a5ef580e25"));
-        builder.update(Convert.hexToUint8("e926cc323886d47234bb0b49219c81e280e8a65748b437c2ae83b09b37a5aaf2"));
+        builder.update(Convert.hexToUint8('215b158f0bd416b596271bce527cd9dc8e4a639cc271d896f9156af6f441eeb9'));
+        builder.update(Convert.hexToUint8('976c5ce6bf3f797113e5a3a094c7801c885daf783c50563ffd3ca6a5ef580e25'));
+        builder.update(Convert.hexToUint8('e926cc323886d47234bb0b49219c81e280e8a65748b437c2ae83b09b37a5aaf2'));
 
+        const rootHash = builder.getRootHash();
 
-        let rootHash = builder.getRootHash();
-
-        expect(Convert.uint8ToHex(rootHash).toLocaleLowerCase()).equal("5dc17b2409d50bcc7c1faa720d0ec8b79a1705d0c517bcc0bdbd316540974d5e");
+        expect(Convert.uint8ToHex(rootHash).toLocaleLowerCase()).equal('5dc17b2409d50bcc7c1faa720d0ec8b79a1705d0c517bcc0bdbd316540974d5e');
 
     });
-
 
 });

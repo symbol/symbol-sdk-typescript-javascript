@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { SignSchema } from "./SignSchema";
+import { SignSchema } from './SignSchema';
 
 export class MerkleHashBuilder {
 
-    hashes: Array<Uint8Array> = new Array<Uint8Array>();
+    hashes: Uint8Array[] = new Array<Uint8Array>();
     hasherFactory: any;
     signSchema: SignSchema;
     length: number;
@@ -29,11 +29,11 @@ export class MerkleHashBuilder {
         this.length = length;
     }
 
-    hash(hashes: Array<Uint8Array>): Uint8Array {
-        let hasher = this.hasherFactory(this.length, this.signSchema);
+    hash(hashes: Uint8Array[]): Uint8Array {
+        const hasher = this.hasherFactory(this.length, this.signSchema);
         hasher.reset();
 
-        hashes.forEach(hash => {
+        hashes.forEach((hash) => {
             hasher.update(hash);
         });
 
@@ -42,15 +42,15 @@ export class MerkleHashBuilder {
         return hash;
     }
 
-    calculateRootHash(hashes: Array<Uint8Array>): Uint8Array {
+    calculateRootHash(hashes: Uint8Array[]): Uint8Array {
 
-        if (hashes.length == 0) {
+        if (hashes.length === 0) {
             return new Uint8Array(this.length);
         }
 
-        var numRemainingHashes = hashes.length;
+        let numRemainingHashes = hashes.length;
         while (numRemainingHashes > 1) {
-            for (var i = 0; i < numRemainingHashes; i += 2) {
+            for (let i = 0; i < numRemainingHashes; i += 2) {
                 if (i + 1 < numRemainingHashes) {
                     hashes.splice(i / 2, 0, this.hash([hashes[i], hashes[i + 1]]));
                     continue;

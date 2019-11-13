@@ -15,8 +15,8 @@
  */
 
 import { sha3_256 } from 'js-sha3';
-import {KeyPair, SHA3Hasher} from '../../core/crypto';
-import {Convert} from '../../core/format';
+import {KeyPair, MerkleHashBuilder, SHA3Hasher} from '../../core/crypto';
+import {Convert, RawArray} from '../../core/format';
 import {AggregateBondedTransactionBuilder} from '../../infrastructure/catbuffer/AggregateBondedTransactionBuilder';
 import {AggregateCompleteTransactionBuilder} from '../../infrastructure/catbuffer/AggregateCompleteTransactionBuilder';
 import {AmountDto} from '../../infrastructure/catbuffer/AmountDto';
@@ -337,7 +337,7 @@ export class AggregateTransaction extends Transaction {
                 this.type.valueOf(),
                 new AmountDto(this.maxFee.toDTO()),
                 new TimestampDto(this.deadline.toDTO()),
-                new Hash256Dto(this.calculateInnerTransactionHash(this.signer)),
+                new Hash256Dto(this.calculateInnerTransactionHash()),
                 transactions,
                 cosignatures,
             ) :
@@ -349,7 +349,7 @@ export class AggregateTransaction extends Transaction {
                 this.type.valueOf(),
                 new AmountDto(this.maxFee.toDTO()),
                 new TimestampDto(this.deadline.toDTO()),
-                new Hash256Dto(this.calculateInnerTransactionHash(this.signer)),
+                new Hash256Dto(this.calculateInnerTransactionHash()),
                 transactions,
                 cosignatures,
             );
@@ -369,14 +369,12 @@ export class AggregateTransaction extends Transaction {
      * Generate inner transaction root hash (merkle tree)
      * @returns {Uint8Array}
      */
-    private calculateInnerTransactionHash(signer?: PublicAccount): Uint8Array {
-        const { MerkleTree } = require('merkletreejs');
-        const hashes: any[] = [];
+    private calculateInnerTransactionHash(): Uint8Array {
+        const builder = new MerkleHashBuilder(SHA3Hasher.createHasher);
         this.innerTransactions.forEach((transaction) => {
-            hashes.push(Buffer.from(sha3_256.arrayBuffer(transaction.toAggregateTransactionBytes())));
+            builder.update(RawArray.uint8View(sha3_256.arrayBuffer(transaction.toAggregateTransactionBytes())));
         });
-        const tree = new MerkleTree(hashes, sha3_256);
-        return Uint8Array.from(tree.getRoot());
+        return builder.getRootHash();
     }
 
     /**
