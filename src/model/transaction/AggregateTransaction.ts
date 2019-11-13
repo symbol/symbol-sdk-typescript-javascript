@@ -293,6 +293,12 @@ export class AggregateTransaction extends Transaction {
 
         // calculate each inner transaction's size
         let byteTransactions = 0;
+        this.innerTransactions.forEach((transaction) => {
+            const transactionByte = transaction.toAggregateTransactionBytes();
+            const innerTransactionPadding = new Uint8Array(this.getInnerTransactionPaddingSize(transactionByte.length, 8));
+            const paddedTransactionByte = GeneratorUtils.concatTypedArrays(transactionByte, innerTransactionPadding);
+            byteTransactions += paddedTransactionByte.length;
+        });
         this.innerTransactions.map((transaction) => {
             byteTransactions += (transaction.size - 80);
         });

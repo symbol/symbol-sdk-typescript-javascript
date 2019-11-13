@@ -124,7 +124,7 @@ export abstract class Transaction {
         const generationHashBytes = Array.from(Convert.hexToUint8(generationHash));
         const signSchema = SHA3Hasher.resolveSignSchema(account.networkType);
         const byteBuffer = Array.from(this.generateBytes());
-        const signingBytes = generationHashBytes.concat(byteBuffer.slice(4 + 64 + 32 + 8));
+        const signingBytes = this.getSigningByte(generationHashBytes);
         const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(account.privateKey, signSchema);
         const signature = Array.from(KeyPair.sign(account, new Uint8Array(signingBytes), signSchema));
         const signedTransactionBuffer = byteBuffer
@@ -141,6 +141,21 @@ export abstract class Transaction {
             account.publicKey,
             this.type,
             this.networkType);
+    }
+
+    /**
+     * @internal
+     * Generate signing bytes
+     * @param generationHashByte GenerationHashBuffer
+     */
+    private getSigningByte(generationHashByte: number[]) {
+        const byteBuffer = Array.from(this.generateBytes());
+        const byteBufferWithoutHeader = byteBuffer.slice(4 + 64 + 32 + 8);
+        if (this.type === TransactionType.AGGREGATE_BONDED || this.type === TransactionType.AGGREGATE_COMPLETE) {
+            return generationHashByte.concat(byteBufferWithoutHeader.slice(0, 52));
+        } else {
+            return generationHashByte.concat(byteBufferWithoutHeader);
+        }
     }
 
     /**
