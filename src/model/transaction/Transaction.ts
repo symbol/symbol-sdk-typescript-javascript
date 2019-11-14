@@ -87,14 +87,17 @@ export abstract class Transaction {
      * @returns {string} Returns Transaction Payload hash
      */
     public static createTransactionHash(transactionPayload: string, generationHashBuffer: number[], networkType: NetworkType): string {
+        const type = parseInt(Convert.uint8ToHex(Convert.hexToUint8(transactionPayload.substring(220, 224)).reverse()), 16);
         const byteBuffer = Array.from(Convert.hexToUint8(transactionPayload));
+        const byteBufferWithoutHeader = byteBuffer.slice(4 + 64 + 32 + 8);
+        const dataBytes = type === TransactionType.AGGREGATE_BONDED || type === TransactionType.AGGREGATE_COMPLETE ?
+            generationHashBuffer.concat(byteBufferWithoutHeader.slice(0, 52)) :
+            generationHashBuffer.concat(byteBufferWithoutHeader);
         const signingBytes = byteBuffer
-            .slice(8, 40)
+            .slice(8, 40) // first half of signature
             .concat(byteBuffer
-                .slice(4 + 4 + 64, 8 + 64 + 32 + 4))
-            .concat(generationHashBuffer)
-            .concat(byteBuffer
-                .splice(4 + 64 + 32 + 8, byteBuffer.length));
+                .slice(4 + 4 + 64, 8 + 64 + 32)) // signer
+            .concat(dataBytes);
 
         const hash = new Uint8Array(32);
         const signSchema = SHA3Hasher.resolveSignSchema(networkType);
@@ -124,7 +127,7 @@ export abstract class Transaction {
         const generationHashBytes = Array.from(Convert.hexToUint8(generationHash));
         const signSchema = SHA3Hasher.resolveSignSchema(account.networkType);
         const byteBuffer = Array.from(this.generateBytes());
-        const signingBytes = this.getSigningByte(generationHashBytes);
+        const signingBytes = this.getSigningBytes(byteBuffer, generationHashBytes);
         const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(account.privateKey, signSchema);
         const signature = Array.from(KeyPair.sign(account, new Uint8Array(signingBytes), signSchema));
         const signedTransactionBuffer = byteBuffer
@@ -146,15 +149,15 @@ export abstract class Transaction {
     /**
      * @internal
      * Generate signing bytes
-     * @param generationHashByte GenerationHashBuffer
+     * @param payloadBytes Payload buffer
+     * @param generationHashBytes GenerationHash buffer
      */
-    private getSigningByte(generationHashByte: number[]) {
-        const byteBuffer = Array.from(this.generateBytes());
-        const byteBufferWithoutHeader = byteBuffer.slice(4 + 64 + 32 + 8);
+    protected getSigningBytes(payloadBytes: number[], generationHashBytes: number[]) {
+        const byteBufferWithoutHeader = payloadBytes.slice(4 + 64 + 32 + 8);
         if (this.type === TransactionType.AGGREGATE_BONDED || this.type === TransactionType.AGGREGATE_COMPLETE) {
-            return generationHashByte.concat(byteBufferWithoutHeader.slice(0, 52));
+            return generationHashBytes.concat(byteBufferWithoutHeader.slice(0, 52));
         } else {
-            return generationHashByte.concat(byteBufferWithoutHeader);
+            return generationHashBytes.concat(byteBufferWithoutHeader);
         }
     }
 
