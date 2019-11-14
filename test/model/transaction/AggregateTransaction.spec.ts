@@ -108,11 +108,11 @@ describe('AggregateTransaction', () => {
             []);
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
-        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('05010000');
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('08010000');
         expect(signedTransaction.payload.substring(
             424,
             signedTransaction.payload.length,
-        )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142000D000000000000746573742D6D657373616765');
+        )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142000D000000000000746573742D6D657373616765000000');
     });
 
     it('should createComplete an AggregateTransaction object with NamespaceRegistrationTransaction', () => {
@@ -131,13 +131,13 @@ describe('AggregateTransaction', () => {
         );
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
-        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('FD000000');
-        expect(signedTransaction.payload.substring(320, 352)).to.be.equal('55000000000000005500000000000000');
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('00010000');
+        expect(signedTransaction.payload.substring(320, 352)).to.be.equal('58000000000000005500000000000000');
 
         expect(signedTransaction.payload.substring(
             424,
             signedTransaction.payload.length,
-        )).to.be.equal('01904E41E803000000000000CFCBE72D994BE69B0013726F6F742D746573742D6E616D657370616365');
+        )).to.be.equal('01904E41E803000000000000CFCBE72D994BE69B0013726F6F742D746573742D6E616D657370616365000000');
     });
 
     it('should createComplete an AggregateTransaction object with MosaicDefinitionTransaction', () => {
@@ -160,12 +160,12 @@ describe('AggregateTransaction', () => {
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('EE000000');
-        expect(signedTransaction.payload.substring(320, 352)).to.be.equal('46000000000000004600000000000000');
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('F0000000');
+        expect(signedTransaction.payload.substring(320, 352)).to.be.equal('48000000000000004600000000000000');
         expect(signedTransaction.payload.substring(
             424,
             signedTransaction.payload.length,
-        )).to.be.equal('01904D410100000000000000E803000000000000E6DE84B80703');
+        )).to.be.equal('01904D410100000000000000E803000000000000E6DE84B807030000');
     });
 
     it('should createComplete an AggregateTransaction object with MosaicSupplyChangeTransaction', () => {
@@ -187,12 +187,12 @@ describe('AggregateTransaction', () => {
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('E9000000');
-        expect(signedTransaction.payload.substring(320, 352)).to.be.equal('41000000000000004100000000000000');
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('F0000000');
+        expect(signedTransaction.payload.substring(320, 352)).to.be.equal('48000000000000004100000000000000');
         expect(signedTransaction.payload.substring(
             424,
             signedTransaction.payload.length,
-        )).to.be.equal('01904D424CCCD78612DDF5CA0A0000000000000001');
+        )).to.be.equal('01904D424CCCD78612DDF5CA0A000000000000000100000000000000');
     });
 
     it('should createComplete an AggregateTransaction object with MultisigAccountModificationTransaction', () => {
@@ -245,13 +245,13 @@ describe('AggregateTransaction', () => {
             generationHash,
         );
 
-        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('65010000');
-        expect(signedTransaction.payload.substring(320, 352)).to.be.equal('5D000000000000005D00000000000000');
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('68010000');
+        expect(signedTransaction.payload.substring(320, 352)).to.be.equal('60000000000000005D00000000000000');
         expect(signedTransaction.payload.substring(
             424,
             424 + 162,
-        )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142000D000000000000746573742D' +
-            '6D65737361676568B3FBB18729C1FDE225C57F8CE080FA828F0067E451A3FD81FA628842B0B763');
+        )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142000D0000000' +
+            '00000746573742D6D65737361676500000068B3FBB18729C1FDE225C57F8CE080FA828F0067E451A3FD81FA628842');
 
     });
 
@@ -273,13 +273,13 @@ describe('AggregateTransaction', () => {
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('05010000');
-        expect(signedTransaction.payload.substring(320, 352)).to.be.equal('5D000000000000005D00000000000000');
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('08010000');
+        expect(signedTransaction.payload.substring(320, 352)).to.be.equal('60000000000000005D00000000000000');
         expect(signedTransaction.payload.substring(220, 224)).to.be.equal('4142');
         expect(signedTransaction.payload.substring(
             424,
             signedTransaction.payload.length,
-        )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142000D000000000000746573742D6D657373616765');
+        )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142000D000000000000746573742D6D657373616765000000');
     });
 
     it('should validate if accounts have signed an aggregate transaction', () => {
@@ -346,7 +346,8 @@ describe('AggregateTransaction', () => {
             PublicAccount.createFromPublicKey('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                 NetworkType.MIJIN_TEST))).to.be.equal(false);
 
-        expect(aggregateTransaction.innerTransactions[0].signer!.publicKey).to.be.equal('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF');
+        expect(aggregateTransaction.innerTransactions[0].signer!.publicKey)
+            .to.be.equal('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF');
 
         expect(Convert.hexToUint8(aggregateTransaction.serialize()).length).to.be.equal(aggregateTransaction.size);
     });
@@ -536,9 +537,8 @@ describe('AggregateTransaction', () => {
                 NetworkType.MIJIN_TEST,
                 [],
             );
-
             expect(Convert.hexToUint8(aggregateTransaction.serialize()).length).to.be.equal(aggregateTransaction.size);
-            expect(aggregateTransaction.size).to.be.equal(268);
+            expect(aggregateTransaction.size).to.be.equal(272);
         });
     });
 });

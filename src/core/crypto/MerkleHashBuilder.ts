@@ -23,13 +23,23 @@ export class MerkleHashBuilder {
     signSchema: SignSchema;
     length: number;
 
+    /**
+     * Constructor
+     * @param hasherFactory Hasher (SHA3_256)
+     * @param signSchema Sign schema
+     * @param length Hash size
+     */
     constructor(hasherFactory: any, signSchema: SignSchema = SignSchema.SHA3, length: number = 32) {
         this.hasherFactory = hasherFactory;
         this.signSchema = signSchema;
         this.length = length;
     }
 
-    hash(hashes: Uint8Array[]): Uint8Array {
+    /** @internal
+     * Hash inner transactions
+     * @param hashes Inner transaction hashes
+     */
+    protected hash(hashes: Uint8Array[]): Uint8Array {
         const hasher = this.hasherFactory(this.length, this.signSchema);
         hasher.reset();
 
@@ -42,7 +52,11 @@ export class MerkleHashBuilder {
         return hash;
     }
 
-    calculateRootHash(hashes: Uint8Array[]): Uint8Array {
+    /** @internal
+     * Get root hash of Merkle Trees
+     * @param hashes Inner transaction hashes
+     */
+    protected calculateRootHash(hashes: Uint8Array[]): Uint8Array {
 
         if (hashes.length === 0) {
             return new Uint8Array(this.length);
@@ -65,11 +79,18 @@ export class MerkleHashBuilder {
         return hashes[0];
     }
 
-    getRootHash(): Uint8Array {
+    /**
+     * Return root hash from Merkle tree
+     */
+    public getRootHash(): Uint8Array {
         return this.calculateRootHash(this.hashes);
     }
 
-    update(hash: Uint8Array): void {
+    /**
+     * Update hashes array
+     * @param hash Inner transaction hash buffer
+     */
+    public update(hash: Uint8Array): void {
         this.hashes.push(hash);
     }
 

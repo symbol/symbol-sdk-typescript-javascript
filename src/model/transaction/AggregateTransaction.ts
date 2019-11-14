@@ -299,9 +299,6 @@ export class AggregateTransaction extends Transaction {
             const paddedTransactionByte = GeneratorUtils.concatTypedArrays(transactionByte, innerTransactionPadding);
             byteTransactions += paddedTransactionByte.length;
         });
-        this.innerTransactions.map((transaction) => {
-            byteTransactions += (transaction.size - 80);
-        });
 
         const byteCosignatures = this.cosignatures.length * 96;
         return byteSize + byteTransactionHash + bytePayloadSize + byteHeader_Reserved1 +
