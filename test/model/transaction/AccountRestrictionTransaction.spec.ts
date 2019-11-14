@@ -15,19 +15,19 @@
  */
 
 import {expect} from 'chai';
+import {Convert} from '../../../src/core/format';
 import {Account} from '../../../src/model/account/Account';
 import {Address} from '../../../src/model/account/Address';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import { AccountRestrictionModificationAction } from '../../../src/model/restriction/AccountRestrictionModificationAction';
-import { AccountRestrictionType } from '../../../src/model/restriction/AccountRestrictionType';
+import { AccountRestrictionFlags } from '../../../src/model/restriction/AccountRestrictionType';
 import { AccountRestrictionModification } from '../../../src/model/transaction/AccountRestrictionModification';
 import {AccountRestrictionTransaction} from '../../../src/model/transaction/AccountRestrictionTransaction';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
-import {Convert} from "../../../src/core/format";
 
 describe('AccountRestrictionTransaction', () => {
     let account: Account;
@@ -67,64 +67,52 @@ describe('AccountRestrictionTransaction', () => {
     });
 
     describe('size', () => {
-        it('should return 148 for AccountAddressRestrictionTransaction transaction byte size with 1 modification', () => {
+        it('should return 161 for AccountAddressRestrictionTransaction transaction byte size with 1 modification', () => {
             const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-            const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
-                AccountRestrictionModificationAction.Add,
-                address,
-            );
             const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionType.AllowIncomingAddress,
-                [addressRestrictionFilter],
+                AccountRestrictionFlags.AllowIncomingAddress,
+                [address],
+                [],
                 NetworkType.MIJIN_TEST,
             );
 
             expect(Convert.hexToUint8(addressRestrictionTransaction.serialize()).length).to.be.equal(addressRestrictionTransaction.size);
-            expect(addressRestrictionTransaction.size).to.be.equal(148);
+            expect(addressRestrictionTransaction.size).to.be.equal(161);
         });
 
-        it('should return 131 for AccountMosaicRestrictionTransaction transaction byte size with 1 modification', () => {
+        it('should return 144 for AccountMosaicRestrictionTransaction transaction byte size with 1 modification', () => {
             const mosaicId = new MosaicId([2262289484, 3405110546]);
-            const mosaicRestrictionFilter = AccountRestrictionModification.createForMosaic(
-                AccountRestrictionModificationAction.Add,
-                mosaicId,
-            );
             const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionType.AllowMosaic,
-                [mosaicRestrictionFilter],
+                AccountRestrictionFlags.AllowMosaic,
+                [mosaicId],
+                [],
                 NetworkType.MIJIN_TEST,
             );
-            expect(mosaicRestrictionTransaction.size).to.be.equal(131);
+            expect(mosaicRestrictionTransaction.size).to.be.equal(144);
         });
 
-        it('should return 125 for AccountOperationRestrictionTransaction transaction byte size with 1 modification', () => {
+        it('should return 138 for AccountOperationRestrictionTransaction transaction byte size with 1 modification', () => {
             const operation = TransactionType.ADDRESS_ALIAS;
-            const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
-                AccountRestrictionModificationAction.Add,
-                operation,
-            );
             const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionType.AllowIncomingTransactionType,
-                [operationRestrictionFilter],
+                AccountRestrictionFlags.AllowIncomingTransactionType,
+                [operation],
+                [],
                 NetworkType.MIJIN_TEST,
             );
-            expect(operationRestrictionTransaction.size).to.be.equal(125);
+            expect(operationRestrictionTransaction.size).to.be.equal(138);
         });
     });
 
     it('should default maxFee field be set to 0', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
-            AccountRestrictionModificationAction.Add,
-            address,
-        );
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.AllowIncomingAddress,
-            [addressRestrictionFilter],
+            AccountRestrictionFlags.AllowIncomingAddress,
+            [address],
+            [],
             NetworkType.MIJIN_TEST,
         );
 
@@ -134,14 +122,11 @@ describe('AccountRestrictionTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
-            AccountRestrictionModificationAction.Add,
-            address,
-        );
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.AllowIncomingAddress,
-            [addressRestrictionFilter],
+            AccountRestrictionFlags.AllowIncomingAddress,
+            [address],
+            [],
             NetworkType.MIJIN_TEST,
             new UInt64([1, 0]),
         );
@@ -153,48 +138,40 @@ describe('AccountRestrictionTransaction', () => {
     it('should create allow incmoing address restriction transaction', () => {
 
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
-            AccountRestrictionModificationAction.Add,
-            address,
-        );
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.AllowIncomingAddress,
-            [addressRestrictionFilter],
+            AccountRestrictionFlags.AllowIncomingAddress,
+            [address],
+            [],
             NetworkType.MIJIN_TEST,
         );
 
         const signedTransaction = addressRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('0101019050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
+        )).to.be.equal('01000100000000009050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
 
     });
 
     it('should throw exception when create address restriction transaction with wrong type', () => {
 
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
-            AccountRestrictionModificationAction.Add,
-            address,
-        );
-
-        const invalidType = [AccountRestrictionType.AllowIncomingTransactionType,
-                             AccountRestrictionType.AllowMosaic,
-                             AccountRestrictionType.AllowOutgoingTransactionType,
-                             AccountRestrictionType.BlockIncomingTransactionType,
-                             AccountRestrictionType.BlockMosaic,
-                             AccountRestrictionType.BlockOutgoingTransactionType,
-                             AccountRestrictionType.Sentinel,
+        const invalidType = [AccountRestrictionFlags.AllowIncomingTransactionType,
+                             AccountRestrictionFlags.AllowMosaic,
+                             AccountRestrictionFlags.AllowOutgoingTransactionType,
+                             AccountRestrictionFlags.BlockIncomingTransactionType,
+                             AccountRestrictionFlags.BlockMosaic,
+                             AccountRestrictionFlags.BlockOutgoingTransactionType,
                             ];
         invalidType.forEach((type) => {
             expect(() => {
                 AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                     Deadline.create(),
                     type,
-                    [addressRestrictionFilter],
+                    [address],
+                    [],
                     NetworkType.MIJIN_TEST,
                 );
              }).to.throw(Error, 'Restriction type is not allowed.');
@@ -204,50 +181,42 @@ describe('AccountRestrictionTransaction', () => {
     it('should create mosaic restriction transaction', () => {
 
         const mosaicId = new MosaicId([2262289484, 3405110546]);
-        const mosaicRestrictionFilter = AccountRestrictionModification.createForMosaic(
-            AccountRestrictionModificationAction.Add,
-            mosaicId,
-        );
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.AllowMosaic,
-            [mosaicRestrictionFilter],
+            AccountRestrictionFlags.AllowMosaic,
+            [mosaicId],
+            [],
             NetworkType.MIJIN_TEST,
         );
 
         const signedTransaction = mosaicRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('0201014CCCD78612DDF5CA');
+        )).to.be.equal('02000100000000004CCCD78612DDF5CA');
 
     });
 
     it('should throw exception when create account mosaic restriction transaction with wrong type', () => {
 
         const mosaicId = new MosaicId([2262289484, 3405110546]);
-        const mosaicRestrictionFilter = AccountRestrictionModification.createForMosaic(
-            AccountRestrictionModificationAction.Add,
-            mosaicId,
-        );
-
-        const invalidType = [AccountRestrictionType.AllowIncomingTransactionType,
-                             AccountRestrictionType.AllowIncomingAddress,
-                             AccountRestrictionType.AllowOutgoingTransactionType,
-                             AccountRestrictionType.BlockIncomingTransactionType,
-                             AccountRestrictionType.AllowOutgoingAddress,
-                             AccountRestrictionType.BlockOutgoingTransactionType,
-                             AccountRestrictionType.BlockIncomingAddress,
-                             AccountRestrictionType.BlockOutgoingAddress,
-                             AccountRestrictionType.Sentinel,
+        const invalidType = [AccountRestrictionFlags.AllowIncomingTransactionType,
+                             AccountRestrictionFlags.AllowIncomingAddress,
+                             AccountRestrictionFlags.AllowOutgoingTransactionType,
+                             AccountRestrictionFlags.BlockIncomingTransactionType,
+                             AccountRestrictionFlags.AllowOutgoingAddress,
+                             AccountRestrictionFlags.BlockOutgoingTransactionType,
+                             AccountRestrictionFlags.BlockIncomingAddress,
+                             AccountRestrictionFlags.BlockOutgoingAddress,
                             ];
         invalidType.forEach((type) => {
             expect(() => {
                 AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
                     Deadline.create(),
                     type,
-                    [mosaicRestrictionFilter],
+                    [mosaicId],
+                    [],
                     NetworkType.MIJIN_TEST,
                 );
              }).to.throw(Error, 'Restriction type is not allowed.');
@@ -257,48 +226,40 @@ describe('AccountRestrictionTransaction', () => {
     it('should create operation restriction transaction', () => {
 
         const operation = TransactionType.ADDRESS_ALIAS;
-        const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
-            AccountRestrictionModificationAction.Add,
-            operation,
-        );
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.AllowIncomingTransactionType,
-            [operationRestrictionFilter],
+            AccountRestrictionFlags.AllowIncomingTransactionType,
+            [operation],
+            [],
             NetworkType.MIJIN_TEST,
         );
 
         const signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('0401014E42');
+        )).to.be.equal('04000100000000004E42');
 
     });
 
     it('should throw exception when create account operation restriction transaction with wrong type', () => {
 
         const operation = TransactionType.ADDRESS_ALIAS;
-        const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
-            AccountRestrictionModificationAction.Add,
-            operation,
-        );
-
-        const invalidType = [AccountRestrictionType.AllowIncomingAddress,
-                             AccountRestrictionType.AllowMosaic,
-                             AccountRestrictionType.BlockMosaic,
-                             AccountRestrictionType.AllowOutgoingAddress,
-                             AccountRestrictionType.BlockIncomingAddress,
-                             AccountRestrictionType.BlockOutgoingAddress,
-                             AccountRestrictionType.Sentinel,
+        const invalidType = [AccountRestrictionFlags.AllowIncomingAddress,
+                             AccountRestrictionFlags.AllowMosaic,
+                             AccountRestrictionFlags.BlockMosaic,
+                             AccountRestrictionFlags.AllowOutgoingAddress,
+                             AccountRestrictionFlags.BlockIncomingAddress,
+                             AccountRestrictionFlags.BlockOutgoingAddress,
                             ];
         invalidType.forEach((type) => {
             expect(() => {
                 AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
                     Deadline.create(),
                     type,
-                    [operationRestrictionFilter],
+                    [operation],
+                    [],
                     NetworkType.MIJIN_TEST,
                 );
              }).to.throw(Error, 'Restriction type is not allowed.');
@@ -308,74 +269,70 @@ describe('AccountRestrictionTransaction', () => {
     it('should create outgoing address restriction transaction', () => {
 
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
-            AccountRestrictionModificationAction.Add,
-            address,
-        );
         let addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.AllowOutgoingAddress,
-            [addressRestrictionFilter],
+            AccountRestrictionFlags.AllowOutgoingAddress,
+            [address],
+            [],
             NetworkType.MIJIN_TEST,
         );
 
         let signedTransaction = addressRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('4101019050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
+        )).to.be.equal('01400100000000009050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
 
         addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.BlockOutgoingAddress,
-            [addressRestrictionFilter],
+            AccountRestrictionFlags.BlockOutgoingAddress,
+            [address],
+            [],
             NetworkType.MIJIN_TEST,
         );
 
         signedTransaction = addressRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('C101019050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
+        )).to.be.equal('01C00100000000009050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
 
     });
 
     it('should create outgoing operation restriction transaction', () => {
 
         const operation = TransactionType.ADDRESS_ALIAS;
-        const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
-            AccountRestrictionModificationAction.Add,
-            operation,
-        );
         let operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.AllowOutgoingTransactionType,
-            [operationRestrictionFilter],
+            AccountRestrictionFlags.AllowOutgoingTransactionType,
+            [operation],
+            [],
             NetworkType.MIJIN_TEST,
         );
 
         let signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('4401014E42');
+        )).to.be.equal('04400100000000004E42');
 
         operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.BlockOutgoingTransactionType,
-            [operationRestrictionFilter],
+            AccountRestrictionFlags.BlockOutgoingTransactionType,
+            [operation],
+            [],
             NetworkType.MIJIN_TEST,
         );
 
         signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('C401014E42');
+        )).to.be.equal('04C00100000000004E42');
 
     });
 });

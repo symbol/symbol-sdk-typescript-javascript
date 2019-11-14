@@ -23,6 +23,7 @@ import { EmbeddedTransactionBuilder } from './EmbeddedTransactionBuilder';
 import { EntityTypeDto } from './EntityTypeDto';
 import { GeneratorUtils } from './GeneratorUtils';
 import { KeyDto } from './KeyDto';
+import { NetworkTypeDto } from './NetworkTypeDto';
 import { TransferTransactionBodyBuilder } from './TransferTransactionBodyBuilder';
 import { UnresolvedAddressDto } from './UnresolvedAddressDto';
 import { UnresolvedMosaicBuilder } from './UnresolvedMosaicBuilder';
@@ -37,15 +38,16 @@ export class EmbeddedTransferTransactionBuilder extends EmbeddedTransactionBuild
      *
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
      * @param recipientAddress Recipient address.
-     * @param message Attached message.
      * @param mosaics Attached mosaics.
+     * @param message Attached message.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  recipientAddress: UnresolvedAddressDto,  message: Uint8Array,  mosaics: UnresolvedMosaicBuilder[]) {
-        super(signerPublicKey, version, type);
-        this.transferTransactionBody = new TransferTransactionBodyBuilder(recipientAddress, message, mosaics);
+    public constructor(signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  recipientAddress: UnresolvedAddressDto,  mosaics: UnresolvedMosaicBuilder[],  message: Uint8Array) {
+        super(signerPublicKey, version, network, type);
+        this.transferTransactionBody = new TransferTransactionBodyBuilder(recipientAddress, mosaics, message);
     }
 
     /**
@@ -61,7 +63,7 @@ export class EmbeddedTransferTransactionBuilder extends EmbeddedTransactionBuild
         const transferTransactionBody = TransferTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, transferTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedTransferTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, transferTransactionBody.recipientAddress, transferTransactionBody.message, transferTransactionBody.mosaics);
+        return new EmbeddedTransferTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, transferTransactionBody.recipientAddress, transferTransactionBody.mosaics, transferTransactionBody.message);
     }
 
     /**
@@ -74,12 +76,12 @@ export class EmbeddedTransferTransactionBuilder extends EmbeddedTransactionBuild
     }
 
     /**
-     * Gets attached message.
+     * Gets reserved padding to align mosaics on 8-byte boundary.
      *
-     * @return Attached message.
+     * @return Reserved padding to align mosaics on 8-byte boundary.
      */
-    public getMessage(): Uint8Array {
-        return this.transferTransactionBody.getMessage();
+    public getTransferTransactionBody_Reserved1(): number {
+        return this.transferTransactionBody.getTransferTransactionBody_Reserved1();
     }
 
     /**
@@ -89,6 +91,15 @@ export class EmbeddedTransferTransactionBuilder extends EmbeddedTransactionBuild
      */
     public getMosaics(): UnresolvedMosaicBuilder[] {
         return this.transferTransactionBody.getMosaics();
+    }
+
+    /**
+     * Gets attached message.
+     *
+     * @return Attached message.
+     */
+    public getMessage(): Uint8Array {
+        return this.transferTransactionBody.getMessage();
     }
 
     /**

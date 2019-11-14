@@ -129,7 +129,7 @@ export class NamespaceMetadataTransaction extends Transaction {
         const builder = isEmbedded ? EmbeddedNamespaceMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             NamespaceMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const networkType = builder.getNetwork().valueOf();
         const transaction = NamespaceMetadataTransaction.create(
             isEmbedded ? Deadline.create() :
                 Deadline.createFromDTO((builder as NamespaceMetadataTransactionBuilder).getDeadline().timestamp),
@@ -177,6 +177,7 @@ export class NamespaceMetadataTransaction extends Transaction {
             new SignatureDto(signatureBuffer),
             new KeyDto(signerBuffer),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.NAMESPACE_METADATA_TRANSACTION.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
@@ -197,6 +198,7 @@ export class NamespaceMetadataTransaction extends Transaction {
         const transactionBuilder = new EmbeddedNamespaceMetadataTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.NAMESPACE_METADATA_TRANSACTION.valueOf(),
             new KeyDto(Convert.hexToUint8(this.targetPublicKey)),
             this.scopedMetadataKey.toDTO(),

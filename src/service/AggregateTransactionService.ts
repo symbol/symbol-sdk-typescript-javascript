@@ -98,8 +98,7 @@ export class AggregateTransactionService {
          * use minRemoval instead of minApproval for cosignatories validation.
          */
         if (innerTransaction.type === TransactionType.MODIFY_MULTISIG_ACCOUNT) {
-            if ((innerTransaction as MultisigAccountModificationTransaction).modifications
-                    .find((modification) => modification.modificationAction === CosignatoryModificationAction.Remove) !== undefined) {
+            if ((innerTransaction as MultisigAccountModificationTransaction).publicKeyDeletions.length) {
                         isMultisigRemoval = true;
             }
         }

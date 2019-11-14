@@ -24,6 +24,7 @@ import { EntityTypeDto } from './EntityTypeDto';
 import { GeneratorUtils } from './GeneratorUtils';
 import { KeyDto } from './KeyDto';
 import { MosaicAddressRestrictionTransactionBodyBuilder } from './MosaicAddressRestrictionTransactionBodyBuilder';
+import { NetworkTypeDto } from './NetworkTypeDto';
 import { SignatureDto } from './SignatureDto';
 import { TimestampDto } from './TimestampDto';
 import { TransactionBuilder } from './TransactionBuilder';
@@ -41,20 +42,21 @@ export class MosaicAddressRestrictionTransactionBuilder extends TransactionBuild
      * @param signature Entity signature.
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
      * @param fee Transaction fee.
      * @param deadline Transaction deadline.
      * @param mosaicId Identifier of the mosaic to which the restriction applies.
      * @param restrictionKey Restriction key.
-     * @param targetAddress Address being restricted.
      * @param previousRestrictionValue Previous restriction value.
      * @param newRestrictionValue New restriction value.
+     * @param targetAddress Address being restricted.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  mosaicId: UnresolvedMosaicIdDto,  restrictionKey: number[],  targetAddress: UnresolvedAddressDto,  previousRestrictionValue: number[],  newRestrictionValue: number[]) {
-        super(signature, signerPublicKey, version, type, fee, deadline);
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  mosaicId: UnresolvedMosaicIdDto,  restrictionKey: number[],  previousRestrictionValue: number[],  newRestrictionValue: number[],  targetAddress: UnresolvedAddressDto) {
+        super(signature, signerPublicKey, version, network, type, fee, deadline);
         // tslint:disable-next-line: max-line-length
-        this.mosaicAddressRestrictionTransactionBody = new MosaicAddressRestrictionTransactionBodyBuilder(mosaicId, restrictionKey, targetAddress, previousRestrictionValue, newRestrictionValue);
+        this.mosaicAddressRestrictionTransactionBody = new MosaicAddressRestrictionTransactionBodyBuilder(mosaicId, restrictionKey, previousRestrictionValue, newRestrictionValue, targetAddress);
     }
 
     /**
@@ -71,7 +73,7 @@ export class MosaicAddressRestrictionTransactionBuilder extends TransactionBuild
         const mosaicAddressRestrictionTransactionBody = MosaicAddressRestrictionTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, mosaicAddressRestrictionTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new MosaicAddressRestrictionTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.type, superObject.fee, superObject.deadline, mosaicAddressRestrictionTransactionBody.mosaicId, mosaicAddressRestrictionTransactionBody.restrictionKey, mosaicAddressRestrictionTransactionBody.targetAddress, mosaicAddressRestrictionTransactionBody.previousRestrictionValue, mosaicAddressRestrictionTransactionBody.newRestrictionValue);
+        return new MosaicAddressRestrictionTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, superObject.fee, superObject.deadline, mosaicAddressRestrictionTransactionBody.mosaicId, mosaicAddressRestrictionTransactionBody.restrictionKey, mosaicAddressRestrictionTransactionBody.previousRestrictionValue, mosaicAddressRestrictionTransactionBody.newRestrictionValue, mosaicAddressRestrictionTransactionBody.targetAddress);
     }
 
     /**
@@ -93,15 +95,6 @@ export class MosaicAddressRestrictionTransactionBuilder extends TransactionBuild
     }
 
     /**
-     * Gets address being restricted.
-     *
-     * @return Address being restricted.
-     */
-    public getTargetAddress(): UnresolvedAddressDto {
-        return this.mosaicAddressRestrictionTransactionBody.getTargetAddress();
-    }
-
-    /**
      * Gets previous restriction value.
      *
      * @return Previous restriction value.
@@ -117,6 +110,15 @@ export class MosaicAddressRestrictionTransactionBuilder extends TransactionBuild
      */
     public getNewRestrictionValue(): number[] {
         return this.mosaicAddressRestrictionTransactionBody.getNewRestrictionValue();
+    }
+
+    /**
+     * Gets address being restricted.
+     *
+     * @return Address being restricted.
+     */
+    public getTargetAddress(): UnresolvedAddressDto {
+        return this.mosaicAddressRestrictionTransactionBody.getTargetAddress();
     }
 
     /**

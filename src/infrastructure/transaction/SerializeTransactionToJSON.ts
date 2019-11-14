@@ -76,34 +76,50 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             };
         case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
             return {
-                restrictionType: (transaction as AccountAddressRestrictionTransaction).restrictionType,
-                modifications: (transaction as AccountAddressRestrictionTransaction).
-                    modifications.map((modification) => {
-                        return modification.toDTO();
-                    }),
+                restrictionFlags: (transaction as AccountAddressRestrictionTransaction).restrictionFlags,
+                restrictionAdditionsCount: (transaction as AccountAddressRestrictionTransaction).restrictionAdditions.length,
+                restrictionDeletionsCount: (transaction as AccountAddressRestrictionTransaction).restrictionDeletions.length,
+                restrictionAdditions: (transaction as AccountAddressRestrictionTransaction).restrictionAdditions.map((addition) => {
+                    return addition.toDTO();
+                }),
+                restrictionDeletions: (transaction as AccountAddressRestrictionTransaction).restrictionDeletions.map((deletion) => {
+                    return deletion.toDTO();
+                }),
             };
         case TransactionType.ACCOUNT_RESTRICTION_OPERATION:
             return {
-                restrictionType: (transaction as AccountOperationRestrictionTransaction).restrictionType,
-                modifications: (transaction as AccountOperationRestrictionTransaction).
-                    modifications.map((modification) => {
-                        return modification.toDTO();
-                    }),
+                restrictionFlags: (transaction as AccountOperationRestrictionTransaction).restrictionFlags,
+                restrictionAdditionsCount: (transaction as AccountAddressRestrictionTransaction).restrictionAdditions.length,
+                restrictionDeletionsCount: (transaction as AccountAddressRestrictionTransaction).restrictionDeletions.length,
+                restrictionAdditions: (transaction as AccountOperationRestrictionTransaction).restrictionAdditions.map((addition) => {
+                    return addition;
+                }),
+                restrictionDeletions: (transaction as AccountOperationRestrictionTransaction).restrictionDeletions.map((deletion) => {
+                    return deletion;
+                }),
             };
         case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
             return {
-                restrictionType: (transaction as AccountMosaicRestrictionTransaction).restrictionType,
-                modifications: (transaction as AccountMosaicRestrictionTransaction).modifications.map((modification) => {
-                        return modification.toDTO();
+                restrictionFlags: (transaction as AccountMosaicRestrictionTransaction).restrictionFlags,
+                restrictionAdditionsCount: (transaction as AccountAddressRestrictionTransaction).restrictionAdditions.length,
+                restrictionDeletionsCount: (transaction as AccountAddressRestrictionTransaction).restrictionDeletions.length,
+                restrictionAdditions: (transaction as AccountMosaicRestrictionTransaction).restrictionAdditions.map((addition) => {
+                        return addition.toHex();
                     }),
+                restrictionDeletions: (transaction as AccountMosaicRestrictionTransaction).restrictionDeletions.map((deletion) => {
+                    return deletion.toHex();
+                }),
             };
         case TransactionType.MODIFY_MULTISIG_ACCOUNT:
             return {
                 minApprovalDelta: (transaction as MultisigAccountModificationTransaction).minApprovalDelta,
                 minRemovalDelta: (transaction as MultisigAccountModificationTransaction).minRemovalDelta,
-                modifications: (transaction as MultisigAccountModificationTransaction).modifications.map((modification) => {
-                        return modification.toDTO();
+                publicKeyAdditions: (transaction as MultisigAccountModificationTransaction).publicKeyAdditions.map((addition) => {
+                        return addition.publicKey;
                     }),
+                publicKeyDeletions: (transaction as MultisigAccountModificationTransaction).publicKeyDeletions.map((deletion) => {
+                    return deletion.publicKey;
+                }),
             };
         case TransactionType.MOSAIC_ALIAS:
             return {

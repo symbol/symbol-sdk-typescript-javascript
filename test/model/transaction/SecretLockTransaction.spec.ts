@@ -104,11 +104,11 @@ describe('SecretLockTransaction', () => {
         );
         const signedTx = secretLockTransaction.signWith(account, generationHash);
         expect(signedTx.payload.substring(
-            240,
+            256,
             signedTx.payload.length,
         )).to.be.equal(
-            '44B262C46CEABB850A000000000000006400000000000000009B3155B37159DA50AA52D5967C509B41' +
-            '0F5A36A3B1E31ECB5AC76675D79B4A5E90C2337113E6D8F15B56E0821149299F340C01706FC1CAD6CB');
+            '9B3155B37159DA50AA52D5967C509B410F5A36A3B1E31ECB5AC76675D79B4A5E44B262C46CEABB850A' +
+            '0000000000000064000000000000000090C2337113E6D8F15B56E0821149299F340C01706FC1CAD6CB');
     });
 
     it('should throw exception when the input is not related to HashTyp: Op_Sha3_256', () => {
@@ -230,7 +230,7 @@ describe('SecretLockTransaction', () => {
     });
 
     describe('size', () => {
-        it('should return 202 for SecretLockTransaction with proof of 32 bytes', () => {
+        it('should return 210 for SecretLockTransaction with proof of 32 bytes', () => {
             const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
             const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
             const secretLockTransaction = SecretLockTransaction.create(
@@ -242,7 +242,7 @@ describe('SecretLockTransaction', () => {
                 recipientAddress,
                 NetworkType.MIJIN_TEST,
             );
-            expect(secretLockTransaction.size).to.be.equal(202);
+            expect(secretLockTransaction.size).to.be.equal(210);
             expect(Convert.hexToUint8(secretLockTransaction.serialize()).length).to.be.equal(secretLockTransaction.size);
         });
     });

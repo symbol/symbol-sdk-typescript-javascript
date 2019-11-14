@@ -67,7 +67,7 @@ describe('EncryptedMessage', () => {
         );
         const signedTransaction = transferTransaction.signWith(sender, generationHash);
         const encryptMessage = EncryptedMessage
-            .createFromPayload(signedTransaction.payload.substring(298, signedTransaction.payload.length - 32));
+            .createFromPayload(signedTransaction.payload.substring(354, signedTransaction.payload.length));
         const plainMessage = recipient.decryptMessage(encryptMessage, sender.publicAccount, NetworkType.MIJIN_TEST);
         expect(plainMessage.payload).to.be.equal('Testing simple transfer');
     });

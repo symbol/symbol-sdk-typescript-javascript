@@ -25,6 +25,7 @@ import { GeneratorUtils } from './GeneratorUtils';
 import { KeyDto } from './KeyDto';
 import { NamespaceIdDto } from './NamespaceIdDto';
 import { NamespaceMetadataTransactionBodyBuilder } from './NamespaceMetadataTransactionBodyBuilder';
+import { NetworkTypeDto } from './NetworkTypeDto';
 
 /** Binary layout for an embedded namespace metadata transaction. */
 export class EmbeddedNamespaceMetadataTransactionBuilder extends EmbeddedTransactionBuilder {
@@ -36,6 +37,7 @@ export class EmbeddedNamespaceMetadataTransactionBuilder extends EmbeddedTransac
      *
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
      * @param targetPublicKey Metadata target public key.
      * @param scopedMetadataKey Metadata key scoped to source, target and type.
@@ -46,8 +48,8 @@ export class EmbeddedNamespaceMetadataTransactionBuilder extends EmbeddedTransac
      * @note when there is an existing value, new value is calculated as xor(previous-value, value).
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  targetPublicKey: KeyDto,  scopedMetadataKey: number[],  targetNamespaceId: NamespaceIdDto,  valueSizeDelta: number,  value: Uint8Array) {
-        super(signerPublicKey, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  targetPublicKey: KeyDto,  scopedMetadataKey: number[],  targetNamespaceId: NamespaceIdDto,  valueSizeDelta: number,  value: Uint8Array) {
+        super(signerPublicKey, version, network, type);
         // tslint:disable-next-line: max-line-length
         this.namespaceMetadataTransactionBody = new NamespaceMetadataTransactionBodyBuilder(targetPublicKey, scopedMetadataKey, targetNamespaceId, valueSizeDelta, value);
     }
@@ -66,7 +68,7 @@ export class EmbeddedNamespaceMetadataTransactionBuilder extends EmbeddedTransac
         const namespaceMetadataTransactionBody = NamespaceMetadataTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, namespaceMetadataTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedNamespaceMetadataTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, namespaceMetadataTransactionBody.targetPublicKey, namespaceMetadataTransactionBody.scopedMetadataKey, namespaceMetadataTransactionBody.targetNamespaceId, namespaceMetadataTransactionBody.valueSizeDelta, namespaceMetadataTransactionBody.value);
+        return new EmbeddedNamespaceMetadataTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, namespaceMetadataTransactionBody.targetPublicKey, namespaceMetadataTransactionBody.scopedMetadataKey, namespaceMetadataTransactionBody.targetNamespaceId, namespaceMetadataTransactionBody.valueSizeDelta, namespaceMetadataTransactionBody.value);
     }
 
     /**

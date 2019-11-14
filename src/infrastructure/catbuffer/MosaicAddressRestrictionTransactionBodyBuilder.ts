@@ -29,29 +29,29 @@ export class MosaicAddressRestrictionTransactionBodyBuilder {
     mosaicId: UnresolvedMosaicIdDto;
     /** Restriction key. */
     restrictionKey: number[];
-    /** Address being restricted. */
-    targetAddress: UnresolvedAddressDto;
     /** Previous restriction value. */
     previousRestrictionValue: number[];
     /** New restriction value. */
     newRestrictionValue: number[];
+    /** Address being restricted. */
+    targetAddress: UnresolvedAddressDto;
 
     /**
      * Constructor.
      *
      * @param mosaicId Identifier of the mosaic to which the restriction applies.
      * @param restrictionKey Restriction key.
-     * @param targetAddress Address being restricted.
      * @param previousRestrictionValue Previous restriction value.
      * @param newRestrictionValue New restriction value.
+     * @param targetAddress Address being restricted.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(mosaicId: UnresolvedMosaicIdDto,  restrictionKey: number[],  targetAddress: UnresolvedAddressDto,  previousRestrictionValue: number[],  newRestrictionValue: number[]) {
+    public constructor(mosaicId: UnresolvedMosaicIdDto,  restrictionKey: number[],  previousRestrictionValue: number[],  newRestrictionValue: number[],  targetAddress: UnresolvedAddressDto) {
         this.mosaicId = mosaicId;
         this.restrictionKey = restrictionKey;
-        this.targetAddress = targetAddress;
         this.previousRestrictionValue = previousRestrictionValue;
         this.newRestrictionValue = newRestrictionValue;
+        this.targetAddress = targetAddress;
     }
 
     /**
@@ -66,14 +66,14 @@ export class MosaicAddressRestrictionTransactionBodyBuilder {
         byteArray.splice(0, mosaicId.getSize());
         const restrictionKey = GeneratorUtils.bufferToUint64(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 8));
         byteArray.splice(0, 8);
-        const targetAddress = UnresolvedAddressDto.loadFromBinary(Uint8Array.from(byteArray));
-        byteArray.splice(0, targetAddress.getSize());
         const previousRestrictionValue = GeneratorUtils.bufferToUint64(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 8));
         byteArray.splice(0, 8);
         const newRestrictionValue = GeneratorUtils.bufferToUint64(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 8));
         byteArray.splice(0, 8);
+        const targetAddress = UnresolvedAddressDto.loadFromBinary(Uint8Array.from(byteArray));
+        byteArray.splice(0, targetAddress.getSize());
         // tslint:disable-next-line: max-line-length
-        return new MosaicAddressRestrictionTransactionBodyBuilder(mosaicId, restrictionKey, targetAddress, previousRestrictionValue, newRestrictionValue);
+        return new MosaicAddressRestrictionTransactionBodyBuilder(mosaicId, restrictionKey, previousRestrictionValue, newRestrictionValue, targetAddress);
     }
 
     /**
@@ -95,15 +95,6 @@ export class MosaicAddressRestrictionTransactionBodyBuilder {
     }
 
     /**
-     * Gets address being restricted.
-     *
-     * @return Address being restricted.
-     */
-    public getTargetAddress(): UnresolvedAddressDto {
-        return this.targetAddress;
-    }
-
-    /**
      * Gets previous restriction value.
      *
      * @return Previous restriction value.
@@ -122,6 +113,15 @@ export class MosaicAddressRestrictionTransactionBodyBuilder {
     }
 
     /**
+     * Gets address being restricted.
+     *
+     * @return Address being restricted.
+     */
+    public getTargetAddress(): UnresolvedAddressDto {
+        return this.targetAddress;
+    }
+
+    /**
      * Gets the size of the object.
      *
      * @return Size in bytes.
@@ -130,9 +130,9 @@ export class MosaicAddressRestrictionTransactionBodyBuilder {
         let size = 0;
         size += this.mosaicId.getSize();
         size += 8; // restrictionKey
-        size += this.targetAddress.getSize();
         size += 8; // previousRestrictionValue
         size += 8; // newRestrictionValue
+        size += this.targetAddress.getSize();
         return size;
     }
 
@@ -147,12 +147,12 @@ export class MosaicAddressRestrictionTransactionBodyBuilder {
         newArray = GeneratorUtils.concatTypedArrays(newArray, mosaicIdBytes);
         const restrictionKeyBytes = GeneratorUtils.uint64ToBuffer(this.getRestrictionKey());
         newArray = GeneratorUtils.concatTypedArrays(newArray, restrictionKeyBytes);
-        const targetAddressBytes = this.targetAddress.serialize();
-        newArray = GeneratorUtils.concatTypedArrays(newArray, targetAddressBytes);
         const previousRestrictionValueBytes = GeneratorUtils.uint64ToBuffer(this.getPreviousRestrictionValue());
         newArray = GeneratorUtils.concatTypedArrays(newArray, previousRestrictionValueBytes);
         const newRestrictionValueBytes = GeneratorUtils.uint64ToBuffer(this.getNewRestrictionValue());
         newArray = GeneratorUtils.concatTypedArrays(newArray, newRestrictionValueBytes);
+        const targetAddressBytes = this.targetAddress.serialize();
+        newArray = GeneratorUtils.concatTypedArrays(newArray, targetAddressBytes);
         return newArray;
     }
 }

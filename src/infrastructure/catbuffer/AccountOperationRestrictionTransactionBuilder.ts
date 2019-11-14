@@ -19,13 +19,12 @@
 *** along with Catapult. If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import { AccountOperationRestrictionModificationBuilder } from './AccountOperationRestrictionModificationBuilder';
 import { AccountOperationRestrictionTransactionBodyBuilder } from './AccountOperationRestrictionTransactionBodyBuilder';
-import { AccountRestrictionTypeDto } from './AccountRestrictionTypeDto';
 import { AmountDto } from './AmountDto';
 import { EntityTypeDto } from './EntityTypeDto';
 import { GeneratorUtils } from './GeneratorUtils';
 import { KeyDto } from './KeyDto';
+import { NetworkTypeDto } from './NetworkTypeDto';
 import { SignatureDto } from './SignatureDto';
 import { TimestampDto } from './TimestampDto';
 import { TransactionBuilder } from './TransactionBuilder';
@@ -41,17 +40,19 @@ export class AccountOperationRestrictionTransactionBuilder extends TransactionBu
      * @param signature Entity signature.
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
      * @param fee Transaction fee.
      * @param deadline Transaction deadline.
-     * @param restrictionType Account restriction type.
-     * @param modifications Account restriction modifications.
+     * @param restrictionFlags Account restriction flags.
+     * @param restrictionAdditions Account restriction additions.
+     * @param restrictionDeletions Account restriction deletions.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  restrictionType: AccountRestrictionTypeDto,  modifications: AccountOperationRestrictionModificationBuilder[]) {
-        super(signature, signerPublicKey, version, type, fee, deadline);
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  restrictionFlags: number,  restrictionAdditions: number[],  restrictionDeletions: number[]) {
+        super(signature, signerPublicKey, version, network, type, fee, deadline);
         // tslint:disable-next-line: max-line-length
-        this.accountOperationRestrictionTransactionBody = new AccountOperationRestrictionTransactionBodyBuilder(restrictionType, modifications);
+        this.accountOperationRestrictionTransactionBody = new AccountOperationRestrictionTransactionBodyBuilder(restrictionFlags, restrictionAdditions, restrictionDeletions);
     }
 
     /**
@@ -68,25 +69,43 @@ export class AccountOperationRestrictionTransactionBuilder extends TransactionBu
         const accountOperationRestrictionTransactionBody = AccountOperationRestrictionTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, accountOperationRestrictionTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new AccountOperationRestrictionTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.type, superObject.fee, superObject.deadline, accountOperationRestrictionTransactionBody.restrictionType, accountOperationRestrictionTransactionBody.modifications);
+        return new AccountOperationRestrictionTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, superObject.fee, superObject.deadline, accountOperationRestrictionTransactionBody.restrictionFlags, accountOperationRestrictionTransactionBody.restrictionAdditions, accountOperationRestrictionTransactionBody.restrictionDeletions);
     }
 
     /**
-     * Gets account restriction type.
+     * Gets account restriction flags.
      *
-     * @return Account restriction type.
+     * @return Account restriction flags.
      */
-    public getRestrictionType(): AccountRestrictionTypeDto {
-        return this.accountOperationRestrictionTransactionBody.getRestrictionType();
+    public getRestrictionFlags(): number {
+        return this.accountOperationRestrictionTransactionBody.getRestrictionFlags();
     }
 
     /**
-     * Gets account restriction modifications.
+     * Gets reserved padding to align restrictionAdditions on 8-byte boundary.
      *
-     * @return Account restriction modifications.
+     * @return Reserved padding to align restrictionAdditions on 8-byte boundary.
      */
-    public getModifications(): AccountOperationRestrictionModificationBuilder[] {
-        return this.accountOperationRestrictionTransactionBody.getModifications();
+    public getAccountRestrictionTransactionBody_Reserved1(): number {
+        return this.accountOperationRestrictionTransactionBody.getAccountRestrictionTransactionBody_Reserved1();
+    }
+
+    /**
+     * Gets account restriction additions.
+     *
+     * @return Account restriction additions.
+     */
+    public getRestrictionAdditions(): number[] {
+        return this.accountOperationRestrictionTransactionBody.getRestrictionAdditions();
+    }
+
+    /**
+     * Gets account restriction deletions.
+     *
+     * @return Account restriction deletions.
+     */
+    public getRestrictionDeletions(): number[] {
+        return this.accountOperationRestrictionTransactionBody.getRestrictionDeletions();
     }
 
     /**

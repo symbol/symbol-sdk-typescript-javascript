@@ -15,7 +15,7 @@
  */
 
 import { Convert } from '../../core/format';
-import { AccountMosaicRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountMosaicRestrictionModificationBuilder';
+import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AccountMosaicRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountMosaicRestrictionTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import {
@@ -28,9 +28,9 @@ import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/Unresolved
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
-import { AccountRestrictionType } from '../restriction/AccountRestrictionType';
+import { NamespaceId } from '../namespace/NamespaceId';
+import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
 import { UInt64 } from '../UInt64';
-import { AccountRestrictionModification } from './AccountRestrictionModification';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
@@ -43,23 +43,26 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
     /**
      * Create a modify account mosaic restriction transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param restrictionType - The account restriction type.
-     * @param modifications - The array of modifications.
+     * @param restrictionFlags - The account restriction flags.
+     * @param restrictionAdditions - Account restriction additions.
+     * @param restrictionDeletions - Account restriction deletions.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {AccountAddressRestrictionTransaction}
      */
     public static create(deadline: Deadline,
-                         restrictionType: AccountRestrictionType,
-                         modifications: Array<AccountRestrictionModification<number[]>>,
+                         restrictionFlags: AccountRestrictionFlags,
+                         restrictionAdditions: Array<MosaicId | NamespaceId>,
+                         restrictionDeletions: Array<MosaicId | NamespaceId>,
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): AccountMosaicRestrictionTransaction {
         return new AccountMosaicRestrictionTransaction(networkType,
             TransactionVersion.ACCOUNT_RESTRICTION_MOSAIC,
             deadline,
             maxFee,
-            restrictionType,
-            modifications);
+            restrictionFlags,
+            restrictionAdditions,
+            restrictionDeletions);
     }
 
     /**
@@ -67,8 +70,9 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
      * @param version
      * @param deadline
      * @param maxFee
-     * @param restrictionType
-     * @param modifications
+     * @param restrictionFlags
+     * @param restrictionAdditions
+     * @param restrictionDeletions
      * @param signature
      * @param signer
      * @param transactionInfo
@@ -77,8 +81,9 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
                 version: number,
                 deadline: Deadline,
                 maxFee: UInt64,
-                public readonly restrictionType: AccountRestrictionType,
-                public readonly modifications: Array<AccountRestrictionModification<number[]>>,
+                public readonly restrictionFlags: AccountRestrictionFlags,
+                public readonly restrictionAdditions: Array<MosaicId | NamespaceId>,
+                public readonly restrictionDeletions: Array<MosaicId | NamespaceId>,
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
@@ -97,16 +102,16 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
         const builder = isEmbedded ? EmbeddedAccountMosaicRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             AccountMosaicRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const networkType = builder.getNetwork().valueOf();
         const transaction = AccountMosaicRestrictionTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO(
                 (builder as AccountMosaicRestrictionTransactionBuilder).getDeadline().timestamp),
-            builder.getRestrictionType().valueOf(),
-            builder.getModifications().map((modification) => {
-                return AccountRestrictionModification.createForMosaic(
-                    modification.modificationAction.valueOf(),
-                    new MosaicId(modification.value.unresolvedMosaicId),
-                );
+            builder.getRestrictionFlags().valueOf(),
+            builder.getRestrictionAdditions().map((addition) => {
+                return UnresolvedMapping.toUnresolvedMosaic(new UInt64(addition.unresolvedMosaicId).toHex());
+            }),
+            builder.getRestrictionDeletions().map((deletion) => {
+                return UnresolvedMapping.toUnresolvedMosaic(new UInt64(deletion.unresolvedMosaicId).toHex());
             }),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountMosaicRestrictionTransactionBuilder).fee.amount),
@@ -125,15 +130,16 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
         const byteSize = super.size;
 
         // set static byte size fields
-        const byteRestrictionType = 1;
-        const byteModificationCount = 1;
+        const byteRestrictionType = 2;
+        const byteAdditionCount = 1;
+        const byteDeletionCount = 1;
+        const byteAccountRestrictionTransactionBody_Reserved1 = 4;
+        const byteRestrictionAdditions = 8 * this.restrictionAdditions.length;
+        const byteRestrictionDeletions = 8 * this.restrictionDeletions.length;
 
-        // each modification contains :
-        // - 1 byte for modificationAction
-        // - 8 bytes for the modification value (mosaicId)
-        const byteModifications = 9 * this.modifications.length;
-
-        return byteSize + byteRestrictionType + byteModificationCount + byteModifications;
+        return byteSize + byteRestrictionType + byteAdditionCount + byteDeletionCount +
+               byteRestrictionAdditions + byteRestrictionDeletions +
+               byteAccountRestrictionTransactionBody_Reserved1;
     }
 
     /**
@@ -148,15 +154,16 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
             new SignatureDto(signatureBuffer),
             new KeyDto(signerBuffer),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.ACCOUNT_RESTRICTION_MOSAIC.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            this.restrictionType.valueOf(),
-            this.modifications.map((modification) => {
-                return new AccountMosaicRestrictionModificationBuilder(
-                    modification.modificationAction.valueOf(),
-                    new UnresolvedMosaicIdDto(modification.value),
-                );
+            this.restrictionFlags.valueOf(),
+            this.restrictionAdditions.map((addition) => {
+                return new UnresolvedMosaicIdDto(addition.id.toDTO());
+            }),
+            this.restrictionDeletions.map((deletion) => {
+                return new UnresolvedMosaicIdDto(deletion.id.toDTO());
             }),
         );
         return transactionBuilder.serialize();
@@ -170,13 +177,14 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
         const transactionBuilder = new EmbeddedAccountMosaicRestrictionTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.ACCOUNT_RESTRICTION_MOSAIC.valueOf(),
-            this.restrictionType.valueOf(),
-            this.modifications.map((modification) => {
-                return new AccountMosaicRestrictionModificationBuilder(
-                    modification.modificationAction.valueOf(),
-                    new UnresolvedMosaicIdDto(modification.value),
-                );
+            this.restrictionFlags.valueOf(),
+            this.restrictionAdditions.map((addition) => {
+                return new UnresolvedMosaicIdDto(addition.id.toDTO());
+            }),
+            this.restrictionDeletions.map((deletion) => {
+                return new UnresolvedMosaicIdDto(deletion.id.toDTO());
             }),
         );
         return transactionBuilder.serialize();

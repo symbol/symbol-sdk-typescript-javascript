@@ -124,7 +124,7 @@ export class TransferTransaction extends Transaction {
         const messageType = builder.getMessage()[0];
         const messageHex = Convert.uint8ToHex(builder.getMessage()).substring(2);
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const networkType = builder.getNetwork().valueOf();
         const transaction = TransferTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO(
                 (builder as TransferTransactionBuilder).getDeadline().timestamp),
@@ -213,8 +213,9 @@ export class TransferTransaction extends Transaction {
 
         // recipient and number of mosaics are static byte size
         const byteRecipientAddress = 25;
-        const byteNumMosaics = 2;
         const byteMosaicsCount = 1;
+        const byteMessageSize = 2;
+        const byteTransferTransactionBody_Reserved1 = 4;
 
         // read message payload size
         const bytePayload = this.getMessageBuffer().length;
@@ -222,7 +223,8 @@ export class TransferTransaction extends Transaction {
         // mosaicId / namespaceId are written on 8 bytes + 8 bytes for the amount.
         const byteMosaics = (8 + 8) * this.mosaics.length;
 
-        return byteSize + byteMosaicsCount + byteRecipientAddress + byteNumMosaics + bytePayload + byteMosaics;
+        return byteSize + byteMosaicsCount + byteRecipientAddress +
+               + byteTransferTransactionBody_Reserved1 + byteMessageSize + bytePayload + byteMosaics;
     }
 
     /**
@@ -237,15 +239,16 @@ export class TransferTransaction extends Transaction {
             new SignatureDto(signatureBuffer),
             new KeyDto(signerBuffer),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.TRANSFER.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
-            this.getMessageBuffer(),
             this.sortMosaics().map((mosaic) => {
                 return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id.toDTO()),
                     new AmountDto(mosaic.amount.toDTO()));
             }),
+            this.getMessageBuffer(),
         );
         return transactionBuilder.serialize();
     }
@@ -258,13 +261,14 @@ export class TransferTransaction extends Transaction {
         const transactionBuilder = new EmbeddedTransferTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.TRANSFER.valueOf(),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
-            this.getMessageBuffer(),
             this.sortMosaics().map((mosaic) => {
                 return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id.toDTO()),
                     new AmountDto(mosaic.amount.toDTO()));
             }),
+            this.getMessageBuffer(),
         );
         return transactionBuilder.serialize();
     }

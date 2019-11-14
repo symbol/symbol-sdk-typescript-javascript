@@ -77,7 +77,7 @@ describe('MosaicMetadataTransaction', () => {
         const signedTransaction = mosaicMetadataTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
         )).to.be.equal('C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFEE80' +
                        '30000000000004CCCD78612DDF5CA01000A0000000000000000000000');
@@ -112,14 +112,14 @@ describe('MosaicMetadataTransaction', () => {
         const signedTransaction = mosaicMetadataTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
         )).to.be.equal('C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFEE80' +
                        '3000000000000C51FB4C93FCA509501000A0000000000000000000000');
     });
 
     describe('size', () => {
-        it('should return 182 for MosaicMetadataTransaction byte size', () => {
+        it('should return 190 for MosaicMetadataTransaction byte size', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
                 Deadline.create(),
                 account.publicKey,
@@ -129,7 +129,7 @@ describe('MosaicMetadataTransaction', () => {
                 Convert.uint8ToUtf8(new Uint8Array(10)),
                 NetworkType.MIJIN_TEST,
             );
-            expect(mosaicMetadataTransaction.size).to.be.equal(182);
+            expect(mosaicMetadataTransaction.size).to.be.equal(190);
             expect(Convert.hexToUint8(mosaicMetadataTransaction.serialize()).length).to.be.equal(mosaicMetadataTransaction.size);
 
         });

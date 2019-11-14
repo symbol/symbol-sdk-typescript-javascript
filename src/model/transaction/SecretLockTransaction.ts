@@ -136,7 +136,7 @@ export class SecretLockTransaction extends Transaction {
         const builder = isEmbedded ? EmbeddedSecretLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             SecretLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const networkType = builder.getNetwork().valueOf();
         const transaction = SecretLockTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO(
                 (builder as SecretLockTransactionBuilder).getDeadline().timestamp),
@@ -198,14 +198,15 @@ export class SecretLockTransaction extends Transaction {
             new SignatureDto(signatureBuffer),
             new KeyDto(signerBuffer),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.SECRET_LOCK.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
+            new Hash256Dto(this.getSecretByte()),
             new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id.toDTO()),
                                                    new AmountDto(this.mosaic.amount.toDTO())),
             new BlockDurationDto(this.duration.toDTO()),
             this.hashType.valueOf(),
-            new Hash256Dto(this.getSecretByte()),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
         );
         return transactionBuilder.serialize();
@@ -219,12 +220,13 @@ export class SecretLockTransaction extends Transaction {
         const transactionBuilder = new EmbeddedSecretLockTransactionBuilder(
             new KeyDto(convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.SECRET_LOCK.valueOf(),
+            new Hash256Dto(this.getSecretByte()),
             new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id.toDTO()),
                                                    new AmountDto(this.mosaic.amount.toDTO())),
             new BlockDurationDto(this.duration.toDTO()),
             this.hashType.valueOf(),
-            new Hash256Dto(this.getSecretByte()),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
         );
         return transactionBuilder.serialize();

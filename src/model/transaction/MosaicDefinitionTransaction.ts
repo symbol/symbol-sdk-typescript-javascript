@@ -131,7 +131,7 @@ export class MosaicDefinitionTransaction extends Transaction {
         const builder = isEmbedded ? EmbeddedMosaicDefinitionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             MosaicDefinitionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const networkType = builder.getNetwork().valueOf();
         const transaction = MosaicDefinitionTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO(
                 (builder as MosaicDefinitionTransactionBuilder).getDeadline().timestamp),
@@ -160,11 +160,11 @@ export class MosaicDefinitionTransaction extends Transaction {
         const byteSize = super.size;
 
         // set static byte size fields
-        const byteNonce = 4;
         const byteMosaicId = 8;
+        const byteDuration = 8;
+        const byteNonce = 4;
         const byteFlags = 1;
         const byteDivisibility = 1;
-        const byteDuration = 8;
 
         return byteSize + byteNonce + byteMosaicId + byteFlags + byteDivisibility + byteDuration;
     }
@@ -190,14 +190,15 @@ export class MosaicDefinitionTransaction extends Transaction {
             new SignatureDto(signatureBuffer),
             new KeyDto(signerBuffer),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.MOSAIC_DEFINITION.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            new MosaicNonceDto(this.getMosaicNonceIntValue()),
             new MosaicIdDto(this.mosaicId.id.toDTO()),
+            new BlockDurationDto(this.duration.toDTO()),
+            new MosaicNonceDto(this.getMosaicNonceIntValue()),
             this.flags.getValue(),
             this.divisibility,
-            new BlockDurationDto(this.duration.toDTO()),
         );
         return transactionBuilder.serialize();
     }
@@ -210,12 +211,13 @@ export class MosaicDefinitionTransaction extends Transaction {
         const transactionBuilder = new EmbeddedMosaicDefinitionTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.MOSAIC_DEFINITION.valueOf(),
-            new MosaicNonceDto(this.getMosaicNonceIntValue()),
             new MosaicIdDto(this.mosaicId.id.toDTO()),
+            new BlockDurationDto(this.duration.toDTO()),
+            new MosaicNonceDto(this.getMosaicNonceIntValue()),
             this.flags.getValue(),
             this.divisibility,
-            new BlockDurationDto(this.duration.toDTO()),
         );
         return transactionBuilder.serialize();
     }

@@ -15,6 +15,7 @@
  */
 
 import { expect } from 'chai';
+import {Convert} from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import { AccountLinkTransaction } from '../../../src/model/transaction/AccountLinkTransaction';
@@ -22,7 +23,6 @@ import { Deadline } from '../../../src/model/transaction/Deadline';
 import { LinkAction } from '../../../src/model/transaction/LinkAction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-import {Convert} from "../../../src/core/format";
 
 describe('AccountLinkTransaction', () => {
     let account: Account;
@@ -70,7 +70,7 @@ describe('AccountLinkTransaction', () => {
         const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
         )).to.be.equal('C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFE01');
     });
@@ -89,13 +89,13 @@ describe('AccountLinkTransaction', () => {
         const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
         )).to.be.equal('C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFE00');
     });
 
     describe('size', () => {
-        it('should return 153 for AccountLinkTransaction byte size', () => {
+        it('should return 161 for AccountLinkTransaction byte size', () => {
             const accountLinkTransaction = AccountLinkTransaction.create(
                 Deadline.create(),
                 account.publicKey,
@@ -103,7 +103,7 @@ describe('AccountLinkTransaction', () => {
                 NetworkType.MIJIN_TEST,
             );
             expect(Convert.hexToUint8(accountLinkTransaction.serialize()).length).to.be.equal(accountLinkTransaction.size);
-            expect(accountLinkTransaction.size).to.be.equal(153);
+            expect(accountLinkTransaction.size).to.be.equal(161);
         });
     });
 });

@@ -35,7 +35,7 @@ import { TransferTransaction } from '../model/transaction/TransferTransaction';
 import { UInt64 } from '../model/UInt64';
 import {
     CreateTransactionFromDTO,
-    extractBeneficiary
+    extractBeneficiary,
 } from './transaction/CreateTransactionFromDTO';
 
 enum ListenerChannelName {
@@ -139,7 +139,7 @@ export class Listener {
         } else if (message.transaction) {
             this.messageSubject.next({
                 channelName: message.meta.channelName,
-                message: CreateTransactionFromDTO(message)
+                message: CreateTransactionFromDTO(message),
             });
         } else if (message.block) {
             const networkType = parseInt(message.block.version.toString(16).substr(0, 2), 16);
@@ -181,7 +181,7 @@ export class Listener {
         } else if (message.meta && message.meta.hash) {
             this.messageSubject.next({
                 channelName: message.meta.channelName,
-                message: message.meta.hash
+                message: message.meta.hash,
             });
         }
     }
@@ -429,9 +429,10 @@ export class Listener {
      */
     private accountAddedToMultiSig(transaction: Transaction, address: Address): boolean {
         if (transaction instanceof MultisigAccountModificationTransaction) {
-            return transaction.modifications.find((_: MultisigCosignatoryModification) =>
-                _.modificationAction === CosignatoryModificationAction.Add &&
-                _.cosignatoryPublicAccount.address.equals(address)) !== undefined;
+            return transaction.publicKeyAdditions.find((_: PublicAccount) =>
+                _.address.equals(address)) !== undefined ||
+                transaction.publicKeyDeletions.find((_: PublicAccount) =>
+                _.address.equals(address)) !== undefined;
         }
         return false;
     }

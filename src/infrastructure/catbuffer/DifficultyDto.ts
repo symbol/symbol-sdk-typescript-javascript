@@ -19,43 +19,42 @@
 *** along with Catapult. If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import { AccountRestrictionModificationActionDto } from './AccountRestrictionModificationActionDto';
 import { GeneratorUtils } from './GeneratorUtils';
 
-/** Account restriction basic modification. */
-export class AccountRestrictionModificationBuilder {
-    /** Modification action. */
-    modificationAction: AccountRestrictionModificationActionDto;
+/** Difficulty. */
+export class DifficultyDto {
+    /** Difficulty. */
+    difficulty: number[];
 
     /**
      * Constructor.
      *
-     * @param modificationAction Modification action.
+     * @param difficulty Difficulty.
      */
-    public constructor(modificationAction: AccountRestrictionModificationActionDto) {
-        this.modificationAction = modificationAction;
+     constructor(difficulty: number[]) {
+        this.difficulty = difficulty;
     }
 
     /**
-     * Creates an instance of AccountRestrictionModificationBuilder from binary payload.
+     * Creates an instance of DifficultyDto from binary payload.
      *
      * @param payload Byte payload to use to serialize the object.
-     * @return Instance of AccountRestrictionModificationBuilder.
+     * @return Instance of DifficultyDto.
      */
-    public static loadFromBinary(payload: Uint8Array): AccountRestrictionModificationBuilder {
+    public static loadFromBinary(payload: Uint8Array): DifficultyDto {
         const byteArray = Array.from(payload);
-        const modificationAction = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
-        byteArray.splice(0, 1);
-        return new AccountRestrictionModificationBuilder(modificationAction);
+        const difficulty = GeneratorUtils.bufferToUint64(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 8));
+        byteArray.splice(0, 8);
+        return new DifficultyDto(difficulty);
     }
 
     /**
-     * Gets modification action.
+     * Gets Difficulty.
      *
-     * @return Modification action.
+     * @return Difficulty.
      */
-    public getModificationAction(): AccountRestrictionModificationActionDto {
-        return this.modificationAction;
+    public getDifficulty(): number[] {
+        return this.difficulty;
     }
 
     /**
@@ -64,9 +63,7 @@ export class AccountRestrictionModificationBuilder {
      * @return Size in bytes.
      */
     public getSize(): number {
-        let size = 0;
-        size += 1; // modificationAction
-        return size;
+        return 8;
     }
 
     /**
@@ -76,8 +73,8 @@ export class AccountRestrictionModificationBuilder {
      */
     public serialize(): Uint8Array {
         let newArray = Uint8Array.from([]);
-        const modificationActionBytes = GeneratorUtils.uintToBuffer(this.modificationAction, 1);
-        newArray = GeneratorUtils.concatTypedArrays(newArray, modificationActionBytes);
+        const difficultyBytes = GeneratorUtils.uint64ToBuffer(this.getDifficulty());
+        newArray = GeneratorUtils.concatTypedArrays(newArray, difficultyBytes);
         return newArray;
     }
 }

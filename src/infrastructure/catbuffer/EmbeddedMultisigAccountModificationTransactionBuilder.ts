@@ -19,12 +19,12 @@
 *** along with Catapult. If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import { CosignatoryModificationBuilder } from './CosignatoryModificationBuilder';
 import { EmbeddedTransactionBuilder } from './EmbeddedTransactionBuilder';
 import { EntityTypeDto } from './EntityTypeDto';
 import { GeneratorUtils } from './GeneratorUtils';
 import { KeyDto } from './KeyDto';
 import { MultisigAccountModificationTransactionBodyBuilder } from './MultisigAccountModificationTransactionBodyBuilder';
+import { NetworkTypeDto } from './NetworkTypeDto';
 
 /** Binary layout for an embedded multisig account modification transaction. */
 export class EmbeddedMultisigAccountModificationTransactionBuilder extends EmbeddedTransactionBuilder {
@@ -36,16 +36,18 @@ export class EmbeddedMultisigAccountModificationTransactionBuilder extends Embed
      *
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
      * @param minRemovalDelta Relative change of the minimal number of cosignatories required when removing an account.
      * @param minApprovalDelta Relative change of the minimal number of cosignatories required when approving a transaction.
-     * @param modifications Attached cosignatory modifications.
+     * @param publicKeyAdditions Cosignatory public key additions.
+     * @param publicKeyDeletions Cosignatory public key deletions.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  minRemovalDelta: number,  minApprovalDelta: number,  modifications: CosignatoryModificationBuilder[]) {
-        super(signerPublicKey, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  minRemovalDelta: number,  minApprovalDelta: number,  publicKeyAdditions: KeyDto[],  publicKeyDeletions: KeyDto[]) {
+        super(signerPublicKey, version, network, type);
         // tslint:disable-next-line: max-line-length
-        this.multisigAccountModificationTransactionBody = new MultisigAccountModificationTransactionBodyBuilder(minRemovalDelta, minApprovalDelta, modifications);
+        this.multisigAccountModificationTransactionBody = new MultisigAccountModificationTransactionBodyBuilder(minRemovalDelta, minApprovalDelta, publicKeyAdditions, publicKeyDeletions);
     }
 
     /**
@@ -62,7 +64,7 @@ export class EmbeddedMultisigAccountModificationTransactionBuilder extends Embed
         const multisigAccountModificationTransactionBody = MultisigAccountModificationTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, multisigAccountModificationTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedMultisigAccountModificationTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, multisigAccountModificationTransactionBody.minRemovalDelta, multisigAccountModificationTransactionBody.minApprovalDelta, multisigAccountModificationTransactionBody.modifications);
+        return new EmbeddedMultisigAccountModificationTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, multisigAccountModificationTransactionBody.minRemovalDelta, multisigAccountModificationTransactionBody.minApprovalDelta, multisigAccountModificationTransactionBody.publicKeyAdditions, multisigAccountModificationTransactionBody.publicKeyDeletions);
     }
 
     /**
@@ -84,12 +86,30 @@ export class EmbeddedMultisigAccountModificationTransactionBuilder extends Embed
     }
 
     /**
-     * Gets attached cosignatory modifications.
+     * Gets reserved padding to align publicKeyAdditions on 8-byte boundary.
      *
-     * @return Attached cosignatory modifications.
+     * @return Reserved padding to align publicKeyAdditions on 8-byte boundary.
      */
-    public getModifications(): CosignatoryModificationBuilder[] {
-        return this.multisigAccountModificationTransactionBody.getModifications();
+    public getMultisigAccountModificationTransactionBody_Reserved1(): number {
+        return this.multisigAccountModificationTransactionBody.getMultisigAccountModificationTransactionBody_Reserved1();
+    }
+
+    /**
+     * Gets cosignatory public key additions.
+     *
+     * @return Cosignatory public key additions.
+     */
+    public getPublicKeyAdditions(): KeyDto[] {
+        return this.multisigAccountModificationTransactionBody.getPublicKeyAdditions();
+    }
+
+    /**
+     * Gets cosignatory public key deletions.
+     *
+     * @return Cosignatory public key deletions.
+     */
+    public getPublicKeyDeletions(): KeyDto[] {
+        return this.multisigAccountModificationTransactionBody.getPublicKeyDeletions();
     }
 
     /**

@@ -131,7 +131,7 @@ export class MosaicMetadataTransaction extends Transaction {
         const builder = isEmbedded ? EmbeddedMosaicMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             MosaicMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const networkType = builder.getNetwork().valueOf();
         const transaction = MosaicMetadataTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as MosaicMetadataTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getTargetPublicKey().key),
@@ -178,6 +178,7 @@ export class MosaicMetadataTransaction extends Transaction {
             new SignatureDto(signatureBuffer),
             new KeyDto(signerBuffer),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.MOSAIC_METADATA_TRANSACTION.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
@@ -198,6 +199,7 @@ export class MosaicMetadataTransaction extends Transaction {
         const transactionBuilder = new EmbeddedMosaicMetadataTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
+            this.networkType.valueOf(),
             TransactionType.MOSAIC_METADATA_TRANSACTION.valueOf(),
             new KeyDto(Convert.hexToUint8(this.targetPublicKey)),
             this.scopedMetadataKey.toDTO(),

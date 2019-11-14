@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-import {KeyPair, SHA3Hasher} from '../../core/crypto';
-import {Convert} from '../../core/format';
+import { sha3_256 } from 'js-sha3';
+import {KeyPair, MerkleHashBuilder, SHA3Hasher} from '../../core/crypto';
+import {Convert, RawArray} from '../../core/format';
 import {AggregateBondedTransactionBuilder} from '../../infrastructure/catbuffer/AggregateBondedTransactionBuilder';
 import {AggregateCompleteTransactionBuilder} from '../../infrastructure/catbuffer/AggregateCompleteTransactionBuilder';
 import {AmountDto} from '../../infrastructure/catbuffer/AmountDto';
 import {CosignatureBuilder} from '../../infrastructure/catbuffer/CosignatureBuilder';
 import {GeneratorUtils} from '../../infrastructure/catbuffer/GeneratorUtils';
+import { Hash256Dto } from '../../infrastructure/catbuffer/Hash256Dto';
 import {KeyDto} from '../../infrastructure/catbuffer/KeyDto';
 import {SignatureDto} from '../../infrastructure/catbuffer/SignatureDto';
 import {TimestampDto} from '../../infrastructure/catbuffer/TimestampDto';
@@ -133,12 +135,12 @@ export class AggregateTransaction extends Transaction {
          * Get transaction type from the payload hex
          * As buffer uses separate builder class for Complete and bonded
          */
-        const type = parseInt(Convert.uint8ToHex(Convert.hexToUint8(payload.substring(204, 208)).reverse()), 16);
+        const type = parseInt(Convert.uint8ToHex(Convert.hexToUint8(payload.substring(220, 224)).reverse()), 16);
         const builder = type === TransactionType.AGGREGATE_COMPLETE ?
             AggregateCompleteTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             AggregateBondedTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const innerTransactionHex = Convert.uint8ToHex(builder.getTransactions());
-        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const networkType = builder.getNetwork().valueOf();
         const consignaturesHex = Convert.uint8ToHex(builder.getCosignatures());
 
         /**
@@ -150,7 +152,7 @@ export class AggregateTransaction extends Transaction {
             const payloadSize = parseInt(Convert.uint8ToHex(Convert.hexToUint8(innerBinary.substring(0, 8)).reverse()), 16) * 2;
             const innerTransaction = innerBinary.substring(0, payloadSize);
             embeddedTransactionArray.push(innerTransaction);
-            innerBinary = innerBinary.substring(payloadSize);
+            innerBinary = innerBinary.substring(payloadSize).replace(/\b0+/g, '');
         }
 
         /**
@@ -283,39 +285,39 @@ export class AggregateTransaction extends Transaction {
      */
     public get size(): number {
         const byteSize = super.size;
-
+        const byteTransactionHash = 32;
         // set static byte size fields
-        const byteTransactionsSize = 4;
+        const bytePayloadSize = 4;
+
+        const byteHeader_Reserved1 = 4;
 
         // calculate each inner transaction's size
         let byteTransactions = 0;
-        this.innerTransactions.map((transaction) => {
-            byteTransactions += (transaction.size - 80);
+        this.innerTransactions.forEach((transaction) => {
+            const transactionByte = transaction.toAggregateTransactionBytes();
+            const innerTransactionPadding = new Uint8Array(this.getInnerTransactionPaddingSize(transactionByte.length, 8));
+            const paddedTransactionByte = GeneratorUtils.concatTypedArrays(transactionByte, innerTransactionPadding);
+            byteTransactions += paddedTransactionByte.length;
         });
 
         const byteCosignatures = this.cosignatures.length * 96;
-        return byteSize + byteTransactionsSize + byteTransactions + byteCosignatures;
+        return byteSize + byteTransactionHash + bytePayloadSize + byteHeader_Reserved1 +
+               byteTransactions + byteCosignatures;
     }
 
     /**
      * @internal
      * @returns {Uint8Array}
      */
-    protected generateBytes(signer?: PublicAccount): Uint8Array {
+    protected generateBytes(): Uint8Array {
         const signerBuffer = new Uint8Array(32);
         const signatureBuffer = new Uint8Array(64);
         let transactions = Uint8Array.from([]);
         this.innerTransactions.forEach((transaction) => {
-            if (!transaction.signer) {
-                if (this.type === TransactionType.AGGREGATE_COMPLETE) {
-                    transaction = Object.assign({__proto__: Object.getPrototypeOf(transaction)}, transaction, {signer});
-                } else {
-                    throw new Error(
-                        'InnerTransaction signer must be provide. Only AggregateComplete transaction can use delegated signer.');
-                }
-            }
             const transactionByte = transaction.toAggregateTransactionBytes();
-            transactions = GeneratorUtils.concatTypedArrays(transactions, transactionByte);
+            const innerTransactionPadding = new Uint8Array(this.getInnerTransactionPaddingSize(transactionByte.length, 8));
+            const paddedTransactionByte = GeneratorUtils.concatTypedArrays(transactionByte, innerTransactionPadding);
+            transactions = GeneratorUtils.concatTypedArrays(transactions, paddedTransactionByte);
         });
 
         let cosignatures = Uint8Array.from([]);
@@ -334,9 +336,11 @@ export class AggregateTransaction extends Transaction {
                 new SignatureDto(signatureBuffer),
                 new KeyDto(signerBuffer),
                 this.versionToDTO(),
+                this.networkType.valueOf(),
                 this.type.valueOf(),
                 new AmountDto(this.maxFee.toDTO()),
                 new TimestampDto(this.deadline.toDTO()),
+                new Hash256Dto(this.calculateInnerTransactionHash()),
                 transactions,
                 cosignatures,
             ) :
@@ -344,9 +348,11 @@ export class AggregateTransaction extends Transaction {
                 new SignatureDto(signatureBuffer),
                 new KeyDto(signerBuffer),
                 this.versionToDTO(),
+                this.networkType.valueOf(),
                 this.type.valueOf(),
                 new AmountDto(this.maxFee.toDTO()),
                 new TimestampDto(this.deadline.toDTO()),
+                new Hash256Dto(this.calculateInnerTransactionHash()),
                 transactions,
                 cosignatures,
             );
@@ -359,5 +365,27 @@ export class AggregateTransaction extends Transaction {
      */
     protected generateEmbeddedBytes(): Uint8Array {
         throw new Error('Method not implemented');
+    }
+
+    /**
+     * @internal
+     * Generate inner transaction root hash (merkle tree)
+     * @returns {Uint8Array}
+     */
+    private calculateInnerTransactionHash(): Uint8Array {
+        const builder = new MerkleHashBuilder(SHA3Hasher.createHasher);
+        this.innerTransactions.forEach((transaction) => {
+            builder.update(RawArray.uint8View(sha3_256.arrayBuffer(transaction.toAggregateTransactionBytes())));
+        });
+        return builder.getRootHash();
+    }
+
+    /**
+     * Gets the padding size that rounds up \a size to the next multiple of \a alignment.
+     * @param size Inner transaction size
+     * @param alignment Next multiple alignment
+     */
+    private getInnerTransactionPaddingSize(size: number, alignment: number): number {
+        return 0 === size % alignment ? 0 : alignment - (size % alignment);
     }
 }

@@ -15,6 +15,7 @@
  */
 
 import {expect} from 'chai';
+import {Convert} from '../../../src/core/format';
 import {Account} from '../../../src/model/account/Account';
 import {Address} from '../../../src/model/account/Address';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
@@ -25,7 +26,6 @@ import {AddressAliasTransaction} from '../../../src/model/transaction/AddressAli
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
-import {Convert} from "../../../src/core/format";
 
 describe('AddressAliasTransaction', () => {
     let account: Account;
@@ -58,7 +58,7 @@ describe('AddressAliasTransaction', () => {
             namespaceId,
             address,
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0])
+            new UInt64([1, 0]),
         );
 
         expect(addressAliasTransaction.maxFee.higher).to.be.equal(0);
@@ -84,14 +84,14 @@ describe('AddressAliasTransaction', () => {
         const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('012AD8FC018D9A49E19050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
+        )).to.be.equal('2AD8FC018D9A49E19050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E14201');
 
     });
 
     describe('size', () => {
-        it('should return 154 for AggregateTransaction byte size with TransferTransaction with 1 mosaic and message NEM', () => {
+        it('should return 162 for AggregateTransaction byte size with TransferTransaction with 1 mosaic and message NEM', () => {
             const namespaceId = new NamespaceId([33347626, 3779697293]);
             const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
             const addressAliasTransaction = AddressAliasTransaction.create(
@@ -102,7 +102,7 @@ describe('AddressAliasTransaction', () => {
                 NetworkType.MIJIN_TEST,
             );
             expect(Convert.hexToUint8(addressAliasTransaction.serialize()).length).to.be.equal(addressAliasTransaction.size);
-            expect(addressAliasTransaction.size).to.be.equal(154);
+            expect(addressAliasTransaction.size).to.be.equal(162);
         });
     });
 });

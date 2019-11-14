@@ -27,7 +27,7 @@ import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
 import { AccountRestrictionModificationAction } from '../../src/model/restriction/AccountRestrictionModificationAction';
-import { AccountRestrictionType } from '../../src/model/restriction/AccountRestrictionType';
+import { AccountRestrictionFlags } from '../../src/model/restriction/AccountRestrictionType';
 import { MosaicRestrictionEntryType } from '../../src/model/restriction/MosaicRestrictionEntryType';
 import { MosaicRestrictionType } from '../../src/model/restriction/MosaicRestrictionType';
 import { AccountRestrictionModification } from '../../src/model/transaction/AccountRestrictionModification';
@@ -168,14 +168,11 @@ describe('RestrictionHttp', () => {
         });
 
         it('Announce AccountRestrictionTransaction', (done) => {
-            const addressPropertyFilter = AccountRestrictionModification.createForAddress(
-                AccountRestrictionModificationAction.Add,
-                account3.address,
-            );
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionType.AllowIncomingAddress,
-                [addressPropertyFilter],
+                AccountRestrictionFlags.AllowIncomingAddress,
+                [account3.address],
+                [],
                 NetworkType.MIJIN_TEST,
             );
             const signedTransaction = addressModification.signWith(account, generationHash);
@@ -407,14 +404,11 @@ describe('RestrictionHttp', () => {
         });
 
         it('Announce AccountRestrictionTransaction', (done) => {
-            const addressPropertyFilter = AccountRestrictionModification.createForAddress(
-                AccountRestrictionModificationAction.Remove,
-                account3.address,
-            );
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionType.AllowIncomingAddress,
-                [addressPropertyFilter],
+                AccountRestrictionFlags.AllowIncomingAddress,
+                [],
+                [account3.address],
                 NetworkType.MIJIN_TEST,
             );
             const signedTransaction = addressModification.signWith(account, generationHash);

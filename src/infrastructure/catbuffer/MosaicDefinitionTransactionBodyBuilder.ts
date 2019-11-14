@@ -26,33 +26,33 @@ import { MosaicNonceDto } from './MosaicNonceDto';
 
 /** Binary layout for a mosaic definition transaction. */
 export class MosaicDefinitionTransactionBodyBuilder {
-    /** Mosaic nonce. */
-    nonce: MosaicNonceDto;
     /** Mosaic identifier. */
     id: MosaicIdDto;
+    /** Mosaic duration. */
+    duration: BlockDurationDto;
+    /** Mosaic nonce. */
+    nonce: MosaicNonceDto;
     /** Mosaic flags. */
     flags: number;
     /** Mosaic divisibility. */
     divisibility: number;
-    /** Mosaic duration. */
-    duration: BlockDurationDto;
 
     /**
      * Constructor.
      *
-     * @param nonce Mosaic nonce.
      * @param id Mosaic identifier.
+     * @param duration Mosaic duration.
+     * @param nonce Mosaic nonce.
      * @param flags Mosaic flags.
      * @param divisibility Mosaic divisibility.
-     * @param duration Mosaic duration.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(nonce: MosaicNonceDto,  id: MosaicIdDto,  flags: number,  divisibility: number,  duration: BlockDurationDto) {
-        this.nonce = nonce;
+    public constructor(id: MosaicIdDto,  duration: BlockDurationDto,  nonce: MosaicNonceDto,  flags: number,  divisibility: number) {
         this.id = id;
+        this.duration = duration;
+        this.nonce = nonce;
         this.flags = flags;
         this.divisibility = divisibility;
-        this.duration = duration;
     }
 
     /**
@@ -63,26 +63,17 @@ export class MosaicDefinitionTransactionBodyBuilder {
      */
     public static loadFromBinary(payload: Uint8Array): MosaicDefinitionTransactionBodyBuilder {
         const byteArray = Array.from(payload);
-        const nonce = MosaicNonceDto.loadFromBinary(Uint8Array.from(byteArray));
-        byteArray.splice(0, nonce.getSize());
         const id = MosaicIdDto.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, id.getSize());
+        const duration = BlockDurationDto.loadFromBinary(Uint8Array.from(byteArray));
+        byteArray.splice(0, duration.getSize());
+        const nonce = MosaicNonceDto.loadFromBinary(Uint8Array.from(byteArray));
+        byteArray.splice(0, nonce.getSize());
         const flags = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
         byteArray.splice(0, 1);
         const divisibility = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
         byteArray.splice(0, 1);
-        const duration = BlockDurationDto.loadFromBinary(Uint8Array.from(byteArray));
-        byteArray.splice(0, duration.getSize());
-        return new MosaicDefinitionTransactionBodyBuilder(nonce, id, flags, divisibility, duration);
-    }
-
-    /**
-     * Gets mosaic nonce.
-     *
-     * @return Mosaic nonce.
-     */
-    public getNonce(): MosaicNonceDto {
-        return this.nonce;
+        return new MosaicDefinitionTransactionBodyBuilder(id, duration, nonce, flags, divisibility);
     }
 
     /**
@@ -92,6 +83,24 @@ export class MosaicDefinitionTransactionBodyBuilder {
      */
     public getId(): MosaicIdDto {
         return this.id;
+    }
+
+    /**
+     * Gets mosaic duration.
+     *
+     * @return Mosaic duration.
+     */
+    public getDuration(): BlockDurationDto {
+        return this.duration;
+    }
+
+    /**
+     * Gets mosaic nonce.
+     *
+     * @return Mosaic nonce.
+     */
+    public getNonce(): MosaicNonceDto {
+        return this.nonce;
     }
 
     /**
@@ -113,26 +122,17 @@ export class MosaicDefinitionTransactionBodyBuilder {
     }
 
     /**
-     * Gets mosaic duration.
-     *
-     * @return Mosaic duration.
-     */
-    public getDuration(): BlockDurationDto {
-        return this.duration;
-    }
-
-    /**
      * Gets the size of the object.
      *
      * @return Size in bytes.
      */
     public getSize(): number {
         let size = 0;
-        size += this.nonce.getSize();
         size += this.id.getSize();
+        size += this.duration.getSize();
+        size += this.nonce.getSize();
         size += 1; // flags
         size += 1; // divisibility
-        size += this.duration.getSize();
         return size;
     }
 
@@ -143,16 +143,16 @@ export class MosaicDefinitionTransactionBodyBuilder {
      */
     public serialize(): Uint8Array {
         let newArray = Uint8Array.from([]);
-        const nonceBytes = this.nonce.serialize();
-        newArray = GeneratorUtils.concatTypedArrays(newArray, nonceBytes);
         const idBytes = this.id.serialize();
         newArray = GeneratorUtils.concatTypedArrays(newArray, idBytes);
+        const durationBytes = this.duration.serialize();
+        newArray = GeneratorUtils.concatTypedArrays(newArray, durationBytes);
+        const nonceBytes = this.nonce.serialize();
+        newArray = GeneratorUtils.concatTypedArrays(newArray, nonceBytes);
         const flagsBytes = GeneratorUtils.uintToBuffer(this.getFlags(), 1);
         newArray = GeneratorUtils.concatTypedArrays(newArray, flagsBytes);
         const divisibilityBytes = GeneratorUtils.uintToBuffer(this.getDivisibility(), 1);
         newArray = GeneratorUtils.concatTypedArrays(newArray, divisibilityBytes);
-        const durationBytes = this.duration.serialize();
-        newArray = GeneratorUtils.concatTypedArrays(newArray, durationBytes);
         return newArray;
     }
 }

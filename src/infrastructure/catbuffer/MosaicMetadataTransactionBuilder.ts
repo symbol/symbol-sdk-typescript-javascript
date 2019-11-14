@@ -24,6 +24,7 @@ import { EntityTypeDto } from './EntityTypeDto';
 import { GeneratorUtils } from './GeneratorUtils';
 import { KeyDto } from './KeyDto';
 import { MosaicMetadataTransactionBodyBuilder } from './MosaicMetadataTransactionBodyBuilder';
+import { NetworkTypeDto } from './NetworkTypeDto';
 import { SignatureDto } from './SignatureDto';
 import { TimestampDto } from './TimestampDto';
 import { TransactionBuilder } from './TransactionBuilder';
@@ -40,6 +41,7 @@ export class MosaicMetadataTransactionBuilder extends TransactionBuilder {
      * @param signature Entity signature.
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
      * @param fee Transaction fee.
      * @param deadline Transaction deadline.
@@ -52,8 +54,8 @@ export class MosaicMetadataTransactionBuilder extends TransactionBuilder {
      * @note when there is an existing value, new value is calculated as xor(previous-value, value).
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  targetPublicKey: KeyDto,  scopedMetadataKey: number[],  targetMosaicId: UnresolvedMosaicIdDto,  valueSizeDelta: number,  value: Uint8Array) {
-        super(signature, signerPublicKey, version, type, fee, deadline);
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  targetPublicKey: KeyDto,  scopedMetadataKey: number[],  targetMosaicId: UnresolvedMosaicIdDto,  valueSizeDelta: number,  value: Uint8Array) {
+        super(signature, signerPublicKey, version, network, type, fee, deadline);
         // tslint:disable-next-line: max-line-length
         this.mosaicMetadataTransactionBody = new MosaicMetadataTransactionBodyBuilder(targetPublicKey, scopedMetadataKey, targetMosaicId, valueSizeDelta, value);
     }
@@ -71,7 +73,7 @@ export class MosaicMetadataTransactionBuilder extends TransactionBuilder {
         const mosaicMetadataTransactionBody = MosaicMetadataTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, mosaicMetadataTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new MosaicMetadataTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.type, superObject.fee, superObject.deadline, mosaicMetadataTransactionBody.targetPublicKey, mosaicMetadataTransactionBody.scopedMetadataKey, mosaicMetadataTransactionBody.targetMosaicId, mosaicMetadataTransactionBody.valueSizeDelta, mosaicMetadataTransactionBody.value);
+        return new MosaicMetadataTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, superObject.fee, superObject.deadline, mosaicMetadataTransactionBody.targetPublicKey, mosaicMetadataTransactionBody.scopedMetadataKey, mosaicMetadataTransactionBody.targetMosaicId, mosaicMetadataTransactionBody.valueSizeDelta, mosaicMetadataTransactionBody.value);
     }
 
     /**

@@ -27,6 +27,7 @@ import { KeyDto } from './KeyDto';
 import { MosaicAliasTransactionBodyBuilder } from './MosaicAliasTransactionBodyBuilder';
 import { MosaicIdDto } from './MosaicIdDto';
 import { NamespaceIdDto } from './NamespaceIdDto';
+import { NetworkTypeDto } from './NetworkTypeDto';
 
 /** Binary layout for an embedded mosaic alias transaction. */
 export class EmbeddedMosaicAliasTransactionBuilder extends EmbeddedTransactionBuilder {
@@ -38,15 +39,16 @@ export class EmbeddedMosaicAliasTransactionBuilder extends EmbeddedTransactionBu
      *
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
-     * @param aliasAction Alias action.
      * @param namespaceId Identifier of the namespace that will become an alias.
      * @param mosaicId Aliased mosaic identifier.
+     * @param aliasAction Alias action.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  aliasAction: AliasActionDto,  namespaceId: NamespaceIdDto,  mosaicId: MosaicIdDto) {
-        super(signerPublicKey, version, type);
-        this.mosaicAliasTransactionBody = new MosaicAliasTransactionBodyBuilder(aliasAction, namespaceId, mosaicId);
+    public constructor(signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  namespaceId: NamespaceIdDto,  mosaicId: MosaicIdDto,  aliasAction: AliasActionDto) {
+        super(signerPublicKey, version, network, type);
+        this.mosaicAliasTransactionBody = new MosaicAliasTransactionBodyBuilder(namespaceId, mosaicId, aliasAction);
     }
 
     /**
@@ -62,16 +64,7 @@ export class EmbeddedMosaicAliasTransactionBuilder extends EmbeddedTransactionBu
         const mosaicAliasTransactionBody = MosaicAliasTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, mosaicAliasTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedMosaicAliasTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, mosaicAliasTransactionBody.aliasAction, mosaicAliasTransactionBody.namespaceId, mosaicAliasTransactionBody.mosaicId);
-    }
-
-    /**
-     * Gets alias action.
-     *
-     * @return Alias action.
-     */
-    public getAliasAction(): AliasActionDto {
-        return this.mosaicAliasTransactionBody.getAliasAction();
+        return new EmbeddedMosaicAliasTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, mosaicAliasTransactionBody.namespaceId, mosaicAliasTransactionBody.mosaicId, mosaicAliasTransactionBody.aliasAction);
     }
 
     /**
@@ -90,6 +83,15 @@ export class EmbeddedMosaicAliasTransactionBuilder extends EmbeddedTransactionBu
      */
     public getMosaicId(): MosaicIdDto {
         return this.mosaicAliasTransactionBody.getMosaicId();
+    }
+
+    /**
+     * Gets alias action.
+     *
+     * @return Alias action.
+     */
+    public getAliasAction(): AliasActionDto {
+        return this.mosaicAliasTransactionBody.getAliasAction();
     }
 
     /**

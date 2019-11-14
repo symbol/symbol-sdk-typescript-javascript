@@ -160,7 +160,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
             NamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const registrationType = builder.getRegistrationType().valueOf();
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const networkType = builder.getNetwork().valueOf();
         const transaction = registrationType === NamespaceRegistrationType.RootNamespace ?
             NamespaceRegistrationTransaction.createRootNamespace(
                 isEmbedded ? Deadline.create() : Deadline.createFromDTO(
@@ -215,6 +215,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                 new SignatureDto(signatureBuffer),
                 new KeyDto(signerBuffer),
                 this.versionToDTO(),
+                this.networkType.valueOf(),
                 TransactionType.REGISTER_NAMESPACE.valueOf(),
                 new AmountDto(this.maxFee.toDTO()),
                 new TimestampDto(this.deadline.toDTO()),
@@ -228,6 +229,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                 new SignatureDto(signatureBuffer),
                 new KeyDto(signerBuffer),
                 this.versionToDTO(),
+                this.networkType.valueOf(),
                 TransactionType.REGISTER_NAMESPACE.valueOf(),
                 new AmountDto(this.maxFee.toDTO()),
                 new TimestampDto(this.deadline.toDTO()),
@@ -250,6 +252,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
             transactionBuilder = new EmbeddedNamespaceRegistrationTransactionBuilder(
                 new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
                 this.versionToDTO(),
+                this.networkType.valueOf(),
                 TransactionType.REGISTER_NAMESPACE.valueOf(),
                 new NamespaceIdDto(this.namespaceId.id.toDTO()),
                 Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
@@ -260,6 +263,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
             transactionBuilder = new EmbeddedNamespaceRegistrationTransactionBuilder(
                 new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
                 this.versionToDTO(),
+                this.networkType.valueOf(),
                 TransactionType.REGISTER_NAMESPACE.valueOf(),
                 new NamespaceIdDto(this.namespaceId.id.toDTO()),
                 Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),

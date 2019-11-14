@@ -20,11 +20,11 @@
 **/
 
 import { AmountDto } from './AmountDto';
-import { CosignatoryModificationBuilder } from './CosignatoryModificationBuilder';
 import { EntityTypeDto } from './EntityTypeDto';
 import { GeneratorUtils } from './GeneratorUtils';
 import { KeyDto } from './KeyDto';
 import { MultisigAccountModificationTransactionBodyBuilder } from './MultisigAccountModificationTransactionBodyBuilder';
+import { NetworkTypeDto } from './NetworkTypeDto';
 import { SignatureDto } from './SignatureDto';
 import { TimestampDto } from './TimestampDto';
 import { TransactionBuilder } from './TransactionBuilder';
@@ -40,18 +40,20 @@ export class MultisigAccountModificationTransactionBuilder extends TransactionBu
      * @param signature Entity signature.
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
      * @param fee Transaction fee.
      * @param deadline Transaction deadline.
      * @param minRemovalDelta Relative change of the minimal number of cosignatories required when removing an account.
      * @param minApprovalDelta Relative change of the minimal number of cosignatories required when approving a transaction.
-     * @param modifications Attached cosignatory modifications.
+     * @param publicKeyAdditions Cosignatory public key additions.
+     * @param publicKeyDeletions Cosignatory public key deletions.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  minRemovalDelta: number,  minApprovalDelta: number,  modifications: CosignatoryModificationBuilder[]) {
-        super(signature, signerPublicKey, version, type, fee, deadline);
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  minRemovalDelta: number,  minApprovalDelta: number,  publicKeyAdditions: KeyDto[],  publicKeyDeletions: KeyDto[]) {
+        super(signature, signerPublicKey, version, network, type, fee, deadline);
         // tslint:disable-next-line: max-line-length
-        this.multisigAccountModificationTransactionBody = new MultisigAccountModificationTransactionBodyBuilder(minRemovalDelta, minApprovalDelta, modifications);
+        this.multisigAccountModificationTransactionBody = new MultisigAccountModificationTransactionBodyBuilder(minRemovalDelta, minApprovalDelta, publicKeyAdditions, publicKeyDeletions);
     }
 
     /**
@@ -68,7 +70,7 @@ export class MultisigAccountModificationTransactionBuilder extends TransactionBu
         const multisigAccountModificationTransactionBody = MultisigAccountModificationTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, multisigAccountModificationTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new MultisigAccountModificationTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.type, superObject.fee, superObject.deadline, multisigAccountModificationTransactionBody.minRemovalDelta, multisigAccountModificationTransactionBody.minApprovalDelta, multisigAccountModificationTransactionBody.modifications);
+        return new MultisigAccountModificationTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, superObject.fee, superObject.deadline, multisigAccountModificationTransactionBody.minRemovalDelta, multisigAccountModificationTransactionBody.minApprovalDelta, multisigAccountModificationTransactionBody.publicKeyAdditions, multisigAccountModificationTransactionBody.publicKeyDeletions);
     }
 
     /**
@@ -90,12 +92,30 @@ export class MultisigAccountModificationTransactionBuilder extends TransactionBu
     }
 
     /**
-     * Gets attached cosignatory modifications.
+     * Gets reserved padding to align publicKeyAdditions on 8-byte boundary.
      *
-     * @return Attached cosignatory modifications.
+     * @return Reserved padding to align publicKeyAdditions on 8-byte boundary.
      */
-    public getModifications(): CosignatoryModificationBuilder[] {
-        return this.multisigAccountModificationTransactionBody.getModifications();
+    public getMultisigAccountModificationTransactionBody_Reserved1(): number {
+        return this.multisigAccountModificationTransactionBody.getMultisigAccountModificationTransactionBody_Reserved1();
+    }
+
+    /**
+     * Gets cosignatory public key additions.
+     *
+     * @return Cosignatory public key additions.
+     */
+    public getPublicKeyAdditions(): KeyDto[] {
+        return this.multisigAccountModificationTransactionBody.getPublicKeyAdditions();
+    }
+
+    /**
+     * Gets cosignatory public key deletions.
+     *
+     * @return Cosignatory public key deletions.
+     */
+    public getPublicKeyDeletions(): KeyDto[] {
+        return this.multisigAccountModificationTransactionBody.getPublicKeyDeletions();
     }
 
     /**

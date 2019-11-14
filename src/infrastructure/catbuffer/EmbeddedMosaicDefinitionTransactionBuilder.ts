@@ -27,6 +27,7 @@ import { KeyDto } from './KeyDto';
 import { MosaicDefinitionTransactionBodyBuilder } from './MosaicDefinitionTransactionBodyBuilder';
 import { MosaicIdDto } from './MosaicIdDto';
 import { MosaicNonceDto } from './MosaicNonceDto';
+import { NetworkTypeDto } from './NetworkTypeDto';
 
 /** Binary layout for an embedded mosaic definition transaction. */
 export class EmbeddedMosaicDefinitionTransactionBuilder extends EmbeddedTransactionBuilder {
@@ -38,18 +39,19 @@ export class EmbeddedMosaicDefinitionTransactionBuilder extends EmbeddedTransact
      *
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
-     * @param nonce Mosaic nonce.
      * @param id Mosaic identifier.
+     * @param duration Mosaic duration.
+     * @param nonce Mosaic nonce.
      * @param flags Mosaic flags.
      * @param divisibility Mosaic divisibility.
-     * @param duration Mosaic duration.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  nonce: MosaicNonceDto,  id: MosaicIdDto,  flags: number,  divisibility: number,  duration: BlockDurationDto) {
-        super(signerPublicKey, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  id: MosaicIdDto,  duration: BlockDurationDto,  nonce: MosaicNonceDto,  flags: number,  divisibility: number) {
+        super(signerPublicKey, version, network, type);
         // tslint:disable-next-line: max-line-length
-        this.mosaicDefinitionTransactionBody = new MosaicDefinitionTransactionBodyBuilder(nonce, id, flags, divisibility, duration);
+        this.mosaicDefinitionTransactionBody = new MosaicDefinitionTransactionBodyBuilder(id, duration, nonce, flags, divisibility);
     }
 
     /**
@@ -66,16 +68,7 @@ export class EmbeddedMosaicDefinitionTransactionBuilder extends EmbeddedTransact
         const mosaicDefinitionTransactionBody = MosaicDefinitionTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, mosaicDefinitionTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedMosaicDefinitionTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, mosaicDefinitionTransactionBody.nonce, mosaicDefinitionTransactionBody.id, mosaicDefinitionTransactionBody.flags, mosaicDefinitionTransactionBody.divisibility, mosaicDefinitionTransactionBody.duration);
-    }
-
-    /**
-     * Gets mosaic nonce.
-     *
-     * @return Mosaic nonce.
-     */
-    public getNonce(): MosaicNonceDto {
-        return this.mosaicDefinitionTransactionBody.getNonce();
+        return new EmbeddedMosaicDefinitionTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, mosaicDefinitionTransactionBody.id, mosaicDefinitionTransactionBody.duration, mosaicDefinitionTransactionBody.nonce, mosaicDefinitionTransactionBody.flags, mosaicDefinitionTransactionBody.divisibility);
     }
 
     /**
@@ -85,6 +78,24 @@ export class EmbeddedMosaicDefinitionTransactionBuilder extends EmbeddedTransact
      */
     public getId(): MosaicIdDto {
         return this.mosaicDefinitionTransactionBody.getId();
+    }
+
+    /**
+     * Gets mosaic duration.
+     *
+     * @return Mosaic duration.
+     */
+    public getDuration(): BlockDurationDto {
+        return this.mosaicDefinitionTransactionBody.getDuration();
+    }
+
+    /**
+     * Gets mosaic nonce.
+     *
+     * @return Mosaic nonce.
+     */
+    public getNonce(): MosaicNonceDto {
+        return this.mosaicDefinitionTransactionBody.getNonce();
     }
 
     /**
@@ -103,15 +114,6 @@ export class EmbeddedMosaicDefinitionTransactionBuilder extends EmbeddedTransact
      */
     public getDivisibility(): number {
         return this.mosaicDefinitionTransactionBody.getDivisibility();
-    }
-
-    /**
-     * Gets mosaic duration.
-     *
-     * @return Mosaic duration.
-     */
-    public getDuration(): BlockDurationDto {
-        return this.mosaicDefinitionTransactionBody.getDuration();
     }
 
     /**

@@ -16,25 +16,25 @@
 
 import {deepEqual} from 'assert';
 import {expect} from 'chai';
-import { AccountRestriction } from '../../../src/model/restriction/AccountRestriction';
-import { AccountRestrictionType } from '../../../src/model/restriction/AccountRestrictionType';
 import { Address } from '../../../src/model/account/Address';
+import { AccountRestriction } from '../../../src/model/restriction/AccountRestriction';
+import { AccountRestrictionFlags } from '../../../src/model/restriction/AccountRestrictionType';
 describe('AccountRestriction', () => {
 
     it('should createComplete an AccountRestriction object', () => {
         const accountRestrictionDTO = {
-            restrictionType: AccountRestrictionType.AllowIncomingAddress,
+            restrictionFlags: AccountRestrictionFlags.AllowIncomingAddress,
             values: ['906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB'],
         };
 
         const accountRestriction = new AccountRestriction(
-            accountRestrictionDTO.restrictionType,
+            accountRestrictionDTO.restrictionFlags,
             accountRestrictionDTO.values.map((value) => {
                 return Address.createFromEncoded(value);
             }),
         );
 
-        expect(accountRestriction.restrictionType).to.be.equal(accountRestrictionDTO.restrictionType);
+        expect(accountRestriction.restrictionFlags).to.be.equal(accountRestrictionDTO.restrictionFlags);
         deepEqual(accountRestriction.values.length, accountRestrictionDTO.values.length);
     });
 });

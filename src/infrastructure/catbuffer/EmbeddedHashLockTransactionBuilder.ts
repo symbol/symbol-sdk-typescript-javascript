@@ -26,6 +26,7 @@ import { GeneratorUtils } from './GeneratorUtils';
 import { Hash256Dto } from './Hash256Dto';
 import { HashLockTransactionBodyBuilder } from './HashLockTransactionBodyBuilder';
 import { KeyDto } from './KeyDto';
+import { NetworkTypeDto } from './NetworkTypeDto';
 import { UnresolvedMosaicBuilder } from './UnresolvedMosaicBuilder';
 
 /** Binary layout for an embedded hash lock transaction. */
@@ -38,14 +39,15 @@ export class EmbeddedHashLockTransactionBuilder extends EmbeddedTransactionBuild
      *
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
      * @param mosaic Lock mosaic.
      * @param duration Number of blocks for which a lock should be valid.
      * @param hash Lock hash.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  mosaic: UnresolvedMosaicBuilder,  duration: BlockDurationDto,  hash: Hash256Dto) {
-        super(signerPublicKey, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  mosaic: UnresolvedMosaicBuilder,  duration: BlockDurationDto,  hash: Hash256Dto) {
+        super(signerPublicKey, version, network, type);
         this.hashLockTransactionBody = new HashLockTransactionBodyBuilder(mosaic, duration, hash);
     }
 
@@ -62,7 +64,7 @@ export class EmbeddedHashLockTransactionBuilder extends EmbeddedTransactionBuild
         const hashLockTransactionBody = HashLockTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, hashLockTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedHashLockTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, hashLockTransactionBody.mosaic, hashLockTransactionBody.duration, hashLockTransactionBody.hash);
+        return new EmbeddedHashLockTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, hashLockTransactionBody.mosaic, hashLockTransactionBody.duration, hashLockTransactionBody.hash);
     }
 
     /**

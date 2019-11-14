@@ -27,6 +27,7 @@ import { KeyDto } from './KeyDto';
 import { NamespaceIdDto } from './NamespaceIdDto';
 import { NamespaceRegistrationTransactionBodyBuilder } from './NamespaceRegistrationTransactionBodyBuilder';
 import { NamespaceRegistrationTypeDto } from './NamespaceRegistrationTypeDto';
+import { NetworkTypeDto } from './NetworkTypeDto';
 import { SignatureDto } from './SignatureDto';
 import { TimestampDto } from './TimestampDto';
 import { TransactionBuilder } from './TransactionBuilder';
@@ -42,6 +43,7 @@ export class NamespaceRegistrationTransactionBuilder extends TransactionBuilder 
      * @param signature Entity signature.
      * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
+     * @param network Entity network.
      * @param type Entity type.
      * @param fee Transaction fee.
      * @param deadline Transaction deadline.
@@ -51,8 +53,8 @@ export class NamespaceRegistrationTransactionBuilder extends TransactionBuilder 
      * @param name Namespace name.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  id: NamespaceIdDto,  name: Uint8Array,  duration?: BlockDurationDto,  parentId?: NamespaceIdDto) {
-        super(signature, signerPublicKey, version, type, fee, deadline);
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  id: NamespaceIdDto,  name: Uint8Array,  duration?: BlockDurationDto,  parentId?: NamespaceIdDto) {
+        super(signature, signerPublicKey, version, network, type, fee, deadline);
         if ((duration && parentId) || (!duration && !parentId)) {
             throw new Error('Invalid conditional parameters');
         }
@@ -74,16 +76,7 @@ export class NamespaceRegistrationTransactionBuilder extends TransactionBuilder 
         const namespaceRegistrationTransactionBody = NamespaceRegistrationTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, namespaceRegistrationTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new NamespaceRegistrationTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.type, superObject.fee, superObject.deadline, namespaceRegistrationTransactionBody.id, namespaceRegistrationTransactionBody.name, namespaceRegistrationTransactionBody.duration, namespaceRegistrationTransactionBody.parentId);
-    }
-
-    /**
-     * Gets namespace registration type.
-     *
-     * @return Namespace registration type.
-     */
-    public getRegistrationType(): NamespaceRegistrationTypeDto {
-        return this.namespaceRegistrationTransactionBody.getRegistrationType();
+        return new NamespaceRegistrationTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.network, superObject.type, superObject.fee, superObject.deadline, namespaceRegistrationTransactionBody.id, namespaceRegistrationTransactionBody.name, namespaceRegistrationTransactionBody.duration, namespaceRegistrationTransactionBody.parentId);
     }
 
     /**
@@ -111,6 +104,15 @@ export class NamespaceRegistrationTransactionBuilder extends TransactionBuilder 
      */
     public getId(): NamespaceIdDto {
         return this.namespaceRegistrationTransactionBody.getId();
+    }
+
+    /**
+     * Gets namespace registration type.
+     *
+     * @return Namespace registration type.
+     */
+    public getRegistrationType(): NamespaceRegistrationTypeDto {
+        return this.namespaceRegistrationTransactionBody.getRegistrationType();
     }
 
     /**

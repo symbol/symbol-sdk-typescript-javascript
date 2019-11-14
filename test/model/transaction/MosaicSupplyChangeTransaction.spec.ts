@@ -15,6 +15,7 @@
  */
 
 import {expect} from 'chai';
+import {Convert} from '../../../src/core/format';
 import {Account} from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
@@ -23,7 +24,6 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicSupplyChangeTransaction} from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
-import {Convert} from "../../../src/core/format";
 
 describe('MosaicSupplyChangeTransaction', () => {
     let account: Account;
@@ -80,14 +80,14 @@ describe('MosaicSupplyChangeTransaction', () => {
         const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
-            240,
+            256,
             signedTransaction.payload.length,
-        )).to.be.equal('4CCCD78612DDF5CA010A00000000000000');
+        )).to.be.equal('4CCCD78612DDF5CA0A0000000000000001');
 
     });
 
     describe('size', () => {
-        it('should return 137 for MosaicSupplyChange transaction byte size', () => {
+        it('should return 145 for MosaicSupplyChange transaction byte size', () => {
             const mosaicId = new MosaicId([2262289484, 3405110546]);
             const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
                 Deadline.create(),
@@ -96,7 +96,7 @@ describe('MosaicSupplyChangeTransaction', () => {
                 UInt64.fromUint(10),
                 NetworkType.MIJIN_TEST,
             );
-            expect(mosaicSupplyChangeTransaction.size).to.be.equal(137);
+            expect(mosaicSupplyChangeTransaction.size).to.be.equal(145);
             expect(Convert.hexToUint8(mosaicSupplyChangeTransaction.serialize()).length).to.be.equal(mosaicSupplyChangeTransaction.size);
         });
     });
