@@ -17,9 +17,12 @@
 import { ClientResponse } from 'http';
 import {from as observableFrom, Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
+import { NetworkName } from '../model/blockchain/NetworkName';
 import {NetworkType} from '../model/blockchain/NetworkType';
 import { NodeInfo } from '../model/node/NodeInfo';
+import { NetworkRoutesApi } from './api/apis';
 import {Http} from './Http';
+import { NetworkTypeDTO } from './model/networkTypeDTO';
 import {NetworkRepository} from './NetworkRepository';
 import { NodeHttp } from './NodeHttp';
 
@@ -34,6 +37,7 @@ export class NetworkHttp extends Http implements NetworkRepository {
      * Nem2 Library account routes api
      */
     private nodeHttp: NodeHttp;
+    private networkRouteApi: NetworkRoutesApi;
 
     /**
      * Constructor
@@ -42,13 +46,14 @@ export class NetworkHttp extends Http implements NetworkRepository {
     constructor(url: string) {
         super();
         this.nodeHttp = new NodeHttp(url);
+        this.networkRouteApi = new NetworkRoutesApi(url);
 
     }
 
     /**
-     * Get current network type.
+     * Get current network identifier.
      *
-     * @return network type enum.
+     * @return network identifier.
      */
     public getNetworkType(): Observable<NetworkType> {
         return observableFrom(this.nodeHttp.getNodeInfo()).pipe(
@@ -56,6 +61,20 @@ export class NetworkHttp extends Http implements NetworkRepository {
                 return nodeInfo.networkIdentifier;
             }),
             catchError((error) =>  throwError(this.errorHandling(error)))),
+        );
+    }
+
+    /**
+     * Get current network type name and description
+     *
+     * @return current network type name and description
+     */
+    public getNetworkName(): Observable<NetworkName> {
+        return observableFrom(this.networkRouteApi.getNetworkType()).pipe(
+            map((response: { response: ClientResponse; body: NetworkTypeDTO; }) => {
+                return new NetworkName(response.body.name, response.body.description);
+            }),
+            catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 }

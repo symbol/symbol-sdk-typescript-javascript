@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,15 @@
  * limitations under the License.
  */
 
-import {Observable} from 'rxjs';
-import { NetworkName } from '../model/blockchain/NetworkName';
-import {NetworkType} from '../model/blockchain/NetworkType';
-
 /**
- * Network interface repository.
- *
- * @since 1.0
+ * The block merkle proof info
  */
-export interface NetworkRepository {
+export class NetworkName {
 
     /**
-     * Get current network type.
-     * @return network type enum.
+     * @param name - Network name
+     * @param description - Network description
      */
-    getNetworkType(): Observable<NetworkType>;
-
-    /**
-     * Get current network type name and description
-     *
-     * @return current network type name and description
-     */
-    getNetworkName(): Observable<NetworkName>;
+    constructor(public readonly name: string, public readonly description: string) {
+    }
 }

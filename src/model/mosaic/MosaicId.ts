@@ -50,6 +50,9 @@ export class MosaicId {
      * @param id
      */
     constructor(id: string | number[]) {
+        if (id === undefined) {
+            throw new Error('MosaicId undefined');
+        }
         if (id instanceof Array) {
             this.id = new Id(id);
         } else if (typeof id === 'string') {

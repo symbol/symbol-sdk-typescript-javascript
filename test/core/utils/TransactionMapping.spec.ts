@@ -837,6 +837,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             NetworkType.MIJIN_TEST,
         );
 
+        console.log(mosaicDefinitionTransaction.toJSON());
         const transaction =
             TransactionMapping.createFromDTO(mosaicDefinitionTransaction.toJSON()) as MosaicDefinitionTransaction;
 

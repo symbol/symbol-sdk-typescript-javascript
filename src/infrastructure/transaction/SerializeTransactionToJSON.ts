@@ -130,7 +130,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
         case TransactionType.MOSAIC_DEFINITION:
             return {
                 nonce: (transaction as MosaicDefinitionTransaction).nonce,
-                mosaicId: (transaction as MosaicDefinitionTransaction).mosaicId.toHex(),
+                id: (transaction as MosaicDefinitionTransaction).mosaicId.toHex(),
                 flags: (transaction as MosaicDefinitionTransaction).flags.getValue(),
                 divisibility: (transaction as MosaicDefinitionTransaction).divisibility,
                 duration: (transaction as MosaicDefinitionTransaction).duration.toString(),
