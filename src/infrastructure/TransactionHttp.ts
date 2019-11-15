@@ -245,7 +245,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
                 const uintHeight = (transaction.transactionInfo as TransactionInfo).height;
 
                 // now read block details
-                return observableFrom(this.blockRoutesApi.getBlockByHeight(uintHeight.compact())).pipe(
+                return observableFrom(this.blockRoutesApi.getBlockByHeight(uintHeight.toString())).pipe(
                 map((blockResponse: { response: ClientResponse; body: BlockInfoDTO; } ) => {
                     const blockDTO = blockResponse.body;
                     // @see https://nemtech.github.io/concepts/transaction.html#fees
