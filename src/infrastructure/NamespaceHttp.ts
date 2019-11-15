@@ -17,9 +17,11 @@ import { ClientResponse } from 'http';
 import {from as observableFrom, Observable, throwError} from 'rxjs';
 import {catchError, map, mergeMap} from 'rxjs/operators';
 import {Convert as convert, RawAddress as AddressLibrary} from '../core/format';
+import { AccountNames } from '../model/account/AccountNames';
 import {Address} from '../model/account/Address';
 import {PublicAccount} from '../model/account/PublicAccount';
 import {MosaicId} from '../model/mosaic/MosaicId';
+import { MosaicNames } from '../model/mosaic/MosaicNames';
 import {AddressAlias} from '../model/namespace/AddressAlias';
 import {Alias} from '../model/namespace/Alias';
 import {AliasType} from '../model/namespace/AliasType';
@@ -29,7 +31,7 @@ import {NamespaceId} from '../model/namespace/NamespaceId';
 import {NamespaceInfo} from '../model/namespace/NamespaceInfo';
 import {NamespaceName} from '../model/namespace/NamespaceName';
 import {UInt64} from '../model/UInt64';
-import { NamespaceInfoDTO, NamespaceNameDTO, NamespaceRoutesApi } from './api';
+import { AccountsNamesDTO, MosaicsNamesDTO, NamespaceInfoDTO, NamespaceNameDTO, NamespaceRoutesApi } from './api';
 import {Http} from './Http';
 import {NamespaceRepository} from './NamespaceRepository';
 import {NetworkHttp} from './NetworkHttp';
@@ -56,6 +58,59 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
         networkHttp = networkHttp == null ? new NetworkHttp(url) : networkHttp;
         super(networkHttp);
         this.namespaceRoutesApi = new NamespaceRoutesApi(url);
+    }
+
+    /**
+     * Returns friendly names for array of addresses.
+     * @summary Get readable names for a set of array of addresses
+     * @param addresses - Array of addresses
+     */
+    public getAccountsNames(addresses: Address[]): Observable<AccountNames[]> {
+        const accountIdsBody = {
+            addresses: addresses.map((address) => address.plain()),
+        };
+        return observableFrom(
+            this.namespaceRoutesApi.getAccountsNames(accountIdsBody)).pipe(
+                map((response: { response: ClientResponse; body: AccountsNamesDTO; }) => {
+                    const accountNames = response.body.accountNames;
+                    return accountNames.map((accountName) => {
+                        return new AccountNames(
+                            Address.createFromEncoded(accountName.address),
+                            accountName.names.map((name) => {
+                                return new NamespaceName(new NamespaceId(name), name);
+                            }),
+                        );
+                    });
+                }),
+                catchError((error) =>  throwError(this.errorHandling(error))),
+        );
+    }
+
+    /**
+     * Get readable names for a set of mosaics
+     * Returns friendly names for mosaics.
+     * @param mosaicIds - Array of mosaic ids
+     * @return Observable<MosaicNames[]>
+     */
+    public getMosaicsNames(mosaicIds: MosaicId[]): Observable<MosaicNames[]> {
+        const mosaicIdsBody = {
+            mosaicIds: mosaicIds.map((id) => id.toHex()),
+        };
+        return observableFrom(
+            this.namespaceRoutesApi.getMosaicsNames(mosaicIdsBody)).pipe(
+                map((response: { response: ClientResponse; body: MosaicsNamesDTO; }) => {
+                    const mosaics = response.body;
+                    return mosaics.mosaicNames.map((mosaic) => {
+                        return new MosaicNames(
+                            new MosaicId(mosaic.mosaicId),
+                            mosaic.names.map((name) => {
+                            return new NamespaceName(new NamespaceId(name), name);
+                            }),
+                        );
+                    });
+                }),
+                catchError((error) =>  throwError(this.errorHandling(error))),
+            );
     }
 
     /**

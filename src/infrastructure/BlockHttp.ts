@@ -78,7 +78,7 @@ export class BlockHttp extends Http implements BlockRepository {
      * @param height - Block height
      * @returns Observable<BlockInfo>
      */
-    public getBlockByHeight(height: number): Observable<BlockInfo> {
+    public getBlockByHeight(height: string): Observable<BlockInfo> {
         return observableFrom(this.blockRoutesApi.getBlockByHeight(height)).pipe(
             map((response: { response: ClientResponse; body: BlockInfoDTO; } ) => {
                 const blockDTO = response.body;
@@ -114,7 +114,7 @@ export class BlockHttp extends Http implements BlockRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    public getBlockTransactions(height: number,
+    public getBlockTransactions(height: string,
                                 queryParams?: QueryParams): Observable<Transaction[]> {
         return observableFrom(
             this.blockRoutesApi.getBlockTransactions(height,
@@ -137,7 +137,7 @@ export class BlockHttp extends Http implements BlockRepository {
      * @param limit - Number of blocks returned. Limit value only available in 25, 50. 75 and 100. (default 25)
      * @returns Observable<BlockInfo[]>
      */
-    public getBlocksByHeightWithLimit(height: number, limit: LimitType = LimitType.N_25): Observable<BlockInfo[]> {
+    public getBlocksByHeightWithLimit(height: string, limit: LimitType = LimitType.N_25): Observable<BlockInfo[]> {
         return observableFrom(
             this.blockRoutesApi.getBlocksByHeightWithLimit(height, limit)).pipe(
                 map((response: { response: ClientResponse; body: BlockInfoDTO[]; }) => {
@@ -171,30 +171,6 @@ export class BlockHttp extends Http implements BlockRepository {
     }
 
     /**
-     * Get the merkle path for a given a receipt statement hash and block
-     * Returns the merkle path for a [receipt statement or resolution](https://nemtech.github.io/concepts/receipt.html)
-     * linked to a block. The path is the complementary data needed to calculate the merkle root.
-     * A client can compare if the calculated root equals the one recorded in the block header,
-     * verifying that the receipt was linked with the block.
-     * @param height The height of the block.
-     * @param hash The hash of the receipt statement or resolution.
-     * @return Observable<MerkleProofInfo>
-     */
-    public getMerkleReceipts(height: number, hash: string): Observable<MerkleProofInfo> {
-        return observableFrom(
-            this.blockRoutesApi.getMerkleReceipts(height, hash)).pipe(
-                map((response: { response: ClientResponse; body: MerkleProofInfoDTO; } ) => {
-                    const merkleProofReceipt = response.body;
-                    return new MerkleProofInfo(
-                        merkleProofReceipt.merklePath!.map(
-                            (payload) => new MerklePathItem(payload.position, payload.hash)),
-                    );
-                }),
-                catchError((error) =>  throwError(this.errorHandling(error))),
-        );
-    }
-
-    /**
      * Get the merkle path for a given a transaction and block
      * Returns the merkle path for a [transaction](https://nemtech.github.io/concepts/transaction.html)
      * included in a block. The path is the complementary data needed to calculate the merkle root.
@@ -204,9 +180,9 @@ export class BlockHttp extends Http implements BlockRepository {
      * @param hash The hash of the transaction.
      * @return Observable<MerkleProofInfo>
      */
-    public getMerkleTransaction(height: number, hash: string): Observable<MerkleProofInfo> {
+    public getMerkleTransaction(height: string, hash: string): Observable<MerkleProofInfo> {
         return observableFrom(
-            this.blockRoutesApi.getMerkleReceipts(height, hash)).pipe(
+            this.blockRoutesApi.getMerkleTransaction(height, hash)).pipe(
                 map((response: { response: ClientResponse; body: MerkleProofInfoDTO; } ) => {
                     const merkleProofTransaction = response.body;
                     return new MerkleProofInfo(
@@ -215,26 +191,6 @@ export class BlockHttp extends Http implements BlockRepository {
                     );
                 }),
                 catchError((error) =>  throwError(this.errorHandling(error))),
-        );
-    }
-
-    /**
-     * Gets an array receipts for a block height.
-     * @param height - Block height from which will be the first block in the array
-     * @param queryParams - (Optional) Query params
-     * @returns Observable<Statement>
-     */
-    public getBlockReceipts(height: number): Observable<Statement> {
-        return this.getNetworkTypeObservable().pipe(
-            mergeMap((networkType) => observableFrom(
-                this.blockRoutesApi.getBlockReceipts(height)).pipe(
-                    map((response: { response: ClientResponse; body: StatementsDTO; }) => {
-                        const receiptDTO = response.body;
-                        return CreateStatementFromDTO(receiptDTO, networkType);
-                    }),
-                    catchError((error) =>  throwError(this.errorHandling(error))),
-                ),
-            ),
         );
     }
 }

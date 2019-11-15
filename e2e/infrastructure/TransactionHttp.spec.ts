@@ -2115,7 +2115,7 @@ describe('TransactionHttp', () => {
 
     describe('transactions', () => {
         it('should call transactions successfully', (done) => {
-            accountHttp.transactions(account.publicAccount.address).subscribe((transactions) => {
+            accountHttp.getAccountTransactions(account.publicAccount.address).subscribe((transactions) => {
                 const transaction = transactions[0];
                 transactionId = transaction.transactionInfo!.id;
                 transactionHash = transaction.transactionInfo!.hash;

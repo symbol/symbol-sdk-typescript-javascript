@@ -15,9 +15,10 @@
  */
 
 import {Observable} from 'rxjs';
+import { AccountNames } from '../model/account/AccountNames';
 import {Address} from '../model/account/Address';
-import {PublicAccount} from '../model/account/PublicAccount';
 import {MosaicId} from '../model/mosaic/MosaicId';
+import { MosaicNames } from '../model/mosaic/MosaicNames';
 import {NamespaceId} from '../model/namespace/NamespaceId';
 import {NamespaceInfo} from '../model/namespace/NamespaceInfo';
 import {NamespaceName} from '../model/namespace/NamespaceName';
@@ -29,6 +30,22 @@ import {QueryParams} from './QueryParams';
  * @since 1.0
  */
 export interface NamespaceRepository {
+
+    /**
+     * Get readable names for a set of accountIds.
+     * Returns friendly names for accounts.
+     * @param accountIds List of Address - * Address can be created rawAddress or publicKey
+     * @return Observable<AccountNames>
+     */
+    getAccountsNames(accountIds: Address[]): Observable<AccountNames[]>;
+
+    /**
+     * Get readable names for a set of mosaics
+     * Returns friendly names for mosaics.
+     * @param mosaicIds - Array of mosaic ids
+     * @return Observable<MosaicNames[]>
+     */
+    getMosaicsNames(mosaicIds: MosaicId[]): Observable<MosaicNames[]>;
 
     /**
      * Gets the NamespaceInfo for a given namespaceId

@@ -18,7 +18,7 @@ import { expect } from 'chai';
 import { ChronoUnit } from 'js-joda';
 import {of as observableOf} from 'rxjs';
 import {deepEqual, instance, mock, when} from 'ts-mockito';
-import { AccountHttp } from '../../src/infrastructure/AccountHttp';
+import { MultisigHttp } from '../../src/infrastructure/MultisigHttp';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { MultisigAccountGraphInfo } from '../../src/model/account/MultisigAccountGraphInfo';
@@ -26,10 +26,8 @@ import { MultisigAccountInfo } from '../../src/model/account/MultisigAccountInfo
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
-import { CosignatoryModificationAction } from '../../src/model/transaction/CosignatoryModificationAction';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
-import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { AggregateTransactionService } from '../../src/service/AggregateTransactionService';
 
@@ -77,7 +75,7 @@ describe('AggregateTransactionService', () => {
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
 
     before(() => {
-        const mockedAccountHttp = mock(AccountHttp);
+        const mockedAccountHttp = mock(MultisigHttp);
 
         when(mockedAccountHttp.getMultisigAccountInfo(deepEqual(account1.address)))
             .thenReturn(observableOf(givenAccount1Info()));
