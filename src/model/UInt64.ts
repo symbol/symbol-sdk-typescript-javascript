@@ -79,6 +79,7 @@ export class UInt64 {
         }
         return true;
     }
+
     /**
      * Constructor
      * @param uintArray
@@ -134,5 +135,16 @@ export class UInt64 {
      */
     public equals(other: UInt64): boolean {
         return this.lower === other.lower && this.higher === other.higher;
+    }
+
+    /**
+     * Compares two UInt64
+     * @param other
+     * @returns {number} - -1, 0, 1
+     */
+    public compare(other: UInt64): number {
+        const long_a = Long.fromBits(this.lower, this.higher, true);
+        const long_b = Long.fromBits(other.lower, other.higher, true);
+        return long_a.compare(long_b);
     }
 }

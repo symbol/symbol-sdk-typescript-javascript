@@ -93,6 +93,26 @@ describe('Uint64', () => {
         });
     });
 
+    describe('compare', () => {
+        it('should return -1 - unsigned', () => {
+            const value = UInt64.fromNumericString('1');
+            const other = UInt64.fromNumericString('2');
+            expect(value.compare(other)).to.be.equal(-1);
+        });
+
+        it('should return 0 - unsigned', () => {
+            const value = UInt64.fromNumericString('1');
+            const other = UInt64.fromNumericString('1');
+            expect(value.compare(other)).to.be.equal(0);
+        });
+
+        it('should return 1 - unsigned', () => {
+            const value = UInt64.fromNumericString('2');
+            const other = UInt64.fromNumericString('1');
+            expect(value.compare(other)).to.be.equal(1);
+        });
+    });
+
     describe('fromHex', () => {
         it('should create from hexadecimal notation', () => {
             hexTestCases.forEach((testCase) => {
