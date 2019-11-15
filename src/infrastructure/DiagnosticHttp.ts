@@ -72,8 +72,8 @@ export class DiagnosticHttp extends Http implements DiagnosticRepository {
             this.diagnosticRoutesApi.getServerInfo()).pipe(
                 map((response: { response: ClientResponse; body: ServerDTO; } ) => {
                     const serverDTO = response.body;
-                    return new ServerInfo(serverDTO.serverInfo.restVersion,
-                        serverDTO.serverInfo.sdkVersion);
+                    return new ServerInfo(serverDTO.restVersion,
+                        serverDTO.sdkVersion);
                 }),
                 catchError((error) =>  throwError(this.errorHandling(error))),
         );

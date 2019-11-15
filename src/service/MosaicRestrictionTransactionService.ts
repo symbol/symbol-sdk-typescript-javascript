@@ -16,7 +16,7 @@
 
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { RestrictionHttp } from '../infrastructure/RestrictionHttp';
+import { RestrictionMosaicHttp } from '../infrastructure/RestrictionMosaicHttp';
 import { Address } from '../model/account/Address';
 import { NetworkType } from '../model/blockchain/NetworkType';
 import { MosaicId } from '../model/mosaic/MosaicId';
@@ -41,7 +41,7 @@ export class MosaicRestrictionTransactionService {
      * Constructor
      * @param restrictionHttp
      */
-    constructor(private readonly restrictionHttp: RestrictionHttp) {
+    constructor(private readonly restrictionHttp: RestrictionMosaicHttp) {
     }
 
     /**

@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-import {deepEqual} from 'assert';
 import {assert, expect} from 'chai';
 import {AccountHttp} from '../../src/infrastructure/AccountHttp';
-import { Listener, TransactionHttp } from '../../src/infrastructure/infrastructure';
-import { RestrictionHttp } from '../../src/infrastructure/RestrictionHttp';
+import { Listener } from '../../src/infrastructure/Listener';
+import { MultisigHttp } from '../../src/infrastructure/MultisigHttp';
+import { NamespaceHttp } from '../../src/infrastructure/NamespaceHttp';
+import { RestrictionAccountHttp } from '../../src/infrastructure/RestrictionAccountHttp';
+import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { Account } from '../../src/model/account/Account';
 import {Address} from '../../src/model/account/Address';
 import {PublicAccount} from '../../src/model/account/PublicAccount';
@@ -27,16 +29,10 @@ import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import { AccountRestrictionModificationAction } from '../../src/model/restriction/AccountRestrictionModificationAction';
-import { AccountRestrictionFlags } from '../../src/model/restriction/AccountRestrictionType';
-import { AccountRestrictionModification } from '../../src/model/transaction/AccountRestrictionModification';
-import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
-import { CosignatoryModificationAction } from '../../src/model/transaction/CosignatoryModificationAction';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
-import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
@@ -53,7 +49,9 @@ describe('AccountHttp', () => {
     let accountPublicKey: string;
     let publicAccount: PublicAccount;
     let accountHttp: AccountHttp;
-    let restrictionHttp: RestrictionHttp;
+    let multisigHttp: MultisigHttp;
+    let namespaceHttp: NamespaceHttp;
+    let restrictionHttp: RestrictionAccountHttp;
     let transactionHttp: TransactionHttp;
     let namespaceId: NamespaceId;
     let generationHash: string;
@@ -80,7 +78,9 @@ describe('AccountHttp', () => {
             generationHash = json.generationHash;
             accountHttp = new AccountHttp(json.apiUrl);
             transactionHttp = new TransactionHttp(json.apiUrl);
-            restrictionHttp = new RestrictionHttp(json.apiUrl);
+            restrictionHttp = new RestrictionAccountHttp(json.apiUrl);
+            multisigHttp = new MultisigHttp(json.apiUrl);
+            namespaceHttp = new NamespaceHttp(json.apiUrl);
             done();
         });
     });
@@ -256,7 +256,7 @@ describe('AccountHttp', () => {
     describe('getMultisigAccountGraphInfo', () => {
         it('should call getMultisigAccountGraphInfo successfully', (done) => {
             setTimeout(() => {
-                accountHttp.getMultisigAccountGraphInfo(multisigAccount.publicAccount.address).subscribe((multisigAccountGraphInfo) => {
+                multisigHttp.getMultisigAccountGraphInfo(multisigAccount.publicAccount.address).subscribe((multisigAccountGraphInfo) => {
                     expect(multisigAccountGraphInfo.multisigAccounts.get(0)![0].
                         account.publicKey).to.be.equal(multisigAccount.publicKey);
                     done();
@@ -267,7 +267,7 @@ describe('AccountHttp', () => {
     describe('getMultisigAccountInfo', () => {
         it('should call getMultisigAccountInfo successfully', (done) => {
             setTimeout(() => {
-                accountHttp.getMultisigAccountInfo(multisigAccount.publicAccount.address).subscribe((multisigAccountInfo) => {
+                multisigHttp.getMultisigAccountInfo(multisigAccount.publicAccount.address).subscribe((multisigAccountInfo) => {
                     expect(multisigAccountInfo.account.publicKey).to.be.equal(multisigAccount.publicKey);
                     done();
                 });
@@ -277,7 +277,7 @@ describe('AccountHttp', () => {
 
     describe('outgoingTransactions', () => {
         it('should call outgoingTransactions successfully', (done) => {
-            accountHttp.outgoingTransactions(publicAccount.address).subscribe((transactions) => {
+            accountHttp.getAccountOutgoingTransactions(publicAccount.address).subscribe((transactions) => {
                 expect(transactions.length).to.be.greaterThan(0);
                 done();
             });
@@ -286,7 +286,7 @@ describe('AccountHttp', () => {
 
     describe('aggregateBondedTransactions', () => {
         it('should call aggregateBondedTransactions successfully', (done) => {
-            accountHttp.aggregateBondedTransactions(publicAccount.address).subscribe(() => {
+            accountHttp.getAccountPartialTransactions(publicAccount.address).subscribe(() => {
                 done();
             }, (error) => {
                 console.log('Error:', error);
@@ -297,7 +297,7 @@ describe('AccountHttp', () => {
 
     describe('transactions', () => {
         it('should call transactions successfully', (done) => {
-            accountHttp.transactions(publicAccount.address).subscribe((transactions) => {
+            accountHttp.getAccountTransactions(publicAccount.address).subscribe((transactions) => {
                 expect(transactions.length).to.be.greaterThan(0);
                 done();
             });
@@ -306,7 +306,7 @@ describe('AccountHttp', () => {
 
     describe('unconfirmedTransactions', () => {
         it('should call unconfirmedTransactions successfully', (done) => {
-            accountHttp.unconfirmedTransactions(publicAccount.address).subscribe((transactions) => {
+            accountHttp.getAccountUnconfirmedTransactions(publicAccount.address).subscribe((transactions) => {
                 expect(transactions.length).to.be.equal(0);
                 done();
             });
@@ -315,7 +315,7 @@ describe('AccountHttp', () => {
 
     describe('getAddressNames', () => {
         it('should call getAddressNames successfully', (done) => {
-            accountHttp.getAccountsNames([accountAddress]).subscribe((addressNames) => {
+            namespaceHttp.getAccountsNames([accountAddress]).subscribe((addressNames) => {
                 expect(addressNames.length).to.be.greaterThan(0);
                 done();
             });

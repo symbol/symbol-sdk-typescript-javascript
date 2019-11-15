@@ -51,7 +51,7 @@ export class ChainHttp extends Http implements ChainRepository {
      * @returns Observable<UInt64>
      */
     public getBlockchainHeight(): Observable<UInt64> {
-        return observableFrom(this.chainRoutesApi.getBlockchainHeight()).pipe(
+        return observableFrom(this.chainRoutesApi.getChainHeight()).pipe(
             map((response: { response: ClientResponse; body: HeightInfoDTO; } ) => {
                 const heightDTO = response.body;
                 return UInt64.fromNumericString(heightDTO.height);

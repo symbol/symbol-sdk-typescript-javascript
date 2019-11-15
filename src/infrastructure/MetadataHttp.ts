@@ -259,7 +259,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
                 metadataEntry.targetPublicKey,
                 UInt64.fromHex(metadataEntry.scopedMetadataKey),
                 metadataEntry.metadataType.valueOf(),
-                metadataEntry.valueSize,
+                Convert.decodeHex(metadataEntry.value).length,
                 Convert.decodeHex(metadataEntry.value),
                 targetId,
             ),

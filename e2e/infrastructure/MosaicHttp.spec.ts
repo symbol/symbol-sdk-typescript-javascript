@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {assert, expect} from 'chai';
-import { Listener, TransactionHttp } from '../../src/infrastructure/infrastructure';
+import { Listener, NamespaceHttp, TransactionHttp } from '../../src/infrastructure/infrastructure';
 import {MosaicHttp} from '../../src/infrastructure/MosaicHttp';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
@@ -36,6 +36,7 @@ describe('MosaicHttp', () => {
     let config;
     let namespaceId: NamespaceId;
     let transactionHttp: TransactionHttp;
+    let namespaceHttp: NamespaceHttp;
     let generationHash: string;
     before((done) => {
         const path = require('path');
@@ -48,6 +49,7 @@ describe('MosaicHttp', () => {
             account = Account.createFromPrivateKey(json.testAccount.privateKey, NetworkType.MIJIN_TEST);
             mosaicHttp = new MosaicHttp(json.apiUrl);
             transactionHttp = new TransactionHttp(json.apiUrl);
+            namespaceHttp = new NamespaceHttp(json.apiUrl);
             generationHash = json.generationHash;
             done();
         });
@@ -182,7 +184,7 @@ describe('MosaicHttp', () => {
 
     describe('getMosaicsNames', () => {
         it('should call getMosaicsNames successfully', (done) => {
-            mosaicHttp.getMosaicsNames([mosaicId]).subscribe((mosaicNames) => {
+            namespaceHttp.getMosaicsNames([mosaicId]).subscribe((mosaicNames) => {
                 expect(mosaicNames.length).to.be.greaterThan(0);
                 done();
             });

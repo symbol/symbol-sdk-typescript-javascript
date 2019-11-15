@@ -17,32 +17,27 @@
 import { ClientResponse } from 'http';
 import {from as observableFrom, Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import { DtoMapping } from '../core/utils/DtoMapping';
 import { Address } from '../model/account/Address';
 import { MosaicId } from '../model/mosaic/MosaicId';
-import { AccountRestriction } from '../model/restriction/AccountRestriction';
-import { AccountRestrictions } from '../model/restriction/AccountRestrictions';
-import { AccountRestrictionsInfo } from '../model/restriction/AccountRestrictionsInfo';
 import { MosaicAddressRestriction } from '../model/restriction/MosaicAddressRestriction';
 import { MosaicGlobalRestriction } from '../model/restriction/MosaicGlobalRestriction';
 import { MosaicGlobalRestrictionItem } from '../model/restriction/MosaicGlobalRestrictionItem';
-import { AccountRestrictionsInfoDTO,
-         MosaicAddressRestrictionDTO,
-         MosaicGlobalRestrictionDTO,
-         RestrictionRoutesApi } from './api';
+import { MosaicAddressRestrictionDTO,
+         MosaicGlobalRestrictionDTO } from './api';
+import { RestrictionMosaicRoutesApi } from './api/restrictionMosaicRoutesApi';
 import {Http} from './Http';
-import { RestrictionRepository } from './RestrictionRepository';
+import { RestrictionMosaicRepository } from './RestrictionMosaicRespository';
 
 /**
- * Restriction http repository.
+ * RestrictionMosaic http repository.
  *
  * @since 1.0
  */
-export class RestrictionHttp extends Http implements RestrictionRepository {
+export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepository {
     /**
      * @internal
      */
-    private restrictionRoutesApi: RestrictionRoutesApi;
+    private restrictionMosaicRoutesApi: RestrictionMosaicRoutesApi;
 
     /**
      * Constructor
@@ -50,44 +45,8 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
      */
     constructor(url: string) {
         super();
-        this.restrictionRoutesApi = new RestrictionRoutesApi(url);
+        this.restrictionMosaicRoutesApi = new RestrictionMosaicRoutesApi(url);
 
-    }
-
-    /**
-     * Get Account restrictions.
-     * @param publicAccount public account
-     * @returns Observable<AccountRestrictions[]>
-     */
-    public getAccountRestrictions(address: Address): Observable<AccountRestriction[]> {
-        return observableFrom(this.restrictionRoutesApi.getAccountRestrictions(address.plain()))
-            .pipe(map((response: { response: ClientResponse; body: AccountRestrictionsInfoDTO; }) => {
-                const accountRestrictions = response.body;
-                return DtoMapping.extractAccountRestrictionFromDto(accountRestrictions).accountRestrictions.restrictions;
-            }),
-            catchError((error) =>  throwError(this.errorHandling(error))),
-        );
-    }
-
-    /**
-     * Get Account restrictions.
-     * @param address list of addresses
-     * @returns Observable<AccountRestrictionsInfo[]>
-     */
-    public getAccountRestrictionsFromAccounts(addresses: Address[]): Observable<AccountRestrictions[]> {
-        const accountIds = {
-            addresses: addresses.map((address) => address.plain()),
-        };
-        return observableFrom(
-            this.restrictionRoutesApi.getAccountRestrictionsFromAccounts(accountIds))
-                .pipe(map((response: { response: ClientResponse; body: AccountRestrictionsInfoDTO[]; }) => {
-                    const accountRestrictions = response.body;
-                    return accountRestrictions.map((restriction) => {
-                        return DtoMapping.extractAccountRestrictionFromDto(restriction).accountRestrictions;
-                    });
-                }),
-                catchError((error) =>  throwError(this.errorHandling(error))),
-        );
     }
 
     /**
@@ -99,7 +58,7 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
      */
     getMosaicAddressRestriction(mosaicId: MosaicId, address: Address): Observable<MosaicAddressRestriction> {
         return observableFrom(
-            this.restrictionRoutesApi.getMosaicAddressRestriction(mosaicId.toHex(), address.plain())).pipe(
+            this.restrictionMosaicRoutesApi.getMosaicAddressRestriction(mosaicId.toHex(), address.plain())).pipe(
                 map((response: { response: ClientResponse; body: MosaicAddressRestrictionDTO; }) => {
                     const payload = response.body.mosaicRestrictionEntry;
                     const restirctionItems = new Map<string, string>();
@@ -130,7 +89,7 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
             addresses: addresses.map((address) => address.plain()),
         };
         return observableFrom(
-            this.restrictionRoutesApi.getMosaicAddressRestrictions(mosaicId.toHex(), accountIds)).pipe(
+            this.restrictionMosaicRoutesApi.getMosaicAddressRestrictions(mosaicId.toHex(), accountIds)).pipe(
                 map((response: { response: ClientResponse; body: MosaicAddressRestrictionDTO[]; }) => {
                     const mosaicAddressRestrictionsDTO = response.body;
                     return mosaicAddressRestrictionsDTO.map((payload) => {
@@ -159,7 +118,7 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
      */
     getMosaicGlobalRestriction(mosaicId: MosaicId): Observable<MosaicGlobalRestriction> {
         return observableFrom(
-            this.restrictionRoutesApi.getMosaicGlobalRestriction(mosaicId.toHex())).pipe(
+            this.restrictionMosaicRoutesApi.getMosaicGlobalRestriction(mosaicId.toHex())).pipe(
                 map((response: { response: ClientResponse; body: MosaicGlobalRestrictionDTO; }) => {
                     const payload = response.body.mosaicRestrictionEntry;
                     const restirctionItems = new Map<string, MosaicGlobalRestrictionItem>();
@@ -192,7 +151,7 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
             mosaicIds: mosaicIds.map((id) => id.toHex()),
         };
         return observableFrom(
-            this.restrictionRoutesApi.getMosaicGlobalRestrictions(mosaicIdsBody)).pipe(
+            this.restrictionMosaicRoutesApi.getMosaicGlobalRestrictions(mosaicIdsBody)).pipe(
                 map((response: { response: ClientResponse; body: MosaicGlobalRestrictionDTO[]; }) => {
                     const mosaicGlobalRestrictionsDTO = response.body;
                     return mosaicGlobalRestrictionsDTO.map((payload) => {

@@ -16,7 +16,7 @@
 
 import {assert, expect} from 'chai';
 import {BlockHttp} from '../../src/infrastructure/BlockHttp';
-import { Listener, TransactionHttp } from '../../src/infrastructure/infrastructure';
+import { Listener, ReceiptHttp, TransactionHttp } from '../../src/infrastructure/infrastructure';
 import {QueryParams} from '../../src/infrastructure/QueryParams';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
@@ -30,6 +30,7 @@ describe('BlockHttp', () => {
     let account: Account;
     let account2: Account;
     let blockHttp: BlockHttp;
+    let receiptHttp: ReceiptHttp;
     let transactionHttp: TransactionHttp;
     let blockReceiptHash = '';
     let blockTransactionHash = '';
@@ -48,6 +49,7 @@ describe('BlockHttp', () => {
             account2 = Account.createFromPrivateKey(json.testAccount2.privateKey, NetworkType.MIJIN_TEST);
             blockHttp = new BlockHttp(json.apiUrl);
             transactionHttp = new TransactionHttp(json.apiUrl);
+            receiptHttp = new ReceiptHttp(json.apiUrl);
             generationHash = json.generationHash;
             done();
         });
@@ -80,8 +82,7 @@ describe('BlockHttp', () => {
             const signedTransaction = transferTransaction.signWith(account, generationHash);
 
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-
-                chainHeight = transaction.transactionInfo!.height.lower;
+                chainHeight = transaction.transactionInfo!.height.toString();
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -95,7 +96,7 @@ describe('BlockHttp', () => {
 
     describe('getBlockByHeight', () => {
         it('should return block info given height', (done) => {
-            blockHttp.getBlockByHeight(1)
+            blockHttp.getBlockByHeight('1')
                 .subscribe((blockInfo) => {
                     blockReceiptHash = blockInfo.blockReceiptsHash;
                     blockTransactionHash = blockInfo.blockTransactionsHash;
@@ -113,7 +114,7 @@ describe('BlockHttp', () => {
         let firstId: string;
 
         it('should return block transactions data given height', (done) => {
-            blockHttp.getBlockTransactions(1)
+            blockHttp.getBlockTransactions('1')
                 .subscribe((transactions) => {
                     nextId = transactions[0].transactionInfo!.id;
                     firstId = transactions[1].transactionInfo!.id;
@@ -123,7 +124,7 @@ describe('BlockHttp', () => {
         });
 
         it('should return block transactions data given height with paginated transactionId', (done) => {
-            blockHttp.getBlockTransactions(1, new QueryParams(10, nextId))
+            blockHttp.getBlockTransactions('1', new QueryParams(10, nextId))
                 .subscribe((transactions) => {
                     expect(transactions[0].transactionInfo!.id).to.be.equal(firstId);
                     expect(transactions.length).to.be.greaterThan(0);
@@ -143,7 +144,7 @@ describe('BlockHttp', () => {
     });
     describe('getMerkleReceipts', () => {
         it('should return Merkle Receipts', (done) => {
-            blockHttp.getMerkleReceipts(chainHeight, blockReceiptHash)
+            receiptHttp.getMerkleReceipts(chainHeight, blockReceiptHash)
                 .subscribe((merkleReceipts) => {
                     expect(merkleReceipts.merklePath).not.to.be.null;
                     done();
@@ -162,7 +163,7 @@ describe('BlockHttp', () => {
 
     describe('getBlockReceipts', () => {
         it('should return block receipts', (done) => {
-            blockHttp.getBlockReceipts(chainHeight)
+            receiptHttp.getBlockReceipts(chainHeight)
                 .subscribe((statement) => {
                     expect(statement.transactionStatements).not.to.be.null;
                     expect(statement.transactionStatements.length).to.be.greaterThan(0);
