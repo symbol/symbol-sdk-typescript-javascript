@@ -47,108 +47,120 @@ import { TransferTransaction } from '../../model/transaction/TransferTransaction
 export const SerializeTransactionToJSON = (transaction: Transaction): any => {
     switch (transaction.type) {
         case TransactionType.LINK_ACCOUNT:
+            const accountLinkTx = transaction as AccountLinkTransaction;
             return {
-                remotePublicKey: (transaction as AccountLinkTransaction).remotePublicKey,
-                linkAction: (transaction as AccountLinkTransaction).linkAction,
+                remotePublicKey: accountLinkTx.remotePublicKey,
+                linkAction: accountLinkTx.linkAction,
             };
         case TransactionType.ADDRESS_ALIAS:
+            const addressAliasTx = transaction as AddressAliasTransaction;
             return {
-                aliasAction: (transaction as AddressAliasTransaction).aliasAction,
-                namespaceId: (transaction as AddressAliasTransaction).namespaceId.toHex(),
-                address: (transaction as AddressAliasTransaction).address.toDTO(),
+                aliasAction: addressAliasTx.aliasAction,
+                namespaceId: addressAliasTx.namespaceId.toHex(),
+                address: addressAliasTx.address.toDTO(),
             };
         case TransactionType.AGGREGATE_BONDED:
         case TransactionType.AGGREGATE_COMPLETE:
+            const aggregateTx = transaction as AggregateTransaction;
             return {
-                transactions: (transaction as AggregateTransaction).innerTransactions.map((innerTransaction) => {
+                transactions: aggregateTx.innerTransactions.map((innerTransaction) => {
                     return innerTransaction.toJSON();
                 }),
-                cosignatures: (transaction as AggregateTransaction).cosignatures.map((cosignature) => {
+                cosignatures: aggregateTx.cosignatures.map((cosignature) => {
                     return cosignature.toDTO();
                 }),
             };
         case TransactionType.LOCK:
+            const LockFundTx = transaction as LockFundsTransaction;
             return {
-                mosaicId: (transaction as LockFundsTransaction).mosaic.id.id,
-                amount: (transaction as LockFundsTransaction).mosaic.amount.toString(),
-                duration: (transaction as LockFundsTransaction).duration.toString(),
-                hash: (transaction as LockFundsTransaction).hash,
+                mosaicId: LockFundTx.mosaic.id.id,
+                amount: LockFundTx.mosaic.amount.toString(),
+                duration: LockFundTx.duration.toString(),
+                hash: LockFundTx.hash,
             };
         case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
+            const accountAddressRestrictionTx = transaction as AccountAddressRestrictionTransaction;
             return {
-                restrictionFlags: (transaction as AccountAddressRestrictionTransaction).restrictionFlags,
-                restrictionAdditionsCount: (transaction as AccountAddressRestrictionTransaction).restrictionAdditions.length,
-                restrictionDeletionsCount: (transaction as AccountAddressRestrictionTransaction).restrictionDeletions.length,
-                restrictionAdditions: (transaction as AccountAddressRestrictionTransaction).restrictionAdditions.map((addition) => {
+                restrictionFlags: accountAddressRestrictionTx.restrictionFlags,
+                restrictionAdditionsCount: accountAddressRestrictionTx.restrictionAdditions.length,
+                restrictionDeletionsCount: accountAddressRestrictionTx.restrictionDeletions.length,
+                restrictionAdditions: accountAddressRestrictionTx.restrictionAdditions.map((addition) => {
                     return addition.toDTO();
                 }),
-                restrictionDeletions: (transaction as AccountAddressRestrictionTransaction).restrictionDeletions.map((deletion) => {
+                restrictionDeletions: accountAddressRestrictionTx.restrictionDeletions.map((deletion) => {
                     return deletion.toDTO();
                 }),
             };
         case TransactionType.ACCOUNT_RESTRICTION_OPERATION:
+            const accountOperationRestrictionTx = transaction as AccountOperationRestrictionTransaction;
             return {
-                restrictionFlags: (transaction as AccountOperationRestrictionTransaction).restrictionFlags,
-                restrictionAdditionsCount: (transaction as AccountAddressRestrictionTransaction).restrictionAdditions.length,
-                restrictionDeletionsCount: (transaction as AccountAddressRestrictionTransaction).restrictionDeletions.length,
-                restrictionAdditions: (transaction as AccountOperationRestrictionTransaction).restrictionAdditions.map((addition) => {
+                restrictionFlags: accountOperationRestrictionTx.restrictionFlags,
+                restrictionAdditionsCount: accountOperationRestrictionTx.restrictionAdditions.length,
+                restrictionDeletionsCount: accountOperationRestrictionTx.restrictionDeletions.length,
+                restrictionAdditions: accountOperationRestrictionTx.restrictionAdditions.map((addition) => {
                     return addition;
                 }),
-                restrictionDeletions: (transaction as AccountOperationRestrictionTransaction).restrictionDeletions.map((deletion) => {
+                restrictionDeletions: accountOperationRestrictionTx.restrictionDeletions.map((deletion) => {
                     return deletion;
                 }),
             };
         case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
+            const accountMosaicRestrictionTx = transaction as AccountMosaicRestrictionTransaction;
             return {
-                restrictionFlags: (transaction as AccountMosaicRestrictionTransaction).restrictionFlags,
-                restrictionAdditionsCount: (transaction as AccountAddressRestrictionTransaction).restrictionAdditions.length,
-                restrictionDeletionsCount: (transaction as AccountAddressRestrictionTransaction).restrictionDeletions.length,
-                restrictionAdditions: (transaction as AccountMosaicRestrictionTransaction).restrictionAdditions.map((addition) => {
+                restrictionFlags: accountMosaicRestrictionTx.restrictionFlags,
+                restrictionAdditionsCount: accountMosaicRestrictionTx.restrictionAdditions.length,
+                restrictionDeletionsCount: accountMosaicRestrictionTx.restrictionDeletions.length,
+                restrictionAdditions: accountMosaicRestrictionTx.restrictionAdditions.map((addition) => {
                         return addition.toHex();
                     }),
-                restrictionDeletions: (transaction as AccountMosaicRestrictionTransaction).restrictionDeletions.map((deletion) => {
+                restrictionDeletions: accountMosaicRestrictionTx.restrictionDeletions.map((deletion) => {
                     return deletion.toHex();
                 }),
             };
         case TransactionType.MODIFY_MULTISIG_ACCOUNT:
+            const multisigTx = transaction as MultisigAccountModificationTransaction;
             return {
-                minApprovalDelta: (transaction as MultisigAccountModificationTransaction).minApprovalDelta,
-                minRemovalDelta: (transaction as MultisigAccountModificationTransaction).minRemovalDelta,
-                publicKeyAdditions: (transaction as MultisigAccountModificationTransaction).publicKeyAdditions.map((addition) => {
+                minApprovalDelta: multisigTx.minApprovalDelta,
+                minRemovalDelta: multisigTx.minRemovalDelta,
+                publicKeyAdditions: multisigTx.publicKeyAdditions.map((addition) => {
                         return addition.publicKey;
                     }),
-                publicKeyDeletions: (transaction as MultisigAccountModificationTransaction).publicKeyDeletions.map((deletion) => {
+                publicKeyDeletions: multisigTx.publicKeyDeletions.map((deletion) => {
                     return deletion.publicKey;
                 }),
             };
         case TransactionType.MOSAIC_ALIAS:
+            const mosaicAliasTx = transaction as MosaicAliasTransaction;
             return {
-                aliasAction: (transaction as MosaicAliasTransaction).aliasAction,
-                namespaceId: (transaction as MosaicAliasTransaction).namespaceId.toHex(),
-                mosaicId: (transaction as MosaicAliasTransaction).mosaicId.toHex(),
+                aliasAction: mosaicAliasTx.aliasAction,
+                namespaceId: mosaicAliasTx.namespaceId.toHex(),
+                mosaicId: mosaicAliasTx.mosaicId.toHex(),
             };
         case TransactionType.MOSAIC_DEFINITION:
+            const mosaicDefinitionTx = transaction as MosaicDefinitionTransaction;
             return {
-                nonce: (transaction as MosaicDefinitionTransaction).nonce,
-                id: (transaction as MosaicDefinitionTransaction).mosaicId.toHex(),
-                flags: (transaction as MosaicDefinitionTransaction).flags.getValue(),
-                divisibility: (transaction as MosaicDefinitionTransaction).divisibility,
-                duration: (transaction as MosaicDefinitionTransaction).duration.toString(),
+                nonce: mosaicDefinitionTx.nonce,
+                id: mosaicDefinitionTx.mosaicId.toHex(),
+                flags: mosaicDefinitionTx.flags.getValue(),
+                divisibility: mosaicDefinitionTx.divisibility,
+                duration: mosaicDefinitionTx.duration.toString(),
             };
         case TransactionType.MOSAIC_SUPPLY_CHANGE:
+            const mosaicSupplyTx = transaction as MosaicSupplyChangeTransaction;
             return {
-                mosaicId: (transaction as MosaicSupplyChangeTransaction).mosaicId.toHex(),
-                action: (transaction as MosaicSupplyChangeTransaction).action,
-                delta: (transaction as MosaicSupplyChangeTransaction).delta.toString(),
+                mosaicId: mosaicSupplyTx.mosaicId.toHex(),
+                action: mosaicSupplyTx.action,
+                delta: mosaicSupplyTx.delta.toString(),
             };
         case TransactionType.REGISTER_NAMESPACE:
-            const registerNamespaceDuration = (transaction as NamespaceRegistrationTransaction).duration;
-            const registerNamespaceParentId = (transaction as NamespaceRegistrationTransaction).parentId;
+            const namespaceTx = transaction as NamespaceRegistrationTransaction;
+            const registerNamespaceDuration = namespaceTx.duration;
+            const registerNamespaceParentId = namespaceTx.parentId;
 
             const jsonObject = {
-                registrationType: (transaction as NamespaceRegistrationTransaction).registrationType,
-                namespaceName: (transaction as NamespaceRegistrationTransaction).namespaceName,
-                id: (transaction as NamespaceRegistrationTransaction).namespaceId.toHex(),
+                registrationType: namespaceTx.registrationType,
+                namespaceName: namespaceTx.namespaceName,
+                id: namespaceTx.namespaceId.toHex(),
             };
 
             if (registerNamespaceDuration) {
@@ -159,75 +171,83 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             }
             return jsonObject;
         case TransactionType.SECRET_LOCK:
+            const secretLockTx = transaction as SecretLockTransaction;
             return {
-                mosaicId: (transaction as SecretLockTransaction).mosaic.id.id.toHex(),
-                amount: (transaction as SecretLockTransaction).mosaic.amount.toString(),
-                duration: (transaction as SecretLockTransaction).duration.toString(),
-                hashAlgorithm: (transaction as SecretLockTransaction).hashType,
-                secret: (transaction as SecretLockTransaction).secret,
-                recipientAddress: (transaction as SecretLockTransaction).recipientAddress.toDTO(),
+                mosaicId: secretLockTx.mosaic.id.id.toHex(),
+                amount: secretLockTx.mosaic.amount.toString(),
+                duration: secretLockTx.duration.toString(),
+                hashAlgorithm: secretLockTx.hashType,
+                secret: secretLockTx.secret,
+                recipientAddress: secretLockTx.recipientAddress.toDTO(),
             };
         case TransactionType.SECRET_PROOF:
+            const secretProofTx = transaction as SecretProofTransaction;
             return {
-                hashAlgorithm: (transaction as SecretProofTransaction).hashType,
-                secret: (transaction as SecretProofTransaction).secret,
-                recipientAddress: (transaction as SecretProofTransaction).recipientAddress.toDTO(),
-                proof: (transaction as SecretProofTransaction).proof,
+                hashAlgorithm: secretProofTx.hashType,
+                secret: secretProofTx.secret,
+                recipientAddress: secretProofTx.recipientAddress.toDTO(),
+                proof: secretProofTx.proof,
             };
         case TransactionType.TRANSFER:
+            const transferTx = transaction as TransferTransaction;
             return {
-                recipientAddress: (transaction as TransferTransaction).recipientAddress.toDTO(),
-                mosaics: (transaction as TransferTransaction).mosaics.map((mosaic) => {
+                recipientAddress: transferTx.recipientAddress.toDTO(),
+                mosaics: transferTx.mosaics.map((mosaic) => {
                     return mosaic.toDTO();
                 }),
-                message: (transaction as TransferTransaction).message.toDTO(),
+                message: transferTx.message.toDTO(),
             };
         case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
+            const mosaicGlobalRestrictionTx = transaction as MosaicGlobalRestrictionTransaction;
             return {
-                mosaicId: (transaction as MosaicGlobalRestrictionTransaction).mosaicId.toHex(),
-                referenceMosaicId: (transaction as MosaicGlobalRestrictionTransaction).referenceMosaicId.toHex(),
-                restrictionKey: (transaction as MosaicGlobalRestrictionTransaction).restrictionKey.toHex(),
-                previousRestrictionValue: (transaction as MosaicGlobalRestrictionTransaction).previousRestrictionValue.toString(),
-                previousRestrictionType: (transaction as MosaicGlobalRestrictionTransaction).previousRestrictionType,
-                newRestrictionValue: (transaction as MosaicGlobalRestrictionTransaction).newRestrictionValue.toString(),
-                newRestrictionType: (transaction as MosaicGlobalRestrictionTransaction).newRestrictionType,
+                mosaicId: mosaicGlobalRestrictionTx.mosaicId.toHex(),
+                referenceMosaicId: mosaicGlobalRestrictionTx.referenceMosaicId.toHex(),
+                restrictionKey: mosaicGlobalRestrictionTx.restrictionKey.toHex(),
+                previousRestrictionValue: mosaicGlobalRestrictionTx.previousRestrictionValue.toString(),
+                previousRestrictionType: mosaicGlobalRestrictionTx.previousRestrictionType,
+                newRestrictionValue: mosaicGlobalRestrictionTx.newRestrictionValue.toString(),
+                newRestrictionType: mosaicGlobalRestrictionTx.newRestrictionType,
             };
         case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
+            const mosaicAddressRestrictionTx = transaction as MosaicAddressRestrictionTransaction;
             return {
-                mosaicId: (transaction as MosaicAddressRestrictionTransaction).mosaicId.toHex(),
-                restrictionKey: (transaction as MosaicAddressRestrictionTransaction).restrictionKey.toHex(),
-                targetAddress: (transaction as MosaicAddressRestrictionTransaction).targetAddress.toDTO(),
-                previousRestrictionValue: (transaction as MosaicAddressRestrictionTransaction).previousRestrictionValue.toString(),
-                newRestrictionValue: (transaction as MosaicAddressRestrictionTransaction).newRestrictionValue.toString(),
+                mosaicId: mosaicAddressRestrictionTx.mosaicId.toHex(),
+                restrictionKey: mosaicAddressRestrictionTx.restrictionKey.toHex(),
+                targetAddress: mosaicAddressRestrictionTx.targetAddress.toDTO(),
+                previousRestrictionValue: mosaicAddressRestrictionTx.previousRestrictionValue.toString(),
+                newRestrictionValue: mosaicAddressRestrictionTx.newRestrictionValue.toString(),
 
             };
         case TransactionType.ACCOUNT_METADATA_TRANSACTION:
+            const accountMetadataTx = transaction as AccountMetadataTransaction;
             return {
-                targetPublicKey: (transaction as AccountMetadataTransaction).targetPublicKey,
-                scopedMetadataKey: (transaction as AccountMetadataTransaction).scopedMetadataKey.toHex(),
-                valueSizeDelta: (transaction as AccountMetadataTransaction).valueSizeDelta,
-                valueSize: (transaction as AccountMetadataTransaction).value.length,
-                value: Convert.utf8ToHex((transaction as AccountMetadataTransaction).value),
+                targetPublicKey: accountMetadataTx.targetPublicKey,
+                scopedMetadataKey: accountMetadataTx.scopedMetadataKey.toHex(),
+                valueSizeDelta: accountMetadataTx.valueSizeDelta,
+                valueSize: accountMetadataTx.value.length,
+                value: Convert.utf8ToHex(accountMetadataTx.value),
 
             };
         case TransactionType.MOSAIC_METADATA_TRANSACTION:
+            const mosaicMetadataTx = transaction as MosaicMetadataTransaction;
             return {
-                targetPublicKey: (transaction as MosaicMetadataTransaction).targetPublicKey,
-                scopedMetadataKey: (transaction as MosaicMetadataTransaction).scopedMetadataKey.toHex(),
-                valueSizeDelta: (transaction as MosaicMetadataTransaction).valueSizeDelta,
-                targetMosaicId: (transaction as MosaicMetadataTransaction).targetMosaicId.id.toHex(),
-                valueSize: (transaction as MosaicMetadataTransaction).value.length,
-                value: Convert.utf8ToHex((transaction as MosaicMetadataTransaction).value),
+                targetPublicKey: mosaicMetadataTx.targetPublicKey,
+                scopedMetadataKey: mosaicMetadataTx.scopedMetadataKey.toHex(),
+                valueSizeDelta: mosaicMetadataTx.valueSizeDelta,
+                targetMosaicId: mosaicMetadataTx.targetMosaicId.id.toHex(),
+                valueSize: mosaicMetadataTx.value.length,
+                value: Convert.utf8ToHex(mosaicMetadataTx.value),
 
             };
         case TransactionType.NAMESPACE_METADATA_TRANSACTION:
+            const namespaceMetaTx = transaction as NamespaceMetadataTransaction;
             return {
-                targetPublicKey: (transaction as NamespaceMetadataTransaction).targetPublicKey,
-                scopedMetadataKey: (transaction as NamespaceMetadataTransaction).scopedMetadataKey.toHex(),
-                valueSizeDelta: (transaction as NamespaceMetadataTransaction).valueSizeDelta,
-                targetNamespaceId: (transaction as NamespaceMetadataTransaction).targetNamespaceId.id.toHex(),
-                valueSize: (transaction as NamespaceMetadataTransaction).value.length,
-                value: Convert.utf8ToHex((transaction as NamespaceMetadataTransaction).value),
+                targetPublicKey: namespaceMetaTx.targetPublicKey,
+                scopedMetadataKey: namespaceMetaTx.scopedMetadataKey.toHex(),
+                valueSizeDelta: namespaceMetaTx.valueSizeDelta,
+                targetNamespaceId: namespaceMetaTx.targetNamespaceId.id.toHex(),
+                valueSize: namespaceMetaTx.value.length,
+                value: Convert.utf8ToHex(namespaceMetaTx.value),
 
             };
         default:

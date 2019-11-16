@@ -69,8 +69,7 @@ export class NetworkHttp extends Http implements NetworkRepository {
      */
     public getNetworkName(): Observable<NetworkName> {
         return observableFrom(this.networkRouteApi.getNetworkType()).pipe(
-            map((response: { response: ClientResponse; body: NetworkTypeDTO; }) =>
-                new NetworkName(response.body.name, response.body.description)),
+            map((({body}) => new NetworkName(body.name, body.description))),
             catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
