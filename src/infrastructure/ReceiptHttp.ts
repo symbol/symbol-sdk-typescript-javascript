@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-import { ClientResponse } from 'http';
 import {from as observableFrom, Observable, throwError} from 'rxjs';
 import {catchError, map, mergeMap} from 'rxjs/operators';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
 import { Statement } from '../model/receipt/Statement';
-import { MerkleProofInfoDTO,
-         StatementsDTO } from './api';
 import { ReceiptRoutesApi } from './api/receiptRoutesApi';
 import {Http} from './Http';
 import { NetworkHttp } from './NetworkHttp';
@@ -64,13 +61,10 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
     public getMerkleReceipts(height: string, hash: string): Observable<MerkleProofInfo> {
         return observableFrom(
             this.receiptRoutesApi.getMerkleReceipts(height, hash)).pipe(
-                map((response: { response: ClientResponse; body: MerkleProofInfoDTO; } ) => {
-                    const merkleProofReceipt = response.body;
-                    return new MerkleProofInfo(
-                        merkleProofReceipt.merklePath!.map(
+                map(({body}) => new MerkleProofInfo(
+                        body.merklePath!.map(
                             (payload) => new MerklePathItem(payload.position, payload.hash)),
-                    );
-                }),
+                    )),
                 catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
@@ -85,10 +79,7 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
                 this.receiptRoutesApi.getBlockReceipts(height)).pipe(
-                    map((response: { response: ClientResponse; body: StatementsDTO; }) => {
-                        const receiptDTO = response.body;
-                        return CreateStatementFromDTO(receiptDTO, networkType);
-                    }),
+                    map(({body}) => CreateStatementFromDTO(body, networkType)),
                     catchError((error) =>  throwError(this.errorHandling(error))),
                 ),
             ),
