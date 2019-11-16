@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { ClientResponse } from 'http';
 import {from as observableFrom, Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {AccountInfo} from '../model/account/AccountInfo';
@@ -27,8 +26,7 @@ import {Transaction} from '../model/transaction/Transaction';
 import { UInt64 } from '../model/UInt64';
 import {AccountRepository} from './AccountRepository';
 import { AccountInfoDTO,
-         AccountRoutesApi,
-         TransactionInfoDTO } from './api';
+         AccountRoutesApi } from './api';
 import {Http} from './Http';
 import {NetworkHttp} from './NetworkHttp';
 import {QueryParams} from './QueryParams';
@@ -64,16 +62,14 @@ export class AccountHttp extends Http implements AccountRepository {
      */
     public getAccountInfo(address: Address): Observable<AccountInfo> {
         return observableFrom(this.accountRoutesApi.getAccountInfo(address.plain())).pipe(
-            map((response: { response: ClientResponse; body: AccountInfoDTO; }) => {
-                const accountInfoDTO = response.body;
-                return new AccountInfo(
-                    Address.createFromEncoded(accountInfoDTO.account.address),
-                    UInt64.fromNumericString(accountInfoDTO.account.addressHeight),
-                    accountInfoDTO.account.publicKey,
-                    UInt64.fromNumericString(accountInfoDTO.account.publicKeyHeight),
-                    accountInfoDTO.account.accountType.valueOf(),
-                    accountInfoDTO.account.linkedAccountKey,
-                    accountInfoDTO.account.activityBuckets.map((bucket) => {
+            map(({body}) => new AccountInfo(
+                    Address.createFromEncoded(body.account.address),
+                    UInt64.fromNumericString(body.account.addressHeight),
+                    body.account.publicKey,
+                    UInt64.fromNumericString(body.account.publicKeyHeight),
+                    body.account.accountType.valueOf(),
+                    body.account.linkedAccountKey,
+                    body.account.activityBuckets.map((bucket) => {
                         return new ActivityBucket(
                             bucket.startHeight,
                             bucket.totalFeesPaid,
@@ -81,14 +77,13 @@ export class AccountHttp extends Http implements AccountRepository {
                             bucket.rawScore,
                         );
                     }),
-                    accountInfoDTO.account.mosaics.map((mosaicDTO) => new Mosaic(
+                    body.account.mosaics.map((mosaicDTO) => new Mosaic(
                         new MosaicId(mosaicDTO.id),
                         UInt64.fromNumericString(mosaicDTO.amount),
                     )),
-                    UInt64.fromNumericString(accountInfoDTO.account.importance),
-                    UInt64.fromNumericString(accountInfoDTO.account.importanceHeight),
-                );
-            }),
+                    UInt64.fromNumericString(body.account.importance),
+                    UInt64.fromNumericString(body.account.importanceHeight),
+                )),
             catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
@@ -104,9 +99,7 @@ export class AccountHttp extends Http implements AccountRepository {
         };
         return observableFrom(
             this.accountRoutesApi.getAccountsInfo(accountIdsBody)).pipe(
-                map((response: { response: ClientResponse; body: AccountInfoDTO[]; }) => {
-                    const accountsInfoMetaDataDTO = response.body;
-                    return accountsInfoMetaDataDTO.map((accountInfoDTO: AccountInfoDTO) => {
+                map(({body}) => body.map((accountInfoDTO: AccountInfoDTO) => {
                         return new AccountInfo(
                             Address.createFromEncoded(accountInfoDTO.account.address),
                             UInt64.fromNumericString(accountInfoDTO.account.addressHeight),
@@ -130,8 +123,7 @@ export class AccountHttp extends Http implements AccountRepository {
                             UInt64.fromNumericString(accountInfoDTO.account.importanceHeight),
                         );
 
-                    });
-                }),
+                    })),
                 catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
@@ -148,12 +140,9 @@ export class AccountHttp extends Http implements AccountRepository {
                                                this.queryParams(queryParams).pageSize,
                                                this.queryParams(queryParams).id,
                                                this.queryParams(queryParams).order)).pipe(
-            map((response: { response: ClientResponse; body: TransactionInfoDTO[]; }) => {
-                const transactionsDTO = response.body;
-                return transactionsDTO.map((transactionDTO) => {
+            map(({body}) => body.map((transactionDTO) => {
                     return CreateTransactionFromDTO(transactionDTO);
-                });
-            }),
+                })),
             catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
@@ -171,12 +160,9 @@ export class AccountHttp extends Http implements AccountRepository {
                 this.queryParams(queryParams).pageSize,
                 this.queryParams(queryParams).id,
                 this.queryParams(queryParams).order)).pipe(
-                    map((response: { response: ClientResponse; body: TransactionInfoDTO[]; }) => {
-                        const transactionsDTO = response.body;
-                        return transactionsDTO.map((transactionDTO) => {
+                    map(({body}) => body.map((transactionDTO) => {
                             return CreateTransactionFromDTO(transactionDTO);
-                        });
-                    }),
+                        })),
                     catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
@@ -194,12 +180,9 @@ export class AccountHttp extends Http implements AccountRepository {
                 this.queryParams(queryParams).pageSize,
                 this.queryParams(queryParams).id,
                 this.queryParams(queryParams).order)).pipe(
-                    map((response: { response: ClientResponse; body: TransactionInfoDTO[]; }) => {
-                        const transactionsDTO = response.body;
-                        return transactionsDTO.map((transactionDTO) => {
+                    map(({body}) => body.map((transactionDTO) => {
                             return CreateTransactionFromDTO(transactionDTO);
-                        });
-                    }),
+                        })),
                     catchError((error) =>  throwError(this.errorHandling(error))),
                 );
     }
@@ -218,12 +201,9 @@ export class AccountHttp extends Http implements AccountRepository {
                 this.queryParams(queryParams).pageSize,
                 this.queryParams(queryParams).id,
                 this.queryParams(queryParams).order)).pipe(
-                    map((response: { response: ClientResponse; body: TransactionInfoDTO[]; }) => {
-                        const transactionsDTO = response.body;
-                        return transactionsDTO.map((transactionDTO) => {
+                    map(({body}) => body.map((transactionDTO) => {
                             return CreateTransactionFromDTO(transactionDTO);
-                        });
-                    }),
+                        })),
                     catchError((error) =>  throwError(this.errorHandling(error))),
                 );
     }
@@ -241,12 +221,9 @@ export class AccountHttp extends Http implements AccountRepository {
                 this.queryParams(queryParams).pageSize,
                 this.queryParams(queryParams).id,
                 this.queryParams(queryParams).order)).pipe(
-                    map((response: { response: ClientResponse; body: TransactionInfoDTO[]; }) => {
-                        const transactionsDTO = response.body;
-                        return transactionsDTO.map((transactionDTO) => {
+                    map(({body}) => body.map((transactionDTO) => {
                             return CreateTransactionFromDTO(transactionDTO) as AggregateTransaction;
-                        });
-                    }),
+                        })),
                     catchError((error) =>  throwError(this.errorHandling(error))),
                 );
     }

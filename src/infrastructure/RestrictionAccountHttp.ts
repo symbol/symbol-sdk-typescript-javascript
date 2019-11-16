@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-import { ClientResponse } from 'http';
 import {from as observableFrom, Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import { DtoMapping } from '../core/utils/DtoMapping';
 import { Address } from '../model/account/Address';
 import { AccountRestriction } from '../model/restriction/AccountRestriction';
 import { AccountRestrictions } from '../model/restriction/AccountRestrictions';
-import { AccountRestrictionsInfoDTO } from './api';
 import { RestrictionAccountRoutesApi } from './api/restrictionAccountRoutesApi';
 import {Http} from './Http';
 import { RestrictionAccountRepository } from './RestrictionAccountRespository';
@@ -54,10 +52,7 @@ export class RestrictionAccountHttp extends Http implements RestrictionAccountRe
      */
     public getAccountRestrictions(address: Address): Observable<AccountRestriction[]> {
         return observableFrom(this.restrictionAccountRoutesApi.getAccountRestrictions(address.plain()))
-            .pipe(map((response: { response: ClientResponse; body: AccountRestrictionsInfoDTO; }) => {
-                const accountRestrictions = response.body;
-                return DtoMapping.extractAccountRestrictionFromDto(accountRestrictions).accountRestrictions.restrictions;
-            }),
+            .pipe(map(({body}) => DtoMapping.extractAccountRestrictionFromDto(body).accountRestrictions.restrictions),
             catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
@@ -73,12 +68,9 @@ export class RestrictionAccountHttp extends Http implements RestrictionAccountRe
         };
         return observableFrom(
             this.restrictionAccountRoutesApi.getAccountRestrictionsFromAccounts(accountIds))
-                .pipe(map((response: { response: ClientResponse; body: AccountRestrictionsInfoDTO[]; }) => {
-                    const accountRestrictions = response.body;
-                    return accountRestrictions.map((restriction) => {
+                .pipe(map(({body}) => body.map((restriction) => {
                         return DtoMapping.extractAccountRestrictionFromDto(restriction).accountRestrictions;
-                    });
-                }),
+                })),
                 catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }

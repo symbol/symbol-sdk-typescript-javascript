@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { ClientResponse } from 'http';
 import {from as observableFrom, Observable, throwError} from 'rxjs';
 import {catchError, map, mergeMap} from 'rxjs/operators';
 import { Address } from '../model/account/Address';
@@ -23,7 +22,7 @@ import {MosaicFlags} from '../model/mosaic/MosaicFlags';
 import {MosaicId} from '../model/mosaic/MosaicId';
 import {MosaicInfo} from '../model/mosaic/MosaicInfo';
 import {UInt64} from '../model/UInt64';
-import { MosaicInfoDTO, MosaicRoutesApi } from './api';
+import { MosaicRoutesApi } from './api';
 import {Http} from './Http';
 import {MosaicRepository} from './MosaicRepository';
 import {NetworkHttp} from './NetworkHttp';
@@ -60,19 +59,16 @@ export class MosaicHttp extends Http implements MosaicRepository {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
                 this.mosaicRoutesApi.getMosaic(mosaicId.toHex())).pipe(
-                    map((response: { response: ClientResponse; body: MosaicInfoDTO; } ) => {
-                        const mosaicInfoDTO = response.body;
-                        return new MosaicInfo(
-                            new MosaicId(mosaicInfoDTO.mosaic.id),
-                            UInt64.fromNumericString(mosaicInfoDTO.mosaic.supply),
-                            UInt64.fromNumericString(mosaicInfoDTO.mosaic.startHeight),
-                            PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.ownerPublicKey, networkType),
-                            mosaicInfoDTO.mosaic.revision,
-                            new MosaicFlags(mosaicInfoDTO.mosaic.flags),
-                            mosaicInfoDTO.mosaic.divisibility,
-                            UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
-                    );
-                }),
+                    map(({body}) => new MosaicInfo(
+                        new MosaicId(body.mosaic.id),
+                        UInt64.fromNumericString(body.mosaic.supply),
+                        UInt64.fromNumericString(body.mosaic.startHeight),
+                        PublicAccount.createFromPublicKey(body.mosaic.ownerPublicKey, networkType),
+                        body.mosaic.revision,
+                        new MosaicFlags(body.mosaic.flags),
+                        body.mosaic.divisibility,
+                        UInt64.fromNumericString(body.mosaic.duration),
+                )),
                 catchError((error) =>  throwError(this.errorHandling(error))),
             )),
         );
@@ -90,21 +86,18 @@ export class MosaicHttp extends Http implements MosaicRepository {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
                 this.mosaicRoutesApi.getMosaics(mosaicIdsBody)).pipe(
-                    map((response: { response: ClientResponse; body: MosaicInfoDTO[]; }) => {
-                        const mosaicInfosDTO = response.body;
-                        return mosaicInfosDTO.map((mosaicInfoDTO) => {
-                            return new MosaicInfo(
-                                new MosaicId(mosaicInfoDTO.mosaic.id),
-                                UInt64.fromNumericString(mosaicInfoDTO.mosaic.supply),
-                                UInt64.fromNumericString(mosaicInfoDTO.mosaic.startHeight),
-                                PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.ownerPublicKey, networkType),
-                                mosaicInfoDTO.mosaic.revision,
-                                new MosaicFlags(mosaicInfoDTO.mosaic.flags),
-                                mosaicInfoDTO.mosaic.divisibility,
-                                UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
-                            );
-                        });
-                    }),
+                    map(({body}) => body.map((mosaicInfoDTO) => {
+                        return new MosaicInfo(
+                            new MosaicId(mosaicInfoDTO.mosaic.id),
+                            UInt64.fromNumericString(mosaicInfoDTO.mosaic.supply),
+                            UInt64.fromNumericString(mosaicInfoDTO.mosaic.startHeight),
+                            PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.ownerPublicKey, networkType),
+                            mosaicInfoDTO.mosaic.revision,
+                            new MosaicFlags(mosaicInfoDTO.mosaic.flags),
+                            mosaicInfoDTO.mosaic.divisibility,
+                            UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
+                        );
+                    })),
                     catchError((error) =>  throwError(this.errorHandling(error))),
                 ),
             ),
@@ -116,23 +109,20 @@ export class MosaicHttp extends Http implements MosaicRepository {
      * @summary Get mosaics created by an account
      * @param address Account address.
      */
-    public getMosaicsFromAccount(address: Address): Observable<MosaicInfo> {
+    public getMosaicsFromAccount(address: Address): Observable<MosaicInfo[]> {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
                 this.mosaicRoutesApi.getMosaicsFromAccount(address.plain())).pipe(
-                    map((response: { response: ClientResponse; body: MosaicInfoDTO; } ) => {
-                        const mosaicInfoDTO = response.body;
-                        return new MosaicInfo(
-                            new MosaicId(mosaicInfoDTO.mosaic.id),
-                            UInt64.fromNumericString(mosaicInfoDTO.mosaic.supply),
-                            UInt64.fromNumericString(mosaicInfoDTO.mosaic.startHeight),
-                            PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.ownerPublicKey, networkType),
-                            mosaicInfoDTO.mosaic.revision,
-                            new MosaicFlags(mosaicInfoDTO.mosaic.flags),
-                            mosaicInfoDTO.mosaic.divisibility,
-                            UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
-                    );
-                }),
+                    map(({body}) => body.mosaics.map((mosaicInfo) =>
+                        new MosaicInfo(
+                            new MosaicId(mosaicInfo.id),
+                            UInt64.fromNumericString(mosaicInfo.supply),
+                            UInt64.fromNumericString(mosaicInfo.startHeight),
+                            PublicAccount.createFromPublicKey(mosaicInfo.ownerPublicKey, networkType),
+                            mosaicInfo.revision,
+                            new MosaicFlags(mosaicInfo.flags),
+                            mosaicInfo.divisibility,
+                            UInt64.fromNumericString(mosaicInfo.duration)))),
                 catchError((error) =>  throwError(this.errorHandling(error))),
             )),
         );
@@ -150,21 +140,18 @@ export class MosaicHttp extends Http implements MosaicRepository {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
                 this.mosaicRoutesApi.getMosaicsFromAccounts(accountIdsBody)).pipe(
-                    map((response: { response: ClientResponse; body: MosaicInfoDTO[]; }) => {
-                        const mosaicInfosDTO = response.body;
-                        return mosaicInfosDTO.map((mosaicInfoDTO) => {
-                            return new MosaicInfo(
-                                new MosaicId(mosaicInfoDTO.mosaic.id),
-                                UInt64.fromNumericString(mosaicInfoDTO.mosaic.supply),
-                                UInt64.fromNumericString(mosaicInfoDTO.mosaic.startHeight),
-                                PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.ownerPublicKey, networkType),
-                                mosaicInfoDTO.mosaic.revision,
-                                new MosaicFlags(mosaicInfoDTO.mosaic.flags),
-                                mosaicInfoDTO.mosaic.divisibility,
-                                UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
-                            );
-                        });
-                    }),
+                    map(({body}) => body.mosaics.map((mosaicInfoDTO) => {
+                        return new MosaicInfo(
+                            new MosaicId(mosaicInfoDTO.id),
+                            UInt64.fromNumericString(mosaicInfoDTO.supply),
+                            UInt64.fromNumericString(mosaicInfoDTO.startHeight),
+                            PublicAccount.createFromPublicKey(mosaicInfoDTO.ownerPublicKey, networkType),
+                            mosaicInfoDTO.revision,
+                            new MosaicFlags(mosaicInfoDTO.flags),
+                            mosaicInfoDTO.divisibility,
+                            UInt64.fromNumericString(mosaicInfoDTO.duration),
+                        );
+                    })),
                     catchError((error) =>  throwError(this.errorHandling(error))),
                 ),
             ),

@@ -45,7 +45,7 @@ export interface MosaicRepository {
       * @summary Get mosaics created for given address
       * @param address Address
       */
-    getMosaicsFromAccount(address: Address): Observable<MosaicInfo>;
+    getMosaicsFromAccount(address: Address): Observable<MosaicInfo[]>;
 
     /**
      * Gets mosaics created for a given array of addresses.
