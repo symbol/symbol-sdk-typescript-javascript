@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Convert, RawAddress, RawArray } from '../../core/format';
+import { Convert, RawAddress } from '../../core/format';
 import { NetworkType } from '../blockchain/NetworkType';
-import { SHA3Hasher, SignSchema } from "../../core/crypto";
-import { keccak256, sha3_256 } from "js-sha3";
 
 /**
  * The address structure describes an address with its network
@@ -74,7 +72,6 @@ export class Address {
         return Address.createFromRawAddress(RawAddress
         .addressToString(Convert.hexToUint8(encoded)));
     }
-
 
     /**
      * Determines the validity of an raw address string.
