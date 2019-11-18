@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+const CryptoJS = require('crypto-js');
 import { RawArray as array } from '../format';
 import * as nacl from './nacl_catapult';
 import { SHA3Hasher as sha3Hasher } from './SHA3Hasher';
 import { SignSchema } from './SignSchema';
-export const CryptoJS = require('crypto-js');
 export const Key_Size = 32;
 export const Signature_Size = 64;
 export const Half_Signature_Size = Signature_Size / 2;
@@ -68,7 +68,7 @@ export const catapult_hash = {
 };
 
 // custom catapult crypto functions
-export const catapult_crypto = (function() {
+export const catapult_crypto = (() => {
     function clamp(d) {
         d[0] &= 248;
         d[31] &= 127;
@@ -82,7 +82,7 @@ export const catapult_crypto = (function() {
         return d;
     }
 
-    const encodedSChecker = (function() {
+    const encodedSChecker = (() => {
         const Is_Reduced = 1;
         const Is_Zero = 2;
 

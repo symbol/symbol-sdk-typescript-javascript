@@ -131,15 +131,6 @@ export const split = (name, processor) => {
     return start;
 };
 
-export const generateNamespaceId = (parentId, name) => {
-    const hash = sha3_256.create();
-    hash.update(Uint32Array.from(parentId).buffer as any);
-    hash.update(name);
-    const result = new Uint32Array(hash.arrayBuffer());
-    // right zero-filling required to keep unsigned number representation
-    return [result[0], (result[1] | 0x80000000) >>> 0];
-};
-
 export const encodeBlock = (input, inputOffset, output, outputOffset) => {
     output[outputOffset + 0] = Alphabet[input[inputOffset + 0] >> 3];
     output[outputOffset + 1] = Alphabet[((input[inputOffset + 0] & 0x07) << 2) | (input[inputOffset + 1] >> 6)];

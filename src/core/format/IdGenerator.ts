@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {sha3_256} from 'js-sha3';
+import {SHA3Hasher} from '../crypto/SHA3Hasher';
+import {SignSchema} from '../crypto/SignSchema';
 import * as utilities from './Utilities';
 
 export class IdGenerator {
@@ -23,8 +24,12 @@ export class IdGenerator {
      * @param {object} ownerPublicId The public id.
      * @returns {module:coders/uint64~uint64} The mosaic id.
      */
-    public static generateMosaicId = (nonce, ownerPublicId) => {
-        const hash = sha3_256.create();
+    public static generateMosaicId = (
+        nonce,
+        ownerPublicId,
+        signSchema: SignSchema = SignSchema.SHA3,
+    ) => {
+        const hash = SHA3Hasher.getHasher(32, signSchema).create();
         hash.update(nonce);
         hash.update(ownerPublicId);
         const result = new Uint32Array(hash.arrayBuffer());
@@ -32,21 +37,43 @@ export class IdGenerator {
     }
 
     /**
+     * Generates a namespace id given a parent id and name.
+     * @param {object} parentId The parent namespace id.
+     * @param {object} name The namespace name.
+     * @returns {module:coders/uint64~uint64} The namespace id.
+     */
+    public static generateNamespaceId = (
+        parentId,
+        name: string,
+        signSchema: SignSchema = SignSchema.SHA3,
+    ) => {
+        const hash = SHA3Hasher.getHasher(32, signSchema).create();
+        hash.update(Uint32Array.from(parentId).buffer as any);
+        hash.update(name);
+        const result = new Uint32Array(hash.arrayBuffer());
+        // right zero-filling required to keep unsigned number representation
+        return [result[0], (result[1] | 0x80000000) >>> 0];
+    }
+
+    /**
      * Parses a unified namespace name into a path.
      * @param {string} name The unified namespace name.
      * @returns {array<module:coders/uint64~uint64>} The namespace path.
      */
-    public static generateNamespacePath = (name: string) => {
+    public static generateNamespacePath = (
+        name: string,
+        signSchema: SignSchema = SignSchema.SHA3,
+    ) => {
         if (0 >= name.length) {
             utilities.throwInvalidFqn('having zero length', name);
         }
         let namespaceId = utilities.idGeneratorConst.namespace_base_id;
         const path = [];
         const start = utilities.split(name, (substringStart, size) => {
-            namespaceId = utilities.generateNamespaceId(namespaceId, utilities.extractPartName(name, substringStart, size));
+            namespaceId = IdGenerator.generateNamespaceId(namespaceId, utilities.extractPartName(name, substringStart, size), signSchema);
             utilities.append(path, namespaceId, name);
         });
-        namespaceId = utilities.generateNamespaceId(namespaceId, utilities.extractPartName(name, start, name.length - start));
+        namespaceId = IdGenerator.generateNamespaceId(namespaceId, utilities.extractPartName(name, start, name.length - start), signSchema);
         utilities.append(path, namespaceId, name);
         return path;
     }

@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import {Crypto} from '../../core/crypto';
+import {Crypto, SignSchema} from '../../core/crypto';
 import { IdGenerator } from '../../core/format';
 
 export class NamespaceMosaicIdGenerator {
     /**
      * @returns mosaic Id
      */
-    public static mosaicId = (nonce, ownerPublicId) => {
-        return IdGenerator.generateMosaicId(nonce, ownerPublicId);
+    public static mosaicId = (nonce, ownerPublicId, signSchema: SignSchema = SignSchema.SHA3) => {
+        return IdGenerator.generateMosaicId(nonce, ownerPublicId, signSchema);
     }
 
     /**
@@ -36,18 +36,22 @@ export class NamespaceMosaicIdGenerator {
      * @param {string} namespaceName - The namespace name
      * @returns sub namespace id
      */
-    public static namespaceId = (namespaceName) => {
-        const path = IdGenerator.generateNamespacePath(namespaceName);
-        return path.length ? IdGenerator.generateNamespacePath(namespaceName)[path.length - 1] : [];
+    public static namespaceId = (namespaceName, signSchema: SignSchema = SignSchema.SHA3) => {
+        const path = IdGenerator.generateNamespacePath(namespaceName, signSchema);
+        return path.length ? IdGenerator.generateNamespacePath(namespaceName, signSchema)[path.length - 1] : [];
     }
     /**
      * @param {string} parentNamespaceName - The parent namespace name
      * @param {string} namespaceName - The namespace name
      * @returns sub namespace parent id
      */
-    public static subnamespaceParentId = (parentNamespaceName: string, namespaceName: string) => {
-        const path = IdGenerator.generateNamespacePath(`${parentNamespaceName}.${namespaceName}`);
-        return IdGenerator.generateNamespacePath(parentNamespaceName)[path.length - 2];
+    public static subnamespaceParentId = (
+        parentNamespaceName: string,
+        namespaceName: string,
+        signSchema: SignSchema = SignSchema.SHA3,
+    ) => {
+        const path = IdGenerator.generateNamespacePath(`${parentNamespaceName}.${namespaceName}`, signSchema);
+        return IdGenerator.generateNamespacePath(parentNamespaceName, signSchema)[path.length - 2];
     }
 
     /**
@@ -55,8 +59,12 @@ export class NamespaceMosaicIdGenerator {
      * @param {string} namespaceName - The namespace name
      * @returns sub namespace id
      */
-    public static subnamespaceNamespaceId = (parentNamespaceName, namespaceName) => {
-        const path = IdGenerator.generateNamespacePath(`${parentNamespaceName}.${namespaceName}`);
+    public static subnamespaceNamespaceId = (
+        parentNamespaceName: string,
+        namespaceName: string,
+        signSchema: SignSchema = SignSchema.SHA3,
+    ) => {
+        const path = IdGenerator.generateNamespacePath(`${parentNamespaceName}.${namespaceName}`, signSchema);
         return path[path.length - 1];
     }
 
