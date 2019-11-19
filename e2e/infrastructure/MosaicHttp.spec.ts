@@ -191,6 +191,26 @@ describe('MosaicHttp', () => {
         });
     });
 
+    describe('getMosaicsFromAccount', () => {
+        it('should call getMosaicsFromAccount successfully', (done) => {
+            mosaicHttp.getMosaicsFromAccount(account.address).subscribe((mosaics) => {
+                expect(mosaics.length).to.be.greaterThan(0);
+                expect(mosaics.find((m) => m.id.toHex() === mosaicId.toHex()) !== undefined).to.be.true;
+                done();
+            });
+        });
+    });
+
+    describe('getMosaicsFromAccounts', () => {
+        it('should call getMosaicsFromAccounts successfully', (done) => {
+            mosaicHttp.getMosaicsFromAccounts([account.address]).subscribe((mosaics) => {
+                expect(mosaics.length).to.be.greaterThan(0);
+                expect(mosaics.find((m) => m.id.toHex() === mosaicId.toHex()) !== undefined).to.be.true;
+                done();
+            });
+        });
+    });
+
     /**
      * =========================
      * House Keeping
