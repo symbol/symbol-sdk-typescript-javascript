@@ -43,9 +43,9 @@ const ValidateTransaction = {
         expect(transaction.signer.publicKey)
             .to.be.equal(transactionDTO.transaction.signerPublicKey);
         expect(transaction.networkType)
-            .to.be.equal(parseInt(transactionDTO.transaction.version.toString(16).substr(0, 2), 16));
+            .to.be.equal(transactionDTO.transaction.network);
         expect(transaction.version)
-            .to.be.equal(parseInt(transactionDTO.transaction.version.toString(16).substr(2, 2), 16));
+            .to.be.equal(transactionDTO.transaction.version);
         expect(transaction.type)
             .to.be.equal(transactionDTO.transaction.type);
         deepEqual(transaction.maxFee,
@@ -82,9 +82,9 @@ const ValidateTransaction = {
         expect(aggregateTransaction.signer.publicKey)
             .to.be.equal(aggregateTransactionDTO.transaction.signerPublicKey);
         expect(aggregateTransaction.networkType)
-            .to.be.equal(parseInt(aggregateTransactionDTO.transaction.version.toString(16).substr(0, 2), 16));
+            .to.be.equal(aggregateTransactionDTO.transaction.network);
         expect(aggregateTransaction.version)
-            .to.be.equal(parseInt(aggregateTransactionDTO.transaction.version.toString(16).substr(2, 2), 16));
+            .to.be.equal(aggregateTransactionDTO.transaction.version);
         expect(aggregateTransaction.type)
             .to.be.equal(aggregateTransactionDTO.transaction.type);
         deepEqual(aggregateTransaction.maxFee,
@@ -122,13 +122,8 @@ const ValidateTransaction = {
             .to.be.equal(modifyMultisigAccountTransactionDTO.transaction.minApprovalDelta);
         expect(modifyMultisigAccountTransaction.minRemovalDelta)
             .to.be.equal(modifyMultisigAccountTransactionDTO.transaction.minRemovalDelta);
-
-        deepEqual(modifyMultisigAccountTransaction.modifications[0], new MultisigCosignatoryModification(
-            modifyMultisigAccountTransactionDTO.transaction.modifications[0].modificationAction,
-            PublicAccount.createFromPublicKey(modifyMultisigAccountTransactionDTO.transaction.modifications[0].cosignatoryPublicKey,
-                                              NetworkType.MIJIN_TEST),
-            ),
-        );
+        expect(modifyMultisigAccountTransaction.publicKeyAdditions.length).to.be.equal(1);
+        expect(modifyMultisigAccountTransaction.publicKeyDeletions.length).to.be.equal(0);
     },
     validateNamespaceCreationTx: (registerNamespaceTransaction, registerNamespaceTransactionDTO) => {
         expect(registerNamespaceTransaction.registrationType)
