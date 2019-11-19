@@ -28,6 +28,7 @@ import { TransactionType } from '../../../src/model/transaction/TransactionType'
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { Convert } from '../../../src/core/format/Convert';
 
 describe('Transaction', () => {
     let account: Account;
@@ -225,6 +226,55 @@ describe('Transaction', () => {
                 new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', 'hash', 'hash'),
             );
             expect(transaction.versionToHex()).to.be.equal('0x9001');
+        });
+    });
+
+    describe('createTransactionHash() should', () => {
+
+        // shortcut
+        const knownPayload = (
+            '970000000000000075DAC796D500CEFDFBD582BC6E0580401FE6DB02FBEA9367'
+          + '3DF47844246CDEA93715EB700F295A459E59D96A2BC6B7E36C79016A96B9FA38'
+          + '7E8B8937342FE30C6BE37B726EEE24C4B0E3C943E09A44691553759A89E92C4A'
+          + '84BBC4AD9AF5D49C0000000001984E4140420F0000000000E4B580B11A000000'
+          + 'A0860100000000002AD8FC018D9A49E100056576696173'
+        );
+
+        // expected values
+        const knownHash_sha3 = '709373248659274C5933BEA2920942D6C7B48B9C2DA4BAEE233510E71495931F';
+        const knownHash_keccak = '787423372BEC0CB2BE3EEA58E773074E121989AF29E5E5BD9EE660C1E3A0AF93';
+        const generationHashBytes = Array.from(Convert.hexToUint8('988C4CDCE4D188013C13DE7914C7FD4D626169EF256722F61C52EFBE06BD5A2C'));
+
+        it('create correct SHA3 transaction hash given network type MIJIN or MIJIN_TEST', () => {
+            const hash1 = Transaction.createTransactionHash(
+                knownPayload,
+                generationHashBytes,
+                NetworkType.MIJIN_TEST,
+            );
+            const hash2 = Transaction.createTransactionHash(
+                knownPayload,
+                generationHashBytes,
+                NetworkType.MIJIN,
+            );
+
+            expect(hash1).to.equal(knownHash_sha3);
+            expect(hash2).to.equal(knownHash_sha3);
+        });
+
+        it('create correct KECCAK transaction hash given network type MAIN_NET or TEST_NET', () => {
+            const hash1 = Transaction.createTransactionHash(
+                knownPayload,
+                generationHashBytes,
+                NetworkType.TEST_NET,
+            );
+            const hash2 = Transaction.createTransactionHash(
+                knownPayload,
+                generationHashBytes,
+                NetworkType.MAIN_NET,
+            );
+
+            expect(hash1).to.equal(knownHash_keccak);
+            expect(hash2).to.equal(knownHash_keccak);
         });
     });
 });
