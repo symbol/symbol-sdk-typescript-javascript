@@ -40,4 +40,15 @@ describe('NetworkHttp', () => {
                 });
         });
     });
+
+    describe('getNetworkName', () => {
+        it('should return network name and description', (done) => {
+            networkHttp.getNetworkName()
+                .subscribe((networkName) => {
+                    expect(networkName.name.toLowerCase()).to.be.equal('mijintest');
+                    expect(networkName.description.toLowerCase()).to.be.equal('catapult development network');
+                    done();
+                });
+        });
+    });
 });
