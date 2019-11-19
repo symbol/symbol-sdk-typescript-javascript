@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { SignSchema } from '../../core/crypto/SignSchema';
 import {Convert as convert} from '../../core/format';
 import {NamespaceMosaicIdGenerator} from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
+import {NetworkType} from '../blockchain/NetworkType';
 import {Id} from '../Id';
 
 /**
@@ -38,26 +40,35 @@ export class NamespaceId {
      * Create NamespaceId from namespace string name (ex: nem or domain.subdom.subdome)
      * or id in form of array number (ex: [929036875, 2226345261])
      *
-     * @param id
+     * @param   {string|number[]}   id          The namespace id (string or uint64 array)
+     * @param   {NetworkType}       networkType The network type for hash algorithm resolution
      */
-    constructor(id: string | number[]) {
+    constructor(
+        id: string | number[],
+        networkType: NetworkType = NetworkType.MIJIN_TEST,
+    ) {
         if (id instanceof Array) {
             this.id = new Id(id);
         } else if (typeof id === 'string') {
             this.fullName = id;
-            this.id = new Id(NamespaceMosaicIdGenerator.namespaceId(id));
+            this.id = new Id(NamespaceMosaicIdGenerator.namespaceId(id, networkType));
         }
     }
 
     /**
      * Create a NamespaceId object from its encoded hexadecimal notation.
-     * @param encoded
+     *
+     * @param   {string}        encoded     Hexadecimal notation of namespace id
+     * @param   {NetworkType}   networkType The network type for hash algorithm resolution
      * @returns {NamespaceId}
      */
-    public static createFromEncoded(encoded: string): NamespaceId {
+    public static createFromEncoded(
+        encoded: string,
+        networkType: NetworkType = NetworkType.MIJIN_TEST,
+    ): NamespaceId {
         const uint = convert.hexToUint8(encoded);
         const hex  = convert.uint8ToHex(uint);
-        const namespace = new NamespaceId(Id.fromHex(hex).toDTO());
+        const namespace = new NamespaceId(Id.fromHex(hex).toDTO(), networkType);
         return namespace;
     }
 

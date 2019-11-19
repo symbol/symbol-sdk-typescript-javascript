@@ -13,22 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {NetworkType} from '../../model/blockchain/NetworkType';
 import {SHA3Hasher} from '../crypto/SHA3Hasher';
-import {SignSchema} from '../crypto/SignSchema';
 import * as utilities from './Utilities';
 
 export class IdGenerator {
     /**
      * Generates a mosaic id given a nonce and a public id.
-     * @param {object} nonce The mosaic nonce.
-     * @param {object} ownerPublicId The public id.
+     * @param   {object}        nonce           The mosaic nonce.
+     * @param   {object}        ownerPublicId   The public id.
+     * @param   {NetworkType}   networkType     The network type for hash algorithm resolution
      * @returns {module:coders/uint64~uint64} The mosaic id.
      */
     public static generateMosaicId = (
         nonce,
         ownerPublicId,
-        signSchema: SignSchema = SignSchema.SHA3,
+        networkType: NetworkType = NetworkType.MIJIN_TEST,
     ) => {
+        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
         const hash = SHA3Hasher.getHasher(32, signSchema).create();
         hash.update(nonce);
         hash.update(ownerPublicId);
@@ -38,15 +40,17 @@ export class IdGenerator {
 
     /**
      * Generates a namespace id given a parent id and name.
-     * @param {object} parentId The parent namespace id.
-     * @param {object} name The namespace name.
+     * @param   {object}        parentId    The parent namespace id.
+     * @param   {object}        name        The namespace name.
+     * @param   {NetworkType}   networkType The network type for hash algorithm resolution
      * @returns {module:coders/uint64~uint64} The namespace id.
      */
     public static generateNamespaceId = (
         parentId,
         name: string,
-        signSchema: SignSchema = SignSchema.SHA3,
+        networkType: NetworkType = NetworkType.MIJIN_TEST,
     ) => {
+        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
         const hash = SHA3Hasher.getHasher(32, signSchema).create();
         hash.update(Uint32Array.from(parentId).buffer as any);
         hash.update(name);
@@ -57,12 +61,13 @@ export class IdGenerator {
 
     /**
      * Parses a unified namespace name into a path.
-     * @param {string} name The unified namespace name.
+     * @param   {string}        name        The unified namespace name.
+     * @param   {NetworkType}   networkType The network type for hash algorithm resolution
      * @returns {array<module:coders/uint64~uint64>} The namespace path.
      */
     public static generateNamespacePath = (
         name: string,
-        signSchema: SignSchema = SignSchema.SHA3,
+        networkType: NetworkType = NetworkType.MIJIN_TEST,
     ) => {
         if (0 >= name.length) {
             utilities.throwInvalidFqn('having zero length', name);
@@ -70,10 +75,18 @@ export class IdGenerator {
         let namespaceId = utilities.idGeneratorConst.namespace_base_id;
         const path = [];
         const start = utilities.split(name, (substringStart, size) => {
-            namespaceId = IdGenerator.generateNamespaceId(namespaceId, utilities.extractPartName(name, substringStart, size), signSchema);
+            namespaceId = IdGenerator.generateNamespaceId(
+                namespaceId,
+                utilities.extractPartName(name, substringStart, size),
+                networkType,
+            );
             utilities.append(path, namespaceId, name);
         });
-        namespaceId = IdGenerator.generateNamespaceId(namespaceId, utilities.extractPartName(name, start, name.length - start), signSchema);
+        namespaceId = IdGenerator.generateNamespaceId(
+            namespaceId,
+            utilities.extractPartName(name, start, name.length - start),
+            networkType,
+        );
         utilities.append(path, namespaceId, name);
         return path;
     }

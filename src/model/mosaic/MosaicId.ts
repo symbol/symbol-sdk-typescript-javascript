@@ -16,6 +16,7 @@
 import { Convert as convert, RawUInt64 as uint64_t } from '../../core/format';
 import {NamespaceMosaicIdGenerator} from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
 import {PublicAccount} from '../account/PublicAccount';
+import {NetworkType} from '../blockchain/NetworkType';
 import {Id} from '../Id';
 import {MosaicNonce} from '../mosaic/MosaicNonce';
 
@@ -34,12 +35,17 @@ export class MosaicId {
     /**
      * Create a MosaicId for given `nonce` MosaicNonce and `owner` PublicAccount.
      *
-     * @param   nonce   {MosaicNonce}
-     * @param   owner   {Account}
+     * @param   {MosaicNonce}   nonce       The mosaic nonce
+     * @param   {PublicAccount} owner       The mosaic owner public account
+     * @param   {NetworkType}   networkType The network type for hash algorithm resolution
      * @return  {MosaicId}
      */
-    public static createFromNonce(nonce: MosaicNonce, owner: PublicAccount): MosaicId {
-        const mosaicId = NamespaceMosaicIdGenerator.mosaicId(nonce.nonce, convert.hexToUint8(owner.publicKey));
+    public static createFromNonce(
+        nonce: MosaicNonce,
+        owner: PublicAccount,
+        networkType: NetworkType = NetworkType.MIJIN_TEST,
+    ): MosaicId {
+        const mosaicId = NamespaceMosaicIdGenerator.mosaicId(nonce.nonce, convert.hexToUint8(owner.publicKey), networkType);
         return new MosaicId(mosaicId);
     }
 
