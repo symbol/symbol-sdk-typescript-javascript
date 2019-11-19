@@ -15,6 +15,7 @@
  */
 
 import {assert, expect} from 'chai';
+import { mergeMap } from 'rxjs/operators';
 import {BlockHttp} from '../../src/infrastructure/BlockHttp';
 import { Listener, ReceiptHttp, TransactionHttp } from '../../src/infrastructure/infrastructure';
 import {QueryParams} from '../../src/infrastructure/QueryParams';
@@ -24,6 +25,7 @@ import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { Transaction } from '../../src/model/transaction/Transaction';
+import { TransactionInfo } from '../../src/model/transaction/TransactionInfo';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 
 describe('BlockHttp', () => {
@@ -144,17 +146,28 @@ describe('BlockHttp', () => {
     });
     describe('getMerkleReceipts', () => {
         it('should return Merkle Receipts', (done) => {
-            receiptHttp.getMerkleReceipts(chainHeight, blockReceiptHash)
-                .subscribe((merkleReceipts) => {
-                    expect(merkleReceipts.merklePath).not.to.be.null;
-                    done();
-                });
+            receiptHttp.getBlockReceipts(chainHeight).pipe(
+                mergeMap((_) => {
+                    return receiptHttp.getMerkleReceipts(chainHeight, _.transactionStatements[0].generateHash());
+                }))
+            .subscribe((merkleReceipts) => {
+                expect(merkleReceipts.merklePath).not.to.be.null;
+                done();
+            });
         });
     });
     describe('getMerkleTransaction', () => {
         it('should return Merkle Transaction', (done) => {
-            blockHttp.getMerkleTransaction(chainHeight, blockTransactionHash)
-                .subscribe((merkleTransactionss) => {
+            blockHttp.getBlockTransactions(chainHeight).pipe(
+                mergeMap((_) => {
+                    const hash = (_[0].transactionInfo as TransactionInfo).hash;
+                    if (hash) {
+                        return blockHttp.getMerkleTransaction(chainHeight, hash);
+                    }
+                    // If reaching this line, something is not right
+                    throw new Error('Tansacation hash is undefined');
+                }))
+            .subscribe((merkleTransactionss) => {
                     expect(merkleTransactionss.merklePath).not.to.be.null;
                     done();
                 });

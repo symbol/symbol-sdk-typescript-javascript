@@ -65,9 +65,9 @@ export class BalanceChangeReceipt extends Receipt {
         const buffer = new Uint8Array(52);
         buffer.set(GeneratorUtils.uintToBuffer(ReceiptVersion.BALANCE_CHANGE, 2));
         buffer.set(GeneratorUtils.uintToBuffer(this.type, 2), 2);
-        buffer.set(Convert.hexToUint8(this.targetPublicAccount.publicKey), 4);
-        buffer.set(GeneratorUtils.uint64ToBuffer(UInt64.fromHex(this.mosaicId.toHex()).toDTO()), 36);
-        buffer.set(GeneratorUtils.uint64ToBuffer(UInt64.fromHex(this.amount.toHex()).toDTO()), 44);
+        buffer.set(GeneratorUtils.uint64ToBuffer(UInt64.fromHex(this.mosaicId.toHex()).toDTO()), 4);
+        buffer.set(GeneratorUtils.uint64ToBuffer(UInt64.fromHex(this.amount.toHex()).toDTO()), 12);
+        buffer.set(Convert.hexToUint8(this.targetPublicAccount.publicKey), 20);
         return buffer;
     }
 }
