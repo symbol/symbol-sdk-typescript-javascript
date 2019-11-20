@@ -46,7 +46,7 @@ export class EmbeddedAccountAddressRestrictionTransactionDTO {
     * Duration expressed in number of blocks.
     */
     'deadline': string;
-    'restrictionType': AccountRestrictionFlagsEnum;
+    'restrictionFlags': AccountRestrictionFlagsEnum;
     /**
     * Account restriction additions.
     */
@@ -90,8 +90,8 @@ export class EmbeddedAccountAddressRestrictionTransactionDTO {
             "type": "string"
         },
         {
-            "name": "restrictionType",
-            "baseName": "restrictionType",
+            "name": "restrictionFlags",
+            "baseName": "restrictionFlags",
             "type": "AccountRestrictionFlagsEnum"
         },
         {

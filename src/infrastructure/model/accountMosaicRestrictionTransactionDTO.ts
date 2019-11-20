@@ -53,7 +53,7 @@ export class AccountMosaicRestrictionTransactionDTO {
     * Duration expressed in number of blocks.
     */
     'deadline': string;
-    'restrictionType': AccountRestrictionFlagsEnum;
+    'restrictionFlags': AccountRestrictionFlagsEnum;
     /**
     * Account restriction additions.
     */
@@ -102,8 +102,8 @@ export class AccountMosaicRestrictionTransactionDTO {
             "type": "string"
         },
         {
-            "name": "restrictionType",
-            "baseName": "restrictionType",
+            "name": "restrictionFlags",
+            "baseName": "restrictionFlags",
             "type": "AccountRestrictionFlagsEnum"
         },
         {

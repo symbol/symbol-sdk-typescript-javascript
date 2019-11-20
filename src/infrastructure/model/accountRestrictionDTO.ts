@@ -28,7 +28,7 @@
 import { AccountRestrictionFlagsEnum } from './accountRestrictionFlagsEnum';
 
 export class AccountRestrictionDTO {
-    'restrictionType': AccountRestrictionFlagsEnum;
+    'restrictionFlags': AccountRestrictionFlagsEnum;
     /**
     * Address, mosaic id, or transaction type to restrict.
     */
@@ -38,8 +38,8 @@ export class AccountRestrictionDTO {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "restrictionType",
-            "baseName": "restrictionType",
+            "name": "restrictionFlags",
+            "baseName": "restrictionFlags",
             "type": "AccountRestrictionFlagsEnum"
         },
         {

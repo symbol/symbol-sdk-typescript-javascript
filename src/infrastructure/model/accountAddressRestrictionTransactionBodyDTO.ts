@@ -28,7 +28,7 @@
 import { AccountRestrictionFlagsEnum } from './accountRestrictionFlagsEnum';
 
 export class AccountAddressRestrictionTransactionBodyDTO {
-    'restrictionType': AccountRestrictionFlagsEnum;
+    'restrictionFlags': AccountRestrictionFlagsEnum;
     /**
     * Account restriction additions.
     */
@@ -42,8 +42,8 @@ export class AccountAddressRestrictionTransactionBodyDTO {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "restrictionType",
-            "baseName": "restrictionType",
+            "name": "restrictionFlags",
+            "baseName": "restrictionFlags",
             "type": "AccountRestrictionFlagsEnum"
         },
         {
