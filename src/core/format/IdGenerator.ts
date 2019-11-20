@@ -28,7 +28,7 @@ export class IdGenerator {
     public static generateMosaicId = (
         nonce,
         ownerPublicId,
-        networkType: NetworkType = NetworkType.MIJIN_TEST,
+        networkType: NetworkType,
     ) => {
         const signSchema = SHA3Hasher.resolveSignSchema(networkType);
         const hash = SHA3Hasher.getHasher(32, signSchema).create();
@@ -48,7 +48,7 @@ export class IdGenerator {
     public static generateNamespaceId = (
         parentId,
         name: string,
-        networkType: NetworkType = NetworkType.MIJIN_TEST,
+        networkType: NetworkType,
     ) => {
         const signSchema = SHA3Hasher.resolveSignSchema(networkType);
         const hash = SHA3Hasher.getHasher(32, signSchema).create();
@@ -67,7 +67,7 @@ export class IdGenerator {
      */
     public static generateNamespacePath = (
         name: string,
-        networkType: NetworkType = NetworkType.MIJIN_TEST,
+        networkType: NetworkType,
     ) => {
         if (0 >= name.length) {
             utilities.throwInvalidFqn('having zero length', name);

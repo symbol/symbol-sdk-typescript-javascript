@@ -27,7 +27,7 @@ export class NamespaceMosaicIdGenerator {
     public static mosaicId = (
         nonce,
         ownerPublicId,
-        networkType: NetworkType = NetworkType.MIJIN_TEST,
+        networkType: NetworkType,
     ) => {
         return IdGenerator.generateMosaicId(nonce, ownerPublicId, networkType);
     }
@@ -46,7 +46,7 @@ export class NamespaceMosaicIdGenerator {
      */
     public static namespaceId = (
         namespaceName,
-        networkType: NetworkType = NetworkType.MIJIN_TEST,
+        networkType: NetworkType,
     ) => {
         const path = IdGenerator.generateNamespacePath(namespaceName, networkType);
         return path.length ? IdGenerator.generateNamespacePath(namespaceName, networkType)[path.length - 1] : [];
@@ -61,7 +61,7 @@ export class NamespaceMosaicIdGenerator {
     public static subnamespaceParentId = (
         parentNamespaceName: string,
         namespaceName: string,
-        networkType: NetworkType = NetworkType.MIJIN_TEST,
+        networkType: NetworkType,
     ) => {
         const path = IdGenerator.generateNamespacePath(`${parentNamespaceName}.${namespaceName}`, networkType);
         return IdGenerator.generateNamespacePath(parentNamespaceName, networkType)[path.length - 2];
@@ -76,7 +76,7 @@ export class NamespaceMosaicIdGenerator {
     public static subnamespaceNamespaceId = (
         parentNamespaceName: string,
         namespaceName: string,
-        networkType: NetworkType = NetworkType.MIJIN_TEST,
+        networkType: NetworkType,
     ) => {
         const path = IdGenerator.generateNamespacePath(`${parentNamespaceName}.${namespaceName}`, networkType);
         return path[path.length - 1];

@@ -76,50 +76,11 @@ export class AccountHttp extends Http implements AccountRepository {
      * @returns Observable<AccountInfo>
      */
     public getAccountInfo(address: Address): Observable<AccountInfo> {
-        return observableFrom(this.accountRoutesApi.getAccountInfo(address.plain())).pipe(
-            map((response: { response: ClientResponse; body: AccountInfoDTO; }) => {
-                const accountInfoDTO = response.body;
-                return new AccountInfo(
-                    Address.createFromEncoded(accountInfoDTO.account.address),
-                    UInt64.fromNumericString(accountInfoDTO.account.addressHeight),
-                    accountInfoDTO.account.publicKey,
-                    UInt64.fromNumericString(accountInfoDTO.account.publicKeyHeight),
-                    accountInfoDTO.account.accountType.valueOf(),
-                    accountInfoDTO.account.linkedAccountKey,
-                    accountInfoDTO.account.activityBuckets.map((bucket) => {
-                        return new ActivityBucket(
-                            bucket.startHeight,
-                            bucket.totalFeesPaid,
-                            bucket.beneficiaryCount,
-                            bucket.rawScore,
-                        );
-                    }),
-                    accountInfoDTO.account.mosaics.map((mosaicDTO) => new Mosaic(
-                        new MosaicId(mosaicDTO.id),
-                        UInt64.fromNumericString(mosaicDTO.amount),
-                    )),
-                    UInt64.fromNumericString(accountInfoDTO.account.importance),
-                    UInt64.fromNumericString(accountInfoDTO.account.importanceHeight),
-                );
-            }),
-            catchError((error) =>  throwError(this.errorHandling(error))),
-        );
-    }
-
-    /**
-     * Gets AccountsInfo for different accounts.
-     * @param addresses List of Address
-     * @returns Observable<AccountInfo[]>
-     */
-    public getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]> {
-        const accountIdsBody = {
-            addresses: addresses.map((address) => address.plain()),
-        };
-        return observableFrom(
-            this.accountRoutesApi.getAccountsInfo(accountIdsBody)).pipe(
-                map((response: { response: ClientResponse; body: AccountInfoDTO[]; }) => {
-                    const accountsInfoMetaDataDTO = response.body;
-                    return accountsInfoMetaDataDTO.map((accountInfoDTO: AccountInfoDTO) => {
+        return this.getNetworkTypeObservable().pipe(
+            mergeMap((networkType) => observableFrom(
+                this.accountRoutesApi.getAccountInfo(address.plain()))
+                    .pipe(map((response: { response: ClientResponse; body: AccountInfoDTO; }) => {
+                        const accountInfoDTO = response.body;
                         return new AccountInfo(
                             Address.createFromEncoded(accountInfoDTO.account.address),
                             UInt64.fromNumericString(accountInfoDTO.account.addressHeight),
@@ -142,32 +103,75 @@ export class AccountHttp extends Http implements AccountRepository {
                             UInt64.fromNumericString(accountInfoDTO.account.importance),
                             UInt64.fromNumericString(accountInfoDTO.account.importanceHeight),
                         );
+                    }),
+                    catchError((error) =>  throwError(this.errorHandling(error)))),
+            ));
+    }
 
-                    });
-                }),
-                catchError((error) =>  throwError(this.errorHandling(error))),
-        );
+    /**
+     * Gets AccountsInfo for different accounts.
+     * @param addresses List of Address
+     * @returns Observable<AccountInfo[]>
+     */
+    public getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]> {
+        const accountIdsBody = {
+            addresses: addresses.map((address) => address.plain()),
+        };
+        return this.getNetworkTypeObservable().pipe(
+            mergeMap((networkType) => observableFrom(
+                this.accountRoutesApi.getAccountsInfo(accountIdsBody)).pipe(
+                    map((response: { response: ClientResponse; body: AccountInfoDTO[]; }) => {
+                        const accountsInfoMetaDataDTO = response.body;
+                        return accountsInfoMetaDataDTO.map((accountInfoDTO: AccountInfoDTO) => {
+                            return new AccountInfo(
+                                Address.createFromEncoded(accountInfoDTO.account.address),
+                                UInt64.fromNumericString(accountInfoDTO.account.addressHeight),
+                                accountInfoDTO.account.publicKey,
+                                UInt64.fromNumericString(accountInfoDTO.account.publicKeyHeight),
+                                accountInfoDTO.account.accountType.valueOf(),
+                                accountInfoDTO.account.linkedAccountKey,
+                                accountInfoDTO.account.activityBuckets.map((bucket) => {
+                                    return new ActivityBucket(
+                                        bucket.startHeight,
+                                        bucket.totalFeesPaid,
+                                        bucket.beneficiaryCount,
+                                        bucket.rawScore,
+                                    );
+                                }),
+                                accountInfoDTO.account.mosaics.map((mosaicDTO) => new Mosaic(
+                                    new MosaicId(mosaicDTO.id),
+                                    UInt64.fromNumericString(mosaicDTO.amount),
+                                )),
+                                UInt64.fromNumericString(accountInfoDTO.account.importance),
+                                UInt64.fromNumericString(accountInfoDTO.account.importanceHeight),
+                            );
+
+                        });
+                    }),
+                    catchError((error) =>  throwError(this.errorHandling(error)))),
+            ));
     }
 
     public getAccountsNames(addresses: Address[]): Observable<AccountNames[]> {
         const accountIdsBody = {
             addresses: addresses.map((address) => address.plain()),
         };
-        return observableFrom(
-            this.accountRoutesApi.getAccountsNames(accountIdsBody)).pipe(
-                map((response: { response: ClientResponse; body: any; }) => {
-                    const accountNames = response.body.accountNames;
-                    return accountNames.map((accountName) => {
-                        return new AccountNames(
-                            Address.createFromEncoded(accountName.address),
-                            accountName.names.map((name) => {
-                                return new NamespaceName(new NamespaceId(name), name);
-                            }),
-                        );
-                    });
-                }),
-                catchError((error) =>  throwError(this.errorHandling(error))),
-        );
+        return this.getNetworkTypeObservable().pipe(
+            mergeMap((networkType) => observableFrom(
+                this.accountRoutesApi.getAccountsNames(accountIdsBody)).pipe(
+                    map((response: { response: ClientResponse; body: any; }) => {
+                        const accountNames = response.body.accountNames;
+                        return accountNames.map((accountName) => {
+                            return new AccountNames(
+                                Address.createFromEncoded(accountName.address),
+                                accountName.names.map((name) => {
+                                    return new NamespaceName(new NamespaceId(name, networkType), name);
+                                }),
+                            );
+                        });
+                    }),
+                    catchError((error) =>  throwError(this.errorHandling(error)))),
+            ));
     }
     /**
      * Gets a MultisigAccountInfo for an account.

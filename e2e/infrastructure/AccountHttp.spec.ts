@@ -140,7 +140,7 @@ describe('AccountHttp', () => {
                 UInt64.fromUint(9),
                 NetworkType.MIJIN_TEST,
             );
-            namespaceId = new NamespaceId(namespaceName);
+            namespaceId = new NamespaceId(namespaceName, NetworkType.MIJIN_TEST);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe(() => {
                 done();

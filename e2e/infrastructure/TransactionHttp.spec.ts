@@ -138,7 +138,7 @@ describe('TransactionHttp', () => {
         });
         it('standalone', (done) => {
             const nonce = MosaicNonce.createRandom();
-            mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
+            mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount, NetworkType.MIJIN_TEST);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 nonce,
@@ -182,7 +182,7 @@ describe('TransactionHttp', () => {
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 nonce,
-                MosaicId.createFromNonce(nonce, account.publicAccount),
+                MosaicId.createFromNonce(nonce, account.publicAccount, NetworkType.MIJIN_TEST),
                 MosaicFlags.create( true, true, true),
                 3,
                 UInt64.fromUint(0),
@@ -310,7 +310,7 @@ describe('TransactionHttp', () => {
                 UInt64.fromUint(10),
                 NetworkType.MIJIN_TEST,
             );
-            namespaceId = new NamespaceId(namespaceName);
+            namespaceId = new NamespaceId(namespaceName, NetworkType.MIJIN_TEST);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe((transaction: NamespaceRegistrationTransaction) => {
                 expect(transaction.namespaceId, 'NamespaceId').not.to.be.undefined;
@@ -1219,7 +1219,9 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = account.sign(aggregateTransaction, generationHash);
             const hashLockTransaction = HashLockTransaction.create(Deadline.create(),
-                new Mosaic(new NamespaceId('cat.currency'), UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
+                new Mosaic(
+                    new NamespaceId('cat.currency', NetworkType.MIJIN_TEST),
+                    UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
                 UInt64.fromUint(10000),
                 signedTransaction,
                 NetworkType.MIJIN_TEST);

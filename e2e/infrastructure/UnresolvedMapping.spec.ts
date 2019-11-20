@@ -93,7 +93,7 @@ describe('TransactionHttp', () => {
      */
     describe('Get network currency mosaic id', () => {
         it('get mosaicId', (done) => {
-            namespaceHttp.getLinkedMosaicId(new NamespaceId('cat.currency')).subscribe((networkMosaicId) => {
+            namespaceHttp.getLinkedMosaicId(new NamespaceId('cat.currency', NetworkType.MIJIN_TEST)).subscribe((networkMosaicId) => {
                 networkCurrencyMosaicId = networkMosaicId;
                 done();
             });
@@ -111,7 +111,7 @@ describe('TransactionHttp', () => {
         });
         it('standalone', (done) => {
             const nonce = MosaicNonce.createRandom();
-            mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
+            mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount, NetworkType.MIJIN_TEST);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 nonce,
@@ -151,7 +151,7 @@ describe('TransactionHttp', () => {
                 UInt64.fromUint(50),
                 NetworkType.MIJIN_TEST,
             );
-            namespaceIdMosaic = new NamespaceId(namespaceName);
+            namespaceIdMosaic = new NamespaceId(namespaceName, NetworkType.MIJIN_TEST);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe(() => {
                 done();
@@ -182,7 +182,7 @@ describe('TransactionHttp', () => {
                 UInt64.fromUint(50),
                 NetworkType.MIJIN_TEST,
             );
-            namespaceIdAddress = new NamespaceId(namespaceName);
+            namespaceIdAddress = new NamespaceId(namespaceName, NetworkType.MIJIN_TEST);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe(() => {
                 done();

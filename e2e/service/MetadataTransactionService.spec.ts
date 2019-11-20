@@ -66,7 +66,7 @@ describe('MetadataTransactionService', () => {
         });
         it('standalone', (done) => {
             const nonce = MosaicNonce.createRandom();
-            mosaicId = MosaicId.createFromNonce(nonce, targetAccount.publicAccount);
+            mosaicId = MosaicId.createFromNonce(nonce, targetAccount.publicAccount, NetworkType.MIJIN_TEST);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 nonce,
@@ -105,7 +105,7 @@ describe('MetadataTransactionService', () => {
                 UInt64.fromUint(9),
                 NetworkType.MIJIN_TEST,
             );
-            namespaceId = new NamespaceId(namespaceName);
+            namespaceId = new NamespaceId(namespaceName, NetworkType.MIJIN_TEST);
             const signedTransaction = registerNamespaceTransaction.signWith(targetAccount, generationHash);
             listener.confirmed(targetAccount.address).subscribe(() => {
                 done();

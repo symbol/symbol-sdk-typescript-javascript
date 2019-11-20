@@ -64,7 +64,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
             maxFee,
             NamespaceRegistrationType.RootNamespace,
             namespaceName,
-            new NamespaceId(namespaceName),
+            new NamespaceId(namespaceName, networkType),
             duration,
         );
     }
@@ -85,7 +85,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                                      maxFee: UInt64 = new UInt64([0, 0])): NamespaceRegistrationTransaction {
         let parentId: NamespaceId;
         if (typeof parentNamespace === 'string') {
-            parentId = new NamespaceId(NamespaceMosaicIdGenerator.subnamespaceParentId(parentNamespace, namespaceName));
+            parentId = new NamespaceId(NamespaceMosaicIdGenerator.subnamespaceParentId(parentNamespace, namespaceName, networkType));
         } else {
             parentId = parentNamespace;
         }
@@ -96,8 +96,8 @@ export class NamespaceRegistrationTransaction extends Transaction {
             NamespaceRegistrationType.SubNamespace,
             namespaceName,
             typeof parentNamespace === 'string' ?
-                new NamespaceId(NamespaceMosaicIdGenerator.subnamespaceNamespaceId(parentNamespace, namespaceName)) :
-                new NamespaceId(NamespaceMosaicIdGenerator.namespaceId(namespaceName)),
+                new NamespaceId(NamespaceMosaicIdGenerator.subnamespaceNamespaceId(parentNamespace, namespaceName, networkType)) :
+                new NamespaceId(NamespaceMosaicIdGenerator.namespaceId(namespaceName, networkType)),
             undefined,
             parentId,
         );

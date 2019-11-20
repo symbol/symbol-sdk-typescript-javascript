@@ -100,7 +100,7 @@ describe('RestrictionHttp', () => {
         });
         it('standalone', (done) => {
             const nonce = MosaicNonce.createRandom();
-            mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
+            mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount, NetworkType.MIJIN_TEST);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 nonce,
@@ -134,7 +134,7 @@ describe('RestrictionHttp', () => {
         });
         it('standalone', (done) => {
             const nonce = MosaicNonce.createRandom();
-            referenceMosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
+            referenceMosaicId = MosaicId.createFromNonce(nonce, account.publicAccount, NetworkType.MIJIN_TEST);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 nonce,

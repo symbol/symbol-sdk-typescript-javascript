@@ -43,7 +43,7 @@ export class MosaicId {
     public static createFromNonce(
         nonce: MosaicNonce,
         owner: PublicAccount,
-        networkType: NetworkType = NetworkType.MIJIN_TEST,
+        networkType: NetworkType,
     ): MosaicId {
         const mosaicId = NamespaceMosaicIdGenerator.mosaicId(nonce.nonce, convert.hexToUint8(owner.publicKey), networkType);
         return new MosaicId(mosaicId);

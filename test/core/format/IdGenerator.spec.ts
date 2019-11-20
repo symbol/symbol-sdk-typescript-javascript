@@ -225,7 +225,7 @@ describe('id generator', () => {
     describe('generate mosaic id', () => {
         it('generates correct well known id', () => {
             // Assert:
-            expect(idGenerator.generateMosaicId(basicMosaicInfo.nonce, basicMosaicInfo.publicId))
+            expect(idGenerator.generateMosaicId(basicMosaicInfo.nonce, basicMosaicInfo.publicId, NetworkType.MIJIN_TEST))
                 .to.deep.equal(basicMosaicInfo.id);
         });
 
@@ -240,7 +240,7 @@ describe('id generator', () => {
             mosaicTestVector.rows.map((row, i) => {
                 const pubKey = convert.hexToUint8(row.publicKey);
                 const nonce = convert.hexToUint8(row.nonce).reverse(); // Little-Endianness!
-                const mosaicId = idGenerator.generateMosaicId(nonce, pubKey);
+                const mosaicId = idGenerator.generateMosaicId(nonce, pubKey, NetworkType.MIJIN_TEST);
                 const expectedId = uint64.fromHex(row.expectedMosaicId);
 
                 // Assert:
@@ -271,8 +271,8 @@ describe('id generator', () => {
     describe('generate namespace paths', () => {
         it('generates correct well known root path', () => {
             // Act:
-            const path = idGenerator.generateNamespacePath('nem');
-            const catPath = idGenerator.generateNamespacePath('cat');
+            const path = idGenerator.generateNamespacePath('nem', NetworkType.MIJIN_TEST);
+            const catPath = idGenerator.generateNamespacePath('cat', NetworkType.MIJIN_TEST);
 
             // Assert:
             expect(path.length).to.equal(1);
@@ -295,8 +295,8 @@ describe('id generator', () => {
 
         it('generates correct well known child path', () => {
             // Act:
-            const path = idGenerator.generateNamespacePath('nem.xem');
-            const catPath = idGenerator.generateNamespacePath('cat.currency');
+            const path = idGenerator.generateNamespacePath('nem.xem', NetworkType.MIJIN_TEST);
+            const catPath = idGenerator.generateNamespacePath('cat.currency', NetworkType.MIJIN_TEST);
 
             // Assert:
             expect(path.length).to.equal(2);
@@ -324,12 +324,12 @@ describe('id generator', () => {
         it('supports multi level namespaces', () => {
             // Arrange:
             const expected: any = [];
-            expected.push(idGenerator.generateNamespaceId(constants.namespace_base_id, 'foo'));
-            expected.push(idGenerator.generateNamespaceId(expected[0], 'bar'));
-            expected.push(idGenerator.generateNamespaceId(expected[1], 'baz'));
+            expected.push(idGenerator.generateNamespaceId(constants.namespace_base_id, 'foo', NetworkType.MIJIN_TEST));
+            expected.push(idGenerator.generateNamespaceId(expected[0], 'bar', NetworkType.MIJIN_TEST));
+            expected.push(idGenerator.generateNamespaceId(expected[1], 'baz', NetworkType.MIJIN_TEST));
 
             // Assert:
-            expect(idGenerator.generateNamespacePath('foo.bar.baz')).to.deep.equal(expected);
+            expect(idGenerator.generateNamespacePath('foo.bar.baz', NetworkType.MIJIN_TEST)).to.deep.equal(expected);
         });
 
         it('supports multi level namespaces with KECCAK given NetworkType.TEST_NET', () => {
@@ -346,13 +346,14 @@ describe('id generator', () => {
         it('rejects names with too many parts', () => {
             // Assert:
             ['a.b.c.d', 'a.b.c.d.e'].forEach((name) =>
-                expect(() => idGenerator.generateNamespacePath(name), `name ${name}`).to.throw('too many parts'));
+                expect(() => idGenerator.generateNamespacePath(name, NetworkType.MIJIN_TEST), `name ${name}`).to.throw('too many parts'));
         });
 
         it('rejects improper qualified names', () => {
             // Assert:
             ['a:b:c', 'a::b'].forEach((name) =>
-                expect(() => idGenerator.generateNamespacePath(name), `name ${name}`).to.throw('invalid part name'));
+                expect(() => idGenerator.generateNamespacePath(name, NetworkType.MIJIN_TEST), `name ${name}`)
+            .to.throw('invalid part name'));
         });
 
         addBasicTests(idGenerator.generateNamespacePath);

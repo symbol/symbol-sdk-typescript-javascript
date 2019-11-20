@@ -45,13 +45,13 @@ export class NamespaceId {
      */
     constructor(
         id: string | number[],
-        networkType: NetworkType = NetworkType.MIJIN_TEST,
+        networkType?: NetworkType,
     ) {
         if (id instanceof Array) {
             this.id = new Id(id);
         } else if (typeof id === 'string') {
             this.fullName = id;
-            this.id = new Id(NamespaceMosaicIdGenerator.namespaceId(id, networkType));
+            this.id = new Id(NamespaceMosaicIdGenerator.namespaceId(id, networkType!));
         }
     }
 
@@ -64,11 +64,10 @@ export class NamespaceId {
      */
     public static createFromEncoded(
         encoded: string,
-        networkType: NetworkType = NetworkType.MIJIN_TEST,
     ): NamespaceId {
         const uint = convert.hexToUint8(encoded);
         const hex  = convert.uint8ToHex(uint);
-        const namespace = new NamespaceId(Id.fromHex(hex).toDTO(), networkType);
+        const namespace = new NamespaceId(Id.fromHex(hex).toDTO());
         return namespace;
     }
 

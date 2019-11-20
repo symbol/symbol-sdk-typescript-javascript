@@ -164,7 +164,7 @@ describe('Listener', () => {
     });
     describe('Get network currency mosaic id', () => {
         it('get mosaicId', (done) => {
-            namespaceHttp.getLinkedMosaicId(new NamespaceId('cat.currency')).subscribe((networkMosaicId) => {
+            namespaceHttp.getLinkedMosaicId(new NamespaceId('cat.currency', NetworkType.MIJIN_TEST)).subscribe((networkMosaicId) => {
                 networkCurrencyMosaicId = networkMosaicId;
                 done();
             });

@@ -63,7 +63,7 @@ describe('MosaicRestrictionTransactionService', () => {
         });
         it('standalone', (done) => {
             const nonce = MosaicNonce.createRandom();
-            mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
+            mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount, NetworkType.MIJIN_TEST);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 nonce,
