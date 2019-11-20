@@ -21,7 +21,7 @@ Cross-platform client for Catapult.
 1. Clone the project.
 
 ```
-git clone https://github.com/nemfoundation/nem2-explorer.git
+git clone https://github.com/nemfoundation/nem2-desktop-wallet.git
 ```
 
 2. Install the dependencies.
