@@ -36,9 +36,32 @@ export abstract class Transaction {
     /**
      * Transaction header size
      *
+     * Included fields are `size`, `verifiableEntityHeader_Reserved1`,
+     * `signature`, `signerPublicKey` and `entityBody_Reserved1`.
+     *
      * @var {number}
      */
-    public static readonly Header_Size = 8 + 64 + 32 + 4;
+    public static readonly Header_Size: number = 8 + 64 + 32 + 4;
+
+    /**
+     * Index of the transaction *type*
+     *
+     * Included fields are the transaction header, `version`
+     * and `network`
+     *
+     * @var {number}
+     */
+    public static readonly Type_Index: number = Transaction.Header_Size + 2;
+
+    /**
+     * Index of the transaction *body*
+     *
+     * Included fields are the transaction header, `version`,
+     * `network`, `type`, `maxFee` and `deadline`
+     *
+     * @var {number}
+     */
+    public static readonly Body_Index: number = Transaction.Header_Size + 1 + 1 + 2 + 8 + 8;
 
     /**
      * @constructor
@@ -101,8 +124,16 @@ export abstract class Transaction {
 
         // prepare
         const entityHash: Uint8Array = new Uint8Array(32);
-        const signSchema: SignSchema = SHA3Hasher.resolveSignSchema(networkType);
         const transactionBytes: Uint8Array = Convert.hexToUint8(transactionPayload);
+
+        // read transaction type
+        const typeIdx: number = Transaction.Type_Index;
+        const typeBytes: Uint8Array = transactionBytes.slice(typeIdx, typeIdx + 2).reverse(); // REVERSED
+        const entityType: TransactionType = parseInt(Convert.uint8ToHex(typeBytes), 16);
+        const isAggregateTransaction = [
+            TransactionType.AGGREGATE_BONDED,
+            TransactionType.AGGREGATE_COMPLETE,
+        ].find((type: TransactionType) => entityType === type) !== undefined;
 
         // 1) take "R" part of a signature (first 32 bytes)
         const signatureR: Uint8Array = transactionBytes.slice(8, 8 + 32);
@@ -118,7 +149,12 @@ export abstract class Transaction {
         // 4) add transaction data without header (EntityDataBuffer)
         // @link https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/EntityHasher.cpp#L30
         const transactionBodyIdx: number = generationHashIdx + generationHash.length;
-        const transactionBody: Uint8Array = transactionBytes.slice(Transaction.Header_Size);
+        let transactionBody: Uint8Array = transactionBytes.slice(Transaction.Header_Size);
+
+        // in case of aggregate transactions, we hash only the merkle transaction hash.
+        if (isAggregateTransaction) {
+            transactionBody = transactionBytes.slice(Transaction.Header_Size, Transaction.Body_Index + 32);
+        }
 
         // 5) concatenate binary hash parts
         // layout: `signature_R || signerPublicKey || generationHash || EntityDataBuffer`
@@ -134,6 +170,7 @@ export abstract class Transaction {
         entityHashBytes.set(transactionBody, transactionBodyIdx);
 
         // 6) create SHA3 or Keccak hash depending on `signSchema`
+        const signSchema: SignSchema = SHA3Hasher.resolveSignSchema(networkType);
         SHA3Hasher.func(entityHash, entityHashBytes, 32, signSchema);
         return Convert.uint8ToHex(entityHash);
     }
