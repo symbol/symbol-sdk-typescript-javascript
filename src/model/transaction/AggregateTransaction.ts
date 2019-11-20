@@ -340,7 +340,7 @@ export class AggregateTransaction extends Transaction {
                 this.type.valueOf(),
                 new AmountDto(this.maxFee.toDTO()),
                 new TimestampDto(this.deadline.toDTO()),
-                new Hash256Dto(this.calculateInnerTransactionHash()),
+                new Hash256Dto(this.calculateInnerTransactionHash(this.networkType)),
                 transactions,
                 cosignatures,
             ) :
@@ -352,7 +352,7 @@ export class AggregateTransaction extends Transaction {
                 this.type.valueOf(),
                 new AmountDto(this.maxFee.toDTO()),
                 new TimestampDto(this.deadline.toDTO()),
-                new Hash256Dto(this.calculateInnerTransactionHash()),
+                new Hash256Dto(this.calculateInnerTransactionHash(this.networkType)),
                 transactions,
                 cosignatures,
             );
@@ -372,11 +372,23 @@ export class AggregateTransaction extends Transaction {
      * Generate inner transaction root hash (merkle tree)
      * @returns {Uint8Array}
      */
-    private calculateInnerTransactionHash(): Uint8Array {
-        const builder = new MerkleHashBuilder(SHA3Hasher.createHasher);
+    private calculateInnerTransactionHash(networkType: NetworkType): Uint8Array {
+        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
+        const hasher  = SHA3Hasher.createHasher(32, signSchema);
+        const builder = new MerkleHashBuilder(32, signSchema);
         this.innerTransactions.forEach((transaction) => {
-            builder.update(RawArray.uint8View(sha3_256.arrayBuffer(transaction.toAggregateTransactionBytes())));
+            const entityHash: Uint8Array = new Uint8Array(32);
+
+            // for each embedded transaction hash their body
+            hasher.reset();
+            hasher.update(transaction.toAggregateTransactionBytes());
+            hasher.finalize(entityHash);
+
+            // update merkle tree (add transaction hash)
+            builder.update(entityHash);
         });
+
+        // calculate root hash with all transactions
         return builder.getRootHash();
     }
 
