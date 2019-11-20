@@ -26,12 +26,16 @@ const constants = {
     nem_id: [0x375FFA4B, 0x84B3552D], // 84B3552D375FFA4B
     xem_id: [0xD95FCF29, 0xD525AD41], // D525AD41D95FCF29
     namespace_base_id: [0, 0],
+    cat_id: [0xBA651B4F, 0xB1497F5F], // B1497F5FBA651B4F
+    currency_id: [0xC462B244, 0x85BBEA6C], // 85BBEA6CC462B244
 };
 
 const keccak_constants = {
     nem_id: [0x12A2C7B8, 0xA912FDE5], // A912FDE512A2C7B8
     xem_id: [0x125CB3C7, 0xB5557B0C], // B5557B0C125CB3C7
     namespace_base_id: [0, 0],
+    cat_id: [0x8E9B1690, 0xBEFDD715], // BEFDD7158E9B1690
+    currency_id: [0x710AD7DF, 0xF50E70E4], // F50E70E4710AD7DF
 };
 
 const basicMosaicInfo = {
@@ -268,39 +272,53 @@ describe('id generator', () => {
         it('generates correct well known root path', () => {
             // Act:
             const path = idGenerator.generateNamespacePath('nem');
+            const catPath = idGenerator.generateNamespacePath('cat');
 
             // Assert:
             expect(path.length).to.equal(1);
+            expect(catPath.length).to.equal(1);
             expect(path[0]).to.deep.equal(constants.nem_id);
+            expect(catPath[0]).to.deep.equal(constants.cat_id);
         });
 
         it('generates correct well known root path with KECCAK given NetworkType.TEST_NET', () => {
             // Act:
             const path = idGenerator.generateNamespacePath('nem', NetworkType.TEST_NET);
+            const catPath = idGenerator.generateNamespacePath('cat', NetworkType.TEST_NET);
 
             // Assert:
             expect(path.length).to.equal(1);
+            expect(catPath.length).to.equal(1);
             expect(path[0]).to.deep.equal(keccak_constants.nem_id);
+            expect(catPath[0]).to.deep.equal(keccak_constants.cat_id);
         });
 
         it('generates correct well known child path', () => {
             // Act:
             const path = idGenerator.generateNamespacePath('nem.xem');
+            const catPath = idGenerator.generateNamespacePath('cat.currency');
 
             // Assert:
             expect(path.length).to.equal(2);
+            expect(catPath.length).to.equal(2);
             expect(path[0]).to.deep.equal(constants.nem_id);
             expect(path[1]).to.deep.equal(constants.xem_id);
+            expect(catPath[0]).to.deep.equal(constants.cat_id);
+            expect(catPath[1]).to.deep.equal(constants.currency_id);
         });
 
         it('generates correct well known child path with KECCAK given NetworkType.TEST_NET', () => {
             // Act:
             const path = idGenerator.generateNamespacePath('nem.xem', NetworkType.TEST_NET);
+            const catPath = idGenerator.generateNamespacePath('cat.currency', NetworkType.TEST_NET);
 
             // Assert:
             expect(path.length).to.equal(2);
+            expect(catPath.length).to.equal(2);
             expect(path[0]).to.deep.equal(keccak_constants.nem_id);
             expect(path[1]).to.deep.equal(keccak_constants.xem_id);
+            expect(catPath[0]).to.deep.equal(keccak_constants.cat_id);
+            expect(catPath[1]).to.deep.equal(keccak_constants.currency_id);
         });
 
         it('supports multi level namespaces', () => {
