@@ -340,7 +340,7 @@ export class AggregateTransaction extends Transaction {
                 this.type.valueOf(),
                 new AmountDto(this.maxFee.toDTO()),
                 new TimestampDto(this.deadline.toDTO()),
-                new Hash256Dto(this.calculateInnerTransactionHash(this.networkType)),
+                new Hash256Dto(this.calculateInnerTransactionHash()),
                 transactions,
                 cosignatures,
             ) :
@@ -352,7 +352,7 @@ export class AggregateTransaction extends Transaction {
                 this.type.valueOf(),
                 new AmountDto(this.maxFee.toDTO()),
                 new TimestampDto(this.deadline.toDTO()),
-                new Hash256Dto(this.calculateInnerTransactionHash(this.networkType)),
+                new Hash256Dto(this.calculateInnerTransactionHash()),
                 transactions,
                 cosignatures,
             );
@@ -372,7 +372,7 @@ export class AggregateTransaction extends Transaction {
      * Generate inner transaction root hash (merkle tree)
      * @returns {Uint8Array}
      */
-    private calculateInnerTransactionHash(networkType: NetworkType): Uint8Array {
+    private calculateInnerTransactionHash(): Uint8Array {
         // Note: Transaction hashing *always* uses SHA3
         const hasher  = SHA3Hasher.createHasher(32, SignSchema.SHA3);
         const builder = new MerkleHashBuilder(32, SignSchema.SHA3);

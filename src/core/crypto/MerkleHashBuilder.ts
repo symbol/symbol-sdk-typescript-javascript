@@ -35,7 +35,7 @@ export class MerkleHashBuilder {
                  *
                  * @var {number}
                  */
-                public readonly length: 32 | 64,
+                public readonly length: number,
                 /**
                  * Signature schema used (hash algorithm diff)
                  *
