@@ -15,7 +15,7 @@
  */
 
 import { sha3_256 } from 'js-sha3';
-import {KeyPair, MerkleHashBuilder, SHA3Hasher} from '../../core/crypto';
+import {KeyPair, MerkleHashBuilder, SHA3Hasher, SignSchema} from '../../core/crypto';
 import {Convert, RawArray} from '../../core/format';
 import {AggregateBondedTransactionBuilder} from '../../infrastructure/catbuffer/AggregateBondedTransactionBuilder';
 import {AggregateCompleteTransactionBuilder} from '../../infrastructure/catbuffer/AggregateCompleteTransactionBuilder';
@@ -373,9 +373,9 @@ export class AggregateTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     private calculateInnerTransactionHash(networkType: NetworkType): Uint8Array {
-        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
-        const hasher  = SHA3Hasher.createHasher(32, signSchema);
-        const builder = new MerkleHashBuilder(32, signSchema);
+        // Note: Transaction hashing *always* uses SHA3
+        const hasher  = SHA3Hasher.createHasher(32, SignSchema.SHA3);
+        const builder = new MerkleHashBuilder(32, SignSchema.SHA3);
         this.innerTransactions.forEach((transaction) => {
             const entityHash: Uint8Array = new Uint8Array(32);
 

@@ -169,9 +169,9 @@ export abstract class Transaction {
         entityHashBytes.set(generationHash, generationHashIdx);
         entityHashBytes.set(transactionBody, transactionBodyIdx);
 
-        // 6) create SHA3 or Keccak hash depending on `signSchema`
-        const signSchema: SignSchema = SHA3Hasher.resolveSignSchema(networkType);
-        SHA3Hasher.func(entityHash, entityHashBytes, 32, signSchema);
+        // 6) create SHA3 hash of transaction data
+        // Note: Transaction hashing *always* uses SHA3
+        SHA3Hasher.func(entityHash, entityHashBytes, 32, SignSchema.SHA3);
         return Convert.uint8ToHex(entityHash);
     }
 
