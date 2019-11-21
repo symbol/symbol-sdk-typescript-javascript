@@ -38,7 +38,8 @@ describe('BlockInfo', () => {
                 beneficiaryPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                 timestamp: new UInt64([ 0, 0 ]),
                 type: 32768,
-                version: 36865,
+                version: 1,
+                network: 144,
             },
             meta: {
                 generationHash: '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
@@ -48,16 +49,15 @@ describe('BlockInfo', () => {
             },
         };
 
-        const network = parseInt(blockDTO.block.version.toString(16).substr(0, 2), 16);
         const blockInfo = new BlockInfo(
             blockDTO.meta.hash,
             blockDTO.meta.generationHash,
             blockDTO.meta.totalFee,
             blockDTO.meta.numTransactions,
             blockDTO.block.signature,
-            PublicAccount.createFromPublicKey(blockDTO.block.signerPublicKey, network),
-            network,
-            parseInt(blockDTO.block.version.toString(16).substr(2, 2), 16), // Tx version
+            PublicAccount.createFromPublicKey(blockDTO.block.signerPublicKey, blockDTO.block.network),
+            blockDTO.block.network,
+            blockDTO.block.version, // Tx version
             blockDTO.block.type,
             blockDTO.block.height,
             blockDTO.block.timestamp,
@@ -67,7 +67,7 @@ describe('BlockInfo', () => {
             blockDTO.block.blockTransactionsHash,
             blockDTO.block.blockReceiptsHash,
             blockDTO.block.stateHash,
-            PublicAccount.createFromPublicKey(blockDTO.block.beneficiaryPublicKey, network),
+            PublicAccount.createFromPublicKey(blockDTO.block.beneficiaryPublicKey, blockDTO.block.network),
         );
 
         expect(blockInfo.hash).to.be.equal(blockDTO.meta.hash);
@@ -76,8 +76,8 @@ describe('BlockInfo', () => {
         expect(blockInfo.numTransactions).to.be.equal(blockDTO.meta.numTransactions);
         expect(blockInfo.signature).to.be.equal(blockDTO.block.signature);
         expect(blockInfo.signer.publicKey).to.be.equal(blockDTO.block.signerPublicKey);
-        expect(blockInfo.networkType).to.be.equal(parseInt(blockDTO.block.version.toString(16).substr(0, 2), 16));
-        expect(blockInfo.version).to.be.equal(parseInt(blockDTO.block.version.toString(16).substr(2, 2), 16));
+        expect(blockInfo.networkType).to.be.equal(blockDTO.block.network);
+        expect(blockInfo.version).to.be.equal(blockDTO.block.version);
         expect(blockInfo.type).to.be.equal(blockDTO.block.type);
         deepEqual(blockInfo.height, blockDTO.block.height);
         deepEqual(blockInfo.timestamp, blockDTO.block.timestamp);

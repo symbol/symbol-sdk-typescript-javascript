@@ -1,7 +1,7 @@
 import { assert, expect } from 'chai';
 import { KeyGenerator } from '../../src/core/format/KeyGenerator';
 import { Listener } from '../../src/infrastructure/Listener';
-import { RestrictionHttp } from '../../src/infrastructure/RestrictionHttp';
+import { RestrictionMosaicHttp } from '../../src/infrastructure/RestrictionMosaicHttp';
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
@@ -23,7 +23,7 @@ describe('MosaicRestrictionTransactionService', () => {
     const key = KeyGenerator.generateUInt64Key('TestKey');
     let targetAccount: Account;
     let account: Account;
-    let restrictionHttp: RestrictionHttp;
+    let restrictionHttp: RestrictionMosaicHttp;
     let transactionHttp: TransactionHttp;
     let mosaicId: MosaicId;
     let config;
@@ -40,7 +40,7 @@ describe('MosaicRestrictionTransactionService', () => {
             account = Account.createFromPrivateKey(json.testAccount.privateKey, NetworkType.MIJIN_TEST);
             targetAccount = Account.createFromPrivateKey(json.testAccount3.privateKey, NetworkType.MIJIN_TEST);
             generationHash = json.generationHash;
-            restrictionHttp = new RestrictionHttp(json.apiUrl);
+            restrictionHttp = new RestrictionMosaicHttp(json.apiUrl);
             transactionHttp = new TransactionHttp(json.apiUrl);
             done();
         });

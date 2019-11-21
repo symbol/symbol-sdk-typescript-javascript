@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-import { ClientResponse } from 'http';
 import {from as observableFrom, Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import { NodeInfo } from '../model/node/NodeInfo';
 import { NodeTime } from '../model/node/NodeTime';
-import { NodeInfoDTO, NodeRoutesApi, NodeTimeDTO } from './api';
+import { UInt64 } from '../model/UInt64';
+import { NodeRoutesApi } from './api';
 import {Http} from './Http';
 import {NodeRepository} from './NodeRepository';
-import { UInt64 } from '../model/UInt64';
 
 /**
  * Node http repository.
@@ -52,18 +51,15 @@ export class NodeHttp extends Http implements NodeRepository {
      */
     public getNodeInfo(): Observable<NodeInfo> {
         return observableFrom(this.nodeRoutesApi.getNodeInfo()).pipe(
-            map((response: { response: ClientResponse; body: NodeInfoDTO; } ) => {
-                const nodeInfoDTO = response.body;
-                return new NodeInfo(
-                    nodeInfoDTO.publicKey,
-                    nodeInfoDTO.port,
-                    nodeInfoDTO.networkIdentifier,
-                    nodeInfoDTO.version,
-                    nodeInfoDTO.roles as number,
-                    nodeInfoDTO.host,
-                    nodeInfoDTO.friendlyName,
-                );
-            }),
+            map(({body}) => new NodeInfo(
+                body.publicKey,
+                body.port,
+                body.networkIdentifier,
+                body.version,
+                body.roles as number,
+                body.host,
+                body.friendlyName,
+            )),
             catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
@@ -74,8 +70,8 @@ export class NodeHttp extends Http implements NodeRepository {
      */
     public getNodeTime(): Observable<NodeTime> {
         return observableFrom(this.nodeRoutesApi.getNodeTime()).pipe(
-            map((response: { response: ClientResponse; body: NodeTimeDTO; } ) => {
-                const nodeTimeDTO = response.body;
+            map(({body}) => {
+                const nodeTimeDTO = body;
                 if (nodeTimeDTO.communicationTimestamps.sendTimestamp && nodeTimeDTO.communicationTimestamps.receiveTimestamp) {
                     return new NodeTime(UInt64.fromNumericString(nodeTimeDTO.communicationTimestamps.sendTimestamp).toDTO(),
                                     UInt64.fromNumericString(nodeTimeDTO.communicationTimestamps.receiveTimestamp).toDTO());

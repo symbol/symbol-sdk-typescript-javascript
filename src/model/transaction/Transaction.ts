@@ -369,7 +369,7 @@ export abstract class Transaction {
     public toJSON() {
         const commonTransactionObject = {
             type: this.type,
-            networkType: this.networkType,
+            network: this.networkType,
             version: this.versionToDTO(),
             maxFee: this.maxFee.toString(),
             deadline: this.deadline.toString(),
