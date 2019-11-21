@@ -175,7 +175,6 @@ describe('MetadataTransactionService', () => {
                 account.publicKey,
                 key,
                 MetadataType.Account,
-                4,
                 value,
                 targetId),
             );

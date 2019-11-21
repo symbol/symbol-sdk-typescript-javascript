@@ -32,7 +32,6 @@ export class MetadataEntry {
      * @param {string} targetPublicKey - The metadata target public key
      * @param {UInt64} scopedMetadataKey - The key scoped to source, target and type
      * @param {MetadatType} metadataType - The metadata type (Account | Mosaic | Namespace)
-     * @param {number} valueSize - The metadata value size
      * @param {string} value - The metadata value
      * @param {MosaicId | NamespaceId | undefined} targetId - The target mosaic or namespace identifier
      */
@@ -57,10 +56,6 @@ export class MetadataEntry {
                  * The metadata type
                  */
                 public readonly metadataType: MetadataType,
-                /**
-                 * The metadata value size
-                 */
-                public readonly valueSize: number,
                 /**
                  * The metadata value
                  */

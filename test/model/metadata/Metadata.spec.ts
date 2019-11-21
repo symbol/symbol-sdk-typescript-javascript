@@ -37,7 +37,6 @@ describe('Metadata', () => {
             scopedMetadataKey: '85BBEA6CC462B244',
             targetId: undefined,
             metadataType: 0,
-            valueSize: 5,
             value: '12345',
         };
         const metadataDTO = {
@@ -55,7 +54,6 @@ describe('Metadata', () => {
                 metadataDTO.metadataEntry.targetPublicKey,
                 UInt64.fromHex(metadataDTO.metadataEntry.scopedMetadataKey),
                 metadataDTO.metadataEntry.metadataType,
-                metadataDTO.metadataEntry.valueSize,
                 metadataDTO.metadataEntry.value,
             ),
         );
@@ -67,7 +65,6 @@ describe('Metadata', () => {
         deepEqual(metadata.metadataEntry.scopedMetadataKey, UInt64.fromHex('85BBEA6CC462B244'));
         deepEqual(metadata.metadataEntry.targetId, undefined);
         deepEqual(metadata.metadataEntry.metadataType, MetadataType.Account);
-        deepEqual(metadata.metadataEntry.valueSize, 5);
         deepEqual(metadata.metadataEntry.value, '12345');
     });
 });
