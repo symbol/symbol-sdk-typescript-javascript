@@ -13,34 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import { SHA3Hasher } from './SHA3Hasher';
 import { SignSchema } from './SignSchema';
 
 export class MerkleHashBuilder {
 
-    hashes: Uint8Array[] = new Array<Uint8Array>();
-    hasherFactory: any;
-    signSchema: SignSchema;
-    length: number;
+    /**
+     * The list of hashes used to calculate root hash.
+     *
+     * @var {Uint8Array}
+     */
+    protected hashes: Uint8Array[] = new Array<Uint8Array>();
 
     /**
      * Constructor
-     * @param hasherFactory Hasher (SHA3_256)
      * @param signSchema Sign schema
      * @param length Hash size
      */
-    constructor(hasherFactory: any, signSchema: SignSchema = SignSchema.SHA3, length: number = 32) {
-        this.hasherFactory = hasherFactory;
-        this.signSchema = signSchema;
-        this.length = length;
+    constructor(/**
+                 * Length of produced merkle hash in bytes.
+                 *
+                 * @var {number}
+                 */
+                public readonly length: number,
+                /**
+                 * Signature schema used (hash algorithm diff)
+                 *
+                 * @var {SignSchema}
+                 */
+                public readonly signSchema: SignSchema) {
     }
 
-    /** @internal
+    /**
      * Hash inner transactions
+     *
+     * @internal
      * @param hashes Inner transaction hashes
+     * @return {Uint8Array}
      */
     protected hash(hashes: Uint8Array[]): Uint8Array {
-        const hasher = this.hasherFactory(this.length, this.signSchema);
+        const hasher = SHA3Hasher.createHasher(this.length, this.signSchema);
         hasher.reset();
 
         hashes.forEach((hashVal: Uint8Array) => {
@@ -52,9 +64,12 @@ export class MerkleHashBuilder {
         return hash;
     }
 
-    /** @internal
-     * Get root hash of Merkle Trees
-     * @param hashes Inner transaction hashes
+    /**
+     * Get root hash of Merkle Tree
+     *
+     * @internal
+     * @param {Uint8Array[]} hashes Inner transaction hashes
+     * @return {Uint8Array}
      */
     protected calculateRootHash(hashes: Uint8Array[]): Uint8Array {
 
@@ -80,18 +95,22 @@ export class MerkleHashBuilder {
     }
 
     /**
-     * Return root hash from Merkle tree
+     * Get root hash of Merkle tree
+     *
+     * @return {Uint8Array}
      */
     public getRootHash(): Uint8Array {
         return this.calculateRootHash(this.hashes);
     }
 
     /**
-     * Update hashes array
+     * Update hashes array (add hash)
+     *
      * @param hash Inner transaction hash buffer
+     * @return {MerkleHashBuilder}
      */
-    public update(hash: Uint8Array): void {
+    public update(hash: Uint8Array): MerkleHashBuilder {
         this.hashes.push(hash);
+        return this;
     }
-
 }

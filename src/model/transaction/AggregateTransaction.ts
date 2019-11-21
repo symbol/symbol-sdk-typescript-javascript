@@ -15,7 +15,7 @@
  */
 
 import { sha3_256 } from 'js-sha3';
-import {KeyPair, MerkleHashBuilder, SHA3Hasher} from '../../core/crypto';
+import {KeyPair, MerkleHashBuilder, SHA3Hasher, SignSchema} from '../../core/crypto';
 import {Convert, RawArray} from '../../core/format';
 import {AggregateBondedTransactionBuilder} from '../../infrastructure/catbuffer/AggregateBondedTransactionBuilder';
 import {AggregateCompleteTransactionBuilder} from '../../infrastructure/catbuffer/AggregateCompleteTransactionBuilder';
@@ -373,10 +373,22 @@ export class AggregateTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     private calculateInnerTransactionHash(): Uint8Array {
-        const builder = new MerkleHashBuilder(SHA3Hasher.createHasher);
+        // Note: Transaction hashing *always* uses SHA3
+        const hasher  = SHA3Hasher.createHasher(32, SignSchema.SHA3);
+        const builder = new MerkleHashBuilder(32, SignSchema.SHA3);
         this.innerTransactions.forEach((transaction) => {
-            builder.update(RawArray.uint8View(sha3_256.arrayBuffer(transaction.toAggregateTransactionBytes())));
+            const entityHash: Uint8Array = new Uint8Array(32);
+
+            // for each embedded transaction hash their body
+            hasher.reset();
+            hasher.update(transaction.toAggregateTransactionBytes());
+            hasher.finalize(entityHash);
+
+            // update merkle tree (add transaction hash)
+            builder.update(entityHash);
         });
+
+        // calculate root hash with all transactions
         return builder.getRootHash();
     }
 

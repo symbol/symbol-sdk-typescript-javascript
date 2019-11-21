@@ -34,6 +34,36 @@ import { TransactionType } from './TransactionType';
 export abstract class Transaction {
 
     /**
+     * Transaction header size
+     *
+     * Included fields are `size`, `verifiableEntityHeader_Reserved1`,
+     * `signature`, `signerPublicKey` and `entityBody_Reserved1`.
+     *
+     * @var {number}
+     */
+    public static readonly Header_Size: number = 8 + 64 + 32 + 4;
+
+    /**
+     * Index of the transaction *type*
+     *
+     * Included fields are the transaction header, `version`
+     * and `network`
+     *
+     * @var {number}
+     */
+    public static readonly Type_Index: number = Transaction.Header_Size + 2;
+
+    /**
+     * Index of the transaction *body*
+     *
+     * Included fields are the transaction header, `version`,
+     * `network`, `type`, `maxFee` and `deadline`
+     *
+     * @var {number}
+     */
+    public static readonly Body_Index: number = Transaction.Header_Size + 1 + 1 + 2 + 8 + 8;
+
+    /**
      * @constructor
      * @param type
      * @param networkType
@@ -81,29 +111,68 @@ export abstract class Transaction {
 
     /**
      * Generate transaction hash hex
+     *
+     * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/EntityHasher.cpp#L32
+     * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/EntityHasher.cpp#L35
+     * @see https://github.com/nemtech/catapult-server/blob/master/sdk/src/extensions/TransactionExtensions.cpp#L46
      * @param {string} transactionPayload HexString Payload
      * @param {Array<number>} generationHashBuffer Network generation hash byte
      * @param {NetworkType} networkType Catapult network identifier
      * @returns {string} Returns Transaction Payload hash
      */
     public static createTransactionHash(transactionPayload: string, generationHashBuffer: number[], networkType: NetworkType): string {
-        const type = parseInt(Convert.uint8ToHex(Convert.hexToUint8(transactionPayload.substring(220, 224)).reverse()), 16);
-        const byteBuffer = Array.from(Convert.hexToUint8(transactionPayload));
-        const byteBufferWithoutHeader = byteBuffer.slice(4 + 64 + 32 + 8);
-        const dataBytes = type === TransactionType.AGGREGATE_BONDED || type === TransactionType.AGGREGATE_COMPLETE ?
-            generationHashBuffer.concat(byteBufferWithoutHeader.slice(0, 52)) :
-            generationHashBuffer.concat(byteBufferWithoutHeader);
-        const signingBytes = byteBuffer
-            .slice(8, 40) // first half of signature
-            .concat(byteBuffer
-                .slice(4 + 4 + 64, 8 + 64 + 32)) // signer
-            .concat(dataBytes);
 
-        const hash = new Uint8Array(32);
-        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
-        SHA3Hasher.func(hash, signingBytes, 32, signSchema);
+        // prepare
+        const entityHash: Uint8Array = new Uint8Array(32);
+        const transactionBytes: Uint8Array = Convert.hexToUint8(transactionPayload);
 
-        return Convert.uint8ToHex(hash);
+        // read transaction type
+        const typeIdx: number = Transaction.Type_Index;
+        const typeBytes: Uint8Array = transactionBytes.slice(typeIdx, typeIdx + 2).reverse(); // REVERSED
+        const entityType: TransactionType = parseInt(Convert.uint8ToHex(typeBytes), 16);
+        const isAggregateTransaction = [
+            TransactionType.AGGREGATE_BONDED,
+            TransactionType.AGGREGATE_COMPLETE,
+        ].find((type: TransactionType) => entityType === type) !== undefined;
+
+        // 1) take "R" part of a signature (first 32 bytes)
+        const signatureR: Uint8Array = transactionBytes.slice(8, 8 + 32);
+
+        // 2) add public key to match sign/verify behavior (32 bytes)
+        const pubKeyIdx: number = signatureR.length;
+        const publicKey: Uint8Array = transactionBytes.slice(8 + 64, 8 + 64 + 32);
+
+        // 3) add generationHash (32 bytes)
+        const generationHashIdx: number = pubKeyIdx + publicKey.length;
+        const generationHash: Uint8Array = Uint8Array.from(generationHashBuffer);
+
+        // 4) add transaction data without header (EntityDataBuffer)
+        // @link https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/EntityHasher.cpp#L30
+        const transactionBodyIdx: number = generationHashIdx + generationHash.length;
+        let transactionBody: Uint8Array = transactionBytes.slice(Transaction.Header_Size);
+
+        // in case of aggregate transactions, we hash only the merkle transaction hash.
+        if (isAggregateTransaction) {
+            transactionBody = transactionBytes.slice(Transaction.Header_Size, Transaction.Body_Index + 32);
+        }
+
+        // 5) concatenate binary hash parts
+        // layout: `signature_R || signerPublicKey || generationHash || EntityDataBuffer`
+        const entityHashBytes: Uint8Array = new Uint8Array(
+            signatureR.length
+          + publicKey.length
+          + generationHash.length
+          + transactionBody.length,
+        );
+        entityHashBytes.set(signatureR, 0);
+        entityHashBytes.set(publicKey, pubKeyIdx);
+        entityHashBytes.set(generationHash, generationHashIdx);
+        entityHashBytes.set(transactionBody, transactionBodyIdx);
+
+        // 6) create SHA3 hash of transaction data
+        // Note: Transaction hashing *always* uses SHA3
+        SHA3Hasher.func(entityHash, entityHashBytes, 32, SignSchema.SHA3);
+        return Convert.uint8ToHex(entityHash);
     }
 
     /**
