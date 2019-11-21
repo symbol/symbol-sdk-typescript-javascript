@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.15.0] - 21-Nov-2019
+
+**Milestone**: Fushicho.2
+
+- Applied latest `Fushicho2` schema changes to both transaction serialization and http client codes.
+- Added `addCosignatures` method for filling cosignatures offline.
+- Added `compare` function in UInt64 class for unsigned 64 bytes numbers comparison.
+
 ## [0.14.4] - 31-Oct-2019
 
 **Milestone**: Fushicho.1
@@ -258,6 +266,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 **Milestone**: Alpaca
 
 - Initial code release.
+[0.15.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.4...v0.15.0
 [0.14.4]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.3...v0.14.4
 [0.14.3]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.2...v0.14.3
 [0.14.2]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.1...v0.14.2
