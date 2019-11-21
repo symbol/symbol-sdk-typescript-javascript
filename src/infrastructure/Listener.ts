@@ -142,7 +142,6 @@ export class Listener {
                 message: CreateTransactionFromDTO(message),
             });
         } else if (message.block) {
-            const networkType = parseInt(message.block.version.toString(16).substr(0, 2), 16);
             this.messageSubject.next({
                 channelName: ListenerChannelName.block, message: new BlockInfo(
                     message.meta.hash,
@@ -150,9 +149,9 @@ export class Listener {
                     message.meta.totalFee ? UInt64.fromNumericString(message.meta.totalFee) : new UInt64([0, 0]),
                     message.meta.numTransactions,
                     message.block.signature,
-                    PublicAccount.createFromPublicKey(message.block.signerPublicKey, networkType),
-                    networkType,
-                    parseInt(message.block.version.toString(16).substr(2, 2), 16), // Tx version
+                    PublicAccount.createFromPublicKey(message.block.signerPublicKey, message.block.network),
+                    message.block.network,
+                    message.block.version,
                     message.block.type,
                     UInt64.fromNumericString(message.block.height),
                     UInt64.fromNumericString(message.block.timestamp),
@@ -162,7 +161,7 @@ export class Listener {
                     message.block.blockTransactionsHash,
                     message.block.blockReceiptsHash,
                     message.block.stateHash,
-                    extractBeneficiary(message, networkType), // passing `message` as `blockDTO`
+                    extractBeneficiary(message, message.block.network), // passing `message` as `blockDTO`
                 ),
             });
         } else if (message.status) {

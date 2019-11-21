@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-import { ClientResponse } from 'http';
 import {from as observableFrom, Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {BlockchainScore} from '../model/blockchain/BlockchainScore';
 import {UInt64} from '../model/UInt64';
-import { ChainRoutesApi,
-         HeightInfoDTO } from './api';
+import { ChainRoutesApi } from './api';
 import { ChainRepository } from './ChainRepository';
 import {Http} from './Http';
-import { ChainScoreDTO } from './model/chainScoreDTO';
 
 /**
  * Chian http repository.
@@ -51,11 +48,8 @@ export class ChainHttp extends Http implements ChainRepository {
      * @returns Observable<UInt64>
      */
     public getBlockchainHeight(): Observable<UInt64> {
-        return observableFrom(this.chainRoutesApi.getBlockchainHeight()).pipe(
-            map((response: { response: ClientResponse; body: HeightInfoDTO; } ) => {
-                const heightDTO = response.body;
-                return UInt64.fromNumericString(heightDTO.height);
-            }),
+        return observableFrom(this.chainRoutesApi.getChainHeight()).pipe(
+            map(({body}) => UInt64.fromNumericString(body.height)),
             catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
@@ -66,13 +60,10 @@ export class ChainHttp extends Http implements ChainRepository {
      */
     public getChainScore(): Observable<BlockchainScore> {
         return observableFrom(this.chainRoutesApi.getChainScore()).pipe(
-            map((response: { response: ClientResponse; body: ChainScoreDTO; } ) => {
-                const blockchainScoreDTO = response.body;
-                return new BlockchainScore(
-                    UInt64.fromNumericString(blockchainScoreDTO.scoreLow),
-                    UInt64.fromNumericString(blockchainScoreDTO.scoreHigh),
-                );
-            }),
+            map(({body}) => new BlockchainScore(
+                    UInt64.fromNumericString(body.scoreLow),
+                    UInt64.fromNumericString(body.scoreHigh),
+                )),
             catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }

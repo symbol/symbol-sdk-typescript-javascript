@@ -37,7 +37,6 @@ describe('MetadataEntry', () => {
             scopedMetadataKey: '85BBEA6CC462B244',
             targetId: undefined,
             metadataType: 0,
-            valueSize: 5,
             value: '12345',
         };
 
@@ -47,7 +46,6 @@ describe('MetadataEntry', () => {
             metadataEntryDTO.targetPublicKey,
             UInt64.fromHex(metadataEntryDTO.scopedMetadataKey),
             metadataEntryDTO.metadataType,
-            metadataEntryDTO.valueSize,
             metadataEntryDTO.value,
         );
 
@@ -57,7 +55,6 @@ describe('MetadataEntry', () => {
         deepEqual(metadata.scopedMetadataKey, UInt64.fromHex('85BBEA6CC462B244'));
         deepEqual(metadata.targetId, undefined);
         deepEqual(metadata.metadataType, MetadataType.Account);
-        deepEqual(metadata.valueSize, 5);
         deepEqual(metadata.value, '12345');
     });
 
@@ -79,7 +76,6 @@ describe('MetadataEntry', () => {
             metadataEntryDTO.targetPublicKey,
             UInt64.fromHex(metadataEntryDTO.scopedMetadataKey),
             metadataEntryDTO.metadataType,
-            metadataEntryDTO.valueSize,
             metadataEntryDTO.value,
             new MosaicId(metadataEntryDTO.targetId),
         );
@@ -90,7 +86,6 @@ describe('MetadataEntry', () => {
         deepEqual(metadata.scopedMetadataKey, UInt64.fromHex('85BBEA6CC462B244'));
         deepEqual((metadata.targetId as MosaicId).toHex(), '85BBEA6CC462B244');
         deepEqual(metadata.metadataType, MetadataType.Mosaic);
-        deepEqual(metadata.valueSize, 5);
         deepEqual(metadata.value, '12345');
     });
 
@@ -102,7 +97,6 @@ describe('MetadataEntry', () => {
             scopedMetadataKey: '85BBEA6CC462B244',
             targetId: '85BBEA6CC462B244',
             metadataType: 2,
-            valueSize: 5,
             value: '12345',
         };
 
@@ -112,7 +106,6 @@ describe('MetadataEntry', () => {
             metadataEntryDTO.targetPublicKey,
             UInt64.fromHex(metadataEntryDTO.scopedMetadataKey),
             metadataEntryDTO.metadataType,
-            metadataEntryDTO.valueSize,
             metadataEntryDTO.value,
             NamespaceId.createFromEncoded(metadataEntryDTO.targetId),
         );
@@ -123,7 +116,6 @@ describe('MetadataEntry', () => {
         deepEqual(metadata.scopedMetadataKey, UInt64.fromHex('85BBEA6CC462B244'));
         deepEqual((metadata.targetId as NamespaceId).toHex(), '85BBEA6CC462B244');
         deepEqual(metadata.metadataType, MetadataType.Namespace);
-        deepEqual(metadata.valueSize, 5);
         deepEqual(metadata.value, '12345');
     });
 });

@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-import { ClientResponse } from 'http';
 import {from as observableFrom, Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {BlockchainStorageInfo} from '../model/blockchain/BlockchainStorageInfo';
 import { ServerInfo } from '../model/diagnostic/ServerInfo';
-import { DiagnosticRoutesApi, ServerDTO, StorageInfoDTO } from './api';
+import { DiagnosticRoutesApi } from './api';
 import {DiagnosticRepository} from './DiagnosticRepository';
 import {Http} from './Http';
 
@@ -51,14 +50,11 @@ export class DiagnosticHttp extends Http implements DiagnosticRepository {
     public getDiagnosticStorage(): Observable<BlockchainStorageInfo> {
         return observableFrom(
             this.diagnosticRoutesApi.getDiagnosticStorage()).pipe(
-                map((response: { response: ClientResponse; body: StorageInfoDTO; } ) => {
-                    const blockchainStorageInfoDTO = response.body;
-                    return new BlockchainStorageInfo(
-                        blockchainStorageInfoDTO.numBlocks,
-                        blockchainStorageInfoDTO.numTransactions,
-                        blockchainStorageInfoDTO.numAccounts,
-                    );
-                }),
+                map(({body}) => new BlockchainStorageInfo(
+                        body.numBlocks,
+                        body.numTransactions,
+                        body.numAccounts,
+                    )),
                 catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
@@ -70,11 +66,7 @@ export class DiagnosticHttp extends Http implements DiagnosticRepository {
     public getServerInfo(): Observable<ServerInfo> {
         return observableFrom(
             this.diagnosticRoutesApi.getServerInfo()).pipe(
-                map((response: { response: ClientResponse; body: ServerDTO; } ) => {
-                    const serverDTO = response.body;
-                    return new ServerInfo(serverDTO.serverInfo.restVersion,
-                        serverDTO.serverInfo.sdkVersion);
-                }),
+                map(({body}) => new ServerInfo(body.serverInfo.restVersion, body.serverInfo.sdkVersion)),
                 catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }

@@ -286,7 +286,7 @@ describe('Listener', () => {
                     done();
                 });
                 listener.aggregateBondedAdded(cosignAccount1.address).subscribe(() => {
-                    accountHttp.aggregateBondedTransactions(cosignAccount1.publicAccount.address).subscribe((transactions) => {
+                    accountHttp.getAccountPartialTransactions(cosignAccount1.publicAccount.address).subscribe((transactions) => {
                         const transactionToCosign = transactions[0];
                         TransactionUtils.cosignTransaction(transactionToCosign, cosignAccount2, transactionHttp);
                     });
@@ -326,7 +326,7 @@ describe('Listener', () => {
                 done();
             });
             listener.aggregateBondedAdded(cosignAccount1.address).subscribe(() => {
-                accountHttp.aggregateBondedTransactions(cosignAccount1.publicAccount.address).subscribe((transactions) => {
+                accountHttp.getAccountPartialTransactions(cosignAccount1.publicAccount.address).subscribe((transactions) => {
                     const transactionToCosign = transactions[0];
                     TransactionUtils.cosignTransaction(transactionToCosign, cosignAccount2, transactionHttp);
                 });

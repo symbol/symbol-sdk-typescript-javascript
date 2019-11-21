@@ -1,4 +1,3 @@
-export * from './accountAddressRestrictionModificationDTO';
 export * from './accountAddressRestrictionTransactionBodyDTO';
 export * from './accountAddressRestrictionTransactionDTO';
 export * from './accountDTO';
@@ -9,16 +8,13 @@ export * from './accountLinkTransactionBodyDTO';
 export * from './accountLinkTransactionDTO';
 export * from './accountMetadataTransactionBodyDTO';
 export * from './accountMetadataTransactionDTO';
-export * from './accountMosaicRestrictionModificationDTO';
 export * from './accountMosaicRestrictionTransactionBodyDTO';
 export * from './accountMosaicRestrictionTransactionDTO';
 export * from './accountNamesDTO';
-export * from './accountOperationRestrictionModificationDTO';
 export * from './accountOperationRestrictionTransactionBodyDTO';
 export * from './accountOperationRestrictionTransactionDTO';
 export * from './accountRestrictionDTO';
-export * from './accountRestrictionModificationActionEnum';
-export * from './accountRestrictionTypeEnum';
+export * from './accountRestrictionFlagsEnum';
 export * from './accountRestrictionsDTO';
 export * from './accountRestrictionsInfoDTO';
 export * from './accountTypeEnum';
@@ -26,15 +22,12 @@ export * from './accountsNamesDTO';
 export * from './activityBucketDTO';
 export * from './addressAliasTransactionBodyDTO';
 export * from './addressAliasTransactionDTO';
-export * from './aggregateBondedTransactionDTO';
-export * from './aggregateCompleteTransactionDTO';
 export * from './aggregateTransactionBodyDTO';
+export * from './aggregateTransactionDTO';
 export * from './aliasActionEnum';
 export * from './aliasDTO';
 export * from './aliasTypeEnum';
 export * from './announceTransactionInfoDTO';
-export * from './artifactExpiryReceiptDTO';
-export * from './artifactExpiryReceiptDTOAllOf';
 export * from './balanceChangeReceiptDTO';
 export * from './balanceChangeReceiptDTOAllOf';
 export * from './balanceTransferReceiptDTO';
@@ -45,8 +38,6 @@ export * from './blockInfoDTO';
 export * from './blockMetaDTO';
 export * from './chainScoreDTO';
 export * from './communicationTimestampsDTO';
-export * from './cosignatoryModificationActionEnum';
-export * from './cosignatoryModificationDTO';
 export * from './cosignature';
 export * from './cosignatureDTO';
 export * from './cosignatureDTOAllOf';
@@ -79,7 +70,7 @@ export * from './heightInfoDTO';
 export * from './inflationReceiptDTO';
 export * from './inflationReceiptDTOAllOf';
 export * from './lockHashAlgorithmEnum';
-export * from './merklePathItem';
+export * from './merklePathItemDTO';
 export * from './merkleProofInfoDTO';
 export * from './messageDTO';
 export * from './messageTypeEnum';
@@ -99,6 +90,8 @@ export * from './mosaicAliasTransactionDTO';
 export * from './mosaicDTO';
 export * from './mosaicDefinitionTransactionBodyDTO';
 export * from './mosaicDefinitionTransactionDTO';
+export * from './mosaicExpiryReceiptDTO';
+export * from './mosaicExpiryReceiptDTOAllOf';
 export * from './mosaicGlobalRestrictionDTO';
 export * from './mosaicGlobalRestrictionEntryDTO';
 export * from './mosaicGlobalRestrictionEntryRestrictionDTO';
@@ -115,6 +108,7 @@ export * from './mosaicRestrictionTypeEnum';
 export * from './mosaicSupplyChangeActionEnum';
 export * from './mosaicSupplyChangeTransactionBodyDTO';
 export * from './mosaicSupplyChangeTransactionDTO';
+export * from './mosaicsInfoDTO';
 export * from './mosaicsNamesDTO';
 export * from './multisigAccountGraphInfoDTO';
 export * from './multisigAccountInfoDTO';
@@ -122,6 +116,8 @@ export * from './multisigAccountModificationTransactionBodyDTO';
 export * from './multisigAccountModificationTransactionDTO';
 export * from './multisigDTO';
 export * from './namespaceDTO';
+export * from './namespaceExpiryReceiptDTO';
+export * from './namespaceExpiryReceiptDTOAllOf';
 export * from './namespaceIds';
 export * from './namespaceInfoDTO';
 export * from './namespaceMetaDTO';
@@ -131,7 +127,9 @@ export * from './namespaceNameDTO';
 export * from './namespaceRegistrationTransactionBodyDTO';
 export * from './namespaceRegistrationTransactionDTO';
 export * from './namespaceRegistrationTypeEnum';
+export * from './namespacesInfoDTO';
 export * from './networkTypeDTO';
+export * from './networkTypeEnum';
 export * from './nodeInfoDTO';
 export * from './nodeTimeDTO';
 export * from './receiptDTO';
@@ -167,7 +165,6 @@ export * from './verifiableEntityDTO';
 
 import localVarRequest = require('request');
 
-import { AccountAddressRestrictionModificationDTO } from './accountAddressRestrictionModificationDTO';
 import { AccountAddressRestrictionTransactionBodyDTO } from './accountAddressRestrictionTransactionBodyDTO';
 import { AccountAddressRestrictionTransactionDTO } from './accountAddressRestrictionTransactionDTO';
 import { AccountDTO } from './accountDTO';
@@ -178,16 +175,13 @@ import { AccountLinkTransactionBodyDTO } from './accountLinkTransactionBodyDTO';
 import { AccountLinkTransactionDTO } from './accountLinkTransactionDTO';
 import { AccountMetadataTransactionBodyDTO } from './accountMetadataTransactionBodyDTO';
 import { AccountMetadataTransactionDTO } from './accountMetadataTransactionDTO';
-import { AccountMosaicRestrictionModificationDTO } from './accountMosaicRestrictionModificationDTO';
 import { AccountMosaicRestrictionTransactionBodyDTO } from './accountMosaicRestrictionTransactionBodyDTO';
 import { AccountMosaicRestrictionTransactionDTO } from './accountMosaicRestrictionTransactionDTO';
 import { AccountNamesDTO } from './accountNamesDTO';
-import { AccountOperationRestrictionModificationDTO } from './accountOperationRestrictionModificationDTO';
 import { AccountOperationRestrictionTransactionBodyDTO } from './accountOperationRestrictionTransactionBodyDTO';
 import { AccountOperationRestrictionTransactionDTO } from './accountOperationRestrictionTransactionDTO';
 import { AccountRestrictionDTO } from './accountRestrictionDTO';
-import { AccountRestrictionModificationActionEnum } from './accountRestrictionModificationActionEnum';
-import { AccountRestrictionTypeEnum } from './accountRestrictionTypeEnum';
+import { AccountRestrictionFlagsEnum } from './accountRestrictionFlagsEnum';
 import { AccountRestrictionsDTO } from './accountRestrictionsDTO';
 import { AccountRestrictionsInfoDTO } from './accountRestrictionsInfoDTO';
 import { AccountTypeEnum } from './accountTypeEnum';
@@ -195,15 +189,12 @@ import { AccountsNamesDTO } from './accountsNamesDTO';
 import { ActivityBucketDTO } from './activityBucketDTO';
 import { AddressAliasTransactionBodyDTO } from './addressAliasTransactionBodyDTO';
 import { AddressAliasTransactionDTO } from './addressAliasTransactionDTO';
-import { AggregateBondedTransactionDTO } from './aggregateBondedTransactionDTO';
-import { AggregateCompleteTransactionDTO } from './aggregateCompleteTransactionDTO';
 import { AggregateTransactionBodyDTO } from './aggregateTransactionBodyDTO';
+import { AggregateTransactionDTO } from './aggregateTransactionDTO';
 import { AliasActionEnum } from './aliasActionEnum';
 import { AliasDTO } from './aliasDTO';
 import { AliasTypeEnum } from './aliasTypeEnum';
 import { AnnounceTransactionInfoDTO } from './announceTransactionInfoDTO';
-import { ArtifactExpiryReceiptDTO } from './artifactExpiryReceiptDTO';
-import { ArtifactExpiryReceiptDTOAllOf } from './artifactExpiryReceiptDTOAllOf';
 import { BalanceChangeReceiptDTO } from './balanceChangeReceiptDTO';
 import { BalanceChangeReceiptDTOAllOf } from './balanceChangeReceiptDTOAllOf';
 import { BalanceTransferReceiptDTO } from './balanceTransferReceiptDTO';
@@ -214,8 +205,6 @@ import { BlockInfoDTO } from './blockInfoDTO';
 import { BlockMetaDTO } from './blockMetaDTO';
 import { ChainScoreDTO } from './chainScoreDTO';
 import { CommunicationTimestampsDTO } from './communicationTimestampsDTO';
-import { CosignatoryModificationActionEnum } from './cosignatoryModificationActionEnum';
-import { CosignatoryModificationDTO } from './cosignatoryModificationDTO';
 import { Cosignature } from './cosignature';
 import { CosignatureDTO } from './cosignatureDTO';
 import { CosignatureDTOAllOf } from './cosignatureDTOAllOf';
@@ -248,7 +237,7 @@ import { HeightInfoDTO } from './heightInfoDTO';
 import { InflationReceiptDTO } from './inflationReceiptDTO';
 import { InflationReceiptDTOAllOf } from './inflationReceiptDTOAllOf';
 import { LockHashAlgorithmEnum } from './lockHashAlgorithmEnum';
-import { MerklePathItem } from './merklePathItem';
+import { MerklePathItemDTO } from './merklePathItemDTO';
 import { MerkleProofInfoDTO } from './merkleProofInfoDTO';
 import { MessageDTO } from './messageDTO';
 import { MessageTypeEnum } from './messageTypeEnum';
@@ -268,6 +257,8 @@ import { MosaicAliasTransactionDTO } from './mosaicAliasTransactionDTO';
 import { MosaicDTO } from './mosaicDTO';
 import { MosaicDefinitionTransactionBodyDTO } from './mosaicDefinitionTransactionBodyDTO';
 import { MosaicDefinitionTransactionDTO } from './mosaicDefinitionTransactionDTO';
+import { MosaicExpiryReceiptDTO } from './mosaicExpiryReceiptDTO';
+import { MosaicExpiryReceiptDTOAllOf } from './mosaicExpiryReceiptDTOAllOf';
 import { MosaicGlobalRestrictionDTO } from './mosaicGlobalRestrictionDTO';
 import { MosaicGlobalRestrictionEntryDTO } from './mosaicGlobalRestrictionEntryDTO';
 import { MosaicGlobalRestrictionEntryRestrictionDTO } from './mosaicGlobalRestrictionEntryRestrictionDTO';
@@ -284,6 +275,7 @@ import { MosaicRestrictionTypeEnum } from './mosaicRestrictionTypeEnum';
 import { MosaicSupplyChangeActionEnum } from './mosaicSupplyChangeActionEnum';
 import { MosaicSupplyChangeTransactionBodyDTO } from './mosaicSupplyChangeTransactionBodyDTO';
 import { MosaicSupplyChangeTransactionDTO } from './mosaicSupplyChangeTransactionDTO';
+import { MosaicsInfoDTO } from './mosaicsInfoDTO';
 import { MosaicsNamesDTO } from './mosaicsNamesDTO';
 import { MultisigAccountGraphInfoDTO } from './multisigAccountGraphInfoDTO';
 import { MultisigAccountInfoDTO } from './multisigAccountInfoDTO';
@@ -291,6 +283,8 @@ import { MultisigAccountModificationTransactionBodyDTO } from './multisigAccount
 import { MultisigAccountModificationTransactionDTO } from './multisigAccountModificationTransactionDTO';
 import { MultisigDTO } from './multisigDTO';
 import { NamespaceDTO } from './namespaceDTO';
+import { NamespaceExpiryReceiptDTO } from './namespaceExpiryReceiptDTO';
+import { NamespaceExpiryReceiptDTOAllOf } from './namespaceExpiryReceiptDTOAllOf';
 import { NamespaceIds } from './namespaceIds';
 import { NamespaceInfoDTO } from './namespaceInfoDTO';
 import { NamespaceMetaDTO } from './namespaceMetaDTO';
@@ -300,7 +294,9 @@ import { NamespaceNameDTO } from './namespaceNameDTO';
 import { NamespaceRegistrationTransactionBodyDTO } from './namespaceRegistrationTransactionBodyDTO';
 import { NamespaceRegistrationTransactionDTO } from './namespaceRegistrationTransactionDTO';
 import { NamespaceRegistrationTypeEnum } from './namespaceRegistrationTypeEnum';
+import { NamespacesInfoDTO } from './namespacesInfoDTO';
 import { NetworkTypeDTO } from './networkTypeDTO';
+import { NetworkTypeEnum } from './networkTypeEnum';
 import { NodeInfoDTO } from './nodeInfoDTO';
 import { NodeTimeDTO } from './nodeTimeDTO';
 import { ReceiptDTO } from './receiptDTO';
@@ -348,12 +344,10 @@ let primitives = [
                  
 let enumsMap: {[index: string]: any} = {
         "AccountLinkActionEnum": AccountLinkActionEnum,
-        "AccountRestrictionModificationActionEnum": AccountRestrictionModificationActionEnum,
-        "AccountRestrictionTypeEnum": AccountRestrictionTypeEnum,
+        "AccountRestrictionFlagsEnum": AccountRestrictionFlagsEnum,
         "AccountTypeEnum": AccountTypeEnum,
         "AliasActionEnum": AliasActionEnum,
         "AliasTypeEnum": AliasTypeEnum,
-        "CosignatoryModificationActionEnum": CosignatoryModificationActionEnum,
         "LockHashAlgorithmEnum": LockHashAlgorithmEnum,
         "MessageTypeEnum": MessageTypeEnum,
         "MetadataTypeEnum": MetadataTypeEnum,
@@ -361,13 +355,13 @@ let enumsMap: {[index: string]: any} = {
         "MosaicRestrictionTypeEnum": MosaicRestrictionTypeEnum,
         "MosaicSupplyChangeActionEnum": MosaicSupplyChangeActionEnum,
         "NamespaceRegistrationTypeEnum": NamespaceRegistrationTypeEnum,
+        "NetworkTypeEnum": NetworkTypeEnum,
         "ReceiptTypeEnum": ReceiptTypeEnum,
         "RolesTypeEnum": RolesTypeEnum,
         "TransactionTypeEnum": TransactionTypeEnum,
 }
 
 let typeMap: {[index: string]: any} = {
-    "AccountAddressRestrictionModificationDTO": AccountAddressRestrictionModificationDTO,
     "AccountAddressRestrictionTransactionBodyDTO": AccountAddressRestrictionTransactionBodyDTO,
     "AccountAddressRestrictionTransactionDTO": AccountAddressRestrictionTransactionDTO,
     "AccountDTO": AccountDTO,
@@ -377,11 +371,9 @@ let typeMap: {[index: string]: any} = {
     "AccountLinkTransactionDTO": AccountLinkTransactionDTO,
     "AccountMetadataTransactionBodyDTO": AccountMetadataTransactionBodyDTO,
     "AccountMetadataTransactionDTO": AccountMetadataTransactionDTO,
-    "AccountMosaicRestrictionModificationDTO": AccountMosaicRestrictionModificationDTO,
     "AccountMosaicRestrictionTransactionBodyDTO": AccountMosaicRestrictionTransactionBodyDTO,
     "AccountMosaicRestrictionTransactionDTO": AccountMosaicRestrictionTransactionDTO,
     "AccountNamesDTO": AccountNamesDTO,
-    "AccountOperationRestrictionModificationDTO": AccountOperationRestrictionModificationDTO,
     "AccountOperationRestrictionTransactionBodyDTO": AccountOperationRestrictionTransactionBodyDTO,
     "AccountOperationRestrictionTransactionDTO": AccountOperationRestrictionTransactionDTO,
     "AccountRestrictionDTO": AccountRestrictionDTO,
@@ -391,13 +383,10 @@ let typeMap: {[index: string]: any} = {
     "ActivityBucketDTO": ActivityBucketDTO,
     "AddressAliasTransactionBodyDTO": AddressAliasTransactionBodyDTO,
     "AddressAliasTransactionDTO": AddressAliasTransactionDTO,
-    "AggregateBondedTransactionDTO": AggregateBondedTransactionDTO,
-    "AggregateCompleteTransactionDTO": AggregateCompleteTransactionDTO,
     "AggregateTransactionBodyDTO": AggregateTransactionBodyDTO,
+    "AggregateTransactionDTO": AggregateTransactionDTO,
     "AliasDTO": AliasDTO,
     "AnnounceTransactionInfoDTO": AnnounceTransactionInfoDTO,
-    "ArtifactExpiryReceiptDTO": ArtifactExpiryReceiptDTO,
-    "ArtifactExpiryReceiptDTOAllOf": ArtifactExpiryReceiptDTOAllOf,
     "BalanceChangeReceiptDTO": BalanceChangeReceiptDTO,
     "BalanceChangeReceiptDTOAllOf": BalanceChangeReceiptDTOAllOf,
     "BalanceTransferReceiptDTO": BalanceTransferReceiptDTO,
@@ -408,7 +397,6 @@ let typeMap: {[index: string]: any} = {
     "BlockMetaDTO": BlockMetaDTO,
     "ChainScoreDTO": ChainScoreDTO,
     "CommunicationTimestampsDTO": CommunicationTimestampsDTO,
-    "CosignatoryModificationDTO": CosignatoryModificationDTO,
     "Cosignature": Cosignature,
     "CosignatureDTO": CosignatureDTO,
     "CosignatureDTOAllOf": CosignatureDTOAllOf,
@@ -440,7 +428,7 @@ let typeMap: {[index: string]: any} = {
     "HeightInfoDTO": HeightInfoDTO,
     "InflationReceiptDTO": InflationReceiptDTO,
     "InflationReceiptDTOAllOf": InflationReceiptDTOAllOf,
-    "MerklePathItem": MerklePathItem,
+    "MerklePathItemDTO": MerklePathItemDTO,
     "MerkleProofInfoDTO": MerkleProofInfoDTO,
     "MessageDTO": MessageDTO,
     "MetadataDTO": MetadataDTO,
@@ -458,6 +446,8 @@ let typeMap: {[index: string]: any} = {
     "MosaicDTO": MosaicDTO,
     "MosaicDefinitionTransactionBodyDTO": MosaicDefinitionTransactionBodyDTO,
     "MosaicDefinitionTransactionDTO": MosaicDefinitionTransactionDTO,
+    "MosaicExpiryReceiptDTO": MosaicExpiryReceiptDTO,
+    "MosaicExpiryReceiptDTOAllOf": MosaicExpiryReceiptDTOAllOf,
     "MosaicGlobalRestrictionDTO": MosaicGlobalRestrictionDTO,
     "MosaicGlobalRestrictionEntryDTO": MosaicGlobalRestrictionEntryDTO,
     "MosaicGlobalRestrictionEntryRestrictionDTO": MosaicGlobalRestrictionEntryRestrictionDTO,
@@ -471,6 +461,7 @@ let typeMap: {[index: string]: any} = {
     "MosaicNamesDTO": MosaicNamesDTO,
     "MosaicSupplyChangeTransactionBodyDTO": MosaicSupplyChangeTransactionBodyDTO,
     "MosaicSupplyChangeTransactionDTO": MosaicSupplyChangeTransactionDTO,
+    "MosaicsInfoDTO": MosaicsInfoDTO,
     "MosaicsNamesDTO": MosaicsNamesDTO,
     "MultisigAccountGraphInfoDTO": MultisigAccountGraphInfoDTO,
     "MultisigAccountInfoDTO": MultisigAccountInfoDTO,
@@ -478,6 +469,8 @@ let typeMap: {[index: string]: any} = {
     "MultisigAccountModificationTransactionDTO": MultisigAccountModificationTransactionDTO,
     "MultisigDTO": MultisigDTO,
     "NamespaceDTO": NamespaceDTO,
+    "NamespaceExpiryReceiptDTO": NamespaceExpiryReceiptDTO,
+    "NamespaceExpiryReceiptDTOAllOf": NamespaceExpiryReceiptDTOAllOf,
     "NamespaceIds": NamespaceIds,
     "NamespaceInfoDTO": NamespaceInfoDTO,
     "NamespaceMetaDTO": NamespaceMetaDTO,
@@ -486,6 +479,7 @@ let typeMap: {[index: string]: any} = {
     "NamespaceNameDTO": NamespaceNameDTO,
     "NamespaceRegistrationTransactionBodyDTO": NamespaceRegistrationTransactionBodyDTO,
     "NamespaceRegistrationTransactionDTO": NamespaceRegistrationTransactionDTO,
+    "NamespacesInfoDTO": NamespacesInfoDTO,
     "NetworkTypeDTO": NetworkTypeDTO,
     "NodeInfoDTO": NodeInfoDTO,
     "NodeTimeDTO": NodeTimeDTO,

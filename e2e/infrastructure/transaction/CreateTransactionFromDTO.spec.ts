@@ -36,7 +36,8 @@ describe('CreateTransactionFromDTO', () => {
                     // tslint:disable-next-line:max-line-length
                     signature: '7442156D839A3AC900BC0299E8701ECDABA674DCF91283223450953B005DE72C538EA54236F5E089530074CE78067CD3325CF53750B9118154C08B20A5CDC00D',
                     signerPublicKey: '2FC3872A792933617D70E02AFF8FBDE152821A0DF0CA5FB04CB56FC3D21C8863',
-                    version: 36865,
+                    version: 1,
+                    network: 144,
                     type: 16724,
                     maxFee: '0',
                     deadline: '1000',
@@ -72,7 +73,8 @@ describe('CreateTransactionFromDTO', () => {
                     // tslint:disable-next-line:max-line-length
                     signature: '7442156D839A3AC900BC0299E8701ECDABA674DCF91283223450953B005DE72C538EA54236F5E089530074CE78067CD3325CF53750B9118154C08B20A5CDC00D',
                     signerPublicKey: '2FC3872A792933617D70E02AFF8FBDE152821A0DF0CA5FB04CB56FC3D21C8863',
-                    version: 36865,
+                    version: 1,
+                    network: 144,
                     type: 16724,
                     maxFee: '0',
                     deadline: '1000',
@@ -136,12 +138,14 @@ describe('CreateTransactionFromDTO', () => {
                                 recipientAddress: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142',
                                 signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                                 type: 16724,
-                                version: 36865,
+                                version: 1,
+                    network: 144,
                             },
                         },
                     ],
                     type: 16705,
-                    version: 36865,
+                    version: 1,
+                    network: 144,
                 },
             };
 
@@ -173,7 +177,8 @@ describe('CreateTransactionFromDTO', () => {
                         '2F6EE63025FEEBCED3293B622AF8581334D0BDAB7541A9E7411E7EE4EF0BC5D0E',
                         signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                         type: 16718,
-                        version: 36865,
+                        version: 1,
+                    network: 144,
                     },
                 };
 
@@ -220,12 +225,14 @@ describe('CreateTransactionFromDTO', () => {
                                     registrationType: 0,
                                     signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                                     type: 16718,
-                                    version: 36865,
+                                    version: 1,
+                    network: 144,
                                 },
                             },
                         ],
                         type: 16705,
-                        version: 36865,
+                        version: 1,
+                    network: 144,
                     },
                 };
 
@@ -259,7 +266,8 @@ describe('CreateTransactionFromDTO', () => {
                         'E02F6EE63025FEEBCED3293B622AF8581334D0BDAB7541A9E7411E7EE4EF0BC5D0E',
                         signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                         type: 16718,
-                        version: 36865,
+                        version: 1,
+                    network: 144,
                     },
                 };
                 const transferTransaction = CreateTransactionFromDTO(registerNamespaceTransactionDTO);
@@ -305,12 +313,14 @@ describe('CreateTransactionFromDTO', () => {
                                     parentId: '85BBEA6CC462B244',
                                     signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                                     type: 16718,
-                                    version: 36865,
+                                    version: 1,
+                    network: 144,
                                 },
                             },
                         ],
                         type: 16705,
-                        version: 36865,
+                        version: 1,
+                    network: 144,
                     },
                 };
 
@@ -345,7 +355,8 @@ describe('CreateTransactionFromDTO', () => {
                     'EBCED3293B622AF8581334D0BDAB7541A9E7411E7EE4EF0BC5D0E',
                     signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                     type: 16717,
-                    version: 36865,
+                    version: 1,
+                    network: 144,
                 },
             };
 
@@ -393,12 +404,14 @@ describe('CreateTransactionFromDTO', () => {
                                 duration: '1000',
                                 signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                                 type: 16717,
-                                version: 36865,
+                                version: 1,
+                    network: 144,
                             },
                         },
                     ],
                     type: 16705,
-                    version: 36865,
+                    version: 1,
+                    network: 144,
                 },
             };
 
@@ -430,7 +443,8 @@ describe('CreateTransactionFromDTO', () => {
                     '2F6EE63025FEEBCED3293B622AF8581334D0BDAB7541A9E7411E7EE4EF0BC5D0E',
                     signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                     type: 16973,
-                    version: 36865,
+                    version: 1,
+                    network: 144,
                 },
             };
 
@@ -476,12 +490,14 @@ describe('CreateTransactionFromDTO', () => {
                                 mosaicId: '85BBEA6CC462B244',
                                 signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                                 type: 16973,
-                                version: 36865,
+                                version: 1,
+                    network: 144,
                             },
                         },
                     ],
                     type: 16705,
-                    version: 36865,
+                    version: 1,
+                    network: 144,
                 },
             };
 
@@ -508,17 +524,14 @@ describe('CreateTransactionFromDTO', () => {
                     maxFee: '0',
                     minApprovalDelta: 1,
                     minRemovalDelta: 1,
-                    modifications: [
-                        {
-                            cosignatoryPublicKey: '76C1622C7FB58986E500228E8FFB30C606CAAFC1CD78E770E82C73DAB7BD7C9F',
-                            modificationAction: 0,
-                        },
-                    ],
+                    publicKeyAdditions: ['76C1622C7FB58986E500228E8FFB30C606CAAFC1CD78E770E82C73DAB7BD7C9F'],
+                    publicKeyDeletions: [],
                     signature: '553E696EB4A54E43A11D180EBA57E4B89D0048C9DD2604A9E0608120018B9E0' +
                     '2F6EE63025FEEBCED3293B622AF8581334D0BDAB7541A9E7411E7EE4EF0BC5D0E',
                     signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                     type: 16725,
-                    version: 36865,
+                    version: 1,
+                    network: 144,
                 },
             };
 
@@ -562,21 +575,18 @@ describe('CreateTransactionFromDTO', () => {
                             transaction: {
                                 minApprovalDelta: 1,
                                 minRemovalDelta: 1,
-                                modifications: [
-                                    {
-                                        cosignatoryPublicKey: '589B73FBC22063E9AE6FBAC67CB9C6EA865EF556E5' +
-                                        'FB8B7310D45F77C1250B97',
-                                        modificationAction: 0,
-                                    },
-                                ],
+                                publicKeyAdditions: ['589B73FBC22063E9AE6FBAC67CB9C6EA865EF556E5FB8B7310D45F77C1250B97'],
+                                publicKeyDeletions: [],
                                 signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                                 type: 16725,
-                                version: 36865,
+                                version: 1,
+                    network: 144,
                             },
                         },
                     ],
                     type: 16705,
-                    version: 36865,
+                    version: 1,
+                    network: 144,
                 },
             };
 

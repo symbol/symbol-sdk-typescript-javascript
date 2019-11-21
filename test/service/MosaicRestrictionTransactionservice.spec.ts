@@ -18,7 +18,7 @@ import {expect} from 'chai';
 import {of as observableOf} from 'rxjs';
 import {deepEqual, instance, mock, when} from 'ts-mockito';
 import { KeyGenerator } from '../../src/core/format/KeyGenerator';
-import { RestrictionHttp } from '../../src/infrastructure/RestrictionHttp';
+import { RestrictionMosaicHttp } from '../../src/infrastructure/RestrictionMosaicHttp';
 import { Account } from '../../src/model/account/Account';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
@@ -52,7 +52,7 @@ describe('MosaicRestrictionTransactionService', () => {
         mosaicId = new MosaicId('85BBEA6CC462B244');
         mosaicIdWrongKey = new MosaicId('85BBEA6CC462B288');
         referenceMosaicId = new MosaicId('1AB129B545561E6A');
-        const mockRestrictionHttp = mock(RestrictionHttp);
+        const mockRestrictionHttp = mock(RestrictionMosaicHttp);
 
         when(mockRestrictionHttp
             .getMosaicGlobalRestriction(deepEqual(mosaicId)))

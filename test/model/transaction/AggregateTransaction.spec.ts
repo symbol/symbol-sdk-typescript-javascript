@@ -325,12 +325,14 @@ describe('AggregateTransaction', () => {
                             ],
                             signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                             type: 16725,
-                            version: 36865,
+                            version: 1,
+                            network: 144,
                         },
                     },
                 ],
                 type: 16705,
-                version: 36865,
+                version: 1,
+                network: 144,
             },
         };
 

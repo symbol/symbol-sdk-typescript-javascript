@@ -17,8 +17,10 @@
 import {deepEqual} from 'assert';
 import {assert, expect} from 'chai';
 import {AccountHttp} from '../../src/infrastructure/AccountHttp';
-import { Listener, TransactionHttp } from '../../src/infrastructure/infrastructure';
-import { RestrictionHttp } from '../../src/infrastructure/RestrictionHttp';
+import { Listener } from '../../src/infrastructure/infrastructure';
+import { RestrictionAccountHttp } from '../../src/infrastructure/RestrictionAccountHttp';
+import { RestrictionMosaicHttp } from '../../src/infrastructure/RestrictionMosaicHttp';
+import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { Account } from '../../src/model/account/Account';
 import {Address} from '../../src/model/account/Address';
 import {PublicAccount} from '../../src/model/account/PublicAccount';
@@ -26,11 +28,9 @@ import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
-import { AccountRestrictionModificationAction } from '../../src/model/restriction/AccountRestrictionModificationAction';
 import { AccountRestrictionFlags } from '../../src/model/restriction/AccountRestrictionType';
 import { MosaicRestrictionEntryType } from '../../src/model/restriction/MosaicRestrictionEntryType';
 import { MosaicRestrictionType } from '../../src/model/restriction/MosaicRestrictionType';
-import { AccountRestrictionModification } from '../../src/model/transaction/AccountRestrictionModification';
 import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
@@ -51,7 +51,8 @@ describe('RestrictionHttp', () => {
     let accountPublicKey: string;
     let publicAccount: PublicAccount;
     let accountHttp: AccountHttp;
-    let restrictionHttp: RestrictionHttp;
+    let restrictionMosaicHttp: RestrictionMosaicHttp;
+    let restrictionAccountHttp: RestrictionAccountHttp;
     let transactionHttp: TransactionHttp;
     let mosaicId: MosaicId;
     let referenceMosaicId: MosaicId;
@@ -79,7 +80,8 @@ describe('RestrictionHttp', () => {
             generationHash = json.generationHash;
             accountHttp = new AccountHttp(json.apiUrl);
             transactionHttp = new TransactionHttp(json.apiUrl);
-            restrictionHttp = new RestrictionHttp(json.apiUrl);
+            restrictionMosaicHttp = new RestrictionMosaicHttp(json.apiUrl);
+            restrictionAccountHttp = new RestrictionAccountHttp(json.apiUrl);
             done();
         });
     });
@@ -305,7 +307,7 @@ describe('RestrictionHttp', () => {
     describe('getAccountRestrictions', () => {
         it('should call getAccountRestrictions successfully', (done) => {
             setTimeout(() => {
-                restrictionHttp.getAccountRestrictions(accountAddress).subscribe((accountRestrictions) => {
+                restrictionAccountHttp.getAccountRestrictions(accountAddress).subscribe((accountRestrictions) => {
                     expect(accountRestrictions.length).to.be.greaterThan(0);
                     done();
                 });
@@ -316,7 +318,7 @@ describe('RestrictionHttp', () => {
     describe('getAccountRestrictionsFromAccounts', () => {
         it('should call getAccountRestrictionsFromAccounts successfully', (done) => {
             setTimeout(() => {
-                restrictionHttp.getAccountRestrictionsFromAccounts([accountAddress]).subscribe((accountRestrictions) => {
+                restrictionAccountHttp.getAccountRestrictionsFromAccounts([accountAddress]).subscribe((accountRestrictions) => {
                     deepEqual(accountRestrictions[0]!.address, accountAddress);
                     done();
                 });
@@ -327,7 +329,7 @@ describe('RestrictionHttp', () => {
     describe('getMosaicAddressRestriction', () => {
         it('should call getMosaicAddressRestriction successfully', (done) => {
             setTimeout(() => {
-                restrictionHttp.getMosaicAddressRestriction(mosaicId, account3.address).subscribe((mosaicRestriction) => {
+                restrictionMosaicHttp.getMosaicAddressRestriction(mosaicId, account3.address).subscribe((mosaicRestriction) => {
                     deepEqual(mosaicRestriction.mosaicId.toHex(), mosaicId.toHex());
                     deepEqual(mosaicRestriction.entryType, MosaicRestrictionEntryType.ADDRESS);
                     deepEqual(mosaicRestriction.targetAddress.plain(), account3.address.plain());
@@ -341,7 +343,7 @@ describe('RestrictionHttp', () => {
     describe('getMosaicAddressRestrictions', () => {
         it('should call getMosaicAddressRestrictions successfully', (done) => {
             setTimeout(() => {
-                restrictionHttp.getMosaicAddressRestrictions(mosaicId, [account3.address]).subscribe((mosaicRestriction) => {
+                restrictionMosaicHttp.getMosaicAddressRestrictions(mosaicId, [account3.address]).subscribe((mosaicRestriction) => {
                     deepEqual(mosaicRestriction[0].mosaicId.toHex(), mosaicId.toHex());
                     deepEqual(mosaicRestriction[0].entryType, MosaicRestrictionEntryType.ADDRESS);
                     deepEqual(mosaicRestriction[0].targetAddress.plain(), account3.address.plain());
@@ -355,7 +357,7 @@ describe('RestrictionHttp', () => {
     describe('getMosaicGlobalRestriction', () => {
         it('should call getMosaicGlobalRestriction successfully', (done) => {
             setTimeout(() => {
-                restrictionHttp.getMosaicGlobalRestriction(mosaicId).subscribe((mosaicRestriction) => {
+                restrictionMosaicHttp.getMosaicGlobalRestriction(mosaicId).subscribe((mosaicRestriction) => {
                     deepEqual(mosaicRestriction.mosaicId.toHex(), mosaicId.toHex());
                     deepEqual(mosaicRestriction.entryType, MosaicRestrictionEntryType.GLOBAL);
                     deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.referenceMosaicId.toHex(),
@@ -373,7 +375,7 @@ describe('RestrictionHttp', () => {
     describe('getMosaicGlobalRestrictions', () => {
         it('should call getMosaicGlobalRestrictions successfully', (done) => {
             setTimeout(() => {
-                restrictionHttp.getMosaicGlobalRestrictions([mosaicId]).subscribe((mosaicRestriction) => {
+                restrictionMosaicHttp.getMosaicGlobalRestrictions([mosaicId]).subscribe((mosaicRestriction) => {
                     deepEqual(mosaicRestriction[0].mosaicId.toHex(), mosaicId.toHex());
                     deepEqual(mosaicRestriction[0].entryType, MosaicRestrictionEntryType.GLOBAL);
                     deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.referenceMosaicId.toHex(),
