@@ -53,7 +53,7 @@ export class MnemonicVerificationTs extends Vue {
     }
 
     mounted() {
-        this.mnemonicRandomList = randomizeMnemonicWordArray(this.mnemonicWordsList)
+        this.mnemonicRandomList = randomizeMnemonicWordArray([...this.mnemonicWordsList])
     }
 
 }
