@@ -23,7 +23,6 @@ export class CheckPasswordDialogTs extends Vue {
 
     @Prop({default: false})
     isOnlyCheckPassword: boolean
-
     @Prop({
         default: () => {
             return []

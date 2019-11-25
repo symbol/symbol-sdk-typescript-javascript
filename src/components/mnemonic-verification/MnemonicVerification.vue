@@ -1,9 +1,13 @@
 <template>
   <div class="mnemonic_container"  @keyup.enter="verificationSuccess">
     <div class="mnemonicWordDiv clear scroll">
-          <span v-for="(c,index) in confirmedMnemonicList" >
-            <Tag closable @on-close="removeConfirmedWord(index)">{{c}}</Tag>
-          </span>
+        <draggable v-model="confirmedMnemonicList" @end="drag=false" ghost-class="ghost">
+          <transition-group>
+            <span v-for="(c,index) in confirmedMnemonicList" :key="c" >
+              <Tag closable @on-close="removeConfirmedWord(index)">{{c}}</Tag>
+            </span>
+          </transition-group>
+        </draggable>
     </div>
     <div class="wordDiv clear">
           <span v-for="(item,index) in mnemonicRandomList"

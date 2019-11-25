@@ -1,8 +1,11 @@
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import {randomizeMnemonicWordArray} from "@/core/utils"
 import {Message} from "@/config"
+import draggable from "vuedraggable";
 
-@Component
+@Component({
+    components:{draggable}
+})
 export class MnemonicVerificationTs extends Vue {
 
     confirmedMnemonicList = []
