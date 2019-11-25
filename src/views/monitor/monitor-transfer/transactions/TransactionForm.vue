@@ -202,7 +202,7 @@
       </div>
       <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
 
-      <div @click="submit" :class="['send_button',isCompleteForm?'pointer':'not_allowed']">
+      <div @click="submit" class="send_button pointer">
         {{$t('send')}}
       </div>
     </form>

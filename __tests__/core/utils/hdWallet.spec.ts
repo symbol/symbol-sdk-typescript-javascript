@@ -1,5 +1,5 @@
-import * as hdWallet from '@/core/utils/hdWallet'
-  // @ts-ignore
+import * as hdWallet from '@/core/utils/hdWallet.ts'
+// @ts-ignore
 import { hdAccount, hdAccountData } from "@@/mock/conf/conf.spec"
 
 describe('hdWallet', () => {

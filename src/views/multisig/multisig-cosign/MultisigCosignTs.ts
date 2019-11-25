@@ -7,9 +7,10 @@ import {fetchChildrenPartialTransactions, fetchPartialTransactions} from '@/core
 import TransactionList from '@/components/transaction-list/TransactionList.vue'
 import MultisigTree from '@/views/multisig/multisig-tree/MultisigTree.vue'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
+import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
 
 @Component({
-    components: { TransactionList, MultisigTree, ErrorTooltip },
+    components: { TransactionList, MultisigTree, ErrorTooltip, DisabledForms },
     computed: mapState({ activeAccount: 'account' }),
 })
 export class MultisigCosignTs extends Vue {

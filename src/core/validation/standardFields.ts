@@ -115,7 +115,7 @@ export const standardFields = {
         label: 'amount',
         name: 'amount',
         type: 'text',
-        validation: `min_value:0|max_value:${MAX_MOSAIC_ATOMIC_UNITS}|decimal:0`,
+        validation: `min_value:0|max_value:${MAX_MOSAIC_ATOMIC_UNITS}|integer`,
         hint: [],
         placeholder: 'PLACEHOLDER_amount',
     },

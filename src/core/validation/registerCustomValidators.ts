@@ -1,12 +1,8 @@
-import {Address, MosaicId, NamespaceId, Account, PublicAccount, NetworkType} from 'nem2-sdk'
+import {MosaicId, Account} from 'nem2-sdk'
 import {networkConfig} from '@/config/constants'
-import {AppAccounts, AppWallet} from "@/core/model"
-
-const {maxNameSize} = networkConfig
-
-interface ValidationObject {
-    valid: false | string
-}
+import {AppAccounts, ValidationObject, AppWallet} from "@/core/model"
+import {validateAddress, validatePublicKey, validateAlias, validateMosaicId, validateNamespace} from './validators'
+const {PUBLIC_KEY_LENGTH} = networkConfig
 
 const getOtherFieldValue = (otherField, validator) => {
     const validatorFields = validator.Validator.$vee._validator.fields.items
@@ -17,6 +13,7 @@ const getOtherFieldValue = (otherField, validator) => {
 
 export const CUSTOM_VALIDATORS_NAMES = {
     address: 'address',
+    addressOrPublicKey: 'addressOrPublicKey',
     confirmPassword: 'confirmPassword',
     confirmLock: 'confirmLock',
     confirmWalletPassword: 'confirmWalletPassword',
@@ -26,53 +23,6 @@ export const CUSTOM_VALIDATORS_NAMES = {
     remoteAccountPrivateKey: 'remoteAccountPrivateKey',
     publicKey: 'publicKey',
     namespaceOrMosaicId: 'namespaceOrMosaicId',
-}
-
-const validateAddress = (address): ValidationObject => {
-    try {
-        Address.createFromRawAddress(address)
-        return {valid: address}
-    } catch (error) {
-        return {valid: false}
-    }
-}
-
-export const validateAlias = (alias): ValidationObject => {
-    if (alias.length > maxNameSize) return {valid: false}
-    try {
-        new NamespaceId(alias)
-        return {valid: alias}
-    } catch (error) {
-        return {valid: false}
-    }
-}
-
-const validatePublicKey = (publicKey): ValidationObject => {
-    try {
-        /** The NetworkType below is for public key testing only */
-        PublicAccount.createFromPublicKey(publicKey, NetworkType.TEST_NET)
-        return {valid: publicKey}
-    } catch (error) {
-        return {valid: false}
-    }
-}
-
-export const validateMosaicId = (mosaicId): ValidationObject => {
-    try {
-        new MosaicId(mosaicId)
-        return {valid: mosaicId}
-    } catch (error) {
-        return {valid: false}
-    }
-}
-
-export const validateNamespace = (namespace): ValidationObject => {
-    try {
-        new NamespaceId(namespace)
-        return {valid: namespace}
-    } catch (error) {
-        return {valid: false}
-    }
 }
 
 const aliasValidator = (context): Promise<ValidationObject> => {
@@ -206,19 +156,31 @@ const addressValidator = (context): Promise<ValidationObject> => {
     )
 }
 
+const addressOrPublicKeyValidator = (context): Promise<ValidationObject> => {
+    return context.Validator.extend(
+        CUSTOM_VALIDATORS_NAMES.addressOrPublicKey,
+        (addressOrPublicKey) => new Promise(async (resolve) => {
+            if (addressOrPublicKey.length === PUBLIC_KEY_LENGTH) {
+                resolve(validatePublicKey(addressOrPublicKey))
+            }
+            resolve(validateAddress(addressOrPublicKey))
+        }),
+    )
+}
+
 const customValidatorFactory = {
     [CUSTOM_VALIDATORS_NAMES.address]: addressValidator,
+    [CUSTOM_VALIDATORS_NAMES.addressOrAlias]: addressOrAliasValidator,
+    [CUSTOM_VALIDATORS_NAMES.addressOrPublicKey]: addressOrPublicKeyValidator,
+    [CUSTOM_VALIDATORS_NAMES.alias]: aliasValidator,
     [CUSTOM_VALIDATORS_NAMES.confirmLock]: confirmLockValidator,
     [CUSTOM_VALIDATORS_NAMES.confirmPassword]: confirmPasswordValidator,
     [CUSTOM_VALIDATORS_NAMES.confirmWalletPassword]: confirmWalletPasswordValidator,
     [CUSTOM_VALIDATORS_NAMES.mosaicId]: mosaicIdValidator,
-    [CUSTOM_VALIDATORS_NAMES.addressOrAlias]: addressOrAliasValidator,
-    [CUSTOM_VALIDATORS_NAMES.alias]: aliasValidator,
     [CUSTOM_VALIDATORS_NAMES.remoteAccountPrivateKey]: remoteAccountPrivateKeyValidator,
     [CUSTOM_VALIDATORS_NAMES.publicKey]: publicKeyValidator,
     [CUSTOM_VALIDATORS_NAMES.namespaceOrMosaicId]: namespaceOrMosaicIdValidator,
 }
-
 
 const CustomValidator = (name, Validator) => ({
     name,
@@ -232,3 +194,4 @@ export const registerCustomValidators = (Validator) => {
     Object.keys(CUSTOM_VALIDATORS_NAMES)
         .forEach(name => CustomValidator(name, Validator).register())
 }
+ 

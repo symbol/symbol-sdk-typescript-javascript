@@ -108,6 +108,7 @@ export const Message = {
     MULTISIG_ACCOUNTS_NO_TX: "Multisig_accounts_can_not_send_a_transaction_by_themselves",
     USER_ABORTED_TX_CONFIRMATION: 'User_aborted_transaction_confirmation',
     PRIVATE_KEY_INVALID_ERROR: 'PRIVATE_KEY_INVALID_ERROR',
+    ADDRESS_UNKNOWN: 'address_unknown',
 }
 
 export const FEE_SPEEDS: Record<string, string> = {
@@ -198,7 +199,6 @@ export const networkConfig = {
     maxMultisigDepth: 3,
     maxCosignatoriesPerAccount: 10,
     maxCosignedAccountsPerAccount: 14,
-    maxNameSize: 64,
     maxChildNamespaces: 256,
     maxNamespaceDepth: 3,
     minNamespaceDuration: "1m",
@@ -216,4 +216,6 @@ export const networkConfig = {
     seedWalletMaxAmount: 10,
     testMnemonicString: 'this is a test string his is a test string this is',
     EMPTY_LINKED_ACCOUNT_KEY: '0000000000000000000000000000000000000000000000000000000000000000',
+    PUBLIC_KEY_LENGTH: 64,
+    NAMESPACE_MAX_LENGTH: 64,
 }

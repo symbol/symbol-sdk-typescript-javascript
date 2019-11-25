@@ -11,10 +11,15 @@ const customMessagesEn = {
     confirmWalletPassword: () => `this password is incorrect`,
     confirmPassword: () => 'passwords do not match',
     max_value:()=>'current value is too big',
-    decimal:()=>'current value does not match divisibility',
     remoteAccountPrivateKey:()=>'the private key is incorrect',
     publicKey:()=>'the public key is incorrect',
     namespaceOrMosaicId:()=>'this is not a correct namespace or mosaic ID',
+}
+
+const errorPerFieldEn = {
+    amount: {
+        integer: () => `The divisibility is incorrect`,
+    }
 }
 
 const customMessagesZh = {
@@ -22,7 +27,12 @@ const customMessagesZh = {
     confirmLock: () => `密码错误`,
     confirmPassword: () => '密码不匹配',
     max_value:()=>'输入的值太大',
-    decimal:()=>'当前值与可分性不匹配'
+}
+
+const errorPerFieldZh = {
+    amount: {
+        integer: () => `当前值与可分性不匹配`,
+    }
 }
 
 export const veeValidateConfig = {
@@ -31,9 +41,11 @@ export const veeValidateConfig = {
     dictionary: {
         'en-US': {
             messages: {...en.messages, ...customMessagesEn},
+            custom: errorPerFieldEn,
         },
         'zh-CN': {
             messages: {...zhCN.messages, ...customMessagesZh},
+            custom: errorPerFieldZh,
         },
     },
     inject: {

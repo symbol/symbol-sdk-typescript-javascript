@@ -1,6 +1,7 @@
 <template>
   <div class="multisig_form_container">
     <div class="left_form radius">
+      <DisabledForms />
       <div class="form-wrapper radius">
         <div class="multisig_convert_container secondary_page_animate">
           <div class="multisig_convert_head">{{ 'Cosign aggregate transactions' }}</div>

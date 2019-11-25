@@ -36,24 +36,22 @@ module.exports = {
     '**/__tests__/views/**/*.(ts)',
   ],
   testURL: 'http://localhost/',
-  watchPlugins: [
-    'jest-watch-typeahead/filename',
-    'jest-watch-typeahead/testname'
-  ],
+  // watchPlugins: [
+  //   'jest-watch-typeahead/filename',
+  //   'jest-watch-typeahead/testname'
+  // ],
   globals: {
     'ts-jest': {
-      babelConfig: true
+      babelConfig: true,
     },
   },
   coverageDirectory: "coverage",
   collectCoverageFrom: [
-    "**/components/**/*.{ts}",
-    "**/core/**/*.{js}",
-    "**/store/**/*.{js}",
-    "**/views/**/*.{ts}",
+    "**/*.{ts}",
     "**/*.{vue}",
     "!**/node_modules/**",
     "!**/*.{png}",
     "!**/*.{d.ts}",
+    "!**/*.{less}",
   ],
 }

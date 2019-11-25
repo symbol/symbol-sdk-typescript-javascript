@@ -1,33 +1,26 @@
-import {AppWallet} from '@/core/model/AppWallet'
+
+import {AppWallet} from '@/core/model/AppWallet.ts'
 import {SimpleWallet} from 'nem2-sdk'
-import {shallowMount, config, createLocalVue} from '@vue/test-utils'
+import {config, createLocalVue} from '@vue/test-utils'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
-import VeeValidate from 'vee-validate'
-// @ts-ignore
-import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
-import {Alert} from 'view-design'
+import {appState} from '@/store/app'
 import {accountMutations, accountState} from '@/store/account'
-import {appMutations, appState} from '@/store/app'
-import {veeValidateConfig} from "@/core/validation"
 import VueRx from "vue-rx"
 import moment from 'vue-moment'
 import {
     mosaicsLoading,
     multisigAccountInfo,
     mosaics,
-    hdAccount,
     CosignWallet,
+    hdAccount
     // @ts-ignore
 } from "@@/mock/conf/conf.spec"
-// @ts-ignore
 const localVue = createLocalVue()
 const router = new VueRouter()
 localVue.use(VueRouter)
 localVue.use(moment as any)
-localVue.component('Alert', Alert)
 localVue.use(Vuex)
-localVue.use(VeeValidate, veeValidateConfig)
 localVue.use(VueRx)
 localVue.directive('focus', {
     inserted: function (el, binding) {
@@ -39,7 +32,6 @@ config.logModifiedComponents = false
 
 describe('AppWallet', () => {
     let store
-    let wrapper
     beforeEach(() => {
             store = store = new Vuex.Store({
                     modules: {
@@ -53,20 +45,11 @@ describe('AppWallet', () => {
                         },
                         app: {
                             state: Object.assign(appState.state, {mosaicsLoading}),
-                            mutations: appMutations.mutations
+                            mutations: {}
                         }
                     }
                 }
             )
-            wrapper = shallowMount(DisabledForms, {
-                sync: false,
-                mocks: {
-                    $t: (msg) => msg,
-                },
-                localVue,
-                store,
-                router,
-            })
         }
     )
 

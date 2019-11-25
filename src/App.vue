@@ -3,6 +3,7 @@
     <router-view/>
     <DisabledUiOverlay/>
     <TransactionConfirmation/>
+    <LoadingOverlay v-if="app.loadingOverlay.show"/>
   </div>
 </template>
 
@@ -24,6 +25,7 @@
     import {AppMosaic, AppWallet, AppInfo, StoreAccount} from '@/core/model'
     import DisabledUiOverlay from '@/components/disabled-ui-overlay/DisabledUiOverlay.vue'
     import TransactionConfirmation from '@/components/transaction-confirmation/TransactionConfirmation.vue'
+    import LoadingOverlay from '@/components/loading-overlay/LoadingOverlay.vue'
 
     @Component({
         computed: {
@@ -31,7 +33,8 @@
         },
         components: {
             DisabledUiOverlay,
-            TransactionConfirmation
+            TransactionConfirmation,
+            LoadingOverlay,
         }
     })
     export default class App extends Vue {
