@@ -1,5 +1,5 @@
-import {Message, formDataConfig, DEFAULT_FEES, FEE_GROUPS} from "@/config/index.ts"
-import {Component, Prop, Vue} from 'vue-property-decorator'
+import {formDataConfig, DEFAULT_FEES, FEE_GROUPS} from "@/config/index.ts"
+import {Component, Prop, Vue, Provide} from 'vue-property-decorator'
 import {
     Address,
     AliasAction,
@@ -14,33 +14,37 @@ import {
 } from "nem2-sdk"
 import {mapState} from "vuex"
 import {cloneData, getAbsoluteMosaicAmount} from "@/core/utils"
-import {StoreAccount, AppInfo, AppWallet, AppNamespace, DefaultFee, MosaicNamespaceStatusType} from "@/core/model"
+import {StoreAccount, AppInfo, AppWallet, AppNamespace, DefaultFee, MosaicNamespaceStatusType, BindTypes} from "@/core/model"
 import {AppMosaics, signTransaction} from '@/core/services'
+import {validation} from '@/core/validation'
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
+import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 
 @Component({
-  computed: {
-    ...mapState({
-      activeAccount: 'account',
-      app: 'app'
-    })
-  },
-  components:{ DisabledForms }
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+            app: 'app'
+        })
+    },
+    components: {DisabledForms, ErrorTooltip}
 })
 
 export class AliasTs extends Vue {
+    @Provide() validator: any = this.$validator
+    BindTypes = BindTypes
+    signTransaction = signTransaction
     activeAccount: StoreAccount
     app: AppInfo
+    validation = validation
     formItems = cloneData(formDataConfig.alias)
-    bindTypes: Record<string, string> = {
-        address: 'address',
-        mosaic: 'mosaic',
-    }
     bindType: string = this.getBindType
+
     /**
      * The namespace name
      */
     alias: string = this.getAlias
+
     /**
      * The address or the mosaic hex Id
      */
@@ -69,6 +73,10 @@ export class AliasTs extends Vue {
         if (!val) {
             this.$emit('close')
         }
+    }
+
+    get currentAccount() {
+        return this.activeAccount.currentAccount
     }
 
     get getTarget(): string {
@@ -101,10 +109,10 @@ export class AliasTs extends Vue {
     }
 
     get getBindType(): string {
-        const {fromNamespace, bind, address, mosaic, bindTypes} = this
-        if (fromNamespace && bind) return bindTypes.address
-        if (mosaic) return bindTypes.mosaic
-        if (address) return bindTypes.address
+        const {fromNamespace, bind, address, mosaic} = this
+        if (fromNamespace && bind) return BindTypes.ADDRESS
+        if (mosaic) return BindTypes.MOSAIC
+        if (address) return BindTypes.ADDRESS
     }
 
     set getBindType(val: string) {
@@ -163,51 +171,20 @@ export class AliasTs extends Vue {
             .map(({name}) => name)
     }
 
-    checkForm(): boolean {
-        const {target, alias, bindTypes, bindType} = this
-
-        if (bindType == bindTypes.address) {
-            try {
-                Address.createFromRawAddress(target)
-            } catch (e) {
-                this.showErrorMessage(this.$t(Message.ADDRESS_FORMAT_ERROR) + '')
-                return false
-            }
-        }
-        if (bindType == bindTypes.mosaic) {
-            try {
-                new MosaicId(target)
-            } catch (e) {
-                this.showErrorMessage(this.$t(Message.MOSAIC_HEX_FORMAT_ERROR) + '')
-                return false
-            }
-        }
-
-        if (!target && !(alias || alias.trim())) {
-            this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR) + '')
-            return false
-        }
-       
-        return true
-    }
-
-    showErrorMessage(message) {
-        this.$Notice.destroy()
-        this.$Notice.error({
-            title: message
-        })
-    }
-
     submit() {
-        if (!this.checkForm()) return
-        this.confirmViaTransactionConfirmation()
+        this.$validator
+            .validate()
+            .then((valid) => {
+                if (!valid) return
+                this.confirmViaTransactionConfirmation()
+            })
     }
 
     transaction(): Transaction {
-        const {alias, feeAmount, bindType, bindTypes, aliasAction, target} = this
+        const {alias, feeAmount, bindType, aliasAction, target} = this
         const {networkType} = this.wallet
 
-        return bindType === bindTypes.address
+        return bindType === BindTypes.ADDRESS
             ? AddressAliasTransaction.create(
                 Deadline.create(),
                 aliasAction,
@@ -228,20 +205,21 @@ export class AliasTs extends Vue {
 
     async confirmViaTransactionConfirmation() {
         try {
+            const transaction = this.transaction()
             this.show = false;
 
             const {
                 success,
                 signedTransaction,
                 signedLock,
-            } = await signTransaction({
-                transaction: this.transaction(),
+            } = await this.signTransaction({
+                transaction,
                 store: this.$store,
             })
-            
-            if(success) {
+
+            if (success) {
                 new AppWallet(this.wallet).announceTransaction(signedTransaction, this.activeAccount.node, this.$root, signedLock)
-            }            
+            }
         } catch (error) {
             console.error("AliasTs -> confirmViaTransactionConfirmation -> error", error)
         }

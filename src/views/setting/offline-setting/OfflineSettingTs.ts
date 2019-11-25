@@ -1,5 +1,5 @@
 import {Component, Provide, Vue} from 'vue-property-decorator'
-import {standardFields} from "@/core/validation"
+import {validation} from "@/core/validation"
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 import {formDataConfig, Message} from "@/config"
 import {cloneData} from "@/core/utils"
@@ -17,9 +17,9 @@ import {StoreAccount} from "@/core/model"
     }
 })
 export default class extends Vue {
-    activeAccount: StoreAccount
     @Provide() validator: any = this.$validator
-    standardFields: object = standardFields
+    activeAccount: StoreAccount
+    validation = validation
     formItems = cloneData(formDataConfig.offsetLineForm)
 
     get generationHash() {

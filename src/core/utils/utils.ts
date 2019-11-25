@@ -52,7 +52,7 @@ export const isRefreshData = function (localStorageName, refreshTime, borderline
 
 export const cloneData = object => JSON.parse(JSON.stringify(object))
 
-export const getTopValueInObject = (object: any) => {
+export const getTopValueInObject = (object: any): any => {
     return Object.values(object)[0]
 }
 

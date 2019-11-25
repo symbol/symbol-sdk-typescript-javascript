@@ -33,7 +33,7 @@
                         v-focus
                         data-vv-name="namespaceName"
                         v-model="formItems.rootNamespaceName"
-                        v-validate="standardFields.namespaceName.validation"
+                        v-validate="validation.namespaceName"
                         :data-vv-as="$t('root_namespace')"
                         type="text"
                         :placeholder="$t('New_root_space')"
@@ -62,7 +62,7 @@
                 <input
                         data-vv-name="duration"
                         v-model="formItems.duration"
-                        v-validate="`required|${standardFields.namespaceDuration.validation}`"
+                        v-validate="`required|${validation.namespaceDuration}`"
                         :data-vv-as="$t('duration')"
                         type="text"
                         :placeholder="$t('duration')"

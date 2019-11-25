@@ -1,145 +1,48 @@
 import {mapState} from "vuex"
 import {Message} from "@/config/index.ts"
-import {TransactionType, Password} from "nem2-sdk"
-import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {AppAccounts, AppWallet, StoreAccount, LockParams} from "@/core/model"
+import {Component, Vue, Prop, Provide} from 'vue-property-decorator'
+import {validation} from '@/core/validation'
+import {StoreAccount} from "@/core/model"
+import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 
 @Component({
     computed: {...mapState({activeAccount: 'account'})},
+    components: {ErrorTooltip},
 })
 export class CheckPasswordDialogTs extends Vue {
-    stepIndex = 0
-    show = false
+    @Provide() validator: any = this.$validator
     activeAccount: StoreAccount
-    walletInputInfo = {
-        password: ''
-    }
-
-    @Prop()
-    showCheckPWDialog: boolean
-
-    @Prop({default: ''})
-    transactionDetail: any
+    validation = validation
+    password = ''
 
     @Prop({default: false})
-    isOnlyCheckPassword: boolean
-    @Prop({
-        default: () => {
-            return []
-        }
-    })
-    transactionList: Array<any>
+    visible: boolean
 
-    @Prop({
-        default: () => {
-            return LockParams.default()
-        }
-    })
-    lockParams: LockParams
+    @Prop({default: false})
+    returnPassword: boolean
 
-    get node() {
-        return this.activeAccount.node
+    get show(): boolean {
+        return this.visible
     }
 
-    get wallet() {
-        return this.activeAccount.wallet
-    }
-
-    get networkType() {
-        return this.activeAccount.wallet.networkType
-    }
-
-    get generationHash() {
-        return this.activeAccount.generationHash
-    }
-
-    get accountName() {
-        return this.activeAccount.accountName
-    }
-
-    get networkCurrency() {
-        return this.activeAccount.networkCurrency
-    }
-
-    checkPasswordDialogCancel() {
-        this.$emit('closeCheckPWDialog')
-    }
-
-    checkWalletPassword() {
-        try {
-            const isPasswordValid = new AppWallet(this.wallet).checkPassword(this.walletInputInfo.password)
-            this.show = false
-            this.$emit('checkEnd', Boolean(isPasswordValid))
-            this.switchAnnounceType()
-            this.checkPasswordDialogCancel()
-        } catch (e) {
-            this.$Notice.destroy()
-            this.$Notice.error({
-                title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
-            })
-            this.$emit('checkEnd', false)
+    set show(val) {
+        if (!val) {
+            this.$emit('close')
         }
     }
 
-    checkAccountPassword() {
-        const {accountName} = this
-        const {password} = this.walletInputInfo
-        const appAccount = AppAccounts()
-        const account = appAccount.getAccountFromLocalStorage(accountName)
-        try {
-            const accountPassword = appAccount.decryptString(account.password, password)
-            if (accountPassword === password) {
-                this.$emit('checkEnd', password)
-                this.showNotice()
-                return
-            }
-            this.$Notice.destroy()
-            this.$Notice.error({
-                title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
-            })
-            this.$emit('checkEnd', false)
-        } catch (e) {
-            this.$Notice.destroy()
-            this.$Notice.error({
-                title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
-            })
-            this.$emit('checkEnd', false)
-        }
-
+    get accountPassword() {
+        return this.activeAccount.currentAccount.password
     }
 
     submit() {
-        if (this.isOnlyCheckPassword) {
-            this.checkAccountPassword()
-            return
-        }
-        this.checkWalletPassword()
-    }
-
-
-    // @VEE-VALIDATE: watch not needed, use showCheckPWDialog as v-model
-    @Watch('showCheckPWDialog')
-    onShowCheckPWDialogChange() {
-        this.walletInputInfo.password = ''
-        this.show = this.showCheckPWDialog
-    }
-
-    switchAnnounceType() {
-        const {node, generationHash, transactionList} = this
-        const password = new Password(this.walletInputInfo.password)
-        const lockFee = this.lockParams.transactionFee
-        if (transactionList[0].type !== TransactionType.AGGREGATE_BONDED) {
-            // normal transaction
-            new AppWallet(this.wallet).signAndAnnounceNormal(password, node, generationHash, transactionList, this)
-            return
-        }
-        // bonded transaction
-        new AppWallet(this.wallet).signAndAnnounceBonded( password,
-                                                          lockFee,
-                                                          transactionList,
-                                                          this.$store,
-                                                          this,
-        )
+        this.$validator
+            .validate()
+            .then((valid) => {
+                const response = valid && this.returnPassword ? this.password : valid
+                this.$emit('passwordValidated', response)
+                this.show = false
+            })
     }
 
     showNotice() {

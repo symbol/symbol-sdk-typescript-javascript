@@ -1,12 +1,13 @@
 import {mapState} from 'vuex'
-import {Message} from "@/config/index.ts"
-import {Component, Vue} from 'vue-property-decorator'
-import {Password, Account, NetworkType} from "nem2-sdk"
+import {NetworkType, Password} from "nem2-sdk"
+import {Component, Provide, Vue} from 'vue-property-decorator'
+import {AppInfo, AppWallet, StoreAccount} from "@/core/model"
+import {Message, formDataConfig, networkTypeConfig} from "@/config"
+import {cloneData} from "@/core/utils"
+import {validation} from '@/core/validation'
 import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
-import {formDataConfig} from '@/config/view/form'
-import {networkTypeConfig} from '@/config/view/setting'
-import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
-import {cloneData, localRead} from "@/core/utils"
+import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
+
 
 @Component({
     computed: {
@@ -15,41 +16,40 @@ import {cloneData, localRead} from "@/core/utils"
             app: 'app'
         })
     },
-    components: {
-        CheckPasswordDialog
-    }
+    components: {CheckPasswordDialog, ErrorTooltip}
 })
 export class WalletImportPrivatekeyTs extends Vue {
+    @Provide() validator: any = this.$validator
     activeAccount: StoreAccount
     app: AppInfo
+    NetworkTypeList = networkTypeConfig
+    NetworkType = NetworkType
+    validation = validation
     account = {}
     formItems = cloneData(formDataConfig.walletImportPrivateKeyForm)
     networkType = networkTypeConfig
     showCheckPWDialog = false
-    NetworkTypeList = networkTypeConfig
-    NetworkType = NetworkType
 
-    get accountNetworkType() {
-        return JSON.parse(localRead('accountMap'))[this.accountName].currentNetType
+    get currentAccount() {
+        return this.activeAccount.currentAccount
     }
 
-    get accountName() {
-        return this.activeAccount.accountName
+    get accountNetworkType() {
+        return this.currentAccount.networkType
     }
 
     submit() {
-        if (!this.checkPrivateKey()) return
-        this.showCheckPWDialog = true
+        this.$validator
+        .validate()
+        .then((valid) => {
+            if (!valid) return
+            this.showCheckPWDialog = true
+        })
     }
 
-    checkEnd(password) {
+    passwordValidated(password) {
         if (!password) return
-        this.closeCheckPWDialog()
         this.importWallet(password)
-    }
-
-    closeCheckPWDialog() {
-        this.showCheckPWDialog = false
     }
 
     importWallet(password) {
@@ -63,7 +63,10 @@ export class WalletImportPrivatekeyTs extends Vue {
                 accountNetworkType,
                 this.$store
             )
-            this.toWalletDetails()
+            this.$Notice.success({
+                title: this['$t']('Import_private_key_operation') + '',
+            })
+            this.$emit('toWalletDetails')
         } catch (error) {
             console.error(error)
             this.$Notice.error({
@@ -72,38 +75,11 @@ export class WalletImportPrivatekeyTs extends Vue {
         }
     }
 
-
-    checkPrivateKey() {
-        const {privateKey} = this.formItems
-        const {accountNetworkType} = this
-
-        if (!privateKey || privateKey === '') {
-            this.showNotice(this.$t(Message.PRIVATE_KEY_INVALID_ERROR))
-            return false
-        }
-        try {
-            const account = Account.createFromPrivateKey(privateKey, accountNetworkType)
-            this.account = account
-            return true
-        } catch (e) {
-            this.showNotice(this.$t(Message.PRIVATE_KEY_INVALID_ERROR))
-            return false
-        }
-    }
-
     showNotice(text) {
         this.$Notice.destroy()
         this.$Notice.error({
             title: text + ''
         })
-    }
-
-    // @VEE-VALIDATE
-    toWalletDetails() {
-        this.$Notice.success({
-            title: this['$t']('Import_private_key_operation') + '',
-        })
-        this.$emit('toWalletDetails')
     }
 
     initForm() {

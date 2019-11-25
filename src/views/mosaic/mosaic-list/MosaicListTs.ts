@@ -1,6 +1,6 @@
 import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import EditDialog from './mosaic-edit-dialog/MosaicEditDialog.vue'
+import MosaicEditDialog from './mosaic-edit-dialog/MosaicEditDialog.vue'
 import {formatNumber} from '@/core/utils'
 import {mosaicSortType} from "@/config/view/mosaic"
 import {Message, networkConfig} from "@/config"
@@ -11,7 +11,7 @@ import {setMosaics, sortMosaicList} from "@/core/services"
 @Component({
     components: {
         Alias,
-        EditDialog
+        MosaicEditDialog
     },
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
 })

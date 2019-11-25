@@ -58,11 +58,11 @@
           <ErrorTooltip fieldName="password">
             <input
               v-model="password"
-              :type="standardFields.walletPassword.type"
-              v-validate="standardFields.walletPassword.validation"
-              :data-vv-name="standardFields.walletPassword.name"
-              :data-vv-as="$t(standardFields.walletPassword.name)"
-              :placeholder="$t(standardFields.walletPassword.name)"
+              type="password"
+              v-validate="validation.walletPassword"
+              data-vv-name="password"
+              :data-vv-as="$t('password')"
+              placeholder="PLACEHOLDER_password"
             />
           </ErrorTooltip>
           <input v-show="false" v-model="wallet" v-validate disabled data-vv-name="wallet" />

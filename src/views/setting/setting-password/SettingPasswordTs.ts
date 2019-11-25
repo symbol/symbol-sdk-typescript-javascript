@@ -1,10 +1,12 @@
 import {Component, Vue, Provide, Watch} from 'vue-property-decorator'
-import {Message} from "@/config"
-import {localRead} from '@/core/utils'
-import {standardFields} from '@/core/validation'
+import {Message, formDataConfig} from "@/config"
+import {cloneData} from '@/core/utils'
 import FormInput from '@/components/other/forms/input/FormInput.vue'
 import {mapState} from "vuex"
 import {AppAccounts, StoreAccount} from "@/core/model"
+import {validation} from '@/core/validation'
+
+const formItems = formDataConfig.settingPassword
 
 @Component(
     {
@@ -18,17 +20,13 @@ import {AppAccounts, StoreAccount} from "@/core/model"
 )
 export class SettingPasswordTs extends Vue {
     @Provide() validator: any = this.$validator
+    AppAccounts = AppAccounts
     activeAccount: StoreAccount
+    validation = validation
     errors: any
     cypher: string
     submitDisabled: boolean = false
-    formItems = {
-        previousPassword: standardFields.previousPassword.default,
-        newPassword: standardFields.previousPassword.default,
-        confirmPassword: standardFields.previousPassword.default,
-        cipher: '',
-        hint: standardFields.hint.default,
-    }
+    formItems = cloneData(formItems)
 
     @Watch('errors')
     onErrorsChanged() {
@@ -36,23 +34,17 @@ export class SettingPasswordTs extends Vue {
     }
 
     get accountName() {
-        return this.activeAccount.accountName
+        return this.activeAccount.currentAccount.name
     }
 
     get mnemonic() {
-        const {accountName} = this
-        return JSON.parse(localRead('accountMap'))[accountName].seed
+        return this.activeAccount.currentAccount.password
     }
 
-
     resetFields() {
-        const {accountName} = this
         this.formItems = {
-            previousPassword: standardFields.previousPassword.default,
-            newPassword: standardFields.previousPassword.default,
-            confirmPassword: standardFields.previousPassword.default,
-            cipher: AppAccounts().getCipherPassword(accountName) + '',
-            hint: standardFields.hint.default,
+            ...cloneData(formItems),
+            cipher: this.activeAccount.currentAccount.password,
         }
     }
 
@@ -63,8 +55,7 @@ export class SettingPasswordTs extends Vue {
             .validate()
             .then((valid) => {
                 if (!valid) return
-                // refresh password localstorage and store info
-                AppAccounts().saveNewPassword(previousPassword, newPassword, mnemonic, accountName, this.$store)
+                this.AppAccounts().saveNewPassword(previousPassword, newPassword, mnemonic, accountName, this.$store)
                 this.resetFields()
                 this.$Notice.success({
                     title: this.$t(Message.SUCCESS) + ''

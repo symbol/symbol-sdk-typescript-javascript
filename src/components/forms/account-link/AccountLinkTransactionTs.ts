@@ -6,7 +6,6 @@ import {cloneData, getAbsoluteMosaicAmount} from '@/core/utils'
 import {formDataConfig, DEFAULT_FEES, FEE_GROUPS} from '@/config'
 import {signTransaction} from '@/core/services/transactions'
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
-import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 
 @Component({
     computed: {
@@ -14,7 +13,7 @@ import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswor
         activeAccount: 'account',
       })
     },
-    components:{ DisabledForms, CheckPasswordDialog }
+    components:{ DisabledForms }
   })
 export class AccountLinkTransactionTs extends Vue {
     activeAccount: StoreAccount

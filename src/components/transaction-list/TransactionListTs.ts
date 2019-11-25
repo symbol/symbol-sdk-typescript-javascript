@@ -1,8 +1,8 @@
-import {TransactionType, NamespaceId} from 'nem2-sdk'
+import {TransactionType, NamespaceId, AggregateTransactionCosignature, Address} from 'nem2-sdk'
 import {mapState} from "vuex"
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {formatNumber, renderMosaics} from '@/core/utils'
-import {FormattedTransaction, AppInfo, StoreAccount, TRANSACTIONS_CATEGORIES, AppWallet} from '@/core/model'
+import {FormattedTransaction, AppInfo, StoreAccount, TRANSACTIONS_CATEGORIES, AppWallet, FormattedAggregateBonded} from '@/core/model'
 import {defaultNetworkConfig, explorerUrlHead} from '@/config'
 import {signTransaction} from '@/core/services'
 import TransactionModal from '@/components/transaction-modal/TransactionModal.vue'
@@ -30,7 +30,7 @@ export class TransactionListTs extends Vue {
     mode: string
 
     get wallet() {
-        return this.activeAccount.wallet
+        return new AppWallet(this.activeAccount.wallet)
     }
 
     get transactionsLoading() {
@@ -39,9 +39,7 @@ export class TransactionListTs extends Vue {
 
     get transactionList() {
         if (this.mode && this.mode === TRANSACTIONS_CATEGORIES.TO_COSIGN) {
-            const {wallet, transactionsToCosign} = this.activeAccount
-            const {publicKey} = wallet
-            return transactionsToCosign[publicKey] || []
+            return this.activeAccount.transactionsToCosign || []
         }
 
         return this.activeAccount.transactionList
@@ -141,6 +139,11 @@ export class TransactionListTs extends Vue {
         this.activeTransaction = transaction
 
         if (this.mode === TRANSACTIONS_CATEGORIES.TO_COSIGN) {
+            if (transaction instanceof FormattedAggregateBonded
+                && transaction.alreadyCosignedBy(Address.createFromRawAddress(this.wallet.address))) {
+                this.showDialog = true
+                return
+            }
             return this.confirmViaTransactionConfirmation()
         }
 

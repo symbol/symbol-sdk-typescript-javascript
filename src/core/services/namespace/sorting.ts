@@ -5,7 +5,8 @@ export const namespaceSortTypes = {
  byDuration: 2,
  byOwnerShip: 3,
  byBindType: 4,
- byBindInfo: 5
+ byBindInfo: 5,
+ byExpired:6
 }
 
 const sortByDuration = (list: AppNamespace[], direction: boolean): AppNamespace[] => {
@@ -55,10 +56,11 @@ const sortingRouter = {
  [namespaceSortTypes.byOwnerShip] : sortByBindInfo,
  [namespaceSortTypes.byBindType] : sortByBindType,
  [namespaceSortTypes.byBindInfo] : sortByOwnerShip,
+ [namespaceSortTypes.byExpired] : sortByDuration,
 }
 
 export const sortNamespaceList = (  namespaceSortType: number,
-                                 list: AppNamespace[], 
+                                 list: AppNamespace[],
                                  direction: boolean): AppNamespace[] => {
  return sortingRouter[namespaceSortType](list, direction)
 }

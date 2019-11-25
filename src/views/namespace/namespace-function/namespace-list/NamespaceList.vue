@@ -42,11 +42,11 @@
           </span>
           <span
                   class="is_expired"
-                  @click="namespaceSortType = namespaceSortTypes.byDuration;
+                  @click="namespaceSortType = namespaceSortTypes.byExpired;
                 sortDirection = !sortDirection"
           >{{$t('Expired')}}
             <Icon
-                    v-if="namespaceSortType === namespaceSortTypes.byDuration"
+                    v-if="namespaceSortType === namespaceSortTypes.byExpired"
                     class="active_sort_type"
                     :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"
             />
@@ -63,7 +63,7 @@
             />
           </span>
           <span
-                  @click="namespaceSortType = namespaceSortTypes.byBindType;
+                  @click="namespaceSortType = namespaceSortTypes.byDuration;
                 sortDirection = !sortDirection"
                   class="type"
           >{{$t('type')}}

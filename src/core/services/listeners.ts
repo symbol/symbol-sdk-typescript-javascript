@@ -2,6 +2,7 @@ import {Address, Listener, NodeHttp} from "nem2-sdk"
 import {filter} from 'rxjs/operators'
 import {formatAndSave} from '@/core/services/transactions'
 import {ChainStatus, TRANSACTIONS_CATEGORIES} from '@/core/model'
+import {Message} from '@/config'
 
 export class ChainListeners {
     private readonly app: any //@TODO: rename and type
@@ -22,6 +23,8 @@ export class ChainListeners {
     txStatusListener: Listener
     newBlocksListener: Listener
     multisigConfirmedListener: Listener
+    aggregateBondedTxListener: Listener
+    cosignatureTxAdded: Listener
 
     start() {
         console.log(`starting chain listener for ${this.address} on ${this.node}`)
@@ -33,14 +36,13 @@ export class ChainListeners {
         this.unconfirmedListener()
         this.confirmedListener()
         this.txErrorListener()
+        this.aggregateBondedListener()
+        this.cosignatureAddedListener()
     }
 
     switchAddress(address: string) {
         this.address = address
-        console.log(`ChainListeners switchAddress to ${this.address}`)
-        this.unconfirmedListener()
-        this.confirmedListener()
-        this.txErrorListener()
+        this.startTransactionListeners()
     }
 
     switchEndpoint(endpoint: string) {
@@ -151,6 +153,48 @@ export class ChainListeners {
                                 duration: 10,
                             })
                         }
+                    })
+            })
+
+    }
+
+    cosignatureAddedListener(): void {
+        this.confirmedTxListener && this.confirmedTxListener.close()
+        const that = this.app
+        const NEW_COSIGNATURE = that.$t(Message.NEW_COSIGNATURE)
+        this.cosignatureTxAdded = new Listener(this.node, WebSocket)
+        this.cosignatureTxAdded
+            .open()
+            .then(() => {
+                this.cosignatureTxAdded
+                    .cosignatureAdded(Address.createFromRawAddress(this.address))
+                    .subscribe((_) => {
+                        that.$Notice.destroy()
+                        that.$Notice.success({
+                            title: NEW_COSIGNATURE, // quick fix
+                            duration: 4,
+                        })
+                    })
+            })
+
+    }
+
+    aggregateBondedListener(): void {
+        this.confirmedTxListener && this.confirmedTxListener.close()
+        const that = this.app
+        const NEW_AGGREGATE_BONDED = that.$t(Message.NEW_AGGREGATE_BONDED)
+        this.aggregateBondedTxListener = new Listener(this.node, WebSocket)
+        this.aggregateBondedTxListener
+            .open()
+            .then(() => {
+                this.aggregateBondedTxListener
+                    .aggregateBondedAdded(Address.createFromRawAddress(this.address))
+                    .subscribe((_) => {
+                        that.$Notice.destroy()
+                        that.$Notice.success({
+                            title: NEW_AGGREGATE_BONDED, // quick fix
+                            duration: 4,
+                        })
                     })
             })
 

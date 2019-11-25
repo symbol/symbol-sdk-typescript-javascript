@@ -168,7 +168,7 @@
             :address="address"
             @close="showAliasDialog = false"
     />
-    <EditDialog
+    <MosaicEditDialog
             v-if="showMosaicEditDialog"
             :showMosaicEditDialog="showMosaicEditDialog"
             :itemMosaic="selectedMosaic"

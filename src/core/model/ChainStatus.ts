@@ -1,7 +1,6 @@
 import {BlockInfo} from 'nem2-sdk';
 import {nodeListConfig} from "@/config/view/node";
-import {networkConfig} from '@/config/index'
-import {NETWORK_PARAMS} from '@/core/validation'
+import {networkConfig, NETWORK_CONSTANTS} from '@/config/index'
 import {formatTimestamp} from '@/core/utils'
 
 export class ChainStatus {
@@ -37,7 +36,7 @@ export class ChainStatus {
     }
 
     getTimeFromBlockNumber(blockNumber: number): string {
-        const highestBlockTimestamp = Math.round(this.timestamp / 1000) + NETWORK_PARAMS.NEMESIS_BLOCK_TIMESTAMP
+        const highestBlockTimestamp = Math.round(this.timestamp / 1000) + NETWORK_CONSTANTS.NEMESIS_BLOCK_TIMESTAMP
         const numberOfBlock = blockNumber - this.height
         return formatTimestamp((numberOfBlock * this.targetBlockTime + highestBlockTimestamp) * 1000)
     }

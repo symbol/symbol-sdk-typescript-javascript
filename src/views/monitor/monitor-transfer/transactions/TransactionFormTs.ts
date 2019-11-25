@@ -9,7 +9,7 @@ import {mapState} from "vuex"
 import {DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
 import {getAbsoluteMosaicAmount, getRelativeMosaicAmount, formatAddress, cloneData} from "@/core/utils"
-import {standardFields, NETWORK_PARAMS} from "@/core/validation"
+import {validation} from "@/core/validation"
 import {signTransaction} from '@/core/services/transactions'
 import {
     AppMosaic,
@@ -44,15 +44,20 @@ export class TransactionFormTs extends Vue {
     transactionDetail = {}
     isShowSubAlias = false
     currentCosignatoryList = []
-    currentMosaic: string = ''
+    selectedMosaicHex: string = ''
     currentAmount: number = 0
     isAddressMapNull = true
     formItems = cloneData(formDataConfig.transferForm)
-    standardFields: object = standardFields
+    validation = validation
     getRelativeMosaicAmount = getRelativeMosaicAmount
     formatAddress = formatAddress
     maxMosaicAbsoluteAmount = 0
 
+    get selectedMosaic() {
+        const {mosaics, selectedMosaicHex} = this
+        if (!mosaics || !selectedMosaicHex) return null
+        return mosaics[selectedMosaicHex] || null
+    }
 
     get addressAliasMap() {
         const addressAliasMap = this.activeAccount.addressAliasMap
@@ -132,17 +137,24 @@ export class TransactionFormTs extends Vue {
         return this.multisigInfo.multisigAccounts.length > 0
     }
 
-    get multisigPublicKeyList(): { publicKey: string, address: string }[] {
+    getMultisigAccountLabel(publicKey: string): string {
+        const address = Address.createFromPublicKey(publicKey, this.networkType)
+        const walletFromList = this.app.walletList.find(wallet => wallet.address === address.plain())
+        if (walletFromList === undefined) return address.pretty()
+        return `${address.pretty()} (${walletFromList.name})`
+    } 
+
+    get multisigPublicKeyList(): {publicKey: string, label: string}[] {
         if (!this.hasMultisigAccounts) return null
         return [
             {
                 publicKey: this.accountPublicKey,
-                address: `(self) ${formatAddress(this.address)}`,
+                label: this.getMultisigAccountLabel(this.accountPublicKey),
             },
             ...this.multisigInfo.multisigAccounts
                 .map(({publicKey}) => ({
                     publicKey,
-                    address: formatAddress(Address.createFromPublicKey(publicKey, this.networkType).plain())
+                    label: this.getMultisigAccountLabel(publicKey)
                 })),
         ]
     }
@@ -184,6 +196,10 @@ export class TransactionFormTs extends Vue {
         return this.app.chainStatus.currentHeight
     }
 
+    get currentAccount() {
+        return this.activeAccount.currentAccount
+    }
+
     get recipient(): Address | NamespaceId {
         const {recipient} = this.formItems
         if (validateAddress(this.formItems.recipient).valid) {
@@ -216,13 +232,18 @@ export class TransactionFormTs extends Vue {
     }
 
     get currentMosaicAbsoluteAmount() {
-        const {mosaics, currentMosaic, currentAmount} = this
-        return mosaics[currentMosaic] ? getAbsoluteMosaicAmount(currentAmount, mosaics[currentMosaic].properties.divisibility) : 0
+        const {mosaics, selectedMosaicHex, currentAmount} = this
+        return mosaics[selectedMosaicHex] ? getAbsoluteMosaicAmount(currentAmount, mosaics[selectedMosaicHex].properties.divisibility) : 0
 
     }
 
+    get lockParams(): LockParams {
+        const {announceInLock, feeAmount, feeDivider} = this
+        return new LockParams(announceInLock, feeAmount / feeDivider)
+    }
+
     initForm() {
-        this.currentMosaic = null
+        this.selectedMosaicHex = null
         this.currentAmount = 0
         this.formItems = cloneData(formDataConfig.transferForm)
         this.formItems.multisigPublicKey = this.accountPublicKey
@@ -230,51 +251,35 @@ export class TransactionFormTs extends Vue {
     }
 
     addMosaic() {
+        const {selectedMosaicHex, mosaics, currentAmount} = this
+        if (this.$validator.errors.has('currentAmount') || !selectedMosaicHex) return
         this.maxMosaicAbsoluteAmount = 0
-        const {currentMosaic, mosaics, currentAmount} = this
-        const {divisibility} = mosaics[currentMosaic].properties
-        const mosaicTransferList = [...this.formItems.mosaicTransferList]
-        const that = this
-        let resultAmount = currentAmount
-        mosaicTransferList.every((item, index) => {
-                if (item.id.toHex() == currentMosaic) {
-                    resultAmount = Number(getRelativeMosaicAmount(item.amount.compact(), divisibility)) + Number(resultAmount)
-                    that.formItems.mosaicTransferList.splice(index, 1)
-                    // Verify additional conditions :if resultAmount > MAX_MOSAIC_ATOMIC_UNITS, do not add mosaic amount
-                    const absoluteAmount = getAbsoluteMosaicAmount(resultAmount, divisibility)
-                    if (absoluteAmount > NETWORK_PARAMS.MAX_MOSAIC_ATOMIC_UNITS) {
-                        that.maxMosaicAbsoluteAmount = absoluteAmount
-                        resultAmount = Number(getRelativeMosaicAmount(item.amount.compact(), divisibility))
-                        return true
-                    }
-                    return false
-                }
-                // get max amount in mosaic list
-                that.maxMosaicAbsoluteAmount = that.maxMosaicAbsoluteAmount > resultAmount ? that.maxMosaicAbsoluteAmount : resultAmount
-                return true
-            }
-        )
-        // Verify direct additions: if resultAmount > MAX_MOSAIC_ATOMIC_UNITS, do not add mosaic amount
-        const absoluteAmount = getAbsoluteMosaicAmount(resultAmount, divisibility)
-        if (absoluteAmount > NETWORK_PARAMS.MAX_MOSAIC_ATOMIC_UNITS) {
-            that.maxMosaicAbsoluteAmount = absoluteAmount
-            return
+        const {divisibility} = mosaics[selectedMosaicHex].properties
+
+        const duplicateMosaicIndex = this.formItems.mosaicTransferList
+            .findIndex((mosaic: Mosaic) => mosaic.id.toHex() === selectedMosaicHex)
+
+        if (duplicateMosaicIndex > -1) {
+            this.formItems.mosaicTransferList.splice(duplicateMosaicIndex, 1)
         }
-        this.formItems.mosaicTransferList.unshift(
+
+        this.formItems.mosaicTransferList.push(
             new Mosaic(
-                new MosaicId(currentMosaic),
+                new MosaicId(selectedMosaicHex),
                 UInt64.fromUint(
-                    getAbsoluteMosaicAmount(resultAmount, divisibility)
+                    getAbsoluteMosaicAmount(currentAmount, divisibility)
                 )
             )
         )
         this.sortMosaics()
         this.clearAssetData()
+        const fieldToReset = this.$validator.fields.find({name: 'currentAmount'});
+        if (fieldToReset) this.$validator.reset(fieldToReset);
     }
 
     clearAssetData() {
-        this.currentMosaic = ''
-        this.currentAmount = 0
+        this.selectedMosaicHex = null
+        this.currentAmount = null
     }
 
     sortMosaics() {
@@ -301,11 +306,6 @@ export class TransactionFormTs extends Vue {
             })
     }
 
-    get lockParams(): LockParams {
-        const {announceInLock, feeAmount, feeDivider} = this
-        return new LockParams(announceInLock, feeAmount / feeDivider)
-    }
-
     async confirmViaTransactionConfirmation() {
         if (this.activeMultisigAccount) {
             this.sendMultisigTransaction()
@@ -313,9 +313,6 @@ export class TransactionFormTs extends Vue {
             this.sendTransaction()
         }
 
-        // delegate the signing to the TransactionConfirmation workflow
-        // the resolve value of this promise will contain the signed transaction
-        // if the user confirms successfully
         const {
             success,
             signedTransaction,
@@ -381,6 +378,10 @@ export class TransactionFormTs extends Vue {
         this.transactionList = [aggregateTransaction]
     }
 
+    resetFields() {
+        this.$nextTick(() => this.$validator.reset())
+    }
+
     @Watch('formItems.multisigPublicKey')
     onMultisigPublicKeyChange(newPublicKey, oldPublicKey) {
         if (!newPublicKey || newPublicKey === oldPublicKey) return
@@ -397,8 +398,10 @@ export class TransactionFormTs extends Vue {
         }
     }
 
-    resetFields() {
-        this.$nextTick(() => this.$validator.reset())
+    @Watch('selectedMosaicHex')
+    onSelectedMosaicHexChange() {
+        /** Makes currentAmount validation reactive */
+        this.$validator.validate('currentAmount', this.currentAmount)
     }
 
     async mounted() {

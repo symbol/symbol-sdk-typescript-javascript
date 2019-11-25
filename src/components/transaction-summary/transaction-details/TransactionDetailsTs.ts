@@ -7,17 +7,11 @@ import {
     SpecialTxDetailsKeys, TxDetailsKeysWithValueToTranslate,
 } from '@/core/model'
 import {getNamespaceNameFromNamespaceId} from '@/core/services'
-import MosaicTable from '../mosaic-table/MosaicTable.vue'
-import CosignatoriesTable from '../cosignatories-table/CosignatoriesTable.vue'
 import TransactionInfoTemplate from '@/components/transaction-summary/transaction-details/transaction-info-template/TransactionInfoTemplate.vue'
 
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
-    components: {
-        MosaicTable,
-        TransactionInfoTemplate,
-        CosignatoriesTable,
-    }
+    components: { TransactionInfoTemplate }
 })
 export class TransactionDetailsTs extends Vue {
     activeAccount: StoreAccount
@@ -38,7 +32,6 @@ export class TransactionDetailsTs extends Vue {
         return {
             head: ['name', 'amount'],
             data: mosaicList,
-
         }
     }
 }

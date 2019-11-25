@@ -22,7 +22,7 @@
           </div>
           <div class="gray_content">
             <div class=" un_click account-network-type">
-              {{NetworkType[accountNetworkType]}}
+              {{NetworkType[currentAccount.networkType]}}
             </div>
           </div>
         </li>
@@ -43,11 +43,12 @@
       </div>
     </div>
     <CheckPasswordDialog
-            :showCheckPWDialog="showCheckPWDialog"
-            :isOnlyCheckPassword="true"
-            @closeCheckPWDialog="closeCheckPWDialog"
-            @checkEnd="checkEnd"
-    ></CheckPasswordDialog>
+      v-if="showCheckPWDialog"
+      :visible="showCheckPWDialog"
+      :returnPassword="true"
+      @close="close"
+      @passwordValidated="passwordValidated"
+    />
   </div>
 </template>
 

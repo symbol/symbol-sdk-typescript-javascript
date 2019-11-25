@@ -14,8 +14,7 @@ export const formatAndSave = (  transaction: Transaction,
     )
     
     if (transactionCategory === TRANSACTIONS_CATEGORIES.TO_COSIGN) {
-        const {publicKey} = store.state.account.wallet
-        store.commit('ADD_TRANSACTION_TO_COSIGN', {publicKey, transactions: formattedTransactions})
+        store.commit('ADD_TRANSACTION_TO_COSIGN', formattedTransactions)
         return
     }
 
@@ -32,7 +31,7 @@ export const setTransactionList = (address: string, store: Store<AppState>): voi
     const accountHttp = new AccountHttp(node)
     const _address = Address.createFromRawAddress(address)
 
-    accountHttp.transactions(_address, new QueryParams(100)).subscribe(
+    accountHttp.getAccountTransactions(_address, new QueryParams(100)).subscribe(
         (transactionList: Transaction[]) => {
             const txList = transactionFormat(transactionList, store)
             store.commit('SET_TRANSACTION_LIST', txList)
@@ -41,7 +40,7 @@ export const setTransactionList = (address: string, store: Store<AppState>): voi
         (error) => console.error("setTransactionList -> transactions -> error", error)
     )
 
-    accountHttp.unconfirmedTransactions(_address, new QueryParams(100)).subscribe(
+    accountHttp.getAccountUnconfirmedTransactions(_address, new QueryParams(100)).subscribe(
         (transactionList: Transaction[]) => {
             const txList = transactionFormat(transactionList, store)
                 .map(x => ({...x, isTxUnconfirmed: true}))

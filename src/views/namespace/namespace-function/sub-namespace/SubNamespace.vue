@@ -54,7 +54,7 @@
                           v-focus
                           data-vv-name="Subspace"
                           v-model="formItems.subNamespaceName"
-                          v-validate="standardFields.subNamespaceName.validation"
+                          v-validate="validation.subNamespaceName"
                           :data-vv-as="$t('Subspace')"
                           type="text"
                           :placeholder="$t('Input_space_name')"

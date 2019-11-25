@@ -1,20 +1,22 @@
-import {shallowMount, config, createLocalVue} from '@vue/test-utils'
+import {config, createLocalVue, shallowMount} from '@vue/test-utils'
 import VueRouter from 'vue-router'
 import iView from 'view-design'
 import Vuex from 'vuex'
 import VeeValidate from 'vee-validate'
 // @ts-ignore
 import TransactionForm from '@/views/monitor/monitor-transfer/transactions/TransactionForm.vue'
-import {accountMutations, accountState} from '@/store/account'
-import {appMutations, appState} from '@/store/app'
-import {veeValidateConfig} from "@/core/validation"
+import {accountMutations, accountState} from '@/store/account/index.ts'
+import {appMutations, appState} from '@/store/app/index.ts'
+import {veeValidateConfig} from "@/core/validation/index.ts"
 import VueRx from "vue-rx"
-import {FEE_SPEEDS} from "@/config"
+import {FEE_SPEEDS} from "@/config/index.ts"
 import flushPromises from 'flush-promises'
 import {
-    Address, Deadline,
-    Mosaic,
+    Account,
+    Address,
     AggregateTransaction,
+    Deadline,
+    Mosaic,
     MosaicId,
     NetworkType,
     TransactionType,
@@ -23,15 +25,15 @@ import {
 } from "nem2-sdk"
 import {
     CosignAccount,
-    mosaicsLoading,
-    multisigAccountInfo,
+    CosignWallet,
+    current1Account,
     mosaics,
-    MultisigAccount,
+    mosaicsLoading,
     Multisig2Account,
-    CosignWallet
-    // @ts-ignore
+    MultisigAccount,
+    multisigAccountInfo
+    //@ts-ignore
 } from "@@/mock/conf/conf.spec"
-import {AppWallet} from "@/core/model"
 // @ts-ignore
 const localVue = createLocalVue()
 const router = new VueRouter()
@@ -59,7 +61,8 @@ describe('MonitorDashBoard', () => {
                             state: Object.assign(accountState.state, {
                                 wallet: CosignWallet,
                                 mosaics,
-                                multisigAccountInfo
+                                multisigAccountInfo,
+                                currentAccount: current1Account
                             }),
                             mutations: accountMutations.mutations
                         },
@@ -81,13 +84,9 @@ describe('MonitorDashBoard', () => {
             })
         }
     )
-
-    it('Component TransactionForm is not null ', () => {
-        expect(wrapper).not.toBeNull()
-    })
-
     it('should create a normal transfer transaction object while did not choose multisig public key', async () => {
         wrapper.setData({
+            selectedMosaicHex: '308F144790CD7BC4',
             formItems: {
                 recipient: CosignAccount.address.toDTO().address,
                 remark: 'unit test',
@@ -115,6 +114,7 @@ describe('MonitorDashBoard', () => {
 
     it('should create an aggregate complete transaction object while choose 1-of-1 multisig', async () => {
         wrapper.setData({
+            selectedMosaicHex: '308F144790CD7BC4',
             formItems: {
                 recipient: CosignAccount.address.toDTO().address,
                 remark: 'unit test',
@@ -152,6 +152,7 @@ describe('MonitorDashBoard', () => {
 
     it('should create an aggregate bonded transaction object while choose 2-of-2 multisig', async () => {
         wrapper.setData({
+            selectedMosaicHex: '308F144790CD7BC4',
             formItems: {
                 recipient: CosignAccount.address.toDTO().address,
                 remark: 'unit test',
@@ -188,6 +189,7 @@ describe('MonitorDashBoard', () => {
 
     it('should not create any transaction object while recipient is neither address nor alias', async () => {
         wrapper.setData({
+            selectedMosaicHex: '308F144790CD7BC4',
             formItems: {
                 recipient: 'IncorrectRecipient',
                 remark: 'unit test',
@@ -202,10 +204,12 @@ describe('MonitorDashBoard', () => {
         await flushPromises()
         const transferTransaction = wrapper.vm.transactionList[0]
         expect(transferTransaction).toBeUndefined()
+
     })
 
     it('should create a transaction object while recipient is an alias', async () => {
         wrapper.setData({
+            selectedMosaicHex: '308F144790CD7BC4',
             formItems: {
                 recipient: 'alias',
                 remark: 'unit test',
@@ -223,6 +227,7 @@ describe('MonitorDashBoard', () => {
 
     it('should not create a transaction object while mosaic list is null', async () => {
         wrapper.setData({
+            selectedMosaicHex: '308F144790CD7BC4',
             formItems: {
                 recipient: 'alias',
                 remark: 'unit test',
@@ -236,10 +241,12 @@ describe('MonitorDashBoard', () => {
         await flushPromises()
         const transferTransaction = wrapper.vm.transactionList[0]
         expect(transferTransaction).toBeUndefined()
+
     })
 
     it('should sort mosaics while add new mosaic', async () => {
         wrapper.setData({
+            selectedMosaicHex: '308F144790CD7BC4',
             formItems: {
                 recipient: 'alias',
                 remark: 'unit test',
@@ -248,13 +255,12 @@ describe('MonitorDashBoard', () => {
                 mosaicTransferList: [new Mosaic(new MosaicId('4EB2D6C822D8A9F7'), UInt64.fromUint(0))],
                 isEncrypted: false
             },
-            currentMosaic: '308F144790CD7BC4',
             currentAmount: 0
         })
 
+        wrapper.vm.addMosaic()
         wrapper.vm.submit()
         await flushPromises()
-        wrapper.vm.addMosaic()
 
         const transferTransaction = wrapper.vm.transactionList[0]
         expect(transferTransaction.mosaics[0].id.toHex()).toBe('308F144790CD7BC4')
@@ -263,6 +269,7 @@ describe('MonitorDashBoard', () => {
 
     it('should create a transaction object while message is null', async () => {
         wrapper.setData({
+            selectedMosaicHex: '308F144790CD7BC4',
             formItems: {
                 recipient: CosignAccount.address.toDTO().address,
                 remark: '',
@@ -284,6 +291,7 @@ describe('MonitorDashBoard', () => {
             message += message
         }
         wrapper.setData({
+            selectedMosaicHex: '308F144790CD7BC4',
             formItems: {
                 recipient: CosignAccount.address.toDTO().address,
                 remark: message,
@@ -301,6 +309,7 @@ describe('MonitorDashBoard', () => {
 
     it('should not pass inspection while mosaic list length < 1', async () => {
         wrapper.setData({
+            selectedMosaicHex: '308F144790CD7BC4',
             formItems: {
                 recipient: CosignAccount.address.toDTO().address,
                 remark: 'unit test',
@@ -316,5 +325,22 @@ describe('MonitorDashBoard', () => {
         expect(transferTransaction).toBeUndefined()
     })
 
+    it('should not pass while network types are different ', async () => {
+        wrapper.setData({
+            selectedMosaicHex: '308F144790CD7BC4',
+            formItems: {
+                recipient: Account.generateNewAccount(NetworkType.TEST_NET).address.plain(),
+                remark: 'unit test',
+                multisigPublicKey: '',
+                feeSpeed: FEE_SPEEDS.NORMAL,
+                mosaicTransferList: [new Mosaic(new MosaicId('308F144790CD7BC4'), UInt64.fromUint(0))],
+                isEncrypted: false,
+            },
+        })
+        wrapper.vm.submit()
+        await flushPromises()
+        const transferTransaction = wrapper.vm.transactionList[0]
+        expect(transferTransaction).toBeUndefined()
+    })
 
 })

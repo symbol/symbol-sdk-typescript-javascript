@@ -1,52 +1,25 @@
 import i18n from '@/language'
 import VeeValidate from 'vee-validate'
 import en from 'vee-validate/dist/locale/en'
+import ja from 'vee-validate/dist/locale/ja'
 import zhCN from 'vee-validate/dist/locale/zh_CN'
-import {registerCustomValidators} from '@/core/validation'
-
-// @TODO: refactor dictionaries import
-const customMessagesEn = {
-    address: () => `this address is invalid`,
-    confirmLock: () => `this password is incorrect`,
-    confirmWalletPassword: () => `this password is incorrect`,
-    confirmPassword: () => 'passwords do not match',
-    max_value:()=>'current value is too big',
-    remoteAccountPrivateKey:()=>'the private key is incorrect',
-    publicKey:()=>'the public key is incorrect',
-    namespaceOrMosaicId:()=>'this is not a correct namespace or mosaic ID',
-}
-
-const errorPerFieldEn = {
-    amount: {
-        integer: () => `The divisibility is incorrect`,
-    }
-}
-
-const customMessagesZh = {
-    address: () => `地址错误`,
-    confirmLock: () => `密码错误`,
-    confirmPassword: () => '密码不匹配',
-    max_value:()=>'输入的值太大',
-}
-
-const errorPerFieldZh = {
-    amount: {
-        integer: () => `当前值与可分性不匹配`,
-    }
-}
+import {registerCustomValidators} from './customValidators'
+import {customMessages, customFieldMessages} from './customMessages'
 
 export const veeValidateConfig = {
     i18n,
     fieldsBagName: 'fieldBags',
     dictionary: {
         'en-US': {
-            messages: {...en.messages, ...customMessagesEn},
-            custom: errorPerFieldEn,
+            messages: {...en.messages, ...customMessages},
+            custom: customFieldMessages,
         },
         'zh-CN': {
-            messages: {...zhCN.messages, ...customMessagesZh},
-            custom: errorPerFieldZh,
+            messages: {...zhCN.messages},
         },
+        'ja-JP': {
+            messages: {...ja.messages},
+        }
     },
     inject: {
         $validator: '$validator',

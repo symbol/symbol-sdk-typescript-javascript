@@ -27,7 +27,10 @@ export const getNamespacesFromAddress = async (address: string,
             .toPromise()
 
         const namespaceIds = namespaceInfo.map(nsInfo => nsInfo.id)
-        const namespaceNames = await namespaceHttp.getNamespacesName(namespaceIds).toPromise()
+        const namespaceNames = namespaceIds.length
+            ? await namespaceHttp.getNamespacesName(namespaceIds).toPromise()
+            : []
+
         return namespaceInfo.map(nsInfo => AppNamespace.fromNamespaceInfo(nsInfo, namespaceNames))
     } catch (error) {
         throw new Error(error)

@@ -14,10 +14,6 @@
           :class="['name', $route.path === '/multisigCosign' ?'active':'','pointer']"
           @click="$router.push('multisigCosign')"
         >{{$t('cosign_transactions')}}</span>
-        <span
-          :class="['name', $route.path === '/multisigMap' ?'active':'','pointer']"
-          @click="$router.push('multisigMap')"
-        >{{$t('map')}}</span>
       </span>
     </div>
 

@@ -1,11 +1,9 @@
 import {Store} from 'vuex'
 import {
     Account,
-    Crypto,
     NetworkType,
     SimpleWallet,
     Password,
-    WalletAlgorithm,
     Listener,
     AccountHttp,
     Address,
@@ -20,14 +18,17 @@ import {
     UInt64,
     EncryptedPrivateKey,
     PersistentDelegationRequestTransaction,
+    MultisigHttp,
+    PublicAccount,
 } from 'nem2-sdk'
 import CryptoJS from 'crypto-js'
 import {filter, mergeMap} from 'rxjs/operators'
 import {Message, networkConfig, defaultNetworkConfig} from "@/config"
-import {localRead, localSave, createSubWalletByPathNumber, getPath} from "@/core/utils"
+import {localRead, localSave, getAccountFromPathNumber, getPath} from "@/core/utils"
 import {AppAccounts, CreateWalletType} from "@/core/model"
 import {AppState, RemoteAccount} from './types'
 import {Log} from './Log'
+import {FormattedTransaction} from './FormattedTransaction'
 const {DEFAULT_LOCK_AMOUNT} = defaultNetworkConfig
 const {EMPTY_LINKED_ACCOUNT_KEY} = networkConfig
 
@@ -53,15 +54,11 @@ export class AppWallet {
     linkedAccountKey: string
     remoteAccount: RemoteAccount | null
 
-    generateWalletTitle(createType: string, coinType: string, netType: string) {
-        return `${createType}-${coinType}-${netType}`
-    }
-
     createFromPrivateKey(name: string,
-                         password: Password,
-                         privateKey: string,
-                         networkType: NetworkType,
-                         store: Store<AppState>): AppWallet {
+        password: Password,
+        privateKey: string,
+        networkType: NetworkType,
+        store: Store<AppState>): AppWallet {
         try {
             this.simpleWallet = SimpleWallet.createFromPrivateKey(name, password, privateKey, networkType)
             this.name = name
@@ -84,10 +81,10 @@ export class AppWallet {
         networkType: NetworkType,
         store: Store<AppState>): AppWallet {
         try {
-            const accountName = store.state.account.accountName
-            let accountMap = localRead('accountMap') === '' ? {} : JSON.parse(localRead('accountMap'))
+            const accountName = store.state.account.currentAccount.name
+            const accountMap = localRead('accountMap') === '' ? {} : JSON.parse(localRead('accountMap'))
             const mnemonic = AppAccounts().decryptString(accountMap[accountName].seed, password.value)
-            const account = createSubWalletByPathNumber(mnemonic, pathNumber)
+            const account = getAccountFromPathNumber(mnemonic, pathNumber, networkType)
             this.simpleWallet = SimpleWallet.createFromPrivateKey(name, password, account.privateKey, networkType)
             this.name = name
             this.address = this.simpleWallet.address.plain()
@@ -105,7 +102,6 @@ export class AppWallet {
         }
     }
 
-    // TODO USE ACCOUNT NETWORK TYPE
     createFromMnemonic(
         name: string,
         password: Password,
@@ -113,9 +109,9 @@ export class AppWallet {
         networkType: NetworkType,
         store: Store<AppState>): AppWallet {
         try {
-            const accountName = store.state.account.accountName
+            const accountName = store.state.account.currentAccount.name
             const accountMap = localRead('accountMap') === '' ? {} : JSON.parse(localRead('accountMap'))
-            const account = createSubWalletByPathNumber(mnemonic, 0)
+            const account = getAccountFromPathNumber(mnemonic, 0, networkType)
             this.simpleWallet = SimpleWallet.createFromPrivateKey(name, password, account.privateKey, networkType)
             this.name = name
             this.address = this.simpleWallet.address.plain()
@@ -159,11 +155,11 @@ export class AppWallet {
     }
 
     createFromKeystore(name: string,
-                       password: Password,
-                       keystorePassword: Password,
-                       keystoreStr: string,
-                       networkType: NetworkType,
-                       store: Store<AppState>): AppWallet {
+        password: Password,
+        keystorePassword: Password,
+        keystoreStr: string,
+        networkType: NetworkType,
+        store: Store<AppState>): AppWallet {
         try {
             this.name = name
             this.networkType = networkType
@@ -192,17 +188,8 @@ export class AppWallet {
             const _password = new Password(password)
             const {encryptedKey, iv} = this.remoteAccount.simpleWallet.encryptedPrivateKey
             return new EncryptedPrivateKey(encryptedKey, iv).decrypt(_password).toUpperCase()
-        } catch(error) {
-            throw new Error(error)
-        }
-    }
-
-    getMnemonic(password: Password): string {
-        if (this.encryptedMnemonic === undefined) throw new Error('This wallet has no encrypted mnemonic')
-        try {
-            return AppAccounts().decryptString(this.encryptedMnemonic, password.value)
         } catch (error) {
-            throw new Error('Could not decrypt the mnemonic')
+            throw new Error(error)
         }
     }
 
@@ -230,7 +217,7 @@ export class AppWallet {
     }
 
     addNewWalletToList(store: Store<AppState>): void {
-        const accountName = store.state.account.accountName
+        const accountName = store.state.account.currentAccount.name
         const accountMap = localRead('accountMap') === ''
             ? {} : JSON.parse(localRead('accountMap'))
         const newActiveWalletAddress = this.address
@@ -253,7 +240,7 @@ export class AppWallet {
 
     delete(store: Store<AppState>, that: any) {
         const list = [...store.state.app.walletList]
-        const accountName = store.state.account.accountName
+        const accountName = store.state.account.currentAccount.name
         const accountMap = localRead('accountMap') === ''
             ? {} : JSON.parse(localRead('accountMap'))
 
@@ -276,13 +263,12 @@ export class AppWallet {
         that.$Notice.success({
             title: that['$t']('Delete_wallet_successfully') + '',
         })
-        // this.$emit('hasWallet')
     }
 
 
     static updateActiveWalletAddress(newActiveWalletAddress: string, store: Store<AppState>) {
         const walletList = store.state.app.walletList
-        const accountName = store.state.account.accountName
+        const accountName = store.state.account.currentAccount.name
         const accountMap = localRead('accountMap') === ''
             ? {} : JSON.parse(localRead('accountMap'))
 
@@ -321,9 +307,9 @@ export class AppWallet {
      * @param privateKey false in the case of new account creation
      * @param store 
      */
-    createAndStoreRemoteAccount(  password: string,
-                                                privateKey: string | false,
-                                                store: Store<AppState>
+    createAndStoreRemoteAccount(password: string,
+        privateKey: string | false,
+        store: Store<AppState>
     ): string {
         if (!this.checkPassword(password)) throw new Error('The password does not match the wallet password')
         const _password = new Password(password)
@@ -334,7 +320,7 @@ export class AppWallet {
 
         const {publicKey} = account
         const _privateKey = account.privateKey
-        if(this.linkedAccountKey && this.linkedAccountKey !== publicKey) {
+        if (this.linkedAccountKey && this.linkedAccountKey !== publicKey) {
             throw new Error('The public key is not matching the current linked account key')
         }
 
@@ -343,7 +329,7 @@ export class AppWallet {
             simpleWallet: SimpleWallet
                 .createFromPrivateKey('remote account', _password, _privateKey, this.networkType),
         }
-        
+
         this.updateWallet(store)
         return _privateKey
     }
@@ -369,7 +355,7 @@ export class AppWallet {
 
 
     updateWallet(store: Store<AppState>) {
-        const accountName = store.state.account.accountName
+        const accountName = store.state.account.currentAccount.name
         const accountMap = localRead('accountMap') === '' ? {} : JSON.parse(localRead('accountMap'))
         const localData: any[] = accountMap[accountName].wallets
         if (!localData.length) throw new Error('error at update wallet, no wallets in storage')
@@ -387,7 +373,7 @@ export class AppWallet {
 
     async setMultisigStatus(node: string, store: Store<AppState>): Promise<void> {
         try {
-            const multisigAccountInfo = await new AccountHttp(node)
+            const multisigAccountInfo = await new MultisigHttp(node)
                 .getMultisigAccountInfo(Address.createFromRawAddress(this.address)).toPromise()
             store.commit('SET_MULTISIG_ACCOUNT_INFO', {address: this.address, multisigAccountInfo})
             store.commit('SET_MULTISIG_LOADING', false)
@@ -426,10 +412,7 @@ export class AppWallet {
 
         new TransactionHttp(node).announceAggregateBondedCosignature(signedTransaction).subscribe(
             _ => {
-                that.$store.commit('POP_TRANSACTION_TO_COSIGN_BY_HASH', {
-                    publicKey: signedTransaction.signerPublicKey,
-                    hash: signedTransaction.parentHash,
-                })
+                that.$store.commit('POP_TRANSACTION_TO_COSIGN_BY_HASH', signedTransaction.parentHash)
                 that.$Notice.success({title: message})
             },
             (error) => {
@@ -467,7 +450,7 @@ export class AppWallet {
         const transactionHttp = new TransactionHttp(node)
         const listener = new Listener(node.replace('http', 'ws'), WebSocket)
         const message = that.$t(Message.SUCCESS)
-        new Log('signedTransaction', { signedTransaction, signedLock }).create(that.$store)
+        new Log('signedTransaction', {signedTransaction, signedLock}).create(that.$store)
 
         listener.open().then(() => {
             transactionHttp
@@ -492,36 +475,16 @@ export class AppWallet {
                     },
                 )
         }).catch((error) => {
-            new Log('announceBonded -> error', { signedTransaction, signedLock }).create(that.$store)
+            new Log('announceBonded -> error', {signedTransaction, signedLock}).create(that.$store)
             console.error('announceBonded -> error', error)
         })
-    }
-
-    // @TODO: review
-    // Remove if CheckPasswordDialog is made redundant
-    signAndAnnounceBonded = (password: Password,
-                             lockFee: number,
-                             transactions: AggregateTransaction[],
-                             store: Store<AppState>,
-                             that,) => {
-        const {node} = store.state.account
-
-        const {signedTransaction, signedLock} = this.getSignedLockAndAggregateTransaction(
-            transactions[0],
-            lockFee,
-            password.value,
-            store,
-        )
-
-        this.announceBonded(signedTransaction, signedLock, node, that)
     }
 
     getSignedLockAndAggregateTransaction(
         aggregateTransaction: AggregateTransaction,
         fee: number,
         password: string,
-        store: Store<AppState>):
-        {
+        store: Store<AppState>): {
             signedTransaction: SignedTransaction,
             signedLock: SignedTransaction,
         } {
@@ -555,18 +518,22 @@ export class AppWallet {
             const _password = new Password(password)
             const delegatedPrivateKey = this.getRemoteAccountPrivateKey(password)
             const accountPrivateKey = this.getAccount(_password).privateKey
-    
+
             return PersistentDelegationRequestTransaction
                 .createPersistentDelegationRequestTransaction(
-                        deadline,
-                        delegatedPrivateKey,
-                        recipientPublicKey,
-                        accountPrivateKey,
-                        this.networkType,
-                        feeAmount,
-                    );
+                    deadline,
+                    delegatedPrivateKey,
+                    recipientPublicKey,
+                    accountPrivateKey,
+                    this.networkType,
+                    feeAmount,
+                );
         } catch (error) {
             throw new Error(error)
         }
+    }
+
+    get publicAccount(): PublicAccount {
+        return PublicAccount.createFromPublicKey(this.publicKey, this.networkType)
     }
 }

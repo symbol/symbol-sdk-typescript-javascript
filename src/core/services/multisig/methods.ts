@@ -1,13 +1,13 @@
 import {Store} from 'vuex'
 import {AppState} from '@/core/model'
-import {Address, AccountHttp} from 'nem2-sdk'
+import {Address, MultisigHttp} from 'nem2-sdk'
 
 export const getMultisigAccountMultisigAccountInfo = async (publicKey: string, store: Store<AppState>) => {
     const {node, wallet} = store.state.account
     const accountAddress = Address.createFromPublicKey(publicKey, wallet.networkType).plain()
 
     try {
-        const multisigAccountInfo = await new AccountHttp(node)
+        const multisigAccountInfo = await new MultisigHttp(node)
             .getMultisigAccountInfo(Address.createFromRawAddress(accountAddress))
             .toPromise()
 

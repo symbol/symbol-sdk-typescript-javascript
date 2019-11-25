@@ -8,7 +8,7 @@ import {networkConfig, formDataConfig, DEFAULT_FEES, FEE_GROUPS} from "@/config"
 import {getAbsoluteMosaicAmount, formatAddress, cloneData} from '@/core/utils'
 import {AppNamespace, StoreAccount, AppInfo, AppWallet, DefaultFee, LockParams} from "@/core/model"
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction, signTransaction} from '@/core/services'
-import {standardFields} from "@/core/validation"
+import {validation} from "@/core/validation"
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 @Component({
@@ -31,7 +31,7 @@ export class SubNamespaceTs extends Vue {
     formItems = cloneData(formDataConfig.subNamespaceForm)
     namespaceGracePeriodDuration = networkConfig.namespaceGracePeriodDuration
     formatAddress = formatAddress
-    standardFields = standardFields
+    validation = validation
 
     get wallet(): AppWallet {
         return this.activeAccount.wallet

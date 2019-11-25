@@ -27,11 +27,12 @@
       </div>
     </div>
     <CheckPasswordDialog
-            :showCheckPWDialog="showCheckPWDialog"
-            :isOnlyCheckPassword="true"
-            @closeCheckPWDialog="closeCheckPWDialog"
-            @checkEnd="checkEnd"
-    ></CheckPasswordDialog>
+      v-if="showCheckPWDialog"
+      :visible="showCheckPWDialog"
+      :returnPassword="true"
+      @close="close"
+      @passwordValidated="passwordValidated"
+    />
   </div>
 </template>
 

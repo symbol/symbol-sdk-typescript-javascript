@@ -1,6 +1,6 @@
 <template>
   <div class="walletSwitchWrap">
-    <div class="walletSwitchHead ">
+    <div class="walletSwitchHead">
       <p class="tit">{{$t('Wallet_management')}}</p>
     </div>
 
@@ -17,7 +17,8 @@
                 <p class="walletName">{{item.name}}</p>
                 <p class="walletAmount overflow_ellipsis">
                   {{ item.balance ? formatNumber(item.balance) : 0 }}
-                  &nbsp;<span class="tails">{{ networkCurrency.ticker }}</span>
+                  &nbsp;
+                  <span class="tails">{{ networkCurrency.ticker }}</span>
                 </p>
               </div>
             </Col>
@@ -26,18 +27,24 @@
                 <p class="walletTypeTxt">{{isMultisig(item.address) ? $t('Public_account') : ''}}</p>
                 <div class="options">
                   <Poptip placement="bottom">
-                    <img src="@/common/img/wallet/moreActive.png">
+                    <img src="@/common/img/wallet/moreActive.png" />
                     <div slot="content">
                       <p
-                              class="optionItem"
-                              @click.stop="walletToDelete = item; showDeleteDialog = true">
-                        <i><img src="@/common/img/wallet/delete.png"></i>
+                        class="optionItem"
+                        @click.stop="walletToDelete = item; showDeleteDialog = true"
+                      >
+                        <i>
+                          <img src="@/common/img/wallet/delete.png" />
+                        </i>
                         <span>{{$t('delete')}}</span>
                       </p>
                       <p
-                              class="optionItem"
-                              @click.stop="walletToUpdate = item; showUpdateDialog = true">
-                        <i><img src="@/common/img/setting/settingEditNodeHover.png"></i>
+                        class="optionItem"
+                        @click.stop="walletToUpdate = item; showUpdateDialog = true"
+                      >
+                        <i>
+                          <img src="@/common/img/setting/settingEditNodeHover.png" />
+                        </i>
                         <span class="green">{{$t('update_wallet_name')}}</span>
                       </p>
                     </div>
@@ -61,36 +68,34 @@
       </Row>
     </div>
     <TheWalletDelete
-            :showCheckPWDialog="showDeleteDialog"
-            :wallet-to-delete="walletToDelete"
-            @closeCheckPWDialog="closeDeleteDialog"
-            @on-cancel="showCheckPWDialog = false"
+      :showCheckPWDialog="showDeleteDialog"
+      :wallet-to-delete="walletToDelete"
+      @closeCheckPWDialog="closeDeleteDialog"
+      @on-cancel="showCheckPWDialog = false"
     />
     <TheWalletUpdate
-            :showUpdateDialog="showUpdateDialog"
-            :walletToUpdate="walletToUpdate"
-            @closeUpdateDialog="closeUpdateDialog"
-            @on-cancel="showUpdateDialog = false"
+      :showUpdateDialog="showUpdateDialog"
+      :walletToUpdate="walletToUpdate"
+      @closeUpdateDialog="closeUpdateDialog"
+      @on-cancel="showUpdateDialog = false"
     />
     <CheckPasswordDialog
-            :showCheckPWDialog="showCheckPWDialog"
-            :isOnlyCheckPassword="true"
-            @closeCheckPWDialog="closeCheckPWDialog"
-            @checkEnd="checkEnd"
-    ></CheckPasswordDialog>
+      v-if="showCheckPWDialog"
+      :visible="showCheckPWDialog"
+      :returnPassword="true"
+      @close="showCheckPWDialog = false"
+      @passwordValidated="passwordValidated"
+    />
   </div>
 </template>
 
 <script lang="ts">
-    import './WalletSwitch.less'
-    //@ts-ignore
-    import {WalletSwitchTs} from '@/views/wallet/wallet-switch/WalletSwitchTs.ts'
+import "./WalletSwitch.less";
+//@ts-ignore
+import { WalletSwitchTs } from "@/views/wallet/wallet-switch/WalletSwitchTs.ts";
 
-    export default class WalletSwitch extends WalletSwitchTs {
-
-    }
+export default class WalletSwitch extends WalletSwitchTs {}
 </script>
 
 <style scoped>
-
 </style>

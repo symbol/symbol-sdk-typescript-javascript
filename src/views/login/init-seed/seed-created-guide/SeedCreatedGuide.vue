@@ -69,7 +69,7 @@
         </Row>
       </div>
       <div class="buttons">
-        <Button v-focus class="next" type="success" @click="toWalletPage()">{{$t('complete')}}</Button>
+        <Button v-focus class="next" type="success" @click="$router.push('dashBoard')">{{$t('complete')}}</Button>
       </div>
     </div>
   </div>

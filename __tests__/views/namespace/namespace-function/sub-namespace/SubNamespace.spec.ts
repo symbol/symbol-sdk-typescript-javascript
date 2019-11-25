@@ -7,7 +7,7 @@ import VeeValidate from 'vee-validate'
 import SubNamespace from '@/views/namespace/namespace-function/sub-namespace/SubNamespace.vue'
 import {accountMutations, accountState} from '@/store/account'
 import {appMutations, appState} from '@/store/app'
-import {NETWORK_PARAMS, veeValidateConfig} from "@/core/validation"
+import {veeValidateConfig} from "@/core/validation"
 import VueRx from "vue-rx"
 import {DEFAULT_FEES, FEE_GROUPS, FEE_SPEEDS} from "@/config"
 import {

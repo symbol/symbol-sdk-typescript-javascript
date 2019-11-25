@@ -1,32 +1,25 @@
 import {Component, Vue, Prop, Watch, Inject} from 'vue-property-decorator'
-import {standardFields} from '@/core/validation'
 
 @Component
 export class FormInputTs extends Vue {
     @Prop() fieldName!: string
     @Prop() formModel!: object
+    @Prop({default: ''}) hint1: string
+    @Prop({default: ''}) hint2: string
+    @Prop({default: ''}) label: string
+    @Prop({default: ''}) placeholder: string
+    @Prop({default: ''}) validation: any
+    @Prop({default: 'text'}) fieldType: string
 
     @Inject('$validator') public $validator!: any
     @Inject() validator!: any
 
     errors: any
     displayedError: string
-    hint1: string
-    hint2: string
-    label: string
-    placeholder: string
-    validation: any
-    fieldType: string
 
     constructor() {
         super()
         this.displayedError = ''
-        this.hint1 = standardFields[this.fieldName].hint[0] || ''
-        this.hint2 = standardFields[this.fieldName].hint[1] || ''
-        this.label = standardFields[this.fieldName].label || ''
-        this.placeholder = standardFields[this.fieldName].placeholder || ''
-        this.validation = standardFields[this.fieldName].validation || ''
-        this.fieldType = standardFields[this.fieldName].type || ''
     }
 
     created() {
@@ -40,7 +33,7 @@ export class FormInputTs extends Vue {
 
     get fieldError() {
         if (!this.errors) return ''
-        return this.errors.first(this.fieldName)
+        return this.$t(this.errors.first(this.fieldName))
     }
 
     @Watch('fieldError')

@@ -9,6 +9,7 @@ import {accountMutations, accountState} from '@/store/account'
 import {appMutations, appState} from '@/store/app'
 import {veeValidateConfig} from "@/core/validation"
 import VueRx from "vue-rx"
+import flushPromises from 'flush-promises'
 import {FEE_SPEEDS} from "@/config"
 import {
     MosaicSupplyChangeTransaction,
@@ -41,7 +42,7 @@ localVue.directive('focus', {
 // close warning
 config.logModifiedComponents = false
 
-describe('MonitorDashBoard', () => {
+describe('MosaicTransaction', () => {
     let store
     let wrapper
     let state
@@ -80,7 +81,7 @@ describe('MonitorDashBoard', () => {
     })
 
 
-    it('should create a normal aggregate transaction while all param is right ', () => {
+    it('should create a normal aggregate transaction while all params are right ', async () => {
         wrapper.setData({
             formItems: {
                 restrictable: false,
@@ -91,25 +92,29 @@ describe('MonitorDashBoard', () => {
                 permanent: true,
                 duration: 1000,
                 feeSpeed: FEE_SPEEDS.NORMAL,
-                multisigPublicKey: ''
+                multisigPublicKey: CosignWallet.publicKey
             }
         })
 
+        const signTransactionMock = jest.fn(x => x)
+        wrapper.vm.signTransaction = signTransactionMock
         wrapper.vm.submit()
+        await flushPromises()
 
-        const aggregateTransaction = wrapper.vm.transactionList[0]
-        const mosaicDefinitionTransaction = aggregateTransaction.innerTransactions[0]
-        const mosaicSupplyChangeTransaction = aggregateTransaction.innerTransactions[1]
+        const [{ transaction },] = signTransactionMock.mock.calls[0]
 
-        expect(aggregateTransaction).toBeInstanceOf(AggregateTransaction)
-        expect(aggregateTransaction.type).toBe(TransactionType.AGGREGATE_COMPLETE)
+        const mosaicDefinitionTransaction = transaction.innerTransactions[0]
+        const mosaicSupplyChangeTransaction = transaction.innerTransactions[1]
+
+        expect(transaction).toBeInstanceOf(AggregateTransaction)
+        expect(transaction.type).toBe(TransactionType.AGGREGATE_COMPLETE)
         expect(mosaicDefinitionTransaction).toBeInstanceOf(MosaicDefinitionTransaction)
         expect(mosaicSupplyChangeTransaction).toBeInstanceOf(MosaicSupplyChangeTransaction)
         expect(mosaicDefinitionTransaction.signer.publicKey).toBe(CosignWallet.publicKey)
         expect(mosaicSupplyChangeTransaction.signer.publicKey).toBe(CosignWallet.publicKey)
     })
 
-    it('should create an aggregate complete transaction while choose 1-of-1 multisig ',  () => {
+    it('should create an aggregate complete transaction while choose 1-of-1 multisig ',  async () => {
         wrapper.setData({
             formItems: {
                 restrictable: false,
@@ -126,6 +131,7 @@ describe('MonitorDashBoard', () => {
 
         store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', MultisigAccount.publicKey)
         wrapper.vm.submit()
+        await flushPromises()
 
         const aggregateTransaction = wrapper.vm.transactionList[0]
         const mosaicDefinitionTransaction = aggregateTransaction.innerTransactions[0]
@@ -139,7 +145,7 @@ describe('MonitorDashBoard', () => {
         expect(mosaicSupplyChangeTransaction.signer.publicKey).toBe(MultisigAccount.publicKey)
     })
 
-    it('should create an aggregate bonded transaction while choose 2-of-2 multisig ',  () => {
+    it('should create an aggregate bonded transaction while choose 2-of-2 multisig ',  async () => {
         wrapper.setData({
             formItems: {
                 restrictable: false,
@@ -150,12 +156,13 @@ describe('MonitorDashBoard', () => {
                 permanent: true,
                 duration: 1000,
                 feeSpeed: FEE_SPEEDS.NORMAL,
-                multisigPublicKey: MultisigAccount.publicKey
+                multisigPublicKey: Multisig2Account.publicKey
             }
         })
 
         store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', Multisig2Account.publicKey)
         wrapper.vm.submit()
+        await flushPromises()
 
         const aggregateTransaction = wrapper.vm.transactionList[0]
         const mosaicDefinitionTransaction = aggregateTransaction.innerTransactions[0]

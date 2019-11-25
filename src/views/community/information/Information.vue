@@ -75,12 +75,12 @@
         </div>
       </div>
     </div>
-    <CheckPWDialog
-            :isOnlyCheckPassword='true'
-            :showCheckPWDialog="showCheckPWDialog"
-            @closeCheckPWDialog="closeCheckPWDialog"
-            :transactionDetail="transactionDetail"
-            @checkEnd="checkEnd"/>
+    <CheckPasswordDialog
+      v-if="showCheckPWDialog"
+      :visible="showCheckPWDialog"
+      @close="close"
+      @passwordValidated="passwordValidated"
+    />
   </div>
 </template>
 

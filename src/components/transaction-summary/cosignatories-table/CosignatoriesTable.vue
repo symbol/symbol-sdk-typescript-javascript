@@ -5,34 +5,39 @@
       <span class="data_item name">{{ $t('cosignatory') }}</span>
     </div>
 
-    <div class=" table_body scroll">
+    <div
+      v-if="modifications.length"
+      class="table_body scroll flex-direction-column"
+    >
       <div
-        v-for="(co, index) in cosignatories"
+        v-for="({addOrRemove, cosignatory}, index) in modifications"
         :key="index"
+        class="modification-row"
       >
-        <span class="data_item overflow_ellipsis index">
-          {{co.modificationType === CosignatoryModificationAction.Add ? $t('Remove') : $t('Add') }}
-        </span>
-        <span class="index data_item overflow_ellipsis name">
-          {{co.cosignatoryPublicAccount.publicKey}}
-        </span>
+        <span class="data_item overflow_ellipsis index">{{ $t(`${addOrRemove}`) }}</span>
+        <span
+          class="index data_item overflow_ellipsis name"
+        >{{ cosignatory.address.pretty() }}</span>
       </div>
+    </div>
+
+    <div v-else class="no-data">
+      {{$t('no_data')}}
     </div>
 
   </div>
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from 'vue-property-decorator'
-    import { MultisigCosignatoryModification, CosignatoryModificationAction } from 'nem2-sdk'
-    
-    @Component
-    export default class CosignatoriesTable extends Vue {
-      CosignatoryModificationAction = CosignatoryModificationAction
-      
-      @Prop({ default: []}) cosignatories: MultisigCosignatoryModification[]
-    }
+import { mapState } from "vuex";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { CosignatoryModification } from "@/core/model";
+
+@Component
+export default class CosignatoriesTable extends Vue {
+  @Prop() modifications: CosignatoryModification[];
+}
 </script>
 <style scoped lang="less">
-  @import "CosignatoriesTable.less";
+@import "CosignatoriesTable.less";
 </style>

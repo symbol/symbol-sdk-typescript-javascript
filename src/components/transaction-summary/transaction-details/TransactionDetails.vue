@@ -3,7 +3,7 @@
     <TransactionInfoTemplate :dialogDetailMap="transaction.dialogDetailMap"></TransactionInfoTemplate>
     <!-- inner transaction -->
     <div class="inner-transaction-container" v-if="transaction.formattedInnerTransactions">
-      <span class=" title"> {{$t('inner_transaction')}}</span>
+      <span class=" info-title"> {{$t('inner')}}</span>
       <Collapse v-model="currentPanel">
         <div
                 v-for="(innerTransaction, index) in transaction.formattedInnerTransactions"

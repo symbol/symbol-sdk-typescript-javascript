@@ -26,7 +26,7 @@ export class GetNodePublicKeyTs extends Vue {
             const nodeInfo = await new NodeHttp(urlWithoutTrailingSlash).getNodeInfo().toPromise()
             this.nodePublicKey = nodeInfo.publicKey
         } catch (error) {
-            console.log("TCL: GetNodePublicKeyTs -> getNodePublicKey -> error", error)
+            console.error("GetNodePublicKeyTs -> getNodePublicKey -> error", error)
             this.nodePublicKey = "Nothing_was_found_at_this_address"
         }
     }

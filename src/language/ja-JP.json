@@ -618,7 +618,6 @@
     "The_wallet_terminal_will_use_the_HD_WALLET_protocol_to_provide_1": "このウォレット端末はHD-WALLETプロトコルを採用して、便利なウォレット管理に提供します。アカウントのデフォルトウォレットは助詞付きの財布になります。",
     "The_wallet_terminal_will_use_the_HD_WALLET_protocol_to_provide_2": "一つのアカウント、一つの種、一つのパスワードの原則に従います。",
     "The_wallet_terminal_will_use_the_HD_WALLET_protocol_to_provide_3": "一つのアカウントの下に複数のウォレットリストがあります。アカウントのパスワードで管理します。パスワードを忘れたら、ガイドを通してパスワードを管理できます。ウォレットを復元するための助数詞を入れます。プログラムの起動ページで他のアカウントに簡単に切り替えることができます。",
-    "The_wallet_terminal_will_use_the_HD_WALLET_protocol_to_provide": "このウォレット端末はHD-WALLETプロトコルを採用して、便利なウォレット管理に提供します。アカウントのデフォルトウォレットは助詞付きの財布になります。一つのアカウント、一つの種、一つのパスワードの原則に従います。一つのアカウントの下に複数のウォレットリストがあります。アカウントのパスワードで管理します。パスワードを忘れたら、ガイドを通してパスワードを管理できます。ウォレットを復元するための助数詞を入れます。プログラムの起動ページで他のアカウントに簡単に切り替えることができます。",
     "Account_name_already_exists": "アカウント名は既に存在します",
     "WLT_file": "WLTファイル（ハードウェアウォレット）",
     "Import_a_seed_file_from_a_WLT_file_or_hardware_wallet": "WLTファイルまたはハードウェアウォレットからフィードファイルをインポートします",
@@ -637,7 +636,6 @@
     "confirmations_height": "ブロック高を確認しました",
     "hash_deadline": "ハッシュ/期限",
     "transaction_record": "取引記録",
-    "import_mnemonic": "ニーモニックのインポート",
     "namespace_filter": "ネームスペースフィルタ",
     "namespace_expired": "期限切れネームスペース",
     "namespace_Not_expired": "期限切れではないネームスペース",
@@ -666,5 +664,7 @@
     "meta_data": "メタデータ",
     "node_exists_error": "ノードは既に存在します",
     "please_input_mosaic_and_amount": "モザイクと数量を入力してください",
-    "refresh": "更新"
+    "refresh": "更新",
+    "ADD": "追加",
+    "REMOVE": "減少"
 }

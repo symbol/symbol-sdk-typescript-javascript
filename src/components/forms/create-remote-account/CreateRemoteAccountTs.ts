@@ -1,19 +1,19 @@
-import { Vue, Component, Prop, Provide } from 'vue-property-decorator'
-import { mapState } from "vuex"
-import { StoreAccount, AppWallet } from '@/core/model'
-import { standardFields } from '@/core/validation'
+import {Vue, Component, Prop, Provide} from 'vue-property-decorator'
+import {mapState} from "vuex"
+import {StoreAccount, AppWallet} from '@/core/model'
+import {validation} from '@/core/validation'
 import CreationForm from './creation-form/CreationForm.vue'
 import ImportForm from './import-form/ImportForm.vue'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 
 @Component({
-  computed: { ...mapState({ activeAccount: 'account' }) },
-  components: { CreationForm, ImportForm, ErrorTooltip }
+  computed: {...mapState({activeAccount: 'account'})},
+  components: {CreationForm, ImportForm, ErrorTooltip}
 })
 export class CreateRemoteAccountTs extends Vue {
   @Provide() validator: any = this.$validator
   activeAccount: StoreAccount
-  standardFields = standardFields
+  validation = validation
   importAccount: boolean = false
   showPrivateKey: boolean = false
   showPasswordPrompt = false
@@ -21,10 +21,10 @@ export class CreateRemoteAccountTs extends Vue {
   privateKey: string = ''
   password: string = ''
 
-  @Prop({ default: false })
+  @Prop({default: false})
   visible: boolean
 
-  @Prop({ default: false })
+  @Prop({default: false})
   viewAccountPropertiesOnly: boolean
 
   get show(): boolean {
@@ -42,7 +42,7 @@ export class CreateRemoteAccountTs extends Vue {
   }
 
   get remoteAccountPublicKey(): string {
-    const { remoteAccount } = this.wallet
+    const {remoteAccount} = this.wallet
     if (!remoteAccount) return null
     return remoteAccount.publicKey
   }
@@ -57,12 +57,12 @@ export class CreateRemoteAccountTs extends Vue {
     this.privateKey = privateKey
     this.hideForms = true
   }
-  
+
   showPrivateKeyClicked(bool: boolean): void {
     if (!bool) {
       this.showPrivateKey = false
       return
-    }  
+    }
 
     if (this.privateKey === '') {
       this.showPasswordPrompt = true
@@ -74,13 +74,13 @@ export class CreateRemoteAccountTs extends Vue {
 
   getRemoteAccountPrivateKey() {
     this.$validator
-    .validate()
-    .then((valid) => {
-      if (!valid) return
-      this.privateKey = this.wallet.getRemoteAccountPrivateKey(this.password)
-      this.showPasswordPrompt = false
-      this.showPrivateKey = true
-    })
+      .validate()
+      .then((valid) => {
+        if (!valid) return
+        this.privateKey = this.wallet.getRemoteAccountPrivateKey(this.password)
+        this.showPasswordPrompt = false
+        this.showPrivateKey = true
+      })
   }
 
   created() {

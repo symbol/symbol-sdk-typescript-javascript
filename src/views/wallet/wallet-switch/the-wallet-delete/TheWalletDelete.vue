@@ -40,16 +40,5 @@
 <script lang="ts">
     import "./TheWalletDelete.less"
     import {TheWalletDeleteTs} from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDeleteTs.ts'
-
-    /**
-     @Prop: showCheckPWDialog
-     @return: closeCheckPWDialog()
-     @return: checkEnd(privatekey:string)
-     */
-
-    export default class TheWalletDelete extends TheWalletDeleteTs {
-    }
+    export default class TheWalletDelete extends TheWalletDeleteTs { }
 </script>
-
-<style scoped>
-</style>

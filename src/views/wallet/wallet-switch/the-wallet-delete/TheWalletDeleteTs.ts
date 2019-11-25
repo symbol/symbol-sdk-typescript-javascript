@@ -1,8 +1,7 @@
-import {Password} from 'nem2-sdk'
 import {Message} from "@/config/index.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {mapState} from 'vuex'
-import {AppAccount, AppAccounts, AppWallet, StoreAccount} from "@/core/model"
+import {AppAccounts, AppWallet, StoreAccount} from "@/core/model"
 
 @Component({
     computed: {
@@ -24,7 +23,6 @@ export class TheWalletDeleteTs extends Vue {
     @Prop()
     walletToDelete: AppWallet
 
-
     get getWallet() {
         return this.activeAccount.wallet
     }
@@ -38,12 +36,10 @@ export class TheWalletDeleteTs extends Vue {
         }
     }
 
-    get accountName(){
-        return this.activeAccount.accountName
-    }
     get walletList() {
         return this.app.walletList
     }
+
     accountQuit() {
         this.$store.commit('RESET_APP')
         this.$store.commit('RESET_ACCOUNT')
@@ -58,7 +54,7 @@ export class TheWalletDeleteTs extends Vue {
 
     deleteByPassword() {
         if(this.walletList.length == 1) {
-           AppAccounts().deleteAccount(this.accountName)
+           AppAccounts().deleteAccount(this.activeAccount.currentAccount.name)
             this.accountQuit()
             return
         }

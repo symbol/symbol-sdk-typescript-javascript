@@ -10,7 +10,7 @@ import {
 } from '@/core/utils'
 import {StoreAccount, AppInfo, DefaultFee, AppWallet, LockParams} from "@/core/model"
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
-import {standardFields} from "@/core/validation"
+import {validation} from "@/core/validation"
 import DisabledForms from "@/components/disabled-forms/DisabledForms.vue"
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 import {signTransaction} from '@/core/services/transactions';
@@ -34,7 +34,7 @@ export class RootNamespaceTs extends Vue {
     transactionList = []
     formItems = cloneData(formDataConfig.rootNamespaceForm)
     formatAddress = formatAddress
-    standardFields: object = standardFields
+    validation = validation
 
     get wallet(): AppWallet {
         return this.activeAccount.wallet

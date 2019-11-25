@@ -1,6 +1,6 @@
 import {mapState} from 'vuex'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {formatNumber, localRead, getPath} from '@/core/utils'
+import {formatNumber, localRead} from '@/core/utils'
 import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
 import {CreateWalletType} from "@/core/model/CreateWalletType"
 import {seedWalletTitle, walletStyleSheetType} from '@/config/view/wallet.ts'
@@ -52,8 +52,8 @@ export class WalletSwitchTs extends Vue {
         return this.wallet.address
     }
 
-    get accountName() {
-        return this.activeAccount.accountName
+    get currentAccount() {
+        return this.activeAccount.currentAccount
     }
 
     get networkCurrency() {
@@ -64,10 +64,6 @@ export class WalletSwitchTs extends Vue {
         const multisigAccountInfo: MultisigAccountInfo = this.activeAccount.multisigAccountInfo[address]
         if (!multisigAccountInfo) return false
         return multisigAccountInfo.cosignatories.length > 0
-    }
-
-    closeCheckPWDialog() {
-        this.showCheckPWDialog = false
     }
 
     closeUpdateDialog() {
@@ -107,8 +103,8 @@ export class WalletSwitchTs extends Vue {
     }
 
     toCreate() {
-        const {accountName} = this
-        const walletList = JSON.parse(localRead('accountMap'))[accountName].wallets
+        const {currentAccount} = this
+        const walletList = JSON.parse(localRead('accountMap'))[currentAccount.name].wallets
         // get sorted path list
         const seedPathList = walletList.filter(item => item.path).map(item => item.path[item.path.length - 8]).sort()
         // check if seed wallets >= 10
@@ -121,19 +117,18 @@ export class WalletSwitchTs extends Vue {
         this.showCheckPWDialog = true
     }
 
-    checkEnd(password) {
+    passwordValidated(password) {
         if (!password) return
-        const {accountName, pathToCreate} = this
-        const currentNetType = JSON.parse(localRead('accountMap'))[accountName].currentNetType
+        const {pathToCreate, currentAccount} = this
+        const networkType = currentAccount.networkType
         try {
             new AppWallet().createFromPath(
                 seedWalletTitle + pathToCreate,
                 new Password(password),
                 pathToCreate,
-                currentNetType,
+                networkType,
                 this.$store,
             )
-            this.closeCheckPWDialog()
         } catch (error) {
             throw new Error(error)
         }

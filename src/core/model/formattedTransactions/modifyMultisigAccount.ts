@@ -1,4 +1,4 @@
-import {FormattedTransaction, AppState} from '@/core/model'
+import {FormattedTransaction, AppState, CosignatoryModifications} from '@/core/model'
 import {getRelativeMosaicAmount} from '@/core/utils'
 import {MultisigAccountModificationTransaction} from 'nem2-sdk'
 import {Store} from 'vuex'
@@ -19,7 +19,7 @@ export class FormattedModifyMultisigAccount extends FormattedTransaction {
             'hash': this.txHeader.hash,
             'minApprovalDelta': tx.minApprovalDelta,
             'maxRemovalDelta': tx.minRemovalDelta,
-            'cosignatories': tx.modifications,
+            'cosignatories': CosignatoryModifications.createFromMultisigAccountModificationTransaction(tx),
           }
     }
 }

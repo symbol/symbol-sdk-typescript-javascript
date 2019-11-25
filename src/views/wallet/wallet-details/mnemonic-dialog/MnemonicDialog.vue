@@ -36,7 +36,7 @@
                 v-model="password"
                 type="password"
                 data-vv-name="password"
-                v-validate="standardFields.previousPassword.validation"
+                v-validate="validation.previousPassword"
                 :data-vv-as="$t('password')"
               />
             </ErrorTooltip>

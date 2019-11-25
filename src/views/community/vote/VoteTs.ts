@@ -1,6 +1,6 @@
 import PieChart from './PieChart.vue'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
+import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {alphabet, Message} from '@/config/index.ts'
 import {vote} from '@/core/api'
 import {mapState} from "vuex"
@@ -12,7 +12,7 @@ import {StoreAccount} from '@/core/model'
 @Component({
         components: {
             PieChart,
-            CheckPWDialog
+            CheckPasswordDialog
         },
         computed: {
             ...mapState({
@@ -103,11 +103,11 @@ export class VoteTs extends Vue {
         this.formItem.starttime = e
     }
 
-    closeCheckPWDialog() {
+    close() {
         // TODO
     }
 
-    checkEnd(flag) {
+    passwordValidated(flag) {
         if (flag) {
             const {sigleSelection, address} = this
             const voteId = this.currentVote.id

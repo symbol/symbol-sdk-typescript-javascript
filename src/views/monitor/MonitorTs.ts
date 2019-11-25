@@ -75,7 +75,7 @@ export class MonitorTs extends Vue {
     }
 
     get accountName() {
-        return this.activeAccount.accountName
+        return this.activeAccount.currentAccount.name
     }
 
     get routes() {

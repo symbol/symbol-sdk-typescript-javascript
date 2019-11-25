@@ -17,21 +17,21 @@ export class AppAccount {
     password: string
     hint: string
     seed: string
-    currentNetType: NetworkType
+    networkType: NetworkType
 
     constructor(
         accountName: string,
         wallets: Array<any>,
         password: string,
         hint: string,
-        currentNetType: NetworkType,
+        networkType: NetworkType,
         seed?: string
     ) {
         this.accountName = accountName
         this.wallets = wallets
         this.password = password
         this.hint = hint
-        this.currentNetType = currentNetType
+        this.networkType = networkType
         this.seed = seed ? seed : ''
     }
 

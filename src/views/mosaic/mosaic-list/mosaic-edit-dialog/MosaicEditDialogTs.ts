@@ -1,24 +1,26 @@
-import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {Component, Vue, Prop, Provide, Watch} from 'vue-property-decorator'
 import {mapState} from "vuex"
-import {Password, NetworkType, MosaicSupplyChangeTransaction, Deadline, UInt64, MosaicId} from 'nem2-sdk'
-import {Message, networkConfig, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config/index.ts"
-import {cloneData, getAbsoluteMosaicAmount} from '@/core/utils'
+import {MosaicSupplyChangeTransaction, Deadline, UInt64, MosaicId, MosaicSupplyChangeAction} from 'nem2-sdk'
+import {DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
+import {cloneData, getAbsoluteMosaicAmount, formatNumber} from '@/core/utils'
 import {AppWallet, AppMosaic, DefaultFee, StoreAccount} from "@/core/model"
+import {signTransaction} from '@/core/services'
+import {validation} from '@/core/validation'
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
+import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 
 @Component({
     computed: {
         ...mapState({activeAccount: 'account'})
     },
-    components:{
-        DisabledForms
-    }
+    components: {DisabledForms, ErrorTooltip}
 })
 export class MosaicEditDialogTs extends Vue {
+    @Provide() validator: any = this.$validator
+    signTransaction = signTransaction
     activeAccount: StoreAccount
-    isCompleteForm = false
-    changedSupply = 0
-    totalSupply = networkConfig.maxMosaicAtomicUnits
+    formatNumber = formatNumber
+    validation = validation
     formItems = cloneData(formDataConfig.mosaicEditForm)
 
     @Prop()
@@ -41,16 +43,21 @@ export class MosaicEditDialogTs extends Vue {
         return this.itemMosaic.mosaicInfo.supply.compact()
     }
 
+    get newSupply(): number {
+        const {supply} = this
+        const {delta} = this.formItems
+        if (!delta) return supply
+        const _delta = parseInt(delta, 10)
+        if (isNaN(_delta)) return supply
+
+        const newSupply = this.formItems.supplyType === MosaicSupplyChangeAction.Increase
+            ? supply + _delta : supply - _delta
+
+        return isNaN(newSupply) ? supply : newSupply
+    }
+
     get wallet(): AppWallet {
         return this.activeAccount.wallet
-    }
-
-    get generationHash(): string {
-        return this.activeAccount.generationHash
-    }
-
-    get node(): string {
-        return this.activeAccount.node
     }
 
     get networkCurrency() {
@@ -58,11 +65,7 @@ export class MosaicEditDialogTs extends Vue {
     }
 
     get mosaicId(): string {
-      return this.itemMosaic.hex
-    }
-
-    get networkType(): NetworkType {
-        return this.wallet.networkType
+        return this.itemMosaic.hex
     }
 
     get defaultFees(): DefaultFee[] {
@@ -71,108 +74,57 @@ export class MosaicEditDialogTs extends Vue {
 
     get feeAmount(): number {
         const {feeSpeed} = this.formItems
-        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        const feeAmount = this.defaultFees.find(({speed}) => feeSpeed === speed).value
         return getAbsoluteMosaicAmount(feeAmount, this.networkCurrency.divisibility)
     }
 
-    mosaicEditDialogCancel() {
-        this.initForm()
-        this.show = false
-    }
-
-    // @TODO: make get newSupply() instead
-    changeSupply() {
-        this.formItems.delta = Math.abs(this.formItems.delta)
-        let supply = 0
-        if (this.formItems.supplyType === 1) {
-            supply = Number(this.formItems.delta) + Number(this.supply)
-            if (supply > this.totalSupply * Math.pow(10, this.formItems['_divisibility'])) {
-                supply = this.totalSupply * Math.pow(10, this.formItems['_divisibility'])
-                this.formItems.delta = supply - this.supply
-            }
-        } else {
-            supply = this.supply - this.formItems.delta
-            if (supply <= 0) {
-                supply = 0
-                this.formItems.delta = this.supply
-            }
-        }
-
-        this.changedSupply = supply
-    }
-
-    checkInfo() {
-        const {formItems} = this
-
-        if (formItems.delta === 0) {
-            this.$Notice.error({
-                title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
-            })
-            return false
-        }
-        if (formItems.password === '') {
-            this.$Notice.error({
-                title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
-            })
-            return false
-        }
-
-        if (formItems.password.length < 8) {
-            this.$Notice.error({
-                title: '' + Message.WRONG_PASSWORD_ERROR
-            })
-            return false
-        }
-
-        const validPassword = new AppWallet(this.wallet).checkPassword(formItems.password)
-
-        if (!validPassword) {
-            this.$Notice.error({
-                title: '' + Message.WRONG_PASSWORD_ERROR
-            })
-            return false
-        }
-        return true
-    }
-
     submit() {
-        if (!this.isCompleteForm) return
-        if (!this.checkInfo()) return
-        this.updateMosaic()
+        this.$validator
+            .validate()
+            .then((valid) => {
+                if (!valid) return
+                this.confirmViaTransactionConfirmation()
+            })
     }
 
-    updateMosaic() {
-        const {node, generationHash, feeAmount, mosaicId, networkType} = this
-        const password = new Password(this.formItems.password)
+    get transaction() {
+        const {feeAmount, mosaicId, wallet} = this
         const {delta, supplyType} = this.formItems
 
-        new AppWallet(this.wallet).signAndAnnounceNormal(
-            password,
-            node,
-            generationHash,
-            [
-                  MosaicSupplyChangeTransaction.create(
-                      Deadline.create(),
-                      new MosaicId(mosaicId),
-                      supplyType,
-                      UInt64.fromUint(delta),
-                      networkType,
-                      UInt64.fromUint(feeAmount)
-                  )
-            ],
-            this,
+        return MosaicSupplyChangeTransaction.create(
+            Deadline.create(),
+            new MosaicId(mosaicId),
+            supplyType,
+            UInt64.fromUint(delta),
+            wallet.networkType,
+            UInt64.fromUint(feeAmount)
         )
-
-        this.mosaicEditDialogCancel
     }
 
-    initForm() {
-        this.formItems = cloneData(formDataConfig.mosaicEditForm)
+    async confirmViaTransactionConfirmation() {
+        try {
+            this.show = false;
+
+            const {
+                success,
+                signedTransaction,
+                signedLock,
+            } = await this.signTransaction({
+                transaction: this.transaction,
+                store: this.$store,
+            })
+
+            if (success) {
+                new AppWallet(this.wallet).announceTransaction(signedTransaction, this.activeAccount.node, this.$root, signedLock)
+            }
+        } catch (error) {
+            console.error("MosaicEditDialogTs -> confirmViaTransactionConfirmation -> error", error)
+        }
     }
 
-    @Watch('formItems', {deep: true})
-    onFormItemChange() {
-        const {delta, password} = this.formItems
-        this.isCompleteForm = parseInt(delta.toString()) >= 0 && password !== ''
+    @Watch('newSupply')
+    onSelectedMosaicHexChange() {
+        /** Makes newSupply validation reactive */
+        this.$validator.validate('newSupply', this.newSupply)
     }
 }

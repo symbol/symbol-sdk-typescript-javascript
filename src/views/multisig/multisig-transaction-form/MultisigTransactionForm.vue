@@ -85,13 +85,10 @@
                     type="text"
                   />
                 </ErrorTooltip>
-                <span
-                  @click="addCosigner(CosignatoryModificationAction.Add)"
-                  class="add_button radius pointer"
-                >+</span>
+                <span @click="addCosigner(AddOrRemove.ADD)" class="add_button radius pointer">+</span>
                 <span
                   v-if="mode === MULTISIG_FORM_MODES.MODIFICATION"
-                  @click="addCosigner(CosignatoryModificationAction.Remove)"
+                  @click="addCosigner(AddOrRemove.REMOVE)"
                   class="delete_button radius pointer"
                 >-</span>
               </div>
@@ -105,7 +102,7 @@
                 style="width: 720px; text-align:center"
               >
                 <input
-                  v-model="formItems.modificationList.length"
+                  v-model="cosignatoryModifications.modifications.length"
                   data-vv-name="cosigners"
                   v-validate="validations.cosigners"
                   :data-vv-as="$t('cosigners')"
@@ -121,19 +118,18 @@
                 <div class="list_body scroll">
                   <div
                     class="please_add_address"
-                    v-if="formItems.modificationList.length == 0"
+                    v-if="!cosignatoryModifications.modifications.length"
                   >{{$t('The_action_list_is_empty')}}</div>
 
                   <div
                     class="list_item radius"
-                    v-for="(i,index) in formItems.modificationList"
+                    v-for="({addOrRemove, cosignatory}, index) in cosignatoryModifications.modifications"
                     :key="index"
                   >
-                    <span class="address_alias">{{i.cosignatoryPublicAccount.publicKey}}</span>
-                    <span class="action">
-                      {{ i.modificationAction == CosignatoryModificationAction.Add
-                      ? $t('add'):$t('cut_back') }}
-                    </span>
+                    <span class="address_alias">{{ cosignatory.address.pretty() }}</span>
+                    <span
+                      class="action"
+                    >{{ $t(`${addOrRemove}`) }}</span>
                     <img
                       class="delete pointer"
                       @click="removeCosigner(index)"
@@ -176,7 +172,7 @@
 </template>
 
 <script lang="ts">
-import { MultisigTransactionFormTs } from "@/views/multisig/multisig-transaction-form/MultisigTransactionFormTs.ts"
+import { MultisigTransactionFormTs } from "@/views/multisig/multisig-transaction-form/MultisigTransactionFormTs.ts";
 import "./MultisigTransactionForm.less";
 
 export default class MultisigTransactionForm extends MultisigTransactionFormTs {}

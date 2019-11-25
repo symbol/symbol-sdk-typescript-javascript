@@ -2,6 +2,12 @@ import {Endpoint} from '@/core/model'
 
 export const nodeListConfig: Endpoint[] = [
     {
+        value: 'http://test-api-01.us-west-1.nemtech.network:3000',
+        name: 'new testnet',
+        url: 'api-01.mt.ap-northeast-1.nemtech.network',
+        isSelected: true,
+    },
+    {
         value: 'http://api-01.mt.ap-northeast-1.nemtech.network:3000',
         name: 'northeast',
         url: 'api-01.mt.ap-northeast-1.nemtech.network',
@@ -17,7 +23,7 @@ export const nodeListConfig: Endpoint[] = [
         value: 'http://api-01.mt.eu-central-1.nemtech.network:3000',
         name: 'central',
         url: 'api-01.mt.eu-central-1.nemtech.network',
-        isSelected: true,
+        isSelected: false,
     },
     {
         value: 'http://api-01.mt.us-east-1.nemtech.network:3000',

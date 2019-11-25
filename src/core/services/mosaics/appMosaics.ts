@@ -7,6 +7,7 @@ import {
     AliasType,
     AddressAlias,
     EmptyAlias,
+    NamespaceHttp,
 } from 'nem2-sdk'
 import {
     FormattedTransaction,
@@ -69,7 +70,7 @@ export const AppMosaics = () => ({
         if (!toUpdate.length) return
 
         try {
-            const mosaicsWithName = await new MosaicHttp(node)
+            const mosaicsWithName = await new NamespaceHttp(node)
                 .getMosaicsNames(toUpdate)
                 .pipe(
                     flatMap(x => x),

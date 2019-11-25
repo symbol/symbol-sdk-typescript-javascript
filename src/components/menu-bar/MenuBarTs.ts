@@ -88,7 +88,7 @@ export class MenuBarTs extends Vue {
     }
 
     get accountName() {
-        return this.activeAccount.accountName
+        return this.activeAccount.currentAccount.name
     }
 
     set currentWalletAddress(newActiveWalletAddress) {

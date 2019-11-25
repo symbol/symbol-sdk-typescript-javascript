@@ -1,6 +1,5 @@
 import {Component, Vue} from 'vue-property-decorator'
 import AccountImportMnemonic from '@/views/login/init-seed/account-import-mnemonic/AccountImportMnemonic.vue'
-import AccountCreateMnemonic from '@/views/login/init-seed/account-create-mnemonic/AccountCreateMnemonic.vue'
 import AccountImportHardware from '@/views/login/init-seed/account-import-hardware/AccountImportHardware.vue'
 import SeedCreatedGuide from '@/views/login/init-seed/seed-created-guide/SeedCreatedGuide.vue'
 import {mapState} from "vuex"
@@ -13,7 +12,6 @@ import {createMnemonic} from "@/core/utils"
     components: {
         CheckPasswordDialog,
         AccountImportMnemonic,
-        AccountCreateMnemonic,
         AccountImportHardware,
         SeedCreatedGuide
     },
@@ -27,28 +25,14 @@ export class InitSeedTs extends Vue {
     activeAccount: StoreAccount
     pageIndex = 0
     createForm = {}
-    walletCreated = false
     navList = walletFnNavConfig
 
     get accountName() {
-        return this.activeAccount.accountName
-    }
-
-    closeCheckPWDialog() {
-        this.goToPage(1)
-    }
-
-    isCreated() {
-        this.walletCreated = true
-        this.updatePageIndex(-1)
+        return this.activeAccount.currentAccount.name
     }
 
     updatePageIndex(index) {
         this.pageIndex = index
-    }
-
-    closeCreated() {
-        this.walletCreated = false
     }
 
     toWalletDetails() {
@@ -63,8 +47,11 @@ export class InitSeedTs extends Vue {
         this.pageIndex = index
     }
 
-    checkEnd(password) {
-        if (!password) return
+    passwordValidated(password) {
+        if (!password) {
+            this.pageIndex = 1
+            return
+        } 
 
         const seed = createMnemonic()
         this.$store.commit('SET_MNEMONIC', AppAccounts().encryptString(seed, password))
@@ -76,13 +63,13 @@ export class InitSeedTs extends Vue {
         this.navList[0].active = false
     }
 
-    created() {
+    mounted() {
         if (this.$route.params.seed) {
             this.createForm = {
                 seed: this.$route.params.seed,
                 password: this.$route.params.password
             }
-            this.isCreated()
+            this.updatePageIndex(-1)
             return
         }
         const initType = Number(this.$route.params.initType) || 0

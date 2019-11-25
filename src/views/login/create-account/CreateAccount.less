@@ -31,17 +31,17 @@
 
       .title_describe {
         margin-top: 15px;
-        width: 1340px;
-        font-size: 20px;
+        width: 650px;
+        font-size: 16px;
         font-weight: 400;
         color: rgba(51, 51, 51, 1);
         line-height: 30px;
+        text-align: justify;
       }
 
       .ivu-select-selection {
         height: 30px;
         line-height: 30px;
-        border: 1px solid #CCCCCC !important;
 
         .ivu-select-selected-value {
           padding-right: 30px;
@@ -82,7 +82,7 @@
 
       .ivu-form-item-label:after {
         display: block;
-        content: '';
+        content: "";
         width: 8px;
         height: 8px;
         background: #666666;
@@ -117,33 +117,6 @@
             height: 100%;
           }
         }
-
-        .ivu-select-selection {
-          height: 45px;
-          line-height: 45px;
-
-          div {
-            height: 45px;
-            line-height: 45px;
-            padding-left: 35px;
-
-            span {
-              height: 45px;
-              line-height: 45px;
-              color: #999999 !important;
-            }
-          }
-
-          .ivu-select-placeholder {
-            font-size: 14px;
-          }
-
-          .ivu-select-selection i::before {
-            color: #999999 !important;
-          }
-        }
-
-
       }
 
       button {
@@ -155,7 +128,7 @@
         font-weight: 400;
         text-align: center;
         color: #fff;
-        background: #20B5AC;
+        background: #20b5ac;
         border: none;
         border-radius: 30px;
         padding: 0;
@@ -172,7 +145,6 @@
 
       .next {
         border: 1px solid rgba(32, 181, 172, 1);
-
       }
     }
   }
@@ -199,5 +171,143 @@
   .bolder_text {
     color: #e81123;
     font-weight: bolder;
+  }
+}
+
+.form-style {
+  padding: 0 19px 0 19px;
+
+  .ivu-tooltip {
+    width: 100%;
+  }
+
+  .describe {
+    position: relative;
+    right: 19px;
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(102, 102, 102, 1);
+    padding-bottom: 20px;
+  }
+
+  li {
+    list-style: disc;
+    font-size: 18px;
+    font-weight: 400;
+    color: rgba(34, 34, 34, 1);
+    padding-bottom: 30px;
+  }
+
+  .tips {
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(153, 153, 153, 1);
+    margin-top: 10px;
+    position: relative;
+    right: 25px;
+  }
+
+  .gray_content.textarea {
+    height: 90px;
+
+    textarea {
+      padding: 10px 30px;
+    }
+  }
+
+  .gray_content {
+    right: 20px;
+    margin-top: 15px;
+    width: 679px;
+    height: 45px;
+
+    border-radius: 4px;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    input {
+      width: 650px;
+      height: 40px;
+      border: none;
+      padding-left: 20px;
+    }
+
+    input::placeholder {
+      color: rgba(153, 153, 153, 1);
+    }
+  }
+
+  .formItemTxt {
+    width: 1080px;
+    font-size: 14px;
+    line-height: 24px;
+    font-weight: 400;
+    color: #999999;
+    margin-bottom: 10px;
+    margin-left: -25px;
+  }
+
+  .gray_content {
+    right: 25px;
+    margin-top: 10px;
+    width: 680px;
+    height: 45px;
+    border: 1px solid rgba(204, 204, 204, 1);
+    border-radius: 4px;
+    position: relative;
+    padding: 8px 1px;
+
+    textarea {
+      width: 99%;
+      height: 95%;
+      font-size: 14px;
+    }
+
+    textarea::placeholder {
+      color: #ccc;
+    }
+
+    input {
+      width: 650px;
+      height: 40px;
+      border: none;
+      padding-left: 20px;
+      font-size: 14px;
+    }
+
+    input::placeholder {
+      color: #ccc;
+    }
+  }
+
+  .account-network-type {
+    font-size: 14px;
+    padding-top: 13px;
+    padding-left: 40px;
+    color: #ddd;
+  }
+
+  .gray_content .ivu-select-selection {
+    z-index: 1;
+  }
+
+  .ivu-select-selection {
+    width: 100%;
+    position: absolute;
+    top: 8px;
+    background-color: transparent;
+    border: unset;
+    height: 45px;
+    line-height: 45px;
+
+  }
+  .ivu-select-item {margin: unset}
+
+  .button-section {
+    width: 664px;
+    position: relative;
+    right: 16px;
+    height: 140px;
   }
 }

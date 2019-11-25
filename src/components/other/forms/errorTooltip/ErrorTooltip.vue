@@ -2,7 +2,7 @@
   <Tooltip
     :always="errored"
     :disabled="!errored"
-    :content="displayedError"
+    :content="$t(displayedError)"
     :placement="placement"
   >
     <slot></slot>

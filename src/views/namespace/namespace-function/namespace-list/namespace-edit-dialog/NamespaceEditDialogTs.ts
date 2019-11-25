@@ -1,27 +1,34 @@
 import './NamespaceEditDialog.less'
 import {mapState} from "vuex"
-import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {Password, NamespaceRegistrationTransaction, Deadline, UInt64} from 'nem2-sdk'
-import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
-import {getAbsoluteMosaicAmount, formatSeconds, cloneData} from '@/core/utils'
-import {AppWallet, StoreAccount, DefaultFee, AppNamespace} from "@/core/model"
+import {Component, Vue, Prop, Provide, Watch} from 'vue-property-decorator'
+import {NamespaceRegistrationTransaction, Deadline, UInt64} from 'nem2-sdk'
+import {DEFAULT_FEES, FEE_GROUPS, formDataConfig, networkConfig} from "@/config"
+import {getAbsoluteMosaicAmount, cloneData, formatNumber, durationToRelativeTime} from '@/core/utils'
+import {AppWallet, StoreAccount, DefaultFee, AppNamespace, AppInfo, NamespaceExpirationInfo} from "@/core/model"
+import {signTransaction} from '@/core/services'
+import {validation} from '@/core/validation'
 import DisabledForms from "@/components/disabled-forms/DisabledForms.vue"
+import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
+
+const {namespaceGracePeriodDuration} = networkConfig
 
 @Component({
     computed: {
-        ...mapState({
+        ...mapState({ 
             activeAccount: 'account',
+            app: 'app',
         })
     },
-    components:{
-        DisabledForms
-    }
+    components: {DisabledForms, ErrorTooltip}
 })
 export class NamespaceEditDialogTs extends Vue {
+    @Provide() validator: any = this.$validator
     activeAccount: StoreAccount
-    isCompleteForm = true
-    stepIndex = 0
-    durationIntoDate: string = '0'
+    app: AppInfo
+    signTransaction = signTransaction
+    namespaceGracePeriodDuration = namespaceGracePeriodDuration
+    formatNumber = formatNumber
+    validation = validation
     formItems = cloneData(formDataConfig.namespaceEditForm)
 
     @Prop({default: false})
@@ -39,16 +46,9 @@ export class NamespaceEditDialogTs extends Vue {
             this.$emit('close')
         }
     }
+
     get wallet(): AppWallet {
         return this.activeAccount.wallet
-    }
-
-    get generationHash() {
-        return this.activeAccount.generationHash
-    }
-
-    get node() {
-        return this.activeAccount.node
     }
 
     get networkCurrency() {
@@ -61,66 +61,15 @@ export class NamespaceEditDialogTs extends Vue {
 
     get feeAmount() {
         const {feeSpeed} = this.formItems
-        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        const feeAmount = this.defaultFees.find(({speed}) => feeSpeed === speed).value
         return getAbsoluteMosaicAmount(feeAmount, this.networkCurrency.divisibility)
     }
 
-    namespaceEditDialogCancel() {
-        this.initForm()
-        this.show = false
-    }
-
-    submit() {
-        if (!this.isCompleteForm) return
-        if (!this.checkInfo()) return
-        this.updateMosaic()
-    }
-
-    changeXEMRentFee() {
-        const duration = Number(this.formItems.duration)
-        if (Number.isNaN(duration)) {
-            this.formItems.duration = 0
-            this.durationIntoDate = '0'
-            return
-        }
-        if (duration * 12 >= 60 * 60 * 24 * 365) {
-            this.$Message.error(Message.DURATION_MORE_THAN_1_YEARS_ERROR)
-            this.formItems.duration = 0
-        }
-        this.durationIntoDate = formatSeconds(duration * 12) + ''
-    }
-
-    checkInfo() {
-        const {formItems} = this
-        if (formItems.password === '' || formItems.duration === 0) {
-            this.$Notice.error({
-                title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
-            })
-            return false
-        }
-        if (formItems.password.length < 8) {
-            this.$Notice.error({
-                title: '' + this.$t('password_error')
-            })
-            return false
-        }
-
-        const validPassword = new AppWallet(this.wallet).checkPassword(formItems.password)
-
-        if (!validPassword) {
-            this.$Notice.error({
-                title: '' + this.$t('password_error')
-            })
-            return false
-        }
-        return true
-    }
-
-    async updateMosaic() {
+    get transaction(): NamespaceRegistrationTransaction {
         const {duration} = this.formItems
-        const {node, generationHash, feeAmount} = this
-        const password = new Password(this.formItems.password)
-        const transaction = NamespaceRegistrationTransaction
+        const {feeAmount} = this
+
+        return NamespaceRegistrationTransaction
             .createRootNamespace(
                 Deadline.create(),
                 this.currentNamespace.name,
@@ -128,26 +77,64 @@ export class NamespaceEditDialogTs extends Vue {
                 this.wallet.networkType,
                 UInt64.fromUint(feeAmount),
             )
-
-        new AppWallet(this.wallet)
-            .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
-        this.initForm()
-        this.updatedNamespace()
     }
 
-    updatedNamespace() {
-        this.show = false
-        this.namespaceEditDialogCancel()
+    get currentHeight(): number {
+        return this.app.chainStatus.currentHeight
     }
 
-    initForm() {
-        this.formItems = cloneData(formDataConfig.namespaceEditForm)
-        this.durationIntoDate = '0'
+    get expirationInfo(): NamespaceExpirationInfo {
+        return this.currentNamespace.expirationInfo(this.currentHeight)
     }
 
-    @Watch('formItems', {deep: true})
-    onFormItemChange() {
-        const {duration, password} = this.formItems
-        this.isCompleteForm = duration > 0 && password !== ''
+    get newExpirationBlock(): number {
+        const {endHeight} = this.currentNamespace
+        const {duration} = this.formItems
+
+        const _duration = parseInt(duration, 10)
+        if (isNaN(_duration)) return endHeight
+        const expirationBlock = endHeight + _duration
+        return isNaN(expirationBlock) ? endHeight : expirationBlock
+    }
+
+    get newExpiresIn(): string {
+        const duration = this.newExpirationBlock - this.currentHeight - namespaceGracePeriodDuration
+        return durationToRelativeTime(duration)
+    }
+
+    async confirmViaTransactionConfirmation() {
+        try {
+            this.show = false;
+
+            const {
+                success,
+                signedTransaction,
+                signedLock,
+            } = await this.signTransaction({
+                transaction: this.transaction,
+                store: this.$store,
+            })
+
+            if (success) {
+                new AppWallet(this.wallet).announceTransaction(signedTransaction, this.activeAccount.node, this.$root, signedLock)
+            }
+        } catch (error) {
+            console.error("NamespaceEditDialogTs -> confirmViaTransactionConfirmation -> error", error)
+        }
+    }
+
+    submit() {
+        this.$validator
+            .validate()
+            .then((valid) => {
+                if (!valid) return
+                this.confirmViaTransactionConfirmation()
+            })
+    }
+
+    @Watch('newExpirationBlock')
+    onSelectedMosaicHexChange() {
+        /** Makes newSupply validation reactive */
+        this.$validator.validate('newDuration', this.newExpirationBlock)
     }
 }

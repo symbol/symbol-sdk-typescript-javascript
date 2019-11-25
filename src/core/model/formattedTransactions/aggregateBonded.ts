@@ -1,7 +1,7 @@
 import {FormattedTransaction, AppState} from '@/core/model'
 import {transactionFormatter} from '@/core/services'
 import {getRelativeMosaicAmount} from '@/core/utils'
-import {AggregateTransaction} from 'nem2-sdk'
+import {AggregateTransaction, Address} from 'nem2-sdk'
 import {Store} from 'vuex';
 
 export class FormattedAggregateBonded extends FormattedTransaction {
@@ -21,6 +21,19 @@ export class FormattedAggregateBonded extends FormattedTransaction {
             'fee': getRelativeMosaicAmount(tx.maxFee.compact(), networkCurrency.divisibility) + ' ' + networkCurrency.ticker,
             'block': this.txHeader.block,
             'hash': this.txHeader.hash,
+            'cosigned_by': this.getCosignedBy(tx), 
         }
+    }
+
+    private getCosignedBy(tx: AggregateTransaction): string[] {
+        return tx.signer ? [
+             tx.signer.address.pretty(),
+            ...tx.cosignatures.map(({signer}) => signer.address.pretty())
+        ] : null
+    }
+
+    alreadyCosignedBy(address: Address): boolean {
+        const addressArray: string[] = this.dialogDetailMap['cosigned_by']
+        return addressArray.includes(address.pretty())
     }
 }

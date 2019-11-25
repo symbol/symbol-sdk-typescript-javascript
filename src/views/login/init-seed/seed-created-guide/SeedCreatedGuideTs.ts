@@ -24,20 +24,13 @@ export class SeedCreatedGuideTs extends Vue {
     mosaics = []
     storeWallet = {}
     showCover = true
-    mnemonicRandomArr = []
     confirmedMnemonicList = []
-    formItem = {
-        currentNetType: '',
-        walletName: '',
-        password: '',
-        checkPW: '',
-    }
 
     @Prop({default: {}})
     createForm: any
 
     get mnemonic() {
-        return this.createForm.seed.split(' ')
+        return this.formInfo.seed.split(' ')
     }
 
     get formInfo() {
@@ -45,7 +38,7 @@ export class SeedCreatedGuideTs extends Vue {
     }
 
     get accountName() {
-        return this.activeAccount.accountName
+        return this.activeAccount.currentAccount.name
     }
 
     get walletList() {
@@ -56,23 +49,12 @@ export class SeedCreatedGuideTs extends Vue {
         this.showCover = false
     }
 
-    sureWord(index) {
-        const word = this.mnemonicRandomArr[index]
-        const flagIndex = this.confirmedMnemonicList.findIndex(item => word == item)
-        if (flagIndex === -1) {
-            this.confirmedMnemonicList.push(word)
-            return
-        }
-        this.removeConfirmedWord(flagIndex)
-    }
-
     changeTabs(index) {
         switch (index) {
             case 0:
                 this.tags = index
                 break
             case 1:
-                this.mnemonicRandomArr = randomizeMnemonicWordArray(this.mnemonic)
                 this.tags = index
                 break
         }
@@ -91,13 +73,14 @@ export class SeedCreatedGuideTs extends Vue {
     createFromMnemonic() {
         const {accountName} = this
         const {seed, password} = this.formInfo
-        const currentNetType = JSON.parse(localRead('accountMap'))[accountName].currentNetType
+        const {networkType} = JSON.parse(localRead('accountMap'))[accountName]
+
         try {
             new AppWallet().createFromMnemonic(
                 'seedWallet',
                 new Password(password),
                 seed,
-                currentNetType,
+                networkType,
                 this.$store,
             )
         } catch (error) {
@@ -109,12 +92,8 @@ export class SeedCreatedGuideTs extends Vue {
         this.confirmedMnemonicList.splice(index, 1)
     }
 
-    toWalletPage() {
-        this.$router.push('dashBoard')
-    }
-
     toBack() {
         this.confirmedMnemonicList = []
-        this.$router.back()
+        this.$router.push('initSeed')
     }
 }

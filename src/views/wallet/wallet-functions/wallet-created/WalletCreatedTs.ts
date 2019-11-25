@@ -22,7 +22,7 @@ export class WalletCreatedTs extends Vue {
     showCover = true
     mnemonicRandomArr = []
     formItem = {
-        currentNetType: '',
+        networkType: '',
         walletName: '',
         password: '',
         checkPW: '',
@@ -91,7 +91,7 @@ export class WalletCreatedTs extends Vue {
                 this.tags = index
                 break
             case 1:
-                this.mnemonicRandomArr = randomizeMnemonicWordArray(this.mnemonic)
+                this.mnemonicRandomArr = randomizeMnemonicWordArray([...this.mnemonic])
                 this.tags = index
                 break
             case 2:
@@ -115,7 +115,7 @@ export class WalletCreatedTs extends Vue {
               this.formInfo.walletName,
               new Password(this.formInfo.password),
               this.mnemonic.join(' '),
-              this.formInfo.currentNetType,
+              this.formInfo.networkType,
               this.$store,
           )
       } catch (error) {

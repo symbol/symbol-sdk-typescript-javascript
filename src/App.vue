@@ -3,13 +3,13 @@
     <router-view/>
     <DisabledUiOverlay/>
     <TransactionConfirmation/>
-    <LoadingOverlay v-if="app.loadingOverlay.show"/>
+    <LoadingOverlay v-if="showLoadingOverlay"/>
   </div>
 </template>
 
 <script lang="ts">
     import 'animate.css'
-    import {Address, AccountHttp} from 'nem2-sdk'
+    import {Address} from 'nem2-sdk'
     import {mapState} from 'vuex'
     import {asyncScheduler} from 'rxjs'
     import {throttleTime} from 'rxjs/operators'
@@ -22,7 +22,7 @@
         getMarketOpenPrice, setTransactionList, setNamespaces, getNamespacesFromAddress,
         setWalletsBalances, ChainListeners, getMultisigAccountMultisigAccountInfo, getNodeInfo,
     } from '@/core/services'
-    import {AppMosaic, AppWallet, AppInfo, StoreAccount} from '@/core/model'
+    import {AppMosaic, AppWallet, AppInfo, StoreAccount, AppAccount} from '@/core/model'
     import DisabledUiOverlay from '@/components/disabled-ui-overlay/DisabledUiOverlay.vue'
     import TransactionConfirmation from '@/components/transaction-confirmation/TransactionConfirmation.vue'
     import LoadingOverlay from '@/components/loading-overlay/LoadingOverlay.vue'
@@ -42,6 +42,10 @@
         activeAccount: StoreAccount
         app: AppInfo
         chainListeners: ChainListeners = null
+
+        get showLoadingOverlay() {
+            return this.app.loadingOverlay && this.app.loadingOverlay.show || false
+        }
 
         get node() {
             return this.activeAccount.node
@@ -73,32 +77,7 @@
         }
 
         get accountName(): string {
-            return this.activeAccount.accountName
-        }
-
-        get accountMap() {
-            return localRead('accountMap') ? JSON.parse(localRead('accountMap')) : null
-        }
-
-        // @TODO: move out from there
-        async setWalletsList() {
-            try {
-                // @TODO: quick fix, to review when refactoring wallets
-                const {accountName, accountMap} = this
-                if (!accountMap) return
-                const currentAccountName = accountName && accountName !== ''
-                    ? accountName : getTopValueInObject(accountMap)['accountName']
-
-                if (!currentAccountName || currentAccountName === '') return
-                await this.$store.commit('SET_ACCOUNT_NAME', currentAccountName)
-                // get active wallet
-                const wallets = getTopValueInObject(accountMap)['wallets']
-                this.$store.commit('SET_WALLET_LIST', wallets)
-                const activeWalletAddress = JSON.parse(localRead('accountMap'))[currentAccountName].activeWalletAddress
-                AppWallet.updateActiveWalletAddress(activeWalletAddress, this.$store)
-            } catch (error) {
-                console.error(error)
-            }
+            return this.activeAccount.currentAccount.name
         }
 
         async onWalletChange(newWallet) {
@@ -132,7 +111,7 @@
                             setTransactionList(newWallet.address, this.$store)
                             appWallet.setMultisigStatus(this.node, this.$store)
                         } catch (error) {
-                            console.error("TCL: App -> onWalletChange -> setTimeout -> error", error)
+                            console.error("App -> onWalletChange -> setTimeout -> error", error)
                         }
                     }, 1000)
                 getNodeInfo(this.$store)
@@ -205,7 +184,6 @@
                  */
                 setTimeout(async () => {
                     try {
-                        await this.setWalletsList()
                         setWalletsBalances(this.$store)
                     } catch (error) {
                         console.error("App -> mounted -> setTimeout -> error", error)
@@ -254,7 +232,9 @@
 
                 if (oldValue !== newValue) {
                     this.onActiveMultisigAccountChange(newValue)
-                    getMultisigAccountMultisigAccountInfo(newValue, this.$store)
+                    setTimeout(() => {
+                        getMultisigAccountMultisigAccountInfo(newValue, this.$store)
+                    }, 500)
                 }
             })
 
@@ -267,6 +247,7 @@
                     throttleTime(6000, asyncScheduler, {leading: true, trailing: true}),
                 ).subscribe(({newValue, oldValue}) => {
                 if (!newValue) return
+                // @TODO: setWalletsBalance name is not appropriate
                 if (oldValue !== newValue) setWalletsBalances(this.$store)
             })
 

@@ -7,9 +7,9 @@ import VeeValidate from 'vee-validate'
 import RootNamespace from '@/views/namespace/namespace-function/root-namespace/RootNamespace.vue'
 import {accountMutations, accountState} from '@/store/account'
 import {appMutations, appState} from '@/store/app'
-import {NETWORK_PARAMS, veeValidateConfig} from "@/core/validation"
+import {veeValidateConfig} from "@/core/validation"
 import VueRx from "vue-rx"
-import {DEFAULT_FEES, FEE_GROUPS, FEE_SPEEDS} from "@/config"
+import {DEFAULT_FEES, FEE_GROUPS, FEE_SPEEDS, NETWORK_CONSTANTS} from "@/config"
 import {
     TransactionType,
     NamespaceRegistrationTransaction,
@@ -185,7 +185,7 @@ describe('RootNamespace', () => {
     it('should not create a normal namespace create transaction while duration is less than 4', () => {
         wrapper.setData({
             formItems: {
-                duration: NETWORK_PARAMS.MIN_NAMESPACE_DURATION - 1,
+                duration: NETWORK_CONSTANTS.MIN_NAMESPACE_DURATION - 1,
                 rootNamespaceName: 'abc',
                 multisigPublicKey: '',
                 feeSpeed: FEE_SPEEDS.NORMAL,
@@ -198,7 +198,7 @@ describe('RootNamespace', () => {
     it('should not create a normal namespace create transaction while duration is more than 2102400', () => {
         wrapper.setData({
             formItems: {
-                duration: NETWORK_PARAMS.MAX_NAMESPACE_DURATION + 1,
+                duration: NETWORK_CONSTANTS.MAX_NAMESPACE_DURATION + 1,
                 rootNamespaceName: 'abc',
                 multisigPublicKey: '',
                 feeSpeed: FEE_SPEEDS.NORMAL,

@@ -1,13 +1,13 @@
-import { Vue, Component, Provide } from 'vue-property-decorator'
-import { mapState } from "vuex"
-import { StoreAccount, AppWallet } from '@/core/model'
-import { standardFields } from '@/core/validation'
+import {Vue, Component, Provide} from 'vue-property-decorator'
+import {mapState} from "vuex"
+import {StoreAccount, AppWallet} from '@/core/model'
+import {validation} from '@/core/validation'
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 
 @Component({
-  computed: { ...mapState({ activeAccount: 'account' }) },
-  components: { DisabledForms, ErrorTooltip }
+  computed: {...mapState({activeAccount: 'account'})},
+  components: {DisabledForms, ErrorTooltip}
 })
 export class CreationFormTs extends Vue {
   @Provide() validator: any = this.$validator
@@ -15,14 +15,14 @@ export class CreationFormTs extends Vue {
   importAccount: boolean = false
   password: string = ''
   privateKey: string = ''
-  standardFields = standardFields
+  validation = validation
 
   get wallet(): AppWallet {
     return new AppWallet(this.activeAccount.wallet)
   }
 
   get remoteAccountPublicKey(): string {
-    const { remoteAccount } = this.wallet
+    const {remoteAccount} = this.wallet
     if (!remoteAccount) return null
     return remoteAccount.publicKey
   }

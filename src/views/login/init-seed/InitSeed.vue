@@ -24,20 +24,19 @@
       <AccountImportMnemonic
               v-if="pageIndex === 1"
               @updatePageIndex="updatePageIndex"
-      >
-      </AccountImportMnemonic>
+      />
       <AccountImportHardware
               v-if="pageIndex === 2"
               @updatePageIndex="updatePageIndex"
-      >
-      </AccountImportHardware>
+      />
     </div>
     <CheckPasswordDialog
-            :showCheckPWDialog="navList[0].active"
-            :isOnlyCheckPassword="true"
-            @closeCheckPWDialog="closeCheckPWDialog"
-            @checkEnd="checkEnd"
-    ></CheckPasswordDialog>
+      v-if="navList[0].active"
+      :visible="navList[0].active"
+      :returnPassword="true"
+      @passwordValidated="passwordValidated"
+      @cancelled="goToPage(1)"
+    />
   </div>
 </template>
 
@@ -50,7 +49,3 @@
 
     }
 </script>
-
-<style scoped>
-
-</style>

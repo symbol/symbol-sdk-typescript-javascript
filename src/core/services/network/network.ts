@@ -5,11 +5,8 @@ import {
     NamespaceHttp,
     ChainHttp,
     BlockHttp,
-    Transaction,
     MosaicDefinitionTransaction,
-    AliasTransaction,
     MosaicAliasTransaction,
-    Mosaic,
     Namespace,
     NodeHttp
 } from "nem2-sdk"
@@ -19,14 +16,14 @@ import {Store} from 'vuex'
 
 export const getNetworkGenerationHash = async (that: any): Promise<void> => {
     try {
-        const block = await new BlockHttp(that.$store.state.account.node).getBlockByHeight(1).toPromise()
+        const block = await new BlockHttp(that.$store.state.account.node).getBlockByHeight('1').toPromise()
         that.$store.commit('SET_IS_NODE_HEALTHY', true)
         that.$Notice.success({
             title: that.$t(Message.NODE_CONNECTION_SUCCEEDED) + ''
         })
         that.$store.commit('SET_GENERATION_HASH', block.generationHash)
     } catch (error) {
-        console.error(error)
+        console.error("getNetworkGenerationHash -> error", error)
         that.$Notice.error({
             title: that.$t(Message.NODE_CONNECTION_ERROR) + ''
         })
@@ -43,7 +40,7 @@ export const setCurrentNetworkMosaic = async (store: Store<AppState>) => {
         const {node} = store.state.account
 
         const genesisBlockInfoList = await new BlockHttp(node)
-            .getBlockTransactions(1, new QueryParams(100))
+            .getBlockTransactions('1', new QueryParams(100))
             .toPromise()
 
         const mosaicDefinitionTx: any[] = genesisBlockInfoList
@@ -72,12 +69,13 @@ export const setCurrentNetworkMosaic = async (store: Store<AppState>) => {
             name: networkMosaicNamespace.name,
         })
 
-        const [, harvestCurrencyAliasTx]: any | false = mosaicAliasTx.length > 1 ? mosaicAliasTx : false
-        const [, harvestMosaicDefinitionTx]: any | false = mosaicAliasTx.length > 1 ? mosaicDefinitionTx : false
-        const harvestMosaicNamespace: Namespace | false = mosaicAliasTx.length > 1
+        const harvestCurrencyAliasTx: MosaicAliasTransaction = mosaicAliasTx.length > 1 ? mosaicAliasTx[1] : null
+        const harvestMosaicDefinitionTx: MosaicDefinitionTransaction = mosaicAliasTx.length > 1 ? mosaicDefinitionTx[1] : null
+
+        const harvestMosaicNamespace: Namespace = mosaicAliasTx.length > 1
             ? await new NamespaceService(new NamespaceHttp(node))
                 .namespace(harvestCurrencyAliasTx.namespaceId).toPromise()
-            : false
+            : null
 
         const appMosaics = [
             AppMosaic.fromGetCurrentNetworkMosaic(networkMosaicDefinitionTx, networkMosaicNamespace)
@@ -90,6 +88,7 @@ export const setCurrentNetworkMosaic = async (store: Store<AppState>) => {
         store.commit('UPDATE_MOSAICS', appMosaics)
         store.commit('SET_NETWORK_MOSAICS', appMosaics)
     } catch (error) {
+        console.error("setCurrentNetworkMosaic -> error", error)
         store.commit('SET_IS_NODE_HEALTHY', false)
     }
 }
@@ -100,17 +99,22 @@ export const getCurrentBlockHeight = async (store: Store<AppState>) => {
         const heightUint = await new ChainHttp(node).getBlockchainHeight().toPromise()
         const height = heightUint.compact()
         store.commit('SET_CHAIN_HEIGHT', height)
-        const blockInfo = await new BlockHttp(node).getBlockByHeight(height).toPromise()
+        const blockInfo = await new BlockHttp(node).getBlockByHeight(`${height}`).toPromise()
         store.commit('SET_CHAIN_STATUS', new ChainStatus(blockInfo))
     } catch (error) {
+        console.error("getCurrentBlockHeight -> error", error)
         store.commit('SET_CHAIN_HEIGHT', 0)
         store.commit('SET_IS_NODE_HEALTHY', false)
     }
 }
 
 export const getNodeInfo = async (store: Store<AppState>) => {
-    const node = store.state.account.node
-    const nodeHttp = new NodeHttp(node)
-    const nodeInfo = await nodeHttp.getNodeInfo().toPromise()
-    store.commit('SET_NODE_NETWORK_TYPE', nodeInfo.networkIdentifier)
+    try {
+        const node = store.state.account.node
+        const nodeHttp = new NodeHttp(node)
+        const nodeInfo = await nodeHttp.getNodeInfo().toPromise()
+        store.commit('SET_NODE_NETWORK_TYPE', nodeInfo.networkIdentifier)
+    } catch (error) {
+        console.error("getNodeInfo -> error", error)
+    }
 }

@@ -107,7 +107,6 @@
       </div>
       <!--      <AddressBook v-if="functionShowList[0]"></AddressBook>-->
       <WalletHarvesting v-if="functionShowList[1]"></WalletHarvesting>
-      <!--      <WalletFilter v-if="functionShowList[1]"></WalletFilter>-->
     </div>
     <MnemonicDialog v-if="showMnemonicDialog"
                     :showMnemonicDialog="showMnemonicDialog"

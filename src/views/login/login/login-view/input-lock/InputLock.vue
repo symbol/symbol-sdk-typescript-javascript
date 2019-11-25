@@ -43,7 +43,7 @@
                 v-model="formItems.password"
                 type="password"
                 :placeholder="$t('account_password')"
-                v-validate="passwordFieldValidation"
+                v-validate="validation.previousPassword"
         >
         <input
                 data-vv-name="cipher"

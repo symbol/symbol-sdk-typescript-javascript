@@ -3,7 +3,6 @@ import { ContactQR } from 'nem2-qr-library'
 import { AliasType, MultisigAccountInfo, PublicAccount } from 'nem2-sdk'
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import AddressBook from '@/views/wallet/wallet-details/wallet-function/address-book/AddressBook.vue'
-import WalletFilter from './wallet-function/wallet-filter/WalletFilter.vue'
 import KeystoreDialog from '@/views/wallet/wallet-details/keystore-dialog/KeystoreDialog.vue'
 import MnemonicDialog from '@/views/wallet/wallet-details/mnemonic-dialog/MnemonicDialog.vue'
 import PrivatekeyDialog from '@/views/wallet/wallet-details/privatekey-dialog/PrivatekeyDialog.vue'
@@ -24,7 +23,6 @@ import { pluck, concatMap } from 'rxjs/operators'
         PrivatekeyDialog,
         KeystoreDialog,
         AddressBook,
-        WalletFilter,
         WalletUpdatePassword,
         WalletHarvesting,
     },

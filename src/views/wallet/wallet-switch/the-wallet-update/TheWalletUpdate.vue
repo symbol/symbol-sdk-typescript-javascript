@@ -33,16 +33,5 @@
 <script lang="ts">
     import "./TheWalletUpdate.less"
     import {TheWalletUpdateTs} from '@/views/wallet/wallet-switch/the-wallet-update/TheWalletUpdateTs.ts'
-
-    /**
-     @Prop: showCheckPWDialog
-     @return: closeCheckPWDialog()
-     @return: checkEnd(privatekey:string)
-     */
-
-    export default class TheWalletUpdate extends TheWalletUpdateTs {
-    }
+    export default class TheWalletUpdate extends TheWalletUpdateTs { }
 </script>
-
-<style scoped>
-</style>

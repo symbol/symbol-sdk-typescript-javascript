@@ -177,11 +177,12 @@
       </div>
     </div>
 
-    <CheckPWDialog
-            :showCheckPWDialog="showCheckPWDialog"
-            @closeCheckPWDialog="closeCheckPWDialog"
-            :isOnlyCheckPassword='true'
-            @checkEnd="checkEnd"/>
+    <CheckPasswordDialog
+      v-if="showCheckPWDialog"
+      :visible="showCheckPWDialog"
+      @close="close"
+      @passwordValidated="passwordValidated"
+    />
   </div>
 </template>
 

@@ -2,12 +2,12 @@ import {Message} from "@/config/index.ts"
 import {formatDate} from '@/core/utils'
 import {blog} from "@/core/api"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
+import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {mapState} from "vuex"
 import {AppInfo, StoreAccount} from '@/core/model'
 @Component({
     components: {
-        CheckPWDialog
+        CheckPasswordDialog
     },
     computed: {
         ...mapState({
@@ -45,15 +45,15 @@ export class informationTs extends Vue {
         return this.$i18n.locale
     }
 
-    closeCheckPWDialog() {
+    close() {
         this.showCheckPWDialog = false
     }
 
-    checkEnd(flag) {
+    passwordValidated(flag) {
         if (flag) {
             this.sendComment()
         }
-        this.closeCheckPWDialog()
+        this.close()
     }
 
     addArticleStartIndex() {

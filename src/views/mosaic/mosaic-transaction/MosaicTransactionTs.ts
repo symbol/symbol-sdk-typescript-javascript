@@ -1,5 +1,5 @@
 import {mapState} from "vuex"
-import {Component, Vue, Watch} from 'vue-property-decorator'
+import {Component, Vue, Watch, Provide} from 'vue-property-decorator'
 import {
     MosaicId,
     MosaicNonce,
@@ -17,14 +17,15 @@ import {
 import {
     formatSeconds, formatAddress, getAbsoluteMosaicAmount, cloneData,
 } from '@/core/utils'
-import {formDataConfig, Message, DEFAULT_FEES, FEE_GROUPS} from '@/config'
-import {StoreAccount, AppWallet, DefaultFee, LockParams, CreateWalletType} from "@/core/model"
-import {NETWORK_PARAMS} from '@/core/validation'
+import {formDataConfig, Message, DEFAULT_FEES, FEE_GROUPS, networkConfig} from '@/config'
+import {StoreAccount, AppWallet, DefaultFee, LockParams} from "@/core/model"
+import {validation} from '@/core/validation'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction, signTransaction} from '@/core/services'
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
+import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 
 @Component({
-    components: { DisabledForms },
+    components: {DisabledForms, ErrorTooltip},
     computed: {
         ...mapState({
             activeAccount: 'account',
@@ -32,8 +33,10 @@ import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
     }
 })
 export class MosaicTransactionTs extends Vue {
+    @Provide() validator: any = this.$validator
+    signTransaction = signTransaction
+    validation = validation
     activeAccount: StoreAccount
-    duration = 0
     transactionDetail = {}
     transactionList = []
     formItems = cloneData(formDataConfig.mosaicTransactionForm)
@@ -64,7 +67,7 @@ export class MosaicTransactionTs extends Vue {
         return this.multisigInfo.multisigAccounts.length > 0
     }
 
-    get multisigPublicKeyList(): { publicKey: string, address: string }[] {
+    get multisigPublicKeyList(): {publicKey: string, address: string}[] {
         if (!this.hasMultisigAccounts) return null
         return [
             {
@@ -133,7 +136,7 @@ export class MosaicTransactionTs extends Vue {
     }
 
     addDivisibilityAmount() {
-        this.formItems.divisibility = this.formItems.divisibility >= NETWORK_PARAMS.MAX_MOSAIC_DIVISIBILITY
+        this.formItems.divisibility = this.formItems.divisibility >= networkConfig.maxMosaicDivisibility
             ? Number(this.formItems.divisibility) : Number(this.formItems.divisibility) + 1
     }
 
@@ -142,7 +145,7 @@ export class MosaicTransactionTs extends Vue {
     }
 
     addSupplyAmount() {
-        this.formItems.supply = this.formItems.supply >= NETWORK_PARAMS.MAX_MOSAIC_ATOMIC_UNITS
+        this.formItems.supply = this.formItems.supply >= networkConfig.maxMosaicAtomicUnits
             ? Number(this.formItems.supply) : Number(this.formItems.supply) + 1
     }
 
@@ -162,12 +165,12 @@ export class MosaicTransactionTs extends Vue {
                 success,
                 signedTransaction,
                 signedLock,
-            } = await signTransaction({
+            } = await this.signTransaction({
                 transaction: this.transactionList[0],
                 store: this.$store,
             })
 
-            if(success) {
+            if (success) {
                 new AppWallet(this.wallet).announceTransaction(signedTransaction, this.activeAccount.node, this, signedLock)
             }
         } catch (error) {
@@ -265,61 +268,19 @@ export class MosaicTransactionTs extends Vue {
         ]
     }
 
-    checkForm() {
-        const {supply, divisibility, duration} = this.formItems
-        // common check
-        if (!Number(supply) || supply < 0) {
-            this.$Notice.error({
-                title: this.$t(Message.SUPPLY_LESS_THAN_0_ERROR) + ''
-            })
-            return false
-        }
-        if ((!Number(divisibility) && Number(divisibility) !== 0) || divisibility < 0) {
-            this.$Notice.error({
-                title: this.$t(Message.DIVISIBILITY_LESS_THAN_0_ERROR) + ''
-            })
-            return false
-        }
-        if (divisibility > 6) {
-            this.$Notice.error({
-                title: this.$t(Message.DIVISIBILITY_MORE_THAN_6_ERROR) + ''
-            })
-            return false
-        }
-        if (!Number(duration) || duration <= 0) {
-            this.$Notice.error({
-                title: this.$t(Message.DURATION_LESS_THAN_0_ERROR) + ''
-            })
-            return false
-        }
-        return true
-    }
-
     submit() {
-        if (!this.checkForm()) return
-        this.confirmViaTransactionConfirmation()
+        this.$validator
+        .validate()
+        .then((valid) => {
+        if (!valid) return
+          this.confirmViaTransactionConfirmation()
+        })
     }
 
     @Watch('formItems.multisigPublicKey')
     onMultisigPublicKeyChange(newPublicKey, oldPublicKey) {
         if (!newPublicKey || newPublicKey === oldPublicKey) return
         this.$store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', newPublicKey)
-    }
-
-    // @VEEVALIDATE
-    @Watch('formItems.supply')
-    onSupplyChange(newVal) {
-        const {MAX_MOSAIC_ATOMIC_UNITS} = NETWORK_PARAMS
-        if (newVal > MAX_MOSAIC_ATOMIC_UNITS) this.formItems.supply = MAX_MOSAIC_ATOMIC_UNITS
-        if (newVal < 0) this.formItems.supply = 0
-    }
-
-    // @VEEVALIDATE
-    @Watch('formItems.divisibility')
-    onDivisibilityChange(newVal) {
-        const {MAX_MOSAIC_DIVISIBILITY} = NETWORK_PARAMS
-        if (newVal > MAX_MOSAIC_DIVISIBILITY) this.formItems.divisibility = MAX_MOSAIC_DIVISIBILITY
-        if (newVal < 0) this.formItems.divisibility = 0
     }
 
     mounted() {

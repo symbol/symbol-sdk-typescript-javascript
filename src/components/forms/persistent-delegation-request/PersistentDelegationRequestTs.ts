@@ -1,11 +1,11 @@
-import { Vue, Component, Prop, Provide } from 'vue-property-decorator'
-import { Account, PersistentDelegationRequestTransaction, Deadline, UInt64 } from 'nem2-sdk'
-import { mapState } from "vuex"
-import { StoreAccount, DefaultFee, AppWallet } from '@/core/model'
-import { cloneData, getAbsoluteMosaicAmount } from '@/core/utils'
-import { formDataConfig, DEFAULT_FEES, FEE_GROUPS } from '@/config'
-import { standardFields } from '@/core/validation'
-import { signTransaction } from '@/core/services/transactions'
+import {Vue, Component, Prop, Provide} from 'vue-property-decorator'
+import {Account, PersistentDelegationRequestTransaction, Deadline, UInt64} from 'nem2-sdk'
+import {mapState} from "vuex"
+import {StoreAccount, DefaultFee, AppWallet} from '@/core/model'
+import {cloneData, getAbsoluteMosaicAmount} from '@/core/utils'
+import {formDataConfig, DEFAULT_FEES, FEE_GROUPS} from '@/config'
+import {validation} from '@/core/validation'
+import {signTransaction} from '@/core/services/transactions'
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 import GetNodePublicKey from '@/components/forms/get-node-public-key/GetNodePublicKey.vue'
@@ -16,7 +16,7 @@ import GetNodePublicKey from '@/components/forms/get-node-public-key/GetNodePubl
             activeAccount: 'account',
         })
     },
-    components: { DisabledForms, ErrorTooltip, GetNodePublicKey }
+    components: {DisabledForms, ErrorTooltip, GetNodePublicKey}
 })
 export class PersistentDelegationRequestTs extends Vue {
     @Provide() validator: any = this.$validator
@@ -24,11 +24,11 @@ export class PersistentDelegationRequestTs extends Vue {
     formItems = cloneData(formDataConfig.remoteForm)
     showGetNodePublicKey = true
     newRemoteAccount: Account = null
-    standardFields = standardFields
+    validation = validation
     recipientPublicKey: string = ""
     password: string = ""
 
-    @Prop({ default: false })
+    @Prop({default: false})
     visible: boolean
 
     get show(): boolean {
@@ -58,8 +58,8 @@ export class PersistentDelegationRequestTs extends Vue {
     }
 
     get feeAmount(): number {
-        const { feeSpeed } = this.formItems
-        const feeAmount = this.defaultFees.find(({ speed }) => feeSpeed === speed).value
+        const {feeSpeed} = this.formItems
+        const feeAmount = this.defaultFees.find(({speed}) => feeSpeed === speed).value
         return getAbsoluteMosaicAmount(feeAmount, this.activeAccount.networkCurrency.divisibility)
     }
 
@@ -95,7 +95,7 @@ export class PersistentDelegationRequestTs extends Vue {
             })
 
             if (success) {
-                const { node } = this.activeAccount
+                const {node} = this.activeAccount
                 new AppWallet(this.wallet).announceTransaction(signedTransaction, node, this.$root)
             }
         } catch (error) {
@@ -105,10 +105,10 @@ export class PersistentDelegationRequestTs extends Vue {
 
     submit() {
         this.$validator
-        .validate()
-        .then((valid) => {
-          if (!valid) return
-          this.signAndAnnounce()
-        })
+            .validate()
+            .then((valid) => {
+                if (!valid) return
+                this.signAndAnnounce()
+            })
     }
 }

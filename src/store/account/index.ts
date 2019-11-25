@@ -4,7 +4,7 @@ import {defaultNetworkConfig} from "@/config/index"
 import {
     AddressAndTransaction, AddressAndNamespaces, AddressAndMosaics,
     AddressAndMultisigInfo, StoreAccount, AppMosaic, NetworkCurrency,
-    AppWallet, AppNamespace, FormattedTransaction,
+    AppWallet, AppNamespace, FormattedTransaction, CurrentAccount,
 } from '@/core/model'
 import {nodeListConfig} from "@/config/view/node"
 
@@ -17,7 +17,8 @@ const state: StoreAccount = {
     addressAliasMap: {},
     generationHash: '',
     transactionList: [],
-    transactionsToCosign: {},
+    currentAccount: CurrentAccount.default(),
+    transactionsToCosign: [],
     accountName: '',
     activeMultisigAccount: null,
     multisigAccountsMosaics: {},
@@ -38,6 +39,15 @@ const updateMosaics = (state: StoreAccount, mosaics: AppMosaic[]) => {
     })
 }
 
+const popTransactionToCosignByHash = (
+    oldTransactions: FormattedTransaction[],
+    hash: string,
+): FormattedTransaction[] => {
+    const transactionIndex = oldTransactions.findIndex(({rawTx}) => rawTx.transactionInfo.hash === hash)
+    oldTransactions.splice(transactionIndex, 1)
+    return oldTransactions
+}
+
 const mutations: MutationTree<StoreAccount> = {
     RESET_ACCOUNT(state: StoreAccount) {
         state.wallet = null
@@ -45,7 +55,7 @@ const mutations: MutationTree<StoreAccount> = {
         state.namespaces = []
         state.addressAliasMap = {}
         state.transactionList = []
-        state.accountName = ''
+        state.currentAccount = CurrentAccount.default()
     },
     SET_WALLET(state: StoreAccount, wallet: AppWallet): void {
         state.wallet = wallet
@@ -84,14 +94,14 @@ const mutations: MutationTree<StoreAccount> = {
     UPDATE_NAMESPACES(state: StoreAccount, namespaces: AppNamespace[]): void {
         const namespacesToUpdate = [...state.namespaces]
 
-        const updatedNamespaces =  namespaces.map(newNamespace => {
+        const updatedNamespaces = namespaces.map(newNamespace => {
             const oldNamespace = namespacesToUpdate.find(({hex}) => hex === newNamespace.hex)
             if (oldNamespace === undefined) return newNamespace
             return AppNamespace.fromNamespaceUpdate(oldNamespace, newNamespace)
         })
 
         const namespacesNotUpdated = namespacesToUpdate.filter(({hex}) => namespaces.find(ns => ns.hex === hex) === undefined)
-        
+
         state.namespaces = [...namespacesNotUpdated, ...updatedNamespaces]
     },
     ADD_NAMESPACE_FROM_RECIPIENT_ADDRESS(state: StoreAccount, namespaces: AppNamespace[]) {
@@ -125,7 +135,6 @@ const mutations: MutationTree<StoreAccount> = {
         state.transactionList.unshift(txList[0])
     },
     ADD_CONFIRMED_TRANSACTION(state: StoreAccount, txList: any) {
-        // @TODO merge or separate these 2 lists in different objects
         const newTx = txList[0]
         const newStateTransactions = [...state.transactionList]
         const txIndex = newStateTransactions
@@ -135,8 +144,8 @@ const mutations: MutationTree<StoreAccount> = {
         newStateTransactions.unshift(newTx)
         state.transactionList = newStateTransactions
     },
-    SET_ACCOUNT_NAME(state: StoreAccount, accountName: string) {
-        state.accountName = accountName
+    SET_ACCOUNT_DATA(state: StoreAccount, currentAccount: CurrentAccount) {
+        state.currentAccount = currentAccount
     },
     SET_MULTISIG_ACCOUNT_INFO(state: StoreAccount, addressAndMultisigInfo: AddressAndMultisigInfo) {
         const {address, multisigAccountInfo} = addressAndMultisigInfo
@@ -149,8 +158,7 @@ const mutations: MutationTree<StoreAccount> = {
         }
         state.activeMultisigAccount = publicKey
     },
-    ADD_CONFIRMED_MULTISIG_ACCOUNT_TRANSACTION(state: StoreAccount,
-                                               addressAndTransaction: AddressAndTransaction) {
+    ADD_CONFIRMED_MULTISIG_ACCOUNT_TRANSACTION(state: StoreAccount, addressAndTransaction: AddressAndTransaction) {
         const {address, transaction} = addressAndTransaction
         const list = {...state.multisigAccountsTransactions}
         if (!list[address]) list[address] = []
@@ -177,35 +185,25 @@ const mutations: MutationTree<StoreAccount> = {
         state.activeWalletAddress = activeWalletAddress
     },
     RESET_TRANSACTIONS_TO_COSIGN(state: StoreAccount) {
-        state.transactionsToCosign = {}
+        state.transactionsToCosign = []
     },
-    RESET_ADDRESS_TRANSACTION_TO_COSIGN(state: StoreAccount, publicKey: string) {
-        if (!state.transactionsToCosign[publicKey]) return
-        state.transactionsToCosign[publicKey] = []
+    POP_TRANSACTION_TO_COSIGN_BY_HASH(state: StoreAccount, hash: string) {
+        state.transactionsToCosign = popTransactionToCosignByHash([...state.transactionsToCosign], hash)
     },
-    POP_TRANSACTION_TO_COSIGN_BY_HASH(state: StoreAccount, payload: {publicKey: string, hash: string}) {
-        const {publicKey, hash} = payload
-        const txToCosign = [...state.transactionsToCosign[publicKey]]
-        if (!txToCosign) return
-        const transactionIndex = txToCosign.findIndex(({rawTx}) => rawTx.transactionInfo.hash === hash)
-        if (transactionIndex === -1) return
-        txToCosign.splice(transactionIndex, 1)
-        state.transactionsToCosign[publicKey] = txToCosign
+    UPDATE_TRANSACTION_TO_COSIGN(state: StoreAccount, newTransaction: FormattedTransaction) {
+        const {hash} = newTransaction.rawTx.transactionInfo
+        const transactions = popTransactionToCosignByHash([...state.transactionsToCosign], hash)
+        state.transactionsToCosign = [newTransaction, ...transactions]
     },
-    ADD_TRANSACTION_TO_COSIGN(state: StoreAccount, payload: {publicKey: string, transactions: FormattedTransaction[]}) {
-        const {publicKey, transactions} = payload
-        const oldTransactions = state.transactionsToCosign[publicKey]
-
-        if (!oldTransactions) {
-            Vue.set(state.transactionsToCosign, publicKey, transactions)
-            return
-        }
+    ADD_TRANSACTION_TO_COSIGN(state: StoreAccount, transactions: FormattedTransaction[]) {
+        const [transaction,] = transactions
+        const oldTransactions = [...state.transactionsToCosign]
         
-        transactions.forEach((tx) => {
-            if (oldTransactions.find(({rawTx}) => rawTx.transactionInfo.hash === tx.rawTx.transactionInfo.hash) === undefined) {
-                Vue.set(state.transactionsToCosign, publicKey, [...transactions, ...oldTransactions])
-            }
-        })
+        const index = oldTransactions
+            .findIndex(({rawTx}) => rawTx.transactionInfo.hash === transaction.rawTx.transactionInfo.hash)
+        
+        if (index > -1) return
+        state.transactionsToCosign = [transaction, ...oldTransactions]
     }
 }
 

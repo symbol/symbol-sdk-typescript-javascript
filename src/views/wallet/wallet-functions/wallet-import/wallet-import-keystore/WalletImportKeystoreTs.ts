@@ -1,11 +1,12 @@
-import {formDataConfig, Message} from "@/config/index.ts"
-import {Password, NetworkType} from "nem2-sdk"
+import {Component, Vue, Provide} from 'vue-property-decorator'
 import {mapState} from 'vuex'
-import {Component, Vue} from 'vue-property-decorator'
-import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
+import {Password, NetworkType} from "nem2-sdk"
+import {formDataConfig, Message} from "@/config/index.ts"
 import {networkTypeConfig} from '@/config/view/setting'
 import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
 import {cloneData, localRead} from "@/core/utils"
+import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
+import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 
 @Component({
     computed: {
@@ -14,30 +15,28 @@ import {cloneData, localRead} from "@/core/utils"
             app: 'app'
         })
     },
-    components: {
-        CheckPasswordDialog
-    }
+    components: {CheckPasswordDialog, ErrorTooltip}
 })
 export class WalletImportKeystoreTs extends Vue {
+    @Provide() validator: any = this.$validator
     activeAccount: StoreAccount
     app: AppInfo
+    NetworkType = NetworkType
     file = ''
     fileList = []
     NetworkTypeList = networkTypeConfig
     formItem = cloneData(formDataConfig.importKeystoreConfig)
     showCheckPWDialog = false
-    NetworkType = NetworkType
 
     get accountNetworkType() {
-        return JSON.parse(localRead('accountMap'))[this.accountName].currentNetType
+        return JSON.parse(localRead('accountMap'))[this.accountName].networkType
     }
 
     get accountName() {
-        return this.activeAccount.accountName
+        return this.activeAccount.currentAccount.name
     }
 
-
-    checkEnd(password) {
+    passwordValidated(password) {
         if (!password) return
         this.importWallet(password)
     }
@@ -47,8 +46,12 @@ export class WalletImportKeystoreTs extends Vue {
     }
 
     submit() {
-        if (!this.checkForm()) return
-        this.showCheckPWDialog = true
+        this.$validator
+            .validate()
+            .then((valid) => {
+                if (!valid) return
+                this.showCheckPWDialog = true
+            })
     }
 
     importWallet(password) {
@@ -76,26 +79,6 @@ export class WalletImportKeystoreTs extends Vue {
         })
         this.closeCheckPWDialog()
         this.$emit('toWalletDetails')
-    }
-
-    checkForm() {
-        const {accountNetworkType} = this
-        const {walletName, keystorePassword, keystoreStr} = this.formItem
-
-        if (!walletName || walletName == '') {
-            this.showErrorNotice(Message.WALLET_NAME_INPUT_ERROR)
-            return false
-        }
-        if (!keystorePassword || keystorePassword == '') {
-            this.showErrorNotice(Message.INPUT_EMPTY_ERROR)
-            return false
-        }
-
-        if (!keystoreStr || keystoreStr == '') {
-            this.showErrorNotice(Message.INPUT_EMPTY_ERROR)
-            return false
-        }
-        return true
     }
 
     showErrorNotice(text) {
