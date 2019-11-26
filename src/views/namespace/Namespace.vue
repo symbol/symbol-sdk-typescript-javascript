@@ -4,15 +4,15 @@
       <span class='button_list_item'>
         <span
           :class="['name', $route.path === '/namespaceList' ?'active':'','pointer']" 
-          @click="$router.push('namespaceList')"
+          @click="$route.path === '/namespaceList' ? '' : $router.push('namespaceList')"
         >{{$t('Namespace_list')}}</span>
         <span
           :class="['name', $route.path === '/createNamespace' ?'active':'','pointer']" 
-          @click="$router.push('createNamespace')"
+          @click="$route.path === '/createNamespace' ? '' : $router.push('createNamespace')"
         >{{$t('Create_namespace')}}</span>
         <span
           :class="['name', $route.path === '/createSubNamespace' ?'active':'','pointer']" 
-          @click="$router.push('createSubNamespace')"
+          @click="$route.path === '/createSubNamespace' ? '' : $router.push('createSubNamespace')"
         >{{$t('Create_subNamespace')}}</span>
     </span>
     </div>

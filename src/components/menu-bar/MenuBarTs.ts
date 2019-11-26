@@ -31,23 +31,13 @@ export class MenuBarTs extends Vue {
     monitorUnselected = monitorUnselected
     languageList = languageConfig
     NetworkType = NetworkType
+    closeWindow = closeWindow
 
     get routes() {
         return routes[0].children
             .filter(({meta}) => meta.clickable)
             .map(({path, meta}) => ({path, meta}))
     }
-
-    // @ROUTING
-    accountQuit() {
-        this.$store.commit('RESET_APP')
-        this.$store.commit('RESET_ACCOUNT')
-        this.$router.push({
-            name: "login"
-        })
-    }
-
-    closeWindow = closeWindow
 
     get isNodeHealthy() {
         return this.app.isNodeHealthy
@@ -93,6 +83,20 @@ export class MenuBarTs extends Vue {
 
     set currentWalletAddress(newActiveWalletAddress) {
         AppWallet.updateActiveWalletAddress(newActiveWalletAddress, this.$store)
+    }
+
+    navigationIconClicked(route: any): void {
+        if (!this.walletList.length) return
+        if (this.$route.matched.map(({path}) => path).includes(route.path)) return
+        this.$router.push(route.path).catch(err => {})
+    }
+
+    accountQuit() {
+        this.$store.commit('RESET_APP')
+        this.$store.commit('RESET_ACCOUNT')
+        this.$router.push({
+            name: "login"
+        })
     }
 
     maxWindow() {

@@ -4,15 +4,15 @@
       <span class='button_list_item'>
         <span
           :class="['name', $route.path === '/multisigConversion' ?'active':'','pointer']"
-          @click="$router.push('multisigConversion')"
+          @click="$route.path === '/multisigConversion' ? '' : $router.push('multisigConversion')"
         >{{$t('convert')}}</span>
         <span
           :class="['name', $route.path === '/multisigManagement' ?'active':'','pointer']"
-          @click="$router.push('multisigManagement')"
+          @click="$route.path === '/multisigManagement' ? '' : $router.push('multisigManagement')"
         >{{$t('manage')}}</span>
         <span
           :class="['name', $route.path === '/multisigCosign' ?'active':'','pointer']"
-          @click="$router.push('multisigCosign')"
+          @click="$route.path === '/multisigCosign' ? '' : $router.push('multisigCosign')"
         >{{$t('cosign_transactions')}}</span>
       </span>
     </div>

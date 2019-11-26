@@ -105,7 +105,7 @@
                     'outter_container',
                     active ? 'disabled' : 'pointer'
                 ]"
-                @click="$router.push(path)"
+                @click="active ? '' : $router.push(path).catch(err => {})"
         >
           <span class="inner_container absolute">{{$t(name)}}</span>
           <span class="line">|</span>

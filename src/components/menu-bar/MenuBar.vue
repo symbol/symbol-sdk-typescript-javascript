@@ -20,10 +20,11 @@
                 v-for="(route, index) in routes"
                 :key="index"
                 :class="[
-              $route.matched.map(({path}) => path).includes(route.path) ? 'active_panel' : '',
-              !walletList.length ? 'un_click' : 'pointer',
-          ]"
-                @click=" !walletList.length ?'': $router.push(route.path)"
+                  $route.matched.map(({path}) => path).includes(route.path)
+                    ? 'active_panel' : '',
+                    'pointer',
+                ]"
+                @click="navigationIconClicked(route)"
         >
           <span
                   :style="$route.matched.map(({path}) => path).includes(route.path)
