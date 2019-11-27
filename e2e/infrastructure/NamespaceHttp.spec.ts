@@ -45,7 +45,7 @@ describe('NamespaceHttp', () => {
             const json = JSON.parse(data);
             config = json;
             account = Account.createFromPrivateKey(json.testAccount.privateKey, NetworkType.MIJIN_TEST);
-            namespaceHttp = new NamespaceHttp(json.apiUrl);
+            namespaceHttp = new NamespaceHttp(json.apiUrl, NetworkType.MIJIN_TEST);
             transactionHttp = new TransactionHttp(json.apiUrl);
             generationHash = json.generationHash;
             done();
