@@ -18,6 +18,7 @@ import {from as observableFrom, Observable, throwError} from 'rxjs';
 import {catchError, map, mergeMap} from 'rxjs/operators';
 import { Address } from '../model/account/Address';
 import {PublicAccount} from '../model/account/PublicAccount';
+import { NetworkType } from '../model/blockchain/NetworkType';
 import {MosaicFlags} from '../model/mosaic/MosaicFlags';
 import {MosaicId} from '../model/mosaic/MosaicId';
 import {MosaicInfo} from '../model/mosaic/MosaicInfo';
@@ -25,7 +26,6 @@ import {UInt64} from '../model/UInt64';
 import { MosaicRoutesApi } from './api';
 import {Http} from './Http';
 import {MosaicRepository} from './MosaicRepository';
-import {NetworkHttp} from './NetworkHttp';
 
 /**
  * Mosaic http repository.
@@ -42,11 +42,10 @@ export class MosaicHttp extends Http implements MosaicRepository {
     /**
      * Constructor
      * @param url
-     * @param networkHttp
+     * @param networkType
      */
-    constructor(url: string, networkHttp?: NetworkHttp) {
-        networkHttp = networkHttp == null ? new NetworkHttp(url) : networkHttp;
-        super(networkHttp);
+    constructor(url: string, networkType?: NetworkType) {
+        super(url, networkType);
         this.mosaicRoutesApi = new MosaicRoutesApi(url);
     }
 

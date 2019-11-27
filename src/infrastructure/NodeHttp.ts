@@ -40,7 +40,7 @@ export class NodeHttp extends Http implements NodeRepository {
      * @param url
      */
     constructor(url: string) {
-        super();
+        super(url);
         this.nodeRoutesApi = new NodeRoutesApi(url);
 
     }

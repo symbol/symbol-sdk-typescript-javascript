@@ -19,6 +19,7 @@ import * as requestPromise from 'request-promise-native';
 import {from as observableFrom, Observable, throwError} from 'rxjs';
 import {catchError, map, mergeMap} from 'rxjs/operators';
 import {PublicAccount} from '../model/account/PublicAccount';
+import { NetworkType } from '../model/blockchain/NetworkType';
 import {CosignatureSignedTransaction} from '../model/transaction/CosignatureSignedTransaction';
 import {Deadline} from '../model/transaction/Deadline';
 import {SignedTransaction} from '../model/transaction/SignedTransaction';
@@ -29,11 +30,8 @@ import {TransactionInfo} from '../model/transaction/TransactionInfo';
 import {TransactionStatus} from '../model/transaction/TransactionStatus';
 import {TransactionType} from '../model/transaction/TransactionType';
 import {UInt64} from '../model/UInt64';
-import { AnnounceTransactionInfoDTO,
-         BlockInfoDTO, BlockRoutesApi,
-         TransactionInfoDTO,
-         TransactionRoutesApi,
-         TransactionStatusDTO } from './api';
+import { BlockInfoDTO, BlockRoutesApi,
+         TransactionRoutesApi } from './api';
 import {Http} from './Http';
 import {CreateTransactionFromDTO} from './transaction/CreateTransactionFromDTO';
 import {TransactionRepository} from './TransactionRepository';
@@ -59,9 +57,10 @@ export class TransactionHttp extends Http implements TransactionRepository {
     /**
      * Constructor
      * @param url
+     * @param networkType
      */
-    constructor(private readonly url: string) {
-        super();
+    constructor(url: string, networkType?: NetworkType) {
+        super(url, networkType);
         this.transactionRoutesApi = new TransactionRoutesApi(url);
         this.blockRoutesApi = new BlockRoutesApi(url);
     }

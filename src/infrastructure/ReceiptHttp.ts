@@ -18,10 +18,10 @@ import {from as observableFrom, Observable, throwError} from 'rxjs';
 import {catchError, map, mergeMap} from 'rxjs/operators';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
+import { NetworkType } from '../model/blockchain/NetworkType';
 import { Statement } from '../model/receipt/Statement';
 import { ReceiptRoutesApi } from './api/receiptRoutesApi';
 import {Http} from './Http';
-import { NetworkHttp } from './NetworkHttp';
 import { CreateStatementFromDTO } from './receipt/CreateReceiptFromDTO';
 import { ReceiptRepository } from './ReceiptRepository';
 
@@ -40,11 +40,10 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
     /**
      * Constructor
      * @param url
-     * @param networkHttp
+     * @param networkType
      */
-    constructor(url: string, networkHttp?: NetworkHttp) {
-        networkHttp = networkHttp == null ? new NetworkHttp(url) : networkHttp;
-        super(networkHttp);
+    constructor(url: string, networkType?: NetworkType) {
+        super(url, networkType);
         this.receiptRoutesApi = new ReceiptRoutesApi(url);
     }
 

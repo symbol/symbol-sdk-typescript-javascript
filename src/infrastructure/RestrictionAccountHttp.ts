@@ -18,6 +18,7 @@ import {from as observableFrom, Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import { DtoMapping } from '../core/utils/DtoMapping';
 import { Address } from '../model/account/Address';
+import { NetworkType } from '../model/blockchain/NetworkType';
 import { AccountRestriction } from '../model/restriction/AccountRestriction';
 import { AccountRestrictions } from '../model/restriction/AccountRestrictions';
 import { RestrictionAccountRoutesApi } from './api/restrictionAccountRoutesApi';
@@ -38,9 +39,10 @@ export class RestrictionAccountHttp extends Http implements RestrictionAccountRe
     /**
      * Constructor
      * @param url
+     * @param networkType
      */
-    constructor(url: string) {
-        super();
+    constructor(url: string, networkType?: NetworkType) {
+        super(url, networkType);
         this.restrictionAccountRoutesApi = new RestrictionAccountRoutesApi(url);
 
     }

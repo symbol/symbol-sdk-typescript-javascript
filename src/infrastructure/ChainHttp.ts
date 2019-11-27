@@ -39,7 +39,7 @@ export class ChainHttp extends Http implements ChainRepository {
      * @param url
      */
     constructor(url: string) {
-        super();
+        super(url);
         this.chainRoutesApi = new ChainRoutesApi(url);
     }
 

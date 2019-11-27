@@ -17,6 +17,7 @@
 import {from as observableFrom, Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import { Address } from '../model/account/Address';
+import { NetworkType } from '../model/blockchain/NetworkType';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicAddressRestriction } from '../model/restriction/MosaicAddressRestriction';
 import { MosaicGlobalRestriction } from '../model/restriction/MosaicGlobalRestriction';
@@ -39,9 +40,10 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
     /**
      * Constructor
      * @param url
+     * @param networkType
      */
-    constructor(url: string) {
-        super();
+    constructor(url: string, networkType?: NetworkType) {
+        super(url, networkType);
         this.restrictionMosaicRoutesApi = new RestrictionMosaicRoutesApi(url);
 
     }
