@@ -13,6 +13,7 @@ export class NumberGrowTs extends Vue {
     numValue = 0
     isAdd = true
 
+    formatNumber = formatNumber
 
     numberGrow(ele) {
         let _this = this
@@ -32,10 +33,6 @@ export class NumberGrowTs extends Vue {
             current = Number(Number(start).toFixed(0))
             ele.innerHTML = current.toString().replace(/(\d)(?=(?:\d{3}[+]?)+$)/g, '$1,')
         }, 10)
-    }
-    formatNumber(number) {
-        return (formatNumber(number) + '').substring(0,(formatNumber(number) + '').indexOf('.'))
-
     }
 
     mounted() {
