@@ -6,11 +6,12 @@ import {
     FormattedTransaction, AppInfo, StoreAccount,
     SpecialTxDetailsKeys, TxDetailsKeysWithValueToTranslate,
 } from '@/core/model'
-import TransactionSummary from '@/components/transaction-summary/TransactionSummary.vue';
+import TransactionDetails from '@/components/transaction-details/TransactionDetails.vue'
+
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
-    components:{
-        TransactionSummary,
+    components: {
+        TransactionDetails,
     }
 })
 export class TransactionModalTs extends Vue {
@@ -39,7 +40,7 @@ export class TransactionModalTs extends Vue {
         return this.activeAccount.wallet.publicKey
     }
 
-    get mosaics (){
+    get mosaics() {
         return this.activeAccount.mosaics
     }
 
@@ -54,14 +55,15 @@ export class TransactionModalTs extends Vue {
         return hexId
     }
 
-    renderMosaicsToTable(mosaics){
-        const mosaicList = renderMosaicsAndReturnArray(mosaics,this.$store)
+    renderMosaicsToTable(mosaics) {
+        const mosaicList = renderMosaicsAndReturnArray(mosaics, this.$store)
         return {
-            head:['name','amount'],
-            data:mosaicList,
+            head: ['name', 'amount'],
+            data: mosaicList,
 
         }
     }
+
     showInnerDialog(currentInnerTransaction) {
         this.isShowInnerDialog = true
         this.currentInnerTransaction = currentInnerTransaction

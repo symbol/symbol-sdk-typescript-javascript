@@ -55,7 +55,7 @@ export class CollectionRecordTs extends Vue {
         const {currentMonthFirst, currentMonthLast, transferTransactionList} = this
 
         const filteredByDate = [...transferTransactionList]
-            .filter(item => (!item.isTxUnconfirmed
+            .filter(item => (item.isTxConfirmed
                 && item.txHeader.date.getTime() <= currentMonthLast.getTime()
                 && item.txHeader.date.getTime() >= currentMonthFirst.getTime()))
 
@@ -75,7 +75,7 @@ export class CollectionRecordTs extends Vue {
     }
 
     get unConfirmedTransactionList() {
-        return this.transferTransactionList.filter(({isTxUnconfirmed}) => isTxUnconfirmed)
+        return this.transferTransactionList.filter(({isTxConfirmed}) => !isTxConfirmed)
     }
 
     get currentMonthFirst(): Date {

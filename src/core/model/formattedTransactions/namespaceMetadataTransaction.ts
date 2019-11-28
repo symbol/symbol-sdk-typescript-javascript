@@ -8,14 +8,15 @@ export class FormattedNamespaceMetadataTransaction extends FormattedTransaction 
     dialogDetailMap: any
     icon: any
 
-    constructor(    tx: Transaction,
-                    store: Store<AppState>) {
+    constructor(tx: Transaction,
+                store: Store<AppState>) {
         super(tx, store)
         const {networkCurrency} = store.state.account
         const {divisibility, ticker} = networkCurrency
 
         this.dialogDetailMap = {
-            'transfer_type': this.txHeader.tag,
+            'self': tx.signer ? tx.signer.address.pretty(): store.state.account.wallet.address,
+            'transaction_type': this.txHeader.tag,
             'fee': getRelativeMosaicAmount(tx.maxFee.compact(), divisibility) + ' ' + ticker,
             'block': this.txHeader.block,
             'hash': this.txHeader.hash,

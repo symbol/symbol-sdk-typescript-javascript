@@ -3,21 +3,17 @@
     <Modal
             v-model="show"
             v-if="activeTransaction"
-            :title="$t('transaction_detail')"
             :transfer="false"
-            class-name="dash_board_dialog text_select"
+            class-name="transaction-modal-dialog text_select"
     >
-      <TransactionSummary
-        :formattedTransaction="activeTransaction"
-        :add-scroll="true"
-      />
+      <TransactionDetails :transaction="activeTransaction"/>
     </Modal>
   </div>
 </template>
 
 <script lang="ts">
-    // @ts-ignore
     import {TransactionModalTs} from '@/components/transaction-modal/TransactionModalTs.ts'
+    import "./TransactionModal.less";
 
     export default class TransactionModal extends TransactionModalTs {
 
@@ -25,5 +21,4 @@
 </script>
 
 <style scoped lang="less">
-  @import "TransactionModal.less";
 </style>

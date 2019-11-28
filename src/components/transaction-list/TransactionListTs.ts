@@ -1,9 +1,16 @@
-import {TransactionType, NamespaceId, AggregateTransactionCosignature, Address} from 'nem2-sdk'
+import {TransactionType, NamespaceId, Address} from 'nem2-sdk'
 import {mapState} from "vuex"
 import {Component, Vue, Prop} from 'vue-property-decorator'
-import {formatNumber, renderMosaics} from '@/core/utils'
-import {FormattedTransaction, AppInfo, StoreAccount, TRANSACTIONS_CATEGORIES, AppWallet, FormattedAggregateBonded} from '@/core/model'
-import {defaultNetworkConfig, explorerUrlHead} from '@/config'
+import {formatNumber, renderMosaics, formatExplorerUrl} from '@/core/utils'
+import {
+    FormattedTransaction,
+    AppInfo,
+    StoreAccount,
+    TRANSACTIONS_CATEGORIES,
+    AppWallet,
+    FormattedAggregateBonded
+} from '@/core/model'
+import {defaultNetworkConfig} from '@/config'
 import {signTransaction} from '@/core/services'
 import TransactionModal from '@/components/transaction-modal/TransactionModal.vue'
 
@@ -25,7 +32,7 @@ export class TransactionListTs extends Vue {
     showDialog: boolean = false
     activeTransaction: FormattedTransaction = null
     NamespaceId = NamespaceId
-
+    formatExplorerUrl = formatExplorerUrl
     @Prop({default: null})
     mode: string
 
@@ -61,12 +68,6 @@ export class TransactionListTs extends Vue {
 
     get namespaces() {
         return this.activeAccount.namespaces
-    }
-
-
-    getExplorerUrl(transactionHash) {
-        return explorerUrlHead + transactionHash
-
     }
 
 

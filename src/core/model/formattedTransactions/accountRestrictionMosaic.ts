@@ -13,7 +13,8 @@ export class FormattedAccountRestrictionMosaic extends FormattedTransaction {
         const {networkCurrency} = store.state.account
 
         this.dialogDetailMap = {
-            'transfer_type': this.txHeader.tag,
+             'self': tx.signer ? tx.signer.address.pretty() : store.state.account.wallet.address,
+            'transaction_type': this.txHeader.tag,
             'fee': getRelativeMosaicAmount(tx.maxFee.compact(), networkCurrency.divisibility) + ' ' + networkCurrency.ticker,
             'block': this.txHeader.block,
             'hash': this.txHeader.hash,

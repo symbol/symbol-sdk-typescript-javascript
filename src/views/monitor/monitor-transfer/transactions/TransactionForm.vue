@@ -5,6 +5,7 @@
         <span class="title">{{$t('sender')}}</span>
         <span class="value no-border">{{ formatAddress(wallet.address) }}</span>
       </div>
+
       <div class="address flex_center" v-if="hasMultisigAccounts">
         <span class="title">{{$t('sender')}}</span>
         <span class="value radius flex_center">

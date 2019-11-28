@@ -12,7 +12,7 @@ export const formatAndSave = (  transaction: Transaction,
         [transaction],
         store,
     )
-    
+
     if (transactionCategory === TRANSACTIONS_CATEGORIES.TO_COSIGN) {
         store.commit('ADD_TRANSACTION_TO_COSIGN', formattedTransactions)
         return
@@ -33,7 +33,7 @@ export const setTransactionList = (address: string, store: Store<AppState>): voi
 
     accountHttp.getAccountTransactions(_address, new QueryParams(100)).subscribe(
         (transactionList: Transaction[]) => {
-            const txList = transactionFormat(transactionList, store)
+            const txList = transactionFormat(transactionList, store) .map(x => ({...x, isTxConfirmed: true}))
             store.commit('SET_TRANSACTION_LIST', txList)
             store.commit('SET_TRANSACTIONS_LOADING', false)
         },
@@ -43,7 +43,7 @@ export const setTransactionList = (address: string, store: Store<AppState>): voi
     accountHttp.getAccountUnconfirmedTransactions(_address, new QueryParams(100)).subscribe(
         (transactionList: Transaction[]) => {
             const txList = transactionFormat(transactionList, store)
-                .map(x => ({...x, isTxUnconfirmed: true}))
+                .map(x => ({...x, isTxConfirmed: false}))
 
             store.commit('SET_UNCONFIRMED_TRANSACTION_LIST', txList)
         },

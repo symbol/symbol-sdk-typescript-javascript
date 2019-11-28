@@ -19,7 +19,6 @@ const state: StoreAccount = {
     transactionList: [],
     currentAccount: CurrentAccount.default(),
     transactionsToCosign: [],
-    accountName: '',
     activeMultisigAccount: null,
     multisigAccountsMosaics: {},
     multisigAccountsNamespaces: {},
@@ -198,10 +197,10 @@ const mutations: MutationTree<StoreAccount> = {
     ADD_TRANSACTION_TO_COSIGN(state: StoreAccount, transactions: FormattedTransaction[]) {
         const [transaction,] = transactions
         const oldTransactions = [...state.transactionsToCosign]
-        
+
         const index = oldTransactions
             .findIndex(({rawTx}) => rawTx.transactionInfo.hash === transaction.rawTx.transactionInfo.hash)
-        
+
         if (index > -1) return
         state.transactionsToCosign = [transaction, ...oldTransactions]
     }

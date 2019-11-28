@@ -10,13 +10,16 @@ export abstract class FormattedTransaction {
     rawTx: Transaction
     txHeader: TransactionHeader
     txBody: any
-    isTxUnconfirmed: boolean
+    isTxConfirmed: boolean
     store: Store<AppState>
-  
+    dialogDetailMap?: any
+    icon?: any
+    formattedInnerTransactions?: FormattedTransaction[]
+
     constructor(transaction: any, store: Store<AppState>) {
         this.rawTx = transaction
         this.txHeader = new TransactionHeader(transaction, store)
-        this.isTxUnconfirmed = transaction.isTxUnconfirmed || false // @TODO: don't add key to Transaction
+        this.isTxConfirmed = transaction.isTxConfirmed || false // @TODO: don't add key to Transaction
         return this
     }
 }

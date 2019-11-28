@@ -9,19 +9,20 @@ export class FormattedAggregateBonded extends FormattedTransaction {
     icon: any
     formattedInnerTransactions: FormattedTransaction[]
 
-    constructor(  tx: AggregateTransaction,
-                  store: Store<AppState>) {
+    constructor(tx: AggregateTransaction,
+                store: Store<AppState>) {
         super(tx, store)
         const {networkCurrency} = store.state.account
-        this.formattedInnerTransactions = transactionFormatter( tx.innerTransactions,
+        this.formattedInnerTransactions = transactionFormatter(tx.innerTransactions,
             store)
 
         this.dialogDetailMap = {
-            'transfer_type': this.txHeader.tag,
+             'self': tx.signer ? tx.signer.address.pretty():store.state.account.wallet.address,
+            'transaction_type': this.txHeader.tag,
             'fee': getRelativeMosaicAmount(tx.maxFee.compact(), networkCurrency.divisibility) + ' ' + networkCurrency.ticker,
             'block': this.txHeader.block,
             'hash': this.txHeader.hash,
-            'cosigned_by': this.getCosignedBy(tx), 
+            'cosigned_by': this.getCosignedBy(tx),
         }
     }
 

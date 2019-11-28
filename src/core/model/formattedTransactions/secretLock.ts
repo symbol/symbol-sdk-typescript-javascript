@@ -1,7 +1,7 @@
 import {FormattedTransaction, AppState} from '@/core/model'
 import {getRelativeMosaicAmount} from '@/core/utils'
-import {SecretLockTransaction, NamespaceId, Address} from 'nem2-sdk'
-import {Store} from 'vuex';
+import {SecretLockTransaction, NamespaceId, Address, Transaction} from 'nem2-sdk'
+import {Store} from 'vuex'
 
 export class FormattedSecretLock extends FormattedTransaction {
     dialogDetailMap: any
@@ -11,18 +11,18 @@ export class FormattedSecretLock extends FormattedTransaction {
                 store: Store<AppState>) {
         super(tx, store)
         const {networkCurrency} = store.state.account
-
-            this.dialogDetailMap = {
-                'transfer_type': this.txHeader.tag,
-                'fee': getRelativeMosaicAmount(tx.maxFee.compact(), networkCurrency.divisibility) + ' ' + networkCurrency.ticker,
-                'block': this.txHeader.block,
-                'hash': this.txHeader.hash,
-                'mosaics': [tx.mosaic],
-                'duration_blocks': tx.duration.compact().toLocaleString(),
-                hashType: tx.hashType,
-                secret: tx.secret,
-                aims: this.getRecipient(),
-            }
+        this.dialogDetailMap = {
+             'self': tx.signer ? tx.signer.address.pretty() : store.state.account.wallet.address,
+            'transaction_type': this.txHeader.tag,
+            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), networkCurrency.divisibility) + ' ' + networkCurrency.ticker,
+            'block': this.txHeader.block,
+            'hash': this.txHeader.hash,
+            'mosaics': [tx.mosaic],
+            'duration_blocks': tx.duration.compact().toLocaleString(),
+            hashType: tx.hashType,
+            secret: tx.secret,
+            aims: this.getRecipient(),
+        }
     }
 
     getRecipient(): string | NamespaceId {

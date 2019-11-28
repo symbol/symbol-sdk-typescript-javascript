@@ -1,7 +1,7 @@
 import {TransactionType, NetworkType} from 'nem2-sdk'
 import {DefaultFee, NetworkCurrency} from '@/core/model'
 
-export const WALLET_VERSION = '0.8.6'
+export const WALLET_VERSION = '0.8.7'
 
 export const isWindows = require('./packge.ts').isWin32
 
@@ -93,6 +93,7 @@ export const defaultNetworkConfig = {
 }
 
 export const networkConfig = {
+
     targetBlockTime: 15,
     enableVerifiableState: true,
     enableVerifiableReceipts: true,
@@ -125,8 +126,8 @@ export const networkConfig = {
     mosaicRentalFeeSinkPublicKey: "53E140B5947F104CABC2D6FE8BAEDBC30EF9A0609C717D9613DE593EC2A266D3",
     mosaicRentalFee: 500,
     maxMultisigDepth: 3,
-    maxCosignatoriesPerAccount: 10,
-    maxCosignedAccountsPerAccount: 14,
+    maxCosignatoriesPerAccount: 25,
+    maxCosignedAccountsPerAccount: 25,
     maxChildNamespaces: 256,
     maxNamespaceDepth: 3,
     minNamespaceDuration: "1m",

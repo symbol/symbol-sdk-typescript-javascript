@@ -7,13 +7,13 @@ import {CreateWalletType} from '@/core/model/CreateWalletType'
 import trezor from '@/core/utils/trezor'
 import {AppWallet} from '@/core/model/AppWallet'
 import {transactionConfirmationObservable} from '@/core/services/transactions'
-import TransactionSummary from '@/components/transaction-summary/TransactionSummary.vue'
+import TransactionDetails from '@/components/transaction-details/TransactionDetails.vue'
 import {StagedTransaction, SignTransaction} from '@/core/model'
 
 @Component({
     computed: {...mapState({app: 'app', account: 'account'})},
     components:{
-        TransactionSummary
+        TransactionDetails
     }
 })
 

@@ -9,7 +9,7 @@
 
 <script lang="ts">
     import 'animate.css'
-    import {Address} from 'nem2-sdk'
+    import {AccountHttp, Address, QueryParams, Transaction} from 'nem2-sdk'
     import {mapState} from 'vuex'
     import {asyncScheduler} from 'rxjs'
     import {throttleTime} from 'rxjs/operators'

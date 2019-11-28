@@ -77,10 +77,10 @@
 
                 <!-- FOURTH COLUMN -->
                 <div class="col4">
-                <span v-if="!c.isTxUnconfirmed" class="col4">
+                <span v-if="c.isTxConfirmed" class="col4">
                   {{ renderHeightAndConfirmation(c.txHeader.block) || '' }}
                 </span>
-                  <span v-if="c.isTxUnconfirmed" class="col4">
+                  <span v-if="!c.isTxConfirmed" class="col4">
                   {{ $t('unconfirmed') }}
                 </span>
                 </div>
@@ -88,7 +88,7 @@
                 <!-- FIFTH COLUMN -->
                 <div class="col5">
                   <span class="item">
-                    <a target="_blank" :href="getExplorerUrl(c.txHeader.hash)"> {{ miniHash(c.txHeader.hash) }} </a>
+                    <a target="_blank" :href="formatExplorerUrl(c.txHeader.hash)"> {{ miniHash(c.txHeader.hash) }} </a>
                   </span>
                   <span class="item bottom">{{c.txHeader.time}}</span>
                 </div>
@@ -96,12 +96,12 @@
                 <!-- SIXTH COLUMN -->
                 <div class="col6">
                   <img
-                          v-if="c.isTxUnconfirmed"
+                          v-if="!c.isTxConfirmed"
                           src="@/common/img/monitor/dash-board/dashboardUnconfirmed.png"
                           class="expand_mosaic_info"
                   />
                   <img
-                          v-if="!c.isTxUnconfirmed"
+                          v-if="c.isTxConfirmed"
                           src="@/common/img/monitor/dash-board/dashboardConfirmed.png"
                           class="expand_mosaic_info"
                   />
@@ -123,12 +123,11 @@
 <script lang="ts">
     // @ts-ignore
     import {TransactionListTs} from './TransactionListTs'
-
+    import "./TransactionList.less";
     export default class TransactionList extends TransactionListTs {
 
     }
 </script>
 
 <style scoped lang="less">
-  @import "./TransactionList.less";
 </style>

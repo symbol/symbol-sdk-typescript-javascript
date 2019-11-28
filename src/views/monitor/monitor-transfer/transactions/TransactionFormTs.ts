@@ -142,9 +142,9 @@ export class TransactionFormTs extends Vue {
         const walletFromList = this.app.walletList.find(wallet => wallet.address === address.plain())
         if (walletFromList === undefined) return address.pretty()
         return `${address.pretty()} (${walletFromList.name})`
-    } 
+    }
 
-    get multisigPublicKeyList(): {publicKey: string, label: string}[] {
+    get multisigPublicKeyList(): { publicKey: string, label: string }[] {
         if (!this.hasMultisigAccounts) return null
         return [
             {
@@ -219,7 +219,6 @@ export class TransactionFormTs extends Vue {
                 return mosaic
             })
             : Object.values(mosaics)
-
         // @TODO: refactor, make it an AppMosaic method
         return [...mosaicList]
             .filter(mosaic => mosaic.balance && mosaic.balance >= 0
@@ -312,22 +311,20 @@ export class TransactionFormTs extends Vue {
         } else {
             this.sendTransaction()
         }
-
-        const {
-            success,
-            signedTransaction,
-            signedLock,
-        } = await signTransaction({
-            transaction: this.transactionList[0],
-            store: this.$store,
-            lockParams: this.lockParams
-        })
-
-        if (success) {
-            const {node} = this.activeAccount
-            new AppWallet(this.wallet).announceTransaction(signedTransaction, node, this, signedLock)
-            this.initForm()
-        }
+            const {
+                success,
+                signedTransaction,
+                signedLock,
+            } = await signTransaction({
+                transaction: this.transactionList[0],
+                store: this.$store,
+                lockParams: this.lockParams
+            })
+            if (success) {
+                const {node} = this.activeAccount
+                new AppWallet(this.wallet).announceTransaction(signedTransaction, node, this, signedLock)
+                this.initForm()
+            }
     }
 
     sendTransaction() {

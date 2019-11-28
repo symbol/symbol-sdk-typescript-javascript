@@ -53,7 +53,6 @@ export interface StoreAccount {
     multisigAccountsTransactions: Record<string, Transaction[]>
     multisigAccountInfo: Record<string, MultisigAccountInfo>
     transactionsToCosign: FormattedTransaction[],
-    accountName: string
     activeWalletAddress: string
     /**
      *  The network currency, to be used for fees management,
