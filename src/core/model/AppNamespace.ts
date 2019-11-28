@@ -5,9 +5,6 @@ import { NamespaceExpirationInfo } from './types'
 const {namespaceGracePeriodDuration} = networkConfig
 
 export class AppNamespace {
-  aliasTarget: string
-  aliasType: string
-
   constructor(   public id: NamespaceId,
                  public hex: string,
                  public namespaceInfo: NamespaceInfo,

@@ -1,17 +1,17 @@
 import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import MosaicEditDialog from './mosaic-edit-dialog/MosaicEditDialog.vue'
 import {formatNumber} from '@/core/utils'
 import {mosaicSortType} from "@/config/view/mosaic"
 import {Message, networkConfig} from "@/config"
 import {AppInfo, AppMosaic, AppNamespace, MosaicNamespaceStatusType, StoreAccount} from "@/core/model"
-import Alias from '@/components/forms/alias/Alias.vue'
 import {setMosaics, sortMosaicList} from "@/core/services"
+import Alias from '@/components/forms/alias/Alias.vue'
+import MosaicSupplyChange from '@/components/forms/mosaic-supply-change/MosaicSupplyChange.vue'
 
 @Component({
     components: {
         Alias,
-        MosaicEditDialog
+        MosaicSupplyChange,
     },
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
 })

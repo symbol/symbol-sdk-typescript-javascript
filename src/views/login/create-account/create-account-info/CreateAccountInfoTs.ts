@@ -60,7 +60,7 @@ export class CreateAccountInfoTs extends Vue {
         AppAccounts().saveAccountInLocalStorage(appAccount)
         this.$Notice.success({title: this.$t(Message.OPERATION_SUCCESS) + ''})
         this.$store.commit('SET_ACCOUNT_DATA', appAccount.currentAccount)
-        this.$store.commit('SET_TEMPORARY_PASSWORD', appAccount.password)
+        this.$store.commit('SET_TEMPORARY_PASSWORD', this.formItem.password)
         this.$router.push('generateMnemonic')
     }
 

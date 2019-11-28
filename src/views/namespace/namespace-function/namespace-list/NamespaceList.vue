@@ -166,7 +166,7 @@
       <p class="second_head">{{$t('scenes_to_be_used')}}</p>
       <p>{{$t('Used_to_bind_a_wallet_address')}}</p>
     </div>
-    <NamespaceEditDialog
+    <NamespaceRegistration
             v-if="showNamespaceEditDialog"
             :currentNamespace="namespace"
             :showNamespaceEditDialog="showNamespaceEditDialog"

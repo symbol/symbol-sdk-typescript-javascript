@@ -88,12 +88,24 @@ const routers = [
             {
                 path: '/mosaic',
                 name: 'mosaic',
+                redirect: '/mosaicList',
                 meta: {
                     clickable: true,
                     icon: leftBarIcons.windowMosaic,
                     activeIcon: leftBarIcons.windowMosaicActive,
                 },
-                component: () => import('@/views/mosaic/Mosaic.vue')
+                component: () => import('@/views/mosaic/Mosaic.vue'),
+                children: [
+                    {
+                        path: '/mosaicList',
+                        name: 'mosaicList',
+                        component: () => import('@/views/mosaic/mosaic-list/MosaicList.vue')
+                    }, {
+                        path: '/createMosaic',
+                        name: 'createMosaic',
+                        component: () => import('@/components/forms/mosaic-creation/MosaicCreation.vue')
+                    },
+                ]
             },
             {
                 path: '/namespace',
@@ -113,11 +125,11 @@ const routers = [
                     }, {
                         path: '/createNamespace',
                         name: 'Create_namespace',
-                        component: () => import('@/views/namespace/namespace-function/root-namespace/RootNamespace.vue')
+                        component: () => import('@/components/forms/create-root-namespace/CreateRootNamespace.vue')
                     }, {
                         path: '/createSubNamespace',
                         name: 'Create_subNamespace',
-                        component: () => import('@/views/namespace/namespace-function/sub-namespace/SubNamespace.vue')
+                        component: () => import('@/components/forms/create-sub-namespace/CreateSubNamespace.vue')
                     },
                 ]
             },

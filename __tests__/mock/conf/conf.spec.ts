@@ -21,6 +21,25 @@ export const Multisig2Account = Account.createFromPrivateKey(
     '72B08ACF80558B285EADA206BB1226A44038C65AC4649108B2284591641657B5',
     NetworkType.MIJIN_TEST)
 
+export const walletList = [
+    {
+        name: 'CosignAccount',
+        address: CosignAccount.address.plain(),
+    },
+    {
+        name: 'Cosign2Account',
+        address: Cosign2Account.address.plain(),
+    },
+    {
+        name: 'MultisigAccount',
+        address: MultisigAccount.address.plain(),
+    },
+    {
+        name: 'Multisig2Account',
+        address: Multisig2Account.address.plain(),
+    },
+]
+
 export const mosaics = {
     "308F144790CD7BC4": {
         "hex": "308F144790CD7BC4",
@@ -116,7 +135,6 @@ export const multisigAccountInfo = {
             {
                 address: MultisigAccount.address,
                 publicKey: MultisigAccount.publicKey
-
             }
         ]
     },

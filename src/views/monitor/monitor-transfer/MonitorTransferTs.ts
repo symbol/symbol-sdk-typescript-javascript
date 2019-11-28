@@ -1,15 +1,15 @@
 import {Component, Vue} from 'vue-property-decorator'
-import CollectionRecord from '@/components/collection-record/CollectionRecord.vue'
-import MultisigTransferTransaction from '@/views/monitor/monitor-transfer/transactions/TransactionForm.vue'
 import {mapState} from "vuex"
-import {TransferType} from "@/core/model/TransferType";
-import {monitorTransferTransferTypeConfig} from '@/config/view/monitor'
-import {StoreAccount} from "@/core/model"
+import {monitorTransferTransferTypeConfig} from '@/config'
+import {StoreAccount, TransferType} from "@/core/model"
+
+import Transfer from '@/components/forms/transfer/Transfer.vue'
+import CollectionRecord from '@/components/collection-record/CollectionRecord.vue'
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
 
 @Component({
     components: {
-        MultisigTransferTransaction,
+        Transfer,
         CollectionRecord,
         DisabledForms,
     },

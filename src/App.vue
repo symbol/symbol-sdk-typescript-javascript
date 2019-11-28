@@ -87,7 +87,6 @@
                 this.$store.commit('SET_MOSAICS_LOADING', true)
                 this.$store.commit('SET_NAMESPACE_LOADING', true)
                 this.$store.commit('SET_MULTISIG_LOADING', true)
-                this.$store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', null)
                 this.$store.commit('RESET_TRANSACTION_LIST')
                 this.$store.commit('RESET_MOSAICS')
                 this.$store.commit('RESET_NAMESPACES')

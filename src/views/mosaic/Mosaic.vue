@@ -1,32 +1,32 @@
 <template>
   <div class="mosaicWrap selection_container">
     <div class="top_navigator radius">
-      <span class="button_list_item " v-for="(b,index) in buttonList">
-        <span :class="['name',b.isSelected?'active':'','pointer']" @click="switchButton(index)">{{$t(b.name)}}</span>
-        <span class="line" v-if="index !== (buttonList.length -1) ">|</span>
+      <span class="button_list_item">
+        <span
+          :class="['name', $route.path === '/mosaicList' ? 'active' : '', 'pointer']"
+          @click="$route.path === '/mosaicList' ? '' : $router.push('mosaicList')"
+        >{{$t('mosaic_list')}}</span>
+
+        <span
+          :class="['name', $route.path === '/createMosaic' ? 'active' : '', 'pointer']"
+          @click="$route.path === '/createMosaic' ? '' : $router.push('createMosaic')"
+        >{{$t('create_mosaic')}}</span>
       </span>
     </div>
 
     <div class="sub_function_container radius">
-
       <div class="right_panel">
-        <MosaicList v-if="buttonList[0].isSelected"></MosaicList>
-        <MosaicTransaction v-if="buttonList[1].isSelected"></MosaicTransaction>
+        <router-view />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-    import "./Mosaic.less"
-    // @ts-ignore
-    import {MosaicTs} from '@/views/mosaic/MosaicTs.ts'
-
-    export default class Mosaic extends MosaicTs {
-
-    }
+export default {
+  name: "Mosaic"
+};
 </script>
-
-<style lang="less">
-
+<style scoped lang="less">
+@import "Mosaic.less";
 </style>

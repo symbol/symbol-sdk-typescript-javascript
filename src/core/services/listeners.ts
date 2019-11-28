@@ -159,7 +159,7 @@ export class ChainListeners {
     }
 
     cosignatureAddedListener(): void {
-        this.confirmedTxListener && this.confirmedTxListener.close()
+        this.cosignatureTxAdded && this.cosignatureTxAdded.close()
         const that = this.app
         const NEW_COSIGNATURE = that.$t(Message.NEW_COSIGNATURE)
         this.cosignatureTxAdded = new Listener(this.node, WebSocket)
@@ -180,7 +180,7 @@ export class ChainListeners {
     }
 
     aggregateBondedListener(): void {
-        this.confirmedTxListener && this.confirmedTxListener.close()
+        this.aggregateBondedTxListener && this.aggregateBondedTxListener.close()
         const that = this.app
         const NEW_AGGREGATE_BONDED = that.$t(Message.NEW_AGGREGATE_BONDED)
         this.aggregateBondedTxListener = new Listener(this.node, WebSocket)

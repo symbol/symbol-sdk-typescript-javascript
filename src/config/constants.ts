@@ -130,7 +130,7 @@ export const networkConfig = {
     maxCosignedAccountsPerAccount: 25,
     maxChildNamespaces: 256,
     maxNamespaceDepth: 3,
-    minNamespaceDuration: "1m",
+    minNamespaceDuration: 30,
     maxNamespaceDuration: 365,
     namespaceGracePeriodDuration: 172800, // Blocks
     reservedRootNamespaceNames: ["xem", "nem", "user", "account", "org", "com", "biz", "net", "edu", "mil", "gov", "info"],
@@ -154,7 +154,8 @@ export const NETWORK_CONSTANTS = {
     MAX_MESSAGE_LENGTH: networkConfig.maxMessageSize - 1,
     MAX_MOSAIC_DURATION: networkConfig.maxMosaicDuration * 24 * 60 * 60 / networkConfig.targetBlockTime,
     MAX_NAMESPACE_DURATION: networkConfig.maxNamespaceDuration * 24 * 60 * 60 / networkConfig.targetBlockTime,
-    MIN_NAMESPACE_DURATION: 4,
+    // todo not sure about max value = 2101400 in validator
+    MIN_NAMESPACE_DURATION: 30 * 24 * 60 * 60 / networkConfig.targetBlockTime,
     PRIVATE_KEY_LENGTH: 64,
     NEMESIS_BLOCK_TIMESTAMP: 1459468800,
 }

@@ -1,15 +1,15 @@
 import {AliasType} from "nem2-sdk"
 import {mapState} from "vuex"
 import {Component, Vue} from 'vue-property-decorator'
-import NamespaceEditDialog from './namespace-edit-dialog/NamespaceEditDialog.vue'
 import {Message, networkConfig} from '@/config'
 import {sortNamespaceList, namespaceSortTypes, setNamespaces} from '@/core/services'
 import {StoreAccount, AppInfo, AppNamespace} from "@/core/model"
+import NamespaceRegistration from '@/components/forms/namespace-registration/NamespaceRegistration.vue'
 import Alias from '@/components/forms/alias/Alias.vue'
 
 @Component({
     components: {
-        NamespaceEditDialog,
+        NamespaceRegistration,
         Alias,
     },
     computed: {

@@ -25,6 +25,7 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator'
+    @Component
     export default class Multisig extends Vue {}
 </script>
 <style scoped lang="less">

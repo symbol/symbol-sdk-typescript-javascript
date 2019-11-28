@@ -92,7 +92,7 @@ export const formDataConfig = {
         feeSpeed: FEE_SPEEDS.NORMAL,
     },
     rootNamespaceForm: {
-        duration: 1000,
+        duration: 1000000,
         rootNamespaceName: '',
         multisigPublicKey: '',
         feeSpeed: FEE_SPEEDS.NORMAL,

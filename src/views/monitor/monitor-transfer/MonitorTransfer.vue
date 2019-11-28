@@ -4,7 +4,7 @@
       <DisabledForms></DisabledForms>
       <div class="bottom_transfer_info scroll ">
         <div class="multisig">
-          <MultisigTransferTransaction></MultisigTransferTransaction>
+          <Transfer />
         </div>
       </div>
     </div>
