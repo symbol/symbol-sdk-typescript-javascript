@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import { Observable } from 'rxjs/internal/Observable';
+import { combineLatest } from 'rxjs/internal/observable/combineLatest';
+import { of } from 'rxjs/internal/observable/of';
 import { Convert, RawAddress } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -26,6 +29,7 @@ import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
 import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
+import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -232,5 +236,37 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.targetAddress, this.networkType)),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param namespaceHttp NamespaceHttp
+     * @returns {MosaicAddressRestrictionTransaction}
+     */
+    resolveAliases(namespaceHttp: NamespaceHttp): Observable<MosaicAddressRestrictionTransaction> {
+        const resolvedAddress = this.targetAddress instanceof NamespaceId ?
+            namespaceHttp.getLinkedAddress(this.targetAddress as NamespaceId) :
+            of(this.targetAddress);
+
+        const resolvedMosaicId = this.mosaicId instanceof NamespaceId ?
+            namespaceHttp.getLinkedMosaicId(this.mosaicId as NamespaceId) :
+            of(this.mosaicId);
+
+        return combineLatest(resolvedAddress, resolvedMosaicId, (address, mosaicId) => {
+            return new MosaicAddressRestrictionTransaction(
+                this.networkType,
+                this.version,
+                this.deadline,
+                this.maxFee,
+                mosaicId,
+                this.restrictionKey,
+                address,
+                this.previousRestrictionValue,
+                this.newRestrictionValue,
+                this.signature,
+                this.signer,
+                this.transactionInfo,
+            );
+        });
     }
 }

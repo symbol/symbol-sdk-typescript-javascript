@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import { combineLatest, from, of } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
+import { mergeMap, toArray } from 'rxjs/operators';
 import { Convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AccountMosaicRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountMosaicRestrictionTransactionBuilder';
@@ -25,6 +28,7 @@ import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
+import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
@@ -188,5 +192,42 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
             }),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param namespaceHttp NamespaceHttp
+     * @returns {AccountMosaicRestrictionTransaction}
+     */
+    resolveAliases(namespaceHttp: NamespaceHttp): Observable<AccountMosaicRestrictionTransaction> {
+        const restrictionAdditions = from(this.restrictionAdditions).pipe(
+            mergeMap((addition) => addition instanceof NamespaceId ?
+                namespaceHttp.getLinkedMosaicId(addition) :
+                of(addition),
+            ),
+            toArray(),
+        );
+        const restrictionDeletions = from(this.restrictionDeletions).pipe(
+            mergeMap((deletion) => deletion instanceof NamespaceId ?
+                namespaceHttp.getLinkedMosaicId(deletion) :
+                of(deletion),
+            ),
+            toArray(),
+        );
+
+        return combineLatest(restrictionAdditions, restrictionDeletions, (additions, deletions) => {
+            return new AccountMosaicRestrictionTransaction(
+                this.networkType,
+                this.version,
+                this.deadline,
+                this.maxFee,
+                this.restrictionFlags,
+                additions,
+                deletions,
+                this.signature,
+                this.signer,
+                this.transactionInfo,
+            );
+        });
     }
 }

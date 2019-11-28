@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Convert, Convert as convert, RawAddress } from '../../core/format';
+import { combineLatest, of } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
+import { map } from 'rxjs/operators';
+import { Convert, Convert as convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
@@ -26,11 +29,11 @@ import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
 import { UnresolvedMosaicBuilder } from '../../infrastructure/catbuffer/UnresolvedMosaicBuilder';
 import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
+import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
-import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
@@ -230,5 +233,34 @@ export class SecretLockTransaction extends Transaction {
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
         );
         return transactionBuilder.serialize();
+    }
+
+    resolveAliases(namespaceHttp: NamespaceHttp): Observable<SecretLockTransaction> {
+        const resolvedRecipient = this.recipientAddress instanceof NamespaceId ?
+                    namespaceHttp.getLinkedAddress(this.recipientAddress as NamespaceId) :
+                    of(this.recipientAddress);
+
+        const resolvedMosaic = this.mosaic instanceof NamespaceId ?
+            namespaceHttp.getLinkedMosaicId(this.recipientAddress as NamespaceId).pipe(
+                map((mosaicId) => new Mosaic(mosaicId, this.mosaic.amount)),
+            ) :
+            of(this.mosaic);
+
+        return combineLatest(resolvedRecipient, resolvedMosaic, (recipient, mosaic) => {
+            return new SecretLockTransaction(
+                this.networkType,
+                this.version,
+                this.deadline,
+                this.maxFee,
+                mosaic,
+                this.duration,
+                this.hashType,
+                this.secret,
+                recipient,
+                this.signature,
+                this.signer,
+                this.transactionInfo,
+            );
+        });
     }
 }

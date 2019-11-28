@@ -15,6 +15,7 @@
  */
 
 import { sha3_256 } from 'js-sha3';
+import { Observable } from 'rxjs/internal/Observable';
 import {KeyPair, MerkleHashBuilder, SHA3Hasher, SignSchema} from '../../core/crypto';
 import {Convert, RawArray} from '../../core/format';
 import {AggregateBondedTransactionBuilder} from '../../infrastructure/catbuffer/AggregateBondedTransactionBuilder';
@@ -26,6 +27,7 @@ import { Hash256Dto } from '../../infrastructure/catbuffer/Hash256Dto';
 import {KeyDto} from '../../infrastructure/catbuffer/KeyDto';
 import {SignatureDto} from '../../infrastructure/catbuffer/SignatureDto';
 import {TimestampDto} from '../../infrastructure/catbuffer/TimestampDto';
+import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
 import {CreateTransactionFromPayload} from '../../infrastructure/transaction/CreateTransactionFromPayload';
 import {Account} from '../account/Account';
 import {PublicAccount} from '../account/PublicAccount';
@@ -399,5 +401,14 @@ export class AggregateTransaction extends Transaction {
      */
     private getInnerTransactionPaddingSize(size: number, alignment: number): number {
         return 0 === size % alignment ? 0 : alignment - (size % alignment);
+    }
+
+    /**
+     * @internal
+     * @param namespaceHttp NamespaceHttp
+     * @returns {AggregateTransaction}
+     */
+    resolveAliases(namespaceHttp: NamespaceHttp): Observable<AggregateTransaction> {
+        throw new Error('Not implemented');
     }
 }

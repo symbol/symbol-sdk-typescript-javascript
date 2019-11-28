@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import { of } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
+import { map } from 'rxjs/operators';
 import { Convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -23,6 +26,7 @@ import { MosaicMetadataTransactionBuilder } from '../../infrastructure/catbuffer
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
+import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
@@ -208,5 +212,47 @@ export class MosaicMetadataTransaction extends Transaction {
             Convert.utf8ToUint8(this.value),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param namespaceHttp NamespaceHttp
+     * @returns {MosaicMetadataTransaction}
+     */
+    resolveAliases(namespaceHttp: NamespaceHttp): Observable<MosaicMetadataTransaction> {
+        return this.targetMosaicId instanceof NamespaceId ?
+            namespaceHttp.getLinkedMosaicId(this.targetMosaicId as NamespaceId).pipe(
+                map((mosaicId) => {
+                    return new MosaicMetadataTransaction(
+                        this.networkType,
+                        this.version,
+                        this.deadline,
+                        this.maxFee,
+                        this.targetPublicKey,
+                        this.scopedMetadataKey,
+                        mosaicId,
+                        this.valueSizeDelta,
+                        this.value,
+                        this.signature,
+                        this.signer,
+                        this.transactionInfo,
+                    );
+                }),
+            ) :
+            of(new MosaicMetadataTransaction(
+                this.networkType,
+                this.version,
+                this.deadline,
+                this.maxFee,
+                this.targetPublicKey,
+                this.scopedMetadataKey,
+                this.targetMosaicId,
+                this.valueSizeDelta,
+                this.value,
+                this.signature,
+                this.signer,
+                this.transactionInfo,
+            ),
+        );
     }
 }

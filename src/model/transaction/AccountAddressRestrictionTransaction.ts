@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { Convert, RawAddress } from '../../core/format';
+import { combineLatest, from, of } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
+import { mergeMap, toArray } from 'rxjs/operators';
+import { Convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AccountAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountAddressRestrictionTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -25,13 +28,13 @@ import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
+import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
 import { UInt64 } from '../UInt64';
-import { AccountRestrictionModification } from './AccountRestrictionModification';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
@@ -189,5 +192,42 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             }),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param namespaceHttp NamespaceHttp
+     * @returns {AccountAddressRestrictionTransaction}
+     */
+    resolveAliases(namespaceHttp: NamespaceHttp): Observable<AccountAddressRestrictionTransaction> {
+        const restrictionAdditions = from(this.restrictionAdditions).pipe(
+            mergeMap((addition) => addition instanceof NamespaceId ?
+                namespaceHttp.getLinkedAddress(addition) :
+                of(addition),
+            ),
+            toArray(),
+        );
+        const restrictionDeletions = from(this.restrictionDeletions).pipe(
+            mergeMap((deletion) => deletion instanceof NamespaceId ?
+                namespaceHttp.getLinkedAddress(deletion) :
+                of(deletion),
+            ),
+            toArray(),
+        );
+
+        return combineLatest(restrictionAdditions, restrictionDeletions, (additions, deletions) => {
+            return new AccountAddressRestrictionTransaction(
+                this.networkType,
+                this.version,
+                this.deadline,
+                this.maxFee,
+                this.restrictionFlags,
+                additions,
+                deletions,
+                this.signature,
+                this.signer,
+                this.transactionInfo,
+            );
+        });
     }
 }

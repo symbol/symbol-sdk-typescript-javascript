@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { Observable } from 'rxjs/internal/Observable';
+import { of } from 'rxjs/internal/observable/of';
 import { Convert } from '../../core/format';
 import { AccountLinkTransactionBuilder } from '../../infrastructure/catbuffer/AccountLinkTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -21,6 +23,7 @@ import { EmbeddedAccountLinkTransactionBuilder } from '../../infrastructure/catb
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
+import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
@@ -162,5 +165,14 @@ export class AccountLinkTransaction extends Transaction {
             this.linkAction.valueOf(),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param namespaceHttp NamespaceHttp
+     * @returns {AccountLinkTransaction}
+     */
+    resolveAliases(namespaceHttp: NamespaceHttp): Observable<AccountLinkTransaction> {
+        return of(this);
     }
 }

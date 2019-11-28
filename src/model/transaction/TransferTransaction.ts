@@ -15,7 +15,10 @@
  */
 
 import * as Long from 'long';
-import {Convert, Convert as convert} from '../../core/format';
+import { combineLatest, from, Observable, of } from 'rxjs';
+import { map, toArray } from 'rxjs/operators';
+import { mergeMap} from 'rxjs/operators';
+import {Convert} from '../../core/format';
 import {UnresolvedMapping} from '../../core/utils/UnresolvedMapping';
 import {AmountDto} from '../../infrastructure/catbuffer/AmountDto';
 import {EmbeddedTransferTransactionBuilder} from '../../infrastructure/catbuffer/EmbeddedTransferTransactionBuilder';
@@ -27,6 +30,7 @@ import {TransferTransactionBuilder} from '../../infrastructure/catbuffer/Transfe
 import {UnresolvedAddressDto} from '../../infrastructure/catbuffer/UnresolvedAddressDto';
 import {UnresolvedMosaicBuilder} from '../../infrastructure/catbuffer/UnresolvedMosaicBuilder';
 import {UnresolvedMosaicIdDto} from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
+import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
 import {Address} from '../account/Address';
 import {PublicAccount} from '../account/PublicAccount';
 import {NetworkType} from '../blockchain/NetworkType';
@@ -43,6 +47,7 @@ import {Transaction} from './Transaction';
 import {TransactionInfo} from './TransactionInfo';
 import {TransactionType} from './TransactionType';
 import {TransactionVersion} from './TransactionVersion';
+import { flatMap } from 'rxjs/operators';
 
 /**
  * Transfer transactions contain data about transfers of mosaics and message to another account.
@@ -271,5 +276,41 @@ export class TransferTransaction extends Transaction {
             this.getMessageBuffer(),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param namespaceHttp NamespaceHttp
+     * @returns {TransferTransaction}
+     */
+    resolveAliases(namespaceHttp: NamespaceHttp): Observable<TransferTransaction> {
+        const resolvedRecipient = this.recipientAddress instanceof NamespaceId ?
+                    namespaceHttp.getLinkedAddress(this.recipientAddress as NamespaceId) :
+                    of(this.recipientAddress);
+
+        const resolvedMosaics = from(this.mosaics).pipe(
+            mergeMap((mosaic) => mosaic.id instanceof NamespaceId ?
+                namespaceHttp.getLinkedMosaicId(mosaic.id).pipe(
+                    map((mosaicId) => new Mosaic(mosaicId, mosaic.amount)),
+                ) :
+                of(mosaic),
+            ),
+            toArray(),
+        );
+
+        return combineLatest(resolvedRecipient, resolvedMosaics, (recipient, mosaics) => {
+            return new TransferTransaction(
+                this.networkType,
+                this.version,
+                this.deadline,
+                this.maxFee,
+                recipient,
+                mosaics,
+                this.message,
+                this.signature,
+                this.signer,
+                this.transactionInfo,
+            );
+        });
     }
 }

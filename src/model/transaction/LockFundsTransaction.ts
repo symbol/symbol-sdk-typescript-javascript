@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+import { Observable } from 'rxjs/internal/Observable';
+import { of } from 'rxjs/internal/observable/of';
+import { map } from 'rxjs/internal/operators/map';
+import { mergeMap } from 'rxjs/internal/operators/mergeMap';
 import { Convert } from '../../core/format';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
@@ -25,10 +29,12 @@ import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedMosaicBuilder } from '../../infrastructure/catbuffer/UnresolvedMosaicBuilder';
 import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
+import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
 import { MosaicId } from '../mosaic/MosaicId';
+import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -50,6 +56,7 @@ export class LockFundsTransaction extends Transaction {
      * Aggregate bonded hash.
      */
     public readonly hash: string;
+    signedTransaction: SignedTransaction;
 
     /**
      * Create a Lock funds transaction object
@@ -108,6 +115,7 @@ export class LockFundsTransaction extends Transaction {
                 transactionInfo?: TransactionInfo) {
         super(TransactionType.LOCK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
         this.hash = signedTransaction.hash;
+        this.signedTransaction = signedTransaction;
         if (signedTransaction.type !== TransactionType.AGGREGATE_BONDED) {
             throw new Error('Signed transaction must be Aggregate Bonded Transaction');
         }
@@ -199,5 +207,43 @@ export class LockFundsTransaction extends Transaction {
             new Hash256Dto(Convert.hexToUint8(this.hash)),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param namespaceHttp NamespaceHttp
+     * @returns {LockFundsTransaction}
+     */
+    resolveAliases(namespaceHttp: NamespaceHttp): Observable<LockFundsTransaction> {
+        return of(this.mosaic).pipe(
+            mergeMap((mosaic) => mosaic.id instanceof NamespaceId ?
+                namespaceHttp.getLinkedMosaicId(mosaic.id).pipe(
+                    map((mosaicId) => new LockFundsTransaction(
+                        this.networkType,
+                        this.version,
+                        this.deadline,
+                        this.maxFee,
+                        new Mosaic(mosaicId, mosaic.amount),
+                        this.duration,
+                        this.signedTransaction,
+                        this.signature,
+                        this.signer,
+                        this.transactionInfo,
+                    )),
+                ) :
+                of(new LockFundsTransaction(
+                    this.networkType,
+                    this.version,
+                    this.deadline,
+                    this.maxFee,
+                    mosaic,
+                    this.duration,
+                    this.signedTransaction,
+                    this.signature,
+                    this.signer,
+                    this.transactionInfo,
+                )),
+            ),
+        );
     }
 }
