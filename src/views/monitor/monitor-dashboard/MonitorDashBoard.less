@@ -1,5 +1,6 @@
-.dash_board_container {
-  height: calc(100% - 70px);
+.monitor-dashboard-wrapper {
+  height: calc(100% - 74px);
+  background-color: #FFF;
 
   .inner_transaction_title {
     width: 200px !important;
@@ -21,88 +22,108 @@
   }
 
   .top_network_info {
-    margin: 15px 0;
-    height: 440px;
+    margin: 20px 0 30px;
+    padding-top: 20px;
+    height: 176px;
 
-    .left_echart {
-      width: 960px;
-      height: 100%;
-      padding: 15px 0;
-      background-color: white;
-      float: left;
-      position: relative;
+    .top_wallet_info {
+      padding-left: 30px;
+      display: flex;
 
-      .trend {
-        font-size: 16px;
-        font-weight: 400;
-        color: rgba(34, 34, 34, 1);
-        padding-left: 30px;
-      }
-
-      .right {
-        font-size: 14px;
-        font-weight: 400;
-        color: rgba(153, 153, 153, 1);
-        padding-right: 28px;
-      }
-
-      .black {
-        color: #222222;
-        margin-left: 5px;
-      }
-
-    }
-
-    .right_net_status {
-      float: left;
-      width: 335px;
-      height: 100%;
-      background-color: white;
-      margin-left: 15px;
-      padding: 15px 31px;
-
-      .panel_name {
-        font-size: 16px;
-        font-weight: 400;
-        color: rgba(34, 34, 34, 1);
-        margin-bottom: 20px;
-      }
-
-      .network_item {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-content: center;
-        align-items: center;
-        padding: 15px 22px;
-        border: 1px solid rgba(238, 238, 238, 1);
-        margin: 8px 0;
-
-        .descript {
-          padding-left: 20px;
-          display: inline-block;
-          width: 180px;
-          font-size: 16px;
-          font-weight: 400;
-          color: rgba(102, 102, 102, 1);
-          line-height: 4px;
-        }
-
-        .data {
-          display: inline-block;
-          width: 120px;
-          text-align: right;
-          font-size: 17px;
-          font-weight: 400;
-          color: rgba(34, 34, 34, 1);
-          line-height: 20px;
-        }
+      > div {
+        width: 295px;
+        height: 156px;
+        margin-right: 30px;
+        padding: 20px 0 0 30px;
 
         img {
+          display: inline-block;
+          height: 36px;
           width: 36px;
+          vertical-align: top;
+        }
+
+        .title {
+          margin-bottom: 40px;
+
+          .title_txt {
+            font-size: 16px;
+            line-height: 26px;
+            color: rgba(255, 255, 255);
+          }
+        }
+      }
+
+      .netWork {
+        background: linear-gradient(90deg, #FF963F 0%, #FACA5D 100%);
+        box-shadow: 0 2px 10px 0 rgba(245, 168, 28, 0.3);
+
+
+        .txt_info {
+          font-size: 40px;
+          font-weight: 400;
+          color: rgba(255, 255, 255, 1);
+          line-height: 40px;
+          margin-left: 163px;
+        }
+      }
+
+      .block_height {
+        background: linear-gradient(90deg, #666BFA 0%, #37ABDE 100%);
+        box-shadow: 0px 2px 10px 0px rgba(55, 171, 222, 0.3);
+
+        .txt_info {
+          font-size: 40px;
+          font-weight: 400;
+          color: rgba(255, 255, 255, 1);
+          line-height: 40px;
+          margin-left: 76px;
+        }
+      }
+
+      .block_time {
+        background: linear-gradient(90deg, #E0564C 0%, #FF9F98 100%);
+        box-shadow: 0px 2px 10px 0px rgba(55, 171, 222, 0.3);
+
+        .title {
+          span:nth-of-type(2) {
+            display: inline-block;
+            font-size: 46px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 1);
+            line-height: 55px;
+            vertical-align: top;
+            margin-left: 95px;
+          }
+        }
+
+        .txt_info {
+          font-size: 14px;
+          font-weight: 400;
+          color: rgba(255, 255, 255, 1);
+        }
+
+        .txt_info2 {
+          font-size: 18px;
+          font-weight: 400;
+          color: rgba(255, 255, 255, 1);
+        }
+      }
+
+      .amount {
+        background: linear-gradient(90deg, #1FB6AC 0%, #4AE0B8 100%);
+        box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.1);
+
+        .txt_info {
+          font-size: 40px;
+          font-weight: 400;
+          color: rgba(255, 255, 255, 1);
+          line-height: 40px;
+          margin-left: 19px;
         }
       }
     }
+
   }
 
   .table_container_unconfirmed {
@@ -122,51 +143,106 @@
       width: 300px;
     }
   }
-}
 
-.no_data {
-  text-align: center;
-  color: gray;
-  margin-top: 100px;
-}
+  .dash_board_dialog {
+    .value {
+      border: none;
+    }
 
-.disappear {
-  animation: fadeOutDown .5s infinite;
-  -webkit-animation: fadeOutDown .5s;
-}
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-.appear {
-  animation: fadeOutUp .5s infinite;
-  -webkit-animation: fadeOutUp .5s;
-}
+    .ivu-modal-close {
+      top: 15px;
+      right: 15px;
+    }
 
-.orange {
-  color: #F1642A !important;
-}
+    .title {
+      display: inline-block;
+      width: 100px;
+      margin-right: 10px;
+      font-weight: 400;
+      color: rgba(153, 153, 153, 1);
+      text-align: left;
 
-.blue {
-  color: #20B5AC !important;
-}
+    }
 
-.red {
-  color: #F65C5C;
-  margin-left: 10px;
-}
+    span {
+      margin-top: 8px;
+      font-size: 16px;
+    }
 
-.green {
-  color: green;
-  margin-left: 10px;
-}
+    .value {
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(34, 34, 34, 1);
+    }
 
-.long {
-  width: 500px !important;
-  height: 40px;
-  line-height: 40px !important;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+    .other_info:nth-of-type(even) {
+      margin-bottom: 20px;
+    }
 
-.transaction-list-wrapper {
-  height: calc(100% - 455px);
+    .transfer_type {
+      margin-bottom: 20px;
+
+      .value {
+        font-size: 20px;
+        font-weight: bold;
+        color: rgba(241, 95, 35, 1);
+      }
+    }
+
+  }
+
+  .no_data {
+    text-align: center;
+    color: gray;
+    margin-top: 100px;
+  }
+
+  .disappear {
+    animation: fadeOutDown .5s infinite;
+    -webkit-animation: fadeOutDown .5s;
+  }
+
+  .appear {
+    animation: fadeOutUp .5s infinite;
+    -webkit-animation: fadeOutUp .5s;
+  }
+
+  .orange {
+    color: #F1642A !important;
+  }
+
+  .blue {
+    color: #20B5AC !important;
+  }
+
+  .red {
+    color: #F65C5C;
+    margin-left: 10px;
+  }
+
+  .green {
+    color: green;
+    margin-left: 10px;
+  }
+
+  .long {
+    width: 500px !important;
+    height: 40px;
+    line-height: 40px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .transaction-list-wrapper {
+    height: calc(100% - 220px);
+  }
+
+  .number-grow-warp {
+    display: inline-block;
+  }
 }
