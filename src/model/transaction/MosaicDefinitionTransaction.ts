@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { Observable } from 'rxjs/internal/Observable';
+import { of } from 'rxjs/internal/observable/of';
 import { Convert } from '../../core/format';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
@@ -25,6 +27,7 @@ import { MosaicIdDto } from '../../infrastructure/catbuffer/MosaicIdDto';
 import { MosaicNonceDto } from '../../infrastructure/catbuffer/MosaicNonceDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
+import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicFlags } from '../mosaic/MosaicFlags';
@@ -220,5 +223,14 @@ export class MosaicDefinitionTransaction extends Transaction {
             this.divisibility,
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param namespaceHttp NamespaceHttp
+     * @returns {MosaicDefinitionTransaction}
+     */
+    resolveAliases(namespaceHttp: NamespaceHttp): Observable<MosaicDefinitionTransaction> {
+        return of(this);
     }
 }

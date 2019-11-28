@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
+import { Observable } from 'rxjs';
 import { KeyPair, SHA3Hasher, SignSchema } from '../../core/crypto';
 import { Convert } from '../../core/format';
+import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
 import { SerializeTransactionToJSON } from '../../infrastructure/transaction/SerializeTransactionToJSON';
 import { Account } from '../account/Account';
 import { PublicAccount } from '../account/PublicAccount';
@@ -184,6 +186,12 @@ export abstract class Transaction {
      * @internal
      */
     protected abstract generateEmbeddedBytes(): Uint8Array;
+
+    /**
+     * @internal
+     * @param namespaceHttp NamespaceHttp
+     */
+    abstract resolveAliases(namespaceHttp: NamespaceHttp): Observable<Transaction>;
 
     /**
      * @internal

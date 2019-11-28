@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { Observable } from 'rxjs/internal/Observable';
+import { of } from 'rxjs/internal/observable/of';
 import { Convert } from '../../core/format';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedNamespaceMetadataTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedNamespaceMetadataTransactionBuilder';
@@ -22,6 +24,7 @@ import { NamespaceIdDto } from '../../infrastructure/catbuffer/NamespaceIdDto';
 import { NamespaceMetadataTransactionBuilder } from '../../infrastructure/catbuffer/NamespaceMetadataTransactionBuilder';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
+import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { NamespaceId } from '../namespace/NamespaceId';
@@ -207,5 +210,14 @@ export class NamespaceMetadataTransaction extends Transaction {
             Convert.utf8ToUint8(this.value),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param namespaceHttp NamespaceHttp
+     * @returns {NamespaceMetadataTransaction}
+     */
+    resolveAliases(namespaceHttp: NamespaceHttp): Observable<NamespaceMetadataTransaction> {
+        return of(this);
     }
 }

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { combineLatest, of } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
 import { Convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -25,6 +27,7 @@ import { MosaicGlobalRestrictionTransactionBuilder } from '../../infrastructure/
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
+import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
@@ -242,5 +245,39 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
             this.newRestrictionType.valueOf(),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param namespaceHttp NamespaceHttp
+     * @returns {MosaicGlobalRestrictionTransaction}
+     */
+    resolveAliases(namespaceHttp: NamespaceHttp): Observable<MosaicGlobalRestrictionTransaction> {
+        const resolvedMosaicId = this.mosaicId instanceof NamespaceId ?
+            namespaceHttp.getLinkedMosaicId(this.mosaicId as NamespaceId) :
+            of(this.mosaicId);
+
+        const resolvedRefMosaicId = this.referenceMosaicId instanceof NamespaceId ?
+            namespaceHttp.getLinkedMosaicId(this.mosaicId as NamespaceId) :
+            of(this.mosaicId);
+
+        return combineLatest(resolvedMosaicId, resolvedRefMosaicId, (mosaicId, refMosaicId) => {
+            return new MosaicGlobalRestrictionTransaction(
+                this.networkType,
+                this.version,
+                this.deadline,
+                this.maxFee,
+                mosaicId,
+                refMosaicId,
+                this.restrictionKey,
+                this.previousRestrictionValue,
+                this.previousRestrictionType,
+                this.newRestrictionValue,
+                this.newRestrictionType,
+                this.signature,
+                this.signer,
+                this.transactionInfo,
+            );
+        });
     }
 }

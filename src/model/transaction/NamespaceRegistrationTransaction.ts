@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { Observable } from 'rxjs/internal/Observable';
+import { of } from 'rxjs/internal/observable/of';
 import { Convert, Convert as convert } from '../../core/format';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
@@ -25,6 +27,7 @@ import { NamespaceIdDto } from '../../infrastructure/catbuffer/NamespaceIdDto';
 import { NamespaceRegistrationTransactionBuilder } from '../../infrastructure/catbuffer/NamespaceRegistrationTransactionBuilder';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
+import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
 import {NamespaceMosaicIdGenerator} from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -272,5 +275,14 @@ export class NamespaceRegistrationTransaction extends Transaction {
             );
         }
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param namespaceHttp NamespaceHttp
+     * @returns {NamespaceRegistrationTransaction}
+     */
+    resolveAliases(namespaceHttp: NamespaceHttp): Observable<NamespaceRegistrationTransaction> {
+        return of(this);
     }
 }

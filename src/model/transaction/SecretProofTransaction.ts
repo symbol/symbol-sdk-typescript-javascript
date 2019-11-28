@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import { Observable } from 'rxjs/internal/Observable';
+import { of } from 'rxjs/internal/observable/of';
+import { map } from 'rxjs/operators';
 import { Convert, Convert as convert, RawAddress } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -24,6 +27,7 @@ import { SecretProofTransactionBuilder } from '../../infrastructure/catbuffer/Se
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
+import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -206,5 +210,45 @@ export class SecretProofTransaction extends Transaction {
             this.getProofByte(),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param namespaceHttp NamespaceHttp
+     * @returns {SecretProofTransaction}
+     */
+    resolveAliases(namespaceHttp: NamespaceHttp): Observable<SecretProofTransaction> {
+        return this.recipientAddress instanceof NamespaceId ?
+            namespaceHttp.getLinkedAddress(this.recipientAddress as NamespaceId).pipe(
+                map((recipient) => {
+                    return new SecretProofTransaction(
+                        this.networkType,
+                        this.version,
+                        this.deadline,
+                        this.maxFee,
+                        this.hashType,
+                        this.secret,
+                        recipient,
+                        this.proof,
+                        this.signature,
+                        this.signer,
+                        this.transactionInfo,
+                    );
+                }),
+            ) :
+            of(new SecretProofTransaction(
+                this.networkType,
+                this.version,
+                this.deadline,
+                this.maxFee,
+                this.hashType,
+                this.secret,
+                this.recipientAddress,
+                this.proof,
+                this.signature,
+                this.signer,
+                this.transactionInfo,
+            ),
+        );
     }
 }
