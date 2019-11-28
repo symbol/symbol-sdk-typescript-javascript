@@ -17,7 +17,6 @@
                 <p class="walletName">{{item.name}}</p>
                 <p class="walletAmount overflow_ellipsis">
                   {{ item.balance ? formatNumber(item.balance) : 0 }}
-                  &nbsp;
                   <span class="tails">{{ networkCurrency.ticker }}</span>
                 </p>
               </div>
@@ -60,10 +59,10 @@
     <div class="walletMethod">
       <Row>
         <Col span="12">
-          <div class="createBtn pointer" @click="toCreate">{{$t('create_sub_wallet')}}</div>
+          <div class="createBtn pointer" @click="toCreate">{{$t('from_seed')}}</div>
         </Col>
         <Col span="12">
-          <div class="importBtn pointer" @click="toImport">{{$t('Import_private_key')}}</div>
+          <div class="importBtn pointer" @click="toImport">{{$t('from_privatekey')}}</div>
         </Col>
       </Row>
     </div>

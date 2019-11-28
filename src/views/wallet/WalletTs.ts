@@ -1,5 +1,4 @@
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import GuideInto from '@/views/login/guide-into/GuideInto.vue'
 import WalletFn from '@/views/wallet/wallet-functions/WalletFunctions.vue'
 import WalletSwitch from '@/views/wallet/wallet-switch/WalletSwitch.vue'
 import WalletDetails from '@/views/wallet/wallet-details/WalletDetails.vue'
@@ -10,7 +9,6 @@ import {AppInfo, StoreAccount} from '@/core/model'
     components: {
         WalletSwitch,
         WalletDetails,
-        GuideInto,
         WalletFn
     },
     computed: {

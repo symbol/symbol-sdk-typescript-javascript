@@ -1,4 +1,12 @@
-import {AppInfo, ChainStatus, LockParams, StagedTransaction, Log, LoadingOverlayObject} from '@/core/model'
+import {
+    AppInfo,
+    ChainStatus,
+    LockParams,
+    StagedTransaction,
+    Log,
+    LoadingOverlayObject,
+    StoreAccount
+} from '@/core/model'
 import {localRead} from "@/core/utils";
 import {Transaction} from 'nem2-sdk';
 import {MutationTree} from 'vuex';
@@ -70,7 +78,7 @@ const mutations: MutationTree<AppInfo> = {
     SET_NAMESPACE_LOADING(state: AppInfo, namespaceLoading: boolean) {
         state.namespaceLoading = namespaceLoading
     },
-    SET_UI_DISABLED(state: AppInfo, { isDisabled, message }: { isDisabled: boolean, message: string}) {
+    SET_UI_DISABLED(state: AppInfo, {isDisabled, message}: { isDisabled: boolean, message: string }) {
         state.isUiDisabled = isDisabled;
         state.uiDisabledMessage = message;
     },
@@ -84,8 +92,18 @@ const mutations: MutationTree<AppInfo> = {
         state.logs.unshift(log)
     },
     SET_LOADING_OVERLAY(state: AppInfo, loadingOverlay: LoadingOverlayObject) {
-        state.loadingOverlay = loadingOverlay
-    }
+        Object.assign(state.loadingOverlay, loadingOverlay)
+    },
+    SET_TEMPORARY_PASSWORD(state: AppInfo, password: string) {
+        state.loadingOverlay.temporaryInfo = {}
+        state.loadingOverlay.temporaryInfo.password = password
+    },
+    SET_TEMPORARY_MNEMONIC(state: AppInfo, mnemonic: string) {
+        state.loadingOverlay.temporaryInfo.mnemonic = mnemonic
+    },
+    REMOVE_TEMPORARY_INFO(state: AppInfo) {
+        delete state.loadingOverlay.temporaryInfo
+    },
 }
 
 export const appState = {state}

@@ -5,6 +5,7 @@ import {AppState} from "@/core/model/types"
 import {AppWallet} from "@/core/model/AppWallet"
 import CryptoJS from "crypto-js"
 import {CreateWalletType} from "@/core/model/CreateWalletType"
+import {CurrentAccount} from './CurrentAccount'
 
 const defaultAlgo = CryptoJS.algo.AES
 const cryptoJSLib: any = CryptoJS.lib
@@ -12,31 +13,49 @@ const PasswordBasedCipher: any = cryptoJSLib.PasswordBasedCipher
 
 
 export class AppAccount {
-    accountName: string
-    wallets: Array<any>
-    password: string
-    hint: string
-    seed: string
-    networkType: NetworkType
-
     constructor(
+        public accountName: string,
+        public wallets: Array<any>,
+        public password: string,
+        public hint: string,
+        public networkType: NetworkType,
+        public seed?: string
+    ) { }
+
+    static create(
+        clearPassword: string,
         accountName: string,
         wallets: Array<any>,
-        password: string,
-        hint: string,
+        hint: string,       
         networkType: NetworkType,
-        seed?: string
-    ) {
-        this.accountName = accountName
-        this.wallets = wallets
-        this.password = password
-        this.hint = hint
-        this.networkType = networkType
-        this.seed = seed ? seed : ''
+    )   {
+        try {
+            const password = AppAccounts().encryptString(clearPassword, clearPassword)
+            return new AppAccount(
+                accountName,
+                wallets,
+                password,
+                hint,
+                networkType,
+            )
+        } catch (error) {
+            
+        }
     }
 
-    get(): AppAccount {
-        return this
+    get currentAccount(): CurrentAccount {
+        return  {
+            name: this.accountName,
+            password: this.password,
+            networkType: this.networkType,
+        }
+    }
+
+    delete(): void {
+        const accountMap = localRead('accountMap') === ''
+            ? {} : JSON.parse(localRead('accountMap'))
+        delete accountMap[this.accountName]
+        localSave('accountMap', JSON.stringify(accountMap))
     }
 }
 

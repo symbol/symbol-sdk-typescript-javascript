@@ -1,4 +1,5 @@
 import {leftBarIcons} from '@/common/img/window'
+import {createStepImage,importStepImage} from '@/config/view/login'
 
 const routers = [
     {
@@ -20,7 +21,7 @@ const routers = [
                 children: [
                     {
                         path: '/dashBoard',
-                        name: 'dash_board',
+                        name: 'dashBoard',
                         // @ts-ignore
                         component: () => import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue')
                     }, {
@@ -196,7 +197,7 @@ const routers = [
                             title: 'offline_setting',
                         },
                         component: () => import('@/views/setting/offline-setting/OfflineSetting.vue')
-                    },{
+                    }, {
                         path: '/settingPassword',
                         name: 'settingPassword',
                         meta: {
@@ -222,41 +223,84 @@ const routers = [
                 ]
             },
             {
-                path: '/login',
+                path: "/login",
                 name: 'login',
-                redirect: '/inputLock',
-                meta: {clickable: false},
-                component: () => import('@/views/login/login/Login.vue'),
+                redirect: '/loginAccount',
+                component: () => import('@/views/login/Login.vue'),
+                meta: {},
                 children: [
                     {
-                        path: '/getStarted',
-                        name: 'Get_started',
-                        component: () => import('@/views/login/login/login-view/get-start/GetStart.vue')
-                    }, {
-                        path: '/inputLock',
-                        name: 'Input_lock',
-                        component: () => import('@/views/login/login/login-view/input-lock/InputLock.vue')
+                        path: '/loginAccount',
+                        name: 'loginAccount',
+                        component: () => import('@/views/login/login-account/LoginAccount.vue'),
+                    },
+                    {
+                        path: '/chooseImportWay',
+                        name: 'chooseImportWay',
+                        component: () => import('@/views/login/choose-import-way/ChooseImportWay.vue'),
+                    },
+                    {
+                        path: '/createAccount',
+                        name: 'createAccount',
+                        redirect: '/CreateAccountInfo',
+                        component: () => import('@/views/login/create-account/CreateAccount.vue'),
+                        children: [
+                            {
+                                path: '/createAccountInfo',
+                                name: 'createAccountInfo',
+                                meta: {icon: createStepImage.createStepImage1},
+                                component: () => import('@/views/login/create-account/create-account-info/CreateAccountInfo.vue'),
+                            }, {
+                                path: '/generateMnemonic',
+                                name: 'generateMnemonic',
+                                meta: {icon: createStepImage.createStepImage2},
+                                component: () => import('@/views/login/create-account/generate-mnemonic/GenerateMnemonic.vue'),
+                            }, {
+                                path: '/showMnemonic',
+                                name: 'showMnemonic',
+                                meta: {icon: createStepImage.createStepImage3},
+                                component: () => import('@/views/login/create-account/show-mnemonic/ShowMnemonic.vue'),
+                            }, {
+                                path: '/verifyMnemonic',
+                                name: 'verifyMnemonic',
+                                meta: {icon: createStepImage.createStepImage4},
+                                component: () => import('@/views/login/create-account/verify-mnemonic/VerifyMnemonic.vue'),
+                            }, {
+                                path: '/finishCreate',
+                                name: 'finishCreate',
+                                meta: {icon: createStepImage.createStepImage5},
+                                component: () => import('@/views/login/create-account/finish-create/FinishCreate.vue'),
+                            }],
+                    },
+                    {
+                        path: '/importAccount',
+                        name: 'importAccount',
+                        redirect: '/inputAccountInfo',
+                        component: () => import('@/views/login/import-account/ImportAccount.vue'),
+                        children: [{
+                            path: '/inputAccountInfo',
+                            name: 'inputAccountInfo',
+                            meta: {icon: importStepImage.importStepImage1},
+                            component: () => import('@/views/login/import-account/create-account-info/CreateAccountInfo.vue'),
+                        }, {
+                            path: '/importMnemonic',
+                            name: 'importMnemonic',
+                            meta: {icon: importStepImage.importStepImage2},
+                            component: () => import('@/views/login/import-account/import-mnemonic/ImportMnemonic.vue'),
+                        }, {
+                            path: '/walletChoose',
+                            name: 'walletChoose',
+                            meta: {icon: importStepImage.importStepImage3},
+                            component: () => import('@/views/login/import-account/wallet-choose/WalletChoose.vue'),
+                        }, {
+                            path: '/finishImport',
+                            name: 'finishImport',
+                            meta: {icon: importStepImage.importStepImage4},
+                            component: () => import('@/views/login/import-account/finish-import/FinishImport.vue'),
+                        }],
                     },
                 ]
-            },
-            {
-                path: '/createAccount',
-                name: 'createAccount',
-                meta: {clickable: false},
-                component: () => import('@/views/login/create-account/CreateAccount.vue'),
-            },
-            {
-                path: '/initAccount',
-                name: 'initAccount',
-                meta: {clickable: false},
-                component: () => import('@/views/login/init-account/InitAccount.vue'),
-            },
-            {
-                path: '/initSeed',
-                name: 'initSeed',
-                meta: {clickable: false},
-                component: () => import('@/views/login/init-seed/InitSeed.vue'),
-            },
+            }
         ]
     },
 ]

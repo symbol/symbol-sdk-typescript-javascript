@@ -16,15 +16,12 @@
     </div>
     <div class="left_navigator">
       <div class="navigator_icon">
-        <div
-                v-for="(route, index) in routes"
+        <div v-for="(route, index) in routes"
                 :key="index"
                 :class="[
-                  $route.matched.map(({path}) => path).includes(route.path)
-                    ? 'active_panel' : '',
-                    'pointer',
-                ]"
-                @click="navigationIconClicked(route)"
+              $route.matched.map(({path}) => path).includes(route.path) ? 'active_panel' : '',
+              !walletList.length ? 'un_click' : 'pointer']"
+                @click=" !walletList.length ?'': $router.push(route.path)"
         >
           <span
                   :style="$route.matched.map(({path}) => path).includes(route.path)

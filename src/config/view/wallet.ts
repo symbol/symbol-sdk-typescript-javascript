@@ -27,11 +27,6 @@ const _walletImportNavigatorConfig = [
 ]
 
 if (localRead && localRead("_ENABLE_TREZOR_") === "true") {
-    _walletFnNavConfig.push({
-        name: 'hardware',
-        to: '/walletImportHardware',
-        active: false
-    })
     _walletImportNavigatorConfig.push({
         title: 'hardware',
         name: 'walletImportHardware',

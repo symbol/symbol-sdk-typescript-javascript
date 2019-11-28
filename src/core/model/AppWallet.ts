@@ -29,6 +29,7 @@ import {AppAccounts, CreateWalletType} from "@/core/model"
 import {AppState, RemoteAccount} from './types'
 import {Log} from './Log'
 import {FormattedTransaction} from './FormattedTransaction'
+
 const {DEFAULT_LOCK_AMOUNT} = defaultNetworkConfig
 const {EMPTY_LINKED_ACCOUNT_KEY} = networkConfig
 
@@ -55,10 +56,10 @@ export class AppWallet {
     remoteAccount: RemoteAccount | null
 
     createFromPrivateKey(name: string,
-        password: Password,
-        privateKey: string,
-        networkType: NetworkType,
-        store: Store<AppState>): AppWallet {
+                         password: Password,
+                         privateKey: string,
+                         networkType: NetworkType,
+                         store: Store<AppState>): AppWallet {
         try {
             this.simpleWallet = SimpleWallet.createFromPrivateKey(name, password, privateKey, networkType)
             this.name = name
@@ -79,7 +80,9 @@ export class AppWallet {
         password: Password,
         pathNumber: number,
         networkType: NetworkType,
-        store: Store<AppState>): AppWallet {
+        store: Store<AppState>,
+        balance?: number
+    ): AppWallet {
         try {
             const accountName = store.state.account.currentAccount.name
             const accountMap = localRead('accountMap') === '' ? {} : JSON.parse(localRead('accountMap'))
@@ -94,6 +97,7 @@ export class AppWallet {
             this.path = getPath(pathNumber)
             this.sourceType = CreateWalletType.seed
             this.encryptedMnemonic = AppAccounts().encryptString(mnemonic, password.value)
+            this.balance = balance || 0
             this.addNewWalletToList(store)
             return this
         } catch (error) {
@@ -130,6 +134,20 @@ export class AppWallet {
         }
     }
 
+    createAccountFromMnemonic(
+        password: Password,
+        mnemonic: string,
+        store: Store<AppState>) {
+        try {
+            const accountName = store.state.account.currentAccount.name
+            const accountMap = localRead('accountMap') === '' ? {} : JSON.parse(localRead('accountMap'))
+            accountMap[accountName].seed = AppAccounts().encryptString(mnemonic, password.value)
+            localSave('accountMap', JSON.stringify(accountMap))
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
+
     createFromTrezor(
         name: string,
         networkType: NetworkType,
@@ -155,11 +173,11 @@ export class AppWallet {
     }
 
     createFromKeystore(name: string,
-        password: Password,
-        keystorePassword: Password,
-        keystoreStr: string,
-        networkType: NetworkType,
-        store: Store<AppState>): AppWallet {
+                       password: Password,
+                       keystorePassword: Password,
+                       keystoreStr: string,
+                       networkType: NetworkType,
+                       store: Store<AppState>): AppWallet {
         try {
             this.name = name
             this.networkType = networkType
@@ -303,13 +321,13 @@ export class AppWallet {
     }
 
     /**
-     * @param password 
+     * @param password
      * @param privateKey false in the case of new account creation
-     * @param store 
+     * @param store
      */
     createAndStoreRemoteAccount(password: string,
-        privateKey: string | false,
-        store: Store<AppState>
+                                privateKey: string | false,
+                                store: Store<AppState>
     ): string {
         if (!this.checkPassword(password)) throw new Error('The password does not match the wallet password')
         const _password = new Password(password)
@@ -485,9 +503,9 @@ export class AppWallet {
         fee: number,
         password: string,
         store: Store<AppState>): {
-            signedTransaction: SignedTransaction,
-            signedLock: SignedTransaction,
-        } {
+        signedTransaction: SignedTransaction,
+        signedLock: SignedTransaction,
+    } {
         const account = this.getAccount(new Password(password))
         const {wallet, networkCurrency, generationHash} = store.state.account
         const {networkType} = wallet
@@ -532,6 +550,19 @@ export class AppWallet {
             throw new Error(error)
         }
     }
+
+    getTenAddressFromMnemonic(
+        mnemonic: string,
+        networkType: NetworkType,
+    ): Address[] {
+        let accountList: Address[] = []
+        for (let i = 0; i <= 9; i++) {
+            const account: Account = getAccountFromPathNumber(mnemonic, i, networkType)
+            accountList.push(account.address)
+        }
+        return accountList
+    }
+
 
     get publicAccount(): PublicAccount {
         return PublicAccount.createFromPublicKey(this.publicKey, this.networkType)

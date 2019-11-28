@@ -11,22 +11,15 @@ router.beforeEach((to, from, next) => {
     const hasWallet: boolean = localRead('accountMap') !== ''
         && JSON.parse(localRead('accountMap')) instanceof Object
         && getObjectLength(JSON.parse(localRead('accountMap'))) > 0
-
     const toPath = to.path
-
-    if (!hasWallet && toPath !== '/getStarted') {
-        next({ path: '/getStarted' })
-
+    if (!hasWallet && (toPath == '/createAccount' || toPath == '/chooseImportWay')) {
+        next()
     }
+
     if (!to.name) {
-        if (hasWallet) {
-            next({ path: '/inputLock' })
-        } else {
-            next({ path: '/getStarted' })
-        }
+        next({path: '/login'})
     } else {
         next()
     }
 })
-
 export default router

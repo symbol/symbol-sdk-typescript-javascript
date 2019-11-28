@@ -35,16 +35,14 @@
     <div class="transaction-list-wrapper">
        <TransactionList />
     </div>
- 
+
   </div>
 </template>
 
 <script lang="ts">
     // @ts-ignore
     import {MonitorDashBoardTs} from '@/views/monitor/monitor-dashboard/MonitorDashBoardTs.ts'
-
     export default class DashBoard extends MonitorDashBoardTs {
-
     }
 </script>
 

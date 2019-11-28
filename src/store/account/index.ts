@@ -189,11 +189,6 @@ const mutations: MutationTree<StoreAccount> = {
     POP_TRANSACTION_TO_COSIGN_BY_HASH(state: StoreAccount, hash: string) {
         state.transactionsToCosign = popTransactionToCosignByHash([...state.transactionsToCosign], hash)
     },
-    UPDATE_TRANSACTION_TO_COSIGN(state: StoreAccount, newTransaction: FormattedTransaction) {
-        const {hash} = newTransaction.rawTx.transactionInfo
-        const transactions = popTransactionToCosignByHash([...state.transactionsToCosign], hash)
-        state.transactionsToCosign = [newTransaction, ...transactions]
-    },
     ADD_TRANSACTION_TO_COSIGN(state: StoreAccount, transactions: FormattedTransaction[]) {
         const [transaction,] = transactions
         const oldTransactions = [...state.transactionsToCosign]
@@ -203,7 +198,12 @@ const mutations: MutationTree<StoreAccount> = {
 
         if (index > -1) return
         state.transactionsToCosign = [transaction, ...oldTransactions]
-    }
+    },
+    UPDATE_TRANSACTION_TO_COSIGN(state: StoreAccount, newTransaction: FormattedTransaction) {
+        const {hash} = newTransaction.rawTx.transactionInfo
+        const transactions = popTransactionToCosignByHash([...state.transactionsToCosign], hash)
+        state.transactionsToCosign = [newTransaction, ...transactions]
+    },
 }
 
 export const accountState = {state}

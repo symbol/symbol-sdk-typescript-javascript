@@ -3,14 +3,14 @@ import WalletImportKeystore
     from '@/views/wallet/wallet-functions/wallet-import/wallet-import-keystore/WalletImportKeystore.vue'
 import WalletImportPrivatekey
     from '@/views/wallet/wallet-functions/wallet-import/wallet-import-privatekey/WalletImportPrivatekey.vue'
-import AccountImportHardware from '@/views/login/init-seed/account-import-hardware/AccountImportHardware.vue'
+import WalletImportHardware from '@/views/wallet/wallet-functions/wallet-import/wallet-import-hardware/WalletImportHardware.vue'
 import {walletImportNavigatorConfig} from '@/config/view/wallet'
 
 @Component({
     components: {
         WalletImportKeystore,
         WalletImportPrivatekey,
-        AccountImportHardware
+        WalletImportHardware,
     },
 })
 export class WalletImportTs extends Vue {

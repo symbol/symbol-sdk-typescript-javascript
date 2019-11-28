@@ -1,7 +1,7 @@
 import {mapState} from 'vuex'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {formatNumber, localRead} from '@/core/utils'
-import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
+import {formatNumber, localRead, getPath} from '@/core/utils'
+import {AppWallet, AppInfo, StoreAccount, AppAccounts} from "@/core/model"
 import {CreateWalletType} from "@/core/model/CreateWalletType"
 import {seedWalletTitle, walletStyleSheetType} from '@/config/view/wallet.ts'
 import {MultisigAccountInfo, Password} from 'nem2-sdk'
@@ -42,11 +42,6 @@ export class WalletSwitchTs extends Vue {
         return this.activeAccount.wallet
     }
 
-    getWalletStyle(item: AppWallet): string {
-        if (item.address === this.activeAddress) return walletStyleSheetType.activeWallet
-        if (item.sourceType === CreateWalletType.seed) return walletStyleSheetType.seedWallet
-        return walletStyleSheetType.otherWallet
-    }
 
     get activeAddress() {
         return this.wallet.address
@@ -58,6 +53,12 @@ export class WalletSwitchTs extends Vue {
 
     get networkCurrency() {
         return this.activeAccount.networkCurrency
+    }
+
+    getWalletStyle(item: AppWallet): string {
+        if (item.address === this.activeAddress) return walletStyleSheetType.activeWallet
+        if (item.sourceType === CreateWalletType.seed) return walletStyleSheetType.seedWallet
+        return walletStyleSheetType.otherWallet
     }
 
     isMultisig(address: string): boolean {
@@ -96,7 +97,9 @@ export class WalletSwitchTs extends Vue {
         const jumpedPath = seedPathList
             .map(a => Number(a))
             .sort()
-            .map((element, index) => { if (element !== index) return index })
+            .map((element, index) => {
+                if (element !== index) return index
+            })
             .filter(x => x !== undefined)
 
         return jumpedPath.length ? jumpedPath[0] : numberOfSeedPath

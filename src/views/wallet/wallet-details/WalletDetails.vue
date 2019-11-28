@@ -133,14 +133,12 @@
 </template>
 
 <script lang="ts">
-    //@ts-ignore
     import {WalletDetailsTs} from '@/views/wallet/wallet-details/WalletDetailsTs.ts'
-
+    import "./WalletDetails.less";
     export default class WalletDetails extends WalletDetailsTs {
 
     }
 </script>
 
 <style scoped lang="less">
-  @import "WalletDetails.less";
 </style>

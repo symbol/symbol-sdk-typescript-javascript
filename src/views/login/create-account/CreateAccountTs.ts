@@ -1,47 +1,19 @@
-import {Component, Provide, Vue} from 'vue-property-decorator'
-import {AppAccount, AppAccounts, CurrentAccount} from '@/core/model'
-import {Message, formDataConfig, networkTypeConfig} from "@/config"
-import {cloneData} from "@/core/utils"
-import {validation} from '@/core/validation'
-import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
+import {Vue, Component} from 'vue-property-decorator'
+import {createStepBarTitleList} from "@/config/view"
+import routes from "@/router/routers"
 
-@Component({ components: {ErrorTooltip} })
-export class CreateAccountTs extends Vue {
-    @Provide() validator: any = this.$validator
-    validation = validation
-    networkTypeList = networkTypeConfig
-    formItem = cloneData(formDataConfig.createAccountForm)
+@Component
+export default class CreateAccountTs extends Vue {
+    StepBarTitleList = createStepBarTitleList
 
-    createAccount() {
-        const appAccounts = AppAccounts()
-        let {accountName, password, networkType, hint} = this.formItem
-        const encryptedPassword = AppAccounts().encryptString(password, password)
-        const appAccount = new AppAccount(accountName, [], encryptedPassword, hint, networkType)
-        appAccounts.saveAccountInLocalStorage(appAccount)
-        this.$Notice.success({title: this.$t(Message.OPERATION_SUCCESS) + ''})
-
-        const currentAccount: CurrentAccount = {
-            name: accountName,
-            password: encryptedPassword,
-            networkType,
-        }
-
-        this.$store.commit('SET_ACCOUNT_DATA', currentAccount)
-
-        this.$router.push({
-            name: 'initSeed',
-            params: {
-                initType: '1'
-            }
-        })
+    get currentRouterIndex() {
+        // @ts-ignore
+        const {name} = this.$route
+        // @ts-ignore
+        return routes[0].children[7].children[2].children.findIndex(item => item.name == name) + 1
     }
 
-    submit() {
-        this.$validator
-            .validate()
-            .then((valid) => {
-                if (!valid) return
-                this.createAccount()
-            })
+    getStepTextClassName(index) {
+        return Number(this.currentRouterIndex) > index ? 'white' : 'gray'
     }
 }

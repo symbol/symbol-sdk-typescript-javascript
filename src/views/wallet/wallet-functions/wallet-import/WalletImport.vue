@@ -22,7 +22,7 @@
             v-if="tabIndex === 0"
             @toWalletDetails="$emit('toWalletDetails')"
           />
-          <AccountImportHardware
+          <WalletImportHardware
             v-if="$store.state.app._ENABLE_TREZOR_ && tabIndex === 2"
             @toWalletDetails="$emit('toWalletDetails')"
           />

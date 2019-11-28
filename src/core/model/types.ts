@@ -68,11 +68,8 @@ export interface StoreAccount {
 export interface LoadingOverlayObject {
     show: boolean,
     message: string,
-}
-
-export interface LoadingOverlayObject {
-    show: boolean,
-    message: string,
+    networkMosaics?: Record<string, AppMosaic>,
+    temporaryInfo?: any
 }
 
 export interface AppInfo {
