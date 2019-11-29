@@ -28,7 +28,7 @@
           <input v-model="formItem.hint"></input>
         </div>
         <div class="button-container">
-          <button @click="$router.push('chooseImportWay')" class="info-button">{{$t('Back_to_home')}}</button>
+          <button @click="$router.push('login')" class="info-button">{{$t('Back_to_home')}}</button>
           <button @click="submit">{{$t('Generating_mnemonic')}}</button>
         </div>
 
