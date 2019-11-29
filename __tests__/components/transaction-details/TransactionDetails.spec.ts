@@ -37,7 +37,7 @@ const mockAggregateTransactionProp = {
     store: {}
 }
 const mockNormalTransactionProp = {
-    rawTx: {},
+    rawTx: {signer: 'mockADefinedSigner'},
     txHeader: {
         hash: 'B2E0DEFA0621C0928AD092BCB765B2CC9DB4A33EC25E4A78CB6BBCCDDFB8A417',
         block: 1232432,
@@ -56,32 +56,32 @@ describe('TransactionDetails', () => {
     let state
 
     beforeEach(() => {
-            store = store = new Vuex.Store({
-                    modules: {
-                        account: {
-                            state: Object.assign(accountState.state, {
-                                wallet: CosignWallet,
-                                mosaics,
-                            }),
-                        },
-                    }
-                }
-            )
-            wrapper = shallowMount(TransactionDetails, {
-                sync: false,
-                mocks: {
-                    $t: (msg) => msg,
+        store = store = new Vuex.Store({
+            modules: {
+                account: {
+                    state: Object.assign(accountState.state, {
+                        wallet: CosignWallet,
+                        mosaics,
+                    }),
                 },
-                propsData: {
-                    transaction: mockAggregateTransactionProp
-                },
-                localVue,
-                store,
-                router,
-            })
+            }
         }
-    )
-    it('should show component TransactionDetails ', () => {
+        )
+        wrapper = shallowMount(TransactionDetails, {
+            sync: false,
+            mocks: {
+                $t: (msg) => msg,
+            },
+            propsData: {
+                transaction: mockAggregateTransactionProp
+            },
+            localVue,
+            store,
+            router,
+        })
+    })
+
+    it('should render', () => {
         expect(wrapper).not.toBeNull()
     })
 
@@ -94,6 +94,27 @@ describe('TransactionDetails', () => {
             transaction: mockNormalTransactionProp
         })
         expect(wrapper.vm.transactionDetails[0]).toBe('MOCK_NORMAL_DIALOG_DETAIL_MAP_DATA')
+    })
+
+    it('should print confirmed when transaction is confirmed', () => {
+        wrapper.setProps({
+            transaction: {...mockNormalTransactionProp, isTxConfirmed: false}
+        })
+        expect(wrapper.vm.getStatus()).toEqual('unconfirmed')
+    })
+
+    it('should print confirmed when transaction is confirmed', () => {
+        wrapper.setProps({
+            transaction: {...mockNormalTransactionProp, isTxConfirmed: true}
+        })
+        expect(wrapper.vm.getStatus()).toEqual('confirmed')
+    })
+
+    it('getStatus should be falsy when transaction has no signer', () => {
+        wrapper.setProps({
+            transaction: {...{...mockNormalTransactionProp, rawTx: {signer: undefined}}}
+        })
+        expect(wrapper.vm.getStatus()).toBeFalsy()
     })
 })
 

@@ -78,12 +78,12 @@ describe('Alias from namespace', () => {
                     visible: true, 
                     bind: true,
                     fromNamespace: true,
-                    namespace: AppNamespace.fromNamespaceName(
-                       new NamespaceName(
+                    namespace: AppNamespace.fromNamespaceNames(
+                       [new NamespaceName(
                            new NamespaceId([4082974126, 2563399553]),
                            'testnamespace',
-                       )
-                    )
+                       )]
+                    )[0]
                 }
             })
         }

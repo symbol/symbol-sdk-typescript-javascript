@@ -161,7 +161,7 @@ export interface ValidationObject {
 }
 
 /**
- * These keys will be handled in a specific way by the transaction detail modal component
+ * These keys will be handled in a specific way by the transaction info template component
  */
 export enum SpecialTxDetailsKeys {
     mosaics = 'mosaics',
@@ -171,14 +171,6 @@ export enum SpecialTxDetailsKeys {
     aims = 'aims',
     hash = 'hash',
     cosigned_by = 'cosigned_by',
-}
-
-export enum TxDetailsKeysWithValueToTranslate {
-    action = 'action',
-    direction = 'direction',
-    supplyMutable = 'supplyMutable',
-    transferable = 'transferable',
-    restrictable = 'restrictable',
 }
 
 export interface BlocksAndTime {

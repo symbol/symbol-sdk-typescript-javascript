@@ -35,8 +35,8 @@ const getName = (appMosaic: AppMosaic, mosaicId: MosaicId | NamespaceId, store: 
 
 export const renderMosaicsAndReturnArray = (
     mosaics: Mosaic[],
-    store: Store<AppState>): {name: string, amount: string, hex: string}[] | 'Loading...' => {
-        if (!mosaics.length) return null
+    store: Store<AppState>): {name: string, amount: string, hex: string}[] => {
+    if (!mosaics.length) return null
         
     const mosaicList = store.state.account.mosaics
 
@@ -54,7 +54,7 @@ export const renderMosaicsAndReturnArray = (
         })
         .filter(x => x)
 
-    if (!items.length) return 'Loading...'
+    if (!items.length) return null
 
     const networkMosaicIndex = items.findIndex(({name}) => name === store.state.account.networkCurrency.name)
     if (networkMosaicIndex <= 0) {
@@ -72,7 +72,7 @@ export const renderMosaics = (
     const result = renderMosaicsAndReturnArray(mosaics, store)
     if (!result) return 'N/A'
     // @TODO: review
-    if (result === 'Loading...') return result
+    if (!result.length) return null
     const prefix = isReceipt ? '' : '-'
     return result.map(({name, amount}) => `${prefix}${amount} [${name}]`).join(', ')
 }

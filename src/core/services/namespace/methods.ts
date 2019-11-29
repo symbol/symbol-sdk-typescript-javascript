@@ -69,9 +69,16 @@ export const handleRecipientAddressAsNamespaceId = async (  transactions: Format
 
     if (!newNamespacesIds.length) return
         const newNamespaces = await new NamespaceHttp(node).getNamespacesName(newNamespacesIds).toPromise()
-        const AppNamespaces = newNamespaces.map(AppNamespace.fromNamespaceName)
-        store.commit('ADD_NAMESPACE_FROM_RECIPIENT_ADDRESS', AppNamespaces)
+        const appNamespaces = AppNamespace.fromNamespaceNames(newNamespaces)
+        store.commit('ADD_NAMESPACE_FROM_RECIPIENT_ADDRESS', appNamespaces)
     } catch (error) {
         console.error("handleRecipientAddressAsNamespaceId -> error", error)
     }
+}
+
+export const formatSenderOrRecipient = (recipient: string | NamespaceId, store: Store<AppState>): string => {
+    if (recipient instanceof NamespaceId) {
+        return getNamespaceNameFromNamespaceId(recipient.id.toHex(), store)
+    }
+    return recipient
 }

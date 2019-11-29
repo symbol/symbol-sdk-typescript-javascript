@@ -1,38 +1,34 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {StoreAccount} from "@/core/model"
 import {mapState} from "vuex"
-import {Address} from "nem2-sdk"
 import {renderMosaicsAndReturnArray} from "@/core/utils"
+import {getNamespaceNameFromNamespaceId, formatSenderOrRecipient} from '@/core/services'
+import {TransferTransaction, Address, NamespaceId} from 'nem2-sdk'
 
 @Component({
     computed: {...mapState({activeAccount: 'account'})},
 })
-export default class extends Vue {
+export class TransactionInfoTemplateTs extends Vue {
     activeAccount: StoreAccount
-    unusedAttributesList = ['from', 'cosignatories', 'hash', 'fee', 'block', 'sender', 'transaction_type', 'self', 'aims', 'tag', 'mosaics']
+    unusedAttributesList = ['from', 'cosignatories', 'hash', 'fee', 'block', 'sender', 'transaction_type', 'self', 'aims', 'tag', 'mosaics', 'namespace']
 
+    getNamespaceNameFromNamespaceId = getNamespaceNameFromNamespaceId
+    formatSenderOrRecipient = formatSenderOrRecipient
+    renderMosaicsAndReturnArray = renderMosaicsAndReturnArray
+    TransferTransaction = TransferTransaction
+    NamespaceId = NamespaceId
+    
     @Prop()
     transactionDetails
 
-    get mosaics(): any {
-        return this.activeAccount.mosaics
-    }
+    @Prop()
+    cosignedBy: string[]
 
-    get address() {
-        return this.activeAccount.wallet.address
-    }
+    getFrom(): string {
+        const {activeMultisigAccount, wallet} = this.activeAccount
 
-
-    decryptedAddress(encryptedAddress) {
-        try {
-            return Address.createFromEncoded(encryptedAddress).pretty()
-        } catch (e) {
-            return encryptedAddress
-        }
-
-    }
-
-    renderMosaicsToTable(mosaics) {
-        return renderMosaicsAndReturnArray(mosaics, this.$store)
+        return this.activeAccount.activeMultisigAccount
+            ? Address.createFromPublicKey(activeMultisigAccount, wallet.networkType).pretty()
+            : Address.createFromRawAddress(wallet.address).pretty()
     }
 }

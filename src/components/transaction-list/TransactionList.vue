@@ -65,7 +65,7 @@
                         :class="['overflow_ellipsis', c.txHeader.isReceipt ? 'green' : 'red']"
                         v-if="c.rawTx.type === TransactionType.TRANSFER"
                 >
-                    {{ renderMosaics(c.rawTx.mosaics, $store, c.txHeader.isReceipt) }}
+                    {{ renderMosaics(c.rawTx.mosaics, $store, c.txHeader.isReceipt) || 'Loading...' }}
                 </span>
                   <span
                           class="red "

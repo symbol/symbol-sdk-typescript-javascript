@@ -39,12 +39,12 @@ localVue.directive('focus', {
 // close warning
 config.logModifiedComponents = false
 
-let namespace = AppNamespace.fromNamespaceName(
+let namespace = AppNamespace.fromNamespaceNames([
     new NamespaceName(
         new NamespaceId([4082974126, 2563399553]),
         'testnamespace',
     )
-)
+])[0]
 
 namespace.endHeight = networkConfig.namespaceGracePeriodDuration + 5
 

@@ -882,5 +882,8 @@
   "ID": "ID",
   "Balance": "Balance",
   "Choose_Wallets": "Choose Wallets",
-  "Access_My_Wallet": "Access My Wallet"
+  "Access_My_Wallet": "Access My Wallet",
+  "hex": "Mosaic",
+  "dashBoard": "Dashboard",
+  "Cosign_aggregate_transactions": "Cosign aggregate transactions"
 }
