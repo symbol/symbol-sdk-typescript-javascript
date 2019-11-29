@@ -132,9 +132,9 @@ export class NamespaceRegistrationTs extends Vue {
             })
     }
 
-    @Watch('newExpirationBlock')
+    @Watch('newExpirationBlock', {immediate: true})
     onSelectedMosaicHexChange() {
         /** Makes newSupply validation reactive */
-        this.$validator.validate('newDuration', this.newExpirationBlock)
+        this.$validator.validate('newDuration', this.newExpirationBlock).catch(e => e)
     }
 }

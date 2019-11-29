@@ -342,10 +342,10 @@ export class TransferTs extends Vue {
         }
     }
 
-    @Watch('selectedMosaicHex')
+    @Watch('selectedMosaicHex', {immediate: true})
     onSelectedMosaicHexChange() {
         /** Makes currentAmount validation reactive */
-        this.$validator.validate('currentAmount', this.currentAmount)
+        this.$validator.validate('currentAmount', this.currentAmount).catch(e => e)
     }
 
     async mounted() {

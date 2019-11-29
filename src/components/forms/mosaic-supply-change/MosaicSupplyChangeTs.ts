@@ -122,9 +122,9 @@ export class MosaicSupplyChangeTs extends Vue {
         }
     }
 
-    @Watch('newSupply')
+    @Watch('newSupply', {immediate: true})
     onSelectedMosaicHexChange() {
         /** Makes newSupply validation reactive */
-        this.$validator.validate('newSupply', this.newSupply)
+        this.$validator.validate('newSupply', this.newSupply).catch(e => e)
     }
 }
