@@ -2,43 +2,11 @@ import {Endpoint} from '@/core/model'
 
 export const nodeListConfig: Endpoint[] = [
     {
-        value: 'http://test-api-01.us-west-1.nemtech.network:3000',
-        name: 'new testnet',
-        url: 'api-01.mt.ap-northeast-1.nemtech.network',
+        value: 'http://api-01.us-east-1.nemtech.network:3000',
+        name: 'us-east-1',
+        url: 'api-01.us-east-1.nemtech.network',
         isSelected: true,
     },
-    {
-        value: 'http://api-01.mt.ap-northeast-1.nemtech.network:3000',
-        name: 'northeast',
-        url: 'api-01.mt.ap-northeast-1.nemtech.network',
-        isSelected: false,
-    },
-    {
-        value: 'http://api-01.mt.ap-southeast-1.nemtech.network:3000',
-        name: 'southeast',
-        url: 'api-01.mt.ap-southeast-1.nemtech.network',
-        isSelected: false,
-    },
-    {
-        value: 'http://api-01.mt.eu-central-1.nemtech.network:3000',
-        name: 'central',
-        url: 'api-01.mt.eu-central-1.nemtech.network',
-        isSelected: false,
-    },
-    {
-        value: 'http://api-01.mt.us-east-1.nemtech.network:3000',
-        name: 'east',
-        url: 'api-01.mt.us-east-1.nemtech.network',
-        isSelected: false,
-    },
-    {
-        value: 'http://api-01.mt.us-west-2.nemtech.network:3000',
-        name: 'west',
-        url: 'api-01.mt.us-west-2.nemtech.network',
-        isSelected: false,
-    },
-
-    // test net node
     {
         value: 'http://api-01.ap-northeast-1.nemtech.network:3000',
         name: 'ap-northeast-1',
@@ -61,12 +29,6 @@ export const nodeListConfig: Endpoint[] = [
         value: 'http://api-01.eu-west-1.nemtech.network:3000',
         name: 'eu-west-1',
         url: 'api-01.eu-west-1.nemtech.network',
-        isSelected: false,
-    },
-    {
-        value: 'http://api-01.us-east-1.nemtech.network:3000',
-        name: 'us-east-1',
-        url: 'api-01.us-east-1.nemtech.network',
         isSelected: false,
     },
     {
