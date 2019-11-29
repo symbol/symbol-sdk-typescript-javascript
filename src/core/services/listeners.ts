@@ -123,7 +123,7 @@ export class ChainListeners {
                             duration: 4,
                         })
                         formatAndSave(
-                            transaction,
+                            {...transaction, isTxConfirmed: true},
                             that.$store,
                             true,
                             TRANSACTIONS_CATEGORIES.NORMAL,
