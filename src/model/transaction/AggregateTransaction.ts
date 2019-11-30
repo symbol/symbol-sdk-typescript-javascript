@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-import { sha3_256 } from 'js-sha3';
 import { Observable } from 'rxjs/internal/Observable';
 import {KeyPair, MerkleHashBuilder, SHA3Hasher, SignSchema} from '../../core/crypto';
-import {Convert, RawArray} from '../../core/format';
+import {Convert} from '../../core/format';
 import {AggregateBondedTransactionBuilder} from '../../infrastructure/catbuffer/AggregateBondedTransactionBuilder';
 import {AggregateCompleteTransactionBuilder} from '../../infrastructure/catbuffer/AggregateCompleteTransactionBuilder';
 import {AmountDto} from '../../infrastructure/catbuffer/AmountDto';
@@ -42,6 +41,8 @@ import {Transaction} from './Transaction';
 import {TransactionInfo} from './TransactionInfo';
 import {TransactionType} from './TransactionType';
 import {TransactionVersion} from './TransactionVersion';
+import { of, from } from 'rxjs';
+import { map, mergeMap, toArray } from 'rxjs/operators';
 
 /**
  * Aggregate innerTransactions contain multiple innerTransactions that can be initiated by different accounts.
@@ -409,6 +410,24 @@ export class AggregateTransaction extends Transaction {
      * @returns {TransferTransaction}
      */
     resolveAliases(receiptHttp: ReceiptHttp): Observable<AggregateTransaction> {
-        throw new Error('Not implemented');
+        return from(this.innerTransactions).pipe(
+            mergeMap((transaction) => transaction.resolveAliases(receiptHttp)),
+            map((transaction) => transaction as InnerTransaction),
+            toArray(),
+        ).pipe(
+            map((innerTransactions) => new AggregateTransaction(
+                    this.networkType,
+                    this.type,
+                    this.version,
+                    this.deadline,
+                    this.maxFee,
+                    innerTransactions,
+                    this.cosignatures,
+                    this.signature,
+                    this.signer,
+                    this.transactionInfo,
+                ),
+            ),
+        );
     }
 }
