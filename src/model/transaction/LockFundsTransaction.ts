@@ -17,7 +17,6 @@
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 import { map } from 'rxjs/internal/operators/map';
-import { mergeMap } from 'rxjs/internal/operators/mergeMap';
 import { Convert } from '../../core/format';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
@@ -29,12 +28,14 @@ import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedMosaicBuilder } from '../../infrastructure/catbuffer/UnresolvedMosaicBuilder';
 import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
-import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
+import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
+import { TransactionService } from '../../service/TransactionService';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { ResolutionType } from '../receipt/ResolutionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -211,39 +212,33 @@ export class LockFundsTransaction extends Transaction {
 
     /**
      * @internal
-     * @param namespaceHttp NamespaceHttp
-     * @returns {LockFundsTransaction}
+     * @param receiptHttp ReceiptHttp
+     * @returns {TransferTransaction}
      */
-    resolveAliases(namespaceHttp: NamespaceHttp): Observable<LockFundsTransaction> {
-        return of(this.mosaic).pipe(
-            mergeMap((mosaic) => mosaic.id instanceof NamespaceId ?
-                namespaceHttp.getLinkedMosaicId(mosaic.id).pipe(
-                    map((mosaicId) => new LockFundsTransaction(
+    resolveAliases(receiptHttp: ReceiptHttp): Observable<LockFundsTransaction> {
+        const hasUnresolved = this.mosaic.id instanceof NamespaceId;
+
+        if (!hasUnresolved) {
+            return of(this);
+        }
+
+        const transactionInfo = this.checkTransactionHeightAndIndex();
+
+        const statementObservable = receiptHttp.getBlockReceipts(transactionInfo.height.toString());
+        return statementObservable.pipe(
+            map((statement) => new LockFundsTransaction(
                         this.networkType,
                         this.version,
                         this.deadline,
                         this.maxFee,
-                        new Mosaic(mosaicId, mosaic.amount),
+                        new Mosaic(TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, this.mosaic.id as NamespaceId,
+                            statement, transactionInfo.index, transactionInfo.height.toString()) as MosaicId, this.mosaic.amount),
                         this.duration,
                         this.signedTransaction,
                         this.signature,
                         this.signer,
                         this.transactionInfo,
                     )),
-                ) :
-                of(new LockFundsTransaction(
-                    this.networkType,
-                    this.version,
-                    this.deadline,
-                    this.maxFee,
-                    mosaic,
-                    this.duration,
-                    this.signedTransaction,
-                    this.signature,
-                    this.signer,
-                    this.transactionInfo,
-                )),
-            ),
         );
     }
 }

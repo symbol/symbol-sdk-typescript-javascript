@@ -23,7 +23,7 @@ import { EmbeddedAccountMetadataTransactionBuilder } from '../../infrastructure/
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
-import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
+import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
@@ -199,10 +199,10 @@ export class AccountMetadataTransaction extends Transaction {
 
     /**
      * @internal
-     * @param namespaceHttp NamespaceHttp
-     * @returns {AccountMetadataTransaction}
+     * @param receiptHttp ReceiptHttp
+     * @returns {TransferTransaction}
      */
-    resolveAliases(namespaceHttp: NamespaceHttp): Observable<AccountMetadataTransaction> {
+    resolveAliases(receiptHttp: ReceiptHttp): Observable<AccountMetadataTransaction> {
         return of(this);
     }
 }

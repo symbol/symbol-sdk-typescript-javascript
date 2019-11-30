@@ -27,7 +27,7 @@ import {
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
-import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
+import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
@@ -180,10 +180,10 @@ export class AccountOperationRestrictionTransaction extends Transaction {
 
     /**
      * @internal
-     * @param namespaceHttp NamespaceHttp
-     * @returns {AccountOperationRestrictionTransaction}
+     * @param receiptHttp ReceiptHttp
+     * @returns {TransferTransaction}
      */
-    resolveAliases(namespaceHttp: NamespaceHttp): Observable<AccountOperationRestrictionTransaction> {
+    resolveAliases(receiptHttp: ReceiptHttp): Observable<AccountOperationRestrictionTransaction> {
         return of(this);
     }
 }

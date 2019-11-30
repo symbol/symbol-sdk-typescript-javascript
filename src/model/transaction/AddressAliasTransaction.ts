@@ -25,7 +25,7 @@ import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { NamespaceIdDto } from '../../infrastructure/catbuffer/NamespaceIdDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
-import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
+import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -189,10 +189,10 @@ export class AddressAliasTransaction extends Transaction {
 
     /**
      * @internal
-     * @param namespaceHttp NamespaceHttp
-     * @returns {AddressAliasTransaction}
+     * @param receiptHttp ReceiptHttp
+     * @returns {TransferTransaction}
      */
-    resolveAliases(namespaceHttp: NamespaceHttp): Observable<AddressAliasTransaction> {
+    resolveAliases(receiptHttp: ReceiptHttp): Observable<AddressAliasTransaction> {
         return of(this);
     }
 }

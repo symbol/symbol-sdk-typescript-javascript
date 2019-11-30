@@ -18,6 +18,7 @@ import { Observable } from 'rxjs';
 import { KeyPair, SHA3Hasher, SignSchema } from '../../core/crypto';
 import { Convert } from '../../core/format';
 import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
+import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
 import { SerializeTransactionToJSON } from '../../infrastructure/transaction/SerializeTransactionToJSON';
 import { Account } from '../account/Account';
 import { PublicAccount } from '../account/PublicAccount';
@@ -189,9 +190,9 @@ export abstract class Transaction {
 
     /**
      * @internal
-     * @param namespaceHttp NamespaceHttp
+     * @param receiptHttp ReceiptHttp
      */
-    abstract resolveAliases(namespaceHttp: NamespaceHttp): Observable<Transaction>;
+    abstract resolveAliases(receiptHttp: ReceiptHttp): Observable<Transaction>;
 
     /**
      * @internal
@@ -390,5 +391,19 @@ export abstract class Transaction {
 
         const childClassObject = SerializeTransactionToJSON(this);
         return {transaction: Object.assign(commonTransactionObject, childClassObject)};
+    }
+
+    /**
+     * @internal
+     * Check if index and height exists in transactionInfo
+     * @returns TransactionInfo
+     */
+    protected checkTransactionHeightAndIndex(): TransactionInfo {
+        if (this.transactionInfo === undefined ||
+            this.transactionInfo.height === undefined ||
+            this.transactionInfo.index === undefined) {
+            throw new Error('Transaction height or index undefined');
+        }
+        return this.transactionInfo;
     }
 }

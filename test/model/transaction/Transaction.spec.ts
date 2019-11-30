@@ -17,7 +17,7 @@
 import { expect } from 'chai';
 import { Observable } from 'rxjs/internal/Observable';
 import { Convert } from '../../../src/core/format/Convert';
-import { NamespaceHttp } from '../../../src/infrastructure/NamespaceHttp';
+import { ReceiptHttp } from '../../../src/infrastructure/ReceiptHttp';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
@@ -256,7 +256,6 @@ describe('Transaction', () => {
 
         // expected values
         const knownHash_sha3 = '709373248659274C5933BEA2920942D6C7B48B9C2DA4BAEE233510E71495931F';
-        const knownHash_keccak = '787423372BEC0CB2BE3EEA58E773074E121989AF29E5E5BD9EE660C1E3A0AF93';
         const generationHashBytes = Array.from(Convert.hexToUint8('988C4CDCE4D188013C13DE7914C7FD4D626169EF256722F61C52EFBE06BD5A2C'));
         const generationHashBytes_mt = Array.from(Convert.hexToUint8('17FA4747F5014B50413CCF968749604D728D7065DC504291EEE556899A534CBB'));
 
@@ -405,7 +404,7 @@ class FakeTransaction extends Transaction {
     protected generateEmbeddedBytes(): Uint8Array {
         throw new Error('Not implemented');
     }
-    resolveAliases(namespaceHttp: NamespaceHttp): Observable<TransferTransaction> {
+    resolveAliases(receiptHttp: ReceiptHttp): Observable<TransferTransaction> {
         throw new Error('Not implemented');
     }
 }

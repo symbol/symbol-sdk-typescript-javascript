@@ -17,7 +17,7 @@
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 import { map } from 'rxjs/operators';
-import { Convert, Convert as convert, RawAddress } from '../../core/format';
+import { Convert, Convert as convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedSecretProofTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedSecretProofTransactionBuilder';
@@ -27,11 +27,13 @@ import { SecretProofTransactionBuilder } from '../../infrastructure/catbuffer/Se
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
-import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
+import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
+import { TransactionService } from '../../service/TransactionService';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { ResolutionType } from '../receipt/ResolutionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { HashType, HashTypeLengthValidator } from './HashType';
@@ -214,40 +216,35 @@ export class SecretProofTransaction extends Transaction {
 
     /**
      * @internal
-     * @param namespaceHttp NamespaceHttp
-     * @returns {SecretProofTransaction}
+     * @param receiptHttp ReceiptHttp
+     * @returns {TransferTransaction}
      */
-    resolveAliases(namespaceHttp: NamespaceHttp): Observable<SecretProofTransaction> {
-        return this.recipientAddress instanceof NamespaceId ?
-            namespaceHttp.getLinkedAddress(this.recipientAddress as NamespaceId).pipe(
-                map((recipient) => {
-                    return new SecretProofTransaction(
-                        this.networkType,
-                        this.version,
-                        this.deadline,
-                        this.maxFee,
-                        this.hashType,
-                        this.secret,
-                        recipient,
-                        this.proof,
-                        this.signature,
-                        this.signer,
-                        this.transactionInfo,
-                    );
-                }),
-            ) :
-            of(new SecretProofTransaction(
-                this.networkType,
-                this.version,
-                this.deadline,
-                this.maxFee,
-                this.hashType,
-                this.secret,
-                this.recipientAddress,
-                this.proof,
-                this.signature,
-                this.signer,
-                this.transactionInfo,
+    resolveAliases(receiptHttp: ReceiptHttp): Observable<SecretProofTransaction> {
+        const hasUnresolved = this.recipientAddress instanceof NamespaceId;
+
+        if (!hasUnresolved) {
+            return of(this);
+        }
+
+        const transactionInfo = this.checkTransactionHeightAndIndex();
+
+        const statementObservable = receiptHttp.getBlockReceipts(transactionInfo.height.toString());
+
+        return statementObservable.pipe(
+            map((statement) => new SecretProofTransaction(
+                    this.networkType,
+                    this.version,
+                    this.deadline,
+                    this.maxFee,
+                    this.hashType,
+                    this.secret,
+                    TransactionService.getResolvedFromReceipt(ResolutionType.Address, this.recipientAddress as NamespaceId,
+                        statement, transactionInfo.index, transactionInfo.height.toString()) as Address,
+                    this.proof,
+                    this.signature,
+                    this.signer,
+                    this.transactionInfo,
+                ),
             ),
         );
     }

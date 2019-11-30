@@ -15,13 +15,14 @@
  */
 
 import { assert } from 'chai';
+import { expect } from 'chai';
 import { Listener } from '../../src/infrastructure/Listener';
 import { NamespaceHttp } from '../../src/infrastructure/NamespaceHttp';
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { Mosaic, MosaicSupplyChangeAction, MosaicSupplyChangeTransaction, Address } from '../../src/model/model';
+import { Address, Mosaic, MosaicSupplyChangeAction, MosaicSupplyChangeTransaction } from '../../src/model/model';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
@@ -36,7 +37,6 @@ import { NamespaceRegistrationTransaction } from '../../src/model/transaction/Na
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
-import { expect } from 'chai';
 
 describe('TransactionService', () => {
     let account: Account;

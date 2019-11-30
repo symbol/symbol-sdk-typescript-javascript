@@ -18,7 +18,7 @@ import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import {
     CreateReceiptFromDTO,
-    CreateStatementFromDTO
+    CreateStatementFromDTO,
 } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
@@ -354,7 +354,7 @@ describe('Receipt', () => {
         const statement = CreateStatementFromDTO(statementDTO, netWorkType);
         const receipt = statement.addressResolutionStatements[0];
         const hash = receipt.generateHash(NetworkType.MAIN_NET);
-        expect(hash).to.be.equal('6967470641BC527768CDC29998F4A3350813FDF2E40D1C97AB0BBA36B9AF649E');
+        expect(hash).to.be.equal('952225717E26295B97F9A35E719CA1319114CCF23C927BCBD14E7A7AA4BAC617');
     });
 
     it('should generate hash for TransactionStatement', () => {
