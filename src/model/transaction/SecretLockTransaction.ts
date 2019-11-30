@@ -241,7 +241,7 @@ export class SecretLockTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
-     * @returns {TransferTransaction}
+     * @returns {Observable<SecretLockTransaction>}
      */
     resolveAliases(receiptHttp: ReceiptHttp): Observable<SecretLockTransaction> {
         const hasUnresolved = this.recipientAddress instanceof NamespaceId ||

@@ -213,7 +213,7 @@ export class LockFundsTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
-     * @returns {TransferTransaction}
+     * @returns {Observable<LockFundsTransaction>}
      */
     resolveAliases(receiptHttp: ReceiptHttp): Observable<LockFundsTransaction> {
         const hasUnresolved = this.mosaic.id instanceof NamespaceId;

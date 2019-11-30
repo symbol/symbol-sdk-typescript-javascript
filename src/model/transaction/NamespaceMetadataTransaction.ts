@@ -216,7 +216,7 @@ export class NamespaceMetadataTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
-     * @returns {TransferTransaction}
+     * @returns {Observable<NamespaceMetadataTransaction>}
      */
     resolveAliases(receiptHttp: ReceiptHttp): Observable<NamespaceMetadataTransaction> {
         return of(this);

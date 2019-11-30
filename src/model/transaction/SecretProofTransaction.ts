@@ -217,7 +217,7 @@ export class SecretProofTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
-     * @returns {TransferTransaction}
+     * @returns {Observable<SecretProofTransaction>}
      */
     resolveAliases(receiptHttp: ReceiptHttp): Observable<SecretProofTransaction> {
         const hasUnresolved = this.recipientAddress instanceof NamespaceId;

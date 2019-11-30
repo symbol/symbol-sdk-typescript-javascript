@@ -170,7 +170,7 @@ export class AccountLinkTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
-     * @returns {TransferTransaction}
+     * @returns {Observable<AccountLinkTransaction>}
      */
     resolveAliases(receiptHttp: ReceiptHttp): Observable<AccountLinkTransaction> {
         return of(this);

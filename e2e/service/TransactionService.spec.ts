@@ -342,6 +342,13 @@ describe('TransactionService', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
+
+    /**
+     * =========================
+     * Test
+     * =========================
+     */
+
     describe('should return resolved transaction', () => {
         it('call transaction service', (done) => {
             const transactionService = new TransactionService(url);

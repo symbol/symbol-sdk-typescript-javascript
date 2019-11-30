@@ -244,7 +244,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
-     * @returns {TransferTransaction}
+     * @returns {Observable<MosaicAddressRestrictionTransaction>}
      */
     resolveAliases(receiptHttp: ReceiptHttp): Observable<MosaicAddressRestrictionTransaction> {
         const hasUnresolved = this.targetAddress instanceof NamespaceId ||

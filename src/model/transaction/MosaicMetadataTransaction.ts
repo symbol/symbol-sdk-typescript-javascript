@@ -219,7 +219,7 @@ export class MosaicMetadataTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
-     * @returns {TransferTransaction}
+     * @returns {Observable<MosaicMetadataTransaction>}
      */
     resolveAliases(receiptHttp: ReceiptHttp): Observable<MosaicMetadataTransaction> {
         const hasUnresolved = this.targetMosaicId instanceof NamespaceId;
