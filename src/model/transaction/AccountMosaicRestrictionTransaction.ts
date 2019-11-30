@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { combineLatest, from, of } from 'rxjs';
+import { combineLatest, of } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { mergeMap, toArray } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AccountMosaicRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountMosaicRestrictionTransactionBuilder';
@@ -28,11 +28,13 @@ import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
-import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
+import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
+import { TransactionService } from '../../service/TransactionService';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { ResolutionType } from '../receipt/ResolutionType';
 import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
@@ -196,23 +198,40 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
 
     /**
      * @internal
-     * @param namespaceHttp NamespaceHttp
-     * @returns {AccountMosaicRestrictionTransaction}
+     * @param receiptHttp ReceiptHttp
+     * @returns {TransferTransaction}
      */
-    resolveAliases(namespaceHttp: NamespaceHttp): Observable<AccountMosaicRestrictionTransaction> {
-        const restrictionAdditions = from(this.restrictionAdditions).pipe(
-            mergeMap((addition) => addition instanceof NamespaceId ?
-                namespaceHttp.getLinkedMosaicId(addition) :
-                of(addition),
-            ),
-            toArray(),
+    resolveAliases(receiptHttp: ReceiptHttp): Observable<AccountMosaicRestrictionTransaction> {
+        const hasUnresolved = this.restrictionAdditions.find((mosaicId) => mosaicId instanceof NamespaceId) !== undefined ||
+            this.restrictionDeletions.find((mosaicId) => mosaicId instanceof NamespaceId) !== undefined;
+
+        if (!hasUnresolved) {
+            return of(this);
+        }
+
+        const transactionInfo = this.checkTransactionHeightAndIndex();
+
+        const statementObservable = receiptHttp.getBlockReceipts(transactionInfo.height.toString());
+        const restrictionAdditions = statementObservable.pipe(
+            map((statement) => {
+                return this.restrictionAdditions.map((addition) => {
+                    return addition instanceof NamespaceId ?
+                    TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, addition as NamespaceId,
+                        statement, transactionInfo.index, transactionInfo.height.toString()) as MosaicId :
+                    addition;
+                });
+            }),
         );
-        const restrictionDeletions = from(this.restrictionDeletions).pipe(
-            mergeMap((deletion) => deletion instanceof NamespaceId ?
-                namespaceHttp.getLinkedMosaicId(deletion) :
-                of(deletion),
-            ),
-            toArray(),
+
+        const restrictionDeletions = statementObservable.pipe(
+            map((statement) => {
+                return this.restrictionDeletions.map((deletion) => {
+                    return deletion instanceof NamespaceId ?
+                    TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, deletion as NamespaceId,
+                        statement, transactionInfo.index, transactionInfo.height.toString()) as MosaicId :
+                        deletion;
+                });
+            }),
         );
 
         return combineLatest(restrictionAdditions, restrictionDeletions, (additions, deletions) => {

@@ -18,7 +18,6 @@ import { CreateTransactionFromDTO } from '../../infrastructure/transaction/Creat
 import { CreateTransactionFromPayload } from '../../infrastructure/transaction/CreateTransactionFromPayload';
 import { InnerTransaction } from '../../model/transaction/InnerTransaction';
 import { Transaction } from '../../model/transaction/Transaction';
-import { SignSchema } from '../crypto/SignSchema';
 
 export class TransactionMapping {
 

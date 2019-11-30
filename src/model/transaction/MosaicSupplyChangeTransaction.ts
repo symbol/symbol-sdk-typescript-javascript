@@ -26,12 +26,14 @@ import { MosaicSupplyChangeTransactionBuilder } from '../../infrastructure/catbu
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
-import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
+import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
+import { TransactionService } from '../../service/TransactionService';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { MosaicSupplyChangeAction } from '../mosaic/MosaicSupplyChangeAction';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { ResolutionType } from '../receipt/ResolutionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -190,19 +192,29 @@ export class MosaicSupplyChangeTransaction extends Transaction {
 
     /**
      * @internal
-     * @param namespaceHttp NamespaceHttp
-     * @returns {MosaicSupplyChangeTransaction}
+     * @param receiptHttp ReceiptHttp
+     * @returns {TransferTransaction}
      */
-    resolveAliases(namespaceHttp: NamespaceHttp): Observable<MosaicSupplyChangeTransaction> {
-        return this.mosaicId instanceof NamespaceId ?
-            namespaceHttp.getLinkedMosaicId(this.mosaicId as NamespaceId).pipe(
-                map((mosaicId) => {
+    resolveAliases(receiptHttp: ReceiptHttp): Observable<MosaicSupplyChangeTransaction> {
+        const hasUnresolved = this.mosaicId instanceof NamespaceId;
+
+        if (!hasUnresolved) {
+            return of(this);
+        }
+
+        const transactionInfo = this.checkTransactionHeightAndIndex();
+
+        const statementObservable = receiptHttp.getBlockReceipts(transactionInfo.height.toString());
+
+        return statementObservable.pipe(
+            map((statement) => {
                     return new MosaicSupplyChangeTransaction(
                         this.networkType,
                         this.version,
                         this.deadline,
                         this.maxFee,
-                        mosaicId,
+                        TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, this.mosaicId as NamespaceId,
+                            statement, transactionInfo.index, transactionInfo.height.toString()) as MosaicId,
                         this.action,
                         this.delta,
                         this.signature,
@@ -210,19 +222,6 @@ export class MosaicSupplyChangeTransaction extends Transaction {
                         this.transactionInfo,
                     );
                 }),
-            ) :
-            of(new MosaicSupplyChangeTransaction(
-                this.networkType,
-                this.version,
-                this.deadline,
-                this.maxFee,
-                this.mosaicId,
-                this.action,
-                this.delta,
-                this.signature,
-                this.signer,
-                this.transactionInfo,
-            ),
         );
     }
 }

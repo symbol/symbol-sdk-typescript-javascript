@@ -15,9 +15,8 @@
  */
 
 import * as Long from 'long';
-import { combineLatest, from, Observable, of } from 'rxjs';
-import { map, toArray } from 'rxjs/operators';
-import { mergeMap} from 'rxjs/operators';
+import { combineLatest, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {Convert} from '../../core/format';
 import {UnresolvedMapping} from '../../core/utils/UnresolvedMapping';
 import {AmountDto} from '../../infrastructure/catbuffer/AmountDto';
@@ -30,7 +29,8 @@ import {TransferTransactionBuilder} from '../../infrastructure/catbuffer/Transfe
 import {UnresolvedAddressDto} from '../../infrastructure/catbuffer/UnresolvedAddressDto';
 import {UnresolvedMosaicBuilder} from '../../infrastructure/catbuffer/UnresolvedMosaicBuilder';
 import {UnresolvedMosaicIdDto} from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
-import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
+import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
+import { TransactionService } from '../../service/TransactionService';
 import {Address} from '../account/Address';
 import {PublicAccount} from '../account/PublicAccount';
 import {NetworkType} from '../blockchain/NetworkType';
@@ -39,7 +39,9 @@ import {Message} from '../message/Message';
 import {MessageType} from '../message/MessageType';
 import {PlainMessage} from '../message/PlainMessage';
 import {Mosaic} from '../mosaic/Mosaic';
+import { MosaicId } from '../mosaic/MosaicId';
 import {NamespaceId} from '../namespace/NamespaceId';
+import { ResolutionType } from '../receipt/ResolutionType';
 import {UInt64} from '../UInt64';
 import {Deadline} from './Deadline';
 import {InnerTransaction} from './InnerTransaction';
@@ -47,7 +49,6 @@ import {Transaction} from './Transaction';
 import {TransactionInfo} from './TransactionInfo';
 import {TransactionType} from './TransactionType';
 import {TransactionVersion} from './TransactionVersion';
-import { flatMap } from 'rxjs/operators';
 
 /**
  * Transfer transactions contain data about transfers of mosaics and message to another account.
@@ -280,22 +281,38 @@ export class TransferTransaction extends Transaction {
 
     /**
      * @internal
-     * @param namespaceHttp NamespaceHttp
+     * @param receiptHttp ReceiptHttp
      * @returns {TransferTransaction}
      */
-    resolveAliases(namespaceHttp: NamespaceHttp): Observable<TransferTransaction> {
-        const resolvedRecipient = this.recipientAddress instanceof NamespaceId ?
-                    namespaceHttp.getLinkedAddress(this.recipientAddress as NamespaceId) :
-                    of(this.recipientAddress);
+    resolveAliases(receiptHttp: ReceiptHttp): Observable<TransferTransaction> {
+        const hasUnresolved = this.recipientAddress instanceof NamespaceId ||
+            this.mosaics.find((mosaic) => mosaic.id instanceof NamespaceId) !== undefined;
 
-        const resolvedMosaics = from(this.mosaics).pipe(
-            mergeMap((mosaic) => mosaic.id instanceof NamespaceId ?
-                namespaceHttp.getLinkedMosaicId(mosaic.id).pipe(
-                    map((mosaicId) => new Mosaic(mosaicId, mosaic.amount)),
-                ) :
-                of(mosaic),
+        if (!hasUnresolved) {
+            return of(this);
+        }
+
+        const transactionInfo = this.checkTransactionHeightAndIndex();
+
+        const statementObservable = receiptHttp.getBlockReceipts(transactionInfo.height.toString());
+
+        const resolvedRecipient = statementObservable.pipe(
+            map((statement) => this.recipientAddress instanceof NamespaceId ?
+                TransactionService.getResolvedFromReceipt(ResolutionType.Address, this.recipientAddress as NamespaceId,
+                    statement, transactionInfo.index, transactionInfo.height.toString()) as Address :
+                this.recipientAddress,
             ),
-            toArray(),
+        );
+
+        const resolvedMosaics = statementObservable.pipe(
+            map((statement) =>
+                this.mosaics.map((mosaic) =>
+                    mosaic.id instanceof NamespaceId ?
+                        new Mosaic(TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, mosaic.id as NamespaceId,
+                        statement, transactionInfo.index, transactionInfo.height.toString()) as MosaicId, mosaic.amount) :
+                        mosaic,
+                ),
+            ),
         );
 
         return combineLatest(resolvedRecipient, resolvedMosaics, (recipient, mosaics) => {

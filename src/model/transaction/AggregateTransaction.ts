@@ -27,7 +27,7 @@ import { Hash256Dto } from '../../infrastructure/catbuffer/Hash256Dto';
 import {KeyDto} from '../../infrastructure/catbuffer/KeyDto';
 import {SignatureDto} from '../../infrastructure/catbuffer/SignatureDto';
 import {TimestampDto} from '../../infrastructure/catbuffer/TimestampDto';
-import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
+import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
 import {CreateTransactionFromPayload} from '../../infrastructure/transaction/CreateTransactionFromPayload';
 import {Account} from '../account/Account';
 import {PublicAccount} from '../account/PublicAccount';
@@ -405,10 +405,10 @@ export class AggregateTransaction extends Transaction {
 
     /**
      * @internal
-     * @param namespaceHttp NamespaceHttp
-     * @returns {AggregateTransaction}
+     * @param receiptHttp ReceiptHttp
+     * @returns {TransferTransaction}
      */
-    resolveAliases(namespaceHttp: NamespaceHttp): Observable<AggregateTransaction> {
+    resolveAliases(receiptHttp: ReceiptHttp): Observable<AggregateTransaction> {
         throw new Error('Not implemented');
     }
 }

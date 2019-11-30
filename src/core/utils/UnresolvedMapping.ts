@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 import { Address } from '../../model/account/Address';
+import { NetworkType } from '../../model/blockchain/NetworkType';
 import { MosaicId } from '../../model/mosaic/MosaicId';
 import { NamespaceId } from '../../model/namespace/NamespaceId';
 import { Convert } from '../format/Convert';
 import { RawAddress } from '../format/RawAddress';
-import { NetworkType } from "../../model/blockchain/NetworkType";
 
 /**
  * @internal

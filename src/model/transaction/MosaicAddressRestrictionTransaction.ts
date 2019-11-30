@@ -17,7 +17,8 @@
 import { Observable } from 'rxjs/internal/Observable';
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
 import { of } from 'rxjs/internal/observable/of';
-import { Convert, RawAddress } from '../../core/format';
+import { map } from 'rxjs/internal/operators/map';
+import { Convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import {
@@ -29,12 +30,14 @@ import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
 import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
-import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
+import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
+import { TransactionService } from '../../service/TransactionService';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { ResolutionType } from '../receipt/ResolutionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -240,17 +243,36 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
 
     /**
      * @internal
-     * @param namespaceHttp NamespaceHttp
-     * @returns {MosaicAddressRestrictionTransaction}
+     * @param receiptHttp ReceiptHttp
+     * @returns {TransferTransaction}
      */
-    resolveAliases(namespaceHttp: NamespaceHttp): Observable<MosaicAddressRestrictionTransaction> {
-        const resolvedAddress = this.targetAddress instanceof NamespaceId ?
-            namespaceHttp.getLinkedAddress(this.targetAddress as NamespaceId) :
-            of(this.targetAddress);
+    resolveAliases(receiptHttp: ReceiptHttp): Observable<MosaicAddressRestrictionTransaction> {
+        const hasUnresolved = this.targetAddress instanceof NamespaceId ||
+            this.mosaicId instanceof NamespaceId;
 
-        const resolvedMosaicId = this.mosaicId instanceof NamespaceId ?
-            namespaceHttp.getLinkedMosaicId(this.mosaicId as NamespaceId) :
-            of(this.mosaicId);
+        if (!hasUnresolved) {
+            return of(this);
+        }
+
+        const transactionInfo = this.checkTransactionHeightAndIndex();
+
+        const statementObservable = receiptHttp.getBlockReceipts(transactionInfo.height.toString());
+
+        const resolvedAddress = statementObservable.pipe(
+            map((statement) => this.targetAddress instanceof NamespaceId ?
+                TransactionService.getResolvedFromReceipt(ResolutionType.Address, this.targetAddress as NamespaceId,
+                    statement, transactionInfo.index, transactionInfo.height.toString()) as Address :
+                this.targetAddress,
+            ),
+        );
+
+        const resolvedMosaicId = statementObservable.pipe(
+            map((statement) => this.mosaicId instanceof NamespaceId ?
+                TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, this.mosaicId as NamespaceId,
+                    statement, transactionInfo.index, transactionInfo.height.toString()) as MosaicId :
+                this.mosaicId,
+            ),
+        );
 
         return combineLatest(resolvedAddress, resolvedMosaicId, (address, mosaicId) => {
             return new MosaicAddressRestrictionTransaction(

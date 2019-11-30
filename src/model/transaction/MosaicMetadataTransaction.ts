@@ -26,11 +26,13 @@ import { MosaicMetadataTransactionBuilder } from '../../infrastructure/catbuffer
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
-import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
+import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
+import { TransactionService } from '../../service/TransactionService';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { ResolutionType } from '../receipt/ResolutionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -216,43 +218,37 @@ export class MosaicMetadataTransaction extends Transaction {
 
     /**
      * @internal
-     * @param namespaceHttp NamespaceHttp
-     * @returns {MosaicMetadataTransaction}
+     * @param receiptHttp ReceiptHttp
+     * @returns {TransferTransaction}
      */
-    resolveAliases(namespaceHttp: NamespaceHttp): Observable<MosaicMetadataTransaction> {
-        return this.targetMosaicId instanceof NamespaceId ?
-            namespaceHttp.getLinkedMosaicId(this.targetMosaicId as NamespaceId).pipe(
-                map((mosaicId) => {
-                    return new MosaicMetadataTransaction(
+    resolveAliases(receiptHttp: ReceiptHttp): Observable<MosaicMetadataTransaction> {
+        const hasUnresolved = this.targetMosaicId instanceof NamespaceId;
+
+        if (!hasUnresolved) {
+            return of(this);
+        }
+
+        const transactionInfo = this.checkTransactionHeightAndIndex();
+
+        const statementObservable = receiptHttp.getBlockReceipts(transactionInfo.height.toString());
+
+        return statementObservable.pipe(
+            map((statement) => new MosaicMetadataTransaction(
                         this.networkType,
                         this.version,
                         this.deadline,
                         this.maxFee,
                         this.targetPublicKey,
                         this.scopedMetadataKey,
-                        mosaicId,
+                        TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, this.targetMosaicId as NamespaceId,
+                            statement, transactionInfo.index, transactionInfo.height.toString()) as MosaicId,
                         this.valueSizeDelta,
                         this.value,
                         this.signature,
                         this.signer,
                         this.transactionInfo,
-                    );
-                }),
-            ) :
-            of(new MosaicMetadataTransaction(
-                this.networkType,
-                this.version,
-                this.deadline,
-                this.maxFee,
-                this.targetPublicKey,
-                this.scopedMetadataKey,
-                this.targetMosaicId,
-                this.valueSizeDelta,
-                this.value,
-                this.signature,
-                this.signer,
-                this.transactionInfo,
-            ),
-        );
+                    ),
+                ),
+            );
     }
 }

@@ -25,6 +25,7 @@ import { NamespaceMetadataTransactionBuilder } from '../../infrastructure/catbuf
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
+import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { NamespaceId } from '../namespace/NamespaceId';
@@ -214,10 +215,10 @@ export class NamespaceMetadataTransaction extends Transaction {
 
     /**
      * @internal
-     * @param namespaceHttp NamespaceHttp
-     * @returns {NamespaceMetadataTransaction}
+     * @param receiptHttp ReceiptHttp
+     * @returns {TransferTransaction}
      */
-    resolveAliases(namespaceHttp: NamespaceHttp): Observable<NamespaceMetadataTransaction> {
+    resolveAliases(receiptHttp: ReceiptHttp): Observable<NamespaceMetadataTransaction> {
         return of(this);
     }
 }

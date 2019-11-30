@@ -15,9 +15,15 @@
  */
 
 import {Observable} from 'rxjs';
-import { flatMap, mergeMap, toArray} from 'rxjs/operators';
-import { NamespaceHttp } from '../infrastructure/NamespaceHttp';
+import { mergeMap, toArray} from 'rxjs/operators';
+import { ReceiptHttp } from '../infrastructure/ReceiptHttp';
 import { TransactionHttp } from '../infrastructure/TransactionHttp';
+import { Address } from '../model/account/Address';
+import { MosaicId } from '../model/mosaic/MosaicId';
+import { NamespaceId } from '../model/namespace/NamespaceId';
+import { ReceiptType } from '../model/receipt/ReceiptType';
+import { ResolutionType } from '../model/receipt/ResolutionType';
+import { Statement } from '../model/receipt/Statement';
 import { Transaction } from '../model/transaction/Transaction';
 
 /**
@@ -26,14 +32,54 @@ import { Transaction } from '../model/transaction/Transaction';
 export class TransactionService {
 
     private readonly transactionHttp: TransactionHttp;
-    private readonly namespaceHttp: NamespaceHttp;
+    private readonly receiptHttp: ReceiptHttp;
     /**
      * Constructor
      * @param url Base catapult-rest url
      */
     constructor(url: string) {
         this.transactionHttp = new TransactionHttp(url);
-        this.namespaceHttp = new NamespaceHttp(url);
+        this.receiptHttp = new ReceiptHttp(url);
+    }
+
+    /**
+     * @internal
+     * Extract resolved address | mosaic from block receipt
+     * @param resolutionType Resolution type: Address / Mosaic
+     * @param unresolved Unresolved address / mosaicId
+     * @param statement Block receipt statement
+     * @param transactionIndex Transaction index
+     * @param height Transaction height
+     * @returns {MosaicId | Address}
+     */
+    public static getResolvedFromReceipt(resolutionType: ResolutionType,
+                                         unresolved: NamespaceId,
+                                         statement: Statement,
+                                         transactionIndex: number,
+                                         height: string): MosaicId | Address {
+        // Check if Harvest_Fee receipt exists on the block as it always takes the index 0.
+        const hasHarvestStatement = statement.transactionStatements
+            .find((transactionStatements) => transactionStatements.source.primaryId === 0 &&
+            transactionStatements.receipts.find((receipt) => receipt.type === ReceiptType.Harvest_Fee) !== undefined) !== undefined;
+
+        // Transaction index can be different if Harvest_Fee transaction exists.
+        transactionIndex = hasHarvestStatement ? transactionIndex + 1 : transactionIndex;
+
+        const resolutionStatement = (resolutionType === ResolutionType.Address ? statement.addressResolutionStatements :
+            statement.mosaicResolutionStatements).find((resolution) => resolution.height.toString() === height &&
+                (resolution.unresolved as NamespaceId).equals(unresolved));
+
+        if (!resolutionStatement) {
+            throw new Error('No resolution statement found');
+        }
+
+        const resolutionEntry = resolutionStatement.resolutionEntries.find((entry) => entry.source.primaryId === transactionIndex);
+
+        if (!resolutionEntry) {
+            throw new Error('No resolution entry found');
+        }
+
+        return resolutionEntry.resolved;
     }
 
     /**
@@ -43,7 +89,7 @@ export class TransactionService {
     public resolveAliases(transationHashes: string[]): Observable<Transaction[]> {
         return this.transactionHttp.getTransactions(transationHashes).pipe(
                 mergeMap((_) => _),
-                flatMap((transaction) => transaction.resolveAliases(this.namespaceHttp)),
+                mergeMap((transaction) => transaction.resolveAliases(this.receiptHttp)),
                 toArray(),
             );
     }

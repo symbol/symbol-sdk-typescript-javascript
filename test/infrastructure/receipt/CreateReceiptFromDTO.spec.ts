@@ -23,6 +23,7 @@ import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { AddressAlias } from '../../../src/model/namespace/AddressAlias';
 import { MosaicAlias } from '../../../src/model/namespace/MosaicAlias';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { ReceiptType } from '../../../src/model/receipt/ReceiptType';
 import { UInt64 } from '../../../src/model/UInt64';
 
@@ -122,8 +123,8 @@ describe('Receipt - CreateStatementFromDTO', () => {
     });
     it('should create Statement', () => {
         const statement = CreateStatementFromDTO(statementDto, netWorkType);
-        const unresolvedAddress = statement.addressResolutionStatements[0].unresolved as Address;
-        const unresolvedMosaicId = statement.mosaicResolutionStatements[0].unresolved as MosaicId;
+        const unresolvedAddress = statement.addressResolutionStatements[0].unresolved as NamespaceId;
+        const unresolvedMosaicId = statement.mosaicResolutionStatements[0].unresolved as NamespaceId;
 
         expect(statement.transactionStatements.length).to.be.equal(1);
         expect(statement.addressResolutionStatements.length).to.be.equal(2);
@@ -136,8 +137,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
         expect(statement.transactionStatements[0].receipts[0].type).to.be.equal(ReceiptType.Harvest_Fee);
 
         deepEqual(statement.addressResolutionStatements[0].height, UInt64.fromNumericString('1488'));
-        deepEqual(unresolvedAddress.plain(),
-                Address.createFromEncoded('9103B60AAF2762688300000000000000000000000000000000').plain());
+        deepEqual(unresolvedAddress.toHex(), '83686227AF0AB603');
         expect(statement.addressResolutionStatements[0].resolutionEntries.length).to.be.equal(1);
         expect((statement.addressResolutionStatements[0].resolutionEntries[0].resolved as Address).plain())
             .to.be.equal(Address.createFromEncoded('917E7E29A01014C2F300000000000000000000000000000000').plain());

@@ -29,12 +29,15 @@ import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
 import { UnresolvedMosaicBuilder } from '../../infrastructure/catbuffer/UnresolvedMosaicBuilder';
 import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
-import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
+import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
+import { TransactionService } from '../../service/TransactionService';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
+import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { ResolutionType } from '../receipt/ResolutionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { HashType, HashTypeLengthValidator } from './HashType';
@@ -235,16 +238,38 @@ export class SecretLockTransaction extends Transaction {
         return transactionBuilder.serialize();
     }
 
-    resolveAliases(namespaceHttp: NamespaceHttp): Observable<SecretLockTransaction> {
-        const resolvedRecipient = this.recipientAddress instanceof NamespaceId ?
-                    namespaceHttp.getLinkedAddress(this.recipientAddress as NamespaceId) :
-                    of(this.recipientAddress);
+    /**
+     * @internal
+     * @param receiptHttp ReceiptHttp
+     * @returns {TransferTransaction}
+     */
+    resolveAliases(receiptHttp: ReceiptHttp): Observable<SecretLockTransaction> {
+        const hasUnresolved = this.recipientAddress instanceof NamespaceId ||
+            this.mosaic.id instanceof NamespaceId;
 
-        const resolvedMosaic = this.mosaic instanceof NamespaceId ?
-            namespaceHttp.getLinkedMosaicId(this.recipientAddress as NamespaceId).pipe(
-                map((mosaicId) => new Mosaic(mosaicId, this.mosaic.amount)),
-            ) :
-            of(this.mosaic);
+        if (!hasUnresolved) {
+            return of(this);
+        }
+
+        const transactionInfo = this.checkTransactionHeightAndIndex();
+
+        const statementObservable = receiptHttp.getBlockReceipts(transactionInfo.height.toString());
+
+        const resolvedRecipient = statementObservable.pipe(
+            map((statement) => this.recipientAddress instanceof NamespaceId ?
+                TransactionService.getResolvedFromReceipt(ResolutionType.Address, this.recipientAddress as NamespaceId,
+                    statement, transactionInfo.index, transactionInfo.height.toString()) as Address :
+                this.recipientAddress,
+            ),
+        );
+
+        const resolvedMosaic = statementObservable.pipe(
+            map((statement) => this.mosaic.id instanceof NamespaceId ?
+                new Mosaic(TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, this.recipientAddress as NamespaceId,
+                    statement, transactionInfo.index, transactionInfo.height.toString()) as MosaicId, this.mosaic.amount) :
+                this.mosaic,
+            ),
+        );
 
         return combineLatest(resolvedRecipient, resolvedMosaic, (recipient, mosaic) => {
             return new SecretLockTransaction(

@@ -16,6 +16,7 @@
 
 import { combineLatest, of } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
+import { map } from 'rxjs/operators';
 import { Convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -27,11 +28,13 @@ import { MosaicGlobalRestrictionTransactionBuilder } from '../../infrastructure/
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
-import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
+import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
+import { TransactionService } from '../../service/TransactionService';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { ResolutionType } from '../receipt/ResolutionType';
 import { MosaicRestrictionType } from '../restriction/MosaicRestrictionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
@@ -249,17 +252,36 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
 
     /**
      * @internal
-     * @param namespaceHttp NamespaceHttp
-     * @returns {MosaicGlobalRestrictionTransaction}
+     * @param receiptHttp ReceiptHttp
+     * @returns {TransferTransaction}
      */
-    resolveAliases(namespaceHttp: NamespaceHttp): Observable<MosaicGlobalRestrictionTransaction> {
-        const resolvedMosaicId = this.mosaicId instanceof NamespaceId ?
-            namespaceHttp.getLinkedMosaicId(this.mosaicId as NamespaceId) :
-            of(this.mosaicId);
+    resolveAliases(receiptHttp: ReceiptHttp): Observable<MosaicGlobalRestrictionTransaction> {
+        const hasUnresolved = this.mosaicId instanceof NamespaceId ||
+            this.referenceMosaicId instanceof NamespaceId;
 
-        const resolvedRefMosaicId = this.referenceMosaicId instanceof NamespaceId ?
-            namespaceHttp.getLinkedMosaicId(this.mosaicId as NamespaceId) :
-            of(this.mosaicId);
+        if (!hasUnresolved) {
+            return of(this);
+        }
+
+        const transactionInfo = this.checkTransactionHeightAndIndex();
+
+        const statementObservable = receiptHttp.getBlockReceipts(transactionInfo.height.toString());
+
+        const resolvedMosaicId = statementObservable.pipe(
+            map((statement) => this.mosaicId instanceof NamespaceId ?
+                TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, this.mosaicId as NamespaceId,
+                    statement, transactionInfo.index, transactionInfo.height.toString()) as MosaicId :
+                this.mosaicId,
+            ),
+        );
+
+        const resolvedRefMosaicId = statementObservable.pipe(
+            map((statement) => this.referenceMosaicId instanceof NamespaceId ?
+                TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, this.referenceMosaicId as NamespaceId,
+                    statement, transactionInfo.index, transactionInfo.height.toString()) as MosaicId :
+                this.referenceMosaicId,
+            ),
+        );
 
         return combineLatest(resolvedMosaicId, resolvedRefMosaicId, (mosaicId, refMosaicId) => {
             return new MosaicGlobalRestrictionTransaction(
