@@ -199,7 +199,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
-     * @returns {TransferTransaction}
+     * @returns {Observable<AccountMosaicRestrictionTransaction>}
      */
     resolveAliases(receiptHttp: ReceiptHttp): Observable<AccountMosaicRestrictionTransaction> {
         const hasUnresolved = this.restrictionAdditions.find((mosaicId) => mosaicId instanceof NamespaceId) !== undefined ||

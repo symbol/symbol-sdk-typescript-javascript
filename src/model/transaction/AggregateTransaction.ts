@@ -407,7 +407,7 @@ export class AggregateTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
-     * @returns {TransferTransaction}
+     * @returns {Observable<AggregateTransaction>}
      */
     resolveAliases(receiptHttp: ReceiptHttp): Observable<AggregateTransaction> {
         return from(this.innerTransactions).pipe(

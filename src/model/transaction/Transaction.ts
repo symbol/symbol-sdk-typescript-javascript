@@ -191,6 +191,7 @@ export abstract class Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
+     * @returns {Observable<Transaction>}
      */
     abstract resolveAliases(receiptHttp: ReceiptHttp): Observable<Transaction>;
 

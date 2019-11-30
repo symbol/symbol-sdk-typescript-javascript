@@ -185,7 +185,7 @@ export class MosaicAliasTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
-     * @returns {TransferTransaction}
+     * @returns {Observable<MosaicAliasTransaction>}
      */
     resolveAliases(receiptHttp: ReceiptHttp): Observable<MosaicAliasTransaction> {
         return of(this);

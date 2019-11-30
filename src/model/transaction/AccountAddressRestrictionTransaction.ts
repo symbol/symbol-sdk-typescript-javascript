@@ -199,7 +199,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
-     * @returns {TransferTransaction}
+     * @returns {Observable<AccountAddressRestrictionTransaction>}
      */
     resolveAliases(receiptHttp: ReceiptHttp): Observable<AccountAddressRestrictionTransaction> {
         const hasUnresolved = this.restrictionAdditions.find((address) => address instanceof NamespaceId) !== undefined ||

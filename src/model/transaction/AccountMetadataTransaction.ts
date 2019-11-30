@@ -200,7 +200,7 @@ export class AccountMetadataTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
-     * @returns {TransferTransaction}
+     * @returns {Observable<AccountMetadataTransaction>}
      */
     resolveAliases(receiptHttp: ReceiptHttp): Observable<AccountMetadataTransaction> {
         return of(this);

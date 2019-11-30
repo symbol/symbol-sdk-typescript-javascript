@@ -280,7 +280,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
-     * @returns {TransferTransaction}
+     * @returns {Observable<NamespaceRegistrationTransaction>}
      */
     resolveAliases(receiptHttp: ReceiptHttp): Observable<NamespaceRegistrationTransaction> {
         return of(this);

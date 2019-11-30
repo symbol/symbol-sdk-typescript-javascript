@@ -181,7 +181,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
-     * @returns {TransferTransaction}
+     * @returns {Observable<AccountOperationRestrictionTransaction>}
      */
     resolveAliases(receiptHttp: ReceiptHttp): Observable<AccountOperationRestrictionTransaction> {
         return of(this);

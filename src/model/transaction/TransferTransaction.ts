@@ -282,7 +282,7 @@ export class TransferTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
-     * @returns {TransferTransaction}
+     * @returns {Observable<TransferTransaction>}
      */
     resolveAliases(receiptHttp: ReceiptHttp): Observable<TransferTransaction> {
         const hasUnresolved = this.recipientAddress instanceof NamespaceId ||
