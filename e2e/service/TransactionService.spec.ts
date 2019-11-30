@@ -20,19 +20,23 @@ import { Listener } from '../../src/infrastructure/Listener';
 import { NamespaceHttp } from '../../src/infrastructure/NamespaceHttp';
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { Account } from '../../src/model/account/Account';
+import { Address } from '../../src/model/account/Address';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { Address, Mosaic, MosaicSupplyChangeAction, MosaicSupplyChangeTransaction } from '../../src/model/model';
+import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
+import { MosaicSupplyChangeAction } from '../../src/model/mosaic/MosaicSupplyChangeAction';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
+import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
+import { MosaicSupplyChangeTransaction } from '../../src/model/transaction/MosaicSupplyChangeTransaction';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
@@ -94,7 +98,7 @@ describe('TransactionService', () => {
             );
             addressAlias = new NamespaceId(namespaceName);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
-
+            transactionHashes.push(signedTransaction.hash);
             listener.confirmed(account.address).subscribe(() => {
                 done();
             });
@@ -126,7 +130,7 @@ describe('TransactionService', () => {
             );
             mosaicAlias = new NamespaceId(namespaceName);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
-
+            transactionHashes.push(signedTransaction.hash);
             listener.confirmed(account.address).subscribe(() => {
                 done();
             });
@@ -158,7 +162,7 @@ describe('TransactionService', () => {
                 NetworkType.MIJIN_TEST,
             );
             const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
-
+            transactionHashes.push(signedTransaction.hash);
             listener.confirmed(account.address).subscribe(() => {
                 done();
             });
@@ -193,7 +197,7 @@ describe('TransactionService', () => {
                 NetworkType.MIJIN_TEST,
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
-
+            transactionHashes.push(signedTransaction.hash);
             listener.confirmed(account.address).subscribe(() => {
                 done();
             });
@@ -219,6 +223,7 @@ describe('TransactionService', () => {
                 NetworkType.MIJIN_TEST,
             );
             const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
+            transactionHashes.push(signedTransaction.hash);
             listener.confirmed(account.address).subscribe(() => {
                 done();
             });
@@ -250,7 +255,7 @@ describe('TransactionService', () => {
                 NetworkType.MIJIN_TEST,
             );
             const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
-
+            transactionHashes.push(signedTransaction.hash);
             listener.confirmed(account.address).subscribe(() => {
                 done();
             });
@@ -277,7 +282,7 @@ describe('TransactionService', () => {
                 Deadline.create(),
                 addressAlias,
                 [
-                    // NetworkCurrencyMosaic.createAbsolute(1), //Seems get banned on rest if passing multiple mosaic alias in
+                    NetworkCurrencyMosaic.createAbsolute(1),
                     new Mosaic(mosaicAlias, UInt64.fromUint(1)),
                 ],
                 PlainMessage.create('test-message'),
@@ -298,13 +303,60 @@ describe('TransactionService', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
+
+    describe('Create Aggreate TransferTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const transferTransaction = TransferTransaction.create(
+                Deadline.create(),
+                addressAlias,
+                [
+                    NetworkCurrencyMosaic.createAbsolute(1),
+                    new Mosaic(mosaicAlias, UInt64.fromUint(1)),
+                ],
+                PlainMessage.create('test-message'),
+                NetworkType.MIJIN_TEST,
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [transferTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+            transactionHashes.push(signedTransaction.hash);
+            listener.confirmed(account.address).subscribe(() => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
     describe('should return resolved transaction', () => {
         it('call transaction service', (done) => {
             const transactionService = new TransactionService(url);
             return transactionService.resolveAliases(transactionHashes).subscribe((transactions) => {
-                transactions.map((tx: TransferTransaction) => {
-                    expect((tx.recipientAddress as Address).plain()).to.be.equal(account.address.plain());
-                    expect(tx.mosaics.find((m) => m.id.toHex() === mosaicId.toHex())).not.to.equal(undefined);
+                expect(transactions.length).to.be.equal(8);
+                transactions.map((tx) => {
+                    if (tx instanceof TransferTransaction) {
+                        expect((tx.recipientAddress as Address).plain()).to.be.equal(account.address.plain());
+                        expect(tx.mosaics.find((m) => m.id.toHex() === mosaicId.toHex())).not.to.equal(undefined);
+                    } else if (tx instanceof AggregateTransaction) {
+                        expect(((tx.innerTransactions[0] as TransferTransaction).recipientAddress as Address)
+                            .plain()).to.be.equal(account.address.plain());
+                        expect((tx.innerTransactions[0] as TransferTransaction).mosaics
+                            .find((m) => m.id.toHex() === mosaicId.toHex())).not.to.equal(undefined);
+                    }
                 });
                 done();
             });
