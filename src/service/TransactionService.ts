@@ -67,12 +67,11 @@ export class TransactionService {
         if (!resolutionStatement) {
             throw new Error('No resolution statement found');
         }
-
         // source (0,0) is reserved for blocks, source (n, 0) is for txes, where n is 1-based index
         const resolutionEntry = resolutionStatement.resolutionEntries
             .find((entry) => entry.source.primaryId ===
-                (aggregateTransactionIndex ? aggregateTransactionIndex + 1 : transactionIndex + 1) &&
-                entry.source.secondaryId === (aggregateTransactionIndex ? transactionIndex : 0));
+                (aggregateTransactionIndex !== undefined ? aggregateTransactionIndex + 1 : transactionIndex + 1) &&
+                entry.source.secondaryId === (aggregateTransactionIndex !== undefined ? transactionIndex + 1 : 0));
 
         if (!resolutionEntry) {
             throw new Error('No resolution entry found');
