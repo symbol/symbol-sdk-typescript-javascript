@@ -244,9 +244,10 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
+     * @param aggregateTransactionIndex Transaction index for aggregated transaction
      * @returns {Observable<MosaicAddressRestrictionTransaction>}
      */
-    resolveAliases(receiptHttp: ReceiptHttp): Observable<MosaicAddressRestrictionTransaction> {
+    resolveAliases(receiptHttp: ReceiptHttp, aggregateTransactionIndex?: number): Observable<MosaicAddressRestrictionTransaction> {
         const hasUnresolved = this.targetAddress instanceof NamespaceId ||
             this.mosaicId instanceof NamespaceId;
 
@@ -261,7 +262,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
         const resolvedAddress = statementObservable.pipe(
             map((statement) => this.targetAddress instanceof NamespaceId ?
                 TransactionService.getResolvedFromReceipt(ResolutionType.Address, this.targetAddress as NamespaceId,
-                    statement, transactionInfo.index, transactionInfo.height.toString()) as Address :
+                    statement, transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as Address :
                 this.targetAddress,
             ),
         );
@@ -269,7 +270,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
         const resolvedMosaicId = statementObservable.pipe(
             map((statement) => this.mosaicId instanceof NamespaceId ?
                 TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, this.mosaicId as NamespaceId,
-                    statement, transactionInfo.index, transactionInfo.height.toString()) as MosaicId :
+                    statement, transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as MosaicId :
                 this.mosaicId,
             ),
         );

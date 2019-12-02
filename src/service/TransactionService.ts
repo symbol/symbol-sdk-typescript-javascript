@@ -50,20 +50,15 @@ export class TransactionService {
      * @param statement Block receipt statement
      * @param transactionIndex Transaction index
      * @param height Transaction height
+     * @param aggregateTransactionIndex Transaction index for aggregate
      * @returns {MosaicId | Address}
      */
     public static getResolvedFromReceipt(resolutionType: ResolutionType,
                                          unresolved: NamespaceId,
                                          statement: Statement,
                                          transactionIndex: number,
-                                         height: string): MosaicId | Address {
-        // Check if Harvest_Fee receipt exists on the block as it always takes the index 0.
-        const hasHarvestStatement = statement.transactionStatements
-            .find((transactionStatements) => transactionStatements.source.primaryId === 0 &&
-            transactionStatements.receipts.find((receipt) => receipt.type === ReceiptType.Harvest_Fee) !== undefined) !== undefined;
-
-        // Transaction index can be different if Harvest_Fee transaction exists.
-        transactionIndex = hasHarvestStatement ? transactionIndex + 1 : transactionIndex;
+                                         height: string,
+                                         aggregateTransactionIndex?: number): MosaicId | Address {
 
         const resolutionStatement = (resolutionType === ResolutionType.Address ? statement.addressResolutionStatements :
             statement.mosaicResolutionStatements).find((resolution) => resolution.height.toString() === height &&
@@ -73,7 +68,11 @@ export class TransactionService {
             throw new Error('No resolution statement found');
         }
 
-        const resolutionEntry = resolutionStatement.resolutionEntries.find((entry) => entry.source.primaryId === transactionIndex);
+        // source (0,0) is reserved for blocks, source (n, 0) is for txes, where n is 1-based index
+        const resolutionEntry = resolutionStatement.resolutionEntries
+            .find((entry) => entry.source.primaryId ===
+                (aggregateTransactionIndex ? aggregateTransactionIndex + 1 : transactionIndex + 1) &&
+                entry.source.secondaryId === (aggregateTransactionIndex ? transactionIndex : 0));
 
         if (!resolutionEntry) {
             throw new Error('No resolution entry found');

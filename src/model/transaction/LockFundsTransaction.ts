@@ -213,9 +213,10 @@ export class LockFundsTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
+     * @param aggregateTransactionIndex Transaction index for aggregated transaction
      * @returns {Observable<LockFundsTransaction>}
      */
-    resolveAliases(receiptHttp: ReceiptHttp): Observable<LockFundsTransaction> {
+    resolveAliases(receiptHttp: ReceiptHttp, aggregateTransactionIndex?: number): Observable<LockFundsTransaction> {
         const hasUnresolved = this.mosaic.id instanceof NamespaceId;
 
         if (!hasUnresolved) {
@@ -232,7 +233,8 @@ export class LockFundsTransaction extends Transaction {
                         this.deadline,
                         this.maxFee,
                         new Mosaic(TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, this.mosaic.id as NamespaceId,
-                            statement, transactionInfo.index, transactionInfo.height.toString()) as MosaicId, this.mosaic.amount),
+                            statement, transactionInfo.index, transactionInfo.height.toString(),
+                            aggregateTransactionIndex) as MosaicId, this.mosaic.amount),
                         this.duration,
                         this.signedTransaction,
                         this.signature,

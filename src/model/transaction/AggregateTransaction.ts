@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+import { from, of } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
+import { map, mergeMap, toArray } from 'rxjs/operators';
 import {KeyPair, MerkleHashBuilder, SHA3Hasher, SignSchema} from '../../core/crypto';
 import {Convert} from '../../core/format';
 import {AggregateBondedTransactionBuilder} from '../../infrastructure/catbuffer/AggregateBondedTransactionBuilder';
@@ -41,8 +43,6 @@ import {Transaction} from './Transaction';
 import {TransactionInfo} from './TransactionInfo';
 import {TransactionType} from './TransactionType';
 import {TransactionVersion} from './TransactionVersion';
-import { of, from } from 'rxjs';
-import { map, mergeMap, toArray } from 'rxjs/operators';
 
 /**
  * Aggregate innerTransactions contain multiple innerTransactions that can be initiated by different accounts.
@@ -410,8 +410,9 @@ export class AggregateTransaction extends Transaction {
      * @returns {Observable<AggregateTransaction>}
      */
     resolveAliases(receiptHttp: ReceiptHttp): Observable<AggregateTransaction> {
+        const transactionInfo = this.checkTransactionHeightAndIndex();
         return from(this.innerTransactions).pipe(
-            mergeMap((transaction) => transaction.resolveAliases(receiptHttp)),
+            mergeMap((transaction) => transaction.resolveAliases(receiptHttp, transactionInfo.index)),
             map((transaction) => transaction as InnerTransaction),
             toArray(),
         ).pipe(
