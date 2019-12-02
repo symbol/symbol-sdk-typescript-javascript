@@ -241,9 +241,10 @@ export class SecretLockTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
+     * @param aggregateTransactionIndex Transaction index for aggregated transaction
      * @returns {Observable<SecretLockTransaction>}
      */
-    resolveAliases(receiptHttp: ReceiptHttp): Observable<SecretLockTransaction> {
+    resolveAliases(receiptHttp: ReceiptHttp, aggregateTransactionIndex?: number): Observable<SecretLockTransaction> {
         const hasUnresolved = this.recipientAddress instanceof NamespaceId ||
             this.mosaic.id instanceof NamespaceId;
 
@@ -258,7 +259,7 @@ export class SecretLockTransaction extends Transaction {
         const resolvedRecipient = statementObservable.pipe(
             map((statement) => this.recipientAddress instanceof NamespaceId ?
                 TransactionService.getResolvedFromReceipt(ResolutionType.Address, this.recipientAddress as NamespaceId,
-                    statement, transactionInfo.index, transactionInfo.height.toString()) as Address :
+                    statement, transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as Address :
                 this.recipientAddress,
             ),
         );
@@ -266,7 +267,8 @@ export class SecretLockTransaction extends Transaction {
         const resolvedMosaic = statementObservable.pipe(
             map((statement) => this.mosaic.id instanceof NamespaceId ?
                 new Mosaic(TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, this.recipientAddress as NamespaceId,
-                    statement, transactionInfo.index, transactionInfo.height.toString()) as MosaicId, this.mosaic.amount) :
+                    statement, transactionInfo.index, transactionInfo.height.toString(),
+                    aggregateTransactionIndex) as MosaicId, this.mosaic.amount) :
                 this.mosaic,
             ),
         );

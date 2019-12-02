@@ -219,9 +219,10 @@ export class MosaicMetadataTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
+     * @param aggregateTransactionIndex Transaction index for aggregated transaction
      * @returns {Observable<MosaicMetadataTransaction>}
      */
-    resolveAliases(receiptHttp: ReceiptHttp): Observable<MosaicMetadataTransaction> {
+    resolveAliases(receiptHttp: ReceiptHttp, aggregateTransactionIndex?: number): Observable<MosaicMetadataTransaction> {
         const hasUnresolved = this.targetMosaicId instanceof NamespaceId;
 
         if (!hasUnresolved) {
@@ -241,7 +242,7 @@ export class MosaicMetadataTransaction extends Transaction {
                         this.targetPublicKey,
                         this.scopedMetadataKey,
                         TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, this.targetMosaicId as NamespaceId,
-                            statement, transactionInfo.index, transactionInfo.height.toString()) as MosaicId,
+                            statement, transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as MosaicId,
                         this.valueSizeDelta,
                         this.value,
                         this.signature,

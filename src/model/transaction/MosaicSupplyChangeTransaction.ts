@@ -193,9 +193,10 @@ export class MosaicSupplyChangeTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
+     * @param aggregateTransactionIndex Transaction index for aggregated transaction
      * @returns {Observable<MosaicSupplyChangeTransaction>}
      */
-    resolveAliases(receiptHttp: ReceiptHttp): Observable<MosaicSupplyChangeTransaction> {
+    resolveAliases(receiptHttp: ReceiptHttp, aggregateTransactionIndex?: number): Observable<MosaicSupplyChangeTransaction> {
         const hasUnresolved = this.mosaicId instanceof NamespaceId;
 
         if (!hasUnresolved) {
@@ -214,7 +215,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
                         this.deadline,
                         this.maxFee,
                         TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, this.mosaicId as NamespaceId,
-                            statement, transactionInfo.index, transactionInfo.height.toString()) as MosaicId,
+                            statement, transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as MosaicId,
                         this.action,
                         this.delta,
                         this.signature,

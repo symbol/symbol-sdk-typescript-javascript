@@ -404,7 +404,7 @@ class FakeTransaction extends Transaction {
     protected generateEmbeddedBytes(): Uint8Array {
         throw new Error('Not implemented');
     }
-    resolveAliases(receiptHttp: ReceiptHttp): Observable<TransferTransaction> {
+    resolveAliases(receiptHttp: ReceiptHttp, aggregateTransactionIndex?: number): Observable<TransferTransaction> {
         throw new Error('Not implemented');
     }
 }

@@ -217,9 +217,10 @@ export class SecretProofTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
+     * @param aggregateTransactionIndex Transaction index for aggregated transaction
      * @returns {Observable<SecretProofTransaction>}
      */
-    resolveAliases(receiptHttp: ReceiptHttp): Observable<SecretProofTransaction> {
+    resolveAliases(receiptHttp: ReceiptHttp, aggregateTransactionIndex?: number): Observable<SecretProofTransaction> {
         const hasUnresolved = this.recipientAddress instanceof NamespaceId;
 
         if (!hasUnresolved) {
@@ -239,7 +240,7 @@ export class SecretProofTransaction extends Transaction {
                     this.hashType,
                     this.secret,
                     TransactionService.getResolvedFromReceipt(ResolutionType.Address, this.recipientAddress as NamespaceId,
-                        statement, transactionInfo.index, transactionInfo.height.toString()) as Address,
+                        statement, transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as Address,
                     this.proof,
                     this.signature,
                     this.signer,

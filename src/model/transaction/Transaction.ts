@@ -191,9 +191,10 @@ export abstract class Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
+     * @param AggregateTransactionIndex Transaction index for aggregated transaction
      * @returns {Observable<Transaction>}
      */
-    abstract resolveAliases(receiptHttp: ReceiptHttp): Observable<Transaction>;
+    abstract resolveAliases(receiptHttp: ReceiptHttp, AggregateTransactionIndex?: number): Observable<Transaction>;
 
     /**
      * @internal

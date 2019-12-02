@@ -129,7 +129,7 @@ describe('TransactionService', () => {
                         resolutionEntries: [
                         {
                             source: {
-                            primaryId: 0,
+                            primaryId: 1,
                             secondaryId: 0,
                             },
                             resolved: '901D8D4741F80299E66BF7FEEB4F30943DA7B68E068B182319',
@@ -171,7 +171,7 @@ describe('TransactionService', () => {
                         resolutionEntries: [
                         {
                             source: {
-                            primaryId: 0,
+                            primaryId: 1,
                             secondaryId: 0,
                             },
                             resolved: '504677C3281108DB',
@@ -186,7 +186,7 @@ describe('TransactionService', () => {
                         resolutionEntries: [
                         {
                             source: {
-                            primaryId: 0,
+                            primaryId: 1,
                             secondaryId: 0,
                             },
                             resolved: '756482FB80FD406C',

@@ -220,7 +220,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
-     * @returns {Observable<MultisigAccountModificationTransaction>
+     * @returns {Observable<MultisigAccountModificationTransaction>}
      */
     resolveAliases(receiptHttp: ReceiptHttp): Observable<MultisigAccountModificationTransaction> {
         return of(this);

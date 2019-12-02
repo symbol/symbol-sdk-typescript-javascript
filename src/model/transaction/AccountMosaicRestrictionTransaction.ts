@@ -199,9 +199,10 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
+     * @param aggregateTransactionIndex Transaction index for aggregated transaction
      * @returns {Observable<AccountMosaicRestrictionTransaction>}
      */
-    resolveAliases(receiptHttp: ReceiptHttp): Observable<AccountMosaicRestrictionTransaction> {
+    resolveAliases(receiptHttp: ReceiptHttp, aggregateTransactionIndex?: number): Observable<AccountMosaicRestrictionTransaction> {
         const hasUnresolved = this.restrictionAdditions.find((mosaicId) => mosaicId instanceof NamespaceId) !== undefined ||
             this.restrictionDeletions.find((mosaicId) => mosaicId instanceof NamespaceId) !== undefined;
 
@@ -217,7 +218,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
                 return this.restrictionAdditions.map((addition) => {
                     return addition instanceof NamespaceId ?
                     TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, addition as NamespaceId,
-                        statement, transactionInfo.index, transactionInfo.height.toString()) as MosaicId :
+                        statement, transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as MosaicId :
                     addition;
                 });
             }),
@@ -228,7 +229,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
                 return this.restrictionDeletions.map((deletion) => {
                     return deletion instanceof NamespaceId ?
                     TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, deletion as NamespaceId,
-                        statement, transactionInfo.index, transactionInfo.height.toString()) as MosaicId :
+                        statement, transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as MosaicId :
                         deletion;
                 });
             }),

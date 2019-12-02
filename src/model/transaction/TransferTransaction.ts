@@ -282,9 +282,10 @@ export class TransferTransaction extends Transaction {
     /**
      * @internal
      * @param receiptHttp ReceiptHttp
+     * @param aggregateTransactionIndex Transaction index for aggregated transaction
      * @returns {Observable<TransferTransaction>}
      */
-    resolveAliases(receiptHttp: ReceiptHttp): Observable<TransferTransaction> {
+    resolveAliases(receiptHttp: ReceiptHttp, aggregateTransactionIndex?: number): Observable<TransferTransaction> {
         const hasUnresolved = this.recipientAddress instanceof NamespaceId ||
             this.mosaics.find((mosaic) => mosaic.id instanceof NamespaceId) !== undefined;
 
@@ -299,7 +300,7 @@ export class TransferTransaction extends Transaction {
         const resolvedRecipient = statementObservable.pipe(
             map((statement) => this.recipientAddress instanceof NamespaceId ?
                 TransactionService.getResolvedFromReceipt(ResolutionType.Address, this.recipientAddress as NamespaceId,
-                    statement, transactionInfo.index, transactionInfo.height.toString()) as Address :
+                    statement, transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as Address :
                 this.recipientAddress,
             ),
         );
@@ -309,7 +310,8 @@ export class TransferTransaction extends Transaction {
                 this.mosaics.map((mosaic) =>
                     mosaic.id instanceof NamespaceId ?
                         new Mosaic(TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, mosaic.id as NamespaceId,
-                        statement, transactionInfo.index, transactionInfo.height.toString()) as MosaicId, mosaic.amount) :
+                        statement, transactionInfo.index, transactionInfo.height.toString(),
+                        aggregateTransactionIndex) as MosaicId, mosaic.amount) :
                         mosaic,
                 ),
             ),
