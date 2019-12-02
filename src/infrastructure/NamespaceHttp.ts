@@ -19,6 +19,7 @@ import {Convert as convert, RawAddress as AddressLibrary} from '../core/format';
 import { AccountNames } from '../model/account/AccountNames';
 import {Address} from '../model/account/Address';
 import {PublicAccount} from '../model/account/PublicAccount';
+import { NetworkType } from '../model/blockchain/NetworkType';
 import {MosaicId} from '../model/mosaic/MosaicId';
 import { MosaicNames } from '../model/mosaic/MosaicNames';
 import {AddressAlias} from '../model/namespace/AddressAlias';
@@ -33,7 +34,6 @@ import {UInt64} from '../model/UInt64';
 import { NamespaceRoutesApi } from './api';
 import {Http} from './Http';
 import {NamespaceRepository} from './NamespaceRepository';
-import {NetworkHttp} from './NetworkHttp';
 import {QueryParams} from './QueryParams';
 
 /**
@@ -51,11 +51,10 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
     /**
      * Constructor
      * @param url
-     * @param networkHttp
+     * @param networkType
      */
-    constructor(url: string, networkHttp?: NetworkHttp) {
-        networkHttp = networkHttp == null ? new NetworkHttp(url) : networkHttp;
-        super(networkHttp);
+    constructor(url: string, networkType?: NetworkType) {
+        super(url, networkType);
         this.namespaceRoutesApi = new NamespaceRoutesApi(url);
     }
 

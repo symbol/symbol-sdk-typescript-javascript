@@ -19,6 +19,7 @@ import {catchError, map} from 'rxjs/operators';
 import {AccountInfo} from '../model/account/AccountInfo';
 import { ActivityBucket } from '../model/account/ActivityBucket';
 import {Address} from '../model/account/Address';
+import { NetworkType } from '../model/blockchain/NetworkType';
 import {Mosaic} from '../model/mosaic/Mosaic';
 import {MosaicId} from '../model/mosaic/MosaicId';
 import {AggregateTransaction} from '../model/transaction/AggregateTransaction';
@@ -28,7 +29,6 @@ import {AccountRepository} from './AccountRepository';
 import { AccountInfoDTO,
          AccountRoutesApi } from './api';
 import {Http} from './Http';
-import {NetworkHttp} from './NetworkHttp';
 import {QueryParams} from './QueryParams';
 import {CreateTransactionFromDTO} from './transaction/CreateTransactionFromDTO';
 
@@ -47,11 +47,10 @@ export class AccountHttp extends Http implements AccountRepository {
     /**
      * Constructor
      * @param url
-     * @param networkHttp
+     * @param networkType
      */
-    constructor(url: string, networkHttp?: NetworkHttp) {
-        networkHttp = networkHttp == null ? new NetworkHttp(url) : networkHttp;
-        super(networkHttp);
+    constructor(url: string, networkType?: NetworkType) {
+        super(url, networkType);
         this.accountRoutesApi = new AccountRoutesApi(url);
     }
 

@@ -20,12 +20,12 @@ import {PublicAccount} from '../model/account/PublicAccount';
 import {BlockInfo} from '../model/blockchain/BlockInfo';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
+import { NetworkType } from '../model/blockchain/NetworkType';
 import {Transaction} from '../model/transaction/Transaction';
 import {UInt64} from '../model/UInt64';
 import { BlockRoutesApi } from './api';
 import {BlockRepository} from './BlockRepository';
 import {Http} from './Http';
-import { NetworkHttp } from './NetworkHttp';
 import {QueryParams} from './QueryParams';
 import {CreateTransactionFromDTO, extractBeneficiary} from './transaction/CreateTransactionFromDTO';
 
@@ -58,11 +58,10 @@ export class BlockHttp extends Http implements BlockRepository {
     /**
      * Constructor
      * @param url
-     * @param networkHttp
+     * @param networkType
      */
-    constructor(url: string, networkHttp?: NetworkHttp) {
-        networkHttp = networkHttp == null ? new NetworkHttp(url) : networkHttp;
-        super(networkHttp);
+    constructor(url: string, networkType?: NetworkType) {
+        super(url, networkType);
         this.blockRoutesApi = new BlockRoutesApi(url);
     }
 

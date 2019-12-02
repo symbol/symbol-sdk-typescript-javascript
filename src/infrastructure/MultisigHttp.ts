@@ -20,10 +20,10 @@ import {Address} from '../model/account/Address';
 import {MultisigAccountGraphInfo} from '../model/account/MultisigAccountGraphInfo';
 import {MultisigAccountInfo} from '../model/account/MultisigAccountInfo';
 import {PublicAccount} from '../model/account/PublicAccount';
+import { NetworkType } from '../model/blockchain/NetworkType';
 import { MultisigRoutesApi } from './api/multisigRoutesApi';
 import {Http} from './Http';
 import { MultisigRepository } from './MultisigRepository';
-import {NetworkHttp} from './NetworkHttp';
 
 /**
  * Multisig http repository.
@@ -40,11 +40,10 @@ export class MultisigHttp extends Http implements MultisigRepository {
     /**
      * Constructor
      * @param url
-     * @param networkHttp
+     * @param networkType
      */
-    constructor(url: string, networkHttp?: NetworkHttp) {
-        networkHttp = networkHttp == null ? new NetworkHttp(url) : networkHttp;
-        super(networkHttp);
+    constructor(url: string, networkType?: NetworkType) {
+        super(url, networkType);
         this.multisigRoutesApi = new MultisigRoutesApi(url);
     }
 

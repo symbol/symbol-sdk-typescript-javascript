@@ -39,7 +39,7 @@ export class DiagnosticHttp extends Http implements DiagnosticRepository {
      * @param url
      */
     constructor(url: string) {
-        super();
+        super(url);
         this.diagnosticRoutesApi = new DiagnosticRoutesApi(url);
     }
 

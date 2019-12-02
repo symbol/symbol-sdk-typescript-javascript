@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { ClientResponse } from 'http';
 import {from as observableFrom, Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import { NetworkName } from '../model/blockchain/NetworkName';
@@ -22,7 +21,6 @@ import {NetworkType} from '../model/blockchain/NetworkType';
 import { NodeInfo } from '../model/node/NodeInfo';
 import { NetworkRoutesApi } from './api/apis';
 import {Http} from './Http';
-import { NetworkTypeDTO } from './model/networkTypeDTO';
 import {NetworkRepository} from './NetworkRepository';
 import { NodeHttp } from './NodeHttp';
 
@@ -44,7 +42,7 @@ export class NetworkHttp extends Http implements NetworkRepository {
      * @param url
      */
     constructor(url: string) {
-        super();
+        super(url);
         this.nodeHttp = new NodeHttp(url);
         this.networkRouteApi = new NetworkRoutesApi(url);
 

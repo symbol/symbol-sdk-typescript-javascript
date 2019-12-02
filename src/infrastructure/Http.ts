@@ -14,36 +14,41 @@
  * limitations under the License.
  */
 
-import {Observable, of as observableOf} from 'rxjs';
-import {map} from 'rxjs/operators';
+// tslint:disable-next-line: ordered-imports
+import {from as observableFrom, Observable, of as observableOf, throwError} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
 import {NetworkType} from '../model/blockchain/NetworkType';
-import {NetworkHttp} from './NetworkHttp';
+import { NodeRoutesApi } from './api/apis';
 import { QueryParams } from './QueryParams';
 /**
  * Http extended by all http services
  */
 export abstract class Http {
-    private networkHttp: NetworkHttp;
-    private networkType: NetworkType;
+    protected readonly url: string;
+    protected networkType: NetworkType;
 
     /**
      * Constructor
-     * @param url
-     * @param networkHttp
+     * @param url Base catapult-rest url
+     * @param networkType
      */
-    constructor(networkHttp?: NetworkHttp) {
-        if (networkHttp) {
-            this.networkHttp = networkHttp;
+    constructor(url: string, networkType?: NetworkType) {
+        if (networkType) {
+            this.networkType = networkType;
         }
+        this.url = url;
     }
 
     getNetworkTypeObservable(): Observable<NetworkType> {
         let networkTypeResolve;
-        if (this.networkType == null) {
-            networkTypeResolve = this.networkHttp.getNetworkType().pipe(map((networkType) => {
-                this.networkType = networkType;
-                return networkType;
-            }));
+        if (!this.networkType) {
+            networkTypeResolve = observableFrom(new NodeRoutesApi(this.url).getNodeInfo()).pipe(
+                map(({body}) => {
+                    this.networkType = body.networkIdentifier;
+                    return body.networkIdentifier;
+                }),
+                catchError((error) =>  throwError(this.errorHandling(error))),
+            );
         } else {
             networkTypeResolve = observableOf(this.networkType);
         }
