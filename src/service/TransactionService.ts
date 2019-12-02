@@ -21,7 +21,6 @@ import { TransactionHttp } from '../infrastructure/TransactionHttp';
 import { Address } from '../model/account/Address';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { NamespaceId } from '../model/namespace/NamespaceId';
-import { ReceiptType } from '../model/receipt/ReceiptType';
 import { ResolutionType } from '../model/receipt/ResolutionType';
 import { Statement } from '../model/receipt/Statement';
 import { Transaction } from '../model/transaction/Transaction';
