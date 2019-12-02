@@ -44,6 +44,7 @@ export abstract class Http {
         if (!this.networkType) {
             networkTypeResolve = observableFrom(new NodeRoutesApi(this.url).getNodeInfo()).pipe(
                 map(({body}) => {
+                    this.networkType = body.networkIdentifier;
                     return body.networkIdentifier;
                 }),
                 catchError((error) =>  throwError(this.errorHandling(error))),
