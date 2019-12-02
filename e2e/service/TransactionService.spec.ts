@@ -16,6 +16,7 @@
 
 import { assert } from 'chai';
 import { expect } from 'chai';
+import { Convert } from '../../src/core/format/Convert';
 import { Listener } from '../../src/infrastructure/Listener';
 import { NamespaceHttp } from '../../src/infrastructure/NamespaceHttp';
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
@@ -36,6 +37,7 @@ import { AggregateTransaction } from '../../src/model/transaction/AggregateTrans
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
+import { MosaicMetadataTransaction } from '../../src/model/transaction/MosaicMetadataTransaction';
 import { MosaicSupplyChangeTransaction } from '../../src/model/transaction/MosaicSupplyChangeTransaction';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
@@ -51,6 +53,7 @@ describe('TransactionService', () => {
     let addressAlias: NamespaceId;
     let mosaicAlias: NamespaceId;
     let mosaicId: MosaicId;
+    let newMosaicId: MosaicId;
     let transactionHttp: TransactionHttp;
     let config;
     let transactionHashes: string[];
@@ -125,7 +128,7 @@ describe('TransactionService', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
-                UInt64.fromUint(9),
+                UInt64.fromUint(20),
                 NetworkType.MIJIN_TEST,
             );
             mosaicAlias = new NamespaceId(namespaceName);
@@ -304,6 +307,12 @@ describe('TransactionService', () => {
         });
     });
 
+    /**
+     * =====================================
+     * Setup test aggregate transaction data
+     * =====================================
+     */
+
     describe('Create Aggreate TransferTransaction', () => {
         let listener: Listener;
         before (() => {
@@ -324,8 +333,56 @@ describe('TransactionService', () => {
                 PlainMessage.create('test-message'),
                 NetworkType.MIJIN_TEST,
             );
+            // Unlink MosaicAlias
+            const mosaicAliasTransactionUnlink = MosaicAliasTransaction.create(
+                Deadline.create(),
+                AliasAction.Unlink,
+                mosaicAlias,
+                mosaicId,
+                NetworkType.MIJIN_TEST,
+            );
+
+            // Create a new Mosaic
+            const nonce = MosaicNonce.createRandom();
+            newMosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
+            const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
+                Deadline.create(),
+                nonce,
+                newMosaicId,
+                MosaicFlags.create(true, true, false),
+                3,
+                UInt64.fromUint(0),
+                NetworkType.MIJIN_TEST,
+            );
+
+            // Link namespace with new MosaicId
+            const mosaicAliasTransactionRelink = MosaicAliasTransaction.create(
+                Deadline.create(),
+                AliasAction.Link,
+                mosaicAlias,
+                newMosaicId,
+                NetworkType.MIJIN_TEST,
+            );
+
+            // Use new mosaicAlias in metadata
+            const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
+                Deadline.create(),
+                account.publicKey,
+                UInt64.fromUint(5),
+                mosaicAlias,
+                10,
+                Convert.uint8ToUtf8(new Uint8Array(10)),
+                NetworkType.MIJIN_TEST,
+            );
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
-                [transferTransaction.toAggregate(account.publicAccount)],
+                [
+                    transferTransaction.toAggregate(account.publicAccount),
+                    mosaicAliasTransactionUnlink.toAggregate(account.publicAccount),
+                    mosaicDefinitionTransaction.toAggregate(account.publicAccount),
+                    mosaicAliasTransactionRelink.toAggregate(account.publicAccount),
+                    mosaicMetadataTransaction.toAggregate(account.publicAccount),
+
+                ],
                 NetworkType.MIJIN_TEST,
                 [],
             );
@@ -359,13 +416,17 @@ describe('TransactionService', () => {
                         expect((tx.recipientAddress as Address).plain()).to.be.equal(account.address.plain());
                         expect(tx.mosaics.find((m) => m.id.toHex() === mosaicId.toHex())).not.to.equal(undefined);
                     } else if (tx instanceof AggregateTransaction) {
+                        expect(tx.innerTransactions.length).to.be.equal(5);
+                        // Assert Transfer
                         expect(((tx.innerTransactions[0] as TransferTransaction).recipientAddress as Address)
                             .plain()).to.be.equal(account.address.plain());
                         expect((tx.innerTransactions[0] as TransferTransaction).mosaics
                             .find((m) => m.id.toHex() === mosaicId.toHex())).not.to.equal(undefined);
+                        // Assert MosaicMeta
+                        expect((tx.innerTransactions[4] as MosaicMetadataTransaction)
+                            .targetMosaicId.toHex() === newMosaicId.toHex()).to.be.true;
                     }
                 });
-                done();
             });
         });
     });

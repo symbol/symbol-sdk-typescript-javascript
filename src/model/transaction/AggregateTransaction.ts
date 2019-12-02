@@ -422,7 +422,7 @@ export class AggregateTransaction extends Transaction {
                     this.version,
                     this.deadline,
                     this.maxFee,
-                    innerTransactions,
+                    innerTransactions.sort((a, b) => a.transactionInfo!.index - b.transactionInfo!.index),
                     this.cosignatures,
                     this.signature,
                     this.signer,
