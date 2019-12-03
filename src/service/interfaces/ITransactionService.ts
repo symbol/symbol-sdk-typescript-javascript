@@ -33,6 +33,7 @@ export interface ITransactionService {
 
     /**
      * @param signedTransaction Signed transaction to be announced.
+     * @param listener Websocket listener
      * @returns {Observable<Transaction>}
      */
     announce(signedTransaction: SignedTransaction, listener: Listener): Observable<Transaction>;
@@ -40,6 +41,7 @@ export interface ITransactionService {
     /**
      * Announce aggregate transaction
      * @param signedTransaction Signed aggregate bonded transaction.
+     * @param listener Websocket listener
      * @returns {Observable<AggregateTransaction>}
      */
     announceAggregateBonded(signedTransaction: SignedTransaction, listener: Listener): Observable<AggregateTransaction>;
@@ -48,6 +50,7 @@ export interface ITransactionService {
      * Announce aggregate bonded transaction with lock fund
      * @param signedHashLockTransaction Signed hash lock transaction.
      * @param signedAggregateTransaction Signed aggregate bonded transaction.
+     * @param listener Websocket listener
      * @returns {Observable<AggregateTransaction>}
      */
     announceHashLockAggregateBonded(signedHashLockTransaction: SignedTransaction,

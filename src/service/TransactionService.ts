@@ -42,6 +42,7 @@ export class TransactionService implements ITransactionService {
 
     private readonly transactionHttp: TransactionHttp;
     private readonly receiptHttp: ReceiptHttp;
+    private readonly listener: Listener;
     /**
      * Constructor
      * @param url Base catapult-rest url
@@ -49,6 +50,7 @@ export class TransactionService implements ITransactionService {
     constructor(url: string) {
         this.transactionHttp = new TransactionHttp(url);
         this.receiptHttp = new ReceiptHttp(url);
+        this.listener = new Listener(url);
     }
 
     /**
