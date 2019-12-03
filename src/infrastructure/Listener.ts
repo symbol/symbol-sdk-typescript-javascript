@@ -239,7 +239,7 @@ export class Listener {
      * it emits a new Transaction in the event stream.
      *
      * @param address address we listen when a transaction is in confirmed state
-     * @param transactionHash transaction hash for the filter
+     * @param transactionHash transactionHash for filtering multiple transactions
      * @return an observable stream of Transaction with state confirmed
      */
     public confirmed(address: Address, transactionHash?: string): Observable<Transaction> {
@@ -292,7 +292,7 @@ export class Listener {
      * it emits a new {@link AggregateTransaction} in the event stream.
      *
      * @param address address we listen when a transaction with missing signatures state
-     * @param transactionHash transaction hash for the filter
+     * @param transactionHash transactionHash for filtering multiple transactions
      * @return an observable stream of AggregateTransaction with missing signatures state
      */
     public aggregateBondedAdded(address: Address, transactionHash?: string): Observable<AggregateTransaction> {
