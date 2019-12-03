@@ -24,11 +24,12 @@ import { NamespaceId } from '../model/namespace/NamespaceId';
 import { ResolutionType } from '../model/receipt/ResolutionType';
 import { Statement } from '../model/receipt/Statement';
 import { Transaction } from '../model/transaction/Transaction';
+import { ITransactionService } from './interfaces/ITransactionService';
 
 /**
  * Transaction Service
  */
-export class TransactionService {
+export class TransactionService implements ITransactionService {
 
     private readonly transactionHttp: TransactionHttp;
     private readonly receiptHttp: ReceiptHttp;
