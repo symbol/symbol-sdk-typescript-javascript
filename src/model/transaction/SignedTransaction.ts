@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { Address } from '../account/Address';
+import { PublicAccount } from '../account/PublicAccount';
 import {NetworkType} from '../blockchain/NetworkType';
 
 /**
@@ -64,5 +66,13 @@ export class SignedTransaction {
             type: this.type,
             networkType: this.networkType,
         };
+    }
+
+    /**
+     * Return signer's address
+     * @returns {Address}
+     */
+    getSignerAddress(): Address {
+        return PublicAccount.createFromPublicKey(this.signerPublicKey, this.networkType).address;
     }
 }
