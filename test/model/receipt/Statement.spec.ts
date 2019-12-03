@@ -15,14 +15,13 @@
  */
 
 import { expect } from 'chai';
-import { UnresolvedMapping } from '../../src/core/utils/UnresolvedMapping';
-import { CreateStatementFromDTO } from '../../src/infrastructure/receipt/CreateReceiptFromDTO';
-import { Account } from '../../src/model/account/Account';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
-import { Address, MosaicId, NamespaceId, ResolutionType } from '../../src/model/model';
-import { TransactionService } from '../../src/service/TransactionService';
+import { UnresolvedMapping } from '../../../src/core/utils/UnresolvedMapping';
+import { CreateStatementFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
+import { Account } from '../../../src/model/account/Account';
+import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { Address, MosaicId, NamespaceId, ResolutionType } from '../../../src/model/model';
 
-describe('TransactionService', () => {
+describe('Statement', () => {
     let account: Account;
     let transactionStatementsDTO;
     let addressResolutionStatementsDTO;
@@ -111,8 +110,8 @@ describe('TransactionService', () => {
     it('should get reolved address from receipt', () => {
         const unresolvedAddress = UnresolvedMapping.toUnresolvedAddress('9156258DE356F030A500000000000000000000000000000000');
         const statement = CreateStatementFromDTO(statementDTO, NetworkType.MIJIN_TEST);
-        const resolved = TransactionService
-            .getResolvedFromReceipt(ResolutionType.Address, unresolvedAddress as NamespaceId, statement, 0, '1473');
+        const resolved = statement
+            .getResolvedFromReceipt(ResolutionType.Address, unresolvedAddress as NamespaceId, 0, '1473');
 
         expect(resolved instanceof Address).to.be.true;
         expect((resolved as Address).equals(account.address)).to.be.true;
@@ -142,8 +141,8 @@ describe('TransactionService', () => {
         };
         const unresolvedAddress = UnresolvedMapping.toUnresolvedAddress('9156258DE356F030A500000000000000000000000000000000');
         const statement = CreateStatementFromDTO(statementWithoutHarvesting, NetworkType.MIJIN_TEST);
-        const resolved = TransactionService
-            .getResolvedFromReceipt(ResolutionType.Address, unresolvedAddress as NamespaceId, statement, 0, '1473');
+        const resolved = statement
+            .getResolvedFromReceipt(ResolutionType.Address, unresolvedAddress as NamespaceId, 0, '1473');
 
         expect(resolved instanceof Address).to.be.true;
         expect((resolved as Address).equals(account.address)).to.be.true;
@@ -152,8 +151,8 @@ describe('TransactionService', () => {
     it('should get reolved mosaic from receipt', () => {
         const unresolvedMosaic = UnresolvedMapping.toUnresolvedMosaic('E81F622A5B11A340');
         const statement = CreateStatementFromDTO(statementDTO, NetworkType.MIJIN_TEST);
-        const resolved = TransactionService
-            .getResolvedFromReceipt(ResolutionType.Mosaic, unresolvedMosaic as NamespaceId, statement, 0, '1473');
+        const resolved = statement
+            .getResolvedFromReceipt(ResolutionType.Mosaic, unresolvedMosaic as NamespaceId, 0, '1473');
 
         expect(resolved instanceof MosaicId).to.be.true;
         expect((resolved as MosaicId).equals(new MosaicId('756482FB80FD406C'))).to.be.true;
@@ -198,8 +197,8 @@ describe('TransactionService', () => {
         };
         const unresolvedMosaic = UnresolvedMapping.toUnresolvedMosaic('E81F622A5B11A340');
         const statement = CreateStatementFromDTO(statementWithoutHarvesting, NetworkType.MIJIN_TEST);
-        const resolved = TransactionService
-            .getResolvedFromReceipt(ResolutionType.Mosaic, unresolvedMosaic as NamespaceId, statement, 0, '1473');
+        const resolved = statement
+            .getResolvedFromReceipt(ResolutionType.Mosaic, unresolvedMosaic as NamespaceId, 0, '1473');
 
         expect(resolved instanceof MosaicId).to.be.true;
         expect((resolved as MosaicId).equals(new MosaicId('756482FB80FD406C'))).to.be.true;

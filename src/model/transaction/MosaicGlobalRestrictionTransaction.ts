@@ -270,16 +270,16 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
 
         const resolvedMosaicId = statementObservable.pipe(
             map((statement) => this.mosaicId instanceof NamespaceId ?
-                TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, this.mosaicId as NamespaceId,
-                    statement, transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as MosaicId :
+                statement.getResolvedFromReceipt(ResolutionType.Mosaic, this.mosaicId as NamespaceId,
+                    transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as MosaicId :
                 this.mosaicId,
             ),
         );
 
         const resolvedRefMosaicId = statementObservable.pipe(
             map((statement) => this.referenceMosaicId instanceof NamespaceId ?
-                TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, this.referenceMosaicId as NamespaceId,
-                    statement, transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as MosaicId :
+                statement.getResolvedFromReceipt(ResolutionType.Mosaic, this.referenceMosaicId as NamespaceId,
+                    transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as MosaicId :
                 this.referenceMosaicId,
             ),
         );

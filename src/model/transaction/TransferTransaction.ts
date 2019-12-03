@@ -299,8 +299,8 @@ export class TransferTransaction extends Transaction {
 
         const resolvedRecipient = statementObservable.pipe(
             map((statement) => this.recipientAddress instanceof NamespaceId ?
-                TransactionService.getResolvedFromReceipt(ResolutionType.Address, this.recipientAddress as NamespaceId,
-                    statement, transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as Address :
+                statement.getResolvedFromReceipt(ResolutionType.Address, this.recipientAddress as NamespaceId,
+                    transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as Address :
                 this.recipientAddress,
             ),
         );
@@ -309,8 +309,8 @@ export class TransferTransaction extends Transaction {
             map((statement) =>
                 this.mosaics.map((mosaic) =>
                     mosaic.id instanceof NamespaceId ?
-                        new Mosaic(TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, mosaic.id as NamespaceId,
-                        statement, transactionInfo.index, transactionInfo.height.toString(),
+                        new Mosaic(statement.getResolvedFromReceipt(ResolutionType.Mosaic, mosaic.id as NamespaceId,
+                        transactionInfo.index, transactionInfo.height.toString(),
                         aggregateTransactionIndex) as MosaicId, mosaic.amount) :
                         mosaic,
                 ),

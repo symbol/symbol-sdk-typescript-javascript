@@ -258,16 +258,16 @@ export class SecretLockTransaction extends Transaction {
 
         const resolvedRecipient = statementObservable.pipe(
             map((statement) => this.recipientAddress instanceof NamespaceId ?
-                TransactionService.getResolvedFromReceipt(ResolutionType.Address, this.recipientAddress as NamespaceId,
-                    statement, transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as Address :
+                statement.getResolvedFromReceipt(ResolutionType.Address, this.recipientAddress as NamespaceId,
+                    transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as Address :
                 this.recipientAddress,
             ),
         );
 
         const resolvedMosaic = statementObservable.pipe(
             map((statement) => this.mosaic.id instanceof NamespaceId ?
-                new Mosaic(TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, this.recipientAddress as NamespaceId,
-                    statement, transactionInfo.index, transactionInfo.height.toString(),
+                new Mosaic(statement.getResolvedFromReceipt(ResolutionType.Mosaic, this.recipientAddress as NamespaceId,
+                    transactionInfo.index, transactionInfo.height.toString(),
                     aggregateTransactionIndex) as MosaicId, this.mosaic.amount) :
                 this.mosaic,
             ),

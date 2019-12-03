@@ -217,8 +217,8 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             map((statement) => {
                 return this.restrictionAdditions.map((addition) => {
                     return addition instanceof NamespaceId ?
-                    TransactionService.getResolvedFromReceipt(ResolutionType.Address, addition as NamespaceId,
-                        statement, transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as Address :
+                        statement.getResolvedFromReceipt(ResolutionType.Address, addition as NamespaceId,
+                        transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as Address :
                     addition;
                 });
             }),
@@ -228,8 +228,8 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             map((statement) => {
                 return this.restrictionDeletions.map((deletion) => {
                     return deletion instanceof NamespaceId ?
-                    TransactionService.getResolvedFromReceipt(ResolutionType.Address, deletion as NamespaceId,
-                        statement, transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as Address :
+                        statement.getResolvedFromReceipt(ResolutionType.Address, deletion as NamespaceId,
+                        transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as Address :
                         deletion;
                 });
             }),

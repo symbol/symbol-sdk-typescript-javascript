@@ -239,15 +239,18 @@ export class Listener {
      * it emits a new Transaction in the event stream.
      *
      * @param address address we listen when a transaction is in confirmed state
+     * @param transactionHash transaction hash for the filter
      * @return an observable stream of Transaction with state confirmed
      */
-    public confirmed(address: Address): Observable<Transaction> {
+    public confirmed(address: Address, transactionHash?: string): Observable<Transaction> {
         this.subscribeTo(`confirmedAdded/${address.plain()}`);
         return this.messageSubject.asObservable().pipe(
             filter((_) => _.channelName === ListenerChannelName.confirmedAdded),
             filter((_) => _.message instanceof Transaction),
             map((_) => _.message as Transaction),
-            filter((_) => this.transactionFromAddress(_, address)));
+            filter((_) => this.transactionFromAddress(_, address)),
+            filter((_) => _.transactionInfo!.hash === transactionHash || transactionHash === undefined),
+        );
     }
 
     /**
@@ -289,15 +292,18 @@ export class Listener {
      * it emits a new {@link AggregateTransaction} in the event stream.
      *
      * @param address address we listen when a transaction with missing signatures state
+     * @param transactionHash transaction hash for the filter
      * @return an observable stream of AggregateTransaction with missing signatures state
      */
-    public aggregateBondedAdded(address: Address): Observable<AggregateTransaction> {
+    public aggregateBondedAdded(address: Address, transactionHash?: string): Observable<AggregateTransaction> {
         this.subscribeTo(`partialAdded/${address.plain()}`);
         return this.messageSubject.asObservable().pipe(
             filter((_) => _.channelName === ListenerChannelName.aggregateBondedAdded),
             filter((_) => _.message instanceof AggregateTransaction),
             map((_) => _.message as AggregateTransaction),
-            filter((_) => this.transactionFromAddress(_, address)));
+            filter((_) => this.transactionFromAddress(_, address)),
+            filter((_) => _.transactionInfo!.hash === transactionHash || transactionHash === undefined),
+        );
     }
 
     /**

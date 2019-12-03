@@ -18,11 +18,6 @@ import {Observable} from 'rxjs';
 import { mergeMap, toArray} from 'rxjs/operators';
 import { ReceiptHttp } from '../infrastructure/ReceiptHttp';
 import { TransactionHttp } from '../infrastructure/TransactionHttp';
-import { Address } from '../model/account/Address';
-import { MosaicId } from '../model/mosaic/MosaicId';
-import { NamespaceId } from '../model/namespace/NamespaceId';
-import { ResolutionType } from '../model/receipt/ResolutionType';
-import { Statement } from '../model/receipt/Statement';
 import { Transaction } from '../model/transaction/Transaction';
 import { ITransactionService } from './interfaces/ITransactionService';
 
@@ -40,44 +35,6 @@ export class TransactionService implements ITransactionService {
     constructor(url: string) {
         this.transactionHttp = new TransactionHttp(url);
         this.receiptHttp = new ReceiptHttp(url);
-    }
-
-    /**
-     * @internal
-     * Extract resolved address | mosaic from block receipt
-     * @param resolutionType Resolution type: Address / Mosaic
-     * @param unresolved Unresolved address / mosaicId
-     * @param statement Block receipt statement
-     * @param transactionIndex Transaction index
-     * @param height Transaction height
-     * @param aggregateTransactionIndex Transaction index for aggregate
-     * @returns {MosaicId | Address}
-     */
-    public static getResolvedFromReceipt(resolutionType: ResolutionType,
-                                         unresolved: NamespaceId,
-                                         statement: Statement,
-                                         transactionIndex: number,
-                                         height: string,
-                                         aggregateTransactionIndex?: number): MosaicId | Address {
-
-        const resolutionStatement = (resolutionType === ResolutionType.Address ? statement.addressResolutionStatements :
-            statement.mosaicResolutionStatements).find((resolution) => resolution.height.toString() === height &&
-                (resolution.unresolved as NamespaceId).equals(unresolved));
-
-        if (!resolutionStatement) {
-            throw new Error('No resolution statement found');
-        }
-        // source (0,0) is reserved for blocks, source (n, 0) is for txes, where n is 1-based index
-        const resolutionEntry = resolutionStatement.resolutionEntries
-            .find((entry) => entry.source.primaryId ===
-                (aggregateTransactionIndex !== undefined ? aggregateTransactionIndex + 1 : transactionIndex + 1) &&
-                entry.source.secondaryId === (aggregateTransactionIndex !== undefined ? transactionIndex + 1 : 0));
-
-        if (!resolutionEntry) {
-            throw new Error('No resolution entry found');
-        }
-
-        return resolutionEntry.resolved;
     }
 
     /**

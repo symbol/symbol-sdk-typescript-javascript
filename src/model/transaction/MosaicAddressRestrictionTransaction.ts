@@ -261,16 +261,16 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
 
         const resolvedAddress = statementObservable.pipe(
             map((statement) => this.targetAddress instanceof NamespaceId ?
-                TransactionService.getResolvedFromReceipt(ResolutionType.Address, this.targetAddress as NamespaceId,
-                    statement, transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as Address :
+                statement.getResolvedFromReceipt(ResolutionType.Address, this.targetAddress as NamespaceId,
+                    transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as Address :
                 this.targetAddress,
             ),
         );
 
         const resolvedMosaicId = statementObservable.pipe(
             map((statement) => this.mosaicId instanceof NamespaceId ?
-                TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, this.mosaicId as NamespaceId,
-                    statement, transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as MosaicId :
+                statement.getResolvedFromReceipt(ResolutionType.Mosaic, this.mosaicId as NamespaceId,
+                    transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as MosaicId :
                 this.mosaicId,
             ),
         );

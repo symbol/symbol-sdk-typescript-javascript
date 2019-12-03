@@ -15,8 +15,10 @@
  */
 
 import { sha3_256 } from 'js-sha3';
+import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
 import { Address } from '../account/Address';
+import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
@@ -24,8 +26,6 @@ import { ReceiptType } from './ReceiptType';
 import { ReceiptVersion } from './ReceiptVersion';
 import { ResolutionEntry } from './ResolutionEntry';
 import { ResolutionType } from './ResolutionType';
-import { NetworkType } from "../blockchain/NetworkType";
-import { UnresolvedMapping } from "../../core/utils/UnresolvedMapping";
 
 /**
  * When a transaction includes an alias, a so called resolution statement reflects the resolved value for that block:
@@ -82,6 +82,76 @@ export class ResolutionStatement {
 
         hasher.update(entryBytes);
         return hasher.hex().toUpperCase();
+    }
+
+    /**
+     * @internal
+     * Find resolution entry for given primaryId and secondaryId
+     * @param primaryId Primary id
+     * @param secondaryId Secondary id
+     * @returns {ResolutionEntry | undefined}
+     */
+    public getResolutionEntryById(primaryId: number, secondaryId: number): ResolutionEntry | undefined {
+        /*
+        Primary id and secondary id do not specifically map to the exact transaction index on the same block.
+        The ids are just the order of the resolution reflecting on the order of transactions (ordered by index).
+        E.g 1 - Bob -> 1 random.token -> Alice
+            2 - Carol -> 1 random.token > Denis
+        Based on above example, 2 transactions (index 0 & 1) are created on the same block, however, only 1
+        resolution entry get generated for both.
+        */
+        const resolvedPrimaryId = this.getMaxAvailablePrimaryId(primaryId);
+
+        if (resolvedPrimaryId === 0) {
+            return undefined;
+        } else if (primaryId > resolvedPrimaryId) {
+            /*
+            If the transaction index is greater than the overall most recent source primary id.
+            Use the most recent resolution entry (Max.PrimaryId + Max.SecondaryId)
+            */
+            return this.resolutionEntries
+                .find((entry) => entry.source.primaryId === resolvedPrimaryId &&
+                    entry.source.secondaryId === this.getMaxSecondaryIdByPrimaryId(resolvedPrimaryId));
+        }
+
+        // When transaction index matches a primary id, get the most recent secondaryId
+        const resolvedSecondaryId = Math.max(...this.resolutionEntries
+            .map((entry) => secondaryId >= entry.source.secondaryId ? entry.source.secondaryId : 0));
+
+        if (resolvedSecondaryId === 0 && secondaryId !== resolvedSecondaryId) {
+            /*
+            If no most recent secondaryId matched transaction index, find previous resolution entry (most recent).
+            */
+            const lastPrimaryId = this.getMaxAvailablePrimaryId(resolvedPrimaryId - 1);
+            return this.resolutionEntries
+                .find((entry) => entry.source.primaryId === lastPrimaryId &&
+                    entry.source.secondaryId === this.getMaxSecondaryIdByPrimaryId(lastPrimaryId));
+        }
+        // All matched
+        return this.resolutionEntries
+            .find((entry) => entry.source.primaryId === resolvedPrimaryId && entry.source.secondaryId === resolvedSecondaryId);
+    }
+
+    /**
+     * @internal
+     * Get most `recent` secondary id by a given primaryId
+     * @param primaryId Primary source id
+     * @returns {number}
+     */
+    private getMaxSecondaryIdByPrimaryId(primaryId: number): number {
+        return Math.max(...this.resolutionEntries.filter((entry) => entry.source.primaryId === primaryId)
+            .map((filtered) => filtered.source.secondaryId));
+    }
+
+    /**
+     * @internal
+     * Get most `recent` primary source id by a given id (transaction index) as PrimaryId might not be the same as block transaction index.
+     * @param primaryId Primary source id
+     * @returns {number}
+     */
+    private getMaxAvailablePrimaryId(primaryId: number): number {
+        return Math.max(...this.resolutionEntries
+            .map((entry) => primaryId >= entry.source.primaryId ? entry.source.primaryId : 0));
     }
 
     /**

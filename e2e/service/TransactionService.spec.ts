@@ -40,6 +40,7 @@ import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicD
 import { MosaicMetadataTransaction } from '../../src/model/transaction/MosaicMetadataTransaction';
 import { MosaicSupplyChangeTransaction } from '../../src/model/transaction/MosaicSupplyChangeTransaction';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
+import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
@@ -47,6 +48,8 @@ import { TransactionService } from '../../src/service/TransactionService';
 describe('TransactionService', () => {
     let account: Account;
     let account2: Account;
+    let account3: Account;
+    let account4: Account;
     let url: string;
     let generationHash: string;
     let namespaceHttp: NamespaceHttp;
@@ -57,6 +60,7 @@ describe('TransactionService', () => {
     let transactionHttp: TransactionHttp;
     let config;
     let transactionHashes: string[];
+    let transactionHashesMultiple: string[];
 
     before((done) => {
         const path = require('path');
@@ -68,11 +72,14 @@ describe('TransactionService', () => {
             config = json;
             account = Account.createFromPrivateKey(json.testAccount.privateKey, NetworkType.MIJIN_TEST);
             account2 = Account.createFromPrivateKey(json.testAccount2.privateKey, NetworkType.MIJIN_TEST);
+            account3 = Account.createFromPrivateKey(json.testAccount3.privateKey, NetworkType.MIJIN_TEST);
+            account4 = Account.createFromPrivateKey(json.cosignatory4Account.privateKey, NetworkType.MIJIN_TEST);
             url = json.apiUrl;
             generationHash = json.generationHash;
             namespaceHttp = new NamespaceHttp(json.apiUrl);
             transactionHttp = new TransactionHttp(json.apiUrl);
             transactionHashes = [];
+            transactionHashesMultiple = [];
             done();
         });
     });
@@ -96,7 +103,7 @@ describe('TransactionService', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
-                UInt64.fromUint(9),
+                UInt64.fromUint(20),
                 NetworkType.MIJIN_TEST,
             );
             addressAlias = new NamespaceId(namespaceName);
@@ -128,7 +135,7 @@ describe('TransactionService', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
-                UInt64.fromUint(20),
+                UInt64.fromUint(50),
                 NetworkType.MIJIN_TEST,
             );
             mosaicAlias = new NamespaceId(namespaceName);
@@ -196,7 +203,7 @@ describe('TransactionService', () => {
                 mosaicId,
                 MosaicFlags.create(true, true, false),
                 3,
-                UInt64.fromUint(0),
+                UInt64.fromUint(50),
                 NetworkType.MIJIN_TEST,
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
@@ -222,7 +229,7 @@ describe('TransactionService', () => {
                 Deadline.create(),
                 mosaicId,
                 MosaicSupplyChangeAction.Increase,
-                UInt64.fromUint(10),
+                UInt64.fromUint(200000),
                 NetworkType.MIJIN_TEST,
             );
             const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
@@ -323,70 +330,7 @@ describe('TransactionService', () => {
             return listener.close();
         });
         it('aggregate', (done) => {
-            const transferTransaction = TransferTransaction.create(
-                Deadline.create(),
-                addressAlias,
-                [
-                    NetworkCurrencyMosaic.createAbsolute(1),
-                    new Mosaic(mosaicAlias, UInt64.fromUint(1)),
-                ],
-                PlainMessage.create('test-message'),
-                NetworkType.MIJIN_TEST,
-            );
-            // Unlink MosaicAlias
-            const mosaicAliasTransactionUnlink = MosaicAliasTransaction.create(
-                Deadline.create(),
-                AliasAction.Unlink,
-                mosaicAlias,
-                mosaicId,
-                NetworkType.MIJIN_TEST,
-            );
-
-            // Create a new Mosaic
-            const nonce = MosaicNonce.createRandom();
-            newMosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
-            const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-                Deadline.create(),
-                nonce,
-                newMosaicId,
-                MosaicFlags.create(true, true, false),
-                3,
-                UInt64.fromUint(0),
-                NetworkType.MIJIN_TEST,
-            );
-
-            // Link namespace with new MosaicId
-            const mosaicAliasTransactionRelink = MosaicAliasTransaction.create(
-                Deadline.create(),
-                AliasAction.Link,
-                mosaicAlias,
-                newMosaicId,
-                NetworkType.MIJIN_TEST,
-            );
-
-            // Use new mosaicAlias in metadata
-            const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
-                Deadline.create(),
-                account.publicKey,
-                UInt64.fromUint(5),
-                mosaicAlias,
-                10,
-                Convert.uint8ToUtf8(new Uint8Array(10)),
-                NetworkType.MIJIN_TEST,
-            );
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
-                [
-                    transferTransaction.toAggregate(account.publicAccount),
-                    mosaicAliasTransactionUnlink.toAggregate(account.publicAccount),
-                    mosaicDefinitionTransaction.toAggregate(account.publicAccount),
-                    mosaicAliasTransactionRelink.toAggregate(account.publicAccount),
-                    mosaicMetadataTransaction.toAggregate(account.publicAccount),
-
-                ],
-                NetworkType.MIJIN_TEST,
-                [],
-            );
-            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+            const signedTransaction = buildAggregateTransaction().signWith(account, generationHash);
             transactionHashes.push(signedTransaction.hash);
             listener.confirmed(account.address).subscribe(() => {
                 done();
@@ -401,6 +345,108 @@ describe('TransactionService', () => {
     });
 
     /**
+     * =====================================
+     * Setup test Multiple transaction on same block
+     * =====================================
+     */
+
+    describe('Transfer mosaic to account 3', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('Announce TransferTransaction', (done) => {
+            const transferTransaction = TransferTransaction.create(
+                Deadline.create(),
+                account3.address,
+                [
+                    new Mosaic(mosaicAlias, UInt64.fromUint(200)),
+                ],
+                PlainMessage.create('test-message'),
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = transferTransaction.signWith(account, generationHash);
+
+            transactionHashes.push(signedTransaction.hash);
+
+            listener.confirmed(account.address).subscribe(() => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
+    describe('Create multiple transfers with alias', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('Announce TransferTransaction', (done) => {
+            const transactions: SignedTransaction[] = [];
+            // 1. Transfer A -> B
+            const transaction1 = TransferTransaction.create(
+                Deadline.create(),
+                account2.address,
+                [
+                    new Mosaic(mosaicAlias, UInt64.fromUint(1)),
+                ],
+                PlainMessage.create('test-message'),
+                NetworkType.MIJIN_TEST,
+            );
+            transactions.push(transaction1.signWith(account, generationHash));
+
+            // 2. Transfer C -> D
+            const transaction2 = TransferTransaction.create(
+                Deadline.create(),
+                account4.address,
+                [
+                    new Mosaic(mosaicAlias, UInt64.fromUint(1)),
+                ],
+                PlainMessage.create('test-message'),
+                NetworkType.MIJIN_TEST,
+            );
+            transactions.push(transaction2.signWith(account3, generationHash));
+
+            // 3. Aggregate
+            const lastSignedTx = buildAggregateTransaction().signWith(account, generationHash);
+            transactions.push(lastSignedTx);
+
+            transactions.forEach((tx) => {
+                transactionHashesMultiple.push(tx.hash);
+                transactionHttp.announce(tx);
+            });
+            listener.confirmed(account.address, lastSignedTx.hash).subscribe(() => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            listener.status(account3.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+        });
+    });
+
+    /**
      * =========================
      * Test
      * =========================
@@ -409,7 +455,7 @@ describe('TransactionService', () => {
     describe('should return resolved transaction', () => {
         it('call transaction service', (done) => {
             const transactionService = new TransactionService(url);
-            return transactionService.resolveAliases(transactionHashes).subscribe((transactions) => {
+            transactionService.resolveAliases(transactionHashes).subscribe((transactions) => {
                 expect(transactions.length).to.be.equal(8);
                 transactions.map((tx) => {
                     if (tx instanceof TransferTransaction) {
@@ -427,7 +473,89 @@ describe('TransactionService', () => {
                             .targetMosaicId.toHex() === newMosaicId.toHex()).to.be.true;
                     }
                 });
-            });
+            },
+            done());
         });
     });
+
+    describe('Test resolve alias with multiple transaction in single block', () => {
+        it('call transaction service', (done) => {
+            const transactionService = new TransactionService(url);
+            transactionService.resolveAliases(transactionHashesMultiple).subscribe((tx) => {
+                expect(tx.length).to.be.equal(3);
+                expect((tx[0] as TransferTransaction).mosaics[0].id.toHex()).to.be.equal(mosaicId.toHex());
+                expect((tx[1] as TransferTransaction).mosaics[0].id.toHex()).to.be.equal(mosaicId.toHex());
+                expect(((tx[2] as AggregateTransaction).innerTransactions[4] as MosaicMetadataTransaction)
+                    .targetMosaicId.toHex()).to.be.equal(newMosaicId.toHex());
+            },
+            done());
+        });
+    });
+
+    function buildAggregateTransaction(): AggregateTransaction {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            addressAlias,
+            [
+                NetworkCurrencyMosaic.createAbsolute(1),
+                new Mosaic(mosaicAlias, UInt64.fromUint(1)),
+            ],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+        // Unlink MosaicAlias
+        const mosaicAliasTransactionUnlink = MosaicAliasTransaction.create(
+            Deadline.create(),
+            AliasAction.Unlink,
+            mosaicAlias,
+            mosaicId,
+            NetworkType.MIJIN_TEST,
+        );
+
+        // Create a new Mosaic
+        const nonce = MosaicNonce.createRandom();
+        newMosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
+        const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
+            Deadline.create(),
+            nonce,
+            newMosaicId,
+            MosaicFlags.create(true, true, false),
+            3,
+            UInt64.fromUint(0),
+            NetworkType.MIJIN_TEST,
+        );
+
+        // Link namespace with new MosaicId
+        const mosaicAliasTransactionRelink = MosaicAliasTransaction.create(
+            Deadline.create(),
+            AliasAction.Link,
+            mosaicAlias,
+            newMosaicId,
+            NetworkType.MIJIN_TEST,
+        );
+
+        // Use new mosaicAlias in metadata
+        const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(5),
+            mosaicAlias,
+            10,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        );
+        return AggregateTransaction.createComplete(Deadline.create(),
+            [
+                transferTransaction.toAggregate(account.publicAccount),
+                mosaicAliasTransactionUnlink.toAggregate(account.publicAccount),
+                mosaicDefinitionTransaction.toAggregate(account.publicAccount),
+                mosaicAliasTransactionRelink.toAggregate(account.publicAccount),
+                mosaicMetadataTransaction.toAggregate(account.publicAccount),
+
+            ],
+            NetworkType.MIJIN_TEST,
+            [],
+        );
+    }
+
 });

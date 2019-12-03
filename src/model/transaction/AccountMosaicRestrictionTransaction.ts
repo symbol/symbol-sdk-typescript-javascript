@@ -217,8 +217,8 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
             map((statement) => {
                 return this.restrictionAdditions.map((addition) => {
                     return addition instanceof NamespaceId ?
-                    TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, addition as NamespaceId,
-                        statement, transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as MosaicId :
+                    statement.getResolvedFromReceipt(ResolutionType.Mosaic, addition as NamespaceId,
+                        transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as MosaicId :
                     addition;
                 });
             }),
@@ -228,8 +228,8 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
             map((statement) => {
                 return this.restrictionDeletions.map((deletion) => {
                     return deletion instanceof NamespaceId ?
-                    TransactionService.getResolvedFromReceipt(ResolutionType.Mosaic, deletion as NamespaceId,
-                        statement, transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as MosaicId :
+                    statement.getResolvedFromReceipt(ResolutionType.Mosaic, deletion as NamespaceId,
+                        transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as MosaicId :
                         deletion;
                 });
             }),
