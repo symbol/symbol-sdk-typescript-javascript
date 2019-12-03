@@ -15,6 +15,8 @@
  */
 
 import {Observable} from 'rxjs';
+import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
+import { SignedTransaction } from '../../model/transaction/SignedTransaction';
 import { Transaction } from '../../model/transaction/Transaction';
 
 /**
@@ -24,7 +26,29 @@ export interface ITransactionService {
 
     /**
      * @param transationHashes List of transaction hashes.
-     * @returns Observable<Transaction[]>
+     * @returns {Observable<Transaction[]>}
      */
     resolveAliases(transationHashes: string[]): Observable<Transaction[]>;
+
+    /**
+     * @param signedTransaction Signed transaction to be announced.
+     * @returns {Observable<Transaction>}
+     */
+    announce(signedTransaction: SignedTransaction): Observable<Transaction>;
+
+    /**
+     * Announce aggregate transaction
+     * @param signedTransaction Signed aggregate bonded transaction.
+     * @returns {Observable<AggregateTransaction>}
+     */
+    announceAggregateBonded(signedTransaction: SignedTransaction): Observable<AggregateTransaction>;
+
+    /**
+     * Announce aggregate bonded transaction with lock fund
+     * @param signedHashLockTransaction Signed hash lock transaction.
+     * @param signedAggregateTransaction Signed aggregate bonded transaction.
+     * @returns {Observable<AggregateTransaction>}
+     */
+    announceHashLockAggregateBonded(signedHashLockTransaction: SignedTransaction,
+                                    signedAggregateTransaction: SignedTransaction): Observable<AggregateTransaction>;
 }
