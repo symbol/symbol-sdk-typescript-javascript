@@ -45,7 +45,6 @@ export class Statement {
     }
 
     /**
-     * @internal
      * Extract resolved address | mosaic from block receipt
      * @param resolutionType Resolution type: Address / Mosaic
      * @param unresolved Unresolved address / mosaicId
