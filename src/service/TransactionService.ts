@@ -16,6 +16,8 @@
 
 import {Observable} from 'rxjs';
 import { mergeMap, toArray} from 'rxjs/operators';
+import { flatMap } from 'rxjs/operators';
+import { Listener } from '../infrastructure/Listener';
 import { ReceiptHttp } from '../infrastructure/ReceiptHttp';
 import { TransactionHttp } from '../infrastructure/TransactionHttp';
 import { Address } from '../model/account/Address';
@@ -23,6 +25,8 @@ import { MosaicId } from '../model/mosaic/MosaicId';
 import { NamespaceId } from '../model/namespace/NamespaceId';
 import { ResolutionType } from '../model/receipt/ResolutionType';
 import { Statement } from '../model/receipt/Statement';
+import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
+import { SignedTransaction } from '../model/transaction/SignedTransaction';
 import { Transaction } from '../model/transaction/Transaction';
 import { ITransactionService } from './interfaces/ITransactionService';
 
@@ -33,6 +37,7 @@ export class TransactionService implements ITransactionService {
 
     private readonly transactionHttp: TransactionHttp;
     private readonly receiptHttp: ReceiptHttp;
+    private readonly listener: Listener;
     /**
      * Constructor
      * @param url Base catapult-rest url
@@ -40,6 +45,7 @@ export class TransactionService implements ITransactionService {
     constructor(url: string) {
         this.transactionHttp = new TransactionHttp(url);
         this.receiptHttp = new ReceiptHttp(url);
+        this.listener = new Listener(url);
     }
 
     /**
@@ -65,7 +71,7 @@ export class TransactionService implements ITransactionService {
                 (resolution.unresolved as NamespaceId).equals(unresolved));
 
         if (!resolutionStatement) {
-            throw new Error('No resolution statement found');
+            throw new Error(`No resolution statement found for unsolved value: ${unresolved.toHex()}`);
         }
         // source (0,0) is reserved for blocks, source (n, 0) is for txes, where n is 1-based index
         const resolutionEntry = resolutionStatement.resolutionEntries
@@ -74,7 +80,7 @@ export class TransactionService implements ITransactionService {
                 entry.source.secondaryId === (aggregateTransactionIndex !== undefined ? transactionIndex + 1 : 0));
 
         if (!resolutionEntry) {
-            throw new Error('No resolution entry found');
+            throw new Error(`No resolution entry found for unsolved value: ${unresolved.toHex()}`);
         }
 
         return resolutionEntry.resolved;
@@ -90,5 +96,40 @@ export class TransactionService implements ITransactionService {
                 mergeMap((transaction) => transaction.resolveAliases(this.receiptHttp)),
                 toArray(),
             );
+    }
+
+    /**
+     * @param signedTransaction Signed transaction to be announced.
+     * @returns {Observable<Transaction>}
+     */
+    public announce(signedTransaction: SignedTransaction): Observable<Transaction> {
+        return this.transactionHttp.announce(signedTransaction).pipe(
+            flatMap(() => this.listener.confirmed(signedTransaction.getSignerAddress(), signedTransaction.hash)),
+        );
+    }
+
+    /**
+     * Announce aggregate transaction
+     * @param signedTransaction Signed aggregate bonded transaction.
+     * @returns {Observable<AggregateTransaction>}
+     */
+    public announceAggregateBonded(signedTransaction: SignedTransaction): Observable<AggregateTransaction> {
+        return this.transactionHttp.announceAggregateBonded(signedTransaction).pipe(
+            flatMap(() => this.listener.aggregateBondedAdded(signedTransaction.getSignerAddress(), signedTransaction.hash)),
+        );
+    }
+
+    /**
+     * Announce aggregate bonded transaction with lock fund
+     * @param signedHashLockTransaction Signed hash lock transaction.
+     * @param signedAggregateTransaction Signed aggregate bonded transaction.
+     * @returns {Observable<AggregateTransaction>}
+     */
+    public announceHashLockAggregateBonded(signedHashLockTransaction: SignedTransaction,
+                                           signedAggregateTransaction: SignedTransaction): Observable<AggregateTransaction> {
+        return this.announce(signedHashLockTransaction).pipe(
+            flatMap(() => this.announceAggregateBonded(signedAggregateTransaction)),
+        );
+
     }
 }
