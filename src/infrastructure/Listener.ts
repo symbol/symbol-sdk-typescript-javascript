@@ -249,7 +249,7 @@ export class Listener {
             filter((_) => _.message instanceof Transaction),
             map((_) => _.message as Transaction),
             filter((_) => this.transactionFromAddress(_, address)),
-            filter((_) => _.transactionInfo!.hash === transactionHash || transactionHash === undefined),
+            filter((_) => transactionHash === undefined || _.transactionInfo!.hash === transactionHash),
         );
     }
 
@@ -302,7 +302,7 @@ export class Listener {
             filter((_) => _.message instanceof AggregateTransaction),
             map((_) => _.message as AggregateTransaction),
             filter((_) => this.transactionFromAddress(_, address)),
-            filter((_) => _.transactionInfo!.hash === transactionHash || transactionHash === undefined),
+            filter((_) => transactionHash === undefined || _.transactionInfo!.hash === transactionHash),
         );
     }
 
