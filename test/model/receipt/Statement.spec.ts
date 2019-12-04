@@ -110,8 +110,7 @@ describe('Statement', () => {
     it('should get reolved address from receipt', () => {
         const unresolvedAddress = UnresolvedMapping.toUnresolvedAddress('9156258DE356F030A500000000000000000000000000000000');
         const statement = CreateStatementFromDTO(statementDTO, NetworkType.MIJIN_TEST);
-        const resolved = statement
-            .getResolvedFromReceipt(ResolutionType.Address, unresolvedAddress as NamespaceId, 0, '1473');
+        const resolved = statement.resolveAddress(unresolvedAddress as NamespaceId, '1473', 0);
 
         expect(resolved instanceof Address).to.be.true;
         expect((resolved as Address).equals(account.address)).to.be.true;
@@ -141,8 +140,7 @@ describe('Statement', () => {
         };
         const unresolvedAddress = UnresolvedMapping.toUnresolvedAddress('9156258DE356F030A500000000000000000000000000000000');
         const statement = CreateStatementFromDTO(statementWithoutHarvesting, NetworkType.MIJIN_TEST);
-        const resolved = statement
-            .getResolvedFromReceipt(ResolutionType.Address, unresolvedAddress as NamespaceId, 0, '1473');
+        const resolved = statement.resolveAddress(unresolvedAddress as NamespaceId, '1473', 0);
 
         expect(resolved instanceof Address).to.be.true;
         expect((resolved as Address).equals(account.address)).to.be.true;
@@ -151,8 +149,7 @@ describe('Statement', () => {
     it('should get reolved mosaic from receipt', () => {
         const unresolvedMosaic = UnresolvedMapping.toUnresolvedMosaic('E81F622A5B11A340');
         const statement = CreateStatementFromDTO(statementDTO, NetworkType.MIJIN_TEST);
-        const resolved = statement
-            .getResolvedFromReceipt(ResolutionType.Mosaic, unresolvedMosaic as NamespaceId, 0, '1473');
+        const resolved = statement.resolveMosaicId(unresolvedMosaic as NamespaceId, '1473', 0);
 
         expect(resolved instanceof MosaicId).to.be.true;
         expect((resolved as MosaicId).equals(new MosaicId('756482FB80FD406C'))).to.be.true;
@@ -197,8 +194,7 @@ describe('Statement', () => {
         };
         const unresolvedMosaic = UnresolvedMapping.toUnresolvedMosaic('E81F622A5B11A340');
         const statement = CreateStatementFromDTO(statementWithoutHarvesting, NetworkType.MIJIN_TEST);
-        const resolved = statement
-            .getResolvedFromReceipt(ResolutionType.Mosaic, unresolvedMosaic as NamespaceId, 0, '1473');
+        const resolved = statement.resolveMosaicId(unresolvedMosaic as NamespaceId, '1473', 0);
 
         expect(resolved instanceof MosaicId).to.be.true;
         expect((resolved as MosaicId).equals(new MosaicId('756482FB80FD406C'))).to.be.true;
