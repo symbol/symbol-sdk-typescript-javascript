@@ -15,6 +15,7 @@
  */
 
 import {Observable} from 'rxjs';
+import { Listener } from '../../infrastructure/Listener';
 import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
 import { SignedTransaction } from '../../model/transaction/SignedTransaction';
 import { Transaction } from '../../model/transaction/Transaction';
@@ -34,14 +35,14 @@ export interface ITransactionService {
      * @param signedTransaction Signed transaction to be announced.
      * @returns {Observable<Transaction>}
      */
-    announce(signedTransaction: SignedTransaction): Observable<Transaction>;
+    announce(signedTransaction: SignedTransaction, listener: Listener): Observable<Transaction>;
 
     /**
      * Announce aggregate transaction
      * @param signedTransaction Signed aggregate bonded transaction.
      * @returns {Observable<AggregateTransaction>}
      */
-    announceAggregateBonded(signedTransaction: SignedTransaction): Observable<AggregateTransaction>;
+    announceAggregateBonded(signedTransaction: SignedTransaction, listener: Listener): Observable<AggregateTransaction>;
 
     /**
      * Announce aggregate bonded transaction with lock fund
@@ -50,5 +51,6 @@ export interface ITransactionService {
      * @returns {Observable<AggregateTransaction>}
      */
     announceHashLockAggregateBonded(signedHashLockTransaction: SignedTransaction,
-                                    signedAggregateTransaction: SignedTransaction): Observable<AggregateTransaction>;
+                                    signedAggregateTransaction: SignedTransaction,
+                                    listener: Listener): Observable<AggregateTransaction>;
 }
