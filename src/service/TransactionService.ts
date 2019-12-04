@@ -42,7 +42,6 @@ export class TransactionService implements ITransactionService {
 
     private readonly transactionHttp: TransactionHttp;
     private readonly receiptHttp: ReceiptHttp;
-    private readonly listener: Listener;
     /**
      * Constructor
      * @param url Base catapult-rest url
@@ -50,7 +49,6 @@ export class TransactionService implements ITransactionService {
     constructor(url: string) {
         this.transactionHttp = new TransactionHttp(url);
         this.receiptHttp = new ReceiptHttp(url);
-        this.listener = new Listener(url);
     }
 
     /**
@@ -192,22 +190,24 @@ export class TransactionService implements ITransactionService {
 
     /**
      * @param signedTransaction Signed transaction to be announced.
+     * @param listener Websocket listener
      * @returns {Observable<Transaction>}
      */
-    public announce(signedTransaction: SignedTransaction): Observable<Transaction> {
+    public announce(signedTransaction: SignedTransaction, listener: Listener): Observable<Transaction> {
         return this.transactionHttp.announce(signedTransaction).pipe(
-            flatMap(() => this.listener.confirmed(signedTransaction.getSignerAddress(), signedTransaction.hash)),
+            flatMap(() => listener.confirmed(signedTransaction.getSignerAddress(), signedTransaction.hash)),
         );
     }
 
     /**
      * Announce aggregate transaction
      * @param signedTransaction Signed aggregate bonded transaction.
+     * @param listener Websocket listener
      * @returns {Observable<AggregateTransaction>}
      */
-    public announceAggregateBonded(signedTransaction: SignedTransaction): Observable<AggregateTransaction> {
+    public announceAggregateBonded(signedTransaction: SignedTransaction, listener: Listener): Observable<AggregateTransaction> {
         return this.transactionHttp.announceAggregateBonded(signedTransaction).pipe(
-            flatMap(() => this.listener.aggregateBondedAdded(signedTransaction.getSignerAddress(), signedTransaction.hash)),
+            flatMap(() => listener.aggregateBondedAdded(signedTransaction.getSignerAddress(), signedTransaction.hash)),
         );
     }
 
@@ -215,12 +215,14 @@ export class TransactionService implements ITransactionService {
      * Announce aggregate bonded transaction with lock fund
      * @param signedHashLockTransaction Signed hash lock transaction.
      * @param signedAggregateTransaction Signed aggregate bonded transaction.
+     * @param listener Websocket listener
      * @returns {Observable<AggregateTransaction>}
      */
     public announceHashLockAggregateBonded(signedHashLockTransaction: SignedTransaction,
-                                           signedAggregateTransaction: SignedTransaction): Observable<AggregateTransaction> {
-        return this.announce(signedHashLockTransaction).pipe(
-            flatMap(() => this.announceAggregateBonded(signedAggregateTransaction)),
+                                           signedAggregateTransaction: SignedTransaction,
+                                           listener: Listener): Observable<AggregateTransaction> {
+        return this.announce(signedHashLockTransaction, listener).pipe(
+            flatMap(() => this.announceAggregateBonded(signedAggregateTransaction, listener)),
         );
 
     }
