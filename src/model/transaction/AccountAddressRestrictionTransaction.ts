@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-import { combineLatest, of } from 'rxjs';
-import { Observable } from 'rxjs/internal/Observable';
-import { map } from 'rxjs/operators';
 import { Convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AccountAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountAddressRestrictionTransactionBuilder';
@@ -28,13 +25,11 @@ import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
-import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
-import { TransactionService } from '../../service/TransactionService';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { NamespaceId } from '../namespace/NamespaceId';
-import { ResolutionType } from '../receipt/ResolutionType';
+import { Statement } from '../receipt/Statement';
 import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
@@ -198,56 +193,25 @@ export class AccountAddressRestrictionTransaction extends Transaction {
 
     /**
      * @internal
-     * @param receiptHttp ReceiptHttp
+     * @param statement Block receipt statement
      * @param aggregateTransactionIndex Transaction index for aggregated transaction
-     * @returns {Observable<AccountAddressRestrictionTransaction>}
+     * @returns {AccountAddressRestrictionTransaction}
      */
-    resolveAliases(receiptHttp: ReceiptHttp, aggregateTransactionIndex?: number): Observable<AccountAddressRestrictionTransaction> {
-        const hasUnresolved = this.restrictionAdditions.find((address) => address instanceof NamespaceId) !== undefined ||
-            this.restrictionDeletions.find((address) => address instanceof NamespaceId) !== undefined;
-
-        if (!hasUnresolved) {
-            return of(this);
-        }
-
+    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): AccountAddressRestrictionTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-
-        const statementObservable = receiptHttp.getBlockReceipts(transactionInfo.height.toString());
-        const restrictionAdditions = statementObservable.pipe(
-            map((statement) => {
-                return this.restrictionAdditions.map((addition) => {
-                    return addition instanceof NamespaceId ?
-                        statement.getResolvedFromReceipt(ResolutionType.Address, addition as NamespaceId,
-                        transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as Address :
-                    addition;
-                });
-            }),
+        return new AccountAddressRestrictionTransaction(
+            this.networkType,
+            this.version,
+            this.deadline,
+            this.maxFee,
+            this.restrictionFlags,
+            this.restrictionAdditions.map((addition) => statement.resolveAddress(addition, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex)),
+            this.restrictionDeletions.map((deletion) => statement.resolveAddress(deletion, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex)),
+            this.signature,
+            this.signer,
+            this.transactionInfo,
         );
-
-        const restrictionDeletions = statementObservable.pipe(
-            map((statement) => {
-                return this.restrictionDeletions.map((deletion) => {
-                    return deletion instanceof NamespaceId ?
-                        statement.getResolvedFromReceipt(ResolutionType.Address, deletion as NamespaceId,
-                        transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as Address :
-                        deletion;
-                });
-            }),
-        );
-
-        return combineLatest(restrictionAdditions, restrictionDeletions, (additions, deletions) => {
-            return new AccountAddressRestrictionTransaction(
-                this.networkType,
-                this.version,
-                this.deadline,
-                this.maxFee,
-                this.restrictionFlags,
-                additions,
-                deletions,
-                this.signature,
-                this.signer,
-                this.transactionInfo,
-            );
-        });
     }
 }

@@ -15,6 +15,7 @@
  */
 
 import { Address } from '../account/Address';
+import { Mosaic } from '../mosaic/Mosaic';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { ResolutionStatement } from './ResolutionStatement';
@@ -45,6 +46,61 @@ export class Statement {
     }
 
     /**
+     * Resolve unresolvedAddress from statement
+     * @param unresolvedAddress Unresolved address
+     * @param height Block height
+     * @param transactionIndex Transaction index
+     * @param aggregateTransactionIndex Aggregate transaction index
+     * @returns {Address}
+     */
+    public resolveAddress(unresolvedAddress: Address | NamespaceId,
+                          height: string,
+                          transactionIndex: number,
+                          aggregateTransactionIndex: number = 0): Address {
+        return unresolvedAddress instanceof NamespaceId ?
+                this.getResolvedFromReceipt(ResolutionType.Address, unresolvedAddress as NamespaceId,
+                    transactionIndex, height, aggregateTransactionIndex) as Address :
+                unresolvedAddress;
+    }
+
+    /**
+     * Resolve unresolvedMosaicId from statement
+     * @param unresolvedMosaicId Unresolved mosaic id
+     * @param height Block height
+     * @param transactionIndex Transaction index
+     * @param aggregateTransactionIndex Aggregate transaction index
+     * @returns {MosaicId}
+     */
+    public resolveMosaicId(unresolvedMosaicId: MosaicId | NamespaceId,
+                           height: string,
+                           transactionIndex: number,
+                           aggregateTransactionIndex: number = 0): MosaicId {
+        return unresolvedMosaicId instanceof NamespaceId ?
+                this.getResolvedFromReceipt(ResolutionType.Mosaic, unresolvedMosaicId as NamespaceId,
+                    transactionIndex, height, aggregateTransactionIndex) as MosaicId :
+                unresolvedMosaicId;
+    }
+
+    /**
+     * Resolve unresolvedMosaic from statement
+     * @param unresolvedMosaic Unresolved mosaic
+     * @param height Block height
+     * @param transactionIndex Transaction index
+     * @param aggregateTransactionIndex Aggregate transaction index
+     * @returns {Mosaic}
+     */
+    public resolveMosaic(unresolvedMosaic: Mosaic,
+                         height: string,
+                         transactionIndex: number,
+                         aggregateTransactionIndex: number = 0): Mosaic {
+        return unresolvedMosaic.id instanceof NamespaceId ?
+                new Mosaic(this.getResolvedFromReceipt(ResolutionType.Mosaic, unresolvedMosaic.id as NamespaceId,
+                    transactionIndex, height, aggregateTransactionIndex) as MosaicId, unresolvedMosaic.amount) :
+                unresolvedMosaic;
+    }
+
+    /**
+     * @internal
      * Extract resolved address | mosaic from block receipt
      * @param resolutionType Resolution type: Address / Mosaic
      * @param unresolved Unresolved address / mosaicId
@@ -53,11 +109,11 @@ export class Statement {
      * @param aggregateTransactionIndex Transaction index for aggregate
      * @returns {MosaicId | Address}
      */
-    public getResolvedFromReceipt(resolutionType: ResolutionType,
-                                  unresolved: NamespaceId,
-                                  transactionIndex: number,
-                                  height: string,
-                                  aggregateTransactionIndex?: number): MosaicId | Address {
+    private getResolvedFromReceipt(resolutionType: ResolutionType,
+                                   unresolved: NamespaceId,
+                                   transactionIndex: number,
+                                   height: string,
+                                   aggregateTransactionIndex?: number): MosaicId | Address {
 
         const resolutionStatement = (resolutionType === ResolutionType.Address ? this.addressResolutionStatements :
             this.mosaicResolutionStatements).find((resolution) => resolution.height.toString() === height &&

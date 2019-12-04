@@ -17,7 +17,6 @@
 import { expect } from 'chai';
 import { Observable } from 'rxjs/internal/Observable';
 import { Convert } from '../../../src/core/format/Convert';
-import { ReceiptHttp } from '../../../src/infrastructure/ReceiptHttp';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
@@ -404,7 +403,7 @@ class FakeTransaction extends Transaction {
     protected generateEmbeddedBytes(): Uint8Array {
         throw new Error('Not implemented');
     }
-    resolveAliases(receiptHttp: ReceiptHttp, aggregateTransactionIndex?: number): Observable<TransferTransaction> {
+    resolveAliases(): TransferTransaction {
         throw new Error('Not implemented');
     }
 }

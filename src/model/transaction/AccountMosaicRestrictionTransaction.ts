@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-import { combineLatest, of } from 'rxjs';
-import { Observable } from 'rxjs/internal/Observable';
-import { map } from 'rxjs/operators';
 import { Convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AccountMosaicRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountMosaicRestrictionTransactionBuilder';
@@ -28,13 +25,11 @@ import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
-import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
-import { TransactionService } from '../../service/TransactionService';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
-import { ResolutionType } from '../receipt/ResolutionType';
+import { Statement } from '../receipt/Statement';
 import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
@@ -198,56 +193,25 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
 
     /**
      * @internal
-     * @param receiptHttp ReceiptHttp
+     * @param statement Block receipt statement
      * @param aggregateTransactionIndex Transaction index for aggregated transaction
-     * @returns {Observable<AccountMosaicRestrictionTransaction>}
+     * @returns {AccountMosaicRestrictionTransaction}
      */
-    resolveAliases(receiptHttp: ReceiptHttp, aggregateTransactionIndex?: number): Observable<AccountMosaicRestrictionTransaction> {
-        const hasUnresolved = this.restrictionAdditions.find((mosaicId) => mosaicId instanceof NamespaceId) !== undefined ||
-            this.restrictionDeletions.find((mosaicId) => mosaicId instanceof NamespaceId) !== undefined;
-
-        if (!hasUnresolved) {
-            return of(this);
-        }
-
+    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): AccountMosaicRestrictionTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-
-        const statementObservable = receiptHttp.getBlockReceipts(transactionInfo.height.toString());
-        const restrictionAdditions = statementObservable.pipe(
-            map((statement) => {
-                return this.restrictionAdditions.map((addition) => {
-                    return addition instanceof NamespaceId ?
-                    statement.getResolvedFromReceipt(ResolutionType.Mosaic, addition as NamespaceId,
-                        transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as MosaicId :
-                    addition;
-                });
-            }),
+        return new AccountMosaicRestrictionTransaction(
+            this.networkType,
+            this.version,
+            this.deadline,
+            this.maxFee,
+            this.restrictionFlags,
+            this.restrictionAdditions.map((addition) => statement.resolveMosaicId(addition, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex)),
+            this.restrictionDeletions.map((deletion) => statement.resolveMosaicId(deletion, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex)),
+            this.signature,
+            this.signer,
+            this.transactionInfo,
         );
-
-        const restrictionDeletions = statementObservable.pipe(
-            map((statement) => {
-                return this.restrictionDeletions.map((deletion) => {
-                    return deletion instanceof NamespaceId ?
-                    statement.getResolvedFromReceipt(ResolutionType.Mosaic, deletion as NamespaceId,
-                        transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as MosaicId :
-                        deletion;
-                });
-            }),
-        );
-
-        return combineLatest(restrictionAdditions, restrictionDeletions, (additions, deletions) => {
-            return new AccountMosaicRestrictionTransaction(
-                this.networkType,
-                this.version,
-                this.deadline,
-                this.maxFee,
-                this.restrictionFlags,
-                additions,
-                deletions,
-                this.signature,
-                this.signer,
-                this.transactionInfo,
-            );
-        });
     }
 }

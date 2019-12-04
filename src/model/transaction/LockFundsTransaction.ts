@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs/internal/observable/of';
-import { map } from 'rxjs/internal/operators/map';
 import { Convert } from '../../core/format';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
@@ -28,14 +25,11 @@ import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedMosaicBuilder } from '../../infrastructure/catbuffer/UnresolvedMosaicBuilder';
 import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
-import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
-import { TransactionService } from '../../service/TransactionService';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
 import { MosaicId } from '../mosaic/MosaicId';
-import { NamespaceId } from '../namespace/NamespaceId';
-import { ResolutionType } from '../receipt/ResolutionType';
+import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -212,35 +206,24 @@ export class LockFundsTransaction extends Transaction {
 
     /**
      * @internal
-     * @param receiptHttp ReceiptHttp
+     * @param statement Block receipt statement
      * @param aggregateTransactionIndex Transaction index for aggregated transaction
-     * @returns {Observable<LockFundsTransaction>}
+     * @returns {LockFundsTransaction}
      */
-    resolveAliases(receiptHttp: ReceiptHttp, aggregateTransactionIndex?: number): Observable<LockFundsTransaction> {
-        const hasUnresolved = this.mosaic.id instanceof NamespaceId;
-
-        if (!hasUnresolved) {
-            return of(this);
-        }
-
+    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): LockFundsTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-
-        const statementObservable = receiptHttp.getBlockReceipts(transactionInfo.height.toString());
-        return statementObservable.pipe(
-            map((statement) => new LockFundsTransaction(
-                        this.networkType,
-                        this.version,
-                        this.deadline,
-                        this.maxFee,
-                        new Mosaic(statement.getResolvedFromReceipt(ResolutionType.Mosaic, this.mosaic.id as NamespaceId,
-                            transactionInfo.index, transactionInfo.height.toString(),
-                            aggregateTransactionIndex) as MosaicId, this.mosaic.amount),
-                        this.duration,
-                        this.signedTransaction,
-                        this.signature,
-                        this.signer,
-                        this.transactionInfo,
-                    )),
+        return new LockFundsTransaction(
+            this.networkType,
+            this.version,
+            this.deadline,
+            this.maxFee,
+            statement.resolveMosaic(this.mosaic, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex),
+            this.duration,
+            this.signedTransaction,
+            this.signature,
+            this.signer,
+            this.transactionInfo,
         );
     }
 }

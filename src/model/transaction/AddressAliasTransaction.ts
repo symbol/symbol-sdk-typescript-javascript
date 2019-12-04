@@ -189,10 +189,9 @@ export class AddressAliasTransaction extends Transaction {
 
     /**
      * @internal
-     * @param receiptHttp ReceiptHttp
-     * @returns {Observable<AddressAliasTransaction>}
+     * @returns {AddressAliasTransaction}
      */
-    resolveAliases(receiptHttp: ReceiptHttp): Observable<AddressAliasTransaction> {
-        return of(this);
+    resolveAliases(): AddressAliasTransaction {
+        return this;
     }
 }

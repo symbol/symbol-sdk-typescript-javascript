@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs/internal/observable/of';
 import { Convert } from '../../core/format';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
@@ -27,7 +25,6 @@ import { MosaicIdDto } from '../../infrastructure/catbuffer/MosaicIdDto';
 import { MosaicNonceDto } from '../../infrastructure/catbuffer/MosaicNonceDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
-import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicFlags } from '../mosaic/MosaicFlags';
@@ -227,10 +224,9 @@ export class MosaicDefinitionTransaction extends Transaction {
 
     /**
      * @internal
-     * @param receiptHttp ReceiptHttp
-     * @returns {Observable<MosaicDefinitionTransaction>}
+     * @returns {MosaicDefinitionTransaction}
      */
-    resolveAliases(receiptHttp: ReceiptHttp): Observable<MosaicDefinitionTransaction> {
-        return of(this);
+    resolveAliases(): MosaicDefinitionTransaction {
+        return this;
     }
 }

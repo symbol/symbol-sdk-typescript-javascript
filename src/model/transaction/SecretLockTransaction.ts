@@ -13,9 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { combineLatest, of } from 'rxjs';
-import { Observable } from 'rxjs/internal/Observable';
-import { map } from 'rxjs/operators';
 import { Convert, Convert as convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -29,15 +26,12 @@ import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
 import { UnresolvedMosaicBuilder } from '../../infrastructure/catbuffer/UnresolvedMosaicBuilder';
 import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
-import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
-import { TransactionService } from '../../service/TransactionService';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
-import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
-import { ResolutionType } from '../receipt/ResolutionType';
+import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { HashType, HashTypeLengthValidator } from './HashType';
@@ -240,54 +234,27 @@ export class SecretLockTransaction extends Transaction {
 
     /**
      * @internal
-     * @param receiptHttp ReceiptHttp
+     * @param statement Block receipt statement
      * @param aggregateTransactionIndex Transaction index for aggregated transaction
-     * @returns {Observable<SecretLockTransaction>}
+     * @returns {SecretLockTransaction}
      */
-    resolveAliases(receiptHttp: ReceiptHttp, aggregateTransactionIndex?: number): Observable<SecretLockTransaction> {
-        const hasUnresolved = this.recipientAddress instanceof NamespaceId ||
-            this.mosaic.id instanceof NamespaceId;
-
-        if (!hasUnresolved) {
-            return of(this);
-        }
-
+    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): SecretLockTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-
-        const statementObservable = receiptHttp.getBlockReceipts(transactionInfo.height.toString());
-
-        const resolvedRecipient = statementObservable.pipe(
-            map((statement) => this.recipientAddress instanceof NamespaceId ?
-                statement.getResolvedFromReceipt(ResolutionType.Address, this.recipientAddress as NamespaceId,
-                    transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as Address :
-                this.recipientAddress,
-            ),
+        return new SecretLockTransaction(
+            this.networkType,
+            this.version,
+            this.deadline,
+            this.maxFee,
+            statement.resolveMosaic(this.mosaic, transactionInfo.height.toString(),
+                    transactionInfo.index, aggregateTransactionIndex),
+            this.duration,
+            this.hashType,
+            this.secret,
+            statement.resolveAddress(this.recipientAddress,
+                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
+            this.signature,
+            this.signer,
+            this.transactionInfo,
         );
-
-        const resolvedMosaic = statementObservable.pipe(
-            map((statement) => this.mosaic.id instanceof NamespaceId ?
-                new Mosaic(statement.getResolvedFromReceipt(ResolutionType.Mosaic, this.recipientAddress as NamespaceId,
-                    transactionInfo.index, transactionInfo.height.toString(),
-                    aggregateTransactionIndex) as MosaicId, this.mosaic.amount) :
-                this.mosaic,
-            ),
-        );
-
-        return combineLatest(resolvedRecipient, resolvedMosaic, (recipient, mosaic) => {
-            return new SecretLockTransaction(
-                this.networkType,
-                this.version,
-                this.deadline,
-                this.maxFee,
-                mosaic,
-                this.duration,
-                this.hashType,
-                this.secret,
-                recipient,
-                this.signature,
-                this.signer,
-                this.transactionInfo,
-            );
-        });
     }
 }

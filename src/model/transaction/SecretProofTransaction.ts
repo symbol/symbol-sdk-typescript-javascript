@@ -34,6 +34,7 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { ResolutionType } from '../receipt/ResolutionType';
+import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { HashType, HashTypeLengthValidator } from './HashType';
@@ -216,37 +217,25 @@ export class SecretProofTransaction extends Transaction {
 
     /**
      * @internal
-     * @param receiptHttp ReceiptHttp
+     * @param statement Block receipt statement
      * @param aggregateTransactionIndex Transaction index for aggregated transaction
-     * @returns {Observable<SecretProofTransaction>}
+     * @returns {SecretProofTransaction}
      */
-    resolveAliases(receiptHttp: ReceiptHttp, aggregateTransactionIndex?: number): Observable<SecretProofTransaction> {
-        const hasUnresolved = this.recipientAddress instanceof NamespaceId;
-
-        if (!hasUnresolved) {
-            return of(this);
-        }
-
+    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): SecretProofTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-
-        const statementObservable = receiptHttp.getBlockReceipts(transactionInfo.height.toString());
-
-        return statementObservable.pipe(
-            map((statement) => new SecretProofTransaction(
-                    this.networkType,
-                    this.version,
-                    this.deadline,
-                    this.maxFee,
-                    this.hashType,
-                    this.secret,
-                    statement.getResolvedFromReceipt(ResolutionType.Address, this.recipientAddress as NamespaceId,
-                        transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as Address,
-                    this.proof,
-                    this.signature,
-                    this.signer,
-                    this.transactionInfo,
-                ),
-            ),
+        return new SecretProofTransaction(
+            this.networkType,
+            this.version,
+            this.deadline,
+            this.maxFee,
+            this.hashType,
+            this.secret,
+            statement.resolveAddress(this.recipientAddress,
+                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
+            this.proof,
+            this.signature,
+            this.signer,
+            this.transactionInfo,
         );
     }
 }

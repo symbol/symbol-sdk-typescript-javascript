@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-import { Observable } from 'rxjs';
 import { KeyPair, SHA3Hasher, SignSchema } from '../../core/crypto';
 import { Convert } from '../../core/format';
-import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
-import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
 import { SerializeTransactionToJSON } from '../../infrastructure/transaction/SerializeTransactionToJSON';
 import { Account } from '../account/Account';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
+import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { AggregateTransactionInfo } from './AggregateTransactionInfo';
 import { Deadline } from './Deadline';
@@ -190,11 +188,11 @@ export abstract class Transaction {
 
     /**
      * @internal
-     * @param receiptHttp ReceiptHttp
+     * @param statement Block receipt statement
      * @param AggregateTransactionIndex Transaction index for aggregated transaction
      * @returns {Observable<Transaction>}
      */
-    abstract resolveAliases(receiptHttp: ReceiptHttp, AggregateTransactionIndex?: number): Observable<Transaction>;
+    abstract resolveAliases(statement?: Statement, aggregateTransactionIndex?: number): Transaction;
 
     /**
      * @internal

@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs/internal/observable/of';
 import { Convert } from '../../core/format';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import {
@@ -26,8 +24,6 @@ import {MultisigAccountModificationTransactionBuilder,
 } from '../../infrastructure/catbuffer/MultisigAccountModificationTransactionBuilder';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
-import { NamespaceHttp } from '../../infrastructure/NamespaceHttp';
-import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
@@ -219,10 +215,9 @@ export class MultisigAccountModificationTransaction extends Transaction {
 
     /**
      * @internal
-     * @param receiptHttp ReceiptHttp
-     * @returns {Observable<MultisigAccountModificationTransaction>}
+     * @returns {MultisigAccountModificationTransaction}
      */
-    resolveAliases(receiptHttp: ReceiptHttp): Observable<MultisigAccountModificationTransaction> {
-        return of(this);
+    resolveAliases(): MultisigAccountModificationTransaction {
+        return this;
     }
 }

@@ -15,8 +15,6 @@
  */
 
 import * as Long from 'long';
-import { combineLatest, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
 import {Convert} from '../../core/format';
 import {UnresolvedMapping} from '../../core/utils/UnresolvedMapping';
 import {AmountDto} from '../../infrastructure/catbuffer/AmountDto';
@@ -29,8 +27,6 @@ import {TransferTransactionBuilder} from '../../infrastructure/catbuffer/Transfe
 import {UnresolvedAddressDto} from '../../infrastructure/catbuffer/UnresolvedAddressDto';
 import {UnresolvedMosaicBuilder} from '../../infrastructure/catbuffer/UnresolvedMosaicBuilder';
 import {UnresolvedMosaicIdDto} from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
-import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
-import { TransactionService } from '../../service/TransactionService';
 import {Address} from '../account/Address';
 import {PublicAccount} from '../account/PublicAccount';
 import {NetworkType} from '../blockchain/NetworkType';
@@ -39,9 +35,8 @@ import {Message} from '../message/Message';
 import {MessageType} from '../message/MessageType';
 import {PlainMessage} from '../message/PlainMessage';
 import {Mosaic} from '../mosaic/Mosaic';
-import { MosaicId } from '../mosaic/MosaicId';
 import {NamespaceId} from '../namespace/NamespaceId';
-import { ResolutionType } from '../receipt/ResolutionType';
+import { Statement } from '../receipt/Statement';
 import {UInt64} from '../UInt64';
 import {Deadline} from './Deadline';
 import {InnerTransaction} from './InnerTransaction';
@@ -281,55 +276,26 @@ export class TransferTransaction extends Transaction {
 
     /**
      * @internal
-     * @param receiptHttp ReceiptHttp
+     * @param statement Block receipt statement
      * @param aggregateTransactionIndex Transaction index for aggregated transaction
-     * @returns {Observable<TransferTransaction>}
+     * @returns {TransferTransaction}
      */
-    resolveAliases(receiptHttp: ReceiptHttp, aggregateTransactionIndex?: number): Observable<TransferTransaction> {
-        const hasUnresolved = this.recipientAddress instanceof NamespaceId ||
-            this.mosaics.find((mosaic) => mosaic.id instanceof NamespaceId) !== undefined;
-
-        if (!hasUnresolved) {
-            return of(this);
-        }
-
+    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): TransferTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-
-        const statementObservable = receiptHttp.getBlockReceipts(transactionInfo.height.toString());
-
-        const resolvedRecipient = statementObservable.pipe(
-            map((statement) => this.recipientAddress instanceof NamespaceId ?
-                statement.getResolvedFromReceipt(ResolutionType.Address, this.recipientAddress as NamespaceId,
-                    transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as Address :
-                this.recipientAddress,
-            ),
+        return new TransferTransaction(
+            this.networkType,
+            this.version,
+            this.deadline,
+            this.maxFee,
+            statement.resolveAddress(this.recipientAddress,
+                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
+            this.mosaics.map((mosaic) =>
+                statement.resolveMosaic(mosaic, transactionInfo.height.toString(),
+                    transactionInfo.index, aggregateTransactionIndex)),
+            this.message,
+            this.signature,
+            this.signer,
+            this.transactionInfo,
         );
-
-        const resolvedMosaics = statementObservable.pipe(
-            map((statement) =>
-                this.mosaics.map((mosaic) =>
-                    mosaic.id instanceof NamespaceId ?
-                        new Mosaic(statement.getResolvedFromReceipt(ResolutionType.Mosaic, mosaic.id as NamespaceId,
-                        transactionInfo.index, transactionInfo.height.toString(),
-                        aggregateTransactionIndex) as MosaicId, mosaic.amount) :
-                        mosaic,
-                ),
-            ),
-        );
-
-        return combineLatest(resolvedRecipient, resolvedMosaics, (recipient, mosaics) => {
-            return new TransferTransaction(
-                this.networkType,
-                this.version,
-                this.deadline,
-                this.maxFee,
-                recipient,
-                mosaics,
-                this.message,
-                this.signature,
-                this.signer,
-                this.transactionInfo,
-            );
-        });
     }
 }

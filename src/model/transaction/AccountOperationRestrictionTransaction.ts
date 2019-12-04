@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs/internal/observable/of';
 import { Convert } from '../../core/format';
 import {
     AccountOperationRestrictionTransactionBuilder,
@@ -27,7 +25,6 @@ import {
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
-import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
@@ -180,10 +177,9 @@ export class AccountOperationRestrictionTransaction extends Transaction {
 
     /**
      * @internal
-     * @param receiptHttp ReceiptHttp
-     * @returns {Observable<AccountOperationRestrictionTransaction>}
+     * @returns {AccountOperationRestrictionTransaction}
      */
-    resolveAliases(receiptHttp: ReceiptHttp): Observable<AccountOperationRestrictionTransaction> {
-        return of(this);
+    resolveAliases(): AccountOperationRestrictionTransaction {
+        return this;
     }
 }

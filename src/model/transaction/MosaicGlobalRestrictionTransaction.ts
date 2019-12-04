@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-import { combineLatest, of } from 'rxjs';
-import { Observable } from 'rxjs/internal/Observable';
-import { map } from 'rxjs/operators';
 import { Convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -28,13 +25,11 @@ import { MosaicGlobalRestrictionTransactionBuilder } from '../../infrastructure/
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
-import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
-import { TransactionService } from '../../service/TransactionService';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
-import { ResolutionType } from '../receipt/ResolutionType';
+import { Statement } from '../receipt/Statement';
 import { MosaicRestrictionType } from '../restriction/MosaicRestrictionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
@@ -252,55 +247,29 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
 
     /**
      * @internal
-     * @param receiptHttp ReceiptHttp
+     * @param statement Block receipt statement
      * @param aggregateTransactionIndex Transaction index for aggregated transaction
-     * @returns {Observable<MosaicGlobalRestrictionTransaction>}
+     * @returns {MosaicGlobalRestrictionTransaction}
      */
-    resolveAliases(receiptHttp: ReceiptHttp, aggregateTransactionIndex?: number): Observable<MosaicGlobalRestrictionTransaction> {
-        const hasUnresolved = this.mosaicId instanceof NamespaceId ||
-            this.referenceMosaicId instanceof NamespaceId;
-
-        if (!hasUnresolved) {
-            return of(this);
-        }
-
+    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): MosaicGlobalRestrictionTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-
-        const statementObservable = receiptHttp.getBlockReceipts(transactionInfo.height.toString());
-
-        const resolvedMosaicId = statementObservable.pipe(
-            map((statement) => this.mosaicId instanceof NamespaceId ?
-                statement.getResolvedFromReceipt(ResolutionType.Mosaic, this.mosaicId as NamespaceId,
-                    transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as MosaicId :
-                this.mosaicId,
-            ),
+        return new MosaicGlobalRestrictionTransaction(
+            this.networkType,
+            this.version,
+            this.deadline,
+            this.maxFee,
+            statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex),
+            statement.resolveMosaicId(this.referenceMosaicId, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex),
+            this.restrictionKey,
+            this.previousRestrictionValue,
+            this.previousRestrictionType,
+            this.newRestrictionValue,
+            this.newRestrictionType,
+            this.signature,
+            this.signer,
+            this.transactionInfo,
         );
-
-        const resolvedRefMosaicId = statementObservable.pipe(
-            map((statement) => this.referenceMosaicId instanceof NamespaceId ?
-                statement.getResolvedFromReceipt(ResolutionType.Mosaic, this.referenceMosaicId as NamespaceId,
-                    transactionInfo.index, transactionInfo.height.toString(), aggregateTransactionIndex) as MosaicId :
-                this.referenceMosaicId,
-            ),
-        );
-
-        return combineLatest(resolvedMosaicId, resolvedRefMosaicId, (mosaicId, refMosaicId) => {
-            return new MosaicGlobalRestrictionTransaction(
-                this.networkType,
-                this.version,
-                this.deadline,
-                this.maxFee,
-                mosaicId,
-                refMosaicId,
-                this.restrictionKey,
-                this.previousRestrictionValue,
-                this.previousRestrictionType,
-                this.newRestrictionValue,
-                this.newRestrictionType,
-                this.signature,
-                this.signer,
-                this.transactionInfo,
-            );
-        });
     }
 }

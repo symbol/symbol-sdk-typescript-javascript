@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs/internal/observable/of';
 import { Convert } from '../../core/format';
 import { AccountMetadataTransactionBuilder } from '../../infrastructure/catbuffer/AccountMetadataTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -23,7 +21,6 @@ import { EmbeddedAccountMetadataTransactionBuilder } from '../../infrastructure/
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
-import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
@@ -199,10 +196,9 @@ export class AccountMetadataTransaction extends Transaction {
 
     /**
      * @internal
-     * @param receiptHttp ReceiptHttp
-     * @returns {Observable<AccountMetadataTransaction>}
+     * @returns {AccountMetadataTransaction}
      */
-    resolveAliases(receiptHttp: ReceiptHttp): Observable<AccountMetadataTransaction> {
-        return of(this);
+    resolveAliases(): AccountMetadataTransaction {
+        return this;
     }
 }

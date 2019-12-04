@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-import { from, of } from 'rxjs';
-import { Observable } from 'rxjs/internal/Observable';
-import { map, mergeMap, toArray } from 'rxjs/operators';
 import {KeyPair, MerkleHashBuilder, SHA3Hasher, SignSchema} from '../../core/crypto';
 import {Convert} from '../../core/format';
 import {AggregateBondedTransactionBuilder} from '../../infrastructure/catbuffer/AggregateBondedTransactionBuilder';
@@ -28,11 +25,11 @@ import { Hash256Dto } from '../../infrastructure/catbuffer/Hash256Dto';
 import {KeyDto} from '../../infrastructure/catbuffer/KeyDto';
 import {SignatureDto} from '../../infrastructure/catbuffer/SignatureDto';
 import {TimestampDto} from '../../infrastructure/catbuffer/TimestampDto';
-import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
 import {CreateTransactionFromPayload} from '../../infrastructure/transaction/CreateTransactionFromPayload';
 import {Account} from '../account/Account';
 import {PublicAccount} from '../account/PublicAccount';
 import {NetworkType} from '../blockchain/NetworkType';
+import { Statement } from '../receipt/Statement';
 import {UInt64} from '../UInt64';
 import {AggregateTransactionCosignature} from './AggregateTransactionCosignature';
 import {CosignatureSignedTransaction} from './CosignatureSignedTransaction';
@@ -406,29 +403,22 @@ export class AggregateTransaction extends Transaction {
 
     /**
      * @internal
-     * @param receiptHttp ReceiptHttp
-     * @returns {Observable<AggregateTransaction>}
+     * @returns {AggregateTransaction}
      */
-    resolveAliases(receiptHttp: ReceiptHttp): Observable<AggregateTransaction> {
+    resolveAliases(statement: Statement): AggregateTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return from(this.innerTransactions).pipe(
-            mergeMap((transaction) => transaction.resolveAliases(receiptHttp, transactionInfo.index)),
-            map((transaction) => transaction as InnerTransaction),
-            toArray(),
-        ).pipe(
-            map((innerTransactions) => new AggregateTransaction(
-                    this.networkType,
-                    this.type,
-                    this.version,
-                    this.deadline,
-                    this.maxFee,
-                    innerTransactions.sort((a, b) => a.transactionInfo!.index - b.transactionInfo!.index),
-                    this.cosignatures,
-                    this.signature,
-                    this.signer,
-                    this.transactionInfo,
-                ),
-            ),
+        return new AggregateTransaction(
+            this.networkType,
+            this.type,
+            this.version,
+            this.deadline,
+            this.maxFee,
+            this.innerTransactions.map((tx) => tx.resolveAliases(statement, transactionInfo.index))
+                .sort((a, b) => a.transactionInfo!.index - b.transactionInfo!.index),
+            this.cosignatures,
+            this.signature,
+            this.signer,
+            this.transactionInfo,
         );
     }
 }
