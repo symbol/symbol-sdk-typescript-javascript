@@ -16,17 +16,25 @@
 
 import { expect } from 'chai';
 import { Listener } from '../../src/infrastructure/Listener';
+import { NamespaceHttp } from '../../src/infrastructure/NamespaceHttp';
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
+import { Mosaic } from '../../src/model/mosaic/Mosaic';
+import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
+import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
+import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
 import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
+import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
+import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
+import { TransactionUtils } from '../infrastructure/TransactionUtils';
 
 describe('TransactionService', () => {
     let account: Account;
@@ -35,9 +43,12 @@ describe('TransactionService', () => {
     let cosignAccount1: Account;
     let cosignAccount2: Account;
     let cosignAccount3: Account;
+    let networkCurrencyMosaicId: MosaicId;
     let url: string;
     let generationHash: string;
     let transactionHttp: TransactionHttp;
+    let transactionService: TransactionService;
+    let namespaceHttp: NamespaceHttp;
     let config;
 
     before((done) => {
@@ -56,7 +67,9 @@ describe('TransactionService', () => {
             cosignAccount3 = Account.createFromPrivateKey(json.cosignatory3Account.privateKey, NetworkType.MIJIN_TEST);
             url = json.apiUrl;
             generationHash = json.generationHash;
-            transactionHttp = new TransactionHttp(json.apiUrl);
+            transactionHttp = new TransactionHttp(url);
+            namespaceHttp = new NamespaceHttp(url);
+            transactionService = new TransactionService(url);
             done();
         });
     });
@@ -66,6 +79,15 @@ describe('TransactionService', () => {
      * Setup test data
      * =========================
      */
+    describe('Get network currency mosaic id', () => {
+        it('get mosaicId', (done) => {
+            namespaceHttp.getLinkedMosaicId(new NamespaceId('cat.currency')).subscribe((networkMosaicId) => {
+                networkCurrencyMosaicId = networkMosaicId;
+                done();
+            });
+        });
+    });
+
     describe('Setup test multisig account', () => {
         let listener: Listener;
         before (() => {
@@ -123,7 +145,6 @@ describe('TransactionService', () => {
             return listener.close();
         });
         it('announce', (done) => {
-            const transactionService = new TransactionService(url);
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
@@ -139,6 +160,65 @@ describe('TransactionService', () => {
                 expect((tx.recipientAddress as Address).equals(account2.address)).to.be.true;
                 expect(tx.message.payload).to.be.equal('test-message');
                 done();
+            });
+        });
+    });
+
+    describe('should announce aggregate bonded with hashlock', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('announce', (done) => {
+            const signedAggregatedTransaction =
+                TransactionUtils.createSignedAggregatedBondTransaction(multisigAccount, account, account2.address, generationHash);
+            const lockFundsTransaction = LockFundsTransaction.create(
+                Deadline.create(),
+                new Mosaic(networkCurrencyMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
+                UInt64.fromUint(1000),
+                signedAggregatedTransaction,
+                NetworkType.MIJIN_TEST,
+            );
+            const signedLockFundsTransaction = lockFundsTransaction.signWith(account, generationHash);
+            transactionService
+                .announceHashLockAggregateBonded(signedLockFundsTransaction, signedAggregatedTransaction, listener).subscribe((tx) => {
+                expect(tx.signer!.publicKey).to.be.equal(account.publicKey);
+                expect(tx.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
+                done();
+            });
+        });
+    });
+
+    describe('should announce aggregate bonded transaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('announce', (done) => {
+            const signedAggregatedTransaction =
+                TransactionUtils.createSignedAggregatedBondTransaction(multisigAccount, account, account2.address, generationHash);
+            const lockFundsTransaction = LockFundsTransaction.create(
+                Deadline.create(),
+                new Mosaic(networkCurrencyMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
+                UInt64.fromUint(1000),
+                signedAggregatedTransaction,
+                NetworkType.MIJIN_TEST,
+            );
+            const signedLockFundsTransaction = lockFundsTransaction.signWith(account, generationHash);
+            transactionService.announce(signedLockFundsTransaction, listener).subscribe(() => {
+                transactionService.announceAggregateBonded(signedAggregatedTransaction, listener).subscribe((tx) => {
+                    expect(tx.signer!.publicKey).to.be.equal(account.publicKey);
+                    expect(tx.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
+                    done();
+                });
             });
         });
     });
