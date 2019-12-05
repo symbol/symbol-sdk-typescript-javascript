@@ -30,6 +30,7 @@ import { MosaicMetadataTransaction } from '../model/transaction/MosaicMetadataTr
 import { MosaicSupplyChangeTransaction } from '../model/transaction/MosaicSupplyChangeTransaction';
 import { SecretLockTransaction } from '../model/transaction/SecretLockTransaction';
 import { SecretProofTransaction } from '../model/transaction/SecretProofTransaction';
+import { SignedTransaction } from '../model/transaction/SignedTransaction';
 import { Transaction } from '../model/transaction/Transaction';
 import { TransactionType } from '../model/transaction/TransactionType';
 import { TransferTransaction } from '../model/transaction/TransferTransaction';
@@ -63,6 +64,46 @@ export class TransactionService implements ITransactionService {
                 mergeMap((transaction) => this.resolveTransaction(transaction)),
                 toArray(),
             );
+    }
+
+    /**
+     * @param signedTransaction Signed transaction to be announced.
+     * @param listener Websocket listener
+     * @returns {Observable<Transaction>}
+     */
+    public announce(signedTransaction: SignedTransaction, listener: Listener): Observable<Transaction> {
+        return this.transactionHttp.announce(signedTransaction).pipe(
+            flatMap(() => listener.confirmed(signedTransaction.getSignerAddress(), signedTransaction.hash)),
+        );
+    }
+
+    /**
+     * Announce aggregate transaction
+     * **NOTE** A lock fund transaction for this aggregate bonded should exists
+     * @param signedTransaction Signed aggregate bonded transaction.
+     * @param listener Websocket listener
+     * @returns {Observable<AggregateTransaction>}
+     */
+    public announceAggregateBonded(signedTransaction: SignedTransaction, listener: Listener): Observable<AggregateTransaction> {
+        return this.transactionHttp.announceAggregateBonded(signedTransaction).pipe(
+            flatMap(() => listener.aggregateBondedAdded(signedTransaction.getSignerAddress(), signedTransaction.hash)),
+        );
+    }
+
+    /**
+     * Announce aggregate bonded transaction with lock fund
+     * @param signedHashLockTransaction Signed hash lock transaction.
+     * @param signedAggregateTransaction Signed aggregate bonded transaction.
+     * @param listener Websocket listener
+     * @returns {Observable<AggregateTransaction>}
+     */
+    public announceHashLockAggregateBonded(signedHashLockTransaction: SignedTransaction,
+                                           signedAggregateTransaction: SignedTransaction,
+                                           listener: Listener): Observable<AggregateTransaction> {
+        return this.announce(signedHashLockTransaction, listener).pipe(
+            flatMap(() => this.announceAggregateBonded(signedAggregateTransaction, listener)),
+        );
+
     }
 
     /**
@@ -146,44 +187,5 @@ export class TransactionService implements ITransactionService {
         return this.receiptHttp.getBlockReceipts(transaction.transactionInfo!.height.toString()).pipe(
             map((statement) => transaction.resolveAliases(statement, aggregateIndex)),
         );
-    }
-
-    /**
-     * @param signedTransaction Signed transaction to be announced.
-     * @param listener Websocket listener
-     * @returns {Observable<Transaction>}
-     */
-    public announce(signedTransaction: SignedTransaction, listener: Listener): Observable<Transaction> {
-        return this.transactionHttp.announce(signedTransaction).pipe(
-            flatMap(() => listener.confirmed(signedTransaction.getSignerAddress(), signedTransaction.hash)),
-        );
-    }
-
-    /**
-     * Announce aggregate transaction
-     * @param signedTransaction Signed aggregate bonded transaction.
-     * @param listener Websocket listener
-     * @returns {Observable<AggregateTransaction>}
-     */
-    public announceAggregateBonded(signedTransaction: SignedTransaction, listener: Listener): Observable<AggregateTransaction> {
-        return this.transactionHttp.announceAggregateBonded(signedTransaction).pipe(
-            flatMap(() => listener.aggregateBondedAdded(signedTransaction.getSignerAddress(), signedTransaction.hash)),
-        );
-    }
-
-    /**
-     * Announce aggregate bonded transaction with lock fund
-     * @param signedHashLockTransaction Signed hash lock transaction.
-     * @param signedAggregateTransaction Signed aggregate bonded transaction.
-     * @param listener Websocket listener
-     * @returns {Observable<AggregateTransaction>}
-     */
-    public announceHashLockAggregateBonded(signedHashLockTransaction: SignedTransaction,
-                                           signedAggregateTransaction: SignedTransaction,
-                                           listener: Listener): Observable<AggregateTransaction> {
-        return this.announce(signedHashLockTransaction, listener).pipe(
-            flatMap(() => this.announceAggregateBonded(signedAggregateTransaction, listener)),
-        );
-
     }
 }
