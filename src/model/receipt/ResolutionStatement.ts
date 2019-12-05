@@ -115,8 +115,7 @@ export class ResolutionStatement {
         }
 
         // When transaction index matches a primary id, get the most recent secondaryId
-        const resolvedSecondaryId = Math.max(...this.resolutionEntries
-            .map((entry) => secondaryId >= entry.source.secondaryId ? entry.source.secondaryId : 0));
+        const resolvedSecondaryId = this.getMaxSecondaryIdByPrimaryId(resolvedPrimaryId);
 
         if (resolvedSecondaryId === 0 && secondaryId !== resolvedSecondaryId) {
             /*
