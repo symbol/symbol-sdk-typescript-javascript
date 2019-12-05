@@ -105,6 +105,42 @@ describe('ResolutionStatement', () => {
                     ],
                 },
             },
+            {
+                statement: {
+                    height: '1500',
+                    unresolved: '85BBEA6CC462B244',
+                    resolutionEntries: [
+                    {
+                        source: {
+                        primaryId: 1,
+                        secondaryId: 1,
+                        },
+                        resolved: '0DC67FBE1CAD29E5',
+                    },
+                    {
+                        source: {
+                        primaryId: 1,
+                        secondaryId: 4,
+                        },
+                        resolved: '7CDF3B117A3C40CC',
+                    },
+                    {
+                        source: {
+                        primaryId: 1,
+                        secondaryId: 7,
+                        },
+                        resolved: '0DC67FBE1CAD29E5',
+                    },
+                    {
+                        source: {
+                        primaryId: 2,
+                        secondaryId: 4,
+                        },
+                        resolved: '7CDF3B117A3C40CC',
+                    },
+                    ],
+                },
+            },
         ];
 
         statementDTO = {
@@ -162,6 +198,22 @@ describe('ResolutionStatement', () => {
         const statement = CreateStatementFromDTO(statementDTO, NetworkType.MIJIN_TEST);
         const entry = statement.addressResolutionStatements[0].getResolutionEntryById(0, 0);
         expect(entry).to.be.undefined;
+    });
+
+    it('resolution change in the block (more than one AGGREGATE)', () => {
+        const statement = CreateStatementFromDTO(statementDTO, NetworkType.MIJIN_TEST);
+        const resolution = statement.mosaicResolutionStatements[2];
+        expect((resolution.getResolutionEntryById(1, 1)!.resolved as MosaicId).toHex()).to.be.equal('0DC67FBE1CAD29E5');
+        expect((resolution.getResolutionEntryById(1, 4)!.resolved as MosaicId).toHex()).to.be.equal('7CDF3B117A3C40CC');
+        expect((resolution.getResolutionEntryById(1, 7)!.resolved as MosaicId).toHex()).to.be.equal('0DC67FBE1CAD29E5');
+        expect((resolution.getResolutionEntryById(2, 1)!.resolved as MosaicId).toHex()).to.be.equal('0DC67FBE1CAD29E5');
+        expect((resolution.getResolutionEntryById(2, 4)!.resolved as MosaicId).toHex()).to.be.equal('7CDF3B117A3C40CC');
+
+        expect((resolution.getResolutionEntryById(3, 0)!.resolved as MosaicId).toHex()).to.be.equal('7CDF3B117A3C40CC');
+        expect((resolution.getResolutionEntryById(2, 2)!.resolved as MosaicId).toHex()).to.be.equal('0DC67FBE1CAD29E5');
+        expect(resolution.getResolutionEntryById(1, 0)).to.be.undefined;
+        expect((resolution.getResolutionEntryById(1, 6)!.resolved as MosaicId).toHex()).to.be.equal('7CDF3B117A3C40CC');
+        expect((resolution.getResolutionEntryById(1, 2)!.resolved as MosaicId).toHex()).to.be.equal('0DC67FBE1CAD29E5');
     });
 
 });
