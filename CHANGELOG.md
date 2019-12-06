@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.15.1] - 06-Dec-2019
+
+**Milestone**: Fushicho.2
+
+- Added `networkType` as an optional paramter in `Http` abstract to recude the number of requests to the catapult-rest server
+- Added `resolveAlias` in transaction for resolving `UnresolvedAddress` and `UnresolvedMosaic` inside a transaction.
+- Added `TransactionService` class.
+- Added `resolveAlias` service in `TransactionService` which resolves alias(es) in transaction(s) from block `ResolutionStatement`.
+- Consolicated transaction announcement and websocket `confirmed` listener into one service call in `TransactionService`.
+- Consolidated `AggregateBonded` tranaction announcement (aggregateBonded + lockFund) into one service call in `TransactionService`.
+
 ## [0.15.0] - 21-Nov-2019
 
 **Milestone**: Fushicho.2
@@ -266,6 +277,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 **Milestone**: Alpaca
 
 - Initial code release.
+[0.15.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.15.0...v0.15.1
 [0.15.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.4...v0.15.0
 [0.14.4]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.3...v0.14.4
 [0.14.3]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.2...v0.14.3
