@@ -178,4 +178,12 @@ export class MosaicAliasTransaction extends Transaction {
         );
         return transactionBuilder.serialize();
     }
+
+    /**
+     * @internal
+     * @returns {MosaicAliasTransaction}
+     */
+    resolveAliases(): MosaicAliasTransaction {
+        return this;
+    }
 }

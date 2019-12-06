@@ -175,7 +175,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.version,
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
-            new MosaicId(transactionDTO.mosaicId),
+            UnresolvedMapping.toUnresolvedMosaic(transactionDTO.mosaicId),
             transactionDTO.action,
             UInt64.fromNumericString(transactionDTO.delta),
             transactionDTO.signature,

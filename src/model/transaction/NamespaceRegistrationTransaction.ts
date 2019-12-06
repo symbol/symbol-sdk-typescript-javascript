@@ -273,4 +273,12 @@ export class NamespaceRegistrationTransaction extends Transaction {
         }
         return transactionBuilder.serialize();
     }
+
+    /**
+     * @internal
+     * @returns {NamespaceRegistrationTransaction}
+     */
+    resolveAliases(): NamespaceRegistrationTransaction {
+        return this;
+    }
 }

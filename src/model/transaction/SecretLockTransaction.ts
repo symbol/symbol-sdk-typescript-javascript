@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Convert, Convert as convert, RawAddress } from '../../core/format';
+import { Convert, Convert as convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
@@ -30,8 +30,8 @@ import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
-import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { HashType, HashTypeLengthValidator } from './HashType';
@@ -230,5 +230,31 @@ export class SecretLockTransaction extends Transaction {
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param statement Block receipt statement
+     * @param aggregateTransactionIndex Transaction index for aggregated transaction
+     * @returns {SecretLockTransaction}
+     */
+    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): SecretLockTransaction {
+        const transactionInfo = this.checkTransactionHeightAndIndex();
+        return new SecretLockTransaction(
+            this.networkType,
+            this.version,
+            this.deadline,
+            this.maxFee,
+            statement.resolveMosaic(this.mosaic, transactionInfo.height.toString(),
+                    transactionInfo.index, aggregateTransactionIndex),
+            this.duration,
+            this.hashType,
+            this.secret,
+            statement.resolveAddress(this.recipientAddress,
+                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
+            this.signature,
+            this.signer,
+            this.transactionInfo,
+        );
     }
 }

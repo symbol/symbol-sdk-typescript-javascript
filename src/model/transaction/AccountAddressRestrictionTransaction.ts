@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Convert, RawAddress } from '../../core/format';
+import { Convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AccountAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountAddressRestrictionTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -29,9 +29,9 @@ import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { Statement } from '../receipt/Statement';
 import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
 import { UInt64 } from '../UInt64';
-import { AccountRestrictionModification } from './AccountRestrictionModification';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
@@ -189,5 +189,29 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             }),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param statement Block receipt statement
+     * @param aggregateTransactionIndex Transaction index for aggregated transaction
+     * @returns {AccountAddressRestrictionTransaction}
+     */
+    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): AccountAddressRestrictionTransaction {
+        const transactionInfo = this.checkTransactionHeightAndIndex();
+        return new AccountAddressRestrictionTransaction(
+            this.networkType,
+            this.version,
+            this.deadline,
+            this.maxFee,
+            this.restrictionFlags,
+            this.restrictionAdditions.map((addition) => statement.resolveAddress(addition, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex)),
+            this.restrictionDeletions.map((deletion) => statement.resolveAddress(deletion, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex)),
+            this.signature,
+            this.signer,
+            this.transactionInfo,
+        );
     }
 }

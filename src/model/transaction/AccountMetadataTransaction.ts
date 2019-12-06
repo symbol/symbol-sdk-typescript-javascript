@@ -193,4 +193,12 @@ export class AccountMetadataTransaction extends Transaction {
         );
         return transactionBuilder.serialize();
     }
+
+    /**
+     * @internal
+     * @returns {AccountMetadataTransaction}
+     */
+    resolveAliases(): AccountMetadataTransaction {
+        return this;
+    }
 }

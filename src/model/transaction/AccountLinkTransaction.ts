@@ -163,4 +163,12 @@ export class AccountLinkTransaction extends Transaction {
         );
         return transactionBuilder.serialize();
     }
+
+    /**
+     * @internal
+     * @returns {AccountLinkTransaction}
+     */
+    resolveAliases(): AccountLinkTransaction {
+        return this;
+    }
 }

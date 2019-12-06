@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { Observable } from 'rxjs/internal/Observable';
+import { of } from 'rxjs/internal/observable/of';
 import { Convert, RawAddress } from '../../core/format';
 import { AddressAliasTransactionBuilder } from '../../infrastructure/catbuffer/AddressAliasTransactionBuilder';
 import { AddressDto } from '../../infrastructure/catbuffer/AddressDto';
@@ -23,6 +25,7 @@ import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { NamespaceIdDto } from '../../infrastructure/catbuffer/NamespaceIdDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
+import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -182,5 +185,13 @@ export class AddressAliasTransaction extends Transaction {
             this.aliasAction.valueOf(),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @returns {AddressAliasTransaction}
+     */
+    resolveAliases(): AddressAliasTransaction {
+        return this;
     }
 }

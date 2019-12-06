@@ -29,7 +29,6 @@ import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
-import { MultisigCosignatoryModification } from './MultisigCosignatoryModification';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -212,5 +211,13 @@ export class MultisigAccountModificationTransaction extends Transaction {
             }),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @returns {MultisigAccountModificationTransaction}
+     */
+    resolveAliases(): MultisigAccountModificationTransaction {
+        return this;
     }
 }

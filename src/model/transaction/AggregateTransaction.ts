@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { sha3_256 } from 'js-sha3';
 import {KeyPair, MerkleHashBuilder, SHA3Hasher, SignSchema} from '../../core/crypto';
-import {Convert, RawArray} from '../../core/format';
+import {Convert} from '../../core/format';
 import {AggregateBondedTransactionBuilder} from '../../infrastructure/catbuffer/AggregateBondedTransactionBuilder';
 import {AggregateCompleteTransactionBuilder} from '../../infrastructure/catbuffer/AggregateCompleteTransactionBuilder';
 import {AmountDto} from '../../infrastructure/catbuffer/AmountDto';
@@ -30,6 +29,7 @@ import {CreateTransactionFromPayload} from '../../infrastructure/transaction/Cre
 import {Account} from '../account/Account';
 import {PublicAccount} from '../account/PublicAccount';
 import {NetworkType} from '../blockchain/NetworkType';
+import { Statement } from '../receipt/Statement';
 import {UInt64} from '../UInt64';
 import {AggregateTransactionCosignature} from './AggregateTransactionCosignature';
 import {CosignatureSignedTransaction} from './CosignatureSignedTransaction';
@@ -399,5 +399,26 @@ export class AggregateTransaction extends Transaction {
      */
     private getInnerTransactionPaddingSize(size: number, alignment: number): number {
         return 0 === size % alignment ? 0 : alignment - (size % alignment);
+    }
+
+    /**
+     * @internal
+     * @returns {AggregateTransaction}
+     */
+    resolveAliases(statement: Statement): AggregateTransaction {
+        const transactionInfo = this.checkTransactionHeightAndIndex();
+        return new AggregateTransaction(
+            this.networkType,
+            this.type,
+            this.version,
+            this.deadline,
+            this.maxFee,
+            this.innerTransactions.map((tx) => tx.resolveAliases(statement, transactionInfo.index))
+                .sort((a, b) => a.transactionInfo!.index - b.transactionInfo!.index),
+            this.cosignatures,
+            this.signature,
+            this.signer,
+            this.transactionInfo,
+        );
     }
 }

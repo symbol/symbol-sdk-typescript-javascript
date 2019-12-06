@@ -29,6 +29,7 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { Statement } from '../receipt/Statement';
 import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
@@ -188,5 +189,29 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
             }),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param statement Block receipt statement
+     * @param aggregateTransactionIndex Transaction index for aggregated transaction
+     * @returns {AccountMosaicRestrictionTransaction}
+     */
+    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): AccountMosaicRestrictionTransaction {
+        const transactionInfo = this.checkTransactionHeightAndIndex();
+        return new AccountMosaicRestrictionTransaction(
+            this.networkType,
+            this.version,
+            this.deadline,
+            this.maxFee,
+            this.restrictionFlags,
+            this.restrictionAdditions.map((addition) => statement.resolveMosaicId(addition, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex)),
+            this.restrictionDeletions.map((deletion) => statement.resolveMosaicId(deletion, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex)),
+            this.signature,
+            this.signer,
+            this.transactionInfo,
+        );
     }
 }

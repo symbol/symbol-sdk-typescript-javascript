@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,17 @@
  * limitations under the License.
  */
 
-export * from './NamespaceService';
-export * from './MosaicService';
-export * from './AggregateTransactionService';
-export * from './MetadataTransactionService';
-export * from './MosaicRestrictionTransactionService';
-export * from './TransactionService';
+import {Observable} from 'rxjs';
+import { Transaction } from '../../model/transaction/Transaction';
+
+/**
+ * Transaction Service Interface
+ */
+export interface ITransactionService {
+
+    /**
+     * @param transationHashes List of transaction hashes.
+     * @returns Observable<Transaction[]>
+     */
+    resolveAliases(transationHashes: string[]): Observable<Transaction[]>;
+}

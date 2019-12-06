@@ -208,4 +208,12 @@ export class NamespaceMetadataTransaction extends Transaction {
         );
         return transactionBuilder.serialize();
     }
+
+    /**
+     * @internal
+     * @returns {NamespaceMetadataTransaction}
+     */
+    resolveAliases(): NamespaceMetadataTransaction {
+        return this;
+    }
 }

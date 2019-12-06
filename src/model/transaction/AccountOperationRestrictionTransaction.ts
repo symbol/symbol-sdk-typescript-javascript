@@ -174,4 +174,12 @@ export class AccountOperationRestrictionTransaction extends Transaction {
         );
         return transactionBuilder.serialize();
     }
+
+    /**
+     * @internal
+     * @returns {AccountOperationRestrictionTransaction}
+     */
+    resolveAliases(): AccountOperationRestrictionTransaction {
+        return this;
+    }
 }

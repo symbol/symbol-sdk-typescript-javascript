@@ -15,7 +15,7 @@
  */
 
 import * as Long from 'long';
-import {Convert, Convert as convert} from '../../core/format';
+import {Convert} from '../../core/format';
 import {UnresolvedMapping} from '../../core/utils/UnresolvedMapping';
 import {AmountDto} from '../../infrastructure/catbuffer/AmountDto';
 import {EmbeddedTransferTransactionBuilder} from '../../infrastructure/catbuffer/EmbeddedTransferTransactionBuilder';
@@ -36,6 +36,7 @@ import {MessageType} from '../message/MessageType';
 import {PlainMessage} from '../message/PlainMessage';
 import {Mosaic} from '../mosaic/Mosaic';
 import {NamespaceId} from '../namespace/NamespaceId';
+import { Statement } from '../receipt/Statement';
 import {UInt64} from '../UInt64';
 import {Deadline} from './Deadline';
 import {InnerTransaction} from './InnerTransaction';
@@ -271,5 +272,30 @@ export class TransferTransaction extends Transaction {
             this.getMessageBuffer(),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param statement Block receipt statement
+     * @param aggregateTransactionIndex Transaction index for aggregated transaction
+     * @returns {TransferTransaction}
+     */
+    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): TransferTransaction {
+        const transactionInfo = this.checkTransactionHeightAndIndex();
+        return new TransferTransaction(
+            this.networkType,
+            this.version,
+            this.deadline,
+            this.maxFee,
+            statement.resolveAddress(this.recipientAddress,
+                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
+            this.mosaics.map((mosaic) =>
+                statement.resolveMosaic(mosaic, transactionInfo.height.toString(),
+                    transactionInfo.index, aggregateTransactionIndex)),
+            this.message,
+            this.signature,
+            this.signer,
+            this.transactionInfo,
+        );
     }
 }

@@ -29,6 +29,7 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
 import { MosaicId } from '../mosaic/MosaicId';
+import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -50,6 +51,7 @@ export class LockFundsTransaction extends Transaction {
      * Aggregate bonded hash.
      */
     public readonly hash: string;
+    signedTransaction: SignedTransaction;
 
     /**
      * Create a Lock funds transaction object
@@ -108,6 +110,7 @@ export class LockFundsTransaction extends Transaction {
                 transactionInfo?: TransactionInfo) {
         super(TransactionType.LOCK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
         this.hash = signedTransaction.hash;
+        this.signedTransaction = signedTransaction;
         if (signedTransaction.type !== TransactionType.AGGREGATE_BONDED) {
             throw new Error('Signed transaction must be Aggregate Bonded Transaction');
         }
@@ -199,5 +202,28 @@ export class LockFundsTransaction extends Transaction {
             new Hash256Dto(Convert.hexToUint8(this.hash)),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param statement Block receipt statement
+     * @param aggregateTransactionIndex Transaction index for aggregated transaction
+     * @returns {LockFundsTransaction}
+     */
+    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): LockFundsTransaction {
+        const transactionInfo = this.checkTransactionHeightAndIndex();
+        return new LockFundsTransaction(
+            this.networkType,
+            this.version,
+            this.deadline,
+            this.maxFee,
+            statement.resolveMosaic(this.mosaic, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex),
+            this.duration,
+            this.signedTransaction,
+            this.signature,
+            this.signer,
+            this.transactionInfo,
+        );
     }
 }

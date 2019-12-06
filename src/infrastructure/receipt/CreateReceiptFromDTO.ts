@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
+import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../../model/account/Address';
 import {PublicAccount} from '../../model/account/PublicAccount';
 import {MosaicId} from '../../model/mosaic/MosaicId';
-import { AddressAlias } from '../../model/namespace/AddressAlias';
-import { AliasType } from '../../model/namespace/AliasType';
-import { MosaicAlias } from '../../model/namespace/MosaicAlias';
 import { NamespaceId } from '../../model/namespace/NamespaceId';
 import { ArtifactExpiryReceipt } from '../../model/receipt/ArtifactExpiryReceipt';
 import { BalanceChangeReceipt } from '../../model/receipt/BalanceChangeReceipt';
@@ -95,7 +93,7 @@ const createResolutionStatement = (statementDTO, resolutionType): ResolutionStat
             return new ResolutionStatement(
                 ResolutionType.Address,
                 UInt64.fromNumericString(statementDTO.height),
-                Address.createFromEncoded(statementDTO.unresolved),
+                extractUnresolvedAddress(statementDTO.unresolved),
                 statementDTO.resolutionEntries.map((entry) => {
                     return new ResolutionEntry(Address.createFromEncoded(entry.resolved),
                         new ReceiptSource(entry.source.primaryId, entry.source.secondaryId));
@@ -105,7 +103,7 @@ const createResolutionStatement = (statementDTO, resolutionType): ResolutionStat
             return new ResolutionStatement(
                 ResolutionType.Mosaic,
                 UInt64.fromNumericString(statementDTO.height),
-                new MosaicId(statementDTO.unresolved),
+                UnresolvedMapping.toUnresolvedMosaic(statementDTO.unresolved),
                 statementDTO.resolutionEntries.map((entry) => {
                     return new ResolutionEntry(new MosaicId(entry.resolved),
                         new ReceiptSource(entry.source.primaryId, entry.source.secondaryId));
@@ -197,6 +195,12 @@ const createInflationReceipt = (receiptDTO): Receipt => {
     );
 };
 
+/**
+ * @internal
+ * @param receiptType receipt type
+ * @param id Artifact id
+ * @returns {MosaicId | NamespaceId}
+ */
 const extractArtifactId = (receiptType: ReceiptType, id: string): MosaicId | NamespaceId => {
     switch (receiptType) {
         case ReceiptType.Mosaic_Expired:
@@ -207,4 +211,22 @@ const extractArtifactId = (receiptType: ReceiptType, id: string): MosaicId | Nam
         default:
             throw new Error('Receipt type is not supported.');
     }
+};
+
+/**
+ * @interal
+ * @param unresolvedAddress unresolved address
+ * @returns {Address | NamespaceId}
+ */
+const extractUnresolvedAddress = (unresolvedAddress: any): Address | NamespaceId => {
+    if (typeof unresolvedAddress === 'string') {
+        return UnresolvedMapping.toUnresolvedAddress(unresolvedAddress);
+    } else if (typeof unresolvedAddress === 'object') { // Is JSON object
+        if (unresolvedAddress.hasOwnProperty('address')) {
+            return Address.createFromRawAddress(unresolvedAddress.address);
+        } else if (unresolvedAddress.hasOwnProperty('id')) {
+            return NamespaceId.createFromEncoded(unresolvedAddress.id);
+        }
+    }
+    throw new Error(`UnresolvedAddress: ${unresolvedAddress} type is not recognised`);
 };

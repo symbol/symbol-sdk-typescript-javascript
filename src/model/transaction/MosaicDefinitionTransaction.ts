@@ -221,4 +221,12 @@ export class MosaicDefinitionTransaction extends Transaction {
         );
         return transactionBuilder.serialize();
     }
+
+    /**
+     * @internal
+     * @returns {MosaicDefinitionTransaction}
+     */
+    resolveAliases(): MosaicDefinitionTransaction {
+        return this;
+    }
 }

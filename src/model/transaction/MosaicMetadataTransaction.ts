@@ -27,6 +27,7 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -208,5 +209,30 @@ export class MosaicMetadataTransaction extends Transaction {
             Convert.utf8ToUint8(this.value),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param statement Block receipt statement
+     * @param aggregateTransactionIndex Transaction index for aggregated transaction
+     * @returns {MosaicMetadataTransaction}
+     */
+    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): MosaicMetadataTransaction {
+        const transactionInfo = this.checkTransactionHeightAndIndex();
+        return new MosaicMetadataTransaction(
+            this.networkType,
+            this.version,
+            this.deadline,
+            this.maxFee,
+            this.targetPublicKey,
+            this.scopedMetadataKey,
+            statement.resolveMosaicId(this.targetMosaicId, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex),
+            this.valueSizeDelta,
+            this.value,
+            this.signature,
+            this.signer,
+            this.transactionInfo,
+        );
     }
 }

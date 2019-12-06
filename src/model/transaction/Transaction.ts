@@ -20,6 +20,7 @@ import { SerializeTransactionToJSON } from '../../infrastructure/transaction/Ser
 import { Account } from '../account/Account';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
+import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { AggregateTransactionInfo } from './AggregateTransactionInfo';
 import { Deadline } from './Deadline';
@@ -184,6 +185,14 @@ export abstract class Transaction {
      * @internal
      */
     protected abstract generateEmbeddedBytes(): Uint8Array;
+
+    /**
+     * @internal
+     * @param statement Block receipt statement
+     * @param AggregateTransactionIndex Transaction index for aggregated transaction
+     * @returns {Observable<Transaction>}
+     */
+    abstract resolveAliases(statement?: Statement, aggregateTransactionIndex?: number): Transaction;
 
     /**
      * @internal
@@ -382,5 +391,19 @@ export abstract class Transaction {
 
         const childClassObject = SerializeTransactionToJSON(this);
         return {transaction: Object.assign(commonTransactionObject, childClassObject)};
+    }
+
+    /**
+     * @internal
+     * Check if index and height exists in transactionInfo
+     * @returns TransactionInfo
+     */
+    protected checkTransactionHeightAndIndex(): TransactionInfo {
+        if (this.transactionInfo === undefined ||
+            this.transactionInfo.height === undefined ||
+            this.transactionInfo.index === undefined) {
+            throw new Error('Transaction height or index undefined');
+        }
+        return this.transactionInfo;
     }
 }

@@ -29,6 +29,7 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { Statement } from '../receipt/Statement';
 import { MosaicRestrictionType } from '../restriction/MosaicRestrictionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
@@ -242,5 +243,33 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
             this.newRestrictionType.valueOf(),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param statement Block receipt statement
+     * @param aggregateTransactionIndex Transaction index for aggregated transaction
+     * @returns {MosaicGlobalRestrictionTransaction}
+     */
+    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): MosaicGlobalRestrictionTransaction {
+        const transactionInfo = this.checkTransactionHeightAndIndex();
+        return new MosaicGlobalRestrictionTransaction(
+            this.networkType,
+            this.version,
+            this.deadline,
+            this.maxFee,
+            statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex),
+            statement.resolveMosaicId(this.referenceMosaicId, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex),
+            this.restrictionKey,
+            this.previousRestrictionValue,
+            this.previousRestrictionType,
+            this.newRestrictionValue,
+            this.newRestrictionType,
+            this.signature,
+            this.signer,
+            this.transactionInfo,
+        );
     }
 }

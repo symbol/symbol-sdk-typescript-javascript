@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { Convert, Convert as convert, RawAddress } from '../../core/format';
+import { Observable } from 'rxjs/internal/Observable';
+import { of } from 'rxjs/internal/observable/of';
+import { map } from 'rxjs/operators';
+import { Convert, Convert as convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedSecretProofTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedSecretProofTransactionBuilder';
@@ -24,10 +27,14 @@ import { SecretProofTransactionBuilder } from '../../infrastructure/catbuffer/Se
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
+import { ReceiptHttp } from '../../infrastructure/ReceiptHttp';
+import { TransactionService } from '../../service/TransactionService';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { ResolutionType } from '../receipt/ResolutionType';
+import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { HashType, HashTypeLengthValidator } from './HashType';
@@ -206,5 +213,29 @@ export class SecretProofTransaction extends Transaction {
             this.getProofByte(),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param statement Block receipt statement
+     * @param aggregateTransactionIndex Transaction index for aggregated transaction
+     * @returns {SecretProofTransaction}
+     */
+    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): SecretProofTransaction {
+        const transactionInfo = this.checkTransactionHeightAndIndex();
+        return new SecretProofTransaction(
+            this.networkType,
+            this.version,
+            this.deadline,
+            this.maxFee,
+            this.hashType,
+            this.secret,
+            statement.resolveAddress(this.recipientAddress,
+                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
+            this.proof,
+            this.signature,
+            this.signer,
+            this.transactionInfo,
+        );
     }
 }

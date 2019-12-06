@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Convert, RawAddress } from '../../core/format';
+import { Convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import {
@@ -31,6 +31,7 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -232,5 +233,31 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.targetAddress, this.networkType)),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param statement Block receipt statement
+     * @param aggregateTransactionIndex Transaction index for aggregated transaction
+     * @returns {MosaicAddressRestrictionTransaction}
+     */
+    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): MosaicAddressRestrictionTransaction {
+        const transactionInfo = this.checkTransactionHeightAndIndex();
+        return new MosaicAddressRestrictionTransaction(
+            this.networkType,
+            this.version,
+            this.deadline,
+            this.maxFee,
+            statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex),
+            this.restrictionKey,
+            statement.resolveAddress(this.targetAddress,
+                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
+            this.previousRestrictionValue,
+            this.newRestrictionValue,
+            this.signature,
+            this.signer,
+            this.transactionInfo,
+        );
     }
 }

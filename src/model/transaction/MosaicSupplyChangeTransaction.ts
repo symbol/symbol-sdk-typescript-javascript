@@ -15,6 +15,7 @@
  */
 
 import { Convert } from '../../core/format';
+import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedMosaicSupplyChangeTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMosaicSupplyChangeTransactionBuilder';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
@@ -26,6 +27,8 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { MosaicSupplyChangeAction } from '../mosaic/MosaicSupplyChangeAction';
+import { NamespaceId } from '../namespace/NamespaceId';
+import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -43,7 +46,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
     /**
      * Create a mosaic supply change transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param mosaicId - The mosaic id.
+     * @param mosaicId - The unresolved mosaic id.
      * @param action - The supply change action (increase | decrease).
      * @param delta - The supply change in units for the mosaic.
      * @param networkType - The network type.
@@ -51,7 +54,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
      * @returns {MosaicSupplyChangeTransaction}
      */
     public static create(deadline: Deadline,
-                         mosaicId: MosaicId,
+                         mosaicId: MosaicId | NamespaceId,
                          action: MosaicSupplyChangeAction,
                          delta: UInt64,
                          networkType: NetworkType,
@@ -83,9 +86,9 @@ export class MosaicSupplyChangeTransaction extends Transaction {
                 deadline: Deadline,
                 maxFee: UInt64,
                 /**
-                 * The mosaic id.
+                 * The unresolved mosaic id.
                  */
-                public readonly mosaicId: MosaicId,
+                public readonly mosaicId: MosaicId | NamespaceId,
                 /**
                  * The supply type.
                  */
@@ -115,7 +118,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
         const transaction = MosaicSupplyChangeTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO(
                 (builder as MosaicSupplyChangeTransactionBuilder).getDeadline().timestamp),
-            new MosaicId(builder.getMosaicId().unresolvedMosaicId),
+            UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getMosaicId().unresolvedMosaicId).toHex()),
             builder.getAction().valueOf(),
             new UInt64(builder.getDelta().amount),
             networkType,
@@ -180,5 +183,28 @@ export class MosaicSupplyChangeTransaction extends Transaction {
             this.action.valueOf(),
         );
         return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @param statement Block receipt statement
+     * @param aggregateTransactionIndex Transaction index for aggregated transaction
+     * @returns {MosaicSupplyChangeTransaction}
+     */
+    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): MosaicSupplyChangeTransaction {
+        const transactionInfo = this.checkTransactionHeightAndIndex();
+        return new MosaicSupplyChangeTransaction(
+            this.networkType,
+            this.version,
+            this.deadline,
+            this.maxFee,
+            statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex),
+            this.action,
+            this.delta,
+            this.signature,
+            this.signer,
+            this.transactionInfo,
+        );
     }
 }
