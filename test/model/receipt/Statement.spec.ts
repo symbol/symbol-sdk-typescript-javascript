@@ -107,7 +107,7 @@ describe('Statement', () => {
         };
     });
 
-    it('should get reolved address from receipt', () => {
+    it('should get resolved address from receipt', () => {
         const unresolvedAddress = UnresolvedMapping.toUnresolvedAddress('9156258DE356F030A500000000000000000000000000000000');
         const statement = CreateStatementFromDTO(statementDTO, NetworkType.MIJIN_TEST);
         const resolved = statement.resolveAddress(unresolvedAddress as NamespaceId, '1473', 0);
@@ -116,7 +116,7 @@ describe('Statement', () => {
         expect((resolved as Address).equals(account.address)).to.be.true;
     });
 
-    it('should get reolved address from receipt without Harvesting_Fee', () => {
+    it('should get resolved address from receipt without Harvesting_Fee', () => {
         const statementWithoutHarvesting = {
             transactionStatements: [],
             addressResolutionStatements: [
@@ -146,7 +146,7 @@ describe('Statement', () => {
         expect((resolved as Address).equals(account.address)).to.be.true;
     });
 
-    it('should get reolved mosaic from receipt', () => {
+    it('should get resolved mosaic from receipt', () => {
         const unresolvedMosaic = UnresolvedMapping.toUnresolvedMosaic('E81F622A5B11A340');
         const statement = CreateStatementFromDTO(statementDTO, NetworkType.MIJIN_TEST);
         const resolved = statement.resolveMosaicId(unresolvedMosaic as NamespaceId, '1473', 0);
@@ -155,7 +155,7 @@ describe('Statement', () => {
         expect((resolved as MosaicId).equals(new MosaicId('756482FB80FD406C'))).to.be.true;
     });
 
-    it('should get reolved mosaic from receipt without Harvesting_Fee', () => {
+    it('should get resolved mosaic from receipt without Harvesting_Fee', () => {
         const statementWithoutHarvesting = {
             transactionStatements: [],
             addressResolutionStatements: [],
