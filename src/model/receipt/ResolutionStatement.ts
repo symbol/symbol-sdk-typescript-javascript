@@ -106,7 +106,7 @@ export class ResolutionStatement {
         If no primaryId found, it means there's no resolution entry available for the process. Invalid entry.
 
         e.g. Given:
-        Entries: [{P:2, S:0}, {P5:, S:6}]
+        Entries: [{P:2, S:0}, {P:5, S:6}]
         Transaction: [Inx:1(0+1), AggInx:0]
         It should return Entry: undefined
         */
@@ -118,12 +118,12 @@ export class ResolutionStatement {
             Use the most recent resolution entry (Max.PrimaryId + Max.SecondaryId)
 
             e.g. Given:
-            Entries: [{P:1, S:0}, {P:2, S:0}, {P:4, S:2}, {P:4, S:4} {P7:, S:6}]
-            Transaction: [Inx:5(0+1), AggInx:0]
-            It should return Entry: {P:3, S:4}
+            Entries: [{P:1, S:0}, {P:2, S:0}, {P:4, S:2}, {P:4, S:4} {P:7, S:6}]
+            Transaction: [Inx:5(4+1), AggInx:0]
+            It should return Entry: {P:4, S:4}
 
             e.g. Given:
-            Entries: [{P:1, S:0}, {P:2, S:0}, {P:4, S:2}, {P:4, S:4}, {P7:, S:6}]
+            Entries: [{P:1, S:0}, {P:2, S:0}, {P:4, S:2}, {P:4, S:4}, {P:7, S:6}]
             Transaction: [Inx:3(2+1), AggInx:0]
             It should return Entry: {P:2, S:0}
             */
@@ -132,16 +132,16 @@ export class ResolutionStatement {
                     entry.source.secondaryId === this.getMaxSecondaryIdByPrimaryId(resolvedPrimaryId));
         }
 
-        // When transaction index matches a primary id, get the most recent secondaryId (resolvedPrimaryId can only <= primaryId)
+        // When transaction index matches a primaryId, get the most recent secondaryId (resolvedPrimaryId can only <= primaryId)
         const resolvedSecondaryId = this.getMaxSecondaryIdByPrimaryIdAndSecondaryId(resolvedPrimaryId, secondaryId);
 
         /*
         If no most recent secondaryId matched transaction index, find previous resolution entry (most recent).
-        This means the resolution entry for the specific innter transaction (inside Aggregate) /
-        was generated previously outside the aggregate. It should return the previous entry (privious primarId)
+        This means the resolution entry for the specific inner transaction (inside Aggregate) /
+        was generated previously outside the aggregate. It should return the previous entry (previous primaryId)
 
         e.g. Given:
-        Entries: [{P:1, S:0}, {P:2, S:0}, {P5:, S:6}]
+        Entries: [{P:1, S:0}, {P:2, S:0}, {P:5, S:6}]
         Transaction: [Inx:5(4+1), AggInx:3(2+1)]
         It should return Entry: {P:2, S:0}
         */
@@ -155,7 +155,7 @@ export class ResolutionStatement {
         Found a matched resolution entry on both primaryId and secondaryId
 
         e.g. Given:
-        Entries: [{P:1, S:0}, {P:2, S:0}, {P5:, S:6}]
+        Entries: [{P:1, S:0}, {P:2, S:0}, {P:5, S:6}]
         Transaction: [Inx:5(4+1), AggInx:6(2+1)]
         It should return Entry: {P:5, S:6}
         */
