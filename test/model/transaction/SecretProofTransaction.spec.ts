@@ -18,19 +18,33 @@ import * as CryptoJS from 'crypto-js';
 import {keccak_256, sha3_256} from 'js-sha3';
 import {Convert, Convert as convert} from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
+import { Address } from '../../../src/model/account/Address';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
+import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
+import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
+import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
+import { Statement } from '../../../src/model/receipt/Statement';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {HashType} from '../../../src/model/transaction/HashType';
 import {SecretProofTransaction} from '../../../src/model/transaction/SecretProofTransaction';
+import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import {UInt64} from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
 describe('SecretProofTransaction', () => {
     let account: Account;
+    let statement: Statement;
+    const unresolvedAddress = new NamespaceId('address');
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     before(() => {
         account = TestingAccount;
+        statement = new Statement([],
+            [new ResolutionStatement(ResolutionType.Address, UInt64.fromUint(2), unresolvedAddress,
+                [new ResolutionEntry(account.address, new ReceiptSource(1, 0))])],
+            [],
+        );
     });
 
     it('should default maxFee field be set to 0', () => {
@@ -229,5 +243,38 @@ describe('SecretProofTransaction', () => {
         expect(secretProofTransaction.secret).to.be.equal('9b3155b37159da50aa52d5967c509b410f5a36a3b1e31ecb5ac76675d79b4a5e' );
         expect(secretProofTransaction.proof).to.be.equal(proof);
         expect(secretProofTransaction.recipientAddress).to.be.equal(recipientAddress);
+    });
+
+    it('Test set maxFee using multiplier', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const secretProofTransaction = SecretProofTransaction.create(
+            Deadline.create(),
+            HashType.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            account.address,
+            proof,
+            NetworkType.MIJIN_TEST,
+        ).setMaxFee(2);
+​
+        expect(secretProofTransaction.maxFee.compact()).to.be.equal(440);
+    });
+
+    it('Test resolveAlias can resolve', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const transferTransaction = new SecretProofTransaction(
+            NetworkType.MIJIN_TEST,
+            1,
+            Deadline.create(),
+            UInt64.fromUint(0),
+            HashType.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            unresolvedAddress,
+            proof,
+            '',
+            account.publicAccount,
+            new TransactionInfo(UInt64.fromUint(2), 0, '')).resolveAliases(statement);
+​
+        expect(transferTransaction.recipientAddress instanceof Address).to.be.true;
+        expect((transferTransaction.recipientAddress as Address).equals(account.address)).to.be.true;
     });
 });

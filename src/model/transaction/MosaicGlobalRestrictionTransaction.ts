@@ -253,23 +253,20 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): MosaicGlobalRestrictionTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return new MosaicGlobalRestrictionTransaction(
-            this.networkType,
-            this.version,
-            this.deadline,
-            this.maxFee,
-            statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex),
-            statement.resolveMosaicId(this.referenceMosaicId, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex),
-            this.restrictionKey,
-            this.previousRestrictionValue,
-            this.previousRestrictionType,
-            this.newRestrictionValue,
-            this.newRestrictionType,
-            this.signature,
-            this.signer,
-            this.transactionInfo,
-        );
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this,
+            {
+                mosaicId: statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
+                    transactionInfo.index, aggregateTransactionIndex),
+                    referenceMosaicId: statement.resolveMosaicId(this.referenceMosaicId, transactionInfo.height.toString(),
+                    transactionInfo.index, aggregateTransactionIndex)});
+    }
+
+    /**
+     * Set transaction maxFee using fee multiplier
+     * @param feeMultiplier The fee multiplier
+     * @returns {MosaicGlobalRestrictionTransaction}
+     */
+    public setMaxFee(multiplier: number): MosaicGlobalRestrictionTransaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * multiplier)});
     }
 }

@@ -20,16 +20,31 @@ import {Account} from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {MosaicSupplyChangeAction} from '../../../src/model/mosaic/MosaicSupplyChangeAction';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
+import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
+import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
+import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
+import { Statement } from '../../../src/model/receipt/Statement';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicSupplyChangeTransaction} from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
+import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
 
 describe('MosaicSupplyChangeTransaction', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+    let statement: Statement;
+    const unresolvedMosaicId = new NamespaceId('mosaic');
+    const resolvedMosaicId = new MosaicId('0DC67FBE1CAD29E5');
     before(() => {
         account = TestingAccount;
+        statement = new Statement([],
+            [],
+            [new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromUint(2), unresolvedMosaicId,
+                [new ResolutionEntry(resolvedMosaicId, new ReceiptSource(1, 0))])],
+        );
     });
 
     it('should default maxFee field be set to 0', () => {
@@ -99,5 +114,35 @@ describe('MosaicSupplyChangeTransaction', () => {
             expect(mosaicSupplyChangeTransaction.size).to.be.equal(145);
             expect(Convert.hexToUint8(mosaicSupplyChangeTransaction.serialize()).length).to.be.equal(mosaicSupplyChangeTransaction.size);
         });
+    });
+
+    it('Test set maxFee using multiplier', () => {
+        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
+            Deadline.create(),
+            mosaicId,
+            MosaicSupplyChangeAction.Increase,
+            UInt64.fromUint(10),
+            NetworkType.MIJIN_TEST,
+        ).setMaxFee(2);
+​
+        expect(mosaicSupplyChangeTransaction.maxFee.compact()).to.be.equal(290);
+    });
+
+    it('Test resolveAlias can resolve', () => {
+        const mosaicSupplyChangeTransaction = new MosaicSupplyChangeTransaction(
+            NetworkType.MIJIN_TEST,
+            1,
+            Deadline.createFromDTO('1'),
+            UInt64.fromUint(0),
+            unresolvedMosaicId,
+            MosaicSupplyChangeAction.Increase,
+            UInt64.fromUint(10),
+            '',
+            account.publicAccount,
+            new TransactionInfo(UInt64.fromUint(2), 0, '')).resolveAliases(statement);
+​
+        expect(mosaicSupplyChangeTransaction.mosaicId instanceof MosaicId).to.be.true;
+        expect((mosaicSupplyChangeTransaction.mosaicId as MosaicId).equals(resolvedMosaicId)).to.be.true;
     });
 });

@@ -212,18 +212,18 @@ export class LockFundsTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): LockFundsTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return new LockFundsTransaction(
-            this.networkType,
-            this.version,
-            this.deadline,
-            this.maxFee,
-            statement.resolveMosaic(this.mosaic, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex),
-            this.duration,
-            this.signedTransaction,
-            this.signature,
-            this.signer,
-            this.transactionInfo,
-        );
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this,
+            {
+                mosaic: statement.resolveMosaic(this.mosaic, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex)});
+    }
+
+    /**
+     * Set transaction maxFee using fee multiplier
+     * @param feeMultiplier The fee multiplier
+     * @returns {LockFundsTransaction}
+     */
+    public setMaxFee(multiplier: number): LockFundsTransaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * multiplier)});
     }
 }

@@ -25,11 +25,18 @@ import {Address} from '../../../src/model/account/Address';
 import {PublicAccount} from '../../../src/model/account/PublicAccount';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {PlainMessage} from '../../../src/model/message/PlainMessage';
+import { Mosaic } from '../../../src/model/mosaic/Mosaic';
 import {MosaicFlags} from '../../../src/model/mosaic/MosaicFlags';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {MosaicNonce} from '../../../src/model/mosaic/MosaicNonce';
 import {MosaicSupplyChangeAction} from '../../../src/model/mosaic/MosaicSupplyChangeAction';
 import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
+import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
+import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
+import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
+import { Statement } from '../../../src/model/receipt/Statement';
 import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
 import {AggregateTransactionCosignature} from '../../../src/model/transaction/AggregateTransactionCosignature';
 import { CosignatureSignedTransaction } from '../../../src/model/transaction/CosignatureSignedTransaction';
@@ -39,6 +46,7 @@ import {MosaicDefinitionTransaction} from '../../../src/model/transaction/Mosaic
 import {MosaicSupplyChangeTransaction} from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
 import {MultisigAccountModificationTransaction} from '../../../src/model/transaction/MultisigAccountModificationTransaction';
 import {NamespaceRegistrationTransaction} from '../../../src/model/transaction/NamespaceRegistrationTransaction';
+import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import {TransferTransaction} from '../../../src/model/transaction/TransferTransaction';
 import {UInt64} from '../../../src/model/UInt64';
@@ -47,8 +55,21 @@ import {Cosignatory2Account, CosignatoryAccount, MultisigAccount, TestingAccount
 describe('AggregateTransaction', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+    let statement: Statement;
+    const unresolvedAddress = new NamespaceId('address');
+    const unresolvedMosaicId = new NamespaceId('mosaic');
+    const resolvedMosaicId = new MosaicId('0DC67FBE1CAD29E5');
     before(() => {
         account = TestingAccount;
+    });
+    before(() => {
+        account = TestingAccount;
+        statement = new Statement([],
+            [new ResolutionStatement(ResolutionType.Address, UInt64.fromUint(2), unresolvedAddress,
+                [new ResolutionEntry(account.address, new ReceiptSource(1, 1))])],
+            [new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromUint(2), unresolvedMosaicId,
+                [new ResolutionEntry(resolvedMosaicId, new ReceiptSource(1, 1))])],
+        );
     });
 
     it('should default maxFee field be set to 0', () => {
@@ -542,5 +563,56 @@ describe('AggregateTransaction', () => {
             expect(Convert.hexToUint8(aggregateTransaction.serialize()).length).to.be.equal(aggregateTransaction.size);
             expect(aggregateTransaction.size).to.be.equal(272);
         });
+    });
+
+    it('Test set maxFee using multiplier', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(1, ChronoUnit.HOURS),
+            unresolvedAddress,
+            [new Mosaic(unresolvedMosaicId, UInt64.fromUint(1))],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const aggregateTransaction = AggregateTransaction.createComplete(
+            Deadline.create(),
+            [transferTransaction.toAggregate(account.publicAccount)],
+            NetworkType.MIJIN_TEST,
+            [],
+        ).setMaxFee(2);
+​
+        expect(aggregateTransaction.maxFee.compact()).to.be.equal(560);
+    });
+
+    it('Test resolveAlias can resolve', () => {
+        const transferTransaction = new TransferTransaction(
+            NetworkType.MIJIN_TEST,
+            1,
+            Deadline.createFromDTO('1'),
+            UInt64.fromUint(0),
+            unresolvedAddress,
+            [new Mosaic(unresolvedMosaicId, UInt64.fromUint(1))],
+            PlainMessage.create('test'),
+            '',
+            account.publicAccount,
+            new TransactionInfo(UInt64.fromUint(2), 0, ''));
+
+        const aggregateTransaction = new AggregateTransaction(
+            NetworkType.MIJIN_TEST,
+            TransactionType.AGGREGATE_COMPLETE,
+            1,
+            Deadline.createFromDTO('1'),
+            UInt64.fromUint(100),
+            [transferTransaction.toAggregate(account.publicAccount)],
+            [],
+            '',
+            account.publicAccount,
+            new TransactionInfo(UInt64.fromUint(2), 0, '')).resolveAliases(statement);
+​
+        const innerTransaction = aggregateTransaction.innerTransactions[0] as TransferTransaction;
+        expect(innerTransaction.recipientAddress instanceof Address).to.be.true;
+        expect(innerTransaction.mosaics[0].id instanceof MosaicId).to.be.true;
+        expect((innerTransaction.recipientAddress as Address).equals(account.address)).to.be.true;
+        expect((innerTransaction.mosaics[0].id as MosaicId).equals(resolvedMosaicId)).to.be.true;
     });
 });

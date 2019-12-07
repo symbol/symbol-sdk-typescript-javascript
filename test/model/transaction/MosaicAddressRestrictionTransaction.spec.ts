@@ -17,19 +17,36 @@
 import {expect} from 'chai';
 import {Convert} from '../../../src/core/format';
 import {Account} from '../../../src/model/account/Account';
+import { Address } from '../../../src/model/account/Address';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
+import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
+import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
+import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
+import { Statement } from '../../../src/model/receipt/Statement';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicAddressRestrictionTransaction} from '../../../src/model/transaction/MosaicAddressRestrictionTransaction';
+import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
 
 describe('MosaicAddressRestrictionTransaction', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+    let statement: Statement;
+    const unresolvedAddress = new NamespaceId('address');
+    const unresolvedMosaicId = new NamespaceId('mosaic');
+    const resolvedMosaicId = new MosaicId('0DC67FBE1CAD29E5');
     before(() => {
         account = TestingAccount;
+        statement = new Statement([],
+            [new ResolutionStatement(ResolutionType.Address, UInt64.fromUint(2), unresolvedAddress,
+                [new ResolutionEntry(account.address, new ReceiptSource(1, 0))])],
+            [new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromUint(2), unresolvedMosaicId,
+                [new ResolutionEntry(resolvedMosaicId, new ReceiptSource(1, 0))])],
+        );
     });
 
     it('should createComplete an MosaicAddressRestrictionTransaction object and sign', () => {
@@ -133,5 +150,40 @@ describe('MosaicAddressRestrictionTransaction', () => {
         )).to.be.equal('010000000000000001000000000000000900000000000000');
 
         expect(Convert.hexToUint8(transaction.serialize()).length).to.be.equal(transaction.size);
+    });
+
+    it('Test set maxFee using multiplier', () => {
+        const transaction = MosaicAddressRestrictionTransaction.create(
+            Deadline.create(),
+            new MosaicId(UInt64.fromUint(1).toDTO()),
+            UInt64.fromUint(1),
+            new NamespaceId('nem.owner'),
+            UInt64.fromUint(8),
+            NetworkType.MIJIN_TEST,
+            UInt64.fromUint(9),
+        ).setMaxFee(2);
+​
+        expect(transaction.maxFee.compact()).to.be.equal(370);
+    });
+
+    it('Test resolveAlias can resolve', () => {
+        const transaction = new MosaicAddressRestrictionTransaction(
+            NetworkType.MIJIN_TEST,
+            1,
+            Deadline.createFromDTO('1'),
+            UInt64.fromUint(0),
+            unresolvedMosaicId,
+            UInt64.fromUint(8),
+            unresolvedAddress,
+            UInt64.fromUint(8),
+            UInt64.fromUint(9),
+            '',
+            account.publicAccount,
+            new TransactionInfo(UInt64.fromUint(2), 0, '')).resolveAliases(statement);
+​
+        expect(transaction.targetAddress instanceof Address).to.be.true;
+        expect(transaction.mosaicId instanceof MosaicId).to.be.true;
+        expect((transaction.targetAddress as Address).equals(account.address)).to.be.true;
+        expect((transaction.mosaicId as MosaicId).equals(resolvedMosaicId)).to.be.true;
     });
 });

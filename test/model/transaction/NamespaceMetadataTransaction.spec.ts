@@ -111,4 +111,18 @@ describe('NamespaceMetadataTransaction', () => {
             expect(Convert.hexToUint8(namespaceMetadataTransaction.serialize()).length).to.be.equal(namespaceMetadataTransaction.size);
         });
     });
+
+    it('Test set maxFee using multiplier', () => {
+        const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            new NamespaceId([2262289484, 3405110546]),
+            1,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        ).setMaxFee(2);
+​
+        expect(namespaceMetadataTransaction.maxFee.compact()).to.be.equal(380);
+    });
 });

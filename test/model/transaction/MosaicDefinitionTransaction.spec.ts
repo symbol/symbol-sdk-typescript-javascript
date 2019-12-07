@@ -159,4 +159,18 @@ describe('MosaicDefinitionTransaction', () => {
             signedTransaction.payload.length,
         )).to.be.equal('01000000000000000000000000000000E6DE84B80003');
     });
+
+    it('Test set maxFee using multiplier', () => {
+        const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
+            Deadline.create(),
+            new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            MosaicFlags.create(false, false, false),
+            3,
+            UInt64.fromUint(0),
+            NetworkType.MIJIN_TEST,
+        ).setMaxFee(2);
+​
+        expect(mosaicDefinitionTransaction.maxFee.compact()).to.be.equal(300);
+    });
 });

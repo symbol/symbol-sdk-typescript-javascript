@@ -193,18 +193,18 @@ export class MosaicSupplyChangeTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): MosaicSupplyChangeTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return new MosaicSupplyChangeTransaction(
-            this.networkType,
-            this.version,
-            this.deadline,
-            this.maxFee,
-            statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex),
-            this.action,
-            this.delta,
-            this.signature,
-            this.signer,
-            this.transactionInfo,
-        );
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this,
+            {
+                mosaicId: statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex)});
+    }
+
+    /**
+     * Set transaction maxFee using fee multiplier
+     * @param feeMultiplier The fee multiplier
+     * @returns {MosaicSupplyChangeTransaction}
+     */
+    public setMaxFee(multiplier: number): MosaicSupplyChangeTransaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * multiplier)});
     }
 }
