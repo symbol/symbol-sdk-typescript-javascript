@@ -194,4 +194,13 @@ export class AddressAliasTransaction extends Transaction {
     resolveAliases(): AddressAliasTransaction {
         return this;
     }
+
+    /**
+     * Set transaction maxFee using fee multiplier
+     * @param feeMultiplier The fee multiplier
+     * @returns {AddressAliasTransaction}
+     */
+    public setMaxFee(multiplier: number): AddressAliasTransaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * multiplier)});
+    }
 }

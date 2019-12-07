@@ -105,4 +105,18 @@ describe('MosaicAliasTransaction', () => {
             expect(Convert.hexToUint8(mosaicAliasTransaction.serialize()).length).to.be.equal(mosaicAliasTransaction.size);
         });
     });
+
+    it('Test set maxFee using multiplier', () => {
+        const namespaceId = new NamespaceId([33347626, 3779697293]);
+        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicAliasTransaction = MosaicAliasTransaction.create(
+            Deadline.create(),
+            AliasAction.Link,
+            namespaceId,
+            mosaicId,
+            NetworkType.MIJIN_TEST,
+        ).setMaxFee(2);
+​
+        expect(mosaicAliasTransaction.maxFee.compact()).to.be.equal(290);
+    });
 });

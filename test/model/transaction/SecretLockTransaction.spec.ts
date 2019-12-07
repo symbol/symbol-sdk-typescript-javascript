@@ -21,20 +21,39 @@ import {Convert, Convert as convert} from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import {Address} from '../../../src/model/account/Address';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import { Mosaic } from '../../../src/model/mosaic/Mosaic';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import {NetworkCurrencyMosaic} from '../../../src/model/mosaic/NetworkCurrencyMosaic';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
+import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
+import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
+import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
+import { Statement } from '../../../src/model/receipt/Statement';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {HashType} from '../../../src/model/transaction/HashType';
 import {SecretLockTransaction} from '../../../src/model/transaction/SecretLockTransaction';
+import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import {UInt64} from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
 describe('SecretLockTransaction', () => {
     let account: Account;
+    let statement: Statement;
+    const unresolvedAddress = new NamespaceId('address');
+    const unresolvedMosaicId = new NamespaceId('mosaic');
+    const mosaicId = new MosaicId('0DC67FBE1CAD29E5');
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     before(() => {
         account = TestingAccount;
+        statement = new Statement([],
+            [new ResolutionStatement(ResolutionType.Address, UInt64.fromUint(2), unresolvedAddress,
+                [new ResolutionEntry(account.address, new ReceiptSource(1, 0))])],
+            [new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromUint(2), unresolvedMosaicId,
+                [new ResolutionEntry(mosaicId, new ReceiptSource(1, 0))])],
+        );
     });
+
     it('should default maxFee field be set to 0', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
@@ -265,5 +284,43 @@ describe('SecretLockTransaction', () => {
         expect(secretLockTransaction.hashType).to.be.equal(0);
         expect(secretLockTransaction.secret).to.be.equal('9b3155b37159da50aa52d5967c509b410f5a36a3b1e31ecb5ac76675d79b4a5e');
         expect(secretLockTransaction.recipientAddress).to.be.equal(recipientAddress);
+    });
+
+    it('Test set maxFee using multiplier', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
+        const secretLockTransaction = SecretLockTransaction.create(
+            Deadline.create(),
+            NetworkCurrencyMosaic.createAbsolute(10),
+            UInt64.fromUint(100),
+            HashType.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            recipientAddress,
+            NetworkType.MIJIN_TEST,
+        ).setMaxFee(2);
+​
+        expect(secretLockTransaction.maxFee.compact()).to.be.equal(420);
+    });
+
+    it('Test resolveAlias can resolve', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const secretLockTransaction = new SecretLockTransaction(
+            NetworkType.MIJIN_TEST,
+            1,
+            Deadline.createFromDTO('1'),
+            UInt64.fromUint(0),
+            new Mosaic(unresolvedMosaicId, UInt64.fromUint(1)),
+            UInt64.fromUint(100),
+            HashType.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            unresolvedAddress,
+            '',
+            account.publicAccount,
+            new TransactionInfo(UInt64.fromUint(2), 0, '')).resolveAliases(statement);
+​
+        expect(secretLockTransaction.recipientAddress instanceof Address).to.be.true;
+        expect(secretLockTransaction.mosaic.id instanceof MosaicId).to.be.true;
+        expect((secretLockTransaction.recipientAddress as Address).equals(account.address)).to.be.true;
+        expect((secretLockTransaction.mosaic.id as MosaicId).equals(mosaicId)).to.be.true;
     });
 });

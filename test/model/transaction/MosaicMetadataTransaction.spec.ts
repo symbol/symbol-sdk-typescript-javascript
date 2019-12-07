@@ -20,16 +20,30 @@ import { Account } from '../../../src/model/account/Account';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
+import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
+import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
+import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
+import { Statement } from '../../../src/model/receipt/Statement';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { MosaicMetadataTransaction } from '../../../src/model/transaction/MosaicMetadataTransaction';
+import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
 describe('MosaicMetadataTransaction', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+    let statement: Statement;
+    const unresolvedMosaicId = new NamespaceId('mosaic');
+    const resolvedMosaicId = new MosaicId('0DC67FBE1CAD29E5');
     before(() => {
         account = TestingAccount;
+        statement = new Statement([],
+            [],
+            [new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromUint(2), unresolvedMosaicId,
+                [new ResolutionEntry(resolvedMosaicId, new ReceiptSource(1, 0))])],
+        );
     });
 
     it('should default maxFee field be set to 0', () => {
@@ -133,5 +147,38 @@ describe('MosaicMetadataTransaction', () => {
             expect(Convert.hexToUint8(mosaicMetadataTransaction.serialize()).length).to.be.equal(mosaicMetadataTransaction.size);
 
         });
+    });
+
+    it('Test set maxFee using multiplier', () => {
+        const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            new MosaicId([2262289484, 3405110546]),
+            1,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        ).setMaxFee(2);
+​
+        expect(mosaicMetadataTransaction.maxFee.compact()).to.be.equal(380);
+    });
+
+    it('Test resolveAlias can resolve', () => {
+        const mosaicMetadataTransaction = new MosaicMetadataTransaction(
+            NetworkType.MIJIN_TEST,
+            1,
+            Deadline.createFromDTO('1'),
+            UInt64.fromUint(0),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            unresolvedMosaicId,
+            10,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            '',
+            account.publicAccount,
+            new TransactionInfo(UInt64.fromUint(2), 0, '')).resolveAliases(statement);
+​
+        expect(mosaicMetadataTransaction.targetMosaicId instanceof MosaicId).to.be.true;
+        expect((mosaicMetadataTransaction.targetMosaicId as MosaicId).equals(resolvedMosaicId)).to.be.true;
     });
 });

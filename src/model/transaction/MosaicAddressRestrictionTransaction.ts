@@ -243,21 +243,20 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): MosaicAddressRestrictionTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return new MosaicAddressRestrictionTransaction(
-            this.networkType,
-            this.version,
-            this.deadline,
-            this.maxFee,
-            statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex),
-            this.restrictionKey,
-            statement.resolveAddress(this.targetAddress,
-                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
-            this.previousRestrictionValue,
-            this.newRestrictionValue,
-            this.signature,
-            this.signer,
-            this.transactionInfo,
-        );
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this,
+            {
+                mosaicId: statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
+                    transactionInfo.index, aggregateTransactionIndex),
+                    targetAddress: statement.resolveAddress(this.targetAddress,
+                    transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex)});
+    }
+
+    /**
+     * Set transaction maxFee using fee multiplier
+     * @param feeMultiplier The fee multiplier
+     * @returns {MosaicAddressRestrictionTransaction}
+     */
+    public setMaxFee(multiplier: number): MosaicAddressRestrictionTransaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * multiplier)});
     }
 }

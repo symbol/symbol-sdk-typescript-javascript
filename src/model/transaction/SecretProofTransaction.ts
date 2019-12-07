@@ -223,19 +223,18 @@ export class SecretProofTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): SecretProofTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return new SecretProofTransaction(
-            this.networkType,
-            this.version,
-            this.deadline,
-            this.maxFee,
-            this.hashType,
-            this.secret,
-            statement.resolveAddress(this.recipientAddress,
-                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
-            this.proof,
-            this.signature,
-            this.signer,
-            this.transactionInfo,
-        );
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this,
+            {
+                recipientAddress: statement.resolveAddress(this.recipientAddress,
+                    transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex)});
+    }
+
+    /**
+     * Set transaction maxFee using fee multiplier
+     * @param feeMultiplier The fee multiplier
+     * @returns {SecretProofTransaction}
+     */
+    public setMaxFee(multiplier: number): SecretProofTransaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * multiplier)});
     }
 }

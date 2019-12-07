@@ -240,21 +240,20 @@ export class SecretLockTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): SecretLockTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return new SecretLockTransaction(
-            this.networkType,
-            this.version,
-            this.deadline,
-            this.maxFee,
-            statement.resolveMosaic(this.mosaic, transactionInfo.height.toString(),
-                    transactionInfo.index, aggregateTransactionIndex),
-            this.duration,
-            this.hashType,
-            this.secret,
-            statement.resolveAddress(this.recipientAddress,
-                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
-            this.signature,
-            this.signer,
-            this.transactionInfo,
-        );
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this,
+            {
+                recipientAddress: statement.resolveAddress(this.recipientAddress,
+                    transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
+                mosaic: statement.resolveMosaic(this.mosaic, transactionInfo.height.toString(),
+                    transactionInfo.index, aggregateTransactionIndex)});
+    }
+
+    /**
+     * Set transaction maxFee using fee multiplier
+     * @param feeMultiplier The fee multiplier
+     * @returns {SecretLockTransaction}
+     */
+    public setMaxFee(multiplier: number): SecretLockTransaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * multiplier)});
     }
 }

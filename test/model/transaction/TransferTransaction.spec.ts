@@ -23,10 +23,13 @@ import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import { MessageType } from '../../../src/model/message/MessageType';
 import { PersistentHarvestingDelegationMessage } from '../../../src/model/message/PersistentHarvestingDelegationMessage';
 import { PlainMessage } from '../../../src/model/message/PlainMessage';
+import { ReceiptSource, ResolutionEntry, ResolutionType, TransactionInfo } from '../../../src/model/model';
 import { Mosaic } from '../../../src/model/mosaic/Mosaic';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
+import { Statement } from '../../../src/model/receipt/Statement';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import {UInt64} from '../../../src/model/UInt64';
@@ -38,8 +41,21 @@ describe('TransferTransaction', () => {
     const delegatedPrivateKey = '8A78C9E9B0E59D0F74C0D47AB29FBD523C706293A3FA9CD9FE0EEB2C10EA924A';
     const recipientPublicKey = '9DBF67474D6E1F8B131B4EB1F5BA0595AFFAE1123607BC1048F342193D7E669F';
     const messageMarker = 'FECC71C764BFE598';
+    let statement: Statement;
+    const unresolvedAddress = new NamespaceId('address');
+    const unresolvedMosaicId = new NamespaceId('mosaic');
+    const mosaicId = new MosaicId('0DC67FBE1CAD29E5');
     before(() => {
         account = TestingAccount;
+    });
+    before(() => {
+        account = TestingAccount;
+        statement = new Statement([],
+            [new ResolutionStatement(ResolutionType.Address, UInt64.fromUint(2), unresolvedAddress,
+                [new ResolutionEntry(account.address, new ReceiptSource(1, 0))])],
+            [new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromUint(2), unresolvedMosaicId,
+                [new ResolutionEntry(mosaicId, new ReceiptSource(1, 0))])],
+        );
     });
 
     it('should default maxFee field be set to 0', () => {
@@ -379,5 +395,36 @@ describe('TransferTransaction', () => {
 ​
         expect(newPayload).to.be.equal(payload);
         expect(newTransaction.recipientToString()).to.be.equal(transferTransaction.recipientToString());
+    });
+
+    it('Test set maxFee using multiplier', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [NetworkCurrencyMosaic.createAbsolute(1)],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        ).setMaxFee(2);
+​
+        expect(transferTransaction.maxFee.compact()).to.be.equal(378);
+    });
+
+    it('Test resolveAlias can resolve', () => {
+        const transferTransaction = new TransferTransaction(
+            NetworkType.MIJIN_TEST,
+            1,
+            Deadline.createFromDTO('1'),
+            UInt64.fromUint(0),
+            unresolvedAddress,
+            [new Mosaic(unresolvedMosaicId, UInt64.fromUint(1))],
+            PlainMessage.create('test'),
+            '',
+            account.publicAccount,
+            new TransactionInfo(UInt64.fromUint(2), 0, '')).resolveAliases(statement);
+​
+        expect(transferTransaction.recipientAddress instanceof Address).to.be.true;
+        expect(transferTransaction.mosaics[0].id instanceof MosaicId).to.be.true;
+        expect((transferTransaction.recipientAddress as Address).equals(account.address)).to.be.true;
+        expect((transferTransaction.mosaics[0].id as MosaicId).equals(mosaicId)).to.be.true;
     });
 });

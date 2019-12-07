@@ -106,4 +106,15 @@ describe('AccountLinkTransaction', () => {
             expect(accountLinkTransaction.size).to.be.equal(161);
         });
     });
+
+    it('Test set maxFee using multiplier', () => {
+        const accountLinkTransaction = AccountLinkTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            LinkAction.Unlink,
+            NetworkType.MIJIN_TEST,
+        ).setMaxFee(2);
+​
+        expect(accountLinkTransaction.maxFee.compact()).to.be.equal(322);
+    });
 });
