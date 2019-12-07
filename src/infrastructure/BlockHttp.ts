@@ -23,7 +23,7 @@ import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
 import { NetworkType } from '../model/blockchain/NetworkType';
 import {Transaction} from '../model/transaction/Transaction';
 import {UInt64} from '../model/UInt64';
-import { BlockRoutesApi } from './api';
+import { BlockInfoDTO, BlockRoutesApi } from './api';
 import {BlockRepository} from './BlockRepository';
 import {Http} from './Http';
 import {QueryParams} from './QueryParams';
@@ -72,30 +72,7 @@ export class BlockHttp extends Http implements BlockRepository {
      */
     public getBlockByHeight(height: string): Observable<BlockInfo> {
         return observableFrom(this.blockRoutesApi.getBlockByHeight(height)).pipe(
-            map(({body}) => {
-                const blockDTO = body;
-                const networkType = parseInt((blockDTO.block.version as number).toString(16).substr(0, 2), 16);
-                return new BlockInfo(
-                    blockDTO.meta.hash,
-                    blockDTO.meta.generationHash,
-                    UInt64.fromNumericString(blockDTO.meta.totalFee),
-                    blockDTO.meta.numTransactions,
-                    blockDTO.block.signature,
-                    PublicAccount.createFromPublicKey(blockDTO.block.signerPublicKey, networkType),
-                    networkType,
-                    parseInt((blockDTO.block.version as number).toString(16).substr(2, 2), 16), // Tx version
-                    blockDTO.block.type,
-                    UInt64.fromNumericString(blockDTO.block.height),
-                    UInt64.fromNumericString(blockDTO.block.timestamp),
-                    UInt64.fromNumericString(blockDTO.block.difficulty),
-                    blockDTO.block.feeMultiplier,
-                    blockDTO.block.previousBlockHash,
-                    blockDTO.block.transactionsHash,
-                    blockDTO.block.receiptsHash,
-                    blockDTO.block.stateHash,
-                    extractBeneficiary(blockDTO, networkType),
-                );
-            }),
+            map(({body}) => this.toBlockInfo(body)),
             catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
@@ -129,30 +106,40 @@ export class BlockHttp extends Http implements BlockRepository {
     public getBlocksByHeightWithLimit(height: string, limit: LimitType = LimitType.N_25): Observable<BlockInfo[]> {
         return observableFrom(
             this.blockRoutesApi.getBlocksByHeightWithLimit(height, limit)).pipe(
-                map(({body}) => body.map((blockDTO) => {
-                        const networkType = parseInt((blockDTO.block.version as number).toString(16).substr(0, 2), 16);
-                        return new BlockInfo(
-                            blockDTO.meta.hash,
-                            blockDTO.meta.generationHash,
-                            UInt64.fromNumericString(blockDTO.meta.totalFee),
-                            blockDTO.meta.numTransactions,
-                            blockDTO.block.signature,
-                            PublicAccount.createFromPublicKey(blockDTO.block.signerPublicKey, networkType),
-                            networkType,
-                            parseInt((blockDTO.block.version as number).toString(16).substr(2, 2), 16), // Tx version
-                            blockDTO.block.type,
-                            UInt64.fromNumericString(blockDTO.block.height),
-                            UInt64.fromNumericString(blockDTO.block.timestamp),
-                            UInt64.fromNumericString(blockDTO.block.difficulty),
-                            blockDTO.block.feeMultiplier,
-                            blockDTO.block.previousBlockHash,
-                            blockDTO.block.transactionsHash,
-                            blockDTO.block.receiptsHash,
-                            blockDTO.block.stateHash,
-                            extractBeneficiary(blockDTO, networkType),
-                        );
-                    })),
+                map(({body}) => body.map((blockDTO) => this.toBlockInfo(blockDTO))),
                 catchError((error) =>  throwError(this.errorHandling(error))),
+        );
+    }
+
+
+    /**
+     * This method maps a BlockInfoDTO from rest to the SDK's BlockInfo model object.
+     *
+     * @internal
+     * @param {BlockInfoDTO} blockDTO the dto object from rest.
+     * @returns {BlockInfo} a BlockInfo model
+     */
+    private toBlockInfo(blockDTO: BlockInfoDTO): BlockInfo {
+        const networkType = blockDTO.block.network.valueOf();
+        return new BlockInfo(
+            blockDTO.meta.hash,
+            blockDTO.meta.generationHash,
+            UInt64.fromNumericString(blockDTO.meta.totalFee),
+            blockDTO.meta.numTransactions,
+            blockDTO.block.signature,
+            PublicAccount.createFromPublicKey(blockDTO.block.signerPublicKey, networkType),
+            networkType,
+            blockDTO.block.version,
+            blockDTO.block.type,
+            UInt64.fromNumericString(blockDTO.block.height),
+            UInt64.fromNumericString(blockDTO.block.timestamp),
+            UInt64.fromNumericString(blockDTO.block.difficulty),
+            blockDTO.block.feeMultiplier,
+            blockDTO.block.previousBlockHash,
+            blockDTO.block.transactionsHash,
+            blockDTO.block.receiptsHash,
+            blockDTO.block.stateHash,
+            extractBeneficiary(blockDTO, networkType),
         );
     }
 
