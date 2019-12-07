@@ -116,30 +116,30 @@ export class BlockHttp extends Http implements BlockRepository {
      * This method maps a BlockInfoDTO from rest to the SDK's BlockInfo model object.
      *
      * @internal
-     * @param {BlockInfoDTO} blockDTO the dto object from rest.
+     * @param {BlockInfoDTO} dto the dto object from rest.
      * @returns {BlockInfo} a BlockInfo model
      */
-    private toBlockInfo(blockDTO: BlockInfoDTO): BlockInfo {
-        const networkType = blockDTO.block.network.valueOf();
+    private toBlockInfo(dto: BlockInfoDTO): BlockInfo {
+        const networkType = dto.block.network.valueOf();
         return new BlockInfo(
-            blockDTO.meta.hash,
-            blockDTO.meta.generationHash,
-            UInt64.fromNumericString(blockDTO.meta.totalFee),
-            blockDTO.meta.numTransactions,
-            blockDTO.block.signature,
-            PublicAccount.createFromPublicKey(blockDTO.block.signerPublicKey, networkType),
+            dto.meta.hash,
+            dto.meta.generationHash,
+            UInt64.fromNumericString(dto.meta.totalFee),
+            dto.meta.numTransactions,
+            dto.block.signature,
+            PublicAccount.createFromPublicKey(dto.block.signerPublicKey, networkType),
             networkType,
-            blockDTO.block.version,
-            blockDTO.block.type,
-            UInt64.fromNumericString(blockDTO.block.height),
-            UInt64.fromNumericString(blockDTO.block.timestamp),
-            UInt64.fromNumericString(blockDTO.block.difficulty),
-            blockDTO.block.feeMultiplier,
-            blockDTO.block.previousBlockHash,
-            blockDTO.block.transactionsHash,
-            blockDTO.block.receiptsHash,
-            blockDTO.block.stateHash,
-            extractBeneficiary(blockDTO, networkType),
+            dto.block.version,
+            dto.block.type,
+            UInt64.fromNumericString(dto.block.height),
+            UInt64.fromNumericString(dto.block.timestamp),
+            UInt64.fromNumericString(dto.block.difficulty),
+            dto.block.feeMultiplier,
+            dto.block.previousBlockHash,
+            dto.block.transactionsHash,
+            dto.block.receiptsHash,
+            dto.block.stateHash,
+            extractBeneficiary(dto, networkType),
         );
     }
 
