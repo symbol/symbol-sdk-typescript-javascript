@@ -295,7 +295,7 @@ export class TransferTransaction extends Transaction {
      * @param feeMultiplier The fee multiplier
      * @returns {TransferTransaction}
      */
-    public setMaxFee(multiplier: number): TransferTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * multiplier)});
+    public setMaxFee(feeMultiplier: number): TransferTransaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
     }
 }

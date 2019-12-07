@@ -417,7 +417,7 @@ export class AggregateTransaction extends Transaction {
      * @param feeMultiplier The fee multiplier
      * @returns {AggregateTransaction}
      */
-    public setMaxFee(multiplier: number): AggregateTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * multiplier)});
+    public setMaxFee(feeMultiplier: number): AggregateTransaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
     }
 }

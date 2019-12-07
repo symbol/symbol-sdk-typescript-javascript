@@ -256,7 +256,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      * @param feeMultiplier The fee multiplier
      * @returns {MosaicAddressRestrictionTransaction}
      */
-    public setMaxFee(multiplier: number): MosaicAddressRestrictionTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * multiplier)});
+    public setMaxFee(feeMultiplier: number): MosaicAddressRestrictionTransaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
     }
 }

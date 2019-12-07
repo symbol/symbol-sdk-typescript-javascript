@@ -222,7 +222,7 @@ export class NamespaceMetadataTransaction extends Transaction {
      * @param feeMultiplier The fee multiplier
      * @returns {NamespaceMetadataTransaction}
      */
-    public setMaxFee(multiplier: number): NamespaceMetadataTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * multiplier)});
+    public setMaxFee(feeMultiplier: number): NamespaceMetadataTransaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
     }
 }

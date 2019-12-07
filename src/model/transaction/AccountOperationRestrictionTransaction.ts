@@ -188,7 +188,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
      * @param feeMultiplier The fee multiplier
      * @returns {AccountOperationRestrictionTransaction}
      */
-    public setMaxFee(multiplier: number): AccountOperationRestrictionTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * multiplier)});
+    public setMaxFee(feeMultiplier: number): AccountOperationRestrictionTransaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
     }
 }

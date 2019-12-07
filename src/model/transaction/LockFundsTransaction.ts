@@ -223,7 +223,7 @@ export class LockFundsTransaction extends Transaction {
      * @param feeMultiplier The fee multiplier
      * @returns {LockFundsTransaction}
      */
-    public setMaxFee(multiplier: number): LockFundsTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * multiplier)});
+    public setMaxFee(feeMultiplier: number): LockFundsTransaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
     }
 }

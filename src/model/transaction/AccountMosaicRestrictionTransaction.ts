@@ -215,7 +215,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
      * @param feeMultiplier The fee multiplier
      * @returns {AccountMosaicRestrictionTransaction}
      */
-    public setMaxFee(multiplier: number): AccountMosaicRestrictionTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * multiplier)});
+    public setMaxFee(feeMultiplier: number): AccountMosaicRestrictionTransaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
     }
 }

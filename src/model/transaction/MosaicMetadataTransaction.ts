@@ -230,7 +230,7 @@ export class MosaicMetadataTransaction extends Transaction {
      * @param feeMultiplier The fee multiplier
      * @returns {MosaicMetadataTransaction}
      */
-    public setMaxFee(multiplier: number): MosaicMetadataTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * multiplier)});
+    public setMaxFee(feeMultiplier: number): MosaicMetadataTransaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
     }
 }

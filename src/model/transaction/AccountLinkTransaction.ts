@@ -177,7 +177,7 @@ export class AccountLinkTransaction extends Transaction {
      * @param feeMultiplier The fee multiplier
      * @returns {AccountLinkTransaction}
      */
-    public setMaxFee(multiplier: number): AccountLinkTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * multiplier)});
+    public setMaxFee(feeMultiplier: number): AccountLinkTransaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
     }
 }

@@ -253,7 +253,7 @@ export class SecretLockTransaction extends Transaction {
      * @param feeMultiplier The fee multiplier
      * @returns {SecretLockTransaction}
      */
-    public setMaxFee(multiplier: number): SecretLockTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * multiplier)});
+    public setMaxFee(feeMultiplier: number): SecretLockTransaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
     }
 }

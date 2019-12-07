@@ -204,7 +204,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
      * @param feeMultiplier The fee multiplier
      * @returns {MosaicSupplyChangeTransaction}
      */
-    public setMaxFee(multiplier: number): MosaicSupplyChangeTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * multiplier)});
+    public setMaxFee(feeMultiplier: number): MosaicSupplyChangeTransaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
     }
 }

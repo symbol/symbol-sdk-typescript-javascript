@@ -192,7 +192,7 @@ export class MosaicAliasTransaction extends Transaction {
      * @param feeMultiplier The fee multiplier
      * @returns {MosaicAliasTransaction}
      */
-    public setMaxFee(multiplier: number): MosaicAliasTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * multiplier)});
+    public setMaxFee(feeMultiplier: number): MosaicAliasTransaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
     }
 }

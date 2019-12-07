@@ -287,7 +287,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
      * @param feeMultiplier The fee multiplier
      * @returns {NamespaceRegistrationTransaction}
      */
-    public setMaxFee(multiplier: number): NamespaceRegistrationTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * multiplier)});
+    public setMaxFee(feeMultiplier: number): NamespaceRegistrationTransaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
     }
 }
