@@ -25,6 +25,8 @@ import { MosaicGlobalRestrictionItem } from '../model/restriction/MosaicGlobalRe
 import { RestrictionMosaicRoutesApi } from './api/restrictionMosaicRoutesApi';
 import {Http} from './Http';
 import { RestrictionMosaicRepository } from './RestrictionMosaicRespository';
+import { MosaicAddressRestrictionDTO } from "./model/mosaicAddressRestrictionDTO";
+import { MosaicGlobalRestrictionDTO } from "./model/mosaicGlobalRestrictionDTO";
 
 /**
  * RestrictionMosaic http repository.
@@ -58,20 +60,7 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
     getMosaicAddressRestriction(mosaicId: MosaicId, address: Address): Observable<MosaicAddressRestriction> {
         return observableFrom(
             this.restrictionMosaicRoutesApi.getMosaicAddressRestriction(mosaicId.toHex(), address.plain())).pipe(
-                map(({body}) => {
-                    const payload = body.mosaicRestrictionEntry;
-                    const restirctionItems = new Map<string, string>();
-                    payload.restrictions.forEach((restriction) => {
-                        restirctionItems.set(restriction.key, restriction.value);
-                    });
-                    return new MosaicAddressRestriction(
-                        payload.compositeHash,
-                        payload.entryType.valueOf(),
-                        new MosaicId(payload.mosaicId),
-                        Address.createFromEncoded(payload.targetAddress),
-                        restirctionItems,
-                    );
-                }),
+                map(({body}) => this.toMosaicAddressRestriction(body)),
                 catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
@@ -89,20 +78,29 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
         };
         return observableFrom(
             this.restrictionMosaicRoutesApi.getMosaicAddressRestrictions(mosaicId.toHex(), accountIds)).pipe(
-                map(({body}) => body.map((payload) => {
-                        const restirctionItems = new Map<string, string>();
-                        payload.mosaicRestrictionEntry.restrictions.forEach((restriction) => {
-                            restirctionItems.set(restriction.key, restriction.value);
-                        });
-                        return new MosaicAddressRestriction(
-                            payload.mosaicRestrictionEntry.compositeHash,
-                            payload.mosaicRestrictionEntry.entryType.valueOf(),
-                            new MosaicId(payload.mosaicRestrictionEntry.mosaicId),
-                            Address.createFromEncoded(payload.mosaicRestrictionEntry.targetAddress),
-                            restirctionItems,
-                        );
-                    })),
+                map(({body}) => body.map(this.toMosaicAddressRestriction)),
                 catchError((error) =>  throwError(this.errorHandling(error))),
+        );
+    }
+
+    /**
+     * This method maps a MosaicAddressRestrictionDTO from rest to the SDK's MosaicAddressRestriction model object.
+     *
+     * @internal
+     * @param {MosaicAddressRestrictionDTO} dto the MosaicAddressRestrictionDTO object from rest.
+     * @returns {MosaicAddressRestriction} a MosaicAddressRestriction model
+     */
+    private toMosaicAddressRestriction(dto: MosaicAddressRestrictionDTO): MosaicAddressRestriction {
+        const restrictionItems = new Map<string, string>();
+        dto.mosaicRestrictionEntry.restrictions.forEach((restriction) => {
+            restrictionItems.set(restriction.key, restriction.value);
+        });
+        return new MosaicAddressRestriction(
+            dto.mosaicRestrictionEntry.compositeHash,
+            dto.mosaicRestrictionEntry.entryType.valueOf(),
+            new MosaicId(dto.mosaicRestrictionEntry.mosaicId),
+            Address.createFromEncoded(dto.mosaicRestrictionEntry.targetAddress),
+            restrictionItems,
         );
     }
 
@@ -115,23 +113,7 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
     getMosaicGlobalRestriction(mosaicId: MosaicId): Observable<MosaicGlobalRestriction> {
         return observableFrom(
             this.restrictionMosaicRoutesApi.getMosaicGlobalRestriction(mosaicId.toHex())).pipe(
-                map(({body}) => {
-                    const payload = body.mosaicRestrictionEntry;
-                    const restirctionItems = new Map<string, MosaicGlobalRestrictionItem>();
-                    payload.restrictions.forEach((restriction) =>
-                        restirctionItems.set(restriction.key,
-                                        new MosaicGlobalRestrictionItem(
-                                            new MosaicId(restriction.restriction.referenceMosaicId),
-                                            restriction.restriction.restrictionValue,
-                                            restriction.restriction.restrictionType.valueOf(),
-                    )));
-                    return new MosaicGlobalRestriction(
-                        payload.compositeHash,
-                        payload.entryType.valueOf(),
-                        new MosaicId(payload.mosaicId),
-                        restirctionItems,
-                    );
-                }),
+                map(({body}) => this.toMosaicGlobalRestriction(body)),
                 catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
@@ -148,23 +130,32 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
         };
         return observableFrom(
             this.restrictionMosaicRoutesApi.getMosaicGlobalRestrictions(mosaicIdsBody)).pipe(
-                map(({body}) => body.map((payload) => {
-                        const restirctionItems = new Map<string, MosaicGlobalRestrictionItem>();
-                        payload.mosaicRestrictionEntry.restrictions.forEach((restriction) =>
-                            restirctionItems.set(restriction.key,
-                                            new MosaicGlobalRestrictionItem(
-                                                new MosaicId(restriction.restriction.referenceMosaicId),
-                                                restriction.restriction.restrictionValue,
-                                                restriction.restriction.restrictionType.valueOf(),
-                        )));
-                        return new MosaicGlobalRestriction(
-                            payload.mosaicRestrictionEntry.compositeHash,
-                            payload.mosaicRestrictionEntry.entryType.valueOf(),
-                            new MosaicId(payload.mosaicRestrictionEntry.mosaicId),
-                            restirctionItems,
-                        );
-                    })),
+                map(({body}) => body.map(this.toMosaicGlobalRestriction)),
                 catchError((error) =>  throwError(this.errorHandling(error))),
+        );
+    }
+
+    /**
+     * This method maps a MosaicGlobalRestrictionDTO from rest to the SDK's MosaicGlobalRestriction model object.
+     *
+     * @internal
+     * @param {MosaicGlobalRestrictionDTO} dto the MosaicGlobalRestrictionDTO object from rest.
+     * @returns {MosaicGlobalRestriction} a MosaicGlobalRestriction model
+     */
+    private toMosaicGlobalRestriction(dto: MosaicGlobalRestrictionDTO): MosaicGlobalRestriction {
+        const restirctionItems = new Map<string, MosaicGlobalRestrictionItem>();
+        dto.mosaicRestrictionEntry.restrictions.forEach((restriction) =>
+            restirctionItems.set(restriction.key,
+                new MosaicGlobalRestrictionItem(
+                    new MosaicId(restriction.restriction.referenceMosaicId),
+                    restriction.restriction.restrictionValue,
+                    restriction.restriction.restrictionType.valueOf(),
+                )));
+        return new MosaicGlobalRestriction(
+            dto.mosaicRestrictionEntry.compositeHash,
+            dto.mosaicRestrictionEntry.entryType.valueOf(),
+            new MosaicId(dto.mosaicRestrictionEntry.mosaicId),
+            restirctionItems,
         );
     }
 }
