@@ -24,7 +24,7 @@ describe('MosaicNonce', () => {
     it('should be created from Uint8Array', () => {
         const nonce = new MosaicNonce(new Uint8Array([0x0, 0x0, 0x0, 0x0]));
         deepEqual(nonce.nonce, new Uint8Array([0x0, 0x0, 0x0, 0x0]));
-        deepEqual(nonce.toDTO(), [0, 0, 0, 0]);
+        deepEqual(nonce.toDTO(), new Uint8Array([0x0, 0x0, 0x0, 0x0]));
     });
 
     it('should create random nonce', () => {
