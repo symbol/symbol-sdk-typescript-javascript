@@ -30,8 +30,10 @@ import {TransactionInfo} from '../model/transaction/TransactionInfo';
 import {TransactionStatus} from '../model/transaction/TransactionStatus';
 import {TransactionType} from '../model/transaction/TransactionType';
 import {UInt64} from '../model/UInt64';
-import { BlockInfoDTO, BlockRoutesApi,
-         TransactionRoutesApi } from './api';
+import {
+    BlockInfoDTO, BlockRoutesApi,
+    TransactionRoutesApi, TransactionStatusDTO
+} from './api';
 import {Http} from './Http';
 import {CreateTransactionFromDTO} from './transaction/CreateTransactionFromDTO';
 import {TransactionRepository} from './TransactionRepository';
@@ -102,13 +104,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
      */
     public getTransactionStatus(transactionHash: string): Observable<TransactionStatus> {
         return observableFrom(this.transactionRoutesApi.getTransactionStatus(transactionHash)).pipe(
-            map(({body}) => new TransactionStatus(
-                body.status,
-                body.group,
-                body.hash,
-                body.deadline ?
-                Deadline.createFromDTO(UInt64.fromNumericString(body.deadline).toDTO()) : undefined,
-                body.height ? UInt64.fromNumericString(body.height) : undefined)),
+            map(({body}) => this.toTransactionStatus(body)),
             catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
@@ -124,17 +120,26 @@ export class TransactionHttp extends Http implements TransactionRepository {
         };
         return observableFrom(
             this.transactionRoutesApi.getTransactionsStatuses(transactionHashesBody)).pipe(
-            map(({body}) => body.map((transactionStatusDTO) => {
-                    return new TransactionStatus(
-                        transactionStatusDTO.status,
-                        transactionStatusDTO.group,
-                        transactionStatusDTO.hash,
-                        transactionStatusDTO.deadline ?
-                            Deadline.createFromDTO(UInt64.fromNumericString(transactionStatusDTO.deadline).toDTO()) : undefined,
-                        transactionStatusDTO.height ? UInt64.fromNumericString(transactionStatusDTO.height) : undefined);
-                })),
+            map(({body}) => body.map(this.toTransactionStatus)),
             catchError((error) =>  throwError(this.errorHandling(error))),
         );
+    }
+
+    /**
+     * This method maps a TransactionStatusDTO from rest to the SDK's TransactionStatus model object.
+     *
+     * @internal
+     * @param {TransactionStatusDTO} dto the TransactionStatusDTO object from rest.
+     * @returns {TransactionStatus} a TransactionStatus model
+     */
+    private toTransactionStatus(dto: TransactionStatusDTO): TransactionStatus {
+        return new TransactionStatus(
+            dto.status,
+            dto.group,
+            dto.hash,
+            dto.deadline ?
+                Deadline.createFromDTO(UInt64.fromNumericString(dto.deadline).toDTO()) : undefined,
+            dto.height ? UInt64.fromNumericString(dto.height) : undefined);
     }
 
     /**

@@ -61,32 +61,10 @@ export class AccountHttp extends Http implements AccountRepository {
      */
     public getAccountInfo(address: Address): Observable<AccountInfo> {
         return observableFrom(this.accountRoutesApi.getAccountInfo(address.plain())).pipe(
-            map(({body}) => new AccountInfo(
-                    Address.createFromEncoded(body.account.address),
-                    UInt64.fromNumericString(body.account.addressHeight),
-                    body.account.publicKey,
-                    UInt64.fromNumericString(body.account.publicKeyHeight),
-                    body.account.accountType.valueOf(),
-                    body.account.linkedAccountKey,
-                    body.account.activityBuckets.map((bucket) => {
-                        return new ActivityBucket(
-                            bucket.startHeight,
-                            bucket.totalFeesPaid,
-                            bucket.beneficiaryCount,
-                            bucket.rawScore,
-                        );
-                    }),
-                    body.account.mosaics.map((mosaicDTO) => new Mosaic(
-                        new MosaicId(mosaicDTO.id),
-                        UInt64.fromNumericString(mosaicDTO.amount),
-                    )),
-                    UInt64.fromNumericString(body.account.importance),
-                    UInt64.fromNumericString(body.account.importanceHeight),
-                )),
+            map(({body}) => this.toAccountInfo(body)),
             catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
-
     /**
      * Gets AccountsInfo for different accounts.
      * @param addresses List of Address
@@ -98,34 +76,44 @@ export class AccountHttp extends Http implements AccountRepository {
         };
         return observableFrom(
             this.accountRoutesApi.getAccountsInfo(accountIdsBody)).pipe(
-                map(({body}) => body.map((accountInfoDTO: AccountInfoDTO) => {
-                        return new AccountInfo(
-                            Address.createFromEncoded(accountInfoDTO.account.address),
-                            UInt64.fromNumericString(accountInfoDTO.account.addressHeight),
-                            accountInfoDTO.account.publicKey,
-                            UInt64.fromNumericString(accountInfoDTO.account.publicKeyHeight),
-                            accountInfoDTO.account.accountType.valueOf(),
-                            accountInfoDTO.account.linkedAccountKey,
-                            accountInfoDTO.account.activityBuckets.map((bucket) => {
-                                return new ActivityBucket(
-                                    bucket.startHeight,
-                                    bucket.totalFeesPaid,
-                                    bucket.beneficiaryCount,
-                                    bucket.rawScore,
-                                );
-                            }),
-                            accountInfoDTO.account.mosaics.map((mosaicDTO) => new Mosaic(
-                                new MosaicId(mosaicDTO.id),
-                                UInt64.fromNumericString(mosaicDTO.amount),
-                            )),
-                            UInt64.fromNumericString(accountInfoDTO.account.importance),
-                            UInt64.fromNumericString(accountInfoDTO.account.importanceHeight),
-                        );
-
-                    })),
+                map(({body}) => body.map(this.toAccountInfo)),
                 catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
+
+
+    /**
+     * This method maps a AccountInfoDTO from rest to the SDK's AccountInfo model object.
+     *
+     * @internal
+     * @param {AccountInfoDTO} dto AccountInfoDTO the dto object from rest.
+     * @returns AccountInfo model
+     */
+    private toAccountInfo(dto: AccountInfoDTO):AccountInfo {
+        return new AccountInfo(
+            Address.createFromEncoded(dto.account.address),
+            UInt64.fromNumericString(dto.account.addressHeight),
+            dto.account.publicKey,
+            UInt64.fromNumericString(dto.account.publicKeyHeight),
+            dto.account.accountType.valueOf(),
+            dto.account.linkedAccountKey,
+            dto.account.activityBuckets.map((bucket) => {
+                return new ActivityBucket(
+                    bucket.startHeight,
+                    bucket.totalFeesPaid,
+                    bucket.beneficiaryCount,
+                    bucket.rawScore,
+                );
+            }),
+            dto.account.mosaics.map((mosaicDTO) => new Mosaic(
+                new MosaicId(mosaicDTO.id),
+                UInt64.fromNumericString(mosaicDTO.amount),
+            )),
+            UInt64.fromNumericString(dto.account.importance),
+            UInt64.fromNumericString(dto.account.importanceHeight),
+        );
+    }
+
 
     /**
      * Gets an array of confirmed transactions for which an account is signer or receiver.
