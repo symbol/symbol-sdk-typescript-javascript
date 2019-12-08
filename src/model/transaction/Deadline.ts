@@ -26,7 +26,7 @@ export class Deadline {
     /**
      * @type {number}
      */
-    public static timestampNemesisBlock = 1459468800;
+    public static timestampNemesisBlock = 1573426800;
 
     /**
      * Deadline value
