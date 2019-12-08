@@ -199,14 +199,13 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): AccountMosaicRestrictionTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this,
-            {
-                restrictionAdditions:
-                    this.restrictionAdditions.map((addition) => statement.resolveMosaicId(addition, transactionInfo.height.toString(),
-                        transactionInfo.index, aggregateTransactionIndex)),
-                restrictionDeletions:
-                    this.restrictionDeletions.map((deletion) => statement.resolveMosaicId(deletion, transactionInfo.height.toString(),
-                        transactionInfo.index, aggregateTransactionIndex)),
-            });
+        return {...Object.getPrototypeOf(this),
+            restrictionAdditions:
+                this.restrictionAdditions.map((addition) => statement.resolveMosaicId(addition, transactionInfo.height.toString(),
+                    transactionInfo.index, aggregateTransactionIndex)),
+            restrictionDeletions:
+                this.restrictionDeletions.map((deletion) => statement.resolveMosaicId(deletion, transactionInfo.height.toString(),
+                    transactionInfo.index, aggregateTransactionIndex)),
+        };
     }
 }

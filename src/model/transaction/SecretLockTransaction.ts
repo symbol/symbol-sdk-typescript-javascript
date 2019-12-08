@@ -240,11 +240,10 @@ export class SecretLockTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): SecretLockTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this,
-            {
-                recipientAddress: statement.resolveAddress(this.recipientAddress,
-                    transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
-                mosaic: statement.resolveMosaic(this.mosaic, transactionInfo.height.toString(),
-                    transactionInfo.index, aggregateTransactionIndex)});
+        return {...Object.getPrototypeOf(this),
+            recipientAddress: statement.resolveAddress(this.recipientAddress,
+                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
+            mosaic: statement.resolveMosaic(this.mosaic, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex)};
     }
 }

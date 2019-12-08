@@ -282,11 +282,9 @@ export class TransferTransaction extends Transaction {
      */
     public resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): TransferTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this,
-            {
-                recipientAddress: statement.resolveAddress(this.recipientAddress,
+        return {...Object.getPrototypeOf(this), recipientAddress: statement.resolveAddress(this.recipientAddress,
                     transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
                 mosaics: this.mosaics.map((mosaic) => statement.resolveMosaic(mosaic, transactionInfo.height.toString(),
-                    transactionInfo.index, aggregateTransactionIndex))});
+                    transactionInfo.index, aggregateTransactionIndex))};
     }
 }

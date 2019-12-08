@@ -212,9 +212,8 @@ export class LockFundsTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): LockFundsTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this,
-            {
-                mosaic: statement.resolveMosaic(this.mosaic, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex)});
+        return {...Object.getPrototypeOf(this),
+            mosaic: statement.resolveMosaic(this.mosaic, transactionInfo.height.toString(),
+            transactionInfo.index, aggregateTransactionIndex)};
     }
 }
