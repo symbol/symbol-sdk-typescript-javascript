@@ -220,13 +220,4 @@ export class MultisigAccountModificationTransaction extends Transaction {
     resolveAliases(): MultisigAccountModificationTransaction {
         return this;
     }
-
-    /**
-     * Set transaction maxFee using fee multiplier
-     * @param feeMultiplier The fee multiplier
-     * @returns {MultisigAccountModificationTransaction}
-     */
-    public setMaxFee(feeMultiplier: number): MultisigAccountModificationTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
-    }
 }

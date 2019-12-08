@@ -224,13 +224,4 @@ export class MosaicMetadataTransaction extends Transaction {
                 targetMosaicId: statement.resolveMosaicId(this.targetMosaicId, transactionInfo.height.toString(),
                     transactionInfo.index, aggregateTransactionIndex)});
     }
-
-    /**
-     * Set transaction maxFee using fee multiplier
-     * @param feeMultiplier The fee multiplier
-     * @returns {MosaicMetadataTransaction}
-     */
-    public setMaxFee(feeMultiplier: number): MosaicMetadataTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
-    }
 }

@@ -201,13 +201,4 @@ export class AccountMetadataTransaction extends Transaction {
     resolveAliases(): AccountMetadataTransaction {
         return this;
     }
-
-    /**
-     * Set transaction maxFee using fee multiplier
-     * @param feeMultiplier The fee multiplier
-     * @returns {AccountMetadataTransaction}
-     */
-    public setMaxFee(feeMultiplier: number): AccountMetadataTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
-    }
 }

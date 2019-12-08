@@ -229,13 +229,4 @@ export class MosaicDefinitionTransaction extends Transaction {
     resolveAliases(): MosaicDefinitionTransaction {
         return this;
     }
-
-    /**
-     * Set transaction maxFee using fee multiplier
-     * @param feeMultiplier The fee multiplier
-     * @returns {MosaicDefinitionTransaction}
-     */
-    public setMaxFee(feeMultiplier: number): MosaicDefinitionTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
-    }
 }

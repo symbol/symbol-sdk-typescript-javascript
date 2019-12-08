@@ -209,13 +209,4 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
                         transactionInfo.index, aggregateTransactionIndex)),
             });
     }
-
-    /**
-     * Set transaction maxFee using fee multiplier
-     * @param feeMultiplier The fee multiplier
-     * @returns {AccountMosaicRestrictionTransaction}
-     */
-    public setMaxFee(feeMultiplier: number): AccountMosaicRestrictionTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
-    }
 }

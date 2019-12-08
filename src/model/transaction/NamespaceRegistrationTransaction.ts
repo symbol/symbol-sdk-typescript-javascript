@@ -281,13 +281,4 @@ export class NamespaceRegistrationTransaction extends Transaction {
     resolveAliases(): NamespaceRegistrationTransaction {
         return this;
     }
-
-    /**
-     * Set transaction maxFee using fee multiplier
-     * @param feeMultiplier The fee multiplier
-     * @returns {NamespaceRegistrationTransaction}
-     */
-    public setMaxFee(feeMultiplier: number): NamespaceRegistrationTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
-    }
 }

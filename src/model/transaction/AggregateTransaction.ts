@@ -411,13 +411,4 @@ export class AggregateTransaction extends Transaction {
         {innerTransactions: this.innerTransactions.map((tx) => tx.resolveAliases(statement, transactionInfo.index))
             .sort((a, b) => a.transactionInfo!.index - b.transactionInfo!.index)});
     }
-
-    /**
-     * Set transaction maxFee using fee multiplier
-     * @param feeMultiplier The fee multiplier
-     * @returns {AggregateTransaction}
-     */
-    public setMaxFee(feeMultiplier: number): AggregateTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
-    }
 }

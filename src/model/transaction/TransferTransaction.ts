@@ -289,13 +289,4 @@ export class TransferTransaction extends Transaction {
                 mosaics: this.mosaics.map((mosaic) => statement.resolveMosaic(mosaic, transactionInfo.height.toString(),
                     transactionInfo.index, aggregateTransactionIndex))});
     }
-
-    /**
-     * Set transaction maxFee using fee multiplier
-     * @param feeMultiplier The fee multiplier
-     * @returns {TransferTransaction}
-     */
-    public setMaxFee(feeMultiplier: number): TransferTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
-    }
 }

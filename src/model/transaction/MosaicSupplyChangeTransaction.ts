@@ -198,13 +198,4 @@ export class MosaicSupplyChangeTransaction extends Transaction {
                 mosaicId: statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
                 transactionInfo.index, aggregateTransactionIndex)});
     }
-
-    /**
-     * Set transaction maxFee using fee multiplier
-     * @param feeMultiplier The fee multiplier
-     * @returns {MosaicSupplyChangeTransaction}
-     */
-    public setMaxFee(feeMultiplier: number): MosaicSupplyChangeTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
-    }
 }

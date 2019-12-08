@@ -250,13 +250,4 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
                     targetAddress: statement.resolveAddress(this.targetAddress,
                     transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex)});
     }
-
-    /**
-     * Set transaction maxFee using fee multiplier
-     * @param feeMultiplier The fee multiplier
-     * @returns {MosaicAddressRestrictionTransaction}
-     */
-    public setMaxFee(feeMultiplier: number): MosaicAddressRestrictionTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
-    }
 }

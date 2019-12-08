@@ -247,13 +247,4 @@ export class SecretLockTransaction extends Transaction {
                 mosaic: statement.resolveMosaic(this.mosaic, transactionInfo.height.toString(),
                     transactionInfo.index, aggregateTransactionIndex)});
     }
-
-    /**
-     * Set transaction maxFee using fee multiplier
-     * @param feeMultiplier The fee multiplier
-     * @returns {SecretLockTransaction}
-     */
-    public setMaxFee(feeMultiplier: number): SecretLockTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
-    }
 }

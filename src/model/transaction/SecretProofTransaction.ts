@@ -228,13 +228,4 @@ export class SecretProofTransaction extends Transaction {
                 recipientAddress: statement.resolveAddress(this.recipientAddress,
                     transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex)});
     }
-
-    /**
-     * Set transaction maxFee using fee multiplier
-     * @param feeMultiplier The fee multiplier
-     * @returns {SecretProofTransaction}
-     */
-    public setMaxFee(feeMultiplier: number): SecretProofTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
-    }
 }

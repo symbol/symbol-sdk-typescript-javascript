@@ -197,9 +197,11 @@ export abstract class Transaction {
     /**
      * Set transaction maxFee using fee multiplier
      * @param feeMultiplier The fee multiplier
-     * @returns {Transaction}
+     * @returns {TransferTransaction}
      */
-    abstract setMaxFee(feeMultiplier: number): Transaction;
+    public setMaxFee(feeMultiplier: number): Transaction {
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
+    }
 
     /**
      * @internal

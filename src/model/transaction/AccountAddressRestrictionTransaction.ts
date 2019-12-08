@@ -209,13 +209,4 @@ export class AccountAddressRestrictionTransaction extends Transaction {
                         transactionInfo.index, aggregateTransactionIndex)),
             });
     }
-
-    /**
-     * Set transaction maxFee using fee multiplier
-     * @param feeMultiplier The fee multiplier
-     * @returns {AccountAddressRestrictionTransaction}
-     */
-    public setMaxFee(feeMultiplier: number): AccountAddressRestrictionTransaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
-    }
 }
