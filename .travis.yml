@@ -6,10 +6,10 @@ node_js:
 cache:
   directories:
     - "node_modules"
-script:
+before_script:
   - npm run build
-# script: 
-#   - npm run test:coveralls
+script: 
+  - npm run test:coveralls
 before_deploy:
   - npm install --global typedoc
   - typedoc --out ts-docs src
