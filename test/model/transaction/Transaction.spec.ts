@@ -406,4 +406,8 @@ class FakeTransaction extends Transaction {
     resolveAliases(): TransferTransaction {
         throw new Error('Not implemented');
     }
+
+    setMaxFee(): TransferTransaction {
+        throw new Error('Not implemented');
+    }
 }

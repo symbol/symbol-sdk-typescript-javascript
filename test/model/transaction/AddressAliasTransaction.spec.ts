@@ -105,4 +105,18 @@ describe('AddressAliasTransaction', () => {
             expect(addressAliasTransaction.size).to.be.equal(162);
         });
     });
+
+    it('Test set maxFee using multiplier', () => {
+        const namespaceId = new NamespaceId([33347626, 3779697293]);
+        const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        const addressAliasTransaction = AddressAliasTransaction.create(
+            Deadline.create(),
+            AliasAction.Link,
+            namespaceId,
+            address,
+            NetworkType.MIJIN_TEST,
+        ).setMaxFee(2);
+​
+        expect(addressAliasTransaction.maxFee.compact()).to.be.equal(324);
+    });
 });

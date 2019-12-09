@@ -407,18 +407,8 @@ export class AggregateTransaction extends Transaction {
      */
     resolveAliases(statement: Statement): AggregateTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return new AggregateTransaction(
-            this.networkType,
-            this.type,
-            this.version,
-            this.deadline,
-            this.maxFee,
-            this.innerTransactions.map((tx) => tx.resolveAliases(statement, transactionInfo.index))
-                .sort((a, b) => a.transactionInfo!.index - b.transactionInfo!.index),
-            this.cosignatures,
-            this.signature,
-            this.signer,
-            this.transactionInfo,
-        );
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this,
+        {innerTransactions: this.innerTransactions.map((tx) => tx.resolveAliases(statement, transactionInfo.index))
+            .sort((a, b) => a.transactionInfo!.index - b.transactionInfo!.index)});
     }
 }

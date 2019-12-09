@@ -243,21 +243,10 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): MosaicAddressRestrictionTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return new MosaicAddressRestrictionTransaction(
-            this.networkType,
-            this.version,
-            this.deadline,
-            this.maxFee,
-            statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
+        return {...Object.getPrototypeOf(this),
+            mosaicId: statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
                 transactionInfo.index, aggregateTransactionIndex),
-            this.restrictionKey,
-            statement.resolveAddress(this.targetAddress,
-                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
-            this.previousRestrictionValue,
-            this.newRestrictionValue,
-            this.signature,
-            this.signer,
-            this.transactionInfo,
-        );
+            targetAddress: statement.resolveAddress(this.targetAddress,
+                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex)};
     }
 }

@@ -121,4 +121,18 @@ describe('MultisigAccountModificationTransaction', () => {
                 .to.be.equal(modifyMultisigAccountTransaction.size);
         });
     });
+
+    it('Test set maxFee using multiplier', () => {
+        const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
+            Deadline.create(),
+            1,
+            1,
+            [PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
+                NetworkType.MIJIN_TEST)],
+            [],
+            NetworkType.MIJIN_TEST,
+        ).setMaxFee(2);
+​
+        expect(modifyMultisigAccountTransaction.maxFee.compact()).to.be.equal(336);
+    });
 });

@@ -195,6 +195,15 @@ export abstract class Transaction {
     abstract resolveAliases(statement?: Statement, aggregateTransactionIndex?: number): Transaction;
 
     /**
+     * Set transaction maxFee using fee multiplier
+     * @param feeMultiplier The fee multiplier
+     * @returns {TransferTransaction}
+     */
+    public setMaxFee(feeMultiplier: number): Transaction {
+        return {...Object.getPrototypeOf(this), maxFee: UInt64.fromUint(this.size * feeMultiplier)};
+    }
+
+    /**
      * @internal
      * Serialize and sign transaction creating a new SignedTransaction
      * @param account - The account to sign the transaction

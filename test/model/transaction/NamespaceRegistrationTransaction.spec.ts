@@ -121,4 +121,15 @@ describe('NamespaceRegistrationTransaction', () => {
             expect(Convert.hexToUint8(registerNamespaceTransaction.serialize()).length).to.be.equal(registerNamespaceTransaction.size);
         });
     });
+
+    it('Test set maxFee using multiplier', () => {
+        const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
+            Deadline.create(),
+            'root-test-namespace',
+            UInt64.fromUint(1000),
+            NetworkType.MIJIN_TEST,
+        ).setMaxFee(2);
+​
+        expect(registerNamespaceTransaction.maxFee.compact()).to.be.equal(330);
+    });
 });

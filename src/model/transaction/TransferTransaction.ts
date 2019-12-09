@@ -280,22 +280,11 @@ export class TransferTransaction extends Transaction {
      * @param aggregateTransactionIndex Transaction index for aggregated transaction
      * @returns {TransferTransaction}
      */
-    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): TransferTransaction {
+    public resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): TransferTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return new TransferTransaction(
-            this.networkType,
-            this.version,
-            this.deadline,
-            this.maxFee,
-            statement.resolveAddress(this.recipientAddress,
-                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
-            this.mosaics.map((mosaic) =>
-                statement.resolveMosaic(mosaic, transactionInfo.height.toString(),
-                    transactionInfo.index, aggregateTransactionIndex)),
-            this.message,
-            this.signature,
-            this.signer,
-            this.transactionInfo,
-        );
+        return {...Object.getPrototypeOf(this), recipientAddress: statement.resolveAddress(this.recipientAddress,
+                    transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
+                mosaics: this.mosaics.map((mosaic) => statement.resolveMosaic(mosaic, transactionInfo.height.toString(),
+                    transactionInfo.index, aggregateTransactionIndex))};
     }
 }

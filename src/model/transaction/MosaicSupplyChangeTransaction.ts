@@ -193,18 +193,8 @@ export class MosaicSupplyChangeTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): MosaicSupplyChangeTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return new MosaicSupplyChangeTransaction(
-            this.networkType,
-            this.version,
-            this.deadline,
-            this.maxFee,
-            statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex),
-            this.action,
-            this.delta,
-            this.signature,
-            this.signer,
-            this.transactionInfo,
-        );
+        return {...Object.getPrototypeOf(this),
+            mosaicId: statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex)};
     }
 }

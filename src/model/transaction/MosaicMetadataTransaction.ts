@@ -219,20 +219,8 @@ export class MosaicMetadataTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): MosaicMetadataTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return new MosaicMetadataTransaction(
-            this.networkType,
-            this.version,
-            this.deadline,
-            this.maxFee,
-            this.targetPublicKey,
-            this.scopedMetadataKey,
-            statement.resolveMosaicId(this.targetMosaicId, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex),
-            this.valueSizeDelta,
-            this.value,
-            this.signature,
-            this.signer,
-            this.transactionInfo,
-        );
+        return {...Object.getPrototypeOf(this),
+            targetMosaicId: statement.resolveMosaicId(this.targetMosaicId, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex)};
     }
 }
