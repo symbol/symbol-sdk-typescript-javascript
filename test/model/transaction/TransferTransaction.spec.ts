@@ -406,7 +406,7 @@ describe('TransferTransaction', () => {
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
 ​
-        expect(transferTransaction.maxFee.compact()).to.be.equal(378);
+        expect(transferTransaction.maxFee.compact()).to.be.equal(0);
     });
 
     it('Test resolveAlias can resolve', () => {
