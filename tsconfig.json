@@ -12,6 +12,7 @@
     "stripInternal": true,
     "outDir": "dist",
     "allowJs": false,
+    "skipLibCheck": true,
     "lib": [
       "es2017",
       "dom"

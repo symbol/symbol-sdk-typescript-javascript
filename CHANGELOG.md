@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.16.0] - 09-Dec-2019
+
+**Milestone**: Fushicho.3
+
+- Added epochAdjustment introduced in catapult-server v0.9.1.1 (Fushicho.3)
+- Added `setMaxFee` to `Transaction` which calculate max transaction fee using `feeMultiplier * transaction.size`.
+- Optimised `resolveAlias` implementation in transaction using object spread operator.
+- Fixed couple of bugs in `blockHttp` and unit tests
+
 ## [0.15.1] - 06-Dec-2019
 
 **Milestone**: Fushicho.2
@@ -277,6 +286,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 **Milestone**: Alpaca
 
 - Initial code release.
+[0.16.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.15.1...v0.16.0
 [0.15.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.15.0...v0.15.1
 [0.15.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.4...v0.15.0
 [0.14.4]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.3...v0.14.4

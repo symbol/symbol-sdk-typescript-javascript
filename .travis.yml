@@ -9,8 +9,8 @@ cache:
 before_script:
   - npm run build
 script: 
-  - npm run test:coveralls
-before_deploy:
+  - npm run test:cov
+  - npm run coveralls-report
   - npm install --global typedoc
   - typedoc --out ts-docs src
   - touch ./ts-docs/.nojekyll
