@@ -79,6 +79,7 @@
   "nyc": {
     "exclude-after-remap": false,
     "exclude": [
+      "**/*.spec.js",
       "gulpfile.js"
     ]
   }
