@@ -200,7 +200,7 @@ export abstract class Transaction {
      * @returns {TransferTransaction}
      */
     public setMaxFee(feeMultiplier: number): Transaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
+        return {...Object.getPrototypeOf(this), maxFee: UInt64.fromUint(this.size * feeMultiplier)};
     }
 
     /**
