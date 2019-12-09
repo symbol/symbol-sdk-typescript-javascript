@@ -10,7 +10,8 @@
     "test:all": "mocha --ui bdd --recursive ./dist/ --timeout 90000",
     "build": "rm -rf dist/ && tsc && npm run e2econfigcopy",
     "test:cov": "nyc --reporter=lcov --reporter=text-lcov npm t && nyc report --reporter=text-lcov",
-    "test:coveralls": "npm run test:cov | coveralls"
+    "test:coveralls": "npm run test:cov | coveralls",
+    "coveralls-report": "cat ./coverage/lcov.info | coveralls"
   },
   "contributors": [
     {
