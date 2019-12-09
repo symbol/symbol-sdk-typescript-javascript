@@ -8,8 +8,8 @@ cache:
     - "node_modules"
 script:
   - npm run build
-after_success: 
-  - npm run test:coveralls
+# script: 
+#   - npm run test:coveralls
 before_deploy:
   - npm install --global typedoc
   - typedoc --out ts-docs src
