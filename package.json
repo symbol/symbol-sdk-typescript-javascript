@@ -77,8 +77,10 @@
     "rxjs": "^6.2.1"
   },
   "nyc": {
+    "exclude-after-remap": false,
     "exclude": [
-      "**/*.spec.js"
+      "**/*.spec.js",
+      "gulpfile.js"
     ]
   }
 }
