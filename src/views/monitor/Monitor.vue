@@ -12,8 +12,8 @@
 
         <div class="split"></div>
         <div class="XEM_amount overflow_ellipsis">
-          <span>{{ticker}}</span>
-          <span class="amount">{{formatNumber(balance)}}</span>
+          <div>{{ticker}}</div>
+          <div class="amount">{{formatNumber(balance)}}</div>
         </div>
         <div class="exchange">
           {{ xemUsdPrice > 0 ? `$${formatNumber(balance*xemUsdPrice)}` : '' }}
