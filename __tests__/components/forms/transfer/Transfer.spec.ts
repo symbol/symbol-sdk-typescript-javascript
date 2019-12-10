@@ -231,7 +231,7 @@ describe('Transfer', () => {
         expect(transferTransaction).toBeInstanceOf(TransferTransaction)
     })
 
-    it('should not create a transaction object while mosaic list is null', async () => {
+    it('should create a transaction object while mosaic list is null', async () => {
         wrapper.vm.$store.state.account.activeMultisigAccount = null
         wrapper.vm.$store.state.account.hasMultisigAccounts = false
 
@@ -249,11 +249,36 @@ describe('Transfer', () => {
         wrapper.vm.submit()
         await flushPromises()
         const transferTransaction = wrapper.vm.transactionList[0]
-        expect(transferTransaction).toBeUndefined()
+        expect(transferTransaction).not.toBeUndefined()
 
     })
 
     it('should sort mosaics while add new mosaic', async () => {
+        wrapper.vm.$store.state.account.activeMultisigAccount = null
+        wrapper.vm.$store.state.account.hasMultisigAccounts = false
+
+        wrapper.setData({
+            selectedMosaicHex: '308F144790CD7BC4',
+            formItems: {
+                recipient: 'alias',
+                remark: 'unit test',
+                multisigPublicKey: "",
+                feeSpeed: FEE_SPEEDS.NORMAL,
+                mosaicTransferList: [new Mosaic(new MosaicId('4EB2D6C822D8A9F7'), UInt64.fromUint(0))],
+                isEncrypted: false
+            },
+            currentAmount: 1
+        })
+
+        wrapper.vm.addMosaic()
+        wrapper.vm.submit()
+        await flushPromises()
+        const transferTransaction = wrapper.vm.transactionList[0]
+        expect(transferTransaction.mosaics[0].id.toHex()).toBe('308F144790CD7BC4')
+        expect(transferTransaction.mosaics[1].id.toHex()).toBe('4EB2D6C822D8A9F7')
+    })
+
+    it('should not add a mosaic when the amount is 0', async () => {
         wrapper.vm.$store.state.account.activeMultisigAccount = null
         wrapper.vm.$store.state.account.hasMultisigAccounts = false
 
@@ -273,10 +298,9 @@ describe('Transfer', () => {
         wrapper.vm.addMosaic()
         wrapper.vm.submit()
         await flushPromises()
-
         const transferTransaction = wrapper.vm.transactionList[0]
-        expect(transferTransaction.mosaics[0].id.toHex()).toBe('308F144790CD7BC4')
-        expect(transferTransaction.mosaics[1].id.toHex()).toBe('4EB2D6C822D8A9F7')
+        expect(transferTransaction.mosaics[0].id.toHex()).toBe('4EB2D6C822D8A9F7')
+        expect(transferTransaction.mosaics[1]).toBeUndefined()
     })
 
     it('should create a transaction object while message is null', async () => {
@@ -322,24 +346,6 @@ describe('Transfer', () => {
         expect(transferTransaction).toBeUndefined()
     })
 
-    it('should not pass inspection while mosaic list length < 1', async () => {
-        wrapper.setData({
-            selectedMosaicHex: '308F144790CD7BC4',
-            formItems: {
-                recipient: CosignAccount.address.toDTO().address,
-                remark: 'unit test',
-                multisigPublicKey: "",
-                feeSpeed: FEE_SPEEDS.NORMAL,
-                mosaicTransferList: [],
-                isEncrypted: false
-            },
-        })
-        wrapper.vm.submit()
-        await flushPromises()
-        const transferTransaction = wrapper.vm.transactionList[0]
-        expect(transferTransaction).toBeUndefined()
-    })
-
     it('should not pass while network types are different ', async () => {
         wrapper.setData({
             selectedMosaicHex: '308F144790CD7BC4',
@@ -356,5 +362,11 @@ describe('Transfer', () => {
         await flushPromises()
         const transferTransaction = wrapper.vm.transactionList[0]
         expect(transferTransaction).toBeUndefined()
+    })
+
+    it('should return proper values when a multisig account is selected', async (done) => {
+        wrapper.vm.$store.state.account.activeMultisigAccount = 'CAD57FEC0C7F2106AD8A6203DA67EE675A1A3C232C676945306448DF5B4124F8'
+        expect(wrapper.vm.isSelectedAccountMultisig).toBeTruthy()
+        done()
     })
 })

@@ -44,7 +44,7 @@ export class TransferTs extends Vue {
     isShowSubAlias = false
     currentCosignatoryList = []
     selectedMosaicHex: string = ''
-    currentAmount: number = 0
+    currentAmount: number = 1
     isAddressMapNull = true
     formItems = cloneData(formDataConfig.transferForm)
     validation = validation
@@ -56,16 +56,6 @@ export class TransferTs extends Vue {
         const {mosaics, selectedMosaicHex} = this
         if (!mosaics || !selectedMosaicHex) return null
         return mosaics[selectedMosaicHex] || null
-    }
-
-    get addressAliasMap() {
-        const addressAliasMap = this.activeAccount.addressAliasMap
-        for (let item in addressAliasMap) {
-            this.isAddressMapNull = false
-            return addressAliasMap
-        }
-        this.isAddressMapNull = true
-        return addressAliasMap
     }
 
     get announceInLock(): boolean {
@@ -113,10 +103,6 @@ export class TransferTs extends Vue {
         return activeMultisigAccount
             ? Address.createFromPublicKey(activeMultisigAccount, this.wallet.networkType).plain()
             : null
-    }
-
-    get address(): string {
-        return this.activeAccount.wallet.address
     }
 
     get multisigMosaicList(): Record<string, AppMosaic> {
@@ -198,7 +184,7 @@ export class TransferTs extends Vue {
 
     initForm() {
         this.selectedMosaicHex = null
-        this.currentAmount = 0
+        this.currentAmount = 1
         this.formItems = cloneData(formDataConfig.transferForm)
         this.formItems.multisigPublicKey = this.wallet.publicKey
         this.resetFields()
@@ -206,6 +192,7 @@ export class TransferTs extends Vue {
 
     addMosaic() {
         const {selectedMosaicHex, mosaics, currentAmount} = this
+        if (!currentAmount) return
         if (this.$validator.errors.has('currentAmount') || !selectedMosaicHex) return
         this.maxMosaicAbsoluteAmount = 0
         const {divisibility} = mosaics[selectedMosaicHex].properties
@@ -233,7 +220,7 @@ export class TransferTs extends Vue {
 
     clearAssetData() {
         this.selectedMosaicHex = null
-        this.currentAmount = null
+        this.currentAmount = 1
     }
 
     sortMosaics() {

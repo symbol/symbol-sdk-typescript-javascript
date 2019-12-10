@@ -18,7 +18,7 @@ export const validation = {
     address: 'required|address|addressNetworkType:currentAccount',
     accountPassword: 'required|confirmLock:accountPassword',
     addressOrAlias: `required|${CUSTOM_VALIDATORS_NAMES.addressOrAlias}|addressOrAliasNetworkType:currentAccount`,
-    amount: 'decimal:6|min_value:0|otherField:selectedMosaic|amountDecimals:selectedMosaic|mosaicMaxAmount:selectedMosaic',
+    amount: 'excluded:""|is_not:0|decimal:6|min_value:0|otherField:selectedMosaic|amountDecimals:selectedMosaic|mosaicMaxAmount:selectedMosaic',
     confirmPassword: 'required|confirmPassword:newPassword',
     divisibility: `required|min_value:0|max_value:${maxMosaicDivisibility}|integer`,
     duration: `required|min_value:0|max_value:${MAX_MOSAIC_DURATION}`,
@@ -26,7 +26,6 @@ export const validation = {
     invoiceAmount: `decimal:6|min_value:0|max_value:${maxMosaicAtomicUnits}`,
     mosaicId: 'required|mosaicId',
     message: `max:${MAX_MESSAGE_LENGTH}`,
-    mosaicListLength: `min_value:1`,
     namespaceDuration: `required|min_value:${MIN_NAMESPACE_DURATION}|max_value:${MAX_NAMESPACE_DURATION}`,
     namespaceName: {
         required: true,
