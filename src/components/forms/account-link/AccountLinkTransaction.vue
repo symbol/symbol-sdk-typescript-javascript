@@ -48,7 +48,7 @@
 
     <!-- UNLINK FROM REMOTE ACCOUNT -->
     <div v-if="wallet.isLinked()">
-      <form @keyup.enter="submit">
+      <form action="submit" onsubmit="event.preventDefault()" @keyup.enter="submit">
         <div class="gray_input_content">
           <span class="title" v-focus>{{$t('Unlink')}}</span>
           <span>{{this.wallet.address}} ({{this.wallet.name}})</span>
@@ -71,4 +71,4 @@ export default class AccountLinkTransaction extends AccountLinkTransactionTs {}
 </script>
 <style lang="less">
 @import "AccountLinkTransaction.less";
-</style> 
+</style>

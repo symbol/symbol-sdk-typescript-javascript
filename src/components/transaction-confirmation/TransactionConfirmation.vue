@@ -17,10 +17,9 @@
             </TransactionDetails>
           </div>
 
-          <form @keyup.enter="submit">
+          <form action="submit" onsubmit="event.preventDefault()" @keyup.enter="submit">
             <div v-if="wallet.sourceType === walletTypes.trezor">
-              <Button
-                      type="success"
+              <Button type="success"
                       @click="confirmTransactionViaTrezor"
                       v-if="wallet.sourceType === walletTypes.trezor" >
                 {{$t('trezor_confirm_transaction_prompt')}}
