@@ -107,19 +107,17 @@
           <div class="QRCodeImg">
             <img :src="qrCode$" />
           </div>
-          <div class="btns">
-            <Row :gutter="80">
-              <Col span="7">&nbsp;</Col>
-              <Col span="5">
-                <Button type="success" @click="toPrevPage">{{$t('display_private_key')}}</Button>
-              </Col>
-              <Col span="5">
-                <Button type="success">
-                  <a :href="qrCode$" download="qrCode.png">{{$t('Download')}}</a>
-                </Button>
-              </Col>
-              <Col span="7">&nbsp;</Col>
-            </Row>
+          <div class="buttons_container">
+            <Button
+              type="success"
+              class="buttons button_arrow"
+              @click="stepIndex = 2"
+            >{{$t('display_private_key')}}</Button>
+            <Button
+              type="success"
+              v-focus
+              class="buttons button_arrow"
+            ><a :href="qrCode$" download="qrCode.png">{{$t('Download')}}</a></Button>
           </div>
         </div>
       </div>
