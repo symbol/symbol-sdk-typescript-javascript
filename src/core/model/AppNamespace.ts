@@ -16,7 +16,6 @@ export class AppNamespace {
 
   static fromNamespaceInfo(namespaceInfo: NamespaceInfo,
     namespaceNames: NamespaceName[]): AppNamespace {
-
     const name = AppNamespace.extractFullNamespace(namespaceInfo, namespaceNames)
     return new AppNamespace(
       namespaceInfo.id,
@@ -39,13 +38,7 @@ export class AppNamespace {
     const parent = namespaceNames
       .find(namespaceName => namespaceName.namespaceId.toHex() === reference.parentId.toHex())
 
-    if (parent === undefined) {
-      console.error(
-        "AppNamespace -> getFullNameFromNamespaceName",
-        'no parent found', 'reference', reference, 'namespaceNames', namespaceNames,
-      )
-      return reference
-    }
+    if (parent === undefined) return reference
 
     return AppNamespace.getFullNameFromNamespaceName(
       new NamespaceName(parent.namespaceId, `${parent.name}.${reference.name}`, parent.parentId),
@@ -74,6 +67,7 @@ export class AppNamespace {
 
   static fromNamespaceUpdate(oldNamespace: AppNamespace, newNamespace: AppNamespace): AppNamespace {
     const newObject: any = {...oldNamespace, ...newNamespace}
+    
     return new AppNamespace(
       newObject.id,
       newObject.hex,
@@ -90,9 +84,7 @@ export class AppNamespace {
     namespaceNames: NamespaceName[]): string {
     return namespace.levels.map((level) => {
       const namespaceName = namespaceNames.find((name) => name.namespaceId.equals(level));
-      if (namespace === undefined) {
-        throw new Error('Not found');
-      }
+      if (namespaceName === undefined) throw new Error('Not found')
       return namespaceName;
     })
       .map((namespaceName: NamespaceName) => namespaceName.name)
@@ -103,7 +95,7 @@ export class AppNamespace {
     return !(this.alias instanceof EmptyAlias)
   }
 
-  expirationInfo(currentHeight): NamespaceExpirationInfo {
+  expirationInfo(currentHeight: number): NamespaceExpirationInfo {
     if (!currentHeight) return null
     const expired = currentHeight > this.endHeight - namespaceGracePeriodDuration
     const expiredIn = this.endHeight - namespaceGracePeriodDuration - currentHeight
