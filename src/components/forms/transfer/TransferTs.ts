@@ -44,7 +44,7 @@ export class TransferTs extends Vue {
     isShowSubAlias = false
     currentCosignatoryList = []
     selectedMosaicHex: string = ''
-    currentAmount: number = 1
+    currentAmount: number = null
     isAddressMapNull = true
     formItems = cloneData(formDataConfig.transferForm)
     validation = validation
@@ -184,7 +184,7 @@ export class TransferTs extends Vue {
 
     initForm() {
         this.selectedMosaicHex = null
-        this.currentAmount = 1
+        this.currentAmount = null
         this.formItems = cloneData(formDataConfig.transferForm)
         this.formItems.multisigPublicKey = this.wallet.publicKey
         this.resetFields()
@@ -220,7 +220,7 @@ export class TransferTs extends Vue {
 
     clearAssetData() {
         this.selectedMosaicHex = null
-        this.currentAmount = 1
+        this.currentAmount = null
     }
 
     sortMosaics() {

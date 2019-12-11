@@ -35,7 +35,7 @@
                     :class="[accountList.length == 0?'un_click':'']"
                     :disabled="accountList.length == 0"
                     v-focus
-                    v-model="formItems.password"
+                    v-model.lazy="formItems.password"
                     type="password"
                     v-validate="validation.accountPassword"
                     data-vv-name="password"

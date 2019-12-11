@@ -53,7 +53,7 @@
             <span class="amount value radius flex_center">
               <ErrorTooltip fieldName="currentAmount" placementOverride="top" class="amountTooltip">
                 <input
-                  v-model="currentAmount"
+                  v-model.lazy="currentAmount"
                   :placeholder="$t('please_enter_the_transfer_amount')"
                   v-validate="validation.amount"
                   :data-vv-as="$t('amount')"

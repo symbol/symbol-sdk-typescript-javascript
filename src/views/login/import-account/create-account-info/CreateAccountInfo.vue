@@ -17,11 +17,11 @@
         </div>
         <div class="form-input-item">
           <div>* {{$t('Set_password')}}</div>
-          <input type="password" v-model="formItem.password"></input>
+          <input type="password" v-model.lazy="formItem.password"></input>
         </div>
         <div class="form-input-item">
           <div>* {{$t('Confirm_password')}}</div>
-          <input type="password" v-model="formItem.passwordAgain"></input>
+          <input type="password" v-model.lazy="formItem.passwordAgain"></input>
         </div>
         <div class="form-input-item">
           <div>* {{$t('Password_hint')}}</div>

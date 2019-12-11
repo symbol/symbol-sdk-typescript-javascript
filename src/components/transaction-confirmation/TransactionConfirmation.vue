@@ -26,7 +26,7 @@
               </Button>
             </div>
             <div v-else>
-              <input v-model="password" type="password" required
+              <input v-model.lazy="password" type="password" required
                      :placeholder="$t('please_enter_your_wallet_password')"/>
               <button class="radius" type="success" @click="submit">{{$t('confirm')}}</button>
               <input v-show="false" type="text">

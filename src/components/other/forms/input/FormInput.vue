@@ -23,7 +23,7 @@
                   :data-vv-as="$t(fieldName)"
                   :data-vv-name="fieldName"
                   v-validate="validation"
-                  v-model="formModel[fieldName]"
+                  v-model.lazy="formModel[fieldName]"
           />
         </div>
       </Tooltip>

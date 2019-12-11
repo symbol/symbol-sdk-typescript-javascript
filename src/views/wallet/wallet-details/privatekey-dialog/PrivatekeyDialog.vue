@@ -23,7 +23,7 @@
           <form action="submit" onsubmit="event.preventDefault()" @keyup.enter="exportPrivatekey">
             <Input
               v-focus
-              v-model="password"
+              v-model.lazy="password"
               type="password"
               v-validate="validation.walletPassword"
               data-vv-name="password"

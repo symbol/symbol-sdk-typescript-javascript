@@ -35,7 +35,7 @@
               <ErrorTooltip fieldName="keystorePassword">
                 <input
                   class="absolute"
-                  v-model="formItem.keystorePassword"
+                  v-model.lazy="formItem.keystorePassword"
                   v-validate="'required'"
                   type="password"
                   :placeholder="$t('please_enter_your_keystore_password')"

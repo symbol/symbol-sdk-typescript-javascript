@@ -21,7 +21,7 @@
         <div class="stepItem1" v-if="stepIndex == 0">
           <form action="submit" onsubmit="event.preventDefault()" @keyup.enter="exportKeystore">
             <Input v-focus
-                   v-model="password"
+                   v-model.lazy="password"
                    type="password"
                    v-validate="validation.walletPassword"
                    data-vv-name="password"

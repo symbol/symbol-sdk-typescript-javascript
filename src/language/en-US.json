@@ -178,7 +178,7 @@
   "receive_address_or_alias": "Enter address or alias (e.g., nem.foundation)",
   "please_enter_the_transfer_amount": "Please enter the transfer amount",
   "please_enter_a_comment": "Please enter a comment",
-  "password_error": "Password error",
+  "password_error": "This password is incorrect",
   "transaction_hash_error": "Transaction hash error",
   "privacy_policy": "Privacy policy",
   "terms_of_use": "Terms of use",

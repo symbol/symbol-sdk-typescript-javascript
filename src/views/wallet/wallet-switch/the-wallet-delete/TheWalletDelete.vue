@@ -20,7 +20,7 @@
             {{$t('this_account_will_be_logged_out_after_the_wallet_is_successfully_deleted')}}</p>
           <Form :model="confirmation">
             <FormItem>
-              <Input v-model="confirmation.value"
+              <Input v-model.lazy="confirmation.value"
                      :autofocus="true"
                      type="password" required
                      :placeholder="$t(confirmationPrompt)"></Input>

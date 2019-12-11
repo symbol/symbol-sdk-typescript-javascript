@@ -4,7 +4,7 @@
       <span class="title">{{$t('password')}}</span>
       <ErrorTooltip fieldName="password">
         <input
-          v-model="password"
+          v-model.lazy="password"
           type="password"
           v-validate="validation.walletPassword"
           data-vv-name="password"

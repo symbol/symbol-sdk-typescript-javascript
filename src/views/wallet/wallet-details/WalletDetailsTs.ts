@@ -6,7 +6,6 @@ import AddressBook from '@/views/wallet/wallet-details/wallet-function/address-b
 import KeystoreDialog from '@/views/wallet/wallet-details/keystore-dialog/KeystoreDialog.vue'
 import MnemonicDialog from '@/views/wallet/wallet-details/mnemonic-dialog/MnemonicDialog.vue'
 import PrivatekeyDialog from '@/views/wallet/wallet-details/privatekey-dialog/PrivatekeyDialog.vue'
-import WalletUpdatePassword from './wallet-function/wallet-update-password/WalletUpdatePassword.vue'
 import WalletHarvesting from '@/views/wallet/wallet-details/wallet-function/wallet-harvesting/WalletHarvesting.vue'
 import { mapState } from "vuex"
 import { AppWallet, AppInfo, StoreAccount, AppNamespace } from "@/core/model"
@@ -23,7 +22,6 @@ import { pluck, concatMap } from 'rxjs/operators'
         PrivatekeyDialog,
         KeystoreDialog,
         AddressBook,
-        WalletUpdatePassword,
         WalletHarvesting,
     },
     computed: {

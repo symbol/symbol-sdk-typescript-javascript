@@ -16,7 +16,7 @@
             <ErrorTooltip fieldName="password">
               <input
                 v-focus
-                v-model="password"
+                v-model.lazy="password"
                 type="password"
                 v-validate="validation.accountPassword"
                 data-vv-name="password"
