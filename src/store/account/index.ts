@@ -13,7 +13,6 @@ const state: StoreAccount = {
     wallet: null,
     mosaics: {},
     namespaces: [],
-    errorTx: [],
     addressAliasMap: {},
     generationHash: '',
     transactionList: [],
@@ -112,9 +111,6 @@ const mutations: MutationTree<StoreAccount> = {
     SET_GENERATION_HASH(state: StoreAccount, generationHash: string): void {
         state.generationHash = generationHash
     },
-    SET_ERROR_TEXT(state: StoreAccount, errorTx: Array<any>): void {
-        state.errorTx = errorTx
-    },
     SET_ADDRESS_ALIAS_MAP(state: StoreAccount, addressAliasMap: any): void {
         state.addressAliasMap = addressAliasMap
     },
@@ -206,5 +202,25 @@ const mutations: MutationTree<StoreAccount> = {
     },
 }
 
+const actions = {
+    SET_GENERATION_HASH({commit, rootState}, {endpoint, generationHash}) {
+        if (endpoint !== rootState.account.node) return
+        commit('SET_GENERATION_HASH', generationHash)
+    },
+    SET_NETWORK_CURRENCY({commit, rootState}, {endpoint, networkCurrency}) {
+        if (endpoint !== rootState.account.node) return
+        commit('SET_NETWORK_CURRENCY', networkCurrency)
+    },
+    SET_NETWORK_MOSAICS({commit, rootState}, {endpoint, appMosaics}) {
+        if (endpoint !== rootState.account.node) return
+        commit('SET_NETWORK_MOSAICS', appMosaics)
+    },
+    UPDATE_MOSAICS({commit, rootState}, {endpoint, appMosaics}) {
+        if (endpoint !== rootState.account.node) return
+        commit('UPDATE_MOSAICS', appMosaics)
+    },
+}
+
 export const accountState = {state}
 export const accountMutations = {mutations}
+export const accountActions = {actions}

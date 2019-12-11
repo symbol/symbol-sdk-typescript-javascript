@@ -135,6 +135,11 @@
     }
 
     .controller {
+      .absolute {
+        background-color: rgba(255, 255, 255, .8);
+        z-index: 1;
+      }
+
       .app_controller {
         float: right;
         font-size: 20px;
@@ -154,8 +159,9 @@
           position: relative;
         }
 
-        .point_healthy {
+        .point_healthy, .point_unhealthy {
           cursor: pointer;
+          -webkit-app-region: no-drag;
 
           i {
             display: inline-block;
@@ -176,15 +182,8 @@
         }
 
         .point_unhealthy {
-          cursor: pointer;
-          -webkit-app-region: no-drag;
-
           i {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
             background-color: red;
-            border-radius: 50%;
           }
         }
 
@@ -316,13 +315,16 @@
   .ivu-poptip-popper {
     z-index: 9;
   }
+
   .ivu-select-dropdown-list {
     .ivu-select-item-focus {
       background-color: transparent;
     }
+
     .ivu-select-item-focus:hover {
       background-color: #f3f3f3;
     }
+
     .ivu-select-item-selected, .ivu-select-item-selected:hover {
       background-color: #f3f3f3;
     }

@@ -1,0 +1,757 @@
+const dtos = [
+  {
+    meta: {
+      height: "1",
+      hash: "E6926EC4574CF320CE108A9294CE67364DC749BAB0B0A6F1BDC59ADA57710183",
+      merkleComponentHash:
+        "E6926EC4574CF320CE108A9294CE67364DC749BAB0B0A6F1BDC59ADA57710183",
+      index: 0,
+      id: "5DE1FA7CED57151DCC57DBC4"
+    },
+    transaction: {
+      signature:
+        "B1D0C57EB9324974F1D4FD92DB6A701C85E16E932F69C435C814F3D153B11A67B5EA32981D7C563DA53F52B267E5FE811998D8C8E632AD654502988ED35C6702",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16718,
+      maxFee: "0",
+      deadline: "1",
+      registrationType: 0,
+      duration: "0",
+      id: "B1497F5FBA651B4F",
+      name: "cat"
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "DA6A35552A2CB690673A7733507F897510766A23D228061A86FEEEBD63560C77",
+      merkleComponentHash:
+        "DA6A35552A2CB690673A7733507F897510766A23D228061A86FEEEBD63560C77",
+      index: 8,
+      id: "5DE1FA7CED57151DCC57DBC5"
+    },
+    transaction: {
+      signature:
+        "A0AF8AB3A52D51F2C7431C20CBC077AA993D27E5F54E215375725F9EEC669E7305A913C8037CF7F49FE5AEBF11E95131D9BF183262D310F18C3380B0C419F30F",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16973,
+      maxFee: "0",
+      deadline: "1",
+      mosaicId: "941299B2B7E1291C",
+      action: 1,
+      delta: "15000000"
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "D745DD714BB1DBAA172A4072AA4CE517470226021F0ACC11B02C8345DAC74005",
+      merkleComponentHash:
+        "D745DD714BB1DBAA172A4072AA4CE517470226021F0ACC11B02C8345DAC74005",
+      index: 15,
+      id: "5DE1FA7CED57151DCC57DBC6"
+    },
+    transaction: {
+      signature:
+        "3C911DBB661B2BF21F972832D19CAE94D951601690B9B6BC53C5181F1C76A0A5FEF4C1B4F69BA050E6020D13E6481ADEA9BC4ED813FEAF9B4B827D1C2236F406",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16724,
+      maxFee: "0",
+      deadline: "1",
+      recipientAddress: "90A9BABB06F01F93CD715C9E9A004EADFDDF096FC114FCE20F",
+      mosaics: [{id: "85BBEA6CC462B244", amount: "449949999900000"}]
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "9BE000F4C82F10BDE2A3852A78CE7A94C049BD8380D7C4849A2042BAD6E199FB",
+      merkleComponentHash:
+        "9BE000F4C82F10BDE2A3852A78CE7A94C049BD8380D7C4849A2042BAD6E199FB",
+      index: 9,
+      id: "5DE1FA7CED57151DCC57DBC7"
+    },
+    transaction: {
+      signature:
+        "B98A120A62AC073AEB6BA0D97C078BF16317D1FB04C573D0AC1FF56F0DF8FEA6D677CD1D128000A92BF1EE6E629A88C7F6330B3D31FC6DEDCB11366028381101",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16724,
+      maxFee: "0",
+      deadline: "1",
+      recipientAddress: "90C83E31C33EE963C936160ECC0D77C048BED7A3E6AD5BEAF5",
+      mosaics: [
+        {id: "85BBEA6CC462B244", amount: "449949999900000"},
+        {id: "941299B2B7E1291C", amount: "3750000"}
+      ]
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "EF0B781B086CBB4F111C53F3DA8FFBE27E5893739C083565D11F2FC00608B5BA",
+      merkleComponentHash:
+        "EF0B781B086CBB4F111C53F3DA8FFBE27E5893739C083565D11F2FC00608B5BA",
+      index: 10,
+      id: "5DE1FA7CED57151DCC57DBC8"
+    },
+    transaction: {
+      signature:
+        "DF2FA99C71369F8D81CFFC19BA3D3792B84D4450E06CF67D20446BF96F9ECAAC2EF6A34D0ECD1FB27382923281E4E9C791FDA87BE8798B6BA14C639201EAF209",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16724,
+      maxFee: "0",
+      deadline: "1",
+      recipientAddress: "90A4BB8C1989C60BDA9B302190A652DEF3C071E67E3EA0659C",
+      mosaics: [
+        {id: "85BBEA6CC462B244", amount: "449949999900000"},
+        {id: "941299B2B7E1291C", amount: "3750000"}
+      ]
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "6904E9B297E7F9067883790B37008D46FD692F9F8605A40AA15D9AC9E6C18819",
+      merkleComponentHash:
+        "6904E9B297E7F9067883790B37008D46FD692F9F8605A40AA15D9AC9E6C18819",
+      index: 16,
+      id: "5DE1FA7CED57151DCC57DBC9"
+    },
+    transaction: {
+      signature:
+        "7ADF098A153D3AC0BA08A50CBA5BF543F937537EC4A62BE2249D67A628E4E6960F4E0FBECE9F170F4C88FE36D9B391718CD050990D9D61E82C1B8F065E9FC108",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16724,
+      maxFee: "0",
+      deadline: "1",
+      recipientAddress: "90FD4DA37243661041786C825007A20994528052931C5B6E46",
+      mosaics: [{id: "85BBEA6CC462B244", amount: "449949999900000"}]
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "F63DD5605AB0938CEE3D46A8AC5883748F6A333D8131FF46681E07BAC6C0CB91",
+      merkleComponentHash:
+        "F63DD5605AB0938CEE3D46A8AC5883748F6A333D8131FF46681E07BAC6C0CB91",
+      index: 11,
+      id: "5DE1FA7CED57151DCC57DBCA"
+    },
+    transaction: {
+      signature:
+        "4956F3681297D7C6EC548AC81E1542F25A7FA80D8795CBEF9F34B3D0B0224E5A7BAE8AB36F916733B08EE5B79D9A013EB47B7CB2F8FF57E2FA2E89400A90AF00",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16724,
+      maxFee: "0",
+      deadline: "1",
+      recipientAddress: "90DB9BC0D49582A60B8BE367A4246571F9EB09B60F6CF46985",
+      mosaics: [
+        {id: "85BBEA6CC462B244", amount: "449949999900000"},
+        {id: "941299B2B7E1291C", amount: "3750000"}
+      ]
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "22781629A13E6F0E1BB526CFF3B45FF24311CE0C7EBE24608C9484044D434DFB",
+      merkleComponentHash:
+        "22781629A13E6F0E1BB526CFF3B45FF24311CE0C7EBE24608C9484044D434DFB",
+      index: 17,
+      id: "5DE1FA7CED57151DCC57DBCB"
+    },
+    transaction: {
+      signature:
+        "850470CF7BC9448D86B7CB82125DB4F79418BFD2488E941916E9F7A487454F32770DDC702EBAF92F36A3127D574018A134BE8D7A2F3491BD45C1D7C674A6420A",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16724,
+      maxFee: "0",
+      deadline: "1",
+      recipientAddress: "90826D2019FE75300EF48CD107F4D25E12C9BF3BAFDD659C8A",
+      mosaics: [{id: "85BBEA6CC462B244", amount: "449949999900000"}]
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "89B830A99B50AB0CAB7E1CE8F589D1440585728124CF6C9D375E11A621CF5816",
+      merkleComponentHash:
+        "89B830A99B50AB0CAB7E1CE8F589D1440585728124CF6C9D375E11A621CF5816",
+      index: 18,
+      id: "5DE1FA7CED57151DCC57DBCC"
+    },
+    transaction: {
+      signature:
+        "1891E5129523A5AFFA7F8A82C653D5F88AE7CEEA786260D276CBD099D36B147012D7393A929249799C81CA6653EC91D0DC9B844779AA5E10C159A5E190517D02",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16724,
+      maxFee: "0",
+      deadline: "1",
+      recipientAddress: "90A8F96F9091E6AA6890E3624DDAF73517D24C979494FAC343",
+      mosaics: [{id: "85BBEA6CC462B244", amount: "449949999900000"}]
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "33D6C500C43A6439204566B0399052B781049560FD1E661C452BDF4649F04EB5",
+      merkleComponentHash:
+        "33D6C500C43A6439204566B0399052B781049560FD1E661C452BDF4649F04EB5",
+      index: 12,
+      id: "5DE1FA7CED57151DCC57DBCD"
+    },
+    transaction: {
+      signature:
+        "6D47EC46B5B08A9EAEF2FD28C3F07BFBA64F81EF4E9482FD277436C7B11878592372AD45463E9877F955C0D023A76876179BB830C0821D5285E00370548FF40F",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16724,
+      maxFee: "0",
+      deadline: "1",
+      recipientAddress: "90AE2540A14FDC977232D41B6E7656DAE839D6B997B673C333",
+      mosaics: [
+        {id: "85BBEA6CC462B244", amount: "449949999900000"},
+        {id: "941299B2B7E1291C", amount: "3750000"}
+      ]
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "62854EAAF50A863D99393CEEC919A7F8B29342C2128538234CFFBC718A0ED319",
+      merkleComponentHash:
+        "62854EAAF50A863D99393CEEC919A7F8B29342C2128538234CFFBC718A0ED319",
+      index: 13,
+      id: "5DE1FA7CED57151DCC57DBCE"
+    },
+    transaction: {
+      signature:
+        "6AA2DA8A64A3237A2B2F97F451E5740992DC8A1AD43F25D5AB7FA0CE202D821E0025A7D9EC2C58A3BBE1E2C6D521CF8844A0BA15D00075B8B8EC5297B3BF230D",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16724,
+      maxFee: "0",
+      deadline: "1",
+      recipientAddress: "90413F33F493A5EA82DE8A346E940778F65E6F2E772AEDF8EA",
+      mosaics: [{id: "85BBEA6CC462B244", amount: "449949999900000"}]
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "917D6A913C53D9524C8323A4A2C813578CCED3E21D98AC3ED51F781B534DA408",
+      merkleComponentHash:
+        "917D6A913C53D9524C8323A4A2C813578CCED3E21D98AC3ED51F781B534DA408",
+      index: 19,
+      id: "5DE1FA7CED57151DCC57DBCF"
+    },
+    transaction: {
+      signature:
+        "EF0418A799A962BF63A8795E60D919FE708BC35CD07ED0503933F18E11C83514097B389BADFA608078A0ED339216C3693153B02493FA2DEFF31A1097D6FC5D01",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16724,
+      maxFee: "0",
+      deadline: "1",
+      recipientAddress: "9031C85ACD5BC1AAB9A882F5E1F4279CBB030F4CAE2ACEAEEC",
+      mosaics: [{id: "85BBEA6CC462B244", amount: "449949999900000"}]
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "B73975E82EDB8F8716FFC806353D039363624D66617AFD1742F2FAB923EB519D",
+      merkleComponentHash:
+        "B73975E82EDB8F8716FFC806353D039363624D66617AFD1742F2FAB923EB519D",
+      index: 14,
+      id: "5DE1FA7CED57151DCC57DBD0"
+    },
+    transaction: {
+      signature:
+        "A5F0FDA85E0447D7B21AD8B9AD674D302E1C1B3AE935A3DD5E61E3A6F61AFDA07F603D0DB1514CBFC45A0CD5F06FD7A8AB7D8160CB5E1801C13F04BE01D53F09",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16724,
+      maxFee: "0",
+      deadline: "1",
+      recipientAddress: "90D732C927F70BB5F15E50248F39F4BFC5C05CB3923B8656DD",
+      mosaics: [{id: "85BBEA6CC462B244", amount: "449949999900000"}]
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "3E2A872DCB6C6BAB241005579F366712C66FE5EB1F260F94A39484908BDDDAF6",
+      merkleComponentHash:
+        "3E2A872DCB6C6BAB241005579F366712C66FE5EB1F260F94A39484908BDDDAF6",
+      index: 20,
+      id: "5DE1FA7CED57151DCC57DBD1"
+    },
+    transaction: {
+      signature:
+        "71EB162E6F192C3B3B158E817CE7AE9C8714735335DF1E6EC28FDB3D0A9C9AC13A3613BB07FA99DFD7EA0F8F1D5A7B86EB6E2C1EBE5C981D10D7D6237970C808",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16724,
+      maxFee: "0",
+      deadline: "1",
+      recipientAddress: "90929C6EE060D0B43F5601101DD1ADCAFBDECB2C5263CBB2FA",
+      mosaics: [{id: "85BBEA6CC462B244", amount: "449949999900000"}]
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "F9737C99FE9780EA4DAFF5E0D896231864C8D2BEFC2234EBC068E26CBF4427EC",
+      merkleComponentHash:
+        "F9737C99FE9780EA4DAFF5E0D896231864C8D2BEFC2234EBC068E26CBF4427EC",
+      index: 21,
+      id: "5DE1FA7CED57151DCC57DBD2"
+    },
+    transaction: {
+      signature:
+        "27076CB0BDA0716D7313C2981CD56E5F48845ABD1CF62AD5436732493CA221D7701672EA8269505C36951E22D2797F43E390CFC741321B4FA79B895C9F0DBE01",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16724,
+      maxFee: "0",
+      deadline: "1",
+      recipientAddress: "90179E392749FFB1FCB640AE8E79DF3DE1687B17F170D4CA96",
+      mosaics: [{id: "85BBEA6CC462B244", amount: "449949999900000"}]
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "EF34B7B22A05D34A8D73906ADF20F2AA680A0441CDCCB43A39351274754A2E39",
+      merkleComponentHash:
+        "EF34B7B22A05D34A8D73906ADF20F2AA680A0441CDCCB43A39351274754A2E39",
+      index: 22,
+      id: "5DE1FA7CED57151DCC57DBD3"
+    },
+    transaction: {
+      signature:
+        "5E045668D26A4DAA7974DF1A7C0B3ADF9E59274E0A11038932188B47D010DFC7881941EDEE00FB824156118EED7E2162BCFE2AFB92D1EAC531DDCD4C01B61C04",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16724,
+      maxFee: "0",
+      deadline: "1",
+      recipientAddress: "903AC6F2ED8AB1B30EC9807DE57BE0A0A44CD13044CE769C37",
+      mosaics: [{id: "85BBEA6CC462B244", amount: "449949999900000"}]
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "439B1702594ED55F9CE9EB48287ED40BA443A8AA0B225B6899D3ED3E637FEFDE",
+      merkleComponentHash:
+        "439B1702594ED55F9CE9EB48287ED40BA443A8AA0B225B6899D3ED3E637FEFDE",
+      index: 23,
+      id: "5DE1FA7CED57151DCC57DBD4"
+    },
+    transaction: {
+      signature:
+        "4F08170695314CDFEB7B69C11D97034EEFDF2C2DA3B840ECFA1A3E810F8843DEEB72716CE907E7EADEBC13646D934B0A6BE0B31E378DE4ACC9E2EE3102AC1D05",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16724,
+      maxFee: "0",
+      deadline: "1",
+      recipientAddress: "9009D2EB22F0F090A789578192C2786EA4E1F2B5DFD46B24B9",
+      mosaics: [{id: "85BBEA6CC462B244", amount: "449949999900000"}]
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "D97191EC7C9C60CF492C3BC6774184F8E9B6D3798731642B39AD564DF1CB9FB8",
+      merkleComponentHash:
+        "D97191EC7C9C60CF492C3BC6774184F8E9B6D3798731642B39AD564DF1CB9FB8",
+      index: 24,
+      id: "5DE1FA7CED57151DCC57DBD5"
+    },
+    transaction: {
+      signature:
+        "97CA79D8853F0F50E23B7E4AEFBCCBABB9B27C22E7FE60413E827DAF713BADBA6C43120CCD7C724508A3155841EB4857C31AE75FFE0AE9EE175D1A911A312806",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16724,
+      maxFee: "0",
+      deadline: "1",
+      recipientAddress: "9034836DFCC8584FF82831F192DAE57177FFB78393E9111DED",
+      mosaics: [{id: "85BBEA6CC462B244", amount: "449949999900000"}]
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "976D94C38E8C4AD25F866DC377F8E1F4AB391338C19F1C883A6F07B38DAA254B",
+      merkleComponentHash:
+        "976D94C38E8C4AD25F866DC377F8E1F4AB391338C19F1C883A6F07B38DAA254B",
+      index: 25,
+      id: "5DE1FA7CED57151DCC57DBD6"
+    },
+    transaction: {
+      signature:
+        "F4AEBCD60E9A50AC2B75E59C7F0F6A9BCA629F23A3DEAAAA8134C48D8E4DECD47567E34CBEE06F090B27CB720692E9DADA9980E6BF0D478885B9F93B9C645E00",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16724,
+      maxFee: "0",
+      deadline: "1",
+      recipientAddress: "90D12328B7F7803991866007F3155EF21628515C673E44BD72",
+      mosaics: [{id: "85BBEA6CC462B244", amount: "449949999900000"}]
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "FB29AE912CA51F0C5EA79C328BC53F5599C4005513A3B9FA3146E1560A6C44C7",
+      merkleComponentHash:
+        "FB29AE912CA51F0C5EA79C328BC53F5599C4005513A3B9FA3146E1560A6C44C7",
+      index: 26,
+      id: "5DE1FA7CED57151DCC57DBD7"
+    },
+    transaction: {
+      signature:
+        "CEFDE2B2098FB51E1CDBB4CC6F388BFB4D9392B3BD2CC342D3B652E35FE8F8F5BAF95019E378D6D5072316D6A8485DDB14AC38B9A0FCE94E1D3AD9CD6BFAD80B",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16724,
+      maxFee: "0",
+      deadline: "1",
+      recipientAddress: "90AF3125783E28A8EE1F3F7A61972CC0D70CBDCDA7A2C741A5",
+      mosaics: [{id: "85BBEA6CC462B244", amount: "449949999900000"}]
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "333678BB953254A3F8DF4B0CD7AF617BE8B4CF789EE3B36A7C3C60684EDF2664",
+      merkleComponentHash:
+        "333678BB953254A3F8DF4B0CD7AF617BE8B4CF789EE3B36A7C3C60684EDF2664",
+      index: 27,
+      id: "5DE1FA7CED57151DCC57DBD8"
+    },
+    transaction: {
+      signature:
+        "E766AC0500B650F88EA8541D43527A33B878B98A05E3041DBDBD947A9ECDD612AF47A3A369B42147C9808CD72E095FE7E81A55AF064ED1A4897344EF43D61104",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16724,
+      maxFee: "0",
+      deadline: "1",
+      recipientAddress: "904C1F1FCD2D7E7E9D80AF755E185B8BC7AB4E06C00DE19ED3",
+      mosaics: [{id: "85BBEA6CC462B244", amount: "449949999900000"}]
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "5A8D6C102387DDBBE88CEED812BB1A86E98037295B4225C3C1C7EF8204691947",
+      merkleComponentHash:
+        "5A8D6C102387DDBBE88CEED812BB1A86E98037295B4225C3C1C7EF8204691947",
+      index: 28,
+      id: "5DE1FA7CED57151DCC57DBD9"
+    },
+    transaction: {
+      signature:
+        "C37E8D78E51A98D5F31E5AC7ADB0636E4A74090A23239EC5655516BEF374C47EA8198D910460C168A6848DB3EABA11B7EB6F9CC697D3B19C61FD07B37E6CBF0D",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16724,
+      maxFee: "0",
+      deadline: "1",
+      recipientAddress: "90E2EB9C8F14B7AB612EBEF051DA326AFBF5F1A68C250B75BE",
+      mosaics: [{id: "85BBEA6CC462B244", amount: "449949999900000"}]
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "C35486FBBB4DD5862C0EEAED8FBB87F5D9B33FDB17A5CBD2095973DC4B046163",
+      merkleComponentHash:
+        "C35486FBBB4DD5862C0EEAED8FBB87F5D9B33FDB17A5CBD2095973DC4B046163",
+      index: 1,
+      id: "5DE1FA7CED57151DCC57DBDA"
+    },
+    transaction: {
+      signature:
+        "F1EBAC95C7A62066E68BB9A910C1A99257B9C70E05798470586E036E873C5C3025737136466975E88BF526EA05DDC3F4C570973776ED219F78AEC967645F5602",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16718,
+      maxFee: "0",
+      deadline: "1",
+      registrationType: 1,
+      parentId: "B1497F5FBA651B4F",
+      id: "941299B2B7E1291C",
+      name: "harvest"
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "294D4CDB52DEB7929473AB54F5342831DEC91E119A461EAFB0C0CD7AFBF25FB7",
+      merkleComponentHash:
+        "294D4CDB52DEB7929473AB54F5342831DEC91E119A461EAFB0C0CD7AFBF25FB7",
+      index: 2,
+      id: "5DE1FA7CED57151DCC57DBDB"
+    },
+    transaction: {
+      signature:
+        "562C4466B423C633BBE4D52AF34CEA288C26676555B5FF32615C1C1AF2000AA8C7661E87B0BA07AB4F705B402164AB3F0EFBF8DE3A3F97A8F03FF7E30EBB3C05",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16718,
+      maxFee: "0",
+      deadline: "1",
+      registrationType: 1,
+      parentId: "B1497F5FBA651B4F",
+      id: "85BBEA6CC462B244",
+      name: "currency"
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "F725452B1215DBC8AFF329CEA5591CC0B351D4A581BBF53B6725CDB895537256",
+      merkleComponentHash:
+        "F725452B1215DBC8AFF329CEA5591CC0B351D4A581BBF53B6725CDB895537256",
+      index: 3,
+      id: "5DE1FA7CED57151DCC57DBDC"
+    },
+    transaction: {
+      signature:
+        "40C93238CB7EECDDB4B05A16C50D6560F431D0B4C51FFF33FE9F8B47F5EA1A2EC62528BB31248A8425A59431B1B185179A628508E4E6B00C1A0C22C68EC1790A",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16717,
+      maxFee: "0",
+      deadline: "1",
+      nonce: 0,
+      id: "4B1278B5DD004110",
+      flags: 2,
+      divisibility: 6,
+      duration: "0"
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "643042A5DE216FFD7228CDD0FBD67D453EA7ABB150FDF393D7217F9FCD3075F7",
+      merkleComponentHash:
+        "643042A5DE216FFD7228CDD0FBD67D453EA7ABB150FDF393D7217F9FCD3075F7",
+      index: 4,
+      id: "5DE1FA7CED57151DCC57DBDD"
+    },
+    transaction: {
+      signature:
+        "C4918F3F0C6130FC654C58E9D84ADF3061FD695BEFA687603A09838A7B82C3F675868006F1F627BA11995BF4658BE606472F3DD1FE061A5BD1431C433ADE1C08",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 17230,
+      maxFee: "0",
+      deadline: "1",
+      namespaceId: "85BBEA6CC462B244",
+      aliasAction: 1,
+      mosaicId: "4B1278B5DD004110"
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "49DC13216BC2EA3282826DBEAD322034503E580497D755611958F02C63CA97FB",
+      merkleComponentHash:
+        "49DC13216BC2EA3282826DBEAD322034503E580497D755611958F02C63CA97FB",
+      index: 5,
+      id: "5DE1FA7CED57151DCC57DBDE"
+    },
+    transaction: {
+      signature:
+        "66A64CA8E22807B869662BFC320F6D8D2F1ADE056A7D39CF4079EFAF5BDCFB87D2F2D89C1E2B6DAA82EE49E6036A3C44AC7D76CC9E881BC22CB4C1D918E75C03",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16973,
+      maxFee: "0",
+      deadline: "1",
+      mosaicId: "85BBEA6CC462B244",
+      action: 1,
+      delta: "8998999998000000"
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "44619F90E2D35E5E5D3787211C19494A5625CF420EF00D34E527081437511C1A",
+      merkleComponentHash:
+        "44619F90E2D35E5E5D3787211C19494A5625CF420EF00D34E527081437511C1A",
+      index: 6,
+      id: "5DE1FA7CED57151DCC57DBDF"
+    },
+    transaction: {
+      signature:
+        "796BAEC49E69BB36F072E66D91F4D545EB53DDDC659BC6D1F3CC3266B2727238739050A2EEA1AEECAE898DF834757CBC06276F9F0CE19FE85F85F005440A9E06",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 16717,
+      maxFee: "0",
+      deadline: "1",
+      nonce: 1,
+      id: "5052F2603B1885E5",
+      flags: 3,
+      divisibility: 3,
+      duration: "0"
+    }
+  },
+  {
+    meta: {
+      height: "1",
+      hash: "5D9FD5CAC3A6E1255DF45362055982E5D493C23B5B63137CD04C9C03CF64EB8D",
+      merkleComponentHash:
+        "5D9FD5CAC3A6E1255DF45362055982E5D493C23B5B63137CD04C9C03CF64EB8D",
+      index: 7,
+      id: "5DE1FA7CED57151DCC57DBE0"
+    },
+    transaction: {
+      signature:
+        "F10E2499CEE07510B8FC7A4551CA95F56B05E3E44D4EB24CAD46C9AB0BA854A3D0F4B5BAFD33A1977EDCC7D06A8B7007D977662F394A4BD7CBD1351551D73009",
+      signerPublicKey:
+        "AA8E0A7D7DAED3BC73FCDF6D35A80D6B18E50901D21E020008939F980ECBC383",
+      version: 1,
+      network: 144,
+      type: 17230,
+      maxFee: "0",
+      deadline: "1",
+      namespaceId: "941299B2B7E1291C",
+      aliasAction: 1,
+      mosaicId: "5052F2603B1885E5"
+    }
+  }
+];
+
+// @ts-ignore
+import {CreateTransactionFromDTO} from "nem2-sdk/dist/src/infrastructure/transaction/CreateTransactionFromDTO";
+
+import {
+  NamespaceInfo,
+  NamespaceId,
+  PublicAccount,
+  UInt64,
+  NetworkType,
+  MosaicAlias,
+  MosaicId
+} from "nem2-sdk";
+
+const namespaceInfoDTO = {
+  meta: {active: true, index: 0, id: "5DDF437A5553ED2B86297524"},
+  namespace: {
+    registrationType: 1,
+    depth: 2,
+    level0: "84B3552D375FFA4B",
+    level1: "D525AD41D95FCF29",
+    alias: {type: 1, mosaicId: "46BE9BC0626F9B1A"},
+    parentId: "84B3552D375FFA4B",
+    ownerPublicKey:
+      "D33212292076DF6F87CFA8B81887FDA2657BBC37CBA183798F43DC27380F75A7",
+    ownerAddress: "98D6315C2EE23CC3ACAE603AAC37D31C5DD894BC22AA6EC356",
+    startHeight: "1",
+    endHeight: "18446744073709551615"
+  }
+};
+
+const xemNamespaceInfo = new NamespaceInfo(
+  namespaceInfoDTO.meta.active,
+  namespaceInfoDTO.meta.index,
+  namespaceInfoDTO.meta.id,
+  namespaceInfoDTO.namespace.registrationType,
+  namespaceInfoDTO.namespace.depth,
+  [
+    NamespaceId.createFromEncoded(namespaceInfoDTO.namespace.level0),
+    NamespaceId.createFromEncoded(namespaceInfoDTO.namespace.level1)
+  ],
+  NamespaceId.createFromEncoded(namespaceInfoDTO.namespace.parentId),
+  PublicAccount.createFromPublicKey(
+    namespaceInfoDTO.namespace.ownerPublicKey,
+    NetworkType.TEST_NET
+  ),
+  UInt64.fromNumericString(namespaceInfoDTO.namespace.startHeight),
+  UInt64.fromNumericString(namespaceInfoDTO.namespace.endHeight),
+  new MosaicAlias(new MosaicId(namespaceInfoDTO.namespace.alias.mosaicId))
+);
+
+export const catNamespace = Object.assign(
+  {__proto__: Object.getPrototypeOf(xemNamespaceInfo)},
+  xemNamespaceInfo,
+  {name: "cat.currency"}
+);
+
+export const firstTransactionsCatCurrency = dtos.map(tx =>
+  CreateTransactionFromDTO(tx)
+);

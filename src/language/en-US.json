@@ -884,5 +884,6 @@
   "Access_My_Wallet": "Access My Wallet",
   "hex": "Mosaic",
   "dashBoard": "Dashboard",
-  "Cosign_aggregate_transactions": "Cosign aggregate transactions"
+  "Cosign_aggregate_transactions": "Cosign aggregate transactions",
+  "Invalid_node": "Invalid node"
 }

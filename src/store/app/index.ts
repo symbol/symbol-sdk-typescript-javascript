@@ -5,7 +5,6 @@ import {
     StagedTransaction,
     Log,
     LoadingOverlayObject,
-    StoreAccount
 } from '@/core/model'
 import {localRead} from "@/core/utils";
 import {Transaction} from 'nem2-sdk';
@@ -36,7 +35,8 @@ const state: AppInfo = {
     loadingOverlay: {
         show: false,
         message: '',
-    }
+    },
+    nodeLoading: false
 }
 
 const mutations: MutationTree<AppInfo> = {
@@ -78,7 +78,7 @@ const mutations: MutationTree<AppInfo> = {
     SET_NAMESPACE_LOADING(state: AppInfo, namespaceLoading: boolean) {
         state.namespaceLoading = namespaceLoading
     },
-    SET_UI_DISABLED(state: AppInfo, {isDisabled, message}: { isDisabled: boolean, message: string }) {
+    SET_UI_DISABLED(state: AppInfo, {isDisabled, message}: {isDisabled: boolean, message: string}) {
         state.isUiDisabled = isDisabled;
         state.uiDisabledMessage = message;
     },
@@ -104,7 +104,39 @@ const mutations: MutationTree<AppInfo> = {
     REMOVE_TEMPORARY_INFO(state: AppInfo) {
         delete state.loadingOverlay.temporaryInfo
     },
+    /** Subscribed in App.vue */
+    TRIGGER_NOTICE(state: AppInfo, message: string) {},
+    SET_NODE_LOADING(state: AppInfo, nodeLoading: boolean) {
+        state.nodeLoading = nodeLoading
+    },
+}
+
+const actions = {
+    SET_CHAIN_STATUS({commit, rootState}, payload: {endpoint: string, chainStatus: ChainStatus}) {
+        const {endpoint, chainStatus} = payload
+        if (endpoint !== rootState.account.node) return
+        commit('SET_CHAIN_STATUS', chainStatus)
+    },
+
+    SET_IS_NODE_HEALTHY({commit, rootState}, payload: {endpoint: string, isNodeHealthy: boolean}) {
+        const {endpoint, isNodeHealthy} = payload
+        if (endpoint !== rootState.account.node) return
+        commit('SET_IS_NODE_HEALTHY', isNodeHealthy)
+    },
+
+    SET_NODE_NETWORK_TYPE({commit, rootState}, payload: {endpoint: string, nodeNetworkType: number}) {
+        const {endpoint, nodeNetworkType} = payload
+        if (endpoint !== rootState.account.node) return
+        commit('SET_NODE_NETWORK_TYPE', nodeNetworkType)
+    },
+
+    SET_NODE_LOADING({commit, rootState}, payload: {endpoint: string, nodeLoading: boolean}) {
+        const {endpoint, nodeLoading} = payload
+        if (endpoint !== rootState.account.node) return
+        commit('SET_NODE_LOADING', nodeLoading)
+    }
 }
 
 export const appState = {state}
 export const appMutations = {mutations}
+export const appActions = {actions}

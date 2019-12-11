@@ -64,3 +64,12 @@ export const flattenArrayOfStrings = (array: any[]): any[] => {
     const step1 = [].concat(...array).map(item => item)
     return [].concat(...step1).map(item => item)
 }
+
+export const httpToWs = (URL: string): string => {
+    const url = URL.toLowerCase()
+    const isHttps = url.substring(0, 5) === 'https'
+
+    return isHttps
+        ? url.replace('https', 'wss')
+        : url.replace('http', 'ws')
+}

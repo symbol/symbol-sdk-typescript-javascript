@@ -3,7 +3,7 @@ import {KlineQuery} from "@/core/query"
 import {market} from "@/core/api"
 
 
-export const getMarketOpenPrice = async (that: any) => {
+export const setMarketOpeningPrice = async (that: any) => {
   try {
       const rstStr = await market.kline({period: "1min", symbol: "xemusdt", size: "1"})
       if (!rstStr.rst) return
@@ -16,6 +16,6 @@ export const getMarketOpenPrice = async (that: any) => {
       }
       localSave('openPriceOneMinute', JSON.stringify(openPriceOneMinute))
   } catch (error) {
-      console.error("getMarketOpenPrice -> error", error)
+      console.error("setMarketOpeningPrice -> error", error)
   }
 }

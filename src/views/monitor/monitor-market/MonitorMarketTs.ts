@@ -121,7 +121,7 @@ export class MonitorMarketTs extends Vue {
 
     }
 
-    async getMarketOpenPrice() {
+    async setMarketOpeningPrice() {
         try {
             if (!isRefreshData('openPriceOneMinute', 1000 * 60, new Date().getSeconds())) {
                 const openPriceOneMinute = JSON.parse(localRead('openPriceOneMinute'))
@@ -182,7 +182,7 @@ export class MonitorMarketTs extends Vue {
     async mounted() {
         // @TODO: this is impacting the performance
         this.getMarketPrice()
-        this.getMarketOpenPrice()
+        this.setMarketOpeningPrice()
         this.getRecentTransactionList()
     }
 }

@@ -67,6 +67,12 @@ export class MenuBarTs extends Vue {
         return this.app.nodeNetworkType
     }
 
+    get nodeNetworkTypeText() {
+        const {nodeNetworkType} = this
+        if (!this.isNodeHealthy) return this.$t('Invalid_node')
+        return nodeNetworkType ? NetworkType[nodeNetworkType] : this.$t('Loading')
+    }
+
     set language(lang) {
         this.$i18n.locale = lang
         localSave('locale', lang)
@@ -85,10 +91,15 @@ export class MenuBarTs extends Vue {
         AppWallet.updateActiveWalletAddress(newActiveWalletAddress, this.$store)
     }
 
+    get nodeLoading() {
+        return this.app.nodeLoading
+    }
+
     navigationIconClicked(route: any): void {
         if (!this.walletList.length) return
         if (this.$route.matched.map(({path}) => path).includes(route.path)) return
-        this.$router.push(route.path).catch(err => {})
+        this.$router.push(route.path).catch(err => {
+        })
     }
 
     accountQuit() {
@@ -120,7 +131,6 @@ export class MenuBarTs extends Vue {
         if (this.node == this.nodeList[index].value) return
         this.nodeList.forEach(item => item.isSelected = false)
         this.nodeList[index].isSelected = true
-        const node = this.nodeList[index].value
         this.$store.commit('SET_NODE', this.nodeList[index].value)
     }
 

@@ -42,7 +42,6 @@ export interface StoreAccount {
     wallet: AppWallet
     mosaics: Record<string, AppMosaic>
     namespaces: AppNamespace[]
-    errorTx: Array<any>
     addressAliasMap: any,
     generationHash: string
     transactionList: FormattedTransaction[]
@@ -91,6 +90,7 @@ export interface AppInfo {
     nodeNetworkType: string,
     logs: Log[],
     loadingOverlay: LoadingOverlayObject,
+    nodeLoading:boolean
 }
 
 export interface StagedTransaction {
