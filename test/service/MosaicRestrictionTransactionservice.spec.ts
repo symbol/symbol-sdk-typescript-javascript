@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {of as observableOf} from 'rxjs';
-import {deepEqual, instance, mock, when} from 'ts-mockito';
+import { expect } from 'chai';
+import { of as observableOf } from 'rxjs';
+import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { KeyGenerator } from '../../src/core/format/KeyGenerator';
-import { RestrictionMosaicHttp } from '../../src/infrastructure/RestrictionMosaicHttp';
+import { RestrictionMosaicRepository } from '../../src/infrastructure/RestrictionMosaicRespository';
 import { Account } from '../../src/model/account/Account';
-import {NetworkType} from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicAddressRestriction } from '../../src/model/restriction/MosaicAddressRestriction';
 import { MosaicGlobalRestriction } from '../../src/model/restriction/MosaicGlobalRestriction';
@@ -31,7 +31,7 @@ import { Deadline } from '../../src/model/transaction/Deadline';
 import { MosaicAddressRestrictionTransaction } from '../../src/model/transaction/MosaicAddressRestrictionTransaction';
 import { MosaicGlobalRestrictionTransaction } from '../../src/model/transaction/MosaicGlobalRestrictionTransaction';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
-import {UInt64} from '../../src/model/UInt64';
+import { UInt64 } from '../../src/model/UInt64';
 import { MosaicRestrictionTransactionService } from '../../src/service/MosaicRestrictionTransactionService';
 import { TestingAccount } from '../conf/conf.spec';
 
@@ -52,18 +52,18 @@ describe('MosaicRestrictionTransactionService', () => {
         mosaicId = new MosaicId('85BBEA6CC462B244');
         mosaicIdWrongKey = new MosaicId('85BBEA6CC462B288');
         referenceMosaicId = new MosaicId('1AB129B545561E6A');
-        const mockRestrictionHttp = mock(RestrictionMosaicHttp);
+        const mockRestrictionRepository = mock<RestrictionMosaicRepository>();
 
-        when(mockRestrictionHttp
+        when(mockRestrictionRepository
             .getMosaicGlobalRestriction(deepEqual(mosaicId)))
             .thenReturn(observableOf(mockGlobalRestriction()));
-        when(mockRestrictionHttp
+        when(mockRestrictionRepository
             .getMosaicGlobalRestriction(deepEqual(mosaicIdWrongKey)))
             .thenThrow(new Error());
-        when(mockRestrictionHttp
+        when(mockRestrictionRepository
             .getMosaicAddressRestriction(deepEqual(mosaicId), deepEqual(account.address)))
                 .thenReturn(observableOf(mockAddressRestriction()));
-        const restrictionHttp = instance(mockRestrictionHttp);
+        const restrictionHttp = instance(mockRestrictionRepository);
         mosaicRestrictionTransactionService = new MosaicRestrictionTransactionService(restrictionHttp);
     });
 
