@@ -147,4 +147,37 @@ export class UInt64 {
         const long_b = Long.fromBits(other.lower, other.higher, true);
         return long_a.compare(long_b);
     }
+
+    /**
+     * UInt64 add operation
+     * @param other
+     * @returns {UInt64}
+     */
+    public add(other: UInt64): UInt64 {
+        const long_value = Long.fromBits(this.lower, this.higher, true);
+        const long_b = Long.fromBits(other.lower, other.higher, true);
+        return this.longToUint64(long_value.add(long_b));
+    }
+
+    /**
+     * UInt64 add operation
+     * @param other
+     * @returns {UInt64}
+     */
+    public subtract(other: UInt64): UInt64 {
+        const long_value = Long.fromBits(this.lower, this.higher, true);
+        const long_b = Long.fromBits(other.lower, other.higher, true);
+        if (long_value.compare(long_b) < 0) {
+            throw new Error('Unsigned substraction result cannot be negative.');
+        }
+        return this.longToUint64(long_value.subtract(long_b));
+    }
+
+    /**
+     * Convert long value to UInt64
+     * @param longValue long value
+     */
+    private longToUint64(longValue: Long): UInt64 {
+        return new UInt64([longValue.getLowBitsUnsigned(), longValue.getHighBitsUnsigned()]);
+    }
 }
