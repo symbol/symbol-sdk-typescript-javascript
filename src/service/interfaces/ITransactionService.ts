@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import { Listener } from '../../infrastructure/Listener';
 import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
 import { SignedTransaction } from '../../model/transaction/SignedTransaction';

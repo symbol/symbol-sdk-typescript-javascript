@@ -63,8 +63,8 @@ describe('MosaicRestrictionTransactionService', () => {
         when(mockRestrictionRepository
             .getMosaicAddressRestriction(deepEqual(mosaicId), deepEqual(account.address)))
                 .thenReturn(observableOf(mockAddressRestriction()));
-        const restrictionHttp = instance(mockRestrictionRepository);
-        mosaicRestrictionTransactionService = new MosaicRestrictionTransactionService(restrictionHttp);
+        const restrictionRepository = instance(mockRestrictionRepository);
+        mosaicRestrictionTransactionService = new MosaicRestrictionTransactionService(restrictionRepository);
     });
 
     it('should create MosaicGlobalRestriction Transaction', (done) => {

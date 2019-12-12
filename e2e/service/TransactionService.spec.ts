@@ -44,6 +44,7 @@ import { SignedTransaction } from '../../src/model/transaction/SignedTransaction
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
+import { ReceiptHttp } from "../../src/infrastructure/ReceiptHttp";
 
 describe('TransactionService', () => {
     let account: Account;
@@ -454,7 +455,7 @@ describe('TransactionService', () => {
 
     describe('should return resolved transaction', () => {
         it('call transaction service', (done) => {
-            const transactionService = new TransactionService(url);
+            const transactionService = new TransactionService(new TransactionHttp(url), new ReceiptHttp(url));
             transactionService.resolveAliases(transactionHashes).subscribe((transactions) => {
                 expect(transactions.length).to.be.equal(8);
                 transactions.map((tx) => {
@@ -480,7 +481,7 @@ describe('TransactionService', () => {
 
     describe('Test resolve alias with multiple transaction in single block', () => {
         it('call transaction service', (done) => {
-            const transactionService = new TransactionService(url);
+            const transactionService = new TransactionService(new TransactionHttp(url), new ReceiptHttp(url));
             transactionService.resolveAliases(transactionHashesMultiple).subscribe((tx) => {
                 expect(tx.length).to.be.equal(3);
                 expect((tx[0] as TransferTransaction).mosaics[0].id.toHex()).to.be.equal(mosaicId.toHex());

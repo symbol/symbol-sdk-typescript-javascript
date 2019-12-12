@@ -37,16 +37,22 @@ export class MosaicHttp extends Http implements MosaicRepository {
      * @internal
      * Nem2 Library mosaic routes api
      */
-    private mosaicRoutesApi: MosaicRoutesApi;
+    private readonly mosaicRoutesApi: MosaicRoutesApi;
 
+    /**
+     * @internal
+     * network type for the mappings.
+     */
+    private readonly networkTypeObservable: Observable<NetworkType>;
     /**
      * Constructor
      * @param url
      * @param networkType
      */
-    constructor(url: string, networkType?: NetworkType) {
-        super(url, networkType);
+    constructor(url: string, networkType?: NetworkType | Observable<NetworkType>) {
+        super(url);
         this.mosaicRoutesApi = new MosaicRoutesApi(url);
+        this.networkTypeObservable = this.createNetworkTypeObservable(networkType);
     }
 
     /**
@@ -55,7 +61,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
      * @returns Observable<MosaicInfo>
      */
     public getMosaic(mosaicId: MosaicId): Observable<MosaicInfo> {
-        return this.getNetworkTypeObservable().pipe(
+        return this.networkTypeObservable.pipe(
             mergeMap((networkType) => observableFrom(
                 this.mosaicRoutesApi.getMosaic(mosaicId.toHex())).pipe(
                     map(({body}) => new MosaicInfo(
@@ -82,7 +88,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
         const mosaicIdsBody = {
             mosaicIds: mosaicIds.map((id) => id.toHex()),
         };
-        return this.getNetworkTypeObservable().pipe(
+        return this.networkTypeObservable.pipe(
             mergeMap((networkType) => observableFrom(
                 this.mosaicRoutesApi.getMosaics(mosaicIdsBody)).pipe(
                     map(({body}) => body.map((mosaicInfoDTO) => {
@@ -109,7 +115,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
      * @param address Account address.
      */
     public getMosaicsFromAccount(address: Address): Observable<MosaicInfo[]> {
-        return this.getNetworkTypeObservable().pipe(
+        return this.networkTypeObservable.pipe(
             mergeMap((networkType) => observableFrom(
                 this.mosaicRoutesApi.getMosaicsFromAccount(address.plain())).pipe(
                     map(({body}) => body.mosaics.map((mosaicInfo) =>
@@ -136,7 +142,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
         const accountIdsBody = {
             addresses: addresses.map((address) => address.plain()),
         };
-        return this.getNetworkTypeObservable().pipe(
+        return this.networkTypeObservable.pipe(
             mergeMap((networkType) => observableFrom(
                 this.mosaicRoutesApi.getMosaicsFromAccounts(accountIdsBody)).pipe(
                     map(({body}) => body.mosaics.map((mosaicInfoDTO) => {

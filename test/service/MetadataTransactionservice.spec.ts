@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {of as observableOf} from 'rxjs';
-import {deepEqual, instance, mock, when} from 'ts-mockito';
+import { expect } from 'chai';
+import { of as observableOf } from 'rxjs';
+import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { Convert } from '../../src/core/format/Convert';
-import { MetadataHttp } from '../../src/infrastructure/MetadataHttp';
+import { MetadataRepository } from '../../src/infrastructure/MetadataRepository';
 import { Account } from '../../src/model/account/Account';
-import {NetworkType} from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { Metadata } from '../../src/model/metadata/Metadata';
 import { MetadataEntry } from '../../src/model/metadata/MetadataEntry';
 import { MetadataType } from '../../src/model/metadata/MetadataType';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
-import {NamespaceId} from '../../src/model/namespace/NamespaceId';
+import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AccountMetadataTransaction } from '../../src/model/transaction/AccountMetadataTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { MosaicMetadataTransaction } from '../../src/model/transaction/MosaicMetadataTransaction';
 import { NamespaceMetadataTransaction } from '../../src/model/transaction/NamespaceMetadataTransaction';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
-import {UInt64} from '../../src/model/UInt64';
+import { UInt64 } from '../../src/model/UInt64';
 import { MetadataTransactionService } from '../../src/service/MetadataTransactionService';
 import { TestingAccount } from '../conf/conf.spec';
 
@@ -45,19 +45,19 @@ describe('MetadataTransactionService', () => {
 
     before(() => {
         account = TestingAccount;
-        const mockMetadataHttp = mock(MetadataHttp);
+        const mockMetadataRepository:MetadataRepository = mock();
 
-        when(mockMetadataHttp
+        when(mockMetadataRepository
             .getAccountMetadataByKeyAndSender(deepEqual(account.address), key.toHex(), account.publicKey))
             .thenReturn(observableOf(mockMetadata(MetadataType.Account)));
-        when(mockMetadataHttp
+        when(mockMetadataRepository
             .getMosaicMetadataByKeyAndSender(deepEqual(new MosaicId(targetIdHex)), key.toHex(), account.publicKey))
                 .thenReturn(observableOf(mockMetadata(MetadataType.Mosaic)));
-        when(mockMetadataHttp
+        when(mockMetadataRepository
             .getNamespaceMetadataByKeyAndSender(deepEqual(NamespaceId.createFromEncoded(targetIdHex)), key.toHex(), account.publicKey))
             .thenReturn(observableOf(mockMetadata(MetadataType.Namespace)));
-        const metadataHttp = instance(mockMetadataHttp);
-        metadataTransactionService = new MetadataTransactionService(metadataHttp);
+        const metadataRepository = instance(mockMetadataRepository);
+        metadataTransactionService = new MetadataTransactionService(metadataRepository);
     });
 
     it('should create AccountMetadataTransaction', (done) => {

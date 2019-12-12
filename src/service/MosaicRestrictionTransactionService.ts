@@ -35,8 +35,8 @@ import { NamespaceId } from "../model/namespace/NamespaceId";
  */
 export class MosaicRestrictionTransactionService {
 
-    private readonly defaultMosaicAddressRestrictionVaule = UInt64.fromHex('FFFFFFFFFFFFFFFF');
-    private readonly defaultMosaicGlobalRestrictionVaule = UInt64.fromUint(0);
+    private readonly defaultMosaicAddressRestrictionValue = UInt64.fromHex('FFFFFFFFFFFFFFFF');
+    private readonly defaultMosaicGlobalRestrictionValue = UInt64.fromUint(0);
 
     /**
      * Constructor
@@ -68,7 +68,7 @@ export class MosaicRestrictionTransactionService {
         return this.getGlobalRestrictionEntry(mosaicId, restrictionKey).pipe(
             map((restrictionEntry: MosaicGlobalRestrictionItem | undefined) => {
                 const currentValue = restrictionEntry ? UInt64.fromNumericString(restrictionEntry.restrictionValue) :
-                    this.defaultMosaicGlobalRestrictionVaule;
+                    this.defaultMosaicGlobalRestrictionValue;
                 const currentType = restrictionEntry ? restrictionEntry.restrictionType : MosaicRestrictionType.NONE;
 
                 return MosaicGlobalRestrictionTransaction.create(
@@ -114,7 +114,7 @@ export class MosaicRestrictionTransactionService {
                 }
                 return this.getAddressRestrictionEntry(mosaicId, restrictionKey, targetAddress).pipe(
                     map((optionalValue) => {
-                        const currentValue = optionalValue ? UInt64.fromNumericString(optionalValue) : this.defaultMosaicAddressRestrictionVaule;
+                        const currentValue = optionalValue ? UInt64.fromNumericString(optionalValue) : this.defaultMosaicAddressRestrictionValue;
                         return MosaicAddressRestrictionTransaction.create(
                             deadline,
                             mosaicId,

@@ -35,6 +35,7 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
 import { TransactionUtils } from '../infrastructure/TransactionUtils';
+import { ReceiptHttp } from "../../src/infrastructure/ReceiptHttp";
 
 describe('TransactionService', () => {
     let account: Account;
@@ -69,7 +70,7 @@ describe('TransactionService', () => {
             generationHash = json.generationHash;
             transactionHttp = new TransactionHttp(url);
             namespaceHttp = new NamespaceHttp(url);
-            transactionService = new TransactionService(url);
+            transactionService = new TransactionService(new TransactionHttp(url), new ReceiptHttp(url));
             done();
         });
     });

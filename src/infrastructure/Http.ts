@@ -15,44 +15,37 @@
  */
 
 // tslint:disable-next-line: ordered-imports
-import {from as observableFrom, Observable, of as observableOf, throwError} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
-import {NetworkType} from '../model/blockchain/NetworkType';
-import { NodeRoutesApi } from './api/apis';
+import { from as observableFrom, Observable, of as observableOf, throwError } from 'rxjs';
+import { NetworkType } from '../model/blockchain/NetworkType';
 import { QueryParams } from './QueryParams';
+import { NodeRoutesApi } from "./api/nodeRoutesApi";
+import { catchError, map, share, shareReplay } from 'rxjs/operators';
+
 /**
  * Http extended by all http services
  */
 export abstract class Http {
     protected readonly url: string;
-    protected networkType: NetworkType;
 
     /**
      * Constructor
      * @param url Base catapult-rest url
-     * @param networkType
      */
-    constructor(url: string, networkType?: NetworkType) {
-        if (networkType) {
-            this.networkType = networkType;
-        }
+    constructor(url: string) {
         this.url = url;
     }
 
-    getNetworkTypeObservable(): Observable<NetworkType> {
-        let networkTypeResolve;
-        if (!this.networkType) {
-            networkTypeResolve = observableFrom(new NodeRoutesApi(this.url).getNodeInfo()).pipe(
-                map(({body}) => {
-                    this.networkType = body.networkIdentifier;
-                    return body.networkIdentifier;
-                }),
-                catchError((error) =>  throwError(this.errorHandling(error))),
-            );
+    createNetworkTypeObservable(networkType?: NetworkType | Observable<NetworkType>): Observable<NetworkType> {
+        if (networkType && networkType instanceof Observable) {
+            return networkType as Observable<NetworkType>;
+        } else if (networkType) {
+            return observableOf(networkType as NetworkType);
         } else {
-            networkTypeResolve = observableOf(this.networkType);
+            return observableFrom(new NodeRoutesApi(this.url).getNodeInfo()).pipe(
+                map(({body}) => body.networkIdentifier),
+                catchError((error) => throwError(this.errorHandling(error))),
+            ).pipe(shareReplay(1));
         }
-        return networkTypeResolve;
     }
 
     queryParams(queryParams?: QueryParams): any {

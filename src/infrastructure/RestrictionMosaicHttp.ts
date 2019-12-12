@@ -44,8 +44,8 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
      * @param url
      * @param networkType
      */
-    constructor(url: string, networkType?: NetworkType) {
-        super(url, networkType);
+    constructor(url: string) {
+        super(url);
         this.restrictionMosaicRoutesApi = new RestrictionMosaicRoutesApi(url);
 
     }
