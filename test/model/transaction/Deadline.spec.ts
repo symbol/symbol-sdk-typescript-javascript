@@ -51,4 +51,12 @@ describe('Deadline', () => {
         expect(deadline.toDTO()[1]).to.be.equal(11);
     });
 
+    it('make sure epochAdjustment is correct', () => {
+        const epochAdjustment = new Date(Deadline.timestampNemesisBlock * 1000);
+        expect(epochAdjustment.getFullYear()).to.be.equal(2019);
+        expect(epochAdjustment.getMonth() + 1).to.be.equal(11);
+        expect(epochAdjustment.getDate()).to.be.equal(11);
+        expect(epochAdjustment.getHours()).to.be.equal(0);
+        expect(epochAdjustment.getMinutes()).to.be.equal(0);
+    });
 });
