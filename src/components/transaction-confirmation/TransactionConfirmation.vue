@@ -18,10 +18,10 @@
           </div>
 
           <form action="submit" onsubmit="event.preventDefault()" @keyup.enter="submit">
-            <div v-if="wallet.sourceType === walletTypes.trezor">
+            <div v-if="wallet.sourceType === CreateWalletType.trezor">
               <Button type="success"
                       @click="confirmTransactionViaTrezor"
-                      v-if="wallet.sourceType === walletTypes.trezor" >
+                      v-if="wallet.sourceType === CreateWalletType.trezor" >
                 {{$t('trezor_confirm_transaction_prompt')}}
               </Button>
             </div>

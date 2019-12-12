@@ -4,7 +4,7 @@ import {MosaicSupplyChangeTransaction, Deadline, UInt64, MosaicId, MosaicSupplyC
 import {DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import {cloneData, getAbsoluteMosaicAmount, formatNumber} from '@/core/utils'
 import {AppWallet, AppMosaic, DefaultFee, StoreAccount} from "@/core/model"
-import {signTransaction} from '@/core/services'
+import {signAndAnnounce} from '@/core/services'
 import {validation} from '@/core/validation'
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
@@ -17,7 +17,7 @@ import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue
 })
 export class MosaicSupplyChangeTs extends Vue {
     @Provide() validator: any = this.$validator
-    signTransaction = signTransaction
+    signAndAnnounce = signAndAnnounce
     activeAccount: StoreAccount
     formatNumber = formatNumber
     validation = validation
@@ -105,18 +105,10 @@ export class MosaicSupplyChangeTs extends Vue {
         try {
             this.show = false;
 
-            const {
-                success,
-                signedTransaction,
-                signedLock,
-            } = await this.signTransaction({
+            this.signAndAnnounce({
                 transaction: this.transaction,
                 store: this.$store,
             })
-
-            if (success) {
-                new AppWallet(this.wallet).announceTransaction(signedTransaction, this.activeAccount.node, this.$root, signedLock)
-            }
         } catch (error) {
             console.error("MosaicEditDialogTs -> confirmViaTransactionConfirmation -> error", error)
         }

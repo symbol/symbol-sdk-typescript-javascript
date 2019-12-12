@@ -106,7 +106,7 @@ describe('NamespaceRegistration', () => {
     //         formItems: formDataConfig.namespaceEditForm,
     //     })
     //     const signTransactionMock = jest.fn(x => x)
-    //     wrapper.vm.signTransaction = signTransactionMock
+    //     wrapper.vm.signAndAnnounce = signTransactionMock
     //     wrapper.vm.submit()
     //     await flushPromises()
     //     console.log(signTransactionMock.mock.calls[0])
@@ -125,7 +125,7 @@ describe('NamespaceRegistration', () => {
             },
         })
         const signTransactionMock = jest.fn(x => x)
-        wrapper.vm.signTransaction = signTransactionMock
+        wrapper.vm.signAndAnnounce = signTransactionMock
         await flushPromises()
         wrapper.vm.submit()
 

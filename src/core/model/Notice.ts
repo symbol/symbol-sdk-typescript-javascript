@@ -1,4 +1,3 @@
-
 import {AppState} from './types';
 import {Store} from 'vuex';
 

@@ -104,7 +104,7 @@ describe('CheckPasswordDialog', () => {
 
     it('Should emit false when a wrong password', async () => {
         wrapper.setProps({returnPassword: false})
-        wrapper.setData({password: 'wrongpassword'})
+        wrapper.setData({password: 'wrongPassword'})
         wrapper.vm.submit()
         await flushPromises()
 

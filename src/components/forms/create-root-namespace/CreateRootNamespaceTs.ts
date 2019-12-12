@@ -9,7 +9,7 @@ import {
     getAbsoluteMosaicAmount, formatSeconds, formatAddress, cloneData
 } from '@/core/utils'
 import {StoreAccount, AppInfo, DefaultFee, AppWallet, LockParams} from "@/core/model"
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction, signTransaction} from '@/core/services'
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction, signAndAnnounce} from '@/core/services'
 import {validation} from "@/core/validation"
 import DisabledForms from "@/components/disabled-forms/DisabledForms.vue"
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
@@ -174,7 +174,7 @@ export class CreateRootNamespaceTs extends Vue {
         this.transactionList = [aggregateTransaction]
     }
 
-    async confirmViaTransactionConfirmation() {
+    confirmViaTransactionConfirmation() {
         if (this.activeMultisigAccount) {
             this.createByMultisig()
         } else {
@@ -182,18 +182,10 @@ export class CreateRootNamespaceTs extends Vue {
         }
 
         try {
-            const {
-                success,
-                signedTransaction,
-                signedLock,
-            } = await signTransaction({
+            signAndAnnounce({
                 transaction: this.transactionList[0],
                 store: this.$store,
             })
-
-            if(success) {
-                new AppWallet(this.wallet).announceTransaction(signedTransaction, this.activeAccount.node, this, signedLock)
-            }
         } catch (error) {
             console.error("RootNamespaceTs -> confirmViaTransactionConfirmation -> error", error)
         }

@@ -7,7 +7,7 @@ import {Component, Vue, Provide} from 'vue-property-decorator'
 import {networkConfig, formDataConfig, DEFAULT_FEES, FEE_GROUPS} from "@/config"
 import {getAbsoluteMosaicAmount, formatAddress, cloneData} from '@/core/utils'
 import {AppNamespace, StoreAccount, AppInfo, AppWallet, DefaultFee} from "@/core/model"
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction, signTransaction} from '@/core/services'
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction, signAndAnnounce} from '@/core/services'
 import {validation} from "@/core/validation"
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
@@ -188,7 +188,7 @@ export class CreateSubNamespaceTs extends Vue {
         this.transactionList = [transaction]
     }
 
-    async confirmViaTransactionConfirmation() {
+    confirmViaTransactionConfirmation() {
         if (this.activeMultisigAccount) {
             this.createByMultisig()
         } else {
@@ -196,18 +196,10 @@ export class CreateSubNamespaceTs extends Vue {
         }
 
         try {
-            const {
-                success,
-                signedTransaction,
-                signedLock,
-            } = await signTransaction({
+            signAndAnnounce({
                 transaction: this.transactionList[0],
                 store: this.$store,
             })
-
-            if(success) {
-                new AppWallet(this.wallet).announceTransaction(signedTransaction, this.activeAccount.node, this, signedLock)
-            }
         } catch (error) {
             console.error("SubNamespaceTs -> confirmViaTransactionConfirmation -> error", error)
         }

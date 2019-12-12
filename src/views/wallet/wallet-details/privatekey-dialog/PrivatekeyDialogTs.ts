@@ -73,6 +73,7 @@ export class PrivatekeyDialogTs extends Vue {
         const {generationHash} = this.activeAccount
         const {networkType} = wallet
         try {
+            // @ts-ignore
             return new AccountQR(account, password, networkType, generationHash)
         } catch (e) {
             return null

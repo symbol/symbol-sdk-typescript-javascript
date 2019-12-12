@@ -29,7 +29,7 @@ export const setWalletsBalances = async (store: Store<AppState>): Promise<void> 
         const {walletList} = store.state.app
         if (!walletList.length) return
 
-        new Log('setWalletsBalances', walletList.map(({address, name}) => ({address, name}))).create(store)
+        Log.create('setWalletsBalances', walletList.map(({address, name}) => ({address, name})), store)
 
         const addresses = walletList.map(({address}) => Address.createFromRawAddress(address))
         const accountsInfo = await new AccountHttp(node).getAccountsInfo(addresses).toPromise()

@@ -17,7 +17,7 @@ import {
     LockParams, AddOrRemove, CosignatoryModifications,
 } from "@/core/model"
 import {getAbsoluteMosaicAmount, formatAddress, cloneData} from "@/core/utils"
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction, signTransaction} from '@/core/services'
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction, signAndAnnounce} from '@/core/services'
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
 import MultisigTree from '@/views/multisig/multisig-tree/MultisigTree.vue'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
@@ -40,7 +40,7 @@ export class MultisigAccountModificationTs extends Vue {
     @Provide() validator: any = this.$validator
     activeAccount: StoreAccount
     MULTISIG_FORM_MODES = MULTISIG_FORM_MODES
-    signTransaction = signTransaction
+    signAndAnnounce = signAndAnnounce
     AddOrRemove = AddOrRemove
     Address = Address
     formItems = {...this.defaultFormItems}
@@ -269,19 +269,13 @@ export class MultisigAccountModificationTs extends Vue {
             ? this.createMultisigConversionTransaction()
             : this.getMultisigModificationTransaction()
 
-        const {
-            success,
-            signedTransaction,
-            signedLock,
-        } = await this.signTransaction({
+        const {success} = await this.signAndAnnounce({
             transaction,
             store: this.$store,
             lockParams: this.lockParams,
         })
-        if (success) {
-            new AppWallet(this.wallet).announceTransaction(signedTransaction, this.activeAccount.node, this, signedLock)
-            this.initForm()
-        }
+
+        if (success) this.initForm()
     }
 
     showErrorMessage(message: string) {

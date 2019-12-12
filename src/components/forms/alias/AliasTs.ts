@@ -15,7 +15,7 @@ import {
 import {mapState} from "vuex"
 import {cloneData, getAbsoluteMosaicAmount} from "@/core/utils"
 import {StoreAccount, AppInfo, AppWallet, AppNamespace, DefaultFee, MosaicNamespaceStatusType, BindTypes} from "@/core/model"
-import {AppMosaics, signTransaction} from '@/core/services'
+import {AppMosaics, signAndAnnounce} from '@/core/services'
 import {validation} from '@/core/validation'
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
@@ -33,7 +33,7 @@ import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue
 export class AliasTs extends Vue {
     @Provide() validator: any = this.$validator
     BindTypes = BindTypes
-    signTransaction = signTransaction
+    signAndAnnounce = signAndAnnounce
     activeAccount: StoreAccount
     app: AppInfo
     validation = validation
@@ -203,23 +203,14 @@ export class AliasTs extends Vue {
             )
     }
 
-    async confirmViaTransactionConfirmation() {
+    confirmViaTransactionConfirmation() {
         try {
-            const transaction = this.transaction()
             this.show = false;
 
-            const {
-                success,
-                signedTransaction,
-                signedLock,
-            } = await this.signTransaction({
-                transaction,
+            this.signAndAnnounce({
+                transaction: this.transaction(),
                 store: this.$store,
             })
-
-            if (success) {
-                new AppWallet(this.wallet).announceTransaction(signedTransaction, this.activeAccount.node, this.$root, signedLock)
-            }
         } catch (error) {
             console.error("AliasTs -> confirmViaTransactionConfirmation -> error", error)
         }

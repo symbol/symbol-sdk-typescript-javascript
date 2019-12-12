@@ -11,7 +11,7 @@ import {
     FormattedAggregateBonded
 } from '@/core/model'
 import {defaultNetworkConfig} from '@/config'
-import {signTransaction} from '@/core/services'
+import {signAndAnnounce} from '@/core/services'
 import TransactionModal from '@/components/transaction-modal/TransactionModal.vue'
 
 @Component({
@@ -87,7 +87,7 @@ export class TransactionListTs extends Vue {
     renderHeightAndConfirmation(transactionHeight: number): string {
         if (transactionHeight === 0) return null
         const {currentHeight} = this
-        if (!currentHeight) return `${transactionHeight}`
+            if (!currentHeight) return `${transactionHeight}`
 
         const confirmations = currentHeight - transactionHeight + 1
         /** Prevents a reactivity glitch */
@@ -117,20 +117,12 @@ export class TransactionListTs extends Vue {
         this.scroll.target.scrollTop = 0
     }
 
-    async confirmViaTransactionConfirmation() {
+    confirmViaTransactionConfirmation() {
         try {
-            const {
-                success,
-                signedTransaction,
-                signedLock,
-            } = await signTransaction({
+            signAndAnnounce({
                 transaction: this.activeTransaction.rawTx,
                 store: this.$store,
             })
-
-            if (success) {
-                new AppWallet(this.wallet).announceTransaction(signedTransaction, this.activeAccount.node, this, signedLock)
-            }
         } catch (error) {
             console.error("TransactionListTs -> confirmViaTransactionConfirmation -> error", error)
         }

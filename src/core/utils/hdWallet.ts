@@ -1,5 +1,6 @@
 import {ExtendedKey, MnemonicPassPhrase, Wallet, Network} from "nem2-hd-wallets"
-import {NetworkType, Account} from 'nem2-sdk'
+import {NetworkType, Account, Address} from 'nem2-sdk'
+import {sequenceEqual} from 'rxjs/operators'
 
 export const getNetworkFromNetworkType = (networkType: NetworkType): Network => {
     if (networkType === NetworkType.MIJIN_TEST) return Network.CATAPULT
@@ -31,6 +32,7 @@ export const getAccountFromPathNumber = (
     const network = getNetworkFromNetworkType(networkType)
     const bip32Node = ExtendedKey.createFromSeed(PassPhrase.toEntropy(), network)
     const wallet = new Wallet(bip32Node.derivePath(path))
+    // @ts-ignore
     return wallet.getAccount(networkType)
 }
 
@@ -43,3 +45,9 @@ export const randomizeMnemonicWordArray = (array: string[]): string[] => {
     }
     return array
 }
+
+export const getTenAddressesFromMnemonic = (
+    mnemonic: string,
+    networkType: NetworkType,
+): Address[] => [...Array(10)]
+    .map((_, index) =>  getAccountFromPathNumber(mnemonic, index, networkType).address)

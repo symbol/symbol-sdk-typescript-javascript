@@ -106,7 +106,7 @@ describe('Alias from namespace', () => {
                 target: '0550A29A06E0A16E',
         })
         const signTransactionMock = jest.fn(x => x)
-        wrapper.vm.signTransaction = signTransactionMock
+        wrapper.vm.signAndAnnounce = signTransactionMock
         wrapper.vm.submit()
         await flushPromises()
         const [{ transaction },] = signTransactionMock.mock.calls[0]
@@ -121,7 +121,7 @@ describe('Alias from namespace', () => {
             target: 'SBOENUE4JRGPMBV4HAOA2MIJGIY4AAHLI2YSKHRF',
         })
         const signTransactionMock = jest.fn(x => x)
-        wrapper.vm.signTransaction = signTransactionMock
+        wrapper.vm.signAndAnnounce = signTransactionMock
         wrapper.vm.submit()
         await flushPromises()
         const [{ transaction },] = signTransactionMock.mock.calls[0]
@@ -136,7 +136,7 @@ describe('Alias from namespace', () => {
             target: Account.generateNewAccount(NetworkType.TEST_NET).address.plain()
         })
         const signTransactionMock = jest.fn(x => x)
-        wrapper.vm.signTransaction = signTransactionMock
+        wrapper.vm.signAndAnnounce = signTransactionMock
         wrapper.vm.submit()
         await flushPromises()
 
@@ -149,7 +149,7 @@ describe('Alias from namespace', () => {
             target: 'THISISANINVALIDADDRESS'
         })
         const signTransactionMock = jest.fn(x => x)
-        wrapper.vm.signTransaction = signTransactionMock
+        wrapper.vm.signAndAnnounce = signTransactionMock
         wrapper.vm.submit()
         await flushPromises()
 

@@ -2,7 +2,6 @@ import {Transaction, TransferTransaction, Address, TransactionType, InnerTransac
 import {transactionTag} from "@/config"
 import {getRelativeMosaicAmount} from '@/core/utils'
 import {transferIcons, transactionTypeToIcon} from '@/common/img/monitor/icons'
-import {ChainStatus} from './ChainStatus'
 import {AppState} from './types'
 import {Store} from 'vuex'
 

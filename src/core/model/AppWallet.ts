@@ -28,7 +28,7 @@ import {localRead, localSave, getAccountFromPathNumber, getPath} from "@/core/ut
 import {AppAccounts, CreateWalletType} from "@/core/model"
 import {AppState, RemoteAccount} from './types'
 import {Log} from './Log'
-import {FormattedTransaction} from './FormattedTransaction'
+import {Notice, NoticeType} from './Notice'
 
 const {DEFAULT_LOCK_AMOUNT} = defaultNetworkConfig
 const {EMPTY_LINKED_ACCOUNT_KEY} = networkConfig
@@ -390,77 +390,70 @@ export class AppWallet {
         return this.linkedAccountKey && this.linkedAccountKey !== EMPTY_LINKED_ACCOUNT_KEY
     }
 
+    /**
+     * Routes a signedTransaction to the relevant announce method
+     * @param signedTransaction 
+     * @param store 
+     * @param signedLock 
+     */
     announceTransaction(
         signedTransaction: SignedTransaction | CosignatureSignedTransaction,
-        node: string,
-        that: any,
+        store: Store<AppState>,
         signedLock?: SignedTransaction,
-    ): void {
+        ): void {
         if (signedTransaction instanceof CosignatureSignedTransaction) {
-            this.announceCosignature(signedTransaction, node, that)
+            this.announceCosignature(signedTransaction, store)
             return
         }
 
         if (signedLock) {
-            this.announceBonded(signedTransaction, signedLock, node, that)
+            this.announceBonded(signedTransaction, signedLock, store)
             return
         }
 
-        this.announceNormal(signedTransaction, node, that)
+        this.announceNormal(signedTransaction, store)
     }
 
-    announceCosignature(signedTransaction: CosignatureSignedTransaction, node: string, that: any): void {
-        const message = that.$t(Message.SUCCESS)
-        new Log('announceCosignature', signedTransaction).create(that.$store)
+    announceCosignature(signedTransaction: CosignatureSignedTransaction, store: Store<AppState>): void {
+        const {node} = store.state.account
+        Log.create('announceCosignature', signedTransaction, store)
 
         new TransactionHttp(node).announceAggregateBondedCosignature(signedTransaction).subscribe(
-            _ => {
-                that.$store.commit('POP_TRANSACTION_TO_COSIGN_BY_HASH', signedTransaction.parentHash)
-                that.$Notice.success({title: message})
+            (_) => {
+                store.commit('POP_TRANSACTION_TO_COSIGN_BY_HASH', signedTransaction.parentHash)
+                Notice.trigger(Message.SUCCESS, NoticeType.success, store)
             },
-            (error) => {
-                new Log('announceNormal -> error', error).create(that.$store)
-                console.error('announceNormal -> error', error)
-            },
+            error => Log.create('announceCosignature -> error', error, store),
         )
     }
 
-    announceNormal(signedTransaction: SignedTransaction, node: string, that: any): void {
-        const message = that.$t(Message.SUCCESS)
-        new Log('announceNormal', signedTransaction).create(that.$store)
+    announceNormal(signedTransaction: SignedTransaction, store: Store<AppState>): void {
+        const {node} = store.state.account
+        Log.create('announceNormal', signedTransaction, store)
+
         new TransactionHttp(node).announce(signedTransaction).subscribe(
-            _ => that.$Notice.success({title: message}),
-            error => console.error('announceNormal -> error', error),
+            _ => Notice.trigger(Message.SUCCESS, NoticeType.success, store),
+            error => Log.create('announceNormal -> error', error, store),
         )
     }
 
-    signAndAnnounceNormal(password: Password, node: string, generationHash: string, transactionList: Array<any>, that: any): void {
-        const account = this.getAccount(password)
-        const signature = account.sign(transactionList[0], generationHash)
-        const message = that.$t(Message.SUCCESS)
-        new Log('signAndAnnounceNormal', signature).create(that.$store)
-
-        new TransactionHttp(node).announce(signature).subscribe(
-            _ => that.$Notice.success({title: message}),
-            (error) => {
-                new Log('signAndAnnounceNormal -> error', error).create(that.$store)
-                console.error('signAndAnnounceNormal -> error', error)
-            }
-        )
-    }
-
-    announceBonded(signedTransaction: SignedTransaction, signedLock: SignedTransaction, node: string, that): void {
+    announceBonded(
+        signedTransaction: SignedTransaction,
+        signedLock: SignedTransaction,
+        store: Store<AppState>,
+    ): void {
+        const {node} = store.state.account
         const transactionHttp = new TransactionHttp(node)
         const listener = new Listener(node.replace('http', 'ws'), WebSocket)
-        const message = that.$t(Message.SUCCESS)
-        new Log('signedTransaction', {signedTransaction, signedLock}).create(that.$store)
+        Log.create('announceBonded', {signedTransaction, signedLock}, store)
 
-        listener.open().then(() => {
+        listener.open().then(() => new Promise((resolve, reject) => {
             transactionHttp
                 .announce(signedLock)
-                .subscribe(x => console.log(x), error => {
-                    throw new Error(error)
-                })
+                .subscribe(
+                    (_) =>  Notice.trigger(Message.SUCCESS, NoticeType.success, store),
+                    error =>  reject(error),
+                )
 
             listener
                 .confirmed(Address.createFromRawAddress(this.address))
@@ -470,16 +463,11 @@ export class AppWallet {
                     mergeMap(_ => transactionHttp.announceAggregateBonded(signedTransaction)),
                 )
                 .subscribe(
-                    (_) => {
-                        that.$Notice.success({title: message})
-                    },
-                    error => {
-                        throw new Error(error)
-                    },
+                    _ => Notice.trigger(Message.SUCCESS, NoticeType.success, store),
+                    error => reject(error),
                 )
-        }).catch((error) => {
-            new Log('announceBonded -> error', {signedTransaction, signedLock}).create(that.$store)
-            console.error('announceBonded -> error', error)
+        })).catch((error) => {
+            Log.create('announceBonded -> error', error, store)
         })
     }
 
@@ -488,21 +476,20 @@ export class AppWallet {
         fee: number,
         password: string,
         store: Store<AppState>): {
-        signedTransaction: SignedTransaction,
-        signedLock: SignedTransaction,
-    } {
+            signedTransaction: SignedTransaction,
+            signedLock: SignedTransaction,
+        } {
         const account = this.getAccount(new Password(password))
-        const {wallet, networkCurrency, generationHash} = store.state.account
-        const {networkType} = wallet
-
+        const {networkCurrency, generationHash} = store.state.account
         const signedTransaction = account.sign(aggregateTransaction, generationHash)
+
         const hashLockTransaction = HashLockTransaction
             .create(
                 Deadline.create(),
                 new Mosaic(new MosaicId(networkCurrency.hex), UInt64.fromUint(DEFAULT_LOCK_AMOUNT)),
                 UInt64.fromUint(480),
                 signedTransaction,
-                networkType,
+                this.networkType,
                 UInt64.fromUint(fee)
             )
         return {
@@ -535,19 +522,6 @@ export class AppWallet {
             throw new Error(error)
         }
     }
-
-    getTenAddressFromMnemonic(
-        mnemonic: string,
-        networkType: NetworkType,
-    ): Address[] {
-        let accountList: Address[] = []
-        for (let i = 0; i <= 9; i++) {
-            const account: Account = getAccountFromPathNumber(mnemonic, i, networkType)
-            accountList.push(account.address)
-        }
-        return accountList
-    }
-
 
     get publicAccount(): PublicAccount {
         return PublicAccount.createFromPublicKey(this.publicKey, this.networkType)

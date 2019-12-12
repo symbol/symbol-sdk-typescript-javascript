@@ -1,5 +1,5 @@
 import {Transaction} from 'nem2-sdk'
-import {AppState, StagedTransaction, SignTransaction} from '@/core/model'
+import {AppState, StagedTransaction, SignTransaction, AppWallet} from '@/core/model'
 import {Store} from 'vuex'
 import {transactionConfirmationObservable} from "@/core/services/transactions"
 import {LockParams} from '@/core/model/LockParams'
@@ -14,7 +14,7 @@ import {LockParams} from '@/core/model/LockParams'
  * will include either the signedTransaction or an error message
  */
 
-export const signTransaction = async({ transaction, store, lockParams }:{
+export const signAndAnnounce = async({ transaction, store, lockParams }:{
     transaction: Transaction,
     store: Store<AppState>,
     lockParams?: LockParams}):
@@ -34,7 +34,7 @@ export const signTransaction = async({ transaction, store, lockParams }:{
         // this will allow this function to resume once the user has either
         // aborted transaction or authorised it successfully (via password or hardware device)
         const subscription = transactionConfirmationObservable.subscribe({
-            async next({ success, error, signedTransaction, signedLock }) {
+            next({ success, error, signedTransaction, signedLock }) {
                 // unsubscribe when a result is received
                 subscription.unsubscribe();
                 const stagedTransaction: StagedTransaction = {
@@ -51,7 +51,10 @@ export const signTransaction = async({ transaction, store, lockParams }:{
                         error,
                         signedTransaction: null
                     })
-                } 
+                }
+
+                new AppWallet(store.state.account.wallet)
+                    .announceTransaction(signedTransaction, store, signedLock)
                 
                 if (lockParams && lockParams.announceInLock) {
                     return resolve({

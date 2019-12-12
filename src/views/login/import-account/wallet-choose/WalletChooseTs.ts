@@ -1,7 +1,7 @@
 import {Vue, Component} from 'vue-property-decorator'
 import {mapState} from "vuex"
 import {AppInfo, AppWallet, StoreAccount} from "@/core/model"
-import {getRelativeMosaicAmount, localSave} from "@/core/utils"
+import {getRelativeMosaicAmount, localSave, getTenAddressesFromMnemonic} from "@/core/utils"
 import {NetworkType, Password, AccountHttp} from "nem2-sdk"
 import {Message} from "@/config"
 
@@ -51,8 +51,8 @@ export default class WalletChooseTs extends Vue {
     get addressList() {
         const {node, networkCurrency} = this
         const that = this
-        // todo put it in AppMosaic
-        const addressList = new AppWallet().getTenAddressFromMnemonic(this.seed, this.networkType)
+        const addressList = getTenAddressesFromMnemonic(this.seed, this.networkType)
+
         new AccountHttp(node).getAccountsInfo(addressList).subscribe(res => {
             console.log(res)
             res.forEach(item => {
@@ -99,5 +99,4 @@ export default class WalletChooseTs extends Vue {
         this.$store.commit('REMOVE_TEMPORARY_INFO')
         this.$router.push("finishImport")
     }
-
 }

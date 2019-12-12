@@ -97,7 +97,7 @@ describe('MosaicCreation', () => {
         })
 
         const signTransactionMock = jest.fn(x => x)
-        wrapper.vm.signTransaction = signTransactionMock
+        wrapper.vm.signAndAnnounce = signTransactionMock
         wrapper.vm.submit()
         await flushPromises()
 

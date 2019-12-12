@@ -13,7 +13,7 @@ export class Log {
         this.date = new Date
     }
 
-    create(store: Store<AppState>) {
-        store.commit('ADD_LOG', this)
+    static create(from: string, data: string | object, store: Store<AppState>) {
+        store.commit('ADD_LOG', new Log(from, data))
     }
 }

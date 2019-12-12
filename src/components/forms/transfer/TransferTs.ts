@@ -10,7 +10,7 @@ import {DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
 import {getAbsoluteMosaicAmount, getRelativeMosaicAmount, formatAddress, cloneData} from "@/core/utils"
 import {validation} from "@/core/validation"
-import {signTransaction} from '@/core/services/transactions'
+import {signAndAnnounce} from '@/core/services/transactions'
 import {
     AppMosaic,
     AppWallet,
@@ -253,20 +253,12 @@ export class TransferTs extends Vue {
         } else {
             this.sendTransaction()
         }
-            const {
-                success,
-                signedTransaction,
-                signedLock,
-            } = await signTransaction({
-                transaction: this.transactionList[0],
-                store: this.$store,
-                lockParams: this.lockParams
-            })
-            if (success) {
-                const {node} = this.activeAccount
-                new AppWallet(this.wallet).announceTransaction(signedTransaction, node, this, signedLock)
-                this.initForm()
-            }
+        const {success} = await signAndAnnounce({
+            transaction: this.transactionList[0],
+            store: this.$store,
+            lockParams: this.lockParams
+        })
+        if (success) this.initForm()
     }
 
     sendTransaction() {

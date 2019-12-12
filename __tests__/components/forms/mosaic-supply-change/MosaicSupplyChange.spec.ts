@@ -86,7 +86,7 @@ describe('MosaicSupplyChange', () => {
             formItems: formDataConfig.mosaicEditForm,
         })
         const signTransactionMock = jest.fn(x => x)
-        wrapper.vm.signTransaction = signTransactionMock
+        wrapper.vm.signAndAnnounce = signTransactionMock
         wrapper.vm.submit()
         await flushPromises()
         const [{transaction},] = signTransactionMock.mock.calls[0]
@@ -104,7 +104,7 @@ describe('MosaicSupplyChange', () => {
             },
         })
         const signTransactionMock = jest.fn(x => x)
-        wrapper.vm.signTransaction = signTransactionMock
+        wrapper.vm.signAndAnnounce = signTransactionMock
         wrapper.vm.submit()
         await flushPromises()
 

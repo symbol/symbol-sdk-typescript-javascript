@@ -5,7 +5,7 @@ import {NamespaceRegistrationTransaction, Deadline, UInt64} from 'nem2-sdk'
 import {DEFAULT_FEES, FEE_GROUPS, formDataConfig, networkConfig} from "@/config"
 import {getAbsoluteMosaicAmount, cloneData, formatNumber, durationToRelativeTime} from '@/core/utils'
 import {AppWallet, StoreAccount, DefaultFee, AppNamespace, AppInfo, NamespaceExpirationInfo} from "@/core/model"
-import {signTransaction} from '@/core/services'
+import {signAndAnnounce} from '@/core/services'
 import {validation} from '@/core/validation'
 import DisabledForms from "@/components/disabled-forms/DisabledForms.vue"
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
@@ -25,7 +25,7 @@ export class NamespaceRegistrationTs extends Vue {
     @Provide() validator: any = this.$validator
     activeAccount: StoreAccount
     app: AppInfo
-    signTransaction = signTransaction
+    signAndAnnounce = signAndAnnounce
     namespaceGracePeriodDuration = namespaceGracePeriodDuration
     formatNumber = formatNumber
     validation = validation
@@ -106,18 +106,10 @@ export class NamespaceRegistrationTs extends Vue {
         try {
             this.show = false;
 
-            const {
-                success,
-                signedTransaction,
-                signedLock,
-            } = await this.signTransaction({
+            this.signAndAnnounce({
                 transaction: this.transaction,
                 store: this.$store,
             })
-
-            if (success) {
-                new AppWallet(this.wallet).announceTransaction(signedTransaction, this.activeAccount.node, this.$root, signedLock)
-            }
         } catch (error) {
             console.error("NamespaceEditDialogTs -> confirmViaTransactionConfirmation -> error", error)
         }

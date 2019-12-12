@@ -1,5 +1,4 @@
 import {mapState} from "vuex"
-import {Message} from "@/config/index.ts"
 import {Component, Vue, Prop, Provide} from 'vue-property-decorator'
 import {validation} from '@/core/validation'
 import {StoreAccount} from "@/core/model"
@@ -43,11 +42,5 @@ export class CheckPasswordDialogTs extends Vue {
                 this.$emit('passwordValidated', response)
                 this.show = false
             })
-    }
-
-    showNotice() {
-        this.$Notice.success({
-            title: this.$t(Message.SUCCESS) + ''
-        })
     }
 }

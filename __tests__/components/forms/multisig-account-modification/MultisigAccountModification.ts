@@ -81,7 +81,7 @@ describe('MultisigAccountModification', () => {
         expect(wrapper).not.toBeNull()
     })
 
-    it('should call signTransaction with a proper transaction in conversion mode', async () => {
+    it('should call signAndAnnounce with a proper transaction in conversion mode', async () => {
         wrapper.vm.$store.state.account.activeMultisigAccount = null
         wrapper.vm.$store.state.account.currentAccountMultisigInfo = null
         wrapper.setProps({mode: MULTISIG_FORM_MODES.CONVERSION})
@@ -99,7 +99,7 @@ describe('MultisigAccountModification', () => {
             },
         })
         const signTransactionMock = jest.fn(x => x)
-        wrapper.vm.signTransaction = signTransactionMock
+        wrapper.vm.signAndAnnounce = signTransactionMock
         wrapper.vm.submit()
         await flushPromises()
 
@@ -122,7 +122,7 @@ describe('MultisigAccountModification', () => {
         expect(innerTransaction.publicKeyDeletions.length).toBe(0)
     })
 
-    it('should call signTransaction with a proper transaction in modification mode', async () => {
+    it('should call signAndAnnounce with a proper transaction in modification mode', async () => {
         wrapper.setData({
             cosignatoryModifications: new CosignatoryModifications([{
                 addOrRemove: AddOrRemove.ADD,
@@ -137,7 +137,7 @@ describe('MultisigAccountModification', () => {
         })
         wrapper.setProps({mode: MULTISIG_FORM_MODES.MODIFICATION})
         const signTransactionMock = jest.fn(x => x)
-        wrapper.vm.signTransaction = signTransactionMock
+        wrapper.vm.signAndAnnounce = signTransactionMock
         wrapper.vm.submit()
         await flushPromises()
 

@@ -7,7 +7,6 @@ import {
     LoadingOverlayObject,
 } from '@/core/model'
 import {localRead} from "@/core/utils";
-import {Transaction} from 'nem2-sdk';
 import {MutationTree} from 'vuex';
 
 const state: AppInfo = {

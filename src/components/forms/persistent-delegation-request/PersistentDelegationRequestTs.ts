@@ -5,7 +5,7 @@ import {StoreAccount, DefaultFee, AppWallet} from '@/core/model'
 import {cloneData, getAbsoluteMosaicAmount} from '@/core/utils'
 import {formDataConfig, DEFAULT_FEES, FEE_GROUPS} from '@/config'
 import {validation} from '@/core/validation'
-import {signTransaction} from '@/core/services/transactions'
+import {signAndAnnounce} from '@/core/services/transactions'
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 import GetNodePublicKey from '@/components/forms/get-node-public-key/GetNodePublicKey.vue'
@@ -81,23 +81,15 @@ export class PersistentDelegationRequestTs extends Vue {
         )
     }
 
-    async signAndAnnounce() {
+    signAndAnnounce() {
         try {
             this.$emit('close')
             const transaction = this.getTransaction()
 
-            const {
-                success,
-                signedTransaction,
-            } = await signTransaction({
+            signAndAnnounce({
                 transaction,
                 store: this.$store,
             })
-
-            if (success) {
-                const {node} = this.activeAccount
-                new AppWallet(this.wallet).announceTransaction(signedTransaction, node, this.$root)
-            }
         } catch (error) {
             console.error("AccountLinkTransactionTs -> submit -> error", error)
         }

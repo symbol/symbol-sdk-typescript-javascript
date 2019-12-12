@@ -20,7 +20,7 @@ import {
 import {formDataConfig, Message, DEFAULT_FEES, FEE_GROUPS, networkConfig} from '@/config'
 import {StoreAccount, AppWallet, DefaultFee, LockParams} from "@/core/model"
 import {validation} from '@/core/validation'
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction, signTransaction} from '@/core/services'
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction, signAndAnnounce} from '@/core/services'
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 import SignerSelector from '@/components/forms/inputs/signer-selector/SignerSelector.vue'
@@ -35,7 +35,7 @@ import SignerSelector from '@/components/forms/inputs/signer-selector/SignerSele
 })
 export class MosaicCreationTs extends Vue {
     @Provide() validator: any = this.$validator
-    signTransaction = signTransaction
+    signAndAnnounce = signAndAnnounce
     validation = validation
     activeAccount: StoreAccount
     transactionDetail = {}
@@ -139,7 +139,7 @@ export class MosaicCreationTs extends Vue {
         this.formItems.supply = this.formItems.supply >= 2 ? Number(this.formItems.supply - 1) : Number(this.formItems.supply)
     }
 
-    async confirmViaTransactionConfirmation() {
+    confirmViaTransactionConfirmation() {
         if (this.activeMultisigAccount) {
             this.createByMultisig()
         } else {
@@ -147,18 +147,10 @@ export class MosaicCreationTs extends Vue {
         }
 
         try {
-            const {
-                success,
-                signedTransaction,
-                signedLock,
-            } = await this.signTransaction({
+            this.signAndAnnounce({
                 transaction: this.transactionList[0],
                 store: this.$store,
             })
-
-            if (success) {
-                new AppWallet(this.wallet).announceTransaction(signedTransaction, this.activeAccount.node, this, signedLock)
-            }
         } catch (error) {
             console.error("MosaicTransactionTs -> confirmViaTransactionConfirmation -> error", error)
         }
