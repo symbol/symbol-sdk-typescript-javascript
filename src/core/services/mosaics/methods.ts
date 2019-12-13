@@ -9,7 +9,6 @@ import {
 import {AppMosaic, AppWallet, MosaicNamespaceStatusType, AppState, AppNamespace} from '@/core/model'
 import {Store} from 'vuex'
 import {mosaicSortType} from "@/config/view/mosaic"
-import {namespaceSortTypes} from "@/core/services"
 
 /**
  * Custom implementation for performance gains
@@ -127,7 +126,12 @@ export const sortByMosaicAlias = (list) => {
     })
     return list
 }
-
+export const sortByBalance = (list) => {
+    return list.sort((a, b) => {
+        if (!b.balance || !a.balance) return 1
+        return b.balance - a.balance
+    })
+}
 // mosaic sorting
 const sortingRouter = {
     [mosaicSortType.byAlias]: sortByMosaicAlias,
@@ -138,9 +142,10 @@ const sortingRouter = {
     [mosaicSortType.bySupply]: sortByMosaicSupply,
     [mosaicSortType.bySupplyMutable]: sortByMosaicSupplyMutable,
     [mosaicSortType.byTransferable]: sortByMosaicTransferable,
+    [mosaicSortType.byBalance]: sortByBalance,
 }
 
 export const sortMosaicList = (mosaicSortType: number,
-                                  list: AppNamespace[]): AppNamespace[] => {
+                               list: AppNamespace[]): AppNamespace[] => {
     return sortingRouter[mosaicSortType](list)
 }

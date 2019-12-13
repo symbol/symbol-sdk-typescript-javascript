@@ -53,7 +53,7 @@ export class Network {
    private reset(endpoint: string) {
       console.log("TCL: Network -> reset -> endpoint !== this.endpoint", endpoint, this.endpoint)
       if (endpoint !== this.endpoint) return
-      
+
       Notice.trigger(Message.NODE_CONNECTION_ERROR, NoticeType.error, this.store)
       this.store.dispatch('SET_IS_NODE_HEALTHY', {endpoint, isNodeHealthy: false})
       this.store.dispatch('SET_GENERATION_HASH', {endpoint, generationHash: 'error'})

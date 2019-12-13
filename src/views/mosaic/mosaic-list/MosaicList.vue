@@ -11,6 +11,12 @@
       </div>
       <div class="mosaicListBody">
         <div class="listTit">
+          <span class="balance" @click="getSortType(mosaicSortType.byBalance)">
+               {{$t('my_balance')}}
+            <Icon v-if="mosaicSortType.byBalance == currentSortType" class="active_sort_type"
+                  :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"/>
+            </span>
+
           <span class="mosaic_id" @click="getSortType(mosaicSortType.byId)">
                {{$t('mosaic_ID')}}
             <Icon v-if="mosaicSortType.byId == currentSortType" class="active_sort_type"
@@ -60,6 +66,8 @@
             <Icon v-if="mosaicSortType.byAlias == currentSortType" class="active_sort_type"
                   :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"/>
             </span>
+
+
           <span @click="refreshMosaicList()"
                 class="pointer refresh_btn">{{$t('refresh')}}</span>
           <div class="mosaic_filter pointer" @click="toggleIsShowExpiredMosaic()">
@@ -75,6 +83,7 @@
                 :key="index"
                 :class="['listItem',value.mosaicInfo && value.mosaicInfo.owner.publicKey == publicKey?'owned_mosaic':'']">
           <Row>
+            <span class="balance text_select overflow_ellipsis">{{value.balance?formatNumber(value.balance):0}}</span>
             <span class="mosaic_id text_select overflow_ellipsis">{{value.hex}}</span>
             <span class="available_quantity overflow_ellipsis">{{mosaicSupplyAmount(value)}}</span>
             <span class="mosaic_divisibility overflow_ellipsis">{{value.properties?value.properties.divisibility:0}}</span>

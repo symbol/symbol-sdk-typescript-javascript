@@ -1,4 +1,3 @@
-import {NetworkType} from "nem2-sdk"
 import mosaic1Icon from "@/common/img/service/mosaic1.png"
 import mosaic2Icon from "@/common/img/service/mosaic2.png"
 import multisign1Icon from "@/common/img/service/multisign1.png"
@@ -8,6 +7,16 @@ import namespace2Icon from "@/common/img/service/namespace2.png"
 import apostille1Icon from "@/common/img/service/apostille1.png"
 import apostille2Icon from "@/common/img/service/apostille2.png"
 import {localRead} from "@/core/utils"
+
+import step1Of4 from '@/common/img/wallet/1_4.png'
+import step2Of4 from '@/common/img/wallet/2_4.png'
+import step3Of4 from '@/common/img/wallet/3_4.png'
+import step4Of4 from '@/common/img/wallet/4_4.png'
+
+import step1Of3 from '@/common/img/wallet/1_3.png'
+import step2Of3 from '@/common/img/wallet/2_3.png'
+import step3Of3 from '@/common/img/wallet/3_3.png'
+
 
 const _walletFnNavConfig = [
     {name: 'create', to: '/walletCreate', active: false},
@@ -77,3 +86,6 @@ export const serviceSwitchFnConfig = [
         active: false
     },
 ]
+
+export const fourStepsPictureList = [step1Of4, step2Of4, step3Of4, step4Of4]
+export const threeStepsPictureList = [step1Of3, step2Of3, step3Of3]

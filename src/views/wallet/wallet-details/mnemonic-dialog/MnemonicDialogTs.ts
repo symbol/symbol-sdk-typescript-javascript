@@ -6,7 +6,7 @@ import {of} from 'rxjs'
 import {pluck, concatMap} from 'rxjs/operators'
 import {AppAccounts, StoreAccount} from "@/core/model"
 import {copyTxt} from "@/core/utils"
-import {Message} from "@/config"
+import {Message, fourStepsPictureList} from "@/config"
 import failureIcon from "@/common/img/monitor/failure.png"
 import {validation} from '@/core/validation'
 import MnemonicVerification from "@/components/mnemonic-verification/MnemonicVerification.vue"
@@ -43,7 +43,8 @@ export class MnemonicDialogTs extends Vue {
     mnemonic = ''
     password: string = ''
     QRCode: string = ''
-
+    fourStepsPictureList = fourStepsPictureList
+    stringOfSteps = ['input_password', 'backup_prompt', 'backup_mnemonic', 'confirm_backup']
     @Prop()
     showMnemonicDialog: boolean
 

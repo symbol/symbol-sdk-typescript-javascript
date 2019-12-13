@@ -2,7 +2,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  scroll-behavior:smooth;
+  scroll-behavior: smooth;
 }
 
 html {
@@ -35,7 +35,7 @@ body {
   user-select: none;
 }
 
-.text_select{
+.text_select {
   -webkit-user-select: text;
   -moz-user-select: text;
   -ms-user-select: text;
@@ -330,6 +330,7 @@ textarea {
     box-shadow: none;
     border-bottom: 1px solid #ccc;
   }
+
   .input_point {
     input {
       border: none;
@@ -338,139 +339,22 @@ textarea {
   }
 }
 
-.alias_bind_dialog {
-  .ivu-modal {
-    width: 500px !important;
-    height: 691px !important;
-    background: rgba(255, 255, 255, 1);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  .bindHeader{
-    height: 74px;
-    line-height: 74px;
-    font-weight:400;
-    .title{
-      padding-left: 64px;
-      font-size:28px !important;
-      color:#222222;
-    }
-  }
-  .ivu-modal {
-    width: 1000px !important;
-    height: 691px !important;
-    background: rgba(255, 255, 255, 1);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  .ivu-modal-content{
-    width: 1000px !important;
-    height: 691px !important;
-
-    .ivu-modal-close{
-      top: 30px ;
-      right: 40px ;
-      .ivu-icon-ios-close{
-        font-size: 40px;
-        color: #666666;
-        font-weight: 400;
-      }
-    }
-
-    .ivu-modal-body {
-      // padding: 14px 55px 0 55px;
-      padding-top: 15px;
-      width: 680px;
-      margin: 0 auto;
-    }
-
-  }
-  .ivu-modal {
-    width: 1000px !important;
-    height: 691px !important;
-    background: rgba(255, 255, 255, 1);
-    border-radius: 8px;
-  }
-
-
-  .ivu-btn {
-    display: none !important;
-  }
-
-  .ivu-modal-footer {
-    border-top: none !important;
-  }
-
-  /* .ivu-modal-header {
-    border: none !important;
-  } */
-
-  .title {
-    color:#666;
-    font-size: 16px;
-    font-weight:400;
-    margin: 10px 0 5px 0;
-  }
-
-  .input_area {
-    display: flex;
-    align-items: center;
-    // border-bottom: 1px solid rgba(238, 238, 238, 1);
-
-    p{
-      font-size: 16px;
-      margin: 15px 0;
-      padding-left: 8px;
-    }
-
-    input {
-      width: 410px;
-      height: 50px;
-      border: none;
-      padding-left: 8px;
-
-    }
-
-    input::placeholder {
-      color: #CCCCCC;
-    }
-
-    .tip {
-      font-size: 16px;
-      font-weight: 400;
-      color: rgba(51, 51, 51, 1);
-      line-height: 16px;
-      margin-right: 10px;
-    }
-  }
-
-  /* .ivu-modal-header p, .ivu-modal-header-inner {
-    padding: 60px 40px 40px 40px;
-    font-size: 28px;
-    font-weight: 400;
-    color: #20B5AC;
-  } */
-
-  .ivu-select-selection {
-    border: none !important;
-  }
-
-  .button_content {
-    float: right;
-    margin-top: 30px;
-
-    span {
-      display: inline-block;
-      width: 86px;
-      height: 44px;
-      line-height: 44px;
-      text-align: center;
-      border-radius: 20px;
-      font-weight: 400;
-    }
-  }
-}
-
 .ivu-modal-wrap {
   z-index: 99999991 !important;
+}
+
+.ivu-modal-header-inner {
+  font-size: 20px !important;
+  padding: 20px 30px !important;
+
+}
+
+.ivu-modal-body {
+  padding: 20px 50px !important;
+}
+
+.justify_text {
+  text-align-last: justify;
+  text-align: justify;
+  text-justify: distribute-all-lines; // 这行必加，兼容ie浏览器
 }

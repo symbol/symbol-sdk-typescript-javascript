@@ -7,11 +7,6 @@
     />
 
     <div class="bottom_transactions radius scroll">
-      <div class="split_page">
-        <span>{{$t('total')}}：{{transactionList.length}} {{$t('data')}}</span>
-        <Page @on-change="changePage" :total="transactionList.length" class="page_content"/>
-      </div>
-
       <div class="label_page">
         <span class="page_title">{{$t(pageTitle)}}</span>
       </div>
@@ -116,6 +111,11 @@
           </div>
         </div>
       </div>
+
+      <div class="split_page">
+        <span>{{$t('total')}}：{{transactionList.length}} {{$t('data')}}</span>
+        <Page @on-change="changePage" :total="transactionList.length" class="page_content"/>
+      </div>
     </div>
   </div>
 </template>
@@ -124,6 +124,7 @@
     // @ts-ignore
     import {TransactionListTs} from './TransactionListTs'
     import "./TransactionList.less";
+
     export default class TransactionList extends TransactionListTs {
 
     }

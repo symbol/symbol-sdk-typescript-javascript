@@ -3,18 +3,21 @@
     <p class="set-title">{{$t('Create_account_and_password')}}</p>
     <p class="set-title-tips">{{$t('Set_title_tips')}}</p>
     <div class="create-account-col scroll">
+
       <div class="create-account-left">
         <div class="form-input-item">
           <div>* {{$t('Set_account_name')}}</div>
           <input v-focus v-model="formItem.accountName"></input>
         </div>
+
         <div class="form-input-item">
           <div>* {{$t('Set_network_type')}}</div>
-          <Select :placeholder="$t('choose_network')" v-model="formItem.currentNetType" required>
+          <Select :placeholder="$t('choose_network')" v-model="currentNetworkType" required>
             <Option :value="item.value" v-for="(item,index) in networkTypeList" :key="index">{{item.label}}
             </Option>
           </Select>
         </div>
+
         <div class="form-input-item">
           <div>* {{$t('Set_password')}}</div>
           <input type="password" v-model.lazy="formItem.password"></input>

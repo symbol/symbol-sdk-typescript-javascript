@@ -1,14 +1,16 @@
 .namespace_transaction_container {
-  padding: 50px 0;
-  background-color: white;
   height: 100%;
 
-  .fee-select{width: 560px}
+  .fee-select {
+    width: 560px
+  }
 
   .right_panel {
-    float: left;
-    padding-left: 90px;
     position: relative;
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+
     .namespace_transaction {
       float: left;
 
@@ -56,19 +58,6 @@
           }
         }
 
-        .tips {
-          margin-left: 140px;
-          width: 558px;
-          font-size: 13px;
-          font-weight: 400;
-          color: rgba(153, 153, 153, 1);
-          line-height: 18px;
-
-          .red {
-            color: #F65C5C;
-          }
-        }
-
         .end_label {
           position: absolute;
           right: 20px;
@@ -99,6 +88,48 @@
     .XEM_rent_fee {
       height: 20px;
       line-height: 20px !important;
+    }
+  }
+
+  .left-root-namespace-form {
+    padding: 20px 100px;
+    width: 1305px;
+    height: 100%;
+    background-color: white;
+  }
+
+  .right-root-namespace-tips {
+    float: right;
+    background-color: white;
+    height: 100%;
+    width: 440px;
+    padding: 20px;
+
+    .right_container_head {
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 20px;
+      color: rgba(51, 51, 51, 1);
+    }
+
+    .second_head {
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 20px;
+      color: rgba(51, 51, 51, 1);
+      margin-top: 37px;
+    }
+
+    p {
+      font-size: 16px;
+      font-weight: 500;
+      color: rgba(51, 51, 51, 1);
+      margin-bottom: 10px;
+      line-height: 30px;
+    }
+
+    .green {
+      color: #20B5AC;
     }
   }
 }

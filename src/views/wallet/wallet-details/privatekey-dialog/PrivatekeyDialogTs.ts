@@ -5,7 +5,7 @@ import {Component, Vue, Prop} from 'vue-property-decorator'
 import {AccountQR} from 'nem2-qr-library'
 import {Password, Account} from 'nem2-sdk'
 import {copyTxt} from "@/core/utils"
-import {Message} from "@/config"
+import {Message, threeStepsPictureList} from "@/config"
 import {AppWallet, StoreAccount} from "@/core/model"
 import failureIcon from "@/common/img/monitor/failure.png"
 import {validation} from '@/core/validation'
@@ -33,7 +33,8 @@ export class PrivatekeyDialogTs extends Vue {
     errors: any
     stepIndex = 0
     password = ''
-
+    threeStepsPictureList = threeStepsPictureList
+    stringOfSteps = ['input_password', 'backup_prompt', 'backup_private_key']
     @Prop()
     showPrivatekeyDialog: boolean
 

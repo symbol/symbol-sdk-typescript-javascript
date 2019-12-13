@@ -1,24 +1,29 @@
 .aliasTable {
   padding: 0 20px;
+
   .ivu-tooltip {
-    flex:8;
+    flex: 8;
   }
-  .ivu-tooltip-rel{
+
+  .ivu-tooltip-rel {
     display: unset;
   }
 
-  .ivu-select-selection{
+  .ivu-select-selection {
     height: 50px;
     line-height: 50px;
-    .ivu-select-selected-value, .ivu-select-placeholder{
+
+    .ivu-select-selected-value, .ivu-select-placeholder {
       height: 50px;
       line-height: 50px;
     }
   }
-  .unLinkP{
+
+  .unLinkP {
     height: 50px;
     line-height: 50px;
   }
+
   .tableTit {
     height: 52px;
     line-height: 52px;
@@ -116,17 +121,19 @@
       }
     }
   }
+
   .cancel {
     color: #989898;
     background: rgba(238, 238, 238, 1);
     margin-right: 20px;
   }
 
-  .checkBtn{
-    color:#fff;
-    background:#20B5AC;
+  .checkBtn {
+    color: #fff;
+    background: #20B5AC;
     margin-right: 20px;
   }
+
   .noData {
     width: 76px;
     text-align: center;
@@ -158,59 +165,171 @@
     }
   }
 
-  .alias_bind_dialog{
+  .alias_bind_dialog {
+    .ivu-modal {
+      width: 500px !important;
+      background: rgba(255, 255, 255, 1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
 
-    .unbind_text{
+    .unbind_text {
       font-size: 14px;
       margin-top: 40px;
       display: flex;
       align-items: center;
 
-      :nth-child(1){
+      :nth-child(1) {
         font-size: 16px;
       }
-      
-      span{
-        margin-right:10px;
+
+      span {
+        margin-right: 10px;
       }
-      .color_text{
-        color:#20B5AC;
+
+      .color_text {
+        color: #20B5AC;
       }
-      
+
       .from-span {
         font-size: 16px;
       }
     }
-    
 
 
-    .input_content{
+    .input_content {
       margin-top: 20px;
       height: 60px;
       display: flex;
       align-items: center;
       justify-content: space-between;
 
-      .title{
-        flex: 2;
+      .title {
+        width: 80px;
+        margin-right: 50px;
       }
 
-      .input_area{
+      .input_area {
         flex: 8;
-        border:1px solid rgba(238, 238, 238, 1);
+        border: 1px solid rgba(238, 238, 238, 1);
         border-radius: 3px;
 
       }
-      .input_radio{
+
+      .input_radio {
         flex: 8;
       }
-      .input_select{
+
+      .input_select {
         flex: 8;
-        border:1px solid rgba(238, 238, 238, 1);
+        border: 1px solid rgba(238, 238, 238, 1);
+      }
+
+    }
+
+    .bindHeader {
+      height: 74px;
+      line-height: 74px;
+      font-weight: 400;
+
+      .title {
+        font-size: 28px !important;
+        color: #222222;
+      }
+    }
+
+    .ivu-modal {
+      width: 1000px !important;
+      background: rgba(255, 255, 255);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .ivu-modal-content {
+      width: 1000px !important;
+      height: 0;
+
+      .ivu-modal-close {
+        top: 30px;
+        right: 40px;
+
+        .ivu-icon-ios-close {
+          font-size: 40px;
+          color: #666666;
+          font-weight: 400;
+        }
+      }
+
+      .ivu-modal-body {
+        padding-top: 15px;
       }
 
     }
 
 
+    .ivu-btn {
+      display: none !important;
+    }
+
+    .ivu-modal-footer {
+      border-top: none !important;
+    }
+
+    .title {
+      color: #666;
+      font-size: 16px;
+      font-weight: 400;
+      margin: 10px 0 5px 0;
+    }
+
+    .input_area {
+      display: flex;
+      align-items: center;
+      // border-bottom: 1px solid rgba(238, 238, 238, 1);
+
+      p {
+        font-size: 16px;
+        margin: 15px 0;
+        padding-left: 8px;
+      }
+
+      input {
+        width: 410px;
+        height: 50px;
+        border: none;
+        padding-left: 8px;
+
+      }
+
+      input::placeholder {
+        color: #CCCCCC;
+      }
+
+      .tip {
+        font-size: 16px;
+        font-weight: 400;
+        color: rgba(51, 51, 51, 1);
+        line-height: 16px;
+        margin-right: 10px;
+      }
+    }
+
+    .ivu-select-selection {
+      border: none !important;
+    }
+
+    .button_content {
+      float: right;
+      margin: 40px 0;
+
+      span {
+        display: inline-block;
+        width: 86px;
+        height: 44px;
+        line-height: 44px;
+        text-align: center;
+        font-weight: 400;
+      }
+    }
   }
 }

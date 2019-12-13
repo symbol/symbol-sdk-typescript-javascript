@@ -14,21 +14,21 @@
           <span class="color_text">{{alias}}</span>
         </div>
         <div v-if="bind && !fromNamespace" class="input_content">
-          <div class="title">{{ address ? $t('address') : $t('mosaic') }}</div>
+          <div class="title justify_text">{{ address ? $t('address') : $t('mosaic') }}</div>
           <div class="input_area">
             <p>{{ target }}</p>
           </div>
         </div>
 
         <div v-if="bind && fromNamespace" class="input_content">
-          <div class="title">{{ $t('namespace') }}</div>
+          <div class="title justify_text">{{ $t('namespace') }}</div>
           <div class="input_area">
             <p>{{ namespace.name }}</p>
           </div>
         </div>
 
         <div v-if="bind && fromNamespace && !restrictedBindType" class="input_content">
-          <div class="title">{{ $t('Alias_type') }}</div>
+          <div class="title justify_text">{{ $t('Alias_type') }}</div>
           <RadioGroup v-model="bindType" class="input_radio">
             <Radio :label="BindTypes.ADDRESS" />
             <Radio :label="BindTypes.MOSAIC" />
@@ -36,7 +36,7 @@
         </div>
 
         <div v-if="bind && fromNamespace && bindType === BindTypes.ADDRESS" class="input_content">
-          <div class="title">{{ $t('address') }}</div>
+          <div class="title justify_text">{{ $t('address') }}</div>
           <div class="input_area">
             <ErrorTooltip fieldName="address" class="flex-8" placementOverride="top">
               <input
@@ -51,7 +51,7 @@
         </div>
 
         <div v-if="bind && fromNamespace && bindType === BindTypes.MOSAIC" class="input_content">
-          <div class="title">{{ $t('mosaic') }}</div>
+          <div class="title justify_text">{{ $t('mosaic') }}</div>
           <ErrorTooltip fieldName="mosaicId" class="flex-8" placementOverride="top">
             <Select
               v-model="target"
@@ -71,17 +71,15 @@
         </div>
 
         <div v-if="bind && !fromNamespace" class="input_content">
-          <div class="title">{{ $t('namespace') }}</div>
+          <div class="title justify_text">{{ $t('namespace') }}</div>
 
           <ErrorTooltip fieldName="namespace" class="flex-8" placementOverride="top">
-            <Select
-              class="fee-select input_select"
+            <Select class="fee-select input_select"
               data-vv-name="namespace"
               v-model="alias"
               v-validate="'required'"
               :data-vv-as="$t('namespace')"
-              :placeholder="$t('namespace')"
-            >
+              :placeholder="$t('namespace')" >
               <Option
                 v-for="(name, index) in linkableNamespaces"
                 :value="name"
@@ -92,7 +90,7 @@
         </div>
 
         <div class="input_content">
-          <div class="title">{{$t('fee')}}</div>
+          <div class="title justify_text">{{$t('fee')}}</div>
           <Select
             class="fee-select input_select"
             data-vv-name="fee"
@@ -110,8 +108,8 @@
         </div>
 
         <div class="button_content">
-          <span class="cancel pointer" @click="show = false">{{$t('cancel')}}</span>
-          <span class="bind checkBtn pointer" @click="submit()">{{bind ? $t('bind') : $t('unbind')}}</span>
+          <span class="radius cancel pointer" @click="show = false">{{$t('cancel')}}</span>
+          <span class="radius bind checkBtn pointer" @click="submit()">{{bind ? $t('bind') : $t('unbind')}}</span>
         </div>
         <input
           v-show="false"

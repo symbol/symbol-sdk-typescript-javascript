@@ -148,7 +148,7 @@ export enum RECIPIENT_TYPES {
 
 export enum BindTypes {
     ADDRESS = 'ADDRESS',
-    MOSAIC = 'MOSAIC,'
+    MOSAIC = 'MOSAIC'
 }
 
 export enum AddOrRemove {

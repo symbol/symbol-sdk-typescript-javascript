@@ -1,17 +1,21 @@
 import {mapState} from 'vuex'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {formatNumber, localRead, getPath} from '@/core/utils'
-import {AppWallet, AppInfo, StoreAccount, AppAccounts} from "@/core/model"
+import {formatNumber, localRead} from '@/core/utils'
+import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
 import {CreateWalletType} from "@/core/model/CreateWalletType"
 import {seedWalletTitle, walletStyleSheetType} from '@/config/view/wallet.ts'
 import {MultisigAccountInfo, Password} from 'nem2-sdk'
 import {Message, networkConfig} from "@/config"
-import TheWalletUpdate from "@/views/wallet/wallet-switch/the-wallet-update/TheWalletUpdate.vue"
 import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import TheWalletDelete from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDelete.vue'
+import MnemonicDialog from '@/views/wallet/wallet-details/mnemonic-dialog/MnemonicDialog.vue'
 
 @Component({
-    components: {TheWalletDelete, TheWalletUpdate, CheckPasswordDialog},
+    components: {
+        TheWalletDelete,
+        MnemonicDialog,
+        CheckPasswordDialog
+    },
     computed: {
         ...mapState({
             activeAccount: 'account',
@@ -23,17 +27,15 @@ export class WalletSwitchTs extends Vue {
     app: AppInfo
     activeAccount: StoreAccount
     showDeleteDialog = false
-    showUpdateDialog = false
     showCheckPWDialog = false
     deleteIndex = -1
     walletToDelete: AppWallet | boolean = false
     thirdTimestamp = 0
     walletStyleSheetType = walletStyleSheetType
-    walletToUpdate = {}
     pathToCreate = 0
     scroll: any
     formatNumber = formatNumber
-
+    showMnemonicDialog = false
     get walletList() {
         return this.app.walletList
     }
@@ -41,7 +43,6 @@ export class WalletSwitchTs extends Vue {
     get wallet() {
         return this.activeAccount.wallet
     }
-
 
     get activeAddress() {
         return this.wallet.address
@@ -65,10 +66,6 @@ export class WalletSwitchTs extends Vue {
         const multisigAccountInfo: MultisigAccountInfo = this.activeAccount.multisigAccountInfo[address]
         if (!multisigAccountInfo) return false
         return multisigAccountInfo.cosignatories.length > 0
-    }
-
-    closeUpdateDialog() {
-        this.showUpdateDialog = false
     }
 
     closeDeleteDialog() {

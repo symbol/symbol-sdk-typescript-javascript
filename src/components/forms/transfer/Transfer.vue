@@ -98,7 +98,7 @@
       </div>
 
       <div class="remark flex_center">
-        <span class="title">{{$t('remarks')}}</span>
+        <span class="title">{{$t('message')}}</span>
         <span class="textarea_container flex_center value radius">
           <ErrorTooltip fieldName="message" placementOverride="top" class="full-width-tooltip">
             <textarea
@@ -130,11 +130,10 @@
           </Select>
         </span>
       </div>
-      <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
+<!--      <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>-->
 
       <div @click="submit" class="send_button pointer">{{$t('send')}}</div>
-      <input
-        v-show="false"
+      <input v-show="false"
         v-model="currentAccount"
         v-validate
         disabled

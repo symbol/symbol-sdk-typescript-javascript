@@ -10,7 +10,7 @@
         </div>
         <div class="form-input-item">
           <div>* {{$t('Set_network_type')}}</div>
-          <Select :placeholder="$t('choose_network')" v-model="formItem.currentNetType" required>
+          <Select :placeholder="$t('choose_network')" v-model="currentNetworkType" required>
             <Option :value="item.value" v-for="(item,index) in networkTypeList" :key="index">{{item.label}}
             </Option>
           </Select>
@@ -29,7 +29,7 @@
         </div>
         <div class="button-container">
           <button @click="$router.push('login')" class="info-button">{{$t('Back_to_home')}}</button>
-          <button @click="submit">{{$t('Generating_mnemonic')}}</button>
+          <button @click="submit">{{$t('Restore_Mnemonic')}}</button>
         </div>
 
       </div>

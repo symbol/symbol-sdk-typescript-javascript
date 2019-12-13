@@ -6,7 +6,7 @@
         <textarea v-model="seed" class="show-mnemonic"></textarea>
         <div class="button-container">
           <button @click="goToCreateAccountInfo" class="info-button">{{$t('Return_password_setting')}}</button>
-          <button @click="submit">{{$t('Select_public_key')}}</button>
+          <button @click="submit">{{$t('Import_mnemonic')}}</button>
         </div>
       </div>
       <div class="create-mnemonic-right">

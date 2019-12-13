@@ -1,7 +1,7 @@
 <template>
   <div class="check-mnemonic-sec">
 
-    <div class="skip" @click="verificationSuccess">{{$t('skip')}}</div>
+    <div class="skip pointer" @click="verificationSuccess">{{$t('skip')}}</div>
     <p class="set-title">{{$t('Verify_mnemonics')}}</p>
     <div class="check-mnemonic-col">
       <div class="check-mnemonic-left">

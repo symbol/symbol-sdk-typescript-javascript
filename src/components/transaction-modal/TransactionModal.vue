@@ -1,6 +1,7 @@
 <template>
   <div class="transaction_modal">
     <Modal
+            :title="$t('transaction_details')"
             v-model="show"
             v-if="activeTransaction"
             :transfer="false"

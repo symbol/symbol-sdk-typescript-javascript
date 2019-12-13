@@ -44,7 +44,7 @@ export class MonitorInvoiceTs extends Vue {
     selectedMosaicHex: string = ""
     formItems = {
         mosaicAmount: 0,
-        remarks: '',
+        message: '',
     }
 
     QRCode: string = failureIcon
@@ -99,13 +99,13 @@ export class MonitorInvoiceTs extends Vue {
 
             if (!activeMosaic.id) return null
             const walletAddress = Address.createFromRawAddress(address)
-            const {mosaicAmount, remarks} = this.formItems
+            const {mosaicAmount, message} = this.formItems
 
             return TransferTransaction.create(
                 Deadline.create(),
                 walletAddress,
                 [new Mosaic(activeMosaic.id, UInt64.fromUint(mosaicAmount))],
-                PlainMessage.create(remarks),
+                PlainMessage.create(message),
                 networkType
             )
         } catch (error) {

@@ -1,9 +1,9 @@
 import {Component, Vue} from 'vue-property-decorator'
 import {formDataConfig, Message} from "@/config"
-import {cloneData} from "@/core/utils"
+import {cloneData, getDefaultAccountNetworkType} from "@/core/utils"
 import {AppAccounts, AppAccount, StoreAccount} from '@/core/model'
 import {networkTypeConfig} from "@/config/view/setting"
-import {NetworkType, Password} from "nem2-sdk"
+import {NetworkType} from "nem2-sdk"
 import {mapState} from "vuex"
 
 @Component({
@@ -18,13 +18,22 @@ export class CreateAccountInfoTs extends Vue {
     activeAccount: StoreAccount
     formItem = cloneData(formDataConfig.createAccountForm)
     networkTypeList = networkTypeConfig
+    currentNetworkType = getDefaultAccountNetworkType()
 
     get accountName() {
         return this.activeAccount.currentAccount.name
     }
 
+
+    get appAccount(): AppAccount {
+        const {currentNetworkType} = this
+        let {accountName, password, hint} = this.formItem
+        return AppAccount.create(password, accountName, [], hint, currentNetworkType)
+    }
+
     checkInput() {
-        const {accountName, currentNetType, password, passwordAgain} = this.formItem
+        const {currentNetworkType} = this
+        const {accountName, password, passwordAgain} = this.formItem
         const appAccounts = AppAccounts()
         if (appAccounts.getAccountFromLocalStorage(accountName)) {
             this.$Notice.error({title: this.$t(Message.ACCOUNT_NAME_EXISTS_ERROR) + ''})
@@ -42,16 +51,11 @@ export class CreateAccountInfoTs extends Vue {
             this.$Notice.error({title: this.$t(Message.INCONSISTENT_PASSWORD_ERROR) + ''})
             return false
         }
-        if (!(currentNetType in NetworkType)) {
+        if (!(currentNetworkType in NetworkType)) {
             this.$Notice.error({title: this.$t(Message.NETWORK_TYPE_INVALID) + ''})
             return false
         }
         return true
-    }
-
-    get appAccount(): AppAccount {
-        let {accountName, password, currentNetType, hint} = this.formItem
-        return AppAccount.create(password, accountName, [], hint, currentNetType)
     }
 
     submit() {
@@ -68,4 +72,5 @@ export class CreateAccountInfoTs extends Vue {
         this.appAccount.delete()
         this.$router.push('login')
     }
+
 }

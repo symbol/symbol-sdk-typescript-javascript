@@ -12,6 +12,12 @@
     height: 30px;
     line-height: 30px;
     position: relative;
+    display: flex;
+    justify-content: space-between;
+
+    .back-up {
+      color: #26B4B0;
+    }
 
     .tit {
       font-size: 20px;
@@ -55,7 +61,7 @@
 
     }
 
-    .createBtn:hover ,
+    .createBtn:hover,
     .importBtn:hover {
       color: #26B4B0;
     }
@@ -109,85 +115,6 @@
           margin-left: 10px;
         }
       }
-
-      .walletTypeTxt {
-        font-size: 12px;
-        font-weight: 400;
-        text-align: center;
-        color: white;
-        margin-bottom: 7px;
-        position: absolute;
-        right: 20px;
-        bottom: 40px;
-      }
-
-      .options {
-        width: 48px;
-        height: 48px;
-        line-height: 48px;
-        text-align: center;
-        margin: 0 auto;
-        margin-top: 30px;
-
-        img {
-          display: inline-block;
-          width: 20px;
-          height: 4px;
-        }
-
-        .ivu-poptip {
-          width: 100%;
-        }
-
-        .ivu-poptip .ivu-poptip-popper {
-          min-width: 0;
-
-          .ivu-poptip-body-content {
-            height: inherit;
-            overflow: inherit;
-          }
-        }
-
-        .ivu-poptip-rel {
-          width: 100%;
-          height: 30px !important;
-        }
-
-        .optionItem {
-          margin: 5px 0;
-          height: 22px;
-          line-height: 18px;
-          padding: 2px;
-
-          i {
-            display: inline-block;
-            width: 16px;
-            height: 18px;
-            margin-right: 9px;
-
-            img {
-              display: inline-block;
-              width: 100%;
-              height: 100%;
-            }
-          }
-
-          span {
-            display: inline-block;
-            height: 18px;
-            line-height: 18px;
-            font-size: 14px;
-            font-weight: 400;
-            color: #F65C5C;
-            position: relative;
-            top: -2px;
-          }
-
-          .green {
-            color: #26B4B0;
-          }
-        }
-      }
     }
 
     .walletItem.active {
@@ -221,42 +148,78 @@
   .active:after {
     display: none;
   }
-}
 
-.walletItem_bg_0 {
-  transition: width .2s;
-  background-image: url("../../../common/img/wallet/wallet-detail/walletDetailBgNormal1.png");
-  width: 400px !important;
-  position: relative;
-  box-shadow: 0px 0px 7px 0px rgba(20, 119, 149, 0.75);
-}
+  .walletItem_bg_0 {
+    transition: width .2s;
+    background-image: url("../../../common/img/wallet/wallet-detail/walletDetailBgNormal1.png");
+    width: 390px !important;
+    position: relative;
+    box-shadow: 0 0 7px 0 rgba(20, 119, 149, 0.75);
+  }
 
-.walletItem_bg_0.active {
-  width: 400px !important;
-  position: relative;
-  box-shadow: 0px 0px 7px 0px rgba(20, 119, 149, 0.75);
-}
+  .walletItem_bg_0::after {
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-left-color: rgba(60, 107, 159);
+    right: -19px;
+    bottom: 40px;
+    content: '';
+
+  }
+
+  .walletItem_bg_0.active {
+    width: 400px !important;
+    position: relative;
+    box-shadow: 0 0 7px 0 rgba(20, 119, 149, 0.75);
+  }
 
 
-.walletItem_bg_1 {
-  transition: width .5s;
-  background-image: url("../../../common/img/wallet/wallet-detail/walletDetailBgNormal2.png");
-}
+  .walletItem_bg_1 {
+    transition: width .5s;
+    background-image: url("../../../common/img/wallet/wallet-detail/walletDetailBgNormal2.png");
+  }
 
-.walletItem_bg_1.active {
-  width: 400px !important;
-  position: relative;
-  box-shadow: 0px 0px 7px 0px rgba(227, 112, 49, 0.75);
-}
+  .walletItem_bg_1.active {
+    width: 400px !important;
+    position: relative;
+    box-shadow: 0 0 7px 0 rgba(227, 112, 49, 0.75);
+  }
 
 
-.walletItem_bg_2 {
-  transition: width .1s;
-  background-image: url("../../../common/img/wallet/wallet-detail/walletDetailBgNormal3.png");
-}
+  .walletItem_bg_2 {
+    transition: width .1s;
+    background-image: url("../../../common/img/wallet/wallet-detail/walletDetailBgNormal3.png");
+  }
 
-.walletItem_bg_2.active {
-  width: 400px !important;
-  position: relative;
-  box-shadow: 0px 0px 7px 0px rgba(51, 45, 36.75);
+  .walletItem_bg_2.active {
+    width: 400px !important;
+    position: relative;
+    box-shadow: 0 0 7px 0 rgba(51, 45, 36.75);
+  }
+
+  .options {
+    position: absolute;
+    top: 55px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+
+    .mosaics {
+      margin-right: 20px;
+    }
+
+    .mosaics,
+    .delete {
+      font-size: 18px;
+      opacity: .5;
+    }
+
+    .mosaics:hover,
+    .delete:hover {
+      opacity: 1;
+    }
+  }
 }

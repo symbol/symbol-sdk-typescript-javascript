@@ -3,26 +3,29 @@
   height: 100%;
   float: right;
   background-color: white;
+  border-left: 2px solid rgb(250, 250, 250);
 
   .top_title {
-    height: 120px;
-    border-bottom: 2px solid #eee;
+    height: 100px;
     display: flex;
     justify-content: center;
     flex-direction: column;
     justify-items: center;
-    text-align: center;
+    text-align: left;
     font-size: 20px;
     font-weight: 400;
-    color: rgba(34, 34, 34, 1);
+    color: rgba(34, 34, 34);
+    padding-left: 10px;
+    >span {
+      padding-left: 25px;
+    }
 
     .right {
       margin-top: 10px;
       font-size: 16px;
       font-weight: 400;
-      color: rgba(32, 181, 172, 1);
+      color: rgba(32, 181, 172);
       position: relative;
-      right: 20px;
 
       .select_date {
         position: relative;
@@ -114,7 +117,7 @@
         margin-left: 15px;
         font-weight: 400;
         font-size: 16px;
-        color: rgba(32, 181, 172, 1);
+        color: rgba(32, 181, 172);
         position: relative;
         bottom: 15px;
       }
@@ -122,7 +125,7 @@
   }
 
   .bottom_transfer_record_list {
-    padding: 20px 36px 34px;
+    padding: 5px 36px 34px;
     height: calc(100% - 130px);
     position: relative;
 
@@ -132,7 +135,7 @@
     }
 
     .transaction_record_item {
-      padding: 26px 0;
+      padding: 16px 0;
       border-bottom: 1px solid rgba(238, 238, 238, 1);
       display: flex;
       flex-direction: row;

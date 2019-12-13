@@ -14,7 +14,7 @@
         </div>
 
         <div class="button-container">
-          <button @click="submit('finished')" class="info-button">{{$t('Skip')}}</button>
+          <button @click="submit('finished')" class="info-button">{{$t('Back')}}</button>
           <button @click="submit('verifyMnemonic')">{{$t('Verify_backup_mnemonics')}}</button>
         </div>
       </div>

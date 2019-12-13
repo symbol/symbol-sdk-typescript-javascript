@@ -1,6 +1,7 @@
 <template>
   <div class="transactionConfirmationWrap">
     <Modal
+            :title="$t('transaction_details')"
             v-if="show"
             v-model="show"
             class-name="vertical-center-modal"

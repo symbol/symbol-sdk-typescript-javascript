@@ -1,7 +1,6 @@
 <template>
   <div class="privatekeyDialogWrap">
-    <Modal
-      v-model="show"
+    <Modal v-model="show"
       class-name="vertical-center-modal"
       :footer-hide="true"
       :width="1000"
@@ -12,12 +11,13 @@
         <span class="title">{{$t('export_private_key')}}</span>
       </div>
       <div class="privatekeyDialogBody">
+
         <div class="steps" v-if="stepIndex != 4">
-          <span :class="['stepItem',stepIndex == 0?'active':'']">{{$t('input_password')}}</span>
-          <span :class="['stepItem',stepIndex == 1?'active':'']">{{$t('backup_prompt')}}</span>
-          <span
-            :class="['stepItem',stepIndex == 2||stepIndex == 3?'active':'']"
-          >{{$t('backup_private_key')}}</span>
+          <img :src="threeStepsPictureList[stepIndex]">
+          <div class="steps-text-container">
+            <span v-for="(title,index) in stringOfSteps"
+                  :class="['stepItem',stepIndex >= index?'before':'after']">{{$t(title)}}</span>
+          </div>
         </div>
         <div class="stepItem1" v-if="stepIndex == 0">
           <form action="submit" onsubmit="event.preventDefault()" @keyup.enter="exportPrivatekey">

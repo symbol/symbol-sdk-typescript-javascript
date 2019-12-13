@@ -18,8 +18,8 @@
   }
 
   .ivu-modal-content {
+    width: 1000px;
     overflow: hidden;
-    padding: 20px;
     .ivu-modal-close {
       top: 30px;
       right: 40px;
@@ -30,19 +30,12 @@
         font-weight: 400;
       }
     }
-
-    .ivu-modal-body {
-      padding: 0;
-    }
   }
 
   .mosaicEditDialogBody {
-    padding: 40px 0;
-
     .stepItem1 {
       width: 680px;
-      margin: 0 auto;
-
+      margin-left: 50px;
       .mosaicTxt {
         height: 60px;
         line-height: 60px;
@@ -100,7 +93,7 @@
         position: relative;
 
         input {
-          padding-right: 50px;
+          padding: 0 20px;
         }
 
         .icon {
@@ -228,28 +221,29 @@
     :nth-child(1){
       font-size: 16px;
     }
-    
+
     span{
       margin-right:10px;
     }
     .color_text{
       color:#20B5AC;
     }
-    
+
     .from-span {
       font-size: 16px;
     }
   }
 
   .input_content{
-    margin-top: 20px;
-    height: 60px;
     display: flex;
+    height: 60px;
     align-items: center;
     justify-content: space-between;
 
     .title{
-      flex: 2;
+      width: 80px;
+      margin-right: 50px;
+      text-align: justify-all;
     }
 
     .no-border {
@@ -259,13 +253,7 @@
     .input_area{
       flex: 8;
       border:1px solid rgba(238, 238, 238, 1);
-      border-radius: 3px;
-
-      p {
-        font-size: 0.16rem;
-        margin: 0.15rem 0;
-        padding-left: 0.08rem;
-      }
+      font-size: 16px;
 
       input {
         height: 45px;
@@ -308,14 +296,11 @@
   .checkBtn{
     color: #fff;
     background: #20B5AC;
-    margin-right: 20px;
-    margin-top: 32px;
+    margin: 20px 0  50px  20px;
     width: 86px;
     height: 44px;
     line-height: 44px;
     text-align: center;
-    border-radius: 20px;
-    font-weight: 400;
     float: right;
   }
 }

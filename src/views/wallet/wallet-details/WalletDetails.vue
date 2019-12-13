@@ -5,12 +5,27 @@
         <Col span="18">
           <h6>{{$t('Basic_information')}}</h6>
           <div v-if="wallet" class="walletInfo">
+
+            <p>
+              <span class="tit">{{$t('Wallet_name')}}</span>
+              <span class="walletName" v-if="wallet">{{wallet.name}}</span>
+              <span class="edit-wallet-name" @click.stop="showUpdateDialog = true"><Icon
+                      type="md-create"/></span>
+            </p>
+
+            <p>
+              <span class="tit">{{$t('privateKey')}}</span>
+              <span class="walletName" v-if="wallet">*******************************************************</span>
+              <span class="edit-wallet-name" @click.stop="changePrivatekeyDialog">
+                <Icon type="md-eye"/>
+              </span>
+            </p>
+
             <p>
               <span class="tit">{{$t('Wallet_type')}}</span>
               <span class="walletType" v-if="wallet">
                 {{isMultisig ? $t('Public_account'):$t('Private_account')}}
               </span>
-
               <span class="tit">{{$t('importance')}}</span>
               <span v-if="wallet">
                 <span v-if="importance != 0">
@@ -20,36 +35,29 @@
                 <span v-else>0</span>
               </span>
             </p>
-            <p>
-              <span class="tit">{{$t('Wallet_name')}}</span>
-              <span class="walletName" v-if="wallet">{{wallet.name}}</span>
-            </p>
+
             <p>
               <span class="tit">{{$t('Wallet_address')}}</span>
               <span class="walletAddress">{{wallet.address}}</span>
-              <i class="copyIcon" @click="copy(wallet.address)"><img
-                      src="@/common/img/wallet/copyIcon.png"></i>
+              <i class="copyIcon" @click="copy(wallet.address)"><img src="@/common/img/wallet/copyIcon.png"></i>
             </p>
+
             <p>
               <span class="tit">{{$t('Wallet_public_key')}}</span>
               <span class="walletPublicKey">{{wallet.publicKey}}</span>
               <i class="copyIcon" @click="copy(wallet.publicKey)"><img
                       src="@/common/img/wallet/copyIcon.png"></i>
             </p>
+
             <p class="link_text">
               <span class="tit">{{$t('Aliases')}}</span>
-              <span class="  alias_add pointer" @click="bindNamespace()" />
+              <span class="  alias_add pointer" @click="bindNamespace()"/>
               <span class="walletPublicKey">
                 <span v-if='!selfAliases.length'>-</span>
                 <div v-if='selfAliases.length'>
-                  <span
-                          v-for="(alias, index) in selfAliases"
-                          :key="index"
-                  >
+                  <span v-for="(alias, index) in selfAliases" :key="index">
                     <span class="aliasLink">
-                      <a
-                              @click="unbindNamespace(alias)"
-                      >{{alias.name}}</a>
+                      <a @click="unbindNamespace(alias)">{{alias.name}}</a>
                       {{index < selfAliases.length - 1 ? ' | ' : ''}}
                     </span>
                   </span>
@@ -66,23 +74,23 @@
         </Col>
       </Row>
     </div>
-    <div class="fnAndBackup radius">
-      <h6>{{$t('Function_and_backup')}}</h6>
-      <div class="backupDiv clear">
-        <div class="Mnemonic pointer left" @click="changeMnemonicDialog">
-          <i><img src="@/common/img/wallet/auxiliaries.png"></i>
-          <span>{{$t('Export_mnemonic')}}</span>
-        </div>
-        <div class="privateKey pointer left" @click="changePrivatekeyDialog">
-          <i><img src="@/common/img/wallet/privatekey.png"></i>
-          <span>{{$t('Export_private_key')}}</span>
-        </div>
-        <div class="Keystore pointer left" @click="changeKeystoreDialog">
-          <i><img src="@/common/img/wallet/keystore.png"></i>
-          <span>{{$t('Export_Keystore')}}</span>
-        </div>
-      </div>
-    </div>
+    <!--    <div class="fnAndBackup radius">-->
+    <!--      <h6>{{$t('Function_and_backup')}}</h6>-->
+    <!--      <div class="backupDiv clear">-->
+    <!--        <div class="Mnemonic pointer left" @click="changeMnemonicDialog">-->
+    <!--          <i><img src="@/common/img/wallet/auxiliaries.png"></i>-->
+    <!--          <span>{{$t('Export_mnemonic')}}</span>-->
+    <!--        </div>-->
+    <!--        <div class="privateKey pointer left" @click="changePrivatekeyDialog">-->
+    <!--          <i><img src="@/common/img/wallet/privatekey.png"></i>-->
+    <!--          <span>{{$t('Export_private_key')}}</span>-->
+    <!--        </div>-->
+    <!--        <div class="Keystore pointer left" @click="changeKeystoreDialog">-->
+    <!--          <i><img src="@/common/img/wallet/keystore.png"></i>-->
+    <!--          <span>{{$t('Export_Keystore')}}</span>-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
     <div class="accountFn radius" ref="accountFn">
       <div class="accountFnNav">
         <ul class="navList clear">
@@ -108,17 +116,14 @@
       <!--      <AddressBook v-if="functionShowList[0]"></AddressBook>-->
       <WalletHarvesting v-if="functionShowList[1]"></WalletHarvesting>
     </div>
-    <MnemonicDialog v-if="showMnemonicDialog"
-                    :showMnemonicDialog="showMnemonicDialog"
-                    @closeMnemonicDialog="closeMnemonicDialog"/>
     <PrivatekeyDialog
             v-if="showPrivatekeyDialog"
             :showPrivatekeyDialog="showPrivatekeyDialog"
-            @closePrivatekeyDialog="showPrivatekeyDialog=false"/>
+            @closePrivatekeyDialog="showPrivatekeyDialog=false"></PrivatekeyDialog>
     <KeystoreDialog
             v-if="showKeystoreDialog"
             :showKeystoreDialog="showKeystoreDialog"
-            @closeKeystoreDialog="showKeystoreDialog=false"/>
+            @closeKeystoreDialog="showKeystoreDialog=false"></KeystoreDialog>
     <Alias
             v-if="showBindDialog"
             :visible='showBindDialog'
@@ -127,14 +132,21 @@
             :mosaic="null"
             :namespace="activeNamespace"
             :address="getAddress"
-            @close="showBindDialog = false"
-    />
+            @close="showBindDialog = false"></Alias>
+    <TheWalletUpdate
+            :showUpdateDialog="showUpdateDialog"
+            :walletToUpdate="wallet"
+            @closeUpdateDialog="showUpdateDialog = false"
+            @on-cancel="showUpdateDialog = false"
+    ></TheWalletUpdate>
+
   </div>
 </template>
 
 <script lang="ts">
     import {WalletDetailsTs} from '@/views/wallet/wallet-details/WalletDetailsTs.ts'
     import "./WalletDetails.less";
+
     export default class WalletDetails extends WalletDetailsTs {
 
     }

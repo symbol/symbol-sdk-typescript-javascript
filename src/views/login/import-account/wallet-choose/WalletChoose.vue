@@ -4,8 +4,8 @@
       <div class="dialog-sub-tips">{{$t('Address_to_Interact_With')}}</div>
       <div class="choose-hd-path radius">
         <div class="selection-container">
-          <span class="network-type radius">{{$t('CATAPULT')}}</span>
-          <span class="network-type radius">{{networkName}}</span>
+<!--          <span class="network-type radius">{{$t('CATAPULT')}}</span>-->
+<!--          <span class="network-type radius">{{networkName}}</span>-->
         </div>
         <div class="hd-path">
           <!--          <span class="hd-path-title">{{$t('HD_Derivation_Path')}}</span>-->

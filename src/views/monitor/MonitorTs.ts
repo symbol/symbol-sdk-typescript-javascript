@@ -1,13 +1,17 @@
 import {Message} from "@/config/index.ts"
-import {Component, Vue} from 'vue-property-decorator'
+import {Component, Vue, Watch} from 'vue-property-decorator'
 import monitorSelected from '@/common/img/monitor/monitorSelected.png'
 import monitorUnselected from '@/common/img/monitor/monitorUnselected.png'
 import {copyTxt, formatNumber, localRead, localSave} from '@/core/utils'
 import {mapState} from "vuex"
 import {AppInfo, MosaicNamespaceStatusType, StoreAccount} from "@/core/model"
 import routes from '@/router/routers'
+import numberGrow from '@/components/number-grow/NumberGrow.vue'
 
 @Component({
+    components: {
+        numberGrow,
+    },
     computed: {
         ...mapState({
             activeAccount: 'account',
@@ -40,6 +44,10 @@ export class MonitorTs extends Vue {
 
     get ticker() {
         return this.activeAccount.networkCurrency.ticker
+    }
+
+    get chainStatus() {
+        return this.app.chainStatus
     }
 
     get mosaicsLoading() {

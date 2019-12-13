@@ -4,7 +4,7 @@ import {Store} from 'vuex'
 import {Address, AccountHttp, AccountInfo} from 'nem2-sdk'
 
 const getBalanceFromAccountInfo = (accountInfo: AccountInfo,
-    networkCurrency: NetworkCurrency): {balance: number, address: string} => {
+                                   networkCurrency: NetworkCurrency): { balance: number, address: string } => {
     const address = accountInfo.address.plain()
 
     try {
@@ -32,14 +32,23 @@ export const setWalletsBalances = async (store: Store<AppState>): Promise<void> 
         Log.create('setWalletsBalances', walletList.map(({address, name}) => ({address, name})), store)
 
         const addresses = walletList.map(({address}) => Address.createFromRawAddress(address))
-        const accountsInfo = await new AccountHttp(node).getAccountsInfo(addresses).toPromise()
-        const balances = accountsInfo.map(ai => getBalanceFromAccountInfo(ai, networkCurrency))
-
+        const accountsInfo: AccountInfo[] = await new AccountHttp(node).getAccountsInfo(addresses).toPromise()
+        // set mosaic types and wallets balance
+        const balances = accountsInfo.map(ai => {
+            return {
+                ...getBalanceFromAccountInfo(ai, networkCurrency),
+                numberOfMosaics : ai.mosaics.length
+            }
+        })
         const appWalletsWithBalance = walletList
             .map(wallet => {
                 const balanceFromAccountInfo = balances.find(({address}) => wallet.address === address)
-                if (balanceFromAccountInfo === undefined) return {...wallet, balance: 0}
-                return {...wallet, balance: balanceFromAccountInfo.balance}
+                if (balanceFromAccountInfo === undefined) return {...wallet, balance: 0, numberOfMosaics : 0}
+                return {
+                    ...wallet,
+                    balance: balanceFromAccountInfo.balance,
+                    numberOfMosaics : balanceFromAccountInfo.numberOfMosaics
+                }
             })
 
 

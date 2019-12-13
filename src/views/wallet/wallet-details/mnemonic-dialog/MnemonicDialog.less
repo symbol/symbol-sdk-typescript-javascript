@@ -33,51 +33,44 @@
   }
 
   .mnemonicDialogBody {
-    padding: 20px 0 0 0;
 
     .steps {
+      position: relative;
       height: 54px;
       text-align: center;
       margin-bottom: 30px;
 
-      .stepItem {
-        display: inline-block;
-        //width: 100px;
-        height: 50px;
-        line-height: 50px;
-        font-size: 16px;
-        font-weight: 400;
-        white-space: nowrap;
-        color: #999999;
-        text-align: center;
-        margin-right: 93px;
-        position: relative;
+      .steps-text-container {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+
+        .stepItem {
+          width: 25%;
+          display: inline-block;
+          height: 50px;
+          line-height: 35px;
+          font-size: 12px;
+          font-weight: 400;
+          white-space: nowrap;
+          text-align: center;
+          color: #999;
+          position: relative;
+        }
+
+        .before {
+          color: white;
+        }
+
+        .after {
+          color: rgba(0, 0, 0, 0.5);
+        }
       }
 
-      .stepItem:last-of-type {
-        margin-right: 0;
-      }
-
-      .stepItem:after {
-        content: '';
-        display: inline-block;
-        width: 100px;
-        left: -50px;
-        margin-left: 50%;
-        height: 4px;
-        background: #CCCCCC;
+      img {
         position: absolute;
-        bottom: -4px;
-      }
-
-      .stepItem.active {
-        font-size: 20px;
-        color: #20B5AC;
-        font-weight: bold;
-      }
-
-      .stepItem.active:after {
-        background: #20B5AC;
+        width: 100%;
+        left: 0;
       }
     }
 
@@ -104,6 +97,7 @@
     .stepItem2,
     .stepItem1 {
       padding: 30px 0;
+
       .ivu-icon {
         font-size: 20px;
         font-weight: bold;
@@ -419,6 +413,7 @@
         border: none;
         border-radius: 30px;
         height: 60px;
+
         span {
           padding: 10px 35px;
         }
@@ -433,12 +428,15 @@
   .confirmed_word {
     color: #ccc;
   }
-  .mnemonic_container .mnemonicWordDiv span{
+
+  .mnemonic_container .mnemonicWordDiv span {
     margin-bottom: 8px;
   }
+
   .mnemonic_container .mnemonicWordDiv span {
     margin-right: 5px;
   }
+
   .mnemonic_container {
     width: 90%;
   }

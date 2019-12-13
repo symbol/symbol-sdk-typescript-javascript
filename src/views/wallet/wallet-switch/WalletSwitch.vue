@@ -2,14 +2,15 @@
   <div class="walletSwitchWrap">
     <div class="walletSwitchHead">
       <p class="tit">{{$t('Wallet_management')}}</p>
+      <p class="back-up pointer" @click="showMnemonicDialog=true">{{$t('backup_mnemonic')}}</p>
     </div>
 
     <div class="walletList scroll" ref="walletScroll">
       <div class="wallet_scroll_item" v-for="(item, index) in walletList" :key="index">
         <div
-          :class="['walletItem', getWalletStyle(item), 'radius']"
-          @click="switchWallet(item.address)"
-          ref="walletsDiv"
+                :class="['walletItem', getWalletStyle(item), 'radius']"
+                @click="switchWallet(item.address)"
+                ref="walletsDiv"
         >
           <Row>
             <Col span="15">
@@ -22,32 +23,17 @@
               </div>
             </Col>
             <Col span="9">
+
               <div @click.stop>
-                <p class="walletTypeTxt">{{isMultisig(item.address) ? $t('Public_account') : ''}}</p>
+                <div class="walletTypeTxt">{{isMultisig(item.address) ? $t('Public_account') : ''}}</div>
                 <div class="options">
-                  <Poptip placement="bottom">
-                    <img src="@/common/img/wallet/moreActive.png" />
-                    <div slot="content">
-                      <p
-                        class="optionItem"
-                        @click.stop="walletToDelete = item; showDeleteDialog = true"
-                      >
-                        <i>
-                          <img src="@/common/img/wallet/delete.png" />
-                        </i>
-                        <span>{{$t('delete')}}</span>
-                      </p>
-                      <p
-                        class="optionItem"
-                        @click.stop="walletToUpdate = item; showUpdateDialog = true"
-                      >
-                        <i>
-                          <img src="@/common/img/setting/settingEditNodeHover.png" />
-                        </i>
-                        <span class="green">{{$t('update_wallet_name')}}</span>
-                      </p>
-                    </div>
-                  </Poptip>
+                  <span class="mosaics">
+                    <Icon type="logo-buffer"/>
+                    <span>{{ item.numberOfMosaics  ? formatNumber(item.numberOfMosaics ) : 0 }}</span>
+                  </span>
+                  <span @click="showDeleteDialog=true" class="delete">
+                    <Icon type="md-trash"/>
+                  </span>
                 </div>
               </div>
             </Col>
@@ -66,34 +52,32 @@
         </Col>
       </Row>
     </div>
-    <TheWalletDelete
-      :showCheckPWDialog="showDeleteDialog"
-      :wallet-to-delete="walletToDelete"
-      @closeCheckPWDialog="closeDeleteDialog"
-      @on-cancel="showCheckPWDialog = false"
-    />
-    <TheWalletUpdate
-      :showUpdateDialog="showUpdateDialog"
-      :walletToUpdate="walletToUpdate"
-      @closeUpdateDialog="closeUpdateDialog"
-      @on-cancel="showUpdateDialog = false"
-    />
+
     <CheckPasswordDialog
-      v-if="showCheckPWDialog"
-      :visible="showCheckPWDialog"
-      :returnPassword="true"
-      @close="showCheckPWDialog = false"
-      @passwordValidated="passwordValidated"
-    />
+            v-if="showCheckPWDialog"
+            :visible="showCheckPWDialog"
+            :returnPassword="true"
+            @close="showCheckPWDialog = false"
+            @passwordValidated="passwordValidated"></CheckPasswordDialog>
+
+    <MnemonicDialog v-if="showMnemonicDialog"
+                    :showMnemonicDialog="showMnemonicDialog"
+                    @closeMnemonicDialog="showMnemonicDialog = false"></MnemonicDialog>
+    <TheWalletDelete
+            :showCheckPWDialog="showDeleteDialog"
+            :wallet-to-delete="wallet"
+            @closeCheckPWDialog="showDeleteDialog=false"
+            @on-cancel="showDeleteDialog = false"></TheWalletDelete>
   </div>
 </template>
 
 <script lang="ts">
-import "./WalletSwitch.less";
-//@ts-ignore
-import { WalletSwitchTs } from "@/views/wallet/wallet-switch/WalletSwitchTs.ts";
+    import "./WalletSwitch.less";
+    //@ts-ignore
+    import {WalletSwitchTs} from "@/views/wallet/wallet-switch/WalletSwitchTs.ts";
 
-export default class WalletSwitch extends WalletSwitchTs {}
+    export default class WalletSwitch extends WalletSwitchTs {
+    }
 </script>
 
 <style scoped>

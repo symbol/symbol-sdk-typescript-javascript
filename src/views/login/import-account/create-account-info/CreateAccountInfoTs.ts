@@ -5,6 +5,7 @@ import {AppAccounts, AppAccount, AppWallet, StoreAccount, CurrentAccount} from '
 import {networkTypeConfig} from "@/config/view/setting"
 import {mapState} from "vuex"
 import {NetworkType} from "nem2-sdk"
+import {getDefaultAccountNetworkType} from "@/core/utils"
 
 @Component({
     computed: {
@@ -17,6 +18,7 @@ import {NetworkType} from "nem2-sdk"
 export class CreateAccountInfoTs extends Vue {
     activeAccount: StoreAccount
     formItem = cloneData(formDataConfig.createAccountForm)
+    currentNetworkType = getDefaultAccountNetworkType()
     networkTypeList = networkTypeConfig
 
     get accountName() {
@@ -25,7 +27,8 @@ export class CreateAccountInfoTs extends Vue {
 
 
     checkInput() {
-        const {accountName, currentNetType, password, passwordAgain} = this.formItem
+        const {currentNetworkType} = this
+        const {accountName, password, passwordAgain} = this.formItem
         const appAccounts = AppAccounts()
         if (appAccounts.getAccountFromLocalStorage(accountName)) {
             this.$Notice.error({title: this.$t(Message.ACCOUNT_NAME_EXISTS_ERROR) + ''})
@@ -43,7 +46,7 @@ export class CreateAccountInfoTs extends Vue {
             this.$Notice.error({title: this.$t(Message.INCONSISTENT_PASSWORD_ERROR) + ''})
             return false
         }
-        if (!(currentNetType in NetworkType)) {
+        if (!(currentNetworkType in NetworkType)) {
             this.$Notice.error({title: this.$t(Message.NETWORK_TYPE_INVALID) + ''})
             return false
         }
@@ -51,17 +54,18 @@ export class CreateAccountInfoTs extends Vue {
     }
 
     submit() {
+        const {currentNetworkType} = this
         const appAccounts = AppAccounts()
-        let {accountName, password, currentNetType, hint} = this.formItem
+        let {accountName, password, hint} = this.formItem
         if (!this.checkInput()) return
         const encryptedPassword = AppAccounts().encryptString(password, password)
-        const appAccount = new AppAccount(accountName, [], encryptedPassword, hint, currentNetType)
+        const appAccount = new AppAccount(accountName, [], encryptedPassword, hint, currentNetworkType)
         appAccounts.saveAccountInLocalStorage(appAccount)
         this.$Notice.success({title: this.$t(Message.OPERATION_SUCCESS) + ''})
         const currentAccount: CurrentAccount = {
             name: accountName,
             password: encryptedPassword,
-            networkType: currentNetType,
+            networkType: currentNetworkType,
         }
         this.$store.commit('SET_ACCOUNT_DATA', currentAccount)
         this.$store.commit('SET_TEMPORARY_PASSWORD', password)

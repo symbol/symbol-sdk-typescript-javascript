@@ -25,49 +25,47 @@
   }
 
   .privatekeyDialogBody {
-    padding: 40px 0 80px;
+    padding: 0 0 80px;
 
     .steps {
+      position: relative;
       height: 54px;
       text-align: center;
+      margin-bottom: 30px;
 
-      .stepItem {
-        display: inline-block;
-        height: 50px;
-        line-height: 50px;
-        font-size: 16px;
-        font-weight: 400;
-        white-space: nowrap;
-        color: #999999;
-        text-align: center;
-        margin-right: 190px;
-        position: relative;
+      .steps-text-container {
+        width: 90%;
+        display: flex;
+        justify-content: space-between;
+        margin-left: 5%;
+
+        .stepItem {
+          width: 33.3%;
+          display: inline-block;
+          height: 50px;
+          line-height: 60px;
+          font-size: 12px;
+          font-weight: 400;
+          white-space: nowrap;
+          text-align: center;
+          color: #999999;
+          position: relative;
+        }
+
+        .before {
+          color: white;
+        }
+
+        .after {
+          color: rgba(0, 0, 0, 0.5);
+        }
       }
 
-      .stepItem:last-of-type {
-        margin-right: 0;
-      }
-
-      .stepItem:after {
-        content: '';
-        display: inline-block;
-        width: 100px;
-        left: -50px;
-        margin-left: 50%;
-        height: 4px;
-        background: #CCCCCC;
+      img {
         position: absolute;
-        bottom: -4px;
-      }
-
-      .stepItem.active {
-        font-size: 20px;
-        color: #20B5AC;
-        font-weight: bold;
-      }
-
-      .stepItem.active:after {
-        background: #20B5AC;
+        width: 90%;
+        margin-left: 5%;
+        left: 0;
       }
     }
 
@@ -264,7 +262,6 @@
     }
 
     .stepItem4 {
-      padding-top: 80px;
 
       .QRCodeImg {
         width: 200px;
@@ -305,6 +302,7 @@
         border-radius: 30px;
         margin: 43px auto 0;
         position: relative;
+
         a {
           color: #fff;
         }

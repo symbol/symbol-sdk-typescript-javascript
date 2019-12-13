@@ -61,73 +61,73 @@
       </div>
     </div>
 
-    <div class="bottom_transactions radius">
-      <div class="left_buy radius scroll ">
-        <div class="transfer_action">
-          Buy XEM
-        </div>
-        <div class="setAmount">
-          <div class="left">
-            <span class="title">{{$t('price')}}</span>
-            <span class="value">{{currentPrice}}</span>
-            <span>USD</span>
-          </div>
-          <div class="right">
-            <span class="title">{{$t('quantity')}}</span>
-            <span class="value">
-              <input v-model.number="purchaseAmount" type="text">
-            </span>
-            <span class="update_arrow">
-              <img @click="addPurchaseAmount " class="pointer"
-                   src="@/common/img/monitor/market/marketAmountUpdateArrow.png"/>
-              <img @click="cutPurchaseAmount" class="pointer"
-                   src="@/common/img/monitor/market/marketAmountUpdateArrow.png"/>
-            </span>
-            <span>XEM</span>
-          </div>
-        </div>
-        <div v-show="purchaseAmount > 0" class="clear conversion ">
-          <span>XEM
-            <span class="bigger">{{Number(purchaseAmount).toFixed(2)}}</span>
-            ≈ ${{(currentPrice * purchaseAmount).toFixed(4)}}</span>
-        </div>
-        <div class="purchase_XEM right un_click ">
-          <span>buy</span>
-        </div>
-      </div>
+<!--    <div class="bottom_transactions radius">-->
+<!--      <div class="left_buy radius scroll ">-->
+<!--        <div class="transfer_action">-->
+<!--          Buy XEM-->
+<!--        </div>-->
+<!--        <div class="setAmount">-->
+<!--          <div class="left">-->
+<!--            <span class="title">{{$t('price')}}</span>-->
+<!--            <span class="value">{{currentPrice}}</span>-->
+<!--            <span>USD</span>-->
+<!--          </div>-->
+<!--          <div class="right">-->
+<!--            <span class="title">{{$t('quantity')}}</span>-->
+<!--            <span class="value">-->
+<!--              <input v-model.number="purchaseAmount" type="text">-->
+<!--            </span>-->
+<!--            <span class="update_arrow">-->
+<!--              <img @click="addPurchaseAmount " class="pointer"-->
+<!--                   src="@/common/img/monitor/market/marketAmountUpdateArrow.png"/>-->
+<!--              <img @click="cutPurchaseAmount" class="pointer"-->
+<!--                   src="@/common/img/monitor/market/marketAmountUpdateArrow.png"/>-->
+<!--            </span>-->
+<!--            <span>XEM</span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div v-show="purchaseAmount > 0" class="clear conversion ">-->
+<!--          <span>XEM-->
+<!--            <span class="bigger">{{Number(purchaseAmount).toFixed(2)}}</span>-->
+<!--            ≈ ${{(currentPrice * purchaseAmount).toFixed(4)}}</span>-->
+<!--        </div>-->
+<!--        <div class="purchase_XEM right un_click ">-->
+<!--          <span>buy</span>-->
+<!--        </div>-->
+<!--      </div>-->
 
-      <div class="right_sell radius scroll">
-        <div class="transfer_action">
-          Sell XEM
-        </div>
-        <div class="setAmount">
-          <div class="left">
-            <span class="title">{{$t('price')}}</span>
-            <span class="value">{{currentPrice}}</span>
-            <span>USD</span>
-          </div>
-          <div class="right">
-            <span class="title">{{$t('quantity')}}</span>
-            <span class="value">
-              <input v-model="sellAmount">
-            </span>
-            <span class="update_arrow">
-              <img @click="addSellAmount " class="pointer"
-                   src="@/common/img/monitor/market/marketAmountUpdateArrow.png"/>
-              <img @click="cutSellAmount" class="pointer"
-                   src="@/common/img/monitor/market/marketAmountUpdateArrow.png"/>
-            </span>
-            <span>XEM</span>
-          </div>
-        </div>
-        <div v-if="sellAmount > 0" class="clear conversion ">
-          <span>XEM <span
-                  class="bigger">{{Number(sellAmount).toFixed(2)}}</span> ≈ ${{(currentPrice * sellAmount).toFixed(4)}}</span>
-        </div>
-        <div class="purchase_XEM right un_click">
-          <span>sell</span>
-        </div>
-      </div>
+<!--      <div class="right_sell radius scroll">-->
+<!--        <div class="transfer_action">-->
+<!--          Sell XEM-->
+<!--        </div>-->
+<!--        <div class="setAmount">-->
+<!--          <div class="left">-->
+<!--            <span class="title">{{$t('price')}}</span>-->
+<!--            <span class="value">{{currentPrice}}</span>-->
+<!--            <span>USD</span>-->
+<!--          </div>-->
+<!--          <div class="right">-->
+<!--            <span class="title">{{$t('quantity')}}</span>-->
+<!--            <span class="value">-->
+<!--              <input v-model="sellAmount">-->
+<!--            </span>-->
+<!--            <span class="update_arrow">-->
+<!--              <img @click="addSellAmount " class="pointer"-->
+<!--                   src="@/common/img/monitor/market/marketAmountUpdateArrow.png"/>-->
+<!--              <img @click="cutSellAmount" class="pointer"-->
+<!--                   src="@/common/img/monitor/market/marketAmountUpdateArrow.png"/>-->
+<!--            </span>-->
+<!--            <span>XEM</span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div v-if="sellAmount > 0" class="clear conversion ">-->
+<!--          <span>XEM <span-->
+<!--                  class="bigger">{{Number(sellAmount).toFixed(2)}}</span> ≈ ${{(currentPrice * sellAmount).toFixed(4)}}</span>-->
+<!--        </div>-->
+<!--        <div class="purchase_XEM right un_click">-->
+<!--          <span>sell</span>-->
+<!--        </div>-->
+<!--      </div>-->
     </div>
 
   </div>

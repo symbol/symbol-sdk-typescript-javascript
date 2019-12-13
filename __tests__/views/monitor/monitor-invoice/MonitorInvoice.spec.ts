@@ -77,11 +77,11 @@ describe('MonitorInvoice', () => {
         wrapper.setData({
             formItems: {
                 mosaicAmount: 88888,
-                remarks: 'this is a message',
+                message: 'this is a message',
             },
             selectedMosaicHex: '0550A29A06E0A16E'
         })
-        
+
         expect(wrapper.vm.transferTransaction).toBeInstanceOf(TransferTransaction)
         expect(wrapper.vm.transferTransaction.message.payload).toEqual('this is a message')
         expect(wrapper.vm.transferTransaction.mosaics[0].amount.compact()).toEqual(88888)

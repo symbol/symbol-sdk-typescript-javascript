@@ -505,7 +505,6 @@
   "Generate_entropy_increase_success": "生成熵增成功，页面即将跳转。",
   "from_seed": "从种子创建",
   "from_privatekey": "从私钥创建",
-  "operation": "操作",
   "Min_signatures_to_sign_a_transaction_or_to_add_a_cosigner": "从多签中添加某人或完成此多签交易所需的签名数",
   "Add_delete_co_signers_this_action_will_be_displayed_in_the_action_log_click_delete_to_cancel": "添加/删除共签人，此处操作会在操作记录中显示，点击删除可撤销",
   "Create_namespace": "创建命名空间",
@@ -883,5 +882,6 @@
   "ID": "ID",
   "Balance": "Balance",
   "Choose_Wallets": "Choose Wallets",
-  "Access_My_Wallet": "Access My Wallet"
+  "Access_My_Wallet": "Access My Wallet",
+  "my_balance": "My balance"
 }

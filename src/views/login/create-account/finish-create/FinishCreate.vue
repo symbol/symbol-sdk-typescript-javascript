@@ -13,7 +13,8 @@
           {{$t('If_you_need_to_back_up_your_mnemonics_again_you_can_find_them_in_Wallet_Management_Wallet_Details_Export_Mnemonics')}}</p>
         <p class="text">· {{$t('Nem_wallet_can_not_recover_your_mnemonic')}}</p>
         <div class="jump-btn">
-          <button @click="submit">{{$t('next')}}</button>
+          <button class="info-button pointer" @click="$router.back()">{{$t('Back')}}</button>
+          <button @click="submit" class="pointer">{{$t('next')}}</button>
         </div>
       </div>
       <div class="finish-right">

@@ -2,7 +2,7 @@
   float: left;
   width: 100%;
   background-color: white;
-  padding: 0 31px;
+  padding: 5px 31px;
   overflow: hidden;
   height: 100%;
 
@@ -33,8 +33,27 @@
 
     .split_page {
       position: absolute;
-      right: 90px;
+      bottom: 0;
+      left: 10px;
       z-index: 0;
+
+      .ivu-page-item {
+        width: 30px;
+        min-width: 30px;
+        height: 30px;
+        border: none;
+        color: #666666;
+      }
+
+      .ivu-page-item-active a,
+      .ivu-page-item-active:hover a {
+        color: #1FB6AC !important;
+      }
+
+      .ivu-page-prev,
+      .ivu-page-next {
+        border: none;
+      }
 
       span {
         vertical-align: middle;
@@ -53,7 +72,7 @@
     .label_page {
       font-size: 18px;
       font-weight: 400;
-      color: rgba(102, 102, 102, 1);
+      color: rgba(102, 102, 102);
       height: 23px;
 
       .page_title {
@@ -89,14 +108,14 @@
 
       .line {
         margin: 0 5px;
-        color: rgba(204, 204, 204, 1);;
+        color: rgba(204, 204, 204);
       }
 
       .selected {
         font-size: 16px;
         position: relative;
         font-weight: bold;
-        color: rgba(32, 181, 172, 1);
+        color: rgba(32, 181, 172);
       }
 
       .selected::before {
@@ -105,7 +124,7 @@
         content: '';
         width: 32px;
         height: 3px;
-        background: rgba(32, 181, 172, 1);
+        background: rgba(32, 181, 172);
         bottom: 0;
         left: -16px;
         margin-left: 50%;
@@ -114,7 +133,7 @@
 
     .all_transaction {
       position: relative;
-      height: calc(100% - 50px);
+      height: calc(100% - 30px);
       margin-top: 20px;
     }
 
@@ -193,7 +212,7 @@
     .table_container,
     .unconfirmed_transactions,
     .confirmed_transactions {
-      height: 100%;
+      height: calc(100% - 30px);
       padding: 0 0 12px 0;
 
       .table_body {
@@ -202,7 +221,7 @@
 
         .table_item {
           width: 100%;
-          background: rgba(247, 251, 252, 1);
+          background: rgba(247, 251, 252);
           border-radius: 4px;
           margin-bottom: 5px;
           padding: 5px 0 5px 20px;
@@ -341,6 +360,7 @@
       width: 300px;
     }
   }
+
   .no_data {
     text-align: center;
     color: gray;
@@ -378,6 +398,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
   .ivu-modal-footer {
     display: none;
   }

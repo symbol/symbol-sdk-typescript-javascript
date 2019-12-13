@@ -6,5 +6,6 @@ export const mosaicSortType = {
     bySupplyMutable: 5,
     byDuration: 6,
     byRestrictable: 7,
-    byAlias: 8
+    byAlias: 8,
+    byBalance: 9
 }
