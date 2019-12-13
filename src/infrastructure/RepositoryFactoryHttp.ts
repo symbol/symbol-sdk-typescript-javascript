@@ -124,7 +124,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
         return new TransactionHttp(this.url);
     }
 
-    getGenerationHash(): Observable<String> {
+    getGenerationHash(): Observable<string> {
         return this.generationHash;
     }
 

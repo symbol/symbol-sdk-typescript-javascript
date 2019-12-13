@@ -48,7 +48,7 @@ export interface RepositoryFactory {
      * @returns the generation hash used to sign transactions. Value retrieved from the block/1
      * endpoint. This method is cached, the server is only called the first time.
      */
-    getGenerationHash(): Observable<String>;
+    getGenerationHash(): Observable<string>;
 
     /**
      * @returns a newly created {@link AccountRepository}

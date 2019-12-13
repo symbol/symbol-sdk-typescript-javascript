@@ -16,11 +16,8 @@
 
 import { assert, expect } from 'chai';
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
-import { Listener } from '../../src/infrastructure/Listener';
 import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
-import { RestrictionAccountRepository } from '../../src/infrastructure/RestrictionAccountRespository';
-import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
@@ -37,9 +34,9 @@ import { NamespaceRegistrationTransaction } from '../../src/model/transaction/Na
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { RepositoryFactory } from "../../src/infrastructure/RepositoryFactory";
-import { RepositoryFactoryHttp } from "../../src/infrastructure/RepositoryFactoryHttp";
+import { Config } from "./Config";
 
-describe('AccountRepository', () => {
+describe('AccountHttp', () => {
     let account: Account;
     let account2: Account;
     let account3: Account;
@@ -54,46 +51,44 @@ describe('AccountRepository', () => {
     let accountRepository: AccountRepository;
     let multisigRepository: MultisigRepository;
     let namespaceRepository: NamespaceRepository;
-    let restrictionRepository: RestrictionAccountRepository;
-    let transactionRepository: TransactionRepository;
     let namespaceId: NamespaceId;
     let generationHash: string;
-    let networkType: NetworkType = NetworkType.MIJIN_TEST;
-    let config;
+    let networkType: NetworkType;
+    let config: Config;
+    let maxFee = UInt64.fromUint(1000000);
 
     before((done) => {
-        const path = require('path');
-        require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
-            if (err) {
-                throw err;
-            }
-            const json = JSON.parse(data);
-            config = json;
-            account = Account.createFromPrivateKey(json.testAccount.privateKey, networkType);
-            account2 = Account.createFromPrivateKey(json.testAccount2.privateKey, networkType);
-            account3 = Account.createFromPrivateKey(json.testAccount3.privateKey, networkType);
-            multisigAccount = Account.createFromPrivateKey(json.multisigAccount.privateKey, networkType);
-            cosignAccount1 = Account.createFromPrivateKey(json.cosignatoryAccount.privateKey, networkType);
-            cosignAccount2 = Account.createFromPrivateKey(json.cosignatory2Account.privateKey, networkType);
-            cosignAccount3 = Account.createFromPrivateKey(json.cosignatory3Account.privateKey, networkType);
-            accountAddress = Address.createFromRawAddress(json.testAccount.address);
-            accountPublicKey = json.testAccount.publicKey;
-            publicAccount = PublicAccount.createFromPublicKey(json.testAccount.publicKey, networkType);
-            generationHash = json.generationHash;
 
-            repositoryFactory = new RepositoryFactoryHttp(json.apiUrl);
+        config = new Config(() => {
+            account = config.account;
+            account2 = config.account2;
+            account3 = config.account3;
+            multisigAccount = config.multisigAccount;
+            cosignAccount1 = config.cosignAccount1;
+            cosignAccount2 = config.cosignAccount2;
+            cosignAccount3 = config.cosignAccount3;
+            accountAddress = config.account.address;
+            accountPublicKey = config.account.publicKey;
+            publicAccount = config.account.publicAccount;
+            generationHash = config.generationHash;
+            networkType = config.networkType;
+            repositoryFactory = config.repositoryFactory;
             accountRepository = repositoryFactory.createAccountRepository();
-            transactionRepository = repositoryFactory.createTransactionRepository();
-            restrictionRepository = repositoryFactory.createRestrictionAccountRepository();
             multisigRepository = repositoryFactory.createMultisigRepository();
             namespaceRepository = repositoryFactory.createNamespaceRepository();
-
-            repositoryFactory.getGenerationHash().subscribe(generationHash => {
-                this.generationHash = generationHash;
-                done();
-            });
-
+            done();
         });
+    });
+    before(() => {
+        return config.listener.open();
+    });
+
+    after(() => {
+        config.listener.close();
+    });
+    afterEach((done) => {
+        // cold down
+        setTimeout(done, 200);
     });
 
     /**
@@ -103,15 +98,6 @@ describe('AccountRepository', () => {
      */
 
     describe('Make sure test account is not virgin', () => {
-        let listener: Listener;
-        before(() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-
         it('Announce TransferTransaction', (done) => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
@@ -119,30 +105,15 @@ describe('AccountRepository', () => {
                 [NetworkCurrencyMosaic.createAbsolute(1)],
                 PlainMessage.create('test-message'),
                 networkType,
+                maxFee
             );
-            const signedTransaction = transferTransaction.signWith(account, generationHash);
 
-            listener.confirmed(account.address).subscribe(() => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionRepository.announce(signedTransaction);
+            const signedTransaction = transferTransaction.signWith(account, generationHash);
+            config.announceTransaction(signedTransaction, done);
         });
     });
 
     describe('Setup test NamespaceId', () => {
-        let listener: Listener;
-        before(() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
         it('Announce NamespaceRegistrationTransaction', (done) => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
@@ -150,30 +121,15 @@ describe('AccountRepository', () => {
                 namespaceName,
                 UInt64.fromUint(9),
                 networkType,
+                maxFee
             );
             namespaceId = new NamespaceId(namespaceName);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe(() => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionRepository.announce(signedTransaction);
+            config.announceTransaction(signedTransaction, done);
         });
     });
 
     describe('Setup test AddressAlias', () => {
-        let listener: Listener;
-        before(() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
 
         it('Announce addressAliasTransaction', (done) => {
             const addressAliasTransaction = AddressAliasTransaction.create(
@@ -181,31 +137,15 @@ describe('AccountRepository', () => {
                 AliasAction.Link,
                 namespaceId,
                 account.address,
-                networkType,
+                networkType, maxFee,
             );
             const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
-
-            listener.confirmed(account.address).subscribe(() => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionRepository.announce(signedTransaction);
+            config.announceTransaction(signedTransaction, done);
         });
     });
 
     describe('Setup test multisig account', () => {
-        let listener: Listener;
-        before(() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
+
         it('Announce MultisigAccountModificationTransaction', (done) => {
             const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
@@ -217,24 +157,18 @@ describe('AccountRepository', () => {
                     cosignAccount3.publicAccount,
                 ],
                 [],
-                networkType,
+                networkType, maxFee,
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                 [modifyMultisigAccountTransaction.toAggregate(multisigAccount.publicAccount)],
                 networkType,
-                []);
+                [],
+                maxFee);
             const signedTransaction = aggregateTransaction
             .signTransactionWithCosignatories(multisigAccount, [cosignAccount1, cosignAccount2, cosignAccount3], generationHash);
 
-            listener.confirmed(multisigAccount.address).subscribe(() => {
-                done();
-            });
-            listener.status(multisigAccount.address).subscribe((error) => {
-                console.log('Error:', error);
-                done();
-            });
-            transactionRepository.announce(signedTransaction);
+            config.announceTransaction(signedTransaction, done);
         });
     });
 
@@ -266,22 +200,18 @@ describe('AccountRepository', () => {
 
     describe('getMultisigAccountGraphInfo', () => {
         it('should call getMultisigAccountGraphInfo successfully', (done) => {
-            setTimeout(() => {
-                multisigRepository.getMultisigAccountGraphInfo(multisigAccount.publicAccount.address).subscribe((multisigAccountGraphInfo) => {
-                    expect(multisigAccountGraphInfo.multisigAccounts.get(0)![0].account.publicKey).to.be.equal(multisigAccount.publicKey);
-                    done();
-                });
-            }, 1000);
+            multisigRepository.getMultisigAccountGraphInfo(multisigAccount.publicAccount.address).subscribe((multisigAccountGraphInfo) => {
+                expect(multisigAccountGraphInfo.multisigAccounts.get(0)![0].account.publicKey).to.be.equal(multisigAccount.publicKey);
+                done();
+            });
         });
     });
     describe('getMultisigAccountInfo', () => {
         it('should call getMultisigAccountInfo successfully', (done) => {
-            setTimeout(() => {
-                multisigRepository.getMultisigAccountInfo(multisigAccount.publicAccount.address).subscribe((multisigAccountInfo) => {
-                    expect(multisigAccountInfo.account.publicKey).to.be.equal(multisigAccount.publicKey);
-                    done();
-                });
-            }, 1000);
+            multisigRepository.getMultisigAccountInfo(multisigAccount.publicAccount.address).subscribe((multisigAccountInfo) => {
+                expect(multisigAccountInfo.account.publicKey).to.be.equal(multisigAccount.publicKey);
+                done();
+            });
         });
     });
 
@@ -338,15 +268,6 @@ describe('AccountRepository', () => {
      * =========================
      */
     describe('Remove test AddressAlias', () => {
-        let listener: Listener;
-        before(() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-
         it('Announce addressAliasTransaction', (done) => {
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
@@ -354,30 +275,14 @@ describe('AccountRepository', () => {
                 namespaceId,
                 account.address,
                 networkType,
+                maxFee
             );
             const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
-
-            listener.confirmed(account.address).subscribe(() => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionRepository.announce(signedTransaction);
+            config.announceTransaction(signedTransaction, done);
         });
     });
 
     describe('Restore test multisig Accounts', () => {
-        let listener: Listener;
-        before(() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
         it('Announce MultisigAccountModificationTransaction', (done) => {
             const removeCosigner1 = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
@@ -387,6 +292,7 @@ describe('AccountRepository', () => {
                 [cosignAccount1.publicAccount,
                 ],
                 networkType,
+                maxFee
             );
             const removeCosigner2 = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
@@ -397,6 +303,7 @@ describe('AccountRepository', () => {
                     cosignAccount2.publicAccount,
                 ],
                 networkType,
+                maxFee
             );
 
             const removeCosigner3 = MultisigAccountModificationTransaction.create(
@@ -408,6 +315,7 @@ describe('AccountRepository', () => {
                     cosignAccount3.publicAccount,
                 ],
                 networkType,
+                maxFee
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
@@ -415,18 +323,10 @@ describe('AccountRepository', () => {
                     removeCosigner2.toAggregate(multisigAccount.publicAccount),
                     removeCosigner3.toAggregate(multisigAccount.publicAccount)],
                 networkType,
-                []);
+                [], maxFee);
             const signedTransaction = aggregateTransaction
             .signTransactionWithCosignatories(cosignAccount1, [cosignAccount2, cosignAccount3], generationHash);
-
-            listener.confirmed(cosignAccount1.address).subscribe(() => {
-                done();
-            });
-            listener.status(cosignAccount1.address).subscribe((error) => {
-                console.log('Error:', error);
-                done();
-            });
-            transactionRepository.announce(signedTransaction);
+            config.announceTransaction(signedTransaction, done);
         });
     });
 });
