@@ -800,7 +800,6 @@
   "new_aggregate_bonded": "A new aggregate transaction has been announced",
   "new_cosignature": "An aggregate transaction has been cosigned",
   "Expired_for": "Expired for",
-  "new_cosignature": "An aggregate transaction has been cosigned",
   "nodes": "Nodes",
   "blocks": "Blocks",
   "transactions": "Transactions",
