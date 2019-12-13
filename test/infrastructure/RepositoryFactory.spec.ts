@@ -72,7 +72,11 @@ describe('RepositoryFactory', () => {
             repositoryFactory.getGenerationHash().subscribe(gh => {
                 expect(counter).to.be.equals(1);
                 expect(gh).to.be.equals('aaaa');
-                done();
+                repositoryFactory.getGenerationHash().subscribe(gh => {
+                    expect(counter).to.be.equals(1);
+                    expect(gh).to.be.equals('aaaa');
+                    done();
+                })
             })
         })
 
@@ -106,6 +110,41 @@ describe('RepositoryFactory', () => {
             expect(networkType).to.be.equals(expectedNetworkType);
             repositoryFactory.getNetworkType().subscribe(networkType => {
                 expect(counter).to.be.equals(1);
+                expect(networkType).to.be.equals(expectedNetworkType);
+                done();
+            })
+        })
+
+    });
+
+    it('Should get NetworkType from memory', (done) => {
+
+        let counter = 0;
+
+        const repositoryMock: NetworkRepository = mock();
+
+        let expectedNetworkType = NetworkType.MIJIN_TEST;
+        const observableOfBlockInfo = observableOf(expectedNetworkType).pipe(map(v => {
+            counter++;
+            return v;
+        }));
+        when(repositoryMock.getNetworkType()).thenReturn(observableOfBlockInfo);
+
+        expect(observableOfBlockInfo).to.be.equals(observableOfBlockInfo);
+
+        const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
+
+            createNetworkRepository(): NetworkRepository {
+                return instance(repositoryMock);
+            }
+        })("http://localhost:3000", expectedNetworkType);
+
+        expect(counter).to.be.equals(0);
+        repositoryFactory.getNetworkType().subscribe(networkType => {
+            expect(counter).to.be.equals(0);
+            expect(networkType).to.be.equals(expectedNetworkType);
+            repositoryFactory.getNetworkType().subscribe(networkType => {
+                expect(counter).to.be.equals(0);
                 expect(networkType).to.be.equals(expectedNetworkType);
                 done();
             })
