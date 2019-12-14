@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-import {assert, expect} from 'chai';
-import { Convert } from '../../src/core/format/Convert';
-import { Listener, TransactionHttp } from '../../src/infrastructure/infrastructure';
+import { expect } from 'chai';
 import { MetadataHttp } from '../../src/infrastructure/MetadataHttp';
 import { Account } from '../../src/model/account/Account';
-import {Address} from '../../src/model/account/Address';
-import {PublicAccount} from '../../src/model/account/PublicAccount';
-import {NetworkType} from '../../src/model/blockchain/NetworkType';
+import { Address } from '../../src/model/account/Address';
+import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
@@ -34,48 +31,40 @@ import { MosaicMetadataTransaction } from '../../src/model/transaction/MosaicMet
 import { NamespaceMetadataTransaction } from '../../src/model/transaction/NamespaceMetadataTransaction';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { UInt64 } from '../../src/model/UInt64';
+import { IntegrationTestHelper } from "./IntegrationTestHelper";
+import { MetadataRepository } from "../../src/infrastructure/MetadataRepository";
 
 describe('MetadataHttp', () => {
+
+    let helper = new IntegrationTestHelper();
     let account: Account;
-    let account2: Account;
-    let account3: Account;
-    let multisigAccount: Account;
-    let cosignAccount1: Account;
-    let cosignAccount2: Account;
-    let cosignAccount3: Account;
     let accountAddress: Address;
-    let accountPublicKey: string;
-    let publicAccount: PublicAccount;
-    let metadataHttp: MetadataHttp;
-    let transactionHttp: TransactionHttp;
     let mosaicId: MosaicId;
     let namespaceId: NamespaceId;
     let generationHash: string;
-    let config;
+    let networkType: NetworkType;
+    let metadataRepository: MetadataRepository;
 
-    before((done) => {
-        const path = require('path');
-        require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
-            if (err) {
-                throw err;
-            }
-            const json = JSON.parse(data);
-            config = json;
-            account = Account.createFromPrivateKey(json.testAccount.privateKey, NetworkType.MIJIN_TEST);
-            account2 = Account.createFromPrivateKey(json.testAccount2.privateKey, NetworkType.MIJIN_TEST);
-            account3 = Account.createFromPrivateKey(json.testAccount3.privateKey, NetworkType.MIJIN_TEST);
-            multisigAccount = Account.createFromPrivateKey(json.multisigAccount.privateKey, NetworkType.MIJIN_TEST);
-            cosignAccount1 = Account.createFromPrivateKey(json.cosignatoryAccount.privateKey, NetworkType.MIJIN_TEST);
-            cosignAccount2 = Account.createFromPrivateKey(json.cosignatory2Account.privateKey, NetworkType.MIJIN_TEST);
-            cosignAccount3 = Account.createFromPrivateKey(json.cosignatory3Account.privateKey, NetworkType.MIJIN_TEST);
-            accountAddress = Address.createFromRawAddress(json.testAccount.address);
-            accountPublicKey = json.testAccount.publicKey;
-            publicAccount = PublicAccount.createFromPublicKey(json.testAccount.publicKey, NetworkType.MIJIN_TEST);
-            generationHash = json.generationHash;
-            metadataHttp = new MetadataHttp(json.apiUrl);
-            transactionHttp = new TransactionHttp(json.apiUrl);
-            done();
+    before(() => {
+        return helper.start().then(() => {
+            account = helper.account;
+            accountAddress = helper.account.address;
+            generationHash = helper.generationHash;
+            networkType = helper.networkType;
+            metadataRepository = helper.repositoryFactory.createMetadataRepository();
         });
+    });
+
+    before(() => {
+        return helper.listener.open();
+    });
+
+    after(() => {
+        helper.listener.close();
+    });
+    afterEach((done) => {
+        // cold down
+        setTimeout(done, 200);
     });
 
     /**
@@ -85,117 +74,66 @@ describe('MetadataHttp', () => {
      */
 
     describe('MosaicDefinitionTransaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('standalone', (done) => {
+
+        it('standalone', () => {
             const nonce = MosaicNonce.createRandom();
             mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 nonce,
                 mosaicId,
-                MosaicFlags.create( true, true, true),
+                MosaicFlags.create(true, true, true),
                 3,
                 UInt64.fromUint(1000),
-                NetworkType.MIJIN_TEST,
+                networkType,
+                helper.maxFee
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe(() => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+            return helper.announce(signedTransaction);
         });
     });
 
     describe('Setup test NamespaceId', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('Announce NamespaceRegistrationTransaction', (done) => {
+
+        it('Announce NamespaceRegistrationTransaction', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
                 UInt64.fromUint(9),
-                NetworkType.MIJIN_TEST,
+                networkType,
+                helper.maxFee
             );
             namespaceId = new NamespaceId(namespaceName);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe(() => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+            return helper.announce(signedTransaction);
         });
     });
 
     describe('AccountMetadataTransaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('aggregate', (done) => {
+        it('aggregate', () => {
             const accountMetadataTransaction = AccountMetadataTransaction.create(
                 Deadline.create(),
                 account.publicKey,
                 UInt64.fromUint(5),
                 23,
                 `Test account meta value`,
-                NetworkType.MIJIN_TEST,
+                networkType,
+                helper.maxFee
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                 [accountMetadataTransaction.toAggregate(account.publicAccount)],
-                NetworkType.MIJIN_TEST,
+                networkType,
                 [],
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe(() => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+            return helper.announce(signedTransaction);
         });
     });
 
     describe('MosaicMetadataTransaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('aggregate', (done) => {
+        it('aggregate', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
                 Deadline.create(),
                 account.publicKey,
@@ -203,37 +141,24 @@ describe('MetadataHttp', () => {
                 mosaicId,
                 22,
                 `Test mosaic meta value`,
-                NetworkType.MIJIN_TEST,
+                networkType,
+                helper.maxFee
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                 [mosaicMetadataTransaction.toAggregate(account.publicAccount)],
-                NetworkType.MIJIN_TEST,
+                networkType,
                 [],
+                helper.maxFee
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe(() => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+            return helper.announce(signedTransaction);
         });
     });
 
     describe('NamespaceMetadataTransaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('aggregate', (done) => {
+
+        it('aggregate', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
                 Deadline.create(),
                 account.publicKey,
@@ -241,24 +166,18 @@ describe('MetadataHttp', () => {
                 namespaceId,
                 25,
                 `Test namespace meta value`,
-                NetworkType.MIJIN_TEST,
+                networkType,
+                helper.maxFee
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                 [namespaceMetadataTransaction.toAggregate(account.publicAccount)],
-                NetworkType.MIJIN_TEST,
+                networkType,
                 [],
+                helper.maxFee
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe(() => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+            return helper.announce(signedTransaction);
         });
     });
 
@@ -270,142 +189,142 @@ describe('MetadataHttp', () => {
 
     describe('getAccountMetadata', () => {
         it('should return metadata given a NEM Address', (done) => {
-            metadataHttp.getAccountMetadata(accountAddress)
-                .subscribe((metadata) => {
-                    expect(metadata.length).to.be.greaterThan(0);
-                    expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
-                    expect(metadata[0].metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata[0].metadataEntry.targetId).to.be.undefined;
-                    expect(metadata[0].metadataEntry.value).to.be.equal('Test account meta value');
-                    expect(metadata[0].metadataEntry.value.length).to.be.equal(23);
-                    done();
-                });
+            metadataRepository.getAccountMetadata(accountAddress)
+            .subscribe((metadata) => {
+                expect(metadata.length).to.be.greaterThan(0);
+                expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
+                expect(metadata[0].metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
+                expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
+                expect(metadata[0].metadataEntry.targetId).to.be.undefined;
+                expect(metadata[0].metadataEntry.value).to.be.equal('Test account meta value');
+                expect(metadata[0].metadataEntry.value.length).to.be.equal(23);
+                done();
+            });
         });
     });
 
     describe('getAccountMetadataByKey', () => {
         it('should return metadata given a NEM Address and metadata key', (done) => {
-            metadataHttp.getAccountMetadataByKey(accountAddress, UInt64.fromUint(5).toHex())
-                .subscribe((metadata) => {
-                    expect(metadata.length).to.be.greaterThan(0);
-                    expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
-                    expect(metadata[0].metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata[0].metadataEntry.targetId).to.be.undefined;
-                    expect(metadata[0].metadataEntry.value).to.be.equal('Test account meta value');
-                    expect(metadata[0].metadataEntry.value.length).to.be.equal(23);
-                    done();
-                });
+            metadataRepository.getAccountMetadataByKey(accountAddress, UInt64.fromUint(5).toHex())
+            .subscribe((metadata) => {
+                expect(metadata.length).to.be.greaterThan(0);
+                expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
+                expect(metadata[0].metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
+                expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
+                expect(metadata[0].metadataEntry.targetId).to.be.undefined;
+                expect(metadata[0].metadataEntry.value).to.be.equal('Test account meta value');
+                expect(metadata[0].metadataEntry.value.length).to.be.equal(23);
+                done();
+            });
         });
     });
 
     describe('getAccountMetadataByKeyAndSender', () => {
         it('should return metadata given a NEM Address and metadata key and sender public key', (done) => {
-            metadataHttp.getAccountMetadataByKeyAndSender(accountAddress, UInt64.fromUint(5).toHex(), account.publicKey)
-                .subscribe((metadata) => {
-                    expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
-                    expect(metadata.metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata.metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata.metadataEntry.targetId).to.be.undefined;
-                    expect(metadata.metadataEntry.value).to.be.equal('Test account meta value');
-                    expect(metadata.metadataEntry.value.length).to.be.equal(23);
-                    done();
-                });
+            metadataRepository.getAccountMetadataByKeyAndSender(accountAddress, UInt64.fromUint(5).toHex(), account.publicKey)
+            .subscribe((metadata) => {
+                expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
+                expect(metadata.metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
+                expect(metadata.metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
+                expect(metadata.metadataEntry.targetId).to.be.undefined;
+                expect(metadata.metadataEntry.value).to.be.equal('Test account meta value');
+                expect(metadata.metadataEntry.value.length).to.be.equal(23);
+                done();
+            });
         });
     });
 
     describe('getMosaicMetadata', () => {
         it('should return metadata given a mosaicId', (done) => {
-            metadataHttp.getMosaicMetadata(mosaicId)
-                .subscribe((metadata) => {
-                    expect(metadata.length).to.be.greaterThan(0);
-                    expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
-                    expect(metadata[0].metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
-                    expect((metadata[0].metadataEntry.targetId as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
-                    expect(metadata[0].metadataEntry.value).to.be.equal('Test mosaic meta value');
-                    expect(metadata[0].metadataEntry.value.length).to.be.equal(22);
-                    done();
-                });
+            metadataRepository.getMosaicMetadata(mosaicId)
+            .subscribe((metadata) => {
+                expect(metadata.length).to.be.greaterThan(0);
+                expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
+                expect(metadata[0].metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
+                expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
+                expect((metadata[0].metadataEntry.targetId as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
+                expect(metadata[0].metadataEntry.value).to.be.equal('Test mosaic meta value');
+                expect(metadata[0].metadataEntry.value.length).to.be.equal(22);
+                done();
+            });
         });
     });
 
     describe('getMosaicMetadataByKey', () => {
         it('should return metadata given a mosaicId and metadata key', (done) => {
-            metadataHttp.getMosaicMetadataByKey(mosaicId, UInt64.fromUint(5).toHex())
-                .subscribe((metadata) => {
-                    expect(metadata.length).to.be.greaterThan(0);
-                    expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
-                    expect(metadata[0].metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
-                    expect((metadata[0].metadataEntry.targetId as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
-                    expect(metadata[0].metadataEntry.value).to.be.equal('Test mosaic meta value');
-                    expect(metadata[0].metadataEntry.value.length).to.be.equal(22);
-                    done();
-                });
+            metadataRepository.getMosaicMetadataByKey(mosaicId, UInt64.fromUint(5).toHex())
+            .subscribe((metadata) => {
+                expect(metadata.length).to.be.greaterThan(0);
+                expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
+                expect(metadata[0].metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
+                expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
+                expect((metadata[0].metadataEntry.targetId as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
+                expect(metadata[0].metadataEntry.value).to.be.equal('Test mosaic meta value');
+                expect(metadata[0].metadataEntry.value.length).to.be.equal(22);
+                done();
+            });
         });
     });
 
     describe('getMosaicMetadataByKeyAndSender', () => {
         it('should return metadata given a mosaicId and metadata key and sender public key', (done) => {
-            metadataHttp.getMosaicMetadataByKeyAndSender(mosaicId, UInt64.fromUint(5).toHex(), account.publicKey)
-                .subscribe((metadata) => {
-                    expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
-                    expect(metadata.metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata.metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
-                    expect((metadata.metadataEntry.targetId as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
-                    expect(metadata.metadataEntry.value).to.be.equal('Test mosaic meta value');
-                    expect(metadata.metadataEntry.value.length).to.be.equal(22);
-                    done();
-                });
+            metadataRepository.getMosaicMetadataByKeyAndSender(mosaicId, UInt64.fromUint(5).toHex(), account.publicKey)
+            .subscribe((metadata) => {
+                expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
+                expect(metadata.metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
+                expect(metadata.metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
+                expect((metadata.metadataEntry.targetId as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
+                expect(metadata.metadataEntry.value).to.be.equal('Test mosaic meta value');
+                expect(metadata.metadataEntry.value.length).to.be.equal(22);
+                done();
+            });
         });
     });
 
     describe('getNamespaceMetadata', () => {
         it('should return metadata given a namespaceId', (done) => {
-            metadataHttp.getNamespaceMetadata(namespaceId)
-                .subscribe((metadata) => {
-                    expect(metadata.length).to.be.greaterThan(0);
-                    expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
-                    expect(metadata[0].metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
-                    expect((metadata[0].metadataEntry.targetId as NamespaceId).toHex()).to.be.equal(namespaceId.toHex());
-                    expect(metadata[0].metadataEntry.value).to.be.equal('Test namespace meta value');
-                    expect(metadata[0].metadataEntry.value.length).to.be.equal(25);
-                    done();
-                });
+            metadataRepository.getNamespaceMetadata(namespaceId)
+            .subscribe((metadata) => {
+                expect(metadata.length).to.be.greaterThan(0);
+                expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
+                expect(metadata[0].metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
+                expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
+                expect((metadata[0].metadataEntry.targetId as NamespaceId).toHex()).to.be.equal(namespaceId.toHex());
+                expect(metadata[0].metadataEntry.value).to.be.equal('Test namespace meta value');
+                expect(metadata[0].metadataEntry.value.length).to.be.equal(25);
+                done();
+            });
         });
     });
 
     describe('getNamespaceMetadataByKey', () => {
         it('should return metadata given a namespaceId and metadata key', (done) => {
-            metadataHttp.getNamespaceMetadataByKey(namespaceId, UInt64.fromUint(5).toHex())
-                .subscribe((metadata) => {
-                    expect(metadata.length).to.be.greaterThan(0);
-                    expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
-                    expect(metadata[0].metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
-                    expect((metadata[0].metadataEntry.targetId as NamespaceId).toHex()).to.be.equal(namespaceId.toHex());
-                    expect(metadata[0].metadataEntry.value).to.be.equal('Test namespace meta value');
-                    expect(metadata[0].metadataEntry.value.length).to.be.equal(25);
-                    done();
-                });
+            metadataRepository.getNamespaceMetadataByKey(namespaceId, UInt64.fromUint(5).toHex())
+            .subscribe((metadata) => {
+                expect(metadata.length).to.be.greaterThan(0);
+                expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
+                expect(metadata[0].metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
+                expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
+                expect((metadata[0].metadataEntry.targetId as NamespaceId).toHex()).to.be.equal(namespaceId.toHex());
+                expect(metadata[0].metadataEntry.value).to.be.equal('Test namespace meta value');
+                expect(metadata[0].metadataEntry.value.length).to.be.equal(25);
+                done();
+            });
         });
     });
 
     describe('getNamespaceMetadataByKeyAndSender', () => {
         it('should return metadata given a namespaceId and metadata key and sender public key', (done) => {
-            metadataHttp.getNamespaceMetadataByKeyAndSender(namespaceId, UInt64.fromUint(5).toHex(), account.publicKey)
-                .subscribe((metadata) => {
-                    expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
-                    expect(metadata.metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata.metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
-                    expect((metadata.metadataEntry.targetId as NamespaceId).toHex()).to.be.equal(namespaceId.toHex());
-                    expect(metadata.metadataEntry.value).to.be.equal('Test namespace meta value');
-                    expect(metadata.metadataEntry.value.length).to.be.equal(25);
-                    done();
-                });
+            metadataRepository.getNamespaceMetadataByKeyAndSender(namespaceId, UInt64.fromUint(5).toHex(), account.publicKey)
+            .subscribe((metadata) => {
+                expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
+                expect(metadata.metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
+                expect(metadata.metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
+                expect((metadata.metadataEntry.targetId as NamespaceId).toHex()).to.be.equal(namespaceId.toHex());
+                expect(metadata.metadataEntry.value).to.be.equal('Test namespace meta value');
+                expect(metadata.metadataEntry.value.length).to.be.equal(25);
+                done();
+            });
         });
     });
 });

@@ -13,32 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {ChronoUnit} from 'js-joda';
-import {TransactionHttp} from '../../src/infrastructure/TransactionHttp';
-import {Account} from '../../src/model/account/Account';
-import {Address} from '../../src/model/account/Address';
+import { ChronoUnit } from 'js-joda';
+import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
+import { Account } from '../../src/model/account/Account';
+import { Address } from '../../src/model/account/Address';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
-import {NetworkType} from '../../src/model/blockchain/NetworkType';
-import {PlainMessage} from '../../src/model/message/PlainMessage';
+import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
-import {NetworkCurrencyMosaic} from '../../src/model/mosaic/NetworkCurrencyMosaic';
-import {AggregateTransaction} from '../../src/model/transaction/AggregateTransaction';
-import { CosignatoryModificationAction } from '../../src/model/transaction/CosignatoryModificationAction';
-import {CosignatureTransaction} from '../../src/model/transaction/CosignatureTransaction';
-import {Deadline} from '../../src/model/transaction/Deadline';
+import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
+import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
+import { CosignatureTransaction } from '../../src/model/transaction/CosignatureTransaction';
+import { Deadline } from '../../src/model/transaction/Deadline';
 import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
 import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
-import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
 import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
-import {TransferTransaction} from '../../src/model/transaction/TransferTransaction';
-import {UInt64} from '../../src/model/UInt64';
+import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
+import { UInt64 } from '../../src/model/UInt64';
 
 export class TransactionUtils {
 
     public static createAndAnnounce(signer: Account,
                                     recipient: Address,
-                                    transactionHttp: TransactionHttp,
+                                    transactionRepository: TransactionRepository,
                                     mosaic: Mosaic[] = [],
                                     generationHash: string) {
         const transferTransaction = TransferTransaction.create(
@@ -49,12 +47,12 @@ export class TransactionUtils {
             NetworkType.MIJIN_TEST,
         );
         const signedTransaction = signer.sign(transferTransaction, generationHash);
-        transactionHttp.announce(signedTransaction);
+        transactionRepository.announce(signedTransaction);
     }
 
     public static announceAggregateBoundedTransaction(signedTransaction: SignedTransaction,
-                                                      transactionHttp: TransactionHttp) {
-        transactionHttp.announceAggregateBonded(signedTransaction);
+                                                      transactionRepository: TransactionRepository) {
+        transactionRepository.announceAggregateBonded(signedTransaction);
     }
 
     public static createSignedAggregatedBondTransaction(aggregatedTo: Account,
@@ -82,7 +80,7 @@ export class TransactionUtils {
     public static createHashLockTransactionAndAnnounce(signedAggregatedTransaction: SignedTransaction,
                                                        signer: Account,
                                                        mosaicId: MosaicId,
-                                                       transactionHttp: TransactionHttp,
+                                                       transactionRepository: TransactionRepository,
                                                        generationHash: string) {
         const lockFundsTransaction = LockFundsTransaction.create(
             Deadline.create(),
@@ -92,19 +90,19 @@ export class TransactionUtils {
             NetworkType.MIJIN_TEST,
         );
         const signedLockFundsTransaction = signer.sign(lockFundsTransaction, generationHash);
-        transactionHttp.announce(signedLockFundsTransaction);
+        transactionRepository.announce(signedLockFundsTransaction);
     }
 
     public static cosignTransaction(transaction: AggregateTransaction,
                                     account: Account,
-                                    transactionHttp: TransactionHttp) {
+                                    transactionRepository: TransactionRepository) {
         const cosignatureTransaction = CosignatureTransaction.create(transaction);
         const cosignatureSignedTransaction = account.signCosignatureTransaction(cosignatureTransaction);
-        transactionHttp.announceAggregateBondedCosignature(cosignatureSignedTransaction);
+        transactionRepository.announceAggregateBondedCosignature(cosignatureSignedTransaction);
     }
 
     public static createMultisigAccountModificationTransaction( account: Account,
-                                                                transactionHttp: TransactionHttp,
+                                                                transactionRepository: TransactionRepository,
                                                                 generationHash: string) {
         const modifyMultisig = MultisigAccountModificationTransaction.create(
             Deadline.create(),
@@ -115,6 +113,6 @@ export class TransactionUtils {
             NetworkType.MIJIN_TEST,
         );
         const signedTransaction = account.sign(modifyMultisig, generationHash);
-        transactionHttp.announce(signedTransaction);
+        transactionRepository.announce(signedTransaction);
     }
 }

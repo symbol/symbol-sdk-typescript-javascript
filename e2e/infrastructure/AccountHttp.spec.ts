@@ -33,13 +33,12 @@ import { MultisigAccountModificationTransaction } from '../../src/model/transact
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
-import { RepositoryFactory } from "../../src/infrastructure/RepositoryFactory";
-import { Config } from "./Config";
+import { IntegrationTestHelper } from "./IntegrationTestHelper";
 
 describe('AccountHttp', () => {
+    let helper = new IntegrationTestHelper();
     let account: Account;
     let account2: Account;
-    let account3: Account;
     let multisigAccount: Account;
     let cosignAccount1: Account;
     let cosignAccount2: Account;
@@ -47,44 +46,37 @@ describe('AccountHttp', () => {
     let accountAddress: Address;
     let accountPublicKey: string;
     let publicAccount: PublicAccount;
-    let repositoryFactory: RepositoryFactory;
     let accountRepository: AccountRepository;
     let multisigRepository: MultisigRepository;
     let namespaceRepository: NamespaceRepository;
     let namespaceId: NamespaceId;
     let generationHash: string;
     let networkType: NetworkType;
-    let config: Config;
-    let maxFee = UInt64.fromUint(1000000);
 
-    before((done) => {
-
-        config = new Config(() => {
-            account = config.account;
-            account2 = config.account2;
-            account3 = config.account3;
-            multisigAccount = config.multisigAccount;
-            cosignAccount1 = config.cosignAccount1;
-            cosignAccount2 = config.cosignAccount2;
-            cosignAccount3 = config.cosignAccount3;
-            accountAddress = config.account.address;
-            accountPublicKey = config.account.publicKey;
-            publicAccount = config.account.publicAccount;
-            generationHash = config.generationHash;
-            networkType = config.networkType;
-            repositoryFactory = config.repositoryFactory;
-            accountRepository = repositoryFactory.createAccountRepository();
-            multisigRepository = repositoryFactory.createMultisigRepository();
-            namespaceRepository = repositoryFactory.createNamespaceRepository();
-            done();
+    before(() => {
+        return helper.start().then(() => {
+            account = helper.account;
+            account2 = helper.account2;
+            multisigAccount = helper.multisigAccount;
+            cosignAccount1 = helper.cosignAccount1;
+            cosignAccount2 = helper.cosignAccount2;
+            cosignAccount3 = helper.cosignAccount3;
+            accountAddress = helper.account.address;
+            accountPublicKey = helper.account.publicKey;
+            publicAccount = helper.account.publicAccount;
+            generationHash = helper.generationHash;
+            networkType = helper.networkType;
+            accountRepository = helper.repositoryFactory.createAccountRepository();
+            multisigRepository = helper.repositoryFactory.createMultisigRepository();
+            namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
         });
     });
     before(() => {
-        return config.listener.open();
+        return helper.listener.open();
     });
 
     after(() => {
-        config.listener.close();
+        helper.listener.close();
     });
     afterEach((done) => {
         // cold down
@@ -98,55 +90,56 @@ describe('AccountHttp', () => {
      */
 
     describe('Make sure test account is not virgin', () => {
-        it('Announce TransferTransaction', (done) => {
+        it('Announce TransferTransaction', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
                 [NetworkCurrencyMosaic.createAbsolute(1)],
                 PlainMessage.create('test-message'),
                 networkType,
-                maxFee
+                helper.maxFee
             );
 
             const signedTransaction = transferTransaction.signWith(account, generationHash);
-            config.announceTransaction(signedTransaction, done);
+            return helper.announce(signedTransaction);
         });
     });
 
     describe('Setup test NamespaceId', () => {
-        it('Announce NamespaceRegistrationTransaction', (done) => {
+        it('Announce NamespaceRegistrationTransaction', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
                 UInt64.fromUint(9),
                 networkType,
-                maxFee
+                helper.maxFee
             );
             namespaceId = new NamespaceId(namespaceName);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
-            config.announceTransaction(signedTransaction, done);
+            return helper.announce(signedTransaction);
         });
     });
 
     describe('Setup test AddressAlias', () => {
 
-        it('Announce addressAliasTransaction', (done) => {
+        it('Announce addressAliasTransaction', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
                 AliasAction.Link,
                 namespaceId,
                 account.address,
-                networkType, maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
-            config.announceTransaction(signedTransaction, done);
+            return helper.announce(signedTransaction);
         });
     });
 
     describe('Setup test multisig account', () => {
 
-        it('Announce MultisigAccountModificationTransaction', (done) => {
+        it('Announce MultisigAccountModificationTransaction', () => {
             const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
                 2,
@@ -157,18 +150,19 @@ describe('AccountHttp', () => {
                     cosignAccount3.publicAccount,
                 ],
                 [],
-                networkType, maxFee,
+                networkType,
+                helper.maxFee,
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                 [modifyMultisigAccountTransaction.toAggregate(multisigAccount.publicAccount)],
                 networkType,
                 [],
-                maxFee);
+                helper.maxFee);
             const signedTransaction = aggregateTransaction
             .signTransactionWithCosignatories(multisigAccount, [cosignAccount1, cosignAccount2, cosignAccount3], generationHash);
 
-            config.announceTransaction(signedTransaction, done);
+            return helper.announce(signedTransaction);
         });
     });
 
@@ -268,22 +262,22 @@ describe('AccountHttp', () => {
      * =========================
      */
     describe('Remove test AddressAlias', () => {
-        it('Announce addressAliasTransaction', (done) => {
+        it('Announce addressAliasTransaction', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
                 AliasAction.Unlink,
                 namespaceId,
                 account.address,
                 networkType,
-                maxFee
+                helper.maxFee
             );
             const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
-            config.announceTransaction(signedTransaction, done);
+            return helper.announce(signedTransaction);
         });
     });
 
     describe('Restore test multisig Accounts', () => {
-        it('Announce MultisigAccountModificationTransaction', (done) => {
+        it('Announce MultisigAccountModificationTransaction', () => {
             const removeCosigner1 = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
                 -1,
@@ -292,7 +286,7 @@ describe('AccountHttp', () => {
                 [cosignAccount1.publicAccount,
                 ],
                 networkType,
-                maxFee
+                helper.maxFee
             );
             const removeCosigner2 = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
@@ -303,7 +297,7 @@ describe('AccountHttp', () => {
                     cosignAccount2.publicAccount,
                 ],
                 networkType,
-                maxFee
+                helper.maxFee
             );
 
             const removeCosigner3 = MultisigAccountModificationTransaction.create(
@@ -315,7 +309,7 @@ describe('AccountHttp', () => {
                     cosignAccount3.publicAccount,
                 ],
                 networkType,
-                maxFee
+                helper.maxFee
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
@@ -323,10 +317,10 @@ describe('AccountHttp', () => {
                     removeCosigner2.toAggregate(multisigAccount.publicAccount),
                     removeCosigner3.toAggregate(multisigAccount.publicAccount)],
                 networkType,
-                [], maxFee);
+                [], helper.maxFee);
             const signedTransaction = aggregateTransaction
             .signTransactionWithCosignatories(cosignAccount1, [cosignAccount2, cosignAccount3], generationHash);
-            config.announceTransaction(signedTransaction, done);
+            return helper.announce(signedTransaction);
         });
     });
 });

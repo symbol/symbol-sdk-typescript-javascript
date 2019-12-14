@@ -18,7 +18,7 @@ import { expect } from 'chai';
 import { of as observableOf } from 'rxjs';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { KeyGenerator } from '../../src/core/format/KeyGenerator';
-import { RestrictionMosaicRepository } from '../../src/infrastructure/RestrictionMosaicRespository';
+import { RestrictionMosaicRepository } from '../../src/infrastructure/RestrictionMosaicRepository';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';

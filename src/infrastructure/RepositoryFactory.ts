@@ -29,7 +29,7 @@ import { NodeRepository } from "./NodeRepository";
 import { TransactionRepository } from "./TransactionRepository";
 import { MetadataRepository } from "./MetadataRepository";
 import { RestrictionAccountRepository } from "./RestrictionAccountRespository";
-import { RestrictionMosaicRepository } from "./RestrictionMosaicRespository";
+import { RestrictionMosaicRepository } from "./RestrictionMosaicRepository";
 
 /**
  * A repository factory allows clients to create repositories to access NEM Server without knowing

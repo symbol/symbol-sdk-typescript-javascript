@@ -27,7 +27,7 @@ import { MosaicAddressRestrictionTransaction } from '../model/transaction/Mosaic
 import { MosaicGlobalRestrictionTransaction } from '../model/transaction/MosaicGlobalRestrictionTransaction';
 import { Transaction } from '../model/transaction/Transaction';
 import { UInt64 } from '../model/UInt64';
-import { RestrictionMosaicRepository } from "../infrastructure/RestrictionMosaicRespository";
+import { RestrictionMosaicRepository } from "../infrastructure/RestrictionMosaicRepository";
 import { NamespaceId } from "../model/namespace/NamespaceId";
 
 /**

@@ -29,7 +29,7 @@ import { NodeRepository } from "./NodeRepository";
 import { TransactionRepository } from "./TransactionRepository";
 import { MetadataRepository } from "./MetadataRepository";
 import { RestrictionAccountRepository } from "./RestrictionAccountRespository";
-import { RestrictionMosaicRepository } from "./RestrictionMosaicRespository";
+import { RestrictionMosaicRepository } from "./RestrictionMosaicRepository";
 import { RepositoryFactory } from "./RepositoryFactory";
 import { AccountHttp } from "./AccountHttp";
 import { BlockHttp } from "./BlockHttp";
