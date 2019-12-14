@@ -37,6 +37,7 @@ export class IntegrationTestHelper {
     public cosignAccount1: Account;
     public cosignAccount2: Account;
     public cosignAccount3: Account;
+    public cosignAccount4: Account;
     public networkType: NetworkType;
     public generationHash: string;
     public listener: Listener;
@@ -67,6 +68,7 @@ export class IntegrationTestHelper {
                         this.cosignAccount1 = this.createAccount(json.cosignatoryAccount);
                         this.cosignAccount2 = this.createAccount(json.cosignatory2Account);
                         this.cosignAccount3 = this.createAccount(json.cosignatory3Account);
+                        this.cosignAccount4 = this.createAccount(json.cosignatory4Account);
                         this.harvestingAccount = this.createAccount(json.harvestingAccount);
 
                         this.maxFee = UInt64.fromUint(1000000); //What would be the best maxFee? In the future we will load the fee multiplier from rest.
@@ -83,6 +85,7 @@ export class IntegrationTestHelper {
                                 this.account3 = this.createAccount(parsedYaml.nemesis_addresses[2]);
                                 this.multisigAccount = this.createAccount(parsedYaml.nemesis_addresses[3]);
                                 this.cosignAccount1 = this.createAccount(parsedYaml.nemesis_addresses[4]);
+                                this.cosignAccount4 = this.createAccount(parsedYaml.nemesis_addresses[5]);
                                 this.harvestingAccount = this.createAccount(parsedYaml.nemesis_addresses_harvesting[0]);
                                 return resolve(this);
                             }

@@ -40,12 +40,7 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from "./IntegrationTestHelper";
 import { Address } from "../../src/model/account/Address";
-import { PublicAccount } from "../../src/model/account/PublicAccount";
-import { RepositoryFactory } from "../../src/infrastructure/RepositoryFactory";
-import { AccountRepository } from "../../src/infrastructure/AccountRepository";
-import { MultisigRepository } from "../../src/infrastructure/MultisigRepository";
 import { NamespaceRepository } from "../../src/infrastructure/NamespaceRepository";
-import { TransactionRepository } from "../../src/infrastructure/TransactionRepository";
 
 describe('TransactionHttp', () => {
     let helper = new IntegrationTestHelper();

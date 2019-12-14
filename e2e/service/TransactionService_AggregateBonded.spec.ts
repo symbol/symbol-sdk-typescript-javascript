@@ -15,9 +15,7 @@
  */
 
 import { expect } from 'chai';
-import { Listener } from '../../src/infrastructure/Listener';
-import { NamespaceHttp } from '../../src/infrastructure/NamespaceHttp';
-import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
+import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
@@ -34,46 +32,69 @@ import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
-import { TransactionUtils } from '../infrastructure/TransactionUtils';
-import { ReceiptHttp } from "../../src/infrastructure/ReceiptHttp";
+import { IntegrationTestHelper } from "../infrastructure/IntegrationTestHelper";
+import { SignedTransaction } from "../../src/model/transaction/SignedTransaction";
+import { ChronoUnit } from "js-joda";
 
 describe('TransactionService', () => {
+
+    let helper = new IntegrationTestHelper();
     let account: Account;
     let account2: Account;
     let multisigAccount: Account;
     let cosignAccount1: Account;
     let cosignAccount2: Account;
     let cosignAccount3: Account;
-    let networkCurrencyMosaicId: MosaicId;
-    let url: string;
+    let namespaceRepository: NamespaceRepository;
     let generationHash: string;
-    let transactionHttp: TransactionHttp;
+    let networkType: NetworkType;
     let transactionService: TransactionService;
-    let namespaceHttp: NamespaceHttp;
-    let config;
+    let networkCurrencyMosaicId: MosaicId;
 
-    before((done) => {
-        const path = require('path');
-        require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
-            if (err) {
-                throw err;
-            }
-            const json = JSON.parse(data);
-            config = json;
-            account = Account.createFromPrivateKey(json.testAccount.privateKey, NetworkType.MIJIN_TEST);
-            account2 = Account.createFromPrivateKey(json.testAccount2.privateKey, NetworkType.MIJIN_TEST);
-            multisigAccount = Account.createFromPrivateKey(json.multisigAccount.privateKey, NetworkType.MIJIN_TEST);
-            cosignAccount1 = Account.createFromPrivateKey(json.cosignatoryAccount.privateKey, NetworkType.MIJIN_TEST);
-            cosignAccount2 = Account.createFromPrivateKey(json.cosignatory2Account.privateKey, NetworkType.MIJIN_TEST);
-            cosignAccount3 = Account.createFromPrivateKey(json.cosignatory3Account.privateKey, NetworkType.MIJIN_TEST);
-            url = json.apiUrl;
-            generationHash = json.generationHash;
-            transactionHttp = new TransactionHttp(url);
-            namespaceHttp = new NamespaceHttp(url);
-            transactionService = new TransactionService(new TransactionHttp(url), new ReceiptHttp(url));
-            done();
+    before(() => {
+        return helper.start().then(() => {
+            account = helper.account;
+            account2 = helper.account2;
+            multisigAccount = helper.multisigAccount;
+            cosignAccount1 = helper.cosignAccount1;
+            cosignAccount2 = helper.cosignAccount2;
+            cosignAccount3 = helper.cosignAccount3;
+            generationHash = helper.generationHash;
+            networkType = helper.networkType;
+            namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
+            transactionService = new TransactionService(helper.repositoryFactory.createTransactionRepository(), helper.repositoryFactory.createReceiptRepository());
         });
     });
+    before(() => {
+        return helper.listener.open();
+    });
+
+    after(() => {
+        helper.listener.close();
+    });
+    afterEach((done) => {
+        // cold down
+        setTimeout(done, 200);
+    });
+
+
+    let createSignedAggregatedBondTransaction = (aggregatedTo: Account,
+                                                 signer: Account,
+                                                 recipient: Address): SignedTransaction => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            recipient, [],
+            PlainMessage.create('test-message'),
+            networkType, helper.maxFee
+        );
+
+        const aggregateTransaction = AggregateTransaction.createBonded(
+            Deadline.create(2, ChronoUnit.MINUTES),
+            [transferTransaction.toAggregate(aggregatedTo.publicAccount)],
+            networkType, [], helper.maxFee
+        );
+        return signer.sign(aggregateTransaction, generationHash);
+    };
 
     /**
      * =========================
@@ -82,7 +103,7 @@ describe('TransactionService', () => {
      */
     describe('Get network currency mosaic id', () => {
         it('get mosaicId', (done) => {
-            namespaceHttp.getLinkedMosaicId(new NamespaceId('cat.currency')).subscribe((networkMosaicId) => {
+            namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).subscribe((networkMosaicId: MosaicId) => {
                 networkCurrencyMosaicId = networkMosaicId;
                 done();
             });
@@ -90,15 +111,8 @@ describe('TransactionService', () => {
     });
 
     describe('Setup test multisig account', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('Announce MultisigAccountModificationTransaction', (done) => {
+
+        it('Announce MultisigAccountModificationTransaction', () => {
             const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
                 2,
@@ -109,24 +123,16 @@ describe('TransactionService', () => {
                     cosignAccount3.publicAccount,
                 ],
                 [],
-                NetworkType.MIJIN_TEST,
+                networkType, helper.maxFee
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                 [modifyMultisigAccountTransaction.toAggregate(multisigAccount.publicAccount)],
-                NetworkType.MIJIN_TEST,
-                []);
+                networkType, [], helper.maxFee);
             const signedTransaction = aggregateTransaction
-                .signTransactionWithCosignatories(multisigAccount, [cosignAccount1, cosignAccount2, cosignAccount3], generationHash);
+            .signTransactionWithCosignatories(multisigAccount, [cosignAccount1, cosignAccount2, cosignAccount3], generationHash);
 
-            listener.confirmed(multisigAccount.address).subscribe(() => {
-                done();
-            });
-            listener.status(multisigAccount.address).subscribe((error) => {
-                console.log('Error:', error);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+            return helper.announce(signedTransaction);
         });
     });
 
@@ -137,14 +143,7 @@ describe('TransactionService', () => {
      */
 
     describe('should announce transaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
+
         it('announce', (done) => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
@@ -153,10 +152,10 @@ describe('TransactionService', () => {
                     NetworkCurrencyMosaic.createAbsolute(1),
                 ],
                 PlainMessage.create('test-message'),
-                NetworkType.MIJIN_TEST,
+                networkType, helper.maxFee
             );
             const signedTransaction = transferTransaction.signWith(account, generationHash);
-            transactionService.announce(signedTransaction, listener).subscribe((tx: TransferTransaction) => {
+            transactionService.announce(signedTransaction, helper.listener).subscribe((tx: TransferTransaction) => {
                 expect(tx.signer!.publicKey).to.be.equal(account.publicKey);
                 expect((tx.recipientAddress as Address).equals(account2.address)).to.be.true;
                 expect(tx.message.payload).to.be.equal('test-message');
@@ -166,27 +165,19 @@ describe('TransactionService', () => {
     });
 
     describe('should announce aggregate bonded with hashlock', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
+
         it('announce', (done) => {
-            const signedAggregatedTransaction =
-                TransactionUtils.createSignedAggregatedBondTransaction(multisigAccount, account, account2.address, generationHash);
+            const signedAggregatedTransaction = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
             const lockFundsTransaction = LockFundsTransaction.create(
                 Deadline.create(),
                 new Mosaic(networkCurrencyMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
                 UInt64.fromUint(1000),
                 signedAggregatedTransaction,
-                NetworkType.MIJIN_TEST,
+                networkType, helper.maxFee
             );
             const signedLockFundsTransaction = lockFundsTransaction.signWith(account, generationHash);
             transactionService
-                .announceHashLockAggregateBonded(signedLockFundsTransaction, signedAggregatedTransaction, listener).subscribe((tx) => {
+            .announceHashLockAggregateBonded(signedLockFundsTransaction, signedAggregatedTransaction, helper.listener).subscribe((tx) => {
                 expect(tx.signer!.publicKey).to.be.equal(account.publicKey);
                 expect(tx.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
                 done();
@@ -194,28 +185,21 @@ describe('TransactionService', () => {
         });
     });
 
+
     describe('should announce aggregate bonded transaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
+
         it('announce', (done) => {
-            const signedAggregatedTransaction =
-                TransactionUtils.createSignedAggregatedBondTransaction(multisigAccount, account, account2.address, generationHash);
+            const signedAggregatedTransaction = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
             const lockFundsTransaction = LockFundsTransaction.create(
                 Deadline.create(),
                 new Mosaic(networkCurrencyMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
                 UInt64.fromUint(1000),
                 signedAggregatedTransaction,
-                NetworkType.MIJIN_TEST,
+                networkType, helper.maxFee
             );
             const signedLockFundsTransaction = lockFundsTransaction.signWith(account, generationHash);
-            transactionService.announce(signedLockFundsTransaction, listener).subscribe(() => {
-                transactionService.announceAggregateBonded(signedAggregatedTransaction, listener).subscribe((tx) => {
+            transactionService.announce(signedLockFundsTransaction, helper.listener).subscribe(() => {
+                transactionService.announceAggregateBonded(signedAggregatedTransaction, helper.listener).subscribe((tx) => {
                     expect(tx.signer!.publicKey).to.be.equal(account.publicKey);
                     expect(tx.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
                     done();
@@ -231,23 +215,16 @@ describe('TransactionService', () => {
      */
 
     describe('Restore test multisig Accounts', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('Announce MultisigAccountModificationTransaction', (done) => {
+
+        it('Announce MultisigAccountModificationTransaction', () => {
             const removeCosigner1 = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
                 -1,
                 0,
                 [],
-                [   cosignAccount1.publicAccount,
+                [cosignAccount1.publicAccount,
                 ],
-                NetworkType.MIJIN_TEST,
+                networkType, helper.maxFee
             );
             const removeCosigner2 = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
@@ -257,7 +234,7 @@ describe('TransactionService', () => {
                 [
                     cosignAccount2.publicAccount,
                 ],
-                NetworkType.MIJIN_TEST,
+                networkType, helper.maxFee
             );
 
             const removeCosigner3 = MultisigAccountModificationTransaction.create(
@@ -268,26 +245,17 @@ describe('TransactionService', () => {
                 [
                     cosignAccount3.publicAccount,
                 ],
-                NetworkType.MIJIN_TEST,
+                networkType, helper.maxFee
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                 [removeCosigner1.toAggregate(multisigAccount.publicAccount),
-                 removeCosigner2.toAggregate(multisigAccount.publicAccount),
-                 removeCosigner3.toAggregate(multisigAccount.publicAccount)],
-                NetworkType.MIJIN_TEST,
-                []);
+                    removeCosigner2.toAggregate(multisigAccount.publicAccount),
+                    removeCosigner3.toAggregate(multisigAccount.publicAccount)], networkType, [], helper.maxFee);
             const signedTransaction = aggregateTransaction
-                .signTransactionWithCosignatories(cosignAccount1, [cosignAccount2, cosignAccount3], generationHash);
+            .signTransactionWithCosignatories(cosignAccount1, [cosignAccount2, cosignAccount3], generationHash);
 
-            listener.confirmed(cosignAccount1.address).subscribe(() => {
-                done();
-            });
-            listener.status(cosignAccount1.address).subscribe((error) => {
-                console.log('Error:', error);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+            return helper.announce(signedTransaction);
         });
     });
 });
