@@ -37,6 +37,7 @@ import {
     CreateTransactionFromDTO,
     extractBeneficiary,
 } from './transaction/CreateTransactionFromDTO';
+import { IListener } from "./IListener";
 
 enum ListenerChannelName {
     block = 'block',
@@ -58,7 +59,7 @@ interface ListenerMessage {
 /**
  * Listener service
  */
-export class Listener {
+export class Listener implements IListener {
     public readonly url: string;
     /**
      * @internal
@@ -202,16 +203,6 @@ export class Listener {
      */
     public close(): void {
         if (this.webSocket && (this.webSocket.readyState === WebSocket.OPEN || this.webSocket.readyState === WebSocket.CONNECTING)) {
-            this.webSocket.close();
-        }
-    }
-
-    /**
-     * Terminate web socket connection.
-     * @returns void
-     */
-    public terminate(): void {
-        if (this.webSocket) {
             this.webSocket.close();
         }
     }
@@ -435,9 +426,9 @@ export class Listener {
     private accountAddedToMultiSig(transaction: Transaction, address: Address): boolean {
         if (transaction instanceof MultisigAccountModificationTransaction) {
             return transaction.publicKeyAdditions.find((_: PublicAccount) =>
-                _.address.equals(address)) !== undefined ||
+                    _.address.equals(address)) !== undefined ||
                 transaction.publicKeyDeletions.find((_: PublicAccount) =>
-                _.address.equals(address)) !== undefined;
+                    _.address.equals(address)) !== undefined;
         }
         return false;
     }

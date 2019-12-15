@@ -18,7 +18,7 @@ import { RepositoryFactoryHttp } from "../../src/infrastructure/RepositoryFactor
 import { RepositoryFactory } from "../../src/infrastructure/RepositoryFactory";
 import { NetworkType } from "../../src/model/blockchain/NetworkType";
 import { combineLatest } from "rxjs";
-import { Listener } from "../../src/infrastructure/Listener";
+import { IListener } from "../../src/infrastructure/IListener";
 import { SignedTransaction } from "../../src/model/transaction/SignedTransaction";
 import { filter } from "rxjs/operators";
 import { Transaction } from "../../src/model/transaction/Transaction";
@@ -40,7 +40,7 @@ export class IntegrationTestHelper {
     public cosignAccount4: Account;
     public networkType: NetworkType;
     public generationHash: string;
-    public listener: Listener;
+    public listener: IListener;
     public maxFee: UInt64;
     public harvestingAccount: Account;
 
@@ -56,7 +56,6 @@ export class IntegrationTestHelper {
                     const json = JSON.parse(jsonData);
                     console.log(`Running tests against: ${json.apiUrl}`);
                     this.apiUrl = json.apiUrl;
-                    this.listener = new Listener(this.apiUrl);
                     this.repositoryFactory = new RepositoryFactoryHttp(json.apiUrl);
                     combineLatest(this.repositoryFactory.getGenerationHash(), this.repositoryFactory.getNetworkType()).subscribe(([generationHash, networkType]) => {
                         this.networkType = networkType;
@@ -70,6 +69,7 @@ export class IntegrationTestHelper {
                         this.cosignAccount3 = this.createAccount(json.cosignatory3Account);
                         this.cosignAccount4 = this.createAccount(json.cosignatory4Account);
                         this.harvestingAccount = this.createAccount(json.harvestingAccount);
+                        this.listener = this.repositoryFactory.createListener();
 
                         this.maxFee = UInt64.fromUint(1000000); //What would be the best maxFee? In the future we will load the fee multiplier from rest.
 

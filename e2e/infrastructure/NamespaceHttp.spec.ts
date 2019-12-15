@@ -50,10 +50,6 @@ describe('NamespaceHttp', () => {
     after(() => {
         helper.listener.close();
     });
-    afterEach((done) => {
-        // cold down
-        setTimeout(done, 200);
-    });
 
     describe('NamespaceRegistrationTransaction', () => {
 

@@ -110,7 +110,7 @@ export class MosaicRestrictionTransactionService {
         return this.getGlobalRestrictionEntry(mosaicId, restrictionKey).pipe(
             switchMap((restrictionEntry: MosaicGlobalRestrictionItem | undefined) => {
                 if (!restrictionEntry) {
-                    throw Error('Global restriction is not valid for RetrictionKey: ' + restrictionKey);
+                    throw Error('Global restriction is not valid for RestrictionKey: ' + restrictionKey);
                 }
                 return this.getAddressRestrictionEntry(mosaicId, restrictionKey, targetAddress).pipe(
                     map((optionalValue) => {

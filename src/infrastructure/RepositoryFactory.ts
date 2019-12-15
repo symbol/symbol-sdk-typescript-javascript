@@ -30,6 +30,8 @@ import { TransactionRepository } from "./TransactionRepository";
 import { MetadataRepository } from "./MetadataRepository";
 import { RestrictionAccountRepository } from "./RestrictionAccountRespository";
 import { RestrictionMosaicRepository } from "./RestrictionMosaicRepository";
+import { Listener } from "./Listener";
+import { IListener } from "./IListener";
 
 /**
  * A repository factory allows clients to create repositories to access NEM Server without knowing
@@ -119,5 +121,10 @@ export interface RepositoryFactory {
      * @returns a newly created {@link RestrictionMosaicRepository}
      */
     createRestrictionMosaicRepository(): RestrictionMosaicRepository;
+
+    /**
+     * @returns a newly create {@link IListener}
+     */
+    createListener(): IListener;
 
 }

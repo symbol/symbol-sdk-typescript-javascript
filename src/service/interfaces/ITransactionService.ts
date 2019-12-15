@@ -15,7 +15,7 @@
  */
 
 import { Observable } from 'rxjs';
-import { Listener } from '../../infrastructure/Listener';
+import { IListener } from '../../infrastructure/IListener';
 import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
 import { SignedTransaction } from '../../model/transaction/SignedTransaction';
 import { Transaction } from '../../model/transaction/Transaction';
@@ -26,17 +26,17 @@ import { Transaction } from '../../model/transaction/Transaction';
 export interface ITransactionService {
 
     /**
-     * @param transationHashes List of transaction hashes.
+     * @param transactionHashes List of transaction hashes.
      * @returns {Observable<Transaction[]>}
      */
-    resolveAliases(transationHashes: string[]): Observable<Transaction[]>;
+    resolveAliases(transactionHashes: string[]): Observable<Transaction[]>;
 
     /**
      * @param signedTransaction Signed transaction to be announced.
      * @param listener Websocket listener
      * @returns {Observable<Transaction>}
      */
-    announce(signedTransaction: SignedTransaction, listener: Listener): Observable<Transaction>;
+    announce(signedTransaction: SignedTransaction, listener: IListener): Observable<Transaction>;
 
     /**
      * Announce aggregate transaction
@@ -44,7 +44,7 @@ export interface ITransactionService {
      * @param listener Websocket listener
      * @returns {Observable<AggregateTransaction>}
      */
-    announceAggregateBonded(signedTransaction: SignedTransaction, listener: Listener): Observable<AggregateTransaction>;
+    announceAggregateBonded(signedTransaction: SignedTransaction, listener: IListener): Observable<AggregateTransaction>;
 
     /**
      * Announce aggregate bonded transaction with lock fund
@@ -55,5 +55,5 @@ export interface ITransactionService {
      */
     announceHashLockAggregateBonded(signedHashLockTransaction: SignedTransaction,
                                     signedAggregateTransaction: SignedTransaction,
-                                    listener: Listener): Observable<AggregateTransaction>;
+                                    listener: IListener): Observable<AggregateTransaction>;
 }

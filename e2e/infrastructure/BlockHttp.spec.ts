@@ -59,10 +59,6 @@ describe('BlockHttp', () => {
     after(() => {
         helper.listener.close();
     });
-    afterEach((done) => {
-        // cold down
-        setTimeout(done, 200);
-    });
 
     /**
      * =========================

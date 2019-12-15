@@ -15,7 +15,6 @@
  */
 import { assert, expect } from 'chai';
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
-import { Listener } from '../../src/infrastructure/Listener';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';

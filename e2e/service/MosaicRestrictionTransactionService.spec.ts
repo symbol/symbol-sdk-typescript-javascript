@@ -20,7 +20,6 @@ import { IntegrationTestHelper } from "../infrastructure/IntegrationTestHelper";
 describe('MosaicRestrictionTransactionService', () => {
     const deadline = Deadline.create();
     const key = KeyGenerator.generateUInt64Key('TestKey');
-    let targetAccount: Account;
     let account: Account;
     let restrictionRepository: RestrictionMosaicRepository;
     let mosaicId: MosaicId;
@@ -30,7 +29,7 @@ describe('MosaicRestrictionTransactionService', () => {
 
     before(() => {
         return helper.start().then(() => {
-            targetAccount = helper.account;
+            account = helper.account;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
             restrictionRepository = helper.repositoryFactory.createRestrictionMosaicRepository();
@@ -43,10 +42,6 @@ describe('MosaicRestrictionTransactionService', () => {
 
     after(() => {
         helper.listener.close();
-    });
-    afterEach((done) => {
-        // cold down
-        setTimeout(done, 200);
     });
 
     /**
@@ -101,7 +96,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 Deadline.create(),
                 mosaicId,
                 key,
-                targetAccount.address,
+                account.address,
                 UInt64.fromUint(2),
                 networkType,
                 helper.maxFee
@@ -150,14 +145,14 @@ describe('MosaicRestrictionTransactionService', () => {
                 networkType,
                 mosaicId,
                 key,
-                targetAccount.address,
+                account.address,
                 '3',
                 helper.maxFee
             ).subscribe((transaction: MosaicAddressRestrictionTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ADDRESS_RESTRICTION);
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal('2');
                 expect(transaction.newRestrictionValue.toString()).to.be.equal('3');
-                expect(transaction.targetAddressToString()).to.be.equal(targetAccount.address.plain());
+                expect(transaction.targetAddressToString()).to.be.equal(account.address.plain());
                 expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
                 done();
             });
@@ -200,7 +195,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 networkType,
                 mosaicId,
                 key,
-                targetAccount.address,
+                account.address,
                 '3',
                 helper.maxFee
             ).subscribe((transaction: MosaicAddressRestrictionTransaction) => {

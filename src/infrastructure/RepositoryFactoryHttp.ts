@@ -46,6 +46,8 @@ import { RestrictionAccountHttp } from "./RestrictionAccountHttp";
 import { RestrictionMosaicHttp } from "./RestrictionMosaicHttp";
 import { TransactionHttp } from "./TransactionHttp";
 import { share, map, shareReplay } from "rxjs/operators";
+import { Listener } from "./Listener";
+import { IListener } from "./IListener";
 
 /**
  * Receipt http repository.
@@ -130,6 +132,10 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
 
     getNetworkType(): Observable<NetworkType> {
         return this.networkType;
+    }
+
+    createListener(): IListener {
+        return new Listener(this.url);
     }
 
 }

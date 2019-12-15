@@ -50,10 +50,6 @@ describe('MetadataTransactionService', () => {
     after(() => {
         helper.listener.close();
     });
-    afterEach((done) => {
-        // cold down
-        setTimeout(done, 200);
-    });
 
     /**
      * =========================
@@ -115,6 +111,7 @@ describe('MetadataTransactionService', () => {
                 [mosaicMetadataTransaction.toAggregate(targetAccount.publicAccount)],
                 networkType,
                 [],
+                helper.maxFee
             );
             const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
 
@@ -139,6 +136,7 @@ describe('MetadataTransactionService', () => {
                 [namespaceMetadataTransaction.toAggregate(targetAccount.publicAccount)],
                 networkType,
                 [],
+                helper.maxFee
             );
             const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
             return helper.announce(signedTransaction);
@@ -236,6 +234,7 @@ describe('MetadataTransactionService', () => {
                     [transaction.toAggregate(targetAccount.publicAccount)],
                     networkType,
                     [],
+                    helper.maxFee
                 );
                 const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
                 helper.announce(signedTransaction).then(() => {
@@ -262,12 +261,14 @@ describe('MetadataTransactionService', () => {
                 key,
                 newValue + 'delta' + 'extra delta',
                 targetAccount.publicAccount,
-                mosaicId, helper.maxFee
+                mosaicId,
+                helper.maxFee
             ).subscribe((transaction: MosaicMetadataTransaction) => {
                 const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                     [transaction.toAggregate(targetAccount.publicAccount)],
                     networkType,
                     [],
+                    helper.maxFee
                 );
                 const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
                 helper.announce(signedTransaction).then(() => {
@@ -299,7 +300,8 @@ describe('MetadataTransactionService', () => {
                 const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                     [transaction.toAggregate(targetAccount.publicAccount)],
                     networkType,
-                    [], helper.maxFee
+                    [],
+                    helper.maxFee
                 );
                 const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
                 helper.announce(signedTransaction).then(() => {

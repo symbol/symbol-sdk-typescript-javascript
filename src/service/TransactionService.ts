@@ -16,7 +16,7 @@
 
 import { Observable, of } from 'rxjs';
 import { flatMap, map, mergeMap, toArray } from 'rxjs/operators';
-import { Listener } from '../infrastructure/Listener';
+import { IListener } from '../infrastructure/IListener';
 import { NamespaceId } from '../model/namespace/NamespaceId';
 import { AccountAddressRestrictionTransaction } from '../model/transaction/AccountAddressRestrictionTransaction';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
@@ -68,7 +68,7 @@ export class TransactionService implements ITransactionService {
      * @param listener Websocket listener
      * @returns {Observable<Transaction>}
      */
-    public announce(signedTransaction: SignedTransaction, listener: Listener): Observable<Transaction> {
+    public announce(signedTransaction: SignedTransaction, listener: IListener): Observable<Transaction> {
         return this.transactionRepository.announce(signedTransaction).pipe(
             flatMap(() => listener.confirmed(signedTransaction.getSignerAddress(), signedTransaction.hash)),
         );
@@ -81,7 +81,7 @@ export class TransactionService implements ITransactionService {
      * @param listener Websocket listener
      * @returns {Observable<AggregateTransaction>}
      */
-    public announceAggregateBonded(signedTransaction: SignedTransaction, listener: Listener): Observable<AggregateTransaction> {
+    public announceAggregateBonded(signedTransaction: SignedTransaction, listener: IListener): Observable<AggregateTransaction> {
         return this.transactionRepository.announceAggregateBonded(signedTransaction).pipe(
             flatMap(() => listener.aggregateBondedAdded(signedTransaction.getSignerAddress(), signedTransaction.hash)),
         );
@@ -96,7 +96,7 @@ export class TransactionService implements ITransactionService {
      */
     public announceHashLockAggregateBonded(signedHashLockTransaction: SignedTransaction,
                                            signedAggregateTransaction: SignedTransaction,
-                                           listener: Listener): Observable<AggregateTransaction> {
+                                           listener: IListener): Observable<AggregateTransaction> {
         return this.announce(signedHashLockTransaction, listener).pipe(
             flatMap(() => this.announceAggregateBonded(signedAggregateTransaction, listener)),
         );
