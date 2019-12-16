@@ -185,4 +185,41 @@ describe('Uint64', () => {
             expect(result).to.be.true;
         });
     });
+
+    describe('Operation', () => {
+        it('should return added value', () => {
+            const value = UInt64.fromUint(100);
+            const other = UInt64.fromUint(1);
+            const result = value.add(other);
+            expect(result.compact()).to.be.equal(101);
+        });
+        it('should return added value', () => {
+            const value = UInt64.fromUint(0);
+            const other = UInt64.fromUint(0);
+            const result = value.add(other);
+            expect(result.compact()).to.be.equal(0);
+        });
+
+        it('should return substract value', () => {
+            const value = UInt64.fromUint(100);
+            const other = UInt64.fromUint(1);
+            const result = value.subtract(other);
+            expect(result.compact()).to.be.equal(99);
+        });
+
+        it('should return substract value', () => {
+            const value = UInt64.fromUint(1);
+            const other = UInt64.fromUint(1);
+            const result = value.subtract(other);
+            expect(result.compact()).to.be.equal(0);
+        });
+
+        it('should return substract value', () => {
+            const value = UInt64.fromUint(100);
+            const other = UInt64.fromUint(1);
+            expect(() => {
+                other.subtract(value);
+            }).to.throw(Error, 'Unsigned substraction result cannot be negative.');
+        });
+    });
 });

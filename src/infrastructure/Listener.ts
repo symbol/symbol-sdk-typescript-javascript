@@ -108,11 +108,8 @@ export class Listener implements IListener {
                     this.webSocket = new WebSocket(this.url);
                 }
                 this.webSocket.onopen = () => {
-                    console.log('connection open');
                 };
                 this.webSocket.onerror = (err) => {
-                    console.log('WebSocket Error ');
-                    console.log(err);
                     reject(err);
                 };
                 this.webSocket.onmessage = (msg) => {
