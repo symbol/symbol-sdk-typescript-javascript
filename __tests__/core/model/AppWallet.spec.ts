@@ -513,7 +513,7 @@ describe('getSignedLockAndAggregateTransaction', () => {
             // @ts-ignore
             store,
         )
-        
+
         expect(signedTransaction).toBeInstanceOf(sdk.SignedTransaction)
         expect(signedTransaction.networkType).toBe(sdk.NetworkType.MIJIN_TEST)
         expect(signedTransaction.signerPublicKey).toBe(appWallet.publicKey)

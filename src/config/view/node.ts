@@ -1,4 +1,5 @@
 import {Endpoint} from '@/core/model'
+import {NetworkType} from "nem2-sdk"
 
 export const nodeListConfig: Endpoint[] = [
     {
@@ -34,3 +35,13 @@ export const nodeListConfig: Endpoint[] = [
 ]
 
 export const explorerUrlHead = 'http://explorer.nemtech.network/transaction/'
+export const explorerLinkList = [
+    {
+        explorerBasePath: 'http://explorer.nemtech.network/transaction/',
+        networkType: NetworkType.TEST_NET
+    },
+    {
+        explorerBasePath: 'http://explorer.mt.nemtech.network/transaction/',
+        networkType: NetworkType.MIJIN_TEST
+    }
+]

@@ -83,7 +83,7 @@
                 <!-- FIFTH COLUMN -->
                 <div class="col5">
                   <span class="item">
-                    <a target="_blank" :href="formatExplorerUrl(c.txHeader.hash)"> {{ miniHash(c.txHeader.hash) }} </a>
+                    <a class="url_text" target="_blank" :href="openExplorer(c.txHeader.hash)">{{ miniHash(c.txHeader.hash) }} </a>
                   </span>
                   <span class="item bottom">{{c.txHeader.time}}</span>
                 </div>

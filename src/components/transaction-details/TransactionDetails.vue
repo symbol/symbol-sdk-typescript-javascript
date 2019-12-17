@@ -4,10 +4,7 @@
       <div v-if="transaction.txHeader.hash" class="transaction-hash top-transaction-item">
         <span class="transaction-info-title">{{$t('hash')}}：</span>
         <span class="bolder">
-          <a
-            target="_blank"
-            :href="formatExplorerUrl(transaction.txHeader.hash)"
-          >{{transaction.txHeader.hash}}</a>
+          <a class="url_text" target="_blank" :href="openExplorer(transaction.txHeader.hash)" >{{transaction.txHeader.hash}}</a>
         </span>
       </div>
 

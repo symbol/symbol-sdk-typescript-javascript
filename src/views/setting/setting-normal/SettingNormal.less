@@ -80,8 +80,49 @@
     font-weight: 400;
     left: -20px;
   }
+
   .gray_content .ivu-select-selection {
     z-index: 1;
   }
+
+  .auto-complete {
+    width: 660px;
+    position: relative;
+
+    .ivu-input {
+      width: 550px;
+      height: 45px;
+      border-radius: 4px;
+      padding: 10px 20px;
+      border: 1px solid #ccc;
+    }
+
+    .ivu-auto-complete {
+      width: 550px;
+      position: relative;
+      right: 20px;
+    }
+
+    .confirm-icon-button {
+      position: absolute;
+      right: 0;
+      top: 9px;
+      line-height: 42px;
+      color: white;
+      text-align: center;
+      width: 110px;
+      font-size: 18px;
+      height: 43px;
+      background-color: #1FB6AC;
+    }
+    .confirm-icon-button:hover{
+      box-shadow: 0 0 10px #1FB6AC;
+    }
+  }
+
+  li {
+    padding: 10px;
+  }
+
 
 }

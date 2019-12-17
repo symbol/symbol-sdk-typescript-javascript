@@ -8,6 +8,7 @@ import {
 } from '@/core/model'
 import {localRead} from "@/core/utils";
 import {MutationTree} from 'vuex';
+import {explorerLinkList} from "@/config"
 
 const state: AppInfo = {
     timeZone: new Date().getTimezoneOffset() / 60,   // current time zone
@@ -35,6 +36,7 @@ const state: AppInfo = {
         show: false,
         message: '',
     },
+    explorerBasePath: explorerLinkList[0].explorerBasePath,
     nodeLoading: false
 }
 
@@ -107,6 +109,9 @@ const mutations: MutationTree<AppInfo> = {
     TRIGGER_NOTICE(state: AppInfo, message: string) {},
     SET_NODE_LOADING(state: AppInfo, nodeLoading: boolean) {
         state.nodeLoading = nodeLoading
+    },
+    SET_EXPLORER_BASE_PATH(state: AppInfo, explorerBasePath: string) {
+        state.explorerBasePath = explorerBasePath
     },
 }
 

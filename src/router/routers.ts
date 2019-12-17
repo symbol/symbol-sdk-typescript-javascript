@@ -176,12 +176,7 @@ const routers = [
                         name: 'information',
                         // @ts-ignore
                         component: () => import('@/views/community/information/Information.vue')
-                    }, {
-                        path: '/vote',
-                        name: 'vote',
-                        // @ts-ignore
-                        component: () => import('@/views/community/vote/Vote.vue')
-                    },
+                    }
                 ]
             },
             {

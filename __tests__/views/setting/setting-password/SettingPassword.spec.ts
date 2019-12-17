@@ -41,23 +41,23 @@ describe('SettingPassword', () => {
     let wrapper
     let state
     beforeEach(() => {
-        store = store = new Vuex.Store({
-            modules: {
-                account: {
-                    state: Object.assign(accountState.state, {
-                        mosaics,
-                        multisigAccountInfo,
-                        wallet: new AppWallet(hdAccount.wallets[0]),
-                        currentAccount: new CurrentAccount(hdAccount.accountName, hdAccount.password, hdAccount.networkType),
-                    }),
-                    mutations: accountMutations.mutations,
-                },
-                app: {
-                    state: Object.assign(appState.state, {mosaicsLoading}),
-                    mutations: appMutations.mutations
+        store = new Vuex.Store({
+                modules: {
+                    account: {
+                        state: Object.assign(accountState.state, {
+                            mosaics,
+                            multisigAccountInfo,
+                            wallet: new AppWallet(hdAccount.wallets[0]),
+                            currentAccount: new CurrentAccount(hdAccount.accountName, hdAccount.password, hdAccount.networkType),
+                        }),
+                        mutations: accountMutations.mutations,
+                    },
+                    app: {
+                        state: Object.assign(appState.state, {mosaicsLoading}),
+                        mutations: appMutations.mutations
+                    }
                 }
             }
-        }
         )
         wrapper = shallowMount(SettingPassword, {
             sync: false,

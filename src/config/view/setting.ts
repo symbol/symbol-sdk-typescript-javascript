@@ -7,39 +7,7 @@ import dashboardPublicKey from "@/common/img/monitor/dash-board/dashboardPublicK
 
 export const settingNetworkColorConfig = ['green_point', 'pink_point', 'purple_point', 'yellow_point']
 
-export const settingNetworkPointConfig: Array<{
-    name: string,
-    rpcUrl: string,
-    chainId: number,
-    symbol: string,
-    exploerUrl: string,
-    isSelected: boolean
-}> = [
-        {
-            name: 'NEM_PRIVATE_1',
-            rpcUrl: 'Https://12.10.0.10',
-            chainId: 1,
-            symbol: 'XEM',
-            exploerUrl: 'https://nodeexplorer.com/',
-            isSelected: true
-        }, {
-            name: 'NEM_MAIN',
-            rpcUrl: 'Https://12.10.0.10',
-            chainId: 2,
-            symbol: 'XEM',
-            exploerUrl: 'https://nodeexplorer.com/',
-            isSelected: false
-        },
-        {
-            name: 'NEM_MAIN_NET',
-            rpcUrl: 'Https://12.10.0.10',
-            chainId: 2,
-            symbol: 'XEM',
-            exploerUrl: 'https://nodeexplorer.com/',
-            isSelected: false
-        }
-    ]
-
+// todo remove it
 export const networkTypeConfig: Array<{
     value: NetworkType,
     label: string

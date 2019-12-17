@@ -6,9 +6,7 @@
     class-name="dash_board_dialog text_select"
   >
     <DisabledForms />
-
     <GetNodePublicKey v-if="showGetNodePublicKey" />
-
     <form action="submit" onsubmit="event.preventDefault()" @keyup.enter="submit">
       <div class="gray_input_content">
         <span class="title">{{$t('Node_public_key')}}</span>
@@ -57,4 +55,4 @@ export default class PersistentDelegationRequest extends PersistentDelegationReq
 </script>
 <style lang="less">
 @import "PersistentDelegationRequest.less";
-</style> 
+</style>

@@ -1,11 +1,11 @@
 import {Component, Vue} from 'vue-property-decorator'
-import {settingNetworkColorConfig, settingNetworkPointConfig} from "@/config/view/setting";
+import {settingNetworkColorConfig} from "@/config/view/setting";
 
 
 
 @Component
 export class SettingNetworkTs extends Vue {
-    pointList = settingNetworkPointConfig
+    pointList = []
     currentEndpoint = {}
     pointerColorList = settingNetworkColorConfig
 

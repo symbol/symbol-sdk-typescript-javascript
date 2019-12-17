@@ -882,6 +882,9 @@
   "ID": "ID",
   "Balance": "Balance",
   "Choose_Wallets": "Choose Wallets",
+  "my_balance": "My balance",
   "Access_My_Wallet": "Access My Wallet",
-  "my_balance": "My balance"
+  "set_explorer_link": "Set explorer link",
+  "please_set_correct_explorer_url_first": "请先设置explorer url",
+  "set_default_explorer": "输入的url不合法，已为您设置默认url"
 }

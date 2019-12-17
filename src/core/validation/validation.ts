@@ -1,5 +1,6 @@
 import {CUSTOM_VALIDATORS_NAMES} from './customValidators'
 import {networkConfig, NETWORK_CONSTANTS, APP_PARAMS} from '@/config/constants'
+
 const {maxMosaicAtomicUnits, maxMosaicDivisibility, NAMESPACE_MAX_LENGTH} = networkConfig
 
 const {MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH} = APP_PARAMS
@@ -45,4 +46,9 @@ export const validation = {
         required: true,
         regex: `^[a-z0-9-_.]{1,${NAMESPACE_MAX_LENGTH}}$`,
     },
+    nodeUrl: {
+        required: true,
+        url: {require_protocol: true}
+    }
+
 }

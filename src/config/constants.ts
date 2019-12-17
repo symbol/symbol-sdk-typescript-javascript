@@ -248,4 +248,5 @@ export const Message = {
     WALLET_NAME_INPUT_ERROR: 'walletCreateWalletNameRemind',
     WRONG_PASSWORD_ERROR: 'password_error',
     WRONG_WALLET_NAME_ERROR: 'wrong_wallet_name_error',
+    SET_DEFAULT_EXPLORER:'set_default_explorer'
 }

@@ -90,7 +90,8 @@ export interface AppInfo {
     nodeNetworkType: string,
     logs: Log[],
     loadingOverlay: LoadingOverlayObject,
-    nodeLoading:boolean
+    nodeLoading:boolean,
+    explorerBasePath:string
 }
 
 export interface StagedTransaction {
