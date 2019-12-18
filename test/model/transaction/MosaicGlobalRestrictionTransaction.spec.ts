@@ -162,6 +162,9 @@ describe('MosaicGlobalRestrictionTransaction', () => {
         ).setMaxFee(2);
 ​
         expect(mosaicGlobalRestrictionTransaction.maxFee.compact()).to.be.equal(340);
+
+        const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
+        expect(signedTransaction.hash).not.to.be.undefined;
     });
 
     it('Test resolveAlias can resolve', () => {
@@ -185,5 +188,8 @@ describe('MosaicGlobalRestrictionTransaction', () => {
         expect((mosaicGlobalRestrictionTransaction.mosaicId as MosaicId).equals(resolvedMosaicId)).to.be.true;
         expect(mosaicGlobalRestrictionTransaction.referenceMosaicId instanceof MosaicId).to.be.true;
         expect((mosaicGlobalRestrictionTransaction.referenceMosaicId as MosaicId).equals(resolvedMosaicId)).to.be.true;
+
+        const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
+        expect(signedTransaction.hash).not.to.be.undefined;
     });
 });

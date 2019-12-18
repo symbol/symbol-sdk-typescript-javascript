@@ -172,5 +172,8 @@ describe('MosaicDefinitionTransaction', () => {
         ).setMaxFee(2);
 ​
         expect(mosaicDefinitionTransaction.maxFee.compact()).to.be.equal(300);
+
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
+        expect(signedTransaction.hash).not.to.be.undefined;
     });
 });

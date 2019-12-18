@@ -199,13 +199,13 @@ export class AccountAddressRestrictionTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): AccountAddressRestrictionTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return {...Object.getPrototypeOf(this),
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {
                 restrictionAdditions:
                     this.restrictionAdditions.map((addition) => statement.resolveAddress(addition, transactionInfo.height.toString(),
                         transactionInfo.index, aggregateTransactionIndex)),
                 restrictionDeletions:
                     this.restrictionDeletions.map((deletion) => statement.resolveAddress(deletion, transactionInfo.height.toString(),
                         transactionInfo.index, aggregateTransactionIndex)),
-            };
+            });
     }
 }

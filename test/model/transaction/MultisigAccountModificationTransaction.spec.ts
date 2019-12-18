@@ -134,5 +134,8 @@ describe('MultisigAccountModificationTransaction', () => {
         ).setMaxFee(2);
 ​
         expect(modifyMultisigAccountTransaction.maxFee.compact()).to.be.equal(336);
+
+        const signedTransaction = modifyMultisigAccountTransaction.signWith(account, generationHash);
+        expect(signedTransaction.hash).not.to.be.undefined;
     });
 });
