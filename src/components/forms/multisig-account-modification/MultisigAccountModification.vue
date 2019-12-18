@@ -26,17 +26,17 @@
 
             <div class="multisig_property_amount">
               <span class="gray_content">
-                <div class="title">{{$t('min_approval')}}</div>
+                <div class="title">{{$t(formLabels[mode].approvalFieldName)}}</div>
                 <div
                   class="title_describe"
-                >{{$t('Min_signatures_to_sign_a_transaction_or_to_add_a_cosigner')}}</div>
+                >{{$t(formLabels[mode].approvalFieldDescription)}}</div>
                 <div class="input_content">
                   <ErrorTooltip fieldName="minApproval" placementOverride="top">
                     <input
                       v-focus
                       class="radius"
                       v-model="formItems.minApproval"
-                      :data-vv-as="$t('min_approval')"
+                      :data-vv-as="$t(formLabels[mode].approvalFieldName)"
                       data-vv-name="minApproval"
                       v-validate="`integer|${validations.minApproval}`"
                     />
@@ -45,14 +45,14 @@
               </span>
 
               <span class="gray_content">
-                <div class="title">{{$t('min_removal')}}</div>
-                <div class="title_describe">{{$t('Min_signatures_required_to_remove_a_cosigner')}}</div>
+                <div class="title">{{$t(formLabels[mode].removalFieldName)}}</div>
+                <div class="title_describe">{{$t(formLabels[mode].removalFieldDescription)}}</div>
                 <div class="input_content">
                   <ErrorTooltip fieldName="minRemoval" placementOverride="top">
                     <input
                       class="radius"
                       v-model="formItems.minRemoval"
-                      :data-vv-as="$t('min_removal')"
+                      :data-vv-as="$t(formLabels[mode].removalFieldName)"
                       data-vv-name="minRemoval"
                       v-validate="`integer|${validations.minRemoval}`"
                     />

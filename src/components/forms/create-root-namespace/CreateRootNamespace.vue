@@ -16,7 +16,7 @@
             </div>
 
             <div class="form_item">
-              <span class="key">{{$t('root_namespace')}}</span>
+              <span class="key">{{$t('name')}}</span>
               <ErrorTooltip fieldName="namespaceName" placementOverride="right">
               <span class="value">
                 <input
@@ -24,9 +24,9 @@
                         data-vv-name="namespaceName"
                         v-model="formItems.rootNamespaceName"
                         v-validate="validation.namespaceName"
-                        :data-vv-as="$t('root_namespace')"
+                        :data-vv-as="$t('name')"
                         type="text"
-                        :placeholder="$t('New_root_space')"
+                        :placeholder="$t('name')"
                 />
               </span>
               </ErrorTooltip>
@@ -47,12 +47,11 @@
                 <span class="end_label">{{$t('duration')}}:{{durationIntoDate}}</span>
               </span>
               </ErrorTooltip>
-
             </div>
 
-            <div class="form_item XEM_rent_fee" v-if="false">
-              <span class="key">{{$t('rent')}}</span>
-              <span class="value">{{Number(formItems.duration)}}{{ networkCurrency.ticker }}</span>
+            <div class="form_item XEM_rent_fee">
+              <span class="key">{{$t('Rental_fee')}}</span>
+              <span class="value">{{ estimatedRentalFee }} ({{ $t('estimate') }})</span>
             </div>
 
             <div class="form_item">

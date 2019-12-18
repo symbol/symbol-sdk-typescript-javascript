@@ -1,10 +1,11 @@
 import {languageConfig, Message} from "@/config"
 import {AppAccount, AppAccounts, AppInfo, CurrentAccount, StoreAccount} from "@/core/model"
 import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
-import {localRead, getObjectLength, getTopValueInObject, localSave} from "@/core/utils/utils"
+import {localRead, getTopValueInObject, localSave} from '@/core/utils/utils'
 import {validation} from "@/core/validation"
 import {mapState} from "vuex"
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue';
+import {onLogin} from '@/core/services'
 
 @Component({
     computed: {
@@ -16,6 +17,8 @@ import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue
 })
 export default class LoginAccountTs extends Vue {
     @Provide() validator: any = this.$validator
+    activeAccount: StoreAccount
+    app: AppInfo
     languageList = languageConfig
     validation = validation
     cipher: string = ''
@@ -23,8 +26,8 @@ export default class LoginAccountTs extends Vue {
     errors: any
     isShowHint = false
     hintText = ''
-    activeAccount: StoreAccount
-    app: AppInfo
+    onLogin = onLogin
+
     formItems = {
         currentAccountName: '',
         password: ''
@@ -74,27 +77,6 @@ export default class LoginAccountTs extends Vue {
         this.$router.push('chooseImportWay')
     }
 
-    jumpToDashBoard() {
-        const {accountMap, accountPassword} = this
-        const {currentAccountName, password} = this.formItems
-        // no seed
-        if (getObjectLength(currentAccountName) == 0 || !accountMap[currentAccountName].seed) {
-            this.$store.commit('SET_TEMPORARY_PASSWORD', password)
-            this.$router.push('generateMnemonic')
-            return
-        }
-
-        this.$store.commit('SET_ACCOUNT_DATA', {
-            name: currentAccountName,
-            password: accountPassword,
-            networkType: accountMap[currentAccountName].networkType,
-        });
-        // have wallet and seed ,init wallet
-        this.$store.commit('SET_WALLET_LIST', accountMap[currentAccountName].wallets)
-        this.$store.commit('SET_WALLET', accountMap[currentAccountName].wallets[0])
-        this.$router.push('monitorPanel')
-    }
-
     showErrorNotice(text) {
         this.$Notice.destroy()
         this.$Notice.error({title: this.$t(text) + ''})
@@ -117,11 +99,38 @@ export default class LoginAccountTs extends Vue {
             .validate()
             .then((valid) => {
                 if (!valid) return
-                that.jumpToDashBoard()
-                localSave('activeAccountName', currentAccountName)
+                this.login()
             })
     }
 
+    login() {
+        if (this.noSeedAvailable()) {
+            this.createNewAccount()
+            return
+        }
+
+        this.onLogin(this.formItems.currentAccountName, this.$store)
+        this.goToDashBoard()
+    }
+
+    createNewAccount() {
+        this.$store.commit('SET_TEMPORARY_PASSWORD', this.formItems.password)
+        this.$router.push('generateMnemonic')
+        return
+    }
+
+    noSeedAvailable(): boolean {
+        const {currentAccountName} = this.formItems
+        if (!currentAccountName || currentAccountName === '') return true
+        if (!this.accountMap) return true
+        if (!this.accountMap[currentAccountName]) return true
+        if (!this.accountMap[currentAccountName].seed) return true
+        return false
+    }
+
+    goToDashBoard() {
+        this.$router.push('monitorPanel')
+    }
 
     @Watch('formItems.currentAccountName')
     onAccountNameChange(newVal, oldVal) {

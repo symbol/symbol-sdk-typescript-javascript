@@ -46,10 +46,6 @@ export class MonitorTs extends Vue {
         return this.activeAccount.networkCurrency.ticker
     }
 
-    get chainStatus() {
-        return this.app.chainStatus
-    }
-
     get mosaicsLoading() {
         return this.app.mosaicsLoading
     }
@@ -79,13 +75,17 @@ export class MonitorTs extends Vue {
     }
 
     get currentHeight() {
-        return this.app.chainStatus.currentHeight
+        return this.app.NetworkProperties.height
     }
 
     get accountName() {
         return this.activeAccount.currentAccount.name
     }
 
+    get NetworkProperties() {
+        return this.app.NetworkProperties
+    }
+    
     get routes() {
         const routesMeta: any[] = routes[0].children
             .find(({name}) => name === 'monitorPanel')

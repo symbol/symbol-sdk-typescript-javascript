@@ -18,6 +18,7 @@ import {
     // @ts-ignore
 } from "@@/mock/conf/conf.spec"
 import flushPromises from 'flush-promises'
+import {NetworkProperties} from '@/core/model'
 
 jest.mock('@/common/img/monitor/failure.png', () => 'failureIcon');
 
@@ -54,9 +55,15 @@ describe('MnemonicDialog', () => {
                             accountName: hdAccount.accountName,
                         }),
                     },
+                    app: {
+                        state: {},
+                    },
                 }
             }
         )
+
+        store.state.app.NetworkProperties = NetworkProperties.create(store)
+
         wrapper = shallowMount(MnemonicDialog, {
             sync: false,
             mocks: {

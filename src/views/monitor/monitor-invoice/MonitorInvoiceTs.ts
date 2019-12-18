@@ -142,7 +142,7 @@ export class MonitorInvoiceTs extends Vue {
         // @TODO: would be better to return a loading indicator
         // instead of an empty array ([] = "no matching data" in the select dropdown)
         const {mosaics} = this
-        const {currentHeight} = this.app.chainStatus
+        const currentHeight = this.app.NetworkProperties.height
         if (this.app.mosaicsLoading || !mosaics) return []
 
         const mosaicList: any = Object.values(mosaics)

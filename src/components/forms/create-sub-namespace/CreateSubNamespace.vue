@@ -17,7 +17,7 @@
 
 
             <div class="form_item">
-              <span class="key">{{$t('parent_namespace')}}</span>
+              <span class="key">{{$t('parent_name')}}</span>
               <span class="value">
             <ErrorTooltip fieldName="parent_namespace" placementOverride="right">
               <Select
@@ -26,7 +26,7 @@
                       v-validate="'required'"
                       v-model="formItems.rootNamespaceName"
                       class="select"
-                      :data-vv-as="$t('parent_namespace')"
+                      :data-vv-as="$t('parent_name')"
               >
                   <Option v-for="item in activeNamespaceList" :value="item.value"
                           :key="item.value">{{ item.label }}</Option>
@@ -36,7 +36,7 @@
             </div>
 
             <div class="form_item">
-              <span class="key">{{$t('Subspace')}}</span>
+              <span class="key">{{$t('Name')}}</span>
               <span class="value">
               <ErrorTooltip fieldName="Subspace" placementOverride="right">
                 <span class="value">
@@ -45,9 +45,9 @@
                           data-vv-name="Subspace"
                           v-model="formItems.subNamespaceName"
                           v-validate="validation.subNamespaceName"
-                          :data-vv-as="$t('Subspace')"
+                          :data-vv-as="$t('Name')"
                           type="text"
-                          :placeholder="$t('Input_space_name')"
+                          :placeholder="$t('Input_namespace_name')"
                   />
                 </span>
               </ErrorTooltip>

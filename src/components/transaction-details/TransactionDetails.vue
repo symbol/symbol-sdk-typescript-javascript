@@ -19,8 +19,10 @@
           <span class="bolder">{{$t(transaction.txHeader.tag)}}</span>
         </span>
         <span class="transaction-fee">
-          <span class="transaction-info-title">{{$t('fee')}}：</span>
-          <span class="bolder">{{transaction.txHeader.fee}}XEM</span>
+          <span class="transaction-info-title">
+            {{$t(transaction.rawTx.signer ? 'fee' : 'MaxFee' )}}: 
+          </span>
+          <span class="bolder">{{transaction.dialogDetailMap.fee}}</span>
         </span>
       </div>
       <div class="top-transaction-item">

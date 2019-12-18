@@ -4,6 +4,7 @@ import iView from 'view-design'
 // @ts-ignore
 import Monitor from '@/views/monitor/Monitor.vue'
 import vueStore from '@/store'
+import {NetworkProperties} from '@/core/model'
 // @ts-ignore
 const localVue = createLocalVue()
 const router = new VueRouter()
@@ -15,6 +16,7 @@ describe('Monitor', () => {
     let store
     beforeEach(() => {
             store = vueStore
+            store.state.app.NetworkProperties = NetworkProperties.create(store)
         }
     )
 

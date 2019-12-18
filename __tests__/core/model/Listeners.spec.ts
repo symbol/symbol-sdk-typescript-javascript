@@ -5,7 +5,7 @@ import flushPromises from 'flush-promises'
 import {of} from 'rxjs'
 import {tap, mapTo} from 'rxjs/operators'
 import {block1} from '../../../__mocks__/network/block1'
-import {Notice, TRANSACTIONS_CATEGORIES, NoticeType, ChainStatus} from '@/core/model'
+import {Notice, TRANSACTIONS_CATEGORIES, NoticeType, NetworkProperties} from '@/core/model'
 import {formatAndSave} from '@/core/services'
 import {Message, APP_PARAMS} from '@/config'
 jest.mock('@/core/services/transactions')
@@ -21,6 +21,12 @@ const mockUnconfirmedAddedCall = jest.fn()
 const mockTriggerNotice = jest.fn()
 const mockListenerClose = jest.fn()
 const mockCommit = jest.fn()
+const mockNetworkPropertiesSetLastBlock = jest.fn()
+const mockNetworkProperties = jest.fn().mockImplementation(function() {
+  return {
+    handleLastBlock: mockNetworkPropertiesSetLastBlock,
+  }
+})
 
 const mockListenerOpen = () => {
  mockListenerOpenCall()
@@ -113,6 +119,8 @@ describe('Listeners', () => {
   mockCommit.mockClear()
   mockListenerClose.mockClear()
   mockListenerOpenCall.mockClear()
+  mockNetworkPropertiesSetLastBlock.mockClear()
+  mockNetworkProperties.mockClear()
  })
 
  const address = Address.createFromRawAddress('TCBIA24P5GO4QNI6H2TIRPXALWF7UKHPI6QOOVDM')
@@ -120,13 +128,14 @@ describe('Listeners', () => {
  const wsEndpoint = 'ws://endpoint.com:3000'
  const httpsEndpoint = 'https://endpoint.com:3000'
  const wssEndpoint = 'wss://endpoint.com:3000'
+
  const store = {
   commit: mockCommit
  }
 
  it('switch endpoint should not call Listener if address is not set', () => {
   // @ts-ignore
-  const listeners = Listeners.create(store)
+      const listeners = Listeners.create(store, new mockNetworkProperties())
   listeners.switchEndpoint(httpEndpoint)
   // @ts-ignore
   expect(listeners.address).toBeUndefined()
@@ -137,7 +146,7 @@ describe('Listeners', () => {
 
  it('switch endpoint should handle https endpoints', () => {
   // @ts-ignore
-  const listeners = Listeners.create(store)
+      const listeners = Listeners.create(store, new mockNetworkProperties())
   listeners.switchEndpoint(httpsEndpoint)
   // @ts-ignore
   expect(listeners.wsEndpoint).toBe(wssEndpoint)
@@ -145,7 +154,7 @@ describe('Listeners', () => {
 
  it('switch address should not call Listener if address is not set', () => {
   // @ts-ignore
-  const listeners = Listeners.create(store)
+      const listeners = Listeners.create(store, new mockNetworkProperties())
   listeners.switchAddress(address)
   // @ts-ignore
   expect(listeners.address).toEqual(address)
@@ -156,7 +165,7 @@ describe('Listeners', () => {
 
  it('switch address should not call Listener if address is not set', () => {
   // @ts-ignore
-  const listeners = Listeners.create(store)
+      const listeners = Listeners.create(store, new mockNetworkProperties())
   listeners.switchAddress(address)
   // @ts-ignore
   expect(listeners.address).toEqual(address)
@@ -167,7 +176,7 @@ describe('Listeners', () => {
 
  it('switchEndpoint should call stop and start if address is set', () => {
   // @ts-ignore
-  const listeners = Listeners.create(store)
+      const listeners = Listeners.create(store, new mockNetworkProperties())
   const mockStop = jest.fn()
   const mockStart = jest.fn()
 
@@ -188,9 +197,9 @@ describe('Listeners', () => {
   expect(Listener).not.toHaveBeenCalled()
  });
 
- it('all listeners should call the proper things', async (done) => {
+ it('all listeners should make the proper calls', async (done) => {
   // @ts-ignore
-  const listeners = Listeners.create(store)
+  const listeners = Listeners.create(store, new mockNetworkProperties())
   listeners.switchEndpoint(httpEndpoint)
   listeners.switchAddress(address)
   await flushPromises()
@@ -205,11 +214,9 @@ describe('Listeners', () => {
    // @ts-ignore
    expect(Listener.mock.calls[0][0]).toBe(wsEndpoint)
 
-   expect(mockNewBlockCall).toHaveBeenCalledTimes(1)
-   expect(mockNewBlockCall.mock.calls[0][0]).toEqual(undefined)
-   expect(mockCommit).toHaveBeenCalledTimes(1)
-   expect(mockCommit.mock.calls[0][0]).toBe('SET_CHAIN_STATUS')
-   expect(mockCommit.mock.calls[0][1]).toEqual(new ChainStatus(block1))
+   expect(mockNetworkProperties).toHaveBeenCalledTimes(1)
+   expect(mockNetworkPropertiesSetLastBlock).toHaveBeenCalledTimes(1)
+   expect(mockNetworkPropertiesSetLastBlock.mock.calls[0][0]).toBe(block1)
 
    expect(mockStatusCall).toHaveBeenCalledTimes(1)
    expect(mockStatusCall.mock.calls[0][0]).toEqual(address)
@@ -257,7 +264,7 @@ describe('Listeners', () => {
 
  it('stop should close the listener if listener is defined', () => {
   // @ts-ignore
-  const listeners = Listeners.create(store)
+  const listeners = Listeners.create(store, new mockNetworkProperties())
 
   listeners.switchEndpoint(httpEndpoint)
   listeners.switchAddress(address)
@@ -268,7 +275,7 @@ describe('Listeners', () => {
 
  it('retry should call stop and start, and increment restartTimes by 1', async (done) => {
   // @ts-ignore
-  const listeners = Listeners.create(store)
+  const listeners = Listeners.create(store, new mockNetworkProperties())
   const mockStop = jest.fn()
   // @ts-ignore
   listeners.wsEndpoint = wsEndpoint
@@ -292,7 +299,7 @@ describe('Listeners', () => {
 
  it('retry should have no effect when MAX_LISTENER_RECONNECT_TRIES is reached', async (done) => {
   // @ts-ignore
-  const listeners = Listeners.create(store)
+  const listeners = Listeners.create(store, new mockNetworkProperties())
   const mockStop = jest.fn()
   // @ts-ignore
   listeners.wsEndpoint = wsEndpoint
@@ -319,7 +326,7 @@ describe('Listeners', () => {
   const mockRetry = jest.fn()
 
   // @ts-ignore
-  const listeners = Listeners.create(store)
+  const listeners = Listeners.create(store, new mockNetworkProperties())
   // @ts-ignore
   listeners.retry = mockRetry
   listeners.switchAddress(address)

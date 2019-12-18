@@ -40,7 +40,8 @@
                       ? expirationInfo.remainingBeforeExpiration.time.substring(2)
                       : expirationInfo.remainingBeforeExpiration.time
                   }}
-                  ({{ 'block' }} {{ formatNumber(currentNamespace.endHeight - namespaceGracePeriodDuration) }})
+                  ({{ 'block' }}{{ expirationInfo.remainingBeforeExpiration.blocks }}
+                  {{ formatNumber(currentNamespace.endHeight - namespaceGracePeriodDuration) }})
                 </p>
               </div>
             </div>

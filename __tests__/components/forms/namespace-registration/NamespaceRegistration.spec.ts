@@ -22,7 +22,7 @@ import {
     CosignWallet
     // @ts-ignore
 } from "@@/mock/conf/conf.spec"
-import {AppWallet, AppNamespace} from "@/core/model"
+import {AppNamespace, NetworkProperties} from "@/core/model"
 // @ts-ignore
 const localVue = createLocalVue()
 const router = new VueRouter()
@@ -79,6 +79,10 @@ describe('NamespaceRegistration', () => {
                 }
             }
         )
+
+        store.state.app.NetworkProperties = NetworkProperties.create(store)
+        store.state.app.NetworkProperties.height = 666
+        
         wrapper = shallowMount(NamespaceRegistration, {
             sync: false,
             mocks: {

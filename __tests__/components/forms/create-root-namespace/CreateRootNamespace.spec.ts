@@ -26,6 +26,8 @@ import {
 import flushPromises from 'flush-promises'
 import {getAbsoluteMosaicAmount} from "@/core/utils"
 import {Multisig2Account, MultisigAccount} from "../../../mock/conf/conf.spec"
+import {NetworkProperties} from '@/core/model'
+
 // @ts-ignore
 const localVue = createLocalVue()
 const router = new VueRouter()
@@ -65,6 +67,10 @@ describe('CreateRootNamespace', () => {
                     }
                 }
             )
+            
+            store.state.app.NetworkProperties = NetworkProperties.create(store)
+            store.state.app.NetworkProperties.height = 666
+
             wrapper = shallowMount(CreateRootNamespace, {
                 sync: false,
                 mocks: {

@@ -50,7 +50,7 @@ export class TransactionHeader {
         && transaction.recipientAddress instanceof Address // @NAMESPACES
         && transaction.recipientAddress.plain() === wallet.address
       
-      const {chainStatus} = store.state.app
+      const {NetworkProperties} = store.state.app
 
      this.tag = this.getTag(transaction)
      this.fee = getRelativeMosaicAmount(transaction.maxFee.compact(), networkCurrency.divisibility)
@@ -58,7 +58,7 @@ export class TransactionHeader {
 
      if (transaction.transactionInfo) {
           this.block = transaction.transactionInfo.height.compact()
-          this.time = chainStatus.getTimeFromBlockNumber(this.block)
+          this.time = NetworkProperties.getTimeFromBlockNumber(this.block)
           this.date = new Date(this.time)
           this.hash = transaction.transactionInfo.hash
      }

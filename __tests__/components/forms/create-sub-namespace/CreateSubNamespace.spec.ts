@@ -24,6 +24,7 @@ import {
 } from "@@/mock/conf/conf.spec"
 import flushPromises from 'flush-promises'
 import {getAbsoluteMosaicAmount} from "@/core/utils"
+import {NetworkProperties} from '@/core/model'
 import {Multisig2Account, MultisigAccount} from "../../../mock/conf/conf.spec"
 // @ts-ignore
 const localVue = createLocalVue()
@@ -64,6 +65,10 @@ describe('CreateSubNamespace', () => {
             }
         }
         )
+
+        store.state.app.NetworkProperties = NetworkProperties.create(store)
+        store.state.app.NetworkProperties.height = 666
+
         wrapper = shallowMount(CreateSubNamespace, {
             sync: false,
             mocks: {

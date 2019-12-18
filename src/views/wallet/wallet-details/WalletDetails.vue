@@ -94,11 +94,6 @@
     <div class="accountFn radius" ref="accountFn">
       <div class="accountFnNav">
         <ul class="navList clear">
-          <!--          <li :class="['left',functionShowList[0]?'active':''] " @click="showFunctionIndex(0)">-->
-          <!--            <img src="@/common/img/wallet/wallet-detail/walletAddressBook.png">-->
-          <!--            {{$t('contact_list')}}-->
-          <!--          </li>-->
-          <!--restrict-->
           <li :class="['left',functionShowList[1]?'active':''] " @click="showFunctionIndex(1)">
             <img src="@/common/img/wallet/wallet-detail/walletHarvesting.png">
             {{$t('Harvesting')}}
@@ -113,7 +108,6 @@
           </li>
         </ul>
       </div>
-      <!--      <AddressBook v-if="functionShowList[0]"></AddressBook>-->
       <WalletHarvesting v-if="functionShowList[1]"></WalletHarvesting>
     </div>
     <PrivatekeyDialog

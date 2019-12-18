@@ -4,7 +4,7 @@ import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue
 import {formDataConfig, Message} from "@/config"
 import {cloneData} from "@/core/utils"
 import {mapState} from "vuex"
-import {StoreAccount} from "@/core/model"
+import {StoreAccount, AppInfo} from "@/core/model"
 
 @Component({
     components: {
@@ -13,17 +13,19 @@ import {StoreAccount} from "@/core/model"
     computed: {
         ...mapState({
             activeAccount: 'account',
+            app: 'app',
         })
     }
 })
 export default class extends Vue {
     @Provide() validator: any = this.$validator
     activeAccount: StoreAccount
+    app: AppInfo
     validation = validation
     formItems = cloneData(formDataConfig.offsetLineForm)
 
     get generationHash() {
-        return this.activeAccount.generationHash
+        return this.app.NetworkProperties.generationHash
     }
 
     get networkCurrency() {

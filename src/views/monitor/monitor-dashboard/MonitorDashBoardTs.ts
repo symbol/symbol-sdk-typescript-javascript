@@ -24,4 +24,8 @@ export class MonitorDashBoardTs extends Vue {
     get wallet() {
         return this.activeAccount.wallet
     }
+
+    get NetworkProperties() {
+        return this.app.NetworkProperties
+    }
 }

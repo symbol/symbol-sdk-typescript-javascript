@@ -61,8 +61,6 @@ export class AppAccount {
 
 
 export const AppAccounts = () => ({
-    accountName: '',
-
     getAccountFromLocalStorage(accountName) {
         const accountMapData = localRead('accountMap') || ''
         if (!accountMapData) {

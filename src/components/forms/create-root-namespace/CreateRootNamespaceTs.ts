@@ -4,9 +4,9 @@ import {
     NamespaceRegistrationTransaction, UInt64, Deadline,
 } from "nem2-sdk"
 import {Component, Vue, Watch, Provide} from 'vue-property-decorator'
-import {DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
+import {DEFAULT_FEES, FEE_GROUPS, formDataConfig, networkConfig} from "@/config"
 import {
-    getAbsoluteMosaicAmount, formatSeconds, formatAddress, cloneData
+    getAbsoluteMosaicAmount, formatSeconds, formatAddress, cloneData, absoluteAmountToRelativeAmountWithTicker,
 } from '@/core/utils'
 import {StoreAccount, AppInfo, DefaultFee, AppWallet, LockParams} from "@/core/model"
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction, signAndAnnounce} from '@/core/services'
@@ -90,7 +90,7 @@ export class CreateRootNamespaceTs extends Vue {
     }
 
     get generationHash(): string {
-        return this.activeAccount.generationHash
+        return this.app.NetworkProperties.generationHash
     }
 
     get node(): string {
@@ -196,10 +196,18 @@ export class CreateRootNamespaceTs extends Vue {
         return new LockParams(announceInLock, feeAmount / feeDivider)
     }
 
-    get durationIntoDate() {
+    get duration(): number {
         const duration = Number(this.formItems.duration)
-        if (!duration || isNaN(duration)) return 0
-        return formatSeconds(duration * 12)
+        return !duration || isNaN(duration) ? 0 : duration
+    }
+
+    get durationIntoDate(): string {
+        return formatSeconds(this.duration * networkConfig.targetBlockTime)
+    }
+
+    get estimatedRentalFee(): string {
+        const rentalFee = this.duration * this.app.NetworkProperties.fee
+        return absoluteAmountToRelativeAmountWithTicker(rentalFee, this.activeAccount.networkCurrency)
     }
 
     async submit() {

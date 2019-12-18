@@ -112,13 +112,13 @@ export class MosaicCreationTs extends Vue {
             this.formItems.duration = 0
             return ''
         }
-        if (duration * 12 >= 60 * 60 * 24 * 3650) {
+        if (duration * networkConfig.targetBlockTime >= 60 * 60 * 24 * 3650) {
             this.$Notice.error({
                 title: this.$t(Message.DURATION_MORE_THAN_10_YEARS_ERROR) + ''
             })
             this.formItems.duration = 0
         }
-        return formatSeconds(duration * 12)
+        return formatSeconds(duration * networkConfig.targetBlockTime)
     }
 
     addDivisibilityAmount() {

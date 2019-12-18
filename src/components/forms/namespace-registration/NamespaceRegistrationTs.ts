@@ -80,7 +80,7 @@ export class NamespaceRegistrationTs extends Vue {
     }
 
     get currentHeight(): number {
-        return this.app.chainStatus.currentHeight
+        return this.app.NetworkProperties.height
     }
 
     get expirationInfo(): NamespaceExpirationInfo {

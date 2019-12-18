@@ -6,7 +6,7 @@ import {AccountQR} from 'nem2-qr-library'
 import {Password, Account} from 'nem2-sdk'
 import {copyTxt} from "@/core/utils"
 import {Message, threeStepsPictureList} from "@/config"
-import {AppWallet, StoreAccount} from "@/core/model"
+import {AppWallet, StoreAccount, AppInfo} from '@/core/model'
 import failureIcon from "@/common/img/monitor/failure.png"
 import {validation} from '@/core/validation'
 
@@ -14,6 +14,7 @@ import {validation} from '@/core/validation'
     computed: {
         ...mapState({
             activeAccount: 'account',
+            app: 'app',
         })
     },
     subscriptions() {
@@ -29,6 +30,7 @@ import {validation} from '@/core/validation'
 })
 export class PrivatekeyDialogTs extends Vue {
     activeAccount: StoreAccount
+    app: AppInfo
     validation = validation
     errors: any
     stepIndex = 0
@@ -71,7 +73,7 @@ export class PrivatekeyDialogTs extends Vue {
     get qrCodeArgs(): AccountQR {
         const {account, wallet, password} = this
         if (!account) return null
-        const {generationHash} = this.activeAccount
+        const {generationHash} = this.app.NetworkProperties
         const {networkType} = wallet
         try {
             // @ts-ignore

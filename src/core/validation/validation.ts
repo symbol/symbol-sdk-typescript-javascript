@@ -1,5 +1,5 @@
 import {CUSTOM_VALIDATORS_NAMES} from './customValidators'
-import {networkConfig, NETWORK_CONSTANTS, APP_PARAMS} from '@/config/constants'
+import {networkConfig, NETWORK_CONSTANTS, APP_PARAMS} from '@/config'
 
 const {maxMosaicAtomicUnits, maxMosaicDivisibility, NAMESPACE_MAX_LENGTH} = networkConfig
 

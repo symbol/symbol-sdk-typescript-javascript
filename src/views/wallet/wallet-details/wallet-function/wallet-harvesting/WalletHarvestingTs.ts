@@ -6,7 +6,7 @@ import AccountLinkTransaction from '@/components/forms/account-link/AccountLinkT
 import CreateRemoteAccount from '@/components/forms/create-remote-account/CreateRemoteAccount.vue'
 import PersistentDelegationRequest from '@/components/forms/persistent-delegation-request/PersistentDelegationRequest.vue'
 
-const {EMPTY_LINKED_ACCOUNT_KEY} = networkConfig
+const {EMPTY_PUBLIC_KEY} = networkConfig
 
 @Component({
     components: { AccountLinkTransaction, CreateRemoteAccount, PersistentDelegationRequest },
@@ -39,7 +39,7 @@ export class WalletHarvestingTs extends Vue {
     }
 
     get isLinked(): boolean {
-        return this.linkedAccountKey && this.linkedAccountKey !== EMPTY_LINKED_ACCOUNT_KEY
+        return this.linkedAccountKey && this.linkedAccountKey !== EMPTY_PUBLIC_KEY
     }
 
     activateRemoteHarvesting() {

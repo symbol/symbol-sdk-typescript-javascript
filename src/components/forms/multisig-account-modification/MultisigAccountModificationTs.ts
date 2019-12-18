@@ -23,6 +23,23 @@ import MultisigTree from '@/views/multisig/multisig-tree/MultisigTree.vue'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 import SignerSelector from '@/components/forms/inputs/signer-selector/SignerSelector.vue'
 
+const {EMPTY_PUBLIC_KEY} = networkConfig
+
+const formLabels = {
+    [MULTISIG_FORM_MODES.CONVERSION]: {
+        approvalFieldName: 'min_approval',
+        approvalFieldDescription: 'Min_signatures_to_sign_a_transaction_or_to_add_a_cosigner',
+        removalFieldName: 'min_removal',
+        removalFieldDescription: 'Min_signatures_required_to_remove_a_cosigner',
+    },
+    [MULTISIG_FORM_MODES.MODIFICATION]: {
+        approvalFieldName: 'min_approval_delta',
+        approvalFieldDescription: 'min_approval_delta_field_description',
+        removalFieldName: 'min_removal_delta',
+        removalFieldDescription: 'min_removal_delta_field_description',
+    },
+}
+
 @Component({
     components: {
         DisabledForms,
@@ -46,6 +63,7 @@ export class MultisigAccountModificationTs extends Vue {
     formItems = {...this.defaultFormItems}
     cosignerToAdd = ''
     cosignatoryModifications = new CosignatoryModifications([])
+    formLabels = formLabels
 
     @Prop() mode: string
 
@@ -58,7 +76,6 @@ export class MultisigAccountModificationTs extends Vue {
             ? cloneData(formDataConfig.multisigConversionForm)
             : cloneData(formDataConfig.multisigModificationForm)
     }
-
     get currentAccountMultisigInfo(): MultisigAccountInfo {
         const { address } = this.wallet
         return this.activeAccount.multisigAccountInfo[address]
@@ -215,40 +232,36 @@ export class MultisigAccountModificationTs extends Vue {
     }
 
     async addCosignerFromAddress(addOrRemove: AddOrRemove) {
-        try {
-            const address = Address.createFromRawAddress(this.cosignerToAdd)
-            this.$store.commit('SET_LOADING_OVERLAY', {
-                show: true,
-                message: `resolving address ${address.pretty()}...`
-            })
+        const address = Address.createFromRawAddress(this.cosignerToAdd)
+        this.$store.commit('SET_LOADING_OVERLAY', {
+            show: true,
+            message: `resolving address ${address.pretty()}...`
+        })
 
-            new AccountHttp(this.activeAccount.node)
-                .getAccountInfo(address)
-                .pipe(
-                    timeout(6000),
-                    finalize(() => {
-                        // @ts-ignore
-                        this.$Spin.hide()
-                        this.$store.commit('SET_LOADING_OVERLAY', {
-                            show: false,
-                            message: ''
-                        })
-                    }))
-                .subscribe(
-                    (accountInfo) => {
-                        this.addModification(accountInfo.publicAccount, addOrRemove)
-                    },
-                    (error) => {
+        new AccountHttp(this.activeAccount.node)
+            .getAccountInfo(address)
+            .pipe(
+                timeout(6000),
+                finalize(() => {
+                    // @ts-ignore
+                    this.$Spin.hide()
+                    this.$store.commit('SET_LOADING_OVERLAY', {
+                        show: false,
+                        message: ''
+                    })
+                }))
+            .subscribe(
+                (accountInfo) => {
+                    if (accountInfo.publicKey === EMPTY_PUBLIC_KEY) {
                         this.showErrorMessage(`${this.$t(Message.ADDRESS_UNKNOWN)}`)
-                        console.error("addCosigner -> error", error)
-                    },
-                )
-        } catch (error) {
-            console.error("getAddressPublicKey -> error", error)
-            // @ts-ignore
-            this.$Spin.hide()
-            this.$store.commit('SET_LOADING_OVERLAY', {show: false, message: ''})
-        }
+                        return
+                    }
+                    this.addModification(accountInfo.publicAccount, addOrRemove)
+                },
+                (error) => {
+                    this.showErrorMessage(`${this.$t(Message.ADDRESS_UNKNOWN)}`)
+                },
+            )
     }
 
     removeCosigner(index) {

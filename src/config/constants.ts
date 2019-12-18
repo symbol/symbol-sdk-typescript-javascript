@@ -3,8 +3,6 @@ import {DefaultFee, NetworkCurrency} from '@/core/model'
 
 export const WALLET_VERSION = '0.8.8-beta'
 
-export const isWindows = require('./packge.ts').isWin32
-
 export const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 //apiServer
 export const apiServerConfig = {
@@ -85,11 +83,10 @@ const defaultNetworkMosaic: NetworkCurrency = {
 }
 
 export const defaultNetworkConfig = {
-    gas2xemRate: 20000,   //  1xem=20000gas
     networkConfirmations: 10,
     defaultNetworkMosaic,
     DEFAULT_LOCK_AMOUNT: 10000000,
-    DEFAULT_NETWORK_TYPE: NetworkType.MIJIN_TEST
+    DEFAULT_NETWORK_TYPE: NetworkType.MIJIN_TEST,
 }
 
 export const networkConfig = {
@@ -102,7 +99,7 @@ export const networkConfig = {
     importanceActivityPercentage: 5,
     maxRollbackBlocks: 40,
     maxDifficultyBlocks: 60,
-    defaultDynamicFeeMultiplier: 10000,
+    defaultDynamicFeeMultiplier: 1000,
     maxMosaicAtomicUnits: 9000000000000000,
     totalChainImportance: 15,
     minHarvesterBalance: 500,
@@ -144,7 +141,7 @@ export const networkConfig = {
     namespaceListSize: 9,
     seedWalletMaxAmount: 10,
     testMnemonicString: 'this is a test string his is a test string this is',
-    EMPTY_LINKED_ACCOUNT_KEY: '0000000000000000000000000000000000000000000000000000000000000000',
+    EMPTY_PUBLIC_KEY: '0000000000000000000000000000000000000000000000000000000000000000',
     PUBLIC_KEY_LENGTH: 64,
     NAMESPACE_MAX_LENGTH: 64,
 }
@@ -154,16 +151,9 @@ export const NETWORK_CONSTANTS = {
     MAX_MESSAGE_LENGTH: networkConfig.maxMessageSize - 1,
     MAX_MOSAIC_DURATION: networkConfig.maxMosaicDuration * 24 * 60 * 60 / networkConfig.targetBlockTime,
     MAX_NAMESPACE_DURATION: networkConfig.maxNamespaceDuration * 24 * 60 * 60 / networkConfig.targetBlockTime,
-    // todo not sure about max value = 2101400 in validator
     MIN_NAMESPACE_DURATION: 30 * 24 * 60 * 60 / networkConfig.targetBlockTime,
     PRIVATE_KEY_LENGTH: 64,
-    NEMESIS_BLOCK_TIMESTAMP: 1459468800,
-}
-
-export const APP_PARAMS = {
-    MIN_PASSWORD_LENGTH: 8,
-    MAX_PASSWORD_LENGTH: 64,
-    MAX_LISTENER_RECONNECT_TRIES: 20,
+    NEMESIS_BLOCK_TIMESTAMP: 1573430400,
 }
 
 export const Message = {

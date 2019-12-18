@@ -10,7 +10,7 @@ import {TransferTransaction, Address, NamespaceId} from 'nem2-sdk'
 })
 export class TransactionInfoTemplateTs extends Vue {
     activeAccount: StoreAccount
-    unusedAttributesList = ['from', 'cosignatories', 'hash', 'fee', 'block', 'sender', 'transaction_type', 'self', 'aims', 'tag', 'mosaics', 'namespace']
+    unusedAttributesList = [ 'from', 'cosignatories', 'hash', 'fee', 'max_fee', 'block', 'sender', 'transaction_type', 'self', 'aims', 'tag', 'mosaics', 'namespace', 'root_namespace' ]
 
     getNamespaceNameFromNamespaceId = getNamespaceNameFromNamespaceId
     formatSenderOrRecipient = formatSenderOrRecipient

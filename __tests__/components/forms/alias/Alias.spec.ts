@@ -24,7 +24,7 @@ import {
     hdAccount,
     // @ts-ignore
 } from "@@/mock/conf/conf.spec"
-import {AppWallet, AppNamespace, BindTypes, CurrentAccount,} from "@/core/model"
+import {AppWallet, AppNamespace, BindTypes, CurrentAccount, NetworkProperties} from "@/core/model"
 import Vue from 'vue'
 
 // @ts-ignore
@@ -66,6 +66,10 @@ describe('Alias from namespace', () => {
                     }
                 }
             )
+
+            store.state.app.NetworkProperties = NetworkProperties.create(store)
+            store.state.app.NetworkProperties.height = 666
+
             wrapper = shallowMount(Alias, {
                 sync: false,
                 mocks: {

@@ -4,7 +4,7 @@ import {Component, Vue, Prop, Provide} from 'vue-property-decorator'
 import {mapState} from "vuex"
 import {of} from 'rxjs'
 import {pluck, concatMap} from 'rxjs/operators'
-import {AppAccounts, StoreAccount} from "@/core/model"
+import {AppAccounts, StoreAccount, AppInfo} from "@/core/model"
 import {copyTxt} from "@/core/utils"
 import {Message, fourStepsPictureList} from "@/config"
 import failureIcon from "@/common/img/monitor/failure.png"
@@ -16,6 +16,7 @@ import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue
     computed: {
         ...mapState({
             activeAccount: 'account',
+            app: 'app',
         })
     },
     components: {
@@ -36,6 +37,7 @@ import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue
 export class MnemonicDialogTs extends Vue {
     @Provide() validator: any = this.$validator
     activeAccount: StoreAccount
+    app: AppInfo
     MnemonicQR = MnemonicQR
     validation = validation
     copyTxt = copyTxt
@@ -64,7 +66,8 @@ export class MnemonicDialogTs extends Vue {
 
     get qrCodeArgs(): MnemonicQR {
         const {mnemonic, password} = this
-        const {generationHash, wallet} = this.activeAccount
+        const {wallet} = this.activeAccount
+        const {generationHash} = this.app.NetworkProperties
         const {networkType} = wallet
         if (password.length < 8) return null
         try {

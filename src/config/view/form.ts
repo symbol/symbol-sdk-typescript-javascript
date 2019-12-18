@@ -1,5 +1,5 @@
 import {NetworkType, MosaicSupplyChangeAction} from "nem2-sdk"
-import {FEE_SPEEDS} from '../constants'
+import {FEE_SPEEDS, NETWORK_CONSTANTS} from '../constants'
 
 export const formDataConfig = {
     settingPassword: {
@@ -91,7 +91,7 @@ export const formDataConfig = {
         feeSpeed: FEE_SPEEDS.NORMAL,
     },
     rootNamespaceForm: {
-        duration: 1000000,
+        duration: NETWORK_CONSTANTS.MAX_NAMESPACE_DURATION,
         rootNamespaceName: '',
         multisigPublicKey: '',
         feeSpeed: FEE_SPEEDS.NORMAL,

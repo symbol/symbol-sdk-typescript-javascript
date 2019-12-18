@@ -104,7 +104,7 @@
               <span class="title_txt">{{$t('nodes')}}</span>
             </div>
             <img src="@/common/img/monitor/network.png"/>
-            <span class="txt_info"><numberGrow :value="chainStatus.nodeNumber"></numberGrow></span>
+            <span class="txt_info"><numberGrow :value="NetworkProperties.nodeNumber"></numberGrow></span>
           </div>
           <div class="block_height radius">
             <div class="title">
@@ -121,16 +121,16 @@
             </div>
             <img src="@/common/img/windowDashboardActive.png"/>
             <span class="txt_info">
-            <numberGrow :value="chainStatus.numTransactions"></numberGrow>
+            <numberGrow :value="NetworkProperties.numTransactions"></numberGrow>
           </span>
           </div>
           <div class="block_time radius">
             <div class="title">
-              <span class="title_txt">{{$t('time')}} <span  class="title_txt">{{chainStatus.getTimeFromBlockNumber(chainStatus.currentHeight)}}</span></span>
+              <span class="title_txt">{{$t('time')}} <span  class="title_txt">{{NetworkProperties.getTimeFromBlockNumber(NetworkProperties.height)}}</span></span>
             </div>
             <img src="@/common/img/monitor/amount.png"/>
             <span class="txt_info">
-            <numberGrow :value="chainStatus.targetBlockTime"></numberGrow>
+            <numberGrow :value="NetworkProperties.targetBlockTime"></numberGrow>
           </span>
           </div>
         </div>

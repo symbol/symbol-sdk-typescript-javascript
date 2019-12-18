@@ -140,7 +140,7 @@ export class TransferTs extends Vue {
     }
 
     get currentHeight() {
-        return this.app.chainStatus.currentHeight
+        return this.app.NetworkProperties.height
     }
 
     get currentAccount() {

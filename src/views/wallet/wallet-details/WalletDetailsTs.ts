@@ -2,7 +2,6 @@ import {copyTxt} from '@/core/utils'
 import {ContactQR} from 'nem2-qr-library'
 import {AliasType, MultisigAccountInfo, PublicAccount} from 'nem2-sdk'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import AddressBook from '@/views/wallet/wallet-details/wallet-function/address-book/AddressBook.vue'
 import KeystoreDialog from '@/views/wallet/wallet-details/keystore-dialog/KeystoreDialog.vue'
 import PrivatekeyDialog from '@/views/wallet/wallet-details/privatekey-dialog/PrivatekeyDialog.vue'
 import WalletHarvesting from '@/views/wallet/wallet-details/wallet-function/wallet-harvesting/WalletHarvesting.vue'
@@ -20,7 +19,6 @@ import TheWalletDelete from '@/views/wallet/wallet-switch/the-wallet-delete/TheW
         Alias,
         PrivatekeyDialog,
         KeystoreDialog,
-        AddressBook,
         WalletHarvesting,
         TheWalletUpdate,
         TheWalletDelete
@@ -72,20 +70,12 @@ export class WalletDetailsTs extends Vue {
         return this.activeAccount.wallet ? this.activeAccount.wallet.address : false
     }
 
-    get generationHash() {
-        return false
-    }
-
-    get currentHeight() {
-        return this.app.chainStatus.currentHeight
-    }
-
     get NamespaceList() {
         return this.activeAccount.namespaces
     }
 
-    get importance() {
-        return this.activeAccount.wallet.importance ? this.activeAccount.wallet.importance + '0' : 0
+    get importance(): string {
+        return this.activeAccount.wallet.importance ? this.activeAccount.wallet.importance + '0' : '0'
     }
 
     get selfAliases(): AppNamespace[] {
@@ -106,7 +96,7 @@ export class WalletDetailsTs extends Vue {
                 this.wallet.name,
                 publicAccount,
                 this.wallet.networkType,
-                this.activeAccount.generationHash,
+                this.app.NetworkProperties.generationHash,
             )
         } catch (error) {
             return null

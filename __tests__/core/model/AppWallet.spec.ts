@@ -31,7 +31,7 @@ localVue.directive('focus', {
     }
 })
 import {Message} from '@/config'
-import {Log, Notice, NoticeType} from '@/core/model'
+import {Log, Notice, NoticeType, NetworkProperties} from '@/core/model'
 jest.mock('@/core/model/Log')
 jest.mock('@/core/model/Notice')
 
@@ -44,11 +44,13 @@ describe('AppWallet', () => {
         store = store = new Vuex.Store({
             modules: {
                 account: {
-                    state: Object.assign(accountState.state, {
-                        wallet: CosignWallet,
-                        mosaics,
-                        multisigAccountInfo,
-                    }),
+                    state: {
+                        ...Object.assign(accountState.state, {
+                          wallet: CosignWallet,
+                          mosaics,
+                          multisigAccountInfo,
+                        }),
+                      },
                     mutations: accountMutations.mutations
                 },
                 app: {
@@ -57,6 +59,8 @@ describe('AppWallet', () => {
                 }
             }
         })
+
+        store.state.app.NetworkProperties = NetworkProperties.create(store)
     })
 
     it('AppWallet should instantiate properly hdWallet object from localStorage ', () => {
@@ -402,9 +406,12 @@ describe('invalid transactions announces', () => {
     const appWallet = new AppWallet(hdAccount.wallets[0])
 
     const store = {
-        state: {account: {node: 'http://localhost:3000'}},
+        state: {account: {node: 'http://localhost:3000'}, app: {}},
         commit: mockCommit,
     }
+
+    // @ts-ignore
+    store.state.app.NetworkProperties = NetworkProperties.create(store)
 
     it('announceCosignature', async (done) => {
         // @ts-ignore
@@ -487,7 +494,12 @@ describe('invalid transactions announces', () => {
 
 describe('getSignedLockAndAggregateTransaction', () => {
     const appWallet = new AppWallet(hdAccount.wallets[0])
-    const store = {state: {account: {networkCurrency, generationHash: hash}}}
+    const store = {state: {account: {networkCurrency, generationHash: hash}, app: {}}}
+
+    // @ts-ignore
+    store.state.app.NetworkProperties = NetworkProperties.create(store)
+    // @ts-ignore
+    store.state.app.NetworkProperties.generationHash = 'CAD57FEC0C7F2106AD8A6203DA67EE675A1A3C232C676945306448DF5B4124F8'
 
     const transaction = sdk.TransferTransaction.create(
         sdk.Deadline.create(),

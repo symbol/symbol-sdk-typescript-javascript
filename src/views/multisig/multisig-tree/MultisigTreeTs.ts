@@ -4,7 +4,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import {Message, MULTISIG_INFO} from "@/config/index.ts"
 import {StoreAccount, AppWallet} from "@/core/model"
 import {formatAddress} from "@/core/utils"
-import {getMultisigAccountMultisigAccountInfo} from '@/core/services'
+import {setMultisigAccountMultisigAccountInfo} from '@/core/services'
 
 @Component({
     computed: {
@@ -33,7 +33,7 @@ export class MultisigTreeTs extends Vue {
     treeClicked(nodeKey: any) {
         const [node] = nodeKey
         if (!node || !node.publicKey) return
-        getMultisigAccountMultisigAccountInfo(node.publicKey, this.$store)
+        setMultisigAccountMultisigAccountInfo(node.publicKey, this.$store)
     }
 
     get multisigTreeData() {

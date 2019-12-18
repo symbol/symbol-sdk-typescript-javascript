@@ -73,7 +73,7 @@ export class CreateSubNamespaceTs extends Vue {
     }
 
     get currentHeight(): number {
-        return this.app.chainStatus.currentHeight
+        return this.app.NetworkProperties.height
     }
 
     get networkCurrency() {

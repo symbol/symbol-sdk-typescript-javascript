@@ -31,7 +31,7 @@ import {Log} from './Log'
 import {Notice, NoticeType} from './Notice'
 
 const {DEFAULT_LOCK_AMOUNT} = defaultNetworkConfig
-const {EMPTY_LINKED_ACCOUNT_KEY} = networkConfig
+const {EMPTY_PUBLIC_KEY} = networkConfig
 
 export class AppWallet {
     constructor(wallet?: {
@@ -54,6 +54,7 @@ export class AppWallet {
     importance: number
     linkedAccountKey: string
     remoteAccount: RemoteAccount | null
+    numberOfMosaics: number
 
     createFromPrivateKey(name: string,
                          password: Password,
@@ -297,12 +298,13 @@ export class AppWallet {
 
     async setAccountInfo(store: Store<AppState>): Promise<void> {
         try {
-            const {EMPTY_LINKED_ACCOUNT_KEY} = networkConfig
+            const {EMPTY_PUBLIC_KEY} = networkConfig
             const accountInfo = await new AccountHttp(store.state.account.node)
                 .getAccountInfo(Address.createFromRawAddress(store.state.account.wallet.address))
                 .toPromise()
+            this.numberOfMosaics = accountInfo.mosaics ? accountInfo.mosaics.length : 0
             this.importance = accountInfo.importance.compact()
-            this.linkedAccountKey = accountInfo.linkedAccountKey === EMPTY_LINKED_ACCOUNT_KEY
+            this.linkedAccountKey = accountInfo.linkedAccountKey === EMPTY_PUBLIC_KEY
                 ? null : accountInfo.linkedAccountKey
             this.updateWallet(store)
         } catch (error) {
@@ -387,7 +389,7 @@ export class AppWallet {
     }
 
     isLinked(): boolean {
-        return this.linkedAccountKey && this.linkedAccountKey !== EMPTY_LINKED_ACCOUNT_KEY
+        return this.linkedAccountKey && this.linkedAccountKey !== EMPTY_PUBLIC_KEY
     }
 
     /**
@@ -480,7 +482,8 @@ export class AppWallet {
             signedLock: SignedTransaction,
         } {
         const account = this.getAccount(new Password(password))
-        const {networkCurrency, generationHash} = store.state.account
+        const {networkCurrency} = store.state.account
+        const {generationHash} = store.state.app.NetworkProperties
         const signedTransaction = account.sign(aggregateTransaction, generationHash)
 
         const hashLockTransaction = HashLockTransaction
