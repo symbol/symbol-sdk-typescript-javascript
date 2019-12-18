@@ -300,6 +300,8 @@ describe('SecretLockTransaction', () => {
         ).setMaxFee(2);
 ​
         expect(secretLockTransaction.maxFee.compact()).to.be.equal(420);
+        const signedTransaction = secretLockTransaction.signWith(account, generationHash);
+        expect(signedTransaction.hash).not.to.be.undefined;
     });
 
     it('Test resolveAlias can resolve', () => {
@@ -322,5 +324,8 @@ describe('SecretLockTransaction', () => {
         expect(secretLockTransaction.mosaic.id instanceof MosaicId).to.be.true;
         expect((secretLockTransaction.recipientAddress as Address).equals(account.address)).to.be.true;
         expect((secretLockTransaction.mosaic.id as MosaicId).equals(mosaicId)).to.be.true;
+
+        const signedTransaction = secretLockTransaction.signWith(account, generationHash);
+        expect(signedTransaction.hash).not.to.be.undefined;
     });
 });

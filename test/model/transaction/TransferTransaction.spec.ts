@@ -407,6 +407,9 @@ describe('TransferTransaction', () => {
         ).setMaxFee(2);
 ​
         expect(transferTransaction.maxFee.compact()).to.be.equal(378);
+
+        const signedTransaction = transferTransaction.signWith(account, generationHash);
+        expect(signedTransaction.hash).not.to.be.undefined;
     });
 
     it('Test resolveAlias can resolve', () => {
@@ -426,5 +429,8 @@ describe('TransferTransaction', () => {
         expect(transferTransaction.mosaics[0].id instanceof MosaicId).to.be.true;
         expect((transferTransaction.recipientAddress as Address).equals(account.address)).to.be.true;
         expect((transferTransaction.mosaics[0].id as MosaicId).equals(mosaicId)).to.be.true;
+
+        const signedTransaction = transferTransaction.signWith(account, generationHash);
+        expect(signedTransaction.hash).not.to.be.undefined;
     });
 });

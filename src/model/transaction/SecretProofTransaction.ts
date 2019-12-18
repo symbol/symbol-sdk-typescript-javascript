@@ -223,8 +223,8 @@ export class SecretProofTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): SecretProofTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return {...Object.getPrototypeOf(this),
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {
             recipientAddress: statement.resolveAddress(this.recipientAddress,
-                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex)};
+                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex)});
     }
 }

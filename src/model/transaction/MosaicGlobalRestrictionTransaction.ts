@@ -253,10 +253,10 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): MosaicGlobalRestrictionTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return {...Object.getPrototypeOf(this),
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {
             mosaicId: statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
                 transactionInfo.index, aggregateTransactionIndex),
             referenceMosaicId: statement.resolveMosaicId(this.referenceMosaicId, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex)};
+                transactionInfo.index, aggregateTransactionIndex)});
     }
 }

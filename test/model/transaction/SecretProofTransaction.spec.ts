@@ -257,6 +257,8 @@ describe('SecretProofTransaction', () => {
         ).setMaxFee(2);
 ​
         expect(secretProofTransaction.maxFee.compact()).to.be.equal(440);
+        const signedTransaction = secretProofTransaction.signWith(account, generationHash);
+        expect(signedTransaction.hash).not.to.be.undefined;
     });
 
     it('Test resolveAlias can resolve', () => {
@@ -276,5 +278,8 @@ describe('SecretProofTransaction', () => {
 ​
         expect(transferTransaction.recipientAddress instanceof Address).to.be.true;
         expect((transferTransaction.recipientAddress as Address).equals(account.address)).to.be.true;
+
+        const signedTransaction = transferTransaction.signWith(account, generationHash);
+        expect(signedTransaction.hash).not.to.be.undefined;
     });
 });

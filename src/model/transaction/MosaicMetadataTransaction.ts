@@ -219,8 +219,8 @@ export class MosaicMetadataTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): MosaicMetadataTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return {...Object.getPrototypeOf(this),
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {
             targetMosaicId: statement.resolveMosaicId(this.targetMosaicId, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex)};
+                transactionInfo.index, aggregateTransactionIndex)});
     }
 }
