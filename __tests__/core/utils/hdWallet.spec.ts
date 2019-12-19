@@ -1,7 +1,6 @@
 import * as hdWallet from '@/core/utils/hdWallet.ts'
 
-// @ts-ignore
-import {hdAccount, hdAccountData, hdAccountTestNet} from "@@/mock/conf/conf.spec"
+import {hdAccount, hdAccountData, hdAccountTestNet} from "@MOCKS/conf/conf"
 import {NetworkType, Address} from 'nem2-sdk'
 import {Network} from 'nem2-hd-wallets'
 

@@ -9,9 +9,8 @@ import moment from 'vue-moment'
 import {
     mosaics,
     CosignWallet,
-    // @ts-ignore
-} from "@@/mock/conf/conf.spec"
-import {appMutations, appState} from "@/store/app"
+} from "@MOCKS/index"
+import {appState} from "@/store/app"
 // @ts-ignore
 const localVue = createLocalVue()
 const router = new VueRouter()

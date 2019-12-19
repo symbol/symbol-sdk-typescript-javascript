@@ -20,8 +20,8 @@ import {
     multisigAccountInfo,
     mosaics,
     CosignWallet
-    // @ts-ignore
-} from "@@/mock/conf/conf.spec"
+} from "@MOCKS/index"
+
 import {AppNamespace, NetworkProperties} from "@/core/model"
 // @ts-ignore
 const localVue = createLocalVue()

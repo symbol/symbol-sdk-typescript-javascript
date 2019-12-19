@@ -11,8 +11,7 @@ import {veeValidateConfig} from "@/core/validation"
 import {
   hdAccount,
   hdAccountData
-  // @ts-ignore
-} from "@@/mock/conf/conf.spec"
+} from "@MOCKS/index"
 
 
 // @ts-ignore
@@ -40,7 +39,7 @@ describe('WalletSwitch', () => {
       modules: {
         account: {
           state: Object.assign(accountState.state, {
-            wallet: hdAccount.wallets[0],
+              wallet: hdAccount.wallets[0],
             accountName: hdAccount.accountName,
           }),
           mutations: accountMutations.mutations,

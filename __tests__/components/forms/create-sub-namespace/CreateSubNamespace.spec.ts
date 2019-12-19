@@ -19,13 +19,14 @@ import {
     multisigAccountInfo,
     mosaics,
     networkCurrency,
-    CosignWallet
-    // @ts-ignore
-} from "@@/mock/conf/conf.spec"
+    CosignWallet,
+    Multisig2Account,
+    MultisigAccount,
+} from "@MOCKS/index"
 import flushPromises from 'flush-promises'
 import {getAbsoluteMosaicAmount} from "@/core/utils"
 import {NetworkProperties} from '@/core/model'
-import {Multisig2Account, MultisigAccount} from "../../../mock/conf/conf.spec"
+
 // @ts-ignore
 const localVue = createLocalVue()
 const router = new VueRouter()

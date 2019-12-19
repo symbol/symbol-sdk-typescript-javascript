@@ -13,9 +13,7 @@ import {
     mosaics,
     networkCurrency,
     hdAccount,
-    // @ts-ignore
-} from "@@/mock/conf/conf.spec"
-
+} from "@MOCKS/index"
 
 // @ts-ignore
 const localVue = createLocalVue()

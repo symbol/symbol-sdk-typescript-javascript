@@ -1,10 +1,7 @@
 import {onLogin} from '@/core/services/eventHandlers/onLogin.ts'
 import {setWalletsBalances} from '@/core/services'
 import * as localStorage from '@/core/utils'
-import {
-  hdAccount,
-  // @ts-ignore
-} from '@@/mock/conf/conf.spec'
+import {hdAccount} from "@MOCKS/index"
 import {AppWallet, CurrentAccount} from '@/core/model'
 
 const mockCommit = jest.fn()
@@ -49,6 +46,7 @@ describe('onLogin', () => {
     onLogin('testWallet', store)
     // @ts-ignore
     expect(mockCommit.mock.calls[0][0]).toBe('SET_WALLET_LIST')
+    // @ts-ignore
     const hdAccountWallets = hdAccount.wallets.map(wallet => new AppWallet(wallet))
     expect(mockCommit.mock.calls[0][0]).toBe('SET_WALLET_LIST')
     expect(mockCommit.mock.calls[0][1]).toStrictEqual(hdAccountWallets)

@@ -15,8 +15,7 @@ import {
     networkCurrency,
     hdAccount,
     hdAccountData,
-    // @ts-ignore
-} from "@@/mock/conf/conf.spec"
+} from "@MOCKS/index"
 import flushPromises from 'flush-promises'
 import {NetworkProperties} from '@/core/model'
 

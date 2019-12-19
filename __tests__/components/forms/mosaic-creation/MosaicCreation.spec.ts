@@ -23,9 +23,8 @@ import {
     mosaics,
     MultisigAccount,
     Multisig2Account,
-    CosignWallet
-    // @ts-ignore
-} from "@@/mock/conf/conf.spec"
+    CosignWallet,
+} from "@MOCKS/index"
 // @ts-ignore
 const localVue = createLocalVue()
 const router = new VueRouter()

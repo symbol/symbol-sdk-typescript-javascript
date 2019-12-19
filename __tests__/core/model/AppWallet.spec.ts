@@ -17,8 +17,7 @@ import {
     CosignWallet,
     hdAccount,
     networkCurrency,
-    // @ts-ignore
-} from "@@/mock/conf/conf.spec"
+} from "@MOCKS/index"
 import Vue from 'vue'
 const localVue = createLocalVue()
 localVue.use(VueRouter)
@@ -65,6 +64,7 @@ describe('AppWallet', () => {
 
     it('AppWallet should instantiate properly hdWallet object from localStorage ', () => {
         const walletObject = hdAccount.wallets[0]
+        // @ts-ignore
         const appWallet = new AppWallet(walletObject)
         expect(appWallet.simpleWallet).toBe(walletObject.simpleWallet)
         expect(appWallet.name).toBe(walletObject.name)
@@ -78,6 +78,7 @@ describe('AppWallet', () => {
     })
 
     it('createAndStoreRemoteAccount should throw if the password provided is not correct', () => {
+        // @ts-ignore
         const appWallet = new AppWallet(hdAccount.wallets[0])
         expect(() => {
             appWallet.createAndStoreRemoteAccount('wrong password', '', store)
@@ -86,6 +87,7 @@ describe('AppWallet', () => {
 
     it('createAndStoreRemoteAccount should throw if the privateKey is invalid', () => {
         const invalidPrivateKey = '4546C6EC07DC5884AC2581063FBC3A7C970306EB3D234C65893CC7E3FE8A4062'
+        // @ts-ignore
         const appWallet = new AppWallet(hdAccount.wallets[0])
         expect(() => {
             appWallet.createAndStoreRemoteAccount('wrong password', invalidPrivateKey, store)
@@ -96,6 +98,7 @@ describe('AppWallet', () => {
         const privateKey = '4546C6EC07DC5884AC2581063FBC3A7C970306EB3D234C65893CC7E3FE8A4062'
         const address = 'SDO7L5Q4URACE732MCFC7XKKW3KKXCCLN73R2KJ5'
         const updateWalletMock = jest.fn()
+        // @ts-ignore
         const appWallet = new AppWallet(hdAccount.wallets[0])
         appWallet.updateWallet = updateWalletMock
 
@@ -111,6 +114,7 @@ describe('AppWallet', () => {
 
     it('createAndStoreRemoteAccount should create a RemoteAccount object when creating an account', () => {
         const updateWalletMock = jest.fn()
+        // @ts-ignore
         const appWallet = new AppWallet(hdAccount.wallets[0])
         appWallet.updateWallet = updateWalletMock
 
@@ -127,6 +131,7 @@ describe('AppWallet', () => {
         const privateKey = '4546C6EC07DC5884AC2581063FBC3A7C970306EB3D234C65893CC7E3FE8A4062'
         const publicKey = '7772FD51AB2B2182D37E5F05EDAAD5DD97DAC2870F9132350F7AF317460B9174'
         const updateWalletMock = jest.fn()
+        // @ts-ignore
         const appWallet = new AppWallet(hdAccount.wallets[0])
 
         appWallet.linkedAccountKey = publicKey
@@ -140,6 +145,7 @@ describe('AppWallet', () => {
     it('getRemoteAccountPrivateKey should return remote account private key', () => {
         const privateKey = '4546C6EC07DC5884AC2581063FBC3A7C970306EB3D234C65893CC7E3FE8A4062'
         const updateWalletMock = jest.fn()
+        // @ts-ignore
         const appWallet = new AppWallet(hdAccount.wallets[0])
         appWallet.updateWallet = updateWalletMock
 
@@ -151,6 +157,7 @@ describe('AppWallet', () => {
     it('getRemoteAccountPrivateKey should throw when provided a wrong password', () => {
         const privateKey = '4546C6EC07DC5884AC2581063FBC3A7C970306EB3D234C65893CC7E3FE8A4062'
         const updateWalletMock = jest.fn()
+        // @ts-ignore
         const appWallet = new AppWallet(hdAccount.wallets[0])
         appWallet.updateWallet = updateWalletMock
 
@@ -161,6 +168,7 @@ describe('AppWallet', () => {
     })
 
     it('getRemoteAccountPrivateKey should throw when wallet has no remoteAccount', () => {
+        // @ts-ignore
         const appWallet = new AppWallet(hdAccount.wallets[0])
         appWallet.remoteAccount = null
         expect(() => {
@@ -169,6 +177,7 @@ describe('AppWallet', () => {
     })
 
     it('gey publicAccount should return a public account', () => {
+        // @ts-ignore
         const appWallet = new AppWallet(hdAccount.wallets[0])
         expect(appWallet.publicAccount).toEqual(PublicAccount.createFromPublicKey(appWallet.publicKey, appWallet.networkType))
     })
@@ -180,6 +189,7 @@ const hash2 = '33BC60F52A98C0BF83F523E022BE58EEF7A674B89BC76BA6FCE4C499DF235058'
 const generationHash = '72B08ACF80558B285EADA206BB1226A44038C65AC4649108B2284591641657B5'
 
 describe('announceTransaction', () => {
+    // @ts-ignore
     const appWallet = new AppWallet(hdAccount.wallets[0])
 
     const store = 'mock store'
@@ -313,6 +323,7 @@ describe('valid transactions announces', () => {
         mockLogCreate.mockClear()
     })
 
+    // @ts-ignore
     const appWallet = new AppWallet(hdAccount.wallets[0])
     const cosignatureSignedTransaction = new sdk.CosignatureSignedTransaction(hash, '', publicKey)
     const signedTransaction = new sdk.SignedTransaction('signed tx', hash, publicKey, 1, sdk.NetworkType.TEST_NET)
@@ -403,6 +414,7 @@ describe('invalid transactions announces', () => {
         mockLogCreate.mockClear()
     })
 
+    // @ts-ignore
     const appWallet = new AppWallet(hdAccount.wallets[0])
 
     const store = {
@@ -493,6 +505,7 @@ describe('invalid transactions announces', () => {
 })
 
 describe('getSignedLockAndAggregateTransaction', () => {
+    // @ts-ignore
     const appWallet = new AppWallet(hdAccount.wallets[0])
     const store = {state: {account: {networkCurrency, generationHash: hash}, app: {}}}
 

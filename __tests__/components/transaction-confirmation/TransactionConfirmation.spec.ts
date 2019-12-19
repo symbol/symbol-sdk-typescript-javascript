@@ -17,8 +17,7 @@ import {
     mosaics,
     hdAccount,
     networkCurrency,
-    // @ts-ignore
-} from "@@/mock/conf/conf.spec"
+} from "@MOCKS/index"
 import {LockParams, Notice, NoticeType, SignTransaction, AppWallet, NetworkProperties} from '@/core/model'
 jest.mock('@/core/model/Notice')
 import Vue from 'vue'
@@ -60,7 +59,7 @@ describe('TransactionConfirmation when staged transaction isn\'t set', () => {
                         networkCurrency,
                         multisigAccountInfo,
                         currentAccount: {
-                            name: hdAccount.name,
+                            name: hdAccount.accountName,
                             password: hdAccount.password,
                             networkType: hdAccount.networkType,
                         }
@@ -194,6 +193,7 @@ describe('TransactionConfirmation when staged transaction is a lock', () => {
     let wrapper
     let state
 
+    // @ts-ignore
     const wallet = new AppWallet(hdAccount.wallets[0])
     const {publicKey, networkType} = wallet
 
@@ -278,8 +278,8 @@ describe('TransactionConfirmation when staged transaction is a cosignature', () 
     let wrapper
     let state
 
+        // @ts-ignore
     const wallet = new AppWallet(hdAccount.wallets[0])
-    const {publicKey, networkType} = wallet
 
     const aggregateTransaction = new AggregateTransaction(
         NetworkType.MIJIN_TEST,

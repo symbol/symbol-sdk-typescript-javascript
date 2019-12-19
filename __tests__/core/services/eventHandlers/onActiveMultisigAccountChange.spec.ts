@@ -1,8 +1,6 @@
 import {OnActiveMultisigAccountChange} from '@/core/services/eventHandlers/onActiveMultisigAccountChange.ts'
 import flushPromises from 'flush-promises'
-import { MultisigWallet,
-  // @ts-ignore
-} from '@@/mock/conf/conf.spec'
+import {MultisigWallet} from "@MOCKS/index"
 import {NetworkType} from 'nem2-sdk'
 
 jest.mock('@/core/services/multisig/methods')

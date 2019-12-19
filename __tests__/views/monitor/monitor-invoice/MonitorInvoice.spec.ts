@@ -16,9 +16,8 @@ import {
     mosaicsLoading,
     multisigAccountInfo,
     mosaics,
-    CosignWallet
-    // @ts-ignore
-} from "@@/mock/conf/conf.spec"
+    CosignWallet,
+} from "@MOCKS/index"
 import {NetworkProperties} from '@/core/model'
 // @ts-ignore
 const localVue = createLocalVue()

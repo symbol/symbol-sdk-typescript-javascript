@@ -10,9 +10,7 @@ import moment from 'vue-moment'
 import {
     mosaics,
     CosignWallet,
-    networkCurrency
-    // @ts-ignore
-} from "@@/mock/conf/conf.spec"
+} from "@MOCKS/conf/conf"
 
 const localVue = createLocalVue()
 const router = new VueRouter()

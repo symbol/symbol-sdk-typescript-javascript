@@ -18,8 +18,7 @@ import {
     hdAccount,
     networkCurrency,
     hdAccountData,
-    // @ts-ignore
-} from "@@/mock/conf/conf.spec"
+} from "@MOCKS/index"
 // @ts-ignore
 const localVue = createLocalVue()
 const router = new VueRouter()
@@ -50,7 +49,7 @@ describe('CheckPasswordDialog', () => {
                         networkCurrency,
                         multisigAccountInfo,
                         currentAccount: {
-                            name: hdAccount.name,
+                            name: hdAccount.accountName,
                             password: hdAccount.password,
                             networkType: hdAccount.networkType,
                         }

@@ -19,11 +19,11 @@ module.exports = {
     "^.+\\.ts$": "ts-jest",
   },
   transformIgnorePatterns: [
-    '<rootDir>/node_modules/'
+    '<rootDir>/node_modules/',
   ],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
-    "^@@/(.*)$": "<rootDir>/__tests__/$1",
+    "^@MOCKS/(.*)$": "<rootDir>/__mocks__/$1",
     "\\.(css|less)$": "identity-obj-proxy"
   },
   snapshotSerializers: [
@@ -50,6 +50,7 @@ module.exports = {
     "**/*.ts",
     "**/*.vue",
     "!**/node_modules/**",
+    "!**/__mocks__/**",
     "!**/*.png",
     "!**/*.d.ts",
     "!**/*.less",

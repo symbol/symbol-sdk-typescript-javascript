@@ -16,8 +16,7 @@ import {
     mosaics,
     hdAccount,
     hdAccountData,
-    // @ts-ignore
-} from "@@/mock/conf/conf.spec"
+} from "@MOCKS/index"
 import {AppWallet, CurrentAccount} from "@/core/model"
 import Vue from 'vue'
 // @ts-ignore
@@ -47,6 +46,7 @@ describe('SettingPassword', () => {
                         state: Object.assign(accountState.state, {
                             mosaics,
                             multisigAccountInfo,
+                            // @ts-ignore
                             wallet: new AppWallet(hdAccount.wallets[0]),
                             currentAccount: new CurrentAccount(hdAccount.accountName, hdAccount.password, hdAccount.networkType),
                         }),

@@ -9,29 +9,12 @@ import {accountMutations, accountState} from '@/store/account'
 import {appMutations, appState} from '@/store/app'
 import {veeValidateConfig} from "@/core/validation"
 import VueRx from "vue-rx"
-import {FEE_SPEEDS} from "@/config"
-import flushPromises from 'flush-promises'
 import {
-    Address, Deadline,
-    Mosaic,
-    AggregateTransaction,
-    MosaicId,
-    NetworkType,
-    TransactionType,
-    TransferTransaction,
-    UInt64
-} from "nem2-sdk"
-import {
-    CosignAccount,
     mosaicsLoading,
     multisigAccountInfo,
     mosaics,
-    MultisigAccount,
-    Multisig2Account,
     CosignWallet
-    // @ts-ignore
-} from "@@/mock/conf/conf.spec"
-import {AppWallet} from "@/core/model"
+} from "@MOCKS/index"
 // @ts-ignore
 const localVue = createLocalVue()
 const router = new VueRouter()

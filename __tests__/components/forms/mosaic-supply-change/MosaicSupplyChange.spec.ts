@@ -19,8 +19,7 @@ import {
     multisigAccountInfo,
     mosaics,
     CosignWallet
-    // @ts-ignore
-} from "@@/mock/conf/conf.spec"
+} from "@MOCKS/index"
 import {AppMosaic} from "@/core/model"
 // @ts-ignore
 const localVue = createLocalVue()
@@ -69,6 +68,7 @@ describe('MosaicSupplyChange', () => {
             store,
             router,
             propsData: {
+                // @ts-ignore
                 itemMosaic: new AppMosaic(mosaics['308F144790CD7BC4']),
                 showMosaicEditDialog: true,
             }

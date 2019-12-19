@@ -1,8 +1,6 @@
 import {OnWalletChange} from '@/core/services/eventHandlers/onWalletChange.ts'
 import {localRead} from '@/core/utils'
-import { MultisigWallet, hdAccount,
-  // @ts-ignore
-} from '@@/mock/conf/conf.spec'
+import {MultisigWallet, hdAccount} from "@MOCKS/index"
 import flushPromises from 'flush-promises'
 import {setMosaics, setNamespaces, setTransactionList} from '@/core/services'
 import {Address} from 'nem2-sdk'
@@ -17,11 +15,15 @@ jest.mock('@/core/services/namespace/methods')
 jest.mock('@/core/services/transactions')
 jest.mock('@/core/utils')
 
+// @ts-ignore
 MultisigWallet.setAccountInfo = mockSetAccountInfo
+// @ts-ignore
 MultisigWallet.setMultisigStatus = mockSetMultisigStatus
 
 const hdWallet = hdAccount.wallets[0]
+// @ts-ignore
 hdWallet.setAccountInfo = mockSetAccountInfo
+// @ts-ignore
 hdWallet.setMultisigStatus = mockSetMultisigStatus
 
 const store = {

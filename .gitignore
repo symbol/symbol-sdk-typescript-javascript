@@ -13,3 +13,5 @@ coverage
 build
 __tests__/**/*.map
 __tests__/**/*.js
+__mocks__/**/*.map
+__mocks__/**/*.js

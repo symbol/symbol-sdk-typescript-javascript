@@ -23,11 +23,10 @@ import {
     multisigAccountInfo,
     mosaics,
     MultisigAccount,
-    CosignWallet
-    // @ts-ignore
-} from "@@/mock/conf/conf.spec"
+    CosignWallet,
+    Cosign2Account,
+} from "@MOCKS/index"
 import {MULTISIG_FORM_MODES, AddOrRemove, CosignatoryModifications} from "@/core/model"
-import {Cosign2Account} from "../../../mock/conf/conf.spec"
 import {of, throwError} from 'rxjs'
 import {tap, mapTo, map, catchError} from 'rxjs/operators'
 

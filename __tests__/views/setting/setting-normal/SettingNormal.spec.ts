@@ -11,10 +11,7 @@ import {veeValidateConfig} from "@/core/validation"
 import VueRx from "vue-rx"
 import flushPromises from 'flush-promises'
 import i18n from '@/language/index.ts'
-import {
-    hdAccount,
-    // @ts-ignore
-} from "@@/mock/conf/conf.spec"
+import {hdAccount} from "@MOCKS/index"
 import {AppWallet} from "@/core/model"
 import {localRead} from "@/core/utils"
 import {explorerLinkList} from "@/config"
@@ -38,6 +35,7 @@ describe('SettingNormal', () => {
                 modules: {
                     account: {
                         state: Object.assign(accountState.state, {
+                            // @ts-ignore
                             wallet: new AppWallet(hdAccount.wallets[0])
                         }),
                         mutations: accountMutations.mutations,

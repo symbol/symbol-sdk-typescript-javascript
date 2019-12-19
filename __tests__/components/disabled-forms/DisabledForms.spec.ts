@@ -17,8 +17,7 @@ import {
     CosignWallet,
     MultisigWallet,
     networkCurrency
-    // @ts-ignore
-} from "@@/mock/conf/conf.spec"
+} from "@MOCKS/index"
 // @ts-ignore
 const localVue = createLocalVue()
 const router = new VueRouter()

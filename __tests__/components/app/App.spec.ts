@@ -9,8 +9,7 @@ import {appMutations, appState, appActions} from '@/store/app'
 import {veeValidateConfig} from '@/core/validation'
 import VueRx from 'vue-rx'
 import {mosaicsLoading, multisigAccountInfo, mosaics, MultisigWallet,
-  // @ts-ignore
-} from '@@/mock/conf/conf.spec'
+} from '@MOCKS/index'
 import {NetworkProperties, NetworkManager, Listeners, Notice, NoticeType} from '@/core/model'
 import {setMarketOpeningPrice} from '@/core/services'
 
