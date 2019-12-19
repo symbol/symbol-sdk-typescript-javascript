@@ -32,6 +32,7 @@
     height: 100%;
 
     .split_page {
+      font-size: 16px;
       position: absolute;
       bottom: 0;
       left: 10px;
@@ -73,12 +74,13 @@
       font-size: 18px;
       font-weight: 400;
       color: rgba(102, 102, 102);
-      height: 23px;
+      line-height: 23px;
+      padding-top: 20px;
 
       .page_title {
-        font-size: 23px;
-        padding-bottom: 5px;
-        margin: 0 23px 5px 15px;
+        font-size: 20px;
+        // padding-bottom: 5px;
+        margin: 0 23px 0 15px;
         position: relative;
         //width: 140px;
 
@@ -87,7 +89,7 @@
           width: 16px;
           height: 16px;
           background: #20B5AC;
-          font-size: 12px;
+          font-size: 16px;
           font-weight: 400;
           color: white;
           text-align: center;
@@ -179,6 +181,7 @@
       }
 
       span {
+        font-size: 16px;
         color: #999999;
       }
 
@@ -294,9 +297,13 @@
             float: left;
             width: 350px;
             text-align: left;
-            padding-right: 37px;
+            padding-right: 30px;
+
 
             .item {
+              overflow: hidden;
+              text-overflow: ellipsis;
+
               position: relative;
               width: 100%;
               float: left;
@@ -329,7 +336,7 @@
           }
 
           span {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 400;
             color: rgba(34, 34, 34, 1);
             padding: 15px 0 15px;

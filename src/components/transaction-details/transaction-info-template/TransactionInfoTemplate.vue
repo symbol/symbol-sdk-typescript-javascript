@@ -37,6 +37,14 @@
               {{a.amount}}
             </div>
           </div>
+          <div v-if="t.message">
+            <span>{{$t('message')}}:</span>
+            {{t.message}}
+          </div>
+          <div v-else>
+            <span>{{$t('message')}}:</span>
+            -
+          </div>
         </div>
 
         <div v-if="t.cosignatories" class="asset-item">
@@ -87,7 +95,7 @@
 </template>
 
 <script lang="ts">
-import {TransactionInfoTemplateTs} from '@/components/transaction-details/transaction-info-template/TransactionInfoTemplateTs.ts';
+import { TransactionInfoTemplateTs } from "@/components/transaction-details/transaction-info-template/TransactionInfoTemplateTs.ts";
 import "./TransactionInfoTemplate.less";
 export default class TransactionInfoTemplate extends TransactionInfoTemplateTs {}
 </script>

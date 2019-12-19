@@ -8,7 +8,7 @@
     cursor: pointer;
 
     span {
-      font-size: 12px;
+      font-size: 16px;
       color: #7b7bc1;
       text-decoration: underline;
     }
@@ -37,7 +37,7 @@
   }
 
   input::placeholder {
-    font-size: 12px;
+    font-size: 16px !important;
     color: #999;
   }
 
@@ -47,11 +47,17 @@
     margin-top: 15px;
     width: 679px;
     height: 45px;
-
     border-radius: 4px;
     position: relative;
     display: flex;
     align-items: center;
+
+    .ivu-select {
+
+      .ivu-select-selected-value {
+        font-size: 16px !important;
+      }
+    }
 
     input {
       width: 650px;
@@ -101,6 +107,10 @@
       width: 550px;
       position: relative;
       right: 20px;
+
+      .ivu-input {
+        font-size: 16px;
+      }
     }
 
     .confirm-icon-button {

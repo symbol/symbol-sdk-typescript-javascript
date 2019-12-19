@@ -64,6 +64,11 @@ export class WalletDetailsTs extends Vue {
         if (!multisigAccountInfo) return false
         return multisigAccountInfo.cosignatories.length > 0
     }
+    get isCosignatory(){
+        const multisigAccountInfo: MultisigAccountInfo = this.activeAccount.multisigAccountInfo[this.wallet.address]
+        if (!multisigAccountInfo) return false
+        return multisigAccountInfo.multisigAccounts.length > 0
+    }
 
     // @TODO: false should not be an option, if false occurs, then it is a reactivity bug
     get getAddress(): string | false {

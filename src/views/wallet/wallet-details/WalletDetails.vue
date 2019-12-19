@@ -10,11 +10,11 @@
               <span class="tit">{{$t('Wallet_name')}}</span>
               <span class="walletName" v-if="wallet">{{wallet.name}}</span>
               <span class="edit-wallet-name" @click.stop="showUpdateDialog = true"><Icon
-                      type="md-create"/></span>
+                type="md-create"/></span>
             </p>
 
             <p>
-              <span class="tit">{{$t('privateKey')}}</span>
+              <span class="tit">{{$t('privatekey')}}</span>
               <span class="walletName" v-if="wallet">*******************************************************</span>
               <span class="edit-wallet-name" @click.stop="changePrivatekeyDialog">
                 <Icon type="md-eye"/>
@@ -22,10 +22,12 @@
             </p>
 
             <p>
-              <span class="tit">{{$t('Wallet_type')}}</span>
-              <span class="walletType" v-if="wallet">
-                {{isMultisig ? $t('Public_account'):$t('Private_account')}}
+              <span v-if="isMultisig||isCosignatory" class="tit">{{$t('Wallet_type')}}</span>
+              <span @click="$router.push('multisigManagement')" v-if="isMultisig||isCosignatory" class="walletType">
+                <Icon v-if="isMultisig" type="md-lock"/>
+                <Icon v-if="isCosignatory" type="md-contacts"/>
               </span>
+
               <span class="tit">{{$t('importance')}}</span>
               <span v-if="wallet">
                 <span v-if="importance != 0">
@@ -46,7 +48,7 @@
               <span class="tit">{{$t('Wallet_public_key')}}</span>
               <span class="walletPublicKey">{{wallet.publicKey}}</span>
               <i class="copyIcon" @click="copy(wallet.publicKey)"><img
-                      src="@/common/img/wallet/copyIcon.png"></i>
+                src="@/common/img/wallet/copyIcon.png"></i>
             </p>
 
             <p class="link_text">
@@ -74,23 +76,6 @@
         </Col>
       </Row>
     </div>
-    <!--    <div class="fnAndBackup radius">-->
-    <!--      <h6>{{$t('Function_and_backup')}}</h6>-->
-    <!--      <div class="backupDiv clear">-->
-    <!--        <div class="Mnemonic pointer left" @click="changeMnemonicDialog">-->
-    <!--          <i><img src="@/common/img/wallet/auxiliaries.png"></i>-->
-    <!--          <span>{{$t('Export_mnemonic')}}</span>-->
-    <!--        </div>-->
-    <!--        <div class="privateKey pointer left" @click="changePrivatekeyDialog">-->
-    <!--          <i><img src="@/common/img/wallet/privatekey.png"></i>-->
-    <!--          <span>{{$t('Export_private_key')}}</span>-->
-    <!--        </div>-->
-    <!--        <div class="Keystore pointer left" @click="changeKeystoreDialog">-->
-    <!--          <i><img src="@/common/img/wallet/keystore.png"></i>-->
-    <!--          <span>{{$t('Export_Keystore')}}</span>-->
-    <!--        </div>-->
-    <!--      </div>-->
-    <!--    </div>-->
     <div class="accountFn radius" ref="accountFn">
       <div class="accountFnNav">
         <ul class="navList clear">
@@ -111,27 +96,27 @@
       <WalletHarvesting v-if="functionShowList[1]"></WalletHarvesting>
     </div>
     <PrivatekeyDialog
-            v-if="showPrivatekeyDialog"
-            :showPrivatekeyDialog="showPrivatekeyDialog"
-            @closePrivatekeyDialog="showPrivatekeyDialog=false"></PrivatekeyDialog>
+      v-if="showPrivatekeyDialog"
+      :showPrivatekeyDialog="showPrivatekeyDialog"
+      @closePrivatekeyDialog="showPrivatekeyDialog=false"></PrivatekeyDialog>
     <KeystoreDialog
-            v-if="showKeystoreDialog"
-            :showKeystoreDialog="showKeystoreDialog"
-            @closeKeystoreDialog="showKeystoreDialog=false"></KeystoreDialog>
+      v-if="showKeystoreDialog"
+      :showKeystoreDialog="showKeystoreDialog"
+      @closeKeystoreDialog="showKeystoreDialog=false"></KeystoreDialog>
     <Alias
-            v-if="showBindDialog"
-            :visible='showBindDialog'
-            :bind="bind"
-            :fromNamespace="fromNamespace"
-            :mosaic="null"
-            :namespace="activeNamespace"
-            :address="getAddress"
-            @close="showBindDialog = false"></Alias>
+      v-if="showBindDialog"
+      :visible='showBindDialog'
+      :bind="bind"
+      :fromNamespace="fromNamespace"
+      :mosaic="null"
+      :namespace="activeNamespace"
+      :address="getAddress"
+      @close="showBindDialog = false"></Alias>
     <TheWalletUpdate
-            :showUpdateDialog="showUpdateDialog"
-            :walletToUpdate="wallet"
-            @closeUpdateDialog="showUpdateDialog = false"
-            @on-cancel="showUpdateDialog = false"
+      :showUpdateDialog="showUpdateDialog"
+      :walletToUpdate="wallet"
+      @closeUpdateDialog="showUpdateDialog = false"
+      @on-cancel="showUpdateDialog = false"
     ></TheWalletUpdate>
 
   </div>
