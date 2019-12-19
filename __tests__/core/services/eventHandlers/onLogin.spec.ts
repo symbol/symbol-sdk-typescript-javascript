@@ -1,4 +1,5 @@
 import {onLogin} from '@/core/services/eventHandlers/onLogin.ts'
+import {setWalletsBalances} from '@/core/services'
 import * as localStorage from '@/core/utils'
 import {
   hdAccount,
@@ -11,8 +12,8 @@ const store = {
   commit: mockCommit,
 }
 
-
 jest.mock('@/core/utils')
+jest.mock('@/core/services/')
 
 describe('onLogin', () => {
   it('should throw when no data found in localStorage', () => {
@@ -57,5 +58,6 @@ describe('onLogin', () => {
     expect(mockCommit.mock.calls[2][1]).toStrictEqual(new CurrentAccount(
       'testWallet', hdAccount.password, hdAccount.networkType,
     ))
+    expect(setWalletsBalances).toHaveBeenCalledTimes(1)
   })
 })

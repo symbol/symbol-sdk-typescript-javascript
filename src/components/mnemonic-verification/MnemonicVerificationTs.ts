@@ -7,38 +7,35 @@ import draggable from "vuedraggable";
     components:{draggable}
 })
 export class MnemonicVerificationTs extends Vue {
-
-    confirmedMnemonicList = []
     mnemonicRandomList = []
     confirmedIndexList = []
 
     @Prop({default: []})
     mnemonicWordsList: Array<string>
 
-    verificationSuccess() {
-        if (this.checkMnemonic())
-            this.$emit('verificationSuccess')
-    }
+    wordClicked(index) {
+        if (this.confirmedIndexList.includes(index)) {
+            this.removeConfirmedWord(index)
+            return
+        }
 
-    toPreviousPage() {
-        this.$emit('toPreviousPage')
+        this.confirmedIndexList.push(index)
     }
 
     removeConfirmedWord(index) {
-        const removeWord = this.confirmedMnemonicList.splice(index, 1)[0]
-        const mnemonicRandomIndex = this.mnemonicRandomList.findIndex(item=>removeWord== item)
-        this.confirmedIndexList[mnemonicRandomIndex] = !this.confirmedIndexList[mnemonicRandomIndex]
+        this.confirmedIndexList = [
+            ...this.confirmedIndexList.filter(confirmedIndex => confirmedIndex !== index),
+        ]
     }
 
-    sureWord(index) {
-        const word = this.mnemonicRandomList[index]
-        if (this.confirmedIndexList[index]) {
-            const flagIndex = this.confirmedMnemonicList.findIndex(item => word == item)
-            this.removeConfirmedWord(flagIndex)
-            return
-        }
-        this.confirmedIndexList[index] = !this.confirmedIndexList[index]
-        this.confirmedMnemonicList.push(word)
+    get confirmedMnemonicList() {
+        const {confirmedIndexList, mnemonicRandomList} = this
+        if(confirmedIndexList.length !== confirmedIndexList.length) return
+        return confirmedIndexList.map(confirmedIndex => mnemonicRandomList[confirmedIndex])
+    }
+
+    set confirmedMnemonicList(newValue) {
+        this.confirmedMnemonicList = [...newValue]
     }
 
     checkMnemonic() {
@@ -49,10 +46,10 @@ export class MnemonicVerificationTs extends Vue {
                     Message.PLEASE_ENTER_MNEMONIC_INFO :
                     Message.MNEMONIC_INCONSISTENCY_ERROR))
             })
-            return false
+            return
         }
         this.$Notice.success({title: this.$t(Message.SUCCESS) + ''})
-        return true
+        this.$emit('verificationSuccess')
     }
 
     mounted() {

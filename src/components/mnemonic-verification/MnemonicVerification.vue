@@ -1,25 +1,29 @@
 <template>
-  <div class="mnemonic_container"  @keyup.enter="verificationSuccess">
+  <div class="mnemonic_container"  @keyup.enter="checkMnemonic()">
     <div class="mnemonicWordDiv clear scroll">
-        <draggable v-model="confirmedMnemonicList" @end="drag=false" ghost-class="ghost">
-          <transition-group>
-            <span v-for="(c,index) in confirmedMnemonicList" :key="c" >
-              <Tag closable @on-close="removeConfirmedWord(index)">{{c}}</Tag>
-            </span>
-          </transition-group>
+        <draggable v-model="confirmedIndexList" @end="drag=false" ghost-class="ghost">
+          <span v-for="(confirmedIndex, index) in confirmedIndexList" :key="index">
+            <Tag closable @on-close="removeConfirmedWord(confirmedIndex)">
+              {{mnemonicRandomList[confirmedIndex]}}
+            </Tag>
+          </span>
         </draggable>
     </div>
     <div class="wordDiv clear">
           <span v-for="(item,index) in mnemonicRandomList"
-                :class="confirmedIndexList[index]?'confirmed_word':''"
+                :class="confirmedIndexList.includes(index)?'confirmed_word':''"
                 :key="index"
-                @click="sureWord(index)">
+                @click="wordClicked(index)">
             {{item}}
           </span>
     </div>
     <div class="buttons clear">
-      <Button class="prev left" type="default" @click="toPreviousPage">{{$t('previous')}}</Button>
-      <Button class="next right" v-focus type="success" @click="verificationSuccess">{{$t('next')}}</Button>
+      <Button class="prev left" type="default" @click="$emit('toPreviousPage')">
+        {{$t('previous')}}
+      </Button>
+      <Button class="next right" v-focus type="success" @click="checkMnemonic()">
+        {{$t('next')}}
+      </Button>
     </div>
   </div>
 </template>

@@ -1,6 +1,7 @@
 import {Store} from 'vuex'
 import {localRead, localSave} from '@/core/utils'
 import {AppState, AppWallet, CurrentAccount} from '@/core/model'
+import {setWalletsBalances} from '@/core/services'
 
 // @TODO: Most of the methods here should be implemented in AppAccount and AppWallet
 
@@ -45,4 +46,5 @@ const setValuesInLocalStorage = (accountName: string, store: Store<AppState>) =>
 export const onLogin = (accountName: string, store: Store<AppState>) => {
   persistAccountName(accountName)
   setValuesInLocalStorage(accountName, store)
+  setWalletsBalances(store)
 }

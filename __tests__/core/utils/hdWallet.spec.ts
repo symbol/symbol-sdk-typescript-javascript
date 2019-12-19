@@ -96,32 +96,32 @@ describe('getTenAddressesFromMnemonic', () => {
   it('should return 10 proper addresses for a TEST_NET account', () => {
     expect(hdWallet.getTenAddressesFromMnemonic(hdAccountData.mnemonic, hdAccount.networkType))
       .toEqual([
-        Address.createFromRawAddress('SBEYUNT2UUBIYNYN4R43JL4CVJP4MD7YECJOKBC4'),
-        Address.createFromRawAddress('SDLMJUJRUBX2D55PNZF53HKNYK34PPSQLOC7TN65'),
-        Address.createFromRawAddress('SDYEFYSEPRJMDMNCSHNK73FF5AO6PHGEJVPBHDHZ'),
-        Address.createFromRawAddress('SBMMMSA2S5BF75G2V2IUHXJCPDPIAGCLXCJ5TTGF'),
-        Address.createFromRawAddress('SBURXG7XWQEWYZCPDGYRXKZAXNOFWPMO5BFM2RW5'),
-        Address.createFromRawAddress('SANLUNBO44GBILU7HH2572JDORQ5KKQGPPXF6VUH'),
-        Address.createFromRawAddress('SC2YVGWUGBJM3Y2CT75GRSLQPGOTYIIZYVEUYNE2'),
-        Address.createFromRawAddress('SA2QRUVBBXYA7Y77YRD6XOF2R33EKRO57IJXANYO'),
-        Address.createFromRawAddress('SADZE24RNZVWP5KOVO5X5KXAW2O4K3C3WLV6BF4I'),
-        Address.createFromRawAddress('SCZBMP63WYMB6KXFQ5ERRXHYKUFH5BAOWX6C7HRD'),
+        Address.createFromRawAddress('SAJFKFAHB4UNEK4LJM76C7L5YMBSB74AKMSAXJJ7'),
+        Address.createFromRawAddress('SCSAG54ILQGI3FYF66LQYXF4GLGZSKQD4MNAL7LD'),
+        Address.createFromRawAddress('SDSHGSEXS2G2YCVJIUBZFWX2RJ6QMBEUZQJAVQXD'),
+        Address.createFromRawAddress('SB5YAT47PX7S7NTDVZGH6DOWPCU6CSRQNSOATHOL'),
+        Address.createFromRawAddress('SA26GLXILCYZP2ROF5GJBTQEGYRHXLH6MKYMGBVM'),
+        Address.createFromRawAddress('SC6VUM5MDFE3VIRNYE5SF4HUW4CQGVAEC7TJXVTW'),
+        Address.createFromRawAddress('SD5X3IEOITG6ACARHNK5FCPO3OKEW35LX2GN63MO'),
+        Address.createFromRawAddress('SDDSZNKC5NSRUA7YHGNFGFSQOJ3IGV7XEHOB2IDF'),
+        Address.createFromRawAddress('SBR25YXDXJXYER4C6VUNCGTJ4FXNFIIXY3G42P46'),
+        Address.createFromRawAddress('SCIUGE27NJLXC3OJS54WICKHCACNLYKQCYLHP5TU'),
       ])
   })
 
   it('should return 10 proper addresses for a MIJIN_TEST account', () => {
     expect(hdWallet.getTenAddressesFromMnemonic(hdAccountData.mnemonic, hdAccountTestNet.networkType))
       .toEqual([
-        Address.createFromRawAddress('TCCKTZH5N4S23F25AKZHCCX3KHXKNHNLNMPTPP4T'),
-        Address.createFromRawAddress('TAJPOQOKNAFFPBTOH5NC56747AX2PJ4RCTOVVBZ2'),
-        Address.createFromRawAddress('TAYZHEPO6D4H65FITFWQJ37KCYNU44ZXAYJCFVHW'),
-        Address.createFromRawAddress('TAYOVWWMGTKMWP7SKYBWKPIZZIZDJ3LHBRBLXWH3'),
-        Address.createFromRawAddress('TCWXK7R6OEI3QKAMD7RRSA353DOECD3HXLOC4R35'),
-        Address.createFromRawAddress('TD2WBCWVVA4OXZU63JRYLS64IOHIGG4CVXP4URMM'),
-        Address.createFromRawAddress('TDRVI5TV3CXSIT7GC2OGINNFLNPH6FGBZLZTFJ5Q'),
-        Address.createFromRawAddress('TDVEKBKVTFJPWOMG5HOWS6CWULM6DH3R572UZNJA'),
-        Address.createFromRawAddress('TCSLZSX26RDB3QPZSUFPPZTRMZPAKBWCNCMNIE7X'),
-        Address.createFromRawAddress('TAP4TGOH7MT6ADJMHG3BEXK56BRNVOJ74Q42SC5U'),
+        Address.createFromRawAddress('TDI5MK645MRVXGEZF52J5OW25DCPNHXVQ5FEMLFR'),
+        Address.createFromRawAddress('TA77TDXXSBEHTY72FPTFYNJGGUONJ2NT467YVE34'),
+        Address.createFromRawAddress('TBV45KMJKBMIBMOSZ435FULAIC5HE7WFUJPJFRML'),
+        Address.createFromRawAddress('TDJXJIDKOLX3WNI4EEGB54GLNB6BKJXTYTS5W76Y'),
+        Address.createFromRawAddress('TCUKSN253F4OWYPDVZDCKIZN3ZHYIS4ZIN6ANHVW'),
+        Address.createFromRawAddress('TB32PN7OACR35V7B6URPL7RY2FBKV5T3AG532O4E'),
+        Address.createFromRawAddress('TB2JBDAG6KBMDDGECVASHGUONDA6XIU5CUF5WHUA'),
+        Address.createFromRawAddress('TAPY4HAURO4SQMCZ5QPJPWAI5EVTIWMVJPRYK5M6'),
+        Address.createFromRawAddress('TBT3M23LBTT5WFE75VLDLV2ALY3MGWKBMS7GDLUK'),
+        Address.createFromRawAddress('TCYHXYZKBUVHK52L5N4D4F7PRHGBWGEGQ7EU2G3B'),
       ])
   })
 })
