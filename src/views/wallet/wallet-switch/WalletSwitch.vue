@@ -2,16 +2,14 @@
   <div class="walletSwitchWrap">
     <div class="walletSwitchHead">
       <p class="tit">{{$t('Wallet_management')}}</p>
-      <p class="back-up pointer" @click="showMnemonicDialog=true">{{$t('backup_mnemonic')}}</p>
+      <p class="back-up pointer" @click="changeMnemonicDialog">{{$t('backup_mnemonic')}}</p>
     </div>
 
     <div class="walletList scroll" ref="walletScroll">
       <div class="wallet_scroll_item" v-for="(item, index) in walletList" :key="index">
-        <div
-                :class="['walletItem', getWalletStyle(item), 'radius']"
+        <div :class="['walletItem', getWalletStyle(item), 'radius']"
                 @click="switchWallet(item.address)"
-                ref="walletsDiv"
-        >
+                ref="walletsDiv" >
           <Row>
             <Col span="15">
               <div>
@@ -31,7 +29,7 @@
                     <Icon type="logo-buffer"/>
                     <span>{{ item.numberOfMosaics  ? formatNumber(item.numberOfMosaics ) : 0 }}</span>
                   </span>
-                  <span @click="showDeleteDialog=true" class="delete">
+                  <span @click="deleteWallet(item)" class="delete">
                     <Icon type="md-trash"/>
                   </span>
                 </div>
@@ -60,12 +58,12 @@
             @close="showCheckPWDialog = false"
             @passwordValidated="passwordValidated"></CheckPasswordDialog>
 
-    <MnemonicDialog v-if="showMnemonicDialog"
-                    :showMnemonicDialog="showMnemonicDialog"
-                    @closeMnemonicDialog="showMnemonicDialog = false"></MnemonicDialog>
+    <MnemonicDialog v-if="isShowMnemonicDialog"
+                    :showMnemonicDialog="isShowMnemonicDialog"
+                    @closeMnemonicDialog="isShowMnemonicDialog = false"></MnemonicDialog>
     <TheWalletDelete
             :showCheckPWDialog="showDeleteDialog"
-            :wallet-to-delete="wallet"
+            :wallet-to-delete="walletToDelete"
             @closeCheckPWDialog="showDeleteDialog=false"
             @on-cancel="showDeleteDialog = false"></TheWalletDelete>
   </div>

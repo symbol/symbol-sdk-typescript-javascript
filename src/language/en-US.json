@@ -894,5 +894,6 @@
   "min_removal_delta_field_description": "Relative change of the number of required signatures to remove a cosigner.",
   "Rental_fee": "Rental fee",
   "estimate": "estimate",
-  "MaxFee": "Max Fee"
+  "MaxFee": "Max Fee",
+  "total_transactions": "Total transactions"
 }

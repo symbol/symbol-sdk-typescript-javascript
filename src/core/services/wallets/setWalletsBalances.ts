@@ -43,7 +43,9 @@ export const setWalletsBalances = async (store: Store<AppState>): Promise<void> 
         const appWalletsWithBalance = walletList
             .map(wallet => {
                 const balanceFromAccountInfo = balances.find(({address}) => wallet.address === address)
-                if (balanceFromAccountInfo === undefined) return {...wallet, balance: 0, numberOfMosaics : 0}
+                if (balanceFromAccountInfo === undefined) {                    
+                    return {...wallet, balance: 0, numberOfMosaics : 0}
+                }
                 return {
                     ...wallet,
                     balance: balanceFromAccountInfo.balance,

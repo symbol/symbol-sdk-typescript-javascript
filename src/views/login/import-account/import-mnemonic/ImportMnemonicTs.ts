@@ -60,7 +60,6 @@ export default class ImportMnemonicTs extends Vue {
             this.$router.push('walletChoose')
         } catch (error) {
             this.$Notice.error({title: 'Creation failed'})
-            console.log(error)
             throw new Error(error)
         }
     }

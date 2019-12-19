@@ -1,11 +1,11 @@
 <template>
   <div class="delete_wallet_container" @keyup.enter="submit">
     <Modal
-            v-model="show"
+            v-model="visible"
             class-name="vertical-center-modal"
             :footer-hide="true"
             :transfer="false"
-            @on-cancel="checkPasswordDialogCancel"
+            @on-cancel="visible=false"
     >
       <div slot="header" class="checkPWDialogHeader">
         <span class="title">{{$t('delete_wallet')}} : {{walletToDelete.name}}</span>
@@ -20,7 +20,7 @@
             {{$t('this_account_will_be_logged_out_after_the_wallet_is_successfully_deleted')}}</p>
           <Form :model="confirmation">
             <FormItem>
-              <Input v-model.lazy="confirmation.value"
+              <Input v-model.lazy="password"
                      :autofocus="true"
                      type="password" required
                      :placeholder="$t(confirmationPrompt)"></Input>

@@ -1,5 +1,5 @@
 import {Message} from "@/config/index.ts"
-import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapState} from 'vuex'
 import {AppAccounts, AppWallet, StoreAccount} from "@/core/model"
 
@@ -10,18 +10,21 @@ import {AppAccounts, AppWallet, StoreAccount} from "@/core/model"
 })
 export class TheWalletDeleteTs extends Vue {
     activeAccount: StoreAccount
-    stepIndex = 0
-    show = false
     app: any
-    confirmation = {
-        value: ''
-    }
+    password:string=''
 
     @Prop()
     showCheckPWDialog: boolean
 
     @Prop()
     walletToDelete: AppWallet
+
+  get visible(){
+      return this.showCheckPWDialog
+  }
+  set visible(value){
+    this.$emit('closeCheckPWDialog')
+  }
 
     get getWallet() {
         return this.activeAccount.wallet
@@ -48,10 +51,6 @@ export class TheWalletDeleteTs extends Vue {
         })
     }
 
-    checkPasswordDialogCancel() {
-        this.$emit('closeCheckPWDialog')
-    }
-
     deleteByPassword() {
         if(this.walletList.length == 1) {
            AppAccounts().deleteAccount(this.activeAccount.currentAccount.name)
@@ -59,15 +58,16 @@ export class TheWalletDeleteTs extends Vue {
             return
         }
         try {
-            const isPasswordCorrect = new AppWallet(this.walletToDelete).checkPassword(this.confirmation.value)
+            const isPasswordCorrect = new AppWallet(this.walletToDelete).checkPassword(this.password)
             if (isPasswordCorrect) {
                 new AppWallet(this.walletToDelete).delete(this.$store, this)
-                this.$emit('closeCheckPWDialog')
-            } else {
-                this.$Notice.error({
-                    title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
-                })
+                this.visible = false
+                return
             }
+              this.$Notice.error({
+                  title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
+              })
+
         } catch (error) {
             this.$Notice.error({
                 title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
@@ -77,15 +77,16 @@ export class TheWalletDeleteTs extends Vue {
 
     deleteByWalletNameConfirmation() {
         try {
-            const isWalletNameCorrect = this.confirmation.value === this.getWallet.name
+            const isWalletNameCorrect = this.password === this.getWallet.name
             if (isWalletNameCorrect) {
                 new AppWallet(this.walletToDelete).delete(this.$store, this)
-                this.$emit('closeCheckPWDialog')
-            } else {
+              this.visible = false
+              return
+            }
                 this.$Notice.error({
                     title: this.$t(Message.WRONG_WALLET_NAME_ERROR) + ''
                 })
-            }
+
         } catch (error) {
             this.$Notice.error({
                 title: this.$t(Message.WRONG_WALLET_NAME_ERROR) + ''
@@ -103,9 +104,4 @@ export class TheWalletDeleteTs extends Vue {
         }
     }
 
-    @Watch('showCheckPWDialog')
-    onShowCheckPWDialogChange() {
-        this.confirmation.value = ''
-        this.show = this.showCheckPWDialog
-    }
 }

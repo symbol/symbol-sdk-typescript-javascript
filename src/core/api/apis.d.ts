@@ -1,4 +1,3 @@
-import {VoteQuery} from "@/core/query/voteQuery"
 
 export declare namespace api {
     interface market {
@@ -48,42 +47,5 @@ export declare namespace api {
         }) => Promise<{
             rst: any;
         }>;
-    }
-
-    interface vote {
-        list: (params: {
-            limit: string,
-            offset: string,
-        }) => Promise<{
-            rst: any;
-        }>;
-        listData: (params: {
-            voteid: string,   // vote id
-            id?: string   // selection id
-        }) => Promise<{
-            rst: any;
-        }>;
-        saveVote: (params: {
-            vote: VoteQuery
-        }) => Promise<{
-            rst: any;
-        }>;
-        addVote: (params: {
-            address: string,
-            voteId: string,
-            voteDataIds: string[],
-        }) => Promise<{
-            rst: any;
-        }>;
-
-        userAlready: (params: {
-            limit: string,   //1
-            offset: string,    //0
-            address: string,
-            voteId?: string
-        }) => Promise<{
-            rst: any;
-        }>;
-
     }
 }

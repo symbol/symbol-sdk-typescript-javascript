@@ -9,7 +9,7 @@ import {
 import {nodeListConfig} from "@/config/view/node"
 
 const state: StoreAccount = {
-    node: nodeListConfig.find((node) => node.isSelected).value,
+    node: '',
     wallet: null,
     mosaics: {},
     namespaces: [],

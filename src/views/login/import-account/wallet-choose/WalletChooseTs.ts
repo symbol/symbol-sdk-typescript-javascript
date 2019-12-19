@@ -54,7 +54,6 @@ export default class WalletChooseTs extends Vue {
         const addressList = getTenAddressesFromMnemonic(this.seed, this.networkType)
 
         new AccountHttp(node).getAccountsInfo(addressList).subscribe(res => {
-            console.log(res)
             res.forEach(item => {
                 const defaultMosaic = item.mosaics.find(mosaic => mosaic.id.toHex() == networkCurrency.hex)
                 if (defaultMosaic) {

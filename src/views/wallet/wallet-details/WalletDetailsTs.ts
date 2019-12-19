@@ -113,17 +113,6 @@ export class WalletDetailsTs extends Vue {
         this.functionShowList[index] = true
     }
 
-    // @WALLETS refactor
-    changeMnemonicDialog() {
-        if (!this.wallet['encryptedMnemonic']) {
-            this.$Notice.warning({
-                title: this.$t('no_mnemonic') + ''
-            })
-            return
-        }
-        this.showMnemonicDialog = true
-    }
-
     closeMnemonicDialog() {
         this.showMnemonicDialog = false
     }

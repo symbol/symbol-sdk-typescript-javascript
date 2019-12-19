@@ -884,5 +884,6 @@
   "Access_My_Wallet": "Access My Wallet",
   "set_explorer_link": "Set explorer link",
   "please_set_correct_explorer_url_first": "请先设置explorer url",
-  "set_default_explorer": "输入的url不合法，已为您设置默认url"
+  "set_default_explorer": "输入的url不合法，已为您设置默认url",
+  "total_transactions": "交易数量"
 }

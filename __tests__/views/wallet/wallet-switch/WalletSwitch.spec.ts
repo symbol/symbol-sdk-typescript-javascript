@@ -86,4 +86,6 @@ describe('WalletSwitch', () => {
       const seedPathList4 = ['0', '1', '3']
       expect(wrapper.vm.getPathNumber(seedPathList4)).toBe(2)
     })
+
+  
 })

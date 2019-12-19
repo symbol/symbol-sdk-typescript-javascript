@@ -1,7 +1,7 @@
-import {TransactionType, NetworkType} from 'nem2-sdk'
+import {TransactionType, NetworkType, Deadline} from 'nem2-sdk'
 import {DefaultFee, NetworkCurrency} from '@/core/model'
 
-export const WALLET_VERSION = '0.8.8-beta'
+export const WALLET_VERSION = '0.8.9'
 
 export const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 //apiServer
@@ -153,7 +153,7 @@ export const NETWORK_CONSTANTS = {
     MAX_NAMESPACE_DURATION: networkConfig.maxNamespaceDuration * 24 * 60 * 60 / networkConfig.targetBlockTime,
     MIN_NAMESPACE_DURATION: 30 * 24 * 60 * 60 / networkConfig.targetBlockTime,
     PRIVATE_KEY_LENGTH: 64,
-    NEMESIS_BLOCK_TIMESTAMP: 1573430400,
+    NEMESIS_BLOCK_TIMESTAMP: Deadline.timestampNemesisBlock,
 }
 
 export const Message = {

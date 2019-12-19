@@ -1,0 +1,82 @@
+import {shallowMount, config, createLocalVue} from '@vue/test-utils'
+import VueRouter from 'vue-router'
+import iView from 'view-design'
+import Vuex from 'vuex'
+import VeeValidate from 'vee-validate'
+// @ts-ignore
+import TheWalletDelete from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDelete.vue'
+import {accountMutations, accountState} from '@/store/account'
+import {appMutations, appState} from '@/store/app'
+import {veeValidateConfig} from "@/core/validation"
+import {
+  hdAccount,
+  hdAccountData
+  // @ts-ignore
+} from "@@/mock/conf/conf.spec"
+
+
+// @ts-ignore
+const localVue = createLocalVue()
+const router = new VueRouter()
+localVue.use(VueRouter)
+localVue.use(iView)
+localVue.use(Vuex)
+localVue.use(VeeValidate, veeValidateConfig)
+localVue.directive('focus', {
+  inserted: function (el, binding) {
+    el.focus()
+  }
+})
+
+jest.mock('nem2-qr-library')
+// close warning
+config.logModifiedComponents = false
+
+describe('WalletSwitch', () => {
+  let store
+  let wrapper
+  beforeEach(() => {
+    store = store = new Vuex.Store({
+      modules: {
+        account: {
+          state: Object.assign(accountState.state, {
+            wallet: hdAccount.wallets[0],
+            accountName: hdAccount.accountName,
+          }),
+          mutations: accountMutations.mutations,
+        },
+        app: {
+          state: Object.assign(appState.state, {
+            walletList: hdAccount.wallets
+          }),
+          mutations: appMutations.mutations
+        },
+      }
+    })
+    wrapper = shallowMount(TheWalletDelete, {
+      sync: false,
+      mocks: {
+        $t: (msg) => msg,
+      },
+      propsData: {
+        showCheckPWDialog: true,
+        walletToDelete: hdAccount.wallets[0]
+      },
+      localVue,
+      store,
+      router,
+    })
+  })
+
+  it('Component TheWalletDelete should mount correctly ', () => {
+    expect(wrapper).not.toBeNull()
+  })
+  it('Component TheWalletDelete delete target wallet rightly ', () => {
+    wrapper.vm.password = hdAccountData.password
+    wrapper.vm.submit()
+    expect(wrapper.vm.$store.state.app.walletList.length).toBe(hdAccount.wallets.length-1)
+    expect(wrapper.vm.$store.state.app.walletList.find(item=>item.address == hdAccount.wallets[0].address)).toBeUndefined()
+  })
+
+
+})

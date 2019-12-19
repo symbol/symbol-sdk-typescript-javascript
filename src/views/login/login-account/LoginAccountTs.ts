@@ -1,5 +1,5 @@
 import {languageConfig, Message} from "@/config"
-import {AppAccount, AppAccounts, AppInfo, CurrentAccount, StoreAccount} from "@/core/model"
+import {AppAccount, AppAccounts, AppInfo, AppWallet, CurrentAccount, StoreAccount} from "@/core/model"
 import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
 import {localRead, getTopValueInObject, localSave} from '@/core/utils/utils'
 import {validation} from "@/core/validation"
@@ -27,7 +27,6 @@ export default class LoginAccountTs extends Vue {
     isShowHint = false
     hintText = ''
     onLogin = onLogin
-
     formItems = {
         currentAccountName: '',
         password: ''
@@ -104,6 +103,7 @@ export default class LoginAccountTs extends Vue {
     }
 
     login() {
+      localSave('activeAccountName',this.formItems.currentAccountName)
         if (this.noSeedAvailable()) {
             this.createNewAccount()
             return
@@ -129,6 +129,8 @@ export default class LoginAccountTs extends Vue {
     }
 
     goToDashBoard() {
+        const activeWalletAddress = this.accountMap[this.formItems.currentAccountName].activeWalletAddress
+        AppWallet.updateActiveWalletAddress(activeWalletAddress, this.$store)
         this.$router.push('monitorPanel')
     }
 

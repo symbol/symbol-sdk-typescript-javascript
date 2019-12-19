@@ -113,7 +113,7 @@
       </div>
 
       <div class="split_page">
-        <span>{{$t('total')}}：{{transactionList.length}} {{$t('data')}}</span>
+        <span>{{$t('total_transactions')}}：{{transactionList.length}}</span>
         <Page @on-change="changePage" :total="transactionList.length" class="page_content"/>
       </div>
     </div>

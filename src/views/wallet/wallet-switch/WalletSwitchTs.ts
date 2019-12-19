@@ -35,7 +35,8 @@ export class WalletSwitchTs extends Vue {
     pathToCreate = 0
     scroll: any
     formatNumber = formatNumber
-    showMnemonicDialog = false
+    isShowMnemonicDialog = false
+
     get walletList() {
         return this.app.walletList
     }
@@ -141,12 +142,29 @@ export class WalletSwitchTs extends Vue {
         this.$refs.walletScroll["scrollTop"] = this.$refs.walletsDiv[currentWalletIndex]['offsetTop'] - 180
     }
 
-    mounted() {
-        this.scrollToActiveWallet()
+
+    deleteWallet(walletToDelete) {
+        this.walletToDelete = walletToDelete
+        this.showDeleteDialog = true
+    }
+
+    // @WALLETS refactor
+    changeMnemonicDialog() {
+        if (!this.wallet.encryptedMnemonic) {
+            this.$Notice.warning({
+                title: this.$t('no_mnemonic') + ''
+            })
+            return
+        }
+        this.isShowMnemonicDialog = true
     }
 
     @Watch('activeAddress')
     onWalletChange() {
         this.scrollToActiveWallet()
     }
+    mounted() {
+      this.scrollToActiveWallet()
+    }
+
 }
