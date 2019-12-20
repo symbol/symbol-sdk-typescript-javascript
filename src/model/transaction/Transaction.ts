@@ -16,6 +16,8 @@
 
 import { KeyPair, SHA3Hasher, SignSchema } from '../../core/crypto';
 import { Convert } from '../../core/format';
+import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
+import { EmbeddedTransactionHelper } from '../../infrastructure/catbuffer/EmbeddedTransactionHelper';
 import { SerializeTransactionToJSON } from '../../infrastructure/transaction/SerializeTransactionToJSON';
 import { Account } from '../account/Account';
 import { PublicAccount } from '../account/PublicAccount';
@@ -184,7 +186,7 @@ export abstract class Transaction {
     /**
      * @internal
      */
-    protected abstract generateEmbeddedBytes(): Uint8Array;
+    public abstract toEmbeddedTransaction(): EmbeddedTransactionBuilder;
 
     /**
      * @internal
@@ -286,7 +288,9 @@ export abstract class Transaction {
      * @return transaction with signer serialized to be part of an aggregate transaction
      */
     public toAggregateTransactionBytes() {
-        return this.generateEmbeddedBytes();
+        return EmbeddedTransactionHelper.serialize(
+            this.toEmbeddedTransaction(),
+        );
     }
 
     /**

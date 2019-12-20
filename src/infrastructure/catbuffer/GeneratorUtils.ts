@@ -145,4 +145,13 @@ export class GeneratorUtils {
         const bytes = binary.slice(0, size);
         return bytes;
     }
+
+    /**
+     * Gets the padding size that rounds up \a size to the next multiple of \a alignment.
+     * @param size Inner transaction size
+     * @param alignment Next multiple alignment
+     */
+    public static getTransactionPaddingSize(size: number, alignment: number): number {
+        return 0 === size % alignment ? 0 : alignment - (size % alignment);
+    }
 }

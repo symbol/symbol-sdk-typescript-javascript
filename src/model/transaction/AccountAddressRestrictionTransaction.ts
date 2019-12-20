@@ -21,6 +21,7 @@ import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import {
     EmbeddedAccountAddressRestrictionTransactionBuilder,
 } from '../../infrastructure/catbuffer/EmbeddedAccountAddressRestrictionTransactionBuilder';
+import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
@@ -172,10 +173,10 @@ export class AccountAddressRestrictionTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {EmbeddedTransactionBuilder}
      */
-    protected generateEmbeddedBytes(): Uint8Array {
-        const transactionBuilder = new EmbeddedAccountAddressRestrictionTransactionBuilder(
+    public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
+        return new EmbeddedAccountAddressRestrictionTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
@@ -188,7 +189,6 @@ export class AccountAddressRestrictionTransaction extends Transaction {
                 return new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(deletion, this.networkType));
             }),
         );
-        return transactionBuilder.serialize();
     }
 
     /**

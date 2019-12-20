@@ -20,6 +20,7 @@ import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import {
     EmbeddedMosaicAddressRestrictionTransactionBuilder,
 } from '../../infrastructure/catbuffer/EmbeddedMosaicAddressRestrictionTransactionBuilder';
+import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { MosaicAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/MosaicAddressRestrictionTransactionBuilder';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
@@ -218,10 +219,10 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {EmbeddedTransactionBuilder}
      */
-    protected generateEmbeddedBytes(): Uint8Array {
-        const transactionBuilder = new EmbeddedMosaicAddressRestrictionTransactionBuilder(
+    public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
+        return new EmbeddedMosaicAddressRestrictionTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
@@ -232,7 +233,6 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
             this.newRestrictionValue.toDTO(),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.targetAddress, this.networkType)),
         );
-        return transactionBuilder.serialize();
     }
 
     /**

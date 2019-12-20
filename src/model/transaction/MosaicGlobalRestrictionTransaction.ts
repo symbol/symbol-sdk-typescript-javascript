@@ -20,6 +20,7 @@ import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import {
     EmbeddedMosaicGlobalRestrictionTransactionBuilder,
 } from '../../infrastructure/catbuffer/EmbeddedMosaicGlobalRestrictionTransactionBuilder';
+import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { MosaicGlobalRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/MosaicGlobalRestrictionTransactionBuilder';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
@@ -226,10 +227,10 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {EmbeddedTransactionBuilder}
      */
-    protected generateEmbeddedBytes(): Uint8Array {
-        const transactionBuilder = new EmbeddedMosaicGlobalRestrictionTransactionBuilder(
+    public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
+        return new EmbeddedMosaicGlobalRestrictionTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
@@ -242,7 +243,6 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
             this.previousRestrictionType.valueOf(),
             this.newRestrictionType.valueOf(),
         );
-        return transactionBuilder.serialize();
     }
 
     /**

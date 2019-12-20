@@ -19,6 +19,7 @@ import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import {
     EmbeddedMultisigAccountModificationTransactionBuilder,
 } from '../../infrastructure/catbuffer/EmbeddedMultisigAccountModificationTransactionBuilder';
+import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import {MultisigAccountModificationTransactionBuilder,
 } from '../../infrastructure/catbuffer/MultisigAccountModificationTransactionBuilder';
@@ -193,10 +194,10 @@ export class MultisigAccountModificationTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {EmbeddedTransactionBuilder}
      */
-    protected generateEmbeddedBytes(): Uint8Array {
-        const transactionBuilder = new EmbeddedMultisigAccountModificationTransactionBuilder(
+    public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
+        return new EmbeddedMultisigAccountModificationTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
@@ -210,7 +211,6 @@ export class MultisigAccountModificationTransaction extends Transaction {
                 return new KeyDto(Convert.hexToUint8(deletion.publicKey));
             }),
         );
-        return transactionBuilder.serialize();
     }
 
     /**

@@ -21,6 +21,8 @@
 
 import { AggregateTransactionBodyBuilder } from './AggregateTransactionBodyBuilder';
 import { AmountDto } from './AmountDto';
+import { CosignatureBuilder } from './CosignatureBuilder';
+import { EmbeddedTransactionBuilder } from './EmbeddedTransactionBuilder';
 import { EntityTypeDto } from './EntityTypeDto';
 import { GeneratorUtils } from './GeneratorUtils';
 import { Hash256Dto } from './Hash256Dto';
@@ -50,7 +52,7 @@ export class AggregateBondedTransactionBuilder extends TransactionBuilder {
      * @param cosignatures Cosignatures data (fills remaining body space after transactions).
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  transactionsHash: Hash256Dto,  transactions: Uint8Array,  cosignatures: Uint8Array) {
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  network: NetworkTypeDto,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  transactionsHash: Hash256Dto,  transactions: EmbeddedTransactionBuilder[],  cosignatures: CosignatureBuilder[]) {
         super(signature, signerPublicKey, version, network, type, fee, deadline);
         this.aggregateTransactionBody = new AggregateTransactionBodyBuilder(transactionsHash, transactions, cosignatures);
     }
@@ -94,7 +96,7 @@ export class AggregateBondedTransactionBuilder extends TransactionBuilder {
      *
      * @return Sub-transaction data (transactions are variable sized and payload size is in bytes).
      */
-    public getTransactions(): Uint8Array {
+    public getTransactions(): EmbeddedTransactionBuilder[] {
         return this.aggregateTransactionBody.getTransactions();
     }
 
@@ -103,7 +105,7 @@ export class AggregateBondedTransactionBuilder extends TransactionBuilder {
      *
      * @return Cosignatures data (fills remaining body space after transactions).
      */
-    public getCosignatures(): Uint8Array {
+    public getCosignatures(): CosignatureBuilder[] {
         return this.aggregateTransactionBody.getCosignatures();
     }
 
