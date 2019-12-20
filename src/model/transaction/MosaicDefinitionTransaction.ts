@@ -18,6 +18,7 @@ import { Convert } from '../../core/format';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
 import { EmbeddedMosaicDefinitionTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMosaicDefinitionTransactionBuilder';
+import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
 import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { MosaicDefinitionTransactionBuilder } from '../../infrastructure/catbuffer/MosaicDefinitionTransactionBuilder';
@@ -205,10 +206,10 @@ export class MosaicDefinitionTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {EmbeddedTransactionBuilder}
      */
-    protected generateEmbeddedBytes(): Uint8Array {
-        const transactionBuilder = new EmbeddedMosaicDefinitionTransactionBuilder(
+    public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
+        return new EmbeddedMosaicDefinitionTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
@@ -219,7 +220,6 @@ export class MosaicDefinitionTransaction extends Transaction {
             this.flags.getValue(),
             this.divisibility,
         );
-        return transactionBuilder.serialize();
     }
 
     /**

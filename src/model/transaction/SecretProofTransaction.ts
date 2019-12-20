@@ -21,6 +21,7 @@ import { Convert, Convert as convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedSecretProofTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedSecretProofTransactionBuilder';
+import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
 import { Hash256Dto } from '../../infrastructure/catbuffer/Hash256Dto';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SecretProofTransactionBuilder } from '../../infrastructure/catbuffer/SecretProofTransactionBuilder';
@@ -199,10 +200,10 @@ export class SecretProofTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {EmbeddedTransactionBuilder}
      */
-    protected generateEmbeddedBytes(): Uint8Array {
-        const transactionBuilder = new EmbeddedSecretProofTransactionBuilder(
+    public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
+        return new EmbeddedSecretProofTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
@@ -212,7 +213,6 @@ export class SecretProofTransaction extends Transaction {
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
             this.getProofByte(),
         );
-        return transactionBuilder.serialize();
     }
 
     /**

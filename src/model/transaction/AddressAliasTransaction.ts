@@ -21,6 +21,7 @@ import { AddressAliasTransactionBuilder } from '../../infrastructure/catbuffer/A
 import { AddressDto } from '../../infrastructure/catbuffer/AddressDto';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedAddressAliasTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedAddressAliasTransactionBuilder';
+import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { NamespaceIdDto } from '../../infrastructure/catbuffer/NamespaceIdDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
@@ -172,10 +173,10 @@ export class AddressAliasTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {EmbeddedTransactionBuilder}
      */
-    protected generateEmbeddedBytes(): Uint8Array {
-        const transactionBuilder = new EmbeddedAddressAliasTransactionBuilder(
+    public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
+        return new EmbeddedAddressAliasTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
@@ -184,7 +185,6 @@ export class AddressAliasTransaction extends Transaction {
             new AddressDto(RawAddress.stringToAddress(this.address.plain())),
             this.aliasAction.valueOf(),
         );
-        return transactionBuilder.serialize();
     }
 
     /**
