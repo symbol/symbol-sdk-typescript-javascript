@@ -18,6 +18,7 @@ import * as Long from 'long';
 import {Convert} from '../../core/format';
 import {UnresolvedMapping} from '../../core/utils/UnresolvedMapping';
 import {AmountDto} from '../../infrastructure/catbuffer/AmountDto';
+import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
 import {EmbeddedTransferTransactionBuilder} from '../../infrastructure/catbuffer/EmbeddedTransferTransactionBuilder';
 import {GeneratorUtils} from '../../infrastructure/catbuffer/GeneratorUtils';
 import {KeyDto} from '../../infrastructure/catbuffer/KeyDto';
@@ -257,10 +258,10 @@ export class TransferTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {EmbeddedTransactionBuilder}
      */
-    protected generateEmbeddedBytes(): Uint8Array {
-        const transactionBuilder = new EmbeddedTransferTransactionBuilder(
+    public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
+        return new EmbeddedTransferTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
@@ -272,7 +273,6 @@ export class TransferTransaction extends Transaction {
             }),
             this.getMessageBuffer(),
         );
-        return transactionBuilder.serialize();
     }
 
     /**

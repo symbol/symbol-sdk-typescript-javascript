@@ -19,6 +19,9 @@
 *** along with Catapult. If not, see <http://www.gnu.org/licenses/>.
 **/
 
+import { CosignatureBuilder } from './CosignatureBuilder';
+import { EmbeddedTransactionBuilder } from './EmbeddedTransactionBuilder';
+import { EmbeddedTransactionHelper } from './EmbeddedTransactionHelper';
 import { GeneratorUtils } from './GeneratorUtils';
 import { Hash256Dto } from './Hash256Dto';
 
@@ -29,9 +32,9 @@ export class AggregateTransactionBodyBuilder {
     /** Reserved padding to align end of AggregateTransactionHeader on 8-byte boundary. */
     aggregateTransactionHeader_Reserved1: number;
     /** Sub-transaction data (transactions are variable sized and payload size is in bytes). */
-    transactions: Uint8Array;
+    transactions: EmbeddedTransactionBuilder[];
     /** Cosignatures data (fills remaining body space after transactions). */
-    cosignatures: Uint8Array;
+    cosignatures: CosignatureBuilder[];
 
     /**
      * Constructor.
@@ -40,7 +43,8 @@ export class AggregateTransactionBodyBuilder {
      * @param transactions Sub-transaction data (transactions are variable sized and payload size is in bytes).
      * @param cosignatures Cosignatures data (fills remaining body space after transactions).
      */
-    public constructor(transactionsHash: Hash256Dto,  transactions: Uint8Array,  cosignatures: Uint8Array) {
+    // tslint:disable-next-line: max-line-length
+    public constructor(transactionsHash: Hash256Dto,  transactions: EmbeddedTransactionBuilder[],  cosignatures: CosignatureBuilder[]) {
         this.transactionsHash = transactionsHash;
         this.aggregateTransactionHeader_Reserved1 = 0;
         this.transactions = transactions;
@@ -62,9 +66,24 @@ export class AggregateTransactionBodyBuilder {
         // tslint:disable-next-line: max-line-length
         const aggregateTransactionHeader_Reserved1 = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 4));
         byteArray.splice(0, 4);
-        const transactions = GeneratorUtils.getBytes(Uint8Array.from(byteArray), payloadSize);
-        byteArray.splice(0, payloadSize);
-        const cosignatures = Uint8Array.from(byteArray);
+        let transactionsByteSize = payloadSize;
+        const transactions: EmbeddedTransactionBuilder[] = [];
+        while (transactionsByteSize > 0) {
+            const item = EmbeddedTransactionHelper.loadFromBinary(Uint8Array.from(byteArray));
+            transactions.push(item);
+            const itemSize = item.getSize() + GeneratorUtils.getTransactionPaddingSize(item.getSize(), 8);
+            transactionsByteSize -= itemSize;
+            byteArray.splice(0, itemSize);
+        }
+        let cosignaturesByteSize = byteArray.length;
+        const cosignatures: CosignatureBuilder[] = [];
+        while (cosignaturesByteSize > 0) {
+            const item = CosignatureBuilder.loadFromBinary(Uint8Array.from(byteArray));
+            cosignatures.push(item);
+            const itemSize = item.getSize();
+            cosignaturesByteSize -= itemSize;
+            byteArray.splice(0, itemSize);
+        }
         return new AggregateTransactionBodyBuilder(transactionsHash, transactions, cosignatures);
     }
 
@@ -91,7 +110,7 @@ export class AggregateTransactionBodyBuilder {
      *
      * @return Sub-transaction data (transactions are variable sized and payload size is in bytes).
      */
-    public getTransactions(): Uint8Array {
+    public getTransactions(): EmbeddedTransactionBuilder[] {
         return this.transactions;
     }
 
@@ -100,7 +119,7 @@ export class AggregateTransactionBodyBuilder {
      *
      * @return Cosignatures data (fills remaining body space after transactions).
      */
-    public getCosignatures(): Uint8Array {
+    public getCosignatures(): CosignatureBuilder[] {
         return this.cosignatures;
     }
 
@@ -114,8 +133,8 @@ export class AggregateTransactionBodyBuilder {
         size += this.transactionsHash.getSize();
         size += 4; // payloadSize
         size += 4; // aggregateTransactionHeader_Reserved1
-        size += this.transactions.length;
-        size += this.cosignatures.length;
+        this.transactions.forEach((o) => size += EmbeddedTransactionHelper.serialize(o).length);
+        this.cosignatures.forEach((o) => size += o.getSize());
         return size;
     }
 
@@ -128,13 +147,20 @@ export class AggregateTransactionBodyBuilder {
         let newArray = Uint8Array.from([]);
         const transactionsHashBytes = this.transactionsHash.serialize();
         newArray = GeneratorUtils.concatTypedArrays(newArray, transactionsHashBytes);
-        const payloadSizeBytes = GeneratorUtils.uintToBuffer(this.transactions.length, 4);
+        // tslint:disable-next-line: max-line-length
+        const payloadSizeBytes = GeneratorUtils.uintToBuffer(EmbeddedTransactionHelper.getEmbeddedTransactionSize(this.transactions), 4);
         newArray = GeneratorUtils.concatTypedArrays(newArray, payloadSizeBytes);
         // tslint:disable-next-line: max-line-length
         const aggregateTransactionHeader_Reserved1Bytes = GeneratorUtils.uintToBuffer(this.getAggregateTransactionHeader_Reserved1(), 4);
         newArray = GeneratorUtils.concatTypedArrays(newArray, aggregateTransactionHeader_Reserved1Bytes);
-        newArray = GeneratorUtils.concatTypedArrays(newArray, this.transactions);
-        newArray = GeneratorUtils.concatTypedArrays(newArray, this.cosignatures);
+        this.transactions.forEach((item) => {
+            const transactionsBytes = EmbeddedTransactionHelper.serialize(item);
+            newArray = GeneratorUtils.concatTypedArrays(newArray, transactionsBytes);
+        });
+        this.cosignatures.forEach((item) => {
+            const cosignaturesBytes = item.serialize();
+            newArray = GeneratorUtils.concatTypedArrays(newArray, cosignaturesBytes);
+        });
         return newArray;
     }
 }

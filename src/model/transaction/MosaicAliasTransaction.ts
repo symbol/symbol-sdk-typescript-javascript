@@ -17,6 +17,7 @@
 import { Convert } from '../../core/format';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedMosaicAliasTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMosaicAliasTransactionBuilder';
+import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { MosaicAliasTransactionBuilder } from '../../infrastructure/catbuffer/MosaicAliasTransactionBuilder';
 import { MosaicIdDto } from '../../infrastructure/catbuffer/MosaicIdDto';
@@ -164,10 +165,10 @@ export class MosaicAliasTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {EmbeddedTransactionBuilder}
      */
-    protected generateEmbeddedBytes(): Uint8Array {
-        const transactionBuilder = new EmbeddedMosaicAliasTransactionBuilder(
+    public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
+        return new EmbeddedMosaicAliasTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
@@ -176,7 +177,6 @@ export class MosaicAliasTransaction extends Transaction {
             new MosaicIdDto(this.mosaicId.id.toDTO()),
             this.aliasAction.valueOf(),
         );
-        return transactionBuilder.serialize();
     }
 
     /**

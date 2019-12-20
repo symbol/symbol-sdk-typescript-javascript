@@ -17,6 +17,7 @@
 import { expect } from 'chai';
 import { Observable } from 'rxjs/internal/Observable';
 import { Convert } from '../../../src/core/format/Convert';
+import { EmbeddedTransactionBuilder } from '../../../src/infrastructure/catbuffer/EmbeddedTransactionBuilder';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
@@ -400,7 +401,7 @@ class FakeTransaction extends Transaction {
         throw new Error('Not implemented');
     }
 
-    protected generateEmbeddedBytes(): Uint8Array {
+    public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
         throw new Error('Not implemented');
     }
     resolveAliases(): TransferTransaction {
