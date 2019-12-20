@@ -125,7 +125,7 @@ export class EmbeddedTransactionHelper {
                 padding = new Uint8Array(GeneratorUtils.getTransactionPaddingSize(byte.length, 8));
                 return GeneratorUtils.concatTypedArrays(byte, padding);
             default:
-                throw new Error(`Transaction type: ${transaction.type} not recognized.`)
+                throw new Error(`Transaction type: ${transaction.type} not recognized.`);
         }
     }
 
@@ -133,45 +133,45 @@ export class EmbeddedTransactionHelper {
         const header = EmbeddedTransactionBuilder.loadFromBinary(bytes);
         switch (header.getType()) {
             case EntityTypeDto.TRANSFER_TRANSACTION_BUILDER:
-                return EmbeddedTransferTransactionBuilder.loadFromBinary(bytes)
+                return EmbeddedTransferTransactionBuilder.loadFromBinary(bytes);
             case EntityTypeDto.ACCOUNT_LINK_TRANSACTION_BUILDER:
-                return EmbeddedAccountLinkTransactionBuilder.loadFromBinary(bytes)
+                return EmbeddedAccountLinkTransactionBuilder.loadFromBinary(bytes);
             case EntityTypeDto.HASH_LOCK_TRANSACTION_BUILDER:
-                return EmbeddedHashLockTransactionBuilder.loadFromBinary(bytes)
+                return EmbeddedHashLockTransactionBuilder.loadFromBinary(bytes);
             case EntityTypeDto.SECRET_LOCK_TRANSACTION_BUILDER:
-                return EmbeddedSecretLockTransactionBuilder.loadFromBinary(bytes)
+                return EmbeddedSecretLockTransactionBuilder.loadFromBinary(bytes);
             case EntityTypeDto.SECRET_PROOF_TRANSACTION_BUILDER:
-                return EmbeddedSecretProofTransactionBuilder.loadFromBinary(bytes)
+                return EmbeddedSecretProofTransactionBuilder.loadFromBinary(bytes);
             case EntityTypeDto.ACCOUNT_METADATA_TRANSACTION_BUILDER:
-                return EmbeddedAccountMetadataTransactionBuilder.loadFromBinary(bytes)
+                return EmbeddedAccountMetadataTransactionBuilder.loadFromBinary(bytes);
             case EntityTypeDto.MOSAIC_METADATA_TRANSACTION_BUILDER:
-                return EmbeddedMosaicMetadataTransactionBuilder.loadFromBinary(bytes)
+                return EmbeddedMosaicMetadataTransactionBuilder.loadFromBinary(bytes);
             case EntityTypeDto.NAMESPACE_METADATA_TRANSACTION_BUILDER:
-                return EmbeddedNamespaceMetadataTransactionBuilder.loadFromBinary(bytes)
+                return EmbeddedNamespaceMetadataTransactionBuilder.loadFromBinary(bytes);
             case EntityTypeDto.MOSAIC_DEFINITION_TRANSACTION_BUILDER:
-                return EmbeddedMosaicDefinitionTransactionBuilder.loadFromBinary(bytes)
+                return EmbeddedMosaicDefinitionTransactionBuilder.loadFromBinary(bytes);
             case EntityTypeDto.MOSAIC_SUPPLY_CHANGE_TRANSACTION_BUILDER:
-                return EmbeddedMosaicSupplyChangeTransactionBuilder.loadFromBinary(bytes)
+                return EmbeddedMosaicSupplyChangeTransactionBuilder.loadFromBinary(bytes);
             case EntityTypeDto.MULTISIG_ACCOUNT_MODIFICATION_TRANSACTION_BUILDER:
-                return EmbeddedMultisigAccountModificationTransactionBuilder.loadFromBinary(bytes)
+                return EmbeddedMultisigAccountModificationTransactionBuilder.loadFromBinary(bytes);
             case EntityTypeDto.ADDRESS_ALIAS_TRANSACTION_BUILDER:
-                return EmbeddedAddressAliasTransactionBuilder.loadFromBinary(bytes)
+                return EmbeddedAddressAliasTransactionBuilder.loadFromBinary(bytes);
             case EntityTypeDto.MOSAIC_ALIAS_TRANSACTION_BUILDER:
-                return EmbeddedMosaicAliasTransactionBuilder.loadFromBinary(bytes)
+                return EmbeddedMosaicAliasTransactionBuilder.loadFromBinary(bytes);
             case EntityTypeDto.NAMESPACE_REGISTRATION_TRANSACTION_BUILDER:
-                return EmbeddedNamespaceRegistrationTransactionBuilder.loadFromBinary(bytes)
+                return EmbeddedNamespaceRegistrationTransactionBuilder.loadFromBinary(bytes);
             case EntityTypeDto.ACCOUNT_ADDRESS_RESTRICTION_TRANSACTION_BUILDER:
-                return EmbeddedAccountAddressRestrictionTransactionBuilder.loadFromBinary(bytes)
+                return EmbeddedAccountAddressRestrictionTransactionBuilder.loadFromBinary(bytes);
             case EntityTypeDto.ACCOUNT_MOSAIC_RESTRICTION_TRANSACTION_BUILDER:
-                return EmbeddedAccountMosaicRestrictionTransactionBuilder.loadFromBinary(bytes)
+                return EmbeddedAccountMosaicRestrictionTransactionBuilder.loadFromBinary(bytes);
             case EntityTypeDto.ACCOUNT_OPERATION_RESTRICTION_TRANSACTION_BUILDER:
-                return EmbeddedAccountOperationRestrictionTransactionBuilder.loadFromBinary(bytes)
+                return EmbeddedAccountOperationRestrictionTransactionBuilder.loadFromBinary(bytes);
             case EntityTypeDto.MOSAIC_ADDRESS_RESTRICTION_TRANSACTION_BUILDER:
-                return EmbeddedMosaicAddressRestrictionTransactionBuilder.loadFromBinary(bytes)
+                return EmbeddedMosaicAddressRestrictionTransactionBuilder.loadFromBinary(bytes);
             case EntityTypeDto.MOSAIC_GLOBAL_RESTRICTION_TRANSACTION_BUILDER:
-                return EmbeddedMosaicGlobalRestrictionTransactionBuilder.loadFromBinary(bytes)
+                return EmbeddedMosaicGlobalRestrictionTransactionBuilder.loadFromBinary(bytes);
             default:
-                throw new Error(`Transaction type: ${header.getType()} not recognized.`)
+                throw new Error(`Transaction type: ${header.getType()} not recognized.`);
         }
     }
 
