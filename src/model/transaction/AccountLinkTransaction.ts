@@ -18,6 +18,7 @@ import { Convert } from '../../core/format';
 import { AccountLinkTransactionBuilder } from '../../infrastructure/catbuffer/AccountLinkTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedAccountLinkTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedAccountLinkTransactionBuilder';
+import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
@@ -150,10 +151,10 @@ export class AccountLinkTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {EmbeddedTransactionBuilder}
      */
-    protected generateEmbeddedBytes(): Uint8Array {
-        const transactionBuilder = new EmbeddedAccountLinkTransactionBuilder(
+    public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
+        return new EmbeddedAccountLinkTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
@@ -161,7 +162,6 @@ export class AccountLinkTransaction extends Transaction {
             new KeyDto(Convert.hexToUint8(this.remotePublicKey)),
             this.linkAction.valueOf(),
         );
-        return transactionBuilder.serialize();
     }
 
     /**

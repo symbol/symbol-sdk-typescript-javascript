@@ -20,6 +20,7 @@ import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDt
 import {
     EmbeddedNamespaceRegistrationTransactionBuilder,
 } from '../../infrastructure/catbuffer/EmbeddedNamespaceRegistrationTransactionBuilder';
+import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { NamespaceIdDto } from '../../infrastructure/catbuffer/NamespaceIdDto';
 import { NamespaceRegistrationTransactionBuilder } from '../../infrastructure/catbuffer/NamespaceRegistrationTransactionBuilder';
@@ -244,12 +245,11 @@ export class NamespaceRegistrationTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {EmbeddedTransactionBuilder}
      */
-    protected generateEmbeddedBytes(): Uint8Array {
-        let transactionBuilder: EmbeddedNamespaceRegistrationTransactionBuilder;
+    public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
         if (this.registrationType === NamespaceRegistrationType.RootNamespace) {
-            transactionBuilder = new EmbeddedNamespaceRegistrationTransactionBuilder(
+            return new EmbeddedNamespaceRegistrationTransactionBuilder(
                 new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
                 this.versionToDTO(),
                 this.networkType.valueOf(),
@@ -259,19 +259,17 @@ export class NamespaceRegistrationTransaction extends Transaction {
                 new BlockDurationDto(this.duration!.toDTO()),
                 undefined,
             );
-        } else {
-            transactionBuilder = new EmbeddedNamespaceRegistrationTransactionBuilder(
-                new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
-                this.versionToDTO(),
-                this.networkType.valueOf(),
-                TransactionType.REGISTER_NAMESPACE.valueOf(),
-                new NamespaceIdDto(this.namespaceId.id.toDTO()),
-                Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
-                undefined,
-                new NamespaceIdDto(this.parentId!.id.toDTO()),
-            );
         }
-        return transactionBuilder.serialize();
+        return new EmbeddedNamespaceRegistrationTransactionBuilder(
+            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.versionToDTO(),
+            this.networkType.valueOf(),
+            TransactionType.REGISTER_NAMESPACE.valueOf(),
+            new NamespaceIdDto(this.namespaceId.id.toDTO()),
+            Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
+            undefined,
+            new NamespaceIdDto(this.parentId!.id.toDTO()),
+        );
     }
 
     /**
