@@ -16,7 +16,8 @@
 
 import {LocalDateTime} from 'js-joda';
 import {Crypto, KeyPair, SHA3Hasher} from '../../core/crypto';
-import { Convert as convert} from '../../core/format';
+import {Convert as convert} from '../../core/format';
+import {ISimpleWalletDTO} from '../../infrastructure/model/simpleWalletDTO';
 import {Account} from '../account/Account';
 import {Address} from '../account/Address';
 import {NetworkType} from '../blockchain/NetworkType';
@@ -103,6 +104,23 @@ export class SimpleWallet extends Wallet {
         const encryptedPrivateKey = new EncryptedPrivateKey(encrypted.ciphertext, encrypted.iv);
 
         return new SimpleWallet(name, network, address, LocalDateTime.now(), encryptedPrivateKey);
+    }
+
+    /**
+     * Instantiate a SimpleWallet from a DTO
+     * @param simpleWalletDTO simple wallet without prototype
+     */
+    static createFromDTO(simpleWalletDTO: ISimpleWalletDTO) {
+        return new SimpleWallet(
+            simpleWalletDTO.name,
+            simpleWalletDTO.network,
+            Address.createFromRawAddress(simpleWalletDTO.address.address),
+            LocalDateTime.now(),
+            new EncryptedPrivateKey(
+                simpleWalletDTO.encryptedPrivateKey.encryptedKey,
+                simpleWalletDTO.encryptedPrivateKey.iv,
+            ),
+        );
     }
 
     /**
