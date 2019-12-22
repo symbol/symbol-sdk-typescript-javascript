@@ -49,13 +49,19 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
     private namespaceRoutesApi: NamespaceRoutesApi;
 
     /**
+     * @internal
+     * network type for the mappings.
+     */
+    private readonly networkTypeObservable: Observable<NetworkType>;
+    /**
      * Constructor
      * @param url
      * @param networkType
      */
-    constructor(url: string, networkType?: NetworkType) {
-        super(url, networkType);
+    constructor(url: string, networkType?: NetworkType | Observable<NetworkType>) {
+        super(url);
         this.namespaceRoutesApi = new NamespaceRoutesApi(url);
+        this.networkTypeObservable = this.createNetworkTypeObservable(networkType);
     }
 
     /**
@@ -111,7 +117,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      * @returns Observable<NamespaceInfo>
      */
     public getNamespace(namespaceId: NamespaceId): Observable<NamespaceInfo> {
-        return this.getNetworkTypeObservable().pipe(
+        return this.networkTypeObservable.pipe(
             mergeMap((networkType) => observableFrom(
                 this.namespaceRoutesApi.getNamespace(namespaceId.toHex())).pipe(
                     map(({body}) => new NamespaceInfo(
@@ -141,7 +147,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      */
     public getNamespacesFromAccount(address: Address,
                                     queryParams?: QueryParams): Observable<NamespaceInfo[]> {
-        return this.getNetworkTypeObservable().pipe(
+        return this.networkTypeObservable.pipe(
             mergeMap((networkType) => observableFrom(
                 this.namespaceRoutesApi.getNamespacesFromAccount(address.plain(),
                                                                  this.queryParams(queryParams).pageSize,
@@ -178,7 +184,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
         const publicKeysBody = {
             addresses: addresses.map((address) => address.plain()),
         };
-        return this.getNetworkTypeObservable().pipe(
+        return this.networkTypeObservable.pipe(
             mergeMap((networkType) => observableFrom(
                 this.namespaceRoutesApi.getNamespacesFromAccounts(publicKeysBody)).pipe(
                 map(({body}) => body.namespaces.map((namespaceInfoDTO) => {
@@ -229,7 +235,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      * @returns Observable<MosaicId | null>
      */
     public getLinkedMosaicId(namespaceId: NamespaceId): Observable<MosaicId> {
-        return this.getNetworkTypeObservable().pipe(
+        return this.networkTypeObservable.pipe(
             mergeMap(() => observableFrom(
                 this.namespaceRoutesApi.getNamespace(namespaceId.toHex())).pipe(
                 map(({body}) => {
@@ -257,7 +263,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      * @returns Observable<Address>
      */
     public getLinkedAddress(namespaceId: NamespaceId): Observable<Address> {
-        return this.getNetworkTypeObservable().pipe(
+        return this.networkTypeObservable.pipe(
             mergeMap(() => observableFrom(
                 this.namespaceRoutesApi.getNamespace(namespaceId.toHex())).pipe(
                 map(({body}) => {

@@ -14,62 +14,62 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {Observable, of as observableOf} from 'rxjs';
-import {deepEqual, instance, mock, when} from 'ts-mockito';
-import {NamespaceHttp} from '../../src/infrastructure/NamespaceHttp';
-import {PublicAccount} from '../../src/model/account/PublicAccount';
-import {NetworkType} from '../../src/model/blockchain/NetworkType';
-import {EmptyAlias} from '../../src/model/namespace/EmptyAlias';
-import {NamespaceId} from '../../src/model/namespace/NamespaceId';
-import {NamespaceInfo} from '../../src/model/namespace/NamespaceInfo';
-import {NamespaceName} from '../../src/model/namespace/NamespaceName';
-import {UInt64} from '../../src/model/UInt64';
-import {NamespaceService} from '../../src/service/NamespaceService';
+import { expect } from 'chai';
+import { of as observableOf } from 'rxjs';
+import { deepEqual, instance, mock, when } from 'ts-mockito';
+import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
+import { PublicAccount } from '../../src/model/account/PublicAccount';
+import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { EmptyAlias } from '../../src/model/namespace/EmptyAlias';
+import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { NamespaceInfo } from '../../src/model/namespace/NamespaceInfo';
+import { NamespaceName } from '../../src/model/namespace/NamespaceName';
+import { UInt64 } from '../../src/model/UInt64';
+import { NamespaceService } from '../../src/service/NamespaceService';
 
 describe('NamespaceService', () => {
 
     it('should return the NamespaceInfo + name for a root namespace', () => {
-        const mockedNamespaceHttp = mock(NamespaceHttp);
+        const mockedNamespaceRepository:NamespaceRepository = mock();
         const rootNamespace = givenRootNamespace();
         const subnamespace = givenSubnamespace();
-        when(mockedNamespaceHttp.getNamespace(rootNamespace.id))
+        when(mockedNamespaceRepository.getNamespace(rootNamespace.id))
             .thenReturn(observableOf(rootNamespace));
-        when(mockedNamespaceHttp.getNamespace(subnamespace.id))
+        when(mockedNamespaceRepository.getNamespace(subnamespace.id))
             .thenReturn(observableOf(subnamespace));
-        when(mockedNamespaceHttp.getNamespacesName(deepEqual([rootNamespace.id])))
+        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id])))
             .thenReturn(observableOf([new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'nem2tests')]));
-        when(mockedNamespaceHttp.getNamespacesName(deepEqual([rootNamespace.id, subnamespace.id])))
+        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id, subnamespace.id])))
             .thenReturn(observableOf([
                 new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'nem2tests'),
                 new NamespaceName(new NamespaceId([1781696705, 4157485863]), 'level2'),
             ]));
-        const namespaceHttp = instance(mockedNamespaceHttp);
-        const namespaceService = new NamespaceService(namespaceHttp);
+        const namespaceRepository = instance(mockedNamespaceRepository);
+        const namespaceService = new NamespaceService(namespaceRepository);
         namespaceService.namespace(rootNamespace.id).subscribe((namespace) => {
             expect(namespace.name).to.be.equal('nem2tests');
         });
     });
 
     it('should return the NamespaceInfo + name for a subnamespace', () => {
-        const mockedNamespaceHttp = mock(NamespaceHttp);
+        const mockedNamespaceRepository:NamespaceRepository = mock();
         const rootNamespace = givenRootNamespace();
         const subnamespace = givenSubnamespace();
-        when(mockedNamespaceHttp.getNamespace(rootNamespace.id))
+        when(mockedNamespaceRepository.getNamespace(rootNamespace.id))
             .thenReturn(observableOf(rootNamespace));
-        when(mockedNamespaceHttp.getNamespace(subnamespace.id))
+        when(mockedNamespaceRepository.getNamespace(subnamespace.id))
             .thenReturn(observableOf(subnamespace));
-        when(mockedNamespaceHttp.getNamespacesName(deepEqual([rootNamespace.id])))
+        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id])))
             .thenReturn(observableOf([new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'nem2tests')]));
-        when(mockedNamespaceHttp.getNamespacesName(deepEqual([subnamespace.id])))
+        when(mockedNamespaceRepository.getNamespacesName(deepEqual([subnamespace.id])))
             .thenReturn(observableOf([new NamespaceName(new NamespaceId([1781696705, 4157485863]), 'level2')]));
-        when(mockedNamespaceHttp.getNamespacesName(deepEqual([rootNamespace.id, subnamespace.id])))
+        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id, subnamespace.id])))
             .thenReturn(observableOf([
                 new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'nem2tests'),
                 new NamespaceName(new NamespaceId([1781696705, 4157485863]), 'level2'),
             ]));
-        const namespaceHttp = instance(mockedNamespaceHttp);
-        const namespaceService = new NamespaceService(namespaceHttp);
+        const namespaceRepository = instance(mockedNamespaceRepository);
+        const namespaceService = new NamespaceService(namespaceRepository);
 
         namespaceService.namespace(subnamespace.id).subscribe((namespace) => {
             expect(namespace.name).to.be.equal('nem2tests.level2');

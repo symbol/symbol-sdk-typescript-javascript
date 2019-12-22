@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-import {from as observableFrom, Observable, throwError} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
-import {AccountInfo} from '../model/account/AccountInfo';
+import { from as observableFrom, Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { AccountInfo } from '../model/account/AccountInfo';
 import { ActivityBucket } from '../model/account/ActivityBucket';
-import {Address} from '../model/account/Address';
-import { NetworkType } from '../model/blockchain/NetworkType';
-import {Mosaic} from '../model/mosaic/Mosaic';
-import {MosaicId} from '../model/mosaic/MosaicId';
-import {AggregateTransaction} from '../model/transaction/AggregateTransaction';
-import {Transaction} from '../model/transaction/Transaction';
+import { Address } from '../model/account/Address';
+import { Mosaic } from '../model/mosaic/Mosaic';
+import { MosaicId } from '../model/mosaic/MosaicId';
+import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
+import { Transaction } from '../model/transaction/Transaction';
 import { UInt64 } from '../model/UInt64';
-import {AccountRepository} from './AccountRepository';
-import { AccountInfoDTO,
-         AccountRoutesApi } from './api';
-import {Http} from './Http';
-import {QueryParams} from './QueryParams';
-import {CreateTransactionFromDTO} from './transaction/CreateTransactionFromDTO';
+import { AccountRepository } from './AccountRepository';
+import { AccountInfoDTO, AccountRoutesApi } from './api';
+import { Http } from './Http';
+import { QueryParams } from './QueryParams';
+import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
 
 /**
  * Account http repository.
@@ -47,10 +45,9 @@ export class AccountHttp extends Http implements AccountRepository {
     /**
      * Constructor
      * @param url
-     * @param networkType
      */
-    constructor(url: string, networkType?: NetworkType) {
-        super(url, networkType);
+    constructor(url: string) {
+        super(url);
         this.accountRoutesApi = new AccountRoutesApi(url);
     }
 

@@ -35,16 +35,23 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
      * @internal
      * Nem2 Library receipt routes api
      */
-    private receiptRoutesApi: ReceiptRoutesApi;
+    private readonly receiptRoutesApi: ReceiptRoutesApi;
+
+    /**
+     * @internal
+     * network type for the mappings.
+     */
+    private readonly networkTypeObservable: Observable<NetworkType>;
 
     /**
      * Constructor
      * @param url
      * @param networkType
      */
-    constructor(url: string, networkType?: NetworkType) {
-        super(url, networkType);
+    constructor(url: string, networkType?: NetworkType | Observable<NetworkType>) {
+        super(url);
         this.receiptRoutesApi = new ReceiptRoutesApi(url);
+        this.networkTypeObservable = this.createNetworkTypeObservable(networkType);
     }
 
     /**
@@ -75,7 +82,7 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
      * @returns Observable<Statement>
      */
     public getBlockReceipts(height: string): Observable<Statement> {
-        return this.getNetworkTypeObservable().pipe(
+        return this.networkTypeObservable.pipe(
             mergeMap((networkType) => observableFrom(
                 this.receiptRoutesApi.getBlockReceipts(height)).pipe(
                     map(({body}) => CreateStatementFromDTO(body, networkType)),

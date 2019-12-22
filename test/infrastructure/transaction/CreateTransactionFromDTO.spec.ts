@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {deepEqual} from 'assert';
-import {expect} from 'chai';
-import {CreateTransactionFromDTO} from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
+import { deepEqual } from 'assert';
+import { expect } from 'chai';
+import { CreateTransactionFromDTO } from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
 import { Address } from '../../../src/model/account/Address';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import ValidateTransaction from './ValidateTransaction';

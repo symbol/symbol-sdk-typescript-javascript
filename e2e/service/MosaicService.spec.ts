@@ -14,35 +14,33 @@
  * limitations under the License.
  */
 
-import { AccountHttp } from '../../src/infrastructure/AccountHttp';
-import { MosaicHttp } from '../../src/infrastructure/MosaicHttp';
+import { AccountRepository } from '../../src/infrastructure/AccountRepository';
+import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
 import { Address } from '../../src/model/account/Address';
 import { MosaicService } from '../../src/service/MosaicService';
+import { IntegrationTestHelper } from "../infrastructure/IntegrationTestHelper";
+import { NetworkType } from "../../src/model/blockchain/NetworkType";
 
 describe('MosaicService', () => {
     let accountAddress: Address;
-    let accountHttp: AccountHttp;
-    let mosaicHttp: MosaicHttp;
+    let accountRepository: AccountRepository;
+    let mosaicRepository: MosaicRepository;
+    let generationHash: string;
+    let helper = new IntegrationTestHelper();
+    let networkType: NetworkType;
 
-    before((done) => {
-        const path = require('path');
-        require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
-            if (err) {
-                throw err;
-            }
-            const json = JSON.parse(data);
-            accountAddress = Address.createFromRawAddress(json.testAccount.address);
-            accountHttp = new AccountHttp(json.apiUrl);
-            mosaicHttp = new MosaicHttp(json.apiUrl);
-            done();
+    before(() => {
+        return helper.start().then(() => {
+            accountAddress = helper.account.address;
+            generationHash = helper.generationHash;
+            networkType = helper.networkType;
+            accountRepository = helper.repositoryFactory.createAccountRepository();
+            mosaicRepository = helper.repositoryFactory.createMosaicRepository();
         });
     });
     it('should return the mosaic list skipping the expired mosaics', (done) => {
-        const mosaicService = new MosaicService(accountHttp, mosaicHttp);
-
-        const address = accountAddress;
-
-        return mosaicService.mosaicsAmountViewFromAddress(address).subscribe((amountViews) => {
+        const mosaicService = new MosaicService(accountRepository, mosaicRepository);
+        return mosaicService.mosaicsAmountViewFromAddress(accountAddress).subscribe((amountViews) => {
             const views = amountViews.map((v) => {
                 return {mosaicId: v.fullName(), amount: v.relativeAmount()};
             });

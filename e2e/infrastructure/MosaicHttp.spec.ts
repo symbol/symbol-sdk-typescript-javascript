@@ -13,46 +13,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {assert, expect} from 'chai';
-import { Listener, NamespaceHttp, TransactionHttp } from '../../src/infrastructure/infrastructure';
-import {MosaicHttp} from '../../src/infrastructure/MosaicHttp';
+import { expect } from 'chai';
+import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
-import {MosaicId} from '../../src/model/mosaic/MosaicId';
+import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
-import {NamespaceId} from '../../src/model/namespace/NamespaceId';
+import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { UInt64 } from '../../src/model/UInt64';
+import { IntegrationTestHelper } from "./IntegrationTestHelper";
+import { NamespaceRepository } from "../../src/infrastructure/NamespaceRepository";
 
 describe('MosaicHttp', () => {
+
     let mosaicId: MosaicId;
-    let mosaicHttp: MosaicHttp;
+    let mosaicRepository: MosaicRepository;
     let account: Account;
-    let config;
     let namespaceId: NamespaceId;
-    let transactionHttp: TransactionHttp;
-    let namespaceHttp: NamespaceHttp;
+    let namespaceRepository: NamespaceRepository;
     let generationHash: string;
-    before((done) => {
-        const path = require('path');
-        require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
-            if (err) {
-                throw err;
-            }
-            const json = JSON.parse(data);
-            config = json;
-            account = Account.createFromPrivateKey(json.testAccount.privateKey, NetworkType.MIJIN_TEST);
-            mosaicHttp = new MosaicHttp(json.apiUrl);
-            transactionHttp = new TransactionHttp(json.apiUrl);
-            namespaceHttp = new NamespaceHttp(json.apiUrl);
-            generationHash = json.generationHash;
-            done();
+    let helper = new IntegrationTestHelper();
+    let networkType: NetworkType;
+
+    before(() => {
+        return helper.start().then(() => {
+            account = helper.account;
+            generationHash = helper.generationHash;
+            networkType = helper.networkType;
+            namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
+            mosaicRepository = helper.repositoryFactory.createMosaicRepository();
         });
+    });
+    before(() => {
+        return helper.listener.open();
+    });
+
+    after(() => {
+        helper.listener.close();
     });
 
     /**
@@ -61,15 +64,8 @@ describe('MosaicHttp', () => {
      * =========================
      */
     describe('Setup test MosaicId', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('Announce MosaicDefinitionTransaction', (done) => {
+
+        it('Announce MosaicDefinitionTransaction', () => {
             const nonce = MosaicNonce.createRandom();
             mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
@@ -79,75 +75,45 @@ describe('MosaicHttp', () => {
                 MosaicFlags.create(true, true, false),
                 3,
                 UInt64.fromUint(0),
-                NetworkType.MIJIN_TEST,
+                networkType,
+                helper.maxFee
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe((transaction) => {
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+
+            return helper.announce(signedTransaction);
         });
     });
 
     describe('Setup test NamespaceId', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('Announce NamespaceRegistrationTransaction', (done) => {
+
+        it('Announce NamespaceRegistrationTransaction', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
                 UInt64.fromUint(1000),
-                NetworkType.MIJIN_TEST,
+                networkType,
+                helper.maxFee
             );
             namespaceId = new NamespaceId(namespaceName);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe((transaction) => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+
+            return helper.announce(signedTransaction);
         });
     });
     describe('Setup test MosaicAlias', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
 
-        it('Announce MosaicAliasTransaction', (done) => {
+        it('Announce MosaicAliasTransaction', () => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
                 Deadline.create(),
                 AliasAction.Link,
                 namespaceId,
                 mosaicId,
-                NetworkType.MIJIN_TEST,
+                networkType,
+                helper.maxFee
             );
             const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
-
-            listener.confirmed(account.address).subscribe((transaction) => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+            return helper.announce(signedTransaction);
         });
     });
 
@@ -158,33 +124,33 @@ describe('MosaicHttp', () => {
      */
     describe('getMosaic', () => {
         it('should return mosaic given mosaicId', (done) => {
-            mosaicHttp.getMosaic(mosaicId)
-                .subscribe((mosaicInfo) => {
-                    expect(mosaicInfo.height.lower).not.to.be.null;
-                    expect(mosaicInfo.divisibility).to.be.equal(3);
-                    expect(mosaicInfo.isSupplyMutable()).to.be.equal(true);
-                    expect(mosaicInfo.isTransferable()).to.be.equal(true);
-                    done();
-                });
+            mosaicRepository.getMosaic(mosaicId)
+            .subscribe((mosaicInfo) => {
+                expect(mosaicInfo.height.lower).not.to.be.null;
+                expect(mosaicInfo.divisibility).to.be.equal(3);
+                expect(mosaicInfo.isSupplyMutable()).to.be.equal(true);
+                expect(mosaicInfo.isTransferable()).to.be.equal(true);
+                done();
+            });
         });
     });
 
     describe('getMosaics', () => {
         it('should return mosaics given array of mosaicIds', (done) => {
-            mosaicHttp.getMosaics([mosaicId])
-                .subscribe((mosaicInfos) => {
-                    expect(mosaicInfos[0].height.lower).not.to.be.null;
-                    expect(mosaicInfos[0].divisibility).to.be.equal(3);
-                    expect(mosaicInfos[0].isSupplyMutable()).to.be.equal(true);
-                    expect(mosaicInfos[0].isTransferable()).to.be.equal(true);
-                    done();
-                });
+            mosaicRepository.getMosaics([mosaicId])
+            .subscribe((mosaicInfos) => {
+                expect(mosaicInfos[0].height.lower).not.to.be.null;
+                expect(mosaicInfos[0].divisibility).to.be.equal(3);
+                expect(mosaicInfos[0].isSupplyMutable()).to.be.equal(true);
+                expect(mosaicInfos[0].isTransferable()).to.be.equal(true);
+                done();
+            });
         });
     });
 
     describe('getMosaicsNames', () => {
         it('should call getMosaicsNames successfully', (done) => {
-            namespaceHttp.getMosaicsNames([mosaicId]).subscribe((mosaicNames) => {
+            namespaceRepository.getMosaicsNames([mosaicId]).subscribe((mosaicNames) => {
                 expect(mosaicNames.length).to.be.greaterThan(0);
                 done();
             });
@@ -193,7 +159,7 @@ describe('MosaicHttp', () => {
 
     describe('getMosaicsFromAccount', () => {
         it('should call getMosaicsFromAccount successfully', (done) => {
-            mosaicHttp.getMosaicsFromAccount(account.address).subscribe((mosaics) => {
+            mosaicRepository.getMosaicsFromAccount(account.address).subscribe((mosaics) => {
                 expect(mosaics.length).to.be.greaterThan(0);
                 expect(mosaics.find((m) => m.id.toHex() === mosaicId.toHex()) !== undefined).to.be.true;
                 done();
@@ -203,7 +169,7 @@ describe('MosaicHttp', () => {
 
     describe('getMosaicsFromAccounts', () => {
         it('should call getMosaicsFromAccounts successfully', (done) => {
-            mosaicHttp.getMosaicsFromAccounts([account.address]).subscribe((mosaics) => {
+            mosaicRepository.getMosaicsFromAccounts([account.address]).subscribe((mosaics) => {
                 expect(mosaics.length).to.be.greaterThan(0);
                 expect(mosaics.find((m) => m.id.toHex() === mosaicId.toHex()) !== undefined).to.be.true;
                 done();
@@ -217,34 +183,19 @@ describe('MosaicHttp', () => {
      * =========================
      */
     describe('Remove test MosaicAlias', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
 
-        it('Announce MosaicAliasTransaction', (done) => {
+
+        it('Announce MosaicAliasTransaction', () => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
                 Deadline.create(),
                 AliasAction.Unlink,
                 namespaceId,
                 mosaicId,
-                NetworkType.MIJIN_TEST,
+                networkType,
+                helper.maxFee
             );
             const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
-
-            listener.confirmed(account.address).subscribe((transaction) => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+            return helper.announce(signedTransaction);
         });
     });
 });

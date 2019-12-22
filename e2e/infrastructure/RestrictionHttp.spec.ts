@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-import {deepEqual} from 'assert';
-import {assert, expect} from 'chai';
-import {AccountHttp} from '../../src/infrastructure/AccountHttp';
-import { Listener } from '../../src/infrastructure/infrastructure';
-import { RestrictionAccountHttp } from '../../src/infrastructure/RestrictionAccountHttp';
-import { RestrictionMosaicHttp } from '../../src/infrastructure/RestrictionMosaicHttp';
-import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
+import { deepEqual } from 'assert';
+import { expect } from 'chai';
+import { RestrictionMosaicRepository } from '../../src/infrastructure/RestrictionMosaicRepository';
 import { Account } from '../../src/model/account/Account';
-import {Address} from '../../src/model/account/Address';
-import {PublicAccount} from '../../src/model/account/PublicAccount';
-import {NetworkType} from '../../src/model/blockchain/NetworkType';
+import { Address } from '../../src/model/account/Address';
+import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
@@ -38,52 +33,38 @@ import { MosaicAddressRestrictionTransaction } from '../../src/model/transaction
 import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
 import { MosaicGlobalRestrictionTransaction } from '../../src/model/transaction/MosaicGlobalRestrictionTransaction';
 import { UInt64 } from '../../src/model/UInt64';
+import { IntegrationTestHelper } from "./IntegrationTestHelper";
+import { RestrictionAccountRepository } from "../../src/infrastructure/RestrictionAccountRespository";
 
 describe('RestrictionHttp', () => {
+    let helper = new IntegrationTestHelper();
     let account: Account;
-    let account2: Account;
     let account3: Account;
-    let multisigAccount: Account;
-    let cosignAccount1: Account;
-    let cosignAccount2: Account;
-    let cosignAccount3: Account;
     let accountAddress: Address;
-    let accountPublicKey: string;
-    let publicAccount: PublicAccount;
-    let accountHttp: AccountHttp;
-    let restrictionMosaicHttp: RestrictionMosaicHttp;
-    let restrictionAccountHttp: RestrictionAccountHttp;
-    let transactionHttp: TransactionHttp;
+    let restrictionMosaicRepository: RestrictionMosaicRepository;
+    let generationHash: string;
+    let networkType: NetworkType;
     let mosaicId: MosaicId;
     let referenceMosaicId: MosaicId;
-    let generationHash: string;
-    let config;
+    let restrictionAccountRepository: RestrictionAccountRepository;
 
-    before((done) => {
-        const path = require('path');
-        require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
-            if (err) {
-                throw err;
-            }
-            const json = JSON.parse(data);
-            config = json;
-            account = Account.createFromPrivateKey(json.testAccount.privateKey, NetworkType.MIJIN_TEST);
-            account2 = Account.createFromPrivateKey(json.testAccount2.privateKey, NetworkType.MIJIN_TEST);
-            account3 = Account.createFromPrivateKey(json.testAccount3.privateKey, NetworkType.MIJIN_TEST);
-            multisigAccount = Account.createFromPrivateKey(json.multisigAccount.privateKey, NetworkType.MIJIN_TEST);
-            cosignAccount1 = Account.createFromPrivateKey(json.cosignatoryAccount.privateKey, NetworkType.MIJIN_TEST);
-            cosignAccount2 = Account.createFromPrivateKey(json.cosignatory2Account.privateKey, NetworkType.MIJIN_TEST);
-            cosignAccount3 = Account.createFromPrivateKey(json.cosignatory3Account.privateKey, NetworkType.MIJIN_TEST);
-            accountAddress = Address.createFromRawAddress(json.testAccount.address);
-            accountPublicKey = json.testAccount.publicKey;
-            publicAccount = PublicAccount.createFromPublicKey(json.testAccount.publicKey, NetworkType.MIJIN_TEST);
-            generationHash = json.generationHash;
-            accountHttp = new AccountHttp(json.apiUrl);
-            transactionHttp = new TransactionHttp(json.apiUrl);
-            restrictionMosaicHttp = new RestrictionMosaicHttp(json.apiUrl);
-            restrictionAccountHttp = new RestrictionAccountHttp(json.apiUrl);
-            done();
+    before(() => {
+        return helper.start().then(() => {
+            account = helper.account;
+            account3 = helper.account3;
+            accountAddress = helper.account.address;
+            generationHash = helper.generationHash;
+            networkType = helper.networkType;
+            restrictionMosaicRepository = helper.repositoryFactory.createRestrictionMosaicRepository();
+            restrictionAccountRepository = helper.repositoryFactory.createRestrictionAccountRepository();
         });
+    });
+    before(() => {
+        return helper.listener.open();
+    });
+
+    after(() => {
+        helper.listener.close();
     });
 
     /**
@@ -92,115 +73,61 @@ describe('RestrictionHttp', () => {
      * =========================
      */
     describe('MosaicDefinitionTransaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('standalone', (done) => {
+
+        it('standalone', () => {
             const nonce = MosaicNonce.createRandom();
             mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 nonce,
                 mosaicId,
-                MosaicFlags.create( true, true, true),
+                MosaicFlags.create(true, true, true),
                 3,
                 UInt64.fromUint(1000),
-                NetworkType.MIJIN_TEST,
+                networkType, helper.maxFee,
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe(() => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+            return helper.announce(signedTransaction);
         });
     });
 
     describe('MosaicDefinitionTransaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('standalone', (done) => {
+
+        it('standalone', () => {
             const nonce = MosaicNonce.createRandom();
             referenceMosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 nonce,
                 referenceMosaicId,
-                MosaicFlags.create( true, true, true),
+                MosaicFlags.create(true, true, true),
                 3,
                 UInt64.fromUint(1000),
-                NetworkType.MIJIN_TEST,
+                networkType, helper.maxFee,
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe(() => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+            return helper.announce(signedTransaction);
         });
     });
 
     describe('Setup Test AccountAddressRestriction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
 
-        it('Announce AccountRestrictionTransaction', (done) => {
+        it('Announce AccountRestrictionTransaction', () => {
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
                 AccountRestrictionFlags.AllowIncomingAddress,
                 [account3.address],
                 [],
-                NetworkType.MIJIN_TEST,
+                networkType, helper.maxFee,
             );
             const signedTransaction = addressModification.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe(() => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+            return helper.announce(signedTransaction);
         });
     });
 
     describe('MosaicGlobalRestrictionTransaction - Reference', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
 
-        it('standalone', (done) => {
+        it('standalone', () => {
             const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
                 Deadline.create(),
                 referenceMosaicId,
@@ -209,33 +136,16 @@ describe('RestrictionHttp', () => {
                 MosaicRestrictionType.NONE,
                 UInt64.fromUint(0),
                 MosaicRestrictionType.GE,
-                NetworkType.MIJIN_TEST,
+                networkType, undefined, helper.maxFee,
             );
             const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
 
-            listener.confirmed(account.address).subscribe(() => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+            return helper.announce(signedTransaction);
         });
     });
 
     describe('MosaicGlobalRestrictionTransaction - with referenceMosaicId', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-
-        it('standalone', (done) => {
+        it('standalone', () => {
             const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
                 Deadline.create(),
                 mosaicId,
@@ -244,57 +154,33 @@ describe('RestrictionHttp', () => {
                 MosaicRestrictionType.NONE,
                 UInt64.fromUint(0),
                 MosaicRestrictionType.GE,
-                NetworkType.MIJIN_TEST,
+                networkType, undefined, helper.maxFee,
                 // TODO:
                 // referenceMosaicId,
             );
             const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
-
-            listener.confirmed(account.address).subscribe(() => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+            return helper.announce(signedTransaction);
         });
     });
 
     describe('MosaicAddressRestrictionTransaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('aggregate', (done) => {
+
+        it('aggregate', () => {
             const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
                 Deadline.create(),
                 mosaicId,
                 UInt64.fromUint(60641),
                 account3.address,
                 UInt64.fromUint(2),
-                NetworkType.MIJIN_TEST,
+                networkType, helper.maxFee,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                 [mosaicAddressRestrictionTransaction.toAggregate(account.publicAccount)],
-                NetworkType.MIJIN_TEST,
-                [],
+                networkType,
+                [], helper.maxFee
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe(() => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+            return helper.announce(signedTransaction);
         });
     });
 
@@ -306,87 +192,76 @@ describe('RestrictionHttp', () => {
 
     describe('getAccountRestrictions', () => {
         it('should call getAccountRestrictions successfully', (done) => {
-            setTimeout(() => {
-                restrictionAccountHttp.getAccountRestrictions(accountAddress).subscribe((accountRestrictions) => {
-                    expect(accountRestrictions.length).to.be.greaterThan(0);
-                    done();
-                });
-            }, 1000);
+
+            restrictionAccountRepository.getAccountRestrictions(accountAddress).subscribe((accountRestrictions) => {
+                expect(accountRestrictions.length).to.be.greaterThan(0);
+                done();
+            });
         });
     });
 
     describe('getAccountRestrictionsFromAccounts', () => {
         it('should call getAccountRestrictionsFromAccounts successfully', (done) => {
-            setTimeout(() => {
-                restrictionAccountHttp.getAccountRestrictionsFromAccounts([accountAddress]).subscribe((accountRestrictions) => {
-                    deepEqual(accountRestrictions[0]!.address, accountAddress);
-                    done();
-                });
-            }, 1000);
+            restrictionAccountRepository.getAccountRestrictionsFromAccounts([accountAddress]).subscribe((accountRestrictions) => {
+                deepEqual(accountRestrictions[0]!.address, accountAddress);
+                done();
+            });
         });
     });
 
     describe('getMosaicAddressRestriction', () => {
         it('should call getMosaicAddressRestriction successfully', (done) => {
-            setTimeout(() => {
-                restrictionMosaicHttp.getMosaicAddressRestriction(mosaicId, account3.address).subscribe((mosaicRestriction) => {
-                    deepEqual(mosaicRestriction.mosaicId.toHex(), mosaicId.toHex());
-                    deepEqual(mosaicRestriction.entryType, MosaicRestrictionEntryType.ADDRESS);
-                    deepEqual(mosaicRestriction.targetAddress.plain(), account3.address.plain());
-                    deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString()), UInt64.fromUint(2).toString());
-                    done();
-                });
-            }, 1000);
+            restrictionMosaicRepository.getMosaicAddressRestriction(mosaicId, account3.address).subscribe((mosaicRestriction) => {
+                deepEqual(mosaicRestriction.mosaicId.toHex(), mosaicId.toHex());
+                deepEqual(mosaicRestriction.entryType, MosaicRestrictionEntryType.ADDRESS);
+                deepEqual(mosaicRestriction.targetAddress.plain(), account3.address.plain());
+                deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString()), UInt64.fromUint(2).toString());
+                done();
+            });
         });
     });
 
     describe('getMosaicAddressRestrictions', () => {
         it('should call getMosaicAddressRestrictions successfully', (done) => {
-            setTimeout(() => {
-                restrictionMosaicHttp.getMosaicAddressRestrictions(mosaicId, [account3.address]).subscribe((mosaicRestriction) => {
-                    deepEqual(mosaicRestriction[0].mosaicId.toHex(), mosaicId.toHex());
-                    deepEqual(mosaicRestriction[0].entryType, MosaicRestrictionEntryType.ADDRESS);
-                    deepEqual(mosaicRestriction[0].targetAddress.plain(), account3.address.plain());
-                    deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString()), UInt64.fromUint(2).toString());
-                    done();
-                });
-            }, 1000);
+            restrictionMosaicRepository.getMosaicAddressRestrictions(mosaicId, [account3.address]).subscribe((mosaicRestriction) => {
+                deepEqual(mosaicRestriction[0].mosaicId.toHex(), mosaicId.toHex());
+                deepEqual(mosaicRestriction[0].entryType, MosaicRestrictionEntryType.ADDRESS);
+                deepEqual(mosaicRestriction[0].targetAddress.plain(), account3.address.plain());
+                deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString()), UInt64.fromUint(2).toString());
+                done();
+            });
         });
     });
 
     describe('getMosaicGlobalRestriction', () => {
         it('should call getMosaicGlobalRestriction successfully', (done) => {
-            setTimeout(() => {
-                restrictionMosaicHttp.getMosaicGlobalRestriction(mosaicId).subscribe((mosaicRestriction) => {
-                    deepEqual(mosaicRestriction.mosaicId.toHex(), mosaicId.toHex());
-                    deepEqual(mosaicRestriction.entryType, MosaicRestrictionEntryType.GLOBAL);
-                    deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.referenceMosaicId.toHex(),
-                        new MosaicId(UInt64.fromUint(0).toHex()).toHex());
-                    deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.restrictionType,
-                        MosaicRestrictionType.GE);
-                    deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.restrictionValue.toString(),
-                        UInt64.fromUint(0).toString());
-                    done();
-                });
-            }, 1000);
+            restrictionMosaicRepository.getMosaicGlobalRestriction(mosaicId).subscribe((mosaicRestriction) => {
+                deepEqual(mosaicRestriction.mosaicId.toHex(), mosaicId.toHex());
+                deepEqual(mosaicRestriction.entryType, MosaicRestrictionEntryType.GLOBAL);
+                deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.referenceMosaicId.toHex(),
+                    new MosaicId(UInt64.fromUint(0).toHex()).toHex());
+                deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.restrictionType,
+                    MosaicRestrictionType.GE);
+                deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.restrictionValue.toString(),
+                    UInt64.fromUint(0).toString());
+                done();
+            });
         });
     });
 
     describe('getMosaicGlobalRestrictions', () => {
         it('should call getMosaicGlobalRestrictions successfully', (done) => {
-            setTimeout(() => {
-                restrictionMosaicHttp.getMosaicGlobalRestrictions([mosaicId]).subscribe((mosaicRestriction) => {
-                    deepEqual(mosaicRestriction[0].mosaicId.toHex(), mosaicId.toHex());
-                    deepEqual(mosaicRestriction[0].entryType, MosaicRestrictionEntryType.GLOBAL);
-                    deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.referenceMosaicId.toHex(),
-                        new MosaicId(UInt64.fromUint(0).toHex()).toHex());
-                    deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.restrictionType,
-                        MosaicRestrictionType.GE);
-                    deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.restrictionValue.toString(),
-                        UInt64.fromUint(0).toString());
-                    done();
-                });
-            }, 1000);
+            restrictionMosaicRepository.getMosaicGlobalRestrictions([mosaicId]).subscribe((mosaicRestriction) => {
+                deepEqual(mosaicRestriction[0].mosaicId.toHex(), mosaicId.toHex());
+                deepEqual(mosaicRestriction[0].entryType, MosaicRestrictionEntryType.GLOBAL);
+                deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.referenceMosaicId.toHex(),
+                    new MosaicId(UInt64.fromUint(0).toHex()).toHex());
+                deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.restrictionType,
+                    MosaicRestrictionType.GE);
+                deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.restrictionValue.toString(),
+                    UInt64.fromUint(0).toString());
+                done();
+            });
         });
     });
 
@@ -396,33 +271,16 @@ describe('RestrictionHttp', () => {
      * =========================
      */
     describe('Remove test AccountRestriction - Address', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-
-        it('Announce AccountRestrictionTransaction', (done) => {
+        it('Announce AccountRestrictionTransaction', () => {
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
                 AccountRestrictionFlags.AllowIncomingAddress,
                 [],
                 [account3.address],
-                NetworkType.MIJIN_TEST,
+                networkType, helper.maxFee,
             );
             const signedTransaction = addressModification.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe(() => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+            return helper.announce(signedTransaction);
         });
     });
 });

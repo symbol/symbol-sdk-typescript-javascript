@@ -35,16 +35,21 @@ export class MultisigHttp extends Http implements MultisigRepository {
      * @internal
      * Nem2 Library account routes api
      */
-    private multisigRoutesApi: MultisigRoutesApi;
-
+    private readonly multisigRoutesApi: MultisigRoutesApi;
+    /**
+     * @internal
+     * network type for the mappings.
+     */
+    private readonly networkTypeObservable: Observable<NetworkType>;
     /**
      * Constructor
      * @param url
      * @param networkType
      */
-    constructor(url: string, networkType?: NetworkType) {
-        super(url, networkType);
+    constructor(url: string, networkType?: NetworkType | Observable<NetworkType>) {
+        super(url);
         this.multisigRoutesApi = new MultisigRoutesApi(url);
+        this.networkTypeObservable = this.createNetworkTypeObservable(networkType);
     }
 
     /**
@@ -53,7 +58,7 @@ export class MultisigHttp extends Http implements MultisigRepository {
      * @returns Observable<MultisigAccountInfo>
      */
     public getMultisigAccountInfo(address: Address): Observable<MultisigAccountInfo> {
-        return this.getNetworkTypeObservable().pipe(
+        return this.networkTypeObservable.pipe(
             mergeMap((networkType) => observableFrom(
                 this.multisigRoutesApi.getAccountMultisig(address.plain()))
                     .pipe(map(({body}) => new MultisigAccountInfo(
@@ -75,7 +80,7 @@ export class MultisigHttp extends Http implements MultisigRepository {
      * @returns Observable<MultisigAccountGraphInfo>
      */
     public getMultisigAccountGraphInfo(address: Address): Observable<MultisigAccountGraphInfo> {
-        return this.getNetworkTypeObservable().pipe(
+        return this.networkTypeObservable.pipe(
             mergeMap((networkType) => observableFrom(
                 this.multisigRoutesApi.getAccountMultisigGraph(address.plain()))
                     .pipe(map(({body}) => {

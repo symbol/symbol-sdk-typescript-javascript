@@ -40,16 +40,21 @@ export class MetadataHttp extends Http implements MetadataRepository {
      * @internal
      * Nem2 Library metadata routes api
      */
-    private metadataRoutesApi: MetadataRoutesApi;
-
+    private readonly metadataRoutesApi: MetadataRoutesApi;
+    /**
+     * @internal
+     * network type for the mappings.
+     */
+    private readonly networkTypeObservable: Observable<NetworkType>;
     /**
      * Constructor
      * @param url
      * @param networkType
      */
-    constructor(url: string, networkType?: NetworkType) {
-        super(url, networkType);
+    constructor(url: string, networkType?: NetworkType | Observable<NetworkType>) {
+        super(url);
         this.metadataRoutesApi = new MetadataRoutesApi(url);
+        this.networkTypeObservable = this.createNetworkTypeObservable(networkType);
     }
 
     /**
