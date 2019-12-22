@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import { Convert } from '../../core/format/Convert';
-import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
+import { MosaicExpiryReceiptBuilder } from '../../infrastructure/catbuffer/MosaicExpiryReceiptBuilder';
+import { MosaicIdDto } from '../../infrastructure/catbuffer/MosaicIdDto';
+import { NamespaceExpiryReceiptBuilder } from '../../infrastructure/catbuffer/NamespaceExpiryReceiptBuilder';
+import { NamespaceIdDto } from '../../infrastructure/catbuffer/NamespaceIdDto';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
-import { UInt64 } from '../UInt64';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
 import { ReceiptVersion } from './ReceiptVersion';
@@ -48,10 +49,11 @@ export class ArtifactExpiryReceipt extends Receipt {
      * @return {Uint8Array}
      */
     public serialize(): Uint8Array {
-        const buffer = new Uint8Array(12);
-        buffer.set(GeneratorUtils.uintToBuffer(ReceiptVersion.ARTIFACT_EXPIRY, 2));
-        buffer.set(GeneratorUtils.uintToBuffer(this.type, 2), 2);
-        buffer.set(GeneratorUtils.uint64ToBuffer(UInt64.fromHex(this.artifactId.toHex()).toDTO()), 4);
-        return buffer;
+        if (this.artifactId instanceof MosaicId) {
+            return new MosaicExpiryReceiptBuilder(ReceiptVersion.ARTIFACT_EXPIRY, this.type.valueOf(),
+                new MosaicIdDto(this.artifactId.toDTO())).serialize();
+        }
+        return new NamespaceExpiryReceiptBuilder(ReceiptVersion.ARTIFACT_EXPIRY, this.type.valueOf(),
+            new NamespaceIdDto(this.artifactId.id.toDTO())).serialize();
     }
 }
