@@ -15,12 +15,11 @@
  */
 
 import { expect } from 'chai';
-import { DiagnosticHttp } from '../../src/infrastructure/DiagnosticHttp';
-import { IntegrationTestHelper } from "./IntegrationTestHelper";
-import { DiagnosticRepository } from "../../src/infrastructure/DiagnosticRepository";
+import { DiagnosticRepository } from '../../src/infrastructure/DiagnosticRepository';
+import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('DiagnosticHttp', () => {
-    let helper = new IntegrationTestHelper();
+    const helper = new IntegrationTestHelper();
     let diagnosticRepository: DiagnosticRepository;
 
     before(() => {

@@ -1,4 +1,4 @@
-import { MerklePathItem } from "./MerklePathItem";
+import { MerklePathItem } from './MerklePathItem';
 
 /*
  * Copyright 2019 NEM

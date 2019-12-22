@@ -17,7 +17,7 @@
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Convert } from '../core/format/Convert';
-import { MetadataHttp } from '../infrastructure/MetadataHttp';
+import { MetadataRepository } from '../infrastructure/MetadataRepository';
 import { Address } from '../model/account/Address';
 import { PublicAccount } from '../model/account/PublicAccount';
 import { NetworkType } from '../model/blockchain/NetworkType';
@@ -29,9 +29,7 @@ import { AccountMetadataTransaction } from '../model/transaction/AccountMetadata
 import { Deadline } from '../model/transaction/Deadline';
 import { MosaicMetadataTransaction } from '../model/transaction/MosaicMetadataTransaction';
 import { NamespaceMetadataTransaction } from '../model/transaction/NamespaceMetadataTransaction';
-import { Transaction } from '../model/transaction/Transaction';
 import { UInt64 } from '../model/UInt64';
-import { MetadataRepository } from "../infrastructure/MetadataRepository";
 
 /**
  * MetadataTransaction service

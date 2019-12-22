@@ -17,14 +17,14 @@ import { NamespaceRegistrationTransaction } from '../../src/model/transaction/Na
 import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { UInt64 } from '../../src/model/UInt64';
 import { MetadataTransactionService } from '../../src/service/MetadataTransactionService';
-import { IntegrationTestHelper } from "../infrastructure/IntegrationTestHelper";
+import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
 describe('MetadataTransactionService', () => {
     const deadline = Deadline.create();
     const key = UInt64.fromUint(123);
     const newValue = 'new test value';
 
-    let helper = new IntegrationTestHelper();
+    const helper = new IntegrationTestHelper();
     let networkType: NetworkType;
 
     let targetAccount: Account;
@@ -32,7 +32,6 @@ describe('MetadataTransactionService', () => {
     let mosaicId: MosaicId;
     let namespaceId: NamespaceId;
     let generationHash: string;
-
 
     before(() => {
         return helper.start().then(() => {
@@ -69,7 +68,7 @@ describe('MetadataTransactionService', () => {
                 MosaicFlags.create(true, true, true),
                 3,
                 UInt64.fromUint(1000),
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(targetAccount, generationHash);
             return helper.announce(signedTransaction);
@@ -84,7 +83,7 @@ describe('MetadataTransactionService', () => {
                 Deadline.create(),
                 namespaceName,
                 UInt64.fromUint(9),
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             namespaceId = new NamespaceId(namespaceName);
             const signedTransaction = registerNamespaceTransaction.signWith(targetAccount, generationHash);
@@ -104,14 +103,14 @@ describe('MetadataTransactionService', () => {
                 newValue.length,
                 newValue,
                 networkType,
-                helper.maxFee
+                helper.maxFee,
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                 [mosaicMetadataTransaction.toAggregate(targetAccount.publicAccount)],
                 networkType,
                 [],
-                helper.maxFee
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
 
@@ -136,7 +135,7 @@ describe('MetadataTransactionService', () => {
                 [namespaceMetadataTransaction.toAggregate(targetAccount.publicAccount)],
                 networkType,
                 [],
-                helper.maxFee
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
             return helper.announce(signedTransaction);
@@ -228,13 +227,13 @@ describe('MetadataTransactionService', () => {
                 newValue + 'delta',
                 targetAccount.publicAccount,
                 mosaicId,
-                helper.maxFee
+                helper.maxFee,
             ).subscribe((transaction: MosaicMetadataTransaction) => {
                 const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                     [transaction.toAggregate(targetAccount.publicAccount)],
                     networkType,
                     [],
-                    helper.maxFee
+                    helper.maxFee,
                 );
                 const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
                 helper.announce(signedTransaction).then(() => {
@@ -262,13 +261,13 @@ describe('MetadataTransactionService', () => {
                 newValue + 'delta' + 'extra delta',
                 targetAccount.publicAccount,
                 mosaicId,
-                helper.maxFee
+                helper.maxFee,
             ).subscribe((transaction: MosaicMetadataTransaction) => {
                 const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                     [transaction.toAggregate(targetAccount.publicAccount)],
                     networkType,
                     [],
-                    helper.maxFee
+                    helper.maxFee,
                 );
                 const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
                 helper.announce(signedTransaction).then(() => {
@@ -301,7 +300,7 @@ describe('MetadataTransactionService', () => {
                     [transaction.toAggregate(targetAccount.publicAccount)],
                     networkType,
                     [],
-                    helper.maxFee
+                    helper.maxFee,
                 );
                 const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
                 helper.announce(signedTransaction).then(() => {

@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-import { Observable } from "rxjs";
-import { NetworkType } from "../model/blockchain/NetworkType";
-import { AccountRepository } from "./AccountRepository";
-import { MultisigRepository } from "./MultisigRepository";
-import { ReceiptRepository } from "./ReceiptRepository";
-import { BlockRepository } from "./BlockRepository";
-import { ChainRepository } from "./ChainRepository";
-import { DiagnosticRepository } from "./DiagnosticRepository";
-import { MosaicRepository } from "./MosaicRepository";
-import { NamespaceRepository } from "./NamespaceRepository";
-import { NetworkRepository } from "./NetworkRepository";
-import { NodeRepository } from "./NodeRepository";
-import { TransactionRepository } from "./TransactionRepository";
-import { MetadataRepository } from "./MetadataRepository";
-import { RestrictionAccountRepository } from "./RestrictionAccountRespository";
-import { RestrictionMosaicRepository } from "./RestrictionMosaicRepository";
-import { Listener } from "./Listener";
-import { IListener } from "./IListener";
+import { Observable } from 'rxjs';
+import { NetworkType } from '../model/blockchain/NetworkType';
+import { AccountRepository } from './AccountRepository';
+import { BlockRepository } from './BlockRepository';
+import { ChainRepository } from './ChainRepository';
+import { DiagnosticRepository } from './DiagnosticRepository';
+import { IListener } from './IListener';
+import { MetadataRepository } from './MetadataRepository';
+import { MosaicRepository } from './MosaicRepository';
+import { MultisigRepository } from './MultisigRepository';
+import { NamespaceRepository } from './NamespaceRepository';
+import { NetworkRepository } from './NetworkRepository';
+import { NodeRepository } from './NodeRepository';
+import { ReceiptRepository } from './ReceiptRepository';
+import { RestrictionAccountRepository } from './RestrictionAccountRespository';
+import { RestrictionMosaicRepository } from './RestrictionMosaicRepository';
+import { TransactionRepository } from './TransactionRepository';
 
 /**
  * A repository factory allows clients to create repositories to access NEM Server without knowing

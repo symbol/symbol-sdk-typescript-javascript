@@ -15,6 +15,7 @@
  */
 import { expect } from 'chai';
 import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
+import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
@@ -27,8 +28,7 @@ import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasT
 import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { UInt64 } from '../../src/model/UInt64';
-import { IntegrationTestHelper } from "./IntegrationTestHelper";
-import { NamespaceRepository } from "../../src/infrastructure/NamespaceRepository";
+import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('MosaicHttp', () => {
 
@@ -38,7 +38,7 @@ describe('MosaicHttp', () => {
     let namespaceId: NamespaceId;
     let namespaceRepository: NamespaceRepository;
     let generationHash: string;
-    let helper = new IntegrationTestHelper();
+    const helper = new IntegrationTestHelper();
     let networkType: NetworkType;
 
     before(() => {
@@ -76,7 +76,7 @@ describe('MosaicHttp', () => {
                 3,
                 UInt64.fromUint(0),
                 networkType,
-                helper.maxFee
+                helper.maxFee,
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
@@ -93,7 +93,7 @@ describe('MosaicHttp', () => {
                 namespaceName,
                 UInt64.fromUint(1000),
                 networkType,
-                helper.maxFee
+                helper.maxFee,
             );
             namespaceId = new NamespaceId(namespaceName);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
@@ -110,7 +110,7 @@ describe('MosaicHttp', () => {
                 namespaceId,
                 mosaicId,
                 networkType,
-                helper.maxFee
+                helper.maxFee,
             );
             const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
@@ -184,7 +184,6 @@ describe('MosaicHttp', () => {
      */
     describe('Remove test MosaicAlias', () => {
 
-
         it('Announce MosaicAliasTransaction', () => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
                 Deadline.create(),
@@ -192,7 +191,7 @@ describe('MosaicHttp', () => {
                 namespaceId,
                 mosaicId,
                 networkType,
-                helper.maxFee
+                helper.maxFee,
             );
             const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
