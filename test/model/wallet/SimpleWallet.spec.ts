@@ -49,4 +49,15 @@ describe('SimpleWallet', () => {
         const account = simpleWallet.open(new Password('password'));
         expect(simpleWallet.address.plain()).to.be.equal(account.address.plain());
     });
+
+    it('should open a simple wallet from a simple wallet without prototype', () => {
+        const privateKey = '5149a02ca2b2610138376717daaff8477f1639796aa108b7eee83e99e585b250';
+        const password = new Password('password');
+        const simpleWallet = SimpleWallet.createFromPrivateKey('wallet-name', password, privateKey, NetworkType.MIJIN_TEST);
+        const account = simpleWallet.open(new Password('password'));
+        const simpleWalletNoProto = JSON.parse(JSON.stringify(simpleWallet));
+        const simpleWallet2 = SimpleWallet.createFromDTO(simpleWalletNoProto);
+        const account2 = simpleWallet2.open(password);
+        expect(account).to.deep.equal(account2);
+    });
 });
