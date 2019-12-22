@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-import { Convert } from '../../core/format/Convert';
-import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { InflationReceiptBuilder } from '../../infrastructure/catbuffer/InflationReceiptBuilder';
+import { MosaicBuilder } from '../../infrastructure/catbuffer/MosaicBuilder';
+import { MosaicIdDto } from '../../infrastructure/catbuffer/MosaicIdDto';
 import { MosaicId } from '../mosaic/MosaicId';
 import { UInt64 } from '../UInt64';
 import { Receipt } from './Receipt';
@@ -56,11 +58,9 @@ export class InflationReceipt extends Receipt {
      * @return {Uint8Array}
      */
     public serialize(): Uint8Array {
-        const buffer = new Uint8Array(20);
-        buffer.set(GeneratorUtils.uintToBuffer(ReceiptVersion.INFLATION_RECEIPT, 2));
-        buffer.set(GeneratorUtils.uintToBuffer(this.type, 2), 2);
-        buffer.set(GeneratorUtils.uint64ToBuffer(UInt64.fromHex(this.mosaicId.toHex()).toDTO()), 4);
-        buffer.set(GeneratorUtils.uint64ToBuffer(UInt64.fromHex(this.amount.toHex()).toDTO()), 12);
-        return buffer;
+       return new InflationReceiptBuilder(
+            ReceiptVersion.INFLATION_RECEIPT, this.type.valueOf(),
+            new MosaicBuilder(new MosaicIdDto(this.mosaicId.toDTO()), new AmountDto(this.amount.toDTO())),
+        ).serialize();
     }
 }
