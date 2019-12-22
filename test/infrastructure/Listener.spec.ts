@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
+import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { Listener } from '../../src/infrastructure/Listener';
-import { Address } from "../../src/model/account/Address";
-import { deepEqual } from "assert";
-import { UInt64 } from "../../src/model/UInt64";
-import { timeout } from "rxjs/operators";
-import { TransactionStatusError } from "../../src/model/transaction/TransactionStatusError";
+import { Address } from '../../src/model/account/Address';
+import { TransactionStatusError } from '../../src/model/transaction/TransactionStatusError';
+import { UInt64 } from '../../src/model/UInt64';
 
 describe('Listener', () => {
     it('should createComplete a WebSocket instance given url parameter', () => {
@@ -39,7 +38,6 @@ describe('Listener', () => {
 
     describe('onStatusWhenAddressIsTheSame', () => {
         it('Should forward status', () => {
-
 
             const errorEncodedAddress = '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB';
 
@@ -67,8 +65,8 @@ describe('Listener', () => {
 
             const reportedStatus = new Array<TransactionStatusError>();
 
-            listener.status(errorAddress).subscribe((transactionStatusError) => {
-                reportedStatus.push(transactionStatusError);
+            listener.status(errorAddress).subscribe((error) => {
+                reportedStatus.push(error);
             });
 
             listener.handleMessage(statusInfoErrorDTO, null);
@@ -80,24 +78,21 @@ describe('Listener', () => {
             expect(transactionStatusError.status).to.be.equal(statusInfoErrorDTO.status);
             deepEqual(transactionStatusError.deadline.toDTO(), UInt64.fromNumericString(statusInfoErrorDTO.deadline).toDTO());
 
-
         });
     });
 
     describe('onStatusWhenAddressIsDifferentAddress', () => {
         it('Should not forward status', () => {
 
-
             const errorEncodedAddress = '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB';
 
             const subscribedEncodedAddress = '906415867F121D037AF447E711B0F5E4D52EBBF066D96AAAAA';
             const subscribedAddress = Address.createFromEncoded(subscribedEncodedAddress);
 
+            // tslint:disable-next-line: max-classes-per-file
             class WebSocketMock {
-
                 constructor(public readonly  url: string) {
                 }
-
                 send(payload: string) {
                     expect(payload).to.be.eq(`{"subscribe":"status/${subscribedAddress.plain()}"}`);
                 }
@@ -121,9 +116,8 @@ describe('Listener', () => {
             });
 
             listener.handleMessage(statusInfoErrorDTO, null);
-            
-            expect(reportedStatus.length).to.be.equal(0);
 
+            expect(reportedStatus.length).to.be.equal(0);
 
         });
     });
@@ -132,7 +126,7 @@ describe('Listener', () => {
         it('should reject because of wrong server url', async () => {
             const listener = new Listener('https://notcorrecturl:0000');
             await listener.open()
-            .then((result) => {
+            .then(() => {
                 throw new Error('This should not be called when expecting error');
             })
             .catch((error) => {

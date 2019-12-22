@@ -16,11 +16,11 @@
 
 import { expect } from 'chai';
 import { NodeRepository } from '../../src/infrastructure/NodeRepository';
-import { IntegrationTestHelper } from "./IntegrationTestHelper";
+import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('NodeHttp', () => {
     let nodeRepository: NodeRepository;
-    let helper = new IntegrationTestHelper();
+    const helper = new IntegrationTestHelper();
 
     before(() => {
         return helper.start().then(() => {

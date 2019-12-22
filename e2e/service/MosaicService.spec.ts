@@ -17,16 +17,16 @@
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
 import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
 import { Address } from '../../src/model/account/Address';
+import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { MosaicService } from '../../src/service/MosaicService';
-import { IntegrationTestHelper } from "../infrastructure/IntegrationTestHelper";
-import { NetworkType } from "../../src/model/blockchain/NetworkType";
+import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
 describe('MosaicService', () => {
     let accountAddress: Address;
     let accountRepository: AccountRepository;
     let mosaicRepository: MosaicRepository;
     let generationHash: string;
-    let helper = new IntegrationTestHelper();
+    const helper = new IntegrationTestHelper();
     let networkType: NetworkType;
 
     before(() => {

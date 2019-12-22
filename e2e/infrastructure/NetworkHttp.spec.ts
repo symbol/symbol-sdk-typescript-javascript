@@ -16,11 +16,11 @@
 import { expect } from 'chai';
 import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
-import { IntegrationTestHelper } from "./IntegrationTestHelper";
+import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('NetworkHttp', () => {
     let networkRepository: NetworkRepository;
-    let helper = new IntegrationTestHelper();
+    const helper = new IntegrationTestHelper();
     let networkType: NetworkType;
 
     before(() => {

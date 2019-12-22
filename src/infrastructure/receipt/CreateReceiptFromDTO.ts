@@ -34,50 +34,21 @@ import { TransactionStatement } from '../../model/receipt/TransactionStatement';
 import {UInt64} from '../../model/UInt64';
 
 /**
- * @param receiptDTO
- * @param networkType
- * @returns {Statement}
- * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/ReceiptType.h
- * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/ReceiptType.cpp
- * @constructor
+ * @interal
+ * @param unresolvedAddress unresolved address
+ * @returns {Address | NamespaceId}
  */
-export const CreateStatementFromDTO = (receiptDTO, networkType): Statement => {
-    return new Statement(
-        receiptDTO.transactionStatements.map((statement) => createTransactionStatement(statement.statement, networkType)),
-        receiptDTO.addressResolutionStatements.map((statement) => createResolutionStatement(statement.statement, ResolutionType.Address)),
-        receiptDTO.mosaicResolutionStatements.map((statement) => createResolutionStatement(statement.statement, ResolutionType.Mosaic)),
-    );
-};
-
-/**
- * @param receiptDTO
- * @param networkType
- * @returns {Receipt}
- * @constructor
- */
-export const CreateReceiptFromDTO = (receiptDTO, networkType): Receipt => {
-    switch (receiptDTO.type) {
-        case ReceiptType.Harvest_Fee:
-        case ReceiptType.LockHash_Created:
-        case ReceiptType.LockHash_Completed:
-        case ReceiptType.LockHash_Expired:
-        case ReceiptType.LockSecret_Created:
-        case ReceiptType.LockSecret_Completed:
-        case ReceiptType.LockSecret_Expired:
-            return createBalanceChangeReceipt(receiptDTO, networkType);
-        case ReceiptType.Mosaic_Levy:
-        case ReceiptType.Mosaic_Rental_Fee:
-        case ReceiptType.Namespace_Rental_Fee:
-            return createBalanceTransferReceipt(receiptDTO, networkType);
-        case ReceiptType.Mosaic_Expired:
-        case ReceiptType.Namespace_Expired:
-        case ReceiptType.Namespace_Deleted:
-            return  createArtifactExpiryReceipt(receiptDTO);
-        case ReceiptType.Inflation:
-            return createInflationReceipt(receiptDTO);
-        default:
-            throw new Error(`Receipt type: ${receiptDTO.type} not recognized.`);
+const extractUnresolvedAddress = (unresolvedAddress: any): Address | NamespaceId => {
+    if (typeof unresolvedAddress === 'string') {
+        return UnresolvedMapping.toUnresolvedAddress(unresolvedAddress);
+    } else if (typeof unresolvedAddress === 'object') { // Is JSON object
+        if (unresolvedAddress.hasOwnProperty('address')) {
+            return Address.createFromRawAddress(unresolvedAddress.address);
+        } else if (unresolvedAddress.hasOwnProperty('id')) {
+            return NamespaceId.createFromEncoded(unresolvedAddress.id);
+        }
     }
+    throw new Error(`UnresolvedAddress: ${unresolvedAddress} type is not recognised`);
 };
 
 /**
@@ -112,23 +83,6 @@ const createResolutionStatement = (statementDTO, resolutionType): ResolutionStat
         default:
             throw new Error ('Resolution type invalid');
     }
-};
-
-/**
- * @internal
- * @param statementDTO
- * @param networkType
- * @returns {TransactionStatement}
- * @constructor
- */
-const createTransactionStatement = (statementDTO, networkType): TransactionStatement => {
-    return new TransactionStatement(
-        UInt64.fromNumericString(statementDTO.height),
-        new ReceiptSource(statementDTO.source.primaryId, statementDTO.source.secondaryId),
-        statementDTO.receipts.map((receipt) => {
-            return CreateReceiptFromDTO(receipt, networkType);
-        }),
-    );
 };
 
 /**
@@ -168,6 +122,24 @@ const createBalanceTransferReceipt = (receiptDTO, networkType): Receipt => {
 
 /**
  * @internal
+ * @param receiptType receipt type
+ * @param id Artifact id
+ * @returns {MosaicId | NamespaceId}
+ */
+const extractArtifactId = (receiptType: ReceiptType, id: string): MosaicId | NamespaceId => {
+    switch (receiptType) {
+        case ReceiptType.Mosaic_Expired:
+            return new MosaicId(id);
+        case ReceiptType.Namespace_Expired:
+        case ReceiptType.Namespace_Deleted:
+            return NamespaceId.createFromEncoded(id);
+        default:
+            throw new Error('Receipt type is not supported.');
+    }
+};
+
+/**
+ * @internal
  * @param receiptDTO
  * @returns {ArtifactExpiryReceipt}
  * @constructor
@@ -196,37 +168,65 @@ const createInflationReceipt = (receiptDTO): Receipt => {
 };
 
 /**
- * @internal
- * @param receiptType receipt type
- * @param id Artifact id
- * @returns {MosaicId | NamespaceId}
+ * @param receiptDTO
+ * @param networkType
+ * @returns {Receipt}
+ * @constructor
  */
-const extractArtifactId = (receiptType: ReceiptType, id: string): MosaicId | NamespaceId => {
-    switch (receiptType) {
+export const CreateReceiptFromDTO = (receiptDTO, networkType): Receipt => {
+    switch (receiptDTO.type) {
+        case ReceiptType.Harvest_Fee:
+        case ReceiptType.LockHash_Created:
+        case ReceiptType.LockHash_Completed:
+        case ReceiptType.LockHash_Expired:
+        case ReceiptType.LockSecret_Created:
+        case ReceiptType.LockSecret_Completed:
+        case ReceiptType.LockSecret_Expired:
+            return createBalanceChangeReceipt(receiptDTO, networkType);
+        case ReceiptType.Mosaic_Levy:
+        case ReceiptType.Mosaic_Rental_Fee:
+        case ReceiptType.Namespace_Rental_Fee:
+            return createBalanceTransferReceipt(receiptDTO, networkType);
         case ReceiptType.Mosaic_Expired:
-            return new MosaicId(id);
         case ReceiptType.Namespace_Expired:
         case ReceiptType.Namespace_Deleted:
-            return NamespaceId.createFromEncoded(id);
+            return  createArtifactExpiryReceipt(receiptDTO);
+        case ReceiptType.Inflation:
+            return createInflationReceipt(receiptDTO);
         default:
-            throw new Error('Receipt type is not supported.');
+            throw new Error(`Receipt type: ${receiptDTO.type} not recognized.`);
     }
 };
 
 /**
- * @interal
- * @param unresolvedAddress unresolved address
- * @returns {Address | NamespaceId}
+ * @internal
+ * @param statementDTO
+ * @param networkType
+ * @returns {TransactionStatement}
+ * @constructor
  */
-const extractUnresolvedAddress = (unresolvedAddress: any): Address | NamespaceId => {
-    if (typeof unresolvedAddress === 'string') {
-        return UnresolvedMapping.toUnresolvedAddress(unresolvedAddress);
-    } else if (typeof unresolvedAddress === 'object') { // Is JSON object
-        if (unresolvedAddress.hasOwnProperty('address')) {
-            return Address.createFromRawAddress(unresolvedAddress.address);
-        } else if (unresolvedAddress.hasOwnProperty('id')) {
-            return NamespaceId.createFromEncoded(unresolvedAddress.id);
-        }
-    }
-    throw new Error(`UnresolvedAddress: ${unresolvedAddress} type is not recognised`);
+const createTransactionStatement = (statementDTO, networkType): TransactionStatement => {
+    return new TransactionStatement(
+        UInt64.fromNumericString(statementDTO.height),
+        new ReceiptSource(statementDTO.source.primaryId, statementDTO.source.secondaryId),
+        statementDTO.receipts.map((receipt) => {
+            return CreateReceiptFromDTO(receipt, networkType);
+        }),
+    );
+};
+
+/**
+ * @param receiptDTO
+ * @param networkType
+ * @returns {Statement}
+ * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/ReceiptType.h
+ * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/ReceiptType.cpp
+ * @constructor
+ */
+export const CreateStatementFromDTO = (receiptDTO, networkType): Statement => {
+    return new Statement(
+        receiptDTO.transactionStatements.map((statement) => createTransactionStatement(statement.statement, networkType)),
+        receiptDTO.addressResolutionStatements.map((statement) => createResolutionStatement(statement.statement, ResolutionType.Address)),
+        receiptDTO.mosaicResolutionStatements.map((statement) => createResolutionStatement(statement.statement, ResolutionType.Mosaic)),
+    );
 };

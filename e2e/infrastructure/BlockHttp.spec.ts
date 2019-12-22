@@ -17,7 +17,9 @@
 import { expect } from 'chai';
 import { mergeMap } from 'rxjs/operators';
 import { BlockHttp } from '../../src/infrastructure/BlockHttp';
+import { BlockRepository } from '../../src/infrastructure/BlockRepository';
 import { QueryParams } from '../../src/infrastructure/QueryParams';
+import { ReceiptRepository } from '../../src/infrastructure/ReceiptRepository';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
@@ -25,12 +27,10 @@ import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMos
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { TransactionInfo } from '../../src/model/transaction/TransactionInfo';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { IntegrationTestHelper } from "./IntegrationTestHelper";
-import { BlockRepository } from "../../src/infrastructure/BlockRepository";
-import { ReceiptRepository } from "../../src/infrastructure/ReceiptRepository";
+import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('BlockHttp', () => {
-    let helper = new IntegrationTestHelper();
+    const helper = new IntegrationTestHelper();
     let account: Account;
     let account2: Account;
     let blockRepository: BlockRepository;
@@ -68,7 +68,6 @@ describe('BlockHttp', () => {
 
     describe('Setup Test Data', () => {
 
-
         it('Announce TransferTransaction', (done) => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
@@ -76,10 +75,10 @@ describe('BlockHttp', () => {
                 [NetworkCurrencyMosaic.createAbsolute(1)],
                 PlainMessage.create('test-message'),
                 networkType,
-                helper.maxFee
+                helper.maxFee,
             );
             const signedTransaction = transferTransaction.signWith(account, generationHash);
-            helper.announce(signedTransaction).then(transaction => {
+            helper.announce(signedTransaction).then((transaction) => {
                 chainHeight = transaction.transactionInfo!.height.toString();
                 return transaction;
             });

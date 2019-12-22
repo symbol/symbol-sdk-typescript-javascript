@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Account } from "../../src/model/account/Account";
-import { RepositoryFactoryHttp } from "../../src/infrastructure/RepositoryFactoryHttp";
-import { RepositoryFactory } from "../../src/infrastructure/RepositoryFactory";
-import { NetworkType } from "../../src/model/blockchain/NetworkType";
-import { combineLatest } from "rxjs";
-import { IListener } from "../../src/infrastructure/IListener";
-import { SignedTransaction } from "../../src/model/transaction/SignedTransaction";
-import { filter } from "rxjs/operators";
-import { Transaction } from "../../src/model/transaction/Transaction";
-import { UInt64 } from "../../src/model/UInt64";
-
-const yaml = require('js-yaml');
+import { combineLatest } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { IListener } from '../../src/infrastructure/IListener';
+import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
+import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
+import { Account } from '../../src/model/account/Account';
+import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
+import { Transaction } from '../../src/model/transaction/Transaction';
+import { UInt64 } from '../../src/model/UInt64';
 
 export class IntegrationTestHelper {
-
+    public readonly yaml = require('js-yaml');
     public apiUrl: string;
     public repositoryFactory: RepositoryFactory;
     public account: Account;
@@ -57,7 +55,8 @@ export class IntegrationTestHelper {
                     console.log(`Running tests against: ${json.apiUrl}`);
                     this.apiUrl = json.apiUrl;
                     this.repositoryFactory = new RepositoryFactoryHttp(json.apiUrl);
-                    combineLatest(this.repositoryFactory.getGenerationHash(), this.repositoryFactory.getNetworkType()).subscribe(([generationHash, networkType]) => {
+                    combineLatest(this.repositoryFactory.getGenerationHash(),
+                        this.repositoryFactory.getNetworkType()).subscribe(([generationHash, networkType]) => {
                         this.networkType = networkType;
                         this.generationHash = generationHash;
                         this.account = this.createAccount(json.testAccount);
@@ -71,15 +70,18 @@ export class IntegrationTestHelper {
                         this.harvestingAccount = this.createAccount(json.harvestingAccount);
                         this.listener = this.repositoryFactory.createListener();
 
-                        this.maxFee = UInt64.fromUint(1000000); //What would be the best maxFee? In the future we will load the fee multiplier from rest.
+                        // What would be the best maxFee? In the future we will load the fee multiplier from rest.
+                        this.maxFee = UInt64.fromUint(1000000);
 
-
-                        require('fs').readFile(path.resolve(__dirname, '../../../catapult-service-bootstrap/build/generated-addresses/addresses.yaml'), (err, yamlData) => {
-                            if (err) {
-                                console.log(`catapult-service-bootstrap generated address could not be loaded. Ignoring and using accounts from network.conf. Error: ${err}`);
+                        require('fs').readFile(path.resolve(__dirname,
+                                '../../../catapult-service-bootstrap/build/generated-addresses/addresses.yaml'),
+                                    (error: any, yamlData: any) => {
+                            if (error) {
+                                console.log(`catapult-service-bootstrap generated address could not be loaded.
+                                    Ignoring and using accounts from network.conf. Error: ${error}`);
                                 return resolve(this);
                             } else {
-                                const parsedYaml = yaml.safeLoad(yamlData);
+                                const parsedYaml = this.yaml.safeLoad(yamlData);
                                 this.account = this.createAccount(parsedYaml.nemesis_addresses[0]);
                                 this.account2 = this.createAccount(parsedYaml.nemesis_addresses[1]);
                                 this.account3 = this.createAccount(parsedYaml.nemesis_addresses[2]);
@@ -91,15 +93,14 @@ export class IntegrationTestHelper {
                             }
                         });
                     }, (error) => {
-                        console.log("There has been an error loading the configuration. ", error)
+                        console.log('There has been an error loading the configuration. ', error);
                         return reject(error);
                     });
                 });
 
-
-            }
+            },
         );
-    };
+    }
 
     createAccount(data): Account {
         return Account.createFromPrivateKey(data.privateKey ? data.privateKey : data.private, this.networkType);
@@ -114,12 +115,12 @@ export class IntegrationTestHelper {
                     console.log(`Transaction ${signedTransaction.type} confirmed`);
                     resolve(transaction);
                 });
-                this.listener.status(address).pipe(filter(status => status.hash === signedTransaction.hash)).subscribe((error) => {
+                this.listener.status(address).pipe(filter((status) => status.hash === signedTransaction.hash)).subscribe((error) => {
                     console.log(`Error processing transaction ${signedTransaction.type}`, error);
                     reject(error);
                 });
                 this.repositoryFactory.createTransactionRepository().announce(signedTransaction);
-            }
+            },
         );
-    };
+    }
 }

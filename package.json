@@ -52,9 +52,9 @@
     "secure-random": "^1.1.1",
     "ts-mockito": "^2.4.0",
     "ts-node": "^5.0.1",
-    "tslint": "^5.8.0",
-    "typescript": "^2.5.3",
-    "typescript-require": "^0.2.9-1"
+    "tslint": "^5.20.1",
+    "typescript": "^2.9.2",
+    "typescript-require": "^0.2.10"
   },
   "dependencies": {
     "bluebird": "^3.5.5",
@@ -67,15 +67,15 @@
     "request": "^2.88.0",
     "request-promise-native": "^1.0.5",
     "ripemd160": "^2.0.2",
-    "rxjs": "^6.2.1",
-    "rxjs-compat": "^6.2.1",
+    "rxjs": "^6.5.3",
+    "rxjs-compat": "^6.5.3",
     "utf8": "^2.1.2",
     "ws": "^5.2.0"
   },
   "peerDependencies": {
     "js-joda": "^1.6.2",
     "utf8": "^2.1.2",
-    "rxjs": "^6.2.1"
+    "rxjs": "^6.5.3"
   },
   "nyc": {
     "exclude-after-remap": false,

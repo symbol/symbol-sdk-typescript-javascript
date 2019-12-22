@@ -17,6 +17,8 @@
 import { Observable, of } from 'rxjs';
 import { flatMap, map, mergeMap, toArray } from 'rxjs/operators';
 import { IListener } from '../infrastructure/IListener';
+import { ReceiptRepository } from '../infrastructure/ReceiptRepository';
+import { TransactionRepository } from '../infrastructure/TransactionRepository';
 import { NamespaceId } from '../model/namespace/NamespaceId';
 import { AccountAddressRestrictionTransaction } from '../model/transaction/AccountAddressRestrictionTransaction';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
@@ -32,8 +34,6 @@ import { Transaction } from '../model/transaction/Transaction';
 import { TransactionType } from '../model/transaction/TransactionType';
 import { TransferTransaction } from '../model/transaction/TransferTransaction';
 import { ITransactionService } from './interfaces/ITransactionService';
-import { TransactionRepository } from "../infrastructure/TransactionRepository";
-import { ReceiptRepository } from "../infrastructure/ReceiptRepository";
 
 /**
  * Transaction Service

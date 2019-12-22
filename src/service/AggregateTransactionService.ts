@@ -17,13 +17,13 @@
 import { from as observableFrom, Observable, of as observableOf } from 'rxjs';
 import { flatMap, map, mergeMap, toArray } from 'rxjs/operators';
 import { TransactionMapping } from '../core/utils/TransactionMapping';
+import { MultisigRepository } from '../infrastructure/MultisigRepository';
 import { MultisigAccountGraphInfo } from '../model/account/MultisigAccountGraphInfo';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
 import { InnerTransaction } from '../model/transaction/InnerTransaction';
 import { MultisigAccountModificationTransaction } from '../model/transaction/MultisigAccountModificationTransaction';
 import { SignedTransaction } from '../model/transaction/SignedTransaction';
 import { TransactionType } from '../model/transaction/TransactionType';
-import { MultisigRepository } from "../infrastructure/MultisigRepository";
 
 /**
  * Aggregated Transaction service

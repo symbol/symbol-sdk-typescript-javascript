@@ -23,21 +23,19 @@ import { BlockInfo } from '../model/blockchain/BlockInfo';
 import { NamespaceId } from '../model/namespace/NamespaceId';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
 import { AggregateTransactionCosignature } from '../model/transaction/AggregateTransactionCosignature';
-import { CosignatoryModificationAction } from '../model/transaction/CosignatoryModificationAction';
 import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
 import { Deadline } from '../model/transaction/Deadline';
 import { InnerTransaction } from '../model/transaction/InnerTransaction';
 import { MultisigAccountModificationTransaction } from '../model/transaction/MultisigAccountModificationTransaction';
-import { MultisigCosignatoryModification } from '../model/transaction/MultisigCosignatoryModification';
 import { Transaction } from '../model/transaction/Transaction';
 import { TransactionStatusError } from '../model/transaction/TransactionStatusError';
 import { TransferTransaction } from '../model/transaction/TransferTransaction';
 import { UInt64 } from '../model/UInt64';
+import { IListener } from './IListener';
 import {
     CreateTransactionFromDTO,
     extractBeneficiary,
 } from './transaction/CreateTransactionFromDTO';
-import { IListener } from "./IListener";
 
 enum ListenerChannelName {
     block = 'block',
@@ -354,18 +352,6 @@ export class Listener implements IListener {
             subscribe: channel,
         };
         this.webSocket.send(JSON.stringify(subscriptionMessage));
-    }
-
-    /**
-     * @internal
-     * @param channel - Channel to unsubscribe
-     */
-    private unsubscribeTo(channel: string) {
-        const unsubscribeMessage = {
-            uid: this.uid,
-            unsubscribe: channel,
-        };
-        this.webSocket.send(JSON.stringify(unsubscribeMessage));
     }
 
     /**

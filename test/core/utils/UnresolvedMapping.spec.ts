@@ -17,7 +17,7 @@ import { expect } from 'chai';
 import { Convert, RawAddress } from '../../../src/core/format';
 import { UnresolvedMapping } from '../../../src/core/utils/UnresolvedMapping';
 import { Address } from '../../../src/model/account/Address';
-import { NetworkType } from "../../../src/model/blockchain/NetworkType";
+import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 

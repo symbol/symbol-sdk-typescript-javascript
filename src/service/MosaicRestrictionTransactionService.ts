@@ -16,9 +16,11 @@
 
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
+import { RestrictionMosaicRepository } from '../infrastructure/RestrictionMosaicRepository';
 import { Address } from '../model/account/Address';
 import { NetworkType } from '../model/blockchain/NetworkType';
 import { MosaicId } from '../model/mosaic/MosaicId';
+import { NamespaceId } from '../model/namespace/NamespaceId';
 import { MosaicGlobalRestriction } from '../model/restriction/MosaicGlobalRestriction';
 import { MosaicGlobalRestrictionItem } from '../model/restriction/MosaicGlobalRestrictionItem';
 import { MosaicRestrictionType } from '../model/restriction/MosaicRestrictionType';
@@ -27,8 +29,6 @@ import { MosaicAddressRestrictionTransaction } from '../model/transaction/Mosaic
 import { MosaicGlobalRestrictionTransaction } from '../model/transaction/MosaicGlobalRestrictionTransaction';
 import { Transaction } from '../model/transaction/Transaction';
 import { UInt64 } from '../model/UInt64';
-import { RestrictionMosaicRepository } from "../infrastructure/RestrictionMosaicRepository";
-import { NamespaceId } from "../model/namespace/NamespaceId";
 
 /**
  * MosaicRestrictionTransactionService service
@@ -114,7 +114,8 @@ export class MosaicRestrictionTransactionService {
                 }
                 return this.getAddressRestrictionEntry(mosaicId, restrictionKey, targetAddress).pipe(
                     map((optionalValue) => {
-                        const currentValue = optionalValue ? UInt64.fromNumericString(optionalValue) : this.defaultMosaicAddressRestrictionValue;
+                        const currentValue = optionalValue ?
+                            UInt64.fromNumericString(optionalValue) : this.defaultMosaicAddressRestrictionValue;
                         return MosaicAddressRestrictionTransaction.create(
                             deadline,
                             mosaicId,
