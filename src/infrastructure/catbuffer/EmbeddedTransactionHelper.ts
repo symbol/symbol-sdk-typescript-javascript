@@ -19,28 +19,28 @@
 *** along with Catapult. If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import { EntityTypeDto } from './EntityTypeDto'
-import { EmbeddedTransactionBuilder } from './EmbeddedTransactionBuilder'
-import { GeneratorUtils } from './GeneratorUtils'
-import { EmbeddedTransferTransactionBuilder } from './EmbeddedTransferTransactionBuilder'
-import { EmbeddedAccountLinkTransactionBuilder } from './EmbeddedAccountLinkTransactionBuilder'
-import { EmbeddedHashLockTransactionBuilder } from './EmbeddedHashLockTransactionBuilder'
-import { EmbeddedSecretLockTransactionBuilder } from './EmbeddedSecretLockTransactionBuilder'
-import { EmbeddedSecretProofTransactionBuilder } from './EmbeddedSecretProofTransactionBuilder'
-import { EmbeddedAccountMetadataTransactionBuilder } from './EmbeddedAccountMetadataTransactionBuilder'
-import { EmbeddedMosaicMetadataTransactionBuilder } from './EmbeddedMosaicMetadataTransactionBuilder'
-import { EmbeddedNamespaceMetadataTransactionBuilder } from './EmbeddedNamespaceMetadataTransactionBuilder'
-import { EmbeddedMosaicDefinitionTransactionBuilder } from './EmbeddedMosaicDefinitionTransactionBuilder'
-import { EmbeddedMosaicSupplyChangeTransactionBuilder } from './EmbeddedMosaicSupplyChangeTransactionBuilder'
-import { EmbeddedMultisigAccountModificationTransactionBuilder } from './EmbeddedMultisigAccountModificationTransactionBuilder'
-import { EmbeddedAddressAliasTransactionBuilder } from './EmbeddedAddressAliasTransactionBuilder'
-import { EmbeddedMosaicAliasTransactionBuilder } from './EmbeddedMosaicAliasTransactionBuilder'
-import { EmbeddedNamespaceRegistrationTransactionBuilder } from './EmbeddedNamespaceRegistrationTransactionBuilder'
-import { EmbeddedAccountAddressRestrictionTransactionBuilder } from './EmbeddedAccountAddressRestrictionTransactionBuilder'
-import { EmbeddedAccountMosaicRestrictionTransactionBuilder } from './EmbeddedAccountMosaicRestrictionTransactionBuilder'
-import { EmbeddedAccountOperationRestrictionTransactionBuilder } from './EmbeddedAccountOperationRestrictionTransactionBuilder'
-import { EmbeddedMosaicAddressRestrictionTransactionBuilder } from './EmbeddedMosaicAddressRestrictionTransactionBuilder'
-import { EmbeddedMosaicGlobalRestrictionTransactionBuilder } from './EmbeddedMosaicGlobalRestrictionTransactionBuilder'
+import { EntityTypeDto } from './EntityTypeDto';
+import { EmbeddedTransactionBuilder } from './EmbeddedTransactionBuilder';
+import { GeneratorUtils } from './GeneratorUtils';
+import { EmbeddedTransferTransactionBuilder } from './EmbeddedTransferTransactionBuilder';
+import { EmbeddedAccountLinkTransactionBuilder } from './EmbeddedAccountLinkTransactionBuilder';
+import { EmbeddedHashLockTransactionBuilder } from './EmbeddedHashLockTransactionBuilder';
+import { EmbeddedSecretLockTransactionBuilder } from './EmbeddedSecretLockTransactionBuilder';
+import { EmbeddedSecretProofTransactionBuilder } from './EmbeddedSecretProofTransactionBuilder';
+import { EmbeddedAccountMetadataTransactionBuilder } from './EmbeddedAccountMetadataTransactionBuilder';
+import { EmbeddedMosaicMetadataTransactionBuilder } from './EmbeddedMosaicMetadataTransactionBuilder';
+import { EmbeddedNamespaceMetadataTransactionBuilder } from './EmbeddedNamespaceMetadataTransactionBuilder';
+import { EmbeddedMosaicDefinitionTransactionBuilder } from './EmbeddedMosaicDefinitionTransactionBuilder';
+import { EmbeddedMosaicSupplyChangeTransactionBuilder } from './EmbeddedMosaicSupplyChangeTransactionBuilder';
+import { EmbeddedMultisigAccountModificationTransactionBuilder } from './EmbeddedMultisigAccountModificationTransactionBuilder';
+import { EmbeddedAddressAliasTransactionBuilder } from './EmbeddedAddressAliasTransactionBuilder';
+import { EmbeddedMosaicAliasTransactionBuilder } from './EmbeddedMosaicAliasTransactionBuilder';
+import { EmbeddedNamespaceRegistrationTransactionBuilder } from './EmbeddedNamespaceRegistrationTransactionBuilder';
+import { EmbeddedAccountAddressRestrictionTransactionBuilder } from './EmbeddedAccountAddressRestrictionTransactionBuilder';
+import { EmbeddedAccountMosaicRestrictionTransactionBuilder } from './EmbeddedAccountMosaicRestrictionTransactionBuilder';
+import { EmbeddedAccountOperationRestrictionTransactionBuilder } from './EmbeddedAccountOperationRestrictionTransactionBuilder';
+import { EmbeddedMosaicAddressRestrictionTransactionBuilder } from './EmbeddedMosaicAddressRestrictionTransactionBuilder';
+import { EmbeddedMosaicGlobalRestrictionTransactionBuilder } from './EmbeddedMosaicGlobalRestrictionTransactionBuilder';
 
 export class EmbeddedTransactionHelper {
 
