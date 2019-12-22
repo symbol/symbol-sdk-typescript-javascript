@@ -31,6 +31,7 @@ import { MosaicMetadataTransaction } from '../model/transaction/MosaicMetadataTr
 import { NamespaceMetadataTransaction } from '../model/transaction/NamespaceMetadataTransaction';
 import { Transaction } from '../model/transaction/Transaction';
 import { UInt64 } from '../model/UInt64';
+import { MetadataRepository } from "../infrastructure/MetadataRepository";
 
 /**
  * MetadataTransaction service
@@ -39,9 +40,9 @@ export class MetadataTransactionService {
 
     /**
      * Constructor
-     * @param metadataHttp
+     * @param metadataRepository
      */
-    constructor(private readonly metadataHttp: MetadataHttp) {
+    constructor(private readonly metadataRepository: MetadataRepository) {
     }
 
     /**
@@ -129,7 +130,7 @@ export class MetadataTransactionService {
                                              value: string,
                                              senderPublicKey: string,
                                              maxFee: UInt64): Observable<AccountMetadataTransaction> {
-        return this.metadataHttp.getAccountMetadataByKeyAndSender(Address.createFromPublicKey(targetPublicKey, networkType),
+        return this.metadataRepository.getAccountMetadataByKeyAndSender(Address.createFromPublicKey(targetPublicKey, networkType),
                                                                   key.toHex(), senderPublicKey)
             .pipe(map((metadata: Metadata) => {
                 const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
@@ -182,7 +183,7 @@ export class MetadataTransactionService {
                                             value: string,
                                             senderPublicKey: string,
                                             maxFee: UInt64): Observable<MosaicMetadataTransaction> {
-        return this.metadataHttp.getMosaicMetadataByKeyAndSender(mosaicId,
+        return this.metadataRepository.getMosaicMetadataByKeyAndSender(mosaicId,
                                                                   key.toHex(), senderPublicKey)
             .pipe(map((metadata: Metadata) => {
                 const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
@@ -237,7 +238,7 @@ export class MetadataTransactionService {
                                                value: string,
                                                senderPublicKey: string,
                                                maxFee: UInt64): Observable<NamespaceMetadataTransaction> {
-        return this.metadataHttp.getNamespaceMetadataByKeyAndSender(namespaceId,
+        return this.metadataRepository.getNamespaceMetadataByKeyAndSender(namespaceId,
                                                                   key.toHex(), senderPublicKey)
             .pipe(map((metadata: Metadata) => {
                 const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);

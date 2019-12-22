@@ -14,42 +14,40 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {ChainHttp} from '../../src/infrastructure/ChainHttp';
-import {QueryParams} from '../../src/infrastructure/QueryParams';
+import { expect } from 'chai';
+import { ChainHttp } from '../../src/infrastructure/ChainHttp';
+import { IntegrationTestHelper } from "./IntegrationTestHelper";
+import { ChainRepository } from "../../src/infrastructure/ChainRepository";
+
 describe('ChainHttp', () => {
-    let chainHttp: ChainHttp;
-    before((done) => {
-        const path = require('path');
-        require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
-            if (err) {
-                throw err;
-            }
-            const json = JSON.parse(data);
-            chainHttp = new ChainHttp(json.apiUrl);
-            done();
+    let helper = new IntegrationTestHelper();
+    let chainRepository: ChainRepository;
+
+    before(() => {
+        return helper.start().then(() => {
+            chainRepository = helper.repositoryFactory.createChainRepository();
         });
     });
 
     describe('getBlockchainHeight', () => {
         it('should return blockchain height', (done) => {
-            chainHttp.getBlockchainHeight()
-                .subscribe((height) => {
-                    expect(height.lower).to.be.greaterThan(0);
-                    done();
-                });
+            chainRepository.getBlockchainHeight()
+            .subscribe((height) => {
+                expect(height.lower).to.be.greaterThan(0);
+                done();
+            });
         });
     });
 
     describe('getBlockchainScore', () => {
         it('should return blockchain score', (done) => {
-            chainHttp.getChainScore()
-                .subscribe((blockchainScore) => {
-                    expect(blockchainScore.scoreLow).to.not.be.equal(undefined);
-                    expect(blockchainScore.scoreHigh.lower).to.be.equal(0);
-                    expect(blockchainScore.scoreHigh.higher).to.be.equal(0);
-                    done();
-                });
+            chainRepository.getChainScore()
+            .subscribe((blockchainScore) => {
+                expect(blockchainScore.scoreLow).to.not.be.equal(undefined);
+                expect(blockchainScore.scoreHigh.lower).to.be.equal(0);
+                expect(blockchainScore.scoreHigh.higher).to.be.equal(0);
+                done();
+            });
         });
     });
 });

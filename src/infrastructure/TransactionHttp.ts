@@ -56,15 +56,23 @@ export class TransactionHttp extends Http implements TransactionRepository {
      */
     private blockRoutesApi: BlockRoutesApi;
 
+
+    /**
+     * @internal
+     * network type for the mappings.
+     */
+    private readonly networkTypeObservable: Observable<NetworkType>;
+
     /**
      * Constructor
      * @param url
      * @param networkType
      */
-    constructor(url: string, networkType?: NetworkType) {
-        super(url, networkType);
+    constructor(url: string, networkType?: NetworkType | Observable<NetworkType>) {
+        super(url);
         this.transactionRoutesApi = new TransactionRoutesApi(url);
         this.blockRoutesApi = new BlockRoutesApi(url);
+        this.networkTypeObservable = this.createNetworkTypeObservable(networkType);
     }
 
     /**

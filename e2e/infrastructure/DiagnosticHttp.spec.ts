@@ -14,42 +14,41 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {DiagnosticHttp} from '../../src/infrastructure/DiagnosticHttp';
+import { expect } from 'chai';
+import { DiagnosticHttp } from '../../src/infrastructure/DiagnosticHttp';
+import { IntegrationTestHelper } from "./IntegrationTestHelper";
+import { DiagnosticRepository } from "../../src/infrastructure/DiagnosticRepository";
+
 describe('DiagnosticHttp', () => {
-    let diagnosticHttp: DiagnosticHttp;
-    before((done) => {
-        const path = require('path');
-        require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
-            if (err) {
-                throw err;
-            }
-            const json = JSON.parse(data);
-            diagnosticHttp = new DiagnosticHttp(json.apiUrl);
-            done();
+    let helper = new IntegrationTestHelper();
+    let diagnosticRepository: DiagnosticRepository;
+
+    before(() => {
+        return helper.start().then(() => {
+            diagnosticRepository = helper.repositoryFactory.createDiagnosticRepository();
         });
     });
 
     describe('getDiagnosticStorage', () => {
         it('should return diagnostic storage', (done) => {
-            diagnosticHttp.getDiagnosticStorage()
-                .subscribe((blockchainStorageInfo) => {
-                    expect(blockchainStorageInfo.numBlocks).to.be.greaterThan(0);
-                    expect(blockchainStorageInfo.numTransactions).to.be.greaterThan(0);
-                    expect(blockchainStorageInfo.numAccounts).to.be.greaterThan(0);
-                    done();
-                });
+            diagnosticRepository.getDiagnosticStorage()
+            .subscribe((blockchainStorageInfo) => {
+                expect(blockchainStorageInfo.numBlocks).to.be.greaterThan(0);
+                expect(blockchainStorageInfo.numTransactions).to.be.greaterThan(0);
+                expect(blockchainStorageInfo.numAccounts).to.be.greaterThan(0);
+                done();
+            });
         });
     });
 
     describe('getServerInfo', () => {
         it('should return diagnostic storage', (done) => {
-            diagnosticHttp.getServerInfo()
-                .subscribe((serverInfo) => {
-                    expect(serverInfo.restVersion).not.to.be.null;
-                    expect(serverInfo.sdkVersion).not.to.be.null;
-                    done();
-                });
+            diagnosticRepository.getServerInfo()
+            .subscribe((serverInfo) => {
+                expect(serverInfo.restVersion).not.to.be.null;
+                expect(serverInfo.sdkVersion).not.to.be.null;
+                done();
+            });
         });
     });
 });

@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-import {deepEqual} from 'assert';
-import {expect} from 'chai';
-import {Address} from '../../../src/model/account/Address';
-import { PublicAccount } from '../../../src/model/account/PublicAccount';
-import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { deepEqual } from 'assert';
+import { expect } from 'chai';
+import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
-import {MultisigCosignatoryModification} from '../../../src/model/transaction/MultisigCosignatoryModification';
-import {TransactionType} from '../../../src/model/transaction/TransactionType';
-import {UInt64} from '../../../src/model/UInt64';
+import { TransactionType } from '../../../src/model/transaction/TransactionType';
+import { UInt64 } from '../../../src/model/UInt64';
 
 const ValidateTransaction = {
     validateStandaloneTx: (transaction, transactionDTO) => {

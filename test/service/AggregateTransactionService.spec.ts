@@ -18,7 +18,8 @@ import { expect } from 'chai';
 import { ChronoUnit } from 'js-joda';
 import {of as observableOf} from 'rxjs';
 import {deepEqual, instance, mock, when} from 'ts-mockito';
-import { MultisigHttp } from '../../src/infrastructure/MultisigHttp';
+import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
+
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { MultisigAccountGraphInfo } from '../../src/model/account/MultisigAccountGraphInfo';
@@ -75,27 +76,27 @@ describe('AggregateTransactionService', () => {
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
 
     before(() => {
-        const mockedAccountHttp = mock(MultisigHttp);
+        const mockedAccountRepository:MultisigRepository = mock();
 
-        when(mockedAccountHttp.getMultisigAccountInfo(deepEqual(account1.address)))
+        when(mockedAccountRepository.getMultisigAccountInfo(deepEqual(account1.address)))
             .thenReturn(observableOf(givenAccount1Info()));
-        when(mockedAccountHttp.getMultisigAccountInfo(deepEqual(account4.address)))
+        when(mockedAccountRepository.getMultisigAccountInfo(deepEqual(account4.address)))
             .thenReturn(observableOf(givenAccount4Info()));
-        when(mockedAccountHttp.getMultisigAccountInfo(deepEqual(multisig2.address)))
+        when(mockedAccountRepository.getMultisigAccountInfo(deepEqual(multisig2.address)))
             .thenReturn(observableOf(givenMultisig2AccountInfo()));
-        when(mockedAccountHttp.getMultisigAccountInfo(deepEqual(multisig3.address)))
+        when(mockedAccountRepository.getMultisigAccountInfo(deepEqual(multisig3.address)))
             .thenReturn(observableOf(givenMultisig3AccountInfo()));
-        when(mockedAccountHttp.getMultisigAccountGraphInfo(deepEqual(multisig2.address)))
+        when(mockedAccountRepository.getMultisigAccountGraphInfo(deepEqual(multisig2.address)))
             .thenReturn(observableOf(givenMultisig2AccountGraphInfo()));
-        when(mockedAccountHttp.getMultisigAccountGraphInfo(deepEqual(multisig3.address)))
+        when(mockedAccountRepository.getMultisigAccountGraphInfo(deepEqual(multisig3.address)))
             .thenReturn(observableOf(givenMultisig3AccountGraphInfo()));
-        when(mockedAccountHttp.getMultisigAccountInfo(deepEqual(account2.address)))
+        when(mockedAccountRepository.getMultisigAccountInfo(deepEqual(account2.address)))
             .thenReturn(observableOf(givenAccount2Info()));
-        when(mockedAccountHttp.getMultisigAccountInfo(deepEqual(account3.address)))
+        when(mockedAccountRepository.getMultisigAccountInfo(deepEqual(account3.address)))
             .thenReturn(observableOf(givenAccount3Info()));
 
-        const accountHttp = instance(mockedAccountHttp);
-        aggregateTransactionService = new AggregateTransactionService(accountHttp);
+        const accountRepository = instance(mockedAccountRepository);
+        aggregateTransactionService = new AggregateTransactionService(accountRepository);
     });
 
     it('should return isComplete: true for aggregated complete transaction - 2 levels Multisig', () => {

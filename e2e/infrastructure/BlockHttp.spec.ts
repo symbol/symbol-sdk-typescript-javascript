@@ -14,47 +14,50 @@
  * limitations under the License.
  */
 
-import {assert, expect} from 'chai';
+import { expect } from 'chai';
 import { mergeMap } from 'rxjs/operators';
-import {BlockHttp} from '../../src/infrastructure/BlockHttp';
-import { Listener, ReceiptHttp, TransactionHttp } from '../../src/infrastructure/infrastructure';
-import {QueryParams} from '../../src/infrastructure/QueryParams';
+import { BlockHttp } from '../../src/infrastructure/BlockHttp';
+import { QueryParams } from '../../src/infrastructure/QueryParams';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { Deadline } from '../../src/model/transaction/Deadline';
-import { Transaction } from '../../src/model/transaction/Transaction';
 import { TransactionInfo } from '../../src/model/transaction/TransactionInfo';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
+import { IntegrationTestHelper } from "./IntegrationTestHelper";
+import { BlockRepository } from "../../src/infrastructure/BlockRepository";
+import { ReceiptRepository } from "../../src/infrastructure/ReceiptRepository";
 
 describe('BlockHttp', () => {
+    let helper = new IntegrationTestHelper();
     let account: Account;
     let account2: Account;
-    let blockHttp: BlockHttp;
-    let receiptHttp: ReceiptHttp;
-    let transactionHttp: TransactionHttp;
+    let blockRepository: BlockRepository;
+    let receiptRepository: ReceiptRepository;
     let blockReceiptHash = '';
     let blockTransactionHash = '';
-    let config;
     let chainHeight;
     let generationHash: string;
-    before((done) => {
-        const path = require('path');
-        require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
-            if (err) {
-                throw err;
-            }
-            const json = JSON.parse(data);
-            config = json;
-            account = Account.createFromPrivateKey(json.testAccount.privateKey, NetworkType.MIJIN_TEST);
-            account2 = Account.createFromPrivateKey(json.testAccount2.privateKey, NetworkType.MIJIN_TEST);
-            blockHttp = new BlockHttp(json.apiUrl);
-            transactionHttp = new TransactionHttp(json.apiUrl);
-            receiptHttp = new ReceiptHttp(json.apiUrl);
-            generationHash = json.generationHash;
-            done();
+    let networkType: NetworkType;
+
+    before(() => {
+        return helper.start().then(() => {
+            account = helper.account;
+            account2 = helper.account2;
+            generationHash = helper.generationHash;
+            networkType = helper.networkType;
+            blockRepository = helper.repositoryFactory.createBlockRepository();
+            receiptRepository = helper.repositoryFactory.createReceiptRepository();
         });
+    });
+
+    before(() => {
+        return helper.listener.open();
+    });
+
+    after(() => {
+        helper.listener.close();
     });
 
     /**
@@ -64,14 +67,7 @@ describe('BlockHttp', () => {
      */
 
     describe('Setup Test Data', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
+
 
         it('Announce TransferTransaction', (done) => {
             const transferTransaction = TransferTransaction.create(
@@ -79,35 +75,29 @@ describe('BlockHttp', () => {
                 account2.address,
                 [NetworkCurrencyMosaic.createAbsolute(1)],
                 PlainMessage.create('test-message'),
-                NetworkType.MIJIN_TEST,
+                networkType,
+                helper.maxFee
             );
             const signedTransaction = transferTransaction.signWith(account, generationHash);
-
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+            helper.announce(signedTransaction).then(transaction => {
                 chainHeight = transaction.transactionInfo!.height.toString();
-                done();
+                return transaction;
             });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
         });
     });
 
     describe('getBlockByHeight', () => {
         it('should return block info given height', (done) => {
-            blockHttp.getBlockByHeight('1')
-                .subscribe((blockInfo) => {
-                    blockReceiptHash = blockInfo.blockReceiptsHash;
-                    blockTransactionHash = blockInfo.blockTransactionsHash;
-                    expect(blockInfo.height.lower).to.be.equal(1);
-                    expect(blockInfo.height.higher).to.be.equal(0);
-                    expect(blockInfo.timestamp.lower).to.be.equal(0);
-                    expect(blockInfo.timestamp.higher).to.be.equal(0);
-                    done();
-                });
+            blockRepository.getBlockByHeight('1')
+            .subscribe((blockInfo) => {
+                blockReceiptHash = blockInfo.blockReceiptsHash;
+                blockTransactionHash = blockInfo.blockTransactionsHash;
+                expect(blockInfo.height.lower).to.be.equal(1);
+                expect(blockInfo.height.higher).to.be.equal(0);
+                expect(blockInfo.timestamp.lower).to.be.equal(0);
+                expect(blockInfo.timestamp.higher).to.be.equal(0);
+                done();
+            });
         });
     });
 
@@ -116,39 +106,39 @@ describe('BlockHttp', () => {
         let firstId: string;
 
         it('should return block transactions data given height', (done) => {
-            blockHttp.getBlockTransactions('1')
-                .subscribe((transactions) => {
-                    nextId = transactions[0].transactionInfo!.id;
-                    firstId = transactions[1].transactionInfo!.id;
-                    expect(transactions.length).to.be.greaterThan(0);
-                    done();
-                });
+            blockRepository.getBlockTransactions('1')
+            .subscribe((transactions) => {
+                nextId = transactions[0].transactionInfo!.id;
+                firstId = transactions[1].transactionInfo!.id;
+                expect(transactions.length).to.be.greaterThan(0);
+                done();
+            });
         });
 
         it('should return block transactions data given height with paginated transactionId', (done) => {
-            blockHttp.getBlockTransactions('1', new QueryParams(10, nextId))
-                .subscribe((transactions) => {
-                    expect(transactions[0].transactionInfo!.id).to.be.equal(firstId);
-                    expect(transactions.length).to.be.greaterThan(0);
-                    done();
-                });
+            blockRepository.getBlockTransactions('1', new QueryParams(10, nextId))
+            .subscribe((transactions) => {
+                expect(transactions[0].transactionInfo!.id).to.be.equal(firstId);
+                expect(transactions.length).to.be.greaterThan(0);
+                done();
+            });
         });
     });
 
     describe('getBlocksByHeightWithLimit', () => {
         it('should return block info given height and limit', (done) => {
-            blockHttp.getBlocksByHeightWithLimit(chainHeight, 50)
-                .subscribe((blocksInfo) => {
-                    expect(blocksInfo.length).to.be.greaterThan(0);
-                    done();
-                });
+            blockRepository.getBlocksByHeightWithLimit(chainHeight, 50)
+            .subscribe((blocksInfo) => {
+                expect(blocksInfo.length).to.be.greaterThan(0);
+                done();
+            });
         });
     });
     describe('getMerkleReceipts', () => {
         it('should return Merkle Receipts', (done) => {
-            receiptHttp.getBlockReceipts(chainHeight).pipe(
+            receiptRepository.getBlockReceipts(chainHeight).pipe(
                 mergeMap((_) => {
-                    return receiptHttp.getMerkleReceipts(chainHeight, _.transactionStatements[0].generateHash());
+                    return receiptRepository.getMerkleReceipts(chainHeight, _.transactionStatements[0].generateHash());
                 }))
             .subscribe((merkleReceipts) => {
                 expect(merkleReceipts.merklePath).not.to.be.null;
@@ -158,30 +148,30 @@ describe('BlockHttp', () => {
     });
     describe('getMerkleTransaction', () => {
         it('should return Merkle Transaction', (done) => {
-            blockHttp.getBlockTransactions(chainHeight).pipe(
+            blockRepository.getBlockTransactions(chainHeight).pipe(
                 mergeMap((_) => {
                     const hash = (_[0].transactionInfo as TransactionInfo).hash;
                     if (hash) {
-                        return blockHttp.getMerkleTransaction(chainHeight, hash);
+                        return blockRepository.getMerkleTransaction(chainHeight, hash);
                     }
                     // If reaching this line, something is not right
                     throw new Error('Tansacation hash is undefined');
                 }))
             .subscribe((merkleTransactionss) => {
-                    expect(merkleTransactionss.merklePath).not.to.be.null;
-                    done();
-                });
+                expect(merkleTransactionss.merklePath).not.to.be.null;
+                done();
+            });
         });
     });
 
     describe('getBlockReceipts', () => {
         it('should return block receipts', (done) => {
-            receiptHttp.getBlockReceipts(chainHeight)
-                .subscribe((statement) => {
-                    expect(statement.transactionStatements).not.to.be.null;
-                    expect(statement.transactionStatements.length).to.be.greaterThan(0);
-                    done();
-                });
+            receiptRepository.getBlockReceipts(chainHeight)
+            .subscribe((statement) => {
+                expect(statement.transactionStatements).not.to.be.null;
+                expect(statement.transactionStatements.length).to.be.greaterThan(0);
+                done();
+            });
         });
     });
 });

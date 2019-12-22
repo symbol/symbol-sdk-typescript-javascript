@@ -1,0 +1,155 @@
+/*
+ * Copyright 2019 NEM
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import { expect } from "chai";
+import { RepositoryFactoryHttp } from "../../src/infrastructure/RepositoryFactoryHttp";
+import { BlockRepository } from "../../src/infrastructure/BlockRepository";
+import { instance, mock, when } from "ts-mockito";
+import { BlockInfo } from "../../src/model/blockchain/BlockInfo";
+import { of as observableOf } from 'rxjs';
+import { map } from "rxjs/operators";
+import { NetworkRepository } from "../../src/infrastructure/NetworkRepository";
+import { NetworkType } from "../../src/model/blockchain/NetworkType";
+
+describe('RepositoryFactory', () => {
+    it('Should create repositories', () => {
+        const repositoryFactory = new RepositoryFactoryHttp("http://localhost:3000");
+
+        expect(repositoryFactory.createBlockRepository()).to.be.not.null;
+        expect(repositoryFactory.createNetworkRepository()).to.be.not.null;
+        expect(repositoryFactory.createNamespaceRepository()).to.be.not.null;
+        expect(repositoryFactory.createAccountRepository()).to.be.not.null;
+        expect(repositoryFactory.createChainRepository()).to.be.not.null;
+        expect(repositoryFactory.createDiagnosticRepository()).to.be.not.null;
+        expect(repositoryFactory.createMetadataRepository()).to.be.not.null;
+        expect(repositoryFactory.createMosaicRepository()).to.be.not.null;
+        expect(repositoryFactory.createMultisigRepository()).to.be.not.null;
+        expect(repositoryFactory.createNodeRepository()).to.be.not.null;
+        expect(repositoryFactory.createReceiptRepository()).to.be.not.null;
+        expect(repositoryFactory.createRestrictionAccountRepository()).to.be.not.null;
+        expect(repositoryFactory.createRestrictionMosaicRepository()).to.be.not.null;
+        expect(repositoryFactory.createTransactionRepository()).to.be.not.null;
+
+    });
+
+    it('Should get GenerationHash from cache', (done) => {
+
+        let counter = 0;
+
+        const repositoryMock: BlockRepository = mock();
+
+        const observableOfBlockInfo = observableOf({generationHash: 'aaaa'} as BlockInfo).pipe(map(v => {
+            counter++;
+            return v;
+        }));
+        when(repositoryMock.getBlockByHeight('1')).thenReturn(observableOfBlockInfo);
+
+        expect(observableOfBlockInfo).to.be.equals(observableOfBlockInfo);
+
+        const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
+
+            createBlockRepository(): BlockRepository {
+                return instance(repositoryMock);
+            }
+        })("http://localhost:3000");
+
+        expect(counter).to.be.equals(0);
+        repositoryFactory.getGenerationHash().subscribe(gh => {
+            expect(counter).to.be.equals(1);
+            expect(gh).to.be.equals('aaaa');
+            repositoryFactory.getGenerationHash().subscribe(gh => {
+                expect(counter).to.be.equals(1);
+                expect(gh).to.be.equals('aaaa');
+                repositoryFactory.getGenerationHash().subscribe(gh => {
+                    expect(counter).to.be.equals(1);
+                    expect(gh).to.be.equals('aaaa');
+                    done();
+                })
+            })
+        })
+
+    });
+
+    it('Should get NetworkType from cache', (done) => {
+
+        let counter = 0;
+
+        const repositoryMock: NetworkRepository = mock();
+
+        let expectedNetworkType = NetworkType.MIJIN_TEST;
+        const observableOfBlockInfo = observableOf(expectedNetworkType).pipe(map(v => {
+            counter++;
+            return v;
+        }));
+        when(repositoryMock.getNetworkType()).thenReturn(observableOfBlockInfo);
+
+        expect(observableOfBlockInfo).to.be.equals(observableOfBlockInfo);
+
+        const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
+
+            createNetworkRepository(): NetworkRepository {
+                return instance(repositoryMock);
+            }
+        })("http://localhost:3000");
+
+        expect(counter).to.be.equals(0);
+        repositoryFactory.getNetworkType().subscribe(networkType => {
+            expect(counter).to.be.equals(1);
+            expect(networkType).to.be.equals(expectedNetworkType);
+            repositoryFactory.getNetworkType().subscribe(networkType => {
+                expect(counter).to.be.equals(1);
+                expect(networkType).to.be.equals(expectedNetworkType);
+                done();
+            })
+        })
+
+    });
+
+    it('Should get NetworkType from memory', (done) => {
+
+        let counter = 0;
+
+        const repositoryMock: NetworkRepository = mock();
+
+        let expectedNetworkType = NetworkType.MIJIN_TEST;
+        const observableOfBlockInfo = observableOf(expectedNetworkType).pipe(map(v => {
+            counter++;
+            return v;
+        }));
+        when(repositoryMock.getNetworkType()).thenReturn(observableOfBlockInfo);
+
+        expect(observableOfBlockInfo).to.be.equals(observableOfBlockInfo);
+
+        const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
+
+            createNetworkRepository(): NetworkRepository {
+                return instance(repositoryMock);
+            }
+        })("http://localhost:3000", expectedNetworkType);
+
+        expect(counter).to.be.equals(0);
+        repositoryFactory.getNetworkType().subscribe(networkType => {
+            expect(counter).to.be.equals(0);
+            expect(networkType).to.be.equals(expectedNetworkType);
+            repositoryFactory.getNetworkType().subscribe(networkType => {
+                expect(counter).to.be.equals(0);
+                expect(networkType).to.be.equals(expectedNetworkType);
+                done();
+            })
+        })
+
+    });
+
+});

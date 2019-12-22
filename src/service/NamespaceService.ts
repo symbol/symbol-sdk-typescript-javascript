@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import {Observable} from 'rxjs';
-import {map, mergeMap} from 'rxjs/operators';
-import {NamespaceHttp} from '../infrastructure/NamespaceHttp';
-import {NamespaceId} from '../model/namespace/NamespaceId';
-import {NamespaceInfo} from '../model/namespace/NamespaceInfo';
-import {NamespaceName} from '../model/namespace/NamespaceName';
-import {Namespace} from './Namespace';
+import { Observable } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
+import { NamespaceId } from '../model/namespace/NamespaceId';
+import { NamespaceInfo } from '../model/namespace/NamespaceInfo';
+import { NamespaceName } from '../model/namespace/NamespaceName';
+import { Namespace } from './Namespace';
+import { NamespaceRepository } from "../infrastructure/NamespaceRepository";
 
 /**
  * Namespace service
@@ -29,9 +29,9 @@ export class NamespaceService {
 
     /**
      * Constructor
-     * @param namespaceHttp
+     * @param namespaceRepository
      */
-    constructor(private readonly namespaceHttp: NamespaceHttp) {
+    constructor(private readonly namespaceRepository: NamespaceRepository) {
     }
 
     /**
@@ -40,8 +40,8 @@ export class NamespaceService {
      * @returns {Observable<Namespace>}
      */
     namespace(id: NamespaceId): Observable<Namespace> {
-        return this.namespaceHttp.getNamespace(id).pipe(
-            mergeMap((namespaceInfo: NamespaceInfo) => this.namespaceHttp
+        return this.namespaceRepository.getNamespace(id).pipe(
+            mergeMap((namespaceInfo: NamespaceInfo) => this.namespaceRepository
                 .getNamespacesName(namespaceInfo.levels).pipe(
                 map((names) => Object.assign(
                     {__proto__: Object.getPrototypeOf(namespaceInfo)},

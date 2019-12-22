@@ -35,16 +35,13 @@ export class RestrictionAccountHttp extends Http implements RestrictionAccountRe
      * @internal
      */
     private restrictionAccountRoutesApi: RestrictionAccountRoutesApi;
-
     /**
      * Constructor
      * @param url
-     * @param networkType
      */
-    constructor(url: string, networkType?: NetworkType) {
-        super(url, networkType);
+    constructor(url: string) {
+        super(url);
         this.restrictionAccountRoutesApi = new RestrictionAccountRoutesApi(url);
-
     }
 
     /**
