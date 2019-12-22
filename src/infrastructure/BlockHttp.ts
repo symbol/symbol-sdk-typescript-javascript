@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-import {from as observableFrom, Observable, throwError} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
-import {PublicAccount} from '../model/account/PublicAccount';
-import {BlockInfo} from '../model/blockchain/BlockInfo';
+import { from as observableFrom, Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { PublicAccount } from '../model/account/PublicAccount';
+import { BlockInfo } from '../model/blockchain/BlockInfo';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
-import { NetworkType } from '../model/blockchain/NetworkType';
-import {Transaction} from '../model/transaction/Transaction';
-import {UInt64} from '../model/UInt64';
+import { Transaction } from '../model/transaction/Transaction';
+import { UInt64 } from '../model/UInt64';
 import { BlockInfoDTO, BlockRoutesApi } from './api';
-import {BlockRepository} from './BlockRepository';
-import {Http} from './Http';
-import {QueryParams} from './QueryParams';
-import {CreateTransactionFromDTO, extractBeneficiary} from './transaction/CreateTransactionFromDTO';
+import { BlockRepository } from './BlockRepository';
+import { Http } from './Http';
+import { QueryParams } from './QueryParams';
+import {
+    CreateTransactionFromDTO,
+    extractBeneficiary
+} from './transaction/CreateTransactionFromDTO';
 
 /**
  * Blocks returned limits:
@@ -43,6 +45,7 @@ export enum LimitType {
     N_100 = 100,
 
 }
+
 /**
  * Blockchain http repository.
  *
@@ -53,15 +56,14 @@ export class BlockHttp extends Http implements BlockRepository {
      * @internal
      * Nem2 Library block routes api
      */
-    private blockRoutesApi: BlockRoutesApi;
+    private readonly blockRoutesApi: BlockRoutesApi;
 
     /**
      * Constructor
      * @param url
-     * @param networkType
      */
-    constructor(url: string, networkType?: NetworkType) {
-        super(url, networkType);
+    constructor(url: string) {
+        super(url);
         this.blockRoutesApi = new BlockRoutesApi(url);
     }
 

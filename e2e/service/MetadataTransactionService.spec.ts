@@ -1,8 +1,5 @@
 import { assert, expect } from 'chai';
-import { Convert } from '../../src/core/format/Convert';
-import { Listener } from '../../src/infrastructure/Listener';
-import { MetadataHttp } from '../../src/infrastructure/MetadataHttp';
-import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
+import { MetadataRepository } from '../../src/infrastructure/MetadataRepository';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { MetadataType } from '../../src/model/metadata/MetadataType';
@@ -20,33 +17,38 @@ import { NamespaceRegistrationTransaction } from '../../src/model/transaction/Na
 import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { UInt64 } from '../../src/model/UInt64';
 import { MetadataTransactionService } from '../../src/service/MetadataTransactionService';
+import { IntegrationTestHelper } from "../infrastructure/IntegrationTestHelper";
 
 describe('MetadataTransactionService', () => {
     const deadline = Deadline.create();
     const key = UInt64.fromUint(123);
     const newValue = 'new test value';
+
+    let helper = new IntegrationTestHelper();
+    let networkType: NetworkType;
+
     let targetAccount: Account;
-    let metadataHttp: MetadataHttp;
-    let transactionHttp: TransactionHttp;
+    let metadataRepository: MetadataRepository;
     let mosaicId: MosaicId;
     let namespaceId: NamespaceId;
-    let config;
     let generationHash: string;
 
-    before((done) => {
-        const path = require('path');
-        require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
-            if (err) {
-                throw err;
-            }
-            const json = JSON.parse(data);
-            config = json;
-            targetAccount = Account.createFromPrivateKey(json.testAccount.privateKey, NetworkType.MIJIN_TEST);
-            generationHash = json.generationHash;
-            metadataHttp = new MetadataHttp(json.apiUrl);
-            transactionHttp = new TransactionHttp(json.apiUrl);
-            done();
+
+    before(() => {
+        return helper.start().then(() => {
+            targetAccount = helper.account;
+            generationHash = helper.generationHash;
+            networkType = helper.networkType;
+            metadataRepository = helper.repositoryFactory.createMetadataRepository();
         });
+    });
+
+    before(() => {
+        return helper.listener.open();
+    });
+
+    after(() => {
+        helper.listener.close();
     });
 
     /**
@@ -56,78 +58,44 @@ describe('MetadataTransactionService', () => {
      */
 
     describe('MosaicDefinitionTransaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('standalone', (done) => {
+
+        it('standalone', () => {
             const nonce = MosaicNonce.createRandom();
             mosaicId = MosaicId.createFromNonce(nonce, targetAccount.publicAccount);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 nonce,
                 mosaicId,
-                MosaicFlags.create( true, true, true),
+                MosaicFlags.create(true, true, true),
                 3,
                 UInt64.fromUint(1000),
-                NetworkType.MIJIN_TEST,
+                networkType, helper.maxFee
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(targetAccount, generationHash);
-            listener.confirmed(targetAccount.address).subscribe(() => {
-                done();
-            });
-            listener.status(targetAccount.address).subscribe((error) => {
-                console.log('Error:', error);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+            return helper.announce(signedTransaction);
         });
     });
 
     describe('Setup test NamespaceId', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('Announce NamespaceRegistrationTransaction', (done) => {
+
+        it('Announce NamespaceRegistrationTransaction', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
                 UInt64.fromUint(9),
-                NetworkType.MIJIN_TEST,
+                networkType, helper.maxFee
             );
             namespaceId = new NamespaceId(namespaceName);
             const signedTransaction = registerNamespaceTransaction.signWith(targetAccount, generationHash);
-            listener.confirmed(targetAccount.address).subscribe(() => {
-                done();
-            });
-            listener.status(targetAccount.address).subscribe((error) => {
-                console.log('Error:', error);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+
+            return helper.announce(signedTransaction);
         });
     });
 
     describe('MosaicMetadataTransaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('aggregate', (done) => {
+
+        it('aggregate', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
                 Deadline.create(),
                 targetAccount.publicKey,
@@ -135,36 +103,25 @@ describe('MetadataTransactionService', () => {
                 mosaicId,
                 newValue.length,
                 newValue,
-                NetworkType.MIJIN_TEST,
+                networkType,
+                helper.maxFee
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                 [mosaicMetadataTransaction.toAggregate(targetAccount.publicAccount)],
-                NetworkType.MIJIN_TEST,
+                networkType,
                 [],
+                helper.maxFee
             );
             const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
-            listener.confirmed(targetAccount.address).subscribe(() => {
-                done();
-            });
-            listener.status(targetAccount.address).subscribe((error) => {
-                console.log('Error:', error);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+
+            return helper.announce(signedTransaction);
         });
     });
 
     describe('NamespaceMetadataTransaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('aggregate', (done) => {
+
+        it('aggregate', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
                 Deadline.create(),
                 targetAccount.publicKey,
@@ -172,23 +129,17 @@ describe('MetadataTransactionService', () => {
                 namespaceId,
                 newValue.length,
                 newValue,
-                NetworkType.MIJIN_TEST,
+                networkType,
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                 [namespaceMetadataTransaction.toAggregate(targetAccount.publicAccount)],
-                NetworkType.MIJIN_TEST,
+                networkType,
                 [],
+                helper.maxFee
             );
             const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
-            listener.confirmed(targetAccount.address).subscribe(() => {
-                done();
-            });
-            listener.status(targetAccount.address).subscribe((error) => {
-                console.log('Error:', error);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+            return helper.announce(signedTransaction);
         });
     });
 
@@ -199,189 +150,167 @@ describe('MetadataTransactionService', () => {
      */
     describe('Test new services', () => {
         it('should create AccountMetadataTransaction - no current metadata', (done) => {
-            const metaDataService = new MetadataTransactionService(metadataHttp);
+            const metaDataService = new MetadataTransactionService(metadataRepository);
 
             return metaDataService.createMetadataTransaction(
-                    deadline,
-                    NetworkType.MIJIN_TEST,
-                    MetadataType.Account,
-                    targetAccount.publicAccount,
-                    key,
-                    newValue,
-                    targetAccount.publicAccount,
-                ).subscribe((transaction: AccountMetadataTransaction) => {
-                    expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA_TRANSACTION);
-                    expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
-                    expect(transaction.value).to.be.equal(newValue);
-                    expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
-                    done();
+                deadline,
+                networkType,
+                MetadataType.Account,
+                targetAccount.publicAccount,
+                key,
+                newValue,
+                targetAccount.publicAccount,
+            ).subscribe((transaction: AccountMetadataTransaction) => {
+                expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA_TRANSACTION);
+                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
+                expect(transaction.value).to.be.equal(newValue);
+                expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
+                done();
             });
         });
         it('should create MosaicMetadataTransaction', (done) => {
-            const metaDataService = new MetadataTransactionService(metadataHttp);
+            const metaDataService = new MetadataTransactionService(metadataRepository);
 
             return metaDataService.createMetadataTransaction(
-                    deadline,
-                    NetworkType.MIJIN_TEST,
-                    MetadataType.Mosaic,
-                    targetAccount.publicAccount,
-                    key,
-                    newValue + 'delta',
-                    targetAccount.publicAccount,
-                    mosaicId,
-                ).subscribe((transaction: MosaicMetadataTransaction) => {
-                    expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA_TRANSACTION);
-                    expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
-                    expect(transaction.valueSizeDelta).to.be.equal(5);
-                    expect(transaction.value).to.be.equal(newValue + 'delta');
-                    expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
-                    expect(transaction.targetMosaicId.toHex()).to.be.equal(mosaicId.toHex());
-                    done();
+                deadline,
+                networkType,
+                MetadataType.Mosaic,
+                targetAccount.publicAccount,
+                key,
+                newValue + 'delta',
+                targetAccount.publicAccount,
+                mosaicId,
+            ).subscribe((transaction: MosaicMetadataTransaction) => {
+                expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA_TRANSACTION);
+                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
+                expect(transaction.valueSizeDelta).to.be.equal(5);
+                expect(transaction.value).to.be.equal(newValue + 'delta');
+                expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
+                expect(transaction.targetMosaicId.toHex()).to.be.equal(mosaicId.toHex());
+                done();
             });
         });
         it('should create NamespaceMetadataTransaction', (done) => {
-            const metaDataService = new MetadataTransactionService(metadataHttp);
+            const metaDataService = new MetadataTransactionService(metadataRepository);
 
             return metaDataService.createMetadataTransaction(
-                    deadline,
-                    NetworkType.MIJIN_TEST,
-                    MetadataType.Namespace,
-                    targetAccount.publicAccount,
-                    key,
-                    newValue + 'delta',
-                    targetAccount.publicAccount,
-                    namespaceId,
-                ).subscribe((transaction: NamespaceMetadataTransaction) => {
-                    expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA_TRANSACTION);
-                    expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
-                    expect(transaction.valueSizeDelta).to.be.equal(5);
-                    expect(transaction.value).to.be.equal(newValue + 'delta');
-                    expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
-                    expect(transaction.targetNamespaceId.toHex()).to.be.equal(namespaceId.toHex());
-                    done();
+                deadline,
+                networkType,
+                MetadataType.Namespace,
+                targetAccount.publicAccount,
+                key,
+                newValue + 'delta',
+                targetAccount.publicAccount,
+                namespaceId,
+            ).subscribe((transaction: NamespaceMetadataTransaction) => {
+                expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA_TRANSACTION);
+                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
+                expect(transaction.valueSizeDelta).to.be.equal(5);
+                expect(transaction.value).to.be.equal(newValue + 'delta');
+                expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
+                expect(transaction.targetNamespaceId.toHex()).to.be.equal(namespaceId.toHex());
+                done();
             });
         });
     });
 
     describe('Announce transaction through service', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
+
         it('should create MosaicMetadataTransaction and announce', (done) => {
-            const metaDataService = new MetadataTransactionService(metadataHttp);
+            const metaDataService = new MetadataTransactionService(metadataRepository);
 
             return metaDataService.createMetadataTransaction(
-                    deadline,
-                    NetworkType.MIJIN_TEST,
-                    MetadataType.Mosaic,
-                    targetAccount.publicAccount,
-                    key,
-                    newValue + 'delta',
-                    targetAccount.publicAccount,
-                    mosaicId,
-                ).subscribe((transaction: MosaicMetadataTransaction) => {
-                    const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
-                        [transaction.toAggregate(targetAccount.publicAccount)],
-                        NetworkType.MIJIN_TEST,
-                        [],
-                    );
-                    const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
-                    listener.confirmed(targetAccount.address).subscribe(() => {
-                        done();
-                    });
-                    listener.status(targetAccount.address).subscribe((error) => {
-                        console.log('Error:', error);
-                        assert(false);
-                        done();
-                    });
-                    transactionHttp.announce(signedTransaction);
+                deadline,
+                networkType,
+                MetadataType.Mosaic,
+                targetAccount.publicAccount,
+                key,
+                newValue + 'delta',
+                targetAccount.publicAccount,
+                mosaicId,
+                helper.maxFee
+            ).subscribe((transaction: MosaicMetadataTransaction) => {
+                const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                    [transaction.toAggregate(targetAccount.publicAccount)],
+                    networkType,
+                    [],
+                    helper.maxFee
+                );
+                const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
+                helper.announce(signedTransaction).then(() => {
+                    done();
+                }, (error) => {
+                    console.log('Error:', error);
+                    assert(false);
+                    done();
+                });
             });
         });
     });
 
     describe('Announce transaction through service with delta size increase', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
+
         it('should create MosaicMetadataTransaction and announce', (done) => {
-            const metaDataService = new MetadataTransactionService(metadataHttp);
+            const metaDataService = new MetadataTransactionService(metadataRepository);
 
             return metaDataService.createMetadataTransaction(
-                    deadline,
-                    NetworkType.MIJIN_TEST,
-                    MetadataType.Mosaic,
-                    targetAccount.publicAccount,
-                    key,
-                    newValue + 'delta' + 'extra delta',
-                    targetAccount.publicAccount,
-                    mosaicId,
-                ).subscribe((transaction: MosaicMetadataTransaction) => {
-                    const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
-                        [transaction.toAggregate(targetAccount.publicAccount)],
-                        NetworkType.MIJIN_TEST,
-                        [],
-                    );
-                    const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
-                    listener.confirmed(targetAccount.address).subscribe(() => {
-                        done();
-                    });
-                    listener.status(targetAccount.address).subscribe((error) => {
-                        console.log('Error:', error);
-                        assert(false);
-                        done();
-                    });
-                    transactionHttp.announce(signedTransaction);
+                deadline,
+                networkType,
+                MetadataType.Mosaic,
+                targetAccount.publicAccount,
+                key,
+                newValue + 'delta' + 'extra delta',
+                targetAccount.publicAccount,
+                mosaicId,
+                helper.maxFee
+            ).subscribe((transaction: MosaicMetadataTransaction) => {
+                const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                    [transaction.toAggregate(targetAccount.publicAccount)],
+                    networkType,
+                    [],
+                    helper.maxFee
+                );
+                const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
+                helper.announce(signedTransaction).then(() => {
+                    done();
+                }, (error) => {
+                    console.log('Error:', error);
+                    assert(false);
+                    done();
+                });
             });
         });
     });
 
     describe('Announce transaction through service with delta size decrease', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
+
         it('should create MosaicMetadataTransaction and announce', (done) => {
-            const metaDataService = new MetadataTransactionService(metadataHttp);
+            const metaDataService = new MetadataTransactionService(metadataRepository);
 
             return metaDataService.createMetadataTransaction(
-                    deadline,
-                    NetworkType.MIJIN_TEST,
-                    MetadataType.Mosaic,
-                    targetAccount.publicAccount,
-                    key,
-                    newValue,
-                    targetAccount.publicAccount,
-                    mosaicId,
-                ).subscribe((transaction: MosaicMetadataTransaction) => {
-                    const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
-                        [transaction.toAggregate(targetAccount.publicAccount)],
-                        NetworkType.MIJIN_TEST,
-                        [],
-                    );
-                    const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
-                    listener.confirmed(targetAccount.address).subscribe(() => {
-                        done();
-                    });
-                    listener.status(targetAccount.address).subscribe((error) => {
-                        console.log('Error:', error);
-                        assert(false);
-                        done();
-                    });
-                    transactionHttp.announce(signedTransaction);
+                deadline,
+                networkType,
+                MetadataType.Mosaic,
+                targetAccount.publicAccount,
+                key,
+                newValue,
+                targetAccount.publicAccount,
+                mosaicId,
+            ).subscribe((transaction: MosaicMetadataTransaction) => {
+                const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                    [transaction.toAggregate(targetAccount.publicAccount)],
+                    networkType,
+                    [],
+                    helper.maxFee
+                );
+                const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
+                helper.announce(signedTransaction).then(() => {
+                    done();
+                }, (error) => {
+                    console.log('Error:', error);
+                    assert(false);
+                    done();
+                });
             });
         });
     });

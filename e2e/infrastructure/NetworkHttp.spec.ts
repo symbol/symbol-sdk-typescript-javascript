@@ -13,42 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {expect} from 'chai';
-import {NetworkHttp} from '../../src/infrastructure/NetworkHttp';
-import {NetworkType} from '../../src/model/blockchain/NetworkType';
+import { expect } from 'chai';
+import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
+import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { IntegrationTestHelper } from "./IntegrationTestHelper";
 
 describe('NetworkHttp', () => {
-    let networkHttp: NetworkHttp;
-    before((done) => {
-        const path = require('path');
-        require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
-            if (err) {
-                throw err;
-            }
-            const json = JSON.parse(data);
-            networkHttp = new NetworkHttp(json.apiUrl);
-            done();
+    let networkRepository: NetworkRepository;
+    let helper = new IntegrationTestHelper();
+    let networkType: NetworkType;
+
+    before(() => {
+        return helper.start().then(() => {
+            networkRepository = helper.repositoryFactory.createNetworkRepository();
+            networkType = helper.networkType;
         });
     });
 
     describe('getNetworkType', () => {
         it('should return network type', (done) => {
-            networkHttp.getNetworkType()
-                .subscribe((networkType) => {
-                    expect(networkType).to.be.equal(NetworkType.MIJIN_TEST);
-                    done();
-                });
+            networkRepository.getNetworkType()
+            .subscribe((sentNetworkType) => {
+                expect(sentNetworkType).to.be.equal(networkType);
+                done();
+            });
         });
     });
 
     describe('getNetworkName', () => {
         it('should return network name and description', (done) => {
-            networkHttp.getNetworkName()
-                .subscribe((networkName) => {
-                    expect(networkName.name.toLowerCase()).to.be.equal('mijintest');
-                    expect(networkName.description.toLowerCase()).to.be.equal('catapult development network');
-                    done();
-                });
+            networkRepository.getNetworkName()
+            .subscribe((networkName) => {
+                expect(networkName.name.toLowerCase()).to.be.not.null;
+                expect(networkName.description.toLowerCase()).to.be.not.null;
+                done();
+            });
         });
     });
 });

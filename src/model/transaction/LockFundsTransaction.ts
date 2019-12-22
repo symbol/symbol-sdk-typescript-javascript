@@ -135,8 +135,7 @@ export class LockFundsTransaction extends Transaction {
                 new UInt64(builder.getMosaic().amount.amount),
             ),
             new UInt64(builder.getDuration().blockDuration),
-            new SignedTransaction('', Convert.uint8ToHex(builder.getHash().hash256), '',
-                                  TransactionType.AGGREGATE_BONDED, networkType),
+            new SignedTransaction('', Convert.uint8ToHex(builder.getHash().hash256), '', TransactionType.AGGREGATE_BONDED, networkType),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as HashLockTransactionBuilder).fee.amount),
         );

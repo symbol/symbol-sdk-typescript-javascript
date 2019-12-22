@@ -13,165 +13,137 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {deepEqual} from 'assert';
-import {assert, expect} from 'chai';
-import { Listener } from '../../src/infrastructure/infrastructure';
-import {NamespaceHttp} from '../../src/infrastructure/NamespaceHttp';
-import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
+import { deepEqual } from 'assert';
+import { expect } from 'chai';
+import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { Account } from '../../src/model/account/Account';
-import {NetworkType} from '../../src/model/blockchain/NetworkType';
-import {NetworkCurrencyMosaic} from '../../src/model/mosaic/NetworkCurrencyMosaic';
+import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { UInt64 } from '../../src/model/UInt64';
+import { IntegrationTestHelper } from "./IntegrationTestHelper";
+import { Address } from "../../src/model/account/Address";
 
 describe('NamespaceHttp', () => {
     const defaultNamespaceId = NetworkCurrencyMosaic.NAMESPACE_ID;
     let namespaceId: NamespaceId;
-    let namespaceHttp: NamespaceHttp;
+    let namespaceRepository: NamespaceRepository;
     let account: Account;
-    let config;
-    let transactionHttp: TransactionHttp;
     let generationHash: string;
-    before((done) => {
-        const path = require('path');
-        require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
-            if (err) {
-                throw err;
-            }
-            const json = JSON.parse(data);
-            config = json;
-            account = Account.createFromPrivateKey(json.testAccount.privateKey, NetworkType.MIJIN_TEST);
-            namespaceHttp = new NamespaceHttp(json.apiUrl, NetworkType.MIJIN_TEST);
-            transactionHttp = new TransactionHttp(json.apiUrl);
-            generationHash = json.generationHash;
-            done();
+    let helper = new IntegrationTestHelper();
+
+    before(() => {
+        return helper.start().then(() => {
+            account = helper.account;
+            generationHash = helper.generationHash;
+            namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
         });
     });
+
+    before(() => {
+        return helper.listener.open();
+    });
+
+    after(() => {
+        helper.listener.close();
+    });
+
     describe('NamespaceRegistrationTransaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('standalone', (done) => {
+
+        it('standalone', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
                 UInt64.fromUint(1000),
-                NetworkType.MIJIN_TEST,
+                helper.networkType,
+                helper.maxFee
             );
             namespaceId = new NamespaceId(namespaceName);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe((transaction) => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+            return helper.announce(signedTransaction);
         });
     });
     describe('AddressAliasTransaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
 
-        it('standalone', (done) => {
+
+        it('standalone', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
                 AliasAction.Link,
                 namespaceId,
                 account.address,
-                NetworkType.MIJIN_TEST,
+                helper.networkType,
+                helper.maxFee
             );
             const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 
-            listener.confirmed(account.address).subscribe((transaction) => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
+            return helper.announce(signedTransaction);
         });
     });
 
     describe('getNamespace', () => {
         it('should return namespace data given namepsaceId', (done) => {
-            namespaceHttp.getNamespace(defaultNamespaceId)
-                .subscribe((namespace) => {
-                    expect(namespace.startHeight.lower).to.be.equal(1);
-                    expect(namespace.startHeight.higher).to.be.equal(0);
-                    done();
-                });
+            namespaceRepository.getNamespace(defaultNamespaceId)
+            .subscribe((namespace) => {
+                expect(namespace.startHeight.lower).to.be.equal(1);
+                expect(namespace.startHeight.higher).to.be.equal(0);
+                done();
+            });
         });
     });
 
     describe('getNamespacesFromAccount', () => {
         it('should return namespace data given publicKeyNemesis', (done) => {
-            namespaceHttp.getNamespacesFromAccount(account.address)
-                .subscribe((namespaces) => {
-                    deepEqual(namespaces[0].owner, account.publicAccount);
-                    done();
-                });
+            namespaceRepository.getNamespacesFromAccount(account.address)
+            .subscribe((namespaces) => {
+                deepEqual(namespaces[0].owner, account.publicAccount);
+                done();
+            });
         });
     });
 
     describe('getNamespacesFromAccounts', () => {
         it('should return namespaces data given publicKeyNemesis', (done) => {
-            namespaceHttp.getNamespacesFromAccounts([account.address])
-                .subscribe((namespaces) => {
-                    deepEqual(namespaces[0].owner, account.publicAccount);
-                    done();
-                });
+            namespaceRepository.getNamespacesFromAccounts([account.address])
+            .subscribe((namespaces) => {
+                deepEqual(namespaces[0].owner, account.publicAccount);
+                done();
+            });
         });
 
     });
 
     describe('getNamespacesName', () => {
         it('should return namespace name given array of namespaceIds', (done) => {
-            namespaceHttp.getNamespacesName([defaultNamespaceId])
-                .subscribe((namespaceNames) => {
-                    expect(namespaceNames[0].name).to.be.equal('currency');
-                    done();
-                });
+            namespaceRepository.getNamespacesName([defaultNamespaceId])
+            .subscribe((namespaceNames) => {
+                expect(namespaceNames[0].name).to.be.equal('currency');
+                done();
+            });
         });
     });
 
     describe('getLinkedMosaicId', () => {
         it('should return mosaicId given currency namespaceId', (done) => {
-            namespaceHttp.getLinkedMosaicId(defaultNamespaceId)
-                .subscribe((mosaicId) => {
-                    expect(mosaicId).to.not.be.null;
-                    done();
-                });
+            namespaceRepository.getLinkedMosaicId(defaultNamespaceId)
+            .subscribe((mosaicId) => {
+                expect(mosaicId).to.not.be.null;
+                done();
+            });
         });
     });
 
     describe('getLinkedAddress', () => {
         it('should return address given namespaceId', (done) => {
-            namespaceHttp.getLinkedAddress(namespaceId)
-                .subscribe((address) => {
-                    expect(address.plain()).to.be.equal(account.address.plain());
-                    done();
-                });
+            namespaceRepository.getLinkedAddress(namespaceId)
+            .subscribe((address: Address) => {
+                expect(address.plain()).to.be.equal(account.address.plain());
+                done();
+            });
         });
     });
 });

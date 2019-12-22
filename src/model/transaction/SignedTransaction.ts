@@ -17,6 +17,7 @@
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import {NetworkType} from '../blockchain/NetworkType';
+import { TransactionType } from "./TransactionType";
 
 /**
  * SignedTransaction object is used to transfer the transaction data and the signature to the server
@@ -26,7 +27,6 @@ export class SignedTransaction {
     /**
      * @param payload
      * @param hash
-     * @param signer
      * @param type
      * @param networkType
      */
@@ -45,7 +45,7 @@ export class SignedTransaction {
                 /**
                  * Transaction type
                  */
-                public readonly type: number,
+                public readonly type: TransactionType,
                 /**
                  * Signer network type
                  */

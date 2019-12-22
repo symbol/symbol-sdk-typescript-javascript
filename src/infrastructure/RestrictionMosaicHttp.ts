@@ -24,7 +24,7 @@ import { MosaicGlobalRestriction } from '../model/restriction/MosaicGlobalRestri
 import { MosaicGlobalRestrictionItem } from '../model/restriction/MosaicGlobalRestrictionItem';
 import { RestrictionMosaicRoutesApi } from './api/restrictionMosaicRoutesApi';
 import {Http} from './Http';
-import { RestrictionMosaicRepository } from './RestrictionMosaicRespository';
+import { RestrictionMosaicRepository } from './RestrictionMosaicRepository';
 import { MosaicAddressRestrictionDTO } from "./model/mosaicAddressRestrictionDTO";
 import { MosaicGlobalRestrictionDTO } from "./model/mosaicGlobalRestrictionDTO";
 
@@ -44,8 +44,8 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
      * @param url
      * @param networkType
      */
-    constructor(url: string, networkType?: NetworkType) {
-        super(url, networkType);
+    constructor(url: string) {
+        super(url);
         this.restrictionMosaicRoutesApi = new RestrictionMosaicRoutesApi(url);
 
     }

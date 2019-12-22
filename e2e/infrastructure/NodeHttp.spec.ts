@@ -14,46 +14,44 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {NodeHttp} from '../../src/infrastructure/NodeHttp';
+import { expect } from 'chai';
+import { NodeRepository } from '../../src/infrastructure/NodeRepository';
+import { IntegrationTestHelper } from "./IntegrationTestHelper";
+
 describe('NodeHttp', () => {
-    let nodeHttp: NodeHttp;
-    before((done) => {
-        const path = require('path');
-        require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
-            if (err) {
-                throw err;
-            }
-            const json = JSON.parse(data);
-            nodeHttp = new NodeHttp(json.apiUrl);
-            done();
+    let nodeRepository: NodeRepository;
+    let helper = new IntegrationTestHelper();
+
+    before(() => {
+        return helper.start().then(() => {
+            nodeRepository = helper.repositoryFactory.createNodeRepository();
         });
     });
 
     describe('getNodeInfo', () => {
         it('should return node info', (done) => {
-            nodeHttp.getNodeInfo()
-                .subscribe((nodeInfo) => {
-                    expect(nodeInfo.friendlyName).not.to.be.undefined;
-                    expect(nodeInfo.host).not.to.be.undefined;
-                    expect(nodeInfo.networkIdentifier).not.to.be.undefined;
-                    expect(nodeInfo.port).not.to.be.undefined;
-                    expect(nodeInfo.publicKey).not.to.be.undefined;
-                    expect(nodeInfo.roles).not.to.be.undefined;
-                    expect(nodeInfo.version).not.to.be.undefined;
-                    done();
-                });
+            nodeRepository.getNodeInfo()
+            .subscribe((nodeInfo) => {
+                expect(nodeInfo.friendlyName).not.to.be.undefined;
+                expect(nodeInfo.host).not.to.be.undefined;
+                expect(nodeInfo.networkIdentifier).not.to.be.undefined;
+                expect(nodeInfo.port).not.to.be.undefined;
+                expect(nodeInfo.publicKey).not.to.be.undefined;
+                expect(nodeInfo.roles).not.to.be.undefined;
+                expect(nodeInfo.version).not.to.be.undefined;
+                done();
+            });
         });
     });
 
     describe('getNodeTime', () => {
         it('should return node time', (done) => {
-            nodeHttp.getNodeTime()
-                .subscribe((nodeTime) => {
-                    expect(nodeTime.receiveTimeStamp).not.to.be.undefined;
-                    expect(nodeTime.sendTimeStamp).not.to.be.undefined;
-                    done();
-                });
+            nodeRepository.getNodeTime()
+            .subscribe((nodeTime) => {
+                expect(nodeTime.receiveTimeStamp).not.to.be.undefined;
+                expect(nodeTime.sendTimeStamp).not.to.be.undefined;
+                done();
+            });
         });
     });
 });
