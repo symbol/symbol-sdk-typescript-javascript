@@ -17,7 +17,7 @@
 import {LocalDateTime} from 'js-joda';
 import {Crypto, KeyPair, SHA3Hasher} from '../../core/crypto';
 import {Convert as convert} from '../../core/format';
-import {ISimpleWalletDTO} from '../../infrastructure/model/simpleWalletDTO';
+import {ISimpleWalletDTO} from '../../infrastructure/wallet/simpleWalletDTO';
 import {Account} from '../account/Account';
 import {Address} from '../account/Address';
 import {NetworkType} from '../blockchain/NetworkType';
