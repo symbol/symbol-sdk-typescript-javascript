@@ -15,10 +15,9 @@
  */
 
 import { expect } from 'chai';
+import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
-import { Convert as convert, RawAddress } from "../../../src/core/format";
-import { Account } from "../../../src/model/account/Account";
 
 const Address_Decoded_Size = 25;
 
@@ -128,20 +127,23 @@ describe('Address', () => {
     });
 
     it('It creates the address from an encoded value', () => {
-        let encoded = '917E7E29A01014C2F300000000000000000000000000000000';
+        const encoded = '917E7E29A01014C2F300000000000000000000000000000000';
         const address = Address.createFromEncoded(encoded);
         expect(address.encoded()).to.be.equal(encoded);
     });
 
     describe('isValidRawAddress', () => {
 
-
         it('returns true for valid address when generated', () => {
             // Assert:
-            expect(Address.isValidRawAddress(Account.generateNewAccount(NetworkType.MIJIN_TEST).address.plain(), NetworkType.MIJIN_TEST)).to.equal(true);
-            expect(Address.isValidRawAddress(Account.generateNewAccount(NetworkType.MAIN_NET).address.plain(), NetworkType.MAIN_NET)).to.equal(true);
-            expect(Address.isValidRawAddress(Account.generateNewAccount(NetworkType.MIJIN).address.plain(), NetworkType.MIJIN)).to.equal(true);
-            expect(Address.isValidRawAddress(Account.generateNewAccount(NetworkType.TEST_NET).address.plain(), NetworkType.TEST_NET)).to.equal(true);
+            expect(Address.isValidRawAddress(
+                Account.generateNewAccount(NetworkType.MIJIN_TEST).address.plain(), NetworkType.MIJIN_TEST)).to.equal(true);
+            expect(Address.isValidRawAddress(
+                Account.generateNewAccount(NetworkType.MAIN_NET).address.plain(), NetworkType.MAIN_NET)).to.equal(true);
+            expect(Address.isValidRawAddress(
+                Account.generateNewAccount(NetworkType.MIJIN).address.plain(), NetworkType.MIJIN)).to.equal(true);
+            expect(Address.isValidRawAddress(
+                Account.generateNewAccount(NetworkType.TEST_NET).address.plain(), NetworkType.TEST_NET)).to.equal(true);
         });
 
         it('returns true for valid address', () => {
@@ -181,10 +183,14 @@ describe('Address', () => {
 
         it('returns true for valid address when generated', () => {
             // Assert:
-            expect(Address.isValidEncodedAddress(Account.generateNewAccount(NetworkType.MIJIN_TEST).address.encoded(), NetworkType.MIJIN_TEST)).to.equal(true);
-            expect(Address.isValidEncodedAddress(Account.generateNewAccount(NetworkType.MAIN_NET).address.encoded(), NetworkType.MAIN_NET)).to.equal(true);
-            expect(Address.isValidEncodedAddress(Account.generateNewAccount(NetworkType.MIJIN).address.encoded(), NetworkType.MIJIN)).to.equal(true);
-            expect(Address.isValidEncodedAddress(Account.generateNewAccount(NetworkType.TEST_NET).address.encoded(), NetworkType.TEST_NET)).to.equal(true);
+            expect(Address.isValidEncodedAddress(
+                Account.generateNewAccount(NetworkType.MIJIN_TEST).address.encoded(), NetworkType.MIJIN_TEST)).to.equal(true);
+            expect(Address.isValidEncodedAddress(
+                Account.generateNewAccount(NetworkType.MAIN_NET).address.encoded(), NetworkType.MAIN_NET)).to.equal(true);
+            expect(Address.isValidEncodedAddress(
+                Account.generateNewAccount(NetworkType.MIJIN).address.encoded(), NetworkType.MIJIN)).to.equal(true);
+            expect(Address.isValidEncodedAddress(
+                Account.generateNewAccount(NetworkType.TEST_NET).address.encoded(), NetworkType.TEST_NET)).to.equal(true);
         });
 
         it('returns true for valid encoded address', () => {

@@ -16,6 +16,7 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import { RestrictionAccountRepository } from '../../src/infrastructure/RestrictionAccountRespository';
 import { RestrictionMosaicRepository } from '../../src/infrastructure/RestrictionMosaicRepository';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
@@ -33,11 +34,10 @@ import { MosaicAddressRestrictionTransaction } from '../../src/model/transaction
 import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
 import { MosaicGlobalRestrictionTransaction } from '../../src/model/transaction/MosaicGlobalRestrictionTransaction';
 import { UInt64 } from '../../src/model/UInt64';
-import { IntegrationTestHelper } from "./IntegrationTestHelper";
-import { RestrictionAccountRepository } from "../../src/infrastructure/RestrictionAccountRespository";
+import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('RestrictionHttp', () => {
-    let helper = new IntegrationTestHelper();
+    const helper = new IntegrationTestHelper();
     let account: Account;
     let account3: Account;
     let accountAddress: Address;
@@ -177,7 +177,7 @@ describe('RestrictionHttp', () => {
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                 [mosaicAddressRestrictionTransaction.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee
+                [], helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);

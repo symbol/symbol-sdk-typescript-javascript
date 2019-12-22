@@ -33,10 +33,10 @@ import { MultisigAccountModificationTransaction } from '../../src/model/transact
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
-import { IntegrationTestHelper } from "./IntegrationTestHelper";
+import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('AccountHttp', () => {
-    let helper = new IntegrationTestHelper();
+    const helper = new IntegrationTestHelper();
     let account: Account;
     let account2: Account;
     let multisigAccount: Account;
@@ -93,7 +93,7 @@ describe('AccountHttp', () => {
                 [NetworkCurrencyMosaic.createAbsolute(1)],
                 PlainMessage.create('test-message'),
                 networkType,
-                helper.maxFee
+                helper.maxFee,
             );
 
             const signedTransaction = transferTransaction.signWith(account, generationHash);
@@ -109,7 +109,7 @@ describe('AccountHttp', () => {
                 namespaceName,
                 UInt64.fromUint(9),
                 networkType,
-                helper.maxFee
+                helper.maxFee,
             );
             namespaceId = new NamespaceId(namespaceName);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
@@ -265,7 +265,7 @@ describe('AccountHttp', () => {
                 namespaceId,
                 account.address,
                 networkType,
-                helper.maxFee
+                helper.maxFee,
             );
             const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
@@ -282,7 +282,7 @@ describe('AccountHttp', () => {
                 [cosignAccount1.publicAccount,
                 ],
                 networkType,
-                helper.maxFee
+                helper.maxFee,
             );
             const removeCosigner2 = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
@@ -293,7 +293,7 @@ describe('AccountHttp', () => {
                     cosignAccount2.publicAccount,
                 ],
                 networkType,
-                helper.maxFee
+                helper.maxFee,
             );
 
             const removeCosigner3 = MultisigAccountModificationTransaction.create(
@@ -305,7 +305,7 @@ describe('AccountHttp', () => {
                     cosignAccount3.publicAccount,
                 ],
                 networkType,
-                helper.maxFee
+                helper.maxFee,
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),

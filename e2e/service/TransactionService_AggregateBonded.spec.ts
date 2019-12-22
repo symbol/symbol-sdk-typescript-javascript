@@ -15,6 +15,7 @@
  */
 
 import { expect } from 'chai';
+import { ChronoUnit } from 'js-joda';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
@@ -28,17 +29,16 @@ import { AggregateTransaction } from '../../src/model/transaction/AggregateTrans
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
 import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
+import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
-import { IntegrationTestHelper } from "../infrastructure/IntegrationTestHelper";
-import { SignedTransaction } from "../../src/model/transaction/SignedTransaction";
-import { ChronoUnit } from "js-joda";
+import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
 describe('TransactionService', () => {
 
-    let helper = new IntegrationTestHelper();
+    const helper = new IntegrationTestHelper();
     let account: Account;
     let account2: Account;
     let multisigAccount: Account;
@@ -62,7 +62,8 @@ describe('TransactionService', () => {
             generationHash = helper.generationHash;
             networkType = helper.networkType;
             namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
-            transactionService = new TransactionService(helper.repositoryFactory.createTransactionRepository(), helper.repositoryFactory.createReceiptRepository());
+            transactionService = new TransactionService(helper.repositoryFactory.createTransactionRepository(),
+                helper.repositoryFactory.createReceiptRepository());
         });
     });
     before(() => {
@@ -73,21 +74,20 @@ describe('TransactionService', () => {
         helper.listener.close();
     });
 
-
-    let createSignedAggregatedBondTransaction = (aggregatedTo: Account,
-                                                 signer: Account,
-                                                 recipient: Address): SignedTransaction => {
+    const createSignedAggregatedBondTransaction = (aggregatedTo: Account,
+                                                   signer: Account,
+                                                   recipient: Address): SignedTransaction => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
             recipient, [],
             PlainMessage.create('test-message'),
-            networkType, helper.maxFee
+            networkType, helper.maxFee,
         );
 
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(2, ChronoUnit.MINUTES),
             [transferTransaction.toAggregate(aggregatedTo.publicAccount)],
-            networkType, [], helper.maxFee
+            networkType, [], helper.maxFee,
         );
         return signer.sign(aggregateTransaction, generationHash);
     };
@@ -119,7 +119,7 @@ describe('TransactionService', () => {
                     cosignAccount3.publicAccount,
                 ],
                 [],
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
@@ -148,7 +148,7 @@ describe('TransactionService', () => {
                     NetworkCurrencyMosaic.createAbsolute(1),
                 ],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             const signedTransaction = transferTransaction.signWith(account, generationHash);
             transactionService.announce(signedTransaction, helper.listener).subscribe((tx: TransferTransaction) => {
@@ -169,7 +169,7 @@ describe('TransactionService', () => {
                 new Mosaic(networkCurrencyMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
                 UInt64.fromUint(1000),
                 signedAggregatedTransaction,
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             const signedLockFundsTransaction = lockFundsTransaction.signWith(account, generationHash);
             transactionService
@@ -181,7 +181,6 @@ describe('TransactionService', () => {
         });
     });
 
-
     describe('should announce aggregate bonded transaction', () => {
 
         it('announce', (done) => {
@@ -191,7 +190,7 @@ describe('TransactionService', () => {
                 new Mosaic(networkCurrencyMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
                 UInt64.fromUint(1000),
                 signedAggregatedTransaction,
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             const signedLockFundsTransaction = lockFundsTransaction.signWith(account, generationHash);
             transactionService.announce(signedLockFundsTransaction, helper.listener).subscribe(() => {
@@ -220,7 +219,7 @@ describe('TransactionService', () => {
                 [],
                 [cosignAccount1.publicAccount,
                 ],
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             const removeCosigner2 = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
@@ -230,7 +229,7 @@ describe('TransactionService', () => {
                 [
                     cosignAccount2.publicAccount,
                 ],
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
 
             const removeCosigner3 = MultisigAccountModificationTransaction.create(
@@ -241,7 +240,7 @@ describe('TransactionService', () => {
                 [
                     cosignAccount3.publicAccount,
                 ],
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),

@@ -15,7 +15,7 @@
  */
 
 import { Convert } from '../../core/format/Convert';
-import { UnresolvedMapping } from "../../core/utils/UnresolvedMapping";
+import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';

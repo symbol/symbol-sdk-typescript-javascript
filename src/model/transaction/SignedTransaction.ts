@@ -17,7 +17,7 @@
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import {NetworkType} from '../blockchain/NetworkType';
-import { TransactionType } from "./TransactionType";
+import { TransactionType } from './TransactionType';
 
 /**
  * SignedTransaction object is used to transfer the transaction data and the signature to the server

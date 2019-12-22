@@ -18,6 +18,7 @@ import {expect} from 'chai';
 import {AccountHttp} from '../../src/infrastructure/AccountHttp';
 import {MosaicHttp} from '../../src/infrastructure/MosaicHttp';
 import {Address} from '../../src/model/account/Address';
+import { NetworkType } from '../../src/model/model';
 import {Mosaic} from '../../src/model/mosaic/Mosaic';
 import {MosaicId} from '../../src/model/mosaic/MosaicId';
 import {MosaicInfo} from '../../src/model/mosaic/MosaicInfo';
@@ -31,7 +32,7 @@ describe('MosaicService', () => {
     it('mosaicsView', () => {
         const mosaicId = new MosaicId([3294802500, 2243684972]);
         const mosaicService = new MosaicService(
-            new AccountHttp(conf.NIS2_URL), new MosaicHttp(conf.NIS2_URL));
+            new AccountHttp(conf.NIS2_URL), new MosaicHttp(conf.NIS2_URL, NetworkType.MIJIN_TEST));
         return mosaicService.mosaicsView([mosaicId]).subscribe((mosaicsView: MosaicView[]) => {
             const mosaicView = mosaicsView[0];
             expect(mosaicView.mosaicInfo).to.be.an.instanceof(MosaicInfo);
@@ -41,7 +42,7 @@ describe('MosaicService', () => {
     it('mosaicsView of no existing mosaicId', () => {
         const mosaicId = new MosaicId([1234, 1234]);
         const mosaicService = new MosaicService(
-            new AccountHttp(conf.NIS2_URL), new MosaicHttp(conf.NIS2_URL));
+            new AccountHttp(conf.NIS2_URL), new MosaicHttp(conf.NIS2_URL, NetworkType.MIJIN_TEST));
         return mosaicService.mosaicsView([mosaicId]).subscribe((mosaicsView: MosaicView[]) => {
             expect(mosaicsView.length).to.be.equal(0);
         });
@@ -49,7 +50,7 @@ describe('MosaicService', () => {
 
     it('mosaicsAmountView', () => {
         const mosaicService = new MosaicService(
-            new AccountHttp(conf.NIS2_URL), new MosaicHttp(conf.NIS2_URL));
+            new AccountHttp(conf.NIS2_URL), new MosaicHttp(conf.NIS2_URL, NetworkType.MIJIN_TEST));
         return mosaicService.mosaicsAmountViewFromAddress(Address.createFromRawAddress('SARNASAS2BIAB6LMFA3FPMGBPGIJGK6IJETM3ZSP'))
             .subscribe((mosaicsAmountView: MosaicAmountView[]) => {
                 const mosaicAmountView = mosaicsAmountView[0];
@@ -59,7 +60,7 @@ describe('MosaicService', () => {
 
     it('mosaicsAmountView of no existing account', () => {
         const mosaicService = new MosaicService(
-            new AccountHttp(conf.NIS2_URL), new MosaicHttp(conf.NIS2_URL));
+            new AccountHttp(conf.NIS2_URL), new MosaicHttp(conf.NIS2_URL, NetworkType.MIJIN_TEST));
         return mosaicService.mosaicsAmountViewFromAddress(Address.createFromRawAddress('SCKBZAMIQ6F46QMZUANE6E33KA63KA7KEQ5X6WJW'))
             .subscribe((mosaicsAmountView: MosaicAmountView[]) => {
                 expect(mosaicsAmountView.length).to.be.equal(0);
@@ -69,7 +70,7 @@ describe('MosaicService', () => {
     it('mosaicsAmountView', () => {
         const mosaic = new Mosaic(new MosaicId([3646934825, 3576016193]), UInt64.fromUint(1000));
         const mosaicService = new MosaicService(
-            new AccountHttp(conf.NIS2_URL), new MosaicHttp(conf.NIS2_URL));
+            new AccountHttp(conf.NIS2_URL), new MosaicHttp(conf.NIS2_URL, NetworkType.MIJIN_TEST));
         return mosaicService.mosaicsAmountView([mosaic]).subscribe((mosaicsAmountView: MosaicAmountView[]) => {
             const mosaicAmountView = mosaicsAmountView[0];
             expect(mosaicAmountView.mosaicInfo).to.be.an.instanceof(MosaicInfo);

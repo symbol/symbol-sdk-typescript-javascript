@@ -17,6 +17,7 @@ import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { Account } from '../../src/model/account/Account';
+import { Address } from '../../src/model/account/Address';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
@@ -24,8 +25,7 @@ import { AddressAliasTransaction } from '../../src/model/transaction/AddressAlia
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { UInt64 } from '../../src/model/UInt64';
-import { IntegrationTestHelper } from "./IntegrationTestHelper";
-import { Address } from "../../src/model/account/Address";
+import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('NamespaceHttp', () => {
     const defaultNamespaceId = NetworkCurrencyMosaic.NAMESPACE_ID;
@@ -33,7 +33,7 @@ describe('NamespaceHttp', () => {
     let namespaceRepository: NamespaceRepository;
     let account: Account;
     let generationHash: string;
-    let helper = new IntegrationTestHelper();
+    const helper = new IntegrationTestHelper();
 
     before(() => {
         return helper.start().then(() => {
@@ -60,7 +60,7 @@ describe('NamespaceHttp', () => {
                 namespaceName,
                 UInt64.fromUint(1000),
                 helper.networkType,
-                helper.maxFee
+                helper.maxFee,
             );
             namespaceId = new NamespaceId(namespaceName);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
@@ -69,7 +69,6 @@ describe('NamespaceHttp', () => {
     });
     describe('AddressAliasTransaction', () => {
 
-
         it('standalone', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
@@ -77,7 +76,7 @@ describe('NamespaceHttp', () => {
                 namespaceId,
                 account.address,
                 helper.networkType,
-                helper.maxFee
+                helper.maxFee,
             );
             const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 

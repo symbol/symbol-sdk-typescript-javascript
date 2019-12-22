@@ -15,12 +15,11 @@
  */
 
 import { expect } from 'chai';
-import { ChainHttp } from '../../src/infrastructure/ChainHttp';
-import { IntegrationTestHelper } from "./IntegrationTestHelper";
-import { ChainRepository } from "../../src/infrastructure/ChainRepository";
+import { ChainRepository } from '../../src/infrastructure/ChainRepository';
+import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('ChainHttp', () => {
-    let helper = new IntegrationTestHelper();
+    const helper = new IntegrationTestHelper();
     let chainRepository: ChainRepository;
 
     before(() => {

@@ -16,10 +16,10 @@
 
 // tslint:disable-next-line: ordered-imports
 import { from as observableFrom, Observable, of as observableOf, throwError } from 'rxjs';
+import { catchError, map, shareReplay } from 'rxjs/operators';
 import { NetworkType } from '../model/blockchain/NetworkType';
+import { NodeRoutesApi } from './api/nodeRoutesApi';
 import { QueryParams } from './QueryParams';
-import { NodeRoutesApi } from "./api/nodeRoutesApi";
-import { catchError, map, share, shareReplay } from 'rxjs/operators';
 
 /**
  * Http extended by all http services
@@ -53,6 +53,7 @@ export abstract class Http {
             pageSize: queryParams ? queryParams.pageSize : undefined,
             id: queryParams ? queryParams.id : undefined,
             order: queryParams ? queryParams.order : undefined,
+            transactionType: queryParams ? queryParams.transactionType : undefined,
         };
     }
 

@@ -16,6 +16,7 @@
 
 import {deepEqual} from 'assert';
 import {expect} from 'chai';
+import { TransactionStatusTypeEnum } from '../../../src/infrastructure/model/transactionStatusTypeEnum';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {TransactionStatus} from '../../../src/model/transaction/TransactionStatus';
 import {UInt64} from '../../../src/model/UInt64';
@@ -27,19 +28,19 @@ describe('TransactionStatus', () => {
             group: 'confirmed',
             hash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
             height: new UInt64([ 1, 0 ]),
-            status: 'Success',
+            code: TransactionStatusTypeEnum.Success,
         };
 
         const transactionStatus = new TransactionStatus(
-            transactionStatusDTO.status,
             transactionStatusDTO.group,
             transactionStatusDTO.hash,
             transactionStatusDTO.deadline,
+            transactionStatusDTO.code,
             transactionStatusDTO.height,
         );
 
         expect(transactionStatus.group).to.be.equal(transactionStatusDTO.group);
-        expect(transactionStatus.status).to.be.equal(transactionStatusDTO.status);
+        expect(transactionStatus.code).to.be.equal(transactionStatusDTO.code);
         expect(transactionStatus.hash).to.be.equal(transactionStatusDTO.hash);
         deepEqual(transactionStatus.deadline, transactionStatusDTO.deadline);
         deepEqual(transactionStatus.height, transactionStatusDTO.height);

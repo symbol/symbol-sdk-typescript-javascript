@@ -32,7 +32,7 @@ import {TransactionType} from '../model/transaction/TransactionType';
 import {UInt64} from '../model/UInt64';
 import {
     BlockInfoDTO, BlockRoutesApi,
-    TransactionRoutesApi, TransactionStatusDTO
+    TransactionRoutesApi, TransactionStatusDTO,
 } from './api';
 import {Http} from './Http';
 import {CreateTransactionFromDTO} from './transaction/CreateTransactionFromDTO';
@@ -56,23 +56,15 @@ export class TransactionHttp extends Http implements TransactionRepository {
      */
     private blockRoutesApi: BlockRoutesApi;
 
-
-    /**
-     * @internal
-     * network type for the mappings.
-     */
-    private readonly networkTypeObservable: Observable<NetworkType>;
-
     /**
      * Constructor
      * @param url
      * @param networkType
      */
-    constructor(url: string, networkType?: NetworkType | Observable<NetworkType>) {
+    constructor(url: string) {
         super(url);
         this.transactionRoutesApi = new TransactionRoutesApi(url);
         this.blockRoutesApi = new BlockRoutesApi(url);
-        this.networkTypeObservable = this.createNetworkTypeObservable(networkType);
     }
 
     /**
@@ -142,11 +134,10 @@ export class TransactionHttp extends Http implements TransactionRepository {
      */
     private toTransactionStatus(dto: TransactionStatusDTO): TransactionStatus {
         return new TransactionStatus(
-            dto.status,
-            dto.group,
+            dto.group.valueOf(),
             dto.hash,
-            dto.deadline ?
-                Deadline.createFromDTO(UInt64.fromNumericString(dto.deadline).toDTO()) : undefined,
+            Deadline.createFromDTO(UInt64.fromNumericString(dto.deadline).toDTO()),
+            dto.code ? dto.code.valueOf() : '',
             dto.height ? UInt64.fromNumericString(dto.height) : undefined);
     }
 
@@ -207,9 +198,9 @@ export class TransactionHttp extends Http implements TransactionRepository {
             if (response.status !== undefined) {
                 throw new TransactionStatus(
                     'failed',
-                    response.status,
                     response.hash,
                     Deadline.createFromDTO(response.deadline),
+                    response.code,
                     UInt64.fromUint(0));
             } else {
                 return CreateTransactionFromDTO(response);

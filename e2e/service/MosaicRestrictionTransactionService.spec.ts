@@ -15,7 +15,7 @@ import { MosaicGlobalRestrictionTransaction } from '../../src/model/transaction/
 import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { UInt64 } from '../../src/model/UInt64';
 import { MosaicRestrictionTransactionService } from '../../src/service/MosaicRestrictionTransactionService';
-import { IntegrationTestHelper } from "../infrastructure/IntegrationTestHelper";
+import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
 describe('MosaicRestrictionTransactionService', () => {
     const deadline = Deadline.create();
@@ -24,7 +24,7 @@ describe('MosaicRestrictionTransactionService', () => {
     let restrictionRepository: RestrictionMosaicRepository;
     let mosaicId: MosaicId;
     let generationHash: string;
-    let helper = new IntegrationTestHelper();
+    const helper = new IntegrationTestHelper();
     let networkType: NetworkType;
 
     before(() => {
@@ -62,7 +62,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 MosaicFlags.create(true, true, true),
                 3,
                 UInt64.fromUint(1000),
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
@@ -82,9 +82,9 @@ describe('MosaicRestrictionTransactionService', () => {
                 MosaicRestrictionType.GE,
                 networkType,
                 undefined,
-                helper.maxFee
+                helper.maxFee,
             );
-            const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash)
+            const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
         });
     });
@@ -99,12 +99,12 @@ describe('MosaicRestrictionTransactionService', () => {
                 account.address,
                 UInt64.fromUint(2),
                 networkType,
-                helper.maxFee
+                helper.maxFee,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                 [mosaicAddressRestrictionTransaction.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee
+                [], helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
@@ -126,7 +126,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 mosaicId,
                 key,
                 '1',
-                MosaicRestrictionType.GE, undefined, helper.maxFee
+                MosaicRestrictionType.GE, undefined, helper.maxFee,
             ).subscribe((transaction: MosaicGlobalRestrictionTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal('0');
@@ -147,7 +147,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 key,
                 account.address,
                 '3',
-                helper.maxFee
+                helper.maxFee,
             ).subscribe((transaction: MosaicAddressRestrictionTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ADDRESS_RESTRICTION);
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal('2');
@@ -169,13 +169,13 @@ describe('MosaicRestrictionTransactionService', () => {
                 mosaicId,
                 key,
                 '1',
-                MosaicRestrictionType.GE, undefined, helper.maxFee
+                MosaicRestrictionType.GE, undefined, helper.maxFee,
             ).subscribe((transaction: MosaicGlobalRestrictionTransaction) => {
                 const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                     [transaction.toAggregate(account.publicAccount)],
                     networkType,
                     [],
-                    helper.maxFee
+                    helper.maxFee,
                 );
                 const signedTransaction = aggregateTransaction.signWith(account, generationHash);
                 helper.announce(signedTransaction).then(() => {
@@ -197,13 +197,13 @@ describe('MosaicRestrictionTransactionService', () => {
                 key,
                 account.address,
                 '3',
-                helper.maxFee
+                helper.maxFee,
             ).subscribe((transaction: MosaicAddressRestrictionTransaction) => {
                 const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                     [transaction.toAggregate(account.publicAccount)],
                     networkType,
                     [],
-                    helper.maxFee
+                    helper.maxFee,
                 );
                 const signedTransaction = aggregateTransaction.signWith(account, generationHash);
                 helper.announce(signedTransaction).then(() => {

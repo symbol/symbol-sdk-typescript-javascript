@@ -28,23 +28,8 @@ import { Http } from './Http';
 import { QueryParams } from './QueryParams';
 import {
     CreateTransactionFromDTO,
-    extractBeneficiary
+    extractBeneficiary,
 } from './transaction/CreateTransactionFromDTO';
-
-/**
- * Blocks returned limits:
- * N_25: 25 blocks.
- * N_50: 50 blocks.
- * N_75: 75 blocks.
- * N_100: 100 blocks.
- */
-export enum LimitType {
-    N_25 = 25,
-    N_50 = 50,
-    N_75 = 75,
-    N_100 = 100,
-
-}
 
 /**
  * Blockchain http repository.
@@ -102,17 +87,16 @@ export class BlockHttp extends Http implements BlockRepository {
     /**
      * Gets array of BlockInfo for a block height with limit
      * @param height - Block height from which will be the first block in the array
-     * @param limit - Number of blocks returned. Limit value only available in 25, 50. 75 and 100. (default 25)
+     * @param limit - Number of blocks returned.
      * @returns Observable<BlockInfo[]>
      */
-    public getBlocksByHeightWithLimit(height: string, limit: LimitType = LimitType.N_25): Observable<BlockInfo[]> {
+    public getBlocksByHeightWithLimit(height: string, limit: number): Observable<BlockInfo[]> {
         return observableFrom(
             this.blockRoutesApi.getBlocksByHeightWithLimit(height, limit)).pipe(
                 map(({body}) => body.map((blockDTO) => this.toBlockInfo(blockDTO))),
                 catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
-
 
     /**
      * This method maps a BlockInfoDTO from rest to the SDK's BlockInfo model object.

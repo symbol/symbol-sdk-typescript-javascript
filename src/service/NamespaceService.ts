@@ -16,11 +16,11 @@
 
 import { Observable } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
+import { NamespaceRepository } from '../infrastructure/NamespaceRepository';
 import { NamespaceId } from '../model/namespace/NamespaceId';
 import { NamespaceInfo } from '../model/namespace/NamespaceInfo';
 import { NamespaceName } from '../model/namespace/NamespaceName';
 import { Namespace } from './Namespace';
-import { NamespaceRepository } from "../infrastructure/NamespaceRepository";
 
 /**
  * Namespace service

@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 import { assert, expect } from 'chai';
+import { ChronoUnit } from 'js-joda';
+import { filter } from 'rxjs/operators';
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
+import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
@@ -25,7 +28,7 @@ import {
     LockFundsTransaction,
     Mosaic,
     SignedTransaction,
-    UInt64
+    UInt64,
 } from '../../src/model/model';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
@@ -34,14 +37,11 @@ import { AggregateTransaction } from '../../src/model/transaction/AggregateTrans
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { IntegrationTestHelper } from "./IntegrationTestHelper";
-import { NamespaceRepository } from "../../src/infrastructure/NamespaceRepository";
-import { filter } from "rxjs/operators";
-import { ChronoUnit } from "js-joda";
+import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('Listener', () => {
 
-    let helper = new IntegrationTestHelper();
+    const helper = new IntegrationTestHelper();
     let account: Account;
     let account2: Account;
     let multisigAccount: Account;
@@ -82,36 +82,35 @@ describe('Listener', () => {
         setTimeout(done, 200);
     });
 
-
-    let createSignedAggregatedBondTransaction = (aggregatedTo: Account,
-                                                 signer: Account,
-                                                 recipient: Address): SignedTransaction => {
+    const createSignedAggregatedBondTransaction = (aggregatedTo: Account,
+                                                   signer: Account,
+                                                   recipient: Address): SignedTransaction => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
             recipient,
             [],
             PlainMessage.create('test-message'),
-            networkType, helper.maxFee
+            networkType, helper.maxFee,
         );
 
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(2, ChronoUnit.MINUTES),
             [transferTransaction.toAggregate(aggregatedTo.publicAccount)],
             networkType,
-            [], helper.maxFee
+            [], helper.maxFee,
         );
         return signer.sign(aggregateTransaction, generationHash);
     };
 
-    let createHashLockTransactionAndAnnounce = (signedAggregatedTransaction: SignedTransaction,
-                                                signer: Account,
-                                                mosaicId: MosaicId) => {
+    const createHashLockTransactionAndAnnounce = (signedAggregatedTransaction: SignedTransaction,
+                                                  signer: Account,
+                                                  mosaicId: MosaicId) => {
         const lockFundsTransaction = LockFundsTransaction.create(
             Deadline.create(),
             new Mosaic(mosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
             UInt64.fromUint(1000),
             signedAggregatedTransaction,
-            networkType, helper.maxFee
+            networkType, helper.maxFee,
         );
         const signedLockFundsTransaction = signer.sign(lockFundsTransaction, generationHash);
         transactionRepository.announce(signedLockFundsTransaction);
@@ -125,7 +124,7 @@ describe('Listener', () => {
                 account.address,
                 [],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             const signedTransaction = account.sign(transferTransaction, generationHash);
             return helper.announce(signedTransaction);
@@ -141,7 +140,7 @@ describe('Listener', () => {
                 recipientAddress,
                 [],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             const signedTransaction = account.sign(transferTransaction, generationHash);
             return helper.announce(signedTransaction);
@@ -157,10 +156,11 @@ describe('Listener', () => {
                 account.address,
                 [],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             const signedTransaction = account.sign(transferTransaction, generationHash);
-            helper.listener.unconfirmedAdded(account.address).pipe(filter((_) => _.transactionInfo!.hash === signedTransaction.hash)).subscribe(() => {
+            helper.listener.unconfirmedAdded(account.address).pipe(
+                filter((_) => _.transactionInfo!.hash === signedTransaction.hash)).subscribe(() => {
                 done();
             });
             helper.announce(signedTransaction);
@@ -173,10 +173,10 @@ describe('Listener', () => {
                 account.address,
                 [],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             const signedTransaction = account.sign(transferTransaction, generationHash);
-            helper.listener.unconfirmedRemoved(account.address).pipe(filter(hash => hash === signedTransaction.hash)).subscribe(() => {
+            helper.listener.unconfirmedRemoved(account.address).pipe(filter((hash) => hash === signedTransaction.hash)).subscribe(() => {
                 done();
             });
             helper.announce(signedTransaction);
@@ -198,7 +198,7 @@ describe('Listener', () => {
                 cosignAccount1.address,
                 [new Mosaic(networkCurrencyMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY)))],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             const signedTransaction = transferTransaction.signWith(account, generationHash);
 
@@ -218,7 +218,7 @@ describe('Listener', () => {
                     cosignAccount3.publicAccount,
                 ],
                 [],
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
@@ -228,7 +228,6 @@ describe('Listener', () => {
             const signedTransaction = aggregateTransaction
             .signTransactionWithCosignatories(multisigAccount, [cosignAccount1, cosignAccount2, cosignAccount3], generationHash);
 
-
             return helper.announce(signedTransaction);
         });
     });
@@ -236,24 +235,27 @@ describe('Listener', () => {
     describe('Aggregate Bonded Transactions', () => {
 
         it('aggregateBondedTransactionsAdded', (done) => {
+            const signedAggregatedTx = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
+            createHashLockTransactionAndAnnounce(signedAggregatedTx, account, networkCurrencyMosaicId);
             helper.listener.aggregateBondedAdded(account.address).subscribe(() => {
                 done();
             });
             helper.listener.confirmed(account.address).subscribe(() => {
-                transactionRepository.announceAggregateBonded(signedAggregatedTx)
+                transactionRepository.announceAggregateBonded(signedAggregatedTx);
             });
             helper.listener.status(account.address).subscribe((error) => {
                 console.log('Error:', error);
                 assert(false);
                 done();
             });
-            const signedAggregatedTx = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
-
-            createHashLockTransactionAndAnnounce(signedAggregatedTx, account, networkCurrencyMosaicId);
         });
     });
     describe('Aggregate Bonded Transactions', () => {
         it('aggregateBondedTransactionsRemoved', (done) => {
+            const signedAggregatedTx =
+                createSignedAggregatedBondTransaction(multisigAccount, cosignAccount1, account2.address);
+
+            createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, networkCurrencyMosaicId);
             helper.listener.confirmed(cosignAccount1.address).subscribe(() => {
                 helper.listener.aggregateBondedRemoved(cosignAccount1.address).subscribe(() => {
                     done();
@@ -272,23 +274,23 @@ describe('Listener', () => {
                     assert(false);
                     done();
                 });
-                transactionRepository.announceAggregateBonded(signedAggregatedTx)
+                transactionRepository.announceAggregateBonded(signedAggregatedTx);
             });
             helper.listener.status(cosignAccount1.address).subscribe((error) => {
                 console.log('Error:', error);
                 assert(false);
                 done();
             });
-            const signedAggregatedTx =
-                createSignedAggregatedBondTransaction(multisigAccount, cosignAccount1, account2.address);
-
-            createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, networkCurrencyMosaicId);
         });
     });
 
     describe('Aggregate Bonded Transactions', () => {
 
         it('cosignatureAdded', (done) => {
+            const signedAggregatedTx =
+                createSignedAggregatedBondTransaction(multisigAccount, cosignAccount1, account2.address);
+
+            createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, networkCurrencyMosaicId);
             helper.listener.cosignatureAdded(cosignAccount1.address).subscribe(() => {
                 done();
             });
@@ -301,17 +303,13 @@ describe('Listener', () => {
                 });
             });
             helper.listener.confirmed(cosignAccount1.address).subscribe(() => {
-                transactionRepository.announceAggregateBonded(signedAggregatedTx)
+                transactionRepository.announceAggregateBonded(signedAggregatedTx);
             });
             helper.listener.status(cosignAccount1.address).subscribe((error) => {
                 console.log('Error:', error);
                 assert(false);
                 done();
             });
-            const signedAggregatedTx =
-                createSignedAggregatedBondTransaction(multisigAccount, cosignAccount1, account2.address);
-
-            createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, networkCurrencyMosaicId);
         });
     });
 
@@ -365,12 +363,12 @@ describe('Listener', () => {
                 account2.address,
                 mosaics,
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
 
             return helper.announce(transferTransaction.signWith(account, generationHash)).then(() => {
-                throw new Error("Transaction should have failed!!");
-            }, error => {
+                throw new Error('Transaction should have failed!!');
+            }, (error) => {
                 expect(error.status).to.be.equal('Failure_Core_Insufficient_Balance');
             });
         });
@@ -387,7 +385,7 @@ describe('Listener', () => {
                 account2.address,
                 [],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
 
             helper.announce(transferTransaction.signWith(account, generationHash));

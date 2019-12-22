@@ -154,9 +154,11 @@ export * from './transactionIds';
 export * from './transactionInfoDTO';
 export * from './transactionMetaDTO';
 export * from './transactionPayload';
+export * from './transactionStateTypeEnum';
 export * from './transactionStatementBodyDTO';
 export * from './transactionStatementDTO';
 export * from './transactionStatusDTO';
+export * from './transactionStatusTypeEnum';
 export * from './transactionTypeEnum';
 export * from './transferTransactionBodyDTO';
 export * from './transferTransactionDTO';
@@ -321,9 +323,11 @@ import { TransactionIds } from './transactionIds';
 import { TransactionInfoDTO } from './transactionInfoDTO';
 import { TransactionMetaDTO } from './transactionMetaDTO';
 import { TransactionPayload } from './transactionPayload';
+import { TransactionStateTypeEnum } from './transactionStateTypeEnum';
 import { TransactionStatementBodyDTO } from './transactionStatementBodyDTO';
 import { TransactionStatementDTO } from './transactionStatementDTO';
 import { TransactionStatusDTO } from './transactionStatusDTO';
+import { TransactionStatusTypeEnum } from './transactionStatusTypeEnum';
 import { TransactionTypeEnum } from './transactionTypeEnum';
 import { TransferTransactionBodyDTO } from './transferTransactionBodyDTO';
 import { TransferTransactionDTO } from './transferTransactionDTO';
@@ -358,6 +362,8 @@ let enumsMap: {[index: string]: any} = {
         "NetworkTypeEnum": NetworkTypeEnum,
         "ReceiptTypeEnum": ReceiptTypeEnum,
         "RolesTypeEnum": RolesTypeEnum,
+        "TransactionStateTypeEnum": TransactionStateTypeEnum,
+        "TransactionStatusTypeEnum": TransactionStatusTypeEnum,
         "TransactionTypeEnum": TransactionTypeEnum,
 }
 
