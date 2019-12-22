@@ -16,6 +16,7 @@
 
 import { KeyPair, SHA3Hasher, SignSchema } from '../../core/crypto';
 import { Convert } from '../../core/format';
+import { DtoMapping } from '../../core/utils/DtoMapping';
 import { SerializeTransactionToJSON } from '../../infrastructure/transaction/SerializeTransactionToJSON';
 import { Account } from '../account/Account';
 import { PublicAccount } from '../account/PublicAccount';
@@ -200,7 +201,7 @@ export abstract class Transaction {
      * @returns {TransferTransaction}
      */
     public setMaxFee(feeMultiplier: number): Transaction {
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
+        return DtoMapping.assign(this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
     }
 
     /**
@@ -277,7 +278,7 @@ export abstract class Transaction {
         if (this.type === TransactionType.AGGREGATE_BONDED || this.type === TransactionType.AGGREGATE_COMPLETE) {
             throw new Error('Inner transaction cannot be an aggregated transaction.');
         }
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {signer});
+        return DtoMapping.assign(this, {signer});
     }
 
     /**
@@ -345,7 +346,7 @@ export abstract class Transaction {
      */
     public reapplyGiven(deadline: Deadline = Deadline.create()): Transaction {
         if (this.isUnannounced()) {
-            return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {deadline});
+            return DtoMapping.assign(this, {deadline});
         }
         throw new Error('an Announced transaction can\'t be modified');
     }

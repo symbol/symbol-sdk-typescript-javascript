@@ -54,4 +54,15 @@ export class DtoMapping {
                         }
                     })));
     }
+
+    /**
+     * Creates a copy of the first object adding the attributes of the second object.
+     * @param object the object to be cloned
+     * @param attributes the extra attributes to be added to the object.
+     * @returns a copy of the first object with the new attributes added.
+     */
+    public static assign<T>(object: T, attributes: any): T {
+        return Object.assign({__proto__: Object.getPrototypeOf(object)}, object, attributes);
+    }
+
 }

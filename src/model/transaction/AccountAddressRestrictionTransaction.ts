@@ -15,6 +15,7 @@
  */
 
 import { Convert } from '../../core/format';
+import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AccountAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountAddressRestrictionTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -199,13 +200,13 @@ export class AccountAddressRestrictionTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): AccountAddressRestrictionTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {
-                restrictionAdditions:
-                    this.restrictionAdditions.map((addition) => statement.resolveAddress(addition, transactionInfo.height.toString(),
-                        transactionInfo.index, aggregateTransactionIndex)),
-                restrictionDeletions:
-                    this.restrictionDeletions.map((deletion) => statement.resolveAddress(deletion, transactionInfo.height.toString(),
-                        transactionInfo.index, aggregateTransactionIndex)),
-            });
+        return DtoMapping.assign(this, {
+            restrictionAdditions:
+                this.restrictionAdditions.map((addition) => statement.resolveAddress(addition, transactionInfo.height.toString(),
+                    transactionInfo.index, aggregateTransactionIndex)),
+            restrictionDeletions:
+                this.restrictionDeletions.map((deletion) => statement.resolveAddress(deletion, transactionInfo.height.toString(),
+                    transactionInfo.index, aggregateTransactionIndex)),
+        });
     }
 }
