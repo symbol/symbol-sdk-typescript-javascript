@@ -97,8 +97,6 @@ export class ReceiptBuilder {
      */
     public serialize(): Uint8Array {
         let newArray = Uint8Array.from([]);
-        const sizeBytes = GeneratorUtils.uintToBuffer(this.getSize(), 4);
-        newArray = GeneratorUtils.concatTypedArrays(newArray, sizeBytes);
         const versionBytes = GeneratorUtils.uintToBuffer(this.getVersion(), 2);
         newArray = GeneratorUtils.concatTypedArrays(newArray, versionBytes);
         const typeBytes = GeneratorUtils.uintToBuffer(this.type, 2);

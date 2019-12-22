@@ -15,8 +15,13 @@
  */
 
 import { Convert } from '../../core/format/Convert';
-import { UnresolvedMapping } from "../../core/utils/UnresolvedMapping";
-import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
+import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
+import { AddressDto } from '../../infrastructure/catbuffer/AddressDto';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { BalanceTransferReceiptBuilder } from '../../infrastructure/catbuffer/BalanceTransferReceiptBuilder';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { MosaicBuilder } from '../../infrastructure/catbuffer/MosaicBuilder';
+import { MosaicIdDto } from '../../infrastructure/catbuffer/MosaicIdDto';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { MosaicId } from '../mosaic/MosaicId';
@@ -70,15 +75,11 @@ export class BalanceTransferReceipt extends Receipt {
      * @return {Uint8Array}
      */
     public serialize(): Uint8Array {
-        const recipient = this.getRecipientBytes();
-        const buffer = new Uint8Array(52 + recipient.length);
-        buffer.set(GeneratorUtils.uintToBuffer(ReceiptVersion.BALANCE_TRANSFER, 2));
-        buffer.set(GeneratorUtils.uintToBuffer(this.type, 2), 2);
-        buffer.set(GeneratorUtils.uint64ToBuffer(UInt64.fromHex(this.mosaicId.toHex()).toDTO()), 4);
-        buffer.set(GeneratorUtils.uint64ToBuffer(UInt64.fromHex(this.amount.toHex()).toDTO()), 12);
-        buffer.set(Convert.hexToUint8(this.sender.publicKey), 20);
-        buffer.set(recipient, 52);
-        return buffer;
+        return new BalanceTransferReceiptBuilder(ReceiptVersion.BALANCE_TRANSFER, this.type.valueOf(),
+            new MosaicBuilder(new MosaicIdDto(this.mosaicId.toDTO()), new AmountDto(this.amount.toDTO())),
+            new KeyDto(Convert.hexToUint8(this.sender.publicKey)),
+            new AddressDto(this.getRecipientBytes()),
+        ).serialize();
     }
 
     /**
