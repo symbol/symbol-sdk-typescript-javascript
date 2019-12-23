@@ -44,11 +44,13 @@ export class TransactionHeader {
   icon:any
 
   constructor(transaction: Transaction, store: Store<AppState>) {
-        const {networkCurrency, wallet} = store.state.account
+      const {networkCurrency, wallet} = store.state.account
     
-     this.isReceipt = transaction instanceof TransferTransaction
-        && transaction.recipientAddress instanceof Address // @NAMESPACES
-        && transaction.recipientAddress.plain() === wallet.address
+      this.isReceipt = transaction.type === TransactionType.TRANSFER
+         // @ts-ignore
+         && transaction.recipientAddress instanceof Address
+         // @ts-ignore
+         && transaction.recipientAddress.plain() === wallet.address
       
       const {NetworkProperties} = store.state.app
 

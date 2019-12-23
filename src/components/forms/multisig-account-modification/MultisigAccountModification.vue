@@ -86,49 +86,49 @@
 
             <div class="cosigner_list">
               <div class="head_title">{{$t('Actions_list')}}</div>
-
-              <div class="list_container radius scroll">
-                <div class="list_head">
-                  <span class="address_alias">{{$t('Address')}}</span>
-                  <span class="action">{{$t('operation')}}</span>
-                  <span class="delete">&nbsp;</span>
-                </div>
-                <div class="list_body scroll">
-                  <div
-                    class="please_add_address"
-                    v-if="!cosignatoryModifications.modifications.length"
-                  >{{$t('The_action_list_is_empty')}}</div>
-
-                  <div
-                    class="list_item radius"
-                    v-for="({addOrRemove, cosignatory}, index) in cosignatoryModifications.modifications"
-                    :key="index"
-                  >
-                    <span class="address_alias">{{ cosignatory.address.pretty() }}</span>
-                    <span
-                      class="action"
-                    >{{ $t(`${addOrRemove}`) }}</span>
-                    <img
-                      class="delete pointer"
-                      @click="removeCosigner(index)"
-                      src="@/common/img/service/multisig/multisigDelete.png"
-                      alt
-                    />
-                  </div>
-                </div>
-              </div>
               <ErrorTooltip
-                      fieldName="cosigners"
-                      placementOverride="top"
-                      style="width: 720px; text-align:center"
+                fieldName="cosigners"
+                placementOverride="top"
+                style="width: 720px; text-align:center"
               >
-                <input
-                        v-model="cosignatoryModifications.modifications.length"
-                        data-vv-name="cosigners"
-                        v-validate="validations.cosigners"
-                        :data-vv-as="$t('cosigners')"
-                        v-show="false"
-                />
+                <div class="list_container radius scroll">
+                  <div class="list_head">
+                    <span class="address_alias">{{$t('Address')}}</span>
+                    <span class="action">{{$t('operation')}}</span>
+                    <span class="delete">&nbsp;</span>
+                  </div>
+
+                  <div class="list_body scroll">
+                    <div
+                      class="please_add_address"
+                      v-if="!cosignatoryModifications.modifications.length"
+                    >{{$t('The_action_list_is_empty')}}</div>
+
+                    <div
+                      class="list_item radius"
+                      v-for="({addOrRemove, cosignatory}, index) in cosignatoryModifications.modifications"
+                      :key="index"
+                    >
+                      <span class="address_alias">{{ cosignatory.address.pretty() }}</span>
+                      <span
+                        class="action"
+                      >{{ $t(`${addOrRemove}`) }}</span>
+                      <img
+                        class="delete pointer"
+                        @click="removeCosigner(index)"
+                        src="@/common/img/service/multisig/multisigDelete.png"
+                        alt
+                      />
+                    </div>
+                  </div>
+                  <input
+                          v-model="cosignatoryModifications.modifications.length"
+                          data-vv-name="cosigners"
+                          v-validate="validations.cosigners"
+                          :data-vv-as="$t('cosigners')"
+                          v-show="false"
+                  />
+                </div>
               </ErrorTooltip>
               <div class="multisig_property_fee">
                 <div class="title">{{$t('fee')}}</div>
