@@ -17,6 +17,7 @@
 import { Convert } from '../../core/format';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedNamespaceMetadataTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedNamespaceMetadataTransactionBuilder';
+import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { NamespaceIdDto } from '../../infrastructure/catbuffer/NamespaceIdDto';
 import { NamespaceMetadataTransactionBuilder } from '../../infrastructure/catbuffer/NamespaceMetadataTransactionBuilder';
@@ -192,10 +193,10 @@ export class NamespaceMetadataTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {EmbeddedTransactionBuilder}
      */
-    protected generateEmbeddedBytes(): Uint8Array {
-        const transactionBuilder = new EmbeddedNamespaceMetadataTransactionBuilder(
+    public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
+        return new EmbeddedNamespaceMetadataTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
@@ -206,7 +207,6 @@ export class NamespaceMetadataTransaction extends Transaction {
             this.valueSizeDelta,
             Convert.utf8ToUint8(this.value),
         );
-        return transactionBuilder.serialize();
     }
 
     /**

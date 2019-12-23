@@ -19,6 +19,7 @@ import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedMosaicMetadataTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMosaicMetadataTransactionBuilder';
+import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { MosaicMetadataTransactionBuilder } from '../../infrastructure/catbuffer/MosaicMetadataTransactionBuilder';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
@@ -195,10 +196,10 @@ export class MosaicMetadataTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {EmbeddedTransactionBuilder}
      */
-    protected generateEmbeddedBytes(): Uint8Array {
-        const transactionBuilder = new EmbeddedMosaicMetadataTransactionBuilder(
+    public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
+        return new EmbeddedMosaicMetadataTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
@@ -209,7 +210,6 @@ export class MosaicMetadataTransaction extends Transaction {
             this.valueSizeDelta,
             Convert.utf8ToUint8(this.value),
         );
-        return transactionBuilder.serialize();
     }
 
     /**

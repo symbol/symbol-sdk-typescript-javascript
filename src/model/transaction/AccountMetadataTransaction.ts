@@ -18,6 +18,7 @@ import { Convert } from '../../core/format';
 import { AccountMetadataTransactionBuilder } from '../../infrastructure/catbuffer/AccountMetadataTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedAccountMetadataTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedAccountMetadataTransactionBuilder';
+import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
@@ -178,10 +179,10 @@ export class AccountMetadataTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {EmbeddedTransactionBuilder}
      */
-    protected generateEmbeddedBytes(): Uint8Array {
-        const transactionBuilder = new EmbeddedAccountMetadataTransactionBuilder(
+    public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
+        return new EmbeddedAccountMetadataTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
@@ -191,7 +192,6 @@ export class AccountMetadataTransaction extends Transaction {
             this.valueSizeDelta,
             Convert.utf8ToUint8(this.value),
         );
-        return transactionBuilder.serialize();
     }
 
     /**

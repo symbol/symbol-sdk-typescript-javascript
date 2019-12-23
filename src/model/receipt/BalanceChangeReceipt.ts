@@ -15,7 +15,11 @@
  */
 
 import { Convert } from '../../core/format/Convert';
-import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { BalanceChangeReceiptBuilder } from '../../infrastructure/catbuffer/BalanceChangeReceiptBuilder';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { MosaicBuilder } from '../../infrastructure/catbuffer/MosaicBuilder';
+import { MosaicIdDto } from '../../infrastructure/catbuffer/MosaicIdDto';
 import { PublicAccount } from '../account/PublicAccount';
 import { MosaicId } from '../mosaic/MosaicId';
 import { UInt64 } from '../UInt64';
@@ -62,12 +66,9 @@ export class BalanceChangeReceipt extends Receipt {
      * @return {Uint8Array}
      */
     public serialize(): Uint8Array {
-        const buffer = new Uint8Array(52);
-        buffer.set(GeneratorUtils.uintToBuffer(ReceiptVersion.BALANCE_CHANGE, 2));
-        buffer.set(GeneratorUtils.uintToBuffer(this.type, 2), 2);
-        buffer.set(GeneratorUtils.uint64ToBuffer(UInt64.fromHex(this.mosaicId.toHex()).toDTO()), 4);
-        buffer.set(GeneratorUtils.uint64ToBuffer(UInt64.fromHex(this.amount.toHex()).toDTO()), 12);
-        buffer.set(Convert.hexToUint8(this.targetPublicAccount.publicKey), 20);
-        return buffer;
+        return new BalanceChangeReceiptBuilder(ReceiptVersion.BALANCE_CHANGE, this.type.valueOf(),
+            new MosaicBuilder(new MosaicIdDto(this.mosaicId.toDTO()), new AmountDto(this.amount.toDTO())),
+            new KeyDto(Convert.hexToUint8(this.targetPublicAccount.publicKey)),
+        ).serialize();
     }
 }

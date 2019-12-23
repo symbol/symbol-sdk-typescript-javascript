@@ -19,6 +19,7 @@ import { DtoMapping } from '../../core/utils/DtoMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
 import { EmbeddedHashLockTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedHashLockTransactionBuilder';
+import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
 import { Hash256Dto } from '../../infrastructure/catbuffer/Hash256Dto';
 import { HashLockTransactionBuilder } from '../../infrastructure/catbuffer/HashLockTransactionBuilder';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
@@ -188,10 +189,10 @@ export class LockFundsTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {EmbeddedTransactionBuilder}
      */
-    protected generateEmbeddedBytes(): Uint8Array {
-        const transactionBuilder = new EmbeddedHashLockTransactionBuilder(
+    public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
+        return new EmbeddedHashLockTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
@@ -201,7 +202,6 @@ export class LockFundsTransaction extends Transaction {
             new BlockDurationDto(this.duration.toDTO()),
             new Hash256Dto(Convert.hexToUint8(this.hash)),
         );
-        return transactionBuilder.serialize();
     }
 
     /**
