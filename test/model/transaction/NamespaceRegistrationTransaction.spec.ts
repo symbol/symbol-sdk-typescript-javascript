@@ -131,5 +131,8 @@ describe('NamespaceRegistrationTransaction', () => {
         ).setMaxFee(2);
 ​
         expect(registerNamespaceTransaction.maxFee.compact()).to.be.equal(330);
+
+        const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
+        expect(signedTransaction.hash).not.to.be.undefined;
     });
 });

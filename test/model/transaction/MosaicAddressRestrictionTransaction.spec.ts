@@ -164,6 +164,9 @@ describe('MosaicAddressRestrictionTransaction', () => {
         ).setMaxFee(2);
 ​
         expect(transaction.maxFee.compact()).to.be.equal(370);
+
+        const signedTransaction = transaction.signWith(account, generationHash);
+        expect(signedTransaction.hash).not.to.be.undefined;
     });
 
     it('Test resolveAlias can resolve', () => {
@@ -185,5 +188,8 @@ describe('MosaicAddressRestrictionTransaction', () => {
         expect(transaction.mosaicId instanceof MosaicId).to.be.true;
         expect((transaction.targetAddress as Address).equals(account.address)).to.be.true;
         expect((transaction.mosaicId as MosaicId).equals(resolvedMosaicId)).to.be.true;
+
+        const signedTransaction = transaction.signWith(account, generationHash);
+        expect(signedTransaction.hash).not.to.be.undefined;
     });
 });

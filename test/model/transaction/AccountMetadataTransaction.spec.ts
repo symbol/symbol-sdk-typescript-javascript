@@ -103,6 +103,9 @@ describe('AccountMetadataTransaction', () => {
 
             expect(Convert.hexToUint8(accountMetadataTransaction.serialize()).length).to.be.equal(accountMetadataTransaction.size);
             expect(accountMetadataTransaction.size).to.be.equal(182);
+
+            const signedTransaction = accountMetadataTransaction.signWith(account, generationHash);
+            expect(signedTransaction.hash).not.to.be.undefined;
         });
     });
 });

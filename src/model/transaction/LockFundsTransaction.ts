@@ -15,6 +15,7 @@
  */
 
 import { Convert } from '../../core/format';
+import { DtoMapping } from '../../core/utils/DtoMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
 import { EmbeddedHashLockTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedHashLockTransactionBuilder';
@@ -211,8 +212,8 @@ export class LockFundsTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): LockFundsTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return {...Object.getPrototypeOf(this),
+        return DtoMapping.assign(this, {
             mosaic: statement.resolveMosaic(this.mosaic, transactionInfo.height.toString(),
-            transactionInfo.index, aggregateTransactionIndex)};
+            transactionInfo.index, aggregateTransactionIndex)});
     }
 }

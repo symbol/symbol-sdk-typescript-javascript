@@ -15,6 +15,7 @@
  */
 
 import { Convert } from '../../core/format';
+import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import {
@@ -253,10 +254,10 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): MosaicGlobalRestrictionTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return {...Object.getPrototypeOf(this),
+        return DtoMapping.assign(this, {
             mosaicId: statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
                 transactionInfo.index, aggregateTransactionIndex),
             referenceMosaicId: statement.resolveMosaicId(this.referenceMosaicId, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex)};
+                transactionInfo.index, aggregateTransactionIndex)});
     }
 }

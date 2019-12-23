@@ -116,5 +116,8 @@ describe('AccountLinkTransaction', () => {
         ).setMaxFee(2);
 ​
         expect(accountLinkTransaction.maxFee.compact()).to.be.equal(322);
+
+        const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
+        expect(signedTransaction.hash).not.to.be.undefined;
     });
 });

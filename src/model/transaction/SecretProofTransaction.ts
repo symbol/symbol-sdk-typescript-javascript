@@ -15,6 +15,7 @@
  */
 
 import { Convert, Convert as convert } from '../../core/format';
+import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedSecretProofTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedSecretProofTransactionBuilder';
@@ -217,8 +218,8 @@ export class SecretProofTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): SecretProofTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return {...Object.getPrototypeOf(this),
+        return DtoMapping.assign(this, {
             recipientAddress: statement.resolveAddress(this.recipientAddress,
-                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex)};
+                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex)});
     }
 }

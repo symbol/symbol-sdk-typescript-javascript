@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { Convert, Convert as convert } from '../../core/format';
+import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
@@ -240,10 +241,10 @@ export class SecretLockTransaction extends Transaction {
      */
     resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): SecretLockTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return {...Object.getPrototypeOf(this),
+        return DtoMapping.assign(this, {
             recipientAddress: statement.resolveAddress(this.recipientAddress,
                 transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
             mosaic: statement.resolveMosaic(this.mosaic, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex)};
+                transactionInfo.index, aggregateTransactionIndex)});
     }
 }

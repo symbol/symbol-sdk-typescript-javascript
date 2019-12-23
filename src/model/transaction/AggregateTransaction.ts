@@ -16,6 +16,7 @@
 
 import {KeyPair, MerkleHashBuilder, SHA3Hasher, SignSchema} from '../../core/crypto';
 import {Convert} from '../../core/format';
+import { DtoMapping } from '../../core/utils/DtoMapping';
 import {AggregateBondedTransactionBuilder} from '../../infrastructure/catbuffer/AggregateBondedTransactionBuilder';
 import {AggregateCompleteTransactionBuilder} from '../../infrastructure/catbuffer/AggregateCompleteTransactionBuilder';
 import {AmountDto} from '../../infrastructure/catbuffer/AmountDto';
@@ -193,7 +194,7 @@ export class AggregateTransaction extends Transaction {
      */
     public addTransactions(transactions: InnerTransaction[]): AggregateTransaction {
         const innerTransactions = this.innerTransactions.concat(transactions);
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {innerTransactions});
+        return DtoMapping.assign(this, {innerTransactions});
     }
 
     /**
@@ -204,7 +205,7 @@ export class AggregateTransaction extends Transaction {
      */
     public addCosignatures(cosigs: AggregateTransactionCosignature[]): AggregateTransaction {
         const cosignatures = this.cosignatures.concat(cosigs);
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {cosignatures});
+        return DtoMapping.assign(this, {cosignatures});
     }
 
     /**
@@ -407,8 +408,8 @@ export class AggregateTransaction extends Transaction {
      */
     resolveAliases(statement: Statement): AggregateTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this,
-        {innerTransactions: this.innerTransactions.map((tx) => tx.resolveAliases(statement, transactionInfo.index))
+        return DtoMapping.assign(this,
+            {innerTransactions: this.innerTransactions.map((tx) => tx.resolveAliases(statement, transactionInfo.index))
             .sort((a, b) => a.transactionInfo!.index - b.transactionInfo!.index)});
     }
 }

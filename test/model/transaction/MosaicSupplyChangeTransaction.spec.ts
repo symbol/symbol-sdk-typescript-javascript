@@ -127,6 +127,8 @@ describe('MosaicSupplyChangeTransaction', () => {
         ).setMaxFee(2);
 ​
         expect(mosaicSupplyChangeTransaction.maxFee.compact()).to.be.equal(290);
+        const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
+        expect(signedTransaction.hash).not.to.be.undefined;
     });
 
     it('Test resolveAlias can resolve', () => {
@@ -144,5 +146,8 @@ describe('MosaicSupplyChangeTransaction', () => {
 ​
         expect(mosaicSupplyChangeTransaction.mosaicId instanceof MosaicId).to.be.true;
         expect((mosaicSupplyChangeTransaction.mosaicId as MosaicId).equals(resolvedMosaicId)).to.be.true;
+
+        const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
+        expect(signedTransaction.hash).not.to.be.undefined;
     });
 });

@@ -44,6 +44,7 @@ import {Transaction} from './Transaction';
 import {TransactionInfo} from './TransactionInfo';
 import {TransactionType} from './TransactionType';
 import {TransactionVersion} from './TransactionVersion';
+import { DtoMapping } from '../../core/utils/DtoMapping';
 
 /**
  * Transfer transactions contain data about transfers of mosaics and message to another account.
@@ -282,9 +283,9 @@ export class TransferTransaction extends Transaction {
      */
     public resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): TransferTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return {...Object.getPrototypeOf(this), recipientAddress: statement.resolveAddress(this.recipientAddress,
-                    transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
-                mosaics: this.mosaics.map((mosaic) => statement.resolveMosaic(mosaic, transactionInfo.height.toString(),
-                    transactionInfo.index, aggregateTransactionIndex))};
+        return DtoMapping.assign(this, {recipientAddress: statement.resolveAddress(this.recipientAddress, transactionInfo.height.toString(),
+            transactionInfo.index, aggregateTransactionIndex),
+            mosaics: this.mosaics.map((mosaic) => statement.resolveMosaic(mosaic, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex))});
     }
 }

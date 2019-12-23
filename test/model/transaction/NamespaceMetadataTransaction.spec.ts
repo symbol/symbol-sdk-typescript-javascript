@@ -124,5 +124,8 @@ describe('NamespaceMetadataTransaction', () => {
         ).setMaxFee(2);
 ​
         expect(namespaceMetadataTransaction.maxFee.compact()).to.be.equal(380);
+
+        const signedTransaction = namespaceMetadataTransaction.signWith(account, generationHash);
+        expect(signedTransaction.hash).not.to.be.undefined;
     });
 });

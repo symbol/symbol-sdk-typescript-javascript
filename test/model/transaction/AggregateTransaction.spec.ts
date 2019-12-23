@@ -582,6 +582,9 @@ describe('AggregateTransaction', () => {
         ).setMaxFee(2);
 ​
         expect(aggregateTransaction.maxFee.compact()).to.be.equal(560);
+
+        const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+        expect(signedTransaction.hash).not.to.be.undefined;
     });
 
     it('Test resolveAlias can resolve', () => {
@@ -614,5 +617,8 @@ describe('AggregateTransaction', () => {
         expect(innerTransaction.mosaics[0].id instanceof MosaicId).to.be.true;
         expect((innerTransaction.recipientAddress as Address).equals(account.address)).to.be.true;
         expect((innerTransaction.mosaics[0].id as MosaicId).equals(resolvedMosaicId)).to.be.true;
+
+        const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+        expect(signedTransaction.hash).not.to.be.undefined;
     });
 });
