@@ -63,6 +63,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
      * Constructor
      * @param url the server url.
      * @param networkType optional network type if you don't want to load it from the server.
+     * @param generationHash optional node generation hash if you don't want to load it from the server.
      */
     constructor(url: string, networkType?: NetworkType, generationHash?: string) {
         this.url = url;
