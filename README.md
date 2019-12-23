@@ -12,7 +12,7 @@ with the NEM2 (a.k.a Catapult)
 
 ### _Fushicho_ Network Compatibility (catapult-server@0.9.1.1)
 
-Due to a network upgrade with [catapult-server@Fushicho](https://github.com/nemtech/catapult-server/releases/tag/v0.9.1.1) version, **it is recommended to use this package's 0.16.0 version and upwards to use this package with Fushicho versioned networks**.
+Due to a network upgrade with [catapult-server@Fushicho](https://github.com/nemtech/catapult-server/releases/tag/v0.9.1.1) version, **it is recommended to use this package's 0.16.1 version and upwards to use this package with Fushicho versioned networks**.
 
 The upgrade to this package's [version v0.16.0](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.16.0) is mandatory for **fushicho compatibility**.
 

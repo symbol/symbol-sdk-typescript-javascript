@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.16.1] - 23-Dec-2019
+
+**Milestone**: Fushicho.3
+
+- Added basic `operations for UInt64` (Add(), Substract()).
+- Added `RepositoryFactoryHttp` which creates concrete http classes in a factory patten.
+- Added `NetworkType` and `GenerationHash` cache for all Http repositories which reduces the number of rest calls.
+- Added static mathod to create `SimpleWallet` from rest DTO payload.
+- Added `TransactionType filter` in `AccountHttp` which can be used for filtering account transactions by type.
+- Added `IntegrationTestHelper` which optimised e2e / integration tests by automatically tracking the changes from catapult rest. Also support loading test accounts directly from catapult-bootstrap-server generated nemesis addresses.
+- Replaced `Records limitation steps (25,50,75,100)` with just number input.
+- Fixed `TrandactionStatus` not returning correct error code bug.
+- Fixed `spread operation issue` in `SetMaxFee and ResolveAlias` which results in missing super class properties bug.
+- Fixed `epochAdjustment` static value not in UTC bug.
+- Fixed known issues in `Catbuffer Typescript Generator` over `EntityTypeDto` and `AggregateTransactionBuilder`. Aggregate transaction's `InnerTransactions` and `Cosignatures` are now in array format (`EmbeddedTransactionBuilder` and `CosignatureBuilder`) instead of using `Uint8Array`.
+
 ## [0.16.0] - 09-Dec-2019
 
 **Milestone**: Fushicho.3
@@ -286,6 +302,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 **Milestone**: Alpaca
 
 - Initial code release.
+[0.16.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.0...v0.16.1
 [0.16.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.15.1...v0.16.0
 [0.15.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.15.0...v0.15.1
 [0.15.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.4...v0.15.0
