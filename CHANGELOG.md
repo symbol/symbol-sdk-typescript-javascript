@@ -8,7 +8,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 **Milestone**: Fushicho.3
 
 - Added basic `operations for UInt64` (Add(), Substract()).
-- Added `HttpRepositoryFactory` which creates concreate http classes in a factory patten.
+- Added `HttpRepositoryFactory` which creates concrete http classes in a factory patten.
 - Added `NetworkType` and `GenerationHash` cache for all Http repositories which reduces the number of rest calls.
 - Added static mathod to create `SimpleWallet` from rest DTO payload.
 - Added `TransactionType filter` in `AccountHttp` which can be used for filtering account transactions by type.
