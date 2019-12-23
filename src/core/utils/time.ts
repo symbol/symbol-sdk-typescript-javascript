@@ -1,4 +1,4 @@
-import {networkConfig} from '@/config'
+import {networkConfig} from '@/config/constants.ts'
 const {targetBlockTime} = networkConfig
 
 export const addZero = function (number: number): string {

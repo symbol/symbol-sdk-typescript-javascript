@@ -20,9 +20,12 @@
         </span>
         <span class="transaction-fee">
           <span class="transaction-info-title">
-            {{$t(transaction.rawTx.signer ? 'fee' : 'MaxFee' )}}: 
+            {{$t(transaction.rawTx.signer ? 'fee' : 'MaxFee' )}}:
           </span>
-          <span class="bolder">{{transaction.dialogDetailMap.fee}}</span>
+          <span class="bolder">
+             <NumberFormatting :numberOfFormatting="transaction.dialogDetailMap.fee"></NumberFormatting>
+            {{networkCurrency.ticker}}
+          </span>
         </span>
       </div>
       <div class="top-transaction-item">

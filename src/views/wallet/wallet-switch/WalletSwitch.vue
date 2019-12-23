@@ -15,7 +15,7 @@
               <div>
                 <p class="walletName">{{item.name}}</p>
                 <p class="walletAmount overflow_ellipsis">
-                  {{ item.balance ? formatNumber(item.balance) : 0 }}
+                  <NumberFormatting :numberOfFormatting="item.balance ? formatNumber(item.balance) : '0' "></NumberFormatting>
                   <span class="tails">{{ networkCurrency.ticker }}</span>
                 </p>
               </div>
@@ -27,7 +27,7 @@
                 <div class="options">
                   <span class="mosaics">
                     <Icon type="logo-buffer"/>
-                    <span>{{ item.numberOfMosaics  ? formatNumber(item.numberOfMosaics ) : 0 }}</span>
+                    <NumberFormatting :numberOfFormatting="item.numberOfMosaics  ? formatNumber(item.numberOfMosaics ) : 0"></NumberFormatting>
                   </span>
                   <span @click="deleteWallet(item)" class="delete">
                     <Icon type="md-trash"/>

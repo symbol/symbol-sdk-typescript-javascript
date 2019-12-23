@@ -76,7 +76,9 @@
             <div class="bottom overflow_ellipsis"> {{c.txHeader.time.slice(0, c.txHeader.time.length - 3)}}</div>
           </div>
           <div class="right">
-            <div class="top overflow_ellipsis">{{ renderMosaicAmount(c.rawTx.mosaics, mosaicList, $store) }}</div>
+            <div class="top overflow_ellipsis">
+              <NumberFormatting :numberOfFormatting="renderMosaicAmount(c.rawTx.mosaics, mosaicList, $store)"></NumberFormatting>
+            </div>
             <div class="bottom overflow_ellipsis">
               {{formatNumber(c.txHeader.block)}}
             </div>

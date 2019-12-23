@@ -13,10 +13,11 @@ import {
 import {signAndAnnounce} from '@/core/services'
 import TransactionModal from '@/components/transaction-modal/TransactionModal.vue'
 import {defaultNetworkConfig} from "@/config"
+import NumberFormatting from '@/components/number-formatting/NumberFormatting.vue'
 
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
-    components: {TransactionModal},
+    components: {TransactionModal,NumberFormatting},
 })
 export class TransactionListTs extends Vue {
     app: AppInfo

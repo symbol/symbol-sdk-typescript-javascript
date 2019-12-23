@@ -16,7 +16,7 @@ export class FormattedTransfer extends FormattedTransaction {
             'transaction_type': this.txHeader.tag,
             'from': this.getSigner(),
             'aims': this.getRecipient(tx),
-            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), networkCurrency.divisibility) + ' ' + networkCurrency.ticker,
+            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), networkCurrency.divisibility),
             'block': this.txHeader.block,
             'hash': this.txHeader.hash,
             'message': rawTx.message.payload,

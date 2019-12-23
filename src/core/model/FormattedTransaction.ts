@@ -12,7 +12,7 @@ export abstract class FormattedTransaction {
     txBody: any
     isTxConfirmed: boolean
     store: Store<AppState>
-    dialogDetailMap?: any
+  dialogDetailMap?: any
     icon?: any
     formattedInnerTransactions?: FormattedTransaction[]
 

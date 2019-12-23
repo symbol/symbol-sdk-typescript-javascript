@@ -83,10 +83,13 @@
                 ? mosaics[m.id.id.toHex()].name : m.id.id.toHex()}}
               </span>
               <span class="mosaic_amount overflow_ellipsis">
-                {{getRelativeMosaicAmount(
-                m.amount.compact(), mosaics[m.id.id.toHex()]
-                ? mosaics[m.id.id.toHex()].properties.divisibility : 1)
-                }}
+              <NumberFormatting
+                :numberOfFormatting="getRelativeMosaicAmount(
+                  m.amount.compact(),
+                  mosaics[m.id.id.toHex()]
+                    ? mosaics[m.id.id.toHex()].properties.divisibility : 1
+                )"
+              />
               </span>
               <span class="icon_delete" @click="removeMosaic(index)"></span>
             </div>

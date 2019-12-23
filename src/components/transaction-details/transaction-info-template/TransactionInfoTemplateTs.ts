@@ -1,11 +1,15 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {StoreAccount} from "@/core/model"
 import {mapState} from "vuex"
-import {renderMosaicsAndReturnArray} from "@/core/utils"
+import {formatNumber, renderMosaicsAndReturnArray} from "@/core/utils"
 import {getNamespaceNameFromNamespaceId, formatSenderOrRecipient} from '@/core/services'
 import {TransferTransaction, Address, NamespaceId} from 'nem2-sdk'
+import NumberFormatting from '@/components/number-formatting/NumberFormatting.vue'
 
 @Component({
+  components:{
+    NumberFormatting
+  },
     computed: {...mapState({activeAccount: 'account'})},
 })
 export class TransactionInfoTemplateTs extends Vue {

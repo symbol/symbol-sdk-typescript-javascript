@@ -9,12 +9,14 @@ import {Message, networkConfig} from "@/config"
 import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import TheWalletDelete from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDelete.vue'
 import MnemonicDialog from '@/views/wallet/wallet-details/mnemonic-dialog/MnemonicDialog.vue'
+import NumberFormatting from '@/components/number-formatting/NumberFormatting.vue'
 
 @Component({
     components: {
         TheWalletDelete,
         MnemonicDialog,
-        CheckPasswordDialog
+        CheckPasswordDialog,
+        NumberFormatting
     },
     computed: {
         ...mapState({
@@ -28,9 +30,7 @@ export class WalletSwitchTs extends Vue {
     activeAccount: StoreAccount
     showDeleteDialog = false
     showCheckPWDialog = false
-    deleteIndex = -1
     walletToDelete: AppWallet | boolean = false
-    thirdTimestamp = 0
     walletStyleSheetType = walletStyleSheetType
     pathToCreate = 0
     scroll: any

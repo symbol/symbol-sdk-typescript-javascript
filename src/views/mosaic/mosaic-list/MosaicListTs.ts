@@ -7,11 +7,13 @@ import {AppInfo, AppMosaic, AppNamespace, MosaicNamespaceStatusType, StoreAccoun
 import {setMosaics, sortMosaicList} from "@/core/services"
 import Alias from '@/components/forms/alias/Alias.vue'
 import MosaicSupplyChange from '@/components/forms/mosaic-supply-change/MosaicSupplyChange.vue'
+import NumberFormatting from '@/components/number-formatting/NumberFormatting.vue'
 
 @Component({
     components: {
         Alias,
         MosaicSupplyChange,
+        NumberFormatting
     },
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
 })

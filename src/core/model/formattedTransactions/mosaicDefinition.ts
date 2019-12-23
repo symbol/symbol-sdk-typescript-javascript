@@ -14,7 +14,7 @@ export class FormattedMosaicDefinition extends FormattedTransaction {
         this.dialogDetailMap = {
              'self': tx.signer ?tx.signer.address.pretty() : store.state.account.wallet.address,
             'transaction_type': this.txHeader.tag,
-            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), networkCurrency.divisibility) + ' ' + networkCurrency.ticker,
+            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), networkCurrency.divisibility),
             'block': this.txHeader.block,
             'hash': this.txHeader.hash,
             'mosaicId': tx.mosaicId.toHex(),

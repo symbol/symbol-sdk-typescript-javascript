@@ -83,7 +83,9 @@
                 :key="index"
                 :class="['listItem',value.mosaicInfo && value.mosaicInfo.owner.publicKey == publicKey?'owned_mosaic':'']">
           <Row>
-            <span class="balance text_select overflow_ellipsis">{{value.balance?formatNumber(value.balance):0}}</span>
+            <span class="balance text_select overflow_ellipsis">
+               <NumberFormatting :numberOfFormatting="value.balance?formatNumber(value.balance):'0'"></NumberFormatting>
+              </span>
             <span class="mosaic_id text_select overflow_ellipsis">{{value.hex}}</span>
             <span class="available_quantity overflow_ellipsis">{{mosaicSupplyAmount(value)}}</span>
             <span class="mosaic_divisibility overflow_ellipsis">{{value.properties?value.properties.divisibility:0}}</span>
@@ -134,11 +136,9 @@
                       <i><img src="@/common/img/service/setAlias.png"></i>
                       <span>{{$t('binding_alias')}}</span>
                     </p>
-                    <p
-                            v-if="value.name"
+                    <p v-if="value.name"
                             class="fnItem"
-                            @click="unbindItem(value)"
-                    >
+                            @click="unbindItem(value)" >
                       <i><img src="@/common/img/service/clearAlias.png"></i>
                       <span>{{$t('unbind')}}</span>
                     </p>

@@ -24,9 +24,10 @@ import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from
 import {validateAddress} from '@/core/validation'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 import SignerSelector from '@/components/forms/inputs/signer-selector/SignerSelector.vue'
+import NumberFormatting from '@/components/number-formatting/NumberFormatting.vue'
 
 @Component({
-    components: {ErrorTooltip, SignerSelector},
+    components: {ErrorTooltip, SignerSelector, NumberFormatting},
     computed: {
         ...mapState({
             activeAccount: 'account',
