@@ -1,3 +1,5 @@
+import { TransactionType } from '../model/transaction/TransactionType';
+
 /*
  * Copyright 2018 NEM
  *
@@ -49,8 +51,11 @@ export class QueryParams {
                  * ASC. Older to newer.
                  */
                 public readonly order: Order = Order.DESC,
+                /**
+                 * Transaction type filter
+                 */
+                public readonly transactionType?: TransactionType,
                 ) {
         this.pageSize = (pageSize >= 10 && pageSize <= 100) ? pageSize : 10;
-        this.id = id;
     }
 }

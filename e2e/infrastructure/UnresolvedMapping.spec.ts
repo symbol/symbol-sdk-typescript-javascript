@@ -15,8 +15,10 @@
  */
 import { expect } from 'chai';
 import { Convert } from '../../src/core/format';
+import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { Account } from '../../src/model/account/Account';
+import { Address } from '../../src/model/account/Address';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
@@ -38,12 +40,10 @@ import { NamespaceRegistrationTransaction } from '../../src/model/transaction/Na
 import { Transaction } from '../../src/model/transaction/Transaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
-import { IntegrationTestHelper } from "./IntegrationTestHelper";
-import { Address } from "../../src/model/account/Address";
-import { NamespaceRepository } from "../../src/infrastructure/NamespaceRepository";
+import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('TransactionHttp', () => {
-    let helper = new IntegrationTestHelper();
+    const helper = new IntegrationTestHelper();
     let account: Account;
     let account2: Account;
     let namespaceRepository: NamespaceRepository;
@@ -290,7 +290,6 @@ describe('TransactionHttp', () => {
                 networkType, helper.maxFee,
             );
             const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
-
 
             return helper.announce(signedTransaction).then((transaction: AddressAliasTransaction) => {
                 expect(transaction.namespaceId, 'NamespaceId').not.to.be.undefined;

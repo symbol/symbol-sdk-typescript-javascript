@@ -78,7 +78,6 @@ export class AccountHttp extends Http implements AccountRepository {
         );
     }
 
-
     /**
      * This method maps a AccountInfoDTO from rest to the SDK's AccountInfo model object.
      *
@@ -86,7 +85,7 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param {AccountInfoDTO} dto AccountInfoDTO the dto object from rest.
      * @returns AccountInfo model
      */
-    private toAccountInfo(dto: AccountInfoDTO):AccountInfo {
+    private toAccountInfo(dto: AccountInfoDTO): AccountInfo {
         return new AccountInfo(
             Address.createFromEncoded(dto.account.address),
             UInt64.fromNumericString(dto.account.addressHeight),
@@ -111,7 +110,6 @@ export class AccountHttp extends Http implements AccountRepository {
         );
     }
 
-
     /**
      * Gets an array of confirmed transactions for which an account is signer or receiver.
      * @param address - * Address can be created rawAddress or publicKey
@@ -120,10 +118,11 @@ export class AccountHttp extends Http implements AccountRepository {
      */
     public getAccountTransactions(address: Address, queryParams?: QueryParams): Observable<Transaction[]> {
         return observableFrom(
-            this.accountRoutesApi.getAccountTransactions(address.plain(),
+            this.accountRoutesApi.getAccountConfirmedTransactions(address.plain(),
                                                this.queryParams(queryParams).pageSize,
                                                this.queryParams(queryParams).id,
-                                               this.queryParams(queryParams).order)).pipe(
+                                               this.queryParams(queryParams).order,
+                                               this.queryParams(queryParams).transactionType)).pipe(
             map(({body}) => body.map((transactionDTO) => {
                     return CreateTransactionFromDTO(transactionDTO);
                 })),
@@ -143,7 +142,8 @@ export class AccountHttp extends Http implements AccountRepository {
             this.accountRoutesApi.getAccountIncomingTransactions(address.plain(),
                 this.queryParams(queryParams).pageSize,
                 this.queryParams(queryParams).id,
-                this.queryParams(queryParams).order)).pipe(
+                this.queryParams(queryParams).order),
+                this.queryParams(queryParams).transactionType).pipe(
                     map(({body}) => body.map((transactionDTO) => {
                             return CreateTransactionFromDTO(transactionDTO);
                         })),
@@ -163,7 +163,8 @@ export class AccountHttp extends Http implements AccountRepository {
             this.accountRoutesApi.getAccountOutgoingTransactions(address.plain(),
                 this.queryParams(queryParams).pageSize,
                 this.queryParams(queryParams).id,
-                this.queryParams(queryParams).order)).pipe(
+                this.queryParams(queryParams).order),
+                this.queryParams(queryParams).transactionType).pipe(
                     map(({body}) => body.map((transactionDTO) => {
                             return CreateTransactionFromDTO(transactionDTO);
                         })),
@@ -184,7 +185,8 @@ export class AccountHttp extends Http implements AccountRepository {
             this.accountRoutesApi.getAccountUnconfirmedTransactions(address.plain(),
                 this.queryParams(queryParams).pageSize,
                 this.queryParams(queryParams).id,
-                this.queryParams(queryParams).order)).pipe(
+                this.queryParams(queryParams).order),
+                this.queryParams(queryParams).transactionType).pipe(
                     map(({body}) => body.map((transactionDTO) => {
                             return CreateTransactionFromDTO(transactionDTO);
                         })),
@@ -204,7 +206,8 @@ export class AccountHttp extends Http implements AccountRepository {
             this.accountRoutesApi.getAccountPartialTransactions(address.plain(),
                 this.queryParams(queryParams).pageSize,
                 this.queryParams(queryParams).id,
-                this.queryParams(queryParams).order)).pipe(
+                this.queryParams(queryParams).order),
+                this.queryParams(queryParams).transactionType).pipe(
                     map(({body}) => body.map((transactionDTO) => {
                             return CreateTransactionFromDTO(transactionDTO) as AggregateTransaction;
                         })),

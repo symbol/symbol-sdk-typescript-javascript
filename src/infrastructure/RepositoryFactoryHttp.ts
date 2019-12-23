@@ -14,40 +14,40 @@
  * limitations under the License.
  */
 
-import { Observable, of as observableOf } from "rxjs";
-import { NetworkType } from "../model/blockchain/NetworkType";
-import { AccountRepository } from "./AccountRepository";
-import { MultisigRepository } from "./MultisigRepository";
-import { ReceiptRepository } from "./ReceiptRepository";
-import { BlockRepository } from "./BlockRepository";
-import { ChainRepository } from "./ChainRepository";
-import { DiagnosticRepository } from "./DiagnosticRepository";
-import { MosaicRepository } from "./MosaicRepository";
-import { NamespaceRepository } from "./NamespaceRepository";
-import { NetworkRepository } from "./NetworkRepository";
-import { NodeRepository } from "./NodeRepository";
-import { TransactionRepository } from "./TransactionRepository";
-import { MetadataRepository } from "./MetadataRepository";
-import { RestrictionAccountRepository } from "./RestrictionAccountRespository";
-import { RestrictionMosaicRepository } from "./RestrictionMosaicRepository";
-import { RepositoryFactory } from "./RepositoryFactory";
-import { AccountHttp } from "./AccountHttp";
-import { BlockHttp } from "./BlockHttp";
-import { ChainHttp } from "./ChainHttp";
-import { DiagnosticHttp } from "./DiagnosticHttp";
-import { MetadataHttp } from "./MetadataHttp";
-import { MosaicHttp } from "./MosaicHttp";
-import { MultisigHttp } from "./MultisigHttp";
-import { NamespaceHttp } from "./NamespaceHttp";
-import { NetworkHttp } from "./NetworkHttp";
-import { NodeHttp } from "./NodeHttp";
-import { ReceiptHttp } from "./ReceiptHttp";
-import { RestrictionAccountHttp } from "./RestrictionAccountHttp";
-import { RestrictionMosaicHttp } from "./RestrictionMosaicHttp";
-import { TransactionHttp } from "./TransactionHttp";
-import { share, map, shareReplay } from "rxjs/operators";
-import { Listener } from "./Listener";
-import { IListener } from "./IListener";
+import { Observable, of as observableOf } from 'rxjs';
+import { map, share, shareReplay } from 'rxjs/operators';
+import { NetworkType } from '../model/blockchain/NetworkType';
+import { AccountHttp } from './AccountHttp';
+import { AccountRepository } from './AccountRepository';
+import { BlockHttp } from './BlockHttp';
+import { BlockRepository } from './BlockRepository';
+import { ChainHttp } from './ChainHttp';
+import { ChainRepository } from './ChainRepository';
+import { DiagnosticHttp } from './DiagnosticHttp';
+import { DiagnosticRepository } from './DiagnosticRepository';
+import { IListener } from './IListener';
+import { Listener } from './Listener';
+import { MetadataHttp } from './MetadataHttp';
+import { MetadataRepository } from './MetadataRepository';
+import { MosaicHttp } from './MosaicHttp';
+import { MosaicRepository } from './MosaicRepository';
+import { MultisigHttp } from './MultisigHttp';
+import { MultisigRepository } from './MultisigRepository';
+import { NamespaceHttp } from './NamespaceHttp';
+import { NamespaceRepository } from './NamespaceRepository';
+import { NetworkHttp } from './NetworkHttp';
+import { NetworkRepository } from './NetworkRepository';
+import { NodeHttp } from './NodeHttp';
+import { NodeRepository } from './NodeRepository';
+import { ReceiptHttp } from './ReceiptHttp';
+import { ReceiptRepository } from './ReceiptRepository';
+import { RepositoryFactory } from './RepositoryFactory';
+import { RestrictionAccountHttp } from './RestrictionAccountHttp';
+import { RestrictionAccountRepository } from './RestrictionAccountRespository';
+import { RestrictionMosaicHttp } from './RestrictionMosaicHttp';
+import { RestrictionMosaicRepository } from './RestrictionMosaicRepository';
+import { TransactionHttp } from './TransactionHttp';
+import { TransactionRepository } from './TransactionRepository';
 
 /**
  * Receipt http repository.
@@ -63,11 +63,13 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
      * Constructor
      * @param url the server url.
      * @param networkType optional network type if you don't want to load it from the server.
+     * @param generationHash optional node generation hash if you don't want to load it from the server.
      */
-    constructor(url: string, networkType?: NetworkType) {
+    constructor(url: string, networkType?: NetworkType, generationHash?: string) {
         this.url = url;
         this.networkType = networkType ? observableOf(networkType) : this.createNetworkRepository().getNetworkType().pipe(shareReplay(1));
-        this.generationHash = this.createBlockRepository().getBlockByHeight('1').pipe(map(b => b.generationHash)).pipe(shareReplay(1));
+        this.generationHash = generationHash ? observableOf(generationHash) :
+            this.createBlockRepository().getBlockByHeight('1').pipe(map((b) => b.generationHash)).pipe(shareReplay(1));
     }
 
     createAccountRepository(): AccountRepository {
@@ -111,7 +113,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     }
 
     createReceiptRepository(): ReceiptRepository {
-        return new ReceiptHttp(this.url);
+        return new ReceiptHttp(this.url, this.networkType);
     }
 
     createRestrictionAccountRepository(): RestrictionAccountRepository {
@@ -137,5 +139,4 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     createListener(): IListener {
         return new Listener(this.url);
     }
-
 }

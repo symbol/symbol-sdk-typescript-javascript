@@ -41,10 +41,10 @@ import { SignedTransaction } from '../../src/model/transaction/SignedTransaction
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
-import { IntegrationTestHelper } from "../infrastructure/IntegrationTestHelper";
+import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
 describe('TransactionService', () => {
-    let helper = new IntegrationTestHelper();
+    const helper = new IntegrationTestHelper();
     let generationHash: string;
     let addressAlias: NamespaceId;
     let mosaicAlias: NamespaceId;
@@ -96,7 +96,7 @@ describe('TransactionService', () => {
                 namespaceName,
                 UInt64.fromUint(20),
                 networkType,
-                helper.maxFee
+                helper.maxFee,
             );
             addressAlias = new NamespaceId(namespaceName);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
@@ -113,7 +113,7 @@ describe('TransactionService', () => {
                 Deadline.create(),
                 namespaceName,
                 UInt64.fromUint(50),
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             mosaicAlias = new NamespaceId(namespaceName);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
@@ -124,14 +124,13 @@ describe('TransactionService', () => {
 
     describe('Setup test AddressAlias', () => {
 
-
         it('Announce addressAliasTransaction', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
                 AliasAction.Link,
                 addressAlias,
                 account.address,
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
             transactionHashes.push(signedTransaction.hash);
@@ -152,7 +151,7 @@ describe('TransactionService', () => {
                 MosaicFlags.create(true, true, false),
                 3,
                 UInt64.fromUint(50),
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
             transactionHashes.push(signedTransaction.hash);
@@ -169,7 +168,7 @@ describe('TransactionService', () => {
                 mosaicId,
                 MosaicSupplyChangeAction.Increase,
                 UInt64.fromUint(200000),
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
             transactionHashes.push(signedTransaction.hash);
@@ -185,7 +184,7 @@ describe('TransactionService', () => {
                 AliasAction.Link,
                 mosaicAlias,
                 mosaicId,
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
             transactionHashes.push(signedTransaction.hash);
@@ -203,7 +202,7 @@ describe('TransactionService', () => {
                     new Mosaic(mosaicAlias, UInt64.fromUint(1)),
                 ],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             const signedTransaction = transferTransaction.signWith(account, generationHash);
 
@@ -236,7 +235,6 @@ describe('TransactionService', () => {
 
     describe('Transfer mosaic to account 3', () => {
 
-
         it('Announce TransferTransaction', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
@@ -245,7 +243,7 @@ describe('TransactionService', () => {
                     new Mosaic(mosaicAlias, UInt64.fromUint(200)),
                 ],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             const signedTransaction = transferTransaction.signWith(account, generationHash);
             transactionHashes.push(signedTransaction.hash);
@@ -254,7 +252,6 @@ describe('TransactionService', () => {
     });
 
     describe('Create multiple transfers with alias', () => {
-
 
         it('Announce TransferTransaction', (done) => {
             const transactions: SignedTransaction[] = [];
@@ -266,7 +263,7 @@ describe('TransactionService', () => {
                     new Mosaic(mosaicAlias, UInt64.fromUint(1)),
                 ],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             transactions.push(transaction1.signWith(account, generationHash));
 
@@ -278,7 +275,7 @@ describe('TransactionService', () => {
                     new Mosaic(mosaicAlias, UInt64.fromUint(1)),
                 ],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee
+                networkType, helper.maxFee,
             );
             transactions.push(transaction2.signWith(account3, generationHash));
 
@@ -360,7 +357,7 @@ describe('TransactionService', () => {
                 new Mosaic(mosaicAlias, UInt64.fromUint(1)),
             ],
             PlainMessage.create('test-message'),
-            networkType, helper.maxFee
+            networkType, helper.maxFee,
         );
         // Unlink MosaicAlias
         const mosaicAliasTransactionUnlink = MosaicAliasTransaction.create(
@@ -368,7 +365,7 @@ describe('TransactionService', () => {
             AliasAction.Unlink,
             mosaicAlias,
             mosaicId,
-            networkType, helper.maxFee
+            networkType, helper.maxFee,
         );
 
         // Create a new Mosaic
@@ -381,7 +378,7 @@ describe('TransactionService', () => {
             MosaicFlags.create(true, true, false),
             3,
             UInt64.fromUint(0),
-            networkType, helper.maxFee
+            networkType, helper.maxFee,
         );
 
         // Link namespace with new MosaicId
@@ -390,7 +387,7 @@ describe('TransactionService', () => {
             AliasAction.Link,
             mosaicAlias,
             newMosaicId,
-            networkType, helper.maxFee
+            networkType, helper.maxFee,
         );
 
         // Use new mosaicAlias in metadata
@@ -401,7 +398,7 @@ describe('TransactionService', () => {
             mosaicAlias,
             10,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            networkType, helper.maxFee
+            networkType, helper.maxFee,
         );
         return AggregateTransaction.createComplete(Deadline.create(),
             [
@@ -413,7 +410,7 @@ describe('TransactionService', () => {
 
             ],
             networkType,
-            [], helper.maxFee
+            [], helper.maxFee,
         );
     }
 

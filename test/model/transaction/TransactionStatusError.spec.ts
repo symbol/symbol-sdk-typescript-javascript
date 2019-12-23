@@ -16,10 +16,10 @@
 
 import {deepEqual} from 'assert';
 import {expect} from 'chai';
-import {TransactionStatusError} from '../../../src/model/transaction/TransactionStatusError';
+import {Address} from '../../../src/model/account/Address';
 import {Deadline} from '../../../src/model/transaction/Deadline';
+import {TransactionStatusError} from '../../../src/model/transaction/TransactionStatusError';
 import { UInt64 } from '../../../src/model/UInt64';
-import {Address} from "../../../src/model/account/Address";
 
 describe('TransactionStatusError', () => {
 

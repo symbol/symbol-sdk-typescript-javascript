@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import {expect} from 'chai';
+import {Convert} from '../../../src/core/format';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
 import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
@@ -21,7 +22,6 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {HashLockTransaction} from '../../../src/model/transaction/HashLockTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
-import {Convert} from "../../../src/core/format";
 
 describe('HashLockTransaction', () => {
     const account = TestingAccount;
