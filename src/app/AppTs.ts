@@ -4,10 +4,11 @@ import {mapState} from 'vuex'
 import {asyncScheduler} from 'rxjs'
 import {throttleTime} from 'rxjs/operators'
 import {isWindows, APP_PARAMS} from '@/config'
+import {
+  setMarketOpeningPrice, OnWalletChange,
+  OnActiveMultisigAccountChange, Endpoints,
+} from '@/core/services'
 
-
-// import {checkInstall} from '@/core/utils'
-import {setMarketOpeningPrice, OnWalletChange, OnActiveMultisigAccountChange} from '@/core/services'
 import {
   AppInfo, StoreAccount, Notice,
   NetworkManager, Listeners, NetworkProperties,
@@ -58,7 +59,7 @@ export class AppTs extends Vue {
     return this.wallet.address
   }
 
-  created() {
+  async created() {
     this.initializeNetwork()
     if (isWindows) checkInstall()
   }
@@ -68,6 +69,20 @@ export class AppTs extends Vue {
     this.initializeEventsHandlers()
     setMarketOpeningPrice(this)
     if (!this.activeAccount.wallet) this.$router.push('/login')
+  }
+
+  async initializeNetwork() {
+    try {
+      const networkProperties = NetworkProperties.create(this.$store)
+      this.$store.commit('INITIALIZE_NETWORK_PROPERTIES', networkProperties)
+      this.Listeners = Listeners.create(this.$store, networkProperties)
+      this.NetworkManager = NetworkManager.create(
+        this.$store, networkProperties, this.Listeners,
+      )
+      await Endpoints.initialize(this.$store)
+    } catch (error) {
+      console.error("AppTs -> initializeNetwork -> error", error)
+    }
   }
 
   initializeNotice() {
@@ -81,15 +96,6 @@ export class AppTs extends Vue {
         this.$Notice[notice.type]({title: messageTranslator(notice.message)})
       }
     })
-  }
-
-  initializeNetwork() {
-    const networkProperties = NetworkProperties.create(this.$store)
-    this.$store.commit('INITIALIZE_NETWORK_PROPERTIES', networkProperties)
-    this.Listeners = Listeners.create(this.$store, networkProperties)
-    this.NetworkManager = NetworkManager.create(
-      this.$store, networkProperties, this.Listeners,
-    )
   }
 
   initializeEventsHandlers() {

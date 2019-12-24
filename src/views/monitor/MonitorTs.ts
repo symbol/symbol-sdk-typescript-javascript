@@ -7,6 +7,8 @@ import {mapState} from "vuex"
 import {AppInfo, MosaicNamespaceStatusType, StoreAccount} from "@/core/model"
 import routes from '@/router/routers'
 import numberGrow from '@/components/number-grow/NumberGrow.vue'
+import {networkConfig} from "@/config/index"
+const {targetBlockTime} = networkConfig
 import NumberFormatting from '@/components/number-formatting/NumberFormatting.vue'
 
 @Component({

@@ -1,6 +1,6 @@
 import {BlockInfo, NetworkType} from 'nem2-sdk'
 import {Store} from 'vuex'
-import {networkConfig, nodeListConfig, NETWORK_CONSTANTS} from '@/config'
+import {networkConfig, defaultNodeList, NETWORK_CONSTANTS} from '@/config'
 import {formatTimestamp} from '@/core/utils'
 import {AppState} from '.'
 
@@ -16,7 +16,7 @@ export class NetworkProperties {
   lastBlockTimestamp: number
   loading: boolean
   networkType: NetworkType
-  nodeNumber: number = nodeListConfig.length
+  nodeNumber: number = defaultNodeList.length
   numTransactions: number
   signerPublicKey: string
   targetBlockTime: number = networkConfig.targetBlockTime
@@ -56,6 +56,7 @@ export class NetworkProperties {
 
   setHealthyToFalse(endpoint: string) {
     this.healthy = false
+    this.loading = false
     this.store.dispatch('SET_NETWORK_PROPERTIES', {endpoint, NetworkProperties: this})
   }  
 

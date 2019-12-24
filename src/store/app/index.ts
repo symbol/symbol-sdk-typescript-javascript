@@ -6,7 +6,7 @@ import {
     LoadingOverlayObject,
     NetworkProperties,
 } from '@/core/model'
-import {localRead} from "@/core/utils";
+import {localRead, localSave} from "@/core/utils";
 import {MutationTree} from 'vuex';
 import {explorerLinkList} from "@/config"
 import Vue from 'vue'
@@ -36,6 +36,7 @@ const state: AppInfo = {
         message: '',
     },
     explorerBasePath: explorerLinkList[0].explorerBasePath,
+    nodeList: [],
 }
 
 const mutations: MutationTree<AppInfo> = {
@@ -100,6 +101,10 @@ const mutations: MutationTree<AppInfo> = {
     SET_EXPLORER_BASE_PATH(state: AppInfo, explorerBasePath: string) {
         state.explorerBasePath = explorerBasePath
     },
+    SET_NODE_LIST(state: AppInfo, nodeList) {
+        state.nodeList = nodeList
+        localSave('nodeList', JSON.stringify(nodeList))
+    }
 }
 
 const actions = {

@@ -6,10 +6,11 @@ import {
     AddressAndMultisigInfo, StoreAccount, AppMosaic, NetworkCurrency,
     AppWallet, AppNamespace, FormattedTransaction, CurrentAccount,
 } from '@/core/model'
-import {nodeListConfig} from "@/config/view/node"
+import {defaultNodeList} from "@/config/view/node"
+import {localRead, localSave} from "@/core/utils"
 
 const state: StoreAccount = {
-    node: '',
+    node: localRead('activeNode') || defaultNodeList[0].value,
     wallet: null,
     mosaics: {},
     namespaces: [],
@@ -106,6 +107,7 @@ const mutations: MutationTree<StoreAccount> = {
     },
     SET_NODE(state: StoreAccount, node: string): void {
         state.node = node
+        localSave('activeNode', node)
     },
     SET_ADDRESS_ALIAS_MAP(state: StoreAccount, addressAliasMap: any): void {
         state.addressAliasMap = addressAliasMap

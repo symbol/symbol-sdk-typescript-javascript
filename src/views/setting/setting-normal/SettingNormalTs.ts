@@ -23,13 +23,10 @@ export class SettingNormalTs extends Vue {
     showDebugConsole: boolean = false
     currentExplorerLink = ''
     activeAccount: StoreAccount
-
-    coinList = [
-        {
+    coinList = [ {
             value: 'USD',
             label: 'USD'
-        },
-    ]
+        }]
 
     get defaultExplorerLinkList() {
         const explorerLinkListInLocalStorage = localRead(' explorerLinkList')

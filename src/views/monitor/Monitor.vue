@@ -128,7 +128,7 @@
             </div>
             <img src="@/common/img/monitor/amount.png"/>
             <span class="txt_info">
-            <numberGrow :value="NetworkProperties.targetBlockTime"></numberGrow>
+            <numberGrow :value="NetworkProperties?NetworkProperties.targetBlockTime:defaultTargetBlockTime"></numberGrow>
           </span>
           </div>
         </div>

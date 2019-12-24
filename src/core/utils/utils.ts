@@ -85,3 +85,19 @@ export function getDefaultAccountNetworkType(): NetworkType {
     if (!accounts[0]) return defaultNetworkConfig.DEFAULT_NETWORK_TYPE
     return accounts[0].networkType
 }
+
+export function completeUrlWithHostAndProtocol(inputNodeValue: string): string {
+    const numberOfColon = inputNodeValue.match(/:/img) ? inputNodeValue.match(/:/img).length : 0
+    const pointIndex = inputNodeValue.indexOf('.')
+    const colonIndex = inputNodeValue.indexOf(':')
+    if (numberOfColon >= 2) return inputNodeValue
+    if (numberOfColon == 0) {
+        return `http://${inputNodeValue}:3000`
+    }
+    if (pointIndex > colonIndex) {
+        return `${inputNodeValue}:3000`
+    }
+    if (pointIndex < colonIndex) {
+        return `http://${inputNodeValue}`
+    }
+}

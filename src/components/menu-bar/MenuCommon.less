@@ -62,6 +62,7 @@
       font-size: 16px;
     }
 
+    .reset-icon,
     .sure_button {
       display: inline-block;
       width: 43px;
@@ -70,6 +71,22 @@
       line-height: 36px;
       background-color: #20B5AC;
       color: white;
+    }
+    .reset-icon:hover,
+    .sure_button:hover {
+      box-shadow: 0 0 10px #20B5AC;
+    }
+    .reset-icon {
+      font-size: 25px;
+      left: 20px;
+      position: relative;
+      i {
+        background-color: transparent !important;
+      }
+      i:before{
+        position: relative;
+        right: 5px;
+      }
     }
   }
 
@@ -330,4 +347,8 @@
     }
   }
 
+  .node-input-container {
+    width: 100%;
+    margin-right: 20px;
+  }
 }

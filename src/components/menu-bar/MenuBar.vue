@@ -1,8 +1,8 @@
 <template>
   <div :class="[isWindows?'windows':'mac','wrap']">
-    <div v-if="isNodeHealthy && nodeNetworkType && networkType">
+    <div v-if="isNodeHealthy && NetworkProperties.networkType && networkType">
       <Alert class="alert warning_alert"
-             v-if="nodeNetworkType !== NetworkType[networkType] "
+             v-if="NetworkProperties.networkType !== NetworkType[networkType] "
              type="error">
         <Icon type="ios-warning-outline"/>
         {{$t('Wallet_network_type_does_not_match_current_network_type')}}
@@ -55,31 +55,49 @@
 
         <div class="app_controller clear">
           <div :class="[isNodeHealthy?'point_healthy':'point_unhealthy']">
-            <Spin class="absolute un_click" v-if="nodeLoading"></Spin>
-            <Poptip  placement="bottom-end">
-              <i class="pointer point" @click="showNodeList = !showNodeList"/>
+            <Spin class="absolute un_click" v-if="NetworkProperties.loading"></Spin>
+            <Poptip @on-popper-hide="refreshValidate" placement="bottom-end">
+              <i class="pointer point"/>
               <span class="network_type_text" v-if="wallet">
                 {{ nodeNetworkTypeText }}
               </span>
-              <div slot="title" class="title">{{$t('current_point')}}：{{node}}</div>
+              <div slot="title" class="title">{{$t('current_endpoint')}}：{{node}}</div>
               <div slot="content">
                 <div class="node_list">
                   <div class="node_list_container scroll">
-                    <div @click="selectEndpoint(index)"
-                         class="point_item pointer"
-                         v-for="(p,index) in nodeList"
-                         :key="`sep${index}`">
-                      <img :src="p.isSelected ? monitorSelected : monitorUnselected">
-                      <span class="node_url text_select">{{p.value}}</span>
-                      <img class="remove_icon" @click.stop="removeNode(index)"
+                    <div
+                      class="point_item pointer"
+                      v-for="(iterNode, index) in nodeList"
+                      :key="`sep${index}`"
+                      @click="node = iterNode.value"
+                    >
+                      <img :src="iterNode.value === node? monitorSelected : monitorUnselected">
+                      <span class="node_url text_select">{{iterNode.value}}</span>
+                      <img class="remove_icon" @click.stop="removeNode(node)"
                            src="@/common/img/service/multisig/multisigDelete.png">
                     </div>
+                    <!-- <span @click="resetNodeListToDefault">RESET NODE LIST TO DEFAULT</span> -->
                   </div>
 
-                  <div class="input_point point_item">
-                    <input v-model="inputNodeValue" :placeholder="$t('please_enter_a_custom_nod_address')">
-                    <span @click="changeEndpointByInput" class="sure_button radius pointer">+</span>
-                  </div>
+                  <form
+                    class="input_point point_item"
+                    action="submit"
+                    onsubmit="event.preventDefault()"
+                    @keyup.enter="submit"
+                  >
+                    <ErrorTooltip placementOverride="top" class="node-input-container" fieldName="friendlyNodeUrl">
+                      <input
+                        v-validate="validation.friendlyNodeUrl"
+                        :data-vv-as="$t('node')"
+                        data-vv-name="friendlyNodeUrl"
+                        v-model="inputNodeValue"
+                        :placeholder="$t('please_enter_a_custom_nod_address')"
+                      >
+                    </ErrorTooltip>
+                    <span @click="submit" class="sure_button radius pointer">+</span>
+                    <span class="reset-icon radius pointer" @click.stop="resetNodeListToDefault()"><Icon type="md-refresh" /></span>
+
+                  </form>
                 </div>
               </div>
             </Poptip>
@@ -116,8 +134,3 @@
 
     }
 </script>
-
-<style scoped lang="less">
-
-</style>
-

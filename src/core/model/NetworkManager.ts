@@ -28,6 +28,7 @@ export class NetworkManager {
  }
 
  public async switchEndpoint(endpoint: string): Promise<void> {
+ console.log("TCL: NetworkManager -> switchEndpoint")
    try {
      this.NetworkProperties.setLoadingToTrue(endpoint)
      const initialGenerationHash = `${this.generationHash}`

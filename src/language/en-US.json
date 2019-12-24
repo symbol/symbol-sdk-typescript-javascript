@@ -313,7 +313,7 @@
   "hash": "Hash",
   "wallet_name": "Wallet name",
   "switch_point": "Switch Node",
-  "current_point": "Current Node",
+  "current_endpoint": "Current Node",
   "point_null_error": "Node null error",
   "please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe": "Please enter your wallet password to ensure it is kept safe.",
   "please_choose": "Please choose",
@@ -895,5 +895,6 @@
   "Rental_fee": "Rental fee",
   "estimate": "estimate",
   "MaxFee": "Max Fee",
-  "total_transactions": "Total transactions"
+  "total_transactions": "Total transactions",
+  "all_nodes_cannot_be_deleted": "All nodes cannot be deleted"
 }

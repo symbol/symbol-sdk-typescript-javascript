@@ -1,17 +1,21 @@
-import {Message, isWindows} from "@/config/index.ts"
+import {isWindows, Message, defaultNodeList} from "@/config/index.ts"
 import monitorSelected from '@/common/img/window/windowSelected.png'
 import monitorUnselected from '@/common/img/window/windowUnselected.png'
-import {localRead, localSave} from "@/core/utils"
-import {Component, Vue} from 'vue-property-decorator'
+import {completeUrlWithHostAndProtocol, localSave} from "@/core/utils"
+import {Component, Provide, Vue} from 'vue-property-decorator'
 import {windowSizeChange, minWindow, maxWindow, unMaximize, closeWindow} from '@/core/utils/electron.ts'
 import {mapState} from 'vuex'
 import {NetworkType} from "nem2-sdk"
 import {languageConfig} from "@/config/view/language"
-import {nodeListConfig} from "@/config/view/node"
-import {StoreAccount, AppWallet, AppInfo, Endpoint} from "@/core/model"
+import {StoreAccount, AppWallet, AppInfo, Notice, NoticeType, Endpoint} from "@/core/model"
 import routes from '@/router/routers'
+import {validation} from "@/core/validation"
+import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 
 @Component({
+    components: {
+        ErrorTooltip
+    },
     computed: {
         ...mapState({
             activeAccount: 'account',
@@ -20,10 +24,11 @@ import routes from '@/router/routers'
     }
 })
 export class MenuBarTs extends Vue {
-    app: AppInfo
-    nodeList: Endpoint[] = [] // @TODO: review node list
+    @Provide() validator: any = this.$validator
     activeAccount: StoreAccount
-    showNodeList: boolean = false
+    app: AppInfo
+    minWindow = minWindow
+    validation = validation
     isWindows = isWindows
     inputNodeValue = ''
     isNowWindowMax = false
@@ -48,10 +53,6 @@ export class MenuBarTs extends Vue {
         return this.NetworkProperties.healthy
     }
 
-    get nodeNetworkType() {
-        return this.NetworkProperties.networkType
-    }
-
     get wallet() {
         return this.activeAccount.wallet || false
     }
@@ -68,8 +69,25 @@ export class MenuBarTs extends Vue {
         return this.activeAccount.node
     }
 
+    set node(newNode: string) {
+        this.$store.commit('SET_NODE', `${newNode}`)
+    }
+
+    get nodeList() {
+        return this.app.nodeList
+    }
+
+    set nodeList(nodeList: Endpoint[]) {
+        this.$store.commit('SET_NODE_LIST', nodeList)
+    }
+
     get language() {
         return this.$i18n.locale
+    }
+
+    set language(lang) {
+        this.$i18n.locale = lang
+        localSave('locale', lang)
     }
 
     get nodeNetworkTypeText() {
@@ -78,39 +96,28 @@ export class MenuBarTs extends Vue {
         return networkType ? NetworkType[networkType] : this.$t('Loading')
     }
 
-    set language(lang) {
-        this.$i18n.locale = lang
-        localSave('locale', lang)
-    }
-
     get currentWalletAddress() {
         if (!this.wallet) return null
         return this.activeAccount.wallet.address
     }
 
+    set currentWalletAddress(newActiveWalletAddress) {
+        AppWallet.updateActiveWalletAddress(newActiveWalletAddress, this.$store)
+    }
+    
     get accountName() {
         return this.activeAccount.currentAccount.name
     }
 
-    set currentWalletAddress(newActiveWalletAddress) {
-        AppWallet.updateActiveWalletAddress(newActiveWalletAddress, this.$store)
-    }
-
-    get nodeLoading() {
-        return this.app.NetworkProperties.loading
-    }
-
-    navigationIconClicked(route: any): void {
-        if (!this.walletList.length) return
-        if (this.$route.matched.map(({path}) => path).includes(route.path)) return
-        this.$router.push(route.path).catch(err => {
-        })
+    refreshValidate() {
+        this.inputNodeValue = ''
+        this.$validator.reset()
     }
 
     accountQuit() {
         this.$store.commit('RESET_APP')
         this.$store.commit('RESET_ACCOUNT')
-        this.$router.push("login")
+        this.$router.push('login')
     }
 
     maxWindow() {
@@ -123,59 +130,63 @@ export class MenuBarTs extends Vue {
         unMaximize()
     }
 
-    minWindow() {
-        minWindow()
-    }
-
-    removeNode(index) {
-        this.nodeList.splice(index, 1)
-        localSave('nodeList', JSON.stringify(this.nodeList))
-    }
-
-    async selectEndpoint(index) {
-        if (this.node == this.nodeList[index].value) return
-        this.nodeList.forEach(item => item.isSelected = false)
-        this.nodeList[index].isSelected = true
-        this.$store.commit('SET_NODE', this.nodeList[index].value)
-    }
-
-    checkNodeInput() {
-        let {nodeList, inputNodeValue} = this
-        if (inputNodeValue == '') {
-            this.$Message.destroy()
-            this.$Message.error(this['$t'](Message.NODE_NULL_ERROR))
-            return false
+    removeNode(clickedNode: string) {
+        if (this.nodeList.length === 1) {
+            Notice.trigger(Message.NODE_ALL_DELETED, NoticeType.error, this.$store)
+            return
         }
-        const flag = nodeList.find(item => item.url == inputNodeValue)
-        if (flag) {
-            this.$Message.destroy()
-            this.$Message.error(this['$t'](Message.NODE_EXISTS_ERROR))
-            return false
-        }
-        return true
-    }
 
-    // @VEEVALIDATE
-    changeEndpointByInput() {
-        let {nodeList, inputNodeValue} = this
-        if (!this.checkNodeInput()) return
-        nodeList.push({
-            value: `${inputNodeValue}`,
-            name: inputNodeValue,
-            url: inputNodeValue,
-            isSelected: false,
-        })
+        const nodeList = [...this.nodeList]
+
+        nodeList.splice(
+            nodeList.findIndex(({value}) => value === clickedNode),
+            1,
+        )
+
+        if (clickedNode === this.node) this.node = nodeList[0].value
         this.nodeList = nodeList
-        localSave('nodeList', JSON.stringify(nodeList))
     }
 
-    initNodeList() {
-        const nodeListData = localRead('nodeList')
-        this.nodeList = nodeListData ? JSON.parse(nodeListData) : nodeListConfig
+    selectEndpoint(index) {
+        if (this.node === this.nodeList[index].value) return
+        this.node = this.nodeList[index].value
+        this.refreshValidate()
+    }
+
+    submit() {
+        let {inputNodeValue} = this
+        this.$validator
+            .validate()
+            .then((valid) => {
+                if (!valid) return
+                this.inputNodeValue = completeUrlWithHostAndProtocol(inputNodeValue)
+                this.createNewNode()
+            })
+    }
+
+    createNewNode() {
+        const {inputNodeValue} = this
+        const nodeList = [...this.nodeList]
+        const nodeIndexInList = nodeList.findIndex(item => item.value == inputNodeValue)
+        
+        if (nodeIndexInList > -1) nodeList.splice(nodeIndexInList, 1)
+        
+        nodeList.unshift({
+            value: inputNodeValue,
+            name: inputNodeValue,
+            url: inputNodeValue
+        })
+
+        this.nodeList = nodeList
+        this.selectEndpoint(0)
+    }
+
+    resetNodeListToDefault() {
+        this.nodeList = defaultNodeList
+        this.selectEndpoint(0)
     }
 
     created() {
         if (isWindows) windowSizeChange()
-        this.initNodeList()
     }
 }

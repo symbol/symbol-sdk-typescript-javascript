@@ -5,6 +5,7 @@ node_modules
 /tests
 .git
 .idea
+.vscode
 *.js.map
 /www
 src/**/*.map

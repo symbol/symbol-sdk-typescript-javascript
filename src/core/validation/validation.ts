@@ -49,6 +49,13 @@ export const validation = {
     nodeUrl: {
         required: true,
         url: {require_protocol: true}
+    },
+    friendlyNodeUrl: {
+        required: true,
+        url: {
+            require_host: false,
+            require_protocol: false,
+        }
     }
 
 }

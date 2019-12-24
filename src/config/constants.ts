@@ -89,7 +89,6 @@ export const defaultNetworkConfig = {
 }
 
 export const networkConfig = {
-
     targetBlockTime: 15,
     enableVerifiableState: true,
     enableVerifiableReceipts: true,
@@ -207,6 +206,7 @@ export const Message = {
     NEW_COSIGNATURE: 'new_cosignature',
     NO_MNEMONIC_INFO: 'no_mnemonic',
     NO_NETWORK_CURRENCY: 'no_network_currency_alert',
+    NODE_ALL_DELETED: 'all_nodes_cannot_be_deleted',
     NODE_CONNECTION_ERROR: 'Node_connection_failed',
     NODE_CONNECTION_SUCCEEDED: 'Node_connection_succeeded',
     NODE_EXISTS_ERROR: 'node_exists_error',

@@ -23,7 +23,7 @@
           <Select
                   v-model="formItems.currentAccountName"
                   placeholder=" "
-                  :class="['select_wallet', accountList.length == 0?'un_click':'']" @change="test">
+                  :class="['select_wallet', accountList.length == 0?'un_click':'']">
             <Option v-for="walletName in accountList" :value="walletName.value" :key="walletName.value" :label="walletName.label">
               <span>{{walletName.label}}</span>
               <span class="login-account-network-type">[{{walletName.networkType}}]</span>

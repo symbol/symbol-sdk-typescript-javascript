@@ -90,7 +90,8 @@ export interface AppInfo {
     stagedTransaction: StagedTransaction,
     logs: Log[],
     loadingOverlay: LoadingOverlayObject,
-    explorerBasePath:string
+    explorerBasePath:string,
+    nodeList: Endpoint[],
 }
 
 export interface StagedTransaction {
@@ -120,7 +121,6 @@ export interface Endpoint {
     value: string,
     name: string,
     url: string,
-    isSelected: boolean
 }
 
 export enum ANNOUNCE_TYPES {

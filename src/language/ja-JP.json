@@ -313,7 +313,7 @@
     "hash": "ハッシュ",
     "wallet_name": "ウォレット名",
     "switch_point": "ノード切り替え",
-    "current_point": "現在のノード",
+    "current_endpoint": "現在のノード",
     "point_null_error": "ノード NULL エラー",
     "please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe": "安全に保管するためにウォレットのパスワードを入力してください",
     "please_choose": "選択してください",

@@ -23,13 +23,13 @@
           <div class="auto-complete">
             <ErrorTooltip fieldName="nodeUrl">
               <AutoComplete v-validate="validation.nodeUrl"
-                            :placeholder="$t('Node_public_key')"
-                            :data-vv-as="$t('Node_public_key')"
+                            :placeholder="$t('node')"
+                            :data-vv-as="$t('node')"
                             data-vv-name="nodeUrl"
                             v-model="currentExplorerLink"
                             :data="defaultExplorerLinkList"
                             :filterMethod="explorerLinkFilterMethod"
-                            placeholder="input here"></AutoComplete>
+                            placeholder="please input explorer url here"></AutoComplete>
             </ErrorTooltip>
             <span @click="setExplorerBasePath" class="radius pointer confirm-icon-button">{{$t('confirm')}}</span>
           </div>
