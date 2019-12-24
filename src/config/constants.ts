@@ -6,10 +6,9 @@ export const WALLET_VERSION = '0.8.9'
 export const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 //apiServer
 export const apiServerConfig = {
-    apiUrl: 'http://120.79.181.170',
     marketUrl: 'http://app.nemcn.io',
-    voteUrl: 'http://120.79.181.170'
 }
+export const feedUrl = 'https://nemflash.io/feed/'
 
 export const transactionTag = {
     RECEIPT: 'receipt',

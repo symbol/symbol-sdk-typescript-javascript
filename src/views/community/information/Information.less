@@ -110,7 +110,6 @@
     height: 100%;
     background: white;
 
-
     .article_container {
       height: 100%;
       padding: 0 0;
@@ -161,7 +160,7 @@
 
     }
 
-    .artile_content {
+    .article_content {
       font-size: 18px;
       font-weight: 400;
       color: rgba(34, 34, 34, 1);
@@ -169,123 +168,18 @@
       margin-top: 50px;
       padding-right: 50px;
       position: relative;
-      height: calc(100% - 100px);
+      height: calc(100% - 120px);
+
+      img {
+        width: 900px !important;
+        height: auto;
+      }
 
       pre {
         white-space: pre-wrap;
         word-wrap: break-word;
       }
-    }
 
-    //.artile_content::after {
-    //  position: absolute;
-    //  display: block;
-    //  content: '';
-    //  background: rgba(238, 238, 238, 1);
-    //  height: 2px;
-    //  width: 960px;
-    //  right: -450px;
-    //  margin-right: 50%;
-    //  bottom: -46px;
-    //}
-
-    .comment {
-      padding: 77px 33px;
-
-      .comment_title {
-        font-size: 20px;
-        font-weight: bold;
-        color: rgba(32, 181, 172, 1);
-        line-height: 32px;
-
-        .comment_title_text {
-          display: inline-block;
-          position: relative;
-        }
-
-        .comment_title_text:after {
-          position: absolute;
-          display: block;
-          content: '';
-          width: 24px;
-          height: 4px;
-          background: rgba(32, 181, 172, 1);
-          left: -12px;
-          margin-left: 50%;
-        }
-      }
-
-      .input_container {
-        position: relative;
-        width: 790px;
-        height: 130px;
-        background: rgba(255, 255, 255, 1);
-        border: 1px solid rgba(204, 204, 204, 1);
-        border-radius: 4px;
-        margin-top: 20px;
-        padding: 18px 18px 0 18px;
-
-        textarea {
-          height: 70%;
-        }
-
-        .textarea_text {
-          position: absolute;
-          font-size: 18px;
-          right: 20px;
-          bottom: 0;
-          color: #ccc;
-        }
-      }
-
-      .send_comment {
-        width: 140px;
-        height: 50px;
-        background: rgba(32, 181, 172, 1);
-        border-radius: 25px;
-        text-align: center;
-        line-height: 50px;
-        color: white;
-        float: right;
-        margin: 20px 0;
-        position: relative;
-        left: 37px;
-      }
-
-      .comment_item_content {
-        margin-top: 90px;
-
-        .load_all_data {
-          text-align: center;
-          color: #ccc;
-        }
-      }
-
-      .comment_item {
-        border-top: 1px solid rgba(238, 238, 238, 1);
-        padding: 20px 0;
-
-        .account_name {
-          font-size: 16px;
-          font-weight: 400;
-          color: rgba(102, 102, 102, 1);
-          line-height: 32px;
-        }
-
-        .comment_content {
-          font-size: 16px;
-          font-weight: 400;
-          color: rgba(34, 34, 34, 1);
-          line-height: 32px;
-        }
-
-        .comment_time {
-          font-size: 16px;
-          font-weight: 400;
-          color: rgba(153, 153, 153, 1);
-          line-height: 32px;
-        }
-      }
     }
   }
 }
@@ -293,3 +187,5 @@
 .article_title {
   font-size: 24px !important;
 }
+
+

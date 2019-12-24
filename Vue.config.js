@@ -46,6 +46,14 @@ module.exports = {
     host: '0.0.0.0',
     port: 8080,
     before: app => {
+    },
+    proxy: {
+      '/nemflash': {
+        target: 'https://nemflash.io/feed/',
+        ws: true,
+        changeOrigin: true,
+        pathRewrite: { '^/nemflash': '' }
+      },
     }
   },
   // plugins

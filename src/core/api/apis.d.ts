@@ -22,30 +22,4 @@ export declare namespace api {
             rst: any;
         }>;
     }
-
-    interface blog {
-        list: (params: {
-            limit: string,
-            offset: string,
-            language: string,
-        }) => Promise<{
-            rst: any;
-        }>;
-        commentSave: (params: {
-            cid: string
-            comment: string
-            address: string
-            nickName: string
-            gtmCreate: string
-        }) => Promise<{
-            rst: any;
-        }>;
-        commentList: (params: {
-            cid: string,
-            limit: string,
-            offset: string,
-        }) => Promise<{
-            rst: any;
-        }>;
-    }
 }
