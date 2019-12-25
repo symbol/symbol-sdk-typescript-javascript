@@ -54,6 +54,7 @@ export class WalletDetailsTs extends Vue {
     activeNamespace: AppNamespace = null
     showUpdateDialog = false
     showDeleteDialog = false
+    refreshImportance = this.activeAccount.wallet.refreshImportance
 
     get wallet(): AppWallet {
         return this.activeAccount.wallet

@@ -529,4 +529,16 @@ export class AppWallet {
     get publicAccount(): PublicAccount {
         return PublicAccount.createFromPublicKey(this.publicKey, this.networkType)
     }
+
+    async refreshImportance(store: Store<AppState>): Promise<void> {
+        try {
+            const accountInfo = await new AccountHttp(store.state.account.node)
+                .getAccountInfo(Address.createFromRawAddress(store.state.account.wallet.address))
+                .toPromise()
+            this.importance = accountInfo.importance.compact();
+            this.updateWallet(store);
+        } catch (error) {            
+            console.error("AppWallet -> refreshImportance -> error", error);
+        }
+    }
 }
