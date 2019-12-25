@@ -1,11 +1,11 @@
 <template>
-  <div class="delete_wallet_container" @keyup.enter="submit">
+  <div class="delete_wallet_container">
     <Modal
-            v-model="visible"
-            class-name="vertical-center-modal"
-            :footer-hide="true"
-            :transfer="false"
-            @on-cancel="visible=false"
+      v-model="visible"
+      class-name="vertical-center-modal"
+      :footer-hide="true"
+      :transfer="false"
+      @on-cancel="visible=false"
     >
       <div slot="header" class="checkPWDialogHeader">
         <span class="title">{{$t('delete_wallet')}} : {{walletToDelete.name}}</span>
@@ -18,18 +18,10 @@
           <p class="checkRemind">{{$t('delete_wallet_tip', {walletName :walletToDelete.name})}}</p>
           <p v-if="walletList.length == 1" class="checkRemind orange">
             {{$t('this_account_will_be_logged_out_after_the_wallet_is_successfully_deleted')}}</p>
-          <Form :model="confirmation">
-            <FormItem>
-              <Input v-model.lazy="password"
-                     :autofocus="true"
-                     type="password" required
-                     :placeholder="$t(confirmationPrompt)"></Input>
-            </FormItem>
-            <FormItem>
-              <Button type="success" @click="submit"> {{$t('confirm')}}</Button>
-            </FormItem>
-            <input v-show="false">
-          </Form>
+          <CheckPassword
+            :returnPassword="true"
+            @passwordValidated="passwordValidated"
+          ></CheckPassword>
         </div>
       </div>
     </Modal>
@@ -38,7 +30,9 @@
 
 
 <script lang="ts">
-    import "./TheWalletDelete.less"
-    import {TheWalletDeleteTs} from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDeleteTs.ts'
-    export default class TheWalletDelete extends TheWalletDeleteTs { }
+  import "./TheWalletDelete.less"
+  import {TheWalletDeleteTs} from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDeleteTs.ts'
+
+  export default class TheWalletDelete extends TheWalletDeleteTs {
+  }
 </script>

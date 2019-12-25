@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import iView from 'view-design'
 import Vuex from 'vuex'
 import VeeValidate from 'vee-validate'
+import flushPromises from 'flush-promises'
 // @ts-ignore
 import TheWalletDelete from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDelete.vue'
 import {accountMutations, accountState} from '@/store/account'
@@ -40,7 +41,7 @@ describe('WalletSwitch', () => {
         account: {
           state: Object.assign(accountState.state, {
               wallet: hdAccount.wallets[0],
-            accountName: hdAccount.accountName,
+              currentAccount: hdAccount,
           }),
           mutations: accountMutations.mutations,
         },
@@ -69,12 +70,6 @@ describe('WalletSwitch', () => {
 
   it('Component TheWalletDelete should mount correctly ', () => {
     expect(wrapper).not.toBeNull()
-  })
-  it('Component TheWalletDelete delete target wallet rightly ', () => {
-    wrapper.vm.password = hdAccountData.password
-    wrapper.vm.submit()
-    expect(wrapper.vm.$store.state.app.walletList.length).toBe(hdAccount.wallets.length-1)
-    expect(wrapper.vm.$store.state.app.walletList.find(item=>item.address == hdAccount.wallets[0].address)).toBeUndefined()
   })
 
 

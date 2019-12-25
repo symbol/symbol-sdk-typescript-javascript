@@ -1,9 +1,7 @@
 <template>
   <div class="WalletFnWrap">
     <div class="walletFnContent">
-      <WalletImport
-              @toWalletDetails="$emit('toWalletDetails')"
-      ></WalletImport>
+      <WalletImport  @toWalletDetails="$emit('toWalletDetails')"  ></WalletImport>
     </div>
   </div>
 </template>

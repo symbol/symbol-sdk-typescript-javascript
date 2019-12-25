@@ -45,7 +45,6 @@ const routers = [
             {
                 path: '/walletPanel',
                 name: 'walletPanel',
-                redirect: '/walletCreate',
                 meta: {
                     clickable: true,
                     icon: leftBarIcons.windowWallet,
@@ -53,18 +52,7 @@ const routers = [
                 },
                 // @ts-ignore
                 component: () => import('@/views/wallet/Wallet.vue'),
-                children: [
-                    {
-                        path: '/walletCreate',
-                        name: 'walletCreate',
-                        // @ts-ignore
-                        component: () => import('@/views/wallet/wallet-functions/wallet-create/WalletCreate.vue')
-                    }, {
-                        path: '/walletCreated',
-                        name: 'walletCreated',
-                        // @ts-ignore
-                        component: () => import('@/views/wallet/wallet-functions/wallet-created/WalletCreated.vue')
-                    }, {
+                children: [{
                         path: 'walletImport',
                         name: 'walletImport',
                         // @ts-ignore

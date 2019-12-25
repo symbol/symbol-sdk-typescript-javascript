@@ -2,11 +2,11 @@ import {mapState} from "vuex"
 import {Component, Vue, Prop, Provide} from 'vue-property-decorator'
 import {validation} from '@/core/validation'
 import {StoreAccount} from "@/core/model"
-import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
+import CheckPassword from '@/components/forms/check-password/CheckPassword.vue'
 
 @Component({
     computed: {...mapState({activeAccount: 'account'})},
-    components: {ErrorTooltip},
+    components: {CheckPassword},
 })
 export class CheckPasswordDialogTs extends Vue {
     @Provide() validator: any = this.$validator
@@ -25,22 +25,13 @@ export class CheckPasswordDialogTs extends Vue {
     }
 
     set show(val) {
-        if (!val) {
-            this.$emit('close')
-        }
+      if (!val) {
+        this.$emit('close')
+      }
     }
 
-    get accountPassword() {
-        return this.activeAccount.currentAccount.password
-    }
-
-    submit() {
-        this.$validator
-            .validate()
-            .then((valid) => {
-                const response = valid && this.returnPassword ? this.password : valid
-                this.$emit('passwordValidated', response)
-                this.show = false
-            })
-    }
+  passwordValidated(value){
+      this.$emit('passwordValidated',value)
+      this.show = false
+  }
 }

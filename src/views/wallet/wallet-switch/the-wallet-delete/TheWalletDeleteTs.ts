@@ -1,23 +1,33 @@
 import {Message} from "@/config/index.ts"
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Vue, Prop, Provide} from 'vue-property-decorator'
 import {mapState} from 'vuex'
 import {AppAccounts, AppWallet, StoreAccount} from "@/core/model"
+import {validation} from "@/core/validation"
+import CheckPassword from '@/components/forms/check-password/CheckPassword.vue'
 
 @Component({
     computed: {
-        ...mapState({activeAccount: 'account', app: 'app'})
-    }
+        ...mapState({activeAccount: 'account', app: 'app'}),
+    },
+  components: {
+    CheckPassword
+  },
 })
 export class TheWalletDeleteTs extends Vue {
+    @Provide() validator: any = this.$validator
+    validation = validation
     activeAccount: StoreAccount
     app: any
-    password:string=''
 
     @Prop()
     showCheckPWDialog: boolean
 
     @Prop()
     walletToDelete: AppWallet
+
+  get accountPassword() {
+    return this.activeAccount.currentAccount.password
+  }
 
   get visible(){
       return this.showCheckPWDialog
@@ -51,33 +61,38 @@ export class TheWalletDeleteTs extends Vue {
         })
     }
 
-    deleteByPassword() {
-        if(this.walletList.length == 1) {
-           AppAccounts().deleteAccount(this.activeAccount.currentAccount.name)
+    deleteByPassword(password) {
+      this.$validator
+        .validate()
+        .then((valid) => {
+          if(!valid) return
+          if (this.walletList.length == 1) {
+            AppAccounts().deleteAccount(this.activeAccount.currentAccount.name)
             this.accountQuit()
             return
-        }
-        try {
-            const isPasswordCorrect = new AppWallet(this.walletToDelete).checkPassword(this.password)
+          }
+          try {
+            const isPasswordCorrect = new AppWallet(this.walletToDelete).checkPassword(password)
             if (isPasswordCorrect) {
-                new AppWallet(this.walletToDelete).delete(this.$store, this)
-                this.visible = false
-                return
+              new AppWallet(this.walletToDelete).delete(this.$store, this)
+              this.visible = false
+              return
             }
-              this.$Notice.error({
-                  title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
-              })
-
-        } catch (error) {
             this.$Notice.error({
-                title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
+              title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
             })
-        }
+
+          } catch (error) {
+            this.$Notice.error({
+              title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
+            })
+          }
+        })
     }
 
-    deleteByWalletNameConfirmation() {
+    deleteByWalletNameConfirmation(password) {
         try {
-            const isWalletNameCorrect = this.password === this.getWallet.name
+            const isWalletNameCorrect = password === this.getWallet.name
             if (isWalletNameCorrect) {
                 new AppWallet(this.walletToDelete).delete(this.$store, this)
               this.visible = false
@@ -94,13 +109,13 @@ export class TheWalletDeleteTs extends Vue {
         }
     }
 
-    submit() {
+    passwordValidated(password) {
         // based on source of wallet, use different protection mechanisms
         switch (this.getWallet.sourceType) {
             case 'Trezor':
-                return this.deleteByWalletNameConfirmation()
+                return this.deleteByWalletNameConfirmation(password)
             default:
-                return this.deleteByPassword()
+                return this.deleteByPassword(password)
         }
     }
 

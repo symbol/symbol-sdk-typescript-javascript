@@ -62,6 +62,7 @@
                     :showMnemonicDialog="isShowMnemonicDialog"
                     @closeMnemonicDialog="isShowMnemonicDialog = false"></MnemonicDialog>
     <TheWalletDelete
+            v-if="showDeleteDialog"
             :showCheckPWDialog="showDeleteDialog"
             :wallet-to-delete="walletToDelete"
             @closeCheckPWDialog="showDeleteDialog=false"

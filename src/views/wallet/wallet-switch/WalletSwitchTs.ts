@@ -104,10 +104,8 @@ export class WalletSwitchTs extends Vue {
     }
 
     toCreate() {
-        const {currentAccount} = this
-        const walletList = JSON.parse(localRead('accountMap'))[currentAccount.name].wallets
         // get sorted path list
-        const seedPathList = walletList.filter(item => item.path).map(item => item.path[item.path.length - 8]).sort()
+        const seedPathList = this.walletList.filter(item => item.path).map(item => item.path[item.path.length - 8]).sort()
         // check if seed wallets >= 10
         if (seedPathList.length >= networkConfig.seedWalletMaxAmount) {
             this.showErrorDialog(Message.SEED_WALLET_OVERFLOW_ERROR)
@@ -136,10 +134,11 @@ export class WalletSwitchTs extends Vue {
     }
 
     scrollToActiveWallet() {
-        // scroll to current wallet
-        const currentWalletIndex = this.walletList
-            .findIndex(({address}) => address === this.activeAddress)
-        this.$refs.walletScroll["scrollTop"] = this.$refs.walletsDiv[currentWalletIndex]['offsetTop'] - 180
+      // scroll to current wallet
+      const currentWalletIndex = this.walletList
+          .findIndex(({address}) => address === this.activeAddress)
+      if(!this.$refs.walletsDiv[currentWalletIndex]) return
+      this.$refs.walletScroll["scrollTop"] = this.$refs.walletsDiv[currentWalletIndex]['offsetTop'] + 180
     }
 
 

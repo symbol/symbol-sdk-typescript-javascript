@@ -81,33 +81,7 @@ describe('CheckPasswordDialog', () => {
         expect(wrapper).not.toBeNull()
     })
 
-    it('Should emit true when provided a right password and when showPassword is set to false', async () => {
-        wrapper.setProps({returnPassword: false})
-        wrapper.setData({password: hdAccountData.password})
-        wrapper.vm.submit()
-        await flushPromises()
 
-        expect(wrapper.emitted('passwordValidated').length).toBe(1)
-        expect(wrapper.emitted('passwordValidated')).toEqual([[true]])
-    })
 
-    it('Should emit the password when provided a right password and when showPassword is set to true', async () => {
-        wrapper.setProps({returnPassword: true})
-        wrapper.setData({password: hdAccountData.password})
-        wrapper.vm.submit()
-        await flushPromises()
 
-        expect(wrapper.emitted('passwordValidated').length).toBe(1)
-        expect(wrapper.emitted('passwordValidated')).toEqual([[hdAccountData.password]])
-    })
-
-    it('Should emit false when a wrong password', async () => {
-        wrapper.setProps({returnPassword: false})
-        wrapper.setData({password: 'wrongPassword'})
-        wrapper.vm.submit()
-        await flushPromises()
-
-        expect(wrapper.emitted('passwordValidated').length).toBe(1)
-        expect(wrapper.emitted('passwordValidated')).toEqual([[false]])
-    })
 })

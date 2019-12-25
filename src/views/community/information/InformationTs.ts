@@ -1,15 +1,10 @@
 import {formatDate} from '@/core/utils'
 import {Component, Vue} from 'vue-property-decorator'
-import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {ArticleFeed} from '@/core/services/community'
 import RSSParser from "rss-parser"
 const xss = require("xss");
 
-@Component({
-    components: {
-        CheckPasswordDialog
-    }
-})
+@Component
 export class informationTs extends Vue {
     startPage = 0
     articleList: any[] = []
