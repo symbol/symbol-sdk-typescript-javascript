@@ -387,4 +387,17 @@ describe('Network properties', () => {
     expect(networkProperties.getTimeFromBlockNumber(29888)).not.toBeNull()
     expect(networkProperties.getTimeFromBlockNumber(29888).length > 0).toBeTruthy()
   })
+
+  it('updateFromOfflineSettings', () => {
+    // @ts-ignore
+    const networkProperties = NetworkProperties.create(store)
+    networkProperties.updateFromOfflineSettings(
+      {generationHash: 'mockGenerationHash'},
+      'mockEndpoint',
+    )
+    expect(mockDispatch.mock.calls[0][0]).toBe('SET_NETWORK_PROPERTIES')
+    const commitCall = mockDispatch.mock.calls[0][1]
+    expect(commitCall.endpoint).toBe('mockEndpoint')
+    expect(commitCall.NetworkProperties.generationHash).toBe('mockGenerationHash')
+  })
 })

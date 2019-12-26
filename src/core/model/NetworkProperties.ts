@@ -6,8 +6,12 @@ import {AppState} from '.'
 
 const {maxRollbackBlocks, defaultDynamicFeeMultiplier} = networkConfig
 
+export class OfflineSettingsParams {
+  generationHash: string
+}
+
 export class NetworkProperties {
-  fee: number
+  fee: number = defaultDynamicFeeMultiplier
   generationHash: string
   healthy: boolean
   height: number
@@ -32,7 +36,7 @@ export class NetworkProperties {
   reset(endpoint: string) {
     this.setValuesToDefault()
     this.healthy = false
-    this.store.dispatch('SET_NETWORK_PROPERTIES', {endpoint, NetworkProperties: this})
+    this.dispatchChanges(endpoint)
   }
 
   private setValuesToDefault() {
@@ -51,21 +55,21 @@ export class NetworkProperties {
 
   setLoadingToTrue(endpoint: string) {
     this.loading = true
-    this.store.dispatch('SET_NETWORK_PROPERTIES', {endpoint, NetworkProperties: this})
+    this.dispatchChanges(endpoint)
   }  
 
   setHealthyToFalse(endpoint: string) {
     this.healthy = false
     this.loading = false
-    this.store.dispatch('SET_NETWORK_PROPERTIES', {endpoint, NetworkProperties: this})
-  }  
+    this.dispatchChanges(endpoint)
+  }
 
   setValuesFromFirstBlock(block: BlockInfo, endpoint: string) {
     this.generationHash = block.generationHash
     this.networkType = block.networkType
     this.healthy = true
     this.loading = false
-    this.store.dispatch('SET_NETWORK_PROPERTIES', {endpoint, NetworkProperties: this})
+    this.dispatchChanges(endpoint)
   }
 
   initializeLatestBlocks(blocks: BlockInfo[], endpoint: string) {
@@ -82,7 +86,7 @@ export class NetworkProperties {
     this.numTransactions = block.numTransactions
     this.signerPublicKey = block.signer.publicKey
     this.lastBlockTimestamp = block.timestamp.compact()
-    this.store.dispatch('SET_NETWORK_PROPERTIES', {endpoint, NetworkProperties: this})
+    this.dispatchChanges(endpoint)
   }
 
   handleLastBlock(block: BlockInfo, endpoint: string) {
@@ -94,7 +98,7 @@ export class NetworkProperties {
 
   private setNetworkFee(endpoint: string) {
     this.fee = this.getMedianFee(this.getBlockFeeMultipliers())
-    this.store.dispatch('SET_NETWORK_PROPERTIES', {endpoint, NetworkProperties: this})
+    this.dispatchChanges(endpoint)
   }
 
   private getBlockFeeMultipliers() {
@@ -113,5 +117,14 @@ export class NetworkProperties {
 
     const numberOfBlock = blockNumber - this.height
     return formatTimestamp((numberOfBlock * this.targetBlockTime + highestBlockTimestamp) * 1000)
+  }
+
+  private dispatchChanges(endpoint: string) {
+    this.store.dispatch('SET_NETWORK_PROPERTIES', {endpoint, NetworkProperties: this})
+  }
+
+  updateFromOfflineSettings(offlineSettingsParams: OfflineSettingsParams, endpoint: string) {
+    this.generationHash = offlineSettingsParams.generationHash
+    this.dispatchChanges(endpoint)
   }
 }

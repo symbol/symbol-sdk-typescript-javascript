@@ -37,6 +37,7 @@ export class MenuBarTs extends Vue {
     languageList = languageConfig
     NetworkType = NetworkType
     closeWindow = closeWindow
+    isShowNodeList = false
 
     get routes() {
         return routes[0].children

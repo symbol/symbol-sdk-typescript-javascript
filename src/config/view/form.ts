@@ -8,13 +8,6 @@ export const formDataConfig = {
         confirmPassword: '',
         cipher: '',
     },
-    offsetLineForm: {
-        generationHash: '',
-        mosaicId: '',
-        divisibility: 1,
-        ticker: 'XEM',
-        mosaicName: '',
-    },
     createAccountForm: {
         accountName: '',
         password: '',

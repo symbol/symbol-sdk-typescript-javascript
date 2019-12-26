@@ -896,5 +896,6 @@
   "estimate": "estimate",
   "MaxFee": "Max Fee",
   "total_transactions": "Total transactions",
-  "all_nodes_cannot_be_deleted": "All nodes cannot be deleted"
+  "all_nodes_cannot_be_deleted": "All nodes cannot be deleted",
+  "Mosaic_name": "Mosaic name"
 }

@@ -34,7 +34,6 @@ localVue.directive('focus', {
         el.focus()
     }
 })
-
 // close warning
 config.logModifiedComponents = false
 const fullUrl = 'http://1.2.3.4:3000'

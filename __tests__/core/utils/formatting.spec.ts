@@ -1,5 +1,5 @@
 import * as formatting from '@/core/utils/formatting.ts'
-import {NetworkCurrency} from '@/core/model'
+import {mockNetworkCurrency} from '@MOCKS/index'
 
 describe('formatNumber', () => {
     it('1 should be formatted as 1 with formatNumber function', () => {
@@ -19,14 +19,8 @@ describe('formatNumber', () => {
     })
 
     describe('absoluteAmountToRelativeAmountWithTicker', () => {
-        const mockNetworkMosaic: NetworkCurrency = {
-            hex: 'mockHex',
-            divisibility: 6,
-            ticker: 'XEM',
-            name: 'nem.xem',
-        }
         it('should return a proper string', () => {
-            const string = formatting.absoluteAmountToRelativeAmountWithTicker(1888884123456, mockNetworkMosaic)
+            const string = formatting.absoluteAmountToRelativeAmountWithTicker(1888884123456, mockNetworkCurrency)
             expect(string).toBe('1,888,884.123456 XEM')
         })
     })
