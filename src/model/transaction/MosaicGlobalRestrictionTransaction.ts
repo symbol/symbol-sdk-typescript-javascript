@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-import { AmountDto } from 'catbuffer/dist/AmountDto';
-import { EmbeddedMosaicGlobalRestrictionTransactionBuilder, } from 'catbuffer/dist/EmbeddedMosaicGlobalRestrictionTransactionBuilder';
-import { EmbeddedTransactionBuilder } from 'catbuffer/dist/EmbeddedTransactionBuilder';
-import { KeyDto } from 'catbuffer/dist/KeyDto';
-import { MosaicGlobalRestrictionTransactionBuilder } from 'catbuffer/dist/MosaicGlobalRestrictionTransactionBuilder';
-import { SignatureDto } from 'catbuffer/dist/SignatureDto';
-import { TimestampDto } from 'catbuffer/dist/TimestampDto';
-import { UnresolvedMosaicIdDto } from 'catbuffer/dist/UnresolvedMosaicIdDto';
+import {
+    AmountDto,
+    EmbeddedMosaicGlobalRestrictionTransactionBuilder,
+    EmbeddedTransactionBuilder,
+    KeyDto,
+    MosaicGlobalRestrictionTransactionBuilder,
+    SignatureDto,
+    TimestampDto,
+    UnresolvedMosaicIdDto
+} from 'catbuffer';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';

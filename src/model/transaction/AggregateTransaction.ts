@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-import { AggregateBondedTransactionBuilder } from 'catbuffer/dist/AggregateBondedTransactionBuilder';
-import { AggregateCompleteTransactionBuilder } from 'catbuffer/dist/AggregateCompleteTransactionBuilder';
-import { AmountDto } from 'catbuffer/dist/AmountDto';
-import { CosignatureBuilder } from 'catbuffer/dist/CosignatureBuilder';
-import { EmbeddedTransactionBuilder } from 'catbuffer/dist/EmbeddedTransactionBuilder';
-import { GeneratorUtils } from 'catbuffer/dist/GeneratorUtils';
-import { Hash256Dto } from 'catbuffer/dist/Hash256Dto';
-import { KeyDto } from 'catbuffer/dist/KeyDto';
-import { SignatureDto } from 'catbuffer/dist/SignatureDto';
-import { TimestampDto } from 'catbuffer/dist/TimestampDto';
+import {
+    AggregateBondedTransactionBuilder,
+    AggregateCompleteTransactionBuilder,
+    AmountDto,
+    CosignatureBuilder,
+    EmbeddedTransactionBuilder,
+    GeneratorUtils,
+    Hash256Dto,
+    KeyDto,
+    SignatureDto,
+    TimestampDto
+} from 'catbuffer';
 import { KeyPair, MerkleHashBuilder, SHA3Hasher, SignSchema } from '../../core/crypto';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';

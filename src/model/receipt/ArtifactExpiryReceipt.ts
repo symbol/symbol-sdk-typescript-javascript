@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-import { MosaicExpiryReceiptBuilder } from 'catbuffer/dist/MosaicExpiryReceiptBuilder';
-import { MosaicIdDto } from 'catbuffer/dist/MosaicIdDto';
-import { NamespaceExpiryReceiptBuilder } from 'catbuffer/dist/NamespaceExpiryReceiptBuilder';
-import { NamespaceIdDto } from 'catbuffer/dist/NamespaceIdDto';
+import { MosaicExpiryReceiptBuilder, MosaicIdDto, NamespaceExpiryReceiptBuilder, NamespaceIdDto } from 'catbuffer';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { Receipt } from './Receipt';

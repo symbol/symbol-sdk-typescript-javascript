@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-import { AddressAliasTransactionBuilder } from 'catbuffer/dist/AddressAliasTransactionBuilder';
-import { AddressDto } from 'catbuffer/dist/AddressDto';
-import { AmountDto } from 'catbuffer/dist/AmountDto';
-import { EmbeddedAddressAliasTransactionBuilder } from 'catbuffer/dist/EmbeddedAddressAliasTransactionBuilder';
-import { EmbeddedTransactionBuilder } from 'catbuffer/dist/EmbeddedTransactionBuilder';
-import { KeyDto } from 'catbuffer/dist/KeyDto';
-import { NamespaceIdDto } from 'catbuffer/dist/NamespaceIdDto';
-import { SignatureDto } from 'catbuffer/dist/SignatureDto';
-import { TimestampDto } from 'catbuffer/dist/TimestampDto';
+import {
+    AddressAliasTransactionBuilder,
+    AddressDto,
+    AmountDto,
+    EmbeddedAddressAliasTransactionBuilder,
+    EmbeddedTransactionBuilder,
+    KeyDto,
+    NamespaceIdDto,
+    SignatureDto,
+    TimestampDto
+} from 'catbuffer';
 import { Convert, RawAddress } from '../../core/format';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';

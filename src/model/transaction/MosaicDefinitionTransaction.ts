@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-import { AmountDto } from 'catbuffer/dist/AmountDto';
-import { BlockDurationDto } from 'catbuffer/dist/BlockDurationDto';
-import { EmbeddedMosaicDefinitionTransactionBuilder } from 'catbuffer/dist/EmbeddedMosaicDefinitionTransactionBuilder';
-import { EmbeddedTransactionBuilder } from 'catbuffer/dist/EmbeddedTransactionBuilder';
-import { GeneratorUtils } from 'catbuffer/dist/GeneratorUtils';
-import { KeyDto } from 'catbuffer/dist/KeyDto';
-import { MosaicDefinitionTransactionBuilder } from 'catbuffer/dist/MosaicDefinitionTransactionBuilder';
-import { MosaicIdDto } from 'catbuffer/dist/MosaicIdDto';
-import { MosaicNonceDto } from 'catbuffer/dist/MosaicNonceDto';
-import { SignatureDto } from 'catbuffer/dist/SignatureDto';
-import { TimestampDto } from 'catbuffer/dist/TimestampDto';
+import {
+    AmountDto,
+    BlockDurationDto,
+    EmbeddedMosaicDefinitionTransactionBuilder,
+    EmbeddedTransactionBuilder,
+    GeneratorUtils,
+    KeyDto,
+    MosaicDefinitionTransactionBuilder,
+    MosaicIdDto,
+    MosaicNonceDto,
+    SignatureDto,
+    TimestampDto
+} from 'catbuffer';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';

@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-import { AmountDto } from 'catbuffer/dist/AmountDto';
-import { EmbeddedMultisigAccountModificationTransactionBuilder, } from 'catbuffer/dist/EmbeddedMultisigAccountModificationTransactionBuilder';
-import { EmbeddedTransactionBuilder } from 'catbuffer/dist/EmbeddedTransactionBuilder';
-import { KeyDto } from 'catbuffer/dist/KeyDto';
-import { MultisigAccountModificationTransactionBuilder, } from 'catbuffer/dist/MultisigAccountModificationTransactionBuilder';
-import { SignatureDto } from 'catbuffer/dist/SignatureDto';
-import { TimestampDto } from 'catbuffer/dist/TimestampDto';
+import {
+    AmountDto,
+    EmbeddedMultisigAccountModificationTransactionBuilder,
+    EmbeddedTransactionBuilder,
+    KeyDto,
+    MultisigAccountModificationTransactionBuilder,
+    SignatureDto,
+    TimestampDto
+} from 'catbuffer';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';

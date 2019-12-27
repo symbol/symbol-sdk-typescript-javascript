@@ -14,6 +14,50 @@
  * limitations under the License.
  */
 
+import {
+    AccountAddressRestrictionTransactionBuilder,
+    AccountLinkTransactionBuilder,
+    AccountMetadataTransactionBuilder,
+    AccountMosaicRestrictionTransactionBuilder,
+    AccountOperationRestrictionTransactionBuilder,
+    AddressAliasTransactionBuilder,
+    AggregateBondedTransactionBuilder,
+    AggregateCompleteTransactionBuilder,
+    EmbeddedAccountAddressRestrictionTransactionBuilder,
+    EmbeddedAccountLinkTransactionBuilder,
+    EmbeddedAccountMetadataTransactionBuilder,
+    EmbeddedAccountMosaicRestrictionTransactionBuilder,
+    EmbeddedAccountOperationRestrictionTransactionBuilder,
+    EmbeddedAddressAliasTransactionBuilder,
+    EmbeddedHashLockTransactionBuilder,
+    EmbeddedMosaicAddressRestrictionTransactionBuilder,
+    EmbeddedMosaicAliasTransactionBuilder,
+    EmbeddedMosaicDefinitionTransactionBuilder,
+    EmbeddedMosaicGlobalRestrictionTransactionBuilder,
+    EmbeddedMosaicMetadataTransactionBuilder,
+    EmbeddedMosaicSupplyChangeTransactionBuilder,
+    EmbeddedMultisigAccountModificationTransactionBuilder,
+    EmbeddedNamespaceMetadataTransactionBuilder,
+    EmbeddedNamespaceRegistrationTransactionBuilder,
+    EmbeddedSecretLockTransactionBuilder,
+    EmbeddedSecretProofTransactionBuilder,
+    EmbeddedTransactionBuilder,
+    EmbeddedTransferTransactionBuilder,
+    HashLockTransactionBuilder,
+    MosaicAddressRestrictionTransactionBuilder,
+    MosaicAliasTransactionBuilder,
+    MosaicDefinitionTransactionBuilder,
+    MosaicGlobalRestrictionTransactionBuilder,
+    MosaicMetadataTransactionBuilder,
+    MosaicSupplyChangeTransactionBuilder,
+    MultisigAccountModificationTransactionBuilder,
+    NamespaceMetadataTransactionBuilder,
+    NamespaceRegistrationTransactionBuilder,
+    SecretLockTransactionBuilder,
+    SecretProofTransactionBuilder,
+    TransactionHelper,
+    TransferTransactionBuilder
+} from 'catbuffer';
 import { Convert, Convert as convert } from '../../core/format';
 import { Deadline, PublicAccount, UInt64 } from '../../model/model';
 import { AccountAddressRestrictionTransaction } from '../../model/transaction/AccountAddressRestrictionTransaction';
@@ -38,48 +82,6 @@ import { SecretProofTransaction } from '../../model/transaction/SecretProofTrans
 import { Transaction } from '../../model/transaction/Transaction';
 import { TransactionType } from '../../model/transaction/TransactionType';
 import { TransferTransaction } from '../../model/transaction/TransferTransaction';
-import { TransactionHelper } from "catbuffer/dist/TransactionHelper";
-import { AccountAddressRestrictionTransactionBuilder } from "catbuffer/dist/AccountAddressRestrictionTransactionBuilder";
-import { EmbeddedTransactionBuilder } from "catbuffer/dist/EmbeddedTransactionBuilder";
-import { AccountMosaicRestrictionTransactionBuilder } from "catbuffer/dist/AccountMosaicRestrictionTransactionBuilder";
-import { AggregateCompleteTransactionBuilder } from "catbuffer/dist/AggregateCompleteTransactionBuilder";
-import { AggregateBondedTransactionBuilder } from "catbuffer/dist/AggregateBondedTransactionBuilder";
-import { AccountOperationRestrictionTransactionBuilder } from "catbuffer/dist/AccountOperationRestrictionTransactionBuilder";
-import { AccountLinkTransactionBuilder } from "catbuffer/dist/AccountLinkTransactionBuilder";
-import { AddressAliasTransactionBuilder } from "catbuffer/dist/AddressAliasTransactionBuilder";
-import { MosaicAliasTransactionBuilder } from "catbuffer/dist/MosaicAliasTransactionBuilder";
-import { MosaicDefinitionTransactionBuilder } from "catbuffer/dist/MosaicDefinitionTransactionBuilder";
-import { MosaicSupplyChangeTransactionBuilder } from "catbuffer/dist/MosaicSupplyChangeTransactionBuilder";
-import { NamespaceRegistrationTransactionBuilder } from "catbuffer/dist/NamespaceRegistrationTransactionBuilder";
-import { TransferTransactionBuilder } from "catbuffer/dist/TransferTransactionBuilder";
-import { SecretLockTransactionBuilder } from "catbuffer/dist/SecretLockTransactionBuilder";
-import { SecretProofTransactionBuilder } from "catbuffer/dist/SecretProofTransactionBuilder";
-import { MultisigAccountModificationTransactionBuilder } from "catbuffer/dist/MultisigAccountModificationTransactionBuilder";
-import { HashLockTransactionBuilder } from "catbuffer/dist/HashLockTransactionBuilder";
-import { MosaicGlobalRestrictionTransactionBuilder } from "catbuffer/dist/MosaicGlobalRestrictionTransactionBuilder";
-import { AccountMetadataTransactionBuilder } from "catbuffer/dist/AccountMetadataTransactionBuilder";
-import { MosaicAddressRestrictionTransactionBuilder } from "catbuffer/dist/MosaicAddressRestrictionTransactionBuilder";
-import { MosaicMetadataTransactionBuilder } from "catbuffer/dist/MosaicMetadataTransactionBuilder";
-import { NamespaceMetadataTransactionBuilder } from "catbuffer/dist/NamespaceMetadataTransactionBuilder";
-import { EmbeddedAccountAddressRestrictionTransactionBuilder } from "catbuffer/dist/EmbeddedAccountAddressRestrictionTransactionBuilder";
-import { EmbeddedAccountMosaicRestrictionTransactionBuilder } from "catbuffer/dist/EmbeddedAccountMosaicRestrictionTransactionBuilder";
-import { EmbeddedAccountOperationRestrictionTransactionBuilder } from "catbuffer/dist/EmbeddedAccountOperationRestrictionTransactionBuilder";
-import { EmbeddedNamespaceMetadataTransactionBuilder } from "catbuffer/dist/EmbeddedNamespaceMetadataTransactionBuilder";
-import { EmbeddedMosaicMetadataTransactionBuilder } from "catbuffer/dist/EmbeddedMosaicMetadataTransactionBuilder";
-import { EmbeddedAccountMetadataTransactionBuilder } from "catbuffer/dist/EmbeddedAccountMetadataTransactionBuilder";
-import { EmbeddedMosaicAddressRestrictionTransactionBuilder } from "catbuffer/dist/EmbeddedMosaicAddressRestrictionTransactionBuilder";
-import { EmbeddedMosaicGlobalRestrictionTransactionBuilder } from "catbuffer/dist/EmbeddedMosaicGlobalRestrictionTransactionBuilder";
-import { EmbeddedHashLockTransactionBuilder } from "catbuffer/dist/EmbeddedHashLockTransactionBuilder";
-import { EmbeddedMultisigAccountModificationTransactionBuilder } from "catbuffer/dist/EmbeddedMultisigAccountModificationTransactionBuilder";
-import { EmbeddedSecretProofTransactionBuilder } from "catbuffer/dist/EmbeddedSecretProofTransactionBuilder";
-import { EmbeddedSecretLockTransactionBuilder } from "catbuffer/dist/EmbeddedSecretLockTransactionBuilder";
-import { EmbeddedTransferTransactionBuilder } from "catbuffer/dist/EmbeddedTransferTransactionBuilder";
-import { EmbeddedNamespaceRegistrationTransactionBuilder } from "catbuffer/dist/EmbeddedNamespaceRegistrationTransactionBuilder";
-import { EmbeddedMosaicSupplyChangeTransactionBuilder } from "catbuffer/dist/EmbeddedMosaicSupplyChangeTransactionBuilder";
-import { EmbeddedMosaicDefinitionTransactionBuilder } from "catbuffer/dist/EmbeddedMosaicDefinitionTransactionBuilder";
-import { EmbeddedMosaicAliasTransactionBuilder } from "catbuffer/dist/EmbeddedMosaicAliasTransactionBuilder";
-import { EmbeddedAddressAliasTransactionBuilder } from "catbuffer/dist/EmbeddedAddressAliasTransactionBuilder";
-import { EmbeddedAccountLinkTransactionBuilder } from "catbuffer/dist/EmbeddedAccountLinkTransactionBuilder";
 
 /**
  * @internal

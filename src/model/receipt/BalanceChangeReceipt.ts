@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
+import { AmountDto, BalanceChangeReceiptBuilder, KeyDto, MosaicBuilder, MosaicIdDto } from 'catbuffer';
 import { Convert } from '../../core/format/Convert';
-import { AmountDto } from 'catbuffer/dist/AmountDto';
-import { BalanceChangeReceiptBuilder } from 'catbuffer/dist/BalanceChangeReceiptBuilder';
-import { KeyDto } from 'catbuffer/dist/KeyDto';
-import { MosaicBuilder } from 'catbuffer/dist/MosaicBuilder';
-import { MosaicIdDto } from 'catbuffer/dist/MosaicIdDto';
 import { PublicAccount } from '../account/PublicAccount';
 import { MosaicId } from '../mosaic/MosaicId';
 import { UInt64 } from '../UInt64';

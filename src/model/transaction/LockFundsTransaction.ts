@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-import { AmountDto } from 'catbuffer/dist/AmountDto';
-import { BlockDurationDto } from 'catbuffer/dist/BlockDurationDto';
-import { EmbeddedHashLockTransactionBuilder } from 'catbuffer/dist/EmbeddedHashLockTransactionBuilder';
-import { EmbeddedTransactionBuilder } from 'catbuffer/dist/EmbeddedTransactionBuilder';
-import { Hash256Dto } from 'catbuffer/dist/Hash256Dto';
-import { HashLockTransactionBuilder } from 'catbuffer/dist/HashLockTransactionBuilder';
-import { KeyDto } from 'catbuffer/dist/KeyDto';
-import { SignatureDto } from 'catbuffer/dist/SignatureDto';
-import { TimestampDto } from 'catbuffer/dist/TimestampDto';
-import { UnresolvedMosaicBuilder } from 'catbuffer/dist/UnresolvedMosaicBuilder';
-import { UnresolvedMosaicIdDto } from 'catbuffer/dist/UnresolvedMosaicIdDto';
+import {
+    AmountDto,
+    BlockDurationDto,
+    EmbeddedHashLockTransactionBuilder,
+    EmbeddedTransactionBuilder,
+    Hash256Dto,
+    HashLockTransactionBuilder,
+    KeyDto,
+    SignatureDto,
+    TimestampDto,
+    UnresolvedMosaicBuilder,
+    UnresolvedMosaicIdDto
+} from 'catbuffer';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { PublicAccount } from '../account/PublicAccount';

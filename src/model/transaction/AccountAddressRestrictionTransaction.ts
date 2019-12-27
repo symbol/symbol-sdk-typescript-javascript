@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-import { AccountAddressRestrictionTransactionBuilder } from 'catbuffer/dist/AccountAddressRestrictionTransactionBuilder';
-import { AmountDto } from 'catbuffer/dist/AmountDto';
-import { EmbeddedAccountAddressRestrictionTransactionBuilder, } from 'catbuffer/dist/EmbeddedAccountAddressRestrictionTransactionBuilder';
-import { EmbeddedTransactionBuilder } from 'catbuffer/dist/EmbeddedTransactionBuilder';
-import { KeyDto } from 'catbuffer/dist/KeyDto';
-import { SignatureDto } from 'catbuffer/dist/SignatureDto';
-import { TimestampDto } from 'catbuffer/dist/TimestampDto';
-import { UnresolvedAddressDto } from 'catbuffer/dist/UnresolvedAddressDto';
+import {
+    AccountAddressRestrictionTransactionBuilder,
+    AmountDto,
+    EmbeddedAccountAddressRestrictionTransactionBuilder,
+    EmbeddedTransactionBuilder,
+    KeyDto,
+    SignatureDto,
+    TimestampDto,
+    UnresolvedAddressDto
+} from 'catbuffer';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
@@ -33,7 +35,6 @@ import { Statement } from '../receipt/Statement';
 import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
-import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';

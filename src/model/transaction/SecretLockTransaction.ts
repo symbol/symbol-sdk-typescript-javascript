@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { AmountDto } from 'catbuffer/dist/AmountDto';
-import { BlockDurationDto } from 'catbuffer/dist/BlockDurationDto';
-import { EmbeddedSecretLockTransactionBuilder } from 'catbuffer/dist/EmbeddedSecretLockTransactionBuilder';
-import { EmbeddedTransactionBuilder } from 'catbuffer/dist/EmbeddedTransactionBuilder';
-import { Hash256Dto } from 'catbuffer/dist/Hash256Dto';
-import { KeyDto } from 'catbuffer/dist/KeyDto';
-import { SecretLockTransactionBuilder } from 'catbuffer/dist/SecretLockTransactionBuilder';
-import { SignatureDto } from 'catbuffer/dist/SignatureDto';
-import { TimestampDto } from 'catbuffer/dist/TimestampDto';
-import { UnresolvedAddressDto } from 'catbuffer/dist/UnresolvedAddressDto';
-import { UnresolvedMosaicBuilder } from 'catbuffer/dist/UnresolvedMosaicBuilder';
-import { UnresolvedMosaicIdDto } from 'catbuffer/dist/UnresolvedMosaicIdDto';
+import {
+    AmountDto,
+    BlockDurationDto,
+    EmbeddedSecretLockTransactionBuilder,
+    EmbeddedTransactionBuilder,
+    Hash256Dto,
+    KeyDto,
+    SecretLockTransactionBuilder,
+    SignatureDto,
+    TimestampDto,
+    UnresolvedAddressDto,
+    UnresolvedMosaicBuilder,
+    UnresolvedMosaicIdDto
+} from 'catbuffer';
 import { Convert, Convert as convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';

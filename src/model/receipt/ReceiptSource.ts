@@ -1,5 +1,4 @@
-import { Convert } from '../../core/format/Convert';
-import { GeneratorUtils } from 'catbuffer/dist/GeneratorUtils';
+import { GeneratorUtils } from 'catbuffer';
 
 /*
  * Copyright 2019 NEM

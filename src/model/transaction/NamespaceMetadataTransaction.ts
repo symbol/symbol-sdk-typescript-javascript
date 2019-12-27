@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-import { AmountDto } from 'catbuffer/dist/AmountDto';
-import { EmbeddedNamespaceMetadataTransactionBuilder } from 'catbuffer/dist/EmbeddedNamespaceMetadataTransactionBuilder';
-import { EmbeddedTransactionBuilder } from 'catbuffer/dist/EmbeddedTransactionBuilder';
-import { KeyDto } from 'catbuffer/dist/KeyDto';
-import { NamespaceIdDto } from 'catbuffer/dist/NamespaceIdDto';
-import { NamespaceMetadataTransactionBuilder } from 'catbuffer/dist/NamespaceMetadataTransactionBuilder';
-import { SignatureDto } from 'catbuffer/dist/SignatureDto';
-import { TimestampDto } from 'catbuffer/dist/TimestampDto';
+import {
+    AmountDto,
+    EmbeddedNamespaceMetadataTransactionBuilder,
+    EmbeddedTransactionBuilder,
+    KeyDto,
+    NamespaceIdDto,
+    NamespaceMetadataTransactionBuilder,
+    SignatureDto,
+    TimestampDto
+} from 'catbuffer';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
