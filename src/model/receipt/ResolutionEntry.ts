@@ -15,7 +15,7 @@
  */
 
 import { RawAddress } from '../../core/format/RawAddress';
-import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
+import { GeneratorUtils } from 'catbuffer/dist/GeneratorUtils';
 import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';
 import { UInt64 } from '../UInt64';

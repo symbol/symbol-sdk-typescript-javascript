@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { SignSchema } from '../../core/crypto';
-import { Convert as convert } from '../../core/format';
-import { InnerTransaction } from '../../model/model';
+import { Convert, Convert as convert } from '../../core/format';
+import { Deadline, PublicAccount, UInt64 } from '../../model/model';
 import { AccountAddressRestrictionTransaction } from '../../model/transaction/AccountAddressRestrictionTransaction';
 import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
 import { AccountMetadataTransaction } from '../../model/transaction/AccountMetadataTransaction';
@@ -39,70 +38,170 @@ import { SecretProofTransaction } from '../../model/transaction/SecretProofTrans
 import { Transaction } from '../../model/transaction/Transaction';
 import { TransactionType } from '../../model/transaction/TransactionType';
 import { TransferTransaction } from '../../model/transaction/TransferTransaction';
-import { EmbeddedTransactionBuilder } from '../catbuffer/EmbeddedTransactionBuilder';
-import { TransactionBuilder } from '../catbuffer/TransactionBuilder';
+import { TransactionHelper } from "catbuffer/dist/TransactionHelper";
+import { AccountAddressRestrictionTransactionBuilder } from "catbuffer/dist/AccountAddressRestrictionTransactionBuilder";
+import { EmbeddedTransactionBuilder } from "catbuffer/dist/EmbeddedTransactionBuilder";
+import { AccountMosaicRestrictionTransactionBuilder } from "catbuffer/dist/AccountMosaicRestrictionTransactionBuilder";
+import { AggregateCompleteTransactionBuilder } from "catbuffer/dist/AggregateCompleteTransactionBuilder";
+import { AggregateBondedTransactionBuilder } from "catbuffer/dist/AggregateBondedTransactionBuilder";
+import { AccountOperationRestrictionTransactionBuilder } from "catbuffer/dist/AccountOperationRestrictionTransactionBuilder";
+import { AccountLinkTransactionBuilder } from "catbuffer/dist/AccountLinkTransactionBuilder";
+import { AddressAliasTransactionBuilder } from "catbuffer/dist/AddressAliasTransactionBuilder";
+import { MosaicAliasTransactionBuilder } from "catbuffer/dist/MosaicAliasTransactionBuilder";
+import { MosaicDefinitionTransactionBuilder } from "catbuffer/dist/MosaicDefinitionTransactionBuilder";
+import { MosaicSupplyChangeTransactionBuilder } from "catbuffer/dist/MosaicSupplyChangeTransactionBuilder";
+import { NamespaceRegistrationTransactionBuilder } from "catbuffer/dist/NamespaceRegistrationTransactionBuilder";
+import { TransferTransactionBuilder } from "catbuffer/dist/TransferTransactionBuilder";
+import { SecretLockTransactionBuilder } from "catbuffer/dist/SecretLockTransactionBuilder";
+import { SecretProofTransactionBuilder } from "catbuffer/dist/SecretProofTransactionBuilder";
+import { MultisigAccountModificationTransactionBuilder } from "catbuffer/dist/MultisigAccountModificationTransactionBuilder";
+import { HashLockTransactionBuilder } from "catbuffer/dist/HashLockTransactionBuilder";
+import { MosaicGlobalRestrictionTransactionBuilder } from "catbuffer/dist/MosaicGlobalRestrictionTransactionBuilder";
+import { AccountMetadataTransactionBuilder } from "catbuffer/dist/AccountMetadataTransactionBuilder";
+import { MosaicAddressRestrictionTransactionBuilder } from "catbuffer/dist/MosaicAddressRestrictionTransactionBuilder";
+import { MosaicMetadataTransactionBuilder } from "catbuffer/dist/MosaicMetadataTransactionBuilder";
+import { NamespaceMetadataTransactionBuilder } from "catbuffer/dist/NamespaceMetadataTransactionBuilder";
+import { EmbeddedAccountAddressRestrictionTransactionBuilder } from "catbuffer/dist/EmbeddedAccountAddressRestrictionTransactionBuilder";
+import { EmbeddedAccountMosaicRestrictionTransactionBuilder } from "catbuffer/dist/EmbeddedAccountMosaicRestrictionTransactionBuilder";
+import { EmbeddedAccountOperationRestrictionTransactionBuilder } from "catbuffer/dist/EmbeddedAccountOperationRestrictionTransactionBuilder";
+import { EmbeddedNamespaceMetadataTransactionBuilder } from "catbuffer/dist/EmbeddedNamespaceMetadataTransactionBuilder";
+import { EmbeddedMosaicMetadataTransactionBuilder } from "catbuffer/dist/EmbeddedMosaicMetadataTransactionBuilder";
+import { EmbeddedAccountMetadataTransactionBuilder } from "catbuffer/dist/EmbeddedAccountMetadataTransactionBuilder";
+import { EmbeddedMosaicAddressRestrictionTransactionBuilder } from "catbuffer/dist/EmbeddedMosaicAddressRestrictionTransactionBuilder";
+import { EmbeddedMosaicGlobalRestrictionTransactionBuilder } from "catbuffer/dist/EmbeddedMosaicGlobalRestrictionTransactionBuilder";
+import { EmbeddedHashLockTransactionBuilder } from "catbuffer/dist/EmbeddedHashLockTransactionBuilder";
+import { EmbeddedMultisigAccountModificationTransactionBuilder } from "catbuffer/dist/EmbeddedMultisigAccountModificationTransactionBuilder";
+import { EmbeddedSecretProofTransactionBuilder } from "catbuffer/dist/EmbeddedSecretProofTransactionBuilder";
+import { EmbeddedSecretLockTransactionBuilder } from "catbuffer/dist/EmbeddedSecretLockTransactionBuilder";
+import { EmbeddedTransferTransactionBuilder } from "catbuffer/dist/EmbeddedTransferTransactionBuilder";
+import { EmbeddedNamespaceRegistrationTransactionBuilder } from "catbuffer/dist/EmbeddedNamespaceRegistrationTransactionBuilder";
+import { EmbeddedMosaicSupplyChangeTransactionBuilder } from "catbuffer/dist/EmbeddedMosaicSupplyChangeTransactionBuilder";
+import { EmbeddedMosaicDefinitionTransactionBuilder } from "catbuffer/dist/EmbeddedMosaicDefinitionTransactionBuilder";
+import { EmbeddedMosaicAliasTransactionBuilder } from "catbuffer/dist/EmbeddedMosaicAliasTransactionBuilder";
+import { EmbeddedAddressAliasTransactionBuilder } from "catbuffer/dist/EmbeddedAddressAliasTransactionBuilder";
+import { EmbeddedAccountLinkTransactionBuilder } from "catbuffer/dist/EmbeddedAccountLinkTransactionBuilder";
 
 /**
  * @internal
  * @param payload - The transaction binary data
- * @param isEmbedded - Is the transaction an embedded inner transaction
- * @returns {Transaction | InnerTransaction}
- * @constructor
+ * @returns Transaction
  */
-export const CreateTransactionFromPayload = (payload: string,
-                                             isEmbedded = false): Transaction | InnerTransaction => {
-    const transactionBuilder = isEmbedded ? EmbeddedTransactionBuilder.loadFromBinary(convert.hexToUint8(payload)) :
-        TransactionBuilder.loadFromBinary(convert.hexToUint8(payload));
-    const type = transactionBuilder.getType().valueOf();
-    switch (type) {
-        case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
-        case TransactionType.ACCOUNT_RESTRICTION_OPERATION:
-        case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
-            switch (type) {
-                case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
-                    return AccountAddressRestrictionTransaction.createFromPayload(payload, isEmbedded);
-                case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
-                    return AccountMosaicRestrictionTransaction.createFromPayload(payload, isEmbedded);
-                case TransactionType.ACCOUNT_RESTRICTION_OPERATION:
-                    return AccountOperationRestrictionTransaction.createFromPayload(payload, isEmbedded);
-            }
-            throw new Error ('Account restriction transaction type not recognised.');
-        case TransactionType.LINK_ACCOUNT:
-            return AccountLinkTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.ADDRESS_ALIAS:
-            return AddressAliasTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.MOSAIC_ALIAS:
-            return MosaicAliasTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.MOSAIC_DEFINITION:
-            return MosaicDefinitionTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.MOSAIC_SUPPLY_CHANGE:
-            return MosaicSupplyChangeTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.REGISTER_NAMESPACE:
-            return NamespaceRegistrationTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.TRANSFER:
-            return TransferTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.SECRET_LOCK:
-            return SecretLockTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.SECRET_PROOF:
-            return SecretProofTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.MODIFY_MULTISIG_ACCOUNT:
-            return MultisigAccountModificationTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.LOCK:
-            return LockFundsTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
-            return MosaicGlobalRestrictionTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
-            return MosaicAddressRestrictionTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.ACCOUNT_METADATA_TRANSACTION:
-            return AccountMetadataTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.MOSAIC_METADATA_TRANSACTION:
-            return MosaicMetadataTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.NAMESPACE_METADATA_TRANSACTION:
-            return NamespaceMetadataTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.AGGREGATE_COMPLETE:
-        case TransactionType.AGGREGATE_BONDED:
-            return AggregateTransaction.createFromPayload(payload);
-        default:
-            throw new Error ('Transaction type not implemented yet.');
+export const CreateTransactionFromPayload = (payload: string): Transaction => {
+    const builder = TransactionHelper.loadFromBinary(convert.hexToUint8(payload));
+    const deadline = Deadline.createFromDTO((builder.getDeadline().timestamp));
+    const maxFee = new UInt64(builder.fee.amount);
+    const toBuilder = (): Transaction => {
+        const type = builder.getType().valueOf();
+        const networkType = builder.getNetwork().valueOf();
+        switch (type) {
+            case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
+                return AccountAddressRestrictionTransaction.createFromBodyBuilder((builder as AccountAddressRestrictionTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
+                return AccountMosaicRestrictionTransaction.createFromBodyBuilder((builder as AccountMosaicRestrictionTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.ACCOUNT_RESTRICTION_OPERATION:
+                return AccountOperationRestrictionTransaction.createFromBodyBuilder((builder as AccountOperationRestrictionTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.LINK_ACCOUNT:
+                return AccountLinkTransaction.createFromBodyBuilder((builder as AccountLinkTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.ADDRESS_ALIAS:
+                return AddressAliasTransaction.createFromBodyBuilder((builder as AddressAliasTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.MOSAIC_ALIAS:
+                return MosaicAliasTransaction.createFromBodyBuilder((builder as MosaicAliasTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.MOSAIC_DEFINITION:
+                return MosaicDefinitionTransaction.createFromBodyBuilder((builder as MosaicDefinitionTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.MOSAIC_SUPPLY_CHANGE:
+                return MosaicSupplyChangeTransaction.createFromBodyBuilder((builder as MosaicSupplyChangeTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.REGISTER_NAMESPACE:
+                return NamespaceRegistrationTransaction.createFromBodyBuilder((builder as NamespaceRegistrationTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.TRANSFER:
+                return TransferTransaction.createFromBodyBuilder((builder as TransferTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.SECRET_LOCK:
+                return SecretLockTransaction.createFromBodyBuilder((builder as SecretLockTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.SECRET_PROOF:
+                return SecretProofTransaction.createFromBodyBuilder((builder as SecretProofTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.MODIFY_MULTISIG_ACCOUNT:
+                return MultisigAccountModificationTransaction.createFromBodyBuilder((builder as MultisigAccountModificationTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.LOCK:
+                return LockFundsTransaction.createFromBodyBuilder((builder as HashLockTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
+                return MosaicGlobalRestrictionTransaction.createFromBodyBuilder((builder as MosaicGlobalRestrictionTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
+                return MosaicAddressRestrictionTransaction.createFromBodyBuilder((builder as MosaicAddressRestrictionTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.ACCOUNT_METADATA_TRANSACTION:
+                return AccountMetadataTransaction.createFromBodyBuilder((builder as AccountMetadataTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.MOSAIC_METADATA_TRANSACTION:
+                return MosaicMetadataTransaction.createFromBodyBuilder((builder as MosaicMetadataTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.NAMESPACE_METADATA_TRANSACTION:
+                return NamespaceMetadataTransaction.createFromBodyBuilder((builder as NamespaceMetadataTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.AGGREGATE_COMPLETE:
+                return AggregateTransaction.createFromBodyBuilder((builder as AggregateCompleteTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.AGGREGATE_BONDED:
+                return AggregateTransaction.createFromBodyBuilder((builder as AggregateBondedTransactionBuilder), networkType, deadline, maxFee);
+            default:
+                throw new Error(`Transaction type ${networkType} not implemented.`);
         }
+    };
+    return toBuilder();
 };
+
+/**
+ * @internal
+ * @param builder - The embedded transaction builder builder.
+ * @returns Transaction
+ */
+export const CreateTransactionFromEmbeddedTransactionBuilder = (builder: EmbeddedTransactionBuilder): Transaction => {
+    const deadline = Deadline.create();
+    const maxFee = new UInt64([0, 0]);
+    const networkType = builder.getNetwork().valueOf();
+    const signer = PublicAccount.createFromPublicKey(Convert.uint8ToHex(builder.getSignerPublicKey().key), networkType);
+
+    const toBuilder = (): Transaction => {
+        const type = builder.getType().valueOf();
+        switch (type) {
+            case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
+                return AccountAddressRestrictionTransaction.createFromBodyBuilder((builder as EmbeddedAccountAddressRestrictionTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
+                return AccountMosaicRestrictionTransaction.createFromBodyBuilder((builder as EmbeddedAccountMosaicRestrictionTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.ACCOUNT_RESTRICTION_OPERATION:
+                return AccountOperationRestrictionTransaction.createFromBodyBuilder((builder as EmbeddedAccountOperationRestrictionTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.LINK_ACCOUNT:
+                return AccountLinkTransaction.createFromBodyBuilder((builder as EmbeddedAccountLinkTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.ADDRESS_ALIAS:
+                return AddressAliasTransaction.createFromBodyBuilder((builder as EmbeddedAddressAliasTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.MOSAIC_ALIAS:
+                return MosaicAliasTransaction.createFromBodyBuilder((builder as EmbeddedMosaicAliasTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.MOSAIC_DEFINITION:
+                return MosaicDefinitionTransaction.createFromBodyBuilder((builder as EmbeddedMosaicDefinitionTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.MOSAIC_SUPPLY_CHANGE:
+                return MosaicSupplyChangeTransaction.createFromBodyBuilder((builder as EmbeddedMosaicSupplyChangeTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.REGISTER_NAMESPACE:
+                return NamespaceRegistrationTransaction.createFromBodyBuilder((builder as EmbeddedNamespaceRegistrationTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.TRANSFER:
+                return TransferTransaction.createFromBodyBuilder((builder as EmbeddedTransferTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.SECRET_LOCK:
+                return SecretLockTransaction.createFromBodyBuilder((builder as EmbeddedSecretLockTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.SECRET_PROOF:
+                return SecretProofTransaction.createFromBodyBuilder((builder as EmbeddedSecretProofTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.MODIFY_MULTISIG_ACCOUNT:
+                return MultisigAccountModificationTransaction.createFromBodyBuilder((builder as EmbeddedMultisigAccountModificationTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.LOCK:
+                return LockFundsTransaction.createFromBodyBuilder((builder as EmbeddedHashLockTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
+                return MosaicGlobalRestrictionTransaction.createFromBodyBuilder((builder as EmbeddedMosaicGlobalRestrictionTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
+                return MosaicAddressRestrictionTransaction.createFromBodyBuilder((builder as EmbeddedMosaicAddressRestrictionTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.ACCOUNT_METADATA_TRANSACTION:
+                return AccountMetadataTransaction.createFromBodyBuilder((builder as EmbeddedAccountMetadataTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.MOSAIC_METADATA_TRANSACTION:
+                return MosaicMetadataTransaction.createFromBodyBuilder((builder as EmbeddedMosaicMetadataTransactionBuilder), networkType, deadline, maxFee);
+            case TransactionType.NAMESPACE_METADATA_TRANSACTION:
+                return NamespaceMetadataTransaction.createFromBodyBuilder((builder as EmbeddedNamespaceMetadataTransactionBuilder), networkType, deadline, maxFee);
+            default:
+                throw new Error(`Transaction type ${networkType} not implemented.`);
+        }
+    };
+
+    return toBuilder().toAggregate(signer);
+};
+
+
+

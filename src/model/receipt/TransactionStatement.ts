@@ -16,7 +16,7 @@
 
 import { sha3_256 } from 'js-sha3';
 import { Convert } from '../../core/format/Convert';
-import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
+import { GeneratorUtils } from 'catbuffer/dist/GeneratorUtils';
 import { UInt64 } from '../UInt64';
 import { Receipt } from './Receipt';
 import { ReceiptSource } from './ReceiptSource';

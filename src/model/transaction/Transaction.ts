@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+import { EmbeddedTransactionBuilder } from 'catbuffer/dist/EmbeddedTransactionBuilder';
+import { EmbeddedTransactionHelper } from 'catbuffer/dist/EmbeddedTransactionHelper';
 import { KeyPair, SHA3Hasher, SignSchema } from '../../core/crypto';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
-import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
-import { EmbeddedTransactionHelper } from '../../infrastructure/catbuffer/EmbeddedTransactionHelper';
 import { SerializeTransactionToJSON } from '../../infrastructure/transaction/SerializeTransactionToJSON';
 import { Account } from '../account/Account';
 import { PublicAccount } from '../account/PublicAccount';

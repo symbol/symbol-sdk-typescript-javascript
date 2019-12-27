@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {ChronoUnit} from 'js-joda';
-import {Convert} from '../../../src/core/format';
+import { expect } from 'chai';
+import { ChronoUnit } from 'js-joda';
+import { Convert } from '../../../src/core/format';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
-import {CreateTransactionFromDTO} from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
+import { CreateTransactionFromDTO } from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
 import { CreateTransactionFromPayload } from '../../../src/infrastructure/transaction/CreateTransactionFromPayload';
-import {Account} from '../../../src/model/account/Account';
-import {Address} from '../../../src/model/account/Address';
-import {PublicAccount} from '../../../src/model/account/PublicAccount';
-import {NetworkType} from '../../../src/model/blockchain/NetworkType';
-import {PlainMessage} from '../../../src/model/message/PlainMessage';
+import { Account } from '../../../src/model/account/Account';
+import { Address } from '../../../src/model/account/Address';
+import { PublicAccount } from '../../../src/model/account/PublicAccount';
+import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { PlainMessage } from '../../../src/model/message/PlainMessage';
 import { Mosaic } from '../../../src/model/mosaic/Mosaic';
-import {MosaicFlags} from '../../../src/model/mosaic/MosaicFlags';
-import {MosaicId} from '../../../src/model/mosaic/MosaicId';
-import {MosaicNonce} from '../../../src/model/mosaic/MosaicNonce';
-import {MosaicSupplyChangeAction} from '../../../src/model/mosaic/MosaicSupplyChangeAction';
+import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { MosaicNonce } from '../../../src/model/mosaic/MosaicNonce';
+import { MosaicSupplyChangeAction } from '../../../src/model/mosaic/MosaicSupplyChangeAction';
 import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
@@ -37,20 +37,21 @@ import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
 import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { Statement } from '../../../src/model/receipt/Statement';
-import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
-import {AggregateTransactionCosignature} from '../../../src/model/transaction/AggregateTransactionCosignature';
+import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
+import { AggregateTransactionCosignature } from '../../../src/model/transaction/AggregateTransactionCosignature';
 import { CosignatureSignedTransaction } from '../../../src/model/transaction/CosignatureSignedTransaction';
 import { CosignatureTransaction } from '../../../src/model/transaction/CosignatureTransaction';
-import {Deadline} from '../../../src/model/transaction/Deadline';
-import {MosaicDefinitionTransaction} from '../../../src/model/transaction/MosaicDefinitionTransaction';
-import {MosaicSupplyChangeTransaction} from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
-import {MultisigAccountModificationTransaction} from '../../../src/model/transaction/MultisigAccountModificationTransaction';
-import {NamespaceRegistrationTransaction} from '../../../src/model/transaction/NamespaceRegistrationTransaction';
+import { Deadline } from '../../../src/model/transaction/Deadline';
+import { MosaicAddressRestrictionTransaction } from '../../../src/model/transaction/MosaicAddressRestrictionTransaction';
+import { MosaicDefinitionTransaction } from '../../../src/model/transaction/MosaicDefinitionTransaction';
+import { MosaicSupplyChangeTransaction } from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
+import { MultisigAccountModificationTransaction } from '../../../src/model/transaction/MultisigAccountModificationTransaction';
+import { NamespaceRegistrationTransaction } from '../../../src/model/transaction/NamespaceRegistrationTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
-import {TransferTransaction} from '../../../src/model/transaction/TransferTransaction';
-import {UInt64} from '../../../src/model/UInt64';
-import {Cosignatory2Account, CosignatoryAccount, MultisigAccount, TestingAccount} from '../../conf/conf.spec';
+import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
+import { UInt64 } from '../../../src/model/UInt64';
+import { Cosignatory2Account, CosignatoryAccount, MultisigAccount, TestingAccount } from '../../conf/conf.spec';
 
 describe('AggregateTransaction', () => {
     let account: Account;
@@ -59,6 +60,7 @@ describe('AggregateTransaction', () => {
     const unresolvedAddress = new NamespaceId('address');
     const unresolvedMosaicId = new NamespaceId('mosaic');
     const resolvedMosaicId = new MosaicId('0DC67FBE1CAD29E5');
+    const networkType = NetworkType.MIJIN_TEST;
     before(() => {
         account = TestingAccount;
     });
@@ -78,13 +80,13 @@ describe('AggregateTransaction', () => {
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            networkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
             [transferTransaction.toAggregate(account.publicAccount)],
-            NetworkType.MIJIN_TEST,
+            networkType,
             [],
         );
 
@@ -98,13 +100,13 @@ describe('AggregateTransaction', () => {
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            networkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
             [transferTransaction.toAggregate(account.publicAccount)],
-            NetworkType.MIJIN_TEST,
+            networkType,
             [],
             new UInt64([1, 0]),
         );
@@ -119,13 +121,13 @@ describe('AggregateTransaction', () => {
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            networkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
             [transferTransaction.toAggregate(account.publicAccount)],
-            NetworkType.MIJIN_TEST,
+            networkType,
             []);
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
@@ -141,13 +143,13 @@ describe('AggregateTransaction', () => {
             Deadline.create(),
             'root-test-namespace',
             UInt64.fromUint(1000),
-            NetworkType.MIJIN_TEST,
+            networkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
             [registerNamespaceTransaction.toAggregate(account.publicAccount)],
-            NetworkType.MIJIN_TEST,
+            networkType,
             [],
         );
 
@@ -169,13 +171,13 @@ describe('AggregateTransaction', () => {
             MosaicFlags.create(true, true, true),
             3,
             UInt64.fromUint(1000),
-            NetworkType.MIJIN_TEST,
+            networkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
             [mosaicDefinitionTransaction.toAggregate(account.publicAccount)],
-            NetworkType.MIJIN_TEST,
+            networkType,
             [],
         );
 
@@ -196,13 +198,13 @@ describe('AggregateTransaction', () => {
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
-            NetworkType.MIJIN_TEST,
+            networkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
             [mosaicSupplyChangeTransaction.toAggregate(account.publicAccount)],
-            NetworkType.MIJIN_TEST,
+            networkType,
             [],
         );
 
@@ -222,17 +224,17 @@ describe('AggregateTransaction', () => {
             2,
             1,
             [PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
-                NetworkType.MIJIN_TEST),
-             PublicAccount.createFromPublicKey('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
-                NetworkType.MIJIN_TEST),
+                networkType),
+                PublicAccount.createFromPublicKey('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
+                    networkType),
             ],
             [],
-            NetworkType.MIJIN_TEST,
+            networkType,
         );
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
             [modifyMultisigAccountTransaction.toAggregate(account.publicAccount)],
-            NetworkType.MIJIN_TEST,
+            networkType,
             [],
         );
 
@@ -253,11 +255,11 @@ describe('AggregateTransaction', () => {
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            networkType,
         );
         const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
             [transferTransaction.toAggregate(MultisigAccount.publicAccount)],
-            NetworkType.MIJIN_TEST,
+            networkType,
             [],
         );
         const signedTransaction = CosignatoryAccount.signTransactionWithCosignatories(
@@ -282,13 +284,13 @@ describe('AggregateTransaction', () => {
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            networkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(2, ChronoUnit.MINUTES),
             [transferTransaction.toAggregate(account.publicAccount)],
-            NetworkType.MIJIN_TEST,
+            networkType,
             [],
         );
 
@@ -316,14 +318,14 @@ describe('AggregateTransaction', () => {
                 cosignatures: [
                     {
                         signature: '5780C8DF9D46BA2BCF029DCC5D3BF55FE1CB5BE7ABCF30387C4637DD' +
-                        'EDFC2152703CA0AD95F21BB9B942F3CC52FCFC2064C7B84CF60D1A9E69195F1943156C07',
+                            'EDFC2152703CA0AD95F21BB9B942F3CC52FCFC2064C7B84CF60D1A9E69195F1943156C07',
                         signerPublicKey: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
                     },
                 ],
                 deadline: '1000',
                 maxFee: '0',
                 signature: '939673209A13FF82397578D22CC96EB8516A6760C894D9B7535E3A1E0680' +
-                '07B9255CFA9A914C97142A7AE18533E381C846B69D2AE0D60D1DC8A55AD120E2B606',
+                    '07B9255CFA9A914C97142A7AE18533E381C846B69D2AE0D60D1DC8A55AD120E2B606',
                 signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
                 transactions: [
                     {
@@ -340,7 +342,7 @@ describe('AggregateTransaction', () => {
                             modifications: [
                                 {
                                     cosignatoryPublicKey: '589B73FBC22063E9AE6FBAC67CB9C6EA865EF556E5' +
-                                    'FB8B7310D45F77C1250B97',
+                                        'FB8B7310D45F77C1250B97',
                                     modificationAction: 0,
                                 },
                             ],
@@ -361,16 +363,16 @@ describe('AggregateTransaction', () => {
             aggregateTransactionDTO) as AggregateTransaction;
         expect(aggregateTransaction.signedByAccount(
             PublicAccount.createFromPublicKey('A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
-                NetworkType.MIJIN_TEST))).to.be.equal(true);
+                networkType))).to.be.equal(true);
         expect(aggregateTransaction.signedByAccount(
             PublicAccount.createFromPublicKey('7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
-                NetworkType.MIJIN_TEST))).to.be.equal(true);
+                networkType))).to.be.equal(true);
         expect(aggregateTransaction.signedByAccount(
             PublicAccount.createFromPublicKey('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
-                NetworkType.MIJIN_TEST))).to.be.equal(false);
+                networkType))).to.be.equal(false);
 
         expect(aggregateTransaction.innerTransactions[0].signer!.publicKey)
-            .to.be.equal('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF');
+        .to.be.equal('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF');
 
         expect(Convert.hexToUint8(aggregateTransaction.serialize()).length).to.be.equal(aggregateTransaction.size);
     });
@@ -379,7 +381,7 @@ describe('AggregateTransaction', () => {
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
             [],
-            NetworkType.MIJIN_TEST,
+            networkType,
             [],
         );
 
@@ -390,7 +392,7 @@ describe('AggregateTransaction', () => {
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(),
             [],
-            NetworkType.MIJIN_TEST,
+            networkType,
         );
 
         expect(aggregateTransaction.type).to.be.equal(0x4241);
@@ -402,20 +404,20 @@ describe('AggregateTransaction', () => {
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            networkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
             [transferTransaction.toAggregate(account.publicAccount)],
-            NetworkType.MIJIN_TEST,
+            networkType,
             []);
 
         expect(() => {
             AggregateTransaction.createComplete(
                 Deadline.create(),
                 [aggregateTransaction.toAggregate(account.publicAccount)],
-                NetworkType.MIJIN_TEST,
+                networkType,
                 []);
         }).to.throw(Error, 'Inner transaction cannot be an aggregated transaction.');
     });
@@ -429,20 +431,20 @@ describe('AggregateTransaction', () => {
         const accountCarol = Cosignatory2Account;
 
         const AtoBTx = TransferTransaction.create(Deadline.create(),
-                                                  accountBob.address,
-                                                  [],
-                                                  PlainMessage.create('a to b'),
-                                                  NetworkType.MIJIN_TEST);
+            accountBob.address,
+            [],
+            PlainMessage.create('a to b'),
+            networkType);
         const BtoATx = TransferTransaction.create(Deadline.create(),
-                                                  accountAlice.address,
-                                                  [],
-                                                  PlainMessage.create('b to a'),
-                                                  NetworkType.MIJIN_TEST);
+            accountAlice.address,
+            [],
+            PlainMessage.create('b to a'),
+            networkType);
         const CtoATx = TransferTransaction.create(Deadline.create(),
-                                                  accountAlice.address,
-                                                  [],
-                                                  PlainMessage.create('c to a'),
-                                                  NetworkType.MIJIN_TEST);
+            accountAlice.address,
+            [],
+            PlainMessage.create('c to a'),
+            networkType);
 
         // 01. Alice creates the aggregated tx and sign it, Then payload send to Bob & Carol
         const aggregateTransaction = AggregateTransaction.createComplete(
@@ -451,7 +453,7 @@ describe('AggregateTransaction', () => {
                 AtoBTx.toAggregate(accountAlice.publicAccount),
                 BtoATx.toAggregate(accountBob.publicAccount),
                 CtoATx.toAggregate(accountCarol.publicAccount)],
-            NetworkType.MIJIN_TEST,
+            networkType,
             [],
         );
 
@@ -482,26 +484,26 @@ describe('AggregateTransaction', () => {
 
         // To make sure that the new cosign method returns the same payload & hash as standard cosigning
         const standardCosignedTransaction = aggregateTransaction
-                    .signTransactionWithCosignatories(accountAlice, [accountBob, accountCarol], generationHash);
+        .signTransactionWithCosignatories(accountAlice, [accountBob, accountCarol], generationHash);
         expect(standardCosignedTransaction.payload).to.be.equal(signedTransaction.payload);
         expect(standardCosignedTransaction.hash).to.be.equal(signedTransaction.hash);
     });
 
     it('Should be able to add innertransactions to current aggregate tx', () => {
         const transferTx1 = TransferTransaction.create(Deadline.create(),
-                                                  account.address,
-                                                  [],
-                                                  PlainMessage.create('a to b'),
-                                                  NetworkType.MIJIN_TEST);
+            account.address,
+            [],
+            PlainMessage.create('a to b'),
+            networkType);
         const transferTx2 = TransferTransaction.create(Deadline.create(),
-                                                  account.address,
-                                                  [],
-                                                  PlainMessage.create('b to a'),
-                                                  NetworkType.MIJIN_TEST);
+            account.address,
+            [],
+            PlainMessage.create('b to a'),
+            networkType);
         let aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
             [transferTx1.toAggregate(account.publicAccount)],
-            NetworkType.MIJIN_TEST,
+            networkType,
             [],
         );
 
@@ -516,14 +518,14 @@ describe('AggregateTransaction', () => {
 
     it('Should be able to add cosignatures to current aggregate tx', () => {
         const transferTx1 = TransferTransaction.create(Deadline.create(),
-                                                  account.address,
-                                                  [],
-                                                  PlainMessage.create('a to b'),
-                                                  NetworkType.MIJIN_TEST);
+            account.address,
+            [],
+            PlainMessage.create('a to b'),
+            networkType);
         let aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
             [transferTx1.toAggregate(account.publicAccount)],
-            NetworkType.MIJIN_TEST,
+            networkType,
             [],
         );
 
@@ -534,7 +536,7 @@ describe('AggregateTransaction', () => {
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
         const cosignature = new AggregateTransactionCosignature(
             signedTransaction.payload,
-            PublicAccount.createFromPublicKey(signedTransaction.signerPublicKey, NetworkType.MIJIN_TEST),
+            PublicAccount.createFromPublicKey(signedTransaction.signerPublicKey, networkType),
         );
 
         aggregateTransaction = aggregateTransaction.addCosignatures([cosignature]);
@@ -552,12 +554,12 @@ describe('AggregateTransaction', () => {
                     NetworkCurrencyMosaic.createRelative(100),
                 ],
                 PlainMessage.create('NEM'),
-                NetworkType.MIJIN_TEST,
+                networkType,
             );
             const aggregateTransaction = AggregateTransaction.createBonded(
                 Deadline.create(),
                 [transaction.toAggregate(account.publicAccount)],
-                NetworkType.MIJIN_TEST,
+                networkType,
                 [],
             );
             expect(Convert.hexToUint8(aggregateTransaction.serialize()).length).to.be.equal(aggregateTransaction.size);
@@ -571,14 +573,14 @@ describe('AggregateTransaction', () => {
             unresolvedAddress,
             [new Mosaic(unresolvedMosaicId, UInt64.fromUint(1))],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            networkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
             [transferTransaction.toAggregate(account.publicAccount)],
-            NetworkType.MIJIN_TEST,
-            [],
+            networkType,
+            []
         ).setMaxFee(2);
 ​
         expect(aggregateTransaction.maxFee.compact()).to.be.equal(560);
@@ -589,7 +591,7 @@ describe('AggregateTransaction', () => {
 
     it('Test resolveAlias can resolve', () => {
         const transferTransaction = new TransferTransaction(
-            NetworkType.MIJIN_TEST,
+            networkType,
             1,
             Deadline.createFromDTO('1'),
             UInt64.fromUint(0),
@@ -601,7 +603,7 @@ describe('AggregateTransaction', () => {
             new TransactionInfo(UInt64.fromUint(2), 0, ''));
 
         const aggregateTransaction = new AggregateTransaction(
-            NetworkType.MIJIN_TEST,
+            networkType,
             TransactionType.AGGREGATE_COMPLETE,
             1,
             Deadline.createFromDTO('1'),
@@ -620,5 +622,57 @@ describe('AggregateTransaction', () => {
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
+    });
+
+
+    it('Test aggregate serialization', () => {
+        const transferTransaction1 = new TransferTransaction(
+            networkType,
+            1,
+            Deadline.createFromDTO('1'),
+            UInt64.fromUint(0),
+            unresolvedAddress,
+            [new Mosaic(unresolvedMosaicId, UInt64.fromUint(1))],
+            PlainMessage.create('test'),
+            '',
+            account.publicAccount,
+            new TransactionInfo(UInt64.fromUint(2), 0, ''));
+        const mosaicId = new MosaicId(UInt64.fromUint(1).toDTO());
+        const namespaceId = NamespaceId.createFromEncoded('9550CA3FC9B41FC5');
+        const transferTransaction2 = MosaicAddressRestrictionTransaction.create(
+            Deadline.create(),
+            mosaicId,
+            UInt64.fromUint(1),
+            namespaceId,
+            UInt64.fromUint(8),
+            networkType,
+            UInt64.fromUint(9),
+        );
+
+        const consignatures = [
+            new AggregateTransactionCosignature('AAA9366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA65456111AAA9366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA65456111',
+                PublicAccount.createFromPublicKey('9A49366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA65456111', networkType)),
+            new AggregateTransactionCosignature('BBB9366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA65456222BBB9366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA65456222',
+                PublicAccount.createFromPublicKey('9A49366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA65456111', networkType))
+        ];
+
+        const aggregateTransaction = AggregateTransaction.createComplete(
+            Deadline.createFromDTO('1'),
+            [transferTransaction1.toAggregate(account.publicAccount), transferTransaction2.toAggregate(account.publicAccount)],
+            networkType, consignatures,
+            UInt64.fromUint(9));
+​
+        const expected = '4002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000190414109000000000000000100000000000000C5C6430F5F0A80E5A419FCDFB088F148248479CF063D3653E8DF9DFE4F1F65EED8000000000000006500000000000000C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFE000000000190544191B053ED6C7799EFFE0000000000000000000000000000000001050000000000AFFD1F1C4B7F61F8010000000000000000746573740000006900000000000000C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFE0000000001905142010000000000000001000000000000000900000000000000080000000000000091C51FB4C93FCA509500000000000000000000000000000000000000000000009A49366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA65456111AAA9366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA65456111AAA9366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA654561119A49366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA65456111BBB9366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA65456222BBB9366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA65456222';
+        expect(aggregateTransaction.serialize()).to.be.equal(expected);
+
+        const parsedTransaction = CreateTransactionFromPayload(expected) as AggregateTransaction;
+
+
+        expect(parsedTransaction.deadline.toString()).to.be.equal(aggregateTransaction.deadline.toString());
+        expect(parsedTransaction.maxFee.toHex()).to.be.equal(aggregateTransaction.maxFee.toHex());
+        expect(parsedTransaction.cosignatures.length).to.be.equal(2);
+        expect(parsedTransaction.innerTransactions.length).to.be.equal(2);
+        expect(parsedTransaction.serialize()).to.be.equal(expected);
+
     });
 });

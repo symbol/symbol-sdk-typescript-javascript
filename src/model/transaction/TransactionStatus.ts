@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {UInt64} from '../UInt64';
-import {Deadline} from './Deadline';
+import { UInt64 } from '../UInt64';
+import { Deadline } from './Deadline';
 
 /**
  * Transaction status contains basic of a transaction announced to the blockchain.

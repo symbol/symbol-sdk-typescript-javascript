@@ -14,38 +14,37 @@
  * limitations under the License.
  */
 
+import { AmountDto } from 'catbuffer/dist/AmountDto';
+import { EmbeddedTransactionBuilder } from 'catbuffer/dist/EmbeddedTransactionBuilder';
+import { EmbeddedTransferTransactionBuilder } from 'catbuffer/dist/EmbeddedTransferTransactionBuilder';
+import { GeneratorUtils } from 'catbuffer/dist/GeneratorUtils';
+import { KeyDto } from 'catbuffer/dist/KeyDto';
+import { SignatureDto } from 'catbuffer/dist/SignatureDto';
+import { TimestampDto } from 'catbuffer/dist/TimestampDto';
+import { TransferTransactionBuilder } from 'catbuffer/dist/TransferTransactionBuilder';
+import { UnresolvedAddressDto } from 'catbuffer/dist/UnresolvedAddressDto';
+import { UnresolvedMosaicBuilder } from 'catbuffer/dist/UnresolvedMosaicBuilder';
+import { UnresolvedMosaicIdDto } from 'catbuffer/dist/UnresolvedMosaicIdDto';
 import * as Long from 'long';
-import {Convert} from '../../core/format';
-import {UnresolvedMapping} from '../../core/utils/UnresolvedMapping';
-import {AmountDto} from '../../infrastructure/catbuffer/AmountDto';
-import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
-import {EmbeddedTransferTransactionBuilder} from '../../infrastructure/catbuffer/EmbeddedTransferTransactionBuilder';
-import {GeneratorUtils} from '../../infrastructure/catbuffer/GeneratorUtils';
-import {KeyDto} from '../../infrastructure/catbuffer/KeyDto';
-import {SignatureDto} from '../../infrastructure/catbuffer/SignatureDto';
-import {TimestampDto} from '../../infrastructure/catbuffer/TimestampDto';
-import {TransferTransactionBuilder} from '../../infrastructure/catbuffer/TransferTransactionBuilder';
-import {UnresolvedAddressDto} from '../../infrastructure/catbuffer/UnresolvedAddressDto';
-import {UnresolvedMosaicBuilder} from '../../infrastructure/catbuffer/UnresolvedMosaicBuilder';
-import {UnresolvedMosaicIdDto} from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
-import {Address} from '../account/Address';
-import {PublicAccount} from '../account/PublicAccount';
-import {NetworkType} from '../blockchain/NetworkType';
-import {EncryptedMessage} from '../message/EncryptedMessage';
-import {Message} from '../message/Message';
-import {MessageType} from '../message/MessageType';
-import {PlainMessage} from '../message/PlainMessage';
-import {Mosaic} from '../mosaic/Mosaic';
-import {NamespaceId} from '../namespace/NamespaceId';
-import { Statement } from '../receipt/Statement';
-import {UInt64} from '../UInt64';
-import {Deadline} from './Deadline';
-import {InnerTransaction} from './InnerTransaction';
-import {Transaction} from './Transaction';
-import {TransactionInfo} from './TransactionInfo';
-import {TransactionType} from './TransactionType';
-import {TransactionVersion} from './TransactionVersion';
+import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
+import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
+import { Address } from '../account/Address';
+import { PublicAccount } from '../account/PublicAccount';
+import { NetworkType } from '../blockchain/NetworkType';
+import { EncryptedMessage } from '../message/EncryptedMessage';
+import { Message } from '../message/Message';
+import { MessageType } from '../message/MessageType';
+import { PlainMessage } from '../message/PlainMessage';
+import { Mosaic } from '../mosaic/Mosaic';
+import { NamespaceId } from '../namespace/NamespaceId';
+import { Statement } from '../receipt/Statement';
+import { UInt64 } from '../UInt64';
+import { Deadline } from './Deadline';
+import { Transaction } from './Transaction';
+import { TransactionInfo } from './TransactionInfo';
+import { TransactionType } from './TransactionType';
+import { TransactionVersion } from './TransactionVersion';
 
 /**
  * Transfer transactions contain data about transfers of mosaics and message to another account.
@@ -115,22 +114,22 @@ export class TransferTransaction extends Transaction {
     }
 
     /**
-     * Create a transaction object from payload
-     * @param {string} payload Binary payload
-     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
-     * @returns {Transaction | InnerTransaction}
+     * Creates a transaction from catbuffer body builders.
+     * @internal
+     * @param builder the body builder
+     * @param networkType the preloaded network type
+     * @param deadline the preloaded deadline
+     * @param maxFee the preloaded max fee
+     * @returns {Transaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedTransferTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            TransferTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+    public static createFromBodyBuilder(builder: TransferTransactionBuilder | EmbeddedTransferTransactionBuilder,
+                                        networkType: NetworkType,
+                                        deadline: Deadline,
+                                        maxFee: UInt64): Transaction {
         const messageType = builder.getMessage()[0];
         const messageHex = Convert.uint8ToHex(builder.getMessage()).substring(2);
-        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = builder.getNetwork().valueOf();
-        const transaction = TransferTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
-                (builder as TransferTransactionBuilder).getDeadline().timestamp),
+        return TransferTransaction.create(
+            deadline,
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
             builder.getMosaics().map((mosaic) => {
                 const id = new UInt64(mosaic.mosaicId.unresolvedMosaicId).toHex();
@@ -141,11 +140,8 @@ export class TransferTransaction extends Transaction {
             messageType === MessageType.PlainMessage ?
                 PlainMessage.createFromPayload(messageHex) :
                 EncryptedMessage.createFromPayload(messageHex),
-            networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as TransferTransactionBuilder).fee.amount),
+            networkType, maxFee
         );
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**

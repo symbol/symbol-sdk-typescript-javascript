@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {PublicAccount} from '../account/PublicAccount';
-import { NetworkType } from '../blockchain/NetworkType';
+import { PublicAccount } from '../account/PublicAccount';
+
 /**
  * Model representing cosignature of an aggregate transaction.
  */

@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
+import { AccountAddressRestrictionTransactionBuilder } from 'catbuffer/dist/AccountAddressRestrictionTransactionBuilder';
+import { AmountDto } from 'catbuffer/dist/AmountDto';
+import { EmbeddedAccountAddressRestrictionTransactionBuilder, } from 'catbuffer/dist/EmbeddedAccountAddressRestrictionTransactionBuilder';
+import { EmbeddedTransactionBuilder } from 'catbuffer/dist/EmbeddedTransactionBuilder';
+import { KeyDto } from 'catbuffer/dist/KeyDto';
+import { SignatureDto } from 'catbuffer/dist/SignatureDto';
+import { TimestampDto } from 'catbuffer/dist/TimestampDto';
+import { UnresolvedAddressDto } from 'catbuffer/dist/UnresolvedAddressDto';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
-import { AccountAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountAddressRestrictionTransactionBuilder';
-import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import {
-    EmbeddedAccountAddressRestrictionTransactionBuilder,
-} from '../../infrastructure/catbuffer/EmbeddedAccountAddressRestrictionTransactionBuilder';
-import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
-import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
-import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
-import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
-import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -91,24 +89,24 @@ export class AccountAddressRestrictionTransaction extends Transaction {
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
         super(TransactionType.ACCOUNT_RESTRICTION_ADDRESS,
-              networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+            networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
-     * Create a transaction object from payload
-     * @param {string} payload Binary payload
-     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
-     * @returns {Transaction | InnerTransaction}
+     * Creates a transaction from catbuffer body builders.
+     * @internal
+     * @param builder the body builder
+     * @param networkType the preloaded network type
+     * @param deadline the preloaded deadline
+     * @param maxFee the preloaded max fee
+     * @returns {Transaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedAccountAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-                        AccountAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = builder.getNetwork().valueOf();
-        const transaction = AccountAddressRestrictionTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
-                (builder as AccountAddressRestrictionTransactionBuilder).getDeadline().timestamp),
+    public static createFromBodyBuilder(builder: AccountAddressRestrictionTransactionBuilder | EmbeddedAccountAddressRestrictionTransactionBuilder,
+                                        networkType: NetworkType,
+                                        deadline: Deadline,
+                                        maxFee: UInt64): Transaction {
+        return AccountAddressRestrictionTransaction.create(
+            deadline,
             builder.getRestrictionFlags().valueOf(),
             builder.getRestrictionAdditions().map((addition) => {
                 return UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(addition.unresolvedAddress));
@@ -117,10 +115,8 @@ export class AccountAddressRestrictionTransaction extends Transaction {
                 return UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(deletion.unresolvedAddress));
             }),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountAddressRestrictionTransactionBuilder).fee.amount),
+            maxFee
         );
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**
@@ -141,8 +137,8 @@ export class AccountAddressRestrictionTransaction extends Transaction {
         const byteRestrictionDeletions = 25 * this.restrictionDeletions.length;
 
         return byteSize + byteRestrictionType + byteAdditionCount + byteDeletionCount +
-               byteRestrictionAdditions + byteRestrictionDeletions +
-               byteAccountRestrictionTransactionBody_Reserved1;
+            byteRestrictionAdditions + byteRestrictionDeletions +
+            byteAccountRestrictionTransactionBody_Reserved1;
     }
 
     /**

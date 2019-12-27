@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {UInt64} from '../UInt64';
-import {TransactionInfo} from './TransactionInfo';
+import { UInt64 } from '../UInt64';
+import { TransactionInfo } from './TransactionInfo';
 
 /**
  * Inner transaction information model included in all aggregate inner transactions

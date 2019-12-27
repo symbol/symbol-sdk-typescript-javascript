@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
+import { AmountDto } from 'catbuffer/dist/AmountDto';
+import { EmbeddedMosaicAddressRestrictionTransactionBuilder, } from 'catbuffer/dist/EmbeddedMosaicAddressRestrictionTransactionBuilder';
+import { EmbeddedTransactionBuilder } from 'catbuffer/dist/EmbeddedTransactionBuilder';
+import { KeyDto } from 'catbuffer/dist/KeyDto';
+import { MosaicAddressRestrictionTransactionBuilder } from 'catbuffer/dist/MosaicAddressRestrictionTransactionBuilder';
+import { SignatureDto } from 'catbuffer/dist/SignatureDto';
+import { TimestampDto } from 'catbuffer/dist/TimestampDto';
+import { UnresolvedAddressDto } from 'catbuffer/dist/UnresolvedAddressDto';
+import { UnresolvedMosaicIdDto } from 'catbuffer/dist/UnresolvedMosaicIdDto';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
-import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import {
-    EmbeddedMosaicAddressRestrictionTransactionBuilder,
-} from '../../infrastructure/catbuffer/EmbeddedMosaicAddressRestrictionTransactionBuilder';
-import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
-import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
-import { MosaicAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/MosaicAddressRestrictionTransactionBuilder';
-import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
-import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
-import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
-import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -36,7 +34,6 @@ import { NamespaceId } from '../namespace/NamespaceId';
 import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
-import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -131,30 +128,28 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
     }
 
     /**
-     * Create a transaction object from payload
-     * @param {string} payload Binary payload
-     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
-     * @returns {Transaction | InnerTransaction}
+     * Creates a transaction from catbuffer body builders.
+     * @internal
+     * @param builder the body builder
+     * @param networkType the preloaded network type
+     * @param deadline the preloaded deadline
+     * @param maxFee the preloaded max fee
+     * @returns {Transaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedMosaicAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-        MosaicAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = builder.getNetwork().valueOf();
-        const transaction = MosaicAddressRestrictionTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
-                (builder as MosaicAddressRestrictionTransactionBuilder).getDeadline().timestamp),
+    public static createFromBodyBuilder(builder: MosaicAddressRestrictionTransactionBuilder | EmbeddedMosaicAddressRestrictionTransactionBuilder,
+                                        networkType: NetworkType,
+                                        deadline: Deadline,
+                                        maxFee: UInt64): Transaction {
+        return MosaicAddressRestrictionTransaction.create(
+            deadline,
             UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getMosaicId().unresolvedMosaicId).toHex()),
             new UInt64(builder.getRestrictionKey()),
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getTargetAddress().unresolvedAddress)),
             new UInt64(builder.getNewRestrictionValue()),
             networkType,
             new UInt64(builder.getPreviousRestrictionValue()),
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicAddressRestrictionTransactionBuilder).fee.amount),
+            maxFee
         );
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**

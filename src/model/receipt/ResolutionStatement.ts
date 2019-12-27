@@ -16,7 +16,7 @@
 
 import { sha3_256 } from 'js-sha3';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
-import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
+import { GeneratorUtils } from 'catbuffer/dist/GeneratorUtils';
 import { Address } from '../account/Address';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';

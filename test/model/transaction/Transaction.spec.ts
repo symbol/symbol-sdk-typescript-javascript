@@ -15,9 +15,8 @@
  */
 
 import { expect } from 'chai';
-import { Observable } from 'rxjs/internal/Observable';
 import { Convert } from '../../../src/core/format/Convert';
-import { EmbeddedTransactionBuilder } from '../../../src/infrastructure/catbuffer/EmbeddedTransactionBuilder';
+import { EmbeddedTransactionBuilder } from 'catbuffer/dist/EmbeddedTransactionBuilder';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';

@@ -15,11 +15,11 @@
  */
 
 import { Convert } from '../../core/format/Convert';
-import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import { BalanceChangeReceiptBuilder } from '../../infrastructure/catbuffer/BalanceChangeReceiptBuilder';
-import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
-import { MosaicBuilder } from '../../infrastructure/catbuffer/MosaicBuilder';
-import { MosaicIdDto } from '../../infrastructure/catbuffer/MosaicIdDto';
+import { AmountDto } from 'catbuffer/dist/AmountDto';
+import { BalanceChangeReceiptBuilder } from 'catbuffer/dist/BalanceChangeReceiptBuilder';
+import { KeyDto } from 'catbuffer/dist/KeyDto';
+import { MosaicBuilder } from 'catbuffer/dist/MosaicBuilder';
+import { MosaicIdDto } from 'catbuffer/dist/MosaicIdDto';
 import { PublicAccount } from '../account/PublicAccount';
 import { MosaicId } from '../mosaic/MosaicId';
 import { UInt64 } from '../UInt64';
