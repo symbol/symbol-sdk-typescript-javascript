@@ -1,5 +1,5 @@
 <template>
-  <div class="create-mnemonic-sec" @keyup.enter="submit('verifyMnemonic')">
+  <div class="create-mnemonic-sec" @keyup.enter="$router.push('verifyMnemonic')">
     <p class="set-title">{{$t('Backup_mnemonic')}}</p>
     <div class="create-mnemonic-col">
       <div class="create-mnemonic-left">
@@ -9,13 +9,13 @@
             <button @click="showMnemonic = true">{{$t('Display_mnemonic')}}</button>
           </div>
           <div class="mnemonic-list" v-else>
-            <span v-for="m in mnemonicWordsList">{{m}}</span>
+            <span v-for="(m, index) in mnemonicWordsList" :key="index">{{m}}</span>
           </div>
         </div>
 
         <div class="button-container">
-          <button @click="submit('finished')" class="info-button">{{$t('Back')}}</button>
-          <button @click="submit('verifyMnemonic')">{{$t('Verify_backup_mnemonics')}}</button>
+          <button @click="$router.push('finishCreate')" class="info-button">{{$t('Back')}}</button>
+          <button @click="$router.push('verifyMnemonic')">{{$t('Verify_backup_mnemonics')}}</button>
         </div>
       </div>
       <div class="create-mnemonic-right">
@@ -28,10 +28,8 @@
 </template>
 
 <script lang="ts">
-    import ShowMnemonicTs from "./ShowMnemonicTs";
-
-    export default class ShowMnemonic extends ShowMnemonicTs {
-    }
+    import ShowMnemonicTs from "@/views/login/create-account/show-mnemonic/ShowMnemonicTs.ts";
+    export default class ShowMnemonic extends ShowMnemonicTs { }
 </script>
 
 <style scoped lang="less">

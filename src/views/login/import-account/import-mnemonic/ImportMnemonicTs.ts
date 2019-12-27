@@ -28,7 +28,7 @@ export default class ImportMnemonicTs extends Vue {
 
 
     get password() {
-        return this.app.loadingOverlay.temporaryInfo.password
+        return this.activeAccount.temporaryLoginInfo.password
     }
 
     checkSeed() {

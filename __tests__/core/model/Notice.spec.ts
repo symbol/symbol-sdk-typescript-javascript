@@ -1,4 +1,5 @@
-import {Notice, NoticeType} from '@/core/model/Notice.ts'
+import {NoticeType} from '@/core/model'
+import {Notice} from '@/core/model/Notice.ts'
 
 describe('Notice', () => {
  it('Should commit the right mutation to the store', () => {

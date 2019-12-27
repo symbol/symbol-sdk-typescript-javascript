@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-    import FinishCreateTs from "./FinishCreateTs";
+    import FinishCreateTs from "@/views/login/create-account/finish-create/FinishCreateTs.ts";
 
     export default class FinishCreate extends FinishCreateTs {
     }

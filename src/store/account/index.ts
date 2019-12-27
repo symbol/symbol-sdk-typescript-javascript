@@ -26,6 +26,10 @@ const state: StoreAccount = {
     networkCurrency: defaultNetworkConfig.defaultNetworkMosaic,
     networkMosaics: {},
     activeWalletAddress: '',
+    temporaryLoginInfo: {
+        password: null,
+        mnemonic: null,
+    },
 }
 
 const updateMosaics = (state: StoreAccount, mosaics: AppMosaic[]) => {
@@ -192,6 +196,18 @@ const mutations: MutationTree<StoreAccount> = {
 
         if (index > -1) return
         state.transactionsToCosign = [transaction, ...oldTransactions]
+    },
+    SET_TEMPORARY_PASSWORD(state: StoreAccount, password: string) {
+        state.temporaryLoginInfo.password = password
+    },
+    SET_TEMPORARY_MNEMONIC(state: StoreAccount, mnemonic: string) {
+        state.temporaryLoginInfo.mnemonic = mnemonic
+    },
+    REMOVE_TEMPORARY_LOGIN_INFO(state: StoreAccount) {
+        state.temporaryLoginInfo = {
+            password: null,
+            mnemonic: null,
+        }
     },
     UPDATE_TRANSACTION_TO_COSIGN(state: StoreAccount, newTransaction: FormattedTransaction) {
         const {hash} = newTransaction.rawTx.transactionInfo

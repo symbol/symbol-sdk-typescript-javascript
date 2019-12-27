@@ -188,6 +188,7 @@ export const Message = {
     MAX_REMOVAL_MORE_THAN_10_ERROR: 'max_removal_amount_more_than_10',
     MIN_APPROVAL_LESS_THAN_0_ERROR: 'min_approval_amount_less_than_0',
     MIN_REMOVAL_LESS_THAN_0_ERROR: 'min_removal_amount_less_than_0',
+    MNEMONIC_GENERATION_ERROR: 'mnemonic_generation_error',
     MNEMONIC_INCONSISTENCY_ERROR: 'Mnemonic_inconsistency',
     MNEMONIC_INPUT_ERROR: 'Mnemonic_input_error',
     MOSAIC_ALIAS_NOT_EXIST_ERROR: 'mosaic_alias_not_exist',

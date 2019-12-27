@@ -9,11 +9,7 @@
 </template>
 
 <script lang="ts">
-    import GenerateMnemonicTs from "./GenerateMnemonicTs"
+    import GenerateMnemonicTs from "@/views/login/create-account/generate-mnemonic/GenerateMnemonicTs.ts"
     import "./GenerateMnemonic.less"
-    export default class GenerateMnemonic extends GenerateMnemonicTs {
-    }
+    export default class GenerateMnemonic extends GenerateMnemonicTs { }
 </script>
-
-<style scoped >
-</style>

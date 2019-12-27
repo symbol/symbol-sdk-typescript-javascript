@@ -3,8 +3,7 @@ import {
  MosaicAliasTransaction, MosaicDefinitionTransaction, Namespace, BlockInfo,
 } from 'nem2-sdk'
 import {Store} from 'vuex'
-import {AppState, Notice, AppMosaic, NetworkProperties} from '.'
-import {NoticeType} from './Notice'
+import {AppState, Notice, AppMosaic, NetworkProperties, NoticeType} from '.'
 import {Message} from '@/config'
 import {OnWalletChange, setWalletsBalances} from '../services'
 import {Listeners} from './Listeners'
@@ -28,7 +27,6 @@ export class NetworkManager {
  }
 
  public async switchEndpoint(endpoint: string): Promise<void> {
- console.log("TCL: NetworkManager -> switchEndpoint")
    try {
      this.NetworkProperties.setLoadingToTrue(endpoint)
      const initialGenerationHash = `${this.generationHash}`
@@ -43,7 +41,6 @@ export class NetworkManager {
      Notice.trigger(Message.NODE_CONNECTION_SUCCEEDED, NoticeType.success, this.store)
      if (initialGenerationHash !== this.generationHash) await this.switchGenerationHash()
    } catch (error) {
-     console.log('TCL: NetworkManager -> error', error)
      this.NetworkProperties.setHealthyToFalse(endpoint)
    }
  }

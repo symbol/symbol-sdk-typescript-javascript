@@ -897,5 +897,6 @@
   "MaxFee": "Max Fee",
   "total_transactions": "Total transactions",
   "all_nodes_cannot_be_deleted": "All nodes cannot be deleted",
+  "mnemonic_generation_error": "Something went wrong when generating your wallet seed.",
   "Mosaic_name": "Mosaic name"
 }

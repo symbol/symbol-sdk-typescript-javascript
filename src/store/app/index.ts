@@ -87,16 +87,6 @@ const mutations: MutationTree<AppInfo> = {
     SET_LOADING_OVERLAY(state: AppInfo, loadingOverlay: LoadingOverlayObject) {
         Object.assign(state.loadingOverlay, loadingOverlay)
     },
-    SET_TEMPORARY_PASSWORD(state: AppInfo, password: string) {
-        state.loadingOverlay.temporaryInfo = {}
-        state.loadingOverlay.temporaryInfo.password = password
-    },
-    SET_TEMPORARY_MNEMONIC(state: AppInfo, mnemonic: string) {
-        state.loadingOverlay.temporaryInfo.mnemonic = mnemonic
-    },
-    REMOVE_TEMPORARY_INFO(state: AppInfo) {
-        delete state.loadingOverlay.temporaryInfo
-    },
     TRIGGER_NOTICE() {/** Subscribed in App.vue */},
     SET_EXPLORER_BASE_PATH(state: AppInfo, explorerBasePath: string) {
         state.explorerBasePath = explorerBasePath

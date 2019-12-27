@@ -39,6 +39,10 @@ export interface RemoteAccount {
     publicKey: string,
 }
 
+export interface TemporaryLoginInfo {
+    password: string
+    mnemonic: string
+}
 
 export interface StoreAccount {
     node: string
@@ -63,14 +67,14 @@ export interface StoreAccount {
     /**
      * This property is ONLY for mosaic list initialization purposes
      */
-    networkMosaics: Record<string, AppMosaic>
+    networkMosaics: Record<string, AppMosaic>,
+    temporaryLoginInfo: TemporaryLoginInfo,
 }
 
 export interface LoadingOverlayObject {
     show: boolean,
     message: string,
     networkMosaics?: Record<string, AppMosaic>,
-    temporaryInfo?: any
 }
 
 export interface AppInfo {
@@ -183,3 +187,10 @@ export interface NamespaceExpirationInfo {
     remainingBeforeExpiration: BlocksAndTime
     remainingBeforeDeletion: BlocksAndTime
 }
+
+export enum NoticeType {
+    success = 'success',
+    error = 'error',
+    warning = 'warning',
+  }
+  

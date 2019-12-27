@@ -26,9 +26,9 @@ import {filter, mergeMap} from 'rxjs/operators'
 import {Message, networkConfig, defaultNetworkConfig} from "@/config"
 import {localRead, localSave, getAccountFromPathNumber, getPath} from "@/core/utils"
 import {AppAccounts, CreateWalletType} from "@/core/model"
-import {AppState, RemoteAccount} from './types'
+import {AppState, RemoteAccount, NoticeType} from './types'
 import {Log} from './Log'
-import {Notice, NoticeType} from './Notice'
+import {Notice} from './Notice'
 
 const {DEFAULT_LOCK_AMOUNT} = defaultNetworkConfig
 const {EMPTY_PUBLIC_KEY} = networkConfig
