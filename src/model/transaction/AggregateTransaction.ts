@@ -14,35 +14,37 @@
  * limitations under the License.
  */
 
-import {KeyPair, MerkleHashBuilder, SHA3Hasher, SignSchema} from '../../core/crypto';
-import {Convert} from '../../core/format';
+import {
+    AggregateBondedTransactionBuilder,
+    AggregateCompleteTransactionBuilder,
+    AmountDto,
+    CosignatureBuilder,
+    EmbeddedTransactionBuilder,
+    EmbeddedTransactionHelper,
+    GeneratorUtils,
+    Hash256Dto,
+    KeyDto,
+    SignatureDto,
+    TimestampDto
+} from 'catbuffer';
+import { KeyPair, MerkleHashBuilder, SHA3Hasher, SignSchema } from '../../core/crypto';
+import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
-import {AggregateBondedTransactionBuilder} from '../../infrastructure/catbuffer/AggregateBondedTransactionBuilder';
-import {AggregateCompleteTransactionBuilder} from '../../infrastructure/catbuffer/AggregateCompleteTransactionBuilder';
-import {AmountDto} from '../../infrastructure/catbuffer/AmountDto';
-import {CosignatureBuilder} from '../../infrastructure/catbuffer/CosignatureBuilder';
-import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
-import { EmbeddedTransactionHelper } from '../../infrastructure/catbuffer/EmbeddedTransactionHelper';
-import {GeneratorUtils} from '../../infrastructure/catbuffer/GeneratorUtils';
-import { Hash256Dto } from '../../infrastructure/catbuffer/Hash256Dto';
-import {KeyDto} from '../../infrastructure/catbuffer/KeyDto';
-import {SignatureDto} from '../../infrastructure/catbuffer/SignatureDto';
-import {TimestampDto} from '../../infrastructure/catbuffer/TimestampDto';
-import {CreateTransactionFromPayload} from '../../infrastructure/transaction/CreateTransactionFromPayload';
-import {Account} from '../account/Account';
-import {PublicAccount} from '../account/PublicAccount';
-import {NetworkType} from '../blockchain/NetworkType';
+import { CreateTransactionFromPayload } from '../../infrastructure/transaction/CreateTransactionFromPayload';
+import { Account } from '../account/Account';
+import { PublicAccount } from '../account/PublicAccount';
+import { NetworkType } from '../blockchain/NetworkType';
 import { Statement } from '../receipt/Statement';
-import {UInt64} from '../UInt64';
-import {AggregateTransactionCosignature} from './AggregateTransactionCosignature';
-import {CosignatureSignedTransaction} from './CosignatureSignedTransaction';
-import {Deadline} from './Deadline';
-import {InnerTransaction} from './InnerTransaction';
-import {SignedTransaction} from './SignedTransaction';
-import {Transaction} from './Transaction';
-import {TransactionInfo} from './TransactionInfo';
-import {TransactionType} from './TransactionType';
-import {TransactionVersion} from './TransactionVersion';
+import { UInt64 } from '../UInt64';
+import { AggregateTransactionCosignature } from './AggregateTransactionCosignature';
+import { CosignatureSignedTransaction } from './CosignatureSignedTransaction';
+import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
+import { SignedTransaction } from './SignedTransaction';
+import { Transaction } from './Transaction';
+import { TransactionInfo } from './TransactionInfo';
+import { TransactionType } from './TransactionType';
+import { TransactionVersion } from './TransactionVersion';
 
 /**
  * Aggregate innerTransactions contain multiple innerTransactions that can be initiated by different accounts.

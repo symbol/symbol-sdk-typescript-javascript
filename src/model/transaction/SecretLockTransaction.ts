@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {
+    AmountDto,
+    BlockDurationDto,
+    EmbeddedSecretLockTransactionBuilder,
+    EmbeddedTransactionBuilder,
+    Hash256Dto,
+    KeyDto,
+    SecretLockTransactionBuilder,
+    SignatureDto,
+    TimestampDto,
+    UnresolvedAddressDto,
+    UnresolvedMosaicBuilder,
+    UnresolvedMosaicIdDto
+} from 'catbuffer';
 import { Convert, Convert as convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
-import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
-import { EmbeddedSecretLockTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedSecretLockTransactionBuilder';
-import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
-import { Hash256Dto } from '../../infrastructure/catbuffer/Hash256Dto';
-import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
-import { SecretLockTransactionBuilder } from '../../infrastructure/catbuffer/SecretLockTransactionBuilder';
-import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
-import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
-import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
-import { UnresolvedMosaicBuilder } from '../../infrastructure/catbuffer/UnresolvedMosaicBuilder';
-import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';

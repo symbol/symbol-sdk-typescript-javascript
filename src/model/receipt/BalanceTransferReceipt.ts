@@ -14,14 +14,9 @@
  * limitations under the License.
  */
 
+import { AddressDto, AmountDto, BalanceTransferReceiptBuilder, KeyDto, MosaicBuilder, MosaicIdDto } from 'catbuffer';
 import { Convert } from '../../core/format/Convert';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
-import { AddressDto } from '../../infrastructure/catbuffer/AddressDto';
-import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import { BalanceTransferReceiptBuilder } from '../../infrastructure/catbuffer/BalanceTransferReceiptBuilder';
-import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
-import { MosaicBuilder } from '../../infrastructure/catbuffer/MosaicBuilder';
-import { MosaicIdDto } from '../../infrastructure/catbuffer/MosaicIdDto';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { MosaicId } from '../mosaic/MosaicId';
