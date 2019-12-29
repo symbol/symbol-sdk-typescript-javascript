@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-import { Convert, Convert as convert } from '../../core/format';
-import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
 import {
+    AmountDto,
+    BlockDurationDto,
     EmbeddedNamespaceRegistrationTransactionBuilder,
-} from '../../infrastructure/catbuffer/EmbeddedNamespaceRegistrationTransactionBuilder';
-import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
-import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
-import { NamespaceIdDto } from '../../infrastructure/catbuffer/NamespaceIdDto';
-import { NamespaceRegistrationTransactionBuilder } from '../../infrastructure/catbuffer/NamespaceRegistrationTransactionBuilder';
-import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
-import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
-import {NamespaceMosaicIdGenerator} from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
+    EmbeddedTransactionBuilder,
+    KeyDto,
+    NamespaceIdDto,
+    NamespaceRegistrationTransactionBuilder,
+    SignatureDto,
+    TimestampDto
+} from 'catbuffer';
+import { Convert, Convert as convert } from '../../core/format';
+import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { NamespaceId } from '../namespace/NamespaceId';

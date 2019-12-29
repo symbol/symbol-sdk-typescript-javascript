@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
+import {
+    AmountDto,
+    EmbeddedMosaicAddressRestrictionTransactionBuilder,
+    EmbeddedTransactionBuilder,
+    KeyDto,
+    MosaicAddressRestrictionTransactionBuilder,
+    SignatureDto,
+    TimestampDto,
+    UnresolvedAddressDto,
+    UnresolvedMosaicIdDto
+} from 'catbuffer';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
-import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import {
-    EmbeddedMosaicAddressRestrictionTransactionBuilder,
-} from '../../infrastructure/catbuffer/EmbeddedMosaicAddressRestrictionTransactionBuilder';
-import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
-import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
-import { MosaicAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/MosaicAddressRestrictionTransactionBuilder';
-import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
-import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
-import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
-import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';

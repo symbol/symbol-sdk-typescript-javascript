@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
+import {
+    AmountDto,
+    EmbeddedSecretProofTransactionBuilder,
+    EmbeddedTransactionBuilder,
+    Hash256Dto,
+    KeyDto,
+    SecretProofTransactionBuilder,
+    SignatureDto,
+    TimestampDto,
+    UnresolvedAddressDto
+} from 'catbuffer';
 import { Convert, Convert as convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
-import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import { EmbeddedSecretProofTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedSecretProofTransactionBuilder';
-import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
-import { Hash256Dto } from '../../infrastructure/catbuffer/Hash256Dto';
-import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
-import { SecretProofTransactionBuilder } from '../../infrastructure/catbuffer/SecretProofTransactionBuilder';
-import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
-import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
-import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';

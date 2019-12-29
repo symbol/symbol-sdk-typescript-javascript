@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
+import {
+    AmountDto,
+    EmbeddedMosaicAliasTransactionBuilder,
+    EmbeddedTransactionBuilder,
+    KeyDto,
+    MosaicAliasTransactionBuilder,
+    MosaicIdDto,
+    NamespaceIdDto,
+    SignatureDto,
+    TimestampDto
+} from 'catbuffer';
 import { Convert } from '../../core/format';
-import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import { EmbeddedMosaicAliasTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMosaicAliasTransactionBuilder';
-import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
-import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
-import { MosaicAliasTransactionBuilder } from '../../infrastructure/catbuffer/MosaicAliasTransactionBuilder';
-import { MosaicIdDto } from '../../infrastructure/catbuffer/MosaicIdDto';
-import { NamespaceIdDto } from '../../infrastructure/catbuffer/NamespaceIdDto';
-import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
-import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';

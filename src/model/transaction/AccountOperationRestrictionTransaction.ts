@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-import { Convert } from '../../core/format';
 import {
     AccountOperationRestrictionTransactionBuilder,
-} from '../../infrastructure/catbuffer/AccountOperationRestrictionTransactionBuilder';
-import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import {
+    AmountDto,
     EmbeddedAccountOperationRestrictionTransactionBuilder,
-} from '../../infrastructure/catbuffer/EmbeddedAccountOperationRestrictionTransactionBuilder';
-import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
-import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
-import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
-import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
+    EmbeddedTransactionBuilder,
+    KeyDto,
+    SignatureDto,
+    TimestampDto,
+} from 'catbuffer';
+import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
