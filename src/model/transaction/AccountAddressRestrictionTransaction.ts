@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
+import {
+    AccountAddressRestrictionTransactionBuilder,
+    AmountDto,
+    EmbeddedAccountAddressRestrictionTransactionBuilder,
+    EmbeddedTransactionBuilder,
+    KeyDto,
+    SignatureDto,
+    TimestampDto,
+    UnresolvedAddressDto
+} from 'catbuffer';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
-import { AccountAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountAddressRestrictionTransactionBuilder';
-import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import {
-    EmbeddedAccountAddressRestrictionTransactionBuilder,
-} from '../../infrastructure/catbuffer/EmbeddedAccountAddressRestrictionTransactionBuilder';
-import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
-import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
-import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
-import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
-import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';

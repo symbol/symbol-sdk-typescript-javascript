@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
+import {
+    AccountMetadataTransactionBuilder,
+    AmountDto,
+    EmbeddedAccountMetadataTransactionBuilder,
+    EmbeddedTransactionBuilder,
+    KeyDto,
+    SignatureDto,
+    TimestampDto
+} from 'catbuffer';
 import { Convert } from '../../core/format';
-import { AccountMetadataTransactionBuilder } from '../../infrastructure/catbuffer/AccountMetadataTransactionBuilder';
-import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import { EmbeddedAccountMetadataTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedAccountMetadataTransactionBuilder';
-import { EmbeddedTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransactionBuilder';
-import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
-import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
-import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';

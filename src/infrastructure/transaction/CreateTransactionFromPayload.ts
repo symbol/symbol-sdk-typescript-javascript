@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { SignSchema } from '../../core/crypto';
+import { EmbeddedTransactionBuilder, TransactionBuilder } from 'catbuffer';
 import { Convert as convert } from '../../core/format';
 import { InnerTransaction } from '../../model/model';
 import { AccountAddressRestrictionTransaction } from '../../model/transaction/AccountAddressRestrictionTransaction';
@@ -39,8 +39,6 @@ import { SecretProofTransaction } from '../../model/transaction/SecretProofTrans
 import { Transaction } from '../../model/transaction/Transaction';
 import { TransactionType } from '../../model/transaction/TransactionType';
 import { TransferTransaction } from '../../model/transaction/TransferTransaction';
-import { EmbeddedTransactionBuilder } from '../catbuffer/EmbeddedTransactionBuilder';
-import { TransactionBuilder } from '../catbuffer/TransactionBuilder';
 
 /**
  * @internal

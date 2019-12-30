@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import { InflationReceiptBuilder } from '../../infrastructure/catbuffer/InflationReceiptBuilder';
-import { MosaicBuilder } from '../../infrastructure/catbuffer/MosaicBuilder';
-import { MosaicIdDto } from '../../infrastructure/catbuffer/MosaicIdDto';
+import { AmountDto, InflationReceiptBuilder, MosaicBuilder, MosaicIdDto } from 'catbuffer';
 import { MosaicId } from '../mosaic/MosaicId';
 import { UInt64 } from '../UInt64';
 import { Receipt } from './Receipt';
