@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-import {from as observableFrom, Observable, throwError} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import { MetadataDTO, MetadataRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
+import { from as observableFrom, Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { Convert } from '../core/format/Convert';
 import { Address } from '../model/account/Address';
-import { NetworkType } from '../model/blockchain/NetworkType';
 import { Metadata } from '../model/metadata/Metadata';
 import { MetadataEntry } from '../model/metadata/MetadataEntry';
 import { MetadataType } from '../model/metadata/MetadataType';
-import {MosaicId} from '../model/mosaic/MosaicId';
-import {NamespaceId} from '../model/namespace/NamespaceId';
-import {UInt64} from '../model/UInt64';
-import { MetadataDTO, MetadataRoutesApi } from './api';
-import {Http} from './Http';
+import { MosaicId } from '../model/mosaic/MosaicId';
+import { NamespaceId } from '../model/namespace/NamespaceId';
+import { UInt64 } from '../model/UInt64';
+import { Http } from './Http';
 import { MetadataRepository } from './MetadataRepository';
 import { QueryParams } from './QueryParams';
 
@@ -214,10 +213,10 @@ export class MetadataHttp extends Http implements MetadataRepository {
 
         switch (metadataEntry.metadataType.valueOf()) {
             case MetadataType.Mosaic:
-                targetId = new MosaicId(metadataEntry.targetId);
+                targetId = new MosaicId(metadataEntry.targetId as any);
                 break;
             case MetadataType.Namespace:
-                targetId = NamespaceId.createFromEncoded(metadataEntry.targetId);
+                targetId = NamespaceId.createFromEncoded(metadataEntry.targetId as any);
                 break;
             default:
                 targetId = undefined;

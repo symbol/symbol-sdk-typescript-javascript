@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import {deepEqual} from 'assert';
-import {expect} from 'chai';
-import { TransactionStatusTypeEnum } from '../../../src/infrastructure/model/transactionStatusTypeEnum';
-import {Deadline} from '../../../src/model/transaction/Deadline';
-import {TransactionStatus} from '../../../src/model/transaction/TransactionStatus';
-import {UInt64} from '../../../src/model/UInt64';
+import { deepEqual } from 'assert';
+import { expect } from 'chai';
+import { TransactionStatusTypeEnum } from 'nem2-sdk-openapi-typescript-node-client';
+import { Deadline } from '../../../src/model/transaction/Deadline';
+import { TransactionStatus } from '../../../src/model/transaction/TransactionStatus';
+import { UInt64 } from '../../../src/model/UInt64';
 
 describe('TransactionStatus', () => {
     it('should createComplete TransactionStatus object', () => {
@@ -27,7 +27,7 @@ describe('TransactionStatus', () => {
             deadline: Deadline.createFromDTO('1'),
             group: 'confirmed',
             hash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
-            height: new UInt64([ 1, 0 ]),
+            height: new UInt64([1, 0]),
             code: TransactionStatusTypeEnum.Success,
         };
 
@@ -35,7 +35,7 @@ describe('TransactionStatus', () => {
             transactionStatusDTO.group,
             transactionStatusDTO.hash,
             transactionStatusDTO.deadline,
-            transactionStatusDTO.code,
+            transactionStatusDTO.code.toString(),
             transactionStatusDTO.height,
         );
 

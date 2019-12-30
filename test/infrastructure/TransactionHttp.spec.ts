@@ -13,16 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {expect} from 'chai';
 
-import {TransactionHttp} from '../../src/infrastructure/TransactionHttp';
-import {Address} from '../../src/model/account/Address';
-import {NetworkType} from '../../src/model/blockchain/NetworkType';
-import {PlainMessage} from '../../src/model/message/PlainMessage';
-import {AggregateTransaction} from '../../src/model/transaction/AggregateTransaction';
-import {Deadline} from '../../src/model/transaction/Deadline';
-import {TransferTransaction} from '../../src/model/transaction/TransferTransaction';
-import {NIS2_URL, TestingAccount} from '../conf/conf.spec';
+import http = require('http');
+import { expect } from 'chai';
+import {
+    BlockRoutesApi,
+    TransactionRoutesApi,
+    TransactionStateTypeEnum,
+    TransactionStatusDTO,
+    TransactionStatusTypeEnum
+} from 'nem2-sdk-openapi-typescript-node-client';
+import { deepEqual, instance, mock, when } from 'ts-mockito';
+
+import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
+import { Address } from '../../src/model/account/Address';
+import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { PlainMessage } from '../../src/model/message/PlainMessage';
+import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
+import { Deadline } from '../../src/model/transaction/Deadline';
+import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
+import { NIS2_URL, TestingAccount } from '../conf/conf.spec';
 
 describe('TransactionHttp', () => {
     const account = TestingAccount;
@@ -51,5 +61,61 @@ describe('TransactionHttp', () => {
             .toPromise()
             .then();
         }).to.throw(Error, 'Only Transaction Type 0x4241 is allowed for announce aggregate bonded');
+    });
+
+    let clientResponse: http.ClientResponse;
+    let transactionRoutesApi: TransactionRoutesApi;
+    let transactionHttp: TransactionHttp;
+    let blockRoutesApi: BlockRoutesApi;
+
+    before(() => {
+        transactionRoutesApi = mock();
+        blockRoutesApi = mock();
+        clientResponse = mock();
+        transactionHttp = new TransactionHttp(NIS2_URL);
+        (transactionHttp as object)['transactionRoutesApi'] = instance(transactionRoutesApi);
+        (transactionHttp as object)['blockRoutesApi'] = instance(blockRoutesApi);
+    });
+
+    it('Test getTransactionStatus method', async () => {
+        const hash = 'abc';
+        const transactionStatusDTO = new TransactionStatusDTO();
+        transactionStatusDTO.code = TransactionStatusTypeEnum.FailureAccountLinkInvalidAction;
+        transactionStatusDTO.deadline = '1234';
+        transactionStatusDTO.hash = hash;
+        transactionStatusDTO.group = TransactionStateTypeEnum.Failed;
+        transactionStatusDTO.height = '567';
+
+        when(transactionRoutesApi.getTransactionStatus(deepEqual(hash)))
+        .thenReturn(Promise.resolve({response: instance(clientResponse), body: transactionStatusDTO}));
+
+        const transactionStatus = await transactionHttp.getTransactionStatus(hash).toPromise();
+
+        expect(transactionStatus.deadline.toString()).to.be.equal('1234');
+        expect(transactionStatus.hash).to.be.equal(hash);
+        expect(transactionStatus.code).to.be.equal('Failure_AccountLink_Invalid_Action');
+        expect(transactionStatus.group).to.be.equal('failed');
+    });
+
+    it('Test getTransactionsStatuses method', async () => {
+        const hash = 'abc';
+        const transactionStatusDTO = new TransactionStatusDTO();
+        transactionStatusDTO.code = TransactionStatusTypeEnum.FailureAccountLinkInvalidAction;
+        transactionStatusDTO.deadline = '1234';
+        transactionStatusDTO.hash = hash;
+        transactionStatusDTO.group = TransactionStateTypeEnum.Failed;
+        transactionStatusDTO.height = '567';
+        when(transactionRoutesApi.getTransactionsStatuses(deepEqual({hashes: [hash]})))
+        .thenReturn(Promise.resolve({response: instance(clientResponse), body: [transactionStatusDTO]}));
+
+        const transactionStatuses = await transactionHttp.getTransactionsStatuses([hash]).toPromise();
+        expect(transactionStatuses.length).to.be.equal(1);
+        const transactionStatus = transactionStatuses[0];
+
+        expect(transactionStatus.deadline.toString()).to.be.equal('1234');
+        expect(transactionStatus.hash).to.be.equal(hash);
+        expect(transactionStatus.code).to.be.equal('Failure_AccountLink_Invalid_Action');
+        expect(transactionStatus.group).to.be.equal('failed');
+
     });
 });

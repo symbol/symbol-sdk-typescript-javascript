@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import {from as observableFrom, Observable, throwError} from 'rxjs';
-import {catchError, map, mergeMap} from 'rxjs/operators';
+import { ReceiptRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
+import { from as observableFrom, Observable, throwError } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
 import { NetworkType } from '../model/blockchain/NetworkType';
 import { Statement } from '../model/receipt/Statement';
-import { ReceiptRoutesApi } from './api/receiptRoutesApi';
-import {Http} from './Http';
+import { Http } from './Http';
 import { CreateStatementFromDTO } from './receipt/CreateReceiptFromDTO';
 import { ReceiptRepository } from './ReceiptRepository';
 

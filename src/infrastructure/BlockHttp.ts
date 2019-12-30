@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { BlockInfoDTO, BlockRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { PublicAccount } from '../model/account/PublicAccount';
@@ -22,14 +23,10 @@ import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
 import { Transaction } from '../model/transaction/Transaction';
 import { UInt64 } from '../model/UInt64';
-import { BlockInfoDTO, BlockRoutesApi } from './api';
 import { BlockRepository } from './BlockRepository';
 import { Http } from './Http';
 import { QueryParams } from './QueryParams';
-import {
-    CreateTransactionFromDTO,
-    extractBeneficiary,
-} from './transaction/CreateTransactionFromDTO';
+import { CreateTransactionFromDTO, extractBeneficiary, } from './transaction/CreateTransactionFromDTO';
 
 /**
  * Blockchain http repository.
