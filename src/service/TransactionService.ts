@@ -110,7 +110,7 @@ export class TransactionService implements ITransactionService {
      */
     private resolveTransaction(transaction: Transaction): Observable<Transaction> {
         if ([TransactionType.AGGREGATE_BONDED, TransactionType.AGGREGATE_COMPLETE].includes(transaction.type)) {
-            if ((transaction as AggregateTransaction).innerTransactions.find((tx) => this.checkShouldResolve((tx as Transaction)))) {
+            if ((transaction as AggregateTransaction).innerTransactions.find((tx) => this.checkShouldResolve(tx))) {
                 return this.resolvedFromReceipt(transaction, transaction.transactionInfo!.index);
             }
             return of(transaction);

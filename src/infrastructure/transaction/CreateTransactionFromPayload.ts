@@ -42,6 +42,7 @@ import {
     EmbeddedSecretLockTransactionBuilder,
     EmbeddedSecretProofTransactionBuilder,
     EmbeddedTransactionBuilder,
+    EmbeddedTransactionHelper,
     EmbeddedTransferTransactionBuilder,
     HashLockTransactionBuilder,
     MosaicAddressRestrictionTransactionBuilder,
@@ -143,6 +144,16 @@ export const CreateTransactionFromPayload = (payload: string): Transaction => {
         }
     };
     return toBuilder();
+};
+
+/**
+ * @internal
+ * @param payload - The transaction binary data from an inner transaction
+ * @returns Transaction
+ */
+export const CreateTransactionFromInnerPayload = (payload: string): Transaction => {
+    const builder = EmbeddedTransactionHelper.loadFromBinary(convert.hexToUint8(payload));
+    return CreateTransactionFromEmbeddedTransactionBuilder(builder);
 };
 
 /**

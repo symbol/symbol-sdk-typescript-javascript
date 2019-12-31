@@ -38,7 +38,6 @@ import { UInt64 } from '../UInt64';
 import { AggregateTransactionCosignature } from './AggregateTransactionCosignature';
 import { CosignatureSignedTransaction } from './CosignatureSignedTransaction';
 import { Deadline } from './Deadline';
-import { InnerTransaction } from './InnerTransaction';
 import { SignedTransaction } from './SignedTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
@@ -70,7 +69,7 @@ export class AggregateTransaction extends Transaction {
                 /**
                  * The array of innerTransactions included in the aggregate transaction.
                  */
-                public readonly innerTransactions: InnerTransaction[],
+                public readonly innerTransactions: Transaction[],
                 /**
                  * The array of transaction cosigners signatures.
                  */
@@ -91,7 +90,7 @@ export class AggregateTransaction extends Transaction {
      * @returns {AggregateTransaction}
      */
     public static createComplete(deadline: Deadline,
-                                 innerTransactions: InnerTransaction[],
+                                 innerTransactions: Transaction[],
                                  networkType: NetworkType,
                                  cosignatures: AggregateTransactionCosignature[],
                                  maxFee: UInt64 = new UInt64([0, 0])): AggregateTransaction {
@@ -108,14 +107,14 @@ export class AggregateTransaction extends Transaction {
     /**
      * Create an aggregate bonded transaction object
      * @param {Deadline} deadline
-     * @param {InnerTransaction[]} innerTransactions
+     * @param {Transaction[]} innerTransactions
      * @param {NetworkType} networkType
      * @param {AggregateTransactionCosignature[]} cosignatures
      * @param {UInt64} maxFee - (Optional) Max fee defined by the sender
      * @return {AggregateTransaction}
      */
     public static createBonded(deadline: Deadline,
-                               innerTransactions: InnerTransaction[],
+                               innerTransactions: Transaction[],
                                networkType: NetworkType,
                                cosignatures: AggregateTransactionCosignature[] = [],
                                maxFee: UInt64 = new UInt64([0, 0])): AggregateTransaction {
@@ -151,7 +150,7 @@ export class AggregateTransaction extends Transaction {
         });
 
         const innerTransactions = builder.getTransactions().map((transaction) => {
-            return CreateTransactionFromEmbeddedTransactionBuilder(transaction as EmbeddedTransactionBuilder) as InnerTransaction;
+            return CreateTransactionFromEmbeddedTransactionBuilder(transaction as EmbeddedTransactionBuilder);
         });
 
         return builder.getType().valueOf() === TransactionType.AGGREGATE_COMPLETE ?
@@ -173,11 +172,11 @@ export class AggregateTransaction extends Transaction {
 
     /**
      * @description add inner transactions to current list
-     * @param {InnerTransaction[]} transactions the transactions to be added
+     * @param {Transaction[]} transactions the transactions to be added
      * @returns {AggregateTransaction}
      * @memberof AggregateTransaction
      */
-    public addTransactions(transactions: InnerTransaction[]): AggregateTransaction {
+    public addTransactions(transactions: Transaction[]): AggregateTransaction {
         const innerTransactions = this.innerTransactions.concat(transactions);
         return DtoMapping.assign(this, {innerTransactions});
     }
@@ -298,7 +297,7 @@ export class AggregateTransaction extends Transaction {
     protected generateBytes(): Uint8Array {
         const signerBuffer = new Uint8Array(32);
         const signatureBuffer = new Uint8Array(64);
-        const transactions = this.innerTransactions.map((transaction) => (transaction as Transaction).toEmbeddedTransaction());
+        const transactions = this.innerTransactions.map((transaction) => transaction.toEmbeddedTransaction());
         const cosignatures = this.cosignatures.map((cosignature) => {
             const signerBytes = Convert.hexToUint8(cosignature.signer.publicKey);
             const signatureBytes = Convert.hexToUint8(cosignature.signature);

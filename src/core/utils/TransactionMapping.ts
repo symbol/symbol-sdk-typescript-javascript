@@ -15,7 +15,10 @@
  */
 
 import { CreateTransactionFromDTO } from '../../infrastructure/transaction/CreateTransactionFromDTO';
-import { CreateTransactionFromPayload } from '../../infrastructure/transaction/CreateTransactionFromPayload';
+import {
+    CreateTransactionFromInnerPayload,
+    CreateTransactionFromPayload
+} from '../../infrastructure/transaction/CreateTransactionFromPayload';
 import { Transaction } from '../../model/transaction/Transaction';
 
 export class TransactionMapping {
@@ -32,9 +35,11 @@ export class TransactionMapping {
     /**
      * Create transaction class from payload binary.
      * @param {string} payload The transaction binary payload
-     * @returns {Transaction} The transaction class.
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @returns Transaction The transaction class.
      */
-    public static createFromPayload(payload: string): Transaction {
-        return CreateTransactionFromPayload(payload);
+    public static createFromPayload(payload: string,
+                                    isEmbedded = false): Transaction {
+        return isEmbedded ? CreateTransactionFromInnerPayload(payload) : CreateTransactionFromPayload(payload);
     }
 }
