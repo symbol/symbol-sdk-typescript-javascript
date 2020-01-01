@@ -14,8 +14,8 @@
         </div>
 
         <div class="button-container">
-          <button @click="$router.push('finishCreate')" class="info-button">{{$t('Back')}}</button>
-          <button @click="$router.push('verifyMnemonic')">{{$t('Verify_backup_mnemonics')}}</button>
+          <button @click="$router.back()" class="info-button">{{$t('Back')}}</button>
+          <button @click="submit('verifyMnemonic')">{{$t('Verify_backup_mnemonics')}}</button>
         </div>
       </div>
       <div class="create-mnemonic-right">

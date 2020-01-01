@@ -1,6 +1,6 @@
 import {MosaicId, Account, Address, NetworkType} from 'nem2-sdk'
 import {networkConfig} from '@/config/constants'
-import {getAbsoluteMosaicAmount} from "@/core/utils"
+import {getAbsoluteMosaicAmount, localRead} from "@/core/utils"
 import {AppAccounts, ValidationObject, AppWallet, CurrentAccount, AppMosaic} from "@/core/model"
 import {validateAddress, validatePublicKey, validateAlias, validateMosaicId, validateNamespace} from './validators'
 
@@ -31,6 +31,23 @@ export const CUSTOM_VALIDATORS_NAMES = {
     privateKey: 'privateKey',
     publicKey: 'publicKey',
     remoteAccountPrivateKey: 'remoteAccountPrivateKey',
+    newAccountName:'newAccountName',
+}
+const newAccountNameValidator = (context): Promise<ValidationObject> => {
+  return context.Validator.extend(
+    CUSTOM_VALIDATORS_NAMES.newAccountName,
+    (accountName) => new Promise((resolve) => {
+      try {
+       const isAccountNameExisted = JSON.parse(localRead('accountMap'))[accountName]
+        if(isAccountNameExisted) {
+          resolve({valid: false})
+        }
+          resolve({valid: true})
+      } catch (error) {
+         resolve({valid: true})
+      }
+    }),
+  )
 }
 
 const aliasValidator = (context): Promise<ValidationObject> => {
@@ -297,6 +314,7 @@ const customValidatorFactory = {
     [CUSTOM_VALIDATORS_NAMES.privateKey]: privateKeyValidator,
     [CUSTOM_VALIDATORS_NAMES.publicKey]: publicKeyValidator,
     [CUSTOM_VALIDATORS_NAMES.remoteAccountPrivateKey]: remoteAccountPrivateKeyValidator,
+    [CUSTOM_VALIDATORS_NAMES.newAccountName]: newAccountNameValidator,
 }
 
 const CustomValidator = (name, Validator) => ({
@@ -311,4 +329,3 @@ export const registerCustomValidators = (Validator) => {
     Object.keys(CUSTOM_VALIDATORS_NAMES)
         .forEach(name => CustomValidator(name, Validator).register())
 }
- 

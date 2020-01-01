@@ -5,8 +5,7 @@
       <div class="welcome-head">
         <p class="title"> {{$t('Access_My_Account')}}</p>
         <p class="title-tips">{{$t('Do_not_have_Account')}}
-          <span class="create-account"
-                @click="$router.push('createAccount')">
+          <span class="create-account" @click="$router.push({name:'createAccount',params:{nextPage:'generateMnemonic'}})">
             {{$t('create_a_new_account')}}
           </span>
         </p>

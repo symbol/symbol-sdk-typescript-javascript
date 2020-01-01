@@ -6,7 +6,15 @@
       <div class="create-account-left">
         <div class="form-input-item">
           <div>* {{$t('Set_account_name')}}</div>
-          <input v-focus v-model="formItem.accountName"></input>
+          <ErrorTooltip fieldName="newAccountName">
+            <input
+              v-validate="validation.newAccountName"
+              data-vv-name="newAccountName"
+              :data-vv-as="$t('newAccountName')"
+              :placeholder="$t('accountName')"
+              v-focus
+              v-model="formItem.accountName"></input>
+          </ErrorTooltip>
         </div>
         <div class="form-input-item">
           <div>* {{$t('Set_network_type')}}</div>
@@ -17,11 +25,30 @@
         </div>
         <div class="form-input-item">
           <div>* {{$t('Set_password')}}</div>
-          <input type="password" v-model.lazy="formItem.password"></input>
+          <ErrorTooltip fieldName="password">
+            <input
+              v-focus
+              v-validate="validation.password"
+              data-vv-name="password"
+              :data-vv-as="$t('password')"
+              :placeholder="$t('please_enter_your_wallet_password')"
+              type="password"
+              v-model.lazy="formItem.password"></input>
+          </ErrorTooltip>
         </div>
         <div class="form-input-item">
           <div>* {{$t('Confirm_password')}}</div>
-          <input type="password" v-model.lazy="formItem.passwordAgain"></input>
+          <ErrorTooltip fieldName="confirmPassword">
+            <input
+              v-focus
+              v-validate="validation.confirmPassword"
+              data-vv-name="confirmPassword"
+              :data-vv-as="$t('password')"
+              :placeholder="$t('please_enter_your_wallet_password')"
+              type="password"
+              v-model.lazy="formItem.passwordAgain"></input>
+          </ErrorTooltip>
+          <input v-show="false" v-model="formItem.password" v-validate disabled data-vv-name="newPassword" />
         </div>
         <div class="form-input-item">
           <div>* {{$t('Password_hint')}}</div>
@@ -29,7 +56,7 @@
         </div>
         <div class="button-container">
           <button @click="$router.push('login')" class="info-button">{{$t('Back_to_home')}}</button>
-          <button @click="submit">{{$t('Restore_Mnemonic')}}</button>
+          <button @click="submit">{{$t(nextPage == 'importMnemonic'?'Restore_Mnemonic':'Generating_mnemonic')}}</button>
         </div>
 
       </div>

@@ -36,6 +36,7 @@ export const validation = {
         required: true,
         min: MIN_PASSWORD_LENGTH,
         max: MAX_PASSWORD_LENGTH,
+        regex:`(?=.*[0-9])(?=.*[a-zA-Z])(.{8,})$`
     },
     previousPassword: 'required|confirmLock:cipher',
     privateKey: `min:${PRIVATE_KEY_LENGTH}|max:${PRIVATE_KEY_LENGTH}|privateKey`,
@@ -50,6 +51,7 @@ export const validation = {
         required: true,
         url: {require_protocol: true}
     },
+    newAccountName:'required|newAccountName',
     friendlyNodeUrl: {
         required: true,
         url: {

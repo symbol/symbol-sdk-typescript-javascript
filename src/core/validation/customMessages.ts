@@ -15,10 +15,12 @@ export const customMessages = {
  [CUSTOM_VALIDATORS_NAMES.privateKey]: () => Message.PRIVATE_KEY_INVALID_ERROR,
  [CUSTOM_VALIDATORS_NAMES.publicKey]: () => Message.PUBLIC_KEY_INVALID,
  [CUSTOM_VALIDATORS_NAMES.remoteAccountPrivateKey]: () => Message.PRIVATE_KEY_INVALID_ERROR,
+ [CUSTOM_VALIDATORS_NAMES.newAccountName]: () => Message.ACCOUNT_NAME_EXISTS_ERROR,
 }
 
 export const customFieldMessages = {
  newDuration: {max_value: () => Message.NAMESPACE_MAX_DURATION},
  namespaceDuration: {max_value: () => Message.NAMESPACE_MAX_DURATION},
  currentAmount: {is_not: () => Message.AMOUNT_LESS_THAN_0_ERROR},
+ password:{regex:()=>Message.PASSWORD_IS_INVALID_ERROR}
 }

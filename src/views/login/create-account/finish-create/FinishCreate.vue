@@ -1,5 +1,5 @@
 <template>
-  <div class="finish-sec" @keyup.enter="submit">
+  <div class="finish-sec scroll" @keyup.enter="submit">
     <img src="@/common/img/success.png"/>
     <span class="set-title"> {{$t('Create_successful')}}</span>
     <p class="set-title-tips">{{$t('Create_successful_tips')}}</p>

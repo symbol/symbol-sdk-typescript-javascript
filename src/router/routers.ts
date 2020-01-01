@@ -243,8 +243,11 @@ const routers = [
                             {
                                 path: '/createAccountInfo',
                                 name: 'createAccountInfo',
-                                meta: {icon: createStepImage.createStepImage1},
-                                component: () => import('@/views/login/create-account/create-account-info/CreateAccountInfo.vue'),
+                                meta: {
+                                  icon: createStepImage.createStepImage1,
+                                  nextPage:'generateMnemonic'
+                                },
+                                component: () => import('@/components/forms/create-account-info/CreateAccountInfo.vue'),
                             }, {
                                 path: '/generateMnemonic',
                                 name: 'generateMnemonic',
@@ -272,12 +275,15 @@ const routers = [
                         name: 'importAccount',
                         redirect: '/inputAccountInfo',
                         component: () => import('@/views/login/import-account/ImportAccount.vue'),
-                        children: [{
-                            path: '/inputAccountInfo',
-                            name: 'inputAccountInfo',
-                            meta: {icon: importStepImage.importStepImage1},
-                            component: () => import('@/views/login/import-account/create-account-info/CreateAccountInfo.vue'),
-                        }, {
+                        children: [ {
+                          path: '/inputAccountInfo',
+                          name: 'inputAccountInfo',
+                          meta: {
+                            icon: createStepImage.createStepImage1,
+                            nextPage:'importMnemonic'
+                          },
+                          component: () => import('@/components/forms/create-account-info/CreateAccountInfo.vue'),
+                        },{
                             path: '/importMnemonic',
                             name: 'importMnemonic',
                             meta: {icon: importStepImage.importStepImage2},

@@ -4,16 +4,20 @@ import {importInfoList} from '@/config/view'
 
 @Component
 export default class WelcomeTs extends Vue {
-    importInfoList = importInfoList
+  importInfoList = importInfoList
 
-    goTo(link) {
-        if (!link) {
-            this.$Notice.warning({
-                title: this.$t('not_yet_open') + ''
-            })
-            return
-        }
-
-        this.$router.push(link)
+  goTo(link) {
+    if (!link) {
+      this.$Notice.warning({
+        title: this.$t('not_yet_open') + ''
+      })
+      return
     }
+    this.$router.push({
+      name: link,
+      params: {
+        nextPage:'importMnemonic'
+      },
+    })
+  }
 }
