@@ -32,7 +32,7 @@
               <span v-if="wallet">
                 <span v-if="importance != 0">
                   {{importance.substring(0,1)+'.'+importance.substring(1)}}*10
-                  <sup>{{(importance+'').length-1}}</sup>
+                  <sup>-{{(importance+'').length-1}}</sup>
                 </span>
                 <span v-else>0</span>
               </span>
