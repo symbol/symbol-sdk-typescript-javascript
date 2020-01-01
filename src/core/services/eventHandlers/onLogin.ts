@@ -27,14 +27,14 @@ const getAccountDataFromStorage = (accountName: string): any[] => {
 const getAccountWallets = (accountData: any): AppWallet[] => {
   const {wallets} = accountData
   if (!wallets) throw new Error(`No wallets found in the localStorage for ${accountData.name}`)
-  return wallets.map(wallet => new AppWallet(wallet))
+  return wallets.map(wallet => AppWallet.createFromDTO(wallet))
 }
 
 const setValuesInLocalStorage = (accountName: string, store: Store<AppState>) => {
-  const accountDataFromStorage = getAccountDataFromStorage(accountName) 
+  const accountDataFromStorage = getAccountDataFromStorage(accountName)
   const wallets = getAccountWallets(accountDataFromStorage)
   store.commit('SET_WALLET_LIST', wallets)
-  store.commit('SET_WALLET', wallets[0])
+  store.commit('SET_WALLET', AppWallet.createFromDTO(wallets[0]))
 
   store.commit(
     'SET_ACCOUNT_DATA',

@@ -3,10 +3,13 @@ import {
  MosaicAliasTransaction, MosaicDefinitionTransaction, Namespace, BlockInfo,
 } from 'nem2-sdk'
 import {Store} from 'vuex'
-import {AppState, Notice, AppMosaic, NetworkProperties, NoticeType} from '.'
-import {Message} from '@/config'
+import {AppState, Notice, AppMosaic, NetworkProperties} from '.'
+import {NoticeType} from '@/core/model'
+import {Message, networkConfig} from '@/config'
 import {OnWalletChange, setWalletsBalances} from '../services'
 import {Listeners} from './Listeners'
+
+const {maxDifficultyBlocks} = networkConfig
 
 export class NetworkManager {
  blockHttp: BlockHttp
@@ -75,7 +78,9 @@ export class NetworkManager {
    const currentEndpoint = `${this.endpoint}`
    const heightUint = await this.chainHttp.getBlockchainHeight().toPromise()
    const height = heightUint.compact()
-   const blocksInfo = await this.blockHttp.getBlocksByHeightWithLimit(`${height}`).toPromise()
+   const blocksInfo = await this.blockHttp.getBlocksByHeightWithLimit(
+     `${height}`, maxDifficultyBlocks,
+    ).toPromise()
    this.NetworkProperties.initializeLatestBlocks(blocksInfo, currentEndpoint)
  }
 

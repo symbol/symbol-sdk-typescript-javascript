@@ -51,7 +51,7 @@ export class PrivatekeyDialogTs extends Vue {
     }
 
     get wallet(): AppWallet {
-        return new AppWallet(this.activeAccount.wallet)
+        return this.activeAccount.wallet
     }
 
     get account(): Account {
@@ -60,7 +60,7 @@ export class PrivatekeyDialogTs extends Vue {
         if (this.$validator.errors.any()) return null
 
         try {
-            return new AppWallet(wallet).getAccount(new Password(password))
+            return wallet.getAccount(new Password(password))
         } catch (error) {
             return null
         }

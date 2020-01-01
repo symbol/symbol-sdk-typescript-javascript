@@ -12,7 +12,7 @@ export class OnWalletChange {
     private readonly listeners: Listeners,
     newWallet?: AppWallet,
   ) {
-    this.newWallet = newWallet ? new AppWallet(newWallet) : this.getWalletFromStore()
+    this.newWallet = newWallet || this.getWalletFromStore()
   }
 
   static async trigger(
@@ -33,7 +33,7 @@ export class OnWalletChange {
   private getWalletFromStore() {
     const walletFromStore = this.store.state.account.wallet
     if (!walletFromStore) return null
-    return new AppWallet(walletFromStore)
+    return AppWallet.createFromDTO(walletFromStore)
   }
 
   private toggleLoadingStatesTo(bool: boolean) {

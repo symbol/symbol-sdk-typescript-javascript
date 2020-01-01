@@ -24,7 +24,7 @@
     "moment-timezone": "^0.5.26",
     "nem2-hd-wallets": "^0.7.0",
     "nem2-qr-library": "^0.7.0",
-    "nem2-sdk": "^0.16.0",
+    "nem2-sdk": "^0.16.1",
     "node-pre-gyp": "^0.13.0",
     "node-uuid": "^1.4.8",
     "request": "^2.88.0",

@@ -1,4 +1,4 @@
-import {AppState, NetworkCurrency, Log} from '@/core/model'
+import {AppState, NetworkCurrency, Log, AppWallet} from '@/core/model'
 import {localSave, localRead} from '@/core/utils'
 import {Store} from 'vuex'
 import {Address, AccountHttp, AccountInfo} from 'nem2-sdk'
@@ -61,7 +61,7 @@ export const setWalletsBalances = async (store: Store<AppState>): Promise<void> 
         }
 
         store.commit('SET_WALLET_LIST', appWalletsWithBalance)
-        store.commit('SET_WALLET', activeWalletWithBalance)
+        store.commit('SET_WALLET', AppWallet.createFromDTO(activeWalletWithBalance))
 
         // @WALLETS: make a standard method
         const localList = localRead('accountMap')

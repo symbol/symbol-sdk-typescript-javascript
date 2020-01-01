@@ -12,23 +12,39 @@ export default class FinishCreateTs extends Vue {
         return this.activeAccount.currentAccount
     }
 
-    submit() {
-        this.createNewWallet()
-        this.setActiveAccount()
-        this.$store.commit('REMOVE_TEMPORARY_LOGIN_INFO')
-        this.$router.push('dashBoard')
+    get accountName() {
+      return this.currentAccount.name
     }
 
-    createNewWallet(): void {
-        const {password, mnemonic} = this.activeAccount.temporaryLoginInfo
+    get seed(): string {
+      return this.activeAccount.temporaryLoginInfo.mnemonic
+    }
 
-        new AppWallet().createFromMnemonic(
-            'SeedWallet',
-            new Password(password),
-            mnemonic,
-            this.currentAccount.networkType,
-            this.$store,
-        )
+    get networkType() {
+      return this.activeAccount.currentAccount.networkType
+    }
+
+    get password() {
+      return this.activeAccount.temporaryLoginInfo.password
+    }
+
+    submit() {
+        const {accountName, seed, networkType, password} = this
+        try {
+            new AppWallet().createFromMnemonic(
+                'SeedWallet',
+                new Password(password),
+                seed,
+                networkType,
+                this.$store,
+            )
+            localSave('activeAccountName', accountName)
+            this.$store.commit('REMOVE_TEMPORARY_LOGIN_INFO')
+            this.$router.push('/dashboard')
+            this.setActiveAccount()
+        } catch (error) {
+            throw new Error(error)
+        }
     }
 
     setActiveAccount(): void {

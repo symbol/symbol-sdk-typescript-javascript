@@ -13,7 +13,7 @@ import {block1} from '../../../__mocks__/network/block1'
 import {OnWalletChange} from '@/core/services/eventHandlers/onWalletChange'
 import {setWalletsBalances} from '@/core/services/wallets/setWalletsBalances'
 
-const {maxRollbackBlocks, defaultDynamicFeeMultiplier} = networkConfig
+const {maxRollbackBlocks,maxDifficultyBlocks, defaultDynamicFeeMultiplier} = networkConfig
 
 jest.mock('@/core/model/Notice')
 jest.mock('@/core/services/eventHandlers/onWalletChange')
@@ -301,7 +301,7 @@ describe('Network properties', () => {
       feeMultiplier: 10,
     }
     // @ts-ignore
-    networkProperties.lastBlocks = [...Array(maxRollbackBlocks + 10)].map(() => oldBlocks)
+    networkProperties.lastBlocks = [...Array(maxDifficultyBlocks + 10)].map(() => oldBlocks)
 
     // @ts-ignore
     networkProperties.handleLastBlock(newBlock, 'http://localhost:3000')
@@ -312,10 +312,10 @@ describe('Network properties', () => {
     expect(commitCall.NetworkProperties.healthy).toBe(true)
     expect(commitCall.NetworkProperties.height).toBe(1000)
     expect(commitCall.NetworkProperties.lastBlock).toBe(newBlock)
-    expect(commitCall.NetworkProperties.lastBlocks.length).toBe(maxRollbackBlocks)
+    expect(commitCall.NetworkProperties.lastBlocks.length).toBe(maxDifficultyBlocks)
     expect(commitCall.NetworkProperties.lastBlocks[0]).toBe(newBlock)
     expect(commitCall.NetworkProperties.lastBlocks)
-      .toStrictEqual([ newBlock, ...[...Array(maxRollbackBlocks - 1)].map(() => oldBlocks) ])
+      .toStrictEqual([ newBlock, ...[...Array(maxDifficultyBlocks - 1)].map(() => oldBlocks) ])
     expect(commitCall.NetworkProperties.lastBlockTimestamp).toBe(116060537287)
     expect(commitCall.NetworkProperties.loading).toBe(false)
     expect(commitCall.NetworkProperties.networkType).toBe(null)

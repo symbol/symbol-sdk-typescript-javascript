@@ -58,11 +58,11 @@ export const setMosaics = (wallet: AppWallet, store: Store<AppState>) => {
             const balance = networkMosaic !== undefined && networkMosaic.balance
                 ? networkMosaic.balance : 0
 
-            new AppWallet(wallet).updateAccountBalance(balance, store)
+            wallet.updateAccountBalance(balance, store)
             store.commit('SET_MOSAICS_LOADING', false)
             resolve(true)
         } catch (error) {
-            new AppWallet(wallet).updateAccountBalance(0, store)
+            wallet.updateAccountBalance(0, store)
             store.commit('SET_MOSAICS_LOADING', false)
             reject(error)
         }

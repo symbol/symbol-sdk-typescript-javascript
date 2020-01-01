@@ -1,5 +1,5 @@
 import {TransactionType, Address, AggregateTransaction} from 'nem2-sdk'
-import {AppMosaic, AppWallet, AppState, FormattedTransaction} from '@/core/model'
+import {AppMosaic, AppState, FormattedTransaction} from '@/core/model'
 import {
    setNamespaces, getTransactionTypesFromAggregate, mosaicsAmountViewFromAddress, handleRecipientAddressAsNamespaceId
 } from '@/core/services'
@@ -34,8 +34,8 @@ export const onTransactionRefreshModule = (store: any) => { // @TODO: check how 
     if (mutation.type === 'ADD_CONFIRMED_TRANSACTION') {
      try {
         const {node, networkCurrency} = state.account
+        const {wallet} = state.account
         const {address} = state.account.wallet
-        const appWallet = new AppWallet(state.account.wallet)
         const accountAddress = Address.createFromRawAddress(address)
 
         const mosaicAmountViews = await mosaicsAmountViewFromAddress(node, accountAddress)
@@ -43,7 +43,7 @@ export const onTransactionRefreshModule = (store: any) => { // @TODO: check how 
         const ownedNetworkCurrency = appMosaics.find(({hex}) => hex === networkCurrency.hex)
         const balance = ownedNetworkCurrency === undefined ? 0 : ownedNetworkCurrency.balance
 
-        appWallet.updateAccountBalance(balance, store)
+        wallet.updateAccountBalance(balance, store)
         store.commit('UPDATE_MOSAICS', appMosaics)
       
         const formattedTransaction: FormattedTransaction = mutation.payload[0] 
@@ -58,11 +58,11 @@ export const onTransactionRefreshModule = (store: any) => { // @TODO: check how 
          }
 
          if (txTypeToSetAccountInfo.some(a => transactionTypes.some(b => b === a))) {
-            appWallet.setAccountInfo(store)
+            wallet.setAccountInfo(store)
          }
 
          if (txTypeToGetMultisigInfo.some(a => transactionTypes.some(b => b === a))) {
-            appWallet.setMultisigStatus(node, store)
+            wallet.setMultisigStatus(node, store)
          }
 
          handleRecipientAddressAsNamespaceId([formattedTransaction], store)

@@ -54,7 +54,7 @@ describe('TransactionConfirmation when staged transaction isn\'t set', () => {
             modules: {
                 account: {
                     state: Object.assign(accountState.state, {
-                        wallet: hdAccount.wallets[0],
+                        wallet: AppWallet.createFromDTO(hdAccount.wallets[0]),
                         mosaics,
                         networkCurrency,
                         multisigAccountInfo,
@@ -123,7 +123,7 @@ describe('TransactionConfirmation when staged transaction is set', () => {
             modules: {
                 account: {
                     state: Object.assign(accountState.state, {
-                        wallet: hdAccount.wallets[0],
+                        wallet: AppWallet.createFromDTO(hdAccount.wallets[0]),
                     }),
                 },
                 app: {
@@ -183,6 +183,7 @@ describe('TransactionConfirmation when staged transaction is set', () => {
         })
 
         wrapper.vm.submit()
+        expect(mockTriggerNotice.mock.calls[0][0]).toBe('')
         expect(mockTriggerNotice).toHaveBeenCalledTimes(0)
     })
 })
@@ -193,8 +194,7 @@ describe('TransactionConfirmation when staged transaction is a lock', () => {
     let wrapper
     let state
 
-    // @ts-ignore
-    const wallet = new AppWallet(hdAccount.wallets[0])
+    const wallet = AppWallet.createFromDTO(hdAccount.wallets[0])
     const {publicKey, networkType} = wallet
 
     const transaction = TransferTransaction.create(
@@ -278,8 +278,7 @@ describe('TransactionConfirmation when staged transaction is a cosignature', () 
     let wrapper
     let state
 
-        // @ts-ignore
-    const wallet = new AppWallet(hdAccount.wallets[0])
+    const wallet = AppWallet.createFromDTO(hdAccount.wallets[0])
 
     const aggregateTransaction = new AggregateTransaction(
         NetworkType.MIJIN_TEST,

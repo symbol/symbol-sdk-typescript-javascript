@@ -99,18 +99,20 @@ export const AppAccounts = () => ({
         let accountMap = JSON.parse(localRead('accountMap'))
         accountMap[accountName].password = newCipherPassword
         accountMap[accountName].wallets = accountMap[accountName].wallets
-            .filter(item => item.sourceType !== CreateWalletType.trezor)
-            .map((item) => {
-                if (item.encryptedMnemonic) {
-                    item.encryptedMnemonic = newEncryptedMnemonic
+            .filter(wallet => wallet.sourceType !== CreateWalletType.trezor)
+            .map((wallet) => {
+                if (wallet.encryptedMnemonic) {
+                    wallet.encryptedMnemonic = newEncryptedMnemonic
                 }
-                const privateKey = new AppWallet({simpleWallet: item.simpleWallet}).getAccount(new Password(previousPassword)).privateKey
-                item.simpleWallet = SimpleWallet.createFromPrivateKey(item.name, new Password(newPassword), privateKey, item.networkType)
-                return item
+                const {privateKey} = AppWallet.createFromDTO(wallet).getAccount(new Password(previousPassword))
+                const updatedSimpleWallet = SimpleWallet.createFromPrivateKey(
+                    wallet.name, new Password(newPassword), privateKey, wallet.networkType,
+                )
+                return {...wallet, updatedSimpleWallet}
             })
 
         const newWallet = accountMap[accountName].wallets.find(item => item.address == store.state.account.wallet.address)
-        store.commit('SET_WALLET', newWallet)
+        store.commit('SET_WALLET', AppWallet.createFromDTO(newWallet))
         store.commit('SET_WALLET_LIST', accountMap[accountName].wallets)
         localSave('accountMap', JSON.stringify(accountMap))
     },

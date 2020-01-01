@@ -15,6 +15,7 @@ import {
     mosaics,
     CosignWallet
 } from "@MOCKS/index"
+import {AppWallet} from '@/core/model'
 // @ts-ignore
 const localVue = createLocalVue()
 const router = new VueRouter()
@@ -40,7 +41,7 @@ describe('MultisigCosign', () => {
                     modules: {
                         account: {
                             state: Object.assign(accountState.state, {
-                                wallet: CosignWallet,
+                                wallet: AppWallet.createFromDTO(CosignWallet),
                                 mosaics,
                                 multisigAccountInfo
                             }),

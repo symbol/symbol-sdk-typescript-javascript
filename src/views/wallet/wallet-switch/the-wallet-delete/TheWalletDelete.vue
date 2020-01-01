@@ -1,11 +1,11 @@
 <template>
-  <div class="delete_wallet_container">
+  <div class="delete_wallet_container" @keyup.enter="submit">
     <Modal
-      v-model="visible"
-      class-name="vertical-center-modal"
-      :footer-hide="true"
-      :transfer="false"
-      @on-cancel="visible=false"
+            v-model="visible"
+            class-name="vertical-center-modal"
+            :footer-hide="true"
+            :transfer="false"
+            @on-cancel="visible=false"
     >
       <div slot="header" class="checkPWDialogHeader">
         <span class="title">{{$t('delete_wallet')}} : {{walletToDelete.name}}</span>
@@ -30,9 +30,7 @@
 
 
 <script lang="ts">
-  import "./TheWalletDelete.less"
-  import {TheWalletDeleteTs} from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDeleteTs.ts'
-
-  export default class TheWalletDelete extends TheWalletDeleteTs {
-  }
+    import "./TheWalletDelete.less"
+    import {TheWalletDeleteTs} from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDeleteTs.ts'
+    export default class TheWalletDelete extends TheWalletDeleteTs { }
 </script>

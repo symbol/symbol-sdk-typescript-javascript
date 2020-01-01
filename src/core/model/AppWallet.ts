@@ -56,6 +56,14 @@ export class AppWallet {
     remoteAccount: RemoteAccount | null
     numberOfMosaics: number
 
+    get publicAccount(): PublicAccount {
+      return PublicAccount.createFromPublicKey(this.publicKey, this.networkType)
+    }
+
+    static createFromDTO(wallet) {
+      return Object.assign(new AppWallet(wallet),{simpleWallet:SimpleWallet.createFromDTO(wallet.simpleWallet)})
+    }
+
     createFromPrivateKey(name: string,
                          password: Password,
                          privateKey: string,
@@ -102,7 +110,6 @@ export class AppWallet {
             this.addNewWalletToList(store)
             return this
         } catch (error) {
-            console.log(error)
             throw new Error(error)
         }
     }
@@ -195,10 +202,7 @@ export class AppWallet {
     }
 
     getAccount(password: Password): Account {
-        const {encryptedKey, iv} = this.simpleWallet.encryptedPrivateKey
-        const {network} = this.simpleWallet
-        const privateKey = new EncryptedPrivateKey(encryptedKey, iv).decrypt(password)
-        return Account.createFromPrivateKey(privateKey, network)
+        return this.simpleWallet.open(password)
     }
 
     getRemoteAccountPrivateKey(password: string): string {
@@ -240,12 +244,11 @@ export class AppWallet {
         const accountMap = localRead('accountMap') === ''
             ? {} : JSON.parse(localRead('accountMap'))
         const newActiveWalletAddress = this.address
-        // if wallet exists ,switch to this wallet
         const localData = accountMap[accountName].wallets
         accountMap[accountName].activeWalletAddress = newActiveWalletAddress
         const flagWallet = localData.find(item => newActiveWalletAddress == item.address)  // find wallet in wallet list
-        if (flagWallet) {  // if wallet existed ,switch to this wallet
-            store.commit('SET_WALLET', flagWallet)
+        if (flagWallet) {
+            store.commit('SET_WALLET', AppWallet.createFromDTO(flagWallet))
             localSave('accountMap', JSON.stringify(accountMap))
             return
         }
@@ -276,7 +279,7 @@ export class AppWallet {
 
         if (store.state.account.wallet.address === this.address) {
             list[0].active = true
-            store.commit('SET_WALLET', list[0])
+            store.commit('SET_WALLET', AppWallet.createFromDTO(list[0]))
         }
 
         that.$Notice.success({
@@ -293,7 +296,10 @@ export class AppWallet {
 
         accountMap[accountName].activeWalletAddress = newActiveWalletAddress
         localSave('accountMap', JSON.stringify(accountMap))
-        store.commit('SET_WALLET', walletList.find(item => item.address == newActiveWalletAddress) || walletList[0])
+        const newWalletDTO = walletList
+            .find(item => item.address == newActiveWalletAddress) || walletList[0]
+        const newActiveWallet = AppWallet.createFromDTO(newWalletDTO)
+        store.commit('SET_WALLET', newActiveWallet)
     }
 
     async setAccountInfo(store: Store<AppState>): Promise<void> {
@@ -371,7 +377,9 @@ export class AppWallet {
 
         const updatedList = Object.assign([], newWalletList, {[newWalletIndex]: this})
         store.commit('SET_WALLET_LIST', updatedList)
-        if (store.state.account.wallet.address === this.address) store.commit('SET_WALLET', this)
+        if (store.state.account.wallet.address === this.address) {
+            store.commit('SET_WALLET', this)
+        }
         accountMap[accountName].wallets = updatedList
         localSave('accountMap', JSON.stringify(accountMap))
     }
@@ -394,9 +402,9 @@ export class AppWallet {
 
     /**
      * Routes a signedTransaction to the relevant announce method
-     * @param signedTransaction 
-     * @param store 
-     * @param signedLock 
+     * @param signedTransaction
+     * @param store
+     * @param signedLock
      */
     announceTransaction(
         signedTransaction: SignedTransaction | CosignatureSignedTransaction,
@@ -526,7 +534,4 @@ export class AppWallet {
         }
     }
 
-    get publicAccount(): PublicAccount {
-        return PublicAccount.createFromPublicKey(this.publicKey, this.networkType)
-    }
 }

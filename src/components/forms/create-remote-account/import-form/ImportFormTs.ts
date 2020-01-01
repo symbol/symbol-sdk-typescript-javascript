@@ -18,7 +18,7 @@ export class ImportFormTs extends Vue {
   validation = validation
 
   get wallet(): AppWallet {
-    return new AppWallet(this.activeAccount.wallet)
+    return this.activeAccount.wallet
   }
 
   submit() {

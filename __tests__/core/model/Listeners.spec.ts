@@ -5,7 +5,7 @@ import flushPromises from 'flush-promises'
 import {of} from 'rxjs'
 import {tap, mapTo} from 'rxjs/operators'
 import {block1} from '../../../__mocks__/network/block1'
-import {Notice, TRANSACTIONS_CATEGORIES, NoticeType, NetworkProperties} from '@/core/model'
+import {Notice, TRANSACTIONS_CATEGORIES, NoticeType} from '@/core/model'
 import {formatAndSave} from '@/core/services'
 import {Message, APP_PARAMS} from '@/config'
 jest.mock('@/core/services/transactions')

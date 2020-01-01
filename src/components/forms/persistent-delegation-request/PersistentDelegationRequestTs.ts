@@ -42,7 +42,7 @@ export class PersistentDelegationRequestTs extends Vue {
     }
 
     get wallet() {
-        return new AppWallet(this.activeAccount.wallet)
+        return this.activeAccount.wallet
     }
 
     get networkCurrency() {

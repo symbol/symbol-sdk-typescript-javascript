@@ -53,8 +53,7 @@ describe('Alias from namespace', () => {
                             state: Object.assign(accountState.state, {
                                 mosaics,
                                 multisigAccountInfo,
-                                // @ts-ignore
-                                wallet: new AppWallet(hdAccount.wallets[0]),
+                                wallet: AppWallet.createFromDTO(hdAccount.wallets[0]),
                                 currentAccount: new CurrentAccount(null, hdAccount.password, hdAccount.networkType)
                             }),
                             mutations: accountMutations.mutations

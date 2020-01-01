@@ -47,8 +47,7 @@ describe('MenuBar', () => {
             modules: {
                 account: {
                     state: Object.assign(accountState.state, {
-                        //@ts-ignore
-                        wallet: new AppWallet(hdAccount.wallets[0]),
+                        wallet: AppWallet.createFromDTO(hdAccount.wallets[0]),
                         currentAccount: new CurrentAccount(null, hdAccount.password, hdAccount.networkType),
                         node: 'http://endpoint.com:3000',
                     }),

@@ -35,8 +35,7 @@ describe('SettingNormal', () => {
                 modules: {
                     account: {
                         state: Object.assign(accountState.state, {
-                            // @ts-ignore
-                            wallet: new AppWallet(hdAccount.wallets[0])
+                            wallet: AppWallet.createFromDTO(hdAccount.wallets[0])
                         }),
                         mutations: accountMutations.mutations,
                     },
@@ -82,6 +81,4 @@ describe('SettingNormal', () => {
         expect(store.state.app.explorerBasePath).toBe(testUrl)
         expect(explorerLinkList.find(item => item.explorerBasePath == testUrl)).not.toBe(null)
     })
-
-
 })

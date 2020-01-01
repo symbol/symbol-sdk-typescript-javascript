@@ -42,7 +42,7 @@ export class TransactionConfirmationTs extends Vue {
     }
 
     get wallet() {
-        return new AppWallet(this.activeAccount.wallet);
+        return this.activeAccount.wallet
     }
 
     get stagedTransaction(): StagedTransaction {

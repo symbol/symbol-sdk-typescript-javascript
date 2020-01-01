@@ -1,5 +1,5 @@
 import {Transaction} from 'nem2-sdk'
-import {AppState, StagedTransaction, SignTransaction, AppWallet} from '@/core/model'
+import {AppState, StagedTransaction, SignTransaction} from '@/core/model'
 import {Store} from 'vuex'
 import {transactionConfirmationObservable} from "@/core/services/transactions"
 import {LockParams} from '@/core/model/LockParams'
@@ -53,8 +53,9 @@ export const signAndAnnounce = async({ transaction, store, lockParams }:{
                     })
                 }
 
-                new AppWallet(store.state.account.wallet)
-                    .announceTransaction(signedTransaction, store, signedLock)
+                store.state.account.wallet.announceTransaction(
+                    signedTransaction, store, signedLock,
+                )
                 
                 if (lockParams && lockParams.announceInLock) {
                     return resolve({

@@ -30,7 +30,7 @@ export class TheWalletUpdateTs extends Vue {
     }
 
     submit() {
-        new AppWallet(this.walletToUpdate).updateWalletName(this.wallet.name, this.$store)
+        AppWallet.createFromDTO(this.walletToUpdate).updateWalletName(this.wallet.name, this.$store)
         this.$emit('closeUpdateDialog')
     }
 

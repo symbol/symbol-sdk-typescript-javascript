@@ -19,7 +19,7 @@ export class MultisigCosignTs extends Vue {
     TRANSACTIONS_CATEGORIES = TRANSACTIONS_CATEGORIES
 
     get wallet() {
-        return new AppWallet(this.activeAccount.wallet)
+        return this.activeAccount.wallet
     }
 
     get address() {

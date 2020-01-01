@@ -37,7 +37,7 @@ export class TransactionListTs extends Vue {
     mode: string
 
     get wallet() {
-        return new AppWallet(this.activeAccount.wallet)
+        return this.activeAccount.wallet
     }
 
     get transactionsLoading() {

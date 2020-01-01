@@ -115,6 +115,12 @@ jest.mock('nem2-sdk/dist/src/infrastructure/BlockHttp', () => ({
   }),
 }))
 
+jest.mock('nem2-sdk/dist/src/infrastructure/NamespaceHttp', () => ({
+  NamespaceHttp: jest.fn().mockImplementation((...args) => ({
+    endpoint: args,
+  })),
+}))
+
 jest.mock('nem2-sdk/dist/src/infrastructure/ChainHttp', () => ({
   ChainHttp: jest.fn().mockImplementation(endpoint => {
     if (endpoint === 'http://errored.endpoint:3000') {
@@ -126,7 +132,7 @@ jest.mock('nem2-sdk/dist/src/infrastructure/ChainHttp', () => ({
 
 jest.mock('nem2-sdk/dist/src/service/NamespaceService', () => ({
   NamespaceService: jest.fn().mockImplementation(namespaceHttp => {
-    const endpoint = namespaceHttp.namespaceRoutesApi._basePath
+    const [endpoint] = namespaceHttp.endpoint
     if (endpoint === 'http://cat.currency:3000') {
       return {namespace: mockCatNamespace}
     }
