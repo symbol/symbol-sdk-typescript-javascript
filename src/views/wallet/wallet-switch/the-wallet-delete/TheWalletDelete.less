@@ -110,7 +110,7 @@
         height: 60px;
         font-size: 16px;
         font-weight: 400;
-        color: #999999;
+        color: #999;
         padding-left: 40px;
         border: 1px solid #CCCCCC;
         border-radius: 8px;
@@ -127,10 +127,11 @@
         text-align: center;
         color: #fff;
         background: #20B5AC;
-        border: none;
-        border-radius: 30px;
         margin: 40px auto 0;
         position: relative;
+      }
+      button:hover{
+        box-shadow: 0 0 10px #20B5AC;
       }
     }
   }
@@ -173,6 +174,15 @@
   .orange {
     font-size: 16px !important;
     font-weight: bold !important;
-    color: rgba(241, 95, 35, 1) !important;
+    color: rgba(241, 95, 35) !important;
+  }
+  .password-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .ivu-tooltip {
+    margin-left: 120px;
   }
 }

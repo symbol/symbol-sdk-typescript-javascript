@@ -279,7 +279,7 @@ const routers = [
                           path: '/inputAccountInfo',
                           name: 'inputAccountInfo',
                           meta: {
-                            icon: createStepImage.createStepImage1,
+                            icon: importStepImage.importStepImage1,
                             nextPage:'importMnemonic'
                           },
                           component: () => import('@/components/forms/create-account-info/CreateAccountInfo.vue'),

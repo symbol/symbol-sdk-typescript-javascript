@@ -11,7 +11,7 @@
               v-validate="validation.newAccountName"
               data-vv-name="newAccountName"
               :data-vv-as="$t('newAccountName')"
-              :placeholder="$t('accountName')"
+              :placeholder="$t('account_name')"
               v-focus
               v-model="formItem.accountName"></input>
           </ErrorTooltip>

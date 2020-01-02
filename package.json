@@ -1,6 +1,6 @@
 {
   "name": "nem2_desk_wallet_cn",
-  "version": "0.8.9",
+  "version": "0.8.10",
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve ",

@@ -7,7 +7,6 @@ export default class CreateAccountTs extends Vue {
     StepBarTitleList = createStepBarTitleList
 
     get currentRouterIndex() {
-        // @ts-ignore
         const {name} = this.$route
         // @ts-ignore
         return routes[0].children[7].children[2].children.findIndex(item => item.name == name) + 1

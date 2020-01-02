@@ -36,18 +36,18 @@ export const importInfoList = [
 ]
 
 export const createStepBarTitleList = [
-    'Create Account',
-    'Generate Mnemonic',
-    'BackUp Mnemonic Phrase',
-    'Verify Mnemonic phrase',
-    'Finished'
+    'Create_Account',
+    'Generate_Mnemonic',
+    'Backup_Mnemonic_Phrase',
+    'Verify_Mnemonic_phrase',
+    'Finish'
 ]
-
+    
 export const importStepBarTitleList = [
-    'Create Account',
-    'Type Mnemonic Phrase',
-    'Choose Wallets',
-    'Finished'
+    'Create_Account',
+    'Type_Mnemonic_Phrase',
+    'Choose_Wallets',
+    'Finish'
 ]
 
 export const importStepImage = {

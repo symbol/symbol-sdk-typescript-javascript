@@ -880,7 +880,6 @@
   "HD_Derivation_Path": "Derivation Path",
   "ID": "#",
   "Balance": "Balance",
-  "Choose_Wallets": "Select Wallets",
   "Access_My_Wallet": "Open my wallet",
   "hex": "Mosaic",
   "dashBoard": "Dashboard",
@@ -899,5 +898,12 @@
   "password_is_invalid": "The password must contain a minimum of 8 characters with alphabet letters and numbers.",
   "all_nodes_cannot_be_deleted": "All nodes cannot be deleted",
   "mnemonic_generation_error": "Something went wrong when generating your wallet seed.",
-  "Mosaic_name": "Mosaic name"
+  "Mosaic_name": "Mosaic name",
+  "Create_Account": "Create Account",
+  "Generate_Mnemonic": "Generate Mnemonic",
+  "Backup_Mnemonic_Phrase": "Backup Mnemonic Phrase",
+  "Verify_Mnemonic_phrase": "Verify Mnemonic phrase",
+  "Finish": "Finish",
+  "Type_Mnemonic_Phrase": "Type Mnemonic Phrase",
+  "Choose_Wallets": "Choose Wallets"
 }
