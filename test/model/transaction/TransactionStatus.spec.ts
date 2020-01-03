@@ -17,6 +17,7 @@
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { TransactionStatusTypeEnum } from 'nem2-sdk-openapi-typescript-node-client';
+import { TransactionStateTypeEnum } from 'nem2-sdk-openapi-typescript-node-client';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { TransactionStatus } from '../../../src/model/transaction/TransactionStatus';
 import { UInt64 } from '../../../src/model/UInt64';
@@ -25,7 +26,7 @@ describe('TransactionStatus', () => {
     it('should createComplete TransactionStatus object', () => {
         const transactionStatusDTO = {
             deadline: Deadline.createFromDTO('1'),
-            group: 'confirmed',
+            group: TransactionStateTypeEnum.Confirmed,
             hash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
             height: new UInt64([1, 0]),
             code: TransactionStatusTypeEnum.Success,
@@ -35,7 +36,7 @@ describe('TransactionStatus', () => {
             transactionStatusDTO.group,
             transactionStatusDTO.hash,
             transactionStatusDTO.deadline,
-            transactionStatusDTO.code.toString(),
+            transactionStatusDTO.code,
             transactionStatusDTO.height,
         );
 

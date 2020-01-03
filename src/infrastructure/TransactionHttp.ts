@@ -126,10 +126,10 @@ export class TransactionHttp extends Http implements TransactionRepository {
      */
     private toTransactionStatus(dto: TransactionStatusDTO): TransactionStatus {
         return new TransactionStatus(
-            dto.group.toString(),
+            dto.group,
             dto.hash,
             Deadline.createFromDTO(UInt64.fromNumericString(dto.deadline).toDTO()),
-            dto.code ? dto.code.toString() : '',
+            dto.code,
             dto.height ? UInt64.fromNumericString(dto.height) : undefined);
     }
 
