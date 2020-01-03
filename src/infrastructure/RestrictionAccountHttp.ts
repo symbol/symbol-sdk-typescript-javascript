@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-import {from as observableFrom, Observable, throwError} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import { RestrictionAccountRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
+import { from as observableFrom, Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { DtoMapping } from '../core/utils/DtoMapping';
 import { Address } from '../model/account/Address';
-import { NetworkType } from '../model/blockchain/NetworkType';
 import { AccountRestriction } from '../model/restriction/AccountRestriction';
 import { AccountRestrictions } from '../model/restriction/AccountRestrictions';
-import { RestrictionAccountRoutesApi } from './api/restrictionAccountRoutesApi';
-import {Http} from './Http';
+import { Http } from './Http';
 import { RestrictionAccountRepository } from './RestrictionAccountRespository';
 
 /**

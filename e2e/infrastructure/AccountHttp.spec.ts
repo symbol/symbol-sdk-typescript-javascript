@@ -226,6 +226,19 @@ describe('AccountHttp', () => {
     });
 
     describe('transactions', () => {
+        it('should not return accounts when account does not exist', () => {
+            return accountRepository.getAccountInfo(Account.generateNewAccount(networkType).address).toPromise().then(r => {
+                return Promise.reject('should fail!');
+            }, err => {
+                const error = JSON.parse(err.message);
+                expect(error.statusCode).to.be.eq(404);
+                expect(error.errorDetails.statusMessage).to.be.eq('Not Found');
+                return Promise.resolve();
+            });
+        });
+    });
+
+    describe('transactions', () => {
         it('should call transactions successfully', (done) => {
             accountRepository.getAccountTransactions(publicAccount.address).subscribe((transactions) => {
                 expect(transactions.length).to.be.greaterThan(0);

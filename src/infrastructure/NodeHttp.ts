@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+import { NodeRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { NodeInfo } from '../model/node/NodeInfo';
 import { NodeTime } from '../model/node/NodeTime';
 import { UInt64 } from '../model/UInt64';
-import { NodeRoutesApi } from './api';
 import { Http } from './Http';
 import { NodeRepository } from './NodeRepository';
 

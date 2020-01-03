@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import {from as observableFrom, Observable, throwError} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
-import {BlockchainStorageInfo} from '../model/blockchain/BlockchainStorageInfo';
+import { DiagnosticRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
+import { from as observableFrom, Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { BlockchainStorageInfo } from '../model/blockchain/BlockchainStorageInfo';
 import { ServerInfo } from '../model/diagnostic/ServerInfo';
-import { DiagnosticRoutesApi } from './api';
-import {DiagnosticRepository} from './DiagnosticRepository';
-import {Http} from './Http';
+import { DiagnosticRepository } from './DiagnosticRepository';
+import { Http } from './Http';
 
 /**
  * Diagnostic http repository.

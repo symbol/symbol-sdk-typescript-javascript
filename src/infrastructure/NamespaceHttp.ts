@@ -13,28 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {from as observableFrom, Observable, throwError} from 'rxjs';
-import {catchError, map, mergeMap} from 'rxjs/operators';
-import {Convert as convert, RawAddress as AddressLibrary} from '../core/format';
+import { NamespaceRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
+import { from as observableFrom, Observable, throwError } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
+import { Convert as convert, RawAddress as AddressLibrary } from '../core/format';
 import { AccountNames } from '../model/account/AccountNames';
-import {Address} from '../model/account/Address';
-import {PublicAccount} from '../model/account/PublicAccount';
+import { Address } from '../model/account/Address';
+import { PublicAccount } from '../model/account/PublicAccount';
 import { NetworkType } from '../model/blockchain/NetworkType';
-import {MosaicId} from '../model/mosaic/MosaicId';
+import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicNames } from '../model/mosaic/MosaicNames';
-import {AddressAlias} from '../model/namespace/AddressAlias';
-import {Alias} from '../model/namespace/Alias';
-import {AliasType} from '../model/namespace/AliasType';
-import {EmptyAlias} from '../model/namespace/EmptyAlias';
-import {MosaicAlias} from '../model/namespace/MosaicAlias';
-import {NamespaceId} from '../model/namespace/NamespaceId';
-import {NamespaceInfo} from '../model/namespace/NamespaceInfo';
-import {NamespaceName} from '../model/namespace/NamespaceName';
-import {UInt64} from '../model/UInt64';
-import { NamespaceRoutesApi } from './api';
-import {Http} from './Http';
-import {NamespaceRepository} from './NamespaceRepository';
-import {QueryParams} from './QueryParams';
+import { AddressAlias } from '../model/namespace/AddressAlias';
+import { Alias } from '../model/namespace/Alias';
+import { AliasType } from '../model/namespace/AliasType';
+import { EmptyAlias } from '../model/namespace/EmptyAlias';
+import { MosaicAlias } from '../model/namespace/MosaicAlias';
+import { NamespaceId } from '../model/namespace/NamespaceId';
+import { NamespaceInfo } from '../model/namespace/NamespaceInfo';
+import { NamespaceName } from '../model/namespace/NamespaceName';
+import { UInt64 } from '../model/UInt64';
+import { Http } from './Http';
+import { NamespaceRepository } from './NamespaceRepository';
+import { QueryParams } from './QueryParams';
 
 /**
  * Namespace http repository.

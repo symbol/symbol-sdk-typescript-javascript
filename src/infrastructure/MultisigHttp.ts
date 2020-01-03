@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import {from as observableFrom, Observable, throwError} from 'rxjs';
-import {catchError, map, mergeMap} from 'rxjs/operators';
-import {Address} from '../model/account/Address';
-import {MultisigAccountGraphInfo} from '../model/account/MultisigAccountGraphInfo';
-import {MultisigAccountInfo} from '../model/account/MultisigAccountInfo';
-import {PublicAccount} from '../model/account/PublicAccount';
+import { MultisigRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
+import { from as observableFrom, Observable, throwError } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
+import { Address } from '../model/account/Address';
+import { MultisigAccountGraphInfo } from '../model/account/MultisigAccountGraphInfo';
+import { MultisigAccountInfo } from '../model/account/MultisigAccountInfo';
+import { PublicAccount } from '../model/account/PublicAccount';
 import { NetworkType } from '../model/blockchain/NetworkType';
-import { MultisigRoutesApi } from './api/multisigRoutesApi';
-import {Http} from './Http';
+import { Http } from './Http';
 import { MultisigRepository } from './MultisigRepository';
 
 /**

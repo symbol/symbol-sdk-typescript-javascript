@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-import {from as observableFrom, Observable, throwError} from 'rxjs';
-import {catchError, map, mergeMap} from 'rxjs/operators';
+import { MosaicRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
+import { from as observableFrom, Observable, throwError } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Address } from '../model/account/Address';
-import {PublicAccount} from '../model/account/PublicAccount';
+import { PublicAccount } from '../model/account/PublicAccount';
 import { NetworkType } from '../model/blockchain/NetworkType';
-import {MosaicFlags} from '../model/mosaic/MosaicFlags';
-import {MosaicId} from '../model/mosaic/MosaicId';
-import {MosaicInfo} from '../model/mosaic/MosaicInfo';
-import {UInt64} from '../model/UInt64';
-import { MosaicRoutesApi } from './api';
-import {Http} from './Http';
-import {MosaicRepository} from './MosaicRepository';
+import { MosaicFlags } from '../model/mosaic/MosaicFlags';
+import { MosaicId } from '../model/mosaic/MosaicId';
+import { MosaicInfo } from '../model/mosaic/MosaicInfo';
+import { UInt64 } from '../model/UInt64';
+import { Http } from './Http';
+import { MosaicRepository } from './MosaicRepository';
 
 /**
  * Mosaic http repository.

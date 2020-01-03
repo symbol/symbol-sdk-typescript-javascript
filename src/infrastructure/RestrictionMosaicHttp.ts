@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-import {from as observableFrom, Observable, throwError} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import {
+    MosaicAddressRestrictionDTO,
+    MosaicGlobalRestrictionDTO,
+    RestrictionMosaicRoutesApi
+} from 'nem2-sdk-openapi-typescript-node-client';
+import { from as observableFrom, Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { Address } from '../model/account/Address';
-import { NetworkType } from '../model/blockchain/NetworkType';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicAddressRestriction } from '../model/restriction/MosaicAddressRestriction';
 import { MosaicGlobalRestriction } from '../model/restriction/MosaicGlobalRestriction';
 import { MosaicGlobalRestrictionItem } from '../model/restriction/MosaicGlobalRestrictionItem';
-import { RestrictionMosaicRoutesApi } from './api/restrictionMosaicRoutesApi';
-import {Http} from './Http';
-import { MosaicAddressRestrictionDTO } from './model/mosaicAddressRestrictionDTO';
-import { MosaicGlobalRestrictionDTO } from './model/mosaicGlobalRestrictionDTO';
+import { Http } from './Http';
 import { RestrictionMosaicRepository } from './RestrictionMosaicRepository';
 
 /**
