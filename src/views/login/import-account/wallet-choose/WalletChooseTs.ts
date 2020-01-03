@@ -3,7 +3,7 @@ import {mapState} from "vuex"
 import {AppInfo, AppWallet, StoreAccount} from "@/core/model"
 import {getRelativeMosaicAmount, localSave, getTenAddressesFromMnemonic} from "@/core/utils"
 import {NetworkType, Password, AccountHttp} from "nem2-sdk"
-import {Message} from "@/config"
+import {Message, APP_PARAMS} from "@/config"
 
 @Component({
     computed: {
@@ -92,7 +92,12 @@ export default class WalletChooseTs extends Vue {
             return
         }
         walletList.forEach((item) => {
-            new AppWallet().createFromPath('Seed-' + item.path, new Password(password), Number(item.path), networkType, this.$store, item.balance)
+            new AppWallet().createFromPath(
+                `${APP_PARAMS.SEED_WALLET_NAME_PREFIX}${item.path}`,
+                new Password(password),
+                Number(item.path), networkType,
+                this.$store, item.balance,
+            )
         })
         localSave('activeAccountName', accountName)
         this.$store.commit('REMOVE_TEMPORARY_LOGIN_INFO')

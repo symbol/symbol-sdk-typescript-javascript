@@ -17,6 +17,7 @@ import step1Of3 from '@/common/img/wallet/1_3.png'
 import step2Of3 from '@/common/img/wallet/2_3.png'
 import step3Of3 from '@/common/img/wallet/3_3.png'
 
+import {APP_PARAMS} from '@/config'
 
 const _walletFnNavConfig = [
     {name: 'create', to: '/walletCreate', active: false},
@@ -52,7 +53,7 @@ export const walletStyleSheetType = {
     otherWallet: 'walletItem_bg_2',
     activeWallet: 'walletItem_bg_0'
 }
-export const seedWalletTitle = 'seedWallet-'
+export const seedWalletTitle = APP_PARAMS.SEED_WALLET_NAME_PREFIX
 export const serviceSwitchFnConfig = [
     {
         name: 'mosaic',

@@ -96,7 +96,7 @@ export const getAbsoluteMosaicAmount = (amount: number, divisibility: number) =>
  */
 export const renderMosaicNames = (mosaics: Mosaic[],
                                   store: Store<AppState>): string => {
-    const mosaicList = store.state.account.mosaics
+const mosaicList = store.state.account.mosaics
     const items = mosaics
         .map(mosaic => {
             const hex = mosaic.id.toHex()
@@ -108,7 +108,7 @@ export const renderMosaicNames = (mosaics: Mosaic[],
         .filter(x => x)
 
     if (!items.length) return 'N/A'
-    const networkMosaicIndex = items.indexOf(store.state.account.networkCurrency.hex)
+    const networkMosaicIndex = items.indexOf(store.state.account.networkCurrency.name)
     if (networkMosaicIndex <= 0) return items.join(', ')
     const networkCurrency = items.splice(networkMosaicIndex, 1)
     items.unshift(networkCurrency[0])

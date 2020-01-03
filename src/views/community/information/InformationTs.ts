@@ -11,9 +11,8 @@ export class informationTs extends Vue {
     loadAllData = false
     remainingWords = 300
     scroll: any
-    currentArticle: any = {title: 'null', content: 'null'}
+    currentArticle = {title: null, content: null, creator: null, pubDate: null} 
     formatDate = formatDate
-
 
     addArticleStartIndex() {
         this.startPage += 10

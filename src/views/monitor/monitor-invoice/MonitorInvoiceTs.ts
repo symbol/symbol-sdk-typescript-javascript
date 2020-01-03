@@ -118,7 +118,11 @@ export class MonitorInvoiceTs extends Vue {
         const {transferTransaction} = this
         if (!transferTransaction || !(transferTransaction instanceof TransferTransaction)) return null
         try {
-            return QRCodeGenerator.createTransactionRequest(transferTransaction)
+            return QRCodeGenerator.createTransactionRequest(
+                transferTransaction,
+                this.wallet.networkType,
+                this.app.NetworkProperties.generationHash,
+            )
         } catch (e) {
             return null
         }

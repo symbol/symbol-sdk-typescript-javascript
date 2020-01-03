@@ -47,12 +47,12 @@
           <input v-show="false" v-model="accountPassword" v-validate disabled data-vv-name="accountPassword"/>
 
           <div class="password-tip">
-            <span class="prompt pointer" @click="isShowHint = !isShowHint">{{$t('hint')}}</span>
+            <span class="prompt pointer" @click="isShowHint = !isShowHint">{{$t('Password_hint')}}</span>
             <span class="pointer create-account"
                   @click="toChooseImportWay">{{$t('create_a_new_account')}}?</span>
           </div>
           <div class="hint" v-if="isShowHint">
-            {{$t('hint')}} : {{hintText}}
+            {{$t('Password_hint')}}: {{hintText}}
           </div>
           <div v-if="accountList.length" class="pointer button" @click="submit">{{$t('login')}}</div>
           <div v-else class="pointer button" @click="toChooseImportWay">{{$t('register')}}</div>

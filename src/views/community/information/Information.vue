@@ -1,11 +1,12 @@
 <template>
   <div class="informationWrap secondary_page_animate">
     <Spin v-if="!currentArticle.title" size="large" fix class="absolute"></Spin>
-    <div class="left left_article_list radius">
+    <div v-if="currentArticle.title" class="left left_article_list radius">
       <div class="list_container scroll" ref="listContainer" @scroll="automaticLoadingArticle">
         <div
           @click="switchArticle(index)"
           v-for="(a,index) in articleList"
+          :key="index"
           :class="['article_summary_item',a.isSelect?'selected':'','pointer']"
         >
           <div class="title">{{a.title}}</div>
