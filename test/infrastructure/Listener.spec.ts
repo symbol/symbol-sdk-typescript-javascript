@@ -56,7 +56,7 @@ describe('Listener', () => {
                 address: errorEncodedAddress,
                 deadline: '1010',
                 hash: 'transaction-hash',
-                status: 'error-message',
+                code: 'error-message',
             };
 
             const listener = new Listener('ws://localhost:3000', WebSocketMock);
@@ -75,7 +75,7 @@ describe('Listener', () => {
             const transactionStatusError = reportedStatus[0];
             expect(transactionStatusError.address).to.deep.equal(errorAddress);
             expect(transactionStatusError.hash).to.be.equal(statusInfoErrorDTO.hash);
-            expect(transactionStatusError.status).to.be.equal(statusInfoErrorDTO.status);
+            expect(transactionStatusError.code).to.be.equal(statusInfoErrorDTO.code);
             deepEqual(transactionStatusError.deadline.toDTO(), UInt64.fromNumericString(statusInfoErrorDTO.deadline).toDTO());
 
         });
