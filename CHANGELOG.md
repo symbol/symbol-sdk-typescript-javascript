@@ -6,11 +6,11 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 ## 06-Jan-2020
 
 **Milestone**: Fushicho.3
-| Versions  |   |   |
-|---|---|---|
-| SDK Core| v0.16.2 | https://www.npmjs.com/package/nem2-sdk |
-| Catbuffer Library| v0.0.7 | https://www.npmjs.com/package/catbuffer |
-| Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client |
+ Versions  |   |
+---|---|---
+SDK Core| v0.16.2 | https://www.npmjs.com/package/nem2-sdk 
+Catbuffer Library| v0.0.7 | https://www.npmjs.com/package/catbuffer 
+Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client 
 
 - Refactored to replace generated codes by public library package for both `Catbuffer` and `OpenAPI Http Client`.
 - Added unresolved (mosaicId, address) support in `MosaicRestrictionTransaction`.
