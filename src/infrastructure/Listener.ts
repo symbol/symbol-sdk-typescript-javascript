@@ -160,12 +160,12 @@ export class Listener implements IListener {
                     extractBeneficiary(message, message.block.network), // passing `message` as `blockDTO`
                 ),
             });
-        } else if (message.status) {
+        } else if (message.code) {
             this.messageSubject.next({
                 channelName: ListenerChannelName.status, message: new TransactionStatusError(
                     Address.createFromEncoded(message.address),
                     message.hash,
-                    message.status,
+                    message.code,
                     Deadline.createFromDTO(message.deadline)),
             });
         } else if (message.parentHash) {

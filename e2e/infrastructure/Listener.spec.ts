@@ -369,7 +369,7 @@ describe('Listener', () => {
             return helper.announce(transferTransaction.signWith(account, generationHash)).then(() => {
                 throw new Error('Transaction should have failed!!');
             }, (error) => {
-                expect(error.status).to.be.equal('Failure_Core_Insufficient_Balance');
+                expect(error.code).to.be.equal('Failure_Core_Insufficient_Balance');
             });
         });
     });

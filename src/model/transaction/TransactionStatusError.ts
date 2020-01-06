@@ -26,7 +26,7 @@ export class TransactionStatusError {
      * @internal
      * @param address
      * @param hash
-     * @param status
+     * @param code
      * @param deadline
      */
     constructor(
@@ -40,9 +40,9 @@ export class TransactionStatusError {
                  */
                 public readonly hash: string,
                 /**
-                 * The status error message.
+                 * The error code.
                  */
-                public readonly status: string,
+                public readonly code: string,
                 /**
                  * The transaction deadline.
                  */

@@ -80,7 +80,7 @@ describe('BlockHttp', () => {
             const signedTransaction = transferTransaction.signWith(account, generationHash);
             helper.announce(signedTransaction).then((transaction) => {
                 chainHeight = transaction.transactionInfo!.height.toString();
-                return transaction;
+                done();
             });
         });
     });
