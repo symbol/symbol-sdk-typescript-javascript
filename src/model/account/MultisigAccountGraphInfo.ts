@@ -22,7 +22,6 @@ import {MultisigAccountInfo} from './MultisigAccountInfo';
 export class MultisigAccountGraphInfo {
 
     /**
-     * @internal
      * @param multisigAccounts
      */
     constructor(/**
