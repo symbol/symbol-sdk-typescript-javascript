@@ -1,17 +1,23 @@
 import { expect } from 'chai';
 import { KeyGenerator } from '../../src/core/format/KeyGenerator';
+import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { RestrictionMosaicRepository } from '../../src/infrastructure/RestrictionMosaicRepository';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
+import { AliasAction } from '../../src/model/namespace/AliasAction';
+import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { MosaicRestrictionType } from '../../src/model/restriction/MosaicRestrictionType';
+import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { MosaicAddressRestrictionTransaction } from '../../src/model/transaction/MosaicAddressRestrictionTransaction';
+import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
 import { MosaicGlobalRestrictionTransaction } from '../../src/model/transaction/MosaicGlobalRestrictionTransaction';
+import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { UInt64 } from '../../src/model/UInt64';
 import { MosaicRestrictionTransactionService } from '../../src/service/MosaicRestrictionTransactionService';
@@ -22,10 +28,13 @@ describe('MosaicRestrictionTransactionService', () => {
     const key = KeyGenerator.generateUInt64Key('TestKey');
     let account: Account;
     let restrictionRepository: RestrictionMosaicRepository;
+    let namespaceRepository: NamespaceRepository;
     let mosaicId: MosaicId;
     let generationHash: string;
     const helper = new IntegrationTestHelper();
     let networkType: NetworkType;
+    let namespaceIdAddress: NamespaceId;
+    let namespaceIdMosaic: NamespaceId;
 
     before(() => {
         return helper.start().then(() => {
@@ -33,6 +42,7 @@ describe('MosaicRestrictionTransactionService', () => {
             generationHash = helper.generationHash;
             networkType = helper.networkType;
             restrictionRepository = helper.repositoryFactory.createRestrictionMosaicRepository();
+            namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
         });
     });
 
@@ -64,6 +74,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 UInt64.fromUint(1000),
                 networkType, helper.maxFee,
             );
+            console.log(mosaicId.toHex());
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
         });
@@ -99,6 +110,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 account.address,
                 UInt64.fromUint(2),
                 networkType,
+                undefined,
                 helper.maxFee,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
@@ -111,14 +123,80 @@ describe('MosaicRestrictionTransactionService', () => {
         });
     });
 
+    describe('NamespaceRegistrationTransaction', () => {
+
+        it('standalone', () => {
+            const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
+            const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
+                Deadline.create(),
+                namespaceName,
+                UInt64.fromUint(50),
+                networkType, helper.maxFee,
+            );
+            namespaceIdMosaic = new NamespaceId(namespaceName);
+            const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
+
+            return helper.announce(signedTransaction);
+        });
+    });
+
+    describe('NamespaceRegistrationTransaction', () => {
+
+        it('standalone', () => {
+            const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
+            const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
+                Deadline.create(),
+                namespaceName,
+                UInt64.fromUint(50),
+                networkType, helper.maxFee,
+            );
+            namespaceIdAddress = new NamespaceId(namespaceName);
+            const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
+
+            return helper.announce(signedTransaction);
+        });
+    });
+
+    describe('AddressAliasTransaction', () => {
+
+        it('standalone', () => {
+            const addressAliasTransaction = AddressAliasTransaction.create(
+                Deadline.create(),
+                AliasAction.Link,
+                namespaceIdAddress,
+                account.address,
+                networkType, helper.maxFee,
+            );
+            const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
+
+            return helper.announce(signedTransaction);
+        });
+    });
+
+    describe('MosaicAliasTransaction', () => {
+
+        it('standalone', () => {
+            const mosaicAliasTransaction = MosaicAliasTransaction.create(
+                Deadline.create(),
+                AliasAction.Link,
+                namespaceIdMosaic,
+                mosaicId,
+                networkType, helper.maxFee,
+            );
+            const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
+
+            return helper.announce(signedTransaction);
+        });
+    });
+
     /**
      * =========================
      * Test
      * =========================
      */
-    describe('Test new services', () => {
+    describe('Test new services - MosaicGlobalRestriction', () => {
         it('should create MosaicGlobalRestrictionTransaction', (done) => {
-            const service = new MosaicRestrictionTransactionService(restrictionRepository);
+            const service = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
 
             return service.createMosaicGlobalRestrictionTransaction(
                 deadline,
@@ -137,9 +215,33 @@ describe('MosaicRestrictionTransactionService', () => {
                 done();
             });
         });
-        it('should create MosaicAddressRestrictionTransaction', (done) => {
-            const service = new MosaicRestrictionTransactionService(restrictionRepository);
+    });
 
+    describe('Test new services - MosaicGlobalRestriction', () => {
+        it('should create MosaicGlobalRestrictionTransaction using alias', (done) => {
+            const service = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
+            return service.createMosaicGlobalRestrictionTransaction(
+                deadline,
+                networkType,
+                namespaceIdMosaic,
+                key,
+                '2',
+                MosaicRestrictionType.GE, undefined, helper.maxFee,
+            ).subscribe((transaction: MosaicGlobalRestrictionTransaction) => {
+                expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
+                expect(transaction.previousRestrictionValue.toString()).to.be.equal('1');
+                expect(transaction.previousRestrictionType).to.be.equal(MosaicRestrictionType.GE);
+                expect(transaction.newRestrictionValue.toString()).to.be.equal('2');
+                expect(transaction.newRestrictionType).to.be.equal(MosaicRestrictionType.GE);
+                expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
+                done();
+            });
+        });
+    });
+
+    describe('Test new services - MosaicAddressRestriction', () => {
+        it('should create MosaicAddressRestrictionTransaction', (done) => {
+            const service = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
             return service.createMosaicAddressRestrictionTransaction(
                 deadline,
                 networkType,
@@ -159,10 +261,33 @@ describe('MosaicRestrictionTransactionService', () => {
         });
     });
 
+    describe('Test new services - MosaicAddressRestriction', () => {
+        it('should create MosaicAddressRestrictionTransaction with address alias', (done) => {
+            const service = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
+
+            return service.createMosaicAddressRestrictionTransaction(
+                deadline,
+                networkType,
+                mosaicId,
+                key,
+                namespaceIdAddress,
+                '4',
+                helper.maxFee,
+            ).subscribe((transaction: MosaicAddressRestrictionTransaction) => {
+                expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ADDRESS_RESTRICTION);
+                expect(transaction.previousRestrictionValue.toString()).to.be.equal('3');
+                expect(transaction.newRestrictionValue.toString()).to.be.equal('4');
+                expect(transaction.targetAddressToString()).to.be.equal(account.address.plain());
+                expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
+                done();
+            });
+        });
+    });
+
     describe('Announce MosaicGlobalRestriction through service', () => {
 
         it('should create MosaicGlobalRestriction and announce', (done) => {
-            const service = new MosaicRestrictionTransactionService(restrictionRepository);
+            const service = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
             service.createMosaicGlobalRestrictionTransaction(
                 deadline,
                 networkType,
@@ -188,7 +313,7 @@ describe('MosaicRestrictionTransactionService', () => {
     describe('Announce MosaicAddressRestriction through service', () => {
 
         it('should create MosaicAddressRestriction and announce', (done) => {
-            const service = new MosaicRestrictionTransactionService(restrictionRepository);
+            const service = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
 
             return service.createMosaicAddressRestrictionTransaction(
                 deadline,
