@@ -15,7 +15,10 @@
  */
 
 import { Observable, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
+import { NamespaceRepository } from '../infrastructure/NamespaceRepository';
 import { RestrictionMosaicRepository } from '../infrastructure/RestrictionMosaicRepository';
 import { Address } from '../model/account/Address';
 import { NetworkType } from '../model/blockchain/NetworkType';
@@ -41,15 +44,17 @@ export class MosaicRestrictionTransactionService {
     /**
      * Constructor
      * @param restrictionMosaicRepository
+     * @param namespaceRepository
      */
-    constructor(private readonly restrictionMosaicRepository: RestrictionMosaicRepository) {
+    constructor(private readonly restrictionMosaicRepository: RestrictionMosaicRepository,
+                private readonly namespaceRepository: NamespaceRepository) {
     }
 
     /**
      * Create a MosaicGlobalRestrictionTransaction object without previous restriction data
      * @param deadline - Deadline
      * @param networkType - Network identifier
-     * @param mosaicId - MosaicId
+     * @param mosaicId - Unresolved mosaicId
      * @param restrictionKey - Restriction key
      * @param restrictionValue - New restriction value
      * @param restrictionType - New restriction type
@@ -58,76 +63,78 @@ export class MosaicRestrictionTransactionService {
      */
     public createMosaicGlobalRestrictionTransaction(deadline: Deadline,
                                                     networkType: NetworkType,
-                                                    mosaicId: MosaicId,
+                                                    mosaicId: MosaicId | NamespaceId,
                                                     restrictionKey: UInt64,
                                                     restrictionValue: string,
                                                     restrictionType: MosaicRestrictionType,
                                                     referenceMosaicId: MosaicId | NamespaceId = new MosaicId(UInt64.fromUint(0).toDTO()),
                                                     maxFee: UInt64 = new UInt64([0, 0])): Observable<Transaction> {
         this.validateInput(restrictionValue);
-        return this.getGlobalRestrictionEntry(mosaicId, restrictionKey).pipe(
-            map((restrictionEntry: MosaicGlobalRestrictionItem | undefined) => {
-                const currentValue = restrictionEntry ? UInt64.fromNumericString(restrictionEntry.restrictionValue) :
-                    this.defaultMosaicGlobalRestrictionValue;
-                const currentType = restrictionEntry ? restrictionEntry.restrictionType : MosaicRestrictionType.NONE;
-
-                return MosaicGlobalRestrictionTransaction.create(
-                    deadline,
-                    mosaicId,
-                    restrictionKey,
-                    currentValue,
-                    currentType,
-                    UInt64.fromNumericString(restrictionValue),
-                    restrictionType,
-                    networkType,
-                    referenceMosaicId,
-                    maxFee,
-                );
-            }),
-            catchError((err) => {
-                throw Error(err);
-            }));
+        return this.getResolvedMosaicId(mosaicId).pipe(
+            mergeMap((resolvedMosaicId) => this.getGlobalRestrictionEntry(resolvedMosaicId, restrictionKey).pipe(
+                map((restrictionEntry: MosaicGlobalRestrictionItem | undefined) => {
+                    const currentValue = restrictionEntry ? UInt64.fromNumericString(restrictionEntry.restrictionValue) :
+                        this.defaultMosaicGlobalRestrictionValue;
+                    const currentType = restrictionEntry ? restrictionEntry.restrictionType : MosaicRestrictionType.NONE;
+                    return MosaicGlobalRestrictionTransaction.create(
+                        deadline,
+                        resolvedMosaicId,
+                        restrictionKey,
+                        currentValue,
+                        currentType,
+                        UInt64.fromNumericString(restrictionValue),
+                        restrictionType,
+                        networkType,
+                        referenceMosaicId,
+                        maxFee,
+                    );
+                }),
+            )));
     }
 
     /**
      * Create a MosaicAddressRestrictionTransaction object without previous restriction data
      * @param deadline - Deadline
      * @param networkType - Network identifier
-     * @param mosaicId - MosaicId
+     * @param mosaicId - Unresolved mosaicId
      * @param restrictionKey - Restriction key
-     * @param targetAddress - Target address
+     * @param targetAddress - Unresolved target address
      * @param restrictionValue - New restriction value
      * @param maxFee - Max fee
      */
     public createMosaicAddressRestrictionTransaction(deadline: Deadline,
                                                      networkType: NetworkType,
-                                                     mosaicId: MosaicId,
+                                                     mosaicId: MosaicId | NamespaceId,
                                                      restrictionKey: UInt64,
-                                                     targetAddress: Address,
+                                                     targetAddress: Address | NamespaceId,
                                                      restrictionValue: string,
                                                      maxFee: UInt64 = new UInt64([0, 0])): Observable<Transaction> {
         this.validateInput(restrictionValue);
-        return this.getGlobalRestrictionEntry(mosaicId, restrictionKey).pipe(
-            switchMap((restrictionEntry: MosaicGlobalRestrictionItem | undefined) => {
-                if (!restrictionEntry) {
-                    throw Error('Global restriction is not valid for RestrictionKey: ' + restrictionKey);
-                }
-                return this.getAddressRestrictionEntry(mosaicId, restrictionKey, targetAddress).pipe(
-                    map((optionalValue) => {
-                        const currentValue = optionalValue ?
-                            UInt64.fromNumericString(optionalValue) : this.defaultMosaicAddressRestrictionValue;
-                        return MosaicAddressRestrictionTransaction.create(
-                            deadline,
-                            mosaicId,
-                            restrictionKey,
-                            targetAddress,
-                            UInt64.fromNumericString(restrictionValue),
-                            networkType,
-                            currentValue,
-                            maxFee,
-                        );
-                    }));
-            }),
+        const combinedUnresolved = combineLatest(this.getResolvedMosaicId(mosaicId), this.getResolvedAddress(targetAddress));
+        return combinedUnresolved.pipe(
+            mergeMap(([resolvedMosaicId, resolvedAddress]) => this.getGlobalRestrictionEntry(resolvedMosaicId, restrictionKey).pipe(
+                mergeMap((restrictionEntry: MosaicGlobalRestrictionItem | undefined) => {
+                    if (!restrictionEntry) {
+                        throw new Error('Global restriction is not valid for RestrictionKey: ' + restrictionKey);
+                    }
+                    return this.getAddressRestrictionEntry(resolvedMosaicId, restrictionKey, resolvedAddress).pipe(
+                        map((optionalValue) => {
+                            const currentValue = optionalValue ?
+                                UInt64.fromNumericString(optionalValue) : this.defaultMosaicAddressRestrictionValue;
+                            return MosaicAddressRestrictionTransaction.create(
+                                deadline,
+                                mosaicId,
+                                restrictionKey,
+                                targetAddress,
+                                UInt64.fromNumericString(restrictionValue),
+                                networkType,
+                                currentValue,
+                                maxFee,
+                            );
+                        }),
+                    );
+                }),
+            )),
         );
     }
 
@@ -141,14 +148,14 @@ export class MosaicRestrictionTransactionService {
     private getAddressRestrictionEntry(mosaicId: MosaicId, restrictionKey: UInt64, targetAddress: Address): Observable<string | undefined> {
         return this.restrictionMosaicRepository.getMosaicAddressRestriction(mosaicId, targetAddress).pipe(
             map((mosaicRestriction) => {
-                return mosaicRestriction.restrictions.get(restrictionKey.toHex());
+                return mosaicRestriction.restrictions.get(restrictionKey.toString());
             }),
             catchError((err: Error) => {
                 const error = JSON.parse(err.message);
                 if (error && error.statusCode && error.statusCode === 404) {
                     return of(undefined);
                 }
-                throw Error(err.message);
+                throw new Error(err.message);
             }));
     }
 
@@ -161,14 +168,15 @@ export class MosaicRestrictionTransactionService {
     private getGlobalRestrictionEntry(mosaicId: MosaicId, restrictionKey: UInt64): Observable<MosaicGlobalRestrictionItem | undefined> {
         return this.restrictionMosaicRepository.getMosaicGlobalRestriction(mosaicId).pipe(
             map((mosaicRestriction: MosaicGlobalRestriction) => {
-                return mosaicRestriction.restrictions.get(restrictionKey.toHex());
+                console.log(mosaicRestriction.restrictions);
+                return mosaicRestriction.restrictions.get(restrictionKey.toString());
             }),
             catchError((err: Error) => {
                 const error = JSON.parse(err.message);
                 if (error && error.statusCode && error.statusCode === 404) {
                     return of(undefined);
                 }
-                throw Error(err.message);
+                throw new Error(err.message);
             }));
     }
 
@@ -178,7 +186,55 @@ export class MosaicRestrictionTransactionService {
      */
     private validateInput(value: string) {
         if (!UInt64.isLongNumericString(value)) {
-            throw Error(`RestrictionValue: ${value} is not a valid numeric string.`);
+            throw new Error(`RestrictionValue: ${value} is not a valid numeric string.`);
         }
+    }
+
+    /**
+     * @internal
+     * Get resolved mosaicId from namespace repository
+     * @param unresolvedMosaicId unresolved mosaicId
+     * @returns {MosaicId}
+     */
+    private getResolvedMosaicId(unresolvedMosaicId: MosaicId | NamespaceId): Observable<MosaicId> {
+        if (unresolvedMosaicId instanceof MosaicId) {
+            return of(unresolvedMosaicId);
+        }
+
+        return this.namespaceRepository.getLinkedMosaicId(unresolvedMosaicId).pipe(
+            map((mosaicId) => {
+                if (!mosaicId) {
+                    throw new Error(`Invalid unresolvedMosaicId: ${unresolvedMosaicId.toHex()}`);
+                }
+                return mosaicId;
+            }),
+            catchError((err) => {
+                throw new Error(err);
+            }),
+        );
+    }
+
+    /**
+     * @internal
+     * Get resolved address from namespace repository
+     * @param unresolvedAddress unresolved address
+     * @returns {Address}
+     */
+    private getResolvedAddress(unresolvedAddress: Address | NamespaceId): Observable<Address> {
+        if (unresolvedAddress instanceof Address) {
+            return of(unresolvedAddress);
+        }
+
+        return this.namespaceRepository.getLinkedAddress(unresolvedAddress).pipe(
+            map((address) => {
+                if (!address) {
+                    throw new Error(`Invalid unresolvedAddress: ${unresolvedAddress.toHex()}`);
+                }
+                return address;
+            }),
+            catchError((err) => {
+                throw new Error(err);
+            }),
+        );
     }
 }
