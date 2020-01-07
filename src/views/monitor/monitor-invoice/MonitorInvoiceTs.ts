@@ -121,7 +121,7 @@ export class MonitorInvoiceTs extends Vue {
             return QRCodeGenerator.createTransactionRequest(
                 transferTransaction,
                 this.wallet.networkType,
-                this.app.NetworkProperties.generationHash,
+                this.app.networkProperties.generationHash,
             )
         } catch (e) {
             return null

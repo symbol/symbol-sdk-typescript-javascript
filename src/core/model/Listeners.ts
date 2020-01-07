@@ -71,7 +71,8 @@ export class Listeners {
         })
 
         this.listener.status(address).subscribe((error: TransactionStatusError) => {
-          Notice.trigger(error.status.split('_').join(' '), NoticeType.error, store)
+            // @ts-ignore
+          Notice.trigger(error.code.split('_').join(' '), NoticeType.error, store)
         })
 
         this.listener.cosignatureAdded(address).subscribe(() => {

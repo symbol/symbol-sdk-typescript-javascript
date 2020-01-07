@@ -45,7 +45,7 @@ const mockNewBlock = (args) => of(args).pipe(
 
 const mockStatus = (args) => of(args).pipe(
  tap((args) => mockStatusCall(args)),
- mapTo({status: 'this_is_a_transaction_error'}),
+ mapTo({code: 'this_is_a_transaction_error'}),
 )
 
 const mockCosignatureAdded = (args) => of(args).pipe(
