@@ -6,15 +6,14 @@ import VeeValidate from 'vee-validate'
 // @ts-ignore
 import OfflineSetting from '@/views/setting/offline-setting/OfflineSetting.vue'
 import {accountMutations, accountState} from '@/store/account'
-import {appMutations, appState} from '@/store/app'
+import {appMutations, appState, appActions} from '@/store/app'
 import {veeValidateConfig} from "@/core/validation"
 import VueRx from "vue-rx"
 import flushPromises from 'flush-promises'
 import i18n from '@/language/index.ts'
 import {hdAccount, mockNetworkCurrency} from "@MOCKS/index"
 import {AppWallet, NetworkProperties} from "@/core/model"
-import {localRead} from "@/core/utils"
-import {explorerLinkList} from "@/config"
+
 // @ts-ignore
 const localVue = createLocalVue()
 const router = new VueRouter()
@@ -36,7 +35,7 @@ describe('OfflineSetting', () => {
                     account: {
                         state: Object.assign(accountState.state, {
                             // @ts-ignore
-                            wallet: new AppWallet(hdAccount.wallets[0]),
+                            wallet: AppWallet.createFromDTO(hdAccount.wallets[0]),
                             node: 'http://initial.endpoint',
                             networkCurrency: mockNetworkCurrency,
                             generationHash: 'initialGenerationHash'
@@ -45,15 +44,16 @@ describe('OfflineSetting', () => {
                     },
                     app: {
                         state: Object.assign(appState.state),
-                        mutations: appMutations.mutations
-                    }
+                        mutations: appMutations.mutations,
+                    },
+                    actions: appActions,
                 }
             }
         )
         
-        store.state.app.NetworkProperties = NetworkProperties.create(store)
-        store.state.app.NetworkProperties.height = 666
-        store.state.app.NetworkProperties.generationHash = 'initialGenerationHash'
+        store.state.app.networkProperties = NetworkProperties.create(store)
+        store.state.app.networkProperties.height = 666
+        store.state.app.networkProperties.generationHash = 'initialGenerationHash'
 
         wrapper = shallowMount(OfflineSetting, {
             sync: false,
@@ -74,7 +74,7 @@ describe('OfflineSetting', () => {
         wrapper.vm.submit()
         await flushPromises()
         expect(wrapper.vm.$store.state.account.node).toBe('http://initial.endpoint')
-        expect(wrapper.vm.$store.state.app.NetworkProperties.generationHash).toBe('initialGenerationHash')
+        expect(wrapper.vm.$store.state.app.networkProperties.generationHash).toBe('initialGenerationHash')
         expect(wrapper.vm.$store.state.account.networkCurrency).toStrictEqual(mockNetworkCurrency)
         done()
     })
@@ -98,7 +98,7 @@ describe('OfflineSetting', () => {
         wrapper.vm.submit()
         await flushPromises()
         expect(wrapper.vm.$store.state.account.node).toBe('http://initial.endpoint')
-        expect(wrapper.vm.$store.state.app.NetworkProperties.generationHash).toBe(newGenerationHash)
+        expect(wrapper.vm.$store.state.app.networkProperties.generationHash).toBe(newGenerationHash)
         expect(wrapper.vm.$store.state.account.networkCurrency).toStrictEqual(newNetworkCurrency)
         done()
     })
@@ -122,7 +122,7 @@ describe('OfflineSetting', () => {
         wrapper.vm.submit()
         await flushPromises()
         expect(wrapper.vm.$store.state.account.node).toBe('http://initial.endpoint')
-        expect(wrapper.vm.$store.state.app.NetworkProperties.generationHash).toBe('initialGenerationHash')
+        expect(wrapper.vm.$store.state.app.networkProperties.generationHash).toBe('initialGenerationHash')
         expect(wrapper.vm.$store.state.account.networkCurrency).toStrictEqual(mockNetworkCurrency)
         done()
     })
@@ -146,7 +146,7 @@ describe('OfflineSetting', () => {
         wrapper.vm.submit()
         await flushPromises()
         expect(wrapper.vm.$store.state.account.node).toBe('http://initial.endpoint')
-        expect(wrapper.vm.$store.state.app.NetworkProperties.generationHash).toBe('initialGenerationHash')
+        expect(wrapper.vm.$store.state.app.networkProperties.generationHash).toBe('initialGenerationHash')
         expect(wrapper.vm.$store.state.account.networkCurrency).toStrictEqual(mockNetworkCurrency)
         done()
     })

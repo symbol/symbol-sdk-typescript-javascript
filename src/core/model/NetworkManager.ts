@@ -20,18 +20,20 @@ export class NetworkManager {
  private generationHash: string = null
 
  private constructor(
-   public store: Store<AppState>,
-   public NetworkProperties: NetworkProperties,
-   public Listeners: Listeners,
+   private store: Store<AppState>,
+   private networkProperties: NetworkProperties,
  ) {}
 
- public static create(store: Store<AppState>, NetworkProperties: NetworkProperties, Listeners: Listeners) {
-   return new NetworkManager(store, NetworkProperties, Listeners)
+ public static create(store: Store<AppState>) {
+    return new NetworkManager(
+      store,
+      store.state.app.networkProperties,
+    )
  }
 
  public async switchEndpoint(endpoint: string): Promise<void> {
    try {
-     this.NetworkProperties.setLoadingToTrue(endpoint)
+     this.networkProperties.setLoadingToTrue(endpoint)
      const initialGenerationHash = `${this.generationHash}`
      this.endpoint = endpoint
      this.blockHttp = new BlockHttp(endpoint)
@@ -44,14 +46,14 @@ export class NetworkManager {
      Notice.trigger(Message.NODE_CONNECTION_SUCCEEDED, NoticeType.success, this.store)
      if (initialGenerationHash !== this.generationHash) await this.switchGenerationHash()
    } catch (error) {
-     this.NetworkProperties.setHealthyToFalse(endpoint)
+     this.networkProperties.setHealthyToFalse(endpoint)
    }
  }
 
  private reset(endpoint: string) {
    if (endpoint !== this.endpoint) return
    Notice.trigger(Message.NODE_CONNECTION_ERROR, NoticeType.error, this.store)
-   this.NetworkProperties.reset(endpoint)
+   this.networkProperties.reset(endpoint)
    this.generationHash = null
    this.endpoint = null
  }
@@ -66,7 +68,7 @@ export class NetworkManager {
      .subscribe(
        (block: BlockInfo) => {
          that.generationHash = block.generationHash
-         that.NetworkProperties.setValuesFromFirstBlock(block, currentEndpoint)
+         that.networkProperties.setValuesFromFirstBlock(block, currentEndpoint)
        },
        (error: Error) => {
          that.reset(currentEndpoint)
@@ -81,12 +83,12 @@ export class NetworkManager {
    const blocksInfo = await this.blockHttp.getBlocksByHeightWithLimit(
      `${height}`, maxDifficultyBlocks,
     ).toPromise()
-   this.NetworkProperties.initializeLatestBlocks(blocksInfo, currentEndpoint)
+   this.networkProperties.initializeLatestBlocks(blocksInfo, currentEndpoint)
  }
 
  private async switchGenerationHash(): Promise<void> {
    await this.setNetworkMosaics()
-   await OnWalletChange.trigger(this.store, this.Listeners)
+   await OnWalletChange.trigger(this.store)
    await setWalletsBalances(this.store)
  }
 

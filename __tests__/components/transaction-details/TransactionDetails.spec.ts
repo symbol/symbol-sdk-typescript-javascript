@@ -11,6 +11,7 @@ import {
     CosignWallet,
 } from "@MOCKS/index"
 import {appState} from "@/store/app"
+import {TransactionStatusGroups} from '@/core/model'
 // @ts-ignore
 const localVue = createLocalVue()
 const router = new VueRouter()
@@ -100,16 +101,18 @@ describe('TransactionDetails', () => {
     })
 
     it('should print confirmed when transaction is confirmed', () => {
-        wrapper.setProps({
-            transaction: {...mockNormalTransactionProp, isTxConfirmed: false}
-        })
+        const transaction = mockNormalTransactionProp
+        // @ts-ignore
+        transaction.transactionStatusGroup = TransactionStatusGroups.unconfirmed
+        wrapper.setProps({ transaction })
         expect(wrapper.vm.getStatus()).toEqual('unconfirmed')
     })
 
     it('should print confirmed when transaction is confirmed', () => {
-        wrapper.setProps({
-            transaction: {...mockNormalTransactionProp, isTxConfirmed: true}
-        })
+        const transaction = mockNormalTransactionProp
+        // @ts-ignore
+        transaction.transactionStatusGroup = TransactionStatusGroups.confirmed
+        wrapper.setProps({ transaction })
         expect(wrapper.vm.getStatus()).toEqual('confirmed')
     })
 

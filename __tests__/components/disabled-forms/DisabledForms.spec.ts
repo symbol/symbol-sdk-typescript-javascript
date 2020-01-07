@@ -35,7 +35,7 @@ localVue.directive('focus', {
 // close warning
 config.logModifiedComponents = false
 
-describe('MonitorDashBoard', () => {
+describe('DisabledForms', () => {
     let store
     let wrapper
     let state

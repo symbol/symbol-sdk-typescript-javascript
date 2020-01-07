@@ -44,7 +44,7 @@ export class MosaicListTs extends Vue {
     }
 
     get currentHeight() {
-        return this.app.NetworkProperties.height
+        return this.app.networkProperties.height
     }
 
     get publicKey() {

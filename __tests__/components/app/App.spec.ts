@@ -11,7 +11,7 @@ import VueRx from 'vue-rx'
 import {mosaicsLoading, multisigAccountInfo, mosaics, MultisigWallet,
 } from '@MOCKS/index'
 import {NetworkProperties, NetworkManager, Listeners, Notice, NoticeType} from '@/core/model'
-import {setMarketOpeningPrice} from '@/core/services'
+import {setMarketOpeningPrice, TransactionFormatter} from '@/core/services'
 
 const localVue = createLocalVue()
 const router = new VueRouter()
@@ -30,6 +30,8 @@ jest.mock('@/core/services/marketData')
 jest.mock('@/core/services/eventHandlers/onActiveMultisigAccountChange')
 jest.mock('@/core/services/eventHandlers/onWalletChange')
 
+const mockActions = jest.fn()
+
 config.logModifiedComponents = false
 
 describe('App', () => {
@@ -39,6 +41,7 @@ describe('App', () => {
   beforeEach(() => {
     // @ts-ignore
     setMarketOpeningPrice.mockClear()
+    mockActions.mockClear()
     store = store = new Vuex.Store({
       modules: {
         account: {
@@ -48,17 +51,14 @@ describe('App', () => {
             multisigAccountInfo,
           }),
           mutations: accountMutations.mutations,
-          actions: appActions.actions,
         },
         app: {
           state: Object.assign(appState.state, {mosaicsLoading}),
           mutations: appMutations.mutations,
+          actions: appActions.actions,
         },
       },
     })
-
-    store.state.app.NetworkProperties = NetworkProperties.create(store)
-    store.state.app.NetworkProperties.height = 666
 
     wrapper = shallowMount(App, {
       sync: false,
@@ -72,10 +72,10 @@ describe('App', () => {
   })
 
   it('Should call the initialization methods when created and mounted', () => {
-    expect(wrapper.vm.Listeners).toBeInstanceOf(Listeners)
-    expect(wrapper.vm.NetworkManager).toBeInstanceOf(NetworkManager)
-    expect(store.state.app.NetworkProperties).toBeInstanceOf(NetworkProperties)
-    expect(store.state.app.NetworkProperties).not.toBe(null)
+    expect(store.state.app.listeners).toBeInstanceOf(Listeners)
+    expect(store.state.app.networkManager).toBeInstanceOf(NetworkManager)
+    expect(store.state.app.networkProperties).toBeInstanceOf(NetworkProperties)
+    expect(store.state.app.transactionFormatter).toBeInstanceOf(TransactionFormatter)
   })
 
   it('The Notice should be triggered when TRIGGER_NOTICE is committed', () => {

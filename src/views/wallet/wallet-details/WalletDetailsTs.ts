@@ -101,7 +101,7 @@ export class WalletDetailsTs extends Vue {
                 this.wallet.name,
                 publicAccount,
                 this.wallet.networkType,
-                this.app.NetworkProperties.generationHash,
+                this.app.networkProperties.generationHash,
             )
         } catch (error) {
             return null

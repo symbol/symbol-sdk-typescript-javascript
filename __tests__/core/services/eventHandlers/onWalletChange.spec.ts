@@ -28,16 +28,18 @@ hdWallet.setMultisigStatus = mockSetMultisigStatus
 
 const store = {
   commit: mockCommit,
-  state: { account: {
-    node: 'http://localhost:3000',
-    wallet: hdWallet,
-  },
+  state: {
+    account: {
+      node: 'http://localhost:3000',
+      wallet: hdWallet,
+    },
+    app: {
+      listeners: {
+        switchAddress: mockSwitchAddress,
+      }
+    }
   },
 } 
-
-const Listeners = {
-  switchAddress: mockSwitchAddress,
-}
 
 describe('OnWalletChange', () => {
   beforeEach(async () => {
@@ -57,7 +59,7 @@ describe('OnWalletChange', () => {
 
   it('should call all the methods', async (done) => {
     // @ts-ignore
-    await OnWalletChange.trigger(store, Listeners, MultisigWallet)
+    await OnWalletChange.trigger(store, MultisigWallet)
     // @ts-ignore
     await flushPromises()
     expect(mockCommit.mock.calls[0][0]).toBe('SET_TRANSACTIONS_LOADING')
@@ -95,7 +97,7 @@ describe('OnWalletChange', () => {
 
   it('should use the wallet from the store when a wallet is not provided', async (done) => {
     // @ts-ignore
-    await OnWalletChange.trigger(store, Listeners)
+    await OnWalletChange.trigger(store)
     await flushPromises()
 
     expect(localRead).toHaveBeenCalledTimes(1)
@@ -111,7 +113,7 @@ describe('OnWalletChange', () => {
     const storeWithoutWallet = {...store}
     storeWithoutWallet.state.account.wallet = null
     // @ts-ignore
-    await OnWalletChange.trigger(storeWithoutWallet, Listeners)
+    await OnWalletChange.trigger(storeWithoutWallet)
     await flushPromises()
     expect(mockCommit).toHaveBeenCalledTimes(0)
     done()

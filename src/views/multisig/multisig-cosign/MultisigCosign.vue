@@ -40,7 +40,7 @@
         </div>
       </div>
       <div class="transaction-wrapper radius">
-        <TransactionList :mode="TRANSACTIONS_CATEGORIES.TO_COSIGN" />
+        <TransactionList :mode="TransactionCategories.TO_COSIGN" />
       </div>
     </div>
     <div class="right_multisig_info radius scroll">

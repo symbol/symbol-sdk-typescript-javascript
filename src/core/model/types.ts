@@ -1,11 +1,14 @@
 import {
-    Transaction, MultisigAccountInfo, MosaicId, NamespaceId,
-    SignedTransaction, CosignatureSignedTransaction, SimpleWallet,
+    Transaction, MultisigAccountInfo, SignedTransaction,
+    CosignatureSignedTransaction, SimpleWallet,
 } from 'nem2-sdk'
 import {AppNamespace} from './AppNamespace'
 import {AppMosaic} from './AppMosaic'
 import {FormattedTransaction} from './FormattedTransaction'
 import {NetworkProperties, AppWallet, LockParams, Log, CurrentAccount} from '.'
+import {TransactionFormatter} from '../services'
+import {Listeners} from './Listeners'
+import {NetworkManager} from './NetworkManager'
 
 export interface AddressAndTransaction {
     address: string
@@ -58,7 +61,6 @@ export interface StoreAccount {
     multisigAccountsTransactions: Record<string, Transaction[]>
     multisigAccountInfo: Record<string, MultisigAccountInfo>
     transactionsToCosign: FormattedTransaction[],
-    activeWalletAddress: string
     /**
      *  The network currency, to be used for fees management,
      *  formatting, defaulting...
@@ -78,24 +80,27 @@ export interface LoadingOverlayObject {
 }
 
 export interface AppInfo {
-    timeZone: number,
-    locale: string,
-    walletList: AppWallet[]
-    mnemonic: string,
-    NetworkProperties: NetworkProperties
-    mosaicsLoading: boolean,
-    transactionsLoading: boolean,
-    xemUsdPrice: Number,
-    namespaceLoading: boolean
-    multisigLoading: boolean,
-    isUiDisabled: boolean,
-    uiDisabledMessage: string,
     _ENABLE_TREZOR_: boolean,
-    stagedTransaction: StagedTransaction,
-    logs: Log[],
-    loadingOverlay: LoadingOverlayObject,
     explorerBasePath:string,
+    isUiDisabled: boolean,
+    listeners: Listeners,
+    loadingOverlay: LoadingOverlayObject,
+    locale: string,
+    logs: Log[],
+    mnemonic: string,
+    mosaicsLoading: boolean,
+    multisigLoading: boolean,
+    namespaceLoading: boolean
+    networkManager: NetworkManager,
+    networkProperties: NetworkProperties
     nodeList: Endpoint[],
+    stagedTransaction: StagedTransaction,
+    timeZone: number,
+    transactionFormatter: TransactionFormatter, 
+    transactionsLoading: boolean,
+    uiDisabledMessage: string,
+    walletList: AppWallet[]
+    xemUsdPrice: Number,
 }
 
 export interface StagedTransaction {
@@ -138,7 +143,7 @@ export enum MULTISIG_FORM_MODES {
     MODIFICATION = 'MODIFICATION',
 }
 
-export enum TRANSACTIONS_CATEGORIES {
+export enum TransactionCategories {
     NORMAL = 'NORMAL',
     MULTISIG = 'MULTISIG',
     TO_COSIGN = 'TO_COSIGN',
@@ -188,9 +193,20 @@ export interface NamespaceExpirationInfo {
     remainingBeforeDeletion: BlocksAndTime
 }
 
+
+export enum TransactionStatusGroups {
+    'confirmed' = 'confirmed',
+    'unconfirmed' = 'unconfirmed',
+}
+
+export interface TransactionFormatterOptions {
+    transactionStatusGroup?: TransactionStatusGroups
+    transactionCategory?: TransactionCategories
+}
+
 export enum NoticeType {
     success = 'success',
     error = 'error',
     warning = 'warning',
-  }
-  
+}
+

@@ -14,6 +14,7 @@ import {resetFontSize} from '@/core/utils/electron.ts'
 import VeeValidate from 'vee-validate'
 import locale from 'view-design/dist/locale/en-US'
 import moment from 'vue-moment'
+import {TransactionFormatter} from '@/core/services'
 
 Vue.use(iView, {locale})
 Vue.use(moment as any)
@@ -36,6 +37,7 @@ Vue.directive('focus', {
         el.focus()
     }
 })
+
 export default new Vue({
     el: '#app',
     router,
@@ -43,3 +45,5 @@ export default new Vue({
     i18n,
     render: h => h(App)
 })
+
+

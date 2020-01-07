@@ -25,7 +25,7 @@ export default class extends Vue {
     networkCurrency: NetworkCurrency = defaultNetworkConfig.defaultNetworkMosaic
 
     get NetworkProperties() {
-        return this.app.NetworkProperties
+        return this.app.networkProperties
     }
 
     submit() {

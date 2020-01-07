@@ -68,8 +68,8 @@ describe('CreateRootNamespace', () => {
                 }
             )
             
-            store.state.app.NetworkProperties = NetworkProperties.create(store)
-            store.state.app.NetworkProperties.height = 666
+            store.state.app.networkProperties = NetworkProperties.create(store)
+            store.state.app.networkProperties.height = 666
 
             wrapper = shallowMount(CreateRootNamespace, {
                 sync: false,

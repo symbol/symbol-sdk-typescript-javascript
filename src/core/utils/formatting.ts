@@ -33,5 +33,5 @@ export const amountWithTicker = (
     amount: number,
     networkCurrency: NetworkCurrency,
 ): string => {
-    return `${formatNumber(amount)} ${networkCurrency.ticker}`
+    return `${formatNumber(amount)}`
 }

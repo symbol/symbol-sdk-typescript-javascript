@@ -1,33 +1,36 @@
 import {Store} from 'vuex'
-import {setMosaics, setNamespaces, setTransactionList} from '@/core/services'
+import {setMosaics, setNamespaces} from '@/core/services'
 import {Address} from 'nem2-sdk'
 import {localRead} from '@/core/utils'
 import {AppWallet, AppState, Listeners} from '@/core/model'
 
 export class OnWalletChange {
-  newWallet: AppWallet
+  private newWallet: AppWallet
+  private readonly listeners: Listeners
 
   private constructor(
     private readonly store: Store<AppState>,
-    private readonly listeners: Listeners,
     newWallet?: AppWallet,
   ) {
-    this.newWallet = newWallet || this.getWalletFromStore()
+    this.listeners = store.state.app.listeners
+    this.newWallet = newWallet ? AppWallet.createFromDTO(newWallet) : this.getWalletFromStore()
   }
 
   static async trigger(
     store: Store<AppState>,
-    listeners: Listeners,
     newWallet?: AppWallet,
   ): Promise <void> {
-    const that = new OnWalletChange(store, listeners, newWallet)
-    if (!that.newWallet) return
-    that.toggleLoadingStatesTo(true)
-    that.resetWalletAssets()
-    that.setMosaicsFromStorage()
-    await that.setWalletDataFromNetwork()
-    that.startListeners()
-    that.toggleLoadingStatesTo(false)
+    await new OnWalletChange(store, newWallet).start()
+  }
+
+  private async start() {
+    if (!this.newWallet) return
+    this.toggleLoadingStatesTo(true)
+    this.resetWalletAssets()
+    this.setMosaicsFromStorage()
+    await this.setWalletDataFromNetwork()
+    this.startListeners()
+    this.toggleLoadingStatesTo(false)
   }
 
   private getWalletFromStore() {
@@ -66,7 +69,7 @@ export class OnWalletChange {
     await newWallet.setMultisigStatus(store.state.account.node, store)
     await setMosaics(newWallet, store)
     await setNamespaces(newWallet.address, store)
-    setTransactionList(newWallet.address, store)
+    await newWallet.setTransactionList(store)
   }
 
   private startListeners() {

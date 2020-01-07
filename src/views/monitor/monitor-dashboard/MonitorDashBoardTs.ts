@@ -26,6 +26,6 @@ export class MonitorDashBoardTs extends Vue {
     }
 
     get NetworkProperties() {
-        return this.app.NetworkProperties
+        return this.app.networkProperties
     }
 }

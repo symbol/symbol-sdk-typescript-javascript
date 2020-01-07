@@ -1,5 +1,6 @@
 import {Store} from 'vuex'
-import {localRead, localSave} from '@/core/utils'
+import {localSave} from '@/core/utils'
+import {localRead} from '@/core/utils/utils'
 import {AppState, AppWallet, CurrentAccount} from '@/core/model'
 import {setWalletsBalances} from '@/core/services'
 
@@ -24,23 +25,33 @@ const getAccountDataFromStorage = (accountName: string): any[] => {
   }
 }
 
-const getAccountWallets = (accountData: any): AppWallet[] => {
+const getAccountWallets = (accountData: any) => {
   const {wallets} = accountData
   if (!wallets) throw new Error(`No wallets found in the localStorage for ${accountData.name}`)
-  return wallets.map(wallet => AppWallet.createFromDTO(wallet))
+  return wallets.map(wallet => wallet)
+}
+
+const getLastActiveWallet = (accountData: any, wallets: any) => {
+  const {activeWalletAddress} = accountData
+  if (!activeWalletAddress) return wallets[0]
+  const walletFromList = wallets.find(({address}) => address === activeWalletAddress)
+  const chosenWallet = walletFromList === undefined ? wallets[0] : walletFromList
+  return AppWallet.createFromDTO(chosenWallet)
 }
 
 const setValuesInLocalStorage = (accountName: string, store: Store<AppState>) => {
   const accountDataFromStorage = getAccountDataFromStorage(accountName)
   const wallets = getAccountWallets(accountDataFromStorage)
-  store.commit('SET_WALLET_LIST', wallets)
-  store.commit('SET_WALLET', AppWallet.createFromDTO(wallets[0]))
+  const lastActiveWallet = getLastActiveWallet(accountDataFromStorage, wallets)
 
   store.commit(
     'SET_ACCOUNT_DATA',
     // @ts-ignore
     new CurrentAccount(accountName, accountDataFromStorage.password, accountDataFromStorage.networkType),
   )
+
+  store.commit('SET_WALLET_LIST', wallets)
+  store.commit('SET_WALLET', lastActiveWallet)
 }
 
 export const onLogin = (accountName: string, store: Store<AppState>) => {

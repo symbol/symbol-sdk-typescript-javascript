@@ -68,7 +68,7 @@ export class KeystoreDialogTs extends Vue {
     }
 
     async generateKeystore() {
-        this.keystoreText = new AppWallet(this.wallet).getKeystore()
+        this.keystoreText = this.wallet.getKeystore()
         this.stepIndex = 2
     }
 

@@ -4,16 +4,8 @@ import {mapState} from 'vuex'
 import {asyncScheduler} from 'rxjs'
 import {throttleTime} from 'rxjs/operators'
 import {isWindows, APP_PARAMS} from '@/config'
-import {
-  setMarketOpeningPrice, OnWalletChange,
-  OnActiveMultisigAccountChange, Endpoints,
-} from '@/core/services'
-
-import {
-  AppInfo, StoreAccount, Notice,
-  NetworkManager, Listeners, NetworkProperties,
-} from '@/core/model'
-
+import {setMarketOpeningPrice, OnWalletChange, OnActiveMultisigAccountChange} from '@/core/services'
+import {AppInfo, StoreAccount, Notice, NetworkManager, Listeners} from '@/core/model'
 import DisabledUiOverlay from '@/components/disabled-ui-overlay/DisabledUiOverlay.vue'
 import TransactionConfirmation from '@/components/transaction-confirmation/TransactionConfirmation.vue'
 import LoadingOverlay from '@/components/loading-overlay/LoadingOverlay.vue'
@@ -60,7 +52,11 @@ export class AppTs extends Vue {
   }
 
   async created() {
-    this.initializeNetwork()
+    try {
+      await this.$store.dispatch('INITIALIZE_SERVICES', this.$store)
+    } catch (error) {
+      console.error("AppTs -> created -> error", error)
+    }
     if (isWindows) checkInstall()
   }
 
@@ -69,20 +65,6 @@ export class AppTs extends Vue {
     this.initializeEventsHandlers()
     setMarketOpeningPrice(this)
     if (!this.activeAccount.wallet) this.$router.push('/login')
-  }
-
-  async initializeNetwork() {
-    try {
-      const networkProperties = NetworkProperties.create(this.$store)
-      this.$store.commit('INITIALIZE_NETWORK_PROPERTIES', networkProperties)
-      this.Listeners = Listeners.create(this.$store, networkProperties)
-      this.NetworkManager = NetworkManager.create(
-        this.$store, networkProperties, this.Listeners,
-      )
-      await Endpoints.initialize(this.$store)
-    } catch (error) {
-      console.error("AppTs -> initializeNetwork -> error", error)
-    }
   }
 
   initializeNotice() {
@@ -102,7 +84,7 @@ export class AppTs extends Vue {
     /**
      * ON ADDRESS CHANGE
      */
-    this.$watchAsObservable('address', {immediate: true})
+    this.$watchAsObservable('address')
       .pipe(
         throttleTime(EVENTS_THROTTLING_TIME, asyncScheduler, {leading: true, trailing: true})
       )
@@ -110,7 +92,7 @@ export class AppTs extends Vue {
         if (!newValue) return
 
         if ((!oldValue && newValue) || (oldValue && newValue !== oldValue)) {
-          await OnWalletChange.trigger(this.$store, this.Listeners, this.wallet)
+          await OnWalletChange.trigger(this.$store, this.wallet)
         }
       })
 
@@ -138,8 +120,8 @@ export class AppTs extends Vue {
       )
       .subscribe(({newValue, oldValue}) => {
         if (newValue && oldValue !== newValue) {
-          this.NetworkManager.switchEndpoint(newValue)
-          this.Listeners.switchEndpoint(newValue)
+          this.app.networkManager.switchEndpoint(newValue)
+          this.app.listeners.switchEndpoint(newValue)
         }
       })
   }

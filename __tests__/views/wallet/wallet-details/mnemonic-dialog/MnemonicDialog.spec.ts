@@ -7,8 +7,6 @@ import VeeValidate from 'vee-validate'
 import MnemonicDialog from '@/views/wallet/wallet-details/mnemonic-dialog/MnemonicDialog.vue'
 import {accountState} from '@/store/account'
 import {veeValidateConfig} from "@/core/validation"
-import {Password} from "nem2-sdk"
-import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 import {
     multisigAccountInfo,
     mosaics,
@@ -61,7 +59,7 @@ describe('MnemonicDialog', () => {
             }
         )
 
-        store.state.app.NetworkProperties = NetworkProperties.create(store)
+        store.state.app.networkProperties = NetworkProperties.create(store)
 
         wrapper = shallowMount(MnemonicDialog, {
             sync: false,

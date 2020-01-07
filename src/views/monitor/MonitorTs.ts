@@ -79,7 +79,7 @@ export class MonitorTs extends Vue {
     }
 
     get currentHeight() {
-        return this.app.NetworkProperties.height
+        return this.app.networkProperties.height
     }
 
     get accountName() {
@@ -87,7 +87,7 @@ export class MonitorTs extends Vue {
     }
 
     get NetworkProperties() {
-        return this.app.NetworkProperties
+        return this.app.networkProperties
     }
 
     get routes() {

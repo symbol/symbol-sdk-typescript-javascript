@@ -27,7 +27,7 @@ export const onTransactionRefreshModule = (store: any) => { // @TODO: check how 
 
   store.subscribe(async (mutation, state: AppState) => {
    if (mutation.type === 'ADD_UNCONFIRMED_TRANSACTION') {
-      const formattedTransaction: FormattedTransaction = mutation.payload[0] 
+      const formattedTransaction: FormattedTransaction = mutation.payload
       handleRecipientAddressAsNamespaceId([formattedTransaction], store)
    }
  
@@ -46,7 +46,7 @@ export const onTransactionRefreshModule = (store: any) => { // @TODO: check how 
         wallet.updateAccountBalance(balance, store)
         store.commit('UPDATE_MOSAICS', appMosaics)
       
-        const formattedTransaction: FormattedTransaction = mutation.payload[0] 
+        const formattedTransaction: FormattedTransaction = mutation.payload 
         const transaction = formattedTransaction.rawTx
 
         const transactionTypes: TransactionType[] = transaction instanceof AggregateTransaction
@@ -54,7 +54,7 @@ export const onTransactionRefreshModule = (store: any) => { // @TODO: check how 
             : [transaction.type]
 
          if (txTypeToGetNamespaces.some(a => transactionTypes.some(b => b === a))) {
-               setNamespaces(address, store)
+            setNamespaces(address, store)
          }
 
          if (txTypeToSetAccountInfo.some(a => transactionTypes.some(b => b === a))) {
@@ -71,26 +71,8 @@ export const onTransactionRefreshModule = (store: any) => { // @TODO: check how 
      }
     }
 
-    if (mutation.type === 'ADD_CONFIRMED_MULTISIG_ACCOUNT_TRANSACTION') {
-      try {
-         const {node} = state.account
-         const {address, transaction} = mutation.payload[0]
-         const accountAddress = Address.createFromRawAddress(address)
-         const mosaicAmountViews = await mosaicsAmountViewFromAddress(node, accountAddress)
-         const appMosaics = mosaicAmountViews.map(x => AppMosaic.fromMosaicAmountView(x))
-         store.commit('UPDATE_MULTISIG_ACCOUNT_MOSAICS', appMosaics)
-         const txType = transaction.type
- 
-         if (txTypeToGetNamespaces.includes(txType)) {
-            setNamespaces(address, store)
-         }
-      } catch (error) {
-       console.error(error)
-      }
-     }
-
-     if (mutation.type === 'SET_TRANSACTION_LIST') {
-         handleRecipientAddressAsNamespaceId(mutation.payload, store)
-     }
+   if (mutation.type === 'SET_TRANSACTION_LIST') {
+      handleRecipientAddressAsNamespaceId(mutation.payload, store)
+   }
   })
 }

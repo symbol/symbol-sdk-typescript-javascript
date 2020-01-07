@@ -5,18 +5,23 @@ import {
     Log,
     LoadingOverlayObject,
     NetworkProperties,
+    AppState,
+    TransactionFormatterOptions,
+    Listeners,
+    NetworkManager,
 } from '@/core/model'
 import {localRead, localSave} from "@/core/utils";
-import {MutationTree} from 'vuex';
+import {MutationTree, Store} from 'vuex';
 import {explorerLinkList} from "@/config"
 import Vue from 'vue'
+import {TransactionFormatter, Endpoints} from '@/core/services';
 
 const state: AppInfo = {
     timeZone: new Date().getTimezoneOffset() / 60,   // current time zone
     locale: 'en-US',
     walletList: [],
     mnemonic: '',
-    NetworkProperties: null,
+    networkProperties: null,
     mosaicsLoading: true,
     transactionsLoading: false,
     namespaceLoading: true,
@@ -37,6 +42,9 @@ const state: AppInfo = {
     },
     explorerBasePath: explorerLinkList[0].explorerBasePath,
     nodeList: [],
+    transactionFormatter: null,
+    listeners: null,
+    networkManager: null,
 }
 
 const mutations: MutationTree<AppInfo> = {
@@ -65,12 +73,6 @@ const mutations: MutationTree<AppInfo> = {
     SET_XEM_USD_PRICE(state: AppInfo, value: number) {
         state.xemUsdPrice = value
     },
-    INITIALIZE_NETWORK_PROPERTIES(state: AppInfo, NetworkProperties: NetworkProperties) {
-        state.NetworkProperties = NetworkProperties
-    },
-    SET_NETWORK_PROPERTIES(state: AppInfo, NetworkProperties: NetworkProperties) {
-        Vue.set(state, 'NetworkProperties', NetworkProperties)
-    },
     SET_NAMESPACE_LOADING(state: AppInfo, namespaceLoading: boolean) {
         state.namespaceLoading = namespaceLoading
     },
@@ -94,7 +96,19 @@ const mutations: MutationTree<AppInfo> = {
     SET_NODE_LIST(state: AppInfo, nodeList) {
         state.nodeList = nodeList
         localSave('nodeList', JSON.stringify(nodeList))
-    }
+    },
+    SET_TRANSACTION_FORMATTER(state: AppInfo, transactionFormatter: TransactionFormatter) {
+        Vue.set(state, 'transactionFormatter', transactionFormatter)
+    },
+    SET_NETWORK_PROPERTIES(state: AppInfo, networkProperties: NetworkProperties) {
+        Vue.set(state, 'networkProperties', networkProperties)
+    },
+    SET_LISTENERS(state: AppInfo, listeners: Listeners) {
+        Vue.set(state, 'listeners', listeners)
+    },
+    SET_NETWORK_MANAGER(state: AppInfo, networkManager: NetworkManager) {
+        Vue.set(state, 'networkManager', networkManager)
+    },
 }
 
 const actions = {
@@ -102,6 +116,13 @@ const actions = {
         const {endpoint, NetworkProperties} = payload
         if (endpoint !== rootState.account.node) return
         commit('SET_NETWORK_PROPERTIES', NetworkProperties)
+    },
+    async INITIALIZE_SERVICES({commit}, store: Store<AppState>) {
+        commit('SET_TRANSACTION_FORMATTER', TransactionFormatter.create(store))
+        commit('SET_NETWORK_PROPERTIES', NetworkProperties.create(store))
+        commit('SET_LISTENERS', Listeners.create(store))
+        commit('SET_NETWORK_MANAGER', NetworkManager.create(store))
+        await Endpoints.initialize(store)
     },
 }
 

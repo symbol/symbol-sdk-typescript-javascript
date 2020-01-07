@@ -45,6 +45,13 @@ config.logModifiedComponents = false
 const mockTriggerNotice = jest.fn()
 Notice.trigger = mockTriggerNotice
 
+const mockFormatAndSaveNewTransaction = jest.fn()
+const mockFormatTransaction = jest.fn()
+const mockTransactionFormatter = {
+    formatTransaction: (...args) => mockFormatTransaction(args),
+    formatAndSaveNewTransaction: (...args) => mockFormatAndSaveNewTransaction(args),
+}
+
 describe('TransactionConfirmation when staged transaction isn\'t set', () => {
     let store
     let wrapper
@@ -66,14 +73,17 @@ describe('TransactionConfirmation when staged transaction isn\'t set', () => {
                     }),
                 },
                 app: {
-                    state: Object.assign(appState.state, {mosaicsLoading}),
+                    state: Object.assign(appState.state, {
+                        mosaicsLoading,
+                        transactionFormatter: mockTransactionFormatter,
+                    }),
                     mutations: appMutations.mutations
                 }
             }
         })
 
-        store.state.app.NetworkProperties = NetworkProperties.create(store)
-        store.state.app.NetworkProperties.generationHash = 'C646720D7A5FF322D6CC5D47D2761643A6CD4E165FCBDB3324F8D3BAD40D4644'
+        store.state.app.networkProperties = NetworkProperties.create(store)
+        store.state.app.networkProperties.generationHash = 'C646720D7A5FF322D6CC5D47D2761643A6CD4E165FCBDB3324F8D3BAD40D4644'
 
         wrapper = shallowMount(TransactionConfirmation, {
             sync: false,
@@ -127,14 +137,17 @@ describe('TransactionConfirmation when staged transaction is set', () => {
                     }),
                 },
                 app: {
-                    state: {stagedTransaction},
+                    state: {
+                        stagedTransaction,
+                        transactionFormatter: mockTransactionFormatter,
+                    },
                     mutations: appMutations.mutations,
                 }
             }
         })
 
-        store.state.app.NetworkProperties = NetworkProperties.create(store)
-        store.state.app.NetworkProperties.generationHash = 'C646720D7A5FF322D6CC5D47D2761643A6CD4E165FCBDB3324F8D3BAD40D4644'
+        store.state.app.networkProperties = NetworkProperties.create(store)
+        store.state.app.networkProperties.generationHash = 'C646720D7A5FF322D6CC5D47D2761643A6CD4E165FCBDB3324F8D3BAD40D4644'
 
         wrapper = shallowMount(TransactionConfirmation, {
             sync: false,
@@ -225,20 +238,22 @@ describe('TransactionConfirmation when staged transaction is a lock', () => {
                     state: Object.assign(accountState.state, {wallet}),
                 },
                 app: {
-                    state: {stagedTransaction},
+                    state: {
+                        stagedTransaction,
+                        transactionFormatter: mockTransactionFormatter,
+                    },
                     mutations: appMutations.mutations,
                 }
             }
         })
 
-        store.state.app.NetworkProperties = NetworkProperties.create(store)
-        store.state.app.NetworkProperties.generationHash = 'C646720D7A5FF322D6CC5D47D2761643A6CD4E165FCBDB3324F8D3BAD40D4644'
+        store.state.app.networkProperties = NetworkProperties.create(store)
+        store.state.app.networkProperties.generationHash = 'C646720D7A5FF322D6CC5D47D2761643A6CD4E165FCBDB3324F8D3BAD40D4644'
 
         wrapper = shallowMount(TransactionConfirmation, {
             sync: false,
             mocks: {
                 $t: (msg) => msg,
-                transactionFormatter: (tx) => tx
             },
             localVue,
             store,
@@ -332,14 +347,17 @@ describe('TransactionConfirmation when staged transaction is a cosignature', () 
                     state: Object.assign(accountState.state, {wallet}),
                 },
                 app: {
-                    state: {stagedTransaction},
+                    state: {
+                        stagedTransaction,
+                        transactionFormatter: mockTransactionFormatter,
+                    },
                     mutations: appMutations.mutations,
                 }
             }
         })
 
-        store.state.app.NetworkProperties = NetworkProperties.create(store)
-        store.state.app.NetworkProperties.generationHash = 'C646720D7A5FF322D6CC5D47D2761643A6CD4E165FCBDB3324F8D3BAD40D4644'
+        store.state.app.networkProperties = NetworkProperties.create(store)
+        store.state.app.networkProperties.generationHash = 'C646720D7A5FF322D6CC5D47D2761643A6CD4E165FCBDB3324F8D3BAD40D4644'
         
         wrapper = shallowMount(TransactionConfirmation, {
             sync: false,

@@ -1,8 +1,8 @@
 import {Component, Vue, Watch, Provide} from 'vue-property-decorator'
 import {Address} from "nem2-sdk"
 import {mapState} from "vuex"
-import {StoreAccount, TRANSACTIONS_CATEGORIES, AppWallet} from "@/core/model"
-import {fetchPartialTransactions, fetchSelfAndChildrenPartialTransactions} from '@/core/services/multisig/partialTransactions'
+import {StoreAccount, TransactionCategories, AppWallet} from "@/core/model"
+import {setPartialTransactions, fetchSelfAndChildrenPartialTransactions} from '@/core/services/multisig/partialTransactions'
 import TransactionList from '@/components/transaction-list/TransactionList.vue'
 import MultisigTree from '@/views/multisig/multisig-tree/MultisigTree.vue'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
@@ -16,7 +16,7 @@ export class MultisigCosignTs extends Vue {
     @Provide() validator: any = this.$validator
     activeAccount: StoreAccount
     currentAddress = ''
-    TRANSACTIONS_CATEGORIES = TRANSACTIONS_CATEGORIES
+    TransactionCategories = TransactionCategories
 
     get wallet() {
         return this.activeAccount.wallet
@@ -53,7 +53,7 @@ export class MultisigCosignTs extends Vue {
 
     getTransactionsToCosign() {
         this.$store.commit('RESET_TRANSACTIONS_TO_COSIGN')
-        fetchPartialTransactions(this.targetAddress, this.$store)
+        setPartialTransactions(this.targetAddress, this.$store)
     }
 
     refreshAll() {

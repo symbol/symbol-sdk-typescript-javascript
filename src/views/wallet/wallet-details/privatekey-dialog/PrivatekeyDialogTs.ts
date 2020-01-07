@@ -73,7 +73,7 @@ export class PrivatekeyDialogTs extends Vue {
     get qrCodeArgs(): AccountQR {
         const {account, wallet, password} = this
         if (!account) return null
-        const {generationHash} = this.app.NetworkProperties
+        const {generationHash} = this.app.networkProperties
         const {networkType} = wallet
         try {
             return new AccountQR(account, password, networkType, generationHash)

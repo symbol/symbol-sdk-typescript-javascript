@@ -1,5 +1,5 @@
 import {languageConfig, Message} from "@/config"
-import {AppInfo, AppWallet, StoreAccount} from "@/core/model"
+import {AppInfo, StoreAccount} from "@/core/model"
 import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
 import {localRead, getTopValueInObject, localSave} from "@/core/utils/utils"
 import {validation} from "@/core/validation"
@@ -84,9 +84,7 @@ export default class LoginAccountTs extends Vue {
     }
 
     submit() {
-        const {accountMap} = this
         const {currentAccountName} = this.formItems
-        const that = this
         if (this.errors.items.length > 0) {
             this.showErrorNotice(this.errors.items[0].msg)
             return
@@ -131,8 +129,6 @@ export default class LoginAccountTs extends Vue {
     }
 
     goToDashBoard() {
-        const activeWalletAddress = this.accountMap[this.formItems.currentAccountName].activeWalletAddress
-        AppWallet.updateActiveWalletAddress(activeWalletAddress, this.$store)
         this.$router.push('monitorPanel')
     }
 

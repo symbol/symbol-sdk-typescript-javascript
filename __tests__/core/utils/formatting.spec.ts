@@ -21,7 +21,7 @@ describe('formatNumber', () => {
     describe('absoluteAmountToRelativeAmountWithTicker', () => {
         it('should return a proper string', () => {
             const string = formatting.absoluteAmountToRelativeAmountWithTicker(1888884123456, mockNetworkCurrency)
-            expect(string).toBe('1,888,884.123456 XEM')
+            expect(string).toBe('1,888,884.123456')
         })
     })
 })

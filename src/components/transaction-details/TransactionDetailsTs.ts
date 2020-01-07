@@ -35,7 +35,7 @@ export class TransactionDetailsTs extends Vue {
 
     getStatus(): string {
         if (!this.transaction.rawTx.signer) return null
-        return this.transaction.isTxConfirmed ? 'confirmed' : 'unconfirmed'
+        return this.transaction.transactionStatusGroup
     }
 
     openExplorer(transactionHash) {

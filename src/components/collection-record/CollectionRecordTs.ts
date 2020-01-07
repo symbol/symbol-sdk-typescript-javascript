@@ -7,7 +7,7 @@ import {
 } from '@/core/utils'
 import TransactionModal from '@/components/transaction-modal/TransactionModal.vue'
 import {TransferType} from "@/core/model/TransferType"
-import {StoreAccount, AppInfo, FormattedTransaction} from "@/core/model"
+import {StoreAccount, AppInfo, FormattedTransaction, TransactionStatusGroups} from "@/core/model"
 import NumberFormatting from '@/components/number-formatting/NumberFormatting.vue'
 
 @Component({
@@ -56,7 +56,8 @@ export class CollectionRecordTs extends Vue {
         const {currentMonthFirst, currentMonthLast, transferTransactionList} = this
 
         const filteredByDate = [...transferTransactionList]
-            .filter(item => (item.isTxConfirmed
+            .filter(item => (
+                item.transactionStatusGroup === TransactionStatusGroups.confirmed
                 && item.txHeader.date.getTime() <= currentMonthLast.getTime()
                 && item.txHeader.date.getTime() >= currentMonthFirst.getTime()))
 
@@ -72,11 +73,14 @@ export class CollectionRecordTs extends Vue {
     }
 
     get currentHeight() {
-        return this.app.NetworkProperties.height
+        return this.app.networkProperties.height
     }
 
     get unConfirmedTransactionList() {
-        return this.transferTransactionList.filter(({isTxConfirmed}) => !isTxConfirmed)
+        return this.transferTransactionList.filter(
+            ({transactionStatusGroup}) => {
+                return transactionStatusGroup === TransactionStatusGroups.unconfirmed
+            })
     }
 
     get currentMonthFirst(): Date {

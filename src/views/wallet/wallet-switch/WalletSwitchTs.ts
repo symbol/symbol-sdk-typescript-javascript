@@ -74,7 +74,8 @@ export class WalletSwitchTs extends Vue {
     }
 
     switchWallet(newActiveWalletAddress) {
-        AppWallet.updateActiveWalletAddress(newActiveWalletAddress, this.$store)
+        const newActiveWallet = this.walletList.find(({address}) => address === newActiveWalletAddress)
+        this.$store.commit('SET_WALLET', newActiveWallet)
     }
 
     toImport() {

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import {MutationTree} from 'vuex'
 import {defaultNetworkConfig} from "@/config/index"
 import {
-    AddressAndTransaction, AddressAndNamespaces, AddressAndMosaics,
+    AddressAndNamespaces, AddressAndMosaics,
     AddressAndMultisigInfo, StoreAccount, AppMosaic, NetworkCurrency,
     AppWallet, AppNamespace, FormattedTransaction, CurrentAccount,
 } from '@/core/model'
@@ -25,7 +25,6 @@ const state: StoreAccount = {
     multisigAccountInfo: {},
     networkCurrency: defaultNetworkConfig.defaultNetworkMosaic,
     networkMosaics: {},
-    activeWalletAddress: '',
     temporaryLoginInfo: {
         password: null,
         mnemonic: null,
@@ -60,6 +59,8 @@ const mutations: MutationTree<StoreAccount> = {
         state.currentAccount = CurrentAccount.default()
     },
     SET_WALLET(state: StoreAccount, wallet: AppWallet): void {
+        const {currentAccount} = state
+        AppWallet.updateActiveWalletAddress(wallet.address, currentAccount.name)
         state.wallet = wallet
     },
     SET_MOSAICS(state: StoreAccount, mosaics: Record<string, AppMosaic>): void {
@@ -128,17 +129,16 @@ const mutations: MutationTree<StoreAccount> = {
     SET_UNCONFIRMED_TRANSACTION_LIST(state: StoreAccount, list: FormattedTransaction[]) {
         state.transactionList.unshift(...list)
     },
-    ADD_UNCONFIRMED_TRANSACTION(state: StoreAccount, txList: any) {
-        state.transactionList.unshift(txList[0])
+    ADD_UNCONFIRMED_TRANSACTION(state: StoreAccount, transaction: FormattedTransaction) {
+        state.transactionList.unshift(transaction)
     },
-    ADD_CONFIRMED_TRANSACTION(state: StoreAccount, txList: any) {
-        const newTx = txList[0]
+    ADD_CONFIRMED_TRANSACTION(state: StoreAccount, transaction: FormattedTransaction) {
         const newStateTransactions = [...state.transactionList]
         const txIndex = newStateTransactions
-            .findIndex(({txHeader}) => newTx.txHeader.hash === txHeader.hash)
+            .findIndex(({txHeader}) => transaction.txHeader.hash === txHeader.hash)
 
         if (txIndex > -1) newStateTransactions.splice(txIndex, 1)
-        newStateTransactions.unshift(newTx)
+        newStateTransactions.unshift(transaction)
         state.transactionList = newStateTransactions
     },
     SET_ACCOUNT_DATA(state: StoreAccount, currentAccount: CurrentAccount) {
@@ -154,13 +154,6 @@ const mutations: MutationTree<StoreAccount> = {
             return
         }
         state.activeMultisigAccount = publicKey
-    },
-    ADD_CONFIRMED_MULTISIG_ACCOUNT_TRANSACTION(state: StoreAccount, addressAndTransaction: AddressAndTransaction) {
-        const {address, transaction} = addressAndTransaction
-        const list = {...state.multisigAccountsTransactions}
-        if (!list[address]) list[address] = []
-        list[address].unshift(transaction)
-        Vue.set(state.multisigAccountsTransactions, address, list)
     },
     SET_MULTISIG_ACCOUNT_NAMESPACES(state: StoreAccount, addressAndNamespaces: AddressAndNamespaces) {
         const {address, namespaces} = addressAndNamespaces
@@ -178,16 +171,13 @@ const mutations: MutationTree<StoreAccount> = {
         })
         Vue.set(state.multisigAccountsMosaics, address, mosaicList)
     },
-    UPDATE_ACTIVE_WALLET_ADDRESS(state: StoreAccount, activeWalletAddress: string) {
-        state.activeWalletAddress = activeWalletAddress
-    },
     RESET_TRANSACTIONS_TO_COSIGN(state: StoreAccount) {
         state.transactionsToCosign = []
     },
     POP_TRANSACTION_TO_COSIGN_BY_HASH(state: StoreAccount, hash: string) {
         state.transactionsToCosign = popTransactionToCosignByHash([...state.transactionsToCosign], hash)
     },
-    ADD_TRANSACTION_TO_COSIGN(state: StoreAccount, transactions: FormattedTransaction[]) {
+    ADD_TRANSACTIONS_TO_COSIGN(state: StoreAccount, transactions: FormattedTransaction[]) {
         const [transaction,] = transactions
         const oldTransactions = [...state.transactionsToCosign]
 

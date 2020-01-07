@@ -64,7 +64,7 @@ export class NamespaceListTs extends Vue {
     }
 
     get currentHeight() {
-        return this.app.NetworkProperties.height
+        return this.app.networkProperties.height
     }
 
     showEditDialog(namespace: AppNamespace) {

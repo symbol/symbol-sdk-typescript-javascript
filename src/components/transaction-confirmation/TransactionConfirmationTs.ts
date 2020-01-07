@@ -1,7 +1,7 @@
 import {mapState} from 'vuex'
 import {Password, AggregateTransaction, CosignatureTransaction} from "nem2-sdk"
 import {Component, Vue} from 'vue-property-decorator'
-import {transactionFormatter, transactionConfirmationObservable} from '@/core/services'
+import {transactionConfirmationObservable} from '@/core/services'
 import {Message} from "@/config"
 import {
     CreateWalletType, AppWallet, StagedTransaction, SignTransaction,
@@ -51,8 +51,7 @@ export class TransactionConfirmationTs extends Vue {
 
     get formattedTransaction() {
         const {transactionToSign} = this.stagedTransaction
-        const [formattedTransaction] = transactionFormatter([transactionToSign], this.$store)
-        return formattedTransaction
+        return this.app.transactionFormatter.formatTransaction(transactionToSign)
     }
 
     async confirmTransactionViaTrezor() {
@@ -140,7 +139,7 @@ export class TransactionConfirmationTs extends Vue {
          */
         const result: SignTransaction = {
             success: true,
-            signedTransaction: account.sign(transactionToSign, this.app.NetworkProperties.generationHash),
+            signedTransaction: account.sign(transactionToSign, this.app.networkProperties.generationHash),
             error: null,
         }
 

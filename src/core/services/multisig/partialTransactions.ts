@@ -1,15 +1,23 @@
-import {Address, AccountHttp, PublicAccount} from 'nem2-sdk'
+import {Address, AccountHttp, PublicAccount, Account} from 'nem2-sdk'
 import {Store} from 'vuex'
-import {AppState, TRANSACTIONS_CATEGORIES} from '@/core/model'
-import {formatAndSave} from '..'
+import {AppState, TransactionCategories, TransactionStatusGroups} from '@/core/model'
 import {interval, from, zip} from 'rxjs'
 import {take, map} from 'rxjs/operators'
 
-export const fetchPartialTransactions = async (address: Address, store: Store<AppState>): Promise<void> => {
+export const setPartialTransactions = async (
+    address: Address, store: Store<AppState>,
+): Promise<void> => {
     try {
-        const {node} = store.state.account
-        const txList = await new AccountHttp(node).getAccountPartialTransactions(address).toPromise()
-        txList.forEach(tx => formatAndSave(tx, store, true, TRANSACTIONS_CATEGORIES.TO_COSIGN))
+        const {node, wallet} = store.state.account
+        const {transactionFormatter} = store.state.app
+        const transactionList = await new AccountHttp(node)
+            .getAccountPartialTransactions(address).toPromise()
+
+        if (!transactionList.length) return
+        transactionFormatter.formatAndSaveTransactions(transactionList, {
+            transactionStatusGroup: TransactionStatusGroups.confirmed,
+            transactionCategory: TransactionCategories.TO_COSIGN,
+        })
     } catch (error) {
         console.error("MultisigCosignTs -> getCosignTransactions -> error", error)
     }
@@ -31,7 +39,10 @@ export const fetchSelfAndChildrenPartialTransactions = (
         .subscribe(
             async (publicKey) => {
                 try {
-                    fetchPartialTransactions(Address.createFromPublicKey(publicKey, address.networkType), store)
+                    await setPartialTransactions(
+                        Address.createFromPublicKey(publicKey, address.networkType),
+                        store,
+                    )
                 } catch (error) {
                     console.error("getChildrenPartialTransactions: error", error)
                 }

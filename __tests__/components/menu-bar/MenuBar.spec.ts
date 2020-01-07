@@ -55,7 +55,7 @@ describe('MenuBar', () => {
                 },
                 app: {
                     state: Object.assign(appState.state, {
-                        NetworkProperties: NetworkProperties.create(appStore),
+                        networkProperties: NetworkProperties.create(appStore),
                         nodeList: [{
                             value: 'http://endpoint.com:3000',
                             name: 'endpoint',

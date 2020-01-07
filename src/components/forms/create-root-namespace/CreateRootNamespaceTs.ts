@@ -90,7 +90,7 @@ export class CreateRootNamespaceTs extends Vue {
     }
 
     get generationHash(): string {
-        return this.app.NetworkProperties.generationHash
+        return this.app.networkProperties.generationHash
     }
 
     get node(): string {
@@ -206,7 +206,7 @@ export class CreateRootNamespaceTs extends Vue {
     }
 
     get estimatedRentalFee(): string {
-        const rentalFee = this.duration * this.app.NetworkProperties.fee
+        const rentalFee = this.duration * this.app.networkProperties.fee
         return absoluteAmountToRelativeAmountWithTicker(rentalFee, this.activeAccount.networkCurrency)
     }
 

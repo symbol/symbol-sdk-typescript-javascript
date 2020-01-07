@@ -8,7 +8,7 @@ describe('getCostFromDurationInBlock', () => {
     const rent = Rent.getFromDurationInBlocks(10000, mockNetworkCurrency)
     expect(rent).toBeInstanceOf(Rent)
     expect(rent.absolute).toBe(10000 * defaultDynamicFeeMultiplier)
-    expect(rent.relativeWithTicker).toBe('10 XEM')
+    expect(rent.relativeWithTicker).toBe('10')
     expect(rent.relative).toBe(10000 * defaultDynamicFeeMultiplier / Math.pow(10, 6))
   })
 })

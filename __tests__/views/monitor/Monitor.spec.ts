@@ -16,7 +16,7 @@ describe('Monitor', () => {
     let store
     beforeEach(() => {
             store = vueStore
-            store.state.app.NetworkProperties = NetworkProperties.create(store)
+            store.state.app.networkProperties = NetworkProperties.create(store)
         }
     )
 

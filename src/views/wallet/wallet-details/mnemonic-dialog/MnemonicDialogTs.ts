@@ -67,7 +67,7 @@ export class MnemonicDialogTs extends Vue {
     get qrCodeArgs(): MnemonicQR {
         const {mnemonic, password} = this
         const {wallet} = this.activeAccount
-        const {generationHash} = this.app.NetworkProperties
+        const {generationHash} = this.app.networkProperties
         const {networkType} = wallet
         if (password.length < 8) return null
         try {

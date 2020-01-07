@@ -26,6 +26,7 @@ import {filter, mergeMap} from 'rxjs/operators'
 import {Message, networkConfig, defaultNetworkConfig} from "@/config"
 import {localRead, localSave, getAccountFromPathNumber, getPath} from "@/core/utils"
 import {AppAccounts, CreateWalletType} from "@/core/model"
+import {setTransactionList} from '@/core/services'
 import {AppState, RemoteAccount, NoticeType} from './types'
 import {Log} from './Log'
 import {Notice} from './Notice'
@@ -61,7 +62,9 @@ export class AppWallet {
     }
 
     static createFromDTO(wallet) {
-      return Object.assign(new AppWallet(wallet),{simpleWallet:SimpleWallet.createFromDTO(wallet.simpleWallet)})
+        return Object.assign(new AppWallet(wallet), {
+            simpleWallet: SimpleWallet.createFromDTO(wallet.simpleWallet),
+        })
     }
 
     createFromPrivateKey(name: string,
@@ -287,19 +290,17 @@ export class AppWallet {
         })
     }
 
-
-    static updateActiveWalletAddress(newActiveWalletAddress: string, store: Store<AppState>) {
-        const walletList = store.state.app.walletList
-        const accountName = store.state.account.currentAccount.name
+    static updateActiveWalletAddress(
+        newActiveWalletAddress: string,
+        currentAccountName: string,
+    ) {
         const accountMap = localRead('accountMap') === ''
             ? {} : JSON.parse(localRead('accountMap'))
 
-        accountMap[accountName].activeWalletAddress = newActiveWalletAddress
+        if (!accountMap[currentAccountName]) return
+
+        accountMap[currentAccountName].activeWalletAddress = newActiveWalletAddress
         localSave('accountMap', JSON.stringify(accountMap))
-        const newWalletDTO = walletList
-            .find(item => item.address == newActiveWalletAddress) || walletList[0]
-        const newActiveWallet = AppWallet.createFromDTO(newWalletDTO)
-        store.commit('SET_WALLET', newActiveWallet)
     }
 
     async setAccountInfo(store: Store<AppState>): Promise<void> {
@@ -491,7 +492,7 @@ export class AppWallet {
         } {
         const account = this.getAccount(new Password(password))
         const {networkCurrency} = store.state.account
-        const {generationHash} = store.state.app.NetworkProperties
+        const {generationHash} = store.state.app.networkProperties
         const signedTransaction = account.sign(aggregateTransaction, generationHash)
 
         const hashLockTransaction = HashLockTransaction
@@ -534,4 +535,10 @@ export class AppWallet {
         }
     }
 
+    async setTransactionList(store: Store<AppState>): Promise<void> {
+        await setTransactionList(
+            Address.createFromRawAddress(this.address),
+            store,
+        )
+    }
 }

@@ -59,7 +59,7 @@ describe('AppWallet', () => {
             }
         })
 
-        store.state.app.NetworkProperties = NetworkProperties.create(store)
+        store.state.app.networkProperties = NetworkProperties.create(store)
     })
 
     it('AppWallet should instantiate properly hdWallet object from localStorage ', () => {
@@ -411,7 +411,7 @@ describe('invalid transactions announces', () => {
     }
 
     // @ts-ignore
-    store.state.app.NetworkProperties = NetworkProperties.create(store)
+    store.state.app.networkProperties = NetworkProperties.create(store)
 
     it('announceCosignature', async (done) => {
         // @ts-ignore
@@ -497,9 +497,9 @@ describe('getSignedLockAndAggregateTransaction', () => {
     const store = {state: {account: {networkCurrency, generationHash: hash}, app: {}}}
 
     // @ts-ignore
-    store.state.app.NetworkProperties = NetworkProperties.create(store)
+    store.state.app.networkProperties = NetworkProperties.create(store)
     // @ts-ignore
-    store.state.app.NetworkProperties.generationHash = 'CAD57FEC0C7F2106AD8A6203DA67EE675A1A3C232C676945306448DF5B4124F8'
+    store.state.app.networkProperties.generationHash = 'CAD57FEC0C7F2106AD8A6203DA67EE675A1A3C232C676945306448DF5B4124F8'
 
     const transaction = sdk.TransferTransaction.create(
         sdk.Deadline.create(),

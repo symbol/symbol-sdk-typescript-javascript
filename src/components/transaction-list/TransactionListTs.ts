@@ -6,7 +6,7 @@ import {
     FormattedTransaction,
     AppInfo,
     StoreAccount,
-    TRANSACTIONS_CATEGORIES,
+    TransactionCategories,
     AppWallet,
     FormattedAggregateBonded
 } from '@/core/model'
@@ -41,11 +41,11 @@ export class TransactionListTs extends Vue {
     }
 
     get transactionsLoading() {
-        return (this.mode && this.mode === TRANSACTIONS_CATEGORIES.TO_COSIGN) ? false : this.app.transactionsLoading
+        return (this.mode && this.mode === TransactionCategories.TO_COSIGN) ? false : this.app.transactionsLoading
     }
 
     get transactionList() {
-        if (this.mode && this.mode === TRANSACTIONS_CATEGORIES.TO_COSIGN) {
+        if (this.mode && this.mode === TransactionCategories.TO_COSIGN) {
             return this.activeAccount.transactionsToCosign || []
         }
 
@@ -63,7 +63,7 @@ export class TransactionListTs extends Vue {
     }
 
     get currentHeight() {
-        return this.app.NetworkProperties.height
+        return this.app.networkProperties.height
     }
 
     get namespaces() {
@@ -72,7 +72,7 @@ export class TransactionListTs extends Vue {
 
 
     get pageTitle() {
-        return this.mode === TRANSACTIONS_CATEGORIES.TO_COSIGN
+        return this.mode === TransactionCategories.TO_COSIGN
             ? 'Transactions_to_cosign'
             : 'transaction_record'
     }
@@ -135,7 +135,7 @@ export class TransactionListTs extends Vue {
     transactionClicked(transaction: FormattedTransaction) {
         this.activeTransaction = transaction
 
-        if (this.mode === TRANSACTIONS_CATEGORIES.TO_COSIGN) {
+        if (this.mode === TransactionCategories.TO_COSIGN) {
             if (transaction instanceof FormattedAggregateBonded
                 && transaction.alreadyCosignedBy(Address.createFromRawAddress(this.wallet.address))) {
                 this.showDialog = true

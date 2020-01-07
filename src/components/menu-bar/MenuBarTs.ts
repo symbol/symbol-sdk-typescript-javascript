@@ -46,7 +46,7 @@ export class MenuBarTs extends Vue {
     }
 
     get NetworkProperties() {
-        return this.app.NetworkProperties
+        return this.app.networkProperties
     }
 
     get isNodeHealthy() {
@@ -92,7 +92,7 @@ export class MenuBarTs extends Vue {
     }
 
     get nodeNetworkTypeText() {
-        const {healthy, networkType} = this.app.NetworkProperties
+        const {healthy, networkType} = this.app.networkProperties
         if (!healthy) return this.$t('Invalid_node')
         return networkType ? NetworkType[networkType] : this.$t('Loading')
     }
@@ -103,7 +103,8 @@ export class MenuBarTs extends Vue {
     }
 
     set currentWalletAddress(newActiveWalletAddress) {
-        AppWallet.updateActiveWalletAddress(newActiveWalletAddress, this.$store)
+        const newActiveWallet = this.walletList.find(({address}) => address === newActiveWalletAddress)
+        this.$store.commit('SET_WALLET', newActiveWallet)
     }
     
     get accountName() {
