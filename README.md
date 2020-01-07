@@ -2,7 +2,6 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Build Status](https://travis-ci.org/nemfoundation/nem2-desktop-wallet.svg?branch=master)](https://travis-ci.org/nemfoundation/nem2-desktop-wallet)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/dd08b1bf-133e-4a77-9fe5-d65d46316e9d/deploy-status)](https://app.netlify.com/sites/nem2-desktop-wallet/deploys)
 
 Cross-platform client for Catapult.
 
