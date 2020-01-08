@@ -21,6 +21,11 @@ export const formatExplorerUrl = (transactionHash) => {
     return explorerUrlHead + transactionHash
 }
 
+export const miniAddress = (address: Address): string => {
+    const string = address.pretty()
+    return `${string.substring(0, 13).toUpperCase()}***${string.substring(28).toUpperCase()}`
+}
+
 export const miniHash = (hash: string): string => {
   return `${hash.substring(0, 18).toLowerCase()}***${hash.substring(42).toLowerCase()}`
 }

@@ -71,7 +71,6 @@ export class Listeners {
         })
 
         this.listener.status(address).subscribe((error: TransactionStatusError) => {
-            // @ts-ignore
           Notice.trigger(error.code.split('_').join(' '), NoticeType.error, store)
         })
 

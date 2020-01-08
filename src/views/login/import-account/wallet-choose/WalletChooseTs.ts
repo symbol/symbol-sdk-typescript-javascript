@@ -1,9 +1,10 @@
 import {Vue, Component} from 'vue-property-decorator'
 import {mapState} from "vuex"
 import {AppInfo, AppWallet, StoreAccount} from "@/core/model"
-import {getRelativeMosaicAmount, localSave, getTenAddressesFromMnemonic} from "@/core/utils"
-import {NetworkType, Password, AccountHttp} from "nem2-sdk"
+import {getRelativeMosaicAmount, localSave, getTenAddressesFromMnemonic, miniAddress} from "@/core/utils"
+import {NetworkType, Password, AccountHttp, Address} from "nem2-sdk"
 import {Message, APP_PARAMS} from "@/config"
+import NumberFormatting from '@/components/number-formatting/NumberFormatting.vue'
 
 @Component({
     computed: {
@@ -11,13 +12,16 @@ import {Message, APP_PARAMS} from "@/config"
             activeAccount: 'account',
             app: 'app'
         })
-    }
+    },
+    components: {NumberFormatting},
 })
 export default class WalletChooseTs extends Vue {
+    app: AppInfo
     activeAccount: StoreAccount
     selectedAccountMap = {}
     addressMosaicMap = {}
-    app: AppInfo
+    miniAddress = miniAddress
+    addressList: Address[] = []
 
     get accountName() {
         return this.activeAccount.currentAccount.name
@@ -48,37 +52,59 @@ export default class WalletChooseTs extends Vue {
         return this.activeAccount.networkCurrency
     }
 
-    get addressList() {
-        const {node, networkCurrency} = this
-        const that = this
-        const addressList = getTenAddressesFromMnemonic(this.seed, this.networkType)
-
-        new AccountHttp(node).getAccountsInfo(addressList).subscribe(res => {
-            res.forEach(item => {
-                const defaultMosaic = item.mosaics.find(mosaic => mosaic.id.toHex() == networkCurrency.hex)
-                if (defaultMosaic) {
-                    that.addressMosaicMap[item.address.plain()] = getRelativeMosaicAmount(defaultMosaic.amount.compact(), networkCurrency.divisibility)
-                    that.$forceUpdate()
-                }
-            })
+    mounted() {
+        Vue.nextTick().then(() => {
+            setTimeout(() => {
+                this.setAddressListAndBalances()
+            }, 200)
         })
-        return addressList
+    }
+
+    setAddressListAndBalances() {
+        this.addressList = getTenAddressesFromMnemonic(this.seed, this.networkType)
+        this.setAddressesBalances()
+    }
+
+    async setAddressesBalances() {
+        try {
+            const {node, networkCurrency, addressList} = this
+
+            const accountsInfo = await new AccountHttp(node)
+                .getAccountsInfo(addressList).toPromise()
+            
+            
+            this.addressMosaicMap = accountsInfo
+                .map(({mosaics, address}) => {
+                    const defaultMosaic = mosaics.find(
+                        mosaic => mosaic.id.toHex() === networkCurrency.hex,
+                    )
+                    return defaultMosaic !== undefined
+                        ? {
+                            address: address.plain(),
+                            balance: getRelativeMosaicAmount(
+                                defaultMosaic.amount.compact(),
+                                networkCurrency.divisibility,
+                            ),
+                        }
+                        : null
+                })
+                .filter(x => x)
+                .reduce((acc, {address, balance}) => ({...acc, [address]: balance}), {})
+        } catch (error) {
+            // do nothing
+        }
     }
 
     addAccount(index, account) {
-        this.selectedAccountMap[index] = account
-        this.$forceUpdate()
+        Vue.set(this.selectedAccountMap, index, account)
     }
 
     removeAccount(index) {
-        delete this.selectedAccountMap[index]
-        this.$forceUpdate()
-
+        const newSelectedAccountMap = {...this.selectedAccountMap} 
+        delete newSelectedAccountMap[index]
+        this.selectedAccountMap = newSelectedAccountMap
     }
 
-    miniHash(hash: string): string {
-        return `${hash.substring(0, 15).toUpperCase()}***${hash.substring(25).toUpperCase()}`
-    }
     submit() {
         const {password, accountName, networkType, addressMosaicMap, selectedAccountMap} = this
         const walletList = Object.keys(selectedAccountMap).map(path => {

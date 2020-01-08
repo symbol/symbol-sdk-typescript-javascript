@@ -63,12 +63,32 @@ export const getAccountFromPath = (
 }
 
 export const getAccountFromPathNumber = (
-  mnemonic: string,
-  pathNumber: number,
-  networkType: NetworkType
-): Account => {
-  return getAccountFromPath(mnemonic, getPath(pathNumber), networkType)
-}
+    mnemonic: string,
+    pathNumber: number,
+    networkType: NetworkType
+  ): Account => {
+    const path = getPath(pathNumber)
+    const network = getNetworkFromNetworkType(networkType)
+    const PassPhrase = new MnemonicPassPhrase(mnemonic)
+    const bip32Seed = PassPhrase.toSeed()
+    const bip32Node = ExtendedKey.createFromSeed(buf2hex(bip32Seed), network)
+    const wallet = new Wallet(bip32Node.derivePath(path))
+    const account = wallet.getAccount(networkType)
+    return account
+  }
+  
+  export const getAccountMnemonic = (
+    bip32Seed: Buffer,
+    pathNumber: number,
+    networkType: NetworkType
+  ): Account => {
+    const path = getPath(pathNumber)
+    const network = getNetworkFromNetworkType(networkType)
+    const bip32Node = ExtendedKey.createFromSeed(buf2hex(bip32Seed), network)
+    const wallet = new Wallet(bip32Node.derivePath(path))
+    const account = wallet.getAccount(networkType)
+    return account
+  }
 
 export const randomizeMnemonicWordArray = (array: string[]): string[] => {
   for (var i = array.length - 1; i > 0; i--) {
@@ -81,10 +101,19 @@ export const randomizeMnemonicWordArray = (array: string[]): string[] => {
 }
 
 export const getTenAddressesFromMnemonic = (
-  mnemonic: string,
-  networkType: NetworkType,
-): Address[] => [...Array(10)]
-  .map((_, index) => getAccountFromPathNumber(mnemonic, index, networkType).address)
+    mnemonic: string,
+    networkType: NetworkType,
+  ): Address[] =>{
+    const bip32Seed = createBip32Seed(mnemonic)
+    return [...Array(10)].map((_, index) => getAccountMnemonic(bip32Seed, index, networkType).address)
+  }
+  
+  export const createBip32Seed = (mnemonic: string)=>{
+    const PassPhrase = new MnemonicPassPhrase(mnemonic);
+    const bip32Seed = PassPhrase.toSeed();
+    return bip32Seed;
+  }
+
 
 export const getRemoteAccountFromPrivateKey = (
   privateKey: string,
