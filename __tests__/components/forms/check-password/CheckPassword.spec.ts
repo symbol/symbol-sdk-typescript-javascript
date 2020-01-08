@@ -77,7 +77,7 @@ describe('CheckPassword', () => {
     }
   )
 
-  it('Should emit the password when provided a right password and when showPassword is set to true', async () => {
+  it('Should emit the password when provided a right password and when showPassword is set to be true', async () => {
     wrapper.setProps({returnPassword: true})
     wrapper.setData({password: hdAccountData.password})
     wrapper.vm.submit()

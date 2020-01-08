@@ -907,10 +907,11 @@
   "set_default_explorer": "输入的url不合法，已为您设置默认url",
   "total_transactions": "交易数量",
   "Are_you_sure_to_unlink_this_account":"您确定要与此地址取消连接吗?",
-  "password_is_invalid": "密码必须包含至少一个字母和数字，且密码长度必须大于等于8",
   "link_Or_Change": "链接或修改远程账户",
   "node_Network": "节点设置",
   "requesting": "受益请求",
   "change_view": "切换视图",
-  "test_node": "测试节点"
+  "test_node": "测试节点",
+  "password_is_invalid": "密码必须包含至少一个字母和数字，且密码长度必须大于等于8",
+  "confirm_information_before_add_child_wallet": "请输入密码以创建子钱包"
 }

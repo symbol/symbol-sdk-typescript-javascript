@@ -7,12 +7,6 @@
           <li>
             {{$t('keystore_string')}}
             <div class="tips">{{$t('keystore_description_import')}}</div>
-            <!--          TODO LOAD FILE-->
-            <!--          <div class="gray_content">-->
-            <!--            <Select v-model="file" :placeholder="$t('please_choose')">-->
-            <!--              <Option v-for="item in fileList" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
-            <!--            </Select>-->
-            <!--          </div>-->
             <div class="gray_content textarea">
               <ErrorTooltip fieldName="keystoreStr">
                 <textarea

@@ -675,7 +675,7 @@
   "SLOW": "Slow",
   "NORMAL": "Normal",
   "FAST": "Fast",
-  "seed_wallet_can_not_be_more_than_10": "You have reached the limit of wallets that can be created in one account. Please, use a different account to create your new wallet.",
+  "seed_wallet_can_not_be_more_than_10": "You have reached the limit of wallets that can be created in one account. Please use a different account to create your new wallet.",
   "create_or_import": "Create or Import",
   "create_sub_wallet": "Create child address",
   "Import_private_key": "Import private key",
@@ -958,5 +958,6 @@
   "requesting": "Harvesting delegation request",
   "change_view": "Change view",
   "Harvested_Block_Hash":"Harvested Block Hash",
-  "test_node": "Test node"
+  "test_node": "Test node",
+  "confirm_information_before_add_child_wallet": "Enter your password to create a new child wallet"
 }

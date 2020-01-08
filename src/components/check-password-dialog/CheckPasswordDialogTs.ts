@@ -32,6 +32,6 @@ export class CheckPasswordDialogTs extends Vue {
 
   passwordValidated(value){
       this.$emit('passwordValidated',value)
-      this.show = false
+      if(value) this.show = false
   }
 }

@@ -58,6 +58,9 @@ export const validation = {
             require_host: false,
             require_protocol: false,
         }
-    }
+    },
+  walletName:{
+    required: true,
+  }
 
 }

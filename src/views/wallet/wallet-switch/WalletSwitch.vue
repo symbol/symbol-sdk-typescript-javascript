@@ -2,7 +2,7 @@
   <div class="walletSwitchWrap">
     <div class="walletSwitchHead">
       <p class="tit">{{$t('Wallet_management')}}</p>
-      <p class="back-up pointer" @click="changeMnemonicDialog">{{$t('backup_mnemonic')}}</p>
+      <p class="back-up pointer" @click="displayMnemonicDialog">{{$t('backup_mnemonic')}}</p>
     </div>
 
     <div class="walletList scroll" ref="walletScroll">
@@ -21,7 +21,6 @@
               </div>
             </Col>
             <Col span="9">
-
               <div @click.stop>
                 <div class="walletTypeTxt">{{isMultisig(item.address) ? $t('Public_account') : ''}}</div>
                 <div class="options">
@@ -43,24 +42,23 @@
     <div class="walletMethod">
       <Row>
         <Col span="12">
-          <div class="createBtn pointer" @click="toCreate">{{$t('from_seed')}}</div>
+          <div class="createBtn pointer" @click="showWalletAdd=true">{{$t('from_seed')}}</div>
         </Col>
         <Col span="12">
-          <div class="importBtn pointer" @click="toImport">{{$t('from_privatekey')}}</div>
+          <div class="importBtn pointer" @click="$emit('toImport')">{{$t('from_privatekey')}}</div>
         </Col>
       </Row>
     </div>
 
-    <CheckPasswordDialog
-      v-if="showCheckPWDialog"
-      :visible="showCheckPWDialog"
-      :returnPassword="true"
-      @close="showCheckPWDialog = false"
-      @passwordValidated="passwordValidated"></CheckPasswordDialog>
+    <TheWalletAdd
+            v-if="showWalletAdd"
+            :visible="showWalletAdd"
+            @close="showWalletAdd = false"></TheWalletAdd>
 
-    <MnemonicDialog v-if="isShowMnemonicDialog"
-                    :showMnemonicDialog="isShowMnemonicDialog"
-                    @closeMnemonicDialog="isShowMnemonicDialog = false"></MnemonicDialog>
+    <MnemonicDialog v-if="showMnemonicDialog"
+                    :showMnemonicDialog="showMnemonicDialog"
+                    @closeMnemonicDialog="showMnemonicDialog = false"></MnemonicDialog>
+
     <TheWalletDelete
             v-if="showDeleteDialog"
             :showCheckPWDialog="showDeleteDialog"
@@ -71,9 +69,8 @@
 </template>
 
 <script lang="ts">
-  import "./WalletSwitch.less";
-  //@ts-ignore
-  import {WalletSwitchTs} from "@/views/wallet/wallet-switch/WalletSwitchTs.ts";
+    import "./WalletSwitch.less";
+    import {WalletSwitchTs} from "@/views/wallet/wallet-switch/WalletSwitchTs.ts";
 
   export default class WalletSwitch extends WalletSwitchTs {
   }

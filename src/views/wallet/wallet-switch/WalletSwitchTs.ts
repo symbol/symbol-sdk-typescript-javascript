@@ -1,12 +1,11 @@
 import {mapState} from 'vuex'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {formatNumber, localRead} from '@/core/utils'
-import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
+import {formatNumber} from '@/core/utils'
+import {AppWallet, AppInfo, StoreAccount, Notice, NoticeType} from "@/core/model"
 import {CreateWalletType} from "@/core/model/CreateWalletType"
-import {seedWalletTitle, walletStyleSheetType} from '@/config/view/wallet.ts'
-import {MultisigAccountInfo, Password} from 'nem2-sdk'
-import {Message, networkConfig} from "@/config"
-import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
+import {walletStyleSheetType} from '@/config/view/wallet.ts'
+import {MultisigAccountInfo} from 'nem2-sdk'
+import TheWalletAdd from '@/views/wallet/wallet-switch/the-wallet-add/TheWalletAdd.vue'
 import TheWalletDelete from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDelete.vue'
 import MnemonicDialog from '@/views/wallet/wallet-details/mnemonic-dialog/MnemonicDialog.vue'
 import NumberFormatting from '@/components/number-formatting/NumberFormatting.vue'
@@ -15,7 +14,7 @@ import NumberFormatting from '@/components/number-formatting/NumberFormatting.vu
     components: {
         TheWalletDelete,
         MnemonicDialog,
-        CheckPasswordDialog,
+        TheWalletAdd,
         NumberFormatting
     },
     computed: {
@@ -29,13 +28,11 @@ export class WalletSwitchTs extends Vue {
     app: AppInfo
     activeAccount: StoreAccount
     showDeleteDialog = false
-    showCheckPWDialog = false
+    showWalletAdd = false
     walletToDelete: AppWallet | boolean = false
     walletStyleSheetType = walletStyleSheetType
-    pathToCreate = 0
-    scroll: any
     formatNumber = formatNumber
-    isShowMnemonicDialog = false
+    showMnemonicDialog = false
 
     get walletList() {
         return this.app.walletList
@@ -49,10 +46,6 @@ export class WalletSwitchTs extends Vue {
         return this.wallet.address
     }
 
-    get currentAccount() {
-        return this.activeAccount.currentAccount
-    }
-
     get networkCurrency() {
         return this.activeAccount.networkCurrency
     }
@@ -63,14 +56,11 @@ export class WalletSwitchTs extends Vue {
         return walletStyleSheetType.otherWallet
     }
 
+    // @AppWallet: should be an AppWallet computed property
     isMultisig(address: string): boolean {
         const multisigAccountInfo: MultisigAccountInfo = this.activeAccount.multisigAccountInfo[address]
         if (!multisigAccountInfo) return false
         return multisigAccountInfo.cosignatories.length > 0
-    }
-
-    closeDeleteDialog() {
-        this.showDeleteDialog = false
     }
 
     switchWallet(newActiveWalletAddress) {
@@ -78,93 +68,37 @@ export class WalletSwitchTs extends Vue {
         this.$store.commit('SET_WALLET', newActiveWallet)
     }
 
-    toImport() {
-        this.$emit('toImport')
-    }
-
-    showErrorDialog(text) {
-        this.$Notice.destroy()
-        this.$Notice.error({
-            title: this.$t(text) + ''
-        })
-    }
-
-    getPathNumber(seedPathList: string[]): number {
-        const numberOfSeedPath = seedPathList.length
-        if (!numberOfSeedPath) return 0
-
-        const jumpedPath = seedPathList
-            .map(a => Number(a))
-            .sort()
-            .map((element, index) => {
-                if (element !== index) return index
-            })
-            .filter(x => x !== undefined)
-
-        return jumpedPath.length ? jumpedPath[0] : numberOfSeedPath
-    }
-
-    toCreate() {
-        // get sorted path list
-        const seedPathList = this.walletList.filter(item => item.path).map(item => item.path[item.path.length - 8]).sort()
-        // check if seed wallets >= 10
-        if (seedPathList.length >= networkConfig.seedWalletMaxAmount) {
-            this.showErrorDialog(Message.SEED_WALLET_OVERFLOW_ERROR)
-            return
-        }
-
-        this.pathToCreate = this.getPathNumber(seedPathList)
-        this.showCheckPWDialog = true
-    }
-
-    passwordValidated(password) {
-        if (!password) return
-        const {pathToCreate, currentAccount} = this
-        const networkType = currentAccount.networkType
-        try {
-            new AppWallet().createFromPath(
-                seedWalletTitle + pathToCreate,
-                new Password(password),
-                pathToCreate,
-                networkType,
-                this.$store,
-            )
-        } catch (error) {
-            throw new Error(error)
-        }
-    }
-
     scrollToActiveWallet() {
-      // scroll to current wallet
       const currentWalletIndex = this.walletList
           .findIndex(({address}) => address === this.activeAddress)
+      console.log("TCL: WalletSwitchTs -> scrollToActiveWallet -> this.$refs.walletsDiv[currentWalletIndex]", this.$refs.walletsDiv[currentWalletIndex])
       if(!this.$refs.walletsDiv[currentWalletIndex]) return
-      this.$refs.walletScroll["scrollTop"] = this.$refs.walletsDiv[currentWalletIndex]['offsetTop'] + 180
+      const offsetTop = this.$refs.walletsDiv[currentWalletIndex]['offsetTop']
+      this.$refs.walletScroll["scrollTop"] = offsetTop - offsetTop / currentWalletIndex
     }
-
 
     deleteWallet(walletToDelete) {
         this.walletToDelete = walletToDelete
         this.showDeleteDialog = true
     }
 
-    // @WALLETS refactor
-    changeMnemonicDialog() {
+    displayMnemonicDialog() {
         if (!this.wallet.encryptedMnemonic) {
-            this.$Notice.warning({
-                title: this.$t('no_mnemonic') + ''
-            })
+            Notice.trigger(`this.$t('no_mnemonic')`, NoticeType.error, this.$store)
             return
         }
-        this.isShowMnemonicDialog = true
+
+        this.showMnemonicDialog = true
     }
 
     @Watch('activeAddress')
     onWalletChange() {
-        this.scrollToActiveWallet()
+        Vue.nextTick().then(() => {
+            this.scrollToActiveWallet()
+        })
     }
+
     mounted() {
       this.scrollToActiveWallet()
     }
-
 }
