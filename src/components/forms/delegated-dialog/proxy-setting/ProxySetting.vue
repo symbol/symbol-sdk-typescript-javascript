@@ -1,0 +1,60 @@
+<template>
+  <div class="account-link-wrapper">
+    <Modal
+      class="confirm-alert-container"
+      v-model="isShowAlertToConfirm"
+      @on-ok="submit"
+      @on-cancel="isShowAlertToConfirm=false"
+      :title="$t('Are_you_sure_to_unlink_this_account')">
+    </Modal>
+
+    <div class="account-link-wrapper-title">
+      <span class="title-remote-account"> {{$t(
+        linkedAccountKey
+          ? 'unbind_remote_account_public_key' : 'input_remote_account_publicKey'
+        )}} </span>
+    </div>
+
+    <span class="ready-to-link-container" v-if="!linkedAccountKey && !remotePublicKey">
+        {{ $t('remote_account_being_created') }}
+    </span>
+
+    <div class="remote-public-key-container">
+        <input class="remote-public-key un_click" data-vv-name="recipientPublicKey"
+                :value="currentRemotePublicKey"
+                v-focus
+               disabled="true"
+                :placeholder="$t('Please_paste_the_proxy_private_key_here')"/>
+        <img class="refresh-icon" src="@/common/img/wallet/wallet-detail/refresh.png" >
+    </div>
+
+    <div class="config-info-container">
+      <div class="config-info-title">{{$t('Configuration_information')}}</div>
+      <div>{{$t('Proxy_address')}}：{{linkedAccountKey||'N/A'}}</div>
+      <div>{{$t('Current_status')}}：
+        <span v-if="linkedAccountKey" class="green">{{$t('Linked')}}</span>
+        <span v-else class="red">{{$t('Not_linked')}}
+        </span></div>
+    </div>
+    <div class="ready-to-unlink button_bottom" v-if="linkedAccountKey">
+      <Button type="default" @click='isShowAlertToConfirm=true'>{{$t('Unlink')}}</Button>
+      <Button type="success"  @click='$emit("nextClicked")'>{{$t('next')}}</Button>
+    </div>
+
+    <div class="ready-to-link button_bottom" v-else>
+      <Button type="default" @click='submit'>{{$t('Link')}}</Button>
+      <Button type="success" class="gray-button" >{{$t('next')}}</Button>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+    import {ProxySettingTs} from "@/components/forms/delegated-dialog/proxy-setting/ProxySettingTs.ts";
+    import './ProxySetting.less'
+
+    export default class ProxySetting extends ProxySettingTs {
+    }
+</script>
+
+<style scoped lang="less">
+</style>

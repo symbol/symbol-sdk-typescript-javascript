@@ -27,7 +27,6 @@
                 <Icon v-if="isMultisig" type="md-lock"/>
                 <Icon v-if="isCosignatory" type="md-contacts"/>
               </span>
-
               <span class="tit">{{$t('importance')}}</span>
               <span v-if="wallet">
                 <span v-if="importance != 0">
@@ -123,12 +122,12 @@
 </template>
 
 <script lang="ts">
-    import {WalletDetailsTs} from '@/views/wallet/wallet-details/WalletDetailsTs.ts'
-    import "./WalletDetails.less";
+  import {WalletDetailsTs} from '@/views/wallet/wallet-details/WalletDetailsTs.ts'
+  import "./WalletDetails.less";
 
-    export default class WalletDetails extends WalletDetailsTs {
+  export default class WalletDetails extends WalletDetailsTs {
 
-    }
+  }
 </script>
 
 <style scoped lang="less">

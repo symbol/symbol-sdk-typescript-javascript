@@ -106,7 +106,7 @@ export class MenuBarTs extends Vue {
         const newActiveWallet = this.walletList.find(({address}) => address === newActiveWalletAddress)
         this.$store.commit('SET_WALLET', newActiveWallet)
     }
-    
+
     get accountName() {
         return this.activeAccount.currentAccount.name
     }
@@ -170,9 +170,9 @@ export class MenuBarTs extends Vue {
         const {inputNodeValue} = this
         const nodeList = [...this.nodeList]
         const nodeIndexInList = nodeList.findIndex(item => item.value == inputNodeValue)
-        
+
         if (nodeIndexInList > -1) nodeList.splice(nodeIndexInList, 1)
-        
+
         nodeList.unshift({
             value: inputNodeValue,
             name: inputNodeValue,

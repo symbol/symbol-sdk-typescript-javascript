@@ -1,12 +1,12 @@
 <template>
   <div class="mnemonicDialogWrap">
     <Modal
-            v-model="show"
-            class-name="vertical-center-modal"
-            :footer-hide="true"
-            :width="1000"
-            :transfer="false"
-            @on-cancel="$emit('closeMnemonicDialog')">
+      v-model="show"
+      class-name="vertical-center-modal"
+      :footer-hide="true"
+      :width="1000"
+      :transfer="false"
+      @on-cancel="$emit('closeMnemonicDialog')">
       <div slot="header" class="mnemonicDialogHeader">
         <span class="title">{{$t('export_mnemonic')}}</span>
       </div>
@@ -21,24 +21,24 @@
 
         <div class="stepItem1" v-if="stepIndex == 0">
           <form
-                  @submit.prevent="validateForm('mnemonic-dialog')"
-                  @keyup.enter="submit"
-                  class="centered"
+            @submit.prevent="validateForm('mnemonic-dialog')"
+            @keyup.enter="submit"
+            class="centered"
           >
             <input
-                    v-model="cipher"
-                    data-vv-name="cipher"
-                    v-validate="'required'"
-                    style="display:none"
+              v-model="cipher"
+              data-vv-name="cipher"
+              v-validate="'required'"
+              style="display:none"
             />
             <ErrorTooltip fieldName="password">
               <input
-                      v-focus
-                      v-model.lazy="password"
-                      type="password"
-                      data-vv-name="password"
-                      v-validate="validation.previousPassword"
-                      :data-vv-as="$t('password')"
+                v-focus
+                v-model.lazy="password"
+                type="password"
+                data-vv-name="password"
+                v-validate="validation.previousPassword"
+                :data-vv-as="$t('password')"
               />
             </ErrorTooltip>
             <div class="buttons_container">
@@ -105,9 +105,9 @@
             {{$t('please_click_on_the_mnemonic_in_order_to_confirm_that_you_are_backing_up_correctly')}}
           </p>
           <MnemonicVerification
-                  :mnemonicWordsList="mnemonic.split(' ')"
-                  @verificationSuccess="$emit('closeMnemonicDialog')"
-                  @toPreviousPage="stepIndex = 2"/>
+            :mnemonicWordsList="mnemonic.split(' ')"
+            @verificationSuccess="$emit('closeMnemonicDialog')"
+            @toPreviousPage="stepIndex = 2"/>
         </div>
 
         <div class="stepItem5" v-if="stepIndex == 4">
@@ -131,8 +131,8 @@
             </Button>
             <Button class="button_arrow" type="success">
               <a
-                      :href="qrCode$"
-                      download="qrCode.png"
+                :href="qrCode$"
+                download="qrCode.png"
               >
                 {{$t('Download')}}
 
@@ -147,12 +147,12 @@
 </template>
 
 <script lang="ts">
-    import '@/views/wallet/wallet-details/mnemonic-dialog/MnemonicDialog.less'
-    import {MnemonicDialogTs} from "@/views/wallet/wallet-details/mnemonic-dialog/MnemonicDialogTs.ts"
+  import '@/views/wallet/wallet-details/mnemonic-dialog/MnemonicDialog.less'
+  import {MnemonicDialogTs} from "@/views/wallet/wallet-details/mnemonic-dialog/MnemonicDialogTs.ts"
 
-    export default class MnemonicDialog extends MnemonicDialogTs {
+  export default class MnemonicDialog extends MnemonicDialogTs {
 
-    }
+  }
 </script>
 
 <style scoped>

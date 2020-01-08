@@ -204,6 +204,12 @@ const mutations: MutationTree<StoreAccount> = {
         const transactions = popTransactionToCosignByHash([...state.transactionsToCosign], hash)
         state.transactionsToCosign = [newTransaction, ...transactions]
     },
+    SET_TEMPORARY_REMOTE_NODE_CONFIG(state: StoreAccount, temporaryRemoteNodeConfig: {
+        publicKey: string,
+        node: string
+    }) {
+        state.wallet.temporaryRemoteNodeConfig = temporaryRemoteNodeConfig
+    },
 }
 
 const actions = {

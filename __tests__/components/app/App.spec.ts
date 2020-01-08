@@ -4,7 +4,7 @@ import iView from 'view-design'
 import Vuex from 'vuex'
 import VeeValidate from 'vee-validate'
 import App from '@/app/App.vue'
-import {accountMutations, accountState} from '@/store/account'
+import {accountMutations, accountState, accountActions} from '@/store/account'
 import {appMutations, appState, appActions} from '@/store/app'
 import {veeValidateConfig} from '@/core/validation'
 import VueRx from 'vue-rx'
@@ -50,6 +50,7 @@ describe('App', () => {
             mosaics,
             multisigAccountInfo,
           }),
+          actions: accountActions.actions,
           mutations: accountMutations.mutations,
         },
         app: {

@@ -1,14 +1,15 @@
 import * as hdWallet from '@/core/utils/hdWallet.ts'
-
-import {hdAccount, hdAccountData, hdAccountTestNet} from "@MOCKS/conf/conf"
-import {NetworkType, Address} from 'nem2-sdk'
+import {hdAccount, hdAccountData, hdAccountTestNet, CosignAccount, CosignAccountRemoteMijinTest, CosignAccountRemoteTestNet} from "@MOCKS/index"
+import {NetworkType, Address, SimpleWallet, Password} from 'nem2-sdk'
 import {Network} from 'nem2-hd-wallets'
+import {AppWallet, CreateWalletType} from '@/core/model'
 
 describe('hdWallet', () => {
   it('createMnemonic should create a 24 words array', () => {
     expect(hdWallet.createMnemonic().split(' ').length).toBe(24)
   })
 })
+
 
 describe('getPath', () => {
   it('should return a correct value', () => {
@@ -31,6 +32,43 @@ describe('getPath', () => {
 })
 
 
+describe('getRemoteAccountPath', () => {
+  it('should return a correct value', () => {
+    expect(hdWallet.getRemoteAccountPath(`m/44'/43'/0'/0'/0'`, 1)).toBe(`m/44'/43'/0'/1'/0'`)
+    expect(hdWallet.getRemoteAccountPath(`m/44'/43'/1'/0'/0'`, 1)).toBe(`m/44'/43'/1'/1'/0'`)
+    expect(hdWallet.getRemoteAccountPath(`m/44'/43'/2'/0'/0'`, 1)).toBe(`m/44'/43'/2'/1'/0'`)
+    expect(hdWallet.getRemoteAccountPath(`m/44'/43'/3'/0'/0'`, 1)).toBe(`m/44'/43'/3'/1'/0'`)
+    expect(hdWallet.getRemoteAccountPath(`m/44'/43'/4'/0'/0'`, 1)).toBe(`m/44'/43'/4'/1'/0'`)
+    expect(hdWallet.getRemoteAccountPath(`m/44'/43'/5'/0'/0'`, 1)).toBe(`m/44'/43'/5'/1'/0'`)
+    expect(hdWallet.getRemoteAccountPath(`m/44'/43'/6'/0'/0'`, 1)).toBe(`m/44'/43'/6'/1'/0'`)
+    expect(hdWallet.getRemoteAccountPath(`m/44'/43'/7'/0'/0'`, 1)).toBe(`m/44'/43'/7'/1'/0'`)
+    expect(hdWallet.getRemoteAccountPath(`m/44'/43'/8'/0'/0'`, 1)).toBe(`m/44'/43'/8'/1'/0'`)
+    expect(hdWallet.getRemoteAccountPath(`m/44'/43'/9'/0'/0'`, 1)).toBe(`m/44'/43'/9'/1'/0'`)
+  })
+
+  it('should throw when incorrect params are provided', () => {
+    expect(() => {hdWallet.getRemoteAccountPath('', null)}).toThrow();
+    expect(() => {hdWallet.getRemoteAccountPath('', undefined)}).toThrow();
+  })
+})
+
+
+describe('getPathNumberFromPath', () => {
+  it('should return a correct value', () => {
+    expect(hdWallet.getPathNumberFromPath(`m/44'/43'/0'/0'/0'`)).toBe(0)
+    expect(hdWallet.getPathNumberFromPath(`m/44'/43'/1'/0'/0'`)).toBe(1)
+    expect(hdWallet.getPathNumberFromPath(`m/44'/43'/2'/0'/0'`)).toBe(2)
+    expect(hdWallet.getPathNumberFromPath(`m/44'/43'/3'/0'/0'`)).toBe(3)
+    expect(hdWallet.getPathNumberFromPath(`m/44'/43'/4'/0'/0'`)).toBe(4)
+    expect(hdWallet.getPathNumberFromPath(`m/44'/43'/5'/0'/0'`)).toBe(5)
+    expect(hdWallet.getPathNumberFromPath(`m/44'/43'/6'/0'/0'`)).toBe(6)
+    expect(hdWallet.getPathNumberFromPath(`m/44'/43'/7'/0'/0'`)).toBe(7)
+    expect(hdWallet.getPathNumberFromPath(`m/44'/43'/8'/0'/0'`)).toBe(8)
+    expect(hdWallet.getPathNumberFromPath(`m/44'/43'/9'/0'/0'`)).toBe(9)
+  })
+})
+
+
 describe('getAccountFromPathNumber', () => {
   it('should return proper addresses for a MIJIN_TEST account', () => {
     const account0 = hdWallet.getAccountFromPathNumber(hdAccountData.mnemonic, 0, hdAccount.networkType)
@@ -45,10 +83,7 @@ describe('getAccountFromPathNumber', () => {
     const account3 = hdWallet.getAccountFromPathNumber(hdAccountData.mnemonic, 3, hdAccount.networkType)
     expect(account3.address.plain()).toBe(hdAccount.wallets[3].address)
   })
-})
 
-
-describe('getAccountFromPathNumber', () => {
   it('should return proper addresses for a TEST_NET account', () => {
     const account0 = hdWallet.getAccountFromPathNumber(hdAccountData.mnemonic, 0, hdAccountTestNet.networkType)
     expect(account0.address.plain()).toBe(hdAccountTestNet.wallets[0].address)
@@ -62,6 +97,7 @@ describe('getAccountFromPathNumber', () => {
     const account3 = hdWallet.getAccountFromPathNumber(hdAccountData.mnemonic, 3, hdAccountTestNet.networkType)
     expect(account3.address.plain()).toBe(hdAccountTestNet.wallets[3].address)
   })
+
 })
 
 
@@ -122,5 +158,69 @@ describe('getTenAddressesFromMnemonic', () => {
         Address.createFromRawAddress('TBT3M23LBTT5WFE75VLDLV2ALY3MGWKBMS7GDLUK'),
         Address.createFromRawAddress('TCYHXYZKBUVHK52L5N4D4F7PRHGBWGEGQ7EU2G3B'),
       ])
+  })
+})
+
+
+
+describe('getRemoteAccountFromPrivateKey', () => {
+  const password = new Password('password1')
+
+  const mijinPrivateKeyWallet = AppWallet.createFromDTO({
+    name: 'pkeyWallet',
+    simpleWallet: SimpleWallet.createFromPrivateKey(
+      'pkeyWallet', password, CosignAccount.privateKey, NetworkType.MIJIN_TEST,
+    ),
+    networkType: NetworkType.MIJIN_TEST,
+    sourceType: CreateWalletType.privateKey,
+  })
+
+
+  const testNetPrivateKeyWallet = AppWallet.createFromDTO({
+    name: 'pkeyWallet',
+    simpleWallet: SimpleWallet.createFromPrivateKey(
+      'pkeyWallet', password, CosignAccount.privateKey, NetworkType.TEST_NET,
+    ),
+    networkType: NetworkType.TEST_NET,
+    sourceType: CreateWalletType.privateKey,
+  })
+
+  it('should throw if the account index is undefined', () => {
+    expect(() => {
+      hdWallet.getRemoteAccountFromPrivateKey(
+        CosignAccount.privateKey,
+        undefined,
+        mijinPrivateKeyWallet.networkType,
+      )
+    }).toThrow()
+  })
+
+  it('should throw if the account index is null', () => {
+    expect(() => {
+      hdWallet.getRemoteAccountFromPrivateKey(
+        CosignAccount.privateKey,
+        null,
+        mijinPrivateKeyWallet.networkType,
+      )
+    }).toThrow()
+  })
+
+  it('should return the correct account, on MIJIN_TEST', () => {
+    const account = hdWallet.getRemoteAccountFromPrivateKey(
+      CosignAccount.privateKey,
+      1,
+      NetworkType.MIJIN_TEST,
+    )
+
+    expect(account).toEqual(CosignAccountRemoteMijinTest)
+  })
+
+  it('should return the correct account, on TEST_TEST', () => {
+    const account = hdWallet.getRemoteAccountFromPrivateKey(
+      CosignAccount.privateKey,
+      1,
+      NetworkType.TEST_NET,
+    )
+    expect(account).toEqual(CosignAccountRemoteTestNet)
   })
 })

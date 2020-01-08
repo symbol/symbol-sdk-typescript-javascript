@@ -7,7 +7,6 @@ import {AppState, Notice, AppMosaic, NetworkProperties} from '.'
 import {NoticeType} from '@/core/model'
 import {Message, networkConfig} from '@/config'
 import {OnWalletChange, setWalletsBalances} from '../services'
-import {Listeners} from './Listeners'
 
 const {maxDifficultyBlocks} = networkConfig
 

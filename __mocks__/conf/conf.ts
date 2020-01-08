@@ -6,6 +6,16 @@ export const CosignAccount = Account.createFromPrivateKey(
     '27002B109810E4C25E8E6AE964FAF129CC3BFD1A95CB99062E0205060041D0C9',
     NetworkType.MIJIN_TEST)
 
+export const CosignAccountRemoteTestNet = Account.createFromPrivateKey(
+    '803040D4A33983C4B233C6C2054A24B9C655E8CAC6C06AECCED56B8FE424FF2B',
+    NetworkType.TEST_NET,
+)
+
+export const CosignAccountRemoteMijinTest = Account.createFromPrivateKey(
+    '803040D4A33983C4B233C6C2054A24B9C655E8CAC6C06AECCED56B8FE424FF2B',
+    NetworkType.MIJIN_TEST,
+)
+
 // cosigner
 export const Cosign2Account = Account.createFromPrivateKey(
     '8472FA74A64A97C85F0A285299D9FD2D44D71CB5698FE9C7E88C33001F9DD83F',
@@ -204,6 +214,7 @@ export const hdAccount = {
                     "iv": "D023A94CB9A32618DCAA8EE491F200E4"
                 }
             },
+            "linkedAccountKey":"31CEA151B07A3E24CEA83F183A75E65A2CCCD3A5D48E413B1AD97637BDCC8559",
             "name": "seedWallet",
             "address": "SAJFKFAHB4UNEK4LJM76C7L5YMBSB74AKMSAXJJ7",
             "publicKey": "C4B3DC11B41653AD52863B32159F771D847A1AFA6D117A64AB8305E0873F6506",
@@ -324,7 +335,8 @@ export const hdAccountTestNet = {
             "path": "m/44'/43'/0'/0'/0'",
             "sourceType": "Seed",
             "encryptedMnemonic": "U2FsdGVkX1+W7TUhx5uCGTyh6iGNij0Y/vX17IIhDm+ybigE/8+3LMe4HXYkhQ52LTNI4l/XIG+Fb48elX3QOQ1yWtzppHDdwZe17maG6QqbTwL+j5A/zqqL1oEFnB2Zt6Ou4q1IngbF5WysbhACIU1hOFeyKIFd9Qw0Jk88V1T4b8LFqEkXv22/AxPKEK8ujirZbm5tiMpTw5hlVuKYIedNezUoi40QfMba5lVaPQD4+F3zMIgnOS6YnPyYuS8SdVqc1pNEHkW5lhND7nFHrbKO/5IGMoz4bXE4skN2SB+r3mh7u7RMPF1Ucmi8JwXq8lx4DSl9qp08eGQ65i4cWBUNYyzFdzknBxx/guVlMfh1gI/zazCKolw/rQ2/Vyb7DRL3f+8o4ROIx53j9XKW78XMy2Rbh3IMZgER/qQCE80=",
-            "balance": 0
+            "balance": 0,
+            "linkedAccountKey": "C93F29151736734FAEEE643034540D06FCD7B005953145AE162399EF4F03E0CF"
         },
         {
             "simpleWallet": {
@@ -349,7 +361,8 @@ export const hdAccountTestNet = {
             "path": "m/44'/43'/1'/0'/0'",
             "sourceType": "Seed",
             "encryptedMnemonic": "U2FsdGVkX1+Svt/SUqT/0mT9yHqY2igPUYT7uzirIglbTDzDLzh4Q22mGR/eXxFfO1MpzwLXwFYuUjL0Nmu4QtimY+OmKdjqcrTMBUYvGuHCIjT+pEC5YAG6R19j4WCP1ox+p9o9rozL2QZtsImX47XSkhr1Q5o6MhmnAMp3tojG6XfRANsvCJ7FYjGCYpownsaGHpej+8iuTycxJ9TjnZdP/twAOc3wdanrzLNavmAqwEeeQCh8A64F+J0eew6MlD6bf3myuKVWYvmefCPH1TtVBLZKUGfCjQOzG/DyT0p6ogmReOBVLvZKMDMRlwLu2fplZsrNU7MLhdjZJsrBTCv5syEY3NK6Ly+v6FpIBBbVd70qZXMARzbQLiv+ILeepL47q30gdZVPsbE1m8fIXTt6Zvc+TYm5ZU/OeGvaEr8=",
-            "balance": 0
+            "balance": 0,
+            "linkedAccountKey": undefined
         },
         {
             "simpleWallet": {

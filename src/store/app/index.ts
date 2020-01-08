@@ -6,7 +6,6 @@ import {
     LoadingOverlayObject,
     NetworkProperties,
     AppState,
-    TransactionFormatterOptions,
     Listeners,
     NetworkManager,
 } from '@/core/model'

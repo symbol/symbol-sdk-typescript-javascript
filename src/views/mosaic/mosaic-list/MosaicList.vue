@@ -77,11 +77,11 @@
           </div>
         </div>
         <Spin v-if="mosaicsLoading" size="large" fix class="absolute"></Spin>
-        <div class="no_data" v-if="false">{{$t('no_data')}}</div>
-        <div
-                v-for="(value, index) in currentMosaicList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-                :key="index"
-                :class="['listItem',value.mosaicInfo && value.mosaicInfo.owner.publicKey == publicKey?'owned_mosaic':'']">
+        <div class="no_data" v-if="!currentMosaicList.length">{{$t('no_data')}}</div>
+        <div v-else
+             v-for="(value, index) in currentMosaicList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+             :key="index"
+             :class="['listItem',value.mosaicInfo && value.mosaicInfo.owner.publicKey == publicKey?'owned_mosaic':'']">
           <Row>
             <span class="balance text_select overflow_ellipsis">
                <NumberFormatting :numberOfFormatting="value.balance?formatNumber(value.balance):'0'"></NumberFormatting>
@@ -112,26 +112,26 @@
 
             <span class="poptip ">
               <div
-                      v-if="value.mosaicInfo && value.mosaicInfo.owner.publicKey == publicKey
+                v-if="value.mosaicInfo && value.mosaicInfo.owner.publicKey == publicKey
                     &&  (computeDuration(value) > 0
                       || computeDuration(value) === MosaicNamespaceStatusType.FOREVER)"
-                      class="listFnDiv"
+                class="listFnDiv"
               >
                 <Poptip placement="bottom">
                   <i class="moreFn"></i>
                   <div slot="content" class="updateFn">
                     <p
-                            v-if="value.properties?value.properties.supplyMutable:false"
-                            class="fnItem"
-                            @click="showEditDialog(value)"
+                      v-if="value.properties?value.properties.supplyMutable:false"
+                      class="fnItem"
+                      @click="showEditDialog(value)"
                     >
                       <i><img src="@/common/img/service/updateMosaic.png"></i>
                       <span class="">{{$t('modify_supply')}}</span>
                     </p>
                     <p
-                            v-if="!value.name"
-                            class="fnItem"
-                            @click="bindItem(value)"
+                      v-if="!value.name"
+                      class="fnItem"
+                      @click="bindItem(value)"
                     >
                       <i><img src="@/common/img/service/setAlias.png"></i>
                       <span>{{$t('binding_alias')}}</span>
@@ -149,14 +149,13 @@
           </Row>
         </div>
         <div class="page_container ">
-          <Page
-                  class="page"
-                  :total="currentMosaicList.length"
-                  @on-change="toggleChange"
-                  :page-size="pageSize"
-          />
+          <Page class="page"
+                :total="currentMosaicList.length"
+                @on-change="toggleChange"
+                :page-size="pageSize"/>
         </div>
       </div>
+
     </div>
 
     <div class="right_container radius">
@@ -168,31 +167,31 @@
       <p>{{$t('mosaic_attribute_text_2')}}</p>
     </div>
     <Alias
-            v-if="showAliasDialog"
-            :visible="showAliasDialog"
-            :bind="bind"
-            :fromNamespace="false"
-            :namespace="namespace"
-            :mosaic="mosaic"
-            :address="address"
-            @close="showAliasDialog = false"
+      v-if="showAliasDialog"
+      :visible="showAliasDialog"
+      :bind="bind"
+      :fromNamespace="false"
+      :namespace="namespace"
+      :mosaic="mosaic"
+      :address="address"
+      @close="showAliasDialog = false"
     />
     <MosaicSupplyChange
-            v-if="showMosaicEditDialog"
-            :showMosaicEditDialog="showMosaicEditDialog"
-            :itemMosaic="selectedMosaic"
-            @close="showMosaicEditDialog = false"
+      v-if="showMosaicEditDialog"
+      :showMosaicEditDialog="showMosaicEditDialog"
+      :itemMosaic="selectedMosaic"
+      @close="showMosaicEditDialog = false"
     />
   </div>
 </template>
 
 <script lang="ts">
-    import {MosaicListTs} from '@/views/mosaic/mosaic-list/MosaicListTs.ts'
-    import "./MosaicList.less"
+  import {MosaicListTs} from '@/views/mosaic/mosaic-list/MosaicListTs.ts'
+  import "./MosaicList.less"
 
-    export default class MosaicList extends MosaicListTs {
+  export default class MosaicList extends MosaicListTs {
 
-    }
+  }
 </script>
 <style scoped lang="less">
 

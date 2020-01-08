@@ -110,21 +110,6 @@ describe('CreateSubNamespace', () => {
         expect(namespaceRegistrationTransaction.namespaceName).toBe('efg')
     })
 
-    it('should not create a NamespaceRegistrationTransaction while sub namespace is invalid ', async () => {
-        wrapper.setData({
-            formItems: {
-                rootNamespaceName: 'asd',
-                subNamespaceName: 'ASD',
-                multisigPublicKey: '',
-                feeSpeed: FEE_SPEEDS.NORMAL,
-            }
-        })
-        wrapper.vm.submit()
-        await flushPromises()
-
-        expect(wrapper.vm.transactionList[0]).toBeUndefined()
-    })
-
     it(' should create an aggregate complete transaction while account is a 1-of-1 multisig ', async () => {
         wrapper.setData({
             formItems: {

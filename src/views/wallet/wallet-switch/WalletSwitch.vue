@@ -8,8 +8,8 @@
     <div class="walletList scroll" ref="walletScroll">
       <div class="wallet_scroll_item" v-for="(item, index) in walletList" :key="index">
         <div :class="['walletItem', getWalletStyle(item), 'radius']"
-                @click="switchWallet(item.address)"
-                ref="walletsDiv" >
+             @click="switchWallet(item.address)"
+             ref="walletsDiv" >
           <Row>
             <Col span="15">
               <div>
@@ -52,11 +52,11 @@
     </div>
 
     <CheckPasswordDialog
-            v-if="showCheckPWDialog"
-            :visible="showCheckPWDialog"
-            :returnPassword="true"
-            @close="showCheckPWDialog = false"
-            @passwordValidated="passwordValidated"></CheckPasswordDialog>
+      v-if="showCheckPWDialog"
+      :visible="showCheckPWDialog"
+      :returnPassword="true"
+      @close="showCheckPWDialog = false"
+      @passwordValidated="passwordValidated"></CheckPasswordDialog>
 
     <MnemonicDialog v-if="isShowMnemonicDialog"
                     :showMnemonicDialog="isShowMnemonicDialog"
@@ -71,12 +71,12 @@
 </template>
 
 <script lang="ts">
-    import "./WalletSwitch.less";
-    //@ts-ignore
-    import {WalletSwitchTs} from "@/views/wallet/wallet-switch/WalletSwitchTs.ts";
+  import "./WalletSwitch.less";
+  //@ts-ignore
+  import {WalletSwitchTs} from "@/views/wallet/wallet-switch/WalletSwitchTs.ts";
 
-    export default class WalletSwitch extends WalletSwitchTs {
-    }
+  export default class WalletSwitch extends WalletSwitchTs {
+  }
 </script>
 
 <style scoped>

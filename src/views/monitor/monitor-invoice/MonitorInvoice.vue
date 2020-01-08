@@ -1,7 +1,7 @@
 <template>
   <div class="qr_content secondary_page_animate">
     <Spin v-if="false" size="large" fix class="absolute"></Spin>
-    <div class="left_container radius">
+    <div class="left_container">
       <img id="qrImg" :src="qrCode$" alt="Transaction QR code"/>
       <div class="qr_info">
 
@@ -13,11 +13,11 @@
         <div class="top-qr-text overflow_ellipsis">
           <span class="top-qr-text-title">{{$t('assets')}}:</span>
           <span v-if="activeMosaic.name">
-            <span class="blue">{{activeMosaic.name }}</span>
-            <span class="gray">（{{activeMosaic.hex }}）</span>
+            <span class="blue">{{activeMosaic.name ||'N/A'}}</span>
+            <span class="gray">（{{activeMosaic.hex||'N/A' }}）</span>
           </span>
           <span v-else class="gray">
-           {{activeMosaic.hex }}
+           {{activeMosaic.hex ||'N/A'}}
           </span>
         </div>
 
@@ -41,6 +41,7 @@
     <CollectionRecord :transactionType="TransferType.RECEIVED"/>
 
     <div class="modal scroll">
+      <div class="set-qr-image">{{$t('set_qr_image')}}</div>
       <form onsubmit="event.preventDefault()">
         <div class="asset">
           <span class="title">{{$t('asset_type')}}</span>

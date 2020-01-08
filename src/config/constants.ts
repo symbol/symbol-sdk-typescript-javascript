@@ -11,81 +11,81 @@ export const apiServerConfig = {
 export const feedUrl = 'https://nemflash.io/feed/'
 
 export const transactionTag = {
-    RECEIPT: 'receipt',
+  RECEIPT: 'receipt',
     PAYMENT: 'payment',
-    [TransactionType.REGISTER_NAMESPACE]: 'register_namespace',
-    [TransactionType.ADDRESS_ALIAS]: 'address_alias',
-    [TransactionType.MOSAIC_ALIAS]: 'mosaic_alias',
-    [TransactionType.MOSAIC_DEFINITION]: 'mosaic_definition',
-    [TransactionType.MOSAIC_SUPPLY_CHANGE]: 'mosaic_supply_change',
-    [TransactionType.MODIFY_MULTISIG_ACCOUNT]: 'modify_multisig_account',
-    [TransactionType.AGGREGATE_COMPLETE]: 'aggregate_complete',
-    [TransactionType.AGGREGATE_BONDED]: 'aggregate_bonded',
-    [TransactionType.LOCK]: 'lock',
-    [TransactionType.SECRET_LOCK]: 'secret_lock',
-    [TransactionType.SECRET_PROOF]: 'secret_proof',
-    [TransactionType.ACCOUNT_RESTRICTION_ADDRESS]: 'account_restriction_address',
-    [TransactionType.ACCOUNT_RESTRICTION_MOSAIC]: 'account_restriction_mosaic',
-    [TransactionType.ACCOUNT_RESTRICTION_OPERATION]: 'account_restriction_operation',
-    [TransactionType.LINK_ACCOUNT]: 'link_account',
-    [TransactionType.MOSAIC_ADDRESS_RESTRICTION]: 'mosaic_address_restriction',
-    [TransactionType.MOSAIC_GLOBAL_RESTRICTION]: 'mosaic_global_restriction',
-    [TransactionType.ACCOUNT_METADATA_TRANSACTION]: 'account_metadata_transaction',
-    [TransactionType.MOSAIC_METADATA_TRANSACTION]: 'mosaic_metadata_transaction',
-    [TransactionType.NAMESPACE_METADATA_TRANSACTION]: 'namespace_metadata_transaction',
+  [TransactionType.REGISTER_NAMESPACE]: 'register_namespace',
+  [TransactionType.ADDRESS_ALIAS]: 'address_alias',
+  [TransactionType.MOSAIC_ALIAS]: 'mosaic_alias',
+  [TransactionType.MOSAIC_DEFINITION]: 'mosaic_definition',
+  [TransactionType.MOSAIC_SUPPLY_CHANGE]: 'mosaic_supply_change',
+  [TransactionType.MODIFY_MULTISIG_ACCOUNT]: 'modify_multisig_account',
+  [TransactionType.AGGREGATE_COMPLETE]: 'aggregate_complete',
+  [TransactionType.AGGREGATE_BONDED]: 'aggregate_bonded',
+  [TransactionType.LOCK]: 'lock',
+  [TransactionType.SECRET_LOCK]: 'secret_lock',
+  [TransactionType.SECRET_PROOF]: 'secret_proof',
+  [TransactionType.ACCOUNT_RESTRICTION_ADDRESS]: 'account_restriction_address',
+  [TransactionType.ACCOUNT_RESTRICTION_MOSAIC]: 'account_restriction_mosaic',
+  [TransactionType.ACCOUNT_RESTRICTION_OPERATION]: 'account_restriction_operation',
+  [TransactionType.LINK_ACCOUNT]: 'link_account',
+  [TransactionType.MOSAIC_ADDRESS_RESTRICTION]: 'mosaic_address_restriction',
+  [TransactionType.MOSAIC_GLOBAL_RESTRICTION]: 'mosaic_global_restriction',
+  [TransactionType.ACCOUNT_METADATA_TRANSACTION]: 'account_metadata_transaction',
+  [TransactionType.MOSAIC_METADATA_TRANSACTION]: 'mosaic_metadata_transaction',
+  [TransactionType.NAMESPACE_METADATA_TRANSACTION]: 'namespace_metadata_transaction',
 }
 
 export const FEE_SPEEDS: Record<string, string> = {
-    SLOW: 'SLOW',
-    NORMAL: 'NORMAL',
-    FAST: 'FAST',
+  SLOW: 'SLOW',
+  NORMAL: 'NORMAL',
+  FAST: 'FAST',
 }
 
 export const FEE_GROUPS: Record<string, string> = {
-    SINGLE: 'SINGLE',
-    DOUBLE: 'DOUBLE',
-    TRIPLE: 'TRIPLE',
+  SINGLE: 'SINGLE',
+  DOUBLE: 'DOUBLE',
+  TRIPLE: 'TRIPLE',
 }
 
 export const MULTISIG_INFO: Record<string, string> = {
-    MULTISIG_INFO: 'Multisig Info',
-    COSIGNATORIES: 'Cosignatories',
-    MULTISIG_ACCOUNTS: 'Multisig accounts',
-    PUBLIC_KEY: 'Public key : ',
-    ADDRESS: "Address : ",
-    MIN_APPROVAL: "Min approval : ",
-    MIN_REMOVAL: "Min removal : "
+  MULTISIG_INFO: 'Multisig Info',
+  COSIGNATORIES: 'Cosignatories',
+  MULTISIG_ACCOUNTS: 'Multisig accounts',
+  PUBLIC_KEY: 'Public key : ',
+  ADDRESS: "Address : ",
+  MIN_APPROVAL: "Min approval : ",
+  MIN_REMOVAL: "Min removal : "
 }
 export const DEFAULT_FEES: Record<string, DefaultFee[]> = {
-    [FEE_GROUPS.SINGLE]: [
-        {speed: FEE_SPEEDS.SLOW, value: 0.05},
-        {speed: FEE_SPEEDS.NORMAL, value: 0.1},
-        {speed: FEE_SPEEDS.FAST, value: 1},
-    ],
-    [FEE_GROUPS.DOUBLE]: [
-        {speed: FEE_SPEEDS.SLOW, value: 0.1},
-        {speed: FEE_SPEEDS.NORMAL, value: 0.2},
-        {speed: FEE_SPEEDS.FAST, value: 2},
-    ],
-    [FEE_GROUPS.TRIPLE]: [
-        {speed: FEE_SPEEDS.SLOW, value: 0.3},
-        {speed: FEE_SPEEDS.NORMAL, value: 0.9},
-        {speed: FEE_SPEEDS.FAST, value: 3},
-    ],
+  [FEE_GROUPS.SINGLE]: [
+    {speed: FEE_SPEEDS.SLOW, value: 0.05},
+    {speed: FEE_SPEEDS.NORMAL, value: 0.1},
+    {speed: FEE_SPEEDS.FAST, value: 1},
+  ],
+  [FEE_GROUPS.DOUBLE]: [
+    {speed: FEE_SPEEDS.SLOW, value: 0.1},
+    {speed: FEE_SPEEDS.NORMAL, value: 0.2},
+    {speed: FEE_SPEEDS.FAST, value: 2},
+  ],
+  [FEE_GROUPS.TRIPLE]: [
+    {speed: FEE_SPEEDS.SLOW, value: 0.3},
+    {speed: FEE_SPEEDS.NORMAL, value: 0.9},
+    {speed: FEE_SPEEDS.FAST, value: 3},
+  ],
 }
 
 const defaultNetworkMosaic: NetworkCurrency = {
-    hex: '',
-    divisibility: 1,
-    ticker: '',
-    name: '',
+  hex: '',
+  divisibility: 1,
+  ticker: '',
+  name: '',
 }
 
 export const defaultNetworkConfig = {
-    networkConfirmations: 10,
-    defaultNetworkMosaic,
-    DEFAULT_LOCK_AMOUNT: 10000000,
-    DEFAULT_NETWORK_TYPE: NetworkType.MIJIN_TEST,
+  networkConfirmations: 10,
+  defaultNetworkMosaic,
+  DEFAULT_LOCK_AMOUNT: 10000000,
+  DEFAULT_NETWORK_TYPE: NetworkType.MIJIN_TEST,
 }
 
 export const networkConfig = {
@@ -145,15 +145,14 @@ export const networkConfig = {
 }
 
 export const NETWORK_CONSTANTS = {
-    GENERATION_HASH_LENGTH: 64,
-    MAX_MESSAGE_LENGTH: networkConfig.maxMessageSize - 1,
-    MAX_MOSAIC_DURATION: networkConfig.maxMosaicDuration * 24 * 60 * 60 / networkConfig.targetBlockTime,
-    MAX_NAMESPACE_DURATION: networkConfig.maxNamespaceDuration * 24 * 60 * 60 / networkConfig.targetBlockTime,
-    MIN_NAMESPACE_DURATION: 30 * 24 * 60 * 60 / networkConfig.targetBlockTime,
-    PRIVATE_KEY_LENGTH: 64,
-    NEMESIS_BLOCK_TIMESTAMP: Deadline.timestampNemesisBlock,
+  GENERATION_HASH_LENGTH: 64,
+  MAX_MESSAGE_LENGTH: networkConfig.maxMessageSize - 1,
+  MAX_MOSAIC_DURATION: networkConfig.maxMosaicDuration * 24 * 60 * 60 / networkConfig.targetBlockTime,
+  MAX_NAMESPACE_DURATION: networkConfig.maxNamespaceDuration * 24 * 60 * 60 / networkConfig.targetBlockTime,
+  MIN_NAMESPACE_DURATION: 30 * 24 * 60 * 60 / networkConfig.targetBlockTime,
+  PRIVATE_KEY_LENGTH: 64,
+  NEMESIS_BLOCK_TIMESTAMP: Deadline.timestampNemesisBlock,
 }
-
 export const Message = {
     ACCOUNT_NAME_EXISTS_ERROR: 'Account_name_already_exists',
     ACCOUNT_NAME_INPUT_ERROR: 'accountCreateWalletNameRemind',
@@ -227,6 +226,7 @@ export const Message = {
     PUBLIC_KEY_INVALID: 'public_key_invalid',
     QR_GENERATION_ERROR: 'QR_code_generation_failed',
     REFRESH_TOO_FAST_WARNING: 'refresh_too_fast_warning',
+    REMOTE_ACCOUNT_NOT_FOUND: 'Cannot find your remote account, please try to unlink it and create a new one',
     ROOT_NAMESPACE_TOO_LONG_ERROR: 'The_root_namespace_cannot_be_longer_than_16',
     SEED_WALLET_OVERFLOW_ERROR: 'seed_wallet_can_not_be_more_than_10',
     SUB_NAMESPACE_LENGTH_LONGER_THAN_64_ERROR: 'The_sub_namespace_cannot_be_longer_than_16',
@@ -240,4 +240,5 @@ export const Message = {
     WRONG_WALLET_NAME_ERROR: 'wrong_wallet_name_error',
     SET_DEFAULT_EXPLORER:'set_default_explorer',
     PASSWORD_IS_INVALID_ERROR:'password_is_invalid',
+    REMOTE_PUBLIC_KEY_MISSING: 'remote_public_key_missing_error'
 }

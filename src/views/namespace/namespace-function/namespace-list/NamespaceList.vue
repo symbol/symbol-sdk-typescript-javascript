@@ -144,7 +144,7 @@
           </span>
             </div>
           </div>
-          <div v-if="namespaceList.length == 0" class="noData">
+          <div v-if="namespaceList.length == 0" class="no_data">
             <p>{{$t('no_data')}}</p>
           </div>
         </div>

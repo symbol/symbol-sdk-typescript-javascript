@@ -109,6 +109,11 @@ export interface StagedTransaction {
     isAwaitingConfirmation: boolean
 }
 
+export interface RemoteAccount {
+  simpleWallet: SimpleWallet,
+  publicKey: string,
+}
+
 export interface SignTransaction {
     success: Boolean
     signedTransaction: SignedTransaction | CosignatureSignedTransaction
@@ -209,4 +214,3 @@ export enum NoticeType {
     error = 'error',
     warning = 'warning',
 }
-

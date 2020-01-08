@@ -21,6 +21,14 @@ export const formatExplorerUrl = (transactionHash) => {
     return explorerUrlHead + transactionHash
 }
 
+export const miniHash = (hash: string): string => {
+  return `${hash.substring(0, 18).toLowerCase()}***${hash.substring(42).toLowerCase()}`
+}
+
+export const tinyHash = (hash: string): string => {
+  return `${hash.substring(0, 6).toLowerCase()}***${hash.substring(58).toLowerCase()}`
+}
+
 export const absoluteAmountToRelativeAmountWithTicker = (
     amount: number,
     networkCurrency: NetworkCurrency,

@@ -41,7 +41,7 @@ export const networkStatusConfig: Array<{
 
         }, {
             icon: dashboardBlockTime,
-            descript: 'average_block_time',
+            descript: 'block_time',
             data: 12,
             variable: 'targetBlockTime'
         }, {

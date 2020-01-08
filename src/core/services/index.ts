@@ -1,4 +1,5 @@
 export * from './eventHandlers'
+export * from './harvesting'
 export * from './marketData'
 export * from './mosaics'
 export * from './multisig'

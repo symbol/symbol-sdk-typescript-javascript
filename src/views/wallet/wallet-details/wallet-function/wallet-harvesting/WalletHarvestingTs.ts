@@ -1,69 +1,91 @@
 import {Component, Vue} from 'vue-property-decorator'
+import {Address} from "nem2-sdk"
 import {mapState} from "vuex"
-import {StoreAccount} from "@/core/model"
+import {StoreAccount, AppWallet, FormattedTransaction, AppInfo} from "@/core/model"
 import {networkConfig} from "@/config"
-import AccountLinkTransaction from '@/components/forms/account-link/AccountLinkTransaction.vue'
-import CreateRemoteAccount from '@/components/forms/create-remote-account/CreateRemoteAccount.vue'
-import PersistentDelegationRequest from '@/components/forms/persistent-delegation-request/PersistentDelegationRequest.vue'
+import DelegatedCheckPasswordDialog
+    from '@/views/wallet/wallet-details/wallet-function/wallet-harvesting/delegated-check-password-dialog/DelegatedCheckPasswordDialog.vue'
+import DelegatedDialog from '@/components/forms/delegated-dialog/DelegatedDialog.vue'
+import TransactionModal from '@/components/transaction-modal/TransactionModal.vue'
+import {tinyHash} from '@/core/utils'
 
 const {EMPTY_PUBLIC_KEY} = networkConfig
 
+const stepMap = {
+    AccountLink: 1,
+    NodeConfig: 2,
+    NodeLink: 3
+}
+
 @Component({
-    components: { AccountLinkTransaction, CreateRemoteAccount, PersistentDelegationRequest },
-    computed: { ...mapState({ activeAccount: 'account' }) },
+    components: {DelegatedDialog, DelegatedCheckPasswordDialog, TransactionModal},
+    computed: {...mapState({activeAccount: 'account', app: 'app'})},
 })
 export class WalletHarvestingTs extends Vue {
     activeAccount: StoreAccount
+    showTransactionModal: boolean = false
+    activeDelegationTransaction: FormattedTransaction = null
     viewAccountPropertiesOnly = false
-    showAccountLinkTransactionForm = false
-    showCreateRemoteAccountForm = false
-    showPersistentDelegationForm = false
-    remoteAccountPrivatekey = null
+    showDelegatedDialog = false
+    isShowPasswordDialog = false
+    currentDelegatedStep = 0
+    miniHash = tinyHash
+    stepMap = stepMap
+    app: AppInfo
+    showDelegatedData = false
+    delegatedDataList = []
 
-    get wallet() {
-        return this.activeAccount.wallet
+  get wallet() {
+        return new AppWallet(this.activeAccount.wallet)
+    }
+
+    get persistentAccountRequestTransactions(): FormattedTransaction[] {
+        return this.wallet.getPersistentAccountRequests(this.$store)
     }
 
     get linkedAccountKey() {
         return this.wallet.linkedAccountKey
     }
 
-    get remoteAccount() {
-        return this.wallet.remoteAccount
-    }
-    
-    get remoteAccountPublicKey() {
-        if (this.linkedAccountKey) return this.linkedAccountKey
-        if (this.remoteAccount) return this.remoteAccount.publicKey
-        return null
+    get linkedAddress() {
+        return this.wallet.linkedAccountKey ? Address.createFromPublicKey(this.linkedAccountKey, this.wallet.networkType).pretty() : null
     }
 
     get isLinked(): boolean {
         return this.linkedAccountKey && this.linkedAccountKey !== EMPTY_PUBLIC_KEY
     }
 
-    activateRemoteHarvesting() {
-        if (!this.remoteAccount) {
-            this.showCreateRemoteAccountForm = true
-            return
-        }
-
-        this.showPersistentDelegationForm = true
+    get remoteNodeConfig() {
+        return this.activeAccount.wallet.temporaryRemoteNodeConfig
     }
 
-    getActionButtonText(): string {
-        if (this.linkedAccountKey) return 'Unlink_now'
-        if (this.remoteAccount) return 'Link_now'
-        return 'Create_remote_account'
+    get passwordInTemporary() {
+        if (!this.activeAccount.temporaryLoginInfo) return null
+        const {password} = this.activeAccount.temporaryLoginInfo
+        return password
     }
 
-    linkAccountClicked() {
-        this.viewAccountPropertiesOnly = false
-        if (this.linkedAccountKey || this.remoteAccount) {
-            this.showAccountLinkTransactionForm = true
-            return
-        }
+    get temporaryRemoteNodeConfig() {
+        return this.activeAccount.wallet.temporaryRemoteNodeConfig
+    }
 
-        this.showCreateRemoteAccountForm = true
+    showTransactionDetail(transaction: FormattedTransaction) {
+        this.activeDelegationTransaction = transaction
+        this.showTransactionModal = true
+    }
+
+    setCurrentDelegatedStep(index) {
+        this.currentDelegatedStep = index
+    }
+
+    switchDelegatedStep(index) {
+        this.isShowPasswordDialog = true
+        this.currentDelegatedStep = index
+        if (this.currentDelegatedStep == stepMap.NodeLink && !this.temporaryRemoteNodeConfig) {
+            this.currentDelegatedStep = stepMap.NodeConfig
+        }
+        if (this.currentDelegatedStep == stepMap.NodeConfig && !this.linkedAccountKey) {
+            this.currentDelegatedStep = stepMap.AccountLink
+        }
     }
 }
