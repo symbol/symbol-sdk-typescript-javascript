@@ -1,5 +1,5 @@
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
-import {randomizeMnemonicWordArray} from "@/core/utils"
+import {randomizeMnemonicWordArray} from "@/core/model"
 import {Message} from "@/config"
 import draggable from "vuedraggable";
 

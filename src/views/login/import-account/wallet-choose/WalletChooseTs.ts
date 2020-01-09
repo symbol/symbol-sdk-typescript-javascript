@@ -1,7 +1,7 @@
 import {Vue, Component} from 'vue-property-decorator'
 import {mapState} from "vuex"
-import {AppInfo, AppWallet, StoreAccount} from "@/core/model"
-import {getRelativeMosaicAmount, localSave, getTenAddressesFromMnemonic, miniAddress} from "@/core/utils"
+import {AppInfo, AppWallet, StoreAccount, HdWallet} from "@/core/model"
+import {getRelativeMosaicAmount, localSave, miniAddress} from "@/core/utils"
 import {NetworkType, Password, AccountHttp, Address} from "nem2-sdk"
 import {Message, APP_PARAMS} from "@/config"
 import NumberFormatting from '@/components/number-formatting/NumberFormatting.vue'
@@ -61,7 +61,11 @@ export default class WalletChooseTs extends Vue {
     }
 
     setAddressListAndBalances() {
-        this.addressList = getTenAddressesFromMnemonic(this.seed, this.networkType)
+        this.addressList = HdWallet.getAddressesFromMnemonic(
+            this.seed,
+            APP_PARAMS.MAX_SEED_WALLETS_NUMBER,
+            this.networkType,
+        )
         this.setAddressesBalances()
     }
 

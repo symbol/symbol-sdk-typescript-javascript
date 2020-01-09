@@ -26,11 +26,12 @@ import CryptoJS from 'crypto-js'
 import {filter, mergeMap} from 'rxjs/operators'
 import {Message, networkConfig, defaultNetworkConfig} from "@/config"
 import {
-  localRead, localSave, getAccountFromPathNumber, getPath,
+  localRead, localSave, 
 } from "@/core/utils"
 import {
   AppState, RemoteAccount, CreateWalletType,
   AppAccounts, FormattedTransaction, NoticeType,
+  Path, HdWallet,
 } from "@/core/model"
 import {setTransactionList} from '@/core/services'
 import {Log} from './Log'
@@ -109,14 +110,14 @@ export class AppWallet {
             const accountName = store.state.account.currentAccount.name
             const accountMap = localRead('accountMap') === '' ? {} : JSON.parse(localRead('accountMap'))
             const mnemonic = AppAccounts().decryptString(accountMap[accountName].seed, password.value)
-            const account = getAccountFromPathNumber(mnemonic, pathNumber, networkType)
+            const account = HdWallet.getAccountFromPathNumber(mnemonic, pathNumber, networkType)
             this.simpleWallet = SimpleWallet.createFromPrivateKey(name, password, account.privateKey, networkType)
             this.name = name
             this.address = this.simpleWallet.address.plain()
             this.publicKey = account.publicKey
             this.networkType = networkType
             this.active = true
-            this.path = getPath(pathNumber)
+            this.path = Path.getFromSeedIndex(pathNumber)
             this.sourceType = CreateWalletType.seed
             this.encryptedMnemonic = AppAccounts().encryptString(mnemonic, password.value)
             this.balance = balance || 0
@@ -136,14 +137,14 @@ export class AppWallet {
     try {
       const accountName = store.state.account.currentAccount.name
       const accountMap = localRead('accountMap') === '' ? {} : JSON.parse(localRead('accountMap'))
-      const account = getAccountFromPathNumber(mnemonic, 0, networkType)
+      const account = HdWallet.getAccountFromPathNumber(mnemonic, 0, networkType)
       this.simpleWallet = SimpleWallet.createFromPrivateKey(name, password, account.privateKey, networkType)
       this.name = name
       this.address = this.simpleWallet.address.plain()
       this.publicKey = account.publicKey
       this.networkType = networkType
       this.active = true
-      this.path = getPath(0)
+      this.path = Path.getFromSeedIndex(0)
       this.sourceType = CreateWalletType.seed
       this.encryptedMnemonic = AppAccounts().encryptString(mnemonic, password.value)
       accountMap[accountName].seed = this.encryptedMnemonic

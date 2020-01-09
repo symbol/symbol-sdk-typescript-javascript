@@ -5,6 +5,7 @@ import {AppWallet, CreateWalletType} from '@/core/model'
 import {of} from 'rxjs'
 import {map, tap} from 'rxjs/operators'
 import flushPromises from 'flush-promises'
+
 const password = new Password('password1')
 
 const mijinPrivateKeyWallet = AppWallet.createFromDTO({
@@ -75,6 +76,13 @@ const mockGetAccountsInfo = (args) => of(args).pipe(
       return [{
         address: hdAccountWallet1Address1,
         accountType: AccountType.Main
+      }]
+    }
+
+    if (args[0].plain() === hdAccountWallet1Address2.plain()) {
+      return [{
+        address: hdAccountWallet1Address2,
+        accountType: AccountType.Remote_Unlinked
       }]
     }
 

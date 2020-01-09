@@ -1,6 +1,5 @@
 import {Vue, Component} from 'vue-property-decorator'
-import {getAccountFromPathNumber} from "@/core/utils"
-import {AppInfo, AppWallet, StoreAccount, AppAccounts} from "@/core/model"
+import {AppInfo, AppWallet, StoreAccount, AppAccounts, HdWallet} from "@/core/model"
 import {Password} from "nem2-sdk"
 import {mapState} from "vuex"
 import {Message} from "@/config"
@@ -38,7 +37,7 @@ export default class ImportMnemonicTs extends Vue {
             return false
         }
         try {
-            getAccountFromPathNumber(seed, 0, networkType)  //use for check mnemonic
+            HdWallet.getAccountFromPathNumber(seed, 0, networkType)  //use for check mnemonic
         } catch (e) {
             this.$Notice.error({title: 'Invalid mnemonic'})
             return false

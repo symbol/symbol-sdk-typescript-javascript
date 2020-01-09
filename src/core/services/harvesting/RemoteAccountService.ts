@@ -4,11 +4,11 @@ import {
   PersistentDelegationRequestTransaction,
   AccountHttp, AccountInfo, AccountType,
 } from 'nem2-sdk';
-import {CreateWalletType, AppAccounts} from "@/core/model"
-import {getRemoteAccountsFromPath, getRemoteAccountsFromPrivateKey} from '@/core/utils';
+import {CreateWalletType, AppAccounts, HdWallet} from "@/core/model"
+import {APP_PARAMS} from '@/config'
 import {Store} from 'vuex';
 
-const MAX_REMOTE_ACCOUNT_CHECKS = 10
+const {MAX_REMOTE_ACCOUNT_CHECKS} = APP_PARAMS
 
 export class RemoteAccountService {
   numberOfCheckedRemoteAccounts = 0
@@ -44,7 +44,7 @@ export class RemoteAccountService {
       return this.getFirstFreeRemoteAccount(someRemoteAccounts, accountsInfo)
     } catch (error) {
       if (this.numberOfCheckedRemoteAccounts < MAX_REMOTE_ACCOUNT_CHECKS) {
-        return this.getAvailableRemoteAccount(password, node, MAX_REMOTE_ACCOUNT_CHECKS)
+        return this.getAvailableRemoteAccount(password, node, MAX_REMOTE_ACCOUNT_CHECKS - 1)
       }
 
       throw new Error('Could not find a linkable remote account')
@@ -53,7 +53,7 @@ export class RemoteAccountService {
 
   private get baseSeedIndex(): number {
     if (this.numberOfCheckedRemoteAccounts === 1) return 1
-    return this.numberOfCheckedRemoteAccounts - MAX_REMOTE_ACCOUNT_CHECKS + 1
+    return 2
   }
 
   private getRemoteAccounts(
@@ -63,7 +63,7 @@ export class RemoteAccountService {
   ): Account[] {
     switch (this.wallet.sourceType) {
       case CreateWalletType.seed:
-        return getRemoteAccountsFromPath(
+        return HdWallet.getSeedWalletRemoteAccounts(
           AppAccounts().decryptString(this.wallet.encryptedMnemonic, password.value),
           this.wallet.path,
           remoteAccountFirstIndex,
@@ -73,7 +73,7 @@ export class RemoteAccountService {
 
       case CreateWalletType.privateKey:
       case CreateWalletType.keyStore:
-        return getRemoteAccountsFromPrivateKey(
+        return HdWallet.getRemoteAccountsFromPrivateKey(
           this.wallet.getAccount(password).privateKey.toString(),
           remoteAccountFirstIndex,
           this.wallet.networkType,
