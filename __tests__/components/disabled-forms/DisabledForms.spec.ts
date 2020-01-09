@@ -16,7 +16,7 @@ import {
     mosaics,
     CosignWallet,
     MultisigWallet,
-    networkCurrency
+    networkProperties
 } from "@MOCKS/index"
 // @ts-ignore
 const localVue = createLocalVue()
@@ -51,7 +51,10 @@ describe('DisabledForms', () => {
                             mutations: accountMutations.mutations
                         },
                         app: {
-                            state: Object.assign(appState.state, {mosaicsLoading}),
+                            state: Object.assign(appState.state, {
+                              mosaicsLoading,
+
+                            }),
                             mutations: appMutations.mutations
                         }
                     }
@@ -69,18 +72,18 @@ describe('DisabledForms', () => {
         }
     )
 
-    it('should not exists while default mosaic is set and current wallet is not a multisig ', async () => {
-        store.commit('SET_NETWORK_CURRENCY', networkCurrency)
+    it('should not exists while networkProperties is set and current wallet is not a multisig ', async () => {
+        store.commit('SET_NETWORK_PROPERTIES', networkProperties)
         expect(wrapper.vm.active).toBe(false)
     })
 
     it('should exists while default mosaic is not set', async () => {
-      store.commit('SET_NETWORK_CURRENCY', {name:''})
+      store.commit('SET_NETWORK_PROPERTIES', {generationHash:''})
       expect(wrapper.vm.active).toBe(true)
     })
 
     it('should exists while activeAccount is a multisig', async () => {
-        store.commit('SET_NETWORK_CURRENCY', networkCurrency)
+        store.commit('SET_NETWORK_PROPERTIES', networkProperties)
         store.commit('SET_WALLET', MultisigWallet)
         expect(wrapper.vm.active).toBe(false)
     })

@@ -16,9 +16,9 @@ export class DisabledFormsTs extends Vue {
     app: AppInfo
 
     get hasNetworkCurrency(): boolean {
-      return Boolean(this.activeAccount
-        && this.activeAccount.networkCurrency
-        && this.activeAccount.networkCurrency.name)
+      return Boolean(this.app
+        && this.app.networkProperties
+        && this.app.networkProperties.generationHash)
     }
 
     get isMultisig(): boolean {

@@ -8,7 +8,11 @@ export const getNetworkFromNetworkType = (networkType: NetworkType): Network => 
   if (networkType === NetworkType.MAIN_NET) return Network.CATAPULT_PUBLIC
   throw new Error('Invalid network type provided')
 }
-
+export const createBip32Seed = (mnemonic: string)=>{
+  const PassPhrase = new MnemonicPassPhrase(mnemonic);
+  const bip32Seed = PassPhrase.toSeed();
+  return bip32Seed;
+}
 export const createMnemonic = () => {
   const mnemonic = MnemonicPassPhrase.createRandom('english')
   return mnemonic.plain
@@ -76,7 +80,7 @@ export const getAccountFromPathNumber = (
     const account = wallet.getAccount(networkType)
     return account
   }
-  
+
   export const getAccountMnemonic = (
     bip32Seed: Buffer,
     pathNumber: number,
@@ -128,12 +132,6 @@ export const getAccountFromBip32SeedAndPath = (
   return wallet.getAccount(networkType)
 }
 
-export const createBip32Seed = (mnemonic: string)=>{
-  const PassPhrase = new MnemonicPassPhrase(mnemonic);
-  const bip32Seed = PassPhrase.toSeed();
-  return bip32Seed;
-}
-
 export const getTenAddressesFromMnemonic = (
   mnemonic: string,
   networkType: NetworkType,
@@ -143,7 +141,7 @@ export const getTenAddressesFromMnemonic = (
 }
 
 const getMasterKeyFromPrivateKey = (
-  privateKey: string, 
+  privateKey: string,
   networkType: NetworkType,
 ): NodeEd25519 => {
   const network = getNetworkFromNetworkType(networkType)

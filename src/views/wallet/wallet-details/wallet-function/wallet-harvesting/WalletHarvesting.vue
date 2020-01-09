@@ -23,7 +23,7 @@
 
       <div class="top_network_info" v-else>
             <div class="left-info-container">
-              <img src="@/common/img/wallet/walletDeleteIcon.png">
+              <img src="@/common/img/wallet/setting.png">
               <div class="steps-list">
                 <span @click="switchDelegatedStep(stepMap.AccountLink)" class="steps-list-item pointer">
                   <span>{{$t('Proxy_settings')}}</span>
@@ -51,7 +51,7 @@
                   <span class="bord_class">{{$t('Delegated_Harvesting')}}</span>
                 </div>
                 <div>
-                  <p class="content_font">{{$t('Delegated_Harvesting_answer')}}</p>
+                  <p class="content_font">{{$t('Delegated_harvesting_text_1')}}</p>
                 </div>
               </div>
             </div>
@@ -70,12 +70,6 @@
                      @setCurrentDelegatedStep="setCurrentDelegatedStep"
                      @closeDialog="showDelegatedDialog=false"
     ></DelegatedDialog>
-
-    <DelegatedCheckPasswordDialog v-if="isShowPasswordDialog"
-                                  :showDialog="isShowPasswordDialog"
-                                  @closeDialog="isShowPasswordDialog=false"
-                                  @passwordCallBack="showDelegatedDialog=true"
-    ></DelegatedCheckPasswordDialog>
 
     <TransactionModal v-if="showTransactionModal"
                       :visible="showTransactionModal"

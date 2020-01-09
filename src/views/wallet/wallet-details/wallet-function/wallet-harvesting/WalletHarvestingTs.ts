@@ -3,8 +3,6 @@ import {Address} from "nem2-sdk"
 import {mapState} from "vuex"
 import {StoreAccount, AppWallet, FormattedTransaction, AppInfo} from "@/core/model"
 import {networkConfig} from "@/config"
-import DelegatedCheckPasswordDialog
-    from '@/views/wallet/wallet-details/wallet-function/wallet-harvesting/delegated-check-password-dialog/DelegatedCheckPasswordDialog.vue'
 import DelegatedDialog from '@/components/forms/delegated-dialog/DelegatedDialog.vue'
 import TransactionModal from '@/components/transaction-modal/TransactionModal.vue'
 import {tinyHash} from '@/core/utils'
@@ -18,7 +16,7 @@ const stepMap = {
 }
 
 @Component({
-    components: {DelegatedDialog, DelegatedCheckPasswordDialog, TransactionModal},
+    components: {DelegatedDialog,  TransactionModal},
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
 })
 export class WalletHarvestingTs extends Vue {
@@ -27,7 +25,6 @@ export class WalletHarvestingTs extends Vue {
     activeDelegationTransaction: FormattedTransaction = null
     viewAccountPropertiesOnly = false
     showDelegatedDialog = false
-    isShowPasswordDialog = false
     currentDelegatedStep = 0
     miniHash = tinyHash
     stepMap = stepMap
@@ -79,7 +76,7 @@ export class WalletHarvestingTs extends Vue {
     }
 
     switchDelegatedStep(index) {
-        this.isShowPasswordDialog = true
+        this.showDelegatedDialog = true
         this.currentDelegatedStep = index
         if (this.currentDelegatedStep == stepMap.NodeLink && !this.temporaryRemoteNodeConfig) {
             this.currentDelegatedStep = stepMap.NodeConfig

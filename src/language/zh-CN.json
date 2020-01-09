@@ -927,6 +927,11 @@
   "Backup_Mnemonic_Phrase": "备份助记词",
   "Verify_Mnemonic_phrase": "验证助记词",
   "Finish": "完成",
+  "generate": "生成",
+  "remote_account_being_created": "请点击右侧‘生成’按钮以生成一个可用的远程账户",
+  "Enter_your_password_to_create_a_remote_account": "输入密码以生成新的远程账户",
+  "Please_set_transaction_fee": "请设置交易费用",
+  "Please_set_transaction_fee_and_password": "请设置交易费用及账户密码",
   "Type_Mnemonic_Phrase": "类型助记词",
   "Are_you_sure_to_unlink_this_account":"您确定要与此地址取消连接吗?",
   "link_Or_Change": "链接或修改远程账户",
@@ -937,5 +942,8 @@
   "Choose_Wallets": "选择钱包",
   "my_balance": "我的余额",
   "Access_My_Wallet": "接入我的钱包",
-  "confirm_information_before_add_child_wallet": "请输入密码以创建子钱包"
+  "confirm_information_before_add_child_wallet": "请输入密码以创建子钱包",
+  "loading": "处理中...",
+  "Enter_your_password_to_create_a_link_transaction": "输入密码以发布远程链接交易"
+
 }

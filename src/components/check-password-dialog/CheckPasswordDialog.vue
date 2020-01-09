@@ -5,10 +5,10 @@
       class-name="vertical-center-modal"
       :footer-hide="true"
       :transfer="false"
-      @on-cancel="$emit('close'); $emit('cancelled')"
+      @on-cancel="show=false"
     >
       <div slot="header" class="checkPWDialogHeader">
-        <span class="title">{{$t('confirm_information')}}</span>
+        <span class="title">{{$t(dialogTitle)}}</span>
       </div>
       <div class="checkPWDialogBody">
         <div class="stepItem1">

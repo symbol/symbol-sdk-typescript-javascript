@@ -422,3 +422,4 @@ export const current1Account = {
     password: '123123123',
     networkType: NetworkType.MIJIN_TEST,
 }
+

@@ -927,6 +927,7 @@
   "Finish": "Finish",
   "Type_Mnemonic_Phrase": "Type Mnemonic Phrase",
   "Are_you_sure_to_unlink_this_account":"Are you sure to unlink this account?",
+  "remote_account_being_created": "Please click the 'Generate' button to generate a valid remote account",
   "link_Or_Change": "Remote account link",
   "node_Network": "Harvesting node",
   "requesting": "Harvesting delegation request",
@@ -936,6 +937,12 @@
   "Choose_Wallets": "Select Wallets",
   "transaction_details": "Transaction details",
   "parent_namespace": "Parent namespace",
+  "generate": "Generate",
+  "Enter_your_password_to_create_a_remote_account": "Enter your password to create a remote account",
+  "Please_set_transaction_fee": "Please set transaction fee",
+  "Please_set_transaction_fee_and_password": "Please set transaction fee and password",
   "Input_namespace_name": "Enter a namespace name",
-  "confirm_information_before_add_child_wallet": "Enter your password to create a new child wallet"
+  "confirm_information_before_add_child_wallet": "Enter your password to create a new child wallet",
+  "loading": "loading...",
+  "Enter_your_password_to_create_a_link_transaction": "Enter your password to create an account link transaction"
 }

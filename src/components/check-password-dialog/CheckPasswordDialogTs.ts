@@ -9,7 +9,6 @@ import CheckPassword from '@/components/forms/check-password/CheckPassword.vue'
     components: {CheckPassword},
 })
 export class CheckPasswordDialogTs extends Vue {
-    @Provide() validator: any = this.$validator
     activeAccount: StoreAccount
     validation = validation
     password = ''
@@ -19,6 +18,9 @@ export class CheckPasswordDialogTs extends Vue {
 
     @Prop({default: false})
     returnPassword: boolean
+
+    @Prop({default:'confirm_information'})
+    dialogTitle:string
 
     get show(): boolean {
         return this.visible
