@@ -6,11 +6,11 @@ import {
     AddressAndMultisigInfo, StoreAccount, AppMosaic, NetworkCurrency,
     AppWallet, AppNamespace, FormattedTransaction, CurrentAccount,
 } from '@/core/model'
-import {defaultNodeList} from "@/config/view/node"
 import {localRead, localSave} from "@/core/utils"
+import {NetworkType} from 'nem2-sdk'
 
 const state: StoreAccount = {
-    node: localRead('activeNode') || defaultNodeList[0].value,
+    node: '',
     wallet: null,
     mosaics: {},
     namespaces: [],
@@ -110,9 +110,12 @@ const mutations: MutationTree<StoreAccount> = {
     ADD_NAMESPACE_FROM_RECIPIENT_ADDRESS(state: StoreAccount, namespaces: AppNamespace[]) {
         state.namespaces = [...state.namespaces, ...namespaces]
     },
-    SET_NODE(state: StoreAccount, node: string): void {
+    SET_NODE(state: StoreAccount, nodeAndNetworkType: {node: string, networkType: NetworkType}): void {
+        const {node, networkType} = nodeAndNetworkType
         state.node = node
-        localSave('activeNode', node)
+        const activeNodeMap = JSON.parse(localRead('activeNodeMap')||'{}')
+        activeNodeMap[networkType] = node
+        localSave('activeNodeMap', JSON.stringify(activeNodeMap))
     },
     SET_ADDRESS_ALIAS_MAP(state: StoreAccount, addressAliasMap: any): void {
         state.addressAliasMap = addressAliasMap

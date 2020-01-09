@@ -69,18 +69,19 @@ describe('DisabledForms', () => {
         }
     )
 
-    it('should not exists while default mosaic has already set', async () => {
+    it('should not exists while default mosaic is set and current wallet is not a multisig ', async () => {
         store.commit('SET_NETWORK_CURRENCY', networkCurrency)
-        expect(wrapper.find('.multisig_ban_container').exists()).toBe(true)
+        expect(wrapper.vm.active).toBe(false)
     })
 
     it('should exists while default mosaic is not set', async () => {
-        expect(wrapper.find('multisig_ban_container').exists()).toBe(false)
+      store.commit('SET_NETWORK_CURRENCY', {name:''})
+      expect(wrapper.vm.active).toBe(true)
     })
 
     it('should exists while activeAccount is a multisig', async () => {
         store.commit('SET_NETWORK_CURRENCY', networkCurrency)
         store.commit('SET_WALLET', MultisigWallet)
-        expect(wrapper.find('multisig_ban_container').exists()).toBe(false)
+        expect(wrapper.vm.active).toBe(false)
     })
 })

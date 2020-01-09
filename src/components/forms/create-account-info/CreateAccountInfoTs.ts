@@ -1,12 +1,13 @@
 import {Component, Prop, Provide, Vue} from 'vue-property-decorator'
-import {formDataConfig, Message} from "@/config"
-import {cloneData} from "@/core/utils"
+import {defaultNodeList, formDataConfig, Message} from "@/config"
+import {cloneData, localRead} from "@/core/utils"
 import {AppAccounts, AppAccount, StoreAccount} from '@/core/model'
 import {networkTypeConfig} from "@/config/view/setting"
 import {mapState} from "vuex"
 import {getDefaultAccountNetworkType} from "@/core/utils"
 import {validation} from "@/core/validation"
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue';
+import {Endpoints} from "@/core/services"
 
 @Component({
   components: {
@@ -47,11 +48,12 @@ export class CreateAccountInfoTs extends Vue {
   }
 
   createNewAccount() {
-    const {appAccount} = this
+    const {appAccount,currentNetworkType} = this
     AppAccounts().saveAccountInLocalStorage(appAccount)
     this.$Notice.success({title: this.$t(Message.OPERATION_SUCCESS) + ''})
     this.$store.commit('SET_ACCOUNT_DATA', appAccount.currentAccount)
     this.$store.commit('SET_TEMPORARY_PASSWORD', this.formItem.password)
+    Endpoints.setNodeInfo(currentNetworkType,this.$store)
     this.$router.push({name:this.nextPage})
   }
 }

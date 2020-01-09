@@ -1,16 +1,16 @@
 import {languageConfig, Message} from "@/config"
-import {AppInfo, StoreAccount} from "@/core/model"
+import {AppWallet, StoreAccount} from "@/core/model"
 import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
-import {localRead, getTopValueInObject, localSave} from "@/core/utils/utils"
+import {getTopValueInObject, localSave, localRead} from "@/core/utils/utils"
 import {validation} from "@/core/validation"
 import {mapState} from "vuex"
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue';
-import {onLogin} from '@/core/services'
+import {Endpoints, onLogin} from '@/core/services'
 import {NetworkType} from 'nem2-sdk';
 
 @Component({
     computed: {
-        ...mapState({activeAccount: 'account', app: 'app'}),
+        ...mapState({activeAccount: 'account'}),
     },
     components: {
         ErrorTooltip
@@ -19,7 +19,6 @@ import {NetworkType} from 'nem2-sdk';
 export default class LoginAccountTs extends Vue {
     @Provide() validator: any = this.$validator
     activeAccount: StoreAccount
-    app: AppInfo
     languageList = languageConfig
     validation = validation
     cipher: string = ''
@@ -28,6 +27,7 @@ export default class LoginAccountTs extends Vue {
     isShowHint = false
     hintText = ''
     onLogin = onLogin
+    NetworkType = NetworkType
     formItems = {
         currentAccountName: '',
         password: ''
@@ -55,23 +55,21 @@ export default class LoginAccountTs extends Vue {
         return this.activeAccount.currentAccount.networkType
     }
 
-    get accountList() {
+    get accountsClassifiedByNetworkType() {
         const {accountMap} = this
-        let accountList = []
-        Object.keys(accountMap).forEach((key: string) => {
-            if (accountMap[key].wallets.length === 0) {
-                delete accountMap[key]
-                return
-            }
-            accountList.push({
-                value: key,
-                label: key,
-                networkType: NetworkType[accountMap[key].networkType],
-            })
-        })
-        localSave('accountMap', JSON.stringify(accountMap))
-        this.$forceUpdate()
-        return accountList
+        if(!Object.keys(accountMap).length) return null
+
+        return Object.keys(accountMap)
+            .filter((accountName: string) => accountMap[accountName].wallets.length)
+            .map((accountName: string) => ({
+                accountName,
+                networkType: accountMap[accountName].networkType
+            }))
+            .reduce((acc, account) => {
+                if (!acc[account.networkType]) acc[account.networkType] = []
+                acc[account.networkType].push(account.accountName)
+                return acc
+            }, {})
     }
 
     toChooseImportWay() {
@@ -85,7 +83,7 @@ export default class LoginAccountTs extends Vue {
 
     submit() {
         const {currentAccountName} = this.formItems
-        if (this.errors.items.length > 0) {
+      if (this.errors.items.length > 0) {
             this.showErrorNotice(this.errors.items[0].msg)
             return
         }
@@ -129,7 +127,8 @@ export default class LoginAccountTs extends Vue {
     }
 
     goToDashBoard() {
-        this.$router.push('monitorPanel')
+      Endpoints.setNodeInfo(this.networkType,this.$store)
+      this.$router.push('monitorPanel')
     }
 
     @Watch('formItems.currentAccountName')

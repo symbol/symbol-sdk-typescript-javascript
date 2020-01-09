@@ -1,6 +1,6 @@
 import {
-    Transaction, MultisigAccountInfo, SignedTransaction,
-    CosignatureSignedTransaction, SimpleWallet,
+  Transaction, MultisigAccountInfo, SignedTransaction,
+  CosignatureSignedTransaction, SimpleWallet, NetworkType,
 } from 'nem2-sdk'
 import {AppNamespace} from './AppNamespace'
 import {AppMosaic} from './AppMosaic'
@@ -96,7 +96,7 @@ export interface AppInfo {
     nodeList: Endpoint[],
     stagedTransaction: StagedTransaction,
     timeZone: number,
-    transactionFormatter: TransactionFormatter, 
+    transactionFormatter: TransactionFormatter,
     transactionsLoading: boolean,
     uiDisabledMessage: string,
     walletList: AppWallet[]
@@ -135,6 +135,7 @@ export interface Endpoint {
     value: string,
     name: string,
     url: string,
+    networkType:NetworkType
 }
 
 export enum ANNOUNCE_TYPES {

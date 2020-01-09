@@ -1,13 +1,13 @@
 
 import {AppWallet} from '@/core/model/AppWallet.ts'
-import {from, throwError} from 'rxjs'
+import {from, throwError, of} from 'rxjs'
 import {tap, map, catchError, mapTo} from 'rxjs/operators'
-import * as sdk from 'nem2-sdk'
 import {config, createLocalVue} from '@vue/test-utils'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 import {appState} from '@/store/app'
 import {accountMutations, accountState} from '@/store/account'
+import {networkConfig} from '@/config'
 import VueRx from "vue-rx"
 import moment from 'vue-moment'
 import {
@@ -17,6 +17,7 @@ import {
     CosignWallet,
     hdAccount,
     networkCurrency,
+    MultisigWallet,
 } from "@MOCKS/index"
 import Vue from 'vue'
 const localVue = createLocalVue()
@@ -34,6 +35,25 @@ import {Log, Notice, NoticeType, NetworkProperties} from '@/core/model'
 jest.mock('@/core/model/Log')
 jest.mock('@/core/model/Notice')
 
+const mockErroredGetAccountsInfo = () => of('mock').pipe(
+  mapTo(([])),
+)
+
+const mockGetAccountsInfo = () => of('mock').pipe(
+    mapTo(([{
+        importance: UInt64.fromUint(666),
+        linkedAccountKey: networkConfig.EMPTY_PUBLIC_KEY,
+    }])),
+)
+
+jest.mock('nem2-sdk/dist/src/infrastructure/AccountHttp', () => ({
+    AccountHttp: jest.fn().mockImplementation(endpoint => {
+      if (endpoint === 'http://errored.endpoint:3000') {
+        return {getAccountsInfo: mockErroredGetAccountsInfo}
+      }
+      return {getAccountsInfo: mockGetAccountsInfo}
+    }),
+  }))
 // close warning
 config.logModifiedComponents = false
 
@@ -114,7 +134,7 @@ describe('announceTransaction', () => {
     })
 
     it('should call announce normal with the proper arguments', () => {
-        const signedTransaction = new sdk.SignedTransaction('', hash, publicKey, 1, sdk.NetworkType.TEST_NET)
+        const signedTransaction = new SignedTransaction('', hash, publicKey, 1, NetworkType.TEST_NET)
 
         // @ts-ignore
         appWallet.announceTransaction(signedTransaction, store)
@@ -126,7 +146,7 @@ describe('announceTransaction', () => {
     });
 
     it('should call announce cosignature when signedTransaction is a CosignatureSignedTransaction', () => {
-        const cosignatureSignedTransaction = new sdk.CosignatureSignedTransaction(generationHash, '', publicKey)
+        const cosignatureSignedTransaction = new CosignatureSignedTransaction(generationHash, '', publicKey)
 
         // @ts-ignore
         appWallet.announceTransaction(cosignatureSignedTransaction, store)
@@ -138,8 +158,8 @@ describe('announceTransaction', () => {
     });
 
     it('should call announce bonded with the proper arguments when a signedLock is provided', () => {
-        const signedTransaction1 = new sdk.SignedTransaction('signedTransaction1', hash, publicKey, 1, sdk.NetworkType.TEST_NET)
-        const signedTransaction2 = new sdk.SignedTransaction('signedTransaction2', hash, publicKey, 1, sdk.NetworkType.TEST_NET)
+        const signedTransaction1 = new SignedTransaction('signedTransaction1', hash, publicKey, 1, NetworkType.TEST_NET)
+        const signedTransaction2 = new SignedTransaction('signedTransaction2', hash, publicKey, 1, NetworkType.TEST_NET)
 
         // @ts-ignore
         appWallet.announceTransaction(signedTransaction1, store, signedTransaction2)
@@ -154,7 +174,7 @@ describe('announceTransaction', () => {
 
 import {TransactionHttp} from 'nem2-sdk/dist/src/infrastructure/TransactionHttp'
 import {Listener} from 'nem2-sdk/dist/src/infrastructure/Listener'
-import {TransactionInfo, UInt64, Address, PublicAccount, NetworkType} from 'nem2-sdk'
+import {TransactionInfo, UInt64, Address, PublicAccount, NetworkType, SimpleWallet, SignedTransaction, CosignatureSignedTransaction, TransferTransaction, Deadline, Mosaic, MosaicId, PlainMessage, AggregateTransaction} from 'nem2-sdk'
 import flushPromises from 'flush-promises'
 const mockAnnounceAggregateBondedCosignatureCall = jest.fn()
 const mockAnnounceCall = jest.fn()
@@ -193,7 +213,7 @@ const mockAnnounceAggregateBonded = (...args) => from(args).pipe(
     catchError((error) => throwError(error)),
 )
 
-const signedLockWithInfo = new sdk.SignedTransaction('signed lock', hash2, publicKey, 1, sdk.NetworkType.TEST_NET)
+const signedLockWithInfo = new SignedTransaction('signed lock', hash2, publicKey, 1, NetworkType.TEST_NET)
 // @ts-ignore
 signedLockWithInfo.transactionInfo = new TransactionInfo(UInt64.fromUint(0), 0, '', hash2)
 
@@ -231,8 +251,8 @@ describe('valid transactions announces', () => {
     })
 
     const appWallet = AppWallet.createFromDTO(hdAccount.wallets[0])
-    const cosignatureSignedTransaction = new sdk.CosignatureSignedTransaction(hash, '', publicKey)
-    const signedTransaction = new sdk.SignedTransaction('signed tx', hash, publicKey, 1, sdk.NetworkType.TEST_NET)
+    const cosignatureSignedTransaction = new CosignatureSignedTransaction(hash, '', publicKey)
+    const signedTransaction = new SignedTransaction('signed tx', hash, publicKey, 1, NetworkType.TEST_NET)
     const store = {
         state: {account: {node: 'http://localhost:3000'}},
         commit: mockCommit,
@@ -369,7 +389,7 @@ describe('invalid transactions announces', () => {
     })
 
     it('announceBonded, error announcing lock', async (done) => {
-        const signedTransaction = new sdk.SignedTransaction('signed tx', hash, publicKey, 1, sdk.NetworkType.TEST_NET)
+        const signedTransaction = new SignedTransaction('signed tx', hash, publicKey, 1, NetworkType.TEST_NET)
 
         // @ts-ignore
         appWallet.announceBonded(signedTransaction, 'throw', store)
@@ -419,18 +439,18 @@ describe('getSignedLockAndAggregateTransaction', () => {
     // @ts-ignore
     store.state.app.networkProperties.generationHash = 'CAD57FEC0C7F2106AD8A6203DA67EE675A1A3C232C676945306448DF5B4124F8'
 
-    const transaction = sdk.TransferTransaction.create(
-        sdk.Deadline.create(),
-        sdk.Address.createFromRawAddress('SBIWHDWZMPIXXM2BINCRXAK3H3MGA5VHB3D2PO5W'),
-        [new sdk.Mosaic(new sdk.MosaicId([2429385668, 814683207]), new UInt64([0, 0]))],
-        sdk.PlainMessage.create(''),
-        sdk.NetworkType.MIJIN_TEST,
+    const transaction = TransferTransaction.create(
+        Deadline.create(),
+        Address.createFromRawAddress('SBIWHDWZMPIXXM2BINCRXAK3H3MGA5VHB3D2PO5W'),
+        [new Mosaic(new MosaicId(networkCurrency.hex), UInt64.fromUint(0))],
+        PlainMessage.create(''),
+        NetworkType.MIJIN_TEST,
     )
 
-    const aggregateTransaction = sdk.AggregateTransaction.createBonded(
-        sdk.Deadline.create(),
+    const aggregateTransaction = AggregateTransaction.createBonded(
+        Deadline.create(),
         [transaction.toAggregate(PublicAccount
-            .createFromPublicKey(publicKey, sdk.NetworkType.MIJIN_TEST))],
+            .createFromPublicKey(publicKey, NetworkType.MIJIN_TEST))],
         NetworkType.MIJIN_TEST,
         [],
     )
@@ -444,12 +464,53 @@ describe('getSignedLockAndAggregateTransaction', () => {
             store,
         )
 
-        expect(signedTransaction).toBeInstanceOf(sdk.SignedTransaction)
-        expect(signedTransaction.networkType).toBe(sdk.NetworkType.MIJIN_TEST)
+        expect(signedTransaction).toBeInstanceOf(SignedTransaction)
+        expect(signedTransaction.networkType).toBe(NetworkType.MIJIN_TEST)
         expect(signedTransaction.signerPublicKey).toBe(appWallet.publicKey)
-        expect(signedLock).toBeInstanceOf(sdk.SignedTransaction)
-        expect(signedLock.networkType).toBe(sdk.NetworkType.MIJIN_TEST)
+        expect(signedLock).toBeInstanceOf(SignedTransaction)
+        expect(signedLock.networkType).toBe(NetworkType.MIJIN_TEST)
         expect(signedLock.signerPublicKey).toBe(appWallet.publicKey)
         expect(signedTransaction).not.toEqual(signedLock)
     });
 });
+
+describe('SetAccountInfo', () => {
+    it('should set properties and update the wallet', async (done) => {
+        const appWallet = new AppWallet(MultisigWallet)
+        const mockUpdateWallet = jest.fn()
+        const mockStore = {
+            state: {
+                account: {
+                    node: 'http://valid.node:3000',
+                    wallet: {
+                        address: MultisigWallet.address
+                    }
+                }
+            }
+        }
+
+        appWallet.updateWallet = mockUpdateWallet
+
+        // @ts-ignore
+        await appWallet.setAccountInfo(mockStore)
+        expect(mockUpdateWallet).toHaveBeenCalledTimes(1)
+        done()
+    });
+
+    it('should throw when wallet is unknown to the network', async (done) => {
+        const appWallet = new AppWallet(MultisigWallet)
+        const mockStore = {
+            state: {
+                account: {
+                    node: 'http://errored.endpoint:3000',
+                    wallet: {
+                        address: MultisigWallet.address
+                    }
+                }
+            }
+        }
+        // @ts-ignore
+        expect(appWallet.setAccountInfo(mockStore)).rejects.toThrow()
+        done()
+    });
+})

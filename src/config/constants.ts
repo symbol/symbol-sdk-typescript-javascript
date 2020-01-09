@@ -82,10 +82,10 @@ const defaultNetworkMosaic: NetworkCurrency = {
 }
 
 export const defaultNetworkConfig = {
-  networkConfirmations: 10,
-  defaultNetworkMosaic,
-  DEFAULT_LOCK_AMOUNT: 10000000,
-  DEFAULT_NETWORK_TYPE: NetworkType.MIJIN_TEST,
+    networkConfirmations: 10,
+    defaultNetworkMosaic,
+    DEFAULT_LOCK_AMOUNT: 10000000,
+    DEFAULT_NETWORK_TYPE: NetworkType.TEST_NET,
 }
 
 export const networkConfig = {
@@ -160,6 +160,7 @@ export const Message = {
     ADDRESS_FORMAT_ERROR: 'address_format_error',
     ADDRESS_INVALID: 'address_invalid',
     ADDRESS_UNKNOWN: 'address_unknown',
+    ADDRESS_UNKNOWN_BY_NETWORK: 'address_unknown_by_network',
     ALIAS_NAME_FORMAT_ERROR: 'alias_name_format_error',
     AMOUNT_LESS_THAN_0_ERROR: 'amount_can_not_be_less_than_0',
     CLICK_TO_LOAD: 'click_to_load',

@@ -117,7 +117,7 @@ export const CosignWallet = {
 
 export const MultisigWallet = {
     active: true,
-    address: CosignAccount.address.toDTO().address,
+    address: CosignAccount.address.plain(),
     balance: 1000,
     name: "wallet-privateKey",
     networkType: CosignAccount.address.toDTO().networkType,
@@ -184,12 +184,7 @@ export const multisigAccountInfo = {
     }
 }
 
-export const networkCurrency = {
-    divisibility: 6,
-    hex: "308F144790CD7BC4",
-    name: "nem.xem",
-    ticker: "XEM"
-}
+export const networkCurrency = {"hex":"75AF035421401EF0","divisibility":6,"ticker":"XEM","name":"nem.xem"}
 
 export const hdAccountData = {
     password: 'password',

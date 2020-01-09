@@ -50,7 +50,7 @@ describe('OfflineSetting', () => {
                 }
             }
         )
-        
+
         store.state.app.networkProperties = NetworkProperties.create(store)
         store.state.app.networkProperties.height = 666
         store.state.app.networkProperties.generationHash = 'initialGenerationHash'

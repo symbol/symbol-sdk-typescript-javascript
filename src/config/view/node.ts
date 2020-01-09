@@ -6,26 +6,50 @@ export const defaultNodeList: Endpoint[] = [
         value: 'http://api-harvest-20.ap-northeast-1.nemtech.network:3000',
         name: 'ap-northeast-1',
         url: 'api-harvest-20.ap-northeast-1.nemtech.network',
+        networkType:NetworkType.TEST_NET,
     },
     {
         value: 'http://api-harvest-20.ap-southeast-1.nemtech.network:3000',
         name: 'ap-southeast-1',
         url: 'api-harvest-20.ap-southeast-1.nemtech.network',
+        networkType:NetworkType.TEST_NET,
     },
     {
         value: 'http://api-harvest-20.eu-west-1.nemtech.network:3000',
         name: 'eu-west-1',
         url: 'api-harvest-20.eu-west-1.nemtech.network',
+      networkType:NetworkType.TEST_NET,
     },
     {
         value: 'http://api-harvest-20.us-west-1.nemtech.network:3000',
         name: 'us-west-1',
         url: 'api-harvest-20.us-west-1.nemtech.network',
+        networkType:NetworkType.TEST_NET,
     },
     {
         value: 'http://api-20.us-west-1.nemtech.network:3000',
         name: 'us-west-1',
         url: 'api-20.us-west-1.nemtech.network',
+        networkType:NetworkType.TEST_NET,
+
+    },
+    {
+      value: 'http://localhost:3000',
+      name: 'http://localhost:3000',
+      url: 'http://localhost:3000',
+      networkType:NetworkType.MAIN_NET,
+    },
+    {
+      value: 'http://localhost:3000',
+      name: 'http://localhost:3000',
+      url: 'http://localhost:3000',
+      networkType:NetworkType.MIJIN,
+    },
+    {
+      value: 'http://localhost:3000',
+      name: 'http://localhost:3000',
+      url: 'http://localhost:3000',
+      networkType:NetworkType.MIJIN_TEST,
     },
 ]
 

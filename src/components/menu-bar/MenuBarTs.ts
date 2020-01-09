@@ -1,4 +1,4 @@
-import {isWindows, Message, defaultNodeList} from "@/config/index.ts"
+import {isWindows, Message, defaultNodeList, routesWithoutAlert} from "@/config/index.ts"
 import monitorSelected from '@/common/img/window/windowSelected.png'
 import monitorUnselected from '@/common/img/window/windowUnselected.png'
 import {completeUrlWithHostAndProtocol, localSave} from "@/core/utils"
@@ -6,12 +6,11 @@ import {Component, Provide, Vue} from 'vue-property-decorator'
 import {windowSizeChange, minWindow, maxWindow, unMaximize, closeWindow} from '@/core/utils/electron.ts'
 import {mapState} from 'vuex'
 import {NetworkType} from "nem2-sdk"
-import {languageConfig} from "@/config/view/language"
-import {StoreAccount, AppWallet, AppInfo, Notice, NoticeType, Endpoint} from "@/core/model"
+import {languageConfig} from "@/config"
+import {StoreAccount, AppInfo, Notice, NoticeType, Endpoint} from "@/core/model"
 import routes from '@/router/routers'
 import {validation} from "@/core/validation"
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
-
 @Component({
     components: {
         ErrorTooltip
@@ -51,7 +50,36 @@ export class MenuBarTs extends Vue {
 
     get isNodeHealthy() {
         if (!this.NetworkProperties) return true
+        if(!this.activeAccount.node) return false
         return this.NetworkProperties.healthy
+    }
+
+    get alert(): {show: boolean, message: string} {
+        const {NetworkProperties, networkType, activeAccount, wallet} = this
+        if (!NetworkProperties||!wallet|| !wallet.networkType || routesWithoutAlert[this.$route.name]) return {
+            show: false,
+            message: '',
+        }
+
+        if (!activeAccount.node || !NetworkProperties.healthy) return {
+            show: true,
+            message: 'Node_not_available_please_check_your_node_or_network_settings',
+        }
+
+        if (networkType && NetworkProperties.networkType !== networkType) return {
+            show: true,
+            message: 'Wallet_network_type_does_not_match_current_network_type',
+        }
+
+        if (!wallet.isKnownByTheNetwork) return {
+            show: true,
+            message: Message.ADDRESS_UNKNOWN_BY_NETWORK,
+        }
+
+        return {
+            show: false,
+            message: '',
+        }
     }
 
     get wallet() {
@@ -63,7 +91,7 @@ export class MenuBarTs extends Vue {
     }
 
     get networkType() {
-        return this.activeAccount.wallet ? NetworkType[this.activeAccount.wallet.networkType] : false
+        return this.activeAccount.wallet ? this.activeAccount.wallet.networkType : false
     }
 
     get node() {
@@ -71,11 +99,15 @@ export class MenuBarTs extends Vue {
     }
 
     set node(newNode: string) {
-        this.$store.commit('SET_NODE', `${newNode}`)
+        if (!this.wallet) return
+        const {networkType} = this
+        this.$store.commit('SET_NODE', {node: `${newNode}`, networkType})
     }
 
     get nodeList() {
-        return this.app.nodeList
+      const {networkType} = this
+      if(!networkType) return []
+      return [...this.app.nodeList].filter(item=>item.networkType == networkType)
     }
 
     set nodeList(nodeList: Endpoint[]) {
@@ -132,21 +164,19 @@ export class MenuBarTs extends Vue {
         unMaximize()
     }
 
-    removeNode(clickedNode: string) {
+    removeNode(clickedNodeName: string) {
         if (this.nodeList.length === 1) {
             Notice.trigger(Message.NODE_ALL_DELETED, NoticeType.error, this.$store)
             return
         }
 
-        const nodeList = [...this.nodeList]
-
-        nodeList.splice(
-            nodeList.findIndex(({value}) => value === clickedNode),
-            1,
+        this.nodeList = [...this.app.nodeList].filter(
+            ({value, networkType}) => !(value === clickedNodeName && networkType === this.networkType),
         )
 
-        if (clickedNode === this.node) this.node = nodeList[0].value
-        this.nodeList = nodeList
+        if (clickedNodeName === this.node){
+          this.node = this.nodeList[0].value
+        }
     }
 
     selectEndpoint(index) {
@@ -168,7 +198,8 @@ export class MenuBarTs extends Vue {
 
     createNewNode() {
         const {inputNodeValue} = this
-        const nodeList = [...this.nodeList]
+        const {networkType}= this.activeAccount.wallet
+        const nodeList = [...this.app.nodeList]
         const nodeIndexInList = nodeList.findIndex(item => item.value == inputNodeValue)
 
         if (nodeIndexInList > -1) nodeList.splice(nodeIndexInList, 1)
@@ -176,7 +207,8 @@ export class MenuBarTs extends Vue {
         nodeList.unshift({
             value: inputNodeValue,
             name: inputNodeValue,
-            url: inputNodeValue
+            url: inputNodeValue,
+            networkType
         })
 
         this.nodeList = nodeList
@@ -184,8 +216,11 @@ export class MenuBarTs extends Vue {
     }
 
     resetNodeListToDefault() {
-        this.nodeList = defaultNodeList
-        this.selectEndpoint(0)
+      const {networkType } = this
+      this.nodeList  = [...this.app.nodeList]
+        .filter(item=>item.networkType != networkType )
+        .concat(defaultNodeList.filter(item=>item.networkType == networkType))
+      this.selectEndpoint(0)
     }
 
     created() {

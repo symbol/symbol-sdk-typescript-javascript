@@ -21,5 +21,4 @@ export class DisabledUiOverlayTs extends Vue {
     get message() {
         return this.app.uiDisabledMessage
     }
-
 }

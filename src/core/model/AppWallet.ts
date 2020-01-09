@@ -47,24 +47,25 @@ export class AppWallet {
     Object.assign(this, wallet)
   }
 
-  name: string | undefined
-  simpleWallet: SimpleWallet | undefined
-  address: string | undefined
-  publicKey: string | undefined
-  networkType: NetworkType | undefined
-  active: boolean | undefined
-  balance: number | 0
-  encryptedMnemonic: string | undefined
-  path: string
-  sourceType: string
-  importance: number
-  linkedAccountKey: string
-  remoteAccount: RemoteAccount | null
-  numberOfMosaics: number
-  temporaryRemoteNodeConfig: {
-    publicKey: string,
-    node: string
-  } | null
+    name: string | undefined
+    simpleWallet: SimpleWallet | undefined
+    address: string | undefined
+    publicKey: string | undefined
+    networkType: NetworkType | undefined
+    active: boolean | undefined
+    balance: number | 0
+    encryptedMnemonic: string | undefined
+    path: string
+    sourceType: string
+    importance: number
+    linkedAccountKey: string
+    remoteAccount: RemoteAccount | null
+    numberOfMosaics: number
+    temporaryRemoteNodeConfig: {
+      publicKey: string,
+      node: string
+    } | null
+  isKnownByTheNetwork = true
 
     get publicAccount(): PublicAccount {
       return PublicAccount.createFromPublicKey(this.publicKey, this.networkType)
@@ -313,21 +314,23 @@ export class AppWallet {
         localSave('accountMap', JSON.stringify(accountMap))
     }
 
-  async setAccountInfo(store: Store<AppState>): Promise<void> {
-    try {
-      const {EMPTY_PUBLIC_KEY} = networkConfig
-      const accountInfo = await new AccountHttp(store.state.account.node)
-        .getAccountInfo(Address.createFromRawAddress(store.state.account.wallet.address))
-        .toPromise()
-      this.numberOfMosaics = accountInfo.mosaics ? accountInfo.mosaics.length : 0
-      this.importance = accountInfo.importance.compact()
-      this.linkedAccountKey = accountInfo.linkedAccountKey === EMPTY_PUBLIC_KEY
-        ? null : accountInfo.linkedAccountKey
-      this.updateWallet(store)
-    } catch (error) {
-      console.error("AppWallet -> setAccountInfo -> error", error)
+    async setAccountInfo(store: Store<AppState>): Promise<void> {
+        const {EMPTY_PUBLIC_KEY} = networkConfig
+        const [accountInfo] = await new AccountHttp(store.state.account.node)
+            .getAccountsInfo([Address.createFromRawAddress(store.state.account.wallet.address)])
+            .toPromise()
+        if(!accountInfo){
+          this.isKnownByTheNetwork = false
+          this.updateWallet(store)
+          return
+        }
+        this.numberOfMosaics = accountInfo.mosaics ? accountInfo.mosaics.length : 0
+        this.importance = accountInfo.importance.compact()
+        this.linkedAccountKey = accountInfo.linkedAccountKey === EMPTY_PUBLIC_KEY
+            ? null : accountInfo.linkedAccountKey
+        this.isKnownByTheNetwork = true
+        this.updateWallet(store)
     }
-  }
 
   async updateAccountBalance(balance: number, store: Store<AppState>): Promise<void> {
     try {

@@ -4,6 +4,8 @@ import {LockParams, SignTransaction} from '@/core/model'
 import {transactionConfirmationObservable} from '@/core/services/transactions'
 
 const mockSignAndAnnounce = jest.fn()
+const mockCommit = jest.fn()
+
 jest.mock('@/core/model/AppWallet')
 
 const transaction = TransferTransaction.create(
@@ -16,33 +18,12 @@ const transaction = TransferTransaction.create(
 
 describe('signAndAnnounce', () => {
   beforeEach(() => {
-    mockSignAndAnnounce.mockClear();
+    mockSignAndAnnounce.mockClear()
+    mockCommit.mockClear()
   });
 
-
-  it('should commit a staged transaction', () => {
-    const commitMock = jest.fn()
-    const store = {commit: commitMock}
-
-    signAndAnnounce({
-      transaction,
-      // @ts-ignore
-      store,
-    })
-
-    expect(commitMock.mock.calls).toHaveLength(1)
-    expect(commitMock.mock.calls[0][0]).toEqual('SET_STAGED_TRANSACTION')
-    expect(commitMock.mock.calls[0][1]).toStrictEqual({
-      transactionToSign: transaction,
-      isAwaitingConfirmation: true,
-      lockParams: LockParams.default(),
-    })
-  })
-
-
   it('should resolve with proper values when signing fails', async (done) => {
-    const commitMock = jest.fn()
-    const store = {commit: commitMock}
+    const store = {commit: mockCommit}
 
     const result: SignTransaction = {
       success: false,
@@ -63,9 +44,9 @@ describe('signAndAnnounce', () => {
     expect(success).toBeFalsy()
     expect(signedTransaction).toBe(null)
     expect(error).toEqual('error message')
-    expect(commitMock.mock.calls).toHaveLength(2)
-    expect(commitMock.mock.calls[1][0]).toEqual('SET_STAGED_TRANSACTION')
-    expect(commitMock.mock.calls[1][1]).toStrictEqual({
+    expect(mockCommit.mock.calls).toHaveLength(2)
+    expect(mockCommit.mock.calls[1][0]).toEqual('SET_STAGED_TRANSACTION')
+    expect(mockCommit.mock.calls[1][1]).toStrictEqual({
       transactionToSign: null,
       isAwaitingConfirmation: false,
       lockParams: LockParams.default(),
@@ -75,11 +56,10 @@ describe('signAndAnnounce', () => {
 
 
   it('should call announceTransaction when signing succeeds', async (done) => {
-    const commitMock = jest.fn()
     const mockAnnounceTransaction = jest.fn()
 
     const store = {
-      commit: commitMock,
+      commit: mockCommit,
       state: {
         account: {
           wallet: {
@@ -119,11 +99,10 @@ describe('signAndAnnounce', () => {
 
 
   it('should call announceTransaction when signing succeeds, with signedLock', async (done) => {
-    const commitMock = jest.fn()
     const mockAnnounceTransaction = jest.fn()
 
     const store = {
-      commit: commitMock,
+      commit: mockCommit,
       state: {
         account: {
           wallet: {

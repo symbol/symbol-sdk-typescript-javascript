@@ -15,9 +15,11 @@ export class DisabledFormsTs extends Vue {
     activeAccount: StoreAccount
     app: AppInfo
 
-    get noNetworkCurrencySet(): boolean {
-        return this.activeAccount.networkCurrency.name === ''
-    } 
+    get hasNetworkCurrency(): boolean {
+      return Boolean(this.activeAccount
+        && this.activeAccount.networkCurrency
+        && this.activeAccount.networkCurrency.name)
+    }
 
     get isMultisig(): boolean {
         const {address} = this.activeAccount.wallet
@@ -26,12 +28,11 @@ export class DisabledFormsTs extends Vue {
     }
 
     get active(): boolean {
-        if (this.noNetworkCurrencySet || this.isMultisig) return true
-        return false
+      return !this.hasNetworkCurrency || this.isMultisig
     }
 
     get alertMessage(): string {
-        if (this.noNetworkCurrencySet) return Message.NO_NETWORK_CURRENCY
+        if (!this.hasNetworkCurrency) return Message.NO_NETWORK_CURRENCY
         if (this.isMultisig) return Message.MULTISIG_ACCOUNTS_NO_TX
         return ''
     }

@@ -2,7 +2,7 @@ import {Store} from 'vuex'
 import {localSave} from '@/core/utils'
 import {localRead} from '@/core/utils/utils'
 import {AppState, AppWallet, CurrentAccount} from '@/core/model'
-import {setWalletsBalances} from '@/core/services'
+import {Endpoints, setWalletsBalances} from '@/core/services'
 
 // @TODO: Most of the methods here should be implemented in AppAccount and AppWallet
 
@@ -10,7 +10,7 @@ const persistAccountName = (accountName: string) => {
   localSave('activeAccountName', accountName)
 }
 
-const getAccountDataFromStorage = (accountName: string): any[] => {
+const getAccountDataFromStorage = (accountName: string): any => {
   try {
     const accountMap = localRead('accountMap')
     if (accountMap === '') throw new Error('No accountMap found in the localStorage after login')

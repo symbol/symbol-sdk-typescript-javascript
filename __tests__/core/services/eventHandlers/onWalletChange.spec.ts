@@ -39,7 +39,7 @@ const store = {
       }
     }
   },
-} 
+}
 
 describe('OnWalletChange', () => {
   beforeEach(async () => {

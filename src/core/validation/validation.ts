@@ -49,7 +49,10 @@ export const validation = {
     },
     nodeUrl: {
         required: true,
-        url: {require_protocol: true}
+        url: {
+          require_protocol: true,
+          require_tld:false
+        }
     },
     newAccountName:'required|newAccountName',
     friendlyNodeUrl: {
@@ -57,6 +60,7 @@ export const validation = {
         url: {
             require_host: false,
             require_protocol: false,
+            require_tld:false,
         }
     },
   walletName:{

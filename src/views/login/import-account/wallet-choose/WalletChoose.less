@@ -1,6 +1,7 @@
 .choose-wallet-sec {
+  height: calc(100% - 10px);
   .left-container {
-    width: 700px;
+    height: calc(100% - 10px);
 
     .dialog-title {
       font-size: 28px;
@@ -18,7 +19,7 @@
     .choose-hd-path {
       border: 1px solid rgba(224, 223, 229);
       width: 700px;
-      height: 665px;
+      height: calc(100% - 190px);
       padding: 10px 0;
     }
 
@@ -84,7 +85,6 @@
 
     .scroll {
       max-height: 520px;
-      padding-left: 25px;
     }
 
     .table-item,
@@ -98,7 +98,7 @@
 
     .table-title .address-id {
       position: relative;
-      left: 8px;
+      left: 20px;
     }
 
 
@@ -107,12 +107,19 @@
       border-bottom: 1px solid #E0DFE5;
     }
 
+    .table-item:hover {
+      color: #1FB6AC;
+      background-color: rgba(38, 180, 176, 0.1);
+    }
+
     .table-item:last-of-type {
       border-bottom: 1px solid transparent;
     }
 
     .address-id {
       width: 30px;
+      position: relative;
+      left: 30px;
       font-size: 20px;
 
       img {
@@ -130,7 +137,7 @@
 
     .address-balance {
       font-size: 20px;
-      width:120px;
+      width: 120px;
     }
   }
 

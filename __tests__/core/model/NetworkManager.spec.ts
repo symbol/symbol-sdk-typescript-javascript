@@ -198,9 +198,6 @@ describe('switchNode', () => {
     // @ts-ignore
     network.switchEndpoint('http://localhost:3000')
 
-    const test = jest.fn()
-    // @ts-ignore
-    network.setNetworkMosaics = test
     await flushPromises()
 
     setTimeout(()=> {

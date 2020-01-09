@@ -3,6 +3,10 @@
     <div class="left-container">
       <div class="dialog-sub-tips">{{$t('Address_to_Interact_With')}}</div>
       <div class="choose-hd-path radius">
+        <div class="selection-container">
+        </div>
+        <div class="hd-path">
+        </div>
         <div class="address-list">
           <div class="table-title">
             <span class="address-id">{{$t('ID')}}</span>

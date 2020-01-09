@@ -4,7 +4,7 @@ import dashboardBlockTime from "@/common/img/monitor/dash-board/dashboardBlockTi
 import dashboardPointAmount from "@/common/img/monitor/dash-board/dashboardPointAmount.png";
 import dashboardTransactionAmount from "@/common/img/monitor/dash-board/dashboardTransactionAmount.png";
 import dashboardPublicKey from "@/common/img/monitor/dash-board/dashboardPublicKey.png";
-
+import routers from '@/router/routers.ts'
 export const settingNetworkColorConfig = ['green_point', 'pink_point', 'purple_point', 'yellow_point']
 
 // todo remove it
@@ -61,3 +61,21 @@ export const networkStatusConfig: Array<{
             variable: 'signerPublicKey'
         }
     ]
+
+function getRoutesWithoutAlert(){
+  const loginRouter = routers[0].children[7].children
+  let routersMap = {}
+  loginRouter.forEach(item=>{
+    routersMap[item.name] = true
+    // @ts-ignore
+    if(item.children){
+      // @ts-ignore
+      item.children.forEach(subItem=>{
+        routersMap[subItem.name] = true
+      })
+    }
+  })
+  return routersMap
+}
+
+export const routesWithoutAlert = getRoutesWithoutAlert()

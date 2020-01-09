@@ -30,7 +30,7 @@ export const onTransactionRefreshModule = (store: any) => { // @TODO: check how 
       const formattedTransaction: FormattedTransaction = mutation.payload
       handleRecipientAddressAsNamespaceId([formattedTransaction], store)
    }
- 
+
     if (mutation.type === 'ADD_CONFIRMED_TRANSACTION') {
      try {
         const {node, networkCurrency} = state.account
@@ -45,8 +45,8 @@ export const onTransactionRefreshModule = (store: any) => { // @TODO: check how 
 
         wallet.updateAccountBalance(balance, store)
         store.commit('UPDATE_MOSAICS', appMosaics)
-      
-        const formattedTransaction: FormattedTransaction = mutation.payload 
+
+        const formattedTransaction: FormattedTransaction = mutation.payload
         const transaction = formattedTransaction.rawTx
 
         const transactionTypes: TransactionType[] = transaction instanceof AggregateTransaction

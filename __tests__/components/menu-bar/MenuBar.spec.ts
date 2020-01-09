@@ -60,6 +60,7 @@ describe('MenuBar', () => {
                             value: 'http://endpoint.com:3000',
                             name: 'endpoint',
                             url: 'endpoint.com',
+                            networkType:hdAccount.networkType
                         }],
                     }),
                     mutations: appMutations.mutations
@@ -135,12 +136,14 @@ describe('MenuBar', () => {
             {
                 value: 'http://a.new.endpoint:3000',
                 name: 'http://a.new.endpoint:3000',
-                url: 'http://a.new.endpoint:3000'
+                url: 'http://a.new.endpoint:3000',
+                networkType:hdAccount.networkType
             },
             {
                 value: 'http://endpoint.com:3000',
                 name: 'endpoint',
                 url: 'endpoint.com',
+                networkType:hdAccount.networkType
             }
         ])
         expect(wrapper.vm.node).toBe('http://a.new.endpoint:3000')
@@ -151,6 +154,7 @@ describe('MenuBar', () => {
                 value: 'http://endpoint.com:3000',
                 name: 'endpoint',
                 url: 'endpoint.com',
+                networkType:hdAccount.networkType
             }
         ])
         expect(wrapper.vm.node).toBe('http://endpoint.com:3000')

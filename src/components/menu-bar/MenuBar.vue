@@ -1,18 +1,9 @@
 <template>
   <div :class="[isWindows?'windows':'mac','wrap']">
-    <div v-if="isNodeHealthy && NetworkProperties.networkType && networkType">
-      <Alert class="alert warning_alert"
-             v-if="NetworkProperties.networkType !== NetworkType[networkType] "
-             type="error">
+    <div v-if="alert.show">
+      <Alert class="alert warning_alert" type="error">
         <Icon type="ios-warning-outline"/>
-        {{$t('Wallet_network_type_does_not_match_current_network_type')}}
-      </Alert>
-    </div>
-
-    <div v-if="!isNodeHealthy">
-      <Alert class="alert error_alert" type="error">
-        <Icon type="md-close"/>
-        {{$t('Node_not_available_please_check_your_node_or_network_settings')}}
+        {{$t(`${alert.message}`)}}
       </Alert>
     </div>
 
@@ -73,10 +64,9 @@
                     >
                       <img :src="iterNode.value === node? monitorSelected : monitorUnselected">
                       <span class="node_url text_select">{{iterNode.value}}</span>
-                      <img class="remove_icon" @click.stop="removeNode(node)"
+                      <img class="remove_icon" @click.stop="removeNode(iterNode.value)"
                            src="@/common/img/service/multisig/multisigDelete.png">
                     </div>
-                    <!-- <span @click="resetNodeListToDefault">RESET NODE LIST TO DEFAULT</span> -->
                   </div>
 
                   <form

@@ -15,26 +15,44 @@
             {{$t('This_program_is_free')}}
           </div>
         </div>
-        <div class="login-card">
+        <div class="login-card radius">
           <img src="@/common/img/login/loginNewLogo.png">
           <p class="login-title">{{$t('login_account')}}</p>
           <p class="account-name ">{{$t('wallet_name')}}</p>
 
-          <Select
-                  v-model="formItems.currentAccountName"
-                  placeholder=" "
-                  :class="['select_wallet', accountList.length == 0?'un_click':'']">
-            <Option v-for="walletName in accountList" :value="walletName.value" :key="walletName.value" :label="walletName.label">
-              <span>{{walletName.label}}</span>
-              <span class="login-account-network-type">[{{walletName.networkType}}]</span>
-            </Option>
-          </Select>
+          <AutoComplete
+            v-model="formItems.currentAccountName"
+            placeholder=" "
+            :class="['select-wallet', !accountsClassifiedByNetworkType?'un_click':'']">
+            <div class="auto-complete-sub-container scroll" >
+              <div class="tips-in-sub-container">{{$t(accountsClassifiedByNetworkType?'Select_a_wallet_in_local_storage':'No_wallet_in_local_storage')}}</div>
+              <div v-if="accountsClassifiedByNetworkType">
+                <div
+                  v-for="(accounts, networkType) in accountsClassifiedByNetworkType"
+                  :key="networkType"
+                >
+                  <div>
+                    <span class="network-type-head-title">
+                      {{NetworkType[networkType]}}
+                    </span>
+                  </div>
+                  <Option
+                    v-for="(walletName, index) in accounts"
+                    :value="walletName"
+                    :key="`${walletName}${index}`"
+                    :label="walletName"
+                  >
+                    <span>{{walletName}}</span>
+                  </Option>
+                </div>
+              </div>
+            </div>
+          </AutoComplete>
           <p class="input-password">{{$t('password')}}</p>
-
           <ErrorTooltip fieldName="password">
             <input
-                    :class="[accountList.length == 0?'un_click':'']"
-                    :disabled="accountList.length == 0"
+                    :class="[!accountsClassifiedByNetworkType?'un_click':'']"
+                    :disabled="!accountsClassifiedByNetworkType"
                     v-focus
                     v-model.lazy="formItems.password"
                     type="password"
@@ -54,7 +72,7 @@
           <div class="hint" v-if="isShowHint">
             {{$t('Password_hint')}}: {{hintText}}
           </div>
-          <div v-if="accountList.length" class="pointer button" @click="submit">{{$t('login')}}</div>
+          <div v-if="accountsClassifiedByNetworkType" class="pointer button" @click="submit">{{$t('login')}}</div>
           <div v-else class="pointer button" @click="toChooseImportWay">{{$t('register')}}</div>
         </div>
       </div>
@@ -63,7 +81,7 @@
 </template>
 
 <script lang="ts">
-    import LoginAccountTs from "./LoginAccountTs";
+    import LoginAccountTs from "@/views/login/login-account/LoginAccountTs.ts";
     import "./LoginAccount.less"
 
     export default class LoginAccount extends LoginAccountTs {

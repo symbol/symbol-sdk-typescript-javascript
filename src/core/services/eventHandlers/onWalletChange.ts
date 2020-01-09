@@ -66,6 +66,7 @@ export class OnWalletChange {
   private async setWalletDataFromNetwork() {
     const {newWallet, store} = this
     await newWallet.setAccountInfo(store)
+    if(!newWallet.isKnownByTheNetwork) return
     await newWallet.setMultisigStatus(store.state.account.node, store)
     await setMosaics(newWallet, store)
     await setNamespaces(newWallet.address, store)
