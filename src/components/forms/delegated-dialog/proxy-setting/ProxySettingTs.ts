@@ -4,7 +4,7 @@ import {mapState} from "vuex"
 import {getAbsoluteMosaicAmount} from "@/core/utils"
 import {DEFAULT_FEES, FEE_GROUPS, FEE_SPEEDS} from "@/config"
 import {AccountLinkTransaction, Deadline, LinkAction, Password, UInt64} from "nem2-sdk"
-import {validation} from "@/core/validation"
+import {validatePublicKey} from "@/core/validation"
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 import {RemoteAccountService} from '@/core/services';
 
@@ -17,14 +17,12 @@ export class ProxySettingTs extends Vue {
     @Provide() validator: any = this.$validator
     activeAccount: StoreAccount
     app: AppInfo
-    validation = validation
     feeSpeed = FEE_SPEEDS.NORMAL
     defaultFees = DEFAULT_FEES[FEE_GROUPS.SINGLE]
     feeDivider = 1
     isButtonDisabled = false
     isShowAlertToConfirm = false
     remotePublicKey: string = null
-
 
     get feeAmount(): number {
         const {feeSpeed} = this
@@ -40,8 +38,8 @@ export class ProxySettingTs extends Vue {
         return this.wallet.linkedAccountKey
     }
 
-    get currentRemotePublicKey(){
-      return this.linkedAccountKey || this.remotePublicKey
+    get currentRemotePublicKey() {
+        return this.linkedAccountKey || this.remotePublicKey
     }
 
     get networkCurrency() {
@@ -86,29 +84,24 @@ export class ProxySettingTs extends Vue {
 
     createAccountLinkTransaction(password: string, remoteAccountPublicKey: string, feeAmount: UInt64): AccountLinkTransaction {
         try {
-          return AccountLinkTransaction.create(
-            Deadline.create(),
-            remoteAccountPublicKey,
-            LinkAction.Link,
-            this.wallet.networkType,
-            feeAmount
-          )
+            return AccountLinkTransaction.create(
+                Deadline.create(),
+                remoteAccountPublicKey,
+                LinkAction.Link,
+                this.wallet.networkType,
+                feeAmount
+            )
         } catch (error) {
-          throw new Error(error)
+            throw new Error(error)
         }
-      }
+    }
 
     submit() {
-        if (this.isButtonDisabled) {
-            return
+        if (this.isButtonDisabled) return
+        if (validatePublicKey(this.currentRemotePublicKey).valid) {
+            this.isButtonDisabled = true
+            this.signAndAnnounce()
         }
-        this.$validator
-            .validate()
-            .then((valid) => {
-                if (!valid) return
-                this.isButtonDisabled = true
-                this.signAndAnnounce()
-            })
     }
 
     async mounted() {
@@ -121,8 +114,7 @@ export class ProxySettingTs extends Vue {
         }
     }
 
-    async setRemotePublicKey(){
-        console.log("TCL: ProxySettingTs -> setRemotePublicKey -> setRemotePublicKey")
+    async setRemotePublicKey() {
         try {
             this.remotePublicKey = await new RemoteAccountService(this.wallet)
                 .getAvailableRemotePublicKey(

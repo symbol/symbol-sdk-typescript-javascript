@@ -876,6 +876,7 @@
   "unbind_remote_account_public_key": "已连接的远程账户的公钥",
   "input_remote_node": "请输入您想要进行链接的远程节点的url，已为您选择了默认可用节点。",
   "no_default_node_yet_please_input_node": "暂未检测到可用的远程节点，请手动输入您想要连接的远程节点url。",
+  "please_set_correct_explorer_url_first": "请先设置explorer url",
   "set_explorer_link": "配置explorer连接",
   "node_configuration": "节点配置",
   "Benefit_Request": "受益请求",
@@ -890,9 +891,6 @@
   "next_delegate": "下一步:受益请求",
   "Please_input_account_password_get_mnemonic": "请输入密码以解锁助记词",
   "set_qr_image": "设置收款二维码",
-  "Choose_Wallets": "选择钱包",
-  "my_balance": "我的余额",
-  "Access_My_Wallet": "接入我的钱包",
   "Remote_node_status": "远程节点中状态",
   "Online": "在线",
   "Unreachable": "无法建立连接",
@@ -936,5 +934,8 @@
   "requesting": "受益请求",
   "change_view": "切换视图",
   "test_node": "测试节点",
+  "Choose_Wallets": "选择钱包",
+  "my_balance": "我的余额",
+  "Access_My_Wallet": "接入我的钱包",
   "confirm_information_before_add_child_wallet": "请输入密码以创建子钱包"
 }

@@ -119,17 +119,17 @@ describe('generateRemoteAccountFromPrivateKey', () => {
   it('should return the correct account, on MIJIN_TEST', () => {
     const account = new RemoteAccountService(mijinPrivateKeyWallet)
       // @ts-ignore
-      .getRemoteAccount(password, 1)
+      .getRemoteAccounts(password, 1, 1)
 
-    expect(account).toEqual(CosignAccountRemoteMijinTest)
+    expect(account[0]).toEqual(CosignAccountRemoteMijinTest)
   })
 
   it('should return the correct account, on TEST_TEST', () => {
     const account = new RemoteAccountService(testNetPrivateKeyWallet)
       // @ts-ignore
-      .getRemoteAccount(password, 1)
+      .getRemoteAccounts(password, 1, 1)
 
-    expect(account).toEqual(CosignAccountRemoteTestNet)
+    expect(account[0]).toEqual(CosignAccountRemoteTestNet)
   })
 })
 
@@ -171,11 +171,9 @@ describe('getAvailableRemotePublicKey', () => {
     await flushPromises()
     expect(mockGetAccountsInfoCall).toHaveBeenCalledTimes(2)
     expect(mockGetAccountsInfoCall.mock.calls[0][0]).toEqual([hdAccountWallet1Address1])
-    expect(mockGetAccountsInfoCall.mock.calls[1][0]).toEqual([
-      hdAccountWallet1Address2,
-      hdAccountWallet1Address3,
-      hdAccountWallet1Address4,
-    ])
+    expect(mockGetAccountsInfoCall.mock.calls[1][0][0]).toEqual(hdAccountWallet1Address2)
+    expect(mockGetAccountsInfoCall.mock.calls[1][0][1]).toEqual(hdAccountWallet1Address3)
+    expect(mockGetAccountsInfoCall.mock.calls[1][0][2]).toEqual(hdAccountWallet1Address4)
     expect(publicKey).toBe(hdAccountWallet1PublicKey2)
     done()
   })
@@ -191,11 +189,9 @@ describe('getAvailableRemotePublicKey', () => {
     await flushPromises()
     expect(mockGetAccountsInfoCall).toHaveBeenCalledTimes(2)
     expect(mockGetAccountsInfoCall.mock.calls[0][0]).toEqual([hdAccountWallet2Address1])
-    expect(mockGetAccountsInfoCall.mock.calls[1][0]).toEqual([
-      hdAccountWallet2Address2,
-      hdAccountWallet2Address3,
-      hdAccountWallet2Address4,
-    ])
+    expect(mockGetAccountsInfoCall.mock.calls[1][0][0]).toEqual(hdAccountWallet2Address2)
+    expect(mockGetAccountsInfoCall.mock.calls[1][0][1]).toEqual(hdAccountWallet2Address3)
+    expect(mockGetAccountsInfoCall.mock.calls[1][0][2]).toEqual(hdAccountWallet2Address4)
     expect(publicKey).toBe(hdAccountWallet2PublicKey4)
     done()
   })

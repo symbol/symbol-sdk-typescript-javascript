@@ -5,11 +5,10 @@ import {
   AccountHttp, AccountInfo, AccountType,
 } from 'nem2-sdk';
 import {CreateWalletType, AppAccounts} from "@/core/model"
-import {getAccountFromPath, getRemoteAccountPath, getRemoteAccountFromPrivateKey} from '@/core/utils';
+import {getRemoteAccountsFromPath, getRemoteAccountsFromPrivateKey} from '@/core/utils';
 import {Store} from 'vuex';
 
-const REMOTE_ACCOUNTS_BATCH_SIZE = 3
-const MAX_REMOTE_ACCOUNT_CHECKS = 4
+const MAX_REMOTE_ACCOUNT_CHECKS = 10
 
 export class RemoteAccountService {
   numberOfCheckedRemoteAccounts = 0
@@ -35,7 +34,7 @@ export class RemoteAccountService {
   ): Promise<Account> {
     try {
       this.numberOfCheckedRemoteAccounts += batchSize
-      const someRemoteAccounts = this.getRemoteAccounts(password, batchSize)
+      const someRemoteAccounts = this.getRemoteAccounts(password, this.baseSeedIndex, batchSize)
       const someRemoteAccountsAddresses = someRemoteAccounts.map(({address}) => address)
 
       const accountsInfo = await new AccountHttp(node)
@@ -45,38 +44,40 @@ export class RemoteAccountService {
       return this.getFirstFreeRemoteAccount(someRemoteAccounts, accountsInfo)
     } catch (error) {
       if (this.numberOfCheckedRemoteAccounts < MAX_REMOTE_ACCOUNT_CHECKS) {
-        return this.getAvailableRemoteAccount(password, node, REMOTE_ACCOUNTS_BATCH_SIZE)
+        return this.getAvailableRemoteAccount(password, node, MAX_REMOTE_ACCOUNT_CHECKS)
       }
 
       throw new Error('Could not find a linkable remote account')
     }
   }
 
-  private getRemoteAccounts(password: Password, batchSize: number): Account[] {
-    return [...Array(batchSize)]
-      .map((ignored, index) => this.getRemoteAccount(password, this.baseSeedIndex + index))
-  }
-
   private get baseSeedIndex(): number {
     if (this.numberOfCheckedRemoteAccounts === 1) return 1
-    return this.numberOfCheckedRemoteAccounts - REMOTE_ACCOUNTS_BATCH_SIZE + 1
+    return this.numberOfCheckedRemoteAccounts - MAX_REMOTE_ACCOUNT_CHECKS + 1
   }
 
-  private getRemoteAccount(password: Password, remoteAccountIndex: number): Account {
+  private getRemoteAccounts(
+    password: Password,
+    remoteAccountFirstIndex: number,
+    numberOfAccounts: number,
+  ): Account[] {
     switch (this.wallet.sourceType) {
       case CreateWalletType.seed:
-        return getAccountFromPath(
+        return getRemoteAccountsFromPath(
           AppAccounts().decryptString(this.wallet.encryptedMnemonic, password.value),
-          getRemoteAccountPath(this.wallet.path, remoteAccountIndex),
+          this.wallet.path,
+          remoteAccountFirstIndex,
           this.wallet.networkType,
+          numberOfAccounts,
         )
 
       case CreateWalletType.privateKey:
       case CreateWalletType.keyStore:
-        return getRemoteAccountFromPrivateKey(
+        return getRemoteAccountsFromPrivateKey(
           this.wallet.getAccount(password).privateKey.toString(),
-          remoteAccountIndex,
+          remoteAccountFirstIndex,
           this.wallet.networkType,
+          numberOfAccounts,
         )
 
       case CreateWalletType.trezor:
@@ -111,7 +112,8 @@ export class RemoteAccountService {
   ): PersistentDelegationRequestTransaction {
     try {
       const delegatedPrivateKey = this
-        .getRemoteAccountFromLinkedAccountKey(password).privateKey
+        .getRemoteAccountFromLinkedAccountKey(password)
+        .privateKey
 
       const accountPrivateKey = this.wallet.getAccount(password).privateKey
 
@@ -134,11 +136,8 @@ export class RemoteAccountService {
       throw new Error('Could not find a remote account that corresponds to the linked account key')
     }
 
-    const accountToMatch = this.getRemoteAccount(password, index)
-
-    return accountToMatch.publicKey === this.wallet.linkedAccountKey
-      ? accountToMatch
-      : this.getRemoteAccountFromLinkedAccountKey(password, index + 1)
+    const accountsToMatch = this.getRemoteAccounts(password, index, MAX_REMOTE_ACCOUNT_CHECKS)
+    return accountsToMatch.find(({publicKey}) => publicKey === this.wallet.linkedAccountKey)
   }
 
   static isLinkable(accountInfo: AccountInfo): boolean {

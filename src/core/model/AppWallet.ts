@@ -40,12 +40,12 @@ const {DEFAULT_LOCK_AMOUNT} = defaultNetworkConfig
 const {EMPTY_PUBLIC_KEY} = networkConfig
 
 export class AppWallet {
-  constructor(wallet?: {
-    name?: string,
-    simpleWallet?: SimpleWallet,
-  }) {
-    Object.assign(this, wallet)
-  }
+    constructor(wallet?: {
+        name?: string,
+        simpleWallet?: SimpleWallet,
+    }) {
+        Object.assign(this, wallet)
+    }
 
     name: string | undefined
     simpleWallet: SimpleWallet | undefined
@@ -61,11 +61,11 @@ export class AppWallet {
     linkedAccountKey: string
     remoteAccount: RemoteAccount | null
     numberOfMosaics: number
+    isKnownByTheNetwork = true
     temporaryRemoteNodeConfig: {
       publicKey: string,
       node: string
     } | null
-  isKnownByTheNetwork = true
 
     get publicAccount(): PublicAccount {
       return PublicAccount.createFromPublicKey(this.publicKey, this.networkType)

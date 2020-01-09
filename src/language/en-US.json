@@ -926,10 +926,6 @@
   "Verify_Mnemonic_phrase": "Verify Mnemonic phrase",
   "Finish": "Finish",
   "Type_Mnemonic_Phrase": "Type Mnemonic Phrase",
-  "transaction_details": "Transaction details",
-  "parent_namespace": "Parent namespace",
-  "Input_namespace_name": "Input namespace name",
-  "Choose_Wallets": "Choose Wallets",
   "Are_you_sure_to_unlink_this_account":"Are you sure to unlink this account?",
   "link_Or_Change": "Remote account link",
   "node_Network": "Harvesting node",
@@ -937,5 +933,9 @@
   "change_view": "Change view",
   "Harvested_Block_Hash":"Harvested Block Hash",
   "test_node": "Test node",
+  "Choose_Wallets": "Select Wallets",
+  "transaction_details": "Transaction details",
+  "parent_namespace": "Parent namespace",
+  "Input_namespace_name": "Enter a namespace name",
   "confirm_information_before_add_child_wallet": "Enter your password to create a new child wallet"
 }

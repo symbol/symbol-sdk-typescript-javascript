@@ -71,13 +71,14 @@ export class AppTs extends Vue {
     this.$Notice.config({duration: 4})
     const messageTranslator = message => `${this.$t(message)}`
     this.$store.subscribe(async (mutation) => {
+
       if (mutation.type === 'TRIGGER_NOTICE') {
         const notice: Notice = mutation.payload
         try {
           this.$Notice.destroy()
           this.$Notice[notice.type]({title: messageTranslator(notice.message)})
-        } catch (e) {
-          console.error('AppTs -> initializeNotice -> error')
+        } catch (error) {
+          console.error('initializeNotice -> error', error)
         }
       }
     })

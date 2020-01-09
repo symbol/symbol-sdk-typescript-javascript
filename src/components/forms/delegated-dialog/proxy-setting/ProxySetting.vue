@@ -15,17 +15,16 @@
         )}} </span>
     </div>
 
-    <span class="ready-to-link-container" v-if="!linkedAccountKey && !remotePublicKey">
-        {{ $t('remote_account_being_created') }}
-    </span>
-
     <div class="remote-public-key-container">
-        <input class="remote-public-key un_click" data-vv-name="recipientPublicKey"
-                :value="currentRemotePublicKey"
-                v-focus
-               disabled="true"
-                :placeholder="$t('Please_paste_the_proxy_private_key_here')"/>
-        <img class="refresh-icon" src="@/common/img/wallet/wallet-detail/refresh.png" >
+      <form action="submit" onsubmit="event.preventDefault()" @keyup.enter="submit">
+        <input
+            class="remote-public-key un_click"
+            :value="currentRemotePublicKey"
+            disabled="true"
+            v-focus
+            :placeholder="$t('remote_account_being_created')"
+        />
+      </form>
     </div>
 
     <div class="config-info-container">

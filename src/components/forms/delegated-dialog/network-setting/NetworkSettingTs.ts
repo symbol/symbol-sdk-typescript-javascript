@@ -1,7 +1,7 @@
 import {Component, Provide, Vue, Watch} from "vue-property-decorator";
 import {NetworkType, NodeHttp} from "nem2-sdk"
 import {mapState} from "vuex"
-import {AppInfo, AppWallet, StoreAccount} from "@/core/model"
+import {AppInfo, AppWallet, StoreAccount, Endpoint} from "@/core/model"
 import {completeUrlWithHostAndProtocol, getAbsoluteMosaicAmount, localRead} from "@/core/utils"
 import {DEFAULT_FEES, defaultNodeList, FEE_GROUPS, FEE_SPEEDS, Message} from "@/config"
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
@@ -37,7 +37,16 @@ export class NetworkSettingTs extends Vue {
     get defaultNodeList() {
         const nodeListData = localRead('nodeList')
         if (nodeListData == '') return defaultNodeList
-        return nodeListData ? JSON.parse(nodeListData).map(item => item.value) : defaultNodeList.map(item => item.value)
+
+        const nodesOfNetworkType = (nodeList) => {
+            return nodeList
+                .filter(({networkType}) => networkType === this.wallet.networkType)
+                .map(({value}) => value)
+        }
+
+        return nodeListData
+            ? nodesOfNetworkType(JSON.parse(nodeListData))
+            : nodesOfNetworkType(defaultNodeList)
     }
 
     get feeAmount(): number {

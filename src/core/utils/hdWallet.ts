@@ -100,33 +100,89 @@ export const randomizeMnemonicWordArray = (array: string[]): string[] => {
   return array
 }
 
-export const getTenAddressesFromMnemonic = (
-    mnemonic: string,
-    networkType: NetworkType,
-  ): Address[] =>{
-    const bip32Seed = createBip32Seed(mnemonic)
-    return [...Array(10)].map((_, index) => getAccountMnemonic(bip32Seed, index, networkType).address)
-  }
-  
-  export const createBip32Seed = (mnemonic: string)=>{
-    const PassPhrase = new MnemonicPassPhrase(mnemonic);
-    const bip32Seed = PassPhrase.toSeed();
-    return bip32Seed;
-  }
+export const getExtendedKeyFromBip32Seed = (
+  bip32Seed: Buffer,
+  networkType: NetworkType
+): ExtendedKey => {
+  const network = getNetworkFromNetworkType(networkType)
+  return ExtendedKey.createFromSeed(buf2hex(bip32Seed), network)
+}
 
-
-export const getRemoteAccountFromPrivateKey = (
-  privateKey: string,
-  remoteAccountIndex: number,
-  networkType: NetworkType,
+export const getAccountFromBip32SeedAndPathNumber = (
+  bip32Seed: Buffer,
+  pathNumber: number,
+  networkType: NetworkType
 ): Account => {
-  if (remoteAccountIndex === null || remoteAccountIndex === undefined) {
+  const extendedKey = getExtendedKeyFromBip32Seed(bip32Seed, networkType)
+  const wallet = new Wallet(extendedKey.derivePath(getPath(pathNumber)))
+  return wallet.getAccount(networkType)
+}
+
+export const getAccountFromBip32SeedAndPath = (
+  bip32Seed: Buffer,
+  path: string,
+  networkType: NetworkType
+): Account => {
+  const extendedKey = getExtendedKeyFromBip32Seed(bip32Seed, networkType)
+  const wallet = new Wallet(extendedKey.derivePath(path))
+  return wallet.getAccount(networkType)
+}
+
+export const createBip32Seed = (mnemonic: string)=>{
+  const PassPhrase = new MnemonicPassPhrase(mnemonic);
+  const bip32Seed = PassPhrase.toSeed();
+  return bip32Seed;
+}
+
+export const getTenAddressesFromMnemonic = (
+  mnemonic: string,
+  networkType: NetworkType,
+): Address[] =>{
+  const bip32Seed = createBip32Seed(mnemonic)
+  return [...Array(10)].map((_, index) => getAccountFromBip32SeedAndPathNumber(bip32Seed, index, networkType).address)
+}
+
+const getMasterKeyFromPrivateKey = (
+  privateKey: string, 
+  networkType: NetworkType,
+): NodeEd25519 => {
+  const network = getNetworkFromNetworkType(networkType)
+  const privateBytes = Buffer.from(Convert.hexToUint8(privateKey))
+  return new NodeEd25519(privateBytes, undefined, Buffer.from(''), network);
+}
+
+export const getRemoteAccountsFromPath = (
+  mnemonic: string,
+  path: string,
+  remoteAccountFirstIndex: number,
+  networkType: NetworkType,
+  numberOfAccounts: number,
+): Account[] => {
+  const bip32Seed = createBip32Seed(mnemonic)
+  const extendedKey = getExtendedKeyFromBip32Seed(bip32Seed, networkType)
+  return [...Array(numberOfAccounts)]
+      .map((_, index) => {
+        const remoteAccountIndex = remoteAccountFirstIndex + index
+        const remoteAccountPath = getRemoteAccountPath(path, remoteAccountIndex)
+        return getAccountFromBip32SeedAndPath(bip32Seed, remoteAccountPath, networkType)
+      })
+}
+
+export const getRemoteAccountsFromPrivateKey = (
+  privateKey: string,
+  remoteAccountFirstIndex: number,
+  networkType: NetworkType,
+  numberOfAccounts: number,
+): Account[] => {
+  if (remoteAccountFirstIndex === null || remoteAccountFirstIndex === undefined) {
     throw new Error('invalid argument provided to getRemoteAccountFromPrivateKey')
   }
 
-  const network = getNetworkFromNetworkType(networkType)
-  const privateBytes = Buffer.from(Convert.hexToUint8(privateKey))
-  const masterKey = new NodeEd25519(privateBytes, undefined, Buffer.from(''), network);
-  const extendedKey = masterKey.derivePath(`m/44'/43'/0'/${remoteAccountIndex}'/0'`)
-  return Account.createFromPrivateKey(extendedKey.privateKey.toString('hex'), networkType)
+  const masterKey = getMasterKeyFromPrivateKey(privateKey, networkType)
+
+  return [...Array(numberOfAccounts)].map((ignored, index) => {
+    const remoteAccountIndex = remoteAccountFirstIndex + index
+    const extendedKey = masterKey.derivePath(`m/44'/43'/0'/${remoteAccountIndex}'/0'`)
+    return Account.createFromPrivateKey(extendedKey.privateKey.toString('hex'), networkType)
+  })
 }

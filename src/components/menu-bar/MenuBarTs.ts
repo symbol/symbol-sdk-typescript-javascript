@@ -175,7 +175,7 @@ export class MenuBarTs extends Vue {
         )
 
         if (clickedNodeName === this.node){
-          this.node = this.nodeList[0].value
+            this.node = this.nodeList[0].value
         }
     }
 

@@ -187,40 +187,44 @@ describe('getRemoteAccountFromPrivateKey', () => {
 
   it('should throw if the account index is undefined', () => {
     expect(() => {
-      hdWallet.getRemoteAccountFromPrivateKey(
+      hdWallet.getRemoteAccountsFromPrivateKey(
         CosignAccount.privateKey,
         undefined,
         mijinPrivateKeyWallet.networkType,
+        1,
       )
     }).toThrow()
   })
 
   it('should throw if the account index is null', () => {
     expect(() => {
-      hdWallet.getRemoteAccountFromPrivateKey(
+      hdWallet.getRemoteAccountsFromPrivateKey(
         CosignAccount.privateKey,
         null,
         mijinPrivateKeyWallet.networkType,
+        1,
       )
     }).toThrow()
   })
 
   it('should return the correct account, on MIJIN_TEST', () => {
-    const account = hdWallet.getRemoteAccountFromPrivateKey(
+    const account = hdWallet.getRemoteAccountsFromPrivateKey(
       CosignAccount.privateKey,
       1,
       NetworkType.MIJIN_TEST,
+      1,
     )
 
-    expect(account).toEqual(CosignAccountRemoteMijinTest)
+    expect(account[0]).toEqual(CosignAccountRemoteMijinTest)
   })
 
   it('should return the correct account, on TEST_TEST', () => {
-    const account = hdWallet.getRemoteAccountFromPrivateKey(
+    const account = hdWallet.getRemoteAccountsFromPrivateKey(
       CosignAccount.privateKey,
       1,
       NetworkType.TEST_NET,
+      1,
     )
-    expect(account).toEqual(CosignAccountRemoteTestNet)
+    expect(account[0]).toEqual(CosignAccountRemoteTestNet)
   })
 })

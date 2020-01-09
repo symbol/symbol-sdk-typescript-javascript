@@ -2,7 +2,7 @@
   <Modal :transfer="false"
          class-name="delegated-check-password-dialog-wrapper"
          v-model="visible"
-         @on-cancel="show=false"
+         @on-cancel="visible=false"
          :footer-hide="true">
     <div slot="header" class="check-deploy-dialog-header">
       <span class="title">{{$t('config')}}</span>
