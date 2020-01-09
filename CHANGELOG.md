@@ -3,14 +3,25 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 09-Jan-2020
+
+**Milestone**: Fushicho.3
+ Versions  |   |
+---|---|---
+SDK Core| v0.16.3 | https://www.npmjs.com/package/nem2-sdk
+Catbuffer Library| v0.0.7 | https://www.npmjs.com/package/catbuffer
+Client Library | v0.7.20-beta.6  | https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client
+
+- Fixed http client (OpenAPI client package) does not support ES6 issue.
+
 ## 06-Jan-2020
 
 **Milestone**: Fushicho.3
  Versions  |   |
 ---|---|---
-SDK Core| v0.16.2 | https://www.npmjs.com/package/nem2-sdk 
-Catbuffer Library| v0.0.7 | https://www.npmjs.com/package/catbuffer 
-Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client 
+SDK Core| v0.16.2 | https://www.npmjs.com/package/nem2-sdk
+Catbuffer Library| v0.0.7 | https://www.npmjs.com/package/catbuffer
+Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client
 
 - Refactored to replace generated codes by public library package for both `Catbuffer` and `OpenAPI Http Client`.
 - Added unresolved (mosaicId, address) support in `MosaicRestrictionTransaction`.
@@ -317,7 +328,8 @@ Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/nem2-sdk-opena
 **Milestone**: Alpaca
 
 - Initial code release.
-[0.16.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.1...v0.16.2
+[0.16.3: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.2...v0.16.3
+[0.16.2]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.1...v0.16.2
 [0.16.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.0...v0.16.1
 [0.16.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.15.1...v0.16.0
 [0.15.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.15.0...v0.15.1
