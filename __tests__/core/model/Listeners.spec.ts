@@ -72,6 +72,8 @@ const mockUnconfirmedAdded = (args) => of(args).pipe(
   mapTo(mockUnconfirmedTransaction),
 )
 
+const mockSetPartialTransactions = jest.fn()
+
 const {MAX_LISTENER_RECONNECT_TRIES} = APP_PARAMS
 
 jest.mock('nem2-sdk/dist/src/infrastructure/Listener', () => ({
@@ -118,6 +120,7 @@ describe('Listeners', () => {
     mockListenerClose.mockClear()
     mockListenerOpenCall.mockClear()
     mockNetworkPropertiesSetLastBlock.mockClear()
+    mockSetPartialTransactions.mockClear()
   })
 
   const address = Address.createFromRawAddress('TCBIA24P5GO4QNI6H2TIRPXALWF7UKHPI6QOOVDM')
@@ -139,6 +142,11 @@ describe('Listeners', () => {
       app: {
         transactionFormatter: mockTransactionFormatter,
         networkProperties: mockNetworkProperties,
+      },
+      account: {
+        wallet: {
+          setPartialTransactions: (...args) => mockSetPartialTransactions(args),
+        },  
       },
     },
   }

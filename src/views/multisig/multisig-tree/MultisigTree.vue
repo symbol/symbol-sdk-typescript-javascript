@@ -6,7 +6,7 @@
     </div>
     <div>
       <span class="green">{{ $t('min_removal') }}:</span>
-      rentAccountMultisigInfo ? currentAccountMultisigInfo.minRemoval : 0 }}
+      {{ currentAccountMultisigInfo ? currentAccountMultisigInfo.minRemoval : 0 }}
     </div>
     <Tree
       v-if="multisigTreeData"

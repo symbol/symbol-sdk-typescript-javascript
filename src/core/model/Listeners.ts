@@ -76,10 +76,12 @@ export class Listeners {
 
         this.listener.cosignatureAdded(address).subscribe(() => {
           Notice.trigger(Message.NEW_COSIGNATURE, NoticeType.success, store)
+          store.state.account.wallet.setPartialTransactions(store)
         })
 
         this.listener.aggregateBondedAdded(address).subscribe(() => {
           Notice.trigger(Message.NEW_AGGREGATE_BONDED, NoticeType.success, store)
+          store.state.account.wallet.setPartialTransactions(store)
         })
 
         this.listener.confirmed(address)

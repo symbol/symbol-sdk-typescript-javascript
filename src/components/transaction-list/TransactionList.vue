@@ -9,6 +9,13 @@
     <div class="bottom_transactions radius scroll">
       <div class="label_page">
         <span class="page_title">{{ $t(pageTitle) }}</span>
+        <span
+          v-if="mode === TransactionCategories.TO_COSIGN"
+          class="pointer refresh_btn"
+          @click.stop="wallet.setPartialTransactions($store)"
+        >
+          {{ $t('refresh') }}
+        </span>
       </div>
 
       <div class="table_container">
@@ -61,7 +68,10 @@
                     v-if="c.rawTx.type !== TransactionType.TRANSFER"
                     class="col2-item bottom tag"
                   >
-                    -> {{ c.txHeader.tag }}
+                    -> {{ c.txHeader.tag }} 
+                    <span v-if="c.toCosign" class="click-to-cosign">
+                      ({{ $t('Click_to_cosign') }})
+                    </span>
                   </span>
                 </div>
 

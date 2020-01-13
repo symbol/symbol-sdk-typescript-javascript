@@ -33,7 +33,7 @@ import {
   AppAccounts, FormattedTransaction, NoticeType,
   Path, HdWallet,
 } from '@/core/model'
-import {setTransactionList} from '@/core/services'
+import {setTransactionList, setPartialTransactions} from '@/core/services'
 import {Log} from './Log'
 import {Notice} from './Notice'
 
@@ -506,6 +506,11 @@ export class AppWallet {
     await setTransactionList(
       Address.createFromRawAddress(this.address),
       store,
+    )
+  }
+  setPartialTransactions(store: Store<AppState>): void {
+    setPartialTransactions(
+      Address.createFromRawAddress(this.address), store,
     )
   }
 }

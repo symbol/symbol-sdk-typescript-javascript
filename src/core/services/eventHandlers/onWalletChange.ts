@@ -48,6 +48,7 @@ export class OnWalletChange {
 
   private resetWalletAssets() {
     this.store.commit('RESET_TRANSACTION_LIST')
+    this.store.commit('RESET_TRANSACTIONS_TO_COSIGN')
     this.store.commit('RESET_MOSAICS')
     this.store.commit('RESET_NAMESPACES')
   }
@@ -71,6 +72,7 @@ export class OnWalletChange {
     await setMosaics(newWallet, store)
     await setNamespaces(newWallet.address, store)
     await newWallet.setTransactionList(store)
+    newWallet.setPartialTransactions(store)
   }
 
   private startListeners() {

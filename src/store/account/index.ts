@@ -167,7 +167,6 @@ const mutations: MutationTree<StoreAccount> = {
   UPDATE_MULTISIG_ACCOUNT_MOSAICS(state: StoreAccount, addressAndMosaics: AddressAndMosaics): void {
     const {address, mosaics} = addressAndMosaics
     const mosaicList = {...state.multisigAccountsMosaics[address]}
-
     mosaics.forEach((mosaic: AppMosaic) => {
       if (!mosaic.hex) return
       const {hex} = mosaic
@@ -182,15 +181,8 @@ const mutations: MutationTree<StoreAccount> = {
   POP_TRANSACTION_TO_COSIGN_BY_HASH(state: StoreAccount, hash: string) {
     state.transactionsToCosign = popTransactionToCosignByHash([...state.transactionsToCosign], hash)
   },
-  ADD_TRANSACTIONS_TO_COSIGN(state: StoreAccount, transactions: FormattedTransaction[]) {
-    const [transaction] = transactions
-    const oldTransactions = [...state.transactionsToCosign]
-
-    const index = oldTransactions
-      .findIndex(({rawTx}) => rawTx.transactionInfo.hash === transaction.rawTx.transactionInfo.hash)
-
-    if (index > -1) return
-    state.transactionsToCosign = [ transaction, ...oldTransactions ]
+  SET_TRANSACTIONS_TO_COSIGN(state: StoreAccount, transactions: FormattedTransaction[]) {
+    state.transactionsToCosign = transactions
   },
   SET_TEMPORARY_PASSWORD(state: StoreAccount, password: string) {
     state.temporaryLoginInfo.password = password

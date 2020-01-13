@@ -89,7 +89,7 @@ describe('TransactionFormatter', () => {
     expect(mockCommit.mock.calls[0][1][3]).toBeInstanceOf(FormattedMosaicAlias)
   })
 
-  it('should call ADD_TRANSACTIONS_TO_COSIGN', () => {
+  it('should call SET_TRANSACTIONS_TO_COSIGN', () => {
   // @ts-ignore 
     TransactionFormatter.create(mockStore).formatAndSaveTransactions([
       registerNamespaceTransaction,
@@ -98,7 +98,7 @@ describe('TransactionFormatter', () => {
       mosaicAliasTransaction,
     ], {transactionCategory: TransactionCategories.TO_COSIGN})
 
-    expect(mockCommit.mock.calls[0][0]).toBe('ADD_TRANSACTIONS_TO_COSIGN')
+    expect(mockCommit.mock.calls[0][0]).toBe('SET_TRANSACTIONS_TO_COSIGN')
     expect(mockCommit.mock.calls[0][1][0]).toBeInstanceOf(FormattedRegisterNamespace)
     expect(mockCommit.mock.calls[0][1][1]).toBeInstanceOf(FormattedTransfer)
     expect(mockCommit.mock.calls[0][1][2]).toBeInstanceOf(FormattedTransfer)

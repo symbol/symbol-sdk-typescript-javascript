@@ -32,6 +32,8 @@ export class TransactionListTs extends Vue {
   showDialog = false
   activeTransaction: FormattedTransaction = null
   NamespaceId = NamespaceId
+  TransactionCategories = TransactionCategories
+
   @Prop({default: null})
   mode: string
 
@@ -48,7 +50,8 @@ export class TransactionListTs extends Vue {
       return this.activeAccount.transactionsToCosign || []
     }
 
-    return this.activeAccount.transactionList
+    const {transactionsToCosign, transactionList} = this.activeAccount
+    return [ ...transactionsToCosign, ...transactionList ]
   }
 
   get mosaicList() {
@@ -134,7 +137,7 @@ export class TransactionListTs extends Vue {
   transactionClicked(transaction: FormattedTransaction) {
     this.activeTransaction = transaction
 
-    if (this.mode === TransactionCategories.TO_COSIGN) {
+    if (this.activeTransaction.toCosign) {
       if (transaction instanceof FormattedAggregateBonded
                 && transaction.alreadyCosignedBy(Address.createFromRawAddress(this.wallet.address))) {
         this.showDialog = true

@@ -17,9 +17,14 @@ export class TransactionFormatter {
     options?: TransactionFormatterOptions,
   ): void {
     const formattedTransactions = this.formatTransactions(transactions, options)
-
-    if(!options) {
+    
+    if (!options) {
       this.store.commit('SET_TRANSACTION_LIST', formattedTransactions)
+      return
+    }
+
+    if (options.transactionCategory && options.transactionCategory === TransactionCategories.TO_COSIGN) {
+      this.store.commit('SET_TRANSACTIONS_TO_COSIGN', formattedTransactions)
       return
     }
 
