@@ -9,6 +9,7 @@ import TheWalletAdd from '@/views/wallet/wallet-switch/the-wallet-add/TheWalletA
 import TheWalletDelete from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDelete.vue'
 import MnemonicDialog from '@/views/wallet/wallet-details/mnemonic-dialog/MnemonicDialog.vue'
 import NumberFormatting from '@/components/number-formatting/NumberFormatting.vue'
+import {BalancesService} from '@/core/services'
 
 @Component({
   components: {
@@ -48,6 +49,10 @@ export class WalletSwitchTs extends Vue {
 
   get networkCurrency() {
     return this.activeAccount.networkCurrency
+  }
+
+  getBalanceFromAddress(wallet: AppWallet): string {
+    return BalancesService.getBalanceFromAddress(wallet, this.$store)
   }
 
   getWalletStyle(item: AppWallet): string {

@@ -5,7 +5,7 @@ import Vuex from 'vuex'
 import VeeValidate from 'vee-validate'
 // @ts-ignore
 import LoginAccount from '@/views/login/login-account/LoginAccount.vue'
-import {accountMutations, accountState} from '@/store/account'
+import {accountMutations, accountState, accountActions} from '@/store/account'
 import {veeValidateConfig} from '@/core/validation'
 import VueRx from 'vue-rx'
 import i18n from '@/language'
@@ -41,6 +41,7 @@ describe('LoginAccount', () => {
         account: {
           state: accountState.state,
           mutations: accountMutations.mutations,
+          actions: accountActions.actions,
         },
         app:{
           state: appState.state,

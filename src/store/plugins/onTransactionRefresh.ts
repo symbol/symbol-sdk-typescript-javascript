@@ -1,7 +1,8 @@
 import {TransactionType, Address, AggregateTransaction} from 'nem2-sdk'
 import {AppMosaic, AppState, FormattedTransaction} from '@/core/model'
 import {
-  setNamespaces, getTransactionTypesFromAggregate, mosaicsAmountViewFromAddress, handleRecipientAddressAsNamespaceId,
+  setNamespaces, getTransactionTypesFromAggregate, BalancesService,
+  mosaicsAmountViewFromAddress, handleRecipientAddressAsNamespaceId,
 } from '@/core/services'
 
 const txTypeToGetNamespaces = [
@@ -33,17 +34,16 @@ export const onTransactionRefreshModule = (store: any) => { // @TODO: check how 
 
     if (mutation.type === 'ADD_CONFIRMED_TRANSACTION') {
       try {
-        const {node, networkCurrency} = state.account
+        const {node} = state.account
         const {wallet} = state.account
         const {address} = state.account.wallet
         const accountAddress = Address.createFromRawAddress(address)
 
         const mosaicAmountViews = await mosaicsAmountViewFromAddress(node, accountAddress)
+        const balances = BalancesService.getFromMosaicAmountViews(mosaicAmountViews)
         const appMosaics = mosaicAmountViews.map(x => AppMosaic.fromMosaicAmountView(x))
-        const ownedNetworkCurrency = appMosaics.find(({hex}) => hex === networkCurrency.hex)
-        const balance = ownedNetworkCurrency === undefined ? 0 : ownedNetworkCurrency.balance
 
-        wallet.updateAccountBalance(balance, store)
+        store.commit('SET_ACCOUNT_BALANCES', {address: wallet.address, balances})
         store.commit('UPDATE_MOSAICS', appMosaics)
 
         const formattedTransaction: FormattedTransaction = mutation.payload

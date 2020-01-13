@@ -3,7 +3,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import monitorSelected from '@/common/img/monitor/monitorSelected.png'
 import monitorUnselected from '@/common/img/monitor/monitorUnselected.png'
 import {copyTxt, formatNumber, localRead, localSave} from '@/core/utils'
-import {mapState} from 'vuex'
+import {mapState, mapGetters} from 'vuex'
 import {AppInfo, MosaicNamespaceStatusType, StoreAccount} from '@/core/model'
 import routes from '@/router/routers'
 import numberGrow from '@/components/number-grow/NumberGrow.vue'
@@ -19,11 +19,15 @@ import NumberFormatting from '@/components/number-formatting/NumberFormatting.vu
       activeAccount: 'account',
       app: 'app',
     }),
+    ...mapGetters({
+      balance: 'balance',
+    }),
   },
 })
 export class MonitorTs extends Vue {
   app: AppInfo
   activeAccount: StoreAccount
+  balance: string
   mosaic: string
   mosaicName = ''
   showExpiredMosaics = false
@@ -33,13 +37,6 @@ export class MonitorTs extends Vue {
   monitorSelected = monitorSelected
   monitorUnselected = monitorUnselected
   formatNumber = formatNumber
-
-  get balance(): number {
-    const {wallet} = this.activeAccount
-    if (!wallet) return 0
-    return wallet.balance || 0
-  }
-
   get xemUsdPrice() {
     return this.app.xemUsdPrice
   }

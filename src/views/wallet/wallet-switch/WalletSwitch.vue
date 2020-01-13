@@ -23,7 +23,7 @@
                   {{ item.name }}
                 </p>
                 <p class="walletAmount overflow_ellipsis">
-                  <NumberFormatting :number-of-formatting="item.balance ? formatNumber(item.balance) : '0' " />
+                  <NumberFormatting :number-of-formatting="getBalanceFromAddress(item)" />
                   <span class="tails">{{ networkCurrency.ticker }}</span>
                 </p>
               </div>

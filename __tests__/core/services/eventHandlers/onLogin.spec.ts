@@ -1,12 +1,14 @@
 import {onLogin} from '@/core/services/eventHandlers/onLogin.ts'
-import {setWalletsBalances} from '@/core/services'
 import {hdAccount} from '@MOCKS/index'
 import {CurrentAccount} from '@/core/model'
 import * as utils from '@/core/utils/utils'
 
 const mockCommit = jest.fn()
+const mockDispatch = jest.fn()
+
 const store = {
   commit: mockCommit,
+  dispatch: mockDispatch,
 }
 
 jest.mock('@/core/utils')
@@ -14,9 +16,8 @@ jest.mock('@/core/services/')
 
 describe('onLogin', () => {
   beforeEach(() => {
-    // @ts-ignore
-    setWalletsBalances.mockClear()
     mockCommit.mockClear()
+    mockDispatch.mockClear()
   })
 
   it('should throw when no data found in localStorage', () => {
@@ -56,7 +57,7 @@ describe('onLogin', () => {
     expect(mockCommit.mock.calls[1][1]).toStrictEqual(hdAccount.wallets)
     expect(mockCommit.mock.calls[2][0]).toBe('SET_WALLET')
     expect(mockCommit.mock.calls[2][1].address).toBe(hdAccount.activeWalletAddress)
-    expect(setWalletsBalances).toHaveBeenCalledTimes(1)
+    expect(mockDispatch.mock.calls[0][0]).toBe('SET_ACCOUNTS_BALANCES')
   })
 
   it('should initialize wallet and account data, when no activeWalletAddress is set', () => {
@@ -74,6 +75,6 @@ describe('onLogin', () => {
     expect(mockCommit.mock.calls[1][1]).toStrictEqual(hdAccount.wallets)
     expect(mockCommit.mock.calls[2][0]).toBe('SET_WALLET')
     expect(mockCommit.mock.calls[2][1].address).toStrictEqual(hdAccount.wallets[0].address)
-    expect(setWalletsBalances).toHaveBeenCalledTimes(1)
+    expect(mockDispatch.mock.calls[0][0]).toBe('SET_ACCOUNTS_BALANCES')
   })
 })

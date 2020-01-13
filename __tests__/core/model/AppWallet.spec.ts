@@ -98,15 +98,6 @@ describe('AppWallet', () => {
     expect(appWallet.path).toBe(walletObject.path)
     expect(appWallet.sourceType).toBe(walletObject.sourceType)
     expect(appWallet.encryptedMnemonic).toBe(walletObject.encryptedMnemonic)
-    expect(appWallet.balance).toBe(walletObject.balance)
-  })
-
-  it('getRemoteAccountPrivateKey should throw when wallet has no remoteAccount', () => {
-    const appWallet = AppWallet.createFromDTO(hdAccount.wallets[0])
-    appWallet.remoteAccount = null
-    expect(() => {
-      appWallet.getRemoteAccountPrivateKey('password')
-    }).toThrowError()
   })
 
   it('gey publicAccount should return a public account', () => {

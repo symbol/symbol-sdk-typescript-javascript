@@ -1,34 +1,38 @@
 import Vue from 'vue'
-import {MutationTree} from 'vuex'
+import {MutationTree, ActionTree, GetterTree} from 'vuex'
 import {defaultNetworkConfig} from '@/config/index'
 import {
   AddressAndNamespaces, AddressAndMosaics,
-  AddressAndMultisigInfo, StoreAccount, AppMosaic, NetworkCurrency,
-  AppWallet, AppNamespace, FormattedTransaction, CurrentAccount,
+  AddressAndMultisigInfo, StoreAccount, AppMosaic,
+  NetworkCurrency, AppWallet, AppNamespace, FormattedTransaction,
+  CurrentAccount, AppState, Balances,
 } from '@/core/model'
-import {localRead, localSave} from '@/core/utils'
-import {NetworkType} from 'nem2-sdk'
+import {localRead, localSave, absoluteAmountToRelativeAmount} from '@/core/utils'
+import {NetworkType, AccountHttp, Address} from 'nem2-sdk'
+import {BalancesService} from '@/core/services/mosaics/BalancesService'
 
 const state: StoreAccount = {
-  node: '',
   wallet: null,
+  activeMultisigAccount: null,
+  balances: {},
   mosaics: {},
   namespaces: [],
-  addressAliasMap: {},
   transactionList: [],
-  currentAccount: CurrentAccount.default(),
   transactionsToCosign: [],
-  activeMultisigAccount: null,
-  multisigAccountsMosaics: {},
-  multisigAccountsNamespaces: {},
-  multisigAccountsTransactions: {},
-  multisigAccountInfo: {},
-  networkCurrency: defaultNetworkConfig.defaultNetworkMosaic,
-  networkMosaics: {},
   temporaryLoginInfo: {
     password: null,
     mnemonic: null,
   },
+
+  // Properties to move out
+  currentAccount: CurrentAccount.default(),
+  multisigAccountInfo: {},
+  multisigAccountsMosaics: {},
+  multisigAccountsNamespaces: {},
+  multisigAccountsTransactions: {},
+  networkCurrency: defaultNetworkConfig.defaultNetworkMosaic,
+  networkMosaics: {},
+  node: '',
 }
 
 const updateMosaics = (state: StoreAccount, mosaics: AppMosaic[]) => {
@@ -54,7 +58,6 @@ const mutations: MutationTree<StoreAccount> = {
     state.wallet = null
     state.mosaics = {}
     state.namespaces = []
-    state.addressAliasMap = {}
     state.transactionList = []
     state.currentAccount = CurrentAccount.default()
   },
@@ -118,12 +121,6 @@ const mutations: MutationTree<StoreAccount> = {
     const activeNodeMap = JSON.parse(localRead('activeNodeMap') || '{}')
     activeNodeMap[networkType] = node
     localSave('activeNodeMap', JSON.stringify(activeNodeMap))
-  },
-  SET_ADDRESS_ALIAS_MAP(state: StoreAccount, addressAliasMap: any): void {
-    state.addressAliasMap = addressAliasMap
-  },
-  SET_WALLET_BALANCE(state: StoreAccount, balance: number) {
-    state.wallet.balance = balance
   },
   RESET_TRANSACTION_LIST(state: StoreAccount) {
     state.transactionList = []
@@ -207,9 +204,28 @@ const mutations: MutationTree<StoreAccount> = {
   }) {
     state.wallet.temporaryRemoteNodeConfig = temporaryRemoteNodeConfig
   },
+
+  SET_ACCOUNTS_BALANCES(state: StoreAccount, balances: Record <string, Balances>) {
+    state.balances = balances
+  },
+
+  SET_ACCOUNT_BALANCES(state, { address, balances }) {
+    Vue.set(state.balances, address, balances)
+  },
 }
 
-const actions = {
+const getters: GetterTree<StoreAccount, AppState> = {
+  balance(state): string {
+    const address = state.wallet.address
+    const balances = state.balances[address]
+    const {networkCurrency} = state
+    if (!balances || !networkCurrency) return '0'
+    const balance = balances[networkCurrency.hex]
+    return balance ? absoluteAmountToRelativeAmount(balance, networkCurrency) : '0'
+  },
+}
+
+const actions: ActionTree<any, AppState> = {
   SET_GENERATION_HASH({commit, rootState}, {endpoint, generationHash}) {
     if (endpoint !== rootState.account.node) return
     commit('SET_GENERATION_HASH', generationHash)
@@ -226,8 +242,22 @@ const actions = {
     if (endpoint !== rootState.account.node) return
     commit('UPDATE_MOSAICS', appMosaics)
   },
+
+  async SET_ACCOUNTS_BALANCES({commit, rootState}) {
+    const {walletList} = rootState.app
+    const {node} = rootState.account
+    const plainAddresses = walletList.map(({address}) => Address.createFromRawAddress(address))
+    const accountsInfo = await new AccountHttp(node)
+      .getAccountsInfo(plainAddresses)
+      .toPromise()
+
+    const balances = BalancesService.getFromAccountsInfo(accountsInfo)
+    
+    commit('SET_ACCOUNTS_BALANCES', balances)
+  },
 }
 
 export const accountState = {state}
 export const accountMutations = {mutations}
 export const accountActions = {actions}
+export const accountGetters = {getters}

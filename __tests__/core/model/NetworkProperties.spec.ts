@@ -11,13 +11,11 @@ import {firstTransactionsCatCurrency, catNamespace} from '../../../__mocks__/net
 import {block29248} from '../../../__mocks__/network/block29248'
 import {block1} from '../../../__mocks__/network/block1'
 import {OnWalletChange} from '@/core/services/eventHandlers/onWalletChange'
-import {setWalletsBalances} from '@/core/services/wallets/setWalletsBalances'
 
 const {maxDifficultyBlocks, defaultDynamicFeeMultiplier} = networkConfig
 
 jest.mock('@/core/model/Notice')
 jest.mock('@/core/services/eventHandlers/onWalletChange')
-jest.mock('@/core/services/wallets/setWalletsBalances')
 
 const mockDispatch = jest.fn()
 const mockTriggerNotice = jest.fn()
@@ -139,8 +137,6 @@ describe('Network properties', () => {
     mockNetworkPropertiesSetValuesFromLatestBlocks.mockClear()
     // @ts-ignore
     OnWalletChange.mockClear()
-    // @ts-ignore
-    setWalletsBalances.mockClear()
   })
 
   const store = {dispatch: mockDispatch}

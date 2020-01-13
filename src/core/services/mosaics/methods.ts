@@ -9,6 +9,7 @@ import {
 import {AppMosaic, AppWallet, MosaicNamespaceStatusType, AppState, AppNamespace} from '@/core/model'
 import {Store} from 'vuex'
 import {mosaicSortType} from '@/config/view/mosaic'
+import {BalancesService} from './BalancesService'
 
 /**
  * Custom implementation for performance gains
@@ -50,22 +51,20 @@ export const setMosaics = async (
   wallet: AppWallet,
   store: Store<AppState>,
 ) => {
-  const {node, networkCurrency} = store.state.account
+  const {node} = store.state.account
   const address = Address.createFromRawAddress(wallet.address)
 
   try {
     const mosaicAmountViews = await mosaicsAmountViewFromAddress(node, address)
+    const balances = BalancesService.getFromMosaicAmountViews(mosaicAmountViews)
+    store.commit('SET_ACCOUNT_BALANCES', {address: wallet.address, balances})
+    
     const appMosaics = mosaicAmountViews.map(x => AppMosaic.fromMosaicAmountView(x))
     store.commit('UPDATE_MOSAICS', appMosaics)
-    const networkMosaic: AppMosaic = appMosaics.find(({hex}) => hex === networkCurrency.hex)
-    const balance = networkMosaic !== undefined && networkMosaic.balance
-      ? networkMosaic.balance : 0
-
-    wallet.updateAccountBalance(balance, store)
     store.commit('SET_MOSAICS_LOADING', false)
     return true
   } catch (error) {
-    wallet.updateAccountBalance(0, store)
+    store.commit('SET_ACCOUNT_BALANCES', {address: wallet.address, balances: {}})
     store.commit('SET_MOSAICS_LOADING', false)
     throw new Error(error)
   }

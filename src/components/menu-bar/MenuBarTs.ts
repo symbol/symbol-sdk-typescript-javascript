@@ -71,11 +71,6 @@ export class MenuBarTs extends Vue {
       message: 'Wallet_network_type_does_not_match_current_network_type',
     }}
 
-    if (!wallet.isKnownByTheNetwork) {return {
-      show: true,
-      message: Message.ADDRESS_UNKNOWN_BY_NETWORK,
-    }}
-
     return {
       show: false,
       message: '',

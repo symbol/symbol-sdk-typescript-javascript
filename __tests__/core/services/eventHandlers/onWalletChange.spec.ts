@@ -6,7 +6,14 @@ import {setMosaics, setNamespaces, setTransactionList} from '@/core/services'
 import {Address} from 'nem2-sdk'
 
 const mockCommit = jest.fn()
-const mockSetAccountInfo = jest.fn()
+const mockSetAccountInfo = (args) => {
+  if (args.state.account.node === 'http://unkonwn.account:3000') {
+    return {walletKnownByNetwork: false}
+  }
+
+  return {walletKnownByNetwork: true}
+}
+
 const mockSetMultisigStatus = jest.fn()
 const mockSwitchAddress = jest.fn()
 const mockSetPartialTransactions = jest.fn()
@@ -17,7 +24,7 @@ jest.mock('@/core/services/transactions')
 jest.mock('@/core/utils')
 
 // @ts-ignore
-MultisigWallet.setAccountInfo = mockSetAccountInfo
+MultisigWallet.setAccountInfo = (args) => mockSetAccountInfo(args)
 // @ts-ignore
 MultisigWallet.setMultisigStatus = mockSetMultisigStatus
 // @ts-ignore
@@ -47,7 +54,6 @@ const store = {
 describe('OnWalletChange', () => {
   beforeEach(async () => {
     mockCommit.mockClear()
-    mockSetAccountInfo.mockClear()
     mockSetMultisigStatus.mockClear()
     // @ts-ignore
     setMosaics.mockClear()
@@ -75,10 +81,8 @@ describe('OnWalletChange', () => {
     expect(mockCommit.mock.calls[3][0]).toBe('SET_MULTISIG_LOADING')
     expect(mockCommit.mock.calls[3][1]).toBe(true)
     expect(mockCommit.mock.calls[4][0]).toBe('RESET_TRANSACTION_LIST')
-    expect(mockCommit.mock.calls[5][0]).toBe('RESET_TRANSACTIONS_TO_COSIGN')
-    expect(mockCommit.mock.calls[6][0]).toBe('RESET_MOSAICS')
-    expect(mockCommit.mock.calls[7][0]).toBe('RESET_NAMESPACES')
-    expect(mockSetAccountInfo).toHaveBeenCalledTimes(1)
+    expect(mockCommit.mock.calls[5][0]).toBe('RESET_MOSAICS')
+    expect(mockCommit.mock.calls[6][0]).toBe('RESET_NAMESPACES')
     expect(mockSetMultisigStatus).toHaveBeenCalledTimes(1)
     expect(localRead).toHaveBeenCalledTimes(1)
     // @ts-ignore
@@ -98,6 +102,45 @@ describe('OnWalletChange', () => {
     expect(mockCommit.mock.calls[10][1]).toBe(false)
     expect(mockCommit.mock.calls[11][0]).toBe('SET_MULTISIG_LOADING')
     expect(mockCommit.mock.calls[11][1]).toBe(false)
+    done()
+  })
+
+  it('should not call all the methods if the account is unknown by the network', async (done) => {
+    const mockStore = store
+    mockStore.state.account.node = 'http://unkonwn.account:3000'
+    // @ts-ignore
+    await OnWalletChange.trigger(mockStore, MultisigWallet)
+    // @ts-ignore
+    await flushPromises()
+    expect(mockCommit.mock.calls[0][0]).toBe('SET_TRANSACTIONS_LOADING')
+    expect(mockCommit.mock.calls[0][1]).toBe(true)
+    expect(mockCommit.mock.calls[1][0]).toBe('SET_MOSAICS_LOADING')
+    expect(mockCommit.mock.calls[1][1]).toBe(true)
+    expect(mockCommit.mock.calls[2][0]).toBe('SET_NAMESPACE_LOADING')
+    expect(mockCommit.mock.calls[2][1]).toBe(true)
+    expect(mockCommit.mock.calls[3][0]).toBe('SET_MULTISIG_LOADING')
+    expect(mockCommit.mock.calls[3][1]).toBe(true)
+    expect(mockCommit.mock.calls[4][0]).toBe('RESET_TRANSACTION_LIST')
+    expect(mockCommit.mock.calls[5][0]).toBe('RESET_MOSAICS')
+    expect(mockCommit.mock.calls[6][0]).toBe('RESET_NAMESPACES')
+    expect(mockSetMultisigStatus).toHaveBeenCalledTimes(0)
+    expect(localRead).toHaveBeenCalledTimes(1)
+    // @ts-ignore
+    expect(localRead.mock.calls[0][0]).toBe(MultisigWallet.address)
+    expect(setMosaics).toHaveBeenCalledTimes(0)
+    expect(setNamespaces).toHaveBeenCalledTimes(0)
+    expect(setTransactionList).toHaveBeenCalledTimes(0)
+    expect(mockSwitchAddress).toHaveBeenCalledTimes(1)
+    expect(mockSwitchAddress.mock.calls[0][0])
+      .toEqual(Address.createFromRawAddress(MultisigWallet.address))
+    expect(mockCommit.mock.calls[7][0]).toBe('SET_TRANSACTIONS_LOADING')
+    expect(mockCommit.mock.calls[7][1]).toBe(false)
+    expect(mockCommit.mock.calls[8][0]).toBe('SET_MOSAICS_LOADING')
+    expect(mockCommit.mock.calls[8][1]).toBe(false)
+    expect(mockCommit.mock.calls[9][0]).toBe('SET_NAMESPACE_LOADING')
+    expect(mockCommit.mock.calls[9][1]).toBe(false)
+    expect(mockCommit.mock.calls[10][0]).toBe('SET_MULTISIG_LOADING')
+    expect(mockCommit.mock.calls[10][1]).toBe(false)
     done()
   })
 

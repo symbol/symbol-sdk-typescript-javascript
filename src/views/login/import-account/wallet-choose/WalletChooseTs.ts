@@ -126,7 +126,7 @@ export default class WalletChooseTs extends Vue {
         `${APP_PARAMS.SEED_WALLET_NAME_PREFIX}${item.path}`,
         new Password(password),
         Number(item.path), networkType,
-        this.$store, item.balance,
+        this.$store,
       )
     })
     localSave('activeAccountName', accountName)

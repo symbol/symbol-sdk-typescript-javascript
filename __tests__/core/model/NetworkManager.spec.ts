@@ -12,11 +12,9 @@ import {firstTransactionsCatCurrency, catNamespace} from '../../../__mocks__/net
 import {block29248} from '../../../__mocks__/network/block29248'
 import {block1} from '../../../__mocks__/network/block1'
 import {OnWalletChange} from '@/core/services/eventHandlers/onWalletChange'
-import {setWalletsBalances} from '@/core/services/wallets/setWalletsBalances'
 
 jest.mock('@/core/model/Notice')
 jest.mock('@/core/services/eventHandlers/onWalletChange')
-jest.mock('@/core/services/wallets/setWalletsBalances')
 
 const mockOnWalletChangeTrigger = jest.fn()
 const mockDispatch = jest.fn()
@@ -163,8 +161,6 @@ describe('switchNode', () => {
     mockNetworkPropertiesSetValuesFromFirstBlock.mockClear()
     mockNetworkPropertiesInitializeLatestBlocks.mockClear()
     mockOnWalletChangeTrigger.mockClear()
-    // @ts-ignore
-    setWalletsBalances.mockClear()
   })
 
   it('should call the proper methods when the generationHash did not change', async done => {
@@ -210,9 +206,7 @@ describe('switchNode', () => {
       expect(mockOnWalletChangeTrigger).toHaveBeenCalledTimes(1)
       // @ts-ignore
       expect(mockOnWalletChangeTrigger.mock.calls[0][0]).toEqual(mockStore)
-      expect(setWalletsBalances).toHaveBeenCalledTimes(1)
-      // @ts-ignore
-      expect(setWalletsBalances.mock.calls[0][0]).toEqual(mockStore)
+      expect(mockDispatch.mock.calls[3][0]).toEqual('SET_ACCOUNTS_BALANCES')
       done()
     }, 50)
   })

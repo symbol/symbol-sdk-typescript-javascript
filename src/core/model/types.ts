@@ -47,30 +47,25 @@ export interface TemporaryLoginInfo {
   mnemonic: string
 }
 
+export type Balances = Record<string, number>
+
 export interface StoreAccount {
-  node: string
-  wallet: AppWallet
-  mosaics: Record<string, AppMosaic>
-  namespaces: AppNamespace[]
-  addressAliasMap: any
-  transactionList: FormattedTransaction[]
-  currentAccount: CurrentAccount
   activeMultisigAccount: string
+  balances: Record<string, Balances>
+  currentAccount: CurrentAccount
+  mosaics: Record<string, AppMosaic>
+  multisigAccountInfo: Record<string, MultisigAccountInfo>
   multisigAccountsMosaics: Record<string, Record<string, AppMosaic>>
   multisigAccountsNamespaces: Record<string, AppNamespace[]>
   multisigAccountsTransactions: Record<string, Transaction[]>
-  multisigAccountInfo: Record<string, MultisigAccountInfo>
-  transactionsToCosign: FormattedTransaction[]
-  /**
-     *  The network currency, to be used for fees management,
-     *  formatting, defaulting...
-     */
+  namespaces: AppNamespace[]
   networkCurrency: NetworkCurrency
-  /**
-     * This property is ONLY for mosaic list initialization purposes
-     */
   networkMosaics: Record<string, AppMosaic>
+  node: string
   temporaryLoginInfo: TemporaryLoginInfo
+  transactionList: FormattedTransaction[]
+  transactionsToCosign: FormattedTransaction[]
+  wallet: AppWallet
 }
 
 export interface LoadingOverlayObject {

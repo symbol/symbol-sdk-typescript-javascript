@@ -13,12 +13,13 @@
         <div class="XEM_amount overflow_ellipsis">
           <div>{{ ticker }}</div>
           <div class="amount">
-            <NumberFormatting :number-of-formatting="formatNumber(balance)" />
+            <NumberFormatting :number-of-formatting="balance" />
           </div>
         </div>
-        <div class="exchange">
-          <NumberFormatting :number-of-formatting="xemUsdPrice > 0 ? `$${formatNumber(balance * xemUsdPrice)}` : ''" />
-        </div>
+        <!-- <div class="exchange">
+          @TODO: make usdBalance a getter once we have a data source
+          <NumberFormatting :number-of-formatting="usdBalance" />
+        </div> -->
       </div>
       <div ref="bottomAccountInfo" class="bottom_account_info radius">
         <div v-if="isShowAccountInfo" class="mosaicListWrap">

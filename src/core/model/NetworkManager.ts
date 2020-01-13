@@ -6,7 +6,7 @@ import {Store} from 'vuex'
 import {AppState, Notice, AppMosaic, NetworkProperties} from '.'
 import {NoticeType} from '@/core/model'
 import {Message, networkConfig} from '@/config'
-import {OnWalletChange, setWalletsBalances} from '../services'
+import {OnWalletChange} from '../services'
 
 const {maxDifficultyBlocks} = networkConfig
 
@@ -88,7 +88,7 @@ export class NetworkManager {
   private async switchGenerationHash(): Promise<void> {
     await this.setNetworkMosaics()
     await OnWalletChange.trigger(this.store)
-    await setWalletsBalances(this.store)
+    await this.store.dispatch('SET_ACCOUNTS_BALANCES')
   }
 
   private async setNetworkMosaics(): Promise<void> {

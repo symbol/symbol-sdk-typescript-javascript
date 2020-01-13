@@ -84,7 +84,7 @@ export class RemoteAccountService {
         throw new Error('remote account generation from Trezor wallet is not supported')
 
       default:
-        throw new Error('Something went wrong at getRemoteAccountPrivateKey')
+        throw new Error('Something went wrong at getRemoteAccounts')
     }
   }
 
