@@ -1,4 +1,4 @@
-import Vue from "vue"
+import Vue from 'vue'
 import Component from 'vue-class-component'
 import {importInfoList} from '@/config/view'
 
@@ -9,14 +9,14 @@ export default class WelcomeTs extends Vue {
   goTo(link) {
     if (!link) {
       this.$Notice.warning({
-        title: this.$t('not_yet_open') + ''
+        title: `${this.$t('not_yet_open')}`,
       })
       return
     }
     this.$router.push({
       name: link,
       params: {
-        nextPage:'importMnemonic'
+        nextPage:'importMnemonic',
       },
     })
   }

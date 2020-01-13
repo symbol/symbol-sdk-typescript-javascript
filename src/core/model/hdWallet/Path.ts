@@ -17,7 +17,7 @@ export class Path {
     path.validatePath(seedWalletPath)
     
     if (remotePathIndex === 0) {
-      throw new Error(`The remote path index can not be 0`)
+      throw new Error('The remote path index can not be 0')
     }
 
     path.validateIndexes(0, remotePathIndex)

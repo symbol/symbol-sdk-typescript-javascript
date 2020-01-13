@@ -1,59 +1,59 @@
-import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
-import {randomizeMnemonicWordArray} from "@/core/model"
-import {Message} from "@/config"
-import draggable from "vuedraggable";
+import {Component, Prop, Vue} from 'vue-property-decorator'
+import {randomizeMnemonicWordArray} from '@/core/model'
+import {Message} from '@/config'
+import draggable from 'vuedraggable'
 
 @Component({
-    components:{draggable}
+  components:{draggable},
 })
 export class MnemonicVerificationTs extends Vue {
-    mnemonicRandomList = []
-    confirmedIndexList = []
+  mnemonicRandomList = []
+  confirmedIndexList = []
 
-    @Prop({default: []})
-    mnemonicWordsList: Array<string>
+  @Prop({default: []})
+  mnemonicWordsList: Array<string>
 
-    wordClicked(index) {
-        if (this.confirmedIndexList.includes(index)) {
-            this.removeConfirmedWord(index)
-            return
-        }
-
-        this.confirmedIndexList.push(index)
+  wordClicked(index) {
+    if (this.confirmedIndexList.includes(index)) {
+      this.removeConfirmedWord(index)
+      return
     }
 
-    removeConfirmedWord(index) {
-        this.confirmedIndexList = [
-            ...this.confirmedIndexList.filter(confirmedIndex => confirmedIndex !== index),
-        ]
-    }
+    this.confirmedIndexList.push(index)
+  }
 
-    get confirmedMnemonicList() {
-        const {confirmedIndexList, mnemonicRandomList} = this
-        if(confirmedIndexList.length !== confirmedIndexList.length) return
-        return confirmedIndexList.map(confirmedIndex => mnemonicRandomList[confirmedIndex])
-    }
+  removeConfirmedWord(index) {
+    this.confirmedIndexList = [
+      ...this.confirmedIndexList.filter(confirmedIndex => confirmedIndex !== index),
+    ]
+  }
 
-    set confirmedMnemonicList(newValue) {
-        this.confirmedMnemonicList = [...newValue]
-    }
+  get confirmedMnemonicList() {
+    const {confirmedIndexList, mnemonicRandomList} = this
+    if(confirmedIndexList.length !== mnemonicRandomList.length) return
+    return confirmedIndexList.map(confirmedIndex => mnemonicRandomList[confirmedIndex])
+  }
 
-    checkMnemonic() {
-        const {confirmedMnemonicList} = this
-        if (JSON.stringify(confirmedMnemonicList) != JSON.stringify(this.mnemonicWordsList)) {
-            this.$Notice.warning({
-                title: '' + (this.$t(confirmedMnemonicList.length < 1 ?
-                    Message.PLEASE_ENTER_MNEMONIC_INFO :
-                    Message.MNEMONIC_INCONSISTENCY_ERROR))
-            })
-            return
-        }
-        this.$Notice.success({title: this.$t(Message.SUCCESS) + ''})
-        this.$emit('verificationSuccess')
-    }
+  set confirmedMnemonicList(newValue) {
+    this.confirmedMnemonicList = [...newValue]
+  }
 
-    mounted() {
-        this.mnemonicRandomList = randomizeMnemonicWordArray([...this.mnemonicWordsList])
+  checkMnemonic() {
+    const {confirmedMnemonicList} = this
+    if (JSON.stringify(confirmedMnemonicList) !== JSON.stringify(this.mnemonicWordsList)) {
+      this.$Notice.warning({
+        title: `${this.$t(confirmedMnemonicList.length < 1 ?
+          Message.PLEASE_ENTER_MNEMONIC_INFO :
+          Message.MNEMONIC_INCONSISTENCY_ERROR)}`,
+      })
+      return
     }
+    this.$Notice.success({title: `${this.$t(Message.SUCCESS)}`})
+    this.$emit('verificationSuccess')
+  }
+
+  mounted() {
+    this.mnemonicRandomList = randomizeMnemonicWordArray([...this.mnemonicWordsList])
+  }
 
 }

@@ -3,8 +3,8 @@
  * Enum containing create wallet type  constants.
  */
 export enum CreateWalletType {
-    keyStore = 'Ks',
-    privateKey = 'Pk',
-    seed = 'Seed',
-    trezor= 'Trezor'
+  keyStore = 'Ks',
+  privateKey = 'Pk',
+  seed = 'Seed',
+  trezor= 'Trezor'
 }

@@ -6,7 +6,7 @@ import Vuex from 'vuex'
 import WalletHarvesting from '@/views/wallet/wallet-details/wallet-function/wallet-harvesting/WalletHarvesting.vue'
 import {accountState, accountMutations} from '@/store/account'
 import {appState} from '@/store/app'
-import {networkCurrency, hdAccount} from "@MOCKS/index"
+import {networkCurrency, hdAccount} from '@MOCKS/index'
 
 
 // @ts-ignore
@@ -16,9 +16,9 @@ localVue.use(VueRouter)
 localVue.use(iView)
 localVue.use(Vuex)
 localVue.directive('focus', {
-  inserted: function (el, binding) {
+  inserted: function (el) {
     el.focus()
-  }
+  },
 })
 
 jest.mock('nem2-qr-library')
@@ -36,12 +36,12 @@ describe('WalletHarvesting', () => {
             wallet: hdAccount.wallets[0],
             networkCurrency,
           }),
-          mutations: accountMutations.mutations
+          mutations: accountMutations.mutations,
         },
         app: {
           state: appState.state,
         },
-      }
+      },
     })
     wrapper = shallowMount(WalletHarvesting, {
       sync: false,
@@ -64,7 +64,6 @@ describe('WalletHarvesting', () => {
   })
 
   it('should show activate buttons while remote account is not set ', () => {
-    const activateButtons = wrapper.find('.activate-buttons')
     expect(wrapper.vm.linkedAddress).not.toBe(null)
   })
 

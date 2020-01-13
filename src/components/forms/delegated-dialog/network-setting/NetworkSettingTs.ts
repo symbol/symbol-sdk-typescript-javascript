@@ -1,126 +1,128 @@
-import {Component, Provide, Vue, Watch} from "vue-property-decorator";
-import {NetworkType, NodeHttp} from "nem2-sdk"
-import {mapState} from "vuex"
-import {AppInfo, AppWallet, StoreAccount, Endpoint} from "@/core/model"
-import {completeUrlWithHostAndProtocol, getAbsoluteMosaicAmount, localRead} from "@/core/utils"
-import {DEFAULT_FEES, defaultNodeList, FEE_GROUPS, FEE_SPEEDS, Message} from "@/config"
+import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
+import {NodeHttp} from 'nem2-sdk'
+import {mapState} from 'vuex'
+import {AppInfo, AppWallet, StoreAccount} from '@/core/model'
+import {completeUrlWithHostAndProtocol, getAbsoluteMosaicAmount, localRead} from '@/core/utils'
+import {DEFAULT_FEES, defaultNodeList, FEE_GROUPS, FEE_SPEEDS, Message} from '@/config'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
-import {validation} from "@/core/validation"
+import {validation} from '@/core/validation'
 
 interface NodePublicKey {
-    label: string
-    value: string
+  label: string
+  value: string
 }
 
 @Component({
-    components: {
-        ErrorTooltip
-    },
-    computed: {
-        ...mapState({
-            activeAccount: 'account',
-            app: 'app'
-        })
-    },
+  components: {
+    ErrorTooltip,
+  },
+  computed: {
+    ...mapState({
+      activeAccount: 'account',
+      app: 'app',
+    }),
+  },
 })
 export class NetworkSettingTs extends Vue {
-    @Provide() validator: any = this.$validator
-    nodePublicKey: NodePublicKey = {label: 'N/A', value: null}
-    activeAccount: StoreAccount
-    app: AppInfo
-    validation = validation
-    chosenNode: string = ''
-    feeSpeed = FEE_SPEEDS.NORMAL
-    defaultFees = DEFAULT_FEES[FEE_GROUPS.SINGLE]
-    feeDivider = 1
+  @Provide() validator: any = this.$validator
+  nodePublicKey: NodePublicKey = {label: 'N/A', value: null}
+  activeAccount: StoreAccount
+  app: AppInfo
+  validation = validation
+  chosenNode = ''
+  feeSpeed = FEE_SPEEDS.NORMAL
+  defaultFees = DEFAULT_FEES[FEE_GROUPS.SINGLE]
+  feeDivider = 1
 
-    get defaultNodeList() {
-        const nodeListData = localRead('nodeList')
-        if (nodeListData == '') return defaultNodeList
+  get defaultNodeList() {
+    const nodeListData = localRead('nodeList')
+    if (nodeListData === '') return defaultNodeList
 
-        const nodesOfNetworkType = (nodeList) => {
-            return nodeList
-                .filter(({networkType}) => networkType === this.wallet.networkType)
-                .map(({value}) => value)
-        }
-
-        return nodeListData
-            ? nodesOfNetworkType(JSON.parse(nodeListData))
-            : nodesOfNetworkType(defaultNodeList)
+    const nodesOfNetworkType = (nodeList) => {
+      return nodeList
+        .filter(({networkType}) => networkType === this.wallet.networkType)
+        .map(({value}) => value)
     }
 
-    get feeAmount(): number {
-        const {feeSpeed} = this
-        const feeAmount = this.defaultFees.find(({speed}) => feeSpeed === speed).value
-        return getAbsoluteMosaicAmount(feeAmount, this.networkCurrency.divisibility)
-    }
+    return nodeListData
+      ? nodesOfNetworkType(JSON.parse(nodeListData))
+      : nodesOfNetworkType(defaultNodeList)
+  }
 
-    get wallet() {
-        return new AppWallet(this.activeAccount.wallet)
-    }
+  get feeAmount(): number {
+    const {feeSpeed} = this
+    const feeAmount = this.defaultFees.find(({speed}) => feeSpeed === speed).value
+    return getAbsoluteMosaicAmount(feeAmount, this.networkCurrency.divisibility)
+  }
 
-    get temporaryRemoteNodeConfig() {
-        return this.activeAccount.wallet.temporaryRemoteNodeConfig
-    }
+  get wallet() {
+    return new AppWallet(this.activeAccount.wallet)
+  }
 
-    get networkCurrency() {
-        return this.activeAccount.networkCurrency
-    }
+  get temporaryRemoteNodeConfig() {
+    return this.activeAccount.wallet.temporaryRemoteNodeConfig
+  }
 
-    resetNodePublicKey() {
-        this.nodePublicKey = {label: 'N/A', value: null}
-    }
+  get networkCurrency() {
+    return this.activeAccount.networkCurrency
+  }
 
-    searchNodeInfo() {
-        this.$validator
-            .validate()
-            .then((valid) => {
-                if (!valid) return
-                this.chosenNode = completeUrlWithHostAndProtocol(this.chosenNode)
-                this.getNodePublicKey()
-            })
-    }
+  resetNodePublicKey() {
+    this.nodePublicKey = {label: 'N/A', value: null}
+  }
 
-    async getNodePublicKey() {
-        const {chosenNode} = this
-        try {
-            this.nodePublicKey = {label: `${this.$t('Loading')}`, value: null}
-            const nodeInfo = await new NodeHttp(chosenNode).getNodeInfo().toPromise()
-            this.nodePublicKey = {label: nodeInfo.publicKey, value: nodeInfo.publicKey}
-        } catch (error) {
-            this.nodePublicKey = {label: `${this.$t('Nothing_was_found_at_this_address')}`, value: null}
+  searchNodeInfo() {
+    this.$validator
+      .validate()
+      .then((valid) => {
+        if (!valid) return
+        this.chosenNode = completeUrlWithHostAndProtocol(this.chosenNode)
+        this.getNodePublicKey()
+      })
+  }
 
-        }
-    }
+  async getNodePublicKey() {
+    const {chosenNode} = this
+    try {
+      this.nodePublicKey = {label: `${this.$t('Loading')}`, value: null}
+      const nodeInfo = await new NodeHttp(chosenNode).getNodeInfo().toPromise()
+      this.nodePublicKey = {label: nodeInfo.publicKey, value: nodeInfo.publicKey}
+    } catch (error) {
+      this.nodePublicKey = {label: `${this.$t('Nothing_was_found_at_this_address')}`, value: null}
 
-    submit() {
-        const {chosenNode} = this
-        if (!this.nodePublicKey.value) {
-            this.$Notice.error({
-                title: this.$t(Message.REMOTE_PUBLIC_KEY_MISSING) + ''
-            })
-            return
-        }
-        this.$store.commit('SET_TEMPORARY_REMOTE_NODE_CONFIG', {
-            publicKey: this.nodePublicKey.value,
-            node: chosenNode
-        })
-        this.$emit("nextClicked");
     }
+  }
 
-    @Watch('chosenNode')
-    onChosenNodeChange() {
-        this.resetNodePublicKey()
+  submit() {
+    const {chosenNode} = this
+    if (!this.nodePublicKey.value) {
+      this.$Notice.error({
+        title: `${this.$t(Message.REMOTE_PUBLIC_KEY_MISSING)}`,
+      })
+      return
     }
+    this.$store.commit('SET_TEMPORARY_REMOTE_NODE_CONFIG', {
+      publicKey: this.nodePublicKey.value,
+      node: chosenNode,
+    })
+    this.$emit('nextClicked')
+  }
 
-    @Watch('useDefaultNode')
-    onUseDefaultNodeChange() {
-        this.resetNodePublicKey()
-    }
+  @Watch('chosenNode')
+  onChosenNodeChange() {
+    this.resetNodePublicKey()
+  }
 
-    mounted() {
-        this.chosenNode = this.temporaryRemoteNodeConfig ? (this.temporaryRemoteNodeConfig.node || this.defaultNodeList[0]) : this.defaultNodeList[0]
-        this.searchNodeInfo()
-    }
+  @Watch('useDefaultNode')
+  onUseDefaultNodeChange() {
+    this.resetNodePublicKey()
+  }
+
+  mounted() {
+    this.chosenNode = this.temporaryRemoteNodeConfig
+      ? (this.temporaryRemoteNodeConfig.node
+      || this.defaultNodeList[0]) : this.defaultNodeList[0]
+    this.searchNodeInfo()
+  }
 
 }

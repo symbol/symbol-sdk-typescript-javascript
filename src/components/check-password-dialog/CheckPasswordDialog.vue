@@ -5,16 +5,17 @@
       class-name="vertical-center-modal"
       :footer-hide="true"
       :transfer="false"
-      @on-cancel="show=false"
+      @on-cancel="show = false"
     >
       <div slot="header" class="checkPWDialogHeader">
-        <span class="title">{{$t(dialogTitle)}}</span>
+        <span class="title">{{ $t(dialogTitle) }}</span>
       </div>
       <div class="checkPWDialogBody">
         <div class="stepItem1">
           <CheckPassword
-            :returnPassword="returnPassword"
-            @passwordValidated="passwordValidated" ></CheckPassword>
+            :return-password="returnPassword"
+            @passwordValidated="passwordValidated"
+          />
         </div>
       </div>
     </Modal>
@@ -23,8 +24,8 @@
 
 
 <script lang="ts">
-import "./CheckPasswordDialog.less";
-import { CheckPasswordDialogTs } from "@/components/check-password-dialog/CheckPasswordDialogTs.ts";
+import './CheckPasswordDialog.less'
+import { CheckPasswordDialogTs } from '@/components/check-password-dialog/CheckPasswordDialogTs.ts'
 
 export default class CheckPasswordDialog extends CheckPasswordDialogTs {}
 </script>

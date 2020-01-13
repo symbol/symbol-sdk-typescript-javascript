@@ -7,13 +7,13 @@ import VeeValidate from 'vee-validate'
 import TheWalletAdd from '@/views/wallet/wallet-switch/the-wallet-add/TheWalletAdd.vue'
 import {accountState} from '@/store/account'
 import {appMutations, appState} from '@/store/app'
-import {veeValidateConfig} from "@/core/validation"
+import {veeValidateConfig} from '@/core/validation'
 import {
   multisigAccountInfo,
   mosaics,
   networkCurrency,
   hdAccount,
-} from "@MOCKS/index"
+} from '@MOCKS/index'
 
 // @ts-ignore
 const localVue = createLocalVue()
@@ -23,9 +23,9 @@ localVue.use(iView)
 localVue.use(Vuex)
 localVue.use(VeeValidate, veeValidateConfig)
 localVue.directive('focus', {
-  inserted: function (el, binding) {
+  inserted: function (el) {
     el.focus()
-  }
+  },
 })
 
 jest.mock('nem2-qr-library')
@@ -49,11 +49,11 @@ describe('WalletSwitch', () => {
         },
         app: {
           state: Object.assign(appState.state, {
-            walletList: hdAccount.wallets
+            walletList: hdAccount.wallets,
           }),
-          mutations: appMutations.mutations
+          mutations: appMutations.mutations,
         },
-      }
+      },
     })
     wrapper = shallowMount(TheWalletAdd, {
       sync: false,
@@ -76,7 +76,7 @@ describe('WalletSwitch', () => {
   })
 
   it('the initial pathToCreate should return 1', () => {
-    wrapper.vm.$store.commit('SET_WALLET_LIST',[hdAccount.wallets[0],hdAccount.wallets[2],hdAccount.wallets[3]])
+    wrapper.vm.$store.commit('SET_WALLET_LIST',[ hdAccount.wallets[0],hdAccount.wallets[2],hdAccount.wallets[3] ])
     expect(wrapper.vm.pathToCreate).toBe(1)
   })
 
@@ -86,12 +86,12 @@ describe('WalletSwitch', () => {
   })
 
   it('the initial pathToCreate should return 2', () => {
-    wrapper.vm.$store.commit('SET_WALLET_LIST',[hdAccount.wallets[0],hdAccount.wallets[1],hdAccount.wallets[3]])
+    wrapper.vm.$store.commit('SET_WALLET_LIST',[ hdAccount.wallets[0],hdAccount.wallets[1],hdAccount.wallets[3] ])
     expect(wrapper.vm.pathToCreate).toBe(2)
   })
 
   it('the initial pathToCreate should return 2', () => {
-    wrapper.vm.$store.commit('SET_WALLET_LIST', [...Array(10)].map(ignored => hdAccount.wallets[0]))
+    wrapper.vm.$store.commit('SET_WALLET_LIST', [...Array(10)].map(() => hdAccount.wallets[0]))
     expect(wrapper.vm.pathToCreate).toBe(undefined)
   })
 })

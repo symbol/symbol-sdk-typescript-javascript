@@ -1,5 +1,5 @@
-import {AppState, NoticeType} from './types';
-import {Store} from 'vuex';
+import {AppState, NoticeType} from './types'
+import {Store} from 'vuex'
 
 export class Notice {
   private constructor(

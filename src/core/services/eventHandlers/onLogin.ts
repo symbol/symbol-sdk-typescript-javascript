@@ -2,7 +2,7 @@ import {Store} from 'vuex'
 import {localSave} from '@/core/utils'
 import {localRead} from '@/core/utils/utils'
 import {AppState, AppWallet, CurrentAccount} from '@/core/model'
-import {Endpoints, setWalletsBalances} from '@/core/services'
+import {setWalletsBalances} from '@/core/services'
 
 // @TODO: Most of the methods here should be implemented in AppAccount and AppWallet
 

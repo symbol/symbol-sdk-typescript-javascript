@@ -1,6 +1,5 @@
 <template>
   <div class="network_content secondary_page_animate">
-
     <div class="right_set_point left">
       <ul>
         <li>
@@ -36,19 +35,24 @@
       </ul>
       <div class="bottom_button">
         <!--        //TODO-->
-        <span class="save_button un_click">{{$t('save')}}</span>
-        <span class="cancel_button pointer">{{$t('cancel')}}</span>
+        <span class="save_button un_click">{{ $t('save') }}</span>
+        <span class="cancel_button pointer">{{ $t('cancel') }}</span>
       </div>
     </div>
 
     <div class="left_point_list left">
       <ul>
-        <li class="create_node pointer"><img src="@/common/img/setting/settingCreateNode.png" alt="">{{$t('create_node')}}
+        <li class="create_node pointer">
+          <img src="@/common/img/setting/settingCreateNode.png" alt="">{{ $t('create_node') }}
         </li>
-        <li @click="selectPoint(index)" v-for="(p,index) in pointList"
-            :class="['green_point',' pointer',pointerColorList[index%4],p.isSelected?'selected_point':'']">
-          {{p.name}}
-          <span v-if="index !== 0"></span>
+        <li
+          v-for="(p,index) in pointList"
+          :key="index"
+          :class="[ 'green_point',' pointer',pointerColorList[index % 4],p.isSelected ? 'selected_point' : '' ]"
+          @click="selectPoint(index)"
+        >
+          {{ p.name }}
+          <span v-if="index !== 0" />
         </li>
       </ul>
     </div>
@@ -56,12 +60,12 @@
 </template>
 
 <script lang="ts">
-    //@ts-ignore
-    import {SettingNetworkTs} from '@/views/setting/setting-network/SettingNetworkTs.ts'
+// @ts-ignore
+import {SettingNetworkTs} from '@/views/setting/setting-network/SettingNetworkTs.ts'
 
-    export default class SettingNetwork extends SettingNetworkTs {
+export default class SettingNetwork extends SettingNetworkTs {
 
-    }
+}
 </script>
 <style scoped lang="less">
   @import "SettingNetwork.less";

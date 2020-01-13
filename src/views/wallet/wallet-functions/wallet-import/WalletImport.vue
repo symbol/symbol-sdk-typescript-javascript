@@ -8,11 +8,13 @@
           class="navigator_item pointer"
           @click="jumpToView(n,index)"
         >
-          <span :class="n.isSelected ? 'selected_title':''">{{$t(n.title)}}</span>
+          <span :class="n.isSelected ? 'selected_title' : ''">{{ $t(n.title) }}</span>
         </div>
       </div>
       <div class="right_view scroll right">
-        <div class="top_title">{{$t('import')}}{{$t(currentHeadText)}}</div>
+        <div class="top_title">
+          {{ $t('import') }}{{ $t(currentHeadText) }}
+        </div>
         <div class="main_view">
           <WalletImportKeystore
             v-if="tabIndex === 1"
@@ -33,9 +35,9 @@
 </template>
 
 <script lang="ts">
-import "./WalletImport.less";
-//@ts-ignore
-import { WalletImportTs } from "@/views/wallet/wallet-functions/wallet-import/WalletImportTs.ts";
+import './WalletImport.less'
+// @ts-ignore
+import { WalletImportTs } from '@/views/wallet/wallet-functions/wallet-import/WalletImportTs.ts'
 
 export default class WalletImport extends WalletImportTs {}
 </script>

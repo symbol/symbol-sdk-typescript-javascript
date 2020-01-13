@@ -4,22 +4,22 @@
       <ul>
         <li>
           <FormInput
-            fieldName="previousPassword"
-            :formModel="formItems"
+            field-name="previousPassword"
+            :form-model="formItems"
             hint="HINT_previous_password"
             label="password"
             :validation="validation.previousPassword"
-            fieldType="password"
+            field-type="password"
             placeholder="PLACEHOLDER_previous_password"
           />
         </li>
 
         <li>
           <FormInput
-            fieldName="newPassword"
-            :formModel="formItems"
+            field-name="newPassword"
+            :form-model="formItems"
             label="LABEL_new_password"
-            fieldType="password"
+            field-type="password"
             :validation="validation.password"
             hint1="HINT_new_password1"
             hint2="HINT_new_password2"
@@ -28,36 +28,36 @@
         </li>
         <li>
           <FormInput
-            fieldName="confirmPassword"
-            :formModel="formItems"
+            field-name="confirmPassword"
+            :form-model="formItems"
             label="PLACEHOLDER_confirm_password"
-            fieldType="password"
+            field-type="password"
             placeholder="PLACEHOLDER_confirm_password"
             :validation="validation.confirmPassword"
           />
         </li>
         <li>
           <FormInput
-            fieldName="hint"
-            :formModel="formItems"
+            field-name="hint"
+            :form-model="formItems"
             label="hint"
             hint1="HINT_cipher_hint1"
             hint2="HINT_new_password2"
             placeholder="PLACEHOLDER_cipher_hint"
           />
         </li>
-        <FormInput style="display:none" fieldName="cipher" :formModel="formItems" />
+        <FormInput style="display:none" field-name="cipher" :form-model="formItems" />
       </ul>
       <span
         :class="`submit-button${submitDisabled ? ' submit-button-disabled' : ''}`"
         @click="submit"
-      >{{$t('confirm')}}</span>
+      >{{ $t('confirm') }}</span>
     </div>
   </form>
 </template>
 
 <script lang="ts">
-import { SettingPasswordTs } from "@/views/setting/setting-password/SettingPasswordTs.ts";
+import { SettingPasswordTs } from '@/views/setting/setting-password/SettingPasswordTs.ts'
 
 export default class SettingLock extends SettingPasswordTs {}
 </script>

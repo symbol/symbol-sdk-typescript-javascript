@@ -7,17 +7,17 @@ import VeeValidate from 'vee-validate'
 import MonitorInvoice from '@/views/monitor/monitor-invoice/MonitorInvoice.vue'
 import {accountMutations, accountState} from '@/store/account'
 import {appMutations, appState} from '@/store/app'
-import {veeValidateConfig} from "@/core/validation"
-import VueRx from "vue-rx"
+import {veeValidateConfig} from '@/core/validation'
+import VueRx from 'vue-rx'
 import {
-    TransferTransaction,
-} from "nem2-sdk"
+  TransferTransaction,
+} from 'nem2-sdk'
 import {
-    mosaicsLoading,
-    multisigAccountInfo,
-    mosaics,
-    CosignWallet,
-} from "@MOCKS/index"
+  mosaicsLoading,
+  multisigAccountInfo,
+  mosaics,
+  CosignWallet,
+} from '@MOCKS/index'
 import {NetworkProperties} from '@/core/model'
 // @ts-ignore
 const localVue = createLocalVue()
@@ -28,78 +28,77 @@ localVue.use(Vuex)
 localVue.use(VeeValidate, veeValidateConfig)
 localVue.use(VueRx)
 localVue.directive('focus', {
-    inserted: function (el, binding) {
-        el.focus()
-    }
+  inserted: function (el) {
+    el.focus()
+  },
 })
 // close warning
 config.logModifiedComponents = false
 
 describe('MonitorInvoice', () => {
-    let store
-    let wrapper
-    let state
-    beforeEach(() => {
-            store = store = new Vuex.Store({
-                    modules: {
-                        account: {
-                            state: Object.assign(accountState.state, {
-                                wallet: CosignWallet,
-                                mosaics,
-                                multisigAccountInfo
-                            }),
-                            mutations: accountMutations.mutations
-                        },
-                        app: {
-                            state: Object.assign(appState.state, {mosaicsLoading}),
-                            mutations: appMutations.mutations
-                        }
-                    }
-                }
-            )
-
-            store.state.app.networkProperties = NetworkProperties.create(store)
-            store.state.app.networkProperties.height = 666
-            
-            wrapper = shallowMount(MonitorInvoice, {
-                sync: false,
-                mocks: {
-                    $t: (msg) => msg,
-                },
-                localVue,
-                store,
-                router,
-            })
-        }
+  let store
+  let wrapper
+  beforeEach(() => {
+    store = store = new Vuex.Store({
+      modules: {
+        account: {
+          state: Object.assign(accountState.state, {
+            wallet: CosignWallet,
+            mosaics,
+            multisigAccountInfo,
+          }),
+          mutations: accountMutations.mutations,
+        },
+        app: {
+          state: Object.assign(appState.state, {mosaicsLoading}),
+          mutations: appMutations.mutations,
+        },
+      },
+    },
     )
 
-    it('Should render', () => {
-        expect(wrapper).not.toBeNull()
+    store.state.app.networkProperties = NetworkProperties.create(store)
+    store.state.app.networkProperties.height = 666
+            
+    wrapper = shallowMount(MonitorInvoice, {
+      sync: false,
+      mocks: {
+        $t: (msg) => msg,
+      },
+      localVue,
+      store,
+      router,
+    })
+  },
+  )
+
+  it('Should render', () => {
+    expect(wrapper).not.toBeNull()
+  })
+
+  it('Should create a valid transfer transaction', () => {
+    wrapper.setData({
+      formItems: {
+        mosaicAmount: 88888,
+        message: 'this is a message',
+      },
+      selectedMosaicHex: '0550A29A06E0A16E',
     })
 
-    it('Should create a valid transfer transaction', () => {
-        wrapper.setData({
-            formItems: {
-                mosaicAmount: 88888,
-                message: 'this is a message',
-            },
-            selectedMosaicHex: '0550A29A06E0A16E'
-        })
+    expect(wrapper.vm.transferTransaction).toBeInstanceOf(TransferTransaction)
+    expect(wrapper.vm.transferTransaction.message.payload).toEqual('this is a message')
+    expect(wrapper.vm.transferTransaction.mosaics[0].amount.compact()).toEqual(88888)
+  })
 
-        expect(wrapper.vm.transferTransaction).toBeInstanceOf(TransferTransaction)
-        expect(wrapper.vm.transferTransaction.message.payload).toEqual('this is a message')
-        expect(wrapper.vm.transferTransaction.mosaics[0].amount.compact()).toEqual(88888)
+  it('Should not create a valid transfer transaction', () => {
+    wrapper.setData({
+      formItems: {
+        mosaicAmount: 88888,
+        remarks: 'this is a message',
+      },
+      selectedMosaicHex: '',
     })
 
-    it('Should not create a valid transfer transaction', () => {
-        wrapper.setData({
-            formItems: {
-                mosaicAmount: 88888,
-                remarks: 'this is a message',
-            },
-            selectedMosaicHex: ''
-        })
-
-        expect(wrapper.vm.transferTransaction).toEqual(null)
-    })
+    expect(wrapper.vm.transferTransaction).toEqual(null)
+  })
 })

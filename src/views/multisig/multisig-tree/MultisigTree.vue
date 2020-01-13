@@ -1,11 +1,12 @@
 <template>
   <div>
     <div>
-      <span class="green">{{$t('min_approval')}}:</span>
-      {{currentAccountMultisigInfo?currentAccountMultisigInfo.minApproval:0}}
+      <span class="green">{{ $t('min_approval') }}:</span>
+      {{ currentAccountMultisigInfo ? currentAccountMultisigInfo.minApproval : 0 }}
     </div>
     <div>
-      <span class="green">{{$t('min_removal')}}:</span>{{currentAccountMultisigInfo?currentAccountMultisigInfo.minRemoval:0}}
+      <span class="green">{{ $t('min_removal') }}:</span>
+      rentAccountMultisigInfo ? currentAccountMultisigInfo.minRemoval : 0 }}
     </div>
     <Tree
       v-if="multisigTreeData"
@@ -21,6 +22,6 @@
 </template>
 
 <script lang="ts">
-    import {MultisigTreeTs} from './MultisigTreeTs'
-    export default class MultisigTree extends MultisigTreeTs {}
+import {MultisigTreeTs} from './MultisigTreeTs'
+export default class MultisigTree extends MultisigTreeTs {}
 </script>

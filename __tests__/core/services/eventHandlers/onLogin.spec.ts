@@ -1,7 +1,7 @@
 import {onLogin} from '@/core/services/eventHandlers/onLogin.ts'
 import {setWalletsBalances} from '@/core/services'
-import {hdAccount} from "@MOCKS/index"
-import {AppWallet, CurrentAccount} from '@/core/model'
+import {hdAccount} from '@MOCKS/index'
+import {CurrentAccount} from '@/core/model'
 import * as utils from '@/core/utils/utils'
 
 const mockCommit = jest.fn()

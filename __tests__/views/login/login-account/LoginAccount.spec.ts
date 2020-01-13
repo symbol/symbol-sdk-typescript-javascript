@@ -6,13 +6,13 @@ import VeeValidate from 'vee-validate'
 // @ts-ignore
 import LoginAccount from '@/views/login/login-account/LoginAccount.vue'
 import {accountMutations, accountState} from '@/store/account'
-import {veeValidateConfig} from "@/core/validation"
-import VueRx from "vue-rx"
-import i18n from "@/language"
-import {localSave} from "@/core/utils"
-import {hdAccount, hdAccountData} from "@MOCKS/index"
+import {veeValidateConfig} from '@/core/validation'
+import VueRx from 'vue-rx'
+import i18n from '@/language'
+import {localSave} from '@/core/utils'
+import {hdAccount, hdAccountData} from '@MOCKS/index'
 import flushPromises from 'flush-promises'
-import {appMutations,appState} from "@/store/app"
+import {appMutations,appState} from '@/store/app'
 
 // @ts-ignore
 const localVue = createLocalVue()
@@ -23,9 +23,9 @@ localVue.use(Vuex)
 localVue.use(VeeValidate, veeValidateConfig)
 localVue.use(VueRx)
 localVue.directive('focus', {
-  inserted: function (el, binding) {
+  inserted: function (el) {
     el.focus()
-  }
+  },
 })
 // close warning
 config.logModifiedComponents = false
@@ -34,33 +34,32 @@ describe('LoginAccount', () => {
   localSave('accountMap',JSON.stringify({testAccount:hdAccount}))
   let store
   let wrapper
-  let state
   beforeEach(() => {
 
-      store = store = new Vuex.Store({
-          modules: {
-            account: {
-              state: accountState.state,
-              mutations: accountMutations.mutations
-            },
-            app:{
-              state: appState.state,
-              mutations: appMutations.mutations
-            }
-          }
-        }
-      )
-      wrapper = shallowMount(LoginAccount, {
-        sync: false,
-        mocks: {
-          $t: (msg) => msg,
+    store = store = new Vuex.Store({
+      modules: {
+        account: {
+          state: accountState.state,
+          mutations: accountMutations.mutations,
         },
-        i18n,
-        localVue,
-        store,
-        router,
-      })
-    }
+        app:{
+          state: appState.state,
+          mutations: appMutations.mutations,
+        },
+      },
+    },
+    )
+    wrapper = shallowMount(LoginAccount, {
+      sync: false,
+      mocks: {
+        $t: (msg) => msg,
+      },
+      i18n,
+      localVue,
+      store,
+      router,
+    })
+  },
   )
 
   it('should save account and node info in store while password is right', async (done) => {
@@ -78,7 +77,7 @@ describe('LoginAccount', () => {
 
   it('should compute accountsClassifiedByNetworkType',async() => {
     const expectedResult = {
-      "144": [ "testAccount" ]
+      '144': ['testAccount'],
     }
     expect(wrapper.vm.accountsClassifiedByNetworkType).toStrictEqual(expectedResult)
   })

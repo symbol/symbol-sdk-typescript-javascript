@@ -1,19 +1,19 @@
-import {mapState} from "vuex";
-import {Component, Vue, Prop} from "vue-property-decorator";
-import DelegateRequests from '@/components/forms/delegated-dialog/delegate-requests/DelegateRequests.vue';
-import NetworkSetting from '@/components/forms/delegated-dialog/network-setting/NetworkSetting.vue';
+import {mapState} from 'vuex'
+import {Component, Vue, Prop} from 'vue-property-decorator'
+import DelegateRequests from '@/components/forms/delegated-dialog/delegate-requests/DelegateRequests.vue'
+import NetworkSetting from '@/components/forms/delegated-dialog/network-setting/NetworkSetting.vue'
 import ProxySetting from '@/components/forms/delegated-dialog/proxy-setting/ProxySetting.vue'
-import {threeStepsPictureList, harvestingTitleList, harvestingStepList} from "@/config"
+import {threeStepsPictureList, harvestingTitleList, harvestingStepList} from '@/config'
 import {harvestingSteps} from '@/config/view/wallet.ts'
-import {StoreAccount} from "@/core/model"
+import {StoreAccount} from '@/core/model'
 
 @Component({
-  computed: {...mapState({activeAccount: "account"})},
+  computed: {...mapState({activeAccount: 'account'})},
   components: {
     DelegateRequests,
     NetworkSetting,
-    ProxySetting
-  }
+    ProxySetting,
+  },
 })
 export class DelegatedDialogTs extends Vue {
   activeAccount: StoreAccount
@@ -22,7 +22,7 @@ export class DelegatedDialogTs extends Vue {
   harvestingSteps = harvestingSteps
   harvestingTitleList = harvestingTitleList
   @Prop()
-  showDialog: boolean;
+  showDialog: boolean
 
   @Prop()
   currentDelegatedStep: number
@@ -44,12 +44,12 @@ export class DelegatedDialogTs extends Vue {
   }
 
   get show() {
-    return this.showDialog;
+    return this.showDialog
   }
 
   set show(val) {
     if (!val) {
-      this.$emit("closeDialog");
+      this.$emit('closeDialog')
     }
   }
 

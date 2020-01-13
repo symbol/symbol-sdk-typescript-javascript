@@ -1,9 +1,9 @@
 import {localRead} from '@/core/utils/utils'
 import {Store} from 'vuex'
 import {AppState, Endpoint} from '@/core/model'
-import {defaultNodeList} from "@/config/view/node"
-import {NetworkType} from "nem2-sdk"
-import {defaultNetworkConfig} from "@/config"
+import {defaultNodeList} from '@/config/view/node'
+import {NetworkType} from 'nem2-sdk'
+import {defaultNetworkConfig} from '@/config'
 
 export class Endpoints {
   nodeList: Endpoint[]
@@ -28,15 +28,15 @@ export class Endpoints {
   }
 
 
-  public static setNodeInfo(networkType:NetworkType,store:Store<any>){
+  public static setNodeInfo(networkType: NetworkType,store: Store<any>){
     const localNodeList = JSON.parse(localRead('nodeList') || '[]')
     const activeNodeMap = JSON.parse(localRead('activeNodeMap') || '{}')
     const previousActiveNode = activeNodeMap[networkType]
-    const defaultNode = defaultNodeList.find(item=>item.networkType == networkType).value
+    const defaultNode = defaultNodeList.find(item=>item.networkType === networkType).value
     const node = previousActiveNode || defaultNode
 
     store.commit('SET_NODE', {node, networkType})
-    store.commit('SET_NODE_LIST',localNodeList.length> 0 ? localNodeList : defaultNodeList)
+    store.commit('SET_NODE_LIST',localNodeList.length > 0 ? localNodeList : defaultNodeList)
   }
 
   private setNodeListFromLocalStorage(): Endpoint[] {

@@ -7,9 +7,9 @@ import {appMosaicsModule, onTransactionRefreshModule} from '@/store/plugins'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-    modules: {
-        app: {...appState, ...appMutations, ...appActions},
-        account: {...accountState, ...accountMutations, ...accountActions},
-    },
-    plugins: [appMosaicsModule, onTransactionRefreshModule]
+  modules: {
+    app: {...appState, ...appMutations, ...appActions},
+    account: {...accountState, ...accountMutations, ...accountActions},
+  },
+  plugins: [ appMosaicsModule, onTransactionRefreshModule ],
 })

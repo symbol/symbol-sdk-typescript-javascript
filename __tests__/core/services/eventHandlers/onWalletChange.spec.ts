@@ -1,6 +1,6 @@
 import {OnWalletChange} from '@/core/services/eventHandlers/onWalletChange.ts'
 import {localRead} from '@/core/utils'
-import {MultisigWallet, hdAccount} from "@MOCKS/index"
+import {MultisigWallet, hdAccount} from '@MOCKS/index'
 import flushPromises from 'flush-promises'
 import {setMosaics, setNamespaces, setTransactionList} from '@/core/services'
 import {Address} from 'nem2-sdk'
@@ -36,8 +36,8 @@ const store = {
     app: {
       listeners: {
         switchAddress: mockSwitchAddress,
-      }
-    }
+      },
+    },
   },
 }
 

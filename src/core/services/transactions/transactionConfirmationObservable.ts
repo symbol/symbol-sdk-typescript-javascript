@@ -1,5 +1,5 @@
-import { Subject } from "rxjs"
+import { Subject } from 'rxjs'
 
-const subject = new Subject();
+const subject = new Subject()
 
-export const transactionConfirmationObservable = subject;
+export const transactionConfirmationObservable = subject

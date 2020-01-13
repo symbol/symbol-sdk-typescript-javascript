@@ -13,7 +13,7 @@ import {block1} from '../../../__mocks__/network/block1'
 import {OnWalletChange} from '@/core/services/eventHandlers/onWalletChange'
 import {setWalletsBalances} from '@/core/services/wallets/setWalletsBalances'
 
-const {maxRollbackBlocks,maxDifficultyBlocks, defaultDynamicFeeMultiplier} = networkConfig
+const {maxDifficultyBlocks, defaultDynamicFeeMultiplier} = networkConfig
 
 jest.mock('@/core/model/Notice')
 jest.mock('@/core/services/eventHandlers/onWalletChange')
@@ -32,7 +32,7 @@ const mockGetBlockByHeight = blockNumber => of(blockNumber).pipe(
   switchMap(blockNumber => {
     if (blockNumber === '29248') return of(block29248)
     return of(block1)
-  })
+  }),
 )
 
 const mockGetBlockByHeightWithLimit = blockNumber => of(blockNumber).pipe(
@@ -40,7 +40,7 @@ const mockGetBlockByHeightWithLimit = blockNumber => of(blockNumber).pipe(
   switchMap(blockNumber => {
     if (blockNumber === '29248') return of([block29248])
     return of(block1)
-  })
+  }),
 )
 
 const mockGetBlockTransactions = (...args) => of(args).pipe(

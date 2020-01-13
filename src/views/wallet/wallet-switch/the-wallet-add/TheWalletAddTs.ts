@@ -1,14 +1,14 @@
-import {mapState} from "vuex"
+import {mapState} from 'vuex'
 import {Component, Vue, Prop, Provide} from 'vue-property-decorator'
 import {validation} from '@/core/validation'
-import {AppInfo, AppWallet, StoreAccount, Notice, NoticeType} from "@/core/model"
+import {AppInfo, AppWallet, StoreAccount, Notice, NoticeType} from '@/core/model'
 import CheckPassword from '@/components/forms/check-password/CheckPassword.vue'
-import {seedWalletTitle, APP_PARAMS, Message} from "@/config"
-import {Password} from "nem2-sdk"
+import {seedWalletTitle, APP_PARAMS, Message} from '@/config'
+import {Password} from 'nem2-sdk'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 
 @Component({
-  computed: {...mapState({activeAccount: 'account', app: 'app', })},
+  computed: {...mapState({activeAccount: 'account', app: 'app' })},
   components: {CheckPassword, ErrorTooltip},
 })
 export class TheWalletAddTs extends Vue {
@@ -25,14 +25,14 @@ export class TheWalletAddTs extends Vue {
     return this.visible
   }
 
-  get walletList() {
-    return this.app.walletList
-  }
-
   set show(val) {
     if (!val) {
       this.$emit('close')
     }
+  }
+
+  get walletList() {
+    return this.app.walletList
   }
 
   get currentAccount() {

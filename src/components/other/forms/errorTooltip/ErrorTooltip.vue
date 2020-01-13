@@ -5,10 +5,10 @@
     :content="$t(displayedError)"
     :placement="placement"
   >
-    <slot></slot>
+    <slot />
   </Tooltip>
 </template>
 <script lang="ts">
-  import {ErrorTooltipTs} from './ErrorTooltipTs'
-  export default class ErrorTooltip extends ErrorTooltipTs {}
+import {ErrorTooltipTs} from './ErrorTooltipTs'
+export default class ErrorTooltip extends ErrorTooltipTs {}
 </script>

@@ -1,15 +1,15 @@
 <template>
   <div class="step-2-wrapper" @mouseover="isSlidable && handleMousemove($event)">
-    <img src="@/common/img/back.png"/>
+    <img src="@/common/img/back.png">
     <div class="progress-bar">
-      {{$t('Move_your_mouse')}}
+      {{ $t('Move_your_mouse') }}
     </div>
-    <Progress :stroke-width="20" stroke-color="#1FB6AC" :percent="percent"/>
+    <Progress :stroke-width="20" stroke-color="#1FB6AC" :percent="percent" />
   </div>
 </template>
 
 <script lang="ts">
-    import GenerateMnemonicTs from "@/views/login/create-account/generate-mnemonic/GenerateMnemonicTs.ts"
-    import "./GenerateMnemonic.less"
-    export default class GenerateMnemonic extends GenerateMnemonicTs { }
+import GenerateMnemonicTs from '@/views/login/create-account/generate-mnemonic/GenerateMnemonicTs.ts'
+import './GenerateMnemonic.less'
+export default class GenerateMnemonic extends GenerateMnemonicTs { }
 </script>

@@ -7,23 +7,23 @@ import {registerCustomValidators} from './customValidators'
 import {customMessages, customFieldMessages} from './customMessages'
 
 export const veeValidateConfig = {
-    i18n,
-    fieldsBagName: 'fieldBags',
-    dictionary: {
-        'en-US': {
-            messages: {...en.messages, ...customMessages},
-            custom: customFieldMessages,
-        },
-        'zh-CN': {
-            messages: {...zhCN.messages},
-        },
-        'ja-JP': {
-            messages: {...ja.messages},
-        }
+  i18n,
+  fieldsBagName: 'fieldBags',
+  dictionary: {
+    'en-US': {
+      messages: {...en.messages, ...customMessages},
+      custom: customFieldMessages,
     },
-    inject: {
-        $validator: '$validator',
+    'zh-CN': {
+      messages: {...zhCN.messages},
     },
+    'ja-JP': {
+      messages: {...ja.messages},
+    },
+  },
+  inject: {
+    $validator: '$validator',
+  },
 }
 
 registerCustomValidators(VeeValidate.Validator)

@@ -1,5 +1,5 @@
-import {NetworkType} from "nem2-sdk"
-import {defaultNetworkConfig} from "@/config"
+import {NetworkType} from 'nem2-sdk'
+import {defaultNetworkConfig} from '@/config'
 
 export const copyTxt = (txt) => {
   return new Promise((resolve) => {
@@ -47,7 +47,7 @@ export const isRefreshData = function (localStorageName, refreshTime, borderline
   const currentTimestamp = currentTime.getTime()
   const marketPriceDataList = JSON.parse(localRead(localStorageName))
   const timeDifference = Number(currentTimestamp) - Number(marketPriceDataList.timestamp)
-  if (refreshTime < timeDifference || borderlineTime == 0) {
+  if (refreshTime < timeDifference || borderlineTime === 0) {
     return true
   }
   return false
@@ -69,12 +69,12 @@ export const flattenArrayOfStrings = (array: any[]): any[] => {
 }
 
 export const httpToWs = (URL: string): string => {
-    const url = URL.toLowerCase()
-    const isHttps = url.substring(0, 5) === 'https'
+  const url = URL.toLowerCase()
+  const isHttps = url.substring(0, 5) === 'https'
 
-    return isHttps
-        ? url.replace('https', 'wss')
-        : url.replace('http', 'ws')
+  return isHttps
+    ? url.replace('https', 'wss')
+    : url.replace('http', 'ws')
 }
 
 export function getDefaultAccountNetworkType(): NetworkType {
@@ -87,17 +87,17 @@ export function getDefaultAccountNetworkType(): NetworkType {
 }
 
 export function completeUrlWithHostAndProtocol(inputNodeValue: string): string {
-    const numberOfColon = inputNodeValue.match(/:/img) ? inputNodeValue.match(/:/img).length : 0
-    const pointIndex = inputNodeValue.indexOf('.')
-    const colonIndex = inputNodeValue.indexOf(':')
-    if (numberOfColon >= 2) return inputNodeValue
-    if (numberOfColon == 0) {
-        return `http://${inputNodeValue}:3000`
-    }
-    if (pointIndex > colonIndex) {
-        return `${inputNodeValue}:3000`
-    }
-    if (pointIndex < colonIndex) {
-        return `http://${inputNodeValue}`
-    }
+  const numberOfColon = inputNodeValue.match(/:/img) ? inputNodeValue.match(/:/img).length : 0
+  const pointIndex = inputNodeValue.indexOf('.')
+  const colonIndex = inputNodeValue.indexOf(':')
+  if (numberOfColon >= 2) return inputNodeValue
+  if (numberOfColon === 0) {
+    return `http://${inputNodeValue}:3000`
+  }
+  if (pointIndex > colonIndex) {
+    return `${inputNodeValue}:3000`
+  }
+  if (pointIndex < colonIndex) {
+    return `http://${inputNodeValue}`
+  }
 }

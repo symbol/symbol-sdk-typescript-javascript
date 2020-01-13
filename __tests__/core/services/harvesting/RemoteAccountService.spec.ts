@@ -75,21 +75,21 @@ const mockGetAccountsInfo = (args) => of(args).pipe(
     if (args[0].plain() === hdAccountWallet1Address1.plain()) {
       return [{
         address: hdAccountWallet1Address1,
-        accountType: AccountType.Main
+        accountType: AccountType.Main,
       }]
     }
 
     if (args[0].plain() === hdAccountWallet1Address2.plain()) {
       return [{
         address: hdAccountWallet1Address2,
-        accountType: AccountType.Remote_Unlinked
+        accountType: AccountType.Remote_Unlinked,
       }]
     }
 
     if (args[0].plain() === hdAccountWallet2Address1.plain()) {
       return [{
         address: hdAccountWallet2Address1,
-        accountType: AccountType.Main
+        accountType: AccountType.Main,
       }]
     }
 
@@ -97,15 +97,15 @@ const mockGetAccountsInfo = (args) => of(args).pipe(
       return [
         {
           address: hdAccountWallet2Address2,
-          accountType: AccountType.Main
+          accountType: AccountType.Main,
         },
         {
           address: hdAccountWallet2Address3,
-          accountType: AccountType.Main
+          accountType: AccountType.Main,
         },
         {
           address: hdAccountWallet2Address4,
-          accountType: AccountType.Remote_Unlinked
+          accountType: AccountType.Remote_Unlinked,
         },
       ]
     }
@@ -119,7 +119,7 @@ jest.mock('nem2-sdk/dist/src/infrastructure/AccountHttp', () => ({
     return {
       getAccountsInfo: mockGetAccountsInfo,
     }
-  })
+  }),
 }))
 
 
@@ -145,8 +145,8 @@ const mockStore = {
   state: {
     account: {
       node: 'http://localHost:3000',
-    }
-  }
+    },
+  },
 }
 
 describe('getAvailableRemotePublicKey', () => {

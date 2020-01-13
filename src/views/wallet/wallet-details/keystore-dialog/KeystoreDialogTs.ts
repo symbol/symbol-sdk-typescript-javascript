@@ -1,84 +1,84 @@
 import {Component, Vue, Prop, Provide} from 'vue-property-decorator'
-import {mapState} from "vuex"
-import {Message} from "@/config/index.ts"
-import {copyTxt} from "@/core/utils"
+import {mapState} from 'vuex'
+import {Message} from '@/config/index.ts'
+import {copyTxt} from '@/core/utils'
 import {validation} from '@/core/validation'
-import {AppWallet, StoreAccount} from "@/core/model"
+import {StoreAccount} from '@/core/model'
 
 @Component({
-    computed: {
-        ...mapState({
-            activeAccount: 'account',
-        })
-    },
+  computed: {
+    ...mapState({
+      activeAccount: 'account',
+    }),
+  },
 })
 export class KeystoreDialogTs extends Vue {
-    @Provide() validator: any = this.$validator
-    activeAccount: StoreAccount
-    errors: any
-    validation = validation
-    stepIndex = 0
-    QRCode = ''
-    keystoreText = ''
-    password = ''
+  @Provide() validator: any = this.$validator
+  activeAccount: StoreAccount
+  errors: any
+  validation = validation
+  stepIndex = 0
+  QRCode = ''
+  keystoreText = ''
+  password = ''
 
-    @Prop()
-    showKeystoreDialog: boolean
+  @Prop()
+  showKeystoreDialog: boolean
 
-    get show() {
-        return this.showKeystoreDialog
+  get show() {
+    return this.showKeystoreDialog
+  }
+
+  set show(val) {
+    if (!val) {
+      this.$emit('closeKeystoreDialog')
     }
+  }
 
-    set show(val) {
-        if (!val) {
-            this.$emit('closeKeystoreDialog')
+  get wallet() {
+    return this.activeAccount.wallet
+  }
+
+  checkWalletPassword() {
+    this.$validator
+      .validate()
+      .then((valid) => {
+        if (!valid) {
+          this.$Notice.destroy()
+          this.$Notice.error({title: `${this.$t(this.errors.items[0].msg)}`})
+          return
         }
-    }
 
-    get wallet() {
-        return this.activeAccount.wallet
-    }
+        this.stepIndex = 1
+      })
+  }
 
-    checkWalletPassword() {
-        this.$validator
-            .validate()
-            .then((valid) => {
-                if (!valid) {
-                    this.$Notice.destroy()
-                    this.$Notice.error({title: `${this.$t(this.errors.items[0].msg)}`})
-                    return
-                }
-
-                this.stepIndex = 1
-            })
+  exportKeystore() {
+    switch (this.stepIndex) {
+      case 0:
+        this.checkWalletPassword()
+        break
+      case 1:
+        this.generateKeystore()
+        break
+      case 2:
+        this.stepIndex = 3
+        break
     }
+  }
 
-    exportKeystore() {
-        switch (this.stepIndex) {
-            case 0:
-                this.checkWalletPassword()
-                break
-            case 1:
-                this.generateKeystore()
-                break
-            case 2:
-                this.stepIndex = 3
-                break
-        }
-    }
+  async generateKeystore() {
+    this.keystoreText = this.wallet.getKeystore()
+    this.stepIndex = 2
+  }
 
-    async generateKeystore() {
-        this.keystoreText = this.wallet.getKeystore()
-        this.stepIndex = 2
-    }
-
-    copyKeystore() {
-        copyTxt(this.keystoreText).then((data) => {
-            this.$Notice.success({
-                title: this.$t(Message.COPY_SUCCESS) + ''
-            })
-        }).catch((error) => {
-            console.log(error)
-        })
-    }
+  copyKeystore() {
+    copyTxt(this.keystoreText).then(() => {
+      this.$Notice.success({
+        title: `${this.$t(Message.COPY_SUCCESS)}`,
+      })
+    }).catch((error) => {
+      console.error(error)
+    })
+  }
 }

@@ -22,7 +22,7 @@ export const appMosaicsModule = (store) => {
         AppMosaics().updateMosaicsInfo(mosaics, store)
         AppMosaics().updateMosaicsName(mosaics, store)
       } catch (error) {
-        console.error("appMosaicsModule -> error", error)
+        console.error('appMosaicsModule -> error', error)
       }
     }
 

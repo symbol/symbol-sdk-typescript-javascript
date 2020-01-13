@@ -1,5 +1,5 @@
 import {networkConfig} from '@/config'
-import {absoluteAmountToRelativeAmountWithTicker} from '@/core/utils'
+import {absoluteAmountToRelativeAmount} from '@/core/utils'
 import {NetworkCurrency} from '@/core/model'
 import {getRelativeMosaicAmount} from '@/core/utils'
 
@@ -13,12 +13,12 @@ export class Rent {
   ) {}
 
   public static getFromDurationInBlocks(
-      duration: number,
-      networkCurrency: NetworkCurrency,
-    ) {
+    duration: number,
+    networkCurrency: NetworkCurrency,
+  ) {
     const absoluteCost = this.getAbsoluteCostFromDuration(duration)
     const relative = getRelativeMosaicAmount(absoluteCost, networkCurrency.divisibility)
-    const relativeWithTicker = absoluteAmountToRelativeAmountWithTicker(absoluteCost, networkCurrency)
+    const relativeWithTicker = absoluteAmountToRelativeAmount(absoluteCost, networkCurrency)
 
     return new Rent(absoluteCost, relative, relativeWithTicker)
   }

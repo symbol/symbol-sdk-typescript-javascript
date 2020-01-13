@@ -11,21 +11,21 @@ localVue.use(iView)
 // close warning
 config.logModifiedComponents = false
 describe('MonitorDashBoard', () => {
-    let store
-    beforeEach(() => {
-            store = vueStore
-        }
-    )
+  let store
+  beforeEach(() => {
+    store = vueStore
+  },
+  )
 
-    it('Component MonitorDashBoard is not null ', () => {
-        const wrapper = mount(Monitor, {
-            mocks: {
-                $t: (msg) => msg
-            },
-            localVue,
-            router,
-            store
-        })
-        expect(wrapper).not.toBeNull()
+  it('Component MonitorDashBoard is not null ', () => {
+    const wrapper = mount(Monitor, {
+      mocks: {
+        $t: (msg) => msg,
+      },
+      localVue,
+      router,
+      store,
     })
+    expect(wrapper).not.toBeNull()
+  })
 })

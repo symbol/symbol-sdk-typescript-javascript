@@ -16,7 +16,7 @@ export class CosignatoryModifications {
     const modificationsWithoutDuplicate = [...this.modifications]
       .filter(({cosignatory}) => cosignatory.publicKey !== cosignatoryModification.cosignatory.publicKey)
 
-    this.modifications = [...modificationsWithoutDuplicate, cosignatoryModification]
+    this.modifications = [ ...modificationsWithoutDuplicate, cosignatoryModification ]
   }
 
   get publicKeysAdditions(): PublicAccount[] {
@@ -32,7 +32,7 @@ export class CosignatoryModifications {
   }
 
   static createFromMultisigAccountModificationTransaction(
-    transaction: MultisigAccountModificationTransaction
+    transaction: MultisigAccountModificationTransaction,
   ): CosignatoryModifications {
     return new CosignatoryModifications([
       ...transaction.publicKeyAdditions.map(cosignatory => ({cosignatory, addOrRemove: AddOrRemove.ADD})),

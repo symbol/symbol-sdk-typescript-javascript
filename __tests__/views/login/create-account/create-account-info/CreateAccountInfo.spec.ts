@@ -2,26 +2,26 @@ import {config, createLocalVue, shallowMount} from '@vue/test-utils'
 import iView from 'view-design'
 import CreateAccountInfo from '@/components/forms/create-account-info/CreateAccountInfo.vue'
 import flushPromises from 'flush-promises'
-import Vuex from "vuex"
-import {accountMutations, accountState} from "@/store/account"
-import {appMutations, appState} from "@/store/app"
-import VeeValidate from "vee-validate"
-import {veeValidateConfig} from "@/core/validation"
-import {localSave} from "@/core/utils"
+import Vuex from 'vuex'
+import {accountMutations, accountState} from '@/store/account'
+import {appMutations, appState} from '@/store/app'
+import VeeValidate from 'vee-validate'
+import {veeValidateConfig} from '@/core/validation'
+import {localSave} from '@/core/utils'
 // @ts-ignore
 const localVue = createLocalVue()
 localVue.use(iView)
 localVue.use(VeeValidate, veeValidateConfig)
 localVue.use(Vuex)
 localVue.directive('focus', {
-  inserted: function (el, binding) {
+  inserted: function (el) {
     el.focus()
-  }
+  },
 })
 const $route = {
   path: 'importMnemonic',
   meta: {
-    nextPage:'importMnemonic'
+    nextPage:'importMnemonic',
   },
 }
 // close warning
@@ -30,39 +30,38 @@ config.logModifiedComponents = false
 describe('CreateAccountInfo', () => {
   let store
   let wrapper
-  let state
   beforeEach(() => {
-      store = store = new Vuex.Store({
-          modules: {
-            account: {
-              state: accountState.state,
-              mutations: accountMutations.mutations
-            },
-            app: {
-              state: appState.state,
-              mutations: appMutations.mutations
-            }
-          }
-        }
-      )
-
-      wrapper = shallowMount(CreateAccountInfo, {
-        sync: false,
-        mocks: {
-          $t: (msg) => msg,
-          $route,
-          $router:{
-            push:()=>{}
-          }
+    store = store = new Vuex.Store({
+      modules: {
+        account: {
+          state: accountState.state,
+          mutations: accountMutations.mutations,
         },
-        localVue,
-        store,
-      })
-    }
+        app: {
+          state: appState.state,
+          mutations: appMutations.mutations,
+        },
+      },
+    },
+    )
+
+    wrapper = shallowMount(CreateAccountInfo, {
+      sync: false,
+      mocks: {
+        $t: (msg) => msg,
+        $route,
+        $router:{
+          push:() => {/* ignored */},
+        },
+      },
+      localVue,
+      store,
+    })
+  },
   )
 
   afterEach(()=>{
-    wrapper.vm.$nextTick(() => wrapper.vm.$validator.reset());
+    wrapper.vm.$nextTick(() => wrapper.vm.$validator.reset())
   })
 
 

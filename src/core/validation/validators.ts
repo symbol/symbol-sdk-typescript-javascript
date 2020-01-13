@@ -1,6 +1,6 @@
 import {Address, NamespaceId, PublicAccount, NetworkType, MosaicId} from 'nem2-sdk'
 import {networkConfig} from '@/config/constants'
-import {ValidationObject} from "@/core/model"
+import {ValidationObject} from '@/core/model'
 const {NAMESPACE_MAX_LENGTH} = networkConfig
 
 export const validateAddress = (address): ValidationObject => {

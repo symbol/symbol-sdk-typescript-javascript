@@ -11,7 +11,7 @@ jest.mock('@/core/model/AppWallet')
 const transaction = TransferTransaction.create(
   Deadline.create(),
   Address.createFromRawAddress('SBIWHDWZMPIXXM2BINCRXAK3H3MGA5VHB3D2PO5W'),
-  [new Mosaic(new MosaicId([2429385668, 814683207]), new UInt64([0, 0]))],
+  [new Mosaic(new MosaicId([ 2429385668, 814683207 ]), new UInt64([ 0, 0 ]))],
   PlainMessage.create(''),
   NetworkType.TEST_NET,
 )
@@ -20,7 +20,7 @@ describe('signAndAnnounce', () => {
   beforeEach(() => {
     mockSignAndAnnounce.mockClear()
     mockCommit.mockClear()
-  });
+  })
 
   it('should resolve with proper values when signing fails', async (done) => {
     const store = {commit: mockCommit}
@@ -64,9 +64,9 @@ describe('signAndAnnounce', () => {
         account: {
           wallet: {
             announceTransaction: (...args) => mockAnnounceTransaction(args),
-          }
-        }
-      }
+          },
+        },
+      },
     }
 
     const result: SignTransaction = {
@@ -107,9 +107,9 @@ describe('signAndAnnounce', () => {
         account: {
           wallet: {
             announceTransaction: (...args) => mockAnnounceTransaction(args),
-          }
-        }
-      }
+          },
+        },
+      },
     }
 
     const result: SignTransaction = {
@@ -129,7 +129,7 @@ describe('signAndAnnounce', () => {
       transaction,
       // @ts-ignore
       store,
-      lockParams: new LockParams(true, 3)
+      lockParams: new LockParams(true, 3),
     })
 
     expect(success).toBeTruthy()

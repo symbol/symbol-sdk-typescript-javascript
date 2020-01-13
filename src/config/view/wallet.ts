@@ -1,12 +1,12 @@
-import mosaic1Icon from "@/common/img/service/mosaic1.png"
-import mosaic2Icon from "@/common/img/service/mosaic2.png"
-import multisign1Icon from "@/common/img/service/multisign1.png"
-import multisign2Icon from "@/common/img/service/multisign2.png"
-import namespace1Icon from "@/common/img/service/namespace1.png"
-import namespace2Icon from "@/common/img/service/namespace2.png"
-import apostille1Icon from "@/common/img/service/apostille1.png"
-import apostille2Icon from "@/common/img/service/apostille2.png"
-import {localRead} from "@/core/utils"
+import mosaic1Icon from '@/common/img/service/mosaic1.png'
+import mosaic2Icon from '@/common/img/service/mosaic2.png'
+import multisign1Icon from '@/common/img/service/multisign1.png'
+import multisign2Icon from '@/common/img/service/multisign2.png'
+import namespace1Icon from '@/common/img/service/namespace1.png'
+import namespace2Icon from '@/common/img/service/namespace2.png'
+import apostille1Icon from '@/common/img/service/apostille1.png'
+import apostille2Icon from '@/common/img/service/apostille2.png'
+import {localRead} from '@/core/utils'
 
 import step1Of4 from '@/common/img/wallet/1_4.png'
 import step2Of4 from '@/common/img/wallet/2_4.png'
@@ -21,26 +21,26 @@ import {APP_PARAMS} from '@/config'
 
 const _walletFnNavConfig = [
   {name: 'create', to: '/walletCreate', active: false},
-  {name: 'import', to: '/walletImportKeystore', active: true}
+  {name: 'import', to: '/walletImportKeystore', active: true},
 ]
 
 const _walletImportNavigatorConfig = [
   {
     title: 'privatekey',
     name: 'walletImportPrivatekey',
-    isSelected: false
+    isSelected: false,
   }, {
     title: 'keystore',
     name: 'walletImportKeystore',
-    isSelected: false
-  }
+    isSelected: false,
+  },
 ]
 
-if (localRead && localRead("_ENABLE_TREZOR_") === "true") {
+if (localRead && localRead('_ENABLE_TREZOR_') === 'true') {
   _walletImportNavigatorConfig.push({
     title: 'hardware',
     name: 'walletImportHardware',
-    isSelected: false
+    isSelected: false,
   })
 }
 
@@ -51,7 +51,7 @@ export const walletImportNavigatorConfig = _walletImportNavigatorConfig
 export const walletStyleSheetType = {
   seedWallet: 'walletItem_bg_1',
   otherWallet: 'walletItem_bg_2',
-  activeWallet: 'walletItem_bg_0'
+  activeWallet: 'walletItem_bg_0',
 }
 export const seedWalletTitle = APP_PARAMS.SEED_WALLET_NAME_PREFIX
 export const serviceSwitchFnConfig = [
@@ -60,8 +60,8 @@ export const serviceSwitchFnConfig = [
     to: '/mosaic',
     iconDefault: mosaic1Icon,
     iconActive: mosaic2Icon,
-    introduce: 'NEM_Mosaic_is_a_smart_asset_with_rich_attributes_and_features_To_create_a_mosaic_you_must_provision_the_root_namespace_for_your_account',
-    active: false
+    introduce: 'NEM_Mosaic_is_a_smart_asset_with_rich_attributes_and',
+    active: false,
   },
   {
     name: 'multi_signature',
@@ -69,14 +69,14 @@ export const serviceSwitchFnConfig = [
     iconDefault: multisign1Icon,
     iconActive: multisign2Icon,
     introduce: 'provides_an_editable_chain_on_protocol_in_a_multi_signature_account_which_is_the_best_way_to_store_funds_and_achieve_a_common_account',
-    active: true
+    active: true,
   }, {
     name: 'namespace',
     to: '/namespace',
     iconDefault: namespace1Icon,
     iconActive: namespace2Icon,
     introduce: 'a_namespace_is_a_domain_name_that_stores_mosaics_Each_namespace_is_unique_within_a_block_chain_and_mosaics_can_be_defined_and_authenticated_on_a_multi_level_sub_namespace',
-    active: false
+    active: false,
   },
   {
     name: 'apostille',
@@ -84,22 +84,22 @@ export const serviceSwitchFnConfig = [
     iconDefault: apostille1Icon,
     iconActive: apostille2Icon,
     introduce: 'provides_an_editable_chain_on_protocol_in_a_multi_signature_account_which_is_the_best_way_to_store_funds_and_achieve_a_common_account',
-    active: false
+    active: false,
   },
 ]
 export const harvestingStepList = [
-  "Proxy_settings",
-  "Network_settings",
-  "Delegate_requests"
+  'Proxy_settings',
+  'Network_settings',
+  'Delegate_requests',
 ]
 export const harvestingTitleList = [
-  "link_Or_Change",
-  "node_Network",
-  "requesting"
+  'link_Or_Change',
+  'node_Network',
+  'requesting',
 ]
-export const fourStepsPictureList = [step1Of4, step2Of4, step3Of4, step4Of4]
+export const fourStepsPictureList = [ step1Of4, step2Of4, step3Of4, step4Of4 ]
 
-export const threeStepsPictureList = [step1Of3, step2Of3, step3Of3]
+export const threeStepsPictureList = [ step1Of3, step2Of3, step3Of3 ]
 
 export enum harvestingSteps {
   AccountLink = 1,

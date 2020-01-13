@@ -1,7 +1,7 @@
 import {Component, Prop, Provide, Vue} from 'vue-property-decorator'
-import {StoreAccount} from "@/core/model"
-import {validation} from "@/core/validation"
-import {mapState} from "vuex"
+import {StoreAccount} from '@/core/model'
+import {validation} from '@/core/validation'
+import {mapState} from 'vuex'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 
 @Component({
@@ -9,14 +9,14 @@ import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue
     ...mapState({activeAccount: 'account'}),
   },
   components:{
-    ErrorTooltip
-  }
+    ErrorTooltip,
+  },
 })
 export default class extends Vue {
   @Provide() validator: any = this.$validator
   activeAccount: StoreAccount
   validation = validation
-  password:string = ''
+  password = ''
 
   @Prop({default: false})
   returnPassword: boolean

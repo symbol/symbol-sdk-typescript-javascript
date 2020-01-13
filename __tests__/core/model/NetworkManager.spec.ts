@@ -33,7 +33,7 @@ const mockGetBlockByHeight = blockNumber => of(blockNumber).pipe(
   switchMap(blockNumber => {
     if (blockNumber === '29248') return of(block29248)
     return of(block1)
-  })
+  }),
 )
 
 const mockGetBlockByHeightWithLimit = blockNumber => of(blockNumber).pipe(
@@ -41,7 +41,7 @@ const mockGetBlockByHeightWithLimit = blockNumber => of(blockNumber).pipe(
   switchMap(blockNumber => {
     if (blockNumber === '29248') return of([block29248])
     return of(block1)
-  })
+  }),
 )
 
 const mockGetBlockTransactions = (...args) => of(args).pipe(
@@ -93,9 +93,9 @@ const mockStore = {
         setValuesFromFirstBlock: mockNetworkPropertiesSetValuesFromFirstBlock ,
         initializeLatestBlocks: mockNetworkPropertiesInitializeLatestBlocks ,
       },
-      listeners: jest.fn().mockImplementation()
-    }
-  }
+      listeners: jest.fn().mockImplementation(),
+    },
+  },
 }
 
 jest.mock('nem2-sdk/dist/src/infrastructure/BlockHttp', () => ({

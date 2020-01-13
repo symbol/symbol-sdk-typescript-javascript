@@ -55,7 +55,7 @@ export class AppTs extends Vue {
     try {
       await this.$store.dispatch('INITIALIZE_SERVICES', this.$store)
     } catch (error) {
-      console.error("AppTs -> created -> error", error)
+      console.error('AppTs -> created -> error', error)
     }
     if (isWindows) checkInstall()
   }
@@ -90,7 +90,7 @@ export class AppTs extends Vue {
      */
     this.$watchAsObservable('address')
       .pipe(
-        throttleTime(EVENTS_THROTTLING_TIME, asyncScheduler, {leading: true, trailing: true})
+        throttleTime(EVENTS_THROTTLING_TIME, asyncScheduler, {leading: true, trailing: true}),
       )
       .subscribe(async ({newValue, oldValue}) => {
         if (!newValue) return
@@ -105,7 +105,7 @@ export class AppTs extends Vue {
      */
     this.$watchAsObservable('activeAccount.activeMultisigAccount')
       .pipe(
-        throttleTime(EVENTS_THROTTLING_TIME, asyncScheduler, {leading: true, trailing: true})
+        throttleTime(EVENTS_THROTTLING_TIME, asyncScheduler, {leading: true, trailing: true}),
       )
       .subscribe(({newValue, oldValue}) => {
         if (!newValue) return
@@ -120,7 +120,7 @@ export class AppTs extends Vue {
      */
     this.$watchAsObservable('node', {immediate: true})
       .pipe(
-        throttleTime(EVENTS_THROTTLING_TIME, asyncScheduler, {leading: true, trailing: true})
+        throttleTime(EVENTS_THROTTLING_TIME, asyncScheduler, {leading: true, trailing: true}),
       )
       .subscribe(({newValue, oldValue}) => {
         if (newValue && oldValue !== newValue) {

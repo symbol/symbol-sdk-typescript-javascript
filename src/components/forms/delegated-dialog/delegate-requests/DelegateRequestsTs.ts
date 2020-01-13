@@ -1,20 +1,19 @@
-import {Component, Vue, Provide} from "vue-property-decorator";
-import {DEFAULT_FEES, FEE_GROUPS, FEE_SPEEDS, Message} from "@/config"
-import {AppInfo, AppWallet, FormattedTransaction, StoreAccount, Notice, NoticeType} from "@/core/model"
-import {mapState} from "vuex"
-import {validation} from "@/core/validation"
-import {Deadline, Password, PersistentDelegationRequestTransaction, TransactionType, UInt64} from "nem2-sdk"
+import {Component, Vue, Provide} from 'vue-property-decorator'
+import {DEFAULT_FEES, FEE_GROUPS, FEE_SPEEDS, Message} from '@/config'
+import {AppInfo, AppWallet, FormattedTransaction, StoreAccount, Notice, NoticeType} from '@/core/model'
+import {mapState} from 'vuex'
+import {validation} from '@/core/validation'
+import {Deadline, Password, PersistentDelegationRequestTransaction, TransactionType, UInt64} from 'nem2-sdk'
 import ThreeDotsLoading from '@/components/three-dots-loading/ThreeDotsLoading.vue'
-import {RemoteAccountService} from '@/core/services';
-import PasswordAndFeeDialog from '@/components/password-and-fee-dialog/PasswordAndFeeDialog.vue'
+import {RemoteAccountService} from '@/core/services'
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
-import {getAbsoluteMosaicAmount} from "@/core/utils"
+import {getAbsoluteMosaicAmount} from '@/core/utils'
 import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 @Component({
   components: {
     ThreeDotsLoading,
     DisabledForms,
-    CheckPasswordDialog
+    CheckPasswordDialog,
   },
   computed: {...mapState({activeAccount: 'account', app: 'app'})},
 })
@@ -27,7 +26,7 @@ export class DelegateRequestsTs extends Vue {
   validation = validation
   app: AppInfo
   showDialogContainsFeeAndPassword = false
-  password: string = ''
+  password = ''
 
   get feeAmount(): number {
     const {feeSpeed} = this
@@ -58,9 +57,9 @@ export class DelegateRequestsTs extends Vue {
   get isUnconfirmedDelegationRequestTransactionExisted(){
     // @todo use a better flag to get DelegationRequestTransaction in transaction list
     return this.activeAccount.transactionList
-      .find( (item:any)=>item.isTxConfirmed==false
-        && item.rawTx.type == TransactionType.TRANSFER
-        && item.rawTx.mosaics.length == 0
+      .find( (item: any)=>item.isTxConfirmed === false
+        && item.rawTx.type === TransactionType.TRANSFER
+        && item.rawTx.mosaics.length === 0,
       )
   }
 
@@ -86,7 +85,7 @@ export class DelegateRequestsTs extends Vue {
       // this.$emit("nextClicked");
       new AppWallet(this.wallet).announceTransaction(signedTransaction, this.$store)
     } catch (error) {
-      console.error("AccountLinkTransactionTs -> signAndAnnounce -> error", error)
+      console.error('AccountLinkTransactionTs -> signAndAnnounce -> error', error)
     }
   }
 

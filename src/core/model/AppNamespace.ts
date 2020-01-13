@@ -83,12 +83,12 @@ export class AppNamespace {
   static extractFullNamespace(namespace: NamespaceInfo,
     namespaceNames: NamespaceName[]): string {
     return namespace.levels.map((level) => {
-      const namespaceName = namespaceNames.find((name) => name.namespaceId.equals(level));
+      const namespaceName = namespaceNames.find((name) => name.namespaceId.equals(level))
       if (namespaceName === undefined) throw new Error('Not found')
-      return namespaceName;
+      return namespaceName
     })
       .map((namespaceName: NamespaceName) => namespaceName.name)
-      .join('.');
+      .join('.')
   }
 
   isLinked(): boolean {
@@ -105,11 +105,11 @@ export class AppNamespace {
       expired,
       remainingBeforeExpiration: {
         blocks: expiredIn,
-        time: durationToRelativeTime(expiredIn)
+        time: durationToRelativeTime(expiredIn),
       },
       remainingBeforeDeletion: {
         blocks: deletedIn,
-        time: durationToRelativeTime(deletedIn)
+        time: durationToRelativeTime(deletedIn),
       },
     }
   }

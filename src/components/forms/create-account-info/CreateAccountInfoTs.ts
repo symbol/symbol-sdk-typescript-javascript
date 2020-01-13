@@ -1,24 +1,24 @@
-import {Component, Prop, Provide, Vue} from 'vue-property-decorator'
-import {defaultNodeList, formDataConfig, Message} from "@/config"
-import {cloneData, localRead} from "@/core/utils"
+import {Component, Provide, Vue} from 'vue-property-decorator'
+import {formDataConfig, Message} from '@/config'
+import {cloneData} from '@/core/utils'
 import {AppAccounts, AppAccount, StoreAccount} from '@/core/model'
-import {networkTypeConfig} from "@/config/view/setting"
-import {mapState} from "vuex"
-import {getDefaultAccountNetworkType} from "@/core/utils"
-import {validation} from "@/core/validation"
-import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue';
-import {Endpoints} from "@/core/services"
+import {networkTypeConfig} from '@/config/view/setting'
+import {mapState} from 'vuex'
+import {getDefaultAccountNetworkType} from '@/core/utils'
+import {validation} from '@/core/validation'
+import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
+import {Endpoints} from '@/core/services'
 
 @Component({
   components: {
-    ErrorTooltip
+    ErrorTooltip,
   },
   computed: {
     ...mapState({
       activeAccount: 'account',
-      app: 'app'
-    })
-  }
+      app: 'app',
+    }),
+  },
 })
 export class CreateAccountInfoTs extends Vue {
   @Provide() validator: any = this.$validator
@@ -34,7 +34,7 @@ export class CreateAccountInfoTs extends Vue {
 
   get appAccount(): AppAccount {
     const {currentNetworkType} = this
-    let {accountName, password, hint} = this.formItem
+    const {accountName, password, hint} = this.formItem
     return AppAccount.create(password, accountName, [], hint, currentNetworkType)
   }
 
@@ -50,7 +50,7 @@ export class CreateAccountInfoTs extends Vue {
   createNewAccount() {
     const {appAccount,currentNetworkType} = this
     AppAccounts().saveAccountInLocalStorage(appAccount)
-    this.$Notice.success({title: this.$t(Message.OPERATION_SUCCESS) + ''})
+    this.$Notice.success({title: `${this.$t(Message.OPERATION_SUCCESS)}`})
     this.$store.commit('SET_ACCOUNT_DATA', appAccount.currentAccount)
     this.$store.commit('SET_TEMPORARY_PASSWORD', this.formItem.password)
     Endpoints.setNodeInfo(currentNetworkType,this.$store)

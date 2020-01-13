@@ -7,12 +7,12 @@ import VeeValidate from 'vee-validate'
 import OfflineSetting from '@/views/setting/offline-setting/OfflineSetting.vue'
 import {accountMutations, accountState} from '@/store/account'
 import {appMutations, appState, appActions} from '@/store/app'
-import {veeValidateConfig} from "@/core/validation"
-import VueRx from "vue-rx"
+import {veeValidateConfig} from '@/core/validation'
+import VueRx from 'vue-rx'
 import flushPromises from 'flush-promises'
 import i18n from '@/language/index.ts'
-import {hdAccount, mockNetworkCurrency} from "@MOCKS/index"
-import {AppWallet, NetworkProperties} from "@/core/model"
+import {hdAccount, mockNetworkCurrency} from '@MOCKS/index'
+import {AppWallet, NetworkProperties} from '@/core/model'
 
 // @ts-ignore
 const localVue = createLocalVue()
@@ -26,128 +26,127 @@ localVue.use(VueRx)
 config.logModifiedComponents = false
 
 describe('OfflineSetting', () => {
-    let store
-    let wrapper
-    let state
-    beforeEach(() => {
-        store = new Vuex.Store({
-                modules: {
-                    account: {
-                        state: Object.assign(accountState.state, {
-                            // @ts-ignore
-                            wallet: AppWallet.createFromDTO(hdAccount.wallets[0]),
-                            node: 'http://initial.endpoint',
-                            networkCurrency: mockNetworkCurrency,
-                            generationHash: 'initialGenerationHash'
-                        }),
-                        mutations: accountMutations.mutations,
-                    },
-                    app: {
-                        state: Object.assign(appState.state),
-                        mutations: appMutations.mutations,
-                    },
-                    actions: appActions,
-                }
-            }
-        )
+  let store
+  let wrapper
+  beforeEach(() => {
+    store = new Vuex.Store({
+      modules: {
+        account: {
+          state: Object.assign(accountState.state, {
+            // @ts-ignore
+            wallet: AppWallet.createFromDTO(hdAccount.wallets[0]),
+            node: 'http://initial.endpoint',
+            networkCurrency: mockNetworkCurrency,
+            generationHash: 'initialGenerationHash',
+          }),
+          mutations: accountMutations.mutations,
+        },
+        app: {
+          state: Object.assign(appState.state),
+          mutations: appMutations.mutations,
+        },
+        actions: appActions,
+      },
+    },
+    )
 
-        store.state.app.networkProperties = NetworkProperties.create(store)
-        store.state.app.networkProperties.height = 666
-        store.state.app.networkProperties.generationHash = 'initialGenerationHash'
+    store.state.app.networkProperties = NetworkProperties.create(store)
+    store.state.app.networkProperties.height = 666
+    store.state.app.networkProperties.generationHash = 'initialGenerationHash'
 
-        wrapper = shallowMount(OfflineSetting, {
-            sync: false,
-            mocks: {
-                $t: (msg) => msg,
-            },
-            i18n,
-            localVue,
-            store,
-            router,
-        })
+    wrapper = shallowMount(OfflineSetting, {
+      sync: false,
+      mocks: {
+        $t: (msg) => msg,
+      },
+      i18n,
+      localVue,
+      store,
+      router,
+    })
+  })
+
+  it('OfflineSetting should render with appropriate default values', async (done) => {
+    expect(wrapper.vm.$store.state.account.node).toBe('http://initial.endpoint')
+    expect(wrapper.vm.generationHash).toBe('initialGenerationHash')
+    expect(wrapper.vm.networkCurrency).toStrictEqual(mockNetworkCurrency)
+    wrapper.vm.submit()
+    await flushPromises()
+    expect(wrapper.vm.$store.state.account.node).toBe('http://initial.endpoint')
+    expect(wrapper.vm.$store.state.app.networkProperties.generationHash).toBe('initialGenerationHash')
+    expect(wrapper.vm.$store.state.account.networkCurrency).toStrictEqual(mockNetworkCurrency)
+    done()
+  })
+
+  it('OfflineSetting should update store settings properly', async (done) => {
+    expect(wrapper.vm.$store.state.account.node).toBe('http://initial.endpoint')
+    expect(wrapper.vm.generationHash).toBe('initialGenerationHash')
+    expect(wrapper.vm.networkCurrency).toStrictEqual(mockNetworkCurrency)
+    const newGenerationHash = '30CA0A8179477777AB3407611405EAAE6C4BA12156035E4DF8A73BD7651D6D9C'
+    const newNetworkCurrency = {
+      hex: '308F144790CD7BC4',
+      divisibility: 3,
+      ticker: 'XIM',
+      name: 'nom.xom',
+    }
+    wrapper.setData({
+      generationHash: newGenerationHash,
+      networkCurrency: newNetworkCurrency,
     })
 
-    it('OfflineSetting should render with appropriate default values', async (done) => {
-        expect(wrapper.vm.$store.state.account.node).toBe('http://initial.endpoint')
-        expect(wrapper.vm.generationHash).toBe('initialGenerationHash')
-        expect(wrapper.vm.networkCurrency).toStrictEqual(mockNetworkCurrency)
-        wrapper.vm.submit()
-        await flushPromises()
-        expect(wrapper.vm.$store.state.account.node).toBe('http://initial.endpoint')
-        expect(wrapper.vm.$store.state.app.networkProperties.generationHash).toBe('initialGenerationHash')
-        expect(wrapper.vm.$store.state.account.networkCurrency).toStrictEqual(mockNetworkCurrency)
-        done()
+    wrapper.vm.submit()
+    await flushPromises()
+    expect(wrapper.vm.$store.state.account.node).toBe('http://initial.endpoint')
+    expect(wrapper.vm.$store.state.app.networkProperties.generationHash).toBe(newGenerationHash)
+    expect(wrapper.vm.$store.state.account.networkCurrency).toStrictEqual(newNetworkCurrency)
+    done()
+  })
+
+  it('OfflineSetting should not update store settings if generationHash is invalid', async (done) => {
+    expect(wrapper.vm.$store.state.account.node).toBe('http://initial.endpoint')
+    expect(wrapper.vm.generationHash).toBe('initialGenerationHash')
+    expect(wrapper.vm.networkCurrency).toStrictEqual(mockNetworkCurrency)
+    const invalidGenerationHash = 'invalidGenerationHash'
+    const newNetworkCurrency = {
+      hex: '308F144790CD7BC4',
+      divisibility: 3,
+      ticker: 'XIM',
+      name: 'nom.xom',
+    }
+    wrapper.setData({
+      generationHash: invalidGenerationHash,
+      networkCurrency: newNetworkCurrency,
     })
 
-    it('OfflineSetting should update store settings properly', async (done) => {
-        expect(wrapper.vm.$store.state.account.node).toBe('http://initial.endpoint')
-        expect(wrapper.vm.generationHash).toBe('initialGenerationHash')
-        expect(wrapper.vm.networkCurrency).toStrictEqual(mockNetworkCurrency)
-        const newGenerationHash = '30CA0A8179477777AB3407611405EAAE6C4BA12156035E4DF8A73BD7651D6D9C'
-        const newNetworkCurrency = {
-            hex: '308F144790CD7BC4',
-            divisibility: 3,
-            ticker: 'XIM',
-            name: 'nom.xom',
-        }
-        wrapper.setData({
-            generationHash: newGenerationHash,
-            networkCurrency: newNetworkCurrency,
-        })
+    wrapper.vm.submit()
+    await flushPromises()
+    expect(wrapper.vm.$store.state.account.node).toBe('http://initial.endpoint')
+    expect(wrapper.vm.$store.state.app.networkProperties.generationHash).toBe('initialGenerationHash')
+    expect(wrapper.vm.$store.state.account.networkCurrency).toStrictEqual(mockNetworkCurrency)
+    done()
+  })
 
-        wrapper.vm.submit()
-        await flushPromises()
-        expect(wrapper.vm.$store.state.account.node).toBe('http://initial.endpoint')
-        expect(wrapper.vm.$store.state.app.networkProperties.generationHash).toBe(newGenerationHash)
-        expect(wrapper.vm.$store.state.account.networkCurrency).toStrictEqual(newNetworkCurrency)
-        done()
+  it('OfflineSetting should not update store settings if hex is invalid', async (done) => {
+    expect(wrapper.vm.$store.state.account.node).toBe('http://initial.endpoint')
+    expect(wrapper.vm.generationHash).toBe('initialGenerationHash')
+    expect(wrapper.vm.networkCurrency).toStrictEqual(mockNetworkCurrency)
+    const newGenerationHash = '30CA0A8179477777AB3407611405EAAE6C4BA12156035E4DF8A73BD7651D6D9C'
+    const invalidNetworkCurrency = {
+      hex: 'notAValidHex',
+      divisibility: 3,
+      ticker: 'XIM',
+      name: 'nom.xom',
+    }
+    wrapper.setData({
+      generationHash: newGenerationHash,
+      networkCurrency: invalidNetworkCurrency,
     })
 
-    it('OfflineSetting should not update store settings if generationHash is invalid', async (done) => {
-        expect(wrapper.vm.$store.state.account.node).toBe('http://initial.endpoint')
-        expect(wrapper.vm.generationHash).toBe('initialGenerationHash')
-        expect(wrapper.vm.networkCurrency).toStrictEqual(mockNetworkCurrency)
-        const invalidGenerationHash = 'invalidGenerationHash'
-        const newNetworkCurrency = {
-            hex: '308F144790CD7BC4',
-            divisibility: 3,
-            ticker: 'XIM',
-            name: 'nom.xom',
-        }
-        wrapper.setData({
-            generationHash: invalidGenerationHash,
-            networkCurrency: newNetworkCurrency,
-        })
-
-        wrapper.vm.submit()
-        await flushPromises()
-        expect(wrapper.vm.$store.state.account.node).toBe('http://initial.endpoint')
-        expect(wrapper.vm.$store.state.app.networkProperties.generationHash).toBe('initialGenerationHash')
-        expect(wrapper.vm.$store.state.account.networkCurrency).toStrictEqual(mockNetworkCurrency)
-        done()
-    })
-
-    it('OfflineSetting should not update store settings if hex is invalid', async (done) => {
-        expect(wrapper.vm.$store.state.account.node).toBe('http://initial.endpoint')
-        expect(wrapper.vm.generationHash).toBe('initialGenerationHash')
-        expect(wrapper.vm.networkCurrency).toStrictEqual(mockNetworkCurrency)
-        const newGenerationHash = '30CA0A8179477777AB3407611405EAAE6C4BA12156035E4DF8A73BD7651D6D9C'
-        const invalidNetworkCurrency = {
-            hex: 'notAValidHex',
-            divisibility: 3,
-            ticker: 'XIM',
-            name: 'nom.xom',
-        }
-        wrapper.setData({
-            generationHash: newGenerationHash,
-            networkCurrency: invalidNetworkCurrency,
-        })
-
-        wrapper.vm.submit()
-        await flushPromises()
-        expect(wrapper.vm.$store.state.account.node).toBe('http://initial.endpoint')
-        expect(wrapper.vm.$store.state.app.networkProperties.generationHash).toBe('initialGenerationHash')
-        expect(wrapper.vm.$store.state.account.networkCurrency).toStrictEqual(mockNetworkCurrency)
-        done()
-    })
+    wrapper.vm.submit()
+    await flushPromises()
+    expect(wrapper.vm.$store.state.account.node).toBe('http://initial.endpoint')
+    expect(wrapper.vm.$store.state.app.networkProperties.generationHash).toBe('initialGenerationHash')
+    expect(wrapper.vm.$store.state.account.networkCurrency).toStrictEqual(mockNetworkCurrency)
+    done()
+  })
 })

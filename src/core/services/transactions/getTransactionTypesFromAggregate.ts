@@ -1,4 +1,4 @@
-import {TransactionType, AggregateTransaction } from 'nem2-sdk';
+import {TransactionType, AggregateTransaction } from 'nem2-sdk'
 
 
 export const getTransactionTypesFromAggregate = (transaction: AggregateTransaction): TransactionType[] => {

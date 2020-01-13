@@ -1,7 +1,7 @@
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
-import {Address, MultisigAccountInfo} from "nem2-sdk"
-import {mapState} from "vuex"
-import {StoreAccount, AppInfo, AppWallet} from "@/core/model"
+import {Address, MultisigAccountInfo} from 'nem2-sdk'
+import {mapState} from 'vuex'
+import {StoreAccount, AppInfo, AppWallet} from '@/core/model'
 
 @Component({computed: {...mapState({activeAccount: 'account', app: 'app'})}})
 export class SignerSelectorTs extends Vue {
@@ -58,7 +58,7 @@ export class SignerSelectorTs extends Vue {
       ...this.multisigInfo.multisigAccounts
         .map(({publicKey}) => ({
           publicKey,
-          label: this.getMultisigAccountLabel(publicKey)
+          label: this.getMultisigAccountLabel(publicKey),
         })),
     ]
   }

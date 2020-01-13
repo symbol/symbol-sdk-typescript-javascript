@@ -1,12 +1,12 @@
-import {AppWallet, AppState} from '@/core/model';
+import {AppWallet, AppState} from '@/core/model'
 import {
   Account, Password, Deadline, UInt64,
   PersistentDelegationRequestTransaction,
   AccountHttp, AccountInfo, AccountType,
-} from 'nem2-sdk';
-import {CreateWalletType, AppAccounts, HdWallet} from "@/core/model"
+} from 'nem2-sdk'
+import {CreateWalletType, AppAccounts, HdWallet} from '@/core/model'
 import {APP_PARAMS} from '@/config'
-import {Store} from 'vuex';
+import {Store} from 'vuex'
 
 const {MAX_REMOTE_ACCOUNT_CHECKS} = APP_PARAMS
 
@@ -30,7 +30,7 @@ export class RemoteAccountService {
   private async getAvailableRemoteAccount(
     password: Password,
     node: string,
-    batchSize: number = 1,
+    batchSize = 1,
   ): Promise<Account> {
     try {
       this.numberOfCheckedRemoteAccounts += batchSize
@@ -125,13 +125,13 @@ export class RemoteAccountService {
           accountPrivateKey,
           this.wallet.networkType,
           feeAmount,
-        );
+        )
     } catch (error) {
       throw new Error(error)
     }
   }
 
-  private getRemoteAccountFromLinkedAccountKey(password: Password, index: number = 1) {
+  private getRemoteAccountFromLinkedAccountKey(password: Password, index = 1) {
     if (index > MAX_REMOTE_ACCOUNT_CHECKS) {
       throw new Error('Could not find a remote account that corresponds to the linked account key')
     }

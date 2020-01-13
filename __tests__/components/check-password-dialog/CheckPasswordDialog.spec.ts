@@ -7,8 +7,8 @@ import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswor
 import {Modal} from 'view-design'
 import {accountMutations, accountState} from '@/store/account'
 import {appMutations, appState} from '@/store/app'
-import {veeValidateConfig} from "@/core/validation"
-import VueRx from "vue-rx"
+import {veeValidateConfig} from '@/core/validation'
+import VueRx from 'vue-rx'
 import moment from 'vue-moment'
 import flushPromises from 'flush-promises'
 
@@ -23,9 +23,9 @@ localVue.use(Vuex)
 localVue.use(VeeValidate, veeValidateConfig)
 localVue.use(VueRx)
 localVue.directive('focus', {
-  inserted: function (el, binding) {
+  inserted: function (el) {
     el.focus()
-  }
+  },
 })
 // close warning
 config.logModifiedComponents = false
@@ -33,37 +33,36 @@ config.logModifiedComponents = false
 describe('CheckPasswordDialog', () => {
   let store
   let wrapper
-  let state
   beforeEach(() => {
-      store = store = new Vuex.Store({
-          modules: {
-            account: {
-              state: accountState.state,
-              mutations: accountMutations.mutations
-            },
-            app: {
-              state: appState.state,
-              mutations: appMutations.mutations
-            }
-          }
-        }
-      )
-      wrapper = shallowMount(CheckPasswordDialog, {
-        sync: false,
-        mocks: {
-          $t: (msg) => msg,
+    store = store = new Vuex.Store({
+      modules: {
+        account: {
+          state: accountState.state,
+          mutations: accountMutations.mutations,
         },
-        propsData: {
-          visible:true,
-          returnPassword:true,
-          dialogTitle:''
+        app: {
+          state: appState.state,
+          mutations: appMutations.mutations,
         },
-        localVue,
-        i18n,
-        store,
-        router,
-      })
-    }
+      },
+    },
+    )
+    wrapper = shallowMount(CheckPasswordDialog, {
+      sync: false,
+      mocks: {
+        $t: (msg) => msg,
+      },
+      propsData: {
+        visible:true,
+        returnPassword:true,
+        dialogTitle:'',
+      },
+      localVue,
+      i18n,
+      store,
+      router,
+    })
+  },
   )
 
   it('should call $emit("passwordValidated") after submit', async () => {

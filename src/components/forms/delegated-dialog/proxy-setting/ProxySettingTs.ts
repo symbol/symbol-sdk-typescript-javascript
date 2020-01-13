@@ -1,14 +1,14 @@
-import {Component, Vue, Provide} from "vue-property-decorator";
-import {AppInfo, AppWallet, DefaultFee, StoreAccount} from "@/core/model"
-import {mapState} from "vuex"
-import {DEFAULT_FEES, FEE_GROUPS, FEE_SPEEDS} from "@/config"
-import {AccountLinkTransaction, Deadline, LinkAction, Password, TransactionType, UInt64} from "nem2-sdk"
-import {validatePublicKey} from "@/core/validation"
+import {Component, Vue, Provide} from 'vue-property-decorator'
+import {AppInfo, AppWallet, StoreAccount} from '@/core/model'
+import {mapState} from 'vuex'
+import {DEFAULT_FEES, FEE_GROUPS, FEE_SPEEDS} from '@/config'
+import {AccountLinkTransaction, Deadline, LinkAction, Password, TransactionType, UInt64} from 'nem2-sdk'
+import {validatePublicKey} from '@/core/validation'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
-import {RemoteAccountService} from '@/core/services';
+import {RemoteAccountService} from '@/core/services'
 import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
-import {getAbsoluteMosaicAmount} from "@/core/utils"
+import {getAbsoluteMosaicAmount} from '@/core/utils'
 
 @Component({
   components: {ErrorTooltip, CheckPasswordDialog, DisabledForms},
@@ -23,7 +23,7 @@ export class ProxySettingTs extends Vue {
   defaultFees = DEFAULT_FEES[FEE_GROUPS.SINGLE]
   remotePublicKey: string = null
   isShowPasswordDialog = false
-  password: string = ''
+  password = ''
   feeDivider = 1
   isGenerateRemoteAccount = false
 
@@ -50,7 +50,9 @@ export class ProxySettingTs extends Vue {
   }
 
   get isUnconfirmedLinkTransactionExisted() {
-    return this.activeAccount.transactionList.find(item => item.isTxConfirmed == false && item.rawTx.type == TransactionType.LINK_ACCOUNT)
+    return this.activeAccount.transactionList.find(
+      item => item.isTxConfirmed === false && item.rawTx.type === TransactionType.LINK_ACCOUNT,
+    )
   }
 
   checkToCreateRemoteAccount(){
@@ -93,7 +95,7 @@ export class ProxySettingTs extends Vue {
       new AppWallet(this.wallet).announceTransaction(signedTransaction, this.$store)
 
     } catch (error) {
-      console.error("AccountLinkTransactionTs -> submit -> error", error)
+      console.error('AccountLinkTransactionTs -> submit -> error', error)
     }
   }
 
@@ -107,14 +109,18 @@ export class ProxySettingTs extends Vue {
     )
   }
 
-  createAccountLinkTransaction(password: string, remoteAccountPublicKey: string, feeAmount: UInt64): AccountLinkTransaction {
+  createAccountLinkTransaction(
+    password: string,
+    remoteAccountPublicKey: string,
+    feeAmount: UInt64,
+  ): AccountLinkTransaction {
     try {
       return AccountLinkTransaction.create(
         Deadline.create(),
         remoteAccountPublicKey,
         LinkAction.Link,
         this.wallet.networkType,
-        feeAmount
+        feeAmount,
       )
     } catch (error) {
       throw new Error(error)

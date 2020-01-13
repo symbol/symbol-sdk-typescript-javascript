@@ -1,7 +1,7 @@
 import {TransactionType, Address, AggregateTransaction} from 'nem2-sdk'
 import {AppMosaic, AppState, FormattedTransaction} from '@/core/model'
 import {
-   setNamespaces, getTransactionTypesFromAggregate, mosaicsAmountViewFromAddress, handleRecipientAddressAsNamespaceId
+  setNamespaces, getTransactionTypesFromAggregate, mosaicsAmountViewFromAddress, handleRecipientAddressAsNamespaceId,
 } from '@/core/services'
 
 const txTypeToGetNamespaces = [
@@ -11,11 +11,11 @@ const txTypeToGetNamespaces = [
 ]
 
 const txTypeToSetAccountInfo = [
-   TransactionType.LINK_ACCOUNT,
+  TransactionType.LINK_ACCOUNT,
 ]
 
 const txTypeToGetMultisigInfo = [
-   TransactionType.MODIFY_MULTISIG_ACCOUNT,
+  TransactionType.MODIFY_MULTISIG_ACCOUNT,
 ]
 
 /**
@@ -26,13 +26,13 @@ export const onTransactionRefreshModule = (store: any) => { // @TODO: check how 
   store.registerModule('onTransactionRefresh', onTransactionRefreshModule)
 
   store.subscribe(async (mutation, state: AppState) => {
-   if (mutation.type === 'ADD_UNCONFIRMED_TRANSACTION') {
+    if (mutation.type === 'ADD_UNCONFIRMED_TRANSACTION') {
       const formattedTransaction: FormattedTransaction = mutation.payload
       handleRecipientAddressAsNamespaceId([formattedTransaction], store)
-   }
+    }
 
     if (mutation.type === 'ADD_CONFIRMED_TRANSACTION') {
-     try {
+      try {
         const {node, networkCurrency} = state.account
         const {wallet} = state.account
         const {address} = state.account.wallet
@@ -50,29 +50,29 @@ export const onTransactionRefreshModule = (store: any) => { // @TODO: check how 
         const transaction = formattedTransaction.rawTx
 
         const transactionTypes: TransactionType[] = transaction instanceof AggregateTransaction
-            ? getTransactionTypesFromAggregate(transaction)
-            : [transaction.type]
+          ? getTransactionTypesFromAggregate(transaction)
+          : [transaction.type]
 
-         if (txTypeToGetNamespaces.some(a => transactionTypes.some(b => b === a))) {
-            setNamespaces(address, store)
-         }
+        if (txTypeToGetNamespaces.some(a => transactionTypes.some(b => b === a))) {
+          setNamespaces(address, store)
+        }
 
-         if (txTypeToSetAccountInfo.some(a => transactionTypes.some(b => b === a))) {
-            wallet.setAccountInfo(store)
-         }
+        if (txTypeToSetAccountInfo.some(a => transactionTypes.some(b => b === a))) {
+          wallet.setAccountInfo(store)
+        }
 
-         if (txTypeToGetMultisigInfo.some(a => transactionTypes.some(b => b === a))) {
-            wallet.setMultisigStatus(node, store)
-         }
+        if (txTypeToGetMultisigInfo.some(a => transactionTypes.some(b => b === a))) {
+          wallet.setMultisigStatus(node, store)
+        }
 
-         handleRecipientAddressAsNamespaceId([formattedTransaction], store)
-     } catch (error) {
+        handleRecipientAddressAsNamespaceId([formattedTransaction], store)
+      } catch (error) {
         console.error(error)
-     }
+      }
     }
 
-   if (mutation.type === 'SET_TRANSACTION_LIST') {
+    if (mutation.type === 'SET_TRANSACTION_LIST') {
       handleRecipientAddressAsNamespaceId(mutation.payload, store)
-   }
+    }
   })
 }
