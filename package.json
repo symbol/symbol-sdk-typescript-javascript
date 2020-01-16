@@ -66,7 +66,7 @@
     "js-sha3": "^0.8.0",
     "long": "^4.0.0",
     "merkletreejs": "^0.1.7",
-    "nem2-sdk-openapi-typescript-node-client": "0.7.20-beta.6",
+    "nem2-sdk-openapi-typescript-node-client": "0.7.20-alpha.7",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.5",
     "ripemd160": "^2.0.2",
