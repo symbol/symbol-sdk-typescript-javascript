@@ -80,7 +80,7 @@ export enum AccountRestrictionFlags {
      * Block outgoing transactions from a given address.
      */
     BlockOutgoingAddress = (AccountRestrictionTypeEnum.Address +
-                                                   AccountRestrictionTypeEnum.Block + 
+                                                   AccountRestrictionTypeEnum.Block +
                                                    AccountRestrictionTypeEnum.Outgoing),
     /**
      * Block outgoing transactions with a given transaction type.

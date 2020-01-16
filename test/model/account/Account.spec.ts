@@ -15,9 +15,9 @@
  */
 
 import {expect} from 'chai';
+import { Convert } from '../../../src/core/format/Convert';
 import {Account} from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
-import { Convert } from '../../../src/core/format/Convert';
 
 describe('Account', () => {
     const accountInformation = {

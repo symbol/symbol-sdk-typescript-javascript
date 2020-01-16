@@ -25,7 +25,7 @@ import {
     MosaicIdDto,
     MosaicNonceDto,
     SignatureDto,
-    TimestampDto
+    TimestampDto,
 } from 'catbuffer';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
