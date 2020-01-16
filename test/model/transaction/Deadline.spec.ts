@@ -53,7 +53,6 @@ describe('Deadline', () => {
 
     it('make sure epochAdjustment is correct', () => {
         const epochAdjustment = new Date(Deadline.timestampNemesisBlock * 1000);
-        console.log(epochAdjustment.toUTCString());
 
         expect(epochAdjustment.getUTCFullYear()).to.be.equal(2019);
         expect(epochAdjustment.getUTCMonth() + 1).to.be.equal(11);
