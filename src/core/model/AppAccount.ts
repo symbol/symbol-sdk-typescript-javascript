@@ -1,121 +1,83 @@
-import {localRead, localRemove, localSave} from '@/core/utils'
+/**
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import {NetworkType, Password, SimpleWallet} from 'nem2-sdk'
 import {Store} from 'vuex'
-import {AppState} from '@/core/model/types'
-import {AppWallet} from '@/core/model/AppWallet'
 import CryptoJS from 'crypto-js'
-import {CreateWalletType} from '@/core/model/CreateWalletType'
-import {CurrentAccount} from './CurrentAccount'
 
-const defaultAlgo = CryptoJS.algo.AES
-const cryptoJSLib: any = CryptoJS.lib
-const PasswordBasedCipher: any = cryptoJSLib.PasswordBasedCipher
+// internal dependencies
+import {DatabaseTable} from '@/core/services/database/DatabaseTable'
+import {DatabaseModel} from '@/core/services/database/DatabaseModel'
+import {ServiceFactory} from '@/core/services/ServiceFactory'
+import {DatabaseService} from '@/core/services/database/DatabaseService'
+import {
+  DatabaseRelation,
+  DatabaseRelationType,
+} from '@/core/services/database/DatabaseRelation'
 
+/// region database entities
+export class AccountsModel extends DatabaseModel {
+  /**
+   * Entity identifier *field name*
+   * @var {string}
+   */
+  public primaryKey: string = 'accountName'
 
-export const AppAccounts = () => ({
-  getAccountFromLocalStorage(accountName) {
-    const accountMapData = localRead('accountMap') || ''
-    if (!accountMapData) {
-      return ''
-    }
-    const accountMap = JSON.parse(localRead('accountMap'))
-    return accountMap[accountName]
-  },
+  /** 
+   * Entity relationships
+   * @var {Map<string, DatabaseRelation>}
+   */
+  public relations: Map<string, DatabaseRelation> = new Map<string, DatabaseRelation>([
+    ['wallets', new DatabaseRelation(DatabaseRelationType.ONE_TO_MANY)]
+  ])
+}
 
-  saveAccountInLocalStorage(appAccount: AppAccount): void {
-    const accountMap = localRead('accountMap') ? JSON.parse(localRead('accountMap')) : {}
-    accountMap[appAccount.accountName] = appAccount
-    localSave('accountMap', JSON.stringify(accountMap))
-  },
-
-  deleteAccount(accountName: string) {
-    const accountMap = localRead('accountMap') === ''
-      ? {} : JSON.parse(localRead('accountMap'))
-    delete accountMap[accountName]
-    localSave('accountMap', JSON.stringify(accountMap))
-  },
+export class AccountsTable extends DatabaseTable {
+  public constructor() {
+    super('accounts', [
+      'accountName',
+      'wallets',
+      'hint',
+      'seed'
+      'networkType',
+    ])
+  }
 
   /**
-     * @description Save a new password in localStorage and store
-     * @param {string} previousPassword
-     * @param {string} newPassword
-     * @param {string} mnemonic
-     * @param {string} accountName
-     * @param {string} store
-     * @returns {string}
-     */
-  saveNewPassword(
-    previousPassword: string,
-    newPassword: string,
-    mnemonic: string,
-    accountName,
-    store: Store<AppState>,
-  ) {
-    const newCipherPassword = this.encryptString(newPassword, newPassword)
-    const newEncryptedMnemonic = this.encryptString(this.decryptString(mnemonic, previousPassword), newPassword)
-
-    const accountMap = JSON.parse(localRead('accountMap'))
-    accountMap[accountName].password = newCipherPassword
-    accountMap[accountName].wallets = accountMap[accountName].wallets
-      .filter(wallet => wallet.sourceType !== CreateWalletType.trezor)
-      .map((wallet) => {
-        if (wallet.encryptedMnemonic) {
-          wallet.encryptedMnemonic = newEncryptedMnemonic
-        }
-        const {privateKey} = AppWallet.createFromDTO(wallet).getAccount(new Password(previousPassword))
-        const updatedSimpleWallet = SimpleWallet.createFromPrivateKey(
-          wallet.name, new Password(newPassword), privateKey, wallet.networkType,
-        )
-        return {...wallet, updatedSimpleWallet}
-      })
-
-    const newWallet = accountMap[accountName].wallets.find(item => item.address === store.state.account.wallet.address)
-    store.commit('SET_WALLET', AppWallet.createFromDTO(newWallet))
-    store.commit('SET_WALLET_LIST', accountMap[accountName].wallets)
-    localSave('accountMap', JSON.stringify(accountMap))
-  },
-
-
-  /**
-     * @description Encrypts a string
-     * @param {string} toEncrypt
-     * @param {string} password
-     * @returns {string} encrypted string
-     */
-  encryptString(toEncrypt: string, password: string) {
-    const encryptedWorkArray = CryptoJS.enc.Utf16.parse(toEncrypt)
-    return PasswordBasedCipher.encrypt(defaultAlgo, encryptedWorkArray, password).toString()
-  },
-
-  /**
-     * @description Decrypts a string
-     * @param {string} toDecrypt
-     * @param {string} password
-     * @returns {string} decrypted string
-     */
-  decryptString(toDecrypt: string, password: string) {
-    const decrypted = PasswordBasedCipher.decrypt(defaultAlgo, toDecrypt, password)
-    return CryptoJS.enc.Utf16.stringify(decrypted)
-  },
-
-  /**
-     * @description Returns a cipher from localStorage
-     * @returns {StoredCipher}
-     */
-  getCipherPassword(accountName) {
-    return JSON.parse(localRead('accountMap'))[accountName]['password']
-  },
-
-  /**
-     * @description Removes a cipher from the localStorage
-     */ deleteLock() {
-    localRemove('lock')
-  },
-
-})
-
+   * Create a new model instance
+   * @return {AccountsModel}
+   */
+  public createModel(): AccountsModel {
+    return new AccountsModel()
+  }
+}
+/// end-region database entities
 
 export class AppAccount {
+  /**
+   * Model instance
+   * @var {AccountsModel}
+   */
+  public model: AccountsModel
+
+  /**
+   * Storage adapter
+   * @var {DatabaseService}
+   */
+  protected dbService: DatabaseService
+
   constructor(
     public accountName: string,
     public wallets: Array<any>,
@@ -123,41 +85,62 @@ export class AppAccount {
     public hint: string,
     public networkType: NetworkType,
     public seed?: string,
-  ) { }
-
-  static create(
-    clearPassword: string,
-    accountName: string,
-    wallets: Array<any>,
-    hint: string,       
-    networkType: NetworkType,
   ) {
-    try {
-      const password = AppAccounts().encryptString(clearPassword, clearPassword)
-      return new AppAccount(
-        accountName,
-        wallets,
-        password,
-        hint,
-        networkType,
-      )
-    } catch (error) {
-      console.error(error)
-    }
+    // initialize service
+    this.dbService = ServiceFactory.create('database')
+
+    // get database storage adapter
+    const adapter = this.dbService.getAdapter<AccountsModel>()
+    const accessSalt = adapter.getSaltForSession()
+
+    // password encrypted with accessSalt
+    const encryptPass = adapter.encryption.encrypt(password, accessSalt, new Password(accessSalt))
+    const encryptSeed = adapter.encryption.encrypt(seed || '', accessSalt, new Password(accessSalt))
+
+    // populate model
+    this.model = new AccountsModel(new Map<string, any>([
+      ['accountName', this.accountName],
+      ['wallets', this.wallets],
+      ['password', encryptPass],
+      ['hint', this.hint],
+      ['networkType', this.networkType],
+      ['seed', encryptSeed]
+    ]))
   }
 
-  get currentAccount(): CurrentAccount {
-    return {
-      name: this.accountName,
-      password: this.password,
-      networkType: this.networkType,
-    }
-  }
+  // static create(
+  //   clearPassword: string,
+  //   accountName: string,
+  //   wallets: Array<any>,
+  //   hint: string,       
+  //   networkType: NetworkType,
+  // ) {
+  //   try {
+  //     const password = AppAccounts().encryptString(clearPassword, clearPassword)
+  //     return new AppAccount(
+  //       accountName,
+  //       wallets,
+  //       password,
+  //       hint,
+  //       networkType,
+  //     )
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }
 
-  delete(): void {
-    const accountMap = localRead('accountMap') === ''
-      ? {} : JSON.parse(localRead('accountMap'))
-    delete accountMap[this.accountName]
-    localSave('accountMap', JSON.stringify(accountMap))
-  }
+  // get currentAccount(): CurrentAccount {
+  //   return {
+  //     name: this.accountName,
+  //     password: this.password,
+  //     networkType: this.networkType,
+  //   }
+  // }
+
+  // delete(): void {
+  //   const accountMap = localRead('accountMap') === ''
+  //     ? {} : JSON.parse(localRead('accountMap'))
+  //   delete accountMap[this.accountName]
+  //   localSave('accountMap', JSON.stringify(accountMap))
+  // }
 }

@@ -1,15 +1,49 @@
 import Vue from 'vue'
 import {MutationTree, ActionTree, GetterTree} from 'vuex'
+
+// internal dependencies
+import {
+  TemporaryLoginInfo,
+  StoreAccount
+} from './StoreAccount'
+
 import {defaultNetworkConfig} from '@/config/index'
 import {
   AddressAndNamespaces, AddressAndMosaics,
-  AddressAndMultisigInfo, StoreAccount, AppMosaic,
+  AddressAndMultisigInfo, AppMosaic,
   NetworkCurrency, AppWallet, AppNamespace, FormattedTransaction,
-  CurrentAccount, AppState, Balances,
+  CurrentAccount, AppState, Balances, AppAccount,
 } from '@/core/model'
 import {localRead, localSave, absoluteAmountToRelativeAmount} from '@/core/utils'
-import {NetworkType, AccountHttp, Address} from 'nem2-sdk'
+import {NetworkType, AccountHttp, Address, Statement} from 'nem2-sdk'
 import {BalancesService} from '@/core/services/mosaics/BalancesService'
+
+
+export default {
+  namespaced: true,
+  state: {
+    currentAccount: AccountsModel,
+    networkType: NetworkType,
+    nodeUrl: StorePeer,
+  },
+  getters: {
+
+  },
+  mutations: {
+
+  },
+  actions: {
+
+  }
+}
+
+
+
+
+
+
+
+
 
 const state: StoreAccount = {
   wallet: null,
@@ -25,7 +59,7 @@ const state: StoreAccount = {
   },
 
   // Properties to move out
-  currentAccount: CurrentAccount.default(),
+  currentAccount: null,
   multisigAccountInfo: {},
   multisigAccountsMosaics: {},
   multisigAccountsNamespaces: {},
@@ -34,6 +68,20 @@ const state: StoreAccount = {
   networkMosaics: {},
   node: '',
 }
+
+
+const getters: GetterTree<StoreAccount, AppState> = {
+  balance(state): string {
+    const address = state.wallet.address
+    const balances = state.balances[address]
+    const {networkCurrency} = state
+    if (!balances || !networkCurrency) return '0'
+    const balance = balances[networkCurrency.hex]
+    return balance ? absoluteAmountToRelativeAmount(balance, networkCurrency) : '0'
+  },
+  currentAccount: state => state.currentAccount
+}
+
 
 const updateMosaics = (state: StoreAccount, mosaics: AppMosaic[]) => {
   if (!mosaics) return // @TODO: quick fix
@@ -59,11 +107,11 @@ const mutations: MutationTree<StoreAccount> = {
     state.mosaics = {}
     state.namespaces = []
     state.transactionList = []
-    state.currentAccount = CurrentAccount.default()
+    state.currentAccount = null
   },
   SET_WALLET(state: StoreAccount, wallet: AppWallet): void {
     const {currentAccount} = state
-    AppWallet.updateActiveWalletAddress(wallet.address, currentAccount.name)
+    AppWallet.updateActiveWalletAddress(wallet.address, currentAccount.accountName)
     state.wallet = wallet
   },
   SET_MOSAICS(state: StoreAccount, mosaics: Record<string, AppMosaic>): void {
@@ -143,7 +191,7 @@ const mutations: MutationTree<StoreAccount> = {
     newStateTransactions.unshift(transaction)
     state.transactionList = newStateTransactions
   },
-  SET_ACCOUNT_DATA(state: StoreAccount, currentAccount: CurrentAccount) {
+  SET_ACCOUNT_DATA(state: StoreAccount, currentAccount: AppAccount) {
     state.currentAccount = currentAccount
   },
   SET_MULTISIG_ACCOUNT_INFO(state: StoreAccount, addressAndMultisigInfo: AddressAndMultisigInfo) {
@@ -211,17 +259,6 @@ const mutations: MutationTree<StoreAccount> = {
 
   SET_ACCOUNT_BALANCES(state, { address, balances }) {
     Vue.set(state.balances, address, balances)
-  },
-}
-
-const getters: GetterTree<StoreAccount, AppState> = {
-  balance(state): string {
-    const address = state.wallet.address
-    const balances = state.balances[address]
-    const {networkCurrency} = state
-    if (!balances || !networkCurrency) return '0'
-    const balance = balances[networkCurrency.hex]
-    return balance ? absoluteAmountToRelativeAmount(balance, networkCurrency) : '0'
   },
 }
 

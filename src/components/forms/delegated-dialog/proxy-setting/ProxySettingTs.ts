@@ -1,5 +1,6 @@
 import {Component, Vue, Provide} from 'vue-property-decorator'
-import {AppInfo, AppWallet, StoreAccount} from '@/core/model'
+import {AppInfo, AppWallet} from '@/core/model'
+import {StoreAccount} from '@/store/account/StoreAccount'
 import {mapState} from 'vuex'
 import {DEFAULT_FEES, FEE_GROUPS, FEE_SPEEDS} from '@/config'
 import {AccountLinkTransaction, Deadline, LinkAction, Password, TransactionType, UInt64} from 'nem2-sdk'

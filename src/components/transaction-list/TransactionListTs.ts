@@ -5,10 +5,10 @@ import {formatNumber, renderMosaics} from '@/core/utils'
 import {
   FormattedTransaction,
   AppInfo,
-  StoreAccount,
   TransactionCategories,
   FormattedAggregateBonded,
 } from '@/core/model'
+import {StoreAccount} from '@/store/account/StoreAccount'
 import {signAndAnnounce} from '@/core/services'
 import TransactionModal from '@/components/transaction-modal/TransactionModal.vue'
 import {defaultNetworkConfig} from '@/config'

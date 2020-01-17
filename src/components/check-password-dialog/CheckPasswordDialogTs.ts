@@ -1,7 +1,7 @@
 import {mapState} from 'vuex'
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {validation} from '@/core/validation'
-import {StoreAccount} from '@/core/model'
+import {StoreAccount} from '@/store/account/StoreAccount'
 import CheckPassword from '@/components/forms/check-password/CheckPassword.vue'
 
 @Component({

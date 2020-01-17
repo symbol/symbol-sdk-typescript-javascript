@@ -1,18 +1,30 @@
-import {AppWallet, AppState} from '@/core/model'
+
 import {
   Account, Password, Deadline, UInt64,
   PersistentDelegationRequestTransaction,
   AccountHttp, AccountInfo, AccountType,
 } from 'nem2-sdk'
-import {CreateWalletType, AppAccounts, HdWallet} from '@/core/model'
-import {APP_PARAMS} from '@/config'
 import {Store} from 'vuex'
+
+// internal dependencies
+import {IService} from '@/core/services/IService'
+
+import {AppState, FormattedTransaction} from '@/core/model'
+import {APP_PARAMS} from '@/config'
 
 const {MAX_REMOTE_ACCOUNT_CHECKS} = APP_PARAMS
 
-export class RemoteAccountService {
-  numberOfCheckedRemoteAccounts = 0
-  constructor(private readonly wallet: AppWallet) {}
+export class RemoteAccountService implements IService {
+  /**
+   * Service name
+   * @var {string}
+   */
+  name: string = 'remote-account'
+
+  /**
+   * 
+   */
+  numberOfCheckedRemoteAccounts: number = 0
 
   async getAvailableRemotePublicKey(
     password: Password,
@@ -32,6 +44,7 @@ export class RemoteAccountService {
     node: string,
     batchSize = 1,
   ): Promise<Account> {
+
     try {
       this.numberOfCheckedRemoteAccounts += batchSize
       const someRemoteAccounts = this.getRemoteAccounts(password, this.baseSeedIndex, batchSize)
@@ -103,8 +116,7 @@ export class RemoteAccountService {
     return linkableRemoteAccounts[0]
   }
 
-
-  getPersistentDelegationRequestTransaction(
+  public getPersistentDelegationRequestTransaction(
     deadline: Deadline,
     recipientPublicKey: string,
     feeAmount: UInt64,
@@ -142,5 +154,10 @@ export class RemoteAccountService {
 
   static isLinkable(accountInfo: AccountInfo): boolean {
     return accountInfo.accountType && accountInfo.accountType === AccountType.Remote_Unlinked
+  }
+
+  public getHarvestingDelegationRequests(transactionList: FormattedTransaction[]): FormattedTransaction[] {
+    transactionList.filter((tx: any) => tx.rawTx instanceof TransferTransaction)
+                   .filter((tx: any) => tx.rawTx.message instanceof PersistentHarvestingDelegationMessage)
   }
 }

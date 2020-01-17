@@ -13,9 +13,10 @@ import {Component, Vue, Prop, Provide} from 'vue-property-decorator'
 import {timeout, finalize} from 'rxjs/operators'
 import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig, networkConfig} from '@/config/index.ts'
 import {
-  StoreAccount, DefaultFee, AppWallet, ANNOUNCE_TYPES, MULTISIG_FORM_MODES,
+  DefaultFee, AppWallet, ANNOUNCE_TYPES, MULTISIG_FORM_MODES,
   LockParams, AddOrRemove, CosignatoryModifications,
 } from '@/core/model'
+import {StoreAccount} from '@/store/account/StoreAccount'
 import {getAbsoluteMosaicAmount, formatAddress, cloneData} from '@/core/utils'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction, signAndAnnounce} from '@/core/services'
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'

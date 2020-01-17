@@ -15,11 +15,11 @@ import {
   AppMosaic,
   AppWallet,
   AppInfo,
-  StoreAccount,
   DefaultFee,
   MosaicNamespaceStatusType,
   LockParams,
 } from '@/core/model'
+import {StoreAccount} from '@/store/account/StoreAccount'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
 import {validateAddress} from '@/core/validation'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'

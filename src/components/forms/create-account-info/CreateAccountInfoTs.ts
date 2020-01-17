@@ -1,13 +1,23 @@
 import {Component, Provide, Vue} from 'vue-property-decorator'
-import {formDataConfig, Message} from '@/config'
-import {cloneData} from '@/core/utils'
-import {AppAccounts, AppAccount, StoreAccount} from '@/core/model'
-import {networkTypeConfig} from '@/config/view/setting'
+import { Password } from 'nem2-sdk'
 import {mapState} from 'vuex'
+import {
+  formDataConfig, Message} from '@/config'
+import {cloneData} from '@/core/utils'
+import {networkTypeConfig} from '@/config/view/setting'
 import {getDefaultAccountNetworkType} from '@/core/utils'
 import {validation} from '@/core/validation'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 import {Endpoints} from '@/core/services'
+import {StoreAccount} from '@/store/account/StoreAccount'
+import {
+  AccountsModel,
+  AppAccount
+} from '@/core/model/AppAccount'
+import {AccountsRepository} from '@/core/repositories/AccountsRepository'
+import {ProtectedStorageAdapter} from '@/core/services/database/ProtectedStorageAdapter'
+
+let accountsRepository: AccountsRepository = new AccountsRepository()
 
 @Component({
   components: {
@@ -18,7 +28,7 @@ import {Endpoints} from '@/core/services'
       activeAccount: 'account',
       app: 'app',
     }),
-  },
+  }
 })
 export class CreateAccountInfoTs extends Vue {
   @Provide() validator: any = this.$validator
@@ -33,9 +43,13 @@ export class CreateAccountInfoTs extends Vue {
   }
 
   get appAccount(): AppAccount {
-    const {currentNetworkType} = this
-    const {accountName, password, hint} = this.formItem
-    return AppAccount.create(password, accountName, [], hint, currentNetworkType)
+    return new AppAccount(
+      this.formItem.accountName,
+      [],
+      this.formItem.password,
+      this.formItem.hint,
+      this.currentNetworkType,
+    )
   }
 
   submit() {
@@ -43,17 +57,23 @@ export class CreateAccountInfoTs extends Vue {
       .validate()
       .then((valid) => {
         if (!valid) return
-        this.createNewAccount()
+        this.persistAccountAndContinue()
       })
   }
 
-  createNewAccount() {
-    const {appAccount,currentNetworkType} = this
-    AppAccounts().saveAccountInLocalStorage(appAccount)
+  persistAccountAndContinue() {
+    // persist newly created account
+    accountsRepository.create(this.appAccount.model.values)
+
+    // notify
     this.$Notice.success({title: `${this.$t(Message.OPERATION_SUCCESS)}`})
-    this.$store.commit('SET_ACCOUNT_DATA', appAccount.currentAccount)
+
+    // mutate store
+    this.$store.commit('SET_ACCOUNT_DATA', this.appAccount)
     this.$store.commit('SET_TEMPORARY_PASSWORD', this.formItem.password)
-    Endpoints.setNodeInfo(currentNetworkType,this.$store)
+
+    // flush and continue
+    Endpoints.setNodeInfo(this.currentNetworkType, this.$store)
     this.$router.push({name:this.nextPage})
   }
 }

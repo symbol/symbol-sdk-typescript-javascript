@@ -2,7 +2,10 @@ import {HdWallet, randomizeMnemonicWordArray} from '@/core/model/hdWallet/HdWall
 import {hdAccount, hdAccountData, hdAccountTestNet, CosignAccount, CosignAccountRemoteMijinTest, CosignAccountRemoteTestNet} from '@MOCKS/index'
 import {NetworkType, Address, SimpleWallet, Password} from 'nem2-sdk'
 import {Network} from 'nem2-hd-wallets'
-import {AppWallet, CreateWalletType, AppAccounts} from '@/core/model'
+import {AppWallet, CreateWalletType} from '@/core/model'
+import {AESEncryptionService} from '@/core/services/encryption/AESEncryptionService'
+
+const encryption = new AESEncryptionService()
 
 describe('randomizeMnemonicWordArray', () => {
   it('should shuffle an array of string', () => {
@@ -160,7 +163,7 @@ describe('getRemoteAccountFromPrivateKey', () => {
 describe('getSeedWalletRemoteAccounts', () => {
   const seedWallet = AppWallet.createFromDTO(hdAccount.wallets[0])
   const privateKeys = HdWallet.getSeedWalletRemoteAccounts(
-    AppAccounts().decryptString(seedWallet.encryptedMnemonic, 'password'),
+    encryption.decrypt(seedWallet.encryptedMnemonic, '', new Password('password')),
     seedWallet.path,
     1,
     NetworkType.MAIN_NET,

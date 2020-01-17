@@ -5,8 +5,9 @@ import {transactionConfirmationObservable} from '@/core/services'
 import {Message} from '@/config'
 import {
   CreateWalletType, StagedTransaction, SignTransaction,
-  AppInfo, StoreAccount, Notice, NoticeType,
+  AppInfo, Notice, NoticeType,
 } from '@/core/model'
+import {StoreAccount} from '@/store/account/StoreAccount'
 import trezor from '@/core/utils/trezor'
 import TransactionDetails from '@/components/transaction-details/TransactionDetails.vue'
 

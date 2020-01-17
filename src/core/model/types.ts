@@ -9,6 +9,7 @@ import {NetworkProperties, AppWallet, LockParams, Log, CurrentAccount} from '.'
 import {TransactionFormatter} from '../services'
 import {Listeners} from './Listeners'
 import {NetworkManager} from './NetworkManager'
+import {StoreAccount} from '@/store/account/StoreAccount'
 
 export interface AddressAndTransaction {
   address: string
@@ -48,25 +49,6 @@ export interface TemporaryLoginInfo {
 }
 
 export type Balances = Record<string, number>
-
-export interface StoreAccount {
-  activeMultisigAccount: string
-  balances: Record<string, Balances>
-  currentAccount: CurrentAccount
-  mosaics: Record<string, AppMosaic>
-  multisigAccountInfo: Record<string, MultisigAccountInfo>
-  multisigAccountsMosaics: Record<string, Record<string, AppMosaic>>
-  multisigAccountsNamespaces: Record<string, AppNamespace[]>
-  multisigAccountsTransactions: Record<string, Transaction[]>
-  namespaces: AppNamespace[]
-  networkCurrency: NetworkCurrency
-  networkMosaics: Record<string, AppMosaic>
-  node: string
-  temporaryLoginInfo: TemporaryLoginInfo
-  transactionList: FormattedTransaction[]
-  transactionsToCosign: FormattedTransaction[]
-  wallet: AppWallet
-}
 
 export interface LoadingOverlayObject {
   show: boolean

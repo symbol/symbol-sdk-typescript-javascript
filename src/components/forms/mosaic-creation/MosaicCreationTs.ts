@@ -18,7 +18,8 @@ import {
   formatSeconds, formatAddress, getAbsoluteMosaicAmount, cloneData,
 } from '@/core/utils'
 import {formDataConfig, Message, DEFAULT_FEES, FEE_GROUPS, networkConfig} from '@/config'
-import {StoreAccount, AppWallet, DefaultFee, LockParams} from '@/core/model'
+import {AppWallet, DefaultFee, LockParams} from '@/core/model'
+import {StoreAccount} from '@/store/account/StoreAccount'
 import {validation} from '@/core/validation'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction, signAndAnnounce} from '@/core/services'
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'

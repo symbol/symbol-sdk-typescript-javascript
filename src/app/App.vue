@@ -14,7 +14,7 @@ export default class App extends AppTs { }
 </script>
 
 <style lang="less">
-@import "../common/css/common.less";
-@import "../common/css/ivewWindows.less";
-@import "../common/css/iviewMac.less";
+@import "@/public/css/common.less";
+@import "@/public/css/ivewWindows.less";
+@import "@/public/css/iviewMac.less";
 </style>

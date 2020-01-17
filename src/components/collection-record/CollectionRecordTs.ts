@@ -7,7 +7,8 @@ import {
 } from '@/core/utils'
 import TransactionModal from '@/components/transaction-modal/TransactionModal.vue'
 import {TransferType} from '@/core/model/TransferType'
-import {StoreAccount, AppInfo, FormattedTransaction, TransactionStatusGroups} from '@/core/model'
+import {AppInfo, FormattedTransaction, TransactionStatusGroups} from '@/core/model'
+import {StoreAccount} from '@/store/account/StoreAccount'
 import NumberFormatting from '@/components/number-formatting/NumberFormatting.vue'
 
 @Component({

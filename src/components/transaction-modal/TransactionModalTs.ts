@@ -1,6 +1,7 @@
 import {mapState} from 'vuex'
 import {Component, Vue, Prop} from 'vue-property-decorator'
-import {FormattedTransaction, StoreAccount} from '@/core/model'
+import {FormattedTransaction} from '@/core/model'
+import {StoreAccount} from '@/store/account/StoreAccount'
 import TransactionDetails from '@/components/transaction-details/TransactionDetails.vue'
 
 @Component({

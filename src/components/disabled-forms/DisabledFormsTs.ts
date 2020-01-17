@@ -1,6 +1,7 @@
 import {Component, Vue} from 'vue-property-decorator'
 import {mapState} from 'vuex'
-import {AppInfo, StoreAccount} from '@/core/model'
+import {AppInfo} from '@/core/model'
+import {StoreAccount} from '@/store/account/StoreAccount'
 import {Message} from '@/config'
 
 @Component({

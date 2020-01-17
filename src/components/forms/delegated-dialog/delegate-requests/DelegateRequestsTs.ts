@@ -1,11 +1,13 @@
 import {Component, Vue, Provide} from 'vue-property-decorator'
 import {DEFAULT_FEES, FEE_GROUPS, FEE_SPEEDS, Message} from '@/config'
-import {AppInfo, AppWallet, FormattedTransaction, StoreAccount, Notice, NoticeType} from '@/core/model'
+import {AppInfo, AppWallet, FormattedTransaction,  Notice, NoticeType} from '@/core/model'
+import {StoreAccount} from '@/store/account/StoreAccount'
 import {mapState} from 'vuex'
 import {validation} from '@/core/validation'
 import {Deadline, Password, PersistentDelegationRequestTransaction, TransactionType, UInt64} from 'nem2-sdk'
 import ThreeDotsLoading from '@/components/three-dots-loading/ThreeDotsLoading.vue'
-import {RemoteAccountService} from '@/core/services'
+import {RemoteAccountService} from '@/core/services/harvesting/RemoteAccountService'
+import {ServiceFactory} from '@/core/services/ServiceFactory'
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
 import {getAbsoluteMosaicAmount} from '@/core/utils'
 import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
@@ -28,6 +30,10 @@ export class DelegateRequestsTs extends Vue {
   showDialogContainsFeeAndPassword = false
   password = ''
 
+  get remoteService(): RemoteAccountService {
+    return ServiceFactory.create('remote-account')
+  }
+
   get feeAmount(): number {
     const {feeSpeed} = this
     const feeAmount = this.defaultFees.find(({speed}) => feeSpeed === speed).value
@@ -35,7 +41,7 @@ export class DelegateRequestsTs extends Vue {
   }
 
   get wallet() {
-    return new AppWallet(this.activeAccount.wallet)
+    return this.activeAccount.wallet
   }
 
   get networkCurrency() {
@@ -43,7 +49,12 @@ export class DelegateRequestsTs extends Vue {
   }
 
   get persistentAccountRequestTransactions(): FormattedTransaction[] {
-    return this.wallet.getPersistentAccountRequests(this.$store) || []
+    if (! this.activeAccount.wallet.isLinked) {
+      return []
+    }
+
+    const transactions = this.$store.state.account.transactionList
+    return this.remoteService.getHarvestingDelegationRequests(transactions) || []
   }
 
   get latestPersistentTransaction() {

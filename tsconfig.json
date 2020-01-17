@@ -15,6 +15,7 @@
     "sourceMap": true,
     "noImplicitAny": false,
     "baseUrl": ".",
+    "outDir": "./dist/",
     "types": [
       "webpack-env",
       "jest"

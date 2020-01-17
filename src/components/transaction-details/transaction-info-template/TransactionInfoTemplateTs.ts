@@ -1,5 +1,5 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import {StoreAccount} from '@/core/model'
+import {StoreAccount} from '@/store/account/StoreAccount'
 import {mapState} from 'vuex'
 import {renderMosaicsAndReturnArray} from '@/core/utils'
 import {getNamespaceNameFromNamespaceId, formatSenderOrRecipient} from '@/core/services'

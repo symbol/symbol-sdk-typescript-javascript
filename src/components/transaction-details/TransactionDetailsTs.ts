@@ -1,6 +1,7 @@
 import {mapState} from 'vuex'
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import {AppInfo, FormattedTransaction, StoreAccount} from '@/core/model'
+import {AppInfo, FormattedTransaction} from '@/core/model'
+import {StoreAccount} from '@/store/account/StoreAccount'
 import TransactionInfoTemplate
   from '@/components/transaction-details/transaction-info-template/TransactionInfoTemplate.vue'
 import NumberFormatting from '@/components/number-formatting/NumberFormatting.vue'
