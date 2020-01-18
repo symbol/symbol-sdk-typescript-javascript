@@ -1,20 +1,52 @@
-import {
-  AppInfo,
-  LockParams,
-  StagedTransaction,
-  Log,
-  LoadingOverlayObject,
-  NetworkProperties,
-  AppState,
-  Listeners,
-  NetworkManager,
-} from '@/core/model'
-import {localRead, localSave} from '@/core/utils'
-import {MutationTree, Store} from 'vuex'
-import {explorerLinkList} from '@/config'
-import Vue from 'vue'
-import {TransactionFormatter, Endpoints} from '@/core/services'
+/**
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import Vue from 'vue';
 
+export default {
+  namespaced: true,
+  state: {
+    timezone: new Date().getTimezoneOffset() / 60,
+    locale: 'en-US',
+    hasLoadingOverlay: false,
+    hasControlsDisabled: false,
+    controlsDisabledMessage: '',
+  },
+  getters: {
+    currentTimezone: (state) => state.timezone,
+    currentLocale: (state) => state.locale,
+    shouldShowLoadingOverloay: (state) => state.hasLoadingOverlay,
+    shouldDisableControls: (state) => state.hasControlsDisabled,
+  },
+  mutations: { mutate: (state, {key, value}) => Vue.set(state, key, value) },
+  actions: {
+    SET_TIME_ZONE({commit}, timeZone: number): void {
+      commit('mutate', {key: 'timezone', value: timeZone})
+    },
+    SET_UI_DISABLED({commit}, {isDisabled, message}: {isDisabled: boolean, message: string}) {
+      commit('mutate', {key: 'hasControlsDisabled', value: isDisabled})
+      commit('mutate', {key: 'controlsDisabledMessage', value: message})
+    },
+    SET_LOADING_OVERLAY({commit}, loadingOverlay) {
+      const hasLoadingOverlay = loadingOverlay && loadingOverlay.show
+      commit('mutate', {key: 'hasLoadingOverlay', value: hasLoadingOverlay})
+    },
+  }
+}
+
+/*
 const state: AppInfo = {
   timeZone: new Date().getTimezoneOffset() / 60, // current time zone
   locale: 'en-US',
@@ -88,7 +120,7 @@ const mutations: MutationTree<AppInfo> = {
   SET_LOADING_OVERLAY(state: AppInfo, loadingOverlay: LoadingOverlayObject) {
     Object.assign(state.loadingOverlay, loadingOverlay)
   },
-  TRIGGER_NOTICE() {/** Subscribed in App.vue */},
+  TRIGGER_NOTICE() {/** Subscribed in App.vue },
   SET_EXPLORER_BASE_PATH(state: AppInfo, explorerBasePath: string) {
     state.explorerBasePath = explorerBasePath
   },
@@ -128,3 +160,4 @@ const actions = {
 export const appState = {state}
 export const appMutations = {mutations}
 export const appActions = {actions}
+*/

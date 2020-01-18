@@ -1,5 +1,4 @@
 /**
- * 
  * Copyright 2020 NEM Foundation (https://nem.io)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,12 +16,11 @@
 import {Password} from 'nem2-sdk'
 
 // internal dependencies
-import {IService} from '@/core/services/IService'
-import {DatabaseModel} from '@/core/services/database/DatabaseModel'
-import {BaseStorageAdapter} from '@/core/services/database/BaseStorageAdapter'
-import {SimpleStorageAdapter} from '@/core/services/database/SimpleStorageAdapter'
-import {LocalStorageBackend} from '@/core/services/database/backends/LocalStorageBackend'
-import {JSONFormatter} from '@/core/services/database/formatters/JSONFormatter'
+import {IService} from './IService'
+import {DatabaseModel} from '@/core/database/DatabaseModel'
+import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
+import {LocalStorageBackend} from '@/core/database/backends/LocalStorageBackend'
+import {JSONFormatter} from '@/core/database/formatters/JSONFormatter'
 
 export class DatabaseService implements IService {
   /**

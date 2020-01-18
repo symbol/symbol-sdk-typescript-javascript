@@ -1,21 +1,44 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {appState, appMutations, appActions} from '@/store/app'
-import {accountState, accountMutations, accountActions, accountGetters} from '@/store/account'
-import {appMosaicsModule, onTransactionRefreshModule} from '@/store/plugins'
+import AccountStore from '@/store/Account'
+import NetworkStore from '@/store/Network'
+import ChainStore from '@/store/Chain'
+import AppInfoStore from '@/store/AppInfo'
+import Plugins from '@/store/Plugins'
 
-Vue.use(Vuex)
+// use AwaitLock for initialization routines
+import {AwaitLock} from '@/store/AwaitLock'
+const AsyncLock = AwaitLock.create();
+
+Vue.use(Vuex);
 
 export default new Vuex.Store({
+  strict: false,
   modules: {
-    app: {...appState, ...appMutations, ...appActions},
-    account: {
-      namespaced: true,
-      ...accountState,
-      ...accountMutations,
-      ...accountActions,
-      ...accountGetters
-    },
+    app: AppInfoStore,
+    network: NetworkStore,
+    chain: ChainStore,
+    account: AccountStore,
   },
-  plugins: [ appMosaicsModule, onTransactionRefreshModule ],
-})
+  plugins: [ 
+    Plugins.mosaicsPlugin,
+    Plugins.transactionsPlugin,
+  ],
+  actions: {
+    async initialize({ commit, dispatch, getters }) {
+      const callback = async () => {
+        await dispatch('network/initialize')
+        await dispatch('chain/initialize')
+      }
+      await AsyncLock.initialize(callback, commit, dispatch, getters)
+    },
+    // Uninitialize the stores (call on app destroyed).
+    async uninitialize({ dispatch }) {
+      await Promise.all([
+        dispatch('network/uninitialize'),
+        dispatch('chain/uninitialize'),
+        dispatch('account/uninitialize'),
+      ])
+    }
+  }
+});

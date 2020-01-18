@@ -1,5 +1,4 @@
 /**
- * 
  * Copyright 2020 NEM Foundation (https://nem.io)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,9 +15,11 @@
  */
 // internal dependencies
 import {IService} from './IService'
-import {AESEncryptionService} from './encryption/AESEncryptionService'
-import {DatabaseService} from './database/DatabaseService'
-import {RemoteAccountService} from './harvesting/RemoteAccountService'
+import {AESEncryptionService} from './AESEncryptionService'
+import {DatabaseService} from './DatabaseService'
+import {RemoteAccountService} from './RemoteAccountService'
+import {RentalFeesService} from './RentalFeesService'
+import {MarketService} from './MarketService'
 
 export class ServiceFactory {
   /**
@@ -30,6 +31,8 @@ export class ServiceFactory {
   public static create(name: 'encryption'): AESEncryptionService
   public static create(name: 'database'): DatabaseService
   public static create(name: 'remote-account'): RemoteAccountService
+  public static create(name: 'rental-fees'): RentalFeesService
+  public static create(name: 'market'): MarketService
   /// end-region specialised signatures
 
   /**
@@ -52,6 +55,12 @@ export class ServiceFactory {
       break
     case 'remote-account':
       service = new RemoteAccountService()
+      break
+    case 'rental-fees':
+      service = new RentalFeesService()
+      break
+    case 'market':
+      service = new MarketService()
       break
 
     default: throw new Error('Could not find any service by name \'' + serviceOpts.name + ' \'')

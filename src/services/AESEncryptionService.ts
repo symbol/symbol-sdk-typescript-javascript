@@ -1,5 +1,4 @@
 /**
- * 
  * Copyright 2020 NEM Foundation (https://nem.io)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,10 +17,9 @@ import { Password } from 'nem2-sdk'
 import CryptoJS from "crypto-js";
 
 // internal dependencies
-import { IService } from '@/core/services/IService'
-import { IEncryptionService } from '@/core/services/encryption/IEncryptionService'
+import { IService } from './IService'
 
-export class AESEncryptionService implements IEncryptionService, IService {
+export class AESEncryptionService implements IService {
   /**
    * Service name
    * @var {string}

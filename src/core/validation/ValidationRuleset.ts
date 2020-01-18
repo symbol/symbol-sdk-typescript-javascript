@@ -14,8 +14,7 @@ const {
   PRIVATE_KEY_LENGTH,
 } = NETWORK_CONSTANTS
 
-
-export const validation = {
+export const ValidationRuleset = {
   address: 'required|address|addressNetworkType:currentAccount',
   accountPassword: 'required|confirmLock:accountPassword',
   addressOrAlias: `required|${CUSTOM_VALIDATORS_NAMES.addressOrAlias}|addressOrAliasNetworkType:currentAccount`,
@@ -66,5 +65,4 @@ export const validation = {
   walletName:{
     required: true,
   },
-
 }

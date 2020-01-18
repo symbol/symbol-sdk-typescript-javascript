@@ -25,8 +25,8 @@ import {JSONFormatter} from './formatters/JSONFormatter'
 import {IStorageBackend} from './backends/IStorageBackend'
 import {LocalStorageBackend} from './backends/LocalStorageBackend'
 import {ObjectStorageBackend} from './backends/ObjectStorageBackend'
-import {IEncryptionService} from '@/core/services/encryption/IEncryptionService'
-import {AESEncryptionService} from '@/core/services/encryption/AESEncryptionService'
+import {IEncryptionService} from '@/services/encryption/IEncryptionService'
+import {AESEncryptionService} from '@/services/encryption/AESEncryptionService'
 
 export class SimpleStorageAdapter<ModelImpl extends DatabaseModel>
   extends BaseStorageAdapter<ModelImpl> {

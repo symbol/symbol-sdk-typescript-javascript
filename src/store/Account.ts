@@ -22,9 +22,8 @@ import {BalancesService} from '@/core/services/mosaics/BalancesService'
 export default {
   namespaced: true,
   state: {
-    currentAccount: AccountsModel,
-    networkType: NetworkType,
-    nodeUrl: StorePeer,
+    currentAccount: '',
+    networkType: NetworkType.TEST_NET,
   },
   getters: {
 
@@ -39,7 +38,7 @@ export default {
 
 
 
-
+/*
 
 
 
@@ -127,13 +126,13 @@ const mutations: MutationTree<StoreAccount> = {
   },
   /**
      * This mutation's purpose is to not be watched by the appMosaics plugin
-     */
+     
   UPDATE_MOSAICS_INFO(state: StoreAccount, mosaics: AppMosaic[]): void {
     updateMosaics(state, mosaics)
   },
   /**
      * This mutation's purpose is to not be watched by the appMosaics plugin
-     */
+     
   UPDATE_MOSAICS_NAMESPACES(state: StoreAccount, mosaics: AppMosaic[]): void {
     updateMosaics(state, mosaics)
   },
@@ -298,3 +297,4 @@ export const accountState = {state}
 export const accountMutations = {mutations}
 export const accountActions = {actions}
 export const accountGetters = {getters}
+*/

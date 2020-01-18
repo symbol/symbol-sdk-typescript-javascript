@@ -1,6 +1,6 @@
 import {Component, Vue} from 'vue-property-decorator'
 import {NetworkType} from 'nem2-sdk'
-import {mapState} from 'vuex'
+import {mapState, mapGetters} from 'vuex'
 import {asyncScheduler} from 'rxjs'
 import {throttleTime} from 'rxjs/operators'
 import {isWindows, APP_PARAMS} from '@/config'
@@ -16,7 +16,13 @@ const {EVENTS_THROTTLING_TIME} = APP_PARAMS
 
 @Component({
   computed: {
-    ...mapState({activeAccount: 'account', app: 'app'}),
+    ...mapState({
+      activeAccount: 'account',
+      app: 'app'
+    }),
+    ...mapGetters({
+      activePeer: 'network/activePeer',
+    }
   },
   components: {
     DisabledUiOverlay,

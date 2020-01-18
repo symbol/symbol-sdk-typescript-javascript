@@ -13,13 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  NetworkType,
-} from 'nem2-sdk'
+import {Address} from 'nem2-sdk'
 
 // internal dependencies
-import {AccountsModel} from '@/core/model/AppAccount'
-import {StorePeer} from '@/store/'
+import {Validator} from './Validator'
 
-export interface StoreAccount {
+export class AddressValidator extends Validator {
+  /**
+   * Execute the validator with \a value
+   * @param {any} value 
+   * @return {ValidationObject}
+   */
+  public validate(value): {valid: boolean|string} {
+    try {
+      Address.createFromRawAddress(value)
+      return {valid: value}
+    }
+    catch (error) {
+      return {valid: false}
+    }
+  }
 }

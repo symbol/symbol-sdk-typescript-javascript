@@ -1,0 +1,54 @@
+{
+  "explorerUrl": "http://explorer.nemtech.network",
+  "defaultNode": {
+    "protocol": "http",
+    "hostname": "api-harvest-20.ap-northeast-1.nemtech.network",
+    "port": 3000,
+    "url": "http://api-harvest-20.ap-northeast-1.nemtech.network:3000"
+  },
+  "networks": {
+    "testnet-publicTest": {
+      "generationHash": "CC42AAD7BD45E8C276741AB2524BC30F5529AF162AD12247EF9A98D6B54A385B",
+      "currencyMosaic": "nem.xem",
+      "harvestMosaic": "nem.xem",
+      "networkType": "publicTest",
+      "nodes": [
+        "http://api-harvest-20.ap-northeast-1.nemtech.network:3000",
+        "http://api-harvest-20.us-west-1.nemtech.network:3000",
+        "http://api-harvest-20.eu-west-1.nemtech.network:3000",
+        "http://api-harvest-20.ap-southeast-1.nemtech.network:3000",
+        "http://api-harvest-21.ap-southeast-1.nemtech.network:3000",
+        "http://api-harvest-21.ap-northeast-1.nemtech.network:3000"
+      ],
+      "properties": {
+        "mosaicRentalFeeSinkPublicKey": "4428A4DA56362C2293A277159F7C1E270FE7BD6CED461877494006C7D69F1172",
+        "namespaceRentalFeeSinkPublicKey": "4428A4DA56362C2293A277159F7C1E270FE7BD6CED461877494006C7D69F1172",
+        "reservedRootNamespaceNames": ["xem", "nem", "user", "account", "org", "com", "biz", "net", "edu", "mil", "gov", "info"],
+        "targetBlockTime": 15,
+        "defaultDynamicFeeMultiplier": 1000,
+        "mosaicRentalFee": 500,
+        "rootNamespaceRentalFeePerBlock": 1,
+        "childNamespaceRentalFee": 100,
+        "lockedFundsPerAggregate": 10000000,
+        "minHarvesterBalance": 10000000000,
+        "maxMosaicDuration": 21024000,
+        "minNamespaceDuration": 172800,
+        "maxNamespaceDuration": 2102400,
+        "namespaceGracePeriodDuration": 172800,
+        "maxTransactionsPerBlock": 1500,
+        "maxTransactionsPerAggregate": 1000,
+        "maxCosignaturesPerAggregate": 25,
+        "maxMosaicsPerAccount": 10000,
+        "maxMosaicDivisibility": 6,
+        "maxMultisigDepth": 3,
+        "maxCosignatoriesPerAccount": 25,
+        "maxCosignedAccountsPerAccount": 25,
+        "maxChildNamespaces": 256,
+        "maxNamespaceDepth": 3,
+        "maxAccountRestrictionValues": 512,
+        "maxMosaicRestrictionValues": 20,
+        "maxMessageSize": 1024
+      }
+    }
+  }
+}
