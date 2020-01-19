@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {DatabaseModel} from '@/core/services/database/DatabaseModel'
-import {DatabaseTable} from '@/core/services/database/DatabaseTable'
-import {BaseStorageAdapter} from '@/core/services/database/BaseStorageAdapter'
-import {SimpleStorageAdapter} from '@/core/services/database/SimpleStorageAdapter'
+import {DatabaseModel} from '@/core/database/DatabaseModel'
+import {DatabaseTable} from '@/core/database/DatabaseTable'
+import {BaseStorageAdapter} from '@/core/database/BaseStorageAdapter'
+import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
 import {IStorable} from './IStorable'
 
 export abstract class ModelRepository<

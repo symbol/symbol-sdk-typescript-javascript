@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 // internal dependencies
-import {DatabaseModel} from '@/core/services/database/DatabaseModel'
-import {BaseStorageAdapter} from '@/core/services/database/BaseStorageAdapter'
+import {DatabaseModel} from '@/core/database/DatabaseModel'
+import {BaseStorageAdapter} from '@/core/database/BaseStorageAdapter'
 
 export interface IStorable<
   ModelImpl extends DatabaseModel,

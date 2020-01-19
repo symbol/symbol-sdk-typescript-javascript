@@ -15,13 +15,15 @@
  */
 // internal dependencies
 import {DatabaseRelation} from './DatabaseRelation'
+import {IRepository} from '@/repositories/IRepository'
 
 export class DatabaseModel {
   /**
-   * Entity identifier *field name*
-   * @var {string}
+   * Entity identifier *field names*. The identifier
+   * is a combination of the values separated by '-'
+   * @var {string[]}
    */
-  public primaryKey: string
+  public primaryKeys: string[]
 
   /** 
    * Entity relationships
@@ -57,8 +59,39 @@ export class DatabaseModel {
     values: Map<string, any> = new Map<string, any>()
   ) {
     this.values = values
-    this.identifier = values.get(this.primaryKey)
+    this.identifier = this.getIdentifier()
     this.isDirty = false
+  }
+
+  /**
+   * Getter for the *row* identifier
+   * @return {string}
+   */
+  public getIdentifier(): string {
+    if (!this.primaryKeys.length) {
+      throw new Error('Primary keys must be described in derivate DatabaseModel classes.')
+    }
+
+    return this.primaryKeys.map(pk => this.values.get(pk)).join('-')
+  }
+
+  /**
+   * Returns true when all primary key *values* are set
+   * @return {boolean}
+   */
+  public hasIdentifier(): boolean {
+    if (!this.primaryKeys.length) {
+      throw new Error('Primary keys must be described in derivate DatabaseModel classes.')
+    }
+
+    // check value of *all* primary keys
+    for (let i = 0, m = this.primaryKeys.length; i < m; i++) {
+      if (! this.values.has(this.primaryKeys[i])) {
+        return false
+      }
+    }
+
+    return true
   }
 
   /**
@@ -68,10 +101,6 @@ export class DatabaseModel {
    * @throws {Error} On overwrite of primary key with different value
    */
   public update(values: Map<string, any>): DatabaseModel {
-    if (values.has(this.primaryKey) && this.identifier !== values.get(this.primaryKey)) {
-      throw new Error('Primary key cannot be modified.')
-    }
-
     this.values = values
     this.isDirty = true
     return this
@@ -87,5 +116,41 @@ export class DatabaseModel {
     this.values.set(field, value)
     this.isDirty = true
     return this
+  }
+
+  /**
+   * Fetch many relations
+   * @access protected
+   * @param {IRepository<ModelImpl>} repository 
+   * @param {string} fieldName
+   * @return {Map<string, ModelImpl>} Collection of objects mapped by identifier
+   */
+  protected fetchRelations<ModelImpl extends DatabaseModel>(
+    repository: IRepository<ModelImpl>,
+    fieldName: string
+  ): Map<string, ModelImpl> {
+    const resolved = new Map<string, ModelImpl>()
+
+    // resolve object by identifier list stored in values
+    // with field name \a fieldName
+    for (const identifier in this.values.get(fieldName)) {
+      resolved.set(identifier, repository.read(identifier))
+    }
+
+    return resolved
+  }
+
+  /**
+   * Fetch one relation
+   * @access protected
+   * @param {IRepository<ModelImpl>} repository 
+   * @param {string} fieldName
+   * @return {ModelImpl} Collection of objects mapped by identifier
+   */
+  protected fetchRelation<ModelImpl extends DatabaseModel>(
+    repository: IRepository<ModelImpl>,
+    fieldName: string
+  ): ModelImpl {
+    return repository.read(this.values.get(fieldName))
   }
 }

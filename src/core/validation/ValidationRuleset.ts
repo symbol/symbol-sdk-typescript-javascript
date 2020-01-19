@@ -1,4 +1,3 @@
-import {CUSTOM_VALIDATORS_NAMES} from './customValidators'
 import {networkConfig, NETWORK_CONSTANTS, APP_PARAMS} from '@/config'
 
 const {maxMosaicAtomicUnits, maxMosaicDivisibility, NAMESPACE_MAX_LENGTH} = networkConfig
@@ -17,7 +16,7 @@ const {
 export const ValidationRuleset = {
   address: 'required|address|addressNetworkType:currentAccount',
   accountPassword: 'required|confirmLock:accountPassword',
-  addressOrAlias: `required|${CUSTOM_VALIDATORS_NAMES.addressOrAlias}|addressOrAliasNetworkType:currentAccount`,
+  addressOrAlias: `required|addressOrAlias|addressOrAliasNetworkType:currentAccount`,
   amount: 'excluded:""|is_not:0|decimal:6|min_value:0|otherField:selectedMosaic|amountDecimals:selectedMosaic|mosaicMaxAmount:selectedMosaic',
   confirmPassword: 'required|confirmPassword:newPassword',
   divisibility: `required|min_value:0|max_value:${maxMosaicDivisibility}|integer`,

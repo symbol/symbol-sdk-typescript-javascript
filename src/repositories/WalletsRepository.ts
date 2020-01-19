@@ -22,7 +22,7 @@ import {SimpleStorageAdapter} from '@/core/services/database/SimpleStorageAdapte
 import {IRepository} from './IRepository'
 import {ModelRepository} from './ModelRepository'
 
-export class WalletRepository
+export class WalletsRepository
   extends ModelRepository<WalletsTable, WalletsModel>
   implements IRepository<WalletsModel> {
 

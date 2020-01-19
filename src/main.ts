@@ -37,6 +37,9 @@ Vue.directive('focus', {
   },
 })
 
+// Create an event bus
+export const eventBus = new Vue();
+
 export default new Vue({
   el: '#app',
   router,

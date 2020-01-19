@@ -18,30 +18,44 @@ import {Store} from 'vuex'
 import CryptoJS from 'crypto-js'
 
 // internal dependencies
-import {DatabaseTable} from '@/core/services/database/DatabaseTable'
-import {DatabaseModel} from '@/core/services/database/DatabaseModel'
-import {ServiceFactory} from '@/core/services/ServiceFactory'
-import {DatabaseService} from '@/core/services/database/DatabaseService'
+import {DatabaseTable} from '@/core/database/DatabaseTable'
+import {DatabaseModel} from '@/core/database/DatabaseModel'
 import {
   DatabaseRelation,
   DatabaseRelationType,
-} from '@/core/services/database/DatabaseRelation'
+} from '@/core/database/DatabaseRelation'
+import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
+import {ServiceFactory} from '@/services/ServiceFactory'
+import {DatabaseService} from '@/services/DatabaseService'
+import {WalletsModel} from '@/core/model/AppWallet'
+import {WalletsRepository} from '@/repositories/WalletsRepository'
 
 /// region database entities
 export class AccountsModel extends DatabaseModel {
   /**
-   * Entity identifier *field name*
-   * @var {string}
+   * Entity identifier *field names*. The identifier
+   * is a combination of the values separated by '-'
+   * @var {string[]}
    */
-  public primaryKey: string = 'accountName'
+  public primaryKeys: string[] = [
+    'accountName',
+  ]
 
-  /** 
+  /**
    * Entity relationships
    * @var {Map<string, DatabaseRelation>}
    */
   public relations: Map<string, DatabaseRelation> = new Map<string, DatabaseRelation>([
     ['wallets', new DatabaseRelation(DatabaseRelationType.ONE_TO_MANY)]
   ])
+
+  /**
+   * Resolve wallet relations
+   * @return {Map<string, WalletsModel>}
+   */
+  public wallets(): Map<string, WalletsModel> {
+    return this.fetchRelations<WalletsModel>(new WalletsRepository(), 'wallets')
+  }
 }
 
 export class AccountsTable extends DatabaseTable {
@@ -50,7 +64,7 @@ export class AccountsTable extends DatabaseTable {
       'accountName',
       'wallets',
       'hint',
-      'seed'
+      'seed',
       'networkType',
     ])
   }
@@ -78,6 +92,12 @@ export class AppAccount {
    */
   protected dbService: DatabaseService
 
+  /**
+   * Storage adapter
+   * @var {SimpleStorageAdapter<AccountsModel>}
+   */
+  protected adapter: SimpleStorageAdapter<AccountsModel>
+
   constructor(
     public accountName: string,
     public wallets: Array<any>,
@@ -90,12 +110,12 @@ export class AppAccount {
     this.dbService = ServiceFactory.create('database')
 
     // get database storage adapter
-    const adapter = this.dbService.getAdapter<AccountsModel>()
-    const accessSalt = adapter.getSaltForSession()
+    this.adapter = this.dbService.getAdapter<AccountsModel>()
+    const accessSalt = this.adapter.getSaltForSession()
 
     // password encrypted with accessSalt
-    const encryptPass = adapter.encryption.encrypt(password, accessSalt, new Password(accessSalt))
-    const encryptSeed = adapter.encryption.encrypt(seed || '', accessSalt, new Password(accessSalt))
+    const encryptPass = this.adapter.encryption.encrypt(password, accessSalt, new Password(accessSalt))
+    const encryptSeed = this.adapter.encryption.encrypt(seed || '', accessSalt, new Password(accessSalt))
 
     // populate model
     this.model = new AccountsModel(new Map<string, any>([
@@ -107,7 +127,9 @@ export class AppAccount {
       ['seed', encryptSeed]
     ]))
   }
+}
 
+/*
   // static create(
   //   clearPassword: string,
   //   accountName: string,
@@ -143,4 +165,4 @@ export class AppAccount {
   //   delete accountMap[this.accountName]
   //   localSave('accountMap', JSON.stringify(accountMap))
   // }
-}
+*/

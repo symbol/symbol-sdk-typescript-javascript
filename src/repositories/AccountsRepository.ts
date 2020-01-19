@@ -18,7 +18,7 @@ import {
   AccountsTable,
   AccountsModel,
 } from '@/core/model/AppAccount'
-import {SimpleStorageAdapter} from '@/core/services/database/SimpleStorageAdapter'
+import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
 import {IRepository} from './IRepository'
 import {ModelRepository} from './ModelRepository'
 

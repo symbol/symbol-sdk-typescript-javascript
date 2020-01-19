@@ -1,5 +1,6 @@
 {
   "explorerUrl": "http://explorer.nemtech.network",
+  "defaultNetworkType": 152,
   "defaultNode": {
     "protocol": "http",
     "hostname": "api-harvest-20.ap-northeast-1.nemtech.network",

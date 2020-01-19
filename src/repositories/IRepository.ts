@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 // internal dependencies
-import {DatabaseModel} from '@/core/services/database/DatabaseModel'
+import {DatabaseModel} from '@/core/database/DatabaseModel'
 
 export interface IRepository<ModelImpl extends DatabaseModel> {
   /**

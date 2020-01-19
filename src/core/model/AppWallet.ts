@@ -13,35 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  SimpleWallet,
-  NetworkType
-} from 'nem2-sdk'
+import {SimpleWallet} from 'nem2-sdk'
 
 // internal dependencies
-import {DatabaseModel} from '@/core/services/database/DatabaseModel'
-import {DatabaseTable} from '@/core/services/database/DatabaseTable'
-import {DatabaseService} from '@/core/services/database/DatabaseService'
-import { SimpleStorageAdapter } from '../services/database/SimpleStorageAdapter'
+import {DatabaseModel} from '@/core/database/DatabaseModel'
+import {DatabaseTable} from '@/core/database/DatabaseTable'
+import {DatabaseRelation} from '@/core/database/DatabaseRelation'
+import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
+import {DatabaseService} from '@/services/DatabaseService'
+import {ServiceFactory} from '@/services/ServiceFactory'
 
 /// region database entities
 export class WalletsModel extends DatabaseModel {
   /**
-   * Entity identifier *field name*
-   * @var {string}
+   * Entity identifier *field names*. The identifier
+   * is a combination of the values separated by '-'
+   * @var {string[]}
    */
-  public primaryKey: string = 'address'
+  public primaryKeys: string[] = [
+    'address',
+  ]
+
+  /**
+   * Entity relationships
+   * @var {Map<string, DatabaseRelation>}
+   */
+  public relations: Map<string, DatabaseRelation> = new Map<string, DatabaseRelation>([])
 }
 
 export class WalletsTable extends DatabaseTable {
   public constructor() {
     super('wallets', [
+      'name',
       'type',
       'address',
       'publicKey',
       'encPrivate',
       'path',
-      'name',
     ])
   }
 
@@ -94,58 +102,24 @@ export class AppWallet {
   constructor(
     public name: string,
     public simpleWallet: SimpleWallet,
-    public address: string,
     public publicKey: string,
     public path: string,
     public sourceType: string,
-    public networkType: NetworkType,
-    public active: boolean,
-    public encryptedMnemonic: string,
   ) {
+    // initialize service
+    this.dbService = ServiceFactory.create('database')
+
+    // get storage adapter
     this.adapter = this.dbService.getAdapter<WalletsModel>()
 
     // populate model
     this.model = new WalletsModel(new Map<string, any>([
       ['name', this.name],
       ['type', AppWalletType.fromDescriptor(this.sourceType)],
-      ['address', this.address],
+      ['address', this.simpleWallet.address],
       ['publicKey', this.publicKey],
       ['encPrivate', simpleWallet.encryptedPrivateKey],
       ['path', this.path],
-      ['networkType', this.networkType]
     ]))
   }
-
-/*
-  name: string
-  simpleWallet: SimpleWallet
-  address: string
-  publicKey: string
-  path: string
-  sourceType: string
-
-  // Should use AppAccount
-  networkType: NetworkType
-  active: boolean
-  encryptedMnemonic: string
-
-  // Should use store
-  importance: number
-  linkedAccountKey: string
-  remoteAccount: RemoteAccount | null
-  numberOfMosaics: number
-
-  // Remove
-  temporaryRemoteNodeConfig: {
-    publicKey: string
-    node: string
-  } | null
-
-  constructor(wallet?: {
-    name?: string
-    simpleWallet?: SimpleWallet
-  }) {
-    Object.assign(this, wallet)
-  }
-*/
 }
