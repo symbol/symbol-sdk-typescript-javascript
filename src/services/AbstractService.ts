@@ -17,7 +17,7 @@ import {Store} from 'vuex'
 import {Password} from 'nem2-sdk'
 
 // internal dependencies
-import {AbstractService} from './AbstractService'
+import {IService} from './IService'
 import {DatabaseModel} from '@/core/database/DatabaseModel'
 import {DatabaseTable} from '@/core/database/DatabaseTable'
 import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
@@ -34,7 +34,7 @@ export type RepositoryImpl = AccountsRepository
                            | PeersRepository
 /// end-region specialized repository implementations
 
-export class DatabaseService extends AbstractService {
+export abstract class AbstractService implements IService {
   /**
    * Service name
    * @var {string}
@@ -49,42 +49,9 @@ export class DatabaseService extends AbstractService {
 
   /**
    * Construct a service instance around \a store
-   * @param store
+   * @param {Vuex.Store} store 
    */
-  constructor(store: Store<any>) {
-    super(store)
-  }
-
-  /**
-   * Get the database adapter
-   * @return {SimpleStorageAdapter<ModelImpl>}
-   */
-  public getAdapter<ModelImpl extends DatabaseModel>(): SimpleStorageAdapter<ModelImpl> {
-    return new SimpleStorageAdapter<ModelImpl>(
-      new LocalStorageBackend(),
-      new JSONFormatter<ModelImpl>(),
-    )
-  }
-
-  /// region specialized signatures
-  public getRepository(name: 'accounts'): AccountsRepository
-  public getRepository(name: 'wallets'): WalletsRepository
-  public getRepository(name: 'peers'): PeersRepository
-  /// end-region specialized signatures
-
-  /**
-   * Get a repository instance
-   * @param repositoryOpts 
-   * @return {IRepository<ModelImpl>}
-   */
-  public getRepository(repositoryOpts): RepositoryImpl {
-    // try to instantiate repository by name
-    switch (repositoryOpts.name) {
-    case 'accounts': return new AccountsRepository()
-    case 'wallets': return new WalletsRepository()
-    case 'peers': return new PeersRepository()
-
-    default: throw new Error('Could not find a repository by name \'' + repositoryOpts.name + ' \'')
-    }
+  public constructor(store: Store<any>) {
+      this.$store = store
   }
 }

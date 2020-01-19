@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {Store} from 'vuex'
 import {NetworkType} from 'nem2-sdk'
 
 // internal dependencies
@@ -72,7 +73,7 @@ export class AppPeer {
    * Database service
    * @var {DatabaseService}
    */
-  protected dbService: DatabaseService = new DatabaseService()
+  protected dbService: DatabaseService
 
   /**
    * Storage adapter
@@ -81,13 +82,14 @@ export class AppPeer {
   protected adapter: SimpleStorageAdapter<PeersModel>
 
   constructor(
+    public store: Store<any>,
     public host: string,
     public port: number,
     public protocol: string,
     public networkType: NetworkType,
   ) {
     // initialize service
-    this.dbService = ServiceFactory.create('database')
+    this.dbService = ServiceFactory.create('database', store)
 
     // get storage adapter
     this.adapter = this.dbService.getAdapter<PeersModel>()

@@ -1,20 +1,33 @@
-
+/**
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import {Store} from 'vuex'
 import {
   Account, Password, Deadline, UInt64,
   PersistentDelegationRequestTransaction,
   AccountHttp, AccountInfo, AccountType,
 } from 'nem2-sdk'
-import {Store} from 'vuex'
 
 // internal dependencies
-import {IService} from '@/core/services/IService'
+import {AbstractService} from '@/services/AbstractService'
 
-import {AppState, FormattedTransaction} from '@/core/model'
-import {APP_PARAMS} from '@/config'
+//XXX app config store getter
+import appConfig from '../../config/app.conf.json'
+const {MAX_REMOTE_ACCOUNT_CHECKS} = appConfig
 
-const {MAX_REMOTE_ACCOUNT_CHECKS} = APP_PARAMS
-
-export class RemoteAccountService implements IService {
+export class RemoteAccountService extends AbstractService {
   /**
    * Service name
    * @var {string}
@@ -25,6 +38,20 @@ export class RemoteAccountService implements IService {
    * 
    */
   numberOfCheckedRemoteAccounts: number = 0
+
+  /**
+   * Vuex Store 
+   * @var {Vuex.Store}
+   */
+  public $store: Store<any>
+
+  /**
+   * Construct a service instance around \a store
+   * @param store
+   */
+  constructor(store: Store<any>) {
+    super(store)
+  }
 
   async getAvailableRemotePublicKey(
     password: Password,
@@ -157,6 +184,8 @@ export class RemoteAccountService implements IService {
   }
 
   public getHarvestingDelegationRequests(transactionList: FormattedTransaction[]): FormattedTransaction[] {
+
+    
     transactionList.filter((tx: any) => tx.rawTx instanceof TransferTransaction)
                    .filter((tx: any) => tx.rawTx.message instanceof PersistentHarvestingDelegationMessage)
   }

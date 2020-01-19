@@ -14,10 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {Store} from 'vuex'
+
 export interface IService {
   /**
    * Service name
    * @var {string}
    */
   name: string
+
+  /**
+   * Vuex Store 
+   * @var {Vuex.Store}
+   */
+  $store: Store<any>
 }

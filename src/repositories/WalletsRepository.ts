@@ -17,8 +17,8 @@
 import {
   WalletsTable,
   WalletsModel,
-} from '@/core/model/AppWallet'
-import {SimpleStorageAdapter} from '@/core/services/database/SimpleStorageAdapter'
+} from '@/core/database/models/AppWallet'
+import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
 import {IRepository} from './IRepository'
 import {ModelRepository} from './ModelRepository'
 
@@ -38,19 +38,11 @@ export class WalletsRepository
 
   /// region abstract methods
   /**
-   * Getter for the table name
-   * @return {string}
+   * Create a table instance
+   * @return {WalletsTable}
    */
-  public getTableName(): string {
-    return 'wallets'
-  }
-
-  /**
-   * Getter for the identifier name
-   * @return {string}
-   */
-  public getPrimaryKey(): string {
-    return 'address'
+  public createTable(): WalletsTable {
+    return new WalletsTable()
   }
 
   /**
@@ -87,14 +79,17 @@ export class WalletsRepository
    * @return {string} The assigned entity identifier
    */
   create(values: Map<string, any>): string {
-    const identifier = values.get(this.getPrimaryKey())
-    if (!identifier || !identifier.length) {
-      throw new Error('Missing value for mandatory identifier \'' + this.getPrimaryKey() + '\'.')
+    const mapped = this.createModel(values)
+
+    // created object must contain values for all primary keys
+    if (! mapped.hasIdentifier()) {
+      throw new Error('Missing value for mandatory identifier fields \'' + mapped.primaryKeys.join(', ') + '\'.')
     }
 
     // verify uniqueness
+    const identifier = mapped.getIdentifier()
     if (this.find(identifier)) {
-      throw new Error('Wallet with address \'' + identifier + '\' already exists.')
+      throw new Error('Wallet with name \'' + identifier + '\' already exists.')
     }
 
     // update collection
@@ -113,7 +108,7 @@ export class WalletsRepository
   public read(identifier: string): WalletsModel {
     // verify existence
     if (!this.find(identifier)) {
-      throw new Error('Account with name \'' + identifier + '\' does not exist.')
+      throw new Error('Wallet with name \'' + identifier + '\' does not exist.')
     }
 
     return this._collection.get(identifier)
@@ -168,6 +163,8 @@ export class WalletsRepository
     return true
   }
   /// end-region implements IRepository
+}
+
 /*
 
 
@@ -597,4 +594,3 @@ export class WalletsRepository
         )
       }
 */
-}

@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { MosaicInfo } from 'nem2-sdk'
+import {Store} from 'vuex'
+import { MosaicInfo, PublicAccount, MosaicFlags, NetworkType } from 'nem2-sdk'
 
 // internal dependencies
 import {DatabaseModel} from '@/core/database/DatabaseModel'
@@ -25,8 +26,8 @@ import {
 import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
 import {ServiceFactory} from '@/services/ServiceFactory'
 import {DatabaseService} from '@/services/DatabaseService'
-import {WalletsModel} from '@/core/model/AppWallet'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
+import {WalletsModel} from './AppWallet'
 
 /// region database entities
 export class MosaicsModel extends DatabaseModel {
@@ -54,6 +55,24 @@ export class MosaicsModel extends DatabaseModel {
    */
   public wallet(): WalletsModel {
     return this.fetchRelation<WalletsModel>(new WalletsRepository(), 'wallet')
+  }
+
+  /**
+   * Instantiate MosaicInfo object
+   * @return {MosaicInfo}
+   */
+  public info(): MosaicInfo {
+    const argv: any = Object.assign({}, this.values.get('info'))
+    return new MosaicInfo(
+      argv.id,
+      argv.supply || 0,
+      argv.height || 0,
+      PublicAccount.createFromPublicKey(argv.owner || '', NetworkType.MIJIN_TEST), // networkType ignored
+      argv.revision || 1,
+      new MosaicFlags(argv.flags || 0),
+      argv.divisibility || 0,
+      argv.duration || 0,
+    )
   }
 }
 
@@ -88,7 +107,7 @@ export class AppMosaic {
    * Database service
    * @var {DatabaseService}
    */
-  protected dbService: DatabaseService = new DatabaseService()
+  protected dbService: DatabaseService
 
   /**
    * Storage adapter
@@ -97,13 +116,14 @@ export class AppMosaic {
   protected adapter: SimpleStorageAdapter<MosaicsModel>
 
   constructor(
+    public store: Store<any>,
     public walletName: string,
     public hexId: string,
     public name: string,
     public info: MosaicInfo,
   ) {
     // initialize service
-    this.dbService = ServiceFactory.create('database')
+    this.dbService = ServiceFactory.create('database', store)
 
     // get storage adapter
     this.adapter = this.dbService.getAdapter<MosaicsModel>()
@@ -115,6 +135,10 @@ export class AppMosaic {
       ['name', this.name],
       ['info', this.info],
     ]))
+  }
+
+  public get divisibility(): number {
+    return this.model.info().divisibility
   }
 }
 

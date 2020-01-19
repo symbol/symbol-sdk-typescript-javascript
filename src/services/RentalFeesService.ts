@@ -13,32 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {Store} from 'vuex'
 import {Password} from 'nem2-sdk'
 
 // internal dependencies
-import {IService} from './IService'
+import {AbstractService} from './AbstractService'
 
-import {networkConfig} from '@/config'
-import {absoluteAmountToRelativeAmount} from '@/core/utils'
-import {NetworkCurrency} from '@/core/model'
-import {getRelativeMosaicAmount} from '@/core/utils'
+import {Formatters} from '@/core/utils/Formatters'
+import {MosaicHelpers} from '@/core/utils/MosaicHelpers'
+import {MosaicsModel} from '@/core/database/models/AppMosaic'
 
-const {defaultDynamicFeeMultiplier} = networkConfig
+//XXX network config store getter
+import networkConfig from '../../config/network.conf.json'
+const {defaultDynamicFeeMultiplier} = networkConfig.networks['testnet-publicTest'].properties
 
-export class RentalFeesService implements IService {
+export class RentalFeesService extends AbstractService {
   /**
    * Service name
    * @var {string}
    */
   name: string = 'rental-fees'
 
+  /**
+   * Vuex Store 
+   * @var {Vuex.Store}
+   */
+  public $store: Store<any>
+
+  /**
+   * Construct a service instance around \a store
+   * @param store
+   */
+  constructor(store: Store<any>) {
+    super(store)
+  }
+
   public static getFromDurationInBlocks(
     duration: number,
-    networkCurrency: NetworkCurrency,
+    networkCurrency: MosaicsModel,
   ) {
     const absoluteCost = this.getAbsoluteCostFromDuration(duration)
-    const relative = getRelativeMosaicAmount(absoluteCost, networkCurrency.divisibility)
-    const relativeWithTicker = absoluteAmountToRelativeAmount(absoluteCost, networkCurrency)
+    const relative = MosaicHelpers.getRelativeMosaicAmount(absoluteCost, networkCurrency.info().divisibility)
+    const relativeWithTicker = Formatters.absoluteAmountToRelativeAmount(absoluteCost, networkCurrency)
 
     return {absoluteCost, relative, relativeWithTicker}
   }

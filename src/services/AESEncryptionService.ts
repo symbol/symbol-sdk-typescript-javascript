@@ -13,18 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Password } from 'nem2-sdk'
+import {Store} from 'vuex'
+import {Password} from 'nem2-sdk'
 import CryptoJS from "crypto-js";
 
 // internal dependencies
-import { IService } from './IService'
+import { AbstractService } from './AbstractService'
 
-export class AESEncryptionService implements IService {
+export class AESEncryptionService extends AbstractService {
   /**
    * Service name
    * @var {string}
    */
   public name: string = 'encryption'
+
+  /**
+   * Vuex Store 
+   * @var {Vuex.Store}
+   */
+  public $store: Store<any>
+
+  /**
+   * Construct a service instance around \a store
+   * @param store
+   */
+  constructor(store: Store<any>) {
+    super(store)
+  }
 
   /**
    * Encrypt data

@@ -54,7 +54,7 @@ export abstract class ModelRepository<
    */
   protected fetch(): Map<string, ModelImpl> {
     // use DatabaseTable
-    const table = this.getTable()
+    const table = this.createTable()
 
     // read items from storage
     this._collection = this._adapter.read(table.tableName)
@@ -67,7 +67,7 @@ export abstract class ModelRepository<
    */
   protected persist(): number {
     // use DatabaseTable
-    const table = this.getTable()
+    const table = this.createTable()
 
     // read items from storage
     return this._adapter.write(table.tableName, this._collection)
@@ -75,16 +75,10 @@ export abstract class ModelRepository<
 
   /// region abstract methods
   /**
-   * Getter for the table name
-   * @return {string}
+   * Create a table instance
+   * @return {TableImpl}
    */
-  public abstract getTableName(): string
-
-  /**
-   * Getter for the identifier name
-   * @return {string}
-   */
-  public abstract getPrimaryKey(): string
+  public abstract createTable(): TableImpl
 
   /**
    * Create a model instance
@@ -93,6 +87,23 @@ export abstract class ModelRepository<
    */
   public abstract createModel(values: Map<string, any>): ModelImpl
   /// end-region abstract methods
+
+  /**
+   * Getter for the table name
+   * @return {string}
+   */
+  public getTableName(): string {
+    return this.createTable().tableName
+  }
+
+  /**
+   * Getter for the identifier names
+   * @return {string[]}
+   */
+  public getPrimaryKeys(): string[] {
+    // proxy object to read primary keys
+    return this.createModel(new Map<string, any>()).primaryKeys
+  }
 
   /// region implements IStorable
   /**
@@ -115,20 +126,4 @@ export abstract class ModelRepository<
     return this
   }
   /// end-region implements IStorable
-
-  /**
-   * Getter for the database table
-   * @return {DatabaseTable}
-   * @throws {Error} On unregistered schema
-   */
-  public getTable(): DatabaseTable {
-    const schema = this.getTableName()
-
-    // catch unregistered schema
-    if (!this._adapter.schemas.has(schema)) {
-      throw new Error('Schema with name \'' + schema + '\' is not registered.')
-    }
-
-    return this._adapter.schemas.get(schema)
-  }
 }

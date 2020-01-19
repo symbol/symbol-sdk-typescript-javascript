@@ -13,21 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {Store} from 'vuex'
+
 // internal dependencies
-import {IService} from './IService'
+import {AbstractService} from './AbstractService'
 import {localSave} from '@/core/utils'
 import {Market} from '@/core/api'
-import {WebClient} from '@/core/utils/web.ts'
+import {WebClient} from '@/core/utils/WebClient'
 
 // in-place configuration
 import appConfig from '../../config/app.conf.json';
 
-export class MarketService implements IService {
+export class MarketService extends AbstractService {
   /**
    * Service name
    * @var {string}
    */
   name: string = 'market'
+
+  /**
+   * Vuex Store 
+   * @var {Vuex.Store}
+   */
+  public $store: Store<any>
+
+  /**
+   * Construct a service instance around \a store
+   * @param store
+   */
+  constructor(store: Store<any>) {
+    super(store)
+  }
 
   public async setMarketOpeningPrice(that: any) {
     try {

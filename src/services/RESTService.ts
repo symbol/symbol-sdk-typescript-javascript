@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {Store} from 'vuex'
 import {
   AccountHttp,
   BlockHttp,
@@ -32,11 +33,11 @@ import {
 } from 'nem2-sdk'
 
 // internal dependencies
-import {IService} from './IService'
+import {AbstractService} from './AbstractService'
 
 export type HttpRepositoryImpl = Http
 
-export class RESTService implements IService {
+export class RESTService extends AbstractService {
   /**
    * Service name
    * @var {string}
@@ -48,6 +49,20 @@ export class RESTService implements IService {
    * @var {Map<string, RepositoryImpl>} 
    */
   public static _cache: Map<string, HttpRepositoryImpl>
+
+  /**
+   * Vuex Store 
+   * @var {Vuex.Store}
+   */
+  public $store: Store<any>
+
+  /**
+   * Construct a service instance around \a store
+   * @param store
+   */
+  constructor(store: Store<any>) {
+    super(store)
+  }
 
   /// region specialised signatures
   public static create(name: 'AccountHttp'): AccountHttp

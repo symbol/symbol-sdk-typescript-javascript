@@ -15,7 +15,6 @@
  */
 import {NetworkType, Password, SimpleWallet} from 'nem2-sdk'
 import {Store} from 'vuex'
-import CryptoJS from 'crypto-js'
 
 // internal dependencies
 import {DatabaseTable} from '@/core/database/DatabaseTable'
@@ -27,8 +26,9 @@ import {
 import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
 import {ServiceFactory} from '@/services/ServiceFactory'
 import {DatabaseService} from '@/services/DatabaseService'
-import {WalletsModel} from '@/core/model/AppWallet'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
+import {WalletsModel} from './AppWallet'
+import store from '@/store'
 
 /// region database entities
 export class AccountsModel extends DatabaseModel {
@@ -99,6 +99,7 @@ export class AppAccount {
   protected adapter: SimpleStorageAdapter<AccountsModel>
 
   constructor(
+    public store: Store<any>,
     public accountName: string,
     public wallets: Array<any>,
     public password: string,
@@ -107,13 +108,13 @@ export class AppAccount {
     public seed?: string,
   ) {
     // initialize service
-    this.dbService = ServiceFactory.create('database')
+    this.dbService = ServiceFactory.create('database', store)
 
     // get database storage adapter
     this.adapter = this.dbService.getAdapter<AccountsModel>()
-    const accessSalt = this.adapter.getSaltForSession()
 
     // password encrypted with accessSalt
+    const accessSalt = this.adapter.getSaltForSession()
     const encryptPass = this.adapter.encryption.encrypt(password, accessSalt, new Password(accessSalt))
     const encryptSeed = this.adapter.encryption.encrypt(seed || '', accessSalt, new Password(accessSalt))
 

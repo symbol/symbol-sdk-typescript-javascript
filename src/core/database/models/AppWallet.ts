@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {Store} from 'vuex'
 import {SimpleWallet} from 'nem2-sdk'
 
 // internal dependencies
@@ -50,6 +51,7 @@ export class WalletsTable extends DatabaseTable {
       'publicKey',
       'encPrivate',
       'path',
+      'isMultisig'
     ])
   }
 
@@ -91,7 +93,7 @@ export class AppWallet {
    * Database service
    * @var {DatabaseService}
    */
-  protected dbService: DatabaseService = new DatabaseService()
+  protected dbService: DatabaseService
 
   /**
    * Storage adapter
@@ -100,14 +102,16 @@ export class AppWallet {
   protected adapter: SimpleStorageAdapter<WalletsModel>
 
   constructor(
+    public store: Store<any>,
     public name: string,
     public simpleWallet: SimpleWallet,
     public publicKey: string,
     public path: string,
     public sourceType: string,
+    public isMultisig: boolean,
   ) {
     // initialize service
-    this.dbService = ServiceFactory.create('database')
+    this.dbService = ServiceFactory.create('database', store)
 
     // get storage adapter
     this.adapter = this.dbService.getAdapter<WalletsModel>()
@@ -120,6 +124,7 @@ export class AppWallet {
       ['publicKey', this.publicKey],
       ['encPrivate', simpleWallet.encryptedPrivateKey],
       ['path', this.path],
+      ['isMultisig', this.isMultisig]
     ]))
   }
 }

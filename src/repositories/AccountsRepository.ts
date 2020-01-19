@@ -17,7 +17,7 @@
 import {
   AccountsTable,
   AccountsModel,
-} from '@/core/model/AppAccount'
+} from '@/core/database/models/AppAccount'
 import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
 import {IRepository} from './IRepository'
 import {ModelRepository} from './ModelRepository'
@@ -38,25 +38,17 @@ export class AccountsRepository
 
   /// region abstract methods
   /**
-   * Getter for the table name
-   * @return {string}
+   * Create a table instance
+   * @return {AccountsTable}
    */
-  public getTableName(): string {
-    return 'accounts'
-  }
-
-  /**
-   * Getter for the identifier name
-   * @return {string}
-   */
-  public getPrimaryKey(): string {
-    return 'accountName'
+  public createTable(): AccountsTable {
+    return new AccountsTable()
   }
 
   /**
    * Create a model instance
    * @param {Map<string, any>} values
-   * @return {ModelImpl}
+   * @return {AccountsModel}
    */
   public createModel(values: Map<string, any>): AccountsModel {
     return new AccountsModel(values)
@@ -81,19 +73,21 @@ export class AccountsRepository
     return this._collection
   }
 
-
   /**
    * Create an entity
    * @param {Map<string, any>} values
    * @return {string} The assigned entity identifier
    */
   create(values: Map<string, any>): string {
-    const identifier = values.get(this.getPrimaryKey())
-    if (!identifier || !identifier.length) {
-      throw new Error('Missing value for mandatory identifier \'' + this.getPrimaryKey() + '\'.')
+    const mapped = this.createModel(values)
+
+    // created object must contain values for all primary keys
+    if (! mapped.hasIdentifier()) {
+      throw new Error('Missing value for mandatory identifier fields \'' + mapped.primaryKeys.join(', ') + '\'.')
     }
 
     // verify uniqueness
+    const identifier = mapped.getIdentifier()
     if (this.find(identifier)) {
       throw new Error('Account with name \'' + identifier + '\' already exists.')
     }

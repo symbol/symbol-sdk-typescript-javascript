@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {Store} from 'vuex'
 import {NamespaceInfo} from 'nem2-sdk'
 
 // internal dependencies
@@ -25,8 +26,8 @@ import {
 import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
 import {ServiceFactory} from '@/services/ServiceFactory'
 import {DatabaseService} from '@/services/DatabaseService'
-import {WalletsModel} from '@/core/model/AppWallet'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
+import {WalletsModel} from './AppWallet'
 
 /// region database entities
 export class NamespacesModel extends DatabaseModel {
@@ -88,7 +89,7 @@ export class AppNamespace {
    * Database service
    * @var {DatabaseService}
    */
-  protected dbService: DatabaseService = new DatabaseService()
+  protected dbService: DatabaseService
 
   /**
    * Storage adapter
@@ -97,13 +98,14 @@ export class AppNamespace {
   protected adapter: SimpleStorageAdapter<NamespacesModel>
 
   constructor(
+    public store: Store<any>,
     public walletName: string,
     public hexId: string,
     public name: string,
     public info: NamespaceInfo,
   ) {
     // initialize service
-    this.dbService = ServiceFactory.create('database')
+    this.dbService = ServiceFactory.create('database', store)
 
     // get storage adapter
     this.adapter = this.dbService.getAdapter<NamespacesModel>()

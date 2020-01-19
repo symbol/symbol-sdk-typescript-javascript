@@ -13,6 +13,159 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// internal dependencies
+import {
+  PeersTable,
+  PeersModel,
+} from '@/core/database/models/AppPeer'
+import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
+import {IRepository} from './IRepository'
+import {ModelRepository} from './ModelRepository'
+
+export class PeersRepository
+  extends ModelRepository<PeersTable, PeersModel>
+  implements IRepository<PeersModel> {
+
+  /**
+   * Construct a repository around \a adapter storage adapter.
+   * @param {SimpleStorageAdapter<PeersModel>} adapter 
+   */
+  public constructor(
+    adapter: SimpleStorageAdapter<PeersModel> = new SimpleStorageAdapter<PeersModel>(),
+  ) {
+    super(adapter)
+  }
+
+  /// region abstract methods
+  /**
+   * Create a table instance
+   * @return {PeersTable}
+   */
+  public createTable(): PeersTable {
+    return new PeersTable()
+  }
+
+  /**
+   * Create a model instance
+   * @param {Map<string, any>} values
+   * @return {ModelImpl}
+   */
+  public createModel(values: Map<string, any>): PeersModel {
+    return new PeersModel(values)
+  }
+  /// end-region abstract methods
+
+  /// region implements IRepository
+  /**
+   * Check for existence of entity by \a identifier
+   * @param {string} identifier 
+   * @return {boolean}
+   */
+  public find(identifier: string): boolean {
+    return this._collection.has(identifier)
+  }
+
+  /**
+   * Getter for the collection of items
+   * @return {Map<string, PeersModel>}
+   */
+  public collect(): Map<string, PeersModel> {
+    return this._collection
+  }
+
+  /**
+   * Create an entity
+   * @param {Map<string, any>} values
+   * @return {string} The assigned entity identifier
+   */
+  create(values: Map<string, any>): string {
+    const mapped = this.createModel(values)
+
+    // created object must contain values for all primary keys
+    if (! mapped.hasIdentifier()) {
+      throw new Error('Missing value for mandatory identifier fields \'' + mapped.primaryKeys.join(', ') + '\'.')
+    }
+
+    // verify uniqueness
+    const identifier = mapped.getIdentifier()
+    if (this.find(identifier)) {
+      throw new Error('Peer with host \'' + identifier + '\' already exists.')
+    }
+
+    // update collection
+    this._collection.set(identifier, new PeersModel(values))
+
+    // persist to storage
+    this.persist()
+    return identifier
+  }
+
+  /**
+   * Getter for the collection of items
+   * @param {string} identifier
+   * @return {PeersModel}
+   */
+  public read(identifier: string): PeersModel {
+    // verify existence
+    if (!this.find(identifier)) {
+      throw new Error('Peer with host \'' + identifier + '\' does not exist.')
+    }
+
+    return this._collection.get(identifier)
+  }
+
+  /**
+   * Update an entity
+   * @param {string} identifier
+   * @param {Map<string, any>} values
+   * @return {PeersModel} The new values
+   */
+  public update(identifier: string, values: Map<string, any>): PeersModel {
+    // require existing
+    const previous = this.read(identifier)
+
+    // populate/update values
+    let iterator = values.keys()
+    for (let i = 0, m = values.size; i < m; i++) {
+      const key = iterator.next()
+      const value = values.get(key.value)
+
+      // expose only "values" from model
+      previous.values.set(key.value, value)
+    }
+
+    // update collection
+    this._collection.set(identifier, previous)
+
+    // persist to storage
+    this.persist()
+    return previous
+  }
+
+  /**
+   * Delete an entity
+   * @param {string} identifier
+   * @return {boolean} Whether an element was deleted
+   */
+  public delete(identifier: string): boolean {
+    // require existing
+    if (!this.find(identifier)) {
+      throw new Error('Peer with host \'' + identifier + '\' does not exist.')
+    }
+
+    // update collection
+    if(! this._collection.delete(identifier)) {
+      return false
+    }
+
+    // persist to storage
+    this.persist()
+    return true
+  }
+  /// end-region implements IRepository
+}
+
+/*
 import {Store} from 'vuex'
 import {
   BlockInfo,
@@ -34,10 +187,6 @@ import {NotificationType} from '@/core/utils/NotificationType'
 import {eventBus} from '../main'
 
 export class PeersRepository  {
-  blockHttp: BlockHttp
-  namespaceHttp: NamespaceHttp
-  namespaceService: NamespaceService
-  chainHttp: ChainHttp
   private endpoint: string = null
   private generationHash: string = null
 
@@ -47,7 +196,7 @@ export class PeersRepository  {
   ) {}
 
   public static create(store: Store<AppState>) {
-    return new NetworkManager(
+    return new PeersRepository(
       store,
       store.state.app.networkProperties,
     )
@@ -159,3 +308,4 @@ export class PeersRepository  {
     store.dispatch('SET_NETWORK_MOSAICS', {appMosaics, currentEndpoint})
   }
 }
+*/
