@@ -1,27 +1,37 @@
+/**
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import {Component, Vue} from 'vue-property-decorator'
-import {NetworkType} from 'nem2-sdk'
 import {mapState, mapGetters} from 'vuex'
+import {NetworkType} from 'nem2-sdk'
 import {asyncScheduler} from 'rxjs'
 import {throttleTime} from 'rxjs/operators'
-import {isWindows, APP_PARAMS} from '@/config'
-import {setMarketOpeningPrice, OnWalletChange, OnActiveMultisigAccountChange} from '@/core/services'
-import {AppInfo, Notice, NetworkManager, Listeners} from '@/core/model'
-import {StoreAccount} from '@/store/account/StoreAccount'
+
+// internal dependencies
 import DisabledUiOverlay from '@/components/disabled-ui-overlay/DisabledUiOverlay.vue'
 import TransactionConfirmation from '@/components/transaction-confirmation/TransactionConfirmation.vue'
 import LoadingOverlay from '@/components/loading-overlay/LoadingOverlay.vue'
-import {checkInstall} from '@/core/utils'
+import {Electron} from '@/core/utils/Electron'
 
-const {EVENTS_THROTTLING_TIME} = APP_PARAMS
+import appConfig from '../../config/app.conf.json'
+const {EVENTS_THROTTLING_TIME} = appConfig
 
 @Component({
   computed: {
-    ...mapState({
-      activeAccount: 'account',
-      app: 'app'
-    }),
     ...mapGetters({
-      activePeer: 'network/activePeer',
+      activePeer: 'network/currentNode',
     }
   },
   components: {
@@ -64,7 +74,7 @@ export class AppTs extends Vue {
     } catch (error) {
       console.error('AppTs -> created -> error', error)
     }
-    if (isWindows) checkInstall()
+    if (process.platform === 'win32') Electron.checkInstall()
   }
 
   async mounted() {

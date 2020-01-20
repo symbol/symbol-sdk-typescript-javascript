@@ -30,6 +30,31 @@ export const getOtherFieldValue = (otherField, validator) => {
 export class ValidatorFactory {
 
   /**
+   * List of known custom validators
+   * @var {string}
+   */
+  public static customValidators: string[] = [
+    'newAccountName',
+    'alias',
+    'publicKey',
+    'confirmLock',
+    'remoteAccountPrivateKey',
+    'confirmPassword',
+    'confirmWalletPassword',
+    'mosaicId',
+    'namespaceOrMosaicId',
+    'addressOrAlias',
+    'address',
+    'addressNetworkType',
+    'addressOrAliasNetworkType',
+    'addressOrPublicKey',
+    'privateKey',
+    'otherField',
+    'amountDecimals',
+    'mosaicMaxAmount',
+  ]
+
+  /**
    * Private constructor (singleton)
    * @access private
    */

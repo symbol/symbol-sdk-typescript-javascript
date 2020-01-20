@@ -1,38 +1,66 @@
+/**
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import Vue from 'vue'
-import {MutationTree, ActionTree, GetterTree} from 'vuex'
+import {NetworkType} from 'nem2-sdk'
 
 // internal dependencies
-import {
-  TemporaryLoginInfo,
-  StoreAccount
-} from './StoreAccount'
-
-import {defaultNetworkConfig} from '@/config/index'
-import {
-  AddressAndNamespaces, AddressAndMosaics,
-  AddressAndMultisigInfo, AppMosaic,
-  NetworkCurrency, AppWallet, AppNamespace, FormattedTransaction,
-  CurrentAccount, AppState, Balances, AppAccount,
-} from '@/core/model'
-import {localRead, localSave, absoluteAmountToRelativeAmount} from '@/core/utils'
-import {NetworkType, AccountHttp, Address, Statement} from 'nem2-sdk'
-import {BalancesService} from '@/core/services/mosaics/BalancesService'
-
+import {$eventBus} from '../main'
+import {AwaitLock} from './AwaitLock';
+const Lock = AwaitLock.create();
 
 export default {
   namespaced: true,
   state: {
+    initialized: false,
     currentAccount: '',
-    networkType: NetworkType.TEST_NET,
+    currentWallet: '',
   },
   getters: {
-
+    getInitialized: state => state.initialized,
+    currentAccount: state => state.currentAccount,
   },
   mutations: {
-
+    setInitialized: (state, initialized) => { state.initialized = initialized },
+    currentAccount: (state, accountName) => Vue.set(state, 'currentAccount', accountName),
   },
   actions: {
+    async initialize({ commit, dispatch, getters }) {
+      const callback = async () => {
+        // update store
+        commit('setInitialized', true)
+      }
 
+      // aquire async lock until initialized
+      await Lock.initialize(callback, {commit, dispatch, getters})
+    },
+    async uninitialize({ commit, dispatch, getters }) {
+      const callback = async () => {
+        commit('setInitialized', false)
+      }
+      await Lock.uninitialize(callback, {commit, dispatch, getters})
+    },
+    async SET_CURRENT_ACCOUNT({commit, dispatch}, accountName) {
+      //XXX validate account exists
+      commit('currentAccount', accountName)
+
+      // reset store + re-initialize
+      await dispatch('uninitialize', null, {root: true})
+      await dispatch('initialize')
+      $eventBus.$emit('onAccountChange', accountName)
+    }
   }
 }
 

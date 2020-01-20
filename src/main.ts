@@ -1,44 +1,64 @@
+/**
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import Vue from 'vue'
 import Router from 'vue-router'
 import VueRx from 'vue-rx'
-import {veeValidateConfig} from '@/core/validation'
+import moment from 'vue-moment'
+import VeeValidate from 'vee-validate'
+import iView from 'view-design'
+import locale from 'view-design/dist/locale/en-US'
+import 'view-design/dist/styles/iview.css'
+
+// internal dependencies
+import {VeeValidateConfig} from '@/core/validators/VeeValidateConfig'
 import App from '@/app/App.vue'
 import i18n from '@/language/index.ts'
 import store from '@/store/index.ts'
 import router from '@/router/index.ts'
-import iView from 'view-design'
-import 'view-design/dist/styles/iview.css'
-import htmlRem from '@/core/utils/rem.ts'
-import {isWindows} from '@/config/index.ts'
-import {resetFontSize} from '@/core/utils/electron.ts'
-import VeeValidate from 'vee-validate'
-import locale from 'view-design/dist/locale/en-US'
-import moment from 'vue-moment'
+import {Electron} from '@/core/utils/Electron'
 
+/// region UI plugins
 Vue.use(iView, {locale})
 Vue.use(moment as any)
 Vue.use(Router)
 Vue.use(VueRx)
-// Introduced the global
-Vue.use(VeeValidate, veeValidateConfig)
-htmlRem()
-if (isWindows) {
-  resetFontSize()
+Vue.use(VeeValidate, VeeValidateConfig)
+
+Electron.htmlRem()
+if (process.platform === 'win32') {
+  Electron.resetFontSize()
 }
 
-Vue.config.productionTip = false
-/*
-* Custom instruction
-* input auto focus
-* */
 Vue.directive('focus', {
   inserted: function (el) {
     el.focus()
   },
 })
+/// end-region UI plugins
 
-// Create an event bus
-export const eventBus = new Vue();
+/// region event bus (events propagated on parallel thread)
+/**
+ * This event bus channels following events:
+ * 
+ * - newConnection with \a nodeUrl
+ * - onAccountChange with \a accountName
+ * - onWalletChange with \a walletAddress
+ */
+export const $eventBus = new Vue();
+/// end-region event bus
 
 export default new Vue({
   el: '#app',
@@ -47,5 +67,3 @@ export default new Vue({
   i18n,
   render: h => h(App),
 })
-
-

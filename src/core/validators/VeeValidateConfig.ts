@@ -1,12 +1,29 @@
-import i18n from '@/language'
+/**
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import VeeValidate from 'vee-validate'
 import en from 'vee-validate/dist/locale/en'
 import ja from 'vee-validate/dist/locale/ja'
 import zhCN from 'vee-validate/dist/locale/zh_CN'
-import {registerCustomValidators} from './customValidators'
-import {NotificationType} from '@/core/Helpers'
 
-export const veeValidateConfig = {
+// internal dependencies
+import i18n from '@/language'
+import {NotificationType} from '@/core/utils/NotificationType'
+import {ValidatorFactory} from './ValidatorFactory'
+
+export const VeeValidateConfig = {
   i18n,
   fieldsBagName: 'fieldBags',
   dictionary: {
@@ -47,4 +64,16 @@ export const veeValidateConfig = {
   },
 }
 
-registerCustomValidators(VeeValidate.Validator)
+/// region register custom validators for vee-validate
+ValidatorFactory.customValidators.map((name: string) => {
+  const customValidator = (name, validator) => ({
+    name,
+    validator,
+    register() {
+      return ValidatorFactory.create(this.name, this)
+    },
+  })
+
+  customValidator(name, VeeValidate.Validator)
+})
+/// end-region register custom validators for vee-validate
