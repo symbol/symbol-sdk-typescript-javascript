@@ -17,9 +17,8 @@ import {Store} from 'vuex'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
-import {localSave} from '@/core/utils'
-import {Market} from '@/core/api'
 import {WebClient} from '@/core/utils/WebClient'
+import {MarketsRepository} from '@/repositories/MarketsRepository'
 
 // in-place configuration
 import appConfig from '../../config/app.conf.json';
@@ -29,7 +28,7 @@ export class MarketService extends AbstractService {
    * Service name
    * @var {string}
    */
-  name: string = 'market'
+  public name: string = 'market'
 
   /**
    * Vuex Store 
@@ -38,25 +37,41 @@ export class MarketService extends AbstractService {
   public $store: Store<any>
 
   /**
+   * The repository instance
+   * @var {MarketsRepository}
+   */
+  protected repository: MarketsRepository
+
+  /**
    * Construct a service instance around \a store
    * @param store
    */
   constructor(store: Store<any>) {
     super(store)
+    this.repository = new MarketsRepository()
   }
 
   public async setMarketOpeningPrice(that: any) {
     try {
-      const rstStr = await Market.kline({period: '1min', symbol: 'xemusdt', size: '1'})
+      const rstStr: any = await this.kline({
+        period: '1min',
+        symbol: 'xemusdt',
+        size: '1'
+      })
       if (!rstStr.rst) return
+
+      // parse response
       const rstQuery: any = JSON.parse(rstStr.rst)
       const result = rstQuery.data ? rstQuery.data[0].close : 0
-      that.$store.commit('SET_XEM_USD_PRICE', result)
-      const openPriceOneMinute = {
-        timestamp: new Date().getTime(),
-        openPrice: result,
-      }
-      localSave('openPriceOneMinute', JSON.stringify(openPriceOneMinute))
+
+      // update state
+      that.$store.commit('market/SET_CURRENT_PRICE', result)
+
+      // save to storage
+      this.repository.create(new Map<string, any>([
+        ['timestamp', new Date().getTime()],
+        ['price_usd', result]
+      ]))
     } catch (error) {
       console.error('setMarketOpeningPrice -> error', error)
     }

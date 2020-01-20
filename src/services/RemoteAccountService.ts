@@ -15,29 +15,44 @@
  */
 import {Store} from 'vuex'
 import {
-  Account, Password, Deadline, UInt64,
-  PersistentDelegationRequestTransaction,
-  AccountHttp, AccountInfo, AccountType,
+  Account,
+  AccountType,
+  Address,
+  PublicAccount,
 } from 'nem2-sdk'
+import {Wallet} from 'nem2-hd-wallets'
 
 // internal dependencies
 import {AbstractService} from '@/services/AbstractService'
-
-//XXX app config store getter
-import appConfig from '../../config/app.conf.json'
-const {MAX_REMOTE_ACCOUNT_CHECKS} = appConfig
+import {WalletService} from '@/services/WalletService'
+import {RESTService} from '@/services/RESTService'
+import {DerivationService, DerivationPathLevels} from '@/services/DerivationService'
+import {DerivationPathValidator} from '@/core/validators/DerivationPathValidator'
 
 export class RemoteAccountService extends AbstractService {
   /**
    * Service name
    * @var {string}
    */
-  name: string = 'remote-account'
+  public name: string = 'remote-account'
 
   /**
-   * 
+   * Default remote account derivation path
+   * @var {string}
    */
-  numberOfCheckedRemoteAccounts: number = 0
+  public static readonly DEFAULT_PATH = 'm/44\'/43\'/0\'/1\'/0\''
+  
+  /**
+   * Wallets service
+   * @var {WalletService}
+   */
+  protected wallets: WalletService
+  
+  /**
+   * Derivation service
+   * @var {DerivationService}
+   */
+  protected paths: DerivationService
 
   /**
    * Vuex Store 
@@ -51,98 +66,58 @@ export class RemoteAccountService extends AbstractService {
    */
   constructor(store: Store<any>) {
     super(store)
+    this.wallets = new WalletService(store)
+    this.paths = new DerivationService(store)
   }
 
-  async getAvailableRemotePublicKey(
-    password: Password,
-    store: Store<AppState>,
-  ): Promise<string> {
-    try {
-      const {node} = store.state.account
-      const availableRemoteAccount = await this.getAvailableRemoteAccount(password, node)
-      return availableRemoteAccount.publicKey
-    } catch (error) {
-      throw new Error(error)
+  /**
+   * Get next available remote account public key
+   * @param {Wallet} wallet 
+   * @param {string} path
+   * @return {Promise<PublicAccount>}
+   */
+  async getNextRemoteAccountPublicKey(
+    wallet: Wallet,
+    path: string = RemoteAccountService.DEFAULT_PATH,
+  ): Promise<PublicAccount> {
+    if (!new DerivationPathValidator().validate(path)) {
+      throw new Error('Invalid derivation path for remote account: ' + path)
     }
-  }
-
-  private async getAvailableRemoteAccount(
-    password: Password,
-    node: string,
-    batchSize = 1,
-  ): Promise<Account> {
 
     try {
-      this.numberOfCheckedRemoteAccounts += batchSize
-      const someRemoteAccounts = this.getRemoteAccounts(password, this.baseSeedIndex, batchSize)
-      const someRemoteAccountsAddresses = someRemoteAccounts.map(({address}) => address)
+      // prepare discovery process
+      const currentPeer = this.$store.getters['network/currentPeer'].url
+      const networkType = this.$store.getters['network/networkType']
+      const accountHttp = RESTService.create('AccountHttp', currentPeer)
 
-      const accountsInfo = await new AccountHttp(node)
-        .getAccountsInfo(someRemoteAccountsAddresses)
-        .toPromise()
+      // generate 10 remote accounts
+      let nextPath: string = path
+      const remoteAccounts: Map<string, Account> = new Map<string, Account>()
+      const remoteAddresses: Address[] = []
+      for (let i = 0; i < 10; i++) {
+        // derive child account and store
+        const remoteAccount = wallet.getChildAccount(nextPath, networkType)
+        remoteAccounts.set(remoteAccount.address.plain(), remoteAccount)
+        remoteAddresses.push(remoteAccount.address)
 
-      return this.getFirstFreeRemoteAccount(someRemoteAccounts, accountsInfo)
-    } catch (error) {
-      if (this.numberOfCheckedRemoteAccounts < MAX_REMOTE_ACCOUNT_CHECKS) {
-        return this.getAvailableRemoteAccount(password, node, MAX_REMOTE_ACCOUNT_CHECKS - 1)
+        // increment derivation path
+        nextPath = this.paths.incrementPathLevel(nextPath, DerivationPathLevels.Remote)
       }
 
-      throw new Error('Could not find a linkable remote account')
+      // read account infos
+      const remoteInfos = await accountHttp.getAccountsInfo(remoteAddresses).toPromise()
+      const firstLinkable = remoteInfos.filter((remoteInfo) => {
+        return remoteInfo.accountType && remoteInfo.accountType === AccountType.Remote_Unlinked
+      }).shift()
+
+      // instantiate with first available remote account
+      return PublicAccount.createFromPublicKey(firstLinkable.publicKey, networkType)
+    }
+    catch (error) {
+      throw new Error('Could not get remote account public key: ' + error)
     }
   }
-
-  private get baseSeedIndex(): number {
-    if (this.numberOfCheckedRemoteAccounts === 1) return 1
-    return 2
-  }
-
-  private getRemoteAccounts(
-    password: Password,
-    remoteAccountFirstIndex: number,
-    numberOfAccounts: number,
-  ): Account[] {
-    switch (this.wallet.sourceType) {
-      case CreateWalletType.seed:
-        return HdWallet.getSeedWalletRemoteAccounts(
-          AppAccounts().decryptString(this.wallet.encryptedMnemonic, password.value),
-          this.wallet.path,
-          remoteAccountFirstIndex,
-          this.wallet.networkType,
-          numberOfAccounts,
-        )
-
-      case CreateWalletType.privateKey:
-      case CreateWalletType.keyStore:
-        return HdWallet.getRemoteAccountsFromPrivateKey(
-          this.wallet.getAccount(password).privateKey.toString(),
-          remoteAccountFirstIndex,
-          this.wallet.networkType,
-          numberOfAccounts,
-        )
-
-      case CreateWalletType.trezor:
-        throw new Error('remote account generation from Trezor wallet is not supported')
-
-      default:
-        throw new Error('Something went wrong at getRemoteAccounts')
-    }
-  }
-
-  private getFirstFreeRemoteAccount(remoteAccounts: Account[], accountsInfo: AccountInfo[]) {
-    if (!accountsInfo.length) return remoteAccounts[0]
-
-    const linkableRemoteAccounts = remoteAccounts.filter(({address}) => {
-      const matchedAccountInfo = accountsInfo.find(ai => ai.address.plain() === address.plain())
-      return matchedAccountInfo === undefined || RemoteAccountService.isLinkable(matchedAccountInfo)
-    })
-
-    if (!linkableRemoteAccounts.length) {
-      throw new Error('Could not find a free remote account')
-    }
-
-    return linkableRemoteAccounts[0]
-  }
-
+/*
   public getPersistentDelegationRequestTransaction(
     deadline: Deadline,
     recipientPublicKey: string,
@@ -170,23 +145,11 @@ export class RemoteAccountService extends AbstractService {
     }
   }
 
-  private getRemoteAccountFromLinkedAccountKey(password: Password, index = 1) {
-    if (index > MAX_REMOTE_ACCOUNT_CHECKS) {
-      throw new Error('Could not find a remote account that corresponds to the linked account key')
-    }
-
-    const accountsToMatch = this.getRemoteAccounts(password, index, MAX_REMOTE_ACCOUNT_CHECKS)
-    return accountsToMatch.find(({publicKey}) => publicKey === this.wallet.linkedAccountKey)
-  }
-
-  static isLinkable(accountInfo: AccountInfo): boolean {
-    return accountInfo.accountType && accountInfo.accountType === AccountType.Remote_Unlinked
-  }
-
   public getHarvestingDelegationRequests(transactionList: FormattedTransaction[]): FormattedTransaction[] {
 
     
     transactionList.filter((tx: any) => tx.rawTx instanceof TransferTransaction)
                    .filter((tx: any) => tx.rawTx.message instanceof PersistentHarvestingDelegationMessage)
   }
+  */
 }

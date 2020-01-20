@@ -15,9 +15,14 @@
  */
 import Vue from 'vue';
 
+// internal dependencies
+import {AwaitLock} from './AwaitLock';
+const Lock = AwaitLock.create();
+
 export default {
   namespaced: true,
   state: {
+    initialized: false,
     timezone: new Date().getTimezoneOffset() / 60,
     locale: 'en-US',
     hasLoadingOverlay: false,
@@ -25,23 +30,46 @@ export default {
     controlsDisabledMessage: '',
   },
   getters: {
+    getInitialized: state => state.initialized,
     currentTimezone: (state) => state.timezone,
     currentLocale: (state) => state.locale,
     shouldShowLoadingOverloay: (state) => state.hasLoadingOverlay,
     shouldDisableControls: (state) => state.hasControlsDisabled,
   },
-  mutations: { mutate: (state, {key, value}) => Vue.set(state, key, value) },
+  mutations: {
+    setInitialized: (state, initialized) => { state.initialized = initialized },
+    timezone: (state, timezone) => Vue.set(state, 'timezone', timezone),
+    toggleControlsDisabled: (state, {disable, message}) => {
+      Vue.set(state, 'hasControlsDisabled', disable)
+      Vue.set(state, 'controlsDisabledMessage', message || '')
+    },
+    toggleLoadingOverlay: (state, display) => Vue.set(state, 'hasLoadingOverlay', display),
+  },
   actions: {
-    SET_TIME_ZONE({commit}, timeZone: number): void {
-      commit('mutate', {key: 'timezone', value: timeZone})
+    async initialize({ commit, dispatch, getters }) {
+      const callback = async () => {
+        // update store
+        commit('setInitialized', true)
+      }
+
+      // aquire async lock until initialized
+      await Lock.initialize(callback, {commit, dispatch, getters})
+    },
+    async uninitialize({ commit, dispatch, getters }) {
+      const callback = async () => {
+        commit('setInitialized', false)
+      }
+      await Lock.uninitialize(callback, {commit, dispatch, getters})
+    },
+    SET_TIME_ZONE({commit}, timezone: number): void {
+      commit('timezone', timezone)
     },
     SET_UI_DISABLED({commit}, {isDisabled, message}: {isDisabled: boolean, message: string}) {
-      commit('mutate', {key: 'hasControlsDisabled', value: isDisabled})
-      commit('mutate', {key: 'controlsDisabledMessage', value: message})
+      commit('toggleControlsDisabled', {disable: isDisabled, message: message})
     },
     SET_LOADING_OVERLAY({commit}, loadingOverlay) {
       const hasLoadingOverlay = loadingOverlay && loadingOverlay.show
-      commit('mutate', {key: 'hasLoadingOverlay', value: hasLoadingOverlay})
+      commit('toggleLoadingOverlay', hasLoadingOverlay)
     },
   }
 }

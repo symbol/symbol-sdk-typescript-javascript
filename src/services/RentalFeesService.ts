@@ -32,7 +32,7 @@ export class RentalFeesService extends AbstractService {
    * Service name
    * @var {string}
    */
-  name: string = 'rental-fees'
+  public name: string = 'rental-fees'
 
   /**
    * Vuex Store 

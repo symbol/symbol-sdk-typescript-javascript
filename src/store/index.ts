@@ -15,9 +15,11 @@
  */
 import Vue from 'vue'
 import Vuex from 'vuex'
-import AccountStore from '@/store/Account'
-import NetworkStore from '@/store/Network'
 import AppInfoStore from '@/store/AppInfo'
+import NetworkStore from '@/store/Network'
+import AccountStore from '@/store/Account'
+import WalletStore from '@/store/Wallet'
+import MarketStore from '@/store/Market'
 
 // use AwaitLock for initialization routines
 import {AwaitLock} from '@/store/AwaitLock'
@@ -25,24 +27,34 @@ const Lock = AwaitLock.create();
 
 Vue.use(Vuex);
 
+/**
+ * Application Store
+ * 
+ * This store initializes peer connection
+ */
 export default new Vuex.Store({
   strict: false,
   modules: {
     app: AppInfoStore,
     network: NetworkStore,
     account: AccountStore,
+    wallet: WalletStore,
+    market: MarketStore,
   },
   actions: {
     async initialize({ commit, dispatch, getters }) {
       const callback = async () => {
+        await dispatch('app/initialize')
         await dispatch('network/initialize')
-        await dispatch('chain/initialize')
       }
+
+      // aquire async lock until initialized
       await Lock.initialize(callback, {commit, dispatch, getters})
     },
     // Uninitialize the stores (call on app destroyed).
     async uninitialize({ dispatch }) {
       await Promise.all([
+        dispatch('app/uninitialize'),
         dispatch('network/uninitialize'),
         dispatch('account/uninitialize'),
         dispatch('wallet/uninitialize'),
