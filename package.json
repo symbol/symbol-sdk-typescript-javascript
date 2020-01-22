@@ -58,7 +58,7 @@
   },
   "dependencies": {
     "bluebird": "^3.5.5",
-    "catbuffer": "0.0.10",
+    "catbuffer": "0.0.11",
     "nem2-sdk-openapi-typescript-node-client": "0.7.20-alpha.7",
     "crypto-js": "^3.1.9-1",
     "js-joda": "^1.6.2",
