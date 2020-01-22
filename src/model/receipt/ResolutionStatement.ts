@@ -80,15 +80,15 @@ export class ResolutionStatement {
             ReceiptVersion.RESOLUTION_STATEMENT, type.valueOf(),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.unresolved as Address | NamespaceId, networkType)),
             this.resolutionEntries.map((entry) => new AddressResolutionEntryBuilder(
-                new AddressDto(RawAddress.stringToAddress((entry.resolved as Address).plain())),
                 new ReceiptSourceBuilder(entry.source.primaryId, entry.source.secondaryId),
+                new AddressDto(RawAddress.stringToAddress((entry.resolved as Address).plain())),
             )),
         ) : new MosaicResolutionStatementBuilder(ReceiptVersion.RESOLUTION_STATEMENT,
                 type.valueOf(),
                 new UnresolvedMosaicIdDto(UInt64.fromHex((this.unresolved as MosaicId | NamespaceId).toHex()).toDTO()),
                 this.resolutionEntries.map((entry) => new MosaicResolutionEntryBuilder(
-                    new MosaicIdDto((entry.resolved as MosaicId).toDTO()),
                     new ReceiptSourceBuilder(entry.source.primaryId, entry.source.secondaryId),
+                    new MosaicIdDto((entry.resolved as MosaicId).toDTO()),
                 )),
         );
         const hasher = sha3_256.create();
