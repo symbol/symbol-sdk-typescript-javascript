@@ -22,6 +22,8 @@ import {DatabaseService} from './DatabaseService'
 import {RemoteAccountService} from './RemoteAccountService'
 import {RentalFeesService} from './RentalFeesService'
 import {MarketService} from './MarketService'
+import {WalletService} from './WalletService'
+import {DerivationService} from './DerivationService'
 
 export class ServiceFactory {
   /**
@@ -35,6 +37,8 @@ export class ServiceFactory {
   public static create(name: 'remote-account', store: Store<any>): RemoteAccountService
   public static create(name: 'rental-fees', store: Store<any>): RentalFeesService
   public static create(name: 'market', store: Store<any>): MarketService
+  public static create(name: 'wallet', store: Store<any>): WalletService
+  public static create(name: 'derivation', store: Store<any>): DerivationService
   /// end-region specialised signatures
 
   /**
@@ -69,8 +73,17 @@ export class ServiceFactory {
     case 'market':
       service = new MarketService(store)
       break
+    case 'wallet':
+      service = new WalletService(store)
+      break
+    case 'derivation':
+      service = new DerivationService(store)
+      break
 
-    default: throw new Error('Could not find any service by name \'' + name + ' \'')
+    default: 
+      const errorMessage = 'Could not find any service by name \'' + name + ' \''
+      store.dispatch('diagnostic/ADD_ERROR', errorMessage)
+      throw new Error(errorMessage)
     }
 
     ServiceFactory._cache.set(name, service)

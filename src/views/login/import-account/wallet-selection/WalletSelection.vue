@@ -12,8 +12,8 @@
             <span class="address-balance">{{ $t('Balance') }}</span>
           </div>
           <div class="scroll">
-            <div v-for="(a, index) in addressList" :key="index" @click="addAccount(index,a)">
-              <div v-if="!(index in selectedAccountMap)" class="table-item pointer">
+            <div v-for="(a, index) in addressesList" :key="index" @click="selectedAccounts.push(index)">
+              <div v-if="!(index in selectedAccounts)" class="table-item pointer">
                 <span class="address-id">{{ index + 1 }}</span>
                 <span class="address-value">{{ miniAddress(a) }}</span>
                 <span v-if="addressMosaicMap[a.plain()]" class="address-balance overflow_ellipsis">
@@ -43,8 +43,8 @@
           </div>
           <div class="scroll radius">
             <div
-              v-for="(value,key,index) in selectedAccountMap" :key="key" class="table-item pointer"
-              @click="removeAccount(key)"
+              v-for="(index, key) in selectedAccounts" :key="key" class="table-item pointer"
+              @click="selectedAccounts = selectedAccounts.splice(selectedAccounts.indexOf(index), 1)"
             >
               <span class="address-id"> {{ index + 1 }} </span>
               <span class="address-value">{{ miniAddress(value) }}</span>
@@ -67,10 +67,10 @@
 </template>
 
 <script>
-import WalletChooseTs from './WalletChooseTs'
-import './WalletChoose.less'
+import WalletSelectionTs from './WalletSelectionTs'
+import './WalletSelection.less'
 
-export default class WalletChoose extends WalletChooseTs {
+export default class WalletSelection extends WalletSelectionTs {
 }
 </script>
 

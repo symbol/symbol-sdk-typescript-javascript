@@ -3,16 +3,16 @@
     <div class="top_navigator radius">
       <span class="button_list_item">
         <span
-          :class="[ 'name', $route.path === '/multisigConversion' ? 'active' : '','pointer' ]"
-          @click="$route.path === '/multisigConversion' ? '' : $router.push('multisigConversion')"
+          :class="[ 'name', $route.name === 'multisig.convert' ? 'active' : '','pointer' ]"
+          @click="$route.name === 'multisig.convert' ? '' : $router.push({name: 'multisig.convert'})"
         >{{ $t('convert') }}</span>
         <span
-          :class="[ 'name', $route.path === '/multisigManagement' ? 'active' : '','pointer' ]"
-          @click="$route.path === '/multisigManagement' ? '' : $router.push('multisigManagement')"
+          :class="[ 'name', $route.name === 'multisig.manage' ? 'active' : '','pointer' ]"
+          @click="$route.name === 'multisig.manage' ? '' : $router.push({name: 'multisig.manage'})"
         >{{ $t('manage') }}</span>
         <span
-          :class="[ 'name', $route.path === '/multisigCosign' ? 'active' : '','pointer' ]"
-          @click="$route.path === '/multisigCosign' ? '' : $router.push('multisigCosign')"
+          :class="[ 'name', $route.name === 'multisig.cosign' ? 'active' : '','pointer' ]"
+          @click="$route.name === 'multisig.cosign' ? '' : $router.push({name: 'multisig.cosign'})"
         >{{ $t('cosign_transactions') }}</span>
       </span>
     </div>

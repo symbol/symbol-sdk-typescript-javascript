@@ -24,7 +24,7 @@ export default {
   state: {
     initialized: false,
     timezone: new Date().getTimezoneOffset() / 60,
-    locale: 'en-US',
+    currentLanguage: 'en-US',
     hasLoadingOverlay: false,
     hasControlsDisabled: false,
     controlsDisabledMessage: '',
@@ -32,7 +32,7 @@ export default {
   getters: {
     getInitialized: state => state.initialized,
     currentTimezone: (state) => state.timezone,
-    currentLocale: (state) => state.locale,
+    currentLanguage: state => state.currentLanguage,
     shouldShowLoadingOverloay: (state) => state.hasLoadingOverlay,
     shouldDisableControls: (state) => state.hasControlsDisabled,
   },
@@ -44,6 +44,7 @@ export default {
       Vue.set(state, 'controlsDisabledMessage', message || '')
     },
     toggleLoadingOverlay: (state, display) => Vue.set(state, 'hasLoadingOverlay', display),
+    setLanguage: (state, lang) => Vue.set(state, 'currentLanguage', lang),
   },
   actions: {
     async initialize({ commit, dispatch, getters }) {
@@ -61,6 +62,7 @@ export default {
       }
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
+/// region scoped actions
     SET_TIME_ZONE({commit}, timezone: number): void {
       commit('timezone', timezone)
     },
@@ -71,6 +73,11 @@ export default {
       const hasLoadingOverlay = loadingOverlay && loadingOverlay.show
       commit('toggleLoadingOverlay', hasLoadingOverlay)
     },
+    SET_LANGUAGE({commit}, language) {
+      this._vm.$i18n.locale = language
+      commit('setLanguage', language)
+    },
+/// end-region scoped actions
   }
 }
 

@@ -50,10 +50,12 @@ export default {
       }
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
+/// region scoped actions
     async SET_CURRENT_PRICE({commit, dispatch}, currentPrice) {
       //XXX validate correct price
       commit('currentPrice', currentPrice)
       $eventBus.$emit('onPriceChange', currentPrice)
     }
+/// end-region scoped actions
   }
 }

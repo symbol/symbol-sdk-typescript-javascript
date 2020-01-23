@@ -23,7 +23,7 @@
 
             <p>
               <span v-if="isMultisig || isCosignatory" class="tit">{{ $t('Wallet_type') }}</span>
-              <span v-if="isMultisig || isCosignatory" class="walletType" @click="$router.push('multisigManagement')">
+              <span v-if="isMultisig || isCosignatory" class="walletType" @click="$router.push({name: 'multisig.manage'})">
                 <Icon v-if="isMultisig" type="md-lock" />
                 <Icon v-if="isCosignatory" type="md-contacts" />
               </span>

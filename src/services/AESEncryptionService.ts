@@ -69,4 +69,20 @@ export class AESEncryptionService extends AbstractService {
   ): string {
     return CryptoJS.AES.decrypt(data, salt + password.value).toString()
   }
+
+  /**
+   * Generate \a count random bytes
+   * @param {number} count 
+   * @param {boolean} raw 
+   * @return {string}
+   */
+  public generateRandomBytes(
+    count: number,
+    raw: boolean = false
+  ): string {
+    const bytes = CryptoJS.lib.WordArray.random(count)
+    if (raw === true) return bytes
+
+    return CryptoJS.enc.Hex.stringify(bytes)
+  }
 }

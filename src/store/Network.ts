@@ -36,6 +36,7 @@ export default {
     explorerUrl: networkConfig.explorerUrl,
     networkType: NetworkType.MIJIN_TEST,
     isConnected: false,
+    nemesisTransactions: [],
   },
   getters: {
     getInitialized: state => state.initialized,
@@ -43,6 +44,7 @@ export default {
     networkType: state => state.networkType,
     currentPeer: state => state.currentPeer,
     explorerUrl: state => state.explorerUrl,
+    isConnected: state => state.isConnected,
   },
   mutations: {
     setInitialized: (state, initialized) => { state.initialized = initialized },
@@ -68,34 +70,41 @@ export default {
           Vue.set(state, 'networkType', NetworkType.MIJIN_TEST)
           break;
       }
-    }
+    },
+    setNemesisTransactions: (state, transactions) => Vue.set(state, 'nemesisTransactions', transactions),
   },
   actions: {
     async initialize({ commit, dispatch, getters }) {
       const callback = async () => {
         const nodeUrl = getters.currentPeer.url
-        let networkType: NetworkType
         try {
           // read network type ("connect")
           const networkHttp = RESTService.create('NetworkHttp', nodeUrl)
-          networkType = await networkHttp.getNetworkType().toPromise()
+          const networkType = await networkHttp.getNetworkType().toPromise()
 
           // update connection state
           commit('setConnected', true)
           $eventBus.$emit('newConnection', nodeUrl);
+
+          // update store
+          commit('networkType', networkType)
+          commit('setInitialized', true)
         }
         catch (e) {
           console.log("Error in Store network/initialize: ", e)
         }
-
-        // update store
-        commit('networkType', networkType)
-        commit('setInitialized', true)
       }
 
       // aquire async lock until initialized
       await Lock.initialize(callback, {commit, dispatch, getters})
     },
+    async uninitialize({ commit, dispatch, getters }) {
+      const callback = async () => {
+        commit('setInitialized', false)
+      }
+      await Lock.uninitialize(callback, {commit, dispatch, getters})
+    },
+/// region scoped actions
     async SET_CURRENT_PEER({ commit, dispatch }, currentPeerUrl) {
       if (!URLHelpers.isValidURL(currentPeerUrl)) {
         throw Error('Cannot change node. URL is not valid: ' + currentPeerUrl)
@@ -110,11 +119,6 @@ export default {
       await dispatch('uninitialize', null, {root: true})
       await dispatch('initialize')
     },
-    async uninitialize({ commit, dispatch, getters }) {
-      const callback = async () => {
-        commit('setInitialized', false)
-      }
-      await Lock.uninitialize(callback, {commit, dispatch, getters})
-    }
+/// end-region scoped actions
   }
 };

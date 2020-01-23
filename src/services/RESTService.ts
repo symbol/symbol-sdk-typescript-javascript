@@ -31,8 +31,8 @@ import {
   ReceiptHttp,
   RestrictionAccountHttp,
   RestrictionMosaicHttp,
-  Transaction,
   TransactionHttp,
+  TransactionStatusError,
 } from 'nem2-sdk'
 import {Subscription} from 'rxjs'
 
@@ -143,6 +143,24 @@ export class RESTService extends AbstractService {
     const address = Address.createFromRawAddress(addressStr)
     const listener = new Listener(wsEndpoint, WebSocket)
     await listener.open()
+
+    /*
+    this.listener.newBlock().subscribe((block: BlockInfo) => {
+      this.networkProperties.handleLastBlock(block, this.httpEndpoint)
+    })
+
+    this.listener.status(address).subscribe((error: TransactionStatusError) => {
+      Notice.trigger(error.code.split('_').join(' '), NoticeType.error, store)
+    })
+
+    this.listener.cosignatureAdded(address).subscribe(() => {
+      Notice.trigger(Message.NEW_COSIGNATURE, NoticeType.success, store)
+      store.state.account.wallet.setPartialTransactions(store)
+    })
+    */
+    // error listener
+    const status = listener.status(address).subscribe(
+      (error: TransactionStatusError) => context.dispatch('notification/addError', error))
 
     // unconfirmed listeners
     const unconfirmedAdded = listener.unconfirmedAdded(address).subscribe(

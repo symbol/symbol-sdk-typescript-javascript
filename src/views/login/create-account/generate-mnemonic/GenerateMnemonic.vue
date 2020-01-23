@@ -1,5 +1,5 @@
 <template>
-  <div class="step-2-wrapper" @mouseover="isSlidable && handleMousemove($event)">
+  <div class="step-2-wrapper" @mouseover="shouldTrackMouse && handleMousemove($event)">
     <img src="@/common/img/back.png">
     <div class="progress-bar">
       {{ $t('Move_your_mouse') }}

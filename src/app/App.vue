@@ -3,7 +3,7 @@
     <router-view />
     <DisabledUiOverlay />
     <TransactionConfirmation />
-    <LoadingOverlay v-if="showLoadingOverlay" />
+    <LoadingOverlay v-if="hasLoadingOverlay" />
   </div>
 </template>
 

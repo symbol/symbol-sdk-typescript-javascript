@@ -9,7 +9,7 @@
           {{ $t('Do_not_have_Account') }}
           <span
             class="create-account"
-            @click="$router.push({name:'createAccount',params:{nextPage:'generateMnemonic'}})"
+            @click="$router.push({name:'login.createAccount', params:{nextPage:'login.createAccount.generateMnemonic'}})"
           >
             {{ $t('create_a_new_account') }}
           </span>
@@ -39,12 +39,12 @@
 </template>
 
 <script lang="ts">
-import WelcomeTs from './ChooseImportWayTs'
+import ImportStrategyTs from './ImportStrategyTs'
 
-export default class Welcome extends WelcomeTs {
+export default class ImportStrategy extends ImportStrategyTs {
 
 }
 </script>
 <style lang="less" scoped>
-  @import "ChooseImportWay.less";
+  @import "ImportStrategy.less";
 </style>

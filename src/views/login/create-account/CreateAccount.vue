@@ -10,7 +10,7 @@
           <span
             v-for="(text, index) in StepBarTitleList"
             :key="index"
-            :class="getStepTextClassName(index)"
+            :class="getStepClassName(index)"
           >{{ $t(text) }}</span>
         </div>
       </div>

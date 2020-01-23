@@ -25,6 +25,7 @@ import 'view-design/dist/styles/iview.css'
 // internal dependencies
 import {VeeValidateConfig} from '@/core/validators/VeeValidateConfig'
 import App from '@/app/App.vue'
+import {UIBootstrapper} from '@/app/UIBootstrapper'
 import i18n from '@/language/index.ts'
 import store from '@/store/index.ts'
 import router from '@/router/index.ts'
@@ -36,17 +37,6 @@ Vue.use(moment as any)
 Vue.use(Router)
 Vue.use(VueRx)
 Vue.use(VeeValidate, VeeValidateConfig)
-
-Electron.htmlRem()
-if (process.platform === 'win32') {
-  Electron.resetFontSize()
-}
-
-Vue.directive('focus', {
-  inserted: function (el) {
-    el.focus()
-  },
-})
 /// end-region UI plugins
 
 /// region event bus (events propagated on parallel thread)
@@ -66,4 +56,11 @@ export default new Vue({
   store,
   i18n,
   render: h => h(App),
+  created: function () {
+    // This will execute following processes:
+    // - configure $Notice
+    // - configure Electron
+    // - configure Vue directives
+    UIBootstrapper.configure(this)
+  },
 })

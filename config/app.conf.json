@@ -1,10 +1,17 @@
 {
-  "EVENTS_THROTTLING_TIME": 6000,
-  "MAX_LISTENER_RECONNECT_TRIES": 20,
-  "MAX_PASSWORD_LENGTH": 64,
-  "MAX_REMOTE_ACCOUNT_CHECKS": 10,
-  "MAX_SEED_WALLETS_NUMBER": 10,
-  "MIN_PASSWORD_LENGTH": 8,
-  "SEED_WALLET_NAME_PREFIX": "SeedWallet-",
-  "marketServerUrl": "http://app.nemcn.io"
+  "constants": {
+    "EVENTS_THROTTLING_TIME": 6000,
+    "MAX_LISTENER_RECONNECT_TRIES": 20,
+    "MAX_PASSWORD_LENGTH": 64,
+    "MAX_REMOTE_ACCOUNT_CHECKS": 10,
+    "MAX_SEED_WALLETS_NUMBER": 10,
+    "MIN_PASSWORD_LENGTH": 8,
+    "SEED_WALLET_NAME_PREFIX": "SeedWallet-"
+  },
+  "marketServerUrl": "http://app.nemcn.io",
+  "languages": [
+    {"value": "en-US", "label": "English"},
+    {"value": "zh-CN", "label": "中文"},
+    {"value": "ja-JP", "label": "日本語"}
+  ]
 }

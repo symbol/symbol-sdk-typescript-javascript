@@ -1,0 +1,353 @@
+.wrap {
+  padding: 50px 0 0 100px;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+
+  .alert {
+    margin-left: 50%;
+    left: -380px;
+    top: 10px;
+    position: absolute;
+    z-index: 9;
+    min-width: 765px;
+    font-size: 16px;
+    line-height: 40px;
+    color: #eee;
+    text-align: center;
+    height: 55px;
+
+    i {
+      position: relative;
+      bottom: 2px;
+      font-size: 20px;
+    }
+  }
+
+  .error_alert {
+    background-color: #cc3835;
+    border: 1px solid #cc3835;
+  }
+
+  .warning_alert {
+    background-color: #fd8c4a;
+    border: 1px solid #fd8c4a;
+  }
+
+  .point {
+    -webkit-app-region: no-drag;
+  }
+
+
+  .input_point {
+    padding-top: 20px;
+
+    .connection_letter {
+      font-size: 18px;
+      color: #ddd;
+      letter-spacing: 2px;
+    }
+
+    input {
+      width: 100%;
+      border-bottom: 1px solid #ccc;
+      padding-left: 10px;
+      margin-right: 20px;
+      padding-bottom: 5px;
+    }
+
+    input::placeholder {
+      font-size: 16px;
+    }
+
+    .reset-icon,
+    .sure_button {
+      display: inline-block;
+      width: 43px;
+      text-align: center;
+      font-size: 35px;
+      line-height: 36px;
+      background-color: #20B5AC;
+      color: white;
+    }
+    .reset-icon:hover,
+    .sure_button:hover {
+      box-shadow: 0 0 10px #20B5AC;
+    }
+    .reset-icon {
+      font-size: 25px;
+      left: 20px;
+      position: relative;
+      i {
+        background-color: transparent !important;
+      }
+      i:before{
+        position: relative;
+        right: 5px;
+      }
+    }
+  }
+
+  .node_list_container {
+    max-height: 160px;
+  }
+
+  .node_list {
+    max-height: 250px;
+
+    .ivu-input {
+      border: none;
+    }
+  }
+
+  .point_item {
+    margin: 10px 20px;
+    padding-right: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    position: relative;
+
+    img {
+      width: 15px;
+      height: 15px;
+      margin-right: 10px;
+    }
+
+    span {
+      text-align: left;
+      //width: 500px;
+      font-size: 20px;
+    }
+  }
+
+  .top_window {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: white;
+    -webkit-app-region: drag;
+    width: 100%;
+    height: 50px;
+
+    .nem_logo_wrap {
+      width: 110px;
+      height: 50px;
+      float: left;
+      overflow-y: hidden;
+
+      .nem_logo {
+        width: 100px;
+        height: 50px;
+        position: relative;
+        box-shadow: 0 0 10px rgba(32, 181, 172, .4);
+
+        img {
+          height: 20px;
+        }
+      }
+    }
+
+    .controller {
+      .absolute {
+        background-color: rgba(255, 255, 255, .8);
+        z-index:1;
+      }
+
+      .app_controller {
+        float: right;
+        font-size: 20px;
+        margin-right: 50px;
+        margin-top: 10px;
+
+        .title {
+          font-size: 18px;
+          text-align: center;
+          padding: 10px;
+          min-width: 450px;
+        }
+
+        > div {
+          float: left;
+          margin-left: 25px;
+          position: relative;
+        }
+
+        .point_healthy, .point_unhealthy {
+          cursor: pointer;
+          -webkit-app-region: no-drag;
+
+          i {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background-color: #18b566;
+            border-radius: 50%;
+          }
+
+          .point {
+            vertical-align: middle;
+          }
+
+          .network_type_text {
+            font-size: 16px;
+            vertical-align: middle;
+          }
+        }
+
+        .point_unhealthy {
+          i {
+            background-color: red;
+          }
+        }
+
+        .switch_language {
+          width: 100px;
+          -webkit-app-region: no-drag;
+          position: relative;
+
+          .ivu-select-placeholder {
+            position: relative;
+          }
+        }
+
+        .switch_wallet {
+          -webkit-app-region: no-drag;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+
+          .select_wallet_icon {
+            width: 22px;
+            height: 22px;
+            position: relative;
+            top: 5px;
+          }
+
+          .ivu-select {
+            font-size: 20px;
+          }
+        }
+      }
+    }
+
+  }
+
+  .left_navigator {
+    position: absolute;
+    padding-top: 115px;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100px;
+    background-color: white;
+
+    .navigator_icon {
+      > div {
+        width: 100px;
+        height: 80px;
+        padding: 35px 22px;
+        background-color: white;
+        position: relative;
+
+        span {
+          width: 28px;
+          height: 28px;
+          background-size: contain;
+          background-repeat: no-repeat;
+        }
+      }
+
+      .active_panel {
+        background: rgba(32, 181, 172, 1);
+      }
+    }
+
+    .quit_account {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: absolute;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+
+      img {
+        width: 25px;
+      }
+
+      .account_name {
+        display: inline-block;
+        width: 80px;
+        text-align: center;
+      }
+
+      span {
+        font-size: 16px;
+        font-weight: 400;
+        color: #666666;
+        margin-top: 13px;
+      }
+    }
+  }
+
+  .right_content {
+    width: 100%;
+    height: 100%;
+  }
+
+  .fade-enter-active {
+    transition: all .2s ease;
+    -webkit-transition: all .2s ease;
+  }
+
+  .fade-leave-active {
+    transition: all .3s ease;
+    -webkit-transition: all .3s ease;
+  }
+
+  .fade-enter {
+    transform: translateX(50px);
+    -webkit-transform: translateX(50px);
+    opacity: 0;
+  }
+
+  .fade-leave-active {
+    opacity: 0;
+  }
+
+  .remove_icon {
+    position: absolute;
+    right: -15px;
+  }
+
+  .remove_icon:hover {
+    opacity: .5;
+
+  }
+
+  .ivu-poptip-popper {
+    z-index: 9;
+  }
+
+  .ivu-select-dropdown-list {
+    .ivu-select-item-focus {
+      background-color: transparent;
+    }
+
+    .ivu-select-item-focus:hover {
+      background-color: #f3f3f3;
+    }
+
+    .ivu-select-item-selected, .ivu-select-item-selected:hover {
+      background-color: #f3f3f3;
+    }
+  }
+
+  .node-input-container {
+    width: 100%;
+    margin-right: 20px;
+  }
+}

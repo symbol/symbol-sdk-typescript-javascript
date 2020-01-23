@@ -1,57 +1,100 @@
+/**
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import {Vue, Component} from 'vue-property-decorator'
-import {mapState} from 'vuex'
-import {StoreAccount, Notice, NoticeType} from '@/core/model'
+import {mapGetters} from 'vuex'
 import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 import CryptoJS from 'crypto-js'
-import {Message} from '@/config'
 
-@Component({computed: {...mapState({activeAccount: 'account'})}})
+// internal dependencies
+import {AccountsModel} from '@/core/database/models/AppAccount'
+import {ServiceFactory} from '@/services/ServiceFactory'
+import {AESEncryptionService} from '@/services/AESEncryptionService'
+import {NotificationType} from '@/core/utils/NotificationType'
+
+@Component({
+  computed: {...mapGetters({currentAccount: 'account/currentAccount'})},
+})
 export default class GenerateMnemonicTs extends Vue {
-  activeAccount: StoreAccount
-  entropy = ''
-  percent = 0
-  isSlidable = true
+  /**
+   * Currently active account
+   * @see {Store.Account}
+   * @var {string}
+   */
+  public currentAccount: AccountsModel
 
-  handleMousemove({x, y}) {
+  /**
+   * Encryption service
+   * @var {AESEncryptionService}
+   */
+  public encryption: AESEncryptionService = ServiceFactory.create('encryption', this.$store)
+
+  /**
+   * Whether component should track mouse move
+   * @var {boolean}
+   */
+  public shouldTrackMouse: boolean = true
+
+  /**
+   * Entropy storage
+   * @var {string}
+   */
+  private entropy = ''
+
+  /**
+   * Percentage of entropy generation process
+   * @var {number}
+   */
+  private percent: number = 0
+
+  /**
+   * Track and handle mouse move event
+   * @param {Vue.Event} event
+   * @return {void} 
+   */
+  public handleMousemove({x, y}) {
     if (this.percent < 100) {
-      this.entropy += `${x}${y}`
-      this.percent ++
+      this.entropy += this.encryption.generateRandomBytes(8, /*raw=*/false)
+      this.percent++
       return
     }
 
-    this.isSlidable = false
-    this.saveMnemonicAndGoToNextPage()
+    // stop tracking
+    this.shouldTrackMouse = false
+    return this.saveMnemonicAndGoToNextPage()
   }
 
-  saveMnemonicAndGoToNextPage() {
+  /**
+   * Save mnemonic and redirect to next page
+   * return {void}
+   */
+  private saveMnemonicAndGoToNextPage() {
     try {
-      const seed = this.createSeedFromMouseEntropy()
-      this.$store.commit('SET_TEMPORARY_MNEMONIC', seed)
-      this.goToShowMnemonic()
-    } catch (error) {
-      Notice.trigger(
-        Message.MNEMONIC_GENERATION_ERROR, NoticeType.error, this.$store,
-      )
+      // act
+      const entropy = CryptoJS.SHA256(this.entropy).toString()
+      const seed = MnemonicPassPhrase.createFromEntropy(entropy)
+
+      // update state
+      this.$store.dispatch('notification/ADD_SUCCESS', 'Generate_entropy_increase_success')
+      this.$store.dispatch('temporary/SET_MNEMONIC', seed)
+
+      // redirect
+      return this.$router.push({name: 'login.createAccount.showMnemonic'})
     }
-  }
-
-  createSeedFromMouseEntropy(): string {
-    if (!this.entropy || !this.entropy.length) {
-      throw new Error('Something went wrong when creating entropy')
+    catch (error) {
+      this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.MNEMONIC_GENERATION_ERROR)
     }
-
-    const entropy = CryptoJS.SHA256(this.entropy).toString()
-
-    Notice.trigger(
-      'Generate_entropy_increase_success', NoticeType.success, this.$store,
-    )
-
-    return MnemonicPassPhrase.createFromEntropy(entropy).plain
-  }
-
-  goToShowMnemonic(): void {
-    setTimeout(() => {
-      this.$router.push('/showMnemonic')
-    }, 2000)
   }
 }

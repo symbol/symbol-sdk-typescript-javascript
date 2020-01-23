@@ -66,7 +66,7 @@
             <input
               v-model.lazy="formItems.password"
               v-focus
-              v-validate="validation.accountPassword"
+              v-validate="validationRules.accountPassword"
               :class="[!accountsClassifiedByNetworkType ? 'un_click' : '']"
               :disabled="!accountsClassifiedByNetworkType"
               type="password"
@@ -84,7 +84,7 @@
             <span class="prompt pointer" @click="isShowHint = !isShowHint">{{ $t('Password_hint') }}</span>
             <span
               class="pointer create-account"
-              @click="toChooseImportWay"
+              @click="$router.push({name: 'login.importStrategy'})"
             >{{ $t('create_a_new_account') }}?</span>
           </div>
           <div v-if="isShowHint" class="hint">
@@ -93,7 +93,7 @@
           <div v-if="accountsClassifiedByNetworkType" class="pointer button" @click="submit">
             {{ $t('login') }}
           </div>
-          <div v-else class="pointer button" @click="toChooseImportWay">
+          <div v-else class="pointer button" @click="$router.push({name: 'login.importStrategy'})">
             {{ $t('register') }}
           </div>
         </div>

@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {NetworkType} from 'nem2-sdk'
+
 // internal dependencies
 import {
   AccountsTable,
@@ -69,7 +71,16 @@ export class AccountsRepository
    * Getter for the collection of items
    * @return {Map<string, AccountsModel>}
    */
-  public collect(): Map<string, AccountsModel> {
+  public collect(): Iterator<AccountsModel> {
+    return this._collection.values()
+  }
+
+  /**
+   * Getter for the collection of items
+   * mapped by identifier
+   * @return {Map<string, AccountsModel>}
+   */
+  public map(): Map<string, AccountsModel> {
     return this._collection
   }
 
@@ -125,7 +136,7 @@ export class AccountsRepository
     const previous = this.read(identifier)
 
     // populate/update values
-    let iterator = values.keys()
+    const iterator = values.keys()
     for (let i = 0, m = values.size; i < m; i++) {
       const key = iterator.next()
       const value = values.get(key.value)
@@ -163,4 +174,25 @@ export class AccountsRepository
     return true
   }
   /// end-region implements IRepository
+
+  /**
+   * Get list of account names mapped by network type
+   * @return {Object}
+   */
+  public getNamesByNetworkType(): any {
+    const iterator = this.collect()
+    const accountsMap = {
+      [NetworkType.MIJIN_TEST]: [],
+      [NetworkType.MIJIN]: [],
+      [NetworkType.TEST_NET]: [],
+      [NetworkType.MAIN_NET]: [],
+    }
+    for (let i = 0, m = this._collection.size; i < m; i++) {
+      const account = iterator.next().value
+      const networkType = account.values.get('networkType')
+      accountsMap[networkType].push(account.values.get('accountName'))
+    }
+
+    return accountsMap
+  }
 }

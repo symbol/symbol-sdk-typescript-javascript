@@ -12,8 +12,8 @@
           <div>* {{ $t('Set_account_name') }}</div>
           <ErrorTooltip field-name="newAccountName">
             <input
-              v-model="formItem.accountName"
-              v-validate="validation.newAccountName"
+              v-model="formItems.accountName"
+              v-validate="validationRules.newAccountName"
               v-focus
               data-vv-name="newAccountName"
               :data-vv-as="$t('newAccountName')"
@@ -23,7 +23,7 @@
         </div>
         <div class="form-input-item">
           <div>* {{ $t('Set_network_type') }}</div>
-          <Select v-model="currentNetworkType" :placeholder="$t('choose_network')" required>
+          <Select v-model="networkType" :placeholder="$t('choose_network')" required>
             <Option v-for="(item,index) in networkTypeList" :key="index" :value="item.value">
               {{ item.label }}
             </Option>
@@ -33,9 +33,9 @@
           <div>* {{ $t('Set_password') }}</div>
           <ErrorTooltip field-name="password">
             <input
-              v-model.lazy="formItem.password"
+              v-model.lazy="formItems.password"
               v-focus
-              v-validate="validation.password"
+              v-validate="validationRules.password"
               data-vv-name="password"
               :data-vv-as="$t('password')"
               :placeholder="$t('please_enter_your_wallet_password')"
@@ -47,9 +47,9 @@
           <div>* {{ $t('Confirm_password') }}</div>
           <ErrorTooltip field-name="confirmPassword">
             <input
-              v-model.lazy="formItem.passwordAgain"
+              v-model.lazy="formItems.passwordAgain"
               v-focus
-              v-validate="validation.confirmPassword"
+              v-validate="validationRules.confirmPassword"
               data-vv-name="confirmPassword"
               :data-vv-as="$t('password')"
               :placeholder="$t('please_enter_your_wallet_password')"
@@ -57,20 +57,20 @@
             >
           </ErrorTooltip>
           <input
-            v-show="false" v-model="formItem.password" v-validate
+            v-show="false" v-model="formItems.password" v-validate
             disabled data-vv-name="newPassword"
           >
         </div>
         <div class="form-input-item">
           <div>* {{ $t('Password_hint') }}</div>
-          <input v-model="formItem.hint">
+          <input v-model="formItems.hint">
         </div>
         <div class="button-container">
-          <button class="info-button" @click="$router.push('login')">
+          <button class="info-button" @click="$router.push({name: 'login'})">
             {{ $t('Back_to_home') }}
           </button>
           <button @click="submit">
-            {{ $t(nextPage === 'importMnemonic' ? 'Restore_Mnemonic' : 'Generating_mnemonic') }}
+            {{ $t(nextPage === 'login.importAccount.importMnemonic' ? 'Restore_Mnemonic' : 'Generating_mnemonic') }}
           </button>
         </div>
       </div>

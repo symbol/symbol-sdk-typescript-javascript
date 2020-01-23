@@ -43,12 +43,12 @@
 </template>
 
 <script lang="ts">
-import FinishCreateTs from '@/views/login/create-account/finish-create/FinishCreateTs.ts'
+import FinalizeTs from '@/views/login/create-account/finish-create/FinalizeTs.ts'
 
-export default class FinishCreate extends FinishCreateTs {
+export default class Finalize extends FinalizeTs {
 }
 </script>
 
 <style scoped lang="less">
-  @import "FinishCreate.less";
+  @import "Finalize.less";
 </style>

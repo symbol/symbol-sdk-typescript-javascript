@@ -34,11 +34,11 @@ export class WalletImportHardwareTs extends Vue {
     this.$Notice.success({
       title: `${this['$t']('Imported_wallet_successfully')}`,
     })
-    this.$router.push('dashBoard')
+    this.$router.push({name: 'dashboard'})
   }
 
   toBack() {
-    this.$router.push('initAccount')
+    this.$router.push({name: 'login.importStrategy'})
   }
 
   onNetworkSelected(){

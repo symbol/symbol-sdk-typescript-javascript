@@ -26,9 +26,16 @@ export interface IRepository<ModelImpl extends DatabaseModel> {
 
   /**
    * Getter for the collection of items
+   * @return {Iterator<ModelImpl>}
+   */
+  collect(): Iterator<ModelImpl>
+
+  /**
+   * Getter for the collection of items
+   * mapped by identifier
    * @return {Map<string, ModelImpl>}
    */
-  collect(): Map<string, ModelImpl>
+  map(): Map<string, ModelImpl>
 
   /// region CRUD
   /**

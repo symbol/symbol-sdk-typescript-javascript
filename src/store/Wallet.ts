@@ -26,7 +26,6 @@ import {$eventBus} from '../main'
 import {CacheKey} from '@/core/utils/CacheKey'
 import {RESTService} from '@/services/RESTService'
 import {AwaitLock} from './AwaitLock';
-import { dispatch } from 'rxjs/internal/observable/pairs';
 const Lock = AwaitLock.create();
 
 /**
@@ -66,7 +65,8 @@ export default {
   state: {
     initialized: false,
     currentWallet: '',
-    walletInfo: null,
+    currentWalletInfo: null,
+    otherWalletsInfo: {},
     allTransactions: [],
     transactionHashes: [],
     confirmedTransactions: [],
@@ -79,7 +79,8 @@ export default {
   getters: {
     getInitialized: state => state.initialized,
     currentWallet: state => state.currentWallet,
-    walletInfo: state => state.walletInfo,
+    currentWalletInfo: state => state.currentWalletInfo,
+    otherWalletsInfo: state => state.otherWalletsInfo,
     getSubscriptions: state => state.subscriptions,
     transactionHashes: state => state.transactionHashes,
     confirmedTransactions: state => state.confirmedTransactions,
@@ -97,7 +98,15 @@ export default {
   mutations: {
     setInitialized: (state, initialized) => { state.initialized = initialized },
     currentWallet: (state, walletAddress) => Vue.set(state, 'currentWallet', walletAddress),
-    walletInfo: (state, walletInfo) => Vue.set(state, 'walletInfo', walletInfo),
+    currentWalletInfo: (state, currentWalletInfo) => Vue.set(state, 'currentWalletInfo', currentWalletInfo),
+    addWalletInfo: (state, walletInfo) => {
+      // update storage
+      let wallets = state.otherWalletsInfo
+      wallets[walletInfo.address.plain()] = walletInfo
+
+      // update state
+      Vue.set(state, 'otherWalletsInfo', wallets)
+    },
     transactionHashes: (state, hashes) => Vue.set(state, 'transactionHashes', hashes),
     confirmedTransactions: (state, transactions) => Vue.set(state, 'confirmedTransactions', transactions),
     unconfirmedTransactions: (state, transactions) => Vue.set(state, 'unconfirmedTransactions', transactions),
@@ -158,9 +167,7 @@ export default {
       }
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
-/**
- * Store API
- */
+/// region scoped actions
     async SET_CURRENT_WALLET({commit, dispatch}, walletAddress) {
       //XXX validate wallet exists
       commit('currentWallet', walletAddress)
@@ -321,12 +328,31 @@ export default {
         const accountHttp = RESTService.create('AccountHttp', currentPeer)
         const accountInfo = await accountHttp.getAccountInfo(addressObject).toPromise()
 
-        return commit('walletInfo', accountInfo);
+        commit('currentWalletInfo', accountInfo)
+        commit('addWalletInfo', accountInfo)
+        return accountInfo
       }
       catch (e) {
         console.error('An error happened while trying to fetch account information: <pre>' + e + '</pre>')
         return false
       }
     },
+    async REST_FETCH_INFOS({commit, rootGetters}, addresses) {
+      try {
+        // prepare REST parameters
+        const currentPeer = rootGetters['network/currentPeer'].url
+
+        // fetch account info from REST gateway
+        const accountHttp = RESTService.create('AccountHttp', currentPeer)
+        const accountsInfo = await accountHttp.getAccountsInfo(addresses).toPromise()
+        accountsInfo.map(info => commit('addWalletInfo', info))
+        return accountsInfo
+      }
+      catch (e) {
+        console.error('An error happened while trying to fetch account information: <pre>' + e + '</pre>')
+        return false
+      }
+    },
+/// end-region scoped actions
   },
 };

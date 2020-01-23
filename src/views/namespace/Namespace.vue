@@ -3,16 +3,16 @@
     <div class="top_navigator radius">
       <span class="button_list_item">
         <span
-          :class="[ 'name', $route.path === '/namespaceList' ? 'active' : '','pointer' ]" 
-          @click="$route.path === '/namespaceList' ? '' : $router.push('namespaceList')"
+          :class="[ 'name', $route.name === 'namespaces.index' ? 'active' : '','pointer' ]" 
+          @click="$route.name === 'namespaces.index' ? '' : $router.push({name: 'namespaces.index'})"
         >{{ $t('Namespace_list') }}</span>
         <span
-          :class="[ 'name', $route.path === '/createNamespace' ? 'active' : '','pointer' ]" 
-          @click="$route.path === '/createNamespace' ? '' : $router.push('createNamespace')"
+          :class="[ 'name', $route.name === 'namespaces.createRoot' ? 'active' : '','pointer' ]" 
+          @click="$route.name === 'namespaces.createRoot' ? '' : $router.push({name: 'namespaces.createRoot'})"
         >{{ $t('Create_namespace') }}</span>
         <span
-          :class="[ 'name', $route.path === '/createSubNamespace' ? 'active' : '','pointer' ]" 
-          @click="$route.path === '/createSubNamespace' ? '' : $router.push('createSubNamespace')"
+          :class="[ 'name', $route.name === 'namespaces.createSub' ? 'active' : '','pointer' ]" 
+          @click="$route.name === 'namespaces.createSub' ? '' : $router.push({name: 'namespaces.createSub'})"
         >{{ $t('Create_subNamespace') }}</span>
       </span>
     </div>

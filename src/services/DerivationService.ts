@@ -68,18 +68,11 @@ export class DerivationService extends AbstractService {
     which: DerivationPathLevels = DerivationPathLevels.Account,
     step: number = 1,
   ): string {
-    if (! this.isValidPath(path)) {
-      throw new Error('Invalid derivation path in DerivationService: ' + path)
-    }
+    // make sure derivation path is valid
+    this.assertValidPath(path)
 
     // purpose and coin type cannot be changed
-    const protect = [
-      DerivationPathLevels.Purpose,
-      DerivationPathLevels.CoinType
-    ]
-    if (undefined !== protect.find(type => which === type)) {
-      throw new Error('Cannot modify a derivation path\'s purpose and coin type levels.')
-    }
+    this.assertCanModifyLevel(which)
 
     // read levels and increment 
     const index = (which as number) - 1
@@ -108,9 +101,8 @@ export class DerivationService extends AbstractService {
     which: DerivationPathLevels = DerivationPathLevels.Account,
     step: number = 1,
   ): string {
-    if (! this.isValidPath(path)) {
-      throw new Error('Invalid derivation path in DerivationService: ' + path)
-    }
+    // make sure derivation path is valid
+    this.assertValidPath(path)
 
     // purpose and coin type cannot be changed
     this.assertCanModifyLevel(which)
@@ -133,18 +125,34 @@ export class DerivationService extends AbstractService {
   }
 
   /**
+   * Assert whether \a path is a valid derivation path
+   * @param {string} path 
+   * @return {void}
+   * @throws {Error} On \a path with invalid derivation path
+   */
+  public assertValidPath(path: string): void {
+    if (! this.isValidPath(path)) {
+      const errorMessage = 'Invalid derivation path: ' + path
+      this.$store.dispatch('diagnostic/ADD_ERROR', errorMessage)
+      throw new Error(errorMessage)
+    }
+  }
+
+  /**
    * Assert whether derivation path level can be modified
    * @param {DerivationPathLevels} which 
    * @return {void}
    * @throws {Error} On \a which with protected path level value
    */
-  protected assertCanModifyLevel(which: DerivationPathLevels): void {
+  public assertCanModifyLevel(which: DerivationPathLevels): void {
     const protect = [
       DerivationPathLevels.Purpose,
       DerivationPathLevels.CoinType
     ]
     if (undefined !== protect.find(type => which === type)) {
-      throw new Error('Cannot modify a derivation path\'s purpose and coin type levels.')
+      const errorMessage = 'Cannot modify a derivation path\'s purpose and coin type levels.'
+      this.$store.dispatch('diagnostic/ADD_ERROR', errorMessage)
+      throw new Error(errorMessage)
     }
   }
 }

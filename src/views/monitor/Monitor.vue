@@ -159,7 +159,7 @@
             'radius',
             active ? 'disabled' : 'pointer'
           ]"
-          @click="active ? '' : $router.push(path).catch(err => {})"
+          @click="active ? '' : $router.push({name}).catch(err => {})"
         >
           <span class="inner_container absolute">{{ $t(name) }}</span>
           <span class="line">|</span>

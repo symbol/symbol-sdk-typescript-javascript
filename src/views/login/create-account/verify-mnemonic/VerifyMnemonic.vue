@@ -1,6 +1,6 @@
 <template>
   <div class="check-mnemonic-sec">
-    <div class="skip pointer" @click="$router.push('finishCreate')">
+    <div class="skip pointer" @click="$router.push({name: 'login.createAccount.finalize'})">
       {{ $t('skip') }}
     </div>
     <p class="set-title">
@@ -10,7 +10,7 @@
       <div class="check-mnemonic-left">
         <MnemonicVerification
           :mnemonic-words-list="mnemonicWordsList"
-          @verificationSuccess="$router.push('finishCreate')"
+          @verificationSuccess="$router.push({name: 'login.createAccount.finalize'})"
           @toPreviousPage="$router.back()"
         />
       </div>

@@ -69,7 +69,16 @@ export class MarketsRepository
    * Getter for the collection of items
    * @return {Map<string, ExchangeRatesModel>}
    */
-  public collect(): Map<string, ExchangeRatesModel> {
+  public collect(): Iterator<ExchangeRatesModel> {
+    return this._collection.values()
+  }
+
+  /**
+   * Getter for the collection of items
+   * mapped by identifier
+   * @return {Map<string, ExchangeRatesModel>}
+   */
+  public map(): Map<string, ExchangeRatesModel> {
     return this._collection
   }
 

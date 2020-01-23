@@ -56,7 +56,7 @@ export default class ImportMnemonicTs extends Vue {
         this.$store,
       )
       this.$store.commit('SET_TEMPORARY_MNEMONIC', this.seed)
-      this.$router.push('walletChoose')
+      this.$router.push({name: 'login.importAccount.walletSelection'})
     } catch (error) {
       this.$Notice.error({title: 'Creation failed'})
       throw new Error(error)
@@ -65,6 +65,6 @@ export default class ImportMnemonicTs extends Vue {
 
   goToCreateAccountInfo() {
     AppAccounts().deleteAccount(this.accountName)
-    this.$router.push('inputAccountInfo')
+    this.$router.push({name: 'login.importAccount.info'})
   }
 }

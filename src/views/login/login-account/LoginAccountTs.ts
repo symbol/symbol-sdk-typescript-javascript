@@ -1,16 +1,42 @@
-import {languageConfig, Message} from '@/config'
-import {StoreAccount} from '@/core/model'
-import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
-import {getTopValueInObject, localSave, localRead} from '@/core/utils/utils'
-import {validation} from '@/core/validation'
-import {mapState} from 'vuex'
+/**
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import {mapGetters} from 'vuex'
+import {Component, Provide, Vue} from 'vue-property-decorator'
+
+// internal dependencies
+import {$eventBus} from '@/main'
+import {NotificationType} from '@/core/utils/NotificationType'
+import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
+import {AccountsRepository} from '@/repositories/AccountsRepository'
+import {AccountsModel} from '@/core/database/models/AppAccount'
+
+// child components
+// @ts-ignore
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
-import {Endpoints, onLogin} from '@/core/services'
-import {NetworkType} from 'nem2-sdk'
+
+// configuration
+import appConfig from '@/../config/app.conf.json'
 
 @Component({
   computed: {
-    ...mapState({activeAccount: 'account'}),
+    ...mapGetters({
+      currentLanguage: 'app/currentLanguage',
+      currentAccount: 'account/currentAccount',
+      isAuthenticated: 'account/isAuthenticated',
+    }),
   },
   components: {
     ErrorTooltip,
@@ -18,138 +44,123 @@ import {NetworkType} from 'nem2-sdk'
 })
 export default class LoginAccountTs extends Vue {
   @Provide() validator: any = this.$validator
-  activeAccount: StoreAccount
-  languageList = languageConfig
-  validation = validation
-  cipher = ''
-  cipherHint = ''
-  errors: any
-  isShowHint = false
-  hintText = ''
-  onLogin = onLogin
-  NetworkType = NetworkType
-  formItems = {
+
+  /**
+   * Currently active language
+   * @see {Store.AppInfo}
+   * @var {string}
+   */
+  public currentLanguage: string
+
+  /**
+   * Currently active account
+   * @see {Store.Account}
+   * @var {string}
+   */
+  public currentAccount: AccountsModel
+
+  /**
+   * List of languages
+   * @see {Config.app}
+   * @var {any[]}
+   */
+  public languageList: any[] = appConfig.languages
+
+  /**
+   * Accounts repository
+   * @var {AccountsRepository}
+   */
+  public accountsRepository = new AccountsRepository()
+
+  /**
+   * Validation rules
+   * @var {ValidationRuleset}
+   */
+  public validationRules = ValidationRuleset
+
+  /**
+   * Form items
+   */
+  public formItems: any = {
     currentAccountName: '',
     password: '',
   }
 
+/// region computed properties getter/setter
   get language() {
-    return this.$i18n.locale
+    return this.currentLanguage
   }
 
   set language(lang) {
-    this.$i18n.locale = lang
-    localSave('locale', lang)
-  }
-
-  get accountMap() {
-    return localRead('accountMap') ? JSON.parse(localRead('accountMap')) : {}
-  }
-
-  get accountPassword() {
-    if (!this.accountMap[this.formItems.currentAccountName]) return null
-    return this.formItems.currentAccountName ? this.accountMap[this.formItems.currentAccountName].password : null
-  }
-
-  get networkType() {
-    return this.activeAccount.currentAccount.networkType
+    this.$store.commit('app/SET_LANGUAGE', lang)
   }
 
   get accountsClassifiedByNetworkType() {
-    const {accountMap} = this
-    if(!Object.keys(accountMap).length) return null
-
-    return Object.keys(accountMap)
-      .filter((accountName: string) => accountMap[accountName].wallets.length)
-      .map((accountName: string) => ({
-        accountName,
-        networkType: accountMap[accountName].networkType,
-      }))
-      .reduce((acc, account) => {
-        if (!acc[account.networkType]) acc[account.networkType] = []
-        acc[account.networkType].push(account.accountName)
-        return acc
-      }, {})
+    const repository = new AccountsRepository()
+    return repository.getNamesByNetworkType()
   }
+/// end-region computed properties getter/setter
 
-  toChooseImportWay() {
-    this.$router.push('chooseImportWay')
-  }
-
-  showErrorNotice(text) {
-    this.$Notice.destroy()
-    this.$Notice.error({title: `${this.$t(text)}`})
-  }
-
-  submit() {
-    const {currentAccountName} = this.formItems
-    if (this.errors.items.length > 0) {
-      this.showErrorNotice(this.errors.items[0].msg)
-      return
-    }
-    if (!currentAccountName) {
-      this.showErrorNotice(Message.ACCOUNT_NAME_INPUT_ERROR)
+  /**
+   * Hook called when the page is mounted
+   * @return {void}
+   */
+  public mounted() {
+    if (this.currentAccount) {
+      this.formItems.currentAccountName = this.currentAccount.values.get('accountName')
       return
     }
 
-    this.$validator
-      .validate()
-      .then((valid) => {
-        if (!valid) return
-        this.login()
-      })
-  }
-
-  login() {
-    localSave('activeAccountName',this.formItems.currentAccountName)
-    if (this.noSeedAvailable()) {
-      this.createNewAccount()
+    // no account pre-selected, select first if available
+    const accounts = this.accountsRepository.map()
+    if (! accounts.size) {
       return
     }
 
-    this.onLogin(this.formItems.currentAccountName, this.$store)
-    this.goToDashBoard()
+    // accounts available, iterate to first account
+    const firstAccount = this.accountsRepository.collect().next().value
+    this.formItems.currentAccountName = firstAccount.values.get('accountName')
   }
 
-  createNewAccount() {
-    this.$store.commit('SET_TEMPORARY_PASSWORD', this.formItems.password)
-    this.$router.push('generateMnemonic')
-    return
-  }
-
-  noSeedAvailable(): boolean {
-    const {currentAccountName} = this.formItems
-    if (!currentAccountName || currentAccountName === '') return true
-    if (!this.accountMap) return true
-    if (!this.accountMap[currentAccountName]) return true
-    if (!this.accountMap[currentAccountName].seed) return true
-    return false
-  }
-
-  goToDashBoard() {
-    Endpoints.setNodeInfo(this.networkType,this.$store)
-    this.$router.push('monitorPanel')
-  }
-
-  @Watch('formItems.currentAccountName')
-  onAccountNameChange(newVal, oldVal) {
-    if (newVal === oldVal) return
-    const {currentAccountName} = this.formItems
-    const {accountMap} = this
-    if (!accountMap[currentAccountName]) return
-    this.cipher = this.accountPassword
-    this.hintText = accountMap[currentAccountName].hint
-  }
-
-
-  mounted() {
-    const {accountMap} = this
-    const activeAccountName = localRead('activeAccountName')
-    if (activeAccountName) {
-      this.formItems.currentAccountName = activeAccountName
-      return
+  /**
+   * Submit action, validates form and logs in user if valid
+   * @return {void}
+   */
+  public submit() {
+    if (! this.formItems.currentAccountName.length) {
+      return this.$store.dispatch('notification/ADD_ERROR', NotificationType.ACCOUNT_NAME_INPUT_ERROR)
     }
-    if (!getTopValueInObject(accountMap)) return
-    this.formItems.currentAccountName = getTopValueInObject(accountMap).accountName
+
+    // use vee-validate, then login if valid
+    this.$validator.validate().then((valid) => {
+      if (!valid) return
+      this.processLogin()
+    })
+  }
+
+  /**
+   * Process login request.
+   * @return {void}
+   */
+  private processLogin() {
+    const identifier = this.formItems.currentAccountName
+
+    // if account doesn't exist, authentication is not valid
+    if (! this.accountsRepository.find(identifier)) {
+      return this.$router.push({name: 'login'})
+    }
+
+    // account exists, fetch data
+    const account: AccountsModel = this.accountsRepository.read(identifier)
+
+    // if account setup was not finalized, redirect
+    if (!account.values.has('seed') || ! account.values.get('seed').length) {
+      return this.$router.push({name: 'login.createAccount.generateMnemonic'})
+    }
+
+    // LOGIN SUCCESS: update app state
+    this.$store.commit('account/SET_CURRENT_ACCOUNT', identifier)
+    $eventBus.$emit('onLogin', identifier)
+    return this.$router.push({name: 'dashboard'})
   }
 }

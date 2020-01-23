@@ -147,7 +147,7 @@ export class MenuBarTs extends Vue {
   accountQuit() {
     this.$store.commit('RESET_APP')
     this.$store.commit('RESET_ACCOUNT')
-    this.$router.push('login')
+    this.$router.push({name: 'login'})
   }
 
   maxWindow() {

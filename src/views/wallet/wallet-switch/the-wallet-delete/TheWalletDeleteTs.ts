@@ -56,9 +56,7 @@ export class TheWalletDeleteTs extends Vue {
   accountQuit() {
     this.$store.commit('RESET_APP')
     this.$store.commit('RESET_ACCOUNT')
-    this.$router.push({
-      name: 'login',
-    })
+    this.$router.push({name: 'login',})
   }
 
   deleteByPassword(password) {

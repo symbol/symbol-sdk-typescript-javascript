@@ -26,7 +26,7 @@
           {{ $t('Nem_wallet_can_not_recover_your_mnemonic') }}
         </p>
         <div class="jump-btn">
-          <button @click="$router.push('dashboard')">
+          <button @click="$router.push({name: 'dashboard'})">
             {{ $t('next') }}
           </button>
         </div>
@@ -39,12 +39,12 @@
 </template>
 
 <script>
-import FinishImportTs from './FinishImportTs'
+import FinalizeTs from './FinalizeTs'
 
-export default class FinishImport extends FinishImportTs {
+export default class Finalize extends FinalizeTs {
 }
 </script>
 
 <style scoped lang="less">
-  @import "FinishImport.less";
+  @import "Finalize.less";
 </style>

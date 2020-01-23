@@ -8,9 +8,9 @@
         <img :src="$route.meta.icon">
         <div class="step-text-container">
           <span
-            v-for="(text,index) in stepBarTitleList"
+            v-for="(text,index) in StepBarTitleList"
             :key="index"
-            :class="getStepTextClassName(index)"
+            :class="getStepClassName(index)"
           >{{ $t(text) }}</span>
         </div>
       </div>
@@ -23,7 +23,7 @@
 import ImportAccountTs from './ImportAccountTs'
 import './ImportAccount.less'
 
-export default class CreatAccount extends ImportAccountTs {
+export default class ImportAccount extends ImportAccountTs {
 }
 </script>
 <style lang="less">

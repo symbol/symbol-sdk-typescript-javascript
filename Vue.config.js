@@ -15,7 +15,7 @@ module.exports = {
   chainWebpack: (config) => {
     //edit path alias
     config.resolve.alias
-        .set('config', path.resolve(__dirname, './src/config'),)
+        .set('config', path.resolve(__dirname, './config'),)
   },
   // generate map
   productionSourceMap: true,

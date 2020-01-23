@@ -63,9 +63,10 @@ export class AccountsTable extends DatabaseTable {
     super('accounts', [
       'accountName',
       'wallets',
+      'password',
       'hint',
-      'seed',
       'networkType',
+      'seed',
     ])
   }
 

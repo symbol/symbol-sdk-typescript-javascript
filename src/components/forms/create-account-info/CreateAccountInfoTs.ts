@@ -1,58 +1,107 @@
+/**
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import {Component, Provide, Vue} from 'vue-property-decorator'
-import { Password } from 'nem2-sdk'
-import {mapState} from 'vuex'
-import {
-  formDataConfig, Message} from '@/config'
-import {cloneData} from '@/core/utils'
-import {networkTypeConfig} from '@/config/view/setting'
-import {getDefaultAccountNetworkType} from '@/core/utils'
-import {validation} from '@/core/validation'
-import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
-import {Endpoints} from '@/core/services'
-import {StoreAccount} from '@/store/account/StoreAccount'
-import {
-  AccountsModel,
-  AppAccount
-} from '@/core/model/AppAccount'
-import {AccountsRepository} from '@/core/repositories/AccountsRepository'
-import {ProtectedStorageAdapter} from '@/core/services/database/ProtectedStorageAdapter'
+import {mapGetters} from 'vuex'
+import {NetworkType, Password} from 'nem2-sdk'
 
-let accountsRepository: AccountsRepository = new AccountsRepository()
+// internal dependencies
+import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
+import {NotificationType} from '@/core/utils/NotificationType'
+import {AccountsModel, AppAccount} from '@/core/database/models/AppAccount'
+import {AccountsRepository} from '@/repositories/AccountsRepository'
+
+// child components
+// @ts-ignore
+import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
+
+/// region custom types
+type NetworkNodeEntry = {value: NetworkType, label: string}
+/// end-region custom types
 
 @Component({
   components: {
     ErrorTooltip,
   },
-  computed: {
-    ...mapState({
-      activeAccount: 'account',
-      app: 'app',
-    }),
-  }
+  computed: {...mapGetters({
+    networkType: 'network/networkType',
+    currentAccount: 'account/currentAccount',
+  })},
 })
 export class CreateAccountInfoTs extends Vue {
   @Provide() validator: any = this.$validator
-  validation = validation
-  activeAccount: StoreAccount
-  formItem = cloneData(formDataConfig.createAccountForm)
-  currentNetworkType = getDefaultAccountNetworkType()
-  networkTypeList = networkTypeConfig
 
+  /**
+   * Currently active account
+   * @see {Store.Account}
+   * @var {string}
+   */
+  public currentAccount: AccountsModel
+
+  /**
+   * Currently active network type
+   * @see {Store.Network}
+   * @var {NetworkType}
+   */
+  public networkType: NetworkType
+
+  /**
+   * Accounts repository
+   * @var {AccountsRepository}
+   */
+  public accountsRepository = new AccountsRepository()
+
+  /**
+   * Validation rules
+   * @var {ValidationRuleset}
+   */
+  public validationRules = ValidationRuleset
+
+  /**
+   * Form fields
+   * @var {Object}
+   */
+  public formItems = {
+    accountName: '',
+    password: '',
+    passwordAgain: '',
+    hint: '',
+  }
+
+  /**
+   * Network types
+   * @var {NetworkNodeEntry[]}
+   */
+  public networkTypeList: NetworkNodeEntry[] = [
+    {value: NetworkType.MIJIN_TEST, label: 'MIJIN_TEST'},
+    {value: NetworkType.MAIN_NET, label: 'MAIN_NET'},
+    {value: NetworkType.TEST_NET, label: 'TEST_NET'},
+    {value: NetworkType.MIJIN, label: 'MIJIN'},
+  ]
+
+/// region computed properties getter/setter
   get nextPage() {
     return this.$route.meta.nextPage
   }
+/// end-region computed properties getter/setter
 
-  get appAccount(): AppAccount {
-    return new AppAccount(
-      this.formItem.accountName,
-      [],
-      this.formItem.password,
-      this.formItem.hint,
-      this.currentNetworkType,
-    )
-  }
-
-  submit() {
+  /**
+   * Submit action, validates form and creates account in storage
+   * @return {void}
+   */
+  public submit() {
     this.$validator
       .validate()
       .then((valid) => {
@@ -61,19 +110,30 @@ export class CreateAccountInfoTs extends Vue {
       })
   }
 
-  persistAccountAndContinue() {
+  /**
+   * Persist created account and redirect to next step
+   * @return {void} 
+   */
+  private persistAccountAndContinue() {
     // persist newly created account
-    accountsRepository.create(this.appAccount.model.values)
+    const account = new AppAccount(
+      this.$store,
+      this.formItems.accountName,
+      [],
+      this.formItems.password,
+      this.formItems.hint,
+      this.networkType,
+    )
 
-    // notify
-    this.$Notice.success({title: `${this.$t(Message.OPERATION_SUCCESS)}`})
+    // use repository for storage
+    this.accountsRepository.create(account.model.values)
 
-    // mutate store
-    this.$store.commit('SET_ACCOUNT_DATA', this.appAccount)
-    this.$store.commit('SET_TEMPORARY_PASSWORD', this.formItem.password)
+    // execute store actions
+    this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
+    this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account.model.values.get('accountName'))
+    this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password)
 
     // flush and continue
-    Endpoints.setNodeInfo(this.currentNetworkType, this.$store)
-    this.$router.push({name:this.nextPage})
+    this.$router.push({name: this.nextPage})
   }
 }

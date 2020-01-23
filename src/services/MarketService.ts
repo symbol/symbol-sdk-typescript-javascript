@@ -72,8 +72,11 @@ export class MarketService extends AbstractService {
         ['timestamp', new Date().getTime()],
         ['price_usd', result]
       ]))
-    } catch (error) {
-      console.error('setMarketOpeningPrice -> error', error)
+    }
+    catch (error) {
+      const errorMessage = 'An error happened while getting market rates: ' + error
+      this.$store.dispatch('diagnostic/ADD_ERROR', errorMessage)
+      throw new Error(errorMessage)
     }
   }
 

@@ -19,19 +19,19 @@ import {Password} from 'nem2-sdk'
 // internal dependencies
 import {AbstractService} from './AbstractService'
 import {DatabaseModel} from '@/core/database/DatabaseModel'
-import {DatabaseTable} from '@/core/database/DatabaseTable'
 import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
 import {LocalStorageBackend} from '@/core/database/backends/LocalStorageBackend'
 import {JSONFormatter} from '@/core/database/formatters/JSONFormatter'
-import {IRepository} from '@/repositories/IRepository'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {PeersRepository} from '@/repositories/PeersRepository'
+import {MarketsRepository} from '@/repositories/MarketsRepository'
 
 /// region specialized repository implementations
 export type RepositoryImpl = AccountsRepository 
                            | WalletsRepository
                            | PeersRepository
+                           | MarketsRepository
 /// end-region specialized repository implementations
 
 export class DatabaseService extends AbstractService {
@@ -70,21 +70,26 @@ export class DatabaseService extends AbstractService {
   public getRepository(name: 'accounts'): AccountsRepository
   public getRepository(name: 'wallets'): WalletsRepository
   public getRepository(name: 'peers'): PeersRepository
+  public getRepository(name: 'markets'): MarketsRepository
   /// end-region specialized signatures
 
   /**
    * Get a repository instance
    * @param repositoryOpts 
-   * @return {IRepository<ModelImpl>}
+   * @return {RepositoryImpl}
    */
-  public getRepository(repositoryOpts): RepositoryImpl {
+  public getRepository(name: string): RepositoryImpl {
     // try to instantiate repository by name
-    switch (repositoryOpts.name) {
+    switch (name) {
     case 'accounts': return new AccountsRepository()
     case 'wallets': return new WalletsRepository()
     case 'peers': return new PeersRepository()
+    case 'markets': return new MarketsRepository()
 
-    default: throw new Error('Could not find a repository by name \'' + repositoryOpts.name + ' \'')
+    default: 
+      const errorMessage = 'Could not find a repository by name \'' + name + ' \''
+      this.$store.dispatch('diagnostic/ADD_ERROR', errorMessage)
+      throw new Error(errorMessage)
     }
   }
 }

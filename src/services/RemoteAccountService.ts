@@ -27,7 +27,6 @@ import {AbstractService} from '@/services/AbstractService'
 import {WalletService} from '@/services/WalletService'
 import {RESTService} from '@/services/RESTService'
 import {DerivationService, DerivationPathLevels} from '@/services/DerivationService'
-import {DerivationPathValidator} from '@/core/validators/DerivationPathValidator'
 
 export class RemoteAccountService extends AbstractService {
   /**
@@ -80,9 +79,8 @@ export class RemoteAccountService extends AbstractService {
     wallet: Wallet,
     path: string = RemoteAccountService.DEFAULT_PATH,
   ): Promise<PublicAccount> {
-    if (!new DerivationPathValidator().validate(path)) {
-      throw new Error('Invalid derivation path for remote account: ' + path)
-    }
+    // validate derivation path
+    this.paths.assertValidPath(path)
 
     try {
       // prepare discovery process
@@ -114,7 +112,9 @@ export class RemoteAccountService extends AbstractService {
       return PublicAccount.createFromPublicKey(firstLinkable.publicKey, networkType)
     }
     catch (error) {
-      throw new Error('Could not get remote account public key: ' + error)
+      const errorMessage = 'An error happened while generating remote account: ' + error
+      this.$store.dispatch('diagnostic/ADD_ERROR', errorMessage)
+      throw new Error(errorMessage)
     }
   }
 /*

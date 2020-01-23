@@ -1,5 +1,5 @@
 <template>
-  <div class="create-mnemonic-sec" @keyup.enter="$router.push('verifyMnemonic')">
+  <div class="create-mnemonic-sec" @keyup.enter="$router.push({name: 'login.createAccount.verifyMnemonic'})">
     <p class="set-title">
       {{ $t('Backup_mnemonic') }}
     </p>
@@ -21,7 +21,7 @@
           <button class="info-button" @click="$router.back()">
             {{ $t('Back') }}
           </button>
-          <button @click="$router.push('verifyMnemonic')">
+          <button @click="$router.push({name: 'login.createAccount.verifyMnemonic'})">
             {{ $t('Verify_backup_mnemonics') }}
           </button>
         </div>

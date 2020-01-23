@@ -3,7 +3,7 @@ import Component from 'vue-class-component'
 import {importInfoList} from '@/config/view'
 
 @Component
-export default class WelcomeTs extends Vue {
+export default class ImportStrategyTs extends Vue {
   importInfoList = importInfoList
 
   goTo(link) {
@@ -16,7 +16,7 @@ export default class WelcomeTs extends Vue {
     this.$router.push({
       name: link,
       params: {
-        nextPage:'importMnemonic',
+        nextPage:'login.importAccount.importMnemonic',
       },
     })
   }

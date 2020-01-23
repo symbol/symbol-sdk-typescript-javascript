@@ -3,13 +3,13 @@
     <div class="top_navigator radius">
       <span class="button_list_item">
         <span
-          :class="[ 'name', $route.path === '/mosaicList' ? 'active' : '', 'pointer' ]"
-          @click="$route.path === '/mosaicList' ? '' : $router.push('mosaicList')"
+          :class="[ 'name', $route.name === 'mosaics.index' ? 'active' : '', 'pointer' ]"
+          @click="$route.name === 'mosaics.index' ? '' : $router.push({name: 'mosaics.index'})"
         >{{ $t('mosaic_list') }}</span>
 
         <span
-          :class="[ 'name', $route.path === '/createMosaic' ? 'active' : '', 'pointer' ]"
-          @click="$route.path === '/createMosaic' ? '' : $router.push('createMosaic')"
+          :class="[ 'name', $route.name === 'mosaics.create' ? 'active' : '', 'pointer' ]"
+          @click="$route.name === 'mosaics.create' ? '' : $router.push({name: 'mosaics.create'})"
         >{{ $t('create_mosaic') }}</span>
       </span>
     </div>

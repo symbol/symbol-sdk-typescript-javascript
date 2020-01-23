@@ -20,6 +20,10 @@ import NetworkStore from '@/store/Network'
 import AccountStore from '@/store/Account'
 import WalletStore from '@/store/Wallet'
 import MarketStore from '@/store/Market'
+import DiagnosticStore from '@/store/Diagnostic'
+import NotificationStore from '@/store/Notification'
+import TemporaryStore from '@/store/Temporary'
+import MosaicStore from '@/store/Mosaic'
 
 // use AwaitLock for initialization routines
 import {AwaitLock} from '@/store/AwaitLock'
@@ -40,12 +44,18 @@ export default new Vuex.Store({
     account: AccountStore,
     wallet: WalletStore,
     market: MarketStore,
+    diagnostic: DiagnosticStore,
+    notification: NotificationStore,
+    temporary: TemporaryStore,
+    mosaic: MosaicStore,
   },
   actions: {
     async initialize({ commit, dispatch, getters }) {
       const callback = async () => {
         await dispatch('app/initialize')
+        await dispatch('notification/initialize')
         await dispatch('network/initialize')
+        await dispatch('mosaic/initialize')
       }
 
       // aquire async lock until initialized
@@ -56,8 +66,13 @@ export default new Vuex.Store({
       await Promise.all([
         dispatch('app/uninitialize'),
         dispatch('network/uninitialize'),
+        dispatch('mosaic/uninitialize'),
         dispatch('account/uninitialize'),
         dispatch('wallet/uninitialize'),
+        dispatch('market/uninitialize'),
+        dispatch('diagnostic/uninitialize'),
+        dispatch('notification/uninitialize'),
+        dispatch('temporary/uninitialize'),
       ])
     }
   }
