@@ -68,9 +68,10 @@ export default {
       return dispatch('RESET_STATE')
     },
     async SET_CURRENT_ACCOUNT({commit, dispatch}, accountName) {
-      //XXX validate account exists
-
+      // validate account exists
       const currentAccount = accountsRepository.read(accountName)
+
+      // update state
       commit('currentAccount', currentAccount)
       commit('setAuthenticated', true)
 
@@ -78,6 +79,21 @@ export default {
       await dispatch('uninitialize', null, {root: true})
       await dispatch('initialize')
       $eventBus.$emit('onAccountChange', accountName)
+    },
+    ADD_WALLET({commit, dispatch, getters}, walletName) {
+      const currentAccount = getters['currentAccount']
+      if (! currentAccount) {
+        return
+      }
+
+      // validate wallet exists
+      const wallet = accountsRepository.read(walletName)
+      const wallets = currentAccount.values.get("wallets")
+      wallets.push(wallet.values.get('name'))
+
+      // update account and return
+      currentAccount.values.set("wallets", wallets)
+      return commit('currentAccount', currentAccount)
     }
 /// end-region scoped actions
   }

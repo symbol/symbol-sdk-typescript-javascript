@@ -165,6 +165,9 @@ export default class WalletSelectionTs extends Vue {
         if (cnt === 0) {
           this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet.model.values.get('name'))
         }
+
+        // add wallet to account
+        this.$store.dispatch('account/ADD_WALLET', wallet.model.values.get('name'))
       })
 
       // execute store actions

@@ -16,6 +16,13 @@
 import {StorageHelpers} from './StorageHelpers'
 
 export class Electron {
+
+  /**
+   * Holds whether the app is maximized
+   * @var {boolean}
+   */
+  public static isMaximized: boolean = false
+
   public static openFile = (fn) => {
     const electron = window['electron']
     electron['dialog'].showOpenDialog({
@@ -82,6 +89,7 @@ export class Electron {
 
   public static minWindow = () => {
     if (window['electron']) {
+      Electron.isMaximized = false
       const ipcRenderer = window['electron']['ipcRenderer']
       ipcRenderer.send('app', 'min')
     }
@@ -89,6 +97,7 @@ export class Electron {
 
   public static maxWindow = () => {
     if (window['electron']) {
+      Electron.isMaximized = true
       const ipcRenderer = window['electron']['ipcRenderer']
       ipcRenderer.send('app', 'max')
     }
@@ -103,6 +112,7 @@ export class Electron {
 
   public static unMaximize = () => {
     if (window['electron']) {
+      Electron.isMaximized = false
       const ipcRenderer = window['electron']['ipcRenderer']
       ipcRenderer.send('app', 'unMaximize')
     }

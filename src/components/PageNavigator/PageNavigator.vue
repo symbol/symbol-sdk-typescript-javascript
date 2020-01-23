@@ -26,5 +26,8 @@
 
 <script lang="ts">
 import {PageNavigatorTs} from './PageNavigatorTs'
+import './PageNavigator.less'
+import './PageNavigator.win32.less'
+
 export default class PageNavigator extends PageNavigatorTs {}
 </script>

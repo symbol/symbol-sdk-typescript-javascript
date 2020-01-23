@@ -19,12 +19,16 @@ import Vue from 'vue';
 import {AwaitLock} from './AwaitLock';
 const Lock = AwaitLock.create();
 
+// configuration
+import appConfig from '@/../config/app.conf.json'
+
 export default {
   namespaced: true,
   state: {
     initialized: false,
     timezone: new Date().getTimezoneOffset() / 60,
     currentLanguage: 'en-US',
+    languages: appConfig.languages,
     hasLoadingOverlay: false,
     hasControlsDisabled: false,
     controlsDisabledMessage: '',
@@ -33,6 +37,7 @@ export default {
     getInitialized: state => state.initialized,
     currentTimezone: (state) => state.timezone,
     currentLanguage: state => state.currentLanguage,
+    languages: state => state.language,
     shouldShowLoadingOverloay: (state) => state.hasLoadingOverlay,
     shouldDisableControls: (state) => state.hasControlsDisabled,
   },

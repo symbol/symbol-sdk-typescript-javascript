@@ -37,6 +37,7 @@ export default {
     networkType: NetworkType.MIJIN_TEST,
     isConnected: false,
     nemesisTransactions: [],
+    knownPeers: networkConfig.networks['testnet-publicTest'].nodes,
   },
   getters: {
     getInitialized: state => state.initialized,
@@ -45,6 +46,7 @@ export default {
     currentPeer: state => state.currentPeer,
     explorerUrl: state => state.explorerUrl,
     isConnected: state => state.isConnected,
+    knownPeers: state => state.knownPeers,
   },
   mutations: {
     setInitialized: (state, initialized) => { state.initialized = initialized },
@@ -56,6 +58,25 @@ export default {
         Vue.set(state, 'currentPeer', currentPeer)
         Vue.set(state, 'wsEndpoint', wsEndpoint)
       }
+    },
+    addPeer: (state, peerUrl) => {
+      const knownPeers = state.knownPeers
+      knownPeers.push(peerUrl)
+      Vue.set(state, 'knownPeers', knownPeers)
+    },
+    removePeer: (state, peerUrl) => {
+      const idx = state.knownPeers.findIndex(peerUrl)
+      if (idx === undefined) {
+        return ;
+      }
+
+      const knownPeers = state.knownPeers
+      delete knownPeers[idx]
+      Vue.set(state, 'knownPeers', knownPeers)
+    },
+    resetPeers: (state) => {
+      const knownPeers = networkConfig.networks['testnet-publicTest'].nodes
+      Vue.set(state, 'knownPeers', knownPeers)
     },
     networkType: (state, type) => {
       switch (type) {
@@ -119,6 +140,19 @@ export default {
       await dispatch('uninitialize', null, {root: true})
       await dispatch('initialize')
     },
+    ADD_KNOWN_PEER({commit}, peerUrl) {
+      if (!URLHelpers.isValidURL(peerUrl)) {
+        throw Error('Cannot add node. URL is not valid: ' + peerUrl)
+      }
+
+      commit('addPeer', peerUrl)
+    },
+    REMOVE_KNOWN_PEER({commit}, peerUrl) {
+      commit('removePeer', peerUrl)
+    },
+    RESET_PEERS({commit}) {
+      commit('resetPeers')
+    }
 /// end-region scoped actions
   }
 };

@@ -40,6 +40,16 @@ export class PeersModel extends DatabaseModel {
    * @var {Map<string, DatabaseRelation>}
    */
   public relations: Map<string, DatabaseRelation> = new Map<string, DatabaseRelation>()
+
+  /**
+   * Get peer full url
+   * @return {string}
+   */
+  public toURL(): string {
+    return this.values.get('protocol')
+        + this.values.get('host') + ':'
+        + this.values.get('port')
+  }
 }
 
 export class PeersTable extends DatabaseTable {
