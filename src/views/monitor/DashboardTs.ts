@@ -1,3 +1,69 @@
+/**
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import {Component, Vue} from 'vue-property-decorator'
+
+// internal dependencies
+import {MarketService} from '@/services/MarketService'
+import routes from '@/router/routes'
+
+// child components
+// @ts-ignore
+import AccountBalancesPanel from '@/components/AccountBalancesPanel/AccountBalancesPanel.vue'
+// @ts-ignore
+import NetworkStatisticsPanel from '@/components/NetworkStatisticsPanel/NetworkStatisticsPanel.vue'
+// @ts-ignore
+import RouterTabList from '@/components/RouterTabList/RouterTabList.vue'
+
+@Component({
+  components: {
+    AccountBalancesPanel,
+    NetworkStatisticsPanel,
+    RouterTabList,
+  },
+})
+export class DashboardTs extends Vue {
+  /**
+   * Market service
+   * @var {MarketService}
+   */
+  public marketService: MarketService
+
+  /**
+   * Hook called when the component is mounted
+   * @return {void}
+   */
+  mounted() {
+    this.marketService = new MarketService(this.$store)
+    this.marketService.setMarketOpeningPrice()
+  }
+
+/// region computed properties getter/setter
+  get routes() {
+    return routes.shift().children
+      .filter(({name}) => name === 'dashboard')
+      .map(r => r.children).map(({path}) => ({
+        path,
+        name,
+        active: this.$route.matched.map(matched => matched.path).includes(path),
+      }))
+  }
+/// end-region computed properties getter/setter
+}
+
+/*
 import {Message} from '@/config/index.ts'
 import {Component, Vue} from 'vue-property-decorator'
 import monitorSelected from '@/common/img/monitor/monitorSelected.png'
@@ -176,3 +242,4 @@ export class MonitorTs extends Vue {
     this.$Notice.error({title: `${this.$t(message)}`})
   }
 }
+*/

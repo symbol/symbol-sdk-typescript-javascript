@@ -1,0 +1,127 @@
+/**
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.top_wallet_address {
+  width: 100%;
+  height: 240px;
+  padding: 22px 20px 0 21px;
+  position: relative;
+  background-size: cover;
+  background-image: url("../../common/img/monitor/dash-board/dashboardWalletBackground.png");
+
+  .wallet_address {
+    padding-bottom: 23px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .address {
+      color: rgba(255, 255, 255, 1);
+      font-size: 16px;
+      font-weight: 400;
+      display: inline-block;
+      width: 360px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    img {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .split {
+    width: 90%;
+    left: 0;
+    margin-left: 5%;
+    border: 1px solid rgba(56, 85, 111, .5);
+    opacity: 0.18;
+    position: absolute;
+  }
+
+  .XEM_amount {
+    margin: 20px 0 8px 0;
+    font-size: 24px;
+    font-weight: 400;
+    color: rgba(255, 255, 255);
+
+    .amount {
+      font-size: 40px;
+      margin-left: 10px;
+    }
+  }
+
+  .exchange {
+    font-size: 18px;
+    font-weight: 400;
+    color: rgba(255, 255, 255);
+  }
+
+  .account_alias {
+    position: absolute;
+    bottom: 20px;
+    right: 19px;
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 1);
+  }
+}
+
+.bottom_account_info {
+  height: calc(100% - 255px);
+  background-color: white;
+  width: 100%;
+  margin-top: 15px;
+  padding: 27px 28px;
+  position: relative;
+
+  .namespace_data {
+    span {
+      color: #222222;
+      width: 50%;
+      display: inline-block;
+      border-bottom: 1px solid #eee;
+      padding: 19px 0 19px 30px;
+
+    }
+
+    .namespace_table_head {
+      span {
+        color: #999999;
+        font-size: 16px;
+      }
+    }
+  }
+
+  .harvesting_data {
+    .harvesting_item {
+      padding: 20px 0;
+
+      .top_info {
+        font-size: 16px;
+        font-weight: 400;
+        color: rgba(34, 34, 34, 1);
+      }
+
+      .bottom_info {
+        font-size: 16px;
+        font-weight: 400;
+        color: rgba(153, 153, 153, 1);
+      }
+    }
+  }
+}

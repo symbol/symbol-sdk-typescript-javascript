@@ -67,10 +67,10 @@ export class WalletsRepository
 
   /**
    * Getter for the collection of items
-   * @return {Map<string, WalletsModel>}
+   * @return {WalletsModel[]}
    */
-  public collect(): Iterator<WalletsModel> {
-    return this._collection.values()
+  public collect(): WalletsModel[] {
+    return Array.from(this._collection.values())
   }
 
   /**
@@ -78,7 +78,7 @@ export class WalletsRepository
    * mapped by identifier
    * @return {Map<string, WalletsModel>}
    */
-  public map(): Map<string, WalletsModel> {
+  public entries(): Map<string, WalletsModel> {
     return this._collection
   }
 

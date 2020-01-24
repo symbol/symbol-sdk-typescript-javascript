@@ -24,6 +24,9 @@ import {RentalFeesService} from './RentalFeesService'
 import {MarketService} from './MarketService'
 import {WalletService} from './WalletService'
 import {DerivationService} from './DerivationService'
+import {MosaicService} from './MosaicService'
+import {PeerService} from './PeerService'
+import {CommunityService} from './CommunityService'
 
 export class ServiceFactory {
   /**
@@ -39,6 +42,9 @@ export class ServiceFactory {
   public static create(name: 'market', store: Store<any>): MarketService
   public static create(name: 'wallet', store: Store<any>): WalletService
   public static create(name: 'derivation', store: Store<any>): DerivationService
+  public static create(name: 'mosaic', store: Store<any>): MosaicService
+  public static create(name: 'peer', store: Store<any>): PeerService
+  public static create(name: 'community', store: Store<any>): CommunityService
   /// end-region specialised signatures
 
   /**
@@ -78,6 +84,15 @@ export class ServiceFactory {
       break
     case 'derivation':
       service = new DerivationService(store)
+      break
+    case 'mosaic':
+      service = new MosaicService(store)
+      break
+    case 'peer':
+      service = new PeerService(store)
+      break
+    case 'community':
+      service = new CommunityService(store)
       break
 
     default: 

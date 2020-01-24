@@ -9,10 +9,11 @@
     "MIN_PASSWORD_LENGTH": 8,
     "SEED_WALLET_NAME_PREFIX": "SeedWallet-"
   },
-  "marketServerUrl": "http://app.nemcn.io",
   "languages": [
     {"value": "en-US", "label": "English"},
     {"value": "zh-CN", "label": "中文"},
     {"value": "ja-JP", "label": "日本語"}
-  ]
+  ],
+  "marketServerUrl": "http://app.nemcn.io",
+  "articlesFeedUrl": "https://nemflash.io/feed/"
 }

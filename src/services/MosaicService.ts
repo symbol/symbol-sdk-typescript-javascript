@@ -54,13 +54,37 @@ export class MosaicService extends AbstractService {
 
     // - if store doesn't know this mosaic, dispatch fetch action
     if (! mosaics.hasOwnProperty(mosaicId.toHex())) {
-      // dispatch store REST_FETCH_INFOS
       mosaicInfo = await this.$store.dispatch('mosaic/REST_FETCH_INFOS', [mosaicId])
     }
     // - read from store
     else mosaicInfo = mosaics[mosaicId.toHex()]
 
+    //XXX save in storage
+
     return mosaicInfo
+  }
+
+  /**
+   * Read the name of a mosaic with id \a mosaic
+   * @param {MosaicId} mosaic 
+   * @return {Promise<string>}
+   */
+  public async getMosaicName(mosaic: MosaicId): Promise<string> {
+    // - get names from store
+    const names = this.$store.getters['mosaic/mosaicsNames']
+    let mosaicName: string
+
+    // - if store doesn't know a name for this mosaics, dispatch fetch action
+    if (! names.hasOwnProperty(mosaic.toHex())) {
+      const mapped = await this.$store.dispatch('mosaic/REST_FETCH_NAMES', [mosaic])
+      mosaicName = mapped.hasOwnProperty(mosaic.toHex()) ? mapped[mosaic.toHex()] : undefined
+    }
+    // - read from store
+    else mosaicName = names[mosaic.toHex()]
+
+    //XXX save in storage
+
+    return mosaicName
   }
 
   /**

@@ -944,6 +944,7 @@
   "Access_My_Wallet": "接入我的钱包",
   "confirm_information_before_add_child_wallet": "请输入密码以创建子钱包",
   "loading": "处理中...",
-  "Enter_your_password_to_create_a_link_transaction": "输入密码以发布远程链接交易"
-
+  "Enter_your_password_to_create_a_link_transaction": "输入密码以发布远程链接交易",
+  "Click_to_cosign": "Click to cosign",
+  "cosignature_added": "Cosignature received"
 }

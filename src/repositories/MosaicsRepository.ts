@@ -15,23 +15,23 @@
  */
 // internal dependencies
 import {
-  ExchangeRatesTable,
-  ExchangeRatesModel,
-} from '@/core/database/models/AppMarket'
+  MosaicsTable,
+  MosaicsModel,
+} from '@/core/database/models/AppMosaic'
 import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
 import {IRepository} from './IRepository'
 import {ModelRepository} from './ModelRepository'
 
-export class MarketsRepository
-  extends ModelRepository<ExchangeRatesTable, ExchangeRatesModel>
-  implements IRepository<ExchangeRatesModel> {
+export class MosaicsRepository
+  extends ModelRepository<MosaicsTable, MosaicsModel>
+  implements IRepository<MosaicsModel> {
 
   /**
    * Construct a repository around \a adapter storage adapter.
-   * @param {SimpleStorageAdapter<ExchangeRatesModel>} adapter 
+   * @param {SimpleStorageAdapter<MosaicsModel>} adapter 
    */
   public constructor(
-    adapter: SimpleStorageAdapter<ExchangeRatesModel> = new SimpleStorageAdapter<ExchangeRatesModel>(),
+    adapter: SimpleStorageAdapter<MosaicsModel> = new SimpleStorageAdapter<MosaicsModel>(),
   ) {
     super(adapter)
   }
@@ -39,19 +39,19 @@ export class MarketsRepository
   /// region abstract methods
   /**
    * Create a table instance
-   * @return {ExchangeRatesTable}
+   * @return {MosaicsTable}
    */
-  public createTable(): ExchangeRatesTable {
-    return new ExchangeRatesTable()
+  public createTable(): MosaicsTable {
+    return new MosaicsTable()
   }
 
   /**
    * Create a model instance
    * @param {Map<string, any>} values
-   * @return {ExchangeRatesModel}
+   * @return {MosaicsModel}
    */
-  public createModel(values: Map<string, any>): ExchangeRatesModel {
-    return new ExchangeRatesModel(values)
+  public createModel(values: Map<string, any>): MosaicsModel {
+    return new MosaicsModel(values)
   }
   /// end-region abstract methods
 
@@ -67,18 +67,18 @@ export class MarketsRepository
 
   /**
    * Getter for the collection of items
-   * @return {ExchangeRatesModel[]}
+   * @return {MosaicsModel[]}
    */
-  public collect(): ExchangeRatesModel[] {
+  public collect(): MosaicsModel[] {
     return Array.from(this._collection.values())
   }
 
   /**
    * Getter for the collection of items
    * mapped by identifier
-   * @return {Map<string, ExchangeRatesModel>}
+   * @return {Map<string, MosaicsModel>}
    */
-  public entries(): Map<string, ExchangeRatesModel> {
+  public entries(): Map<string, MosaicsModel> {
     return this._collection
   }
 
@@ -98,11 +98,11 @@ export class MarketsRepository
     // verify uniqueness
     const identifier = mapped.getIdentifier()
     if (this.find(identifier)) {
-      throw new Error('Exchange rate with timestamp \'' + identifier + '\' already exists.')
+      throw new Error('Mosaic with identifier \'' + identifier + '\' already exists.')
     }
 
     // update collection
-    this._collection.set(identifier, new ExchangeRatesModel(values))
+    this._collection.set(identifier, new MosaicsModel(values))
 
     // persist to storage
     this.persist()
@@ -112,12 +112,12 @@ export class MarketsRepository
   /**
    * Getter for the collection of items
    * @param {string} identifier
-   * @return {ExchangeRatesModel}
+   * @return {MosaicsModel}
    */
-  public read(identifier: string): ExchangeRatesModel {
+  public read(identifier: string): MosaicsModel {
     // verify existence
     if (!this.find(identifier)) {
-      throw new Error('Exchange rate with timestamp \'' + identifier + '\' does not exist.')
+      throw new Error('Mosaic with identifier \'' + identifier + '\' does not exist.')
     }
 
     return this._collection.get(identifier)
@@ -127,9 +127,9 @@ export class MarketsRepository
    * Update an entity
    * @param {string} identifier
    * @param {Map<string, any>} values
-   * @return {ExchangeRatesModel} The new values
+   * @return {MosaicsModel} The new values
    */
-  public update(identifier: string, values: Map<string, any>): ExchangeRatesModel {
+  public update(identifier: string, values: Map<string, any>): MosaicsModel {
     // require existing
     const previous = this.read(identifier)
 
@@ -159,7 +159,7 @@ export class MarketsRepository
   public delete(identifier: string): boolean {
     // require existing
     if (!this.find(identifier)) {
-      throw new Error('Exchange rate with timestamp \'' + identifier + '\' does not exist.')
+      throw new Error('Mosaic with identifier \'' + identifier + '\' does not exist.')
     }
 
     // update collection

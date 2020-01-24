@@ -102,4 +102,5 @@ export enum NotificationType {
   SET_DEFAULT_EXPLORER ='set_default_explorer',
   PASSWORD_IS_INVALID_ERROR ='password_is_invalid',
   REMOTE_PUBLIC_KEY_MISSING = 'remote_public_key_missing_error',
+  COSIGNATURE_ADDED = 'cosignature_added',
 }

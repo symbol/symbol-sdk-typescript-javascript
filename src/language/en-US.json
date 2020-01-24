@@ -943,7 +943,8 @@
   "Please_set_transaction_fee_and_password": "Please set transaction fee and password",
   "Input_namespace_name": "Enter a namespace name",
   "confirm_information_before_add_child_wallet": "Enter your password to create a new child wallet",
-  "loading": "loading...",
+  "loading": "Loading...",
   "Enter_your_password_to_create_a_link_transaction": "Enter your password to create an account link transaction",
-  "Click_to_cosign": "Click to cosign"
+  "Click_to_cosign": "Click to cosign",
+  "cosignature_added": "Cosignature received"
 }

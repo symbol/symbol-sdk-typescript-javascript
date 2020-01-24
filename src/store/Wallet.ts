@@ -18,6 +18,8 @@ import {
   Address,
   QueryParams,
   Listener,
+  Mosaic,
+  UInt64,
 } from 'nem2-sdk'
 import {Subscription} from 'rxjs'
 
@@ -25,8 +27,8 @@ import {Subscription} from 'rxjs'
 import {$eventBus} from '../main'
 import {CacheKey} from '@/core/utils/CacheKey'
 import {RESTService} from '@/services/RESTService'
+import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {AwaitLock} from './AwaitLock';
-const Lock = AwaitLock.create();
 
 /**
  * Helper to format transaction group in name of state variable.
@@ -51,11 +53,16 @@ const transactionGroupToStateVariable = (
   return transactionGroup
 }
 
+/// region globals
+const Lock = AwaitLock.create();
+const walletsRepository = new WalletsRepository()
+/// end-region globals
+
 /**
  * Type SubscriptionType for Wallet Store
  * @type {SubscriptionType}
  */
-export type SubscriptionType = {listener: Listener, subscriptions: Subscription[]}
+type SubscriptionType = {listener: Listener, subscriptions: Subscription[]}
 
 /**
  * Wallet Store
@@ -65,7 +72,9 @@ export default {
   state: {
     initialized: false,
     currentWallet: '',
+    currentWalletAddress: null,
     currentWalletInfo: null,
+    currentWalletMosaics: [],
     otherWalletsInfo: {},
     allTransactions: [],
     transactionHashes: [],
@@ -79,7 +88,9 @@ export default {
   getters: {
     getInitialized: state => state.initialized,
     currentWallet: state => state.currentWallet,
+    currentWalletAddress: state => state.currentWalletAddress,
     currentWalletInfo: state => state.currentWalletInfo,
+    currentWalletMosaics: state => state.currentWalletMosaics,
     otherWalletsInfo: state => state.otherWalletsInfo,
     getSubscriptions: state => state.subscriptions,
     transactionHashes: state => state.transactionHashes,
@@ -97,8 +108,10 @@ export default {
   },
   mutations: {
     setInitialized: (state, initialized) => { state.initialized = initialized },
-    currentWallet: (state, walletAddress) => Vue.set(state, 'currentWallet', walletAddress),
+    currentWallet: (state, walletName) => Vue.set(state, 'currentWallet', walletName),
+    currentWalletAddress: (state, walletAddress) => Vue.set(state, 'currentWalletAddress', walletAddress),
     currentWalletInfo: (state, currentWalletInfo) => Vue.set(state, 'currentWalletInfo', currentWalletInfo),
+    currentWalletMosaics: (state, currentWalletMosaics) => Vue.set(state, 'currentWalletMosaics', currentWalletMosaics),
     addWalletInfo: (state, walletInfo) => {
       // update storage
       let wallets = state.otherWalletsInfo
@@ -168,14 +181,32 @@ export default {
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
 /// region scoped actions
-    async SET_CURRENT_WALLET({commit, dispatch}, walletAddress) {
-      //XXX validate wallet exists
-      commit('currentWallet', walletAddress)
+    async SET_CURRENT_WALLET({commit, dispatch}, walletName) {
+
+      const currentWallet = walletsRepository.read(walletName)
+      commit('currentWallet', walletName)
+      commit('currentWalletAddress', currentWallet.address())
 
       // reset store + re-initialize
       await dispatch('uninitialize', null, {root: true})
       await dispatch('initialize')
       $eventBus.$emit('onWalletChange', walletAddress)
+    },
+    SET_BALANCES({commit, dispatch, rootGetters}, mosaics) {
+      // - read network mosaic
+      const networkMosaic = rootGetters['mosaic/networkMosaic']
+
+      // - if there is no mosaics, add network mosaic balance 0
+      if (! mosaics.length) {
+        mosaics = [new Mosaic(networkMosaic, UInt64.fromUint(0))]
+      }
+      // - if there is mosaics, set network mosaic on top
+      else {
+        const currency = mosaics.filter(m => m.id.equals(networkMosaic)).shift()
+        mosaics = [currency].concat(mosaics.find(m => !m.id.equals(networkMosaic)) || [])
+      }
+
+      commit('currentWalletMosics', mosaics)
     },
     RESET_SUBSCRIPTIONS({commit}) {
       commit('setSubscriptions', [])
@@ -314,7 +345,7 @@ export default {
         return false
       }
     },
-    async REST_FETCH_INFO({commit, rootGetters}, address) {
+    async REST_FETCH_INFO({commit, dispatch, getters, rootGetters}, address) {
       if (!address || address.length !== 40) {
         return ;
       }
@@ -328,8 +359,11 @@ export default {
         const accountHttp = RESTService.create('AccountHttp', currentPeer)
         const accountInfo = await accountHttp.getAccountInfo(addressObject).toPromise()
 
-        commit('currentWalletInfo', accountInfo)
         commit('addWalletInfo', accountInfo)
+
+        if (address === getters['currentWallet'])
+        commit('currentWalletInfo', accountInfo)
+        dispatch('SET_BALANCES', accountInfo.mosaics)
         return accountInfo
       }
       catch (e) {

@@ -24,12 +24,13 @@ import 'view-design/dist/styles/iview.css'
 
 // internal dependencies
 import {VeeValidateConfig} from '@/core/validators/VeeValidateConfig'
-import App from '@/app/App.vue'
 import {UIBootstrapper} from '@/app/UIBootstrapper'
 import i18n from '@/language/index.ts'
 import store from '@/store/index.ts'
 import router from '@/router/index.ts'
-import {Electron} from '@/core/utils/Electron'
+
+// @ts-ignore
+import App from '@/app/App.vue'
 
 /// region UI plugins
 Vue.use(iView, {locale})

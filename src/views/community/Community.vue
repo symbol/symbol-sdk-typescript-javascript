@@ -4,10 +4,10 @@
       <div class="communityPanelNav left">
         <ul class="navList clear">
           <li
-            v-for="(item,index) in navList"
+            v-for="(item,index) in communityPanelNavConfig"
             :key="index"
             :class="[ item.active ? 'active' : '','left',item.disabled ? 'disabled' : '' ]"
-            @click="goToPage(item)"
+            @click="$router.push({name: item.to})"
           >
             {{ $t(item.name) }}
           </li>

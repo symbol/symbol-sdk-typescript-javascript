@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
+import {Component, Vue, Prop} from 'vue-property-decorator'
 
 /// region custom types
-type TabEntryType = { name: string, route: string, active: boolean }
+type TabEntryType = { title: string, route: string, active: boolean }
 /// end-region custom types
 
 @Component
-export class CommunityTs extends Vue {
+export class RouterTabListTs extends Vue {
   /**
-   * List of in-page navigator items
-   * @var {Array<TabEntryType>}
+   * Property for adding links
+   * @var {TabEntryType[]}
    */
-  public communityPanelNavConfig: Array<TabEntryType> = [
-    { name: 'news', route: 'community.index', active: true },
-    // { name: 'vote', to: '/vote', active: false, },
-  ]
+  @Prop({
+    default: []
+  }) links: TabEntryType[]
 }

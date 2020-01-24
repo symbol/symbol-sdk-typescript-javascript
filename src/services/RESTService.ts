@@ -18,6 +18,7 @@ import {
   AccountHttp,
   Address,
   BlockHttp,
+  BlockInfo,
   ChainHttp,
   DiagnosticHttp,
   Http,
@@ -39,6 +40,7 @@ import {Subscription} from 'rxjs'
 // internal dependencies
 import {AbstractService} from './AbstractService'
 import {AddressValidator} from '@/core/validators/AddressValidator'
+import {NotificationType} from '@/core/utils/NotificationType'
 
 export type HttpRepositoryImpl = Http
 
@@ -144,20 +146,6 @@ export class RESTService extends AbstractService {
     const listener = new Listener(wsEndpoint, WebSocket)
     await listener.open()
 
-    /*
-    this.listener.newBlock().subscribe((block: BlockInfo) => {
-      this.networkProperties.handleLastBlock(block, this.httpEndpoint)
-    })
-
-    this.listener.status(address).subscribe((error: TransactionStatusError) => {
-      Notice.trigger(error.code.split('_').join(' '), NoticeType.error, store)
-    })
-
-    this.listener.cosignatureAdded(address).subscribe(() => {
-      Notice.trigger(Message.NEW_COSIGNATURE, NoticeType.success, store)
-      store.state.account.wallet.setPartialTransactions(store)
-    })
-    */
     // error listener
     const status = listener.status(address).subscribe(
       (error: TransactionStatusError) => context.dispatch('notification/addError', error))
@@ -172,6 +160,10 @@ export class RESTService extends AbstractService {
       err => console.log(err))
 
     // partial listeners
+    const cosignatureAdded = listener.cosignatureAdded(address).subscribe(
+      transaction => context.dispatch('notification/ADD_SUCCESS', NotificationType.COSIGNATURE_ADDED),
+      err => console.log(err))
+
     const partialAdded = listener.aggregateBondedAdded(address).subscribe(
       transaction => context.dispatch('wallet/addTransaction', {group: 'partial', transaction}),
       err => console.log(err))
@@ -192,5 +184,26 @@ export class RESTService extends AbstractService {
       partialRemoved,
       confirmed,
     ]}
+  }
+
+  /**
+   * Subscribe to blocks websocket channels
+   * @param {Context} dispatch 
+   * @param {string} wsEndpoint 
+   * @param {Address} address 
+   */
+  public static async subscribeBlocks(
+    context: {dispatch: any, commit: any},
+    wsEndpoint: string,
+  ): Promise<{listener: Listener, subscriptions: Subscription[]}> {
+    // open websocket connection
+    const listener = new Listener(wsEndpoint, WebSocket)
+    await listener.open()
+
+    const newBlock = listener.newBlock().subscribe((block: BlockInfo) => {
+      context.dispatch('SET_CURRENT_HEIGHT', block.height.compact())
+    })
+
+    return {listener, subscriptions: [newBlock,]}
   }
 }

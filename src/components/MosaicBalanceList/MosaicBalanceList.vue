@@ -1,0 +1,85 @@
+<template>
+<div>
+  <Tabs v-if="!isEditionMode" size="small">
+    <TabPane :label="$t('assets')" name="name1">
+      <img
+        class="asset_list pointer" src="@/common/img/monitor/monitorAssetList.png"
+        @click="isEditionMode = true"
+      >
+      <div class="mosaicList secondary_page_animate">
+        <div
+          v-for="(entry, index) in filtered"
+          :key="index"
+          class="mosaic_data text_select"
+        >
+          <span class="img_container">
+            <img v-if="entry.mosaic.id.equals(networkMosaic)" src="@/../public/img/monitor/monitorMosaicIcon.png" alt="">
+            <img v-else src="@/../public/img/monitor/mosaicDefault.png" alt="">
+          </span>
+          <span class="mosaic_name">
+            {{ mosaicService.getMosaicName(entry.mosaic.id) || entry.mosaic.id.toHex() }}
+          </span>
+          <span class="mosaic_value">
+            <AmountDisplay :amount="mosaicHelpers.getRelativeAmount(entry.mosaic.balance || 0, entry.info?.divisibility)" />
+          </span>
+        </div>
+      </div>
+    </TabPane>
+  </Tabs>
+  <div v-else class="searchMosaic secondary_page_animate">
+    <img
+      src="@/common/img/monitor/monitorLeftArrow.png" class="asset_setting_tit pointer"
+      alt="" @click="isEditionMode = false"
+    >
+    <div class="input_outter">
+      <img src="@/common/img/monitor/monitorSearchIcon.png" alt="">
+      <input v-model="formItems.name" type="text" :placeholder="$t('search_for_asset_name')">
+      <span class="search pointer" @click="return false">{{ $t('search') }}</span>
+    </div>
+    <div class="mosaicList">
+      <div class="toggle_all_checked ">
+        <span @click="toggleMosaicDisplay()">
+          <div :class="[ 'choose', formItems.hasCheckedAll ? 'true' : 'false' ]" />
+          {{ !formItems.hasCheckedAll ? $t('select_all') : $t('all_unchecked') }}
+        </span>
+        <span @click="return false">
+          <div :class="[ 'choose', formItems.hasShowExpired ? 'true' : 'false' ]" />
+          {{ $t('Display_expired_mosaic') }}
+        </span>
+      </div>
+      <div
+        v-for="(entry, index) in extendedMosaics"
+        :key="index"
+        :class="[ 'mosaic_data',index === 0 ? 'padding_top_0' : '' ]"
+        class="mosaic_data pointer text_select"
+        @click="toggleMosaicDisplay(entry.mosaic.id)"
+      >
+        <span class="namege_img ">
+          <img class="small_icon " :src="hasMosaicHidden(entry.mosaic.id) ? monitorUnselected : monitorSelected">
+          <img v-if="entry.mosaic.id.equals(networkMosaic)" class="mosaicIcon" src="@/common/img/monitor/monitorMosaicIcon.png" />
+          <img v-else class="mosaicIcon" src="@/common/img/monitor/mosaicDefault.png">
+        </span>
+        <span class="mosaic_name text_select">
+          {{ mosaicService.getMosaicName(entry.mosaic.id) || entry.mosaic.id.toHex() }}
+        </span>
+        <span class="mosaic_value">
+          <AmountDisplay :amount="mosaicHelpers.getRelativeAmount(entry.mosaic.balance || 0, entry.info?.divisibility)" />
+        </span>
+      </div>
+      <div class="complete_container">
+        <div class="complete" @click="isEditionMode = false">
+          {{ $t('Close') }}
+        </div>
+      </div>
+      <div class="mosaic_data" />
+    </div>
+  </div>
+</div>
+</template>
+
+<script lang="ts">
+import {MosaicBalanceListTs} from './MosaicBalanceListTs'
+import './MosaicBalanceList.less'
+
+export default class MosaicBalanceList extends MosaicBalanceListTs {}
+</script>

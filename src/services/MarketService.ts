@@ -51,7 +51,7 @@ export class MarketService extends AbstractService {
     this.repository = new MarketsRepository()
   }
 
-  public async setMarketOpeningPrice(that: any) {
+  public async setMarketOpeningPrice() {
     try {
       const rstStr: any = await this.kline({
         period: '1min',
@@ -65,7 +65,7 @@ export class MarketService extends AbstractService {
       const result = rstQuery.data ? rstQuery.data[0].close : 0
 
       // update state
-      that.$store.commit('market/SET_CURRENT_PRICE', result)
+      this.$store.commit('market/SET_CURRENT_PRICE', result)
 
       // save to storage
       this.repository.create(new Map<string, any>([

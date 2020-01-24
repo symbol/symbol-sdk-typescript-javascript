@@ -133,7 +133,7 @@ export class AppMosaic {
       ['wallet', this.walletName],
       ['hexId', this.hexId],
       ['name', this.name],
-      ['info', this.info],
+      ['info', JSON.stringify(this.info)],
     ]))
   }
 

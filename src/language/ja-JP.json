@@ -944,5 +944,7 @@
     "Input_namespace_name": "ネームスペース名を入力",
     "confirm_information_before_add_child_wallet": "新しい子ウォレットを作成するためにパスワードを入力してください",
     "loading": "読込中…",
-    "Enter_your_password_to_create_a_link_transaction": "アカウントリンクトランザクションを作成するためにパスワードを入力してください"
+    "Enter_your_password_to_create_a_link_transaction": "アカウントリンクトランザクションを作成するためにパスワードを入力してください",
+    "Click_to_cosign": "Click to cosign",
+    "cosignature_added": "Cosignature received"
 }

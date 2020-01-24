@@ -13,20 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
-
-/// region custom types
-type TabEntryType = { name: string, route: string, active: boolean }
-/// end-region custom types
-
-@Component
-export class CommunityTs extends Vue {
+export class UIHelpers {
   /**
-   * List of in-page navigator items
-   * @var {Array<TabEntryType>}
+   * Helper method to copy text to clipboard
+   * @param {string} text 
+   * @return {boolean}
    */
-  public communityPanelNavConfig: Array<TabEntryType> = [
-    { name: 'news', route: 'community.index', active: true },
-    // { name: 'vote', to: '/vote', active: false, },
-  ]
+  public static copyToClipboard(text: string): boolean {
+    try {
+      // create ghost element
+      const input = document.createElement('input')
+      input.setAttribute('readonly', 'readonly')
+      input.setAttribute('value', text)
+      document.body.appendChild(input)
+
+      // use DOM commands
+      input.select()
+      document.execCommand('copy')
+
+      // flush
+      document.body.removeChild(input)
+      return true
+    }
+    catch(e) {}
+    return false
+  }
 }

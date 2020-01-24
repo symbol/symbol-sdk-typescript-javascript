@@ -1,0 +1,86 @@
+/**
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.top_navidator {
+  background-color: white;
+  height: 60px;
+  color: #666;
+  border-bottom: 2px solid rgba(249,249, 249);
+
+  .outter_container {
+    font-size: 18px;
+    position: relative;
+    width: 200px;
+    height: 100%;
+    color: #666;
+    text-align: center;
+    display: inline-block;
+  }
+
+  .outter_container:last-of-type {
+    .line {
+      color: transparent;
+    }
+  }
+
+  .disabled {
+    color: #ccc;
+    background-color: white;
+    cursor: not-allowed;
+    height: 20px;
+  }
+
+  .active_navigator {
+    position: relative;
+    font-size: 20px;
+    font-weight: bold;
+
+    .inner_container {
+      color: rgba(32, 181, 172);
+    }
+  }
+
+  .inner_container {
+    position: relative;
+    line-height: 60px;
+    padding-bottom: 20px;
+  }
+
+  .line {
+    display: inline-block;
+    width: 1px;
+    height: 20px;
+    float: right;
+    line-height: 60px;
+    font-size: 20px;
+    padding-bottom: 20px;
+    color: #ccc;
+    font-weight: normal;
+  }
+
+  .active_navigator {
+    .inner_container:after {
+      background-color: rgba(32, 181, 172);
+      display: block;
+      position: absolute;
+      content: '';
+      bottom: 0;
+      width: 30px;
+      height: 3px;
+      margin-left: 50%;
+      left: -15px;
+    }
+  }
+}

@@ -67,10 +67,10 @@ export class PeersRepository
 
   /**
    * Getter for the collection of items
-   * @return {Map<string, PeersModel>}
+   * @return {PeersModel[]}
    */
-  public collect(): Iterator<PeersModel> {
-    return this._collection.values()
+  public collect(): PeersModel[] {
+    return Array.from(this._collection.values())
   }
 
   /**
@@ -78,7 +78,7 @@ export class PeersRepository
    * mapped by identifier
    * @return {Map<string, PeersModel>}
    */
-  public map(): Map<string, PeersModel> {
+  public entries(): Map<string, PeersModel> {
     return this._collection
   }
 

@@ -112,13 +112,13 @@ export default class LoginAccountTs extends Vue {
     }
 
     // no account pre-selected, select first if available
-    const accounts = this.accountsRepository.map()
+    const accounts = this.accountsRepository.entries()
     if (! accounts.size) {
       return
     }
 
     // accounts available, iterate to first account
-    const firstAccount = this.accountsRepository.collect().next().value
+    const firstAccount = this.accountsRepository.collect().shift()
     this.formItems.currentAccountName = firstAccount.values.get('accountName')
   }
 

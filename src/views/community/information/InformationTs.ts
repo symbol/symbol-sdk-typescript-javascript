@@ -1,85 +1,55 @@
-import {formatDate} from '@/core/utils'
+/**
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import {Component, Vue} from 'vue-property-decorator'
-import {ArticleFeed} from '@/core/services/community'
-import RSSParser from 'rss-parser'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const xss = require('xss')
+import {mapGetters} from 'vuex'
 
-@Component
+// internal dependencies
+import {ArticleEntry, CommunityService} from '@/services/CommunityService'
+
+@Component({computed: {...mapGetters({
+  currentArticle: 'community/currentArticle',
+  latestArticles: 'community/latestArticles',
+})}})
 export class InformationTs extends Vue {
-  startPage = 0
-  articleList: any[] = []
-  loadAllData = false
-  remainingWords = 300
-  scroll: any
-  currentArticle = {title: null, content: null, creator: null, pubDate: null} 
-  formatDate = formatDate
+  /**
+   * Currently active article
+   * @var {string}
+   */
+  public currentArticle: string
 
-  addArticleStartIndex() {
-    this.startPage += 10
+  /**
+   * List of latest articles
+   * @var {ArticleEntry[]}
+   */
+  public latestArticles: ArticleEntry[]
+
+  /**
+   * Hook called when the component is mounted
+   * @return {void}
+   */
+  mounted() {
+    this.$store.dispatch('community/initialize')
   }
 
-  switchArticle(index) {
-    let list: any = this.articleList
-    this.currentArticle = list[index]
-    list = list.map((item) => {
-      item.isSelect = false
-      return item
-    })
-    list[index].isSelect = true
-    this.articleList = list
-    this.scrollTop()
-  }
-
-  divScroll(div) {
-    this.scroll = div
-  }
-
-  scrollTop() {
-    this.scroll ? this.scroll.target.scrollTop = 0 : ''
-  }
-
-  automaticLoadingArticle() {
-    const allHeight = this.$refs.listContainer['scrollHeight']
-    const scrollHeight = this.$refs.listContainer['offsetHeight'] + this.$refs['listContainer']['scrollTop']
-    if (allHeight <= scrollHeight) {
-      this.getArticleByPage()
-    }
-    this.getArticleByPage()
-  }
-
-  async getArticleByPage() {
-
-    if (this.loadAllData) {
-      return
-    }
-    this.addArticleStartIndex()
-  }
-
-
-  async mounted() {
-    try {
-      const data = await ArticleFeed.reqFeed()
-      const parser = new RSSParser()
-      parser.parseString(data, (err, parsed) => {
-        if (err) {
-          console.error(`Error occured while parsing RSS Feed ${err.toString()}`)
-        } else {
-          parsed.items.forEach(item => {
-            this.articleList.push({
-              creator: item.creator,
-              pubDate: item.pubDate,
-              title: item.title,
-              content: xss(item['content:encoded']),
-            })
-          })
-          this.articleList[0].isSelect = true
-          this.currentArticle = this.articleList[0]
-          this.getArticleByPage()
-        }
-      })
-    } catch (error) {
-      console.error('InformationTs -> mounted -> error', error)
-    }
+  /**
+   * Switch the active article
+   * @param {string} title
+   * @return {void}
+   */
+  public switchArticle(title: string) {
+    this.$store.dispatch('community/SET_CURRENT_ARTICLE', title)
   }
 }

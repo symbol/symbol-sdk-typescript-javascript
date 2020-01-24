@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Address} from 'nem2-sdk'
-import {MosaicHelpers} from './MosaicHelpers'
-import {NetworkCurrency} from '@/core/model'
+import {Address, MosaicInfo} from 'nem2-sdk'
 
+// internal dependencies
+import {MosaicHelpers} from './MosaicHelpers'
+
+// configuration
 import networkConfig from '../../../config/network.conf.json';
 
 export class Formatters {
@@ -53,9 +55,25 @@ export class Formatters {
 
   public static absoluteAmountToRelativeAmount = (
     amount: number,
-    networkCurrency: NetworkCurrency,
+    networkCurrency: MosaicInfo,
   ): string => {
     const relativeAmount = MosaicHelpers.getRelativeMosaicAmount(amount, networkCurrency.divisibility)
     return `${Formatters.formatNumber(relativeAmount)}`
+  }
+
+  public static formatDate = (timestamp) => {
+    const now = new Date(Number(timestamp))
+    const year = now.getFullYear()
+    let month = `${now.getMonth() + 1}`
+    month = Number(month) < 10 ? `0${month}` : month
+    let date = `${now.getDate()}`
+    date = Number(date) < 10 ? `0${date}` : date
+    let hour = `${now.getHours()}`
+    hour = Number(hour) < 10 ? `0${hour}` : hour
+    let minute = `${now.getMinutes()}`
+    minute = Number(minute) < 10 ? `0${minute}` : minute
+    let second = `${now.getSeconds()}`
+    second = Number(second) < 10 ? `0${second}` : second
+    return `${year}-${month}-${date} ${hour}:${minute}:${second}`
   }
 }

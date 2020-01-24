@@ -1,27 +1,24 @@
 <template>
   <div class="informationWrap secondary_page_animate">
-    <Spin
-      v-if="!currentArticle.title" size="large" fix
+    <Spin v-if="!currentArticle"
+      size="large" fix
       class="absolute"
     />
-    <div v-if="currentArticle.title" class="left left_article_list radius">
-      <div ref="listContainer" class="list_container scroll" @scroll="automaticLoadingArticle">
+    <div v-if="currentArticle" class="left left_article_list radius">
+      <div ref="listContainer" class="list_container scroll">
         <div
-          v-for="(a,index) in articleList"
+          v-for="(a,index) in latestArticles"
           :key="index"
           :class="[ 'article_summary_item',a.isSelect ? 'selected' : '','pointer' ]"
-          @click="switchArticle(index)"
+          @click="switchArticle(a.title)"
         >
           <div class="title">
             {{ a.title }}
           </div>
           <div class="other_info">
             <span class="from">{{ a.creator }}</span>
-            <span class="date">{{ formatDate(Date.parse(a.pubDate)) }}</span>
+            <span class="date">{{ a.pubDate }}</span>
           </div>
-        </div>
-        <div v-if="loadAllData" class="load_all_data">
-          {{ $t('no_more_data') }}
         </div>
       </div>
     </div>
@@ -31,9 +28,9 @@
       </div>
       <div class="other_info content">
         <span class="from">{{ currentArticle.creator }}</span>
-        <span class="date">{{ formatDate(Date.parse(currentArticle.pubDate)) }}</span>
+        <span class="date">{{ currentArticle.pubDate }}</span>
       </div>
-      <div class="article_content scroll content" @scroll="divScroll">
+      <div class="article_content scroll content">
         <div v-html="currentArticle.content" />
       </div>
     </div>

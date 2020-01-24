@@ -69,10 +69,10 @@ export class AccountsRepository
 
   /**
    * Getter for the collection of items
-   * @return {Map<string, AccountsModel>}
+   * @return {AccountsModel[]}
    */
-  public collect(): Iterator<AccountsModel> {
-    return this._collection.values()
+  public collect(): AccountsModel[] {
+    return Array.from(this._collection.values())
   }
 
   /**
@@ -80,7 +80,7 @@ export class AccountsRepository
    * mapped by identifier
    * @return {Map<string, AccountsModel>}
    */
-  public map(): Map<string, AccountsModel> {
+  public entries(): Map<string, AccountsModel> {
     return this._collection
   }
 
@@ -180,15 +180,15 @@ export class AccountsRepository
    * @return {Object}
    */
   public getNamesByNetworkType(): any {
-    const iterator = this.collect()
+    const accounts = this.collect()
     const accountsMap = {
       [NetworkType.MIJIN_TEST]: [],
       [NetworkType.MIJIN]: [],
       [NetworkType.TEST_NET]: [],
       [NetworkType.MAIN_NET]: [],
     }
-    for (let i = 0, m = this._collection.size; i < m; i++) {
-      const account = iterator.next().value
+    for (let i = 0, m = accounts.length; i < m; i++) {
+      const account = accounts[i]
       const networkType = account.values.get('networkType')
       accountsMap[networkType].push(account.values.get('accountName'))
     }

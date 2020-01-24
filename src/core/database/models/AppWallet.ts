@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {SimpleWallet} from 'nem2-sdk'
+import {SimpleWallet, Address} from 'nem2-sdk'
 
 // internal dependencies
 import {DatabaseModel} from '@/core/database/DatabaseModel'
@@ -40,6 +40,14 @@ export class WalletsModel extends DatabaseModel {
    * @var {Map<string, DatabaseRelation>}
    */
   public relations: Map<string, DatabaseRelation> = new Map<string, DatabaseRelation>([])
+
+  /**
+   * Getter for address instance
+   * @return {Address}
+   */
+  public address(): Address {
+    return Address.createFromRawAddress(this.values.get('address'))
+  }
 }
 
 export class WalletsTable extends DatabaseTable {

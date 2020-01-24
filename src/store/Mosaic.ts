@@ -31,19 +31,27 @@ export default {
     initialized: false,
     networkMosaicId: null,
     networkMosaicName: '',
+    networkMosaicTicker: '',
     nemesisTransactions: [],
     mosaicsInfoByHex: {},
+    mosaicsNamesByHex: {},
+    hiddenMosaics: [],
   },
   getters: {
     getInitialized: state => state.initialized,
     networkMosaic: state => state.networkMosaicId,
+    networkMosaicTicker: state => state.networkMosaicTicker,
     nemesisTransactions: state => state.nemesisTransactions,
     mosaicsInfo: state => state.mosaicsInfoByHex,
+    mosaicsInfoList: state => Object.keys(state.mosaicsInfoByHex).map(hex => state.mosaicsInfoByHex[hex]),
+    mosaicsNames: state => state.mosaicsNamesByHex,
+    hiddenMosaics: state => state.hiddenMosaics,
   },
   mutations: {
     setInitialized: (state, initialized) => { state.initialized = initialized },
     setNetworkMosaicId: (state, mosaic) => Vue.set(state, 'networkMosaicId', mosaic),
     setNetworkMosaicName: (state, name) => Vue.set(state, 'networkMosaicName', name),
+    setNetworkMosaicTicker: (state, ticker) => Vue.set(state, 'networkMosaicTicker', ticker),
     setNemesisTransactions: (state, transactions) => Vue.set(state, 'nemesisTransactions', transactions),
     addMosaicInfo: (state, mosaicInfo: MosaicInfo) => {
       let info = state.mosaicsInfoByHex
@@ -52,6 +60,34 @@ export default {
       // register mosaic info
       info[hex] = mosaicInfo
       Vue.set(state, 'mosaicsInfoByHex', info)
+    },
+    addMosaicName: (state, payload: {hex: string, name: string}) => {
+      let names = state.mosaicsNamesByHex
+      let hex = payload.hex
+
+      // register mosaic name
+      names[hex] = payload.name
+      Vue.set(state, 'mosaicsNamesByHey', names)
+    },
+    hideMosaic: (state, mosaicId) => {
+      const hiddenMosaics = state.hiddenMosaics
+      const iter = hiddenMosaics.findIndex(mosaicId.toHex())
+      if (iter !== undefined) {
+        return
+      }
+
+      hiddenMosaics.push(mosaicId.toHex())
+      Vue.set(state, 'hiddenMosaics', hiddenMosaics)
+    },
+    showMosaic: (state, mosaicId) => {
+      const hiddenMosaics = state.hiddenMosaics
+      const iter = hiddenMosaics.findIndex(mosaicId.toHex())
+      if (iter === undefined) {
+        return
+      }
+
+      delete hiddenMosaics[iter]
+      Vue.set(state, 'hiddenMosaics', hiddenMosaics)
     }
   },
   actions: {
@@ -79,6 +115,12 @@ export default {
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
 /// region scoped actions
+    HIDE_MOSAIC({commit}, mosaicId) {
+      commit('hideMosaic', mosaicId)
+    },
+    SHOW_MOSAIC({commit}, mosaicId) {
+      commit('showMosaic', mosaicId)
+    },
     SET_NEMESIS_TRANSACTIONS({commit, dispatch}, transactions) {
       // - read first root namespace
       const rootNamespaceTx = transactions.filter(
@@ -102,7 +144,8 @@ export default {
 
       commit('setNetworkMosaicName', mosaicName)
       commit('setNetworkMosaicId', aliasTx.mosaicId)
-      dispatch('REST_FETCH_INFOS', [aliasTx.mosaicId])
+      commit('setNetworkMosaicTicker', subNamespaceTx.namespaceName.toUpperCase())
+      dispatch('REST_FETCH_INFO', aliasTx.mosaicId)
     },
     async REST_FETCH_INFO({commit, rootGetters}, mosaicId) {
       const nodeUrl = rootGetters['network/currentPeer'].url
@@ -119,7 +162,25 @@ export default {
       
       mosaicsInfo.map(info => commit('addMosaicInfo', info))
       return mosaicsInfo
-    }
+    },
+    async REST_FETCH_NAMES({commit, rootGetters}, mosaicIds) {
+      const nodeUrl = rootGetters['network/currentPeer'].url
+      const namespaceHttp = RESTService.create('NamespaceHttp', nodeUrl)
+      const mosaicNames = await namespaceHttp.getMosaicsNames(mosaicIds).toPromise()
+
+      // map by hex if names available
+      const mappedNames = mosaicNames.filter(
+        entry => entry.names.length >= 1
+      ).map(
+        ({mosaicId, names}) => { return {
+          hex: mosaicId.toHex(),
+          name: names.shift() //XXX takes only first name!
+        }})
+
+      // update store
+      mappedNames.map(mappedEntry => commit('addMosaicName', mappedEntry))
+      return mappedNames
+    },
 /// end-region scoped actions
   }
 }
