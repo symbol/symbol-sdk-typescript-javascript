@@ -184,13 +184,13 @@ export default {
     async SET_CURRENT_WALLET({commit, dispatch}, walletName) {
 
       const currentWallet = walletsRepository.read(walletName)
-      commit('currentWallet', walletName)
+      commit('currentWallet', currentWallet)
       commit('currentWalletAddress', currentWallet.address())
 
       // reset store + re-initialize
       await dispatch('uninitialize', null, {root: true})
       await dispatch('initialize')
-      $eventBus.$emit('onWalletChange', walletAddress)
+      $eventBus.$emit('onWalletChange', currentWallet.address().plain())
     },
     SET_BALANCES({commit, dispatch, rootGetters}, mosaics) {
       // - read network mosaic

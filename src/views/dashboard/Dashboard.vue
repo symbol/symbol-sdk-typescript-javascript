@@ -17,13 +17,10 @@
 
 <script lang="ts">
 // @ts-ignore
-import {MonitorTs} from '@/views/monitor/MonitorTs.ts'
+import {DashboardTs} from '@/views/dashboard/DashboardTs.ts'
+import "Dashboard.less";
 
-export default class Monitor extends MonitorTs {
+export default class Dashboard extends DashboardTs {
 
 }
 </script>
-
-<style scoped lang="less">
-  @import "Monitor.less";
-</style>

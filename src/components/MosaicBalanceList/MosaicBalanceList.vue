@@ -48,7 +48,7 @@
         </span>
       </div>
       <div
-        v-for="(entry, index) in extendedMosaics"
+        v-for="(entry, index) in mosaicsWithInfo"
         :key="index"
         :class="[ 'mosaic_data',index === 0 ? 'padding_top_0' : '' ]"
         class="mosaic_data pointer text_select"

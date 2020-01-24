@@ -102,6 +102,14 @@ export class MosaicBalanceListTs extends Vue {
       mosaic: balanceEntry
     }})
   }
+
+  get mosaicsWithInfo(): {info: MosaicInfo, mosaic: Mosaic}[] {
+    const info = this.mosaicsInfo
+    return this.mosaics.map((balanceEntry: Mosaic) => { return {
+      info: info.filter(mosaic => mosaic.id.equals(balanceEntry.id)).shift(),
+      mosaic: balanceEntry
+    }})
+  }
 /// end-region computed properties getter/setter
 
   /**

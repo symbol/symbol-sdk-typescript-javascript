@@ -902,7 +902,7 @@
   "Send_request": "Send request",
   "next_delegate": "Next:Delegate",
   "Please_input_account_password_get_mnemonic": "Please input account password get mnemonic",
-  "set_qr_image": "Set qr image",
+  "set_qr_image": "Enter your invoice data in below form",
   "set_default_explorer": "The url entered is not valid, a default url has been set for you.",
   "min_approval_delta_field_description": "Relative change of the number of required signatures to approve a transaction.",
   "min_removal_delta_field_description": "Relative change of the number of required signatures to remove a cosigner.",

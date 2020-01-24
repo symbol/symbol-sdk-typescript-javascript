@@ -1,27 +1,39 @@
-import {Message} from '@/config/index.ts'
-import {QRCodeGenerator, TransactionQR} from 'nem2-qr-library'
-import {copyTxt} from '@/core/utils'
+/**
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import {Component, Vue, Provide} from 'vue-property-decorator'
-import CollectionRecord from '@/components/collection-record/CollectionRecord.vue'
-import {mapState} from 'vuex'
+import {mapGetters} from 'vuex'
+import {QRCodeGenerator, TransactionQR} from 'nem2-qr-library'
 import {MosaicId, TransferTransaction, Deadline, Address, Mosaic, UInt64, PlainMessage, NamespaceId} from 'nem2-sdk'
-import {TransferType} from '@/core/model/TransferType'
-import {monitorReceiptTransferTypeConfig} from '@/config/view/monitor'
-import {AppInfo, MosaicNamespaceStatusType, StoreAccount} from '@/core/model'
-import failureIcon from '@/common/img/monitor/failure.png'
 import {pluck, concatMap} from 'rxjs/operators'
 import {of} from 'rxjs'
-import {validateMosaicId, validation} from '@/core/validation'
-import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
+
+// internal dependencies
+import {AccountsModel} from '@/core/database/models/AppAccount'
+import {WalletsModel} from '@/core/database/models/AppWallet'
+import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
+
+// resources
+// @ts-ignore
+import failureIcon from '@/../public/img/monitor/failure.png'
 
 @Component({
-  components: {CollectionRecord, ErrorTooltip},
-  computed: {
-    ...mapState({
-      activeAccount: 'account',
-      app: 'app',
-    }),
-  },
+  computed: {...mapGetters({
+    currentAccount: 'account/currentAccount',
+    currentWallet: 'wallet/currentWallet',
+  })},
   subscriptions() {
     const qrCode$ = this
       .$watchAsObservable('qrCodeArgs', {immediate: true})
@@ -34,8 +46,31 @@ import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue
   },
 })
 
-export class MonitorInvoiceTs extends Vue {
+export class DashboardInvoicePageTs extends Vue {
   @Provide() validator: any = this.$validator
+
+  /**
+   * Currently active account
+   * @see {Store.Account}
+   * @var {AccountsModel}
+   */
+  public currentAccount: AccountsModel
+
+  /**
+   * Currently active wallet
+   * @see {Store.Wallet}
+   * @var {WalletsModel}
+   */
+  public currentWallet: WalletsModel
+
+  /**
+   * Validation rules
+   * @var {ValidationRuleset}
+   */
+  public validationRules = ValidationRuleset
+}
+/*
+
   activeAccount: StoreAccount
   app: AppInfo
   validation = validation
@@ -81,7 +116,7 @@ export class MonitorInvoiceTs extends Vue {
 
       return {name, hex, id}
     } catch (error) {
-      console.error('MonitorInvoiceTs -> error', error)
+      console.error('DashboardInvoicePageTs -> error', error)
       return {
         name: null, hex: selectedMosaicHex, id: null,
       }
@@ -109,7 +144,7 @@ export class MonitorInvoiceTs extends Vue {
         networkType,
       )
     } catch (error) {
-      console.error('MonitorInvoiceTs -> error', error)
+      console.error('DashboardInvoicePageTs -> error', error)
       return null
     }
   }
@@ -194,4 +229,6 @@ export class MonitorInvoiceTs extends Vue {
   mounted() {
     this.selectedMosaicHex = this.mosaicList[0] ? this.mosaicList[0].value : ''
   }
+
 }
+*/

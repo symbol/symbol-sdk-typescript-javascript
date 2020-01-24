@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {leftBarIcons} from '@/../public/img/window'
-import {createStepImage,importStepImage} from '@/config/view/login'
+import {createStepImage,importStepImage} from '@/config/view/resources/Images'
 
 const routes: any[] = [
   {
@@ -150,9 +150,9 @@ const routes: any[] = [
         ],
       },
       {
-        path: '/monitorPanel',
+        path: '/dashboard',
         name: 'dashboard',
-        redirect: '/dashBoard',
+        redirect: '/dashboard/home',
         meta: {
           protected: true,
           clickable: true,
@@ -160,37 +160,37 @@ const routes: any[] = [
           activeIcon: leftBarIcons.windowDashboardActive,
         },
         // @ts-ignore
-        component: () => import('@/views/monitor/Monitor.vue'),
+        component: () => import('@/views/dashboard/Dashboard.vue'),
         children: [
           {
-            path: '/dashBoard',
+            path: '/home',
             name: 'dashboard.index',
             meta: { protected: true},
             // @ts-ignore
-            component: () => import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue'),
+            component: () => import('@/views/dashboard/home/DashboardHomePage.vue'),
           }, {
             path: '/transfer',
             name: 'dashboard.transfer',
             meta: { protected: true},
             // @ts-ignore
-            component: () => import('@/views/monitor/monitor-transfer/MonitorTransfer.vue'),
+            component: () => import('@/views/dashboard/transfer/DashboardTransferPage.vue'),
           }, {
             path: '/invoice',
             name: 'dashboard.invoice',
             meta: { protected: true},
             // @ts-ignore
-            component: () => import('@/views/monitor/monitor-invoice/MonitorInvoice.vue'),
+            component: () => import('@/views/dashboard/invoice/DashboardInvoicePage.vue'),
           }, {
             path: '/market',
             name: 'dashboard.market',
             meta: { protected: true},
             // @ts-ignore
-            component: () => import('@/views/monitor/monitor-market/MonitorMarket.vue'),
+            component: () => import('@/views/dashboard/market/DashboardMarketPage.vue'),
           },
         ],
       },
       {
-        path: '/walletPanel',
+        path: '/wallets',
         name: 'wallets',
         meta: {
           protected: true,
