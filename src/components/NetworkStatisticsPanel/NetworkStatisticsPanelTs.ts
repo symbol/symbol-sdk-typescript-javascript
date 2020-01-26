@@ -17,13 +17,21 @@ import {NodeInfo} from 'nem2-sdk'
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
-@Component({computed: {...mapGetters({
-  countTransactions: 'statistics/countTransactions',
-  countAccounts: 'statistics/countAccounts',
-  countNodes: 'statistics/countNodes',
-  currentHeight: 'network/currentHeight',
-  currentPeerInfo: 'network/currentPeerInfo',
-})}})
+// child components
+// @ts-ignore
+import AnimatedNumber from '@/components/AnimatedNumber/AnimatedNumber.vue'
+
+@Component({
+  components: {
+    AnimatedNumber,
+  },
+  computed: {...mapGetters({
+    countTransactions: 'statistics/countTransactions',
+    countAccounts: 'statistics/countAccounts',
+    countNodes: 'statistics/countNodes',
+    currentHeight: 'network/currentHeight',
+    currentPeerInfo: 'network/currentPeerInfo',
+  })}})
 export class NetworkStatisticsPanelTs extends Vue {
   /**
    * Number of transactions on the network

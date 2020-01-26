@@ -9,9 +9,9 @@
     <div class="check-mnemonic-col">
       <div class="check-mnemonic-left">
         <MnemonicVerification
-          :mnemonic-words-list="mnemonicWordsList"
-          @verificationSuccess="$router.push({name: 'login.createAccount.finalize'})"
-          @toPreviousPage="$router.back()"
+          :words="mnemonicWordsList"
+          @success="$router.push({name: 'login.createAccount.finalize'})"
+          @canceled="$router.back()"
         />
       </div>
       <div class="check-mnemonic-right">

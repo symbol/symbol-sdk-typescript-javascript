@@ -45,7 +45,6 @@ export default {
   actions: {
     async initialize({ commit, dispatch, getters }) {
       const callback = async () => {
-        await dispatch('RESET_STATE')
         commit('setInitialized', true)
       }
 
@@ -74,6 +73,10 @@ export default {
       // update state
       commit('currentAccount', currentAccount)
       commit('setAuthenticated', true)
+
+      // set knownWallets
+      dispatch('wallet/setKnownWallets', currentAccount.wallets())
+      dispatch()
 
       // reset store + re-initialize
       await dispatch('uninitialize', null, {root: true})

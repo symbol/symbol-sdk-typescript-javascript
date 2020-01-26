@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// internal dependencies
+// configuration
 import networkConfig from '../../../config/network.conf.json'
 import appConfig from '../../../config/app.conf.json'
-const {MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH} = appConfig
+const {MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH} = appConfig.constants
 
 //XXX network store config getter
 const currentNetwork = networkConfig.networks['testnet-publicTest']

@@ -13,29 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
-
-// internal dependencies
-import {WalletsModel} from '@/core/database/models/AppWallet'
-
-// child components
-// @ts-ignore
-import TransactionList from '@/components/transaction-list/TransactionList.vue'
-
-@Component({
-  components: {
-    TransactionList,
-  },
-  computed: {...mapGetters({
-    currentWallet: 'wallet/currentWallet'
-  })}
-})
-export class DashboardHomePageTs extends Vue {
-  /**
-   * Currently active wallet
-   * @see {Store.Wallet}
-   * @var {WalletsModel}
-   */
-  public currentWallet: WalletsModel
+.number-grow-warp {
+  transform: translateZ(0);
 }

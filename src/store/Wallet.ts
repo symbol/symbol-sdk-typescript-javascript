@@ -20,6 +20,7 @@ import {
   Listener,
   Mosaic,
   UInt64,
+  Transaction,
 } from 'nem2-sdk'
 import {Subscription} from 'rxjs'
 
@@ -75,6 +76,8 @@ export default {
     currentWalletAddress: null,
     currentWalletInfo: null,
     currentWalletMosaics: [],
+    currentMultisigInfo: null,
+    knownWallets: {},
     otherWalletsInfo: {},
     allTransactions: [],
     transactionHashes: [],
@@ -91,6 +94,8 @@ export default {
     currentWalletAddress: state => state.currentWalletAddress,
     currentWalletInfo: state => state.currentWalletInfo,
     currentWalletMosaics: state => state.currentWalletMosaics,
+    currentMultisigInfo: state => state.currentMultisigInfo,
+    knownWallets: state => state.knownWallets,
     otherWalletsInfo: state => state.otherWalletsInfo,
     getSubscriptions: state => state.subscriptions,
     transactionHashes: state => state.transactionHashes,
@@ -100,9 +105,9 @@ export default {
     transactionCache: state => state.transactionCache,
     allTransactions: state => {
       return [].concat(
-        state.confirmedTransactions,
-        state.unconfirmedTransactions,
         state.partialTransactions,
+        state.unconfirmedTransactions,
+        state.confirmedTransactions,
       )
     },
   },
@@ -112,6 +117,7 @@ export default {
     currentWalletAddress: (state, walletAddress) => Vue.set(state, 'currentWalletAddress', walletAddress),
     currentWalletInfo: (state, currentWalletInfo) => Vue.set(state, 'currentWalletInfo', currentWalletInfo),
     currentWalletMosaics: (state, currentWalletMosaics) => Vue.set(state, 'currentWalletMosaics', currentWalletMosaics),
+    setKnownWallets: (state, wallets) => Vue.set(state, 'knownWallets', wallets),
     addWalletInfo: (state, walletInfo) => {
       // update storage
       let wallets = state.otherWalletsInfo
@@ -120,6 +126,7 @@ export default {
       // update state
       Vue.set(state, 'otherWalletsInfo', wallets)
     },
+    setMultisigInfo: (state, multisigInfo) => Vue.set(state, 'currentMultisigInfo', multisigInfo),
     transactionHashes: (state, hashes) => Vue.set(state, 'transactionHashes', hashes),
     confirmedTransactions: (state, transactions) => Vue.set(state, 'confirmedTransactions', transactions),
     unconfirmedTransactions: (state, transactions) => Vue.set(state, 'unconfirmedTransactions', transactions),
@@ -163,7 +170,7 @@ export default {
 
         // fetch account info
         dispatch('REST_FETCH_INFO', address)
-
+        
         // open websocket connections
         dispatch('SUBSCRIBE', address)
         dispatch('RESET_TRANSACTIONS')
@@ -188,9 +195,12 @@ export default {
       commit('currentWalletAddress', currentWallet.address())
 
       // reset store + re-initialize
-      await dispatch('uninitialize', null, {root: true})
-      await dispatch('initialize')
+      await dispatch('uninitialize')
+      await dispatch('initialize', currentWallet.address().plain())
       $eventBus.$emit('onWalletChange', currentWallet.address().plain())
+    },
+    SET_KNOWN_WALLETS({commit}, wallets) {
+      commit('setKnownWallets', wallets)
     },
     SET_BALANCES({commit, dispatch, rootGetters}, mosaics) {
       // - read network mosaic
@@ -309,13 +319,17 @@ export default {
 /**
  * REST API
  */
-    async REST_FETCH_TRANSACTIONS({dispatch, getters, rootGetters}, {address, pageSize, id}) {
+    async REST_FETCH_TRANSACTIONS({dispatch, getters, rootGetters}, {group, address, pageSize, id}) {
+      if (!group || ! ['partial', 'unconfirmed', 'confirmed'].includes(group)) {
+        group = 'confirmed'
+      }
+
       if (!address || address.length !== 40) {
         return ;
       }
 
       // check cache for results
-      const cacheKey = CacheKey.create([address, pageSize, id])
+      const cacheKey = CacheKey.create([group, address, pageSize, id])
       const cache = getters['transactionCache']
       if (cache.hasOwnProperty(cacheKey)) {
         return cache[cacheKey]
@@ -329,11 +343,18 @@ export default {
         
         // fetch transactions from REST gateway
         const accountHttp = RESTService.create('AccountHttp', currentPeer)
-        const transactions = await accountHttp.getAccountTransactions(addressObject, queryParams).toPromise()
+        let transactions: Transaction[] 
+
+        if ('confirmed' === group)
+          transactions = await accountHttp.getAccountTransactions(addressObject, queryParams).toPromise()
+        else if ('unconfirmed' === group)
+          transactions = await accountHttp.getAccountUnconfirmedTransactions(addressObject, queryParams).toPromise()
+        else if ('partial' === group)
+          transactions = await accountHttp.getAccountPartialTransactions(addressObject, queryParams).toPromise()
 
         // update store
         transactions.map((transaction) => dispatch('ADD_TRANSACTION', {
-          group: 'confirmed',
+          group: group,
           cacheKey: cacheKey,
           transaction
         }))
@@ -361,9 +382,12 @@ export default {
 
         commit('addWalletInfo', accountInfo)
 
-        if (address === getters['currentWallet'])
-        commit('currentWalletInfo', accountInfo)
-        dispatch('SET_BALANCES', accountInfo.mosaics)
+        // update current wallet state if necessary
+        if (address === getters['currentWallet']) {
+          commit('currentWalletInfo', accountInfo)
+          dispatch('SET_BALANCES', accountInfo.mosaics)
+        }
+
         return accountInfo
       }
       catch (e) {
@@ -384,6 +408,28 @@ export default {
       }
       catch (e) {
         console.error('An error happened while trying to fetch account information: <pre>' + e + '</pre>')
+        return false
+      }
+    },
+    async REST_FETCH_MULTISIG({commit, dispatch, getters, rootGetters}, address) {
+      if (!address || address.length !== 40) {
+        return ;
+      }
+
+      try {
+        // prepare REST parameters
+        const currentPeer = rootGetters['network/currentPeer'].url
+        const addressObject = Address.createFromRawAddress(address)
+
+        // fetch account info from REST gateway
+        const multisigHttp = RESTService.create('MultisigHttp', currentPeer)
+        const multisigInfo = await multisigHttp.getMultisigAccountInfo(addressObject).toPromise()
+
+        commit('setMultisigInfo', multisigInfo)
+        return multisigInfo
+      }
+      catch (e) {
+        console.error('An error happened while trying to fetch multisig information: <pre>' + e + '</pre>')
         return false
       }
     },

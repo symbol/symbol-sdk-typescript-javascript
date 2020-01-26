@@ -13,29 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import {Component, Vue, Prop} from 'vue-property-decorator'
 
 // internal dependencies
-import {WalletsModel} from '@/core/database/models/AppWallet'
+import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
 
 // child components
 // @ts-ignore
-import TransactionList from '@/components/transaction-list/TransactionList.vue'
+import ErrorTooltip from '@/components/forms/ErrorTooltip/ErrorTooltip.vue'
 
 @Component({
   components: {
-    TransactionList,
+    ErrorTooltip,
   },
-  computed: {...mapGetters({
-    currentWallet: 'wallet/currentWallet'
-  })}
 })
-export class DashboardHomePageTs extends Vue {
+export class MessageInputTs extends Vue {
+
+  @Prop({
+    default: ''
+  }) value: string
+
   /**
-   * Currently active wallet
-   * @see {Store.Wallet}
-   * @var {WalletsModel}
+   * Validation rules
+   * @var {ValidationRuleset}
    */
-  public currentWallet: WalletsModel
+  public validationRules = ValidationRuleset
+
+/// region computed properties getter/setter
+/// end-region computed properties getter/setter
 }

@@ -28,7 +28,6 @@ import {ServiceFactory} from '@/services/ServiceFactory'
 import {DatabaseService} from '@/services/DatabaseService'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {WalletsModel} from './AppWallet'
-import store from '@/store'
 
 /// region database entities
 export class AccountsModel extends DatabaseModel {

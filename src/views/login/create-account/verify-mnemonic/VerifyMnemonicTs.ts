@@ -22,7 +22,7 @@ import {AccountsModel} from '@/core/database/models/AppAccount'
 
 // child components
 // @ts-ignore
-import MnemonicVerification from '@/components/mnemonic-verification/MnemonicVerification.vue'
+import MnemonicVerification from '@/components/MnemonicVerification/MnemonicVerification.vue'
 
 @Component({
   components: {

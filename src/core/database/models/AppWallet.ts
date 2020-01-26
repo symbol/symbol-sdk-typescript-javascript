@@ -32,6 +32,7 @@ export class WalletsModel extends DatabaseModel {
    * @var {string[]}
    */
   public primaryKeys: string[] = [
+    'accountName',
     'address',
   ]
 
@@ -53,6 +54,7 @@ export class WalletsModel extends DatabaseModel {
 export class WalletsTable extends DatabaseTable {
   public constructor() {
     super('wallets', [
+      'accountName',
       'name',
       'type',
       'address',
@@ -111,6 +113,7 @@ export class AppWallet {
 
   constructor(
     public store: Store<any>,
+    public accountName: string,
     public name: string,
     public simpleWallet: SimpleWallet,
     public publicKey: string,
@@ -126,6 +129,7 @@ export class AppWallet {
 
     // populate model
     this.model = new WalletsModel(new Map<string, any>([
+      ['accountName', this.accountName],
       ['name', this.name],
       ['type', AppWalletType.fromDescriptor(this.sourceType)],
       ['address', this.simpleWallet.address],

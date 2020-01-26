@@ -168,4 +168,32 @@ export class WalletService extends AbstractService {
     const accounts = this.generateAccountsFromMnemonic(mnemonic, networkType, startPath, count)
     return accounts.map(acct => acct.address)
   }
+
+  /**
+   * Get a user friendly name for a public key
+   * @param {string} publicKey 
+   */
+  public getWalletLabel(
+    publicKey: string,
+    networkType: NetworkType
+  ): string {
+    const address = Address.createFromPublicKey(publicKey, networkType)
+    const known = this.$store.getters['wallet/knownWallets']
+    const findIt = known.find(wlt => publicKey === wlt.values.get('publicKey'))
+    if (undefined !== findIt) {
+      return findIt.values.get('name')
+    }
+
+    // wallet not found by public key
+    return address.plain()
+  }
+  /*
+
+  getMultisigAccountLabel(publicKey: string): string {
+    const address = Address.createFromPublicKey(publicKey, this.wallet.networkType)
+    const walletFromList = this.app.walletList.find(wallet => wallet.address === address.plain())
+    if (walletFromList === undefined) return address.pretty()
+    return `${address.pretty()} (${walletFromList.name})`
+  }
+  */
 }

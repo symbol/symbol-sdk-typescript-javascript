@@ -6,7 +6,9 @@
           <span class="title_txt">{{ $t('accounts') }}</span>
         </div>
         <img src="@/common/img/monitor/network.png">
-        <span class="txt_info"><numberGrow :value="countAccounts" /></span>
+        <span class="txt_info">
+          <AnimatedNumber v-model="countAccounts" />
+        </span>
       </div>
       <div class="block_height radius">
         <div class="title">
@@ -14,7 +16,7 @@
         </div>
         <img src="@/common/img/monitor/block_height.png">
         <span class="txt_info">
-          <numberGrow :value="currentHeight" />
+          <AnimatedNumber v-model="currentHeight" />
         </span>
       </div>
       <div class="amount radius">
@@ -23,7 +25,7 @@
         </div>
         <img src="@/common/img/windowDashboardActive.png">
         <span class="txt_info">
-          <numberGrow :value="countTransactions" />
+          <AnimatedNumber v-model="countTransactions" />
         </span>
       </div>
       <div class="block_time radius">
@@ -36,7 +38,7 @@
         </div>
         <img src="@/common/img/monitor/amount.png">
         <span class="txt_info">
-          <numberGrow :value="countNodes" />
+          <AnimatedNumber v-model="countNodes" />
         </span>
       </div>
     </div>

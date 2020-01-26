@@ -1,7 +1,7 @@
 <template>
   <div class="monitor-dashboard-wrapper secondary_page_animate">
     <div class="transaction-list-wrapper">
-      <TransactionList />
+      <TransactionList v-if="!!currentWallet" :address="currentWallet.address()" />
     </div>
   </div>
 </template>

@@ -13,29 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
-
-// internal dependencies
-import {WalletsModel} from '@/core/database/models/AppWallet'
+import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Transaction} from 'nem2-sdk'
 
 // child components
 // @ts-ignore
-import TransactionList from '@/components/transaction-list/TransactionList.vue'
+import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue'
 
+/**
+ * Emits: closed
+ */
 @Component({
   components: {
-    TransactionList,
+    TransactionDetails,
   },
-  computed: {...mapGetters({
-    currentWallet: 'wallet/currentWallet'
-  })}
 })
-export class DashboardHomePageTs extends Vue {
-  /**
-   * Currently active wallet
-   * @see {Store.Wallet}
-   * @var {WalletsModel}
-   */
-  public currentWallet: WalletsModel
+export class TransactionModalTs extends Vue {
+  @Prop({
+    default: false
+  }) visible: boolean
+
+  @Prop({
+    default: null
+  }) transaction: Transaction
 }
