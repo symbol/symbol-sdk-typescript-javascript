@@ -2,8 +2,8 @@
   <div id="app" :class="[isWindows ? 'windows' : 'mac']">
     <router-view />
     <DisabledUiOverlay />
-    <TransactionConfirmation />
-    <LoadingOverlay v-if="hasLoadingOverlay" />
+    <ModalTransactionConfirmation />
+    <SpinnerLoading v-if="hasLoadingOverlay" />
   </div>
 </template>
 

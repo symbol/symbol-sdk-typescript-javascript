@@ -32,7 +32,7 @@ import ActionDisplay from '@/components/ActionDisplay/ActionDisplay.vue'
 import networkConfig from '@/../config/network.conf.json'
 
 // resources
-import {transferIcons, transactionTypeToIcon} from '@/../public/img/monitor/icons'
+import {transferIcons, transactionTypeToIcon} from '@/views/resources/Images'
 import {dashboardImages} from '@/views/resources/Images'
 
 @Component({components: {

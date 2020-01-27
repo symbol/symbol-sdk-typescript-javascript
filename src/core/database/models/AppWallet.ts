@@ -60,6 +60,7 @@ export class WalletsTable extends DatabaseTable {
       'address',
       'publicKey',
       'encPrivate',
+      'envIv',
       'path',
       'isMultisig'
     ])
@@ -134,7 +135,8 @@ export class AppWallet {
       ['type', AppWalletType.fromDescriptor(this.sourceType)],
       ['address', this.simpleWallet.address],
       ['publicKey', this.publicKey],
-      ['encPrivate', simpleWallet.encryptedPrivateKey],
+      ['encPrivate', simpleWallet.encryptedPrivateKey.encryptedKey],
+      ['encIv', simpleWallet.encryptedPrivateKey.iv],
       ['path', this.path],
       ['isMultisig', this.isMultisig]
     ]))

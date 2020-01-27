@@ -16,10 +16,13 @@
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
-// internal dependencies
-import DisabledUiOverlay from '@/components/disabled-ui-overlay/DisabledUiOverlay.vue'
-import TransactionConfirmation from '@/components/transaction-confirmation/TransactionConfirmation.vue'
-import LoadingOverlay from '@/components/loading-overlay/LoadingOverlay.vue'
+// child components
+// @ts-ignore
+import DisabledUiOverlay from '@/components/DisabledUiOverlay/DisabledUiOverlay.vue'
+// @ts-ignore
+import TransactionConfirmation from '@/components/TransactionConfirmation/TransactionConfirmation.vue'
+// @ts-ignore
+import SpinnerLoading from '@/components/SpinnerLoading/SpinnerLoading.vue'
 
 @Component({
   computed: {
@@ -32,7 +35,7 @@ import LoadingOverlay from '@/components/loading-overlay/LoadingOverlay.vue'
   components: {
     DisabledUiOverlay,
     TransactionConfirmation,
-    LoadingOverlay,
+    SpinnerLoading,
   },
 })
 export class AppTs extends Vue {

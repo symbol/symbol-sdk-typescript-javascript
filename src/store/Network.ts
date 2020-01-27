@@ -75,6 +75,7 @@ export default {
     currentPeer: URLHelpers.formatUrl(networkConfig.defaultNode.url),
     explorerUrl: networkConfig.explorerUrl,
     networkType: NetworkType.MIJIN_TEST,
+    generationHash: networkConfig.networks['testnet-publicTest'].generationHash,
     isConnected: false,
     nemesisTransactions: [],
     knownPeers: networkConfig.networks['testnet-publicTest'].nodes,
@@ -88,6 +89,7 @@ export default {
     getSubscriptions: state => state.subscriptions,
     wsEndpoint: state => state.wsEndpoint,
     networkType: state => state.networkType,
+    generationHash: state => state.generationHash,
     currentPeer: state => state.currentPeer,
     currentPeerInfo: state => state.currentPeerInfo,
     explorerUrl: state => state.explorerUrl,
@@ -157,6 +159,7 @@ export default {
         Vue.set(state, 'subscriptions', subscriptions)
       }
     },
+    generationHash: (state, hash) => Vue.set(state, 'generationHash', hash),
   },
   actions: {
     async initialize({ commit, dispatch, getters }) {

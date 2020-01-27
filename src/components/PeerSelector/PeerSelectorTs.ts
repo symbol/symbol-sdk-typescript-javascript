@@ -97,7 +97,7 @@ export class PeerSelectorTs extends Vue {
     this.service = new PeerService(this.$store)
 
     // collect from storage
-    this.collection = this.peers.map()
+    this.collection = this.peers.entries()
   }
 
 /// region computed properties getter/setter

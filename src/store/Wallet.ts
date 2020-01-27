@@ -21,8 +21,12 @@ import {
   Mosaic,
   UInt64,
   Transaction,
+  SignedTransaction,
+  TransactionService,
+  AggregateTransaction,
 } from 'nem2-sdk'
-import {Subscription} from 'rxjs'
+import {Subscription, Observable, from} from 'rxjs'
+import {map} from 'rxjs/operators'
 
 // internal dependencies
 import {$eventBus} from '../main'
@@ -30,6 +34,7 @@ import {CacheKey} from '@/core/utils/CacheKey'
 import {RESTService} from '@/services/RESTService'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {AwaitLock} from './AwaitLock';
+import { TransactionBroadcastResult } from '@/core/TransactionBroadcastResult';
 
 /**
  * Helper to format transaction group in name of state variable.
@@ -63,7 +68,19 @@ const walletsRepository = new WalletsRepository()
  * Type SubscriptionType for Wallet Store
  * @type {SubscriptionType}
  */
-type SubscriptionType = {listener: Listener, subscriptions: Subscription[]}
+type SubscriptionType = {
+  listener: Listener,
+  subscriptions: Subscription[]
+}
+
+/**
+ * Type PartialTransactionAnnouncementPayloadType for Wallet Store 
+ * @type {PartialTransactionAnnouncementPayloadType}
+ */
+type PartialTransactionAnnouncementPayloadType = {
+  signedLock: SignedTransaction,
+  signedPartial: SignedTransaction,
+}
 
 /**
  * Wallet Store
@@ -84,6 +101,8 @@ export default {
     confirmedTransactions: [],
     unconfirmedTransactions: [],
     partialTransactions: [],
+    stagedTransactions: [],
+    signedTransactions: [],
     transactionCache: {},
     // Subscriptions to websocket channels.
     subscriptions: [],
@@ -102,6 +121,8 @@ export default {
     confirmedTransactions: state => state.confirmedTransactions,
     unconfirmedTransactions: state => state.unconfirmedTransactions,
     partialTransactions: state => state.partialTransactions,
+    stagedTransactions: state => state.stagedTransactions,
+    signedTransactions: state => state.signedTransactions,
     transactionCache: state => state.transactionCache,
     allTransactions: state => {
       return [].concat(
@@ -159,7 +180,44 @@ export default {
       // update state
       Vue.set(state, 'transactionCache', cache)
       return cache
-    } 
+    },
+    setStagedTransactions: (state, transactions: Transaction[]) => Vue.set(state, 'stagedTransactions', transactions),
+    addStagedTransaction: (state, transaction: Transaction, dependencyHash: string) => {
+      // - get previously staged transactions
+      const staged = state.stagedTransactions
+
+      // - update instead of push if transaction exists on stage
+      const findIndex = staged.findIndex(tx => tx.transactionInfo.hash === transaction.transactionInfo.hash)
+      if (undefined !== findIndex) {
+        staged[findIndex] = transaction
+      }
+      // - push transaction on stage (order matters)
+      else staged.push(transaction)
+
+      // - update state
+      return Vue.set(state, 'stagedTransactions', staged)
+    },
+    addSignedTransaction: (state, transaction: SignedTransaction) => {
+      // - get previously signed transactions
+      const signed = state.signedTransactions
+
+      // - update state
+      signed.push(transaction)
+      return Vue.set(state, 'signedTransactions', signed)
+    },
+    removeSignedTransaction: (state, transaction: SignedTransaction) => {
+      // - get previously signed transactions
+      const signed = state.signedTransactions
+
+      // - find transaction by hash and delete
+      const findIndex = signed.findIndex(tx => tx.hash === transaction.hash)
+      if (undefined !== findIndex) {
+        delete signed[findIndex]
+      }
+
+      // - use Array.from to reset indexes
+      return Vue.set(state, 'signedTransactions', Array.from(signed))
+    },
   },
   actions: {
     async initialize({ commit, dispatch, getters }, address) {
@@ -281,6 +339,12 @@ export default {
       commit(transactionGroup, transactions)
       return commit('transactionHashes', hashes)
     },
+    ADD_STAGED_TRANSACTION({commit}, stagedTransaction: Transaction) {
+      commit('addStagedTransaction', stagedTransaction)
+    },
+    RESET_TRANSACTION_STAGE({commit}) {
+      commit('setStagedTransactions', [])
+    },
 /**
  * Websocket API
  */
@@ -330,7 +394,7 @@ export default {
 
       // check cache for results
       const cacheKey = CacheKey.create([group, address, pageSize, id])
-      const cache = getters['transactionCache']
+      const cache = getters.transactionCache
       if (cache.hasOwnProperty(cacheKey)) {
         return cache[cacheKey]
       }
@@ -393,7 +457,7 @@ export default {
         commit('addWalletInfo', accountInfo)
 
         // update current wallet state if necessary
-        if (address === getters['currentWallet']) {
+        if (address === getters.currentWalletAddress.plain()) {
           commit('currentWalletInfo', accountInfo)
           dispatch('SET_BALANCES', accountInfo.mosaics)
         }
@@ -441,6 +505,68 @@ export default {
       catch (e) {
         console.error('An error happened while trying to fetch multisig information: <pre>' + e + '</pre>')
         return false
+      }
+    },
+    REST_ANNOUNCE_PARTIAL(
+      {commit, rootGetters},
+      {signedLock, signedPartial}
+    ): Observable<TransactionBroadcastResult> {
+      try {
+        // prepare REST parameters
+        const currentPeer = rootGetters['network/currentPeer'].url
+        const wsEndpoint = rootGetters['network/wsEndpoint']
+        const transactionHttp = RESTService.create('TransactionHttp', currentPeer)
+        const receiptHttp = RESTService.create('ReceiptHttp', currentPeer)
+        const listener = new Listener(wsEndpoint)
+
+        // prepare nem2-sdk TransactionService
+        const service = new TransactionService(transactionHttp, receiptHttp)
+
+        // announce lock and aggregate only after lock confirmation
+        return service.announceHashLockAggregateBonded(
+          signedLock,
+          signedPartial,
+          listener
+        ).pipe(
+          map((announcedTransaction: AggregateTransaction) => {
+            commit('removeSignedTransaction', signedPartial)
+            commit('removeSignedTransaction', signedLock)
+
+            return new TransactionBroadcastResult(signedPartial, true)
+          })
+        )
+      }
+      catch(e) {
+        return from([
+          new TransactionBroadcastResult(signedPartial, false, e.toString()),
+        ])
+      }
+    },
+    REST_ANNOUNCE_TRANSACTION(
+      {commit, dispatch, rootGetters},
+      signedTransaction: SignedTransaction
+    ): Observable<TransactionBroadcastResult> {
+      try {
+        // prepare REST parameters
+        const currentPeer = rootGetters['network/currentPeer'].url
+        const wsEndpoint = rootGetters['network/wsEndpoint']
+        const transactionHttp = RESTService.create('TransactionHttp', currentPeer)
+        const receiptHttp = RESTService.create('ReceiptHttp', currentPeer)
+        const listener = new Listener(wsEndpoint)
+
+        // prepare nem2-sdk TransactionService
+        const service = new TransactionService(transactionHttp, receiptHttp)
+        return service.announce(signedTransaction, listener).pipe(
+          map((transaction: Transaction) => {
+            commit('removeSignedTransaction', signedTransaction)
+            return new TransactionBroadcastResult(signedTransaction, true)
+          })
+        )
+      }
+      catch(e) {
+        return from([
+          new TransactionBroadcastResult(signedTransaction, false, e.toString()),
+        ])
       }
     },
 /// end-region scoped actions

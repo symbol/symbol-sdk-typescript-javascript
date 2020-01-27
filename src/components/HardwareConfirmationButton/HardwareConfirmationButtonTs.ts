@@ -1,0 +1,228 @@
+/**
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import {Component, Vue, Prop} from 'vue-property-decorator'
+import {mapGetters} from 'vuex'
+import {Transaction, SignedTransaction, NetworkType, TransactionType} from 'nem2-sdk'
+
+// internal dependencies
+import {AccountsModel} from '@/core/database/models/AppAccount'
+import {WalletsModel} from '@/core/database/models/AppWallet'
+import {TransactionService} from '@/services/TransactionService'
+import {NotificationType} from '@/core/utils/NotificationType'
+import TrezorConnect from '@/core/utils/TrezorConnect'
+
+@Component({
+  computed: {...mapGetters({
+    networkType: 'network/networkType',
+    currentAccount: 'account/currentAccount',
+    currentWallet: 'wallet/currentWallet',
+    stagedTransactions: 'wallet/stagedTransactions',
+  })},
+})
+export class ModalTransactionConfirmationTs extends Vue {
+  /**
+   * Current network type
+   * @see {Store.Network}
+   * @var {NetworkType}
+   */
+  public networkType: NetworkType
+
+  /**
+   * Currently active account
+   * @see {Store.Account}
+   * @var {AccountsModel}
+   */
+  public currentAccount: AccountsModel
+
+  /**
+   * Currently active wallet
+   * @see {Store.Wallet}
+   * @var {WalletsModel}
+   */
+  public currentWallet: WalletsModel
+
+  /**
+   * Staged transactions (to-be-signed)
+   * @see {Store.Wallet}
+   * @var {Transaction[]}
+   */
+  public stagedTransactions: Transaction[]
+
+  /**
+   * Transaction service
+   * @var {TransactionService}
+   */
+  public service: TransactionService
+
+  /**
+   * Hook called when the component is mounted
+   * @return {void}
+   */
+  public mounted() {
+    this.service = new TransactionService(this.$store)
+  }
+
+  /**
+   * Process with hardware confirmation (currently trezor only)
+   * @return {void}
+   */
+  public async processHardware() {
+    // - read transaction stage
+    const transactions = this.stagedTransactions
+    if (! transactions.length) {
+      this.$emit('error', this.$t('no_transaction_on_stage'))
+      return this.$store.dispatch('notification/ADD_ERROR', this.$t('no_transaction_on_stage'))
+    }
+
+    const countStaged: number = transactions.length
+    const signedTxes: SignedTransaction[] = []
+    for (let i = 0, m = transactions.length; i < m; i++) {
+      // - order matters, get first transaction on-stage
+      const stagedTx = transactions.shift()
+      
+      // - sign each transaction with TrezorConnect
+      const result = await TrezorConnect.nemSignTransaction({
+        path: this.currentWallet.values.get('path'),
+        transaction: stagedTx,
+      })
+
+      // - in case of error, display notification and exit
+      if (! result.success) {
+        this.$emit('error', result.payload.error)
+        return this.$store.dispatch('notification/ADD_ERROR', result.payload.error)
+      }
+
+      // - transaction is signed
+      const signedTx = new SignedTransaction(
+        result.payload.data,
+        stagedTx.transactionInfo.hash,
+        stagedTx.signer.publicKey,
+        stagedTx.type,
+        this.networkType
+      )
+
+      signedTxes.push(signedTx)
+    }
+
+    if (signedTxes.length === countStaged) {
+      return this.$emit('success', signedTxes)
+    }
+
+    this.$emit('error', this.$t('at_least_one_error_produced_during_sign_attempt'))
+    return this.$store.dispatch('notification/ADD_ERROR', this.$t('at_least_one_error_produced_during_sign_attempt'))
+  }
+
+  /*
+  get show() {
+    return this.app.stagedTransaction.isAwaitingConfirmation
+  }
+
+  set show(val) {
+    if (!val) {
+      this.password = ''
+      this.$emit('close')
+      const result: SignTransaction = {
+        success: false,
+        signedTransaction: null,
+        error: Message.USER_ABORTED_TX_CONFIRMATION,
+      }
+
+      transactionConfirmationObservable.next(result)
+    }
+  }
+
+  get wallet() {
+    return this.activeAccount.wallet
+  }
+
+  get stagedTransaction(): StagedTransaction {
+    return this.app.stagedTransaction
+  }
+
+  get formattedTransaction() {
+    const {transactionToSign} = this.stagedTransaction
+    return this.app.transactionFormatter.formatTransaction(transactionToSign)
+  }
+
+
+  submit() {
+    const {wallet, password} = this
+
+    if (!wallet.checkPassword(password)) {
+      Notice.trigger(Message.WRONG_PASSWORD_ERROR, NoticeType.error, this.$store)
+      this.password = ''
+      return
+    }
+
+    const account = wallet.getAccount(new Password(this.password))
+    const {transactionToSign, lockParams} = this.stagedTransaction
+
+    /**
+         * AGGREGATE BONDED
+         
+    if (transactionToSign instanceof AggregateTransaction && lockParams.announceInLock) {
+      const {signedTransaction, signedLock} = wallet.getSignedLockAndAggregateTransaction(
+        transactionToSign,
+        lockParams.transactionFee,
+        this.password,
+        this.$store,
+      )
+
+      const result: SignTransaction = {
+        success: true,
+        signedTransaction,
+        signedLock,
+        error: null,
+      }
+
+      transactionConfirmationObservable.next(result)
+      this.password = ''
+      return
+    }
+
+
+    /**
+         * COSIGNATURE
+         
+    if (transactionToSign instanceof AggregateTransaction && transactionToSign.signer) {
+      const cosignatureTransaction = CosignatureTransaction.create(transactionToSign)
+
+      const result: SignTransaction = {
+        success: true,
+        signedTransaction: account.signCosignatureTransaction(cosignatureTransaction),
+        error: null,
+      }
+
+      transactionConfirmationObservable.next(result)
+      this.password = ''
+      return
+    }
+
+
+    /**
+         * DEFAULT SIGNATURE
+         
+    const result: SignTransaction = {
+      success: true,
+      signedTransaction: account.sign(transactionToSign, this.app.networkProperties.generationHash),
+      error: null,
+    }
+
+    this.password = ''
+    transactionConfirmationObservable.next(result)
+  }
+  */
+}
