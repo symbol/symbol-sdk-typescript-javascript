@@ -26,20 +26,17 @@ import {TransactionService} from '@/services/TransactionService'
 // @ts-ignore
 import TransactionModal from '@/components/TransactionModal/TransactionModal.vue'
 // @ts-ignore
-import TransactionListHeader from '@/components/TransactionList/TransactionListHeader.vue'
+import TransactionListHeader from '@/components/TransactionList/TransactionListHeader/TransactionListHeader.vue'
 // @ts-ignore
-import TransactionListRows from '@/components/TransactionList/TransactionListRows.vue'
+import TransactionRows from '@/components/TransactionList/TransactionRows/TransactionRows.vue'
 // @ts-ignore
 import PageTitle from '@/components/PageTitle/PageTitle.vue'
-
-// resources
-import {transferIcons, transactionTypeToIcon} from '@/../public/img/monitor/icons'
 
 @Component({
   components: {
     TransactionModal,
     TransactionListHeader,
-    TransactionListRows,
+    TransactionRows,
     PageTitle,
   },
   computed: {...mapGetters({
@@ -127,6 +124,12 @@ export class TransactionListTs extends Vue {
   public service: TransactionService
 
   /**
+   * The current tab
+   * @var {string} One of 'confirmed', 'unconfirmed' or 'partial'
+   */
+  public currentTab: 'confirmed' | 'unconfirmed' | 'partial' = 'confirmed'
+
+  /**
    * The current page number
    * @var {number}
    */
@@ -164,11 +167,16 @@ export class TransactionListTs extends Vue {
    * @return {void}
    */
   public async refresh() {
-    this.confirmedTransactions = await this.$store.dispatch('wallet/REST_FETCH_TRANSACTIONS', {
-      group: 'confirmed',
+    const group = this.currentTab
+    const transactions = await this.$store.dispatch('wallet/REST_FETCH_TRANSACTIONS', {
+      group: group,
       address: this.currentWallet.address().plain(),
       pageSize: 100
     })
+
+    if ('confirmed' === group) this.confirmedTransactions = transactions
+    else if ('unconfirmed' === group) this.unconfirmedTransactions = transactions
+    else if ('partial' === group) this.partialTransactions = transactions
   }
 
   /**

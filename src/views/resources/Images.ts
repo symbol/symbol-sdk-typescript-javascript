@@ -37,6 +37,10 @@ import createStepImage3 from '@/../public/img/login/3_5.png'
 import createStepImage4 from '@/../public/img/login/4_5.png'
 // @ts-ignore
 import createStepImage5 from '@/../public/img/login/5_5.png'
+// @ts-ignore
+import dashboardUnconfirmed from ' @/../public/img/monitor/dash-board/dashboardUnconfirmed.png'
+// @ts-ignore
+import dashboardConfirmed from ' @/../public/img/monitor/dash-board/dashboardConfirmed.png'
 
 export const walletTypeImage = {
   seedImg,
@@ -57,4 +61,9 @@ export const createStepImage = {
   createStepImage3,
   createStepImage4,
   createStepImage5,
+}
+
+export const dashboardImages = {
+  dashboardUnconfirmed,
+  dashboardConfirmed,
 }

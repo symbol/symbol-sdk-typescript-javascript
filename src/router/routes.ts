@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {leftBarIcons} from '@/../public/img/window'
-import {createStepImage,importStepImage} from '@/config/view/resources/Images'
+import {createStepImage, importStepImage} from '@/views/resources/Images'
 
 const routes: any[] = [
   {
@@ -22,7 +22,7 @@ const routes: any[] = [
     name: 'home',
     redirect: '/login',
     // @ts-ignore
-    component: () => import('@/views/PageLayout/PageLayout.vue'),
+    component: () => import('@/views/layout/PageLayout/PageLayout.vue'),
     /// region PageLayout children
     children: [
       {
@@ -50,7 +50,7 @@ const routes: any[] = [
           {
             path: '/createAccount',
             name: 'login.createAccount',
-            redirect: '/CreateAccountInfo',
+            redirect: '/createAccountInfo',
             // @ts-ignore
             component: () => import('@/views/login/create-account/CreateAccount.vue'),
             children: [
@@ -63,7 +63,7 @@ const routes: any[] = [
                   nextPage:'login.createAccount.generateMnemonic',
                 },
                 // @ts-ignore
-                component: () => import('@/components/forms/create-account-info/CreateAccountInfo.vue'),
+                component: () => import('@/views/forms/FormAccountCreation/FormAccountCreation.vue'),
               }, {
                 path: '/generateMnemonic',
                 name: 'login.createAccount.generateMnemonic',
@@ -117,7 +117,7 @@ const routes: any[] = [
                 nextPage:'login.importAccount.importMnemonic',
               },
               // @ts-ignore
-              component: () => import('@/components/forms/create-account-info/CreateAccountInfo.vue'),
+              component: () => import('@/views/forms/FormAccountCreation/FormAccountCreation.vue'),
             },{
               path: '/importMnemonic',
               name: 'login.importAccount.importMnemonic',

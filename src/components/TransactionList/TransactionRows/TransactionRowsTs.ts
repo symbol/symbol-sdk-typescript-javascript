@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-.label_page {
-  font-size: 18px;
-  font-weight: 400;
-  color: rgba(102, 102, 102);
-  line-height: 23px;
-  padding-top: 20px;
+import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Transaction} from 'nem2-sdk'
 
-  .page_title {
-    font-size: 20px;
-    // padding-bottom: 5px;
-    margin: 0 23px 0 15px;
-    position: relative;
-    //width: 140px;
-  }
+// child components
+// @ts-ignore
+import TransactionRow from '@/components/TransactionList/TransactionRow/TransactionRow.vue'
+
+@Component({components: {TransactionRow}})
+export class TransactionListRowTs extends Vue {
+  
+  @Prop({
+    default: []
+  }) transactions: Transaction[]
 }

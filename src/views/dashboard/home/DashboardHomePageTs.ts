@@ -21,7 +21,7 @@ import {WalletsModel} from '@/core/database/models/AppWallet'
 
 // child components
 // @ts-ignore
-import TransactionList from '@/components/transaction-list/TransactionList.vue'
+import TransactionList from '@/components/TransactionList/TransactionList.vue'
 
 @Component({
   components: {

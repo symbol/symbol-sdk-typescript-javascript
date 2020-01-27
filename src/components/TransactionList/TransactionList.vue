@@ -2,16 +2,43 @@
   <div class="transaction-list-container radius">
     <div class="bottom_transactions radius scroll">
 
-      <PageTitle :title="$t('transactions')" @refresh="refresh()" />
+      <Tabs v-model="currentTab" size="small">
+        <TabPane :label="$t('transactions')"
+                 name="confirmedTransactions"
+                 @input="currentTab = 'confirmed'; refresh()">
+          <PageTitle :title="$t('transactions')" @refresh="refresh()" />
+        </TabPane>
+        <TabPane :label="$t('unconfirmed')"
+                 name="unconfirmedTransactions"
+                 @input="currentTab = 'unconfirmed'; refresh()">
+          <PageTitle :title="$t('unconfirmed')" @refresh="refresh()" />
+        </TabPane>
+        <TabPane :label="$t('partial')"
+                 name="partialTransactions"
+                 @input="currentTab = 'partial'; refresh()">
+          <PageTitle :title="$t('partial')" @refresh="refresh()" />
+        </TabPane>
+      </Tabs>
 
       <div class="table_container">
         <div class="all_transaction">
 
           <TransactionListHeader />
 
-          <TransactionListRows :transactions="partialTransactions" @clicked="onClickTransaction" />
-          <TransactionListRows :transactions="unconfirmedTransactions" @clicked="onClickTransaction" />
-          <TransactionListRows :transactions="currentPageTransactions" @clicked="onClickTransaction" />
+          <!-- Confirmed transactions tab -->
+          <TransactionRows v-if="currentTab === 'confirmed'"
+                           :transactions="currentPageTransactions"
+                           @click="onClickTransaction" />
+
+          <!-- Partial transactions tab -->
+          <TransactionRows v-if="currentTab === 'partial'" 
+                           :transactions="partialTransactions"
+                           @click="onClickTransaction" />
+
+          <!-- Unconfirmed transactions tab -->
+          <TransactionRows v-if="currentTab === 'unconfirmed'"
+                           :transactions="unconfirmedTransactions"
+                           @click="onClickTransaction" />
         </div>
       </div>
 

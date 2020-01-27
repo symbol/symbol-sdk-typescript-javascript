@@ -152,11 +152,11 @@ export class RESTService extends AbstractService {
 
     // unconfirmed listeners
     const unconfirmedAdded = listener.unconfirmedAdded(address).subscribe(
-      transaction => context.dispatch('wallet/addTransaction', {group: 'unconfirmed', transaction}),
+      transaction => context.dispatch('wallet/ADD_TRANSACTION', {group: 'unconfirmed', transaction}),
       err => console.log(err))
 
     const unconfirmedRemoved = listener.unconfirmedRemoved(address).subscribe(
-      transaction => context.dispatch('wallet/removeTransaction', {group: 'unconfirmed', transaction}),
+      transaction => context.dispatch('wallet/REMOVE_TRANSACTION', {group: 'unconfirmed', transaction}),
       err => console.log(err))
 
     // partial listeners
@@ -165,16 +165,16 @@ export class RESTService extends AbstractService {
       err => console.log(err))
 
     const partialAdded = listener.aggregateBondedAdded(address).subscribe(
-      transaction => context.dispatch('wallet/addTransaction', {group: 'partial', transaction}),
+      transaction => context.dispatch('wallet/ADD_TRANSACTION', {group: 'partial', transaction}),
       err => console.log(err))
 
     const partialRemoved = listener.aggregateBondedRemoved(address).subscribe(
-      transaction => context.dispatch('wallet/removeTransaction', {group: 'partial', transaction}),
+      transaction => context.dispatch('wallet/REMOVE_TRANSACTION', {group: 'partial', transaction}),
       err => console.log(err))
 
     // confirmed listener
     const confirmed = listener.confirmed(address).subscribe(
-      transaction => context.dispatch('wallet/addTransaction', {group: 'confirmed', transaction}),
+      transaction => context.dispatch('wallet/ADD_TRANSACTION', {group: 'confirmed', transaction}),
       err => console.log(err))
 
     return {listener, subscriptions: [
