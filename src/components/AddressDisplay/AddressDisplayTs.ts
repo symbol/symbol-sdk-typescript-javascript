@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 import {Component, Prop, Vue} from 'vue-property-decorator'
+import {Address} from 'nem2-sdk'
 
 @Component
-export default class AmountDisplayTs extends Vue {
+export default class AddressDisplayTs extends Vue {
 
   @Prop({
-    default: 0
-  }) amount: number
-
-  @Prop({
-    default: 0
-  }) decimals: number
+    default: null
+  }) address: Address
 
 /// region computed properties getter/setter
-  get parts() {
-    const p1 = Math.floor(this.amount)
-    const p2 = this.amount - p1
-    return [p1, p2]
+  public get pretty(): string {
+    return this.address.pretty()
   }
 /// end-region computed properties getter/setter
 }

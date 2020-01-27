@@ -15,24 +15,39 @@
  */
 import {mapGetters} from 'vuex'
 import {Component, Vue, Prop} from 'vue-property-decorator'
-import {Transaction, TransactionType, NamespaceId, Address} from 'nem2-sdk'
+import {Transaction, TransactionType, NamespaceId, Address, TransferTransaction, MosaicId} from 'nem2-sdk'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/models/AppAccount'
 import {WalletsModel} from '@/core/database/models/AppWallet'
+import {TransactionService} from '@/services/TransactionService'
 
 // child components
 // @ts-ignore
 import TransactionModal from '@/components/TransactionModal/TransactionModal.vue'
 // @ts-ignore
-import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue'
+import TransactionListHeader from '@/components/TransactionList/TransactionListHeader.vue'
+// @ts-ignore
+import TransactionListRows from '@/components/TransactionList/TransactionListRows.vue'
+// @ts-ignore
+import PageTitle from '@/components/PageTitle/PageTitle.vue'
+
+// resources
+import {transferIcons, transactionTypeToIcon} from '@/../public/img/monitor/icons'
 
 @Component({
-  components: {TransactionModal, AmountDisplay},
+  components: {
+    TransactionModal,
+    TransactionListHeader,
+    TransactionListRows,
+    PageTitle,
+  },
   computed: {...mapGetters({
     currentAccount: 'account/currentAccount',
     currentWallet: 'wallet/currentWallet',
     knownWallets: 'wallet/knownWallets',
+    networkMosaic: 'mosaic/networkMosaic',
+    currentHeight: 'network/currentHeight',
     // use partial+unconfirmed from store because
     // of ephemeral nature (websocket only here)
     partialTransactions: 'wallet/partialTransactions',
@@ -44,6 +59,10 @@ export class TransactionListTs extends Vue {
   @Prop({
     default: ''
   }) address: string
+
+  @Prop({
+    default: 10
+  }) pageSize: number
 
   /**
    * Currently active account
@@ -67,7 +86,22 @@ export class TransactionListTs extends Vue {
   public knownWallets: WalletsModel[]
 
   /**
+   * Network block height
+   * @see {Store.Network}
+   * @var {number}
+   */
+  public currentHeight: number
+
+  /**
+   * Network mosaic id
+   * @see {Store.Mosaic}
+   * @var {MosaicId}
+   */
+  public networkMosaic: MosaicId
+
+  /**
    * List of confirmed transactions (per-request)
+   * @see {Store.Wallet}
    * @var {Transaction[]}
    */
   public confirmedTransactions: Transaction[]
@@ -87,23 +121,41 @@ export class TransactionListTs extends Vue {
   public partialTransactions: Transaction[]
 
   /**
+   * Transaction service
+   * @var {TransactionService}
+   */
+  public service: TransactionService
+
+  /**
+   * The current page number
+   * @var {number}
+   */
+  public currentPage: number = 1
+
+  /**
+   * Active transaction (in-modal)
+   * @var {Transaction}
+   */
+  public activeTransaction: Transaction
+
+  /**
    * Hook called when the component is mounted
    * @return {void}
    */
   public async mounted() {
-    this.confirmedTransactions = await this.$store.dispatch('wallet/REST_FETCH_TRANSACTIONS', {
-      group: 'confirmed',
-      address: this.currentWallet.address().plain(),
-      pageSize: 100
-    })
+    this.service = new TransactionService(this.$store)
+    this.refresh()
   }
 
 /// region computed properties getter/setter
-  public get currentPageTransactions(): Transaction[] {
+  public get countPages(): number {
+    return Math.ceil(this.confirmedTransactions.length / 10)
+  }
 
-    const start = (this.page - 1) * this.pageSize
-    const end = this.page * this.pageSize
-    return [...this.confirmedTransactions].slice(start, end)
+  public get currentPageTransactions(): Transaction[] {
+    const start = (this.currentPage - 1) * this.pageSize
+    const end = this.currentPage * this.pageSize
+    return this.confirmedTransactions.slice(start, end)
   }
 /// end-region computed properties getter/setter
 
@@ -111,8 +163,20 @@ export class TransactionListTs extends Vue {
    * Refresh transaction list
    * @return {void}
    */
-  public refresh() {
+  public async refresh() {
+    this.confirmedTransactions = await this.$store.dispatch('wallet/REST_FETCH_TRANSACTIONS', {
+      group: 'confirmed',
+      address: this.currentWallet.address().plain(),
+      pageSize: 100
+    })
+  }
 
+  /**
+   * Hook called when a transaction is clicked
+   * @param {Transaction} transaction 
+   */
+  public onClickTransaction(transaction: Transaction) {
+    this.activeTransaction = transaction
   }
 
   /*

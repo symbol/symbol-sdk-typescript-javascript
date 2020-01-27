@@ -13,24 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Prop, Vue} from 'vue-property-decorator'
+import {Component, Vue, Prop} from 'vue-property-decorator'
 
 @Component
-export default class AmountDisplayTs extends Vue {
-
+export class PageTitleTs extends Vue {
   @Prop({
-    default: 0
-  }) amount: number
-
-  @Prop({
-    default: 0
-  }) decimals: number
-
-/// region computed properties getter/setter
-  get parts() {
-    const p1 = Math.floor(this.amount)
-    const p2 = this.amount - p1
-    return [p1, p2]
-  }
-/// end-region computed properties getter/setter
+    default: ''
+  }) title: string
 }

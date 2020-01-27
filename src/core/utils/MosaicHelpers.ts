@@ -15,7 +15,8 @@
  */
 import {Store} from 'vuex'
 import {Mosaic, NamespaceId, MosaicId} from 'nem2-sdk'
-import {AppMosaic, AppState} from '@/core/model'
+
+// internal dependencies
 import {Formatters} from '@/core/utils/Formatters'
 
 export class MosaicHelpers {
@@ -26,7 +27,7 @@ export class MosaicHelpers {
    * @param mosaics
    * @param store
    */
-  public static getAppMosaicHex = (hex: string, store: Store<AppState>): string => {
+  public static getAppMosaicHex = (hex: string, store: Store<any>): string => {
     const {mosaics} = store.state.account
     if (mosaics[hex]) return hex
     const appMosaicFromHex: any = Object.values(mosaics).find(({namespaceHex}) => hex === namespaceHex)
@@ -35,14 +36,14 @@ export class MosaicHelpers {
   }
 
   // @TODO: remove in favour of namespace method
-  public static getNamespaceNameFromNamespaceId = (hexId: string, store: Store<AppState>) => {
+  public static getNamespaceNameFromNamespaceId = (hexId: string, store: Store<any>) => {
     const {namespaces} = store.state.account
     const namespace = namespaces.find(({ hex }) => hex === hexId)
     if (namespace === undefined) return hexId
     return namespace.name
   }
 
-  public static getName = (appMosaic: AppMosaic, mosaicId: MosaicId | NamespaceId, store: Store<AppState>): string => {
+  public static getName = (appMosaic: AppMosaic, mosaicId: MosaicId | NamespaceId, store: Store<any>): string => {
     if (appMosaic && appMosaic.name) return appMosaic.name
     if (mosaicId instanceof NamespaceId) return MosaicHelpers.getNamespaceNameFromNamespaceId(mosaicId.id.toHex(), store)
     return appMosaic.hex || 'N/A'
@@ -55,7 +56,7 @@ export class MosaicHelpers {
 
   public static renderMosaicsAndReturnArray = (
     mosaics: Mosaic[],
-    store: Store<AppState>): {name: string, amount: string, hex: string}[] => {
+    store: Store<any>): {name: string, amount: string, hex: string}[] => {
     if (!mosaics.length) return null
           
     const mosaicList = store.state.account.mosaics
@@ -91,7 +92,7 @@ export class MosaicHelpers {
 
   public static renderMosaics = (
     mosaics: Mosaic[],
-    store: Store<AppState>,
+    store: Store<any>,
     isReceipt: boolean): any => {
     const result = MosaicHelpers.renderMosaicsAndReturnArray(mosaics, store)
     if (!result) return 'N/A'
@@ -114,7 +115,7 @@ export class MosaicHelpers {
    * @param store
    */
   public static renderMosaicNames = (mosaics: Mosaic[],
-    store: Store<AppState>): string => {
+    store: Store<any>): string => {
     const mosaicList = store.state.account.mosaics
     const items = mosaics
       .map(mosaic => {
@@ -139,7 +140,7 @@ export class MosaicHelpers {
    * @param mosaics
    * @param mosaicList
    */
-  public static renderMosaicAmount = (mosaics: Mosaic[], mosaicList: AppMosaic[], store: Store<AppState>): string => {
+  public static renderMosaicAmount = (mosaics: Mosaic[], mosaicList: AppMosaic[], store: Store<any>): string => {
     if (!mosaics.length) return '0'
     if (mosaics.length > 1) return 'mix'
     const hex = mosaics[0].id.toHex()

@@ -18,15 +18,17 @@ import {Store} from 'vuex'
 // internal dependencies
 import {IService} from './IService'
 import {AESEncryptionService} from './AESEncryptionService'
+import {CommunityService} from './CommunityService'
 import {DatabaseService} from './DatabaseService'
+import {DerivationService} from './DerivationService'
+import {MarketService} from './MarketService'
+import {MosaicService} from './MosaicService'
+import {NamespaceService} from './NamespaceService'
+import {PeerService} from './PeerService'
 import {RemoteAccountService} from './RemoteAccountService'
 import {RentalFeesService} from './RentalFeesService'
-import {MarketService} from './MarketService'
 import {WalletService} from './WalletService'
-import {DerivationService} from './DerivationService'
-import {MosaicService} from './MosaicService'
-import {PeerService} from './PeerService'
-import {CommunityService} from './CommunityService'
+import {TransactionService} from './TransactionService'
 
 export class ServiceFactory {
   /**
@@ -36,15 +38,17 @@ export class ServiceFactory {
 
   /// region specialised signatures
   public static create(name: 'encryption', store: Store<any>): AESEncryptionService
+  public static create(name: 'community', store: Store<any>): CommunityService
   public static create(name: 'database', store: Store<any>): DatabaseService
+  public static create(name: 'derivation', store: Store<any>): DerivationService
+  public static create(name: 'market', store: Store<any>): MarketService
+  public static create(name: 'mosaic', store: Store<any>): MosaicService
+  public static create(name: 'namespace', store: Store<any>): NamespaceService
+  public static create(name: 'peer', store: Store<any>): PeerService
   public static create(name: 'remote-account', store: Store<any>): RemoteAccountService
   public static create(name: 'rental-fees', store: Store<any>): RentalFeesService
-  public static create(name: 'market', store: Store<any>): MarketService
+  public static create(name: 'transaction', store: Store<any>): TransactionService
   public static create(name: 'wallet', store: Store<any>): WalletService
-  public static create(name: 'derivation', store: Store<any>): DerivationService
-  public static create(name: 'mosaic', store: Store<any>): MosaicService
-  public static create(name: 'peer', store: Store<any>): PeerService
-  public static create(name: 'community', store: Store<any>): CommunityService
   /// end-region specialised signatures
 
   /**
@@ -67,8 +71,26 @@ export class ServiceFactory {
     case 'encryption':
       service = new AESEncryptionService(store)
       break
+    case 'community':
+      service = new CommunityService(store)
+      break
     case 'database':
       service = new DatabaseService(store)
+      break
+    case 'derivation':
+      service = new DerivationService(store)
+      break
+    case 'market':
+      service = new MarketService(store)
+      break
+    case 'mosaic':
+      service = new MosaicService(store)
+      break
+    case 'namespace':
+      service = new NamespaceService(store)
+      break
+    case 'peer':
+      service = new PeerService(store)
       break
     case 'remote-account':
       service = new RemoteAccountService(store)
@@ -76,23 +98,11 @@ export class ServiceFactory {
     case 'rental-fees':
       service = new RentalFeesService(store)
       break
-    case 'market':
-      service = new MarketService(store)
+    case 'transaction':
+      service = new TransactionService(store)
       break
     case 'wallet':
       service = new WalletService(store)
-      break
-    case 'derivation':
-      service = new DerivationService(store)
-      break
-    case 'mosaic':
-      service = new MosaicService(store)
-      break
-    case 'peer':
-      service = new PeerService(store)
-      break
-    case 'community':
-      service = new CommunityService(store)
       break
 
     default: 

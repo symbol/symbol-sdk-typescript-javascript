@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import Vue from 'vue';
-import {NetworkType, Listener} from 'nem2-sdk';
+import {NetworkType, Listener, BlockInfo} from 'nem2-sdk';
 import {Subscription} from 'rxjs'
 
 // internal dependencies
@@ -27,12 +27,42 @@ const Lock = AwaitLock.create();
 // configuration
 import networkConfig from '../../config/network.conf.json';
 
+/// region internal helpers
+/**
+ * Recursive function helper to determine block ranges
+ * needed to fetch data about all block \a heights
+ * @param {number[]} heights 
+ * @return {BlockRangeType[]}
+ */
+const getBlockRanges = (heights: number[]): BlockRangeType[] => {
+  let ranges: BlockRangeType[] = []
+  const pageSize: number = 100
+  const min: number = Math.min(...heights)
+
+  // - register first range
+  ranges.push({start: min})
+
+  // - take remaining block heights and run again
+  heights = heights.filter(height => height > min + pageSize)
+  if (heights.length) {
+    ranges = ranges.concat(getBlockRanges(heights))
+  }
+  return ranges
+}
+/// end-region internal helpers
+
 /// region custom types
 /**
  * Type SubscriptionType for Wallet Store
  * @type {SubscriptionType}
  */
 type SubscriptionType = {listener: Listener, subscriptions: Subscription[]}
+
+/**
+ * Type BlockRangeType for Wallet Store
+ * @type {BlockRangeType}
+ */
+type BlockRangeType = {start: number}
 /// end-region custom types
 
 export default {
@@ -49,6 +79,7 @@ export default {
     nemesisTransactions: [],
     knownPeers: networkConfig.networks['testnet-publicTest'].nodes,
     currentHeight: 0,
+    knownBlocks: {},
     // Subscriptions to websocket channels.
     subscriptions: [],
   },
@@ -63,6 +94,7 @@ export default {
     isConnected: state => state.isConnected,
     knownPeers: state => state.knownPeers,
     currentHeight: state => state.currentHeight,
+    knownBlocks: state => state.knownBlocks,
   },
   mutations: {
     setInitialized: (state, initialized) => { state.initialized = initialized },
@@ -95,6 +127,11 @@ export default {
     resetPeers: (state) => {
       const knownPeers = networkConfig.networks['testnet-publicTest'].nodes
       Vue.set(state, 'knownPeers', knownPeers)
+    },
+    addBlock: (state, block: BlockInfo) => {
+      const knownBlocks = state.knownBlocks
+      knownBlocks[block.height.compact()] = block
+      Vue.set(state, 'knownBlocks', knownBlocks)
     },
     networkType: (state, type) => {
       switch (type) {
@@ -194,6 +231,9 @@ export default {
     RESET_SUBSCRIPTIONS({commit}) {
       commit('setSubscriptions', [])
     },
+    ADD_BLOCK({commit}, block: BlockInfo) {
+      commit('addBlock', block)
+    },
 /**
  * Websocket API
  */
@@ -226,7 +266,50 @@ export default {
     },
     SET_CURRENT_HEIGHT({commit}, height) {
       commit('currentHeight', height)
-    }
+    },
+    async REST_FETCH_BLOCKS({commit, dispatch, getters, rootGetters}, blockHeights: number[]) {
+
+      // - filter out known blocks
+      const knownBlocks = getters['knownBlocks']
+      const heights = blockHeights.filter(height => undefined === knownBlocks.find(height))
+
+      // - initialize blocks list with known blocks
+      let blocks: BlockInfo[] = blockHeights.filter(
+        height => undefined !== knownBlocks.find(height)
+      ).map(known => knownBlocks.find(known))
+
+      // - use block ranges helper to minimize number of requests
+      let ranges: {start: number}[] = getBlockRanges(heights)
+      if (ranges.length > 3) {
+        // - too many ranges, take only 3 for current action
+        ranges = ranges.slice(0, 3)
+
+        // - dispatch other ranges to later execution
+        setInterval(() => {
+          return dispatch('REST_FETCH_BLOCKS', ranges.slice(3))
+        }, 3000)
+      }
+
+      try {
+        // - prepare REST gateway connection
+        const currentPeer = rootGetters['network/currentPeer'].url
+        const blockHttp = RESTService.create('BlockHttp', currentPeer)
+
+        // - fetch blocks information per-range
+        ranges.map(async ({start}, index: number) => {
+          const page = await blockHttp.getBlocksByHeightWithLimit(start.toString(), 100).toPromise()
+          blocks = blocks.concat(page)
+        })
+
+        // - register blocks in store
+        blocks.map(block => commit('addBlock', block))
+        return blocks
+      }
+      catch (e) {
+        console.error('An error happened while trying to fetch account information: <pre>' + e + '</pre>')
+        return false
+      }
+    },
 /// end-region scoped actions
   }
 };

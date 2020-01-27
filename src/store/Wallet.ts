@@ -340,13 +340,17 @@ export default {
         const currentPeer = rootGetters['network/currentPeer'].url
         const queryParams = new QueryParams(pageSize, id)
         const addressObject = Address.createFromRawAddress(address)
-        
+
         // fetch transactions from REST gateway
         const accountHttp = RESTService.create('AccountHttp', currentPeer)
-        let transactions: Transaction[] 
+        let transactions: Transaction[]
+        let blockHeights: number[]
 
-        if ('confirmed' === group)
+        if ('confirmed' === group) {
           transactions = await accountHttp.getAccountTransactions(addressObject, queryParams).toPromise()
+          // - record block height to be fetched
+          transactions.map(transaction => blockHeights.push(transaction.transactionInfo.height.compact()))
+        }
         else if ('unconfirmed' === group)
           transactions = await accountHttp.getAccountUnconfirmedTransactions(addressObject, queryParams).toPromise()
         else if ('partial' === group)
@@ -358,6 +362,12 @@ export default {
           cacheKey: cacheKey,
           transaction
         }))
+
+        // fetch block informations if necessary
+        if (blockHeights.length) {
+          // - non-blocking
+          dispatch('network/REST_FETCH_BLOCKS', blockHeights, {root: true})
+        }
 
         return transactions
       }

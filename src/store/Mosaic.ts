@@ -145,6 +145,7 @@ export default {
       commit('setNetworkMosaicName', mosaicName)
       commit('setNetworkMosaicId', aliasTx.mosaicId)
       commit('setNetworkMosaicTicker', subNamespaceTx.namespaceName.toUpperCase())
+      commit('addMosaicName', {hex: aliasTx.mosaicId.toHex(), name: mosaicName})
       dispatch('REST_FETCH_INFO', aliasTx.mosaicId)
     },
     async REST_FETCH_INFO({commit, rootGetters}, mosaicId) {

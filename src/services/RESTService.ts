@@ -202,6 +202,7 @@ export class RESTService extends AbstractService {
 
     const newBlock = listener.newBlock().subscribe((block: BlockInfo) => {
       context.dispatch('SET_CURRENT_HEIGHT', block.height.compact())
+      context.dispatch('ADD_BLOCK', block)
     })
 
     return {listener, subscriptions: [newBlock,]}

@@ -24,6 +24,7 @@ import DiagnosticStore from '@/store/Diagnostic'
 import NotificationStore from '@/store/Notification'
 import TemporaryStore from '@/store/Temporary'
 import MosaicStore from '@/store/Mosaic'
+import NamespaceStore from '@/store/Namespace'
 
 // use AwaitLock for initialization routines
 import {AwaitLock} from '@/store/AwaitLock'
@@ -48,6 +49,7 @@ export default new Vuex.Store({
     notification: NotificationStore,
     temporary: TemporaryStore,
     mosaic: MosaicStore,
+    namespace: NamespaceStore,
   },
   actions: {
     async initialize({ commit, dispatch, getters }) {
@@ -69,10 +71,11 @@ export default new Vuex.Store({
         dispatch('mosaic/uninitialize'),
         dispatch('account/uninitialize'),
         dispatch('wallet/uninitialize'),
+        dispatch('namespace/uninitialize'),
         dispatch('market/uninitialize'),
-        dispatch('diagnostic/uninitialize'),
         dispatch('notification/uninitialize'),
         dispatch('temporary/uninitialize'),
+        dispatch('diagnostic/uninitialize'),
       ])
     }
   }
