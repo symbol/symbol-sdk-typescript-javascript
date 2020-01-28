@@ -20,8 +20,6 @@ import {mapGetters} from 'vuex'
 // @ts-ignore
 import DisabledUiOverlay from '@/components/DisabledUiOverlay/DisabledUiOverlay.vue'
 // @ts-ignore
-import TransactionConfirmation from '@/components/TransactionConfirmation/TransactionConfirmation.vue'
-// @ts-ignore
 import SpinnerLoading from '@/components/SpinnerLoading/SpinnerLoading.vue'
 
 @Component({
@@ -34,7 +32,6 @@ import SpinnerLoading from '@/components/SpinnerLoading/SpinnerLoading.vue'
   },
   components: {
     DisabledUiOverlay,
-    TransactionConfirmation,
     SpinnerLoading,
   },
 })

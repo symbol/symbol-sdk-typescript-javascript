@@ -182,7 +182,7 @@ export default {
       return cache
     },
     setStagedTransactions: (state, transactions: Transaction[]) => Vue.set(state, 'stagedTransactions', transactions),
-    addStagedTransaction: (state, transaction: Transaction, dependencyHash: string) => {
+    addStagedTransaction: (state, transaction: Transaction) => {
       // - get previously staged transactions
       const staged = state.stagedTransactions
 

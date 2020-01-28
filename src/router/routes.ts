@@ -180,13 +180,7 @@ const routes: any[] = [
             meta: { protected: true},
             // @ts-ignore
             component: () => import('@/views/dashboard/invoice/DashboardInvoicePage.vue'),
-          }, {
-            path: '/market',
-            name: 'dashboard.market',
-            meta: { protected: true},
-            // @ts-ignore
-            component: () => import('@/views/dashboard/market/DashboardMarketPage.vue'),
-          },
+          }
         ],
       },
       {

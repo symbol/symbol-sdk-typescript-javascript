@@ -19,7 +19,6 @@ import AppInfoStore from '@/store/AppInfo'
 import NetworkStore from '@/store/Network'
 import AccountStore from '@/store/Account'
 import WalletStore from '@/store/Wallet'
-import MarketStore from '@/store/Market'
 import DiagnosticStore from '@/store/Diagnostic'
 import NotificationStore from '@/store/Notification'
 import TemporaryStore from '@/store/Temporary'
@@ -44,7 +43,6 @@ export default new Vuex.Store({
     network: NetworkStore,
     account: AccountStore,
     wallet: WalletStore,
-    market: MarketStore,
     diagnostic: DiagnosticStore,
     notification: NotificationStore,
     temporary: TemporaryStore,
@@ -72,7 +70,6 @@ export default new Vuex.Store({
         dispatch('account/uninitialize'),
         dispatch('wallet/uninitialize'),
         dispatch('namespace/uninitialize'),
-        dispatch('market/uninitialize'),
         dispatch('notification/uninitialize'),
         dispatch('temporary/uninitialize'),
         dispatch('diagnostic/uninitialize'),

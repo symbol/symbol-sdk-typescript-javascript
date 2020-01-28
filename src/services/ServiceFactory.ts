@@ -21,7 +21,6 @@ import {AESEncryptionService} from './AESEncryptionService'
 import {CommunityService} from './CommunityService'
 import {DatabaseService} from './DatabaseService'
 import {DerivationService} from './DerivationService'
-import {MarketService} from './MarketService'
 import {MosaicService} from './MosaicService'
 import {NamespaceService} from './NamespaceService'
 import {PeerService} from './PeerService'
@@ -41,7 +40,6 @@ export class ServiceFactory {
   public static create(name: 'community', store: Store<any>): CommunityService
   public static create(name: 'database', store: Store<any>): DatabaseService
   public static create(name: 'derivation', store: Store<any>): DerivationService
-  public static create(name: 'market', store: Store<any>): MarketService
   public static create(name: 'mosaic', store: Store<any>): MosaicService
   public static create(name: 'namespace', store: Store<any>): NamespaceService
   public static create(name: 'peer', store: Store<any>): PeerService
@@ -79,9 +77,6 @@ export class ServiceFactory {
       break
     case 'derivation':
       service = new DerivationService(store)
-      break
-    case 'market':
-      service = new MarketService(store)
       break
     case 'mosaic':
       service = new MosaicService(store)

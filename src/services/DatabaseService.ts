@@ -25,13 +25,11 @@ import {JSONFormatter} from '@/core/database/formatters/JSONFormatter'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {PeersRepository} from '@/repositories/PeersRepository'
-import {MarketsRepository} from '@/repositories/MarketsRepository'
 
 /// region specialized repository implementations
 export type RepositoryImpl = AccountsRepository 
                            | WalletsRepository
                            | PeersRepository
-                           | MarketsRepository
 /// end-region specialized repository implementations
 
 export class DatabaseService extends AbstractService {
@@ -70,7 +68,6 @@ export class DatabaseService extends AbstractService {
   public getRepository(name: 'accounts'): AccountsRepository
   public getRepository(name: 'wallets'): WalletsRepository
   public getRepository(name: 'peers'): PeersRepository
-  public getRepository(name: 'markets'): MarketsRepository
   /// end-region specialized signatures
 
   /**
@@ -84,7 +81,6 @@ export class DatabaseService extends AbstractService {
     case 'accounts': return new AccountsRepository()
     case 'wallets': return new WalletsRepository()
     case 'peers': return new PeersRepository()
-    case 'markets': return new MarketsRepository()
 
     default: 
       const errorMessage = 'Could not find a repository by name \'' + name + ' \''

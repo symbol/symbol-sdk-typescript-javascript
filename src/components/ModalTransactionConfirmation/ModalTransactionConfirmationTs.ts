@@ -43,7 +43,6 @@ import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/
     currentWallet: 'wallet/currentWallet',
     stagedTransactions: 'wallet/stagedTransactions',
     signedTransactions: 'wallet/signedTransactions',
-    isAwaitingUnlock: 'wallet/isAwaitingUnlock',
   })},
 })
 export class ModalTransactionConfirmationTs extends Vue {
