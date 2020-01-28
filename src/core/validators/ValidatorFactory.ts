@@ -13,19 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// internal dependencies
-import { AddressValidator } from './AddressValidator'
-import { AliasValidator } from './AliasValidator'
-import { MosaicIdValidator } from './MosaicIdValidator'
-import { NamespaceIdValidator } from './NamespaceIdValidator'
-import { PublicKeyValidator } from './PublicKeyValidator'
+import {Account, Address, MosaicId, MosaicInfo, NetworkType} from 'nem2-sdk'
 
+// internal dependencies
+import {AddressValidator} from './AddressValidator'
+import {AliasValidator} from './AliasValidator'
+import {MosaicIdValidator} from './MosaicIdValidator'
+import {NamespaceIdValidator} from './NamespaceIdValidator'
+import {PublicKeyValidator} from './PublicKeyValidator'
+import {AccountsRepository} from '@/repositories/AccountsRepository'
+import {AccountsModel} from '@/core/database/models/AppAccount'
+import {MosaicWithInfoView} from '@/core/views/MosaicWithInfoView'
+
+// configuration
+import networkConfig from '@/../config/network.conf.json'
+
+/// region internal helpers
 export const getOtherFieldValue = (otherField, validator) => {
   const validatorFields = validator.Validator.$vee._validator.fields.items
   const field = validatorFields.find(field => field.name === otherField)
   if (field === undefined) throw new Error('The targeted confirmation field was not found')
   return field.value
 }
+/// end-region internal helpers
 
 export class ValidatorFactory {
 
@@ -69,10 +79,7 @@ export class ValidatorFactory {
     case 'newAccountName': return ValidatorFactory.newAccountNameValidator(context)
     case 'alias': return ValidatorFactory.aliasValidator(context)
     case 'publicKey': return ValidatorFactory.publicKeyValidator(context)
-    case 'confirmLock': return ValidatorFactory.confirmLockValidator(context)
-    case 'remoteAccountPrivateKey': return ValidatorFactory.remoteAccountPrivateKeyValidator(context)
     case 'confirmPassword': return ValidatorFactory.confirmPasswordValidator(context)
-    case 'confirmWalletPassword': return ValidatorFactory.confirmWalletPasswordValidator(context)
     case 'mosaicId': return ValidatorFactory.mosaicIdValidator(context)
     case 'namespaceOrMosaicId': return ValidatorFactory.namespaceOrMosaicIdValidator(context)
     case 'addressOrAlias': return ValidatorFactory.addressOrAliasValidator(context)
@@ -94,15 +101,11 @@ export class ValidatorFactory {
     return context.Validator.extend(
       'newAccountName',
       (accountName) => new Promise((resolve) => {
-        try {
-          const isAccountNameExisted = JSON.parse(localRead('accountMap'))[accountName]
-          if(isAccountNameExisted) {
-            resolve({valid: false})
-          }
-          resolve({valid: true})
-        } catch (error) {
-          resolve({valid: true})
-        }
+        const repository = new AccountsRepository()
+        const accountExists = repository.find(accountName)
+
+        // - account must not exist
+        resolve({valid: !accountExists})
       }),
     )
   }
@@ -115,7 +118,7 @@ export class ValidatorFactory {
       }),
     )
   }
-  
+
   protected static publicKeyValidator(context): Promise<{valid: boolean|string}> {
     return context.Validator.extend(
       'publicKey',
@@ -124,40 +127,7 @@ export class ValidatorFactory {
       }),
     )
   }
-  
-  protected static confirmLockValidator(context): Promise<{valid: boolean|string}> {
-    return context.Validator.extend(
-      'confirmLock',
-      (password, [otherField]) => new Promise((resolve) => {
-        const passwordCipher = getOtherFieldValue(otherField, context)
-        if (AppAccounts().decryptString(passwordCipher, password) !== password) resolve({valid: false})
-        resolve({valid: true})
-      }),
-      {hasTarget: true},
-    )
-  }
-  
-  protected static remoteAccountPrivateKeyValidator(context): Promise<{valid: boolean|string}> {
-    return context.Validator.extend(
-      'remoteAccountPrivateKey',
-      (privateKey, [otherField]) => new Promise((resolve) => {
-        const wallet: AppWallet = getOtherFieldValue(otherField, context)
-        if (!(wallet instanceof AppWallet)) resolve({valid: false})
-  
-        try {
-          const account = Account.createFromPrivateKey(privateKey, wallet.networkType)
-          if (wallet.linkedAccountKey && wallet.linkedAccountKey !== account.publicKey) {
-            resolve({valid: false})
-          }
-          resolve({valid: true})
-        } catch (error) {
-          resolve({valid: false})
-        }
-      }),
-      {hasTarget: true},
-    )
-  }
-  
+
   protected static confirmPasswordValidator(context): Promise<{valid: boolean|string}> {
     return context.Validator.extend(
       'confirmPassword',
@@ -169,19 +139,7 @@ export class ValidatorFactory {
       {hasTarget: true},
     )
   }
-  
-  protected static confirmWalletPasswordValidator(context): Promise<{valid: boolean|string}> {
-    return context.Validator.extend(
-      'confirmWalletPassword',
-      (password, [otherField]) => new Promise((resolve) => {
-        const wallet = getOtherFieldValue(otherField, context)
-        if (!(wallet instanceof AppWallet)) resolve({valid: false})
-        resolve({valid: wallet.checkPassword(password)})
-      }),
-      {hasTarget: true},
-    )
-  }
-  
+
   protected static mosaicIdValidator(context): Promise<{valid: boolean|string}> {
     return context.Validator.extend(
       'mosaicId',
@@ -241,10 +199,11 @@ export class ValidatorFactory {
     return context.Validator.extend(
       'addressNetworkType',
       (address, [otherField]) => new Promise((resolve) => {
-        const currentAccount: CurrentAccount = getOtherFieldValue(otherField, context)
+        const currentAccount: AccountsModel = getOtherFieldValue(otherField, context)
+        const networkType: NetworkType = currentAccount.values.get('networkType') as NetworkType
         try {
           const _address = Address.createFromRawAddress(address)
-          if (_address.networkType === currentAccount.networkType) resolve({valid: address})
+          if (_address.networkType === networkType) resolve({valid: address})
           resolve({valid: false})
         } catch (error) {
           resolve({valid: false})
@@ -258,11 +217,12 @@ export class ValidatorFactory {
     return context.Validator.extend(
       'addressOrAliasNetworkType',
       (addressOrAlias, [otherField]) => new Promise((resolve) => {
-        const currentAccount: CurrentAccount = getOtherFieldValue(otherField, context)
+        const currentAccount: AccountsModel = getOtherFieldValue(otherField, context)
+        const networkType: NetworkType = currentAccount.values.get('networkType') as NetworkType
         try {
           if (!new AddressValidator().validate(addressOrAlias).valid) resolve({valid: addressOrAlias})
           const _address = Address.createFromRawAddress(addressOrAlias)
-          if (_address.networkType === currentAccount.networkType) resolve({valid: addressOrAlias})
+          if (_address.networkType === networkType) resolve({valid: addressOrAlias})
           resolve({valid: false})
         } catch (error) {
           resolve({valid: false})
@@ -312,8 +272,8 @@ export class ValidatorFactory {
           const decimalPart: string = (`${amount}`).split('.')[1]
           if (!decimalPart) return resolve({valid: true})
           const numberOfDecimals = decimalPart.length
-          const appMosaic: AppMosaic = getOtherFieldValue(otherField, context)
-          if (numberOfDecimals > appMosaic.properties.divisibility) resolve({valid: false})
+          const mosaicInfo: MosaicInfo = getOtherFieldValue(otherField, context)
+          if (numberOfDecimals > mosaicInfo.divisibility) resolve({valid: false})
           resolve({valid: true})
         } catch (error) {
           resolve({valid: false})
@@ -328,10 +288,10 @@ export class ValidatorFactory {
       'mosaicMaxAmount',
       (amount, [otherField]) => new Promise((resolve) => {
         try {
-          const appMosaic: AppMosaic = getOtherFieldValue(otherField, context)
-          const absoluteAmount = getAbsoluteMosaicAmount(amount, appMosaic.properties.divisibility)
+          const mosaicView: MosaicWithInfoView = getOtherFieldValue(otherField, context)
+          const absoluteAmount = amount * Math.pow(10, mosaicView.mosaicInfo.divisibility)
           if (isNaN(absoluteAmount)) resolve({valid: false})
-          if (absoluteAmount > maxMosaicAtomicUnits) resolve({valid: false})
+          if (absoluteAmount > mosaicView.mosaic.amount.compact()) resolve({valid: false})
           resolve({valid: true})
         } catch (error) {
           resolve({valid: false})
@@ -345,7 +305,7 @@ export class ValidatorFactory {
     return context.Validator.extend(
       'addressOrPublicKey',
       (addressOrPublicKey) => new Promise((resolve) => {
-        if (addressOrPublicKey.length === PUBLIC_KEY_LENGTH) {
+        if (addressOrPublicKey.length === 64) {
           resolve(new PublicKeyValidator().validate(addressOrPublicKey))
         }
         resolve(new AddressValidator().validate(addressOrPublicKey))

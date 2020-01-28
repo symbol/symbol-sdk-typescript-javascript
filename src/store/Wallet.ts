@@ -34,7 +34,8 @@ import {CacheKey} from '@/core/utils/CacheKey'
 import {RESTService} from '@/services/RESTService'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {AwaitLock} from './AwaitLock';
-import { TransactionBroadcastResult } from '@/core/TransactionBroadcastResult';
+import {BroadcastResult} from '@/core/transactions/BroadcastResult';
+import {WalletsModel} from '@/core/database/models/AppWallet'
 
 /**
  * Helper to format transaction group in name of state variable.
@@ -486,6 +487,10 @@ export default {
       }
     },
     async REST_FETCH_MULTISIG({commit, dispatch, getters, rootGetters}, address) {
+      if (address instanceof WalletsModel) {
+        address = address.address().plain()
+      }
+
       if (!address || address.length !== 40) {
         return ;
       }
@@ -510,7 +515,7 @@ export default {
     REST_ANNOUNCE_PARTIAL(
       {commit, rootGetters},
       {signedLock, signedPartial}
-    ): Observable<TransactionBroadcastResult> {
+    ): Observable<BroadcastResult> {
       try {
         // prepare REST parameters
         const currentPeer = rootGetters['network/currentPeer'].url
@@ -532,20 +537,20 @@ export default {
             commit('removeSignedTransaction', signedPartial)
             commit('removeSignedTransaction', signedLock)
 
-            return new TransactionBroadcastResult(signedPartial, true)
+            return new BroadcastResult(signedPartial, true)
           })
         )
       }
       catch(e) {
         return from([
-          new TransactionBroadcastResult(signedPartial, false, e.toString()),
+          new BroadcastResult(signedPartial, false, e.toString()),
         ])
       }
     },
     REST_ANNOUNCE_TRANSACTION(
       {commit, dispatch, rootGetters},
       signedTransaction: SignedTransaction
-    ): Observable<TransactionBroadcastResult> {
+    ): Observable<BroadcastResult> {
       try {
         // prepare REST parameters
         const currentPeer = rootGetters['network/currentPeer'].url
@@ -559,13 +564,13 @@ export default {
         return service.announce(signedTransaction, listener).pipe(
           map((transaction: Transaction) => {
             commit('removeSignedTransaction', signedTransaction)
-            return new TransactionBroadcastResult(signedTransaction, true)
+            return new BroadcastResult(signedTransaction, true)
           })
         )
       }
       catch(e) {
         return from([
-          new TransactionBroadcastResult(signedTransaction, false, e.toString()),
+          new BroadcastResult(signedTransaction, false, e.toString()),
         ])
       }
     },

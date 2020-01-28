@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, MosaicInfo, Mosaic} from 'nem2-sdk'
+import {MosaicId, MosaicInfo, Mosaic, RawUInt64} from 'nem2-sdk'
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
@@ -36,16 +36,16 @@ import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue
 export class AmountInputTs extends Vue {
 
   @Prop({
-    default: []
-  }) mosaics: Mosaic[]
+    default: null
+  }) mosaicId: MosaicId
 
   @Prop({
     default: ''
-  }) mosaicId: string
+  }) mosaicHex: string
 
   @Prop({
     default: ''
-  }) value: string
+  }) value: number
 
   /**
    * Networks currency mosaic
@@ -65,6 +65,40 @@ export class AmountInputTs extends Vue {
    */
   public validationRules = ValidationRuleset
 
+  /**
+   * Hook called when the component is created
+   * @return {void}
+   */
+  public created() {
+    if (this.mosaicId) {
+      this.mosaicHex = this.mosaicId.toHex()
+    }
+    else if (this.mosaicHex) {
+      this.mosaicId = new MosaicId(RawUInt64.fromHex(this.mosaicHex))
+    }
+  }
+
 /// region computed properties getter/setter
+  public get relativeValue(): string {
+    const mosaicInfo = this.mosaicsInfo.find(info => info.id.equals(this.mosaicId))
+    if (undefined === mosaicInfo) {
+      return this.value.toString()
+    }
+
+    return (this.value / Math.pow(10, mosaicInfo.divisibility)).toString()
+  }
+
+  public set relativeValue(amount: string) {
+    const asNumber = parseFloat(amount)
+    const mosaicInfo = this.mosaicsInfo.find(info => info.id.equals(this.mosaicId))
+    if (undefined === mosaicInfo) {
+      this.value = Math.floor(asNumber)
+    }
+    else {
+      this.value = Math.floor(asNumber * Math.pow(10, mosaicInfo.divisibility))
+    }
+
+    this.$emit('change', this.value)
+  }
 /// end-region computed properties getter/setter
 }

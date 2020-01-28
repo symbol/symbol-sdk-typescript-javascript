@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
+import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 import {Account, Transaction, SignedTransaction} from 'nem2-sdk'
 
@@ -21,7 +21,7 @@ import {Account, Transaction, SignedTransaction} from 'nem2-sdk'
 import {AccountsModel} from '@/core/database/models/AppAccount'
 import {WalletsModel, AppWalletType} from '@/core/database/models/AppWallet'
 import {TransactionService} from '@/services/TransactionService'
-import {TransactionBroadcastResult} from '@/core/TransactionBroadcastResult'
+import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 
 // child components
 // @ts-ignore
@@ -46,6 +46,11 @@ import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/
   })},
 })
 export class ModalTransactionConfirmationTs extends Vue {
+
+  @Prop({
+    default: false
+  }) visible: boolean
+
   /**
    * Network generation hash
    * @var {string}
@@ -114,7 +119,7 @@ export class ModalTransactionConfirmationTs extends Vue {
     transactions.map(async (signed) => await this.$store.commit('wallet/addSignedTransaction', signed))
 
     // - broadcast signed transactions
-    this.service.announceSignedTransactions().subscribe((results: TransactionBroadcastResult[]) => {
+    this.service.announceSignedTransactions().subscribe((results: BroadcastResult[]) => {
       // - notify about errors
       const errors = results.filter(result => false === result.success)
       if (errors.length) {
@@ -142,7 +147,7 @@ export class ModalTransactionConfirmationTs extends Vue {
     })
 
     // - broadcast signed transactions
-    this.service.announceSignedTransactions().subscribe((results: TransactionBroadcastResult[]) => {
+    this.service.announceSignedTransactions().subscribe((results: BroadcastResult[]) => {
       // - notify about errors
       const errors = results.filter(result => false === result.success)
       if (errors.length) {

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import {Address, MosaicInfo} from 'nem2-sdk'
+import {decode} from 'utf8'
 
 // internal dependencies
 import {MosaicHelpers} from './MosaicHelpers'
@@ -75,5 +76,17 @@ export class Formatters {
     let second = `${now.getSeconds()}`
     second = Number(second) < 10 ? `0${second}` : second
     return `${year}-${month}-${date} ${hour}:${minute}:${second}`
+  }
+
+  public static hexToUtf8(hex: string): string {
+    let str = '';
+    for (let i = 0; i < hex.length; i += 2) {
+        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    }
+    try {
+        return decode(str);
+    } catch (e) {
+        return str;
+    }
   }
 }

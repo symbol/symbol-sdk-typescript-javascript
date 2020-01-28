@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {leftBarIcons} from '@/../public/img/window'
-import {createStepImage, importStepImage} from '@/views/resources/Images'
+import {createStepImage, importStepImage, leftBarIcons} from '@/views/resources/Images'
 
 const routes: any[] = [
   {

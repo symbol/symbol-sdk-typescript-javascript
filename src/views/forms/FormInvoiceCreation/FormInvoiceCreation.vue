@@ -12,9 +12,9 @@
                            v-model="selectedMosaic" />
         </span>
         <span class="value radius flex_center">
-          <AmountInput :mosaic-id="selectedMosaic"
+          <AmountInput :mosaic-hex="selectedMosaic"
                        :mosaics="currentWalletMosaics"
-                        v-model="invoiceAmount" />
+                        v-model="amount" />
         </span>
       </span>
     </div>
@@ -22,9 +22,9 @@
   <div class="remark flex_center">
     <span class="title">{{ $t('remarks') }}</span>
     <span class="textarea-container flex_center value radius">
-      <MessageInput v-model="invoiceMessage" />
+      <MessageInput v-model="message" />
     </span>
-    <span class="remark_length">{{ formItems.message.length }}/25</span>
+    <span class="remark_length">{{ message.length }}</span>
   </div>
 </div>
 </template>

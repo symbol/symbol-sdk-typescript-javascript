@@ -130,6 +130,7 @@ export default class FinalizeTs extends Vue {
 
     return new AppWallet(
       this.$store,
+      this.currentAccount.getIdentifier(),
       'SeedWallet',
       simpleWallet,
       account.publicKey,

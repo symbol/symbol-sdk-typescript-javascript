@@ -18,7 +18,7 @@
       <div class="account-type">
         <div
           v-for="(item,index) in importInfoList" :key="index" class="account-item"
-          @click="goTo(item.link)"
+          @click="redirect({name: item.route})"
         >
           <div class="img-box radius">
             <img :src="item.image">
@@ -40,11 +40,7 @@
 
 <script lang="ts">
 import ImportStrategyTs from './ImportStrategyTs'
+import "ImportStrategy.less";
 
-export default class ImportStrategy extends ImportStrategyTs {
-
-}
+export default class ImportStrategy extends ImportStrategyTs {}
 </script>
-<style lang="less" scoped>
-  @import "ImportStrategy.less";
-</style>

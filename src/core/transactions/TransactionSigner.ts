@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 import {
-    Account,
-    Transaction,
-    SignedTransaction,
-    AggregateTransaction,
-    TransactionType,
-    CosignatureSignedTransaction,
-    CosignatureTransaction,
+  Account,
+  Transaction,
+  SignedTransaction,
+  AggregateTransaction,
+  TransactionType,
+  CosignatureSignedTransaction,
+  CosignatureTransaction,
 } from 'nem2-sdk';
 
 export class TransactionSigner {

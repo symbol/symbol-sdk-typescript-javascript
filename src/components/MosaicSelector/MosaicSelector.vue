@@ -9,7 +9,10 @@
       :data-vv-as="$t('asset_type')"
       data-vv-name="selectedMosaic"
     >
-      <Option v-for="m in currentWalletMosaics" :key="m.id.toHex()" :value="m.id.toHex()">
+      <Option 
+          v-for="m in mosaics"
+          :key="m.id.toHex()"
+          :value="m.id.toHex()">
         {{ mosaicService.getMosaicName(m.id) || m.id.toHex() }}
       </Option>
     </AutoComplete>

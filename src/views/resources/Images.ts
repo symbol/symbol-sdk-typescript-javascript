@@ -83,7 +83,7 @@ import transferSent from '@/../public/img/monitor/dash-board/dashboardMosaicOut.
 import transferReceived from '@/../public/img/monitor/dash-board/dashboardMosaicIn.png'
 
 /// region exported image objects
-export const walletTypeImage = {
+export const walletTypeImages = {
   seedImg,
   trezorImg,
   ledgerImg,

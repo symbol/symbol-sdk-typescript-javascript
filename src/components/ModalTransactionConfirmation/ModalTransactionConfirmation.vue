@@ -1,7 +1,7 @@
 <template>
   <div class="transactionConfirmationWrap">
     <Modal
-      v-if="stagedTransactions.length"
+      v-if="visible && stagedTransactions.length"
       :title="$t('transaction_details')"
       class-name="vertical-center-modal"
       :footer-hide="true"

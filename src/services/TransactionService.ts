@@ -48,7 +48,7 @@ import {map, flatMap} from 'rxjs/operators'
 // internal dependencies
 import {AbstractService} from './AbstractService'
 import {WalletsModel} from '@/core/database/models/AppWallet'
-import {TransactionBroadcastResult} from '@/core/TransactionBroadcastResult'
+import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 
 export class TransactionService extends AbstractService {
   /**
@@ -154,9 +154,9 @@ export class TransactionService extends AbstractService {
    * Announce any _signed_ transaction. This method uses the nem2-sdk
    * TransactionService to announce locks before aggregate bonded
    * transactions.
-   * @return {Observable<TransactionBroadcastResult[]>}
+   * @return {Observable<BroadcastResult[]>}
    */
-  public announceSignedTransactions(): Observable<TransactionBroadcastResult[]> {
+  public announceSignedTransactions(): Observable<BroadcastResult[]> {
     // shortcuts
     const signedTransactions = this.$store.getters['wallet/signedTransactions']
     
@@ -172,66 +172,4 @@ export class TransactionService extends AbstractService {
     })
   }
 
-  /*
-  export const signAndAnnounce = async({ transaction, store, lockParams }: {
--  transaction: Transaction
--  store: Store<AppState>
--  lockParams?: LockParams}):
--Promise<SignTransaction> => {
--
--  // stage the transaction data in the store, causing the UI to be blocked
--  const stagedTransaction: StagedTransaction = {
--    transactionToSign: transaction,
--    lockParams: lockParams || LockParams.default(),
--    isAwaitingConfirmation: true,
--  }
--
--  store.commit('SET_STAGED_TRANSACTION', stagedTransaction)
--
--  return new Promise(resolve => {
--    // subscribe to the transactionConfirmation observable subject
--    // this will allow this function to resume once the user has either
--    // aborted transaction or authorised it successfully (via password or hardware device)
--    const subscription = transactionConfirmationObservable.subscribe({
--      next({ success, error, signedTransaction, signedLock }) {
--        // unsubscribe when a result is received
--        subscription.unsubscribe()
--        const stagedTransaction: StagedTransaction = {
--          transactionToSign: null,
--          isAwaitingConfirmation: false,
--          lockParams: LockParams.default(),
--        }
--
--        store.commit('SET_STAGED_TRANSACTION', stagedTransaction)
--
--        if(!success) {
--          return resolve({
--            success: false,
--            error,
--            signedTransaction: null,
--          })
--        }
-
--        store.state.account.wallet.announceTransaction(
--          signedTransaction, store, signedLock,
--        )
--                
--        if (lockParams && lockParams.announceInLock) {
--          return resolve({
--            success,
--            error: null,
--            signedTransaction,
--            signedLock,
--          })
--        }
--
--        return resolve({
--          success,
--          error: null,
--          signedTransaction,
--        })
--      },
--    })
--  })
-*/
 }

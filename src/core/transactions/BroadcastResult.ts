@@ -16,7 +16,7 @@
  */
 import {SignedTransaction} from 'nem2-sdk'
 
-export class TransactionBroadcastResult {
+export class BroadcastResult {
   /**
    * Create a transaction broadcast result instance
    *

@@ -1,7 +1,7 @@
 <template>
   <ErrorTooltip field-name="mosaicAmount">
     <input
-      v-model="value"
+      v-model="relativeValue"
       v-validate="validationRules.invoiceAmount"
       class="amount_input"
       type="text"
