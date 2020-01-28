@@ -235,6 +235,7 @@ export default class WalletSelectionTs extends Vue {
 
     return new AppWallet(
       this.$store,
+      this.currentAccount.values.get('accountName'),
       'SeedWallet',
       simpleWallet,
       account.publicKey,

@@ -1,70 +1,97 @@
+/**
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import {Vue, Component} from 'vue-property-decorator'
-import {AppInfo, AppWallet, StoreAccount, AppAccounts, HdWallet} from '@/core/model'
-import {Password} from 'nem2-sdk'
-import {mapState} from 'vuex'
-import {Message} from '@/config'
+import {mapGetters} from 'vuex'
+import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 
-@Component({
-  computed: {
-    ...mapState({
-      activeAccount: 'account',
-      app: 'app',
-    }),
-  },
-})
+// internal dependencies
+import {AccountsModel} from '@/core/database/models/AppAccount'
+import {AccountsRepository} from '@/repositories/AccountsRepository'
+import {NotificationType} from '@/core/utils/NotificationType'
+
+@Component({computed: {...mapGetters({
+  currentAccount: 'account/currentAccount',
+})}})
 export default class ImportMnemonicTs extends Vue {
-  seed = ''
-  activeAccount: StoreAccount
-  app: AppInfo
+  /**
+   * Currently active account
+   * @see {Store.Account}
+   * @var {string}
+   */
+  public currentAccount: AccountsModel
 
-  get accountName() {
-    return this.activeAccount.currentAccount.name
+  /**
+   * Account repository
+   * @var {AccountsRepository}
+   */
+  public accounts: AccountsRepository
+
+  /**
+   * Form items
+   * @var {any}
+   */
+  public formItems = {
+    seed: ''
   }
 
-  get networkType() {
-    return this.activeAccount.currentAccount.networkType
+  /**
+   * Hook called when the component is mounted
+   * @return {void}
+   */
+  public mounted() {
+    this.accounts = new AccountsRepository()
   }
 
+  /**
+   * Delete account and go back
+   * @return {void}
+   */
+  public deleteAccountAndBack() {
+    // - delete the temporary account from storage
+    const identifier = this.currentAccount.getIdentifier()
+    this.accounts.delete(identifier)
 
-  get password() {
-    return this.activeAccount.temporaryLoginInfo.password
-  }
-
-  checkSeed() {
-    const {seed, networkType} = this
-    if (!seed || !seed.trim()) {
-      this.$Notice.error({title: `${this.$t(Message.INPUT_EMPTY_ERROR)}`})
-      return false
-    }
-    try {
-      HdWallet.getAccountFromPathNumber(seed, 0, networkType) // use for check mnemonic
-    } catch (e) {
-      this.$Notice.error({title: 'Invalid mnemonic'})
-      return false
-    }
-
-    return true
-  }
-
-  submit() {
-    if (!this.checkSeed()) return
-    const {seed, password} = this
-    try {
-      new AppWallet().createAccountFromMnemonic(
-        new Password(password),
-        seed,
-        this.$store,
-      )
-      this.$store.commit('SET_TEMPORARY_MNEMONIC', this.seed)
-      this.$router.push({name: 'login.importAccount.walletSelection'})
-    } catch (error) {
-      this.$Notice.error({title: 'Creation failed'})
-      throw new Error(error)
-    }
-  }
-
-  goToCreateAccountInfo() {
-    AppAccounts().deleteAccount(this.accountName)
+    // - back to previous page
     this.$router.push({name: 'login.importAccount.info'})
+  }
+
+  /**
+   * Process to mnemonic pass phrase verification
+   * @return {void}
+   */
+  public processVerification() {
+    if (!this.formItems.seed || !this.formItems.seed.length) {
+      return this.$store.dispatch('notification/ADD_ERROR', NotificationType.INPUT_EMPTY_ERROR)
+    }
+
+    try {
+      // - verify validity of mnemonic
+      const mnemonic = new MnemonicPassPhrase(this.formItems.seed)
+      if (!mnemonic.isValid())
+        throw new Error('Invalid mnemonic pass phrase')
+
+      // update state
+      this.$store.dispatch('notification/ADD_SUCCESS', this.$t('Generate_entropy_increase_success'))
+      this.$store.dispatch('temporary/SET_MNEMONIC', mnemonic.plain)
+
+      // redirect
+      return this.$router.push({name: 'login.importAccount.walletSelection'})
+    }
+    catch(e) {
+      return this.$store.dispatch('notification/ADD_ERROR', this.$t('invalid_mnemonic_input'))
+    }
   }
 }
