@@ -46,7 +46,7 @@ describe('PersistentHarvestingDelegationMessage', () => {
         const encryptedMessage =
             PersistentHarvestingDelegationMessage
                 .create(delegatedPrivateKey, recipient.publicKey, NetworkType.MIJIN_TEST);
-        expect(encryptedMessage.payload.length).to.be.equal(272);
+        expect(encryptedMessage.payload.length).to.be.equal(208);
         expect(encryptedMessage.type).to.be.equal(MessageType.PersistentHarvestingDelegationMessage);
     });
 

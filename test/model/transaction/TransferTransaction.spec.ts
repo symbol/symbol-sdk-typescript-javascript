@@ -269,7 +269,7 @@ describe('TransferTransaction', () => {
                 .create(delegatedPrivateKey, recipientPublicKey, NetworkType.MIJIN_TEST),
             NetworkType.MIJIN_TEST,
         );
-        expect(transferTransaction.message.payload.length).to.be.equal(192 + messageMarker.length + 64);
+        expect(transferTransaction.message.payload.length).to.be.equal(192 + messageMarker.length);
         expect(transferTransaction.message.payload.includes(messageMarker)).to.be.true;
         expect(transferTransaction.mosaics.length).to.be.equal(0);
         expect(transferTransaction.recipientAddress).to.be.instanceof(Address);

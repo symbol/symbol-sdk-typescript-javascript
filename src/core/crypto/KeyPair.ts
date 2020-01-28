@@ -70,13 +70,10 @@ export class KeyPair {
      * @param {SignSchema} signSchema The Sign Schema. (KECCAK(NIS1) / SHA3(Catapult))
      * @returns {Uint8Array} The shared key.
      */
-    public static deriveSharedKey = (keyPair, publicKey: Uint8Array, salt: Uint8Array, signSchema: SignSchema) => {
-        if (Utility.Key_Size !== salt.length) {
-            throw Error(`salt has unexpected size: ${salt.length}`);
-        }
+    public static deriveSharedKey = (keyPair, publicKey: Uint8Array, signSchema: SignSchema) => {
         if (Utility.Key_Size !== publicKey.length) {
-            throw Error(`public key has unexpected size: ${salt.length}`);
+            throw Error(`public key has unexpected size: ${publicKey.length}`);
         }
-        return Utility.catapult_crypto.deriveSharedKey(salt, keyPair.privateKey, publicKey, Utility.catapult_hash.func, signSchema);
+        return Utility.catapult_crypto.deriveSharedKey(keyPair.privateKey, publicKey, Utility.catapult_hash.func, signSchema);
     }
 }

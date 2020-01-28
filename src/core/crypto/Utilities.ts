@@ -24,6 +24,7 @@ export const Signature_Size = 64;
 export const Half_Signature_Size = Signature_Size / 2;
 export const Hash_Size = 64;
 export const Half_Hash_Size = Hash_Size / 2;
+export const hkdf = require('futoin-hkdf');
 
 /**
  * Convert an Uint8Array to WordArray
@@ -68,7 +69,7 @@ export const catapult_hash = {
 };
 
 // custom catapult crypto functions
-export const catapult_crypto = (function() {
+export const catapult_crypto = (() => {
     function clamp(d) {
         d[0] &= 248;
         d[31] &= 127;
@@ -82,7 +83,7 @@ export const catapult_crypto = (function() {
         return d;
     }
 
-    const encodedSChecker = (function() {
+    const encodedSChecker = (() => {
         const Is_Reduced = 1;
         const Is_Zero = 2;
 
@@ -202,25 +203,21 @@ export const catapult_crypto = (function() {
             return 0 === c.crypto_verify_32(signature, 0, t, 0);
         },
 
-        deriveSharedKey: (salt, sk, pk, hashfunc, signSchema: SignSchema) => {
+        deriveSharedKey: (sk, pk, hashfunc, signSchema: SignSchema) => {
             const c = nacl;
             const d = prepareForScalarMult(sk, hashfunc, signSchema);
 
             // sharedKey = pack(p = d (derived from sk) * q (derived from pk))
             const q = [c.gf(), c.gf(), c.gf(), c.gf()];
             const p = [c.gf(), c.gf(), c.gf(), c.gf()];
-            const sharedKey = new Uint8Array(Key_Size);
+            const sharedSecret = new Uint8Array(Key_Size);
             c.unpack(q, pk);
             c.scalarmult(p, q, d);
-            c.pack(sharedKey, p);
-            // salt the shared key
-            for (let i = 0; i < Key_Size; ++i) {
-                sharedKey[i] ^= salt[i];
-            }
-            // return the hash of the result
-            const sharedKeyHash = new Uint8Array(Key_Size);
-            hashfunc(sharedKeyHash, sharedKey, Key_Size, signSchema);
-            return sharedKeyHash;
+            c.pack(sharedSecret, p);
+            const info = 'catapult';
+            const hash = 'SHA-256';
+            const sharedKey = hkdf(sharedSecret, 32, {salt: new Uint8Array(32), info, hash});
+            return sharedKey;
         },
     };
 })();
