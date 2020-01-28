@@ -59,8 +59,9 @@ export class WalletService extends AbstractService {
    * Construct a service instance around \a store
    * @param store
    */
-  constructor(store: Store<any>) {
-    super(store)
+  constructor(store?: Store<any>) {
+    super()
+    this.$store = store
   }
 
   /**

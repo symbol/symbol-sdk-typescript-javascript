@@ -18,8 +18,8 @@ import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
-import {AccountsModel} from '@/core/database/models/AppAccount'
-import {WalletsModel} from '@/core/database/models/AppWallet'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {ServiceFactory} from '@/services/ServiceFactory'
 
 @Component({
@@ -73,10 +73,6 @@ export class FormAccountUnlockTs extends Vue {
    * @return {void}
    */
   public processVerification() {
-    // - get database storage adapter
-    const db = ServiceFactory.create('database', this.$store)
-    const adapter = db.getAdapter<AccountsModel>()
-
     // - create encrypted payload for active wallet
     const encrypted = new EncryptedPrivateKey(
       this.currentWallet.values.get('encPrivate'),

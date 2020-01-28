@@ -15,22 +15,20 @@
  */
 import {DatabaseModel} from '@/core/database/DatabaseModel'
 import {DatabaseTable} from '@/core/database/DatabaseTable'
-import {BaseStorageAdapter} from '@/core/database/BaseStorageAdapter'
+import {AppDatabase} from '@/core/database/AppDatabase'
 import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
-import {DatabaseService} from '@/services/DatabaseService'
 import {IStorable} from './IStorable'
-import {AppStore} from '@/main'
 
 export abstract class ModelRepository<
   TableImpl extends DatabaseTable,
   ModelImpl extends DatabaseModel
-> implements IStorable<ModelImpl, BaseStorageAdapter<ModelImpl>> {
+> implements IStorable<SimpleStorageAdapter> {
   /**
    * Storage adapter
    * @see {IStorable}
-   * @var {BaseStorageAdapter<ModelImpl>}
+   * @var {SimpleStorageAdapter}
    */
-  protected _adapter: BaseStorageAdapter<ModelImpl>
+  protected _adapter: SimpleStorageAdapter
 
   /**
    * Collection of items
@@ -41,15 +39,10 @@ export abstract class ModelRepository<
 
   /**
    * Construct a repository around \a adapter storage adapter.
-   * @param {BaseStorageAdapter} adapter 
+   * @param {SimpleStorageAdapter} adapter 
    */
   public constructor() {
-
-    // - get database adapter from database service
-    const service = new DatabaseService(AppStore)
-    const adapter = service.getAdapter<ModelImpl>()
-
-    this.setAdapter(adapter)
+    this.setAdapter(AppDatabase.getAdapter())
     this.fetch()
   }
 
@@ -114,19 +107,19 @@ export abstract class ModelRepository<
   /**
    * Getter for the adapter
    * @see {IStorable}
-   * @return {BaseStorageAdapter}
+   * @return {SimpleStorageAdapter}
    */
-  public getAdapter(): BaseStorageAdapter<ModelImpl> {
+  public getAdapter(): SimpleStorageAdapter {
     return this._adapter
   }
 
   /**
    * Setter for the storage adapter
    * @see {IStorable}
-   * @param {StorageAdapterImpl} adapter
+   * @param {SimpleStorageAdapter} adapter
    * @return {ModelRepository<TableImpl, ModelImpl>}
    */
-  public setAdapter(adapter: BaseStorageAdapter<ModelImpl>): ModelRepository<TableImpl, ModelImpl> {
+  public setAdapter(adapter: SimpleStorageAdapter): ModelRepository<TableImpl, ModelImpl> {
     this._adapter = adapter
     return this
   }

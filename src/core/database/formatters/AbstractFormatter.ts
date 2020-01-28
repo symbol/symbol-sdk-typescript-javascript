@@ -17,17 +17,17 @@
 import {IDataFormatter} from './IDataFormatter'
 import {DatabaseModel} from '../DatabaseModel'
 
-export abstract class AbstractFormatter<ModelImpl extends DatabaseModel, StorageDataType>
-  implements IDataFormatter<ModelImpl, StorageDataType> {
+export abstract class AbstractFormatter
+  implements IDataFormatter {
   /**
    * Validate format of \a data and throw exception
    * if not valid.
-   * @param {StorageDataType} data 
+   * @param {string} data 
    * @return {boolean}
    * @throws {Error} On invalid JSON \a data
    */
-  public assertFormat(data: StorageDataType): boolean {
-    if (this.validate(data) === true) {
+  public assertFormat<ModelImpl extends DatabaseModel>(data: string): boolean {
+    if (this.validate<ModelImpl>(data) === true) {
       return true
     }
 
@@ -38,22 +38,22 @@ export abstract class AbstractFormatter<ModelImpl extends DatabaseModel, Storage
   /**
    * Format an \a entity
    * @param {ModelImpl} entity
-   * @return {StorageDataType}
+   * @return {string}
    */
-  public abstract format(entities: Map<string, ModelImpl>): StorageDataType
+  public abstract format<ModelImpl extends DatabaseModel>(entities: Map<string, ModelImpl>): string
 
   /**
    * Parse formatted \a data to entities
-   * @param {StorageDataType} data
+   * @param {string} data
    * @return {Map<string, ModelImpl>}
    */
-  public abstract parse(data: StorageDataType): Map<string, ModelImpl>
+  public abstract parse<ModelImpl extends DatabaseModel>(data: string): Map<string, ModelImpl>
 
   /**
    * Validate format of \a data
-   * @param {StorageDataType} data 
+   * @param {string} data 
    * @return {boolean}
    */
-  public abstract validate(data: StorageDataType): boolean
+  public abstract validate<ModelImpl extends DatabaseModel>(data: string): boolean
   /// end-region abstract methods
 }

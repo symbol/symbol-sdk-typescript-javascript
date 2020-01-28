@@ -47,7 +47,7 @@ import {map, flatMap} from 'rxjs/operators'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
-import {WalletsModel} from '@/core/database/models/AppWallet'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 
 export class TransactionService extends AbstractService {
@@ -67,8 +67,9 @@ export class TransactionService extends AbstractService {
    * Construct a service instance around \a store
    * @param store
    */
-  constructor(store: Store<any>) {
-    super(store)
+  constructor(store?: Store<any>) {
+    super()
+    this.$store = store
   }
 
   /**

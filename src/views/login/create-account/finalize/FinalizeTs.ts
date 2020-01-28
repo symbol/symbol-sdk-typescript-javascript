@@ -19,7 +19,7 @@ import {NetworkType, SimpleWallet, Password} from 'nem2-sdk'
 import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 
 // internal dependencies
-import {AccountsModel} from '@/core/database/models/AppAccount'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {AppWallet} from '@/core/database/models/AppWallet'
 import {WalletService} from '@/services/WalletService'
 import {WalletsRepository} from '@/repositories/WalletsRepository'

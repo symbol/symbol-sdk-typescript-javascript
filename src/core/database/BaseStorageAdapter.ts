@@ -23,8 +23,8 @@ import {ObjectStorageBackend} from './backends/ObjectStorageBackend'
 import {IDataFormatter} from './formatters/IDataFormatter'
 import {JSONFormatter} from './formatters/JSONFormatter'
 
-export abstract class BaseStorageAdapter<ModelImpl extends DatabaseModel> 
-  implements IStorageAdapter<string> {
+export abstract class BaseStorageAdapter 
+  implements IStorageAdapter {
   /**
    * Storage backend
    * @var {IStorageBackend}
@@ -33,9 +33,9 @@ export abstract class BaseStorageAdapter<ModelImpl extends DatabaseModel>
 
   /**
    * Data formatter
-   * @var {IDataFormatter<ModelImpl, string>}
+   * @var {IDataFormatter}
    */
-  public readonly formatter: IDataFormatter<ModelImpl, string>
+  public readonly formatter: IDataFormatter
 
   /**
    * List of database table schemas
@@ -49,7 +49,7 @@ export abstract class BaseStorageAdapter<ModelImpl extends DatabaseModel>
    */
   public constructor(
     storageBackend: IStorageBackend = !!localStorage ? new LocalStorageBackend() : new ObjectStorageBackend(),
-    dataFormatter: IDataFormatter<ModelImpl, string> = new JSONFormatter<ModelImpl>()
+    dataFormatter: IDataFormatter = new JSONFormatter()
   ) {
     this.storage = storageBackend
     this.formatter = dataFormatter
@@ -60,7 +60,7 @@ export abstract class BaseStorageAdapter<ModelImpl extends DatabaseModel>
    * Getter for table schemas
    * @return {BaseStorageAdapter<ModelImpl>}
    */
-  public setSchemas(schemas: Map<string, DatabaseTable>): BaseStorageAdapter<ModelImpl> {
+  public setSchemas(schemas: Map<string, DatabaseTable>): BaseStorageAdapter {
     this.schemas = schemas
     return this
   }
@@ -70,7 +70,7 @@ export abstract class BaseStorageAdapter<ModelImpl extends DatabaseModel>
    * @param {string} schemaId 
    * @return {Map<string, ModelImpl>}
    */
-  public read(schemaId: string): Map<string, ModelImpl> {
+  public read<ModelImpl extends DatabaseModel>(schemaId: string): Map<string, ModelImpl> {
     // catch unregistered schema
     if (!this.schemas.has(schemaId)) {
       throw new Error('Schema with identifier \'' + schemaId + '\' is not registered.')
@@ -78,15 +78,19 @@ export abstract class BaseStorageAdapter<ModelImpl extends DatabaseModel>
 
     // read schema from storage backend
     const schema = this.schemas.get(schemaId)
-    const data = this.storage.getItem(schema.tableName) || ''
+    const data = this.storage.getItem(schema.tableName)
+
+    if (!data || data === null || !data.length) {
+      return new Map<string, ModelImpl>()
+    }
 
     // valid stored data to identify invalid data format
-    if (!this.formatter.validate(data)) {
+    if (!this.formatter.validate<ModelImpl>(data)) {
       throw new Error('Data stored for schema \'' + schemaId + '\' does not comply with IDataFormatter derivate.')
     }
 
     // map on-the-fly + validate singular entities format
-    return this.formatter.parse(data)
+    return this.formatter.parse<ModelImpl>(data)
   }
 
   /**
@@ -94,7 +98,7 @@ export abstract class BaseStorageAdapter<ModelImpl extends DatabaseModel>
    * @param {Map<string, ModelImpl>} entities
    * @return {number} The count of entities written
    */
-  public write(schemaId: string, entities: Map<string, ModelImpl>): number {
+  public write<ModelImpl extends DatabaseModel>(schemaId: string, entities: Map<string, ModelImpl>): number {
     // catch unregistered schema
     if (!this.schemas.has(schemaId)) {
       throw new Error('Schema with identifier \'' + schemaId + '\' is not registered.')
@@ -102,7 +106,7 @@ export abstract class BaseStorageAdapter<ModelImpl extends DatabaseModel>
 
     // format data
     const schema = this.schemas.get(schemaId)
-    const data = this.formatter.format(entities)
+    const data = this.formatter.format<ModelImpl>(entities)
 
     // persist formatted data
     this.storage.setItem(schemaId, data)

@@ -20,9 +20,6 @@ import CryptoJS from "crypto-js";
 // internal dependencies
 import {AbstractService} from './AbstractService'
 
-// @ts-ignore
-import {AppStore} from '@/main'
-
 export class AESEncryptionService extends AbstractService {
   /**
    * Service name
@@ -40,8 +37,9 @@ export class AESEncryptionService extends AbstractService {
    * Construct a service instance around \a store
    * @param store
    */
-  constructor(store: Store<any> = AppStore) {
-    super(store)
+  constructor(store?: Store<any>) {
+    super()
+    this.$store = store
   }
 
   /**
@@ -50,7 +48,7 @@ export class AESEncryptionService extends AbstractService {
    * @param {string} salt 
    * @param {Password} password 
    */
-  public encrypt(
+  public static encrypt(
     data: string,
     salt: string,
     password: Password,
@@ -65,7 +63,7 @@ export class AESEncryptionService extends AbstractService {
    * @param {string} salt 
    * @param {Password} password 
    */
-  public decrypt(
+  public static decrypt(
     data: string,
     salt: string,
     password: Password
@@ -79,7 +77,7 @@ export class AESEncryptionService extends AbstractService {
    * @param {boolean} raw 
    * @return {string}
    */
-  public generateRandomBytes(
+  public static generateRandomBytes(
     count: number,
     raw: boolean = false
   ): string {

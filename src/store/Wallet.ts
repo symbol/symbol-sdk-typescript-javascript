@@ -35,7 +35,7 @@ import {RESTService} from '@/services/RESTService'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {AwaitLock} from './AwaitLock';
 import {BroadcastResult} from '@/core/transactions/BroadcastResult';
-import {WalletsModel} from '@/core/database/models/AppWallet'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
 
 /**
  * Helper to format transaction group in name of state variable.

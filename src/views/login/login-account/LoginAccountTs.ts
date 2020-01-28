@@ -21,7 +21,7 @@ import {$eventBus} from '@/main'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
-import {AccountsModel} from '@/core/database/models/AppAccount'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
 
 // child components
 // @ts-ignore

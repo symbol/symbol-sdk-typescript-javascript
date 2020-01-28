@@ -13,29 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import {DatabaseModel} from '@/core/database/DatabaseModel'
+import {DatabaseRelation, DatabaseRelationType} from '@/core/database/DatabaseRelation'
 
-// internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
-
-// child components
-// @ts-ignore
-import TransactionList from '@/components/TransactionList/TransactionList.vue'
-
-@Component({
-  components: {
-    TransactionList,
-  },
-  computed: {...mapGetters({
-    currentWallet: 'wallet/currentWallet'
-  })}
-})
-export class DashboardHomePageTs extends Vue {
+export class AccountsModel extends DatabaseModel {
   /**
-   * Currently active wallet
-   * @see {Store.Wallet}
-   * @var {WalletsModel}
+   * Entity identifier *field names*. The identifier
+   * is a combination of the values separated by '-'
+   * @var {string[]}
    */
-  public currentWallet: WalletsModel
+  public primaryKeys: string[] = [
+    'accountName',
+  ]
+
+  /**
+   * Entity relationships
+   * @var {Map<string, DatabaseRelation>}
+   */
+  public relations: Map<string, DatabaseRelation> = new Map<string, DatabaseRelation>([
+    ['wallets', new DatabaseRelation(DatabaseRelationType.ONE_TO_MANY)]
+  ])
 }

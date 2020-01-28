@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {Password} from 'nem2-sdk'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
-import {MosaicService} from '@/services/MosaicService'
-import {Formatters} from '@/core/utils/Formatters'
-import {MosaicsModel} from '@/core/database/models/AppMosaic'
 
 //XXX network config store getter
 import networkConfig from '../../config/network.conf.json'
@@ -43,8 +39,9 @@ export class RentalFeesService extends AbstractService {
    * Construct a service instance around \a store
    * @param store
    */
-  constructor(store: Store<any>) {
-    super(store)
+  constructor(store?: Store<any>) {
+    super()
+    this.$store = store
   }
 
   private static getAbsoluteCostFromDuration = (duration: number): number => {

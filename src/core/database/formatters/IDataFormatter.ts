@@ -16,25 +16,25 @@
 // internal dependencies
 import {DatabaseModel} from '../DatabaseModel'
 
-export interface IDataFormatter<ModelImpl extends DatabaseModel, StorageDataType> {
+export interface IDataFormatter {
   /**
    * Format \a entities mapped by identifier
    * @param {Map<string, ModelImpl>} entities
-   * @return {StorageDataType}
+   * @return {string}
    */
-  format(entities: Map<string, ModelImpl>): StorageDataType
+  format<ModelImpl extends DatabaseModel>(entities: Map<string, ModelImpl>): string
 
   /**
    * Parse formatted \a data to entities
-   * @param {StorageDataType} data
+   * @param {string} data
    * @return {Map<string, ModelImpl>}
    */
-  parse(data: StorageDataType): Map<string, ModelImpl>
+  parse<ModelImpl extends DatabaseModel>(data: string): Map<string, ModelImpl>
 
   /**
    * Validate format of \a data
-   * @param {StorageDataType} data 
+   * @param {string} data 
    * @return {boolean}
    */
-  validate(data: StorageDataType): boolean
+  validate<ModelImpl extends DatabaseModel>(data: string): boolean
 }

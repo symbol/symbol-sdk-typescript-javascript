@@ -19,8 +19,8 @@ import {NetworkType, Password, MosaicId, Address, SimpleWallet} from 'nem2-sdk'
 import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 
 // internal dependencies
-import {AccountsModel} from '@/core/database/models/AppAccount'
-import {WalletsModel, AppWallet} from '@/core/database/models/AppWallet'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
+import {AppWallet} from '@/core/database/models/AppWallet'
 import {DerivationService, DerivationPathLevels} from '@/services/DerivationService'
 import {WalletService} from '@/services/WalletService'
 import {MosaicService} from '@/services/MosaicService'
@@ -30,10 +30,6 @@ import {NotificationType} from '@/core/utils/NotificationType'
 // child components
 // @ts-ignore
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
-
-// configuration
-import networkConfig from  '@/../config/network.conf.json'
-const networkCurrencyName = networkConfig.networks['testnet-publicTest'].currencyMosaic
 
 @Component({
   computed: {

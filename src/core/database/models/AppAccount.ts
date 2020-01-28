@@ -17,67 +17,10 @@ import {NetworkType, Password, SimpleWallet} from 'nem2-sdk'
 import {Store} from 'vuex'
 
 // internal dependencies
-import {DatabaseTable} from '@/core/database/DatabaseTable'
-import {DatabaseModel} from '@/core/database/DatabaseModel'
-import {
-  DatabaseRelation,
-  DatabaseRelationType,
-} from '@/core/database/DatabaseRelation'
 import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
-import {ServiceFactory} from '@/services/ServiceFactory'
-import {DatabaseService} from '@/services/DatabaseService'
-import {WalletsRepository} from '@/repositories/WalletsRepository'
-import {WalletsModel} from './AppWallet'
-
-/// region database entities
-export class AccountsModel extends DatabaseModel {
-  /**
-   * Entity identifier *field names*. The identifier
-   * is a combination of the values separated by '-'
-   * @var {string[]}
-   */
-  public primaryKeys: string[] = [
-    'accountName',
-  ]
-
-  /**
-   * Entity relationships
-   * @var {Map<string, DatabaseRelation>}
-   */
-  public relations: Map<string, DatabaseRelation> = new Map<string, DatabaseRelation>([
-    ['wallets', new DatabaseRelation(DatabaseRelationType.ONE_TO_MANY)]
-  ])
-
-  /**
-   * Resolve wallet relations
-   * @return {Map<string, WalletsModel>}
-   */
-  public wallets(): Map<string, WalletsModel> {
-    return this.fetchRelations<WalletsModel>(new WalletsRepository(), 'wallets')
-  }
-}
-
-export class AccountsTable extends DatabaseTable {
-  public constructor() {
-    super('accounts', [
-      'accountName',
-      'wallets',
-      'password',
-      'hint',
-      'networkType',
-      'seed',
-    ])
-  }
-
-  /**
-   * Create a new model instance
-   * @return {AccountsModel}
-   */
-  public createModel(): AccountsModel {
-    return new AccountsModel()
-  }
-}
-/// end-region database entities
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
+import {AppDatabase} from '@/core/database/AppDatabase'
+import {AESEncryptionService} from '@/services/AESEncryptionService'
 
 export class AppAccount {
   /**
@@ -88,15 +31,9 @@ export class AppAccount {
 
   /**
    * Storage adapter
-   * @var {DatabaseService}
+   * @var {SimpleStorageAdapter}
    */
-  protected dbService: DatabaseService
-
-  /**
-   * Storage adapter
-   * @var {SimpleStorageAdapter<AccountsModel>}
-   */
-  protected adapter: SimpleStorageAdapter<AccountsModel>
+  protected adapter: SimpleStorageAdapter
 
   constructor(
     public store: Store<any>,
@@ -107,16 +44,13 @@ export class AppAccount {
     public networkType: NetworkType,
     public seed?: string,
   ) {
-    // initialize service
-    this.dbService = ServiceFactory.create('database', store)
-
     // get database storage adapter
-    this.adapter = this.dbService.getAdapter<AccountsModel>()
+    this.adapter = AppDatabase.getAdapter()
 
     // password encrypted with accessSalt
     const accessSalt = this.adapter.getSaltForSession()
-    const encryptPass = this.adapter.encryption.encrypt(password, accessSalt, new Password(accessSalt))
-    const encryptSeed = this.adapter.encryption.encrypt(seed || '', accessSalt, new Password(accessSalt))
+    const encryptPass = AESEncryptionService.encrypt(password, accessSalt, new Password(accessSalt))
+    const encryptSeed = AESEncryptionService.encrypt(seed || '', accessSalt, new Password(accessSalt))
 
     // populate model
     this.model = new AccountsModel(new Map<string, any>([
@@ -129,41 +63,3 @@ export class AppAccount {
     ]))
   }
 }
-
-/*
-  // static create(
-  //   clearPassword: string,
-  //   accountName: string,
-  //   wallets: Array<any>,
-  //   hint: string,       
-  //   networkType: NetworkType,
-  // ) {
-  //   try {
-  //     const password = AppAccounts().encryptString(clearPassword, clearPassword)
-  //     return new AppAccount(
-  //       accountName,
-  //       wallets,
-  //       password,
-  //       hint,
-  //       networkType,
-  //     )
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
-
-  // get currentAccount(): CurrentAccount {
-  //   return {
-  //     name: this.accountName,
-  //     password: this.password,
-  //     networkType: this.networkType,
-  //   }
-  // }
-
-  // delete(): void {
-  //   const accountMap = localRead('accountMap') === ''
-  //     ? {} : JSON.parse(localRead('accountMap'))
-  //   delete accountMap[this.accountName]
-  //   localSave('accountMap', JSON.stringify(accountMap))
-  // }
-*/

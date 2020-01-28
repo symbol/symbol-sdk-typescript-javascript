@@ -15,21 +15,31 @@
  */
 // internal dependencies
 import {DatabaseModel} from '@/core/database/DatabaseModel'
-import {BaseStorageAdapter} from '@/core/database/BaseStorageAdapter'
+import {DatabaseRelation} from '@/core/database/DatabaseRelation'
 
-export interface IStorable<
-  StorageAdapterImpl extends BaseStorageAdapter
-> {
+export class PeersModel extends DatabaseModel {
   /**
-   * Getter for the storage adapter
-   * @return {StorageAdapterImpl}
+   * Entity identifier *field names*. The identifier
+   * is a combination of the values separated by '-'
+   * @var {string[]}
    */
-  getAdapter(): StorageAdapterImpl
+  public primaryKeys: string[] = [
+    'host',
+  ]
 
   /**
-   * Setter for the storage adapter
-   * @param {StorageAdapterImpl} adapter
-   * @return {IStorable<ModelImpl, StorageAdapterImpl>}
+   * Entity relationships
+   * @var {Map<string, DatabaseRelation>}
    */
-  setAdapter(adapter: StorageAdapterImpl): IStorable<StorageAdapterImpl>
+  public relations: Map<string, DatabaseRelation> = new Map<string, DatabaseRelation>()
+
+  /**
+   * Get peer full url
+   * @return {string}
+   */
+  public toURL(): string {
+    return this.values.get('protocol')
+        + this.values.get('host') + ':'
+        + this.values.get('port')
+  }
 }

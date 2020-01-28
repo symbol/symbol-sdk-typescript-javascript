@@ -18,7 +18,7 @@ import {Vue, Component} from 'vue-property-decorator'
 import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 
 // internal dependencies
-import {AccountsModel} from '@/core/database/models/AppAccount'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
 
 @Component({
   computed: {...mapGetters({

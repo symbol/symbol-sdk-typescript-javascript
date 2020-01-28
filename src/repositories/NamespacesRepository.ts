@@ -14,153 +14,149 @@
  * limitations under the License.
  */
 // internal dependencies
-import {
-    NamespacesTable,
-    NamespacesModel,
-  } from '@/core/database/models/AppNamespace'
-  import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
-  import {IRepository} from './IRepository'
-  import {ModelRepository} from './ModelRepository'
-  
-  export class NamespacesRepository
-    extends ModelRepository<NamespacesTable, NamespacesModel>
-    implements IRepository<NamespacesModel> {
+import {NamespacesTable} from '@/core/database/entities/NamespacesTable'
+import {NamespacesModel} from '@/core/database/entities/NamespacesModel'
+import {IRepository} from './IRepository'
+import {ModelRepository} from './ModelRepository'
 
-    /// region abstract methods
-    /**
-     * Create a table instance
-     * @return {NamespacesTable}
-     */
-    public createTable(): NamespacesTable {
-      return new NamespacesTable()
-    }
-  
-    /**
-     * Create a model instance
-     * @param {Map<string, any>} values
-     * @return {NamespacesModel}
-     */
-    public createModel(values: Map<string, any>): NamespacesModel {
-      return new NamespacesModel(values)
-    }
-    /// end-region abstract methods
-  
-    /// region implements IRepository
-    /**
-     * Check for existence of entity by \a identifier
-     * @param {string} identifier 
-     * @return {boolean}
-     */
-    public find(identifier: string): boolean {
-      return this._collection.has(identifier)
-    }
-  
-    /**
-     * Getter for the collection of items
-     * @return {NamespacesModel[]}
-     */
-    public collect(): NamespacesModel[] {
-      return Array.from(this._collection.values())
-    }
-  
-    /**
-     * Getter for the collection of items
-     * mapped by identifier
-     * @return {Map<string, NamespacesModel>}
-     */
-    public entries(): Map<string, NamespacesModel> {
-      return this._collection
-    }
-  
-    /**
-     * Create an entity
-     * @param {Map<string, any>} values
-     * @return {string} The assigned entity identifier
-     */
-    create(values: Map<string, any>): string {
-      const mapped = this.createModel(values)
-  
-      // created object must contain values for all primary keys
-      if (! mapped.hasIdentifier()) {
-        throw new Error('Missing value for mandatory identifier fields \'' + mapped.primaryKeys.join(', ') + '\'.')
-      }
-  
-      // verify uniqueness
-      const identifier = mapped.getIdentifier()
-      if (this.find(identifier)) {
-        throw new Error('Namespace with identifier \'' + identifier + '\' already exists.')
-      }
-  
-      // update collection
-      this._collection.set(identifier, new NamespacesModel(values))
-  
-      // persist to storage
-      this.persist()
-      return identifier
-    }
-  
-    /**
-     * Getter for the collection of items
-     * @param {string} identifier
-     * @return {NamespacesModel}
-     */
-    public read(identifier: string): NamespacesModel {
-      // verify existence
-      if (!this.find(identifier)) {
-        throw new Error('Namespace with identifier \'' + identifier + '\' does not exist.')
-      }
-  
-      return this._collection.get(identifier)
-    }
-  
-    /**
-     * Update an entity
-     * @param {string} identifier
-     * @param {Map<string, any>} values
-     * @return {NamespacesModel} The new values
-     */
-    public update(identifier: string, values: Map<string, any>): NamespacesModel {
-      // require existing
-      const previous = this.read(identifier)
-  
-      // populate/update values
-      let iterator = values.keys()
-      for (let i = 0, m = values.size; i < m; i++) {
-        const key = iterator.next()
-        const value = values.get(key.value)
-  
-        // expose only "values" from model
-        previous.values.set(key.value, value)
-      }
-  
-      // update collection
-      this._collection.set(identifier, previous)
-  
-      // persist to storage
-      this.persist()
-      return previous
-    }
-  
-    /**
-     * Delete an entity
-     * @param {string} identifier
-     * @return {boolean} Whether an element was deleted
-     */
-    public delete(identifier: string): boolean {
-      // require existing
-      if (!this.find(identifier)) {
-        throw new Error('Namespace with identifier \'' + identifier + '\' does not exist.')
-      }
-  
-      // update collection
-      if(! this._collection.delete(identifier)) {
-        return false
-      }
-  
-      // persist to storage
-      this.persist()
-      return true
-    }
-    /// end-region implements IRepository
+export class NamespacesRepository
+  extends ModelRepository<NamespacesTable, NamespacesModel>
+  implements IRepository<NamespacesModel> {
+
+  /// region abstract methods
+  /**
+   * Create a table instance
+   * @return {NamespacesTable}
+   */
+  public createTable(): NamespacesTable {
+    return new NamespacesTable()
   }
-  
+
+  /**
+   * Create a model instance
+   * @param {Map<string, any>} values
+   * @return {NamespacesModel}
+   */
+  public createModel(values: Map<string, any>): NamespacesModel {
+    return new NamespacesModel(values)
+  }
+  /// end-region abstract methods
+
+  /// region implements IRepository
+  /**
+   * Check for existence of entity by \a identifier
+   * @param {string} identifier 
+   * @return {boolean}
+   */
+  public find(identifier: string): boolean {
+    return this._collection.has(identifier)
+  }
+
+  /**
+   * Getter for the collection of items
+   * @return {NamespacesModel[]}
+   */
+  public collect(): NamespacesModel[] {
+    return Array.from(this._collection.values())
+  }
+
+  /**
+   * Getter for the collection of items
+   * mapped by identifier
+   * @return {Map<string, NamespacesModel>}
+   */
+  public entries(): Map<string, NamespacesModel> {
+    return this._collection
+  }
+
+  /**
+   * Create an entity
+   * @param {Map<string, any>} values
+   * @return {string} The assigned entity identifier
+   */
+  create(values: Map<string, any>): string {
+    const mapped = this.createModel(values)
+
+    // created object must contain values for all primary keys
+    if (! mapped.hasIdentifier()) {
+      throw new Error('Missing value for mandatory identifier fields \'' + mapped.primaryKeys.join(', ') + '\'.')
+    }
+
+    // verify uniqueness
+    const identifier = mapped.getIdentifier()
+    if (this.find(identifier)) {
+      throw new Error('Namespace with identifier \'' + identifier + '\' already exists.')
+    }
+
+    // update collection
+    this._collection.set(identifier, new NamespacesModel(values))
+
+    // persist to storage
+    this.persist()
+    return identifier
+  }
+
+  /**
+   * Getter for the collection of items
+   * @param {string} identifier
+   * @return {NamespacesModel}
+   */
+  public read(identifier: string): NamespacesModel {
+    // verify existence
+    if (!this.find(identifier)) {
+      throw new Error('Namespace with identifier \'' + identifier + '\' does not exist.')
+    }
+
+    return this._collection.get(identifier)
+  }
+
+  /**
+   * Update an entity
+   * @param {string} identifier
+   * @param {Map<string, any>} values
+   * @return {NamespacesModel} The new values
+   */
+  public update(identifier: string, values: Map<string, any>): NamespacesModel {
+    // require existing
+    const previous = this.read(identifier)
+
+    // populate/update values
+    let iterator = values.keys()
+    for (let i = 0, m = values.size; i < m; i++) {
+      const key = iterator.next()
+      const value = values.get(key.value)
+
+      // expose only "values" from model
+      previous.values.set(key.value, value)
+    }
+
+    // update collection
+    this._collection.set(identifier, previous)
+
+    // persist to storage
+    this.persist()
+    return previous
+  }
+
+  /**
+   * Delete an entity
+   * @param {string} identifier
+   * @return {boolean} Whether an element was deleted
+   */
+  public delete(identifier: string): boolean {
+    // require existing
+    if (!this.find(identifier)) {
+      throw new Error('Namespace with identifier \'' + identifier + '\' does not exist.')
+    }
+
+    // update collection
+    if(! this._collection.delete(identifier)) {
+      return false
+    }
+
+    // persist to storage
+    this.persist()
+    return true
+  }
+  /// end-region implements IRepository
+}

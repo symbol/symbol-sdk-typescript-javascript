@@ -17,60 +17,9 @@ import {Store} from 'vuex'
 import {NetworkType} from 'nem2-sdk'
 
 // internal dependencies
-import {DatabaseTable} from '@/core/database/DatabaseTable'
-import {DatabaseModel} from '@/core/database/DatabaseModel'
-import {DatabaseRelation} from '@/core/database/DatabaseRelation'
 import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
-import {ServiceFactory} from '@/services/ServiceFactory'
-import {DatabaseService} from '@/services/DatabaseService'
-
-/// region database entities
-export class PeersModel extends DatabaseModel {
-  /**
-   * Entity identifier *field names*. The identifier
-   * is a combination of the values separated by '-'
-   * @var {string[]}
-   */
-  public primaryKeys: string[] = [
-    'host',
-  ]
-
-  /**
-   * Entity relationships
-   * @var {Map<string, DatabaseRelation>}
-   */
-  public relations: Map<string, DatabaseRelation> = new Map<string, DatabaseRelation>()
-
-  /**
-   * Get peer full url
-   * @return {string}
-   */
-  public toURL(): string {
-    return this.values.get('protocol')
-        + this.values.get('host') + ':'
-        + this.values.get('port')
-  }
-}
-
-export class PeersTable extends DatabaseTable {
-  public constructor() {
-    super('endpoints', [
-      'host',
-      'port',
-      'protocol',
-      'networkType',
-    ])
-  }
-
-  /**
-   * Create a new model instance
-   * @return {PeersModel}
-   */
-  public createModel(): PeersModel {
-    return new PeersModel()
-  }
-}
-/// end-region database entities
+import {PeersModel} from '@/core/database/entities/PeersModel'
+import {AppDatabase} from '@/core/database/AppDatabase'
 
 export class AppPeer {
   /**
@@ -80,16 +29,10 @@ export class AppPeer {
   public model: PeersModel
 
   /**
-   * Database service
-   * @var {DatabaseService}
-   */
-  protected dbService: DatabaseService
-
-  /**
    * Storage adapter
-   * @var {SimpleStorageAdapter<PeersModel>}
+   * @var {SimpleStorageAdapter}
    */
-  protected adapter: SimpleStorageAdapter<PeersModel>
+  protected adapter: SimpleStorageAdapter
 
   constructor(
     public store: Store<any>,
@@ -98,11 +41,8 @@ export class AppPeer {
     public protocol: string,
     public networkType: NetworkType,
   ) {
-    // initialize service
-    this.dbService = ServiceFactory.create('database', store)
-
     // get storage adapter
-    this.adapter = this.dbService.getAdapter<PeersModel>()
+    this.adapter = AppDatabase.getAdapter()
 
     // populate model
     this.model = new PeersModel(new Map<string, any>([

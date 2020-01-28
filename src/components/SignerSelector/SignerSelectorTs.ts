@@ -18,8 +18,8 @@ import {mapGetters} from 'vuex'
 import {MultisigAccountInfo, PublicAccount, NetworkType} from 'nem2-sdk'
 
 // internal dependencies
-import {AccountsModel} from '@/core/database/models/AppAccount'
-import {WalletsModel} from '@/core/database/models/AppWallet'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {WalletService} from '@/services/WalletService'
 
 @Component({computed: {...mapGetters({

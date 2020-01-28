@@ -19,8 +19,7 @@ import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 import CryptoJS from 'crypto-js'
 
 // internal dependencies
-import {AccountsModel} from '@/core/database/models/AppAccount'
-import {ServiceFactory} from '@/services/ServiceFactory'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {AESEncryptionService} from '@/services/AESEncryptionService'
 import {NotificationType} from '@/core/utils/NotificationType'
 
@@ -34,12 +33,6 @@ export default class GenerateMnemonicTs extends Vue {
    * @var {string}
    */
   public currentAccount: AccountsModel
-
-  /**
-   * Encryption service
-   * @var {AESEncryptionService}
-   */
-  public encryption: AESEncryptionService = ServiceFactory.create('encryption', this.$store)
 
   /**
    * Whether component should track mouse move
@@ -66,7 +59,7 @@ export default class GenerateMnemonicTs extends Vue {
    */
   public handleMousemove({x, y}) {
     if (this.percent < 100) {
-      this.entropy += this.encryption.generateRandomBytes(8, /*raw=*/false)
+      this.entropy += AESEncryptionService.generateRandomBytes(8, /*raw=*/false)
       this.percent++
       return
     }

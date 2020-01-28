@@ -63,8 +63,9 @@ export class RemoteAccountService extends AbstractService {
    * Construct a service instance around \a store
    * @param store
    */
-  constructor(store: Store<any>) {
-    super(store)
+  constructor(store?: Store<any>) {
+    super()
+    this.$store = store
     this.wallets = new WalletService(store)
     this.paths = new DerivationService(store)
   }

@@ -20,8 +20,9 @@ import {NetworkType, Password} from 'nem2-sdk'
 // internal dependencies
 import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
 import {NotificationType} from '@/core/utils/NotificationType'
-import {AccountsModel, AppAccount} from '@/core/database/models/AppAccount'
+import {AppAccount} from '@/core/database/models/AppAccount'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
 
 // child components
 // @ts-ignore

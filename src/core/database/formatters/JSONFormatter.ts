@@ -18,16 +18,16 @@ import {DatabaseModel} from '../DatabaseModel'
 import {IDataFormatter} from './IDataFormatter'
 import {AbstractFormatter} from './AbstractFormatter'
 
-export class JSONFormatter<ModelImpl extends DatabaseModel>
-  extends AbstractFormatter<ModelImpl, string>
-  implements IDataFormatter<ModelImpl, string> {
+export class JSONFormatter 
+  extends AbstractFormatter
+  implements IDataFormatter {
 
   /**
    * Format an \a entity
    * @param {ModelImpl} entity
    * @return {string}
    */
-  public format(entities: Map<string, ModelImpl>): string {
+  public format<ModelImpl extends DatabaseModel>(entities: Map<string, ModelImpl>): string {
     // format each entity individually
     let iterator = entities.keys()
     let data: Map<string, Map<string, any>> = new Map<string, Map<string, any>>()
@@ -48,7 +48,7 @@ export class JSONFormatter<ModelImpl extends DatabaseModel>
    * @param {string} data
    * @return {Map<string, ModelImpl>}
    */
-  public parse(data: string): Map<string, ModelImpl> {
+  public parse<ModelImpl extends DatabaseModel>(data: string): Map<string, ModelImpl> {
     let parsed = []
     try {
       parsed = JSON.parse(data)

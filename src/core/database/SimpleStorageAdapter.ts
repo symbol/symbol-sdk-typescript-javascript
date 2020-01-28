@@ -26,27 +26,19 @@ import {LocalStorageBackend} from './backends/LocalStorageBackend'
 import {ObjectStorageBackend} from './backends/ObjectStorageBackend'
 import {AESEncryptionService} from '@/services/AESEncryptionService'
 
-export class SimpleStorageAdapter<ModelImpl extends DatabaseModel>
-  extends BaseStorageAdapter<ModelImpl> {
-  /**
-   * Service for encryption
-   * @var {AESEncryptionService}
-   */
-  public readonly encryption: AESEncryptionService
-  
+export class SimpleStorageAdapter
+  extends BaseStorageAdapter {
+
   /**
    * Construct a simple storage adapter
    * @param {IStorageBackend} storageBackend
    * @param {IDataFormatter} dataFormatter
-   * @param {AESEncryptionService} encryptionService
    */
   public constructor(
     storageBackend: IStorageBackend = !!localStorage ? new LocalStorageBackend() : new ObjectStorageBackend(),
-    dataFormatter: IDataFormatter<ModelImpl, string> = new JSONFormatter<ModelImpl>(),
-    encryptionService: AESEncryptionService = new AESEncryptionService(),
+    dataFormatter: IDataFormatter = new JSONFormatter(),
   ) {
     super(storageBackend, dataFormatter)
-    this.encryption = encryptionService
   }
 
   /**
@@ -80,7 +72,7 @@ export class SimpleStorageAdapter<ModelImpl extends DatabaseModel>
       accessSalt = CryptoJS.lib.WordArray.random(32).toString()
   
       // encrypt salt with \a sessionId
-      const ciphertext = this.encryption.encrypt(accessSalt, '', new Password(sessionId))
+      const ciphertext = AESEncryptionService.encrypt(accessSalt, '', new Password(sessionId))
 
       // store encrypted salt
       this.storage.setItem('accessSalt', ciphertext)
@@ -88,6 +80,6 @@ export class SimpleStorageAdapter<ModelImpl extends DatabaseModel>
     }
 
     // decrypt stored encrypted salt with \a sessionId
-    return this.encryption.decrypt(accessSalt, '', new Password(sessionId))
+    return AESEncryptionService.decrypt(accessSalt, '', new Password(sessionId))
   }
 }

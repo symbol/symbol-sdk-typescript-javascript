@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 // internal dependencies
-import {
-  MosaicsTable,
-  MosaicsModel,
-} from '@/core/database/models/AppMosaic'
-import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
+import {MosaicsTable} from '@/core/database/entities/MosaicsTable'
+import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
 import {IRepository} from './IRepository'
 import {ModelRepository} from './ModelRepository'
 

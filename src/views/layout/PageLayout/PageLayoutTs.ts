@@ -19,7 +19,7 @@ import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {Electron} from '@/core/utils/Electron'
-import {AccountsModel} from '@/core/database/models/AppAccount'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
 
 // child components
 // @ts-ignore

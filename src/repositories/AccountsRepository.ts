@@ -16,11 +16,8 @@
 import {NetworkType} from 'nem2-sdk'
 
 // internal dependencies
-import {
-  AccountsTable,
-  AccountsModel,
-} from '@/core/database/models/AppAccount'
-import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
+import {AccountsTable} from '@/core/database/entities/AccountsTable'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {IRepository} from './IRepository'
 import {ModelRepository} from './ModelRepository'
 

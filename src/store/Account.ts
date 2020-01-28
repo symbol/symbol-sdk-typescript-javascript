@@ -18,11 +18,14 @@ import Vue from 'vue'
 // internal dependencies
 import {$eventBus} from '../main'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
+import {WalletsRepository} from '@/repositories/WalletsRepository'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {AwaitLock} from './AwaitLock';
 
 /// region globals
 const Lock = AwaitLock.create();
 const accountsRepository = new AccountsRepository()
+const walletsRepository = new WalletsRepository()
 /// end-region globals
 
 export default {
@@ -75,8 +78,8 @@ export default {
       commit('setAuthenticated', true)
 
       // set knownWallets
-      dispatch('wallet/setKnownWallets', currentAccount.wallets())
-      dispatch()
+      const knownWallets = currentAccount.fetchRelations<WalletsModel>(walletsRepository, 'wallets')
+      dispatch('wallet/SET_KNOWN_WALLETS', knownWallets, {root: true})
 
       // reset store + re-initialize
       await dispatch('uninitialize', null, {root: true})

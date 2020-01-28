@@ -18,7 +18,7 @@ import {mapGetters} from 'vuex'
 import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 
 // internal dependencies
-import {AccountsModel} from '@/core/database/models/AppAccount'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
 
 // child components
 // @ts-ignore

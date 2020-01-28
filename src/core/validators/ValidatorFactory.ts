@@ -22,7 +22,7 @@ import {MosaicIdValidator} from './MosaicIdValidator'
 import {NamespaceIdValidator} from './NamespaceIdValidator'
 import {PublicKeyValidator} from './PublicKeyValidator'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
-import {AccountsModel} from '@/core/database/models/AppAccount'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {MosaicWithInfoView} from '@/core/views/MosaicWithInfoView'
 
 // configuration

@@ -14,25 +14,9 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {Password} from 'nem2-sdk'
 
 // internal dependencies
 import {IService} from './IService'
-import {DatabaseModel} from '@/core/database/DatabaseModel'
-import {DatabaseTable} from '@/core/database/DatabaseTable'
-import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
-import {LocalStorageBackend} from '@/core/database/backends/LocalStorageBackend'
-import {JSONFormatter} from '@/core/database/formatters/JSONFormatter'
-import {IRepository} from '@/repositories/IRepository'
-import {AccountsRepository} from '@/repositories/AccountsRepository'
-import {WalletsRepository} from '@/repositories/WalletsRepository'
-import {PeersRepository} from '@/repositories/PeersRepository'
-
-/// region specialized repository implementations
-export type RepositoryImpl = AccountsRepository 
-                           | WalletsRepository
-                           | PeersRepository
-/// end-region specialized repository implementations
 
 export abstract class AbstractService implements IService {
   /**
@@ -51,7 +35,5 @@ export abstract class AbstractService implements IService {
    * Construct a service instance around \a store
    * @param {Vuex.Store} store 
    */
-  public constructor(store: Store<any>) {
-      this.$store = store
-  }
+  public constructor() {}
 }

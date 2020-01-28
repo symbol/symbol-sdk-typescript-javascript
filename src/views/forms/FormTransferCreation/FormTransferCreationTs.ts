@@ -18,7 +18,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
-import {WalletsModel} from '@/core/database/models/AppWallet'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {Formatters} from '@/core/utils/Formatters'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
 import {TransferTransactionParams} from '@/core/transactions/TransferTransactionParams'

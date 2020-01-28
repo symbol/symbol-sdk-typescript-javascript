@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 // internal dependencies
-import {
-  PeersTable,
-  PeersModel,
-} from '@/core/database/models/AppPeer'
-import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
+import {PeersTable} from '@/core/database/entities/PeersTable'
+import {PeersModel} from '@/core/database/entities/PeersModel'
 import {IRepository} from './IRepository'
 import {ModelRepository} from './ModelRepository'
 

@@ -21,8 +21,8 @@ import {QRCodeGenerator, TransactionQR} from 'nem2-qr-library'
 import {MosaicId, Mosaic, UInt64, RawUInt64, NetworkType, PlainMessage, EmptyMessage} from 'nem2-sdk'
 
 // internal dependencies
-import {AccountsModel} from '@/core/database/models/AppAccount'
-import {WalletsModel} from '@/core/database/models/AppWallet'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
 import {TransactionService} from '@/services/TransactionService'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'

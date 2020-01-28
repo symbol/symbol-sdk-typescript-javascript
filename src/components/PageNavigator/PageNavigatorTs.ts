@@ -17,7 +17,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
-import {AccountsModel} from '@/core/database/models/AppAccount'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import routes from '@/router/routes'
 
 @Component({

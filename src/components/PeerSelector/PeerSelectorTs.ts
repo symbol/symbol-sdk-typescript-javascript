@@ -18,7 +18,8 @@ import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
-import {PeersModel, AppPeer} from '@/core/database/models/AppPeer'
+import {AppPeer} from '@/core/database/models/AppPeer'
+import {PeersModel} from '@/core/database/entities/PeersModel'
 import {PeersRepository} from '@/repositories/PeersRepository'
 import {PeerService} from '@/services/PeerService'
 import {URLHelpers} from '@/core/utils/URLHelpers'

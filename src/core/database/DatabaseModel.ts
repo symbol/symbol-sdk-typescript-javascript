@@ -125,7 +125,7 @@ export class DatabaseModel {
    * @param {string} fieldName
    * @return {Map<string, ModelImpl>} Collection of objects mapped by identifier
    */
-  protected fetchRelations<ModelImpl extends DatabaseModel>(
+  public fetchRelations<ModelImpl extends DatabaseModel>(
     repository: IRepository<ModelImpl>,
     fieldName: string
   ): Map<string, ModelImpl> {
@@ -147,7 +147,7 @@ export class DatabaseModel {
    * @param {string} fieldName
    * @return {ModelImpl} Collection of objects mapped by identifier
    */
-  protected fetchRelation<ModelImpl extends DatabaseModel>(
+  public fetchRelation<ModelImpl extends DatabaseModel>(
     repository: IRepository<ModelImpl>,
     fieldName: string
   ): ModelImpl {

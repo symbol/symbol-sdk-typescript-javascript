@@ -19,7 +19,7 @@ import {MosaicId, MultisigAccountInfo} from 'nem2-sdk'
 
 // internal dependencies
 import {NotificationType} from '@/core/utils/NotificationType'
-import {WalletsModel} from '@/core/database/models/AppWallet'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
 
 @Component({computed: {...mapGetters({
   currentWallet: 'wallet/currentWallet',

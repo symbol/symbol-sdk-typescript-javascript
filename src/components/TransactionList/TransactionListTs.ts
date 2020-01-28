@@ -18,8 +18,8 @@ import {Component, Vue, Prop} from 'vue-property-decorator'
 import {Transaction, TransactionType, NamespaceId, Address, TransferTransaction, MosaicId} from 'nem2-sdk'
 
 // internal dependencies
-import {AccountsModel} from '@/core/database/models/AppAccount'
-import {WalletsModel} from '@/core/database/models/AppWallet'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {TransactionService} from '@/services/TransactionService'
 
 // child components

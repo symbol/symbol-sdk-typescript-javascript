@@ -13,29 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import {DatabaseTable} from '@/core/database/DatabaseTable'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
 
-// internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
+export class AccountsTable extends DatabaseTable {
+  public constructor() {
+    super('accounts', [
+      'accountName',
+      'wallets',
+      'password',
+      'hint',
+      'networkType',
+      'seed',
+    ])
+  }
 
-// child components
-// @ts-ignore
-import TransactionList from '@/components/TransactionList/TransactionList.vue'
-
-@Component({
-  components: {
-    TransactionList,
-  },
-  computed: {...mapGetters({
-    currentWallet: 'wallet/currentWallet'
-  })}
-})
-export class DashboardHomePageTs extends Vue {
   /**
-   * Currently active wallet
-   * @see {Store.Wallet}
-   * @var {WalletsModel}
+   * Create a new model instance
+   * @return {AccountsModel}
    */
-  public currentWallet: WalletsModel
+  public createModel(): AccountsModel {
+    return new AccountsModel()
+  }
 }

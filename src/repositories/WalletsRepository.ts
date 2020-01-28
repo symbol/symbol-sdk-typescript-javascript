@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 // internal dependencies
-import {
-  WalletsTable,
-  WalletsModel,
-} from '@/core/database/models/AppWallet'
-import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
+import {WalletsTable} from '@/core/database/entities/WalletsTable'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {IRepository} from './IRepository'
 import {ModelRepository} from './ModelRepository'
 

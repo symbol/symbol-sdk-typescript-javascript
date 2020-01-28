@@ -25,7 +25,7 @@ import SpinnerLoading from '@/components/SpinnerLoading/SpinnerLoading.vue'
 @Component({
   computed: {
     ...mapGetters({
-      hasLoadingOverlay: 'app/hasLoadingOverlay',
+      hasLoadingOverlay: 'app/shouldShowLoadingOverlay',
       currentPeer: 'network/currentPeer',
       currentAccount: 'account/currentAccount'
     })

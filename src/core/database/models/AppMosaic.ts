@@ -14,87 +14,12 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import { MosaicInfo, PublicAccount, MosaicFlags, NetworkType } from 'nem2-sdk'
+import {MosaicInfo} from 'nem2-sdk'
 
 // internal dependencies
-import {DatabaseModel} from '@/core/database/DatabaseModel'
-import {DatabaseTable} from '@/core/database/DatabaseTable'
-import {
-  DatabaseRelation,
-  DatabaseRelationType,
-} from '@/core/database/DatabaseRelation'
 import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
-import {ServiceFactory} from '@/services/ServiceFactory'
-import {DatabaseService} from '@/services/DatabaseService'
-import {WalletsRepository} from '@/repositories/WalletsRepository'
-import {WalletsModel} from './AppWallet'
-
-/// region database entities
-export class MosaicsModel extends DatabaseModel {
-  /**
-   * Entity identifier *field names*. The identifier
-   * is a combination of the values separated by '-'
-   * @var {string[]}
-   */
-  public primaryKeys: string[] = [
-    'wallet',
-    'hexId',
-  ]
-
-  /**
-   * Entity relationships
-   * @var {Map<string, DatabaseRelation>}
-   */
-  public relations: Map<string, DatabaseRelation> =  new Map<string, DatabaseRelation>([
-    ['wallet', new DatabaseRelation(DatabaseRelationType.ONE_TO_ONE)]
-  ])
-
-  /**
-   * Resolve wallet relation
-   * @return {Map<string, WalletsModel>}
-   */
-  public wallet(): WalletsModel {
-    return this.fetchRelation<WalletsModel>(new WalletsRepository(), 'wallet')
-  }
-
-  /**
-   * Instantiate MosaicInfo object
-   * @return {MosaicInfo}
-   */
-  public info(): MosaicInfo {
-    const argv: any = Object.assign({}, this.values.get('info'))
-    return new MosaicInfo(
-      argv.id,
-      argv.supply || 0,
-      argv.height || 0,
-      PublicAccount.createFromPublicKey(argv.owner || '', NetworkType.MIJIN_TEST), // networkType ignored
-      argv.revision || 1,
-      new MosaicFlags(argv.flags || 0),
-      argv.divisibility || 0,
-      argv.duration || 0,
-    )
-  }
-}
-
-export class MosaicsTable extends DatabaseTable {
-  public constructor() {
-    super('mosaics', [
-      'wallet',
-      'hexId',
-      'name',
-      'info',
-    ])
-  }
-
-  /**
-   * Create a new model instance
-   * @return {MosaicsModel}
-   */
-  public createModel(): MosaicsModel {
-    return new MosaicsModel()
-  }
-}
-/// end-region database entities
+import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
+import {AppDatabase} from '@/core/database/AppDatabase'
 
 export class AppMosaic {
   /**
@@ -104,16 +29,10 @@ export class AppMosaic {
   public model: MosaicsModel
 
   /**
-   * Database service
-   * @var {DatabaseService}
-   */
-  protected dbService: DatabaseService
-
-  /**
    * Storage adapter
-   * @var {SimpleStorageAdapter<MosaicsModel>}
+   * @var {SimpleStorageAdapter}
    */
-  protected adapter: SimpleStorageAdapter<MosaicsModel>
+  protected adapter: SimpleStorageAdapter
 
   constructor(
     public store: Store<any>,
@@ -122,11 +41,8 @@ export class AppMosaic {
     public name: string,
     public info: MosaicInfo,
   ) {
-    // initialize service
-    this.dbService = ServiceFactory.create('database', store)
-
     // get storage adapter
-    this.adapter = this.dbService.getAdapter<MosaicsModel>()
+    this.adapter = AppDatabase.getAdapter()
 
     // populate model
     this.model = new MosaicsModel(new Map<string, any>([
@@ -141,98 +57,3 @@ export class AppMosaic {
     return this.model.info().divisibility
   }
 }
-
-
-
-/*
-import {
-  UInt64,
-  MosaicAmountView,
-  MosaicDefinitionTransaction,
-  MosaicInfo,
-  Namespace,
-} from 'nem2-sdk'
-import {MosaicProperties, AppNamespace, MosaicNamespaceStatusType} from '@/core/model'
-import {getRelativeMosaicAmount} from '@/core/utils'
-
-
-export class AppMosaic {
-  hex: string
-  namespaceHex: string
-  amount: any
-  balance?: number
-  expirationHeight: number | MosaicNamespaceStatusType.FOREVER
-  height: UInt64
-  mosaicInfo: MosaicInfo
-  name: string
-  properties: MosaicProperties
-  hide: boolean
-
-  constructor(appMosaic?: {
-    hex: string
-    expirationHeight?: number | MosaicNamespaceStatusType.FOREVER
-    balance?: number
-    name?: string
-    amount?: any
-    mosaicInfo?: MosaicInfo
-    properties?: MosaicProperties
-    hide?: boolean
-    namespaceHex?: string
-  }) {
-    Object.assign(this, appMosaic)
-    delete this.amount
-    if (this.mosaicInfo) {
-      const duration = this.mosaicInfo.duration.compact()
-      this.expirationHeight = duration === 0
-        ? MosaicNamespaceStatusType.FOREVER : this.mosaicInfo.height.compact() + duration
-      this.expirationHeight = appMosaic.expirationHeight ? appMosaic.expirationHeight : this.expirationHeight
-      this.properties = new MosaicProperties(
-        this.mosaicInfo.isSupplyMutable(),
-        this.mosaicInfo.isTransferable(),
-        this.mosaicInfo.divisibility,
-        this.mosaicInfo.duration.compact(),
-        this.mosaicInfo.isRestrictable(),
-      )
-    }
-  }
-
-  static fromGetCurrentNetworkMosaic( mosaicDefinitionTransaction: MosaicDefinitionTransaction,
-    namespace: Namespace): AppMosaic {
-    const {mosaicId} = mosaicDefinitionTransaction
-    return new AppMosaic({
-      hex: mosaicId.toHex(),
-      properties: new MosaicProperties(
-        mosaicDefinitionTransaction.flags.supplyMutable,
-        mosaicDefinitionTransaction.flags.transferable,
-        mosaicDefinitionTransaction.divisibility,
-        mosaicDefinitionTransaction.duration.compact(),
-        mosaicDefinitionTransaction.flags.restrictable,
-      ),
-      name: namespace.name,
-      namespaceHex: namespace.id.toHex(),
-    })
-  }
-
-  static fromMosaicAmountView(mosaic: MosaicAmountView): AppMosaic {
-    const mosaicHex = mosaic.mosaicInfo.id.toHex()
-    return new AppMosaic({
-      ...mosaic,
-      hex: mosaicHex,
-      balance: getRelativeMosaicAmount(
-        mosaic.amount.compact(),
-        mosaic.mosaicInfo.divisibility,
-      ),
-    })
-  }
-
-  static fromNamespace(namespace: Namespace | AppNamespace): AppMosaic {
-    const namespaceHex = namespace instanceof AppNamespace ? namespace.hex : namespace.id.toHex()
-
-    return new AppMosaic({
-      hex: namespace.alias.mosaicId.toHex(),
-      namespaceHex,
-      name: namespace.name,
-    })
-  }
-}
-*/

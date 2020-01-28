@@ -17,64 +17,9 @@ import {Store} from 'vuex'
 import {SimpleWallet, Address} from 'nem2-sdk'
 
 // internal dependencies
-import {DatabaseModel} from '@/core/database/DatabaseModel'
-import {DatabaseTable} from '@/core/database/DatabaseTable'
-import {DatabaseRelation} from '@/core/database/DatabaseRelation'
 import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
-import {DatabaseService} from '@/services/DatabaseService'
-import {ServiceFactory} from '@/services/ServiceFactory'
-
-/// region database entities
-export class WalletsModel extends DatabaseModel {
-  /**
-   * Entity identifier *field names*. The identifier
-   * is a combination of the values separated by '-'
-   * @var {string[]}
-   */
-  public primaryKeys: string[] = [
-    'accountName',
-    'address',
-  ]
-
-  /**
-   * Entity relationships
-   * @var {Map<string, DatabaseRelation>}
-   */
-  public relations: Map<string, DatabaseRelation> = new Map<string, DatabaseRelation>([])
-
-  /**
-   * Getter for address instance
-   * @return {Address}
-   */
-  public address(): Address {
-    return Address.createFromRawAddress(this.values.get('address'))
-  }
-}
-
-export class WalletsTable extends DatabaseTable {
-  public constructor() {
-    super('wallets', [
-      'accountName',
-      'name',
-      'type',
-      'address',
-      'publicKey',
-      'encPrivate',
-      'envIv',
-      'path',
-      'isMultisig'
-    ])
-  }
-
-  /**
-   * Create a new model instance
-   * @return {WalletsModel}
-   */
-  public createModel(): WalletsModel {
-    return new WalletsModel()
-  }
-}
-/// end-region database entities
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {AppDatabase} from '@/core/database/AppDatabase'
 
 export class AppWalletType {
   public static readonly SEED: number = 1
@@ -101,16 +46,10 @@ export class AppWallet {
   public model: WalletsModel
 
   /**
-   * Database service
-   * @var {DatabaseService}
-   */
-  protected dbService: DatabaseService
-
-  /**
    * Storage adapter
-   * @var {SimpleStorageAdapter<WalletsModel>}
+   * @var {SimpleStorageAdapter}
    */
-  protected adapter: SimpleStorageAdapter<WalletsModel>
+  protected adapter: SimpleStorageAdapter
 
   constructor(
     public store: Store<any>,
@@ -122,11 +61,8 @@ export class AppWallet {
     public sourceType: string,
     public isMultisig: boolean,
   ) {
-    // initialize service
-    this.dbService = ServiceFactory.create('database', store)
-
     // get storage adapter
-    this.adapter = this.dbService.getAdapter<WalletsModel>()
+    this.adapter = AppDatabase.getAdapter()
 
     // populate model
     this.model = new WalletsModel(new Map<string, any>([

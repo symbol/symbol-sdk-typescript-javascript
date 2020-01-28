@@ -18,8 +18,9 @@ import {mapGetters} from 'vuex'
 import {Account, Transaction, SignedTransaction} from 'nem2-sdk'
 
 // internal dependencies
-import {AccountsModel} from '@/core/database/models/AppAccount'
-import {WalletsModel, AppWalletType} from '@/core/database/models/AppWallet'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {AppWalletType} from '@/core/database/models/AppWallet'
 import {TransactionService} from '@/services/TransactionService'
 import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 

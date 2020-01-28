@@ -19,7 +19,7 @@ import {DatabaseModel} from './DatabaseModel'
 import {IStorageBackend} from './backends/IStorageBackend'
 import {IDataFormatter} from './formatters/IDataFormatter'
 
-export interface IStorageAdapter<StorageDataType> {
+export interface IStorageAdapter {
   /**
    * Storage backend
    * @var {IStorageBackend}
@@ -28,9 +28,9 @@ export interface IStorageAdapter<StorageDataType> {
 
   /**
    * Data formatter
-   * @var {IDataFormatter<DatabaseModel, StorageDataType>}
+   * @var {IDataFormatter}
    */
-  formatter: IDataFormatter<DatabaseModel, StorageDataType>
+  formatter: IDataFormatter
 
   /**
    * List of database table schemas
@@ -42,19 +42,19 @@ export interface IStorageAdapter<StorageDataType> {
    * Getter for table schemas
    * @return {Map<string, DatabaseTable>}
    */
-  setSchemas(schemas: Map<string, DatabaseTable>): IStorageAdapter<StorageDataType>
+  setSchemas(schemas: Map<string, DatabaseTable>): IStorageAdapter
 
   /**
    * Read and parse data for schema with \a schemaId
    * @param {string} schemaId 
-   * @return {Map<string, DatabaseModel>}
+   * @return {Map<string, ModelImpl>}
    */
-  read(schemaId: string): Map<string, DatabaseModel>
+  read<ModelImpl extends DatabaseModel>(schemaId: string): Map<string, ModelImpl>
 
   /**
    * Read and parse data for schema with \a schemaId
-   * @param {Map<string, DatabaseModel>} entities
+   * @param {Map<string, ModelImpl>} entities
    * @return {number} The count of entities written
    */
-  write(schemaId: string, entities: Map<string, DatabaseModel>): number
+  write<ModelImpl extends DatabaseModel>(schemaId: string, entities: Map<string, ModelImpl>): number
 }
