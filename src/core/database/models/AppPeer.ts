@@ -54,7 +54,7 @@ export class PeersModel extends DatabaseModel {
 
 export class PeersTable extends DatabaseTable {
   public constructor() {
-    super('accounts', [
+    super('endpoints', [
       'host',
       'port',
       'protocol',

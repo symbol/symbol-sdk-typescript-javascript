@@ -26,16 +26,6 @@ export class PeersRepository
   extends ModelRepository<PeersTable, PeersModel>
   implements IRepository<PeersModel> {
 
-  /**
-   * Construct a repository around \a adapter storage adapter.
-   * @param {SimpleStorageAdapter<PeersModel>} adapter 
-   */
-  public constructor(
-    adapter: SimpleStorageAdapter<PeersModel> = new SimpleStorageAdapter<PeersModel>(),
-  ) {
-    super(adapter)
-  }
-
   /// region abstract methods
   /**
    * Create a table instance

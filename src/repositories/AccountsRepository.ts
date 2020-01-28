@@ -28,16 +28,6 @@ export class AccountsRepository
   extends ModelRepository<AccountsTable, AccountsModel>
   implements IRepository<AccountsModel> {
 
-  /**
-   * Construct a repository around \a adapter storage adapter.
-   * @param {SimpleStorageAdapter<AccountsModel>} adapter 
-   */
-  public constructor(
-    adapter: SimpleStorageAdapter<AccountsModel> = new SimpleStorageAdapter<AccountsModel>(),
-  ) {
-    super(adapter)
-  }
-
   /// region abstract methods
   /**
    * Create a table instance

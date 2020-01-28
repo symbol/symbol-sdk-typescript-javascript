@@ -26,16 +26,6 @@ export class WalletsRepository
   extends ModelRepository<WalletsTable, WalletsModel>
   implements IRepository<WalletsModel> {
 
-  /**
-   * Construct a repository around \a adapter storage adapter.
-   * @param {SimpleStorageAdapter<WalletsModel>} adapter 
-   */
-  public constructor(
-    adapter: SimpleStorageAdapter<WalletsModel> = new SimpleStorageAdapter<WalletsModel>(),
-  ) {
-    super(adapter)
-  }
-
   /// region abstract methods
   /**
    * Create a table instance

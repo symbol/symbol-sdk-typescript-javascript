@@ -17,7 +17,9 @@ import {DatabaseModel} from '@/core/database/DatabaseModel'
 import {DatabaseTable} from '@/core/database/DatabaseTable'
 import {BaseStorageAdapter} from '@/core/database/BaseStorageAdapter'
 import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
+import {DatabaseService} from '@/services/DatabaseService'
 import {IStorable} from './IStorable'
+import {AppStore} from '@/main'
 
 export abstract class ModelRepository<
   TableImpl extends DatabaseTable,
@@ -41,9 +43,12 @@ export abstract class ModelRepository<
    * Construct a repository around \a adapter storage adapter.
    * @param {BaseStorageAdapter} adapter 
    */
-  public constructor(
-    adapter: BaseStorageAdapter<ModelImpl> = new SimpleStorageAdapter<ModelImpl>()
-  ) {
+  public constructor() {
+
+    // - get database adapter from database service
+    const service = new DatabaseService(AppStore)
+    const adapter = service.getAdapter<ModelImpl>()
+
     this.setAdapter(adapter)
     this.fetch()
   }

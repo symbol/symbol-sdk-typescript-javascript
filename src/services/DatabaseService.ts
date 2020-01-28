@@ -25,6 +25,12 @@ import {JSONFormatter} from '@/core/database/formatters/JSONFormatter'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {PeersRepository} from '@/repositories/PeersRepository'
+import {DatabaseTable} from '@/core/database/DatabaseTable'
+import {AccountsTable} from '@/core/database/models/AppAccount'
+import {WalletsTable} from '@/core/database/models/AppWallet'
+import {PeersTable} from '@/core/database/models/AppPeer'
+import {MosaicsTable} from '@/core/database/models/AppMosaic'
+import {NamespacesTable} from '@/core/database/models/AppNamespace'
 
 /// region specialized repository implementations
 export type RepositoryImpl = AccountsRepository 
@@ -58,10 +64,21 @@ export class DatabaseService extends AbstractService {
    * @return {SimpleStorageAdapter<ModelImpl>}
    */
   public getAdapter<ModelImpl extends DatabaseModel>(): SimpleStorageAdapter<ModelImpl> {
-    return new SimpleStorageAdapter<ModelImpl>(
+    const adapter = new SimpleStorageAdapter<ModelImpl>(
       new LocalStorageBackend(),
       new JSONFormatter<ModelImpl>(),
     )
+
+    // - configure database tables
+    adapter.setSchemas(new Map<string, DatabaseTable>([
+      ['accounts', new AccountsTable()],
+      ['wallets', new WalletsTable()],
+      ['endpoints', new PeersTable()],
+      ['mosaics', new MosaicsTable()],
+      ['namespaces', new NamespacesTable()]
+    ]))
+
+    return adapter
   }
 
   /// region specialized signatures

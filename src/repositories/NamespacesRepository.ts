@@ -25,17 +25,7 @@ import {
   export class NamespacesRepository
     extends ModelRepository<NamespacesTable, NamespacesModel>
     implements IRepository<NamespacesModel> {
-  
-    /**
-     * Construct a repository around \a adapter storage adapter.
-     * @param {SimpleStorageAdapter<NamespacesModel>} adapter 
-     */
-    public constructor(
-      adapter: SimpleStorageAdapter<NamespacesModel> = new SimpleStorageAdapter<NamespacesModel>(),
-    ) {
-      super(adapter)
-    }
-  
+
     /// region abstract methods
     /**
      * Create a table instance

@@ -26,16 +26,6 @@ export class MosaicsRepository
   extends ModelRepository<MosaicsTable, MosaicsModel>
   implements IRepository<MosaicsModel> {
 
-  /**
-   * Construct a repository around \a adapter storage adapter.
-   * @param {SimpleStorageAdapter<MosaicsModel>} adapter 
-   */
-  public constructor(
-    adapter: SimpleStorageAdapter<MosaicsModel> = new SimpleStorageAdapter<MosaicsModel>(),
-  ) {
-    super(adapter)
-  }
-
   /// region abstract methods
   /**
    * Create a table instance
