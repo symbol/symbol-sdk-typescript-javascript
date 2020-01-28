@@ -21,7 +21,7 @@ import {Transaction} from 'nem2-sdk'
 import TransactionRow from '@/components/TransactionList/TransactionRow/TransactionRow.vue'
 
 @Component({components: {TransactionRow}})
-export class TransactionListRowTs extends Vue {
+export class TransactionRowsTs extends Vue {
   
   @Prop({
     default: []

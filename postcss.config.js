@@ -1,4 +1,4 @@
-const isWin32 = require('./src/config/packge.ts').isWin32
+const isWin32 = process.platform === 'win32'
 const propList = isWin32 ? ["*", '!font-size'] : ["*"]
 
 module.exports = {

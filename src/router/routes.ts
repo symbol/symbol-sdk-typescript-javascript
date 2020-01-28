@@ -182,6 +182,7 @@ const routes: any[] = [
           }
         ],
       },
+      /*
       {
         path: '/wallets',
         name: 'wallets',
@@ -313,6 +314,7 @@ const routes: any[] = [
           },
         ],
       },
+      */
       {
         path: '/communityPanel',
         name: 'community',
@@ -335,6 +337,7 @@ const routes: any[] = [
           },
         ],
       },
+      /*
       {
         path: '/settingPanel',
         name: 'settings',
@@ -399,6 +402,7 @@ const routes: any[] = [
         ],
         /// end-region settings children
       },
+       */
     ],
     /// end-region PageLayout children
   },

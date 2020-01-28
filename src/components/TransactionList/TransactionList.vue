@@ -48,7 +48,7 @@
       </div>
     </div>
 
-    <TransactionModal
+    <ModalTransactionDetails
       :visible="!!activeTransaction"
       :transaction="activeTransaction"
     />

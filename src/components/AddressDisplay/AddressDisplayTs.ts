@@ -17,7 +17,7 @@ import {Component, Prop, Vue} from 'vue-property-decorator'
 import {Address} from 'nem2-sdk'
 
 @Component
-export default class AddressDisplayTs extends Vue {
+export class AddressDisplayTs extends Vue {
 
   @Prop({
     default: null

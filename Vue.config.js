@@ -12,11 +12,11 @@ module.exports = {
   lintOnSave: true,
   // webpack
   // see https://github.com/vuejs/vue-cli/blob/dev/docs/webpack.md
-  chainWebpack: (config) => {
-    //edit path alias
-    config.resolve.alias
-        .set('config', path.resolve(__dirname, './config'),)
-  },
+  // chainWebpack: (config) => {
+  //   //edit path alias
+  //   config.resolve.alias
+  //       .set('config', path.resolve(__dirname, './config'),)
+  // },
   // generate map
   productionSourceMap: true,
   //use template in vue

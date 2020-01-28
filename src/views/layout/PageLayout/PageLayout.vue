@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import {PageLayoutTs} from '@/components/menu-bar/PageLayoutTs.ts'
+import {PageLayoutTs} from '@/views/layout/PageLayout/PageLayoutTs.ts'
 import './PageLayout.common.less'
 import './PageLayout.mac.less'
 import './PageLayout.win32.less'

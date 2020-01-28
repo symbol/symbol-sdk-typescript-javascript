@@ -19,7 +19,8 @@
       <AmountInput :mosaic-hex="formItems.selectedMosaicHex"
                     v-model="formItems.relativeAmount" />
 
-      <MosaicAttachmentDisplay :mosaics="formItems.attachedMosaics"/>
+      <MosaicAttachmentDisplay :mosaics="formItems.attachedMosaics"
+                               @delete="onDeleteMosaic" />
 
       <div class="remark flex_center">
         <span class="title">{{ $t('message') }}</span>
@@ -31,21 +32,21 @@
       </div>
 
       <MaxFeeSelector v-model="formItems.maxFee" />
-      
+
       <div class="send_button pointer" @click="processTransfer">
         {{ $t('send') }}
       </div>
     </form>
 
-    <ModalTransactionConfirmation :visible="isAwaitingSignature === true" />
+    <ModalTransactionConfirmation :visible="isAwaitingSignature === true"
+                                  @success="onConfirmationSuccess"
+                                  @error="onConfirmationError" />
   </div>
 </template>
 
 <script lang="ts">
-import { FormTransferCreationTs } from '@/components/forms/FormTransferCreation/FormTransferCreationTs.ts'
+import { FormTransferCreationTs } from '@/views/forms/FormTransferCreation/FormTransferCreationTs.ts'
+import "./FormTransferCreation.less";
 
 export default class FormTransferCreation extends FormTransferCreationTs {}
 </script>
-<style scoped lang="less">
-@import "FormTransferCreation.less";
-</style>

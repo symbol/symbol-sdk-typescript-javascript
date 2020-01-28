@@ -23,7 +23,7 @@ import {AccountsModel} from '@/core/database/models/AppAccount'
 
 // child components
 // @ts-ignore
-import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
 import PageNavigator from '@/components/PageNavigator/PageNavigator.vue'
 // @ts-ignore

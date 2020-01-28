@@ -16,7 +16,7 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
 @Component
-export default class AmountDisplayTs extends Vue {
+export class AmountDisplayTs extends Vue {
 
   @Prop({
     default: 0

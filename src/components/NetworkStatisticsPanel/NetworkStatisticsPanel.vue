@@ -5,7 +5,7 @@
         <div class="title">
           <span class="title_txt">{{ $t('accounts') }}</span>
         </div>
-        <img src="@/common/img/monitor/network.png">
+        <img src="@/views/resources/img/monitor/network.png">
         <span class="txt_info">
           <AnimatedNumber v-model="countAccounts" />
         </span>
@@ -14,7 +14,7 @@
         <div class="title">
           <span class="title_txt">{{ $t('blocks') }}</span>
         </div>
-        <img src="@/common/img/monitor/block_height.png">
+        <img src="@/views/resources/img/monitor/block_height.png">
         <span class="txt_info">
           <AnimatedNumber v-model="currentHeight" />
         </span>
@@ -23,7 +23,7 @@
         <div class="title">
           <span class="title_txt">{{ $t('transactions') }}</span>
         </div>
-        <img src="@/common/img/windowDashboardActive.png">
+        <img src="@/views/resources/img/windowDashboardActive.png">
         <span class="txt_info">
           <AnimatedNumber v-model="countTransactions" />
         </span>
@@ -36,7 +36,7 @@
               {{ currentPeerInfo ? currentPeerInfo.friendlyName : $t('loading') }}
             </span></span>
         </div>
-        <img src="@/common/img/monitor/amount.png">
+        <img src="@/views/resources/img/monitor/amount.png">
         <span class="txt_info">
           <AnimatedNumber v-model="countNodes" />
         </span>

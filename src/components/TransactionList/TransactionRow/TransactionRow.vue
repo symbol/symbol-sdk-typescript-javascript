@@ -41,7 +41,7 @@
         <a
           class="url_text"
           target="_blank"
-          :href="explorerBaseUrl + '/transaction/' + transaction.transactionInfo.hash)"
+          :href="(explorerBaseUrl + '/transaction/' + transaction.transactionInfo.hash)"
         >{{ formatters.miniHash(c.txHeader.hash) }} </a>
       </span>
       <span class="item bottom">{{ c.txHeader.time }}</span>
@@ -64,7 +64,6 @@
 <script lang="ts">
 // @ts-ignore
 import {TransactionRowTs} from './TransactionRowTs'
-import './TransactionRow.less'
 
 export default class TransactionRow extends TransactionRowTs {}
 </script>

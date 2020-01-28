@@ -17,8 +17,8 @@
             <TransactionDetails :transaction="transaction" />
           </div>
 
-          <HardwareConfirmationButton v-if="isUsingHardwareWallet()" @success="onTransactionsSigned" />
-          <FormAccountUnlock v-else @success="onAccountUnlocked" />
+          <HardwareConfirmationButton v-if="isUsingHardwareWallet()" @success="onTransactionsSigned" @error="onError" />
+          <FormAccountUnlock v-else @success="onAccountUnlocked" @error="onError" />
         </div>
       </div>
     </Modal>
@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import {ModalTransactionConfirmationTs} from '@/components/transaction-confirmation/ModalTransactionConfirmationTs.ts'
+import {ModalTransactionConfirmationTs} from '@/components/ModalTransactionConfirmation/ModalTransactionConfirmationTs.ts'
 import './ModalTransactionConfirmation.less'
 
 export default class ModalTransactionConfirmation extends ModalTransactionConfirmationTs {}

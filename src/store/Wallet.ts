@@ -201,6 +201,7 @@ export default {
     addSignedTransaction: (state, transaction: SignedTransaction) => {
       // - get previously signed transactions
       const signed = state.signedTransactions
+      const staged = state.stagedTransactions
 
       // - update state
       signed.push(transaction)

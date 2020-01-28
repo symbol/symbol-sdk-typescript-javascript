@@ -44,6 +44,8 @@
     "__mocks__/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "src/views/resources/css",
+    "src/views/resources/img"
   ]
 }

@@ -11,7 +11,6 @@
 
 <script lang="ts">
 import {FormAccountUnlockTs} from './FormAccountUnlockTs'
-import './FormAccountUnlock.less'
 
 export default class FormAccountUnlock extends FormAccountUnlockTs {}
 </script>

@@ -16,8 +16,8 @@
 
 <script lang="ts">
 // @ts-ignore
-import {DashboardTransferPageTs} from '@/views/monitor/monitor-transfer/DashboardTransferPageTs.ts'
-import "DashboardTransferPage.less";
+import {DashboardTransferPageTs} from '@/views/dashboard/transfer/DashboardTransferPageTs.ts'
+import "./DashboardTransferPage.less";
 
 export default class DashboardTransferPage extends DashboardTransferPageTs {}
 </script>

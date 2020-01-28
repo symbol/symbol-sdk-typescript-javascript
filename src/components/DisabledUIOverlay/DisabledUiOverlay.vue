@@ -17,12 +17,8 @@
 </template>
 
 <script lang="ts">
+import {DisabledUiOverlayTs} from '@/components/DisabledUiOverlay/DisabledUiOverlayTs.ts'
 import './DisabledUiOverlay.less'
-import {DisabledUiOverlayTs} from '@/components/disabled-ui-overlay/DisabledUiOverlayTs.ts'
 
-export default class DisabledUiOverlay extends DisabledUiOverlayTs {
-}
+export default class DisabledUiOverlay extends DisabledUiOverlayTs {}
 </script>
-
-<style scoped>
-</style>

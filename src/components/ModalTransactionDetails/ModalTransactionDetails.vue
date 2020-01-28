@@ -13,8 +13,8 @@
 </template>
 
 <script lang="ts">
-import {TransactionModalTs} from '@/components/TransactionModal/TransactionModalTs.ts'
-import './TransactionModal.less'
+import {ModalTransactionDetailsTs} from '@/components/ModalTransactionDetails/ModalTransactionDetailsTs.ts'
+import './ModalTransactionDetails.less'
 
-export default class TransactionModal extends TransactionModalTs {}
+export default class ModalTransactionDetails extends ModalTransactionDetailsTs {}
 </script>

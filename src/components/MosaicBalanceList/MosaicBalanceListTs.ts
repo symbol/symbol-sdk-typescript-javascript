@@ -19,7 +19,6 @@ import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {MosaicService} from '@/services/MosaicService'
-import {MosaicHelpers} from '@/core/utils/MosaicHelpers'
 
 // child components
 // @ts-ignore
@@ -64,12 +63,6 @@ export class MosaicBalanceListTs extends Vue {
    * @var {MosaicService}
    */
   public mosaicService: MosaicService
-  
-  /**
-   * Mosaic helpers
-   * @var {MosaicHelpers}
-   */
-  public mosaicHelpers: MosaicHelpers = MosaicHelpers
 
   /**
    * Whether the component is in edition mode

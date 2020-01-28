@@ -20,7 +20,7 @@ import {Address, Transaction, TransactionType, TransferTransaction, NamespaceId}
 import {TransactionService} from '@/services/TransactionService'
 
 @Component
-export default class ActionDisplayTs extends Vue {
+export class ActionDisplayTs extends Vue {
 
   @Prop({
     default: null

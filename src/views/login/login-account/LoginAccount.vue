@@ -18,7 +18,7 @@
           </div>
         </div>
         <div class="login-card radius">
-          <img src="@/common/img/login/loginNewLogo.png">
+          <img src="@/views/resources/img/login/loginNewLogo.png">
           <p class="login-title">
             {{ $t('login_account') }}
           </p>

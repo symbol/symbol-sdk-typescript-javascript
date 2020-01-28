@@ -29,7 +29,7 @@ import {NotificationType} from '@/core/utils/NotificationType'
 
 // child components
 // @ts-ignore
-import NumberFormatting from '@/components/number-formatting/NumberFormatting.vue'
+import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
 
 // configuration
 import networkConfig from  '@/../config/network.conf.json'
@@ -45,7 +45,7 @@ const networkCurrencyName = networkConfig.networks['testnet-publicTest'].currenc
       currentMnemonic: 'temporary/mnemonic',
     }),
   },
-  components: {NumberFormatting},
+  components: {MosaicAmountDisplay},
 })
 export default class WalletSelectionTs extends Vue {
   /**

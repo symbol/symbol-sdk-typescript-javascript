@@ -1,6 +1,6 @@
 <template>
   <div class="finish-sec scroll" @keyup.enter="submit">
-    <img src="@/common/img/success.png" alt>
+    <img src="@/views/resources/img/success.png" alt>
     <span class="set-title"> {{ $t('Import_successful') }}</span>
     <p class="set-title-tips">
       {{ $t('Import_your_account_successful') }}
@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="finish-right">
-        <img src="@/common/img/finish.png" alt>
+        <img src="@/views/resources/img/finish.png" alt>
       </div>
     </div>
   </div>

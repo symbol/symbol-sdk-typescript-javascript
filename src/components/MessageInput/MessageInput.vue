@@ -12,7 +12,6 @@
 
 <script lang="ts">
 import {MessageInputTs} from './MessageInputTs'
-import './MessageInput.less'
 
 export default class MessageInput extends MessageInputTs {}
 </script>

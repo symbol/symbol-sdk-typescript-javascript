@@ -20,7 +20,7 @@
             <img :src="currentPeer.url === iterNode.toURL() ? monitorSelected : monitorUnselected">
             <span class="node_url text_select">{{ iterNode.toURL() }}</span>
             <img
-              class="remove_icon" src="@/common/img/service/multisig/multisigDelete.png"
+              class="remove_icon" src="@/views/resources/img/service/multisig/multisigDelete.png"
               @click.stop="removePeer(iterNode.toURL())">
           </div>
         </div>

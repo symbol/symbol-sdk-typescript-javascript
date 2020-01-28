@@ -32,7 +32,7 @@ import TrezorConnect from '@/core/utils/TrezorConnect'
     stagedTransactions: 'wallet/stagedTransactions',
   })},
 })
-export class ModalTransactionConfirmationTs extends Vue {
+export class HardwareConfirmationButtonTs extends Vue {
   /**
    * Current network type
    * @see {Store.Network}

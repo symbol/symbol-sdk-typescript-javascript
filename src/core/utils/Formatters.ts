@@ -16,9 +16,6 @@
 import {Address, MosaicInfo} from 'nem2-sdk'
 import {decode} from 'utf8'
 
-// internal dependencies
-import {MosaicHelpers} from './MosaicHelpers'
-
 // configuration
 import networkConfig from '../../../config/network.conf.json';
 
@@ -54,14 +51,6 @@ export class Formatters {
     return `${hash.substring(0, 6).toLowerCase()}***${hash.substring(58).toLowerCase()}`
   }
 
-  public static absoluteAmountToRelativeAmount = (
-    amount: number,
-    networkCurrency: MosaicInfo,
-  ): string => {
-    const relativeAmount = MosaicHelpers.getRelativeMosaicAmount(amount, networkCurrency.divisibility)
-    return `${Formatters.formatNumber(relativeAmount)}`
-  }
-
   public static formatDate = (timestamp) => {
     const now = new Date(Number(timestamp))
     const year = now.getFullYear()
@@ -89,4 +78,5 @@ export class Formatters {
         return str;
     }
   }
+
 }

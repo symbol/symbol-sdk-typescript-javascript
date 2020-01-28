@@ -118,6 +118,9 @@ export class ModalTransactionConfirmationTs extends Vue {
     // - transactions are ready to be announced
     transactions.map(async (signed) => await this.$store.commit('wallet/addSignedTransaction', signed))
 
+    // - reset transaction stage
+    this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
+
     // - broadcast signed transactions
     this.service.announceSignedTransactions().subscribe((results: BroadcastResult[]) => {
       // - notify about errors
@@ -146,6 +149,9 @@ export class ModalTransactionConfirmationTs extends Vue {
       await this.$store.commit('wallet/addSignedTransaction', signedTx)
     })
 
+    // - reset transaction stage
+    this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
+
     // - broadcast signed transactions
     this.service.announceSignedTransactions().subscribe((results: BroadcastResult[]) => {
       // - notify about errors
@@ -156,5 +162,15 @@ export class ModalTransactionConfirmationTs extends Vue {
 
       return this.$emit('success')
     })
+  }
+
+  /**
+   * Hook called when child component FormAccountUnlock or
+   * HardwareConfirmationButton emit the 'error' event.
+   * @param {string} message
+   * @return {void}
+   */
+  public onError(error: string) {
+    this.$emit('error', error)
   }
 }

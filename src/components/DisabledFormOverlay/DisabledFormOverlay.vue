@@ -8,8 +8,8 @@
 </template>
 
 <script lang="ts">
-import {DisabledFormOverlayTs} from '@/components/disabled-forms/DisabledFormOverlayTs.ts'
-import "DisabledFormOverlay.less";
+import {DisabledFormOverlayTs} from '@/components/DisabledFormOverlay/DisabledFormOverlayTs.ts'
+import "./DisabledFormOverlay.less";
 
 export default class DisabledFormOverlay extends DisabledFormOverlayTs {}
 </script>

@@ -13,7 +13,6 @@
 
 <script lang="ts">
 import {AmountInputTs} from './AmountInputTs'
-import './AmountInput.less'
 
 export default class AmountInput extends AmountInputTs {}
 </script>

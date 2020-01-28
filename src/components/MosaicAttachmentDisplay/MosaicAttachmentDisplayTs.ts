@@ -13,33 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {MosaicId, MosaicInfo, Mosaic} from 'nem2-sdk'
+import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {MosaicId, MosaicInfo} from 'nem2-sdk'
+
+// internal dependencies
+import {MosaicService} from '@/services/MosaicService'
 
 // child components
 // @ts-ignore
-import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue'
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+// @ts-ignore
+import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
 
 @Component({
-  components: {AmountDisplay},
+  components: {
+    ErrorTooltip,
+    MosaicAmountDisplay,
+  },
   computed: {...mapGetters({
+    networkMosaic: 'mosaic/networkMosaic',
     mosaicsInfo: 'mosaic/mosaicsInfoList',
   })}
 })
-export class MosaicAmountDisplayTs extends Vue {
+export class MosaicAttachmentDisplayTs extends Vue {
 
   @Prop({
-    default: null
-  }) id: MosaicId
-    
-  @Prop({
-    default: 0
-  }) amount: number
+    default: []
+  }) mosaics: Mosaic[]
 
-  @Prop({
-    default: 'green'
-  }) color: 'red' | 'green'
+  /**
+   * Networks currency mosaic
+   * @var {MosaicId}
+   */
+  public networkMosaic: MosaicId
 
   /**
    * Network mosaics info (all)
@@ -48,20 +55,19 @@ export class MosaicAmountDisplayTs extends Vue {
   public mosaicsInfo: MosaicInfo[]
 
   /**
+   * Mosaic service
+   * @var {MosaicService}
+   */
+  public mosaicService: MosaicService
+
+/// region computed properties getter/setter
+/// end-region computed properties getter/setter
+
+  /**
    * Hook called when the component is mounted
    * @return {void}
    */
-  public async mounted() {
-    const hasInfo = this.mosaicsInfo.find(info => info.id.equals(this.id))
-    if (hasInfo === undefined) {
-      await this.$store.dispatch('mosaic/REST_FETCH_INFO', this.id)
-    }
+  public mounted() {
+    this.mosaicService = new MosaicService(this.$store)
   }
-
-/// region computed properties getter/setter
-  public get divisibility(): number {
-    const hasInfo = this.mosaicsInfo.find(info => info.id.equals(this.id))
-    return hasInfo === undefined ? 0 : hasInfo.divisibility
-  }
-/// end-region computed properties getter/setter
 }

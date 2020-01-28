@@ -18,7 +18,7 @@
     </div>
 
     <div v-if="!!currentAccount" class="quit_account pointer" @click="logout">
-      <img src="@/common/img/window/windowAccountQuit.png" alt="">
+      <img src="@/views/resources/img/window/windowAccountQuit.png" alt="">
       <span class="account_name overflow_ellipsis">{{ currentAccount.values.get('accountName') }}</span>
     </div>
   </div>

@@ -16,19 +16,20 @@
 import Router from 'vue-router'
 
 // internal dependencies
-import routers from '@/router/routers.ts'
+import routes from '@/router/routes.ts'
+import {AppStore} from '@/main'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 
 // create router instance
 const router = new Router({
   mode: 'hash',
-  routes: routers,
+  routes: routes,
 })
 
 /// region Navigation Guards
 router.beforeEach((to, from, next) => {
   const repository = new AccountsRepository()
-  const hasAccounts = repository.map().size > 0
+  const hasAccounts = repository.entries().size > 0
 
   const skipRedirect: string[] = [
     'login.createAccount',
@@ -38,9 +39,16 @@ router.beforeEach((to, from, next) => {
     return next({name: 'login.createAccount'})
   }
 
-  if (to.meta.protected === true) {
-
+  if (to.meta.protected) {
+    return next(/* no-redirect */)
   }
+
+  const isAuthenticated = AppStore.getters['account/isAuthenticated'] === true
+  if (!isAuthenticated) {
+    return next({name: 'login'})
+  }
+
+  return next()
 })
 /// end-region Navigation Guards
 

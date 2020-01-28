@@ -20,15 +20,12 @@ import {Transaction} from 'nem2-sdk'
 // @ts-ignore
 import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue'
 
-/**
- * Emits: closed
- */
 @Component({
   components: {
     TransactionDetails,
   },
 })
-export class TransactionModalTs extends Vue {
+export class ModalTransactionDetailsTs extends Vue {
   @Prop({
     default: false
   }) visible: boolean

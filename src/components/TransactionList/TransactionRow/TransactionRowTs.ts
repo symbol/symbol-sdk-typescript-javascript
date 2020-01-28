@@ -40,7 +40,7 @@ import {dashboardImages} from '@/views/resources/Images'
     ActionDisplay,
     MosaicAmountDisplay,
   }})
-export class TransactionListRowTs extends Vue {
+export class TransactionRowTs extends Vue {
   
   @Prop({
     default: []

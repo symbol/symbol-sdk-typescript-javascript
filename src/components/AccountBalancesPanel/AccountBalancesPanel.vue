@@ -5,7 +5,7 @@
       <span class="address">
         {{ currentWallet ? currentWallet.address().plain() : $t('loading') }}
       </span>
-      <img class="pointer" src="@/common/img/monitor/monitorCopyAddress.png" @click="uiHelpers.copyToClipboard">
+      <img class="pointer" src="@/views/resources/img/monitor/monitorCopyAddress.png" @click="uiHelpers.copyToClipboard">
     </div>
 
     <div class="split" />
@@ -26,8 +26,8 @@
 </template>
 
 <script lang="ts">
-import {AccountsBalancesPanelTs} from './AccountsBalancesPanelTs'
-import './AccountsBalancesPanel.less'
+import {AccountBalancesPanelTs} from './AccountBalancesPanelTs'
+import './AccountBalancesPanel.less'
 
-export default class AccountsBalancesPanel extends AccountsBalancesPanelTs {}
+export default class AccountBalancesPanel extends AccountBalancesPanelTs {}
 </script>

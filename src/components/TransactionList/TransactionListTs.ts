@@ -24,7 +24,7 @@ import {TransactionService} from '@/services/TransactionService'
 
 // child components
 // @ts-ignore
-import TransactionModal from '@/components/TransactionModal/TransactionModal.vue'
+import ModalTransactionDetails from '@/components/ModalTransactionDetails/ModalTransactionDetails.vue'
 // @ts-ignore
 import TransactionListHeader from '@/components/TransactionList/TransactionListHeader/TransactionListHeader.vue'
 // @ts-ignore
@@ -34,7 +34,7 @@ import PageTitle from '@/components/PageTitle/PageTitle.vue'
 
 @Component({
   components: {
-    TransactionModal,
+    ModalTransactionDetails,
     TransactionListHeader,
     TransactionRows,
     PageTitle,

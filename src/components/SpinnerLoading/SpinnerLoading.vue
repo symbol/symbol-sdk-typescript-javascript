@@ -3,19 +3,24 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { AppInfo } from '@/core/model'
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
-@Component({ computed: { ...mapState({ app: 'app' }) } })
+@Component({computed: { ...mapGetters({
+  disabledMessage: 'app/controlsDisabledMessage'
+})}})
 export default class SpinnerLoading extends Vue {
-  app: AppInfo
+  /**
+   * Message displayed when UI is disabled
+   * @var {string}
+   */
+  public disabledMessage: string
 
   open() {
     // @ts-ignore
     this.$Spin.show({
       render: h => {
         return h('div', [
-          h('div', this.app.loadingOverlay.message),
+          h('div', this.disabledMessage),
           h('i', {
             class: 'ivu-icon ivu-icon-ios-close-circle icon',
           }),
@@ -42,7 +47,7 @@ export default class SpinnerLoading extends Vue {
   closeScreen() {
     // @ts-ignore
     this.$Spin.hide()
-    this.$store.commit('SET_LOADING_OVERLAY', {
+    this.$store.commit('app/SET_LOADING_OVERLAY', {
       show: false,
       message: '',
     })

@@ -40,6 +40,7 @@ export default {
     languages: state => state.language,
     shouldShowLoadingOverloay: (state) => state.hasLoadingOverlay,
     shouldDisableControls: (state) => state.hasControlsDisabled,
+    controlsDisabledMessage: (state) => state.controlsDisabledMessage,
   },
   mutations: {
     setInitialized: (state, initialized) => { state.initialized = initialized },

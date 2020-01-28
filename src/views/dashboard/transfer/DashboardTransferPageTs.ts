@@ -22,7 +22,7 @@ import {WalletsModel} from '@/core/database/models/AppWallet'
 
 // child components
 // @ts-ignore
-import FormTransferCreation from '@/components/forms/FormTransferCreation/FormTransferCreation.vue'
+import FormTransferCreation from '@/views/forms/FormTransferCreation/FormTransferCreation.vue'
 // @ts-ignore
 import DisabledFormOverlay from '@/components/DisabledFormOverlay/DisabledFormOverlay.vue'
 

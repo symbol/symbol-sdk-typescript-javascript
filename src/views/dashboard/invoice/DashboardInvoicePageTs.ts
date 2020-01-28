@@ -34,7 +34,7 @@ import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue'
 
 // resources
 // @ts-ignore
-import failureIcon from '@/../public/img/monitor/failure.png'
+import failureIcon from '@/views/resources/img/monitor/failure.png'
 
 @Component({
   components: {

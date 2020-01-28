@@ -22,7 +22,6 @@
 <script lang="ts">
 // @ts-ignore
 import {TransactionRowsTs} from './TransactionRowsTs'
-import './TransactionRows.less'
 
 export default class TransactionRows extends TransactionRowsTs {}
 </script>

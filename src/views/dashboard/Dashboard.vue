@@ -18,7 +18,7 @@
 <script lang="ts">
 // @ts-ignore
 import {DashboardTs} from '@/views/dashboard/DashboardTs.ts'
-import "Dashboard.less";
+import "./Dashboard.less";
 
 export default class Dashboard extends DashboardTs {
 

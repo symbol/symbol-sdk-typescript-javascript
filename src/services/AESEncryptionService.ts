@@ -18,7 +18,10 @@ import {Password} from 'nem2-sdk'
 import CryptoJS from "crypto-js";
 
 // internal dependencies
-import { AbstractService } from './AbstractService'
+import {AbstractService} from './AbstractService'
+
+// @ts-ignore
+import {AppStore} from '@/main'
 
 export class AESEncryptionService extends AbstractService {
   /**
@@ -37,7 +40,7 @@ export class AESEncryptionService extends AbstractService {
    * Construct a service instance around \a store
    * @param store
    */
-  constructor(store: Store<any>) {
+  constructor(store: Store<any> = AppStore) {
     super(store)
   }
 

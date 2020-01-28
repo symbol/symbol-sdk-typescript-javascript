@@ -19,11 +19,10 @@ import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {MosaicService} from '@/services/MosaicService'
-import {MosaicHelpers} from '@/core/utils/MosaicHelpers'
 
 // child components
 // @ts-ignore
-import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
+import ErrorTooltip from '@/components//ErrorTooltip/ErrorTooltip.vue'
 
 @Component({
   components: {

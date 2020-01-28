@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {Address, Mosaic, MosaicId, NamespaceId, UInt64, RawUInt64, PlainMessage, EmptyMessage} from 'nem2-sdk'
+import {Address, Mosaic, MosaicId, NamespaceId, UInt64, RawUInt64, PlainMessage, EmptyMessage, TransferTransaction} from 'nem2-sdk'
 
 // internal dependencies
 import {TransactionParams} from './TransactionParams'
@@ -67,6 +67,24 @@ export class TransferTransactionParams extends TransactionParams {
       params.setParam('message', PlainMessage.create(formItems.message))
     }
 
+    return params
+  }
+
+  public static createFromTransaction(transaction: TransferTransaction): TransferTransactionParams {
+    const params = new TransferTransactionParams()
+
+    // - map recipient
+    params.setParam('recipient', transaction.recipientAddress)
+
+    // - set mosaics
+    params.setParam('mosaics', transaction.mosaics.map(
+      mosaic => ({
+        mosaicHex: mosaic.id.toHex(),
+        amount: mosaic.amount.compact()
+      })))
+
+    // - set message
+    params.setParam('message', transaction.message)
     return params
   }
 }

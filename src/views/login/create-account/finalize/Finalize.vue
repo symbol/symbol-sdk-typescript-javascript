@@ -1,6 +1,6 @@
 <template>
   <div class="finish-sec scroll" @keyup.enter="submit">
-    <img src="@/common/img/success.png">
+    <img src="@/views/resources/img/success.png">
     <span class="set-title"> {{ $t('Create_successful') }}</span>
     <p class="set-title-tips">
       {{ $t('Create_successful_tips') }}
@@ -36,14 +36,14 @@
         </div>
       </div>
       <div class="finish-right">
-        <img src="@/common/img/finish.png" alt>
+        <img src="@/views/resources/img/finish.png" alt>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import FinalizeTs from '@/views/login/create-account/finish-create/FinalizeTs.ts'
+import FinalizeTs from '@/views/login/create-account/finalize/FinalizeTs.ts'
 
 export default class Finalize extends FinalizeTs {
 }

@@ -24,7 +24,7 @@ export class AppLogoTs extends Vue {
    * Absolute path to the logo file
    * @var {string}
    */
-  public readonly logoFilePath = '@/../public/img/window/windowNemLogo.png'
+  public readonly logoFilePath = '@/views/resources/img/window/windowNemLogo.png'
 
   /**
    * Title of the app

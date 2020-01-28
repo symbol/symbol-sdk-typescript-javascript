@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import {DashboardInvoicePageTs} from '@/views/monitor/monitor-invoice/DashboardInvoicePageTs.ts'
+import {DashboardInvoicePageTs} from '@/views/dashboard/invoice/DashboardInvoicePageTs.ts'
 import './DashboardInvoicePage.less'
 
 export default class DashboardInvoicePage extends DashboardInvoicePageTs {}

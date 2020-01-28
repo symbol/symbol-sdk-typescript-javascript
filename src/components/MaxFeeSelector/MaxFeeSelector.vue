@@ -20,8 +20,8 @@
 </template>
 
 <script lang="ts">
-import {MaxFeeSelectorTs} from '@/components/disabled-forms/MaxFeeSelectorTs.ts'
-import "MaxFeeSelector.less";
+import {MaxFeeSelectorTs} from '@/components/MaxFeeSelector/MaxFeeSelectorTs.ts'
+import "./MaxFeeSelector.less";
 
 export default class MaxFeeSelector extends MaxFeeSelectorTs {}
 </script>

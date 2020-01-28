@@ -7,7 +7,7 @@
       <div class="create-mnemonic-left">
         <div class="mnemonic-container">
           <div v-if="!showMnemonic" class="show-mnemonic">
-            <img src="@/common/img/invisible.png">
+            <img src="@/views/resources/img/invisible.png">
             <button @click="showMnemonic = true">
               {{ $t('Display_mnemonic') }}
             </button>

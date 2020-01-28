@@ -25,7 +25,7 @@ import {AccountsModel} from '@/core/database/models/AppAccount'
 
 // child components
 // @ts-ignore
-import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 
 // configuration
 import appConfig from '@/../config/app.conf.json'

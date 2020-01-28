@@ -17,7 +17,7 @@
                 <span class="address-id">{{ index + 1 }}</span>
                 <span class="address-value">{{ miniAddress(a) }}</span>
                 <span v-if="addressMosaicMap[a.plain()]" class="address-balance overflow_ellipsis">
-                  <NumberFormatting :number-of-formatting="addressMosaicMap[a.plain()]" />
+                  <MosaicAmountDisplay :id="networkMosaic" :amount="addressMosaicMap[a.plain()]" />
                 </span>
                 <span v-if="!addressMosaicMap[a.plain()]" class="address-balance overflow_ellipsis">
                   N/A
@@ -49,7 +49,7 @@
               <span class="address-id"> {{ index + 1 }} </span>
               <span class="address-value">{{ miniAddress(value) }}</span>
               <span class="address-balance overflow_ellipsis">{{ addressMosaicMap[value.plain()] || 'N/A' }}</span>
-              <span class="remove-icon"><img src="@/common/img/Invisible@2x.png"></span>
+              <span class="remove-icon"><img src="@/views/resources/img/Invisible@2x.png"></span>
             </div>
           </div>
         </div>

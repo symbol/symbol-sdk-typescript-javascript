@@ -51,6 +51,8 @@ Vue.use(VeeValidate, VeeValidateConfig)
 export const $eventBus = new Vue();
 /// end-region event bus
 
+export const AppStore = store
+
 export default new Vue({
   el: '#app',
   router,

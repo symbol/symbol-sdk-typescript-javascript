@@ -3,7 +3,7 @@
   <Tabs v-if="!isEditionMode" size="small">
     <TabPane :label="$t('assets')" name="name1">
       <img
-        class="asset_list pointer" src="@/common/img/monitor/monitorAssetList.png"
+        class="asset_list pointer" src="@/views/resources/img/monitor/monitorAssetList.png"
         @click="isEditionMode = true"
       >
       <div class="mosaicList secondary_page_animate">
@@ -13,14 +13,15 @@
           class="mosaic_data text_select"
         >
           <span class="img_container">
-            <img v-if="entry.mosaic.id.equals(networkMosaic)" src="@/../public/img/monitor/monitorMosaicIcon.png" alt="">
-            <img v-else src="@/../public/img/monitor/mosaicDefault.png" alt="">
+            <img v-if="entry.mosaic.id.equals(networkMosaic)" src="@/views/resources/img/monitor/monitorMosaicIcon.png" alt="">
+            <img v-else src="@/views/resources/img/monitor/mosaicDefault.png" alt="">
           </span>
           <span class="mosaic_name">
             {{ mosaicService.getMosaicName(entry.mosaic.id) || entry.mosaic.id.toHex() }}
           </span>
           <span class="mosaic_value">
-            <AmountDisplay :amount="mosaicHelpers.getRelativeAmount(entry.mosaic.balance || 0, entry.info?.divisibility)" />
+            <MosaicAmountDisplay :amount="mosaicService.getRelativeAmount(entry.mosaic.balance || 0, entry.mosaic.id)"
+                                 :id="entry.mosaic.id" />
           </span>
         </div>
       </div>
@@ -28,11 +29,11 @@
   </Tabs>
   <div v-else class="searchMosaic secondary_page_animate">
     <img
-      src="@/common/img/monitor/monitorLeftArrow.png" class="asset_setting_tit pointer"
+      src="@/views/resources/img/monitor/monitorLeftArrow.png" class="asset_setting_tit pointer"
       alt="" @click="isEditionMode = false"
     >
     <div class="input_outter">
-      <img src="@/common/img/monitor/monitorSearchIcon.png" alt="">
+      <img src="@/views/resources/img/monitor/monitorSearchIcon.png" alt="">
       <input v-model="formItems.name" type="text" :placeholder="$t('search_for_asset_name')">
       <span class="search pointer" @click="return false">{{ $t('search') }}</span>
     </div>
@@ -56,14 +57,15 @@
       >
         <span class="namege_img ">
           <img class="small_icon " :src="hasMosaicHidden(entry.mosaic.id) ? monitorUnselected : monitorSelected">
-          <img v-if="entry.mosaic.id.equals(networkMosaic)" class="mosaicIcon" src="@/common/img/monitor/monitorMosaicIcon.png" />
-          <img v-else class="mosaicIcon" src="@/common/img/monitor/mosaicDefault.png">
+          <img v-if="entry.mosaic.id.equals(networkMosaic)" class="mosaicIcon" src="@/views/resources/img/monitor/monitorMosaicIcon.png" />
+          <img v-else class="mosaicIcon" src="@/views/resources/img/monitor/mosaicDefault.png">
         </span>
         <span class="mosaic_name text_select">
           {{ mosaicService.getMosaicName(entry.mosaic.id) || entry.mosaic.id.toHex() }}
         </span>
         <span class="mosaic_value">
-          <AmountDisplay :amount="mosaicHelpers.getRelativeAmount(entry.mosaic.balance || 0, entry.info?.divisibility)" />
+            <MosaicAmountDisplay :amount="mosaicService.getRelativeAmount(entry.mosaic.balance || 0, entry.mosaic.id)"
+                                 :id="entry.mosaic.id" />
         </span>
       </div>
       <div class="complete_container">

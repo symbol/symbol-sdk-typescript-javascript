@@ -18,9 +18,8 @@ import {Password} from 'nem2-sdk'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
-
+import {MosaicService} from '@/services/MosaicService'
 import {Formatters} from '@/core/utils/Formatters'
-import {MosaicHelpers} from '@/core/utils/MosaicHelpers'
 import {MosaicsModel} from '@/core/database/models/AppMosaic'
 
 //XXX network config store getter
@@ -46,17 +45,6 @@ export class RentalFeesService extends AbstractService {
    */
   constructor(store: Store<any>) {
     super(store)
-  }
-
-  public static getFromDurationInBlocks(
-    duration: number,
-    networkCurrency: MosaicsModel,
-  ) {
-    const absoluteCost = this.getAbsoluteCostFromDuration(duration)
-    const relative = MosaicHelpers.getRelativeMosaicAmount(absoluteCost, networkCurrency.info().divisibility)
-    const relativeWithTicker = Formatters.absoluteAmountToRelativeAmount(absoluteCost, networkCurrency)
-
-    return {absoluteCost, relative, relativeWithTicker}
   }
 
   private static getAbsoluteCostFromDuration = (duration: number): number => {

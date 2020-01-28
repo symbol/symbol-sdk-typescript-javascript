@@ -9,8 +9,8 @@
 </template>
 
 <script lang="ts">
-import {AnimatedNumberTs} from '@/components/AnimatedNumberTs/AnimatedNumberTs.ts'
-import "AnimatedNumber.less";
+import {AnimatedNumberTs} from '@/components/AnimatedNumber/AnimatedNumberTs.ts'
+import "./AnimatedNumber.less";
 
 export default class AnimatedNumber extends AnimatedNumberTs {}
 </script>

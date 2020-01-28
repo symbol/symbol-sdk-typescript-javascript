@@ -21,7 +21,6 @@
 
 <script lang="ts">
 import {MosaicSelectorTs} from './MosaicSelectorTs'
-import './MosaicSelector.less'
 
 export default class MosaicSelector extends MosaicSelectorTs {}
 </script>

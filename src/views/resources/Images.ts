@@ -16,71 +16,71 @@
 import {TransactionType} from 'nem2-sdk'
 
 // @ts-ignore
-import seedImg from '@/../public/img/login/seed.png'
+import seedImg from '@/views/resources/img/login/seed.png'
 // @ts-ignore
-import trezorImg from '@/../public/img/login/trezor.png'
+import trezorImg from '@/views/resources/img/login/trezor.png'
 // @ts-ignore
-import ledgerImg from '@/../public/img/login/ledger.png'
+import ledgerImg from '@/views/resources/img/login/ledger.png'
 // @ts-ignore
-import importStepImage1 from '@/../public/img/login/1_4.png'
+import importStepImage1 from '@/views/resources/img/login/1_4.png'
 // @ts-ignore
-import importStepImage2 from '@/../public/img/login/2_4.png'
+import importStepImage2 from '@/views/resources/img/login/2_4.png'
 // @ts-ignore
-import importStepImage3 from '@/../public/img/login/3_4.png'
+import importStepImage3 from '@/views/resources/img/login/3_4.png'
 // @ts-ignore
-import importStepImage4 from '@/../public/img/login/4_4.png'
+import importStepImage4 from '@/views/resources/img/login/4_4.png'
 // @ts-ignore
-import createStepImage1 from '@/../public/img/login/1_5.png'
+import createStepImage1 from '@/views/resources/img/login/1_5.png'
 // @ts-ignore
-import createStepImage2 from '@/../public/img/login/2_5.png'
+import createStepImage2 from '@/views/resources/img/login/2_5.png'
 // @ts-ignore
-import createStepImage3 from '@/../public/img/login/3_5.png'
+import createStepImage3 from '@/views/resources/img/login/3_5.png'
 // @ts-ignore
-import createStepImage4 from '@/../public/img/login/4_5.png'
+import createStepImage4 from '@/views/resources/img/login/4_5.png'
 // @ts-ignore
-import createStepImage5 from '@/../public/img/login/5_5.png'
+import createStepImage5 from '@/views/resources/img/login/5_5.png'
 // @ts-ignore
-import dashboardUnconfirmed from ' @/../public/img/monitor/dash-board/dashboardUnconfirmed.png'
+import dashboardUnconfirmed from '@/views/resources/img/monitor/dash-board/dashboardUnconfirmed.png'
 // @ts-ignore
-import dashboardConfirmed from ' @/../public/img/monitor/dash-board/dashboardConfirmed.png'
+import dashboardConfirmed from '@/views/resources/img/monitor/dash-board/dashboardConfirmed.png'
 // @ts-ignore
-import windowDashboard from '@/../public/img/window/windowDashboard.png'
+import windowDashboard from '@/views/resources/img/window/windowDashboard.png'
 // @ts-ignore
-import windowDashboardActive from '@/../public/img/window/windowDashboardActive.png'
+import windowDashboardActive from '@/views/resources/img/window/windowDashboardActive.png'
 // @ts-ignore
-import windowWallet from '@/../public/img/window/windowWallet.png'
+import windowWallet from '@/views/resources/img/window/windowWallet.png'
 // @ts-ignore
-import windowWalletActive from '@/../public/img/window/windowWalletActive.png'
+import windowWalletActive from '@/views/resources/img/window/windowWalletActive.png'
 // @ts-ignore
-import windowMosaic from '@/../public/img/window/windowMosaic.png'
+import windowMosaic from '@/views/resources/img/window/windowMosaic.png'
 // @ts-ignore
-import windowMosaicActive from '@/../public/img/window/windowMosaicActive.png'
+import windowMosaicActive from '@/views/resources/img/window/windowMosaicActive.png'
 // @ts-ignore
-import windowNamespace from '@/../public/img/window/windowNamespace.png'
+import windowNamespace from '@/views/resources/img/window/windowNamespace.png'
 // @ts-ignore
-import windowNamespaceActive from '@/../public/img/window/windowNamespaceActive.png'
+import windowNamespaceActive from '@/views/resources/img/window/windowNamespaceActive.png'
 // @ts-ignore
-import windowMultisig from '@/../public/img/window/windowMultisig.png'
+import windowMultisig from '@/views/resources/img/window/windowMultisig.png'
 // @ts-ignore
-import windowMultisigActive from '@/../public/img/window/windowMultisigActive.png'
+import windowMultisigActive from '@/views/resources/img/window/windowMultisigActive.png'
 // @ts-ignore
-import windowCommunity from '@/../public/img/window/windowCommunity.png'
+import windowCommunity from '@/views/resources/img/window/windowCommunity.png'
 // @ts-ignore
-import windowCommunityActive from '@/../public/img/window/windowCommunityActive.png'
+import windowCommunityActive from '@/views/resources/img/window/windowCommunityActive.png'
 // @ts-ignore
-import windowSetting from '@/../public/img/window/windowSetting.png'
+import windowSetting from '@/views/resources/img/window/windowSetting.png'
 // @ts-ignore
-import windowSettingActive from '@/../public/img/window/windowSettingActive.png'
+import windowSettingActive from '@/views/resources/img/window/windowSettingActive.png'
 // @ts-ignore
-import dashboardAggregate from '@/../public/img/monitor/dash-board/dashboardAggregate.png'
+import dashboardAggregate from '@/views/resources/img/monitor/dash-board/dashboardAggregate.png'
 // @ts-ignore
-import dashboardMultisig from '@/../public/img/monitor/dash-board/dashboardMultisig.png'
+import dashboardMultisig from '@/views/resources/img/monitor/dash-board/dashboardMultisig.png'
 // @ts-ignore
-import dashboardOther from '@/../public/img/monitor/dash-board/dashboardOther.png'
+import dashboardOther from '@/views/resources/img/monitor/dash-board/dashboardOther.png'
 // @ts-ignore
-import transferSent from '@/../public/img/monitor/dash-board/dashboardMosaicOut.png'
+import transferSent from '@/views/resources/img/monitor/dash-board/dashboardMosaicOut.png'
 // @ts-ignore
-import transferReceived from '@/../public/img/monitor/dash-board/dashboardMosaicIn.png'
+import transferReceived from '@/views/resources/img/monitor/dash-board/dashboardMosaicIn.png'
 
 /// region exported image objects
 export const walletTypeImages = {

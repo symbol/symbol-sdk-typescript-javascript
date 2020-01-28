@@ -22,6 +22,7 @@ import {WalletsModel} from '@/core/database/models/AppWallet'
 import {Formatters} from '@/core/utils/Formatters'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
 import {TransferTransactionParams} from '@/core/transactions/TransferTransactionParams'
+import {NotificationType} from '@/core/utils/NotificationType'
 
 // child components
 // @ts-ignore
@@ -34,13 +35,20 @@ import MessageInput from '@/components/MessageInput/MessageInput.vue'
 import ModalTransactionConfirmation from '@/components/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
 // @ts-ignore
 import SignerSelector from '@/components/SignerSelector/SignerSelector.vue'
+// @ts-ignore
+import MosaicAttachmentDisplay from '@/components/MosaicAttachmentDisplay/MosaicAttachmentDisplay.vue'
+// @ts-ignore
+import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
 
 @Component({
   components: {
     AmountInput,
     MosaicSelector,
     MessageInput,
-    ModalTransactionConfirmation
+    ModalTransactionConfirmation,
+    SignerSelector,
+    MosaicAttachmentDisplay,
+    MaxFeeSelector,
   },
   computed: {...mapGetters({
     currentWallet: 'wallet/currentWallet',
@@ -166,6 +174,37 @@ export class FormTransferCreationTs extends Vue {
     this.formItems.maxFee = transaction.maxFee.compact()
   }
 /// end-region computed properties getter/setter
+
+  /**
+   * Hook called when the child component ModalTransactionConfirmation triggers
+   * the event 'success'
+   * @return {void}
+   */
+  public onConfirmationSuccess() {
+    this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
+  }
+
+  /**
+   * Hook called when the child component ModalTransactionConfirmation triggers
+   * the event 'error'
+   * @return {void}
+   */
+  public onConfirmationError(error: string) {
+    this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
+    this.$store.dispatch('notification/ADD_ERROR', error)
+  }
+
+  /**
+   * Hook called when the child component MosaicAttachmentDisplay triggers
+   * the event 'delete'
+   * @return {void}
+   */
+  public onDeleteMosaic(id: MosaicId) {
+    const index = this.formItems.attachedMosaics.findIndex(attached => attached.mosaicHex === id.toHex())
+    if (undefined !== index) {
+      delete this.formItems.attachedMosaics[index]
+    }
+  }
 
   /**
    * Process form input
