@@ -18,6 +18,7 @@ import { expect } from 'chai';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { MessageMarker } from '../../../src/model/message/MessageMarker';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import {
     PersistentDelegationRequestTransaction,
@@ -30,7 +31,7 @@ describe('PersistentDelegationRequestTransaction', () => {
     const delegatedPrivateKey = '8A78C9E9B0E59D0F74C0D47AB29FBD523C706293A3FA9CD9FE0EEB2C10EA924A';
     const recipientPublicKey = '9DBF67474D6E1F8B131B4EB1F5BA0595AFFAE1123607BC1048F342193D7E669F';
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
-    const messageMarker = 'FECC71C764BFE598';
+    const messageMarker = MessageMarker.PersistentDelegationUnlock;
 
     before(() => {
         account = TestingAccount;
@@ -42,7 +43,6 @@ describe('PersistentDelegationRequestTransaction', () => {
                 Deadline.create(),
                 delegatedPrivateKey,
                 recipientPublicKey,
-                account.privateKey,
                 NetworkType.MIJIN_TEST,
             );
 
@@ -56,7 +56,6 @@ describe('PersistentDelegationRequestTransaction', () => {
                 Deadline.create(),
                 delegatedPrivateKey,
                 recipientPublicKey,
-                account.privateKey,
                 NetworkType.MIJIN_TEST,
                 new UInt64([1, 0]),
             );
@@ -71,11 +70,10 @@ describe('PersistentDelegationRequestTransaction', () => {
                 Deadline.create(),
                 delegatedPrivateKey,
                 recipientPublicKey,
-                account.privateKey,
                 NetworkType.MIJIN_TEST,
             );
 
-        expect(persistentDelegationRequestTransaction.message.payload.length).to.be.equal(192 + messageMarker.length);
+        expect(persistentDelegationRequestTransaction.message.payload.length).to.be.equal(192 + messageMarker.length + 64);
         expect(persistentDelegationRequestTransaction.message.payload.includes(messageMarker)).to.be.true;
         expect(persistentDelegationRequestTransaction.mosaics.length).to.be.equal(0);
         expect(persistentDelegationRequestTransaction.recipientAddress).to.be.instanceof(Address);
@@ -96,20 +94,6 @@ describe('PersistentDelegationRequestTransaction', () => {
                 Deadline.create(),
                 'abc',
                 recipientPublicKey,
-                account.privateKey,
-                NetworkType.MIJIN_TEST,
-                new UInt64([1, 0]),
-            );
-        }).to.throw();
-    });
-
-    it('should throw exception with invalid sender private key', () => {
-        expect(() => {
-            PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
-                Deadline.create(),
-                delegatedPrivateKey,
-                recipientPublicKey,
-                'abc',
                 NetworkType.MIJIN_TEST,
                 new UInt64([1, 0]),
             );

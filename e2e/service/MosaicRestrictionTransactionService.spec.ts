@@ -74,7 +74,6 @@ describe('MosaicRestrictionTransactionService', () => {
                 UInt64.fromUint(1000),
                 networkType, helper.maxFee,
             );
-            console.log(mosaicId.toHex());
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
         });

@@ -16,11 +16,11 @@
 
 import {Crypto, SHA3Hasher} from '../../core/crypto';
 import { Convert } from '../../core/format/Convert';
+import { Account } from '../account/Account';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Message } from './Message';
 import { MessageMarker } from './MessageMarker';
 import { MessageType } from './MessageType';
-import { PlainMessage } from './PlainMessage';
 
 export class PersistentHarvestingDelegationMessage extends Message {
     constructor(payload: string) {
@@ -33,18 +33,17 @@ export class PersistentHarvestingDelegationMessage extends Message {
     /**
      *
      * @param delegatedPrivateKey - Private key of delegated account
-     * @param senderPrivateKey - Sender private key
      * @param recipientPublicKey - Recipient public key
      * @param {NetworkType} networkType - Catapult network type
      * @return {PersistentHarvestingDelegationMessage}
      */
     public static create(delegatedPrivateKey: string,
-                         senderPrivateKey: string,
                          recipientPublicKey: string,
                          networkType: NetworkType): PersistentHarvestingDelegationMessage {
         const signSchema = SHA3Hasher.resolveSignSchema(networkType);
-        const encrypted = MessageMarker.PersistentDelegationUnlock +
-            Crypto.encode(senderPrivateKey, recipientPublicKey, delegatedPrivateKey, signSchema, true).toUpperCase();
+        const ephemeralKeypair = Account.generateNewAccount(networkType);
+        const encrypted = MessageMarker.PersistentDelegationUnlock + ephemeralKeypair.publicKey +
+            Crypto.encode(ephemeralKeypair.privateKey, recipientPublicKey, delegatedPrivateKey, signSchema, true).toUpperCase();
         return new PersistentHarvestingDelegationMessage(encrypted);
     }
 
@@ -61,17 +60,17 @@ export class PersistentHarvestingDelegationMessage extends Message {
      *
      * @param encryptMessage - Encrypted message to be decrypted
      * @param privateKey - Recipient private key
-     * @param senderPublicKey - Sender public key
      * @param {NetworkType} networkType - Catapult network type
      * @return {string}
      */
     public static decrypt(encryptMessage: PersistentHarvestingDelegationMessage,
                           privateKey: string,
-                          senderPublicKey: string,
                           networkType: NetworkType): string {
         const signSchema = SHA3Hasher.resolveSignSchema(networkType);
-        const payload = encryptMessage.payload.substring(MessageMarker.PersistentDelegationUnlock.length);
-        const decrypted = Crypto.decode(privateKey, senderPublicKey, payload, signSchema);
+        const markerLength = MessageMarker.PersistentDelegationUnlock.length;
+        const ephemeralPublicKey = encryptMessage.payload.substring(markerLength, markerLength + 64);
+        const payload = encryptMessage.payload.substring(markerLength + ephemeralPublicKey.length);
+        const decrypted = Crypto.decode(privateKey, ephemeralPublicKey, payload, signSchema);
         return decrypted.toUpperCase();
     }
 }

@@ -20,6 +20,7 @@ import { CreateTransactionFromPayload } from '../../../src/infrastructure/transa
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { MessageMarker } from '../../../src/model/message/MessageMarker';
 import { MessageType } from '../../../src/model/message/MessageType';
 import { PersistentHarvestingDelegationMessage } from '../../../src/model/message/PersistentHarvestingDelegationMessage';
 import { PlainMessage } from '../../../src/model/message/PlainMessage';
@@ -40,7 +41,7 @@ describe('TransferTransaction', () => {
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     const delegatedPrivateKey = '8A78C9E9B0E59D0F74C0D47AB29FBD523C706293A3FA9CD9FE0EEB2C10EA924A';
     const recipientPublicKey = '9DBF67474D6E1F8B131B4EB1F5BA0595AFFAE1123607BC1048F342193D7E669F';
-    const messageMarker = 'FECC71C764BFE598';
+    const messageMarker = MessageMarker.PersistentDelegationUnlock;
     let statement: Statement;
     const unresolvedAddress = new NamespaceId('address');
     const unresolvedMosaicId = new NamespaceId('mosaic');
@@ -252,7 +253,7 @@ describe('TransferTransaction', () => {
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [],
             PersistentHarvestingDelegationMessage
-                .create(delegatedPrivateKey, account.privateKey, recipientPublicKey, NetworkType.MIJIN_TEST),
+                .create(delegatedPrivateKey, recipientPublicKey, NetworkType.MIJIN_TEST),
             NetworkType.MIJIN_TEST,
         );
 
@@ -265,11 +266,10 @@ describe('TransferTransaction', () => {
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [],
             PersistentHarvestingDelegationMessage
-                .create(delegatedPrivateKey, account.privateKey, recipientPublicKey, NetworkType.MIJIN_TEST),
+                .create(delegatedPrivateKey, recipientPublicKey, NetworkType.MIJIN_TEST),
             NetworkType.MIJIN_TEST,
         );
-
-        expect(transferTransaction.message.payload.length).to.be.equal(192 + messageMarker.length);
+        expect(transferTransaction.message.payload.length).to.be.equal(192 + messageMarker.length + 64);
         expect(transferTransaction.message.payload.includes(messageMarker)).to.be.true;
         expect(transferTransaction.mosaics.length).to.be.equal(0);
         expect(transferTransaction.recipientAddress).to.be.instanceof(Address);
@@ -291,7 +291,7 @@ describe('TransferTransaction', () => {
                 Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
                 [NetworkCurrencyMosaic.createRelative(100)],
                 PersistentHarvestingDelegationMessage
-                    .create(delegatedPrivateKey, account.privateKey, recipientPublicKey,  NetworkType.MIJIN_TEST),
+                    .create(delegatedPrivateKey, recipientPublicKey,  NetworkType.MIJIN_TEST),
                 NetworkType.MIJIN_TEST,
             );
         }).to.throw(Error, 'PersistentDelegationRequestTransaction should be created without Mosaic');
@@ -303,7 +303,7 @@ describe('TransferTransaction', () => {
                 Deadline.create(),
                 Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
                 [NetworkCurrencyMosaic.createRelative(100)],
-                PersistentHarvestingDelegationMessage.create('abc',  account.privateKey, recipientPublicKey, NetworkType.MIJIN_TEST),
+                PersistentHarvestingDelegationMessage.create('abc',  recipientPublicKey, NetworkType.MIJIN_TEST),
                 NetworkType.MIJIN_TEST,
             );
         }).to.throw();
@@ -315,7 +315,7 @@ describe('TransferTransaction', () => {
                 Deadline.create(),
                 Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
                 [NetworkCurrencyMosaic.createRelative(100)],
-                PersistentHarvestingDelegationMessage.create(delegatedPrivateKey, 'abc', recipientPublicKey, NetworkType.MIJIN_TEST),
+                PersistentHarvestingDelegationMessage.create(delegatedPrivateKey, recipientPublicKey, NetworkType.MIJIN_TEST),
                 NetworkType.MIJIN_TEST,
             );
         }).to.throw();
