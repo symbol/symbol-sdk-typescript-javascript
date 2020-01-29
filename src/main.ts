@@ -23,7 +23,7 @@ import locale from 'view-design/dist/locale/en-US'
 import 'view-design/dist/styles/iview.css'
 
 // internal dependencies
-import {VeeValidateConfig} from '@/core/validators/VeeValidateConfig'
+import {VeeValidateConfig, registerCustomValidators} from '@/core/validators/VeeValidateConfig'
 import {UIBootstrapper} from '@/app/UIBootstrapper'
 import i18n from '@/language/index.ts'
 import store from '@/store/index.ts'
@@ -38,6 +38,7 @@ Vue.use(moment as any)
 Vue.use(Router)
 Vue.use(VueRx)
 Vue.use(VeeValidate, VeeValidateConfig)
+registerCustomValidators()
 /// end-region UI plugins
 
 /// region event bus (events propagated on parallel thread)
@@ -51,7 +52,10 @@ Vue.use(VeeValidate, VeeValidateConfig)
 export const $eventBus = new Vue();
 /// end-region event bus
 
+/// region app storage & state store initializations
 export const AppStore = store
+
+/// end-region app storage & state store initializations
 
 export default new Vue({
   el: '#app',

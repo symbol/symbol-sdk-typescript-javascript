@@ -65,15 +65,9 @@ export const VeeValidateConfig = {
 }
 
 /// region register custom validators for vee-validate
-ValidatorFactory.customValidators.map((name: string) => {
-  const customValidator = (name, validator) => ({
-    name,
-    validator,
-    register() {
-      return ValidatorFactory.create(this.name, this)
-    },
+export const registerCustomValidators = () => {
+  ValidatorFactory.customValidators.map((name: string) => {
+    ValidatorFactory.create(name)
   })
-
-  customValidator(name, VeeValidate.Validator)
-})
+}
 /// end-region register custom validators for vee-validate

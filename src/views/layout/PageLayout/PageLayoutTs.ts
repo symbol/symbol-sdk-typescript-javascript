@@ -37,7 +37,6 @@ import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue
 // @ts-ignore
 import WalletSelector from '@/components/WalletSelector/WalletSelector.vue'
 
-
 @Component({
   components: {
     AppLogo,

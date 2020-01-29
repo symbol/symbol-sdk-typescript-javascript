@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import VeeValidate from 'vee-validate'
 import {Account, Address, MosaicId, MosaicInfo, NetworkType} from 'nem2-sdk'
 
 // internal dependencies
@@ -27,10 +28,11 @@ import {MosaicWithInfoView} from '@/core/views/MosaicWithInfoView'
 
 // configuration
 import networkConfig from '@/../config/network.conf.json'
+import { Content } from 'view-design'
 
 /// region internal helpers
-export const getOtherFieldValue = (otherField, validator) => {
-  const validatorFields = validator.Validator.$vee._validator.fields.items
+export const getOtherFieldValue = (otherField) => {
+  const validatorFields = this._vm.$vee._validator.fields.items
   const field = validatorFields.find(field => field.name === otherField)
   if (field === undefined) throw new Error('The targeted confirmation field was not found')
   return field.value
@@ -47,10 +49,7 @@ export class ValidatorFactory {
     'newAccountName',
     'alias',
     'publicKey',
-    'confirmLock',
-    'remoteAccountPrivateKey',
     'confirmPassword',
-    'confirmWalletPassword',
     'mosaicId',
     'namespaceOrMosaicId',
     'addressOrAlias',
@@ -72,33 +71,33 @@ export class ValidatorFactory {
 
   /**
    * Create a validator instance around \a context
-   * @param {any} context
+   * @param {string} name
    */
-  public static create(name, context): Promise<{valid: boolean|string}> {
+  public static create(name: string) {
     switch(name) {
-    case 'newAccountName': return ValidatorFactory.newAccountNameValidator(context)
-    case 'alias': return ValidatorFactory.aliasValidator(context)
-    case 'publicKey': return ValidatorFactory.publicKeyValidator(context)
-    case 'confirmPassword': return ValidatorFactory.confirmPasswordValidator(context)
-    case 'mosaicId': return ValidatorFactory.mosaicIdValidator(context)
-    case 'namespaceOrMosaicId': return ValidatorFactory.namespaceOrMosaicIdValidator(context)
-    case 'addressOrAlias': return ValidatorFactory.addressOrAliasValidator(context)
-    case 'address': return ValidatorFactory.addressValidator(context)
-    case 'addressNetworkType': return ValidatorFactory.addressNetworkTypeValidator(context)
-    case 'addressOrAliasNetworkType': return ValidatorFactory.addressOrAliasNetworkTypeValidator(context)
-    case 'addressOrPublicKey': return ValidatorFactory.addressOrPublicKeyValidator(context)
-    case 'privateKey': return ValidatorFactory.privateKeyValidator(context)
-    case 'otherField': return ValidatorFactory.otherFieldValidator(context)
-    case 'amountDecimals': return ValidatorFactory.amountDecimalsValidator(context)
-    case 'mosaicMaxAmount': return ValidatorFactory.mosaicAmountValidator(context)
+    case 'newAccountName': return ValidatorFactory.newAccountNameValidator()
+    case 'alias': return ValidatorFactory.aliasValidator()
+    case 'publicKey': return ValidatorFactory.publicKeyValidator()
+    case 'confirmPassword': return ValidatorFactory.confirmPasswordValidator()
+    case 'mosaicId': return ValidatorFactory.mosaicIdValidator()
+    case 'namespaceOrMosaicId': return ValidatorFactory.namespaceOrMosaicIdValidator()
+    case 'addressOrAlias': return ValidatorFactory.addressOrAliasValidator()
+    case 'address': return ValidatorFactory.addressValidator()
+    case 'addressNetworkType': return ValidatorFactory.addressNetworkTypeValidator()
+    case 'addressOrAliasNetworkType': return ValidatorFactory.addressOrAliasNetworkTypeValidator()
+    case 'addressOrPublicKey': return ValidatorFactory.addressOrPublicKeyValidator()
+    case 'privateKey': return ValidatorFactory.privateKeyValidator()
+    case 'otherField': return ValidatorFactory.otherFieldValidator()
+    case 'amountDecimals': return ValidatorFactory.amountDecimalsValidator()
+    case 'mosaicMaxAmount': return ValidatorFactory.mosaicAmountValidator()
     default: break
     }
 
     throw new Error('No validator registered with name \'' + name + '\'')
   }
 
-  protected static newAccountNameValidator(context): Promise<{valid: boolean|string}> {
-    return context.Validator.extend(
+  protected static newAccountNameValidator() {
+    return VeeValidate.Validator.extend(
       'newAccountName',
       (accountName) => new Promise((resolve) => {
         const repository = new AccountsRepository()
@@ -110,29 +109,29 @@ export class ValidatorFactory {
     )
   }
 
-  protected static aliasValidator(context): Promise<{valid: boolean|string}> {
-    return context.Validator.extend(
+  protected static aliasValidator() {
+    return VeeValidate.Validator.extend(
       'alias',
       (alias) => new Promise((resolve) => {
-        resolve(new AliasValidator().validate(alias))
+        resolve(false !== new AliasValidator().validate(alias).valid)
       }),
     )
   }
 
-  protected static publicKeyValidator(context): Promise<{valid: boolean|string}> {
-    return context.Validator.extend(
+  protected static publicKeyValidator() {
+    return VeeValidate.Validator.extend(
       'publicKey',
       (publicKey) => new Promise((resolve) => {
-        resolve(new PublicKeyValidator().validate(publicKey))
+        resolve(false !== new PublicKeyValidator().validate(publicKey).valid)
       }),
     )
   }
 
-  protected static confirmPasswordValidator(context): Promise<{valid: boolean|string}> {
-    return context.Validator.extend(
+  protected static confirmPasswordValidator() {
+    return VeeValidate.Validator.extend(
       'confirmPassword',
-      (password, [otherField]) => new Promise((resolve) => {
-        const otherValue = getOtherFieldValue(otherField, context)
+      (password, otherField) => new Promise((resolve) => {
+        const otherValue = getOtherFieldValue(otherField)
         if (otherValue !== password) resolve({valid: false})
         resolve({valid: password})
       }),
@@ -140,8 +139,8 @@ export class ValidatorFactory {
     )
   }
 
-  protected static mosaicIdValidator(context): Promise<{valid: boolean|string}> {
-    return context.Validator.extend(
+  protected static mosaicIdValidator() {
+    return VeeValidate.Validator.extend(
       'mosaicId',
       (mosaicId) => new Promise((resolve) => {
         try {
@@ -154,8 +153,8 @@ export class ValidatorFactory {
     )
   }
   
-  protected static namespaceOrMosaicIdValidator(context): Promise<{valid: boolean|string}> {
-    return context.Validator.extend(
+  protected static namespaceOrMosaicIdValidator() {
+    return VeeValidate.Validator.extend(
       'namespaceOrMosaicId',
       (namespaceOrMosaicId) => new Promise((resolve) => {
         const isValidMosaicId = new MosaicIdValidator().validate(namespaceOrMosaicId)
@@ -170,8 +169,8 @@ export class ValidatorFactory {
     )
   }
   
-  protected static addressOrAliasValidator(context): Promise<{valid: boolean|string}> {
-    return context.Validator.extend(
+  protected static addressOrAliasValidator() {
+    return VeeValidate.Validator.extend(
       'addressOrAlias',
       (addressOrAlias) => new Promise((resolve) => {
         const isValidAddress = new AddressValidator().validate(addressOrAlias)
@@ -186,20 +185,20 @@ export class ValidatorFactory {
     )
   }
   
-  protected static addressValidator(context): Promise<{valid: boolean|string}> {
-    return context.Validator.extend(
+  protected static addressValidator() {
+    return VeeValidate.Validator.extend(
       'address',
       (address) => new Promise((resolve) => {
-        resolve(new AddressValidator().validate(address))
+        resolve(false !== new AddressValidator().validate(address).valid)
       }),
     )
   }
   
-  protected static addressNetworkTypeValidator(context): Promise<{valid: boolean|string}> {
-    return context.Validator.extend(
+  protected static addressNetworkTypeValidator() {
+    return VeeValidate.Validator.extend(
       'addressNetworkType',
-      (address, [otherField]) => new Promise((resolve) => {
-        const currentAccount: AccountsModel = getOtherFieldValue(otherField, context)
+      (address, otherField) => new Promise((resolve) => {
+        const currentAccount: AccountsModel = getOtherFieldValue(otherField)
         const networkType: NetworkType = currentAccount.values.get('networkType') as NetworkType
         try {
           const _address = Address.createFromRawAddress(address)
@@ -213,11 +212,11 @@ export class ValidatorFactory {
     )
   }
   
-  protected static addressOrAliasNetworkTypeValidator(context): Promise<{valid: boolean|string}> {
-    return context.Validator.extend(
+  protected static addressOrAliasNetworkTypeValidator() {
+    return VeeValidate.Validator.extend(
       'addressOrAliasNetworkType',
-      (addressOrAlias, [otherField]) => new Promise((resolve) => {
-        const currentAccount: AccountsModel = getOtherFieldValue(otherField, context)
+      (addressOrAlias, otherField) => new Promise((resolve) => {
+        const currentAccount: AccountsModel = getOtherFieldValue(otherField)
         const networkType: NetworkType = currentAccount.values.get('networkType') as NetworkType
         try {
           if (!new AddressValidator().validate(addressOrAlias).valid) resolve({valid: addressOrAlias})
@@ -232,8 +231,8 @@ export class ValidatorFactory {
     )
   }
   
-  protected static privateKeyValidator(context): Promise<{valid: boolean|string}> {
-    return context.Validator.extend(
+  protected static privateKeyValidator() {
+    return VeeValidate.Validator.extend(
       'privateKey',
       (privateKey) => new Promise((resolve) => {
         try {
@@ -248,12 +247,12 @@ export class ValidatorFactory {
   }
   
   /** Verified if the value of a cross-validation field is set */
-  protected static otherFieldValidator(context): Promise<{valid: boolean|string}> {
-    return context.Validator.extend(
+  protected static otherFieldValidator() {
+    return VeeValidate.Validator.extend(
       'otherField',
-      (field, [otherField]) => new Promise((resolve) => {
+      (field, otherField) => new Promise((resolve) => {
         try {
-          const otherValue = getOtherFieldValue(otherField, context)
+          const otherValue = getOtherFieldValue(otherField)
           if (!otherValue) resolve({valid: false})
           resolve({valid: true})
         } catch (error) {
@@ -264,15 +263,15 @@ export class ValidatorFactory {
     )
   }
   
-  protected static amountDecimalsValidator(context): Promise<{valid: boolean|string}> {
-    return context.Validator.extend(
+  protected static amountDecimalsValidator() {
+    return VeeValidate.Validator.extend(
       'amountDecimals',
-      (amount, [otherField]) => new Promise((resolve) => {
+      (amount, otherField) => new Promise((resolve) => {
         try {
           const decimalPart: string = (`${amount}`).split('.')[1]
           if (!decimalPart) return resolve({valid: true})
           const numberOfDecimals = decimalPart.length
-          const mosaicInfo: MosaicInfo = getOtherFieldValue(otherField, context)
+          const mosaicInfo: MosaicInfo = getOtherFieldValue(otherField)
           if (numberOfDecimals > mosaicInfo.divisibility) resolve({valid: false})
           resolve({valid: true})
         } catch (error) {
@@ -283,12 +282,12 @@ export class ValidatorFactory {
     )
   }
   
-  protected static mosaicAmountValidator(context): Promise<{valid: boolean|string}> {
-    return context.Validator.extend(
+  protected static mosaicAmountValidator() {
+    return VeeValidate.Validator.extend(
       'mosaicMaxAmount',
-      (amount, [otherField]) => new Promise((resolve) => {
+      (amount, otherField) => new Promise((resolve) => {
         try {
-          const mosaicView: MosaicWithInfoView = getOtherFieldValue(otherField, context)
+          const mosaicView: MosaicWithInfoView = getOtherFieldValue(otherField)
           const absoluteAmount = amount * Math.pow(10, mosaicView.mosaicInfo.divisibility)
           if (isNaN(absoluteAmount)) resolve({valid: false})
           if (absoluteAmount > mosaicView.mosaic.amount.compact()) resolve({valid: false})
@@ -301,14 +300,14 @@ export class ValidatorFactory {
     )
   }
   
-  protected static addressOrPublicKeyValidator(context): Promise<{valid: boolean|string}> {
-    return context.Validator.extend(
+  protected static addressOrPublicKeyValidator() {
+    return VeeValidate.Validator.extend(
       'addressOrPublicKey',
       (addressOrPublicKey) => new Promise((resolve) => {
         if (addressOrPublicKey.length === 64) {
-          resolve(new PublicKeyValidator().validate(addressOrPublicKey))
+          resolve(false !== new PublicKeyValidator().validate(addressOrPublicKey).valid)
         }
-        resolve(new AddressValidator().validate(addressOrPublicKey))
+        resolve(false !== new AddressValidator().validate(addressOrPublicKey).valid)
       }),
     )
   }
