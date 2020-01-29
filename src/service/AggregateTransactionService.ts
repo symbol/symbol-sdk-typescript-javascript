@@ -96,8 +96,8 @@ export class AggregateTransactionService {
          * Check inner transaction. If remove cosigner from multisig account,
          * use minRemoval instead of minApproval for cosignatories validation.
          */
-        if (innerTransaction.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION) {
-            if ((innerTransaction as MultisigAccountModificationTransaction).publicKeyDeletions.length) {
+        if (transaction.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION) {
+            if ((transaction as MultisigAccountModificationTransaction).publicKeyDeletions.length) {
                         isMultisigRemoval = true;
             }
         }

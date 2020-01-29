@@ -97,13 +97,13 @@ export const CreateTransactionFromPayload = (payload: string): Transaction => {
         const type = builder.getType().valueOf();
         const networkType = builder.getNetwork().valueOf();
         switch (type) {
-            case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
+            case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
                 return AccountAddressRestrictionTransaction.createFromBodyBuilder((builder as AccountAddressRestrictionTransactionBuilder), networkType, deadline, maxFee);
-            case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
+            case TransactionType.ACCOUNT_MOSAIC_RESTRICTION:
                 return AccountMosaicRestrictionTransaction.createFromBodyBuilder((builder as AccountMosaicRestrictionTransactionBuilder), networkType, deadline, maxFee);
-            case TransactionType.ACCOUNT_RESTRICTION_OPERATION:
+            case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
                 return AccountOperationRestrictionTransaction.createFromBodyBuilder((builder as AccountOperationRestrictionTransactionBuilder), networkType, deadline, maxFee);
-            case TransactionType.LINK_ACCOUNT:
+            case TransactionType.ACCOUNT_LINK:
                 return AccountLinkTransaction.createFromBodyBuilder((builder as AccountLinkTransactionBuilder), networkType, deadline, maxFee);
             case TransactionType.ADDRESS_ALIAS:
                 return AddressAliasTransaction.createFromBodyBuilder((builder as AddressAliasTransactionBuilder), networkType, deadline, maxFee);
@@ -121,19 +121,19 @@ export const CreateTransactionFromPayload = (payload: string): Transaction => {
                 return SecretLockTransaction.createFromBodyBuilder((builder as SecretLockTransactionBuilder), networkType, deadline, maxFee);
             case TransactionType.SECRET_PROOF:
                 return SecretProofTransaction.createFromBodyBuilder((builder as SecretProofTransactionBuilder), networkType, deadline, maxFee);
-            case TransactionType.MODIFY_MULTISIG_ACCOUNT:
+            case TransactionType.MULTISIG_ACCOUNT_MODIFICATION:
                 return MultisigAccountModificationTransaction.createFromBodyBuilder((builder as MultisigAccountModificationTransactionBuilder), networkType, deadline, maxFee);
-            case TransactionType.LOCK:
+            case TransactionType.HASH_LOCK:
                 return LockFundsTransaction.createFromBodyBuilder((builder as HashLockTransactionBuilder), networkType, deadline, maxFee);
             case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
                 return MosaicGlobalRestrictionTransaction.createFromBodyBuilder((builder as MosaicGlobalRestrictionTransactionBuilder), networkType, deadline, maxFee);
             case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
                 return MosaicAddressRestrictionTransaction.createFromBodyBuilder((builder as MosaicAddressRestrictionTransactionBuilder), networkType, deadline, maxFee);
-            case TransactionType.ACCOUNT_METADATA_TRANSACTION:
+            case TransactionType.ACCOUNT_METADATA:
                 return AccountMetadataTransaction.createFromBodyBuilder((builder as AccountMetadataTransactionBuilder), networkType, deadline, maxFee);
-            case TransactionType.MOSAIC_METADATA_TRANSACTION:
+            case TransactionType.MOSAIC_METADATA:
                 return MosaicMetadataTransaction.createFromBodyBuilder((builder as MosaicMetadataTransactionBuilder), networkType, deadline, maxFee);
-            case TransactionType.NAMESPACE_METADATA_TRANSACTION:
+            case TransactionType.NAMESPACE_METADATA:
                 return NamespaceMetadataTransaction.createFromBodyBuilder((builder as NamespaceMetadataTransactionBuilder), networkType, deadline, maxFee);
             case TransactionType.AGGREGATE_COMPLETE:
                 return AggregateTransaction.createFromBodyBuilder((builder as AggregateCompleteTransactionBuilder), networkType, deadline, maxFee);
@@ -170,13 +170,13 @@ export const CreateTransactionFromEmbeddedTransactionBuilder = (builder: Embedde
     const toBuilder = (): Transaction => {
         const type = builder.getType().valueOf();
         switch (type) {
-            case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
+            case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
                 return AccountAddressRestrictionTransaction.createFromBodyBuilder((builder as EmbeddedAccountAddressRestrictionTransactionBuilder), networkType, deadline, maxFee);
-            case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
+            case TransactionType.ACCOUNT_MOSAIC_RESTRICTION:
                 return AccountMosaicRestrictionTransaction.createFromBodyBuilder((builder as EmbeddedAccountMosaicRestrictionTransactionBuilder), networkType, deadline, maxFee);
-            case TransactionType.ACCOUNT_RESTRICTION_OPERATION:
+            case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
                 return AccountOperationRestrictionTransaction.createFromBodyBuilder((builder as EmbeddedAccountOperationRestrictionTransactionBuilder), networkType, deadline, maxFee);
-            case TransactionType.LINK_ACCOUNT:
+            case TransactionType.ACCOUNT_LINK:
                 return AccountLinkTransaction.createFromBodyBuilder((builder as EmbeddedAccountLinkTransactionBuilder), networkType, deadline, maxFee);
             case TransactionType.ADDRESS_ALIAS:
                 return AddressAliasTransaction.createFromBodyBuilder((builder as EmbeddedAddressAliasTransactionBuilder), networkType, deadline, maxFee);
