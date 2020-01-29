@@ -45,7 +45,7 @@ describe('MetadataTransactionService', () => {
 
     before(() => {
         account = TestingAccount;
-        const mockMetadataRepository:MetadataRepository = mock();
+        const mockMetadataRepository: MetadataRepository = mock();
 
         when(mockMetadataRepository
             .getAccountMetadataByKeyAndSender(deepEqual(account.address), key.toHex(), account.publicKey))

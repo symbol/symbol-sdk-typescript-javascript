@@ -26,7 +26,7 @@ import { UInt64 } from '../model/UInt64';
 import { BlockRepository } from './BlockRepository';
 import { Http } from './Http';
 import { QueryParams } from './QueryParams';
-import { CreateTransactionFromDTO, extractBeneficiary, } from './transaction/CreateTransactionFromDTO';
+import { CreateTransactionFromDTO, extractBeneficiary } from './transaction/CreateTransactionFromDTO';
 
 /**
  * Blockchain http repository.

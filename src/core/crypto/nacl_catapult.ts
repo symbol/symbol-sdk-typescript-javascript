@@ -681,7 +681,7 @@ export const crypto_shared_key_hash = (shared, pk, sk, hashfunc, signSchema) => 
     d[31] &= 127;
     d[31] |= 64;
 
-    let q = [gf(), gf(), gf(), gf()];
+    const q = [gf(), gf(), gf(), gf()];
     unpackneg(q, pk);
     scalarmult(p, q, d);
     pack(shared, p);

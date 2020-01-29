@@ -22,7 +22,6 @@ import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSi
 import { Transaction } from '../model/transaction/Transaction';
 import { TransactionStatusError } from '../model/transaction/TransactionStatusError';
 
-
 /**
  * Listener service
  */
@@ -53,7 +52,7 @@ export interface IListener {
      *
      * @return an observable stream of BlockInfo
      */
-    newBlock(): Observable<BlockInfo>
+    newBlock(): Observable<BlockInfo>;
 
     /**
      * Returns an observable stream of Transaction for a specific address.
@@ -68,13 +67,13 @@ export interface IListener {
     confirmed(address: Address, transactionHash?: string): Observable<Transaction>;
 
     /**
-    * Returns an observable stream of Transaction for a specific address.
-    * Each time a transaction is in unconfirmed state an it involves the address,
-    * it emits a new Transaction in the event stream.
-    *
-    * @param address address we listen when a transaction is in unconfirmed state
-    * @return an observable stream of Transaction with state unconfirmed
-    */
+     * Returns an observable stream of Transaction for a specific address.
+     * Each time a transaction is in unconfirmed state an it involves the address,
+     * it emits a new Transaction in the event stream.
+     *
+     * @param address address we listen when a transaction is in unconfirmed state
+     * @return an observable stream of Transaction with state unconfirmed
+     */
      unconfirmedAdded(address: Address): Observable<Transaction>;
 
     /**
@@ -96,7 +95,7 @@ export interface IListener {
      * @param transactionHash transactionHash for filtering multiple transactions
      * @return an observable stream of AggregateTransaction with missing signatures state
      */
-    aggregateBondedAdded(address: Address, transactionHash?: string): Observable<AggregateTransaction>
+    aggregateBondedAdded(address: Address, transactionHash?: string): Observable<AggregateTransaction>;
 
     /**
      * Returns an observable stream of Transaction Hashes for specific address.
@@ -106,7 +105,7 @@ export interface IListener {
      * @param address address we listen when a transaction is confirmed or rejected
      * @return an observable stream of Strings with the transaction hash
      */
-    aggregateBondedRemoved(address: Address): Observable<string>
+    aggregateBondedRemoved(address: Address): Observable<string>;
 
     /**
      * Returns an observable stream of {@link TransactionStatusError} for specific address.

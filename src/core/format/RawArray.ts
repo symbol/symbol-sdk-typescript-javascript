@@ -50,7 +50,7 @@ export class RawArray {
      * @param {Array} array The array to check.
      * @returns {boolean} true if the array is zero-filled, false otherwise.
      */
-    public static isZeroFilled = (array) => array.every(value => 0 === value);
+    public static isZeroFilled = (array) => array.every((value) => 0 === value);
 
     /**
      * Deeply checks the equality of two arrays.

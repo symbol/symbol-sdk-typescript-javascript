@@ -17,13 +17,13 @@
 import {deepEqual} from 'assert';
 import {expect} from 'chai';
 import {AccountInfo} from '../../../src/model/account/AccountInfo';
+import { ActivityBucket } from '../../../src/model/account/ActivityBucket';
 import {Address} from '../../../src/model/account/Address';
 import {PublicAccount} from '../../../src/model/account/PublicAccount';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {Mosaic} from '../../../src/model/mosaic/Mosaic';
-import {UInt64} from '../../../src/model/UInt64';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
-import { ActivityBucket } from '../../../src/model/account/ActivityBucket';
+import {UInt64} from '../../../src/model/UInt64';
 
 describe('AccountInfo', () => {
 

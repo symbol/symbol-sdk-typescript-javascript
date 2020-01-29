@@ -21,10 +21,10 @@ import {MosaicId} from './MosaicId';
 
 /**
  * NetworkCurrencyMosaic mosaic
- * 
+ *
  * This represents the per-network currency mosaic. This mosaicId is aliased
  * with namespace name `cat.currency`.
- * 
+ *
  * @since 0.10.2
  */
 export class NetworkCurrencyMosaic extends Mosaic {
