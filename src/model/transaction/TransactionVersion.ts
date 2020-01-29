@@ -37,7 +37,7 @@ export class TransactionVersion {
      * Register namespace transaction version.
      * @type {number}
      */
-    public static readonly REGISTER_NAMESPACE = 0x01;
+    public static readonly NAMESPACE_REGISTRATION = 0x01;
 
     /**
      * Mosaic definition transaction version.
@@ -55,7 +55,7 @@ export class TransactionVersion {
      * Modify multisig account transaction version.
      * @type {number}
      */
-    public static readonly MODIFY_MULTISIG_ACCOUNT = 0x01;
+    public static readonly MULTISIG_ACCOUNT_MODIFICATION = 0x01;
 
     /**
      * Aggregate complete transaction version.
@@ -72,7 +72,7 @@ export class TransactionVersion {
      * Lock transaction version
      * @type {number}
      */
-    public static readonly LOCK = 0x01;
+    public static readonly HASH_LOCK = 0x01;
 
     /**
      * Secret Lock transaction version
@@ -114,13 +114,13 @@ export class TransactionVersion {
      * Account Restriction address transaction version
      * @type {number}
      */
-    public static readonly ACCOUNT_RESTRICTION_ADDRESS = 0x01;
+    public static readonly ACCOUNT_ADDRESS_RESTRICTION = 0x01;
 
     /**
      * Account Restriction mosaic transaction version
      * @type {number}
      */
-    public static readonly ACCOUNT_RESTRICTION_MOSAIC = 0x01;
+    public static readonly ACCOUNT_MOSAIC_RESTRICTION = 0x01;
 
     /**
      * Account Restriction operation transaction version
@@ -132,23 +132,23 @@ export class TransactionVersion {
      * Link account transaction version
      * @type {number}
      */
-    public static readonly LINK_ACCOUNT = 0x01;
+    public static readonly ACCOUNT_LINK = 0x01;
 
     /**
      * Account metadata transaction version
      * @type {number}
      */
-    public static readonly ACCOUNT_METADATA_TRANSACTION = 0x01;
+    public static readonly ACCOUNT_METADATA = 0x01;
 
     /**
      * Mosaic metadata transaction version
      * @type {number}
      */
-    public static readonly MOSAIC_METADATA_TRANSACTION = 0x01;
+    public static readonly MOSAIC_METADATA = 0x01;
 
     /**
      * Namespace metadata transaction version
      * @type {number}
      */
-    public static readonly NAMESPACE_METADATA_TRANSACTION = 0x01;
+    public static readonly NAMESPACE_METADATA = 0x01;
 }

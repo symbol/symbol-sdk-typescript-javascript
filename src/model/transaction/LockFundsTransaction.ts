@@ -75,7 +75,7 @@ export class LockFundsTransaction extends Transaction {
                          maxFee: UInt64 = new UInt64([0, 0])): LockFundsTransaction {
         return new LockFundsTransaction(
             networkType,
-            TransactionVersion.LOCK,
+            TransactionVersion.HASH_LOCK,
             deadline,
             maxFee,
             mosaic,
@@ -112,7 +112,7 @@ export class LockFundsTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.LOCK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+        super(TransactionType.HASH_LOCK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
         this.hash = signedTransaction.hash;
         this.signedTransaction = signedTransaction;
         if (signedTransaction.type !== TransactionType.AGGREGATE_BONDED) {
@@ -178,7 +178,7 @@ export class LockFundsTransaction extends Transaction {
             new KeyDto(signerBuffer),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.LOCK.valueOf(),
+            TransactionType.HASH_LOCK.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
             new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id.toDTO()),
@@ -198,7 +198,7 @@ export class LockFundsTransaction extends Transaction {
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.LOCK.valueOf(),
+            TransactionType.HASH_LOCK.valueOf(),
             new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id.toDTO()),
                                                    new AmountDto(this.mosaic.amount.toDTO())),
             new BlockDurationDto(this.duration.toDTO()),
