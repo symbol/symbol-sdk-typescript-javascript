@@ -15,7 +15,7 @@
  */
 import {mapGetters} from 'vuex'
 import {Component, Provide, Vue} from 'vue-property-decorator'
-import {NetworkType} from 'nem2-sdk'
+import {NetworkType, Password} from 'nem2-sdk'
 
 // internal dependencies
 import {$eventBus} from '@/main'
@@ -23,6 +23,7 @@ import {NotificationType} from '@/core/utils/NotificationType'
 import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
+import {AESEncryptionService} from '@/services/AESEncryptionService'
 
 // child components
 // @ts-ignore
@@ -96,6 +97,7 @@ export default class LoginAccountTs extends Vue {
   public formItems: any = {
     currentAccountName: '',
     password: '',
+    hasHint: false,
   }
 
 /// region computed properties getter/setter
@@ -136,6 +138,37 @@ export default class LoginAccountTs extends Vue {
   }
 
   /**
+   * Getter for network type label
+   * @param {NetworkType} networkType 
+   * @return {string}
+   */
+  public getNetworkTypeLabel(networkType: NetworkType): string {
+    const findType = this.networkTypeList.find(n => n.value === networkType)
+    if (findType === undefined) {
+      return ''
+    }
+    return findType.label
+  }
+
+  /**
+   * Get account password hint
+   * XXX should be encrypted with accessSalt.
+   * @return {string}
+   */
+  public getPasswordHint(): string {
+    const identifier = this.formItems.currentAccountName
+
+    // if account doesn't exist, authentication is not valid
+    if (! this.accountsRepository.find(identifier)) {
+      return ''
+    }
+
+    // account exists, fetch data
+    const account: AccountsModel = this.accountsRepository.read(identifier)
+    return account.values.get('hint')
+  }
+
+  /**
    * Submit action, validates form and logs in user if valid
    * @return {void}
    */
@@ -160,7 +193,7 @@ export default class LoginAccountTs extends Vue {
 
     // if account doesn't exist, authentication is not valid
     if (! this.accountsRepository.find(identifier)) {
-      return this.$router.push({name: 'login'})
+      return this.$router.push({name: 'login.account'})
     }
 
     // account exists, fetch data
@@ -169,6 +202,18 @@ export default class LoginAccountTs extends Vue {
     // if account setup was not finalized, redirect
     if (!account.values.has('seed') || ! account.values.get('seed').length) {
       return this.$router.push({name: 'login.createAccount.generateMnemonic'})
+    }
+
+    // validate password
+    const accessSalt = this.accountsRepository.getAdapter().getSaltForSession()
+    const accountPass = AESEncryptionService.decrypt(
+      account.values.get('password'),
+      accessSalt,
+      new Password(accessSalt)
+    )
+
+    if (accountPass !== this.formItems.password) {
+      return this.$store.dispatch('notification/ADD_ERROR', NotificationType.WRONG_PASSWORD_ERROR)
     }
 
     // LOGIN SUCCESS: update app state

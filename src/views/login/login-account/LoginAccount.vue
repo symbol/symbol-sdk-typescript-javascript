@@ -44,7 +44,7 @@
                 >
                   <div v-if="accounts.length">
                     <span class="network-type-head-title">
-                      {{ networkTypeList.find(n => n.value === networkType).label }}
+                      {{ getNetworkTypeLabel(networkType) }}
                     </span>
                   </div>
                   <Option
@@ -66,7 +66,7 @@
             <input
               v-model.lazy="formItems.password"
               v-focus
-              v-validate="validationRules.accountPassword"
+              v-validate="'required'"
               :class="[!accountsClassifiedByNetworkType ? 'un_click' : '']"
               :disabled="!accountsClassifiedByNetworkType"
               type="password"
@@ -75,20 +75,16 @@
               :placeholder="$t('please_enter_your_wallet_password')"
             >
           </ErrorTooltip>
-          <input
-            v-show="false" v-model="accountPassword" v-validate
-            disabled data-vv-name="accountPassword"
-          >
 
           <div class="password-tip">
-            <span class="prompt pointer" @click="isShowHint = !isShowHint">{{ $t('Password_hint') }}</span>
+            <span class="prompt pointer" @click="formItems.hasHint = !formItems.hasHint">{{ $t('Password_hint') }}</span>
             <span
               class="pointer create-account"
               @click="$router.push({name: 'login.importStrategy'})"
             >{{ $t('create_a_new_account') }}?</span>
           </div>
-          <div v-if="isShowHint" class="hint">
-            {{ $t('Password_hint') }}: {{ hintText }}
+          <div v-if="formItems.hasHint" class="hint">
+            {{ $t('Password_hint') }}: {{ getPasswordHint() }}
           </div>
           <div v-if="accountsClassifiedByNetworkType" class="pointer button" @click="submit">
             {{ $t('login') }}
