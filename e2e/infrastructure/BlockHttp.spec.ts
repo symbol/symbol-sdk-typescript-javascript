@@ -28,6 +28,7 @@ import { Deadline } from '../../src/model/transaction/Deadline';
 import { TransactionInfo } from '../../src/model/transaction/TransactionInfo';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
+import { UInt64 } from '../../src/model/UInt64';
 
 describe('BlockHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -87,7 +88,7 @@ describe('BlockHttp', () => {
 
     describe('getBlockByHeight', () => {
         it('should return block info given height', (done) => {
-            blockRepository.getBlockByHeight('1')
+            blockRepository.getBlockByHeight(UInt64.fromUint(1))
             .subscribe((blockInfo) => {
                 blockReceiptHash = blockInfo.blockReceiptsHash;
                 blockTransactionHash = blockInfo.blockTransactionsHash;
@@ -105,7 +106,7 @@ describe('BlockHttp', () => {
         let firstId: string;
 
         it('should return block transactions data given height', (done) => {
-            blockRepository.getBlockTransactions('1')
+            blockRepository.getBlockTransactions(UInt64.fromUint(1))
             .subscribe((transactions) => {
                 nextId = transactions[0].transactionInfo!.id;
                 firstId = transactions[1].transactionInfo!.id;
@@ -115,7 +116,7 @@ describe('BlockHttp', () => {
         });
 
         it('should return block transactions data given height with paginated transactionId', (done) => {
-            blockRepository.getBlockTransactions('1', new QueryParams(10, nextId))
+            blockRepository.getBlockTransactions(UInt64.fromUint(1), new QueryParams(10, nextId))
             .subscribe((transactions) => {
                 expect(transactions[0].transactionInfo!.id).to.be.equal(firstId);
                 expect(transactions.length).to.be.greaterThan(0);
