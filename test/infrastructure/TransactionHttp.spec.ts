@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import http = require('http');
 import { expect } from 'chai';
+import http = require('http');
 import {
     BlockRoutesApi,
     TransactionRoutesApi,
     TransactionStateTypeEnum,
     TransactionStatusDTO,
-    TransactionStatusTypeEnum
+    TransactionStatusTypeEnum,
 } from 'nem2-sdk-openapi-typescript-node-client';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 

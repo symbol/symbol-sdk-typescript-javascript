@@ -23,7 +23,7 @@ import {
     NamespaceIdDto,
     NamespaceRegistrationTransactionBuilder,
     SignatureDto,
-    TimestampDto
+    TimestampDto,
 } from 'catbuffer';
 import { Convert, Convert as convert } from '../../core/format';
 import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';

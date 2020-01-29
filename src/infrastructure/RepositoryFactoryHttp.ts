@@ -43,7 +43,7 @@ import { ReceiptHttp } from './ReceiptHttp';
 import { ReceiptRepository } from './ReceiptRepository';
 import { RepositoryFactory } from './RepositoryFactory';
 import { RestrictionAccountHttp } from './RestrictionAccountHttp';
-import { RestrictionAccountRepository } from './RestrictionAccountRespository';
+import { RestrictionAccountRepository } from './RestrictionAccountRepository';
 import { RestrictionMosaicHttp } from './RestrictionMosaicHttp';
 import { RestrictionMosaicRepository } from './RestrictionMosaicRepository';
 import { TransactionHttp } from './TransactionHttp';

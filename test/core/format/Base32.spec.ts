@@ -20,24 +20,24 @@ import {Base32 as base32} from '../../../src/core/format/Base32';
 describe('base32', () => {
     const Test_Vectors = [{
             decoded: '68BA9E8D1AA4502E1F73DA19784B5D7DA16CA1E4AF895FAC12',
-            encoded: 'NC5J5DI2URIC4H3T3IMXQS25PWQWZIPEV6EV7LAS'
+            encoded: 'NC5J5DI2URIC4H3T3IMXQS25PWQWZIPEV6EV7LAS',
         },
         {
             decoded: '684C2605E5B366BB94BC30755EC9F50D74E80FC9283D20E283',
-            encoded: 'NBGCMBPFWNTLXFF4GB2V5SPVBV2OQD6JFA6SBYUD'
+            encoded: 'NBGCMBPFWNTLXFF4GB2V5SPVBV2OQD6JFA6SBYUD',
         },
         {
             decoded: '68D7B09A14BEA7CE060E71C0FA9AC9B4226DE167013DE10B3D',
-            encoded: 'NDL3BGQUX2T44BQOOHAPVGWJWQRG3YLHAE66CCZ5'
+            encoded: 'NDL3BGQUX2T44BQOOHAPVGWJWQRG3YLHAE66CCZ5',
         },
         {
             decoded: '686C44C024F1089669F53C45AC6D62CC17A0D9CBA67A6205E6',
-            encoded: 'NBWEJQBE6EEJM2PVHRC2Y3LCZQL2BWOLUZ5GEBPG'
+            encoded: 'NBWEJQBE6EEJM2PVHRC2Y3LCZQL2BWOLUZ5GEBPG',
         },
         {
             decoded: '98A0FE84BBFC5EEE7CADC2B12F790DAA4A7A9505096E674FAB',
-            encoded: 'TCQP5BF37RPO47FNYKYS66INVJFHVFIFBFXGOT5L'
-        }
+            encoded: 'TCQP5BF37RPO47FNYKYS66INVJFHVFIFBFXGOT5L',
+        },
     ];
 
     describe('encode', () => {
@@ -146,7 +146,7 @@ describe('base32', () => {
             const illegalInputs = [
                 'NC5J5DI2URIC4H3T3IMXQS21PWQWZIPEV6EV7LAS', // contains char '1'
                 'NBGCMBPFWNTLXFF4GB2V5SPV!V2OQD6JFA6SBYUD', // contains char '!'
-                'NDL3BGQUX2T44BQOOHAPVGWJWQRG3YLHAE)6CCZ5' // contains char ')'
+                'NDL3BGQUX2T44BQOOHAPVGWJWQRG3YLHAE)6CCZ5', // contains char ')'
             ];
 
             // Act + Assert:
