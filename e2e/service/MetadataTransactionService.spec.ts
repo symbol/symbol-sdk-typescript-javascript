@@ -160,7 +160,7 @@ describe('MetadataTransactionService', () => {
                 newValue,
                 targetAccount.publicAccount,
             ).subscribe((transaction: AccountMetadataTransaction) => {
-                expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA_TRANSACTION);
+                expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA);
                 expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
                 expect(transaction.value).to.be.equal(newValue);
                 expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
@@ -180,7 +180,7 @@ describe('MetadataTransactionService', () => {
                 targetAccount.publicAccount,
                 mosaicId,
             ).subscribe((transaction: MosaicMetadataTransaction) => {
-                expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA_TRANSACTION);
+                expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
                 expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
                 expect(transaction.valueSizeDelta).to.be.equal(5);
                 expect(transaction.value).to.be.equal(newValue + 'delta');
@@ -202,7 +202,7 @@ describe('MetadataTransactionService', () => {
                 targetAccount.publicAccount,
                 namespaceId,
             ).subscribe((transaction: NamespaceMetadataTransaction) => {
-                expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA_TRANSACTION);
+                expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
                 expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
                 expect(transaction.valueSizeDelta).to.be.equal(5);
                 expect(transaction.value).to.be.equal(newValue + 'delta');

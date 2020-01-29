@@ -60,7 +60,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                                       networkType: NetworkType,
                                       maxFee: UInt64 = new UInt64([0, 0])): NamespaceRegistrationTransaction {
         return new NamespaceRegistrationTransaction(networkType,
-            TransactionVersion.REGISTER_NAMESPACE,
+            TransactionVersion.NAMESPACE_REGISTRATION,
             deadline,
             maxFee,
             NamespaceRegistrationType.RootNamespace,
@@ -91,7 +91,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
             parentId = parentNamespace;
         }
         return new NamespaceRegistrationTransaction(networkType,
-            TransactionVersion.REGISTER_NAMESPACE,
+            TransactionVersion.NAMESPACE_REGISTRATION,
             deadline,
             maxFee,
             NamespaceRegistrationType.SubNamespace,
@@ -146,7 +146,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.REGISTER_NAMESPACE, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+        super(TransactionType.NAMESPACE_REGISTRATION, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
@@ -217,7 +217,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                 new KeyDto(signerBuffer),
                 this.versionToDTO(),
                 this.networkType.valueOf(),
-                TransactionType.REGISTER_NAMESPACE.valueOf(),
+                TransactionType.NAMESPACE_REGISTRATION.valueOf(),
                 new AmountDto(this.maxFee.toDTO()),
                 new TimestampDto(this.deadline.toDTO()),
                 new NamespaceIdDto(this.namespaceId.id.toDTO()),
@@ -231,7 +231,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                 new KeyDto(signerBuffer),
                 this.versionToDTO(),
                 this.networkType.valueOf(),
-                TransactionType.REGISTER_NAMESPACE.valueOf(),
+                TransactionType.NAMESPACE_REGISTRATION.valueOf(),
                 new AmountDto(this.maxFee.toDTO()),
                 new TimestampDto(this.deadline.toDTO()),
                 new NamespaceIdDto(this.namespaceId.id.toDTO()),
@@ -253,7 +253,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                 new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
                 this.versionToDTO(),
                 this.networkType.valueOf(),
-                TransactionType.REGISTER_NAMESPACE.valueOf(),
+                TransactionType.NAMESPACE_REGISTRATION.valueOf(),
                 new NamespaceIdDto(this.namespaceId.id.toDTO()),
                 Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
                 new BlockDurationDto(this.duration!.toDTO()),
@@ -264,7 +264,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.REGISTER_NAMESPACE.valueOf(),
+            TransactionType.NAMESPACE_REGISTRATION.valueOf(),
             new NamespaceIdDto(this.namespaceId.id.toDTO()),
             Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
             undefined,

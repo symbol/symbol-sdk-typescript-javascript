@@ -31,7 +31,7 @@ export enum TransactionType {
      * Register namespace transaction type.
      * @type {number}
      */
-    REGISTER_NAMESPACE = 0x414E,
+    NAMESPACE_REGISTRATION = 0x414E,
 
     /**
      * Address alias transaction type
@@ -61,7 +61,7 @@ export enum TransactionType {
      * Modify multisig account transaction type.
      * @type {number}
      */
-    MODIFY_MULTISIG_ACCOUNT = 0x4155,
+    MULTISIG_ACCOUNT_MODIFICATION = 0x4155,
 
     /**
      * Aggregate complete transaction type.
@@ -78,7 +78,7 @@ export enum TransactionType {
      * Lock transaction type
      * @type {number}
      */
-    LOCK = 0x4148,
+    HASH_LOCK = 0x4148,
 
     /**
      * Secret Lock Transaction type
@@ -96,25 +96,25 @@ export enum TransactionType {
      * Account restriction address transaction type
      * @type {number}
      */
-    ACCOUNT_RESTRICTION_ADDRESS = 0x4150,
+    ACCOUNT_ADDRESS_RESTRICTION = 0x4150,
 
     /**
      * Account restriction mosaic transaction type
      * @type {number}
      */
-    ACCOUNT_RESTRICTION_MOSAIC = 0x4250,
+    ACCOUNT_MOSAIC_RESTRICTION = 0x4250,
 
     /**
      * Account restriction operation transaction type
      * @type {number}
      */
-   ACCOUNT_RESTRICTION_OPERATION = 0x4350,
+    ACCOUNT_OPERATION_RESTRICTION = 0x4350,
 
     /**
      * Link account transaction type
      * @type {number}
      */
-    LINK_ACCOUNT = 0x414C,
+    ACCOUNT_LINK = 0x414C,
 
     /**
      * Mosaic address restriction type
@@ -132,17 +132,17 @@ export enum TransactionType {
      * Account metadata transaction
      * @type {number}
      */
-    ACCOUNT_METADATA_TRANSACTION = 0x4144,
+    ACCOUNT_METADATA = 0x4144,
 
     /**
      * Mosaic metadata transaction
      * @type {number}
      */
-    MOSAIC_METADATA_TRANSACTION = 0x4244,
+    MOSAIC_METADATA = 0x4244,
 
     /**
      * Namespace metadata transaction
      * @type {number}
      */
-    NAMESPACE_METADATA_TRANSACTION = 0x4344,
+    NAMESPACE_METADATA = 0x4344,
 }
