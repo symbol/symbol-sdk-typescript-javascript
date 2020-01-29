@@ -64,7 +64,7 @@
           <input v-model="formItems.hint">
         </div>
         <div class="button-container">
-          <button class="info-button" @click="$router.push({name: 'login'})">
+          <button class="info-button" @click="$router.push({name: 'login.account'})">
             {{ $t('Back_to_home') }}
           </button>
           <button @click="submit">

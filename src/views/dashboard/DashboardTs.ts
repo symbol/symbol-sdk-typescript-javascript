@@ -16,7 +16,7 @@
 import {Component, Vue} from 'vue-property-decorator'
 
 // internal dependencies
-import routes from '@/router/routes'
+import {routes} from '@/router/routes'
 
 // child components
 // @ts-ignore

@@ -15,6 +15,7 @@
  */
 import {mapGetters} from 'vuex'
 import {Component, Provide, Vue} from 'vue-property-decorator'
+import {NetworkType} from 'nem2-sdk'
 
 // internal dependencies
 import {$eventBus} from '@/main'
@@ -79,6 +80,17 @@ export default class LoginAccountTs extends Vue {
   public validationRules = ValidationRuleset
 
   /**
+   * Network types
+   * @var {NetworkNodeEntry[]}
+   */
+  public networkTypeList: {value: NetworkType, label: string}[] = [
+    {value: NetworkType.MIJIN_TEST, label: 'MIJIN_TEST'},
+    {value: NetworkType.MAIN_NET, label: 'MAIN_NET'},
+    {value: NetworkType.TEST_NET, label: 'TEST_NET'},
+    {value: NetworkType.MIJIN, label: 'MIJIN'},
+  ]
+
+  /**
    * Form items
    */
   public formItems: any = {
@@ -97,6 +109,7 @@ export default class LoginAccountTs extends Vue {
 
   get accountsClassifiedByNetworkType() {
     const repository = new AccountsRepository()
+    console.log("account by network type: ", repository.getNamesByNetworkType())
     return repository.getNamesByNetworkType()
   }
 /// end-region computed properties getter/setter

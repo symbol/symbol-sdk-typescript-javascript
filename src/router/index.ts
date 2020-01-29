@@ -16,7 +16,7 @@
 import Router from 'vue-router'
 
 // internal dependencies
-import routes from '@/router/routes.ts'
+import {routes} from '@/router/routes.ts'
 import {AppStore} from '@/main'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 
@@ -37,13 +37,16 @@ router.beforeEach((to, from, next) => {
     return next({name: 'login.createAccount.info'})
   }
 
+  console.log("TO: ", to)
+
   if (!to.meta.protected) {
     return next(/* no-redirect */)
   }
 
   const isAuthenticated = AppStore.getters['account/isAuthenticated'] === true
+  console.log("auth: ", isAuthenticated)
   if (!isAuthenticated) {
-    return next({name: 'login'})
+    return next({name: 'login.account'})
   }
 
   return next()

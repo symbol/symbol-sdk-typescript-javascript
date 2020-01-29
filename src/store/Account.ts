@@ -98,7 +98,7 @@ export default {
       await dispatch('initialize')
       $eventBus.$emit('onAccountChange', accountName)
     },
-    ADD_WALLET({commit, dispatch, getters}, walletName) {
+    ADD_WALLET({commit, dispatch, getters}, walletId) {
       fetchDatabase()
 
       const currentAccount = getters['currentAccount']
@@ -107,13 +107,15 @@ export default {
       }
 
       // validate wallet exists
-      const wallet = walletsRepository.read(walletName)
+      const wallet = walletsRepository.read(walletId)
       const wallets = currentAccount.values.get("wallets")
-      wallets.push(wallet.values.get('name'))
+      wallets.push(wallet.getIdentifier())
 
       // update account and return
       currentAccount.values.set("wallets", wallets)
-      return commit('currentAccount', currentAccount)
+      accountsRepository.update(currentAccount.getIdentifier(), currentAccount.values)
+
+      return dispatch('SET_CURRENT_ACCOUNT', currentAccount.getIdentifier())
     }
 /// end-region scoped actions
   }

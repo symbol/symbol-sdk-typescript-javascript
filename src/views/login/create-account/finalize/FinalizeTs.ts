@@ -93,15 +93,13 @@ export default class FinalizeTs extends Vue {
       // create account by mnemonic
       const wallet = this.createWalletFromMnemonic()
 
-      console.log("wallet model: ", wallet.model)
-
       // use repository for storage
       this.walletsRepository.create(wallet.model.values)
 
       // execute store actions
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
-      this.$store.dispatch('account/ADD_WALLET', wallet.model.values.get('name'))
-      this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet.model.values.get('name'))
+      this.$store.dispatch('account/ADD_WALLET', wallet.model.getIdentifier())
+      this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet.model.getIdentifier())
       this.$store.dispatch('temporary/RESET_STATE')
 
       // flush and continue
@@ -123,17 +121,12 @@ export default class FinalizeTs extends Vue {
       WalletService.DEFAULT_WALLET_PATH
     )
 
-    console.log("account: ", account)
-
     const simpleWallet = SimpleWallet.createFromPrivateKey(
       'SeedWallet',
       this.currentPassword,
       account.privateKey,
       this.networkType
     )
-
-    console.log("privateKey: ", account.privateKey)
-    console.log("simpleWallet: ", simpleWallet)
 
     return new AppWallet(
       this.$store,

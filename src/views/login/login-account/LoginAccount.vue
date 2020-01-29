@@ -42,18 +42,18 @@
                   v-for="(accounts, networkType) in accountsClassifiedByNetworkType"
                   :key="networkType"
                 >
-                  <div>
+                  <div v-if="accounts.length">
                     <span class="network-type-head-title">
-                      {{ NetworkType[networkType] }}
+                      {{ networkTypeList.find(n => n.value === networkType).label }}
                     </span>
                   </div>
                   <Option
-                    v-for="(walletName, index) in accounts"
-                    :key="`${walletName}${index}`"
-                    :value="walletName"
-                    :label="walletName"
+                    v-for="(accountName, index) in accounts"
+                    :key="`${accountName}${index}`"
+                    :value="accountName"
+                    :label="accountName"
                   >
-                    <span>{{ walletName }}</span>
+                    <span>{{ accountName }}</span>
                   </Option>
                 </div>
               </div>

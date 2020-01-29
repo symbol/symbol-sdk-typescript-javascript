@@ -121,13 +121,13 @@ export abstract class DatabaseModel {
 
     // to-json
     const json = JSON.stringify(raw)
-    const hasher = SHA3Hasher.createHasher(length, SignSchema.SHA3);
+    const hasher = SHA3Hasher.createHasher(64, SignSchema.SHA3);
     hasher.reset();
-    hasher.update(json);
+    hasher.update(Convert.utf8ToHex(json));
 
-    const hash = new Uint8Array(length);
+    const hash = new Uint8Array(64);
     hasher.finalize(hash);
-    return Convert.uint8ToHex(hash).substr(0, 12)
+    return Convert.uint8ToHex(hash).substr(0, 16)
   }
 
   /**

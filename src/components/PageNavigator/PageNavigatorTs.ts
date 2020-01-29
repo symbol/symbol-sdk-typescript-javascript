@@ -18,7 +18,7 @@ import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import routes from '@/router/routes'
+import {routes} from '@/router/routes'
 
 @Component({
   computed: {
@@ -37,6 +37,7 @@ export class PageNavigatorTs extends Vue {
 
 /// region computed properties getter/setter
   get routes() {
+    console.log("router ROUTES: ", routes)
     return routes.shift().children
       .filter(({meta}) => meta.clickable)
       .map(({path, meta}) => ({path, meta}))
@@ -49,6 +50,6 @@ export class PageNavigatorTs extends Vue {
    */
   public logout() {
     this.$store.dispatch('account/LOG_OUT')
-    this.$router.push({name: 'login'})
+    this.$router.push({name: 'login.account'})
   }
 }

@@ -15,7 +15,7 @@
  */
 import {createStepImage, importStepImage, leftBarIcons} from '@/views/resources/Images'
 
-const routes: any[] = [
+export const routes: any[] = [
   {
     path: '/',
     name: 'home',
@@ -402,5 +402,3 @@ const routes: any[] = [
     /// end-region PageLayout children
   },
 ]
-
-export default routes

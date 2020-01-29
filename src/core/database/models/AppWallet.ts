@@ -69,10 +69,10 @@ export class AppWallet {
       ['accountName', this.accountName],
       ['name', this.name],
       ['type', AppWalletType.fromDescriptor(this.sourceType)],
-      ['address', this.simpleWallet.address],
+      ['address', this.simpleWallet.address.plain()],
       ['publicKey', this.publicKey],
-      ['encPrivate', simpleWallet.encryptedPrivateKey.encryptedKey],
-      ['encIv', simpleWallet.encryptedPrivateKey.iv],
+      ['encPrivate', this.simpleWallet.encryptedPrivateKey.encryptedKey],
+      ['encIv', this.simpleWallet.encryptedPrivateKey.iv],
       ['path', this.path],
       ['isMultisig', this.isMultisig]
     ]))

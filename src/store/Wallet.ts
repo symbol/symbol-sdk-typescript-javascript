@@ -257,10 +257,10 @@ export default {
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
 /// region scoped actions
-    async SET_CURRENT_WALLET({commit, dispatch}, walletName) {
+    async SET_CURRENT_WALLET({commit, dispatch}, walletId) {
       fetchDatabase()
 
-      const currentWallet = walletsRepository.read(walletName)
+      const currentWallet = walletsRepository.read(walletId)
       commit('currentWallet', currentWallet)
       commit('currentWalletAddress', currentWallet.objects.address)
 
