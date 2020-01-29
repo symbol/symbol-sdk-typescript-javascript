@@ -113,7 +113,7 @@ export const CreateTransactionFromPayload = (payload: string): Transaction => {
                 return MosaicDefinitionTransaction.createFromBodyBuilder((builder as MosaicDefinitionTransactionBuilder), networkType, deadline, maxFee);
             case TransactionType.MOSAIC_SUPPLY_CHANGE:
                 return MosaicSupplyChangeTransaction.createFromBodyBuilder((builder as MosaicSupplyChangeTransactionBuilder), networkType, deadline, maxFee);
-            case TransactionType.REGISTER_NAMESPACE:
+            case TransactionType.NAMESPACE_REGISTRATION:
                 return NamespaceRegistrationTransaction.createFromBodyBuilder((builder as NamespaceRegistrationTransactionBuilder), networkType, deadline, maxFee);
             case TransactionType.TRANSFER:
                 return TransferTransaction.createFromBodyBuilder((builder as TransferTransactionBuilder), networkType, deadline, maxFee);
@@ -186,7 +186,7 @@ export const CreateTransactionFromEmbeddedTransactionBuilder = (builder: Embedde
                 return MosaicDefinitionTransaction.createFromBodyBuilder((builder as EmbeddedMosaicDefinitionTransactionBuilder), networkType, deadline, maxFee);
             case TransactionType.MOSAIC_SUPPLY_CHANGE:
                 return MosaicSupplyChangeTransaction.createFromBodyBuilder((builder as EmbeddedMosaicSupplyChangeTransactionBuilder), networkType, deadline, maxFee);
-            case TransactionType.REGISTER_NAMESPACE:
+            case TransactionType.NAMESPACE_REGISTRATION:
                 return NamespaceRegistrationTransaction.createFromBodyBuilder((builder as EmbeddedNamespaceRegistrationTransactionBuilder), networkType, deadline, maxFee);
             case TransactionType.TRANSFER:
                 return TransferTransaction.createFromBodyBuilder((builder as EmbeddedTransferTransactionBuilder), networkType, deadline, maxFee);
@@ -194,19 +194,19 @@ export const CreateTransactionFromEmbeddedTransactionBuilder = (builder: Embedde
                 return SecretLockTransaction.createFromBodyBuilder((builder as EmbeddedSecretLockTransactionBuilder), networkType, deadline, maxFee);
             case TransactionType.SECRET_PROOF:
                 return SecretProofTransaction.createFromBodyBuilder((builder as EmbeddedSecretProofTransactionBuilder), networkType, deadline, maxFee);
-            case TransactionType.MODIFY_MULTISIG_ACCOUNT:
+            case TransactionType.MULTISIG_ACCOUNT_MODIFICATION:
                 return MultisigAccountModificationTransaction.createFromBodyBuilder((builder as EmbeddedMultisigAccountModificationTransactionBuilder), networkType, deadline, maxFee);
-            case TransactionType.LOCK:
+            case TransactionType.HASH_LOCK:
                 return LockFundsTransaction.createFromBodyBuilder((builder as EmbeddedHashLockTransactionBuilder), networkType, deadline, maxFee);
             case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
                 return MosaicGlobalRestrictionTransaction.createFromBodyBuilder((builder as EmbeddedMosaicGlobalRestrictionTransactionBuilder), networkType, deadline, maxFee);
             case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
                 return MosaicAddressRestrictionTransaction.createFromBodyBuilder((builder as EmbeddedMosaicAddressRestrictionTransactionBuilder), networkType, deadline, maxFee);
-            case TransactionType.ACCOUNT_METADATA_TRANSACTION:
+            case TransactionType.ACCOUNT_METADATA:
                 return AccountMetadataTransaction.createFromBodyBuilder((builder as EmbeddedAccountMetadataTransactionBuilder), networkType, deadline, maxFee);
-            case TransactionType.MOSAIC_METADATA_TRANSACTION:
+            case TransactionType.MOSAIC_METADATA:
                 return MosaicMetadataTransaction.createFromBodyBuilder((builder as EmbeddedMosaicMetadataTransactionBuilder), networkType, deadline, maxFee);
-            case TransactionType.NAMESPACE_METADATA_TRANSACTION:
+            case TransactionType.NAMESPACE_METADATA:
                 return NamespaceMetadataTransaction.createFromBodyBuilder((builder as EmbeddedNamespaceMetadataTransactionBuilder), networkType, deadline, maxFee);
             default:
                 throw new Error(`Transaction type ${networkType} not implemented.`);

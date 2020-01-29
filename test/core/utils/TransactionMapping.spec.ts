@@ -608,7 +608,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const transaction = TransactionMapping.createFromPayload(signedTx.payload) as AccountMetadataTransaction;
 
-        expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA_TRANSACTION);
+        expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA);
         expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
         expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
         expect(transaction.valueSizeDelta).to.be.equal(1);
@@ -630,7 +630,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const transaction = TransactionMapping.createFromPayload(signedTx.payload) as MosaicMetadataTransaction;
 
-        expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA_TRANSACTION);
+        expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
         expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
         expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
         expect(transaction.valueSizeDelta).to.be.equal(1);
@@ -653,7 +653,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const transaction = TransactionMapping.createFromPayload(signedTx.payload) as NamespaceMetadataTransaction;
 
-        expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA_TRANSACTION);
+        expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
         expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
         expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
         expect(transaction.valueSizeDelta).to.be.equal(1);
@@ -765,7 +765,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const transaction =
             TransactionMapping.createFromDTO(mosaicRestrictionTransaction.toJSON()) as AccountMosaicRestrictionTransaction;
 
-        expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_RESTRICTION_MOSAIC);
+        expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_MOSAIC_RESTRICTION);
         expect(transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowMosaic);
         expect(transaction.restrictionAdditions.length).to.be.equal(1);
     });
@@ -783,7 +783,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const transaction =
             TransactionMapping.createFromDTO(operationRestrictionTransaction.toJSON()) as AccountMosaicRestrictionTransaction;
 
-        expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_RESTRICTION_OPERATION);
+        expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_OPERATION_RESTRICTION);
         expect(transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowIncomingTransactionType);
         expect(transaction.restrictionAdditions.length).to.be.equal(1);
     });
@@ -989,7 +989,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const transaction =
             TransactionMapping.createFromDTO(modifyMultisigAccountTransaction.toJSON()) as MultisigAccountModificationTransaction;
 
-        expect(transaction.type).to.be.equal(TransactionType.MODIFY_MULTISIG_ACCOUNT);
+        expect(transaction.type).to.be.equal(TransactionType.MULTISIG_ACCOUNT_MODIFICATION);
         expect(transaction.minApprovalDelta).to.be.equal(2);
         expect(transaction.minRemovalDelta).to.be.equal(1);
     });
@@ -1055,7 +1055,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const transaction =
             TransactionMapping.createFromDTO(lockTransaction.toJSON()) as LockFundsTransaction;
 
-        expect(transaction.type).to.be.equal(TransactionType.LOCK);
+        expect(transaction.type).to.be.equal(TransactionType.HASH_LOCK);
         expect(transaction.hash).to.be.equal(signedTransaction.hash);
     });
 
@@ -1070,7 +1070,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const transaction =
             TransactionMapping.createFromDTO(registerNamespaceTransaction.toJSON()) as NamespaceRegistrationTransaction;
 
-        expect(transaction.type).to.be.equal(TransactionType.REGISTER_NAMESPACE);
+        expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_REGISTRATION);
 
     });
 
@@ -1084,7 +1084,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const transaction =
             TransactionMapping.createFromDTO(registerNamespaceTransaction.toJSON()) as NamespaceRegistrationTransaction;
 
-        expect(transaction.type).to.be.equal(TransactionType.REGISTER_NAMESPACE);
+        expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_REGISTRATION);
     });
 
     it('should create MosaicGlobalRestrictionTransaction', () => {
@@ -1147,7 +1147,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const transaction =
             TransactionMapping.createFromDTO(accountMetadataTransaction.toJSON()) as AccountMetadataTransaction;
 
-        expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA_TRANSACTION);
+        expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA);
         expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
         expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
         expect(transaction.valueSizeDelta).to.be.equal(1);
@@ -1168,7 +1168,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const transaction =
             TransactionMapping.createFromDTO(mosaicMetadataTransaction.toJSON()) as MosaicMetadataTransaction;
 
-        expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA_TRANSACTION);
+        expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
         expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
         expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
         expect(transaction.valueSizeDelta).to.be.equal(1);
@@ -1190,7 +1190,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const transaction =
             TransactionMapping.createFromDTO(namespaceMetadataTransaction.toJSON()) as NamespaceMetadataTransaction;
 
-        expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA_TRANSACTION);
+        expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
         expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
         expect(transaction.scopedMetadataKey.toString()).to.be.equal(UInt64.fromUint(1000).toString());
         expect(transaction.valueSizeDelta).to.be.equal(1);

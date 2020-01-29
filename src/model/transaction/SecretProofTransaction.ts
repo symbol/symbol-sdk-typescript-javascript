@@ -23,7 +23,7 @@ import {
     SecretProofTransactionBuilder,
     SignatureDto,
     TimestampDto,
-    UnresolvedAddressDto
+    UnresolvedAddressDto,
 } from 'catbuffer';
 import { Convert, Convert as convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';

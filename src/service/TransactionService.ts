@@ -126,25 +126,25 @@ export class TransactionService implements ITransactionService {
      */
     private checkShouldResolve(transaction: Transaction): boolean {
         switch (transaction.type) {
-            case TransactionType.LINK_ACCOUNT:
-            case TransactionType.ACCOUNT_METADATA_TRANSACTION:
-            case TransactionType.ACCOUNT_RESTRICTION_OPERATION:
+            case TransactionType.ACCOUNT_LINK:
+            case TransactionType.ACCOUNT_METADATA:
+            case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
             case TransactionType.ADDRESS_ALIAS:
             case TransactionType.MOSAIC_ALIAS:
             case TransactionType.MOSAIC_DEFINITION:
-            case TransactionType.MODIFY_MULTISIG_ACCOUNT:
-            case TransactionType.NAMESPACE_METADATA_TRANSACTION:
-            case TransactionType.REGISTER_NAMESPACE:
+            case TransactionType.MULTISIG_ACCOUNT_MODIFICATION:
+            case TransactionType.NAMESPACE_METADATA:
+            case TransactionType.NAMESPACE_REGISTRATION:
                 return false;
-            case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
+            case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
                 const accountAddressRestriction = transaction as AccountAddressRestrictionTransaction;
                 return accountAddressRestriction.restrictionAdditions.find((address) => address instanceof NamespaceId) !== undefined ||
                     accountAddressRestriction.restrictionDeletions.find((address) => address instanceof NamespaceId) !== undefined;
-            case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
+            case TransactionType.ACCOUNT_MOSAIC_RESTRICTION:
                 const accountMosaicRestriction = transaction as AccountAddressRestrictionTransaction;
                 return accountMosaicRestriction.restrictionAdditions.find((mosaicId) => mosaicId instanceof NamespaceId) !== undefined ||
                     accountMosaicRestriction.restrictionDeletions.find((mosaicId) => mosaicId instanceof NamespaceId) !== undefined;
-            case TransactionType.LOCK:
+            case TransactionType.HASH_LOCK:
                 return (transaction as LockFundsTransaction).mosaic.id instanceof NamespaceId;
             case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
                 const mosaicAddressRestriction = transaction as MosaicAddressRestrictionTransaction;
@@ -154,7 +154,7 @@ export class TransactionService implements ITransactionService {
                 const mosaicGlobalRestriction = transaction as MosaicGlobalRestrictionTransaction;
                 return mosaicGlobalRestriction.referenceMosaicId instanceof NamespaceId ||
                     mosaicGlobalRestriction.mosaicId instanceof NamespaceId;
-            case TransactionType.MOSAIC_METADATA_TRANSACTION:
+            case TransactionType.MOSAIC_METADATA:
                 return (transaction as MosaicMetadataTransaction).targetMosaicId instanceof NamespaceId;
             case TransactionType.MOSAIC_SUPPLY_CHANGE:
                 return (transaction as MosaicSupplyChangeTransaction).mosaicId instanceof NamespaceId;
@@ -181,7 +181,7 @@ export class TransactionService implements ITransactionService {
      * @return {Observable<Transaction>}
      */
     private resolvedFromReceipt(transaction: Transaction, aggregateIndex: number): Observable<Transaction> {
-        return this.receiptRepository.getBlockReceipts(transaction.transactionInfo!.height.toString()).pipe(
+        return this.receiptRepository.getBlockReceipts(transaction.transactionInfo!.height).pipe(
             map((statement) => transaction.resolveAliases(statement, aggregateIndex)),
         );
     }

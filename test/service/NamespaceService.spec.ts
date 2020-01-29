@@ -30,7 +30,7 @@ import { NamespaceService } from '../../src/service/NamespaceService';
 describe('NamespaceService', () => {
 
     it('should return the NamespaceInfo + name for a root namespace', () => {
-        const mockedNamespaceRepository:NamespaceRepository = mock();
+        const mockedNamespaceRepository: NamespaceRepository = mock();
         const rootNamespace = givenRootNamespace();
         const subnamespace = givenSubnamespace();
         when(mockedNamespaceRepository.getNamespace(rootNamespace.id))
@@ -52,7 +52,7 @@ describe('NamespaceService', () => {
     });
 
     it('should return the NamespaceInfo + name for a subnamespace', () => {
-        const mockedNamespaceRepository:NamespaceRepository = mock();
+        const mockedNamespaceRepository: NamespaceRepository = mock();
         const rootNamespace = givenRootNamespace();
         const subnamespace = givenSubnamespace();
         when(mockedNamespaceRepository.getNamespace(rootNamespace.id))

@@ -22,7 +22,7 @@ import {
     MosaicMetadataTransactionBuilder,
     SignatureDto,
     TimestampDto,
-    UnresolvedMosaicIdDto
+    UnresolvedMosaicIdDto,
 } from 'catbuffer';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
@@ -66,7 +66,7 @@ export class MosaicMetadataTransaction extends Transaction {
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): MosaicMetadataTransaction {
         return new MosaicMetadataTransaction(networkType,
-            TransactionVersion.MOSAIC_METADATA_TRANSACTION,
+            TransactionVersion.MOSAIC_METADATA,
             deadline,
             maxFee,
             targetPublicKey,
@@ -118,7 +118,7 @@ export class MosaicMetadataTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.MOSAIC_METADATA_TRANSACTION, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+        super(TransactionType.MOSAIC_METADATA, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
         if (value.length > 1024) {
             throw new Error('The maximum value size is 1024');
         }
@@ -182,7 +182,7 @@ export class MosaicMetadataTransaction extends Transaction {
             new KeyDto(signerBuffer),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.MOSAIC_METADATA_TRANSACTION.valueOf(),
+            TransactionType.MOSAIC_METADATA.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
             new KeyDto(Convert.hexToUint8(this.targetPublicKey)),
@@ -203,7 +203,7 @@ export class MosaicMetadataTransaction extends Transaction {
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.MOSAIC_METADATA_TRANSACTION.valueOf(),
+            TransactionType.MOSAIC_METADATA.valueOf(),
             new KeyDto(Convert.hexToUint8(this.targetPublicKey)),
             this.scopedMetadataKey.toDTO(),
             new UnresolvedMosaicIdDto(this.targetMosaicId.id.toDTO()),

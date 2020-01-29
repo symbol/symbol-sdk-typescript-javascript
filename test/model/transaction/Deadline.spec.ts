@@ -53,13 +53,12 @@ describe('Deadline', () => {
 
     it('make sure epochAdjustment is correct', () => {
         const epochAdjustment = new Date(Deadline.timestampNemesisBlock * 1000);
-        console.log(epochAdjustment.toUTCString());
 
         expect(epochAdjustment.getUTCFullYear()).to.be.equal(2019);
         expect(epochAdjustment.getUTCMonth() + 1).to.be.equal(11);
         expect(epochAdjustment.getUTCDate()).to.be.equal(11);
         expect(epochAdjustment.getUTCHours()).to.be.equal(0);
         expect(epochAdjustment.getUTCMinutes()).to.be.equal(0);
-        expect(epochAdjustment.toUTCString()).to.be.equal("Mon, 11 Nov 2019 00:00:00 GMT");
+        expect(epochAdjustment.toUTCString()).to.be.equal('Mon, 11 Nov 2019 00:00:00 GMT');
     });
 });

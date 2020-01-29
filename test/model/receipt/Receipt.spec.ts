@@ -347,14 +347,14 @@ describe('Receipt', () => {
         const statement = CreateStatementFromDTO(statementDTO, netWorkType);
         const receipt = statement.mosaicResolutionStatements[0];
         const hash = receipt.generateHash(NetworkType.MAIN_NET);
-        expect(hash).to.be.equal('99381CE398D3AAE110FC97E984D7D35A710A5C525A4F959EC8916B382DE78A63');
+        expect(hash).to.be.equal('DE29FB6356530E5D1FBEE0A84202520C155D882C46EA74456752D6C75F0707B3');
     });
 
     it('should generate hash for AddressResolutionStatement', () => {
         const statement = CreateStatementFromDTO(statementDTO, netWorkType);
         const receipt = statement.addressResolutionStatements[0];
         const hash = receipt.generateHash(NetworkType.MAIN_NET);
-        expect(hash).to.be.equal('952225717E26295B97F9A35E719CA1319114CCF23C927BCBD14E7A7AA4BAC617');
+        expect(hash).to.be.equal('EFE3D51BF14E861E6E219D1ADB5715D132D6AB7481B29726104933E517F7FBCC');
     });
 
     it('should generate hash for TransactionStatement', () => {

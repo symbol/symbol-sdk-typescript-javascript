@@ -22,7 +22,7 @@ import {
     KeyDto,
     SignatureDto,
     TimestampDto,
-    UnresolvedMosaicIdDto
+    UnresolvedMosaicIdDto,
 } from 'catbuffer';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
@@ -59,7 +59,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): AccountMosaicRestrictionTransaction {
         return new AccountMosaicRestrictionTransaction(networkType,
-            TransactionVersion.ACCOUNT_RESTRICTION_MOSAIC,
+            TransactionVersion.ACCOUNT_MOSAIC_RESTRICTION,
             deadline,
             maxFee,
             restrictionFlags,
@@ -89,8 +89,8 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.ACCOUNT_RESTRICTION_MOSAIC,
-            networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+        super(TransactionType.ACCOUNT_MOSAIC_RESTRICTION,
+              networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
@@ -154,7 +154,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
             new KeyDto(signerBuffer),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.ACCOUNT_RESTRICTION_MOSAIC.valueOf(),
+            TransactionType.ACCOUNT_MOSAIC_RESTRICTION.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
             this.restrictionFlags.valueOf(),
@@ -177,7 +177,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.ACCOUNT_RESTRICTION_MOSAIC.valueOf(),
+            TransactionType.ACCOUNT_MOSAIC_RESTRICTION.valueOf(),
             this.restrictionFlags.valueOf(),
             this.restrictionAdditions.map((addition) => {
                 return new UnresolvedMosaicIdDto(addition.id.toDTO());

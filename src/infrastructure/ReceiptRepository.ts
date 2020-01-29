@@ -17,6 +17,7 @@
 import {Observable} from 'rxjs';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
 import { Statement } from '../model/receipt/Statement';
+import { UInt64 } from '../model/UInt64';
 
 /**
  * Receipt interface repository.
@@ -28,10 +29,10 @@ export interface ReceiptRepository {
     /**
      * Get receipts from a block
      * Returns the receipts linked to a block.
-     * @param {string} height The height of the block.
+     * @param {UInt64} height The height of the block.
      * @return Observable<Statement>
      */
-    getBlockReceipts(height: string): Observable<Statement>;
+    getBlockReceipts(height: UInt64): Observable<Statement>;
 
     /**
      * Get the merkle path for a given a receipt statement hash and block
@@ -43,5 +44,5 @@ export interface ReceiptRepository {
      * @param hash The hash of the receipt statement or resolution.
      * @return Observable<MerkleProofInfo>
      */
-    getMerkleReceipts(height: string, hash: string): Observable<MerkleProofInfo>;
+    getMerkleReceipts(height: UInt64, hash: string): Observable<MerkleProofInfo>;
 }

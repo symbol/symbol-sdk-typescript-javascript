@@ -21,7 +21,7 @@ import {
     EmbeddedTransactionBuilder,
     KeyDto,
     SignatureDto,
-    TimestampDto
+    TimestampDto,
 } from 'catbuffer';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
@@ -53,7 +53,7 @@ export class AccountLinkTransaction extends Transaction {
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): AccountLinkTransaction {
         return new AccountLinkTransaction(networkType,
-            TransactionVersion.LINK_ACCOUNT,
+            TransactionVersion.ACCOUNT_LINK,
             deadline,
             maxFee,
             remotePublicKey,
@@ -86,7 +86,7 @@ export class AccountLinkTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.LINK_ACCOUNT, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+        super(TransactionType.ACCOUNT_LINK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
 
@@ -141,7 +141,7 @@ export class AccountLinkTransaction extends Transaction {
             new KeyDto(signerBuffer),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.LINK_ACCOUNT.valueOf(),
+            TransactionType.ACCOUNT_LINK.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
             new KeyDto(Convert.hexToUint8(this.remotePublicKey)),
@@ -159,7 +159,7 @@ export class AccountLinkTransaction extends Transaction {
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.LINK_ACCOUNT.valueOf(),
+            TransactionType.ACCOUNT_LINK.valueOf(),
             new KeyDto(Convert.hexToUint8(this.remotePublicKey)),
             this.linkAction.valueOf(),
         );

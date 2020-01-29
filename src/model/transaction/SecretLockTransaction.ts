@@ -25,7 +25,7 @@ import {
     TimestampDto,
     UnresolvedAddressDto,
     UnresolvedMosaicBuilder,
-    UnresolvedMosaicIdDto
+    UnresolvedMosaicIdDto,
 } from 'catbuffer';
 import { Convert, Convert as convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';

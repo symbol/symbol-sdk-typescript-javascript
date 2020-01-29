@@ -86,7 +86,7 @@ export class Convert {
      * @param {Uint8Array} input A uint8 array.
      * @returns {string} A hex encoded string corresponding to the input.
      */
-    public static uint8ToHex = (input) => {
+    public static uint8ToHex = (input): string => {
         let s = '';
         for (const byte of input) {
             s += utilities.Nibble_To_Char_Map[byte >> 4];

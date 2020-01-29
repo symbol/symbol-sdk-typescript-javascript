@@ -21,7 +21,7 @@ import {
     KeyDto,
     MultisigAccountModificationTransactionBuilder,
     SignatureDto,
-    TimestampDto
+    TimestampDto,
 } from 'catbuffer';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
@@ -60,7 +60,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): MultisigAccountModificationTransaction {
         return new MultisigAccountModificationTransaction(networkType,
-            TransactionVersion.MODIFY_MULTISIG_ACCOUNT,
+            TransactionVersion.MULTISIG_ACCOUNT_MODIFICATION,
             deadline,
             maxFee,
             minApprovalDelta,
@@ -107,7 +107,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.MODIFY_MULTISIG_ACCOUNT, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+        super(TransactionType.MULTISIG_ACCOUNT_MODIFICATION, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
@@ -172,7 +172,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
             new KeyDto(signerBuffer),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.MODIFY_MULTISIG_ACCOUNT.valueOf(),
+            TransactionType.MULTISIG_ACCOUNT_MODIFICATION.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
             this.minRemovalDelta,
@@ -196,7 +196,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.MODIFY_MULTISIG_ACCOUNT.valueOf(),
+            TransactionType.MULTISIG_ACCOUNT_MODIFICATION.valueOf(),
             this.minRemovalDelta,
             this.minApprovalDelta,
             this.publicKeyAdditions.map((addition) => {

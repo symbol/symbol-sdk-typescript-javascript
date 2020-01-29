@@ -16,8 +16,8 @@
 
 import {deepEqual} from 'assert';
 import {expect} from 'chai';
-import {NamespaceName} from '../../../src/model/namespace/NamespaceName';
 import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
+import {NamespaceName} from '../../../src/model/namespace/NamespaceName';
 
 describe('NamespaceName', () => {
 

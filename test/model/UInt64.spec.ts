@@ -23,7 +23,7 @@ const hexTestCases = [
     { str: '0000000012345678', value: [0x12345678, 0], description: '8' },
     { str: '0000ABCD12345678', value: [0x12345678, 0xABCD], description: '(8, 16)' },
     { str: '1234567890ABCDEF', value: [0x90ABCDEF, 0x12345678], description: '16' },
-    { str: 'FFFFFFFFFFFFFFFF', value: [0xFFFFFFFF, 0xFFFFFFFF], description: '16 (max value)' }
+    { str: 'FFFFFFFFFFFFFFFF', value: [0xFFFFFFFF, 0xFFFFFFFF], description: '16 (max value)' },
 ];
 
 describe('Uint64', () => {

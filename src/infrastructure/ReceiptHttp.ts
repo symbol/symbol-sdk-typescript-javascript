@@ -21,6 +21,7 @@ import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
 import { NetworkType } from '../model/blockchain/NetworkType';
 import { Statement } from '../model/receipt/Statement';
+import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { CreateStatementFromDTO } from './receipt/CreateReceiptFromDTO';
 import { ReceiptRepository } from './ReceiptRepository';
@@ -64,9 +65,9 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
      * @param hash The hash of the receipt statement or resolution.
      * @return Observable<MerkleProofInfo>
      */
-    public getMerkleReceipts(height: string, hash: string): Observable<MerkleProofInfo> {
+    public getMerkleReceipts(height: UInt64, hash: string): Observable<MerkleProofInfo> {
         return observableFrom(
-            this.receiptRoutesApi.getMerkleReceipts(height, hash)).pipe(
+            this.receiptRoutesApi.getMerkleReceipts(height.toString(), hash)).pipe(
                 map(({body}) => new MerkleProofInfo(
                         body.merklePath!.map(
                             (payload) => new MerklePathItem(payload.position, payload.hash)),
@@ -81,10 +82,10 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<Statement>
      */
-    public getBlockReceipts(height: string): Observable<Statement> {
+    public getBlockReceipts(height: UInt64): Observable<Statement> {
         return this.networkTypeObservable.pipe(
             mergeMap((networkType) => observableFrom(
-                this.receiptRoutesApi.getBlockReceipts(height)).pipe(
+                this.receiptRoutesApi.getBlockReceipts(height.toString())).pipe(
                     map(({body}) => CreateStatementFromDTO(body, networkType)),
                     catchError((error) =>  throwError(this.errorHandling(error))),
                 ),

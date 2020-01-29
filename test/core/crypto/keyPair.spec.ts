@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {expect} from 'chai';
-import {Crypto, KeyPair, SHA3Hasher, SignSchema} from '../../../src/core/crypto';
+import { expect } from 'chai';
+import { Crypto, KeyPair, SHA3Hasher, SignSchema } from '../../../src/core/crypto';
+import * as Utility from '../../../src/core/crypto/Utilities';
 import { Convert } from '../../../src/core/format/Convert';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 
@@ -27,22 +28,22 @@ describe('key pair', () => {
     const nis1TestSignSchema = SHA3Hasher.resolveSignSchema(NetworkType.TEST_NET);
 
     const Private_Keys = [
-        '8D31B712AB28D49591EAF5066E9E967B44507FC19C3D54D742F7B3A255CFF4AB',
-        '15923F9D2FFFB11D771818E1F7D7DDCD363913933264D58533CB3A5DD2DAA66A',
-        'A9323CEF24497AB770516EA572A0A2645EE2D5A75BC72E78DE534C0A03BC328E',
-        'D7D816DA0566878EE739EDE2131CD64201BCCC27F88FA51BA5815BCB0FE33CC8',
-        '27FC9998454848B987FAD89296558A34DEED4358D1517B953572F3E0AAA0A22D',
+        '575dbb3062267eff57c970a336ebbc8fbcfe12c5bd3ed7bc11eb0481d7704ced'.toUpperCase(),
+        '5b0e3fa5d3b49a79022d7c1e121ba1cbbf4db5821f47ab8c708ef88defc29bfe'.toUpperCase(),
+        '738ba9bb9110aea8f15caa353aca5653b4bdfca1db9f34d0efed2ce1325aeeda'.toUpperCase(),
+        'e8bf9bc0f35c12d8c8bf94dd3a8b5b4034f1063948e3cc5304e55e31aa4b95a6'.toUpperCase(),
+        'c325ea529674396db5675939e7988883d59a5fc17a28ca977e3ba85370232a83'.toUpperCase(),
     ];
 
     describe('construction', () => {
         it('can extract from private key test vectors', () => {
             // Arrange:
             const Expected_Public_Keys = [
-                '53C659B47C176A70EB228DE5C0A0FF391282C96640C2A42CD5BBD0982176AB1B',
-                '3FE4A1AA148F5E76891CE924F5DC05627A87047B2B4AD9242C09C0ECED9B2338',
-                'F398C0A2BDACDBD7037D2F686727201641BBF87EF458F632AE2A04B4E8F57994',
-                '6A283A241A8D8203B3A1E918B1E6F0A3E14E75E16D4CFFA45AE4EF89E38ED6B5',
-                '4DC62B38215826438DE2369743C6BBE6D13428405025DFEFF2857B9A9BC9D821',
+                'BD8D3F8B7E1B3839C650F458234AB1FF87CDB1EDA36338D9E446E27D454717F2',
+                '26821636A618FD524A3AB57276EFC36CAF787DF19EE00F60035CE376A18E8C47',
+                'DFC7F40FC549AC8BB2EF097600103FF457A1D7DC5755D434474761459B030E6F',
+                '96C7AB358EBB91104322C56435642BD939A77432286B229372987FC366EA319F',
+                '9488CFB5D7D439213B11FA80C1B57E8A7AB7E41B64CBA18A89180D412C04915C',
             ];
 
             // Sanity:
@@ -97,11 +98,11 @@ describe('key pair', () => {
             ];
 
             const Expected_Public_Keys = [
-                'c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
-                '96eb2a145211b1b7ab5f0d4b14f8abc8d695c7aee31a3cfc2d4881313c68eea3',
-                '2d8425e4ca2d8926346c7a7ca39826acd881a8639e81bd68820409c6e30d142a',
-                '4feed486777ed38e44c489c7c4e93a830e4c4a907fa19a174e630ef0f6ed0409',
-                '83ee32e4e145024d29bca54f71fa335a98b3e68283f1a3099c4d4ae113b53e54',
+                'D6C3845431236C5A5A907A9E45BD60DA0E12EFD350B970E7F58E3499E2E7A2F0',
+                'F3BD51ADD90A7BE8ED81F64EEE9456AF3B38478275B17EABE1853DFCFD3BF2CD',
+                '017CB008D00E41D17A6A09A6BE5C65C89E1E28706A621B0791B270E4F6182CC3',
+                '60068A23A0893538B5C364CAC86CB8670668BE84AEE2B6FCFF83FDF39A03F822',
+                'AE054EF2A458A0CEE6B34A1DD32597A9236C4D453040B9AF58B5AE22A73024B7',
             ];
 
             // Sanity:
@@ -109,7 +110,7 @@ describe('key pair', () => {
 
             for (let i = 0; i < Nis1_Private_Key.length; ++i) {
                 // Arrange:
-                const privateKeyHex = Convert.uint8ToHex(Convert.hexToUint8Reverse(Nis1_Private_Key[i]));
+                const privateKeyHex = Nis1_Private_Key[i];
                 const expectedPublicKey = Expected_Public_Keys[i];
 
                 // Act:
@@ -279,16 +280,16 @@ describe('key pair', () => {
                 'd2488e854dbcdfdb2c9d16c8c0b2fdbc0abb6bac991bfe2b14d359a6bc99d66c00fd60d731ae06d0',
             ];
             const Expected_Signature = [
-                'd9cec0cc0e3465fab229f8e1d6db68ab9cc99a18cb0435f70deb6100948576cd5c0aa1feb550bdd8693ef81eb10a556a622db1f9301986827b96716a7134230c',
-                '98bca58b075d1748f1c3a7ae18f9341bc18e90d1beb8499e8a654c65d8a0b4fbd2e084661088d1e5069187a2811996ae31f59463668ef0f8cb0ac46a726e7902',
-                'ef257d6e73706bb04878875c58aa385385bf439f7040ea8297f7798a0ea30c1c5eff5ddc05443f801849c68e98111ae65d088e726d1d9b7eeca2eb93b677860c',
-                '0c684e71b35fed4d92b222fc60561db34e0d8afe44bdd958aaf4ee965911bef5991236f3e1bced59fc44030693bcac37f34d29e5ae946669dc326e706e81b804',
-                '6f17f7b21ef9d6907a7ab104559f77d5a2532b557d95edffd6d88c073d87ac00fc838fc0d05282a0280368092a4bd67e95c20f3e14580be28d8b351968c65e03',
+                '62D65D4728E07489152A45FC66BF680A85674AA1D971F265C02AC45E09EB115791FFA524C28F9A3238A18751C314EDC0CDD7124A1BDEE1B1414DE7365F02950B',
+                'E48FFDE4FE2298E6DE06CE1FC0006A68544B5A8CEA4F93CFAD3E671720A010092FBB4E2DE3B7414C4E09766129BA26BA30A06A7676269B8868E55913779D4B0E',
+                'C65ECD2E25797A92CA6BB92DC817ABCABA9B40F19F181A77150222F8C8519391B5FA713DE495040E9DE1354ADCE35485F2C56608DAD30A94FA0EAAE468651308',
+                'C8B018ACB41191A09B354FCA3C8A207EDA8875F3FE6778B90288E67AA4648C9FF183E6576B452F6DC88B1D31E369BE5AF79A96FE4520EC40D156232B7B08F900',
+                '5A3CDDAC6E61DB8A614C8475A5B55EF0EC35C5206FA3EE4057CEADDD0E101A2EC4AFCBC688F8CF3488AB25FA5B6C879CEE59F4A1F51115383EEA2F9A9E1D820C',
             ];
 
             for (let i = 0; i < Nis1_Private_Key.length; ++i) {
                 // Arrange:
-                const privateKey = Convert.uint8ToHex(Convert.hexToUint8Reverse(Nis1_Private_Key[i]));
+                const privateKey = Nis1_Private_Key[i];
                 const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey, nis1TestSignSchema);
                 const payload = Convert.hexToUint8(Nis1_Data[i]);
 
@@ -538,112 +539,16 @@ describe('key pair', () => {
         });
     });
 
-    describe('test vectors', () => {
-        const Input_Data = [
-            '8ce03cd60514233b86789729102ea09e867fc6d964dea8c2018ef7d0a2e0e24bf7e348e917116690b9',
-            'e4a92208a6fc52282b620699191ee6fb9cf04daf48b48fd542c5e43daa9897763a199aaa4b6f10546109f47ac3564fade0',
-            '13ed795344c4448a3b256f23665336645a853c5c44dbff6db1b9224b5303b6447fbf8240a2249c55',
-            'a2704638434e9f7340f22d08019c4c8e3dbee0df8dd4454a1d70844de11694f4c8ca67fdcb08fed0cec9abb2112b5e5f89',
-            'd2488e854dbcdfdb2c9d16c8c0b2fdbc0abb6bac991bfe2b14d359a6bc99d66c00fd60d731ae06d0',
-        ];
-        const Expected_Signatures = [
-            'C9B1342EAB27E906567586803DA265CC15CCACA411E0AEF44508595ACBC47600D0' +
-            '2527F2EED9AB3F28C856D27E30C3808AF7F22F5F243DE698182D373A9ADE03',
-            '0755E437ED4C8DD66F1EC29F581F6906AB1E98704ECA94B428A25937DF00EC6479' +
-            '6F08E5FEF30C6F6C57E4A5FB4C811D617FA661EB6958D55DAE66DDED205501',
-            '15D6585A2A456E90E89E8774E9D12FE01A6ACFE09936EE41271AA1FBE0551264A9' +
-            'FF9329CB6FEE6AE034238C8A91522A6258361D48C5E70A41C1F1C51F55330D',
-            'F6FB0D8448FEC0605CF74CFFCC7B7AE8D31D403BCA26F7BD21CB4AC87B00769E9C' +
-            'C7465A601ED28CDF08920C73C583E69D621BA2E45266B86B5FCF8165CBE309',
-            'E88D8C32FE165D34B775F70657B96D8229FFA9C783E61198A6F3CCB92F487982D0' +
-            '8F8B16AB9157E2EFC3B78F126088F585E26055741A9F25127AC13E883C9A05',
-        ];
-
-        function assertCanSignTestVectors(dataTransform) {
-            // Sanity:
-            expect(Private_Keys.length).equal(Input_Data.length);
-            expect(Private_Keys.length).equal(Expected_Signatures.length);
-
-            for (let i = 0; i < Private_Keys.length; ++i) {
-                // Arrange:
-                const inputData = dataTransform(Input_Data[i]);
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Private_Keys[i], mijinTestSignSchema);
-
-                // Act:
-                const signature = KeyPair.sign(keyPair, inputData, mijinTestSignSchema);
-
-                // Assert:
-                const message = `signing with ${Private_Keys[i]}`;
-                expect(Convert.uint8ToHex(signature), message).equal(Expected_Signatures[i]);
-            }
-        }
-
-        it('can sign test vectors as hex string', () => {
-            // Assert:
-            assertCanSignTestVectors((data) => data);
-        });
-
-        it('can sign test vectors as binary', () => {
-            // Assert:
-            assertCanSignTestVectors((data) => Convert.hexToUint8(data));
-        });
-
-        function assertCanVerifyTestVectors(dataTransform) {
-            // Sanity:
-            expect(Private_Keys.length).equal(Input_Data.length);
-            expect(Private_Keys.length).equal(Expected_Signatures.length);
-
-            for (let i = 0; i < Private_Keys.length; ++i) {
-                // Arrange:
-                const inputData = dataTransform(Input_Data[i]);
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Private_Keys[i], mijinTestSignSchema);
-                const signature = KeyPair.sign(keyPair, inputData, mijinTestSignSchema);
-
-                // Act:
-                const isVerified = KeyPair.verify(keyPair.publicKey, inputData, signature, mijinTestSignSchema);
-
-                // Assert:
-                const message = `verifying with ${Private_Keys[i]}`;
-                expect(isVerified, message).equal(true);
-            }
-        }
-
-        it('can verify test vectors as hex string', () => {
-            // Assert:
-            assertCanVerifyTestVectors((data) => data);
-        });
-
-        it('can verify test vectors as binary', () => {
-            // Assert:
-            assertCanVerifyTestVectors((data) => Convert.hexToUint8(data));
-        });
-    });
-
     describe('derive shared key', () => {
-        const Salt_Size = 32;
-
-        it('fails if salt is wrong size', () => {
-            // Arrange: create a salt that is too long
-            const keyPair = randomKeyPair();
-            const publicKey = Crypto.randomBytes(32);
-            const salt = Crypto.randomBytes(Salt_Size + 1);
-
-            // Act:
-            expect(() => {
-                    KeyPair.deriveSharedKey(keyPair, publicKey, salt, mijinTestSignSchema);
-                })
-                .to.throw('salt has unexpected size');
-        });
 
         it('derives same shared key for both partners', () => {
             // Arrange:
             const keyPair1 = randomKeyPair();
             const keyPair2 = randomKeyPair();
-            const salt = Crypto.randomBytes(Salt_Size);
 
             // Act:
-            const sharedKey1 = KeyPair.deriveSharedKey(keyPair1, keyPair2.publicKey, salt, mijinTestSignSchema);
-            const sharedKey2 = KeyPair.deriveSharedKey(keyPair2, keyPair1.publicKey, salt, mijinTestSignSchema);
+            const sharedKey1 = KeyPair.deriveSharedKey(keyPair1, keyPair2.publicKey, mijinTestSignSchema);
+            const sharedKey2 = KeyPair.deriveSharedKey(keyPair2, keyPair1.publicKey, mijinTestSignSchema);
 
             // Assert:
             expect(sharedKey1).to.deep.equal(sharedKey2);
@@ -654,11 +559,10 @@ describe('key pair', () => {
             const keyPair = randomKeyPair();
             const publicKey1 = Crypto.randomBytes(32);
             const publicKey2 = Crypto.randomBytes(32);
-            const salt = Crypto.randomBytes(Salt_Size);
 
             // Act:
-            const sharedKey1 = KeyPair.deriveSharedKey(keyPair, publicKey1, salt, mijinTestSignSchema);
-            const sharedKey2 = KeyPair.deriveSharedKey(keyPair, publicKey2, salt, mijinTestSignSchema);
+            const sharedKey1 = KeyPair.deriveSharedKey(keyPair, publicKey1, mijinTestSignSchema);
+            const sharedKey2 = KeyPair.deriveSharedKey(keyPair, publicKey2, mijinTestSignSchema);
 
             // Assert:
             expect(sharedKey1).to.not.deep.equal(sharedKey2);
@@ -669,13 +573,12 @@ describe('key pair', () => {
             const keyPair = KeyPair.createKeyPairFromPrivateKeyString(
                 '8F545C2816788AB41D352F236D80DBBCBC34705B5F902EFF1F1D88327C7C1300', mijinTestSignSchema);
             const publicKey = Convert.hexToUint8('BF684FB1A85A8C8091EE0442EDDB22E51683802AFA0C0E7C6FE3F3E3E87A8D72');
-            const salt = Convert.hexToUint8('422C39DF16AAE42A74A5597D6EE2D59CFB4EEB6B3F26D98425B9163A03DAA3B5');
 
             // Act:
-            const sharedKey = KeyPair.deriveSharedKey(keyPair, publicKey, salt, mijinTestSignSchema);
+            const sharedKey = KeyPair.deriveSharedKey(keyPair, publicKey, mijinTestSignSchema);
 
             // Assert:
-            expect(Convert.uint8ToHex(sharedKey)).to.equal('007FD607264C64C7BB83509E7CFA96E0FEAF34A373CDA75FACAA4DE9E141257B');
+            expect(Convert.uint8ToHex(sharedKey)).to.equal('9E2DF6A12BABD5673F02C5B81898A03AC2E2D152639502E3DCECEF7C91C115F6');
         });
     });
 
@@ -687,50 +590,50 @@ describe('key pair', () => {
             // Arrange: create a salt that is too long
             // Arrange:
             const Nis1_Private_Key = [
+                '00137c7c32881d1fff2e905f5b7034bcbcdb806d232f351db48a7816285c548f',
                 'e8857f8e488d4e6d4b71bcd44bb4cff49208c32651e1f6500c3b58cafeb8def6',
                 'd7f67b5f52cbcd1a1367e0376a8eb1012b634acfcf35e8322bae8b22bb9e8dea',
                 'd026ddb445fb3bbf3020e4b55ed7b5f9b7fd1278c34978ca1a6ed6b358dadbae',
                 'c522b38c391d1c3fa539cc58802bc66ac34bb3c73accd7f41b47f539bedcd016',
-                '2f1b82be8e65d610a4e588f000a89a733a9de98ffc1ac9d55e138b3b0a855da0',
             ];
 
             const Nis1_Public_Keys = [
-                '9d8e5f200b05a2638fb084a375408cabd6d5989590d96e3eea5f2cb34668178e',
-                '9735c92d150dcee0ade5a8d1822f46a4db22c9cda25f33773ae856fe374a3e8a',
-                'd19e6beca3b26b9d1abc127835ebeb7a6c19c33dec8ec472e1c4d458202f4ec8',
-                'ea5b6a0053237f7712b1d2347c447d3e83e0f2191762d07e1f53f8eb7f2dfeaa',
-                '65aeda1b47f66c978a4a41d4dcdfbd8eab5cdeb135695c2b0c28f54417b1486d',
+                '4C3B71636D3088ED3DF93D81E9169604EF0D4D68107BE0B446715DC12096243B',
+                '3B2BE0C315CDA77876D70845FD355D46E6825BA26985ABAB3E07B65C71266126',
+                '536D5C32538C8E66623F2E4F0FA7E124EF0AF1F0DBC97338C61188F37C4937EA',
+                'FA9AF9448E76D1D0B6EBE05336D813918315B4941F78C1CC5EA1D1573177022C',
+                '63ABC887EAD7B80247244E0C58CB7689C313444F4924278DBEA72DDB3391F9DA',
             ];
 
-            const Nis1_Salt = [
-                'ad63ac08f9afc85eb0bf4f8881ca6eaa0215924c87aa2f137d56109bb76c6f98',
-                '96104f0a28f9cca40901c066cd435134662a3b053eb6c8df80ee0d05dc941963',
-                'd8f94a0bbb1de80aea17aab42e2ffb982e73fc49b649a318479e951e392d8728',
-                '3f8c969678a8abdbfb76866a142c284a6f01636c1c1607947436e0d2c30d5245',
-                'e66415c58b981c7f1f2b8f45a42149e9144616ff6de49ff83d97000ac6f6f992',
+            const Expected_ScalarMulResult = [
+                'FEB242779628761122E9FB1718512025040C683D69B8105BA1F383D47578B29F',
+                '277FD55F1A54F57F3E5B408CACA560360BA75F67AB954FB4E27A7ADBCAAB6719',
+                '8B38A30824E322555A748A5BEB67FBE0E0F1BD2B51635549F1F19CDF76BA0E9A',
+                '9342380F112C70B17B7254EFCD3FCF6F4F1FF844C7790426BF6EDC4C800BD0A0',
+                'A5593308E182D6D86D633F18DF19D87FAA4EF447FD1904891600CEEF303FD591',
             ];
 
             const Expected_Derived_Key = [
-                '990a5f611c65fbcde735378bdec38e1039c5466503511e8c645bbe42795c752b',
-                'b498aa21d4ba4879ea9fd4225e93bacc760dcd9c119f8f38ab0716457d1a6f85',
-                'd012afe3d1d932304e613c91545bf571cf2c7281d6cafa8e81393a551f675540',
-                '7e27efa50eed1c2ac51a12089cbab6a192624709c7330c016d5bc9af146584c1',
-                'bb4ab31c334e55d378937978c90bb33779b23cd5ef4c68342a394f4ec8fa1ada',
+                '1E203DF5CD53961AAF75B24EFD5548AB6F01F0E9EF1C0C721F6A0ECAAF91AC9A',
+                'E77654455AACFADE2E3291E3B88191847D06295CAE7160D55FB32E6D86A48C17',
+                '0368A074CA19F446659DF7BA04B2CE92F6BDCB423510D69223BD75E3827F0893',
+                '2F58733AB16A170B8389C39F5BA10509E59EC803CF9168739C693D0E6035A402',
+                '28DB21A1EBA731E85B0A58109CA273AF4B461726F5A5F62951777C3DCCD9281C',
             ];
 
             for (let i = 0; i < Nis1_Private_Key.length; ++i) {
                 // Arrange:
-                const privateKey = Convert.uint8ToHex(Convert.hexToUint8Reverse(Nis1_Private_Key[i]));
+                const privateKey = Nis1_Private_Key[i];
                 const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey, nis1TestSignSchema);
                 const publicKey = Convert.hexToUint8(Nis1_Public_Keys[i]);
-                const salt = Convert.hexToUint8(Nis1_Salt[i]);
 
                 // Act:
-                const sharedKey = Convert.uint8ToHex(KeyPair.deriveSharedKey(keyPair, publicKey, salt, nis1TestSignSchema));
+                const sharedKey = Convert.uint8ToHex(KeyPair.deriveSharedKey(keyPair, publicKey, nis1TestSignSchema));
+                const sharedSecret = Convert.uint8ToHex(Utility.catapult_crypto.deriveSharedSecret(keyPair.privateKey, publicKey, Utility.catapult_hash.func, nis1TestSignSchema));
 
                 // Assert:
-                const message = ` from ${Nis1_Private_Key[i]}`;
                 expect(sharedKey.toUpperCase()).to.deep.equal(Expected_Derived_Key[i].toUpperCase());
+                expect(sharedSecret.toUpperCase()).to.deep.equal(Expected_ScalarMulResult[i].toUpperCase());
             }
         });
     });
@@ -751,41 +654,41 @@ describe('key pair', () => {
             ];
 
             const Public_Keys = [
-                'bf684fb1a85a8c8091ee0442eddb22e51683802afa0c0e7c6fe3f3e3e87a8d72',
-                '9d8e5f200b05a2638fb084a375408cabd6d5989590d96e3eea5f2cb34668178e',
-                '9735c92d150dcee0ade5a8d1822f46a4db22c9cda25f33773ae856fe374a3e8a',
-                'd19e6beca3b26b9d1abc127835ebeb7a6c19c33dec8ec472e1c4d458202f4ec8',
-                'ea5b6a0053237f7712b1d2347c447d3e83e0f2191762d07e1f53f8eb7f2dfeaa',
+                '134A753D1FBC098879D3EC04F67EF661B2976B15C6037F7961AA343DC23D9D5E',
+                '2B3CFEF43CEE139691F466643F779EC3CEBFC9B1AB92DBA87FF9AC8E5F49B454',
+                '31C960BF74D53DE0EA92E11DE39DC69D60F1133131F634C2C2595F05E35B687E',
+                'FDA70F88C7985C5B7D8BDE4CD6C2162E1DF0C7F44555125B6EA54E87958F6722',
+                '9896A394B035E0F18855B2F6EE934E20ABADBF6B65B26E0C9329C283C1A9F980',
             ];
 
-            const Salt = [
-                '422c39df16aae42a74a5597d6ee2d59cfb4eeb6b3f26d98425b9163a03daa3b5',
-                'ad63ac08f9afc85eb0bf4f8881ca6eaa0215924c87aa2f137d56109bb76c6f98',
-                '96104f0a28f9cca40901c066cd435134662a3b053eb6c8df80ee0d05dc941963',
-                'd8f94a0bbb1de80aea17aab42e2ffb982e73fc49b649a318479e951e392d8728',
-                '3f8c969678a8abdbfb76866a142c284a6f01636c1c1607947436e0d2c30d5245',
+            const Expected_ScalarMulResult = [
+                '4118C2B3058714A288A9E218B7E0F9CCAD74C2EC44884CABBE20A2A33DB1282F',
+                'DA4BFF3709E40B4299988806435819D3E8E90ADE435EAC086EE295E0ADC3E0BB',
+                '81B15312FA6A87285C883FF205BA7E7DB319DEA1E7A79D1F78B93E73A156AA64',
+                '100221B07AB55C3260A7B7F12CDA0A8FA97998664C6509661A2E51417AF9C998',
+                'EE74B025E7A304BD0D3F131EF1132D2C194568034B9A7DE93653327D6618215C',
             ];
 
             const Expected_Derived_Key = [
-                '32628d4ecf167487881de9e81466614a3442c1b1f6eb146ebe7ad69c37184696',
-                'da30f8081c065f5c4e2d17a551af3634a63395991af9642c29a7bbc9312b98a5',
-                '58c9a027b30fcbec8ac7962df1eb81f27317ab6f39ada66be8d9453653a305af',
-                '58815adb5f8ef154c6091c65b28e3d6d5ea25da40040e7489ee05f65ecffa61c',
-                '8c677358d7512c4d53b0f5d59cff421625851322fae4c66e98f670c49c916f32',
+                '8ADE930F8352A5D2B42B575B698C8791834525CBB1A3C94F814DA676922EDBBD',
+                'C831BAFDF301F3E7A2910557B14EAEE054F8072A5E3C58797DF2F7EAD6C2F8E2',
+                '9C885AA670354E517320403E6E613FD076F486A3C6F986F3D7605F36D542F705',
+                '857312941280887C38FA7077AA808C52C755A27EAEAC1220A2F404CFDABBA131',
+                '85F5C2F191D2E3A3833C63059566D11B8EA552775AE0002D237BC35B5439FB59',
             ];
 
             for (let i = 0; i < Private_Key.length; ++i) {
                 // Arrange:
                 const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Private_Key[i], mijinTestSignSchema);
                 const publicKey = Convert.hexToUint8(Public_Keys[i]);
-                const salt = Convert.hexToUint8(Salt[i]);
 
                 // Act:
-                const sharedKey = Convert.uint8ToHex(KeyPair.deriveSharedKey(keyPair, publicKey, salt, mijinTestSignSchema));
+                const sharedKey = Convert.uint8ToHex(KeyPair.deriveSharedKey(keyPair, publicKey, mijinTestSignSchema));
+                const sharedSecret = Convert.uint8ToHex(Utility.catapult_crypto.deriveSharedSecret(keyPair.privateKey, publicKey, Utility.catapult_hash.func, mijinTestSignSchema));
 
                 // Assert:
-                const message = ` from ${Private_Key[i]}`;
                 expect(sharedKey.toUpperCase()).to.deep.equal(Expected_Derived_Key[i].toUpperCase());
+                expect(sharedSecret.toUpperCase()).to.deep.equal(Expected_ScalarMulResult[i].toUpperCase());
             }
         });
     });

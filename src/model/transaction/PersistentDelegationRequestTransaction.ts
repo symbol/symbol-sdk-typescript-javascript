@@ -28,7 +28,6 @@ export class PersistentDelegationRequestTransaction extends TransferTransaction 
      * @param deadline - The deadline to include the transaction.
      * @param delegatedPrivateKey - The private key of delegated account
      * @param recipientPublicKey - The recipient public key
-     * @param senderPrivateKey - The sender's private key
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {TransferTransaction}
@@ -37,11 +36,10 @@ export class PersistentDelegationRequestTransaction extends TransferTransaction 
                     deadline: Deadline,
                     delegatedPrivateKey: string,
                     recipientPublicKey: string,
-                    senderPrivateKey: string,
                     networkType: NetworkType,
                     maxFee: UInt64 = new UInt64([0, 0])): PersistentDelegationRequestTransaction {
         const message = PersistentHarvestingDelegationMessage
-            .create(delegatedPrivateKey, senderPrivateKey, recipientPublicKey, networkType);
+            .create(delegatedPrivateKey, recipientPublicKey, networkType);
         return super.create(deadline, Address.createFromPublicKey(recipientPublicKey, networkType), [], message, networkType, maxFee);
     }
 }

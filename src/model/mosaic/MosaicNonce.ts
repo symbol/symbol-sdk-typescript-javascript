@@ -80,6 +80,6 @@ export class MosaicNonce {
      * @returns {string}
      */
     public toHex(): string {
-        return convert.uint8ToHex(this.nonce)
+        return convert.uint8ToHex(this.nonce);
     }
 }

@@ -116,7 +116,6 @@ describe('MultisigAccountInfo', () => {
                 multisigAccountInfoDTO.multisig.multisigAccounts,
             );
 
-
             expect(multisigAccountInfo.hasCosigner(
                 PublicAccount.createFromPublicKey('B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D',
                     NetworkType.MIJIN_TEST))).to.be.equal(false);
@@ -146,7 +145,6 @@ describe('MultisigAccountInfo', () => {
                 multisigAccountInfoDTO.multisig.cosignatories,
                 multisigAccountInfoDTO.multisig.multisigAccounts,
             );
-
 
             expect(multisigAccountInfo.isCosignerOfMultisigAccount(
                 PublicAccount.createFromPublicKey('B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D',

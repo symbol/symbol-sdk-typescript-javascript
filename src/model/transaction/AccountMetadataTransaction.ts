@@ -21,7 +21,7 @@ import {
     EmbeddedTransactionBuilder,
     KeyDto,
     SignatureDto,
-    TimestampDto
+    TimestampDto,
 } from 'catbuffer';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
@@ -58,7 +58,7 @@ export class AccountMetadataTransaction extends Transaction {
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): AccountMetadataTransaction {
         return new AccountMetadataTransaction(networkType,
-            TransactionVersion.ACCOUNT_METADATA_TRANSACTION,
+            TransactionVersion.ACCOUNT_METADATA,
             deadline,
             maxFee,
             targetPublicKey,
@@ -104,7 +104,7 @@ export class AccountMetadataTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.ACCOUNT_METADATA_TRANSACTION, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+        super(TransactionType.ACCOUNT_METADATA, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
         if (value.length > 1024) {
             throw new Error('The maximum value size is 1024');
         }
@@ -166,7 +166,7 @@ export class AccountMetadataTransaction extends Transaction {
             new KeyDto(signerBuffer),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.ACCOUNT_METADATA_TRANSACTION.valueOf(),
+            TransactionType.ACCOUNT_METADATA.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
             new KeyDto(Convert.hexToUint8(this.targetPublicKey)),
@@ -186,7 +186,7 @@ export class AccountMetadataTransaction extends Transaction {
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.ACCOUNT_METADATA_TRANSACTION.valueOf(),
+            TransactionType.ACCOUNT_METADATA.valueOf(),
             new KeyDto(Convert.hexToUint8(this.targetPublicKey)),
             this.scopedMetadataKey.toDTO(),
             this.valueSizeDelta,
