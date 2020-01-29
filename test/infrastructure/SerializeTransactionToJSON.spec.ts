@@ -83,7 +83,7 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = addressRestrictionTransaction.toJSON();
 
-        expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_RESTRICTION_ADDRESS);
+        expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_ADDRESS_RESTRICTION);
         expect(json.transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowIncomingAddress);
         expect(json.transaction.restrictionAdditions.length).to.be.equal(1);
     });
@@ -100,7 +100,7 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = mosaicRestrictionTransaction.toJSON();
 
-        expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_RESTRICTION_MOSAIC);
+        expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_MOSAIC_RESTRICTION);
         expect(json.transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowMosaic);
         expect(json.transaction.restrictionAdditions.length).to.be.equal(1);
     });
@@ -117,7 +117,7 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = operationRestrictionTransaction.toJSON();
 
-        expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_RESTRICTION_OPERATION);
+        expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_OPERATION_RESTRICTION);
         expect(json.transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowIncomingTransactionType);
         expect(json.transaction.restrictionAdditions.length).to.be.equal(1);
     });
@@ -284,7 +284,7 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = modifyMultisigAccountTransaction.toJSON();
 
-        expect(json.transaction.type).to.be.equal(TransactionType.MODIFY_MULTISIG_ACCOUNT);
+        expect(json.transaction.type).to.be.equal(TransactionType.MULTISIG_ACCOUNT_MODIFICATION);
         expect(json.transaction.minApprovalDelta).to.be.equal(2);
         expect(json.transaction.minRemovalDelta).to.be.equal(1);
     });
@@ -348,7 +348,7 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = lockTransaction.toJSON();
 
-        expect(json.transaction.type).to.be.equal(TransactionType.LOCK);
+        expect(json.transaction.type).to.be.equal(TransactionType.HASH_LOCK);
         expect(json.transaction.hash).to.be.equal(signedTransaction.hash);
     });
 
@@ -362,7 +362,7 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = registerNamespaceTransaction.toJSON();
 
-        expect(json.transaction.type).to.be.equal(TransactionType.REGISTER_NAMESPACE);
+        expect(json.transaction.type).to.be.equal(TransactionType.NAMESPACE_REGISTRATION);
 
     });
 
@@ -376,6 +376,6 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = registerNamespaceTransaction.toJSON();
 
-        expect(json.transaction.type).to.be.equal(TransactionType.REGISTER_NAMESPACE);
+        expect(json.transaction.type).to.be.equal(TransactionType.NAMESPACE_REGISTRATION);
     });
 });

@@ -52,13 +52,13 @@ const ValidateTransaction = {
 
         if (transaction.type === TransactionType.TRANSFER) {
             ValidateTransaction.validateTransferTx(transaction, transactionDTO);
-        } else if (transaction.type === TransactionType.REGISTER_NAMESPACE) {
+        } else if (transaction.type === TransactionType.NAMESPACE_REGISTRATION) {
             ValidateTransaction.validateNamespaceCreationTx(transaction, transactionDTO);
         } else if (transaction.type === TransactionType.MOSAIC_DEFINITION) {
             ValidateTransaction.validateMosaicCreationTx(transaction, transactionDTO);
         } else if (transaction.type === TransactionType.MOSAIC_SUPPLY_CHANGE) {
             ValidateTransaction.validateMosaicSupplyChangeTx(transaction, transactionDTO);
-        } else if (transaction.type === TransactionType.MODIFY_MULTISIG_ACCOUNT) {
+        } else if (transaction.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION) {
             ValidateTransaction.validateMultisigModificationTx(transaction, transactionDTO);
         }
     },

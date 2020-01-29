@@ -137,7 +137,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                     transactionDTO.network) : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.REGISTER_NAMESPACE) {
+    } else if (transactionDTO.type === TransactionType.NAMESPACE_REGISTRATION) {
         return new NamespaceRegistrationTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -183,7 +183,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                             transactionDTO.network) : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.MODIFY_MULTISIG_ACCOUNT) {
+    } else if (transactionDTO.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION) {
         return new MultisigAccountModificationTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -200,7 +200,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                             transactionDTO.network) : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.LOCK) {
+    } else if (transactionDTO.type === TransactionType.HASH_LOCK) {
         const networkType = transactionDTO.network;
         return new LockFundsTransaction(
             networkType,
@@ -276,7 +276,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                             transactionDTO.network) : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.ACCOUNT_RESTRICTION_ADDRESS) {
+    } else if (transactionDTO.type === TransactionType.ACCOUNT_ADDRESS_RESTRICTION) {
         return new AccountAddressRestrictionTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -292,7 +292,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                             transactionDTO.network) : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.ACCOUNT_RESTRICTION_OPERATION) {
+    } else if (transactionDTO.type === TransactionType.ACCOUNT_OPERATION_RESTRICTION) {
         return new AccountOperationRestrictionTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -306,7 +306,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                             transactionDTO.network) : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.ACCOUNT_RESTRICTION_MOSAIC) {
+    } else if (transactionDTO.type === TransactionType.ACCOUNT_MOSAIC_RESTRICTION) {
         return new AccountMosaicRestrictionTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -322,7 +322,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                             transactionDTO.network) : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.LINK_ACCOUNT) {
+    } else if (transactionDTO.type === TransactionType.ACCOUNT_LINK) {
         return new AccountLinkTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -369,7 +369,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                     transactionDTO.network) : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.ACCOUNT_METADATA_TRANSACTION) {
+    } else if (transactionDTO.type === TransactionType.ACCOUNT_METADATA) {
         return new AccountMetadataTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -384,7 +384,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                     transactionDTO.network) : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.MOSAIC_METADATA_TRANSACTION) {
+    } else if (transactionDTO.type === TransactionType.MOSAIC_METADATA) {
         return new MosaicMetadataTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -400,7 +400,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                     transactionDTO.network) : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.NAMESPACE_METADATA_TRANSACTION) {
+    } else if (transactionDTO.type === TransactionType.NAMESPACE_METADATA) {
         return new NamespaceMetadataTransaction(
             transactionDTO.network,
             transactionDTO.version,

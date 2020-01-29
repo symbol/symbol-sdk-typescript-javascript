@@ -46,7 +46,7 @@ import { TransferTransaction } from '../../model/transaction/TransferTransaction
  */
 export const SerializeTransactionToJSON = (transaction: Transaction): any => {
     switch (transaction.type) {
-        case TransactionType.LINK_ACCOUNT:
+        case TransactionType.ACCOUNT_LINK:
             const accountLinkTx = transaction as AccountLinkTransaction;
             return {
                 remotePublicKey: accountLinkTx.remotePublicKey,
@@ -70,7 +70,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                     return cosignature.toDTO();
                 }),
             };
-        case TransactionType.LOCK:
+        case TransactionType.HASH_LOCK:
             const LockFundTx = transaction as LockFundsTransaction;
             return {
                 mosaicId: LockFundTx.mosaic.id.id,
@@ -78,7 +78,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 duration: LockFundTx.duration.toString(),
                 hash: LockFundTx.hash,
             };
-        case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
+        case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
             const accountAddressRestrictionTx = transaction as AccountAddressRestrictionTransaction;
             return {
                 restrictionFlags: accountAddressRestrictionTx.restrictionFlags,
@@ -91,7 +91,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                     return deletion.toDTO();
                 }),
             };
-        case TransactionType.ACCOUNT_RESTRICTION_OPERATION:
+        case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
             const accountOperationRestrictionTx = transaction as AccountOperationRestrictionTransaction;
             return {
                 restrictionFlags: accountOperationRestrictionTx.restrictionFlags,
@@ -104,7 +104,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                     return deletion;
                 }),
             };
-        case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
+        case TransactionType.ACCOUNT_MOSAIC_RESTRICTION:
             const accountMosaicRestrictionTx = transaction as AccountMosaicRestrictionTransaction;
             return {
                 restrictionFlags: accountMosaicRestrictionTx.restrictionFlags,
@@ -117,7 +117,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                     return deletion.toHex();
                 }),
             };
-        case TransactionType.MODIFY_MULTISIG_ACCOUNT:
+        case TransactionType.MULTISIG_ACCOUNT_MODIFICATION:
             const multisigTx = transaction as MultisigAccountModificationTransaction;
             return {
                 minApprovalDelta: multisigTx.minApprovalDelta,
@@ -152,7 +152,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 action: mosaicSupplyTx.action,
                 delta: mosaicSupplyTx.delta.toString(),
             };
-        case TransactionType.REGISTER_NAMESPACE:
+        case TransactionType.NAMESPACE_REGISTRATION:
             const namespaceTx = transaction as NamespaceRegistrationTransaction;
             const registerNamespaceDuration = namespaceTx.duration;
             const registerNamespaceParentId = namespaceTx.parentId;
@@ -218,7 +218,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 newRestrictionValue: mosaicAddressRestrictionTx.newRestrictionValue.toString(),
 
             };
-        case TransactionType.ACCOUNT_METADATA_TRANSACTION:
+        case TransactionType.ACCOUNT_METADATA:
             const accountMetadataTx = transaction as AccountMetadataTransaction;
             return {
                 targetPublicKey: accountMetadataTx.targetPublicKey,
@@ -228,7 +228,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 value: Convert.utf8ToHex(accountMetadataTx.value),
 
             };
-        case TransactionType.MOSAIC_METADATA_TRANSACTION:
+        case TransactionType.MOSAIC_METADATA:
             const mosaicMetadataTx = transaction as MosaicMetadataTransaction;
             return {
                 targetPublicKey: mosaicMetadataTx.targetPublicKey,
@@ -239,7 +239,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 value: Convert.utf8ToHex(mosaicMetadataTx.value),
 
             };
-        case TransactionType.NAMESPACE_METADATA_TRANSACTION:
+        case TransactionType.NAMESPACE_METADATA:
             const namespaceMetaTx = transaction as NamespaceMetadataTransaction;
             return {
                 targetPublicKey: namespaceMetaTx.targetPublicKey,
