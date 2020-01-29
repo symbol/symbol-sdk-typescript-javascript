@@ -34,4 +34,19 @@ export class LanguageSelectorTs extends Vue {
    * @var {any[]}
    */
   public languageList: {value: string, label: string}[]
+
+
+  /**
+   * Currently active language
+   */
+  get language() {
+    return this.currentLanguage
+  }
+
+  /**
+   * Sets the new language
+   */
+  set language(language: string) {
+    this.$store.commit('app/setLanguage', language)
+  }
 }

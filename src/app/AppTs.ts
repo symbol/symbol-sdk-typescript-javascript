@@ -18,7 +18,7 @@ import {mapGetters} from 'vuex'
 
 // child components
 // @ts-ignore
-import DisabledUiOverlay from '@/components/DisabledUiOverlay/DisabledUiOverlay.vue'
+import DisabledUiOverlay from '@/components/DisabledUIOverlay/DisabledUiOverlay.vue'
 // @ts-ignore
 import SpinnerLoading from '@/components/SpinnerLoading/SpinnerLoading.vue'
 
@@ -62,13 +62,4 @@ export class AppTs extends Vue {
    * @var {boolean}
    */
   public hasLoadingOverlay: boolean
-
-  /**
-   * Hook called when the app is mounted
-   * @return {void}
-   */
-  mounted() {
-    if (! this.currentAccount || ! this.currentAccount.length)
-      this.$router.push({name: 'login'})
-  }
 }

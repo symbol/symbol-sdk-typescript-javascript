@@ -1,8 +1,8 @@
 <template>
   <div class="switch_language">
     <i-select v-model="language">
-      <i-option v-for="(item, index) in languageList" :key="index" :value="item.value">
-        {{ item.label }}
+      <i-option v-for="({label, value}, index) in languageList" :key="index" :value="value">
+        {{ label }}
       </i-option>
     </i-select>
   </div>

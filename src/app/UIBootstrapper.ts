@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import Vue from 'vue'
-import {Electron} from '@/core/utils/Electron'
+import {Electron} from '@/core/utils/electron'
 
 export class UIBootstrapper {
   /**

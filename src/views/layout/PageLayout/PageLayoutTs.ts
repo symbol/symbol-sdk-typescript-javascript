@@ -18,10 +18,12 @@ import {Component, Provide, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
-import {Electron} from '@/core/utils/Electron'
+import {Electron} from '@/core/utils/electron'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
 
 // child components
+// @ts-ignore
+import AppLogo from '@/components/AppLogo/AppLogo.vue'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
@@ -35,8 +37,10 @@ import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue
 // @ts-ignore
 import WalletSelector from '@/components/WalletSelector/WalletSelector.vue'
 
+
 @Component({
   components: {
+    AppLogo,
     ErrorTooltip,
     PageNavigator,
     WindowControls,

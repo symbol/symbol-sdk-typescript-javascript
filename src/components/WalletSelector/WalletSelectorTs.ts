@@ -67,7 +67,7 @@ export class WalletSelectorTs extends Vue {
   }
 
   get currentWallets(): string[] {
-    return this.currentAccount.values.get("wallets")
+    return !this.currentAccount ? [] : this.currentAccount.values.get("wallets")
   }
 /// end-region computed properties getter/setter
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="nem_logo_wrap">
     <div class="nem_logo">
-      <img class="absolute" src="logoFilePath" alt="appTitle">
+      <img class="absolute" :src="logo" alt="appTitle">
     </div>
   </div>
 </template>

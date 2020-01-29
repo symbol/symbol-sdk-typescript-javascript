@@ -31,15 +31,13 @@ router.beforeEach((to, from, next) => {
   const repository = new AccountsRepository()
   const hasAccounts = repository.entries().size > 0
 
-  const skipRedirect: string[] = [
-    'login.createAccount',
-    'login.importStrategy',
-  ]
-  if (!hasAccounts && !skipRedirect.includes(to.name)) {
-    return next({name: 'login.createAccount'})
+  // No account when app is opened: redirect to create account page
+  const skipRedirect: string[] = ['login.createAccount.info']
+  if (!from.name && !hasAccounts && !skipRedirect.includes(to.name)) {
+    return next({name: 'login.createAccount.info'})
   }
 
-  if (to.meta.protected) {
+  if (!to.meta.protected) {
     return next(/* no-redirect */)
   }
 
