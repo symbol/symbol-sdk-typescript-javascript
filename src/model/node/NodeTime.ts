@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { RoleType } from './RoleType';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
+import { RoleType } from './RoleType';
 /**
  * The node info structure describes basic information of a node.
  */

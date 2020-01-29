@@ -229,9 +229,9 @@ describe('AccountHttp', () => {
 
     describe('transactions', () => {
         it('should not return accounts when account does not exist', () => {
-            return accountRepository.getAccountInfo(Account.generateNewAccount(networkType).address).toPromise().then(r => {
+            return accountRepository.getAccountInfo(Account.generateNewAccount(networkType).address).toPromise().then((r) => {
                 return Promise.reject('should fail!');
-            }, err => {
+            }, (err) => {
                 const error = JSON.parse(err.message);
                 expect(error.statusCode).to.be.eq(404);
                 expect(error.errorDetails.statusMessage).to.be.eq('Not Found');
@@ -245,7 +245,7 @@ describe('AccountHttp', () => {
             const transactions = await accountRepository.getAccountTransactions(publicAccount.address, {transactionType: TransactionType.TRANSFER} as QueryParams).toPromise();
 
             expect(transactions.length).to.be.greaterThan(0);
-            transactions.forEach(t => {
+            transactions.forEach((t) => {
                 expect(t.type).to.be.eq(TransactionType.TRANSFER);
             });
         });

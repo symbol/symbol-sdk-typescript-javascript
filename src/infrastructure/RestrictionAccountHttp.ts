@@ -22,7 +22,7 @@ import { Address } from '../model/account/Address';
 import { AccountRestriction } from '../model/restriction/AccountRestriction';
 import { AccountRestrictions } from '../model/restriction/AccountRestrictions';
 import { Http } from './Http';
-import { RestrictionAccountRepository } from './RestrictionAccountRespository';
+import { RestrictionAccountRepository } from './RestrictionAccountRepository';
 
 /**
  * RestrictionAccount http repository.

@@ -25,7 +25,7 @@ import {
     TransferTransactionBuilder,
     UnresolvedAddressDto,
     UnresolvedMosaicBuilder,
-    UnresolvedMosaicIdDto
+    UnresolvedMosaicIdDto,
 } from 'catbuffer';
 import * as Long from 'long';
 import { Convert } from '../../core/format';

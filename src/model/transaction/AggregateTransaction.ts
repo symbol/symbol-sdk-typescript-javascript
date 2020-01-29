@@ -25,7 +25,7 @@ import {
     Hash256Dto,
     KeyDto,
     SignatureDto,
-    TimestampDto
+    TimestampDto,
 } from 'catbuffer';
 import { KeyPair, MerkleHashBuilder, SHA3Hasher, SignSchema } from '../../core/crypto';
 import { Convert } from '../../core/format';

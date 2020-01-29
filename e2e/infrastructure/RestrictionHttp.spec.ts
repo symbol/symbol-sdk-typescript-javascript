@@ -16,7 +16,7 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { RestrictionAccountRepository } from '../../src/infrastructure/RestrictionAccountRespository';
+import { RestrictionAccountRepository } from '../../src/infrastructure/RestrictionAccountRepository';
 import { RestrictionMosaicRepository } from '../../src/infrastructure/RestrictionMosaicRepository';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';

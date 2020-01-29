@@ -48,8 +48,8 @@ describe('MosaicNonce', () => {
 
     describe('toHex()', () => {
         it('should return string value of nonce', () => {
-            const nonce = new MosaicNonce(new Uint8Array([0x0, 0x0, 0x0, 0x0]))
-            const hex = nonce.toHex()
+            const nonce = new MosaicNonce(new Uint8Array([0x0, 0x0, 0x0, 0x0]));
+            const hex = nonce.toHex();
             expect(hex).to.be.equal('00000000');
         });
     });

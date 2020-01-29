@@ -22,7 +22,7 @@ import {
     KeyDto,
     SignatureDto,
     TimestampDto,
-    UnresolvedAddressDto
+    UnresolvedAddressDto,
 } from 'catbuffer';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';

@@ -23,7 +23,7 @@ import {
     KeyDto,
     NamespaceIdDto,
     SignatureDto,
-    TimestampDto
+    TimestampDto,
 } from 'catbuffer';
 import { Convert, RawAddress } from '../../core/format';
 import { Address } from '../account/Address';

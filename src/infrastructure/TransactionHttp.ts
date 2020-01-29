@@ -15,7 +15,7 @@
  */
 
 import { ClientResponse } from 'http';
-import { BlockInfoDTO, BlockRoutesApi, TransactionRoutesApi, TransactionStatusDTO, } from 'nem2-sdk-openapi-typescript-node-client';
+import { BlockInfoDTO, BlockRoutesApi, TransactionRoutesApi, TransactionStatusDTO } from 'nem2-sdk-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
