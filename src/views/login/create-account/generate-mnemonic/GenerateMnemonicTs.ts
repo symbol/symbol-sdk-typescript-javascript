@@ -15,6 +15,7 @@
  */
 import {Vue, Component} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
+import {Password} from 'nem2-sdk'
 import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 import CryptoJS from 'crypto-js'
 
@@ -22,9 +23,13 @@ import CryptoJS from 'crypto-js'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {AESEncryptionService} from '@/services/AESEncryptionService'
 import {NotificationType} from '@/core/utils/NotificationType'
+import {AccountsRepository} from '@/repositories/AccountsRepository'
 
 @Component({
-  computed: {...mapGetters({currentAccount: 'account/currentAccount'})},
+  computed: {...mapGetters({
+    currentAccount: 'account/currentAccount',
+    currentPassword: 'temporary/password'
+  })},
 })
 export default class GenerateMnemonicTs extends Vue {
   /**
@@ -33,6 +38,19 @@ export default class GenerateMnemonicTs extends Vue {
    * @var {string}
    */
   public currentAccount: AccountsModel
+
+  /**
+   * Previous step's password
+   * @see {Store.Temporary}
+   * @var {string}
+   */
+  public currentPassword: string
+
+  /**
+   * Accounts repository
+   * @var {AccountsRepository}
+   */
+  public accounts: AccountsRepository
 
   /**
    * Whether component should track mouse move
@@ -51,6 +69,14 @@ export default class GenerateMnemonicTs extends Vue {
    * @var {number}
    */
   private percent: number = 0
+
+  /**
+   * Hook called when the component is mounted
+   * @return {void}
+   */
+  public mounted() {
+    this.accounts = new AccountsRepository()
+  }
 
   /**
    * Track and handle mouse move event
@@ -79,8 +105,19 @@ export default class GenerateMnemonicTs extends Vue {
       const entropy = CryptoJS.SHA256(this.entropy).toString()
       const seed = MnemonicPassPhrase.createFromEntropy(entropy)
 
+      // encrypt seed for storage
+      const encSeed = AESEncryptionService.encrypt(
+        seed.toSeed(this.currentPassword).toString('hex'),
+        new Password(this.currentPassword)
+      )
+
+      // update currentAccount instance and storage
+      this.currentAccount.values.set("seed", encSeed)
+      this.accounts.update(this.currentAccount.getIdentifier(), this.currentAccount.values)
+      
       // update state
       this.$store.dispatch('notification/ADD_SUCCESS', this.$t('Generate_entropy_increase_success'))
+      this.$store.dispatch('account/SET_CURRENT_ACCOUNT', this.currentAccount.getIdentifier())
       this.$store.dispatch('temporary/SET_MNEMONIC', seed)
 
       // redirect

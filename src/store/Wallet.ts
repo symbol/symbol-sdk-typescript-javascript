@@ -457,6 +457,8 @@ export default {
         return ;
       }
 
+      console.log('wallet/REST_FETCH_INFO: fetching info for', address)
+
       try {
         // prepare REST parameters
         const currentPeer = rootGetters['network/currentPeer'].url

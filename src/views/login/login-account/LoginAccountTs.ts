@@ -208,9 +208,13 @@ export default class LoginAccountTs extends Vue {
     const accessSalt = this.accountsRepository.getAdapter().getSaltForSession()
     const accountPass = AESEncryptionService.decrypt(
       account.values.get('password'),
-      accessSalt,
       new Password(accessSalt)
     )
+
+    console.log('encrypted: ', account.values.get('password'))
+    console.log("decrypted: ", accountPass)
+    console.log("access salt: ", accessSalt)
+    console.log(accountPass.toString())
 
     if (accountPass !== this.formItems.password) {
       return this.$store.dispatch('notification/ADD_ERROR', NotificationType.WRONG_PASSWORD_ERROR)

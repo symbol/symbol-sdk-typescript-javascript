@@ -49,8 +49,11 @@ export class AppAccount {
 
     // password encrypted with accessSalt
     const accessSalt = this.adapter.getSaltForSession()
-    const encryptPass = AESEncryptionService.encrypt(password, accessSalt, new Password(accessSalt))
-    const encryptSeed = AESEncryptionService.encrypt(seed || '', accessSalt, new Password(accessSalt))
+    const encryptPass = AESEncryptionService.encrypt(password, new Password(accessSalt))
+    let encryptSeed = ''
+    if (seed && seed.length) {
+      encryptSeed = AESEncryptionService.encrypt(seed, new Password(accessSalt))
+    }
 
     // populate model
     this.model = new AccountsModel(new Map<string, any>([

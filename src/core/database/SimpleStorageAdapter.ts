@@ -70,9 +70,10 @@ export class SimpleStorageAdapter
     if (null === accessSalt) {
       // salt doesn't exist, generate new
       accessSalt = CryptoJS.lib.WordArray.random(32).toString()
+      console.log("creating accessSalt: ", accessSalt)
   
       // encrypt salt with \a sessionId
-      const ciphertext = AESEncryptionService.encrypt(accessSalt, '', new Password(sessionId))
+      const ciphertext = AESEncryptionService.encrypt(accessSalt, new Password(sessionId))
 
       // store encrypted salt
       this.storage.setItem('accessSalt', ciphertext)
@@ -80,6 +81,6 @@ export class SimpleStorageAdapter
     }
 
     // decrypt stored encrypted salt with \a sessionId
-    return AESEncryptionService.decrypt(accessSalt, '', new Password(sessionId))
+    return AESEncryptionService.decrypt(accessSalt, new Password(sessionId))
   }
 }

@@ -50,11 +50,27 @@ export class AESEncryptionService extends AbstractService {
    */
   public static encrypt(
     data: string,
-    salt: string,
     password: Password,
   ): string {
-    const payload = CryptoJS.AES.encrypt(data, salt + password.value)
-    return payload.toString()
+    const salt = CryptoJS.lib.WordArray.random(16);
+
+    // generate password based key
+    const key = CryptoJS.PBKDF2(password.value, salt, {
+      keySize: 8,
+      iterations: 1024
+    });
+
+    // encrypt using random IV
+    const iv = CryptoJS.lib.WordArray.random(16);
+    const encrypted = CryptoJS.AES.encrypt(data, key, { 
+      iv: iv, 
+      padding: CryptoJS.pad.Pkcs7,
+      mode: CryptoJS.mode.CBC
+    });
+
+    // salt (16 bytes) + iv (16 bytes)
+    // prepend them to the ciphertext for use  in decryption
+    return salt + iv.toString() + encrypted.toString();
   }
 
   /**
@@ -65,10 +81,29 @@ export class AESEncryptionService extends AbstractService {
    */
   public static decrypt(
     data: string,
-    salt: string,
     password: Password
   ): string {
-    return CryptoJS.AES.decrypt(data, salt + password.value).toString()
+    console.log("Data to decrypt: ", data)
+    console.log("Password: ", password.value)
+
+    const salt = CryptoJS.enc.Hex.parse(data.substr(0, 32));
+    const iv = CryptoJS.enc.Hex.parse(data.substr(32, 32))
+    const encrypted = data.substring(64);
+
+    // generate password based key
+    const key = CryptoJS.PBKDF2(password.value, salt, {
+      keySize: 8,
+      iterations: 1024
+    });
+
+    // decrypt using custom IV
+    const decrypted = CryptoJS.AES.decrypt(encrypted, key, { 
+      iv: iv, 
+      padding: CryptoJS.pad.Pkcs7,
+      mode: CryptoJS.mode.CBC
+    })
+    
+    return decrypted.toString();
   }
 
   /**

@@ -84,10 +84,8 @@ export abstract class ModelRepository implements IStorable<SimpleStorageAdapter>
 
     // resolve object by identifier list stored in values
     // with field name \a fieldName
-    for (const identifier in model.values.get(fieldName)) {
-      resolved.set(identifier, repository.read(identifier))
-    }
-
+    const ids = model.values.get(fieldName)
+    ids.map(id => resolved.set(id, repository.read(id)))
     return resolved
   }
 
