@@ -158,6 +158,7 @@ export * from './transaction/MosaicAddressRestrictionTransaction';
 
 // Wallet
 export * from './wallet/EncryptedPrivateKey';
+export * from './wallet/ISimpleWalletDTO';
 export * from './wallet/Password';
 export * from './wallet/SimpleWallet';
 export * from './wallet/Wallet';

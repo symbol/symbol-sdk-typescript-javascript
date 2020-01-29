@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import {from as observableFrom, Observable, throwError} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import { NetworkRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
+import { from as observableFrom, Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { NetworkName } from '../model/blockchain/NetworkName';
-import {NetworkType} from '../model/blockchain/NetworkType';
+import { NetworkType } from '../model/blockchain/NetworkType';
 import { NodeInfo } from '../model/node/NodeInfo';
-import { NetworkRoutesApi } from './api/apis';
-import {Http} from './Http';
-import {NetworkRepository} from './NetworkRepository';
+import { Http } from './Http';
+import { NetworkRepository } from './NetworkRepository';
 import { NodeHttp } from './NodeHttp';
 
 /**

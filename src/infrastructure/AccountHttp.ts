@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { AccountInfoDTO, AccountRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { AccountInfo } from '../model/account/AccountInfo';
@@ -25,7 +26,6 @@ import { AggregateTransaction } from '../model/transaction/AggregateTransaction'
 import { Transaction } from '../model/transaction/Transaction';
 import { UInt64 } from '../model/UInt64';
 import { AccountRepository } from './AccountRepository';
-import { AccountInfoDTO, AccountRoutesApi } from './api';
 import { Http } from './Http';
 import { QueryParams } from './QueryParams';
 import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';

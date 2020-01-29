@@ -28,17 +28,17 @@ describe('TransactionStatusError', () => {
             address: Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             deadline: '1010',
             hash: 'transaction-hash',
-            status: 'error-message',
+            code: 'error-message',
         };
         const transactionStatusError = new TransactionStatusError(
             statusInfoErrorDTO.address,
             statusInfoErrorDTO.hash,
-            statusInfoErrorDTO.status,
+            statusInfoErrorDTO.code,
             Deadline.createFromDTO(statusInfoErrorDTO.deadline));
 
         expect(transactionStatusError.address).to.be.equal(statusInfoErrorDTO.address);
         expect(transactionStatusError.hash).to.be.equal(statusInfoErrorDTO.hash);
-        expect(transactionStatusError.status).to.be.equal(statusInfoErrorDTO.status);
+        expect(transactionStatusError.code).to.be.equal(statusInfoErrorDTO.code);
         deepEqual(transactionStatusError.deadline.toDTO(), UInt64.fromNumericString(statusInfoErrorDTO.deadline).toDTO());
     });
 });

@@ -18,6 +18,7 @@ import { assert, expect } from 'chai';
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
 import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
+import { QueryParams } from '../../src/infrastructure/QueryParams';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
@@ -31,6 +32,7 @@ import { AggregateTransaction } from '../../src/model/transaction/AggregateTrans
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
+import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
@@ -221,6 +223,30 @@ describe('AccountHttp', () => {
             }, (error) => {
                 console.log('Error:', error);
                 assert(false);
+            });
+        });
+    });
+
+    describe('transactions', () => {
+        it('should not return accounts when account does not exist', () => {
+            return accountRepository.getAccountInfo(Account.generateNewAccount(networkType).address).toPromise().then(r => {
+                return Promise.reject('should fail!');
+            }, err => {
+                const error = JSON.parse(err.message);
+                expect(error.statusCode).to.be.eq(404);
+                expect(error.errorDetails.statusMessage).to.be.eq('Not Found');
+                return Promise.resolve();
+            });
+        });
+    });
+
+    describe('transactions', () => {
+        it('should call transactions successfully by type', async () => {
+            const transactions = await accountRepository.getAccountTransactions(publicAccount.address, {transactionType: TransactionType.TRANSFER} as QueryParams).toPromise();
+
+            expect(transactions.length).to.be.greaterThan(0);
+            transactions.forEach(t => {
+                expect(t.type).to.be.eq(TransactionType.TRANSFER);
             });
         });
     });

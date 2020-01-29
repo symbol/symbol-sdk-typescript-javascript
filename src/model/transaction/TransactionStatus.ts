@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import { UInt64 } from '../UInt64';
-import { Deadline } from './Deadline';
+import { TransactionStateTypeEnum, TransactionStatusTypeEnum } from 'nem2-sdk-openapi-typescript-node-client';
+import {UInt64} from '../UInt64';
+import {Deadline} from './Deadline';
 
 /**
  * Transaction status contains basic of a transaction announced to the blockchain.
@@ -33,7 +34,7 @@ export class TransactionStatus {
                 /**
                  * The transaction status group "failed", "unconfirmed", "confirmed", etc...
                  */
-                public readonly group: string,
+                public readonly group: TransactionStateTypeEnum,
                 /**
                  * The transaction hash.
                  */
@@ -45,7 +46,7 @@ export class TransactionStatus {
                 /**
                  * The transaction status code being the error name in case of failure and success otherwise.
                  */
-                public readonly code?: string,
+                public readonly code?: TransactionStatusTypeEnum,
                 /**
                  * The height of the block at which it was confirmed or rejected.
                  */

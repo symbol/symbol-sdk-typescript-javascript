@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+import { NodeRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
 // tslint:disable-next-line: ordered-imports
 import { from as observableFrom, Observable, of as observableOf, throwError } from 'rxjs';
 import { catchError, map, shareReplay } from 'rxjs/operators';
 import { NetworkType } from '../model/blockchain/NetworkType';
-import { NodeRoutesApi } from './api/nodeRoutesApi';
 import { QueryParams } from './QueryParams';
 
 /**
@@ -61,7 +61,10 @@ export abstract class Http {
         if (error.response && error.response.statusCode && error.body) {
             const formattedError = {
                 statusCode: error.response.statusCode,
-                errorDetails: error.response,
+                errorDetails: {
+                    statusCode: error.response.statusCode,
+                    statusMessage: error.response.statusMessage,
+                },
                 body: error.body,
             };
             return new Error(JSON.stringify(formattedError));

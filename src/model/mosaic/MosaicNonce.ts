@@ -74,4 +74,12 @@ export class MosaicNonce {
     public toDTO(): Uint8Array {
         return this.nonce;
     }
+
+    /**
+     * Get string value of nonce
+     * @returns {string}
+     */
+    public toHex(): string {
+        return convert.uint8ToHex(this.nonce)
+    }
 }

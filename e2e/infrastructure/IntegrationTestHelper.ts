@@ -77,8 +77,7 @@ export class IntegrationTestHelper {
                                 '../../../catapult-service-bootstrap/build/generated-addresses/addresses.yaml'),
                                     (error: any, yamlData: any) => {
                             if (error) {
-                                console.log(`catapult-service-bootstrap generated address could not be loaded.
-                                    Ignoring and using accounts from network.conf. Error: ${error}`);
+                                console.log(`catapult-service-bootstrap generated address could not be loaded. Ignoring and using accounts from network.conf.`);
                                 return resolve(this);
                             } else {
                                 const parsedYaml = this.yaml.safeLoad(yamlData);

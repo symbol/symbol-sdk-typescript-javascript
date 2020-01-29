@@ -17,11 +17,11 @@
 import {LocalDateTime} from 'js-joda';
 import {Crypto, KeyPair, SHA3Hasher} from '../../core/crypto';
 import {Convert as convert} from '../../core/format';
-import {ISimpleWalletDTO} from '../../infrastructure/wallet/simpleWalletDTO';
 import {Account} from '../account/Account';
 import {Address} from '../account/Address';
 import {NetworkType} from '../blockchain/NetworkType';
 import {EncryptedPrivateKey} from './EncryptedPrivateKey';
+import {ISimpleWalletDTO} from './ISimpleWalletDTO';
 import {Password} from './Password';
 import {Wallet} from './Wallet';
 
@@ -109,8 +109,9 @@ export class SimpleWallet extends Wallet {
     /**
      * Instantiate a SimpleWallet from a DTO
      * @param simpleWalletDTO simple wallet without prototype
+     * @returns {SimpleWallet}
      */
-    static createFromDTO(simpleWalletDTO: ISimpleWalletDTO) {
+    static createFromDTO(simpleWalletDTO: ISimpleWalletDTO): SimpleWallet {
         return new SimpleWallet(
             simpleWalletDTO.name,
             simpleWalletDTO.network,
