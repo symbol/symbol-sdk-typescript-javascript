@@ -19,7 +19,6 @@ const routes: any[] = [
   {
     path: '/',
     name: 'home',
-    redirect: '/login',
     // @ts-ignore
     component: () => import('@/views/layout/PageLayout/PageLayout.vue'),
     /// region PageLayout children
@@ -27,7 +26,6 @@ const routes: any[] = [
       {
         path: '/login',
         name: 'login',
-        redirect: '/loginAccount',
         // @ts-ignore
         component: () => import('@/views/login/Login.vue'),
         meta: { protected: false },
@@ -49,7 +47,6 @@ const routes: any[] = [
           {
             path: '/createAccount',
             name: 'login.createAccount',
-            redirect: '/createAccountInfo',
             // @ts-ignore
             component: () => import('@/views/login/create-account/CreateAccount.vue'),
             children: [
@@ -104,7 +101,6 @@ const routes: any[] = [
           {
             path: '/importAccount',
             name: 'login.importAccount',
-            redirect: '/inputAccountInfo',
             // @ts-ignore
             component: () => import('@/views/login/import-account/ImportAccount.vue'),
             children: [{
@@ -151,7 +147,6 @@ const routes: any[] = [
       {
         path: '/dashboard',
         name: 'dashboard',
-        redirect: '/dashboard/home',
         meta: {
           protected: true,
           clickable: true,

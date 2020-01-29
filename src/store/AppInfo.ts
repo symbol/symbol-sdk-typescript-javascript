@@ -37,7 +37,7 @@ export default {
     getInitialized: state => state.initialized,
     currentTimezone: (state) => state.timezone,
     currentLanguage: state => state.currentLanguage,
-    languages: state => state.language,
+    languages: state => state.languages,
     shouldShowLoadingOverlay: (state) => state.hasLoadingOverlay,
     shouldDisableControls: (state) => state.hasControlsDisabled,
     controlsDisabledMessage: (state) => state.controlsDisabledMessage,

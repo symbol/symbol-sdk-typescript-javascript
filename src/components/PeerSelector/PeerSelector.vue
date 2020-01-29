@@ -34,7 +34,7 @@
           <ErrorTooltip placement-override="top" class="node-input-container" field-name="friendlyNodeUrl">
             <input
               v-model="formItems.nodeUrl"
-              v-validate="validation.friendlyNodeUrl"
+              v-validate="validationRules.friendlyNodeUrl"
               :data-vv-as="$t('node')"
               data-vv-name="friendlyNodeUrl"
               :placeholder="$t('please_enter_a_custom_nod_address')"
@@ -53,3 +53,11 @@
   </Poptip>
 </div>
 </template>
+
+<script lang="ts">
+import {PeerSelectorTs} from '@/components/PeerSelector/PeerSelectorTs.ts'
+
+export default class PeerSelector extends PeerSelectorTs {
+
+}
+</script>

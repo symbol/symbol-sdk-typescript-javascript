@@ -16,7 +16,7 @@
 import {Component, Vue} from 'vue-property-decorator'
 
 // internal dependencies
-import {Electron} from '@/core/utils/Electron'
+import {Electron} from '@/core/utils/electron'
 
 @Component
 export class WindowControlsTs extends Vue {

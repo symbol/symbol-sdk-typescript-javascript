@@ -18,13 +18,17 @@ import {Component, Vue} from 'vue-property-decorator'
 // configuration
 import appConfig from '@/../config/app.conf.json'
 
+// import logo as an image
+// @ts-ignore
+import logo from '@/views/resources/img/window/windowNemLogo.png'
+
 @Component
 export class AppLogoTs extends Vue {
   /**
-   * Absolute path to the logo file
-   * @var {string}
+   * Logo image
+   * @var {any}
    */
-  public readonly logoFilePath = '@/views/resources/img/window/windowNemLogo.png'
+  public readonly logo = logo
 
   /**
    * Title of the app

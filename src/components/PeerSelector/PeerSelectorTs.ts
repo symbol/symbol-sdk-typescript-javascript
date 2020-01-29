@@ -25,6 +25,9 @@ import {PeerService} from '@/services/PeerService'
 import {URLHelpers} from '@/core/utils/URLHelpers'
 import {NotificationType} from '@/core/utils/NotificationType'
 
+// internal dependencies
+import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
+
 // helpers
 const getNetworkTypeText = (networkType: NetworkType) => {
   switch (networkType) {
@@ -36,11 +39,18 @@ const getNetworkTypeText = (networkType: NetworkType) => {
   }
 }
 
-@Component({computed: {...mapGetters({
-  currentPeer: 'network/currentPeer',
-  isConnected: 'network/isConnected',
-  networkType: 'network/networkType',
-})}})
+// child components
+// @ts-ignore
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+
+@Component({
+  computed: {...mapGetters({
+    currentPeer: 'network/currentPeer',
+    isConnected: 'network/isConnected',
+    networkType: 'network/networkType',
+  })},
+  components: {ErrorTooltip},
+})
 export class PeerSelectorTs extends Vue {
   /**
    * Currently active account
@@ -90,6 +100,12 @@ export class PeerSelectorTs extends Vue {
   }
 
   /**
+   * Validation rules
+   * @var {ValidationRuleset}
+   */
+  public validationRules = ValidationRuleset
+
+  /**
    * Hook called when the component is mounted
    * @return {void}
    */
@@ -103,7 +119,7 @@ export class PeerSelectorTs extends Vue {
 
 /// region computed properties getter/setter
   get peersList(): PeersModel[] {
-    return Array.from(this.collection.values())
+    return this.collection ? Array.from(this.collection.values()) : []
   }
 
   get networkTypeText(): string {
