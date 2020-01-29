@@ -18,7 +18,7 @@ import {Component, Provide, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
-import {Electron} from '@/core/utils/electron'
+import {Electron} from '@/core/utils/Electron'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
 
 // child components
