@@ -16,7 +16,7 @@
 
 export class MessageMarker {
     /**
-     * 8-byte marker: FE CC 71 C7 64 BF E5 98 for PersistentDelegationRequestTransaction message
+     * 8-byte marker: FE2A8061577301E2 for PersistentDelegationRequestTransaction message
      */
-    public static readonly PersistentDelegationUnlock = 'FECC71C764BFE598';
+    public static readonly PersistentDelegationUnlock = 'FE2A8061577301E2';
 }
