@@ -123,57 +123,45 @@ describe('MosaicHttp', () => {
      * =========================
      */
     describe('getMosaic', () => {
-        it('should return mosaic given mosaicId', (done) => {
-            mosaicRepository.getMosaic(mosaicId)
-            .subscribe((mosaicInfo) => {
-                expect(mosaicInfo.height.lower).not.to.be.null;
-                expect(mosaicInfo.divisibility).to.be.equal(3);
-                expect(mosaicInfo.isSupplyMutable()).to.be.equal(true);
-                expect(mosaicInfo.isTransferable()).to.be.equal(true);
-                done();
-            });
+        it('should return mosaic given mosaicId', async () => {
+            const mosaicInfo = await mosaicRepository.getMosaic(mosaicId).toPromise();
+            expect(mosaicInfo.height.lower).not.to.be.null;
+            expect(mosaicInfo.divisibility).to.be.equal(3);
+            expect(mosaicInfo.isSupplyMutable()).to.be.equal(true);
+            expect(mosaicInfo.isTransferable()).to.be.equal(true);
         });
     });
 
     describe('getMosaics', () => {
-        it('should return mosaics given array of mosaicIds', (done) => {
-            mosaicRepository.getMosaics([mosaicId])
-            .subscribe((mosaicInfos) => {
-                expect(mosaicInfos[0].height.lower).not.to.be.null;
-                expect(mosaicInfos[0].divisibility).to.be.equal(3);
-                expect(mosaicInfos[0].isSupplyMutable()).to.be.equal(true);
-                expect(mosaicInfos[0].isTransferable()).to.be.equal(true);
-                done();
-            });
+        it('should return mosaics given array of mosaicIds', async () => {
+            const mosaicInfos = await mosaicRepository.getMosaics([mosaicId]).toPromise();
+            expect(mosaicInfos[0].height.lower).not.to.be.null;
+            expect(mosaicInfos[0].divisibility).to.be.equal(3);
+            expect(mosaicInfos[0].isSupplyMutable()).to.be.equal(true);
+            expect(mosaicInfos[0].isTransferable()).to.be.equal(true);
         });
     });
 
     describe('getMosaicsNames', () => {
-        it('should call getMosaicsNames successfully', (done) => {
-            namespaceRepository.getMosaicsNames([mosaicId]).subscribe((mosaicNames) => {
-                expect(mosaicNames.length).to.be.greaterThan(0);
-                done();
-            });
+        it('should call getMosaicsNames successfully', async () => {
+            const mosaicNames = await namespaceRepository.getMosaicsNames([mosaicId]).toPromise();
+            expect(mosaicNames.length).to.be.greaterThan(0);
         });
     });
 
     describe('getMosaicsFromAccount', () => {
-        it('should call getMosaicsFromAccount successfully', (done) => {
-            mosaicRepository.getMosaicsFromAccount(account.address).subscribe((mosaics) => {
-                expect(mosaics.length).to.be.greaterThan(0);
-                expect(mosaics.find((m) => m.id.toHex() === mosaicId.toHex()) !== undefined).to.be.true;
-                done();
-            });
+        it('should call getMosaicsFromAccount successfully', async () => {
+            const mosaics = await mosaicRepository.getMosaicsFromAccount(account.address).toPromise();
+            expect(mosaics.length).to.be.greaterThan(0);
+            expect(mosaics.find((m) => m.id.toHex() === mosaicId.toHex()) !== undefined).to.be.true;
         });
     });
 
     describe('getMosaicsFromAccounts', () => {
-        it('should call getMosaicsFromAccounts successfully', (done) => {
-            mosaicRepository.getMosaicsFromAccounts([account.address]).subscribe((mosaics) => {
-                expect(mosaics.length).to.be.greaterThan(0);
-                expect(mosaics.find((m) => m.id.toHex() === mosaicId.toHex()) !== undefined).to.be.true;
-                done();
-            });
+        it('should call getMosaicsFromAccounts successfully', async () => {
+            const mosaics = await mosaicRepository.getMosaicsFromAccounts([account.address]).toPromise();
+            expect(mosaics.length).to.be.greaterThan(0);
+            expect(mosaics.find((m) => m.id.toHex() === mosaicId.toHex()) !== undefined).to.be.true;
         });
     });
 

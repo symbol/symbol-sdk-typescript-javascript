@@ -191,77 +191,65 @@ describe('RestrictionHttp', () => {
      */
 
     describe('getAccountRestrictions', () => {
-        it('should call getAccountRestrictions successfully', (done) => {
+        it('should call getAccountRestrictions successfully', async () => {
 
-            restrictionAccountRepository.getAccountRestrictions(accountAddress).subscribe((accountRestrictions) => {
-                expect(accountRestrictions.length).to.be.greaterThan(0);
-                done();
-            });
+            const accountRestrictions = await restrictionAccountRepository.getAccountRestrictions(accountAddress).toPromise();
+            expect(accountRestrictions.length).to.be.greaterThan(0);
         });
     });
 
     describe('getAccountRestrictionsFromAccounts', () => {
-        it('should call getAccountRestrictionsFromAccounts successfully', (done) => {
-            restrictionAccountRepository.getAccountRestrictionsFromAccounts([accountAddress]).subscribe((accountRestrictions) => {
-                deepEqual(accountRestrictions[0]!.address, accountAddress);
-                done();
-            });
+        it('should call getAccountRestrictionsFromAccounts successfully', async () => {
+            const accountRestrictions = await restrictionAccountRepository.getAccountRestrictionsFromAccounts([accountAddress]).toPromise();
+            deepEqual(accountRestrictions[0]!.address, accountAddress);
         });
     });
 
     describe('getMosaicAddressRestriction', () => {
-        it('should call getMosaicAddressRestriction successfully', (done) => {
-            restrictionMosaicRepository.getMosaicAddressRestriction(mosaicId, account3.address).subscribe((mosaicRestriction) => {
-                deepEqual(mosaicRestriction.mosaicId.toHex(), mosaicId.toHex());
-                deepEqual(mosaicRestriction.entryType, MosaicRestrictionEntryType.ADDRESS);
-                deepEqual(mosaicRestriction.targetAddress.plain(), account3.address.plain());
-                deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString()), UInt64.fromUint(2).toString());
-                done();
-            });
+        it('should call getMosaicAddressRestriction successfully', async () => {
+            const mosaicRestriction = await restrictionMosaicRepository.getMosaicAddressRestriction(mosaicId, account3.address).toPromise();
+            deepEqual(mosaicRestriction.mosaicId.toHex(), mosaicId.toHex());
+            deepEqual(mosaicRestriction.entryType, MosaicRestrictionEntryType.ADDRESS);
+            deepEqual(mosaicRestriction.targetAddress.plain(), account3.address.plain());
+            deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString()), UInt64.fromUint(2).toString());
         });
     });
 
     describe('getMosaicAddressRestrictions', () => {
-        it('should call getMosaicAddressRestrictions successfully', (done) => {
-            restrictionMosaicRepository.getMosaicAddressRestrictions(mosaicId, [account3.address]).subscribe((mosaicRestriction) => {
-                deepEqual(mosaicRestriction[0].mosaicId.toHex(), mosaicId.toHex());
-                deepEqual(mosaicRestriction[0].entryType, MosaicRestrictionEntryType.ADDRESS);
-                deepEqual(mosaicRestriction[0].targetAddress.plain(), account3.address.plain());
-                deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString()), UInt64.fromUint(2).toString());
-                done();
-            });
+        it('should call getMosaicAddressRestrictions successfully', async () => {
+            const mosaicRestriction = await restrictionMosaicRepository.getMosaicAddressRestrictions(mosaicId, [account3.address]).toPromise();
+            deepEqual(mosaicRestriction[0].mosaicId.toHex(), mosaicId.toHex());
+            deepEqual(mosaicRestriction[0].entryType, MosaicRestrictionEntryType.ADDRESS);
+            deepEqual(mosaicRestriction[0].targetAddress.plain(), account3.address.plain());
+            deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString()), UInt64.fromUint(2).toString());
         });
     });
 
     describe('getMosaicGlobalRestriction', () => {
-        it('should call getMosaicGlobalRestriction successfully', (done) => {
-            restrictionMosaicRepository.getMosaicGlobalRestriction(mosaicId).subscribe((mosaicRestriction) => {
-                deepEqual(mosaicRestriction.mosaicId.toHex(), mosaicId.toHex());
-                deepEqual(mosaicRestriction.entryType, MosaicRestrictionEntryType.GLOBAL);
-                deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.referenceMosaicId.toHex(),
-                    new MosaicId(UInt64.fromUint(0).toHex()).toHex());
-                deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.restrictionType,
-                    MosaicRestrictionType.GE);
-                deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.restrictionValue.toString(),
-                    UInt64.fromUint(0).toString());
-                done();
-            });
+        it('should call getMosaicGlobalRestriction successfully', async () => {
+            const mosaicRestriction = await restrictionMosaicRepository.getMosaicGlobalRestriction(mosaicId).toPromise();
+            deepEqual(mosaicRestriction.mosaicId.toHex(), mosaicId.toHex());
+            deepEqual(mosaicRestriction.entryType, MosaicRestrictionEntryType.GLOBAL);
+            deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.referenceMosaicId.toHex(),
+                new MosaicId(UInt64.fromUint(0).toHex()).toHex());
+            deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.restrictionType,
+                MosaicRestrictionType.GE);
+            deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.restrictionValue.toString(),
+                UInt64.fromUint(0).toString());
         });
     });
 
     describe('getMosaicGlobalRestrictions', () => {
-        it('should call getMosaicGlobalRestrictions successfully', (done) => {
-            restrictionMosaicRepository.getMosaicGlobalRestrictions([mosaicId]).subscribe((mosaicRestriction) => {
-                deepEqual(mosaicRestriction[0].mosaicId.toHex(), mosaicId.toHex());
-                deepEqual(mosaicRestriction[0].entryType, MosaicRestrictionEntryType.GLOBAL);
-                deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.referenceMosaicId.toHex(),
-                    new MosaicId(UInt64.fromUint(0).toHex()).toHex());
-                deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.restrictionType,
-                    MosaicRestrictionType.GE);
-                deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.restrictionValue.toString(),
-                    UInt64.fromUint(0).toString());
-                done();
-            });
+        it('should call getMosaicGlobalRestrictions successfully', async () => {
+            const mosaicRestriction = await restrictionMosaicRepository.getMosaicGlobalRestrictions([mosaicId]).toPromise();
+            deepEqual(mosaicRestriction[0].mosaicId.toHex(), mosaicId.toHex());
+            deepEqual(mosaicRestriction[0].entryType, MosaicRestrictionEntryType.GLOBAL);
+            deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.referenceMosaicId.toHex(),
+                new MosaicId(UInt64.fromUint(0).toHex()).toHex());
+            deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.restrictionType,
+                MosaicRestrictionType.GE);
+            deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.restrictionValue.toString(),
+                UInt64.fromUint(0).toString());
         });
     });
 
