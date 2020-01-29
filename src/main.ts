@@ -57,8 +57,7 @@ export const AppStore = store
 
 /// end-region app storage & state store initializations
 
-export default new Vue({
-  el: '#app',
+const app = new Vue({
   router,
   store,
   i18n,
@@ -71,3 +70,7 @@ export default new Vue({
     UIBootstrapper.configure(this)
   },
 })
+
+app.$mount('#app') 
+
+export default app

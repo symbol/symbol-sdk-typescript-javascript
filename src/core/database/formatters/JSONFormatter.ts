@@ -15,29 +15,44 @@
  */
 // internal dependencies
 import {DatabaseModel} from '../DatabaseModel'
-import {IDataFormatter} from './IDataFormatter'
 import {AbstractFormatter} from './AbstractFormatter'
 
 export class JSONFormatter 
-  extends AbstractFormatter
-  implements IDataFormatter {
+  extends AbstractFormatter {
 
   /**
    * Format an \a entity
-   * @param {ModelImpl} entity
+   * @param {DatabaseModel} entity
    * @return {string}
    */
-  public format<ModelImpl extends DatabaseModel>(entities: Map<string, ModelImpl>): string {
+  public format(entities: Map<string, DatabaseModel>): string {
     // format each entity individually
     let iterator = entities.keys()
-    let data: Map<string, Map<string, any>> = new Map<string, Map<string, any>>()
+    let data: {} = {}
     for (let i = 0, m = entities.size; i < m; i++) {
-      const key = iterator.next()
-      const dto = entities.get(key.value)
-      const row = dto.values
+      // read next identifier and model data
+      const id = iterator.next().value
+      const dto = entities.get(id)
+
+      if (!id.length) {
+        continue
+      }
 
       // expose only "values" from model
-      data.set(key.value, row)
+      let raw = {}
+      const row: Map<string, any> = dto.values
+      const keys = row.keys()
+      const values = row.values()
+      for (let j = null; !(j = keys.next()).done;) {
+        const field = j.value
+        if (!field.length) {
+          continue
+        }
+        raw[field] = values.next().value
+      }
+
+      // entities stored by id
+      data[id] = raw
     }
 
     return JSON.stringify(data)
@@ -48,35 +63,35 @@ export class JSONFormatter
    * @param {string} data
    * @return {Map<string, ModelImpl>}
    */
-  public parse<ModelImpl extends DatabaseModel>(data: string): Map<string, ModelImpl> {
-    let parsed = []
-    try {
-      parsed = JSON.parse(data)
-
-      // if provided data is for singular entity, wrap in array
-      if (!(parsed instanceof Array)) {
-        parsed = [parsed]
-      }
-    }
+  public parse(data: string): Map<string, DatabaseModel> {
+    let parsed = {}
+    try { parsed = JSON.parse(data) }
     catch(e) {}
 
-    if (!parsed.length) {
-      return new Map<string, ModelImpl>()
+    if (!Object.keys(parsed).length) {
+      return new Map<string, DatabaseModel>()
+    }
+
+    // - map with correct database entities
+    const schema = this.getSchema()
+    if (!schema) {
+      throw new Error('Error parsing JSON: Schema must be set before data can be parsed.')
     }
 
     // map entities to model instances by identifier
-    const entities = new Map<string, ModelImpl>()
-    parsed.map((entity: any) => {
-      // create model
-      let Activator: { new (): ModelImpl; }
-      const model = Object.assign(new Activator(), entity)
+    const entities = new Map<string, DatabaseModel>()
+    Object.keys(parsed).map((identifier: string) => {
+      // read entity by identifier
+      const entity = parsed[identifier]
+      const fields = Object.keys(entity)
+      const values = []
+      fields.map(field => values.push([field, entity[field]]))
 
-      // populate fields
-      model.values = new Map<string, any>(entity)
-      model.identifier = model.values.get(model.primaryKey)
+      // create model & populate fields
+      const model = schema.createModel(new Map<string, any>(values))
 
       // store by identifier
-      entities.set(model.identifier, model)
+      entities.set(model.getIdentifier(), model)
     })
 
     return entities

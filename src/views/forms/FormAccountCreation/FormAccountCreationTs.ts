@@ -79,6 +79,7 @@ export class FormAccountCreationTs extends Vue {
     password: '',
     passwordAgain: '',
     hint: '',
+    networkType: NetworkType.TEST_NET,
   }
 
   /**

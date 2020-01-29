@@ -18,12 +18,10 @@ import {NetworkType} from 'nem2-sdk'
 // internal dependencies
 import {AccountsTable} from '@/core/database/entities/AccountsTable'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {IRepository} from './IRepository'
 import {ModelRepository} from './ModelRepository'
 
 export class AccountsRepository
-  extends ModelRepository<AccountsTable, AccountsModel>
-  implements IRepository<AccountsModel> {
+  extends ModelRepository {
 
   /// region abstract methods
   /**

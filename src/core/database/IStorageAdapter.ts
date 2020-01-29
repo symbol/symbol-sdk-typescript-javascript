@@ -17,7 +17,7 @@
 import {DatabaseTable} from './DatabaseTable'
 import {DatabaseModel} from './DatabaseModel'
 import {IStorageBackend} from './backends/IStorageBackend'
-import {IDataFormatter} from './formatters/IDataFormatter'
+import {AbstractFormatter} from './formatters/AbstractFormatter'
 
 export interface IStorageAdapter {
   /**
@@ -28,9 +28,9 @@ export interface IStorageAdapter {
 
   /**
    * Data formatter
-   * @var {IDataFormatter}
+   * @var {AbstractFormatter}
    */
-  formatter: IDataFormatter
+  formatter: AbstractFormatter
 
   /**
    * List of database table schemas
@@ -47,14 +47,14 @@ export interface IStorageAdapter {
   /**
    * Read and parse data for schema with \a schemaId
    * @param {string} schemaId 
-   * @return {Map<string, ModelImpl>}
+   * @return {Map<string, DatabaseModel>}
    */
-  read<ModelImpl extends DatabaseModel>(schemaId: string): Map<string, ModelImpl>
+  read(schemaId: string): Map<string, DatabaseModel>
 
   /**
    * Read and parse data for schema with \a schemaId
-   * @param {Map<string, ModelImpl>} entities
+   * @param {Map<string, DatabaseModel>} entities
    * @return {number} The count of entities written
    */
-  write<ModelImpl extends DatabaseModel>(schemaId: string, entities: Map<string, ModelImpl>): number
+  write(schemaId: string, entities: Map<string, DatabaseModel>): number
 }

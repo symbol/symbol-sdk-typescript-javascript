@@ -16,12 +16,10 @@
 // internal dependencies
 import {PeersTable} from '@/core/database/entities/PeersTable'
 import {PeersModel} from '@/core/database/entities/PeersModel'
-import {IRepository} from './IRepository'
 import {ModelRepository} from './ModelRepository'
 
 export class PeersRepository
-  extends ModelRepository<PeersTable, PeersModel>
-  implements IRepository<PeersModel> {
+  extends ModelRepository {
 
   /// region abstract methods
   /**

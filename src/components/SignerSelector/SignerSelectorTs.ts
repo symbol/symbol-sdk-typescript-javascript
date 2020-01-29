@@ -84,7 +84,7 @@ export class SignerSelectorTs extends Vue {
     this.walletService = new WalletService(this.$store)
 
     if (this.currentWallet) {
-      const address = this.currentWallet.address().plain()
+      const address = this.currentWallet.objects.address.plain()
       await this.$store.dispatch('wallet/REST_FETCH_MULTISIG', address)
     }
   }

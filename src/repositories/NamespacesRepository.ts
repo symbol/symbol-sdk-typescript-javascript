@@ -16,12 +16,10 @@
 // internal dependencies
 import {NamespacesTable} from '@/core/database/entities/NamespacesTable'
 import {NamespacesModel} from '@/core/database/entities/NamespacesModel'
-import {IRepository} from './IRepository'
 import {ModelRepository} from './ModelRepository'
 
 export class NamespacesRepository
-  extends ModelRepository<NamespacesTable, NamespacesModel>
-  implements IRepository<NamespacesModel> {
+  extends ModelRepository {
 
   /// region abstract methods
   /**

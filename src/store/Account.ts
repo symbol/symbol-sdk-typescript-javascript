@@ -28,6 +28,16 @@ const accountsRepository = new AccountsRepository()
 const walletsRepository = new WalletsRepository()
 /// end-region globals
 
+/**
+ * Internal helper used to maintain updated snapshot
+ * of database storage backend.
+ * @return {void}
+ */
+const fetchDatabase = () => {
+  accountsRepository.fetch()
+  walletsRepository.fetch()
+}
+
 export default {
   namespaced: true,
   state: {
@@ -70,6 +80,8 @@ export default {
       return dispatch('RESET_STATE')
     },
     async SET_CURRENT_ACCOUNT({commit, dispatch}, accountName) {
+      fetchDatabase()
+
       // validate account exists
       const currentAccount = accountsRepository.read(accountName)
 
@@ -78,7 +90,7 @@ export default {
       commit('setAuthenticated', true)
 
       // set knownWallets
-      const knownWallets = currentAccount.fetchRelations<WalletsModel>(walletsRepository, 'wallets')
+      const knownWallets = accountsRepository.fetchRelations(walletsRepository, currentAccount, 'wallets')
       dispatch('wallet/SET_KNOWN_WALLETS', knownWallets, {root: true})
 
       // reset store + re-initialize
@@ -87,13 +99,15 @@ export default {
       $eventBus.$emit('onAccountChange', accountName)
     },
     ADD_WALLET({commit, dispatch, getters}, walletName) {
+      fetchDatabase()
+
       const currentAccount = getters['currentAccount']
       if (! currentAccount) {
         return
       }
 
       // validate wallet exists
-      const wallet = accountsRepository.read(walletName)
+      const wallet = walletsRepository.read(walletName)
       const wallets = currentAccount.values.get("wallets")
       wallets.push(wallet.values.get('name'))
 

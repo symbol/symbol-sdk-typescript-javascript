@@ -19,10 +19,7 @@ import {AppDatabase} from '@/core/database/AppDatabase'
 import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
 import {IStorable} from './IStorable'
 
-export abstract class ModelRepository<
-  TableImpl extends DatabaseTable,
-  ModelImpl extends DatabaseModel
-> implements IStorable<SimpleStorageAdapter> {
+export abstract class ModelRepository implements IStorable<SimpleStorageAdapter> {
   /**
    * Storage adapter
    * @see {IStorable}
@@ -33,9 +30,9 @@ export abstract class ModelRepository<
   /**
    * Collection of items
    * @see {IRepository}
-   * @var {Map<string, ModelImpl>}
+   * @var {Map<string, DatabaseModel>}
    */
-  protected _collection: Map<string, ModelImpl>
+  protected _collection: Map<string, DatabaseModel>
 
   /**
    * Construct a repository around \a adapter storage adapter.
@@ -48,9 +45,9 @@ export abstract class ModelRepository<
 
   /**
    * Fetch items from storage
-   * @return {Map<string, ModelImpl>}
+   * @return {Map<string, DatabaseModel>}
    */
-  protected fetch(): Map<string, ModelImpl> {
+  public fetch(): Map<string, DatabaseModel> {
     // use DatabaseTable
     const table = this.createTable()
 
@@ -63,7 +60,7 @@ export abstract class ModelRepository<
    * Persist items to storage
    * @return {number}
    */
-  protected persist(): number {
+  public persist(): number {
     // use DatabaseTable
     const table = this.createTable()
 
@@ -71,19 +68,109 @@ export abstract class ModelRepository<
     return this._adapter.write(table.tableName, this._collection)
   }
 
+  /**
+   * Fetch many relations using \a repository and values from \a model
+   * @param {ModelRepository} repository
+   * @param {DatabaseModel} model 
+   * @param {string} fieldName
+   * @return {Map<string, DatabaseModel>} Collection of objects mapped by identifier
+   */
+  public fetchRelations(
+    repository: ModelRepository,
+    model: DatabaseModel,
+    fieldName: string,
+  ): Map<string, DatabaseModel> {
+    const resolved = new Map<string, DatabaseModel>()
+
+    // resolve object by identifier list stored in values
+    // with field name \a fieldName
+    for (const identifier in model.values.get(fieldName)) {
+      resolved.set(identifier, repository.read(identifier))
+    }
+
+    return resolved
+  }
+
+  /**
+   * Fetch one relation using \a repository and values from \a model
+   * @access protected
+   * @param {ModelRepository} repository
+   * @param {DatabaseModel} model 
+   * @param {string} fieldName
+   * @return {DatabaseModel} Sub class Model instance
+   */
+  public fetchRelation(
+    repository: ModelRepository,
+    model: DatabaseModel,
+    fieldName: string
+  ): DatabaseModel {
+    return repository.read(model.values.get(fieldName))
+  }
+
   /// region abstract methods
   /**
    * Create a table instance
-   * @return {TableImpl}
+   * @return {DatabaseTable}
    */
-  public abstract createTable(): TableImpl
+  public abstract createTable(): DatabaseTable
 
   /**
    * Create a model instance
    * @param {Map<string, any>} values
-   * @return {ModelImpl}
+   * @return {DatabaseModel}
    */
-  public abstract createModel(values: Map<string, any>): ModelImpl
+  public abstract createModel(values: Map<string, any>): DatabaseModel
+
+  /**
+   * Check for existence of entity by \a id
+   * @param {string} id 
+   * @return {boolean}
+   */
+  public abstract find(key: string): boolean
+
+  /**
+   * Getter for the collection of items
+   * @return {ModelImpl[]}
+   */
+  public abstract collect(): DatabaseModel[]
+
+  /**
+   * Getter for the collection of items
+   * mapped by identifier
+   * @return {Map<string, DatabaseModel>}
+   */
+  public abstract entries(): Map<string, DatabaseModel>
+
+  /// region CRUD
+  /**
+   * Create an entity
+   * @param {Map<string, any>} values
+   * @return {string} The assigned entity identifier
+   */
+  public abstract create(values: Map<string, any>): string
+
+  /**
+   * Getter for the collection of items
+   * @param {string} identifier
+   * @return {Map<string, DatabaseModel>}
+   */
+  public abstract read(identifier: string): DatabaseModel
+
+  /**
+   * Update an entity
+   * @param {string} identifier
+   * @param {Map<string, any>} values
+   * @return {DatabaseModel} The new values
+   */
+  public abstract update(identifier: string, values: Map<string, any>): DatabaseModel
+
+  /**
+   * Delete an entity
+   * @param {string} identifier
+   * @return {boolean} Whether an element was deleted
+   */
+  public abstract delete(identifier: string): boolean
+  /// end-region CRUD
   /// end-region abstract methods
 
   /**
@@ -117,9 +204,9 @@ export abstract class ModelRepository<
    * Setter for the storage adapter
    * @see {IStorable}
    * @param {SimpleStorageAdapter} adapter
-   * @return {ModelRepository<TableImpl, ModelImpl>}
+   * @return {ModelRepository}
    */
-  public setAdapter(adapter: SimpleStorageAdapter): ModelRepository<TableImpl, ModelImpl> {
+  public setAdapter(adapter: SimpleStorageAdapter): ModelRepository {
     this._adapter = adapter
     return this
   }

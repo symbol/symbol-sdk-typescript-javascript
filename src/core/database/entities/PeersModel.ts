@@ -34,12 +34,23 @@ export class PeersModel extends DatabaseModel {
   public relations: Map<string, DatabaseRelation> = new Map<string, DatabaseRelation>()
 
   /**
-   * Get peer full url
-   * @return {string}
+   * Construct a peer model instance
+   * 
+   * @param {Map<string, any>} values
    */
-  public toURL(): string {
-    return this.values.get('protocol')
-        + this.values.get('host') + ':'
-        + this.values.get('port')
+  public constructor(values: Map<string, any> = new Map<string, any>()) {
+    super(['host'], values)
+  }
+
+  /**
+   * Permits to return specific field's mapped object instances
+   * @return any
+   */
+  public get objects(): any {
+    const url = this.values.get('protocol')
+    + this.values.get('host') + ':'
+    + this.values.get('port')
+
+    return {url}
   }
 }

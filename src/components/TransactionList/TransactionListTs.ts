@@ -170,7 +170,7 @@ export class TransactionListTs extends Vue {
     const group = this.currentTab
     const transactions = await this.$store.dispatch('wallet/REST_FETCH_TRANSACTIONS', {
       group: group,
-      address: this.currentWallet.address().plain(),
+      address: this.currentWallet.objects.address.plain(),
       pageSize: 100
     })
 

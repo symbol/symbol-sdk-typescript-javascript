@@ -93,6 +93,8 @@ export default class FinalizeTs extends Vue {
       // create account by mnemonic
       const wallet = this.createWalletFromMnemonic()
 
+      console.log("wallet model: ", wallet.model)
+
       // use repository for storage
       this.walletsRepository.create(wallet.model.values)
 
@@ -121,12 +123,17 @@ export default class FinalizeTs extends Vue {
       WalletService.DEFAULT_WALLET_PATH
     )
 
+    console.log("account: ", account)
+
     const simpleWallet = SimpleWallet.createFromPrivateKey(
       'SeedWallet',
       this.currentPassword,
       account.privateKey,
       this.networkType
     )
+
+    console.log("privateKey: ", account.privateKey)
+    console.log("simpleWallet: ", simpleWallet)
 
     return new AppWallet(
       this.$store,

@@ -19,6 +19,7 @@ import {NamespacesModel} from '@/core/database/entities/NamespacesModel'
 export class NamespacesTable extends DatabaseTable {
   public constructor() {
     super('namespaces', [
+      'id',
       'wallet',
       'hexId',
       'name',
@@ -30,7 +31,7 @@ export class NamespacesTable extends DatabaseTable {
    * Create a new model instance
    * @return {NamespacesModel}
    */
-  public createModel(): NamespacesModel {
-    return new NamespacesModel()
+  public createModel(values: Map<string, any> = new Map<string, any>()): NamespacesModel {
+    return new NamespacesModel(values)
   }
 }

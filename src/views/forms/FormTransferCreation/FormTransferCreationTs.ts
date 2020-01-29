@@ -127,7 +127,7 @@ export class FormTransferCreationTs extends Vue {
    */
   public async created() {
     this.factory = new TransactionFactory(this.$store)
-    await this.$store.dispatch('wallet/REST_FETCH_MULTISIG', this.currentWallet.address().plain())
+    await this.$store.dispatch('wallet/REST_FETCH_MULTISIG', this.currentWallet.objects.address.plain())
 
     // - re-populate form if transaction staged
     if (this.stagedTransactions.length) {

@@ -140,7 +140,7 @@ export class TransactionService extends AbstractService {
 
     if (TransactionType.TRANSFER === transaction.type) {
       const transfer = this.getDerivateTransaction(transaction) as TransferTransaction
-      details['isIncoming'] = transfer.recipientAddress.equals(currentWallet.address())
+      details['isIncoming'] = transfer.recipientAddress.equals(currentWallet.objects.address)
     }
 
     // - populate common transaction fields

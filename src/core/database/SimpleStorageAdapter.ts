@@ -19,7 +19,7 @@ import CryptoJS from "crypto-js";
 // internal dependencies
 import {DatabaseModel} from './DatabaseModel'
 import {BaseStorageAdapter} from './BaseStorageAdapter'
-import {IDataFormatter} from './formatters/IDataFormatter'
+import {AbstractFormatter} from './formatters/AbstractFormatter'
 import {JSONFormatter} from './formatters/JSONFormatter'
 import {IStorageBackend} from './backends/IStorageBackend'
 import {LocalStorageBackend} from './backends/LocalStorageBackend'
@@ -36,7 +36,7 @@ export class SimpleStorageAdapter
    */
   public constructor(
     storageBackend: IStorageBackend = !!localStorage ? new LocalStorageBackend() : new ObjectStorageBackend(),
-    dataFormatter: IDataFormatter = new JSONFormatter(),
+    dataFormatter: AbstractFormatter = new JSONFormatter(),
   ) {
     super(storageBackend, dataFormatter)
   }

@@ -20,28 +20,36 @@ import {DatabaseModel} from '@/core/database/DatabaseModel'
 import {DatabaseRelation} from '@/core/database/DatabaseRelation'
 
 export class WalletsModel extends DatabaseModel {
-    /**
-     * Entity identifier *field names*. The identifier
-     * is a combination of the values separated by '-'
-     * @var {string[]}
-     */
-    public primaryKeys: string[] = [
-      'accountName',
-      'address',
-    ]
-  
-    /**
-     * Entity relationships
-     * @var {Map<string, DatabaseRelation>}
-     */
-    public relations: Map<string, DatabaseRelation> = new Map<string, DatabaseRelation>([])
-  
-    /**
-     * Getter for address instance
-     * @return {Address}
-     */
-    public address(): Address {
-      return Address.createFromRawAddress(this.values.get('address'))
-    }
+  /**
+   * Entity identifier *field names*. The identifier
+   * is a combination of the values separated by '-'
+   * @var {string[]}
+   */
+  public primaryKeys: string[] = [
+    'id',
+  ]
+
+  /**
+   * Entity relationships
+   * @var {Map<string, DatabaseRelation>}
+   */
+  public relations: Map<string, DatabaseRelation> = new Map<string, DatabaseRelation>([])
+
+  /**
+   * Construct a wallet model instance
+   * 
+   * @param {Map<string, any>} values
+   */
+  public constructor(values: Map<string, any> = new Map<string, any>()) {
+    super(['id'], values)
   }
-  
+
+  /**
+   * Permits to return specific field's mapped object instances
+   * @return any
+   */
+  public get objects(): any {
+    const address = Address.createFromRawAddress(this.values.get('address'))
+    return {address}
+  }
+}

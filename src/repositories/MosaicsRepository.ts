@@ -16,12 +16,10 @@
 // internal dependencies
 import {MosaicsTable} from '@/core/database/entities/MosaicsTable'
 import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
-import {IRepository} from './IRepository'
 import {ModelRepository} from './ModelRepository'
 
 export class MosaicsRepository
-  extends ModelRepository<MosaicsTable, MosaicsModel>
-  implements IRepository<MosaicsModel> {
+  extends ModelRepository {
 
   /// region abstract methods
   /**

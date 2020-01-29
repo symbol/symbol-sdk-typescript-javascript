@@ -23,7 +23,7 @@
         </div>
         <div class="form-input-item">
           <div>* {{ $t('Set_network_type') }}</div>
-          <Select v-model="networkType" :placeholder="$t('choose_network')" required>
+          <Select v-model="formItems.networkType" :placeholder="$t('choose_network')" required>
             <Option v-for="(item,index) in networkTypeList" :key="index" :value="item.value">
               {{ item.label }}
             </Option>
@@ -33,6 +33,8 @@
           <div>* {{ $t('Set_password') }}</div>
           <ErrorTooltip field-name="password">
             <input
+              ref="passwordInput"
+              name="password"
               v-model.lazy="formItems.password"
               v-focus
               v-validate="validationRules.password"
@@ -49,17 +51,13 @@
             <input
               v-model.lazy="formItems.passwordAgain"
               v-focus
-              v-validate="validationRules.confirmPassword"
+              v-validate="'required|confirmed:passwordInput'"
               data-vv-name="confirmPassword"
               :data-vv-as="$t('password')"
               :placeholder="$t('please_enter_your_wallet_password')"
               type="password"
             >
           </ErrorTooltip>
-          <input
-            v-show="false" v-model="formItems.password" v-validate
-            disabled data-vv-name="newPassword"
-          >
         </div>
         <div class="form-input-item">
           <div>* {{ $t('Password_hint') }}</div>

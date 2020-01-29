@@ -148,7 +148,7 @@ export class DashboardInvoicePageTs extends Vue {
   public created() {
     this.service = new TransactionService(this.$store)
     this.formItems.mosaicHex = this.networkMosaic.toHex()
-    this.formItems.recipient = this.currentWallet.address()
+    this.formItems.recipient = this.currentWallet.objects.address
   }
 
 /// region computed properties getter/setter
@@ -209,7 +209,7 @@ export class DashboardInvoicePageTs extends Vue {
    */
   public onFormChange(formItems: any) {
     this.formItems = {
-      recipient: this.currentWallet.address(),
+      recipient: this.currentWallet.objects.address,
       mosaicHex: formItems.mosaicId,
       amount: formItems.amount,
       message: formItems.message

@@ -76,15 +76,19 @@ export class WalletService extends AbstractService {
     networkType: NetworkType,
     path: string = WalletService.DEFAULT_WALLET_PATH,
   ): Account {
-    if (! new DerivationPathValidator().validate(path)) {
+    if (false === new DerivationPathValidator().validate(path).valid) {
       const errorMessage = 'Invalid derivation path: ' + path
       this.$store.dispatch('diagnostic/ADD_ERROR', errorMessage)
       throw new Error(errorMessage)
     }
 
+    console.log('WalletService: path: ', path)
+    console.log('WalletService: mnemonic plain: ', mnemonic.plain)
+    console.log('WalletService: mnemonic seed: ', mnemonic.toSeed().toString('hex'))
+
     // create hd extended key
     const network = getNetworkFromNetworkType(networkType)
-    const extendedKey = ExtendedKey.createFromSeed(mnemonic.toSeed().toString(), network)
+    const extendedKey = ExtendedKey.createFromSeed(mnemonic.toSeed().toString('hex'), network)
 
     // create wallet
     const wallet = new Wallet(extendedKey)
@@ -102,7 +106,7 @@ export class WalletService extends AbstractService {
     networkType: NetworkType,
   ): ExtendedKey {
     return ExtendedKey.createFromSeed(
-      mnemonic.toSeed().toString(),
+      mnemonic.toSeed().toString('hex'),
       getNetworkFromNetworkType(networkType)
     )
   }
@@ -188,13 +192,4 @@ export class WalletService extends AbstractService {
     // wallet not found by public key
     return address.plain()
   }
-  /*
-
-  getMultisigAccountLabel(publicKey: string): string {
-    const address = Address.createFromPublicKey(publicKey, this.wallet.networkType)
-    const walletFromList = this.app.walletList.find(wallet => wallet.address === address.plain())
-    if (walletFromList === undefined) return address.pretty()
-    return `${address.pretty()} (${walletFromList.name})`
-  }
-  */
 }

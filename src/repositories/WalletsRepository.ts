@@ -16,12 +16,10 @@
 // internal dependencies
 import {WalletsTable} from '@/core/database/entities/WalletsTable'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
-import {IRepository} from './IRepository'
 import {ModelRepository} from './ModelRepository'
 
 export class WalletsRepository
-  extends ModelRepository<WalletsTable, WalletsModel>
-  implements IRepository<WalletsModel> {
+  extends ModelRepository {
 
   /// region abstract methods
   /**

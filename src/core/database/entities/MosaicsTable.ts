@@ -19,6 +19,7 @@ import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
 export class MosaicsTable extends DatabaseTable {
   public constructor() {
     super('mosaics', [
+      'id',
       'wallet',
       'hexId',
       'name',
@@ -30,7 +31,7 @@ export class MosaicsTable extends DatabaseTable {
    * Create a new model instance
    * @return {MosaicsModel}
    */
-  public createModel(): MosaicsModel {
-    return new MosaicsModel()
+  public createModel(values: Map<string, any> = new Map<string, any>()): MosaicsModel {
+    return new MosaicsModel(values)
   }
 }

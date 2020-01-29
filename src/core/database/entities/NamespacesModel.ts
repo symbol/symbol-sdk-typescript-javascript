@@ -24,8 +24,7 @@ export class NamespacesModel extends DatabaseModel {
    * @var {string[]}
    */
   public primaryKeys: string[] = [
-    'wallet',
-    'hexId',
+    'id',
   ]
 
   /**
@@ -35,4 +34,13 @@ export class NamespacesModel extends DatabaseModel {
   public relations: Map<string, DatabaseRelation> =  new Map<string, DatabaseRelation>([
     ['wallet', new DatabaseRelation(DatabaseRelationType.ONE_TO_ONE)]
   ])
+
+  /**
+   * Construct a namespace model instance
+   * 
+   * @param {Map<string, any>} values
+   */
+  public constructor(values: Map<string, any> = new Map<string, any>()) {
+    super(['id'], values)
+  }
 }

@@ -30,9 +30,10 @@ export class AccountsTable extends DatabaseTable {
 
   /**
    * Create a new model instance
+   * @param {Map<string, any>} values
    * @return {AccountsModel}
    */
-  public createModel(): AccountsModel {
-    return new AccountsModel()
+  public createModel(values: Map<string, any> = new Map<string, any>()): AccountsModel {
+    return new AccountsModel(values)
   }
 }

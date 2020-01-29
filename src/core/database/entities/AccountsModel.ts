@@ -33,4 +33,13 @@ export class AccountsModel extends DatabaseModel {
   public relations: Map<string, DatabaseRelation> = new Map<string, DatabaseRelation>([
     ['wallets', new DatabaseRelation(DatabaseRelationType.ONE_TO_MANY)]
   ])
+
+  /**
+   * Construct an account model instance
+   * 
+   * @param {Map<string, any>} values
+   */
+  public constructor(values: Map<string, any> = new Map<string, any>()) {
+    super(['accountName'], values)
+  }
 }

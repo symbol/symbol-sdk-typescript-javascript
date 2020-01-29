@@ -49,7 +49,6 @@ export class ValidatorFactory {
     'newAccountName',
     'alias',
     'publicKey',
-    'confirmPassword',
     'mosaicId',
     'namespaceOrMosaicId',
     'addressOrAlias',
@@ -78,7 +77,6 @@ export class ValidatorFactory {
     case 'newAccountName': return ValidatorFactory.newAccountNameValidator()
     case 'alias': return ValidatorFactory.aliasValidator()
     case 'publicKey': return ValidatorFactory.publicKeyValidator()
-    case 'confirmPassword': return ValidatorFactory.confirmPasswordValidator()
     case 'mosaicId': return ValidatorFactory.mosaicIdValidator()
     case 'namespaceOrMosaicId': return ValidatorFactory.namespaceOrMosaicIdValidator()
     case 'addressOrAlias': return ValidatorFactory.addressOrAliasValidator()
@@ -124,18 +122,6 @@ export class ValidatorFactory {
       (publicKey) => new Promise((resolve) => {
         resolve(false !== new PublicKeyValidator().validate(publicKey).valid)
       }),
-    )
-  }
-
-  protected static confirmPasswordValidator() {
-    return VeeValidate.Validator.extend(
-      'confirmPassword',
-      (password, otherField) => new Promise((resolve) => {
-        const otherValue = getOtherFieldValue(otherField)
-        if (otherValue !== password) resolve({valid: false})
-        resolve({valid: password})
-      }),
-      {hasTarget: true},
     )
   }
 

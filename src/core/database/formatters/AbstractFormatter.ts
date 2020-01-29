@@ -14,11 +14,35 @@
  * limitations under the License.
  */
 // internal dependencies
-import {IDataFormatter} from './IDataFormatter'
 import {DatabaseModel} from '../DatabaseModel'
+import {DatabaseTable} from '../DatabaseTable'
 
-export abstract class AbstractFormatter
-  implements IDataFormatter {
+export abstract class AbstractFormatter {
+
+  /**
+   * The schema used for instance creation
+   * @var {DatabaseTable}
+   */
+  protected $schema: DatabaseTable
+
+  /**
+   * Setter for active database table (schema)
+   * @param {DatabaseTable} schema 
+   * @return {AbstractFormatter}
+   */
+  public setSchema(schema: DatabaseTable): AbstractFormatter {
+    this.$schema = schema
+    return this
+  }
+
+  /**
+   * Getter for active database table (schema)
+   * @return {DatabaseTable}
+   */
+  public getSchema(): DatabaseTable {
+    return this.$schema
+  }
+
   /**
    * Validate format of \a data and throw exception
    * if not valid.
@@ -26,8 +50,8 @@ export abstract class AbstractFormatter
    * @return {boolean}
    * @throws {Error} On invalid JSON \a data
    */
-  public assertFormat<ModelImpl extends DatabaseModel>(data: string): boolean {
-    if (this.validate<ModelImpl>(data) === true) {
+  public assertFormat(data: string): boolean {
+    if (this.validate(data) === true) {
       return true
     }
 
@@ -37,23 +61,23 @@ export abstract class AbstractFormatter
   /// region abstract methods
   /**
    * Format an \a entity
-   * @param {ModelImpl} entity
+   * @param {DatabaseModel} entity
    * @return {string}
    */
-  public abstract format<ModelImpl extends DatabaseModel>(entities: Map<string, ModelImpl>): string
+  public abstract format(entities: Map<string, DatabaseModel>): string
 
   /**
    * Parse formatted \a data to entities
    * @param {string} data
-   * @return {Map<string, ModelImpl>}
+   * @return {Map<string, DatabaseModel>}
    */
-  public abstract parse<ModelImpl extends DatabaseModel>(data: string): Map<string, ModelImpl>
+  public abstract parse(data: string): Map<string, DatabaseModel>
 
   /**
    * Validate format of \a data
    * @param {string} data 
    * @return {boolean}
    */
-  public abstract validate<ModelImpl extends DatabaseModel>(data: string): boolean
+  public abstract validate(data: string): boolean
   /// end-region abstract methods
 }

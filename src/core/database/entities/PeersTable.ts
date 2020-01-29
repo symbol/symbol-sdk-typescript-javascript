@@ -30,7 +30,7 @@ export class PeersTable extends DatabaseTable {
    * Create a new model instance
    * @return {PeersModel}
    */
-  public createModel(): PeersModel {
-    return new PeersModel()
+  public createModel(values: Map<string, any> = new Map<string, any>()): PeersModel {
+    return new PeersModel(values)
   }
 }

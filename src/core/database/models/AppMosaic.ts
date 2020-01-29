@@ -54,6 +54,6 @@ export class AppMosaic {
   }
 
   public get divisibility(): number {
-    return this.model.info().divisibility
+    return this.model.objects.info.divisibility
   }
 }

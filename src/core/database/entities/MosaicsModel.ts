@@ -26,8 +26,7 @@ export class MosaicsModel extends DatabaseModel {
    * @var {string[]}
    */
   public primaryKeys: string[] = [
-    'wallet',
-    'hexId',
+    'id',
   ]
 
   /**
@@ -39,12 +38,21 @@ export class MosaicsModel extends DatabaseModel {
   ])
 
   /**
-   * Instantiate MosaicInfo object
-   * @return {MosaicInfo}
+   * Construct a mosaic model instance
+   * 
+   * @param {Map<string, any>} values
    */
-  public info(): MosaicInfo {
+  public constructor(values: Map<string, any> = new Map<string, any>()) {
+    super(['id'], values)
+  }
+
+  /**
+   * Permits to return specific field's mapped object instances
+   * @return any
+   */
+  public get objects(): any {
     const argv: any = Object.assign({}, this.values.get('info'))
-    return new MosaicInfo(
+    const info = new MosaicInfo(
       argv.id,
       argv.supply || 0,
       argv.height || 0,
@@ -54,5 +62,7 @@ export class MosaicsModel extends DatabaseModel {
       argv.divisibility || 0,
       argv.duration || 0,
     )
+
+    return {info}
   }
 }

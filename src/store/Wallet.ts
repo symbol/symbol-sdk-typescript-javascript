@@ -84,6 +84,15 @@ type PartialTransactionAnnouncementPayloadType = {
 }
 
 /**
+ * Internal helper used to maintain updated snapshot
+ * of database storage backend.
+ * @return {void}
+ */
+const fetchDatabase = () => {
+  walletsRepository.fetch()
+}
+
+/**
  * Wallet Store
  */
 export default {
@@ -249,15 +258,16 @@ export default {
     },
 /// region scoped actions
     async SET_CURRENT_WALLET({commit, dispatch}, walletName) {
+      fetchDatabase()
 
       const currentWallet = walletsRepository.read(walletName)
       commit('currentWallet', currentWallet)
-      commit('currentWalletAddress', currentWallet.address())
+      commit('currentWalletAddress', currentWallet.objects.address)
 
       // reset store + re-initialize
       await dispatch('uninitialize')
-      await dispatch('initialize', currentWallet.address().plain())
-      $eventBus.$emit('onWalletChange', currentWallet.address().plain())
+      await dispatch('initialize', currentWallet.objects.address.plain())
+      $eventBus.$emit('onWalletChange', currentWallet.objects.address.plain())
     },
     SET_KNOWN_WALLETS({commit}, wallets) {
       commit('setKnownWallets', wallets)
@@ -489,7 +499,7 @@ export default {
     },
     async REST_FETCH_MULTISIG({commit, dispatch, getters, rootGetters}, address) {
       if (address instanceof WalletsModel) {
-        address = address.address().plain()
+        address = address.objects.address.plain()
       }
 
       if (!address || address.length !== 40) {

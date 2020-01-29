@@ -80,7 +80,7 @@ export default class GenerateMnemonicTs extends Vue {
       const seed = MnemonicPassPhrase.createFromEntropy(entropy)
 
       // update state
-      this.$store.dispatch('notification/ADD_SUCCESS', 'Generate_entropy_increase_success')
+      this.$store.dispatch('notification/ADD_SUCCESS', this.$t('Generate_entropy_increase_success'))
       this.$store.dispatch('temporary/SET_MNEMONIC', seed)
 
       // redirect

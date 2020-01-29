@@ -88,7 +88,7 @@ export default {
     async ADD_DEBUG({commit}, message) {
       commit('addLog', {level: LogLevels.DEBUG, message})
     },
-    async ADD_WARN({commit}, message) {
+    async ADD_WARNING({commit}, message) {
       commit('addLog', {level: LogLevels.WARNING, message})
     },
     async ADD_ERROR({commit}, message) {

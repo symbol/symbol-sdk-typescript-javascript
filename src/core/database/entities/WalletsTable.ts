@@ -19,6 +19,7 @@ import {WalletsModel} from '@/core/database/entities/WalletsModel'
 export class WalletsTable extends DatabaseTable {
   public constructor() {
     super('wallets', [
+      'id',
       'accountName',
       'name',
       'type',
@@ -35,7 +36,7 @@ export class WalletsTable extends DatabaseTable {
    * Create a new model instance
    * @return {WalletsModel}
    */
-  public createModel(): WalletsModel {
-    return new WalletsModel()
+  public createModel(values: Map<string, any> = new Map<string, any>()): WalletsModel {
+    return new WalletsModel(values)
   }
 }

@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {SHA3Hasher, SignSchema, Convert} from 'nem2-sdk'
+
 // internal dependencies
 import {DatabaseRelation} from './DatabaseRelation'
-import {IRepository} from '@/repositories/IRepository'
 
-export class DatabaseModel {
+export abstract class DatabaseModel {
   /**
    * Entity identifier *field names*. The identifier
    * is a combination of the values separated by '-'
    * @var {string[]}
    */
-  public primaryKeys: string[]
+  public primaryKeys: string[] = []
 
   /** 
    * Entity relationships
@@ -56,8 +57,10 @@ export class DatabaseModel {
    * @param types 
    */
   public constructor(
+    primaryKeys: string[] = [],
     values: Map<string, any> = new Map<string, any>()
   ) {
+    this.primaryKeys = primaryKeys
     this.values = values
     this.identifier = this.getIdentifier()
     this.isDirty = false
@@ -72,7 +75,13 @@ export class DatabaseModel {
       throw new Error('Primary keys must be described in derivate DatabaseModel classes.')
     }
 
-    return this.primaryKeys.map(pk => this.values.get(pk)).join('-')
+    return this.primaryKeys.map(pk => {
+      const val = this.values.get(pk)
+      if (!val && pk === 'id') {
+        this.values.set('id', this.generateIdentifier())
+      }
+      return val
+    }).join('-')
   }
 
   /**
@@ -92,6 +101,33 @@ export class DatabaseModel {
     }
 
     return true
+  }
+
+  /**
+   * Generate an identifier for a model instance from its fields
+   * @return {string}
+   */
+  protected generateIdentifier(): string {
+    let raw = {}
+    const fields = this.values.keys()
+    const values = this.values.values()
+    for (let j = null; !(j = fields.next()).done;) {
+      const field = j.value
+      if (!field.length) {
+        continue
+      }
+      raw[field] = values.next().value
+    }
+
+    // to-json
+    const json = JSON.stringify(raw)
+    const hasher = SHA3Hasher.createHasher(length, SignSchema.SHA3);
+    hasher.reset();
+    hasher.update(json);
+
+    const hash = new Uint8Array(length);
+    hasher.finalize(hash);
+    return Convert.uint8ToHex(hash).substr(0, 12)
   }
 
   /**
@@ -119,38 +155,10 @@ export class DatabaseModel {
   }
 
   /**
-   * Fetch many relations
-   * @access protected
-   * @param {IRepository<ModelImpl>} repository 
-   * @param {string} fieldName
-   * @return {Map<string, ModelImpl>} Collection of objects mapped by identifier
+   * Permits to return specific field's mapped object instances
+   * @return any
    */
-  public fetchRelations<ModelImpl extends DatabaseModel>(
-    repository: IRepository<ModelImpl>,
-    fieldName: string
-  ): Map<string, ModelImpl> {
-    const resolved = new Map<string, ModelImpl>()
-
-    // resolve object by identifier list stored in values
-    // with field name \a fieldName
-    for (const identifier in this.values.get(fieldName)) {
-      resolved.set(identifier, repository.read(identifier))
-    }
-
-    return resolved
-  }
-
-  /**
-   * Fetch one relation
-   * @access protected
-   * @param {IRepository<ModelImpl>} repository 
-   * @param {string} fieldName
-   * @return {ModelImpl} Collection of objects mapped by identifier
-   */
-  public fetchRelation<ModelImpl extends DatabaseModel>(
-    repository: IRepository<ModelImpl>,
-    fieldName: string
-  ): ModelImpl {
-    return repository.read(this.values.get(fieldName))
+  public get objects(): any {
+    return {}
   }
 }

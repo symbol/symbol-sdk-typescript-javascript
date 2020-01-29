@@ -54,6 +54,6 @@ export abstract class DatabaseTable {
    * Create a new model instance
    * @return {DatabaseModel}
    */
-  public abstract createModel(): DatabaseModel
+  public abstract createModel(values: Map<string, any>): DatabaseModel
   /// end-region abstract methods
 }

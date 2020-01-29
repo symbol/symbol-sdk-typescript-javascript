@@ -16,6 +16,7 @@
 import Vue from 'vue'
 
 // internal dependencies
+import app from '@/main'
 import {LogLevels} from '@/core/utils/LogLevels'
 import {AwaitLock} from './AwaitLock';
 const Lock = AwaitLock.create();
@@ -57,8 +58,8 @@ export default {
       Vue.set(state, 'history', history)
 
       /// region trigger notice UI
-      this._vm.$Notice.destroy()
-      this._vm.$Notice[payload.level]({title: this._vm.$t(payload.message)})
+      app.$Notice.destroy()
+      app.$Notice[payload.level]({title: app.$t(payload.message)})
       /// end-region trigger notice UI
     },
   },
@@ -66,7 +67,7 @@ export default {
     async initialize({ commit, dispatch, getters }) {
       const callback = async () => {
         /// region initialize $Notice
-        this._vm.$Notice.config({duration: 4})
+        app.$Notice.config({duration: 4})
         /// end-region initialize $Notice
 
         // update store
@@ -84,15 +85,15 @@ export default {
     },
 /// region scoped actions
     async ADD_SUCCESS({commit, dispatch}, message) {
-      commit('add', {level: 'success', message})
+      commit('add', {vm: this, level: 'success', message})
       dispatch('diagnostic/ADD_INFO', 'Notification (Success): ' + message, {root: true})
     },
     async ADD_WARNING({commit, dispatch}, message) {
-      commit('add', {level: 'warning', message})
+      commit('add', {vm: this, level: 'warning', message})
       dispatch('diagnostic/ADD_WARNING', 'Notification (Warning): ' + message, {root: true})
     },
     async ADD_ERROR({commit, dispatch}, message) {
-      commit('add', {level: 'error', message})
+      commit('add', {vm: this, level: 'error', message})
       dispatch('diagnostic/ADD_ERROR', 'Notification (Error): ' + message, {root: true})
     },
 /// end-region scoped actions
