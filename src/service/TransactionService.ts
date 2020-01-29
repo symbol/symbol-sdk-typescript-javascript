@@ -181,7 +181,7 @@ export class TransactionService implements ITransactionService {
      * @return {Observable<Transaction>}
      */
     private resolvedFromReceipt(transaction: Transaction, aggregateIndex: number): Observable<Transaction> {
-        return this.receiptRepository.getBlockReceipts(transaction.transactionInfo!.height.toString()).pipe(
+        return this.receiptRepository.getBlockReceipts(transaction.transactionInfo!.height).pipe(
             map((statement) => transaction.resolveAliases(statement, aggregateIndex)),
         );
     }

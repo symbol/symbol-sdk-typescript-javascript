@@ -54,8 +54,8 @@ export class BlockHttp extends Http implements BlockRepository {
      * @param height - Block height
      * @returns Observable<BlockInfo>
      */
-    public getBlockByHeight(height: string): Observable<BlockInfo> {
-        return observableFrom(this.blockRoutesApi.getBlockByHeight(height)).pipe(
+    public getBlockByHeight(height: UInt64): Observable<BlockInfo> {
+        return observableFrom(this.blockRoutesApi.getBlockByHeight(height.toString())).pipe(
             map(({body}) => this.toBlockInfo(body)),
             catchError((error) =>  throwError(this.errorHandling(error))),
         );
@@ -67,10 +67,10 @@ export class BlockHttp extends Http implements BlockRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    public getBlockTransactions(height: string,
+    public getBlockTransactions(height: UInt64,
                                 queryParams?: QueryParams): Observable<Transaction[]> {
         return observableFrom(
-            this.blockRoutesApi.getBlockTransactions(height,
+            this.blockRoutesApi.getBlockTransactions(height.toString(),
                                                      this.queryParams(queryParams).pageSize,
                                                      this.queryParams(queryParams).id,
                                                      this.queryParams(queryParams).order))
@@ -87,9 +87,9 @@ export class BlockHttp extends Http implements BlockRepository {
      * @param limit - Number of blocks returned.
      * @returns Observable<BlockInfo[]>
      */
-    public getBlocksByHeightWithLimit(height: string, limit: number): Observable<BlockInfo[]> {
+    public getBlocksByHeightWithLimit(height: UInt64, limit: number): Observable<BlockInfo[]> {
         return observableFrom(
-            this.blockRoutesApi.getBlocksByHeightWithLimit(height, limit)).pipe(
+            this.blockRoutesApi.getBlocksByHeightWithLimit(height.toString(), limit)).pipe(
                 map(({body}) => body.map((blockDTO) => this.toBlockInfo(blockDTO))),
                 catchError((error) =>  throwError(this.errorHandling(error))),
         );
@@ -136,9 +136,9 @@ export class BlockHttp extends Http implements BlockRepository {
      * @param hash The hash of the transaction.
      * @return Observable<MerkleProofInfo>
      */
-    public getMerkleTransaction(height: string, hash: string): Observable<MerkleProofInfo> {
+    public getMerkleTransaction(height: UInt64, hash: string): Observable<MerkleProofInfo> {
         return observableFrom(
-            this.blockRoutesApi.getMerkleTransaction(height, hash)).pipe(
+            this.blockRoutesApi.getMerkleTransaction(height.toString(), hash)).pipe(
                 map(({body}) => new MerkleProofInfo(
                         body.merklePath!.map((payload) => new MerklePathItem(payload.position, payload.hash)),
                     )),

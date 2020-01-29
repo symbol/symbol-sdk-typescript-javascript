@@ -17,6 +17,7 @@
 import { Observable, of as observableOf } from 'rxjs';
 import { map, share, shareReplay } from 'rxjs/operators';
 import { NetworkType } from '../model/blockchain/NetworkType';
+import { UInt64 } from '../model/UInt64';
 import { AccountHttp } from './AccountHttp';
 import { AccountRepository } from './AccountRepository';
 import { BlockHttp } from './BlockHttp';
@@ -69,7 +70,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
         this.url = url;
         this.networkType = networkType ? observableOf(networkType) : this.createNetworkRepository().getNetworkType().pipe(shareReplay(1));
         this.generationHash = generationHash ? observableOf(generationHash) :
-            this.createBlockRepository().getBlockByHeight('1').pipe(map((b) => b.generationHash)).pipe(shareReplay(1));
+            this.createBlockRepository().getBlockByHeight(UInt64.fromUint(1)).pipe(map((b) => b.generationHash)).pipe(shareReplay(1));
     }
 
     createAccountRepository(): AccountRepository {
