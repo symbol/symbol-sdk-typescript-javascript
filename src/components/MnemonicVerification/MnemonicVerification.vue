@@ -1,5 +1,5 @@
 <template>
-  <div class="mnemonic_container" @keyup.enter="checkMnemonic()">
+  <div class="mnemonic_container" @keyup.enter="processVerification()">
     <div class="mnemonicWordDiv clear scroll">
       <draggable v-model="selectedWords" ghost-class="ghost" @end="drag = false">
         <span v-for="(word, index) in selectedWords" :key="index">

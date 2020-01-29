@@ -132,7 +132,7 @@ export class FormAccountCreationTs extends Vue {
 
     // execute store actions
     this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
-    this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account.model.values.get('accountName'))
+    this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account.model.getIdentifier())
     this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password)
 
     // flush and continue

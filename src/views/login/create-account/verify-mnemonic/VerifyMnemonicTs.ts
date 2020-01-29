@@ -48,14 +48,6 @@ export default class VerifyMnemonicTs extends Vue {
    */
   public currentMnemonic: MnemonicPassPhrase
 
-  /**
-   * Hook called when the page is mounted
-   * @return {void}
-   */
-  async mounted() {
-    await this.$store.dispatch('temporary/initialize')
-  }
-
 /// region computed properties getter/setter
   get mnemonicWordsList(): string[] {
     return this.currentMnemonic.plain.split(' ')

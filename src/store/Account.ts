@@ -85,6 +85,9 @@ export default {
       // validate account exists
       const currentAccount = accountsRepository.read(accountName)
 
+      // changing active account, must unitialize app!
+      await dispatch('uninitialize', null, {root: true})
+
       // update state
       commit('currentAccount', currentAccount)
       commit('setAuthenticated', true)
@@ -94,7 +97,6 @@ export default {
       dispatch('wallet/SET_KNOWN_WALLETS', knownWallets, {root: true})
 
       // reset store + re-initialize
-      await dispatch('uninitialize', null, {root: true})
       await dispatch('initialize')
       $eventBus.$emit('onAccountChange', accountName)
     },
