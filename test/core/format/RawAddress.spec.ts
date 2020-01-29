@@ -199,19 +199,19 @@ describe('address', () => {
         it('can create Address from NIS public Key', () => {
             // Arrange:
             const Public_Keys = [
-                'c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
-                '96eb2a145211b1b7ab5f0d4b14f8abc8d695c7aee31a3cfc2d4881313c68eea3',
-                '2d8425e4ca2d8926346c7a7ca39826acd881a8639e81bd68820409c6e30d142a',
-                '4feed486777ed38e44c489c7c4e93a830e4c4a907fa19a174e630ef0f6ed0409',
-                '83ee32e4e145024d29bca54f71fa335a98b3e68283f1a3099c4d4ae113b53e54',
+                'd6c3845431236c5a5a907a9e45bd60da0e12efd350b970e7f58e3499e2e7a2f0',
+                'f3bd51add90a7be8ed81f64eee9456af3b38478275b17eabe1853dfcfd3bf2cd',
+                '017cb008d00e41d17a6a09a6be5c65c89e1e28706a621b0791b270e4f6182cc3',
+                '60068a23a0893538b5c364cac86cb8670668be84aee2b6fcff83fdf39a03f822',
+                'ae054ef2a458a0cee6b34a1dd32597a9236c4d453040b9af58b5ae22a73024b7',
             ];
 
             const Addresses = [
-                'NDD2CT6LQLIYQ56KIXI3ENTM6EK3D44P5JFXJ4R4',
-                'NABHFGE5ORQD3LE4O6B7JUFN47ECOFBFASC3SCAC',
-                'NAVOZX4HDVOAR4W6K4WJHWPD3MOFU27DFHC7KZOZ',
-                'NBZ6JK5YOCU6UPSSZ5D3G27UHAPHTY5HDQMGE6TT',
-                'NCQW2P5DNZ5BBXQVGS367DQ4AHC3RXOEVGRCLY6V',
+                'NCFGSLITSWMRROU2GO7FPMIUUDELUPSZUNJABUMH',
+                'NAAPGLKY7HZNQJYM4T6JEKM4NU6M2MOBIV3T4GNF',
+                'NCF5QZSBRM2CXTXIG3YWXZ7X6NARCF5JMD55OCV6',
+                'NC3U645TJAVWXXYOLRQIX7GIZEVZWLN5W44Z3KZT',
+                'NBLWRN5WLGP5MUBKMDQCHK6BWJL2LSJRVMDT7HQD',
             ];
 
             // Sanity:
@@ -240,19 +240,19 @@ describe('address', () => {
         it('can create Address from NIS public Key', () => {
             // Arrange:
             const Public_Keys = [
-                'c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
-                '96eb2a145211b1b7ab5f0d4b14f8abc8d695c7aee31a3cfc2d4881313c68eea3',
-                '2d8425e4ca2d8926346c7a7ca39826acd881a8639e81bd68820409c6e30d142a',
-                '4feed486777ed38e44c489c7c4e93a830e4c4a907fa19a174e630ef0f6ed0409',
-                '83ee32e4e145024d29bca54f71fa335a98b3e68283f1a3099c4d4ae113b53e54',
+                'd6c3845431236c5a5a907a9e45bd60da0e12efd350b970e7f58e3499e2e7a2f0',
+                'f3bd51add90a7be8ed81f64eee9456af3b38478275b17eabe1853dfcfd3bf2cd',
+                '017cb008d00e41d17a6a09a6be5c65c89e1e28706a621b0791b270e4f6182cc3',
+                '60068a23a0893538b5c364cac86cb8670668be84aee2b6fcff83fdf39a03f822',
+                'ae054ef2a458a0cee6b34a1dd32597a9236c4d453040b9af58b5ae22a73024b7',
             ];
 
             const Addresses = [
-                'TDD2CT6LQLIYQ56KIXI3ENTM6EK3D44P5KZPFMK2',
-                'TABHFGE5ORQD3LE4O6B7JUFN47ECOFBFATE53N2I',
-                'TAVOZX4HDVOAR4W6K4WJHWPD3MOFU27DFEJDR2PR',
-                'TBZ6JK5YOCU6UPSSZ5D3G27UHAPHTY5HDQCDS5YA',
-                'TCQW2P5DNZ5BBXQVGS367DQ4AHC3RXOEVFZOQCJ6',
+                'TCFGSLITSWMRROU2GO7FPMIUUDELUPSZUNUEZF33',
+                'TAAPGLKY7HZNQJYM4T6JEKM4NU6M2MOBIXGXU3O6',
+                'TCF5QZSBRM2CXTXIG3YWXZ7X6NARCF5JMB6EXFEQ',
+                'TC3U645TJAVWXXYOLRQIX7GIZEVZWLN5W7JQHW5U',
+                'TBLWRN5WLGP5MUBKMDQCHK6BWJL2LSJRVO7ZCX3R',
             ];
 
             // Sanity:

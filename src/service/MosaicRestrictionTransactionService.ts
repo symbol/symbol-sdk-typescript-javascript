@@ -168,7 +168,6 @@ export class MosaicRestrictionTransactionService {
     private getGlobalRestrictionEntry(mosaicId: MosaicId, restrictionKey: UInt64): Observable<MosaicGlobalRestrictionItem | undefined> {
         return this.restrictionMosaicRepository.getMosaicGlobalRestriction(mosaicId).pipe(
             map((mosaicRestriction: MosaicGlobalRestriction) => {
-                console.log(mosaicRestriction.restrictions);
                 return mosaicRestriction.restrictions.get(restrictionKey.toString());
             }),
             catchError((err: Error) => {

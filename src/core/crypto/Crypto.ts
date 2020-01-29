@@ -228,20 +228,19 @@ export class Crypto {
                              recipientPub: string,
                              msg: string,
                              iv: Uint8Array,
-                             salt: Uint8Array,
                              signSchema: SignSchema): string => {
         // Errors
-        if (!senderPriv || !recipientPub || !msg || !iv || !salt) { throw new Error('Missing argument !'); }
+        if (!senderPriv || !recipientPub || !msg || !iv) { throw new Error('Missing argument !'); }
         // Processing
         const keyPair = KeyPair.createKeyPairFromPrivateKeyString(senderPriv, signSchema);
         const pk = convert.hexToUint8(recipientPub);
-        const encKey = utility.ua2words(KeyPair.deriveSharedKey(keyPair, pk, salt, signSchema), 32);
+        const encKey = utility.ua2words(KeyPair.deriveSharedKey(keyPair, pk, signSchema), 32);
         const encIv = {
             iv: utility.ua2words(iv, 16),
         };
         const encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Hex.parse(msg), encKey, encIv);
         // Result
-        const result = convert.uint8ToHex(salt) + convert.uint8ToHex(iv) + CryptoJS.enc.Hex.stringify(encrypted.ciphertext);
+        const result = convert.uint8ToHex(iv) + CryptoJS.enc.Hex.stringify(encrypted.ciphertext);
         return result;
     }
 
@@ -264,8 +263,7 @@ export class Crypto {
         if (!senderPriv || !recipientPub || !msg) { throw new Error('Missing argument !'); }
         // Processing
         const iv = Crypto.randomBytes(16);
-        const salt = Crypto.randomBytes(32);
-        const encoded = Crypto._encode(senderPriv, recipientPub, isHexString ? msg : convert.utf8ToHex(msg), iv, salt, signSchema);
+        const encoded = Crypto._encode(senderPriv, recipientPub, isHexString ? msg : convert.utf8ToHex(msg), iv, signSchema);
         // Result
         return encoded;
     }
@@ -277,7 +275,6 @@ export class Crypto {
      * @param {string} senderPublic - A sender public key
      * @param {Uint8Array} payload - An encrypted message payload in bytes
      * @param {Uint8Array} iv - 16-byte AES initialization vector
-     * @param {Uint8Array} salt - 32-byte salt
      * @param {SignSchema} signSchema The Sign Schema. (KECCAK(NIS1) / SHA3(Catapult))
      * @return {string} - The decoded payload as hex
      */
@@ -285,14 +282,13 @@ export class Crypto {
                              senderPublic: string,
                              payload: Uint8Array,
                              iv: Uint8Array,
-                             salt: Uint8Array,
                              signSchema: SignSchema): string => {
         // Error
         if (!recipientPrivate || !senderPublic || !payload) { throw new Error('Missing argument !'); }
         // Processing
         const keyPair = KeyPair.createKeyPairFromPrivateKeyString(recipientPrivate, signSchema);
         const pk = convert.hexToUint8(senderPublic);
-        const encKey = utility.ua2words(KeyPair.deriveSharedKey(keyPair, pk, salt, signSchema), 32);
+        const encKey = utility.ua2words(KeyPair.deriveSharedKey(keyPair, pk, signSchema), 32);
         const encIv = {
             iv: utility.ua2words(iv, 16),
         };
@@ -321,10 +317,9 @@ export class Crypto {
         if (!recipientPrivate || !senderPublic || !payload) { throw new Error('Missing argument !'); }
         // Processing
         const binPayload = convert.hexToUint8(payload);
-        const payloadBuffer = new Uint8Array(binPayload.buffer, 48);
-        const salt = new Uint8Array(binPayload.buffer, 0, 32);
-        const iv = new Uint8Array(binPayload.buffer, 32, 16);
-        const decoded = Crypto._decode(recipientPrivate, senderPublic, payloadBuffer, iv, salt, signSchema);
+        const payloadBuffer = new Uint8Array(binPayload.buffer, 16);
+        const iv = new Uint8Array(binPayload.buffer, 0, 16);
+        const decoded = Crypto._decode(recipientPrivate, senderPublic, payloadBuffer, iv, signSchema);
         return decoded.toUpperCase();
     }
 
