@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
-import { GeneratorUtils } from 'catbuffer';
+import { AddressDto,
+         AddressResolutionEntryBuilder,
+         AddressResolutionStatementBuilder,
+         MosaicIdDto, MosaicResolutionEntryBuilder,
+         MosaicResolutionStatementBuilder,
+         ReceiptSourceBuilder,
+         UnresolvedAddressDto,
+         UnresolvedMosaicIdDto } from 'catbuffer';
 import { sha3_256 } from 'js-sha3';
+import { RawAddress } from '../../core/format/RawAddress';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../account/Address';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -68,19 +76,23 @@ export class ResolutionStatement {
     public generateHash(networkType: NetworkType): string {
         const type = this.resolutionType === ResolutionType.Address ? ReceiptType.Address_Alias_Resolution
             : ReceiptType.Mosaic_Alias_Resolution;
-        const unresolvedBytes = this.getUnresolvedBytes(this.resolutionType, networkType);
+        const builder = this.resolutionType === ResolutionType.Address ? new AddressResolutionStatementBuilder(
+            ReceiptVersion.RESOLUTION_STATEMENT, type.valueOf(),
+            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.unresolved as Address | NamespaceId, networkType)),
+            this.resolutionEntries.map((entry) => new AddressResolutionEntryBuilder(
+                new ReceiptSourceBuilder(entry.source.primaryId, entry.source.secondaryId),
+                new AddressDto(RawAddress.stringToAddress((entry.resolved as Address).plain())),
+            )),
+        ) : new MosaicResolutionStatementBuilder(ReceiptVersion.RESOLUTION_STATEMENT,
+                type.valueOf(),
+                new UnresolvedMosaicIdDto(UInt64.fromHex((this.unresolved as MosaicId | NamespaceId).toHex()).toDTO()),
+                this.resolutionEntries.map((entry) => new MosaicResolutionEntryBuilder(
+                    new ReceiptSourceBuilder(entry.source.primaryId, entry.source.secondaryId),
+                    new MosaicIdDto((entry.resolved as MosaicId).toDTO()),
+                )),
+        );
         const hasher = sha3_256.create();
-        hasher.update(GeneratorUtils.uintToBuffer(ReceiptVersion.RESOLUTION_STATEMENT, 2));
-        hasher.update(GeneratorUtils.uintToBuffer(type, 2));
-        hasher.update(unresolvedBytes);
-
-        let entryBytes = Uint8Array.from([]);
-        this.resolutionEntries.forEach((entry) => {
-            const bytes = entry.serialize();
-            entryBytes = GeneratorUtils.concatTypedArrays(entryBytes, bytes);
-        });
-
-        hasher.update(entryBytes);
+        hasher.update(builder.serialize());
         return hasher.hex().toUpperCase();
     }
 
@@ -194,19 +206,5 @@ export class ResolutionStatement {
     private getMaxAvailablePrimaryId(primaryId: number): number {
         return Math.max(...this.resolutionEntries
             .map((entry) => primaryId >= entry.source.primaryId ? entry.source.primaryId : 0));
-    }
-
-    /**
-     * @internal
-     * Generate buffer for unresulved
-     * @param {resolutionType} The resolution Type
-     * @param {networkType} the network type serialized in the output.
-     * @return {Uint8Array}
-     */
-    private getUnresolvedBytes(resolutionType: ResolutionType, networkType: NetworkType): Uint8Array {
-        if (resolutionType === ResolutionType.Address) {
-            return UnresolvedMapping.toUnresolvedAddressBytes(this.unresolved as Address | NamespaceId, networkType);
-        }
-        return GeneratorUtils.uint64ToBuffer(UInt64.fromHex((this.unresolved as MosaicId | NamespaceId).toHex()).toDTO());
     }
 }

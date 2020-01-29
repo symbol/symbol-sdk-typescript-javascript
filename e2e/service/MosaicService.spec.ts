@@ -44,7 +44,6 @@ describe('MosaicService', () => {
             const views = amountViews.map((v) => {
                 return {mosaicId: v.fullName(), amount: v.relativeAmount()};
             });
-            console.log(views);
             done();
         });
     });
