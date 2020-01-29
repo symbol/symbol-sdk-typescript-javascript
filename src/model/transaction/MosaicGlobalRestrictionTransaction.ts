@@ -22,7 +22,7 @@ import {
     MosaicGlobalRestrictionTransactionBuilder,
     SignatureDto,
     TimestampDto,
-    UnresolvedMosaicIdDto
+    UnresolvedMosaicIdDto,
 } from 'catbuffer';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';

@@ -28,7 +28,7 @@ import { NamespaceRepository } from './NamespaceRepository';
 import { NetworkRepository } from './NetworkRepository';
 import { NodeRepository } from './NodeRepository';
 import { ReceiptRepository } from './ReceiptRepository';
-import { RestrictionAccountRepository } from './RestrictionAccountRespository';
+import { RestrictionAccountRepository } from './RestrictionAccountRepository';
 import { RestrictionMosaicRepository } from './RestrictionMosaicRepository';
 import { TransactionRepository } from './TransactionRepository';
 

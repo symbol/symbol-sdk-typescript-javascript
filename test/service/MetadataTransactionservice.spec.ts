@@ -45,7 +45,7 @@ describe('MetadataTransactionService', () => {
 
     before(() => {
         account = TestingAccount;
-        const mockMetadataRepository:MetadataRepository = mock();
+        const mockMetadataRepository: MetadataRepository = mock();
 
         when(mockMetadataRepository
             .getAccountMetadataByKeyAndSender(deepEqual(account.address), key.toHex(), account.publicKey))
@@ -69,7 +69,7 @@ describe('MetadataTransactionService', () => {
                                                              value + deltaValue,
                                                              account.publicAccount)
             .subscribe((transaction: AccountMetadataTransaction) => {
-                expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA_TRANSACTION);
+                expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA);
                 expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
                 expect(Convert.utf8ToHex(transaction.value))
                     .to.be.equal(Convert.xor(Convert.utf8ToUint8(value), Convert.utf8ToUint8(value + deltaValue)));
@@ -89,7 +89,7 @@ describe('MetadataTransactionService', () => {
                                                              account.publicAccount,
                                                              new MosaicId(targetIdHex))
             .subscribe((transaction: MosaicMetadataTransaction) => {
-                expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA_TRANSACTION);
+                expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
                 expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
                 expect(Convert.utf8ToHex(transaction.value))
                     .to.be.equal(Convert.xor(Convert.utf8ToUint8(value), Convert.utf8ToUint8(value + deltaValue)));
@@ -110,7 +110,7 @@ describe('MetadataTransactionService', () => {
                                                              account.publicAccount,
                                                              NamespaceId.createFromEncoded(targetIdHex))
             .subscribe((transaction: NamespaceMetadataTransaction) => {
-                expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA_TRANSACTION);
+                expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
                 expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
                 expect(Convert.utf8ToHex(transaction.value))
                     .to.be.equal(Convert.xor(Convert.utf8ToUint8(value), Convert.utf8ToUint8(value + deltaValue)));

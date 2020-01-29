@@ -22,7 +22,7 @@ import {
     KeyDto,
     SignatureDto,
     TimestampDto,
-    UnresolvedAddressDto
+    UnresolvedAddressDto,
 } from 'catbuffer';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
@@ -60,7 +60,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): AccountAddressRestrictionTransaction {
         return new AccountAddressRestrictionTransaction(networkType,
-            TransactionVersion.ACCOUNT_RESTRICTION_ADDRESS,
+            TransactionVersion.ACCOUNT_ADDRESS_RESTRICTION,
             deadline,
             maxFee,
             restrictionFlags,
@@ -90,7 +90,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.ACCOUNT_RESTRICTION_ADDRESS,
+        super(TransactionType.ACCOUNT_ADDRESS_RESTRICTION,
               networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
@@ -158,7 +158,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             new KeyDto(signerBuffer),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.ACCOUNT_RESTRICTION_ADDRESS.valueOf(),
+            TransactionType.ACCOUNT_ADDRESS_RESTRICTION.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
             this.restrictionFlags.valueOf(),
@@ -181,7 +181,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.ACCOUNT_RESTRICTION_ADDRESS.valueOf(),
+            TransactionType.ACCOUNT_ADDRESS_RESTRICTION.valueOf(),
             this.restrictionFlags.valueOf(),
             this.restrictionAdditions.map((addition) => {
                 return new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(addition, this.networkType));

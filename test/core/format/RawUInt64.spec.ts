@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {
-    expect
+    expect,
 } from 'chai';
 import { Convert as convert, RawUInt64 as uint64} from '../../../src/core/format';
 
@@ -85,36 +85,36 @@ describe('uint64', () => {
         const successTestCases = [{
                 number: 0,
                 uint64: [0, 0],
-                description: '0'
+                description: '0',
             },
             {
                 number: 0xA1B2,
                 uint64: [0xA1B2, 0],
-                description: '(0, 8)'
+                description: '(0, 8)',
             },
             {
                 number: 0x12345678,
                 uint64: [0x12345678, 0],
-                description: '8'
+                description: '8',
             },
             {
                 number: 0xABCD12345678,
                 uint64: [0x12345678, 0xABCD],
-                description: '(8, 16)'
+                description: '(8, 16)',
             },
             {
                 number: 0x0014567890ABCDEF,
                 uint64: [0x90ABCDEF, 0x00145678],
-                description: '14'
+                description: '14',
             },
             {
                 number: Number.MAX_SAFE_INTEGER,
                 uint64: [0xFFFFFFFF, 0x001FFFFF],
-                description: '14 (max value)'
-            }
+                description: '14 (max value)',
+            },
         ];
 
-        successTestCases.forEach(testCase => {
+        successTestCases.forEach((testCase) => {
             it(`can parse numeric with ${testCase.description} significant digits`, () => {
                 // Act:
                 const value = uint64.fromUint(testCase.number);
@@ -128,37 +128,37 @@ describe('uint64', () => {
     const hexTestCases = [{
             str: '0000000000000000',
             value: [0, 0],
-            description: '0'
+            description: '0',
         },
         {
             str: '000000000000A1B2',
             value: [0xA1B2, 0],
-            description: '(0, 8)'
+            description: '(0, 8)',
         },
         {
             str: '0000000012345678',
             value: [0x12345678, 0],
-            description: '8'
+            description: '8',
         },
         {
             str: '0000ABCD12345678',
             value: [0x12345678, 0xABCD],
-            description: '(8, 16)'
+            description: '(8, 16)',
         },
         {
             str: '1234567890ABCDEF',
             value: [0x90ABCDEF, 0x12345678],
-            description: '16'
+            description: '16',
         },
         {
             str: 'FFFFFFFFFFFFFFFF',
             value: [0xFFFFFFFF, 0xFFFFFFFF],
-            description: '16 (max value)'
-        }
+            description: '16 (max value)',
+        },
     ];
 
     describe('fromBytes', () => {
-        hexTestCases.forEach(testCase => {
+        hexTestCases.forEach((testCase) => {
             it(`can parse byte array with ${testCase.description} significant digits`, () => {
                 // Arrange: prepare little-endian bytes
                 const bytes = convert.hexToUint8(testCase.str).reverse();
@@ -176,7 +176,7 @@ describe('uint64', () => {
             const errorMessage = 'byte array has unexpected size';
 
             // Assert:
-            [0, 3, 4, 5, 7, 9].forEach(size => {
+            [0, 3, 4, 5, 7, 9].forEach((size) => {
                 expect(() => {
                     uint64.fromBytes(new Uint8Array(size));
                 }, `size ${size}`).to.throw(errorMessage);
@@ -188,26 +188,26 @@ describe('uint64', () => {
         const fromBytes32TestCases = [{
                 str: '00000000',
                 value: [0, 0],
-                description: '0'
+                description: '0',
             },
             {
                 str: '0000A1B2',
                 value: [0xA1B2, 0],
-                description: '(0, 8)'
+                description: '(0, 8)',
             },
             {
                 str: '12345678',
                 value: [0x12345678, 0],
-                description: '8'
+                description: '8',
             },
             {
                 str: 'FFFFFFFF',
                 value: [0xFFFFFFFF, 0],
-                description: '8 (max value)'
-            }
+                description: '8 (max value)',
+            },
         ];
 
-        fromBytes32TestCases.forEach(testCase => {
+        fromBytes32TestCases.forEach((testCase) => {
             it(`can parse byte array with ${testCase.description} significant digits`, () => {
                 // Arrange: prepare little-endian bytes
                 const bytes = convert.hexToUint8(testCase.str).reverse();
@@ -225,7 +225,7 @@ describe('uint64', () => {
             const errorMessage = 'byte array has unexpected size';
 
             // Assert:
-            [0, 3, 5, 7, 8, 9].forEach(size => {
+            [0, 3, 5, 7, 8, 9].forEach((size) => {
                 expect(() => {
                     uint64.fromBytes32(new Uint8Array(size));
                 }, `size ${size}`).to.throw(errorMessage);
@@ -234,7 +234,7 @@ describe('uint64', () => {
     });
 
     describe('fromHex', () => {
-        hexTestCases.forEach(testCase => {
+        hexTestCases.forEach((testCase) => {
             it(`can parse hex string with ${testCase.description} significant digits`, () => {
                 // Act:
                 const value = uint64.fromHex(testCase.str);
@@ -272,7 +272,7 @@ describe('uint64', () => {
     });
 
     describe('toHex', () => {
-        hexTestCases.forEach(testCase => {
+        hexTestCases.forEach((testCase) => {
             it(`can format hex string with ${testCase.description} significant digits`, () => {
                 // Act:
                 const str = uint64.toHex(testCase.value);
@@ -287,26 +287,26 @@ describe('uint64', () => {
         const zeroTestCases = [{
                 description: 'low and high are zero',
                 value: [0, 0],
-                isZero: true
+                isZero: true,
             },
             {
                 description: 'low is nonzero and high is zero',
                 value: [1, 0],
-                isZero: false
+                isZero: false,
             },
             {
                 description: 'low is zero and high is nonzero',
                 value: [0, 1],
-                isZero: false
+                isZero: false,
             },
             {
                 description: 'low and high are nonzero',
                 value: [74, 12],
-                isZero: false
-            }
+                isZero: false,
+            },
         ];
 
-        zeroTestCases.forEach(testCase => {
+        zeroTestCases.forEach((testCase) => {
             it(`returns ${testCase.isZero} when ${testCase.description}`, () => {
                 // Act:
                 const isZero = uint64.isZero(testCase.value);

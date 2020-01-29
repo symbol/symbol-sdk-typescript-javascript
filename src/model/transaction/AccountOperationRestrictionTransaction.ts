@@ -84,7 +84,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.ACCOUNT_RESTRICTION_OPERATION,
+        super(TransactionType.ACCOUNT_OPERATION_RESTRICTION,
               networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
@@ -147,7 +147,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
             new KeyDto(signerBuffer),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.ACCOUNT_RESTRICTION_OPERATION.valueOf(),
+            TransactionType.ACCOUNT_OPERATION_RESTRICTION.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
             this.restrictionFlags.valueOf(),
@@ -166,7 +166,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.ACCOUNT_RESTRICTION_OPERATION.valueOf(),
+            TransactionType.ACCOUNT_OPERATION_RESTRICTION.valueOf(),
             this.restrictionFlags.valueOf(),
             this.restrictionAdditions,
             this.restrictionDeletions,

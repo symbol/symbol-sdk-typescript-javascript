@@ -60,6 +60,6 @@ describe('Deadline', () => {
         expect(epochAdjustment.getUTCDate()).to.be.equal(11);
         expect(epochAdjustment.getUTCHours()).to.be.equal(0);
         expect(epochAdjustment.getUTCMinutes()).to.be.equal(0);
-        expect(epochAdjustment.toUTCString()).to.be.equal("Mon, 11 Nov 2019 00:00:00 GMT");
+        expect(epochAdjustment.toUTCString()).to.be.equal('Mon, 11 Nov 2019 00:00:00 GMT');
     });
 });
