@@ -18,6 +18,7 @@ import { RawArray as array } from '../format';
 import * as nacl from './nacl_catapult';
 import { SHA3Hasher as sha3Hasher } from './SHA3Hasher';
 import { SignSchema } from './SignSchema';
+
 export const CryptoJS = require('crypto-js');
 export const Key_Size = 32;
 export const Signature_Size = 64;
@@ -203,21 +204,26 @@ export const catapult_crypto = (() => {
             return 0 === c.crypto_verify_32(signature, 0, t, 0);
         },
 
-        deriveSharedKey: (sk, pk, hashfunc, signSchema: SignSchema) => {
-            const c = nacl;
-            const d = prepareForScalarMult(sk, hashfunc, signSchema);
+        deriveSharedKey: (privateKey: Uint8Array, publicKey: Uint8Array, hashfunc, signSchema: SignSchema): Uint8Array => {
+            const sharedSecret = catapult_crypto.deriveSharedSecret(privateKey, publicKey, hashfunc, signSchema);
+            const info = 'catapult';
+            const hash = 'SHA-256';
+            return hkdf(sharedSecret, 32, {salt: new Uint8Array(32), info, hash});
+        },
 
-            // sharedKey = pack(p = d (derived from sk) * q (derived from pk))
+        deriveSharedSecret: (privateKey: Uint8Array, publicKey: Uint8Array, hashfunc, signSchema: SignSchema): Uint8Array => {
+            const c = nacl;
+            const d = prepareForScalarMult(privateKey, hashfunc, signSchema);
+
+            // sharedKey = pack(p = d (derived from privateKey) * q (derived from publicKey))
             const q = [c.gf(), c.gf(), c.gf(), c.gf()];
             const p = [c.gf(), c.gf(), c.gf(), c.gf()];
             const sharedSecret = new Uint8Array(Key_Size);
-            c.unpack(q, pk);
+
+            c.unpack(q, publicKey);
             c.scalarmult(p, q, d);
             c.pack(sharedSecret, p);
-            const info = 'catapult';
-            const hash = 'SHA-256';
-            const sharedKey = hkdf(sharedSecret, 32, {salt: new Uint8Array(32), info, hash});
-            return sharedKey;
+            return sharedSecret;
         },
     };
 })();

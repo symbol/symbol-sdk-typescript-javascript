@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {expect} from 'chai';
-import {Crypto, KeyPair, SHA3Hasher, SignSchema} from '../../../src/core/crypto';
+import { expect } from 'chai';
+import { Crypto, KeyPair, SHA3Hasher, SignSchema } from '../../../src/core/crypto';
+import * as Utility from '../../../src/core/crypto/Utilities';
 import { Convert } from '../../../src/core/format/Convert';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
-import { Address } from '../../../src/model/account/Address';
 
 describe('key pair', () => {
     const randomKeyPair = () =>
@@ -605,12 +605,12 @@ describe('key pair', () => {
                 '63ABC887EAD7B80247244E0C58CB7689C313444F4924278DBEA72DDB3391F9DA',
             ];
 
-            const Nis1_Salt = [
-                '422c39df16aae42a74a5597d6ee2d59cfb4eeb6b3f26d98425b9163a03daa3b5',
-                'ad63ac08f9afc85eb0bf4f8881ca6eaa0215924c87aa2f137d56109bb76c6f98',
-                '96104f0a28f9cca40901c066cd435134662a3b053eb6c8df80ee0d05dc941963',
-                'd8f94a0bbb1de80aea17aab42e2ffb982e73fc49b649a318479e951e392d8728',
-                '3f8c969678a8abdbfb76866a142c284a6f01636c1c1607947436e0d2c30d5245',
+            const Expected_ScalarMulResult = [
+                'FEB242779628761122E9FB1718512025040C683D69B8105BA1F383D47578B29F',
+                '277FD55F1A54F57F3E5B408CACA560360BA75F67AB954FB4E27A7ADBCAAB6719',
+                '8B38A30824E322555A748A5BEB67FBE0E0F1BD2B51635549F1F19CDF76BA0E9A',
+                '9342380F112C70B17B7254EFCD3FCF6F4F1FF844C7790426BF6EDC4C800BD0A0',
+                'A5593308E182D6D86D633F18DF19D87FAA4EF447FD1904891600CEEF303FD591',
             ];
 
             const Expected_Derived_Key = [
@@ -629,10 +629,11 @@ describe('key pair', () => {
 
                 // Act:
                 const sharedKey = Convert.uint8ToHex(KeyPair.deriveSharedKey(keyPair, publicKey, nis1TestSignSchema));
+                const sharedSecret = Convert.uint8ToHex(Utility.catapult_crypto.deriveSharedSecret(keyPair.privateKey, publicKey, Utility.catapult_hash.func, nis1TestSignSchema));
 
                 // Assert:
-                const message = ` from ${Nis1_Private_Key[i]}`;
                 expect(sharedKey.toUpperCase()).to.deep.equal(Expected_Derived_Key[i].toUpperCase());
+                expect(sharedSecret.toUpperCase()).to.deep.equal(Expected_ScalarMulResult[i].toUpperCase());
             }
         });
     });
@@ -660,12 +661,12 @@ describe('key pair', () => {
                 '9896A394B035E0F18855B2F6EE934E20ABADBF6B65B26E0C9329C283C1A9F980',
             ];
 
-            const Salt = [
-                '422c39df16aae42a74a5597d6ee2d59cfb4eeb6b3f26d98425b9163a03daa3b5',
-                'ad63ac08f9afc85eb0bf4f8881ca6eaa0215924c87aa2f137d56109bb76c6f98',
-                '96104f0a28f9cca40901c066cd435134662a3b053eb6c8df80ee0d05dc941963',
-                'd8f94a0bbb1de80aea17aab42e2ffb982e73fc49b649a318479e951e392d8728',
-                '3f8c969678a8abdbfb76866a142c284a6f01636c1c1607947436e0d2c30d5245',
+            const Expected_ScalarMulResult = [
+                '4118C2B3058714A288A9E218B7E0F9CCAD74C2EC44884CABBE20A2A33DB1282F',
+                'DA4BFF3709E40B4299988806435819D3E8E90ADE435EAC086EE295E0ADC3E0BB',
+                '81B15312FA6A87285C883FF205BA7E7DB319DEA1E7A79D1F78B93E73A156AA64',
+                '100221B07AB55C3260A7B7F12CDA0A8FA97998664C6509661A2E51417AF9C998',
+                'EE74B025E7A304BD0D3F131EF1132D2C194568034B9A7DE93653327D6618215C',
             ];
 
             const Expected_Derived_Key = [
@@ -683,10 +684,11 @@ describe('key pair', () => {
 
                 // Act:
                 const sharedKey = Convert.uint8ToHex(KeyPair.deriveSharedKey(keyPair, publicKey, mijinTestSignSchema));
+                const sharedSecret = Convert.uint8ToHex(Utility.catapult_crypto.deriveSharedSecret(keyPair.privateKey, publicKey, Utility.catapult_hash.func, mijinTestSignSchema));
 
                 // Assert:
-                const message = ` from ${Private_Key[i]}`;
                 expect(sharedKey.toUpperCase()).to.deep.equal(Expected_Derived_Key[i].toUpperCase());
+                expect(sharedSecret.toUpperCase()).to.deep.equal(Expected_ScalarMulResult[i].toUpperCase());
             }
         });
     });
