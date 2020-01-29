@@ -531,7 +531,7 @@ describe('TransactionHttp', () => {
             const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
                 Deadline.create(),
                 AccountRestrictionFlags.BlockIncomingTransactionType,
-                [TransactionType.LINK_ACCOUNT],
+                [TransactionType.ACCOUNT_LINK],
                 [],
                 networkType, helper.maxFee,
             );
@@ -551,7 +551,7 @@ describe('TransactionHttp', () => {
                 Deadline.create(),
                 AccountRestrictionFlags.BlockIncomingTransactionType,
                 [],
-                [TransactionType.LINK_ACCOUNT],
+                [TransactionType.ACCOUNT_LINK],
                 networkType, helper.maxFee,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
@@ -569,12 +569,12 @@ describe('TransactionHttp', () => {
         it('standalone', () => {
             AccountRestrictionModification.createForOperation(
                 AccountRestrictionModificationAction.Add,
-                TransactionType.LINK_ACCOUNT,
+                TransactionType.ACCOUNT_LINK,
             );
             const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
                 Deadline.create(),
                 AccountRestrictionFlags.BlockOutgoingTransactionType,
-                [TransactionType.LINK_ACCOUNT],
+                [TransactionType.ACCOUNT_LINK],
                 [],
                 networkType, helper.maxFee,
             );
@@ -595,7 +595,7 @@ describe('TransactionHttp', () => {
                 Deadline.create(),
                 AccountRestrictionFlags.BlockOutgoingTransactionType,
                 [],
-                [TransactionType.LINK_ACCOUNT],
+                [TransactionType.ACCOUNT_LINK],
                 networkType, helper.maxFee,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),

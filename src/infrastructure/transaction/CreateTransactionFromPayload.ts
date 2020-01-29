@@ -53,19 +53,19 @@ export const CreateTransactionFromPayload = (payload: string,
         TransactionBuilder.loadFromBinary(convert.hexToUint8(payload));
     const type = transactionBuilder.getType().valueOf();
     switch (type) {
-        case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
-        case TransactionType.ACCOUNT_RESTRICTION_OPERATION:
-        case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
+        case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
+        case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
+        case TransactionType.ACCOUNT_MOSAIC_RESTRICTION:
             switch (type) {
-                case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
+                case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
                     return AccountAddressRestrictionTransaction.createFromPayload(payload, isEmbedded);
-                case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
+                case TransactionType.ACCOUNT_MOSAIC_RESTRICTION:
                     return AccountMosaicRestrictionTransaction.createFromPayload(payload, isEmbedded);
-                case TransactionType.ACCOUNT_RESTRICTION_OPERATION:
+                case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
                     return AccountOperationRestrictionTransaction.createFromPayload(payload, isEmbedded);
             }
             throw new Error ('Account restriction transaction type not recognised.');
-        case TransactionType.LINK_ACCOUNT:
+        case TransactionType.ACCOUNT_LINK:
             return AccountLinkTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.ADDRESS_ALIAS:
             return AddressAliasTransaction.createFromPayload(payload, isEmbedded);
@@ -75,7 +75,7 @@ export const CreateTransactionFromPayload = (payload: string,
             return MosaicDefinitionTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.MOSAIC_SUPPLY_CHANGE:
             return MosaicSupplyChangeTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.REGISTER_NAMESPACE:
+        case TransactionType.NAMESPACE_REGISTRATION:
             return NamespaceRegistrationTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.TRANSFER:
             return TransferTransaction.createFromPayload(payload, isEmbedded);
@@ -83,19 +83,19 @@ export const CreateTransactionFromPayload = (payload: string,
             return SecretLockTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.SECRET_PROOF:
             return SecretProofTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.MODIFY_MULTISIG_ACCOUNT:
+        case TransactionType.MULTISIG_ACCOUNT_MODIFICATION:
             return MultisigAccountModificationTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.LOCK:
+        case TransactionType.HASH_LOCK:
             return LockFundsTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
             return MosaicGlobalRestrictionTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
             return MosaicAddressRestrictionTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.ACCOUNT_METADATA_TRANSACTION:
+        case TransactionType.ACCOUNT_METADATA:
             return AccountMetadataTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.MOSAIC_METADATA_TRANSACTION:
+        case TransactionType.MOSAIC_METADATA:
             return MosaicMetadataTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.NAMESPACE_METADATA_TRANSACTION:
+        case TransactionType.NAMESPACE_METADATA:
             return NamespaceMetadataTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.AGGREGATE_COMPLETE:
         case TransactionType.AGGREGATE_BONDED:
