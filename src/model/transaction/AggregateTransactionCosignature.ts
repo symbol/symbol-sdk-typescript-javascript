@@ -15,6 +15,7 @@
  */
 
 import { PublicAccount } from '../account/PublicAccount';
+import { NetworkType } from '../blockchain/NetworkType';
 
 /**
  * Model representing cosignature of an aggregate transaction.
