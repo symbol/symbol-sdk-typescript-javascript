@@ -17,11 +17,11 @@
               class="point_item pointer"
               @click="switchPeer(iterNode.toURL())"
           >
-            <img :src="currentPeer.url === iterNode.toURL() ? monitorSelected : monitorUnselected">
-            <span class="node_url text_select">{{ iterNode.toURL() }}</span>
+            <img :src="currentPeer.url === iterNode.objects.url ? monitorSelected : monitorUnselected">
+            <span class="node_url text_select">{{ iterNode.objects.url }}</span>
             <img
               class="remove_icon" src="@/views/resources/img/service/multisig/multisigDelete.png"
-              @click.stop="removePeer(iterNode.toURL())">
+              @click.stop="removePeer(iterNode.objects.url)">
           </div>
         </div>
 

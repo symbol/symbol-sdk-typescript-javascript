@@ -49,7 +49,7 @@ export class PeerService extends AbstractService {
    */
   public getNodeUrl(fromUrl: string): string {
     const url = URLHelpers.formatUrl(fromUrl)
-    return url.protocol + '://' + url.hostname + (url.port ? ':' + url.port : ':3000')
+    return url.protocol + '//' + url.hostname + (url.port ? ':' + url.port : ':3000')
   }
 
   /**

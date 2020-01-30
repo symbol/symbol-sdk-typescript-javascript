@@ -53,8 +53,8 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 })
 export class PeerSelectorTs extends Vue {
   /**
-   * Currently active account
-   * @see {Store.Account}
+   * Currently active endpoint
+   * @see {Store.Network}
    * @var {Object}
    */
   public currentPeer: Object
@@ -151,6 +151,9 @@ export class PeerSelectorTs extends Vue {
       // validate and parse input
       const nodeUrl = this.service.getNodeUrl(this.formItems.nodeUrl)
       const node = URLHelpers.formatUrl(nodeUrl)
+
+      console.log("nodeUrl: ", nodeUrl)
+      console.log("node: ", node)
 
       // read network type from node pre-saving
       const networkType = await this.service.getNetworkType(nodeUrl)
