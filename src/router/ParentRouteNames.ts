@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 
-// external dependencies
-import {Component, Vue, Prop} from 'vue-property-decorator'
-
-// internal dependencies
-import {TabEntry} from '@/router/TabEntry'
-
-@Component
-export class RouterTabListTs extends Vue {
-  /**
-   * Property for adding links
-   * @var {TabEntry[]}
-   */
-  @Prop({
-    default: []
-  }) tabEntries: TabEntry[]
+/**
+ * Parent route names
+ * Used to display child routes in navigation components
+ * @enum {number}
+ */
+export enum ParentRouteNames {
+  'dashboard' = 'dashboard',
+  'settings' = 'settings',
 }

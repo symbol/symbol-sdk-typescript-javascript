@@ -1,17 +1,17 @@
 <template>
   <div class="top_navidator radius">
     <span
-      v-for="({title, route, active}, index) in links"
+      v-for="(tabEntry, index) in tabEntries"
       :key="index"
       :class="[
-        active ? 'active_navigator' : '',
+        tabEntry.isActive($route) ? 'active_navigator' : '',
         'outter_container',
         'radius',
-        active ? 'disabled' : 'pointer'
+        tabEntry.isActive($route) ? 'disabled' : 'pointer'
       ]"
-      @click="active ? '' : $router.push({name: route}).catch(err => {})"
+      @click="tabEntry.isActive($route) ? '' : $router.push({name: tabEntry.route}).catch(err => {})"
     >
-      <span class="inner_container absolute">{{ $t(title) }}</span>
+      <span class="inner_container absolute">{{ $t(tabEntry.title) }}</span>
       <span class="line">|</span>
     </span>
   </div>

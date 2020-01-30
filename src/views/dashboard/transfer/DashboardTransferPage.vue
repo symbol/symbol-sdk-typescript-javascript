@@ -1,7 +1,7 @@
 <template>
   <div class="transaction_content secondary_page_animate">
     <div class="left_container radius ">
-      <DisabledForms />
+      <DisabledFormOverlay />
       <div class="bottom_transfer_info scroll ">
         <div class="multisig">
           <FormTransferCreation />

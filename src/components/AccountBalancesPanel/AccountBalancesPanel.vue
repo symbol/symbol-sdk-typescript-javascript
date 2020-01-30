@@ -17,7 +17,7 @@
     </div>
   </div>
   <div ref="bottomAccountInfo" class="bottom_account_info radius">
-    <div v-if="isShowAccountInfo" class="mosaicListWrap">
+    <div class="mosaicListWrap">
       <Spin v-if="!currentWallet || !currentWalletMosaics.length" size="large" fix class="absolute" />
       <MosaicBalanceList :mosaics="currentWalletMosaics" />
     </div>

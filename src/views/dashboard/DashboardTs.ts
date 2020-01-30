@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// external dependencies
 import {Component, Vue} from 'vue-property-decorator'
 
 // internal dependencies
-import {routes} from '@/router/routes'
+import {ParentRouteNames} from '@/router/ParentRouteNames'
 
 // child components
 // @ts-ignore
@@ -34,21 +35,10 @@ import RouterTabList from '@/components/RouterTabList/RouterTabList.vue'
   },
 })
 export class DashboardTs extends Vue {
-  /**
-   * Hook called when the component is mounted
-   * @return {void}
-   */
-  mounted() {}
-
 /// region computed properties getter/setter
-  get routes() {
-    return routes.shift().children
-      .filter(({name}) => name === 'dashboard')
-      .map(r => r.children).map(({path}) => ({
-        path,
-        name,
-        active: this.$route.matched.map(matched => matched.path).includes(path),
-      }))
+  get tabEntries() {
+    // @ts-ignore
+    return this.$router.getTabEntries(ParentRouteNames.dashboard)
   }
 /// end-region computed properties getter/setter
 }

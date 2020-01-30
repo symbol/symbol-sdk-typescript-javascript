@@ -1,7 +1,6 @@
 <template>
   <Select
     v-model="value"
-    @change="onChange"
     :placeholder="$t('publicKey')"
     class="fee-select"
   >

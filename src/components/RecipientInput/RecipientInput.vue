@@ -14,7 +14,6 @@
 
 <script lang="ts">
 import {RecipientInputTs} from './RecipientInputTs'
-import './RecipientInput.less'
 
 export default class RecipientInput extends RecipientInputTs {}
 </script>

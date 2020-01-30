@@ -13,33 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
 
-// internal dependencies
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
-
-@Component({
-  computed: {
-    ...mapGetters({
-      currentAccount: 'account/currentAccount',
-    }),
-  },
-})
-export class PageNavigatorTs extends Vue {
+/**
+ * Metadata added to Vue Router routes
+ * @interface RouteMeta
+ */
+export interface RouteMeta {
   /**
-   * Currently active account
-   * @see {Store.Account}
-   * @var {string}
+   * Authentication required
+   * @type {boolean}
    */
-  public currentAccount: AccountsModel
-
+  protected: boolean
   /**
-   * Executes action of logout
-   * @return {void}
+   * Localized route name shown in the view
+   * @type {string}
    */
-  public logout() {
-    this.$store.dispatch('account/LOG_OUT')
-    this.$router.push({name: 'login.account'})
-  }
+  title?: string
+  // @TODO: REVIEW
+  clickable?: boolean
+  icon?: unknown
+  activeIcon?: unknown
+  active?: boolean
+  nextPage?: string
 }

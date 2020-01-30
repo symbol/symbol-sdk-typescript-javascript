@@ -22,7 +22,7 @@ import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
 
 // child components
 // @ts-ignore
-import ErrorTooltip from '@/components/forms/ErrorTooltip/ErrorTooltip.vue'
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 
 @Component({
   components: {

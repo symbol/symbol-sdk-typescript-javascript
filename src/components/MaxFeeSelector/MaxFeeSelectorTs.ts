@@ -48,7 +48,12 @@ export class MaxFeeSelectorTs extends Vue {
   @Prop({
     default: 'single'
   }) multiplier: 'single' | 'double' | 'triple'
-
+  
+  /**
+   * Value set by the parent component's v-model
+   * @type {number}
+   */
+  @Prop() value: number
   /**
    * Fees specification
    * @var {any}
@@ -56,6 +61,20 @@ export class MaxFeeSelectorTs extends Vue {
   public feeSpeeds = feesConfig[this.multiplier]
 
 /// region computed properties getter/setter
+  /**
+   * Value set by the parent component
+   * @type {number}
+   */
+  get chosenMaxFee(): number {
+    return this.value
+  }
+
+  /**
+   * Emit value change
+   */
+  set chosenMaxFee(newValue: number) {
+    this.$emit('input', newValue)
+  }
 /// end-region computed properties getter/setter
 
   /**

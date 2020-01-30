@@ -39,6 +39,8 @@ import SignerSelector from '@/components/SignerSelector/SignerSelector.vue'
 import MosaicAttachmentDisplay from '@/components/MosaicAttachmentDisplay/MosaicAttachmentDisplay.vue'
 // @ts-ignore
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
+// @ts-ignore
+import RecipientInput from '@/components/RecipientInput/RecipientInput.vue'
 
 @Component({
   components: {
@@ -49,6 +51,7 @@ import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
     SignerSelector,
     MosaicAttachmentDisplay,
     MaxFeeSelector,
+    RecipientInput,
   },
   computed: {...mapGetters({
     currentWallet: 'wallet/currentWallet',

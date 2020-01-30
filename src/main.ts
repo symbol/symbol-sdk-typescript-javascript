@@ -27,7 +27,7 @@ import {VeeValidateConfig, registerCustomValidators} from '@/core/validators/Vee
 import {UIBootstrapper} from '@/app/UIBootstrapper'
 import i18n from '@/language/index.ts'
 import store from '@/store/index.ts'
-import router from '@/router/index.ts'
+import router from '@/router/AppRouter'
 
 // @ts-ignore
 import App from '@/app/App.vue'

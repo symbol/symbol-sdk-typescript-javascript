@@ -4,7 +4,7 @@
       v-if="value > 0" ref="animee" :data-time="time"
       class="number-grow" :data-value="value"
     />
-    <span v-else>{{ Formatters.formatNumber(value) || 0 }}</span>
+    <span v-else>{{ formatters.formatNumber(value) || 0 }}</span>
   </div>
 </template>
 

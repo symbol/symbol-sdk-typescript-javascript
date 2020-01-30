@@ -3,7 +3,7 @@
     <span class="title">{{ $t('fee') }}</span>
     <span class="type value radius flex_center">
       <Select
-        v-model="formItems.feeSpeed"
+        v-model="chosenMaxFee"
         v-validate="'required'"
         data-vv-name="mosaic"
         :data-vv-as="$t('fee')"

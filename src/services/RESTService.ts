@@ -55,7 +55,7 @@ export class RESTService extends AbstractService {
    * REST repositories cache
    * @var {Map<string, RepositoryImpl>} 
    */
-  public static _cache: Map<string, HttpRepositoryImpl>
+  public static _cache: Map<string, HttpRepositoryImpl> = new Map
 
   /**
    * Vuex Store 
@@ -99,7 +99,7 @@ export class RESTService extends AbstractService {
     nodeUrl: string
   ): HttpRepositoryImpl {
     // try to use previous instance
-    if (RESTService._cache.has(name)) {
+    if (RESTService._cache && RESTService._cache.has(name)) {
       return RESTService._cache.get(name)
     }
 

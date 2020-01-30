@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 import {createStepImage, importStepImage, leftBarIcons} from '@/views/resources/Images'
+import {AppRoute} from './AppRoute'
 
-export const routes: any[] = [
+export const routes: AppRoute[] = [
   {
     path: '/',
     name: 'home',
+    meta: { protected: false },
     // @ts-ignore
     component: () => import('@/views/layout/PageLayout/PageLayout.vue'),
     /// region PageLayout children
@@ -47,6 +49,7 @@ export const routes: any[] = [
           {
             path: '/createAccount',
             name: 'login.createAccount',
+            meta: { protected: false },
             // @ts-ignore
             component: () => import('@/views/login/create-account/CreateAccount.vue'),
             children: [
@@ -101,6 +104,7 @@ export const routes: any[] = [
           {
             path: '/importAccount',
             name: 'login.importAccount',
+            meta: { protected: false },
             // @ts-ignore
             component: () => import('@/views/login/import-account/ImportAccount.vue'),
             children: [{
@@ -159,19 +163,28 @@ export const routes: any[] = [
           {
             path: '/home',
             name: 'dashboard.index',
-            meta: { protected: true},
+            meta: {
+              protected: true,
+              title: 'dashboard',
+            },
             // @ts-ignore
             component: () => import('@/views/dashboard/home/DashboardHomePage.vue'),
           }, {
             path: '/transfer',
             name: 'dashboard.transfer',
-            meta: { protected: true},
+            meta: {
+              protected: true,
+              title: 'transfer',
+            },
             // @ts-ignore
             component: () => import('@/views/dashboard/transfer/DashboardTransferPage.vue'),
           }, {
             path: '/invoice',
             name: 'dashboard.invoice',
-            meta: { protected: true},
+            meta: {
+              protected: true,
+              title: 'invoice',
+            },
             // @ts-ignore
             component: () => import('@/views/dashboard/invoice/DashboardInvoicePage.vue'),
           }

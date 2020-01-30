@@ -1,7 +1,9 @@
 <template>
-  <div v-if="active" class="multisig_ban_container">
+  <div v-if="false" class="multisig_ban_container">
+    <!-- @TODO: restaure when Network Currency initialization works
+    <div v-if="alert" class="multisig_ban_container">  -->
     <Alert type="error">
-      {{ $t(alertMessage) }}
+      {{ $t(alert) }}
     </Alert>
     <div class="is_multisig un_click radius" />
   </div>

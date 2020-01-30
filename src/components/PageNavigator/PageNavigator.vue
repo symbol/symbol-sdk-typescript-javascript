@@ -2,7 +2,7 @@
   <div class="left_navigator">
     <div class="navigator_icon">
       <div
-        v-for="(route, index) in routes"
+        v-for="(route, index) in $router.getRoutes()"
         :key="index"
         :class="[ $route.matched.map(({path}) => path).includes(route.path) ? 'active_panel' : '',
                   !currentAccount ? 'un_click' : 'pointer' ]"
