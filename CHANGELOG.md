@@ -8,6 +8,17 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 **Milestone**: Fushicho.4(RC3)
  Versions  |   |
 ---|---|---
+SDK Core| v0.16.5 | https://www.npmjs.com/package/nem2-sdk
+Catbuffer Library| v0.0.11 | https://www.npmjs.com/package/catbuffer
+Client Library | v0.7.20-beta.7  | https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client
+
+- Fixed circular reference issue after removed `InnerTransaction` class.
+
+## 30-Jan-2020
+
+**Milestone**: Fushicho.4(RC3)
+ Versions  |   |
+---|---|---
 SDK Core| v0.16.4 | https://www.npmjs.com/package/nem2-sdk
 Catbuffer Library| v0.0.11 | https://www.npmjs.com/package/catbuffer
 Client Library | v0.7.20-beta.7  | https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client
@@ -346,6 +357,7 @@ Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/nem2-sdk-opena
 **Milestone**: Alpaca
 
 - Initial code release.
+[0.16.5]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.4...v0.16.5
 [0.16.4]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.3...v0.16.4
 [0.16.3]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.2...v0.16.3
 [0.16.2]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.1...v0.16.2
