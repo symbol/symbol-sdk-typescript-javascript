@@ -92,7 +92,7 @@ export class CommunityService extends AbstractService {
    * Get latest articles from RSS feed
    * @return {Promise<ArticleEntry[]}
    */
-  public async getLatestArticles(): Promise<ArticleEntry[]> {
+  public async getLatestArticles(): Promise<any[]> {
     const data = await request()
     const parser = new RSSParser()
 
@@ -103,8 +103,7 @@ export class CommunityService extends AbstractService {
       
         // - parse item and sanitize content
         const articles = parsed.items.map(item => {
-          let article: ArticleEntry
-          return Object.assign(article, item, {
+          return Object.assign({}, item, {
             content: XSSSanitizer.filterXSS(item['content:encoded']),
             pubDate: Formatters.formatDate(Date.parse(item.pubDate))
           })

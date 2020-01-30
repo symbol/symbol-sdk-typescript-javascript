@@ -56,11 +56,11 @@
           <img v-else class="mosaicIcon" src="@/views/resources/img/monitor/mosaicDefault.png">
         </span>
         <span class="mosaic_name text_select">
-          {{ mosaicService.getMosaicName(entry.mosaic.id) || entry.mosaic.id.toHex() }}
+            {{ entry.name }}
         </span>
         <span class="mosaic_value">
-            <MosaicAmountDisplay :amount="mosaicService.getRelativeAmount(entry.mosaic.balance || 0, entry.mosaic.id)"
-                                 :id="entry.mosaic.id" />
+            <MosaicAmountDisplay :amount="entry.amount"
+                                 :id="entry.id" />
         </span>
       </div>
       <div class="complete_container">

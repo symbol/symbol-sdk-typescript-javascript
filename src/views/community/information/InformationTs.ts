@@ -40,8 +40,8 @@ export class InformationTs extends Vue {
    * Hook called when the component is mounted
    * @return {void}
    */
-  mounted() {
-    this.$store.dispatch('community/initialize')
+  public async mounted() {
+    await this.$store.dispatch('community/initialize')
   }
 
   /**

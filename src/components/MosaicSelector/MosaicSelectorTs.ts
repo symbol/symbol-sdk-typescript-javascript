@@ -59,16 +59,8 @@ export class MosaicSelectorTs extends Vue {
    * Mosaic service
    * @var {MosaicService}
    */
-  public mosaicService: MosaicService
+  public mosaicService: MosaicService = new MosaicService()
 
 /// region computed properties getter/setter
 /// end-region computed properties getter/setter
-
-  /**
-   * Hook called when the component is mounted
-   * @return {void}
-   */
-  public mounted() {
-    this.mosaicService = new MosaicService(this.$store)
-  }
 }

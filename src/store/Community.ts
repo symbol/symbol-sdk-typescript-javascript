@@ -16,9 +16,8 @@
 import Vue from 'vue';
 
 // internal dependencies
-import {$eventBus} from '../main'
-import {ServiceFactory} from '@/services/ServiceFactory'
 import {AwaitLock} from './AwaitLock';
+import {CommunityService} from '@/services/CommunityService';
 const Lock = AwaitLock.create();
 
 /**
@@ -72,7 +71,7 @@ export default {
     async FETCH_ARTICLES({commit, dispatch}) {
       // fetch articles from external feed
       try {
-        const service = ServiceFactory.create('community', this._vm.$store)
+        const service = new CommunityService()
         const articles = await service.getLatestArticles()
 
         return articles.map(article => commit('addArticle', article))

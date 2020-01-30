@@ -25,6 +25,7 @@ import TemporaryStore from '@/store/Temporary'
 import MosaicStore from '@/store/Mosaic'
 import NamespaceStore from '@/store/Namespace'
 import StatisticsStore from '@/store/Statistics'
+import CommunityStore from '@/store/Community'
 
 // use AwaitLock for initialization routines
 import {AwaitLock} from '@/store/AwaitLock'
@@ -50,6 +51,7 @@ export default new Vuex.Store({
     mosaic: MosaicStore,
     namespace: NamespaceStore,
     statistics: StatisticsStore,
+    community: CommunityStore,
   },
   actions: {
     async initialize({ commit, dispatch, getters }) {

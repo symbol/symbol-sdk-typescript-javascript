@@ -102,17 +102,22 @@ export class SignerSelectorTs extends Vue {
     )
 
     // add multisig accounts
-    return [
+    const self = [
       {
         publicKey: currentSigner.publicKey,
-        label: this.walletService.getWalletLabel(currentSigner.publicKey, this.networkType)
+        label: this.currentWallet.values.get('name')
       },
-      ...this.multisigInfo.multisigAccounts.map(
+    ]
+
+    if (this.multisigInfo) {
+      return self.concat(...this.multisigInfo.multisigAccounts.map(
         ({publicKey}) => ({
           publicKey,
           label: this.walletService.getWalletLabel(publicKey, this.networkType)
-        }))
-    ]
+        })))
+    }
+
+    return self
   }
 /// end-region computed properties getter/setter
 }
