@@ -102,7 +102,8 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
      * @param maxFee the preloaded max fee
      * @returns {Transaction}
      */
-    public static createFromBodyBuilder(builder: AccountMosaicRestrictionTransactionBuilder | EmbeddedAccountMosaicRestrictionTransactionBuilder,
+    public static createFromBodyBuilder(builder: AccountMosaicRestrictionTransactionBuilder |
+                                                 EmbeddedAccountMosaicRestrictionTransactionBuilder,
                                         networkType: NetworkType,
                                         deadline: Deadline,
                                         maxFee: UInt64): Transaction {

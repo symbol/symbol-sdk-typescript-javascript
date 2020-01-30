@@ -96,7 +96,8 @@ export class AccountOperationRestrictionTransaction extends Transaction {
      * @param maxFee the preloaded max fee
      * @returns {Transaction}
      */
-    public static createFromBodyBuilder(builder: AccountOperationRestrictionTransactionBuilder | EmbeddedAccountOperationRestrictionTransactionBuilder,
+    public static createFromBodyBuilder(builder: AccountOperationRestrictionTransactionBuilder |
+                                                 EmbeddedAccountOperationRestrictionTransactionBuilder,
                                         networkType: NetworkType,
                                         deadline: Deadline,
                                         maxFee: UInt64): Transaction {

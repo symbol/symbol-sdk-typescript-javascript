@@ -119,7 +119,8 @@ export class MultisigAccountModificationTransaction extends Transaction {
      * @param maxFee the preloaded max fee
      * @returns {Transaction}
      */
-    public static createFromBodyBuilder(builder: MultisigAccountModificationTransactionBuilder | EmbeddedMultisigAccountModificationTransactionBuilder,
+    public static createFromBodyBuilder(builder: MultisigAccountModificationTransactionBuilder |
+                                                 EmbeddedMultisigAccountModificationTransactionBuilder,
                                         networkType: NetworkType,
                                         deadline: Deadline,
                                         maxFee: UInt64): Transaction {
