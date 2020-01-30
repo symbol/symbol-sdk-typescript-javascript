@@ -3,6 +3,24 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 30-Jan-2020
+
+**Milestone**: Fushicho.4(RC3)
+ Versions  |   |
+---|---|---
+SDK Core| v0.16.4 | https://www.npmjs.com/package/nem2-sdk
+Catbuffer Library| v0.0.11 | https://www.npmjs.com/package/catbuffer
+Client Library | v0.7.20-beta.7  | https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client
+
+- Core 0.9.2.1 compatible. Changed hash algorithm for shared key derivation to `HKDF-HMAC-Sha256`.
+- Removed `senderPrivateKey` in `Persistent Delegation Request Transaction`. Instead, it uses an `ephemeral key pair` and the `EphemeralPublicKey` is now attached in the `PersistentDelegationMessage` payload.
+- Removed `salt` encryption and decryption functions which uses `HKDF-HMAC-Sha256` instead. This only affects the encrypted payload.
+- Added missing export in `Infrastructure` classes / interfaces.
+- Applied latest `catbuffer` builder codes for `ResolutionStatement`.
+- Updated `TransactionType` & `TransactionVersion` enum key name to match `catabuffer` schema definition.
+- Changed signature type for `Height` from `numeric string` to `UInt64` in `Block` & `Receipt` respostiories
+- Fixed a few ts lint issues.
+
 ## 09-Jan-2020
 
 **Milestone**: Fushicho.3
@@ -328,6 +346,7 @@ Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/nem2-sdk-opena
 **Milestone**: Alpaca
 
 - Initial code release.
+[0.16.4]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.3...v0.16.4
 [0.16.3]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.2...v0.16.3
 [0.16.2]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.1...v0.16.2
 [0.16.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.0...v0.16.1
