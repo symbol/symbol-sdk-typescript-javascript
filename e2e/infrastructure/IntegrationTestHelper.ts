@@ -73,14 +73,13 @@ export class IntegrationTestHelper {
                         // What would be the best maxFee? In the future we will load the fee multiplier from rest.
                         this.maxFee = UInt64.fromUint(1000000);
 
-                        const bootstrapRoot = process.env.CATAPULT_SERVICE_BOOTSTRAP || path.resolve(__dirname, '../../../../catapult-service-bootstrap');
-                        const bootstrapPath = `${bootstrapRoot}/build/generated-addresses/addresses.yaml`;
-                        require('fs').readFile(bootstrapPath, (error: any, yamlData: any) => {
+                        require('fs').readFile(path.resolve(__dirname,
+                                '../../../catapult-service-bootstrap/build/generated-addresses/addresses.yaml'),
+                                    (error: any, yamlData: any) => {
                             if (error) {
-                                console.log(`catapult-service-bootstrap generated address could not be loaded from path ${bootstrapPath}. Ignoring and using accounts from network.conf.`);
+                                console.log(`catapult-service-bootstrap generated address could not be loaded. Ignoring and using accounts from network.conf.`);
                                 return resolve(this);
                             } else {
-                                console.log(`catapult-service-bootstrap generated address loaded from path ${bootstrapPath}.`);
                                 const parsedYaml = this.yaml.safeLoad(yamlData);
                                 this.account = this.createAccount(parsedYaml.nemesis_addresses[0]);
                                 this.account2 = this.createAccount(parsedYaml.nemesis_addresses[1]);

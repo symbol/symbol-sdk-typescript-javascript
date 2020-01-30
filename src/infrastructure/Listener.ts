@@ -25,13 +25,17 @@ import { AggregateTransaction } from '../model/transaction/AggregateTransaction'
 import { AggregateTransactionCosignature } from '../model/transaction/AggregateTransactionCosignature';
 import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
 import { Deadline } from '../model/transaction/Deadline';
+import { InnerTransaction } from '../model/transaction/InnerTransaction';
 import { MultisigAccountModificationTransaction } from '../model/transaction/MultisigAccountModificationTransaction';
 import { Transaction } from '../model/transaction/Transaction';
 import { TransactionStatusError } from '../model/transaction/TransactionStatusError';
 import { TransferTransaction } from '../model/transaction/TransferTransaction';
 import { UInt64 } from '../model/UInt64';
 import { IListener } from './IListener';
-import { CreateTransactionFromDTO, extractBeneficiary } from './transaction/CreateTransactionFromDTO';
+import {
+    CreateTransactionFromDTO,
+    extractBeneficiary,
+} from './transaction/CreateTransactionFromDTO';
 
 enum ListenerChannelName {
     block = 'block',
@@ -366,7 +370,7 @@ export class Listener implements IListener {
                     transactionFromAddress = true;
                 }
             });
-            transaction.innerTransactions.map((innerTransaction: Transaction) => {
+            transaction.innerTransactions.map((innerTransaction: InnerTransaction) => {
                 if (this.transactionHasSignerOrReceptor(innerTransaction, address) ||
                     this.accountAddedToMultiSig(innerTransaction, address)) {
                     transactionFromAddress = true;

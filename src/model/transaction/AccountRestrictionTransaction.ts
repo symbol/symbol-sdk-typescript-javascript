@@ -23,6 +23,7 @@ import { UInt64 } from '../UInt64';
 import { AccountAddressRestrictionTransaction } from './AccountAddressRestrictionTransaction';
 import { AccountMosaicRestrictionTransaction } from './AccountMosaicRestrictionTransaction';
 import { AccountOperationRestrictionTransaction } from './AccountOperationRestrictionTransaction';
+import { AccountRestrictionModification } from './AccountRestrictionModification';
 import { Deadline } from './Deadline';
 import { TransactionType } from './TransactionType';
 

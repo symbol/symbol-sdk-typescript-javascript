@@ -30,6 +30,7 @@ import { NetworkType } from '../blockchain/NetworkType';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -121,28 +122,30 @@ export class NamespaceMetadataTransaction extends Transaction {
     }
 
     /**
-     * Creates a transaction from catbuffer body builders.
-     * @internal
-     * @param builder the body builder
-     * @param networkType the preloaded network type
-     * @param deadline the preloaded deadline
-     * @param maxFee the preloaded max fee
-     * @returns {Transaction}
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @returns {Transaction | InnerTransaction}
      */
-    public static createFromBodyBuilder(builder: NamespaceMetadataTransactionBuilder | EmbeddedNamespaceMetadataTransactionBuilder,
-                                        networkType: NetworkType,
-                                        deadline: Deadline,
-                                        maxFee: UInt64): Transaction {
-        return NamespaceMetadataTransaction.create(
-            deadline,
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedNamespaceMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+            NamespaceMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const networkType = builder.getNetwork().valueOf();
+        const transaction = NamespaceMetadataTransaction.create(
+            isEmbedded ? Deadline.create() :
+                Deadline.createFromDTO((builder as NamespaceMetadataTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getTargetPublicKey().key),
             new UInt64(builder.getScopedMetadataKey()),
             new NamespaceId(builder.getTargetNamespaceId().namespaceId),
             builder.getValueSizeDelta(),
             Convert.uint8ToUtf8(builder.getValue()),
             networkType,
-            maxFee,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceMetadataTransactionBuilder).fee.amount),
         );
+        return isEmbedded ?
+            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { PublicAccount } from '../account/PublicAccount';
-import { CosignatoryModificationAction } from './CosignatoryModificationAction';
+import {PublicAccount} from '../account/PublicAccount';
+import {CosignatoryModificationAction} from './CosignatoryModificationAction';
 
 /**
  * Multisig cosignatory modifications are part of the NEM's multisig account system.

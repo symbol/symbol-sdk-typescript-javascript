@@ -21,7 +21,7 @@
  * 2: Op_Hash_160 (first with SHA-256 and then with RIPEMD-160 (BTC compatibility))
  * 3: Op_Hash_256: input is hashed twice with SHA-256 (BTC compatibility)
  */
-import { Convert as convert } from '../../core/format';
+import {Convert as convert} from '../../core/format';
 
 export enum HashType {
     Op_Sha3_256 = 0,
