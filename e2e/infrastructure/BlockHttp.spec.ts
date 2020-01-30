@@ -27,8 +27,8 @@ import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMos
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { TransactionInfo } from '../../src/model/transaction/TransactionInfo';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { UInt64 } from '../../src/model/UInt64';
+import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('BlockHttp', () => {
     const helper = new IntegrationTestHelper();
