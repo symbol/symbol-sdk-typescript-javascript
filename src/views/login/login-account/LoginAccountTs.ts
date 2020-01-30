@@ -23,7 +23,7 @@ import {NotificationType} from '@/core/utils/NotificationType'
 import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {AESEncryptionService} from '@/services/AESEncryptionService'
+import {AccountService} from '@/services/AccountService'
 
 // child components
 // @ts-ignore
@@ -204,24 +204,19 @@ export default class LoginAccountTs extends Vue {
       return this.$router.push({name: 'login.createAccount.generateMnemonic'})
     }
 
-    // validate password
-    const accessSalt = this.accountsRepository.getAdapter().getSaltForSession()
-    const accountPass = AESEncryptionService.decrypt(
-      account.values.get('password'),
-      new Password(accessSalt)
-    )
+    // use service to generate password hash
+    const service = new AccountService(this.$store)
+    const passwordHash = service.getPasswordHash(new Password(this.formItems.password))
 
-    console.log('encrypted: ', account.values.get('password'))
-    console.log("decrypted: ", accountPass)
-    console.log("access salt: ", accessSalt)
-    console.log(accountPass.toString())
+    // read account's password hash and compare
+    const accountPass = account.values.get('password')
 
-    if (accountPass !== this.formItems.password) {
+    if (accountPass !== passwordHash) {
       return this.$store.dispatch('notification/ADD_ERROR', NotificationType.WRONG_PASSWORD_ERROR)
     }
 
     // LOGIN SUCCESS: update app state
-    this.$store.commit('account/SET_CURRENT_ACCOUNT', identifier)
+    this.$store.dispatch('account/SET_CURRENT_ACCOUNT', identifier)
     $eventBus.$emit('onLogin', identifier)
     return this.$router.push({name: 'dashboard'})
   }

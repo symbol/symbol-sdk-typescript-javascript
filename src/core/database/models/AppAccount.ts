@@ -21,6 +21,7 @@ import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {AppDatabase} from '@/core/database/AppDatabase'
 import {AESEncryptionService} from '@/services/AESEncryptionService'
+import {AccountService} from '@/services/AccountService'
 
 export class AppAccount {
   /**
@@ -47,19 +48,21 @@ export class AppAccount {
     // get database storage adapter
     this.adapter = AppDatabase.getAdapter()
 
-    // password encrypted with accessSalt
-    const accessSalt = this.adapter.getSaltForSession()
-    const encryptPass = AESEncryptionService.encrypt(password, new Password(accessSalt))
+    // seed encrypted with password if necessary
     let encryptSeed = ''
     if (seed && seed.length) {
-      encryptSeed = AESEncryptionService.encrypt(seed, new Password(accessSalt))
+      encryptSeed = AESEncryptionService.encrypt(seed, new Password(this.password))
     }
 
+    // password stored as hash (never plain.)
+    const service = new AccountService(this.store)
+    const passwordHash = service.getPasswordHash(new Password(this.password))
+    
     // populate model
     this.model = new AccountsModel(new Map<string, any>([
       ['accountName', this.accountName],
       ['wallets', this.wallets],
-      ['password', encryptPass],
+      ['password', passwordHash],
       ['hint', this.hint],
       ['networkType', this.networkType],
       ['seed', encryptSeed]

@@ -69,8 +69,8 @@ export class AESEncryptionService extends AbstractService {
     });
 
     // salt (16 bytes) + iv (16 bytes)
-    // prepend them to the ciphertext for use  in decryption
-    return salt + iv.toString() + encrypted.toString();
+    // prepend them to the ciphertext for use in decryption
+    return salt.toString() + iv.toString() + encrypted.toString();
   }
 
   /**
@@ -83,9 +83,6 @@ export class AESEncryptionService extends AbstractService {
     data: string,
     password: Password
   ): string {
-    console.log("Data to decrypt: ", data)
-    console.log("Password: ", password.value)
-
     const salt = CryptoJS.enc.Hex.parse(data.substr(0, 32));
     const iv = CryptoJS.enc.Hex.parse(data.substr(32, 32))
     const encrypted = data.substring(64);
@@ -102,8 +99,8 @@ export class AESEncryptionService extends AbstractService {
       padding: CryptoJS.pad.Pkcs7,
       mode: CryptoJS.mode.CBC
     })
-    
-    return decrypted.toString();
+
+    return decrypted.toString(CryptoJS.enc.Utf8);
   }
 
   /**

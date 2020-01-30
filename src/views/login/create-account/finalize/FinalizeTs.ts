@@ -81,16 +81,6 @@ export default class FinalizeTs extends Vue {
   public mounted() {
     this.walletService = new WalletService(this.$store)
     this.walletsRepository = new WalletsRepository()
-
-    console.log("when mounted currentAccount: ", this.currentAccount)
-  }
-
-  /**
-   * Hook called when the page is created
-   * @return {void}
-   */
-  public created() {
-    console.log("when created currentAccount: ", this.currentAccount)
   }
 
   /**
@@ -102,12 +92,9 @@ export default class FinalizeTs extends Vue {
     try {
       // create account by mnemonic
       const wallet = this.createWalletFromMnemonic()
-      console.log("wallet model: ", wallet.model)
 
       // use repository for storage
       this.walletsRepository.create(wallet.model.values)
-
-      console.log("persisted wallet: ", wallet.model.getIdentifier())
 
       // execute store actions
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
@@ -134,9 +121,6 @@ export default class FinalizeTs extends Vue {
       this.networkType,
       WalletService.DEFAULT_WALLET_PATH
     )
-
-    console.log("FinalizeTs account by path: ", account)
-    console.log("currentAccount: ", this.currentAccount.getIdentifier())
 
     const simpleWallet = SimpleWallet.createFromPrivateKey(
       'SeedWallet',

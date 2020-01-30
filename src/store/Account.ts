@@ -94,7 +94,10 @@ export default {
 
       // set knownWallets
       const knownWallets = accountsRepository.fetchRelations(walletsRepository, currentAccount, 'wallets')
-      dispatch('wallet/SET_KNOWN_WALLETS', knownWallets, {root: true})
+      if (knownWallets.size) {
+        dispatch('wallet/SET_CURRENT_WALLET', Array.from(knownWallets.values()).shift(), {root: true})
+        dispatch('wallet/SET_KNOWN_WALLETS', Array.from(knownWallets.values()), {root: true})
+      }
 
       // reset store + re-initialize
       await dispatch('initialize')

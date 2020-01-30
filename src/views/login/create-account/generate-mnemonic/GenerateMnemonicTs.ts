@@ -104,10 +104,6 @@ export default class GenerateMnemonicTs extends Vue {
       // act
       const entropy = CryptoJS.SHA256(this.entropy).toString()
       const seed = MnemonicPassPhrase.createFromEntropy(entropy)
-
-      console.log("currentAccount: ", this.currentAccount.getIdentifier())
-      console.log("currentPassword: ", this.currentPassword.value)
-      console.log("secureSeed: ", seed.toSeed(this.currentPassword.value).toString('hex'))
       
       // encrypt seed for storage
       const encSeed = AESEncryptionService.encrypt(
@@ -115,13 +111,9 @@ export default class GenerateMnemonicTs extends Vue {
         this.currentPassword
       )
 
-      console.log("encSeed: ", encSeed)      
-
       // update currentAccount instance and storage
       this.currentAccount.values.set("seed", encSeed)
       this.accounts.update(this.currentAccount.getIdentifier(), this.currentAccount.values)
-
-      console.log("updated account: ", this.currentAccount.getIdentifier())
 
       // update state
       this.$store.dispatch('notification/ADD_SUCCESS', this.$t('Generate_entropy_increase_success'))

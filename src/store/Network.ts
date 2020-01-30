@@ -165,6 +165,9 @@ export default {
     async initialize({ commit, dispatch, getters }) {
       const callback = async () => {
         const nodeUrl = getters.currentPeer.url
+
+        console.log('network/initialize: nodeUrl: ', nodeUrl)
+
         try {
           // read network type ("connect")
           const networkHttp = RESTService.create('NetworkHttp', nodeUrl)
@@ -172,12 +175,17 @@ export default {
           const nodeHttp = RESTService.create('NodeHttp', nodeUrl)
           const networkType = await networkHttp.getNetworkType().toPromise()
 
+          console.log('network/initialize: networkType: ', networkType)
+
           // update connection state
           commit('setConnected', true)
-          $eventBus.$emit('newConnection', nodeUrl);
+          $eventBus.$emit('newConnection', nodeUrl)
 
           const peerInfo = await nodeHttp.getNodeInfo().toPromise()
           const currentHeight = await chainHttp.getBlockchainHeight().toPromise()
+
+          console.log('network/initialize: peerInfo: ', peerInfo)
+          console.log('network/initialize: currentHeight: ', currentHeight.compact())
 
           // update store
           commit('networkType', networkType)
@@ -243,7 +251,7 @@ export default {
     // Subscribe to latest account transactions.
     async SUBSCRIBE({ commit, dispatch, getters }) {
       // use RESTService to open websocket channel subscriptions
-      const websocketUrl = getters['/wsEndpoint']
+      const websocketUrl = getters['wsEndpoint']
       const subscriptions: SubscriptionType  = await RESTService.subscribeBlocks(
         {commit, dispatch},
         websocketUrl,
