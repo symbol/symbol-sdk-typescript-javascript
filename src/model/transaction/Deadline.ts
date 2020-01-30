@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { ChronoUnit, Instant, LocalDateTime, ZoneId } from 'js-joda';
-import { UInt64 } from '../UInt64';
+import {ChronoUnit, Instant, LocalDateTime, ZoneId} from 'js-joda';
+import {UInt64} from '../UInt64';
 
 /**
  * The deadline of the transaction. The deadline is given as the number of seconds elapsed since the creation of the nemesis block.

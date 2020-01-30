@@ -36,6 +36,7 @@ import { MosaicId } from '../mosaic/MosaicId';
 import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
 import { SignedTransaction } from './SignedTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
@@ -120,28 +121,30 @@ export class LockFundsTransaction extends Transaction {
     }
 
     /**
-     * Creates a transaction from catbuffer body builders.
-     * @internal
-     * @param builder the body builder
-     * @param networkType the preloaded network type
-     * @param deadline the preloaded deadline
-     * @param maxFee the preloaded max fee
-     * @returns {Transaction}
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @returns {Transaction | InnerTransaction}
      */
-    public static createFromBodyBuilder(builder: HashLockTransactionBuilder | EmbeddedHashLockTransactionBuilder,
-                                        networkType: NetworkType,
-                                        deadline: Deadline,
-                                        maxFee: UInt64): Transaction {
-        return LockFundsTransaction.create(
-            deadline,
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedHashLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+            HashLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const networkType = builder.getNetwork().valueOf();
+        const transaction = LockFundsTransaction.create(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as HashLockTransactionBuilder).getDeadline().timestamp),
             new Mosaic(
                 new MosaicId(builder.getMosaic().mosaicId.unresolvedMosaicId),
                 new UInt64(builder.getMosaic().amount.amount),
             ),
             new UInt64(builder.getDuration().blockDuration),
             new SignedTransaction('', Convert.uint8ToHex(builder.getHash().hash256), '', TransactionType.AGGREGATE_BONDED, networkType),
-            networkType, maxFee,
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as HashLockTransactionBuilder).fee.amount),
         );
+        return isEmbedded ?
+            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**

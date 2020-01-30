@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { expect } from 'chai';
+import { assert, expect } from 'chai';
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
 import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
@@ -171,42 +171,59 @@ describe('AccountHttp', () => {
      */
 
     describe('getAccountInfo', () => {
-        it('should return account data given a NEM Address', async () => {
-            const accountInfo = await accountRepository.getAccountInfo(accountAddress).toPromise();
-            expect(accountInfo.publicKey).to.be.equal(accountPublicKey);
+        it('should return account data given a NEM Address', (done) => {
+            accountRepository.getAccountInfo(accountAddress)
+            .subscribe((accountInfo) => {
+                expect(accountInfo.publicKey).to.be.equal(accountPublicKey);
+                done();
+            });
         });
     });
 
     describe('getAccountsInfo', () => {
-        it('should return account data given a NEM Address', async () => {
-            const accountsInfo = await accountRepository.getAccountsInfo([accountAddress]).toPromise();
-            expect(accountsInfo[0].publicKey).to.be.equal(accountPublicKey);
+        it('should return account data given a NEM Address', (done) => {
+            accountRepository.getAccountsInfo([accountAddress])
+            .subscribe((accountsInfo) => {
+                expect(accountsInfo[0].publicKey).to.be.equal(accountPublicKey);
+                done();
+            });
         });
     });
 
     describe('getMultisigAccountGraphInfo', () => {
-        it('should call getMultisigAccountGraphInfo successfully', async () => {
-            const multisigAccountGraphInfo = await multisigRepository.getMultisigAccountGraphInfo(multisigAccount.publicAccount.address).toPromise();
-            expect(multisigAccountGraphInfo.multisigAccounts.get(0)![0].account.publicKey).to.be.equal(multisigAccount.publicKey);
+        it('should call getMultisigAccountGraphInfo successfully', (done) => {
+            multisigRepository.getMultisigAccountGraphInfo(multisigAccount.publicAccount.address).subscribe((multisigAccountGraphInfo) => {
+                expect(multisigAccountGraphInfo.multisigAccounts.get(0)![0].account.publicKey).to.be.equal(multisigAccount.publicKey);
+                done();
+            });
         });
     });
     describe('getMultisigAccountInfo', () => {
-        it('should call getMultisigAccountInfo successfully', async () => {
-            const multisigAccountInfo = await multisigRepository.getMultisigAccountInfo(multisigAccount.publicAccount.address).toPromise();
-            expect(multisigAccountInfo.account.publicKey).to.be.equal(multisigAccount.publicKey);
+        it('should call getMultisigAccountInfo successfully', (done) => {
+            multisigRepository.getMultisigAccountInfo(multisigAccount.publicAccount.address).subscribe((multisigAccountInfo) => {
+                expect(multisigAccountInfo.account.publicKey).to.be.equal(multisigAccount.publicKey);
+                done();
+            });
         });
     });
 
     describe('outgoingTransactions', () => {
-        it('should call outgoingTransactions successfully', async () => {
-            const transactions = await accountRepository.getAccountOutgoingTransactions(publicAccount.address).toPromise();
-            expect(transactions.length).to.be.greaterThan(0);
+        it('should call outgoingTransactions successfully', (done) => {
+            accountRepository.getAccountOutgoingTransactions(publicAccount.address).subscribe((transactions) => {
+                expect(transactions.length).to.be.greaterThan(0);
+                done();
+            });
         });
     });
 
     describe('aggregateBondedTransactions', () => {
-        it('should call aggregateBondedTransactions successfully', async () => {
-            await accountRepository.getAccountPartialTransactions(publicAccount.address).toPromise();
+        it('should call aggregateBondedTransactions successfully', (done) => {
+            accountRepository.getAccountPartialTransactions(publicAccount.address).subscribe(() => {
+                done();
+            }, (error) => {
+                console.log('Error:', error);
+                assert(false);
+            });
         });
     });
 
@@ -226,6 +243,7 @@ describe('AccountHttp', () => {
     describe('transactions', () => {
         it('should call transactions successfully by type', async () => {
             const transactions = await accountRepository.getAccountTransactions(publicAccount.address, {transactionType: TransactionType.TRANSFER} as QueryParams).toPromise();
+
             expect(transactions.length).to.be.greaterThan(0);
             transactions.forEach((t) => {
                 expect(t.type).to.be.eq(TransactionType.TRANSFER);
@@ -234,23 +252,29 @@ describe('AccountHttp', () => {
     });
 
     describe('transactions', () => {
-        it('should call transactions successfully', async () => {
-            const transactions = await accountRepository.getAccountTransactions(publicAccount.address).toPromise();
-            expect(transactions.length).to.be.greaterThan(0);
+        it('should call transactions successfully', (done) => {
+            accountRepository.getAccountTransactions(publicAccount.address).subscribe((transactions) => {
+                expect(transactions.length).to.be.greaterThan(0);
+                done();
+            });
         });
     });
 
     describe('unconfirmedTransactions', () => {
-        it('should call unconfirmedTransactions successfully', async () => {
-            const transactions = await accountRepository.getAccountUnconfirmedTransactions(publicAccount.address).toPromise();
-            expect(transactions.length).to.be.equal(0);
+        it('should call unconfirmedTransactions successfully', (done) => {
+            accountRepository.getAccountUnconfirmedTransactions(publicAccount.address).subscribe((transactions) => {
+                expect(transactions.length).to.be.equal(0);
+                done();
+            });
         });
     });
 
     describe('getAddressNames', () => {
-        it('should call getAddressNames successfully', async () => {
-            const addressNames = await namespaceRepository.getAccountsNames([accountAddress]).toPromise();
-            expect(addressNames.length).to.be.greaterThan(0);
+        it('should call getAddressNames successfully', (done) => {
+            namespaceRepository.getAccountsNames([accountAddress]).subscribe((addressNames) => {
+                expect(addressNames.length).to.be.greaterThan(0);
+                done();
+            });
         });
     });
 

@@ -28,6 +28,7 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -111,20 +112,20 @@ export class MultisigAccountModificationTransaction extends Transaction {
     }
 
     /**
-     * Creates a transaction from catbuffer body builders.
-     * @internal
-     * @param builder the body builder
-     * @param networkType the preloaded network type
-     * @param deadline the preloaded deadline
-     * @param maxFee the preloaded max fee
-     * @returns {Transaction}
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @returns {Transaction | InnerTransaction}
      */
-    public static createFromBodyBuilder(builder: MultisigAccountModificationTransactionBuilder |
-                                                 EmbeddedMultisigAccountModificationTransactionBuilder,
-                                        networkType: NetworkType,
-                                        deadline: Deadline,
-                                        maxFee: UInt64): Transaction {
-        return MultisigAccountModificationTransaction.create(deadline,
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedMultisigAccountModificationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+            MultisigAccountModificationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const networkType = builder.getNetwork().valueOf();
+        const transaction = MultisigAccountModificationTransaction.create(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+                (builder as MultisigAccountModificationTransactionBuilder).getDeadline().timestamp),
             builder.getMinApprovalDelta(),
             builder.getMinRemovalDelta(),
             builder.getPublicKeyAdditions().map((addition) => {
@@ -134,8 +135,10 @@ export class MultisigAccountModificationTransaction extends Transaction {
                 return PublicAccount.createFromPublicKey(Convert.uint8ToHex(deletion.getKey()), networkType);
             }),
             networkType,
-            maxFee,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MultisigAccountModificationTransactionBuilder).fee.amount),
         );
+        return isEmbedded ?
+            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**

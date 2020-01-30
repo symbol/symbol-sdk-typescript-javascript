@@ -13,47 +13,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Convert as convert } from '../../core/format';
+import {Convert as convert} from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
-import { Address } from '../../model/account/Address';
-import { PublicAccount } from '../../model/account/PublicAccount';
-import { NetworkType } from '../../model/blockchain/NetworkType';
+import {Address} from '../../model/account/Address';
+import {PublicAccount} from '../../model/account/PublicAccount';
+import {NetworkType} from '../../model/blockchain/NetworkType';
 import { EncryptedMessage } from '../../model/message/EncryptedMessage';
 import { MessageType } from '../../model/message/MessageType';
 import { PersistentHarvestingDelegationMessage } from '../../model/message/PersistentHarvestingDelegationMessage';
-import { EmptyMessage, PlainMessage } from '../../model/message/PlainMessage';
-import { Mosaic } from '../../model/mosaic/Mosaic';
-import { MosaicFlags } from '../../model/mosaic/MosaicFlags';
-import { MosaicId } from '../../model/mosaic/MosaicId';
-import { NamespaceId } from '../../model/namespace/NamespaceId';
-import { AccountAddressRestrictionTransaction } from '../../model/transaction/AccountAddressRestrictionTransaction';
+import {EmptyMessage, PlainMessage} from '../../model/message/PlainMessage';
+import {Mosaic} from '../../model/mosaic/Mosaic';
+import {MosaicFlags} from '../../model/mosaic/MosaicFlags';
+import {MosaicId} from '../../model/mosaic/MosaicId';
+import {NamespaceId} from '../../model/namespace/NamespaceId';
+import {AccountAddressRestrictionTransaction} from '../../model/transaction/AccountAddressRestrictionTransaction';
 import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
 import { AccountMetadataTransaction } from '../../model/transaction/AccountMetadataTransaction';
-import { AccountMosaicRestrictionTransaction } from '../../model/transaction/AccountMosaicRestrictionTransaction';
-import { AccountOperationRestrictionTransaction } from '../../model/transaction/AccountOperationRestrictionTransaction';
-import { AddressAliasTransaction } from '../../model/transaction/AddressAliasTransaction';
-import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
-import { AggregateTransactionCosignature } from '../../model/transaction/AggregateTransactionCosignature';
-import { AggregateTransactionInfo } from '../../model/transaction/AggregateTransactionInfo';
-import { Deadline } from '../../model/transaction/Deadline';
-import { LockFundsTransaction } from '../../model/transaction/LockFundsTransaction';
+import {AccountMosaicRestrictionTransaction} from '../../model/transaction/AccountMosaicRestrictionTransaction';
+import {AccountOperationRestrictionTransaction} from '../../model/transaction/AccountOperationRestrictionTransaction';
+import {AddressAliasTransaction} from '../../model/transaction/AddressAliasTransaction';
+import {AggregateTransaction} from '../../model/transaction/AggregateTransaction';
+import {AggregateTransactionCosignature} from '../../model/transaction/AggregateTransactionCosignature';
+import {AggregateTransactionInfo} from '../../model/transaction/AggregateTransactionInfo';
+import {Deadline} from '../../model/transaction/Deadline';
+import {LockFundsTransaction} from '../../model/transaction/LockFundsTransaction';
 import { MosaicAddressRestrictionTransaction } from '../../model/transaction/MosaicAddressRestrictionTransaction';
-import { MosaicAliasTransaction } from '../../model/transaction/MosaicAliasTransaction';
-import { MosaicDefinitionTransaction } from '../../model/transaction/MosaicDefinitionTransaction';
+import {MosaicAliasTransaction} from '../../model/transaction/MosaicAliasTransaction';
+import {MosaicDefinitionTransaction} from '../../model/transaction/MosaicDefinitionTransaction';
 import { MosaicGlobalRestrictionTransaction } from '../../model/transaction/MosaicGlobalRestrictionTransaction';
 import { MosaicMetadataTransaction } from '../../model/transaction/MosaicMetadataTransaction';
-import { MosaicSupplyChangeTransaction } from '../../model/transaction/MosaicSupplyChangeTransaction';
-import { MultisigAccountModificationTransaction } from '../../model/transaction/MultisigAccountModificationTransaction';
+import {MosaicSupplyChangeTransaction} from '../../model/transaction/MosaicSupplyChangeTransaction';
+import {MultisigAccountModificationTransaction} from '../../model/transaction/MultisigAccountModificationTransaction';
 import { NamespaceMetadataTransaction } from '../../model/transaction/NamespaceMetadataTransaction';
-import { NamespaceRegistrationTransaction } from '../../model/transaction/NamespaceRegistrationTransaction';
-import { SecretLockTransaction } from '../../model/transaction/SecretLockTransaction';
-import { SecretProofTransaction } from '../../model/transaction/SecretProofTransaction';
-import { SignedTransaction } from '../../model/transaction/SignedTransaction';
-import { Transaction } from '../../model/transaction/Transaction';
-import { TransactionInfo } from '../../model/transaction/TransactionInfo';
-import { TransactionType } from '../../model/transaction/TransactionType';
-import { TransferTransaction } from '../../model/transaction/TransferTransaction';
-import { UInt64 } from '../../model/UInt64';
+import {NamespaceRegistrationTransaction} from '../../model/transaction/NamespaceRegistrationTransaction';
+import {SecretLockTransaction} from '../../model/transaction/SecretLockTransaction';
+import {SecretProofTransaction} from '../../model/transaction/SecretProofTransaction';
+import {SignedTransaction} from '../../model/transaction/SignedTransaction';
+import {Transaction} from '../../model/transaction/Transaction';
+import {TransactionInfo} from '../../model/transaction/TransactionInfo';
+import {TransactionType} from '../../model/transaction/TransactionType';
+import {TransferTransaction} from '../../model/transaction/TransferTransaction';
+import {UInt64} from '../../model/UInt64';
 
 /**
  * @internal
@@ -122,8 +122,7 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
  * @constructor
  */
 const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Transaction => {
-    const signer = transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
-        transactionDTO.network) : undefined;
+
     if (transactionDTO.type === TransactionType.TRANSFER) {
         return new TransferTransaction(
             transactionDTO.network,
@@ -134,7 +133,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractMosaics(transactionDTO.mosaics),
             extractMessage(transactionDTO.message !== undefined ? transactionDTO.message : undefined),
             transactionDTO.signature,
-            signer,
+            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
+                    transactionDTO.network) : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.NAMESPACE_REGISTRATION) {
@@ -149,7 +149,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.registrationType === 0 ? UInt64.fromNumericString(transactionDTO.duration) : undefined,
             transactionDTO.registrationType === 1 ? NamespaceId.createFromEncoded(transactionDTO.parentId) : undefined,
             transactionDTO.signature,
-            signer,
+            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
+                            transactionDTO.network) : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.MOSAIC_DEFINITION) {
@@ -164,7 +165,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.divisibility,
             UInt64.fromNumericString(transactionDTO.duration),
             transactionDTO.signature,
-            signer,
+            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
+                            transactionDTO.network) : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.MOSAIC_SUPPLY_CHANGE) {
@@ -177,7 +179,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.action,
             UInt64.fromNumericString(transactionDTO.delta),
             transactionDTO.signature,
-            signer,
+            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
+                            transactionDTO.network) : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION) {
@@ -193,7 +196,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.publicKeyDeletions ? transactionDTO.publicKeyDeletions.map((deletion) =>
                 PublicAccount.createFromPublicKey(deletion, transactionDTO.network)) : [],
             transactionDTO.signature,
-            signer,
+            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
+                            transactionDTO.network) : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.HASH_LOCK) {
@@ -207,7 +211,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             UInt64.fromNumericString(transactionDTO.duration),
             new SignedTransaction('', transactionDTO.hash, '', TransactionType.AGGREGATE_BONDED, networkType),
             transactionDTO.signature,
-            signer,
+            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, networkType) : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.SECRET_LOCK) {
@@ -224,7 +228,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.secret,
             extractRecipient(recipientAddress),
             transactionDTO.signature,
-            signer,
+            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
+                            transactionDTO.network) : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.SECRET_PROOF) {
@@ -239,7 +244,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractRecipient(recipientAddress),
             transactionDTO.proof,
             transactionDTO.signature,
-            signer,
+            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
+                            transactionDTO.network) : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.MOSAIC_ALIAS) {
@@ -252,7 +258,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             NamespaceId.createFromEncoded(transactionDTO.namespaceId),
             new MosaicId(transactionDTO.mosaicId),
             transactionDTO.signature,
-            signer,
+            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
+                            transactionDTO.network) : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.ADDRESS_ALIAS) {
@@ -265,7 +272,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             NamespaceId.createFromEncoded(transactionDTO.namespaceId),
             extractRecipient(transactionDTO.address) as Address,
             transactionDTO.signature,
-            signer,
+            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
+                            transactionDTO.network) : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.ACCOUNT_ADDRESS_RESTRICTION) {
@@ -280,7 +288,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.restrictionDeletions ? transactionDTO.restrictionDeletions.map((deletion) =>
                 extractRecipient(deletion)) : [],
             transactionDTO.signature,
-            signer,
+            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
+                            transactionDTO.network) : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.ACCOUNT_OPERATION_RESTRICTION) {
@@ -293,7 +302,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.restrictionAdditions ? transactionDTO.restrictionAdditions : [],
             transactionDTO.restrictionDeletions ? transactionDTO.restrictionDeletions : [],
             transactionDTO.signature,
-            signer,
+            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
+                            transactionDTO.network) : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.ACCOUNT_MOSAIC_RESTRICTION) {
@@ -308,7 +318,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.restrictionDeletions ? transactionDTO.restrictionDeletions.map((deletion) =>
                 UnresolvedMapping.toUnresolvedMosaic(deletion)) : [],
             transactionDTO.signature,
-            signer,
+            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
+                            transactionDTO.network) : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.ACCOUNT_LINK) {
@@ -320,7 +331,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.remotePublicKey,
             transactionDTO.linkAction,
             transactionDTO.signature,
-            signer,
+            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
+                    transactionDTO.network) : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.MOSAIC_GLOBAL_RESTRICTION) {
@@ -337,7 +349,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             UInt64.fromNumericString(transactionDTO.newRestrictionValue),
             transactionDTO.newRestrictionType,
             transactionDTO.signature,
-            signer,
+            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
+                    transactionDTO.network) : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.MOSAIC_ADDRESS_RESTRICTION) {
@@ -352,7 +365,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             UInt64.fromNumericString(transactionDTO.previousRestrictionValue),
             UInt64.fromNumericString(transactionDTO.newRestrictionValue),
             transactionDTO.signature,
-            signer,
+            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
+                    transactionDTO.network) : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.ACCOUNT_METADATA) {
@@ -366,7 +380,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.valueSizeDelta,
             convert.decodeHex(transactionDTO.value),
             transactionDTO.signature,
-            signer,
+            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
+                    transactionDTO.network) : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.MOSAIC_METADATA) {
@@ -381,7 +396,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.valueSizeDelta,
             convert.decodeHex(transactionDTO.value),
             transactionDTO.signature,
-            signer,
+            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
+                    transactionDTO.network) : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.NAMESPACE_METADATA) {
@@ -396,7 +412,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.valueSizeDelta,
             convert.decodeHex(transactionDTO.value),
             transactionDTO.signature,
-            signer,
+            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
+                    transactionDTO.network) : undefined,
             transactionInfo,
         );
     }

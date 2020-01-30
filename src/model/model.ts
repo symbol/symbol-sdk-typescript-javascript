@@ -129,7 +129,7 @@ export * from './transaction/Deadline';
 export * from './transaction/PersistentDelegationRequestTransaction';
 export * from './transaction/HashLockTransaction';
 export * from './transaction/HashType';
-export * from './transaction/Transaction';
+export * from './transaction/InnerTransaction';
 export * from './transaction/LinkAction';
 export * from './transaction/LockFundsTransaction';
 export * from './transaction/MultisigAccountModificationTransaction';

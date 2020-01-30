@@ -16,9 +16,9 @@
 
 import { KeyPair, SHA3Hasher } from '../../core/crypto';
 import { Convert } from '../../core/format/Convert';
-import { Account } from '../account/Account';
-import { AggregateTransaction } from './AggregateTransaction';
-import { CosignatureSignedTransaction } from './CosignatureSignedTransaction';
+import {Account} from '../account/Account';
+import {AggregateTransaction} from './AggregateTransaction';
+import {CosignatureSignedTransaction} from './CosignatureSignedTransaction';
 import { Transaction } from './Transaction';
 
 /**

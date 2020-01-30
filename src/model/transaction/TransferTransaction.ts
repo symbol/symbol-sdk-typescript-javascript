@@ -43,6 +43,7 @@ import { NamespaceId } from '../namespace/NamespaceId';
 import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -116,22 +117,22 @@ export class TransferTransaction extends Transaction {
     }
 
     /**
-     * Creates a transaction from catbuffer body builders.
-     * @internal
-     * @param builder the body builder
-     * @param networkType the preloaded network type
-     * @param deadline the preloaded deadline
-     * @param maxFee the preloaded max fee
-     * @returns {Transaction}
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @returns {Transaction | InnerTransaction}
      */
-    public static createFromBodyBuilder(builder: TransferTransactionBuilder | EmbeddedTransferTransactionBuilder,
-                                        networkType: NetworkType,
-                                        deadline: Deadline,
-                                        maxFee: UInt64): Transaction {
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedTransferTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+            TransferTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const messageType = builder.getMessage()[0];
         const messageHex = Convert.uint8ToHex(builder.getMessage()).substring(2);
-        return TransferTransaction.create(
-            deadline,
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const networkType = builder.getNetwork().valueOf();
+        const transaction = TransferTransaction.create(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+                (builder as TransferTransactionBuilder).getDeadline().timestamp),
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
             builder.getMosaics().map((mosaic) => {
                 const id = new UInt64(mosaic.mosaicId.unresolvedMosaicId).toHex();
@@ -142,8 +143,11 @@ export class TransferTransaction extends Transaction {
             messageType === MessageType.PlainMessage ?
                 PlainMessage.createFromPayload(messageHex) :
                 EncryptedMessage.createFromPayload(messageHex),
-            networkType, maxFee,
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as TransferTransactionBuilder).fee.amount),
         );
+        return isEmbedded ?
+            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**

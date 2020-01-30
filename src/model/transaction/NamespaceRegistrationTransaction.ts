@@ -33,6 +33,7 @@ import { NamespaceId } from '../namespace/NamespaceId';
 import { NamespaceRegistrationType } from '../namespace/NamespaceRegistrationType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -149,33 +150,36 @@ export class NamespaceRegistrationTransaction extends Transaction {
     }
 
     /**
-     * Creates a transaction from catbuffer body builders.
-     * @internal
-     * @param builder the body builder
-     * @param networkType the preloaded network type
-     * @param deadline the preloaded deadline
-     * @param maxFee the preloaded max fee
-     * @returns {Transaction}
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @returns {Transaction | InnerTransaction}
      */
-    public static createFromBodyBuilder(builder: NamespaceRegistrationTransactionBuilder | EmbeddedNamespaceRegistrationTransactionBuilder,
-                                        networkType: NetworkType,
-                                        deadline: Deadline,
-                                        maxFee: UInt64): Transaction {
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedNamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+            NamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const registrationType = builder.getRegistrationType().valueOf();
-        return registrationType === NamespaceRegistrationType.RootNamespace ?
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const networkType = builder.getNetwork().valueOf();
+        const transaction = registrationType === NamespaceRegistrationType.RootNamespace ?
             NamespaceRegistrationTransaction.createRootNamespace(
-                deadline,
-                Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
-                new UInt64(builder.getDuration()!.blockDuration),
-                networkType,
-                maxFee,
-            ) : NamespaceRegistrationTransaction.createSubNamespace(
-                deadline,
-                Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
-                new NamespaceId(builder.getParentId()!.namespaceId),
-                networkType,
-                maxFee,
-            );
+                isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+                    (builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp),
+            Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
+            new UInt64(builder.getDuration()!.blockDuration),
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
+        ) : NamespaceRegistrationTransaction.createSubNamespace(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+                (builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp),
+            Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
+            new NamespaceId(builder.getParentId()!.namespaceId),
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
+        );
+        return isEmbedded ?
+            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Address } from '../account/Address';
-import { Deadline } from './Deadline';
+import {Address} from '../account/Address';
+import {Deadline} from './Deadline';
 
 /**
  * Transaction status error model returned by listeners
