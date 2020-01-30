@@ -62,4 +62,37 @@ export class AppTs extends Vue {
    * @var {boolean}
    */
   public hasLoadingOverlay: boolean
+
+  /**
+   * Hook called when the app is started
+   * @return {void}
+   */
+  public created() {
+    this.initialize()
+  }
+
+  /**
+   * Hook called when the app is closed
+   * @return {void}
+   */
+  public destroyed() {
+    this.uninitialize()
+  }
+
+  /**
+   * Initialize the app store
+   * @see {Store.AppInfo}
+   */
+  protected initialize() {
+    this.$store.dispatch('initialize')
+        .catch(error => console.log(error))
+  }
+
+  /**
+   * Uninitialize the app store
+   * @see {Store.AppInfo}
+   */
+  protected uninitialize() {
+    this.$store.dispatch('uninitialize')
+  }
 }

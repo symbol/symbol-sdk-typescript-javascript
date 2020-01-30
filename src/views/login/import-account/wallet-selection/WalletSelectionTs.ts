@@ -159,7 +159,7 @@ export default class WalletSelectionTs extends Vue {
 
         // set first wallet active
         if (cnt === 0) {
-          this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet.model.values.get('name'))
+          this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet.model.getIdentifier())
         }
 
         // add wallet to account

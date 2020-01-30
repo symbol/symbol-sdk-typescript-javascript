@@ -66,7 +66,7 @@
             <input
               v-model.lazy="formItems.password"
               v-focus
-              v-validate="'required'"
+              v-validate="'required|min:8'"
               :class="[!accountsClassifiedByNetworkType ? 'un_click' : '']"
               :disabled="!accountsClassifiedByNetworkType"
               type="password"

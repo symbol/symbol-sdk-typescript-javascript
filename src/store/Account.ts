@@ -85,8 +85,8 @@ export default {
       // validate account exists
       const currentAccount = accountsRepository.read(accountName)
 
-      // changing active account, must unitialize app!
-      await dispatch('uninitialize', null, {root: true})
+      // changing active account, must unitialize wallet!
+      await dispatch('wallet/uninitialize', null, {root: true})
 
       // update state
       commit('currentAccount', currentAccount)
@@ -95,8 +95,10 @@ export default {
       // set knownWallets
       const knownWallets = accountsRepository.fetchRelations(walletsRepository, currentAccount, 'wallets')
       if (knownWallets.size) {
-        dispatch('wallet/SET_CURRENT_WALLET', Array.from(knownWallets.values()).shift(), {root: true})
-        dispatch('wallet/SET_KNOWN_WALLETS', Array.from(knownWallets.values()), {root: true})
+        const known = Array.from(knownWallets.values())
+        const firstWalletId = known.shift().getIdentifier()
+        dispatch('wallet/SET_CURRENT_WALLET', firstWalletId, {root: true})
+        dispatch('wallet/SET_KNOWN_WALLETS', knownWallets, {root: true})
       }
 
       // reset store + re-initialize

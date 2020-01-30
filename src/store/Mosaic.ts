@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, MosaicInfo, NamespaceId, QueryParams, Transaction, TransactionType} from 'nem2-sdk'
+import {MosaicId, MosaicInfo, NamespaceId, QueryParams, Transaction, TransactionType, NamespaceRegistrationType} from 'nem2-sdk'
 import Vue from 'vue'
 
 // internal dependencies
@@ -55,7 +55,7 @@ export default {
     setNemesisTransactions: (state, transactions) => Vue.set(state, 'nemesisTransactions', transactions),
     addMosaicInfo: (state, mosaicInfo: MosaicInfo) => {
       let info = state.mosaicsInfoByHex
-      let hex = info.id.toHex()
+      let hex = mosaicInfo.id.toHex()
 
       // register mosaic info
       info[hex] = mosaicInfo
@@ -124,12 +124,14 @@ export default {
     SET_NEMESIS_TRANSACTIONS({commit, dispatch}, transactions) {
       // - read first root namespace
       const rootNamespaceTx = transactions.filter(
-        tx => tx.type === TransactionType.REGISTER_NAMESPACE).shift()
+        tx => tx.type === TransactionType.REGISTER_NAMESPACE
+           && tx.registrationType === NamespaceRegistrationType.RootNamespace).shift()
 
       // - read sub namespace
       const subNamespaceTx = transactions.filter(
         tx => tx.type === TransactionType.REGISTER_NAMESPACE 
-           && tx.parentId === rootNamespaceTx.namespaceId).shift()
+           && tx.registrationType === NamespaceRegistrationType.SubNamespace
+           && tx.parentId.equals(rootNamespaceTx.namespaceId)).shift()
 
       // - read alias
       const aliasTx = transactions.filter(

@@ -41,7 +41,6 @@ export const ValidationRuleset = {
   password: {
     required: true,
     min: MIN_PASSWORD_LENGTH,
-    max: MAX_PASSWORD_LENGTH,
     regex:'(?=.*[0-9])(?=.*[a-zA-Z])(.{8,})$',
   },
   previousPassword: 'required|confirmLock:cipher',

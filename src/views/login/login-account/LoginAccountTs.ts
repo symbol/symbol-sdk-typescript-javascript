@@ -111,7 +111,6 @@ export default class LoginAccountTs extends Vue {
 
   get accountsClassifiedByNetworkType() {
     const repository = new AccountsRepository()
-    console.log("account by network type: ", repository.getNamesByNetworkType())
     return repository.getNamesByNetworkType()
   }
 /// end-region computed properties getter/setter
@@ -177,11 +176,12 @@ export default class LoginAccountTs extends Vue {
       return this.$store.dispatch('notification/ADD_ERROR', NotificationType.ACCOUNT_NAME_INPUT_ERROR)
     }
 
-    // use vee-validate, then login if valid
-    this.$validator.validate().then((valid) => {
-      if (!valid) return
-      this.processLogin()
-    })
+    if (! this.formItems.password.length || this.formItems.password.length < 8) {
+      return this.$store.dispatch('notification/ADD_ERROR', NotificationType.WRONG_PASSWORD_ERROR)
+    }
+
+    // now compare password hashes
+    return this.processLogin()
   }
 
   /**
