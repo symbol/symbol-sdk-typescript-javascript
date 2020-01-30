@@ -175,9 +175,8 @@ export default {
           const nodeHttp = RESTService.create('NodeHttp', nodeUrl)
           const networkType = await networkHttp.getNetworkType().toPromise()
 
-          console.log('network/initialize: networkType: ', networkType)
-
           // update connection state
+          commit('currentPeer', nodeUrl)
           commit('setConnected', true)
           $eventBus.$emit('newConnection', nodeUrl)
 
@@ -223,7 +222,7 @@ export default {
       commit('setInitialized', false)
 
       // reset store + re-initialize
-      await dispatch('uninitialize', null, {root: true})
+      await dispatch('uninitialize')
       await dispatch('initialize')
     },
     ADD_KNOWN_PEER({commit}, peerUrl) {
