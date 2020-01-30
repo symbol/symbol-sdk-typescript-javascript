@@ -57,7 +57,7 @@ import {
     SecretLockTransactionBuilder,
     SecretProofTransactionBuilder,
     TransactionHelper,
-    TransferTransactionBuilder
+    TransferTransactionBuilder,
 } from 'catbuffer';
 import { Convert, Convert as convert } from '../../core/format';
 import { Deadline, PublicAccount, UInt64 } from '../../model/model';
@@ -215,6 +215,3 @@ export const CreateTransactionFromEmbeddedTransactionBuilder = (builder: Embedde
 
     return toBuilder().toAggregate(signer);
 };
-
-
-

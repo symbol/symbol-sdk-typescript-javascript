@@ -142,7 +142,7 @@ export class TransferTransaction extends Transaction {
             messageType === MessageType.PlainMessage ?
                 PlainMessage.createFromPayload(messageHex) :
                 EncryptedMessage.createFromPayload(messageHex),
-            networkType, maxFee
+            networkType, maxFee,
         );
     }
 

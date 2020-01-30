@@ -150,7 +150,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
             new UInt64(builder.getNewRestrictionValue()),
             networkType,
             new UInt64(builder.getPreviousRestrictionValue()),
-            maxFee
+            maxFee,
         );
     }
 

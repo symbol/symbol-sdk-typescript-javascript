@@ -104,7 +104,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
             builder.getRestrictionFlags().valueOf(),
             builder.getRestrictionAdditions(),
             builder.getRestrictionDeletions(),
-            networkType, maxFee
+            networkType, maxFee,
         );
     }
 

@@ -17,7 +17,7 @@
 import { CreateTransactionFromDTO } from '../../infrastructure/transaction/CreateTransactionFromDTO';
 import {
     CreateTransactionFromInnerPayload,
-    CreateTransactionFromPayload
+    CreateTransactionFromPayload,
 } from '../../infrastructure/transaction/CreateTransactionFromPayload';
 import { Transaction } from '../../model/transaction/Transaction';
 

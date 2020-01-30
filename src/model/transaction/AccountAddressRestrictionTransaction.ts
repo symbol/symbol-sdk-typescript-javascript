@@ -116,7 +116,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
                 return UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(deletion.unresolvedAddress));
             }),
             networkType,
-            maxFee
+            maxFee,
         );
     }
 

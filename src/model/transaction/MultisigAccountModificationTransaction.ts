@@ -133,7 +133,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
                 return PublicAccount.createFromPublicKey(Convert.uint8ToHex(deletion.getKey()), networkType);
             }),
             networkType,
-            maxFee
+            maxFee,
         );
     }
 

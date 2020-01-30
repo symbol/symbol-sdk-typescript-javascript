@@ -125,7 +125,7 @@ export class SecretProofTransaction extends Transaction {
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
             Convert.uint8ToHex(builder.getProof()),
             networkType,
-            maxFee
+            maxFee,
         );
     }
 

@@ -130,7 +130,7 @@ export class AccountMetadataTransaction extends Transaction {
             builder.getValueSizeDelta(),
             Convert.uint8ToUtf8(builder.getValue()),
             networkType,
-            maxFee
+            maxFee,
         );
     }
 

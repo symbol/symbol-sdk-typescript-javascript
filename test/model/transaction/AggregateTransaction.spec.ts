@@ -580,7 +580,7 @@ describe('AggregateTransaction', () => {
             Deadline.create(),
             [transferTransaction.toAggregate(account.publicAccount)],
             networkType,
-            []
+            [],
         ).setMaxFee(2);
 ​
         expect(aggregateTransaction.maxFee.compact()).to.be.equal(560);
@@ -624,7 +624,6 @@ describe('AggregateTransaction', () => {
         expect(signedTransaction.hash).not.to.be.undefined;
     });
 
-
     it('Test aggregate serialization', () => {
         const transferTransaction1 = new TransferTransaction(
             networkType,
@@ -653,7 +652,7 @@ describe('AggregateTransaction', () => {
             new AggregateTransactionCosignature('AAA9366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA65456111AAA9366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA65456111',
                 PublicAccount.createFromPublicKey('9A49366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA65456111', networkType)),
             new AggregateTransactionCosignature('BBB9366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA65456222BBB9366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA65456222',
-                PublicAccount.createFromPublicKey('9A49366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA65456111', networkType))
+                PublicAccount.createFromPublicKey('9A49366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA65456111', networkType)),
         ];
 
         const aggregateTransaction = AggregateTransaction.createComplete(
@@ -666,7 +665,6 @@ describe('AggregateTransaction', () => {
         expect(aggregateTransaction.serialize()).to.be.equal(expected);
 
         const parsedTransaction = CreateTransactionFromPayload(expected) as AggregateTransaction;
-
 
         expect(parsedTransaction.deadline.toString()).to.be.equal(aggregateTransaction.deadline.toString());
         expect(parsedTransaction.maxFee.toHex()).to.be.equal(aggregateTransaction.maxFee.toHex());

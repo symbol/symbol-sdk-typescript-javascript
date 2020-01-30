@@ -115,7 +115,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
             builder.getRestrictionDeletions().map((deletion) => {
                 return UnresolvedMapping.toUnresolvedMosaic(new UInt64(deletion.unresolvedMosaicId).toHex());
             }),
-            networkType, maxFee
+            networkType, maxFee,
         );
     }
 
