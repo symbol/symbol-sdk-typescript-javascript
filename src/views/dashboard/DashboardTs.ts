@@ -18,6 +18,7 @@ import {Component, Vue} from 'vue-property-decorator'
 
 // internal dependencies
 import {ParentRouteNames} from '@/router/ParentRouteNames'
+import {AppRouter} from '@/router/AppRouter'
 
 // child components
 // @ts-ignore

@@ -16,7 +16,10 @@
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {Formatters} from '@/core/utils/Formatters'
 
-@Component
+// child components
+import VueNumber from 'vue-number-animation'
+
+@Component({components: {VueNumber}})
 export class AnimatedNumberTs extends Vue {
 
   @Prop({
@@ -39,32 +42,7 @@ export class AnimatedNumberTs extends Vue {
    */
   public mounted() {
     if (this.value) {
-      this.animate(this.$refs.animee)
+      (this.$refs.animee as VueNumber).play()
     }
-  }
-
-  /**
-   * Animate the element by adding intervals
-   * between incremental steps.
-   * @param {Vue.Refs} ref
-   */
-  protected animate(ref) {
-    const step = (this.value * 10) / (this.time * 1000)
-    let current = 0
-    let start = 0
-    let t = setInterval(function () {
-      start += step
-      if (start > this.value) {
-        clearInterval(t)
-        start = this.value
-        t = null
-        this.$emit('done')
-      }
-      if (current === start) {
-        return
-      }
-      current = Number(Number(start).toFixed(0))
-      ref.innerHTML = current.toString().replace(/(\d)(?=(?:\d{3}[+]?)+$)/g, '$1,')
-    }, 10)
   }
 }

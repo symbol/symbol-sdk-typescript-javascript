@@ -188,7 +188,7 @@ export default class LoginAccountTs extends Vue {
    * Process login request.
    * @return {void}
    */
-  private processLogin() {
+  private async processLogin() {
     const identifier = this.formItems.currentAccountName
 
     // if account doesn't exist, authentication is not valid
@@ -216,7 +216,7 @@ export default class LoginAccountTs extends Vue {
     }
 
     // LOGIN SUCCESS: update app state
-    this.$store.dispatch('account/SET_CURRENT_ACCOUNT', identifier)
+    await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', identifier)
     $eventBus.$emit('onLogin', identifier)
     return this.$router.push({name: 'dashboard'})
   }

@@ -53,7 +53,6 @@ export class AppRouter extends Router {
       }
 
       const isAuthenticated = AppStore.getters['account/isAuthenticated'] === true
-      console.log("auth: ", isAuthenticated)
       if (!isAuthenticated) {
         return next({name: 'login.account'})
       }

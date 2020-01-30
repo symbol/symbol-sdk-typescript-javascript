@@ -28,6 +28,7 @@ import {UIBootstrapper} from '@/app/UIBootstrapper'
 import i18n from '@/language/index.ts'
 import store from '@/store/index.ts'
 import router from '@/router/AppRouter'
+import VueNumber from 'vue-number-animation'
 
 // @ts-ignore
 import App from '@/app/App.vue'
@@ -39,6 +40,7 @@ Vue.use(Router)
 Vue.use(VueRx)
 Vue.use(VeeValidate, VeeValidateConfig)
 registerCustomValidators()
+Vue.use(VueNumber)
 /// end-region UI plugins
 
 /// region event bus (events propagated on parallel thread)
