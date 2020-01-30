@@ -78,11 +78,8 @@ describe('TransactionHttp', () => {
      * =========================
      */
     describe('Get network currency mosaic id', () => {
-        it('get mosaicId', (done) => {
-            namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).subscribe((networkMosaicId: MosaicId) => {
-                networkCurrencyMosaicId = networkMosaicId;
-                done();
-            });
+        it('get mosaicId', async () => {
+            networkCurrencyMosaicId = (await namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).toPromise()) as MosaicId;
         });
     });
 

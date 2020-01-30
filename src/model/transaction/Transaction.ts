@@ -26,7 +26,6 @@ import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { AggregateTransactionInfo } from './AggregateTransactionInfo';
 import { Deadline } from './Deadline';
-import { InnerTransaction } from './InnerTransaction';
 import { SignedTransaction } from './SignedTransaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -273,9 +272,9 @@ export abstract class Transaction {
      * Signer is optional for `AggregateComplete` transaction `ONLY`.
      * If no signer provided, aggregate transaction signer will be delegated on signing
      * @param signer - Innre transaction signer.
-     * @returns InnerTransaction
+     * @returns Transaction
      */
-    public toAggregate(signer: PublicAccount): InnerTransaction {
+    public toAggregate(signer: PublicAccount): Transaction {
         if (this.type === TransactionType.AGGREGATE_BONDED || this.type === TransactionType.AGGREGATE_COMPLETE) {
             throw new Error('Inner transaction cannot be an aggregated transaction.');
         }

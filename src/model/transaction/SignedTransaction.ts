@@ -16,7 +16,7 @@
 
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
-import {NetworkType} from '../blockchain/NetworkType';
+import { NetworkType } from '../blockchain/NetworkType';
 import { TransactionType } from './TransactionType';
 
 /**

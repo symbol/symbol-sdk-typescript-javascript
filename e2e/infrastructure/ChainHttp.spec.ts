@@ -29,24 +29,18 @@ describe('ChainHttp', () => {
     });
 
     describe('getBlockchainHeight', () => {
-        it('should return blockchain height', (done) => {
-            chainRepository.getBlockchainHeight()
-            .subscribe((height) => {
-                expect(height.lower).to.be.greaterThan(0);
-                done();
-            });
+        it('should return blockchain height', async () => {
+            const height = await chainRepository.getBlockchainHeight().toPromise();
+            expect(height.lower).to.be.greaterThan(0);
         });
     });
 
     describe('getBlockchainScore', () => {
-        it('should return blockchain score', (done) => {
-            chainRepository.getChainScore()
-            .subscribe((blockchainScore) => {
-                expect(blockchainScore.scoreLow).to.not.be.equal(undefined);
-                expect(blockchainScore.scoreHigh.lower).to.be.equal(0);
-                expect(blockchainScore.scoreHigh.higher).to.be.equal(0);
-                done();
-            });
+        it('should return blockchain score', async () => {
+            const blockchainScore = await chainRepository.getChainScore().toPromise();
+            expect(blockchainScore.scoreLow).to.not.be.equal(undefined);
+            expect(blockchainScore.scoreHigh.lower).to.be.equal(0);
+            expect(blockchainScore.scoreHigh.higher).to.be.equal(0);
         });
     });
 });

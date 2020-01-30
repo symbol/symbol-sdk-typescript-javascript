@@ -35,7 +35,6 @@ import { NamespaceId } from '../namespace/NamespaceId';
 import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
-import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -107,29 +106,28 @@ export class MosaicSupplyChangeTransaction extends Transaction {
         super(TransactionType.MOSAIC_SUPPLY_CHANGE, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
+
+
     /**
-     * Create a transaction object from payload
-     * @param {string} payload Binary payload
-     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
-     * @returns {Transaction | InnerTransaction}
+     * Creates a transaction from catbuffer body builders.
+     * @internal
+     * @param builder the body builder
+     * @param networkType the preloaded network type
+     * @param deadline the preloaded deadline
+     * @param maxFee the preloaded max fee
+     * @returns {Transaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedMosaicSupplyChangeTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            MosaicSupplyChangeTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = builder.getNetwork().valueOf();
-        const transaction = MosaicSupplyChangeTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
-                (builder as MosaicSupplyChangeTransactionBuilder).getDeadline().timestamp),
+    public static createFromBodyBuilder(builder: MosaicSupplyChangeTransactionBuilder | EmbeddedMosaicSupplyChangeTransactionBuilder,
+                                        networkType: NetworkType,
+                                        deadline: Deadline,
+                                        maxFee: UInt64): Transaction {
+        return MosaicSupplyChangeTransaction.create(
+            deadline,
             UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getMosaicId().unresolvedMosaicId).toHex()),
             builder.getAction().valueOf(),
             new UInt64(builder.getDelta().amount),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicSupplyChangeTransactionBuilder).fee.amount),
-        );
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
+            maxFee);
     }
 
     /**

@@ -15,21 +15,14 @@
  */
 import { assert, expect } from 'chai';
 import { ChronoUnit } from 'js-joda';
-import { filter } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
-import {
-    Address,
-    CosignatureTransaction,
-    LockFundsTransaction,
-    Mosaic,
-    SignedTransaction,
-    UInt64,
-} from '../../src/model/model';
+import { Address, CosignatureTransaction, LockFundsTransaction, Mosaic, SignedTransaction, UInt64, } from '../../src/model/model';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
@@ -183,11 +176,10 @@ describe('Listener', () => {
         });
     });
     describe('Get network currency mosaic id', () => {
-        it('get mosaicId', (done) => {
-            namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).subscribe((networkMosaicId: MosaicId) => {
+        it('get mosaicId', () => {
+            return namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).pipe(map((networkMosaicId: MosaicId) => {
                 networkCurrencyMosaicId = networkMosaicId;
-                done();
-            });
+            })).toPromise();
         });
     });
 

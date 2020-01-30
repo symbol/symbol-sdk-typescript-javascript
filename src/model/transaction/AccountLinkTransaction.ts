@@ -28,7 +28,6 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
-import { InnerTransaction } from './InnerTransaction';
 import { LinkAction } from './LinkAction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
@@ -90,27 +89,27 @@ export class AccountLinkTransaction extends Transaction {
         super(TransactionType.ACCOUNT_LINK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
+
     /**
-     * Create a transaction object from payload
-     * @param {string} payload Binary payload
-     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
-     * @returns {Transaction | InnerTransaction}
+     * Creates a transaction from catbuffer body builders.
+     * @internal
+     * @param builder the body builder
+     * @param networkType the preloaded network type
+     * @param deadline the preloaded deadline
+     * @param maxFee the preloaded max fee
+     * @returns {Transaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedAccountLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-                        AccountLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = builder.getNetwork().valueOf();
-        const transaction = AccountLinkTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AccountLinkTransactionBuilder).getDeadline().timestamp),
+    public static createFromBodyBuilder(builder: AccountLinkTransactionBuilder | EmbeddedAccountLinkTransactionBuilder,
+                                        networkType: NetworkType,
+                                        deadline: Deadline,
+                                        maxFee: UInt64): Transaction {
+        return AccountLinkTransaction.create(
+            deadline,
             Convert.uint8ToHex(builder.getRemotePublicKey().key),
             builder.getLinkAction().valueOf(),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountLinkTransactionBuilder).fee.amount),
+            maxFee,
         );
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**

@@ -29,25 +29,19 @@ describe('DiagnosticHttp', () => {
     });
 
     describe('getDiagnosticStorage', () => {
-        it('should return diagnostic storage', (done) => {
-            diagnosticRepository.getDiagnosticStorage()
-            .subscribe((blockchainStorageInfo) => {
-                expect(blockchainStorageInfo.numBlocks).to.be.greaterThan(0);
-                expect(blockchainStorageInfo.numTransactions).to.be.greaterThan(0);
-                expect(blockchainStorageInfo.numAccounts).to.be.greaterThan(0);
-                done();
-            });
+        it('should return diagnostic storage', async () => {
+            const blockchainStorageInfo = await diagnosticRepository.getDiagnosticStorage().toPromise();
+            expect(blockchainStorageInfo.numBlocks).to.be.greaterThan(0);
+            expect(blockchainStorageInfo.numTransactions).to.be.greaterThan(0);
+            expect(blockchainStorageInfo.numAccounts).to.be.greaterThan(0);
         });
     });
 
     describe('getServerInfo', () => {
-        it('should return diagnostic storage', (done) => {
-            diagnosticRepository.getServerInfo()
-            .subscribe((serverInfo) => {
-                expect(serverInfo.restVersion).not.to.be.null;
-                expect(serverInfo.sdkVersion).not.to.be.null;
-                done();
-            });
+        it('should return diagnostic storage', async () => {
+            const serverInfo = await diagnosticRepository.getServerInfo().toPromise();
+            expect(serverInfo.restVersion).not.to.be.null;
+            expect(serverInfo.sdkVersion).not.to.be.null;
         });
     });
 });

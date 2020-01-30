@@ -20,9 +20,9 @@ import { TransactionMapping } from '../core/utils/TransactionMapping';
 import { MultisigRepository } from '../infrastructure/MultisigRepository';
 import { MultisigAccountGraphInfo } from '../model/account/MultisigAccountGraphInfo';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
-import { InnerTransaction } from '../model/transaction/InnerTransaction';
 import { MultisigAccountModificationTransaction } from '../model/transaction/MultisigAccountModificationTransaction';
 import { SignedTransaction } from '../model/transaction/SignedTransaction';
+import { Transaction } from '../model/transaction/Transaction';
 import { TransactionType } from '../model/transaction/TransactionType';
 
 /**
@@ -77,12 +77,12 @@ export class AggregateTransactionService {
      * Validate cosignatories against multisig Account(s)
      * @param graphInfo - multisig account graph info
      * @param cosignatories - array of cosignatories extracted from aggregated transaction
-     * @param innerTransaction - the inner transaction of the aggregated transaction
+     * @param transaction - the inner transaction of the aggregated transaction
      * @returns {boolean}
      */
     private validateCosignatories(graphInfo: MultisigAccountGraphInfo,
                                   cosignatories: string[],
-                                  innerTransaction: InnerTransaction): boolean {
+                                  transaction: Transaction): boolean {
         /**
          *  Validate cosignatories from bottom level to top
          */
@@ -96,8 +96,8 @@ export class AggregateTransactionService {
          * Check inner transaction. If remove cosigner from multisig account,
          * use minRemoval instead of minApproval for cosignatories validation.
          */
-        if (innerTransaction.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION) {
-            if ((innerTransaction as MultisigAccountModificationTransaction).publicKeyDeletions.length) {
+        if (transaction.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION) {
+            if ((transaction as MultisigAccountModificationTransaction).publicKeyDeletions.length) {
                         isMultisigRemoval = true;
             }
         }

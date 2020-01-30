@@ -29,7 +29,6 @@ import { NetworkType } from '../blockchain/NetworkType';
 import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
-import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -89,27 +88,24 @@ export class AccountOperationRestrictionTransaction extends Transaction {
     }
 
     /**
-     * Create a transaction object from payload
-     * @param {string} payload Binary payload
-     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
-     * @returns {Transaction | InnerTransaction}
+     * Creates a transaction from catbuffer body builders.
+     * @internal
+     * @param builder the body builder
+     * @param networkType the preloaded network type
+     * @param deadline the preloaded deadline
+     * @param maxFee the preloaded max fee
+     * @returns {Transaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedAccountOperationRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            AccountOperationRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signer = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const networkType = builder.getNetwork().valueOf();
-        const transaction = AccountOperationRestrictionTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
-                (builder as AccountOperationRestrictionTransactionBuilder).getDeadline().timestamp),
+    public static createFromBodyBuilder(builder: AccountOperationRestrictionTransactionBuilder | EmbeddedAccountOperationRestrictionTransactionBuilder,
+                                        networkType: NetworkType,
+                                        deadline: Deadline,
+                                        maxFee: UInt64): Transaction {
+        return AccountOperationRestrictionTransaction.create(deadline,
             builder.getRestrictionFlags().valueOf(),
             builder.getRestrictionAdditions(),
             builder.getRestrictionDeletions(),
-            networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountOperationRestrictionTransactionBuilder).fee.amount),
+            networkType, maxFee
         );
-        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType)) : transaction;
     }
 
     /**
@@ -130,8 +126,8 @@ export class AccountOperationRestrictionTransaction extends Transaction {
         const byteRestrictionDeletions = 2 * this.restrictionDeletions.length;
 
         return byteSize + byteRestrictionType + byteAdditionCount + byteDeletionCount +
-               byteRestrictionAdditions + byteRestrictionDeletions +
-               byteAccountRestrictionTransactionBody_Reserved1;
+            byteRestrictionAdditions + byteRestrictionDeletions +
+            byteAccountRestrictionTransactionBody_Reserved1;
     }
 
     /**

@@ -133,11 +133,8 @@ describe('TransactionHttp', () => {
     });
 
     describe('Get network currency mosaic id', () => {
-        it('get mosaicId', (done) => {
-            namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).subscribe((networkMosaicId: MosaicId) => {
-                networkCurrencyMosaicId = networkMosaicId;
-                done();
-            });
+        it('get mosaicId', async () => {
+            networkCurrencyMosaicId = (await namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).toPromise()) as MosaicId;
         });
     });
 
@@ -611,7 +608,7 @@ describe('TransactionHttp', () => {
 
     describe('AccountLinkTransaction', () => {
 
-        it('standalone', (done) => {
+        it('standalone', () => {
             const accountLinkTransaction = AccountLinkTransaction.create(
                 Deadline.create(),
                 harvestingAccount.publicKey,
@@ -623,7 +620,7 @@ describe('TransactionHttp', () => {
             return helper.announce(signedTransaction).then((transaction: AccountLinkTransaction) => {
                 expect(transaction.remotePublicKey, 'RemotePublicKey').not.to.be.undefined;
                 expect(transaction.linkAction, 'LinkAction').not.to.be.undefined;
-                done();
+                return signedTransaction;
             });
 
         });
@@ -1327,82 +1324,62 @@ describe('TransactionHttp', () => {
     });
 
     describe('transactions', () => {
-        it('should call transactions successfully', (done) => {
-            accountRepository.getAccountTransactions(account.publicAccount.address).subscribe((transactions) => {
-                const transaction = transactions[0];
-                transactionId = transaction.transactionInfo!.id;
-                transactionHash = transaction.transactionInfo!.hash;
-                done();
-            });
+        it('should call transactions successfully', async () => {
+            const transactions = await accountRepository.getAccountTransactions(account.publicAccount.address).toPromise();
+            const transaction = transactions[0];
+            transactionId = transaction.transactionInfo!.id;
+            transactionHash = transaction.transactionInfo!.hash;
         });
     });
 
     describe('getTransaction', () => {
-        it('should return transaction info given transactionHash', (done) => {
-            transactionRepository.getTransaction(transactionHash)
-            .subscribe((transaction) => {
-                expect(transaction.transactionInfo!.hash).to.be.equal(transactionHash);
-                expect(transaction.transactionInfo!.id).to.be.equal(transactionId);
-                done();
-            });
+        it('should return transaction info given transactionHash', async () => {
+            const transaction = await transactionRepository.getTransaction(transactionHash).toPromise();
+            expect(transaction.transactionInfo!.hash).to.be.equal(transactionHash);
+            expect(transaction.transactionInfo!.id).to.be.equal(transactionId);
         });
 
-        it('should return transaction info given transactionId', (done) => {
-            transactionRepository.getTransaction(transactionId)
-            .subscribe((transaction) => {
-                expect(transaction.transactionInfo!.hash).to.be.equal(transactionHash);
-                expect(transaction.transactionInfo!.id).to.be.equal(transactionId);
-                done();
-            });
+        it('should return transaction info given transactionId', async () => {
+            const transaction = await transactionRepository.getTransaction(transactionId).toPromise();
+            expect(transaction.transactionInfo!.hash).to.be.equal(transactionHash);
+            expect(transaction.transactionInfo!.id).to.be.equal(transactionId);
         });
     });
 
     describe('getTransactions', () => {
-        it('should return transaction info given array of transactionHash', (done) => {
-            transactionRepository.getTransactions([transactionHash])
-            .subscribe((transactions) => {
-                expect(transactions[0].transactionInfo!.hash).to.be.equal(transactionHash);
-                expect(transactions[0].transactionInfo!.id).to.be.equal(transactionId);
-                done();
-            });
+        it('should return transaction info given array of transactionHash', async () => {
+            const transactions = await transactionRepository.getTransactions([transactionHash]).toPromise();
+            expect(transactions[0].transactionInfo!.hash).to.be.equal(transactionHash);
+            expect(transactions[0].transactionInfo!.id).to.be.equal(transactionId);
         });
 
-        it('should return transaction info given array of transactionId', (done) => {
-            transactionRepository.getTransactions([transactionId])
-            .subscribe((transactions) => {
-                expect(transactions[0].transactionInfo!.hash).to.be.equal(transactionHash);
-                expect(transactions[0].transactionInfo!.id).to.be.equal(transactionId);
-                done();
-            });
+        it('should return transaction info given array of transactionId', async () => {
+            const transactions = await transactionRepository.getTransactions([transactionId]).toPromise();
+            expect(transactions[0].transactionInfo!.hash).to.be.equal(transactionHash);
+            expect(transactions[0].transactionInfo!.id).to.be.equal(transactionId);
         });
     });
 
     describe('getTransactionStatus', () => {
-        it('should return transaction status given transactionHash', (done) => {
-            transactionRepository.getTransactionStatus(transactionHash)
-            .subscribe((transactionStatus) => {
-                expect(transactionStatus.group).to.be.equal('confirmed');
-                expect(transactionStatus.height!.lower).to.be.greaterThan(0);
-                expect(transactionStatus.height!.higher).to.be.equal(0);
-                done();
-            });
+        it('should return transaction status given transactionHash', async () => {
+            const transactionStatus = await transactionRepository.getTransactionStatus(transactionHash).toPromise();
+            expect(transactionStatus.group).to.be.equal('confirmed');
+            expect(transactionStatus.height!.lower).to.be.greaterThan(0);
+            expect(transactionStatus.height!.higher).to.be.equal(0);
         });
     });
 
     describe('getTransactionsStatuses', () => {
-        it('should return transaction status given array of transactionHash', (done) => {
-            transactionRepository.getTransactionsStatuses([transactionHash])
-            .subscribe((transactionStatuses) => {
-                expect(transactionStatuses[0].group).to.be.equal('confirmed');
-                expect(transactionStatuses[0].height!.lower).to.be.greaterThan(0);
-                expect(transactionStatuses[0].height!.higher).to.be.equal(0);
-                done();
-            });
+        it('should return transaction status given array of transactionHash', async () => {
+            const transactionStatuses = await transactionRepository.getTransactionsStatuses([transactionHash]).toPromise();
+            expect(transactionStatuses[0].group).to.be.equal('confirmed');
+            expect(transactionStatuses[0].height!.lower).to.be.greaterThan(0);
+            expect(transactionStatuses[0].height!.higher).to.be.equal(0);
         });
     });
 
     describe('announce', () => {
-        it('should return success when announce', (done) => {
+        it('should return success when announce', async () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
@@ -1411,17 +1388,13 @@ describe('TransactionHttp', () => {
                 networkType, helper.maxFee,
             );
             const signedTransaction = transferTransaction.signWith(account, generationHash);
-            transactionRepository.announce(signedTransaction)
-            .subscribe((transactionAnnounceResponse) => {
-                expect(transactionAnnounceResponse.message)
-                .to.be.equal('packet 9 was pushed to the network via /transaction');
-                done();
-            });
+            const transactionAnnounceResponse = await transactionRepository.announce(signedTransaction).toPromise();
+            expect(transactionAnnounceResponse.message).to.be.equal('packet 9 was pushed to the network via /transaction');
         });
     });
 
     describe('announceAggregateBonded', () => {
-        it('should return success when announceAggregateBonded', (done) => {
+        it('should return success when announceAggregateBonded', async () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
@@ -1435,35 +1408,25 @@ describe('TransactionHttp', () => {
                 networkType,
                 [], helper.maxFee);
             const signedTransaction = aggregateTransaction.signWith(cosignAccount1, generationHash);
-            transactionRepository.announceAggregateBonded(signedTransaction)
-            .subscribe((transactionAnnounceResponse) => {
-                expect(transactionAnnounceResponse.message)
-                .to.be.equal('packet 500 was pushed to the network via /transaction/partial');
-                done();
-            });
+            const transactionAnnounceResponse = await transactionRepository.announceAggregateBonded(signedTransaction).toPromise();
+            expect(transactionAnnounceResponse.message)
+            .to.be.equal('packet 500 was pushed to the network via /transaction/partial');
         });
     });
 
     describe('announceAggregateBondedCosignature', () => {
-        it('should return success when announceAggregateBondedCosignature', (done) => {
+        it('should return success when announceAggregateBondedCosignature', async () => {
             const payload = new CosignatureSignedTransaction('', '', '');
-            transactionRepository.announceAggregateBondedCosignature(payload)
-            .subscribe((transactionAnnounceResponse) => {
-                expect(transactionAnnounceResponse.message)
-                .to.be.equal('packet 501 was pushed to the network via /transaction/cosignature');
-                done();
-            });
+            const transactionAnnounceResponse = await transactionRepository.announceAggregateBondedCosignature(payload).toPromise();
+            expect(transactionAnnounceResponse.message).to.be.equal('packet 501 was pushed to the network via /transaction/cosignature');
         });
     });
 
     describe('getTransactionEffectiveFee', () => {
-        it('should return effective paid fee given transactionHash', (done) => {
-            transactionRepository.getTransactionEffectiveFee(transactionHash)
-            .subscribe((effectiveFee) => {
-                expect(effectiveFee).to.not.be.undefined;
-                expect(effectiveFee).to.be.equal(0);
-                done();
-            });
+        it('should return effective paid fee given transactionHash', async () => {
+            const effectiveFee = await transactionRepository.getTransactionEffectiveFee(transactionHash).toPromise();
+            expect(effectiveFee).to.not.be.undefined;
+            expect(effectiveFee).to.be.equal(0);
         });
     });
 });
