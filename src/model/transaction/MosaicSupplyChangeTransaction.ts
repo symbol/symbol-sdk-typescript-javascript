@@ -106,8 +106,6 @@ export class MosaicSupplyChangeTransaction extends Transaction {
         super(TransactionType.MOSAIC_SUPPLY_CHANGE, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
-
-
     /**
      * Creates a transaction from catbuffer body builders.
      * @internal

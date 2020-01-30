@@ -89,7 +89,6 @@ export class AccountLinkTransaction extends Transaction {
         super(TransactionType.ACCOUNT_LINK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
-
     /**
      * Creates a transaction from catbuffer body builders.
      * @internal

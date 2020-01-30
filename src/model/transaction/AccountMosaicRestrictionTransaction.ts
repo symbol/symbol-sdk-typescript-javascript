@@ -102,7 +102,8 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
      * @param maxFee the preloaded max fee
      * @returns {Transaction}
      */
-    public static createFromBodyBuilder(builder: AccountMosaicRestrictionTransactionBuilder | EmbeddedAccountMosaicRestrictionTransactionBuilder,
+    public static createFromBodyBuilder(builder: AccountMosaicRestrictionTransactionBuilder |
+                                                 EmbeddedAccountMosaicRestrictionTransactionBuilder,
                                         networkType: NetworkType,
                                         deadline: Deadline,
                                         maxFee: UInt64): Transaction {
@@ -115,7 +116,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
             builder.getRestrictionDeletions().map((deletion) => {
                 return UnresolvedMapping.toUnresolvedMosaic(new UInt64(deletion.unresolvedMosaicId).toHex());
             }),
-            networkType, maxFee
+            networkType, maxFee,
         );
     }
 

@@ -100,7 +100,6 @@ export class MosaicAliasTransaction extends Transaction {
         super(TransactionType.MOSAIC_ALIAS, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
-
     /**
      * Creates a transaction from catbuffer body builders.
      * @internal

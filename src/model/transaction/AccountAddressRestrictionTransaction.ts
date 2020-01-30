@@ -102,7 +102,8 @@ export class AccountAddressRestrictionTransaction extends Transaction {
      * @param maxFee the preloaded max fee
      * @returns {Transaction}
      */
-    public static createFromBodyBuilder(builder: AccountAddressRestrictionTransactionBuilder | EmbeddedAccountAddressRestrictionTransactionBuilder,
+    public static createFromBodyBuilder(builder: AccountAddressRestrictionTransactionBuilder |
+                                                 EmbeddedAccountAddressRestrictionTransactionBuilder,
                                         networkType: NetworkType,
                                         deadline: Deadline,
                                         maxFee: UInt64): Transaction {
@@ -116,7 +117,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
                 return UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(deletion.unresolvedAddress));
             }),
             networkType,
-            maxFee
+            maxFee,
         );
     }
 

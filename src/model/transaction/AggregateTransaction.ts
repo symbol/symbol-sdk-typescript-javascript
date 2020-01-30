@@ -159,16 +159,15 @@ export class AggregateTransaction extends Transaction {
                 innerTransactions,
                 networkType,
                 consignatures,
-                maxFee
+                maxFee,
             ) : AggregateTransaction.createBonded(
                 deadline,
                 innerTransactions,
                 networkType,
                 consignatures,
-                maxFee
+                maxFee,
             );
     }
-
 
     /**
      * @description add inner transactions to current list
@@ -386,7 +385,7 @@ export class AggregateTransaction extends Transaction {
         return DtoMapping.assign(this,
             {
                 innerTransactions: this.innerTransactions.map((tx) => tx.resolveAliases(statement, transactionInfo.index))
-                .sort((a, b) => a.transactionInfo!.index - b.transactionInfo!.index)
+                .sort((a, b) => a.transactionInfo!.index - b.transactionInfo!.index),
             });
     }
 }

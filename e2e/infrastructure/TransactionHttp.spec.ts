@@ -134,7 +134,8 @@ describe('TransactionHttp', () => {
 
     describe('Get network currency mosaic id', () => {
         it('get mosaicId', async () => {
-            networkCurrencyMosaicId = (await namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).toPromise()) as MosaicId;
+            networkCurrencyMosaicId =
+                (await namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).toPromise()) as MosaicId;
         });
     });
 

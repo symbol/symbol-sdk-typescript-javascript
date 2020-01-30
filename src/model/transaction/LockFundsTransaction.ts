@@ -140,7 +140,7 @@ export class LockFundsTransaction extends Transaction {
             ),
             new UInt64(builder.getDuration().blockDuration),
             new SignedTransaction('', Convert.uint8ToHex(builder.getHash().hash256), '', TransactionType.AGGREGATE_BONDED, networkType),
-            networkType, maxFee
+            networkType, maxFee,
         );
     }
 

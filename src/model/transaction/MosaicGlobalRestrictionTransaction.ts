@@ -168,7 +168,7 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
             builder.getNewRestrictionType().valueOf(),
             networkType,
             UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getReferenceMosaicId().unresolvedMosaicId).toHex()),
-            maxFee
+            maxFee,
         );
     }
 
