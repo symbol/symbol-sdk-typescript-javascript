@@ -3,7 +3,7 @@
   <div class="top_wallet_address radius">
     <div class="wallet_address">
       <span class="address">
-        {{ currentWallet ? currentWallet.address().plain() : $t('loading') }}
+        {{ currentWallet ? currentWallet.objects.address.plain() : $t('loading') }}
       </span>
       <img class="pointer" src="@/views/resources/img/monitor/monitorCopyAddress.png" @click="uiHelpers.copyToClipboard">
     </div>

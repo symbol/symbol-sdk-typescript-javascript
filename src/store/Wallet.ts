@@ -272,7 +272,7 @@ export default {
     SET_KNOWN_WALLETS({commit}, wallets) {
       commit('setKnownWallets', wallets)
     },
-    SET_BALANCES({commit, dispatch, rootGetters}, mosaics) {
+    SET_BALANCES({commit, rootGetters}, mosaics) {
       // - read network mosaic
       const networkMosaic = rootGetters['mosaic/networkMosaic']
 
@@ -282,11 +282,14 @@ export default {
       }
       // - if there is mosaics, set network mosaic on top
       else {
-        const currency = mosaics.filter(m => m.id.equals(networkMosaic)).shift()
-        mosaics = [currency].concat(mosaics.find(m => !m.id.equals(networkMosaic)) || [])
+        let currency = mosaics.find(m => m.id.equals(networkMosaic))
+        if (undefined === currency) {
+          currency = [new Mosaic(networkMosaic, UInt64.fromUint(0))]
+        }
+        mosaics = currency.concat(mosaics.filter(m => !m.id.equals(networkMosaic)) || [])
       }
 
-      commit('currentWalletMosics', mosaics)
+      commit('currentWalletMosaics', mosaics)
     },
     RESET_SUBSCRIPTIONS({commit}) {
       commit('setSubscriptions', [])
@@ -411,6 +414,9 @@ export default {
         return cache[cacheKey]
       }
 
+      console.log('wallet/REST_FETCH_TRANSACTIONS: address: ', address)
+      console.log('wallet/REST_FETCH_TRANSACTIONS: group: ', group)
+
       try {
         // prepare REST parameters
         const currentPeer = rootGetters['network/currentPeer'].url
@@ -419,8 +425,8 @@ export default {
 
         // fetch transactions from REST gateway
         const accountHttp = RESTService.create('AccountHttp', currentPeer)
-        let transactions: Transaction[]
-        let blockHeights: number[]
+        let transactions: Transaction[] = []
+        let blockHeights: number[] = []
 
         if ('confirmed' === group) {
           transactions = await accountHttp.getAccountTransactions(addressObject, queryParams).toPromise()
@@ -431,6 +437,8 @@ export default {
           transactions = await accountHttp.getAccountUnconfirmedTransactions(addressObject, queryParams).toPromise()
         else if ('partial' === group)
           transactions = await accountHttp.getAccountPartialTransactions(addressObject, queryParams).toPromise()
+
+        console.log('wallet/REST_FETCH_TRANSACTIONS: transactions: ', transactions)
 
         // update store
         transactions.map((transaction) => dispatch('ADD_TRANSACTION', {
@@ -466,33 +474,45 @@ export default {
 
         // fetch account info from REST gateway
         const accountHttp = RESTService.create('AccountHttp', currentPeer)
-        const accountInfo = await accountHttp.getAccountInfo(addressObject).toPromise()
 
-        commit('addWalletInfo', accountInfo)
+        return accountHttp.getAccountInfo(addressObject).subscribe((accountInfo) => {
+          commit('addWalletInfo', accountInfo)
 
-        // update current wallet state if necessary
-        if (address === getters.currentWalletAddress.plain()) {
-          commit('currentWalletInfo', accountInfo)
-          dispatch('SET_BALANCES', accountInfo.mosaics)
-        }
+          // update current wallet state if necessary
+          if (address === getters.currentWalletAddress.plain()) {
+            commit('currentWalletInfo', accountInfo)
+            dispatch('SET_BALANCES', accountInfo.mosaics)
+          }
 
-        return accountInfo
+          return accountInfo
+        }, (error) => {
+          dispatch('SET_BALANCES', [])
+        })
       }
       catch (e) {
         console.error('An error happened while trying to fetch account information: <pre>' + e + '</pre>')
         return false
       }
     },
-    async REST_FETCH_INFOS({commit, rootGetters}, addresses) {
+    async REST_FETCH_INFOS({commit, dispatch, getters, rootGetters}, addresses) {
       try {
         // prepare REST parameters
         const currentPeer = rootGetters['network/currentPeer'].url
 
         // fetch account info from REST gateway
         const accountHttp = RESTService.create('AccountHttp', currentPeer)
-        const accountsInfo = await accountHttp.getAccountsInfo(addresses).toPromise()
-        accountsInfo.map(info => commit('addWalletInfo', info))
-        return accountsInfo
+
+        return accountHttp.getAccountsInfo(addresses).subscribe((accountsInfo) => {
+          accountsInfo.map(info => commit('addWalletInfo', info))
+
+          const currentWalletInfo = accountsInfo.find(info => info.address.equals(getters.currentWalletAddress))
+          if (currentWalletInfo !== undefined) {
+            commit('currentWalletInfo', currentWalletInfo)
+            dispatch('SET_BALANCES', currentWalletInfo.mosaics)
+          }
+
+          return accountsInfo
+        }, (error) => console.error('An error happened while trying to fetch account informations: ', error))
       }
       catch (e) {
         console.error('An error happened while trying to fetch account information: <pre>' + e + '</pre>')

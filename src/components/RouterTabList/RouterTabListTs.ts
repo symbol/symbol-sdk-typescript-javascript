@@ -29,4 +29,8 @@ export class RouterTabListTs extends Vue {
   @Prop({
     default: []
   }) tabEntries: TabEntry[]
+
+  public get hasActive(): boolean {
+    return undefined !== this.tabEntries.find(entry => entry.isActive(this.$route))
+  }
 }

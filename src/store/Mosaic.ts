@@ -67,7 +67,7 @@ export default {
 
       // register mosaic name
       names[hex] = payload.name
-      Vue.set(state, 'mosaicsNamesByHey', names)
+      Vue.set(state, 'mosaicsNamesByHex', names)
     },
     hideMosaic: (state, mosaicId) => {
       const hiddenMosaics = state.hiddenMosaics
@@ -162,7 +162,7 @@ export default {
       const nodeUrl = rootGetters['network/currentPeer'].url
       const mosaicHttp = RESTService.create('MosaicHttp', nodeUrl)
       const mosaicsInfo = await mosaicHttp.getMosaics(mosaicIds).toPromise()
-      
+
       mosaicsInfo.map(info => commit('addMosaicInfo', info))
       return mosaicsInfo
     },

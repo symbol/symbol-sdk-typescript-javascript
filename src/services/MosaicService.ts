@@ -55,7 +55,7 @@ export class MosaicService extends AbstractService {
 
     // - if store doesn't know this mosaic, dispatch fetch action
     if (! mosaics.hasOwnProperty(mosaicId.toHex())) {
-      mosaicInfo = await this.$store.dispatch('mosaic/REST_FETCH_INFOS', [mosaicId])
+      mosaicInfo = await this.$store.dispatch('mosaic/REST_FETCH_INFO', mosaicId)
     }
     // - read from store
     else mosaicInfo = mosaics[mosaicId.toHex()]
@@ -78,7 +78,8 @@ export class MosaicService extends AbstractService {
     // - if store doesn't know a name for this mosaics, dispatch fetch action
     if (! names.hasOwnProperty(mosaic.toHex())) {
       const mapped = await this.$store.dispatch('mosaic/REST_FETCH_NAMES', [mosaic])
-      mosaicName = mapped.hasOwnProperty(mosaic.toHex()) ? mapped[mosaic.toHex()] : undefined
+      const entry = mapped.find(e => e.hex === mosaic.toHex())
+      mosaicName = undefined === entry ? mosaic.toHex() : entry.name
     }
     // - read from store
     else mosaicName = names[mosaic.toHex()]
@@ -96,10 +97,15 @@ export class MosaicService extends AbstractService {
    */
   public async getRelativeAmount(
     amount: number,
-    mosaic: MosaicId
+    mosaic: MosaicId,
+    mosaicInfo?: MosaicInfo,
   ): Promise<number> {
-    const info = await this.getMosaicInfo(mosaic)
-    return amount / Math.pow(10, info.divisibility)
+    let info = mosaicInfo
+    if (info === undefined) {
+      info = await this.getMosaicInfo(mosaic)
+    }
+
+    return amount / Math.pow(10, info.divisibility || 0)
   }
 
   /**

@@ -19,8 +19,13 @@ import {Transaction} from 'nem2-sdk'
 // child components
 // @ts-ignore
 import TransactionRow from '@/components/TransactionList/TransactionRow/TransactionRow.vue'
+// @ts-ignore
+import TransactionListHeader from '@/components/TransactionList/TransactionListHeader/TransactionListHeader.vue'
 
-@Component({components: {TransactionRow}})
+@Component({components: {
+  TransactionRow,
+  TransactionListHeader,
+}})
 export class TransactionRowsTs extends Vue {
   
   @Prop({

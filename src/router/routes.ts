@@ -157,6 +157,7 @@ export const routes: AppRoute[] = [
           icon: leftBarIcons.windowDashboard,
           activeIcon: leftBarIcons.windowDashboardActive,
         },
+        redirect: '/home',
         // @ts-ignore
         component: () => import('@/views/dashboard/Dashboard.vue'),
         children: [

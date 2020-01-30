@@ -26,8 +26,6 @@ import {TransactionService} from '@/services/TransactionService'
 // @ts-ignore
 import ModalTransactionDetails from '@/components/ModalTransactionDetails/ModalTransactionDetails.vue'
 // @ts-ignore
-import TransactionListHeader from '@/components/TransactionList/TransactionListHeader/TransactionListHeader.vue'
-// @ts-ignore
 import TransactionRows from '@/components/TransactionList/TransactionRows/TransactionRows.vue'
 // @ts-ignore
 import PageTitle from '@/components/PageTitle/PageTitle.vue'
@@ -35,7 +33,6 @@ import PageTitle from '@/components/PageTitle/PageTitle.vue'
 @Component({
   components: {
     ModalTransactionDetails,
-    TransactionListHeader,
     TransactionRows,
     PageTitle,
   },
@@ -127,7 +124,7 @@ export class TransactionListTs extends Vue {
    * The current tab
    * @var {string} One of 'confirmed', 'unconfirmed' or 'partial'
    */
-  public currentTab: 'confirmed' | 'unconfirmed' | 'partial' = 'confirmed'
+  public currentTab: string = 'confirmed'
 
   /**
    * The current page number
@@ -139,7 +136,7 @@ export class TransactionListTs extends Vue {
    * Active transaction (in-modal)
    * @var {Transaction}
    */
-  public activeTransaction: Transaction
+  public activeTransaction: Transaction = null
 
   /**
    * Hook called when the component is mounted
@@ -158,7 +155,9 @@ export class TransactionListTs extends Vue {
   public get currentPageTransactions(): Transaction[] {
     const start = (this.currentPage - 1) * this.pageSize
     const end = this.currentPage * this.pageSize
-    return this.confirmedTransactions.slice(start, end)
+    return !this.confirmedTransactions || !this.confirmedTransactions.length 
+        ? [] 
+        : this.confirmedTransactions.slice(start, end)
   }
 /// end-region computed properties getter/setter
 
@@ -166,17 +165,16 @@ export class TransactionListTs extends Vue {
    * Refresh transaction list
    * @return {void}
    */
-  public async refresh() {
-    const group = this.currentTab
+  public async refresh(grp?) {
+    const group = grp ? grp : this.currentTab
     const transactions = await this.$store.dispatch('wallet/REST_FETCH_TRANSACTIONS', {
       group: group,
       address: this.currentWallet.objects.address.plain(),
       pageSize: 100
     })
 
-    if ('confirmed' === group) this.confirmedTransactions = transactions
-    else if ('unconfirmed' === group) this.unconfirmedTransactions = transactions
-    else if ('partial' === group) this.partialTransactions = transactions
+    // "confirmTransactions" is the only with setter! (others are one-way from store.)
+    if ('confirmed' === group) this.confirmedTransactions = transactions || []
   }
 
   /**
@@ -185,6 +183,23 @@ export class TransactionListTs extends Vue {
    */
   public onClickTransaction(transaction: Transaction) {
     this.activeTransaction = transaction
+  }
+
+  /**
+   * 
+   */
+  onTabChange(tab: string) {
+    this.currentTab = tab
+  }
+
+  /**
+   * 
+   */
+  onPageChange(page: number) {
+    if (page > this.countPages) page = this.countPages
+    else if (page < 1) page = 1
+
+    this.currentPage = page
   }
 
   /*

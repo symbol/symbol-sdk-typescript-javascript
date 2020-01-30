@@ -13,15 +13,15 @@
           class="mosaic_data text_select"
         >
           <span class="img_container">
-            <img v-if="entry.mosaic.id.equals(networkMosaic)" src="@/views/resources/img/monitor/monitorMosaicIcon.png" alt="">
+            <img v-if="entry.id.equals(networkMosaic)" src="@/views/resources/img/monitor/monitorMosaicIcon.png" alt="">
             <img v-else src="@/views/resources/img/monitor/mosaicDefault.png" alt="">
           </span>
           <span class="mosaic_name">
-            {{ mosaicService.getMosaicName(entry.mosaic.id) || entry.mosaic.id.toHex() }}
+            {{ entry.name }}
           </span>
           <span class="mosaic_value">
-            <MosaicAmountDisplay :amount="mosaicService.getRelativeAmount(entry.mosaic.balance || 0, entry.mosaic.id)"
-                                 :id="entry.mosaic.id" />
+            <MosaicAmountDisplay :amount="entry.amount"
+                                 :id="entry.id" />
           </span>
         </div>
       </div>
@@ -32,11 +32,6 @@
       src="@/views/resources/img/monitor/monitorLeftArrow.png" class="asset_setting_tit pointer"
       alt="" @click="isEditionMode = false"
     >
-    <div class="input_outter">
-      <img src="@/views/resources/img/monitor/monitorSearchIcon.png" alt="">
-      <input v-model="formItems.name" type="text" :placeholder="$t('search_for_asset_name')">
-      <span class="search pointer" @click="return false">{{ $t('search') }}</span>
-    </div>
     <div class="mosaicList">
       <div class="toggle_all_checked ">
         <span @click="toggleMosaicDisplay()">
@@ -56,7 +51,7 @@
         @click="toggleMosaicDisplay(entry.mosaic.id)"
       >
         <span class="namege_img ">
-          <img class="small_icon " :src="hasMosaicHidden(entry.mosaic.id) ? monitorUnselected : monitorSelected">
+          <img class="small_icon " :src="hasHiddenMosaic(entry.mosaic.id) ? monitorUnselected : monitorSelected">
           <img v-if="entry.mosaic.id.equals(networkMosaic)" class="mosaicIcon" src="@/views/resources/img/monitor/monitorMosaicIcon.png" />
           <img v-else class="mosaicIcon" src="@/views/resources/img/monitor/mosaicDefault.png">
         </span>

@@ -1,7 +1,7 @@
 <template>
   <span>
     <span>{{ parts[0] }}</span>
-    <span class="lighter-color">{{ parts[1] === 0 ? '0' : parts[1].toString().replace(/^0\./, '').toFixed(decimals) }}</span>
+    <span class="lighter-color">{{ parts[1] === 0 ? '' : parts[1].toFixed(decimals).replace(/^0/, '') }}</span>
   </span>
 </template>
 

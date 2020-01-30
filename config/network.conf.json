@@ -1,25 +1,20 @@
 {
-  "explorerUrl": "http://explorer.nemtech.network",
+  "explorerUrl": "http://explorer-xym.nemtech.network",
   "defaultNetworkType": 152,
   "defaultNode": {
     "protocol": "http",
-    "hostname": "api-harvest-20.ap-northeast-1.nemtech.network",
+    "hostname": "api-xym-harvest-20.us-west-1.nemtech.network",
     "port": 3000,
-    "url": "http://api-harvest-20.ap-northeast-1.nemtech.network:3000"
+    "url": "http://api-xym-harvest-20.us-west-1.nemtech.network:3000/"
   },
   "networks": {
     "testnet-publicTest": {
       "generationHash": "CC42AAD7BD45E8C276741AB2524BC30F5529AF162AD12247EF9A98D6B54A385B",
-      "currencyMosaic": "nem.xem",
-      "harvestMosaic": "nem.xem",
+      "currencyMosaic": "symbol.xym",
+      "harvestMosaic": "symbol.xym",
       "networkType": "publicTest",
       "nodes": [
-        "http://api-harvest-20.ap-northeast-1.nemtech.network:3000",
-        "http://api-harvest-20.us-west-1.nemtech.network:3000",
-        "http://api-harvest-20.eu-west-1.nemtech.network:3000",
-        "http://api-harvest-20.ap-southeast-1.nemtech.network:3000",
-        "http://api-harvest-21.ap-southeast-1.nemtech.network:3000",
-        "http://api-harvest-21.ap-northeast-1.nemtech.network:3000"
+        "http://api-xym-harvest-20.us-west-1.nemtech.network:3000/"
       ],
       "properties": {
         "mosaicRentalFeeSinkPublicKey": "4428A4DA56362C2293A277159F7C1E270FE7BD6CED461877494006C7D69F1172",

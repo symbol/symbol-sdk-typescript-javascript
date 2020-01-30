@@ -22,11 +22,11 @@ import {MosaicService} from '@/services/MosaicService'
 
 // child components
 // @ts-ignore
-import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue'
+import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
 
 @Component({
   components: {
-    AmountDisplay,
+    MosaicAmountDisplay,
   },
   computed: {...mapGetters({
     networkMosaic: 'mosaic/networkMosaic',
@@ -62,13 +62,19 @@ export class MosaicBalanceListTs extends Vue {
    * Mosaic service
    * @var {MosaicService}
    */
-  public mosaicService: MosaicService
+  public mosaicService: MosaicService = new MosaicService(this.$store)
 
   /**
    * Whether the component is in edition mode
    * @var {boolean}
    */
   public isEditionMode: boolean = false
+
+  /**
+   * Formatted balance entries
+   * @var {any}
+   */
+  public formatted: any[] = []
 
   /**
    * Form items
@@ -78,6 +84,30 @@ export class MosaicBalanceListTs extends Vue {
     name: '',
     hasCheckedAll: true,
     hasShowExpired: false,
+  }
+
+  public async mounted() {
+    // - *asynchronously* fetching name/amount info
+    return this.mosaics.map(async (mosaic) => {
+      const currentMosaicId = mosaic.id as MosaicId
+      const currentBalance = mosaic.amount.compact() || 0
+
+      // read name from db/store/network
+      const mosaicName = await this.mosaicService.getMosaicName(currentMosaicId)
+
+      // use mosaic info to format amount (skip REST)
+      const mosaicInfo = this.mosaicsInfo.find(info => info.id.equals(currentMosaicId))
+      const relativeAmount = await this.mosaicService.getRelativeAmount(currentBalance, currentMosaicId, mosaicInfo)
+
+      // prepare formatted entry
+      const balanceEntry: {id: MosaicId, name: string, amount: number, mosaic: Mosaic} = {
+        id: currentMosaicId,
+        name: mosaicName,
+        amount: relativeAmount,
+        mosaic: mosaic
+      }
+      this.formatted.push(balanceEntry)
+    })
   }
 
 /// region computed properties getter/setter
@@ -90,9 +120,10 @@ export class MosaicBalanceListTs extends Vue {
     }
 
     const info = filter(this.mosaicsInfo)
-    return filter(this.mosaics).map((balanceEntry: Mosaic) => { return {
+    return filter(this.formatted).map((balanceEntry) => { return {
       info: info.filter(mosaic => mosaic.id.equals(balanceEntry.id)).shift(),
-      mosaic: balanceEntry
+      name: balanceEntry.name,
+      id: balanceEntry.id
     }})
   }
 
@@ -104,14 +135,6 @@ export class MosaicBalanceListTs extends Vue {
     }})
   }
 /// end-region computed properties getter/setter
-
-  /**
-   * Hook called when the component is mounted
-   * @return {void}
-   */
-  public mounted() {
-    this.mosaicService = new MosaicService(this.$store)
-  }
 
   /**
    * Returns true when mosaic \a mosaicId is hidden
