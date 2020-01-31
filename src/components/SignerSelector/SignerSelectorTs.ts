@@ -30,7 +30,10 @@ import {WalletService} from '@/services/WalletService'
   multisigInfo: 'wallet/currentMultisigInfo',
 })}})
 export class SignerSelectorTs extends Vue {
-
+  /**
+   * Value set by the parent component's v-model
+   * @type {string}
+   */
   @Prop({
     default: ''
   }) value: string
@@ -90,6 +93,21 @@ export class SignerSelectorTs extends Vue {
   }
 
 /// region computed properties getter/setter
+  /**
+   * Value set by the parent component
+   * @type {string}
+   */
+  get chosenSigner(): string {
+    return this.value
+  }
+
+  /**
+   * Emit value change
+   */
+  set chosenSigner(newValue: string) {
+    this.$emit('input', newValue)
+  }
+
   public get signers(): {publicKey: string, label: string}[] {
     if (! this.currentWallet) {
       return []
