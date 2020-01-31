@@ -5,7 +5,7 @@
     "protocol": "http",
     "hostname": "api-harvest-20.ap-northeast-1.nemtech.network",
     "port": 3000,
-    "url": "http://api-harvest-20.ap-northeast-1.nemtech.network:3000"
+    "url": "http://api-xym-harvest-20.eu-west-1.nemtech.network:3000"
   },
   "networks": {
     "testnet-publicTest": {
@@ -14,7 +14,7 @@
       "harvestMosaic": "nem.xem",
       "networkType": "publicTest",
       "nodes": [
-        "http://api-harvest-20.ap-northeast-1.nemtech.network:3000"
+        "http://api-xym-harvest-20.eu-west-1.nemtech.network:3000"
       ],
       "properties": {
         "mosaicRentalFeeSinkPublicKey": "4428A4DA56362C2293A277159F7C1E270FE7BD6CED461877494006C7D69F1172",

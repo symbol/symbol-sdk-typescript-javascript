@@ -104,7 +104,7 @@ export default {
     currentWalletInfo: null,
     currentWalletMosaics: [],
     currentMultisigInfo: null,
-    knownWallets: {},
+    knownWallets: new Map(),
     otherWalletsInfo: {},
     allTransactions: [],
     transactionHashes: [],
@@ -276,20 +276,25 @@ export default {
       // - read network mosaic
       const networkMosaic = rootGetters['mosaic/networkMosaic']
 
+      // - network mosaic with amount
+      const defaultNetworkMosaic = new Mosaic(networkMosaic, UInt64.fromUint(0))
+
       // - if there is no mosaics, add network mosaic balance 0
-      if (! mosaics.length) {
-        mosaics = [new Mosaic(networkMosaic, UInt64.fromUint(0))]
-      }
-      // - if there is mosaics, set network mosaic on top
-      else {
-        let currency = mosaics.find(m => m.id.equals(networkMosaic))
-        if (undefined === currency) {
-          currency = [new Mosaic(networkMosaic, UInt64.fromUint(0))]
-        }
-        mosaics = currency.concat(mosaics.filter(m => !m.id.equals(networkMosaic)) || [])
+      if (!mosaics.length) {
+        commit('currentWalletMosaics', [defaultNetworkMosaic])
+        return
       }
 
-      commit('currentWalletMosaics', mosaics)
+      // - if there is mosaics, set network mosaic on top
+      const networkMosaicIndexInMosaics = mosaics.findIndex(m => m.id.equals(networkMosaic))
+      const balances = networkMosaicIndexInMosaics === -1
+        ? [ defaultNetworkMosaic, ...mosaics ]
+        : [ 
+          mosaics[networkMosaicIndexInMosaics],
+          ...mosaics.filter(m => !m.id.equals(networkMosaic)),
+        ]
+      
+      commit('currentWalletMosaics', balances)
     },
     RESET_SUBSCRIPTIONS({commit}) {
       commit('setSubscriptions', [])
@@ -470,12 +475,17 @@ export default {
       try {
         // prepare REST parameters
         const currentPeer = rootGetters['network/currentPeer'].url
+        console.log("TCL: REST_FETCH_INFO -> currentPeer", currentPeer)
         const addressObject = Address.createFromRawAddress(address)
+        console.log("TCL: REST_FETCH_INFO -> addressObject", addressObject)
 
         // fetch account info from REST gateway
         const accountHttp = RESTService.create('AccountHttp', currentPeer)
+        console.log("TCL: REST_FETCH_INFO -> accountHttp", accountHttp)
 
         return accountHttp.getAccountInfo(addressObject).subscribe((accountInfo) => {
+          console.log("TCL: REST_FETCH_INFO -> accountInfo", accountInfo)
+
           commit('addWalletInfo', accountInfo)
 
           // update current wallet state if necessary
@@ -486,6 +496,7 @@ export default {
 
           return accountInfo
         }, (error) => {
+        console.log("TCL: REST_FETCH_INFO -> error", error)
           dispatch('SET_BALANCES', [])
         })
       }

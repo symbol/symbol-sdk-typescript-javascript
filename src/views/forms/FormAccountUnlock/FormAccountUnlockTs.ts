@@ -20,13 +20,12 @@ import {mapGetters} from 'vuex'
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
-import {ServiceFactory} from '@/services/ServiceFactory'
 
 @Component({
   computed: {...mapGetters({
     networkType: 'network/networkType',
     currentAccount: 'account/currentAccount',
-    currentWallett: 'wallet/currentWallet',
+    currentWallet: 'wallet/currentWallet',
   })}
 })
 export class FormAccountUnlockTs extends Vue {

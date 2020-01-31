@@ -46,6 +46,7 @@ export default {
     mosaicsInfoList: state => Object.keys(state.mosaicsInfoByHex).map(hex => state.mosaicsInfoByHex[hex]),
     mosaicsNames: state => state.mosaicsNamesByHex,
     hiddenMosaics: state => state.hiddenMosaics,
+    networkMosaicName: state => state.networkMosaicName,
   },
   mutations: {
     setInitialized: (state, initialized) => { state.initialized = initialized },

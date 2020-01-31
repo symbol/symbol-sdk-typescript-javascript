@@ -5,7 +5,11 @@
       <span class="address">
         {{ currentWallet ? currentWallet.objects.address.plain() : $t('loading') }}
       </span>
-      <img class="pointer" src="@/views/resources/img/monitor/monitorCopyAddress.png" @click="uiHelpers.copyToClipboard">
+      <img
+        class="pointer"
+        src="@/views/resources/img/monitor/monitorCopyAddress.png"
+        @click="uiHelpers.copyToClipboard(currentWallet.objects.address.plain())"
+      >
     </div>
 
     <div class="split" />

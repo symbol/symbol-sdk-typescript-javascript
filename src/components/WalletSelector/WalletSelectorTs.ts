@@ -17,22 +17,14 @@ import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 
 @Component({computed: {...mapGetters({
-  currentAccount: 'account/currentAccount',
   currentWallet: 'wallet/currentWallet',
+  knownWallets: 'wallet/knownWallets',
 })}})
 export class WalletSelectorTs extends Vue {
-  /**
-   * Currently active account
-   * @see {Store.Account}
-   * @var {AccountsModel}
-   */
-  public currentAccount: AccountsModel
-
   /**
    * Currently active wallet
    * @see {Store.Wallet}
@@ -44,30 +36,21 @@ export class WalletSelectorTs extends Vue {
    * Wallets repository
    * @var {WalletsRepository}
    */
-  public wallets: WalletsRepository
-
-  /**
-   * Hook called when the component is mounted
-   * @return {void}
-   */
-  mounted() {
-    this.wallets = new WalletsRepository()
-  }
+  public knownWallets: WalletsRepository
 
 /// region computed properties getter/setter
-  get currentWalletName(): string {
-    return !this.currentWallet ? '' : this.currentWallet.values.get("name")
+  get currentWalletIdentifier(): string {
+    return !this.currentWallet ? '' : {...this.currentWallet}.identifier
   }
 
-  set currentWalletName(name: string) {
-    this.$store.dispatch('wallet/SET_CURRENT_WALLET', name)
-
-    // update inner state
-    this.currentWallet = this.wallets.read(name)
+  set currentWalletIdentifier(identifier: string) {
+    this.$store.dispatch('wallet/SET_CURRENT_WALLET', identifier)
   }
 
-  get currentWallets(): string[] {
-    return !this.currentAccount ? [] : this.currentAccount.values.get("wallets")
+  get currentWallets(): {identifier: string, name: string}[] {
+    return [...this.knownWallets.entries()].map(
+      ([ identifier, {values}]) => ({identifier, name: values.get('name')}),
+    )
   }
 /// end-region computed properties getter/setter
 }

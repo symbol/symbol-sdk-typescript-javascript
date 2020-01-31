@@ -1,6 +1,6 @@
 <template>
   <Select
-    v-model="value"
+    v-model="chosenSigner"
     :placeholder="$t('publicKey')"
     class="fee-select"
   >
