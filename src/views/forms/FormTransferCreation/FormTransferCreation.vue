@@ -1,8 +1,7 @@
 <template>
   <div class="FormTransferCreation">
-    <form @submit.prevent="validateForm('FormTransferCreation-transaction')" @keyup.enter="processTransfer">
-
-      <SignerSelector v-model="formItems.signerPublicKey "/>
+    <form action="processTransfer" onsubmit="event.preventDefaul" @keyup.enter="processTransfer">
+      <SignerSelector v-model="formItems.signerPublicKey" />
 
       <div class="target flex_center">
         <span class="title">{{ $t('FormTransferCreation_target') }}</span>
