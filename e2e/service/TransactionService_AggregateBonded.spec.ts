@@ -98,10 +98,9 @@ describe('TransactionService', () => {
      * =========================
      */
     describe('Get network currency mosaic id', () => {
-        it('get mosaicId', (done) => {
-            namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).subscribe((networkMosaicId: MosaicId) => {
+        it('get mosaicId', () => {
+            return namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).toPromise().then((networkMosaicId: MosaicId) => {
                 networkCurrencyMosaicId = networkMosaicId;
-                done();
             });
         });
     });
@@ -140,7 +139,7 @@ describe('TransactionService', () => {
 
     describe('should announce transaction', () => {
 
-        it('announce', (done) => {
+        it('announce', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
@@ -151,18 +150,17 @@ describe('TransactionService', () => {
                 networkType, helper.maxFee,
             );
             const signedTransaction = transferTransaction.signWith(account, generationHash);
-            transactionService.announce(signedTransaction, helper.listener).subscribe((tx: TransferTransaction) => {
+            return transactionService.announce(signedTransaction, helper.listener).toPromise().then((tx: TransferTransaction) => {
                 expect(tx.signer!.publicKey).to.be.equal(account.publicKey);
                 expect((tx.recipientAddress as Address).equals(account2.address)).to.be.true;
                 expect(tx.message.payload).to.be.equal('test-message');
-                done();
             });
         });
     });
 
     describe('should announce aggregate bonded with hashlock', () => {
 
-        it('announce', (done) => {
+        it('announce', async () => {
             const signedAggregatedTransaction = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
             const lockFundsTransaction = LockFundsTransaction.create(
                 Deadline.create(),
@@ -172,18 +170,16 @@ describe('TransactionService', () => {
                 networkType, helper.maxFee,
             );
             const signedLockFundsTransaction = lockFundsTransaction.signWith(account, generationHash);
-            transactionService
-            .announceHashLockAggregateBonded(signedLockFundsTransaction, signedAggregatedTransaction, helper.listener).subscribe((tx) => {
-                expect(tx.signer!.publicKey).to.be.equal(account.publicKey);
-                expect(tx.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
-                done();
-            });
+            const tx = await transactionService.announceHashLockAggregateBonded(signedLockFundsTransaction, signedAggregatedTransaction, helper.listener).toPromise();
+            expect(tx.signer!.publicKey).to.be.equal(account.publicKey);
+            expect(tx.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
+
         });
     });
 
     describe('should announce aggregate bonded transaction', () => {
 
-        it('announce', (done) => {
+        it('announce', async () => {
             const signedAggregatedTransaction = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
             const lockFundsTransaction = LockFundsTransaction.create(
                 Deadline.create(),
@@ -193,13 +189,12 @@ describe('TransactionService', () => {
                 networkType, helper.maxFee,
             );
             const signedLockFundsTransaction = lockFundsTransaction.signWith(account, generationHash);
-            transactionService.announce(signedLockFundsTransaction, helper.listener).subscribe(() => {
-                transactionService.announceAggregateBonded(signedAggregatedTransaction, helper.listener).subscribe((tx) => {
-                    expect(tx.signer!.publicKey).to.be.equal(account.publicKey);
-                    expect(tx.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
-                    done();
-                });
-            });
+            const signedLockFundsTransactionResponse = await transactionService.announce(signedLockFundsTransaction, helper.listener).toPromise();
+            expect(signedLockFundsTransactionResponse.transactionInfo!.hash).to.be.equal(signedLockFundsTransaction.hash);
+            const tx = await transactionService.announceAggregateBonded(signedAggregatedTransaction, helper.listener).toPromise();
+            expect(tx.signer!.publicKey).to.be.equal(account.publicKey);
+            expect(tx.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
+
         });
     });
 
@@ -211,7 +206,7 @@ describe('TransactionService', () => {
 
     describe('Restore test multisig Accounts', () => {
 
-        it('Announce MultisigAccountModificationTransaction', () => {
+        it('Announce MultisigAccountModificationTransaction', async () => {
             const removeCosigner1 = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
                 -1,
@@ -250,7 +245,7 @@ describe('TransactionService', () => {
             const signedTransaction = aggregateTransaction
             .signTransactionWithCosignatories(cosignAccount1, [cosignAccount2, cosignAccount3], generationHash);
 
-            return helper.announce(signedTransaction);
+            await helper.announce(signedTransaction);
         });
     });
 });

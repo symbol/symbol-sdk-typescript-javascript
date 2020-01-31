@@ -29,29 +29,23 @@ describe('NodeHttp', () => {
     });
 
     describe('getNodeInfo', () => {
-        it('should return node info', (done) => {
-            nodeRepository.getNodeInfo()
-            .subscribe((nodeInfo) => {
-                expect(nodeInfo.friendlyName).not.to.be.undefined;
-                expect(nodeInfo.host).not.to.be.undefined;
-                expect(nodeInfo.networkIdentifier).not.to.be.undefined;
-                expect(nodeInfo.port).not.to.be.undefined;
-                expect(nodeInfo.publicKey).not.to.be.undefined;
-                expect(nodeInfo.roles).not.to.be.undefined;
-                expect(nodeInfo.version).not.to.be.undefined;
-                done();
-            });
+        it('should return node info', async () => {
+            const nodeInfo = await nodeRepository.getNodeInfo().toPromise();
+            expect(nodeInfo.friendlyName).not.to.be.undefined;
+            expect(nodeInfo.host).not.to.be.undefined;
+            expect(nodeInfo.networkIdentifier).not.to.be.undefined;
+            expect(nodeInfo.port).not.to.be.undefined;
+            expect(nodeInfo.publicKey).not.to.be.undefined;
+            expect(nodeInfo.roles).not.to.be.undefined;
+            expect(nodeInfo.version).not.to.be.undefined;
         });
     });
 
     describe('getNodeTime', () => {
-        it('should return node time', (done) => {
-            nodeRepository.getNodeTime()
-            .subscribe((nodeTime) => {
-                expect(nodeTime.receiveTimeStamp).not.to.be.undefined;
-                expect(nodeTime.sendTimeStamp).not.to.be.undefined;
-                done();
-            });
+        it('should return node time', async () => {
+            const nodeTime = await nodeRepository.getNodeTime().toPromise();
+            expect(nodeTime.receiveTimeStamp).not.to.be.undefined;
+            expect(nodeTime.sendTimeStamp).not.to.be.undefined;
         });
     });
 });

@@ -310,41 +310,40 @@ describe('TransactionService', () => {
      */
 
     describe('should return resolved transaction', () => {
-        it('call transaction service', (done) => {
-
-            transactionService.resolveAliases(transactionHashes).subscribe((transactions) => {
-                    expect(transactions.length).to.be.equal(8);
-                    transactions.map((tx) => {
-                        if (tx instanceof TransferTransaction) {
-                            expect((tx.recipientAddress as Address).plain()).to.be.equal(account.address.plain());
-                            expect(tx.mosaics.find((m) => m.id.toHex() === mosaicId.toHex())).not.to.equal(undefined);
-                        } else if (tx instanceof AggregateTransaction) {
-                            expect(tx.innerTransactions.length).to.be.equal(5);
-                            // Assert Transfer
-                            expect(((tx.innerTransactions[0] as TransferTransaction).recipientAddress as Address)
-                            .plain()).to.be.equal(account.address.plain());
-                            expect((tx.innerTransactions[0] as TransferTransaction).mosaics
-                            .find((m) => m.id.toHex() === mosaicId.toHex())).not.to.equal(undefined);
-                            // Assert MosaicMeta
-                            expect((tx.innerTransactions[4] as MosaicMetadataTransaction)
-                            .targetMosaicId.toHex() === newMosaicId.toHex()).to.be.true;
-                        }
-                    });
-                },
-                done());
+        it('call transaction service', () => {
+            return transactionService.resolveAliases(transactionHashes).toPromise().then((transactions) => {
+                expect(transactions.length).to.be.equal(8);
+                transactions.map((tx) => {
+                    if (tx instanceof TransferTransaction) {
+                        expect((tx.recipientAddress as Address).plain()).to.be.equal(account.address.plain());
+                        expect(tx.mosaics.find((m) => m.id.toHex() === mosaicId.toHex())).not.to.equal(undefined);
+                    } else if (tx instanceof AggregateTransaction) {
+                        expect(tx.innerTransactions.length).to.be.equal(5);
+                        // Assert Transfer
+                        expect(((tx.innerTransactions[0] as TransferTransaction).recipientAddress as Address)
+                        .plain()).to.be.equal(account.address.plain());
+                        expect((tx.innerTransactions[0] as TransferTransaction).mosaics
+                        .find((m) => m.id.toHex() === mosaicId.toHex())).not.to.equal(undefined);
+                        // Assert MosaicMeta
+                        expect((tx.innerTransactions[4] as MosaicMetadataTransaction)
+                        .targetMosaicId.toHex() === newMosaicId.toHex()).to.be.true;
+                    }
+                    return tx;
+                });
+            });
         });
     });
 
     describe('Test resolve alias with multiple transaction in single block', () => {
-        it('call transaction service', (done) => {
-            transactionService.resolveAliases(transactionHashesMultiple).subscribe((tx) => {
-                    expect(tx.length).to.be.equal(3);
-                    expect((tx[0] as TransferTransaction).mosaics[0].id.toHex()).to.be.equal(mosaicId.toHex());
-                    expect((tx[1] as TransferTransaction).mosaics[0].id.toHex()).to.be.equal(mosaicId.toHex());
-                    expect(((tx[2] as AggregateTransaction).innerTransactions[4] as MosaicMetadataTransaction)
-                    .targetMosaicId.toHex()).to.be.equal(newMosaicId.toHex());
-                },
-                done());
+        it('call transaction service', () => {
+            return transactionService.resolveAliases(transactionHashesMultiple).toPromise().then((tx) => {
+                expect(tx.length).to.be.equal(3);
+                expect((tx[0] as TransferTransaction).mosaics[0].id.toHex()).to.be.equal(mosaicId.toHex());
+                expect((tx[1] as TransferTransaction).mosaics[0].id.toHex()).to.be.equal(mosaicId.toHex());
+                expect(((tx[2] as AggregateTransaction).innerTransactions[4] as MosaicMetadataTransaction)
+                .targetMosaicId.toHex()).to.be.equal(newMosaicId.toHex());
+                return tx;
+            });
         });
     });
 

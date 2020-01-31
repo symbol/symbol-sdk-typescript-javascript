@@ -22,14 +22,7 @@ import { TransactionRepository } from '../../src/infrastructure/TransactionRepos
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
-import {
-    Address,
-    CosignatureTransaction,
-    LockFundsTransaction,
-    Mosaic,
-    SignedTransaction,
-    UInt64,
-} from '../../src/model/model';
+import { Address, CosignatureTransaction, LockFundsTransaction, Mosaic, SignedTransaction, UInt64 } from '../../src/model/model';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
@@ -52,7 +45,7 @@ describe('Listener', () => {
     let namespaceRepository: NamespaceRepository;
     let generationHash: string;
     let networkType: NetworkType;
-    let networkCurrencyMosaicId: MosaicId;
+    let networkCurrencyMosaicId: NamespaceId = NetworkCurrencyMosaic.NAMESPACE_ID;
     let transactionRepository: TransactionRepository;
 
     before(() => {
@@ -104,7 +97,7 @@ describe('Listener', () => {
 
     const createHashLockTransactionAndAnnounce = (signedAggregatedTransaction: SignedTransaction,
                                                   signer: Account,
-                                                  mosaicId: MosaicId) => {
+                                                  mosaicId: MosaicId | NamespaceId) => {
         const lockFundsTransaction = LockFundsTransaction.create(
             Deadline.create(),
             new Mosaic(mosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
@@ -163,11 +156,10 @@ describe('Listener', () => {
                 filter((_) => _.transactionInfo!.hash === signedTransaction.hash)).subscribe(() => {
                 done();
             });
-            helper.announce(signedTransaction);
+            transactionRepository.announce(signedTransaction);
         });
 
         it('unconfirmedTransactionsRemoved', (done) => {
-
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account.address,
@@ -179,15 +171,7 @@ describe('Listener', () => {
             helper.listener.unconfirmedRemoved(account.address).pipe(filter((hash) => hash === signedTransaction.hash)).subscribe(() => {
                 done();
             });
-            helper.announce(signedTransaction);
-        });
-    });
-    describe('Get network currency mosaic id', () => {
-        it('get mosaicId', (done) => {
-            namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).subscribe((networkMosaicId: MosaicId) => {
-                networkCurrencyMosaicId = networkMosaicId;
-                done();
-            });
+            transactionRepository.announce(signedTransaction);
         });
     });
 
