@@ -59,7 +59,7 @@ export class MosaicSelectorTs extends Vue {
    * Mosaic service
    * @var {MosaicService}
    */
-  public mosaicService: MosaicService = new MosaicService()
+  public mosaicService: MosaicService = new MosaicService(this.$store)
 
 /// region computed properties getter/setter
 /// end-region computed properties getter/setter
