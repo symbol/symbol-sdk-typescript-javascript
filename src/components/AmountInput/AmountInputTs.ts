@@ -28,36 +28,12 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
   components: {
     ErrorTooltip,
   },
-  computed: {...mapGetters({
-    networkMosaic: 'mosaic/networkMosaic',
-    mosaicsInfo: 'mosaic/mosaicsInfoList',
-  })}
 })
 export class AmountInputTs extends Vue {
 
   @Prop({
-    default: null
-  }) mosaicId: MosaicId
-
-  @Prop({
-    default: ''
-  }) mosaicHex: string
-
-  @Prop({
     default: ''
   }) value: number
-
-  /**
-   * Networks currency mosaic
-   * @var {MosaicId}
-   */
-  public networkMosaic: MosaicId
-
-  /**
-   * Network mosaics info (all)
-   * @var {MosaicInfo[]}
-   */
-  public mosaicsInfo: MosaicInfo[]
 
   /**
    * Validation rules
@@ -65,40 +41,13 @@ export class AmountInputTs extends Vue {
    */
   public validationRules = ValidationRuleset
 
-  /**
-   * Hook called when the component is created
-   * @return {void}
-   */
-  public created() {
-    if (this.mosaicId) {
-      this.mosaicHex = this.mosaicId.toHex()
-    }
-    else if (this.mosaicHex) {
-      this.mosaicId = new MosaicId(RawUInt64.fromHex(this.mosaicHex))
-    }
-  }
-
 /// region computed properties getter/setter
-  public get relativeValue(): string {
-    const mosaicInfo = this.mosaicsInfo.find(info => info.id.equals(this.mosaicId))
-    if (undefined === mosaicInfo) {
-      return this.value.toString()
-    }
-
-    return (this.value / Math.pow(10, mosaicInfo.divisibility)).toString()
+  public get relativeValue(): number {
+    return this.value
   }
 
-  public set relativeValue(amount: string) {
-    const asNumber = parseFloat(amount)
-    const mosaicInfo = this.mosaicsInfo.find(info => info.id.equals(this.mosaicId))
-    if (undefined === mosaicInfo) {
-      this.value = Math.floor(asNumber)
-    }
-    else {
-      this.value = Math.floor(asNumber * Math.pow(10, mosaicInfo.divisibility))
-    }
-
-    this.$emit('change', this.value)
+  public set relativeValue(amount: number) {
+    this.$emit('input', this.value)
   }
 /// end-region computed properties getter/setter
 }

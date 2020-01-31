@@ -20,17 +20,23 @@ export class AmountDisplayTs extends Vue {
 
   @Prop({
     default: 0
-  }) amount: number
+  }) value: number
 
   @Prop({
     default: 0
   }) decimals: number
 
 /// region computed properties getter/setter
-  get parts() {
-    const p1 = Math.floor(this.amount)
-    const p2 = this.amount - p1
-    return [p1, p2]
+  get integerPart(): string {
+    return Math.floor(this.value).toString()
+  }
+
+  get fractionalPart(): string {
+    const rest = this.value - Math.floor(this.value)
+    if (rest === 0) return ''
+
+    // remove leftmost-0
+    return rest.toFixed(this.decimals).replace(/^0/, '')
   }
 /// end-region computed properties getter/setter
 }

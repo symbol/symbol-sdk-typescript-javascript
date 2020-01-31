@@ -15,7 +15,7 @@
       <MosaicSelector :mosaics="currentWalletMosaics"
                       v-model="formItems.selectedMosaicHex" />
 
-      <AmountInput :mosaic-hex="formItems.selectedMosaicHex"
+      <AmountInput :mosaic-id="mosaicsInfo.find(info => info.id.toHex() === formItems.selectedMosaicHex)"
                     v-model="formItems.relativeAmount" />
 
       <MosaicAttachmentDisplay :mosaics="formItems.attachedMosaics"

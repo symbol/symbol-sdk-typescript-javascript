@@ -1,7 +1,7 @@
 <template>
   <ErrorTooltip field-name="selectedMosaic">
     <AutoComplete
-      v-model="value"
+      v-model="selectedMosaic"
       v-validate="'required|namespaceOrMosaicId'"
       v-focus
       :placeholder="$t('Please_enter_mosaic_hex_or_alias')"

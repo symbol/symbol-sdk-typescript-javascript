@@ -62,5 +62,12 @@ export class MosaicSelectorTs extends Vue {
   public mosaicsNames: string[]
 
 /// region computed properties getter/setter
+  public get selectedMosaic(): string {
+    return this.value
+  }
+
+  public set selectedMosaic(hex: string) {
+    this.$emit('input', hex)
+  }
 /// end-region computed properties getter/setter
 }

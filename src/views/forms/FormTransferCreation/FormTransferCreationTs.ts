@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, Mosaic, MultisigAccountInfo, TransferTransaction, Transaction, TransactionType, PlainMessage} from 'nem2-sdk'
+import {MosaicId, Mosaic, MultisigAccountInfo, TransferTransaction, Transaction, TransactionType, PlainMessage, MosaicInfo} from 'nem2-sdk'
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
@@ -59,6 +59,7 @@ import RecipientInput from '@/components/RecipientInput/RecipientInput.vue'
     currentMultisigInfo: 'wallet/currentMultisigInfo',
     networkMosaic: 'mosaic/networkMosaic',
     stagedTransactions: 'wallet/stagedTransactions',
+    mosaicsInfo: 'mosaic/mosaicsInfoList',
   })}
 })
 export class FormTransferCreationTs extends Vue {
@@ -91,6 +92,12 @@ export class FormTransferCreationTs extends Vue {
    * @var {Transaction[]}
    */
   public stagedTransactions: Transaction[]
+
+  /**
+   * List of known mosaics
+   * @var {MosaicInfo[]}
+   */
+  public mosaicsInfo: MosaicInfo[]
 
   /**
    * Formatters helpers
@@ -129,6 +136,9 @@ export class FormTransferCreationTs extends Vue {
    * @return {void}
    */
   public async created() {
+    this.formItems.signerPublicKey = this.currentWallet.values.get('publicKey')
+    this.formItems.selectedMosaicHex = this.networkMosaic.toHex()
+
     this.factory = new TransactionFactory(this.$store)
     await this.$store.dispatch('wallet/REST_FETCH_MULTISIG', this.currentWallet.objects.address.plain())
 
