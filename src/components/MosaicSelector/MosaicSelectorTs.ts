@@ -17,9 +17,6 @@ import {MosaicId, MosaicInfo, Mosaic} from 'nem2-sdk'
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
-// internal dependencies
-import {MosaicService} from '@/services/MosaicService'
-
 // child components
 // @ts-ignore
 import ErrorTooltip from '@/components//ErrorTooltip/ErrorTooltip.vue'
@@ -31,6 +28,7 @@ import ErrorTooltip from '@/components//ErrorTooltip/ErrorTooltip.vue'
   computed: {...mapGetters({
     networkMosaic: 'mosaic/networkMosaic',
     mosaicsInfo: 'mosaic/mosaicsInfoList',
+    mosaicsNames: 'mosaic/mosaicsNames',
   })}
 })
 export class MosaicSelectorTs extends Vue {
@@ -51,15 +49,17 @@ export class MosaicSelectorTs extends Vue {
 
   /**
    * Network mosaics info (all)
+   * @see {Store.Mosaic}
    * @var {MosaicInfo[]}
    */
   public mosaicsInfo: MosaicInfo[]
 
   /**
-   * Mosaic service
-   * @var {MosaicService}
+   * Network mosaics names (all)
+   * @see {Store.Mosaic}
+   * @var {string[]}
    */
-  public mosaicService: MosaicService = new MosaicService(this.$store)
+  public mosaicsNames: string[]
 
 /// region computed properties getter/setter
 /// end-region computed properties getter/setter

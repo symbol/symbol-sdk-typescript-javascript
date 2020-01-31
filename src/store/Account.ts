@@ -98,7 +98,7 @@ export default {
         const known = Array.from(knownWallets.values())
         const firstWalletId = known.shift().getIdentifier()
         dispatch('wallet/SET_CURRENT_WALLET', firstWalletId, {root: true})
-        dispatch('wallet/SET_KNOWN_WALLETS', knownWallets, {root: true})
+        dispatch('wallet/SET_KNOWN_WALLETS', known, {root: true})
       }
 
       // reset store + re-initialize

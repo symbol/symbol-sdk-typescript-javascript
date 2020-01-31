@@ -104,7 +104,7 @@ export default {
     currentWalletInfo: null,
     currentWalletMosaics: [],
     currentMultisigInfo: null,
-    knownWallets: new Map(),
+    knownWallets: [],
     otherWalletsInfo: {},
     allTransactions: [],
     transactionHashes: [],

@@ -13,7 +13,7 @@
           v-for="m in mosaics"
           :key="m.id.toHex()"
           :value="m.id.toHex()">
-        {{ mosaicService.getMosaicName(m.id) || m.id.toHex() }}
+        {{ mosaicsNames.hasOwnProperty(m.id.toHex()) ? mosaicsNames[m.id.toHex()] : m.id.toHex() }}
       </Option>
     </AutoComplete>
   </ErrorTooltip>
