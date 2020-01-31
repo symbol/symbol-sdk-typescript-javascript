@@ -5,7 +5,7 @@
 
       <ErrorTooltip field-name="remarks">
         <textarea
-          v-model="value"
+          v-model="plain"
           v-validate="validationRules.message"
           class="radius"
           :placeholder="$t('Please_enter_notes')"

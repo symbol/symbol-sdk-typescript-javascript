@@ -36,7 +36,7 @@ export class RecipientInputTs extends Vue {
 
   @Prop({
     default: null
-  }) value: Address | string
+  }) value: string
 
   /**
    * Current network type
@@ -52,20 +52,11 @@ export class RecipientInputTs extends Vue {
 
 /// region computed properties getter/setter
   public get rawValue(): string {
-    if (this.value instanceof Address) {
-      return this.value.plain()
-    }
-
     return this.value
   }
 
   public set rawValue(input: string) {
-    if ([40, 46].includes(input.length)) {
-      this.$emit('input', Address.createFromRawAddress(input))
-    }
-    else {
-      this.$emit('input', input)
-    }
+    this.$emit('input', input)
   }
 /// end-region computed properties getter/setter
 }

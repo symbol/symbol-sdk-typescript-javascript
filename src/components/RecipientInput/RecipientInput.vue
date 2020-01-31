@@ -12,6 +12,7 @@
           :data-vv-as="$t('FormTransferCreation_target')"
           :placeholder="$t('receive_address_or_alias')"
           type="text"
+          @blur="$emit('blur', rawValue)"
         />
       </ErrorTooltip>
 

@@ -6,7 +6,7 @@
       <SignerSelector v-model="formItems.signerPublicKey" />
 
       <!-- Transfer recipient input field -->
-      <RecipientInput v-model="formItems.recipient" />
+      <RecipientInput v-model="formItems.recipientRaw" @input="onChangeRecipient" />
 
       <!-- Mosaics attachments input fields -->
       <MosaicAttachmentInput v-model="formItems.attachedMosaics"
@@ -23,7 +23,7 @@
       <MessageInput v-model="formItems.messagePlain" />
 
       <!-- Transaction fee selector -->
-      <MaxFeeSelector v-model="formItems.maxFee" @input="$emit('input', formItems)" />
+      <MaxFeeSelector v-model="formItems.maxFee" />
 
       <div class="send_button pointer" @click="onSubmit">
         {{ $t('send') }}

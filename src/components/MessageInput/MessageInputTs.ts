@@ -40,5 +40,12 @@ export class MessageInputTs extends Vue {
   public validationRules = ValidationRuleset
 
 /// region computed properties getter/setter
+  get plain(): string {
+    return this.value
+  }
+
+  set plain(msg: string) {
+    this.$emit('input', msg)
+  }
 /// end-region computed properties getter/setter
 }

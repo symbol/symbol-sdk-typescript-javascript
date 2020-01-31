@@ -37,6 +37,9 @@ import {TransactionFactory} from '@/core/transactions/TransactionFactory'
 import {TransferTransactionParams} from '@/core/transactions/TransferTransactionParams'
 import {NotificationType} from '@/core/utils/NotificationType'
 
+// configuration
+import feesConfig from '@/../config/fees.conf.json'
+
 // child components
 // @ts-ignore
 import AmountInput from '@/components/AmountInput/AmountInput.vue'
@@ -171,6 +174,7 @@ export class FormTransferCreationTs extends Vue {
    */
   public formItems = {
     signerPublicKey: '',
+    recipientRaw: '',
     recipient: null,
     selectedMosaicHex: '',
     relativeAmount: 0,
@@ -190,9 +194,13 @@ export class FormTransferCreationTs extends Vue {
    * @return {void}
    */
   public async created() {
+    this.factory = new TransactionFactory(this.$store)
+
+    // - set default form values
     this.formItems.signerPublicKey = !!this.signer ? this.signer.publicKey : this.currentWallet.values.get('publicKey')
     this.formItems.selectedMosaicHex = this.networkMosaic.toHex()
-    this.formItems.recipient = !!this.recipient ? this.recipient : ''
+    this.formItems.recipientRaw = !!this.recipient ? this.recipient.plain() : ''
+    this.formItems.recipient = !!this.recipient ? this.recipient : null
     this.formItems.attachedMosaics = !!this.mosaics && this.mosaics.length ? this.mosaics.map(
       mosaic => ({
         id: mosaic.id,
@@ -202,7 +210,10 @@ export class FormTransferCreationTs extends Vue {
       })) : []
     this.formItems.messagePlain = !!this.message ? Formatters.hexToUtf8(this.message.payload) : ''
 
-    this.factory = new TransactionFactory(this.$store)
+    // - maxFee must be absolute
+    const info = this.mosaicsInfo.find(i => i.id.toHex() === this.formItems.selectedMosaicHex)
+    const div = info ? info.divisibility : 0
+    this.formItems.maxFee = feesConfig['single'].find(s => s.speed === 'NORMAL').value * Math.pow(10, div)
 
     // - re-populate form if transaction staged
     if (this.stagedTransactions.length) {
@@ -233,7 +244,9 @@ export class FormTransferCreationTs extends Vue {
 
   protected set transaction(transaction: TransferTransaction) {
     // - populate recipient
-    this.formItems.recipient = transaction.recipientAddress
+    this.formItems.recipientRaw = transaction.recipientAddress instanceof Address
+                                ? transaction.recipientAddress.plain()
+                                : (transaction.recipientAddress as NamespaceId).toHex()
 
     // - populate attached mosaics
     this.formItems.attachedMosaics = transaction.mosaics.map(
@@ -301,6 +314,14 @@ export class FormTransferCreationTs extends Vue {
       name: this.getMosaicName(id),
       amount: formItems.amount, // amount is relative
     })
+  }
+
+  public onChangeRecipient(input: string) {
+    if ([40, 46].includes(input.length)) {
+      return this.formItems.recipient = Address.createFromRawAddress(input)
+    }
+
+    return this.formItems.recipient = new NamespaceId(input)
   }
 
   /**

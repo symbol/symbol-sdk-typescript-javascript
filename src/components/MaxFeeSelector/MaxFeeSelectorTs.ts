@@ -19,6 +19,7 @@ import {MosaicId, MosaicInfo} from 'nem2-sdk'
 
 // configuration
 import feesConfig from '@/../config/fees.conf.json'
+import { timingSafeEqual } from 'crypto'
 
 @Component({computed: {...mapGetters({
   networkMosaic: 'mosaic/networkMosaic',
@@ -54,6 +55,7 @@ export class MaxFeeSelectorTs extends Vue {
    * @type {number}
    */
   @Prop() value: number
+
   /**
    * Fees specification
    * @var {any}
@@ -83,11 +85,11 @@ export class MaxFeeSelectorTs extends Vue {
    * @return {number}
    */
   public convertToRawAmount(price: number): number {
-    const mosaicInfo = this.mosaicsInfo.find(info => info.id.equals(this.networkMosaic))
-    if (mosaicInfo === undefined) {
-      return price * Math.pow(10, 6)
+    const info = this.mosaicsInfo.find(i => i.id.equals(this.networkMosaic))
+    if (info === undefined) {
+      return price
     }
 
-    return price * Math.pow(10, mosaicInfo.divisibility)
+    return price * Math.pow(10, info.divisibility)
   }
 }
