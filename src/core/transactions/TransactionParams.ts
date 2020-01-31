@@ -41,6 +41,8 @@ export abstract class TransactionParams {
       if (! fields.length || undefined === fields.find(f => f === 'maxFee')) {
         fields.push('maxFee')
       }
+
+      this.values = new Map<string, any>()
   }
 
   /**

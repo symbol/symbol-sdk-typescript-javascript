@@ -17,23 +17,24 @@ import {MosaicId, MosaicInfo, Mosaic} from 'nem2-sdk'
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
+// internal dependencies
+import {MosaicService} from '@/services/MosaicService'
+
 // child components
 // @ts-ignore
-import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue'
 // @ts-ignore
-import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
+import AmountInput from '@/components/AmountInput/AmountInput.vue'
+// @ts-ignore
+import ButtonAdd from '@/components/ButtonAdd/ButtonAdd.vue'
+import { timingSafeEqual } from 'crypto'
 
-type MosaicAttachmentType = {
-  id: MosaicId,
-  mosaicHex: string,
-  name: string,
-  amount: number,
-}
 
 @Component({
   components: {
-    ErrorTooltip,
-    MosaicAmountDisplay,
+    MosaicSelector,
+    AmountInput,
+    ButtonAdd,
   },
   computed: {...mapGetters({
     networkMosaic: 'mosaic/networkMosaic',
@@ -41,11 +42,11 @@ type MosaicAttachmentType = {
     mosaicsNames: 'mosaic/mosaicsNames',
   })}
 })
-export class MosaicAttachmentDisplayTs extends Vue {
+export class MosaicAttachmentInputTs extends Vue {
 
   @Prop({
     default: []
-  }) mosaics: MosaicAttachmentType[]
+  }) mosaics: Mosaic[]
 
   /**
    * Whether to show absolute amounts or not
@@ -72,7 +73,41 @@ export class MosaicAttachmentDisplayTs extends Vue {
    */
   public mosaicsNames: any
 
-/// region computed properties getter/setter
+  /**
+   * Form items
+   * @var {any}
+   */
+  public formItems = {
+    selectedMosaicHex: '',
+    relativeAmount: 0,
+  }
 
+/// region computed properties getter/setter
+  get selectedMosaic(): string {
+    return this.formItems.selectedMosaicHex
+  }
+
+  set selectedMosaic(hex: string) {
+    this.formItems.selectedMosaicHex = hex
+  }
+
+  get relativeAmount(): number {
+    return this.formItems.relativeAmount
+  }
+
+  set relativeAmount(amount: number) {
+    this.formItems.relativeAmount = amount
+  }
 /// end-region computed properties getter/setter
+
+  public onClickAdd() {
+    if (!this.formItems.selectedMosaicHex.length) {
+      return ;
+    }
+
+    this.$emit('add', {
+      mosaicHex: this.formItems.selectedMosaicHex,
+      amount: this.formItems.relativeAmount
+    })
+  }
 }

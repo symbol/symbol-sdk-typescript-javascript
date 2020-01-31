@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, Mosaic} from 'nem2-sdk'
+import {MosaicId, MosaicInfo, Mosaic} from 'nem2-sdk'
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
@@ -22,22 +22,17 @@ import {WalletsModel} from '@/core/database/entities/WalletsModel'
 
 // child components
 // @ts-ignore
-import AmountInput from '@/components/AmountInput/AmountInput.vue'
-// @ts-ignore
-import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue'
-// @ts-ignore
-import MessageInput from '@/components/MessageInput/MessageInput.vue'
+import FormTransferCreation from '@/views/forms/FormTransferCreation/FormTransferCreation.vue'
 
 @Component({
   components: {
-    AmountInput,
-    MosaicSelector,
-    MessageInput,
+    FormTransferCreation,
   },
   computed: {...mapGetters({
     currentWallet: 'wallet/currentWallet',
     currentWalletMosaics: 'wallet/currentWalletMosaics',
     networkMosaic: 'mosaic/networkMosaic',
+    mosaicsInfo: 'mosaic/mosaicsInfoList',
   })}
 })
 export class FormInvoiceCreationTs extends Vue {
@@ -60,52 +55,27 @@ export class FormInvoiceCreationTs extends Vue {
   public networkMosaic: MosaicId
 
   /**
+   * List of known mosaics
+   * @var {MosaicInfo[]}
+   */
+  public mosaicsInfo: MosaicInfo[]
+
+  /**
    * Form items
    * @var {any}
    */
-  public formItems = {
-    mosaicId: '',
-    amount: 0,
-    message: '',
-  }
-
-  /**
-   * Hook called when the component is mounted
-   * @return {void}
-   */
-  public mounted() {
-    this.formItems.mosaicId = this.networkMosaic.toHex()
-  }
+  public formItems: any = {}
 
 /// region computed properties getter/setter
-  public get selectedMosaic(): string { return this.getter('mosaicId') }
-  public set selectedMosaic(mosaicHex: string) { this.setter('mosaicId', mosaicHex) }
-
-  public get amount(): number { return this.getter('amount') }
-  public set amount(amount: number) { this.setter('amount', amount) }
-
-  public get message(): string { return this.getter('message') }
-  public set message(message: string) { this.setter('message', message) }
 /// end-region computed properties getter/setter
 
   /**
-   * Helper for form field getter definition
-   * @param {string} field 
-   * @return {any}
-   */
-  protected getter(field: string): any {
-    return this.formItems[field]
-  }
-
-  /**
-   * Helper for form field setter definition
-   * @param {string} field 
-   * @param {any} value
+   * Setter for form values
    * @return {void}
-   * @emits change
+   * @emits input
    */
-  protected setter(field: string, value: any) {
-    this.formItems[field] = value
-    this.$emit('change', this.formItems)
+  public onFormChange(formItems: any) {
+    this.formItems = formItems
+    this.$emit('input', this.formItems)
   }
 }

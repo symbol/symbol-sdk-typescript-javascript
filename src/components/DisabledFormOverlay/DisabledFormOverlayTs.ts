@@ -57,7 +57,7 @@ export class DisabledFormOverlayTs extends Vue {
 /// region computed properties getter/setter
   get alert(): string {
     if (!this.networkMosaic) return NotificationType.NO_NETWORK_CURRENCY
-    if (this.multisigInfo.cosignatories.length) return NotificationType.MULTISIG_ACCOUNTS_NO_TX
+    if (this.multisigInfo && this.multisigInfo.cosignatories.length) return NotificationType.MULTISIG_ACCOUNTS_NO_TX
     return ''
   }
 /// end-region computed properties getter/setter

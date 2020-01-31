@@ -5,25 +5,23 @@
       <div class="qr_info">
         <div id="address_text" class="address_text top-qr-text">
           <span class="top-qr-text-title">{{ $t('account') }}:</span>
-          <span class="gray">{{ currentWallet.address().plain() }}</span>
+          <span class="gray">{{ formItems.recipient || 'N/A' }}</span>
         </div>
 
         <div class="top-qr-text overflow_ellipsis">
           <span class="top-qr-text-title">{{ $t('assets') }}:</span>
-          <span>
-            <span class="blue">{{ selectedMosaic.name || 'N/A' }}</span>
-            <span class="gray">（{{ selectedMosaic.id.toHex() || 'N/A' }}）</span>
+          <span v-if="formItems.attachedMosaics.length"
+                v-for="(selectedMosaic, index) in formItems.attachedMosaics">
+            <span class="blue">{{ selectedMosaic.amount }}</span>
+            <span class="blue">{{ selectedMosaic.name }}</span>
+            <span class="gray">（{{ selectedMosaic.id.toHex() }}）</span>
           </span>
-        </div>
-
-        <div class="top-qr-text">
-          <span class="top-qr-text-title">{{ $t('amount') }}:</span>
-          <span class="black">{{ formItems.amount || 0 }}</span>
+          <span v-else>{{ 'N/A' }}</span>
         </div>
 
         <div class="top-qr-text">
           <span class="top-qr-text-title">{{ $t('message') }}:</span>
-          <span>{{ formItems.message }}</span>
+          <span>{{ formItems.messagePlain }}</span>
         </div>
 
         <div class="qr_button">
@@ -37,7 +35,7 @@
 
     <div class="modal scroll">
 
-      <FormInvoiceCreation @change="onFormChange" />
+      <FormInvoiceCreation @input="onFormChange" />
 
     </div>
   </div>

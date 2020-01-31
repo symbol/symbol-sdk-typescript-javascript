@@ -21,6 +21,7 @@ export const routes: AppRoute[] = [
     path: '/',
     name: 'home',
     meta: { protected: false },
+    redirect: '/loginAccount',
     // @ts-ignore
     component: () => import('@/views/layout/PageLayout/PageLayout.vue'),
     /// region PageLayout children

@@ -67,74 +67,6 @@
     color: rgba(204, 204, 204, 1);
   }
 
-  .target {
-    margin-bottom: 10px;
-    height: 60px;
-    position: relative;
-
-    .pointer {
-      position: absolute;
-      width: 45px;
-      height: 45px;
-      background-color: #4DC2BF;
-      font-size: 20px;
-      font-weight: 400;
-      color: #ffffff;
-      right: 20px;
-      border-radius: 0 4px 4px 0;
-      text-align: center;
-    }
-
-    .selections {
-      width: calc(100% - 130px);
-      background-color: white;
-      border: 1px solid rgba(204, 204, 204, 1);
-      position: absolute;
-      z-index: 999;
-      padding: 5px 0;
-      left: 110px;
-      border-radius: 0 0 4px 4px;
-      border-top: none;
-      top: 60px;
-
-      .selection_container {
-        max-height: 100px;
-        min-height: 50px;
-        margin: 0 10px;
-
-        div {
-          padding: 3px 5px;
-          margin: 2px 0;
-          font-size: 16px;
-        }
-
-        .selection_item:hover {
-          background-color: #ddd;
-        }
-      }
-    }
-
-    .value {
-
-
-      span {
-        display: inline-block;
-        width: 60px;
-        height: 60px;
-        background-color: #4DC2BF;
-        color: white;
-        font-size: 20px;
-        font-weight: 400;
-        color: rgba(255, 255, 255, 1);
-        text-align: center;
-      }
-
-      input {
-        border-radius: 0;
-      }
-    }
-  }
-
   .address {
     margin-bottom: 5px;
     height: 60px;
@@ -178,33 +110,6 @@
     }
   }
 
-  .remark {
-    margin-top: 20px;
-
-    .title {
-      position: relative;
-      bottom: 15px;
-    }
-
-    .textarea_container {
-      height: 80px;
-      justify-content: center;
-      padding: 15px 20px;
-      line-height: 20px;
-
-      textarea {
-        border: none;
-        outline: none;
-        font-size: 16px;
-      }
-
-      textarea::placeholder {
-        font-size: 16px;
-        font-weight: 400;
-      }
-    }
-  }
-
   input::placeholder,
   textarea::placeholder {
     font-size: 16px;
@@ -242,19 +147,6 @@
     text-align: right;
   }
 
-  .add_mosaic_button {
-    display: inline-block;
-    width: 40px;
-    height: 44px;
-    position: relative;
-    left: 10px;
-    border: 10px solid #20B5AC;
-    background-color: #20B5AC;
-    background-image: url("../../resources/img/wallet/wallet-detail/walletDetailAdd.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center center;
-  }
 
   .encryption_item {
     margin-left: 10px;

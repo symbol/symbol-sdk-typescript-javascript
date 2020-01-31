@@ -24,20 +24,8 @@ import {NamespaceIdValidator} from './NamespaceIdValidator'
 import {PublicKeyValidator} from './PublicKeyValidator'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {MosaicWithInfoView} from '@/core/views/MosaicWithInfoView'
-
-// configuration
-import networkConfig from '@/../config/network.conf.json'
-import { Content } from 'view-design'
-
-/// region internal helpers
-export const getOtherFieldValue = (otherField) => {
-  const validatorFields = this._vm.$vee._validator.fields.items
-  const field = validatorFields.find(field => field.name === otherField)
-  if (field === undefined) throw new Error('The targeted confirmation field was not found')
-  return field.value
-}
-/// end-region internal helpers
+import app from '@/main'
+import AppStore from '@/store/index'
 
 export class ValidatorFactory {
 
@@ -57,9 +45,6 @@ export class ValidatorFactory {
     'addressOrAliasNetworkType',
     'addressOrPublicKey',
     'privateKey',
-    'otherField',
-    'amountDecimals',
-    'mosaicMaxAmount',
   ]
 
   /**
@@ -85,9 +70,6 @@ export class ValidatorFactory {
     case 'addressOrAliasNetworkType': return ValidatorFactory.addressOrAliasNetworkTypeValidator()
     case 'addressOrPublicKey': return ValidatorFactory.addressOrPublicKeyValidator()
     case 'privateKey': return ValidatorFactory.privateKeyValidator()
-    case 'otherField': return ValidatorFactory.otherFieldValidator()
-    case 'amountDecimals': return ValidatorFactory.amountDecimalsValidator()
-    case 'mosaicMaxAmount': return ValidatorFactory.mosaicAmountValidator()
     default: break
     }
 
@@ -183,8 +165,8 @@ export class ValidatorFactory {
   protected static addressNetworkTypeValidator() {
     return VeeValidate.Validator.extend(
       'addressNetworkType',
-      (address, otherField) => new Promise((resolve) => {
-        const currentAccount: AccountsModel = getOtherFieldValue(otherField)
+      (address) => new Promise((resolve) => {
+        const currentAccount: AccountsModel = AppStore.getters['account/currentAccount']
         const networkType: NetworkType = currentAccount.values.get('networkType') as NetworkType
         try {
           const _address = Address.createFromRawAddress(address)
@@ -201,8 +183,8 @@ export class ValidatorFactory {
   protected static addressOrAliasNetworkTypeValidator() {
     return VeeValidate.Validator.extend(
       'addressOrAliasNetworkType',
-      (addressOrAlias, otherField) => new Promise((resolve) => {
-        const currentAccount: AccountsModel = getOtherFieldValue(otherField)
+      (addressOrAlias) => new Promise((resolve) => {
+        const currentAccount: AccountsModel = AppStore.getters['account/currentAccount']
         const networkType: NetworkType = currentAccount.values.get('networkType') as NetworkType
         try {
           if (!new AddressValidator().validate(addressOrAlias).valid) resolve({valid: addressOrAlias})
@@ -229,60 +211,6 @@ export class ValidatorFactory {
           resolve({valid: false})
         }
       }),
-    )
-  }
-  
-  /** Verified if the value of a cross-validation field is set */
-  protected static otherFieldValidator() {
-    return VeeValidate.Validator.extend(
-      'otherField',
-      (field, otherField) => new Promise((resolve) => {
-        try {
-          const otherValue = getOtherFieldValue(otherField)
-          if (!otherValue) resolve({valid: false})
-          resolve({valid: true})
-        } catch (error) {
-          resolve({valid: false})
-        }
-      }),
-      {hasTarget: true},
-    )
-  }
-  
-  protected static amountDecimalsValidator() {
-    return VeeValidate.Validator.extend(
-      'amountDecimals',
-      (amount, otherField) => new Promise((resolve) => {
-        try {
-          const decimalPart: string = (`${amount}`).split('.')[1]
-          if (!decimalPart) return resolve({valid: true})
-          const numberOfDecimals = decimalPart.length
-          const mosaicInfo: MosaicInfo = getOtherFieldValue(otherField)
-          if (numberOfDecimals > mosaicInfo.divisibility) resolve({valid: false})
-          resolve({valid: true})
-        } catch (error) {
-          resolve({valid: false})
-        }
-      }),
-      {hasTarget: true},
-    )
-  }
-  
-  protected static mosaicAmountValidator() {
-    return VeeValidate.Validator.extend(
-      'mosaicMaxAmount',
-      (amount, otherField) => new Promise((resolve) => {
-        try {
-          const mosaicView: MosaicWithInfoView = getOtherFieldValue(otherField)
-          const absoluteAmount = amount * Math.pow(10, mosaicView.mosaicInfo.divisibility)
-          if (isNaN(absoluteAmount)) resolve({valid: false})
-          if (absoluteAmount > mosaicView.mosaic.amount.compact()) resolve({valid: false})
-          resolve({valid: true})
-        } catch (error) {
-          resolve({valid: false})
-        }
-      }),
-      {hasTarget: true},
     )
   }
   

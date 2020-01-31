@@ -38,7 +38,7 @@ Vue.use(Vuex);
  * 
  * This store initializes peer connection
  */
-export default new Vuex.Store({
+const AppStore = new Vuex.Store({
   strict: false,
   modules: {
     app: AppInfoStore,
@@ -81,3 +81,5 @@ export default new Vuex.Store({
     }
   }
 });
+
+export default AppStore

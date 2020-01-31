@@ -30,12 +30,24 @@ import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue'
 export class MosaicAmountDisplayTs extends Vue {
 
   @Prop({
-    default: null
+    default: null,
+    required: true
   }) id: MosaicId
     
   @Prop({
-    default: 0
-  }) amount: number
+    default: null
+  }) relativeAmount: number
+    
+  @Prop({
+    default: null
+  }) absoluteAmount: number
+
+  /**
+   * Whether to show absolute amount or not
+   */
+  @Prop({
+    default: false
+  }) absolute: boolean
 
   @Prop({
     default: 'green'
@@ -59,6 +71,17 @@ export class MosaicAmountDisplayTs extends Vue {
   }
 
 /// region computed properties getter/setter
+  public get amount(): number {
+    if (this.absolute && null === this.absoluteAmount) {
+      return this.relativeAmount * Math.pow(10, this.divisibility)
+    }
+    else if (this.absolute) {
+      return this.absoluteAmount
+    }
+    
+    return this.relativeAmount
+  }
+
   public get divisibility(): number {
     const hasInfo = this.mosaicsInfo.find(info => info.id.equals(this.id))
     return hasInfo === undefined ? 0 : hasInfo.divisibility

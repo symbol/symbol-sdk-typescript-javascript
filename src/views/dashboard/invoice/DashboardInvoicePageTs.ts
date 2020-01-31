@@ -24,13 +24,12 @@ import {MosaicId, Mosaic, UInt64, RawUInt64, NetworkType, PlainMessage, EmptyMes
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
-import {TransactionService} from '@/services/TransactionService'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
 import {TransferTransactionParams} from '@/core/transactions/TransferTransactionParams'
 
 // child components
 // @ts-ignore
-import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue'
+import FormInvoiceCreation from '@/views/forms/FormInvoiceCreation/FormInvoiceCreation.vue'
 
 // resources
 // @ts-ignore
@@ -38,7 +37,7 @@ import failureIcon from '@/views/resources/img/monitor/failure.png'
 
 @Component({
   components: {
-    MosaicSelector,
+    FormInvoiceCreation
   },
   computed: {...mapGetters({
     networkType: 'network/networkType',
@@ -119,76 +118,30 @@ export class DashboardInvoicePageTs extends Vue {
   public validationRules = ValidationRuleset
 
   /**
-   * Transaction service
-   * @var {TransactionService}
-   */
-  public service: TransactionService
-
-  /**
-   * Transaction instance factory
-   * @var {TransactionFactory}
-   */
-  public factory: TransactionFactory
-
-  /**
    * Form items
    * @var {any}
    */
-  public formItems = {
-    recipient: null,
-    mosaicHex: '',
-    amount: 0,
-    message: '',
-  }
-
-  /**
-   * Hook called when the component is created
-   * @return {void}
-   */
-  public created() {
-    this.service = new TransactionService(this.$store)
-    this.formItems.mosaicHex = this.networkMosaic.toHex()
-    this.formItems.recipient = this.currentWallet.objects.address
-  }
+  public formItems: any = {}
 
 /// region computed properties getter/setter
-  public get selectedMosaic(): {name: string, id: MosaicId} {
-    if (!this.formItems.mosaicHex.length) {
-      return {
-        name: this.networkMosaicName,
-        id: this.networkMosaic
-      }
-    }
-
-    // try to affect already known mosaic name
-    let mosaicName: string = this.formItems.mosaicHex
-    let mosaicId: MosaicId = new MosaicId(RawUInt64.fromHex(this.formItems.mosaicHex))
-    if (this.mosaicsNames.hasOwnProperty(this.formItems.mosaicHex)) {
-      mosaicName = this.mosaicsNames[this.formItems.mosaicHex]
-    }
-
-    return {
-      name: mosaicName,
-      id: mosaicId
-    }
-  }
-
   public get transactionQR(): TransactionQR {
+    if (!this.formItems.recipient) {
+      return ;
+    }
+
     // - read form
     const data = {
-      recipient: this.formItems.recipient,
-      mosaics: [{
-        mosaicHex: this.formItems.mosaicHex,
-        amount: this.formItems.amount
-      }],
-      message: this.formItems.message
+      recipient: this.formItems.recipient || '',
+      mosaics: this.formItems.attachedMosaics || [],
+      message: this.formItems.messagePlain || ''
     }
 
     // - prepare transaction parameters
     const params = TransferTransactionParams.create(data)
 
     // - prepare transfer transaction
-    const transfer = this.factory.build('TransferTransaction', params)
+    const factory = new TransactionFactory(this.$store)
+    const transfer = factory.build('TransferTransaction', params)
     try {
       return QRCodeGenerator.createTransactionRequest(
         transfer,
@@ -208,12 +161,7 @@ export class DashboardInvoicePageTs extends Vue {
    * @param {any} formItems
    */
   public onFormChange(formItems: any) {
-    this.formItems = {
-      recipient: this.currentWallet.objects.address,
-      mosaicHex: formItems.mosaicId,
-      amount: formItems.amount,
-      message: formItems.message
-    }
+    this.formItems = formItems
   }
 
   /**
@@ -221,6 +169,10 @@ export class DashboardInvoicePageTs extends Vue {
    * @return {void}
    */
   public onDownloadQR() {
+    if (!this.formItems.recipient) {
+      return ;
+    }
+
     // - read QR code base64
     const QRCode: any = document.querySelector('#qrImg')
     const url = QRCode.src
@@ -228,7 +180,7 @@ export class DashboardInvoicePageTs extends Vue {
     // - create link (<a>)
     const a = document.createElement('a')
     const event = new MouseEvent('click')
-    a.download = 'qr_receive_' + this.formItems.recipient.plain()
+    a.download = 'qr_receive_' + this.formItems.recipient
     a.href = url
 
     // - start download

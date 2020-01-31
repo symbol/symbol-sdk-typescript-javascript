@@ -13,8 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, Mosaic, MultisigAccountInfo, TransferTransaction, Transaction, TransactionType, PlainMessage, MosaicInfo} from 'nem2-sdk'
-import {Component, Vue} from 'vue-property-decorator'
+import {
+  MosaicId, 
+  Mosaic,
+  MultisigAccountInfo,
+  TransferTransaction,
+  Transaction,
+  TransactionType,
+  MosaicInfo,
+  Address,
+  Message,
+  PublicAccount,
+  RawUInt64,
+  NamespaceId,
+} from 'nem2-sdk'
+import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
@@ -38,9 +51,13 @@ import SignerSelector from '@/components/SignerSelector/SignerSelector.vue'
 // @ts-ignore
 import MosaicAttachmentDisplay from '@/components/MosaicAttachmentDisplay/MosaicAttachmentDisplay.vue'
 // @ts-ignore
+import MosaicAttachmentInput from '@/components/MosaicAttachmentInput/MosaicAttachmentInput.vue'
+// @ts-ignore
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
 // @ts-ignore
 import RecipientInput from '@/components/RecipientInput/RecipientInput.vue'
+// @ts-ignore
+import ButtonAdd from '@/components/ButtonAdd/ButtonAdd.vue'
 
 @Component({
   components: {
@@ -50,8 +67,10 @@ import RecipientInput from '@/components/RecipientInput/RecipientInput.vue'
     ModalTransactionConfirmation,
     SignerSelector,
     MosaicAttachmentDisplay,
+    MosaicAttachmentInput,
     MaxFeeSelector,
     RecipientInput,
+    ButtonAdd,
   },
   computed: {...mapGetters({
     currentWallet: 'wallet/currentWallet',
@@ -60,9 +79,32 @@ import RecipientInput from '@/components/RecipientInput/RecipientInput.vue'
     networkMosaic: 'mosaic/networkMosaic',
     stagedTransactions: 'wallet/stagedTransactions',
     mosaicsInfo: 'mosaic/mosaicsInfoList',
+    mosaicsNames: 'mosaic/mosaicsNames',
+    namespacesNames: 'namespace/namespacesNames',
   })}
 })
 export class FormTransferCreationTs extends Vue {
+
+  @Prop({
+    default: null
+  }) signer: PublicAccount
+
+  @Prop({
+    default: null
+  }) recipient: Address
+
+  @Prop({
+    default: null
+  }) mosaics: Mosaic[]
+
+  @Prop({
+    default: null
+  }) message: Message
+
+  @Prop({
+    default: false
+  }) disableSubmit: boolean
+
   /**
    * Currently active wallet
    * @var {WalletsModel}
@@ -98,6 +140,18 @@ export class FormTransferCreationTs extends Vue {
    * @var {MosaicInfo[]}
    */
   public mosaicsInfo: MosaicInfo[]
+
+  /**
+   * List of known mosaics names
+   * @var {any}
+   */
+  public mosaicsNames: any
+
+  /**
+   * List of known namespaces names
+   * @var {any}
+   */
+  public namespacesNames: any
 
   /**
    * Formatters helpers
@@ -136,11 +190,19 @@ export class FormTransferCreationTs extends Vue {
    * @return {void}
    */
   public async created() {
-    this.formItems.signerPublicKey = this.currentWallet.values.get('publicKey')
+    this.formItems.signerPublicKey = !!this.signer ? this.signer.publicKey : this.currentWallet.values.get('publicKey')
     this.formItems.selectedMosaicHex = this.networkMosaic.toHex()
+    this.formItems.recipient = !!this.recipient ? this.recipient : ''
+    this.formItems.attachedMosaics = !!this.mosaics && this.mosaics.length ? this.mosaics.map(
+      mosaic => ({
+        id: mosaic.id,
+        mosaicHex: mosaic.id.toHex(),
+        name: this.getMosaicName(mosaic.id),
+        amount: mosaic.amount.compact()
+      })) : []
+    this.formItems.messagePlain = !!this.message ? Formatters.hexToUtf8(this.message.payload) : ''
 
     this.factory = new TransactionFactory(this.$store)
-    await this.$store.dispatch('wallet/REST_FETCH_MULTISIG', this.currentWallet.objects.address.plain())
 
     // - re-populate form if transaction staged
     if (this.stagedTransactions.length) {
@@ -156,14 +218,14 @@ export class FormTransferCreationTs extends Vue {
       recipient: this.formItems.recipient,
       mosaics: this.formItems.attachedMosaics.map(
         (spec: {mosaicHex: string, amount: number}): {mosaicHex: string, amount: number} => ({
-          mosaicHex: spec.mosaicHex, 
-          amount: spec.amount
+          mosaicHex: spec.mosaicHex,
+          amount: spec.amount // amount is relative
         })),
       message: this.formItems.messagePlain,
     }
 
     // - prepare transaction parameters
-    const params = TransferTransactionParams.create(data)
+    const params = TransferTransactionParams.create(data, this.mosaicsInfo)
 
     // - prepare transfer transaction
     return this.factory.build('TransferTransaction', params)
@@ -175,10 +237,17 @@ export class FormTransferCreationTs extends Vue {
 
     // - populate attached mosaics
     this.formItems.attachedMosaics = transaction.mosaics.map(
-      mosaic => ({
-        mosaicHex: mosaic.id.toHex(),
-        amount: mosaic.amount.compact()
-      }))
+      mosaic => {
+        const info = this.mosaicsInfo.find(i => i.id.equals(mosaic.id))
+        const div = info ? info.divisibility : 0
+        // amount will be converted to RELATIVE
+        return {
+          id: mosaic.id,
+          mosaicHex: mosaic.id.toHex(),
+          name: this.getMosaicName(mosaic.id),
+          amount: mosaic.amount.compact() / Math.pow(10, div)
+        }
+      })
 
     // - convert and populate message
     this.formItems.messagePlain = Formatters.hexToUtf8(transaction.message.payload)
@@ -220,10 +289,29 @@ export class FormTransferCreationTs extends Vue {
   }
 
   /**
+   * Hook called when the child component ButtonAdd triggers
+   * the event 'click'
+   * @return {void}
+   */
+  public onAddMosaic(formItems: any) {
+    const id = new MosaicId(RawUInt64.fromHex(formItems.mosaicHex))
+    this.formItems.attachedMosaics.push({
+      id: id,
+      mosaicHex: formItems.mosaicHex,
+      name: this.getMosaicName(id),
+      amount: formItems.amount, // amount is relative
+    })
+  }
+
+  /**
    * Process form input
    * @return {void}
    */
-  public processTransfer() {
+  public onSubmit() {
+    if (this.disableSubmit) {
+      return ;
+    }
+
     this.$validator
       .validate()
       .then(async (valid) => {
@@ -234,342 +322,20 @@ export class FormTransferCreationTs extends Vue {
         this.isAwaitingSignature = true
       })
   }
-}
 
-/*
-import {
-  Mosaic, MosaicId, UInt64, Address, NamespaceId,
-  MultisigAccountInfo, TransferTransaction,
-  Message as Msg,
-  Deadline,
-  PlainMessage,
-} from 'nem2-sdk'
-import {mapState} from 'vuex'
-import {DEFAULT_FEES, FEE_GROUPS, formDataConfig} from '@/config'
-import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
-import {getAbsoluteMosaicAmount, getRelativeMosaicAmount, formatAddress, cloneData} from '@/core/utils'
-import {validation} from '@/core/validation'
-import {signAndAnnounce} from '@/core/services/transactions'
-import {
-  AppMosaic,
-  AppWallet,
-  AppInfo,
-  DefaultFee,
-  MosaicNamespaceStatusType,
-  LockParams,
-} from '@/core/model'
-import {StoreAccount} from '@/store/account/StoreAccount'
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
-import {validateAddress} from '@/core/validation'
-import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
-import SignerSelector from '@/components/forms/inputs/signer-selector/SignerSelector.vue'
-import NumberFormatting from '@/components/number-formatting/NumberFormatting.vue'
-
-@Component({
-  components: {ErrorTooltip, SignerSelector, NumberFormatting},
-  computed: {
-    ...mapState({
-      activeAccount: 'account',
-      app: 'app',
-    }),
-  },
-})
-export class FormTransferCreationTs extends Vue {
-  @Provide() validator: any = this.$validator
-  activeAccount: StoreAccount
-  app: AppInfo
-  isShowPanel = true
-  transactionList = []
-  transactionDetail = {}
-  isShowSubAlias = false
-  currentCosignatoryList = []
-  selectedMosaicHex = ''
-  currentAmount: number = null
-  isAddressMapNull = true
-  formItems = cloneData(formDataConfig.transferForm)
-  validation = validation
-  getRelativeMosaicAmount = getRelativeMosaicAmount
-  formatAddress = formatAddress
-  maxMosaicAbsoluteAmount = 0
-
-  get selectedMosaic() {
-    const {mosaics, selectedMosaicHex} = this
-    if (!mosaics || !selectedMosaicHex) return null
-    return mosaics[selectedMosaicHex] || null
-  }
-
-  get announceInLock(): boolean {
-    const {activeMultisigAccount, networkType} = this
-    if (!this.activeMultisigAccount) return false
-    const address = Address.createFromPublicKey(activeMultisigAccount, networkType).plain()
-    // @TODO: Do a loading system
-    const multisigInfo = this.activeAccount.multisigAccountInfo[address]
-    if (!multisigInfo) return false
-    return multisigInfo.minApproval > 1
-  }
-
-  get defaultFees(): DefaultFee[] {
-    if (!this.activeMultisigAccount) return DEFAULT_FEES[FEE_GROUPS.SINGLE]
-    if (!this.announceInLock) return DEFAULT_FEES[FEE_GROUPS.DOUBLE]
-    if (this.announceInLock) return DEFAULT_FEES[FEE_GROUPS.TRIPLE]
-  }
-
-  get networkCurrency() {
-    return this.activeAccount.networkCurrency
-  }
-
-  get feeAmount(): number {
-    const {feeSpeed} = this.formItems
-    const feeAmount = this.defaultFees.find(({speed}) => feeSpeed === speed).value
-    return getAbsoluteMosaicAmount(feeAmount, this.networkCurrency.divisibility)
-  }
-
-  get feeDivider(): number {
-    if (!this.activeMultisigAccount) return 1
-    if (!this.announceInLock) return 2
-    if (this.announceInLock) return 3
-  }
-
-  get isSelectedAccountMultisig(): boolean {
-    return this.activeAccount.activeMultisigAccount ? true : false
-  }
-
-  get activeMultisigAccount(): string {
-    return this.activeAccount.activeMultisigAccount
-  }
-
-  get activeMultisigAccountAddress(): string {
-    const {activeMultisigAccount} = this
-    return activeMultisigAccount
-      ? Address.createFromPublicKey(activeMultisigAccount, this.wallet.networkType).plain()
-      : null
-  }
-
-  get multisigMosaicList(): Record<string, AppMosaic> {
-    const {activeMultisigAccountAddress} = this
-    const {multisigAccountsMosaics} = this.activeAccount
-    if (!activeMultisigAccountAddress) return {}
-    return multisigAccountsMosaics[activeMultisigAccountAddress] || {}
-  }
-
-  get multisigInfo(): MultisigAccountInfo {
-    const {address} = this.wallet
-    return this.activeAccount.multisigAccountInfo[address]
-  }
-
-  get hasMultisigAccounts(): boolean {
-    if (!this.multisigInfo) return false
-    return this.multisigInfo.multisigAccounts.length > 0
-  }
-
-  get wallet(): AppWallet {
-    return this.activeAccount.wallet
-  }
-
-  get networkType() {
-    return this.activeAccount.wallet.networkType
-  }
-
-  get mosaicsLoading() {
-    return this.app.mosaicsLoading
-  }
-
-  get mosaics() {
-    const {mosaicsLoading} = this
-    return mosaicsLoading ? [] : this.activeAccount.mosaics
-  }
-
-  get currentHeight() {
-    return this.app.networkProperties.height
-  }
-
-  get currentAccount() {
-    return this.activeAccount.currentAccount
-  }
-
-  get recipient(): Address | NamespaceId {
-    const {recipient} = this.formItems
-    if (validateAddress(this.formItems.recipient).valid) {
-      return Address.createFromRawAddress(recipient)
+  /**
+   * internal helper for mosaic names
+   * @param {Mosaic} mosaic 
+   * @return {string}
+   */
+  protected getMosaicName(mosaicId: MosaicId | NamespaceId): string {
+    if (this.mosaicsNames.hasOwnProperty(mosaicId.toHex())) {
+      return this.mosaicsNames[mosaicId.toHex()]
     }
-    return new NamespaceId(recipient)
-  }
-
-  get mosaicList() {
-    // @TODO: would be better to return a loading indicator
-    // instead of an empty array ([] = "no matching data" in the select dropdown)
-    const {mosaics, currentHeight, multisigMosaicList, isSelectedAccountMultisig} = this
-
-    const mosaicList = isSelectedAccountMultisig
-      ? Object.values(multisigMosaicList).map(mosaic => {
-        if (mosaics[mosaic.hex]) return {...mosaic, name: mosaics[mosaic.hex].name || null}
-        return mosaic
-      })
-      : Object.values(mosaics)
-    // @TODO: refactor, make it an AppMosaic method
-    return [...mosaicList]
-      .filter(mosaic => mosaic.balance && mosaic.balance >= 0
-                && (mosaic.expirationHeight === MosaicNamespaceStatusType.FOREVER
-                    || currentHeight < mosaic.expirationHeight))
-      .map(({name, balance, hex}) => ({
-        label: `${name || hex} (${balance.toLocaleString()})`,
-        value: hex,
-      }))
-  }
-
-  get lockParams(): LockParams {
-    const {announceInLock, feeAmount, feeDivider} = this
-    return new LockParams(announceInLock, feeAmount / feeDivider)
-  }
-
-  initForm() {
-    this.selectedMosaicHex = null
-    this.currentAmount = null
-    this.formItems = cloneData(formDataConfig.transferForm)
-    this.formItems.multisigPublicKey = this.wallet.publicKey
-    this.resetFields()
-  }
-
-  addMosaic() {
-    const {selectedMosaicHex, mosaics, currentAmount} = this
-    if (!currentAmount) return
-    if (this.$validator.errors.has('currentAmount') || !selectedMosaicHex) return
-    this.maxMosaicAbsoluteAmount = 0
-    const {divisibility} = mosaics[selectedMosaicHex].properties
-
-    const duplicateMosaicIndex = this.formItems.mosaicTransferList
-      .findIndex((mosaic: Mosaic) => mosaic.id.toHex() === selectedMosaicHex)
-
-    if (duplicateMosaicIndex > -1) {
-      this.formItems.mosaicTransferList.splice(duplicateMosaicIndex, 1)
+    else if (this.namespacesNames.hasOwnProperty(mosaicId.toHex())) {
+      return this.namespacesNames[mosaicId.toHex()]
     }
 
-    this.formItems.mosaicTransferList.push(
-      new Mosaic(
-        new MosaicId(selectedMosaicHex),
-        UInt64.fromUint(
-          getAbsoluteMosaicAmount(currentAmount, divisibility),
-        ),
-      ),
-    )
-    this.sortMosaics()
-    this.clearAssetData()
-    const fieldToReset = this.$validator.fields.find({name: 'currentAmount'})
-    if (fieldToReset) this.$validator.reset(fieldToReset)
-  }
-
-  clearAssetData() {
-    this.selectedMosaicHex = null
-    this.currentAmount = null
-  }
-
-  sortMosaics() {
-    this.formItems.mosaicTransferList = this.formItems.mosaicTransferList.sort((a, b) => {
-      if (Number(a.id.toDTO()[1]) > b.id.toDTO()[1]) {
-        return 1
-      } else if (a.id.toDTO()[1] < b.id.toDTO()[1]) {
-        return -1
-      }
-      return 0
-    })
-  }
-
-  removeMosaic(index) {
-    this.formItems.mosaicTransferList.splice(index, 1)
-  }
-
-  submit() {
-    this.$validator
-      .validate()
-      .then((valid) => {
-        if (!valid) return
-        this.confirmViaTransactionConfirmation()
-      })
-  }
-
-  async confirmViaTransactionConfirmation() {
-    if (this.activeMultisigAccount) {
-      this.sendMultisigTransaction()
-    } else {
-      this.sendTransaction()
-    }
-    const {success} = await signAndAnnounce({
-      transaction: this.transactionList[0],
-      store: this.$store,
-      lockParams: this.lockParams,
-    })
-    if (success) this.initForm()
-  }
-
-  sendTransaction() {
-    const {remark, mosaicTransferList} = this.formItems
-    const {feeAmount, networkType, recipient} = this
-    const message: Msg = PlainMessage.create(remark)
-    const transaction = TransferTransaction
-      .create(Deadline.create(),
-        recipient,
-        mosaicTransferList,
-        message,
-        networkType,
-        UInt64.fromUint(feeAmount))
-    this.transactionList = [transaction]
-  }
-
-  sendMultisigTransaction() {
-    const {networkType, feeAmount, recipient, feeDivider} = this
-    const {mosaicTransferList, remark, multisigPublicKey} = this.formItems
-    const message: Msg = PlainMessage.create(remark)
-    const innerFee = feeAmount / feeDivider
-    const aggregateFee = feeAmount / feeDivider
-
-    const transaction = TransferTransaction
-      .create(Deadline.create(),
-        recipient,
-        mosaicTransferList,
-        message,
-        networkType,
-        UInt64.fromUint(feeAmount))
-
-    if (this.announceInLock) {
-      const aggregateTransaction = createBondedMultisigTransaction(
-        [transaction],
-        multisigPublicKey,
-        networkType,
-        innerFee,
-      )
-      this.transactionList = [aggregateTransaction]
-      return
-    }
-    const aggregateTransaction = createCompleteMultisigTransaction(
-      [transaction],
-      multisigPublicKey,
-      networkType,
-      aggregateFee,
-    )
-    this.transactionList = [aggregateTransaction]
-  }
-
-  resetFields() {
-    this.$nextTick(() => this.$validator.reset())
-  }
-
-  @Watch('wallet', {deep: true})
-  onWalletChange(newVal, oldVal) {
-    if (!newVal.publicKey) return
-    if (newVal.publicKey !== oldVal.publicKey) {
-      this.initForm()
-    }
-  }
-
-  @Watch('selectedMosaicHex', {immediate: true})
-  onSelectedMosaicHexChange() {
-    /** Makes currentAmount validation reactive /
-    this.$validator.validate('currentAmount', this.currentAmount).catch(e => e)
-  }
-
-  async mounted() {
-    this.initForm()
+    return  mosaicId.toHex()
   }
 }
-
-*/

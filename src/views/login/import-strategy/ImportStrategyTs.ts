@@ -30,7 +30,7 @@ export default class ImportStrategyTs extends Vue {
       image: walletTypeImages.seedImg,
       title: 'Import_Seed',
       description: 'Import_Mnemonic_phrase_directly_to_make_an_account',
-      route: 'login.importAccount',
+      route: 'login.importAccount.info',
     },
     {
       image: walletTypeImages.trezorImg,

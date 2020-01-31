@@ -1,7 +1,5 @@
 <template>
-  <div v-if="false" class="multisig_ban_container">
-    <!-- @TODO: restaure when Network Currency initialization works
-    <div v-if="alert" class="multisig_ban_container">  -->
+  <div v-if="alert.length" class="multisig_ban_container">
     <Alert type="error">
       {{ $t(alert) }}
     </Alert>

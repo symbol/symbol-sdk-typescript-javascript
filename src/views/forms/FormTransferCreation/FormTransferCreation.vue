@@ -1,38 +1,31 @@
 <template>
   <div class="FormTransferCreation">
-    <form action="processTransfer" onsubmit="event.preventDefaul" @keyup.enter="processTransfer">
+    <form action="onSubmit" onsubmit="event.preventDefaul" @keyup.enter="onSubmit">
+
+      <!-- Transaction signer selector -->
       <SignerSelector v-model="formItems.signerPublicKey" />
 
-      <div class="target flex_center">
-        <span class="title">{{ $t('FormTransferCreation_target') }}</span>
-        <span class="value radius flex_center">
+      <!-- Transfer recipient input field -->
+      <RecipientInput v-model="formItems.recipient" />
 
-          <RecipientInput v-model="formItems.recipient" />
+      <!-- Mosaics attachments input fields -->
+      <MosaicAttachmentInput v-model="formItems.attachedMosaics"
+                             :mosaics="currentWalletMosaics"
+                             :absolute="false"
+                             @add="onAddMosaic" />
 
-        </span>
-      </div>
-
-      <MosaicSelector :mosaics="currentWalletMosaics"
-                      v-model="formItems.selectedMosaicHex" />
-
-      <AmountInput :mosaic-id="mosaicsInfo.find(info => info.id.toHex() === formItems.selectedMosaicHex)"
-                    v-model="formItems.relativeAmount" />
-
+      <!-- Display of attached mosaics -->
       <MosaicAttachmentDisplay :mosaics="formItems.attachedMosaics"
+                               :absolute="true"
                                @delete="onDeleteMosaic" />
 
-      <div class="remark flex_center">
-        <span class="title">{{ $t('message') }}</span>
-        <span class="textarea_container flex_center value radius">
+      <!-- Transfer message input field -->
+      <MessageInput v-model="formItems.messagePlain" />
 
-          <MessageInput v-model="formItems.messagePlain" />
+      <!-- Transaction fee selector -->
+      <MaxFeeSelector v-model="formItems.maxFee" @input="$emit('input', formItems)" />
 
-        </span>
-      </div>
-
-      <MaxFeeSelector v-model="formItems.maxFee" />
-
-      <div class="send_button pointer" @click="processTransfer">
+      <div class="send_button pointer" @click="onSubmit">
         {{ $t('send') }}
       </div>
     </form>

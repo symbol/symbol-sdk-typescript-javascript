@@ -13,10 +13,10 @@
           class="mosaic_list_item radius"
         >
           <span class="mosaic_name overflow_ellipsis">
-           {{ mosaicService.getMosaicName(m.id) || m.id.toHex() }}
+           {{ m.name }}
           </span>
           <span class="mosaic_amount overflow_ellipsis">
-            <MosaicAmountDisplay :id="m.id" :amount="m.amount.compact()" />
+            <MosaicAmountDisplay :id="m.id" :relative-amount="m.amount" :absolute="absolute" />
           </span>
           <span class="icon_delete" @click="$emit('delete', m.id)" />
         </div>
