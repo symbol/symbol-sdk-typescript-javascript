@@ -2,19 +2,19 @@
   <div class="asset">
     <ErrorTooltip field-name="selectedMosaic">
       <AutoComplete
-        v-model="selectedMosaicName"
-        v-validate="'required|namespaceOrMosaicId'"
-        v-focus
+        @on-change="onChange"
         class="type"
-        :placeholder="$t('Please_enter_mosaic_hex_or_alias')"
-        :data-vv-as="$t('asset_type')"
+        v-model="selectedMosaicName"
+        v-focus
+        v-validate="'required|namespaceOrMosaicId'"
         data-vv-name="selectedMosaic"
       >
         <Option 
             v-for="m in mosaics"
             v-bind:key="m.id.toHex()"
+            v-bind:label="getMosaicName(m.id)"
             v-bind:value="getMosaicName(m.id)">
-          {{ getMosaicName(m.id) }}
+          {{ getMosaicName(m.id) }} 
         </Option>
       </AutoComplete>
     </ErrorTooltip>

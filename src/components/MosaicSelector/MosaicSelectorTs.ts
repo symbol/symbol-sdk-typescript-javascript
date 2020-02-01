@@ -66,11 +66,15 @@ export class MosaicSelectorTs extends Vue {
    * @see {Store.Mosaic}
    * @var {string[]}
    */
-  public mosaicsNames: string[]
+  public mosaicsNames: any
+
+  public created() {
+    this.selectedMosaicName = this.networkMosaicName
+  }
 
 /// region computed properties getter/setter
   public get selectedMosaic(): string {
-    return this.value || this.networkMosaic.toHex()
+    return Object.keys(this.mosaicsNames).find(k => this.mosaicsNames[k] === this.selectedMosaicName)
   }
 
   public set selectedMosaic(hex: string) {
@@ -78,11 +82,31 @@ export class MosaicSelectorTs extends Vue {
   }
 
   public get selectedMosaicName(): string {
-    const id = new MosaicId(RawUInt64.fromHex(this.selectedMosaic))
+    const selected = this.value || this.networkMosaic.toHex()
+    const id = new MosaicId(RawUInt64.fromHex(selected))
     return this.getMosaicName(id)
   }
 
+  public set selectedMosaicName(name: string) {
+    this.selectedMosaic = Object.keys(this.mosaicsNames).find(k => this.mosaicsNames[k] === name)
+  }
   /// end-region computed properties getter/setter
+
+  public onChange (input: string) {
+    console.log('onChange: ', input)
+    const canFindByName = Object.keys(this.mosaicsNames).find(k => this.mosaicsNames[k] === input)
+    if (undefined !== canFindByName) {
+      console.log('canFindByName: ', canFindByName)
+      return this.selectedMosaicName = this.mosaicsNames[canFindByName]
+    }
+
+    const canFindByHex = Object.keys(this.mosaicsNames).find(k => k === input)
+    if (undefined !== canFindByHex) {
+      console.log('canFindByHex: ', canFindByHex)
+      return this.selectedMosaicName = this.mosaicsNames[canFindByHex]
+    }
+  }
+
   public getMosaicName(mosaicId: MosaicId): string {
     if (this.mosaicsNames.hasOwnProperty(mosaicId.toHex())) {
       return this.mosaicsNames[mosaicId.toHex()]

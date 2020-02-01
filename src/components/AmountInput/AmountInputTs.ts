@@ -33,7 +33,7 @@ export class AmountInputTs extends Vue {
 
   @Prop({
     default: ''
-  }) value: number
+  }) value: string
 
   /**
    * Validation rules
@@ -42,12 +42,12 @@ export class AmountInputTs extends Vue {
   public validationRules = ValidationRuleset
 
 /// region computed properties getter/setter
-  public get relativeValue(): number {
+  public get relativeValue(): string {
     return this.value
   }
 
-  public set relativeValue(amount: number) {
-    this.$emit('input', this.value)
+  public set relativeValue(amount: string) {
+    this.$emit('input', parseFloat(amount))
   }
 /// end-region computed properties getter/setter
 }

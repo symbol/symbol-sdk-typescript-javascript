@@ -45,7 +45,7 @@ export class MosaicAttachmentDisplayTs extends Vue {
 
   @Prop({
     default: []
-  }) mosaics: MosaicAttachmentType[]
+  }) value: MosaicAttachmentType[]
 
   /**
    * Whether to show absolute amounts or not
@@ -72,7 +72,18 @@ export class MosaicAttachmentDisplayTs extends Vue {
    */
   public mosaicsNames: any
 
-/// region computed properties getter/setter
+  public attachedMosaics: MosaicAttachmentType[]
 
+/// region computed properties getter/setter
+  public get mosaics(): MosaicAttachmentType[] {
+    console.log('get MosaicAttachmentDisplay.mosaics', this.attachedMosaics || this.value || [])
+    return [].concat(...(this.attachedMosaics || this.value || []))
+  }
+
+  public set mosaics(attachments: MosaicAttachmentType[]) {
+    console.log('set MosaicAttachmentDisplay.mosaics', attachments)
+    this.attachedMosaics = attachments
+    this.$emit('change', attachments)
+  }
 /// end-region computed properties getter/setter
 }

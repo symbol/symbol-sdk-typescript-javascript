@@ -1,12 +1,14 @@
 <template>
   <div>
     <MosaicSelector :mosaics="mosaics"
-                    v-model="selectedMosaic" />
+                    v-model="selectedMosaic"
+                    @input="onChangeMosaic" />
 
-    <AmountInput v-model="relativeAmount" />
-    
+    <AmountInput v-model="relativeAmount"
+                 @input="onChangeAmount" />
+
     <ButtonAdd @click="onClickAdd"
-               :disabled="!formItems.selectedMosaicHex || undefined === formItems.relativeAmount" />
+               :disabled="!canClickAdd" />
   </div>
 </template>
 

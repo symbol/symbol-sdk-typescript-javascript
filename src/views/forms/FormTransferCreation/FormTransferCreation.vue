@@ -15,7 +15,7 @@
                              @add="onAddMosaic" />
 
       <!-- Display of attached mosaics -->
-      <MosaicAttachmentDisplay :mosaics="formItems.attachedMosaics"
+      <MosaicAttachmentDisplay v-model="formItems.attachedMosaics"
                                :absolute="true"
                                @delete="onDeleteMosaic" />
 

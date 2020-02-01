@@ -62,6 +62,8 @@ import RecipientInput from '@/components/RecipientInput/RecipientInput.vue'
 // @ts-ignore
 import ButtonAdd from '@/components/ButtonAdd/ButtonAdd.vue'
 
+type MosaicAttachmentType = {id: MosaicId, mosaicHex: string, name: string, amount: number}
+
 @Component({
   components: {
     AmountInput,
@@ -174,11 +176,11 @@ export class FormTransferCreationTs extends Vue {
    */
   public formItems = {
     signerPublicKey: '',
+    attachedMosaics: [],
     recipientRaw: '',
     recipient: null,
     selectedMosaicHex: '',
     relativeAmount: 0,
-    attachedMosaics: [],
     messagePlain: '',
     maxFee: 0
   }
@@ -201,13 +203,7 @@ export class FormTransferCreationTs extends Vue {
     this.formItems.selectedMosaicHex = this.networkMosaic.toHex()
     this.formItems.recipientRaw = !!this.recipient ? this.recipient.plain() : ''
     this.formItems.recipient = !!this.recipient ? this.recipient : null
-    this.formItems.attachedMosaics = !!this.mosaics && this.mosaics.length ? this.mosaics.map(
-      mosaic => ({
-        id: mosaic.id,
-        mosaicHex: mosaic.id.toHex(),
-        name: this.getMosaicName(mosaic.id),
-        amount: mosaic.amount.compact()
-      })) : []
+    this.formItems.attachedMosaics = !!this.mosaics && this.mosaics.length ? this.mosaicsToAttachments(this.mosaics) : []
     this.formItems.messagePlain = !!this.message ? Formatters.hexToUtf8(this.message.payload) : ''
 
     // - maxFee must be absolute
@@ -223,6 +219,19 @@ export class FormTransferCreationTs extends Vue {
   }
 
 /// region computed properties getter/setter
+  public get attachedMosaics(): MosaicAttachmentType[] {
+    if (this.mosaics && this.mosaics.length) {
+      return this.mosaicsToAttachments(this.mosaics)
+    }
+
+    return this.formItems.attachedMosaics || []
+  }
+
+  public set attachedMosaics(attachments: MosaicAttachmentType[]) {
+    console.log('set attachedMosaics: ', attachments)
+    this.formItems.attachedMosaics = attachments
+  }
+
   protected get transaction(): TransferTransaction {
     // - read form
     const data = {
@@ -249,18 +258,7 @@ export class FormTransferCreationTs extends Vue {
                                 : (transaction.recipientAddress as NamespaceId).toHex()
 
     // - populate attached mosaics
-    this.formItems.attachedMosaics = transaction.mosaics.map(
-      mosaic => {
-        const info = this.mosaicsInfo.find(i => i.id.equals(mosaic.id))
-        const div = info ? info.divisibility : 0
-        // amount will be converted to RELATIVE
-        return {
-          id: mosaic.id,
-          mosaicHex: mosaic.id.toHex(),
-          name: this.getMosaicName(mosaic.id),
-          amount: mosaic.amount.compact() / Math.pow(10, div)
-        }
-      })
+    this.attachedMosaics = this.mosaicsToAttachments(transaction.mosaics)
 
     // - convert and populate message
     this.formItems.messagePlain = Formatters.hexToUtf8(transaction.message.payload)
@@ -306,14 +304,30 @@ export class FormTransferCreationTs extends Vue {
    * the event 'click'
    * @return {void}
    */
-  public onAddMosaic(formItems: any) {
+  public async onAddMosaic(formItems: {mosaicHex: string, amount: number}) {
+    console.log('onAddMosaic(formItems): ', formItems)
+
+    // - update form data
+    const attachments = [].concat(...this.formItems.attachedMosaics)
+    console.log('onAddMosaic(attachments): ', attachments)
     const id = new MosaicId(RawUInt64.fromHex(formItems.mosaicHex))
-    this.formItems.attachedMosaics.push({
-      id: id,
-      mosaicHex: formItems.mosaicHex,
-      name: this.getMosaicName(id),
-      amount: formItems.amount, // amount is relative
-    })
+    const exists = attachments.findIndex(m => m.id.equals(id))
+    if (-1 !== exists) {
+      // - mosaic was already added, only increment amount
+      attachments[exists].amount += formItems.amount // amount is relative
+    }
+    else {
+      // - mosaic newly added
+      attachments.push({
+        id: id,
+        mosaicHex: formItems.mosaicHex,
+        name: this.getMosaicName(id),
+        amount: formItems.amount, // amount is relative
+      })
+    }
+
+    console.log('onAddMosaic(attachments): ', attachments)
+    this.attachedMosaics = attachments
   }
 
   public onChangeRecipient(input: string) {
@@ -358,5 +372,20 @@ export class FormTransferCreationTs extends Vue {
     }
 
     return  mosaicId.toHex()
+  }
+
+  protected mosaicsToAttachments(mosaics: Mosaic[]): MosaicAttachmentType[] {
+    return mosaics.map(
+      mosaic => {
+        const info = this.mosaicsInfo.find(i => i.id.equals(mosaic.id))
+        const div = info ? info.divisibility : 0
+        // amount will be converted to RELATIVE
+        return {
+          id: mosaic.id as MosaicId, //XXX resolve mosaicId from namespaceId
+          mosaicHex: mosaic.id.toHex(),
+          name: this.getMosaicName(mosaic.id),
+          amount: mosaic.amount.compact() / Math.pow(10, div)
+        }
+      })
   }
 }

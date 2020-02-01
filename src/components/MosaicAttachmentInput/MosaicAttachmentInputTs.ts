@@ -17,9 +17,6 @@ import {MosaicId, MosaicInfo, Mosaic} from 'nem2-sdk'
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
-// internal dependencies
-import {MosaicService} from '@/services/MosaicService'
-
 // child components
 // @ts-ignore
 import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue'
@@ -27,7 +24,6 @@ import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue'
 import AmountInput from '@/components/AmountInput/AmountInput.vue'
 // @ts-ignore
 import ButtonAdd from '@/components/ButtonAdd/ButtonAdd.vue'
-import { timingSafeEqual } from 'crypto'
 
 
 @Component({
@@ -98,16 +94,33 @@ export class MosaicAttachmentInputTs extends Vue {
   set relativeAmount(amount: number) {
     this.formItems.relativeAmount = amount
   }
+
+  get canClickAdd(): boolean {
+    if (!this.formItems.selectedMosaicHex
+        || undefined === this.formItems.relativeAmount) {
+      return false
+    }
+
+    return true
+  }
 /// end-region computed properties getter/setter
 
+  public onChangeMosaic(hex: string) {
+    this.selectedMosaic = hex
+  }
+
+  public onChangeAmount(amt: number) {
+    this.relativeAmount = amt
+  }
+
   public onClickAdd() {
-    if (!this.formItems.selectedMosaicHex.length) {
+    if (!this.canClickAdd) {
       return ;
     }
 
     this.$emit('add', {
-      mosaicHex: this.formItems.selectedMosaicHex,
-      amount: this.formItems.relativeAmount
+      mosaicHex: this.selectedMosaic,
+      amount: this.relativeAmount,
     })
   }
 }
