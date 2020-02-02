@@ -52,7 +52,7 @@ export class AESEncryptionService extends AbstractService {
     data: string,
     password: Password,
   ): string {
-    const salt = CryptoJS.lib.WordArray.random(16);
+    const salt = CryptoJS.lib.WordArray.random(16)
 
     // generate password based key
     const key = CryptoJS.PBKDF2(password.value, salt, {
@@ -61,7 +61,7 @@ export class AESEncryptionService extends AbstractService {
     });
 
     // encrypt using random IV
-    const iv = CryptoJS.lib.WordArray.random(16);
+    const iv = CryptoJS.lib.WordArray.random(16)
     const encrypted = CryptoJS.AES.encrypt(data, key, { 
       iv: iv, 
       padding: CryptoJS.pad.Pkcs7,
@@ -83,7 +83,7 @@ export class AESEncryptionService extends AbstractService {
     data: string,
     password: Password
   ): string {
-    const salt = CryptoJS.enc.Hex.parse(data.substr(0, 32));
+    const salt = CryptoJS.enc.Hex.parse(data.substr(0, 32))
     const iv = CryptoJS.enc.Hex.parse(data.substr(32, 32))
     const encrypted = data.substring(64);
 
