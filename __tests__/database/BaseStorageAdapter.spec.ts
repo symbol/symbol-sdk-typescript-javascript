@@ -13,44 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {DatabaseTable} from '@/core/database/DatabaseTable'
-import {DatabaseModel} from '@/core/database/DatabaseModel'
+import {
+  FakeAdapter,
+  FakeTable,
+  FakeModel,
+  getAdapter
+} from '@MOCKS/Database'
 import {JSONFormatter} from '@/core/database/formatters/JSONFormatter'
-import {BaseStorageAdapter} from '@/core/database/BaseStorageAdapter'
-import { ObjectStorageBackend } from '@/core/database/backends/ObjectStorageBackend'
-
-// MOCKS
-class FakeAdapter extends BaseStorageAdapter {}
-class FakeModel extends DatabaseModel {}
-class FakeTable extends DatabaseTable {
-  public createModel(values: Map<string, any>): DatabaseModel {
-    return new FakeModel(['id'], values)
-  }
-}
-
-// HELPERS
-const getAdapter = (): FakeAdapter => {
-  const adapter = new FakeAdapter(new ObjectStorageBackend({
-    accounts: '{'
-      + '"1234":{"id":"1234","name":"one"},'
-      + '"5678":{"id":"5678","name":"two"}'
-    + '}',
-    wallets: '{'
-      + '"abcd":{"id":"abcd","name":"w_one","address":"w_addr"},'
-      + '"efgh":{"id":"efgh","name":"w_two","address":"w_addr2"},'
-      + '"ijkl":{"id":"ijkl","name":"w_thr","address":"w_addr3"}'
-    + '}',
-    crashes: '[{item: "this is a corrupted table data format"}]'
-  }))
-  adapter.setSchemas(new Map<string, FakeTable>([
-    ['accounts', new FakeTable('accounts', ['id', 'name'])],
-    ['wallets', new FakeTable('wallets', ['id', 'name', 'address'])],
-    ['endpoints', new FakeTable('endpoints', ['id', 'host', 'port'])],
-    ['aliased', new FakeTable('crashes', ['id', 'time', 'error'])],
-  ]))
-
-  return adapter
-}
 
 describe('database/BaseStorageAdapter ==>', () => {
   describe('constructor() should', () => {

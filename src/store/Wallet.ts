@@ -257,17 +257,17 @@ export default {
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
 /// region scoped actions
-    async SET_CURRENT_WALLET({commit, dispatch}, walletId) {
-      fetchDatabase()
+    async SET_CURRENT_WALLET({commit, dispatch}, currentWalletModel) {
+      // fetchDatabase()
 
-      const currentWallet = walletsRepository.read(walletId)
-      commit('currentWallet', currentWallet)
-      commit('currentWalletAddress', currentWallet.objects.address)
+      // const currentWallet = walletsRepository.read(walletId)
+      commit('currentWallet', currentWalletModel)
+      commit('currentWalletAddress', currentWalletModel.objects.address)
 
       // reset store + re-initialize
       await dispatch('uninitialize')
-      await dispatch('initialize', currentWallet.objects.address.plain())
-      $eventBus.$emit('onWalletChange', currentWallet.objects.address.plain())
+      await dispatch('initialize', currentWalletModel.objects.address.plain())
+      $eventBus.$emit('onWalletChange', currentWalletModel.objects.address.plain())
     },
     SET_KNOWN_WALLETS({commit}, wallets) {
       commit('setKnownWallets', wallets)

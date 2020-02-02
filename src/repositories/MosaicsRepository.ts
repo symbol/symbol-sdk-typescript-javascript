@@ -63,8 +63,19 @@ export class MosaicsRepository
    * mapped by identifier
    * @return {Map<string, MosaicsModel>}
    */
-  public entries(): Map<string, MosaicsModel> {
-    return this._collection
+  public entries(
+    filterFn: (
+      value: MosaicsModel,
+      index: number,
+      array: MosaicsModel[]
+    ) => boolean = (e) => true
+  ): Map<string, MosaicsModel> {
+    const filtered = this.collect().filter(filterFn)
+    const mapped = new Map<string, MosaicsModel>()
+
+    // map by identifier
+    filtered.map(f => mapped.set(f.getIdentifier(), f))
+    return mapped
   }
 
   /**

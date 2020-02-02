@@ -63,8 +63,19 @@ export class WalletsRepository
    * mapped by identifier
    * @return {Map<string, WalletsModel>}
    */
-  public entries(): Map<string, WalletsModel> {
-    return this._collection
+  public entries(
+    filterFn: (
+      value: WalletsModel,
+      index: number,
+      array: WalletsModel[]
+    ) => boolean = (e) => true
+  ): Map<string, WalletsModel> {
+    const filtered = this.collect().filter(filterFn)
+    const mapped = new Map<string, WalletsModel>()
+
+    // map by identifier
+    filtered.map(f => mapped.set(f.getIdentifier(), f))
+    return mapped
   }
 
   /**

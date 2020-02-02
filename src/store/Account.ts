@@ -79,50 +79,31 @@ export default {
     LOG_OUT({dispatch}) {
       return dispatch('RESET_STATE')
     },
-    async SET_CURRENT_ACCOUNT({commit, dispatch}, accountName) {
-      fetchDatabase()
-
-      // validate account exists
-      const currentAccount = accountsRepository.read(accountName)
+    async SET_CURRENT_ACCOUNT({commit, dispatch}, currentAccountModel) {
 
       // changing active account, must unitialize wallet!
       await dispatch('wallet/uninitialize', null, {root: true})
 
       // update state
-      commit('currentAccount', currentAccount)
+      commit('currentAccount', currentAccountModel)
       commit('setAuthenticated', true)
-
-      // set knownWallets
-      const knownWallets = accountsRepository.fetchRelations(walletsRepository, currentAccount, 'wallets')
-      if (knownWallets.size) {
-        const known = Array.from(knownWallets.values())
-        const firstWalletId = known.shift().getIdentifier()
-        dispatch('wallet/SET_CURRENT_WALLET', firstWalletId, {root: true})
-        dispatch('wallet/SET_KNOWN_WALLETS', known, {root: true})
-      }
 
       // reset store + re-initialize
       await dispatch('initialize')
-      $eventBus.$emit('onAccountChange', accountName)
+      $eventBus.$emit('onAccountChange', currentAccountModel.getIdentifier())
     },
-    ADD_WALLET({commit, dispatch, getters}, walletId) {
-      fetchDatabase()
-
-      const currentAccount = getters['currentAccount']
-      if (! currentAccount) {
+    ADD_WALLET({dispatch, getters, state}, walletModel) {
+      const resolvedAccount = (getters.currentAccount)(state)
+      if (!resolvedAccount) {
         return
       }
 
-      // validate wallet exists
-      const wallet = walletsRepository.read(walletId)
-      const wallets = currentAccount.values.get("wallets")
-      wallets.push(wallet.getIdentifier())
+      const wallets = resolvedAccount.values.get("wallets")
+      wallets.push(walletModel.getIdentifier())
 
       // update account and return
-      currentAccount.values.set("wallets", wallets)
-      accountsRepository.update(currentAccount.getIdentifier(), currentAccount.values)
-
-      return dispatch('SET_CURRENT_ACCOUNT', currentAccount.getIdentifier())
+      resolvedAccount.values.set("wallets", wallets)
+      return dispatch('SET_CURRENT_ACCOUNT', resolvedAccount)
     }
 /// end-region scoped actions
   }

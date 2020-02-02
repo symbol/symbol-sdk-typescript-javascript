@@ -63,8 +63,19 @@ export class NamespacesRepository
    * mapped by identifier
    * @return {Map<string, NamespacesModel>}
    */
-  public entries(): Map<string, NamespacesModel> {
-    return this._collection
+  public entries(
+    filterFn: (
+      value: NamespacesModel,
+      index: number,
+      array: NamespacesModel[]
+    ) => boolean = (e) => true
+  ): Map<string, NamespacesModel> {
+    const filtered = this.collect().filter(filterFn)
+    const mapped = new Map<string, NamespacesModel>()
+
+    // map by identifier
+    filtered.map(f => mapped.set(f.getIdentifier(), f))
+    return mapped
   }
 
   /**

@@ -139,6 +139,19 @@ export abstract class ModelRepository implements IStorable<SimpleStorageAdapter>
    */
   public abstract entries(): Map<string, DatabaseModel>
 
+  /**
+   * Getter for the collection of items
+   * mapped by identifier
+   * @return {Map<string, DatabaseModel>}
+   */
+  public abstract entries(
+    filterFn?: (
+      value: DatabaseModel,
+      index: number,
+      array: DatabaseModel[]
+    ) => boolean
+  ): Map<string, DatabaseModel>
+
   /// region CRUD
   /**
    * Create an entity

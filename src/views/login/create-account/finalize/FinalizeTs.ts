@@ -22,6 +22,7 @@ import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {AppWallet} from '@/core/database/models/AppWallet'
 import {WalletService} from '@/services/WalletService'
+import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {NotificationType} from '@/core/utils/NotificationType'
 
@@ -75,12 +76,19 @@ export default class FinalizeTs extends Vue {
   public walletsRepository: WalletsRepository
 
   /**
+   * Accounts Repository
+   * @var {AccountsRepository}
+   */
+  public accountsRepository: AccountsRepository
+
+  /**
    * Hook called when the page is mounted
    * @return {void}
    */
   public mounted() {
     this.walletService = new WalletService(this.$store)
     this.walletsRepository = new WalletsRepository()
+    this.accountsRepository = new AccountsRepository()
   }
 
   /**
@@ -93,14 +101,24 @@ export default class FinalizeTs extends Vue {
       // create account by mnemonic
       const wallet = this.createWalletFromMnemonic()
 
+      // add wallet to account
+      const wallets = this.currentAccount.values.get("wallets")
+      wallets.push(wallet.model.getIdentifier())
+      this.currentAccount.values.set("wallets", wallets)
+
       // use repository for storage
       this.walletsRepository.create(wallet.model.values)
+      this.accountsRepository.update(
+        this.currentAccount.getIdentifier(),
+        this.currentAccount.values
+      )
 
       // execute store actions
-      this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
-      this.$store.dispatch('account/ADD_WALLET', wallet.model.getIdentifier())
-      this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet.model.getIdentifier())
+      this.$store.dispatch('account/ADD_WALLET', wallet.model)
+      this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet.model)
+      this.$store.dispatch('wallet/SET_KNOWN_WALLETS', wallets)
       this.$store.dispatch('temporary/RESET_STATE')
+      this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
 
       // flush and continue
       return this.$router.push({name: 'dashboard'})

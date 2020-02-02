@@ -63,8 +63,19 @@ export class PeersRepository
    * mapped by identifier
    * @return {Map<string, PeersModel>}
    */
-  public entries(): Map<string, PeersModel> {
-    return this._collection
+  public entries(
+    filterFn: (
+      value: PeersModel,
+      index: number,
+      array: PeersModel[]
+    ) => boolean = (e) => true
+  ): Map<string, PeersModel> {
+    const filtered = this.collect().filter(filterFn)
+    const mapped = new Map<string, PeersModel>()
+
+    // map by identifier
+    filtered.map(f => mapped.set(f.getIdentifier(), f))
+    return mapped
   }
 
   /**

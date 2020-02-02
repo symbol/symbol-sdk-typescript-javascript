@@ -65,8 +65,19 @@ export class AccountsRepository
    * mapped by identifier
    * @return {Map<string, AccountsModel>}
    */
-  public entries(): Map<string, AccountsModel> {
-    return this._collection
+  public entries(
+    filterFn: (
+      value: AccountsModel,
+      index: number,
+      array: AccountsModel[]
+    ) => boolean = (e) => true
+  ): Map<string, AccountsModel> {
+    const filtered = this.collect().filter(filterFn)
+    const mapped = new Map<string, AccountsModel>()
+
+    // map by identifier
+    filtered.map(f => mapped.set(f.getIdentifier(), f))
+    return mapped
   }
 
   /**

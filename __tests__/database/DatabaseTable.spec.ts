@@ -13,16 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {DatabaseTable} from '@/core/database/DatabaseTable'
-import {DatabaseModel} from '@/core/database/DatabaseModel'
-
-// mocks
-class FakeModel extends DatabaseModel {}
-class FakeTable extends DatabaseTable {
-  public createModel(values: Map<string, any>): DatabaseModel {
-    return new FakeModel(['primaryKey'], values)
-  }
-}
+import {FakeTable} from '@MOCKS/Database'
 
 describe('database/DatabaseTable ==>', () => {
   describe('constructor() should', () => {

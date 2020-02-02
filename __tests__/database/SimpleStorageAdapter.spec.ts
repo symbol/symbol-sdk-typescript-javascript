@@ -13,28 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {DatabaseTable} from '@/core/database/DatabaseTable'
-import {DatabaseModel} from '@/core/database/DatabaseModel'
-import {JSONFormatter} from '@/core/database/formatters/JSONFormatter'
-import {ObjectStorageBackend} from '@/core/database/backends/ObjectStorageBackend'
-import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
-import { AESEncryptionService } from '@/services/AESEncryptionService'
-import { Password } from 'nem2-sdk'
-
-// MOCKS
-class FakeModel extends DatabaseModel {}
-class FakeTable extends DatabaseTable {
-  public createModel(values: Map<string, any>): DatabaseModel {
-    return new FakeModel(['id'], values)
-  }
-}
-
-// HELPERS
-const getAdapter = (data: any = {}): SimpleStorageAdapter => {
-  const adapter = new SimpleStorageAdapter(new ObjectStorageBackend(data))
-  adapter.setSchemas(new Map<string, FakeTable>())
-  return adapter
-}
+import {getAdapter} from '@MOCKS/Database'
+import {AESEncryptionService} from '@/services/AESEncryptionService'
+import {Password} from 'nem2-sdk'
 
 describe('database/BaseStorageAdapter ==>', () => {
   describe('getSessionId() should', () => {

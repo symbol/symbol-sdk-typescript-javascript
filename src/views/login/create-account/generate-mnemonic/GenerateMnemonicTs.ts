@@ -116,9 +116,9 @@ export default class GenerateMnemonicTs extends Vue {
       this.accounts.update(this.currentAccount.getIdentifier(), this.currentAccount.values)
 
       // update state
-      this.$store.dispatch('notification/ADD_SUCCESS', this.$t('Generate_entropy_increase_success'))
-      this.$store.dispatch('account/SET_CURRENT_ACCOUNT', this.currentAccount.getIdentifier())
+      await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', this.currentAccount)
       this.$store.dispatch('temporary/SET_MNEMONIC', seed)
+      this.$store.dispatch('notification/ADD_SUCCESS', this.$t('Generate_entropy_increase_success'))
 
       // redirect
       return this.$router.push({name: 'login.createAccount.showMnemonic'})

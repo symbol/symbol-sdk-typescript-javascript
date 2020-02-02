@@ -34,9 +34,15 @@ export class WalletSelectorTs extends Vue {
 
   /**
    * Wallets repository
+   * @var {string[]}
+   */
+  public knownWallets: string
+
+  /**
+   * Wallets repository
    * @var {WalletsRepository}
    */
-  public knownWallets: WalletsRepository
+  public walletsRepository: WalletsRepository = new WalletsRepository()
 
 /// region computed properties getter/setter
   get currentWalletIdentifier(): string {
@@ -45,10 +51,16 @@ export class WalletSelectorTs extends Vue {
 
   set currentWalletIdentifier(identifier: string) {
     this.$store.dispatch('wallet/SET_CURRENT_WALLET', identifier)
+    this.$emit('change', identifier)
   }
 
   get currentWallets(): {identifier: string, name: string}[] {
-    return [...this.knownWallets.entries()].map(
+    // filter wallets to only known wallet names
+    const knownWallets = this.walletsRepository.entries(
+      (e) => this.knownWallets.includes(e.values.get('name'))
+    )
+
+    return [...knownWallets].map(
       ([ identifier, {values}]) => ({identifier, name: values.get('name')}),
     )
   }

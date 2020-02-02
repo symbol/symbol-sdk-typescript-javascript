@@ -25,6 +25,7 @@ import {DerivationService, DerivationPathLevels} from '@/services/DerivationServ
 import {WalletService} from '@/services/WalletService'
 import {MosaicService} from '@/services/MosaicService'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
+import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {NotificationType} from '@/core/utils/NotificationType'
 
 // child components
@@ -103,6 +104,12 @@ export default class WalletSelectionTs extends Vue {
   public walletsRepository: WalletsRepository
 
   /**
+   * Accounts Repository
+   * @var {AccountsRepository}
+   */
+  public accountsRepository: AccountsRepository
+
+  /**
    * List of addresses
    * @var {Address[]}
    */
@@ -129,6 +136,7 @@ export default class WalletSelectionTs extends Vue {
     this.walletService = new WalletService(this.$store)
     this.mosaicService = new MosaicService(this.$store)
     this.walletsRepository = new WalletsRepository()
+    this.accountsRepository = new AccountsRepository()
 
     Vue.nextTick().then(() => {
       setTimeout(() => this.initAccounts(), 200)
@@ -151,24 +159,37 @@ export default class WalletSelectionTs extends Vue {
 
     try {
       // selected accounts must be imported to storage
-      this.selectedAccounts.map((index, cnt) => {
+      const wallets = this.selectedAccounts.map((index, cnt) => {
         const wallet = this.createWalletFromPathIndex(index)
+
+        // add wallet to account
+        const wallets = this.currentAccount.values.get("wallets")
+        wallets.push(wallet.model.getIdentifier())
+        this.currentAccount.values.set("wallets", wallets)
 
         // use repository for storage
         this.walletsRepository.create(wallet.model.values)
+        this.accountsRepository.update(
+          this.currentAccount.getIdentifier(),
+          this.currentAccount.values
+        )
 
         // set first wallet active
         if (cnt === 0) {
-          this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet.model.getIdentifier())
+          this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet.model)
         }
 
         // add wallet to account
         this.$store.dispatch('account/ADD_WALLET', wallet.model.values.get('name'))
+        return wallet.model
       })
 
+      // set known wallets
+      this.$store.dispatch('wallet/SET_KNOWN_WALLETS', wallets.map(w => w.getIdentifier()))
+
       // execute store actions
-      this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
       this.$store.dispatch('temporary/RESET_STATE')
+      this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
       return this.$router.push({name: 'login.importAccount.finalize'})
     }
     catch(error) {

@@ -22,7 +22,9 @@ import {$eventBus} from '@/events'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
+import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {AccountService} from '@/services/AccountService'
 
 // child components
@@ -73,6 +75,12 @@ export default class LoginAccountTs extends Vue {
    * @var {AccountsRepository}
    */
   public accountsRepository = new AccountsRepository()
+
+  /**
+   * Accounts repository
+   * @var {WalletsRepository}
+   */
+  public walletsRepository = new WalletsRepository()
 
   /**
    * Validation rules
@@ -198,6 +206,11 @@ export default class LoginAccountTs extends Vue {
 
     // account exists, fetch data
     const account: AccountsModel = this.accountsRepository.read(identifier)
+    const knownWallets: Map<string, WalletsModel> = this.accountsRepository.fetchRelations(
+      this.walletsRepository,
+      account,
+      'wallets'
+    )
 
     // if account setup was not finalized, redirect
     if (!account.values.has('seed') || ! account.values.get('seed').length) {
@@ -216,7 +229,10 @@ export default class LoginAccountTs extends Vue {
     }
 
     // LOGIN SUCCESS: update app state
-    await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', identifier)
+    await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)
+    await this.$store.dispatch('wallet/SET_CURRENT_WALLET', Array.from(knownWallets.values()).shift())
+    this.$store.dispatch('wallet/SET_KNOWN_WALLETS', account.values.get('wallets'))
+
     $eventBus.$emit('onLogin', identifier)
     return this.$router.push({name: 'dashboard'})
   }
