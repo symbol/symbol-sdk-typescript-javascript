@@ -17,20 +17,16 @@ import {FakeModel, getAdapter, getFakeModel} from '@MOCKS/Database'
 import AccountStore from '@/store/Account'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 
-// MOCKS
-class FakeRepository extends AccountsRepository {
-  public constructor() {
-    super()
-    this.setAdapter(getAdapter())
-    this.fetch()
-  }
-}
-
 describe('store/Account ==>', () => {
   describe('action "RESET_STATE" should', () => {
     test('mutate currentAccount and isAuthenticated', () => {
+      // prepare
       const commit = jest.fn()
+
+      // act
       AccountStore.actions.RESET_STATE({commit})
+
+      // assert
       expect(commit).toHaveBeenCalledTimes(2)
       expect(commit).toHaveBeenNthCalledWith(1, 'currentAccount', null)
       expect(commit).toHaveBeenNthCalledWith(2, 'setAuthenticated', false)
@@ -39,8 +35,13 @@ describe('store/Account ==>', () => {
 
   describe('action "LOG_OUT" should', () => {
     test('dispatch "RESET_STATE"', () => {
+      // prepare
       const dispatch = jest.fn()
+
+      // act
       AccountStore.actions.LOG_OUT({dispatch})
+
+      // assert
       expect(dispatch).toHaveBeenCalled()
       expect(dispatch).toHaveBeenCalledWith('RESET_STATE')
     })
@@ -48,47 +49,58 @@ describe('store/Account ==>', () => {
 
   describe('action "SET_CURRENT_ACCOUNT" should', () => {
     test('dispatch "wallet/uninitialize"', () => {
+      // prepare
       const commit = jest.fn()
       const dispatch = jest.fn()
 
+      // act
       AccountStore.actions.SET_CURRENT_ACCOUNT(
         {commit, dispatch},
         getFakeModel('1234')
       )
+
+      // assert
       expect(dispatch).toHaveBeenNthCalledWith(1, 'wallet/uninitialize', null, {root: true})
     })
 
     test('mutate currentAccount and isAuthenticated', async () => {
+      // prepare
       const commit = jest.fn()
       const dispatch = jest.fn()
       const model = getFakeModel('1234')
 
+      // act
       await AccountStore.actions.SET_CURRENT_ACCOUNT(
         {commit, dispatch},
         model
       )
+
+      // assert
       expect(commit).toHaveBeenCalledTimes(2)
       expect(commit).toHaveBeenNthCalledWith(1, 'currentAccount', model)
       expect(commit).toHaveBeenNthCalledWith(2, 'setAuthenticated', true)
     })
 
     test('dispatch "account/initialize"', async () => {
+      // prepare
       const commit = jest.fn()
       const dispatch = jest.fn()
 
+      // act
       await AccountStore.actions.SET_CURRENT_ACCOUNT(
         {commit, dispatch},
         getFakeModel('1234')
       )
+
+      // assert
       expect(dispatch).toHaveBeenNthCalledWith(2, 'initialize')
     })
   })
 
   describe('action "ADD_WALLET" should', () => {
     test('do nothing given no currentAccount', () => {
+      // prepare
       const dispatch = jest.fn()
-
-      // overwrite state for test
       AccountStore.state = Object.assign({}, AccountStore.state, {
         currentAccount: null
       })
@@ -98,15 +110,16 @@ describe('store/Account ==>', () => {
         {dispatch, getters: AccountStore.getters, state: AccountStore.state},
         getFakeModel('1234')
       )
+
+      // assert
       expect(dispatch).not.toHaveBeenCalled()
     })
 
     test('dispatch "SET_CURRENT_ACCOUNT" given currentAccount', () => {
+      // prepare
       const dispatch = jest.fn()
       const account = getFakeModel('1234', [['wallets', []]])
       const wallet = getFakeModel('5678')
-
-      // overwrite state for test
       AccountStore.state = Object.assign({}, AccountStore.state, {
         currentAccount: account
       })
@@ -116,16 +129,17 @@ describe('store/Account ==>', () => {
         {dispatch, getters: AccountStore.getters, state: AccountStore.state},
         wallet
       )
+
+      // assert
       expect(dispatch).toHaveBeenCalled()
       expect(dispatch).toHaveBeenCalledWith('SET_CURRENT_ACCOUNT', account)
     })
 
     test('update currentAccount wallets', () => {
+      // prepare
       const dispatch = jest.fn()
       const account = getFakeModel('1234', [['wallets', []]])
       const wallet = getFakeModel('5678')
-
-      // overwrite state for test
       AccountStore.state = Object.assign({}, AccountStore.state, {
         currentAccount: account
       })
