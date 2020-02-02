@@ -30,12 +30,6 @@ export abstract class DatabaseTable {
   public columns: string[]
 
   /**
-   * Name of identifier field
-   * @var {string}
-   */
-  public identifier: string
-
-  /**
    * Construct a database table instance
    * @param tableName 
    * @param columns 

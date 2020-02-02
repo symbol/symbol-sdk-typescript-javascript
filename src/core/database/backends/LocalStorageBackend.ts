@@ -17,6 +17,7 @@
 import {IStorageBackend} from './IStorageBackend'
 
 export class LocalStorageBackend implements IStorageBackend {
+
   /**
    * The number of available entries
    * @var {number}
@@ -36,18 +37,18 @@ export class LocalStorageBackend implements IStorageBackend {
   /**
    * Getter for value with \a key
    * @param {string} key 
-   * @return {string|null}
+   * @return {any}
    */
-  public getItem(key: string): string | null {
+  public getItem(key: string): any {
     return localStorage.getItem(key)
   }
 
   /**
    * Setter for \a key with \a value
    * @param {string} key
-   * @param {string} value
+   * @param {any} value
    */
-  public setItem(key: string, value: string): void {
+  public setItem(key: string, value: any): void {
     localStorage.setItem(key, value)
   }
 }

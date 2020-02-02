@@ -32,11 +32,13 @@ export class JSONFormatter
     for (let i = 0, m = entities.size; i < m; i++) {
       // read next identifier and model data
       const id = iterator.next().value
-      const dto = entities.get(id)
-
       if (!id.length) {
         continue
       }
+
+      // read model
+      const dto = entities.get(id)
+      const identifier = dto.getIdentifier()
 
       // expose only "values" from model
       let raw = {}
@@ -52,7 +54,7 @@ export class JSONFormatter
       }
 
       // entities stored by id
-      data[id] = raw
+      data[identifier] = raw
     }
 
     return JSON.stringify(data)

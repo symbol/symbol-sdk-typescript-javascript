@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export interface IStorageBackend {
-  /**
-   * The number of available entries
-   * @var {number}
-   */
-  length: number
+import {BaseStorageAdapter} from '@/core/database/BaseStorageAdapter'
 
-  /**
-   * Getter for value with \a key
-   * @param {string} key 
-   * @return {string|null}
-   */
-  getItem(key: string): any
+// mocks
+class FakeAdapter extends BaseStorageAdapter {}
 
-  /**
-   * Setter for \a key with \a value
-   * @param {string} key
-   * @param {any} value
-   */
-  setItem(key: string, value: any): void
-}
+describe('database/BaseStorageAdapter ==>', () => {
+  describe('constructor() should', () => {
+    it ('set default backend given no parameters', () => {
+      const adapter = new FakeAdapter()
+      expect(adapter).toBeDefined()
+      expect(adapter.storage).toBeDefined()
+    })
+
+    it ('set default formatter given no parameters', () => {
+      const adapter = new FakeAdapter()
+      expect(adapter).toBeDefined()
+      expect(adapter.formatter).toBeDefined()
+    })
+  })
+})

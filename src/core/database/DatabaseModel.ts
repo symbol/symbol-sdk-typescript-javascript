@@ -17,6 +17,7 @@ import {SHA3Hasher, SignSchema, Convert} from 'nem2-sdk'
 
 // internal dependencies
 import {DatabaseRelation} from './DatabaseRelation'
+import {AESEncryptionService} from '@/services/AESEncryptionService'
 
 export abstract class DatabaseModel {
   /**
@@ -108,7 +109,11 @@ export abstract class DatabaseModel {
    * @return {string}
    */
   protected generateIdentifier(): string {
-    let raw = {}
+    let raw = {
+      time: new Date().valueOf(),
+      seed: AESEncryptionService.generateRandomBytes(8)
+    }
+
     const fields = this.values.keys()
     const values = this.values.values()
     for (let j = null; !(j = fields.next()).done;) {

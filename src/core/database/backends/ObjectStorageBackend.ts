@@ -21,7 +21,15 @@ export class ObjectStorageBackend implements IStorageBackend {
    * The storage backend (a simple object)
    * @var {any}
    */
-  protected backend = {}
+  protected backend: any = {}
+
+  /**
+   * Construct an object storage backend
+   * @param backend 
+   */
+  public constructor(backend: any = {}) {
+    this.backend = backend
+  }
 
   /**
    * The number of available entries
@@ -42,9 +50,9 @@ export class ObjectStorageBackend implements IStorageBackend {
   /**
    * Getter for value with \a key
    * @param {string} key 
-   * @return {string|null}
+   * @return {any}
    */
-  public getItem(key: string): string | null {
+  public getItem(key: string): any {
     if (! this.backend.hasOwnProperty(key)) {
       return null
     }
@@ -55,9 +63,9 @@ export class ObjectStorageBackend implements IStorageBackend {
   /**
    * Setter for \a key with \a value
    * @param {string} key
-   * @param {string} value
+   * @param {any} value
    */
-  public setItem(key: string, value: string): void {
+  public setItem(key: string, value: any): void {
     this.backend[key] = value
   }
 }

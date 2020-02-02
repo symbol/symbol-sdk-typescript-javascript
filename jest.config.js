@@ -30,16 +30,12 @@ module.exports = {
     'jest-serializer-vue'
   ],
   testMatch: [
-    '**/__tests__/components/**/*.(ts)',
-    '**/__tests__/core/**/*.(ts)',
-    '**/__tests__/store/**/*.(ts)',
-    '**/__tests__/views/**/*.(ts)',
+    '**/__tests__/database/**/*.spec.(ts)',
+    '**/__tests__/repositories/**/*.spec.(ts)',
+    '**/__tests__/store/**/*.spec.(ts)',
+    '**/__tests__/components/**/*.spec.(ts)',
   ],
   testURL: 'http://localhost/',
-  // watchPlugins: [
-  //   'jest-watch-typeahead/filename',
-  //   'jest-watch-typeahead/testname'
-  // ],
   globals: {
     'ts-jest': {
       babelConfig: true,
