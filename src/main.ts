@@ -43,17 +43,6 @@ registerCustomValidators()
 Vue.use(VueNumber)
 /// end-region UI plugins
 
-/// region event bus (events propagated on parallel thread)
-/**
- * This event bus channels following events:
- * 
- * - newConnection with \a nodeUrl
- * - onAccountChange with \a accountName
- * - onWalletChange with \a walletAddress
- */
-export const $eventBus = new Vue();
-/// end-region event bus
-
 /// region app storage & state store initializations
 export const AppStore = store
 

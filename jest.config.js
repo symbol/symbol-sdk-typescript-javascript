@@ -30,11 +30,11 @@ module.exports = {
     'jest-serializer-vue'
   ],
   testMatch: [
-    '**/__tests__/database/**/*.spec.(ts)',
-    '**/__tests__/services/**/*.spec.(ts)',
-    '**/__tests__/repositories/**/*.spec.(ts)',
-    '**/__tests__/store/**/*.spec.(ts)',
-    '**/__tests__/components/**/*.spec.(ts)',
+    '**/__tests__/database/**/*.spec.ts',
+    '**/__tests__/services/**/*.spec.ts',
+    '**/__tests__/repositories/**/*.spec.ts',
+    '**/__tests__/store/**/*.spec.ts',
+    '**/__tests__/components/**/*.spec.ts',
   ],
   testURL: 'http://localhost/',
   globals: {

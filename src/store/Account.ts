@@ -16,7 +16,7 @@
 import Vue from 'vue'
 
 // internal dependencies
-import {$eventBus} from '../main'
+import {$eventBus} from '../events'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'

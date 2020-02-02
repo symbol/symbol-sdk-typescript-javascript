@@ -29,7 +29,7 @@ import {Subscription, Observable, from} from 'rxjs'
 import {map} from 'rxjs/operators'
 
 // internal dependencies
-import {$eventBus} from '../main'
+import {$eventBus} from '../events'
 import {CacheKey} from '@/core/utils/CacheKey'
 import {RESTService} from '@/services/RESTService'
 import {WalletsRepository} from '@/repositories/WalletsRepository'

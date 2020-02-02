@@ -18,7 +18,7 @@ import {Component, Provide, Vue} from 'vue-property-decorator'
 import {NetworkType, Password} from 'nem2-sdk'
 
 // internal dependencies
-import {$eventBus} from '@/main'
+import {$eventBus} from '@/events'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
 import {AccountsRepository} from '@/repositories/AccountsRepository'

@@ -18,7 +18,7 @@ import {NetworkType, Listener, BlockInfo} from 'nem2-sdk';
 import {Subscription} from 'rxjs'
 
 // internal dependencies
-import {$eventBus} from '../main'
+import {$eventBus} from '../events'
 import {RESTService} from '@/services/RESTService'
 import {URLHelpers} from '@/core/utils/URLHelpers';
 import {AwaitLock} from './AwaitLock';
