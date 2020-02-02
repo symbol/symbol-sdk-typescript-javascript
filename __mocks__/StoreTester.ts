@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {expect} from 'chai'
-
 /**
  * Vuex Store mutation descriptor
  * @type {MutationPayloadType}
@@ -58,9 +56,9 @@ export class StoreTester {
       const mutation = expectedMutations[count]
 
       try {
-        expect(type).to.equal(mutation.type)
+        expect(type).toBe(mutation.type)
         if (payload) {
-          expect(payload).to.deep.equal(mutation.payload)
+          expect(payload).toMatchObject(mutation.payload)
         }
       } catch (error) {
         done(error)
@@ -77,7 +75,7 @@ export class StoreTester {
 
     // check if no mutations should have been dispatched
     if (expectedMutations.length === 0) {
-      expect(count).to.equal(0)
+      expect(count).toBe(0)
       done()
     }
   }

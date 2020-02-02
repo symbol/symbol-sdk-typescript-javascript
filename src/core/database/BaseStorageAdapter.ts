@@ -66,18 +66,36 @@ export abstract class BaseStorageAdapter
   }
 
   /**
+   * Find schema by *alias* or by *table name*.
+   * @param {string} schemaId 
+   * @return {DatabaseTable}
+   */
+  public getSchema(schemaId: string): DatabaseTable {
+    let schemaKey: string = schemaId
+    if (!this.schemas.has(schemaKey)) {
+      // try to find aliased schema
+      schemaKey = [...this.schemas.keys()].find(
+        s => this.schemas.get(s).tableName === schemaId
+      )
+
+      // catch unregistered schema
+      if (schemaKey === undefined) {
+        throw new Error('Schema with identifier \'' + schemaId + '\' is not registered.')
+      }
+    }
+
+    return this.schemas.get(schemaKey)
+  }
+
+  /**
    * Read and parse data for schema with \a schemaId
    * @param {string} schemaId 
    * @return {Map<string, DatabaseModel>}
    */
   public read(schemaId: string): Map<string, DatabaseModel> {
-    // catch unregistered schema
-    if (!this.schemas.has(schemaId)) {
-      throw new Error('Schema with identifier \'' + schemaId + '\' is not registered.')
-    }
-
+    // key can be alias or table name
     // read schema from storage backend
-    const schema = this.schemas.get(schemaId)
+    const schema = this.getSchema(schemaId)
 
     // set schema for formatter instance creation
     this.formatter.setSchema(schema)
@@ -103,13 +121,11 @@ export abstract class BaseStorageAdapter
    * @return {number} The count of entities written
    */
   public write(schemaId: string, entities: Map<string, DatabaseModel>): number {
-    // catch unregistered schema
-    if (!this.schemas.has(schemaId)) {
-      throw new Error('Schema with identifier \'' + schemaId + '\' is not registered.')
-    }
+    // key can be alias or table name
+    // read schema from storage backend
+    const schema = this.getSchema(schemaId)
 
     // format data
-    const schema = this.schemas.get(schemaId)
     const data = this.formatter.format(entities)
 
     // persist formatted data

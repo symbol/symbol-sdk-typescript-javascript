@@ -19,12 +19,12 @@ const getBackend = (data?: any) => new ObjectStorageBackend(data)
 
 describe('database/ObjectStorageBackend ==>', () => {
   describe('constructor() should', () => {
-    it ('create instance given no data', () => {
+    it('create instance given no data', () => {
       const backend = getBackend()
       expect(backend).toBeDefined()
     })
 
-    it ('create instances given any data', () => {
+    it('create instances given any data', () => {
       const b1 = getBackend(false)
       const b2 = getBackend([1, 2, 3])
       const b3 = getBackend({field: 'value'})
@@ -38,12 +38,12 @@ describe('database/ObjectStorageBackend ==>', () => {
   })
 
   describe('length property should', () => {
-    it ('contain 0 given no data', () => {
+    it('contain 0 given no data', () => {
       const backend = getBackend()
       expect(backend.length).toBe(0)
     })
 
-    it ('contain correct item lengths', () => {
+    it('contain correct item lengths', () => {
       const b1 = getBackend({item: 'value'})
       const b2 = getBackend({item: 'value', item2: 'value'})
       const b3 = getBackend({item: 'value', item2: 'value', item3: false})
@@ -54,19 +54,19 @@ describe('database/ObjectStorageBackend ==>', () => {
   })
 
   describe('isAvailable() should', () => {
-    it ('always return true', () => {
+    it('always return true', () => {
       const backend = getBackend()
       expect(backend.isAvailable()).toBe(true)
     })
   })
 
   describe('getItem() should', () => {
-    it ('return null given unknown item name', () => {
+    it('return null given unknown item name', () => {
       const backend = getBackend()
       expect(backend.getItem('unknown')).toBe(null)
     })
 
-    it ('return value given known item names', () => {
+    it('return value given known item names', () => {
       const backend = getBackend({
         boolField: true,
         numberField: 1,
@@ -84,7 +84,7 @@ describe('database/ObjectStorageBackend ==>', () => {
   })
 
   describe('setItem() should', () => {
-    it ('set values in storage', () => {
+    it('set values in storage', () => {
       const backend = getBackend()
       backend.setItem('boolField', true)
       backend.setItem('numberField', 1)
@@ -100,7 +100,7 @@ describe('database/ObjectStorageBackend ==>', () => {
       expect(backend.getItem('objectField')).toMatchObject({item: 'value'})
     })
 
-    it ('set new value given known item name', () => {
+    it('set new value given known item name', () => {
       const backend = getBackend({item: 'value'})
       backend.setItem('item', 'newValue')
 

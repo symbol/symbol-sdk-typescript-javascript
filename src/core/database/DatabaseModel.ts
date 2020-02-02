@@ -77,9 +77,10 @@ export abstract class DatabaseModel {
     }
 
     return this.primaryKeys.map(pk => {
-      const val = this.values.get(pk)
+      let val = this.values.get(pk)
       if (!val && pk === 'id') {
-        this.values.set('id', this.generateIdentifier())
+        val = this.generateIdentifier()
+        this.values.set('id', val)
       }
       return val
     }).join('-')
