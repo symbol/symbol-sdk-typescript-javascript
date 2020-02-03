@@ -18,7 +18,7 @@ import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
-import {WalletsRepository} from '@/repositories/WalletsRepository'
+import {WalletService} from '@/services/WalletService'
 
 @Component({computed: {...mapGetters({
   currentWallet: 'wallet/currentWallet',
@@ -40,23 +40,36 @@ export class WalletSelectorTs extends Vue {
 
   /**
    * Wallets repository
-   * @var {WalletsRepository}
+   * @var {WalletService}
    */
-  public walletsRepository: WalletsRepository = new WalletsRepository()
+  public service: WalletService
+
+  public created() {
+    this.service = new WalletService(this.$store)
+  }
 
 /// region computed properties getter/setter
-  get currentWalletIdentifier(): string {
+  public get currentWalletIdentifier(): string {
     return !this.currentWallet ? '' : {...this.currentWallet}.identifier
   }
 
-  set currentWalletIdentifier(identifier: string) {
-    this.$store.dispatch('wallet/SET_CURRENT_WALLET', identifier)
-    this.$emit('change', identifier)
+  public set currentWalletIdentifier(identifier: string) {
+    if (!identifier || !identifier.length) {
+      return ;
+    }
+
+    const wallet = this.service.getWallet(identifier)
+    if (!wallet) {
+      return ;
+    }
+
+    this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
+    this.$emit('change', wallet.getIdentifier())
   }
 
   get currentWallets(): {identifier: string, name: string}[] {
     // filter wallets to only known wallet names
-    const knownWallets = this.walletsRepository.entries(
+    const knownWallets = this.service.getWallets(
       (e) => this.knownWallets.includes(e.values.get('name'))
     )
 

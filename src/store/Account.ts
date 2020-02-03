@@ -17,26 +17,11 @@ import Vue from 'vue'
 
 // internal dependencies
 import {$eventBus} from '../events'
-import {AccountsRepository} from '@/repositories/AccountsRepository'
-import {WalletsRepository} from '@/repositories/WalletsRepository'
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {AwaitLock} from './AwaitLock';
 
 /// region globals
 const Lock = AwaitLock.create();
-const accountsRepository = new AccountsRepository()
-const walletsRepository = new WalletsRepository()
 /// end-region globals
-
-/**
- * Internal helper used to maintain updated snapshot
- * of database storage backend.
- * @return {void}
- */
-const fetchDatabase = () => {
-  accountsRepository.fetch()
-  walletsRepository.fetch()
-}
 
 export default {
   namespaced: true,

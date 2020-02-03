@@ -32,7 +32,6 @@ import {map} from 'rxjs/operators'
 import {$eventBus} from '../events'
 import {CacheKey} from '@/core/utils/CacheKey'
 import {RESTService} from '@/services/RESTService'
-import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {AwaitLock} from './AwaitLock';
 import {BroadcastResult} from '@/core/transactions/BroadcastResult';
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
@@ -62,7 +61,6 @@ const transactionGroupToStateVariable = (
 
 /// region globals
 const Lock = AwaitLock.create();
-const walletsRepository = new WalletsRepository()
 /// end-region globals
 
 /**
@@ -81,15 +79,6 @@ type SubscriptionType = {
 type PartialTransactionAnnouncementPayloadType = {
   signedLock: SignedTransaction,
   signedPartial: SignedTransaction,
-}
-
-/**
- * Internal helper used to maintain updated snapshot
- * of database storage backend.
- * @return {void}
- */
-const fetchDatabase = () => {
-  walletsRepository.fetch()
 }
 
 /**

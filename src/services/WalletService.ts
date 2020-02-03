@@ -27,6 +27,9 @@ import {
 import {AbstractService} from './AbstractService'
 import {DerivationService, DerivationPathLevels} from './DerivationService'
 import {DerivationPathValidator} from '@/core/validators/DerivationPathValidator'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {WalletsRepository} from '@/repositories/WalletsRepository'
+import { SimpleStorageAdapter } from '@/core/database/SimpleStorageAdapter'
 
 const getNetworkFromNetworkType = (networkType: NetworkType): Network => {
   if (undefined !== [NetworkType.MIJIN, NetworkType.MIJIN_TEST].find(type => networkType === type)) {
@@ -50,6 +53,12 @@ export class WalletService extends AbstractService {
   public $store: Store<any>
 
   /**
+   * Wallets repository
+   * @var {WalletsRepository}
+   */
+  public wallets: WalletsRepository
+
+  /**
    * Default wallet derivation path
    * @var {string}
    */
@@ -59,9 +68,50 @@ export class WalletService extends AbstractService {
    * Construct a service instance around \a store
    * @param store
    */
-  constructor(store?: Store<any>) {
+  constructor(store?: Store<any>, adapter?: SimpleStorageAdapter) {
     super()
     this.$store = store
+    this.wallets = new WalletsRepository()
+
+    // - use overwritten adapter
+    if (!!adapter) {
+      this.wallets.setAdapter(adapter)
+      this.wallets.fetch()
+    }
+  }
+
+  /**
+   * Read wallet from store or dispatch fetch action.
+   * @param {MosaicId} mosaicId 
+   * @return {Promise<MosaicInfo>}
+   */
+  public getWallet(
+    identifier: string 
+  ): WalletsModel {
+    try {
+      const wallet = this.wallets.read(identifier)
+      return wallet
+    }
+    catch (e) {
+      this.$store.dispatch('notification/ADD_ERROR', 'Wallet with identifier \'' + identifier + '\' does not exist.')
+    }
+
+    return null
+  }
+
+  /**
+   * Getter for the collection of items
+   * mapped by identifier
+   * @return {Map<string, WalletsModel>}
+   */
+  public getWallets(
+    filterFn: (
+      value: WalletsModel,
+      index: number,
+      array: WalletsModel[]
+    ) => boolean = (e) => true
+  ): Map<string, WalletsModel>  {
+    return this.wallets.entries(filterFn)
   }
 
   /**
@@ -81,10 +131,6 @@ export class WalletService extends AbstractService {
       this.$store.dispatch('diagnostic/ADD_ERROR', errorMessage)
       throw new Error(errorMessage)
     }
-
-    console.log('WalletService: path: ', path)
-    console.log('WalletService: mnemonic plain: ', mnemonic.plain)
-    console.log('WalletService: mnemonic seed: ', mnemonic.toSeed().toString('hex'))
 
     // create hd extended key
     const network = getNetworkFromNetworkType(networkType)

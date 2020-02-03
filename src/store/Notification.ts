@@ -17,7 +17,6 @@ import Vue from 'vue'
 
 // internal dependencies
 import app from '@/main'
-import {LogLevels} from '@/core/utils/LogLevels'
 import {AwaitLock} from './AwaitLock';
 const Lock = AwaitLock.create();
 

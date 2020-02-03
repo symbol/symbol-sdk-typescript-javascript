@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {FakeModel, getAdapter, getFakeModel} from '@MOCKS/Database'
+import {getFakeModel} from '@MOCKS/Database'
 import AccountStore from '@/store/Account'
-import {AccountsRepository} from '@/repositories/AccountsRepository'
 
 describe('store/Account ==>', () => {
   describe('action "RESET_STATE" should', () => {
