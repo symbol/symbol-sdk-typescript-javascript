@@ -194,7 +194,7 @@ describe('MosaicRestrictionTransactionService', () => {
      * =========================
      */
     describe('Test new services - MosaicGlobalRestriction', () => {
-        it('should create MosaicGlobalRestrictionTransaction', (done) => {
+        it('should create MosaicGlobalRestrictionTransaction', () => {
             const service = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
 
             return service.createMosaicGlobalRestrictionTransaction(
@@ -204,20 +204,19 @@ describe('MosaicRestrictionTransactionService', () => {
                 key,
                 '1',
                 MosaicRestrictionType.GE, undefined, helper.maxFee,
-            ).subscribe((transaction: MosaicGlobalRestrictionTransaction) => {
+            ).toPromise().then((transaction: MosaicGlobalRestrictionTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal('0');
                 expect(transaction.previousRestrictionType).to.be.equal(MosaicRestrictionType.GE);
                 expect(transaction.newRestrictionValue.toString()).to.be.equal('1');
                 expect(transaction.newRestrictionType).to.be.equal(MosaicRestrictionType.GE);
                 expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
-                done();
             });
         });
     });
 
     describe('Test new services - MosaicGlobalRestriction', () => {
-        it('should create MosaicGlobalRestrictionTransaction using alias', (done) => {
+        it('should create MosaicGlobalRestrictionTransaction using alias', () => {
             const service = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
             return service.createMosaicGlobalRestrictionTransaction(
                 deadline,
@@ -226,20 +225,19 @@ describe('MosaicRestrictionTransactionService', () => {
                 key,
                 '2',
                 MosaicRestrictionType.GE, undefined, helper.maxFee,
-            ).subscribe((transaction: MosaicGlobalRestrictionTransaction) => {
+            ).toPromise().then((transaction: MosaicGlobalRestrictionTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal('1');
                 expect(transaction.previousRestrictionType).to.be.equal(MosaicRestrictionType.GE);
                 expect(transaction.newRestrictionValue.toString()).to.be.equal('2');
                 expect(transaction.newRestrictionType).to.be.equal(MosaicRestrictionType.GE);
                 expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
-                done();
             });
         });
     });
 
     describe('Test new services - MosaicAddressRestriction', () => {
-        it('should create MosaicAddressRestrictionTransaction', (done) => {
+        it('should create MosaicAddressRestrictionTransaction', () => {
             const service = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
             return service.createMosaicAddressRestrictionTransaction(
                 deadline,
@@ -249,19 +247,18 @@ describe('MosaicRestrictionTransactionService', () => {
                 account.address,
                 '3',
                 helper.maxFee,
-            ).subscribe((transaction: MosaicAddressRestrictionTransaction) => {
+            ).toPromise().then((transaction: MosaicAddressRestrictionTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ADDRESS_RESTRICTION);
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal('2');
                 expect(transaction.newRestrictionValue.toString()).to.be.equal('3');
                 expect(transaction.targetAddressToString()).to.be.equal(account.address.plain());
                 expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
-                done();
             });
         });
     });
 
     describe('Test new services - MosaicAddressRestriction', () => {
-        it('should create MosaicAddressRestrictionTransaction with address alias', (done) => {
+        it('should create MosaicAddressRestrictionTransaction with address alias', () => {
             const service = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
 
             return service.createMosaicAddressRestrictionTransaction(
@@ -272,29 +269,28 @@ describe('MosaicRestrictionTransactionService', () => {
                 namespaceIdAddress,
                 '4',
                 helper.maxFee,
-            ).subscribe((transaction: MosaicAddressRestrictionTransaction) => {
+            ).toPromise().then((transaction: MosaicAddressRestrictionTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ADDRESS_RESTRICTION);
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal('3');
                 expect(transaction.newRestrictionValue.toString()).to.be.equal('4');
                 expect(transaction.targetAddressToString()).to.be.equal(account.address.plain());
                 expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
-                done();
             });
         });
     });
 
     describe('Announce MosaicGlobalRestriction through service', () => {
 
-        it('should create MosaicGlobalRestriction and announce', (done) => {
+        it('should create MosaicGlobalRestriction and announce', () => {
             const service = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
-            service.createMosaicGlobalRestrictionTransaction(
+            return service.createMosaicGlobalRestrictionTransaction(
                 deadline,
                 networkType,
                 mosaicId,
                 key,
                 '1',
                 MosaicRestrictionType.GE, undefined, helper.maxFee,
-            ).subscribe((transaction: MosaicGlobalRestrictionTransaction) => {
+            ).toPromise().then((transaction: MosaicGlobalRestrictionTransaction) => {
                 const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                     [transaction.toAggregate(account.publicAccount)],
                     networkType,
@@ -302,18 +298,15 @@ describe('MosaicRestrictionTransactionService', () => {
                     helper.maxFee,
                 );
                 const signedTransaction = aggregateTransaction.signWith(account, generationHash);
-                helper.announce(signedTransaction).then(() => {
-                    done();
-                });
+                return helper.announce(signedTransaction);
             });
         });
     });
 
     describe('Announce MosaicAddressRestriction through service', () => {
 
-        it('should create MosaicAddressRestriction and announce', (done) => {
+        it('should create MosaicAddressRestriction and announce', () => {
             const service = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
-
             return service.createMosaicAddressRestrictionTransaction(
                 deadline,
                 networkType,
@@ -322,7 +315,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 account.address,
                 '3',
                 helper.maxFee,
-            ).subscribe((transaction: MosaicAddressRestrictionTransaction) => {
+            ).toPromise().then((transaction: MosaicAddressRestrictionTransaction) => {
                 const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                     [transaction.toAggregate(account.publicAccount)],
                     networkType,
@@ -330,9 +323,7 @@ describe('MosaicRestrictionTransactionService', () => {
                     helper.maxFee,
                 );
                 const signedTransaction = aggregateTransaction.signWith(account, generationHash);
-                helper.announce(signedTransaction).then(() => {
-                    done();
-                });
+                return helper.announce(signedTransaction);
             });
         });
     });

@@ -85,64 +85,46 @@ describe('NamespaceHttp', () => {
     });
 
     describe('getNamespace', () => {
-        it('should return namespace data given namepsaceId', (done) => {
-            namespaceRepository.getNamespace(defaultNamespaceId)
-            .subscribe((namespace) => {
-                expect(namespace.startHeight.lower).to.be.equal(1);
-                expect(namespace.startHeight.higher).to.be.equal(0);
-                done();
-            });
+        it('should return namespace data given namepsaceId', async () => {
+            const namespace = await namespaceRepository.getNamespace(defaultNamespaceId).toPromise();
+            expect(namespace.startHeight.lower).to.be.equal(1);
+            expect(namespace.startHeight.higher).to.be.equal(0);
         });
     });
 
     describe('getNamespacesFromAccount', () => {
-        it('should return namespace data given publicKeyNemesis', (done) => {
-            namespaceRepository.getNamespacesFromAccount(account.address)
-            .subscribe((namespaces) => {
-                deepEqual(namespaces[0].owner, account.publicAccount);
-                done();
-            });
+        it('should return namespace data given publicKeyNemesis', async () => {
+            const namespaces = await namespaceRepository.getNamespacesFromAccount(account.address).toPromise();
+            deepEqual(namespaces[0].owner, account.publicAccount);
         });
     });
 
     describe('getNamespacesFromAccounts', () => {
-        it('should return namespaces data given publicKeyNemesis', (done) => {
-            namespaceRepository.getNamespacesFromAccounts([account.address])
-            .subscribe((namespaces) => {
-                deepEqual(namespaces[0].owner, account.publicAccount);
-                done();
-            });
+        it('should return namespaces data given publicKeyNemesis', async () => {
+            const namespaces = await namespaceRepository.getNamespacesFromAccounts([account.address]).toPromise();
+            deepEqual(namespaces[0].owner, account.publicAccount);
         });
 
     });
 
     describe('getNamespacesName', () => {
-        it('should return namespace name given array of namespaceIds', (done) => {
-            namespaceRepository.getNamespacesName([defaultNamespaceId])
-            .subscribe((namespaceNames) => {
-                expect(namespaceNames[0].name).to.be.equal('currency');
-                done();
-            });
+        it('should return namespace name given array of namespaceIds', async () => {
+            const namespaceNames = await namespaceRepository.getNamespacesName([defaultNamespaceId]).toPromise();
+            expect(namespaceNames[0].name).to.be.equal('currency');
         });
     });
 
     describe('getLinkedMosaicId', () => {
-        it('should return mosaicId given currency namespaceId', (done) => {
-            namespaceRepository.getLinkedMosaicId(defaultNamespaceId)
-            .subscribe((mosaicId) => {
-                expect(mosaicId).to.not.be.null;
-                done();
-            });
+        it('should return mosaicId given currency namespaceId', async () => {
+            const mosaicId = await namespaceRepository.getLinkedMosaicId(defaultNamespaceId).toPromise();
+            expect(mosaicId).to.not.be.null;
         });
     });
 
     describe('getLinkedAddress', () => {
-        it('should return address given namespaceId', (done) => {
-            namespaceRepository.getLinkedAddress(namespaceId)
-            .subscribe((address: Address) => {
-                expect(address.plain()).to.be.equal(account.address.plain());
-                done();
-            });
+        it('should return address given namespaceId', async () => {
+            const address = (await namespaceRepository.getLinkedAddress(namespaceId).toPromise()) as Address;
+            expect(address.plain()).to.be.equal(account.address.plain());
         });
     });
 });

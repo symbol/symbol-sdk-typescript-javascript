@@ -1,4 +1,5 @@
-import { assert, expect } from 'chai';
+import { expect } from 'chai';
+import { Convert } from '../../src/core/format';
 import { MetadataRepository } from '../../src/infrastructure/MetadataRepository';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
@@ -7,7 +8,6 @@ import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import { AccountMetadataTransaction } from '../../src/model/transaction/AccountMetadataTransaction';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
@@ -148,10 +148,11 @@ describe('MetadataTransactionService', () => {
      * =========================
      */
     describe('Test new services', () => {
-        it('should create AccountMetadataTransaction - no current metadata', (done) => {
+
+        it('should create AccountMetadataTransaction - no current metadata', async () => {
             const metaDataService = new MetadataTransactionService(metadataRepository);
 
-            return metaDataService.createMetadataTransaction(
+            const transaction = await metaDataService.createMetadataTransaction(
                 deadline,
                 networkType,
                 MetadataType.Account,
@@ -159,66 +160,65 @@ describe('MetadataTransactionService', () => {
                 key,
                 newValue,
                 targetAccount.publicAccount,
-            ).subscribe((transaction: AccountMetadataTransaction) => {
-                expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA);
-                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
-                expect(transaction.value).to.be.equal(newValue);
-                expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
-                done();
-            });
-        });
-        it('should create MosaicMetadataTransaction', (done) => {
-            const metaDataService = new MetadataTransactionService(metadataRepository);
+            ).toPromise();
 
-            return metaDataService.createMetadataTransaction(
+            expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA);
+            expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
+            expect(transaction.value).to.be.equal(newValue);
+            expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
+        });
+
+        it('should create MosaicMetadataTransaction', async () => {
+            const metaDataService = new MetadataTransactionService(metadataRepository);
+            const updateValue = newValue + 'delta';
+            const transaction = await metaDataService.createMetadataTransaction(
                 deadline,
                 networkType,
                 MetadataType.Mosaic,
                 targetAccount.publicAccount,
                 key,
-                newValue + 'delta',
+                updateValue,
                 targetAccount.publicAccount,
                 mosaicId,
-            ).subscribe((transaction: MosaicMetadataTransaction) => {
-                expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
-                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
-                expect(transaction.valueSizeDelta).to.be.equal(5);
-                expect(transaction.value).to.be.equal(newValue + 'delta');
-                expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
-                expect(transaction.targetMosaicId.toHex()).to.be.equal(mosaicId.toHex());
-                done();
-            });
+            ).toPromise() as MosaicMetadataTransaction;
+            expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
+            expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
+            expect(transaction.valueSizeDelta).to.be.equal(5);
+            expect(transaction.value).to.be.equals( Convert.decodeHex(Convert.xor(Convert.utf8ToUint8(newValue), Convert.utf8ToUint8(updateValue))));
+            expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
+            expect(transaction.targetMosaicId.toHex()).to.be.equal(mosaicId.toHex());
         });
-        it('should create NamespaceMetadataTransaction', (done) => {
+
+        it('should create NamespaceMetadataTransaction', async () => {
             const metaDataService = new MetadataTransactionService(metadataRepository);
 
-            return metaDataService.createMetadataTransaction(
+            const updateValue = newValue + 'delta';
+            const transaction = await metaDataService.createMetadataTransaction(
                 deadline,
                 networkType,
                 MetadataType.Namespace,
                 targetAccount.publicAccount,
                 key,
-                newValue + 'delta',
+                updateValue,
                 targetAccount.publicAccount,
                 namespaceId,
-            ).subscribe((transaction: NamespaceMetadataTransaction) => {
-                expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
-                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
-                expect(transaction.valueSizeDelta).to.be.equal(5);
-                expect(transaction.value).to.be.equal(newValue + 'delta');
-                expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
-                expect(transaction.targetNamespaceId.toHex()).to.be.equal(namespaceId.toHex());
-                done();
-            });
+            ).toPromise() as NamespaceMetadataTransaction;
+
+            expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
+            expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
+            expect(transaction.valueSizeDelta).to.be.equal(5);
+            expect(transaction.value).to.be.equals( Convert.decodeHex(Convert.xor(Convert.utf8ToUint8(newValue), Convert.utf8ToUint8(updateValue))));
+            expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
+            expect(transaction.targetNamespaceId.toHex()).to.be.equal(namespaceId.toHex());
         });
     });
 
     describe('Announce transaction through service', () => {
 
-        it('should create MosaicMetadataTransaction and announce', (done) => {
+        it('should create MosaicMetadataTransaction and announce', async () => {
             const metaDataService = new MetadataTransactionService(metadataRepository);
 
-            return metaDataService.createMetadataTransaction(
+            const transaction = await metaDataService.createMetadataTransaction(
                 deadline,
                 networkType,
                 MetadataType.Mosaic,
@@ -228,28 +228,21 @@ describe('MetadataTransactionService', () => {
                 targetAccount.publicAccount,
                 mosaicId,
                 helper.maxFee,
-            ).subscribe((transaction: MosaicMetadataTransaction) => {
-                const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
-                    [transaction.toAggregate(targetAccount.publicAccount)],
-                    networkType,
-                    [],
-                    helper.maxFee,
-                );
-                const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
-                helper.announce(signedTransaction).then(() => {
-                    done();
-                }, (error) => {
-                    console.log('Error:', error);
-                    assert(false);
-                    done();
-                });
-            });
+            ).toPromise();
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [transaction.toAggregate(targetAccount.publicAccount)],
+                networkType,
+                [],
+                helper.maxFee,
+            );
+            const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
+            return helper.announce(signedTransaction);
         });
     });
 
     describe('Announce transaction through service with delta size increase', () => {
 
-        it('should create MosaicMetadataTransaction and announce', (done) => {
+        it('should create MosaicMetadataTransaction and announce', () => {
             const metaDataService = new MetadataTransactionService(metadataRepository);
 
             return metaDataService.createMetadataTransaction(
@@ -262,7 +255,7 @@ describe('MetadataTransactionService', () => {
                 targetAccount.publicAccount,
                 mosaicId,
                 helper.maxFee,
-            ).subscribe((transaction: MosaicMetadataTransaction) => {
+            ).toPromise().then((transaction: MosaicMetadataTransaction) => {
                 const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                     [transaction.toAggregate(targetAccount.publicAccount)],
                     networkType,
@@ -270,20 +263,14 @@ describe('MetadataTransactionService', () => {
                     helper.maxFee,
                 );
                 const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
-                helper.announce(signedTransaction).then(() => {
-                    done();
-                }, (error) => {
-                    console.log('Error:', error);
-                    assert(false);
-                    done();
-                });
+                return helper.announce(signedTransaction);
             });
         });
     });
 
     describe('Announce transaction through service with delta size decrease', () => {
 
-        it('should create MosaicMetadataTransaction and announce', (done) => {
+        it('should create MosaicMetadataTransaction and announce', async () => {
             const metaDataService = new MetadataTransactionService(metadataRepository);
 
             return metaDataService.createMetadataTransaction(
@@ -295,7 +282,7 @@ describe('MetadataTransactionService', () => {
                 newValue,
                 targetAccount.publicAccount,
                 mosaicId,
-            ).subscribe((transaction: MosaicMetadataTransaction) => {
+            ).toPromise().then((transaction: MosaicMetadataTransaction) => {
                 const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                     [transaction.toAggregate(targetAccount.publicAccount)],
                     networkType,
@@ -303,13 +290,7 @@ describe('MetadataTransactionService', () => {
                     helper.maxFee,
                 );
                 const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
-                helper.announce(signedTransaction).then(() => {
-                    done();
-                }, (error) => {
-                    console.log('Error:', error);
-                    assert(false);
-                    done();
-                });
+                return helper.announce(signedTransaction);
             });
         });
     });

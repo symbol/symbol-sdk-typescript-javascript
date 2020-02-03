@@ -31,23 +31,17 @@ describe('NetworkHttp', () => {
     });
 
     describe('getNetworkType', () => {
-        it('should return network type', (done) => {
-            networkRepository.getNetworkType()
-            .subscribe((sentNetworkType) => {
-                expect(sentNetworkType).to.be.equal(networkType);
-                done();
-            });
+        it('should return network type', async () => {
+            const sentNetworkType = await networkRepository.getNetworkType().toPromise();
+            expect(sentNetworkType).to.be.equal(networkType);
         });
     });
 
     describe('getNetworkName', () => {
-        it('should return network name and description', (done) => {
-            networkRepository.getNetworkName()
-            .subscribe((networkName) => {
-                expect(networkName.name.toLowerCase()).to.be.not.null;
-                expect(networkName.description.toLowerCase()).to.be.not.null;
-                done();
-            });
+        it('should return network name and description', async () => {
+            const networkName = await networkRepository.getNetworkName().toPromise();
+            expect(networkName.name.toLowerCase()).to.be.not.null;
+            expect(networkName.description.toLowerCase()).to.be.not.null;
         });
     });
 });

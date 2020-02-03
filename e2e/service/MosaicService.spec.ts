@@ -38,13 +38,12 @@ describe('MosaicService', () => {
             mosaicRepository = helper.repositoryFactory.createMosaicRepository();
         });
     });
-    it('should return the mosaic list skipping the expired mosaics', (done) => {
+    it('should return the mosaic list skipping the expired mosaics', () => {
         const mosaicService = new MosaicService(accountRepository, mosaicRepository);
-        return mosaicService.mosaicsAmountViewFromAddress(accountAddress).subscribe((amountViews) => {
-            const views = amountViews.map((v) => {
+        return mosaicService.mosaicsAmountViewFromAddress(accountAddress).toPromise().then((amountViews) => {
+            return amountViews.map((v) => {
                 return {mosaicId: v.fullName(), amount: v.relativeAmount()};
             });
-            done();
         });
     });
 });
