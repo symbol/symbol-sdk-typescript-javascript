@@ -18,19 +18,19 @@
 import {Component, Vue, Prop} from 'vue-property-decorator'
 
 // internal dependencies
+import {ParentRouteNames} from '@/router/ParentRouteNames'
 import {TabEntry} from '@/router/TabEntry'
 
 @Component
 export class RouterTabListTs extends Vue {
   /**
-   * Property for adding links
-   * @var {TabEntry[]}
+   * Parent route name
+   * @var {ParentRouteNames}
    */
-  @Prop({
-    default: []
-  }) tabEntries: TabEntry[]
+  @Prop({ default: ''}) parentRouteName: ParentRouteNames
 
-  public get hasActive(): boolean {
-    return undefined !== this.tabEntries.find(entry => entry.isActive(this.$route))
+  public get tabEntries(): TabEntry[] {
+    // @ts-ignore
+    return this.$router.getTabEntries(this.parentRouteName)
   }
 }

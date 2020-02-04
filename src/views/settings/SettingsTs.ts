@@ -21,22 +21,19 @@ import {ParentRouteNames} from '@/router/ParentRouteNames'
 
 // child components
 // @ts-ignore
-import AccountBalancesPanel from '@/components/AccountBalancesPanel/AccountBalancesPanel.vue'
+import VerticalNavigationTabs from '@/components/VerticalNavigationTabs/VerticalNavigationTabs.vue'
 // @ts-ignore
-import NetworkStatisticsPanel from '@/components/NetworkStatisticsPanel/NetworkStatisticsPanel.vue'
-// @ts-ignore
-import RouterTabList from '@/components/RouterTabList/RouterTabList.vue'
+import FormTitle from '@/components/FormTitle/FormTitle.vue'
 
 @Component({
   components: {
-    AccountBalancesPanel,
-    NetworkStatisticsPanel,
-    RouterTabList,
+    VerticalNavigationTabs,
+    FormTitle,
   },
 })
-export class DashboardTs extends Vue {
+export class SettingsTs extends Vue {
   /**
    * Argument passed to the Router Tab List
    */
-  parentRouteName = ParentRouteNames.dashboard
+  parentRouteName = ParentRouteNames.settings
 }

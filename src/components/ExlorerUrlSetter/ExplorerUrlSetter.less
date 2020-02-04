@@ -1,0 +1,66 @@
+.explorer-link-form-item {
+  display: block;
+  float: left;
+  clear: both;
+  width: 100%;
+
+  .form-item-line {
+    display: inline-flex;
+
+    .auto-complete-container {
+      display: block;
+      position: relative;
+      float: left;
+    }
+
+    .auto-complete {
+      width: 5.5rem;
+      height: 0.45rem;
+      border-radius: 0.04rem;
+      padding: 0.1rem 0.2rem;
+      border: 0.01rem solid #ccc;
+      line-height: 1.5;
+      color: #515a6e;
+      background-color: #fff;
+      background-image: none;
+      cursor: text;
+      transition: border 0.2s ease-in-out, background 0.2s ease-in-out,
+        box-shadow 0.2s ease-in-out;
+
+      .ivu-input {
+        border-bottom: unset;
+        height: unset;
+      }
+
+      .ivu-select-dropdown {
+        left: 1px !important;
+      }
+    }
+
+    
+    .button-container {
+      display: inline-block;
+      margin-left: 10px;
+    }
+
+    .confirmation-button {
+      line-height: 0.42rem;
+      color: #fff;
+      text-align: center;
+      width: 1rem;
+      height: 0.45rem;
+      font-size: 0.18rem;
+      background-color: #1fb6ac;
+      border-radius: 0.04rem;
+      cursor: pointer;
+      font-weight: 400;
+      position: relative;
+      float: left;
+    }
+
+    .confirmation-button:hover {
+      opacity: 0.8;
+      box-shadow: 0 0 0.1rem #1fb6ac;
+    }
+  }
+}

@@ -123,7 +123,8 @@ export class MosaicBalanceListTs extends Vue {
     return filter(this.formatted).map((balanceEntry) => { return {
       info: info.filter(mosaic => mosaic.id.equals(balanceEntry.id)).shift(),
       name: balanceEntry.name,
-      id: balanceEntry.id
+      id: balanceEntry.id,
+      amount: balanceEntry.amount,
     }})
   }
 

@@ -280,13 +280,13 @@ export default {
     async REST_FETCH_BLOCKS({commit, dispatch, getters, rootGetters}, blockHeights: number[]) {
 
       // - filter out known blocks
-      const knownBlocks = getters['knownBlocks']
-      const heights = blockHeights.filter(height => undefined === knownBlocks.find(height))
+      const knownBlocks: Record<number, BlockInfo> = getters['knownBlocks']
+      const heights = blockHeights.filter(height => !knownBlocks[height])
 
       // - initialize blocks list with known blocks
       let blocks: BlockInfo[] = blockHeights.filter(
-        height => undefined !== knownBlocks.find(height)
-      ).map(known => knownBlocks.find(known))
+        height => !knownBlocks[height]
+      ).map(known => knownBlocks[known])
 
       // - use block ranges helper to minimize number of requests
       let ranges: {start: number}[] = getBlockRanges(heights)

@@ -120,11 +120,11 @@ export class TransactionService extends AbstractService {
     // store shortcuts
     const currentWallet: WalletsModel = this.$store.getters['wallet/currentWallet']
     const knownWallets: WalletsModel[] = this.$store.getters['wallet/knownWallets']
-    const knownBlocks: BlockInfo[] = this.$store.getters['network/knownBlocks']
+    const knownBlocks: Record<number, BlockInfo> = this.$store.getters['network/knownBlocks']
 
     // try to find block for fee information
     const height = transaction.transactionInfo ? transaction.transactionInfo.height : undefined
-    const block = knownBlocks.find((known: BlockInfo) => known.height.equals(height))
+    const block = Object().values(knownBlocks).find((known: BlockInfo) => known.height.equals(height))
 
     const isAggregate = [
       TransactionType.AGGREGATE_BONDED,

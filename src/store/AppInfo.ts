@@ -21,26 +21,27 @@ const Lock = AwaitLock.create();
 
 // configuration
 import appConfig from '@/../config/app.conf.json'
+import networkConfig from '@/../config/network.conf.json'
 
 export default {
   namespaced: true,
   state: {
     initialized: false,
     timezone: new Date().getTimezoneOffset() / 60,
-    currentLanguage: 'en-US',
     languages: appConfig.languages,
     hasLoadingOverlay: false,
     hasControlsDisabled: false,
     controlsDisabledMessage: '',
+    explorerUrl: networkConfig.explorerUrl,
   },
   getters: {
     getInitialized: state => state.initialized,
     currentTimezone: (state) => state.timezone,
-    currentLanguage: state => state.currentLanguage,
     languages: state => state.languages,
     shouldShowLoadingOverlay: (state) => state.hasLoadingOverlay,
     shouldDisableControls: (state) => state.hasControlsDisabled,
     controlsDisabledMessage: (state) => state.controlsDisabledMessage,
+    explorerUrl: (state) => state.explorerUrl,
   },
   mutations: {
     setInitialized: (state, initialized) => { state.initialized = initialized },
@@ -50,7 +51,7 @@ export default {
       Vue.set(state, 'controlsDisabledMessage', message || '')
     },
     toggleLoadingOverlay: (state, display) => Vue.set(state, 'hasLoadingOverlay', display),
-    setLanguage: (state, lang) => Vue.set(state, 'currentLanguage', lang),
+    setExplorerUrl: (state, url) => Vue.set(state, 'explorerUrl', url),
   },
   actions: {
     async initialize({ commit, dispatch, getters }) {
@@ -79,9 +80,8 @@ export default {
       const hasLoadingOverlay = loadingOverlay && loadingOverlay.show
       commit('toggleLoadingOverlay', hasLoadingOverlay)
     },
-    SET_LANGUAGE({commit}, language) {
-      this._vm.$i18n.locale = language
-      commit('setLanguage', language)
+    SET_EXPLORER_URL({commit}, url: string) {
+      commit('setExplorerUrl', url)
     },
 /// end-region scoped actions
   }

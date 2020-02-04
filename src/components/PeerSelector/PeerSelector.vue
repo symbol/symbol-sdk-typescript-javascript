@@ -29,7 +29,7 @@
           class="input_point point_item"
           action="submit"
           onsubmit="event.preventDefault()"
-          @keyup.enter="submit"
+          @keyup.enter="addPeer"
         >
           <ErrorTooltip placement-override="top" class="node-input-container" field-name="friendlyNodeUrl">
             <input

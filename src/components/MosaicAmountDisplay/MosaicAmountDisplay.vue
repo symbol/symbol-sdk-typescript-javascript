@@ -1,6 +1,6 @@
 <template>
   <span :class="[ 'amount', 'overflow_ellipsis', color ]">
-    <AmountDisplay :amount="amount" :decimals="divisibility" />
+    <AmountDisplay :value="amount" :decimals="divisibility" />
   </span>
 </template>
 

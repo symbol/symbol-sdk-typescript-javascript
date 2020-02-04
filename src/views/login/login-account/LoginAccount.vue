@@ -2,11 +2,7 @@
   <div class="login-account-wrapper">
     <form action="submit" onsubmit="event.preventDefault()" @keyup.enter="submit">
       <div class="switch-language-container">
-        <Select v-model="language" :placeholder="$t('switch_language')">
-          <Option v-for="item in languageList" :key="item.value" :value="item.value">
-            {{ item.label }}
-          </Option>
-        </Select>
+        <LanguageSelector />
       </div>
       <div class="welcome-box">
         <div class="banner-image">

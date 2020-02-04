@@ -40,13 +40,14 @@ export class LanguageSelectorTs extends Vue {
    * Currently active language
    */
   get language() {
-    return this.currentLanguage
+    return this.$i18n.locale
   }
 
   /**
    * Sets the new language
    */
   set language(language: string) {
-    this.$store.commit('app/setLanguage', language)
+    this.$i18n.locale = language
+    window.localStorage.setItem('locale', language)
   }
 }

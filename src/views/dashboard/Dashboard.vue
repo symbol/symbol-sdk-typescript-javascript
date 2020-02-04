@@ -6,7 +6,7 @@
 
     <div class="monitor_panel_right_container">
       <NetworkStatisticsPanel />
-      <RouterTabList :tab-entries="tabEntries" />
+      <RouterTabList :parent-route-name="parentRouteName" />
 
       <div class="radius bottom_router_view">
         <router-view />

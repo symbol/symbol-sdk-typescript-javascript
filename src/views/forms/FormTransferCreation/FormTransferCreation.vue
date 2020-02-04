@@ -1,6 +1,6 @@
 <template>
   <div class="FormTransferCreation">
-    <form action="onSubmit" onsubmit="event.preventDefaul" @keyup.enter="onSubmit">
+    <form action="onSubmit" onsubmit="event.preventDefault()" @keyup.enter="onSubmit">
 
       <!-- Transaction signer selector -->
       <SignerSelector v-model="formItems.signerPublicKey" />

@@ -18,9 +18,9 @@
           </span>
           <span class="mosaic_name">
             {{ entry.name }}
-          </span>
+            </span>
           <span class="mosaic_value">
-            <MosaicAmountDisplay :amount="entry.amount"
+            <MosaicAmountDisplay :relative-amount="entry.amount"
                                  :id="entry.id" />
           </span>
         </div>
@@ -56,10 +56,9 @@
           <img v-else class="mosaicIcon" src="@/views/resources/img/monitor/mosaicDefault.png">
         </span>
         <span class="mosaic_name text_select">
-            {{ entry.name }}
         </span>
         <span class="mosaic_value">
-            <MosaicAmountDisplay :amount="entry.amount"
+            <MosaicAmountDisplay :relative-amount="entry.amount"
                                  :id="entry.id" />
         </span>
       </div>

@@ -347,11 +347,10 @@ export const routes: AppRoute[] = [
           },
         ],
       },
-      /*
       {
         path: '/settingPanel',
         name: 'settings',
-        redirect: '/settingNormal',
+        redirect: '/generalSettings',
         meta: {
           protected: true,
           clickable: true,
@@ -359,60 +358,42 @@ export const routes: AppRoute[] = [
           activeIcon: leftBarIcons.windowSettingActive,
         },
         // @ts-ignore
-        component: () => import('@/views/setting/Setting.vue'),
+        component: () => import('@/views/settings/Settings.vue'),
         /// region settings children
         children: [
           {
-            path: '/settingNormal',
-            name: 'settings.general',
+            path: '/generalSettings',
+            name: 'general.settings',
             meta: {
               protected: true,
               title: 'general_settings',
             },
             // @ts-ignore
-            component: () => import('@/views/setting/setting-normal/SettingNormal.vue'),
-          }, {
-            path: '/offlineSetting',
-            name: 'settings.offline',
-            meta: {
-              protected: true,
-              title: 'offline_setting',
-            },
-            // @ts-ignore
-            component: () => import('@/views/setting/offline-setting/OfflineSetting.vue'),
-          }, {
-            path: '/settingPassword',
-            name: 'settings.password',
-            meta: {
-              protected: true,
-              title: 'account_password',
-            },
-            // @ts-ignore
-            component: () => import('@/views/setting/setting-password/SettingPassword.vue'),
-          }, {
-            path: '/settingNetwork',
-            name: 'settings.network',
-            meta: {
-              protected: true,
-              disabled: true,
-              title: 'network_settings',
-            },
-            // @ts-ignore
-            component: () => import('@/views/setting/setting-network/SettingNetwork.vue'),
-          }, {
-            path: '/settingAbout',
+            component: () => import('@/views/settings/general-settings/GeneralSettings.vue'),
+          },
+          // {
+          //   path: '/settingPassword',
+          //   name: 'settings.password',
+          //   meta: {
+          //     protected: true,
+          //     title: 'account_password',
+          //   },
+          //   // @ts-ignore
+          //   component: () => import('@/views/setting/setting-password/SettingPassword.vue'),
+          // },
+          {
+            path: '/about',
             name: 'settings.about',
             meta: {
               protected: true,
               title: 'about',
             },
             // @ts-ignore
-            component: () => import('@/views/setting/setting-about/SettingAbout.vue'),
+            component: () => import('@/views/settings/about/About.vue'),
           },
         ],
         /// end-region settings children
       },
-       */
     ],
     /// end-region PageLayout children
   },

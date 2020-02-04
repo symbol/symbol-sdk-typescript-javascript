@@ -13,30 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 // external dependencies
-import {Component, Vue} from 'vue-property-decorator'
+import {Component, Vue, Prop} from 'vue-property-decorator'
 
 // internal dependencies
 import {ParentRouteNames} from '@/router/ParentRouteNames'
+import {TabEntry} from '@/router/TabEntry'
 
-// child components
-// @ts-ignore
-import AccountBalancesPanel from '@/components/AccountBalancesPanel/AccountBalancesPanel.vue'
-// @ts-ignore
-import NetworkStatisticsPanel from '@/components/NetworkStatisticsPanel/NetworkStatisticsPanel.vue'
-// @ts-ignore
-import RouterTabList from '@/components/RouterTabList/RouterTabList.vue'
-
-@Component({
-  components: {
-    AccountBalancesPanel,
-    NetworkStatisticsPanel,
-    RouterTabList,
-  },
-})
-export class DashboardTs extends Vue {
+@Component
+export class VerticalNavigationTabsTs extends Vue {
   /**
-   * Argument passed to the Router Tab List
+   * Parent route name
+   * @var {ParentRouteNames}
    */
-  parentRouteName = ParentRouteNames.dashboard
+  @Prop({ default: ''}) parentRouteName: ParentRouteNames
+
+  public get tabEntries(): TabEntry[] {
+    // @ts-ignore
+    return this.$router.getTabEntries(this.parentRouteName)
+  }
 }

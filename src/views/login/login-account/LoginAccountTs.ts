@@ -30,6 +30,8 @@ import {AccountService} from '@/services/AccountService'
 // child components
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+// @ts-ignore
+import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue'
 
 // configuration
 import appConfig from '@/../config/app.conf.json'
@@ -44,6 +46,7 @@ import appConfig from '@/../config/app.conf.json'
   },
   components: {
     ErrorTooltip,
+    LanguageSelector,
   },
 })
 export default class LoginAccountTs extends Vue {
