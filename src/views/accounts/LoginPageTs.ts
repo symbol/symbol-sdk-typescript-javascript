@@ -49,7 +49,7 @@ import appConfig from '@/../config/app.conf.json'
     LanguageSelector,
   },
 })
-export default class LoginAccountTs extends Vue {
+export default class LoginPageTs extends Vue {
   @Provide() validator: any = this.$validator
 
   /**
@@ -204,7 +204,7 @@ export default class LoginAccountTs extends Vue {
 
     // if account doesn't exist, authentication is not valid
     if (! this.accountsRepository.find(identifier)) {
-      return this.$router.push({name: 'login.account'})
+      return this.$router.push({name: 'accounts.login'})
     }
 
     // account exists, fetch data
@@ -217,7 +217,7 @@ export default class LoginAccountTs extends Vue {
 
     // if account setup was not finalized, redirect
     if (!account.values.has('seed') || ! account.values.get('seed').length) {
-      return this.$router.push({name: 'login.createAccount.generateMnemonic'})
+      return this.$router.push({name: 'accounts.createAccount.generateMnemonic'})
     }
 
     // use service to generate password hash

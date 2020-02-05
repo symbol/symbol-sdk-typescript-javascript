@@ -64,11 +64,11 @@
           <input v-model="formItems.hint">
         </div>
         <div class="button-container">
-          <button class="info-button" @click="$router.push({name: 'login.account'})">
+          <button class="info-button" @click="$router.push({name: 'accounts.login'})">
             {{ $t('Back_to_home') }}
           </button>
           <button @click="submit">
-            {{ $t(nextPage === 'login.importAccount.importMnemonic' ? 'Restore_Mnemonic' : 'Generating_mnemonic') }}
+            {{ $t(nextPage === 'accounts.importAccount.importMnemonic' ? 'Restore_Mnemonic' : 'Generating_mnemonic') }}
           </button>
         </div>
       </div>

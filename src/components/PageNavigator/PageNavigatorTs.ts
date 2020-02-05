@@ -40,6 +40,6 @@ export class PageNavigatorTs extends Vue {
    */
   public logout() {
     this.$store.dispatch('account/LOG_OUT')
-    this.$router.push({name: 'login.account'})
+    this.$router.push({name: 'accounts.login'})
   }
 }

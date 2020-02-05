@@ -1,6 +1,6 @@
 <template>
   <div class="check-mnemonic-sec">
-    <div class="skip pointer" @click="$router.push({name: 'login.createAccount.finalize'})">
+    <div class="skip pointer" @click="$router.push({name: 'accounts.createAccount.finalize'})">
       {{ $t('skip') }}
     </div>
     <p class="set-title">
@@ -10,7 +10,7 @@
       <div class="check-mnemonic-left">
         <MnemonicVerification
           :words="mnemonicWordsList"
-          @success="$router.push({name: 'login.createAccount.finalize'})"
+          @success="$router.push({name: 'accounts.createAccount.finalize'})"
           @canceled="$router.back()"
         />
       </div>
@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import VerifyMnemonicTs from '@/views/login/create-account/verify-mnemonic/VerifyMnemonicTs.ts'
+import VerifyMnemonicTs from './VerifyMnemonicTs'
 import './VerifyMnemonic.less'
 
 export default class VerifyMnemonic extends VerifyMnemonicTs {

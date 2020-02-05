@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import FinalizeTs from '@/views/login/create-account/finalize/FinalizeTs.ts'
+import FinalizeTs from './FinalizeTs'
 
 export default class Finalize extends FinalizeTs {
 }

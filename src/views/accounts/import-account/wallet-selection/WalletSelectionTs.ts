@@ -190,7 +190,7 @@ export default class WalletSelectionTs extends Vue {
       // execute store actions
       this.$store.dispatch('temporary/RESET_STATE')
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
-      return this.$router.push({name: 'login.importAccount.finalize'})
+      return this.$router.push({name: 'accounts.importAccount.finalize'})
     }
     catch(error) {
       return this.$store.dispatch(

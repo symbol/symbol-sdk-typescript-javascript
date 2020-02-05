@@ -11,7 +11,8 @@
         <div class="top-qr-text overflow_ellipsis">
           <span class="top-qr-text-title">{{ $t('assets') }}:</span>
           <span v-if="formItems.attachedMosaics.length"
-                v-for="(selectedMosaic, index) in formItems.attachedMosaics">
+                v-for="(selectedMosaic, index) in formItems.attachedMosaics"
+                :key="index">
             <span class="blue">{{ selectedMosaic.amount }}</span>
             <span class="blue">{{ selectedMosaic.name }}</span>
             <span class="gray">（{{ selectedMosaic.id.toHex() }}）</span>
@@ -42,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import {DashboardInvoicePageTs} from '@/views/dashboard/invoice/DashboardInvoicePageTs.ts'
+import {DashboardInvoicePageTs} from './DashboardInvoicePageTs'
 import './DashboardInvoicePage.less'
 
 export default class DashboardInvoicePage extends DashboardInvoicePageTs {}

@@ -9,7 +9,7 @@
           {{ $t('Do_not_have_Account') }}
           <span
             class="create-account"
-            @click="$router.push({name:'login.createAccount.info', params:{nextPage:'login.createAccount.generateMnemonic'}})"
+            @click="$router.push({name:'accounts.createAccount.info', params:{nextPage:'accounts.createAccount.generateMnemonic'}})"
           >
             {{ $t('create_a_new_account') }}
           </span>

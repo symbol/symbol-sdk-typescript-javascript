@@ -30,7 +30,7 @@ export default class ImportStrategyTs extends Vue {
       image: walletTypeImages.seedImg,
       title: 'Import_Seed',
       description: 'Import_Mnemonic_phrase_directly_to_make_an_account',
-      route: 'login.importAccount.info',
+      route: 'accounts.importAccount.info',
     },
     {
       image: walletTypeImages.trezorImg,
@@ -58,7 +58,7 @@ export default class ImportStrategyTs extends Vue {
     return this.$router.push({
       name: routeName,
       params: {
-        nextPage:'login.importAccount.importMnemonic',
+        nextPage:'accounts.importAccount.importMnemonic',
       },
     })
   }

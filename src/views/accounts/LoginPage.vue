@@ -76,7 +76,7 @@
             <span class="prompt pointer" @click="formItems.hasHint = !formItems.hasHint">{{ $t('Password_hint') }}</span>
             <span
               class="pointer create-account"
-              @click="$router.push({name: 'login.importStrategy'})"
+              @click="$router.push({name: 'accounts.importAccount.importStrategy'})"
             >{{ $t('create_a_new_account') }}?</span>
           </div>
           <div v-if="formItems.hasHint" class="hint">
@@ -85,7 +85,7 @@
           <div v-if="accountsClassifiedByNetworkType" class="pointer button" @click="submit">
             {{ $t('login') }}
           </div>
-          <div v-else class="pointer button" @click="$router.push({name: 'login.importStrategy'})">
+          <div v-else class="pointer button" @click="$router.push({name: 'accounts.importAccount.importStrategy'})">
             {{ $t('register') }}
           </div>
         </div>
@@ -95,11 +95,10 @@
 </template>
 
 <script lang="ts">
-import LoginAccountTs from '@/views/login/login-account/LoginAccountTs.ts'
-import './LoginAccount.less'
+import LoginPageTs from './LoginPageTs'
+import './LoginPage.less'
 
-export default class LoginAccount extends LoginAccountTs {
-}
+export default class LoginPage extends LoginPageTs {}
 </script>
 <style lang="less">
 </style>

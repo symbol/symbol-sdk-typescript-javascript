@@ -121,7 +121,7 @@ export default class GenerateMnemonicTs extends Vue {
       this.$store.dispatch('notification/ADD_SUCCESS', this.$t('Generate_entropy_increase_success'))
 
       // redirect
-      return this.$router.push({name: 'login.createAccount.showMnemonic'})
+      return this.$router.push({name: 'accounts.createAccount.showMnemonic'})
     }
     catch (error) {
       this.$store.dispatch('notification/ADD_ERROR', NotificationType.MNEMONIC_GENERATION_ERROR)

@@ -21,130 +21,130 @@ export const routes: AppRoute[] = [
     path: '/',
     name: 'home',
     meta: { protected: false },
-    redirect: '/loginAccount',
+    redirect: {name: 'accounts.login'},
     // @ts-ignore
     component: () => import('@/views/layout/PageLayout/PageLayout.vue'),
     /// region PageLayout children
     children: [
       {
-        path: '/login',
-        name: 'login',
+        path: 'accounts',
+        name: 'accounts',
         // @ts-ignore
-        component: () => import('@/views/login/Login.vue'),
+        component: () => import('@/views/layout/RouterPage.vue'),
         meta: { protected: false },
         children: [
           {
-            path: '/loginAccount',
-            name: 'login.account',
+            path: 'login',
+            name: 'accounts.login',
             meta: { protected: false },
             // @ts-ignore
-            component: () => import('@/views/login/login-account/LoginAccount.vue'),
+            component: () => import('@/views/accounts/LoginPage.vue'),
           },
           {
-            path: '/chooseImportWay',
-            name: 'login.importStrategy',
+            path: 'create',
+            name: 'accounts.importAccount.importStrategy',
             meta: { protected: false },
             // @ts-ignore
-            component: () => import('@/views/login/import-strategy/ImportStrategy.vue'),
+            component: () => import('@/views/accounts/import-account/import-strategy/ImportStrategy.vue'),
           },
           {
-            path: '/createAccount',
-            name: 'login.createAccount',
+            path: 'create/new',
+            name: 'accounts.createAccount',
             meta: { protected: false },
             // @ts-ignore
-            component: () => import('@/views/login/create-account/CreateAccount.vue'),
+            component: () => import('@/views/accounts/create-account/CreateAccount.vue'),
             children: [
               {
-                path: '/createAccountInfo',
-                name: 'login.createAccount.info',
+                path: 'create/info',
+                name: 'accounts.createAccount.info',
                 meta: {
                   protected: false,
                   icon: createStepImage.createStepImage1,
-                  nextPage:'login.createAccount.generateMnemonic',
+                  nextPage:'accounts.createAccount.generateMnemonic',
                 },
                 // @ts-ignore
                 component: () => import('@/views/forms/FormAccountCreation/FormAccountCreation.vue'),
               }, {
-                path: '/generateMnemonic',
-                name: 'login.createAccount.generateMnemonic',
+                path: 'create/generateMnemonic',
+                name: 'accounts.createAccount.generateMnemonic',
                 meta: {
                   protected: false,
                   icon: createStepImage.createStepImage2
                 },
                 // @ts-ignore
-                component: () => import('@/views/login/create-account/generate-mnemonic/GenerateMnemonic.vue'),
+                component: () => import('@/views/accounts/create-account/generate-mnemonic/GenerateMnemonic.vue'),
               }, {
-                path: '/showMnemonic',
-                name: 'login.createAccount.showMnemonic',
+                path: 'create/showMnemonic',
+                name: 'accounts.createAccount.showMnemonic',
                 meta: {
                   protected: false,
                   icon: createStepImage.createStepImage3
                 },
                 // @ts-ignore
-                component: () => import('@/views/login/create-account/show-mnemonic/ShowMnemonic.vue'),
+                component: () => import('@/views/accounts/create-account/show-mnemonic/ShowMnemonic.vue'),
               }, {
-                path: '/verifyMnemonic',
-                name: 'login.createAccount.verifyMnemonic',
+                path: 'create/verifyMnemonic',
+                name: 'accounts.createAccount.verifyMnemonic',
                 meta: {
                   protected: false,
                   icon: createStepImage.createStepImage4
                 },
                 // @ts-ignore
-                component: () => import('@/views/login/create-account/verify-mnemonic/VerifyMnemonic.vue'),
+                component: () => import('@/views/accounts/create-account/verify-mnemonic/VerifyMnemonic.vue'),
               }, {
-                path: '/finishCreate',
-                name: 'login.createAccount.finalize',
+                path: 'create/finishCreate',
+                name: 'accounts.createAccount.finalize',
                 meta: {
                   protected: false,
                   icon: createStepImage.createStepImage5
                 },
                 // @ts-ignore
-                component: () => import('@/views/login/create-account/finalize/Finalize.vue'),
+                component: () => import('@/views/accounts/create-account/finalize/Finalize.vue'),
               }],
           },
           {
-            path: '/importAccount',
-            name: 'login.importAccount',
+            path: 'import',
+            name: 'accounts.importAccount',
             meta: { protected: false },
             // @ts-ignore
-            component: () => import('@/views/login/import-account/ImportAccount.vue'),
+            component: () => import('@/views/accounts/import-account/ImportAccount.vue'),
             children: [{
-              path: '/inputAccountInfo',
-              name: 'login.importAccount.info',
+              path: 'import/inputAccountInfo',
+              name: 'accounts.importAccount.info',
               meta: {
                 protected: false,
                 icon: importStepImage.importStepImage1,
-                nextPage:'login.importAccount.importMnemonic',
+                nextPage:'accounts.importAccount.importMnemonic',
               },
               // @ts-ignore
               component: () => import('@/views/forms/FormAccountCreation/FormAccountCreation.vue'),
             },{
-              path: '/importMnemonic',
-              name: 'login.importAccount.importMnemonic',
+              path: 'import/importMnemonic',
+              name: 'accounts.importAccount.importMnemonic',
               meta: {
                 protected: false,
                 icon: importStepImage.importStepImage2
               },
               // @ts-ignore
-              component: () => import('@/views/login/import-account/import-mnemonic/ImportMnemonic.vue'),
+              component: () => import('@/views/accounts/import-account/import-mnemonic/ImportMnemonic.vue'),
             }, {
-              path: '/walletChoose',
-              name: 'login.importAccount.walletSelection',
+              path: 'import/walletChoose',
+              name: 'accounts.importAccount.walletSelection',
               meta: {
                 protected: false,
                 icon: importStepImage.importStepImage3
               },
               // @ts-ignore
-              component: () => import('@/views/login/import-account/wallet-selection/WalletSelection.vue'),
+              component: () => import('@/views/accounts/import-account/wallet-selection/WalletSelection.vue'),
             }, {
-              path: '/finishImport',
-              name: 'login.importAccount.finalize',
+              path: 'import/finishImport',
+              name: 'accounts.importAccount.finalize',
               meta: {
                 protected: false,
                 icon: importStepImage.importStepImage4
               },
               // @ts-ignore
-              component: () => import('@/views/login/import-account/finalize/Finalize.vue'),
+              component: () => import('@/views/accounts/import-account/finalize/Finalize.vue'),
             }],
           },
         ],

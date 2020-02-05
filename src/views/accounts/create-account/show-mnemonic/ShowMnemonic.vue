@@ -1,5 +1,5 @@
 <template>
-  <div class="create-mnemonic-sec" @keyup.enter="$router.push({name: 'login.createAccount.verifyMnemonic'})">
+  <div class="create-mnemonic-sec" @keyup.enter="$router.push({name: 'accounts.createAccount.verifyMnemonic'})">
     <p class="set-title">
       {{ $t('Backup_mnemonic') }}
     </p>
@@ -21,7 +21,7 @@
           <button class="info-button" @click="$router.back()">
             {{ $t('Back') }}
           </button>
-          <button @click="$router.push({name: 'login.createAccount.verifyMnemonic'})">
+          <button @click="$router.push({name: 'accounts.createAccount.verifyMnemonic'})">
             {{ $t('Verify_backup_mnemonics') }}
           </button>
         </div>
@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import ShowMnemonicTs from '@/views/login/create-account/show-mnemonic/ShowMnemonicTs.ts'
+import ShowMnemonicTs from './ShowMnemonicTs'
 export default class ShowMnemonic extends ShowMnemonicTs { }
 </script>
 

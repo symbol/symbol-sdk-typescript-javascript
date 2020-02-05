@@ -65,7 +65,7 @@ export default class ImportMnemonicTs extends Vue {
     this.accounts.delete(identifier)
 
     // - back to previous page
-    this.$router.push({name: 'login.importAccount.info'})
+    this.$router.push({name: 'accounts.importAccount.info'})
   }
 
   /**
@@ -88,7 +88,7 @@ export default class ImportMnemonicTs extends Vue {
       this.$store.dispatch('temporary/SET_MNEMONIC', mnemonic.plain)
 
       // redirect
-      return this.$router.push({name: 'login.importAccount.walletSelection'})
+      return this.$router.push({name: 'accounts.importAccount.walletSelection'})
     }
     catch(e) {
       return this.$store.dispatch('notification/ADD_ERROR', this.$t('invalid_mnemonic_input'))

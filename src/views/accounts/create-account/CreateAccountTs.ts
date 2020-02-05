@@ -16,15 +16,16 @@
 import {Vue, Component} from 'vue-property-decorator'
 
 @Component
-export default class ImportAccountTs extends Vue {
+export default class CreateAccountTs extends Vue {
   /**
    * List of steps
    * @var {string[]}
    */
   public StepBarTitleList = [
     'Create_Account',
-    'Type_Mnemonic_Phrase',
-    'Choose_Wallets',
+    'Generate_Mnemonic',
+    'Backup_Mnemonic_Phrase',
+    'Verify_Mnemonic_phrase',
     'Finish',
   ]
 
@@ -39,10 +40,11 @@ export default class ImportAccountTs extends Vue {
   public getCurrentStep(): number {
     switch(this.$route.name) {
     default:
-    case 'login.importAccount.info': return 0
-    case 'login.importAccount.importMnemonic': return 1
-    case 'login.importAccount.walletSelection': return 2
-    case 'login.importAccount.finalize': return 3
+    case 'accounts.createAccount.info': return 0
+    case 'accounts.createAccount.generateMnemonic': return 1
+    case 'accounts.createAccount.showMnemonic': return 2
+    case 'accounts.createAccount.verifyMnemonic': return 3
+    case 'accounts.createAccount.finalize': return 4
     }
   }
 

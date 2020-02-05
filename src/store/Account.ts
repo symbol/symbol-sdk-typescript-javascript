@@ -78,7 +78,7 @@ export default {
       $eventBus.$emit('onAccountChange', currentAccountModel.getIdentifier())
     },
     ADD_WALLET({dispatch, getters, state}, walletModel) {
-      const resolvedAccount = (getters.currentAccount)(state)
+      const resolvedAccount = getters.currentAccount
       if (!resolvedAccount) {
         return
       }

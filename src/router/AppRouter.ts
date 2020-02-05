@@ -43,9 +43,9 @@ export class AppRouter extends Router {
       const hasAccounts = repository.entries().size > 0
 
       // No account when app is opened: redirect to create account page
-      const skipRedirect: string[] = ['login.createAccount.info']
+      const skipRedirect: string[] = ['accounts.createAccount.info']
       if (!from.name && !hasAccounts && !skipRedirect.includes(to.name)) {
-        return next({name: 'login.createAccount.info'})
+        return next({name: 'accounts.createAccount.info'})
       }
 
       if (!to.meta.protected) {
@@ -54,7 +54,7 @@ export class AppRouter extends Router {
 
       const isAuthenticated = AppStore.getters['account/isAuthenticated'] === true
       if (!isAuthenticated) {
-        return next({name: 'login.account'})
+        return next({name: 'accounts.login'})
       }
 
       return next()
