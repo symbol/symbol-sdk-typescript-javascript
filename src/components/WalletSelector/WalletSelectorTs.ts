@@ -33,10 +33,10 @@ export class WalletSelectorTs extends Vue {
   public currentWallet: WalletsModel
 
   /**
-   * Wallets repository
+   * Known wallets identifiers
    * @var {string[]}
    */
-  public knownWallets: string
+  public knownWallets: string[]
 
   /**
    * Wallets repository
@@ -67,12 +67,17 @@ export class WalletSelectorTs extends Vue {
     this.$emit('change', wallet.getIdentifier())
   }
 
-  get currentWallets(): {identifier: string, name: string}[] {
+  public get currentWallets(): {identifier: string, name: string}[] {
+    if (!this.knownWallets || !this.knownWallets.length) {
+      return []
+    }
+
     // filter wallets to only known wallet names
     const knownWallets = this.service.getWallets(
-      (e) => this.knownWallets.includes(e.values.get('name'))
+      (e) => this.knownWallets.includes(e.getIdentifier())
     )
-
+  
+    console.log("WalletSelector/currentWallets: ", knownWallets)
     return [...knownWallets].map(
       ([ identifier, {values}]) => ({identifier, name: values.get('name')}),
     )

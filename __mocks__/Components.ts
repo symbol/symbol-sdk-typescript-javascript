@@ -46,7 +46,7 @@ export const getComponent = (
   storeModules: {[name: string]: any},
   stateChanges?: {[field: string]: any},
 ) => {
-  // format store module overwrites
+  // - format store module overwrites
   const modules = Object.keys(storeModules).map(k => ({
     [k]: Object.assign({}, storeModules[k], {
       // - map state overwrites to store module

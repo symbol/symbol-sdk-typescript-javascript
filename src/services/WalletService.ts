@@ -75,6 +75,7 @@ export class WalletService extends AbstractService {
 
     // - use overwritten adapter
     if (!!adapter) {
+      this.$store.dispatch('diagnostic/ADD_DEBUG', 'Changing WalletService storage adapter.')
       this.wallets.setAdapter(adapter)
       this.wallets.fetch()
     }

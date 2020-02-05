@@ -68,19 +68,7 @@ describe('store/WalletSelector ==>', () => {
       expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled()
     })
 
-    test('call WalletService.getWallet given identifier', () => {
-      // prepare
-      const wrapper = getComponent(WalletSelector, {wallet: WalletStore}, {})
-      const component = (wrapper.vm as WalletSelector)
-      component.service.getWallet = jest.fn()
-
-      // act
-      component.currentWalletIdentifier = 'walletIdentifier'
-      expect(component.service.getWallet).toHaveBeenCalledWith('walletIdentifier')
-      expect(component.service.getWallet.mock.results[0].value).toBeFalsy()
-    })
-
-    test('do nothing given invalid identifier', () => {
+    test('dispatch "notification/ADD_ERROR" given invalid identifier', () => {
       // prepare
       const wrapper = getComponent(WalletSelector, {wallet: WalletStore}, {})
       const service = new WalletService(wrapper.vm.$store, getAdapter())
@@ -117,6 +105,23 @@ describe('store/WalletSelector ==>', () => {
       expect(wrapper.emitted().change).toBeTruthy()
       expect(wrapper.emitted().change.length).toBe(1)
       expect(wrapper.emitted().change[0]).toEqual(['abcd'])
+    })
+  })
+
+  describe('getter for property "currentWallets" should', () => {
+    test('return empty array given no knownWallets', () => {
+      // prepare
+      const wrapper = getComponent(WalletSelector, {wallet: WalletStore}, {
+        knownWallets: []
+      })
+      const component = (wrapper.vm as WalletSelector)
+
+      // act
+      const actual = component.currentWallets
+
+      // assert
+      expect(actual).toBeDefined()
+      expect(actual.length).toBe(0)
     })
   })
 })
