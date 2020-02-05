@@ -111,8 +111,8 @@ export class WalletService extends AbstractService {
       index: number,
       array: WalletsModel[]
     ) => boolean = (e) => true
-  ): Map<string, WalletsModel>  {
-    return this.wallets.entries(filterFn)
+  ): WalletsModel[] {
+    return Array.from(this.wallets.entries(filterFn).values())
   }
 
   /**

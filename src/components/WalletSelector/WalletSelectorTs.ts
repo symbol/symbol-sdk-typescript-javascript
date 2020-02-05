@@ -79,7 +79,7 @@ export class WalletSelectorTs extends Vue {
   
     console.log("WalletSelector/currentWallets: ", knownWallets)
     return [...knownWallets].map(
-      ([ identifier, {values}]) => ({identifier, name: values.get('name')}),
+      ({identifier, values}) => ({identifier, name: values.get('name')}),
     )
   }
 /// end-region computed properties getter/setter
