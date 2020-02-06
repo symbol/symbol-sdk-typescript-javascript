@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import {DisabledFormOverlayTs} from '@/components/DisabledFormOverlay/DisabledFormOverlayTs.ts'
+import {DisabledFormOverlayTs} from './DisabledFormOverlayTs'
 import "./DisabledFormOverlay.less";
 
 export default class DisabledFormOverlay extends DisabledFormOverlayTs {}

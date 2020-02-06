@@ -48,7 +48,7 @@ import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue'
 // @ts-ignore
 import MessageInput from '@/components/MessageInput/MessageInput.vue'
 // @ts-ignore
-import ModalTransactionConfirmation from '@/components/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
+import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
 // @ts-ignore
 import SignerSelector from '@/components/SignerSelector/SignerSelector.vue'
 // @ts-ignore

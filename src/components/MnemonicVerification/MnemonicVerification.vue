@@ -34,11 +34,8 @@
 </template>
 
 <script lang="ts">
-import {MnemonicVerificationTs} from '@/components/MnemonicVerification/MnemonicVerificationTs.ts'
+import {MnemonicVerificationTs} from './MnemonicVerificationTs'
 import './MnemonicVerification.less'
 
 export default class MnemonicVerification extends MnemonicVerificationTs {}
 </script>
-<style scoped lang="less">
-
-</style>

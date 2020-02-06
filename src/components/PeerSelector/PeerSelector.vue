@@ -55,9 +55,7 @@
 </template>
 
 <script lang="ts">
-import {PeerSelectorTs} from '@/components/PeerSelector/PeerSelectorTs.ts'
+import {PeerSelectorTs} from './PeerSelectorTs'
 
-export default class PeerSelector extends PeerSelectorTs {
-
-}
+export default class PeerSelector extends PeerSelectorTs {}
 </script>

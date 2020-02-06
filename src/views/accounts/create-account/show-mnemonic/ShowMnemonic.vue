@@ -43,9 +43,7 @@
 
 <script lang="ts">
 import ShowMnemonicTs from './ShowMnemonicTs'
-export default class ShowMnemonic extends ShowMnemonicTs { }
-</script>
+import "./ShowMnemonic.less";
 
-<style scoped lang="less">
-  @import "ShowMnemonic.less";
-</style>
+export default class ShowMnemonic extends ShowMnemonicTs {}
+</script>

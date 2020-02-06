@@ -36,10 +36,9 @@
 </template>
 <script lang="ts">
 import {FormInputTs} from './FormInputTs'
+import "./FormInput.less";
 
-export default class FormInput extends FormInputTs {
-}
+export default class FormInput extends FormInputTs {}
 </script>
 <style scoped lang="less">
-  @import "FormInput.less";
 </style>

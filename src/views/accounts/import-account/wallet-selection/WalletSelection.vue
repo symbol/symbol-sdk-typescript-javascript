@@ -70,9 +70,5 @@
 import WalletSelectionTs from './WalletSelectionTs'
 import './WalletSelection.less'
 
-export default class WalletSelection extends WalletSelectionTs {
-}
+export default class WalletSelection extends WalletSelectionTs {}
 </script>
-
-<style scoped lang="less">
-</style>

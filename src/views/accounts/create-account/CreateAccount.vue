@@ -23,8 +23,5 @@
 import CreateAccountTs from './CreateAccountTs'
 import './CreateAccount.less'
 
-export default class CreateAccount extends CreateAccountTs {
-}
+export default class CreateAccount extends CreateAccountTs {}
 </script>
-<style lang="less">
-</style>

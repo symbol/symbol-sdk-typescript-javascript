@@ -95,6 +95,7 @@ export default {
     currentMultisigInfo: null,
     knownWallets: [],
     otherWalletsInfo: {},
+    otherMultisigsInfo: {},
     allTransactions: [],
     transactionHashes: [],
     confirmedTransactions: [],
@@ -115,6 +116,7 @@ export default {
     currentMultisigInfo: state => state.currentMultisigInfo,
     knownWallets: state => state.knownWallets,
     otherWalletsInfo: state => state.otherWalletsInfo,
+    otherMultisigsInfo: state => state.otherMultisigsInfo,
     getSubscriptions: state => state.subscriptions,
     transactionHashes: state => state.transactionHashes,
     confirmedTransactions: state => state.confirmedTransactions,
@@ -145,6 +147,14 @@ export default {
 
       // update state
       Vue.set(state, 'otherWalletsInfo', wallets)
+    },
+    addOtherMultisigInfo: (state, multisigInfo) => {
+      // update storage
+      let wallets = state.otherMultisigsInfo
+      wallets[multisigInfo.address.plain()] = multisigInfo
+
+      // update state
+      Vue.set(state, 'otherMultisigsInfo', wallets)
     },
     setMultisigInfo: (state, multisigInfo) => Vue.set(state, 'currentMultisigInfo', multisigInfo),
     transactionHashes: (state, hashes) => Vue.set(state, 'transactionHashes', hashes),
@@ -531,13 +541,19 @@ export default {
       try {
         // prepare REST parameters
         const currentPeer = rootGetters['network/currentPeer'].url
+        const currentWallet = getters['currentWallet']
         const addressObject = Address.createFromRawAddress(address)
 
         // fetch account info from REST gateway
         const multisigHttp = RESTService.create('MultisigHttp', currentPeer)
         const multisigInfo = await multisigHttp.getMultisigAccountInfo(addressObject).toPromise()
 
-        commit('setMultisigInfo', multisigInfo)
+        // store multisig info
+        commit('addOtherMultisigInfo', multisigInfo)
+        if (currentWallet && currentWallet.values.get('address') === address) {
+          commit('setMultisigInfo', multisigInfo)
+        }
+
         return multisigInfo
       }
       catch (e) {

@@ -30,9 +30,5 @@
 import VerifyMnemonicTs from './VerifyMnemonicTs'
 import './VerifyMnemonic.less'
 
-export default class VerifyMnemonic extends VerifyMnemonicTs {
-}
+export default class VerifyMnemonic extends VerifyMnemonicTs {}
 </script>
-
-<style lang="less">
-</style>

@@ -18,7 +18,7 @@
         <div class="app_controller clear">
           <PeerSelector />
           <LanguageSelector />
-          <WalletSelector />
+          <WalletSelectorField />
         </div>
       </div>
     </div>
@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import {PageLayoutTs} from '@/views/layout/PageLayout/PageLayoutTs.ts'
+import {PageLayoutTs} from './PageLayoutTs'
 import './PageLayout.common.less'
 import './PageLayout.mac.less'
 import './PageLayout.win32.less'
