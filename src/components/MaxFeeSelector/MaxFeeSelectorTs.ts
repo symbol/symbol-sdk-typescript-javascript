@@ -19,13 +19,19 @@ import {MosaicId, MosaicInfo} from 'nem2-sdk'
 
 // configuration
 import feesConfig from '@/../config/fees.conf.json'
-import { timingSafeEqual } from 'crypto'
+// @ts-ignore
+import FormLabel from '@/components/FormLabel/FormLabel.vue'
 
-@Component({computed: {...mapGetters({
-  networkMosaic: 'mosaic/networkMosaic',
-  networkMosaicName: 'mosaic/networkMosaicName',
-  mosaicsInfo: 'mosaic/mosaicsInfoList',
-})}})
+@Component({
+  components: {
+    FormLabel,
+  },
+  computed: {...mapGetters({
+    networkMosaic: 'mosaic/networkMosaic',
+    networkMosaicName: 'mosaic/networkMosaicName',
+    mosaicsInfo: 'mosaic/mosaicsInfoList',
+  })},
+})
 export class MaxFeeSelectorTs extends Vue {
 
   /**

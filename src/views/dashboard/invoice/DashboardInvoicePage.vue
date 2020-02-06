@@ -4,25 +4,28 @@
       <img id="qrImg" :src="qrCode$" alt="Transaction QR code">
       <div class="qr_info">
         <div id="address_text" class="address_text top-qr-text">
-          <span class="top-qr-text-title">{{ $t('account') }}:</span>
-          <span class="gray">{{ formItems.recipient || 'N/A' }}</span>
+          <span class="top-qr-text-title">{{ $t('Recipient') }}:</span>
+          <span class="gray">{{ recipient }}</span>
         </div>
 
         <div class="top-qr-text overflow_ellipsis">
           <span class="top-qr-text-title">{{ $t('assets') }}:</span>
-          <span v-if="formItems.attachedMosaics.length"
-                v-for="(selectedMosaic, index) in formItems.attachedMosaics"
-                :key="index">
-            <span class="blue">{{ selectedMosaic.amount }}</span>
-            <span class="blue">{{ selectedMosaic.name }}</span>
-            <span class="gray">（{{ selectedMosaic.id.toHex() }}）</span>
-          </span>
+          <div v-if="balanceEntries.length">
+            <div 
+              v-for="({mosaicHex, name, amount}, index) in balanceEntries"
+              :key="index"
+            >
+              <span class="blue">{{ amount }}&nbsp;</span>
+              <span class="blue">{{ name }}</span>
+              <span class="gray">（{{ mosaicHex }}）</span>
+            </div>
+          </div>
           <span v-else>{{ 'N/A' }}</span>
         </div>
 
         <div class="top-qr-text">
           <span class="top-qr-text-title">{{ $t('message') }}:</span>
-          <span>{{ formItems.messagePlain }}</span>
+          <span>{{ transaction && transaction.message.payload }}</span>
         </div>
 
         <div class="qr_button">
@@ -35,9 +38,11 @@
     -->
 
     <div class="modal scroll">
-
-      <FormInvoiceCreation @input="onFormChange" />
-
+      <FormTransferCreation
+        :hide-signer="true"
+        :disable-submit="true"
+        @onTransactionChange="onInvoiceChange"
+      />
     </div>
   </div>
 </template>

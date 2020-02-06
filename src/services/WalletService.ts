@@ -26,7 +26,7 @@ import {
 // internal dependencies
 import {AbstractService} from './AbstractService'
 import {DerivationService, DerivationPathLevels} from './DerivationService'
-import {DerivationPathValidator} from '@/core/validators/DerivationPathValidator'
+import {DerivationPathValidator} from '@/core/validation/validators'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 import { SimpleStorageAdapter } from '@/core/database/SimpleStorageAdapter'
@@ -127,7 +127,7 @@ export class WalletService extends AbstractService {
     networkType: NetworkType,
     path: string = WalletService.DEFAULT_WALLET_PATH,
   ): Account {
-    if (false === new DerivationPathValidator().validate(path).valid) {
+    if (false === DerivationPathValidator.validate(path)) {
       const errorMessage = 'Invalid derivation path: ' + path
       this.$store.dispatch('diagnostic/ADD_ERROR', errorMessage)
       throw new Error(errorMessage)

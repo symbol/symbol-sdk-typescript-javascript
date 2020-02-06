@@ -13,24 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId} from 'nem2-sdk'
-
 // internal dependencies
-import {Validator} from './Validator'
+import {Validator, staticImplements} from './Validator' 
 
-export class MosaicIdValidator extends Validator {
+@staticImplements<Validator>() 
+export class DerivationPathValidator {
   /**
-   * Execute the validator with \a value
-   * @param {any} value 
-   * @return {ValidationObject}
+   * Executes the validator
+   * @static
+   * @param {string} value
+   * @returns {({valid: boolean|string})}
    */
-  public validate(value): {valid: boolean|string} {
-    try {
-      new MosaicId(value)
-      return {valid: value}
+  public static validate(value: any): boolean {
+    if (value.match(/^m\/44'\/43'\/[0-9]+'\/[0-9]+'\/[0-9]+'/)) {
+      return value
     }
-    catch (error) {
-      return {valid: false}
-    }
+
+    return false
   }
 }

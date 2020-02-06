@@ -13,21 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-.add_mosaic_button {
-  display: inline-block;
-  width: 40px;
-  height: 44px;
-  position: relative;
-  left: 10px;
-  border: 10px solid #1fb6ac;
-  background-color: #1fb6ac;
-  background-image: url("../../views/resources/img/wallet/wallet-detail/walletDetailAdd.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center center;
-  cursor: pointer;
-}
+import { configure } from 'vee-validate'
+import i18n from '@/language'
 
-.add_mosaic_button:hover {
-  box-shadow: 0 0 0.1rem #1fb6ac;
+export class ErrorMessages {  
+  /**
+   * Loads error messages
+   * @static
+   */
+  public static load() {
+    return new ErrorMessages().loadStandardValidationRulesMessages()
+  }
+
+  /**
+   * Maps translation messages passed to i18n
+   * to the validation rules shipped with vee-validate
+   * @private
+   */
+  private loadStandardValidationRulesMessages() {
+    configure({
+      // @ts-ignore
+      defaultMessage: (_, values) => i18n.t(`validation.${values._rule_}`, values),
+    })
+  }
 }

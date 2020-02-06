@@ -13,28 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  NetworkType,
-  PublicAccount
-} from 'nem2-sdk'
 
-// internal dependencies
-import {Validator} from './Validator'
 
-export class PublicKeyValidator extends Validator {
+/**
+ * Validator interface
+ * @interface Validator
+ */
+export interface Validator {
+  new(): void
   /**
-   * Execute the validator with \a value
-   * @param {any} value 
-   * @return {ValidationObject}
+   * Validates a value
+   * @param {*} value
+   * @param {*} [args]
+   * @returns {boolean}
    */
-  public validate(value): {valid: boolean|string} {
-    try {
-        /** The NetworkType below is for public key testing only */
-        PublicAccount.createFromPublicKey(value, NetworkType.TEST_NET)
-        return {valid: value}
-      }
-      catch (error) {
-        return {valid: false}
-      }
-  }
+  validate(value: any, args?: any): boolean
+}
+
+
+/**
+ * Decorator that enables typing classes with static methods
+ */
+export function staticImplements<T>() {
+  return <U extends T>(constructor: U) => {constructor}
 }

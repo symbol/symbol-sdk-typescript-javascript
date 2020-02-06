@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {NetworkType} from 'nem2-sdk'
-import {Component, Provide, Vue} from 'vue-property-decorator'
+import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
@@ -58,8 +58,6 @@ import WalletSelectorField from '@/components/WalletSelectorField/WalletSelector
   },
 })
 export class PageLayoutTs extends Vue {
-  @Provide() validator: any = this.$validator
-
   /**
    * Whether the app is running on windows platform
    * @var {boolean}

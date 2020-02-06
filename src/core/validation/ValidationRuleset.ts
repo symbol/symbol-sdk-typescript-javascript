@@ -16,27 +16,26 @@
 // configuration
 import networkConfig from '../../../config/network.conf.json'
 import appConfig from '../../../config/app.conf.json'
-const {MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH} = appConfig.constants
+const {MIN_PASSWORD_LENGTH} = appConfig.constants
 
-//XXX network store config getter
+// XXX network store config getter
 const currentNetwork = networkConfig.networks['testnet-publicTest']
 
 export const ValidationRuleset = {
   address: 'required|address|addressNetworkType:currentAccount',
   accountPassword: 'required|confirmLock:accountPassword',
-  addressOrAlias: `required|addressOrAlias|addressOrAliasNetworkType:currentAccount`,
-  amount: 'excluded:""|is_not:0|decimal:6|min_value:0|otherField:selectedMosaic|amountDecimals:selectedMosaic|mosaicMaxAmount:selectedMosaic',
-  confirmPassword: 'required|confirmPassword:newPassword',
-  divisibility: `required|min_value:0|max_value:6|integer`,
+  addressOrAlias: 'required|addressOrAlias|addressOrAliasNetworkType:currentAccount',
+  amount: 'excluded:""|is_not:0|min_value:0|maxDecimals:6',
+  confirmPassword: 'required|confirmPassword:@newPassword',
+  divisibility: 'required|min_value:0|max_value:6|integer',
   duration: `required|min_value:0|max_value:${currentNetwork.properties.maxMosaicDuration}`,
-  generationHash: `required|min:64|max:64`,
-  invoiceAmount: `decimal:6|min_value:0`,
+  generationHash: 'required|min:64|max:64',
   mosaicId: 'required|mosaicId',
   message: `max:${currentNetwork.properties.maxMessageSize}`,
   namespaceDuration: `required|min_value:${currentNetwork.properties.minNamespaceDuration}|max_value:${currentNetwork.properties.maxNamespaceDuration}`,
   namespaceName: {
     required: true,
-    regex: `^[a-z0-9-_]{1,64}$`,
+    regex: '^[a-z0-9-_]{1,64}$',
   },
   password: {
     required: true,
@@ -44,30 +43,16 @@ export const ValidationRuleset = {
     regex:'(?=.*[0-9])(?=.*[a-zA-Z])(.{8,})$',
   },
   previousPassword: 'required|confirmLock:cipher',
-  privateKey: `min:64|max:64|privateKey`,
+  privateKey: 'min:64|max:64|privateKey',
   recipientPublicKey: 'required|publicKey',
-  supply: `required|integer|min_value: 1`,
+  supply: 'required|integer|min_value: 1',
   walletPassword: 'required|confirmWalletPassword:wallet',
   subNamespaceName: {
     required: true,
-    regex: `^[a-z0-9-_.]{1,64}$`,
+    regex: '^[a-z0-9-_.]{1,64}$',
   },
-  nodeUrl: {
-    required: true,
-    url: {
-      require_protocol: true,
-      require_tld:false,
-    },
-  },
+  url: 'required|url',
   newAccountName:'required|newAccountName',
-  friendlyNodeUrl: {
-    required: true,
-    url: {
-      require_host: false,
-      require_protocol: false,
-      require_tld:false,
-    },
-  },
   walletName:{
     required: true,
   },

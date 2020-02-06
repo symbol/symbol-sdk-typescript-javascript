@@ -16,9 +16,10 @@
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 // internal dependencies
-import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
+import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 
 // child components
+import {ValidationProvider, ValidationObserver} from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
@@ -29,6 +30,8 @@ import networkConfig from '@/../config/network.conf.json'
 
 @Component({
   components: {
+    ValidationProvider,
+    ValidationObserver,
     ErrorTooltip,
     FormLabel,
   },
@@ -82,10 +85,7 @@ export class ExplorerUrlSetterTs extends Vue {
    * @return {void}
    */
   setExplorerLink() {
-    this.$validator.validate().then((valid) => {
-      if (!valid) return
-      this.$store.dispatch('app/SET_EXPLORER_URL', this.chosenExplorerUrl)
-    })
+    this.$store.dispatch('app/SET_EXPLORER_URL', this.chosenExplorerUrl)
   }
 
   /**

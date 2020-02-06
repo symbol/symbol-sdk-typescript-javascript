@@ -14,15 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Store} from 'vuex'
 import {Address, Mosaic, MosaicId, NamespaceId, UInt64, RawUInt64, PlainMessage, EmptyMessage, TransferTransaction, MosaicInfo} from 'nem2-sdk'
 
 // internal dependencies
 import {TransactionParams} from './TransactionParams'
-import {Validator} from '@/core/validators/Validator'
-import {AddressValidator} from '@/core/validators/AddressValidator'
-import {PublicKeyValidator} from '@/core/validators/PublicKeyValidator'
-import {NamespaceIdValidator} from '@/core/validators/NamespaceIdValidator'
 
 type TransferFormFieldsType = {
   recipient: Address | NamespaceId,
@@ -65,7 +60,7 @@ export class TransferTransactionParams extends TransactionParams {
       formItems.mosaics.map(spec => {
         // prepare mosaic entry (push always ABSOLUTE amount)
         const info = params.mosaicsInfo.find(i => i.id.toHex() === spec.mosaicHex)
-        const div  = info ? info.divisibility : 0
+        const div = info ? info.divisibility : 0
         const mosaic = new Mosaic(
           new MosaicId(RawUInt64.fromHex(spec.mosaicHex)),
           UInt64.fromUint(spec.amount * Math.pow(10, div))
@@ -74,6 +69,7 @@ export class TransferTransactionParams extends TransactionParams {
       })
     }
 
+    params.setParam('mosaics', mosaics)
     params.setParam('message', EmptyMessage)
     if (formItems.message && formItems.message.length) {
       params.setParam('message', PlainMessage.create(formItems.message))

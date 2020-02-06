@@ -17,19 +17,17 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import VueRx from 'vue-rx'
 import moment from 'vue-moment'
-import VeeValidate from 'vee-validate'
 import iView from 'view-design'
 import locale from 'view-design/dist/locale/en-US'
 import 'view-design/dist/styles/iview.css'
 
 // internal dependencies
-import {VeeValidateConfig, registerCustomValidators} from '@/core/validators/VeeValidateConfig'
 import {UIBootstrapper} from '@/app/UIBootstrapper'
 import i18n from '@/language/index.ts'
 import store from '@/store/index.ts'
 import router from '@/router/AppRouter'
 import VueNumber from 'vue-number-animation'
-
+import {VeeValidateSetup} from '@/core/validation/VeeValidateSetup'
 // @ts-ignore
 import App from '@/app/App.vue'
 
@@ -38,10 +36,10 @@ Vue.use(iView, {locale})
 Vue.use(moment as any)
 Vue.use(Router)
 Vue.use(VueRx)
-Vue.use(VeeValidate, VeeValidateConfig)
-registerCustomValidators()
 Vue.use(VueNumber)
 /// end-region UI plugins
+
+VeeValidateSetup.initialize()
 
 /// region app storage & state store initializations
 export const AppStore = store

@@ -58,19 +58,24 @@
           <p class="input-password">
             {{ $t('password') }}
           </p>
-          <ErrorTooltip field-name="password">
-            <input
-              v-model.lazy="formItems.password"
-              v-focus
-              v-validate="'required|min:8'"
-              :class="[!accountsClassifiedByNetworkType ? 'un_click' : '']"
-              :disabled="!accountsClassifiedByNetworkType"
-              type="password"
-              data-vv-name="password"
-              :data-vv-as="$t('password')"
-              :placeholder="$t('please_enter_your_wallet_password')"
-            >
-          </ErrorTooltip>
+          <ValidationProvider
+            v-slot="{ errors }"
+            mode="lazy"
+            vid="password"
+            :name="$t('password')"
+            rules="required|min:8"
+          >
+            <ErrorTooltip field-name="password" :errors="errors">
+              <input
+                v-model="formItems.password"
+                v-focus
+                :class="[!accountsClassifiedByNetworkType ? 'un_click' : '']"
+                :placeholder="$t('please_enter_your_wallet_password')"
+                type="password"
+                :disabled="!accountsClassifiedByNetworkType"
+              >
+            </ErrorTooltip>
+          </ValidationProvider>
 
           <div class="password-tip">
             <span class="prompt pointer" @click="formItems.hasHint = !formItems.hasHint">{{ $t('Password_hint') }}</span>

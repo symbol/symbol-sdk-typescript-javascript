@@ -1,14 +1,19 @@
 <template>
-  <ErrorTooltip field-name="mosaicAmount">
-    <input
-      v-model="relativeValue"
-      v-validate="validationRules.invoiceAmount"
-      class="amount_input"
-      type="text"
-      :placeholder="$t('Please_enter_the_amount_of_transfer')"
-      data-vv-name="mosaicAmount"
-    >
-  </ErrorTooltip>
+  <ValidationProvider
+    v-slot="{ errors }"
+    mode="lazy"
+    vid="amount"
+    :name="$t('amount')"
+    :rules="validationRules.amount"
+  >
+    <ErrorTooltip :errors="errors">
+      <input
+        v-model="relativeValue"
+        class="input-style input-size"
+        type="text"
+      >
+    </ErrorTooltip>
+  </ValidationProvider>
 </template>
 
 <script lang="ts">

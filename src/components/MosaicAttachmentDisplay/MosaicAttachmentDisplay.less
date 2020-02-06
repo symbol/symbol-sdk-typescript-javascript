@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 .mosaic_list_container {
-  width: 560px;
+  width: 6rem;
   height: 200px;
-  color: #999;
   padding: 5px ;
-  margin-left: 110px;
   border: 1px solid #ccc;
+  font-size: 0.16rem;
+  color: #515a6e;
+
+  .no_data {
+    margin: 0.3rem;
+    font-size: 0.16rem;
+    text-align: center;
+  }
 
   .mosaic_list_item {
     padding: 5px 0;
@@ -28,7 +34,6 @@
   }
 
   .scroll {
-    margin: 0 5px;
     height: 190px;
   }
 
@@ -46,12 +51,14 @@
   }
 
   .icon_delete {
-    display: inline-block;
     background-image: url("../../views/resources/img/wallet/wallet-detail/walletDetailsdelete.png");
     background-repeat: no-repeat;
     background-size: contain;
     width: 15px;
     height: 15px;
+    margin-right: 0.5rem;
+    float: right;
+    cursor: pointer;
   }
 
   .icon_delete:hover {

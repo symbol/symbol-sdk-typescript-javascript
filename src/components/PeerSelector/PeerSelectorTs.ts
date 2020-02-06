@@ -26,7 +26,7 @@ import {URLHelpers} from '@/core/utils/URLHelpers'
 import {NotificationType} from '@/core/utils/NotificationType'
 
 // internal dependencies
-import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
+import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 
 // helpers
 const getNetworkTypeText = (networkType: NetworkType) => {
@@ -144,38 +144,37 @@ export class PeerSelectorTs extends Vue {
    * Add a new peer to storage
    * @return {void}
    */
-  public addPeer() {
-    this.$validator.validate().then(async (valid) => {
-      if (! valid) return
+  public async addPeer() {
+    // @VVV
 
-      // validate and parse input
-      const nodeUrl = this.service.getNodeUrl(this.formItems.nodeUrl)
-      const node = URLHelpers.formatUrl(nodeUrl)
+    // validate and parse input
+    const nodeUrl = this.service.getNodeUrl(this.formItems.nodeUrl)
+    const node = URLHelpers.formatUrl(nodeUrl)
 
-      console.log("nodeUrl: ", nodeUrl)
-      console.log("node: ", node)
+    console.log("nodeUrl: ", nodeUrl)
+    console.log("node: ", node)
 
-      // read network type from node pre-saving
-      const networkType = await this.service.getNetworkType(nodeUrl)
+    // read network type from node pre-saving
+    const networkType = await this.service.getNetworkType(nodeUrl)
 
-      // prepare model
-      const peer = new AppPeer(
-        this.$store,
-        node.hostname,
-        parseInt(node.port),
-        node.protocol,
-        networkType,
-      )
+    // prepare model
+    const peer = new AppPeer(
+      this.$store,
+      node.hostname,
+      parseInt(node.port),
+      node.protocol,
+      networkType,
+    )
 
-      // save in storage
-      this.peers.create(peer.model.values)
-      this.$store.dispatch('network/ADD_KNOWN_PEER', nodeUrl)
-      this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
+    // save in storage
+    this.peers.create(peer.model.values)
+    this.$store.dispatch('network/ADD_KNOWN_PEER', nodeUrl)
+    this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
 
-      // reset
-      this.formItems.nodeUrl = ''
-      this.$validator.reset()
-    })
+    // reset
+    this.formItems.nodeUrl = ''
+    // @VVV
+    // this.$validator.reset()
   }
 
   /**

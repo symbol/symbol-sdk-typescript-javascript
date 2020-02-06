@@ -39,7 +39,7 @@ import {Subscription} from 'rxjs'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
-import {AddressValidator} from '@/core/validators/AddressValidator'
+import {AddressValidator} from '@/core/validation/validators'
 import {NotificationType} from '@/core/utils/NotificationType'
 
 export type HttpRepositoryImpl = Http
@@ -138,7 +138,7 @@ export class RESTService extends AbstractService {
     wsEndpoint: string,
     addressStr: string
   ): Promise<{listener: Listener, subscriptions: Subscription[]}> {
-    if (! new AddressValidator().validate(addressStr)) {
+    if (!AddressValidator.validate(addressStr)) {
       throw new Error('Invalid address for subscribing to websocket connections')
     }
 

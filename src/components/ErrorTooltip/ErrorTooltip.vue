@@ -1,9 +1,9 @@
 <template>
   <Tooltip
+    :content="displayedError"
+    :placement="placementOverride"
     :always="errored"
     :disabled="!errored"
-    :content="$t(displayedError)"
-    :placement="placement"
   >
     <slot />
   </Tooltip>

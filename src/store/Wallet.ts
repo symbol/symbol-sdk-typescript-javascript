@@ -474,16 +474,12 @@ export default {
       try {
         // prepare REST parameters
         const currentPeer = rootGetters['network/currentPeer'].url
-        console.log("TCL: REST_FETCH_INFO -> currentPeer", currentPeer)
         const addressObject = Address.createFromRawAddress(address)
-        console.log("TCL: REST_FETCH_INFO -> addressObject", addressObject)
 
         // fetch account info from REST gateway
         const accountHttp = RESTService.create('AccountHttp', currentPeer)
-        console.log("TCL: REST_FETCH_INFO -> accountHttp", accountHttp)
 
         return accountHttp.getAccountInfo(addressObject).subscribe((accountInfo) => {
-          console.log("TCL: REST_FETCH_INFO -> accountInfo", accountInfo)
 
           commit('addWalletInfo', accountInfo)
 
@@ -494,8 +490,7 @@ export default {
           }
 
           return accountInfo
-        }, (error) => {
-        console.log("TCL: REST_FETCH_INFO -> error", error)
+        }, () => {
           dispatch('SET_BALANCES', [])
         })
       }

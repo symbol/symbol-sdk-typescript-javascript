@@ -16,21 +16,23 @@
 import {NamespaceId} from 'nem2-sdk'
 
 // internal dependencies
-import {Validator} from './Validator'
+import {Validator, staticImplements} from './Validator' 
 
-export class NamespaceIdValidator extends Validator {
+@staticImplements<Validator>() 
+export class AliasValidator { 
   /**
-   * Execute the validator with \a value
-   * @param {any} value 
-   * @return {ValidationObject}
+   * Executes the validator
+   * @static
+   * @param {*} value
+   * @returns {boolean}
    */
-  public validate(value): {valid: boolean|string} {
+  public static validate(value: any): boolean {
     try {
       new NamespaceId(value)
-      return {valid: value}
+      return value
     }
     catch (error) {
-      return {valid: false}
+      return false
     }
   }
 }

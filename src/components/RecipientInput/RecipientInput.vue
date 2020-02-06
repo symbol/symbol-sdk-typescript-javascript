@@ -1,27 +1,33 @@
 <template>
-  <div class="target flex_center">
-    <span class="title">{{ $t('FormTransferCreation_target') }}</span>
-    <span class="value radius flex_center">
-
-      <ErrorTooltip field-name="recipient" placement-override="top">
-        <input
-          v-model="rawValue"
-          v-focus
-          v-validate="validationRules.addressOrAlias"
-          data-vv-name="recipient"
-          :data-vv-as="$t('FormTransferCreation_target')"
-          :placeholder="$t('receive_address_or_alias')"
-          type="text"
-          @blur="$emit('blur', rawValue)"
-        />
+  <div class="form-line-container">
+    <FormLabel>{{ $t('transfer_target') }}</FormLabel>
+    <ValidationProvider
+      v-slot="{ errors }"
+      mode="lazy"
+      vid="recipient"
+      :name="$t('recipient')"
+      :rules="`${validationRules.addressOrAlias}|addressOrAliasNetworkType:${networkType}`"
+      tag="div"
+      class="inline-container"
+    >
+      <ErrorTooltip :errors="errors">
+        <div class="full-width-item-container">
+          <input
+            v-model="rawValue"
+            v-focus
+            class="full-width-item-container input-size input-style"
+            :placeholder="$t('receive_address_or_alias')"
+            type="text"
+            @blur="$emit('blur', rawValue)"
+          >
+        </div>
       </ErrorTooltip>
-
-    </span>
+    </ValidationProvider>
   </div>
 </template>
 
 <script lang="ts">
-import {RecipientInputTs} from './RecipientInputTs'
-
+import { RecipientInputTs } from './RecipientInputTs'
+import '@/styles/forms.less'
 export default class RecipientInput extends RecipientInputTs {}
 </script>

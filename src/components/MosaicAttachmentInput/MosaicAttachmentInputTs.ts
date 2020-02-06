@@ -18,19 +18,23 @@ import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // child components
+import {ValidationObserver} from 'vee-validate'
 // @ts-ignore
 import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue'
 // @ts-ignore
 import AmountInput from '@/components/AmountInput/AmountInput.vue'
 // @ts-ignore
 import ButtonAdd from '@/components/ButtonAdd/ButtonAdd.vue'
-
+// @ts-ignore
+import FormLabel from '@/components/FormLabel/FormLabel.vue'
 
 @Component({
   components: {
+    ValidationObserver,
     MosaicSelector,
     AmountInput,
     ButtonAdd,
+    FormLabel,
   },
   computed: {...mapGetters({
     networkMosaic: 'mosaic/networkMosaic',
@@ -109,18 +113,12 @@ export class MosaicAttachmentInputTs extends Vue {
     this.selectedMosaic = hex
   }
 
-  public onChangeAmount(amt: number) {
-    this.relativeAmount = amt
-  }
-
   public onClickAdd() {
-    if (!this.canClickAdd) {
-      return ;
-    }
+    if (!this.canClickAdd) return
 
     this.$emit('add', {
       mosaicHex: this.selectedMosaic,
-      amount: this.relativeAmount,
+      amount: parseFloat(`${this.relativeAmount}`),
     })
   }
 }

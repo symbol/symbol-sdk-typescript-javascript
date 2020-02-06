@@ -31,10 +31,11 @@
           onsubmit="event.preventDefault()"
           @keyup.enter="addPeer"
         >
+              <!-- v-validate="validationRules.friendlyNodeUrl" -->
+
           <ErrorTooltip placement-override="top" class="node-input-container" field-name="friendlyNodeUrl">
             <input
               v-model="formItems.nodeUrl"
-              v-validate="validationRules.friendlyNodeUrl"
               :data-vv-as="$t('node')"
               data-vv-name="friendlyNodeUrl"
               :placeholder="$t('please_enter_a_custom_nod_address')"

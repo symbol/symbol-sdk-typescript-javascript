@@ -18,7 +18,7 @@ import {mapGetters} from 'vuex'
 
 @Component({computed: {...mapGetters({
   currentLanguage: 'app/currentLanguage',
-  languageList: 'app/languages'
+  languageList: 'app/languages',
 })}})
 export class LanguageSelectorTs extends Vue {
   /**

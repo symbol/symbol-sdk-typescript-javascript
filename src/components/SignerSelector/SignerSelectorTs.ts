@@ -22,20 +22,27 @@ import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {WalletService} from '@/services/WalletService'
 
-@Component({computed: {...mapGetters({
-  networkType: 'network/networkType',
-  currentAccount: 'account/currentAccount',
-  currentWallet: 'wallet/currentWallet',
-  knownWallets: 'wallet/knownWallets',
-  multisigInfo: 'wallet/currentMultisigInfo',
-})}})
+// child components
+// @ts-ignore
+import FormLabel from '@/components/FormLabel/FormLabel.vue'
+
+@Component({
+  components: {FormLabel},
+  computed: {...mapGetters({
+    networkType: 'network/networkType',
+    currentAccount: 'account/currentAccount',
+    currentWallet: 'wallet/currentWallet',
+    knownWallets: 'wallet/knownWallets',
+    multisigInfo: 'wallet/currentMultisigInfo',
+  })},
+})
 export class SignerSelectorTs extends Vue {
   /**
    * Value set by the parent component's v-model
    * @type {string}
    */
   @Prop({
-    default: ''
+    default: '',
   }) value: string
 
   /**
@@ -92,7 +99,7 @@ export class SignerSelectorTs extends Vue {
     }
   }
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   /**
    * Value set by the parent component
    * @type {string}
@@ -109,21 +116,21 @@ export class SignerSelectorTs extends Vue {
   }
 
   public get signers(): {publicKey: string, label: string}[] {
-    if (! this.currentWallet) {
+    if (!this.currentWallet) {
       return []
     }
 
     // "self"
     const currentSigner = PublicAccount.createFromPublicKey(
       this.currentWallet.values.get('publicKey'),
-      this.networkType
+      this.networkType,
     )
 
     // add multisig accounts
     const self = [
       {
         publicKey: currentSigner.publicKey,
-        label: this.currentWallet.values.get('name')
+        label: this.currentWallet.values.get('name'),
       },
     ]
 
@@ -131,7 +138,7 @@ export class SignerSelectorTs extends Vue {
       return self.concat(...this.multisigInfo.multisigAccounts.map(
         ({publicKey}) => ({
           publicKey,
-          label: this.walletService.getWalletLabel(publicKey, this.networkType)
+          label: this.walletService.getWalletLabel(publicKey, this.networkType),
         })))
     }
 

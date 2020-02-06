@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-.add_mosaic_button {
-  display: inline-block;
-  width: 40px;
-  height: 44px;
-  position: relative;
-  left: 10px;
-  border: 10px solid #1fb6ac;
-  background-color: #1fb6ac;
-  background-image: url("../../views/resources/img/wallet/wallet-detail/walletDetailAdd.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center center;
-  cursor: pointer;
-}
+import {Validator, staticImplements} from './Validator' 
 
-.add_mosaic_button:hover {
-  box-shadow: 0 0 0.1rem #1fb6ac;
+@staticImplements<Validator>() 
+export class MaxDecimalsValidator {
+  /**
+   * Validates the max number of decimals in a number
+   * @static
+   * @param {*} value
+   * @param {number} maxDecimalNumber
+   * @returns {boolean}
+   */
+  public static validate(value: any, maxDecimalNumber: number): boolean {
+    if(Math.floor(value) == value) return true
+    const decimalNumber = value.toString().split('.')[1].length || 0
+    return decimalNumber <= maxDecimalNumber
+  }
 }
