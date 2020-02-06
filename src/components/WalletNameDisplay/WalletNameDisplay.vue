@@ -11,12 +11,12 @@
     <ModalFormGeneric :visible="hasNameFormModal"
                       @submit="onChangeName"
                       @cancel="hasNameFormModal = false">
-      <div v-slot:fields="formItems">
+      <template v-slot:fields="formItems">
         <div class="row">
           <label>New name: </label>
           <input type="text" name="name" v-model="formItems.name" />
         </div>
-      </div>
+      </template>
     </ModalFormGeneric>
   </div>
 </template>

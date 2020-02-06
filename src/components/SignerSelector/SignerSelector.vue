@@ -23,7 +23,6 @@
 
 <script lang="ts">
 import { SignerSelectorTs } from './SignerSelectorTs'
-import { SignerSelectorTs } from '@/components/SignerSelector/SignerSelectorTs.ts'
 import '@/styles/forms.less'
 export default class SignerSelector extends SignerSelectorTs {}
 </script>
