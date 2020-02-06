@@ -27,12 +27,22 @@
           · {{ $t('Nem_wallet_can_not_recover_your_mnemonic') }}
         </p>
         <div class="jump-btn">
-          <button class="info-button pointer" @click="$router.back()">
-            {{ $t('Back') }}
-          </button>
-          <button class="pointer" @click="submit">
-            {{ $t('next') }}
-          </button>
+          <div class="flex-container" style="width:100%">
+            <button
+              type="button"
+              class="button-style back-button" 
+              @click="$router.back()"
+            >
+              {{ $t('back') }}
+            </button>
+            <button
+              type="submit"
+              class="button-style validation-button" 
+              @click="submit"
+            >
+              {{ $t('next') }}
+            </button>
+          </div>
         </div>
       </div>
       <div class="finish-right">
@@ -44,11 +54,7 @@
 
 <script lang="ts">
 import FinalizeTs from './FinalizeTs'
-
-export default class Finalize extends FinalizeTs {
-}
+import './Finalize.less'
+import '@/styles/forms.less'
+export default class Finalize extends FinalizeTs {}
 </script>
-
-<style scoped lang="less">
-  @import "Finalize.less";
-</style>

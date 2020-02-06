@@ -1,24 +1,30 @@
 <template>
-  <div class="remark flex_center">
-    <span class="title">{{ $t('message') }}</span>
-    <span class="textarea_container flex_center value radius">
-
-      <ErrorTooltip field-name="remarks">
-        <textarea
-          v-model="plain"
-          v-validate="validationRules.message"
-          class="radius"
-          :placeholder="$t('Please_enter_notes')"
-          data-vv-name="remarks"
-        />
-      </ErrorTooltip>
-
-    </span>
+  <div class="form-line-container">
+    <FormLabel>{{ $t('message') }}</FormLabel>
+    <div class="inline-container">
+      <ValidationProvider
+        v-slot="{ errors }"
+        mode="lazy"
+        vid="message"
+        :name="$t('message')"
+        :rules="validationRules.message"
+        tag="div"
+        class="full-width-item-container"
+      >
+        <ErrorTooltip :errors="errors">
+          <textarea
+            v-model="plain"
+            class="full-width-item-container textarea-size textarea-style"
+            :placeholder="$t('Please_enter_notes')"
+          />
+        </ErrorTooltip>
+      </ValidationProvider>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import {MessageInputTs} from './MessageInputTs'
-
+import '@/styles/forms.less'
 export default class MessageInput extends MessageInputTs {}
 </script>

@@ -13,25 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NamespaceId} from 'nem2-sdk'
+import {Address} from 'nem2-sdk'
 
 // internal dependencies
-import {Validator} from './Validator'
+import {Validator, staticImplements} from './Validator' 
 
-export class AliasValidator extends Validator {
+@staticImplements<Validator>() 
+export class AddressValidator {
   /**
-   * Execute the validator with \a value
-   * @param {any} value 
-   * @return {ValidationObject}
+   * Executes the validator
+   * @static
+   * @param {*} value
+   * @returns {boolean}
    */
-  public validate(value): {valid: boolean|string} {
-    //XXX if (alias.length > NAMESPACE_MAX_LENGTH) return {valid: false}
+  public static validate(value: any): boolean {
     try {
-      new NamespaceId(value)
-      return {valid: value}
+      Address.createFromRawAddress(value)
+      return true
     }
     catch (error) {
-      return {valid: false}
+      return false
     }
   }
 }

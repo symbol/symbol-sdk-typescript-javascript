@@ -8,7 +8,10 @@
         <div class="mnemonic-container">
           <div v-if="!showMnemonic" class="show-mnemonic">
             <img src="@/views/resources/img/invisible.png">
-            <button @click="showMnemonic = true">
+            <button
+              class="button-style validation-button"
+              @click="showMnemonic = true"
+            >
               {{ $t('Display_mnemonic') }}
             </button>
           </div>
@@ -16,14 +19,23 @@
             <span v-for="(m, index) in mnemonicWordsList" :key="index">{{ m }}</span>
           </div>
         </div>
-
-        <div class="button-container">
-          <button class="info-button" @click="$router.back()">
-            {{ $t('Back') }}
-          </button>
-          <button @click="$router.push({name: 'accounts.createAccount.verifyMnemonic'})">
-            {{ $t('Verify_backup_mnemonics') }}
-          </button>
+        <div class="form-line-container button-container">
+          <div class="flex-container mt-3">
+            <button
+              type="button"
+              class="button-style back-button" 
+              @click="$router.back()"
+            >
+              {{ $t('back') }}
+            </button>
+            <button
+              type="submit"
+              class="button-style validation-button" 
+              @click="$router.push({name: 'accounts.createAccount.verifyMnemonic'})"
+            >
+              {{ $t('Verify_backup_mnemonics') }}
+            </button>   
+          </div>
         </div>
       </div>
       <div class="create-mnemonic-right">
@@ -43,9 +55,7 @@
 
 <script lang="ts">
 import ShowMnemonicTs from './ShowMnemonicTs'
+import './ShowMnemonic.less'
+import '@/styles/forms.less'
 export default class ShowMnemonic extends ShowMnemonicTs { }
 </script>
-
-<style scoped lang="less">
-  @import "ShowMnemonic.less";
-</style>

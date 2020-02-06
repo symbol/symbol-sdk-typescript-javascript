@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 import {mapGetters} from 'vuex'
-import {Component, Provide, Vue} from 'vue-property-decorator'
+import {Component, Vue} from 'vue-property-decorator'
 import {NetworkType, Password} from 'nem2-sdk'
 
 // internal dependencies
 import {$eventBus} from '@/events'
 import {NotificationType} from '@/core/utils/NotificationType'
-import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
+import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
@@ -28,6 +28,8 @@ import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {AccountService} from '@/services/AccountService'
 
 // child components
+// @ts-ignore
+import {ValidationProvider, ValidationObserver} from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
@@ -46,12 +48,13 @@ import appConfig from '@/../config/app.conf.json'
   },
   components: {
     ErrorTooltip,
+    ValidationProvider,
+    ValidationObserver,
     LanguageSelector,
   },
 })
-export default class LoginPageTs extends Vue {
-  @Provide() validator: any = this.$validator
 
+export default class LoginPageTs extends Vue {
   /**
    * Currently active language
    * @see {Store.AppInfo}

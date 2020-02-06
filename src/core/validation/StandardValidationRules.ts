@@ -13,20 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// internal dependencies
-import {Validator} from './Validator'
+import {extend} from 'vee-validate'
+import {
+  digits,
+  excluded,
+  is_not,
+  max,
+  min_value,
+  min, 
+  required, 
+  regex,
+} from 'vee-validate/dist/rules'
 
-export class DerivationPathValidator extends Validator {
+export class StandardValidationRules {
   /**
-   * Execute the validator with \a value
-   * @param {any} value 
-   * @return {ValidationObject}
+   * Registers validation rules shipped with vee-validate
+   * @static
    */
-  public validate(value: string): {valid: boolean|string} {
-    if (value.match(/^m\/44'\/43'\/[0-9]+'\/[0-9]+'\/[0-9]+'/)) {
-      return {valid: value}
-    }
-
-    return {valid: false}
+  public static register() {
+    extend('digits', digits)
+    extend('excluded', excluded)
+    extend('is_not', is_not)
+    extend('max', max)
+    extend('min_value', min_value)
+    extend('min', min)
+    extend('regex', regex)
+    extend('required', required)
   }
 }

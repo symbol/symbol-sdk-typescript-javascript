@@ -1,98 +1,187 @@
 <template>
-  <div class="create-account-sec" @keyup.enter="submit()">
-    <p class="set-title">
-      {{ $t('Create_an_account_and_password') }}
-    </p>
-    <p class="set-title-tips">
-      {{ $t('Set_title_tips') }}
-    </p>
-    <div class="create-account-col">
-      <div class="create-account-left">
-        <div class="form-input-item">
-          <div>* {{ $t('Set_account_name') }}</div>
-          <ErrorTooltip field-name="newAccountName">
-            <input
-              v-model="formItems.accountName"
-              v-validate="validationRules.newAccountName"
-              v-focus
-              data-vv-name="newAccountName"
-              :data-vv-as="$t('newAccountName')"
-              :placeholder="$t('account_name')"
+  <div>
+    <FormWrapper>
+      <ValidationObserver v-slot="{ handleSubmit }">
+        <form @keyup.enter="handleSubmit(submit)">
+          <div class="fixed-full-width-item-container">
+            <div class="form-headline">
+              {{ $t('Create_an_account_and_password') }}
+            </div>
+          </div>
+
+          <div class="fixed-full-width-item-container">
+            <div class="form-line-container">
+              <div class="form-text">
+                {{ $t('Account_creation_description') }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-line-container">
+            <FormLabel>{{ $t('Set_account_name') }}</FormLabel>
+            <ValidationProvider
+              v-slot="{ errors }"
+              vid="newAccountName"
+              :name="$t('newAccountName')"
+              :rules="validationRules.newAccountName"
+              tag="div"
+              class="inline-container"
             >
-          </ErrorTooltip>
-        </div>
-        <div class="form-input-item">
-          <div>* {{ $t('Set_network_type') }}</div>
-          <Select v-model="formItems.networkType" :placeholder="$t('choose_network')" required>
-            <Option v-for="(item,index) in networkTypeList" :key="index" :value="item.value">
-              {{ item.label }}
-            </Option>
-          </Select>
-        </div>
-        <div class="form-input-item">
-          <div>* {{ $t('Set_password') }}</div>
-          <ErrorTooltip field-name="password">
-            <input
-              ref="passwordInput"
-              name="password"
-              v-model.lazy="formItems.password"
-              v-focus
-              v-validate="validationRules.password"
-              data-vv-name="password"
-              :data-vv-as="$t('password')"
-              :placeholder="$t('please_enter_your_wallet_password')"
-              type="password"
+              <ErrorTooltip :errors="errors">
+                <div class="full-width-item-container">
+                  <input
+                    v-model="formItems.accountName"
+                    v-focus
+                    class="full-width-item-container input-size input-style"
+                    :placeholder="$t('account_name')"
+                  >
+                </div>
+              </ErrorTooltip>
+            </ValidationProvider>
+          </div>
+
+          <div class="form-line-container">
+            <FormLabel>{{ $t('Set_network_type') }}</FormLabel>
+            <div class="inline-container">
+              <div class="full-width-item-container">
+                <Select
+                  v-model="formItems.networkType"
+                  :placeholder="$t('choose_network')"
+                  class="select-size select-style"
+                >
+                  <Option v-for="(item,index) in networkTypeList" :key="index" :value="item.value">
+                    {{ item.label }}
+                  </Option>
+                </Select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-line-container">
+            <FormLabel>{{ $t('new_password_label') }}</FormLabel>
+            <ValidationProvider
+              v-slot="{ errors }"
+              vid="newPassword"
+              mode="lazy"
+              :name="$t('password')"
+              :rules="validationRules.password"
+              tag="div"
+              class="inline-container"
             >
-          </ErrorTooltip>
-        </div>
-        <div class="form-input-item">
-          <div>* {{ $t('Confirm_password') }}</div>
-          <ErrorTooltip field-name="confirmPassword">
-            <input
-              v-model.lazy="formItems.passwordAgain"
-              v-focus
-              v-validate="'required|confirmed:passwordInput'"
-              data-vv-name="confirmPassword"
-              :data-vv-as="$t('password')"
-              :placeholder="$t('please_enter_your_wallet_password')"
-              type="password"
+              <ErrorTooltip :errors="errors">
+                <div class="full-width-item-container">
+                  <input
+                    ref="passwordInput"
+                    v-model="formItems.password"
+                    class="full-width-item-container input-size input-style"
+                    :placeholder="$t('please_enter_your_wallet_password')"
+                    type="password"
+                  >
+                </div>
+              </ErrorTooltip>
+            </ValidationProvider>
+          </div>
+
+          <div class="form-line-container">
+            <FormLabel>{{ $t('repeat_password_label') }}</FormLabel>
+            <ValidationProvider
+              v-slot="{ errors }"
+              vid="confirmPassword"
+              :name="$t('confirmPassword')"
+              :rules="validationRules.confirmPassword"
+              tag="div"
+              class="inline-container"
             >
-          </ErrorTooltip>
-        </div>
-        <div class="form-input-item">
-          <div>* {{ $t('Password_hint') }}</div>
-          <input v-model="formItems.hint">
-        </div>
-        <div class="button-container">
-          <button class="info-button" @click="$router.push({name: 'accounts.login'})">
-            {{ $t('Back_to_home') }}
-          </button>
-          <button @click="submit">
-            {{ $t(nextPage === 'accounts.importAccount.importMnemonic' ? 'Restore_Mnemonic' : 'Generating_mnemonic') }}
-          </button>
-        </div>
-      </div>
-      <div class="create-account-right">
-        <p class="text1">
-          {{ $t('Account_description') }}
-        </p>
-        <p class=" text">
-          {{ $t('Account_description_tips1') }}
-        </p>
-        <p class=" text">
-          {{ $t('Account_description_tips2') }}
-        </p>
-        <p class="text red">
-          {{ $t('Account_description_tips3') }}
-        </p>
-      </div>
+              <ErrorTooltip :errors="errors">
+                <div class="full-width-item-container">
+                  <input
+                    v-model="formItems.passwordAgain"
+                    class="full-width-item-container input-size input-style"
+                    data-vv-name="confirmPassword"
+                    :placeholder="$t('please_enter_your_new_password_again')"
+                    type="password"
+                  >
+                </div>
+              </ErrorTooltip>
+            </ValidationProvider>
+          </div>
+
+          <div class="form-line-container">
+            <FormLabel>{{ $t('Password_hint') }}</FormLabel>
+            <ValidationProvider
+              v-slot="{ errors }"
+              vid="hint"
+              :name="$t('hint')"
+              :rules="validationRules.message"
+              tag="div"
+              class="inline-container"
+            >
+              <ErrorTooltip :errors="errors">
+                <div class="full-width-item-container">
+                  <input
+                    v-model="formItems.hint"
+                    class="full-width-item-container input-size input-style"
+                  >
+                </div>
+              </ErrorTooltip>
+            </ValidationProvider>
+          </div>
+
+          <div class="form-line-container fixed-full-width-item-container">
+            <div class="flex-container mt-3">
+              <button
+                type="button"
+                class="button-style back-button" 
+                @click="$router.push({name: 'accounts.login'})"
+              >
+                {{ $t('back') }}
+              </button>
+              <button
+                type="submit"
+                class="button-style validation-button" 
+                @click="handleSubmit(submit)"
+              >
+                {{ $t(nextPage === 'accounts.importAccount.importMnemonic'
+                  ? 'Restore_Mnemonic'
+                  : 'Generating_mnemonic'
+                ) }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </ValidationObserver>
+    </FormWrapper>
+
+    <div class="right-hints-section">
+      <p class="text1">
+        {{ $t('Account_description') }}
+      </p>
+      <p class=" text">
+        {{ $t('Account_description_tips1') }}
+      </p>
+      <p class=" text">
+        {{ $t('Account_description_tips2') }}
+      </p>
+      <p class="text red">
+        {{ $t('Account_description_tips3') }}
+      </p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import {FormAccountCreationTs} from './FormAccountCreationTs'
-import './FormAccountCreation.less'
-
+import '@/styles/forms.less'
 export default class FormAccountCreation extends FormAccountCreationTs {}
 </script>
+
+<style>
+.right-hints-section {
+  display: block;
+  position: absolute;
+  width: 5rem;
+  float: left;
+  left: 10.5rem;
+  top: 3.5rem;
+}
+</style>

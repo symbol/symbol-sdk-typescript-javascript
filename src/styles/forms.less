@@ -1,0 +1,202 @@
+.form-line-container {
+  display: block;
+  float: left;
+  clear: both;
+  width: 100%;
+  margin-bottom: 0.14rem;
+
+  .inline-container {
+    display: inline-flex;
+
+    .half-width-item-container {
+      .right-item {
+        margin-left: 0.2rem;
+      }
+      .input-size {
+        width: 2.9rem;
+      }
+      .select-size {
+        width: 2.9rem;
+      }
+      .auto-complete-size {
+        width: 2.9rem;
+      }
+    }
+
+    .full-width-item-container {
+      .input-size {
+        width: 6rem;
+      }
+      .select-size {
+        width: 6rem;
+      }
+      .auto-complete-size {
+        width: 6rem;
+      }
+      .textarea-size {
+        width: 6rem;
+      }
+    }
+
+    .input-style {
+      height: 0.45rem;
+      border: none;
+      outline: none;
+      padding-left: 0.2rem;
+      padding-right: 0.15rem;
+      font-size: 16px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      border: 0.01rem solid #ccc;
+      border-radius: 0.04rem;
+    }
+
+    .textarea-style {
+      height: 0.8rem;
+      outline: none;
+      padding: 0.1rem 0.2rem;
+      font-size: 0.16rem;
+      border: 0.01rem solid #ccc;
+      border-radius: 0.04rem;
+    }
+
+    .select-style {
+      height: 0.45rem;
+      line-height: 0.45rem;
+      width: 6rem;
+      display: block;
+      font-size: 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      padding-left: 0.08rem;
+      padding-right: 0.24rem;
+      border: 0.01rem solid #ccc;
+      border-radius: 0.04rem;
+
+      .ivu-select-selection {
+        border: unset;
+      }
+
+      .ivu-select-selected-value {
+        font-size: 0.16rem;
+        padding-left: 0;
+        height: 0.45rem;
+        line-height: 0.45rem;
+      }
+
+      .ivu-select-dropdown {
+        min-width: unset !important;
+        margin: 0.12rem 0;
+        width: 5.8rem;
+      }
+
+      .ivu-select-arrow {
+        top: 66%;
+      }
+    }
+
+    .auto-complete-style {
+      height: 0.45rem;
+      border-radius: 0.04rem;
+      padding: 0 0.2rem;
+      border: 0.01rem solid #ccc;
+      line-height: 1.5;
+      color: #515a6e;
+      background-color: #fff;
+      background-image: none;
+      cursor: text;
+      transition: border 0.2s ease-in-out, background 0.2s ease-in-out,
+        box-shadow 0.2s ease-in-out;
+
+      .ivu-input {
+        height: 0.4rem;
+        font-size: 16px;
+        border-bottom: unset;
+        padding: 0;
+        background: none;
+      }
+
+      .ivu-select-dropdown {
+        left: 1px !important;
+      }
+    }
+  }
+}
+
+.fixed-full-width-item-container {
+  width: 6rem;
+  display: block;
+  float: left;
+  clear: both;
+
+  .centered-button {
+    margin: 10px auto;
+  }
+}
+
+// Styles common to all buttons
+.button-style {
+  text-align: center;
+  height: 0.45rem !important;
+  display: block;
+  width: auto !important;
+  padding: 0.08rem 0.3rem;
+  border: none;
+  outline: none;
+  font-size: 0.2rem;
+  font-weight: 500;
+  border-radius: 0.04rem;
+  cursor: pointer;
+}
+
+.validation-button {
+  background-color: #1fb6ac;
+  color: white;
+}
+
+.validation-button:hover {
+  box-shadow: 0 0 0.1rem #1fb6ac;
+  background-color: #1fb6ac !important;
+  color: white !important;
+  opacity: 0.8 !important;
+}
+
+.back-button {
+  background: #e0dfe5;
+  color: #333;
+}
+
+.back-button:hover {
+  box-shadow: 0 0 0.1rem #e0dfe5;
+  background-color: #e0dfe5 !important;
+  color: #333 !important;
+  opacity: 0.8 !important;
+}
+
+.right-side-button {
+  display: inline;
+  margin-left: 10px;
+}
+
+.form-headline {
+  margin-top: 0.1rem;
+  height: 0.5rem;
+  font-size: 0.26rem;
+  font-weight: 600;
+  margin-bottom: 0.19rem;
+}
+
+.form-text {
+  color: rgba(136, 136, 136);
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mt-3 {
+  margin-top: 0.3rem;
+}

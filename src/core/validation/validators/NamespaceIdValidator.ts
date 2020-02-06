@@ -13,13 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export abstract class Validator {
-  /// region abstract methods
+import {NamespaceId} from 'nem2-sdk'
+
+// internal dependencies
+import {Validator, staticImplements} from './Validator' 
+
+@staticImplements<Validator>() 
+export class NamespaceIdValidator {
   /**
-   * Execute the validator with \a value
-   * @param {any} value 
-   * @return {ValidationObject}
+   * Executes the validator
+   * @static
+   * @param {*} value
+   * @returns {boolean}
    */
-  public abstract validate(value): {valid: boolean|string}
-  /// end-region abstract methods
+  public static validate(value: any): boolean {
+    try {
+      new NamespaceId(value)
+      return true
+    }
+    catch (error) {
+      return false
+    }
+  }
 }

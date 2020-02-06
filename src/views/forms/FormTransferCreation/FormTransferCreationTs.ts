@@ -27,7 +27,7 @@ import {
   RawUInt64,
   NamespaceId,
 } from 'nem2-sdk'
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
@@ -41,41 +41,47 @@ import {NotificationType} from '@/core/utils/NotificationType'
 import feesConfig from '@/../config/fees.conf.json'
 
 // child components
+import {ValidationObserver} from 'vee-validate'
 // @ts-ignore
 import AmountInput from '@/components/AmountInput/AmountInput.vue'
 // @ts-ignore
-import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue'
+import ButtonAdd from '@/components/ButtonAdd/ButtonAdd.vue'
+// @ts-ignore
+import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
+// @ts-ignore
+import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
 // @ts-ignore
 import MessageInput from '@/components/MessageInput/MessageInput.vue'
 // @ts-ignore
 import ModalTransactionConfirmation from '@/components/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
 // @ts-ignore
-import SignerSelector from '@/components/SignerSelector/SignerSelector.vue'
-// @ts-ignore
 import MosaicAttachmentDisplay from '@/components/MosaicAttachmentDisplay/MosaicAttachmentDisplay.vue'
 // @ts-ignore
 import MosaicAttachmentInput from '@/components/MosaicAttachmentInput/MosaicAttachmentInput.vue'
 // @ts-ignore
-import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
+import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue'
 // @ts-ignore
 import RecipientInput from '@/components/RecipientInput/RecipientInput.vue'
 // @ts-ignore
-import ButtonAdd from '@/components/ButtonAdd/ButtonAdd.vue'
+import SignerSelector from '@/components/SignerSelector/SignerSelector.vue'
+
 
 type MosaicAttachmentType = {id: MosaicId, mosaicHex: string, name: string, amount: number}
 
 @Component({
   components: {
     AmountInput,
-    MosaicSelector,
+    ButtonAdd,
+    FormWrapper,
+    MaxFeeSelector,
     MessageInput,
     ModalTransactionConfirmation,
-    SignerSelector,
     MosaicAttachmentDisplay,
     MosaicAttachmentInput,
-    MaxFeeSelector,
+    MosaicSelector,
     RecipientInput,
-    ButtonAdd,
+    SignerSelector,
+    ValidationObserver,
   },
   computed: {...mapGetters({
     currentWallet: 'wallet/currentWallet',
@@ -89,7 +95,7 @@ type MosaicAttachmentType = {id: MosaicId, mosaicHex: string, name: string, amou
   })}
 })
 export class FormTransferCreationTs extends Vue {
-
+  // @TODO: check if props needed
   @Prop({
     default: null
   }) signer: PublicAccount
@@ -110,6 +116,9 @@ export class FormTransferCreationTs extends Vue {
     default: false
   }) disableSubmit: boolean
 
+  @Prop({
+    default: false
+  }) hideSigner: boolean
   /**
    * Currently active wallet
    * @var {WalletsModel}
@@ -228,27 +237,31 @@ export class FormTransferCreationTs extends Vue {
   }
 
   public set attachedMosaics(attachments: MosaicAttachmentType[]) {
-    console.log('set attachedMosaics: ', attachments)
     this.formItems.attachedMosaics = attachments
   }
 
   protected get transaction(): TransferTransaction {
-    // - read form
-    const data = {
-      recipient: this.formItems.recipient,
-      mosaics: this.formItems.attachedMosaics.map(
-        (spec: {mosaicHex: string, amount: number}): {mosaicHex: string, amount: number} => ({
-          mosaicHex: spec.mosaicHex,
-          amount: spec.amount // amount is relative
-        })),
-      message: this.formItems.messagePlain,
+    try {
+      // - read form
+      const data = {
+        recipient: this.instantiatedRecipient,
+        mosaics: this.attachedMosaics.map(
+          (spec: {mosaicHex: string, amount: number}): {mosaicHex: string, amount: number} => ({
+            mosaicHex: spec.mosaicHex,
+            amount: spec.amount // amount is relative
+          })),
+        message: this.formItems.messagePlain,
+      }
+
+      // - prepare transaction parameters
+      const params = TransferTransactionParams.create(data, this.mosaicsInfo)
+
+      // - prepare transfer transaction
+      return this.factory.build('TransferTransaction', params)
+    } catch (error) {
+      return null
     }
 
-    // - prepare transaction parameters
-    const params = TransferTransactionParams.create(data, this.mosaicsInfo)
-
-    // - prepare transfer transaction
-    return this.factory.build('TransferTransaction', params)
   }
 
   protected set transaction(transaction: TransferTransaction) {
@@ -265,6 +278,22 @@ export class FormTransferCreationTs extends Vue {
 
     // - populate maxFee
     this.formItems.maxFee = transaction.maxFee.compact()
+  }
+
+  /**
+   * Recipient used in the transaction
+   * @readonly
+   * @protected
+   * @type {(Address | NamespaceId)}
+   */
+  protected get instantiatedRecipient(): Address | NamespaceId {
+    const {recipientRaw} = this.formItems
+    if (!recipientRaw) return null
+    if ([ 40, 46 ].includes(recipientRaw.length)) {
+      return Address.createFromRawAddress(recipientRaw)
+    }
+
+    return new NamespaceId(recipientRaw)
   }
 /// end-region computed properties getter/setter
 
@@ -293,10 +322,9 @@ export class FormTransferCreationTs extends Vue {
    * @return {void}
    */
   public onDeleteMosaic(id: MosaicId) {
-    const index = this.formItems.attachedMosaics.findIndex(attached => attached.mosaicHex === id.toHex())
-    if (undefined !== index) {
-      delete this.formItems.attachedMosaics[index]
-    }
+    const updatedAttachedMosaics = [...this.formItems.attachedMosaics]
+      .filter(({mosaicHex}) => mosaicHex !== id.toHex())
+    Vue.set(this.formItems, 'attachedMosaics', updatedAttachedMosaics)
   }
 
   /**
@@ -305,11 +333,8 @@ export class FormTransferCreationTs extends Vue {
    * @return {void}
    */
   public async onAddMosaic(formItems: {mosaicHex: string, amount: number}) {
-    console.log('onAddMosaic(formItems): ', formItems)
-
     // - update form data
     const attachments = [].concat(...this.formItems.attachedMosaics)
-    console.log('onAddMosaic(attachments): ', attachments)
     const id = new MosaicId(RawUInt64.fromHex(formItems.mosaicHex))
     const exists = attachments.findIndex(m => m.id.equals(id))
     if (-1 !== exists) {
@@ -326,36 +351,15 @@ export class FormTransferCreationTs extends Vue {
       })
     }
 
-    console.log('onAddMosaic(attachments): ', attachments)
     this.attachedMosaics = attachments
-  }
-
-  public onChangeRecipient(input: string) {
-    if ([40, 46].includes(input.length)) {
-      return this.formItems.recipient = Address.createFromRawAddress(input)
-    }
-
-    return this.formItems.recipient = new NamespaceId(input)
   }
 
   /**
    * Process form input
    * @return {void}
    */
-  public onSubmit() {
-    if (this.disableSubmit) {
-      return ;
-    }
-
-    this.$validator
-      .validate()
-      .then(async (valid) => {
-        if (!valid) return
-
-        // - put transaction on stage
-        await this.$store.dispatch('wallet/ADD_STAGED_TRANSACTION', this.transaction)
-        this.isAwaitingSignature = true
-      })
+  public async onSubmit() {
+    await this.$store.dispatch('wallet/ADD_STAGED_TRANSACTION', this.transaction)
   }
 
   /**
@@ -371,7 +375,7 @@ export class FormTransferCreationTs extends Vue {
       return this.namespacesNames[mosaicId.toHex()]
     }
 
-    return  mosaicId.toHex()
+    return mosaicId.toHex()
   }
 
   protected mosaicsToAttachments(mosaics: Mosaic[]): MosaicAttachmentType[] {
@@ -387,5 +391,13 @@ export class FormTransferCreationTs extends Vue {
           amount: mosaic.amount.compact() / Math.pow(10, div)
         }
       })
+  }
+
+  @Watch('transaction')
+  onTransactionChange(newTransaction: TransferTransaction) {
+    this.$emit('onTransactionChange', {
+      transaction: newTransaction,
+      balanceEntries: this.attachedMosaics,
+    })
   }
 }

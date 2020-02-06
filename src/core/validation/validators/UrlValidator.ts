@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-.add_mosaic_button {
-  display: inline-block;
-  width: 40px;
-  height: 44px;
-  position: relative;
-  left: 10px;
-  border: 10px solid #1fb6ac;
-  background-color: #1fb6ac;
-  background-image: url("../../views/resources/img/wallet/wallet-detail/walletDetailAdd.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center center;
-  cursor: pointer;
-}
+import {Validator, staticImplements} from './Validator' 
 
-.add_mosaic_button:hover {
-  box-shadow: 0 0 0.1rem #1fb6ac;
+@staticImplements<Validator>() 
+export class UrlValidator {
+  /**
+   * Validates an URL
+   * @static
+   * @param {*} value
+   * @returns {boolean}
+   */
+  public static validate(value: any): boolean {
+    const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+       '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
+       '((\\d{1,3}\\.){3}\\d{1,3}))' + // ip (v4) address
+       '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port
+       '(\\#[-a-z\\d_]*)?$','i')
+    return pattern.test(value)
+  }
 }

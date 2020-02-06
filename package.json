@@ -38,7 +38,7 @@
     "trezor-connect": "^7.0.5",
     "typescript": "^3.7.2",
     "utf-8-validate": "^5.0.2",
-    "vee-validate": "^2.2.15",
+    "vee-validate": "^3.2.3",
     "view-design": "^4.0.0",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",

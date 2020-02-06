@@ -78,18 +78,19 @@ export class TransactionFactory {
     const deadline = Deadline.create()
     const networkType = this.$store.getters['network/networkType']
 
-    let transaction: TransactionImpl
     switch (name) {
-    case 'TransferTransaction': return TransferTransaction.create(
-      deadline,
-      params.getParam('recipient'),
-      params.getParam('amount'),
-      params.getParam('message'),
-      networkType,
-      params.getParam('maxFee')
-    );
+      case 'TransferTransaction': 
+        return TransferTransaction.create(
+          deadline,
+          params.getParam('recipient'),
+          params.getParam('mosaics'),
+          params.getParam('message'),
+          networkType,
+          params.getParam('maxFee'),
+        );
 
-    default: break
+
+      default: break
     }
 
     throw new Error('Could not find a REST repository by name \'' + name + ' \'')

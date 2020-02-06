@@ -15,18 +15,23 @@
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Address, NamespaceId, NetworkType} from 'nem2-sdk'
+import {NetworkType} from 'nem2-sdk'
 
 // internal dependencies
-import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
+import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 
 // child components
+import {ValidationProvider} from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+// @ts-ignore
+import FormLabel from '@/components/FormLabel/FormLabel.vue'
 
 @Component({
   components: {
+    ValidationProvider,
     ErrorTooltip,
+    FormLabel,
   },
   computed: {...mapGetters({
     networkType: 'network/networkType',

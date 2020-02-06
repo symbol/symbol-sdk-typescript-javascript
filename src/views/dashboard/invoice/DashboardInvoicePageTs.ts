@@ -13,40 +13,60 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Provide} from 'vue-property-decorator'
+// external dependencies
+import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 import {pluck, concatMap} from 'rxjs/operators'
-import {of} from 'rxjs'
+import {of, Observable} from 'rxjs'
 import {QRCodeGenerator, TransactionQR} from 'nem2-qr-library'
-import {MosaicId, Mosaic, UInt64, RawUInt64, NetworkType, PlainMessage, EmptyMessage} from 'nem2-sdk'
-
-// internal dependencies
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
-import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
-import {TransactionFactory} from '@/core/transactions/TransactionFactory'
-import {TransferTransactionParams} from '@/core/transactions/TransferTransactionParams'
+import {NetworkType, TransferTransaction, Address, MosaicId} from 'nem2-sdk'
 
 // child components
 // @ts-ignore
-import FormInvoiceCreation from '@/views/forms/FormInvoiceCreation/FormInvoiceCreation.vue'
+import FormTransferCreation from '@/views/forms/FormTransferCreation/FormTransferCreation.vue'
 
 // resources
 // @ts-ignore
 import failureIcon from '@/views/resources/img/monitor/failure.png'
 
+// @TODO: to move out
+/**
+ * Mosaic object to be displayed in the views
+ * @export
+ * @interface BalanceEntry
+ */
+export interface BalanceEntry {
+  /**
+   * Mosaic Id
+   * @type {MosaicId}
+   */
+  id: MosaicId
+  /**
+   * Mosaic hex Id
+   * @type {string}
+   */
+  mosaicHex: string
+  /**
+   * Mosaic name
+   * @type {string}
+   */
+  name: string
+  /**
+   * Relative amount
+   * @type {number}
+   */
+  amount: number
+}
+
+
 @Component({
   components: {
-    FormInvoiceCreation
+    FormTransferCreation,
   },
   computed: {...mapGetters({
     networkType: 'network/networkType',
     generationHash: 'network/generationHash',
-    networkMosaic: 'mosaic/networkMosaic',
-    networkMosaicName: 'mosaic/networkMosaicName',
-    mosaicsNames: 'mosaic/mosaicsNames',
-    currentAccount: 'account/currentAccount',
-    currentWallet: 'wallet/currentWallet',
+    currentWalletAddress: 'wallet/currentWalletAddress',
   })},
   subscriptions() {
     const qrCode$ = this
@@ -60,14 +80,18 @@ import failureIcon from '@/views/resources/img/monitor/failure.png'
   },
 })
 export class DashboardInvoicePageTs extends Vue {
-  @Provide() validator: any = this.$validator
-
   /**
    * Network type
    * @see {Store.Network}
    * @var {NetworkType}
    */
   public networkType: NetworkType
+
+  /**
+   * Transaction QR code
+   * @type {Observable<string>}
+   */
+  public qrCode$: Observable<string>
 
   /**
    * Network's generation hash
@@ -77,74 +101,40 @@ export class DashboardInvoicePageTs extends Vue {
   public generationHash: string
 
   /**
-   * Network's currency mosaic
-   * @see {Store.Mosaic}
-   * @var {MosaicId}
+   * The transaction to be translated to a QR code
+   * @type {TransferTransaction}
    */
-  public networkMosaic: MosaicId
+  public transaction: TransferTransaction = null
 
   /**
-   * Network's currency mosaic name
-   * @see {Store.Mosaic}
-   * @var {string}
+   * The transaction's mosaics to be displayed
+   * @type {BalanceEntry[]}
    */
-  public networkMosaicName: string
-
-  /**
-   * Network's mosaics names
-   * @see {Store.Mosaic}
-   * @var {any}
-   */
-  public mosaicsNames: {}
-
-  /**
-   * Currently active account
-   * @see {Store.Account}
-   * @var {AccountsModel}
-   */
-  public currentAccount: AccountsModel
-
-  /**
-   * Currently active wallet
-   * @see {Store.Wallet}
-   * @var {WalletsModel}
-   */
-  public currentWallet: WalletsModel
-
-  /**
-   * Validation rules
-   * @var {ValidationRuleset}
-   */
-  public validationRules = ValidationRuleset
-
-  /**
-   * Form items
-   * @var {any}
-   */
-  public formItems: any = {}
+  public balanceEntries: BalanceEntry[] = []
 
 /// region computed properties getter/setter
+  /**
+   * Recipient to be shown in the view
+   * @readonly
+   * @type {string}
+   */
+  public get recipient(): string {
+    if (!this.transaction || this.transaction.recipientAddress === undefined) return ''
+    const recipient = this.transaction.recipientAddress
+    return recipient instanceof Address ? recipient.pretty() : recipient.toHex()
+  }
+
+  /**
+   * Transaction QR code arguments
+   * @readonly
+   * @type {TransactionQR}
+   */
   public get transactionQR(): TransactionQR {
-    if (!this.formItems.recipient) {
-      return ;
-    }
+    if (!this.transaction || this.transaction.recipientAddress === undefined) return null
 
-    // - read form
-    const data = {
-      recipient: this.formItems.recipient || '',
-      mosaics: this.formItems.attachedMosaics || [],
-      message: this.formItems.messagePlain || ''
-    }
-
-    // - prepare transaction parameters
-    const params = TransferTransactionParams.create(data)
-
-    // - prepare transfer transaction
-    const factory = new TransactionFactory(this.$store)
-    const transfer = factory.build('TransferTransaction', params)
     try {
       return QRCodeGenerator.createTransactionRequest(
-        transfer,
+        this.transaction,
         this.networkType,
         this.generationHash,
       )
@@ -160,8 +150,14 @@ export class DashboardInvoicePageTs extends Vue {
    * emits the 'change' event with its new values.
    * @param {any} formItems
    */
-  public onFormChange(formItems: any) {
-    this.formItems = formItems
+  public onInvoiceChange(invoiceParams: {
+    transaction: TransferTransaction
+    balanceEntries: BalanceEntry[]
+  }) {
+    const {transaction, balanceEntries} = invoiceParams
+    if (!transaction) return
+    Vue.set(this, 'transaction', transaction)
+    Vue.set(this, 'balanceEntries', balanceEntries)
   }
 
   /**
@@ -169,18 +165,17 @@ export class DashboardInvoicePageTs extends Vue {
    * @return {void}
    */
   public onDownloadQR() {
-    if (!this.formItems.recipient) {
-      return ;
-    }
+    if (!this.transactionQR) return
 
     // - read QR code base64
     const QRCode: any = document.querySelector('#qrImg')
+    if (!QRCode) return
     const url = QRCode.src
 
     // - create link (<a>)
     const a = document.createElement('a')
     const event = new MouseEvent('click')
-    a.download = 'qr_receive_' + this.formItems.recipient
+    a.download = `qr_receive_${this.recipient}`
     a.href = url
 
     // - start download

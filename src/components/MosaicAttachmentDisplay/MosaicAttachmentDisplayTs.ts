@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, MosaicInfo, Mosaic} from 'nem2-sdk'
+import {MosaicId, MosaicInfo} from 'nem2-sdk'
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 

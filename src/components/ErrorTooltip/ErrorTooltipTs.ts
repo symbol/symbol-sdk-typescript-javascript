@@ -1,45 +1,53 @@
-import {Component, Vue, Prop, Watch, Inject} from 'vue-property-decorator'
+import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 
 @Component
 export class ErrorTooltipTs extends Vue {
-  @Prop() fieldName!: string
-  @Prop() formModel!: object
-  @Prop() placementOverride!: string
+  /**
+   * Tooltip placement
+   * @type {string}
+   */
+  @Prop({default: 'top-end'}) placementOverride!: string
 
-  @Inject('$validator') public $validator!: any
-  @Inject() validator!: any
+  /**
+   * Errors returned by the Validation Provider
+   * @type {string[]}
+   */
+  @Prop() errors!: string[]
 
+  /**
+   * Error message shown in the tooltip
+   * @var {string}
+   */
   displayedError = ''
-    
-  get errors() {
-    return this.$validator.errors
+
+  /**
+   * The string of the first error message
+   * @readonly
+   * @type {string}
+   */
+  get fieldError(): string | null {
+    if (!this.errors) return null
+    if (!this.errors.length) return null
+    return this.errors.shift() || null
   }
 
-  get errorItem(): string {
-    const {items} = this.errors
-    if (!items.length) return null
-    const item = items.find(({field}) => field === this.fieldName)
-    if (item === undefined) return null
-    return item.msg
+  /**
+   * Errored state
+   * @readonly
+   * @type {boolean}
+   */
+  get errored(): boolean {
+    return this.fieldError !== null
   }
 
-  get errored() {
-    if (!this.errors.items.length) return false
-    if (!this.errors) return false
-    return this.errorItem !== null
-  }
-
-  get fieldError() {
-    return this.errorItem || ''
-  }
-
-  get placement() {
-    return this.placementOverride || 'bottom-start'
-  }
-
-  @Watch('fieldError')
+  /**
+   * Sets the string shown in the tooltip
+   * (To avoid an ugly-looking behaviour,
+   * it must not switch to a falsy value or an empty string)
+   * @param {string} newValue
+   */
+  @Watch('fieldError', {immediate: true})
   onFieldErrorChanged(newValue: string) {
-    // Avoid flashing when the error Tooltip gets cleared
-    if (newValue !== '') this.displayedError = newValue
+    if (newValue && newValue !== '') this.displayedError = newValue
   }
 }

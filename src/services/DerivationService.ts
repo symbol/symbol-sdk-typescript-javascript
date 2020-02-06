@@ -17,7 +17,7 @@ import {Store} from 'vuex'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
-import {DerivationPathValidator} from '@/core/validators/DerivationPathValidator'
+import {DerivationPathValidator} from '@/core/validation/validators'
 
 export enum DerivationPathLevels {
   Purpose = 1,
@@ -55,7 +55,7 @@ export class DerivationService extends AbstractService {
    * @return {boolean}
    */
   public isValidPath(path: string): boolean {
-    return new DerivationPathValidator().validate(path).valid === path
+    return DerivationPathValidator.validate(path)
   }
 
   /**

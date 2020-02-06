@@ -13,20 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Provide, Vue} from 'vue-property-decorator'
+import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {NetworkType, Password} from 'nem2-sdk'
+import {NetworkType} from 'nem2-sdk'
 
 // internal dependencies
-import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
+import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {AppAccount} from '@/core/database/models/AppAccount'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
 
 // child components
+import {ValidationObserver, ValidationProvider} from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+// @ts-ignore
+import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
+// @ts-ignore
+import FormLabel from '@/components/FormLabel/FormLabel.vue'
 
 /// region custom types
 type NetworkNodeEntry = {value: NetworkType, label: string}
@@ -34,7 +39,11 @@ type NetworkNodeEntry = {value: NetworkType, label: string}
 
 @Component({
   components: {
+    ValidationObserver,
+    ValidationProvider,
     ErrorTooltip,
+    FormWrapper,
+    FormLabel,
   },
   computed: {...mapGetters({
     networkType: 'network/networkType',
@@ -42,8 +51,6 @@ type NetworkNodeEntry = {value: NetworkType, label: string}
   })},
 })
 export class FormAccountCreationTs extends Vue {
-  @Provide() validator: any = this.$validator
-
   /**
    * Currently active account
    * @see {Store.Account}
@@ -104,12 +111,8 @@ export class FormAccountCreationTs extends Vue {
    * @return {void}
    */
   public submit() {
-    this.$validator
-      .validate()
-      .then((valid) => {
-        if (!valid) return
-        this.persistAccountAndContinue()
-      })
+    // @VEE
+    this.persistAccountAndContinue()
   }
 
   /**

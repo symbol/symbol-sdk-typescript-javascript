@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, MosaicInfo, Mosaic, RawUInt64} from 'nem2-sdk'
 import {Component, Vue, Prop} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
 
 // internal dependencies
-import {ValidationRuleset} from '@/core/validators/ValidationRuleset'
+import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 
 // child components
+import {ValidationProvider} from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 
 @Component({
   components: {
+    ValidationProvider,
     ErrorTooltip,
   },
 })
 export class AmountInputTs extends Vue {
-
   @Prop({
     default: ''
   }) value: string
@@ -47,7 +46,7 @@ export class AmountInputTs extends Vue {
   }
 
   public set relativeValue(amount: string) {
-    this.$emit('input', parseFloat(amount))
+    this.$emit('input', amount)
   }
 /// end-region computed properties getter/setter
 }

@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-.add_mosaic_button {
-  display: inline-block;
-  width: 40px;
-  height: 44px;
-  position: relative;
-  left: 10px;
-  border: 10px solid #1fb6ac;
-  background-color: #1fb6ac;
-  background-image: url("../../views/resources/img/wallet/wallet-detail/walletDetailAdd.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center center;
-  cursor: pointer;
-}
+import {StandardValidationRules} from '@/core/validation/StandardValidationRules'
 
-.add_mosaic_button:hover {
-  box-shadow: 0 0 0.1rem #1fb6ac;
+export class VeeValidateSetup {
+  /**
+   * Initialize Vee Validate custom settings
+   * @static
+   */
+  public static initialize() {
+    const setup = new VeeValidateSetup
+    setup.registerValidationRules()
+  }
+
+  private registerValidationRules() {
+    StandardValidationRules.register()
+  }
 }

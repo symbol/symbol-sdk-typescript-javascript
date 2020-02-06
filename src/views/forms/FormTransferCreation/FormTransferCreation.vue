@@ -1,44 +1,61 @@
 <template>
   <div class="FormTransferCreation">
-    <form action="onSubmit" onsubmit="event.preventDefault()" @keyup.enter="onSubmit">
+    <FormWrapper>
+      <ValidationObserver v-slot="{ handleSubmit }">
+        <form
+          onsubmit="event.preventDefault()"
+          @keyup.enter="disableSubmit ? '' : handleSubmit(onSubmit)"
+        >
+          <!-- Transaction signer selector -->
+          <SignerSelector v-if="!hideSigner" v-model="formItems.signerPublicKey" />
 
-      <!-- Transaction signer selector -->
-      <SignerSelector v-model="formItems.signerPublicKey" />
+          <!-- Transfer recipient input field -->
+          <RecipientInput v-model="formItems.recipientRaw" />
 
-      <!-- Transfer recipient input field -->
-      <RecipientInput v-model="formItems.recipientRaw" @input="onChangeRecipient" />
+          <!-- Mosaics attachments input fields -->
+          <MosaicAttachmentInput
+            v-model="formItems.attachedMosaics"
+            :mosaics="currentWalletMosaics"
+            :absolute="false"
+            @add="onAddMosaic"
+          />
 
-      <!-- Mosaics attachments input fields -->
-      <MosaicAttachmentInput v-model="formItems.attachedMosaics"
-                             :mosaics="currentWalletMosaics"
-                             :absolute="false"
-                             @add="onAddMosaic" />
+          <!-- Display of attached mosaics -->
+          <MosaicAttachmentDisplay
+            v-model="formItems.attachedMosaics"
+            :absolute="false"
+            @delete="onDeleteMosaic"
+          />
 
-      <!-- Display of attached mosaics -->
-      <MosaicAttachmentDisplay v-model="formItems.attachedMosaics"
-                               :absolute="true"
-                               @delete="onDeleteMosaic" />
+          <!-- Transfer message input field -->
+          <MessageInput v-model="formItems.messagePlain" />
 
-      <!-- Transfer message input field -->
-      <MessageInput v-model="formItems.messagePlain" />
+          <!-- Transaction fee selector -->
+          <MaxFeeSelector v-model="formItems.maxFee" />
 
-      <!-- Transaction fee selector -->
-      <MaxFeeSelector v-model="formItems.maxFee" />
+          <div v-if="!disableSubmit" class="form-line-container fixed-full-width-item-container">
+            <button
+              type="submit"
+              class="centered-button button-style validation-button"
+              @click="handleSubmit(onSubmit)"
+            >
+              {{ $t('send') }}
+            </button>
+          </div>
+        </form>
+      </ValidationObserver>
 
-      <div class="send_button pointer" @click="onSubmit">
-        {{ $t('send') }}
-      </div>
-    </form>
-
-    <ModalTransactionConfirmation :visible="isAwaitingSignature === true"
-                                  @success="onConfirmationSuccess"
-                                  @error="onConfirmationError" />
+      <ModalTransactionConfirmation
+        :visible="isAwaitingSignature === true"
+        @success="onConfirmationSuccess"
+        @error="onConfirmationError"
+      />
+    </FormWrapper>
   </div>
 </template>
 
 <script lang="ts">
 import { FormTransferCreationTs } from '@/views/forms/FormTransferCreation/FormTransferCreationTs.ts'
-import "./FormTransferCreation.less";
-
+import '@/styles/forms.less'
 export default class FormTransferCreation extends FormTransferCreationTs {}
 </script>

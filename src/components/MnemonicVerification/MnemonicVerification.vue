@@ -20,15 +20,22 @@
       </span>
     </div>
     <div class="buttons clear">
-      <Button class="prev left" type="default" @click="$emit('canceled')">
-        {{ $t('previous') }}
-      </Button>
-      <Button
-        v-focus class="next right" type="success"
-        @click="processVerification()"
-      >
-        {{ $t('next') }}
-      </Button>
+      <div class="flex-container mt-3">
+        <button
+          type="button"
+          class="button-style back-button" 
+          @click="$emit('cancelled')"
+        >
+          {{ $t('previous') }}
+        </button>
+        <button
+          type="submit"
+          class="button-style validation-button" 
+          @click="processVerification()"
+        >
+          {{ $t('next') }}
+        </button>   
+      </div>
     </div>
   </div>
 </template>
@@ -36,7 +43,7 @@
 <script lang="ts">
 import {MnemonicVerificationTs} from '@/components/MnemonicVerification/MnemonicVerificationTs.ts'
 import './MnemonicVerification.less'
-
+import '@/styles/forms.less'
 export default class MnemonicVerification extends MnemonicVerificationTs {}
 </script>
 <style scoped lang="less">
