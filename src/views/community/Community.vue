@@ -21,15 +21,9 @@
 </template>
 
 <script lang="ts">
-import './Community.less'
 // @ts-ignore
 import {CommunityTs} from '@/views/community/CommunityTs.ts'
+import './Community.less'
 
-export default class Community extends CommunityTs {
-
-}
+export default class Community extends CommunityTs {}
 </script>
-
-<style scoped>
-
-</style>

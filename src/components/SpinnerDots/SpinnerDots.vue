@@ -8,9 +8,8 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator'
+import "./SpinnerDots.less";
+
 @Component
-export default class ThreeDotsLoading extends Vue { }
+export default class SpinnerDots extends Vue { }
 </script>
-<style scoped lang="less">
-  @import "ThreeDotsLoading";
-</style>

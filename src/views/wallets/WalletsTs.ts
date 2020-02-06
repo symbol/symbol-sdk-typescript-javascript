@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// external dependencies
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
@@ -20,11 +21,16 @@ import {mapGetters} from 'vuex'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {WalletService} from '@/services/WalletService'
 
-@Component({computed: {...mapGetters({
-  currentWallet: 'wallet/currentWallet',
-  knownWallets: 'wallet/knownWallets',
-})}})
-export class WalletSelectorTs extends Vue {
+// child components
+
+@Component({
+  computed: {...mapGetters({
+    currentAccount: 'account/currentAccount',
+    currentWallet: 'wallet/currentWallet',
+    knownWallets: 'wallet/knownWallets',
+  })}
+})
+export class WalletsTs extends Vue {
   /**
    * Currently active wallet
    * @see {Store.Wallet}
@@ -47,40 +53,4 @@ export class WalletSelectorTs extends Vue {
   public created() {
     this.service = new WalletService(this.$store)
   }
-
-/// region computed properties getter/setter
-  public get currentWalletIdentifier(): string {
-    return !this.currentWallet ? '' : {...this.currentWallet}.identifier
-  }
-
-  public set currentWalletIdentifier(identifier: string) {
-    if (!identifier || !identifier.length) {
-      return ;
-    }
-
-    const wallet = this.service.getWallet(identifier)
-    if (!wallet) {
-      return ;
-    }
-
-    this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
-    this.$emit('change', wallet.getIdentifier())
-  }
-
-  public get currentWallets(): {identifier: string, name: string}[] {
-    if (!this.knownWallets || !this.knownWallets.length) {
-      return []
-    }
-
-    // filter wallets to only known wallet names
-    const knownWallets = this.service.getWallets(
-      (e) => this.knownWallets.includes(e.getIdentifier())
-    )
-  
-    console.log("WalletSelector/currentWallets: ", knownWallets)
-    return [...knownWallets].map(
-      ({identifier, values}) => ({identifier, name: values.get('name')}),
-    )
-  }
-/// end-region computed properties getter/setter
 }

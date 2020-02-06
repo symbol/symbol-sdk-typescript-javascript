@@ -100,5 +100,3 @@ import './LoginPage.less'
 
 export default class LoginPage extends LoginPageTs {}
 </script>
-<style lang="less">
-</style>

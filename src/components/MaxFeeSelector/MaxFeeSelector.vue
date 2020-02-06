@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import {MaxFeeSelectorTs} from '@/components/MaxFeeSelector/MaxFeeSelectorTs.ts'
+import {MaxFeeSelectorTs} from './MaxFeeSelectorTs'
 import "./MaxFeeSelector.less";
 
 export default class MaxFeeSelector extends MaxFeeSelectorTs {}

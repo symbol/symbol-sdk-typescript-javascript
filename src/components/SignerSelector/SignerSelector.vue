@@ -15,6 +15,6 @@
 </template>
 
 <script lang="ts">
-import { SignerSelectorTs } from '@/components/SignerSelector/SignerSelectorTs.ts'
+import { SignerSelectorTs } from './SignerSelectorTs'
 export default class SignerSelector extends SignerSelectorTs {}
 </script>

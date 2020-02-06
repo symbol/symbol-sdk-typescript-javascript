@@ -43,8 +43,7 @@
 </template>
 <script lang="ts">
 import {DebugConsoleTs} from './DebugConsoleTs'
+import "./DebugConsole.less";
+
 export default class DebugConsole extends DebugConsoleTs { }
 </script>
-<style scoped lang="less">
-  @import "DebugConsole.less";
-</style>

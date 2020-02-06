@@ -35,7 +35,7 @@ import PeerSelector from '@/components/PeerSelector/PeerSelector.vue'
 // @ts-ignore
 import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue'
 // @ts-ignore
-import WalletSelector from '@/components/WalletSelector/WalletSelector.vue'
+import WalletSelectorField from '@/components/WalletSelectorField/WalletSelectorField.vue'
 
 @Component({
   components: {
@@ -45,7 +45,7 @@ import WalletSelector from '@/components/WalletSelector/WalletSelector.vue'
     WindowControls,
     PeerSelector,
     LanguageSelector,
-    WalletSelector,
+    WalletSelectorField,
   },
   computed: {
     ...mapGetters({

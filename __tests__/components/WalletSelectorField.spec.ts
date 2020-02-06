@@ -19,17 +19,17 @@ import {getComponent} from '@MOCKS/Components'
 import WalletStore from '@/store/Wallet'
 
 // @ts-ignore
-import WalletSelector from '@/components/WalletSelector/WalletSelector.vue'
+import WalletSelectorField from '@/components/WalletSelectorField/WalletSelectorField.vue'
 import {WalletService} from '@/services/WalletService'
 
-describe('store/WalletSelector ==>', () => {
+describe('store/WalletSelectorField ==>', () => {
   describe('getter for property "currentWalletIdentifier" should', () => {
     test('return empty string given no currentWallet', () => {
       // prepare
-      const wrapper = getComponent(WalletSelector, {wallet: WalletStore}, {
+      const wrapper = getComponent(WalletSelectorField, {wallet: WalletStore}, {
         currentWallet: null
       })
-      const component = (wrapper.vm as WalletSelector)
+      const component = (wrapper.vm as WalletSelectorField)
 
       // act
       const actual = component.currentWalletIdentifier
@@ -42,10 +42,10 @@ describe('store/WalletSelector ==>', () => {
     test('return wallet identifier given currentWallet', () => {
       // prepare
       const wallet = getFakeModel('5678')
-      const wrapper = getComponent(WalletSelector, {wallet: WalletStore}, {
+      const wrapper = getComponent(WalletSelectorField, {wallet: WalletStore}, {
         currentWallet: wallet
       })
-      const component = (wrapper.vm as WalletSelector)
+      const component = (wrapper.vm as WalletSelectorField)
 
       // act
       const actual = component.currentWalletIdentifier
@@ -60,8 +60,8 @@ describe('store/WalletSelector ==>', () => {
   describe('setter for property "currentWalletIdentifier" should', () => {
     test('do nothing given empty identifier', () => {
       // prepare
-      const wrapper = getComponent(WalletSelector, {wallet: WalletStore}, {})
-      const component = (wrapper.vm as WalletSelector)
+      const wrapper = getComponent(WalletSelectorField, {wallet: WalletStore}, {})
+      const component = (wrapper.vm as WalletSelectorField)
 
       // act
       component.currentWalletIdentifier = ''
@@ -70,9 +70,9 @@ describe('store/WalletSelector ==>', () => {
 
     test('dispatch "notification/ADD_ERROR" given invalid identifier', () => {
       // prepare
-      const wrapper = getComponent(WalletSelector, {wallet: WalletStore}, {})
+      const wrapper = getComponent(WalletSelectorField, {wallet: WalletStore}, {})
       const service = new WalletService(wrapper.vm.$store, getAdapter())
-      const component = (wrapper.vm as WalletSelector)
+      const component = (wrapper.vm as WalletSelectorField)
       component.service = service
 
       // act
@@ -89,9 +89,9 @@ describe('store/WalletSelector ==>', () => {
         ['name', 'w_one'],
         ['address', 'w_addr'],
       ])
-      const wrapper = getComponent(WalletSelector, {wallet: WalletStore}, {})
+      const wrapper = getComponent(WalletSelectorField, {wallet: WalletStore}, {})
       const service = new WalletService(wrapper.vm.$store, getAdapter())
-      const component = (wrapper.vm as WalletSelector)
+      const component = (wrapper.vm as WalletSelectorField)
       component.service = service
 
       // act
@@ -111,10 +111,10 @@ describe('store/WalletSelector ==>', () => {
   describe('getter for property "currentWallets" should', () => {
     test('return empty array given no knownWallets', () => {
       // prepare
-      const wrapper = getComponent(WalletSelector, {wallet: WalletStore}, {
+      const wrapper = getComponent(WalletSelectorField, {wallet: WalletStore}, {
         knownWallets: []
       })
-      const component = (wrapper.vm as WalletSelector)
+      const component = (wrapper.vm as WalletSelectorField)
 
       // act
       const actual = component.currentWallets

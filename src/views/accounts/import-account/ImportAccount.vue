@@ -23,8 +23,5 @@
 import ImportAccountTs from './ImportAccountTs'
 import './ImportAccount.less'
 
-export default class ImportAccount extends ImportAccountTs {
-}
+export default class ImportAccount extends ImportAccountTs {}
 </script>
-<style lang="less">
-</style>

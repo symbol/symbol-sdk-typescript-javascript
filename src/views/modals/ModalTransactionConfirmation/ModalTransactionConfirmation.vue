@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import {ModalTransactionConfirmationTs} from '@/components/ModalTransactionConfirmation/ModalTransactionConfirmationTs.ts'
+import {ModalTransactionConfirmationTs} from './ModalTransactionConfirmationTs'
 import './ModalTransactionConfirmation.less'
 
 export default class ModalTransactionConfirmation extends ModalTransactionConfirmationTs {}

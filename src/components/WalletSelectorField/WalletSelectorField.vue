@@ -14,8 +14,8 @@
 </template>
 
 <script lang="ts">
-import {WalletSelectorTs} from './WalletSelectorTs'
-import './WalletSelector.less'
+import {WalletSelectorFieldTs} from './WalletSelectorFieldTs'
+import './WalletSelectorField.less'
 
-export default class WalletSelector extends WalletSelectorTs {}
+export default class WalletSelectorField extends WalletSelectorFieldTs {}
 </script>

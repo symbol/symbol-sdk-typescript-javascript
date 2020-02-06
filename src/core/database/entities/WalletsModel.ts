@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Address} from 'nem2-sdk'
+import {Address, PublicAccount} from 'nem2-sdk'
 
 // internal dependencies
 import {DatabaseModel} from '@/core/database/DatabaseModel'
@@ -50,6 +50,7 @@ export class WalletsModel extends DatabaseModel {
    */
   public get objects(): any {
     const address = Address.createFromRawAddress(this.values.get('address'))
-    return {address}
+    const publicAccount = PublicAccount.createFromPublicKey(this.values.get('publicKey'), address.networkType)
+    return {address, publicAccount}
   }
 }

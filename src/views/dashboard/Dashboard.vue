@@ -20,7 +20,5 @@
 import {DashboardTs} from '@/views/dashboard/DashboardTs.ts'
 import "./Dashboard.less";
 
-export default class Dashboard extends DashboardTs {
-
-}
+export default class Dashboard extends DashboardTs {}
 </script>

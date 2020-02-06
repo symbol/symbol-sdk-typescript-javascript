@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import { FormTransferCreationTs } from '@/views/forms/FormTransferCreation/FormTransferCreationTs.ts'
+import { FormTransferCreationTs } from './FormTransferCreationTs'
 import "./FormTransferCreation.less";
 
 export default class FormTransferCreation extends FormTransferCreationTs {}

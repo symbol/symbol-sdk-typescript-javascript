@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import {HardwareConfirmationButtonTs} from '@/components/HardwareConfirmationButton/HardwareConfirmationButtonTs.ts'
+import {HardwareConfirmationButtonTs} from './HardwareConfirmationButtonTs'
 
 export default class HardwareConfirmationButton extends HardwareConfirmationButtonTs {}
 </script>
