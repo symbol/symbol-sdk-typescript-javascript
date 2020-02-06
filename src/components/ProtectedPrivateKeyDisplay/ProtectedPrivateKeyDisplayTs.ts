@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
-import {EncryptedPrivateKey} from 'nem2-sdk'
+import {Account, EncryptedPrivateKey} from 'nem2-sdk'
 
 // internal dependencies
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
@@ -73,6 +73,7 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
   }
 
   public set hasAccountUnlockModal(f: boolean) {
+    console.log("changing hasAccountUnlockModal: ", f)
     this.isUnlockingAccount = f
   }
 /// end-region computed properties getter/setter
@@ -93,5 +94,17 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
     setTimeout(() => {
       this.hasPlainPrivateKey = false
     }, 10000) // 10 seconds
+
+    return 'plaintext'
+  }
+
+  public onClickDisplay() {
+    this.hasAccountUnlockModal = true
+  }
+
+  public onAccountUnlocked(account: Account) {
+    this.hasPlainPrivateKey = true
+    console.log("ProtectedPrivateKeyDisplay unlocked: ", account.privateKey)
+    return true
   }
 }

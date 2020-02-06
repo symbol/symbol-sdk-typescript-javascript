@@ -22,8 +22,19 @@ import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {WalletService} from '@/services/WalletService'
 
 // child components
+// @ts-ignore
+import WalletSelectorPanel from '@/components/WalletSelectorPanel/WalletSelectorPanel.vue'
+// @ts-ignore
+import WalletDetails from '@/components/WalletDetails/WalletDetails.vue'
+// @ts-ignore
+import WalletActions from '@/components/WalletActions/WalletActions.vue'
 
 @Component({
+  components: {
+    WalletSelectorPanel,
+    WalletDetails,
+    WalletActions,
+  },
   computed: {...mapGetters({
     currentAccount: 'account/currentAccount',
     currentWallet: 'wallet/currentWallet',

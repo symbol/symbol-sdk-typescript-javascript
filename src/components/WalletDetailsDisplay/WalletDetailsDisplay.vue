@@ -4,14 +4,14 @@
       <span class="tit">{{ $t('Wallet_address') }}</span>
       <span class="walletAddress">{{ wallet.objects.address.plain() }}</span>
       <i class="copyIcon"
-         @click="UIHelpers.copyToClipboard(wallet.objects.address.plain())">
+         @click="uiHelpers.copyToClipboard(wallet.objects.address.plain())">
         <img src="@/views/resources/img/wallet/copyIcon.png"></i>
     </p>
 
     <p>
       <span class="tit">{{ $t('Wallet_public_key') }}</span>
       <span class="walletPublicKey">{{ wallet.objects.publicAccount.publicKey }}</span>
-      <i class="copyIcon" @click="UIHelpers.copyToClipboard(wallet.objects.publicAccount.publicKey)">
+      <i class="copyIcon" @click="uiHelpers.copyToClipboard(wallet.objects.publicAccount.publicKey)">
         <img src="@/views/resources/img/wallet/copyIcon.png" />
       </i>
     </p>
@@ -37,7 +37,6 @@
 
 <script lang="ts">
 import {WalletDetailsDisplayTs} from './WalletDetailsDisplayTs'
-import './WalletDetailsDisplay.less'
 
 export default class WalletDetailsDisplay extends WalletDetailsDisplayTs {}
 </script>

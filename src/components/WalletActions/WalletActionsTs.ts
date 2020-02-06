@@ -17,20 +17,13 @@ import {Component, Vue, Prop} from 'vue-property-decorator'
 
 // internal dependencies
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
-import {UIHelpers} from '@/core/utils/UIHelpers'
 
 @Component
-export class WalletDetailsDisplayTs extends Vue {
+export class WalletActionsTs extends Vue {
 
   @Prop({
     default: null
   }) wallet: WalletsModel
-
-  /**
-   * UI Helpers
-   * @var {UIHelpers}
-   */
-  public uiHelpers = UIHelpers
 
 /// region computed properties getter/setter
 /// end-region computed properties getter/setter

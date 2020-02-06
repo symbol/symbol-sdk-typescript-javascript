@@ -22,13 +22,15 @@ import {WalletsModel} from '@/core/database/entities/WalletsModel'
 // @ts-ignore
 import WalletNameDisplay from '@/components/WalletNameDisplay/WalletNameDisplay.vue'
 // @ts-ignore
-import ModalFormGeneric from '@/components/ModalFormGeneric/ModalFormGeneric.vue'
+import ModalFormGeneric from '@/views/modals/ModalFormGeneric/ModalFormGeneric.vue'
 // @ts-ignore
 import ProtectedPrivateKeyDisplay from '@/components/ProtectedPrivateKeyDisplay/ProtectedPrivateKeyDisplay.vue'
 // @ts-ignore
 import ImportanceScoreDisplay from '@/components/ImportanceScoreDisplay/ImportanceScoreDisplay.vue'
 // @ts-ignore
 import WalletContactQR from '@/components/WalletContactQR/WalletContactQR.vue'
+// @ts-ignore
+import WalletDetailsDisplay from '@/components/WalletDetailsDisplay/WalletDetailsDisplay.vue'
 
 @Component({
   components: {
@@ -37,6 +39,7 @@ import WalletContactQR from '@/components/WalletContactQR/WalletContactQR.vue'
     ProtectedPrivateKeyDisplay,
     ImportanceScoreDisplay,
     WalletContactQR,
+    WalletDetailsDisplay,
   },
 })
 export class WalletDetailsTs extends Vue {

@@ -22,7 +22,7 @@
             'walletItem_bg_1': isSeedWallet(item),
             'walletItem_bg_2': !isActiveWallet(item) && !isSeedWallet(item),
           }"
-          @click="currentWalletIdentifier = item.identifier)"
+          @click="currentWalletIdentifier = item.identifier"
         >
           <Row>
             <i-col span="15">

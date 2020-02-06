@@ -8,7 +8,7 @@
         <WalletDetails :wallet="currentWallet" />
       </div>
     </div>
-    <div v-if="tabIndex !== -1" class="walletMethods">
+    <div>
       <WalletActions :wallet="currentWallet" />
     </div>
   </div>

@@ -61,7 +61,7 @@
               <i-col span="9">
                 <div class="imgDiv">
                   <div class="step2Img">
-                    <img src="@/common/img/wallet/Step2Img.png">
+                    <img src="@/views/resources/img/wallet/Step2Img.png">
                   </div>
                 </div>
               </i-col>
@@ -133,7 +133,7 @@
 
         <div v-if="stepIndex === 4" class="stepItem5">
           <div class="backupImg">
-            <img src="@/common/img/wallet/exportSuccess.png">
+            <img src="@/views/resources/img/wallet/exportSuccess.png">
           </div>
           <p class="backupTxt">
             {{ $t('the_mnemonic_order_is_correct_and_the_backup_is_successful') }}

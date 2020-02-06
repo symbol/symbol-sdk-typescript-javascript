@@ -23,7 +23,6 @@
 
 <script lang="ts">
 import {WalletNameDisplayTs} from './WalletNameDisplayTs'
-import './WalletNameDisplay.less'
 
 export default class WalletNameDisplay extends WalletNameDisplayTs {}
 </script>

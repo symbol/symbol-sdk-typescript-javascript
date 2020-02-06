@@ -192,7 +192,6 @@ export const routes: AppRoute[] = [
           }
         ],
       },
-      /*
       {
         path: '/wallets',
         name: 'wallets',
@@ -203,31 +202,10 @@ export const routes: AppRoute[] = [
           activeIcon: leftBarIcons.windowWalletActive,
         },
         // @ts-ignore
-        component: () => import('@/views/wallet/Wallet.vue'),
-        children: [{
-          path: 'walletImport',
-          name: 'wallets.import',
-          meta: { protected: true},
-          // @ts-ignore
-          component: () => import('@/views/wallet/wallet-functions/wallet-import/WalletImport.vue'),
-          children: [
-            {
-              path: '/walletImportKeystore',
-              name: 'wallets.import.keyStore',
-              meta: { protected: true},
-              // @ts-ignore
-              component: () => import('@/views/wallet/wallet-functions/wallet-import/wallet-import-keystore/WalletImportKeystore.vue'),
-            }, {
-              path: '/walletImportPrivatekey',
-              name: 'wallets.import.privateKey',
-              meta: { protected: true},
-              // @ts-ignore
-              component: () => import('@/views/wallet/wallet-functions/wallet-import/wallet-import-privatekey/WalletImportPrivatekey.vue'),
-            },
-          ],
-        },
-        ],
+        component: () => import('@/views/wallets/Wallets.vue'),
       },
+      /*
+      
       {
         path: '/mosaic',
         name: 'mosaics',

@@ -2,15 +2,14 @@
   <div>
     <span class="tit">{{ $t('privatekey') }}</span>
     <span v-if="hasPlainPrivateKey">{{ decryptKey() }}</span>
-    <span class="edit-wallet-name" 
-          @click.stop="hasPlainPrivateKey = true">
+    <button class="edit-wallet-name" 
+          @click="onClickDisplay">
       <Icon type="md-eye" />
-    </span>
+    </button>
 
     <ModalFormAccountUnlock
-      v-if="!!this.clickedWallet"
       :visible="hasAccountUnlockModal"
-      @success="hasPlainPrivateKey = true"
+      :on-success="onAccountUnlocked"
     />
   </div>
 </template>

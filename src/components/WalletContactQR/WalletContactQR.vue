@@ -11,7 +11,6 @@
 
 <script lang="ts">
 import {WalletContactQRTs} from './WalletContactQRTs'
-import './WalletContactQR.less'
 
 export default class WalletContactQR extends WalletContactQRTs {}
 </script>
