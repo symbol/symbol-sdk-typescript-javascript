@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
+import {ValidationObserver} from 'vee-validate'
 
-@Component
+// child components
+// @ts-ignore
+import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
+
+@Component({
+  components: {
+    FormWrapper,
+    ValidationObserver,
+  },
+})
 export class ModalFormGenericTs extends Vue {
   @Prop({
     default: false
@@ -35,12 +45,32 @@ export class ModalFormGenericTs extends Vue {
    */
   public formItems: any = {}
 
+  /// region computed properties
+  /**
+   * Visibility state
+   * @type {boolean}
+   */
+  public get show(): boolean {
+    return this.visible
+  }
+
+  /**
+   * Emits close event
+   */
+  public set show(val) {
+    if (!val) {
+      this.$emit('close')
+    }
+  }
+  /// end-region computed properties
+
   /**
    * Hook called when the child form is submitted
    * @return {void}
    */
   public submit() {
     this.$emit('submit', this.formItems)
+    this.show = false
     return this.onSubmit(this.formItems)
   }
 

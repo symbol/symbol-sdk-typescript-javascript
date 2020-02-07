@@ -1,11 +1,15 @@
 // external dependencies
 import {extend} from 'vee-validate'
 import i18n from '@/language'
-import {Address} from 'nem2-sdk'
+import {Address, Password} from 'nem2-sdk'
 
 // internal dependencies
 import {AccountsRepository} from '@/repositories/AccountsRepository'
+import {WalletsRepository} from '@/repositories/WalletsRepository'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {AccountService} from '@/services/AccountService'
 import {NotificationType} from '@/core/utils/NotificationType'
+import {AppStore} from '@/app/AppStore'
 
 import {
   AddressValidator,
@@ -77,6 +81,38 @@ export class CustomValidationRules {
         return new AccountsRepository().find(value) === false
       },
       message: `${i18n.t(`${NotificationType.ACCOUNT_NAME_EXISTS_ERROR}`)}`,
+    })
+
+    extend('accountPassword', {
+      validate(value) {
+        if (!value || value.length < 8) {
+          return false
+        }
+
+        const currentAccount = AppStore.getters['account/currentAccount']
+        const currentHash = currentAccount.values.get('password')
+        const inputHash = new AccountService(AppStore).getPasswordHash(new Password(value))
+        return inputHash === currentHash
+      },
+      message: `${i18n.t(`${NotificationType.WRONG_PASSWORD_ERROR}`)}`,
+    })
+
+    extend('accountWalletName', {
+      validate(value) {
+        const accountsRepository = new AccountsRepository()
+        const walletsRepository = new WalletsRepository()
+
+        // - fetch current account wallets
+        const currentAccount = AppStore.getters['account/currentAccount']
+        const knownWallets = Array.from(accountsRepository.fetchRelations(
+          walletsRepository,
+          currentAccount,
+          'wallets'
+        ).values())
+
+        return undefined === knownWallets.find(w => value === w.values.get('name'))
+      },
+      message: `${i18n.t(`${NotificationType.ERROR_WALLET_NAME_ALREADY_EXISTS}`)}`,
     })
   }
 }

@@ -14,17 +14,26 @@
  * limitations under the License.
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
+import {ValidationProvider} from 'vee-validate'
 
 // internal dependencies
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 
 // child components
 // @ts-ignore
 import ModalFormGeneric from '@/views/modals/ModalFormGeneric/ModalFormGeneric.vue'
+// @ts-ignore
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+// @ts-ignore
+import FormLabel from '@/components/FormLabel/FormLabel.vue'
 
 @Component({
   components: {
     ModalFormGeneric,
+    ValidationProvider,
+    ErrorTooltip,
+    FormLabel,
   }
 })
 export class WalletNameDisplayTs extends Vue {
@@ -38,15 +47,31 @@ export class WalletNameDisplayTs extends Vue {
   }) editable: boolean
 
   /**
-   * Whether the name form modal is open
+   * Whether name is currently being edited
    * @var {boolean}
    */
-  public hasNameFormModal: boolean = false
+  public isEditingName: boolean = false
+
+  /**
+   * Validation rules
+   * @var {ValidationRuleset}
+   */
+  public validationRules = ValidationRuleset
 
 /// region computed properties getter/setter
+  public get hasNameFormModal(): boolean {
+    return this.editable && this.isEditingName
+  }
+
+  public set hasNameFormModal(f: boolean) {
+    this.isEditingName = f
+  }
 /// end-region computed properties getter/setter
 
   public onChangeName(formItems: any) {
+    // - resolve "observer" values
+    const values = {...formItems}
 
+    console.log("Form values: ", values)
   }
 }

@@ -23,7 +23,7 @@ const currentNetwork = networkConfig.networks['testnet-publicTest']
 
 export const ValidationRuleset = {
   address: 'required|address|addressNetworkType:currentAccount',
-  accountPassword: 'required|confirmLock:accountPassword',
+  accountPassword: 'required|accountPassword',
   addressOrAlias: 'required|addressOrAlias|addressOrAliasNetworkType:currentAccount',
   amount: 'excluded:""|is_not:0|min_value:0|maxDecimals:6',
   confirmPassword: 'required|confirmPassword:@newPassword',
@@ -53,7 +53,5 @@ export const ValidationRuleset = {
   },
   url: 'required|url',
   newAccountName:'required|newAccountName',
-  walletName:{
-    required: true,
-  },
+  accountWalletName: 'required|accountWalletName',
 }

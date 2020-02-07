@@ -98,7 +98,7 @@
   "namespace": "Namespace",
   "validity_period": "Validity",
   "harvested_block": "Harvested block",
-  "successful_copy": "Successful copy",
+  "successful_copy": "Copied to clipboard!",
   "address_format_error": "Address format error",
   "amount_can_not_be_less_than_0": "The amount should be greater than 0",
   "fee_can_not_be_less_than_0": "Fee cannot be less than 0",
@@ -944,6 +944,8 @@
   "Enter_your_password_to_create_a_link_transaction": "Enter your password to create an account link transaction",
   "Click_to_cosign": "Click to cosign",
   "cosignature_added": "Cosignature received",
+
+
   "transaction_descriptor_16724": "Transfer",
   "transaction_descriptor_16718": "Namespace registration",
   "transaction_descriptor_16974": "Address alias",
@@ -972,5 +974,8 @@
   "repeat_password_label": "Confirm your password",
   "Recipient": "Recipient",
   "Close": "Close",
-  "modal_account_unlock_title": "Unlock your account"
+  "modal_account_unlock_title": "Unlock your account",
+  "x_seconds": "{seconds} sec.",
+  "form_label_new_wallet_name": "New wallet name",
+  "error_wallet_name_already_exists": "This wallet name already exists. Please, enter a unique wallet name."
 }

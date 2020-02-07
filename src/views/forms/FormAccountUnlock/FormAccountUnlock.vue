@@ -8,13 +8,13 @@
     >
       <div class="inline-container">
         <ValidationProvider
-          v-slot="{ errors }"
+          class="full-width-item-container"
+          tag="div"
           mode="lazy"
           vid="password"
           :name="$t('password')"
-          rules="'required"
-          tag="div"
-          class="full-width-item-container"
+          :rules="validationRules.accountPassword"
+          v-slot="{ errors }"
         >
           <ErrorTooltip :errors="errors">
             <input
@@ -24,8 +24,8 @@
               class="full-width-item-container input-size input-style"
               :placeholder="$t('please_enter_your_wallet_password')"
             >
-          </errortooltip>
-        </validationprovider>
+          </ErrorTooltip>
+        </ValidationProvider>
         <button
           class="button-style validation-button right-side-button"
           type="submit"
