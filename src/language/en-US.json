@@ -975,5 +975,7 @@
   "Recipient": "Recipient",
   "Close": "Close",
   "modal_account_unlock_title": "Unlock your account",
-  "x_seconds": "{seconds} sec."
+  "x_seconds": "{seconds} sec.",
+  "form_label_new_wallet_name": "New wallet name",
+  "error_wallet_name_already_exists": "This wallet name already exists. Please, enter a unique wallet name."
 }

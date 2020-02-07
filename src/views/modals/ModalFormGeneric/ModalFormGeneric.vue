@@ -1,24 +1,58 @@
 <template>
   <div class="transaction_modal">
     <Modal
-      v-if="visible"
-      v-model="visible"
+      v-model="show"
       :title="$t('modal_account_unlock_title')"
       :transfer="false"
       class-name="transaction-modal-dialog text_select"
     >
-      <form action="submit()" @keyup.enter="submit()">
-        <slot name="fields" v-bind:formItems="formItems"></slot>
+      <FormWrapper class="generic-form-container">
+        <ValidationObserver v-slot="{ handleSubmit }">
+          <form
+            action="handleSubmit(submit)"
+            onsubmit="event.preventDefault()"
+            class="form-line-container mt-3"
+            @keyup.enter="handleSubmit(submit)"
+          >
+            <div class="inline-container">
+              <slot name="fields" v-bind:formItems="formItems"></slot>
+              <button
+                class="button-style validation-button right-side-button"
+                type="submit"
+                @click="handleSubmit(submit)"
+              >
+                {{ $t('confirm') }}
+              </button>
+            </div>
+          </form>
+        </ValidationObserver>
+      </FormWrapper>
 
-        <button type="cancel" @click="cancel()">{{ $t('cancel') }}</button>
-        <button type="submit" @click="submit()">{{ $t('send') }}</button>
-      </form>
+      <div slot="footer" class="modal-footer">
+        <button
+          type="reset"
+          class="centered-button button-style back-button float-right"
+          @click="show = false"
+        >
+          {{ $t('close') }}
+        </button>
+      </div>
     </Modal>
   </div>
 </template>
 
 <script lang="ts">
 import {ModalFormGenericTs} from './ModalFormGenericTs'
+import '@/styles/forms.less'
 
 export default class ModalFormGeneric extends ModalFormGenericTs {}
 </script>
+
+<style lang="less" scoped>
+.generic-form-container {
+  display: block;
+  width: 100%;
+  clear: both;
+  min-height: 1rem;
+}
+</style>

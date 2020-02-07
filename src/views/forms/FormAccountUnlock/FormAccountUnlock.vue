@@ -24,8 +24,8 @@
               class="full-width-item-container input-size input-style"
               :placeholder="$t('please_enter_your_wallet_password')"
             >
-          </errortooltip>
-        </validationprovider>
+          </ErrorTooltip>
+        </ValidationProvider>
         <button
           class="button-style validation-button right-side-button"
           type="submit"
