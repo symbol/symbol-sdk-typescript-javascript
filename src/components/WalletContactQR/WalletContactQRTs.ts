@@ -16,7 +16,7 @@
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {ContactQR} from 'nem2-qr-library'
 import {PublicAccount} from 'nem2-sdk'
-import {of} from 'rxjs'
+import {of, Observable} from 'rxjs'
 import {pluck, concatMap} from 'rxjs/operators'
 
 // internal dependencies
@@ -53,6 +53,13 @@ export class WalletContactQRTs extends Vue {
    * @var {string}
    */
   public generationHash: string
+
+
+  /**
+   * QR Code
+   * @type {Observable<string>}
+   */
+  public qrCode$: Observable<string>
 
 /// region computed properties getter/setter
   get qrCodeArgs(): ContactQR {

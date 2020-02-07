@@ -970,5 +970,7 @@
   "incorrect_field_error": "The {_field_} field is incorrect.",
   "new_password_label": "Password (should contain at least 8 characters, 1 letter and 1 number)",
   "repeat_password_label": "Confirm your password",
-  "Recipient": "Recipient"
+  "Recipient": "Recipient",
+  "Close": "Close",
+  "modal_account_unlock_title": "Unlock your account"
 }

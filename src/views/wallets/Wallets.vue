@@ -1,22 +1,19 @@
 <template>
-  <div class="WalletPanelWrap clear">
-    <div v-if="!!currentWallet" class="hasWalletPanel">
-      <div class="left WalletSwitch">
-        <WalletSelectorPanel />
-      </div>
-      <div class="left WalletFn">
-        <WalletDetails :wallet="currentWallet" />
-      </div>
+  <div class="main-container">
+    <div class="left-container">
+      <WalletSelectorPanel />
     </div>
-    <div>
-      <WalletActions :wallet="currentWallet" />
+    <div class="right-container">
+      <WalletDetails :wallet="currentWallet" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import {WalletsTs} from './WalletsTs'
-import './Wallets.less'
-
 export default class Wallets extends WalletsTs {}
 </script>
+
+<style lang="less" scoped>
+@import './Wallets.less';
+</style>

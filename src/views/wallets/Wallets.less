@@ -1,31 +1,20 @@
-.WalletPanelWrap{
-    box-sizing: border-box;
-    width: 100%;
-    height: 100%;
-    .hasWalletPanel,.noWalletPanel{
-      box-sizing: border-box;
-      width: 100%;
-      height: 100%;
-    }
-    .WalletSwitch,.WalletFn{
-      height: calc(100% - 55px);
-      margin: 20px 15px 20px 20px;
-      overflow: hidden;
-    }
-    .WalletFn{
-      margin-left: 0;
-    }
-    .ML30{
-      margin-left: 30px;
-    }
-    .noWallet{
-      width: 100%;
-      height: 100%;
-    }
-    .walletMethods{
-      width: 100%;
-      height: 100%;
-      padding: 20px 20px;
-    }
-  }
-  
+.main-container {
+  grid-template-columns: 4.4rem auto;
+  grid-template-rows: 100%;
+  display: grid;
+  margin: 20px;
+  height: calc(100% - 55px);
+  background-color: white;
+}
+
+.left-container {
+  border-radius: 4px;
+  background-color: lightsalmon;
+}
+
+.right-container {
+  background-color: #eee;
+  padding-left: 25px;
+  border-radius: 0 4px 4px 0;
+}
+

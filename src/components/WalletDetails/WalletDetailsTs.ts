@@ -48,6 +48,11 @@ export class WalletDetailsTs extends Vue {
     default: null
   }) wallet: WalletsModel
 
+  /**
+   * Name form visibility
+   * @type {boolean}
+   */
+  hasNameForm: boolean = false
 /// region computed properties getter/setter
 /// end-region computed properties getter/setter
 }

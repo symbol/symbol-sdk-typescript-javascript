@@ -21,7 +21,19 @@ import {mapGetters} from 'vuex'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
 
+// child components
+import {ValidationProvider} from 'vee-validate'
+// @ts-ignore
+import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
+// @ts-ignore
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+
 @Component({
+  components: {
+    ValidationProvider,
+    FormWrapper,
+    ErrorTooltip,
+  },
   computed: {...mapGetters({
     networkType: 'network/networkType',
     currentAccount: 'account/currentAccount',

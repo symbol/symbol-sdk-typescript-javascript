@@ -33,6 +33,7 @@ module.exports = {
    "@typescript-eslint/indent": ["error", 2],
    "@typescript-eslint/interface-name-prefix": "off",
    "@typescript-eslint/no-explicit-any": "off",
+   "@typescript-eslint/no-inferrable-types": "off",
    "@typescript-eslint/semi": [2, "never"],
    "array-bracket-spacing": [
      "error",

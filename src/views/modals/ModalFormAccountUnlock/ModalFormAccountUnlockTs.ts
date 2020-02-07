@@ -42,6 +42,24 @@ export class ModalFormAccountUnlockTs extends Vue {
     default: (a: Account) => true
   }) onSuccess: (a: Account) => boolean
 
+
+  /**
+   * Visibility state
+   * @type {boolean}
+   */
+  get show(): boolean {
+    return this.visible
+  }
+
+  /**
+   * Emits close event
+   */
+  set show(val) {
+    if (!val) {
+      this.$emit('close')
+    }
+  }
+
   /**
    * Currently active account
    * @see {Store.Account}
@@ -63,6 +81,7 @@ export class ModalFormAccountUnlockTs extends Vue {
     this.$emit('success', account.publicAccount)
 
     // - dispatch callback
+    this.show = false
     return this.onSuccess(account)
   }
 

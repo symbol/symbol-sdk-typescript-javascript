@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span class="tit">{{ $t('importance') }}</span>
+    <span class="wallet-detail-label">{{ $t('importance') }}</span>
     <span>
       <span>
         {{ score }}
@@ -14,3 +14,7 @@ import {ImportanceScoreDisplayTs} from './ImportanceScoreDisplayTs'
 
 export default class ImportanceScoreDisplay extends ImportanceScoreDisplayTs {}
 </script>
+  
+<style lang="less" scoped>
+@import '../WalletDetails/WalletDetails.less';
+</style>

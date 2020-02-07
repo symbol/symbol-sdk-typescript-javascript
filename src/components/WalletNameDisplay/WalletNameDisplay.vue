@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span class="tit">{{ $t('Wallet_name') }}</span>
+    <span class="wallet-detail-label">{{ $t('Wallet_name') }}</span>
     <span v-if="wallet" class="walletName">{{ wallet.values.get('name') }}</span>
     <span v-if="editable"
           @click.stop="hasNameFormModal = true"
@@ -26,3 +26,7 @@ import {WalletNameDisplayTs} from './WalletNameDisplayTs'
 
 export default class WalletNameDisplay extends WalletNameDisplayTs {}
 </script>
+
+<style lang="less" scoped>
+@import '../WalletDetails/WalletDetails.less';
+</style>

@@ -1,19 +1,29 @@
 <template>
-  <div ref="walletDetailsWrap" class="walletDetailsWrap">
-    <div class="Information radius">
-      <Row>
-        <i-col span="18">
-          <h6>{{ $t('Basic_information') }}</h6>
-          <div v-if="wallet" class="walletInfo">
+  <div class="wallet-detail-outer-container">
+    <div class="wallet-detail-inner-container">
+      <div class="left-container">
+        <span class="left-container-title">{{ $t('Basic_information') }}</span>
 
-            <WalletNameDisplay 
-                :wallet="wallet"
-                :editable="true"
-                @update="hasNameForm = true" />
+        <div class="detail-row">
+          <WalletNameDisplay 
+            :wallet="wallet"
+            :editable="true"
+            @update="hasNameForm = true"
+          />
+        </div>
 
-            <ProtectedPrivateKeyDisplay :wallet="wallet" />
+        <div class="detail-row">
+          <ProtectedPrivateKeyDisplay :wallet="wallet" />
+        </div>
 
-            <!--
+        <div class="detail-row">
+          <ImportanceScoreDisplay :wallet="wallet" />
+        </div>
+
+        <div class="detail-double-row">
+          <WalletDetailsDisplay :wallet="wallet" />
+        </div>
+        <!--
             <p>
               <span v-if="isMultisig || isCosignatory" class="tit">{{ $t('Wallet_type') }}</span>
               <span v-if="isMultisig || isCosignatory" class="walletType" @click="$router.push({name: 'multisig.manage'})">
@@ -22,21 +32,19 @@
               </span>
             </p>
             -->
-
-            <ImportanceScoreDisplay :wallet="wallet" />
-
-            <WalletDetailsDisplay :wallet="wallet" />
-
-          </div>
-        </i-col>
-        <i-col span="6">
-
-          <WalletContactQR :wallet="wallet" />
-
-        </i-col>
-      </Row>
+      </div>
+      <div class="right-container">
+        <WalletContactQR :wallet="wallet" />
+      </div>
     </div>
-    <!-- 
+    <div class="wallet-actions-outer-container">
+      <div class="wallet-actions-inner-container">
+        WALLET ACTIONS HERE
+      </div>
+    </div>
+  </div>
+
+  <!-- 
     <div ref="accountFn" class="accountFn radius">
       <div class="accountFnNav">
         <ul class="navList clear">
@@ -85,12 +93,13 @@
       @on-cancel="showUpdateDialog = false"
     />
 -->
-  </div>
 </template>
 
 <script lang="ts">
 import {WalletDetailsTs} from './WalletDetailsTs'
-import './WalletDetails.less'
-
 export default class WalletDetails extends WalletDetailsTs {}
 </script>
+
+<style lang="less" scoped>
+@import './WalletDetails.less';
+</style>
