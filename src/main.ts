@@ -23,8 +23,8 @@ import 'view-design/dist/styles/iview.css'
 
 // internal dependencies
 import {UIBootstrapper} from '@/app/UIBootstrapper'
+import {AppStore} from '@/app/AppStore'
 import i18n from '@/language/index.ts'
-import store from '@/store/index.ts'
 import router from '@/router/AppRouter'
 import VueNumber from 'vue-number-animation'
 import {VeeValidateSetup} from '@/core/validation/VeeValidateSetup'
@@ -37,18 +37,12 @@ Vue.use(moment as any)
 Vue.use(Router)
 Vue.use(VueRx)
 Vue.use(VueNumber)
-/// end-region UI plugins
-
 VeeValidateSetup.initialize()
-
-/// region app storage & state store initializations
-export const AppStore = store
-
-/// end-region app storage & state store initializations
+/// end-region UI plugins
 
 const app = new Vue({
   router,
-  store,
+  store: AppStore,
   i18n,
   render: h => h(App),
   created: function () {
@@ -60,6 +54,5 @@ const app = new Vue({
   },
 })
 
-app.$mount('#app') 
-
+app.$mount('#app')
 export default app

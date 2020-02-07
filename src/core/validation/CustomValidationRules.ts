@@ -1,11 +1,13 @@
 // external dependencies
 import {extend} from 'vee-validate'
 import i18n from '@/language'
-import {Address} from 'nem2-sdk'
+import {Address, Password} from 'nem2-sdk'
 
 // internal dependencies
 import {AccountsRepository} from '@/repositories/AccountsRepository'
+import {AccountService} from '@/services/AccountService'
 import {NotificationType} from '@/core/utils/NotificationType'
+import {AppStore} from '@/app/AppStore'
 
 import {
   AddressValidator,
@@ -77,6 +79,16 @@ export class CustomValidationRules {
         return new AccountsRepository().find(value) === false
       },
       message: `${i18n.t(`${NotificationType.ACCOUNT_NAME_EXISTS_ERROR}`)}`,
+    })
+
+    extend('accountPassword', {
+      validate(value) {
+        const currentAccount = AppStore.getters['account/currentAccount']
+        const currentHash = currentAccount.values.get('password')
+        const inputHash = new AccountService(AppStore).getPasswordHash(new Password(value))
+        return inputHash === currentHash
+      },
+      message: `${i18n.t(`${NotificationType.INCONSISTENT_PASSWORD_ERROR}`)}`,
     })
   }
 }

@@ -22,7 +22,7 @@ import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {AppRoute} from './AppRoute'
 import {ParentRouteNames} from './ParentRouteNames'
 import {TabEntry} from './TabEntry'
-import {AppStore} from '@/main'
+import {AppStore} from '@/app/AppStore'
 
 /**
  * Extension of Vue Router

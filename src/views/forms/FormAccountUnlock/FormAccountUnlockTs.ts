@@ -20,6 +20,7 @@ import {mapGetters} from 'vuex'
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 
 // child components
 import {ValidationProvider} from 'vee-validate'
@@ -58,6 +59,12 @@ export class FormAccountUnlockTs extends Vue {
    * @var {WalletsModel}
    */
   public currentWallet: WalletsModel
+
+  /**
+   * Validation rules
+   * @var {ValidationRuleset}
+   */
+  public validationRules = ValidationRuleset
 
   /**
    * Form items

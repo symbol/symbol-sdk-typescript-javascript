@@ -18,6 +18,7 @@ import {Account, EncryptedPrivateKey} from 'nem2-sdk'
 
 // internal dependencies
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {UIHelpers} from '@/core/utils/UIHelpers'
 
 // child components
 // @ts-ignore
@@ -32,6 +33,12 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
   @Prop({
     default: null
   }) wallet: WalletsModel
+
+  /**
+   * UI Helpers
+   * @var {UIHelpers}
+   */
+  public uiHelpers = UIHelpers
 
   /**
    * Whether account is currently being unlocked
@@ -52,6 +59,13 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
    */
   private plainInformation: string = ''
 
+  /**
+   * seconds counter
+   * @internal
+   * @var {number}
+   */
+  public secondsCounter: number = 10
+
 /// region computed properties getter/setter
   public get hasPlainPrivateKey(): boolean {
     return this.isDisplayingPrivateKey
@@ -61,10 +75,11 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
     this.isDisplayingPrivateKey = f
 
     if (f === true) {
+      // "countdown" for hiding message
+      let cntInterval = this.onStartCounter()
+
       // - private key hidden after 10 seconds
-      setTimeout(() => {
-        this.hasPlainPrivateKey = false
-      }, 10000) // 10 seconds
+      let hideInterval = this.onHideTimeout(this.secondsCounter, cntInterval)
     }
   }
 
@@ -73,38 +88,56 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
   }
 
   public set hasAccountUnlockModal(f: boolean) {
-    console.log("changing hasAccountUnlockModal: ", f)
     this.isUnlockingAccount = f
   }
 /// end-region computed properties getter/setter
 
   /**
-   * Decrypt the stored key
+   * Hook called when the seconds counter starts
+   * @return {void}
    */
-  public decryptKey() {
-    const encPrivate = new EncryptedPrivateKey(
-      this.wallet.values.get('encPrivate'),
-      this.wallet.values.get('encIv'),
-    )
-
-    // ...
-
-
-    // remove decrypted copy from memory
-    setTimeout(() => {
-      this.hasPlainPrivateKey = false
-    }, 10000) // 10 seconds
-
-    return 'plaintext'
+  public onStartCounter() {
+    let cntInterval = null
+    cntInterval = setInterval(() => {
+      this.secondsCounter = this.secondsCounter - 1
+      if (this.secondsCounter < 0) {
+        this.secondsCounter = 0
+        clearInterval(cntInterval)
+      }
+    }, 999)
+    return cntInterval
   }
 
+  /**
+   * Hook called when the hide timeout starts
+   * @return {void}
+   */
+  public onHideTimeout(seconds, counterInterval) {
+    // - private key hidden after 10 seconds
+    setTimeout(() => {
+      this.hasPlainPrivateKey = false
+      clearInterval(counterInterval)
+      this.secondsCounter = 10
+    }, seconds * 1000)
+  }
+
+  /**
+   * Hook called when the account unlock modal must open
+   * @return {void}
+   */
   public onClickDisplay() {
     this.hasAccountUnlockModal = true
   }
 
-  public onAccountUnlocked(account: Account) {
+  /**
+   * Hook called when the account has been unlocked
+   * @param {Account} account 
+   * @return {boolean}
+   */
+  public onAccountUnlocked(account: Account): boolean {
     this.hasPlainPrivateKey = true
-    console.log("ProtectedPrivateKeyDisplay unlocked: ", account.privateKey)
+    this.hasAccountUnlockModal = false
+    this.plainInformation = account.privateKey
     return true
   }
 }

@@ -6,7 +6,7 @@
       <img
         src="@/views/resources/img/wallet/copyIcon.png"
         class="copy-icon"
-        @click="uiHelpers.copyToClipboard(wallet.objects.address.pretty())"
+        @click="uiHelpers.copyToClipboard(wallet.objects.address.plain())"
       >
     </div>
     <div class="detail-row">
