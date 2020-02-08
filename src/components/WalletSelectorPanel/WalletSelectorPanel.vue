@@ -60,16 +60,12 @@
     </div>
 
     <div class="walletMethod">
-      <Row>
-        <i-col span="8"></i-col>
-        <i-col span="8">
-          <button type="button" 
-                  @click="hasAddWalletModal = true">
-            {{ $t('button_add_wallet') }}
-          </button>
-        </i-col>
-        <i-col span="8"></i-col>
-      </Row>
+      <button type="button" 
+              class="button-style validation-button right-side-button plus-button" 
+              @click="hasAddWalletModal = true">
+        <Icon type="md-add-circle" />
+        <span>&nbsp{{ $t('button_add_wallet') }}</span>
+      </button>
     </div>
 
     <ModalFormSubWalletCreation
@@ -86,3 +82,15 @@ import './WalletSelectorPanel.less'
 
 export default class WalletSelectorPanel extends WalletSelectorPanelTs {}
 </script>
+
+<style lang="less" scoped>
+.walletMethod {
+  text-align: center;
+}
+
+.plus-button {
+  height: 0.35rem !important;
+  padding: 0 0.3rem;
+  margin: auto;
+}
+</style>

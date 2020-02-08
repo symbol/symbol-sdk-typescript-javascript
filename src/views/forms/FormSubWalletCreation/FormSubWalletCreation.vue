@@ -1,76 +1,79 @@
 <template>
   <div>
-    <FormWrapper>
+    <FormWrapper class="sub-wallet-creation-container">
       <ValidationObserver v-slot="{ handleSubmit }">
         <form
+          class="form-container mt-3"
           onsubmit="event.preventDefault()"
           @keyup.enter="handleSubmit(onSubmit)"
+          autocomplete="off"
         >
-          <ValidationProvider
-            class="full-width-item-container"
-            tag="div" mode="lazy" vid="name"
-            :name="$t('type')"
-            :rules="'required'"
-            v-slot="{ errors }"
-          >
-            <div class="row">
+          <div class="form-row">
+            <ValidationProvider
+              tag="div" mode="lazy" vid="name"
+              :name="$t('type')"
+              :rules="'required'"
+              v-slot="{ errors }"
+            >
               <FormLabel>{{ $t('form_label_new_wallet_type') }}</FormLabel>
               <select v-model="formItems.type"
-                      class="full-width-item-container input-size select-style">
+                      class="input-size input-style">
                 <option>{{ $t('please_select') }}</option>
                 <option value="child_wallet">{{ $t('child_wallet') }}</option>
                 <option value="privatekey_wallet">{{ $t('privatekey_wallet') }}</option>
               </select>
-            </div>
-          </ValidationProvider>
+            </ValidationProvider>
+          </div>
 
-          <ValidationProvider
-            class="full-width-item-container"
-            tag="div"
-            mode="lazy"
-            vid="name"
-            :name="$t('name')"
-            :rules="validationRules.accountWalletName"
-            v-slot="{ errors }"
-          >
-            <div class="row">
+          <div class="form-row">
+            <ValidationProvider
+              tag="div"
+              mode="lazy"
+              vid="name"
+              :name="$t('name')"
+              :rules="validationRules.accountWalletName"
+              v-slot="{ errors }"
+            >
               <FormLabel>{{ $t('form_label_new_wallet_name') }}</FormLabel>
               <ErrorTooltip :errors="errors">
                 <input type="text"
                       name="name"
-                      class="full-width-item-container input-size input-style"
-                      v-model="formItems.name" />
+                      class="input-size input-style"
+                      v-model="formItems.name"
+                      autocomplete="new-password" />
               </ErrorTooltip>
-            </div>
-          </ValidationProvider>
+            </ValidationProvider>
+          </div>
 
-          <ValidationProvider v-if="formItems.type === 'privatekey_wallet'"
-            class="full-width-item-container"
-            tag="div"
-            mode="lazy"
-            vid="name"
-            :name="$t('privateKey')"
-            :rules="validationRules.privateKey"
-            v-slot="{ errors }"
-          >
-            <div class="row">
+          <div class="form-row">
+            <ValidationProvider v-if="formItems.type === 'privatekey_wallet'"
+              tag="div"
+              mode="lazy"
+              vid="name"
+              :name="$t('privateKey')"
+              :rules="validationRules.privateKey"
+              v-slot="{ errors }"
+            >
               <FormLabel>{{ $t('form_label_private_key') }}</FormLabel>
               <ErrorTooltip :errors="errors">
                 <input type="password"
                       name="privateKey"
-                      class="full-width-item-container input-size input-style"
-                      v-model="formItems.privateKey" />
+                      class="input-size input-style"
+                      v-model="formItems.privateKey"
+                      autocomplete="new-password" />
               </ErrorTooltip>
-            </div>
-          </ValidationProvider>
+            </ValidationProvider>
+          </div>
 
-          <button
-            class="button-style validation-button right-side-button"
-            type="submit"
-            @click="handleSubmit(onSubmit)"
-          >
-            {{ $t('confirm') }}
-          </button>
+          <div class="form-row">
+            <button
+              class="button-style validation-button right-side-button"
+              type="submit"
+              @click="handleSubmit(onSubmit)"
+            >
+              {{ $t('confirm') }}
+            </button>
+          </div>
         </form>
       </ValidationObserver>
     </FormWrapper>
@@ -88,3 +91,13 @@
 import { FormSubWalletCreationTs } from './FormSubWalletCreationTs'
 export default class FormSubWalletCreation extends FormSubWalletCreationTs {}
 </script>
+
+<style scope>
+.sub-wallet-creation-container {
+  display: block;
+  width: 100%;
+  clear: both;
+  min-height: 1rem;
+}
+</style>
+
