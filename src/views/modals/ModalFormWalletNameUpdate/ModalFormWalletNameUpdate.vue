@@ -5,7 +5,7 @@
       :title="$t('modal_title_enter_wallet_name')"
       :transfer="false"
     >
-      <FormSubWalletCreation @submit="onSubmit" />
+      <FormWalletNameUpdate @submit="onSubmit" />
       <div slot="footer" class="modal-footer">
         <button
           type="submit"
@@ -20,8 +20,8 @@
 </template>
 
 <script lang="ts">
-import { ModalFormSubWalletCreationTs } from './ModalFormSubWalletCreationTs'
-export default class ModalFormSubWalletCreation extends ModalFormSubWalletCreationTs {}
+import { ModalFormWalletNameUpdateTs } from './ModalFormWalletNameUpdateTs'
+export default class ModalFormWalletNameUpdate extends ModalFormWalletNameUpdateTs {}
 </script>
 
 <style scoped>

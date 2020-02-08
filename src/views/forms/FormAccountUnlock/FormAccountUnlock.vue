@@ -43,7 +43,7 @@ import {FormAccountUnlockTs} from './FormAccountUnlockTs'
 export default class FormAccountUnlock extends FormAccountUnlockTs {}
 </script>
 
-<style>
+<style scoped>
 .account-unlock-container {
   display: block;
   width: 100%;

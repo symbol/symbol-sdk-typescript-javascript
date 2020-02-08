@@ -22,7 +22,7 @@ import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 
 // child components
 // @ts-ignore
-import ModalFormGeneric from '@/views/modals/ModalFormGeneric/ModalFormGeneric.vue'
+import ModalFormWalletNameUpdate from '@/views/modals/ModalFormWalletNameUpdate/ModalFormWalletNameUpdate.vue'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
@@ -30,7 +30,7 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue'
 
 @Component({
   components: {
-    ModalFormGeneric,
+    ModalFormWalletNameUpdate,
     ValidationProvider,
     ErrorTooltip,
     FormLabel,

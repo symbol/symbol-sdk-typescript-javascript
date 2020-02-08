@@ -21,6 +21,7 @@ import { MnemonicPassPhrase } from 'nem2-hd-wallets'
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {DerivationPathLevels, DerivationService} from '@/services/DerivationService'
 import {AESEncryptionService} from '@/services/AESEncryptionService'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
@@ -51,17 +52,17 @@ import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalF
   },
   computed: {...mapGetters({
     networkType: 'network/networkType',
-    currentAccount: 'account/currentAccount',
+    currentWallet: 'wallet/currentWallet',
     knownWallets: 'wallet/knownWallets',
   })},
 })
-export class FormSubWalletCreationTs extends Vue {
+export class FormWalletNameUpdateTs extends Vue {
   /**
    * Currently active account
-   * @see {Store.Account}
-   * @var {AccountsModel}
+   * @see {Store.Wallet}
+   * @var {WalletsModel}
    */
-  public currentAccount: AccountsModel
+  public currentWallet: WalletsModel
 
   /**
    * Known wallets identifiers
@@ -81,18 +82,6 @@ export class FormSubWalletCreationTs extends Vue {
    * @var {WalletService}
    */
   public wallets: WalletService
-
-  /**
-   * Derivation paths service
-   * @var {DerivationService}
-   */
-  public paths: DerivationService
-
-  /**
-   * Accounts repository
-   * @var {AccountsRepository}
-   */
-  public accountsRepository: AccountsRepository
 
   /**
    * Wallets repository
@@ -123,15 +112,11 @@ export class FormSubWalletCreationTs extends Vue {
    * @var {Object}
    */
   public formItems = {
-    type: 'child_wallet',
-    privateKey: '',
     name: '',
   }
 
   public created() {
     this.wallets = new WalletService(this.$store)
-    this.paths = new DerivationService(this.$store)
-    this.accountsRepository = new AccountsRepository()
     this.walletsRepository = new WalletsRepository()
   }
 
@@ -142,26 +127,6 @@ export class FormSubWalletCreationTs extends Vue {
 
   public set hasAccountUnlockModal(f: boolean) {
     this.isUnlockingAccount = f
-  }
-
-  public get sortedKnownPaths(): string[] {
-    if (!this.knownWallets || !this.knownWallets.length) {
-      return []
-    }
-
-    // filter wallets to only known wallet names
-    const knownWallets = this.wallets.getWallets(
-      (e) => this.knownWallets.includes(e.getIdentifier())
-    )
-  
-    return [...knownWallets].map(
-      ({identifier, values}) => ({
-        identifier,
-        path: values.get('path'),
-      }),
-    ).filter(
-      w => w.path && w.path.length
-    ).map(w => w.path).sort()
   }
 /// end-region computed properties getter/setter
 
@@ -177,53 +142,19 @@ export class FormSubWalletCreationTs extends Vue {
    * When account is unlocked, the sub wallet can be created
    */
   public onAccountUnlocked(account, password) {
-    this.currentPassword = password
-
     // - interpret form items
     const values = this.formItems
-    const type = values.type && ['child_wallet', 'privatekey_wallet'].includes(values.type)
-               ? values.type
-               : 'child_wallet'
 
     try {
-      // - create sub wallet (can be either derived or by private key)
-      let subWallet: AppWallet
-      switch(type) {
-      default:
-      case 'child_wallet':
-        subWallet = this.deriveNextChildWallet(values.name)
-        break;
-
-      case 'privatekey_wallet':
-        subWallet = this.wallets.getSubWalletByPrivateKey(
-          this.currentAccount,
-          this.currentPassword,
-          this.formItems.name,
-          this.formItems.privateKey,
-          this.networkType,
-        )
-        break;
-      }
-
-      // - remove password before GC
-      this.currentPassword = null
+      // - update model values
+      this.currentWallet.values.set('name', values.name)
 
       // - use repositories for storage
-      this.walletsRepository.create(subWallet.model.values)
-
-      // - also add wallet to account (in storage)
-      const wallets = this.currentAccount.values.get("wallets")
-      wallets.push(subWallet.model.getIdentifier())
-      this.currentAccount.values.set("wallets", wallets)
-      this.accountsRepository.update(
-        this.currentAccount.getIdentifier(),
-        this.currentAccount.values
+      this.walletsRepository.update(
+        this.currentWallet.getIdentifier(),
+        this.currentWallet.values
       )
 
-      // - update app state
-      this.$store.dispatch('account/ADD_WALLET', subWallet.model)
-      this.$store.dispatch('wallet/SET_CURRENT_WALLET', subWallet.model)
-      this.$store.dispatch('wallet/SET_KNOWN_WALLETS', wallets)
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
       this.$emit('submit', this.formItems)
     }
@@ -231,40 +162,5 @@ export class FormSubWalletCreationTs extends Vue {
       this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.')
       console.error(e)
     }
-  }
-
-  /**
-   * Use HD wallet derivation to get next child wallet
-   * @param {string} childWalletName 
-   * @return {AppWallet}
-   */
-  private deriveNextChildWallet(childWalletName: string): AppWallet {
-    // - read all known paths
-    const knownPaths = this.sortedKnownPaths
-
-    // - increment last path
-    const lastPath = knownPaths.pop()
-    const nextPath = this.paths.incrementPathLevel(lastPath, DerivationPathLevels.Address, 1)
-
-    console.log("childWalletName: ", childWalletName)
-    console.log("knownPaths: ", knownPaths)
-    console.log("nextPath: ", nextPath)
-
-    // - decrypt mnemonic
-    const encSeed = this.currentAccount.values.get('seed')
-    const passphrase = AESEncryptionService.decrypt(encSeed, this.currentPassword)
-    const mnemonic = new MnemonicPassPhrase(passphrase)
-
-    // create account by mnemonic
-    const wallet = this.wallets.getChildWalletByPath(
-      this.currentAccount,
-      this.currentPassword,
-      mnemonic,
-      nextPath,
-      this.networkType,
-      childWalletName,
-    )
-
-    return wallet
   }
 }
