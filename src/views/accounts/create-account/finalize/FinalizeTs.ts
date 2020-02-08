@@ -99,7 +99,12 @@ export default class FinalizeTs extends Vue {
   public submit() {
     try {
       // create account by mnemonic
-      const wallet = this.createWalletFromMnemonic()
+      const wallet = this.walletService.getDefaultWallet(
+        this.currentAccount,
+        this.currentMnemonic,
+        this.currentPassword,
+        this.networkType
+      )
 
       // add wallet to account
       const wallets = this.currentAccount.values.get("wallets")
@@ -126,36 +131,5 @@ export default class FinalizeTs extends Vue {
     catch (error) {
       throw new Error(error)
     }
-  }
-
-  /**
-   * Create an AppWallet instance from mnemonic
-   * @return {AppWallet}
-   */
-  private createWalletFromMnemonic(): AppWallet {
-    console.log("currentAccount: ", this.currentAccount)
-    const account = this.walletService.getAccountByPath(
-      this.currentMnemonic,
-      this.networkType,
-      WalletService.DEFAULT_WALLET_PATH
-    )
-
-    const simpleWallet = SimpleWallet.createFromPrivateKey(
-      'SeedWallet',
-      this.currentPassword,
-      account.privateKey,
-      this.networkType
-    )
-
-    return new AppWallet(
-      this.$store,
-      this.currentAccount.getIdentifier(),
-      'SeedWallet',
-      simpleWallet,
-      account.publicKey,
-      WalletService.DEFAULT_WALLET_PATH,
-      'Seed',
-      false
-    )
   }
 }

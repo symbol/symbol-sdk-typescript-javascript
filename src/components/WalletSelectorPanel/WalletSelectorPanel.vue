@@ -1,6 +1,6 @@
 <template>
-  <div class="WalletSelectorPanelWrap">
-    <div class="WalletSelectorPanelHead">
+  <div class="walletSwitchWrap">
+    <div class="walletSwitchHead">
       <p class="tit">
         {{ $t('Wallet_management') }}
       </p>
@@ -19,8 +19,7 @@
             'walletItem': true,
             'radius': true,
             'walletItem_bg_0': isActiveWallet(item),
-            'walletItem_bg_1': isSeedWallet(item),
-            'walletItem_bg_2': !isActiveWallet(item) && !isSeedWallet(item),
+            'walletItem_bg_2': !isActiveWallet(item),
           }"
           @click="currentWalletIdentifier = item.identifier"
         >
@@ -59,52 +58,25 @@
         </div>
       </div>
     </div>
-<!--
+
     <div class="walletMethod">
       <Row>
-        <i-col span="12">
-          <div class="createBtn pointer" @click="showWalletAdd = true">
-            {{ $t('from_seed') }}
-          </div>
+        <i-col span="8"></i-col>
+        <i-col span="8">
+          <button type="button" 
+                  @click="hasAddWalletModal = true">
+            {{ $t('button_add_wallet') }}
+          </button>
         </i-col>
-        <i-col span="12">
-          <div class="importBtn pointer" @click="$emit('toImport')">
-            {{ $t('from_privatekey') }}
-          </div>
-        </i-col>
+        <i-col span="8"></i-col>
       </Row>
     </div>
--->
-    <!--
-    <ModalAccountUnlock
-      v-if="!!this.clickedWallet"
-      @success="onDeleteWallet()"
-    />
-    -->
 
-<!--
-    <ModalMnemonicBackupWizard
-      v-if="showMnemonicDialog"
-      :show-mnemonic-dialog="showMnemonicDialog"
-      @closeMnemonicDialog="showMnemonicDialog = false"
-    />
--->
+    <ModalFormSubWalletCreation
+      v-if="hasAddWalletModal"
+      :visible="hasAddWalletModal"
+      @close="hasAddWalletModal = false" />
 
-<!--
-    <TheWalletAdd
-      v-if="showWalletAdd"
-      :visible="showWalletAdd"
-      @close="showWalletAdd = false"
-    />
-
-    <TheWalletDelete
-      v-if="showDeleteDialog"
-      :show-check-p-w-dialog="showDeleteDialog"
-      :wallet-to-delete="walletToDelete"
-      @closeCheckPWDialog="showDeleteDialog = false"
-      @on-cancel="showDeleteDialog = false"
-    />
--->
   </div>
 </template>
 

@@ -2,7 +2,7 @@
   <div class="transaction_modal">
     <Modal
       v-model="show"
-      :title="$t('modal_account_unlock_title')"
+      :title="title"
       :transfer="false"
       class-name="transaction-modal-dialog text_select"
     >
@@ -11,7 +11,7 @@
           <form
             action="handleSubmit(submit)"
             onsubmit="event.preventDefault()"
-            class="form-line-container mt-3"
+            class="mt-3"
             @keyup.enter="handleSubmit(submit)"
           >
             <div class="inline-container">

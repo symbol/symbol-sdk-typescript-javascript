@@ -76,7 +76,7 @@ export class DerivationService extends AbstractService {
     this.assertCanModifyLevel(which)
 
     // read levels and increment 
-    const index = (which as number) - 1
+    const index = which as number
     const parts = path.split('/')
     
     // calculate next index (increment)
@@ -109,7 +109,7 @@ export class DerivationService extends AbstractService {
     this.assertCanModifyLevel(which)
 
     // read levels and increment 
-    const index = (which as number) - 1
+    const index = which as number
     const parts = path.split('/')
 
     // calculate next index (decrement)

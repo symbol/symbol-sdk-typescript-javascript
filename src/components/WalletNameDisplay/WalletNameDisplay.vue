@@ -11,7 +11,7 @@
     <ModalFormGeneric 
       v-if="hasNameFormModal"
       :visible="hasNameFormModal"
-      :on-submit="onChangeName"
+      @submit="onChangeName"
       @close="hasNameFormModal = false">
       <template v-slot:fields="slotProps">
         <ValidationProvider

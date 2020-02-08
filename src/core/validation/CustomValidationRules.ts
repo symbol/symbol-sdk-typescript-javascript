@@ -1,7 +1,7 @@
 // external dependencies
 import {extend} from 'vee-validate'
 import i18n from '@/language'
-import {Address, Password} from 'nem2-sdk'
+import {Address, Password, Account, NetworkType} from 'nem2-sdk'
 
 // internal dependencies
 import {AccountsRepository} from '@/repositories/AccountsRepository'
@@ -113,6 +113,18 @@ export class CustomValidationRules {
         return undefined === knownWallets.find(w => value === w.values.get('name'))
       },
       message: `${i18n.t(`${NotificationType.ERROR_WALLET_NAME_ALREADY_EXISTS}`)}`,
+    })
+
+    extend('privateKey', {
+      validate(value) {
+        try {
+          Account.createFromPrivateKey(value, NetworkType.MIJIN_TEST)
+          return true
+        }
+        catch (e) {}
+        return false 
+      },
+      message: `${i18n.t(`${NotificationType.ACCOUNT_NAME_EXISTS_ERROR}`)}`,
     })
   }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {Account, Address, NetworkType} from 'nem2-sdk'
+import {Account, Address, NetworkType, SimpleWallet, Password} from 'nem2-sdk'
 import {
   ExtendedKey,
   MnemonicPassPhrase,
@@ -29,7 +29,9 @@ import {DerivationService, DerivationPathLevels} from './DerivationService'
 import {DerivationPathValidator} from '@/core/validation/validators'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
-import { SimpleStorageAdapter } from '@/core/database/SimpleStorageAdapter'
+import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
+import {AppWallet} from '@/core/database/models/AppWallet'
 
 const getNetworkFromNetworkType = (networkType: NetworkType): Network => {
   if (undefined !== [NetworkType.MIJIN, NetworkType.MIJIN_TEST].find(type => networkType === type)) {
@@ -200,7 +202,7 @@ export class WalletService extends AbstractService {
     // increment derivation path \a count times
     let current = startPath
     const paths = [...Array(count).keys()].map(
-      index => count === 0 ? current : (current = helpers.incrementPathLevel(current, DerivationPathLevels.Account))
+      index => count === 0 ? current : (current = helpers.incrementPathLevel(current, DerivationPathLevels.Address))
     )
 
     const wallets = paths.map(path => new Wallet(xkey.derivePath(path)))
@@ -238,5 +240,114 @@ export class WalletService extends AbstractService {
 
     // wallet not found by public key
     return address.plain()
+  }
+
+  /**
+   * Create an AppWallet instance from mnemonic
+   * @return {AppWallet}
+   */
+  public getDefaultWallet(
+    currentAccount: AccountsModel,
+    mnemonic: MnemonicPassPhrase,
+    password: Password,
+    networkType: NetworkType,
+  ): AppWallet {
+    const account = this.getAccountByPath(
+      mnemonic,
+      networkType,
+      WalletService.DEFAULT_WALLET_PATH
+    )
+
+    const simpleWallet = SimpleWallet.createFromPrivateKey(
+      'SeedWallet 1',
+      password,
+      account.privateKey,
+      networkType
+    )
+
+    return new AppWallet(
+      this.$store,
+      currentAccount.getIdentifier(),
+      'SeedWallet 1',
+      simpleWallet,
+      account.publicKey,
+      WalletService.DEFAULT_WALLET_PATH,
+      'Seed',
+      false
+    )
+  }
+
+  /**
+   * Create an child wallet AppWallet instance from mnemonic and path
+   * @return {AppWallet}
+   */
+  public getChildWalletByPath(
+    currentAccount: AccountsModel,
+    password: Password,
+    mnemonic: MnemonicPassPhrase,
+    nextPath: string,
+    networkType: NetworkType,
+    childWalletName: string,
+  ): AppWallet {
+
+    // - derive account
+    const account = this.getAccountByPath(
+      mnemonic,
+      networkType,
+      nextPath
+    )
+
+    const simpleWallet = SimpleWallet.createFromPrivateKey(
+      childWalletName,
+      password,
+      account.privateKey,
+      networkType
+    )
+
+    return new AppWallet(
+      this.$store,
+      currentAccount.getIdentifier(),
+      childWalletName,
+      simpleWallet,
+      account.publicKey,
+      nextPath,
+      'Seed',
+      false
+    )
+  }
+
+  /**
+   * Create a sub wallet (AppWallet) by private key
+   * @param currentAccount 
+   * @param password 
+   * @param childWalletName 
+   * @param privateKey 
+   * @param networkType 
+   */
+  public getSubWalletByPrivateKey(
+    currentAccount: AccountsModel,
+    password: Password,
+    childWalletName: string,
+    privateKey: string,
+    networkType: NetworkType,
+  ): AppWallet {
+    const account = Account.createFromPrivateKey(privateKey, networkType)
+    const simpleWallet = SimpleWallet.createFromPrivateKey(
+      childWalletName,
+      password,
+      account.privateKey,
+      networkType
+    )
+
+    return new AppWallet(
+      this.$store,
+      currentAccount.getIdentifier(),
+      childWalletName,
+      simpleWallet,
+      account.publicKey,
+      '',
+      'Pk',
+      false
+    )
   }
 }

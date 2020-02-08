@@ -15,25 +15,40 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Mosaic, MosaicId} from 'nem2-sdk'
+import {Mosaic, MosaicId, Account, Password, NetworkType} from 'nem2-sdk'
+import {ValidationProvider} from 'vee-validate'
 
 // internal dependencies
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {AppWallet, AppWalletType} from '@/core/database/models/AppWallet'
 import {WalletService} from '@/services/WalletService'
+import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 
 // child components
 // @ts-ignore
 import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue'
 // @ts-ignore
 import ModalMnemonicBackupWizard from '@/views/modals/ModalMnemonicBackupWizard/ModalMnemonicBackupWizard.vue'
+// @ts-ignore
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+// @ts-ignore
+import FormLabel from '@/components/FormLabel/FormLabel.vue'
+// @ts-ignore
+import ModalFormSubWalletCreation from '@/views/modals/ModalFormSubWalletCreation/ModalFormSubWalletCreation.vue'
 
 @Component({
   components: {
     AmountDisplay,
     ModalMnemonicBackupWizard,
+    ModalFormSubWalletCreation,
+    ErrorTooltip,
+    FormLabel,
+    ValidationProvider,
   }, 
   computed: {...mapGetters({
+    networkType: 'network/networkType',
+    currentAccount: 'account/currentAccount',
     currentWallet: 'wallet/currentWallet',
     knownWallets: 'wallet/knownWallets',
     currentWalletMosaics: 'wallet/currentWalletMosaics',
@@ -41,6 +56,20 @@ import ModalMnemonicBackupWizard from '@/views/modals/ModalMnemonicBackupWizard/
     networkMosaicTicker: 'mosaic/networkMosaicTicker',
   })}})
 export class WalletSelectorPanelTs extends Vue {
+  /**
+   * Currently active networkType
+   * @see {Store.Network}
+   * @var {NetworkType}
+   */
+  public networkType: NetworkType
+
+  /**
+   * Currently active account
+   * @see {Store.Account}
+   * @var {AccountsModel}
+   */
+  public currentAccount: AccountsModel
+
   /**
    * Currently active wallet
    * @see {Store.Wallet}
@@ -85,6 +114,19 @@ export class WalletSelectorPanelTs extends Vue {
   public clickedWallet: WalletsModel
 
   /**
+   * Whether user is currently adding a wallet (modal)
+   * @var {boolean}
+   */
+  public isAddingWallet: boolean = false
+
+  /**
+   * Validation rules
+   * @var {ValidationRuleset}
+   */
+  public validationRules = ValidationRuleset
+
+
+  /**
    * Hook called when the component is created
    * @return {void}
    */
@@ -111,7 +153,13 @@ export class WalletSelectorPanelTs extends Vue {
     this.$emit('change', wallet.getIdentifier())
   }
 
-  public get currentWallets(): {identifier: string, name: string}[] {
+  public get currentWallets(): {
+    identifier: string,
+    name: string,
+    type: number,
+    isMultisig: boolean,
+    path: string
+  }[] {
     if (!this.knownWallets || !this.knownWallets.length) {
       return []
     }
@@ -126,7 +174,8 @@ export class WalletSelectorPanelTs extends Vue {
         identifier,
         name: values.get('name'),
         type: values.get('type'),
-        isMultisig: values.get('isMultisig')
+        isMultisig: values.get('isMultisig'),
+        path: values.get('path'),
       }),
     )
   }
@@ -142,6 +191,14 @@ export class WalletSelectorPanelTs extends Vue {
     )
 
     return entry.length === 1 ? entry.shift().amount.compact() : 0
+  }
+
+  public get hasAddWalletModal(): boolean {
+    return this.isAddingWallet
+  }
+
+  public set hasAddWalletModal(f: boolean) {
+    this.isAddingWallet = f
   }
 /// end-region computed properties getter/setter
 
@@ -162,125 +219,58 @@ export class WalletSelectorPanelTs extends Vue {
   public isSeedWallet(item): boolean {
     return item.type === AppWalletType.SEED
   }
-
-  /**
-   * Hook called when the delete button of a wallet is clicked
-   * @param item 
-   */
-  public onClickDelete(item) {
-    this.clickedWallet = item
-  }
 }
 
 
 /*
-import {mapState} from 'vuex'
-import {Component, Vue, Watch} from 'vue-property-decorator'
-import {formatNumber} from '@/core/utils'
-import {AppWallet, AppInfo, StoreAccount, Notice, NoticeType} from '@/core/model'
-import {CreateWalletType} from '@/core/model/CreateWalletType'
-import {walletStyleSheetType} from '@/config/view/wallet.ts'
-import {MultisigAccountInfo} from 'nem2-sdk'
-import TheWalletAdd from '@/views/wallet/wallet-switch/the-wallet-add/TheWalletAdd.vue'
-import TheWalletDelete from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDelete.vue'
-import MnemonicDialog from '@/views/wallet/wallet-details/mnemonic-dialog/MnemonicDialog.vue'
-import NumberFormatting from '@/components/number-formatting/NumberFormatting.vue'
-import {BalancesService} from '@/core/services'
 
-@Component({
-  components: {
-    TheWalletDelete,
-    MnemonicDialog,
-    TheWalletAdd,
-    NumberFormatting,
-  },
-  computed: {
-    ...mapState({
-      activeAccount: 'account',
-      app: 'app',
-    }),
-  },
-})
-export class WalletSwitchTs extends Vue {
-  app: AppInfo
-  activeAccount: StoreAccount
-  showDeleteDialog = false
-  showWalletAdd = false
-  walletToDelete: AppWallet | boolean = false
-  walletStyleSheetType = walletStyleSheetType
-  formatNumber = formatNumber
-  showMnemonicDialog = false
-
-  get walletList() {
-    return this.app.walletList
-  }
-
-  get wallet() {
-    return this.activeAccount.wallet
-  }
-
-  get activeAddress() {
-    return this.wallet.address
-  }
-
-  get networkCurrency() {
-    return this.activeAccount.networkCurrency
-  }
-
-  getBalanceFromAddress(wallet: AppWallet): string {
-    return BalancesService.getBalanceFromAddress(wallet, this.$store)
-  }
-
-  getWalletStyle(item: AppWallet): string {
-    if (item.address === this.activeAddress) return walletStyleSheetType.activeWallet
-    if (item.sourceType === CreateWalletType.seed) return walletStyleSheetType.seedWallet
-    return walletStyleSheetType.otherWallet
-  }
-
-  // @AppWallet: should be an AppWallet computed property
-  isMultisig(address: string): boolean {
-    const multisigAccountInfo: MultisigAccountInfo = this.activeAccount.multisigAccountInfo[address]
-    if (!multisigAccountInfo) return false
-    return multisigAccountInfo.cosignatories.length > 0
-  }
-
-  switchWallet(newActiveWalletAddress) {
-    const newActiveWallet = this.walletList.find(({address}) => address === newActiveWalletAddress)
-    this.$store.commit('SET_WALLET', newActiveWallet)
-  }
-
-  scrollToActiveWallet() {
-    const currentWalletIndex = this.walletList
-      .findIndex(({address}) => address === this.activeAddress)
-    if(!this.$refs.walletsDiv[currentWalletIndex]) return
-    const offsetTop = this.$refs.walletsDiv[currentWalletIndex]['offsetTop']
-    this.$refs.walletScroll['scrollTop'] = offsetTop - offsetTop / currentWalletIndex
-  }
-
-  deleteWallet(walletToDelete) {
-    this.walletToDelete = walletToDelete
-    this.showDeleteDialog = true
-  }
-
-  displayMnemonicDialog() {
-    if (!this.wallet.encryptedMnemonic) {
-      Notice.trigger('this.$t(\'no_mnemonic\')', NoticeType.error, this.$store)
+  get pathToCreate() {
+    const seedPathList = this.walletList.filter(item => item.path).map(item => item.path[item.path.length - 8]).sort()
+    const numberOfSeedPath = seedPathList.length
+    if (numberOfSeedPath >= APP_PARAMS.MAX_SEED_WALLETS_NUMBER) {
+      Notice.trigger(Message.SEED_WALLET_OVERFLOW_ERROR, NoticeType.error, this.$store)
+      this.show = false
       return
     }
 
-    this.showMnemonicDialog = true
+    if (!numberOfSeedPath) return 0
+
+    const jumpedPath = seedPathList
+      .map(a => Number(a))
+      .sort()
+      .map((element, index) => {
+        if (element !== index) return index
+      })
+      .filter(x => x !== undefined)
+    return jumpedPath.length ? jumpedPath[0] : numberOfSeedPath
   }
 
-  @Watch('activeAddress')
-  onWalletChange() {
-    Vue.nextTick().then(() => {
-      this.scrollToActiveWallet()
-    })
+
+  passwordValidated(password) {
+    if (!password) return
+    const {pathToCreate, walletName, currentAccount} = this
+    const networkType = currentAccount.networkType
+    this.$validator
+      .validate()
+      .then((valid) => {
+        if (!valid) return
+        try {
+          new AppWallet().createFromPath(
+            walletName,
+            new Password(password),
+            pathToCreate,
+            networkType,
+            this.$store,
+          )
+          this.show = false
+        } catch (error) {
+          throw new Error(error)
+        }
+      })
   }
 
   mounted() {
-    this.scrollToActiveWallet()
+    this.walletName = seedWalletTitle + this.pathToCreate
   }
-}
 
 */

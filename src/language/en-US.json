@@ -977,5 +977,10 @@
   "modal_account_unlock_title": "Unlock your account",
   "x_seconds": "{seconds} sec.",
   "form_label_new_wallet_name": "New wallet name",
-  "error_wallet_name_already_exists": "This wallet name already exists. Please, enter a unique wallet name."
+  "form_label_new_wallet_type": "Select the type of wallet",
+  "form_label_private_key": "Enter your private key",
+  "error_wallet_name_already_exists": "This wallet name already exists. Please, enter a unique wallet name.",
+  "modal_title_enter_wallet_name": "Configure your new wallet",
+  "child_wallet": "I want to create a child wallet for my account",
+  "privatekey_wallet": "I want to import an existing wallet private key"
 }

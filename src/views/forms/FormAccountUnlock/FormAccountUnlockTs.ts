@@ -99,13 +99,12 @@ export class FormAccountUnlockTs extends Vue {
 
     try {
       // - attempt decryption
-      const privateKey: string = encrypted.decrypt(new Password(
-        this.formItems.password
-      ))
+      const password = new Password(this.formItems.password)
+      const privateKey: string = encrypted.decrypt(password)
 
       if (privateKey.length === 64) {
         const unlockedAccount = Account.createFromPrivateKey(privateKey, this.networkType)
-        return this.$emit('success', unlockedAccount)
+        return this.$emit('success', {account: unlockedAccount, password})
       }
 
       return this.$emit('error', this.$t('invalid_password'))

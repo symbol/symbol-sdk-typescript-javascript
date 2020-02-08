@@ -15,7 +15,7 @@
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Account} from 'nem2-sdk'
+import {Account, Password} from 'nem2-sdk'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
@@ -39,9 +39,8 @@ export class ModalFormAccountUnlockTs extends Vue {
   }) visible: boolean
 
   @Prop({
-    default: (a: Account) => true
-  }) onSuccess: (a: Account) => boolean
-
+    default: (a: Account, p: Password) => true
+  }) onSuccess: (a: Account, p: Password) => boolean
 
   /**
    * Visibility state
@@ -73,16 +72,16 @@ export class ModalFormAccountUnlockTs extends Vue {
    * @param {Password} password 
    * @return {void}
    */
-  public onAccountUnlocked(account: Account) {
+  public onAccountUnlocked(payload: {account: Account, password: Password}) {
     // - log about unlock success
-    this.$store.dispatch('diagnostic/ADD_INFO', 'Account ' + account.address.plain() + ' unlocked successfully.')
+    this.$store.dispatch('diagnostic/ADD_INFO', 'Account ' + payload.account.address.plain() + ' unlocked successfully.')
 
     // - emit success
-    this.$emit('success', account.publicAccount)
+    this.$emit('success', payload.account.publicAccount)
 
     // - dispatch callback
     this.show = false
-    return this.onSuccess(account)
+    return this.onSuccess(payload.account, payload.password)
   }
 
   /**

@@ -14,66 +14,59 @@
  * limitations under the License.
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
-import {ValidationObserver} from 'vee-validate'
+import {mapGetters} from 'vuex'
+
+// internal dependencies
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
 
 // child components
 // @ts-ignore
-import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
+import FormSubWalletCreation from '@/views/forms/FormSubWalletCreation/FormSubWalletCreation.vue'
 
 @Component({
   components: {
-    FormWrapper,
-    ValidationObserver,
+    FormSubWalletCreation,
   },
+  computed: {...mapGetters({
+    currentAccount: 'account/currentAccount',
+  })}
 })
-export class ModalFormGenericTs extends Vue {
+export class ModalFormSubWalletCreationTs extends Vue {
   @Prop({
     default: false
   }) visible: boolean
 
-  @Prop({
-    default: 'Please, fill in the below form'
-  }) title: string
-
-  /**
-   * Form items
-   * @var {any}
-   */
-  public formItems: any = {}
-
-  /// region computed properties
   /**
    * Visibility state
    * @type {boolean}
    */
-  public get show(): boolean {
+  get show(): boolean {
     return this.visible
   }
 
   /**
    * Emits close event
    */
-  public set show(val) {
+  set show(val) {
     if (!val) {
       this.$emit('close')
     }
   }
-  /// end-region computed properties
 
   /**
-   * Hook called when the child form is submitted
+   * Currently active account
+   * @see {Store.Account}
+   * @var {AccountsModel}
+   */
+  public currentAccount: AccountsModel
+
+  /**
+   * Hook called when child component FormSubWalletCreation emits
+   * the 'submit' event.
+   * @param {Password} password 
    * @return {void}
    */
-  public submit() {
-    this.$emit('submit', this.formItems)
+  public onSubmit(formItems: any) {
     this.show = false
-  }
-
-  /**
-   * Hook called when the child form is cancelled
-   * @return {void}
-   */
-  public cancel() {
-    this.$emit('cancel')
   }
 }
