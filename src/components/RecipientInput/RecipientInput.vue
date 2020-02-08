@@ -28,6 +28,5 @@
 
 <script lang="ts">
 import { RecipientInputTs } from './RecipientInputTs'
-import '@/styles/forms.less'
 export default class RecipientInput extends RecipientInputTs {}
 </script>

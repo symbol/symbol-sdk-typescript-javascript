@@ -1,7 +1,7 @@
 <template>
   <div class="main-container radius">
     <div class="left-container">
-      <VerticalNavigationTabs :parent-route-name="parentRouteName" />
+      <NavigationTabs direction="vertical" :parent-route-name="parentRouteName" />
     </div>
     <div class="right-container">
       <FormTitle style="form-containers">

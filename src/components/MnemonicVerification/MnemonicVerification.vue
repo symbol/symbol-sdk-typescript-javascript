@@ -43,6 +43,5 @@
 <script lang="ts">
 import {MnemonicVerificationTs} from './MnemonicVerificationTs'
 import './MnemonicVerification.less'
-import '@/styles/forms.less'
 export default class MnemonicVerification extends MnemonicVerificationTs {}
 </script>

@@ -21,13 +21,13 @@ import {ParentRouteNames} from '@/router/ParentRouteNames'
 
 // child components
 // @ts-ignore
-import VerticalNavigationTabs from '@/components/VerticalNavigationTabs/VerticalNavigationTabs.vue'
+import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue'
 // @ts-ignore
 import FormTitle from '@/components/FormTitle/FormTitle.vue'
 
 @Component({
   components: {
-    VerticalNavigationTabs,
+    NavigationTabs,
     FormTitle,
   },
 })

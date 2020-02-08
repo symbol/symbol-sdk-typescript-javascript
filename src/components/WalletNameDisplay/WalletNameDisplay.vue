@@ -40,7 +40,6 @@
 
 <script lang="ts">
 import {WalletNameDisplayTs} from './WalletNameDisplayTs'
-import '@/styles/forms.less'
 
 export default class WalletNameDisplay extends WalletNameDisplayTs {}
 </script>

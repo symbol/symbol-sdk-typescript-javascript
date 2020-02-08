@@ -195,12 +195,6 @@ export class FormTransferCreationTs extends Vue {
   }
 
   /**
-   * Whether the component is awaiting signature
-   * @var {boolean}
-   */
-  public isAwaitingSignature: boolean = false
-
-  /**
    * Hook called when the component is mounted
    * @return {void}
    */

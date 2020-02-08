@@ -22,6 +22,5 @@
 
 <script lang="ts">
 import {MosaicSelectorTs} from './MosaicSelectorTs'
-import '@/styles/forms.less'
 export default class MosaicSelector extends MosaicSelectorTs {}
 </script>

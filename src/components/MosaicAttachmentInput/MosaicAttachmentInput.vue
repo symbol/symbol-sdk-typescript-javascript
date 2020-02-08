@@ -30,7 +30,6 @@
 
 <script lang="ts">
 import {MosaicAttachmentInputTs} from './MosaicAttachmentInputTs'
-import '@/styles/forms.less'
 export default class MosaicAttachmentInput extends MosaicAttachmentInputTs {}
 </script>
 

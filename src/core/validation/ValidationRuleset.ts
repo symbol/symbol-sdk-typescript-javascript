@@ -37,6 +37,10 @@ export const ValidationRuleset = {
     required: true,
     regex: '^[a-z0-9-_]{1,64}$',
   },
+  subNamespaceName: {
+    required: true,
+    regex: '^[a-z0-9-_.]{1,64}$',
+  },
   password: {
     required: true,
     min: MIN_PASSWORD_LENGTH,
@@ -47,10 +51,6 @@ export const ValidationRuleset = {
   recipientPublicKey: 'required|publicKey',
   supply: 'required|integer|min_value: 1',
   walletPassword: 'required|confirmWalletPassword:wallet',
-  subNamespaceName: {
-    required: true,
-    regex: '^[a-z0-9-_.]{1,64}$',
-  },
   url: 'required|url',
   newAccountName:'required|newAccountName',
   accountWalletName: 'required|accountWalletName',

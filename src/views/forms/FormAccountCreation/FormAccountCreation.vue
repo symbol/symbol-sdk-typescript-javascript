@@ -171,7 +171,6 @@
 
 <script lang="ts">
 import {FormAccountCreationTs} from './FormAccountCreationTs'
-import '@/styles/forms.less'
 export default class FormAccountCreation extends FormAccountCreationTs {}
 </script>
 

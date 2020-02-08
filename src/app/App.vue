@@ -16,4 +16,6 @@ export default class App extends AppTs { }
 @import "../views/resources/css/common.less";
 @import "../views/resources/css/ivewWindows.less";
 @import "../views/resources/css/iviewMac.less";
+@import "../views/resources/css/text.less";
+@import "../views/resources/css/forms.less";
 </style>

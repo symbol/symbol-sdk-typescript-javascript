@@ -17,12 +17,14 @@ import {extend} from 'vee-validate'
 import {
   digits,
   excluded,
+  integer,
   is_not,
+  max_value,
   max,
   min_value,
   min, 
-  required, 
   regex,
+  required, 
 } from 'vee-validate/dist/rules'
 
 export class StandardValidationRules {
@@ -33,7 +35,9 @@ export class StandardValidationRules {
   public static register() {
     extend('digits', digits)
     extend('excluded', excluded)
+    extend('integer', integer)
     extend('is_not', is_not)
+    extend('max_value', max_value)
     extend('max', max)
     extend('min_value', min_value)
     extend('min', min)

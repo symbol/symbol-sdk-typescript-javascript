@@ -25,6 +25,5 @@
 
 <script lang="ts">
 import {MessageInputTs} from './MessageInputTs'
-import '@/styles/forms.less'
 export default class MessageInput extends MessageInputTs {}
 </script>

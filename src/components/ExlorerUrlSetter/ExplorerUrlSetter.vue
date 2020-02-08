@@ -43,7 +43,6 @@
 
 <script>
 import { ExplorerUrlSetterTs } from './ExplorerUrlSetterTs'
-import '@/styles/forms.less'
 
 export default class ExplorerUrlSetter extends ExplorerUrlSetterTs {}
 </script>

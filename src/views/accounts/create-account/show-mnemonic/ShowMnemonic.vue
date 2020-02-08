@@ -56,6 +56,5 @@
 <script lang="ts">
 import ShowMnemonicTs from './ShowMnemonicTs'
 import './ShowMnemonic.less'
-import '@/styles/forms.less'
 export default class ShowMnemonic extends ShowMnemonicTs { }
 </script>

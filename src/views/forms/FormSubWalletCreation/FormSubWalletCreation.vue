@@ -86,6 +86,5 @@
 
 <script lang="ts">
 import { FormSubWalletCreationTs } from './FormSubWalletCreationTs'
-import '@/styles/forms.less'
 export default class FormSubWalletCreation extends FormSubWalletCreationTs {}
 </script>

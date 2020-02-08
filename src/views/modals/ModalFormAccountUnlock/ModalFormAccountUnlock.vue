@@ -21,7 +21,6 @@
 
 <script lang="ts">
 import { ModalFormAccountUnlockTs } from './ModalFormAccountUnlockTs'
-import '@/styles/forms.less'
 export default class ModalFormAccountUnlock extends ModalFormAccountUnlockTs {}
 </script>
 

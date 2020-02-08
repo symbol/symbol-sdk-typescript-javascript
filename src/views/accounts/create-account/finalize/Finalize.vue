@@ -55,6 +55,5 @@
 <script lang="ts">
 import FinalizeTs from './FinalizeTs'
 import './Finalize.less'
-import '@/styles/forms.less'
 export default class Finalize extends FinalizeTs {}
 </script>

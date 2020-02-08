@@ -203,11 +203,8 @@ export const routes: AppRoute[] = [
         },
         // @ts-ignore
         component: () => import('@/views/wallets/Wallets.vue'),
-      },
-      /*
-      
-      {
-        path: '/mosaic',
+      }, {
+        path: '/mosaics',
         name: 'mosaics',
         redirect: '/mosaicList',
         meta: {
@@ -217,25 +214,31 @@ export const routes: AppRoute[] = [
           activeIcon: leftBarIcons.windowMosaicActive,
         },
         // @ts-ignore
-        component: () => import('@/views/mosaic/Mosaic.vue'),
+        component: () => import('@/views/mosaics/MosaicsDashboardPage/MosaicsDashboardPage.vue'),
         children: [
           {
             path: '/mosaicList',
-            name: 'mosaics.index',
-            meta: { protected: true},
+            name: 'mosaics.list',
+            meta: {
+              protected: true,
+              title: 'mosaic_list',
+            },
             // @ts-ignore
-            component: () => import('@/views/mosaic/mosaic-list/MosaicList.vue'),
+            component: () => import('@/views/mosaics/MosaicListPage/MosaicListPage.vue'),
           }, {
             path: '/createMosaic',
             name: 'mosaics.create',
-            meta: { protected: true},
+            meta: {
+              protected: true,
+              title: 'create_mosaic',
+            },
             // @ts-ignore
-            component: () => import('@/components/forms/mosaic-creation/MosaicCreation.vue'),
+            component: () => import('@/views/mosaics/CreateMosaicPage/CreateMosaicPage.vue'),
           },
         ],
       },
       {
-        path: '/namespace',
+        path: '/namespaces',
         name: 'namespaces',
         meta: {
           protected: true,
@@ -245,30 +248,40 @@ export const routes: AppRoute[] = [
         },
         redirect: '/namespaceList',
         // @ts-ignore
-        component: () => import('@/views/namespace/Namespace.vue'),
+        component: () => import('@/views/namespaces/NamespacesDashboardPage/NamespacesDashboardPage.vue'),
         children: [
           {
             path: '/namespaceList',
-            name: 'namespaces.index',
-            meta: { protected: true},
+            name: 'namespaces.list',
+            meta: {
+              protected: true,
+              title: 'Namespace_list',
+            },
             // @ts-ignore
-            component: () => import('@/views/namespace/namespace-function/namespace-list/NamespaceList.vue'),
-          }, {
+            component: () => import('@/views/namespaces/NamespaceListPage/NamespaceListPage.vue'),
+          },
+          {
             path: '/createNamespace',
-            name: 'namespaces.createRoot',
-            meta: { protected: true},
+            name: 'namespaces.createRootNamespace',
+            meta: {
+              protected: true,
+              title: 'Create_namespace',
+            },
             // @ts-ignore
-            component: () => import('@/components/forms/create-root-namespace/CreateRootNamespace.vue'),
+            component: () => import('@/views/namespaces/CreateNamespacePage/CreateNamespacePage.vue'),
           }, {
             path: '/createSubNamespace',
-            name: 'namespaces.createSub',
-            meta: { protected: true},
+            name: 'namespaces.createSubnamespace',
+            meta: {
+              protected: true,
+              title: 'Create_subNamespace',
+            },
             // @ts-ignore
-            component: () => import('@/components/forms/create-sub-namespace/CreateSubNamespace.vue'),
+            component: () => import('@/views/namespaces/CreateSubNamespacePage/CreateSubNamespacePage.vue'),
           },
         ],
       },
-      {
+      /*  {
         path: '/multisigApi',
         name: 'multisig',
         meta: {

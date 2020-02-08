@@ -21,5 +21,7 @@
  */
 export enum ParentRouteNames {
   'dashboard' = 'dashboard',
+  'mosaics' = 'mosaics',
+  'namespaces' = 'namespaces',
   'settings' = 'settings',
 }

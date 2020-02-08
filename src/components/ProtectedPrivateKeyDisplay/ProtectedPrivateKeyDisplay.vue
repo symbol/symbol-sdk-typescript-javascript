@@ -29,7 +29,6 @@
 
 <script>
 import { ProtectedPrivateKeyDisplayTs } from './ProtectedPrivateKeyDisplayTs'
-import '@/styles/forms.less'
 export default class ProtectedPrivateKeyDisplay extends ProtectedPrivateKeyDisplayTs {}
 </script>
 

@@ -92,7 +92,10 @@ export class AppRouter extends Router {
   private getParentRoute(parentRouteName? : ParentRouteNames): AppRoute {
     switch (parentRouteName) {
       case ParentRouteNames.dashboard:
+      case ParentRouteNames.mosaics:
+      case ParentRouteNames.namespaces:
       case ParentRouteNames.settings:
+
         if (!this.getParentRoute() || !this.getParentRoute().children) return null
         return this.getParentRoute().children
           .find(({name}) => name === parentRouteName) as AppRoute

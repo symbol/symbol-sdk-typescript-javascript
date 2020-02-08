@@ -44,11 +44,15 @@ import {
   LockFundsTransaction,
   Deadline,
   UInt64,
+  NamespaceRegistrationType,
 } from 'nem2-sdk'
 
 // internal dependencies
 import {TransactionParams} from '@/core/transactions/TransactionParams'
 import {TransferTransactionParams} from '@/core/transactions/TransferTransactionParams'
+import {MosaicDefinitionTransactionParams} from './MosaicDefinitionTransactionParams'
+import {MosaicSupplyChangeTransactionParams} from './MosaicSupplyChangeTransactionParams'
+import {NamespaceRegistrationTransactionParams} from './NamespaceRegistrationTransactionParams'
 
 export type TransactionImpl = Transaction
 
@@ -59,10 +63,13 @@ export class TransactionFactory {
      * Vuex Store instance
      * @var {Vuex.Store}
      */
-    public readonly $store: Store<any>,) {}
+    public readonly $store: Store<any>) {}
 
   /// region specialised signatures
   public build(name: 'TransferTransaction', params: TransferTransactionParams): TransferTransaction
+  public build(name: 'MosaicDefinitionTransaction', params: MosaicDefinitionTransactionParams): MosaicDefinitionTransaction
+  public build(name: 'MosaicSupplyChangeTransaction', params: MosaicSupplyChangeTransactionParams): MosaicSupplyChangeTransaction
+  public build(name: 'NamespaceRegistrationTransaction', params: NamespaceRegistrationTransactionParams): NamespaceRegistrationTransaction
   /// end-region specialised signatures
 
   /**
@@ -72,7 +79,7 @@ export class TransactionFactory {
    */
   public build(
     name: string,
-    params: TransactionParams
+    params: TransactionParams,
   ): TransactionImpl {
 
     const deadline = Deadline.create()
@@ -87,12 +94,56 @@ export class TransactionFactory {
           params.getParam('message'),
           networkType,
           params.getParam('maxFee'),
-        );
+        )
+
+      case 'MosaicDefinitionTransaction': 
+        return MosaicDefinitionTransaction.create(
+          deadline,
+          params.getParam('nonce'),
+          params.getParam('mosaicId'),
+          params.getParam('mosaicFlags'),
+          params.getParam('divisibility'),
+          params.getParam('duration'),
+          networkType,
+          params.getParam('maxFee'),
+        )
+      
+      case 'MosaicSupplyChangeTransaction': 
+        return MosaicSupplyChangeTransaction.create(
+          deadline,
+          params.getParam('Id'),
+          params.getParam('mosaicSupplyChangeAction'),
+          params.getParam('supply'),
+          networkType,
+          params.getParam('maxFee'),
+        )
+
+      case 'NamespaceRegistrationTransaction':
+        switch (params.getParam('namespaceRegistrationType')) {
+          case NamespaceRegistrationType.SubNamespace:
+            return NamespaceRegistrationTransaction.createSubNamespace(
+              deadline,
+              params.getParam('subNamespaceName'),
+              params.getParam('rootNamespaceName'),
+              networkType,
+              params.getParam('maxFee'),
+            )
+
+          case NamespaceRegistrationType.RootNamespace:
+          default: 
+            return NamespaceRegistrationTransaction.createRootNamespace(
+              deadline,
+              params.getParam('rootNamespaceName'),
+              params.getParam('duration'),
+              networkType,
+              params.getParam('maxFee'),
+            )
+        }
 
 
       default: break
     }
-
-    throw new Error('Could not find a REST repository by name \'' + name + ' \'')
+    
+    throw new Error(`Could not find a REST repository by name '${name}'`)
   }
 }

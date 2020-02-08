@@ -234,7 +234,7 @@
   "false": "false",
   "input_space_name": "Input sub namespace name",
   "the_duration_is_calculated_in_blocks_one_block_is_12_seconds": "The duration is calculated in blocks, one block is 15 seconds.",
-  "space_list": "Namespace list",
+  "Namespace_list": "Namespace list",
   "namespace_name": "Namespace name",
   "update_namespace": "Update namespace",
   "namespace_operation": "Namespace operation",
@@ -427,8 +427,7 @@
   "Choose_a_co_signer": "Choose a co-signatory",
   "this_account_is_not_a_cosignatory": "This account is not a co-signatory",
   "Create_namespace": "Create namespace",
-  "Create_subNamespace": "Create subNamespace",
-  "Namespace_list": "My namespaces",
+  "Create_subNamespace": "Create Subnamespace",
   "New_root_space": "New root space",
   "Subspace": "Sub-namespace",
   "Input_space_name": "Input namespace",
@@ -982,5 +981,6 @@
   "error_wallet_name_already_exists": "This wallet name already exists. Please, enter a unique wallet name.",
   "modal_title_enter_wallet_name": "Configure your new wallet",
   "child_wallet": "I want to create a child wallet for my account",
-  "privatekey_wallet": "I want to import an existing wallet private key"
+  "privatekey_wallet": "I want to import an existing wallet private key",
+  "Select_a_namespace": "Select a namespace"
 }

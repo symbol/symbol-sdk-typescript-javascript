@@ -22,7 +22,7 @@ import {ParentRouteNames} from '@/router/ParentRouteNames'
 import {TabEntry} from '@/router/TabEntry'
 
 @Component
-export class VerticalNavigationTabsTs extends Vue {
+export class NavigationTabsTs extends Vue {
   /**
    * Parent route name
    * @var {ParentRouteNames}
@@ -33,4 +33,6 @@ export class VerticalNavigationTabsTs extends Vue {
     // @ts-ignore
     return this.$router.getTabEntries(this.parentRouteName)
   }
+
+  @Prop({ default: 'horizontal' }) direction: 'horizontal' | 'vertical'
 }

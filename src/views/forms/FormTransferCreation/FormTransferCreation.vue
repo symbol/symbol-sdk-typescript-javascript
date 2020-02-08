@@ -56,6 +56,5 @@
 
 <script lang="ts">
 import { FormTransferCreationTs } from './FormTransferCreationTs'
-import '@/styles/forms.less'
 export default class FormTransferCreation extends FormTransferCreationTs {}
 </script>

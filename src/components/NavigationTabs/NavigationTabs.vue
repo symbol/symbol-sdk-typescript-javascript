@@ -1,5 +1,5 @@
 <template>
-  <div class="vertical-tabs-container">
+  <div :class="[direction]">
     <span
       v-for="(tabEntry, index) in tabEntries"
       :key="index"
@@ -16,8 +16,10 @@
 </template>
 
 <script lang="ts">
-import {VerticalNavigationTabsTs} from './VerticalNavigationTabsTs'
-import './VerticalNavigationTabs.less'
-
-export default class VerticalNavigationTabs extends VerticalNavigationTabsTs {}
+import {NavigationTabsTs} from './NavigationTabsTs'
+export default class NavigationTabs extends NavigationTabsTs {}
 </script>
+
+<style lang="less" scoped>
+@import './NavigationTabs.less';
+</style>

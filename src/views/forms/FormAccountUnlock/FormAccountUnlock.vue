@@ -8,13 +8,13 @@
     >
       <div class="inline-container">
         <ValidationProvider
+          v-slot="{ errors }"
           class="full-width-item-container"
           tag="div"
           mode="lazy"
           vid="password"
           :name="$t('password')"
           :rules="validationRules.accountPassword"
-          v-slot="{ errors }"
         >
           <ErrorTooltip :errors="errors">
             <input
@@ -40,7 +40,6 @@
 
 <script lang="ts">
 import {FormAccountUnlockTs} from './FormAccountUnlockTs'
-import '@/styles/forms.less'
 export default class FormAccountUnlock extends FormAccountUnlockTs {}
 </script>
 

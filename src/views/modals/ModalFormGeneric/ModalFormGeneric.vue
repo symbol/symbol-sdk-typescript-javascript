@@ -43,7 +43,6 @@
 
 <script lang="ts">
 import {ModalFormGenericTs} from './ModalFormGenericTs'
-import '@/styles/forms.less'
 
 export default class ModalFormGeneric extends ModalFormGenericTs {}
 </script>

@@ -25,6 +25,5 @@
 
 <script lang="ts">
 import {MaxFeeSelectorTs} from './MaxFeeSelectorTs'
-import '@/styles/forms.less'
 export default class MaxFeeSelector extends MaxFeeSelectorTs {}
 </script>

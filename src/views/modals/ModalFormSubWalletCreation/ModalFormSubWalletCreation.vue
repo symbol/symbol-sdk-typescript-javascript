@@ -21,7 +21,6 @@
 
 <script lang="ts">
 import { ModalFormSubWalletCreationTs } from './ModalFormSubWalletCreationTs'
-import '@/styles/forms.less'
 export default class ModalFormSubWalletCreation extends ModalFormSubWalletCreationTs {}
 </script>
 
