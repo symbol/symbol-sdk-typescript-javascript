@@ -17,6 +17,9 @@
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
+// internal dependencies
+import {AppWalletType} from '@/core/database/models/AppWallet'
+
 // child components
 // @ts-ignore
 import WalletNameDisplay from '@/components/WalletNameDisplay/WalletNameDisplay.vue'
@@ -52,6 +55,15 @@ export class WalletDetailsTs extends Vue {
   hasNameForm: boolean = false
 /// region computed properties getter/setter
 /// end-region computed properties getter/setter
+
+  /**
+   * Whether the wallet item is a seed wallet
+   * @param item
+   * @return {boolean}
+   */
+  public isSeedWallet(item): boolean {
+    return item.type === AppWalletType.SEED
+  }
 }
 
 

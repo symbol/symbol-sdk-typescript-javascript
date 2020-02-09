@@ -1,9 +1,11 @@
 
+@import "variables";
+
 /*************************************************************
  * Components
  *************************************************************/
 
- .input-style {
+.input-style {
   height: 0.45rem;
   border: none;
   outline: none;
@@ -13,7 +15,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  border: 0.01rem solid #ccc;
+  border: 0.01rem solid @border;
   border-radius: 0.04rem;
 }
 
@@ -22,7 +24,7 @@
   outline: none;
   padding: 0.1rem 0.2rem;
   font-size: 0.16rem;
-  border: 0.01rem solid #ccc;
+  border: 0.01rem solid @border;
   border-radius: 0.04rem;
 }
 
@@ -37,7 +39,7 @@
   white-space: nowrap;
   padding-left: 0.08rem;
   padding-right: 0.24rem;
-  border: 0.01rem solid #ccc;
+  border: 0.01rem solid @border;
   border-radius: 0.04rem;
 
   .ivu-select-selection {
@@ -74,10 +76,10 @@
   height: 0.45rem;
   border-radius: 0.04rem;
   padding: 0 0.2rem;
-  border: 0.01rem solid #ccc;
+  border: 0.01rem solid @border;
   line-height: 1.5;
-  color: #515a6e;
-  background-color: #fff;
+  color: @selectedValue;
+  background-color: @white;
   background-image: none;
   cursor: text;
   transition: border 0.2s ease-in-out, background 0.2s ease-in-out,
@@ -112,25 +114,25 @@
 }
 
 .validation-button {
-  background-color: #5200c6;
-  color: white;
+  background-color: @purple;
+  color: @white;
 }
 
 .validation-button:hover {
-  box-shadow: 0 0 0.1rem #5200c6;
-  background-color: #5200c6 !important;
-  color: white !important;
+  box-shadow: 0 0 0.1rem @purple;
+  background-color: @purple !important;
+  color: @white !important;
   opacity: 0.8 !important;
 }
 
 .back-button {
-  background: #e0dfe5;
-  color: #333;
+  background: @grayLight;
+  color: @purpleDark;
 }
 
 .back-button:hover {
-  box-shadow: 0 0 0.1rem #e0dfe5;
-  background-color: #e0dfe5 !important;
+  box-shadow: 0 0 0.1rem @grayLight;
+  background-color: @grayLight !important;
   color: #333 !important;
   opacity: 0.8 !important;
 }
@@ -149,7 +151,7 @@
 }
 
 .form-text {
-  color: rgba(136, 136, 136);
+  color: @grayDark;
 }
 
 

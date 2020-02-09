@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@import "../../views/resources/css/variables.less";
+
 .wrap {
   .left_navigator {
     position: absolute;
@@ -21,14 +23,14 @@
     bottom: 0;
     height: 100%;
     width: 100px;
-    background-color: white;
+    background-color: @white;
 
     .navigator_icon {
       > div {
         width: 100px;
         height: 80px;
         padding: 35px 22px;
-        background-color: white;
+        background-color: @white;
         position: relative;
 
         span {
@@ -40,7 +42,7 @@
       }
 
       .active_panel {
-        background: rgba(32, 181, 172, 1);
+        background: @purple;
       }
     }
 
@@ -66,7 +68,7 @@
       span {
         font-size: 16px;
         font-weight: 400;
-        color: #666666;
+        color: @purple;
         margin-top: 13px;
       }
     }

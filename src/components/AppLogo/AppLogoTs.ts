@@ -20,7 +20,7 @@ import appConfig from '@/../config/app.conf.json'
 
 // import logo as an image
 // @ts-ignore
-import logo from '@/views/resources/img/window/windowNemLogo.png'
+import logo from '@/views/resources/symbol_from_nem.png'
 
 @Component
 export class AppLogoTs extends Vue {

@@ -1,3 +1,6 @@
+
+@import "variables";
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -87,11 +90,11 @@ input {
 }
 
 input::placeholder {
-  color: #999;
+  color: @grayDark;
 }
 
 #app {
-  background-color: #eee;
+  background-color: @white;
   height: 100%;
   overflow: hidden;
 }
@@ -164,7 +167,7 @@ input::placeholder {
   p {
     font-size: 16px;
     font-weight: 400;
-    color: #CCCCCC;
+    color: @border;
     white-space: nowrap;
   }
 }
@@ -173,10 +176,10 @@ input::placeholder {
 .white_wrap {
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, .3);
+  background: @blackTransparent;
   opacity: .6;
   position: absolute;
-  color: #000;
+  color: @black;
   font-size: 40px;
   text-align: center;
   line-height: 500px;
@@ -191,20 +194,20 @@ input::placeholder {
 
 ::-webkit-scrollbar-track {
   border-radius: 5px;
-  background-color: #fdf8f5;
+  background-color: @whiteDark;
 }
 
 ::-webkit-scrollbar-thumb {
   border-radius: 5px;
-  background-color: rgba(77, 194, 191, 1);
+  background-color: @purple;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(77, 194, 191, 1);
+  background-color: @purple;
 }
 
 ::-webkit-scrollbar-thumb:active {
-  background-color: rgba(77, 194, 191, 1);
+  background-color: @purple;
   cursor: pointer;
 }
 
@@ -232,7 +235,7 @@ textarea {
 
 .topo_graph_container {
   .tooltip {
-    box-shadow: 0 0 5px #e0e0e0;
+    box-shadow: 0 0 5px @boxShadow;
     padding: 20px;
     max-width: 700px !important;
     word-break: break-all;
@@ -240,15 +243,15 @@ textarea {
     overflow: unset;
     white-space: normal;
     height: auto;
-    background-color: white;
-    color: #222222;
+    background-color: @white;
+    color: @purpleLight;
   }
 }
 
 
 .not_allowed {
-  color: #999 !important;
-  background-color: #cccccc !important;
+  color: @grayDark !important;
+  background-color: @grayLight !important;
   cursor: not-allowed !important;
 }
 
@@ -268,7 +271,7 @@ textarea {
   .ivu-notice-notice {
     width: 100%;
     height: auto;
-    background: black;
+    background: @black;
     display: flex;
     align-items: center;
     word-break: break-all;
@@ -290,7 +293,7 @@ textarea {
       max-width: 500px;
       width: auto;
       height: auto;
-      color: white;
+      color: @white;
       overflow: unset;
       line-height: 24px !important;
       font-size: 16px !important;
@@ -300,7 +303,7 @@ textarea {
 
     .ivu-notice-notice-close {
       i {
-        color: white;
+        color: @white;
 
       }
     }
@@ -323,18 +326,18 @@ textarea {
   .ivu-input {
     border: none;
     border-radius: 0;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid @border;
   }
 
   .ivu-input:focus {
     box-shadow: none;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid @border;
   }
 
   .input_point {
     input {
       border: none;
-      border-bottom: 1px solid #ccc;
+      border-bottom: 1px solid @border;
     }
   }
 }
@@ -344,12 +347,12 @@ textarea {
 }
 
 .url_text {
-  color: #999999;
+  color: @grayDark;
   cursor: pointer;
 }
 
 .url_text:hover {
-  color: #1FB6AC;
+  color: @purple;
 }
 
 .ivu-modal-header-inner {
@@ -369,12 +372,12 @@ textarea {
 }
 
 .url_text {
-  color: #999999;
+  color: @grayDark;
   cursor: pointer;
 }
 
 .url_text:hover {
-  color: #1FB6AC;
+  color: @purple;
 }
 
 .ivu-modal-header-inner {
@@ -411,11 +414,11 @@ textarea {
     border: none;
   }
   .ivu-btn-primary {
-    background-color: #1FB6AC !important;
+    background-color: @purple !important;
     border: none !important;
   }
 }
 
 .xym-outline {
-  box-shadow: 0 0.01rem 0.15rem 0.01rem #a66bf96b;
+  box-shadow: 0 0.01rem 0.15rem 0.01rem @boxShadow;
 }
