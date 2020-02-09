@@ -1,24 +1,20 @@
-.informationWrap {
-  width: 1765px;
+.information-main-container {
+  position: relative;
+  width: 100%;
   height: 100%;
-  border-radius: 8px;
-  background-color: white;
+  padding: 0.2rem 0 0 0.2rem;
+  display: grid;
+  grid-template-columns: 6.2rem auto;
+  grid-template-rows: 100%;
+  overflow: hidden;
 
   .left_article_list {
-    height: calc(100% - 125px);
-    position: absolute;
-    top: 105px;
-    padding: 20px 10px;
-    left: 0;
-    background-color: white;
-    width: 750px;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
 
     .list_container {
       height: 100%;
-      padding: 0 10px;
-      padding-right: 15px;
-      width: 700px;
-
 
       .load_all_data {
         text-align: center;
@@ -27,7 +23,7 @@
     }
 
     .article_summary_item {
-      margin-left: 40px;
+      margin-left: 0.1rem;
       padding: 35px 32px;
       margin-bottom: 15px;
       width: 580px;
@@ -102,11 +98,8 @@
   }
 
   .right_article_detail {
-    position: absolute;
-    right: 65px;
-    top: 0;
-    padding: 39px 20px 59px 40px;
-    width: 1020px;
+    padding: 0 0.25rem 0 0.4rem;
+    width: 100%;
     height: 100%;
     background: white;
 

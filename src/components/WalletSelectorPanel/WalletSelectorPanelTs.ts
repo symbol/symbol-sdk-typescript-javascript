@@ -15,13 +15,13 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Mosaic, MosaicId, Account, Password, NetworkType} from 'nem2-sdk'
+import {Mosaic, MosaicId, NetworkType} from 'nem2-sdk'
 import {ValidationProvider} from 'vee-validate'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
-import {AppWallet, AppWalletType} from '@/core/database/models/AppWallet'
+import {AppWalletType} from '@/core/database/models/AppWallet'
 import {WalletService} from '@/services/WalletService'
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 
@@ -53,7 +53,6 @@ import ModalFormSubWalletCreation from '@/views/modals/ModalFormSubWalletCreatio
     knownWallets: 'wallet/knownWallets',
     currentWalletMosaics: 'wallet/currentWalletMosaics',
     networkMosaic: 'mosaic/networkMosaic',
-    networkMosaicTicker: 'mosaic/networkMosaicTicker',
   })}})
 export class WalletSelectorPanelTs extends Vue {
   /**
@@ -94,12 +93,6 @@ export class WalletSelectorPanelTs extends Vue {
    * @var {MosaicId}
    */
   public networkMosaic: MosaicId
-
-  /**
-   * Currency mosaic's ticker
-   * @var {string}
-   */
-  public networkMosaicTicker: string
 
   /**
    * Wallets repository

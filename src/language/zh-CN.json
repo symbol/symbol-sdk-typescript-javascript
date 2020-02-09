@@ -183,7 +183,7 @@
   "transmittable": "可传输",
   "variable_supply": "可变供应量",
   "duration_permanent": "是否永久存在",
-  "other_information": "其他信息",
+  "Information": "信息",
   "duration": "持续时间",
   "enter_the_number_of_blocks_integer": "输入块数（整数）",
   "enter_the_number_of_blocks": "输入持续租用马赛克的块数（整数）,1个块=1XEM",

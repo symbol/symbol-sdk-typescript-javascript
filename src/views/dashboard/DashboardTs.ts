@@ -25,13 +25,13 @@ import AccountBalancesPanel from '@/components/AccountBalancesPanel/AccountBalan
 // @ts-ignore
 import NetworkStatisticsPanel from '@/components/NetworkStatisticsPanel/NetworkStatisticsPanel.vue'
 // @ts-ignore
-import RouterTabList from '@/components/RouterTabList/RouterTabList.vue'
+import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue'
 
 @Component({
   components: {
     AccountBalancesPanel,
     NetworkStatisticsPanel,
-    RouterTabList,
+    NavigationTabs,
   },
 })
 export class DashboardTs extends Vue {

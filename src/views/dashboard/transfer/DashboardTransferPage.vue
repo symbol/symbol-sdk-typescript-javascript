@@ -1,23 +1,23 @@
 <template>
-  <div class="transaction_content secondary_page_animate">
-    <div class="left_container radius ">
+  <div class="transfer-container secondary_page_animate">
+    <div class="left-container scroll">
       <DisabledFormOverlay />
-      <div class="bottom_transfer_info scroll ">
-        <div class="multisig">
-          <FormTransferCreation />
-        </div>
-      </div>
+      <FormTransferCreation />
     </div>
-    <!--
-    <CollectionRecord :transaction-type="transferType.SENT" />
-    -->
+
+    <div class="right-container">
+      CollectionRecord component
+      <!--
+      <CollectionRecord :transaction-type="transferType.SENT" />
+      -->
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 // @ts-ignore
 import {DashboardTransferPageTs} from '@/views/dashboard/transfer/DashboardTransferPageTs.ts'
-import "./DashboardTransferPage.less";
+import './DashboardTransferPage.less'
 
 export default class DashboardTransferPage extends DashboardTransferPageTs {}
 </script>

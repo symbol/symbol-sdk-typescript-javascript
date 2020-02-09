@@ -1,7 +1,7 @@
 <template>
   <div class="top_network_info radius">
     <div class="top_wallet_info">
-      <div class="netWork radius">
+      <div class="xym-outline wallet-info-tile">
         <div class="title">
           <span class="title_txt">{{ $t('accounts') }}</span>
         </div>
@@ -10,7 +10,7 @@
           <AnimatedNumber v-model="countAccounts" />
         </span>
       </div>
-      <div class="block_height radius">
+      <div class="xym-outline wallet-info-tile">
         <div class="title">
           <span class="title_txt">{{ $t('blocks') }}</span>
         </div>
@@ -19,7 +19,7 @@
           <AnimatedNumber v-model="currentHeight" />
         </span>
       </div>
-      <div class="amount radius">
+      <div class="xym-outline wallet-info-tile">
         <div class="title">
           <span class="title_txt">{{ $t('transactions') }}</span>
         </div>
@@ -28,7 +28,7 @@
           <AnimatedNumber v-model="countTransactions" />
         </span>
       </div>
-      <div class="block_time radius">
+      <div class="xym-outline wallet-info-tile">
         <div class="title">
           <span class="title_txt">
             {{ $t('nodeUrl') }}:&nbsp;

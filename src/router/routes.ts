@@ -31,15 +31,11 @@ export const routes: AppRoute[] = [
         name: 'accounts',
         // @ts-ignore
         component: () => import('@/views/layout/RouterPage.vue'),
-        meta: { protected: false },
+        meta: {
+          protected: false,
+          hideFromMenu: true,
+        },
         children: [
-          {
-            path: 'login',
-            name: 'accounts.login',
-            meta: { protected: false },
-            // @ts-ignore
-            component: () => import('@/views/accounts/LoginPage.vue'),
-          },
           {
             path: 'create',
             name: 'accounts.importAccount.importStrategy',
@@ -195,6 +191,7 @@ export const routes: AppRoute[] = [
       {
         path: '/wallets',
         name: 'wallets',
+        redirect: '/walletDetails',
         meta: {
           protected: true,
           clickable: true,
@@ -203,6 +200,18 @@ export const routes: AppRoute[] = [
         },
         // @ts-ignore
         component: () => import('@/views/wallets/Wallets.vue'),
+        children: [
+          {
+            path: '/walletDetails',
+            name: 'wallet.details',
+            meta: {
+              protected: true,
+              title: 'information',
+            },
+            // @ts-ignore
+            component: () => import('@/components/WalletDetails/WalletDetails.vue'),
+          },
+        ],
       }, {
         path: '/mosaics',
         name: 'mosaics',
@@ -387,5 +396,11 @@ export const routes: AppRoute[] = [
       },
     ],
     /// end-region PageLayout children
+  }, {
+    path: 'login',
+    name: 'accounts.login',
+    meta: { protected: false },
+    // @ts-ignore
+    component: () => import('@/views/accounts/LoginPage.vue'),
   },
 ]

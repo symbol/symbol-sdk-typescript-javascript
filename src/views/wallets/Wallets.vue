@@ -1,10 +1,16 @@
 <template>
-  <div class="main-container">
-    <div class="left-container">
+  <div class="wallets-main-container">
+    <div class="left-container xym-outline">
       <WalletSelectorPanel />
     </div>
-    <div class="right-container">
-      <WalletDetails :wallet="currentWallet" />
+    <div class="right-container xym-outline">
+      <div class="header-container">
+        <NavigationTabs direction="horizontal" :parent-route-name="parentRouteName" />
+      </div>
+
+      <div class="bottom-container">
+        <router-view />
+      </div>
     </div>
   </div>
 </template>

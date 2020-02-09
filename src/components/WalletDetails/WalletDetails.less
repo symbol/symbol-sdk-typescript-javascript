@@ -2,34 +2,38 @@
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-rows: 3.5rem auto;
+  grid-template-rows: 100%;
   background-color: #fff;
-  padding: 25px 0 0 0;
-  display: block;
-  clear: both;
-  float: left;
   border-radius: 0.04rem;
   overflow: hidden;
-
+  
   .wallet-detail-inner-container {
     width: 100%;
-    padding: 0 0 0 20px;
+    height: 100%;
+    padding: 0.25rem;
     margin: 0;
     display: grid;
     grid-template-columns: 9rem auto;
 
     .left-container {
-      background-color: white;
-      display: inline-grid;
-      font-size: 16px;
-      font-weight: 400;
-      color: #222;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
 
       .left-container-title {
         font-size: 20px;
         color: #222;
         font-weight: 500;
       }
+
+      .wallet-details-grid {
+        background-color: white;
+        display: inline-grid;
+        font-size: 0.16rem;
+        font-weight: 400;
+        color: #222;
+        grid-auto-rows: 0.5rem;
+      }      
 
       .detail-row {
         grid-row: span 1;
@@ -66,4 +70,9 @@
       border-radius: 0.04rem;
     }
   }
+}
+
+.edit-wallet-name {
+  margin-left: 0.18rem;
+  cursor: pointer;
 }

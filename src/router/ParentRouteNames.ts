@@ -24,4 +24,5 @@ export enum ParentRouteNames {
   'mosaics' = 'mosaics',
   'namespaces' = 'namespaces',
   'settings' = 'settings',
+  'wallets' = 'wallets',
 }

@@ -1,29 +1,29 @@
 <template>
-  <div class="communityPanelWrap clear">
-    <div class="communityPanel">
-      <div class="communityPanelNav left">
-        <ul class="navList clear">
-          <li
-            v-for="(item,index) in communityPanelNavConfig"
-            :key="index"
-            :class="[ item.active ? 'active' : '','left',item.disabled ? 'disabled' : '' ]"
-            @click="$router.push({name: item.to})"
-          >
-            {{ $t(item.name) }}
-          </li>
-        </ul>
+  <div class="main-container">
+    <div class="inner-container xym-outline">
+      <div class="top-container">
+        <h1 class="page-title">
+          {{ $t('news') }}
+        </h1>
       </div>
-      <div class="contentPanel radius">
-        <router-view />
+      <div class="bottom-container">
+        <Information />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-// @ts-ignore
-import {CommunityTs} from '@/views/community/CommunityTs.ts'
-import './Community.less'
+// external dependencies
+import {Component, Vue} from 'vue-property-decorator'
 
-export default class Community extends CommunityTs {}
+// child components
+import Information from '@/views/community/information/Information.vue'
+
+@Component({ components: {Information} })
+export default class Community extends Vue {}
 </script>
+
+<style lang="less" scoped>
+@import './Community.less';
+</style>

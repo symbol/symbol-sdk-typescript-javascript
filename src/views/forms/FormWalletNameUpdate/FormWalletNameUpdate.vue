@@ -1,29 +1,31 @@
 <template>
   <div>
-    <FormWrapper class="wallet-name-update-container">
-      <ValidationObserver v-slot="{ handleSubmit }">
+    <FormWrapper>
+      <ValidationObserver v-slot="{ handleSubmit }" class="wallet-name-update-container">
         <form
           class="form-line-container mt-3"
           onsubmit="event.preventDefault()"
           @keyup.enter="handleSubmit(onSubmit)"
         >
+          <FormLabel>{{ $t('form_label_new_wallet_name') }}</FormLabel>
           <div class="inline-container">
             <ValidationProvider
+              v-slot="{ errors }"
               class="full-width-item-container"
               tag="div"
               mode="lazy"
               vid="name"
               :name="$t('name')"
               :rules="validationRules.accountWalletName"
-              v-slot="{ errors }"
             >
-              <FormLabel>{{ $t('form_label_new_wallet_name') }}</FormLabel>
               <ErrorTooltip :errors="errors">
-                <input type="text"
-                      name="name"
-                      class="full-width-item-container input-size input-style"
-                      v-model="formItems.name"
-                      v-focus />
+                <input
+                  v-model="formItems.name"
+                  v-focus
+                  type="text"
+                  name="name"
+                  class="full-width-item-container input-size input-style"
+                >
               </ErrorTooltip>
             </ValidationProvider>
 
@@ -58,7 +60,7 @@ export default class FormWalletNameUpdate extends FormWalletNameUpdateTs {}
   display: block;
   width: 100%;
   clear: both;
-  min-height: 1rem;
+  min-height: 1.4rem;
 }
 </style>
 

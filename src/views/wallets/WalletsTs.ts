@@ -18,10 +18,13 @@ import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
+import {ParentRouteNames} from '@/router/ParentRouteNames'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {WalletService} from '@/services/WalletService'
 
 // child components
+// @ts-ignore
+import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue'
 // @ts-ignore
 import WalletSelectorPanel from '@/components/WalletSelectorPanel/WalletSelectorPanel.vue'
 // @ts-ignore
@@ -29,8 +32,10 @@ import WalletDetails from '@/components/WalletDetails/WalletDetails.vue'
 // @ts-ignore
 import WalletActions from '@/components/WalletActions/WalletActions.vue'
 
+
 @Component({
   components: {
+    NavigationTabs,
     WalletSelectorPanel,
     WalletDetails,
     WalletActions,
@@ -60,6 +65,12 @@ export class WalletsTs extends Vue {
    * @var {WalletService}
    */
   public service: WalletService
+
+  /**
+   * Argument passed to the navigation component
+   * @var {ParentRouteNames}
+   */
+  public parentRouteName: string = ParentRouteNames.wallets
 
   public created() {
     this.service = new WalletService(this.$store)

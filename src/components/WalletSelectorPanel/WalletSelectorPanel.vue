@@ -1,78 +1,70 @@
 <template>
-  <div class="walletSwitchWrap">
-    <div class="walletSwitchHead">
-      <p class="tit">
-        {{ $t('Wallet_management') }}
-      </p>
-      <!--
-      <p class="back-up pointer" @click="displayMnemonicDialog">
-        {{ $t('backup_mnemonic') }}
-      </p>
-      -->
+  <div class="wallet-switch-container">
+    <div class="wallet-switch-header-container">
+      <div class="wallet-switch-header-left-container">
+        <h1 class="section-title">
+          {{ $t('Wallet_management') }}
+        </h1>
+      </div>
+      <div class="wallet-switch-header-right-container">
+        <span class="back-up pointer">
+          {{ $t('backup_mnemonic') }}
+          <!-- @click="displayMnemonicDialog" -->
+        </span>
+      </div>
     </div>
 
-    <div ref="walletScroll" class="walletList scroll">
-      <div v-for="(item, index) in currentWallets" :key="index" class="wallet_scroll_item">
-        <div
-          ref="walletsDiv"
-          :class="{
-            'walletItem': true,
-            'radius': true,
-            'walletItem_bg_0': isActiveWallet(item),
-            'walletItem_bg_2': !isActiveWallet(item),
-          }"
-          @click="currentWalletIdentifier = item.identifier"
-        >
-          <Row>
-            <i-col span="15">
-              <div>
-                <p class="walletName">
-                  {{ item.name }}
-                </p>
-                <p class="walletAmount overflow_ellipsis">
-                  <div class="amount">
-                    <AmountDisplay :amount="networkMosaicBalance" />
-                  </div>
-                  <div>{{ networkMosaicTicker }}</div>
-                </p>
-              </div>
-            </i-col>
-            <i-col span="9">
-              <div @click.stop>
-                <div class="walletTypeTxt">
-                  {{ item.isMultisig? $t('Multisig') : '' }}
-                </div>
-                <div class="options">
-                  <span class="mosaics">
-                    <Icon type="logo-buffer" />
-                  </span>
-                  <!--
-                  <span class="delete" @click="onClickDelete(item)">
-                    <Icon type="md-trash" />
-                  </span>
-                  -->
-                </div>
-              </div>
-            </i-col>
-          </Row>
+    <div class="wallet-switch-body-container scroll">
+      <div
+        v-for="(item, index) in currentWallets"
+        :key="index"
+        :class="[
+          'wallet-tile',
+          isActiveWallet(item) ? 'active-background' : 'inactive-background',
+          'pointer',
+        ]"
+        @click="currentWalletIdentifier = item.identifier"
+      >
+        <div class="wallet-tile-inner-container">
+          <div class="wallet-tile-upper-container">
+            <div class="wallet-name">
+              <span>{{ item.name }}</span>
+            </div>
+          </div>
+
+          <div class="wallet-tile-lower-container">
+            <div class="wallet-amount">
+              <AmountDisplay :amount="networkMosaicBalance" :show-ticker="true" /> 
+            </div>
+            <div class="wallet-icons">
+              <span class="wallet-icon">
+                {{ item.isMultisig ? $t('Multisig') : '' }}
+              </span>
+              <span class="wallet-icon">
+                icon
+                <!-- @TODO: seed / privateKey -->
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="walletMethod">
-      <button type="button" 
-              class="button-style validation-button right-side-button plus-button" 
-              @click="hasAddWalletModal = true">
-        <Icon type="md-add-circle" />
-        <span>&nbsp{{ $t('button_add_wallet') }}</span>
+    <div class="wallet-switch-footer-container">
+      <button
+        type="button" 
+        class="button-add-wallet"
+        @click="hasAddWalletModal = true"
+      >
+        {{ $t('button_add_wallet') }}
       </button>
     </div>
 
     <ModalFormSubWalletCreation
       v-if="hasAddWalletModal"
       :visible="hasAddWalletModal"
-      @close="hasAddWalletModal = false" />
-
+      @close="hasAddWalletModal = false"
+    />
   </div>
 </template>
 

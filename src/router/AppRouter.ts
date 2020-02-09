@@ -95,7 +95,7 @@ export class AppRouter extends Router {
       case ParentRouteNames.mosaics:
       case ParentRouteNames.namespaces:
       case ParentRouteNames.settings:
-
+      case ParentRouteNames.wallets:
         if (!this.getParentRoute() || !this.getParentRoute().children) return null
         return this.getParentRoute().children
           .find(({name}) => name === parentRouteName) as AppRoute
@@ -113,9 +113,7 @@ export class AppRouter extends Router {
    */
   private getChildRoutes(parentRoute: AppRoute): AppRoute[] {
     if (!parentRoute.children) return []
-    return [...parentRoute.children]
-    // @ TODO: Replace by a Hidden prop on routes to hide if needed
-    // .filter(({meta}) => meta.clickable)  
+    return [...parentRoute.children].filter(({meta}) => !meta.hideFromMenu)  
   }
 }
 

@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 import {Component, Prop, Vue} from 'vue-property-decorator'
+import {mapGetters} from 'vuex'
 
-@Component
+@Component({
+  computed: {...mapGetters({
+    networkMosaicTicker: 'mosaic/networkMosaicTicker',
+  })},
+})
 export class AmountDisplayTs extends Vue {
 
   @Prop({
@@ -25,6 +30,17 @@ export class AmountDisplayTs extends Vue {
   @Prop({
     default: 0
   }) decimals: number
+
+  @Prop({
+    default: false,
+  }) showTicker: false
+
+
+  /**
+   * Currency mosaic's ticker
+   * @var {string}
+   */
+  public networkMosaicTicker: string
 
 /// region computed properties getter/setter
   get integerPart(): string {

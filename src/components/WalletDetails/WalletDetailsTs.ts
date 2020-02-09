@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
-
-// internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
+// external dependencies
+import {Component, Vue} from 'vue-property-decorator'
+import {mapGetters} from 'vuex'
 
 // child components
 // @ts-ignore
@@ -41,13 +40,11 @@ import WalletDetailsDisplay from '@/components/WalletDetailsDisplay/WalletDetail
     WalletContactQR,
     WalletDetailsDisplay,
   },
+  computed: {...mapGetters({
+    wallet: 'wallet/currentWallet',
+  })},
 })
 export class WalletDetailsTs extends Vue {
-
-  @Prop({
-    default: null
-  }) wallet: WalletsModel
-
   /**
    * Name form visibility
    * @type {boolean}

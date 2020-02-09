@@ -17,7 +17,7 @@
           target-asset="namespace"
         />
 
-        <div class="form-line-container fixed-full-width-item-container mt-3">
+        <div class="form-line-container fixed-full-width-item-container checkboxes">
           <Checkbox v-model="formItems.transferable">
             {{ $t('transmittable') }}
           </Checkbox>
@@ -54,3 +54,9 @@
 import {FormMosaicDefinitionTransactionTs} from './FormMosaicDefinitionTransactionTs'
 export default class FormMosaicDefinitionTransaction extends FormMosaicDefinitionTransactionTs {}
 </script>
+
+<style lang="less" scoped>
+.checkboxes {
+  margin: 0.25rem 0 0.3rem 0;
+}
+</style>

@@ -186,7 +186,7 @@
   "transmittable": "Transferable",
   "variable_supply": "Supply mutable",
   "duration_permanent": "Unlimited duration",
-  "other_information": "Information",
+  "Information": "Information",
   "duration": "Duration",
   "enter_the_number_of_blocks_integer": "Enter the number of blocks",
   "enter_the_number_of_blocks": "Enter the blocks amount to rent the mosaic, 1 block = 1XEM.",
@@ -399,7 +399,7 @@
   "Import_mnemonic_operations": "Import mnemonic operations",
   "Imported_wallet_successfully": "Imported wallet successfully",
   "Import_private_key_operation": "Import private key operation",
-  "Wallet_management": "Wallet management",
+  "Wallet_management": "My wallets",
   "Public_account": "PUBLIC",
   "Private_account": "PRIVATE",
   "delete": "Delete",
@@ -982,6 +982,5 @@
   "modal_title_enter_wallet_name": "Configure your new wallet",
   "child_wallet": "I want to create a child wallet for my account",
   "privatekey_wallet": "I want to import an existing wallet private key",
-  "Select_a_namespace": "Select a namespace",
-  "button_add_wallet": "Add or Import a Wallet"
+  "Select_a_namespace": "Select a namespace"
 }

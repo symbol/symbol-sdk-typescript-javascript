@@ -17,7 +17,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
-import {ArticleEntry, CommunityService} from '@/services/CommunityService'
+import {ArticleEntry} from '@/services/CommunityService'
 
 @Component({computed: {...mapGetters({
   currentArticle: 'community/currentArticle',
@@ -49,7 +49,7 @@ export class InformationTs extends Vue {
    * @param {string} title
    * @return {void}
    */
-  public switchArticle(title: string) {
-    this.$store.dispatch('community/SET_CURRENT_ARTICLE', title)
+  public switchArticle(article: ArticleEntry) {
+    this.$store.dispatch('community/SET_CURRENT_ARTICLE', article)
   }
 }

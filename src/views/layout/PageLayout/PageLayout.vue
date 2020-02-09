@@ -23,18 +23,18 @@
       </div>
     </div>
     <transition name="fade" mode="out-in">
-      <router-view />
+      <div class="main-outer-container">
+        <router-view />
+      </div>
     </transition>
   </div>
 </template>
 
 <script lang="ts">
-import {PageLayoutTs} from './PageLayoutTs'
+import { PageLayoutTs } from './PageLayoutTs'
 import './PageLayout.common.less'
 import './PageLayout.mac.less'
 import './PageLayout.win32.less'
 
-export default class PageLayout extends PageLayoutTs {
-
-}
+export default class PageLayout extends PageLayoutTs {}
 </script>

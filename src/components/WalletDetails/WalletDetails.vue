@@ -3,26 +3,26 @@
     <div class="wallet-detail-inner-container">
       <div class="left-container">
         <span class="left-container-title">{{ $t('Basic_information') }}</span>
+        <div class="wallet-details-grid  mt-3">
+          <div class="detail-row">
+            <WalletNameDisplay 
+              :wallet="wallet"
+              :editable="true"
+              @update="hasNameForm = true"
+            />
+          </div>
 
-        <div class="detail-row">
-          <WalletNameDisplay 
-            :wallet="wallet"
-            :editable="true"
-            @update="hasNameForm = true"
-          />
-        </div>
+          <div class="detail-row">
+            <ImportanceScoreDisplay :wallet="wallet" />
+          </div>
 
-        <div class="detail-row">
-          <ProtectedPrivateKeyDisplay :wallet="wallet" />
-        </div>
+          <div class="detail-double-row">
+            <WalletDetailsDisplay :wallet="wallet" />
+          </div>
 
-        <div class="detail-row">
-          <ImportanceScoreDisplay :wallet="wallet" />
-        </div>
-
-        <div class="detail-double-row">
-          <WalletDetailsDisplay :wallet="wallet" />
-        </div>
+          <div class="detail-row">
+            <ProtectedPrivateKeyDisplay :wallet="wallet" />
+          </div>
         <!--
             <p>
               <span v-if="isMultisig || isCosignatory" class="tit">{{ $t('Wallet_type') }}</span>
@@ -32,14 +32,10 @@
               </span>
             </p>
             -->
+        </div>
       </div>
       <div class="right-container">
         <WalletContactQR :wallet="wallet" />
-      </div>
-    </div>
-    <div class="wallet-actions-outer-container">
-      <div class="wallet-actions-inner-container">
-        WALLET ACTIONS HERE
       </div>
     </div>
   </div>

@@ -14,22 +14,20 @@
  * limitations under the License.
  */
 .top_network_info {
-  margin: 0 0 15px;
-  padding: 20px 0;
-  background-color: white;
+  background-color: transparent;
+  justify-content: space-between;
 
   .number-grow-warp {
     display: inline-block;
   }
 
   .top_wallet_info {
-    padding-left: 30px;
     display: flex;
+    justify-content: space-between;
 
     > div {
       width: 295px;
       height: 126px;
-      margin-right: 30px;
       padding: 10px 0 0 30px;
 
       img {
@@ -45,7 +43,7 @@
         .title_txt {
           font-size: 18px;
           line-height: 26px;
-          color: rgba(255, 255, 255);
+          color:  #5200c6;
         }
       }
     }
@@ -55,50 +53,10 @@
       font-weight: 400;
       width: 180px;
       display: inline-block;
-      color: rgba(255, 255, 255);
+      color:  #5200c6;
       text-align: right;
       line-height: 40px;
       margin-left: 10px;
-    }
-
-    .netWork {
-      background: linear-gradient(90deg, #FF963F 0%, #FACA5D 100%);
-      box-shadow: 0 2px 10px 0 rgba(245, 168, 28, 0.3);
-    }
-
-    .block_height {
-      background: linear-gradient(90deg, #666BFA 0%, #37ABDE 100%);
-      box-shadow: 0 2px 10px 0 rgba(55, 171, 222, 0.3);
-
-
-    }
-
-    .block_time {
-      background: linear-gradient(90deg, #E0564C 0%, #FF9F98 100%);
-      box-shadow: 0 2px 10px 0 rgba(55, 171, 222, 0.3);
-
-      .title {
-        span:nth-of-type(2) {
-          display: inline-block;
-          font-size: 46px;
-          font-weight: 400;
-          color: rgba(255, 255, 255);
-          line-height: 55px;
-          vertical-align: top;
-          margin-left: 95px;
-        }
-      }
-
-      .txt_info2 {
-        font-size: 18px;
-        font-weight: 400;
-        color: rgba(255, 255, 255);
-      }
-    }
-
-    .amount {
-      background: linear-gradient(90deg, #1FB6AC 0%, #4AE0B8 100%);
-      box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.1);
     }
   }
 }

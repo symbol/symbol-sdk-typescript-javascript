@@ -52,7 +52,7 @@ export default {
       const callback = async () => {
         // fetch news
         await dispatch('FETCH_ARTICLES')
-        commit('currentArticle', [...state.articles].shift().title)
+        commit('currentArticle', [...state.articles].shift())
         commit('setInitialized', true)
       }
       await Lock.initialize(callback, {commit, dispatch, getters})

@@ -35,4 +35,5 @@ export interface RouteMeta {
   activeIcon?: unknown
   active?: boolean
   nextPage?: string
+  hideFromMenu?: boolean
 }

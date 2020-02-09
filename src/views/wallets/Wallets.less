@@ -1,20 +1,22 @@
-.main-container {
-  grid-template-columns: 4.4rem auto;
-  grid-template-rows: 100%;
+.wallets-main-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0.2rem 0 0.35rem 0.2rem;
   display: grid;
-  margin: 20px;
-  height: calc(100% - 55px);
-  background-color: white;
+  grid-template-columns: 4.5rem 13rem 0.25rem;
+  grid-template-rows: 100%;
+  grid-column-gap: 0.25rem;
 }
 
 .left-container {
   border-radius: 4px;
-  background-color: lightsalmon;
 }
 
 .right-container {
-  background-color: #eee;
-  padding-left: 25px;
-  border-radius: 0 4px 4px 0;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 0.6rem 100%;
+  background-color: white;
+  overflow: hidden;
 }
-

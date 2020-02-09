@@ -1,9 +1,7 @@
 <template>
   <div class="main-container">
-    <div class="header-outer-container">
-      <div class="header-inner-container">
-        <NavigationTabs direction="horizontal" :parent-route-name="parentRouteName" />
-      </div>
+    <div class="header-container">
+      <NavigationTabs direction="horizontal" :parent-route-name="parentRouteName" />
     </div>
 
     <div class="body-container">

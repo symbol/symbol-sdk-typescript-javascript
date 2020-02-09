@@ -186,7 +186,7 @@
     "transmittable": "転送可",
     "variable_supply": "可変供給量",
     "duration_permanent": "無期限",
-    "other_information": "情報",
+    "Information": "情報",
     "duration": "期間",
     "enter_the_number_of_blocks_integer": "ブロック数を入力してください",
     "enter_the_number_of_blocks": "モザイクをレンタルするブロック数を入力してください。1ブロック=1XEM",

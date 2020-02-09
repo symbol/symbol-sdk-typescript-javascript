@@ -2,6 +2,7 @@
   <span>
     <span>{{ integerPart }}</span>
     <span class="lighter-color">{{ fractionalPart }}</span>
+    <span v-if="showTicker" class="ticker">&nbsp;{{ networkMosaicTicker }}</span>
   </span>
 </template>
 

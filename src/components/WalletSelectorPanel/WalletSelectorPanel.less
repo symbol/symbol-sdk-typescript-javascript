@@ -1,226 +1,104 @@
-.walletSwitchWrap {
-    box-sizing: border-box;
-    width: 440px;
-    height: 100%;
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 4px;
-    overflow-y: auto;
-    overflow-x: hidden;
-  
-    .walletSwitchHead {
-      height: 30px;
-      line-height: 30px;
-      position: relative;
-      display: flex;
-      justify-content: space-between;
-  
+.wallet-switch-container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 0.6rem auto 1rem;
+  overflow: hidden;
+  background-color: white;
+
+  .wallet-switch-header-container {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    grid-template-rows: 100%;
+
+    .wallet-switch-header-left-container {
+      padding: 0.17rem 0 0.4rem 0.2rem;
+    }
+
+    .wallet-switch-header-right-container {
+      text-align: right;
+      padding: 0.19rem 0.2rem 0 0;
+
       .back-up {
-        color: #26B4B0;
-      }
-  
-      .tit {
-        font-size: 20px;
-        font-weight: bold;
-        color: #222222;
-      }
-  
-      .changeNetType {
-        height: 30px;
-        line-height: 30px;
-        position: absolute;
-        right: 0;
-        top: 0;
-        z-index: 999;
-  
-        .ivu-select-selection {
-          height: 30px;
-          line-height: 30px;
-          border: 1px solid #CCCCCC !important;
-  
-          .ivu-select-selected-value {
-            padding-right: 30px;
-          }
-        }
       }
     }
-  
-    .walletMethod {
-      width: 360px;
-      height: 40px;
-      padding: 30px 0;
-      margin: 45px auto 0;
-  
-      .createBtn,
-      .importBtn {
-        height: 40px;
-        line-height: 40px;
-        font-size: 16px;
-        text-align: center;
-        color: #777;
-  
-      }
-  
-      .createBtn:hover,
-      .importBtn:hover {
-        color: #26B4B0;
-      }
-  
-      .createBtn {
-        padding-right: 40px;
-        border-right: 1px solid #ddd;
-      }
-  
+  }
+
+  @activeColor:  #775282;
+  @passiveColor: #e4dce6;
+  @passiveTextColor: #73747a;
+
+  .wallet-switch-body-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-auto-rows: 0.8rem;
+    grid-row-gap: 0.2rem;
+
+    .active-background {
+      background-color: @activeColor;
+      color: white;
     }
-  
-    .walletList {
-      height: calc(100% - 150px);
-      width: 410px;
-      padding-top: 10px;
-  
-  
-      .walletItem {
-        width: 380px;
-        height: 100px;
-        color: white;
-        position: relative;
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
-        padding: 16px 0 0 28px;
-        margin-bottom: 20px;
-        cursor: pointer;
-        border-radius: 12px;
-  
-        .walletName {
-          font-size: 16px;
-          font-weight: 400;
-          color: white;
-          white-space: nowrap;
-          margin-bottom: 18px;
-        }
-  
-        .walletAmount {
-          font-size: 24px;
-          line-height: 24px;
-          font-weight: 400;
-          color: white;
-          white-space: nowrap;
-  
-          .tails {
-            height: 24px;
-            line-height: 24px;
-            font-weight: 400;
-            font-size: 16px;
-            color: white;
-            margin-left: 10px;
-          }
-        }
-      }
-  
-      .walletItem.active {
-        color: #FFFFFF;
-        background-size: 100% 100%;
-        height: 120px;
-        background-repeat: no-repeat;
-  
-  
-        .walletName {
-          color: #FFFFFF;
-          font-size: 16px;
-        }
-  
-        .walletAmount {
-          color: #FFFFFF;
-          font-size: 30px;
-          margin-top: 26px;
-  
-          .tails {
-            color: #FFFFFF;
-          }
-        }
-  
-        .walletTypeTxt {
-          color: #FFFFFF;
-        }
-      }
-    }
-  
-    .active:after {
-      display: none;
-    }
-  
-    .walletItem_bg_0 {
-      transition: width .2s;
-      background-image: url("../../views/resources/img/wallet/wallet-detail/walletDetailBgNormal1.png");
-      width: 390px !important;
-      position: relative;
-      box-shadow: 0 0 7px 0 rgba(20, 119, 149, 0.75);
-    }
-  
-    .walletItem_bg_0::after {
+
+    .active-background:after {
       display: block;
       position: absolute;
       width: 0;
       height: 0;
-      border: 10px solid transparent;
-      border-left-color: rgba(60, 107, 159);
-      right: -19px;
-      bottom: 40px;
-      content: '';
-  
+      border: 0.1rem solid transparent;
+      border-left-color: @activeColor;
+      right: -0.19rem;
+      bottom: 0.3rem;
+      content: "";
     }
-  
-    .walletItem_bg_0.active {
-      width: 400px !important;
+
+    .inactive-background {
+      background-color:  @passiveColor;
+      color: @passiveTextColor;
+    }
+
+    .wallet-tile {
+      margin: 0 .24rem;
       position: relative;
-      box-shadow: 0 0 7px 0 rgba(20, 119, 149, 0.75);
-    }
+      padding: .1rem .3rem;
+
+      .wallet-tile-inner-container {
+        display: grid;
+        width: 100%;
+        height: 100%;
+        display: grid;
+        grid-template-rows: 40% 60%;
+        grid-template-columns: 100%;
+
+        .wallet-tile-upper-container {
+          .wallet-name {
+          }
+        }
   
+        .wallet-tile-lower-container {
+          display: grid;
+          width: 100%;
+          height: 100%;
+          display: grid;
+          grid-template-rows: 100%;
+          grid-template-columns: 80% 20%;
+
+          .wallet-amount {
+          }
   
-    .walletItem_bg_1 {
-      transition: width .5s;
-      background-image: url("../../views/resources/img/wallet/wallet-detail/walletDetailBgNormal2.png");
-    }
-  
-    .walletItem_bg_1.active {
-      width: 400px !important;
-      position: relative;
-      box-shadow: 0 0 7px 0 rgba(227, 112, 49, 0.75);
-    }
-  
-  
-    .walletItem_bg_2 {
-      transition: width .1s;
-      background-image: url("../../views/resources/img/wallet/wallet-detail/walletDetailBgNormal3.png");
-    }
-  
-    .walletItem_bg_2.active {
-      width: 400px !important;
-      position: relative;
-      box-shadow: 0 0 7px 0 rgba(51, 45, 36.75);
-    }
-  
-    .options {
-      position: absolute;
-      top: 55px;
-      right: 20px;
-      display: flex;
-      justify-content: space-between;
-  
-      .mosaics {
-        margin-right: 20px;
-      }
-  
-      .mosaics,
-      .delete {
-        font-size: 18px;
-        opacity: .5;
-      }
-  
-      .mosaics:hover,
-      .delete:hover {
-        opacity: 1;
+          .wallet-icons {
+            .wallet-icon {
+            }
+          }
+        }
       }
     }
   }
-  
+
+  .wallet-switch-footer-container {
+    text-align: center;
+    padding-top: 0.3rem;
+  }
+}

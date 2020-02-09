@@ -1,5 +1,5 @@
 <template>
-  <div class="main-container radius">
+  <div class="settings-main-container radius">
     <div class="left-container">
       <NavigationTabs direction="vertical" :parent-route-name="parentRouteName" />
     </div>

@@ -1,6 +1,7 @@
 <template>
-  <div class="informationWrap secondary_page_animate">
-    <Spin v-if="!currentArticle"
+  <div class="information-main-container secondary_page_animate">
+    <Spin
+      v-if="!currentArticle"
       size="large" fix
       class="absolute"
     />
@@ -9,8 +10,8 @@
         <div
           v-for="(a,index) in latestArticles"
           :key="index"
-          :class="[ 'article_summary_item',a.isSelect ? 'selected' : '','pointer' ]"
-          @click="switchArticle(a.title)"
+          :class="[ 'article_summary_item', a.isSelect ? 'selected' : '','pointer' ]"
+          @click="switchArticle(a)"
         >
           <div class="title">
             {{ a.title }}
@@ -40,9 +41,10 @@
 <script lang="ts">
 // @ts-ignore
 import { InformationTs } from '@/views/community/information/InformationTs.ts'
-import './Information.less'
+
 export default class InputLock extends InformationTs {}
 </script>
 
 <style lang="less" scoped>
+@import './Information.less';
 </style>
