@@ -13,9 +13,11 @@
       </div>
     </div>
 
-    <div v-if="!!currentAccount" class="quit_account pointer" @click="logout">
-      <img src="@/views/resources/img/window/windowAccountQuit.png" alt="">
-      <span class="account_name overflow_ellipsis">{{ currentAccount.values.get('accountName') }}</span>
+    <div v-if="!!currentAccount" class="quit_account navigator-item" @click="logout">
+      <div class="body pointer">
+        <Icon :type="'md-log-out'" size="48" />
+        <div>{{ currentAccount.values.get('accountName') }}</div>
+      </div>
     </div>
   </div>
 </template>

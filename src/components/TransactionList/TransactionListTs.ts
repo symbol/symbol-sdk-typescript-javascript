@@ -142,7 +142,7 @@ export class TransactionListTs extends Vue {
    * Hook called when the component is mounted
    * @return {void}
    */
-  public async mounted() {
+  public async created() {
     this.service = new TransactionService(this.$store)
     this.refresh()
   }
@@ -155,9 +155,18 @@ export class TransactionListTs extends Vue {
   public get currentPageTransactions(): Transaction[] {
     const start = (this.currentPage - 1) * this.pageSize
     const end = this.currentPage * this.pageSize
+
+    console.log("get currentPageTransactions: confirmedTransactions: ", this.confirmedTransactions)
+    console.log("get currentPageTransactions: start: ", start)
+    console.log("get currentPageTransactions: end: ", end)
+
     return !this.confirmedTransactions || !this.confirmedTransactions.length 
         ? [] 
         : this.confirmedTransactions.slice(start, end)
+  }
+
+  public set currentPageTransactions(transactions: Transaction[]) {
+    this.confirmedTransactions = transactions
   }
 /// end-region computed properties getter/setter
 
@@ -174,7 +183,9 @@ export class TransactionListTs extends Vue {
     })
 
     // "confirmTransactions" is the only with setter! (others are one-way from store.)
-    if ('confirmed' === group) this.confirmedTransactions = transactions || []
+    if ('confirmed' === group) {
+      this.currentPageTransactions = transactions || []
+    }
   }
 
   /**

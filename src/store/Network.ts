@@ -34,8 +34,7 @@ import networkConfig from '../../config/network.conf.json';
  * @param {number[]} heights 
  * @return {BlockRangeType[]}
  */
-const getBlockRanges = (heights: number[]): BlockRangeType[] => {
-  let ranges: BlockRangeType[] = []
+const getBlockRanges = (heights: number[], ranges: BlockRangeType[] = []): BlockRangeType[] => {
   const pageSize: number = 100
   const min: number = Math.min(...heights)
 
@@ -45,7 +44,7 @@ const getBlockRanges = (heights: number[]): BlockRangeType[] => {
   // - take remaining block heights and run again
   heights = heights.filter(height => height > min + pageSize)
   if (heights.length) {
-    ranges = ranges.concat(getBlockRanges(heights))
+    return getBlockRanges(heights, ranges)
   }
   return ranges
 }
@@ -280,40 +279,47 @@ export default {
     async REST_FETCH_BLOCKS({commit, dispatch, getters, rootGetters}, blockHeights: number[]) {
 
       // - filter out known blocks
-      const knownBlocks: Record<number, BlockInfo> = getters['knownBlocks']
-      const heights = blockHeights.filter(height => !knownBlocks[height])
+      const knownBlocks: {[h: number]: BlockInfo} = getters['knownBlocks']
+      console.log('knownBlocks', knownBlocks)
+
+      const unknownHeights = blockHeights.filter(height => !knownBlocks.hasOwnProperty(height))
+      const knownHeights = blockHeights.filter(height => knownBlocks.hasOwnProperty(height))
+
+      console.log("network/REST_FETCH_BLOCKS: unknownBlocks: ", unknownHeights)
 
       // - initialize blocks list with known blocks
-      let blocks: BlockInfo[] = blockHeights.filter(
-        height => !knownBlocks[height]
-      ).map(known => knownBlocks[known])
-
-      // - use block ranges helper to minimize number of requests
-      let ranges: {start: number}[] = getBlockRanges(heights)
-      if (ranges.length > 3) {
-        // - too many ranges, take only 3 for current action
-        ranges = ranges.slice(0, 3)
-
-        // - dispatch other ranges to later execution
-        setInterval(() => {
-          return dispatch('REST_FETCH_BLOCKS', ranges.slice(3))
-        }, 3000)
+      let blocks: BlockInfo[] = knownHeights.map(known => knownBlocks[known])
+      if (!unknownHeights.length) {
+        return blocks
       }
+
+      // - use block ranges helper to minimize number of requests (recent blocks first)
+      let ranges: {start: number}[] = getBlockRanges(unknownHeights).reverse()
+
+      console.log("network/REST_FETCH_BLOCKS: ranges: ", ranges)
 
       try {
         // - prepare REST gateway connection
         const currentPeer = rootGetters['network/currentPeer'].url
         const blockHttp = RESTService.create('BlockHttp', currentPeer)
 
-        // - fetch blocks information per-range
-        ranges.map(async ({start}, index: number) => {
-          const page = await blockHttp.getBlocksByHeightWithLimit(start.toString(), 100).toPromise()
-          blocks = blocks.concat(page)
+        // - fetch blocks information per-range (wait 3 seconds every 4th block)
+        ranges.slice(0, 3).map(({start}, index: number) => {
+          console.log("network/REST_FETCH_BLOCKS: range: ", start)
+          blockHttp.getBlocksByHeightWithLimit(start.toString(), 100).subscribe(
+            (infos: BlockInfo[]) => {
+              infos.map(b => commit('addBlock', b))
+              blocks = blocks.concat(infos)
+            })
         })
 
-        // - register blocks in store
-        blocks.map(block => commit('addBlock', block))
-        return blocks
+        const nextHeights = ranges.slice(3).map(r => r.start)
+        if (nextHeights.length) {
+          setTimeout(() => {
+            console.log('delaying heights: ', nextHeights)
+            return dispatch('REST_FETCH_BLOCKS', nextHeights)
+          }, 2000)
+        }
       }
       catch (e) {
         console.error('An error happened while trying to fetch account information: <pre>' + e + '</pre>')

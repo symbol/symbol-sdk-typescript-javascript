@@ -453,6 +453,7 @@ export default {
 
         // fetch block informations if necessary
         if (blockHeights.length) {
+          console.log("wallet/REST_FETCH_TRANSACTIONS: blockHeights: ", blockHeights)
           // - non-blocking
           dispatch('network/REST_FETCH_BLOCKS', blockHeights, {root: true})
         }
