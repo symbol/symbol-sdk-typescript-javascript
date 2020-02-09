@@ -53,10 +53,11 @@
     <div class="wallet-switch-footer-container">
       <button
         type="button" 
-        class="button-add-wallet"
+        class="button-add-wallet button-style validation-button"
         @click="hasAddWalletModal = true"
       >
-        {{ $t('button_add_wallet') }}
+        <Icon type="md-add-circle" />
+        &nbsp;{{ $t('button_add_wallet') }}
       </button>
     </div>
 
@@ -80,7 +81,7 @@ export default class WalletSelectorPanel extends WalletSelectorPanelTs {}
   text-align: center;
 }
 
-.plus-button {
+.button-add-wallet {
   height: 0.35rem !important;
   padding: 0 0.3rem;
   margin: auto;

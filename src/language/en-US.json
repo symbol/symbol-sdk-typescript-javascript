@@ -982,5 +982,6 @@
   "modal_title_enter_wallet_name": "Configure your new wallet",
   "child_wallet": "I want to create a child wallet for my account",
   "privatekey_wallet": "I want to import an existing wallet private key",
-  "Select_a_namespace": "Select a namespace"
+  "Select_a_namespace": "Select a namespace",
+  "button_add_wallet": "Add or import a wallet"
 }
