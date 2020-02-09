@@ -40,7 +40,7 @@
 
 <script lang="ts">
 // @ts-ignore
-import { InformationTs } from '@/views/community/information/InformationTs.ts'
+import { InformationTs } from './InformationTs'
 
 export default class InputLock extends InformationTs {}
 </script>

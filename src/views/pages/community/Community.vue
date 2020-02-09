@@ -18,7 +18,7 @@
 import {Component, Vue} from 'vue-property-decorator'
 
 // child components
-import Information from '@/views/community/information/Information.vue'
+import Information from './information/Information.vue'
 
 @Component({ components: {Information} })
 export default class Community extends Vue {}

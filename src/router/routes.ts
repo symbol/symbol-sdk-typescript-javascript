@@ -42,14 +42,14 @@ export const routes: AppRoute[] = [
             name: 'accounts.importAccount.importStrategy',
             meta: { protected: false },
             // @ts-ignore
-            component: () => import('@/views/accounts/import-account/import-strategy/ImportStrategy.vue'),
+            component: () => import('@/views/pages/accounts/import-account/import-strategy/ImportStrategy.vue'),
           },
           {
             path: 'create',
             name: 'accounts.createAccount',
             meta: { protected: false },
             // @ts-ignore
-            component: () => import('@/views/accounts/create-account/CreateAccount.vue'),
+            component: () => import('@/views/pages/accounts/create-account/CreateAccount.vue'),
             children: [
               {
                 path: 'info',
@@ -69,7 +69,7 @@ export const routes: AppRoute[] = [
                   icon: createStepImage.createStepImage2
                 },
                 // @ts-ignore
-                component: () => import('@/views/accounts/create-account/generate-mnemonic/GenerateMnemonic.vue'),
+                component: () => import('@/views/pages/accounts/create-account/generate-mnemonic/GenerateMnemonic.vue'),
               }, {
                 path: 'showMnemonic',
                 name: 'accounts.createAccount.showMnemonic',
@@ -78,7 +78,7 @@ export const routes: AppRoute[] = [
                   icon: createStepImage.createStepImage3
                 },
                 // @ts-ignore
-                component: () => import('@/views/accounts/create-account/show-mnemonic/ShowMnemonic.vue'),
+                component: () => import('@/views/pages/accounts/create-account/show-mnemonic/ShowMnemonic.vue'),
               }, {
                 path: 'verifyMnemonic',
                 name: 'accounts.createAccount.verifyMnemonic',
@@ -87,7 +87,7 @@ export const routes: AppRoute[] = [
                   icon: createStepImage.createStepImage4
                 },
                 // @ts-ignore
-                component: () => import('@/views/accounts/create-account/verify-mnemonic/VerifyMnemonic.vue'),
+                component: () => import('@/views/pages/accounts/create-account/verify-mnemonic/VerifyMnemonic.vue'),
               }, {
                 path: 'finishCreate',
                 name: 'accounts.createAccount.finalize',
@@ -96,7 +96,7 @@ export const routes: AppRoute[] = [
                   icon: createStepImage.createStepImage5
                 },
                 // @ts-ignore
-                component: () => import('@/views/accounts/create-account/finalize/Finalize.vue'),
+                component: () => import('@/views/pages/accounts/create-account/finalize/Finalize.vue'),
               }],
           },
           {
@@ -104,7 +104,7 @@ export const routes: AppRoute[] = [
             name: 'accounts.importAccount',
             meta: { protected: false },
             // @ts-ignore
-            component: () => import('@/views/accounts/import-account/ImportAccount.vue'),
+            component: () => import('@/views/pages/accounts/import-account/ImportAccount.vue'),
             children: [{
               path: 'inputAccountInfo',
               name: 'accounts.importAccount.info',
@@ -123,7 +123,7 @@ export const routes: AppRoute[] = [
                 icon: importStepImage.importStepImage2
               },
               // @ts-ignore
-              component: () => import('@/views/accounts/import-account/import-mnemonic/ImportMnemonic.vue'),
+              component: () => import('@/views/pages/accounts/import-account/import-mnemonic/ImportMnemonic.vue'),
             }, {
               path: 'walletChoose',
               name: 'accounts.importAccount.walletSelection',
@@ -132,7 +132,7 @@ export const routes: AppRoute[] = [
                 icon: importStepImage.importStepImage3
               },
               // @ts-ignore
-              component: () => import('@/views/accounts/import-account/wallet-selection/WalletSelection.vue'),
+              component: () => import('@/views/pages/accounts/import-account/wallet-selection/WalletSelection.vue'),
             }, {
               path: 'finishImport',
               name: 'accounts.importAccount.finalize',
@@ -141,7 +141,7 @@ export const routes: AppRoute[] = [
                 icon: importStepImage.importStepImage4
               },
               // @ts-ignore
-              component: () => import('@/views/accounts/import-account/finalize/Finalize.vue'),
+              component: () => import('@/views/pages/accounts/import-account/finalize/Finalize.vue'),
             }],
           },
         ],
@@ -157,7 +157,7 @@ export const routes: AppRoute[] = [
         },
         redirect: '/home',
         // @ts-ignore
-        component: () => import('@/views/dashboard/Dashboard.vue'),
+        component: () => import('@/views/pages/dashboard/Dashboard.vue'),
         children: [
           {
             path: '/home',
@@ -167,7 +167,7 @@ export const routes: AppRoute[] = [
               title: 'dashboard',
             },
             // @ts-ignore
-            component: () => import('@/views/dashboard/home/DashboardHomePage.vue'),
+            component: () => import('@/views/pages/dashboard/home/DashboardHomePage.vue'),
           }, {
             path: '/transfer',
             name: 'dashboard.transfer',
@@ -176,7 +176,7 @@ export const routes: AppRoute[] = [
               title: 'transfer',
             },
             // @ts-ignore
-            component: () => import('@/views/dashboard/transfer/DashboardTransferPage.vue'),
+            component: () => import('@/views/pages/dashboard/transfer/DashboardTransferPage.vue'),
           }, {
             path: '/invoice',
             name: 'dashboard.invoice',
@@ -185,7 +185,7 @@ export const routes: AppRoute[] = [
               title: 'invoice',
             },
             // @ts-ignore
-            component: () => import('@/views/dashboard/invoice/DashboardInvoicePage.vue'),
+            component: () => import('@/views/pages/dashboard/invoice/DashboardInvoicePage.vue'),
           }
         ],
       },
@@ -200,7 +200,7 @@ export const routes: AppRoute[] = [
           icon: 'md-card',
         },
         // @ts-ignore
-        component: () => import('@/views/wallets/Wallets.vue'),
+        component: () => import('@/views/pages/wallets/Wallets.vue'),
         children: [
           {
             path: '/walletDetails',
@@ -224,7 +224,7 @@ export const routes: AppRoute[] = [
           icon: 'md-apps',
         },
         // @ts-ignore
-        component: () => import('@/views/mosaics/MosaicsDashboardPage/MosaicsDashboardPage.vue'),
+        component: () => import('@/views/pages/mosaics/MosaicsDashboardPage/MosaicsDashboardPage.vue'),
         children: [
           {
             path: '/mosaicList',
@@ -234,7 +234,7 @@ export const routes: AppRoute[] = [
               title: 'mosaic_list',
             },
             // @ts-ignore
-            component: () => import('@/views/mosaics/MosaicListPage/MosaicListPage.vue'),
+            component: () => import('@/views/pages/mosaics/MosaicListPage/MosaicListPage.vue'),
           }, {
             path: '/createMosaic',
             name: 'mosaics.create',
@@ -243,7 +243,7 @@ export const routes: AppRoute[] = [
               title: 'create_mosaic',
             },
             // @ts-ignore
-            component: () => import('@/views/mosaics/CreateMosaicPage/CreateMosaicPage.vue'),
+            component: () => import('@/views/pages/mosaics/CreateMosaicPage/CreateMosaicPage.vue'),
           },
         ],
       },
@@ -258,7 +258,7 @@ export const routes: AppRoute[] = [
         },
         redirect: '/namespaceList',
         // @ts-ignore
-        component: () => import('@/views/namespaces/NamespacesDashboardPage/NamespacesDashboardPage.vue'),
+        component: () => import('@/views/pages/namespaces/NamespacesDashboardPage/NamespacesDashboardPage.vue'),
         children: [
           {
             path: '/namespaceList',
@@ -268,7 +268,7 @@ export const routes: AppRoute[] = [
               title: 'Namespace_list',
             },
             // @ts-ignore
-            component: () => import('@/views/namespaces/NamespaceListPage/NamespaceListPage.vue'),
+            component: () => import('@/views/pages/namespaces/NamespaceListPage/NamespaceListPage.vue'),
           },
           {
             path: '/createNamespace',
@@ -278,7 +278,7 @@ export const routes: AppRoute[] = [
               title: 'Create_namespace',
             },
             // @ts-ignore
-            component: () => import('@/views/namespaces/CreateNamespacePage/CreateNamespacePage.vue'),
+            component: () => import('@/views/pages/namespaces/CreateNamespacePage/CreateNamespacePage.vue'),
           }, {
             path: '/createSubNamespace',
             name: 'namespaces.createSubnamespace',
@@ -287,7 +287,7 @@ export const routes: AppRoute[] = [
               title: 'Create_subNamespace',
             },
             // @ts-ignore
-            component: () => import('@/views/namespaces/CreateSubNamespacePage/CreateSubNamespacePage.vue'),
+            component: () => import('@/views/pages/namespaces/CreateSubNamespacePage/CreateSubNamespacePage.vue'),
           },
         ],
       },
@@ -337,14 +337,14 @@ export const routes: AppRoute[] = [
           icon: 'md-chatbubbles',
         },
         // @ts-ignore
-        component: () => import('@/views/community/Community.vue'),
+        component: () => import('@/views/pages/community/Community.vue'),
         children: [
           {
             path: '/information',
             name: 'community.index',
             meta: { protected: true},
             // @ts-ignore
-            component: () => import('@/views/community/information/Information.vue'),
+            component: () => import('@/views/pages/community/information/Information.vue'),
           },
         ],
       },
@@ -359,7 +359,7 @@ export const routes: AppRoute[] = [
           icon: 'md-settings',
         },
         // @ts-ignore
-        component: () => import('@/views/settings/Settings.vue'),
+        component: () => import('@/views/pages/settings/Settings.vue'),
         /// region settings children
         children: [
           {
@@ -370,7 +370,7 @@ export const routes: AppRoute[] = [
               title: 'general_settings',
             },
             // @ts-ignore
-            component: () => import('@/views/settings/general-settings/GeneralSettings.vue'),
+            component: () => import('@/views/pages/settings/general-settings/GeneralSettings.vue'),
           },
           // {
           //   path: '/settingPassword',
@@ -390,7 +390,7 @@ export const routes: AppRoute[] = [
               title: 'about',
             },
             // @ts-ignore
-            component: () => import('@/views/settings/about/About.vue'),
+            component: () => import('@/views/pages/settings/about/About.vue'),
           },
         ],
         /// end-region settings children
@@ -402,6 +402,6 @@ export const routes: AppRoute[] = [
     name: 'accounts.login',
     meta: { protected: false },
     // @ts-ignore
-    component: () => import('@/views/accounts/LoginPage.vue'),
+    component: () => import('@/views/pages/accounts/LoginPage.vue'),
   },
 ]

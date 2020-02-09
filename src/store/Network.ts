@@ -280,12 +280,8 @@ export default {
 
       // - filter out known blocks
       const knownBlocks: {[h: number]: BlockInfo} = getters['knownBlocks']
-      console.log('knownBlocks', knownBlocks)
-
       const unknownHeights = blockHeights.filter(height => !knownBlocks.hasOwnProperty(height))
       const knownHeights = blockHeights.filter(height => knownBlocks.hasOwnProperty(height))
-
-      console.log("network/REST_FETCH_BLOCKS: unknownBlocks: ", unknownHeights)
 
       // - initialize blocks list with known blocks
       let blocks: BlockInfo[] = knownHeights.map(known => knownBlocks[known])
@@ -296,8 +292,6 @@ export default {
       // - use block ranges helper to minimize number of requests (recent blocks first)
       let ranges: {start: number}[] = getBlockRanges(unknownHeights).reverse()
 
-      console.log("network/REST_FETCH_BLOCKS: ranges: ", ranges)
-
       try {
         // - prepare REST gateway connection
         const currentPeer = rootGetters['network/currentPeer'].url
@@ -305,7 +299,6 @@ export default {
 
         // - fetch blocks information per-range (wait 3 seconds every 4th block)
         ranges.slice(0, 3).map(({start}, index: number) => {
-          console.log("network/REST_FETCH_BLOCKS: range: ", start)
           blockHttp.getBlocksByHeightWithLimit(start.toString(), 100).subscribe(
             (infos: BlockInfo[]) => {
               infos.map(b => commit('addBlock', b))
@@ -316,13 +309,13 @@ export default {
         const nextHeights = ranges.slice(3).map(r => r.start)
         if (nextHeights.length) {
           setTimeout(() => {
-            console.log('delaying heights: ', nextHeights)
+            console.log('network/REST_FETCH_BLOCKS delaying heights discovery (2 seconds): ', nextHeights)
             return dispatch('REST_FETCH_BLOCKS', nextHeights)
           }, 2000)
         }
       }
       catch (e) {
-        console.error('An error happened while trying to fetch account information: <pre>' + e + '</pre>')
+        console.error('An error happened while trying to fetch blocks information: <pre>' + e + '</pre>')
         return false
       }
     },
