@@ -983,5 +983,12 @@
   "child_wallet": "I want to create a child wallet for my account",
   "privatekey_wallet": "I want to import an existing wallet private key",
   "Select_a_namespace": "Select a namespace",
-  "button_add_wallet": "Add or import a wallet"
+  "button_add_wallet": "Add or import a wallet",
+  "sidebar_item_home": "Home",
+  "sidebar_item_wallets": "Wallets",
+  "sidebar_item_mosaics": "Mosaics",
+  "sidebar_item_namespaces": "Namespaces",
+  "sidebar_item_multisig": "Multisig",
+  "sidebar_item_community": "News",
+  "sidebar_item_settings": "Settings"
 }

@@ -15,6 +15,7 @@
  */
 import {createStepImage, importStepImage, leftBarIcons} from '@/views/resources/Images'
 import {AppRoute} from './AppRoute'
+import i18n from '@/language'
 
 export const routes: AppRoute[] = [
   {
@@ -44,14 +45,14 @@ export const routes: AppRoute[] = [
             component: () => import('@/views/accounts/import-account/import-strategy/ImportStrategy.vue'),
           },
           {
-            path: 'create/new',
+            path: 'create',
             name: 'accounts.createAccount',
             meta: { protected: false },
             // @ts-ignore
             component: () => import('@/views/accounts/create-account/CreateAccount.vue'),
             children: [
               {
-                path: 'create/info',
+                path: 'info',
                 name: 'accounts.createAccount.info',
                 meta: {
                   protected: false,
@@ -61,7 +62,7 @@ export const routes: AppRoute[] = [
                 // @ts-ignore
                 component: () => import('@/views/forms/FormAccountCreation/FormAccountCreation.vue'),
               }, {
-                path: 'create/generateMnemonic',
+                path: 'generateMnemonic',
                 name: 'accounts.createAccount.generateMnemonic',
                 meta: {
                   protected: false,
@@ -70,7 +71,7 @@ export const routes: AppRoute[] = [
                 // @ts-ignore
                 component: () => import('@/views/accounts/create-account/generate-mnemonic/GenerateMnemonic.vue'),
               }, {
-                path: 'create/showMnemonic',
+                path: 'showMnemonic',
                 name: 'accounts.createAccount.showMnemonic',
                 meta: {
                   protected: false,
@@ -79,7 +80,7 @@ export const routes: AppRoute[] = [
                 // @ts-ignore
                 component: () => import('@/views/accounts/create-account/show-mnemonic/ShowMnemonic.vue'),
               }, {
-                path: 'create/verifyMnemonic',
+                path: 'verifyMnemonic',
                 name: 'accounts.createAccount.verifyMnemonic',
                 meta: {
                   protected: false,
@@ -88,7 +89,7 @@ export const routes: AppRoute[] = [
                 // @ts-ignore
                 component: () => import('@/views/accounts/create-account/verify-mnemonic/VerifyMnemonic.vue'),
               }, {
-                path: 'create/finishCreate',
+                path: 'finishCreate',
                 name: 'accounts.createAccount.finalize',
                 meta: {
                   protected: false,
@@ -105,7 +106,7 @@ export const routes: AppRoute[] = [
             // @ts-ignore
             component: () => import('@/views/accounts/import-account/ImportAccount.vue'),
             children: [{
-              path: 'import/inputAccountInfo',
+              path: 'inputAccountInfo',
               name: 'accounts.importAccount.info',
               meta: {
                 protected: false,
@@ -115,7 +116,7 @@ export const routes: AppRoute[] = [
               // @ts-ignore
               component: () => import('@/views/forms/FormAccountCreation/FormAccountCreation.vue'),
             },{
-              path: 'import/importMnemonic',
+              path: 'importMnemonic',
               name: 'accounts.importAccount.importMnemonic',
               meta: {
                 protected: false,
@@ -124,7 +125,7 @@ export const routes: AppRoute[] = [
               // @ts-ignore
               component: () => import('@/views/accounts/import-account/import-mnemonic/ImportMnemonic.vue'),
             }, {
-              path: 'import/walletChoose',
+              path: 'walletChoose',
               name: 'accounts.importAccount.walletSelection',
               meta: {
                 protected: false,
@@ -133,7 +134,7 @@ export const routes: AppRoute[] = [
               // @ts-ignore
               component: () => import('@/views/accounts/import-account/wallet-selection/WalletSelection.vue'),
             }, {
-              path: 'import/finishImport',
+              path: 'finishImport',
               name: 'accounts.importAccount.finalize',
               meta: {
                 protected: false,
@@ -151,8 +152,8 @@ export const routes: AppRoute[] = [
         meta: {
           protected: true,
           clickable: true,
-          icon: leftBarIcons.windowDashboard,
-          activeIcon: leftBarIcons.windowDashboardActive,
+          title: i18n.t('sidebar_item_home').toString(),
+          icon: 'md-home',
         },
         redirect: '/home',
         // @ts-ignore
@@ -195,8 +196,8 @@ export const routes: AppRoute[] = [
         meta: {
           protected: true,
           clickable: true,
-          icon: leftBarIcons.windowWallet,
-          activeIcon: leftBarIcons.windowWalletActive,
+          title: i18n.t('sidebar_item_wallets').toString(),
+          icon: 'md-card',
         },
         // @ts-ignore
         component: () => import('@/views/wallets/Wallets.vue'),
@@ -219,8 +220,8 @@ export const routes: AppRoute[] = [
         meta: {
           protected: true,
           clickable: true,
-          icon: leftBarIcons.windowMosaic,
-          activeIcon: leftBarIcons.windowMosaicActive,
+          title: i18n.t('sidebar_item_mosaics').toString(),
+          icon: 'md-apps',
         },
         // @ts-ignore
         component: () => import('@/views/mosaics/MosaicsDashboardPage/MosaicsDashboardPage.vue'),
@@ -252,8 +253,8 @@ export const routes: AppRoute[] = [
         meta: {
           protected: true,
           clickable: true,
-          icon: leftBarIcons.windowNamespace,
-          activeIcon: leftBarIcons.windowNamespaceActive,
+          title: i18n.t('sidebar_item_namespaces').toString(),
+          icon: 'md-text',
         },
         redirect: '/namespaceList',
         // @ts-ignore
@@ -332,8 +333,8 @@ export const routes: AppRoute[] = [
         meta: {
           protected: true,
           clickable: true,
-          icon: leftBarIcons.windowCommunity,
-          activeIcon: leftBarIcons.windowCommunityActive,
+          title: i18n.t('sidebar_item_community').toString(),
+          icon: 'md-chatbubbles',
         },
         // @ts-ignore
         component: () => import('@/views/community/Community.vue'),
@@ -354,8 +355,8 @@ export const routes: AppRoute[] = [
         meta: {
           protected: true,
           clickable: true,
-          icon: leftBarIcons.windowSetting,
-          activeIcon: leftBarIcons.windowSettingActive,
+          title: i18n.t('sidebar_item_settings').toString(),
+          icon: 'md-settings',
         },
         // @ts-ignore
         component: () => import('@/views/settings/Settings.vue'),
@@ -397,7 +398,7 @@ export const routes: AppRoute[] = [
     ],
     /// end-region PageLayout children
   }, {
-    path: 'login',
+    path: '/login',
     name: 'accounts.login',
     meta: { protected: false },
     // @ts-ignore

@@ -1,19 +1,15 @@
 <template>
-  <div class="left_navigator">
-    <div class="navigator_icon">
+  <div class="left_navigator xym-outline">
+    <div class="navigator-item">
       <div
         v-for="(route, index) in $router.getRoutes()"
         :key="index"
-        :class="[ $route.matched.map(({path}) => path).includes(route.path) ? 'active_panel' : '',
-                  !currentAccount ? 'un_click' : 'pointer' ]"
+        :class="[ $route.matched.map(({path}) => path).includes(route.path) ? 'active' : '',
+                  !currentAccount ? 'un_click' : 'pointer', 'body' ]"
         @click="!currentAccount ? '' : $router.push({name: route.name})"
       >
-        <span
-          :style="$route.matched.map(({path}) => path).includes(route.path)
-            ? { backgroundImage: `url('${route.meta.activeIcon}')` }
-            : { backgroundImage: `url('${route.meta.icon}')` }"
-          class="absolute"
-        />
+        <Icon :type="route.meta.icon" size="48" />
+        <div>{{ route.meta.title }}</div>
       </div>
     </div>
 

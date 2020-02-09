@@ -32,7 +32,6 @@ export interface RouteMeta {
   // @TODO: REVIEW
   clickable?: boolean
   icon?: unknown
-  activeIcon?: unknown
   active?: boolean
   nextPage?: string
   hideFromMenu?: boolean

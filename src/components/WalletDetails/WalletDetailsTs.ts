@@ -19,6 +19,7 @@ import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {AppWalletType} from '@/core/database/models/AppWallet'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
 
 // child components
 // @ts-ignore
@@ -61,8 +62,8 @@ export class WalletDetailsTs extends Vue {
    * @param item
    * @return {boolean}
    */
-  public isSeedWallet(item): boolean {
-    return item.type === AppWalletType.SEED
+  public isSeedWallet(wallet: WalletsModel): boolean {
+    return wallet.values.get('seed') && wallet.values.get('seed').length
   }
 }
 

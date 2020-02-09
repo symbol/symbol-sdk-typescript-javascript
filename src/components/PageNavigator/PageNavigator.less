@@ -25,24 +25,35 @@
     width: 100px;
     background-color: @white;
 
-    .navigator_icon {
-      > div {
-        width: 100px;
-        height: 80px;
-        padding: 35px 22px;
-        background-color: @white;
-        position: relative;
-
-        span {
-          width: 28px;
-          height: 28px;
-          background-size: contain;
-          background-repeat: no-repeat;
-        }
+    .navigator-item {
+      .body.active {
+        background-color: @purple;
+        color: @white;
+        opacity: 1;
       }
 
-      .active_panel {
-        background: @purple;
+      .body {
+        background-size: contain;
+        background-repeat: no-repeat;
+        width: 100px;
+        height: 100px;
+        background-color: @white;
+        position: relative;
+        opacity: 0.8;
+
+        i {
+          height: 48px;
+          width: 48px;
+          padding-left: 24px;
+          padding-top: 13px;
+        }
+
+        div {
+          text-align: center;
+          margin: auto;
+          font-weight: 900;
+          font-size: 15px;
+        }
       }
     }
 
