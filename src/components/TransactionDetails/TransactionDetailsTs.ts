@@ -15,12 +15,35 @@
  */
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Transaction, TransactionType, TransferTransaction, NetworkType} from 'nem2-sdk'
+import {
+  Transaction,
+  TransactionType,
+  NetworkType,
+  AccountAddressRestrictionTransaction,
+  AccountLinkTransaction,
+  AccountMetadataTransaction,
+  AccountMosaicRestrictionTransaction,
+  AccountOperationRestrictionTransaction,
+  AddressAliasTransaction,
+  AggregateTransaction,
+  HashLockTransaction,
+  MosaicAddressRestrictionTransaction,
+  MosaicAliasTransaction,
+  MosaicDefinitionTransaction,
+  MosaicGlobalRestrictionTransaction,
+  MosaicMetadataTransaction,
+  MosaicSupplyChangeTransaction,
+  MultisigAccountModificationTransaction,
+  NamespaceMetadataTransaction,
+  NamespaceRegistrationTransaction,
+  SecretLockTransaction,
+  SecretProofTransaction,
+  TransferTransaction,
+} from 'nem2-sdk'
 
 // internal dependencies
-import {TransactionParams} from '@/core/transactions/TransactionParams'
-import {TransferTransactionParams} from '@/core/transactions/TransferTransactionParams'
-import {TransactionService} from '@/services/TransactionService'
+import {TransactionView} from '@/core/transactions/TransactionView'
+import {TransactionService, TransactionViewType} from '@/services/TransactionService'
 import {Formatters} from '@/core/utils/Formatters'
 
 // configuration
@@ -75,22 +98,60 @@ export class TransactionDetailsTs extends Vue {
    * Transaction service
    * @var {TransactionService}
    */
-  public transactionService: TransactionService
+  public service: TransactionService
 
   /**
    * Hook called when the component is mounted
    * @return {void}
    */
   public mounted() {
-    this.transactionService = new TransactionService(this.$store)
+    this.service = new TransactionService(this.$store)
   }
 
 /// region computed properties getter/setter
-  public get parameters(): TransactionParams {
-    switch(this.transaction.type) {
-    default: throw new Error('Invalid transaction type in TransactionDetails')
-    case TransactionType.TRANSFER:
-      return TransferTransactionParams.createFromTransaction(this.transaction as TransferTransaction)
+  public get view(): TransactionViewType {
+    switch (this.transaction.type) {
+      case TransactionType.MOSAIC_DEFINITION: 
+        return this.service.getView(this.transaction as MosaicDefinitionTransaction)
+      case TransactionType.MOSAIC_SUPPLY_CHANGE:
+        return this.service.getView(this.transaction as MosaicSupplyChangeTransaction)
+      case TransactionType.REGISTER_NAMESPACE:
+        return this.service.getView(this.transaction as NamespaceRegistrationTransaction)
+      case TransactionType.TRANSFER:
+        return this.service.getView(this.transaction as TransferTransaction)
+      case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
+        return this.service.getView(this.transaction as AccountAddressRestrictionTransaction)
+      case TransactionType.LINK_ACCOUNT:
+        return this.service.getView(this.transaction as AccountLinkTransaction)
+      case TransactionType.ACCOUNT_METADATA_TRANSACTION:
+        return this.service.getView(this.transaction as AccountMetadataTransaction)
+      case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
+        return this.service.getView(this.transaction as AccountMosaicRestrictionTransaction)
+      case TransactionType.ACCOUNT_RESTRICTION_OPERATION:
+        return this.service.getView(this.transaction as AccountOperationRestrictionTransaction)
+      case TransactionType.ADDRESS_ALIAS:
+        return this.service.getView(this.transaction as AddressAliasTransaction)
+      case TransactionType.AGGREGATE_BONDED:
+      case TransactionType.AGGREGATE_COMPLETE:
+        return this.service.getView(this.transaction as AggregateTransaction)
+      case TransactionType.LOCK:
+        return this.service.getView(this.transaction as HashLockTransaction)
+      case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
+        return this.service.getView(this.transaction as MosaicAddressRestrictionTransaction)
+      case TransactionType.MOSAIC_ALIAS:
+        return this.service.getView(this.transaction as MosaicAliasTransaction)
+      case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
+        return this.service.getView(this.transaction as MosaicGlobalRestrictionTransaction)
+      case TransactionType.MOSAIC_METADATA_TRANSACTION:
+        return this.service.getView(this.transaction as MosaicMetadataTransaction)
+      case TransactionType.MODIFY_MULTISIG_ACCOUNT:
+        return this.service.getView(this.transaction as MultisigAccountModificationTransaction)
+      case TransactionType.NAMESPACE_METADATA_TRANSACTION:
+        return this.service.getView(this.transaction as NamespaceMetadataTransaction)
+      case TransactionType.SECRET_LOCK:
+        return this.service.getView(this.transaction as SecretLockTransaction)
+      case TransactionType.SECRET_PROOF:
+        return this.service.getView(this.transaction as SecretProofTransaction)
     }
   }
 /// end-region computed properties getter/setter
@@ -100,9 +161,9 @@ export class TransactionDetailsTs extends Vue {
    * @return {number}
    */
   public getFeeAmount(): number {
-    // - read per-transaction-type details
-    const details = this.transactionService.getTransactionDetails(this.transaction)
-    return details.effectiveFee || this.transaction.maxFee?.compact() || 0
+    return this.view.values.get('effectiveFee')
+        || this.view.values.get('maxFee')
+        || 0
   }
 
   /*

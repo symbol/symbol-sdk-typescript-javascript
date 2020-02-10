@@ -45,16 +45,24 @@ import {
   Deadline,
   UInt64,
   NamespaceRegistrationType,
+  EmptyMessage,
 } from 'nem2-sdk'
 
 // internal dependencies
-import {TransactionParams} from '@/core/transactions/TransactionParams'
-import {TransferTransactionParams} from '@/core/transactions/TransferTransactionParams'
-import {MosaicDefinitionTransactionParams} from './MosaicDefinitionTransactionParams'
-import {MosaicSupplyChangeTransactionParams} from './MosaicSupplyChangeTransactionParams'
-import {NamespaceRegistrationTransactionParams} from './NamespaceRegistrationTransactionParams'
+import {ViewUnknownTransaction} from '@/core/transactions/ViewUnknownTransaction'
+import {ViewTransferTransaction} from '@/core/transactions/ViewTransferTransaction'
+import {ViewMosaicDefinitionTransaction} from './ViewMosaicDefinitionTransaction'
+import {ViewMosaicSupplyChangeTransaction} from './ViewMosaicSupplyChangeTransaction'
+import {ViewNamespaceRegistrationTransaction} from './ViewNamespaceRegistrationTransaction'
 
+/// region custom types
 export type TransactionImpl = Transaction
+type TransactionViewType = ViewMosaicDefinitionTransaction
+                         | ViewMosaicSupplyChangeTransaction
+                         | ViewNamespaceRegistrationTransaction
+                         | ViewTransferTransaction
+                         | ViewUnknownTransaction
+/// end-region custom types
 
 export class TransactionFactory {
 
@@ -66,10 +74,10 @@ export class TransactionFactory {
     public readonly $store: Store<any>) {}
 
   /// region specialised signatures
-  public build(name: 'TransferTransaction', params: TransferTransactionParams): TransferTransaction
-  public build(name: 'MosaicDefinitionTransaction', params: MosaicDefinitionTransactionParams): MosaicDefinitionTransaction
-  public build(name: 'MosaicSupplyChangeTransaction', params: MosaicSupplyChangeTransactionParams): MosaicSupplyChangeTransaction
-  public build(name: 'NamespaceRegistrationTransaction', params: NamespaceRegistrationTransactionParams): NamespaceRegistrationTransaction
+  public build(view: ViewTransferTransaction): TransferTransaction
+  public build(view: ViewMosaicDefinitionTransaction): MosaicDefinitionTransaction
+  public build(view: ViewMosaicSupplyChangeTransaction): MosaicSupplyChangeTransaction
+  public build(view: ViewNamespaceRegistrationTransaction): NamespaceRegistrationTransaction
   /// end-region specialised signatures
 
   /**
@@ -78,72 +86,65 @@ export class TransactionFactory {
    * @param {string} nodeUrl 
    */
   public build(
-    name: string,
-    params: TransactionParams,
+    view: TransactionViewType,
   ): TransactionImpl {
 
     const deadline = Deadline.create()
     const networkType = this.$store.getters['network/networkType']
 
-    switch (name) {
-      case 'TransferTransaction': 
-        return TransferTransaction.create(
-          deadline,
-          params.getParam('recipient'),
-          params.getParam('mosaics'),
-          params.getParam('message'),
-          networkType,
-          params.getParam('maxFee'),
-        )
-
-      case 'MosaicDefinitionTransaction': 
-        return MosaicDefinitionTransaction.create(
-          deadline,
-          params.getParam('nonce'),
-          params.getParam('mosaicId'),
-          params.getParam('mosaicFlags'),
-          params.getParam('divisibility'),
-          params.getParam('duration'),
-          networkType,
-          params.getParam('maxFee'),
-        )
-      
-      case 'MosaicSupplyChangeTransaction': 
-        return MosaicSupplyChangeTransaction.create(
-          deadline,
-          params.getParam('Id'),
-          params.getParam('mosaicSupplyChangeAction'),
-          params.getParam('supply'),
-          networkType,
-          params.getParam('maxFee'),
-        )
-
-      case 'NamespaceRegistrationTransaction':
-        switch (params.getParam('namespaceRegistrationType')) {
-          case NamespaceRegistrationType.SubNamespace:
-            return NamespaceRegistrationTransaction.createSubNamespace(
-              deadline,
-              params.getParam('subNamespaceName'),
-              params.getParam('rootNamespaceName'),
-              networkType,
-              params.getParam('maxFee'),
-            )
-
-          case NamespaceRegistrationType.RootNamespace:
-          default: 
-            return NamespaceRegistrationTransaction.createRootNamespace(
-              deadline,
-              params.getParam('rootNamespaceName'),
-              params.getParam('duration'),
-              networkType,
-              params.getParam('maxFee'),
-            )
-        }
-
-
-      default: break
+    if (view instanceof ViewMosaicDefinitionTransaction) {
+      return MosaicDefinitionTransaction.create(
+        deadline,
+        view.values.get('nonce'),
+        view.values.get('mosaicId'),
+        view.values.get('mosaicFlags'),
+        view.values.get('divisibility'),
+        view.values.get('duration'),
+        networkType,
+        view.values.get('maxFee'),
+      )
     }
-    
-    throw new Error(`Could not find a REST repository by name '${name}'`)
+    else if (view instanceof ViewMosaicSupplyChangeTransaction) {
+      return MosaicSupplyChangeTransaction.create(
+        deadline,
+        view.values.get('Id'),
+        view.values.get('mosaicSupplyChangeAction'),
+        view.values.get('supply'),
+        networkType,
+        view.values.get('maxFee'),
+      )
+    }
+    else if (view instanceof ViewNamespaceRegistrationTransaction) {
+      // - sub namespace
+      if (NamespaceRegistrationType.SubNamespace === view.values.get('registrationType')) {
+        return NamespaceRegistrationTransaction.createSubNamespace(
+          deadline,
+          view.values.get('subNamespaceName'),
+          view.values.get('rootNamespaceName'),
+          networkType,
+          view.values.get('maxFee'),
+        )
+      }
+      // - root namespace
+      return NamespaceRegistrationTransaction.createRootNamespace(
+        deadline,
+        view.values.get('rootNamespaceName'),
+        view.values.get('duration'),
+        networkType,
+        view.values.get('maxFee'),
+      )
+    }
+    else if (view instanceof ViewTransferTransaction) {
+      return TransferTransaction.create(
+        deadline,
+        view.values.get('recipient'),
+        view.values.get('mosaics'),
+        view.values.get('message') || EmptyMessage,
+        networkType,
+        view.values.get('maxFee'),
+      )
+    }
+
+    throw new Error(`Transaction type not yet implemented in TransactionFactory`)
   }
 }

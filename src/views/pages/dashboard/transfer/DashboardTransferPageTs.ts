@@ -22,14 +22,11 @@ import {WalletsModel} from '@/core/database/entities/WalletsModel'
 
 // child components
 // @ts-ignore
-import FormTransferCreation from '@/views/forms/FormTransferCreation/FormTransferCreation.vue'
-// @ts-ignore
-import DisabledFormOverlay from '@/components/DisabledFormOverlay/DisabledFormOverlay.vue'
+import FormTransferTransaction from '@/views/forms/FormTransferTransaction/FormTransferTransaction.vue'
 
 @Component({
   components: {
-    FormTransferCreation,
-    DisabledFormOverlay,
+    FormTransferTransaction,
   },
   computed: {...mapGetters({
     currentAccount: 'account/currentAccount',

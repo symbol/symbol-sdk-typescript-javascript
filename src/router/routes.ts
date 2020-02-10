@@ -279,15 +279,6 @@ export const routes: AppRoute[] = [
             },
             // @ts-ignore
             component: () => import('@/views/pages/namespaces/CreateNamespacePage/CreateNamespacePage.vue'),
-          }, {
-            path: '/createSubNamespace',
-            name: 'namespaces.createSubnamespace',
-            meta: {
-              protected: true,
-              title: 'Create_subNamespace',
-            },
-            // @ts-ignore
-            component: () => import('@/views/pages/namespaces/CreateSubNamespacePage/CreateSubNamespacePage.vue'),
           },
         ],
       },

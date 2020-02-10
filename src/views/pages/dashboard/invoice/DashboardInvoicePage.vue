@@ -28,7 +28,7 @@
 
           <div class="top-qr-text">
             <span class="top-qr-text-title">{{ $t('message') }}:</span>
-            <span>{{ transaction && transaction.message.payload }}</span>
+            <span>{{ transactions.length ? transactions.shift().message.payload : '' }}</span>
           </div>
 
           <div class="qr_button">
@@ -37,10 +37,10 @@
         </div>
       </div>
 
-      <FormTransferCreation
+      <FormTransferTransaction
         :hide-signer="true"
         :disable-submit="true"
-        @onTransactionChange="onInvoiceChange"
+        @onTransactionsChange="onInvoiceChange"
       />
     </div>
 

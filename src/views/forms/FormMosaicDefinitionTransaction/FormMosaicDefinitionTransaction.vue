@@ -46,6 +46,13 @@
         </div>
       </form>
     </ValidationObserver>
+
+    <ModalTransactionConfirmation
+      v-if="isAwaitingSignature"
+      :visible="isAwaitingSignature"
+      @success="onConfirmationSuccess"
+      @error="onConfirmationError"
+    />
   </FormWrapper>
 </template>
 

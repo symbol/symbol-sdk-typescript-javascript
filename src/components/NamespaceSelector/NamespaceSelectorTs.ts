@@ -16,6 +16,8 @@
 // external dependencies
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
+import {NamespaceInfo} from 'nem2-sdk'
+
 // child components
 import {ValidationProvider} from 'vee-validate'
 // @ts-ignore
@@ -31,6 +33,7 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue'
   },
   computed: {...mapGetters({
     namespacesNames: 'namespace/namespacesNames',
+    ownedNamespaces: 'wallet/currentWalletOwnedNamespaces',
   })}, 
 })
 export class NamespaceSelectorTs extends Vue {
@@ -43,10 +46,16 @@ export class NamespaceSelectorTs extends Vue {
   }) value: string
 
   /**
-   * Namespaces names
-   * @type {{hex: string, name: string}}
+   * Current wallet's owned namespaces
+   * @var {NamespaceInfo[]}
    */
-  public namespacesNames: Record<string, string>
+  public ownedNamespaces: NamespaceInfo[]
+
+  /**
+   * Namespaces names
+   * @type {[h: string]: string}
+   */
+  public namespacesNames: {[h: string]: string}
 
   /// region computed properties getter/setter
   /**
@@ -64,4 +73,17 @@ export class NamespaceSelectorTs extends Vue {
     this.$emit('input', newValue)
   }
 /// end-region computed properties getter/setter
+
+  /**
+   * Helper method to read namespace name if available
+   * @param {NamespaceInfo} info 
+   * @return {string}
+   */
+  public getName(info: NamespaceInfo): string {
+    if (this.namespacesNames.hasOwnProperty(info.id.toHex())) {
+      return this.namespacesNames[info.id.toHex()]
+    }
+
+    return info.id.toHex()
+  }
 }

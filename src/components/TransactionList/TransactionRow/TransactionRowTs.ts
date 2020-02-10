@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
-import {Transaction, TransactionType, TransferTransaction} from 'nem2-sdk'
+import {
+  Transaction,
+  TransactionType,
+  TransferTransaction,
+  MosaicDefinitionTransaction,
+  MosaicSupplyChangeTransaction,
+  NamespaceRegistrationTransaction,
+} from 'nem2-sdk'
 
 // internal dependencies
-import {TransactionService} from '@/services/TransactionService'
+import {TransactionService, TransactionViewType} from '@/services/TransactionService'
 import {Formatters} from '@/core/utils/Formatters'
 
 // child components
@@ -33,7 +40,6 @@ import networkConfig from '@/../config/network.conf.json'
 
 // resources
 import {transferIcons, transactionTypeToIcon} from '@/views/resources/Images'
-import {dashboardImages} from '@/views/resources/Images'
 
 @Component({components: {
     AddressDisplay,
@@ -72,23 +78,39 @@ export class TransactionRowTs extends Vue {
     this.service = new TransactionService(this.$store)
   }
 
+/// region computed properties getter/setter
+  public get view(): TransactionViewType {
+    switch (this.transaction.type) {
+      case TransactionType.MOSAIC_DEFINITION: 
+        return this.service.getView(this.transaction as MosaicDefinitionTransaction)
+      case TransactionType.MOSAIC_SUPPLY_CHANGE:
+        return this.service.getView(this.transaction as MosaicSupplyChangeTransaction)
+      case TransactionType.REGISTER_NAMESPACE:
+        return this.service.getView(this.transaction as NamespaceRegistrationTransaction)
+      case TransactionType.TRANSFER:
+        return this.service.getView(this.transaction as TransferTransaction)
+    }
+  }
+/// end-region computed properties getter/setter
+
   /**
    * Get icon per-transaction
    * @param {Transaction} transaction 
    * @return {string}
    */
-  public getIcon(transaction: Transaction) {
+  public getIcon() {
     // - read per-transaction-type details
-    const details = this.service.getTransactionDetails(transaction)
+    const view = this.view
 
     // - transfers have specific incoming/outgoing icons
-    if (transaction.type === TransactionType.TRANSFER) {
-      const transfer = transaction as TransferTransaction
-      return details.isIncoming ? transferIcons.transferReceived : transferIcons.transferSent
+    if (view.transaction.type === TransactionType.TRANSFER) {
+      return view.values.get('isIncoming') 
+          ? transferIcons.transferReceived
+          : transferIcons.transferSent
     }
 
     // - otherwise use per-type icon
-    return transactionTypeToIcon[transaction.type]
+    return transactionTypeToIcon[view.transaction.type]
   }
 
   /**
@@ -97,8 +119,7 @@ export class TransactionRowTs extends Vue {
    */
   public isIncomingTransaction(): boolean {
     // - read per-transaction-type details
-    const details = this.service.getTransactionDetails(this.transaction)
-    return details.isIncoming
+    return this.view.values.get('isIncoming')
   }
 
   /**
@@ -106,9 +127,9 @@ export class TransactionRowTs extends Vue {
    * @return {number}
    */
   public getFeeAmount(): number {
-    // - read per-transaction-type details
-    const details = this.service.getTransactionDetails(this.transaction)
-    return details.effectiveFee || this.transaction.maxFee?.compact() || 0
+    return this.view.values.get('effectiveFee')
+        || this.view.values.get('maxFee').compact()
+        || 0
   }
 
   /**
@@ -116,6 +137,7 @@ export class TransactionRowTs extends Vue {
    * @param transaction 
    */
   public getHeight(): number | string {
-    return this.transaction.transactionInfo?.height.compact() || this.$t('unconfirmed').toString()
+    return this.view.info?.height.compact() 
+        || this.$t('unconfirmed').toString()
   }
 }

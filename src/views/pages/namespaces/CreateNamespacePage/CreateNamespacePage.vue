@@ -1,9 +1,7 @@
 <template>
   <AssetFormPageWrap>
     <template v-slot:form-section>
-      <FormNamespaceRegistrationTransaction
-        :namespace-registration-type="NamespaceRegistrationType.RootNamespace"
-      />
+      <FormNamespaceRegistrationTransaction />
     </template>
     <template v-slot:form-description>
       <div class="asset-description-title">

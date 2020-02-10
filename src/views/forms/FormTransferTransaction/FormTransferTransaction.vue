@@ -1,5 +1,5 @@
 <template>
-  <div class="FormTransferCreation">
+  <div class="FormTransferTransaction">
     <FormWrapper>
       <ValidationObserver v-slot="{ handleSubmit }">
         <form
@@ -46,7 +46,8 @@
       </ValidationObserver>
 
       <ModalTransactionConfirmation
-        :visible="isAwaitingSignature === true"
+        v-if="isAwaitingSignature"
+        :visible="isAwaitingSignature"
         @success="onConfirmationSuccess"
         @error="onConfirmationError"
       />
@@ -55,6 +56,6 @@
 </template>
 
 <script lang="ts">
-import { FormTransferCreationTs } from './FormTransferCreationTs'
-export default class FormTransferCreation extends FormTransferCreationTs {}
+import { FormTransferTransactionTs } from './FormTransferTransactionTs'
+export default class FormTransferTransaction extends FormTransferTransactionTs {}
 </script>

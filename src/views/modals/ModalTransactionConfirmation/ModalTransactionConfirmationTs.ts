@@ -109,6 +109,10 @@ export class ModalTransactionConfirmationTs extends Vue {
   /**
    * Hook called when child component HardwareConfirmationButton emits
    * the 'success' event.
+   *
+   * This hook shall *only announce* said \a transactions
+   * which were signed using a hardware device.
+   *
    * @param {SignedTransaction[]} transactions
    * @return {void}
    */
@@ -137,6 +141,11 @@ export class ModalTransactionConfirmationTs extends Vue {
   /**
    * Hook called when child component FormAccountUnlock emits
    * the 'success' event.
+   *
+   * This hook shall *sign transactions* with the \a account
+   * that has been unlocked. Subsequently it will also announce
+   * the signed transaction.
+   *
    * @param {Password} password 
    * @return {void}
    */

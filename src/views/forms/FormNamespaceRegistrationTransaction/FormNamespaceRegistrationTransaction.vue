@@ -4,22 +4,40 @@
       <form
         onsubmit="event.preventDefault()"
         @keyup.enter="handleSubmit(onSubmit)"
+        class="form-container mt-3"
       >
         <SignerSelector v-model="formItems.signerPublicKey" />
-      
+
+        <div class="form-row">
+          <ValidationProvider
+            tag="div" mode="lazy" vid="registrationType"
+            :name="$t('registrationType')"
+            :rules="'required'"
+            v-slot="{ errors }"
+          >
+            <FormLabel>{{ $t('form_label_registration_type') }}</FormLabel>
+            <select v-model="formItems.registrationType"
+                    class="input-size input-style">
+              <option :value="typeRootNamespace">{{ $t('option_root_namespace') }}</option>
+              <option v-if="ownedNamespaces.length"
+                      :value="typeSubNamespace">{{ $t('option_sub_namespace') }}</option>
+            </select>
+          </ValidationProvider>
+        </div>
+
         <NamespaceSelector
-          v-if="namespaceRegistrationType === NamespaceRegistrationType.SubNamespace"
+          v-if="formItems.registrationType === typeSubNamespace && ownedNamespaces.length"
           v-model="formItems.parentNamespaceName"
-          :namespace-registration-type="namespaceRegistrationType"
+          :namespace-registration-type="formItems.registrationType"
         />
 
         <NamespaceNameInput
           v-model="formItems.newNamespaceName"
-          :namespace-registration-type="namespaceRegistrationType"
+          :namespace-registration-type="formItems.registrationType"
         />
 
         <DurationInput
-          v-if="namespaceRegistrationType === NamespaceRegistrationType.RootNamespace"
+          v-if="formItems.registrationType === typeRootNamespace"
           v-model="formItems.duration"
           target-asset="namespace"
         />
@@ -38,6 +56,13 @@
         </div>
       </form>
     </ValidationObserver>
+
+    <ModalTransactionConfirmation
+      v-if="isAwaitingSignature"
+      :visible="isAwaitingSignature"
+      @success="onConfirmationSuccess"
+      @error="onConfirmationError"
+    />
   </FormWrapper>
 </template>
 

@@ -1,11 +1,9 @@
 <template>
   <div class="transaction_modal">
     <Modal
-      v-if="visible && !!transaction"
-      v-model="visible"
-      :title="$t('transaction_details')"
+      v-model="show"
+      :title="$t('modal_title_transaction_details')"
       :transfer="false"
-      class-name="transaction-modal-dialog text_select"
     >
       <TransactionDetails :transaction="transaction" />
     </Modal>

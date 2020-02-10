@@ -109,8 +109,11 @@ export class MosaicSelectorTs extends Vue {
 
   public getMosaicName(mosaicId: MosaicId): string {
     if (this.mosaicsNames.hasOwnProperty(mosaicId.toHex())) {
-      return this.mosaicsNames[mosaicId.toHex()]
+      return this.mosaicsNames[mosaicId.toHex()].hasOwnProperty('namespaceId')
+           ? this.mosaicsNames[mosaicId.toHex()].namespaceId.fullName
+           : this.mosaicsNames[mosaicId.toHex()]
     }
+
     return mosaicId.toHex()
   }
 }

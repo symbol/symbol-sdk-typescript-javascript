@@ -49,6 +49,19 @@ import {map, flatMap} from 'rxjs/operators'
 import {AbstractService} from './AbstractService'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {BroadcastResult} from '@/core/transactions/BroadcastResult'
+import {ViewMosaicDefinitionTransaction} from '@/core/transactions/ViewMosaicDefinitionTransaction'
+import {ViewMosaicSupplyChangeTransaction} from '@/core/transactions/ViewMosaicSupplyChangeTransaction'
+import {ViewNamespaceRegistrationTransaction} from '@/core/transactions/ViewNamespaceRegistrationTransaction'
+import {ViewTransferTransaction} from '@/core/transactions/ViewTransferTransaction'
+import {ViewUnknownTransaction} from '@/core/transactions/ViewUnknownTransaction'
+
+/// region custom types
+export type TransactionViewType = ViewMosaicDefinitionTransaction
+                         | ViewMosaicSupplyChangeTransaction
+                         | ViewNamespaceRegistrationTransaction
+                         | ViewTransferTransaction
+                         | ViewUnknownTransaction
+/// end-region custom types
 
 export class TransactionService extends AbstractService {
   /**
@@ -106,23 +119,93 @@ export class TransactionService extends AbstractService {
    }
   }
 
+/// region specialised signatures
+  public getView(transaction: MosaicDefinitionTransaction): ViewMosaicDefinitionTransaction
+  public getView(transaction: MosaicSupplyChangeTransaction): ViewMosaicSupplyChangeTransaction
+  public getView(transaction: NamespaceRegistrationTransaction): ViewNamespaceRegistrationTransaction
+  public getView(transaction: TransferTransaction): ViewTransferTransaction
+  //XXX not implemented yet
+  public getView(transaction: AccountAddressRestrictionTransaction): ViewUnknownTransaction
+  public getView(transaction: AccountLinkTransaction): ViewUnknownTransaction
+  public getView(transaction: AccountMetadataTransaction): ViewUnknownTransaction
+  public getView(transaction: AccountMosaicRestrictionTransaction): ViewUnknownTransaction
+  public getView(transaction: AccountOperationRestrictionTransaction): ViewUnknownTransaction
+  public getView(transaction: AddressAliasTransaction): ViewUnknownTransaction
+  public getView(transaction: AggregateTransaction): ViewUnknownTransaction
+  public getView(transaction: HashLockTransaction): ViewUnknownTransaction
+  public getView(transaction: MosaicAddressRestrictionTransaction): ViewUnknownTransaction
+  public getView(transaction: MosaicAliasTransaction): ViewUnknownTransaction
+  public getView(transaction: MosaicGlobalRestrictionTransaction): ViewUnknownTransaction
+  public getView(transaction: MosaicMetadataTransaction): ViewUnknownTransaction
+  public getView(transaction: MultisigAccountModificationTransaction): ViewUnknownTransaction
+  public getView(transaction: NamespaceMetadataTransaction): ViewUnknownTransaction
+  public getView(transaction: SecretLockTransaction): ViewUnknownTransaction
+  public getView(transaction: SecretProofTransaction): ViewUnknownTransaction
+/// end-region specialised signatures
+
   /**
    * Returns true when \a transaction is an incoming transaction
    * @param {Transaction} transaction 
-   * @return {boolean}
+   * @return {TransactionViewType}
+   * @throws {Error} On unrecognized transaction type (view not implemented)
    */
-  public getTransactionDetails(transaction: Transaction): {
-    hasBlockInfo: boolean,
-    isIncoming: boolean,
-    maxFee: number,
-    effectiveFee: number,
-  } {
-    // store shortcuts
+  public getView(transaction: Transaction): TransactionViewType {
+    // - store shortcuts
     const currentWallet: WalletsModel = this.$store.getters['wallet/currentWallet']
-    const knownWallets: WalletsModel[] = this.$store.getters['wallet/knownWallets']
-    const knownBlocks: Record<number, BlockInfo> = this.$store.getters['network/knownBlocks']
+    const knownBlocks: {[h: number]: BlockInfo}= this.$store.getters['network/knownBlocks']
 
-    // try to find block for fee information
+    // - interpret transaction type and initialize view
+    let view: TransactionViewType
+    switch (transaction.type) {
+    /// region XXX views for transaction types not yet implemented
+    case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
+    case TransactionType.LINK_ACCOUNT:
+    case TransactionType.ACCOUNT_METADATA_TRANSACTION:
+    case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
+    case TransactionType.ACCOUNT_RESTRICTION_OPERATION:
+    case TransactionType.ADDRESS_ALIAS:
+    case TransactionType.AGGREGATE_BONDED:
+    case TransactionType.AGGREGATE_COMPLETE:
+    case TransactionType.LOCK:
+    case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
+    case TransactionType.MOSAIC_ALIAS:
+    case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
+    case TransactionType.MOSAIC_METADATA_TRANSACTION:
+    case TransactionType.MODIFY_MULTISIG_ACCOUNT:
+    case TransactionType.NAMESPACE_METADATA_TRANSACTION:
+    case TransactionType.SECRET_LOCK:
+    case TransactionType.SECRET_PROOF:
+      view = new ViewUnknownTransaction(this.$store);
+      view.use(transaction)
+      break;
+
+    /// end-region XXX views for transaction types not yet implemented
+
+    case TransactionType.MOSAIC_DEFINITION:
+      view = new ViewMosaicDefinitionTransaction(this.$store);
+      view.use(transaction as MosaicDefinitionTransaction)
+      break;
+    case TransactionType.MOSAIC_SUPPLY_CHANGE:
+      view = new ViewMosaicSupplyChangeTransaction(this.$store); 
+      view.use(transaction as MosaicSupplyChangeTransaction)
+      break;
+    case TransactionType.REGISTER_NAMESPACE:
+      view = new ViewNamespaceRegistrationTransaction(this.$store);
+      view.use(transaction as NamespaceRegistrationTransaction)
+      break;
+    case TransactionType.TRANSFER: 
+      view = new ViewTransferTransaction(this.$store);
+      view.use(transaction as TransferTransaction)
+      break;
+
+    default:
+      // - throw on transaction view not implemented 
+      const errorMessage = 'View not implemented for transaction type \'' + transaction.type + ' \''
+      this.$store.dispatch('diagnostic/ADD_ERROR', errorMessage)
+      throw new Error(errorMessage)
+    }
+
+    // - try to find block for fee information
     const height = transaction.transactionInfo ? transaction.transactionInfo.height : undefined
     const block = Object().values(knownBlocks).find((known: BlockInfo) => known.height.equals(height))
 
@@ -131,24 +214,24 @@ export class TransactionService extends AbstractService {
       TransactionType.AGGREGATE_COMPLETE
     ].includes(transaction.type)
 
-    let details = {
-      isIncoming: false,
-      maxFee: isAggregate ? 0 : transaction.maxFee.compact(),
-      effectiveFee: 0,
-      hasBlockInfo: undefined !== block
+    // - set helper fields
+    view.values.set('isIncoming', false)
+    view.values.set('hasBlockInfo', undefined !== block)
+
+    // - initialize fee fields
+    view.values.set('maxFee', isAggregate ? 0 : transaction.maxFee.compact())
+    view.values.set('effectiveFee', 0)
+    if (!isAggregate && view.values.get('hasBlockInfo')) {
+      view.values.set('effectiveFee', transaction.size * block.feeMultiplier)
     }
 
+    // - update helper fields by transaction type
     if (TransactionType.TRANSFER === transaction.type) {
       const transfer = this.getDerivateTransaction(transaction) as TransferTransaction
-      details['isIncoming'] = transfer.recipientAddress.equals(currentWallet.objects.address)
+      view.values.set('isIncoming', transfer.recipientAddress.equals(currentWallet.objects.address))
     }
 
-    // - populate common transaction fields
-    if (! isAggregate && details.hasBlockInfo) {
-      details['effectiveFee'] = transaction.size * block.feeMultiplier
-    }
-
-    return details
+    return view
   }
 
   /**
@@ -160,7 +243,7 @@ export class TransactionService extends AbstractService {
   public announceSignedTransactions(): Observable<BroadcastResult[]> {
     // shortcuts
     const signedTransactions = this.$store.getters['wallet/signedTransactions']
-    
+
     // - simple transactions only
     const transactions = signedTransactions.filter(
       tx => ![

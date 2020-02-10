@@ -19,11 +19,11 @@ import {mapGetters} from 'vuex'
 import {pluck, concatMap} from 'rxjs/operators'
 import {of, Observable} from 'rxjs'
 import {QRCodeGenerator, TransactionQR} from 'nem2-qr-library'
-import {NetworkType, TransferTransaction, Address, MosaicId} from 'nem2-sdk'
+import {NetworkType, TransferTransaction, Address, MosaicId, Transaction} from 'nem2-sdk'
 
 // child components
 // @ts-ignore
-import FormTransferCreation from '@/views/forms/FormTransferCreation/FormTransferCreation.vue'
+import FormTransferTransaction from '@/views/forms/FormTransferTransaction/FormTransferTransaction.vue'
 
 // resources
 // @ts-ignore
@@ -58,10 +58,9 @@ export interface BalanceEntry {
   amount: number
 }
 
-
 @Component({
   components: {
-    FormTransferCreation,
+    FormTransferTransaction,
   },
   computed: {...mapGetters({
     networkType: 'network/networkType',
@@ -102,9 +101,9 @@ export class DashboardInvoicePageTs extends Vue {
 
   /**
    * The transaction to be translated to a QR code
-   * @type {TransferTransaction}
+   * @type {Transaction[]}
    */
-  public transaction: TransferTransaction = null
+  public transactions: Transaction[] = []
 
   /**
    * The transaction's mosaics to be displayed
@@ -119,8 +118,11 @@ export class DashboardInvoicePageTs extends Vue {
    * @type {string}
    */
   public get recipient(): string {
-    if (!this.transaction || this.transaction.recipientAddress === undefined) return ''
-    const recipient = this.transaction.recipientAddress
+    if (!this.transactions.length) return ''
+
+    // - read TransferTransaction instance
+    const transfer = this.transactions.shift() as TransferTransaction
+    const recipient = transfer.recipientAddress
     return recipient instanceof Address ? recipient.pretty() : recipient.toHex()
   }
 
@@ -130,11 +132,15 @@ export class DashboardInvoicePageTs extends Vue {
    * @type {TransactionQR}
    */
   public get transactionQR(): TransactionQR {
-    if (!this.transaction || this.transaction.recipientAddress === undefined) return null
+    if (!this.transactions.length) return null
+
+    // - read TransferTransaction instance
+    const transfer = this.transactions.shift() as TransferTransaction
+    console.log("invoice transfer: ", transfer)
 
     try {
       return QRCodeGenerator.createTransactionRequest(
-        this.transaction,
+        transfer,
         this.networkType,
         this.generationHash,
       )
@@ -150,14 +156,8 @@ export class DashboardInvoicePageTs extends Vue {
    * emits the 'change' event with its new values.
    * @param {any} formItems
    */
-  public onInvoiceChange(invoiceParams: {
-    transaction: TransferTransaction
-    balanceEntries: BalanceEntry[]
-  }) {
-    const {transaction, balanceEntries} = invoiceParams
-    if (!transaction) return
-    Vue.set(this, 'transaction', transaction)
-    Vue.set(this, 'balanceEntries', balanceEntries)
+  public onInvoiceChange(transactions: Transaction[]) {
+    Vue.set(this, 'transactions', transactions)
   }
 
   /**

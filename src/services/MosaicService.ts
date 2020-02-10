@@ -73,7 +73,7 @@ export class MosaicService extends AbstractService {
   public async getMosaicName(mosaic: MosaicId): Promise<string> {
     // - get names from store
     const names = this.$store.getters['mosaic/mosaicsNames']
-    let mosaicName: string
+    let mosaicName: any
 
     // - if store doesn't know a name for this mosaics, dispatch fetch action
     if (! names.hasOwnProperty(mosaic.toHex())) {
@@ -86,7 +86,9 @@ export class MosaicService extends AbstractService {
 
     //XXX save in storage
 
-    return mosaicName
+    return mosaicName.hasOwnProperty('namespaceId')
+         ? mosaicName.namespaceId.fullName
+         : mosaicName
   }
 
   /**

@@ -93,6 +93,8 @@ export default {
     currentWalletInfo: null,
     currentWalletMosaics: [],
     currentMultisigInfo: null,
+    currentWalletOwnedMosaics: [],
+    currentWalletOwnedNamespaces: [],
     knownWallets: [],
     otherWalletsInfo: {},
     otherMultisigsInfo: {},
@@ -113,6 +115,8 @@ export default {
     currentWalletAddress: state => state.currentWalletAddress,
     currentWalletInfo: state => state.currentWalletInfo,
     currentWalletMosaics: state => state.currentWalletMosaics,
+    currentWalletOwnedMosaics: state => state.currentWalletOwnedMosaics,
+    currentWalletOwnedNamespaces: state => state.currentWalletOwnedNamespaces,
     currentMultisigInfo: state => state.currentMultisigInfo,
     knownWallets: state => state.knownWallets,
     otherWalletsInfo: state => state.otherWalletsInfo,
@@ -139,6 +143,8 @@ export default {
     currentWalletAddress: (state, walletAddress) => Vue.set(state, 'currentWalletAddress', walletAddress),
     currentWalletInfo: (state, currentWalletInfo) => Vue.set(state, 'currentWalletInfo', currentWalletInfo),
     currentWalletMosaics: (state, currentWalletMosaics) => Vue.set(state, 'currentWalletMosaics', currentWalletMosaics),
+    currentWalletOwnedMosaics: (state, currentWalletOwnedMosaics) => Vue.set(state, 'currentWalletOwnedMosaics', currentWalletOwnedMosaics),
+    currentWalletOwnedNamespaces: (state, currentWalletOwnedNamespaces) => Vue.set(state, 'currentWalletOwnedNamespaces', currentWalletOwnedNamespaces),
     setKnownWallets: (state, wallets) => Vue.set(state, 'knownWallets', wallets),
     addWalletInfo: (state, walletInfo) => {
       // update storage
@@ -554,6 +560,68 @@ export default {
       }
       catch (e) {
         console.error('An error happened while trying to fetch multisig information: <pre>' + e + '</pre>')
+        return false
+      }
+    },
+    async REST_FETCH_OWNED_MOSAICS({commit, dispatch, getters, rootGetters}, address) {
+      if (address instanceof WalletsModel) {
+        address = address.objects.address.plain()
+      }
+
+      if (!address || address.length !== 40) {
+        return ;
+      }
+
+      try {
+        // prepare REST parameters
+        const currentPeer = rootGetters['network/currentPeer'].url
+        const currentWallet = getters['currentWallet']
+        const addressObject = Address.createFromRawAddress(address)
+
+        // fetch account info from REST gateway
+        const mosaicHttp = RESTService.create('MosaicHttp', currentPeer)
+        const ownedMosaics = await mosaicHttp.getMosaicsFromAccount(addressObject).toPromise()
+
+        // store multisig info
+        if (currentWallet && currentWallet.values.get('address') === address) {
+          commit('currentWalletOwnedMosaics', ownedMosaics)
+        }
+
+        return ownedMosaics
+      }
+      catch (e) {
+        console.error('An error happened while trying to fetch owned mosaics information: <pre>' + e + '</pre>')
+        return false
+      }
+    },
+    async REST_FETCH_OWNED_NAMESPACES({commit, dispatch, getters, rootGetters}, address) {
+      if (address instanceof WalletsModel) {
+        address = address.objects.address.plain()
+      }
+
+      if (!address || address.length !== 40) {
+        return ;
+      }
+
+      try {
+        // prepare REST parameters
+        const currentPeer = rootGetters['network/currentPeer'].url
+        const currentWallet = getters['currentWallet']
+        const addressObject = Address.createFromRawAddress(address)
+
+        // fetch account info from REST gateway
+        const namespaceHttp = RESTService.create('NamespaceHttp', currentPeer)
+        const ownedNamespaces = await namespaceHttp.getNamespacesFromAccount(addressObject).toPromise()
+
+        // store multisig info
+        if (currentWallet && currentWallet.values.get('address') === address) {
+          commit('currentWalletOwnedNamespaces', ownedNamespaces)
+        }
+
+        return ownedNamespaces
+      }
+      catch (e) {
+        console.error('An error happened while trying to fetch owned namespaces information: <pre>' + e + '</pre>')
         return false
       }
     },

@@ -1,8 +1,7 @@
 <template>
   <div class="transfer-container secondary_page_animate">
     <div class="left-container scroll">
-      <DisabledFormOverlay />
-      <FormTransferCreation />
+      <FormTransferTransaction />
     </div>
 
     <div class="right-container">

@@ -1,10 +1,8 @@
 <template>
   <div class="transactionConfirmationWrap">
     <Modal
-      v-if="visible && stagedTransactions.length"
-      :title="$t('transaction_details')"
-      class-name="vertical-center-modal"
-      :footer-hide="true"
+      v-if="show"
+      :title="$t('modal_title_transaction_confirmation')"
       :transfer="false"
     >
       <div slot="header" class="transactionConfirmationHeader">
@@ -17,9 +15,27 @@
             <TransactionDetails :transaction="transaction" />
           </div>
 
-          <HardwareConfirmationButton v-if="isUsingHardwareWallet()" @success="onTransactionsSigned" @error="onError" />
-          <FormAccountUnlock v-else @success="onAccountUnlocked" @error="onError" />
+          <HardwareConfirmationButton 
+            v-if="isUsingHardwareWallet()" 
+            @success="onTransactionsSigned"
+            @error="onError"
+          />
+          <FormAccountUnlock 
+            v-else
+            @success="onAccountUnlocked"
+            @error="onError"
+          />
         </div>
+      </div>
+
+      <div slot="footer" class="modal-footer">
+        <button
+          type="submit"
+          class="centered-button button-style back-button float-right"
+          @click="show = false"
+        >
+          {{ $t('close') }}
+        </button>
       </div>
     </Modal>
   </div>
