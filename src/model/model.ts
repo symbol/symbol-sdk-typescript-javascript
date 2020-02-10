@@ -30,7 +30,7 @@ export * from './account/AccountNames';
 
 // Blockchain
 export * from './blockchain/BlockchainScore';
-export * from './blockchain/BlockchainStorageInfo';
+export * from './blockchain/StorageInfo';
 export * from './blockchain/BlockInfo';
 export * from './blockchain/NetworkType';
 export * from './blockchain/MerklePathItem';
@@ -38,7 +38,7 @@ export * from './blockchain/MerkleProofInfo';
 export * from './blockchain/NetworkName';
 
 // Diagnostic
-export * from './diagnostic/ServerInfo';
+export * from './node/ServerInfo';
 
 // Mosaic
 export * from './mosaic/Mosaic';
@@ -75,6 +75,7 @@ export * from './namespace/EmptyAlias';
 export * from './node/NodeInfo';
 export * from './node/NodeTime';
 export * from './node/RoleType';
+export * from './node/NodeHealth';
 
 // Receipt
 export * from './receipt/ArtifactExpiryReceipt';

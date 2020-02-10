@@ -15,8 +15,11 @@
  */
 
 import {Observable} from 'rxjs';
+import { StorageInfo } from '../model/blockchain/StorageInfo';
+import { NodeHealth } from '../model/node/NodeHealth';
 import { NodeInfo } from '../model/node/NodeInfo';
 import { NodeTime } from '../model/node/NodeTime';
+import { ServerInfo } from '../model/node/ServerInfo';
 
 /**
  * Node interface repository.
@@ -36,4 +39,24 @@ export interface NodeRepository {
      * @summary Get the node time
      */
     getNodeTime(): Observable<NodeTime>;
+
+    /**
+     * Get node health information
+     *
+     * @return {@link NodeHealth} of NodeHealth
+     */
+    getNodeHealth(): Observable<NodeHealth>;
+
+    /**
+     * Gets blockchain storage info.
+     * @returns Observable<StorageInfo>
+     */
+    getStorageInfo(): Observable<StorageInfo>;
+
+    /**
+     * Gets blockchain server info.
+     * @returns Observable<Server>
+     */
+    getServerInfo(): Observable<ServerInfo>;
+
 }

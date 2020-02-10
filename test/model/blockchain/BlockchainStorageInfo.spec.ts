@@ -15,18 +15,18 @@
  */
 
 import {expect} from 'chai';
-import {BlockchainStorageInfo} from '../../../src/model/blockchain/BlockchainStorageInfo';
+import { StorageInfo } from '../../../src/model/blockchain/StorageInfo';
 
 describe('BlockchainStorageInfo', () => {
 
-    it('should createComplete an BlockchainStorageInfo object', () => {
+    it('should createComplete an StorageInfo object', () => {
         const blockchainStorageInfoDTO = {
             numBlocks: 1,
             numTransactions: 100,
             numAccounts: 10,
         };
 
-        const blockchainScore = new BlockchainStorageInfo(
+        const blockchainScore = new StorageInfo(
             blockchainStorageInfoDTO.numBlocks,
             blockchainStorageInfoDTO.numTransactions,
             blockchainStorageInfoDTO.numAccounts,

@@ -48,4 +48,29 @@ describe('NodeHttp', () => {
             expect(nodeTime.sendTimeStamp).not.to.be.undefined;
         });
     });
+
+    describe('getStorageInfo', () => {
+        it('should return storage info', async () => {
+            const blockchainStorageInfo = await nodeRepository.getStorageInfo().toPromise();
+            expect(blockchainStorageInfo.numBlocks).to.be.greaterThan(0);
+            expect(blockchainStorageInfo.numTransactions).to.be.greaterThan(0);
+            expect(blockchainStorageInfo.numAccounts).to.be.greaterThan(0);
+        });
+    });
+
+    describe('getServerInfo', () => {
+        it('should return server info', async () => {
+            const serverInfo = await nodeRepository.getServerInfo().toPromise();
+            expect(serverInfo.restVersion).not.to.be.null;
+            expect(serverInfo.sdkVersion).not.to.be.null;
+        });
+    });
+
+    describe('getNodeHealth', () => {
+        it('should return node health', async () => {
+            const health = await nodeRepository.getNodeHealth().toPromise();
+            expect(health.apiNode).not.to.be.null;
+            expect(health.db).not.to.be.null;
+        });
+    });
 });
