@@ -52,7 +52,7 @@ import { FormGeneralSettingsTs } from './FormGeneralSettingsTs'
 export default class FormGeneralSettings extends FormGeneralSettingsTs {}
 </script>
 
-<style scope>
+<style scoped>
 .general-settings-container {
   display: block;
   width: 100%;

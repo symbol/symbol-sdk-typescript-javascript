@@ -1,5 +1,7 @@
 {
   "name": "symbol-desktop-wallet",
+  "description": "Symbol Wallet",
+  "homepage": "https://github.com/nemfoundation/symbol-desktop-wallet",
   "version": "1.0.0",
   "scripts": {
     "dev": "vue-cli-service serve ",

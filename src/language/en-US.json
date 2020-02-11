@@ -1003,5 +1003,20 @@
   "fee_speed_slow": "Slow",
   "fee_speed_normal": "Normal",
   "fee_speed_fast": "Fast",
-  "fee_speed_fastest": "Fastest"
+  "fee_speed_fastest": "Fastest",
+  "about_app_release": "Software Release",
+  "about_app_url": "Software Homepage",
+  "about_dependencies": "Dependencies",
+  "about_sdk_version": "Symbol SDK",
+  "about_typescript_version": "Typescript",
+  "about_vue_version": "Vue Framework",
+  "about_rxjs_version": "RxJs Library",
+  "about_network": "Network",
+  "about_default_node": "Default node",
+  "about_network_type": "Network type",
+  "about_generation_hash": "Generation hash",
+  "form_label_new_password": "Enter a new password",
+  "form_label_new_password_confirm": "Confirm your new password",
+  "form_label_new_password_hint": "Enter a password hint",
+  "success_password_changed": "Your password was updated successfully. You will now be logged out."
 }
