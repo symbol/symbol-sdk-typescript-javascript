@@ -39,19 +39,15 @@ export class EncryptedMessage extends Message {
      * @param message - Plain message to be encrypted
      * @param recipientPublicAccount - Recipient public account
      * @param privateKey - Sender private key
-     * @param {NetworkType} networkType - Catapult network type
      * @return {EncryptedMessage}
      */
     public static create(message: string,
                          recipientPublicAccount: PublicAccount,
-                         privateKey: string,
-                         networkType: NetworkType): EncryptedMessage {
-        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
+                         privateKey: string): EncryptedMessage {
         return new EncryptedMessage(
             Crypto.encode(privateKey,
                           recipientPublicAccount.publicKey,
-                          message,
-                          signSchema).toUpperCase(),
+                          message).toUpperCase(),
             recipientPublicAccount);
     }
 
@@ -68,18 +64,14 @@ export class EncryptedMessage extends Message {
      * @param encryptMessage - Encrypted message to be decrypted
      * @param privateKey - Recipient private key
      * @param recipientPublicAccount - Sender public account
-     * @param {NetworkType} networkType - Catapult network type
      * @return {PlainMessage}
      */
     public static decrypt(encryptMessage: EncryptedMessage,
                           privateKey,
-                          recipientPublicAccount: PublicAccount,
-                          networkType: NetworkType): PlainMessage {
-        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
+                          recipientPublicAccount: PublicAccount): PlainMessage {
         return new PlainMessage(this.decodeHex(
                 Crypto.decode(privateKey,
                               recipientPublicAccount.publicKey,
-                              encryptMessage.payload,
-                              signSchema)));
+                              encryptMessage.payload)));
     }
 }

@@ -144,21 +144,6 @@ describe('address', () => {
             expect(address.isValidAddress(decoded2, NetworkType.TEST_NET)).to.equal(true);
             expect(decoded1).to.not.deep.equal(decoded2);
         });
-
-        it('can create address from public key using NIS1 schema', () => {
-            const nonKeccakHex = '9823BB7C3C089D996585466380EDBDC19D495918484BF7E997';
-            const keccakHex = '981A00208CDDCC647BF1E065E93824FAA732AAB187CC1A9B02';
-            const publicKey = convert.hexToUint8('3485D98EFD7EB07ADAFCFD1A157D89DE2796A95E780813C0258AF3F5F84ED8CB');
-
-            // Act:
-            const decoded = address.publicKeyToAddress(publicKey, NetworkType.TEST_NET);
-
-            // Assert:
-            expect(decoded[0]).to.equal(NetworkType.TEST_NET);
-            expect(address.isValidAddress(decoded, NetworkType.TEST_NET)).to.equal(true);
-            expect(convert.uint8ToHex(decoded)).to.equal(keccakHex);
-            expect(convert.uint8ToHex(decoded)).not.to.equal(nonKeccakHex);
-        });
     });
 
     describe('isValidAddress', () => {
@@ -193,25 +178,25 @@ describe('address', () => {
     });
 
     /**
-     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-nis1.json
+     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address.json
      */
-    describe('NIS1 test vector [PublicNet] - PublicKey to Address', () => {
-        it('can create Address from NIS public Key', () => {
+    describe('Catapult test vector [PublicNet] - PublicKey to Address', () => {
+        it('can create Address from Catapult public Key', () => {
             // Arrange:
             const Public_Keys = [
-                'd6c3845431236c5a5a907a9e45bd60da0e12efd350b970e7f58e3499e2e7a2f0',
-                'f3bd51add90a7be8ed81f64eee9456af3b38478275b17eabe1853dfcfd3bf2cd',
-                '017cb008d00e41d17a6a09a6be5c65c89e1e28706a621b0791b270e4f6182cc3',
-                '60068a23a0893538b5c364cac86cb8670668be84aee2b6fcff83fdf39a03f822',
-                'ae054ef2a458a0cee6b34a1dd32597a9236c4d453040b9af58b5ae22a73024b7',
+                '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F',
+                '4875FD2E32875D1BC6567745F1509F0F890A1BF8EE59FA74452FA4183A270E03',
+                '9F780097FB6A1F287ED2736A597B8EA7F08D20F1ECDB9935DE6694ECF1C58900',
+                '0815926E003CDD5AF0113C0E067262307A42CD1E697F53B683F7E5F9F57D72C9',
+                '3683B3E45E76870CFE076E47C2B34CE8E3EAEC26C8AA7C1ED752E3E840AF8A27',
             ];
 
             const Addresses = [
-                'NCFGSLITSWMRROU2GO7FPMIUUDELUPSZUNJABUMH',
-                'NAAPGLKY7HZNQJYM4T6JEKM4NU6M2MOBIV3T4GNF',
-                'NCF5QZSBRM2CXTXIG3YWXZ7X6NARCF5JMD55OCV6',
-                'NC3U645TJAVWXXYOLRQIX7GIZEVZWLN5W44Z3KZT',
-                'NBLWRN5WLGP5MUBKMDQCHK6BWJL2LSJRVMDT7HQD',
+                'NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ3365',
+                'NDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2YCZOQR4',
+                'NCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRH6SYIUT',
+                'NDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWFDDCHAF',
+                'NDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QAZ4BMVY',
             ];
 
             // Sanity:
@@ -234,25 +219,25 @@ describe('address', () => {
     });
 
     /**
-     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-nis1.json
+     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address.json
      */
-    describe('NIS1 test vector [PublicTest] - PublicKey to Address', () => {
-        it('can create Address from NIS public Key', () => {
+    describe('Catapult test vector [PublicTest] - PublicKey to Address', () => {
+        it('can create Address from Catapult public Key', () => {
             // Arrange:
             const Public_Keys = [
-                'd6c3845431236c5a5a907a9e45bd60da0e12efd350b970e7f58e3499e2e7a2f0',
-                'f3bd51add90a7be8ed81f64eee9456af3b38478275b17eabe1853dfcfd3bf2cd',
-                '017cb008d00e41d17a6a09a6be5c65c89e1e28706a621b0791b270e4f6182cc3',
-                '60068a23a0893538b5c364cac86cb8670668be84aee2b6fcff83fdf39a03f822',
-                'ae054ef2a458a0cee6b34a1dd32597a9236c4d453040b9af58b5ae22a73024b7',
+                '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F',
+                '4875FD2E32875D1BC6567745F1509F0F890A1BF8EE59FA74452FA4183A270E03',
+                '9F780097FB6A1F287ED2736A597B8EA7F08D20F1ECDB9935DE6694ECF1C58900',
+                '0815926E003CDD5AF0113C0E067262307A42CD1E697F53B683F7E5F9F57D72C9',
+                '3683B3E45E76870CFE076E47C2B34CE8E3EAEC26C8AA7C1ED752E3E840AF8A27',
             ];
 
             const Addresses = [
-                'TCFGSLITSWMRROU2GO7FPMIUUDELUPSZUNUEZF33',
-                'TAAPGLKY7HZNQJYM4T6JEKM4NU6M2MOBIXGXU3O6',
-                'TCF5QZSBRM2CXTXIG3YWXZ7X6NARCF5JMB6EXFEQ',
-                'TC3U645TJAVWXXYOLRQIX7GIZEVZWLN5W7JQHW5U',
-                'TBLWRN5WLGP5MUBKMDQCHK6BWJL2LSJRVO7ZCX3R',
+                'TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5UW',
+                'TDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2YBO3KHD',
+                'TCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRE3VIBRU',
+                'TDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWEPHRSM7',
+                'TDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QCY5ZUBR',
             ];
 
             // Sanity:
@@ -275,107 +260,25 @@ describe('address', () => {
     });
 
     /**
-     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-catapult.json
-     */
-    describe('Catapult test vector [PublicNet] - PublicKey to Address', () => {
-        it('can create Address from Catapult public Key', () => {
-            // Arrange:
-            const Public_Keys = [
-                'BD8D3F8B7E1B3839C650F458234AB1FF87CDB1EDA36338D9E446E27D454717F2',
-                '26821636A618FD524A3AB57276EFC36CAF787DF19EE00F60035CE376A18E8C47',
-                'DFC7F40FC549AC8BB2EF097600103FF457A1D7DC5755D434474761459B030E6F',
-                '96C7AB358EBB91104322C56435642BD939A77432286B229372987FC366EA319F',
-                '9488CFB5D7D439213B11FA80C1B57E8A7AB7E41B64CBA18A89180D412C04915C',
-            ];
-
-            const Addresses = [
-                'MDIPRQMB3HT7A6ZKV7HOHJQM7JHX6H3FN5YHHZMD',
-                'MC65QJI4OWTUFJNQ2IDVOMUTE7IDI2EGEEZ6ADFH',
-                'MCBC4VAQBVSB4J5J2PTFM7OUY5CYDL33VUHV7FNU',
-                'MBLW3CQPBGPCFAXG4XM5GDEVLPESCPDPFN4NBABW',
-                'MA5RDU36TKBTW4KVSSPD7PT5YTUMD7OIJEMAYYMV',
-            ];
-
-            // Sanity:
-            expect(Public_Keys.length).equal(Addresses.length);
-
-            for (let i = 0; i < Public_Keys.length; ++i) {
-                // Arrange:
-                const publicKeyHex = Public_Keys[i];
-                const expectedAddress = Addresses[i];
-
-                // Act:
-                const result = address.addressToString(
-                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN));
-
-                // Assert:
-                const message = ` from ${publicKeyHex}`;
-                expect(result.toUpperCase(), `public ${message}`).equal(expectedAddress.toUpperCase());
-            }
-        });
-    });
-
-    /**
-     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-catapult.json
-     */
-    describe('Catapult test vector [PublicTest] - PublicKey to Address', () => {
-        it('can create Address from Catapult public Key', () => {
-            // Arrange:
-            const Public_Keys = [
-                'BD8D3F8B7E1B3839C650F458234AB1FF87CDB1EDA36338D9E446E27D454717F2',
-                '26821636A618FD524A3AB57276EFC36CAF787DF19EE00F60035CE376A18E8C47',
-                'DFC7F40FC549AC8BB2EF097600103FF457A1D7DC5755D434474761459B030E6F',
-                '96C7AB358EBB91104322C56435642BD939A77432286B229372987FC366EA319F',
-                '9488CFB5D7D439213B11FA80C1B57E8A7AB7E41B64CBA18A89180D412C04915C',
-            ];
-
-            const Addresses = [
-                'SDIPRQMB3HT7A6ZKV7HOHJQM7JHX6H3FN5EIRD3D',
-                'SC65QJI4OWTUFJNQ2IDVOMUTE7IDI2EGEGTDOMI3',
-                'SCBC4VAQBVSB4J5J2PTFM7OUY5CYDL33VVLQRCX6',
-                'SBLW3CQPBGPCFAXG4XM5GDEVLPESCPDPFNJYN46J',
-                'SA5RDU36TKBTW4KVSSPD7PT5YTUMD7OIJGV24AZM',
-            ];
-
-            // Sanity:
-            expect(Public_Keys.length).equal(Addresses.length);
-
-            for (let i = 0; i < Public_Keys.length; ++i) {
-                // Arrange:
-                const publicKeyHex = Public_Keys[i];
-                const expectedAddress = Addresses[i];
-
-                // Act:
-                const result = address.addressToString(
-                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN_TEST));
-
-                // Assert:
-                const message = ` from ${publicKeyHex}`;
-                expect(result.toUpperCase(), `public ${message}`).equal(expectedAddress.toUpperCase());
-            }
-        });
-    });
-
-    /**
-     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-catapult.json
+     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address.json
      */
     describe('Catapult test vector [MIJIN] - PublicKey to Address', () => {
         it('can create Address from Catapult public Key', () => {
             // Arrange:
             const Public_Keys = [
-                'BD8D3F8B7E1B3839C650F458234AB1FF87CDB1EDA36338D9E446E27D454717F2',
-                '26821636A618FD524A3AB57276EFC36CAF787DF19EE00F60035CE376A18E8C47',
-                'DFC7F40FC549AC8BB2EF097600103FF457A1D7DC5755D434474761459B030E6F',
-                '96C7AB358EBB91104322C56435642BD939A77432286B229372987FC366EA319F',
-                '9488CFB5D7D439213B11FA80C1B57E8A7AB7E41B64CBA18A89180D412C04915C',
+                '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F',
+                '4875FD2E32875D1BC6567745F1509F0F890A1BF8EE59FA74452FA4183A270E03',
+                '9F780097FB6A1F287ED2736A597B8EA7F08D20F1ECDB9935DE6694ECF1C58900',
+                '0815926E003CDD5AF0113C0E067262307A42CD1E697F53B683F7E5F9F57D72C9',
+                '3683B3E45E76870CFE076E47C2B34CE8E3EAEC26C8AA7C1ED752E3E840AF8A27',
             ];
 
             const Addresses = [
-                'MDIPRQMB3HT7A6ZKV7HOHJQM7JHX6H3FN5YHHZMD',
-                'MC65QJI4OWTUFJNQ2IDVOMUTE7IDI2EGEEZ6ADFH',
-                'MCBC4VAQBVSB4J5J2PTFM7OUY5CYDL33VUHV7FNU',
-                'MBLW3CQPBGPCFAXG4XM5GDEVLPESCPDPFN4NBABW',
-                'MA5RDU36TKBTW4KVSSPD7PT5YTUMD7OIJEMAYYMV',
+                'MATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34YACREP',
+                'MDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22B27FN3',
+                'MCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRFDHL7JO',
+                'MDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWFN3NK2Z',
+                'MDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QCLCVED4',
             ];
 
             // Sanity:
@@ -398,25 +301,25 @@ describe('address', () => {
     });
 
     /**
-     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-catapult.json
+     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address.json
      */
     describe('Catapult test vector [MIJIN_TEST] - PublicKey to Address', () => {
         it('can create Address from Catapult public Key', () => {
             // Arrange:
             const Public_Keys = [
-                'BD8D3F8B7E1B3839C650F458234AB1FF87CDB1EDA36338D9E446E27D454717F2',
-                '26821636A618FD524A3AB57276EFC36CAF787DF19EE00F60035CE376A18E8C47',
-                'DFC7F40FC549AC8BB2EF097600103FF457A1D7DC5755D434474761459B030E6F',
-                '96C7AB358EBB91104322C56435642BD939A77432286B229372987FC366EA319F',
-                '9488CFB5D7D439213B11FA80C1B57E8A7AB7E41B64CBA18A89180D412C04915C',
+                '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F',
+                '4875FD2E32875D1BC6567745F1509F0F890A1BF8EE59FA74452FA4183A270E03',
+                '9F780097FB6A1F287ED2736A597B8EA7F08D20F1ECDB9935DE6694ECF1C58900',
+                '0815926E003CDD5AF0113C0E067262307A42CD1E697F53B683F7E5F9F57D72C9',
+                '3683B3E45E76870CFE076E47C2B34CE8E3EAEC26C8AA7C1ED752E3E840AF8A27',
             ];
 
             const Addresses = [
-                'SDIPRQMB3HT7A6ZKV7HOHJQM7JHX6H3FN5EIRD3D',
-                'SC65QJI4OWTUFJNQ2IDVOMUTE7IDI2EGEGTDOMI3',
-                'SCBC4VAQBVSB4J5J2PTFM7OUY5CYDL33VVLQRCX6',
-                'SBLW3CQPBGPCFAXG4XM5GDEVLPESCPDPFNJYN46J',
-                'SA5RDU36TKBTW4KVSSPD7PT5YTUMD7OIJGV24AZM',
+                'SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMUQ',
+                'SDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2Z5UYY4U',
+                'SCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRFENHXSH',
+                'SDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWH6N46CD',
+                'SDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QDVZG2PO',
             ];
 
             // Sanity:

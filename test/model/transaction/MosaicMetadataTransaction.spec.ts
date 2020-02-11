@@ -93,8 +93,8 @@ describe('MosaicMetadataTransaction', () => {
         expect(signedTransaction.payload.substring(
             256,
             signedTransaction.payload.length,
-        )).to.be.equal('C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFEE80' +
-                       '30000000000004CCCD78612DDF5CA01000A0000000000000000000000');
+        )).to.be.equal('9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8' +
+                       '787B6E8030000000000004CCCD78612DDF5CA01000A0000000000000000000000');
     });
 
     it('should throw error if value size is bigger than 1024', () => {
@@ -128,8 +128,8 @@ describe('MosaicMetadataTransaction', () => {
         expect(signedTransaction.payload.substring(
             256,
             signedTransaction.payload.length,
-        )).to.be.equal('C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFEE80' +
-                       '3000000000000C51FB4C93FCA509501000A0000000000000000000000');
+        )).to.be.equal('9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA878' +
+                       '7B6E803000000000000C51FB4C93FCA509501000A0000000000000000000000');
     });
 
     describe('size', () => {

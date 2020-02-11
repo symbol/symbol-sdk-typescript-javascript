@@ -15,7 +15,7 @@
  */
 
 import { KeyPair, SHA3Hasher } from '../../core/crypto';
-import { Convert as convert} from '../../core/format';
+import { Convert as convert, Convert} from '../../core/format';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Address } from './Address';
 
@@ -80,9 +80,9 @@ export class PublicAccount {
         const convertedSignature = convert.hexToUint8(signature);
 
         // Convert to Uint8Array
-        const convertedData = convert.hexToUint8(convert.utf8ToHex(data));
-        const signSchema = SHA3Hasher.resolveSignSchema(this.address.networkType);
-        return KeyPair.verify(convert.hexToUint8(this.publicKey), convertedData, convertedSignature, signSchema);
+
+        const convertedData = convert.hexToUint8(Convert.isHexString(data) ? data : convert.utf8ToHex(data));
+        return KeyPair.verify(convert.hexToUint8(this.publicKey), convertedData, convertedSignature);
     }
 
     /**

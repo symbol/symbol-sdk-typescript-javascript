@@ -71,8 +71,8 @@ describe('MosaicAddressRestrictionTransaction', () => {
         expect(signedTransaction.payload.substring(
             256,
             signedTransaction.payload.length,
-        )).to.be.equal('0100000000000000010000000000000009000000000000000800000000000000' +
-                       '90A75B6B63D31BDA93808727940F24699AECDDF17C568508BA');
+        )).to.be.equal('010000000000000001000000000000000900000000000000080' +
+                       '000000000000090D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1204EA451');
     });
 
     it('should createComplete an MosaicAddressRestrictionTransaction use mosaic alias', () => {
@@ -97,8 +97,8 @@ describe('MosaicAddressRestrictionTransaction', () => {
         expect(signedTransaction.payload.substring(
             256,
             signedTransaction.payload.length,
-        )).to.be.equal('C51FB4C93FCA5095010000000000000009000000000000000800000000000000' +
-                       '90A75B6B63D31BDA93808727940F24699AECDDF17C568508BA');
+        )).to.be.equal('C51FB4C93FCA509501000000000000000900000000000000080000000000' +
+                       '000090D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1204EA451');
     });
 
     it('should createComplete an MosaicAddressRestrictionTransaction use address alias', () => {
@@ -124,8 +124,8 @@ describe('MosaicAddressRestrictionTransaction', () => {
         expect(signedTransaction.payload.substring(
             256,
             signedTransaction.payload.length,
-        )).to.be.equal('0100000000000000010000000000000009000000000000000800000000000000' +
-                       '91C51FB4C93FCA509500000000000000000000000000000000');
+        )).to.be.equal('01000000000000000100000000000000090000000000000008000000000' +
+                       '0000091C51FB4C93FCA509500000000000000000000000000000000');
     });
 
     it('should format targetAddress payload with 8 bytes binary namespaceId - targetAddressToString', () => {

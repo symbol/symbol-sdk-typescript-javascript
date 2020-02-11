@@ -15,7 +15,6 @@
  */
 
 import { expect } from 'chai';
-import { UnresolvedMapping } from '../../../src/core/utils/UnresolvedMapping';
 import { CreateStatementFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
 import { Account } from '../../../src/model/account/Account';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
@@ -61,7 +60,7 @@ describe('ResolutionStatement', () => {
                         primaryId: 1,
                         secondaryId: 0,
                         },
-                        resolved: '901D8D4741F80299E66BF7FEEB4F30943DA7B68E068B182319',
+                        resolved: '90AB9480887275E559F3BCA87E6158AA7AFF339BE85E77A0F3',
                     },
                     ],
                 },

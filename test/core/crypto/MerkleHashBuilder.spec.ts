@@ -15,13 +15,13 @@
  */
 
 import { expect } from 'chai';
-import { MerkleHashBuilder, SHA3Hasher, SignSchema } from '../../../src/core/crypto';
+import { MerkleHashBuilder } from '../../../src/core/crypto';
 import { Convert } from '../../../src/core/format';
 
 describe('MerkleHashBuilder should', () => {
     it('fill 0s for empty merkle tree', () => {
         // Arrange:
-        const builder = new MerkleHashBuilder(32, SignSchema.SHA3);
+        const builder = new MerkleHashBuilder(32);
 
         const rootHash = builder.getRootHash();
 
@@ -31,7 +31,7 @@ describe('MerkleHashBuilder should', () => {
 
     it('return first hash given single child', () => {
         // Arrange:
-        const builder = new MerkleHashBuilder(32, SignSchema.SHA3);
+        const builder = new MerkleHashBuilder(32);
 
         builder.update(Convert.hexToUint8('215B158F0BD416B596271BCE527CD9DC8E4A639CC271D896F9156AF6F441EEB9'));
 
@@ -43,7 +43,7 @@ describe('MerkleHashBuilder should', () => {
 
     it('create correct merkle hash given two children', () => {
         // Arrange:
-        const builder = new MerkleHashBuilder(32, SignSchema.SHA3);
+        const builder = new MerkleHashBuilder(32);
 
         builder.update(Convert.hexToUint8('215b158f0bd416b596271bce527cd9dc8e4a639cc271d896f9156af6f441eeb9'));
         builder.update(Convert.hexToUint8('976c5ce6bf3f797113e5a3a094c7801c885daf783c50563ffd3ca6a5ef580e25'));
@@ -56,7 +56,7 @@ describe('MerkleHashBuilder should', () => {
 
     it('create correct merkle hash given three children', () => {
         // Arrange:
-        const builder = new MerkleHashBuilder(32, SignSchema.SHA3);
+        const builder = new MerkleHashBuilder(32);
 
         builder.update(Convert.hexToUint8('215b158f0bd416b596271bce527cd9dc8e4a639cc271d896f9156af6f441eeb9'));
         builder.update(Convert.hexToUint8('976c5ce6bf3f797113e5a3a094c7801c885daf783c50563ffd3ca6a5ef580e25'));

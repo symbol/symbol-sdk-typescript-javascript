@@ -361,6 +361,6 @@ describe('Receipt', () => {
         const statement = CreateStatementFromDTO(statementDTO, netWorkType);
         const receipt = statement.transactionStatements[0];
         const hash = receipt.generateHash();
-        expect(hash).to.be.equal('78E5F66EC55D1331646528F9BF7EC247C68F58E651223E7F05CBD4FBF0BF88FA');
+        expect(hash).to.be.equal('D84F5C2E4CBFC645FFAEC92A32AEEB22969C3C48296CF77BCD86BE79A300D0CF');
     });
 });

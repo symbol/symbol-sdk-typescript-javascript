@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-import { keccak256, sha3_256 } from 'js-sha3';
+import { sha3_256 } from 'js-sha3';
 import RIPEMD160 = require('ripemd160');
 import { NetworkType } from '../../model/blockchain/NetworkType';
-import { SignSchema} from '../crypto';
-import { SHA3Hasher } from '../crypto/SHA3Hasher';
 import { Base32 } from './Base32';
 import { Convert } from './Convert';
 import { RawArray } from './RawArray';
@@ -82,8 +80,7 @@ export class RawAddress {
     public static publicKeyToAddress = (publicKey: Uint8Array,
                                         networkType: NetworkType): Uint8Array => {
         // step 1: sha3 hash of the public key
-        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
-        const publicKeyHash = signSchema === SignSchema.SHA3 ? sha3_256.arrayBuffer(publicKey) : keccak256.arrayBuffer(publicKey);
+        const publicKeyHash = sha3_256.arrayBuffer(publicKey);
 
         // step 2: ripemd160 hash of (1)
         const ripemdHash = new RIPEMD160().update(new Buffer(publicKeyHash)).digest();
@@ -94,9 +91,7 @@ export class RawAddress {
         RawArray.copy(decodedAddress, ripemdHash, RawAddress.constants.sizes.ripemd160, 1);
 
         // step 4: concatenate (3) and the checksum of (3)
-        const hash = signSchema === SignSchema.SHA3 ?
-            sha3_256.arrayBuffer(decodedAddress.subarray(0, RawAddress.constants.sizes.ripemd160 + 1)) :
-            keccak256.arrayBuffer(decodedAddress.subarray(0, RawAddress.constants.sizes.ripemd160 + 1));
+        const hash = sha3_256.arrayBuffer(decodedAddress.subarray(0, RawAddress.constants.sizes.ripemd160 + 1));
 
         RawArray.copy(decodedAddress, RawArray.uint8View(hash),
             RawAddress.constants.sizes.checksum, RawAddress.constants.sizes.ripemd160 + 1);
@@ -114,8 +109,7 @@ export class RawAddress {
         if (RawAddress.constants.sizes.addressDecoded !== decoded.length) {
             return false;
         }
-        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
-        const hash = signSchema === SignSchema.SHA3 ? sha3_256.create() : keccak256.create();
+        const hash = sha3_256.create();
         const checksumBegin = RawAddress.constants.sizes.addressDecoded - RawAddress.constants.sizes.checksum;
         hash.update(decoded.subarray(0, checksumBegin));
         const checksum = new Uint8Array(RawAddress.constants.sizes.checksum);

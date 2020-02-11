@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import { Crypto, KeyPair, SHA3Hasher, SignSchema } from '../../../src/core/crypto';
+import { Crypto, KeyPair } from '../../../src/core/crypto';
 import * as Utility from '../../../src/core/crypto/Utilities';
 import { Convert } from '../../../src/core/format/Convert';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 
 describe('key pair', () => {
     const randomKeyPair = () =>
-        KeyPair.createKeyPairFromPrivateKeyString(Convert.uint8ToHex(Crypto.randomBytes(32)), SignSchema.SHA3);
+        KeyPair.createKeyPairFromPrivateKeyString(Convert.uint8ToHex(Crypto.randomBytes(32)));
     const Private_Key_Size = 32;
     const Signature_Size = 64;
-    const mijinTestSignSchema = SHA3Hasher.resolveSignSchema(NetworkType.MIJIN_TEST);
-    const nis1TestSignSchema = SHA3Hasher.resolveSignSchema(NetworkType.TEST_NET);
 
     const Private_Keys = [
         '575dbb3062267eff57c970a336ebbc8fbcfe12c5bd3ed7bc11eb0481d7704ced'.toUpperCase(),
@@ -34,16 +32,18 @@ describe('key pair', () => {
         'e8bf9bc0f35c12d8c8bf94dd3a8b5b4034f1063948e3cc5304e55e31aa4b95a6'.toUpperCase(),
         'c325ea529674396db5675939e7988883d59a5fc17a28ca977e3ba85370232a83'.toUpperCase(),
     ];
-
+     /**
+      * @see https://github.com/nemtech/test-vectors/blob/master/1.test-keys.json
+      */
     describe('construction', () => {
         it('can extract from private key test vectors', () => {
             // Arrange:
             const Expected_Public_Keys = [
-                'BD8D3F8B7E1B3839C650F458234AB1FF87CDB1EDA36338D9E446E27D454717F2',
-                '26821636A618FD524A3AB57276EFC36CAF787DF19EE00F60035CE376A18E8C47',
-                'DFC7F40FC549AC8BB2EF097600103FF457A1D7DC5755D434474761459B030E6F',
-                '96C7AB358EBB91104322C56435642BD939A77432286B229372987FC366EA319F',
-                '9488CFB5D7D439213B11FA80C1B57E8A7AB7E41B64CBA18A89180D412C04915C',
+                '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F',
+                '4875FD2E32875D1BC6567745F1509F0F890A1BF8EE59FA74452FA4183A270E03',
+                '9F780097FB6A1F287ED2736A597B8EA7F08D20F1ECDB9935DE6694ECF1C58900',
+                '0815926E003CDD5AF0113C0E067262307A42CD1E697F53B683F7E5F9F57D72C9',
+                '3683B3E45E76870CFE076E47C2B34CE8E3EAEC26C8AA7C1ED752E3E840AF8A27',
             ];
 
             // Sanity:
@@ -55,7 +55,7 @@ describe('key pair', () => {
                 const expectedPublicKey = Expected_Public_Keys[i];
 
                 // Act:
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKeyHex, mijinTestSignSchema);
+                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKeyHex);
 
                 // Assert:
                 const message = ` from ${privateKeyHex}`;
@@ -76,184 +76,7 @@ describe('key pair', () => {
             invalidPrivateKeys.forEach((privateKey) => {
                 // Assert:
                 expect(() => {
-                        KeyPair.createKeyPairFromPrivateKeyString(privateKey, mijinTestSignSchema);
-                    }, `from ${privateKey}`)
-                    .to.throw('private key has unexpected size');
-            });
-        });
-    });
-
-    /**
-     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-keys-nis1.json
-     */
-    describe('NIS1 test vector - Keccak', () => {
-        it('can extract from private key test vectors', () => {
-            // Arrange:
-            const Nis1_Private_Key = [
-                '575dbb3062267eff57c970a336ebbc8fbcfe12c5bd3ed7bc11eb0481d7704ced',
-                '5b0e3fa5d3b49a79022d7c1e121ba1cbbf4db5821f47ab8c708ef88defc29bfe',
-                '738ba9bb9110aea8f15caa353aca5653b4bdfca1db9f34d0efed2ce1325aeeda',
-                'e8bf9bc0f35c12d8c8bf94dd3a8b5b4034f1063948e3cc5304e55e31aa4b95a6',
-                'c325ea529674396db5675939e7988883d59a5fc17a28ca977e3ba85370232a83',
-            ];
-
-            const Expected_Public_Keys = [
-                'D6C3845431236C5A5A907A9E45BD60DA0E12EFD350B970E7F58E3499E2E7A2F0',
-                'F3BD51ADD90A7BE8ED81F64EEE9456AF3B38478275B17EABE1853DFCFD3BF2CD',
-                '017CB008D00E41D17A6A09A6BE5C65C89E1E28706A621B0791B270E4F6182CC3',
-                '60068A23A0893538B5C364CAC86CB8670668BE84AEE2B6FCFF83FDF39A03F822',
-                'AE054EF2A458A0CEE6B34A1DD32597A9236C4D453040B9AF58B5AE22A73024B7',
-            ];
-
-            // Sanity:
-            expect(Nis1_Private_Key.length).equal(Expected_Public_Keys.length);
-
-            for (let i = 0; i < Nis1_Private_Key.length; ++i) {
-                // Arrange:
-                const privateKeyHex = Nis1_Private_Key[i];
-                const expectedPublicKey = Expected_Public_Keys[i];
-
-                // Act:
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKeyHex, nis1TestSignSchema);
-
-                // Assert:
-                const message = ` from ${privateKeyHex}`;
-                expect(Convert.uint8ToHex(keyPair.publicKey).toUpperCase(), `public ${message}`).equal(expectedPublicKey.toUpperCase());
-                expect(Convert.uint8ToHex(keyPair.privateKey).toUpperCase(), `private ${message}`).equal(privateKeyHex.toUpperCase());
-            }
-        });
-
-        it('cannot extract from invalid private key', () => {
-            // Arrange:
-            const invalidPrivateKeys = [
-                '', // empty
-                '53C659B47C176A70EB228DE5C0A0FF391282C96640C2A42CD5BBD0982176AB', // short
-                '53C659B47C176A70EB228DE5C0A0FF391282C96640C2A42CD5BBD0982176AB1BBB', // long
-            ];
-
-            // Act:
-            invalidPrivateKeys.forEach((privateKey) => {
-                // Assert:
-                expect(() => {
-                        KeyPair.createKeyPairFromPrivateKeyString(privateKey, mijinTestSignSchema);
-                    }, `from ${privateKey}`)
-                    .to.throw('private key has unexpected size');
-            });
-        });
-    });
-
-    /**
-     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-keys-catapult.json
-     */
-    describe('Catapult test vector - SHA3', () => {
-        it('can extract from private key test vectors', () => {
-            // Arrange:
-            const Private_Key = [
-                '575dbb3062267eff57c970a336ebbc8fbcfe12c5bd3ed7bc11eb0481d7704ced',
-                '5b0e3fa5d3b49a79022d7c1e121ba1cbbf4db5821f47ab8c708ef88defc29bfe',
-                '738ba9bb9110aea8f15caa353aca5653b4bdfca1db9f34d0efed2ce1325aeeda',
-                'e8bf9bc0f35c12d8c8bf94dd3a8b5b4034f1063948e3cc5304e55e31aa4b95a6',
-                'c325ea529674396db5675939e7988883d59a5fc17a28ca977e3ba85370232a83',
-            ];
-
-            const Expected_Public_Keys = [
-                'BD8D3F8B7E1B3839C650F458234AB1FF87CDB1EDA36338D9E446E27D454717F2',
-                '26821636A618FD524A3AB57276EFC36CAF787DF19EE00F60035CE376A18E8C47',
-                'DFC7F40FC549AC8BB2EF097600103FF457A1D7DC5755D434474761459B030E6F',
-                '96C7AB358EBB91104322C56435642BD939A77432286B229372987FC366EA319F',
-                '9488CFB5D7D439213B11FA80C1B57E8A7AB7E41B64CBA18A89180D412C04915C',
-            ];
-
-            // Sanity:
-            expect(Private_Key.length).equal(Expected_Public_Keys.length);
-
-            for (let i = 0; i < Private_Key.length; ++i) {
-                // Arrange:
-                const privateKeyHex = Private_Key[i];
-                const expectedPublicKey = Expected_Public_Keys[i];
-
-                // Act:
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKeyHex, mijinTestSignSchema);
-
-                // Assert:
-                const message = ` from ${privateKeyHex}`;
-                expect(Convert.uint8ToHex(keyPair.publicKey).toUpperCase(), `public ${message}`).equal(expectedPublicKey.toUpperCase());
-                expect(Convert.uint8ToHex(keyPair.privateKey).toUpperCase(), `private ${message}`).equal(privateKeyHex.toUpperCase());
-            }
-        });
-
-        it('cannot extract from invalid private key', () => {
-            // Arrange:
-            const invalidPrivateKeys = [
-                '', // empty
-                '53C659B47C176A70EB228DE5C0A0FF391282C96640C2A42CD5BBD0982176AB', // short
-                '53C659B47C176A70EB228DE5C0A0FF391282C96640C2A42CD5BBD0982176AB1BBB', // long
-            ];
-
-            // Act:
-            invalidPrivateKeys.forEach((privateKey) => {
-                // Assert:
-                expect(() => {
-                        KeyPair.createKeyPairFromPrivateKeyString(privateKey, mijinTestSignSchema);
-                    }, `from ${privateKey}`)
-                    .to.throw('private key has unexpected size');
-            });
-        });
-    });
-
-    /**
-     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-keys-catapult.json
-     */
-    describe('Catapult test vector - SHA3', () => {
-        it('can extract from private key test vectors', () => {
-            // Arrange:
-            const Private_Key = [
-                '575dbb3062267eff57c970a336ebbc8fbcfe12c5bd3ed7bc11eb0481d7704ced',
-                '5b0e3fa5d3b49a79022d7c1e121ba1cbbf4db5821f47ab8c708ef88defc29bfe',
-                '738ba9bb9110aea8f15caa353aca5653b4bdfca1db9f34d0efed2ce1325aeeda',
-                'e8bf9bc0f35c12d8c8bf94dd3a8b5b4034f1063948e3cc5304e55e31aa4b95a6',
-                'c325ea529674396db5675939e7988883d59a5fc17a28ca977e3ba85370232a83',
-            ];
-
-            const Expected_Public_Keys = [
-                'BD8D3F8B7E1B3839C650F458234AB1FF87CDB1EDA36338D9E446E27D454717F2',
-                '26821636A618FD524A3AB57276EFC36CAF787DF19EE00F60035CE376A18E8C47',
-                'DFC7F40FC549AC8BB2EF097600103FF457A1D7DC5755D434474761459B030E6F',
-                '96C7AB358EBB91104322C56435642BD939A77432286B229372987FC366EA319F',
-                '9488CFB5D7D439213B11FA80C1B57E8A7AB7E41B64CBA18A89180D412C04915C',
-            ];
-
-            // Sanity:
-            expect(Private_Key.length).equal(Expected_Public_Keys.length);
-
-            for (let i = 0; i < Private_Key.length; ++i) {
-                // Arrange:
-                const privateKeyHex = Private_Key[i];
-                const expectedPublicKey = Expected_Public_Keys[i];
-
-                // Act:
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKeyHex, mijinTestSignSchema);
-
-                // Assert:
-                const message = ` from ${privateKeyHex}`;
-                expect(Convert.uint8ToHex(keyPair.publicKey).toUpperCase(), `public ${message}`).equal(expectedPublicKey.toUpperCase());
-                expect(Convert.uint8ToHex(keyPair.privateKey).toUpperCase(), `private ${message}`).equal(privateKeyHex.toUpperCase());
-            }
-        });
-
-        it('cannot extract from invalid private key', () => {
-            // Arrange:
-            const invalidPrivateKeys = [
-                '', // empty
-                '53C659B47C176A70EB228DE5C0A0FF391282C96640C2A42CD5BBD0982176AB', // short
-                '53C659B47C176A70EB228DE5C0A0FF391282C96640C2A42CD5BBD0982176AB1BBB', // long
-            ];
-
-            // Act:
-            invalidPrivateKeys.forEach((privateKey) => {
-                // Assert:
-                expect(() => {
-                        KeyPair.createKeyPairFromPrivateKeyString(privateKey, mijinTestSignSchema);
+                        KeyPair.createKeyPairFromPrivateKeyString(privateKey);
                     }, `from ${privateKey}`)
                     .to.throw('private key has unexpected size');
             });
@@ -262,52 +85,7 @@ describe('key pair', () => {
 
     describe('sign & verify- Test Vector', () => {
         /**
-         * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/2.test-sign-nis1.json
-         */
-        it('NIS1', () => {
-            const Nis1_Private_Key = [
-                'abf4cf55a2b3f742d7543d9cc17f50447b969e6e06f5ea9195d428ab12b7318d',
-                '6aa6dad25d3acb3385d5643293133936cdddd7f7e11818771db1ff2f9d3f9215',
-                '8e32bc030a4c53de782ec75ba7d5e25e64a2a072a56e5170b77a4924ef3c32a9',
-                'c83ce30fcb5b81a51ba58ff827ccbc0142d61c13e2ed39e78e876605da16d8d7',
-                '2da2a0aae0f37235957b51d15843edde348a559692d8fa87b94848459899fc27',
-            ];
-            const Nis1_Data = [
-                '8ce03cd60514233b86789729102ea09e867fc6d964dea8c2018ef7d0a2e0e24bf7e348e917116690b9',
-                'e4a92208a6fc52282b620699191ee6fb9cf04daf48b48fd542c5e43daa9897763a199aaa4b6f10546109f47ac3564fade0',
-                '13ed795344c4448a3b256f23665336645a853c5c44dbff6db1b9224b5303b6447fbf8240a2249c55',
-                'a2704638434e9f7340f22d08019c4c8e3dbee0df8dd4454a1d70844de11694f4c8ca67fdcb08fed0cec9abb2112b5e5f89',
-                'd2488e854dbcdfdb2c9d16c8c0b2fdbc0abb6bac991bfe2b14d359a6bc99d66c00fd60d731ae06d0',
-            ];
-            const Expected_Signature = [
-                '62D65D4728E07489152A45FC66BF680A85674AA1D971F265C02AC45E09EB115791FFA524C28F9A3238A18751C314EDC0CDD7124A1BDEE1B1414DE7365F02950B',
-                'E48FFDE4FE2298E6DE06CE1FC0006A68544B5A8CEA4F93CFAD3E671720A010092FBB4E2DE3B7414C4E09766129BA26BA30A06A7676269B8868E55913779D4B0E',
-                'C65ECD2E25797A92CA6BB92DC817ABCABA9B40F19F181A77150222F8C8519391B5FA713DE495040E9DE1354ADCE35485F2C56608DAD30A94FA0EAAE468651308',
-                'C8B018ACB41191A09B354FCA3C8A207EDA8875F3FE6778B90288E67AA4648C9FF183E6576B452F6DC88B1D31E369BE5AF79A96FE4520EC40D156232B7B08F900',
-                '5A3CDDAC6E61DB8A614C8475A5B55EF0EC35C5206FA3EE4057CEADDD0E101A2EC4AFCBC688F8CF3488AB25FA5B6C879CEE59F4A1F51115383EEA2F9A9E1D820C',
-            ];
-
-            for (let i = 0; i < Nis1_Private_Key.length; ++i) {
-                // Arrange:
-                const privateKey = Nis1_Private_Key[i];
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey, nis1TestSignSchema);
-                const payload = Convert.hexToUint8(Nis1_Data[i]);
-
-                // Act:
-                const signature = KeyPair.sign(keyPair, payload, nis1TestSignSchema);
-
-                // Assert:
-                const message = ` from ${Nis1_Private_Key[i]}`;
-                expect(Convert.uint8ToHex(KeyPair.sign(keyPair, payload, nis1TestSignSchema)).toUpperCase(),
-                    `private ${message}`).to.deep.equal(Expected_Signature[i].toUpperCase());
-
-                const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature, nis1TestSignSchema);
-                expect(isVerified, `private ${message}`).to.equal(true);
-            }
-        });
-
-        /**
-         * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/2.test-sign-catapult.json
+         * @see https://github.com/nemtech/test-vectors/blob/master/2.test-sign.json
          */
         it('CATAPULT', () => {
             const Catapult_Private_Key = [
@@ -325,26 +103,26 @@ describe('key pair', () => {
                 'd2488e854dbcdfdb2c9d16c8c0b2fdbc0abb6bac991bfe2b14d359a6bc99d66c00fd60d731ae06d0',
             ];
             const Expected_Signature = [
-                '26E2C18BD0865AC141EDC181C61D2EC74231A4C8EB644C732D4830E82EB143094E7078086648964B0B91363E555907EC53E2AE7BD185D609805099F5C3A4CF07',
-                '079B761E8C6A0AF15664D86E8DCCC67D78286384732CF3E36332E7E839DAB617C4A7F942B9C40F84513613089011378B43D43706648317564E3F77EF142F280A',
-                '2AD313E2BFFE35A6AFBBCBC1AC673922EB760EC1FF91C35BAA76275E4E9BA3D9A5FA7F5B005D52F5E3B9DB381DD268499234C7F0774C297823693955C382D00B',
-                'C846A755CF670A8C13861D27380568480FFC96D99CA2F560EC432DEE244D41D7B180EC6B756ED393A249C28932D6CE1BD5A3A7D28396DEBA7739BAEF611A180B',
-                'DF852FB53BF166ACF784E2C906BFE35AA0A7D51A0193265288945111D066906C77874AD1E13555E274A4425673AF046B102137ADE1DF5A361614C7411B53F50F',
+                '31D272F0662915CAC43AB7D721CAF65D8601F52B2E793EA1533E7BC20E04EA97B74859D9209A7B18DFECFD2C4A42D6957628F5357E3FB8B87CF6A888BAB4280E',
+                'F21E4BE0A914C0C023F724E1EAB9071A3743887BB8824CB170404475873A827B301464261E93700725E8D4427A3E39D365AFB2C9191F75D33C6BE55896E0CC00',
+                '939CD8932093571E24B21EA53F1359279BA5CFC32CE99BB020E676CF82B0AA1DD4BC76FCDE41EF784C06D122B3D018135352C057F079C926B3EFFA7E73CF1D06',
+                '9B4AFBB7B96CAD7726389C2A4F31115940E6EEE3EA29B3293C82EC8C03B9555C183ED1C55CA89A58C17729EFBA76A505C79AA40EC618D83124BC1134B887D305',
+                '7AF2F0D9B30DE3B6C40605FDD4EBA93ECE39FA7458B300D538EC8D0ABAC1756DEFC0CA84C8A599954313E58CE36EFBA4C24A82FD6BB8127023A58EFC52A8410A',
             ];
 
             for (let i = 0; i < Catapult_Private_Key.length; ++i) {
                 // Arrange:
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Catapult_Private_Key[i], mijinTestSignSchema);
+                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Catapult_Private_Key[i]);
                 const payload = Convert.hexToUint8(Catapult_Data[i]);
 
                 // Act:
-                const signature = KeyPair.sign(keyPair, payload, mijinTestSignSchema);
+                const signature = KeyPair.sign(keyPair, payload);
 
                 // Assert:
                 const message = ` from ${Catapult_Private_Key[i]}`;
                 expect(Convert.uint8ToHex(signature).toUpperCase(),
                     `private ${message}`).to.deep.equal(Expected_Signature[i].toUpperCase());
-                const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature, mijinTestSignSchema);
+                const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature);
                 expect(isVerified, `private ${message}`).to.equal(true);
             }
         });
@@ -357,7 +135,7 @@ describe('key pair', () => {
             const payload = Crypto.randomBytes(100);
 
             // Act:
-            const signature = KeyPair.sign(keyPair, payload, mijinTestSignSchema);
+            const signature = KeyPair.sign(keyPair, payload);
 
             // Assert:
             expect(signature).to.not.deep.equal(new Uint8Array(Signature_Size));
@@ -366,13 +144,13 @@ describe('key pair', () => {
         it('returns same signature for same data signed by same key pairs', () => {
             // Arrange:
             const privateKey = Convert.uint8ToHex(Crypto.randomBytes(Private_Key_Size));
-            const keyPair1 = KeyPair.createKeyPairFromPrivateKeyString(privateKey, mijinTestSignSchema);
-            const keyPair2 = KeyPair.createKeyPairFromPrivateKeyString(privateKey, mijinTestSignSchema);
+            const keyPair1 = KeyPair.createKeyPairFromPrivateKeyString(privateKey);
+            const keyPair2 = KeyPair.createKeyPairFromPrivateKeyString(privateKey);
             const payload = Crypto.randomBytes(100);
 
             // Act:
-            const signature1 = KeyPair.sign(keyPair1, payload, mijinTestSignSchema);
-            const signature2 = KeyPair.sign(keyPair2, payload, mijinTestSignSchema);
+            const signature1 = KeyPair.sign(keyPair1, payload);
+            const signature2 = KeyPair.sign(keyPair2, payload);
 
             // Assert:
             expect(signature2).to.deep.equal(signature1);
@@ -385,8 +163,8 @@ describe('key pair', () => {
             const payload = Crypto.randomBytes(100);
 
             // Act:
-            const signature1 = KeyPair.sign(keyPair1, payload, mijinTestSignSchema);
-            const signature2 = KeyPair.sign(keyPair2, payload, mijinTestSignSchema);
+            const signature1 = KeyPair.sign(keyPair1, payload);
+            const signature2 = KeyPair.sign(keyPair2, payload);
 
             // Assert:
             expect(signature2).to.not.deep.equal(signature1);
@@ -399,10 +177,10 @@ describe('key pair', () => {
             // Arrange:
             const keyPair = randomKeyPair();
             const payload = Crypto.randomBytes(100);
-            const signature = KeyPair.sign(keyPair, payload, mijinTestSignSchema);
+            const signature = KeyPair.sign(keyPair, payload);
 
             // Act:
-            const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature, mijinTestSignSchema);
+            const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature);
 
             // Assert:
             expect(isVerified).to.equal(true);
@@ -413,10 +191,10 @@ describe('key pair', () => {
             const keyPair1 = randomKeyPair();
             const keyPair2 = randomKeyPair();
             const payload = Crypto.randomBytes(100);
-            const signature = KeyPair.sign(keyPair1, payload, mijinTestSignSchema);
+            const signature = KeyPair.sign(keyPair1, payload);
 
             // Act:
-            const isVerified = KeyPair.verify(keyPair2.publicKey, payload, signature, mijinTestSignSchema);
+            const isVerified = KeyPair.verify(keyPair2.publicKey, payload, signature);
 
             // Assert:
             expect(isVerified).to.equal(false);
@@ -428,11 +206,11 @@ describe('key pair', () => {
             const payload = Crypto.randomBytes(100);
 
             for (let i = 0; i < Signature_Size; i += 4) {
-                const signature = KeyPair.sign(keyPair, payload, mijinTestSignSchema);
+                const signature = KeyPair.sign(keyPair, payload);
                 signature[i] ^= 0xFF;
 
                 // Act:
-                const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature, mijinTestSignSchema);
+                const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature);
 
                 // Assert:
                 expect(isVerified, `signature modified at ${i}`).to.equal(false);
@@ -445,11 +223,11 @@ describe('key pair', () => {
             const payload = Crypto.randomBytes(44);
 
             for (let i = 0; i < payload.length; i += 4) {
-                const signature = KeyPair.sign(keyPair, payload, mijinTestSignSchema);
+                const signature = KeyPair.sign(keyPair, payload);
                 payload[i] ^= 0xFF;
 
                 // Act:
-                const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature, mijinTestSignSchema);
+                const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature);
 
                 // Assert:
                 expect(isVerified, `payload modified at ${i}`).to.equal(false);
@@ -463,10 +241,10 @@ describe('key pair', () => {
             keyPair.publicKey[keyPair.publicKey.length - 1] = 1;
 
             const payload = Crypto.randomBytes(100);
-            const signature = KeyPair.sign(keyPair, payload, mijinTestSignSchema);
+            const signature = KeyPair.sign(keyPair, payload);
 
             // Act:
-            const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature, mijinTestSignSchema);
+            const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature);
 
             // Assert:
             expect(isVerified).to.equal(false);
@@ -476,14 +254,14 @@ describe('key pair', () => {
             // Arrange:
             const keyPair = randomKeyPair();
             const payload = Crypto.randomBytes(100);
-            const signature = KeyPair.sign(keyPair, payload, mijinTestSignSchema);
+            const signature = KeyPair.sign(keyPair, payload);
 
             for (let i = 0; i < keyPair.publicKey.length; ++i) {
                 keyPair.publicKey[i] ^= 0xFF;
             }
 
             // Act:
-            const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature, mijinTestSignSchema);
+            const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature);
 
             // Assert:
             expect(isVerified).to.equal(false);
@@ -495,10 +273,10 @@ describe('key pair', () => {
             keyPair.publicKey.fill(0);
 
             const payload = Crypto.randomBytes(100);
-            const signature = KeyPair.sign(keyPair, payload, mijinTestSignSchema);
+            const signature = KeyPair.sign(keyPair, payload);
 
             // Act:
-            const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature, mijinTestSignSchema);
+            const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature);
 
             // Assert:
             expect(isVerified).to.equal(false);
@@ -523,15 +301,15 @@ describe('key pair', () => {
             // Arrange:
             const keyPair = randomKeyPair();
             const payload = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]);
-            const canonicalSignature = KeyPair.sign(keyPair, payload, mijinTestSignSchema);
+            const canonicalSignature = KeyPair.sign(keyPair, payload);
 
             // this is signature with group order added to 'encodedS' part of signature
             const nonCanonicalSignature = canonicalSignature.slice();
             scalarAddGroupOrder(nonCanonicalSignature.subarray(32));
 
             // Act:
-            const isCanonicalVerified = KeyPair.verify(keyPair.publicKey, payload, canonicalSignature, mijinTestSignSchema);
-            const isNonCanonicalVerified = KeyPair.verify(keyPair.privateKey, payload, nonCanonicalSignature, mijinTestSignSchema);
+            const isCanonicalVerified = KeyPair.verify(keyPair.publicKey, payload, canonicalSignature);
+            const isNonCanonicalVerified = KeyPair.verify(keyPair.privateKey, payload, nonCanonicalSignature);
 
             // Assert:
             expect(isCanonicalVerified).to.equal(true);
@@ -547,8 +325,8 @@ describe('key pair', () => {
             const keyPair2 = randomKeyPair();
 
             // Act:
-            const sharedKey1 = KeyPair.deriveSharedKey(keyPair1, keyPair2.publicKey, mijinTestSignSchema);
-            const sharedKey2 = KeyPair.deriveSharedKey(keyPair2, keyPair1.publicKey, mijinTestSignSchema);
+            const sharedKey1 = Utility.catapult_crypto.deriveSharedKey(keyPair1.privateKey, keyPair2.publicKey);
+            const sharedKey2 = Utility.catapult_crypto.deriveSharedKey(keyPair2.privateKey, keyPair1.publicKey);
 
             // Assert:
             expect(sharedKey1).to.deep.equal(sharedKey2);
@@ -561,85 +339,16 @@ describe('key pair', () => {
             const publicKey2 = Crypto.randomBytes(32);
 
             // Act:
-            const sharedKey1 = KeyPair.deriveSharedKey(keyPair, publicKey1, mijinTestSignSchema);
-            const sharedKey2 = KeyPair.deriveSharedKey(keyPair, publicKey2, mijinTestSignSchema);
+            const sharedKey1 = Utility.catapult_crypto.deriveSharedKey(keyPair.privateKey, publicKey1);
+            const sharedKey2 = Utility.catapult_crypto.deriveSharedKey(keyPair.privateKey, publicKey2);
 
             // Assert:
             expect(sharedKey1).to.not.deep.equal(sharedKey2);
         });
-
-        it('can derive deterministic shared key from well known inputs', () => {
-            // Arrange:
-            const keyPair = KeyPair.createKeyPairFromPrivateKeyString(
-                '8F545C2816788AB41D352F236D80DBBCBC34705B5F902EFF1F1D88327C7C1300', mijinTestSignSchema);
-            const publicKey = Convert.hexToUint8('BF684FB1A85A8C8091EE0442EDDB22E51683802AFA0C0E7C6FE3F3E3E87A8D72');
-
-            // Act:
-            const sharedKey = KeyPair.deriveSharedKey(keyPair, publicKey, mijinTestSignSchema);
-
-            // Assert:
-            expect(Convert.uint8ToHex(sharedKey)).to.equal('9E2DF6A12BABD5673F02C5B81898A03AC2E2D152639502E3DCECEF7C91C115F6');
-        });
     });
 
     /**
-     * @see https://github.com/nemtech/test-vectors/blob/master/3.test-derive-nis1.json
-     */
-    describe('derive shared key - Test Vecto NIS1', () => {
-        it('derive shared key using keccak', () => {
-            // Arrange: create a salt that is too long
-            // Arrange:
-            const Nis1_Private_Key = [
-                '00137c7c32881d1fff2e905f5b7034bcbcdb806d232f351db48a7816285c548f',
-                'e8857f8e488d4e6d4b71bcd44bb4cff49208c32651e1f6500c3b58cafeb8def6',
-                'd7f67b5f52cbcd1a1367e0376a8eb1012b634acfcf35e8322bae8b22bb9e8dea',
-                'd026ddb445fb3bbf3020e4b55ed7b5f9b7fd1278c34978ca1a6ed6b358dadbae',
-                'c522b38c391d1c3fa539cc58802bc66ac34bb3c73accd7f41b47f539bedcd016',
-            ];
-
-            const Nis1_Public_Keys = [
-                '4C3B71636D3088ED3DF93D81E9169604EF0D4D68107BE0B446715DC12096243B',
-                '3B2BE0C315CDA77876D70845FD355D46E6825BA26985ABAB3E07B65C71266126',
-                '536D5C32538C8E66623F2E4F0FA7E124EF0AF1F0DBC97338C61188F37C4937EA',
-                'FA9AF9448E76D1D0B6EBE05336D813918315B4941F78C1CC5EA1D1573177022C',
-                '63ABC887EAD7B80247244E0C58CB7689C313444F4924278DBEA72DDB3391F9DA',
-            ];
-
-            const Expected_ScalarMulResult = [
-                'FEB242779628761122E9FB1718512025040C683D69B8105BA1F383D47578B29F',
-                '277FD55F1A54F57F3E5B408CACA560360BA75F67AB954FB4E27A7ADBCAAB6719',
-                '8B38A30824E322555A748A5BEB67FBE0E0F1BD2B51635549F1F19CDF76BA0E9A',
-                '9342380F112C70B17B7254EFCD3FCF6F4F1FF844C7790426BF6EDC4C800BD0A0',
-                'A5593308E182D6D86D633F18DF19D87FAA4EF447FD1904891600CEEF303FD591',
-            ];
-
-            const Expected_Derived_Key = [
-                '1E203DF5CD53961AAF75B24EFD5548AB6F01F0E9EF1C0C721F6A0ECAAF91AC9A',
-                'E77654455AACFADE2E3291E3B88191847D06295CAE7160D55FB32E6D86A48C17',
-                '0368A074CA19F446659DF7BA04B2CE92F6BDCB423510D69223BD75E3827F0893',
-                '2F58733AB16A170B8389C39F5BA10509E59EC803CF9168739C693D0E6035A402',
-                '28DB21A1EBA731E85B0A58109CA273AF4B461726F5A5F62951777C3DCCD9281C',
-            ];
-
-            for (let i = 0; i < Nis1_Private_Key.length; ++i) {
-                // Arrange:
-                const privateKey = Nis1_Private_Key[i];
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey, nis1TestSignSchema);
-                const publicKey = Convert.hexToUint8(Nis1_Public_Keys[i]);
-
-                // Act:
-                const sharedKey = Convert.uint8ToHex(KeyPair.deriveSharedKey(keyPair, publicKey, nis1TestSignSchema));
-                const sharedSecret = Convert.uint8ToHex(Utility.catapult_crypto.deriveSharedSecret(keyPair.privateKey, publicKey, Utility.catapult_hash.func, nis1TestSignSchema));
-
-                // Assert:
-                expect(sharedKey.toUpperCase()).to.deep.equal(Expected_Derived_Key[i].toUpperCase());
-                expect(sharedSecret.toUpperCase()).to.deep.equal(Expected_ScalarMulResult[i].toUpperCase());
-            }
-        });
-    });
-
-    /**
-     * @see https://github.com/nemtech/test-vectors/blob/master/3.test-derive-catapult.json
+     * @see https://github.com/nemtech/test-vectors/blob/master/3.test-derive.json
      */
     describe('derive shared key - Test Vecto Catapult', () => {
         it('derive shared key using sha3', () => {
@@ -654,39 +363,40 @@ describe('key pair', () => {
             ];
 
             const Public_Keys = [
-                '134A753D1FBC098879D3EC04F67EF661B2976B15C6037F7961AA343DC23D9D5E',
-                '2B3CFEF43CEE139691F466643F779EC3CEBFC9B1AB92DBA87FF9AC8E5F49B454',
-                '31C960BF74D53DE0EA92E11DE39DC69D60F1133131F634C2C2595F05E35B687E',
-                'FDA70F88C7985C5B7D8BDE4CD6C2162E1DF0C7F44555125B6EA54E87958F6722',
-                '9896A394B035E0F18855B2F6EE934E20ABADBF6B65B26E0C9329C283C1A9F980',
+                'FDEE3C7A41F4717D18B5BFFD685C3C43DFFDC3F8E168AA1B237E1EBF8E9BC869',
+                '0531061660549384490453BC61FB7AFDA69D49E961489A4847D8D5AF1749C65B',
+                '9A6C6AA5C83019DFF2BC89F4D28D5163F72724F765AA450CB68F9EB6CBFBE20B',
+                '4C29246B32541F0469028BDFE0E24A3322163CFB086A17537CA6C1A5858DE222',
+                'DA64508E86229035B35D9363A2A3583B0E59D50A25472CED4320B149166F91B0',
             ];
 
             const Expected_ScalarMulResult = [
-                '4118C2B3058714A288A9E218B7E0F9CCAD74C2EC44884CABBE20A2A33DB1282F',
-                'DA4BFF3709E40B4299988806435819D3E8E90ADE435EAC086EE295E0ADC3E0BB',
-                '81B15312FA6A87285C883FF205BA7E7DB319DEA1E7A79D1F78B93E73A156AA64',
-                '100221B07AB55C3260A7B7F12CDA0A8FA97998664C6509661A2E51417AF9C998',
-                'EE74B025E7A304BD0D3F131EF1132D2C194568034B9A7DE93653327D6618215C',
+                'EAFB74D6778DCF4A55B1758432A13767719FD8AD66A32FF2E3256CEFA4DD7334',
+                '03351F60B934BC9635D397A76CA47C25A4B3B78925785931A04F30460F102CE6',
+                'C1EFCCDF3DC7E0A898B18D7C13D4433E59F6D5D404B6BB714942822250C0778C',
+                '750AA2E689A89D9A25D0C1F4F41BF470CF598126BD958FAB2245DBEB84B5E65F',
+                '7247B4916097994EF458A899F7163718A55A4D6CF2C26BA2EFD37A9791DB9EB4',
             ];
 
             const Expected_Derived_Key = [
-                '8ADE930F8352A5D2B42B575B698C8791834525CBB1A3C94F814DA676922EDBBD',
-                'C831BAFDF301F3E7A2910557B14EAEE054F8072A5E3C58797DF2F7EAD6C2F8E2',
-                '9C885AA670354E517320403E6E613FD076F486A3C6F986F3D7605F36D542F705',
-                '857312941280887C38FA7077AA808C52C755A27EAEAC1220A2F404CFDABBA131',
-                '85F5C2F191D2E3A3833C63059566D11B8EA552775AE0002D237BC35B5439FB59',
+                '59BE24D6DB8381DA153CB653134EF7352FA9FDDFD2A9B3727924F7761390C6C1',
+                '52C7F2DCD494A14ED50720BAE0CE6792D9E22D450CF492682801294ECAF35932',
+                'C8B57A0B117548273422A55801A963F86A4404AE23F3E4986EF655F40927691F',
+                '3E8A0DAB3B19B68C176FC349BFE6476A33CCDE7A09292040D98F88DE222495A9',
+                'A3B157EFB3B5163CDF24841F11ECB55DEC18567345D0FCB46B072C2399CD364A',
             ];
 
             for (let i = 0; i < Private_Key.length; ++i) {
                 // Arrange:
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Private_Key[i], mijinTestSignSchema);
+                const privateKey = Convert.hexToUint8(Private_Key[i]);
                 const publicKey = Convert.hexToUint8(Public_Keys[i]);
 
                 // Act:
-                const sharedKey = Convert.uint8ToHex(KeyPair.deriveSharedKey(keyPair, publicKey, mijinTestSignSchema));
-                const sharedSecret = Convert.uint8ToHex(Utility.catapult_crypto.deriveSharedSecret(keyPair.privateKey, publicKey, Utility.catapult_hash.func, mijinTestSignSchema));
+                const sharedKey = Convert.uint8ToHex(Utility.catapult_crypto.deriveSharedKey(privateKey, publicKey));
+                const sharedSecret = Convert.uint8ToHex(Utility.catapult_crypto.deriveSharedSecret(privateKey, publicKey));
 
                 // Assert:
+                expect(sharedSecret.toUpperCase()).to.deep.equal(Expected_ScalarMulResult[i].toUpperCase());
                 expect(sharedKey.toUpperCase()).to.deep.equal(Expected_Derived_Key[i].toUpperCase());
                 expect(sharedSecret.toUpperCase()).to.deep.equal(Expected_ScalarMulResult[i].toUpperCase());
             }

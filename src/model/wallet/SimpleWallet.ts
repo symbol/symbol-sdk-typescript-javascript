@@ -65,8 +65,7 @@ export class SimpleWallet extends Wallet {
         const hashKey = convert.uint8ToHex(randomBytesArray); // TODO: derive private key correctly
 
         // Create KeyPair from hash key
-        const signSchema = SHA3Hasher.resolveSignSchema(network);
-        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(hashKey, signSchema);
+        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(hashKey);
 
         // Create address from public key
         const address = Address.createFromPublicKey(convert.uint8ToHex(keyPair.publicKey), network);
@@ -92,8 +91,7 @@ export class SimpleWallet extends Wallet {
                                 privateKey: string,
                                 network: NetworkType): SimpleWallet {
         // Create KeyPair from hash key
-        const signSchema = SHA3Hasher.resolveSignSchema(network);
-        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey, signSchema);
+        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey);
 
         // Create address from public key
         const address = Address.createFromPublicKey(convert.uint8ToHex(keyPair.publicKey), network);

@@ -672,11 +672,11 @@ export const cleanup = (arr) => {
     }
 };
 
-export const crypto_shared_key_hash = (shared, pk, sk, hashfunc, signSchema) => {
+export const crypto_shared_key_hash = (shared, pk, sk, hashfunc) => {
     const d = new Uint8Array(64);
     const p = [gf(), gf(), gf(), gf()];
 
-    hashfunc(d, sk, 32, signSchema);
+    hashfunc(d, sk, 32);
     d[0] &= 248;
     d[31] &= 127;
     d[31] |= 64;
@@ -893,7 +893,6 @@ export const unpack = (r, p) => {
     S(chk, r[0]);
     M(chk, chk, den);
     if (neq25519(chk, num)) {
-        console.log('not a valid Ed25519EncodedGroupElement.');
         return -1;
     }
 

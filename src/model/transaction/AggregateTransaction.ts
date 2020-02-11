@@ -27,7 +27,7 @@ import {
     SignatureDto,
     TimestampDto,
 } from 'catbuffer';
-import { KeyPair, MerkleHashBuilder, SHA3Hasher, SignSchema } from '../../core/crypto';
+import { KeyPair, MerkleHashBuilder, SHA3Hasher } from '../../core/crypto';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { CreateTransactionFromPayload } from '../../infrastructure/transaction/CreateTransactionFromPayload';
@@ -210,8 +210,8 @@ export class AggregateTransaction extends Transaction {
         const transactionHashBytes = Convert.hexToUint8(signedTransaction.hash);
         let signedPayload = signedTransaction.payload;
         cosignatories.forEach((cosigner) => {
-            const signSchema = SHA3Hasher.resolveSignSchema(cosigner.networkType);
-            const signature = KeyPair.sign(cosigner, transactionHashBytes, signSchema);
+            const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(cosigner.privateKey);
+            const signature = KeyPair.sign(keyPairEncoded, transactionHashBytes);
             signedPayload += cosigner.publicKey + Convert.uint8ToHex(signature);
         });
 
@@ -353,8 +353,8 @@ export class AggregateTransaction extends Transaction {
      */
     private calculateInnerTransactionHash(): Uint8Array {
         // Note: Transaction hashing *always* uses SHA3
-        const hasher  = SHA3Hasher.createHasher(32, SignSchema.SHA3);
-        const builder = new MerkleHashBuilder(32, SignSchema.SHA3);
+        const hasher  = SHA3Hasher.createHasher(32);
+        const builder = new MerkleHashBuilder(32);
         this.innerTransactions.forEach((transaction) => {
             const entityHash: Uint8Array = new Uint8Array(32);
 

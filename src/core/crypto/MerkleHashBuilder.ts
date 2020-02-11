@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { SHA3Hasher } from './SHA3Hasher';
-import { SignSchema } from './SignSchema';
 
 export class MerkleHashBuilder {
 
@@ -27,7 +26,6 @@ export class MerkleHashBuilder {
 
     /**
      * Constructor
-     * @param signSchema Sign schema
      * @param length Hash size
      */
     constructor(/**
@@ -35,13 +33,7 @@ export class MerkleHashBuilder {
                  *
                  * @var {number}
                  */
-                public readonly length: number,
-                /**
-                 * Signature schema used (hash algorithm diff)
-                 *
-                 * @var {SignSchema}
-                 */
-                public readonly signSchema: SignSchema) {
+                public readonly length: number) {
     }
 
     /**
@@ -52,7 +44,7 @@ export class MerkleHashBuilder {
      * @return {Uint8Array}
      */
     protected hash(hashes: Uint8Array[]): Uint8Array {
-        const hasher = SHA3Hasher.createHasher(this.length, this.signSchema);
+        const hasher = SHA3Hasher.createHasher(this.length);
         hasher.reset();
 
         hashes.forEach((hashVal: Uint8Array) => {

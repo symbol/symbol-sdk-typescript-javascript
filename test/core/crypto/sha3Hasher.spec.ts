@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 import {expect} from 'chai';
-import { SignSchema } from '../../../src/core/crypto';
 import {SHA3Hasher as sha3Hasher} from '../../../src/core/crypto/SHA3Hasher';
 import {Convert as convert} from '../../../src/core/format';
-import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 
 describe('hasher', () => {
     const inputs = [
@@ -43,7 +41,7 @@ describe('hasher', () => {
 
                     // Act:
                     const hash = new Uint8Array(length);
-                    sha3Hasher.func(hash, inputBuffer, length, SignSchema.SHA3);
+                    sha3Hasher.func(hash, inputBuffer, length);
 
                     // Assert:
                     expect(convert.uint8ToHex(hash), `hashing ${inputHex}`).equal(expectedHash);
@@ -62,7 +60,7 @@ describe('hasher', () => {
                     const inputBuffer = convert.hexToUint8(inputHex);
                     const expectedHash = expectedOutputs[i];
 
-                    const hasher = sha3Hasher.createHasher(length, SignSchema.SHA3);
+                    const hasher = sha3Hasher.createHasher(length);
                     hasher.reset();
 
                     // Act: hash the input in two parts
@@ -82,7 +80,7 @@ describe('hasher', () => {
                 const inputHex = inputs[3];
                 const expectedHash = expectedOutputs[3];
 
-                const hasher = sha3Hasher.createHasher(length, SignSchema.SHA3);
+                const hasher = sha3Hasher.createHasher(length);
                 hasher.reset();
 
                 // Act:
@@ -97,7 +95,7 @@ describe('hasher', () => {
 
             it('cannot hash unsupported data type', () => {
                 // Arrange:
-                const hasher = sha3Hasher.createHasher(length, SignSchema.SHA3);
+                const hasher = sha3Hasher.createHasher(length);
                 hasher.reset();
 
                 // Act:
@@ -109,7 +107,7 @@ describe('hasher', () => {
                 const inputHex = inputs[3];
                 const expectedHash = expectedOutputs[3];
 
-                const hasher = sha3Hasher.createHasher(length, SignSchema.SHA3);
+                const hasher = sha3Hasher.createHasher(length);
                 hasher.reset();
                 hasher.update('ABCD');
 
@@ -126,26 +124,7 @@ describe('hasher', () => {
         });
     }
 
-    describe('Resolve SignSchema', () => {
-        it('Should return Keccak schema', () => {
-            let signSchema = sha3Hasher.resolveSignSchema(NetworkType.MAIN_NET);
-            expect(signSchema).to.be.equal(SignSchema.KECCAK);
-
-            signSchema = sha3Hasher.resolveSignSchema(NetworkType.TEST_NET);
-            expect(signSchema).to.be.equal(SignSchema.KECCAK);
-        });
-
-        it('Should return SHA3 schema', () => {
-            let signSchema = sha3Hasher.resolveSignSchema(NetworkType.MIJIN);
-            expect(signSchema).to.be.equal(SignSchema.SHA3);
-
-            signSchema = sha3Hasher.resolveSignSchema(NetworkType.MIJIN_TEST);
-            expect(signSchema).to.be.equal(SignSchema.SHA3);
-        });
-    });
-
     describe('sha3 256', () => {
-        // https://github.com/gvanas/KeccakCodePackage/blob/master/TestVectors/ShortMsgKAT_SHA3-256.txt
         addSha3Tests(32, [
             'A7FFC6F8BF1ED76651C14756A061D662F580FF4DE43B49FA82D80A4B80F8434A',
             '677035391CD3701293D385F037BA32796252BB7CE180B00B582DD9B20AAAD7F0',
@@ -157,7 +136,6 @@ describe('hasher', () => {
     });
 
     describe('sha3 512', () => {
-        // https://github.com/gvanas/KeccakCodePackage/blob/master/TestVectors/ShortMsgKAT_SHA3-512.txt
         addSha3Tests(64, [
             'A69F73CCA23A9AC5C8B567DC185A756E97C982164FE25859E0D1DCC1475C80A615' +
             'B2123AF1F5F94C11E3E9402C3AC558F500199D95B6D3E301758586281DCD26',
