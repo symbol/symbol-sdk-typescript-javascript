@@ -53,7 +53,6 @@ import WalletSelectorField from '@/components/WalletSelectorField/WalletSelector
       isConnected: 'network/isConnected',
       networkType: 'network/networkType',
       currentAccount: 'account/currentAccount',
-      currentLanguage: 'app/currentLanguage',
     }),
   },
 })

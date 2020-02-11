@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
+import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
+
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 
@@ -42,6 +43,14 @@ import networkConfig from '@/../config/network.conf.json'
   },
 })
 export class ExplorerUrlSetterTs extends Vue {
+  @Prop({
+    default: ''
+  }) value: string
+
+  @Prop({
+    default: true
+  }) autoSubmit: boolean
+
   /**
   * Validation rules
   * @var {ValidationRuleset}
@@ -52,13 +61,7 @@ export class ExplorerUrlSetterTs extends Vue {
    * Explorer URL
    * @var {string}
    */
-  explorerUrl: string
-
-  /**
-   * Chosen explorer URL
-   * @var {string}
-   */
-  chosenExplorerUrl = ''
+  public explorerUrl: string
 
   /**
    * Default explorer link list
@@ -71,28 +74,20 @@ export class ExplorerUrlSetterTs extends Vue {
   }
 
   /**
-   * Auto-complete filtering method
-   * @param {string} value
-   * @param {string[]} option
-   * @returns 
+   * Currently explorer url
    */
-  explorerLinkFilterMethod(value: string, option: string) {
-    return option.toUpperCase().indexOf(value.toUpperCase()) !== -1
+  get chosenExplorerUrl() {
+    return this.value && this.value.length ? this.value : this.explorerUrl
   }
 
   /**
-   * Set the new explorer link
-   * @return {void}
+   * Sets the new language
    */
-  setExplorerLink() {
-    this.$store.dispatch('app/SET_EXPLORER_URL', this.chosenExplorerUrl)
-  }
+  set chosenExplorerUrl(url: string) {
+    if (this.autoSubmit) {
+      this.$store.dispatch('app/SET_EXPLORER_URL', url)
+    }
 
-  /**
-   * Hook called when the component is mounted
-   * @return {void}
-   */
-  mounted() {
-    this.chosenExplorerUrl = this.explorerUrl
+    this.$emit('input', url)
   }
 }

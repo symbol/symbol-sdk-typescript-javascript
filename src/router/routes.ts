@@ -361,7 +361,7 @@ export const routes: AppRoute[] = [
               title: 'general_settings',
             },
             // @ts-ignore
-            component: () => import('@/views/pages/settings/general-settings/GeneralSettings.vue'),
+            component: () => import('@/views/forms/FormGeneralSettings/FormGeneralSettings.vue'),
           },
           // {
           //   path: '/settingPassword',

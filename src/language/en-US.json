@@ -851,7 +851,7 @@
   "Invalid_node": "Invalid node",
   "Cosign_aggregate_transactions": "Co-sign aggregate bonded transactions",
   "Restore_Mnemonic": "Restore mnemonic passphrase",
-  "set_explorer_link": "Set explorer link",
+  "set_explorer_link": "Set your preferred explorer URL",
   "my_balance": "My balance",
   "Delegated_Harvesting": "What is Delegated Harvesting?",
   "Delegated_Harvesting_answer": "Please input your password to unlock your account. An account link transaction will be sent first to delegate your importance, this will cost you 0.05 XEM. Following this, a persistent delegation request will be sent to a remote node and will cost another 0.05 XEM per request. ",
@@ -979,6 +979,7 @@
   "form_label_new_wallet_type": "Select the type of wallet",
   "form_label_private_key": "Enter your private key",
   "form_label_registration_type": "Namespace type",
+  "form_label_language": "Set your preferred language",
   "option_root_namespace": "Root Namespace",
   "option_sub_namespace": "Sub namespace",
   "error_wallet_name_already_exists": "This wallet name already exists. Please, enter a unique wallet name.",
@@ -997,5 +998,10 @@
   "sidebar_item_namespaces": "Namespaces",
   "sidebar_item_multisig": "Multisig",
   "sidebar_item_community": "News",
-  "sidebar_item_settings": "Settings"
+  "sidebar_item_settings": "Settings",
+  "fee_speed_slowest": "Slowest",
+  "fee_speed_slow": "Slow",
+  "fee_speed_normal": "Normal",
+  "fee_speed_fast": "Fast",
+  "fee_speed_fastest": "Fastest"
 }

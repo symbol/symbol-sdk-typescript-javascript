@@ -1,17 +1,7 @@
 {
-  "single": [
-    {"speed": "SLOW", "value": 0.05},
-    {"speed": "NORMAL", "value": 0.1},
-    {"speed": "FAST", "value": 1}
-  ],
-  "double": [
-    {"speed": "SLOW", "value": 0.1},
-    {"speed": "NORMAL", "value": 0.2},
-    {"speed": "FAST", "value": 2}
-  ],
-  "triple": [
-    {"speed": "SLOW", "value": 0.3},
-    {"speed": "NORMAL", "value": 0.9},
-    {"speed": "FAST", "value": 3}
-  ]
+  "slowest": 5000,
+  "slow": 30000,
+  "normal": 50000,
+  "fast": 100000,
+  "fastest": 1000000
 }

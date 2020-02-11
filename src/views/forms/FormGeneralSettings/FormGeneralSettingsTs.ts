@@ -18,18 +18,6 @@ import {mapGetters} from 'vuex'
 import {NetworkType, Password, Account} from 'nem2-sdk'
 import { MnemonicPassPhrase } from 'nem2-hd-wallets'
 
-// internal dependencies
-import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
-import {DerivationPathLevels, DerivationService} from '@/services/DerivationService'
-import {AESEncryptionService} from '@/services/AESEncryptionService'
-import {AccountsRepository} from '@/repositories/AccountsRepository'
-import {WalletsRepository} from '@/repositories/WalletsRepository'
-import {NotificationType} from '@/core/utils/NotificationType'
-import {AppWallet, AppWalletType} from '@/core/database/models/AppWallet'
-import {WalletService} from '@/services/WalletService'
-
 // child components
 import {ValidationObserver, ValidationProvider} from 'vee-validate'
 // @ts-ignore
@@ -38,6 +26,12 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
 import FormLabel from '@/components/FormLabel/FormLabel.vue'
+// @ts-ignore
+import ExplorerUrlSetter from '@/components/ExplorerUrlSetter/ExplorerUrlSetter.vue'
+// @ts-ignore
+import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue'
+// @ts-ignore
+import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
 // @ts-ignore
 import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
 
@@ -48,52 +42,44 @@ import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalF
     ErrorTooltip,
     FormWrapper,
     FormLabel,
+    ExplorerUrlSetter,
+    LanguageSelector,
+    MaxFeeSelector,
     ModalFormAccountUnlock,
   },
   computed: {...mapGetters({
-    networkType: 'network/networkType',
-    currentWallet: 'wallet/currentWallet',
-    knownWallets: 'wallet/knownWallets',
-  })},
+    currentLanguage: 'app/currentLanguage',
+    explorerUrl: 'app/explorerUrl',
+    languageList: 'app/languages',
+    defaultFee: 'app/defaultFee',
+  })}
 })
-export class FormWalletNameUpdateTs extends Vue {
+export class FormGeneralSettingsTs extends Vue {
   /**
-   * Currently active account
-   * @see {Store.Wallet}
-   * @var {WalletsModel}
+   * Currently active language
+   * @see {Store.AppInfo}
+   * @var {string}
    */
-  public currentWallet: WalletsModel
+  public currentLanguage: string
 
   /**
-   * Known wallets identifiers
-   * @var {string[]}
+   * List of available languages
+   * @see {Store.AppInfo}
+   * @var {any[]}
    */
-  public knownWallets: string[]
+  public languageList: {value: string, label: string}[]
 
   /**
-   * Currently active network type
-   * @see {Store.Network}
-   * @var {NetworkType}
+   * Default fee setting
+   * @var {number}
    */
-  public networkType: NetworkType
+  public defaultFee: number
 
   /**
-   * Wallets repository
-   * @var {WalletService}
+   * Explorer url setting
+   * @var {string}
    */
-  public wallets: WalletService
-
-  /**
-   * Wallets repository
-   * @var {WalletsRepository}
-   */
-  public walletsRepository: WalletsRepository
-
-  /**
-   * Validation rules
-   * @var {ValidationRuleset}
-   */
-  public validationRules = ValidationRuleset
+  public explorerUrl: string
 
   /**
    * Whether account is currently being unlocked
@@ -102,22 +88,19 @@ export class FormWalletNameUpdateTs extends Vue {
   public isUnlockingAccount: boolean = false
 
   /**
-   * Current unlocked password
-   * @var {Password}
-   */
-  public currentPassword: Password
-
-  /**
    * Form fields
    * @var {Object}
    */
   public formItems = {
-    name: '',
+    maxFee: 0,
+    currentLanguage: '',
+    explorerUrl: ''
   }
 
   public created() {
-    this.wallets = new WalletService(this.$store)
-    this.walletsRepository = new WalletsRepository()
+    this.formItems.currentLanguage = this.currentLanguage
+    this.formItems.maxFee = this.defaultFee
+    this.formItems.explorerUrl = this.explorerUrl
   }
 
 /// region computed properties getter/setter
@@ -135,27 +118,21 @@ export class FormWalletNameUpdateTs extends Vue {
    * @return {void}
    */
   public onSubmit() {
+    console.log("formItems: ", this.formItems)
     this.hasAccountUnlockModal = true
   }
-
   /**
    * When account is unlocked, the sub wallet can be created
    */
   public onAccountUnlocked(account: Account, password: Password) {
-    // - interpret form items
-    const values = this.formItems
 
     try {
-      // - update model values
-      this.currentWallet.values.set('name', values.name)
+      //XXX settings service
 
-      // - use repositories for storage
-      this.walletsRepository.update(
-        this.currentWallet.getIdentifier(),
-        this.currentWallet.values
-      )
+      this.$store.dispatch('app/SET_LANGUAGE', this.formItems.currentLanguage)
+      this.$store.dispatch('app/SET_EXPLORER_URL', this.formItems.explorerUrl)
+      this.$store.dispatch('app/SET_DEFAULT_FEE', this.formItems.maxFee)
 
-      this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
       this.$emit('submit', this.formItems)
     }
     catch (e) {

@@ -115,8 +115,7 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
     this.formItems.duration = 10000
 
     // - maxFee must be absolute
-    const defaultFee = feesConfig['single'].find(s => s.speed === 'NORMAL')
-    this.formItems.maxFee = this.getAbsoluteFee(defaultFee.value)
+    this.formItems.maxFee = this.defaultFee
   }
 
   /**

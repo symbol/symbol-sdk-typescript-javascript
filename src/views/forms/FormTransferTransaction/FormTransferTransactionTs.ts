@@ -152,8 +152,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     this.formItems.messagePlain = !!this.message ? Formatters.hexToUtf8(this.message.payload) : ''
 
     // - maxFee must be absolute
-    const defaultFee = feesConfig['single'].find(s => s.speed === 'NORMAL')
-    this.formItems.maxFee = this.getAbsoluteFee(defaultFee.value)
+    this.formItems.maxFee = this.defaultFee
   }
 
   /**

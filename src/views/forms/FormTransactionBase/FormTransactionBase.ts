@@ -40,6 +40,7 @@ import {NotificationType} from '@/core/utils/NotificationType'
 
 @Component({
   computed: {...mapGetters({
+    defaultFee: 'app/defaultFee',
     currentWallet: 'wallet/currentWallet',
     currentWalletMosaics: 'wallet/currentWalletMosaics',
     currentMultisigInfo: 'wallet/currentMultisigInfo',
@@ -52,7 +53,13 @@ import {NotificationType} from '@/core/utils/NotificationType'
 })
 export class FormTransactionBase extends Vue {
 /// region store getters
-    /**
+  /**
+   * Default fee setting
+   * @var {number}
+   */
+  public defaultFee: number
+
+  /**
    * Currently active wallet
    * @var {WalletsModel}
    */
@@ -228,7 +235,7 @@ export class FormTransactionBase extends Vue {
           transaction
         )
       })
-      
+
     // - open signature modal
     this.onShowConfirmationModal()
   }

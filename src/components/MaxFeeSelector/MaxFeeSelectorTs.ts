@@ -27,6 +27,7 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue'
     FormLabel,
   },
   computed: {...mapGetters({
+    defaultFee: 'app/defaultFee',
     networkMosaic: 'mosaic/networkMosaic',
     networkMosaicName: 'mosaic/networkMosaicName',
     mosaicsInfo: 'mosaic/mosaicsInfoList',
@@ -52,21 +53,29 @@ export class MaxFeeSelectorTs extends Vue {
    */
   public mosaicsInfo: MosaicInfo[]
 
+  /**
+   * Default fee setting
+   * @var {number}
+   */
+  public defaultFee: number
+
   @Prop({
-    default: 'single'
-  }) multiplier: 'single' | 'double' | 'triple'
-  
+    default: 1
+  }) multiplier: number
+
   /**
    * Value set by the parent component's v-model
    * @type {number}
    */
-  @Prop() value: number
+  @Prop({
+    default: feesConfig.normal
+  }) value: number
 
   /**
    * Fees specification
    * @var {any}
    */
-  public feeSpeeds = feesConfig[this.multiplier]
+  public feeValues = feesConfig
 
 /// region computed properties getter/setter
   /**
@@ -74,7 +83,7 @@ export class MaxFeeSelectorTs extends Vue {
    * @type {number}
    */
   get chosenMaxFee(): number {
-    return this.value
+    return this.value || this.defaultFee
   }
 
   /**
@@ -90,12 +99,12 @@ export class MaxFeeSelectorTs extends Vue {
    * @param {number} price
    * @return {number}
    */
-  public convertToRawAmount(price: number): number {
+  public getRelative(amount: number): number {
     const info = this.mosaicsInfo.find(i => i.id.equals(this.networkMosaic))
     if (info === undefined) {
-      return price
+      return amount
     }
 
-    return price * Math.pow(10, info.divisibility)
+    return amount / Math.pow(10, info.divisibility)
   }
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
+import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 @Component({computed: {...mapGetters({
@@ -21,6 +21,18 @@ import {mapGetters} from 'vuex'
   languageList: 'app/languages',
 })}})
 export class LanguageSelectorTs extends Vue {
+  @Prop({
+    default: ''
+  }) value: string
+
+  @Prop({
+    default: false
+  }) defaultFormStyle: boolean
+
+  @Prop({
+    default: true
+  }) autoSubmit: boolean
+
   /**
    * Currently active language
    * @see {Store.AppInfo}
@@ -35,19 +47,21 @@ export class LanguageSelectorTs extends Vue {
    */
   public languageList: {value: string, label: string}[]
 
-
   /**
    * Currently active language
    */
   get language() {
-    return this.$i18n.locale
+    return this.value && this.value.length ? this.value : this.currentLanguage
   }
 
   /**
    * Sets the new language
    */
   set language(language: string) {
-    this.$i18n.locale = language
-    window.localStorage.setItem('locale', language)
+    if (this.autoSubmit) {
+      this.$store.dispatch('app/SET_LANGUAGE', language)
+    }
+
+    this.$emit('input', language)
   }
 }

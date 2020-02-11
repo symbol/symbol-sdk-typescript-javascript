@@ -176,11 +176,11 @@ export class FormSubWalletCreationTs extends Vue {
   /**
    * When account is unlocked, the sub wallet can be created
    */
-  public onAccountUnlocked(account, password) {
+  public onAccountUnlocked(account: Account, password: Password) {
     this.currentPassword = password
 
     // - interpret form items
-    const values = this.formItems
+    const values = {...this.formItems}
     const type = values.type && ['child_wallet', 'privatekey_wallet'].includes(values.type)
                ? values.type
                : 'child_wallet'
