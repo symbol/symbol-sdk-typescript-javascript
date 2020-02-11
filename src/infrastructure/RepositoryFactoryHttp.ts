@@ -24,8 +24,6 @@ import { BlockHttp } from './BlockHttp';
 import { BlockRepository } from './BlockRepository';
 import { ChainHttp } from './ChainHttp';
 import { ChainRepository } from './ChainRepository';
-import { DiagnosticHttp } from './DiagnosticHttp';
-import { DiagnosticRepository } from './DiagnosticRepository';
 import { IListener } from './IListener';
 import { Listener } from './Listener';
 import { MetadataHttp } from './MetadataHttp';
@@ -83,10 +81,6 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
 
     createChainRepository(): ChainRepository {
         return new ChainHttp(this.url);
-    }
-
-    createDiagnosticRepository(): DiagnosticRepository {
-        return new DiagnosticHttp(this.url);
     }
 
     createMetadataRepository(): MetadataRepository {

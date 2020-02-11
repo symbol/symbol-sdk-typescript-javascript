@@ -17,7 +17,7 @@
 /**
  * The blockchain storage info structure describes stored data.
  */
-export class BlockchainStorageInfo {
+export class StorageInfo {
 
     /**
      * @param numBlocks

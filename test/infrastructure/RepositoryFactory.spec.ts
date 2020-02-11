@@ -33,7 +33,6 @@ describe('RepositoryFactory', () => {
         expect(repositoryFactory.createNamespaceRepository()).to.be.not.null;
         expect(repositoryFactory.createAccountRepository()).to.be.not.null;
         expect(repositoryFactory.createChainRepository()).to.be.not.null;
-        expect(repositoryFactory.createDiagnosticRepository()).to.be.not.null;
         expect(repositoryFactory.createMetadataRepository()).to.be.not.null;
         expect(repositoryFactory.createMosaicRepository()).to.be.not.null;
         expect(repositoryFactory.createMultisigRepository()).to.be.not.null;

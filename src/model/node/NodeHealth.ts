@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NEM
+ * Copyright 2020 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,23 @@
  * limitations under the License.
  */
 
-import {Observable} from 'rxjs';
-import {BlockchainStorageInfo} from '../model/blockchain/BlockchainStorageInfo';
-import { ServerInfo } from '../model/diagnostic/ServerInfo';
+import { NodeStatusEnum } from 'nem2-sdk-openapi-typescript-node-client';
 
 /**
- * Diagnostic interface repository.
- *
- * @since 1.0
+ * The node info structure describes basic information of a node health.
  */
-export interface DiagnosticRepository {
+export class NodeHealth {
 
     /**
-     * Gets blockchain storage info.
-     * @returns Observable<BlockchainStorageInfo>
+     * @param apiNode
+     * @param db
      */
-    getDiagnosticStorage(): Observable<BlockchainStorageInfo>;
-
-    /**
-     * Gets blockchain server info.
-     * @returns Observable<Server>
-     */
-    getServerInfo(): Observable<ServerInfo>;
+    constructor(/**
+                 * The api node status
+                 */
+                public readonly apiNode: NodeStatusEnum,
+                /**
+                 * The database status
+                 */
+                public readonly db: NodeStatusEnum ) {}
 }

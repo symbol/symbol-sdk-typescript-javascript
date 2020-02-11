@@ -17,7 +17,6 @@
 export * from './AccountHttp';
 export * from './BlockHttp';
 export * from './ChainHttp';
-export * from './DiagnosticHttp';
 export * from './Http';
 export * from './MosaicHttp';
 export * from './MetadataHttp';
@@ -36,7 +35,6 @@ export * from './transaction/NamespaceMosaicIdGenerator';
 export * from './AccountRepository';
 export * from './BlockRepository';
 export * from './ChainRepository';
-export * from './DiagnosticRepository';
 export * from './IListener';
 export * from './MetadataRepository';
 export * from './MosaicRepository';

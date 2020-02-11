@@ -19,7 +19,6 @@ import { NetworkType } from '../model/blockchain/NetworkType';
 import { AccountRepository } from './AccountRepository';
 import { BlockRepository } from './BlockRepository';
 import { ChainRepository } from './ChainRepository';
-import { DiagnosticRepository } from './DiagnosticRepository';
 import { IListener } from './IListener';
 import { MetadataRepository } from './MetadataRepository';
 import { MosaicRepository } from './MosaicRepository';
@@ -75,11 +74,6 @@ export interface RepositoryFactory {
      * @returns a newly created {@link ChainRepository}
      */
     createChainRepository(): ChainRepository;
-
-    /**
-     * @returns a newly created {@link DiagnosticRepository}
-     */
-    createDiagnosticRepository(): DiagnosticRepository;
 
     /**
      * @returns a newly created {@link MosaicRepository}

@@ -17,8 +17,11 @@
 import { NodeRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { StorageInfo } from '../model/blockchain/StorageInfo';
+import { NodeHealth } from '../model/node/NodeHealth';
 import { NodeInfo } from '../model/node/NodeInfo';
 import { NodeTime } from '../model/node/NodeTime';
+import { ServerInfo } from '../model/node/ServerInfo';
 import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { NodeRepository } from './NodeRepository';
@@ -79,6 +82,46 @@ export class NodeHttp extends Http implements NodeRepository {
                 throw Error ('Node time not available');
             }),
             catchError((error) =>  throwError(this.errorHandling(error))),
+        );
+    }
+
+    /**
+     * Gets blockchain storage info.
+     * @returns Observable<BlockchainStorageInfo>
+     */
+    public getStorageInfo(): Observable<StorageInfo> {
+        return observableFrom(
+            this.nodeRoutesApi.getNodeStorage()).pipe(
+                map(({body}) => new StorageInfo(
+                        body.numBlocks,
+                        body.numTransactions,
+                        body.numAccounts,
+                    )),
+                catchError((error) =>  throwError(this.errorHandling(error))),
+        );
+    }
+
+    /**
+     * Gets blockchain server info.
+     * @returns Observable<Server>
+     */
+    public getServerInfo(): Observable<ServerInfo> {
+        return observableFrom(
+            this.nodeRoutesApi.getServerInfo()).pipe(
+                map(({body}) => new ServerInfo(body.serverInfo.restVersion, body.serverInfo.sdkVersion)),
+                catchError((error) =>  throwError(this.errorHandling(error))),
+        );
+    }
+
+    /**
+     * Gets blockchain server info.
+     * @returns Observable<Server>
+     */
+    public getNodeHealth(): Observable<NodeHealth> {
+        return observableFrom(
+            this.nodeRoutesApi.getNodeHealth()).pipe(
+                map(({body}) => new NodeHealth(body.status.apiNode, body.status.db)),
+                catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 }
