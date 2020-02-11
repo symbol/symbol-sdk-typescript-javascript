@@ -242,7 +242,7 @@ export class TransactionService extends AbstractService {
    * transactions.
    * @return {Observable<BroadcastResult[]>}
    */
-  public announceSignedTransactions(): Observable<BroadcastResult[]> {
+  public async announceSignedTransactions(): Promise<BroadcastResult[]> {
     // shortcuts
     const signedTransactions = this.$store.getters['wallet/signedTransactions']
 
@@ -253,9 +253,8 @@ export class TransactionService extends AbstractService {
         TransactionType.LOCK
       ].includes(tx.type))
 
-    return transactions.map(transaction => { 
-      return this.$store.dispatch('REST_ANNOUNCE_TRANSACTION', transaction)
-    })
+    return transactions.map(
+      async (transaction: SignedTransaction) => await this.$store.dispatch('wallet/REST_ANNOUNCE_TRANSACTION', transaction)
+    )
   }
-
 }

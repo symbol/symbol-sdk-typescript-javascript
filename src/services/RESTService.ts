@@ -149,36 +149,37 @@ export class RESTService extends AbstractService {
 
     // error listener
     const status = listener.status(address).subscribe(
-      (error: TransactionStatusError) => context.dispatch('notification/addError', error))
+      (error: TransactionStatusError) => context.dispatch('notification/ADD_ERROR', error.code, {root: true}))
 
     // unconfirmed listeners
     const unconfirmedAdded = listener.unconfirmedAdded(address).subscribe(
-      transaction => context.dispatch('wallet/ADD_TRANSACTION', {group: 'unconfirmed', transaction}),
+      transaction => context.dispatch('wallet/ADD_TRANSACTION', {group: 'unconfirmed', transaction}, {root: true}),
       err => console.log(err))
 
     const unconfirmedRemoved = listener.unconfirmedRemoved(address).subscribe(
-      transaction => context.dispatch('wallet/REMOVE_TRANSACTION', {group: 'unconfirmed', transaction}),
+      transaction => context.dispatch('wallet/REMOVE_TRANSACTION', {group: 'unconfirmed', transaction}, {root: true}),
       err => console.log(err))
 
     // partial listeners
     const cosignatureAdded = listener.cosignatureAdded(address).subscribe(
-      transaction => context.dispatch('notification/ADD_SUCCESS', NotificationType.COSIGNATURE_ADDED),
+      transaction => context.dispatch('notification/ADD_SUCCESS', NotificationType.COSIGNATURE_ADDED, {root: true}),
       err => console.log(err))
 
     const partialAdded = listener.aggregateBondedAdded(address).subscribe(
-      transaction => context.dispatch('wallet/ADD_TRANSACTION', {group: 'partial', transaction}),
+      transaction => context.dispatch('wallet/ADD_TRANSACTION', {group: 'partial', transaction}, {root: true}),
       err => console.log(err))
 
     const partialRemoved = listener.aggregateBondedRemoved(address).subscribe(
-      transaction => context.dispatch('wallet/REMOVE_TRANSACTION', {group: 'partial', transaction}),
+      transaction => context.dispatch('wallet/REMOVE_TRANSACTION', {group: 'partial', transaction}, {root: true}),
       err => console.log(err))
 
     // confirmed listener
     const confirmed = listener.confirmed(address).subscribe(
-      transaction => context.dispatch('wallet/ADD_TRANSACTION', {group: 'confirmed', transaction}),
+      transaction => context.dispatch('wallet/ADD_TRANSACTION', {group: 'confirmed', transaction}, {root: true}),
       err => console.log(err))
 
     return {listener, subscriptions: [
+      status,
       unconfirmedAdded,
       unconfirmedRemoved,
       partialAdded,

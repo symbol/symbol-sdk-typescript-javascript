@@ -138,8 +138,7 @@ export class FormTransactionBase extends Vue {
   }
 
   public set hasConfirmationModal(f: boolean) {
-    console.log('set hasConfirmationModal: ', f)
-    this.isAwaitingSignature = true
+    this.isAwaitingSignature = f
   }
 /// end-region computed properties getter/setter
 
@@ -192,7 +191,7 @@ export class FormTransactionBase extends Vue {
    * @return {void}
    */
   public onConfirmationSuccess() {
-    this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
+    this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS_ACCOUNT_UNLOCKED)
   }
 
   /**
@@ -201,8 +200,17 @@ export class FormTransactionBase extends Vue {
    * @return {void}
    */
   public onConfirmationError(error: string) {
-    this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
     this.$store.dispatch('notification/ADD_ERROR', error)
+  }
+
+  /**
+   * Hook called when the child component ModalTransactionConfirmation triggers
+   * the event 'close'
+   * @return {void}
+   */
+  public onConfirmationCancel() {
+    this.hasConfirmationModal = false
+    this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
   }
 
   /**
@@ -210,12 +218,11 @@ export class FormTransactionBase extends Vue {
    * @return {void}
    */
   public async onSubmit() {
-    console.log("transactions prepared: ", this.getTransactions())
+    console.log("Staging Transactions: ", this.getTransactions())
 
     // - add transactions to stage (to be signed)
     this.getTransactions().map(
       async (transaction) => {
-        console.log("Staging transaction: ", transaction)
         await this.$store.dispatch(
           'wallet/ADD_STAGED_TRANSACTION',
           transaction
@@ -223,7 +230,6 @@ export class FormTransactionBase extends Vue {
       })
       
     // - open signature modal
-    console.log("onShowConfirmationModal")
     this.onShowConfirmationModal()
   }
 

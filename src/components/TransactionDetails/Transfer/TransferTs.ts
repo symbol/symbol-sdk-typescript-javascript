@@ -77,6 +77,11 @@ export class TransferTs extends Vue {
     
     return (recipient as Address).pretty()
   }
+
+  public get message(): string {
+    const message = (this.view.transaction as TransferTransaction).message
+    return message.payload
+  }
 /// end-region computed properties getter/setter
 
   public getMosaicIdByHex(mosaicHex: string): MosaicId {

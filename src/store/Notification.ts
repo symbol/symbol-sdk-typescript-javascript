@@ -84,15 +84,15 @@ export default {
     },
 /// region scoped actions
     async ADD_SUCCESS({commit, dispatch}, message) {
-      commit('add', {vm: this, level: 'success', message})
+      commit('add', {level: 'success', message})
       dispatch('diagnostic/ADD_INFO', 'Notification (Success): ' + message, {root: true})
     },
     async ADD_WARNING({commit, dispatch}, message) {
-      commit('add', {vm: this, level: 'warning', message})
+      commit('add', {level: 'warning', message})
       dispatch('diagnostic/ADD_WARNING', 'Notification (Warning): ' + message, {root: true})
     },
     async ADD_ERROR({commit, dispatch}, message) {
-      commit('add', {vm: this, level: 'error', message})
+      commit('add', {level: 'error', message})
       dispatch('diagnostic/ADD_ERROR', 'Notification (Error): ' + message, {root: true})
     },
 /// end-region scoped actions

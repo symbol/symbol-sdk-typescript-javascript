@@ -4,10 +4,8 @@
       v-model="show"
       :title="$t('modal_title_transaction_confirmation')"
       :transfer="false"
+      @close="show = false"
     >
-      <div slot="header" class="transactionConfirmationHeader">
-        <span class="title">{{ $t('confirm_information') }}</span>
-      </div>
       <div class="transactionConfirmationBody">
         <div class="stepItem1">
           <div v-if="!!stagedTransactions"
@@ -29,15 +27,7 @@
         </div>
       </div>
 
-      <div slot="footer" class="modal-footer">
-        <button
-          type="submit"
-          class="centered-button button-style back-button float-right"
-          @click="show = false"
-        >
-          {{ $t('close') }}
-        </button>
-      </div>
+      <div slot="footer" class="modal-footer"></div>
     </Modal>
   </div>
 </template>
@@ -49,7 +39,7 @@ export default class ModalTransactionConfirmation extends ModalTransactionConfir
 
 <style scoped>
 .ivu-modal-content   {
-  width: 8.5rem;
+  min-width: 8.5rem;
 }
 
 .modal-footer {

@@ -103,5 +103,6 @@ export enum NotificationType {
   PASSWORD_IS_INVALID_ERROR ='password_is_invalid',
   REMOTE_PUBLIC_KEY_MISSING = 'remote_public_key_missing_error',
   COSIGNATURE_ADDED = 'cosignature_added',
-  ERROR_WALLET_NAME_ALREADY_EXISTS = 'error_wallet_name_already_exists'
+  ERROR_WALLET_NAME_ALREADY_EXISTS = 'error_wallet_name_already_exists',
+  SUCCESS_ACCOUNT_UNLOCKED = 'success_account_unlocked'
 }

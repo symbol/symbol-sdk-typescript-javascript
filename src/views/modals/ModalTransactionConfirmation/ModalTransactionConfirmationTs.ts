@@ -15,7 +15,7 @@
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Account, Transaction, SignedTransaction} from 'nem2-sdk'
+import {Account, Transaction, SignedTransaction, Password} from 'nem2-sdk'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
@@ -31,6 +31,7 @@ import TransactionDetails from '@/components/TransactionDetails/TransactionDetai
 import FormAccountUnlock from '@/views/forms/FormAccountUnlock/FormAccountUnlock.vue'
 // @ts-ignore
 import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/HardwareConfirmationButton.vue'
+import { NotificationType } from '@/core/utils/NotificationType'
 
 @Component({
   components: {
@@ -92,14 +93,6 @@ export class ModalTransactionConfirmationTs extends Vue {
    */
   public service: TransactionService
 
-  /**
-   * Hook called when the component is mounted
-   * @return {void}
-   */
-  public mounted() {
-    this.service = new TransactionService(this.$store)
-  }
-
 /// region computed properties getter/setter
   /**
    * Returns whether current wallets is a hardware wallet
@@ -140,26 +133,33 @@ export class ModalTransactionConfirmationTs extends Vue {
    * @param {SignedTransaction[]} transactions
    * @return {void}
    */
-  public onTransactionsSigned(transactions: SignedTransaction[]) {
+  public async onTransactionsSigned(transactions: SignedTransaction[]) {
+    this.service = new TransactionService(this.$store)
+
     // - log about transaction signature success
     this.$store.dispatch('diagnostic/ADD_INFO', 'Signed ' + transactions.length + ' Transaction(s) on stage with Hardware Wallet')
+
+    console.log("Signed Transactions: ", transactions.map(signed => signed.payload))
 
     // - transactions are ready to be announced
     transactions.map(async (signed) => await this.$store.commit('wallet/addSignedTransaction', signed))
 
     // - reset transaction stage
+    this.show = false
     this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
 
-    // - broadcast signed transactions
-    this.service.announceSignedTransactions().subscribe((results: BroadcastResult[]) => {
-      // - notify about errors
-      const errors = results.filter(result => false === result.success)
-      if (errors.length) {
-        return errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
-      }
+    // - XXX end-user should be able to uncheck "announce now"
 
-      return this.$emit('success')
-    })
+    // - broadcast signed transactions
+    const results: BroadcastResult[] = await this.service.announceSignedTransactions()
+
+    // - notify about errors
+    const errors = results.filter(result => false === result.success)
+    if (errors.length) {
+      return errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
+    }
+
+    return this.$emit('success')
   }
 
   /**
@@ -173,29 +173,38 @@ export class ModalTransactionConfirmationTs extends Vue {
    * @param {Password} password 
    * @return {void}
    */
-  public onAccountUnlocked(account: Account) {
+  public async onAccountUnlocked({account, password}: {account: Account, password: Password}) {
+    this.service = new TransactionService(this.$store)
+
+    console.log("unlocked: ", account)
+
     // - log about unlock success
     this.$store.dispatch('diagnostic/ADD_INFO', 'Account ' + account.address.plain() + ' unlocked successfully.')
 
     // - get staged transactions and sign
     this.stagedTransactions.map(async (staged) => {
       const signedTx = account.sign(staged, this.generationHash)
+      console.log("Signed Transaction: ", {hash: signedTx.hash, payload: signedTx.payload})
       await this.$store.commit('wallet/addSignedTransaction', signedTx)
     })
 
     // - reset transaction stage
+    this.show = false
     this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
 
-    // - broadcast signed transactions
-    this.service.announceSignedTransactions().subscribe((results: BroadcastResult[]) => {
-      // - notify about errors
-      const errors = results.filter(result => false === result.success)
-      if (errors.length) {
-        return errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
-      }
+    // - XXX end-user should be able to uncheck "announce now"
 
-      return this.$emit('success')
-    })
+    // - broadcast signed transactions
+    const results: BroadcastResult[] = await this.service.announceSignedTransactions()
+
+    // - notify about errors
+    const errors = results.filter(result => false === result.success)
+    if (errors.length) {
+      return errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
+    }
+
+    this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
+    return this.$emit('success')
   }
 
   /**

@@ -982,6 +982,8 @@
   "option_root_namespace": "Root Namespace",
   "option_sub_namespace": "Sub namespace",
   "error_wallet_name_already_exists": "This wallet name already exists. Please, enter a unique wallet name.",
+  "error_invalid_password": "This password is invalid",
+  "success_account_unlocked": "Account unlocked successfully",
   "modal_title_enter_wallet_name": "Configure your new wallet",
   "modal_title_transaction_details": "Details about a transaction",
   "modal_title_transaction_confirmation": "Sign a transaction",

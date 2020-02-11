@@ -50,6 +50,7 @@
         :visible="hasConfirmationModal"
         @success="onConfirmationSuccess"
         @error="onConfirmationError"
+        @close="onConfirmationCancel"
       />
     </FormWrapper>
   </div>

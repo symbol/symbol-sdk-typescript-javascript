@@ -107,7 +107,7 @@ export class FormAccountUnlockTs extends Vue {
         return this.$emit('success', {account: unlockedAccount, password})
       }
 
-      return this.$emit('error', this.$t('invalid_password'))
+      return this.$emit('error', this.$t('error_invalid_password'))
     }
     catch(e) {
       this.$emit('error', e)
