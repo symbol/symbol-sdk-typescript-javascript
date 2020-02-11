@@ -138,7 +138,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     // - re-populate form if transaction staged
     if (this.stagedTransactions.length) {
       const transfer = this.stagedTransactions.find(staged => staged.type === TransactionType.TRANSFER)
-      this.transactions = [transfer as TransferTransaction]
+      this.setTransactions([transfer as TransferTransaction])
       this.isAwaitingSignature = true
       return ;
     }
@@ -156,13 +156,12 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     this.formItems.maxFee = this.getAbsoluteFee(defaultFee.value)
   }
 
-/// region computed properties getter/setter
   /**
    * Getter for TRANSFER transactions that will be staged
    * @see {FormTransactionBase}
    * @return {TransferTransaction[]}
    */
-  protected get transactions(): TransferTransaction[] {
+  protected getTransactions(): TransferTransaction[] {
     this.factory = new TransactionFactory(this.$store)
     try {
       // - read form
@@ -176,45 +175,44 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         message: this.formItems.messagePlain,
         maxFee: UInt64.fromUint(this.formItems.maxFee),
       }
-
+      
       // - prepare transaction parameters
-      const view = new ViewTransferTransaction(this.$store)
-
-      // - parse form fields
-      view.parse(data)
-
+      let view = new ViewTransferTransaction(this.$store)
+      view = view.parse(data)
+      
       // - prepare transfer transaction
       return [this.factory.build(view)]
     } catch (error) {
       console.error('Error happened in FormTransferTransaction.transactions(): ', error)
     }
   }
-
+  
   /**
    * Setter for TRANSFER transactions that will be staged
    * @see {FormTransactionBase}
    * @param {TransferTransaction[]} transactions
    * @throws {Error} If not overloaded in derivate component
    */
-  protected set transactions(transactions: TransferTransaction[]) {
+  protected setTransactions(transactions: TransferTransaction[]) {
     // - this form creates only 1 transaction
     const transaction = transactions.shift()
 
     // - populate recipient
     this.formItems.recipientRaw = transaction.recipientAddress instanceof Address
-                                ? transaction.recipientAddress.plain()
-                                : (transaction.recipientAddress as NamespaceId).toHex()
-
+    ? transaction.recipientAddress.plain()
+    : (transaction.recipientAddress as NamespaceId).fullName
+    
     // - populate attached mosaics
     this.attachedMosaics = this.mosaicsToAttachments(transaction.mosaics)
-
+    
     // - convert and populate message
     this.formItems.messagePlain = Formatters.hexToUtf8(transaction.message.payload)
-
+    
     // - populate maxFee
     this.formItems.maxFee = transaction.maxFee.compact()
   }
 
+/// region computed properties getter/setter
   /**
    * Getter for attached mosaics
    * @return {MosaicAttachmentType[]}

@@ -101,8 +101,32 @@ export class ModalTransactionConfirmationTs extends Vue {
   }
 
 /// region computed properties getter/setter
+  /**
+   * Returns whether current wallets is a hardware wallet
+   * @return {boolean}
+   */
   public get isUsingHardwareWallet(): boolean {
+    //XXX should use "stagedTransaction.signer" to identify wallet
     return AppWalletType.TREZOR === this.currentWallet.values.get('type')
+  }
+
+  /**
+   * Visibility state
+   * @type {boolean}
+   */
+  public get show(): boolean {
+    return this.visible 
+        //&& !!this.stagedTransactions
+        //&& this.stagedTransactions.length > 0
+  }
+
+  /**
+   * Emits close event
+   */
+  public set show(val) {
+    if (!val) {
+      this.$emit('close')
+    }
   }
 /// end-region computed properties getter/setter
 

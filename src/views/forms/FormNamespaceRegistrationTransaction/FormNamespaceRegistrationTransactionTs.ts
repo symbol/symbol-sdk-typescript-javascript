@@ -102,7 +102,7 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
     // - re-populate form if transaction staged
     if (this.stagedTransactions.length) {
       const transaction = this.stagedTransactions.find(staged => staged.type === TransactionType.REGISTER_NAMESPACE)
-      this.transactions = [transaction as NamespaceRegistrationTransaction]
+      this.setTransactions([transaction as NamespaceRegistrationTransaction])
       this.isAwaitingSignature = true
       return ;
     }
@@ -119,32 +119,31 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
     this.formItems.maxFee = this.getAbsoluteFee(defaultFee.value)
   }
 
-/// region computed properties getter/setter
   /**
-   * Getter for MOSAIC DEFINITION and SUPPLY CHANGE transactions that will be staged
+   * Getter for NAMESPACE REGISTRATION transactions that will be staged
    * @see {FormTransactionBase}
    * @return {TransferTransaction[]}
    */
-  protected get transactions(): Transaction[] {
+  protected getTransactions(): Transaction[] {
     this.factory = new TransactionFactory(this.$store)
     try {
       // - read form for definition
       const data: NamespaceRegistrationFormFieldsType = {
         registrationType: this.formItems.registrationType,
         rootNamespaceName: NamespaceRegistrationType.RootNamespace === this.formItems.registrationType 
-                         ? this.formItems.newNamespaceName
-                         : this.formItems.parentNamespaceName,
+        ? this.formItems.newNamespaceName
+        : this.formItems.parentNamespaceName,
         subNamespaceName: NamespaceRegistrationType.SubNamespace === this.formItems.registrationType 
-                        ? this.formItems.newNamespaceName
-                        : '',
+        ? this.formItems.newNamespaceName
+        : '',
         duration: this.formItems.duration,
         maxFee: UInt64.fromUint(this.formItems.maxFee),
       }
-
+      
       // - prepare mosaic definition transaction
-      const view = new ViewNamespaceRegistrationTransaction(this.$store)
-      view.parse(data)
-
+      let view = new ViewNamespaceRegistrationTransaction(this.$store)
+      view = view.parse(data)
+      
       // - prepare mosaic definition and supply change
       return [
         this.factory.build(view),
@@ -153,25 +152,27 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
       console.error('Error happened in FormNamespaceRegistrationTransaction.transactions(): ', error)
     }
   }
-
+  
   /**
    * Setter for TRANSFER transactions that will be staged
    * @see {FormTransactionBase}
    * @param {TransferTransaction[]} transactions
    * @throws {Error} If not overloaded in derivate component
    */
-  protected set transactions(transactions: Transaction[]) {
+  protected setTransactions(transactions: Transaction[]) {
     // - this form creates 2 transaction
     const transaction = transactions.shift() as NamespaceRegistrationTransaction
-
+    
     // - populate from transaction
     this.formItems.registrationType = transaction.registrationType
     this.formItems.newNamespaceName = transaction.namespaceName
     this.formItems.parentNamespaceName = transaction.parentId ? transaction.parentId.toHex() : ''
     this.formItems.duration = transaction.duration ? transaction.duration.compact() : 0
-
+    
     // - populate maxFee
     this.formItems.maxFee = transaction.maxFee.compact()
   }
+
+/// region computed properties getter/setter
 /// end-region computed properties getter/setter
 }

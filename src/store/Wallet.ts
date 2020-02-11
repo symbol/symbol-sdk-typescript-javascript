@@ -201,13 +201,8 @@ export default {
       // - get previously staged transactions
       const staged = state.stagedTransactions
 
-      // - update instead of push if transaction exists on stage
-      const findIndex = staged.findIndex(tx => tx.transactionInfo.hash === transaction.transactionInfo.hash)
-      if (undefined !== findIndex) {
-        staged[findIndex] = transaction
-      }
       // - push transaction on stage (order matters)
-      else staged.push(transaction)
+      staged.push(transaction)
 
       // - update state
       return Vue.set(state, 'stagedTransactions', staged)

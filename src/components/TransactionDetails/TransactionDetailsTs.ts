@@ -19,6 +19,7 @@ import {
   Transaction,
   TransactionType,
   NetworkType,
+  MosaicId,
   AccountAddressRestrictionTransaction,
   AccountLinkTransaction,
   AccountMetadataTransaction,
@@ -42,7 +43,6 @@ import {
 } from 'nem2-sdk'
 
 // internal dependencies
-import {TransactionView} from '@/core/transactions/TransactionView'
 import {TransactionService, TransactionViewType} from '@/services/TransactionService'
 import {Formatters} from '@/core/utils/Formatters'
 
@@ -51,14 +51,27 @@ import networkConfig from '@/../config/network.conf.json'
 
 // child components
 // @ts-ignore
-import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
+import TransactionDetailsHeader from '@/components/TransactionDetailsHeader/TransactionDetailsHeader.vue'
+// @ts-ignore
+import TransactionDetailsTransfer from '@/components/TransactionDetails/Transfer/Transfer.vue'
+// @ts-ignore
+import TransactionDetailsMosaicDefinition from '@/components/TransactionDetails/MosaicDefinition/MosaicDefinition.vue'
+// @ts-ignore
+import TransactionDetailsMosaicSupplyChange from '@/components/TransactionDetails/MosaicSupplyChange/MosaicSupplyChange.vue'
+// @ts-ignore
+import TransactionDetailsNamespaceRegistration from '@/components/TransactionDetails/NamespaceRegistration/NamespaceRegistration.vue'
 
 @Component({
   components: {
-    MosaicAmountDisplay,
+    TransactionDetailsHeader,
+    TransactionDetailsTransfer,
+    TransactionDetailsMosaicDefinition,
+    TransactionDetailsMosaicSupplyChange,
+    TransactionDetailsNamespaceRegistration,
   },
   computed: {...mapGetters({
     networkType: 'network/networkType',
+    networkMosaic: 'mosaic/networkMosaic',
     networkMosaicTicker: 'mosaic/networkMosaicTicker',
   })},
 })
@@ -74,6 +87,13 @@ export class TransactionDetailsTs extends Vue {
    * @var {NetworkType}
    */
   public networkType: NetworkType
+
+  /**
+   * Network mosaic id
+   * @see {Store.Mosaic}
+   * @var {MosaicId}
+   */
+  public networkMosaic: MosaicId
 
   /**
    * Current network currency mosaic ticker
@@ -101,15 +121,26 @@ export class TransactionDetailsTs extends Vue {
   public service: TransactionService
 
   /**
-   * Hook called when the component is mounted
-   * @return {void}
+   * Transaction view instance
+   * @var {TransactionViewType}
    */
-  public mounted() {
-    this.service = new TransactionService(this.$store)
+  public view: TransactionViewType
+
+  /**
+   * Expose transaction types to view
+   * @var {TransactionType}
+   */
+  public types = TransactionType
+
+  public created() {
+    if (!!this.transaction) {
+      this.view = this.getView()
+    }
   }
 
-/// region computed properties getter/setter
-  public get view(): TransactionViewType {
+  public getView(): TransactionViewType {
+    this.service = new TransactionService(this.$store)
+
     switch (this.transaction.type) {
       case TransactionType.MOSAIC_DEFINITION: 
         return this.service.getView(this.transaction as MosaicDefinitionTransaction)
@@ -154,40 +185,13 @@ export class TransactionDetailsTs extends Vue {
         return this.service.getView(this.transaction as SecretProofTransaction)
     }
   }
-/// end-region computed properties getter/setter
 
   /**
-   * Returns the effective fee paid if available
-   * @return {number}
+   * Whether set transaction is of type \a type
+   * @param {TransactionType} type 
+   * @return {boolean}
    */
-  public getFeeAmount(): number {
-    return this.view.values.get('effectiveFee')
-        || this.view.values.get('maxFee')
-        || 0
+  public isType(type): boolean {
+    return !!this.transaction && this.transaction.type === type
   }
-
-  /*
-  get explorerBasePath() {
-    return this.app.explorerBasePath
-  }
-  get networkCurrency() {
-    return this.activeAccount.networkCurrency
-  }
-
-  get transactionDetails() {
-    return this.transaction.formattedInnerTransactions ?
-      this.transaction.formattedInnerTransactions.map(item => item.dialogDetailMap) :
-      [this.transaction.dialogDetailMap]
-  }
-
-  getStatus(): string {
-    if (!this.transaction.rawTx.signer) return null
-    return this.transaction.transactionStatusGroup
-  }
-
-  openExplorer(transactionHash) {
-    const {explorerBasePath} = this
-    return explorerBasePath + transactionHash
-  }
-  */
 }

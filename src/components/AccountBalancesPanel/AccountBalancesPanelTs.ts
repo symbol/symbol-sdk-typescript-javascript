@@ -72,7 +72,7 @@ export class AccountBalancesPanelTs extends Vue {
 
 /// region computed properties getter/setter
   get networkMosaicBalance() {
-    if (! this.currentWallet || ! this.currentWalletMosaics.length) {
+    if (!this.currentWallet || !this.currentWalletMosaics.length) {
       return 0
     }
 

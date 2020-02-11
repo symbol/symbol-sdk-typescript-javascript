@@ -1,7 +1,7 @@
 <template>
-  <div class="transactionConfirmationWrap">
+  <div class="container">
     <Modal
-      v-if="show"
+      v-model="show"
       :title="$t('modal_title_transaction_confirmation')"
       :transfer="false"
     >
@@ -10,13 +10,14 @@
       </div>
       <div class="transactionConfirmationBody">
         <div class="stepItem1">
-          <div v-for="(transaction, index) in stagedTransactions"
+          <div v-if="!!stagedTransactions"
+               v-for="(transaction, index) in stagedTransactions"
                class="info_container">
             <TransactionDetails :transaction="transaction" />
           </div>
 
           <HardwareConfirmationButton 
-            v-if="isUsingHardwareWallet()" 
+            v-if="isUsingHardwareWallet" 
             @success="onTransactionsSigned"
             @error="onError"
           />
@@ -43,7 +44,20 @@
 
 <script lang="ts">
 import {ModalTransactionConfirmationTs} from './ModalTransactionConfirmationTs'
-import './ModalTransactionConfirmation.less'
-
 export default class ModalTransactionConfirmation extends ModalTransactionConfirmationTs {}
 </script>
+
+<style scoped>
+.ivu-modal-content   {
+  width: 8.5rem;
+}
+
+.modal-footer {
+  height: 0.46rem;
+  padding-right: 0.4rem;
+}
+
+.float-right {
+  float: right;
+}
+</style>

@@ -72,6 +72,7 @@ export abstract class TransactionView<FormFieldsType> {
    * @param {Store<any>} store 
    */
   public constructor(store: Store<any> = AppStore) {
+    this.$store = store
     this.values = new Map<string, any>()
   }
 
@@ -103,7 +104,10 @@ export abstract class TransactionView<FormFieldsType> {
 
     // - signed transaction fields
     this.values.set('signature', transaction.signature)
-    this.values.set('signerPublicKey', transaction.signer.publicKey)
+
+    if (!!transaction.signer) {
+      this.values.set('signerPublicKey', transaction.signer.publicKey)
+    }
 
     // - network related fields
     this.values.set('networkType', transaction.networkType)

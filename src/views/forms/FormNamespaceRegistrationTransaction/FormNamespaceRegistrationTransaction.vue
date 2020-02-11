@@ -58,8 +58,8 @@
     </ValidationObserver>
 
     <ModalTransactionConfirmation
-      v-if="isAwaitingSignature"
-      :visible="isAwaitingSignature"
+      v-if="hasConfirmationModal"
+      :visible="hasConfirmationModal"
       @success="onConfirmationSuccess"
       @error="onConfirmationError"
     />

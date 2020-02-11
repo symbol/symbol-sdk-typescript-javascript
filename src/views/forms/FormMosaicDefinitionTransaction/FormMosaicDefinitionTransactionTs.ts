@@ -94,10 +94,10 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     if (this.stagedTransactions.length) {
       const definition = this.stagedTransactions.find(staged => staged.type === TransactionType.MOSAIC_DEFINITION)
       const supply = this.stagedTransactions.find(staged => staged.type === TransactionType.MOSAIC_SUPPLY_CHANGE)
-      this.transactions = [
+      this.setTransactions([
         definition as MosaicDefinitionTransaction,
         supply as MosaicSupplyChangeTransaction
-      ]
+      ])
       this.isAwaitingSignature = true
       return ;
     }
@@ -120,7 +120,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
    * @see {FormTransactionBase}
    * @return {TransferTransaction[]}
    */
-  protected get transactions(): Transaction[] {
+  protected getTransactions(): Transaction[] {
     this.factory = new TransactionFactory(this.$store)
     try {
       //XXX signer selector
@@ -151,12 +151,12 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
       }
 
       // - prepare mosaic definition transaction
-      const definitionView = new ViewMosaicDefinitionTransaction(this.$store)
-      definitionView.parse(definitionData)
+      let definitionView = new ViewMosaicDefinitionTransaction(this.$store)
+      definitionView = definitionView.parse(definitionData)
 
       // - prepare mosaic definition transaction
-      const supplyChangeView = new ViewMosaicSupplyChangeTransaction(this.$store)
-      supplyChangeView.parse(supplyChangeData)
+      let supplyChangeView = new ViewMosaicSupplyChangeTransaction(this.$store)
+      supplyChangeView = supplyChangeView.parse(supplyChangeData)
 
       // - prepare mosaic definition and supply change
       return [
@@ -174,7 +174,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
    * @param {TransferTransaction[]} transactions
    * @throws {Error} If not overloaded in derivate component
    */
-  protected set transactions(transactions: Transaction[]) {
+  protected setTransactions(transactions: Transaction[]) {
     // - this form creates 2 transaction
     const definition = transactions.shift() as MosaicDefinitionTransaction
     const supplyChange = transactions.shift() as MosaicSupplyChangeTransaction
@@ -193,5 +193,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     // - populate maxFee
     this.formItems.maxFee = definition.maxFee.compact()
   }
+
+/// region computed properties getter/setter
 /// end-region computed properties getter/setter
 }

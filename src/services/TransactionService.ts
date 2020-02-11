@@ -176,26 +176,26 @@ export class TransactionService extends AbstractService {
     case TransactionType.SECRET_LOCK:
     case TransactionType.SECRET_PROOF:
       view = new ViewUnknownTransaction(this.$store);
-      view.use(transaction)
+      view = view.use(transaction)
       break;
 
     /// end-region XXX views for transaction types not yet implemented
 
     case TransactionType.MOSAIC_DEFINITION:
       view = new ViewMosaicDefinitionTransaction(this.$store);
-      view.use(transaction as MosaicDefinitionTransaction)
+      view = view.use(transaction as MosaicDefinitionTransaction)
       break;
     case TransactionType.MOSAIC_SUPPLY_CHANGE:
       view = new ViewMosaicSupplyChangeTransaction(this.$store); 
-      view.use(transaction as MosaicSupplyChangeTransaction)
+      view = view.use(transaction as MosaicSupplyChangeTransaction)
       break;
     case TransactionType.REGISTER_NAMESPACE:
       view = new ViewNamespaceRegistrationTransaction(this.$store);
-      view.use(transaction as NamespaceRegistrationTransaction)
+      view = view.use(transaction as NamespaceRegistrationTransaction)
       break;
-    case TransactionType.TRANSFER: 
+    case TransactionType.TRANSFER:
       view = new ViewTransferTransaction(this.$store);
-      view.use(transaction as TransferTransaction)
+      view = view.use(transaction as TransferTransaction)
       break;
 
     default:
@@ -207,7 +207,9 @@ export class TransactionService extends AbstractService {
 
     // - try to find block for fee information
     const height = transaction.transactionInfo ? transaction.transactionInfo.height : undefined
-    const block = Object().values(knownBlocks).find((known: BlockInfo) => known.height.equals(height))
+    const block: BlockInfo = !height ? undefined : Object.keys(knownBlocks).filter(
+      k => knownBlocks[k].height.equals(height)
+    ).map(k => knownBlocks[k]).shift()
 
     const isAggregate = [
       TransactionType.AGGREGATE_BONDED,

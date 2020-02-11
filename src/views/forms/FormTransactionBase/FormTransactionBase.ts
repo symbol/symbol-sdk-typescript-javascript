@@ -102,23 +102,23 @@ export class FormTransactionBase extends Vue {
 /// end-region store getters
 
 /// region property watches
-  @Watch('transactions')
+  @Watch('getTransactions')
   onTransactionsChange(transactions: Transaction[]) {
     this.$emit('onTransactionsChange', transactions)
   }
 /// end-region property watches
 
   /**
-   * Transaction factory
-   * @var {TransactionFactory}
-   */
-  public factory: TransactionFactory
-
-  /**
    * Whether the form is currently awaiting a signature
    * @var {boolean}
    */
   public isAwaitingSignature: boolean = false
+
+  /**
+   * Transaction factory
+   * @var {TransactionFactory}
+   */
+  public factory: TransactionFactory
 
   /**
    * Hook called when the component is mounted
@@ -131,6 +131,17 @@ export class FormTransactionBase extends Vue {
       try { this.$store.dispatch('wallet/REST_FETCH_OWNED_NAMESPACES', address) } catch(e) {}
     }
   }
+
+/// region computed properties getter/setter
+  public get hasConfirmationModal(): boolean {
+    return this.isAwaitingSignature
+  }
+
+  public set hasConfirmationModal(f: boolean) {
+    console.log('set hasConfirmationModal: ', f)
+    this.isAwaitingSignature = true
+  }
+/// end-region computed properties getter/setter
 
   /**
    * Hook called when the component is created
@@ -153,8 +164,8 @@ export class FormTransactionBase extends Vue {
    * Getter for transactions that will be staged
    * @throws {Error} If not overloaded in derivate component
    */
-  protected get transactions(): Transaction[] {
-    throw new Error('Getter method \'get transactions()\' must be overloaded in derivate components.')
+  protected getTransactions(): Transaction[] {
+    throw new Error('Getter method \'getTransactions()\' must be overloaded in derivate components.')
   }
 
   /**
@@ -162,8 +173,17 @@ export class FormTransactionBase extends Vue {
    * @param {Transaction[]} transactions
    * @throws {Error} If not overloaded in derivate component
    */
-  protected set transactions(transactions: Transaction[]) {
-    throw new Error('Setter method \'set transactions()\' must be overloaded in derivate components.')
+  protected setTransactions(transactions: Transaction[]) {
+    throw new Error('Setter method \'setTransactions()\' must be overloaded in derivate components.')
+  }
+
+  /**
+   * Hook called when the confirmation modal must open
+   * @see {FormTransactionBase}
+   * @throws {Error} If not overloaded in derivate component
+   */
+  protected onShowConfirmationModal() {
+    this.hasConfirmationModal = true
   }
 
   /**
@@ -190,16 +210,21 @@ export class FormTransactionBase extends Vue {
    * @return {void}
    */
   public async onSubmit() {
-    // - add transactions to stage (to be signed)
-    await this.transactions.map(
-      async (transaction) => await this.$store.dispatch(
-        'wallet/ADD_STAGED_TRANSACTION',
-        transaction
-      )
-    )
+    console.log("transactions prepared: ", this.getTransactions())
 
+    // - add transactions to stage (to be signed)
+    this.getTransactions().map(
+      async (transaction) => {
+        console.log("Staging transaction: ", transaction)
+        await this.$store.dispatch(
+          'wallet/ADD_STAGED_TRANSACTION',
+          transaction
+        )
+      })
+      
     // - open signature modal
-    this.isAwaitingSignature = true
+    console.log("onShowConfirmationModal")
+    this.onShowConfirmationModal()
   }
 
   /**
