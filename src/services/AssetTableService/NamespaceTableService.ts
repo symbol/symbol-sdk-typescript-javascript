@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 // external dependencies
+import {Store} from 'vuex'
 import {NamespaceInfo, AliasType} from 'nem2-sdk'
 
 // internal dependencies
-import {AssetTableService, AssetType, TableField} from './AssetTableService'
+import {AssetTableService, TableField} from './AssetTableService'
 import {TimeHelpers} from '@/core/utils/TimeHelpers'
-import {NamespaceTableFields, NamespaceTableRowValues} from './NamespaceTableConfig'
-
 
 export class NamespaceTableService extends AssetTableService {
-  public constructor(store: any) {
-    super(store, AssetType.namespace)
+  /**
+   * Creates an instance of NamespaceTableService.
+   * @param {*} store
+   */
+  constructor(store?: Store<any>) {
+    super(store)
   }
 
   /**
@@ -33,46 +36,38 @@ export class NamespaceTableService extends AssetTableService {
    */
   public getTableFields(): TableField[] {
     return [
-      {
-        name: NamespaceTableFields.name,
-        label: 'table_header_name',
-      }, {
-        name: NamespaceTableFields.expiration,
-        label: 'table_header_expiration',
-      }, {
-        name: NamespaceTableFields.expired,
-        label: 'table_header_expired',
-      }, {
-        name: NamespaceTableFields.aliasIdentifier,
-        label: 'table_header_alias_identifier',
-      }, {
-        name: NamespaceTableFields.aliasType,
-        label: 'table_header_alias_type',
-      },
+      {name: 'name', label: 'table_header_name'},
+      {name: 'expiration', label: 'table_header_expiration'},
+      {name: 'expired', label: 'table_header_expired'},
+      {name: 'aliasIdentifier', label: 'table_header_alias_identifier'},
+      {name: 'aliasType', label: 'table_header_alias_type'},
     ]
   }
-  
+
   /**
    * Return table values to be displayed in a table rows
    * @returns {NamespaceTableRowValues}
    */
-  public async getTableRows(): Promise<NamespaceTableRowValues[]> {
-    const currentWalletAddress = this.store.getters['wallet/currentWalletAddress']
-    const namespaceInfo: NamespaceInfo[] = await this.store.dispatch('wallet/REST_FETCH_OWNED_NAMESPACES', currentWalletAddress.plain())
+  public async getTableRows(): Promise<any[]> {
+    const currentWalletAddress = this.$store.getters['wallet/currentWalletAddress']
+
+    //XXX data source "REST_FETCH_OWNED_NAMESPACES"
+
+    const namespaceInfo: NamespaceInfo[] = await this.$store.dispatch('wallet/REST_FETCH_OWNED_NAMESPACES', currentWalletAddress.plain())
     if (!namespaceInfo.length) return []
 
     const namespaceIds = namespaceInfo.map(({id}) => id)
-    const namespaceNames: {hex: string, name: string}[] = await this.store.dispatch('namespace/REST_FETCH_NAMES', namespaceIds)
+    const namespaceNames: {hex: string, name: string}[] = await this.$store.dispatch('namespace/REST_FETCH_NAMES', namespaceIds)
 
     return Object.values(namespaceInfo).map(namespaceInfo => {
       const {expired, expiration} = this.getExpiration(namespaceInfo)
 
       return {
-        [NamespaceTableFields.name]: namespaceNames.find(({hex}) => hex === namespaceInfo.id.toHex()).name,
-        [NamespaceTableFields.expiration]: expiration,
-        [NamespaceTableFields.expired]: expired,
-        [NamespaceTableFields.aliasType]: this.getAliasType(namespaceInfo),
-        [NamespaceTableFields.aliasIdentifier]: this.getAliasIdentifier(namespaceInfo),
+        "name": namespaceNames.find(({hex}) => hex === namespaceInfo.id.toHex()).name,
+        "expiration": expiration,
+        "expired": expired,
+        "aliasType": this.getAliasType(namespaceInfo),
+        "aliasIdentifier": this.getAliasIdentifier(namespaceInfo),
       }
     })
   }
@@ -111,7 +106,7 @@ export class NamespaceTableService extends AssetTableService {
   ): {expiration: string, expired: boolean} {
     const {currentHeight} = this
     const endHeight = namespaceInfo.endHeight.compact()
-    const networkConfig = this.store.getters['network/config']
+    const networkConfig = this.$store.getters['network/config']
     const {namespaceGracePeriodDuration} = networkConfig.networks['testnet-publicTest']
     
     const expired = currentHeight > endHeight - namespaceGracePeriodDuration

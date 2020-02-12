@@ -1,7 +1,7 @@
 <template>
-  <span>
-    <span>{{ integerPart }}</span>
-    <span class="lighter-color">{{ fractionalPart }}</span>
+  <span class="amount-display-container">
+    <span class="integer-part">{{ integerPart }}</span>
+    <span class="fractional-part">{{ fractionalPart }}</span>
     <span v-if="showTicker" class="ticker">&nbsp;{{ networkMosaicTicker }}</span>
   </span>
 </template>
@@ -13,7 +13,15 @@ export default class AmountDisplay extends AmountDisplayTs {}
 </script>
 
 <style scoped lang="less">
-  .lighter-color {
+.amount-display-container {
+  span {
+    font-size: 25px;
+  }
+  .integer-part {
+    opacity: 1;
+  }
+  .fractional-part {
     opacity: .4;
   }
+}
 </style>

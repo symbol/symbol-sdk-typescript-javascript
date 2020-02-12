@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// internal dependencies
-import {AssetTableService, AssetType, TableField} from './AssetTableService'
+import {Store} from 'vuex'
 import {Mosaic, MosaicInfo} from 'nem2-sdk'
-import {MosaicTableFields, MosaicTableRowValues} from './MosaicTableConfig'
+
+// internal dependencies
+import {AssetTableService, TableField} from './AssetTableService'
 
 export class MosaicTableService extends AssetTableService {
   private currentWalletMosaics: Mosaic[]
 
   /**
-  * Creates an instance of MosaicAssetTableService.
+  * Creates an instance of MosaicTableService.
   * @param {*} store
   */
-  public constructor(store: any) {
-    super(store, AssetType.mosaic)
-    this.currentWalletMosaics = this.store.getters['wallet/currentWalletMosaics'] || []
+  constructor(store?: Store<any>) {
+    super(store)
+    this.currentWalletMosaics = this.$store.getters['wallet/currentWalletMosaics'] || []
   }
 
   /**
@@ -36,34 +37,15 @@ export class MosaicTableService extends AssetTableService {
    */
   public getTableFields(): TableField[] {
     return [
-      {
-        name: MosaicTableFields.hexId,
-        label: 'table_header_hex_id',
-      }, {
-        name: MosaicTableFields.name,
-        label: 'table_header_name',
-      }, {
-        name: MosaicTableFields.supply,
-        label: 'table_header_supply',
-      }, {
-        name: MosaicTableFields.balance,
-        label: 'table_header_balance',
-      }, {
-        name: MosaicTableFields.expiration,
-        label: 'table_header_expiration',
-      }, {
-        name: MosaicTableFields.divisibility,
-        label: 'table_header_divisibility',
-      }, {
-        name: MosaicTableFields.transferable,
-        label: 'table_header_transferable',
-      }, {
-        name: MosaicTableFields.supplyMutable,
-        label: 'table_header_supply_mutable',
-      }, {
-        name: MosaicTableFields.restrictable,
-        label: 'table_header_restrictable',
-      },
+      {name: 'hexId', label: 'table_header_hex_id'},
+      {name: 'name', label: 'table_header_name'},
+      {name: 'supply', label: 'table_header_supply'},
+      {name: 'balance', label: 'table_header_balance'},
+      {name: 'expiration', label: 'table_header_expiration'},
+      {name: 'divisibility', label: 'table_header_divisibility'},
+      {name: 'transferable', label: 'table_header_transferable'},
+      {name: 'supplyMutable', label: 'table_header_supply_mutable'},
+      {name: 'restrictable', label: 'table_header_restrictable'},
     ]
   }
 
@@ -71,23 +53,25 @@ export class MosaicTableService extends AssetTableService {
   * Return table values to be displayed in a table rows
   * @returns {MosaicTableRowValues[]}
   */
-  public async getTableRows(): Promise<MosaicTableRowValues[]> {
-    const mosaicsInfo: Record<string, MosaicInfo> = this.store.getters['mosaic/mosaicsInfo'] || {}
-    const mosaicNamesByHex: Record<string, string> = this.store.getters['mosaic/mosaicsNames'] || {}
+  public async getTableRows(): Promise<any[]> {
+    //XXX data source "REST_FETCH_OWNED_MOSAICS"
+
+    const mosaicsInfo: Record<string, MosaicInfo> = this.$store.getters['mosaic/mosaicsInfo'] || {}
+    const mosaicNamesByHex: Record<string, string> = this.$store.getters['mosaic/mosaicsNames'] || {}
 
     return Object.values(mosaicsInfo).map(mosaicInfo => {
       const hexId = mosaicInfo.id.toHex()
 
       return {
-        [MosaicTableFields.hexId]: hexId,
-        [MosaicTableFields.name]: mosaicNamesByHex[hexId] || 'N/A',
-        [MosaicTableFields.supply]: mosaicInfo.supply.compact().toLocaleString(),
-        [MosaicTableFields.balance]: this.getRelativeBalanceById(mosaicInfo),
-        [MosaicTableFields.expiration]: this.getExpiration(mosaicInfo),
-        [MosaicTableFields.divisibility]: mosaicInfo.divisibility,
-        [MosaicTableFields.transferable]: mosaicInfo.flags.transferable,
-        [MosaicTableFields.supplyMutable]: mosaicInfo.flags.supplyMutable,
-        [MosaicTableFields.restrictable]: mosaicInfo.flags.restrictable,
+        "hexId": hexId,
+        "name": mosaicNamesByHex[hexId] || 'N/A',
+        "supply": mosaicInfo.supply.compact().toLocaleString(),
+        "balance": this.getRelativeBalanceById(mosaicInfo),
+        "expiration": this.getExpiration(mosaicInfo),
+        "divisibility": mosaicInfo.divisibility,
+        "transferable": mosaicInfo.flags.transferable,
+        "supplyMutable": mosaicInfo.flags.supplyMutable,
+        "restrictable": mosaicInfo.flags.restrictable,
       }
     })
   }
@@ -116,7 +100,7 @@ export class MosaicTableService extends AssetTableService {
   private getExpiration(mosaicInfo: MosaicInfo): string {
     const duration = mosaicInfo.duration.compact()
     if (duration === 0) return 'unlimited'
-    const expiresIn = (mosaicInfo.height.compact() + duration) - this.currentHeight
+    const expiresIn = (mosaicInfo.height.compact() + duration) - this.getCurrentHeight()
     if (expiresIn <= 0) return 'expired'
     return expiresIn.toLocaleString()
   }

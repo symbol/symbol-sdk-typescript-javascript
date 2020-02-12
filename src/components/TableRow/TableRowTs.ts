@@ -16,9 +16,6 @@
 // external dependencies
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-// internal dependencies
-import {TableRowValues, AssetType} from '@/services/AssetTableService/AssetTableService'
-
 // child components
 // @ts-ignore
 import TableRow from '@/components/TableRow/TableRow.vue'
@@ -36,11 +33,11 @@ export class TableRowTs extends Vue {
    * Type of assets shown in the table
    * @type {string}
    */
-  @Prop({default: AssetType.mosaic}) assetType: AssetType
+  @Prop({default: 'mosaic'}) assetType: string
 
   /**
    * Type of assets shown in the table
-   * @type {string}
+   * @type {any}
    */
-  @Prop({default: []}) rowValues: TableRowValues
+  @Prop({default: []}) rowValues: any
 }

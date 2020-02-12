@@ -18,18 +18,6 @@ import {Store} from 'vuex'
 
 // internal dependencies
 import {AbstractService} from '../AbstractService'
-import {MosaicTableFields, MosaicTableRowValues} from './MosaicTableConfig'
-import {NamespaceTableFields, NamespaceTableRowValues} from './NamespaceTableConfig'
-
-/**
- * Asset type
- * @export
- * @enum {number}
- */
-export enum AssetType { 
-  mosaic = 'mosaic',
-  namespace = 'namespace',
-}
 
 /**
  * Table field to be used in a table header
@@ -37,25 +25,9 @@ export enum AssetType {
  * @interface TableField
  */
 export interface TableField {
-  name: TableFieldNames
+  name: string,
   label: string
 }
-
-export const TableFieldNames = {...MosaicTableFields, ...NamespaceTableFields}
-
-/**
- * Fields that can be used in a table
- * @export
- * @type {TableField}
- */
-export type TableFieldNames = MosaicTableFields | NamespaceTableFields
-
-/**
- * Values that can be displayed in a table
- * @export
- * @type {TableRowValues}
- */
-export type TableRowValues = MosaicTableRowValues | NamespaceTableRowValues
 
 /**
  * Sorting directions
@@ -69,7 +41,10 @@ export type SortingDirections = 'asc' | 'desc'
  * @export
  * @type {TableSortingOptions}
  */
-export type TableSortingOptions = {itemName: TableFieldNames, direction: SortingDirections}
+export type TableSortingOptions = {
+  fieldName: string,
+  direction: SortingDirections
+}
 
 /**
  * Filtering types
@@ -83,8 +58,10 @@ export type FilteringTypes = 'show' | 'hide'
  * @export
  * @type {TableFilteringOptions}
  */
-export type TableFilteringOptions = { itemName: TableFieldNames, filteringType: FilteringTypes }
-
+export type TableFilteringOptions = {
+  fieldName: string,
+  filteringType: FilteringTypes
+}
 
 export abstract class AssetTableService extends AbstractService {
   /**
@@ -111,9 +88,19 @@ export abstract class AssetTableService extends AbstractService {
    * @param {*} store
    * @param {AssetType} assetType
    */
-  public constructor(protected store: any, protected assetType: AssetType) {
+  constructor(store?: Store<any>) {
     super()
-    this.currentHeight = this.store.getters['network/currentHeight'] || 0
+    this.$store = store
+    this.currentHeight = this.getCurrentHeight()
+  }
+
+  /**
+   * Fetch current height from network store
+   * @see {Store.Network}
+   * @return {number}
+   */
+  protected getCurrentHeight(): number {
+    return this.$store.getters['network/currentHeight'] || 0
   }
 
   /**
@@ -126,7 +113,7 @@ export abstract class AssetTableService extends AbstractService {
    * Return table values to be displayed in a table rows
    * @returns {TableRowValues[]}
    */
-  public abstract getTableRows(): Promise<TableRowValues[]>
+  public abstract getTableRows(): Promise<any[]>
 
   /**
    * Filter table rows according to filtering options
@@ -134,20 +121,20 @@ export abstract class AssetTableService extends AbstractService {
    * @param {TableFilteringOptions} filterBy
    * @returns {TableRowValues[]}
    */
-  public filter(values: TableRowValues[], filterBy: TableFilteringOptions): TableRowValues[] {
-    const { itemName, filteringType } = filterBy
+  public filter(values: any[], filter: TableFilteringOptions): any[] {
+    if (filter.filteringType === 'show') {
+      return values
+    }
 
-    if (filteringType === 'show') return values
-
-    if (itemName === TableFieldNames.expiration) {
+    if (filter.fieldName === 'expiration') {
       return values.filter(({expiration}) => expiration !== 'expired')
     }
 
-    if (itemName === TableFieldNames.expired) {
+    if (filter.fieldName === 'expired') {
       return values.filter((value) => 'expired' in value && value.expired)
     }
 
-    throw new Error(`sorting ${itemName} fields is not yet implemented`)
+    throw new Error(`Sorting by '${filter.fieldName}' field is not yet implemented`)
   }
 
   /**
@@ -156,36 +143,38 @@ export abstract class AssetTableService extends AbstractService {
    * @param {TableSortingOptions} sortBy
    * @returns {TableRowValues[]}
    */
-  public sort(valuesToSort: TableRowValues[], sortBy: TableSortingOptions): TableRowValues[] {
-    const { itemName, direction } = sortBy
+  public sort(valuesToSort: any[], options: TableSortingOptions): any[] {
     const values = [...valuesToSort]
-    const sortingMethod = direction === 'asc' ? 'sort' : 'reverse'
-    if (!values.length) return values
-    const sampleValue = values[0][itemName]
-    
-    switch (typeof sampleValue) {
-      case 'string':
-        return values [sortingMethod]((a, b) => {
-          return a[itemName].toLowerCase().localeCompare(
-            b[itemName].toLowerCase(),
-            navigator.languages[0] || navigator.language,
-            {numeric: true, ignorePunctuation: true},
-          )
-        })
-        
-      case 'boolean':
-        return [...values][sortingMethod]((a, b) => {
-          return (a[itemName] === b[itemName]) ? 0 : a[itemName] ? -1 : 1
-        })
-
-      case 'number':
-        return values[sortingMethod]((a, b) => {
-          if (!b[itemName] || !a[itemName]) return 1
-          return b[itemName] - a[itemName]
-        })
-
-      default:
-        throw new Error(`sorting the data type ${typeof sampleValue} is not supported`)
+    const sortingMethod = options.direction === 'asc' ? 'sort' : 'reverse'
+    if (!values.length) {
+      return values
     }
+
+    // - use sample to identify fields type
+    const sampleValue = values[0][options.fieldName]
+
+    // - sorting method depends on type
+    if ('string' === typeof sampleValue) {
+      return values [sortingMethod]((a, b) => {
+        return a[options.fieldName].toLowerCase().localeCompare(
+          b[options.fieldName].toLowerCase(),
+          navigator.languages[0] || navigator.language,
+          {numeric: true, ignorePunctuation: true},
+        )
+      })
+    }
+    else if ('boolean' === typeof sampleValue) {
+      return [...values][sortingMethod]((a, b) => {
+        return (a[options.fieldName] === b[options.fieldName]) ? 0 : a[options.fieldName] ? -1 : 1
+      })
+    }
+    else if ('number' === typeof sampleValue) {
+      return values[sortingMethod]((a, b) => {
+        if (!b[options.fieldName] || !a[options.fieldName]) return 1
+        return b[options.fieldName] - a[options.fieldName]
+      })
+    }
+
+    throw new Error(`sorting the data type ${typeof sampleValue} is not supported`)
   }
 }

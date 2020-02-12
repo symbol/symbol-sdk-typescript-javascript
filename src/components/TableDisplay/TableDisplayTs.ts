@@ -18,16 +18,19 @@ import {Component, Prop, Vue} from 'vue-property-decorator'
 
 // internal dependencies
 import {
-  AssetTableService, AssetType, TableFieldNames,
-  TableSortingOptions, TableFilteringOptions,
-  TableField, SortingDirections, FilteringTypes,
-  TableRowValues,
+  AssetTableService,
+  TableSortingOptions,
+  TableFilteringOptions,
+  TableField,
+  SortingDirections,
+  FilteringTypes,
 } from '@/services/AssetTableService/AssetTableService'
+import {MosaicTableService} from '@/services/AssetTableService/MosaicTableService'
+import {NamespaceTableService} from '@/services/AssetTableService/NamespaceTableService'
 
 // child components
 // @ts-ignore
 import TableRow from '@/components/TableRow/TableRow.vue'
-import {AssetTableServiceFactory} from '@/services/AssetTableService/AssetTableServiceFactory'
 
 @Component({
   components: {TableRow},
@@ -37,7 +40,9 @@ export class TableDisplayTs extends Vue {
    * Type of assets shown in the table
    * @type {string}
    */
-  @Prop({default: AssetType.mosaic}) assetType: AssetType
+  @Prop({
+    default: 'mosaic'
+  }) assetType: string
 
   /**
   * Loading state of the data to be shown in the table
@@ -46,28 +51,22 @@ export class TableDisplayTs extends Vue {
   @Prop({default: false}) loading: boolean
 
   /**
-   * Table Service
-   * @var {AssetTableService}
-   */
-  public assetTableService: AssetTableService = AssetTableServiceFactory.getService(this.$store, this.assetType)
-
-  /**
    * Current table sorting state
    * @var {TableSortingOptions}
    */
-  public sortedBy: TableSortingOptions = {itemName: undefined, direction: undefined}
+  public sortedBy: TableSortingOptions = {fieldName: undefined, direction: undefined}
 
   /**
   * Current table filtering state
   * @var {TableFilteringOptions}
   */
-  public filteredBy: TableFilteringOptions = {itemName: undefined, filteringType: undefined}
+  public filteredBy: TableFilteringOptions = {fieldName: undefined, filteringType: undefined}
 
   /**
    * Non-filtered table data
    * @var {TableRowValues[]}
    */
-  public tableRows: TableRowValues[] = []
+  public tableRows: any[] = []
 
   /**
    * Pagination page size
@@ -80,15 +79,30 @@ export class TableDisplayTs extends Vue {
    * @type {number}
    */
   public currentPage: number = 1
-  /// region getters and setters
 
+  /**
+   * Instantiate the table service around {assetType}
+   * @return {AssetTableService}
+   */
+  protected getService(): AssetTableService {
+    if ('mosaic' === this.assetType) {
+      return new MosaicTableService(this.$store)
+    }
+    else if ('namespace' === this.assetType) {
+      return new NamespaceTableService(this.$store)
+    }
+
+    throw new Error('Asset type \'' + this.assetType + '\' does not exist in TableDisplay.')
+  }
+
+  /// region getters and setters
   /**
    * Values displayed in the table
    * @readonly
    * @return {TableRowValues[]}
    */
-  get displayedValues(): TableRowValues[] {
-    return this.assetTableService.filter(this.tableRows, this.filteredBy)
+  get displayedValues(): any[] {
+    return this.getService().filter(this.tableRows, this.filteredBy)
   }
 
   /**
@@ -97,7 +111,7 @@ export class TableDisplayTs extends Vue {
    * @return {TableField[]}
    */
   get tableFields(): TableField[] {
-    return this.assetTableService.getTableFields()
+    return this.getService().getTableFields()
   }
 
   /**
@@ -105,7 +119,7 @@ export class TableDisplayTs extends Vue {
    * @readonly
    * @return {TableRowValues[]}
    */
-  get currentPageRows(): TableRowValues[] {
+  get currentPageRows(): any[] {
     return this.displayedValues.slice(
       (this.currentPage - 1) * this.pageSize,
       this.currentPage * this.pageSize
@@ -129,54 +143,53 @@ export class TableDisplayTs extends Vue {
    */
   public setDefaultFiltering(): void {
     const defaultFilteringType: FilteringTypes = 'hide'
-    const defaultFilteringItemName: TableFieldNames = TableFieldNames.expiration
+    const defaultFilteringfieldName: string = 'expiration'
 
     Vue.set(this, 'filteredBy', {
-      itemName: defaultFilteringItemName,
+      fieldName: defaultFilteringfieldName,
       filteringType: defaultFilteringType,
     })
   }
 
   /**
    * Triggers table filtering by setting its filtering options
-   * @param {TableFieldNames} itemName
+   * @param {TableFieldNames} fieldName
    */
-  public filterBy(itemName: TableFieldNames): void {
+  public filterBy(fieldName: string): void {
     const filteredBy = {...this.filteredBy}
-    const filteringType: FilteringTypes = filteredBy.itemName === itemName
+    const filteringType: FilteringTypes = filteredBy.fieldName === fieldName
       && filteredBy.filteringType === 'show' ? 'hide' : 'show'
 
-    this.filteredBy = {itemName, filteringType}
+    this.filteredBy = {fieldName, filteringType}
   }
 
   /**
    * Sets the default sorting state and trigger it
    */
   public setDefaultSorting(): void {
-    const defaultSortingDirection: SortingDirections = 'asc'
-    const defaultSortingItemName: TableFieldNames = this.assetType === 'namespace'
-      ? TableFieldNames.name : TableFieldNames.hexId
+    const defaultSort = 'asc'
+    const defaultField = 'namespace' === this.assetType ? 'name' : 'hexId'
 
     Vue.set(this, 'sortedBy', {
-      itemName: defaultSortingItemName,
-      direction: defaultSortingDirection,
+      fieldName: defaultField,
+      direction: defaultSort,
     })
 
-    this.sortBy(defaultSortingItemName)
+    this.sortBy(defaultField)
   }
 
   /**
    * Sorts the table data
-   * @param {TableFieldNames} itemName
+   * @param {TableFieldNames} fieldName
    */
-  public sortBy(itemName: TableFieldNames): void {
+  public sortBy(fieldName: string): void {
     const sortedBy = {...this.sortedBy}
-    const direction: SortingDirections = sortedBy.itemName === itemName
+    const direction: SortingDirections = sortedBy.fieldName === fieldName
       && sortedBy.direction === 'asc'
       ? 'desc' : 'asc'
 
-    Vue.set(this, 'sortedBy', {itemName, direction})
-    this.tableRows = this.assetTableService.sort(this.tableRows, this.sortedBy)
+    Vue.set(this, 'sortedBy', {fieldName, direction})
+    this.tableRows = this.getService().sort(this.tableRows, this.sortedBy)
   }
 
   /**
@@ -192,7 +205,7 @@ export class TableDisplayTs extends Vue {
    * @returns {Promise<void>}
    */
   public async setTableValues(): Promise<void> {
-    this.tableRows = await this.assetTableService.getTableRows()
+    this.tableRows = await this.getService().getTableRows()
   }
 
   /**
