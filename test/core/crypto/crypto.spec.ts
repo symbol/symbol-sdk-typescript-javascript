@@ -477,4 +477,50 @@ describe('crypto tests', () => {
         expect(salt.toString().length).equal(32 * 2);
         expect(decrypted).equal(privateKey);
     });
+
+    /**
+     * @see https://github.com/nemtech/test-vectors/blob/master/4.test-cipher.json
+     */
+    describe('test vector cipher', () => {
+        it('test vector cipher', () => {
+            // Arrange:
+            const Private_Key = '3140f94c79f249787d1ec75a97a885980eb8f0a7d9b7aa03e7200296e422b2b6';
+
+            const Public_Keys = 'C62827148875ACAF05D25D29B1BB1D947396A89CE41CB48888AE6961D9991DDF';
+
+            const ivs = [
+                'a73ff5c32f8fd055b09775817a6a3f95',
+                '91246c2d5493867c4fa3e78f85963677',
+                '9f8e33d82374dad6aac0e3dbe7aea704',
+                '6acdf8e01acc8074ddc807281b6af888',
+                'f2e9f18aeb374965f54d2f4e31189a8f',
+            ];
+
+            const cipherText = [
+                'EEF67A32E1FE96AF1401DF42DD356A1CAEC5B6B36576357C22232049D174F63E',
+                'F94355BEF2CBF73E06AF2FF57BB8D72D7090062379062B60E8EF37EA858D8FF4',
+                '18FF3AB60B01D5D39CFDD50ADDE0F49ECAEE4355B224D0D8A0607455A3DFA823',
+                'E64795B1B980A6101E9C12824FAA5A4DFC1467F767AA3DC5A990F3A28692A1FA',
+                '17817662A9B61AF1E9C6F3D7C1D02CAAACEA586E4BD777A68C0765D5231619F3',
+            ];
+
+            const clearText = [
+                '86ddb9e713a8ebf67a51830eff03b837e147c20d75e67b2a54aa29e98c',
+                '86ddb9e713a8ebf67a51830eff03b837e147c20d75e67b2a54aa29e98c',
+                '86ddb9e713a8ebf67a51830eff03b837e147c20d75e67b2a54aa29e98c',
+                '86ddb9e713a8ebf67a51830eff03b837e147c20d75e67b2a54aa29e98c',
+                '86ddb9e713a8ebf67a51830eff03b837e147c20d75e67b2a54aa29e98c',
+            ];
+
+            for (let i = 0; i < ivs.length; ++i) {
+                // Arrange:
+                const iv = Convert.hexToUint8(ivs[i]);
+
+                // Act:
+                const encoded = Crypto._encode(Private_Key, Public_Keys, clearText[i], iv);
+                // Assert:
+                expect(encoded.toUpperCase()).to.deep.equal(ivs[i].toUpperCase() + cipherText[i].toUpperCase());
+            }
+        });
+    });
 });
