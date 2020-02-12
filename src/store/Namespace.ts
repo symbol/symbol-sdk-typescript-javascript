@@ -39,7 +39,7 @@ export default {
     setInitialized: (state, initialized) => { state.initialized = initialized },
     addNamespaceInfo: (state, namespaceInfo: NamespaceInfo) => {
       let info = state.namespacesInfoByHex
-      let hex = info.id.toHex()
+      let hex = namespaceInfo.id.toHex()
 
       // register mosaic info
       info[hex] = namespaceInfo
@@ -74,10 +74,10 @@ export default {
     async REST_FETCH_INFO({commit, rootGetters}, namespaceId: NamespaceId) {
       const nodeUrl = rootGetters['network/currentPeer'].url
       const namespaceHttp = RESTService.create('NamespaceHttp', nodeUrl)
-      const mosaicInfo = await namespaceHttp.getNamespace(namespaceId).toPromise()
+      const namespaceInfo = await namespaceHttp.getNamespace(namespaceId).toPromise()
 
-      commit('addNamespaceInfo', mosaicInfo)
-      return mosaicInfo
+      commit('addNamespaceInfo', namespaceInfo)
+      return namespaceInfo
     },
     async REST_FETCH_NAMES({commit, rootGetters}, namespaceIds: NamespaceId[]): Promise<{hex: string, name: string}[]> {
       const nodeUrl = rootGetters['network/currentPeer'].url
@@ -89,7 +89,7 @@ export default {
         .filter(({name}) => name.length)
         .map((namespaceName) => ({
           hex:  namespaceName.namespaceId.toHex(),
-          name: NamespaceService.getFullNameFromNamespaceNames(namespaceName, namespaceNames).name,
+          name: namespaceName.name,
         }))
 
       // update store

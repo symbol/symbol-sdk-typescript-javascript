@@ -15,7 +15,7 @@
  */
 // internal dependencies
 import {DatabaseModel} from '@/core/database/DatabaseModel'
-import {DatabaseRelation, DatabaseRelationType} from '@/core/database/DatabaseRelation'
+import {DatabaseRelation} from '@/core/database/DatabaseRelation'
 
 export class NamespacesModel extends DatabaseModel {
   /**
@@ -24,16 +24,14 @@ export class NamespacesModel extends DatabaseModel {
    * @var {string[]}
    */
   public primaryKeys: string[] = [
-    'id',
+    'hexId',
   ]
 
   /**
    * Entity relationships
    * @var {Map<string, DatabaseRelation>}
    */
-  public relations: Map<string, DatabaseRelation> =  new Map<string, DatabaseRelation>([
-    ['wallet', new DatabaseRelation(DatabaseRelationType.ONE_TO_ONE)]
-  ])
+  public relations: Map<string, DatabaseRelation> =  new Map<string, DatabaseRelation>()
 
   /**
    * Construct a namespace model instance
@@ -41,6 +39,6 @@ export class NamespacesModel extends DatabaseModel {
    * @param {Map<string, any>} values
    */
   public constructor(values: Map<string, any> = new Map<string, any>()) {
-    super(['id'], values)
+    super(['hexId'], values)
   }
 }

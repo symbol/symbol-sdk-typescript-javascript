@@ -19,11 +19,18 @@ import {NamespacesModel} from '@/core/database/entities/NamespacesModel'
 export class NamespacesTable extends DatabaseTable {
   public constructor() {
     super('namespaces', [
-      'id',
-      'wallet',
       'hexId',
       'name',
-      'info',
+      'active',
+      'depth',
+      'level0',
+      'level1',
+      'level2',
+      'alias',
+      'parentId',
+      'startHeight',
+      'endHeight',
+      'ownerPublicKey',
     ])
   }
 

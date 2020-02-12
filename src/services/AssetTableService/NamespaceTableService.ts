@@ -20,6 +20,8 @@ import {NamespaceInfo, AliasType} from 'nem2-sdk'
 // internal dependencies
 import {AssetTableService, TableField} from './AssetTableService'
 import {TimeHelpers} from '@/core/utils/TimeHelpers'
+import {NamespaceService} from '@/services/NamespaceService'
+import {NamespacesModel} from '@/core/database/entities/NamespacesModel'
 
 export class NamespaceTableService extends AssetTableService {
   /**
@@ -36,6 +38,7 @@ export class NamespaceTableService extends AssetTableService {
    */
   public getTableFields(): TableField[] {
     return [
+      {name: 'hexId', label: 'table_header_hex_id'},
       {name: 'name', label: 'table_header_name'},
       {name: 'expiration', label: 'table_header_expiration'},
       {name: 'expired', label: 'table_header_expired'},
@@ -51,25 +54,34 @@ export class NamespaceTableService extends AssetTableService {
   public async getTableRows(): Promise<any[]> {
     const currentWalletAddress = this.$store.getters['wallet/currentWalletAddress']
 
-    //XXX data source "REST_FETCH_OWNED_NAMESPACES"
+    // - read REST for _owned_ namespaces
+    const ownedNamespaces: NamespaceInfo[] = await this.$store.dispatch(
+      'wallet/REST_FETCH_OWNED_NAMESPACES',
+      currentWalletAddress.plain()
+    )
 
-    const namespaceInfo: NamespaceInfo[] = await this.$store.dispatch('wallet/REST_FETCH_OWNED_NAMESPACES', currentWalletAddress.plain())
-    if (!namespaceInfo.length) return []
+    // - use service to get information about mosaics
+    const service = new NamespaceService(this.$store)
+    const namespaces = []
+    for (let i = 0, m = ownedNamespaces.length; i < m; i++) {
+      const namespace = ownedNamespaces[i]
+      const {expired, expiration} = this.getExpiration(namespace)
 
-    const namespaceIds = namespaceInfo.map(({id}) => id)
-    const namespaceNames: {hex: string, name: string}[] = await this.$store.dispatch('namespace/REST_FETCH_NAMES', namespaceIds)
+      // - read model
+      const model = await service.getNamespace(namespace.id)
 
-    return Object.values(namespaceInfo).map(namespaceInfo => {
-      const {expired, expiration} = this.getExpiration(namespaceInfo)
-
-      return {
-        "name": namespaceNames.find(({hex}) => hex === namespaceInfo.id.toHex()).name,
+      // - map table fields
+      namespaces.push({
+        "hexId": namespace.id.toHex(),
+        "name": model.values.get('name'),
         "expiration": expiration,
         "expired": expired,
-        "aliasType": this.getAliasType(namespaceInfo),
-        "aliasIdentifier": this.getAliasIdentifier(namespaceInfo),
-      }
-    })
+        "aliasIdentifier": this.getAliasIdentifier(namespace),
+        "aliasType": this.getAliasType(namespace),
+      })
+    }
+
+    return namespaces
   }
 
   /**

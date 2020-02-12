@@ -18,6 +18,8 @@ import {NamespaceId, NamespaceInfo, NamespaceName} from 'nem2-sdk'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
+import {NamespacesRepository} from '@/repositories/NamespacesRepository'
+import {NamespacesModel} from '@/core/database/entities/NamespacesModel'
 
 export class NamespaceService extends AbstractService {
   /**
@@ -42,76 +44,84 @@ export class NamespaceService extends AbstractService {
   }
 
   /**
-   * Read namespace info from store or dispatch fetch action.
-   * @param {NamespaceId} namespaceId 
-   * @return {Promise<NamespaceInfo>}
+   * Read the collection of known namespaces from database.
+   *
+   * @param {Function} filterFn
+   * @return {MosaicsModel[]}
    */
-  public async getNamespaceInfo(
-    namespaceId: NamespaceId 
-  ): Promise<NamespaceInfo> {
-    // - get infos from store
-    const namespaces = this.$store.getters['namespace/namespacesInfo']
-    let namespaceInfo: NamespaceInfo
-
-    // - if store doesn't know this mosaic, dispatch fetch action
-    if (! namespaces.hasOwnProperty(namespaceId.toHex())) {
-      namespaceInfo = await this.$store.dispatch('namespace/REST_FETCH_INFOS', [namespaceId])
-    }
-    // - read from store
-    else namespaceInfo = namespaces[namespaceId.toHex()]
-
-    //XXX save in storage
-
-    return namespaceInfo
+  public getNamespaces(
+    filterFn: (
+      value: NamespacesModel,
+      index: number,
+      array: NamespacesModel[]
+    ) => boolean = (e) => true
+  ): NamespacesModel[] {
+    const repository = new NamespacesRepository()
+    return repository.collect().filter(filterFn)
   }
 
   /**
-   * Read the name of a mosaic with id \a mosaic
-   * @param {NamespaceId} mosaic 
-   * @return {Promise<string>}
+   * Read namespace from database or dispatch fetch action
+   * from REST.
+   *
+   * @param {MosaicId} mosaicId 
+   * @return {NamespacesModel}
    */
-  public async getNamespaceName(
+  public async getNamespace(
     namespaceId: NamespaceId 
-  ): Promise<string> {
-    // - get names from store
-    const names = this.$store.getters['mosaic/mosaicsNames']
-    let namespaceName: string
+  ): Promise<NamespacesModel> {
 
-    // - if store doesn't know a name for this mosaics, dispatch fetch action
-    if (! names.hasOwnProperty(namespaceId.toHex())) {
-      const mapped: NamespaceName[] = await this.$store.dispatch('namespace/REST_FETCH_NAMES', [namespaceId])
-      namespaceName = mapped.hasOwnProperty(namespaceId.toHex()) ? mapped[namespaceId.toHex()] : undefined
+    const repository = new NamespacesRepository()
+    let namespace: NamespacesModel
+
+    if (!repository.find(namespaceId.toHex())) {
+      // - namespace is unknown, fetch from REST + add to storage
+      namespace = await this.fetchNamespaceInfo(namespaceId)
     }
-    // - read from store
-    else namespaceName = names[namespaceId.toHex()]
+    else {
+      // - mosaic known, read NamespacesModel
+      namespace = repository.read(namespaceId.toHex())
+    }
 
-    //XXX save in storage
-
-    return namespaceName
+    return namespace
   }
 
-  
   /**
-   * Constructs a namespace fullName from namespace names
-   * @static
-   * @param {NamespaceName} reference
-   * @param {NamespaceName[]} namespaceNames
-   * @returns {NamespaceName}
+   * Read namespace from REST using store action.
+   *
+   * @internal
+   * @param {MosaicId} mosaicId 
+   * @return {MosaicsModel}
    */
-  public static getFullNameFromNamespaceNames(
-    reference: NamespaceName,
-    namespaceNames: NamespaceName[],
-  ): NamespaceName {
-    if (!reference.parentId) return reference
+  protected async fetchNamespaceInfo(
+    namespaceId: NamespaceId 
+  ): Promise<NamespacesModel> {
+    // - fetch INFO from REST
+    const namespaceInfo: NamespaceInfo = await this.$store.dispatch('namespace/REST_FETCH_INFO', namespaceId)
+    const namespaceIds = namespaceInfo.levels.filter((info, i) => i < namespaceInfo.depth - 1)
 
-    const parent = namespaceNames
-      .find(namespaceName => namespaceName.namespaceId.toHex() === reference.parentId.toHex())
+    // - fetch NAMES from REST
+    const namespaceNames = await this.$store.dispatch('namespace/REST_FETCH_NAMES', [...namespaceIds])
+    const fullName = namespaceNames.map(n => n.name).join('.')
 
-    if (parent === undefined) return reference
+    // - use repository for storage
+    const repository = new NamespacesRepository()
+    const namespace = repository.createModel(new Map<string, any>([
+      ['hexId', namespaceId.toHex()],
+      ['name', fullName],
+      ['depth', namespaceInfo.depth],
+      ['level0', namespaceInfo.levels[0].toHex()],
+      ['level1', namespaceInfo.levels.length > 1 ? namespaceInfo.levels[1].toHex() : ''],
+      ['level2', namespaceInfo.levels.length > 2 ? namespaceInfo.levels[2].toHex() : ''],
+      ['alias', namespaceInfo.alias],
+      ['parentId', namespaceInfo.depth !== 1 ? namespaceInfo.parentNamespaceId().toHex() : ''],
+      ['startHeight', namespaceInfo.startHeight.compact()],
+      ['endHeight', namespaceInfo.endHeight.compact()],
+      ['ownerPublicKey', namespaceInfo.owner.publicKey],
+    ]))
 
-    return NamespaceService.getFullNameFromNamespaceNames(
-      new NamespaceName(parent.namespaceId, `${parent.name}.${reference.name}`, parent.parentId),
-      namespaceNames,
-    )
+    // - store and return
+    repository.create(namespace.values)
+    return namespace
   }
 }
