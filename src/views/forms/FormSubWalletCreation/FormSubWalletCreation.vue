@@ -19,8 +19,8 @@
               <select v-model="formItems.type"
                       class="input-size input-style">
                 <option>{{ $t('please_select') }}</option>
-                <option value="child_wallet">{{ $t('child_wallet') }}</option>
-                <option value="privatekey_wallet">{{ $t('privatekey_wallet') }}</option>
+                <option value="child_wallet">{{ $t('option_child_wallet') }}</option>
+                <option value="privatekey_wallet">{{ $t('option_privatekey_wallet') }}</option>
               </select>
             </ValidationProvider>
           </div>

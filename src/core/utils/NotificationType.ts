@@ -105,5 +105,6 @@ export enum NotificationType {
   COSIGNATURE_ADDED = 'cosignature_added',
   ERROR_WALLET_NAME_ALREADY_EXISTS = 'error_wallet_name_already_exists',
   SUCCESS_ACCOUNT_UNLOCKED = 'success_account_unlocked',
-  SUCCESS_PASSWORD_CHANGED = 'success_password_changed'
+  SUCCESS_PASSWORD_CHANGED = 'success_password_changed',
+  SUCCESS_SETTINGS_UPDATED = 'success_settings_updated',
 }

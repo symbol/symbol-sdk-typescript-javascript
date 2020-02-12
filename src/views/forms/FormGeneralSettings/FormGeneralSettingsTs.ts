@@ -16,7 +16,10 @@
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 import {NetworkType, Password, Account} from 'nem2-sdk'
-import { MnemonicPassPhrase } from 'nem2-hd-wallets'
+
+// internal dependencies
+import {SettingService} from '@/services/SettingService'
+import {NotificationType} from '@/core/utils/NotificationType'
 
 // child components
 import {ValidationObserver, ValidationProvider} from 'vee-validate'
@@ -127,12 +130,17 @@ export class FormGeneralSettingsTs extends Vue {
   public onAccountUnlocked(account: Account, password: Password) {
 
     try {
-      //XXX settings service
+      // - use service to bridge between database and store
+      const service = new SettingService(this.$store)
 
-      this.$store.dispatch('app/SET_LANGUAGE', this.formItems.currentLanguage)
-      this.$store.dispatch('app/SET_EXPLORER_URL', this.formItems.explorerUrl)
-      this.$store.dispatch('app/SET_DEFAULT_FEE', this.formItems.maxFee)
+      // - dispatches 3 store actions:
+      //   - app/SET_LANGUAGE
+      //   - app/SET_EXPLORER_URL
+      //   - app/SET_DEFAULT_FEE
+      service.saveSettingsForm(this.formItems)
 
+      // - add notification and emit
+      this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS_SETTINGS_UPDATED)
       this.$emit('submit', this.formItems)
     }
     catch (e) {

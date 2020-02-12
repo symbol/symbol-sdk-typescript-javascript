@@ -23,6 +23,7 @@ import {WalletsTable} from '@/core/database/entities/WalletsTable'
 import {PeersTable} from '@/core/database/entities/PeersTable'
 import {MosaicsTable} from '@/core/database/entities/MosaicsTable'
 import {NamespacesTable} from '@/core/database/entities/NamespacesTable'
+import {SettingsTable} from '@/core/database/entities/SettingsTable'
 
 export class AppDatabase {
   
@@ -38,7 +39,8 @@ export class AppDatabase {
       ['wallets', new WalletsTable()],
       ['endpoints', new PeersTable()],
       ['mosaics', new MosaicsTable()],
-      ['namespaces', new NamespacesTable()]
+      ['namespaces', new NamespacesTable()],
+      ['settings', new SettingsTable()]
     ]))
 
     return adapter
