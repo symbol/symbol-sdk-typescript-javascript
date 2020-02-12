@@ -83,16 +83,33 @@ export class TableDisplayTs extends Vue {
   /// region getters and setters
 
   /**
-  * Values displayed in the table
-  * @readonly
-  * @type {TableRow[]}
-  */
+   * Values displayed in the table
+   * @readonly
+   * @return {TableRowValues[]}
+   */
   get displayedValues(): TableRowValues[] {
     return this.assetTableService.filter(this.tableRows, this.filteredBy)
   }
 
+  /**
+   * Header fields displayed in the table
+   * @readonly
+   * @return {TableField[]}
+   */
   get tableFields(): TableField[] {
     return this.assetTableService.getTableFields()
+  }
+
+  /**
+   * Get current page rows
+   * @readonly
+   * @return {TableRowValues[]}
+   */
+  get currentPageRows(): TableRowValues[] {
+    return this.displayedValues.slice(
+      (this.currentPage - 1) * this.pageSize,
+      this.currentPage * this.pageSize
+    )
   }
   /// end-region getters and setters
 
@@ -136,7 +153,7 @@ export class TableDisplayTs extends Vue {
    * Sets the default sorting state and trigger it
    */
   public setDefaultSorting(): void {
-    const defaultSortingDirection: SortingDirections = 'ascending'
+    const defaultSortingDirection: SortingDirections = 'asc'
     const defaultSortingItemName: TableFieldNames = this.assetType === 'namespace'
       ? TableFieldNames.name : TableFieldNames.hexId
 
@@ -155,8 +172,8 @@ export class TableDisplayTs extends Vue {
   public sortBy(itemName: TableFieldNames): void {
     const sortedBy = {...this.sortedBy}
     const direction: SortingDirections = sortedBy.itemName === itemName
-      && sortedBy.direction === 'ascending'
-      ? 'descending' : 'ascending'
+      && sortedBy.direction === 'asc'
+      ? 'desc' : 'asc'
 
     Vue.set(this, 'sortedBy', {itemName, direction})
     this.tableRows = this.assetTableService.sort(this.tableRows, this.sortedBy)

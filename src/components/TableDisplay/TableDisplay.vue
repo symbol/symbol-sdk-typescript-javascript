@@ -29,7 +29,7 @@
         <Icon
           v-if="sortedBy.itemName === name"
           class="sort-icon"
-          :type="sortedBy.direction === 'ascending'
+          :type="sortedBy.direction === 'asc'
             ? 'md-arrow-dropup' : 'md-arrow-dropdown'"
         />
       </div>
@@ -41,8 +41,7 @@
       />
       <div v-if="displayedValues.length" class="table-rows-container">
         <TableRow
-          v-for="(rowValues, index) in displayedValues
-            .slice((currentPage - 1) * pageSize, currentPage * pageSize)"
+          v-for="(rowValues, index) in currentPageRows"
           :key="index"
           :row-values="rowValues"
           :asset-type="assetType"

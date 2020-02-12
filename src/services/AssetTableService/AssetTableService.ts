@@ -62,7 +62,7 @@ export type TableRowValues = MosaicTableRowValues | NamespaceTableRowValues
  * @export
  * @type {SortingDirections}
  */
-export type SortingDirections = 'ascending' | 'descending'
+export type SortingDirections = 'asc' | 'desc'
 
 /**
  * Sorting options
@@ -86,7 +86,7 @@ export type FilteringTypes = 'show' | 'hide'
 export type TableFilteringOptions = { itemName: TableFieldNames, filteringType: FilteringTypes }
 
 
-export class AssetTableService extends AbstractService {
+export abstract class AssetTableService extends AbstractService {
   /**
    * Service name
    * @var {string}
@@ -120,17 +120,13 @@ export class AssetTableService extends AbstractService {
    * Return table fields to be displayed in a table header
    * @returns {TableField[]}
    */
-  public getTableFields(): TableField[] {
-    throw new Error('Method \'getTableFields()\' must be overloaded in derivate classes.')
-  }
+  public abstract getTableFields(): TableField[]
 
   /**
    * Return table values to be displayed in a table rows
    * @returns {TableRowValues[]}
    */
-  public getTableRows(): Promise<TableRowValues[]> {
-    throw new Error('Method \'getTableRows()\' must be overloaded in derivate classes.')
-  }
+  public abstract getTableRows(): Promise<TableRowValues[]>
 
   /**
    * Filter table rows according to filtering options
@@ -163,7 +159,7 @@ export class AssetTableService extends AbstractService {
   public sort(valuesToSort: TableRowValues[], sortBy: TableSortingOptions): TableRowValues[] {
     const { itemName, direction } = sortBy
     const values = [...valuesToSort]
-    const sortingMethod = direction === 'ascending' ? 'sort' : 'reverse'
+    const sortingMethod = direction === 'asc' ? 'sort' : 'reverse'
     if (!values.length) return values
     const sampleValue = values[0][itemName]
     
