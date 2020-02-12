@@ -15,7 +15,7 @@
  */
 
 /**
- * The block merkle proof info
+ * Network Name
  */
 export class NetworkName {
 
