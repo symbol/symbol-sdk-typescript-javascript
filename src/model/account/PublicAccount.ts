@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { KeyPair, SHA3Hasher } from '../../core/crypto';
-import { Convert as convert, Convert} from '../../core/format';
+import { KeyPair } from '../../core/crypto';
+import { Convert } from '../../core/format';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Address } from './Address';
 
@@ -73,16 +73,16 @@ export class PublicAccount {
             throw new Error('Signature length is incorrect');
         }
 
-        if (!convert.isHexString(signature)) {
+        if (!Convert.isHexString(signature)) {
             throw new Error('Signature must be hexadecimal only');
         }
         // Convert signature key to Uint8Array
-        const convertedSignature = convert.hexToUint8(signature);
+        const convertedSignature = Convert.hexToUint8(signature);
 
         // Convert to Uint8Array
 
-        const convertedData = convert.hexToUint8(Convert.isHexString(data) ? data : convert.utf8ToHex(data));
-        return KeyPair.verify(convert.hexToUint8(this.publicKey), convertedData, convertedSignature);
+        const convertedData = Convert.hexToUint8(Convert.isHexString(data) ? data : Convert.utf8ToHex(data));
+        return KeyPair.verify(Convert.hexToUint8(this.publicKey), convertedData, convertedSignature);
     }
 
     /**

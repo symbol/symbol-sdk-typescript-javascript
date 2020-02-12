@@ -186,7 +186,8 @@ describe('AccountHttp', () => {
 
     describe('getMultisigAccountGraphInfo', () => {
         it('should call getMultisigAccountGraphInfo successfully', async () => {
-            const multisigAccountGraphInfo = await multisigRepository.getMultisigAccountGraphInfo(multisigAccount.publicAccount.address).toPromise();
+            const multisigAccountGraphInfo =
+                await multisigRepository.getMultisigAccountGraphInfo(multisigAccount.publicAccount.address).toPromise();
             expect(multisigAccountGraphInfo.multisigAccounts.get(0)![0].account.publicKey).to.be.equal(multisigAccount.publicKey);
         });
     });
@@ -225,7 +226,8 @@ describe('AccountHttp', () => {
 
     describe('transactions', () => {
         it('should call transactions successfully by type', async () => {
-            const transactions = await accountRepository.getAccountTransactions(publicAccount.address, {transactionType: TransactionType.TRANSFER} as QueryParams).toPromise();
+            const transactions = await accountRepository.getAccountTransactions(
+                publicAccount.address, {transactionType: TransactionType.TRANSFER} as QueryParams).toPromise();
             expect(transactions.length).to.be.greaterThan(0);
             transactions.forEach((t) => {
                 expect(t.type).to.be.eq(TransactionType.TRANSFER);

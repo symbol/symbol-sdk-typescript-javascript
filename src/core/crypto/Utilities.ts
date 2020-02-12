@@ -16,12 +16,14 @@
 
 import { RawArray as array } from '../format';
 import * as nacl from './nacl_catapult';
+// tslint:disable-next-line: no-var-requires
 export const CryptoJS = require('crypto-js');
 export const Key_Size = 32;
 export const Signature_Size = 64;
 export const Half_Signature_Size = Signature_Size / 2;
 export const Hash_Size = 64;
 export const Half_Hash_Size = Hash_Size / 2;
+// tslint:disable-next-line: no-var-requires
 export const hkdf = require('futoin-hkdf');
 import { sha512 } from 'js-sha512';
 
