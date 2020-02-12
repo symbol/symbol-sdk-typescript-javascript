@@ -18,6 +18,8 @@ import {MosaicId, MosaicInfo, AccountInfo} from 'nem2-sdk'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
+import {MosaicsRepository} from '@/repositories/MosaicsRepository'
+import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
 
 export class MosaicService extends AbstractService {
   /**
@@ -42,53 +44,80 @@ export class MosaicService extends AbstractService {
   }
 
   /**
-   * Read mosaic info from store or dispatch fetch action.
-   * @param {MosaicId} mosaicId 
-   * @return {Promise<MosaicInfo>}
+   * Read the collection of known mosaics from database.
+   *
+   * @param {Function} filterFn
+   * @return {MosaicsModel[]}
    */
-  public async getMosaicInfo(
-    mosaicId: MosaicId 
-  ): Promise<MosaicInfo> {
-    // - get infos from store
-    const mosaics = this.$store.getters['mosaic/mosaicsInfo']
-    let mosaicInfo: MosaicInfo
-
-    // - if store doesn't know this mosaic, dispatch fetch action
-    if (! mosaics.hasOwnProperty(mosaicId.toHex())) {
-      mosaicInfo = await this.$store.dispatch('mosaic/REST_FETCH_INFO', mosaicId)
-    }
-    // - read from store
-    else mosaicInfo = mosaics[mosaicId.toHex()]
-
-    //XXX save in storage
-
-    return mosaicInfo
+  public getMosaics(
+    filterFn: (
+      value: MosaicsModel,
+      index: number,
+      array: MosaicsModel[]
+    ) => boolean = (e) => true
+  ): MosaicsModel[] {
+    const repository = new MosaicsRepository()
+    return repository.collect().filter(filterFn)
   }
 
   /**
-   * Read the name of a mosaic with id \a mosaic
-   * @param {MosaicId} mosaic 
-   * @return {Promise<string>}
+   * Read mosaic from database or dispatch fetch action
+   * from REST.
+   *
+   * @param {MosaicId} mosaicId 
+   * @return {MosaicsModel}
    */
-  public async getMosaicName(mosaic: MosaicId): Promise<string> {
-    // - get names from store
-    const names = this.$store.getters['mosaic/mosaicsNames']
-    let mosaicName: any
+  public async getMosaic(
+    mosaicId: MosaicId 
+  ): Promise<MosaicsModel> {
 
-    // - if store doesn't know a name for this mosaics, dispatch fetch action
-    if (! names.hasOwnProperty(mosaic.toHex())) {
-      const mapped = await this.$store.dispatch('mosaic/REST_FETCH_NAMES', [mosaic])
-      const entry = mapped.find(e => e.hex === mosaic.toHex())
-      mosaicName = undefined === entry ? mosaic.toHex() : entry.name
+    const repository = new MosaicsRepository()
+    let mosaic: MosaicsModel
+
+    if (!repository.find(mosaicId.toHex())) {
+      // - mosaic is unknown, fetch from REST + add to storage
+      mosaic = await this.fetchMosaicInfo(mosaicId)
     }
-    // - read from store
-    else mosaicName = names[mosaic.toHex()]
+    else {
+      // - mosaic known, build MosaicInfo from model
+      mosaic = repository.read(mosaicId.toHex())
+    }
 
-    //XXX save in storage
+    return mosaic
+  }
 
-    return mosaicName.hasOwnProperty('namespaceId')
-         ? mosaicName.namespaceId.fullName
-         : mosaicName
+  /**
+   * Read mosaic from REST using store action.
+   *
+   * @internal
+   * @param {MosaicId} mosaicId 
+   * @return {MosaicsModel}
+   */
+  protected async fetchMosaicInfo(
+    mosaicId: MosaicId
+  ): Promise<MosaicsModel> {
+    // - fetch INFO from REST
+    const mosaicInfo = await this.$store.dispatch('mosaic/REST_FETCH_INFO', mosaicId)
+
+    // - fetch NAMES from REST
+    const mosaicNames = await this.$store.dispatch('mosaic/REST_FETCH_NAMES', [mosaicId])
+
+    // - use repository for storage
+    const repository = new MosaicsRepository()
+    const mosaic = repository.createModel(new Map<string, any>([
+      ['hexId', mosaicId.toHex()],
+      ['name', mosaicNames && mosaicNames.length ? mosaicNames.shift().name : ''],
+      ['flags', mosaicInfo.flags.toDTO()],
+      ['startHeight', mosaicInfo.height],
+      ['duration', mosaicInfo.duration.compact()],
+      ['divisibility', mosaicInfo.divisibility],
+      ['supply', mosaicInfo.supply],
+      ['ownerPublicKey', mosaicInfo.owner.publicKey]
+    ]))
+
+    // - store and return
+    repository.create(mosaic.values)
+    return mosaic
   }
 
   /**
@@ -100,14 +129,9 @@ export class MosaicService extends AbstractService {
   public async getRelativeAmount(
     amount: number,
     mosaic: MosaicId,
-    mosaicInfo?: MosaicInfo,
   ): Promise<number> {
-    let info = mosaicInfo
-    if (info === undefined) {
-      info = await this.getMosaicInfo(mosaic)
-    }
-
-    return amount / Math.pow(10, info.divisibility || 0)
+    let info = await this.getMosaic(mosaic)
+    return amount / Math.pow(10, info.values.get('divisibility') || 0)
   }
 
   /**

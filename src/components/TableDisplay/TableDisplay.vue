@@ -27,7 +27,7 @@
       >
         <span>{{ $t(label) }}</span>
         <Icon
-          v-if="sortedBy.itemName === name"
+          v-if="sortedBy.fieldName === name"
           class="sort-icon"
           :type="sortedBy.direction === 'asc'
             ? 'md-arrow-dropup' : 'md-arrow-dropdown'"
@@ -47,7 +47,7 @@
           :asset-type="assetType"
         />
       </div>
-      <div v-if="!displayedValues.length" class="empty-container">
+      <div v-else class="empty-container">
         <span class="no-data">{{ $t('no_data') }}</span>
       </div>
     </div>

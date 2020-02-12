@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {Mosaic, MosaicInfo} from 'nem2-sdk'
+import {Mosaic, MosaicInfo, MosaicFlags, RawUInt64, UInt64} from 'nem2-sdk'
 
 // internal dependencies
 import {AssetTableService, TableField} from './AssetTableService'
+import {MosaicService} from '@/services/MosaicService'
+import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
 
 export class MosaicTableService extends AssetTableService {
   private currentWalletMosaics: Mosaic[]
@@ -54,54 +56,65 @@ export class MosaicTableService extends AssetTableService {
   * @returns {MosaicTableRowValues[]}
   */
   public async getTableRows(): Promise<any[]> {
-    //XXX data source "REST_FETCH_OWNED_MOSAICS"
+    // - read store for _owned_ mosaics
+    const currentWalletMosaics = this.$store.getters['wallet/currentWalletMosaics'] || []
 
-    const mosaicsInfo: Record<string, MosaicInfo> = this.$store.getters['mosaic/mosaicsInfo'] || {}
-    const mosaicNamesByHex: Record<string, string> = this.$store.getters['mosaic/mosaicsNames'] || {}
+    // - use service to get information about mosaics
+    const service = new MosaicService(this.$store)
+    const mosaics = []
+    for (let i = 0, m = currentWalletMosaics.length; i < m; i++) {
+      const mosaic = currentWalletMosaics[i]
 
-    return Object.values(mosaicsInfo).map(mosaicInfo => {
-      const hexId = mosaicInfo.id.toHex()
+      // - read model
+      const model = await service.getMosaic(mosaic.id)
+      const flags = new MosaicFlags(model.values.get('flags'))
 
-      return {
-        "hexId": hexId,
-        "name": mosaicNamesByHex[hexId] || 'N/A',
-        "supply": mosaicInfo.supply.compact().toLocaleString(),
-        "balance": this.getRelativeBalanceById(mosaicInfo),
-        "expiration": this.getExpiration(mosaicInfo),
-        "divisibility": mosaicInfo.divisibility,
-        "transferable": mosaicInfo.flags.transferable,
-        "supplyMutable": mosaicInfo.flags.supplyMutable,
-        "restrictable": mosaicInfo.flags.restrictable,
-      }
-    })
-  }
+      // - identify balance row
+      const balance = currentWalletMosaics.find(m => m.id.equals(mosaic.id))
+      const supply  = model.values.get('supply')
 
-  /**
-  * Returns a relative balance synchronously
-  * @private
-  * @param {MosaicInfo} mosaicInfo
-  * @returns {number}
-  */
-  private getRelativeBalanceById(mosaicInfo: MosaicInfo): number {
-    // @TODO: Should not stay here
-    const hexId = mosaicInfo.id.toHex()
-    const currentWalletMosaic = this.currentWalletMosaics.find(({id}) => id.toHex() === hexId)
-    if (currentWalletMosaic === undefined) return 0
-    const {divisibility} = mosaicInfo
-    return currentWalletMosaic.amount.compact() / Math.pow(10, divisibility)
+      // - map table fields
+      mosaics.push({
+        "hexId": mosaic.id.toHex(),
+        "name": model.values.get('name'),
+        "supply": new UInt64([supply.lower, supply.higher]).compact(),
+        "balance": balance === undefined ? 0 : (
+          // - get relative amount
+          balance.amount / Math.pow(10, model.values.get('divisibility'))
+        ),
+        "expiration": this.getExpiration(model),
+        "divisibility": model.values.get('divisibility'),
+        "transferable": flags.transferable,
+        "supplyMutable": flags.supplyMutable,
+        "restrictable": flags.restrictable
+      })
+    }
+
+    return mosaics
   }
 
   /**
    * Returns a view of a mosaic expiration info
    * @private
-   * @param {MosaicInfo} mosaicInfo
+   * @param {MosaicsModel} mosaic
    * @returns {string}
    */
-  private getExpiration(mosaicInfo: MosaicInfo): string {
-    const duration = mosaicInfo.duration.compact()
-    if (duration === 0) return 'unlimited'
-    const expiresIn = (mosaicInfo.height.compact() + duration) - this.getCurrentHeight()
-    if (expiresIn <= 0) return 'expired'
-    return expiresIn.toLocaleString()
+  private getExpiration(mosaic: MosaicsModel): string {
+    const duration = mosaic.values.get('duration')
+    const startHeight = mosaic.values.get('startHeight')
+
+    // - unlimited mosaics have duration=0
+    if (duration === 0) {
+      return 'unlimited'
+    }
+
+    // - calculate expiration
+    const expiresIn = (startHeight + duration) - this.getCurrentHeight()
+    if (expiresIn <= 0) {
+      return 'expired'
+    }
+
+    // - number of blocks remaining
+    return expiresIn.toString()
   }
 }

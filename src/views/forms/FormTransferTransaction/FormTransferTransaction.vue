@@ -7,7 +7,9 @@
           @keyup.enter="disableSubmit ? '' : handleSubmit(onSubmit)"
         >
           <!-- Transaction signer selector -->
-          <SignerSelector v-if="!hideSigner" v-model="formItems.signerPublicKey" />
+          <SignerSelector v-if="!hideSigner"
+                          v-model="formItems.signerPublicKey"
+                          @input="onChangeSigner" />
 
           <!-- Transfer recipient input field -->
           <RecipientInput v-model="formItems.recipientRaw" />
@@ -15,7 +17,7 @@
           <!-- Mosaics attachments input fields -->
           <MosaicAttachmentInput
             v-model="formItems.attachedMosaics"
-            :mosaics="currentWalletMosaics"
+            :mosaics="getCurrentSignerMosaics()"
             :absolute="false"
             @add="onAddMosaic"
           />

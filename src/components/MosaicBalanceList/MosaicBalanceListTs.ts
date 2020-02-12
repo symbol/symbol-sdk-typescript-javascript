@@ -93,12 +93,11 @@ export class MosaicBalanceListTs extends Vue {
       const currentBalance = mosaic.amount.compact() || 0
 
       // read name from db/store/network
-      const mosaicName = await this.mosaicService.getMosaicName(currentMosaicId)
+      const model = await this.mosaicService.getMosaic(mosaic.id as MosaicId)
+      const mosaicName = model.values.get('name')
 
       // use mosaic info to format amount (skip REST)
-      const mosaicInfo = this.mosaicsInfo.find(info => info.id.equals(currentMosaicId))
-      const relativeAmount = await this.mosaicService
-        .getRelativeAmount(currentBalance, currentMosaicId, mosaicInfo)
+      const relativeAmount = await this.mosaicService.getRelativeAmount(currentBalance, currentMosaicId)
 
       // prepare formatted entry
       const balanceEntry: {id: MosaicId, name: string, amount: number, mosaic: Mosaic} = {
@@ -109,8 +108,6 @@ export class MosaicBalanceListTs extends Vue {
       }
       this.formatted.push(balanceEntry)
     })
-
-    
   }
 
 /// region computed properties getter/setter

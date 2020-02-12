@@ -134,7 +134,7 @@ export class TableDisplayTs extends Vue {
    */
   public async created(): Promise<void> {
     this.setDefaultFiltering()
-    await this.setTableValues()
+    await this.refresh()
     this.setDefaultSorting()
   }
 
@@ -197,14 +197,6 @@ export class TableDisplayTs extends Vue {
    * @returns {Promise<void>}
    */
   public async refresh(): Promise<void> {
-    await this.setTableValues()
-  }
-
-  /**
-   * Sets the table values
-   * @returns {Promise<void>}
-   */
-  public async setTableValues(): Promise<void> {
     this.tableRows = await this.getService().getTableRows()
   }
 

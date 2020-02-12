@@ -151,11 +151,15 @@ export abstract class AssetTableService extends AbstractService {
     }
 
     // - use sample to identify fields type
-    const sampleValue = values[0][options.fieldName]
+    const sampleValue = [...values][0][options.fieldName]
+
+    if (sampleValue === undefined) {
+      return values
+    }
 
     // - sorting method depends on type
     if ('string' === typeof sampleValue) {
-      return values [sortingMethod]((a, b) => {
+      return [...values][sortingMethod]((a, b) => {
         return a[options.fieldName].toLowerCase().localeCompare(
           b[options.fieldName].toLowerCase(),
           navigator.languages[0] || navigator.language,

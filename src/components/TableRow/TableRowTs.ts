@@ -40,4 +40,8 @@ export class TableRowTs extends Vue {
    * @type {any}
    */
   @Prop({default: []}) rowValues: any
+
+  public async created() {
+    await this.rowValues
+  }
 }

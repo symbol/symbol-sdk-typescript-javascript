@@ -265,6 +265,8 @@ export default {
       commit('currentWallet', currentWalletModel)
       commit('currentWalletAddress', currentWalletModel.objects.address)
 
+      dispatch('diagnostic/ADD_DEBUG', 'Changing current wallet to ' + currentWalletModel.objects.address.plain(), {root: true})
+
       // reset store + re-initialize
       await dispatch('uninitialize')
       await dispatch('initialize', currentWalletModel.objects.address.plain())
@@ -464,6 +466,19 @@ export default {
         dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch transactions: ' + e, {root: true})
         return false
       }
+    },
+    async REST_FETCH_BALANCES({dispatch}, address) {
+      if (!address || address.length !== 40) {
+        return ;
+      }
+
+      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_BALANCES dispatched with : ' + address, {root: true})
+      try {
+        const accountInfo = await dispatch('REST_FETCH_INFO', address)
+        return accountInfo.mosaics
+      }
+      catch(e) {}
+      return []
     },
     async REST_FETCH_INFO({commit, dispatch, getters, rootGetters}, address) {
       if (!address || address.length !== 40) {

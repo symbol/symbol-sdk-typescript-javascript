@@ -27,6 +27,7 @@ import {
   RawUInt64,
   NamespaceId,
   UInt64,
+  NetworkType,
 } from 'nem2-sdk'
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
@@ -40,6 +41,8 @@ import {NotificationType} from '@/core/utils/NotificationType'
 
 @Component({
   computed: {...mapGetters({
+    generationHash: 'network/generationHash',
+    networkType: 'network/networkType',
     defaultFee: 'app/defaultFee',
     currentWallet: 'wallet/currentWallet',
     currentWalletMosaics: 'wallet/currentWalletMosaics',
@@ -53,6 +56,18 @@ import {NotificationType} from '@/core/utils/NotificationType'
 })
 export class FormTransactionBase extends Vue {
 /// region store getters
+  /**
+   * Network generation hash
+   * @var {string}
+   */
+  public generationHash: string
+
+  /**
+   * Network type
+   * @var {NetworkType}
+   */
+  public networkType: NetworkType
+
   /**
    * Default fee setting
    * @var {number}
@@ -116,6 +131,13 @@ export class FormTransactionBase extends Vue {
 /// end-region property watches
 
   /**
+   * Whether the transaction should be signed by a different
+   * account than the active wallet.
+   * @var {boolean}
+   */
+  public currentSigner: string
+
+  /**
    * Whether the form is currently awaiting a signature
    * @var {boolean}
    */
@@ -133,6 +155,8 @@ export class FormTransactionBase extends Vue {
    */
   public mounted() {
     if (this.currentWallet) {
+      this.currentSigner = this.currentWallet.objects.publicAccount.publicKey
+
       const address = this.currentWallet.objects.address.plain()
       try { this.$store.dispatch('wallet/REST_FETCH_MULTISIG', address) } catch(e) {}
       try { this.$store.dispatch('wallet/REST_FETCH_OWNED_NAMESPACES', address) } catch(e) {}
@@ -193,6 +217,14 @@ export class FormTransactionBase extends Vue {
   }
 
   /**
+   * Hook called when a signer is selected.
+   * @param {string} signerPublicKey 
+   */
+  public onChangeSigner(signerPublicKey: string) {
+    this.currentSigner = signerPublicKey
+  }
+
+  /**
    * Hook called when the child component ModalTransactionConfirmation triggers
    * the event 'success'
    * @return {void}
@@ -239,6 +271,22 @@ export class FormTransactionBase extends Vue {
 
     // - open signature modal
     this.onShowConfirmationModal()
+  }
+
+  /**
+   * Helper to retrieve mosaics of the currently selected signer
+   * @return {Mosaic[]}
+   */
+  public async getCurrentSignerMosaics(): Promise<Mosaic[]> {
+    if (!this.currentWallet) {
+      return []
+    }
+
+    const current = this.currentWallet.objects.publicAccount.publicKey
+    const address = Address.createFromPublicKey(current, this.networkType)
+    return this.currentSigner === this.currentWallet.objects.publicAccount.publicKey
+         ? this.currentWalletMosaics
+         : await this.$store.dispatch('wallet/REST_FETCH_BALANCES', address)
   }
 
   /**

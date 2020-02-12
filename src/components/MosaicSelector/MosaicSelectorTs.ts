@@ -17,6 +17,10 @@ import {MosaicId, MosaicInfo, Mosaic, RawUInt64} from 'nem2-sdk'
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
+// internal dependencies
+import {MosaicService} from '@/services/MosaicService'
+import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
+
 // child components
 // @ts-ignore
 import ErrorTooltip from '@/components//ErrorTooltip/ErrorTooltip.vue'
@@ -33,10 +37,6 @@ import ErrorTooltip from '@/components//ErrorTooltip/ErrorTooltip.vue'
   })}
 })
 export class MosaicSelectorTs extends Vue {
-
-  @Prop({
-    default: []
-  }) mosaics: Mosaic[]
 
   @Prop({
     default: ''
@@ -73,8 +73,15 @@ export class MosaicSelectorTs extends Vue {
   }
 
 /// region computed properties getter/setter
+  public get mosaics(): MosaicsModel[] {
+    const service = new MosaicService(this.$store)
+    return service.getMosaics()
+  }
+
   public get selectedMosaic(): string {
-    return Object.keys(this.mosaicsNames).find(k => this.mosaicsNames[k] === this.selectedMosaicName)
+    return this.mosaics.filter(
+      m => m.values.get('name') === this.selectedMosaicName
+    ).shift().getIdentifier()
   }
 
   public set selectedMosaic(hex: string) {
@@ -84,41 +91,27 @@ export class MosaicSelectorTs extends Vue {
   public get selectedMosaicName(): string {
     const selected = this.value || this.networkMosaic.toHex()
     const id = new MosaicId(RawUInt64.fromHex(selected))
-    return this.getMosaicName(id)
+    return this.mosaics.filter(
+      m => m.getIdentifier() === selected
+    ).shift().values.get('name')
   }
 
   public set selectedMosaicName(name: string) {
-    this.selectedMosaic = Object.keys(this.mosaicsNames).find(
-      k => (this.mosaicsNames[k].hasOwnProperty('namespaceId') 
-         && this.mosaicsNames[k].namespaceId.fullName === name)
-         || this.mosaicsNames[k] === name
-    )
+    this.selectedMosaic = this.mosaics.filter(
+      m => m.values.get('name') === name
+    ).shift().getIdentifier()
   }
   /// end-region computed properties getter/setter
 
   public onChange (input: string) {
-    const canFindByName = Object.keys(this.mosaicsNames).find(
-      k => (this.mosaicsNames[k].hasOwnProperty('namespaceId') 
-         && this.mosaicsNames[k].namespaceId.fullName === input)
-         || this.mosaicsNames[k] === input
-    )
+    const canFindByName = this.mosaics.find(m => m.values.get('name') === input)
     if (undefined !== canFindByName) {
-      return this.selectedMosaicName = this.mosaicsNames[canFindByName]
+      return this.selectedMosaicName = canFindByName.values.get('name')
     }
 
-    const canFindByHex = Object.keys(this.mosaicsNames).find(k => k === input)
+    const canFindByHex = this.mosaics.find(m => m.getIdentifier() === input)
     if (undefined !== canFindByHex) {
-      return this.selectedMosaicName = this.mosaicsNames[canFindByHex]
+      return this.selectedMosaicName = canFindByHex.values.get('name')
     }
-  }
-
-  public getMosaicName(mosaicId: MosaicId): string {
-    if (this.mosaicsNames.hasOwnProperty(mosaicId.toHex())) {
-      return this.mosaicsNames[mosaicId.toHex()].hasOwnProperty('namespaceId')
-           ? this.mosaicsNames[mosaicId.toHex()].namespaceId.fullName
-           : this.mosaicsNames[mosaicId.toHex()]
-    }
-
-    return mosaicId.toHex()
   }
 }

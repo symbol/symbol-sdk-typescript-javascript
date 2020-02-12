@@ -9,11 +9,11 @@
       >
         <Option 
           v-for="m in mosaics"
-          :key="m.id.toHex()"
-          :label="getMosaicName(m.id)"
-          :value="getMosaicName(m.id)"
+          :key="m.getIdentifier()"
+          :label="m.values.get('name')"
+          :value="m.values.get('name')"
         >
-          {{ getMosaicName(m.id) }} 
+          {{ m.values.get('name') }} 
         </Option>
       </AutoComplete>
     </ErrorTooltip>

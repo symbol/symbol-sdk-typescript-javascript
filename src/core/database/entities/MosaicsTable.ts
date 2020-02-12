@@ -19,11 +19,14 @@ import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
 export class MosaicsTable extends DatabaseTable {
   public constructor() {
     super('mosaics', [
-      'id',
-      'wallet',
       'hexId',
       'name',
-      'info',
+      'flags',
+      'startHeight',
+      'duration',
+      'supply',
+      'divisibility',
+      'ownerPublicKey',
     ])
   }
 

@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicInfo, MosaicFlags, NetworkType, PublicAccount} from 'nem2-sdk'
-
 // internal dependencies
 import {DatabaseModel} from '@/core/database/DatabaseModel'
-import {DatabaseRelation, DatabaseRelationType} from '@/core/database/DatabaseRelation'
+import {DatabaseRelation} from '@/core/database/DatabaseRelation'
 
 export class MosaicsModel extends DatabaseModel {
   /**
@@ -26,16 +24,14 @@ export class MosaicsModel extends DatabaseModel {
    * @var {string[]}
    */
   public primaryKeys: string[] = [
-    'id',
+    'hexId',
   ]
 
   /**
    * Entity relationships
    * @var {Map<string, DatabaseRelation>}
    */
-  public relations: Map<string, DatabaseRelation> =  new Map<string, DatabaseRelation>([
-    ['wallet', new DatabaseRelation(DatabaseRelationType.ONE_TO_ONE)]
-  ])
+  public relations: Map<string, DatabaseRelation> =  new Map<string, DatabaseRelation>()
 
   /**
    * Construct a mosaic model instance
@@ -43,26 +39,6 @@ export class MosaicsModel extends DatabaseModel {
    * @param {Map<string, any>} values
    */
   public constructor(values: Map<string, any> = new Map<string, any>()) {
-    super(['id'], values)
-  }
-
-  /**
-   * Permits to return specific field's mapped object instances
-   * @return any
-   */
-  public get objects(): any {
-    const argv: any = Object.assign({}, this.values.get('info'))
-    const info = new MosaicInfo(
-      argv.id,
-      argv.supply || 0,
-      argv.height || 0,
-      PublicAccount.createFromPublicKey(argv.owner || '', NetworkType.MIJIN_TEST), // networkType ignored
-      argv.revision || 1,
-      new MosaicFlags(argv.flags || 0),
-      argv.divisibility || 0,
-      argv.duration || 0,
-    )
-
-    return {info}
+    super(['hexId'], values)
   }
 }

@@ -142,6 +142,8 @@ export class RESTService extends AbstractService {
       throw new Error('Invalid address for subscribing to websocket connections')
     }
 
+    context.dispatch('diagnostic/ADD_DEBUG', 'Opening REST websocket channel connections with ' + addressStr, {root: true})
+
     // open websocket connection
     const address = Address.createFromRawAddress(addressStr)
     const listener = new Listener(wsEndpoint, WebSocket)
@@ -201,6 +203,8 @@ export class RESTService extends AbstractService {
     // open websocket connection
     const listener = new Listener(wsEndpoint, WebSocket)
     await listener.open()
+
+    context.dispatch('diagnostic/ADD_DEBUG', 'Opening REST block websocket channel connection', {root: true})
 
     const newBlock = listener.newBlock().subscribe((block: BlockInfo) => {
       context.dispatch('SET_CURRENT_HEIGHT', block.height.compact())
