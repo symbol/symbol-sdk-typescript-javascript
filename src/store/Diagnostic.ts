@@ -57,7 +57,8 @@ export default {
       const logs = state.logs
       logs.push({
         level: payload.level || LogLevels.DEBUG,
-        message: payload.message
+        message: payload.message,
+        time: payload.time
       })
       Vue.set(state, 'logs', logs)
     },
@@ -80,19 +81,19 @@ export default {
     },
 /// region scoped actions
     async ADD_LOG({commit}, {level, message}) {
-      commit('addLog', {level, message})
+      commit('addLog', {level, message, time: new Date()})
     },
     async ADD_INFO({commit}, message) {
-      commit('addLog', {level: LogLevels.INFO, message})
+      commit('addLog', {level: LogLevels.INFO, message, time: new Date()})
     },
     async ADD_DEBUG({commit}, message) {
-      commit('addLog', {level: LogLevels.DEBUG, message})
+      commit('addLog', {level: LogLevels.DEBUG, message, time: new Date()})
     },
     async ADD_WARNING({commit}, message) {
-      commit('addLog', {level: LogLevels.WARNING, message})
+      commit('addLog', {level: LogLevels.WARNING, message, time: new Date()})
     },
     async ADD_ERROR({commit}, message) {
-      commit('addLog', {level: LogLevels.ERROR, message})
+      commit('addLog', {level: LogLevels.ERROR, message, time: new Date()})
     },
 /// end-region scoped actions
   }

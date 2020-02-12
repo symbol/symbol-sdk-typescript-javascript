@@ -76,8 +76,7 @@ export class WalletSelectorFieldTs extends Vue {
     const knownWallets = this.service.getWallets(
       (e) => this.knownWallets.includes(e.getIdentifier())
     )
-  
-    console.log("WalletSelectorField/currentWallets: ", knownWallets)
+
     return [...knownWallets].map(
       ({identifier, values}) => ({identifier, name: values.get('name')}),
     )

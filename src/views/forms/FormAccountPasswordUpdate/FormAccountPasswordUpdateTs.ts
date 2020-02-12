@@ -93,7 +93,6 @@ export class FormAccountPasswordUpdateTs extends Vue {
    * @return {void}
    */
   public onSubmit() {
-    console.log("formItems: ", this.formItems)
     this.hasAccountUnlockModal = true
   }
   /**

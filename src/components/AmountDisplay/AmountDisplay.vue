@@ -15,7 +15,7 @@ export default class AmountDisplay extends AmountDisplayTs {}
 <style scoped lang="less">
 .amount-display-container {
   span {
-    font-size: 25px;
+    font-size: 20px;
   }
   .integer-part {
     opacity: 1;

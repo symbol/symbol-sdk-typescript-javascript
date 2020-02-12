@@ -207,6 +207,7 @@ export default class LoginPageTs extends Vue {
 
     // if account doesn't exist, authentication is not valid
     if (! this.accountsRepository.find(identifier)) {
+      this.$store.dispatch('diagnostic/ADD_ERROR', 'Invalid login attempt')
       return this.$router.push({name: 'accounts.login'})
     }
 
@@ -220,6 +221,7 @@ export default class LoginPageTs extends Vue {
 
     // if account setup was not finalized, redirect
     if (!account.values.has('seed') || ! account.values.get('seed').length) {
+      this.$store.dispatch('diagnostic/ADD_WARNING', 'Account has not setup mnemonic pass phrase, redirecting: ' + account.getIdentifier())
       return this.$router.push({name: 'accounts.createAccount.generateMnemonic'})
     }
 
@@ -238,6 +240,7 @@ export default class LoginPageTs extends Vue {
     await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)
     await this.$store.dispatch('wallet/SET_CURRENT_WALLET', Array.from(knownWallets.values()).shift())
     this.$store.dispatch('wallet/SET_KNOWN_WALLETS', account.values.get('wallets'))
+    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Account login successful with identifier: ' + account.getIdentifier())
 
     $eventBus.$emit('onLogin', identifier)
     return this.$router.push({name: 'dashboard'})

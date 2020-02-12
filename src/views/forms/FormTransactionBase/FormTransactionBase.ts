@@ -225,7 +225,8 @@ export class FormTransactionBase extends Vue {
    * @return {void}
    */
   public async onSubmit() {
-    console.log("Staging Transactions: ", this.getTransactions())
+
+    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Adding transaction(s) to stage (prepared & unsigned): ' + this.getTransactions().length)
 
     // - add transactions to stage (to be signed)
     this.getTransactions().map(

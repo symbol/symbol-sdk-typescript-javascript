@@ -420,8 +420,7 @@ export default {
         return cache[cacheKey]
       }
 
-      console.log('wallet/REST_FETCH_TRANSACTIONS: address: ', address)
-      console.log('wallet/REST_FETCH_TRANSACTIONS: group: ', group)
+      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_TRANSACTIONS dispatched with : ' + JSON.stringify({address: address, group}), {root: true})
 
       try {
         // prepare REST parameters
@@ -444,7 +443,7 @@ export default {
         else if ('partial' === group)
           transactions = await accountHttp.getAccountPartialTransactions(addressObject, queryParams).toPromise()
 
-        console.log('wallet/REST_FETCH_TRANSACTIONS: transactions: ', transactions)
+        dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_TRANSACTIONS numTransactions: ' + transactions.length, {root: true})
 
         // update store
         transactions.map((transaction) => dispatch('ADD_TRANSACTION', {
@@ -455,7 +454,6 @@ export default {
 
         // fetch block informations if necessary
         if (blockHeights.length) {
-          console.log("wallet/REST_FETCH_TRANSACTIONS: blockHeights: ", blockHeights)
           // - non-blocking
           dispatch('network/REST_FETCH_BLOCKS', blockHeights, {root: true})
         }
@@ -463,7 +461,7 @@ export default {
         return transactions
       }
       catch (e) {
-        console.error('An error happened while trying to fetch transactions: ' + e)
+        dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch transactions: ' + e, {root: true})
         return false
       }
     },
@@ -472,7 +470,7 @@ export default {
         return ;
       }
 
-      console.log('wallet/REST_FETCH_INFO: fetching info for', address)
+      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_INFO dispatched with : ' + JSON.stringify({address: address}), {root: true})
 
       try {
         // prepare REST parameters
@@ -498,11 +496,14 @@ export default {
         })
       }
       catch (e) {
-        console.error('An error happened while trying to fetch account information: <pre>' + e + '</pre>')
+        dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch account information: ' + e, {root: true})
         return false
       }
     },
     async REST_FETCH_INFOS({commit, dispatch, getters, rootGetters}, addresses) {
+
+      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_INFOS dispatched with : ' + JSON.stringify(addresses.map(a => a.plain())), {root: true})
+
       try {
         // prepare REST parameters
         const currentPeer = rootGetters['network/currentPeer'].url
@@ -520,10 +521,10 @@ export default {
           }
 
           return accountsInfo
-        }, (error) => console.error('An error happened while trying to fetch account informations: ', error))
+        }, (error) => dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch account informations: ' + error, {root: true}))
       }
       catch (e) {
-        console.error('An error happened while trying to fetch account information: <pre>' + e + '</pre>')
+        dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch account informations: ' + e, {root: true})
         return false
       }
     },
@@ -535,6 +536,8 @@ export default {
       if (!address || address.length !== 40) {
         return ;
       }
+
+      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_MULTISIG dispatched with : ' + address, {root: true})
 
       try {
         // prepare REST parameters
@@ -555,7 +558,7 @@ export default {
         return multisigInfo
       }
       catch (e) {
-        console.error('An error happened while trying to fetch multisig information: <pre>' + e + '</pre>')
+        dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch multisig information: ' + e, {root: true})
         return false
       }
     },
@@ -567,6 +570,8 @@ export default {
       if (!address || address.length !== 40) {
         return ;
       }
+
+      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_OWNED_MOSAICS dispatched with : ' + address, {root: true})
 
       try {
         // prepare REST parameters
@@ -586,7 +591,7 @@ export default {
         return ownedMosaics
       }
       catch (e) {
-        console.error('An error happened while trying to fetch owned mosaics information: <pre>' + e + '</pre>')
+        dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch owned mosaics: ' + e, {root: true})
         return false
       }
     },
@@ -598,6 +603,8 @@ export default {
       if (!address || address.length !== 40) {
         return ;
       }
+
+      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_OWNED_NAMESPACES dispatched with : ' + address, {root: true})
 
       try {
         // prepare REST parameters
@@ -617,7 +624,7 @@ export default {
         return ownedNamespaces
       }
       catch (e) {
-        console.error('An error happened while trying to fetch owned namespaces information: <pre>' + e + '</pre>')
+        dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch owned namespaces: ' + e, {root: true})
         return null
       }
     },
@@ -660,6 +667,12 @@ export default {
       {commit, dispatch, rootGetters},
       signedTransaction: SignedTransaction
     ): Observable<BroadcastResult> {
+
+      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_ANNOUNCE_TRANSACTION dispatched with: ' + JSON.stringify({
+        hash: signedTransaction.hash,
+        payload: signedTransaction.payload
+      }), {root: true})
+
       try {
         // prepare REST parameters
         const currentPeer = rootGetters['network/currentPeer'].url

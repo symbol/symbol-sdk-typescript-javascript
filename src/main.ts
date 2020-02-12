@@ -54,6 +54,5 @@ const app = new Vue({
   },
 })
 
-console.log("mounting app")
 app.$mount('#app')
 export default app

@@ -86,7 +86,7 @@ import packageConfig from '@/../package.json'
     FormLabel,
   },
 })
-export default class About extends Vue {
+export default class AboutPage extends Vue {
   public configs = {
     package: packageConfig,
     app: appConfig,

@@ -166,7 +166,7 @@ export default {
       const callback = async () => {
         const nodeUrl = getters.currentPeer.url
 
-        console.log('network/initialize: nodeUrl: ', nodeUrl)
+        dispatch('diagnostic/ADD_DEBUG', 'Store action network/initialize selected peer: ' + nodeUrl, {root: true})
 
         try {
           // read network type ("connect")
@@ -183,8 +183,8 @@ export default {
           const peerInfo = await nodeHttp.getNodeInfo().toPromise()
           const currentHeight = await chainHttp.getBlockchainHeight().toPromise()
 
-          console.log('network/initialize: peerInfo: ', peerInfo)
-          console.log('network/initialize: currentHeight: ', currentHeight.compact())
+          dispatch('diagnostic/ADD_DEBUG', 'Store action network/initialize peer information: ' + JSON.stringify(peerInfo), {root: true})
+          dispatch('diagnostic/ADD_DEBUG', 'Store action network/initialize peer block height: ' + currentHeight.compact(), {root: true})
 
           // update store
           commit('networkType', networkType)
@@ -196,7 +196,7 @@ export default {
           dispatch('SUBSCRIBE')
         }
         catch (e) {
-          console.log("Error in Store network/initialize: ", e)
+          dispatch('diagnostic/ADD_ERROR', 'Store action network/initialize error: ' + e.toString(), {root: true})
         }
       }
 
@@ -310,13 +310,13 @@ export default {
         const nextHeights = ranges.slice(3).map(r => r.start)
         if (nextHeights.length) {
           setTimeout(() => {
-            console.log('network/REST_FETCH_BLOCKS delaying heights discovery (2 seconds): ', nextHeights)
+            dispatch('diagnostic/ADD_DEBUG', 'Store action network/REST_FETCH_BLOCKS delaying heights discovery for 2 seconds: ' + JSON.stringify(nextHeights), {root: true})
             return dispatch('REST_FETCH_BLOCKS', nextHeights)
           }, 2000)
         }
       }
       catch (e) {
-        console.error('An error happened while trying to fetch blocks information: <pre>' + e + '</pre>')
+        dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch blocks information: ' + e, {root: true})
         return false
       }
     },

@@ -67,11 +67,4 @@ export class WalletNameDisplayTs extends Vue {
     this.isEditingName = f
   }
 /// end-region computed properties getter/setter
-
-  public onChangeName(formItems: any) {
-    // - resolve "observer" values
-    const values = {...formItems}
-
-    console.log("Form values: ", values)
-  }
 }

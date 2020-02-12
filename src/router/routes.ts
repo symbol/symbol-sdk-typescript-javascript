@@ -340,9 +340,9 @@ export const routes: AppRoute[] = [
         ],
       },
       {
-        path: '/settingPanel',
+        path: 'settings',
         name: 'settings',
-        redirect: '/generalSettings',
+        redirect: '/settings/general',
         meta: {
           protected: true,
           clickable: true,
@@ -354,7 +354,7 @@ export const routes: AppRoute[] = [
         /// region settings children
         children: [
           {
-            path: '/generalSettings',
+            path: 'general',
             name: 'settings.general',
             meta: {
               protected: true,
@@ -364,7 +364,7 @@ export const routes: AppRoute[] = [
             component: () => import('@/views/forms/FormGeneralSettings/FormGeneralSettings.vue'),
           },
           {
-            path: '/settingPassword',
+            path: 'password-reset',
             name: 'settings.password',
             meta: {
               protected: true,
@@ -374,14 +374,24 @@ export const routes: AppRoute[] = [
             component: () => import('@/views/forms/FormAccountPasswordUpdate/FormAccountPasswordUpdate.vue'),
           },
           {
-            path: '/about',
+            path: 'about',
             name: 'settings.about',
             meta: {
               protected: true,
               title: 'about',
             },
             // @ts-ignore
-            component: () => import('@/views/pages/settings/about/About.vue'),
+            component: () => import('@/views/pages/settings/AboutPage/AboutPage.vue'),
+          },
+          {
+            path: 'diagnostic',
+            name: 'settings.diagnostic',
+            meta: {
+              protected: true,
+              title: 'diagnostic',
+            },
+            // @ts-ignore
+            component: () => import('@/views/pages/settings/DiagnosticPage/DiagnosticPage.vue'),
           },
         ],
         /// end-region settings children

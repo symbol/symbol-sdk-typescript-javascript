@@ -139,8 +139,6 @@ export class ModalTransactionConfirmationTs extends Vue {
     // - log about transaction signature success
     this.$store.dispatch('diagnostic/ADD_INFO', 'Signed ' + transactions.length + ' Transaction(s) on stage with Hardware Wallet')
 
-    console.log("Signed Transactions: ", transactions.map(signed => signed.payload))
-
     // - transactions are ready to be announced
     transactions.map(async (signed) => await this.$store.commit('wallet/addSignedTransaction', signed))
 
@@ -176,15 +174,16 @@ export class ModalTransactionConfirmationTs extends Vue {
   public async onAccountUnlocked({account, password}: {account: Account, password: Password}) {
     this.service = new TransactionService(this.$store)
 
-    console.log("unlocked: ", account)
-
     // - log about unlock success
     this.$store.dispatch('diagnostic/ADD_INFO', 'Account ' + account.address.plain() + ' unlocked successfully.')
 
     // - get staged transactions and sign
     this.stagedTransactions.map(async (staged) => {
       const signedTx = account.sign(staged, this.generationHash)
-      console.log("Signed Transaction: ", {hash: signedTx.hash, payload: signedTx.payload})
+      this.$store.dispatch('diagnostic/ADD_DEBUG', 'Signed transaction with account ' + account.address.plain() + ' and result: ' + JSON.stringify({
+        hash: signedTx.hash,
+        payload: signedTx.payload
+      }))
       await this.$store.commit('wallet/addSignedTransaction', signedTx)
     })
 

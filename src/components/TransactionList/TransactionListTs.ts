@@ -156,10 +156,6 @@ export class TransactionListTs extends Vue {
     const start = (this.currentPage - 1) * this.pageSize
     const end = this.currentPage * this.pageSize
 
-    console.log("get currentPageTransactions: confirmedTransactions: ", this.confirmedTransactions)
-    console.log("get currentPageTransactions: start: ", start)
-    console.log("get currentPageTransactions: end: ", end)
-
     return !this.confirmedTransactions || !this.confirmedTransactions.length 
         ? [] 
         : this.confirmedTransactions.slice(start, end)

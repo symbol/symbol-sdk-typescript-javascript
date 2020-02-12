@@ -151,9 +151,6 @@ export class PeerSelectorTs extends Vue {
     const nodeUrl = this.service.getNodeUrl(this.formItems.nodeUrl)
     const node = URLHelpers.formatUrl(nodeUrl)
 
-    console.log("nodeUrl: ", nodeUrl)
-    console.log("node: ", node)
-
     // read network type from node pre-saving
     const networkType = await this.service.getNetworkType(nodeUrl)
 
@@ -170,6 +167,7 @@ export class PeerSelectorTs extends Vue {
     this.peers.create(peer.model.values)
     this.$store.dispatch('network/ADD_KNOWN_PEER', nodeUrl)
     this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
+    this.$store.dispatch('diagnostic/ADD_DEBUG', 'PeerSelector added peer: '+ nodeUrl)
 
     // reset
     this.formItems.nodeUrl = ''

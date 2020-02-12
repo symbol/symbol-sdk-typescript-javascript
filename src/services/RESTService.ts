@@ -154,29 +154,29 @@ export class RESTService extends AbstractService {
     // unconfirmed listeners
     const unconfirmedAdded = listener.unconfirmedAdded(address).subscribe(
       transaction => context.dispatch('wallet/ADD_TRANSACTION', {group: 'unconfirmed', transaction}, {root: true}),
-      err => console.log(err))
+      err => context.dispatch('diagnostic/ADD_ERROR', err, {root: true}))
 
     const unconfirmedRemoved = listener.unconfirmedRemoved(address).subscribe(
       transaction => context.dispatch('wallet/REMOVE_TRANSACTION', {group: 'unconfirmed', transaction}, {root: true}),
-      err => console.log(err))
+      err => context.dispatch('diagnostic/ADD_ERROR', err, {root: true}))
 
     // partial listeners
     const cosignatureAdded = listener.cosignatureAdded(address).subscribe(
       transaction => context.dispatch('notification/ADD_SUCCESS', NotificationType.COSIGNATURE_ADDED, {root: true}),
-      err => console.log(err))
+      err => context.dispatch('diagnostic/ADD_ERROR', err, {root: true}))
 
     const partialAdded = listener.aggregateBondedAdded(address).subscribe(
       transaction => context.dispatch('wallet/ADD_TRANSACTION', {group: 'partial', transaction}, {root: true}),
-      err => console.log(err))
+      err => context.dispatch('diagnostic/ADD_ERROR', err, {root: true}))
 
     const partialRemoved = listener.aggregateBondedRemoved(address).subscribe(
       transaction => context.dispatch('wallet/REMOVE_TRANSACTION', {group: 'partial', transaction}, {root: true}),
-      err => console.log(err))
+      err => context.dispatch('diagnostic/ADD_ERROR', err, {root: true}))
 
     // confirmed listener
     const confirmed = listener.confirmed(address).subscribe(
       transaction => context.dispatch('wallet/ADD_TRANSACTION', {group: 'confirmed', transaction}, {root: true}),
-      err => console.log(err))
+      err => context.dispatch('diagnostic/ADD_ERROR', err, {root: true}))
 
     return {listener, subscriptions: [
       status,
@@ -203,9 +203,9 @@ export class RESTService extends AbstractService {
     await listener.open()
 
     const newBlock = listener.newBlock().subscribe((block: BlockInfo) => {
-      console.log("New block: #", block.height.compact())
       context.dispatch('SET_CURRENT_HEIGHT', block.height.compact())
       context.dispatch('ADD_BLOCK', block)
+      context.dispatch('diagnostic/ADD_INFO', 'New block height: ' + block.height.compact(), {root: true})
     })
 
     return {listener, subscriptions: [newBlock,]}

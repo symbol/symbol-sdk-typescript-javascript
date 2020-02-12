@@ -57,6 +57,7 @@ const AppStore = new Vuex.Store({
     async initialize({ commit, dispatch, getters }) {
       const callback = async () => {
         await dispatch('app/initialize')
+        await dispatch('diagnostic/initialize')
         await dispatch('notification/initialize')
         await dispatch('network/initialize')
         await dispatch('mosaic/initialize')

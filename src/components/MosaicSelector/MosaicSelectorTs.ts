@@ -97,20 +97,17 @@ export class MosaicSelectorTs extends Vue {
   /// end-region computed properties getter/setter
 
   public onChange (input: string) {
-    console.log('onChange: ', input)
     const canFindByName = Object.keys(this.mosaicsNames).find(
       k => (this.mosaicsNames[k].hasOwnProperty('namespaceId') 
          && this.mosaicsNames[k].namespaceId.fullName === input)
          || this.mosaicsNames[k] === input
     )
     if (undefined !== canFindByName) {
-      console.log('canFindByName: ', canFindByName)
       return this.selectedMosaicName = this.mosaicsNames[canFindByName]
     }
 
     const canFindByHex = Object.keys(this.mosaicsNames).find(k => k === input)
     if (undefined !== canFindByHex) {
-      console.log('canFindByHex: ', canFindByHex)
       return this.selectedMosaicName = this.mosaicsNames[canFindByHex]
     }
   }

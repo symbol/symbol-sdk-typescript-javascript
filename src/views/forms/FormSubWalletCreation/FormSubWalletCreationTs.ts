@@ -246,9 +246,7 @@ export class FormSubWalletCreationTs extends Vue {
     const lastPath = knownPaths.pop()
     const nextPath = this.paths.incrementPathLevel(lastPath, DerivationPathLevels.Address, 1)
 
-    console.log("childWalletName: ", childWalletName)
-    console.log("knownPaths: ", knownPaths)
-    console.log("nextPath: ", nextPath)
+    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Adding child wallet with derivation path: ' + nextPath)
 
     // - decrypt mnemonic
     const encSeed = this.currentAccount.values.get('seed')

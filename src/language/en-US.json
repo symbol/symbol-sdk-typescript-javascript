@@ -1014,6 +1014,7 @@
   "x_seconds": "{seconds} sec.",
 
   "Select_a_namespace": "Select a namespace",
+  "diagnostic": "Diagnostic",
   "about_app_release": "Software Release",
   "about_app_url": "Software Homepage",
   "about_dependencies": "Dependencies",
