@@ -17,6 +17,7 @@
 import { NetworkRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { NetworkFees } from '../model/blockchain/NetworkFees';
 import { NetworkName } from '../model/blockchain/NetworkName';
 import { NetworkType } from '../model/blockchain/NetworkType';
 import { NodeInfo } from '../model/node/NodeInfo';
@@ -68,6 +69,20 @@ export class NetworkHttp extends Http implements NetworkRepository {
     public getNetworkName(): Observable<NetworkName> {
         return observableFrom(this.networkRouteApi.getNetworkType()).pipe(
             map((({body}) => new NetworkName(body.name, body.description))),
+            catchError((error) =>  throwError(this.errorHandling(error))),
+        );
+    }
+
+    /**
+     * Returns information about the average, median, highest and lower fee multiplier over the last
+     * \"numBlocksTransactionFeeStats\". The setting \"numBlocksTransactionFeeStats\" is adjustable
+     * via a configuration file (rest/resources/rest.json) per REST instance.
+     * @summary Get transaction fees information
+     */
+    public getNetworkFees(): Observable<NetworkFees> {
+        return observableFrom(this.networkRouteApi.getNetworkFees()).pipe(
+            map((({body}) =>
+                new NetworkFees(body.averageFeeMultiplier, body.medianFeeMultiplier, body.highestFeeMultiplier, body.lowestFeeMultiplier))),
             catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }

@@ -44,4 +44,14 @@ describe('NetworkHttp', () => {
             expect(networkName.description.toLowerCase()).to.be.not.null;
         });
     });
+
+    describe('getNetworkFees', () => {
+        it('should return network fees', async () => {
+            const fees = await networkRepository.getNetworkFees().toPromise();
+            expect(fees.averageFeeMultiplier).to.be.not.null;
+            expect(fees.highestFeeMultiplier).to.be.not.null;
+            expect(fees.lowestFeeMultiplier).to.be.not.null;
+            expect(fees.medianFeeMultiplier).to.be.not.null;
+        });
+    });
 });
