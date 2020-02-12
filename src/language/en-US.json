@@ -1018,5 +1018,17 @@
   "form_label_new_password": "Enter a new password",
   "form_label_new_password_confirm": "Confirm your new password",
   "form_label_new_password_hint": "Enter a password hint",
-  "success_password_changed": "Your password was updated successfully. You will now be logged out."
+  "success_password_changed": "Your password was updated successfully. You will now be logged out.",
+  "table_header_hex_id": "id",
+  "table_header_name": "name",
+  "table_header_supply": "supply",
+  "table_header_balance": "balance",
+  "table_header_divisibility": "divisibility",
+  "table_header_transferable": "transferable",
+  "table_header_supply_mutable": "supply mutable",
+  "table_header_restrictable": "restrictable",
+  "table_header_expiration": "expiration",
+  "table_header_expired": "expired",
+  "table_header_alias_identifier": "alias",
+  "table_header_alias_type": "alias type"
 }

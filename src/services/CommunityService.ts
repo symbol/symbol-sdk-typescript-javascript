@@ -71,7 +71,7 @@ export class CommunityService extends AbstractService {
    * Service name
    * @var {string}
    */
-  public name: string = 'mosaic'
+  public name: string = 'community'
 
   /**
    * Vuex Store 

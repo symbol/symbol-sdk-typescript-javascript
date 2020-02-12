@@ -1,13 +1,11 @@
 <template>
   <AssetListPageWrap>
-    <template v-slot:table-title>
-      {{ $t('Namespace_and_Sub_Namespace') }}
-    </template>
-    <template v-slot:table-description>
-      {{ $t('Under_the_current_wallet') }}
-    </template>
     <template v-slot:table-section>
-      MOSAIC TABLE HERE
+      <TableDisplay asset-type="mosaic" class="table-section">
+        <template v-slot:table-title>
+          <h1 class="section-title">{{ $t('Mosaics') }}</h1> 
+        </template>
+      </TableDisplay>
     </template>
     <template v-slot:asset-description>
       <div class="asset-description-title">
@@ -38,7 +36,15 @@ import {Component, Vue} from 'vue-property-decorator'
 
 // child components
 import AssetListPageWrap from '@/components/AssetListPageWrap/AssetListPageWrap.vue'
+import TableDisplay from '@/components/TableDisplay/TableDisplay.vue'
 
-@Component({ components: {AssetListPageWrap} })
+@Component({ components: {AssetListPageWrap, TableDisplay} })
 export default class MosaicListPage extends Vue {}
 </script>
+
+<style scoped lang="css">
+.table-section {
+  padding: 0.2rem;
+  height: 100%;
+}
+</style>

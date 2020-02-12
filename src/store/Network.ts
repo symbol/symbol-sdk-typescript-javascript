@@ -96,6 +96,7 @@ export default {
     knownPeers: state => state.knownPeers,
     currentHeight: state => state.currentHeight,
     knownBlocks: state => state.knownBlocks,
+    config: state => state.config,
   },
   mutations: {
     setInitialized: (state, initialized) => { state.initialized = initialized },

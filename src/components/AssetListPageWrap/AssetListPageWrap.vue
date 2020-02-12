@@ -1,17 +1,11 @@
 <template>
   <div class="asset-list-main-container">
-    <div class="left-container">
-      <div class="table-title">
-        <slot name="table-title" />
-      </div>
-      <div class="table-description">
-        <slot name="table-description" />
-      </div>
+    <div class="left-container xym-outline">
       <div class="table-section">
         <slot name="table-section" />
       </div>
     </div>
-    <div class="right-container">
+    <div class="right-container xym-outline">
       <slot name="asset-description" />
     </div>
   </div>

@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NamespaceInfo, NamespaceId, QueryParams, Transaction, TransactionType} from 'nem2-sdk'
+import {NamespaceInfo, NamespaceId} from 'nem2-sdk'
 import Vue from 'vue'
 
 // internal dependencies
 import {RESTService} from '@/services/RESTService'
 import {AwaitLock} from './AwaitLock';
+import {NamespaceService} from '@/services/NamespaceService';
 const Lock = AwaitLock.create();
 
 export default {
@@ -78,23 +79,22 @@ export default {
       commit('addNamespaceInfo', mosaicInfo)
       return mosaicInfo
     },
-    async REST_FETCH_NAMES({commit, rootGetters}, namespaceIds: NamespaceId[]) {
+    async REST_FETCH_NAMES({commit, rootGetters}, namespaceIds: NamespaceId[]): Promise<{hex: string, name: string}[]> {
       const nodeUrl = rootGetters['network/currentPeer'].url
       const namespaceHttp = RESTService.create('NamespaceHttp', nodeUrl)
       const namespaceNames = await namespaceHttp.getNamespacesName(namespaceIds).toPromise()
 
       // map by hex if names available
-      const mappedNames = namespaceNames.filter(
-        entry => entry.name.length >= 1
-      ).map(
-        ({namespaceId, name}) => { return {
-          hex: namespaceId.toHex(),
-          name: name
-        }})
+      const mappedNames = namespaceNames
+        .filter(({name}) => name.length)
+        .map((namespaceName) => ({
+          hex:  namespaceName.namespaceId.toHex(),
+          name: NamespaceService.getFullNameFromNamespaceNames(namespaceName, namespaceNames).name,
+        }))
 
       // update store
-      mappedNames.map(mappedEntry => commit('addNamespaceName', mappedEntry))
-      return namespaceIds.length === 1 ? mappedNames.shift().name : mappedNames
+      mappedNames.forEach(mappedEntry => commit('addNamespaceName', mappedEntry))
+      return mappedNames 
     },
 /// end-region scoped actions
   }

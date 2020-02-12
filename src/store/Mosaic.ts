@@ -167,24 +167,21 @@ export default {
       mosaicsInfo.map(info => commit('addMosaicInfo', info))
       return mosaicsInfo
     },
-    async REST_FETCH_NAMES({commit, rootGetters}, mosaicIds) {
+    async REST_FETCH_NAMES({commit, rootGetters}, mosaicIds): Promise<{hex: string, name: string}[]> {
       const nodeUrl = rootGetters['network/currentPeer'].url
       const namespaceHttp = RESTService.create('NamespaceHttp', nodeUrl)
       const mosaicNames = await namespaceHttp.getMosaicsNames(mosaicIds).toPromise()
 
       // map by hex if names available
-      const mappedNames = mosaicNames.filter(
-        entry => entry.names.length >= 1
-      ).map(
-        ({mosaicId, names}) => { return {
-          hex: mosaicId.toHex(),
-          name: names.shift() //XXX takes only first name!
-        }})
+      const mappedNames = mosaicNames
+        .filter(({names}) => names.length)
+        .map(({mosaicId, names}) => ({hex: mosaicId.toHex(), name: names.shift().name}))
 
       // update store
-      mappedNames.map(mappedEntry => commit('addMosaicName', mappedEntry))
+      mappedNames.forEach(mappedEntry => commit('addMosaicName', mappedEntry))
+
       return mappedNames
     },
 /// end-region scoped actions
-  }
+  },
 }

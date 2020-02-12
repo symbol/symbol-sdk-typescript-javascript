@@ -16,6 +16,7 @@
 import Vue from 'vue';
 import {
   Address,
+  NamespaceInfo,
   QueryParams,
   Listener,
   Mosaic,
@@ -589,7 +590,7 @@ export default {
         return false
       }
     },
-    async REST_FETCH_OWNED_NAMESPACES({commit, dispatch, getters, rootGetters}, address) {
+    async REST_FETCH_OWNED_NAMESPACES({commit, dispatch, getters, rootGetters}, address): Promise<NamespaceInfo[]> {
       if (address instanceof WalletsModel) {
         address = address.objects.address.plain()
       }
@@ -617,7 +618,7 @@ export default {
       }
       catch (e) {
         console.error('An error happened while trying to fetch owned namespaces information: <pre>' + e + '</pre>')
-        return false
+        return null
       }
     },
     REST_ANNOUNCE_PARTIAL(

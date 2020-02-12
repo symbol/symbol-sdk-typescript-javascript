@@ -1,5 +1,5 @@
 <template>
-  <div class="main-container">
+  <div class="asset-dashboard-main-container">
     <div class="header-container">
       <NavigationTabs direction="horizontal" :parent-route-name="parentRouteName" />
     </div>

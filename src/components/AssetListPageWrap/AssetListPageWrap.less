@@ -1,15 +1,15 @@
 .asset-list-main-container {
-  background-color: lightslategrey;
+  width: 100%;
+  height: 100%;
+  padding: 0.2rem 0 0.35rem 0.2rem;
   display: grid;
   grid-template-columns: 12.7rem auto;
   grid-template-rows: 100%;
-  height: 100%;
-  overflow: hidden;
+  grid-column-gap: 0.25rem;
 
   .left-container {
-    background-color: lightyellow;
     display: grid;
-    grid-template-rows: 0.8rem 0.5rem auto;
+    grid-template-rows: 100%;
 
     .table-title {
       background-color: limegreen;
@@ -26,12 +26,10 @@
     }
 
     .table-section {
-      background-color: lightcyan;
     }
   }
 
   .right-container {
-    background-color: lightpink;
     padding-left: 0.2rem;
   }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {NamespaceId, NamespaceInfo} from 'nem2-sdk'
+import {NamespaceId, NamespaceInfo, NamespaceName} from 'nem2-sdk'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
@@ -79,7 +79,7 @@ export class NamespaceService extends AbstractService {
 
     // - if store doesn't know a name for this mosaics, dispatch fetch action
     if (! names.hasOwnProperty(namespaceId.toHex())) {
-      const mapped = await this.$store.dispatch('namespace/REST_FETCH_NAMES', [namespaceId])
+      const mapped: NamespaceName[] = await this.$store.dispatch('namespace/REST_FETCH_NAMES', [namespaceId])
       namespaceName = mapped.hasOwnProperty(namespaceId.toHex()) ? mapped[namespaceId.toHex()] : undefined
     }
     // - read from store
@@ -88,5 +88,30 @@ export class NamespaceService extends AbstractService {
     //XXX save in storage
 
     return namespaceName
+  }
+
+  
+  /**
+   * Constructs a namespace fullName from namespace names
+   * @static
+   * @param {NamespaceName} reference
+   * @param {NamespaceName[]} namespaceNames
+   * @returns {NamespaceName}
+   */
+  public static getFullNameFromNamespaceNames(
+    reference: NamespaceName,
+    namespaceNames: NamespaceName[],
+  ): NamespaceName {
+    if (!reference.parentId) return reference
+
+    const parent = namespaceNames
+      .find(namespaceName => namespaceName.namespaceId.toHex() === reference.parentId.toHex())
+
+    if (parent === undefined) return reference
+
+    return NamespaceService.getFullNameFromNamespaceNames(
+      new NamespaceName(parent.namespaceId, `${parent.name}.${reference.name}`, parent.parentId),
+      namespaceNames,
+    )
   }
 }

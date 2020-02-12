@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import {Address, Transaction, TransactionType, TransferTransaction, NamespaceId} from 'nem2-sdk'
+import {Address, Transaction, TransactionType, TransferTransaction, NamespaceId, NamespaceName} from 'nem2-sdk'
 
 // internal dependencies
 import {TransactionService} from '@/services/TransactionService'
@@ -72,7 +72,8 @@ export class ActionDisplayTs extends Vue {
     if (this.transaction.type === TransactionType.TRANSFER
       && (this.transaction as TransferTransaction).recipientAddress instanceof NamespaceId) {
       const id = ((this.transaction as TransferTransaction).recipientAddress as NamespaceId)
-      this.descriptor = await this.$store.dispatch('namespace/REST_FETCH_NAMES', [id])
+      const namespaceNames: NamespaceName[] = await this.$store.dispatch('namespace/REST_FETCH_NAMES', [id])
+      this.descriptor = namespaceNames.shift().name
     }
     // - otherwise use *translated* transaction descriptor
     else if (this.transaction.type !== TransactionType.TRANSFER) {
