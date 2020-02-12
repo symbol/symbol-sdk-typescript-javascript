@@ -15,6 +15,7 @@
  */
 
 import {Observable} from 'rxjs';
+import { NetworkFees } from '../model/blockchain/NetworkFees';
 import { NetworkName } from '../model/blockchain/NetworkName';
 import {NetworkType} from '../model/blockchain/NetworkType';
 
@@ -37,4 +38,11 @@ export interface NetworkRepository {
      * @return current network type name and description
      */
     getNetworkName(): Observable<NetworkName>;
+
+    /**
+     * Returns information about the average, median, highest and lower fee multiplier over the last "numBlocksTransactionFeeStats".
+     * @return the NetworkFees
+     */
+    getNetworkFees(): Observable<NetworkFees> ;
+
 }
