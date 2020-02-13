@@ -55,7 +55,7 @@ export class MosaicAmountDisplayTs extends Vue {
 
   @Prop({
     default: 'normal',
-  }) size: 'normal' | 'smaller' | 'bigger'
+  }) size: 'normal' | 'smaller' | 'bigger' | 'biggest'
 
   /**
    * Network mosaics info (all)

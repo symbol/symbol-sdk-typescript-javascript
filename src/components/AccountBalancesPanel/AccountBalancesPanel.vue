@@ -17,7 +17,7 @@
           <MosaicAmountDisplay :relative-amount="networkMosaicBalance"
                                :id="networkMosaic"
                                :absolute="false"
-                               :size="'bigger'" />
+                               :size="'biggest'" />
         </div>
       </div>
     </div>
