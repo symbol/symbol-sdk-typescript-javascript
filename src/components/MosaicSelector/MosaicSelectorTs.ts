@@ -69,7 +69,9 @@ export class MosaicSelectorTs extends Vue {
   public mosaicsNames: any
 
   public created() {
-    this.selectedMosaicName = this.networkMosaicName
+    if (this.networkMosaic) {
+      this.selectedMosaic = this.networkMosaic.toHex()
+    }
   }
 
 /// region computed properties getter/setter
@@ -79,9 +81,7 @@ export class MosaicSelectorTs extends Vue {
   }
 
   public get selectedMosaic(): string {
-    return this.mosaics.filter(
-      m => m.values.get('name') === this.selectedMosaicName
-    ).shift().getIdentifier()
+    return this.value || this.networkMosaic.toHex()
   }
 
   public set selectedMosaic(hex: string) {
@@ -89,29 +89,31 @@ export class MosaicSelectorTs extends Vue {
   }
 
   public get selectedMosaicName(): string {
-    const selected = this.value || this.networkMosaic.toHex()
-    const id = new MosaicId(RawUInt64.fromHex(selected))
-    return this.mosaics.filter(
-      m => m.getIdentifier() === selected
-    ).shift().values.get('name')
+    const exists = this.mosaics.filter(
+      m => m.getIdentifier() === this.selectedMosaic
+    )
+
+    return exists.length ? exists.shift().values.get('name') : this.selectedMosaic
   }
 
-  public set selectedMosaicName(name: string) {
-    this.selectedMosaic = this.mosaics.filter(
-      m => m.values.get('name') === name
-    ).shift().getIdentifier()
+  public set selectedMosaicName(n: string) {
+    const exists = this.mosaics.filter(
+      m => m.values.get('name') === n
+    )
+
+    this.selectedMosaic = exists.length ? exists.shift().getIdentifier() : this.networkMosaic.toHex()
   }
   /// end-region computed properties getter/setter
 
   public onChange (input: string) {
     const canFindByName = this.mosaics.find(m => m.values.get('name') === input)
     if (undefined !== canFindByName) {
-      return this.selectedMosaicName = canFindByName.values.get('name')
+      return this.selectedMosaic = canFindByName.getIdentifier()
     }
 
     const canFindByHex = this.mosaics.find(m => m.getIdentifier() === input)
     if (undefined !== canFindByHex) {
-      return this.selectedMosaicName = canFindByHex.values.get('name')
+      return this.selectedMosaic = canFindByHex.getIdentifier()
     }
   }
 }
