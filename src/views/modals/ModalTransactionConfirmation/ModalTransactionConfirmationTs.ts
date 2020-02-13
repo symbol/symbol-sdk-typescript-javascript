@@ -178,7 +178,7 @@ export class ModalTransactionConfirmationTs extends Vue {
     this.$store.dispatch('diagnostic/ADD_INFO', 'Account ' + account.address.plain() + ' unlocked successfully.')
 
     // - get staged transactions and sign
-    this.stagedTransactions.map(async (staged) => {
+    await this.stagedTransactions.map(async (staged) => {
       const signedTx = account.sign(staged, this.generationHash)
       this.$store.dispatch('diagnostic/ADD_DEBUG', 'Signed transaction with account ' + account.address.plain() + ' and result: ' + JSON.stringify({
         hash: signedTx.hash,
@@ -188,14 +188,12 @@ export class ModalTransactionConfirmationTs extends Vue {
     })
 
     // - reset transaction stage
-    this.show = false
     this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
 
     // - XXX end-user should be able to uncheck "announce now"
-
     // - broadcast signed transactions
     const results: BroadcastResult[] = await this.service.announceSignedTransactions()
-
+    
     // - notify about errors
     const errors = results.filter(result => false === result.success)
     if (errors.length) {
@@ -203,6 +201,7 @@ export class ModalTransactionConfirmationTs extends Vue {
     }
 
     this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
+    this.show = false
     return this.$emit('success')
   }
 

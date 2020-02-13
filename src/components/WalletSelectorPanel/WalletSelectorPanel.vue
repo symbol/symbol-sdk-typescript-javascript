@@ -34,7 +34,9 @@
 
           <div class="wallet-tile-lower-container">
             <div class="wallet-amount">
-              <AmountDisplay :amount="networkMosaicBalance" :show-ticker="true" /> 
+              <MosaicAmountDisplay :relative-amount="addressesBalances[item.address]"
+                                  :id="networkMosaic"
+                                  :size="'bigger'" />
             </div>
             <div class="wallet-icons">
               <span class="wallet-icon">

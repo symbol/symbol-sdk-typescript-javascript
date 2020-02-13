@@ -17,7 +17,7 @@
               {{ m.name }}
             </span>
             <span class="mosaic_amount overflow_ellipsis">
-              <MosaicAmountDisplay :id="m.id" :relative-amount="m.amount" :absolute="absolute" />
+              <MosaicAmountDisplay :id="m.id" :relative-amount="m.amount" :absolute="absolute" :size="'normal'" />
             </span>
             <span class="icon_delete" @click="$emit('delete', m.id)" />
           </div>

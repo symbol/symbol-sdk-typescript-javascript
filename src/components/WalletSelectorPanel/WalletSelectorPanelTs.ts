@@ -15,7 +15,7 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Mosaic, MosaicId, NetworkType} from 'nem2-sdk'
+import {Mosaic, MosaicId, NetworkType, AccountInfo, Address} from 'nem2-sdk'
 import {ValidationProvider} from 'vee-validate'
 
 // internal dependencies
@@ -23,11 +23,13 @@ import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {AppWalletType} from '@/core/database/models/AppWallet'
 import {WalletService} from '@/services/WalletService'
+import {MosaicService} from '@/services/MosaicService'
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
+import {WalletsRepository} from '@/repositories/WalletsRepository'
 
 // child components
 // @ts-ignore
-import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue'
+import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
 // @ts-ignore
 import ModalMnemonicBackupWizard from '@/views/modals/ModalMnemonicBackupWizard/ModalMnemonicBackupWizard.vue'
 // @ts-ignore
@@ -39,7 +41,7 @@ import ModalFormSubWalletCreation from '@/views/modals/ModalFormSubWalletCreatio
 
 @Component({
   components: {
-    AmountDisplay,
+    MosaicAmountDisplay,
     ModalMnemonicBackupWizard,
     ModalFormSubWalletCreation,
     ErrorTooltip,
@@ -52,6 +54,7 @@ import ModalFormSubWalletCreation from '@/views/modals/ModalFormSubWalletCreatio
     currentWallet: 'wallet/currentWallet',
     knownWallets: 'wallet/knownWallets',
     currentWalletMosaics: 'wallet/currentWalletMosaics',
+    otherWalletsInfo: 'wallet/otherWalletsInfo',
     networkMosaic: 'mosaic/networkMosaic',
   })}})
 export class WalletSelectorPanelTs extends Vue {
@@ -89,6 +92,12 @@ export class WalletSelectorPanelTs extends Vue {
   public currentWalletMosaics: Mosaic[]
 
   /**
+   * Currently active wallet's balances
+   * @var {Mosaic[]}
+   */
+  public otherWalletsInfo: AccountInfo[]
+
+  /**
    * Networks currency mosaic
    * @var {MosaicId}
    */
@@ -118,13 +127,54 @@ export class WalletSelectorPanelTs extends Vue {
    */
   public validationRules = ValidationRuleset
 
+  public addressesBalances: any = {}
 
   /**
    * Hook called when the component is created
    * @return {void}
    */
-  public created() {
+  public async created() {
     this.service = new WalletService(this.$store)
+    const mosaicService = new MosaicService(this.$store)
+
+    // - read known addresses
+    const repository = new WalletsRepository()
+    const addresses = Array.from(repository.entries(
+      (w: WalletsModel) => this.knownWallets.includes(w.getIdentifier())
+    ).values()).map(w => Address.createFromRawAddress(w.values.get('address')))
+
+    // - fetch latest accounts infos (1 request)
+    await this.$store.dispatch('wallet/REST_FETCH_INFOS', addresses)
+
+    // - filter available wallets info
+    const knownWallets = Object.keys(this.otherWalletsInfo).filter(
+      k => {
+        const wallet = Array.from(repository.entries(
+          (w: WalletsModel) => k === w.values.get('address')
+        ).values())
+
+        return wallet.length === 1
+      }).map(k => this.otherWalletsInfo[k])
+
+    // - format balances
+    for (let i = 0, m = knownWallets.length; i < m; i++) {
+      const currentInfo = knownWallets[i]
+
+      // read info and balance
+      const address = currentInfo.address.plain()
+      const netBalance = currentInfo.mosaics.find(m => m.id.equals(this.networkMosaic))
+
+      // store relative balance
+      const balance = await mosaicService.getRelativeAmount(
+        {...netBalance}.amount.compact(),
+        this.networkMosaic
+      )
+
+      this.addressesBalances[address] = balance
+    }
+
+    // - "fake click" to enable balances (nextTick)
+    this.currentWalletIdentifier = this.currentWallet.getIdentifier()
   }
 
 /// region computed properties getter/setter
@@ -148,6 +198,7 @@ export class WalletSelectorPanelTs extends Vue {
 
   public get currentWallets(): {
     identifier: string,
+    address: string,
     name: string,
     type: number,
     isMultisig: boolean,
@@ -165,25 +216,13 @@ export class WalletSelectorPanelTs extends Vue {
     return [...knownWallets].map(
       ({identifier, values}) => ({
         identifier,
+        address: values.get('address'),
         name: values.get('name'),
         type: values.get('type'),
         isMultisig: values.get('isMultisig'),
         path: values.get('path'),
       }),
     )
-  }
-
-  public get networkMosaicBalance() {
-    if (! this.currentWallet || ! this.currentWalletMosaics.length) {
-      return 0
-    }
-
-    // search for network mosaic
-    const entry = this.currentWalletMosaics.filter(
-      mosaic => mosaic.id.equals(this.networkMosaic)
-    )
-
-    return entry.length === 1 ? entry.shift().amount.compact() : 0
   }
 
   public get hasAddWalletModal(): boolean {
@@ -212,58 +251,8 @@ export class WalletSelectorPanelTs extends Vue {
   public isSeedWallet(item): boolean {
     return item.type === AppWalletType.SEED
   }
+
+  public getBalance(item): number {
+    return this.addressesBalances[item.address]
+  }
 }
-
-
-/*
-
-  get pathToCreate() {
-    const seedPathList = this.walletList.filter(item => item.path).map(item => item.path[item.path.length - 8]).sort()
-    const numberOfSeedPath = seedPathList.length
-    if (numberOfSeedPath >= APP_PARAMS.MAX_SEED_WALLETS_NUMBER) {
-      Notice.trigger(Message.SEED_WALLET_OVERFLOW_ERROR, NoticeType.error, this.$store)
-      this.show = false
-      return
-    }
-
-    if (!numberOfSeedPath) return 0
-
-    const jumpedPath = seedPathList
-      .map(a => Number(a))
-      .sort()
-      .map((element, index) => {
-        if (element !== index) return index
-      })
-      .filter(x => x !== undefined)
-    return jumpedPath.length ? jumpedPath[0] : numberOfSeedPath
-  }
-
-
-  passwordValidated(password) {
-    if (!password) return
-    const {pathToCreate, walletName, currentAccount} = this
-    const networkType = currentAccount.networkType
-    this.$validator
-      .validate()
-      .then((valid) => {
-        if (!valid) return
-        try {
-          new AppWallet().createFromPath(
-            walletName,
-            new Password(password),
-            pathToCreate,
-            networkType,
-            this.$store,
-          )
-          this.show = false
-        } catch (error) {
-          throw new Error(error)
-        }
-      })
-  }
-
-  mounted() {
-    this.walletName = seedWalletTitle + this.pathToCreate
-  }
-
-*/

@@ -230,6 +230,7 @@ export class FormTransactionBase extends Vue {
    * @return {void}
    */
   public onConfirmationSuccess() {
+    this.resetForm()
     this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS_ACCOUNT_UNLOCKED)
   }
 
