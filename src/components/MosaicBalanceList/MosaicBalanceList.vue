@@ -21,7 +21,8 @@
             </span>
           <span class="mosaic_value">
             <MosaicAmountDisplay :relative-amount="entry.amount"
-                                 :id="entry.id" />
+                                 :id="entry.id"
+                                 :size="'normal'" />
           </span>   
         </div>
       </div>

@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, Mosaic} from 'nem2-sdk'
+import {MosaicId, Mosaic, MosaicRestrictionTransactionService} from 'nem2-sdk'
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {UIHelpers} from '@/core/utils/UIHelpers'
+import {MosaicService} from '@/services/MosaicService'
 
 // child components
 // @ts-ignore
-import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue'
+import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
 // @ts-ignore
 import MosaicBalanceList from '@/components/MosaicBalanceList/MosaicBalanceList.vue'
 
 @Component({
   components: {
-    AmountDisplay,
+    MosaicAmountDisplay,
     MosaicBalanceList,
   },
   computed: {...mapGetters({
@@ -70,18 +71,35 @@ export class AccountBalancesPanelTs extends Vue {
    */
   public uiHelpers = UIHelpers
 
+  /**
+   * The current wallet's network mosaic balance (RELATIVE)
+   * @var {number}
+   */
+  public networkMosaicBalance: number = 0
+
+  public async created() {
+    const service = new MosaicService(this.$store)
+    const balance = this.absoluteBalance
+    this.networkMosaicBalance = await service.getRelativeAmount(balance, this.networkMosaic)
+  }
+
 /// region computed properties getter/setter
-  get networkMosaicBalance() {
+  public get absoluteBalance() {
     if (!this.currentWallet || !this.currentWalletMosaics.length) {
       return 0
     }
 
-    // search for network mosaic
+    // - search for network mosaic
     const entry = this.currentWalletMosaics.filter(
       mosaic => mosaic.id.equals(this.networkMosaic)
     )
 
-    return entry.length === 1 ? entry.shift().amount.compact() : 0
+    if (!entry.length) {
+      return 0
+    }
+
+    // - format to relative
+    return entry.shift().amount.compact()
   }
 /// end-region computed properties getter/setter
 }

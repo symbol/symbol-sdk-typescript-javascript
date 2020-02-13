@@ -53,6 +53,10 @@ export class MosaicAmountDisplayTs extends Vue {
     default: 'green'
   }) color: 'red' | 'green'
 
+  @Prop({
+    default: 'normal',
+  }) size: 'normal' | 'smaller' | 'bigger'
+
   /**
    * Network mosaics info (all)
    * @var {MosaicInfo[]}
@@ -78,7 +82,7 @@ export class MosaicAmountDisplayTs extends Vue {
     else if (this.absolute) {
       return this.absoluteAmount
     }
-    
+
     return this.relativeAmount
   }
 

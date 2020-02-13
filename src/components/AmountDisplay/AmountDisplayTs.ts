@@ -35,6 +35,9 @@ export class AmountDisplayTs extends Vue {
     default: false,
   }) showTicker: false
 
+  @Prop({
+    default: 'normal',
+  }) size: 'normal' | 'smaller' | 'bigger'
 
   /**
    * Currency mosaic's ticker

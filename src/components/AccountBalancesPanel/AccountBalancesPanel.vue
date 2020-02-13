@@ -5,18 +5,19 @@
         <span class="address">
           {{ currentWallet ? currentWallet.objects.address.plain() : $t('loading') }}
         </span>
-        <img
-          class="pointer"
+        <img class="pointer"
           src="@/views/resources/img/monitor/monitorCopyAddress.png"
-          @click="uiHelpers.copyToClipboard(currentWallet.objects.address.plain())"
-        >
+          @click="uiHelpers.copyToClipboard(currentWallet.objects.address.plain())" />
       </div>
 
       <div class="split" />
       <div class="XEM_amount overflow_ellipsis">
         <div>{{ networkMosaicTicker }}</div>
         <div class="amount">
-          <AmountDisplay :amount="networkMosaicBalance" />
+          <MosaicAmountDisplay :relative-amount="networkMosaicBalance"
+                               :id="networkMosaic"
+                               :absolute="false"
+                               :size="'bigger'" />
         </div>
       </div>
     </div>
