@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@import "../../views/resources/css/variables.less";
 
 .balances-panel-container {
   display: grid;
@@ -22,7 +23,7 @@
 }
 
 .wallet-info-tile {
-  background-color: white;
+  background-color: @white;
 }
 
 .top_wallet_address {
@@ -31,7 +32,8 @@
   padding: 22px 20px 0 21px;
   position: relative;
   background-size: cover;
-  background-image: url("../../views/resources/img/monitor/dash-board/dashboardWalletBackground.png");
+  // background-image: url("../../views/resources/img/monitor/dash-board/dashboardWalletBackground.png");
+  background-image: linear-gradient(120deg, @primary, @secondary);
 
   .wallet_address {
     padding-bottom: 23px;
@@ -40,7 +42,7 @@
     justify-content: space-between;
 
     .address {
-      color: rgba(255, 255, 255, 1);
+      color: @white;
       font-size: 16px;
       font-weight: 400;
       display: inline-block;
@@ -60,7 +62,7 @@
     width: 90%;
     left: 0;
     margin-left: 5%;
-    border: 1px solid rgba(56, 85, 111, .5);
+    border: 1px solid @border;
     opacity: 0.18;
     position: absolute;
   }
@@ -69,7 +71,7 @@
     margin: 20px 0 8px 0;
     font-size: 24px;
     font-weight: 400;
-    color: rgba(255, 255, 255);
+    color: @white;
 
     .amount {
       font-size: 40px;
@@ -80,7 +82,7 @@
   .exchange {
     font-size: 18px;
     font-weight: 400;
-    color: rgba(255, 255, 255);
+    color: @white;
   }
 
   .account_alias {
@@ -89,13 +91,13 @@
     right: 19px;
     font-size: 16px;
     font-weight: 400;
-    color: rgba(255, 255, 255, 1);
+    color: @white;
   }
 }
 
 .bottom_account_info {
   height: 100%;
-  background-color: white;
+  background-color: @white;
   width: 100%;
   padding: 0.27rem 0.28rem;
   position: relative;
@@ -104,17 +106,17 @@
 
   .namespace_data {
     span {
-      color: #222222;
+      color: @blackLight;
       width: 50%;
       display: inline-block;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid @border;
       padding: 19px 0 19px 30px;
 
     }
 
     .namespace_table_head {
       span {
-        color: #999999;
+        color: @grayDark;
         font-size: 16px;
       }
     }
@@ -127,13 +129,13 @@
       .top_info {
         font-size: 16px;
         font-weight: 400;
-        color: rgba(34, 34, 34, 1);
+        color: @black;
       }
 
       .bottom_info {
         font-size: 16px;
         font-weight: 400;
-        color: rgba(153, 153, 153, 1);
+        color: @grayDark;
       }
     }
   }

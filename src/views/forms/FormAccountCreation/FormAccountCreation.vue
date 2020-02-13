@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="scroll">
     <FormWrapper>
       <ValidationObserver v-slot="{ handleSubmit }">
         <form @keyup.enter="handleSubmit(submit)">
@@ -181,6 +181,6 @@ export default class FormAccountCreation extends FormAccountCreationTs {}
   width: 5rem;
   float: left;
   left: 10.5rem;
-  top: 3.5rem;
+  top: 2.5rem;
 }
 </style>

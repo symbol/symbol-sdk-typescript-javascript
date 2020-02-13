@@ -7,14 +7,14 @@
       <div class="welcome-box">
         <div class="banner-image">
           <div class="top-welcome-text">
-            {{ $t('Nem_Catapult_Welcome_you_nice') }}!
+            {{ $t('Nem_Catapult_Welcome_you_nice') }}
           </div>
           <div class="bottom-welcome-text">
             {{ $t('This_program_is_free') }}
           </div>
         </div>
         <div class="login-card radius">
-          <img src="@/views/resources/img/login/loginNewLogo.png">
+          <div class="img-box" />
           <p class="login-title">
             {{ $t('login_account') }}
           </p>

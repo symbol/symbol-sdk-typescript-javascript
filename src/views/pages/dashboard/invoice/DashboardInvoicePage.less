@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+@import "../../../resources/css/variables.less";
+
 .invoice-container {
   width: 100%;
   height: 100%;
@@ -46,6 +49,7 @@
         width: 100%;
         height: 100%;
         padding-left: 0.4rem;
+        padding-top: 0.2rem;
       }
     }
 
@@ -68,8 +72,7 @@
       margin-top: 10px;
       display: flex;
       position: relative;
-      right: 7px;
-      width: 280px;
+      width: 120px;
       align-items: center;
       justify-content: space-around;
 
@@ -84,7 +87,7 @@
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
-        background-color: #20B5AC;
+        background-color: @primary;
       }
     }
   }

@@ -8,14 +8,14 @@
                   !currentAccount ? 'un_click' : 'pointer', 'body' ]"
         @click="!currentAccount ? '' : $router.push({name: route.name})"
       >
-        <Icon :type="route.meta.icon" size="48" />
+        <Icon :type="route.meta.icon" size="38" />
         <div>{{ route.meta.title }}</div>
       </div>
     </div>
 
     <div v-if="!!currentAccount" class="quit_account navigator-item" @click="logout">
       <div class="body pointer">
-        <Icon :type="'md-log-out'" size="48" />
+        <Icon :type="'md-log-out'" size="38" />
         <div>{{ currentAccount.values.get('accountName') }}</div>
       </div>
     </div>

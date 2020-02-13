@@ -1,3 +1,21 @@
+/**
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@import "variables.less";
+
 .mac {
 
   .ivu-select-visible .ivu-select-selection {
@@ -132,7 +150,7 @@
     }
 
     .ivu-checkbox-checked .ivu-checkbox-inner {
-      border: 5px solid #20B5AC !important;
+      border: 5px solid @primary !important;
     }
 
     .ivu-checkbox-checked .ivu-checkbox-inner:after {
@@ -144,11 +162,11 @@
 
 
     .ivu-tabs-nav .ivu-tabs-tab:hover {
-      color: #20B5AC !important;
+      color: @primary !important;
     }
 
     .ivu-tabs-nav .ivu-tabs-tab-active {
-      color: #20B5AC !important;
+      color: @primary !important;
       font-size: 16px !important;
       font-weight: bold;
 
@@ -160,7 +178,7 @@
     }
 
     .ivu-tabs-ink-bar {
-      background-color: #20B5AC !important;
+      background-color: @primary !important;
     }
 
 
@@ -237,7 +255,7 @@
     }
 
     .ivu-tabs-nav .ivu-tabs-tab-active {
-      color: #20B5AC !important;
+      color: @primary !important;
       font-size: 16px !important;
     }
 
@@ -399,18 +417,18 @@
 
 
   .ivu-radio-checked .ivu-radio-inner {
-    border-color: #20B5AC !important;
+    border-color: @primary !important;
     color: #333333 !important;
   }
 
   .ivu-radio-inner {
     position: relative;
-    border-color: #20B5AC !important;
+    border-color: @primary !important;
     border-radius: 50% !important;
   }
 
   .ivu-radio-inner:after {
-    background-color: #20B5AC !important;
+    background-color: @primary !important;
   }
 
 
@@ -456,7 +474,7 @@
   }
 
   .ivu-spin-dot {
-    background-color: #20B5AC !important;
+    background-color: @primary !important;
   }
 
 
@@ -645,7 +663,7 @@
   // multisigApi manage
   .switch_container {
     .ivu-tooltip-light .ivu-tooltip-inner {
-      color: #20B5AC !important;
+      color: @primary !important;
     }
   }
 
@@ -670,8 +688,8 @@
 
   .mosaic_transaction_container {
     .ivu-checkbox-checked .ivu-checkbox-inner {
-      border-color: #20B5AC;
-      background-color: #20B5AC;
+      border-color: @primary;
+      background-color: @primary;
     }
 
   }

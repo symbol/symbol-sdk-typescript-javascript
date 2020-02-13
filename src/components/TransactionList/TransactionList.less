@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+@import "../../views/resources/css/variables.less";
+
 .transaction-list-container {
   float: left;
   width: 100%;
-  background-color: white;
+  background-color: @white;
   padding: 5px 31px;
   overflow: hidden;
   height: 100%;
@@ -39,18 +42,18 @@
     padding: 2px 12px;
     line-height: 30px;
     border-radius: 14px;
-    color: #20B5AC;
+    color: @primary;
     z-index: 1;
   }
 
   .inner_transaction {
     .value {
-      color: #26B4B0;
+      color: @primary;
       line-height: 30px;
     }
 
     .value:hover {
-      color: #1183d7;
+      color: @primary;;
     }
 
     margin-left: 110px;
@@ -59,7 +62,7 @@
   }
 
   .bottom_transactions {
-    background-color: white;
+    background-color: @white;
     position: relative;
     overflow: hidden;
     height: 100%;
@@ -76,12 +79,12 @@
         min-width: 30px;
         height: 30px;
         border: none;
-        color: #666666;
+        color: @grayDark;
       }
 
       .ivu-page-item-active a,
       .ivu-page-item-active:hover a {
-        color: #1FB6AC !important;
+        color: @primary !important;
       }
 
       .ivu-page-prev,
@@ -108,7 +111,7 @@
     }
 
     .active_select {
-      border: 2px solid gainsboro;
+      border: 2px solid @border;
     }
 
 
@@ -168,7 +171,7 @@
   }
 
   .blue {
-    color: #20B5AC !important;
+    color: @primary !important;
   }
 
   .red {
@@ -188,4 +191,25 @@
   .ivu-modal-footer {
     display: none;
   }
+}
+
+.ivu-tabs-nav .ivu-tabs-tab-active {
+  color: @primary;
+}
+
+.ivu-tabs-nav .ivu-tabs-tab:hover {
+  color: @primary;
+}
+
+.ivu-tabs-ink-bar {
+  background-color: @primary;
+}
+
+.ivu-tabs-nav-prev {
+  top: 4px;
+  left: -12px;
+}
+
+.ivu-tabs-mini .ivu-tabs-tab {
+  font-size: 0.16rem;
 }

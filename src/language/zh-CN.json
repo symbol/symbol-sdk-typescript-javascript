@@ -433,7 +433,7 @@
   "Access_your_trezor_wallet_to_make_trezor_account": "访问您的Trezor钱包创建Trezor的帐户",
   "Access_your_ledger_wallet_to_make_ledge_account": "访问您的ledge钱包创建ledge的帐户",
   "This_program_is_free": "本程序是基于NEM CATAPULT进行设计的，一个开源的NEM数字资产管理系统，它可以帮忙你方便的\n访问CATAPULT网络，创建账户、管理资产和更多操作。",
-  "Nem_Catapult_Welcome_you_nice": "Nem Catapult欢迎您",
+  "Nem_Catapult_Welcome_you_nice": "Welcome to Symbol 欢迎您",
   "register": "注册",
   "Import_an_old_account": "导入一个老账户",
   "Account_creation_description": "在开始使用本程序之前，你需要为自己创建一个账户和密码来方便管理自己的钱包资产",

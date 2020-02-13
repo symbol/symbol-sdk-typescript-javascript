@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- .toggle_all_checked {
+
+@import "../../views/resources/css/variables.less";
+
+.toggle_all_checked {
   margin-top: 10px;
   font-size: 16px;
   height: 20px;
@@ -31,7 +34,7 @@
   }
 }
 
- .false {
+.false {
   width: 20px;
   height: 20px;
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQyIDc5LjE2MDkyNCwgMjAxNy8wNy8xMy0wMTowNjozOSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpCNEVDOTkyRUIxRUQxMUU5ODFEMkQzNzJFQjRCRTYxMSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpCNEVDOTkyRkIxRUQxMUU5ODFEMkQzNzJFQjRCRTYxMSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkI0RUM5OTJDQjFFRDExRTk4MUQyRDM3MkVCNEJFNjExIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkI0RUM5OTJEQjFFRDExRTk4MUQyRDM3MkVCNEJFNjExIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8++obw+QAAAZZJREFUeNqklb0vQ2EUxl+vhrHphEYYKlETIaXSiIGwtAz+A2EV7CwMLGIgKf4EBq2pXURNrsRgQVKdkJqarop4jjy3aW7uvf24J/nl5r3nPM/9es+5bYnctXKIdjAFJkCQ5z7AHbgFP3Yin825DrACtkGXw8U+wQ44A19uhr3gEoxx/QIy4JXrEJgHg+AILINF8GZnOAByoIcGmyDtcIcL4ACMgnu+mrwkNAs6wQXNxDTiYqaYi7C2G5zTo2q4BoZBgVcvqfpRYq1oRujxbyiPvcGidVBWjUeZGkUPnxjG+KjP4Eo1H6J5okdMDKNMZFTrkeUxqms2bcGDoakNasuGbjWqWs12kujzYNhvtqbmXpKY9WA4w+ONZrPLXQ6BeAtmcWrfgSGGv2CPyUPgb8LMT43EvniZHyUJHtn8KRBowCzA2hC1ydrWq4AlUATTbPiEi5nkDNYWqa1Yp02eDZ/iFEmze7LmJOFEmgNhrh/cxpdiYhKsgi0Kww4Ddhec1huwigXH4IRzbtzyCzD4C/i2exd/AgwA3/NXNfVm4RMAAAAASUVORK5CYII=");
@@ -59,7 +62,7 @@
   .complete_container {
     width: 100%;
     height: 80px;
-    background-color: white;
+    background-color: @white;
     padding-top: 20px;
     position: absolute;
     left: 0;
@@ -70,13 +73,13 @@
     width: 150px;
     height: 44px;
     border-radius: 22px;
-    border: 1px solid rgba(38, 180, 176);
+    border: 1px solid @border;
     text-align: center;
     line-height: 44px;
     cursor: pointer;
     font-size: 16px;
     font-weight: 400;
-    color: rgba(38, 180, 176);
+    color: @purple;
     position: absolute;
     margin-left: 50%;
     left: -75px;
@@ -93,7 +96,7 @@
   align-items: center;
   font-size: 16px;
   font-weight: 400;
-  color: rgba(34, 34, 34);
+  color: @blackLight;
   height: 20px;
   margin-bottom: 30px;
 
@@ -133,7 +136,7 @@
   font-size: 16px;
   text-align: center;
   right: -60px;
-  color: #20B5AC;
+  color: @purple;
 }
 
 .input_outter {
@@ -152,7 +155,7 @@
     margin: 0 10px 0 10px;
   }
 
-  border: 1px solid rgba(238, 238, 238);
+  border: 1px solid @border;
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -166,7 +169,7 @@
 
 .asset_list {
   width: 24px;
-  top: -35px;
+  top: -40px;
   height: 20px;
   position: absolute;
   right: 0;
@@ -182,7 +185,7 @@
   justify-content: space-between;
   align-content: center;
   align-items: center;
-  border-bottom: 1px solid rgba(238, 238, 238, .5);
+  border-bottom: 1px solid @border;
   position: relative;
 
   .namege_img {
@@ -218,7 +221,7 @@
     width: 180px;
     font-size: 18px;
     font-weight: 400;
-    color: rgba(34, 34, 34);
+    color: @blackLight;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -231,13 +234,13 @@
     div:first-of-type {
       font-size: 16px;
       font-weight: 400;
-      color: rgba(34, 34, 34);
+      color: @blackLight;
     }
 
     div:nth-of-type(2) {
       font-size: 16px;
       font-weight: 400;
-      color: rgba(102, 102, 102);
+      color: @grayDark;
     }
   }
 
