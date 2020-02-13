@@ -106,6 +106,12 @@ export class NamespaceService extends AbstractService {
 
     // - use repository for storage
     const repository = new NamespacesRepository()
+    if (repository.find(namespaceId.toHex())) {
+      //XXX update instead of just read
+      return repository.read(namespaceId.toHex())
+    }
+
+    // - CREATE
     const namespace = repository.createModel(new Map<string, any>([
       ['hexId', namespaceId.toHex()],
       ['name', fullName],

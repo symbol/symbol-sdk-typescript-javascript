@@ -104,6 +104,12 @@ export class MosaicService extends AbstractService {
 
     // - use repository for storage
     const repository = new MosaicsRepository()
+    if (repository.find(mosaicId.toHex())) {
+      //XXX update instead of just read
+      return repository.read(mosaicId.toHex())
+    }
+
+    // - CREATE
     const mosaic = repository.createModel(new Map<string, any>([
       ['hexId', mosaicId.toHex()],
       ['name', mosaicNames && mosaicNames.length ? mosaicNames.shift().name : ''],

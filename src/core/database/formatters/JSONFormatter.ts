@@ -67,8 +67,13 @@ export class JSONFormatter
    */
   public parse(data: string): Map<string, DatabaseModel> {
     let parsed = {}
-    try { parsed = JSON.parse(data) }
-    catch(e) {}
+    try { 
+      parsed = JSON.parse(data) 
+      if (!parsed || parsed === null) {
+        return new Map<string, DatabaseModel>()
+      }
+    }
+    catch(e) { return new Map<string, DatabaseModel>() }
 
     if (!Object.keys(parsed).length) {
       return new Map<string, DatabaseModel>()
@@ -105,7 +110,11 @@ export class JSONFormatter
    * @return {boolean}
    */
   public validate(data: string): boolean {
-    try { 
+    try {
+      if (!data || data === null || !data.length) {
+        return false
+      }
+
       JSON.parse(data)
       return true
     }
