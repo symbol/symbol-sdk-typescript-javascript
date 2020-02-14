@@ -20,7 +20,6 @@ import Router from 'vue-router'
 import {routes} from '@/router/routes'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {AppRoute} from './AppRoute'
-import {ParentRouteNames} from './ParentRouteNames'
 import {TabEntry} from './TabEntry'
 import {AppStore} from '@/app/AppStore'
 
@@ -63,10 +62,10 @@ export class AppRouter extends Router {
 
   /**
    * Gets routes from Parent Route Name
-   * @param {ParentRouteNames} [parentRouteName]
+   * @param {string} [parentRouteName]
    * @returns {AppRoute[]}
    */
-  public getRoutes(parentRouteName? : ParentRouteNames): AppRoute[] {
+  public getRoutes(parentRouteName? : string): AppRoute[] {
     const parentRoute = this.getParentRoute(parentRouteName)
     if (!parentRoute) return []
     return this.getChildRoutes(parentRoute)
@@ -75,34 +74,58 @@ export class AppRouter extends Router {
   /**
    * Get Tab Entries from Parent Route Name
    *
-   * @param {ParentRouteNames} [parentRouteName]
+   * @param {string} [parentRouteName]
    * @returns {TabEntry[]}
    */
-  public getTabEntries(parentRouteName? : ParentRouteNames): TabEntry[] {
+  public getTabEntries(parentRouteName? : string): TabEntry[] {
     const routes = this.getRoutes(parentRouteName)
     return TabEntry.getFromRoutes(routes)
   }
 
   /**
-   * Gets a route from ParentRouteNames
+   * Gets a route from string
    * @private
-   * @param {ParentRouteNames} [parentRouteName]
+   * @param {string} [parentRouteName]
    * @returns {RouteConfig[]}
    */
-  private getParentRoute(parentRouteName? : ParentRouteNames): AppRoute {
-    switch (parentRouteName) {
-      case ParentRouteNames.dashboard:
-      case ParentRouteNames.mosaics:
-      case ParentRouteNames.namespaces:
-      case ParentRouteNames.settings:
-      case ParentRouteNames.wallets:
-        if (!this.getParentRoute() || !this.getParentRoute().children) return null
-        return this.getParentRoute().children
-          .find(({name}) => name === parentRouteName) as AppRoute
-    
-      default:
-        return [...this.routes].shift()
+  private getParentRoute(parentRouteName: string = ''): AppRoute {
+    const routes = [...this.routes]
+
+    // - read custom route configuration
+    // - first top level route contain all app routes
+    // - second top level route contains login
+    const appRoute = routes.shift()
+    const loginRoute = routes.shift()
+
+    if (!parentRouteName.length) {
+      return appRoute
     }
+
+    // - find requested top level route
+    const modules = [
+      'dashboard',
+      'mosaics',
+      'multisig',
+      'namespaces',
+      'settings',
+      'wallets',
+      'community',
+    ]
+
+    // - app modules
+    const moduleRoutes = appRoute.children.filter(
+      ({name}) => modules.includes(name)
+    )
+
+    // - find by name
+    const module = moduleRoutes.find(r => r.name === parentRouteName)
+
+    // - name does not represent a top level route
+    if (undefined === module) {
+      throw new Error('Top level (module) route with name \'' + parentRouteName + '\' does not exist.')
+    }
+
+    return module
   }
 
   /**

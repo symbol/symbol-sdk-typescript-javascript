@@ -47,15 +47,4 @@ export class DashboardTransferPageTs extends Vue {
    * @var {WalletsModel}
    */
   public currentWallet: WalletsModel
-/**
-   * List of available follow-up pages
-   * @var {any[]}
-   */
-  public transferTypeList = [
-    {
-      name: 'ordinary_transfer',
-      isSelect: true,
-      disabled: false,
-    },
-  ]
 }

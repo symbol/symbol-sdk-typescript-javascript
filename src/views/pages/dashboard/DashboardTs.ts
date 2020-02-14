@@ -16,9 +16,6 @@
 // external dependencies
 import {Component, Vue} from 'vue-property-decorator'
 
-// internal dependencies
-import {ParentRouteNames} from '@/router/ParentRouteNames'
-
 // child components
 // @ts-ignore
 import AccountBalancesPanel from '@/components/AccountBalancesPanel/AccountBalancesPanel.vue'
@@ -38,5 +35,5 @@ export class DashboardTs extends Vue {
   /**
    * Argument passed to the Router Tab List
    */
-  parentRouteName = ParentRouteNames.dashboard
+  parentRouteName = 'dashboard'
 }

@@ -16,9 +16,6 @@
 // external dependencies
 import {Component, Vue} from 'vue-property-decorator'
 
-// internal dependencies
-import {ParentRouteNames} from '@/router/ParentRouteNames'
-
 // child components
 // @ts-ignore
 import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue'
@@ -35,5 +32,5 @@ export class SettingsTs extends Vue {
   /**
    * Argument passed to the Router Tab List
    */
-  parentRouteName = ParentRouteNames.settings
+  parentRouteName = 'settings'
 }

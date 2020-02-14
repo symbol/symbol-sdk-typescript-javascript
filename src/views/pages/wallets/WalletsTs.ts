@@ -18,7 +18,6 @@ import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
-import {ParentRouteNames} from '@/router/ParentRouteNames'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {WalletService} from '@/services/WalletService'
 
@@ -68,9 +67,9 @@ export class WalletsTs extends Vue {
 
   /**
    * Argument passed to the navigation component
-   * @var {ParentRouteNames}
+   * @var {string}
    */
-  public parentRouteName: string = ParentRouteNames.wallets
+  public parentRouteName: string = 'wallets'
 
   public created() {
     this.service = new WalletService(this.$store)

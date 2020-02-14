@@ -18,16 +18,15 @@
 import {Component, Vue, Prop} from 'vue-property-decorator'
 
 // internal dependencies
-import {ParentRouteNames} from '@/router/ParentRouteNames'
 import {TabEntry} from '@/router/TabEntry'
 
 @Component
 export class NavigationTabsTs extends Vue {
   /**
    * Parent route name
-   * @var {ParentRouteNames}
+   * @var {string}
    */
-  @Prop({ default: ''}) parentRouteName: ParentRouteNames
+  @Prop({ default: ''}) parentRouteName: string
 
   public get tabEntries(): TabEntry[] {
     // @ts-ignore

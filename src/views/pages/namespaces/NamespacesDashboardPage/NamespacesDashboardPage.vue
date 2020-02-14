@@ -1,20 +1,17 @@
 <template>
-  <AssetDashboardWrap :parent-route-name="ParentRouteNames.namespaces" />
+  <AssetDashboardWrap :parent-route-name="'namespaces'" />
 </template>
 
 <script lang="ts">
 // external dependencies
 import {Component, Vue} from 'vue-property-decorator'
 
-// internal dependencies
-import {ParentRouteNames} from '@/router/ParentRouteNames'
-
 // child components
 import AssetDashboardWrap from '@/components/AssetDashboardWrap/AssetDashboardWrap.vue'
 
 @Component({
   components: {AssetDashboardWrap},
-  data() {return {ParentRouteNames}},
+  data() {return {}},
 })
 export default class MosaicsDashboardPage extends Vue {}
 </script>
