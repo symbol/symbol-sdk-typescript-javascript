@@ -41,7 +41,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import {NamespaceRegistrationType} from 'nem2-sdk'
 
 // child components
-import AssetFormPageWrap from '@/components/AssetFormPageWrap/AssetFormPageWrap.vue'
+import AssetFormPageWrap from '@/views/pages/assets/AssetFormPageWrap/AssetFormPageWrap.vue'
 import FormNamespaceRegistrationTransaction from '@/views/forms/FormNamespaceRegistrationTransaction/FormNamespaceRegistrationTransaction.vue'
 
 // @ts-ignore

@@ -35,7 +35,7 @@
 import {Component, Vue} from 'vue-property-decorator'
 
 // child components
-import AssetListPageWrap from '@/components/AssetListPageWrap/AssetListPageWrap.vue'
+import AssetListPageWrap from '@/views/pages/assets/AssetListPageWrap/AssetListPageWrap.vue'
 import TableDisplay from '@/components/TableDisplay/TableDisplay.vue'
 
 @Component({ components: {AssetListPageWrap, TableDisplay} })

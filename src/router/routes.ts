@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {createStepImage, importStepImage, leftBarIcons} from '@/views/resources/Images'
+import {createStepImage, importStepImage} from '@/views/resources/Images'
 import {AppRoute} from './AppRoute'
 import i18n from '@/language'
 
@@ -281,43 +281,49 @@ export const routes: AppRoute[] = [
             component: () => import('@/views/pages/namespaces/CreateNamespacePage/CreateNamespacePage.vue'),
           },
         ],
-      },
-      /*  {
-        path: '/multisigApi',
+      }, {
+        path: '/multisig',
         name: 'multisig',
         meta: {
           protected: true,
           clickable: true,
-          icon: leftBarIcons.windowMultisig,
-          activeIcon: leftBarIcons.windowMultisigActive,
+          title: i18n.t('sidebar_item_multisig').toString(),
+          icon: 'md-contacts',
         },
         redirect: '/multisigConversion',
         // @ts-ignore
-        component: () => import('@/views/multisig/Multisig.vue'),
+        component: () => import('@/views/pages/multisig/MultisigDashboardPage/MultisigDashboardPage.vue'),
         children: [
           {
             path: '/multisigConversion',
-            name: 'multisig.convert',
-            meta: { protected: true},
+            name: 'multisig.conversion',
+            meta: {
+              protected: true,
+              title: 'convert',
+            },
             // @ts-ignore
-            component: () => import('@/views/multisig/MultisigConversion.vue'),
+            component: () => import('@/views/pages/multisig/ConvertAccountPage/ConvertAccountPage.vue'),
           }, {
             path: '/multisigManagement',
-            name: 'multisig.manage',
-            meta: { protected: true},
+            name: 'multisig.management',
+            meta: {
+              protected: true,
+              title: 'manage',
+            },
             // @ts-ignore
-            component: () => import('@/views/multisig/MultisigModification.vue'),
+            component: () => import('@/views/pages/multisig/ManageAccountPage/ManageAccountPage.vue'),
           }, {
             path: '/multisigCosign',
             name: 'multisig.cosign',
-            meta: { protected: true},
+            meta: {
+              protected: true,
+              title: 'cosign_transactions',
+            },
             // @ts-ignore
-            component: () => import('@/views/multisig/multisig-cosign/MultisigCosign.vue'),
+            component: () => import('@/views/pages/multisig/PartialTransactionDashboardPage/PartialTransactionDashboardPage.vue'),
           },
         ],
-      },
-      */
-      {
+      }, {
         path: '/communityPanel',
         name: 'community',
         redirect: '/information',

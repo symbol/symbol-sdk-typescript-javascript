@@ -262,13 +262,13 @@ export class FormTransactionBase extends Vue {
     this.$store.dispatch('diagnostic/ADD_DEBUG', 'Adding transaction(s) to stage (prepared & unsigned): ' + this.getTransactions().length)
 
     // - add transactions to stage (to be signed)
-    this.getTransactions().map(
+    await Promise.all(this.getTransactions().map(
       async (transaction) => {
         await this.$store.dispatch(
           'wallet/ADD_STAGED_TRANSACTION',
           transaction
         )
-      })
+      }))
 
     // - open signature modal
     this.onShowConfirmationModal()

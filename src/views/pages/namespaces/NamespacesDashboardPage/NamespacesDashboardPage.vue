@@ -7,7 +7,7 @@
 import {Component, Vue} from 'vue-property-decorator'
 
 // child components
-import AssetDashboardWrap from '@/components/AssetDashboardWrap/AssetDashboardWrap.vue'
+import AssetDashboardWrap from '@/views/pages/assets/AssetDashboardWrap/AssetDashboardWrap.vue'
 
 @Component({
   components: {AssetDashboardWrap},

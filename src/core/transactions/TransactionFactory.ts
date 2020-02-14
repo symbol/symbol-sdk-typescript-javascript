@@ -54,6 +54,7 @@ import {ViewTransferTransaction} from '@/core/transactions/ViewTransferTransacti
 import {ViewMosaicDefinitionTransaction} from './ViewMosaicDefinitionTransaction'
 import {ViewMosaicSupplyChangeTransaction} from './ViewMosaicSupplyChangeTransaction'
 import {ViewNamespaceRegistrationTransaction} from './ViewNamespaceRegistrationTransaction'
+import {ViewMultisigAccountModificationTransaction} from './ViewMultisigAccountModificationTransaction'
 
 /// region custom types
 export type TransactionImpl = Transaction
@@ -61,6 +62,7 @@ type TransactionViewType = ViewMosaicDefinitionTransaction
                          | ViewMosaicSupplyChangeTransaction
                          | ViewNamespaceRegistrationTransaction
                          | ViewTransferTransaction
+                         | ViewMultisigAccountModificationTransaction
                          | ViewUnknownTransaction
 /// end-region custom types
 
@@ -78,6 +80,7 @@ export class TransactionFactory {
   public build(view: ViewMosaicDefinitionTransaction): MosaicDefinitionTransaction
   public build(view: ViewMosaicSupplyChangeTransaction): MosaicSupplyChangeTransaction
   public build(view: ViewNamespaceRegistrationTransaction): NamespaceRegistrationTransaction
+  public build(view: ViewMultisigAccountModificationTransaction): MultisigAccountModificationTransaction
   /// end-region specialised signatures
 
   /**
@@ -140,6 +143,17 @@ export class TransactionFactory {
         view.values.get('recipient'),
         view.values.get('mosaics'),
         view.values.get('message') || EmptyMessage,
+        networkType,
+        view.values.get('maxFee'),
+      )
+    }
+    else if (view instanceof ViewMultisigAccountModificationTransaction) {
+      return MultisigAccountModificationTransaction.create(
+        deadline,
+        parseInt(view.values.get('minApprovalDelta'), 10),
+        parseInt(view.values.get('minRemovalDelta'), 10),
+        view.values.get('publicKeyAdditions'),
+        view.values.get('publicKeyDeletions'),
         networkType,
         view.values.get('maxFee'),
       )

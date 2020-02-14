@@ -47,7 +47,7 @@ export default class SpinnerLoading extends Vue {
   closeScreen() {
     // @ts-ignore
     this.$Spin.hide()
-    this.$store.commit('app/SET_LOADING_OVERLAY', {
+    this.$store.dispatch('app/SET_LOADING_OVERLAY', {
       show: false,
       message: '',
     })

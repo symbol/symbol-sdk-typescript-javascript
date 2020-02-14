@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="clearfix">
+    <div class="clearfix centered">
       <span class="qr-code-title">{{ $t('Address_QR_code') }}</span>
     </div>
 
-    <div class="clearfix">
+    <div class="clearfix centered">
       <img class="qr-code-image" :src="qrCode$">
     </div>
   </div>
@@ -16,11 +16,7 @@ export default class WalletContactQR extends WalletContactQRTs {}
 </script>
 
 <style scoped>
-.clearfix {
-  display: block;
-  width: 100%;
-  float: left;
-  clear: both;
+.centered {
   text-align: center;
 }
 

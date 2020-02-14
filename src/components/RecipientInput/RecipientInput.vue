@@ -16,7 +16,7 @@
             v-model="rawValue"
             v-focus
             class="full-width-item-container input-size input-style"
-            :placeholder="$t('receive_address_or_alias')"
+            :placeholder="$t('placeholder_address_or_alias')"
             type="text"
             @blur="$emit('blur', rawValue)"
           >

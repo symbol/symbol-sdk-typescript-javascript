@@ -54,4 +54,5 @@ export const ValidationRuleset = {
   url: 'required|url',
   newAccountName:'required|newAccountName',
   accountWalletName: 'required|accountWalletName',
+  addressOrPublicKey: 'addressOrPublicKey',
 }

@@ -86,7 +86,6 @@ export abstract class AssetTableService extends AbstractService {
   /**
    * Creates an instance of AssetTableService.
    * @param {*} store
-   * @param {AssetType} assetType
    */
   constructor(store?: Store<any>) {
     super()

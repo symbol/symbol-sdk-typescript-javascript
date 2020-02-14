@@ -2,6 +2,7 @@
   <div class="container">
     <Modal
       v-model="show"
+      class-name="modal-transaction-confirmation"
       :title="$t('modal_title_transaction_confirmation')"
       :transfer="false"
       @close="show = false"
@@ -37,8 +38,8 @@ import {ModalTransactionConfirmationTs} from './ModalTransactionConfirmationTs'
 export default class ModalTransactionConfirmation extends ModalTransactionConfirmationTs {}
 </script>
 
-<style scoped>
-.ivu-modal-content   {
+<style lang="less">
+.modal-transaction-confirmation   {
   min-width: 8.5rem;
 }
 

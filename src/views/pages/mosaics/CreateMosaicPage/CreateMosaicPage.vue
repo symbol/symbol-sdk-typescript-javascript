@@ -34,7 +34,7 @@
 import {Component, Vue} from 'vue-property-decorator'
 
 // child components
-import AssetFormPageWrap from '@/components/AssetFormPageWrap/AssetFormPageWrap.vue'
+import AssetFormPageWrap from '@/views/pages/assets/AssetFormPageWrap/AssetFormPageWrap.vue'
 import FormMosaicDefinitionTransaction from '@/views/forms/FormMosaicDefinitionTransaction/FormMosaicDefinitionTransaction.vue'
 
 // @ts-ignore

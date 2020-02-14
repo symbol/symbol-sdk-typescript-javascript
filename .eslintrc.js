@@ -57,6 +57,7 @@ module.exports = {
    }],
    "no-console": ["error", { allow: ["info", "error"] }],
    "no-ex-assign": "error",
+   "no-extra-boolean-cast": 0,
    "no-loop-func": "error",
    "no-multi-spaces": "error",
    "no-multiple-empty-lines": 2,

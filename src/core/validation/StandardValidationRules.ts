@@ -18,6 +18,7 @@ import {
   digits,
   excluded,
   integer,
+  is,
   is_not,
   max_value,
   max,
@@ -36,6 +37,7 @@ export class StandardValidationRules {
     extend('digits', digits)
     extend('excluded', excluded)
     extend('integer', integer)
+    extend('is', is)
     extend('is_not', is_not)
     extend('max_value', max_value)
     extend('max', max)
