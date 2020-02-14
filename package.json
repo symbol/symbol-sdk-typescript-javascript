@@ -85,6 +85,7 @@
     "ts-jest": "^24.1.0",
     "tslint": "^5.20.1",
     "vue-jest": "^3.0.5",
-    "vue-template-compiler": "^2.6.10"
+    "vue-template-compiler": "^2.6.10",
+    "google-fonts-webpack-plugin": "^0.4.4"
   }
 }

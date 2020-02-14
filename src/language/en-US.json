@@ -90,6 +90,7 @@
   "dash_board": "Dashboard",
   "market": "Market",
   "transfer": "Transfer",
+  "harvesting": "Harvesting",
   "Multisig_transfer": "Multisig transfer",
   "receipt": "Receipt",
   "remote": "Harvested Blocks",
@@ -941,6 +942,23 @@
   "sidebar_item_community": "News",
   "sidebar_item_settings": "Settings",
 
+  "page_title_dashboard": "Dashboard",
+  "page_title_transfer": "Transfer",
+  "page_title_invoice": "Invoice",
+  "page_title_harvesting": "Harvesting",
+  "page_title_wallet_details": "Wallet Information",
+  "page_title_mosaics": "Owned mosaics",
+  "page_title_mosaics_create": "Create new mosaics",
+  "page_title_namespaces": "Owned namespces",
+  "page_title_namespaces_create": "Create new namespaces",
+  "page_title_multisig_convert": "Convert an account",
+  "page_title_multisig_manage": "Manage multi-signature",
+  "page_title_multisig_cosign": "Sign transactions",
+  "page_title_settings_general": "General settings",
+  "page_title_settings_password": "Account password",
+  "page_title_settings_about": "About",
+  "page_title_settings_diagnostic": "Diagnostic",
+
   "error_wallet_name_already_exists": "This wallet name already exists. Please, enter a unique wallet name.",
   "error_invalid_password": "This password is invalid",
   "success_account_unlocked": "Account unlocked successfully",
@@ -1046,5 +1064,20 @@
   "table_header_expired": "expired",
   "table_header_alias_identifier": "alias",
   "table_header_alias_type": "alias type",
-  "resolving_address": "resolving address {address}..."
+  "resolving_address": "resolving address {address}...",
+
+  "wallets_backup_title": "Backup & Security",
+  "wallets_backup_tile_title": "Wallet Backup",
+  "wallets_backup_tile_description": "Backup your wallet(s) now",
+  "wallets_setup_harvesting_title": "Setup harvesting",
+  "wallets_setup_harvesting_description": "Configure delegated harvesting",
+  "wallets_change_password_title": "Change Password",
+  "wallets_change_password_description": "Change your password",
+  "wallets_view_explorer_description": "Open in explorer",
+  "wallets_view_open_faucet": "Open the faucet",
+  "wallets_view_dashboard": "View in dashboard",
+  "wallets_view_multisig": "Multi-signature",
+  "wallets_share_qr_code": "Share public details",
+  "wallets_create_invoice": "Create an invoice"
+
 }

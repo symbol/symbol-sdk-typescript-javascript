@@ -13,34 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import {Component, Vue, Prop} from 'vue-property-decorator'
 
 // internal dependencies
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import router from '@/router/AppRouter'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import { mapGetters } from 'vuex'
 
 @Component({
-  computed: {
-    ...mapGetters({
-      currentAccount: 'account/currentAccount',
-    }),
-  },
+  computed: {...mapGetters({
+    explorerUrl: 'app/explorerUrl'
+  })}
 })
-export class PageNavigatorTs extends Vue {
-  /**
-   * Currently active account
-   * @see {Store.Account}
-   * @var {string}
-   */
-  public currentAccount: AccountsModel
+export class WalletLinksTs extends Vue {
 
-  /**
-   * Executes action of logout
-   * @return {void}
-   */
-  public logout() {
-    this.$store.dispatch('account/LOG_OUT')
-    this.$router.push({name: 'accounts.login'})
+  @Prop({
+    default: null
+  }) wallet: WalletsModel
+
+/// region computed properties getter/setter
+/// end-region computed properties getter/setter
+
+  public openExplorer() {
+
+  }
+
+  public openFaucet() {
+
+  }
+
+  public shareQR() {
+    
   }
 }

@@ -1,0 +1,59 @@
+/**
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+@import "../../views/resources/css/variables.less";
+
+.wallet-links-container {
+  height: 100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 0.2rem;
+
+  .wallet-link:hover {
+    background: @grayLightest;
+  }
+
+  .wallet-link.danger:hover {
+    background: @redLightest;
+  }
+
+  .wallet-link {
+    display: grid;
+    grid-template-columns: 0.67rem 2.13rem;
+
+    text-align: center;
+    border-radius: 4px;
+    margin-right: 0.3rem;
+    cursor: pointer;
+    box-shadow: 0 2px 10px 0 @boxShadow;
+
+    .img-box {
+      img {
+        width: 0.5rem;
+        margin: 25px auto 15px 15px;
+      }
+    }
+
+    .info {
+      font-size: 22px;
+      font-weight: 600;
+      color: @black;
+      line-height: 24px;
+      // margin-top: -15px;
+      padding-top: 36px;
+    }
+  }
+}

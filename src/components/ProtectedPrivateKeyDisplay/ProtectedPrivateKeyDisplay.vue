@@ -1,16 +1,16 @@
 <template>
-  <div class="wallet-details-container">
-    <div class="detail-row">
-      <span class="wallet-detail-label">{{ $t('privatekey') }}</span>
-      <div v-if="hasPlainPrivateKey">
-        <span>{{ plainInformation }}</span>
-        &nbsp;<img src="@/views/resources/img/wallet/copyIcon.png"
-            class="copy-icon"
-            @click="uiHelpers.copyToClipboard(plainInformation)" />
-        <span> ({{ $t('x_seconds', {seconds: secondsCounter}) }})</span>
-      </div>
-      <button v-else
-        type="button"
+  <div class="wallet-detail-row-3cols">
+    <span class="label">{{ $t('privatekey') }}</span>
+    <div v-if="hasPlainPrivateKey" class="value">
+      <span>{{ plainInformation }}</span>
+      &nbsp;<img src="@/views/resources/img/wallet/copyIcon.png"
+          class="copy-icon"
+          @click="uiHelpers.copyToClipboard(plainInformation)" />
+      <span> ({{ $t('x_seconds', {seconds: secondsCounter}) }})</span>
+    </div>
+    <div v-else>
+      <span class="value">********</span>
+      <button type="button"
         class="button-style validation-button right-side-button eye-button" 
         @click="onClickDisplay"
       >
@@ -33,13 +33,6 @@ export default class ProtectedPrivateKeyDisplay extends ProtectedPrivateKeyDispl
 </script>
 
 <style lang="less" scoped>
-@import '../WalletDetails/WalletDetails.less';
-
-.wallet-details-container {
-  height: 100%;
-  display: grid;
-}
-
 .copy-icon {
   width: .24rem;
   height: .24rem;
@@ -49,5 +42,6 @@ export default class ProtectedPrivateKeyDisplay extends ProtectedPrivateKeyDispl
 .eye-button {
   height: 0.35rem !important;
   padding: 0 0.3rem;
+  max-width: 75px;
 }
 </style>

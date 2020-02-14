@@ -1,12 +1,16 @@
 <template>
-  <div>
-    <span class="wallet-detail-label">{{ $t('Wallet_name') }}</span>
-    <span v-if="wallet" class="walletName">{{ wallet.values.get('name') }}</span>
-    <span v-if="editable"
-          @click.stop="hasNameFormModal = true"
-          class="edit-wallet-name" >
-      <Icon type="md-create"/>
-    </span>
+  <div class="wallet-detail-row">
+    <div class="label">{{ $t('Wallet_name') }}</div>
+    <div class="value">
+      <span v-if="wallet" class="walletName">{{ wallet.values.get('name') }}</span>
+      <button
+        type="button"
+        class="button-style validation-button right-side-button edit-button" 
+        @click.stop="hasNameFormModal = true"
+      >
+        <Icon type="md-create"/>
+      </button>
+    </div>
 
     <ModalFormWalletNameUpdate
       v-if="hasNameFormModal"
@@ -23,5 +27,8 @@ export default class WalletNameDisplay extends WalletNameDisplayTs {}
 </script>
 
 <style lang="less" scoped>
-@import '../WalletDetails/WalletDetails.less';
+.edit-button {
+  height: 0.35rem !important;
+  padding: 0 0.3rem;
+}
 </style>

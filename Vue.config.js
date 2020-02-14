@@ -12,11 +12,16 @@ module.exports = {
   lintOnSave: true,
   // webpack
   // see https://github.com/vuejs/vue-cli/blob/dev/docs/webpack.md
-  // chainWebpack: (config) => {
-  //   //edit path alias
-  //   config.resolve.alias
-  //       .set('config', path.resolve(__dirname, './config'),)
-  // },
+  chainWebpack: (config) => {
+    config.plugin('google-fonts')
+    .tap(args => {
+      return [
+        new GoogleFontsPlugin({
+          fonts: [{ family: "Source Sans Pro" }]
+        })
+      ]
+    })
+  },
   // generate map
   productionSourceMap: true,
   //use template in vue

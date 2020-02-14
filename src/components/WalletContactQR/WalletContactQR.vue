@@ -27,7 +27,7 @@ export default class WalletContactQR extends WalletContactQRTs {}
 }
 
 .qr-code-image {
-  width: 2.8rem;
-  height: 2.8rem;
+  width: 2rem;
+  height: 2rem;
 }
 </style>

@@ -164,7 +164,7 @@ export const routes: AppRoute[] = [
             name: 'dashboard.index',
             meta: {
               protected: true,
-              title: 'dashboard',
+              title: i18n.t('page_title_dashboard').toString(),
             },
             // @ts-ignore
             component: () => import('@/views/pages/dashboard/home/DashboardHomePage.vue'),
@@ -173,7 +173,7 @@ export const routes: AppRoute[] = [
             name: 'dashboard.transfer',
             meta: {
               protected: true,
-              title: 'transfer',
+              title: i18n.t('page_title_transfer').toString(),
             },
             // @ts-ignore
             component: () => import('@/views/pages/dashboard/transfer/DashboardTransferPage.vue'),
@@ -182,17 +182,27 @@ export const routes: AppRoute[] = [
             name: 'dashboard.invoice',
             meta: {
               protected: true,
-              title: 'invoice',
+              title: i18n.t('page_title_invoice').toString(),
             },
             // @ts-ignore
             component: () => import('@/views/pages/dashboard/invoice/DashboardInvoicePage.vue'),
+          },
+          {
+            path: '/harvesting',
+            name: 'dashboard.harvesting',
+            meta: {
+              protected: true,
+              title: i18n.t('page_title_harvesting').toString(),
+            },
+            // @ts-ignore
+            component: () => import('@/views/pages/dashboard/harvesting/DashboardHarvestingPage.vue'),
           }
         ],
       },
       {
         path: '/wallets',
         name: 'wallets',
-        redirect: '/walletDetails',
+        redirect: '/wallets/details',
         meta: {
           protected: true,
           clickable: true,
@@ -203,14 +213,14 @@ export const routes: AppRoute[] = [
         component: () => import('@/views/pages/wallets/Wallets.vue'),
         children: [
           {
-            path: '/walletDetails',
+            path: 'details',
             name: 'wallet.details',
             meta: {
               protected: true,
-              title: 'information',
+              title: i18n.t('page_title_wallet_details').toString(),
             },
             // @ts-ignore
-            component: () => import('@/components/WalletDetails/WalletDetails.vue'),
+            component: () => import('@/views/pages/wallets/WalletDetailsPage/WalletDetailsPage.vue'),
           },
         ],
       }, {
@@ -231,7 +241,7 @@ export const routes: AppRoute[] = [
             name: 'mosaics.list',
             meta: {
               protected: true,
-              title: 'mosaic_list',
+              title: i18n.t('page_title_mosaics').toString(),
             },
             // @ts-ignore
             component: () => import('@/views/pages/mosaics/MosaicListPage/MosaicListPage.vue'),
@@ -240,7 +250,7 @@ export const routes: AppRoute[] = [
             name: 'mosaics.create',
             meta: {
               protected: true,
-              title: 'create_mosaic',
+              title: i18n.t('page_title_mosaics_create').toString(),
             },
             // @ts-ignore
             component: () => import('@/views/pages/mosaics/CreateMosaicPage/CreateMosaicPage.vue'),
@@ -265,7 +275,7 @@ export const routes: AppRoute[] = [
             name: 'namespaces.list',
             meta: {
               protected: true,
-              title: 'Namespace_list',
+              title: i18n.t('page_title_namespaces').toString(),
             },
             // @ts-ignore
             component: () => import('@/views/pages/namespaces/NamespaceListPage/NamespaceListPage.vue'),
@@ -275,7 +285,7 @@ export const routes: AppRoute[] = [
             name: 'namespaces.createRootNamespace',
             meta: {
               protected: true,
-              title: 'Create_namespace',
+              title: i18n.t('page_title_namespaces_create').toString(),
             },
             // @ts-ignore
             component: () => import('@/views/pages/namespaces/CreateNamespacePage/CreateNamespacePage.vue'),
@@ -299,7 +309,7 @@ export const routes: AppRoute[] = [
             name: 'multisig.conversion',
             meta: {
               protected: true,
-              title: 'convert',
+              title: i18n.t('page_title_multisig_convert').toString(),
             },
             // @ts-ignore
             component: () => import('@/views/pages/multisig/ConvertAccountPage/ConvertAccountPage.vue'),
@@ -308,7 +318,7 @@ export const routes: AppRoute[] = [
             name: 'multisig.management',
             meta: {
               protected: true,
-              title: 'manage',
+              title: i18n.t('page_title_multisig_manage').toString(),
             },
             // @ts-ignore
             component: () => import('@/views/pages/multisig/ManageAccountPage/ManageAccountPage.vue'),
@@ -317,7 +327,7 @@ export const routes: AppRoute[] = [
             name: 'multisig.cosign',
             meta: {
               protected: true,
-              title: 'cosign_transactions',
+              title: i18n.t('page_title_multisig_cosign').toString(),
             },
             // @ts-ignore
             component: () => import('@/views/pages/multisig/PartialTransactionDashboardPage/PartialTransactionDashboardPage.vue'),
@@ -346,7 +356,7 @@ export const routes: AppRoute[] = [
         ],
       },
       {
-        path: 'settings',
+        path: '/settings',
         name: 'settings',
         redirect: '/settings/general',
         meta: {
@@ -364,7 +374,7 @@ export const routes: AppRoute[] = [
             name: 'settings.general',
             meta: {
               protected: true,
-              title: 'general_settings',
+              title: i18n.t('page_title_settings_general').toString(),
             },
             // @ts-ignore
             component: () => import('@/views/forms/FormGeneralSettings/FormGeneralSettings.vue'),
@@ -374,7 +384,7 @@ export const routes: AppRoute[] = [
             name: 'settings.password',
             meta: {
               protected: true,
-              title: 'account_password',
+              title: i18n.t('page_title_settings_password').toString(),
             },
             // @ts-ignore
             component: () => import('@/views/forms/FormAccountPasswordUpdate/FormAccountPasswordUpdate.vue'),
@@ -384,7 +394,7 @@ export const routes: AppRoute[] = [
             name: 'settings.about',
             meta: {
               protected: true,
-              title: 'about',
+              title: i18n.t('page_title_settings_about').toString(),
             },
             // @ts-ignore
             component: () => import('@/views/pages/settings/AboutPage/AboutPage.vue'),
@@ -394,7 +404,7 @@ export const routes: AppRoute[] = [
             name: 'settings.diagnostic',
             meta: {
               protected: true,
-              title: 'diagnostic',
+              title: i18n.t('page_title_settings_diagnostic').toString(),
             },
             // @ts-ignore
             component: () => import('@/views/pages/settings/DiagnosticPage/DiagnosticPage.vue'),
