@@ -79,11 +79,14 @@ export class WalletSelectorFieldTs extends Vue {
       return ;
     }
 
-    if (this.autoSubmit) {
-      this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
-    }
-
-    this.$emit('input', wallet.getIdentifier())
+    // if (this.autoSubmit) {
+    //   this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet).then(() => 
+    //     this.$emit('input', wallet.getIdentifier())
+    //   )
+    // }
+    // else {
+      this.$emit('input', wallet.getIdentifier())
+    //}
   }
 
   public get currentWallets(): {identifier: string, name: string}[] {

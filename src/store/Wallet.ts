@@ -238,17 +238,13 @@ export default {
             return ;
         }
 
-        await dispatch('UNSUBSCRIBE')
-        await dispatch('RESET_BALANCES')
-        await dispatch('RESET_TRANSACTIONS')
-
         // fetch account info
-        await dispatch('REST_FETCH_INFO', address)
-        await dispatch('REST_FETCH_TRANSACTIONS', {
+        try { await dispatch('REST_FETCH_INFO', address) } catch (e) {}
+        try { await dispatch('REST_FETCH_TRANSACTIONS', {
           group: 'confirmed',
           pageSize: 100,
           address: address,
-        })
+        }) } catch(e) {}
 
         // open websocket connections
         dispatch('SUBSCRIBE', address)
@@ -259,8 +255,9 @@ export default {
     async uninitialize({ commit, dispatch, getters }) {
       const callback = async () => {
         // close websocket connections
-        dispatch('UNSUBSCRIBE')
-        dispatch('RESET_TRANSACTIONS')
+        await dispatch('UNSUBSCRIBE')
+        await dispatch('RESET_BALANCES')
+        await dispatch('RESET_TRANSACTIONS')
         commit('setInitialized', false)
       }
       await Lock.uninitialize(callback, {commit, dispatch, getters})
@@ -454,10 +451,10 @@ export default {
         dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_TRANSACTIONS numTransactions: ' + transactions.length, {root: true})
 
         // update store
-        transactions.map((transaction) => dispatch('ADD_TRANSACTION', {
-          group: group,
-          transaction
-        }))
+        for (let i = 0, m = transactions.length; i < m; i++) {
+          const transaction = transactions[i]
+          await dispatch('ADD_TRANSACTION', { group, transaction })
+        }
 
         // fetch block informations if necessary
         if (blockHeights.length) {

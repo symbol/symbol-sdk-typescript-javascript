@@ -20,6 +20,8 @@ import {mapGetters} from 'vuex'
 // internal dependencies
 import {Electron} from '@/core/utils/Electron'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {WalletService} from '@/services/WalletService'
 
 // child components
 // @ts-ignore
@@ -116,5 +118,18 @@ export class PageLayoutTs extends Vue {
   created() {
     if (process.platform === 'win32')
       Electron.windowSizeChange()
+  }
+
+  public async onChangeWallet(walletId: string) {
+    const service = new WalletService(this.$store)
+    const wallet = service.getWallet(walletId)
+    if (!wallet) {
+      console.log("Wallet not found: ", walletId)
+      return ;
+    }
+
+    console.log("dispatching SET_CURRENT_WALLET")
+    await this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
+    console.log("done SET_CURRENT_WALLET")
   }
 }

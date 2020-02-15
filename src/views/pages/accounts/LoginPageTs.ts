@@ -187,7 +187,7 @@ export default class LoginPageTs extends Vue {
    * Submit action, validates form and logs in user if valid
    * @return {void}
    */
-  public submit() {
+  public async submit() {
     if (! this.formItems.currentAccountName.length) {
       return this.$store.dispatch('notification/ADD_ERROR', NotificationType.ACCOUNT_NAME_INPUT_ERROR)
     }
@@ -197,7 +197,7 @@ export default class LoginPageTs extends Vue {
     }
 
     // now compare password hashes
-    return this.processLogin()
+    return await this.processLogin()
   }
 
   /**

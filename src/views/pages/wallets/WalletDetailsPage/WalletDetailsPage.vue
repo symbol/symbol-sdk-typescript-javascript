@@ -5,44 +5,44 @@
         <div class="wallet-details-grid  mt-3">
           <div class="detail-row text_select">
             <WalletNameDisplay 
-              :wallet="wallet"
+              :wallet="currentWallet"
               :editable="true"
               @update="hasNameForm = true"
             />
           </div>
 
           <div class="detail-row text_select">
-            <ImportanceScoreDisplay :wallet="wallet" />
+            <ImportanceScoreDisplay :wallet="currentWallet" />
           </div>
 
           <div class="detail-row text_select">
-            <WalletAddressDisplay :wallet="wallet" />
+            <WalletAddressDisplay :wallet="currentWallet" />
           </div>
 
           <div class="detail-row text_select">
-            <WalletPublicKeyDisplay :wallet="wallet" />
+            <WalletPublicKeyDisplay :wallet="currentWallet" />
           </div>
 
           <div class="detail-row">
-            <ProtectedPrivateKeyDisplay :wallet="wallet" />
+            <ProtectedPrivateKeyDisplay :wallet="currentWallet" />
           </div>
 
           <div class="detail-row text_select">
-            <WalletFlagsDisplay :wallet="wallet" />
+            <WalletFlagsDisplay :wallet="currentWallet" />
           </div>
         </div>
       </div>
       <div class="right-container">
-        <WalletContactQR :wallet="wallet" />
+        <WalletContactQR :wallet="currentWallet" />
       </div>
     </div>
 
     <div class="wallet-actions-container">
-      <WalletLinks :wallet="wallet" />
+      <WalletLinks :wallet="currentWallet" />
     </div>
 
     <div class="wallet-actions-container">
-      <WalletActions :wallet="wallet" />
+      <WalletActions :wallet="currentWallet" />
     </div>
   </div>
 

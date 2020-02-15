@@ -15,6 +15,9 @@
  */
 // external dependencies
 import {Component, Vue} from 'vue-property-decorator'
+import {mapGetters} from 'vuex'
+
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
 
 // child components
 // @ts-ignore
@@ -30,6 +33,9 @@ import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue'
     NetworkStatisticsPanel,
     NavigationTabs,
   },
+  computed: {...mapGetters({
+    currentWallet: 'wallet/currentWallet',
+  })}
 })
 export class DashboardTs extends Vue {
   /**

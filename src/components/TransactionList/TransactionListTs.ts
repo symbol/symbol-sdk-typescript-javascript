@@ -146,7 +146,7 @@ export class TransactionListTs extends Vue {
     this.service = new TransactionService(this.$store)
 
     // if (!this.confirmedTransactions || !this.confirmedTransactions.length) {
-    //   await this.refresh()
+    //  await this.refresh()
     // }
   }
 
@@ -159,11 +159,10 @@ export class TransactionListTs extends Vue {
     const start = (this.currentPage - 1) * this.pageSize
     const end = this.currentPage * this.pageSize
 
-    return [...this.confirmedTransactions].length
+    return this.confirmedTransactions && [...this.confirmedTransactions].length
       ? [...this.confirmedTransactions].slice(start, end)
-      : [] 
+      : []
   }
-
   /// end-region computed properties getter/setter
 
   /**
@@ -172,11 +171,16 @@ export class TransactionListTs extends Vue {
    */
   public async refresh(grp?) {
     const group = grp ? grp : this.currentTab
-    return await this.$store.dispatch('wallet/REST_FETCH_TRANSACTIONS', {
+
+    console.log('refreshing ' + group + '...')
+    await this.$store.dispatch('wallet/REST_FETCH_TRANSACTIONS', {
       group: group,
       address: this.currentWallet.objects.address.plain(),
       pageSize: 100,
     })
+
+    this.$forceUpdate()
+    console.log("confirmed: ", ...this.confirmedTransactions)
   }
 
   /**

@@ -57,10 +57,17 @@ import WalletFlagsDisplay from '@/components/WalletFlagsDisplay/WalletFlagsDispl
     WalletFlagsDisplay,
   },
   computed: {...mapGetters({
-    wallet: 'wallet/currentWallet',
+    currentWallet: 'wallet/currentWallet',
   })},
 })
 export class WalletDetailsPageTs extends Vue {
+  /**
+   * Currently active wallet
+   * @see {Store.Wallet}
+   * @var {WalletsModel}
+   */
+  public currentWallet: WalletsModel
+
   /**
    * Name form visibility
    * @type {boolean}

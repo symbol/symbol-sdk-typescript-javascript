@@ -4,8 +4,8 @@
     <div v-if="transactions.length" class="transaction-rows-outer-container">
       <div v-if="transactions.length" class="transaction-rows-inner-container">
         <TransactionRow
-          v-for="(transaction, index) in transactions"
-          :key="index"
+          v-for="(transaction, index) in transactionsList"
+          :key="transaction.transactionInfo.hash"
           :transaction="transaction"
           @click="$emit('click', transaction)"
         />
@@ -34,7 +34,11 @@ import TransactionListHeader from '@/components/TransactionList/TransactionListH
   },
 })
 export default class TransactionTable extends Vue {
-  @Prop({ default: () => [] }) transactions: Transaction[]
+  @Prop({ default: [] }) transactions: Transaction[]
+
+  get transactionsList(): Transaction[] {
+    return this.transactions
+  }
 }
 </script>
 

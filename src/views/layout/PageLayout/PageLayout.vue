@@ -18,7 +18,7 @@
         <div class="app_controller clear">
           <PeerSelector />
           <LanguageSelector />
-          <WalletSelectorField />
+          <WalletSelectorField @input="onChangeWallet" />
         </div>
       </div>
     </div>
