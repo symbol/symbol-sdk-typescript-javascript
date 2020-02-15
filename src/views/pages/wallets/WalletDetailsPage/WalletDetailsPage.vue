@@ -3,7 +3,7 @@
     <div class="wallet-detail-inner-container">
       <div class="left-container">
         <div class="wallet-details-grid  mt-3">
-          <div class="detail-row">
+          <div class="detail-row text_select">
             <WalletNameDisplay 
               :wallet="wallet"
               :editable="true"
@@ -11,20 +11,24 @@
             />
           </div>
 
-          <div class="detail-row">
+          <div class="detail-row text_select">
             <ImportanceScoreDisplay :wallet="wallet" />
           </div>
 
-          <div class="detail-row">
+          <div class="detail-row text_select">
             <WalletAddressDisplay :wallet="wallet" />
           </div>
 
-          <div class="detail-row">
+          <div class="detail-row text_select">
             <WalletPublicKeyDisplay :wallet="wallet" />
           </div>
 
           <div class="detail-row">
             <ProtectedPrivateKeyDisplay :wallet="wallet" />
+          </div>
+
+          <div class="detail-row text_select">
+            <WalletFlagsDisplay :wallet="wallet" />
           </div>
         </div>
       </div>

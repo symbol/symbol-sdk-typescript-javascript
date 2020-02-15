@@ -25,7 +25,9 @@ import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {SettingsModel} from '@/core/database/entities/SettingsModel'
 import {AccountService} from '@/services/AccountService'
+import {SettingService} from '@/services/SettingService'
 
 // child components
 // @ts-ignore
@@ -204,6 +206,8 @@ export default class LoginPageTs extends Vue {
    */
   private async processLogin() {
     const identifier = this.formItems.currentAccountName
+    const accountService = new AccountService(this.$store)
+    const settingService = new SettingService(this.$store)
 
     // if account doesn't exist, authentication is not valid
     if (! this.accountsRepository.find(identifier)) {
@@ -213,11 +217,20 @@ export default class LoginPageTs extends Vue {
 
     // account exists, fetch data
     const account: AccountsModel = this.accountsRepository.read(identifier)
+    const settings: SettingsModel = settingService.getSettings(account)
     const knownWallets: Map<string, WalletsModel> = this.accountsRepository.fetchRelations(
       this.walletsRepository,
       account,
       'wallets'
     )
+
+    // read default wallet from settings
+    const defaultWalletId = settings.values.get('default_wallet').length 
+                        ? settings.values.get('default_wallet')
+                        : Array.from(knownWallets.values()).shift().getIdentifier()
+    const defaultWallet = Array.from(knownWallets.values()).filter(
+      w => w.getIdentifier() === defaultWalletId
+    ).shift()
 
     // if account setup was not finalized, redirect
     if (!account.values.has('seed') || ! account.values.get('seed').length) {
@@ -226,8 +239,7 @@ export default class LoginPageTs extends Vue {
     }
 
     // use service to generate password hash
-    const service = new AccountService(this.$store)
-    const passwordHash = service.getPasswordHash(new Password(this.formItems.password))
+    const passwordHash = accountService.getPasswordHash(new Password(this.formItems.password))
 
     // read account's password hash and compare
     const accountPass = account.values.get('password')
@@ -238,7 +250,7 @@ export default class LoginPageTs extends Vue {
 
     // LOGIN SUCCESS: update app state
     await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)
-    await this.$store.dispatch('wallet/SET_CURRENT_WALLET', Array.from(knownWallets.values()).shift())
+    await this.$store.dispatch('wallet/SET_CURRENT_WALLET', defaultWallet)
     this.$store.dispatch('wallet/SET_KNOWN_WALLETS', account.values.get('wallets'))
     this.$store.dispatch('diagnostic/ADD_DEBUG', 'Account login successful with identifier: ' + account.getIdentifier())
 

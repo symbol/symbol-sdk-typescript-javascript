@@ -13,25 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {DatabaseTable} from '@/core/database/DatabaseTable'
-import {SettingsModel} from '@/core/database/entities/SettingsModel'
+import {Component, Vue, Prop} from 'vue-property-decorator'
 
-export class SettingsTable extends DatabaseTable {
-  public constructor() {
-    super('settings', [
-      'accountName',
-      'default_fee,',
-      'language',
-      'explorer_url',
-      'default_wallet',
-    ])
-  }
+// internal dependencies
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {UIHelpers} from '@/core/utils/UIHelpers'
+import { mapGetters } from 'vuex'
+
+@Component({
+  computed: {...mapGetters({
+    defaultWallet: 'app/defaultWallet',
+  })}
+})
+export class WalletFlagsDisplayTs extends Vue {
+
+  @Prop({
+    default: null
+  }) wallet: WalletsModel
 
   /**
-   * Create a new model instance
-   * @return {SettingsModel}
+   * UI Helpers
+   * @var {UIHelpers}
    */
-  public createModel(values: Map<string, any> = new Map<string, any>()): SettingsModel {
-    return new SettingsModel(values)
-  }
+  public uiHelpers = UIHelpers
+
+/// region computed properties getter/setter
+/// end-region computed properties getter/setter
 }

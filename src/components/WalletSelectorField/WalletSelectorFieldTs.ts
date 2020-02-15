@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
+import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
@@ -25,6 +25,18 @@ import {WalletService} from '@/services/WalletService'
   knownWallets: 'wallet/knownWallets',
 })}})
 export class WalletSelectorFieldTs extends Vue {
+  @Prop({
+    default: ''
+  }) value: string
+
+  @Prop({
+    default: false
+  }) defaultFormStyle: boolean
+
+  @Prop({
+    default: true
+  }) autoSubmit: boolean
+
   /**
    * Currently active wallet
    * @see {Store.Wallet}
@@ -50,7 +62,11 @@ export class WalletSelectorFieldTs extends Vue {
 
 /// region computed properties getter/setter
   public get currentWalletIdentifier(): string {
-    return !this.currentWallet ? '' : {...this.currentWallet}.identifier
+    if (this.autoSubmit) {
+      return {...this.currentWallet}.identifier
+    }
+
+    return this.value
   }
 
   public set currentWalletIdentifier(identifier: string) {
@@ -63,8 +79,11 @@ export class WalletSelectorFieldTs extends Vue {
       return ;
     }
 
-    this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
-    this.$emit('change', wallet.getIdentifier())
+    if (this.autoSubmit) {
+      this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
+    }
+
+    this.$emit('input', wallet.getIdentifier())
   }
 
   public get currentWallets(): {identifier: string, name: string}[] {

@@ -36,6 +36,8 @@ import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue
 // @ts-ignore
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
 // @ts-ignore
+import WalletSelectorField from '@/components/WalletSelectorField/WalletSelectorField.vue'
+// @ts-ignore
 import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
 
 @Component({
@@ -48,6 +50,7 @@ import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalF
     ExplorerUrlSetter,
     LanguageSelector,
     MaxFeeSelector,
+    WalletSelectorField,
     ModalFormAccountUnlock,
   },
   computed: {...mapGetters({
@@ -55,6 +58,8 @@ import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalF
     explorerUrl: 'app/explorerUrl',
     languageList: 'app/languages',
     defaultFee: 'app/defaultFee',
+    defaultWallet: 'app/defaultWallet',
+    knownWallets: 'wallet/knownWallets',
   })}
 })
 export class FormGeneralSettingsTs extends Vue {
@@ -79,10 +84,22 @@ export class FormGeneralSettingsTs extends Vue {
   public defaultFee: number
 
   /**
+   * Default wallet setting
+   * @var {number}
+   */
+  public defaultWallet: string
+
+  /**
    * Explorer url setting
    * @var {string}
    */
   public explorerUrl: string
+
+  /**
+   * Known wallets identifiers
+   * @var {string[]}
+   */
+  public knownWallets: string[]
 
   /**
    * Whether account is currently being unlocked
@@ -97,13 +114,22 @@ export class FormGeneralSettingsTs extends Vue {
   public formItems = {
     maxFee: 0,
     currentLanguage: '',
-    explorerUrl: ''
+    explorerUrl: '',
+    defaultWallet: '',
   }
 
   public created() {
+    this.resetForm()
+  }
+
+  public resetForm() {
     this.formItems.currentLanguage = this.currentLanguage
     this.formItems.maxFee = this.defaultFee
     this.formItems.explorerUrl = this.explorerUrl
+    this.formItems.defaultWallet = this.defaultWallet && this.defaultWallet.length
+                                 ? this.defaultWallet : (this.knownWallets.length
+                                 ? this.knownWallets.shift()
+                                 : '')
   }
 
 /// region computed properties getter/setter
@@ -136,6 +162,7 @@ export class FormGeneralSettingsTs extends Vue {
       //   - app/SET_LANGUAGE
       //   - app/SET_EXPLORER_URL
       //   - app/SET_DEFAULT_FEE
+      //   - app/SET_DEFAULT_WALLET
       service.saveSettingsForm(this.formItems)
 
       // - add notification and emit

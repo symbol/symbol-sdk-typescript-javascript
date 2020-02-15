@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {MosaicId, MosaicInfo, AccountInfo} from 'nem2-sdk'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
 import {SettingsRepository} from '@/repositories/SettingsRepository'
 import {SettingsModel} from '@/core/database/entities/SettingsModel'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
+import i18n from '@/language'
+
+// configuration
+import appConfig from '@/../config/app.conf.json'
+import feesConfig from '@/../config/fees.conf.json'
+import networkConfig from '@/../config/network.conf.json'
 
 export class SettingService extends AbstractService {
   /**
@@ -44,6 +50,28 @@ export class SettingService extends AbstractService {
   }
 
   /**
+   * Get settings for \a account
+   * @param {AccountsModel} account 
+   * @return {SettingsModel}
+   */
+  public getSettings(account: AccountsModel): SettingsModel {
+    const repository = new SettingsRepository()
+
+    // - read settings from storage if available
+    if (repository.find(account.getIdentifier())) {
+      return repository.read(account.getIdentifier())
+    }
+
+    // - defaults
+    return repository.createModel(new Map<string, any>([
+      ['explorer_url', networkConfig.explorerUrl],
+      ['default_fee', feesConfig.normal],
+      ['default_wallet', ''],
+      ['language', i18n.locale]
+    ]))
+  }
+
+  /**
    * Save settings
    * @param {MosaicId} mosaicId 
    * @return {Promise<MosaicInfo>}
@@ -52,7 +80,8 @@ export class SettingService extends AbstractService {
     formItems: {
       currentLanguage: string,
       explorerUrl: string,
-      maxFee: number
+      maxFee: number,
+      defaultWallet: string,
     }
   ) {
     // - prepare
@@ -62,6 +91,7 @@ export class SettingService extends AbstractService {
       ['language', formItems.currentLanguage],
       ['default_fee', formItems.maxFee],
       ['explorer_url', formItems.explorerUrl],
+      ['default_wallet', formItems.defaultWallet],
     ])
 
     // - UPDATE when possible
@@ -78,6 +108,7 @@ export class SettingService extends AbstractService {
     this.$store.dispatch('app/SET_LANGUAGE', formItems.currentLanguage)
     this.$store.dispatch('app/SET_EXPLORER_URL', formItems.explorerUrl)
     this.$store.dispatch('app/SET_DEFAULT_FEE', formItems.maxFee)
+    this.$store.dispatch('app/SET_DEFAULT_WALLET', formItems.defaultWallet)
     return true
   }
 }

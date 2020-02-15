@@ -1,5 +1,5 @@
 <template>
-  <div class="form-line-container">
+  <div :class="className">
     <div class="fee flex_center">
       <FormLabel>{{ $t('fee') }}</FormLabel>
       <div class="inline-container">

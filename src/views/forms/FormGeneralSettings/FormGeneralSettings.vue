@@ -17,7 +17,7 @@
           </div>
 
           <!-- Transaction fee selector -->
-          <MaxFeeSelector v-model="formItems.maxFee" />
+          <MaxFeeSelector v-model="formItems.maxFee" :class-name="'form-row'" />
 
           <div class="form-row">
             <ExplorerUrlSetter
@@ -26,12 +26,27 @@
           </div>
 
           <div class="form-row">
+            <FormLabel>{{ $t('form_label_default_wallet') }}</FormLabel>
+            <WalletSelectorField
+              v-model="formItems.defaultWallet"
+              :auto-submit="false"
+              :default-form-style="true" />
+          </div>
+
+          <div class="form-row form-submit">
             <button
               class="button-style validation-button right-side-button"
               type="submit"
               @click="handleSubmit(onSubmit)"
             >
               {{ $t('confirm') }}
+            </button>
+            <button
+              class="button-style validation-button back-button"
+              type="reset"
+              @click="resetForm"
+            >
+              {{ $t('reset') }}
             </button>
           </div>
         </form>
@@ -52,12 +67,21 @@ import { FormGeneralSettingsTs } from './FormGeneralSettingsTs'
 export default class FormGeneralSettings extends FormGeneralSettingsTs {}
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .general-settings-container {
   display: block;
   width: 100%;
   clear: both;
   min-height: 1rem;
+}
+
+.form-submit {
+  display: flex;
+  margin-top: 25px;
+
+  button[type="reset"] {
+    margin-left: 35px;
+  }
 }
 </style>
 

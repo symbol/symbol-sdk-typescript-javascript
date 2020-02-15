@@ -36,6 +36,7 @@ export default {
     controlsDisabledMessage: '',
     explorerUrl: networkConfig.explorerUrl,
     defaultFee: feesConfig.normal,
+    defaultWallet: '',
   },
   getters: {
     getInitialized: state => state.initialized,
@@ -49,6 +50,7 @@ export default {
     controlsDisabledMessage: (state) => state.controlsDisabledMessage,
     explorerUrl: (state) => state.explorerUrl,
     defaultFee: (state) => state.defaultFee,
+    defaultWallet: (state) => state.defaultWallet,
   },
   mutations: {
     setInitialized: (state, initialized) => { state.initialized = initialized },
@@ -64,6 +66,7 @@ export default {
       window.localStorage.setItem('locale', lang)
     },
     setDefaultFee: (state, maxFee) => Vue.set(state, 'defaultFee', maxFee),
+    setDefaultWallet: (state, defaultWallet) => Vue.set(state, 'defaultWallet', defaultWallet),
   },
   actions: {
     async initialize({ commit, dispatch, getters }) {
@@ -100,6 +103,15 @@ export default {
     },
     SET_DEFAULT_FEE({commit}, maxFee: number) {
       commit('setDefaultFee', maxFee)
+    },
+    SET_DEFAULT_WALLET({commit}, defaultWallet: string) {
+      commit('setDefaultWallet', defaultWallet)
+    },
+    USE_SETTINGS({commit}, settingsModel) {
+      commit('setExplorerUrl', settingsModel.values.get('explorer_url'))
+      commit('setCurrentLanguage', settingsModel.values.get('language'))
+      commit('setDefaultFee', settingsModel.values.get('default_fee'))
+      commit('setDefaultWallet', settingsModel.values.get('default_wallet'))
     }
 /// end-region scoped actions
   }

@@ -35,6 +35,10 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue'
 })
 export class MaxFeeSelectorTs extends Vue {
 
+  @Prop({
+    default: 'form-line-container'
+  }) className: string
+
   /**
    * Networks currency mosaic id
    * @var {MosaicId}

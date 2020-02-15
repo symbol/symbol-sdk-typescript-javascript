@@ -263,14 +263,16 @@ export default {
 
       // const currentWallet = walletsRepository.read(walletId)
       commit('currentWallet', currentWalletModel)
-      commit('currentWalletAddress', currentWalletModel.objects.address)
 
-      dispatch('diagnostic/ADD_DEBUG', 'Changing current wallet to ' + currentWalletModel.objects.address.plain(), {root: true})
+      const address = Address.createFromRawAddress(currentWalletModel.values.get('address'))
+      commit('currentWalletAddress', address)
+
+      dispatch('diagnostic/ADD_DEBUG', 'Changing current wallet to ' + address.plain(), {root: true})
 
       // reset store + re-initialize
       await dispatch('uninitialize')
-      await dispatch('initialize', currentWalletModel.objects.address.plain())
-      $eventBus.$emit('onWalletChange', currentWalletModel.objects.address.plain())
+      await dispatch('initialize', address.plain())
+      $eventBus.$emit('onWalletChange', address.plain())
     },
     SET_KNOWN_WALLETS({commit}, wallets) {
       commit('setKnownWallets', wallets)

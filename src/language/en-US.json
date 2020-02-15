@@ -1006,6 +1006,7 @@
   "form_label_add_cosignatory": "Add a cosignatory",
   "form_label_remove_cosignatory": "Remove a cosignatory",
   "form_label_cosignatory_modifications": "Cosignatory modifications",
+  "form_label_default_wallet": "Set your preferred default wallet",
 
   "form_label_description_min_approval": "Minimum signatures to sign a transaction or to add a cosigner",
   "form_label_description_min_removal": "Minimum signatures required to remove a cosigner",
@@ -1078,6 +1079,8 @@
   "wallets_view_dashboard": "View in dashboard",
   "wallets_view_multisig": "Multi-signature",
   "wallets_share_qr_code": "Share public details",
-  "wallets_create_invoice": "Create an invoice"
-
+  "wallets_create_invoice": "Create an invoice",
+  "wallets_flags_simple": "Simple account",
+  "wallets_flags_multisig": "Multi-signature",
+  "wallets_flags_default_wallet": "Default wallet"
 }

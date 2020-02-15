@@ -18,6 +18,7 @@ import Vue from 'vue'
 // internal dependencies
 import {$eventBus} from '../events'
 import {AwaitLock} from './AwaitLock';
+import {SettingService} from '@/services/SettingService'
 
 /// region globals
 const Lock = AwaitLock.create();
@@ -74,6 +75,11 @@ export default {
       commit('setAuthenticated', true)
 
       dispatch('diagnostic/ADD_DEBUG', 'Changing current account to ' + currentAccountModel.getIdentifier(), {root: true})
+
+      const settings = new SettingService().getSettings(currentAccountModel)
+      dispatch('app/USE_SETTINGS', settings, {root: true})
+
+      dispatch('diagnostic/ADD_DEBUG', 'Using account settings ' + Array.from(settings.values), {root: true})
 
       // reset store + re-initialize
       await dispatch('initialize')

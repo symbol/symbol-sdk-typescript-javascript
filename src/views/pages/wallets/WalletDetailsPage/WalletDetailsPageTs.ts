@@ -40,6 +40,8 @@ import WalletPublicKeyDisplay from '@/components/WalletPublicKeyDisplay/WalletPu
 import WalletActions from '@/components/WalletActions/WalletActions.vue'
 // @ts-ignore
 import WalletLinks from '@/components/WalletLinks/WalletLinks.vue'
+// @ts-ignore
+import WalletFlagsDisplay from '@/components/WalletFlagsDisplay/WalletFlagsDisplay.vue'
 
 @Component({
   components: {
@@ -52,6 +54,7 @@ import WalletLinks from '@/components/WalletLinks/WalletLinks.vue'
     WalletLinks,
     WalletAddressDisplay,
     WalletPublicKeyDisplay,
+    WalletFlagsDisplay,
   },
   computed: {...mapGetters({
     wallet: 'wallet/currentWallet',
