@@ -243,8 +243,13 @@ export default {
         await dispatch('RESET_TRANSACTIONS')
 
         // fetch account info
-        dispatch('REST_FETCH_INFO', address)
-        
+        await dispatch('REST_FETCH_INFO', address)
+        await dispatch('REST_FETCH_TRANSACTIONS', {
+          group: 'confirmed',
+          pageSize: 100,
+          address: address,
+        })
+
         // open websocket connections
         dispatch('SUBSCRIBE', address)
         commit('setInitialized', true)

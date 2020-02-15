@@ -96,7 +96,6 @@ export class TransactionListTs extends Vue {
 
   /**
    * List of confirmed transactions (per-request)
-   * @see {Store.Wallet}
    * @var {Transaction[]}
    */
   public confirmedTransactions: Transaction[]
@@ -145,7 +144,10 @@ export class TransactionListTs extends Vue {
    */
   public async created() {
     this.service = new TransactionService(this.$store)
-    this.refresh()
+
+    // if (!this.confirmedTransactions || !this.confirmedTransactions.length) {
+    //   await this.refresh()
+    // }
   }
 
   /// region computed properties getter/setter
@@ -170,7 +172,7 @@ export class TransactionListTs extends Vue {
    */
   public async refresh(grp?) {
     const group = grp ? grp : this.currentTab
-    await this.$store.dispatch('wallet/REST_FETCH_TRANSACTIONS', {
+    return await this.$store.dispatch('wallet/REST_FETCH_TRANSACTIONS', {
       group: group,
       address: this.currentWallet.objects.address.plain(),
       pageSize: 100,
