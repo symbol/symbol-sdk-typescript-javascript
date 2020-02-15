@@ -238,12 +238,15 @@ export default {
             return ;
         }
 
+        await dispatch('UNSUBSCRIBE')
+        await dispatch('RESET_BALANCES')
+        await dispatch('RESET_TRANSACTIONS')
+
         // fetch account info
         dispatch('REST_FETCH_INFO', address)
         
         // open websocket connections
         dispatch('SUBSCRIBE', address)
-        dispatch('RESET_TRANSACTIONS')
         commit('setInitialized', true)
       }
       await Lock.initialize(callback, {commit, dispatch, getters})
@@ -276,6 +279,9 @@ export default {
     },
     SET_KNOWN_WALLETS({commit}, wallets) {
       commit('setKnownWallets', wallets)
+    },
+    RESET_BALANCES({dispatch}) {
+      dispatch('SET_BALANCES', [])
     },
     SET_BALANCES({commit, rootGetters}, mosaics) {
       // - read network mosaic
@@ -331,7 +337,7 @@ export default {
       hashes.push(transaction.transactionInfo.hash)
 
       // update state
-      commit('addTransactionToCache', {hash: transaction.transactionInfo.hash, transaction})
+      //commit('addTransactionToCache', {hash: transaction.transactionInfo.hash, transaction})
       commit(transactionGroup, transactions)
       return commit('transactionHashes', hashes)
     },
@@ -417,13 +423,6 @@ export default {
         return ;
       }
 
-      // check cache for results
-      const cacheKey = CacheKey.create([group, address, pageSize, id])
-      const cache = getters.transactionCache
-      if (cache.hasOwnProperty(cacheKey)) {
-        return cache[cacheKey]
-      }
-
       dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_TRANSACTIONS dispatched with : ' + JSON.stringify({address: address, group}), {root: true})
 
       try {
@@ -452,7 +451,6 @@ export default {
         // update store
         transactions.map((transaction) => dispatch('ADD_TRANSACTION', {
           group: group,
-          cacheKey: cacheKey,
           transaction
         }))
 

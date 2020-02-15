@@ -96,34 +96,49 @@ export class MosaicService extends AbstractService {
   protected async fetchMosaicInfo(
     mosaicId: MosaicId
   ): Promise<MosaicsModel> {
-    // - fetch INFO from REST
-    const mosaicInfo = await this.$store.dispatch('mosaic/REST_FETCH_INFO', mosaicId)
+    try {
+      // - fetch INFO from REST
+      const mosaicInfo = await this.$store.dispatch('mosaic/REST_FETCH_INFO', mosaicId)
 
-    // - fetch NAMES from REST
-    const mosaicNames = await this.$store.dispatch('mosaic/REST_FETCH_NAMES', [mosaicId])
+      // - fetch NAMES from REST
+      const mosaicNames = await this.$store.dispatch('mosaic/REST_FETCH_NAMES', [mosaicId])
 
-    // - use repository for storage
-    const repository = new MosaicsRepository()
-    if (repository.find(mosaicId.toHex())) {
-      //XXX update instead of just read
-      return repository.read(mosaicId.toHex())
+      // - use repository for storage
+      const repository = new MosaicsRepository()
+      if (repository.find(mosaicId.toHex())) {
+        //XXX update instead of just read
+        return repository.read(mosaicId.toHex())
+      }
+
+      // - CREATE
+      const mosaic = repository.createModel(new Map<string, any>([
+        ['hexId', mosaicId.toHex()],
+        ['name', mosaicNames && mosaicNames.length ? mosaicNames.shift().name : ''],
+        ['flags', mosaicInfo.flags.toDTO()],
+        ['startHeight', mosaicInfo.height],
+        ['duration', mosaicInfo.duration.compact()],
+        ['divisibility', mosaicInfo.divisibility],
+        ['supply', mosaicInfo.supply],
+        ['ownerPublicKey', mosaicInfo.owner.publicKey]
+      ]))
+
+      // - store and return
+      repository.create(mosaic.values)
+      return mosaic
     }
-
-    // - CREATE
-    const mosaic = repository.createModel(new Map<string, any>([
-      ['hexId', mosaicId.toHex()],
-      ['name', mosaicNames && mosaicNames.length ? mosaicNames.shift().name : ''],
-      ['flags', mosaicInfo.flags.toDTO()],
-      ['startHeight', mosaicInfo.height],
-      ['duration', mosaicInfo.duration.compact()],
-      ['divisibility', mosaicInfo.divisibility],
-      ['supply', mosaicInfo.supply],
-      ['ownerPublicKey', mosaicInfo.owner.publicKey]
-    ]))
-
-    // - store and return
-    repository.create(mosaic.values)
-    return mosaic
+    catch (e) {
+      const repository = new MosaicsRepository()
+      return repository.createModel(new Map<string, any>([
+        ['hexId', mosaicId.toHex()],
+        ['name', mosaicId.toHex()],
+        ['flags', null],
+        ['startHeight', 0],
+        ['duration', 0],
+        ['divisibility', 0],
+        ['supply', 0],
+        ['ownerPublicKey', '']
+      ]))
+    }
   }
 
   /**

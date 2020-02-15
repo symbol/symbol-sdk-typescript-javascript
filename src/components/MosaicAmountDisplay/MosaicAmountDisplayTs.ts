@@ -17,6 +17,8 @@ import {mapGetters} from 'vuex'
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {MosaicId, MosaicInfo} from 'nem2-sdk'
 
+import {MosaicService} from '@/services/MosaicService'
+
 // child components
 // @ts-ignore
 import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue'
@@ -63,15 +65,16 @@ export class MosaicAmountDisplayTs extends Vue {
    */
   public mosaicsInfo: MosaicInfo[]
 
+  public divisibility: number = 0
+
   /**
    * Hook called when the component is mounted
    * @return {void}
    */
   public async mounted() {
-    const hasInfo = this.mosaicsInfo.find(info => info.id.equals(this.id))
-    if (hasInfo === undefined) {
-      await this.$store.dispatch('mosaic/REST_FETCH_INFO', this.id)
-    }
+    const service = new MosaicService(this.$store)
+    const model = await service.getMosaic(this.id)
+    this.divisibility = model.values.get('divisibility')
   }
 
 /// region computed properties getter/setter
@@ -84,11 +87,6 @@ export class MosaicAmountDisplayTs extends Vue {
     }
 
     return this.relativeAmount
-  }
-
-  public get divisibility(): number {
-    const hasInfo = this.mosaicsInfo.find(info => info.id.equals(this.id))
-    return hasInfo === undefined ? 0 : hasInfo.divisibility
   }
 /// end-region computed properties getter/setter
 }
