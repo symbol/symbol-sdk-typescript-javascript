@@ -54,7 +54,12 @@
       </div>
     </div>
 
-    <ModalTransactionDetails :visible="!!activeTransaction" :transaction="activeTransaction" />
+    <ModalTransactionDetails
+      v-if="hasDetailModal"
+      :visible="hasDetailModal"
+      @close="onCloseDetailModal"
+      :transaction="activeTransaction"
+    />
   </div>
 </template>
 

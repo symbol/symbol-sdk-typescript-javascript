@@ -35,18 +35,19 @@ export class ModalTransactionDetailsTs extends Vue {
   }) transaction: Transaction
 
 /// region computed properties
+  
   /**
    * Visibility state
    * @type {boolean}
    */
-  get show(): boolean {
-    return this.visible && !!this.transaction
+  public get show(): boolean {
+    return this.visible
   }
 
   /**
    * Emits close event
    */
-  set show(val) {
+  public set show(val) {
     if (!val) {
       this.$emit('close')
     }

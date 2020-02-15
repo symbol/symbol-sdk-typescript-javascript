@@ -4,6 +4,7 @@
       v-model="show"
       :title="$t('modal_title_transaction_details')"
       :transfer="false"
+      @close="show = false"
     >
       <TransactionDetails :transaction="transaction" />
     </Modal>

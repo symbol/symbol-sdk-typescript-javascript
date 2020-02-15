@@ -139,6 +139,12 @@ export class TransactionListTs extends Vue {
   public activeTransaction: Transaction = null
 
   /**
+   * Whether the detail modal box is open
+   * @var {boolean}
+   */
+  public isDisplayingDetails: boolean = false
+
+  /**
    * Hook called when the component is mounted
    * @return {void}
    */
@@ -162,6 +168,14 @@ export class TransactionListTs extends Vue {
     return this.confirmedTransactions && [...this.confirmedTransactions].length
       ? [...this.confirmedTransactions].slice(start, end)
       : []
+  }
+
+  public get hasDetailModal(): boolean {
+    return this.isDisplayingDetails
+  }
+
+  public set hasDetailModal(f: boolean) {
+    this.isDisplayingDetails = f
   }
   /// end-region computed properties getter/setter
 
@@ -188,7 +202,14 @@ export class TransactionListTs extends Vue {
    * @param {Transaction} transaction 
    */
   public onClickTransaction(transaction: Transaction) {
+    console.log("clicked: ", transaction)
     this.activeTransaction = transaction
+    this.hasDetailModal = true
+  }
+
+  public onCloseDetailModal() {
+    this.hasDetailModal = false
+    this.activeTransaction = undefined
   }
 
   /**
