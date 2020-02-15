@@ -13,19 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// external dependencies
 import {Component, Vue, Prop} from 'vue-property-decorator'
-import {
-  Transaction,
-  TransactionType,
-  TransferTransaction,
-  MosaicDefinitionTransaction,
-  MosaicSupplyChangeTransaction,
-  NamespaceRegistrationTransaction,
-} from 'nem2-sdk'
+import {mapGetters} from 'vuex'
+import {Transaction, TransactionType, MosaicId} from 'nem2-sdk'
 
 // internal dependencies
 import {TransactionService, TransactionViewType} from '@/services/TransactionService'
 import {Formatters} from '@/core/utils/Formatters'
+import {TimeHelpers} from '@/core/utils/TimeHelpers'
 
 // child components
 // @ts-ignore
@@ -41,23 +37,39 @@ import networkConfig from '@/../config/network.conf.json'
 // resources
 import {transferIcons, transactionTypeToIcon} from '@/views/resources/Images'
 
-@Component({components: {
+@Component({
+  components: {
     AddressDisplay,
     ActionDisplay,
     MosaicAmountDisplay,
-  }})
+  },
+  computed: {...mapGetters({networkMosaic: 'mosaic/networkMosaic'})},
+})
 export class TransactionRowTs extends Vue {
-  
+
   @Prop({
-    default: []
+    default: [],
   }) transaction: Transaction
 
   /**
    * Transaction service
    * @var {TransactionService}
    */
-  public service: TransactionService
+  public service: TransactionService = new TransactionService(this.$store)
+
+  /**
+   * Network mosaic id
+   * @private
+   * @type {MosaicId}
+   */
+  protected networkMosaic: MosaicId
   
+  /**
+   * Transaction type from SDK
+   * @type {TransactionType}
+   */
+  private transactionType = TransactionType
+
   /**
    * Formatters
    * @var {Formatters}
@@ -65,33 +77,22 @@ export class TransactionRowTs extends Vue {
   public formatters: Formatters = Formatters
 
   /**
+   * Time helpers
+   * @var {Formatters}
+   */
+  protected timeHelpers: TimeHelpers = TimeHelpers
+
+  /**
    * Explorer base path
    * @var {string}
    */
   public explorerBaseUrl: string = networkConfig.explorerUrl
 
-  /**
-   * Hook called when the component is mounted
-   * @return {void}
-   */
-  public async mounted() {
-    this.service = new TransactionService(this.$store)
-  }
-
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get view(): TransactionViewType {
-    switch (this.transaction.type) {
-      case TransactionType.MOSAIC_DEFINITION: 
-        return this.service.getView(this.transaction as MosaicDefinitionTransaction)
-      case TransactionType.MOSAIC_SUPPLY_CHANGE:
-        return this.service.getView(this.transaction as MosaicSupplyChangeTransaction)
-      case TransactionType.REGISTER_NAMESPACE:
-        return this.service.getView(this.transaction as NamespaceRegistrationTransaction)
-      case TransactionType.TRANSFER:
-        return this.service.getView(this.transaction as TransferTransaction)
-    }
+    return this.service.getView(this.transaction as any)
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Get icon per-transaction
@@ -99,14 +100,14 @@ export class TransactionRowTs extends Vue {
    * @return {string}
    */
   public getIcon() {
-    // - read per-transaction-type details
+    // - read per-transaction-type details@
     const view = this.view
 
     // - transfers have specific incoming/outgoing icons
-    if (view.transaction.type === TransactionType.TRANSFER) {
-      return view.values.get('isIncoming') 
-          ? transferIcons.transferReceived
-          : transferIcons.transferSent
+    if (view.transaction.type === this.transactionType.TRANSFER) {
+      return view.values.get('isIncoming')
+        ? transferIcons.transferReceived
+        : transferIcons.transferSent
     }
 
     // - otherwise use per-type icon
@@ -127,17 +128,19 @@ export class TransactionRowTs extends Vue {
    * @return {number}
    */
   public getFeeAmount(): number {
-    return this.view.values.get('effectiveFee')
-        || this.view.values.get('maxFee').compact()
-        || 0
+    this.view.values
+
+    if (this.view.values.get('effectiveFee') !== undefined) return this.view.values.get('effectiveFee')
+    if (this.view.values.get('maxFee') !== undefined) return this.view.values.get('maxFee')
+    return 0
   }
 
   /**
    * Returns the transaction height or number of confirmations
    * @param transaction 
    */
-  public getHeight(): number | string {
-    return this.view.info?.height.compact() 
-        || this.$t('unconfirmed').toString()
+  public getHeight(): string {
+    return this.view.info?.height.compact().toLocaleString()
+      || this.$t('unconfirmed').toString()
   }
 }

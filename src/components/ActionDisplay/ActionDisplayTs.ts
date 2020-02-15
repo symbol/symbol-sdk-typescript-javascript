@@ -21,10 +21,11 @@ import {TransactionService} from '@/services/TransactionService'
 
 @Component
 export class ActionDisplayTs extends Vue {
-
-  @Prop({
-    default: null
-  }) transaction: Transaction
+  /**
+   * Transaction
+   * @type {Transaction}
+   */
+  @Prop({ default: null }) transaction: Transaction
 
   /**
    * Action descriptor
@@ -33,10 +34,24 @@ export class ActionDisplayTs extends Vue {
   public descriptor: string
 
   /**
+   * Transaction type from SDK
+   * @type {TransactionType}
+   */
+  private transactionType = TransactionType
+
+  /**
    * Transaction service
    * @var {TransactionService}
    */
   public service: TransactionService
+
+  /**
+   * Whether the transaction needs a cosignature
+   * // @TODO
+   * @protected
+   * @type {boolean}
+   */
+  protected needsCosignature: boolean = false
 
   /**
    * Hook called when the component is mounted
@@ -49,10 +64,10 @@ export class ActionDisplayTs extends Vue {
     this.loadDetails()
   }
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get details(): string {
     // - overwrite descriptor in case of transaction with address
-    if (this.transaction.type === TransactionType.TRANSFER
+    if (this.transaction.type === this.transactionType.TRANSFER
       && (this.transaction as TransferTransaction).recipientAddress instanceof Address) {
       const transaction = this.transaction as TransferTransaction
       const recipient = transaction.recipientAddress as Address
@@ -61,24 +76,23 @@ export class ActionDisplayTs extends Vue {
 
     return this.descriptor
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Load transaction details
-   * @return {void}
+   * @return {Promise<void>}
    */
-  protected async loadDetails() {
+  protected async loadDetails(): Promise<void> {
     // - in case of transfer to a namespace id, resolve namespace name
-    if (this.transaction.type === TransactionType.TRANSFER
+    if (this.transaction.type === this.transactionType.TRANSFER
       && (this.transaction as TransferTransaction).recipientAddress instanceof NamespaceId) {
       const id = ((this.transaction as TransferTransaction).recipientAddress as NamespaceId)
       const namespaceNames: NamespaceName[] = await this.$store.dispatch('namespace/REST_FETCH_NAMES', [id])
       this.descriptor = namespaceNames.shift().name
     }
     // - otherwise use *translated* transaction descriptor
-    else if (this.transaction.type !== TransactionType.TRANSFER) {
-      this.descriptor = this.$t('transaction_descriptor_' + this.transaction.type).toString()
+    else if (this.transaction.type !== this.transactionType.TRANSFER) {
+      this.descriptor = `${this.$t(`transaction_descriptor_${this.transaction.type}`)}`
     }
-    // - ...
   }
 }

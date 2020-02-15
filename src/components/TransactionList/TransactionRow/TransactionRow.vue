@@ -1,69 +1,60 @@
 <template>
-  <div class="row">
+  <div class="transaction-row-container transaction-table-columns">
     <!-- FIRST COLUMN -->
-    <img class="mosaic_action" :src="getIcon()" alt="">
+    <div class="icon-cell">
+      <img :src="getIcon()" class="icon-cell-image">
+    </div>
 
     <!-- SECOND COLUMN -->
-    <div class="col2 overflow_ellipsis">
+    <div class="address-cell">
       <AddressDisplay :address="transaction.signer.address" />
       <ActionDisplay :transaction="transaction" />
     </div>
 
     <!-- THIRD COLUMN -->
-    <div class="col3">
-
+    <div class="amount-cell">
       <!-- Display details if transfer -->
-      <div v-if="transaction.type === TransactionType.TRANSFER">
-        <div v-for="(mosaic, index) in transaction.mosaics"
-              :key="index">
-          <MosaicAmountDisplay :amount="mosaic.amount"
-                                :id="mosaic.id"
-                                :color="isIncomingTransaction() ? 'green' : 'red'" />
+      <div v-if="transaction.type === transactionType.TRANSFER">
+        <div v-for="(mosaic, index) in transaction.mosaics" :key="index">
+          <MosaicAmountDisplay
+            :id="mosaic.id"
+            :amount="mosaic.amount"
+            :color="isIncomingTransaction() ? 'green' : 'red'"
+          />
         </div>
       </div>
 
       <!-- Display fee if not transfer -->
       <div v-else>
-        <MosaicAmountDisplay :amount="getFeeAmount()"
-                              :id="networkMosaic"
-                              :color="'red'" />
+        <MosaicAmountDisplay :id="networkMosaic" :amount="getFeeAmount()" :color="'red'" />
       </div>
     </div>
 
     <!-- FOURTH COLUMN -->
-    <div class="col4">
-      {{ getHeight() }}
+    <div class="confirmation-cell">
+      {{ getHeight() }}
     </div>
 
     <!-- FIFTH COLUMN -->
-    <div class="col5">
-      <span class="item">
+    <div class="hash-cell">
+      <span class="hash-cell-transaction-hash">
         <a
           class="url_text"
           target="_blank"
           :href="(explorerBaseUrl + '/transaction/' + transaction.transactionInfo.hash)"
-        >{{ formatters.miniHash(c.txHeader.hash) }} </a>
+        >{{ formatters.miniHash(transaction.transactionInfo.hash) }}</a>
       </span>
-      <span class="item bottom">{{ c.txHeader.time }}</span>
-    </div>
-
-    <!-- SIXTH COLUMN -->
-    <div class="col6">
-      <img v-if="transaction.isConfirmed()"
-        :src="dashboardImages.dashboardConfirmed"
-        class="expand_mosaic_info"
-      >
-      <img v-else
-        :src="dashboardImages.dashboardUnconfirmed"
-        class="expand_mosaic_info"
-      >
+      <span class="hash-cell-time">
+        <!-- @TODO: Should be transaction time instead of deadline -->
+        {{ timeHelpers.formatTimestamp(transaction.deadline.value) }}
+      </span>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 // @ts-ignore
-import {TransactionRowTs} from './TransactionRowTs'
+import { TransactionRowTs } from './TransactionRowTs'
 
 export default class TransactionRow extends TransactionRowTs {}
 </script>

@@ -1,0 +1,40 @@
+@import "../../../views/resources/css/variables.less";
+
+.transaction-header-container {
+ display: grid;
+ width: 100%;
+ height: 100%;
+ grid-template-rows: 100%;
+ padding: 2px 0 10px;
+ font-size: @normalFont;
+ text-align: left;
+
+ .address-header {
+   text-align: left;
+   padding: 0.1rem;
+ }
+
+ .amount-header {
+   text-align: right;
+   padding: 0.1rem;
+ }
+
+ .confirmation-header {
+   text-align: center;
+   padding: 0.1rem;
+ }
+
+ .hash-header {
+   text-align: right;
+   padding: 0.1rem 0.2rem 0.1rem 0.1rem;
+ }
+
+ span {
+   font-size: 16px;
+   color: @secondary;
+ }
+
+ .account {
+   padding-left: 70px;
+ }
+}
