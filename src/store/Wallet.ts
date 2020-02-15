@@ -329,14 +329,14 @@ export default {
       const hashes = getters['transactionHashes']
       const transaction = transactionMessage.transaction
       const findIterator = hashes.find(hash => hash === transaction.transactionInfo.hash)
-      if (findIterator !== undefined) {
-        return ; // transaction already known
-      }
 
       // register transaction
       const transactions = getters[transactionGroup]
       transactions.push(transaction)
-      hashes.push(transaction.transactionInfo.hash)
+
+      if (findIterator === undefined) {
+        hashes.push(transaction.transactionInfo.hash)
+      }
 
       // update state
       //commit('addTransactionToCache', {hash: transaction.transactionInfo.hash, transaction})
@@ -453,7 +453,7 @@ export default {
         // update store
         for (let i = 0, m = transactions.length; i < m; i++) {
           const transaction = transactions[i]
-          await dispatch('ADD_TRANSACTION', { group, transaction })
+          await dispatch('ADD_TRANSACTION', { address, group, transaction })
         }
 
         // fetch block informations if necessary

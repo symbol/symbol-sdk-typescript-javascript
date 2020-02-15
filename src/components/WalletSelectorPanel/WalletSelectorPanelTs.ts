@@ -192,7 +192,7 @@ export class WalletSelectorPanelTs extends Vue {
       return ;
     }
 
-    if (this.currentWallet && identifier !== this.currentWallet.getIdentifier()) {
+    if (!this.currentWallet || identifier !== this.currentWallet.getIdentifier()) {
       this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
       this.$emit('input', wallet.getIdentifier())
     }
