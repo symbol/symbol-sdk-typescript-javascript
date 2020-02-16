@@ -184,6 +184,7 @@ export class RESTService extends AbstractService {
       status,
       unconfirmedAdded,
       unconfirmedRemoved,
+      cosignatureAdded,
       partialAdded,
       partialRemoved,
       confirmed,

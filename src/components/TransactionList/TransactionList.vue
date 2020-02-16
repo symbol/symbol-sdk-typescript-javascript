@@ -17,7 +17,7 @@
             <PageTitle :title="$t('transactions')" @refresh="refresh('confirmed')" />
 
             <!-- Confirmed transactions tab -->
-            <TransactionTable :transactions="currentPageTransactions" @click="onClickTransaction" />
+            <TransactionTable :transactions="currentPageTransactions.items" @click="onClickTransaction" />
           </TabPane>
           <TabPane
             :label="$t('unconfirmed')"
@@ -45,9 +45,9 @@
       </div>
 
       <div class="transaction-list-pagination-container">
-        <span>{{ $t('total_transactions') }}：{{ currentPageTransactions.length }}</span>
+        <span>{{ $t('total_transactions') }}：{{ totalCountItems }}</span>
         <Page
-          :total="currentPageTransactions.length"
+          :total="totalCountItems"
           class="page_content"
           @on-change="onPageChange"
         />

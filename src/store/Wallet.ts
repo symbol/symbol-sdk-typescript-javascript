@@ -124,17 +124,43 @@ export default {
     otherMultisigsInfo: state => state.otherMultisigsInfo,
     getSubscriptions: state => state.subscriptions,
     transactionHashes: state => state.transactionHashes,
-    confirmedTransactions: state => state.confirmedTransactions,
-    unconfirmedTransactions: state => state.unconfirmedTransactions,
-    partialTransactions: state => state.partialTransactions,
+    confirmedTransactions: state => {
+      return state.confirmedTransactions.sort((t1, t2) => {
+        const info1 = t1.transactionInfo
+        const info2 = t2.transactionInfo
+
+        // - confirmed sorted by height then index
+        const diffHeight = info1.height.compact() - info2.height.compact()
+        const diffIndex = info1.index - info2.index
+        return diffHeight !== 0 ? diffHeight : diffIndex
+      })
+    },
+    unconfirmedTransactions: state => {
+      return state.unconfirmedTransactions.sort((t1, t2) => {
+        const info1 = t1.transactionInfo
+        const info2 = t2.transactionInfo
+     
+        // - unconfirmed/partial sorted by index
+        return t1.transactionInfo.index - t2.transactionInfo.index
+      })
+    },
+    partialTransactions: state => {
+      return state.partialTransactions.sort((t1, t2) => {
+        const info1 = t1.transactionInfo
+        const info2 = t2.transactionInfo
+     
+        // - unconfirmed/partial sorted by index
+        return t1.transactionInfo.index - t2.transactionInfo.index
+      })
+    },
     stagedTransactions: state => state.stagedTransactions,
     signedTransactions: state => state.signedTransactions,
     transactionCache: state => state.transactionCache,
-    allTransactions: state => {
+    allTransactions: (state, getters) => {
       return [].concat(
-        state.partialTransactions,
-        state.unconfirmedTransactions,
-        state.confirmedTransactions,
+        getters.partialTransactions,
+        getters.unconfirmedTransactions,
+        getters.confirmedTransactions,
       )
     },
   },
@@ -317,10 +343,14 @@ export default {
       commit('unconfirmedTransactions', [])
       commit('partialTransactions', [])
     },
-    ADD_TRANSACTION({commit, getters}, transactionMessage) {
+    ADD_TRANSACTION({commit, dispatch, getters}, transactionMessage) {
+
       if (!transactionMessage || !transactionMessage.group) {
         throw Error('Missing mandatory field \'group\' for action wallet/addTransaction.')
       }
+
+      const message = 'Adding transaction to ' + transactionMessage.group + ' Type: ' + transactionMessage.transaction.type
+      dispatch('diagnostic/ADD_DEBUG', message, {root: true})
 
       // format transactionGroup to store variable name
       let transactionGroup = transactionGroupToStateVariable(transactionMessage.group);
@@ -332,7 +362,10 @@ export default {
 
       // register transaction
       const transactions = getters[transactionGroup]
-      transactions.push(transaction)
+      const findTx = transactions.find(t => t.transactionInfo.hash === transaction.transactionInfo.hash)
+      if (findTx === undefined) {
+        transactions.push(transaction)
+      }
 
       if (findIterator === undefined) {
         hashes.push(transaction.transactionInfo.hash)

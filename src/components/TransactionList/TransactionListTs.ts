@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 import {mapGetters} from 'vuex'
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Transaction, MosaicId} from 'nem2-sdk'
+import {of, Observable} from 'rxjs'
+import {pluck, concatMap} from 'rxjs/operators'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
@@ -156,18 +158,37 @@ export class TransactionListTs extends Vue {
     // }
   }
 
+/// region property watches
+  // @Watch('totalCountItems')
+  // onCountItemsChange(totalCount: number) {
+  //   this.refresh()
+  // }
+/// end-region property watches
+
   /// region computed properties getter/setter
   public get countPages(): number {
-    return Math.ceil(this.confirmedTransactions.length / 10)
+    if (!this.confirmedTransactions) return 0
+    return Math.ceil([...this.confirmedTransactions].length / 10)
   }
 
-  public get currentPageTransactions(): Transaction[] {
+  public get totalCountItems(): number {
+    return [...this.confirmedTransactions].length
+  }
+
+  public get currentPageTransactions(): {total: number, items: Transaction[]} {
     const start = (this.currentPage - 1) * this.pageSize
     const end = this.currentPage * this.pageSize
+    const total = this.totalCountItems
 
-    return this.confirmedTransactions && [...this.confirmedTransactions].length
-      ? [...this.confirmedTransactions].slice(start, end)
-      : []
+    if (!this.confirmedTransactions || !total) {
+      return {total: 0, items: []}
+    }
+
+    const items = [...this.confirmedTransactions].reverse().slice(start, end)
+    return {
+      total,
+      items
+    }
   }
 
   public get hasDetailModal(): boolean {
@@ -186,15 +207,15 @@ export class TransactionListTs extends Vue {
   public async refresh(grp?) {
     const group = grp ? grp : this.currentTab
 
-    console.log('refreshing ' + group + '...')
+    console.log("refreshing...")
     await this.$store.dispatch('wallet/REST_FETCH_TRANSACTIONS', {
       group: group,
       address: this.currentWallet.objects.address.plain(),
       pageSize: 100,
     })
 
-    this.$forceUpdate()
-    console.log("confirmed: ", ...this.confirmedTransactions)
+    const newPage = this.currentPageTransactions
+    console.log("transactions: ", newPage)
   }
 
   /**
@@ -202,7 +223,6 @@ export class TransactionListTs extends Vue {
    * @param {Transaction} transaction 
    */
   public onClickTransaction(transaction: Transaction) {
-    console.log("clicked: ", transaction)
     this.activeTransaction = transaction
     this.hasDetailModal = true
   }
