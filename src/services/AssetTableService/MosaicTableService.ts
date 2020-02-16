@@ -101,7 +101,7 @@ export class MosaicTableService extends AssetTableService {
    */
   private getExpiration(mosaic: MosaicsModel): string {
     const duration = mosaic.values.get('duration')
-    const startHeight = mosaic.values.get('startHeight')
+    const startHeight = mosaic.objects.startHeight
 
     // - unlimited mosaics have duration=0
     if (duration === 0) {
@@ -109,7 +109,7 @@ export class MosaicTableService extends AssetTableService {
     }
 
     // - calculate expiration
-    const expiresIn = (startHeight + duration) - this.getCurrentHeight()
+    const expiresIn = (startHeight.compact() + duration) - this.getCurrentHeight()
     if (expiresIn <= 0) {
       return 'expired'
     }

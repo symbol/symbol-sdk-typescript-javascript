@@ -16,6 +16,7 @@
 // internal dependencies
 import {DatabaseModel} from '@/core/database/DatabaseModel'
 import {DatabaseRelation} from '@/core/database/DatabaseRelation'
+import {UInt64} from 'nem2-sdk'
 
 export class MosaicsModel extends DatabaseModel {
   /**
@@ -40,5 +41,17 @@ export class MosaicsModel extends DatabaseModel {
    */
   public constructor(values: Map<string, any> = new Map<string, any>()) {
     super(['hexId'], values)
+  }
+
+  /**
+   * Permits to return specific field's mapped object instances
+   * @return any
+   */
+  public get objects(): {startHeight: UInt64} {
+    const rawStartHeight = this.values.get('startHeight')
+
+    return {
+      startHeight: new UInt64([ rawStartHeight.lower, rawStartHeight.higher ]),
+    }
   }
 }

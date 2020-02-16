@@ -33,6 +33,8 @@
             ? 'md-arrow-dropup' : 'md-arrow-dropdown'"
         />
       </div>
+      <!-- Enmpty header for the action button column -->
+      <div>&nbsp;</div>
     </div>
     <div class="table-body-container">
       <Spin

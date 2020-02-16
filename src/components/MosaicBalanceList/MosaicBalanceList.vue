@@ -17,7 +17,7 @@
             <img v-else src="@/views/resources/img/monitor/mosaicDefault.png" alt="">
           </span>
           <span class="mosaic_name">
-            {{ entry.name }}
+            {{ entry.name !== '' ? entry.name : entry.id.toHex() }} 
             </span>
           <span class="mosaic_value">
             <MosaicAmountDisplay :relative-amount="entry.amount"

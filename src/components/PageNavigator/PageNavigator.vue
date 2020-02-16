@@ -1,22 +1,33 @@
 <template>
-  <div class="left_navigator xym-outline">
-    <div class="navigator-item">
+  <div class="left-navigator xym-outline">
+    <div class="navigator-items-container">
       <div
         v-for="(route, index) in $router.getRoutes()"
         :key="index"
-        :class="[ $route.matched.map(({path}) => path).includes(route.path) ? 'active' : '',
-                  !currentAccount ? 'un_click' : 'pointer', 'body' ]"
+        :class="[
+          'navigator-item-container',
+          $route.matched.map(({path}) => path).includes(route.path) ? 'active' : '',
+          !currentAccount ? 'un_click' : '',
+        ]"
         @click="!currentAccount ? '' : $router.push({name: route.name})"
       >
-        <Icon :type="route.meta.icon" size="48" />
-        <div>{{ route.meta.title }}</div>
+        <div class="navigator-icon-container">
+          <Icon :type="route.meta.icon" class="navigator-icon" />
+        </div>
+        <div class="navigator-text-container">
+          <div>{{ route.meta.title }}</div>
+        </div>
       </div>
     </div>
 
-    <div v-if="!!currentAccount" class="quit_account navigator-item" @click="logout">
-      <div class="body pointer">
-        <Icon :type="'md-log-out'" size="48" />
-        <div>{{ currentAccount.values.get('accountName') }}</div>
+    <div v-if="!!currentAccount" class="logout-item-container" @click="logout">
+      <div class="navigator-item-container">
+        <div class="navigator-icon-container">
+          <Icon :type="'md-log-out'" class="navigator-icon" />
+        </div>
+        <div class="navigator-text-container">
+          {{ currentAccount.values.get('accountName') }}
+        </div>
       </div>
     </div>
   </div>
@@ -25,7 +36,5 @@
 <script lang="ts">
 import {PageNavigatorTs} from './PageNavigatorTs'
 import './PageNavigator.less'
-import './PageNavigator.win32.less'
-
 export default class PageNavigator extends PageNavigatorTs {}
 </script>
