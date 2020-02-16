@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, Mosaic, MosaicRestrictionTransactionService} from 'nem2-sdk'
+import {MosaicId, Mosaic, MosaicInfo} from 'nem2-sdk'
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
@@ -71,16 +71,12 @@ export class AccountBalancesPanelTs extends Vue {
    */
   public uiHelpers = UIHelpers
 
-  /**
-   * The current wallet's network mosaic balance (RELATIVE)
-   * @var {number}
-   */
-  public networkMosaicBalance: number = 0
+  public divisibility: number
 
   public async created() {
     const service = new MosaicService(this.$store)
-    const balance = this.absoluteBalance
-    this.networkMosaicBalance = await service.getRelativeAmount(balance, this.networkMosaic)
+    const model = await service.getMosaic(this.networkMosaic)
+    this.divisibility = model.values.get('divisibility')
   }
 
 /// region computed properties getter/setter
@@ -100,6 +96,11 @@ export class AccountBalancesPanelTs extends Vue {
 
     // - format to relative
     return entry.shift().amount.compact()
+  }
+
+  public get networkMosaicBalance(): number {
+    const balance = this.absoluteBalance
+    return balance / Math.pow(10, this.divisibility)
   }
 /// end-region computed properties getter/setter
 }
