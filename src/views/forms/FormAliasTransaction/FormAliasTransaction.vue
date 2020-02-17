@@ -16,31 +16,18 @@
 
         <!-- Form for LINK alias action -->
         <div v-if="aliasAction === AliasAction.Link">
-          <ValidationProvider
-            v-slot="{ errors }"
-            class="full-width-item-container"
-            tag="div"
-            vid="password"
-            :name="$t('password')"
-            :rules="required"
-          >
-            <ErrorTooltip :errors="errors">
-              <input
-                v-model="formItems.password"
-                v-focus
-                type="password"
-                class="full-width-item-container input-size input-style"
-                :placeholder="$t('please_enter_your_wallet_password')"
-              >
-            </ErrorTooltip>
-          </ValidationProvider>
-
+          wwww{{formItems.namespaceHexId}}wwwwwwwwww
+          <NamespaceSelector
+            v-model="formItems.namespaceHexId"
+            :namespaces="linkableNamespaces"
+          />
+          dddddddddd{{formItems.aliasTarget}}dddddddd
           <MosaicSelector
             v-if="aliasTargetType === 'mosaic'"
             v-model="formItems.aliasTarget"
             :mosaics="linkableMosaics"
           />
-
+          iiiiiiiiiiii
           <!-- Transfer recipient input field -->
           <RecipientInput v-if="aliasTargetType === 'address'" v-model="formItems.aliasTarget" />
         </div>

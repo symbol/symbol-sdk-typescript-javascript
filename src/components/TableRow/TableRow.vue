@@ -18,7 +18,11 @@
       </div>
     </div>
     <div class="edit-icon-cell">
-      <Icon type="md-create" class="edit-icon" />
+      <Icon
+        type="md-create"
+        class="edit-icon"
+        @click="$emit('on-show-alias-form', rowValues)"
+      />
     </div>
   </div>
 </template>

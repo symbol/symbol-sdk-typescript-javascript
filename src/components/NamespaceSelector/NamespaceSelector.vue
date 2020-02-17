@@ -18,7 +18,7 @@
             :placeholder="$t('Select_a_namespace')"
           >
             <Option
-              v-for="(info) in ownedNamespaces"
+              v-for="(info) in namespaces"
               :key="getName(info)"
               :value="getName(info)"
             >

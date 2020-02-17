@@ -31,6 +31,7 @@ import {NamespaceTableService} from '@/services/AssetTableService/NamespaceTable
 // child components
 // @ts-ignore
 import TableRow from '@/components/TableRow/TableRow.vue'
+import {NamespaceId, AliasAction, MosaicId} from 'nem2-sdk'
 
 @Component({
   components: {TableRow},
@@ -41,7 +42,7 @@ export class TableDisplayTs extends Vue {
    * @type {string}
    */
   @Prop({
-    default: 'mosaic'
+    default: 'mosaic',
   }) assetType: string
 
   /**
@@ -92,7 +93,7 @@ export class TableDisplayTs extends Vue {
       return new NamespaceTableService(this.$store)
     }
 
-    throw new Error('Asset type \'' + this.assetType + '\' does not exist in TableDisplay.')
+    throw new Error(`Asset type '${this.assetType}' does not exist in TableDisplay.`)
   }
 
   /// region getters and setters
@@ -122,7 +123,7 @@ export class TableDisplayTs extends Vue {
   get currentPageRows(): any[] {
     return this.displayedValues.slice(
       (this.currentPage - 1) * this.pageSize,
-      this.currentPage * this.pageSize
+      this.currentPage * this.pageSize,
     )
   }
   /// end-region getters and setters
@@ -206,5 +207,31 @@ export class TableDisplayTs extends Vue {
    */
   public handlePageChange(page: number): void {
     this.currentPage = page
+  }
+
+  /**
+   * Triggers the alias form modal
+   * @protected
+   * @param {Record<string, string>} rowValues
+   */
+  public showAliasForm(rowValues: Record<string, string>): void {
+    if (this.assetType === 'mosaic') {
+      this.$emit(
+        'show-alias-form', {
+          namespaceId: null,
+          aliasTarget: new MosaicId(rowValues.hexId),
+          aliasAction: AliasAction.Link,
+        })
+      return
+    }
+
+    if (this.assetType === 'namespace') {
+      this.$emit(
+        'show-alias-form', {
+          namespaceId: new NamespaceId(rowValues.name),
+          aliasTarget: null,
+          aliasAction: AliasAction.Link,
+        })
+    }
   }
 }

@@ -15,33 +15,46 @@
  */
 import {
   TransactionType, AliasTransaction, NamespaceId, MosaicId, Address, AliasAction, AliasType,
-  AddressAliasTransaction, MosaicAliasTransaction, MosaicInfo, NamespaceInfo, UInt64,
+  AddressAliasTransaction, MosaicAliasTransaction, MosaicInfo, NamespaceInfo, UInt64, Mosaic,
 } from 'nem2-sdk'
 import {Component, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
-
-// child components
-import {ValidationProvider} from 'vee-validate'
-// @ts-ignore
-import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
-// @ts-ignore
-import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 import {FormTransactionBase} from '../FormTransactionBase/FormTransactionBase'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
 import {ViewAliasTransaction} from '@/core/transactions/ViewAliasTransaction'
 
+// child components
+import {ValidationProvider, ValidationObserver} from 'vee-validate'
+// @ts-ignore
+import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
+// @ts-ignore
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+// @ts-ignore
+import NamespaceSelector from '@/components/NamespaceSelector/NamespaceSelector.vue'
+// @ts-ignore
+import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue'
+// @ts-ignore
+import RecipientInput from '@/components/RecipientInput/RecipientInput.vue'
+// @ts-ignore
+import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
+
 @Component({
   components: {
     ValidationProvider,
+    ValidationObserver,
     FormWrapper,
     ErrorTooltip,
+    NamespaceSelector,
+    MosaicSelector,
+    RecipientInput,
+    MaxFeeSelector,
   },
   computed: {...mapGetters({
-    currentWalletOwnedNamespaces: 'wallet/currentWalletOwnedNamespaces', 
-    currentWalletOwnedMosaics: 'wallet/currentWalletOwnedMosaics',
+    ownedNamespaces: 'wallet/currentWalletOwnedNamespaces', 
+    ownedMosaics: 'wallet/currentWalletOwnedMosaics',
     mosaicsNamesByHex: 'mosaic/mosaicsNamesByHex',
   })},
 })
@@ -109,22 +122,22 @@ export class FormAliasTransactionTs extends FormTransactionBase {
    * @protected
    * @type {string []}
    */
-  protected get linkableNamespaceIds(): string[] {
-    return this.ownedNamespaces
-      .filter(({alias}) => alias && alias.type !== AliasType.Address)
-      .map(({id}) => id.toHex())
+  protected get linkableNamespaces(): NamespaceInfo[] {
+    return this.ownedNamespaces.filter(
+      ({alias}) => alias && alias.type !== AliasType.Address,
+    )
   }
   
   /**
    * Current wallet mosaics hex Ids that can be linked
    * @readonly
    * @protected
-   * @type {MosaicId[]}
+   * @type {Mosaic}
    */
-  protected get linkableMosaicIds(): string[] {
+  protected get linkableMosaics(): Mosaic[] {
     return this.ownedMosaics
       .filter(({id}) => this.mosaicsNamesByHex[id.toHex()] === undefined)
-      .map(({id}) => id.toHex())
+      .map(({id}) => new Mosaic(id, UInt64.fromUint(0)))
   }
 
   /**
