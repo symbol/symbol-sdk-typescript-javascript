@@ -1082,5 +1082,6 @@
   "wallets_create_invoice": "Create an invoice",
   "wallets_flags_simple": "Simple account",
   "wallets_flags_multisig": "Multi-signature",
-  "wallets_flags_default_wallet": "Default wallet"
+  "wallets_flags_default_wallet": "Default wallet",
+  "unlink_namespace_from": "Unlink {aliasTarget} from {namespaceId}"
 }

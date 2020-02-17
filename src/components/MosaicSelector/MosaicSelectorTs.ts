@@ -38,9 +38,13 @@ import ErrorTooltip from '@/components//ErrorTooltip/ErrorTooltip.vue'
 })
 export class MosaicSelectorTs extends Vue {
 
-  @Prop({
-    default: ''
-  }) value: string
+  /**
+   * Prop bound to the parent v-model
+   * @type {string}
+   */
+  @Prop({ default: '' }) value: string
+
+  @Prop({ default: [] }) mosaics: MosaicsModel
 
   /**
    * Networks currency mosaic

@@ -88,10 +88,6 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
   @Prop({
     default: false,
   }) disableSubmit: boolean
-
-  @Prop({
-    default: false,
-  }) hideSigner: boolean
   /// end-region component properties
 
   /**

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, MosaicInfo, Mosaic} from 'nem2-sdk'
+import {MosaicId, MosaicInfo} from 'nem2-sdk'
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
@@ -27,6 +27,7 @@ import AmountInput from '@/components/AmountInput/AmountInput.vue'
 import ButtonAdd from '@/components/ButtonAdd/ButtonAdd.vue'
 // @ts-ignore
 import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
 
 @Component({
   components: {
@@ -45,8 +46,8 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue'
 export class MosaicAttachmentInputTs extends Vue {
 
   @Prop({
-    default: []
-  }) mosaics: Mosaic[]
+    default: [],
+  }) mosaics: MosaicsModel[]
 
   /**
    * Whether to show absolute amounts or not

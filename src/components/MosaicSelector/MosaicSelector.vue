@@ -10,10 +10,9 @@
         <Option 
           v-for="m in mosaics"
           :key="m.getIdentifier()"
-          :label="m.values.get('name')"
           :value="m.values.get('name')"
         >
-          {{ m.values.get('name') }} 
+          {{ m.values.get('name') !== '' ? m.values.get('name') : m.values.get('hexId') }} 
         </Option>
       </AutoComplete>
     </ErrorTooltip>
