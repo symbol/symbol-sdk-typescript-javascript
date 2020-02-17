@@ -311,29 +311,8 @@ export default {
     RESET_BALANCES({dispatch}) {
       dispatch('SET_BALANCES', [])
     },
-    SET_BALANCES({commit, rootGetters}, mosaics) {
-      // - read network mosaic
-      const networkMosaic = rootGetters['mosaic/networkMosaic']
-
-      // - network mosaic with amount
-      const defaultNetworkMosaic = new Mosaic(networkMosaic, UInt64.fromUint(0))
-
-      // - if there is no mosaics, add network mosaic balance 0
-      if (!mosaics.length) {
-        commit('currentWalletMosaics', [defaultNetworkMosaic])
-        return
-      }
-
-      // - if there is mosaics, set network mosaic on top
-      const networkMosaicIndexInMosaics = mosaics.findIndex(m => m.id.equals(networkMosaic))
-      const balances = networkMosaicIndexInMosaics === -1
-        ? [ defaultNetworkMosaic, ...mosaics ]
-        : [ 
-          mosaics[networkMosaicIndexInMosaics],
-          ...mosaics.filter(m => !m.id.equals(networkMosaic)),
-        ]
-      
-      commit('currentWalletMosaics', balances)
+    SET_BALANCES({commit}, mosaics) {
+      commit('currentWalletMosaics', mosaics.length ? mosaics : [])
     },
     RESET_SUBSCRIPTIONS({commit}) {
       commit('setSubscriptions', [])

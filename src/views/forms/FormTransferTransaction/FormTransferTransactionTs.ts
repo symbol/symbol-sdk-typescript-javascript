@@ -16,11 +16,8 @@
 import {
   MosaicId, 
   Mosaic,
-  MultisigAccountInfo,
   TransferTransaction,
-  Transaction,
   TransactionType,
-  MosaicInfo,
   Address,
   Message,
   PublicAccount,
@@ -36,8 +33,6 @@ import {ViewTransferTransaction, TransferFormFieldsType} from '@/core/transactio
 import {FormTransactionBase} from '@/views/forms/FormTransactionBase/FormTransactionBase'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
 
-// configuration
-import feesConfig from '@/../config/fees.conf.json'
 
 // child components
 import {ValidationObserver} from 'vee-validate'

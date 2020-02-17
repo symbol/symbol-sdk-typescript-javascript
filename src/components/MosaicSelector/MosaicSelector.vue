@@ -1,20 +1,20 @@
 <template>
   <div>
     <ErrorTooltip field-name="selectedMosaic">
-      <AutoComplete
+      <Select
         v-model="selectedMosaicName"
         v-focus
-        class="auto-complete-size auto-complete-style"
+        class="select-size select-style"
         @on-change="onChange"
       >
         <Option 
-          v-for="m in mosaics"
+          v-for="m in displayedMosaics"
           :key="m.getIdentifier()"
           :value="m.values.get('name')"
         >
           {{ m.values.get('name') !== '' ? m.values.get('name') : m.values.get('hexId') }} 
         </Option>
-      </AutoComplete>
+      </Select>
     </ErrorTooltip>
   </div>
 </template>

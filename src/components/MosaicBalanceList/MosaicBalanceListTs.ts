@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, MosaicInfo, Mosaic} from 'nem2-sdk'
+import {MosaicId, MosaicInfo, Mosaic, NamespaceId} from 'nem2-sdk'
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
@@ -24,14 +24,27 @@ import {MosaicService} from '@/services/MosaicService'
 // @ts-ignore
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
 
+// resources
+import {dashboardImages} from '@/views/resources/Images' 
+
+// custom types
+interface BalanceEntry {
+  id: MosaicId
+  name: string
+  amount: number
+  mosaic: Mosaic
+}
+
 @Component({
   components: {
     MosaicAmountDisplay,
   },
   computed: {...mapGetters({
-    networkMosaic: 'mosaic/networkMosaic',
-    mosaicsInfo: 'mosaic/mosaicsInfoList',
+    currentWalletMosaics: 'wallet/currentWalletMosaics',
     hiddenMosaics: 'mosaic/hiddenMosaics',
+    mosaicsInfo: 'mosaic/mosaicsInfo',
+    mosaicsNames: 'mosaic/mosaicsNames',
+    networkMosaic: 'mosaic/networkMosaic',
   })}
 })
 export class MosaicBalanceListTs extends Vue {
@@ -41,7 +54,13 @@ export class MosaicBalanceListTs extends Vue {
   }) mosaics: Mosaic[]
 
   /**
-   * Networks currency mosaic
+   * Dashboard images
+   * @var {any}
+   */
+  protected dashboardImages: Record<string, any> = dashboardImages
+  
+  /**
+   * Networks 1currency mosaic
    * @var {MosaicId}
    */
   public networkMosaic: MosaicId
@@ -51,6 +70,12 @@ export class MosaicBalanceListTs extends Vue {
    * @var {MosaicInfo[]}
    */
   public mosaicsInfo: MosaicInfo[]
+
+  /**
+   * Currently active wallet's balances
+   * @var {Mosaic[]}
+   */
+  public currentWalletMosaics: Mosaic[]
 
   /**
    * List of mosaics that are hidden
@@ -111,29 +136,51 @@ export class MosaicBalanceListTs extends Vue {
   }
 
 /// region computed properties getter/setter
-  get filtered(): {info: MosaicInfo, mosaic: Mosaic}[] {
-    // internal helper
-    const filter = (objects) => { 
-      return objects.filter(
-        mosaic => -1 === this.hiddenMosaics.indexOf(mosaic.id.toHex())
-      )
-    }
+  /**
+   * Balance entries from the currently active wallet's mosaics
+   * @readonly
+   * @type {BalanceEntry}
+   */
+  get balanceEntries(): BalanceEntry[] {
+    return this.mosaics
+      .map(mosaic => {
+        const mosaicInfo = this.mosaicsInfo[mosaic.id.toHex()]
 
-    const info = filter(this.mosaicsInfo)
-    return filter(this.formatted).map((balanceEntry) => { return {
-      info: info.filter(mosaic => mosaic.id.equals(balanceEntry.id)).shift(),
-      name: balanceEntry.name,
-      id: balanceEntry.id,
-      amount: balanceEntry.amount,
-    }})
+        const mosaicFromStorage = this.mosaicService.getMosaicSync(mosaic.id)
+        // Mosaics not found from store are skipped, 
+        // Until next component rendering
+        if (!mosaicFromStorage) return null
+
+        // @TODO: Dirty fix: Force reactivity by taking the getter
+        // mosaic/mosaicInfo as a systematic source
+        const divisibility = mosaicInfo
+          ? mosaicInfo.divisibility : mosaicFromStorage.values.get('divisibility')
+        const balance = mosaic.amount.compact() || 0
+        const amount = balance / Math.pow(10, divisibility)
+
+        return {
+          id: mosaic.id as MosaicId,
+          // Mosaic names are not reactive
+          name: mosaicFromStorage.values.get('name'), 
+          amount,
+          mosaic: mosaic,
+        }
+      })
+      // filter out skipped mosaics
+      .filter(x => x) 
   }
 
-  get mosaicsWithInfo(): {info: MosaicInfo, mosaic: Mosaic}[] {
-    const info = this.mosaicsInfo
-    return this.mosaics.map((balanceEntry: Mosaic) => { return {
-      info: info.filter(mosaic => mosaic.id.equals(balanceEntry.id)).shift(),
-      mosaic: balanceEntry
-    }})
+  /**
+   * Filtered balance entries displayed in the view
+   *
+   * @readonly
+   * @type {BalanceEntry[]}
+   */
+  get filteredBalanceEntries(): BalanceEntry[] {
+    // internal helper
+    return this.balanceEntries.filter(
+      entry => -1 === this.hiddenMosaics.indexOf(entry.id.toHex()),
+    )
   }
 /// end-region computed properties getter/setter
 
@@ -142,7 +189,7 @@ export class MosaicBalanceListTs extends Vue {
    * @param {MosaicId} mosaicId 
    * @return {boolean}
    */
-  public hasHiddenMosaic(mosaicId: MosaicId): boolean {
+  public hasHiddenMosaic(mosaicId: MosaicId | NamespaceId): boolean {
     return 1 === this.mosaics.filter(mosaic => {
       return mosaic.id.equals(mosaicId)
           && -1 === this.hiddenMosaics.indexOf(mosaic.id.toHex())
@@ -153,7 +200,7 @@ export class MosaicBalanceListTs extends Vue {
    * Toggle whether all mosaics are shown or hidden
    * @return {void}
    */
-  public toggleMosaicDisplay(mosaicId?: MosaicId) {
+  public toggleMosaicDisplay(mosaicId?: MosaicId| NamespaceId) {
     // - clicked singular checkbox
     if (mosaicId !== undefined) {
       const isHidden = this.hasHiddenMosaic(mosaicId)

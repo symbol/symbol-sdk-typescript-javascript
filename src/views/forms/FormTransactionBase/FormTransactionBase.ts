@@ -87,6 +87,12 @@ export class FormTransactionBase extends Vue {
   public currentWalletMosaics: Mosaic[]
 
   /**
+   * Currently active multisig account's balances
+   * @var {Mosaic[]}
+   */
+  public currentMultisigAccountMosaics: Mosaic[] = []
+
+  /**
    * Currently active wallet's multisig info
    * @var {MultisigAccountInfo}
    */
@@ -272,22 +278,6 @@ export class FormTransactionBase extends Vue {
 
     // - open signature modal
     this.onShowConfirmationModal()
-  }
-
-  /**
-   * Helper to retrieve mosaics of the currently selected signer
-   * @return {Mosaic[]}
-   */
-  public async getCurrentSignerMosaics(): Promise<Mosaic[]> {
-    if (!this.currentWallet) {
-      return []
-    }
-
-    const current = this.currentWallet.objects.publicAccount.publicKey
-    const address = Address.createFromPublicKey(current, this.networkType)
-    return this.currentSigner === this.currentWallet.objects.publicAccount.publicKey
-         ? this.currentWalletMosaics
-         : await this.$store.dispatch('wallet/REST_FETCH_BALANCES', address)
   }
 
   /**

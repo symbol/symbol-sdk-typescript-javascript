@@ -81,6 +81,10 @@ import dashboardOther from '@/views/resources/img/monitor/dash-board/dashboardOt
 import transferSent from '@/views/resources/img/monitor/dash-board/dashboardMosaicOut.png'
 // @ts-ignore
 import transferReceived from '@/views/resources/img/monitor/dash-board/dashboardMosaicIn.png'
+// @ts-ignore
+import selected from '@/views/resources/img/monitor/mosaics/selected.png'
+// @ts-ignore
+import unselected from '@/views/resources/img/monitor/mosaics/unselected.png'
 
 /// region exported image objects
 export const walletTypeImages = {
@@ -107,6 +111,8 @@ export const createStepImage = {
 export const dashboardImages = {
   dashboardUnconfirmed,
   dashboardConfirmed,
+  selected,
+  unselected,
 }
 
 export const leftBarIcons = {

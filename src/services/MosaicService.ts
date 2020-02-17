@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {MosaicId, MosaicInfo, AccountInfo} from 'nem2-sdk'
+import {MosaicId, AccountInfo, NamespaceId} from 'nem2-sdk'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
@@ -67,10 +67,7 @@ export class MosaicService extends AbstractService {
    * @param {MosaicId} mosaicId 
    * @return {MosaicsModel}
    */
-  public async getMosaic(
-    mosaicId: MosaicId 
-  ): Promise<MosaicsModel> {
-
+  public async getMosaic(mosaicId: MosaicId): Promise<MosaicsModel> {
     const repository = new MosaicsRepository()
     let mosaic: MosaicsModel
 
@@ -84,6 +81,24 @@ export class MosaicService extends AbstractService {
     }
 
     return mosaic
+  }
+
+  /**
+   * Returns mosaic from database
+   * if mosaic is not found, fetch from REST + add to storage as a side effect
+   * @param {MosaicId} mosaicId
+   * @returns {(MosaicsModel | null)}
+   */
+  public getMosaicSync(mosaicId: MosaicId | NamespaceId): MosaicsModel | null {
+    const repository = new MosaicsRepository()
+
+    if (!repository.find(mosaicId.toHex())) {
+      // - mosaic is unknown, fetch from REST + add to storage
+      this.fetchMosaicInfo(mosaicId as MosaicId)
+      return null
+    }
+
+    return repository.read(mosaicId.toHex())
   }
 
   /**
