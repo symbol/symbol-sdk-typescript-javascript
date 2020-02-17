@@ -16,16 +16,20 @@
  */
 import {Store} from 'vuex'
 import {
-  Transaction,
-  TransactionType,
   AccountAddressRestrictionTransaction,
   AccountLinkTransaction,
   AccountMetadataTransaction,
   AccountMosaicRestrictionTransaction,
   AccountOperationRestrictionTransaction,
+  Address,
   AddressAliasTransaction,
   AggregateTransaction,
+  AliasTransaction,
+  BlockInfo,
+  Deadline,
+  EmptyMessage,
   HashLockTransaction,
+  LockFundsTransaction,
   MosaicAddressRestrictionTransaction,
   MosaicAliasTransaction,
   MosaicDefinitionTransaction,
@@ -35,35 +39,35 @@ import {
   MultisigAccountModificationTransaction,
   NamespaceMetadataTransaction,
   NamespaceRegistrationTransaction,
+  NamespaceRegistrationType,
   SecretLockTransaction,
   SecretProofTransaction,
-  TransferTransaction,
-  BlockInfo,
   SignedTransaction,
+  Transaction,
   TransactionMapping,
-  LockFundsTransaction,
-  Deadline,
+  TransactionType,
+  TransferTransaction,
   UInt64,
-  NamespaceRegistrationType,
-  EmptyMessage,
 } from 'nem2-sdk'
 
 // internal dependencies
-import {ViewUnknownTransaction} from '@/core/transactions/ViewUnknownTransaction'
-import {ViewTransferTransaction} from '@/core/transactions/ViewTransferTransaction'
+import {ViewAliasTransaction} from './ViewAliasTransaction'
 import {ViewMosaicDefinitionTransaction} from './ViewMosaicDefinitionTransaction'
 import {ViewMosaicSupplyChangeTransaction} from './ViewMosaicSupplyChangeTransaction'
-import {ViewNamespaceRegistrationTransaction} from './ViewNamespaceRegistrationTransaction'
 import {ViewMultisigAccountModificationTransaction} from './ViewMultisigAccountModificationTransaction'
+import {ViewNamespaceRegistrationTransaction} from './ViewNamespaceRegistrationTransaction'
+import {ViewTransferTransaction} from '@/core/transactions/ViewTransferTransaction'
+import {ViewUnknownTransaction} from '@/core/transactions/ViewUnknownTransaction'
 
 /// region custom types
 export type TransactionImpl = Transaction
-type TransactionViewType = ViewMosaicDefinitionTransaction
-                         | ViewMosaicSupplyChangeTransaction
-                         | ViewNamespaceRegistrationTransaction
-                         | ViewTransferTransaction
-                         | ViewMultisigAccountModificationTransaction
-                         | ViewUnknownTransaction
+type TransactionViewType = ViewAliasTransaction
+| ViewMosaicDefinitionTransaction
+| ViewMosaicSupplyChangeTransaction
+| ViewMultisigAccountModificationTransaction
+| ViewNamespaceRegistrationTransaction
+| ViewTransferTransaction
+| ViewUnknownTransaction
 /// end-region custom types
 
 export class TransactionFactory {
@@ -76,11 +80,13 @@ export class TransactionFactory {
     public readonly $store: Store<any>) {}
 
   /// region specialised signatures
-  public build(view: ViewTransferTransaction): TransferTransaction
+  public build(view: ViewAliasTransaction): AliasTransaction
   public build(view: ViewMosaicDefinitionTransaction): MosaicDefinitionTransaction
   public build(view: ViewMosaicSupplyChangeTransaction): MosaicSupplyChangeTransaction
-  public build(view: ViewNamespaceRegistrationTransaction): NamespaceRegistrationTransaction
   public build(view: ViewMultisigAccountModificationTransaction): MultisigAccountModificationTransaction
+  public build(view: ViewNamespaceRegistrationTransaction): NamespaceRegistrationTransaction
+  public build(view: ViewTransferTransaction): TransferTransaction
+  
   /// end-region specialised signatures
 
   /**
@@ -158,7 +164,28 @@ export class TransactionFactory {
         view.values.get('maxFee'),
       )
     }
+    else if (view instanceof ViewAliasTransaction) {
+      if (view.values.get('aliasTarget') instanceof Address) {
+        return AddressAliasTransaction.create(
+          deadline,
+          view.values.get('aliasAction'),
+          view.values.get('namespaceId'),
+          view.values.get('aliasTarget'),
+          networkType,
+          view.values.get('maxFee'),
+        ) as AliasTransaction
+      }
 
-    throw new Error(`Transaction type not yet implemented in TransactionFactory`)
+      return MosaicAliasTransaction.create(
+        deadline,
+        view.values.get('aliasAction'),
+        view.values.get('namespaceId'),
+        view.values.get('aliasTarget'),
+        networkType,
+        view.values.get('maxFee'),
+      )
+    }
+
+    throw new Error('Transaction type not yet implemented in TransactionFactory')
   }
 }

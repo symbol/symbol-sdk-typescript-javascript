@@ -53,7 +53,6 @@ import ModalFormSubWalletCreation from '@/views/modals/ModalFormSubWalletCreatio
     currentAccount: 'account/currentAccount',
     currentWallet: 'wallet/currentWallet',
     knownWallets: 'wallet/knownWallets',
-    currentWalletMosaics: 'wallet/currentWalletMosaics',
     otherWalletsInfo: 'wallet/otherWalletsInfo',
     networkMosaic: 'mosaic/networkMosaic',
   })}})
@@ -84,12 +83,6 @@ export class WalletSelectorPanelTs extends Vue {
    * @var {string[]}
    */
   public knownWallets: string[]
-
-  /**
-   * Currently active wallet's balances
-   * @var {Mosaic[]}
-   */
-  public currentWalletMosaics: Mosaic[]
 
   /**
    * Currently active wallet's balances

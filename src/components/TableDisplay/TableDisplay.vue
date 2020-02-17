@@ -47,6 +47,7 @@
           :key="index"
           :row-values="rowValues"
           :asset-type="assetType"
+          @on-show-alias-form="showAliasForm"
         />
       </div>
       <div v-else class="empty-container">

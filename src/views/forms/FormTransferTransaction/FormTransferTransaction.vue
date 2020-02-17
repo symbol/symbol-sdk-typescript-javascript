@@ -17,7 +17,7 @@
           <!-- Mosaics attachments input fields -->
           <MosaicAttachmentInput
             v-model="formItems.attachedMosaics"
-            :mosaics="getCurrentSignerMosaics()"
+            :mosaics="currentWalletMosaics"
             :absolute="false"
             @add="onAddMosaic"
           />

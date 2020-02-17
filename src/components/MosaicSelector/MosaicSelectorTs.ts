@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, MosaicInfo, Mosaic, RawUInt64} from 'nem2-sdk'
+import {MosaicId, MosaicInfo, Mosaic} from 'nem2-sdk'
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
@@ -38,9 +38,13 @@ import ErrorTooltip from '@/components//ErrorTooltip/ErrorTooltip.vue'
 })
 export class MosaicSelectorTs extends Vue {
 
-  @Prop({
-    default: ''
-  }) value: string
+  /**
+   * Prop bound to the parent v-model
+   * @type {string}
+   */
+  @Prop({ default: '' }) value: string
+
+  @Prop({ default: [] }) mosaics: Mosaic[]
 
   /**
    * Networks currency mosaic
@@ -75,9 +79,26 @@ export class MosaicSelectorTs extends Vue {
   }
 
 /// region computed properties getter/setter
-  public get mosaics(): MosaicsModel[] {
+  /**
+   * All mosaics stored in db
+   * @readonly
+   * @type {MosaicsModel[]}
+   */
+  public get allMosaics(): MosaicsModel[] {
     const service = new MosaicService(this.$store)
     return service.getMosaics()
+  }
+
+  /**
+   * Mosaics shown as options in the select
+   * @readonly
+   * @protected
+   * @type {MosaicsModel[]}
+   */
+  protected get displayedMosaics(): MosaicsModel[] {
+    return this.mosaics
+      .map(({id}) => this.allMosaics.find(m => m.getIdentifier() === id.toHex()))
+      .filter(x => x) // filter out the mosaics of which info has not yet been fetched
   }
 
   public get selectedMosaic(): string {
@@ -89,7 +110,7 @@ export class MosaicSelectorTs extends Vue {
   }
 
   public get selectedMosaicName(): string {
-    const exists = this.mosaics.filter(
+    const exists = this.allMosaics.filter(
       m => m.getIdentifier() === this.selectedMosaic
     )
 
@@ -97,7 +118,7 @@ export class MosaicSelectorTs extends Vue {
   }
 
   public set selectedMosaicName(n: string) {
-    const exists = this.mosaics.filter(
+    const exists = this.allMosaics.filter(
       m => m.values.get('name') === n
     )
 
@@ -106,14 +127,15 @@ export class MosaicSelectorTs extends Vue {
   /// end-region computed properties getter/setter
 
   public onChange (input: string) {
-    const canFindByName = this.mosaics.find(m => m.values.get('name') === input)
-    if (undefined !== canFindByName) {
-      return this.selectedMosaic = canFindByName.getIdentifier()
+    const canFindByName = this.allMosaics.find(m => m.values.get('name') === input)
+    if (undefined !== canFindByName) { 
+      this.selectedMosaic = canFindByName.getIdentifier()
+      return
     }
 
-    const canFindByHex = this.mosaics.find(m => m.getIdentifier() === input)
+    const canFindByHex = this.allMosaics.find(m => m.getIdentifier() === input)
     if (undefined !== canFindByHex) {
-      return this.selectedMosaic = canFindByHex.getIdentifier()
+      this.selectedMosaic = canFindByHex.getIdentifier()
     }
   }
 }

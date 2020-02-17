@@ -33,7 +33,6 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue'
   },
   computed: {...mapGetters({
     namespacesNames: 'namespace/namespacesNames',
-    ownedNamespaces: 'wallet/currentWalletOwnedNamespaces',
   })}, 
 })
 export class NamespaceSelectorTs extends Vue {
@@ -41,15 +40,13 @@ export class NamespaceSelectorTs extends Vue {
    * Value set by the parent component's v-model
    * @type {string}
    */
-  @Prop({
-    default: null,
-  }) value: string
+  @Prop({ default: null }) value: string
 
   /**
    * Current wallet's owned namespaces
    * @var {NamespaceInfo[]}
    */
-  public ownedNamespaces: NamespaceInfo[]
+  @Prop({ default: [] }) namespaces: NamespaceInfo[]
 
   /**
    * Namespaces names

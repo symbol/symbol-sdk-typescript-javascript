@@ -33,7 +33,7 @@ export type MosaicDefinitionFormFieldsType = {
 
 export class ViewMosaicDefinitionTransaction extends TransactionView<MosaicDefinitionFormFieldsType> {
   /**
-   * Fields that are specific to transfer transactions
+   * Fields that are specific to mosaic definition transactions
    * @var {string[]}
    */
   protected readonly fields: string[] = [

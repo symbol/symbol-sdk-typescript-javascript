@@ -27,6 +27,7 @@ import {MosaicService} from '@/services/MosaicService'
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
 // @ts-ignore
 import MosaicBalanceList from '@/components/MosaicBalanceList/MosaicBalanceList.vue'
+import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
 
 @Component({
   components: {
@@ -71,12 +72,31 @@ export class AccountBalancesPanelTs extends Vue {
    */
   public uiHelpers = UIHelpers
 
-  public divisibility: number
+  private mosaicService: MosaicService = new MosaicService(this.$store)
 
-  public async created() {
-    const service = new MosaicService(this.$store)
-    const model = await service.getMosaic(this.networkMosaic)
-    this.divisibility = model.values.get('divisibility')
+
+  /**
+   * collection of known mosaics from database
+   * @readonly
+   * @protected
+   * @type {MosaicsModel[]}
+   */
+  protected get allMosaics(): MosaicsModel[] {
+    return this.mosaicService.getMosaics()
+  }
+
+  /**
+   * Network mosaic divisibility
+   * @readonly
+   * @protected
+   * @type {number}
+   */
+  protected get divisibility(): number {
+    if (!this.networkMosaic) return null
+    const networkMosaicId = this.networkMosaic.id.toHex()
+    const networkMosaicModel = this.allMosaics.find(m => m.getIdentifier() === networkMosaicId)
+    if (networkMosaicModel === undefined) return null
+    return networkMosaicModel.values.get('divisibility')
   }
 
 /// region computed properties getter/setter
@@ -100,6 +120,7 @@ export class AccountBalancesPanelTs extends Vue {
 
   public get networkMosaicBalance(): number {
     const balance = this.absoluteBalance
+    if (balance === 0 || !this.divisibility) return 0
     return balance / Math.pow(10, this.divisibility)
   }
 /// end-region computed properties getter/setter

@@ -28,7 +28,7 @@
         <NamespaceSelector
           v-if="formItems.registrationType === typeSubNamespace && ownedNamespaces.length"
           v-model="formItems.parentNamespaceName"
-          :namespace-registration-type="formItems.registrationType"
+          :namespaces="ownedNamespaces"
         />
 
         <NamespaceNameInput

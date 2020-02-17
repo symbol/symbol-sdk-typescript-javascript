@@ -7,7 +7,6 @@
             <WalletNameDisplay 
               :wallet="currentWallet"
               :editable="true"
-              @update="hasNameForm = true"
             />
           </div>
 

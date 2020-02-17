@@ -21,7 +21,6 @@ import {NamespaceInfo, AliasType} from 'nem2-sdk'
 import {AssetTableService, TableField} from './AssetTableService'
 import {TimeHelpers} from '@/core/utils/TimeHelpers'
 import {NamespaceService} from '@/services/NamespaceService'
-import {NamespacesModel} from '@/core/database/entities/NamespacesModel'
 
 export class NamespaceTableService extends AssetTableService {
   /**
