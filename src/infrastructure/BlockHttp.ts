@@ -26,7 +26,7 @@ import { UInt64 } from '../model/UInt64';
 import { BlockRepository } from './BlockRepository';
 import { Http } from './Http';
 import { QueryParams } from './QueryParams';
-import { CreateTransactionFromDTO, extractBeneficiary } from './transaction/CreateTransactionFromDTO';
+import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
 
 /**
  * Blockchain http repository.
@@ -122,7 +122,7 @@ export class BlockHttp extends Http implements BlockRepository {
             dto.block.transactionsHash,
             dto.block.receiptsHash,
             dto.block.stateHash,
-            extractBeneficiary(dto, networkType),
+            dto.block.beneficiaryPublicKey ? PublicAccount.createFromPublicKey(dto.block.beneficiaryPublicKey, networkType) : undefined,
         );
     }
 
