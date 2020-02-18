@@ -88,30 +88,24 @@ describe('BlockService', () => {
      */
 
     describe('Validate transansaction', () => {
-        it('call block service', () => {
-            return transactionRepository.getTransaction(transactionHash).subscribe(
-                (transaction) => {
-                    const transactionInfo = transaction.transactionInfo;
-                    if (transactionInfo && transactionInfo.height !== undefined) {
-                        const validationResult = blockService.validateTransactionInBlock(transactionHash, transactionInfo.height);
-                        expect(validationResult).to.be.true;
-                    }
-                    assert(false, `Transaction (hash: ${transactionHash}) not found`);
-                },
-            );
+        it('call block service', async () => {
+            const transaction = await transactionRepository.getTransaction(transactionHash).toPromise();
+            const transactionInfo = transaction.transactionInfo;
+            if (transactionInfo && transactionInfo.height !== undefined) {
+                const validationResult = await blockService.validateTransactionInBlock(transactionHash, transactionInfo.height).toPromise();
+                expect(validationResult).to.be.true;
+            } else {
+                assert(false, `Transaction (hash: ${transactionHash}) not found`);
+            }
         });
     });
 
     describe('Validate receipt', () => {
-        it('call block service', () => {
-            return receiptRepository.getBlockReceipts(UInt64.fromUint(1)).subscribe(
-                (statement) => {
-                    const receipt = statement.transactionStatements[0];
-                    const validationResult = blockService.validateReceiptInBlock(receipt.generateHash(), UInt64.fromUint(1));
-                    expect(validationResult).to.be.true;
-                },
-            );
+        it('call block service', async () => {
+            const statement = await receiptRepository.getBlockReceipts(UInt64.fromUint(1)).toPromise();
+            const receipt = statement.transactionStatements[0];
+            const validationResult = await blockService.validateReceiptInBlock(receipt.generateHash(), UInt64.fromUint(1)).toPromise();
+            expect(validationResult).to.be.true;
         });
     });
-
 });
