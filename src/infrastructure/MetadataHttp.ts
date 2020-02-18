@@ -62,7 +62,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
             this.metadataRoutesApi.getAccountMetadata(address.plain(),
                                                       this.queryParams(queryParams).pageSize,
                                                       this.queryParams(queryParams).id,
-                                                      this.queryParams(queryParams).order)).pipe(
+                                                      this.queryParams(queryParams).ordering)).pipe(
             map(({body}) => body.metadataEntries.map((metadataEntry) => {
                     return this.buildMetadata(metadataEntry);
                 })),
@@ -112,7 +112,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
             this.metadataRoutesApi.getMosaicMetadata(mosaicId.toHex(),
                                                      this.queryParams(queryParams).pageSize,
                                                      this.queryParams(queryParams).id,
-                                                     this.queryParams(queryParams).order)).pipe(
+                                                     this.queryParams(queryParams).ordering)).pipe(
             map(({body}) => body.metadataEntries.map((metadataEntry) => {
                     return this.buildMetadata(metadataEntry);
                 })),
@@ -162,7 +162,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
             this.metadataRoutesApi.getNamespaceMetadata(namespaceId.toHex(),
                                                      this.queryParams(queryParams).pageSize,
                                                      this.queryParams(queryParams).id,
-                                                     this.queryParams(queryParams).order)).pipe(
+                                                     this.queryParams(queryParams).ordering)).pipe(
             map(({body}) => body.metadataEntries.map((metadataEntry) => {
                     return this.buildMetadata(metadataEntry);
                 })),

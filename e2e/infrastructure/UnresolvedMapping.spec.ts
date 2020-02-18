@@ -24,7 +24,7 @@ import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
-import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
+import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { MosaicRestrictionType } from '../../src/model/restriction/MosaicRestrictionType';
@@ -50,7 +50,7 @@ describe('TransactionHttp', () => {
     let generationHash: string;
     let networkType: NetworkType;
     let mosaicId: MosaicId;
-    let networkCurrencyMosaicId: MosaicId;
+    let NetworkCurrencyLocalId: MosaicId;
     let namespaceIdAddress: NamespaceId;
     let namespaceIdMosaic: NamespaceId;
 
@@ -79,7 +79,7 @@ describe('TransactionHttp', () => {
      */
     describe('Get network currency mosaic id', () => {
         it('get mosaicId', async () => {
-            networkCurrencyMosaicId =
+            NetworkCurrencyLocalId =
                 (await namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).toPromise()) as MosaicId;
         });
     });
@@ -259,7 +259,7 @@ describe('TransactionHttp', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
-                [NetworkCurrencyMosaic.createAbsolute(1)],
+                [NetworkCurrencyLocal.createAbsolute(1)],
                 PlainMessage.create('test-message'),
                 networkType, helper.maxFee,
             );

@@ -56,6 +56,7 @@ export class NodeHttp extends Http implements NodeRepository {
         return observableFrom(this.nodeRoutesApi.getNodeInfo()).pipe(
             map(({body}) => new NodeInfo(
                 body.publicKey,
+                body.networkGenerationHash,
                 body.port,
                 body.networkIdentifier,
                 body.version,

@@ -152,7 +152,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
                 this.namespaceRoutesApi.getNamespacesFromAccount(address.plain(),
                                                                  this.queryParams(queryParams).pageSize,
                                                                  this.queryParams(queryParams).id,
-                                                                 this.queryParams(queryParams).order)).pipe(
+                                                                 this.queryParams(queryParams).ordering)).pipe(
                 map(({body}) => body.namespaces.map((namespaceInfoDTO) => {
                     return new NamespaceInfo(
                         namespaceInfoDTO.meta.active,

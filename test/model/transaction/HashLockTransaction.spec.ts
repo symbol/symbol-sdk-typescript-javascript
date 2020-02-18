@@ -16,7 +16,7 @@
 import {expect} from 'chai';
 import {Convert} from '../../../src/core/format';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
-import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
+import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
 import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {HashLockTransaction} from '../../../src/model/transaction/HashLockTransaction';
@@ -35,11 +35,11 @@ describe('HashLockTransaction', () => {
         );
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const transaction = HashLockTransaction.create(Deadline.create(),
-            NetworkCurrencyMosaic.createRelative(10),
+            NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
             NetworkType.MIJIN_TEST);
-        expect(transaction.mosaic.id).to.be.equal(NetworkCurrencyMosaic.NAMESPACE_ID);
+        expect(transaction.mosaic.id).to.be.equal(NetworkCurrencyLocal.NAMESPACE_ID);
         expect(transaction.mosaic.amount.compact()).to.be.equal(10000000);
         expect(transaction.hash).to.be.equal(signedTransaction.hash);
         expect(Convert.hexToUint8(transaction.serialize()).length).to.be.equal(transaction.size);
@@ -55,7 +55,7 @@ describe('HashLockTransaction', () => {
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         expect(() => {
             HashLockTransaction.create(Deadline.create(),
-                NetworkCurrencyMosaic.createRelative(10),
+                NetworkCurrencyLocal.createRelative(10),
                 UInt64.fromUint(10),
                 signedTransaction,
                 NetworkType.MIJIN_TEST);

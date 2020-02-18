@@ -1,7 +1,5 @@
-import { PositionEnum } from "nem2-sdk-openapi-typescript-node-client/dist/model/positionEnum";
-
 /*
- * Copyright 2019 NEM
+ * Copyright 2020 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +14,25 @@ import { PositionEnum } from "nem2-sdk-openapi-typescript-node-client/dist/model
  * limitations under the License.
  */
 
+import { Observable } from 'rxjs';
+import { UInt64 } from '../../model/UInt64';
+
 /**
- * The block merkle path item
+ * Block Service Interface
  */
-export class MerklePathItem {
+export interface IBlockService {
 
     /**
-     * @param position
-     * @param hash
+     * Validate transaction hash in block
+     * @param leaf transaction hash
+     * @param height block height
      */
-    constructor(/**
-                 * The position
-                 */
-                public readonly position?: PositionEnum,
-                /**
-                 * The hash
-                 */
-                public readonly hash?: string) {
+    validateTransactionInBlock(leaf: string, height: UInt64): Observable<boolean>;
 
-    }
+    /**
+     * Validate statement hash in block
+     * @param leaf statement hash
+     * @param height block height
+     */
+    validateStatementInBlock(leaf: string, height: UInt64): Observable<boolean>;
 }

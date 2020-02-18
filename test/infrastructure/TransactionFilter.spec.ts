@@ -1,7 +1,5 @@
-import { PositionEnum } from "nem2-sdk-openapi-typescript-node-client/dist/model/positionEnum";
-
 /*
- * Copyright 2019 NEM
+ * Copyright 2020 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +14,15 @@ import { PositionEnum } from "nem2-sdk-openapi-typescript-node-client/dist/model
  * limitations under the License.
  */
 
-/**
- * The block merkle path item
- */
-export class MerklePathItem {
+import { expect } from 'chai';
+import { TransactionFilter } from '../../src/infrastructure/TransactionFilter';
+import { TransactionType } from '../../src/model/transaction/TransactionType';
 
-    /**
-     * @param position
-     * @param hash
-     */
-    constructor(/**
-                 * The position
-                 */
-                public readonly position?: PositionEnum,
-                /**
-                 * The hash
-                 */
-                public readonly hash?: string) {
+describe('TransactionFilter', () => {
+    it('should return correct query param', () => {
+        const param = new TransactionFilter()
+            .setType([TransactionType.TRANSFER, TransactionType.ACCOUNT_LINK]);
 
-    }
-}
+        expect(param.convertCSV(param.type)).to.be.equal('16724,16716');
+    });
+});

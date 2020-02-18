@@ -23,7 +23,7 @@ import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
-import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
+import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
@@ -49,7 +49,7 @@ describe('TransactionService', () => {
     let generationHash: string;
     let networkType: NetworkType;
     let transactionService: TransactionService;
-    let networkCurrencyMosaicId: MosaicId;
+    let NetworkCurrencyLocalId: MosaicId;
 
     before(() => {
         return helper.start().then(() => {
@@ -100,7 +100,7 @@ describe('TransactionService', () => {
     describe('Get network currency mosaic id', () => {
         it('get mosaicId', () => {
             return namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).toPromise().then((networkMosaicId: MosaicId) => {
-                networkCurrencyMosaicId = networkMosaicId;
+                NetworkCurrencyLocalId = networkMosaicId;
             });
         });
     });
@@ -144,7 +144,7 @@ describe('TransactionService', () => {
                 Deadline.create(),
                 account2.address,
                 [
-                    NetworkCurrencyMosaic.createAbsolute(1),
+                    NetworkCurrencyLocal.createAbsolute(1),
                 ],
                 PlainMessage.create('test-message'),
                 networkType, helper.maxFee,
@@ -164,7 +164,7 @@ describe('TransactionService', () => {
             const signedAggregatedTransaction = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
             const lockFundsTransaction = LockFundsTransaction.create(
                 Deadline.create(),
-                new Mosaic(networkCurrencyMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
+                new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
                 UInt64.fromUint(1000),
                 signedAggregatedTransaction,
                 networkType, helper.maxFee,
@@ -184,7 +184,7 @@ describe('TransactionService', () => {
             const signedAggregatedTransaction = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
             const lockFundsTransaction = LockFundsTransaction.create(
                 Deadline.create(),
-                new Mosaic(networkCurrencyMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
+                new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
                 UInt64.fromUint(1000),
                 signedAggregatedTransaction,
                 networkType, helper.maxFee,

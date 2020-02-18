@@ -20,7 +20,7 @@ import {Account} from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import { Mosaic } from '../../../src/model/mosaic/Mosaic';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
-import {NetworkCurrencyMosaic} from '../../../src/model/mosaic/NetworkCurrencyMosaic';
+import {NetworkCurrencyLocal} from '../../../src/model/mosaic/NetworkCurrencyLocal';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
 import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
@@ -58,7 +58,7 @@ describe('LockFundsTransaction', () => {
         );
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
-            NetworkCurrencyMosaic.createRelative(10),
+            NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
             NetworkType.MIJIN_TEST,
@@ -78,7 +78,7 @@ describe('LockFundsTransaction', () => {
         );
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
-            NetworkCurrencyMosaic.createRelative(10),
+            NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
             NetworkType.MIJIN_TEST,
@@ -98,11 +98,11 @@ describe('LockFundsTransaction', () => {
         );
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const transaction = LockFundsTransaction.create(Deadline.create(),
-            NetworkCurrencyMosaic.createRelative(10),
+            NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
             NetworkType.MIJIN_TEST);
-        deepEqual(transaction.mosaic.id.id, NetworkCurrencyMosaic.NAMESPACE_ID.id);
+        deepEqual(transaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
         expect(transaction.mosaic.amount.compact()).to.be.equal(10000000);
         expect(transaction.hash).to.be.equal(signedTransaction.hash);
     });
@@ -117,7 +117,7 @@ describe('LockFundsTransaction', () => {
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         expect(() => {
             LockFundsTransaction.create(Deadline.create(),
-                NetworkCurrencyMosaic.createRelative(10),
+                NetworkCurrencyLocal.createRelative(10),
                 UInt64.fromUint(10),
                 signedTransaction,
                 NetworkType.MIJIN_TEST);
@@ -133,7 +133,7 @@ describe('LockFundsTransaction', () => {
         );
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
-            NetworkCurrencyMosaic.createRelative(10),
+            NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
             NetworkType.MIJIN_TEST,
@@ -156,7 +156,7 @@ describe('LockFundsTransaction', () => {
             );
             const signedTransaction = account.sign(aggregateTransaction, generationHash);
             const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
-                NetworkCurrencyMosaic.createRelative(10),
+                NetworkCurrencyLocal.createRelative(10),
                 UInt64.fromUint(10),
                 signedTransaction,
                 NetworkType.MIJIN_TEST,
@@ -174,7 +174,7 @@ describe('LockFundsTransaction', () => {
         );
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
-            NetworkCurrencyMosaic.createRelative(10),
+            NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
             NetworkType.MIJIN_TEST,
