@@ -317,9 +317,9 @@ export abstract class Transaction {
      */
     public hasMissingSignatures(): boolean {
         return this.transactionInfo != null && this.transactionInfo.height.compact() === 0
-            && this.transactionInfo.hash !== undefined
+            && (this.transactionInfo.hash !== undefined
             && this.transactionInfo.merkleComponentHash !== undefined
-            && this.transactionInfo.hash.toUpperCase() === this.transactionInfo.merkleComponentHash.toUpperCase();
+            && this.transactionInfo.hash.toUpperCase() !== this.transactionInfo.merkleComponentHash.toUpperCase());
     }
 
     /**
