@@ -20,7 +20,6 @@ import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {AppWallet} from '@/core/database/models/AppWallet'
 import {WalletService} from '@/services/WalletService'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
@@ -108,19 +107,19 @@ export default class FinalizeTs extends Vue {
 
       // add wallet to account
       const wallets = this.currentAccount.values.get("wallets")
-      wallets.push(wallet.model.getIdentifier())
+      wallets.push(wallet.getIdentifier())
       this.currentAccount.values.set("wallets", wallets)
 
       // use repository for storage
-      this.walletsRepository.create(wallet.model.values)
+      this.walletsRepository.create(wallet.values)
       this.accountsRepository.update(
         this.currentAccount.getIdentifier(),
         this.currentAccount.values
       )
 
       // execute store actions
-      this.$store.dispatch('account/ADD_WALLET', wallet.model)
-      this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet.model)
+      this.$store.dispatch('account/ADD_WALLET', wallet)
+      this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
       this.$store.dispatch('wallet/SET_KNOWN_WALLETS', wallets)
       this.$store.dispatch('temporary/RESET_STATE')
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)

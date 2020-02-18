@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {DatabaseTable} from '@/core/database/DatabaseTable'
+import {DatabaseTable, DatabaseMigration} from '@/core/database/DatabaseTable'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
 
 export class AccountsTable extends DatabaseTable {
@@ -35,5 +35,14 @@ export class AccountsTable extends DatabaseTable {
    */
   public createModel(values: Map<string, any> = new Map<string, any>()): AccountsModel {
     return new AccountsModel(values)
+  }
+
+  /**
+   * Returns a list of migration callbacks to execute
+   * for database versioning.
+   * @return {any[]}
+   */
+  public getMigrations(): DatabaseMigration[] {
+    return []
   }
 }

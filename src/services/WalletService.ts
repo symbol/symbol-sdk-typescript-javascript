@@ -27,11 +27,10 @@ import {
 import {AbstractService} from './AbstractService'
 import {DerivationService, DerivationPathLevels} from './DerivationService'
 import {DerivationPathValidator} from '@/core/validation/validators'
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {WalletsModel, WalletType} from '@/core/database/entities/WalletsModel'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {AppWallet} from '@/core/database/models/AppWallet'
 
 const getNetworkFromNetworkType = (networkType: NetworkType): Network => {
   if (undefined !== [NetworkType.MIJIN, NetworkType.MIJIN_TEST].find(type => networkType === type)) {
@@ -114,7 +113,8 @@ export class WalletService extends AbstractService {
       array: WalletsModel[]
     ) => boolean = (e) => true
   ): WalletsModel[] {
-    return Array.from(this.wallets.entries(filterFn).values())
+    const repository = new WalletsRepository()
+    return repository.collect().filter(filterFn)
   }
 
   /**
@@ -243,15 +243,15 @@ export class WalletService extends AbstractService {
   }
 
   /**
-   * Create an AppWallet instance from mnemonic
-   * @return {AppWallet}
+   * Create a wallet instance from mnemonic
+   * @return {WalletsModel}
    */
   public getDefaultWallet(
     currentAccount: AccountsModel,
     mnemonic: MnemonicPassPhrase,
     password: Password,
     networkType: NetworkType,
-  ): AppWallet {
+  ): WalletsModel {
     const account = this.getAccountByPath(
       mnemonic,
       networkType,
@@ -265,21 +265,22 @@ export class WalletService extends AbstractService {
       networkType
     )
 
-    return new AppWallet(
-      this.$store,
-      currentAccount.getIdentifier(),
-      'SeedWallet 1',
-      simpleWallet,
-      account.publicKey,
-      WalletService.DEFAULT_WALLET_PATH,
-      'Seed',
-      false
-    )
+    return new WalletsModel(new Map<string, any>([
+      ['accountName', currentAccount.getIdentifier()],
+      ['name', 'Seed Wallet 1'],
+      ['type', WalletType.fromDescriptor('Seed')],
+      ['address', simpleWallet.address.plain()],
+      ['publicKey', account.publicKey],
+      ['encPrivate', simpleWallet.encryptedPrivateKey.encryptedKey],
+      ['encIv', simpleWallet.encryptedPrivateKey.iv],
+      ['path', WalletService.DEFAULT_WALLET_PATH],
+      ['isMultisig', false]
+    ]))
   }
 
   /**
-   * Create an child wallet AppWallet instance from mnemonic and path
-   * @return {AppWallet}
+   * Create a child wallet instance from mnemonic and path
+   * @return {WalletsModel}
    */
   public getChildWalletByPath(
     currentAccount: AccountsModel,
@@ -288,7 +289,7 @@ export class WalletService extends AbstractService {
     nextPath: string,
     networkType: NetworkType,
     childWalletName: string,
-  ): AppWallet {
+  ): WalletsModel {
 
     // - derive account
     const account = this.getAccountByPath(
@@ -304,25 +305,27 @@ export class WalletService extends AbstractService {
       networkType
     )
 
-    return new AppWallet(
-      this.$store,
-      currentAccount.getIdentifier(),
-      childWalletName,
-      simpleWallet,
-      account.publicKey,
-      nextPath,
-      'Seed',
-      false
-    )
+    return new WalletsModel(new Map<string, any>([
+      ['accountName', currentAccount.getIdentifier()],
+      ['name', childWalletName],
+      ['type', WalletType.fromDescriptor('Seed')],
+      ['address', simpleWallet.address.plain()],
+      ['publicKey', account.publicKey],
+      ['encPrivate', simpleWallet.encryptedPrivateKey.encryptedKey],
+      ['encIv', simpleWallet.encryptedPrivateKey.iv],
+      ['path', nextPath],
+      ['isMultisig', false]
+    ]))
   }
 
   /**
-   * Create a sub wallet (AppWallet) by private key
+   * Create a sub wallet by private key
    * @param currentAccount 
    * @param password 
    * @param childWalletName 
    * @param privateKey 
    * @param networkType 
+   * @return {WalletsModel}
    */
   public getSubWalletByPrivateKey(
     currentAccount: AccountsModel,
@@ -330,7 +333,7 @@ export class WalletService extends AbstractService {
     childWalletName: string,
     privateKey: string,
     networkType: NetworkType,
-  ): AppWallet {
+  ): WalletsModel {
     const account = Account.createFromPrivateKey(privateKey, networkType)
     const simpleWallet = SimpleWallet.createFromPrivateKey(
       childWalletName,
@@ -339,15 +342,16 @@ export class WalletService extends AbstractService {
       networkType
     )
 
-    return new AppWallet(
-      this.$store,
-      currentAccount.getIdentifier(),
-      childWalletName,
-      simpleWallet,
-      account.publicKey,
-      '',
-      'Pk',
-      false
-    )
+    return new WalletsModel(new Map<string, any>([
+      ['accountName', currentAccount.getIdentifier()],
+      ['name', childWalletName],
+      ['type', WalletType.fromDescriptor('Pk')],
+      ['address', simpleWallet.address.plain()],
+      ['publicKey', account.publicKey],
+      ['encPrivate', simpleWallet.encryptedPrivateKey.encryptedKey],
+      ['encIv', simpleWallet.encryptedPrivateKey.iv],
+      ['path', ''],
+      ['isMultisig', false]
+    ]))
   }
 }

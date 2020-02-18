@@ -24,7 +24,7 @@ export class PeersModel extends DatabaseModel {
    * @var {string[]}
    */
   public primaryKeys: string[] = [
-    'host',
+    'id',
   ]
 
   /**
@@ -39,7 +39,7 @@ export class PeersModel extends DatabaseModel {
    * @param {Map<string, any>} values
    */
   public constructor(values: Map<string, any> = new Map<string, any>()) {
-    super(['host'], values)
+    super(['id'], values)
   }
 
   /**

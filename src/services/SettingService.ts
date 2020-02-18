@@ -50,6 +50,22 @@ export class SettingService extends AbstractService {
   }
 
   /**
+   * Getter for the collection of items
+   * mapped by identifier
+   * @return {Map<string, SettingsModel>}
+   */
+  public allSettings(
+    filterFn: (
+      value: SettingsModel,
+      index: number,
+      array: SettingsModel[]
+    ) => boolean = (e) => true
+  ): SettingsModel[] {
+    const repository = new SettingsRepository()
+    return repository.collect().filter(filterFn)
+  }
+
+  /**
    * Get settings for \a account
    * @param {AccountsModel} account 
    * @return {SettingsModel}

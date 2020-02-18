@@ -43,8 +43,30 @@ export abstract class ModelRepository implements IStorable<SimpleStorageAdapter>
     this.fetch()
   }
 
+  /// region implements IStorable
+  /**
+   * Getter for the adapter
+   * @see {IStorable}
+   * @return {SimpleStorageAdapter}
+   */
+  public getAdapter(): SimpleStorageAdapter {
+    return this._adapter
+  }
+
+  /**
+   * Setter for the storage adapter
+   * @see {IStorable}
+   * @param {SimpleStorageAdapter} adapter
+   * @return {ModelRepository}
+   */
+  public setAdapter(adapter: SimpleStorageAdapter): ModelRepository {
+    this._adapter = adapter
+    return this
+  }
+
   /**
    * Fetch items from storage
+   * @see {IStorable}
    * @return {Map<string, DatabaseModel>}
    */
   public fetch(): Map<string, DatabaseModel> {
@@ -58,6 +80,7 @@ export abstract class ModelRepository implements IStorable<SimpleStorageAdapter>
 
   /**
    * Persist items to storage
+   * @see {IStorable}
    * @return {number}
    */
   public persist(): number {
@@ -67,6 +90,18 @@ export abstract class ModelRepository implements IStorable<SimpleStorageAdapter>
     // read items from storage
     return this._adapter.write(table.tableName, this._collection)
   }
+
+  /**
+   * Reset storage (empty)
+   * @see {IStorable}
+   * @return boolean
+   */
+  public reset() {
+    this._collection.clear()
+    this.persist()
+    return true
+  }
+/// end-region implements IStorable
 
   /**
    * Fetch many relations using \a repository and values from \a model
@@ -200,26 +235,4 @@ export abstract class ModelRepository implements IStorable<SimpleStorageAdapter>
     // proxy object to read primary keys
     return this.createModel(new Map<string, any>()).primaryKeys
   }
-
-  /// region implements IStorable
-  /**
-   * Getter for the adapter
-   * @see {IStorable}
-   * @return {SimpleStorageAdapter}
-   */
-  public getAdapter(): SimpleStorageAdapter {
-    return this._adapter
-  }
-
-  /**
-   * Setter for the storage adapter
-   * @see {IStorable}
-   * @param {SimpleStorageAdapter} adapter
-   * @return {ModelRepository}
-   */
-  public setAdapter(adapter: SimpleStorageAdapter): ModelRepository {
-    this._adapter = adapter
-    return this
-  }
-  /// end-region implements IStorable
 }

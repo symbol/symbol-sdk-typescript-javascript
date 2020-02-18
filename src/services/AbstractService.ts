@@ -23,7 +23,7 @@ export abstract class AbstractService implements IService {
    * Service name
    * @var {string}
    */
-  public name: string = 'database'
+  public name: string = ''
 
   /**
    * Vuex Store 

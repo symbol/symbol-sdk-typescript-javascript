@@ -1,6 +1,6 @@
 <template>
 <div :class="[isConnected ? 'point_healthy' : 'point_unhealthy']">
-  <Poptip placement="bottom-end" @on-popper-hide="$validator.reset()">
+  <Poptip placement="bottom-end">
     <i class="pointer point" />
     <span v-if="isConnected" class="network_type_text">
     {{ networkTypeText }}
@@ -12,16 +12,16 @@
       <div class="node_list">
         <div class="node_list_container scroll">
           <div
-              v-for="(iterNode, index) in peersList"
+              v-for="(iterPeer, index) in peersList"
               :key="`sep${index}`"
               class="point_item pointer"
-              @click="switchPeer(iterNode.toURL())"
+              @click="switchPeer(iterPeer.values.get('rest_url'))"
           >
-            <img :src="currentPeer.url === iterNode.objects.url ? monitorSelected : monitorUnselected">
-            <span class="node_url text_select">{{ iterNode.objects.url }}</span>
+            <img :src="currentPeer.url === iterPeer.values.get('rest_url') ? imageResources.selected : imageResources.unselected">
+            <span class="node_url text_select">{{ iterPeer.values.get('rest_url') }}</span>
             <img
               class="remove_icon" src="@/views/resources/img/service/multisig/multisigDelete.png"
-              @click.stop="removePeer(iterNode.objects.url)">
+              @click.stop="removePeer(iterPeer.values.get('rest_url'))">
           </div>
         </div>
 

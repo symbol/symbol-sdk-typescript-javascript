@@ -18,7 +18,6 @@ import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
-import {AppPeer} from '@/core/database/models/AppPeer'
 import {PeersModel} from '@/core/database/entities/PeersModel'
 import {PeersRepository} from '@/repositories/PeersRepository'
 import {PeerService} from '@/services/PeerService'
@@ -43,11 +42,15 @@ const getNetworkTypeText = (networkType: NetworkType) => {
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 
+// resources
+import {dashboardImages} from '@/views/resources/Images'
+
 @Component({
   computed: {...mapGetters({
     currentPeer: 'network/currentPeer',
     isConnected: 'network/isConnected',
     networkType: 'network/networkType',
+    generationHash: 'network/generationHash',
   })},
   components: {ErrorTooltip},
 })
@@ -74,16 +77,11 @@ export class PeerSelectorTs extends Vue {
   public networkType: NetworkType
 
   /**
-   * Peers repository
-   * @var {PeersRepository}
+   * Current generationHash
+   * @see {Store.Network}
+   * @var {string}
    */
-  public peers: PeersRepository
-
-  /**
-   * Peer service
-   * @var {PeerService}
-   */
-  public service: PeerService
+  public generationHash: string
 
   /**
    * Peers list
@@ -96,7 +94,8 @@ export class PeerSelectorTs extends Vue {
    * @var {Object}
    */
   public formItems = {
-    nodeUrl: ''
+    nodeUrl: '',
+    setDefault: false,
   }
 
   /**
@@ -106,20 +105,14 @@ export class PeerSelectorTs extends Vue {
   public validationRules = ValidationRuleset
 
   /**
-   * Hook called when the component is mounted
-   * @return {void}
+   * Image resources
    */
-  mounted() {
-    this.peers = new PeersRepository()
-    this.service = new PeerService(this.$store)
-
-    // collect from storage
-    this.collection = this.peers.entries()
-  }
+  public imageResources = dashboardImages
 
 /// region computed properties getter/setter
   get peersList(): PeersModel[] {
-    return this.collection ? Array.from(this.collection.values()) : []
+    const repository = new PeersRepository()
+    return repository.collect()
   }
 
   get networkTypeText(): string {
@@ -137,7 +130,7 @@ export class PeerSelectorTs extends Vue {
     this.$store.dispatch('network/SET_CURRENT_PEER', url)
 
     // update inner state
-    this.currentPeer = this.peers.read(peer.hostname)
+    //this.currentPeer = this.peers.read(peer.hostname)
   }
 
   /**
@@ -147,32 +140,53 @@ export class PeerSelectorTs extends Vue {
   public async addPeer() {
     // @VVV
 
+    const service = new PeerService(this.$store)
+    const repository = new PeersRepository()
+
     // validate and parse input
-    const nodeUrl = this.service.getNodeUrl(this.formItems.nodeUrl)
+    const nodeUrl = service.getNodeUrl(this.formItems.nodeUrl)
     const node = URLHelpers.formatUrl(nodeUrl)
 
+    // - XXX set loading
+
     // read network type from node pre-saving
-    const networkType = await this.service.getNetworkType(nodeUrl)
+    try {
+      const {
+        networkType,
+        generationHash,
+        peerInfo,
+      } = await this.$store.dispatch('network/REST_FETCH_PEER_INFO', nodeUrl)
 
-    // prepare model
-    const peer = new AppPeer(
-      this.$store,
-      node.hostname,
-      parseInt(node.port),
-      node.protocol,
-      networkType,
-    )
+      // - XXX remove loading
 
-    // save in storage
-    this.peers.create(peer.model.values)
-    this.$store.dispatch('network/ADD_KNOWN_PEER', nodeUrl)
-    this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
-    this.$store.dispatch('diagnostic/ADD_DEBUG', 'PeerSelector added peer: '+ nodeUrl)
+      // prepare model
+      const peer = new PeersModel(new Map<string, any>([
+        ['rest_url', nodeUrl],
+        ['host', node.hostname],
+        ['port', parseInt(node.port)],
+        ['protocol', node.protocol],
+        ['networkType', networkType],
+        ['generationHash', generationHash],
+        ['roles', peerInfo.roles],
+        ['is_default', this.formItems.setDefault],
+        ['friendly_name', peerInfo.friendlyName]
+      ]))
 
-    // reset
-    this.formItems.nodeUrl = ''
-    // @VVV
-    // this.$validator.reset()
+      // save in storage
+      repository.create(peer.values)
+      this.$store.dispatch('network/ADD_KNOWN_PEER', nodeUrl)
+      this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
+      this.$store.dispatch('diagnostic/ADD_DEBUG', 'PeerSelector added peer: '+ nodeUrl)
+
+      // reset
+      this.formItems.nodeUrl = ''
+      // @VVV
+      // this.$validator.reset()
+    }
+    catch(e) {
+      this.$store.dispatch('diagnostic/ADD_ERROR', 'PeerSelector unreachable host with URL: '+ nodeUrl)
+      this.$store.dispatch('notification/ADD_ERROR', NotificationType.ERROR_PEER_UNREACHABLE)
+    }
   }
 
   /**
@@ -183,7 +197,8 @@ export class PeerSelectorTs extends Vue {
 
     //XXX currently not removing from storage
 
-    const nodeUrl = this.service.getNodeUrl(url)
+    const service = new PeerService(this.$store)
+    const nodeUrl = service.getNodeUrl(url)
 
     // removes only from vuex store
     this.$store.dispatch('network/REMOVE_KNOWN_PEER', nodeUrl)

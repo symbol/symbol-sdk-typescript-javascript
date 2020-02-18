@@ -16,7 +16,7 @@
 // internal dependencies
 import {DatabaseModel} from '@/core/database/DatabaseModel'
 import {DatabaseRelation} from '@/core/database/DatabaseRelation'
-import {UInt64} from 'nem2-sdk'
+import {UInt64, MosaicId, RawUInt64, MosaicInfo, PublicAccount, NetworkType, MosaicFlags} from 'nem2-sdk'
 
 export class MosaicsModel extends DatabaseModel {
   /**
@@ -47,10 +47,31 @@ export class MosaicsModel extends DatabaseModel {
    * Permits to return specific field's mapped object instances
    * @return any
    */
-  public get objects(): {startHeight: UInt64} {
+  public get objects(): {
+    mosaicId: MosaicId,
+    mosaicInfo: MosaicInfo,
+    startHeight: UInt64
+  } {
     const rawStartHeight = this.values.get('startHeight')
+    const hexId = this.getIdentifier()
+    const mosaicId = new MosaicId(RawUInt64.fromHex(hexId))
+    const ownerPub = PublicAccount.createFromPublicKey(
+      this.values.get('ownerPublicKey'),
+      NetworkType.MIJIN_TEST // ignored
+    )
 
     return {
+      mosaicId,
+      mosaicInfo: new MosaicInfo(
+        mosaicId,
+        this.values.get('supply'),
+        rawStartHeight,
+        ownerPub,
+        1,
+        new MosaicFlags(this.values.get('flags')),
+        this.values.get('divisibility'),
+        this.values.get('duration')
+      ),
       startHeight: new UInt64([ rawStartHeight.lower, rawStartHeight.higher ]),
     }
   }

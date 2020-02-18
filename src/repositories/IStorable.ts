@@ -32,4 +32,22 @@ export interface IStorable<
    * @return {IStorable<ModelImpl, StorageAdapterImpl>}
    */
   setAdapter(adapter: StorageAdapterImpl): IStorable<StorageAdapterImpl>
+
+  /**
+   * Fetch items from storage
+   * @return {Map<string, DatabaseModel>}
+   */
+  fetch(): Map<string, DatabaseModel>
+
+  /**
+   * Persist items to storage
+   * @return {number}
+   */
+  persist(): number
+
+  /**
+   * Reset storage (empty)
+   * @return boolean
+   */
+  reset(): boolean
 }

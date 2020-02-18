@@ -1,5 +1,6 @@
 {
   "explorerUrl": "http://explorer-xym.nemtech.network",
+  "faucetUrl": "http://faucet-xym-01.nemtech.network",
   "defaultNetworkType": 152,
   "defaultNode": {
     "protocol": "http",
@@ -12,13 +13,13 @@
       "generationHash": "45870419226A7E51D61D94AD728231EDC6C9B3086EF9255A8421A4F26870456A",
       "currencyMosaic": "symbol.xym",
       "harvestMosaic": "symbol.xym",
-      "networkType": "publicTest",
+      "networkType": 152,
       "nodes": [
-        "http://api-xym-harvest-3-01.us-west-2.nemtech.network:3000",
-        "http://api-xym-harvest-3-01.eu-west-1.nemtech.network:3000",
-        "http://api-xym-3-01.ap-southeast-1.nemtech.network:3000",
-        "http://api-xym-3-01.ap-northeast-1.nemtech.network:3000",
-        "http://api-xym-3-01.us-west-2.nemtech.network:3000"
+        {"friendly": "Dual US West", "roles": 3, "url": "http://api-xym-harvest-3-01.us-west-2.nemtech.network:3000"},
+        {"friendly": "Dual EU West", "roles": 3, "url": "http://api-xym-harvest-3-01.eu-west-1.nemtech.network:3000"},
+        {"friendly": "API AP Southeast", "roles": 2, "url": "http://api-xym-3-01.ap-southeast-1.nemtech.network:3000"},
+        {"friendly": "API AP Northeast", "roles": 2, "url": "http://api-xym-3-01.ap-northeast-1.nemtech.network:3000"},
+        {"friendly": "API US West", "roles": 2, "url": "http://api-xym-3-01.us-west-2.nemtech.network:3000"}
       ],
       "properties": {
         "mosaicRentalFeeSinkPublicKey": "4428A4DA56362C2293A277159F7C1E270FE7BD6CED461877494006C7D69F1172",

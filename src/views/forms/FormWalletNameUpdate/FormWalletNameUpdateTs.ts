@@ -21,13 +21,12 @@ import { MnemonicPassPhrase } from 'nem2-hd-wallets'
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {WalletsModel, WalletType} from '@/core/database/entities/WalletsModel'
 import {DerivationPathLevels, DerivationService} from '@/services/DerivationService'
 import {AESEncryptionService} from '@/services/AESEncryptionService'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {NotificationType} from '@/core/utils/NotificationType'
-import {AppWallet, AppWalletType} from '@/core/database/models/AppWallet'
 import {WalletService} from '@/services/WalletService'
 
 // child components

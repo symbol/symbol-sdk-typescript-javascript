@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {DatabaseTable} from '@/core/database/DatabaseTable'
+import {DatabaseTable, DatabaseMigration} from '@/core/database/DatabaseTable'
 import {SettingsModel} from '@/core/database/entities/SettingsModel'
 
 export class SettingsTable extends DatabaseTable {
@@ -33,5 +33,14 @@ export class SettingsTable extends DatabaseTable {
    */
   public createModel(values: Map<string, any> = new Map<string, any>()): SettingsModel {
     return new SettingsModel(values)
+  }
+
+  /**
+   * Returns a list of migration callbacks to execute
+   * for database versioning.
+   * @return {any[]}
+   */
+  public getMigrations(): DatabaseMigration[] {
+    return []
   }
 }

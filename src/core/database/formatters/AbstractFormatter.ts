@@ -64,14 +64,20 @@ export abstract class AbstractFormatter {
    * @param {DatabaseModel} entity
    * @return {string}
    */
-  public abstract format(entities: Map<string, DatabaseModel>): string
+  public abstract format(
+    schema: DatabaseTable,
+    entities: Map<string, DatabaseModel>
+  ): string
 
   /**
    * Parse formatted \a data to entities
    * @param {string} data
    * @return {Map<string, DatabaseModel>}
    */
-  public abstract parse(data: string): Map<string, DatabaseModel>
+  public abstract parse(
+    schema: DatabaseTable,
+    data: string
+  ): Map<string, DatabaseModel>
 
   /**
    * Validate format of \a data

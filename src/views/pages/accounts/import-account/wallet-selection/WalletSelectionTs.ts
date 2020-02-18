@@ -20,7 +20,7 @@ import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {AppWallet} from '@/core/database/models/AppWallet'
+import {WalletsModel, WalletType} from '@/core/database/entities/WalletsModel'
 import {DerivationService, DerivationPathLevels} from '@/services/DerivationService'
 import {WalletService} from '@/services/WalletService'
 import {MosaicService} from '@/services/MosaicService'
@@ -164,11 +164,11 @@ export default class WalletSelectionTs extends Vue {
 
         // add wallet to account
         const wallets = this.currentAccount.values.get("wallets")
-        wallets.push(wallet.model.getIdentifier())
+        wallets.push(wallet.getIdentifier())
         this.currentAccount.values.set("wallets", wallets)
 
         // use repository for storage
-        this.walletsRepository.create(wallet.model.values)
+        this.walletsRepository.create(wallet.values)
         this.accountsRepository.update(
           this.currentAccount.getIdentifier(),
           this.currentAccount.values
@@ -176,12 +176,12 @@ export default class WalletSelectionTs extends Vue {
 
         // set first wallet active
         if (cnt === 0) {
-          this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet.model)
+          this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
         }
 
         // add wallet to account
-        this.$store.dispatch('account/ADD_WALLET', wallet.model.values.get('name'))
-        return wallet.model
+        this.$store.dispatch('account/ADD_WALLET', wallet.values.get('name'))
+        return wallet
       })
 
       // set known wallets
@@ -227,10 +227,10 @@ export default class WalletSelectionTs extends Vue {
   }
 
   /**
-   * Create an AppWallet instance from mnemonic and path
-   * @return {AppWallet}
+   * Create a wallet instance from mnemonic and path
+   * @return {WalletsModel}
    */
-  private createWalletFromPathIndex(index: number): AppWallet {
+  private createWalletFromPathIndex(index: number): WalletsModel {
     const path = this.derivation.incrementPathLevel(
       WalletService.DEFAULT_WALLET_PATH,
       DerivationPathLevels.Account,
@@ -250,15 +250,16 @@ export default class WalletSelectionTs extends Vue {
       this.networkType
     )
 
-    return new AppWallet(
-      this.$store,
-      this.currentAccount.values.get('accountName'),
-      'SeedWallet',
-      simpleWallet,
-      account.publicKey,
-      WalletService.DEFAULT_WALLET_PATH,
-      'Seed',
-      false
-    )
+    return new WalletsModel(new Map<string, any>([
+      ['accountName', this.currentAccount.values.get('accountName')],
+      ['name', 'Seed Wallet' + (index+1).toString()],
+      ['type', WalletType.fromDescriptor('Seed')],
+      ['address', simpleWallet.address.plain()],
+      ['publicKey', account.publicKey],
+      ['encPrivate', simpleWallet.encryptedPrivateKey.encryptedKey],
+      ['encIv', simpleWallet.encryptedPrivateKey.iv],
+      ['path', path],
+      ['isMultisig', false]
+    ]))
   }
 }

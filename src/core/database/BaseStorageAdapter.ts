@@ -97,11 +97,8 @@ export abstract class BaseStorageAdapter
     // read schema from storage backend
     const schema = this.getSchema(schemaId)
 
-    // set schema for formatter instance creation
-    this.formatter.setSchema(schema)
-
+    // read from storage
     const data = this.storage.getItem(schema.tableName)
-
     if (!data || data === null || !data.length) {
       return new Map<string, DatabaseModel>()
     }
@@ -112,7 +109,19 @@ export abstract class BaseStorageAdapter
     }
 
     // map on-the-fly + validate singular entities format
-    return this.formatter.parse(data)
+    const rows: Map<string, DatabaseModel> = this.formatter.parse(schema, data)
+
+    // identify out-of-date entities and run migrations
+    if (!this.checkSchemaVersion(schema, rows)) {
+      // there is at least one out-of-date entity, database needs migration(s)
+      const migratedRows = schema.migrateRows(rows)
+
+      // persist migrated rows
+      this.write(schemaId, migratedRows)
+      return migratedRows // return *up-to-date* always
+    }
+
+    return rows
   }
 
   /**
@@ -126,10 +135,28 @@ export abstract class BaseStorageAdapter
     const schema = this.getSchema(schemaId)
 
     // format data
-    const data = this.formatter.format(entities)
+    const data = this.formatter.format(schema, entities)
 
-    // persist formatted data
+    // persist formatted data to storage
     this.storage.setItem(schemaId, data)
     return entities.size
+  }
+
+  /**
+   * Iterates entities to find *out-of-date* data schemas.
+   * @param {DatabaseTable} schema 
+   * @param {Map<string, DatabaseModel>} rows 
+   * @return {boolean}  True if rows are up to date, false if any requires migration
+   */
+  protected checkSchemaVersion(
+    schema: DatabaseTable,
+    rows: Map<string, DatabaseModel>
+  ): boolean {
+    const migratees = Array.from(rows.values()).filter(
+      model => !model.values.has('version') 
+             || model.values.get('version') < schema.version
+    )
+
+    return !migratees.length
   }
 }

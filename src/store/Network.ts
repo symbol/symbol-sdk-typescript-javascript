@@ -20,12 +20,14 @@ import {Subscription} from 'rxjs'
 // internal dependencies
 import {$eventBus} from '../events'
 import {RESTService} from '@/services/RESTService'
-import {URLHelpers} from '@/core/utils/URLHelpers';
-import {AwaitLock} from './AwaitLock';
+import {PeersModel} from '@/core/database/entities/PeersModel'
+import {URLHelpers} from '@/core/utils/URLHelpers'
+import {AwaitLock} from './AwaitLock'
 const Lock = AwaitLock.create();
 
 // configuration
 import networkConfig from '../../config/network.conf.json';
+import { PeersRepository } from '@/repositories/PeersRepository';
 
 /// region internal helpers
 /**
@@ -89,6 +91,7 @@ export default {
     wsEndpoint: state => state.wsEndpoint,
     networkType: state => state.networkType,
     generationHash: state => state.generationHash,
+    defaultPeer: state => URLHelpers.formatUrl(networkConfig.defaultNode.url),
     currentPeer: state => state.currentPeer,
     currentPeerInfo: state => state.currentPeerInfo,
     explorerUrl: state => state.explorerUrl,
@@ -127,8 +130,7 @@ export default {
       Vue.set(state, 'knownPeers', knownPeers)
     },
     resetPeers: (state) => {
-      const knownPeers = networkConfig.networks['testnet-publicTest'].nodes
-      Vue.set(state, 'knownPeers', knownPeers)
+      Vue.set(state, 'knownPeers', [])
     },
     addBlock: (state, block: BlockInfo) => {
       const knownBlocks = state.knownBlocks
@@ -162,42 +164,34 @@ export default {
     generationHash: (state, hash) => Vue.set(state, 'generationHash', hash),
   },
   actions: {
-    async initialize({ commit, dispatch, getters }) {
+    async initialize({ commit, dispatch, getters }, withFeed) {
       const callback = async () => {
-        const nodeUrl = getters.currentPeer.url
+
+        let initPayload: {
+          knownPeers: PeersModel[],
+          nodeUrl: string
+        }
+
+        // - initialize current peer from database if available
+        if (undefined !== withFeed && withFeed.endpoints && withFeed.endpoints.length) {
+          initPayload = await dispatch('INITIALIZE_FROM_DB', withFeed)
+        }
+        // - initialize current peer from config and REST
+        else {
+          console.log("initializing network from config with default node: ", getters.defaultPeer.url)
+          initPayload = await dispatch('INITIALIZE_FROM_CONFIG', getters.defaultPeer.url)
+        }
+
+        const knownPeers: PeersModel[] = initPayload.knownPeers
+        const nodeUrl: string = initPayload.nodeUrl
 
         dispatch('diagnostic/ADD_DEBUG', 'Store action network/initialize selected peer: ' + nodeUrl, {root: true})
 
-        try {
-          // read network type ("connect")
-          const networkHttp = RESTService.create('NetworkHttp', nodeUrl)
-          const chainHttp = RESTService.create('ChainHttp', nodeUrl)
-          const nodeHttp = RESTService.create('NodeHttp', nodeUrl)
-          const networkType = await networkHttp.getNetworkType().toPromise()
+        // - populate known peers
+        knownPeers.map(peer => commit('addPeer', peer.values.get('rest_url')))
 
-          // update connection state
-          commit('currentPeer', nodeUrl)
-          commit('setConnected', true)
-          $eventBus.$emit('newConnection', nodeUrl)
-
-          const peerInfo = await nodeHttp.getNodeInfo().toPromise()
-          const currentHeight = await chainHttp.getBlockchainHeight().toPromise()
-
-          dispatch('diagnostic/ADD_DEBUG', 'Store action network/initialize peer information: ' + JSON.stringify(peerInfo), {root: true})
-          dispatch('diagnostic/ADD_DEBUG', 'Store action network/initialize peer block height: ' + currentHeight.compact(), {root: true})
-
-          // update store
-          commit('networkType', networkType)
-          commit('currentHeight', currentHeight.compact())
-          commit('currentPeerInfo', peerInfo)
-          commit('setInitialized', true)
-
-          // subscribe to updates
-          dispatch('SUBSCRIBE')
-        }
-        catch (e) {
-          dispatch('diagnostic/ADD_ERROR', 'Store action network/initialize error: ' + e.toString(), {root: true})
-        }
+        // update store
+        commit('setInitialized', true)
       }
 
       // aquire async lock until initialized
@@ -211,19 +205,90 @@ export default {
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
 /// region scoped actions
+    async INITIALIZE_FROM_DB({dispatch}, withFeed) {
+      const defaultPeer = withFeed.endpoints.find(m => m.values.get('is_default'))
+      const nodeUrl = defaultPeer.values.get('rest_url')
+
+      // - height always from network
+      const chainHttp = RESTService.create('ChainHttp', nodeUrl)
+      const currentHeight = await chainHttp.getBlockchainHeight().toPromise()
+
+      // - set current peer connection
+      dispatch('OPEN_PEER_CONNECTION', {
+        url: nodeUrl,
+        networkType: defaultPeer.values.get('networkType'),
+        generationHash: defaultPeer.values.get('generationHash'),
+        currentHeight: currentHeight,
+        peerInfo: defaultPeer.objects.info
+      })
+
+      // - populate known peers
+      return {
+        knownPeers: withFeed.endpoints,
+        nodeUrl: nodeUrl
+      }
+    },
+    async INITIALIZE_FROM_CONFIG({commit, dispatch}, nodeUrl) {
+      try {
+        const payload = await dispatch('REST_FETCH_PEER_INFO', nodeUrl)
+
+        console.log("config payload: ", payload)
+
+        // - set current peer connection
+        dispatch('OPEN_PEER_CONNECTION', {
+          url: payload.url,
+          networkType: payload.networkType,
+          generationHash: payload.generationHash,
+          currentHeight: payload.currentHeight,
+          peerInfo: payload.peerInfo
+        })
+
+        // - initialize from config must populate DB
+        const repository = new PeersRepository()
+        const knownPeers: PeersModel[] = repository.repopulateFromConfig(payload.generationHash)
+        return {
+          knownPeers: knownPeers,
+          nodeUrl: nodeUrl
+        }
+      }
+      catch (e) {
+        console.log("Error in INTIALIZE_FROM_CONFIG: ", e)
+        dispatch('diagnostic/ADD_ERROR', 'Store action network/initialize default peer unreachable: ' + e.toString(), {root: true})
+      }
+    },
+    async OPEN_PEER_CONNECTION({state, commit, dispatch}, payload) {
+      commit('currentPeer', payload.url)
+      commit('networkType', payload.networkType)
+      commit('setConnected', true)
+      $eventBus.$emit('newConnection', payload.url)
+ 
+      commit('currentHeight', payload.currentHeight.compact())
+      commit('currentPeerInfo', payload.peerInfo)
+
+      // subscribe to updates
+      dispatch('SUBSCRIBE')
+    },
     async SET_CURRENT_PEER({ commit, dispatch }, currentPeerUrl) {
       if (!URLHelpers.isValidURL(currentPeerUrl)) {
         throw Error('Cannot change node. URL is not valid: ' + currentPeerUrl)
       }
 
-      // update state pre-connection
-      commit('currentPeer', currentPeerUrl)
-      commit('setConnected', false)
-      commit('setInitialized', false)
+      try {
+        // - disconnect from previous node
+        await dispatch('UNSUBSCRIBE')
 
-      // reset store + re-initialize
-      await dispatch('uninitialize')
-      await dispatch('initialize')
+        // - fetch info / connect to new node
+        const payload = await dispatch('REST_FETCH_PEER_INFO', currentPeerUrl)
+
+        dispatch('OPEN_PEER_CONNECTION', {
+          url: payload.url,
+          networkType: payload.networkType,
+          generationHash: payload.generationHash,
+          currentHeight: payload.currentHeight,
+          peerInfo: payload.peerInfo
+        })
+      }
+      catch (e) {}
     },
     ADD_KNOWN_PEER({commit}, peerUrl) {
       if (!URLHelpers.isValidURL(peerUrl)) {
@@ -235,8 +300,15 @@ export default {
     REMOVE_KNOWN_PEER({commit}, peerUrl) {
       commit('removePeer', peerUrl)
     },
-    RESET_PEERS({commit}) {
+    RESET_PEERS({commit, getters}) {
       commit('resetPeers')
+
+      // - re-populate known peers from config
+      const repository = new PeersRepository()
+      const knownPeers = repository.repopulateFromConfig(getters.generationHash)
+
+      // - populate known peers
+      knownPeers.map(peer => commit('addPeer', peer.values.get('rest_url')))
     },
     RESET_SUBSCRIPTIONS({commit}) {
       commit('setSubscriptions', [])
@@ -318,6 +390,33 @@ export default {
       catch (e) {
         dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch blocks information: ' + e, {root: true})
         return false
+      }
+    },
+    async REST_FETCH_PEER_INFO({commit}, nodeUrl: string) {
+      try {
+        const blockHttp = RESTService.create('BlockHttp', nodeUrl)
+        const chainHttp = RESTService.create('ChainHttp', nodeUrl)
+        const nodeHttp = RESTService.create('NodeHttp', nodeUrl)
+
+        // - read nemesis from REST
+        const nemesis = await blockHttp.getBlockByHeight('1').toPromise()
+
+        // - read peer info from REST
+        const peerInfo = await nodeHttp.getNodeInfo().toPromise()
+
+        // - read chain height from REST
+        const currentHeight = await chainHttp.getBlockchainHeight().toPromise()
+
+        return {
+          url: nodeUrl,
+          networkType: nemesis.networkType,
+          generationHash: nemesis.generationHash,
+          currentHeight: currentHeight,
+          peerInfo: peerInfo
+        }
+      }
+      catch(e) {
+        return NetworkType.TEST_NET
       }
     },
 /// end-region scoped actions

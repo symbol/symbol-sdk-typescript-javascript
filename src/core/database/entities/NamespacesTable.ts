@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {DatabaseTable} from '@/core/database/DatabaseTable'
+import {DatabaseTable, DatabaseMigration} from '@/core/database/DatabaseTable'
 import {NamespacesModel} from '@/core/database/entities/NamespacesModel'
 
 export class NamespacesTable extends DatabaseTable {
@@ -31,7 +31,8 @@ export class NamespacesTable extends DatabaseTable {
       'startHeight',
       'endHeight',
       'ownerPublicKey',
-    ])
+      'generationHash',
+    ], 2) // version=2
   }
 
   /**
@@ -40,5 +41,14 @@ export class NamespacesTable extends DatabaseTable {
    */
   public createModel(values: Map<string, any> = new Map<string, any>()): NamespacesModel {
     return new NamespacesModel(values)
+  }
+
+  /**
+   * Returns a list of migration callbacks to execute
+   * for database versioning.
+   * @return {any[]}
+   */
+  public getMigrations(): DatabaseMigration[] {
+    return []
   }
 }

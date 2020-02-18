@@ -20,8 +20,7 @@ import {ValidationProvider} from 'vee-validate'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
-import {AppWalletType} from '@/core/database/models/AppWallet'
+import {WalletsModel, WalletType} from '@/core/database/entities/WalletsModel'
 import {WalletService} from '@/services/WalletService'
 import {MosaicService} from '@/services/MosaicService'
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
@@ -244,7 +243,7 @@ export class WalletSelectorPanelTs extends Vue {
    * @return {boolean}
    */
   public isSeedWallet(item): boolean {
-    return item.type === AppWalletType.SEED
+    return item.type === WalletType.SEED
   }
 
   public getBalance(item): number {

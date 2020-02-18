@@ -26,8 +26,8 @@ import {AESEncryptionService} from '@/services/AESEncryptionService'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {NotificationType} from '@/core/utils/NotificationType'
-import {AppWallet, AppWalletType} from '@/core/database/models/AppWallet'
 import {WalletService} from '@/services/WalletService'
+import {WalletsModel, WalletType} from '@/core/database/entities/WalletsModel'
 
 // child components
 import {ValidationObserver, ValidationProvider} from 'vee-validate'
@@ -187,7 +187,7 @@ export class FormSubWalletCreationTs extends Vue {
 
     try {
       // - create sub wallet (can be either derived or by private key)
-      let subWallet: AppWallet
+      let subWallet: WalletsModel
       switch(type) {
       default:
       case 'child_wallet':
@@ -209,11 +209,11 @@ export class FormSubWalletCreationTs extends Vue {
       this.currentPassword = null
 
       // - use repositories for storage
-      this.walletsRepository.create(subWallet.model.values)
+      this.walletsRepository.create(subWallet.values)
 
       // - also add wallet to account (in storage)
       const wallets = this.currentAccount.values.get("wallets")
-      wallets.push(subWallet.model.getIdentifier())
+      wallets.push(subWallet.getIdentifier())
       this.currentAccount.values.set("wallets", wallets)
       this.accountsRepository.update(
         this.currentAccount.getIdentifier(),
@@ -221,8 +221,8 @@ export class FormSubWalletCreationTs extends Vue {
       )
 
       // - update app state
-      this.$store.dispatch('account/ADD_WALLET', subWallet.model)
-      this.$store.dispatch('wallet/SET_CURRENT_WALLET', subWallet.model)
+      this.$store.dispatch('account/ADD_WALLET', subWallet)
+      this.$store.dispatch('wallet/SET_CURRENT_WALLET', subWallet)
       this.$store.dispatch('wallet/SET_KNOWN_WALLETS', wallets)
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
       this.$emit('submit', this.formItems)
@@ -236,9 +236,9 @@ export class FormSubWalletCreationTs extends Vue {
   /**
    * Use HD wallet derivation to get next child wallet
    * @param {string} childWalletName 
-   * @return {AppWallet}
+   * @return {WalletsModel}
    */
-  private deriveNextChildWallet(childWalletName: string): AppWallet {
+  private deriveNextChildWallet(childWalletName: string): WalletsModel {
     // - read all known paths
     const knownPaths = this.sortedKnownPaths
 

@@ -19,8 +19,7 @@ import {Account, Transaction, SignedTransaction, Password} from 'nem2-sdk'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
-import {AppWalletType} from '@/core/database/models/AppWallet'
+import {WalletsModel, WalletType} from '@/core/database/entities/WalletsModel'
 import {TransactionService} from '@/services/TransactionService'
 import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 
@@ -100,7 +99,7 @@ export class ModalTransactionConfirmationTs extends Vue {
    */
   public get isUsingHardwareWallet(): boolean {
     //XXX should use "stagedTransaction.signer" to identify wallet
-    return AppWalletType.TREZOR === this.currentWallet.values.get('type')
+    return WalletType.TREZOR === this.currentWallet.values.get('type')
   }
 
   /**

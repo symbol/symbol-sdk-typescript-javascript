@@ -107,4 +107,5 @@ export enum NotificationType {
   SUCCESS_ACCOUNT_UNLOCKED = 'success_account_unlocked',
   SUCCESS_PASSWORD_CHANGED = 'success_password_changed',
   SUCCESS_SETTINGS_UPDATED = 'success_settings_updated',
+  ERROR_PEER_UNREACHABLE = 'error_peer_unreachable'
 }

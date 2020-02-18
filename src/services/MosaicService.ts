@@ -67,13 +67,17 @@ export class MosaicService extends AbstractService {
    * @param {MosaicId} mosaicId 
    * @return {MosaicsModel}
    */
-  public async getMosaic(mosaicId: MosaicId): Promise<MosaicsModel> {
+  public async getMosaic(
+    mosaicId: MosaicId,
+    isCurrencyMosaic: boolean = false,
+    isHarvestMosaic: boolean = false,
+  ): Promise<MosaicsModel> {
     const repository = new MosaicsRepository()
     let mosaic: MosaicsModel
 
     if (!repository.find(mosaicId.toHex())) {
       // - mosaic is unknown, fetch from REST + add to storage
-      mosaic = await this.fetchMosaicInfo(mosaicId)
+      mosaic = await this.fetchMosaicInfo(mosaicId, isCurrencyMosaic, isHarvestMosaic)
     }
     else {
       // - mosaic known, build MosaicInfo from model
@@ -109,8 +113,13 @@ export class MosaicService extends AbstractService {
    * @return {MosaicsModel}
    */
   protected async fetchMosaicInfo(
-    mosaicId: MosaicId
+    mosaicId: MosaicId,
+    isCurrencyMosaic: boolean = false,
+    isHarvestMosaic: boolean = false,
   ): Promise<MosaicsModel> {
+    // - get network info from store
+    const generationHash = this.$store.getters['network/generationHash']
+
     try {
       // - fetch INFO from REST
       const mosaicInfo = await this.$store.dispatch('mosaic/REST_FETCH_INFO', mosaicId)
@@ -134,7 +143,10 @@ export class MosaicService extends AbstractService {
         ['duration', mosaicInfo.duration.compact()],
         ['divisibility', mosaicInfo.divisibility],
         ['supply', mosaicInfo.supply],
-        ['ownerPublicKey', mosaicInfo.owner.publicKey]
+        ['ownerPublicKey', mosaicInfo.owner.publicKey],
+        ['generationHash', generationHash],
+        ['isCurrencyMosaic', isCurrencyMosaic],
+        ['isHarvestMosaic', isHarvestMosaic],
       ]))
 
       // - store and return
@@ -151,7 +163,10 @@ export class MosaicService extends AbstractService {
         ['duration', 0],
         ['divisibility', 0],
         ['supply', 0],
-        ['ownerPublicKey', '']
+        ['ownerPublicKey', ''],
+        ['generationHash', generationHash],
+        ['isCurrencyMosaic', isCurrencyMosaic],
+        ['isHarvestMosaic', isHarvestMosaic],
       ]))
     }
   }

@@ -15,12 +15,12 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {NetworkType} from 'nem2-sdk'
+import {NetworkType, Password} from 'nem2-sdk'
 
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 import {NotificationType} from '@/core/utils/NotificationType'
-import {AppAccount} from '@/core/database/models/AppAccount'
+import {AccountService} from '@/services/AccountService'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
 
@@ -120,23 +120,27 @@ export class FormAccountCreationTs extends Vue {
    * @return {void} 
    */
   private persistAccountAndContinue() {
-    // persist newly created account
-    const account = new AppAccount(
-      this.$store,
-      this.formItems.accountName,
-      [],
-      this.formItems.password,
-      this.formItems.hint,
-      this.networkType,
-    )
+    // -  password stored as hash (never plain.)
+    const service = new AccountService(this.$store)
+    const passwordHash = service.getPasswordHash(new Password(this.formItems.password))
+    
+    // - populate model
+    const model = new AccountsModel(new Map<string, any>([
+      ['accountName', this.formItems.accountName],
+      ['wallets', []],
+      ['password', passwordHash],
+      ['hint', this.formItems.hint],
+      ['networkType', this.networkType],
+      ['seed', '']
+    ]))
 
     // use repository for storage
-    this.accountsRepository.create(account.model.values)
+    this.accountsRepository.create(model.values)
 
     // execute store actions
-    this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
-    this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account.model)
+    this.$store.dispatch('account/SET_CURRENT_ACCOUNT', model)
     this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password)
+    this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
 
     // flush and continue
     this.$router.push({name: this.nextPage})

@@ -96,6 +96,9 @@ export class NamespaceService extends AbstractService {
   protected async fetchNamespaceInfo(
     namespaceId: NamespaceId 
   ): Promise<NamespacesModel> {
+    // - get network info from store
+    const generationHash = this.$store.getters['network/generationHash']
+
     // - fetch INFO from REST
     const namespaceInfo: NamespaceInfo = await this.$store.dispatch('namespace/REST_FETCH_INFO', namespaceId)
     const namespaceIds = namespaceInfo.levels.filter((info, i) => i < namespaceInfo.depth - 1)
@@ -124,6 +127,7 @@ export class NamespaceService extends AbstractService {
       ['startHeight', namespaceInfo.startHeight.compact()],
       ['endHeight', namespaceInfo.endHeight.compact()],
       ['ownerPublicKey', namespaceInfo.owner.publicKey],
+      ['generationHash', generationHash],
     ]))
 
     // - store and return

@@ -18,6 +18,8 @@ import {Store} from 'vuex'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
+import {PeersRepository} from '@/repositories/PeersRepository'
+import {PeersModel} from '@/core/database/entities/PeersModel'
 import {URLHelpers} from '@/core/utils/URLHelpers'
 
 export class PeerService extends AbstractService {
@@ -43,6 +45,22 @@ export class PeerService extends AbstractService {
   }
 
   /**
+   * Getter for the collection of items
+   * mapped by identifier
+   * @return {Map<string, PeersModel>}
+   */
+  public getEndpoints(
+    filterFn: (
+      value: PeersModel,
+      index: number,
+      array: PeersModel[]
+    ) => boolean = (e) => true
+  ): PeersModel[] {
+    const repository = new PeersRepository()
+    return repository.collect().filter(filterFn)
+  }
+
+  /**
    * Get full node url and add missing pieces
    * @param {string} fromUrl 
    * @return {string}
@@ -50,20 +68,5 @@ export class PeerService extends AbstractService {
   public getNodeUrl(fromUrl: string): string {
     const url = URLHelpers.formatUrl(fromUrl)
     return url.protocol + '//' + url.hostname + (url.port ? ':' + url.port : ':3000')
-  }
-
-  /**
-   * Get a node's network type
-   * @param {string} nodeUrl 
-   * @return {Promise<NetworkType>}
-   */
-  public async getNetworkType(nodeUrl: string): Promise<NetworkType> {
-    try {
-      const networkHttp = new NetworkHttp(nodeUrl)
-      return await networkHttp.getNetworkType().toPromise()
-    }
-    catch(e) {
-      return NetworkType.TEST_NET
-    }
   }
 }

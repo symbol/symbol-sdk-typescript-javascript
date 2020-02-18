@@ -52,7 +52,7 @@ describe('database/JSONFormatter ==>', () => {
       const formatter = getFormatter()
 
       // act
-      const json = formatter.format(new Map<string, FakeModel>())
+      const json = formatter.format(new FakeTable('table', ['col1']), new Map<string, FakeModel>())
       expect(json).toBe('{}')
     })
 
@@ -74,7 +74,10 @@ describe('database/JSONFormatter ==>', () => {
         + '"db_column3":"value3",'
         + '"id":"' + model.getIdentifier() + '"'
         + '}}'
-      const json = formatter.format(new Map<string, FakeModel>([[model.getIdentifier(), model]]))
+      const json = formatter.format(
+        new FakeTable('table', ['col1']),
+        new Map<string, FakeModel>([[model.getIdentifier(), model]])
+      )
       expect(json).toBe(expected)
 
       // make sure JSON is valid
@@ -101,10 +104,12 @@ describe('database/JSONFormatter ==>', () => {
       ]))
 
       // act
-      const json = formatter.format(new Map<string, FakeModel>([
-        [model1.getIdentifier(), model1],
-        [model2.getIdentifier(), model2],
-      ]))
+      const json = formatter.format(
+        new FakeTable('table', ['col1']),
+        new Map<string, FakeModel>([
+          [model1.getIdentifier(), model1],
+          [model2.getIdentifier(), model2],
+        ]))
 
       try {
         const parsed = JSON.parse(json)
@@ -130,10 +135,12 @@ describe('database/JSONFormatter ==>', () => {
       ]))
 
       // act
-      const json = formatter.format(new Map<string, FakeModel>([
-        [model1.getIdentifier(), model1],
-        [model2.getIdentifier(), model2],
-      ]))
+      const json = formatter.format(
+        new FakeTable('table', ['col1']),
+        new Map<string, FakeModel>([
+          [model1.getIdentifier(), model1],
+          [model2.getIdentifier(), model2],
+        ]))
 
       try {
         const parsed = JSON.parse(json)
@@ -160,7 +167,7 @@ describe('database/JSONFormatter ==>', () => {
     it('throw if schema is undefined', () => {
       const formatter = new JSONFormatter()
       expect(() => {
-        formatter.parse('{"item":"1"}')
+        formatter.parse(new FakeTable('table', ['item']), '{"item":"1"}')
       }).toThrow('Error parsing JSON: Schema must be set before data can be parsed.')
     })
 
@@ -170,7 +177,7 @@ describe('database/JSONFormatter ==>', () => {
       const json = '{}'
 
       // act
-      const map = formatter.parse(json)
+      const map = formatter.parse(new FakeTable('table', ['col1']), json)
       expect(map.size).toBe(0)
     })
 
@@ -186,7 +193,10 @@ describe('database/JSONFormatter ==>', () => {
       + '}}'
 
       // act
-      const map = formatter.parse(json)
+      const map = formatter.parse(
+        new FakeTable('table', ['db_column1', 'db_column2', 'db_column3']), 
+        json
+      )
       expect(map.size).toBe(1)
       expect(map.has('123456789')).toBe(true)
       expect(map.get('123456789')).toBeInstanceOf(FakeModel)
@@ -209,7 +219,10 @@ describe('database/JSONFormatter ==>', () => {
       + '}}'
 
       // act
-      const map = formatter.parse(json)
+      const map = formatter.parse(
+        new FakeTable('table', ['db_column1', 'db_column2', 'db_column3']), 
+        json
+      )
       expect(map.size).toBe(2)
       expect(map.has('1234')).toBe(true)
       expect(map.get('1234')).toBeInstanceOf(FakeModel)
@@ -234,7 +247,10 @@ describe('database/JSONFormatter ==>', () => {
       + '}}'
 
       // act
-      const map = formatter.parse(json)
+      const map = formatter.parse(
+        new FakeTable('table', ['db_column1', 'db_column2', 'db_column3']), 
+        json
+      )
       const model1 = map.get('1234')
       const model2 = map.get('5678')
 

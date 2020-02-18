@@ -16,6 +16,10 @@
 import {DatabaseTable} from '@/core/database/DatabaseTable'
 import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
 
+/// region database migrations
+import {MosaicsMigrations} from '@/core/database/migrations/mosaics/MosaicsMigrations'
+/// end-region database migrations
+
 export class MosaicsTable extends DatabaseTable {
   public constructor() {
     super('mosaics', [
@@ -27,7 +31,10 @@ export class MosaicsTable extends DatabaseTable {
       'supply',
       'divisibility',
       'ownerPublicKey',
-    ])
+      'generationHash',
+      'isCurrencyMosaic',
+      'isHarvestMosaic',
+    ], 2) // version=2
   }
 
   /**
@@ -36,5 +43,19 @@ export class MosaicsTable extends DatabaseTable {
    */
   public createModel(values: Map<string, any> = new Map<string, any>()): MosaicsModel {
     return new MosaicsModel(values)
+  }
+
+  /**
+   * Returns a list of migration callbacks to execute
+   * for database versioning.
+   * @return {any[]}
+   */
+  public getMigrations(): {
+    version: number,
+    callback: (rows: Map<string, MosaicsModel>) => Map<string, MosaicsModel>
+  }[] {
+    return [
+      {version: 2, callback: MosaicsMigrations.version2_addGenHash}
+    ]
   }
 }

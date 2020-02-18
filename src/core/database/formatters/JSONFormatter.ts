@@ -16,6 +16,7 @@
 // internal dependencies
 import {DatabaseModel} from '../DatabaseModel'
 import {AbstractFormatter} from './AbstractFormatter'
+import { DatabaseTable } from '../DatabaseTable'
 
 export class JSONFormatter 
   extends AbstractFormatter {
@@ -25,7 +26,10 @@ export class JSONFormatter
    * @param {DatabaseModel} entity
    * @return {string}
    */
-  public format(entities: Map<string, DatabaseModel>): string {
+  public format(
+    schema: DatabaseTable,
+    entities: Map<string, DatabaseModel>,
+  ): string {
     // format each entity individually
     let iterator = entities.keys()
     let data: {} = {}
@@ -40,7 +44,7 @@ export class JSONFormatter
       const dto = entities.get(id)
       const identifier = dto.getIdentifier()
 
-      // expose only "values" from model
+      // expose only "values" from model + add VERSION
       let raw = {}
       const row: Map<string, any> = dto.values
       const keys = row.keys()
@@ -52,6 +56,9 @@ export class JSONFormatter
         }
         raw[field] = values.next().value
       }
+
+      // add schema version
+      raw['version'] = schema.version
 
       // entities stored by id
       data[identifier] = raw
@@ -65,7 +72,10 @@ export class JSONFormatter
    * @param {string} data
    * @return {Map<string, ModelImpl>}
    */
-  public parse(data: string): Map<string, DatabaseModel> {
+  public parse(
+    schema: DatabaseTable,
+    data: string,
+  ): Map<string, DatabaseModel> {
     let parsed = {}
     try { 
       parsed = JSON.parse(data) 
@@ -77,12 +87,6 @@ export class JSONFormatter
 
     if (!Object.keys(parsed).length) {
       return new Map<string, DatabaseModel>()
-    }
-
-    // - map with correct database entities
-    const schema = this.getSchema()
-    if (!schema) {
-      throw new Error('Error parsing JSON: Schema must be set before data can be parsed.')
     }
 
     // map entities to model instances by identifier

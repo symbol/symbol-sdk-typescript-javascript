@@ -18,6 +18,8 @@ import {Store} from 'vuex'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
+import {AccountsRepository} from '@/repositories/AccountsRepository'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
 
 export class AccountService extends AbstractService {
   /**
@@ -39,6 +41,23 @@ export class AccountService extends AbstractService {
   constructor(store?: Store<any>) {
     super()
     this.$store = store
+  }
+
+  /**
+   * Read the collection of known accounts from database.
+   *
+   * @param {Function} filterFn
+   * @return {MosaicsModel[]}
+   */
+  public getAccounts(
+    filterFn: (
+      value: AccountsModel,
+      index: number,
+      array: AccountsModel[]
+    ) => boolean = (e) => true
+  ): AccountsModel[] {
+    const repository = new AccountsRepository()
+    return repository.collect().filter(filterFn)
   }
 
   /**

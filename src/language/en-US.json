@@ -961,6 +961,7 @@
 
   "error_wallet_name_already_exists": "This wallet name already exists. Please, enter a unique wallet name.",
   "error_invalid_password": "This password is invalid",
+  "error_peer_unreachable": "Network node is unreachable.",
   "success_account_unlocked": "Account unlocked successfully",
   "success_password_changed": "Your password was updated successfully. You will now be logged out.",
   "success_settings_updated": "Your settings have been updated successfully.",

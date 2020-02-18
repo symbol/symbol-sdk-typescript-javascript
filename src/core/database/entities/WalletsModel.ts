@@ -19,6 +19,23 @@ import {Address, PublicAccount} from 'nem2-sdk'
 import {DatabaseModel} from '@/core/database/DatabaseModel'
 import {DatabaseRelation} from '@/core/database/DatabaseRelation'
 
+export class WalletType {
+  public static readonly SEED: number = 1
+  public static readonly PRIVATE_KEY = 2
+  public static readonly KEYSTORE = 3
+  public static readonly TREZOR = 4
+
+  public static fromDescriptor(descriptor: string) {
+    switch(descriptor) {
+    default:
+    case 'Ks': return WalletType.KEYSTORE
+    case 'Pk': return WalletType.PRIVATE_KEY
+    case 'Seed': return WalletType.SEED
+    case 'Trezor': return WalletType.TREZOR
+    }
+  }
+}
+
 export class WalletsModel extends DatabaseModel {
   /**
    * Entity identifier *field names*. The identifier

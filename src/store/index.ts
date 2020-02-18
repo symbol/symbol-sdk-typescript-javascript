@@ -16,6 +16,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import AppInfoStore from '@/store/AppInfo'
+import DatabaseStore from '@/store/Database'
 import NetworkStore from '@/store/Network'
 import AccountStore from '@/store/Account'
 import WalletStore from '@/store/Wallet'
@@ -42,6 +43,7 @@ const AppStore = new Vuex.Store({
   strict: false,
   modules: {
     app: AppInfoStore,
+    db: DatabaseStore,
     network: NetworkStore,
     account: AccountStore,
     wallet: WalletStore,
@@ -57,10 +59,11 @@ const AppStore = new Vuex.Store({
     async initialize({ commit, dispatch, getters }) {
       const callback = async () => {
         await dispatch('app/initialize')
+        await dispatch('db/initialize')
         await dispatch('diagnostic/initialize')
         await dispatch('notification/initialize')
-        await dispatch('network/initialize')
-        await dispatch('mosaic/initialize')
+        await dispatch('network/initialize', getters['db/feed'])
+        await dispatch('mosaic/initialize', getters['db/feed'])
       }
 
       // aquire async lock until initialized

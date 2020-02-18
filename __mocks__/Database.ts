@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {DatabaseTable} from '@/core/database/DatabaseTable'
+import {DatabaseTable, DatabaseMigration} from '@/core/database/DatabaseTable'
 import {DatabaseModel} from '@/core/database/DatabaseModel'
 import {ObjectStorageBackend} from '@/core/database/backends/ObjectStorageBackend'
 import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
@@ -24,6 +24,10 @@ export class FakeModel extends DatabaseModel {}
 export class FakeTable extends DatabaseTable {
   public createModel(values: Map<string, any>): DatabaseModel {
     return new FakeModel(['id'], values)
+  }
+
+  public getMigrations(): DatabaseMigration[] {
+    return []
   }
 }
 /// end-region mocks
