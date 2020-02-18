@@ -298,7 +298,9 @@ export abstract class Transaction {
      */
     public isUnconfirmed(): boolean {
         return this.transactionInfo != null && this.transactionInfo.height.compact() === 0
-            && this.transactionInfo.hash === this.transactionInfo.merkleComponentHash;
+            && this.transactionInfo.hash !== undefined
+            && this.transactionInfo.merkleComponentHash !== undefined
+            && this.transactionInfo.hash.toUpperCase() === this.transactionInfo.merkleComponentHash.toUpperCase();
     }
 
     /**
@@ -314,8 +316,10 @@ export abstract class Transaction {
      * @returns {boolean}
      */
     public hasMissingSignatures(): boolean {
-        return this.transactionInfo != null && this.transactionInfo.height.compact() === 0 &&
-            this.transactionInfo.hash !== this.transactionInfo.merkleComponentHash;
+        return this.transactionInfo != null && this.transactionInfo.height.compact() === 0
+            && this.transactionInfo.hash !== undefined
+            && this.transactionInfo.merkleComponentHash !== undefined
+            && this.transactionInfo.hash.toUpperCase() === this.transactionInfo.merkleComponentHash.toUpperCase();
     }
 
     /**

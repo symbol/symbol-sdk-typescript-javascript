@@ -232,7 +232,13 @@ export class Listener implements IListener {
             filter((_) => _.message instanceof Transaction),
             map((_) => _.message as Transaction),
             filter((_) => this.transactionFromAddress(_, address)),
-            filter((_) => transactionHash === undefined || _.transactionInfo!.hash === transactionHash),
+            filter((_) => {
+                if (transactionHash === undefined) {
+                    return true;
+                } else {
+                    const metaHash = _.transactionInfo!.hash;
+                    return metaHash !== undefined ? metaHash.toUpperCase() === transactionHash.toUpperCase() : false;
+                }}),
         );
     }
 
@@ -333,7 +339,7 @@ export class Listener implements IListener {
     public cosignatureAdded(address: Address): Observable<CosignatureSignedTransaction> {
         this.subscribeTo(`cosignature/${address.plain()}`);
         return this.messageSubject.asObservable().pipe(
-            filter((_) => _.channelName === ListenerChannelName.cosignature),
+            filter((_) => _.channelName.toUpperCase() === ListenerChannelName.cosignature.toUpperCase()),
             filter((_) => _.message instanceof CosignatureSignedTransaction),
             map((_) => _.message as CosignatureSignedTransaction));
     }
