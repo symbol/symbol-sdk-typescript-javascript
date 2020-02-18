@@ -184,7 +184,8 @@ describe('MetadataTransactionService', () => {
             expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
             expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
             expect(transaction.valueSizeDelta).to.be.equal(5);
-            expect(transaction.value).to.be.equals( Convert.decodeHex(Convert.xor(Convert.utf8ToUint8(newValue), Convert.utf8ToUint8(updateValue))));
+            expect(transaction.value).to.be.equals(
+                Convert.decodeHex(Convert.xor(Convert.utf8ToUint8(newValue), Convert.utf8ToUint8(updateValue))));
             expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
             expect(transaction.targetMosaicId.toHex()).to.be.equal(mosaicId.toHex());
         });
@@ -207,7 +208,8 @@ describe('MetadataTransactionService', () => {
             expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
             expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
             expect(transaction.valueSizeDelta).to.be.equal(5);
-            expect(transaction.value).to.be.equals( Convert.decodeHex(Convert.xor(Convert.utf8ToUint8(newValue), Convert.utf8ToUint8(updateValue))));
+            expect(transaction.value).to.be.equals( Convert.decodeHex(
+                Convert.xor(Convert.utf8ToUint8(newValue), Convert.utf8ToUint8(updateValue))));
             expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
             expect(transaction.targetNamespaceId.toHex()).to.be.equal(namespaceId.toHex());
         });

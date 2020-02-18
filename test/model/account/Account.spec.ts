@@ -21,9 +21,9 @@ import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 
 describe('Account', () => {
     const accountInformation = {
-        address: 'SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2',
+        address: 'SDLGYM2CBZKBDGK3VT6KFMUM6HE7LXL2WEQE5JCR',
         privateKey: '26b64cb10f005e5988a36744ca19e20d835ccc7c105aaa5f3b212da593180930'.toUpperCase(),
-        publicKey: 'c2f93346e27ce6ad1a9f8f5e3066f8326593a406bdf357acb041e2f9ab402efe'.toUpperCase(),
+        publicKey: '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6'.toUpperCase(),
     };
 
     it('should be created via private key', () => {
@@ -31,20 +31,6 @@ describe('Account', () => {
         expect(account.publicKey).to.be.equal(accountInformation.publicKey);
         expect(account.privateKey).to.be.equal(accountInformation.privateKey);
         expect(account.address.plain()).to.be.equal(accountInformation.address);
-    });
-
-    /**
-     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-keys-nis1.json
-     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-nis1.json
-     */
-    it('should be created via private key using NIS1 schema', () => {
-        const privateKey =
-            Convert.uint8ToHex(Convert.hexToUint8Reverse('575dbb3062267eff57c970a336ebbc8fbcfe12c5bd3ed7bc11eb0481d7704ced'));
-        const account = Account.createFromPrivateKey(privateKey,
-            NetworkType.TEST_NET);
-        expect(account.publicKey.toUpperCase()).to.be.
-            equal('c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844'.toUpperCase());
-        expect(account.address.plain()).to.be.equal('TDD2CT6LQLIYQ56KIXI3ENTM6EK3D44P5KZPFMK2');
     });
 
     it('should throw exception when the private key is not valid', () => {

@@ -31,6 +31,7 @@ import { TransferTransaction } from '../../../src/model/transaction/TransferTran
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
+// tslint:disable: no-use-before-declare
 describe('Transaction', () => {
     let account: Account;
 

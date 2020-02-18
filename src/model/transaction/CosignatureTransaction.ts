@@ -61,8 +61,8 @@ export class CosignatureTransaction {
         const transactionHash =
             Transaction.createTransactionHash(payload, Array.from(Convert.hexToUint8(generationHash)), account.networkType);
         const hashBytes = Convert.hexToUint8(transactionHash);
-        const signSchema = SHA3Hasher.resolveSignSchema(account.networkType);
-        const signature = KeyPair.sign(account, new Uint8Array(hashBytes), signSchema);
+        const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(account.privateKey);
+        const signature = KeyPair.sign(keyPairEncoded, new Uint8Array(hashBytes));
         return new CosignatureSignedTransaction(
             Convert.uint8ToHex(hashBytes),
             Convert.uint8ToHex(signature),
@@ -81,8 +81,8 @@ export class CosignatureTransaction {
         }
         const hash = this.transactionToCosign.transactionInfo!.hash;
         const hashBytes = Convert.hexToUint8(hash ? hash : '');
-        const signSchema = SHA3Hasher.resolveSignSchema(account.networkType);
-        const signature = KeyPair.sign(account, new Uint8Array(hashBytes), signSchema);
+        const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(account.privateKey);
+        const signature = KeyPair.sign(keyPairEncoded, new Uint8Array(hashBytes));
         return new CosignatureSignedTransaction(
             hash ? hash : '',
             Convert.uint8ToHex(signature),

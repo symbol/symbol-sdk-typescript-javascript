@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-import { keccak256, keccak512, sha3_256, sha3_512 } from 'js-sha3';
-import { NetworkType } from '../../model/blockchain/NetworkType';
+import { sha3_256, sha3_512 } from 'js-sha3';
 import { Convert as convert, RawArray as array } from '../format';
-import { SignSchema } from './SignSchema';
 
 export class SHA3Hasher {
     /**
@@ -25,10 +23,9 @@ export class SHA3Hasher {
      * @param {Uint8Array} dest The computed hash destination.
      * @param {Uint8Array} data The data to hash.
      * @param {numeric} length The hash length in bytes.
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK(NIS1) / SHA3(Catapult))
      */
-    public static func = (dest, data, length, signSchema: SignSchema) => {
-        const hasher = SHA3Hasher.getHasher(length, signSchema);
+    public static func = (dest, data, length) => {
+        const hasher = SHA3Hasher.getHasher(length);
         const hash = hasher.arrayBuffer(data);
         array.copy(dest, array.uint8View(hash));
     }
@@ -36,14 +33,13 @@ export class SHA3Hasher {
     /**
      * Creates a hasher object.
      * @param {numeric} length The hash length in bytes.
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK(NIS1) / SHA3(Catapult))
      * @returns {object} The hasher.
      */
-    public static createHasher = (length = 64, signSchema: SignSchema) => {
+    public static createHasher = (length = 64) => {
         let hash;
         return {
             reset: () => {
-                hash = SHA3Hasher.getHasher(length, signSchema).create();
+                hash = SHA3Hasher.getHasher(length).create();
             },
             update: (data: any) => {
                 if (data instanceof Uint8Array) {
@@ -63,27 +59,12 @@ export class SHA3Hasher {
     /**
      * Get a hasher instance.
      * @param {numeric} length The hash length in bytes.
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK(NIS1) / SHA3(Catapult))
      * @returns {object} The hasher.
      */
-    public static getHasher = (length = 64, signSchema: SignSchema) => {
+    public static getHasher = (length = 64) => {
         return {
-            32: signSchema === SignSchema.SHA3 ? sha3_256 : keccak256,
-            64: signSchema === SignSchema.SHA3 ? sha3_512 : keccak512 ,
+            32: sha3_256,
+            64: sha3_512,
         } [length];
-    }
-
-    /**
-     * Resolve signature schema from given network type
-     *
-     * @param {NetworkType} networkType - Network type
-     *
-     * @return {SignSchema}
-     */
-    public static resolveSignSchema(networkType: NetworkType): SignSchema {
-        if (networkType === NetworkType.MAIN_NET || networkType === NetworkType.TEST_NET) {
-            return SignSchema.KECCAK;
-        }
-        return SignSchema.SHA3;
     }
 }

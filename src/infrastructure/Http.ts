@@ -69,6 +69,9 @@ export abstract class Http {
             };
             return new Error(JSON.stringify(formattedError));
         }
+        if (error.code && error.address && error.code === 'ECONNREFUSED') {
+            return new Error(`Cannot reach node: ${error.address}:${error.port}`);
+        }
         return new Error(error);
     }
 }

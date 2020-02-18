@@ -53,24 +53,6 @@ describe('Address', () => {
         expect(address.networkType).to.be.equal(NetworkType.TEST_NET);
     });
 
-    /**
-     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-nis1.json
-     */
-    it('createComplete an address given publicKey + NetworkType.MAIN_NET using NIS1 schema', () => {
-        const address = Address.createFromPublicKey(NIS_PublicKey, NetworkType.MAIN_NET);
-        expect(address.plain()).to.be.equal('NDD2CT6LQLIYQ56KIXI3ENTM6EK3D44P5JFXJ4R4');
-        expect(address.networkType).to.be.equal(NetworkType.MAIN_NET);
-    });
-
-    /**
-     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-nis1.json
-     */
-    it('createComplete an address given publicKey + NetworkType.TEST_NET using NIS1 schema', () => {
-        const address = Address.createFromPublicKey(NIS_PublicKey, NetworkType.TEST_NET);
-        expect(address.plain()).to.be.equal('TDD2CT6LQLIYQ56KIXI3ENTM6EK3D44P5KZPFMK2');
-        expect(address.networkType).to.be.equal(NetworkType.TEST_NET);
-    });
-
     it('createComplete an address given SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2', () => {
         const address = Address.createFromRawAddress('SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2');
         expect(address.networkType).to.be.equal(NetworkType.MIJIN_TEST);
