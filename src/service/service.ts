@@ -20,3 +20,4 @@ export * from './AggregateTransactionService';
 export * from './MetadataTransactionService';
 export * from './MosaicRestrictionTransactionService';
 export * from './TransactionService';
+export * from './BlockService';
