@@ -19,7 +19,7 @@ import {AccountInfo} from '../model/account/AccountInfo';
 import {Address} from '../model/account/Address';
 import {AggregateTransaction} from '../model/transaction/AggregateTransaction';
 import {Transaction} from '../model/transaction/Transaction';
-import { TransactionSearchCriteria } from './TransactionSearchCriteria';
+import { QueryParams } from './QueryParams';
 
 /**
  * Account interface repository.
@@ -48,7 +48,7 @@ export interface AccountRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    getAccountTransactions(address: Address, queryParams?: TransactionSearchCriteria): Observable<Transaction[]>;
+    getAccountTransactions(address: Address, queryParams?: QueryParams): Observable<Transaction[]>;
 
     /**
      * Gets an array of transactions for which an account is the recipient of a transaction.
@@ -57,7 +57,7 @@ export interface AccountRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    getAccountIncomingTransactions(address: Address, queryParams?: TransactionSearchCriteria): Observable<Transaction[]>;
+    getAccountIncomingTransactions(address: Address, queryParams?: QueryParams): Observable<Transaction[]>;
 
     /**
      * Gets an array of transactions for which an account is the sender a transaction.
@@ -66,7 +66,7 @@ export interface AccountRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    getAccountOutgoingTransactions(address: Address, queryParams?: TransactionSearchCriteria): Observable<Transaction[]>;
+    getAccountOutgoingTransactions(address: Address, queryParams?: QueryParams): Observable<Transaction[]>;
 
     /**
      * Gets the array of transactions for which an account is the sender or receiver and which have not yet been included in a block.
@@ -76,7 +76,7 @@ export interface AccountRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    getAccountUnconfirmedTransactions(address: Address, queryParams?: TransactionSearchCriteria): Observable<Transaction[]>;
+    getAccountUnconfirmedTransactions(address: Address, queryParams?: QueryParams): Observable<Transaction[]>;
 
     /**
      * Gets an array of transactions for which an account is the sender or has sign the transaction.
@@ -85,5 +85,5 @@ export interface AccountRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<AggregateTransaction[]>
      */
-    getAccountPartialTransactions(address: Address, queryParams?: TransactionSearchCriteria): Observable<AggregateTransaction[]>;
+    getAccountPartialTransactions(address: Address, queryParams?: QueryParams): Observable<AggregateTransaction[]>;
 }
