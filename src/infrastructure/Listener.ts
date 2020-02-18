@@ -32,10 +32,7 @@ import { TransactionStatusError } from '../model/transaction/TransactionStatusEr
 import { TransferTransaction } from '../model/transaction/TransferTransaction';
 import { UInt64 } from '../model/UInt64';
 import { IListener } from './IListener';
-import {
-    CreateTransactionFromDTO,
-    extractBeneficiary,
-} from './transaction/CreateTransactionFromDTO';
+import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
 
 enum ListenerChannelName {
     block = 'block',
@@ -157,7 +154,7 @@ export class Listener implements IListener {
                     message.block.blockTransactionsHash,
                     message.block.blockReceiptsHash,
                     message.block.stateHash,
-                    extractBeneficiary(message, message.block.network), // passing `message` as `blockDTO`
+                    message.block.beneficiaryPublicKey,
                 ),
             });
         } else if (message.code) {
