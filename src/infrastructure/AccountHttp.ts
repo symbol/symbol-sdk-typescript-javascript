@@ -29,7 +29,6 @@ import { AccountRepository } from './AccountRepository';
 import { Http } from './Http';
 import { QueryParams } from './QueryParams';
 import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
-import { TransactionSearchCriteria } from './TransactionSearchCriteria';
 
 /**
  * Account http repository.
@@ -118,13 +117,13 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    public getAccountTransactions(address: Address, queryParams?: TransactionSearchCriteria): Observable<Transaction[]> {
+    public getAccountTransactions(address: Address, queryParams?: QueryParams): Observable<Transaction[]> {
         return observableFrom(
             this.accountRoutesApi.getAccountConfirmedTransactions(address.plain(),
-                this.transactionSearchCriteria(queryParams).pageSize,
-                this.transactionSearchCriteria(queryParams).id,
-                this.transactionSearchCriteria(queryParams).ordering,
-                this.transactionSearchCriteria(queryParams).type)).pipe(
+                this.queryParams(queryParams).pageSize,
+                this.queryParams(queryParams).id,
+                this.queryParams(queryParams).ordering,
+                this.queryParams(queryParams).type)).pipe(
                     map(({body}) => body.map((transactionDTO) => {
                             return CreateTransactionFromDTO(transactionDTO);
                         })),
@@ -139,13 +138,13 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    public getAccountIncomingTransactions(address: Address, queryParams?: TransactionSearchCriteria): Observable <Transaction[]> {
+    public getAccountIncomingTransactions(address: Address, queryParams?: QueryParams): Observable <Transaction[]> {
         return observableFrom(
             this.accountRoutesApi.getAccountIncomingTransactions(address.plain(),
-                this.transactionSearchCriteria(queryParams).pageSize,
-                this.transactionSearchCriteria(queryParams).id,
-                this.transactionSearchCriteria(queryParams).ordering),
-                this.transactionSearchCriteria(queryParams).type).pipe(
+                this.queryParams(queryParams).pageSize,
+                this.queryParams(queryParams).id,
+                this.queryParams(queryParams).ordering),
+                this.queryParams(queryParams).type).pipe(
                     map(({body}) => body.map((transactionDTO) => {
                             return CreateTransactionFromDTO(transactionDTO);
                         })),
@@ -160,13 +159,13 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    public getAccountOutgoingTransactions(address: Address, queryParams?: TransactionSearchCriteria): Observable <Transaction[]> {
+    public getAccountOutgoingTransactions(address: Address, queryParams?: QueryParams): Observable <Transaction[]> {
         return observableFrom(
             this.accountRoutesApi.getAccountOutgoingTransactions(address.plain(),
-                this.transactionSearchCriteria(queryParams).pageSize,
-                this.transactionSearchCriteria(queryParams).id,
-                this.transactionSearchCriteria(queryParams).ordering),
-                this.transactionSearchCriteria(queryParams).type).pipe(
+                this.queryParams(queryParams).pageSize,
+                this.queryParams(queryParams).id,
+                this.queryParams(queryParams).ordering),
+                this.queryParams(queryParams).type).pipe(
                     map(({body}) => body.map((transactionDTO) => {
                             return CreateTransactionFromDTO(transactionDTO);
                         })),
@@ -182,13 +181,13 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    public getAccountUnconfirmedTransactions(address: Address, queryParams?: TransactionSearchCriteria): Observable <Transaction[]> {
+    public getAccountUnconfirmedTransactions(address: Address, queryParams?: QueryParams): Observable <Transaction[]> {
         return observableFrom(
             this.accountRoutesApi.getAccountUnconfirmedTransactions(address.plain(),
-                this.transactionSearchCriteria(queryParams).pageSize,
-                this.transactionSearchCriteria(queryParams).id,
-                this.transactionSearchCriteria(queryParams).ordering),
-                this.transactionSearchCriteria(queryParams).type).pipe(
+                this.queryParams(queryParams).pageSize,
+                this.queryParams(queryParams).id,
+                this.queryParams(queryParams).ordering),
+                this.queryParams(queryParams).type).pipe(
                     map(({body}) => body.map((transactionDTO) => {
                             return CreateTransactionFromDTO(transactionDTO);
                         })),
@@ -203,13 +202,13 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<AggregateTransaction[]>
      */
-    public getAccountPartialTransactions(address: Address, queryParams?: TransactionSearchCriteria): Observable <AggregateTransaction[]> {
+    public getAccountPartialTransactions(address: Address, queryParams?: QueryParams): Observable <AggregateTransaction[]> {
         return observableFrom(
             this.accountRoutesApi.getAccountPartialTransactions(address.plain(),
-                this.transactionSearchCriteria(queryParams).pageSize,
-                this.transactionSearchCriteria(queryParams).id,
-                this.transactionSearchCriteria(queryParams).ordering),
-                this.transactionSearchCriteria(queryParams).type).pipe(
+                this.queryParams(queryParams).pageSize,
+                this.queryParams(queryParams).id,
+                this.queryParams(queryParams).ordering),
+                this.queryParams(queryParams).type).pipe(
                     map(({body}) => body.map((transactionDTO) => {
                             return CreateTransactionFromDTO(transactionDTO) as AggregateTransaction;
                         })),

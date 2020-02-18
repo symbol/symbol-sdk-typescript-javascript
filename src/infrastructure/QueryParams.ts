@@ -44,10 +44,13 @@ export class QueryParams {
      * ASC. Older to newer.
      */
     public order: Order = Order.DESC;
+
+    /**
+     * Transaction type list
+     */
+    public type?: TransactionType[];
     /**
      * Constructor
-     * @param pageSize
-     * @param id
      */
     constructor() {
     }
@@ -65,5 +68,22 @@ export class QueryParams {
     public setOrder(order: Order = Order.DESC): QueryParams {
         this.order = order;
         return this;
+    }
+
+    public setType(type?: TransactionType[]): QueryParams {
+        this.type = type;
+        return this;
+    }
+
+    /**
+     * Return comma seperated list
+     * @param type Transaction type list
+     */
+    public convertCSV(type?: TransactionType[]): string | undefined {
+        if (!type || type.length === 0) {
+            return undefined;
+        } else {
+            return type.map((t) => t.valueOf().toString()).join(',');
+        }
     }
 }
