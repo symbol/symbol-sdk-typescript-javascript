@@ -291,7 +291,13 @@ export class Listener implements IListener {
             filter((_) => _.message instanceof AggregateTransaction),
             map((_) => _.message as AggregateTransaction),
             filter((_) => this.transactionFromAddress(_, address)),
-            filter((_) => transactionHash === undefined || _.transactionInfo!.hash === transactionHash),
+            filter((_) => {
+                if (transactionHash === undefined) {
+                    return true;
+                } else {
+                    const metaHash = _.transactionInfo!.hash;
+                    return metaHash !== undefined ? metaHash.toUpperCase() === transactionHash.toUpperCase() : false;
+                }}),
         );
     }
 
