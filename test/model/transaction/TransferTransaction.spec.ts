@@ -27,7 +27,7 @@ import { PlainMessage } from '../../../src/model/message/PlainMessage';
 import { ReceiptSource, ResolutionEntry, ResolutionType, TransactionInfo } from '../../../src/model/model';
 import { Mosaic } from '../../../src/model/mosaic/Mosaic';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
-import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
+import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
 import { Statement } from '../../../src/model/receipt/Statement';
@@ -113,7 +113,7 @@ describe('TransferTransaction', () => {
             Deadline.create(),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [
-                NetworkCurrencyMosaic.createRelative(100),
+                NetworkCurrencyLocal.createRelative(100),
             ],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -140,7 +140,7 @@ describe('TransferTransaction', () => {
             Deadline.create(),
             addressAlias,
             [
-                NetworkCurrencyMosaic.createRelative(100),
+                NetworkCurrencyLocal.createRelative(100),
             ],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -166,7 +166,7 @@ describe('TransferTransaction', () => {
             Deadline.create(),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [
-                NetworkCurrencyMosaic.createRelative(100),
+                NetworkCurrencyLocal.createRelative(100),
             ],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -188,7 +188,7 @@ describe('TransferTransaction', () => {
             Deadline.create(),
             new NamespaceId('nem.owner'),
             [
-                NetworkCurrencyMosaic.createRelative(100),
+                NetworkCurrencyLocal.createRelative(100),
             ],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -211,7 +211,7 @@ describe('TransferTransaction', () => {
                 Deadline.create(),
                 Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
                 [
-                    NetworkCurrencyMosaic.createRelative(100),
+                    NetworkCurrencyLocal.createRelative(100),
                 ],
                 PlainMessage.create('NEM'),
                 NetworkType.MIJIN_TEST,
@@ -226,7 +226,7 @@ describe('TransferTransaction', () => {
             Deadline.create(),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [
-                NetworkCurrencyMosaic.createRelative(100),
+                NetworkCurrencyLocal.createRelative(100),
             ],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -289,7 +289,7 @@ describe('TransferTransaction', () => {
             TransferTransaction.create(
                 Deadline.create(),
                 Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
-                [NetworkCurrencyMosaic.createRelative(100)],
+                [NetworkCurrencyLocal.createRelative(100)],
                 PersistentHarvestingDelegationMessage
                     .create(delegatedPrivateKey, recipientPublicKey,  NetworkType.MIJIN_TEST),
                 NetworkType.MIJIN_TEST,
@@ -302,7 +302,7 @@ describe('TransferTransaction', () => {
             TransferTransaction.create(
                 Deadline.create(),
                 Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
-                [NetworkCurrencyMosaic.createRelative(100)],
+                [NetworkCurrencyLocal.createRelative(100)],
                 PersistentHarvestingDelegationMessage.create('abc',  recipientPublicKey, NetworkType.MIJIN_TEST),
                 NetworkType.MIJIN_TEST,
             );
@@ -314,7 +314,7 @@ describe('TransferTransaction', () => {
             TransferTransaction.create(
                 Deadline.create(),
                 Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
-                [NetworkCurrencyMosaic.createRelative(100)],
+                [NetworkCurrencyLocal.createRelative(100)],
                 PersistentHarvestingDelegationMessage.create(delegatedPrivateKey, recipientPublicKey, NetworkType.MIJIN_TEST),
                 NetworkType.MIJIN_TEST,
             );
@@ -384,7 +384,7 @@ describe('TransferTransaction', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.createFromDTO('1'),
             namespaceId,
-            [NetworkCurrencyMosaic.createAbsolute(1)],
+            [NetworkCurrencyLocal.createAbsolute(1)],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
         );
@@ -401,7 +401,7 @@ describe('TransferTransaction', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
-            [NetworkCurrencyMosaic.createAbsolute(1)],
+            [NetworkCurrencyLocal.createAbsolute(1)],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);

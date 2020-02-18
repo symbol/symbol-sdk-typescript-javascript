@@ -49,8 +49,9 @@ export * from './mosaic/MosaicSupplyChangeAction';
 export * from './mosaic/MosaicFlags';
 export * from '../service/MosaicView';
 export * from '../service/MosaicAmountView';
-export * from './mosaic/NetworkCurrencyMosaic';
-export * from './mosaic/NetworkHarvestMosaic';
+export * from './mosaic/NetworkCurrencyLocal';
+export * from './mosaic/NetworkCurrencyPublic';
+export * from './mosaic/NetworkHarvestLocal';
 export * from './mosaic/MosaicNames';
 
 // Mosaic

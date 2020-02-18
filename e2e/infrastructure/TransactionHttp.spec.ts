@@ -35,7 +35,7 @@ import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
 import { MosaicSupplyChangeAction } from '../../src/model/mosaic/MosaicSupplyChangeAction';
-import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
+import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AccountRestrictionModificationAction } from '../../src/model/restriction/AccountRestrictionModificationAction';
@@ -94,7 +94,7 @@ describe('TransactionHttp', () => {
     let generationHash: string;
     let networkType: NetworkType;
     let mosaicId: MosaicId;
-    let networkCurrencyMosaicId: MosaicId;
+    let NetworkCurrencyLocalId: MosaicId;
     let namespaceId: NamespaceId;
     let harvestingAccount: Account;
     let transactionRepository: TransactionRepository;
@@ -134,7 +134,7 @@ describe('TransactionHttp', () => {
 
     describe('Get network currency mosaic id', () => {
         it('get mosaicId', async () => {
-            networkCurrencyMosaicId =
+            NetworkCurrencyLocalId =
                 (await namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).toPromise()) as MosaicId;
         });
     });
@@ -386,7 +386,7 @@ describe('TransactionHttp', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
-                [NetworkCurrencyMosaic.createAbsolute(1)],
+                [NetworkCurrencyLocal.createAbsolute(1)],
                 PlainMessage.create('test-message'),
                 networkType, helper.maxFee,
             );
@@ -399,7 +399,7 @@ describe('TransactionHttp', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
-                [NetworkCurrencyMosaic.createAbsolute(1)],
+                [NetworkCurrencyLocal.createAbsolute(1)],
                 PlainMessage.create('test-message'),
                 networkType, helper.maxFee,
             );
@@ -672,7 +672,7 @@ describe('TransactionHttp', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 namespaceId,
-                [NetworkCurrencyMosaic.createAbsolute(1)],
+                [NetworkCurrencyLocal.createAbsolute(1)],
                 PlainMessage.create('test-message'),
                 networkType, helper.maxFee,
             );
@@ -772,7 +772,7 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = account.sign(aggregateTransaction, generationHash);
             const hashLockTransaction = HashLockTransaction.create(Deadline.create(),
-                new Mosaic(new NamespaceId('cat.currency'), UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
+                new Mosaic(new NamespaceId('cat.currency'), UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
                 UInt64.fromUint(10000),
                 signedTransaction,
                 networkType, helper.maxFee);
@@ -812,7 +812,7 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = account.sign(aggregateTransaction, generationHash);
             const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
-                new Mosaic(networkCurrencyMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
+                new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
                 UInt64.fromUint(10000),
                 signedTransaction,
                 networkType, helper.maxFee);
@@ -831,7 +831,7 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = account.sign(aggregateTransaction, generationHash);
             const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
-                new Mosaic(networkCurrencyMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
+                new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
                 UInt64.fromUint(10),
                 signedTransaction,
                 networkType, helper.maxFee);
@@ -871,7 +871,7 @@ describe('TransactionHttp', () => {
         it('standalone', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyMosaic.createAbsolute(10),
+                NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Sha3_256,
                 sha3_256.create().update(Crypto.randomBytes(20)).hex(),
@@ -893,7 +893,7 @@ describe('TransactionHttp', () => {
         it('aggregate', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyMosaic.createAbsolute(10),
+                NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Sha3_256,
                 sha3_256.create().update(Crypto.randomBytes(20)).hex(),
@@ -912,7 +912,7 @@ describe('TransactionHttp', () => {
         it('standalone', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyMosaic.createAbsolute(10),
+                NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Keccak_256,
                 sha3_256.create().update(Crypto.randomBytes(20)).hex(),
@@ -927,7 +927,7 @@ describe('TransactionHttp', () => {
         it('aggregate', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyMosaic.createAbsolute(10),
+                NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Keccak_256,
                 sha3_256.create().update(Crypto.randomBytes(20)).hex(),
@@ -948,7 +948,7 @@ describe('TransactionHttp', () => {
             const secret = CryptoJS.RIPEMD160(CryptoJS.SHA256(secretSeed).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex);
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyMosaic.createAbsolute(10),
+                NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Hash_160,
                 secret,
@@ -965,7 +965,7 @@ describe('TransactionHttp', () => {
             const secret = CryptoJS.RIPEMD160(CryptoJS.SHA256(secretSeed).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex);
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyMosaic.createAbsolute(10),
+                NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Hash_160,
                 secret,
@@ -984,7 +984,7 @@ describe('TransactionHttp', () => {
         it('standalone', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyMosaic.createAbsolute(10),
+                NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Hash_256,
                 sha3_256.create().update(Crypto.randomBytes(20)).hex(),
@@ -999,7 +999,7 @@ describe('TransactionHttp', () => {
         it('aggregate', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyMosaic.createAbsolute(10),
+                NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Hash_256,
                 sha3_256.create().update(Crypto.randomBytes(20)).hex(),
@@ -1023,7 +1023,7 @@ describe('TransactionHttp', () => {
 
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(1, ChronoUnit.HOURS),
-                NetworkCurrencyMosaic.createAbsolute(10),
+                NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(11),
                 HashType.Op_Sha3_256,
                 secret,
@@ -1061,7 +1061,7 @@ describe('TransactionHttp', () => {
             const proof = convert.uint8ToHex(secretSeed);
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyMosaic.createAbsolute(10),
+                NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Sha3_256,
                 secret,
@@ -1094,7 +1094,7 @@ describe('TransactionHttp', () => {
             const proof = convert.uint8ToHex(secretSeed);
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyMosaic.createAbsolute(10),
+                NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Keccak_256,
                 secret,
@@ -1123,7 +1123,7 @@ describe('TransactionHttp', () => {
             const proof = convert.uint8ToHex(secretSeed);
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyMosaic.createAbsolute(10),
+                NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Keccak_256,
                 secret,
@@ -1157,7 +1157,7 @@ describe('TransactionHttp', () => {
             const proof = secretSeed;
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyMosaic.createAbsolute(10),
+                NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Hash_160,
                 secret,
@@ -1189,7 +1189,7 @@ describe('TransactionHttp', () => {
             const proof = secretSeed;
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyMosaic.createAbsolute(10),
+                NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Hash_160,
                 secret,
@@ -1223,7 +1223,7 @@ describe('TransactionHttp', () => {
             const proof = secretSeed;
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyMosaic.createAbsolute(10),
+                NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Hash_256,
                 secret,
@@ -1254,7 +1254,7 @@ describe('TransactionHttp', () => {
             const proof = secretSeed;
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyMosaic.createAbsolute(10),
+                NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Hash_256,
                 secret,
@@ -1288,8 +1288,8 @@ describe('TransactionHttp', () => {
                 // AliceAccount: account
                 // BobAccount: account
 
-            const sendAmount = NetworkCurrencyMosaic.createRelative(1000);
-            const backAmount = NetworkCurrencyMosaic.createRelative(1);
+            const sendAmount = NetworkCurrencyLocal.createRelative(1000);
+            const backAmount = NetworkCurrencyLocal.createRelative(1);
 
             const aliceTransferTransaction = TransferTransaction.create(Deadline.create(), account2.address, [sendAmount],
                 PlainMessage.create('payout'), networkType, helper.maxFee);
@@ -1384,7 +1384,7 @@ describe('TransactionHttp', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
-                [NetworkCurrencyMosaic.createAbsolute(1)],
+                [NetworkCurrencyLocal.createAbsolute(1)],
                 PlainMessage.create('test-message'),
                 networkType, helper.maxFee,
             );
@@ -1399,7 +1399,7 @@ describe('TransactionHttp', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
-                [NetworkCurrencyMosaic.createRelative(1)],
+                [NetworkCurrencyLocal.createRelative(1)],
                 PlainMessage.create('test-message'),
                 networkType, helper.maxFee,
             );

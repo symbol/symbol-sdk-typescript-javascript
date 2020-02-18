@@ -31,7 +31,7 @@ import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../../src/model/mosaic/MosaicNonce';
 import { MosaicSupplyChangeAction } from '../../../src/model/mosaic/MosaicSupplyChangeAction';
-import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
+import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
 import { AliasAction } from '../../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NamespaceRegistrationType } from '../../../src/model/namespace/NamespaceRegistrationType';
@@ -320,7 +320,7 @@ describe('TransactionMapping - createFromPayload', () => {
             Deadline.create(),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [
-                NetworkCurrencyMosaic.createRelative(100),
+                NetworkCurrencyLocal.createRelative(100),
             ],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -341,7 +341,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
-            NetworkCurrencyMosaic.createAbsolute(10),
+            NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             HashType.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
@@ -462,7 +462,7 @@ describe('TransactionMapping - createFromPayload', () => {
         );
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockTransaction = LockFundsTransaction.create(Deadline.create(),
-            NetworkCurrencyMosaic.createRelative(10),
+            NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
             NetworkType.MIJIN_TEST);
@@ -471,7 +471,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const transaction = TransactionMapping.createFromPayload(signedLockFundTransaction.payload) as LockFundsTransaction;
 
-        deepEqual(transaction.mosaic.id.id, NetworkCurrencyMosaic.NAMESPACE_ID.id);
+        deepEqual(transaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
         expect(transaction.mosaic.amount.compact()).to.be.equal(10000000);
         expect(transaction.hash).to.be.equal(signedTransaction.hash);
     });
@@ -676,7 +676,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             Deadline.create(),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [
-                NetworkCurrencyMosaic.createRelative(100),
+                NetworkCurrencyLocal.createRelative(100),
             ],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -693,7 +693,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             Deadline.create(),
             new NamespaceId([33347626, 3779697293]),
             [
-                NetworkCurrencyMosaic.createRelative(100),
+                NetworkCurrencyLocal.createRelative(100),
             ],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -710,7 +710,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             Deadline.create(),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [
-                NetworkCurrencyMosaic.createRelative(100),
+                NetworkCurrencyLocal.createRelative(100),
             ],
             new EncryptedMessage('12324556'),
             NetworkType.MIJIN_TEST,
@@ -871,7 +871,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
-            NetworkCurrencyMosaic.createAbsolute(10),
+            NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             HashType.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
@@ -892,7 +892,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const recipientAddress = new NamespaceId('test');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
-            NetworkCurrencyMosaic.createAbsolute(10),
+            NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             HashType.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
@@ -1049,7 +1049,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         );
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockTransaction = LockFundsTransaction.create(Deadline.create(),
-            NetworkCurrencyMosaic.createRelative(10),
+            NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
             NetworkType.MIJIN_TEST);
