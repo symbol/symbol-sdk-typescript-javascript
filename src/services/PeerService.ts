@@ -66,7 +66,15 @@ export class PeerService extends AbstractService {
    * @return {string}
    */
   public getNodeUrl(fromUrl: string): string {
-    const url = URLHelpers.formatUrl(fromUrl)
+    let fixedUrl = -1 === fromUrl.indexOf('://')
+                  ? 'http://' + fromUrl
+                  : fromUrl
+
+    fixedUrl = !fixedUrl.match(/https?:\/\/[^:]+:([0-9]+)\/?$/)
+             ? fixedUrl + ':3000' // default adds :3000
+             : fixedUrl
+
+    const url = URLHelpers.formatUrl(fixedUrl)
     return url.protocol + '//' + url.hostname + (url.port ? ':' + url.port : ':3000')
   }
 }

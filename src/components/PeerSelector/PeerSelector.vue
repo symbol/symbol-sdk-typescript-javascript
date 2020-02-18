@@ -12,16 +12,16 @@
       <div class="node_list">
         <div class="node_list_container scroll">
           <div
-              v-for="(iterPeer, index) in peersList"
+              v-for="(nodeUrl, index) in peersList"
               :key="`sep${index}`"
               class="point_item pointer"
-              @click="switchPeer(iterPeer.values.get('rest_url'))"
+              @click="switchPeer(nodeUrl)"
           >
-            <img :src="currentPeer.url === iterPeer.values.get('rest_url') ? imageResources.selected : imageResources.unselected">
-            <span class="node_url text_select">{{ iterPeer.values.get('rest_url') }}</span>
+            <img :src="currentPeer.url === nodeUrl ? imageResources.selected : imageResources.unselected">
+            <span class="node_url text_select">{{ nodeUrl }}</span>
             <img
               class="remove_icon" src="@/views/resources/img/service/multisig/multisigDelete.png"
-              @click.stop="removePeer(iterPeer.values.get('rest_url'))">
+              @click.stop="removePeer(nodeUrl)">
           </div>
         </div>
 

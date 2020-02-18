@@ -79,7 +79,7 @@ export default {
     generationHash: networkConfig.networks['testnet-publicTest'].generationHash,
     isConnected: false,
     nemesisTransactions: [],
-    knownPeers: networkConfig.networks['testnet-publicTest'].nodes,
+    knownPeers: [],
     currentHeight: 0,
     knownBlocks: {},
     // Subscriptions to websocket channels.
@@ -120,13 +120,14 @@ export default {
       Vue.set(state, 'knownPeers', knownPeers)
     },
     removePeer: (state, peerUrl) => {
-      const idx = state.knownPeers.findIndex(peerUrl)
+      const idx = state.knownPeers.findIndex(p => p === peerUrl)
       if (idx === undefined) {
         return ;
       }
 
-      const knownPeers = state.knownPeers
-      delete knownPeers[idx]
+      let leftPeers = state.knownPeers.splice(0, idx)
+      let rightPeers = state.knownPeers.splice(idx+1, state.knownPeers.length - idx - 1)
+      const knownPeers = leftPeers.concat(rightPeers)
       Vue.set(state, 'knownPeers', knownPeers)
     },
     resetPeers: (state) => {
@@ -178,7 +179,6 @@ export default {
         }
         // - initialize current peer from config and REST
         else {
-          console.log("initializing network from config with default node: ", getters.defaultPeer.url)
           initPayload = await dispatch('INITIALIZE_FROM_CONFIG', getters.defaultPeer.url)
         }
 
@@ -232,8 +232,6 @@ export default {
       try {
         const payload = await dispatch('REST_FETCH_PEER_INFO', nodeUrl)
 
-        console.log("config payload: ", payload)
-
         // - set current peer connection
         dispatch('OPEN_PEER_CONNECTION', {
           url: payload.url,
@@ -252,7 +250,6 @@ export default {
         }
       }
       catch (e) {
-        console.log("Error in INTIALIZE_FROM_CONFIG: ", e)
         dispatch('diagnostic/ADD_ERROR', 'Store action network/initialize default peer unreachable: ' + e.toString(), {root: true})
       }
     },
@@ -300,7 +297,7 @@ export default {
     REMOVE_KNOWN_PEER({commit}, peerUrl) {
       commit('removePeer', peerUrl)
     },
-    RESET_PEERS({commit, getters}) {
+    RESET_PEERS({commit, getters, dispatch}) {
       commit('resetPeers')
 
       // - re-populate known peers from config
@@ -309,6 +306,8 @@ export default {
 
       // - populate known peers
       knownPeers.map(peer => commit('addPeer', peer.values.get('rest_url')))
+
+      dispatch('SET_CURRENT_PEER', knownPeers.shift().values.get('rest_url'))
     },
     RESET_SUBSCRIPTIONS({commit}) {
       commit('setSubscriptions', [])

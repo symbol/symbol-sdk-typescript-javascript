@@ -51,6 +51,7 @@ import {dashboardImages} from '@/views/resources/Images'
     isConnected: 'network/isConnected',
     networkType: 'network/networkType',
     generationHash: 'network/generationHash',
+    knownPeers: 'network/knownPeers',
   })},
   components: {ErrorTooltip},
 })
@@ -84,6 +85,13 @@ export class PeerSelectorTs extends Vue {
   public generationHash: string
 
   /**
+   * Knwown peers
+   * @see {Store.Network}
+   * @var {string[]}
+   */
+  public knownPeers: string[]
+
+  /**
    * Peers list
    * @var {Map<string, PeersModel>}
    */
@@ -110,9 +118,8 @@ export class PeerSelectorTs extends Vue {
   public imageResources = dashboardImages
 
 /// region computed properties getter/setter
-  get peersList(): PeersModel[] {
-    const repository = new PeersRepository()
-    return repository.collect()
+  get peersList(): string[] {
+    return this.knownPeers
   }
 
   get networkTypeText(): string {

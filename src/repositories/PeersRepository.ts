@@ -196,25 +196,28 @@ export class PeersRepository
 
     // - for each known node create a endpoints entry
     const peers: PeersModel[] = []
-    networkConfig.networks[networkLabel].nodes.map(({friendly, roles, url}) => {
-      const node = URLHelpers.formatUrl(url)
-      const isDefault = networkConfig.defaultNode.url === url
+    const nodes = networkConfig.networks[networkLabel].nodes
+
+    for (let i = 0, m = nodes.length; i < m; i++) {
+      const spec = nodes[i]
+      const node = URLHelpers.formatUrl(spec.url)
+      const isDefault = networkConfig.defaultNode.url === spec.url
 
       const model = new PeersModel(new Map<string, any>([
-        ['rest_url', url],
+        ['rest_url', spec.url],
         ['host', node.hostname],
         ['port', parseInt(node.port)],
         ['protocol', node.protocol],
         ['networkType', networkType],
         ['generationHash', generationHash],
-        ['roles', roles],
+        ['roles', spec.roles],
         ['is_default', isDefault],
-        ['friendly_name', friendly],
+        ['friendly_name', spec.friendly],
       ]))
 
       this.create(model.values)
       peers.push(model)
-    })
+    }
 
     return peers
   }
