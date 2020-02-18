@@ -48,7 +48,7 @@ describe('BlockService', () => {
             networkType = helper.networkType;
             transactionRepository = helper.repositoryFactory.createTransactionRepository();
             receiptRepository = helper.repositoryFactory.createReceiptRepository();
-            blockService = new BlockService(helper.repositoryFactory.createBlockRepository(), receiptRepository);
+            blockService = new BlockService(helper.repositoryFactory);
         });
     });
     before(() => {
@@ -102,9 +102,9 @@ describe('BlockService', () => {
 
     describe('Validate receipt', () => {
         it('call block service', async () => {
-            const statement = await receiptRepository.getBlockReceipts(UInt64.fromUint(1)).toPromise();
-            const receipt = statement.transactionStatements[0];
-            const validationResult = await blockService.validateReceiptInBlock(receipt.generateHash(), UInt64.fromUint(1)).toPromise();
+            const statements = await receiptRepository.getBlockReceipts(UInt64.fromUint(1)).toPromise();
+            const statement = statements.transactionStatements[0];
+            const validationResult = await blockService.validateStatementInBlock(statement.generateHash(), UInt64.fromUint(1)).toPromise();
             expect(validationResult).to.be.true;
         });
     });

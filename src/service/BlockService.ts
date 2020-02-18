@@ -19,6 +19,7 @@ import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BlockRepository } from '../infrastructure/BlockRepository';
 import { ReceiptRepository } from '../infrastructure/ReceiptRepository';
+import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { UInt64 } from '../model/UInt64';
 
@@ -26,13 +27,16 @@ import { UInt64 } from '../model/UInt64';
  * Transaction Service
  */
 export class BlockService {
+    private readonly blockRepository: BlockRepository;
+    private readonly receiptRepository: ReceiptRepository;
 
     /**
      * Constructor
-     * @param blockRepository
-     * @param receiptRepository
+     * @param repositoryFactory
      */
-    constructor(private readonly blockRepository: BlockRepository, private readonly receiptRepository: ReceiptRepository) {
+    constructor(public readonly repositoryFactory: RepositoryFactory) {
+        this.blockRepository = repositoryFactory.createBlockRepository();
+        this.receiptRepository = repositoryFactory.createReceiptRepository();
     }
 
     /**
@@ -49,11 +53,11 @@ export class BlockService {
     }
 
     /**
-     * Validate receipt hash in block
-     * @param leaf receipt hash
+     * Validate statement hash in block
+     * @param leaf statement hash
      * @param height block height
      */
-    public validateReceiptInBlock(leaf: string, height: UInt64): Observable<boolean> {
+    public validateStatementInBlock(leaf: string, height: UInt64): Observable<boolean> {
         const rootHashObservable = this.blockRepository.getBlockByHeight(height);
         const merklePathItemObservable = this.receiptRepository.getMerkleReceipts(height, leaf);
         return combineLatest(rootHashObservable, merklePathItemObservable).pipe(
