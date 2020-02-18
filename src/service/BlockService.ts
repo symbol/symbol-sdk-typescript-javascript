@@ -15,6 +15,7 @@
  */
 
 import { sha3_256 } from 'js-sha3';
+import { PositionEnum } from 'nem2-sdk-openapi-typescript-node-client/dist/model/positionEnum';
 import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { BlockRepository } from '../infrastructure/BlockRepository';
@@ -79,7 +80,7 @@ export class BlockService {
         const rootToCompare = merklePathItem.reduce((proofHash, pathItem) => {
                 const hasher = sha3_256.create();
                 // Left
-                if (pathItem.position === 1) {
+                if (pathItem.position !== undefined && pathItem.position === PositionEnum.Left) {
                     return hasher.update(Buffer.from(pathItem.hash + proofHash, 'hex')).hex();
                 } else {
                     // Right

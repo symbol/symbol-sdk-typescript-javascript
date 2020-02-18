@@ -30,32 +30,40 @@ export enum Order {
  * @since 1.0
  */
 export class QueryParams {
-
+    /**
+     * Page size between 10 and 100, otherwise 10
+     */
+    public pageSize = 10;
+    /**
+     * Id after which we want objects to be returned
+     */
+    public id?: string;
+    /**
+     * Order of transactions.
+     * DESC. Newer to older.
+     * ASC. Older to newer.
+     */
+    public order: Order = Order.DESC;
     /**
      * Constructor
      * @param pageSize
      * @param id
      */
-    constructor(
-                /**
-                 * Page size between 10 and 100, otherwise 10
-                 */
-                public readonly pageSize: number,
-                /**
-                 * Id after which we want objects to be returned
-                 */
-                public readonly id?: string,
-                /**
-                 * Order of transactions.
-                 * DESC. Newer to older.
-                 * ASC. Older to newer.
-                 */
-                public readonly order: Order = Order.DESC,
-                /**
-                 * Transaction type filter
-                 */
-                public readonly transactionType?: TransactionType,
-                ) {
+    constructor() {
+    }
+
+    public setPageSize(pageSize: number): QueryParams {
         this.pageSize = (pageSize >= 10 && pageSize <= 100) ? pageSize : 10;
+        return this;
+    }
+
+    public setId(id?: string): QueryParams {
+        this.id = id;
+        return this;
+    }
+
+    public setOrder(order: Order = Order.DESC): QueryParams {
+        this.order = order;
+        return this;
     }
 }

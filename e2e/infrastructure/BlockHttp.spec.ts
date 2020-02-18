@@ -111,7 +111,8 @@ describe('BlockHttp', () => {
         });
 
         it('should return block transactions data given height with paginated transactionId', async () => {
-            const transactions = await blockRepository.getBlockTransactions(UInt64.fromUint(1), new QueryParams(10, nextId)).toPromise();
+            const transactions = await blockRepository.getBlockTransactions(UInt64.fromUint(1),
+                new QueryParams().setPageSize(10).setId(nextId)).toPromise();
             expect(transactions[0].transactionInfo!.id).to.be.equal(firstId);
             expect(transactions.length).to.be.greaterThan(0);
         });

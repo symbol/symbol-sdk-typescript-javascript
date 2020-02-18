@@ -22,6 +22,7 @@ export class NodeInfo {
 
     /**
      * @param publicKey
+     * @param networkGenerationHash
      * @param port
      * @param networkIdentifier
      * @param version
@@ -33,6 +34,10 @@ export class NodeInfo {
                  * The public key used to identify the node.
                  */
                 public readonly publicKey: string,
+                /**
+                 * The network generation hash
+                 */
+                public readonly networkGenerationHash: string,
                 /**
                  * The port used for the communication.
                  */
