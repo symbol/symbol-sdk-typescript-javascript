@@ -10,11 +10,11 @@ with the NEM2 (a.k.a Catapult)
 
 ## Important Notes
 
-### _Fushicho_ Network Compatibility (catapult-server@0.9.2.1)
+### _Fushicho_ Network Compatibility (catapult-server@0.9.3.1)
 
-Due to a network upgrade with [catapult-server@Fushicho](https://github.com/nemtech/catapult-server/releases/tag/v0.9.2.1) version, **it is recommended to use this package's 0.16.5 version and upwards to use this package with Fushicho versioned networks**.
+Due to a network upgrade with [catapult-server@Fushicho](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.1) version, **it is recommended to use this package's 0.17.0 version and upwards to use this package with Fushicho versioned networks**.
 
-The upgrade to this package's [version v0.16.5](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.16.5) is mandatory for **fushicho compatibility**.
+The upgrade to this package's [version v0.17.0](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.17.0) is mandatory for **fushicho compatibility**.
 
 ### _Elephant_ Network Compatibility (catapult-server@0.7.0.1)
 

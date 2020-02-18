@@ -3,6 +3,26 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 17-Feb-2020
+
+**Milestone**: Fushicho.4(RC3 0.9.3.1)
+ Versions  |   |
+---|---|---
+SDK Core| v0.17.0 | https://www.npmjs.com/package/nem2-sdk
+Catbuffer Library| v0.0.11 | https://www.npmjs.com/package/catbuffer
+Client Library | v0.8.4  | https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client
+
+- **[BREAKING CHANGE]** Changed hashing algorithm to cope catapult-server changes. All Key derivation and signing are now using `SHA512`. Removed `SignSchema` so `NetworkType` is no longer bonded to the schema anymore (sha3 / keccak). This change will affect all existing keypairs / address (derived from public key) and  transaction signatures.
+- **[BREAKING CHANGE]** Added new `TransactionFilter` parameter to `AccountHttp` which is now support filtering with list of transaction type.
+- Added `GenerationHash` to the payload in `node/info` endpoint.
+- Added enum for block merkle path item positions (`left / right`) to replace previous number type value (`1 / 2`).
+- Added new `BlockService` for `Transaction` and `Receipt` block merkle proof auditing.
+- Added new node type `Dual` to the existing `RoleTypeEnum`.
+- Added new endpoint `node/health` in `NodeHttp`.
+- Moved `getStorageInfo` and `getServerInfo` from `DiagnosticHttp` to `NodeHttp` repository.
+- Improved e2e testing by using `async / await`.
+- General legacy code refactoring and cleanup.
+
 ## 30-Jan-2020
 
 **Milestone**: Fushicho.4(RC3)
@@ -357,6 +377,7 @@ Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/nem2-sdk-opena
 **Milestone**: Alpaca
 
 - Initial code release.
+[0.17.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.5...v0.17.0
 [0.16.5]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.4...v0.16.5
 [0.16.4]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.3...v0.16.4
 [0.16.3]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.2...v0.16.3

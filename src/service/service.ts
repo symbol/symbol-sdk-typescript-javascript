@@ -21,3 +21,5 @@ export * from './MetadataTransactionService';
 export * from './MosaicRestrictionTransactionService';
 export * from './TransactionService';
 export * from './BlockService';
+export * from './interfaces/IBlockService';
+export * from './interfaces/ITransactionService';
