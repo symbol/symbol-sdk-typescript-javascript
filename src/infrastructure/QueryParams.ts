@@ -1,5 +1,3 @@
-import { TransactionType } from '../model/transaction/TransactionType';
-
 /*
  * Copyright 2018 NEM
  *
@@ -15,6 +13,8 @@ import { TransactionType } from '../model/transaction/TransactionType';
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import { TransactionType } from '../model/transaction/TransactionType';
 
  /**
   * @since 0.11.3
@@ -46,10 +46,6 @@ export class QueryParams {
     public order: Order = Order.DESC;
 
     /**
-     * Transaction type list
-     */
-    public type?: TransactionType[];
-    /**
      * Constructor
      */
     constructor() {
@@ -68,22 +64,5 @@ export class QueryParams {
     public setOrder(order: Order = Order.DESC): QueryParams {
         this.order = order;
         return this;
-    }
-
-    public setType(type?: TransactionType[]): QueryParams {
-        this.type = type;
-        return this;
-    }
-
-    /**
-     * Return comma seperated list
-     * @param type Transaction type list
-     */
-    public convertCSV(type?: TransactionType[]): string | undefined {
-        if (!type || type.length === 0) {
-            return undefined;
-        } else {
-            return type.map((t) => t.valueOf().toString()).join(',');
-        }
     }
 }

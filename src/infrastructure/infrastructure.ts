@@ -47,3 +47,4 @@ export * from './RepositoryFactory';
 export * from './RestrictionAccountRepository';
 export * from './RestrictionMosaicRepository';
 export * from './TransactionRepository';
+export * from './TransactionFilter';

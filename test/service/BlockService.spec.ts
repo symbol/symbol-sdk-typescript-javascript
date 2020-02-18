@@ -28,6 +28,7 @@ import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { UInt64 } from '../../src/model/UInt64';
 import { BlockService } from '../../src/service/BlockService';
 import { TestingAccount } from '../conf/conf.spec';
+import { PositionEnum } from 'nem2-sdk-openapi-typescript-node-client';
 
 describe('BlockService', () => {
 
@@ -100,11 +101,11 @@ describe('BlockService', () => {
     function mockMerklePath(): MerkleProofInfo {
         return new MerkleProofInfo(
             [
-                new MerklePathItem(1, 'CDE45D740536E5361F392025A44B26546A138958E69CD6F18D22908F8F11ECF2'),
-                new MerklePathItem(2, '4EF55DAB8FEF9711B23DA71D2ACC58EFFF3969C3D572E06ACB898F99BED4827A'),
-                new MerklePathItem(1, '1BB95470065ED69D184948A0175EDC2EAB9E86A0CEB47B648A58A02A5445AF66'),
-                new MerklePathItem(2, 'D96B03809B8B198EFA5824191A979F7B85C0E9B7A6623DAFF38D4B2927EFDFB5'),
-                new MerklePathItem(2, '9981EBDBCA8E36BA4D4D4A450072026AC8C85BA6497666219E0E049BE3362E51'),
+                new MerklePathItem(PositionEnum.Left, 'CDE45D740536E5361F392025A44B26546A138958E69CD6F18D22908F8F11ECF2'),
+                new MerklePathItem(PositionEnum.Right, '4EF55DAB8FEF9711B23DA71D2ACC58EFFF3969C3D572E06ACB898F99BED4827A'),
+                new MerklePathItem(PositionEnum.Left, '1BB95470065ED69D184948A0175EDC2EAB9E86A0CEB47B648A58A02A5445AF66'),
+                new MerklePathItem(PositionEnum.Right, 'D96B03809B8B198EFA5824191A979F7B85C0E9B7A6623DAFF38D4B2927EFDFB5'),
+                new MerklePathItem(PositionEnum.Right, '9981EBDBCA8E36BA4D4D4A450072026AC8C85BA6497666219E0E049BE3362E51'),
             ],
         );
     }

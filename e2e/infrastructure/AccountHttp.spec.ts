@@ -16,8 +16,10 @@
 
 import { expect } from 'chai';
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
+import { TransactionFilter } from '../../src/infrastructure/infrastructure';
 import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
+import { QueryParams } from '../../src/infrastructure/QueryParams';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
@@ -35,7 +37,6 @@ import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { QueryParams } from '../../src/infrastructure/QueryParams';
 
 describe('AccountHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -227,7 +228,7 @@ describe('AccountHttp', () => {
     describe('transactions', () => {
         it('should call transactions successfully by type', async () => {
             const transactions = await accountRepository.getAccountTransactions(
-                publicAccount.address, new QueryParams().setType([TransactionType.TRANSFER])).toPromise();
+                publicAccount.address, new QueryParams(), new TransactionFilter().setType([TransactionType.TRANSFER])).toPromise();
             expect(transactions.length).to.be.greaterThan(0);
             transactions.forEach((t) => {
                 expect(t.type).to.be.eq(TransactionType.TRANSFER);

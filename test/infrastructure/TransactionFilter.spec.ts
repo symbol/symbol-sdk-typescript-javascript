@@ -15,19 +15,14 @@
  */
 
 import { expect } from 'chai';
-import { Order, QueryParams } from '../../src/infrastructure/QueryParams';
+import { TransactionFilter } from '../../src/infrastructure/TransactionFilter';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
 
-describe('QueryParams', () => {
+describe('TransactionFilter', () => {
     it('should return correct query param', () => {
-        const param = new QueryParams().setId('0')
-            .setOrder(Order.ASC)
-            .setPageSize(10)
+        const param = new TransactionFilter()
             .setType([TransactionType.TRANSFER, TransactionType.ACCOUNT_LINK]);
 
-        expect(param.id).to.be.equal('0');
-        expect(param.order.valueOf()).to.be.equal(Order.ASC.valueOf());
-        expect(param.pageSize).to.be.equal(10);
         expect(param.convertCSV(param.type)).to.be.equal('16724,16716');
     });
 });
