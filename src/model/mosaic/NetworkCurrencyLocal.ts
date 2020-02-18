@@ -20,14 +20,14 @@ import {Mosaic} from './Mosaic';
 import {MosaicId} from './MosaicId';
 
 /**
- * NetworkCurrencyMosaic mosaic
+ * NetworkCurrencyLocal mosaic for local test network (local bootstrap server)
  *
  * This represents the per-network currency mosaic. This mosaicId is aliased
  * with namespace name `cat.currency`.
  *
  * @since 0.10.2
  */
-export class NetworkCurrencyMosaic extends Mosaic {
+export class NetworkCurrencyLocal extends Mosaic {
 
     /**
      * namespaceId of `currency` namespace.
@@ -66,33 +66,33 @@ export class NetworkCurrencyMosaic extends Mosaic {
      * @param amount
      */
     private constructor(amount: UInt64) {
-        super(NetworkCurrencyMosaic.NAMESPACE_ID, amount);
+        super(NetworkCurrencyLocal.NAMESPACE_ID, amount);
     }
 
     /**
-     * Create NetworkCurrencyMosaic with using NetworkCurrencyMosaic as unit.
+     * Create NetworkCurrencyLocal with using NetworkCurrencyLocal as unit.
      *
      * @param amount
-     * @returns {NetworkCurrencyMosaic}
+     * @returns {NetworkCurrencyLocal}
      */
     public static createRelative(amount: UInt64 | number) {
         if (typeof amount === 'number') {
-            return new NetworkCurrencyMosaic(UInt64.fromUint(amount * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY)));
+            return new NetworkCurrencyLocal(UInt64.fromUint(amount * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY)));
         }
-        return new NetworkCurrencyMosaic(UInt64.fromUint((amount as UInt64).compact() * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY)));
+        return new NetworkCurrencyLocal(UInt64.fromUint((amount as UInt64).compact() * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY)));
     }
 
     /**
-     * Create NetworkCurrencyMosaic with using micro NetworkCurrencyMosaic as unit,
-     * 1 NetworkCurrencyMosaic = 1000000 micro NetworkCurrencyMosaic.
+     * Create NetworkCurrencyLocal with using micro NetworkCurrencyLocal as unit,
+     * 1 NetworkCurrencyLocal = 1000000 micro NetworkCurrencyLocal.
      *
      * @param amount
-     * @returns {NetworkCurrencyMosaic}
+     * @returns {NetworkCurrencyLocal}
      */
     public static createAbsolute(amount: UInt64 | number) {
         if (typeof amount === 'number') {
-            return new NetworkCurrencyMosaic(UInt64.fromUint(amount));
+            return new NetworkCurrencyLocal(UInt64.fromUint(amount));
         }
-        return new NetworkCurrencyMosaic(amount as UInt64);
+        return new NetworkCurrencyLocal(amount as UInt64);
     }
 }

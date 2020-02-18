@@ -17,7 +17,7 @@
 import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
 import {EncryptedMessage} from '../../../src/model/message/EncryptedMessage';
-import { Deadline, NetworkCurrencyMosaic, NetworkType, TransferTransaction } from '../../../src/model/model';
+import { Deadline, NetworkCurrencyLocal, NetworkType, TransferTransaction } from '../../../src/model/model';
 
 describe('EncryptedMessage', () => {
 
@@ -61,7 +61,7 @@ describe('EncryptedMessage', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
             recipient.address,
-            [NetworkCurrencyMosaic.createAbsolute(1)],
+            [NetworkCurrencyLocal.createAbsolute(1)],
             sender.encryptMessage('Testing simple transfer', recipient.publicAccount, NetworkType.MIJIN_TEST),
             NetworkType.MIJIN_TEST,
         );

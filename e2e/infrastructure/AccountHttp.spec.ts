@@ -24,7 +24,7 @@ import { Address } from '../../src/model/account/Address';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
+import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
@@ -92,7 +92,7 @@ describe('AccountHttp', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
-                [NetworkCurrencyMosaic.createAbsolute(1)],
+                [NetworkCurrencyLocal.createAbsolute(1)],
                 PlainMessage.create('test-message'),
                 networkType,
                 helper.maxFee,

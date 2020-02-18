@@ -26,7 +26,7 @@ import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
 import { MosaicSupplyChangeAction } from '../../src/model/mosaic/MosaicSupplyChangeAction';
-import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
+import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
@@ -199,7 +199,7 @@ describe('TransactionService', () => {
                 Deadline.create(),
                 addressAlias,
                 [
-                    NetworkCurrencyMosaic.createAbsolute(1),
+                    NetworkCurrencyLocal.createAbsolute(1),
                     new Mosaic(mosaicAlias, UInt64.fromUint(1)),
                 ],
                 PlainMessage.create('test-message'),
@@ -353,7 +353,7 @@ describe('TransactionService', () => {
             Deadline.create(),
             addressAlias,
             [
-                NetworkCurrencyMosaic.createAbsolute(1),
+                NetworkCurrencyLocal.createAbsolute(1),
                 new Mosaic(mosaicAlias, UInt64.fromUint(1)),
             ],
             PlainMessage.create('test-message'),

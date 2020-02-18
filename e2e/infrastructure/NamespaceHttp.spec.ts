@@ -18,7 +18,7 @@ import { expect } from 'chai';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
-import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
+import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
@@ -28,7 +28,7 @@ import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('NamespaceHttp', () => {
-    const defaultNamespaceId = NetworkCurrencyMosaic.NAMESPACE_ID;
+    const defaultNamespaceId = NetworkCurrencyLocal.NAMESPACE_ID;
     let namespaceId: NamespaceId;
     let namespaceRepository: NamespaceRepository;
     let account: Account;

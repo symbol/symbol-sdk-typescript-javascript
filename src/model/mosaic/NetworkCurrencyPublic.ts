@@ -13,39 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import {NamespaceId} from '../namespace/NamespaceId';
 import {UInt64} from '../UInt64';
 import {Mosaic} from './Mosaic';
 import {MosaicId} from './MosaicId';
 
 /**
- * NetworkHarvestMosaic mosaic
+ * NetworkCurrencyPublic mosaic for public / Public_test network
  *
- * This represents the per-network harvest mosaic. This mosaicId is aliased
- * with namespace name `cat.harvest`.
+ * This represents the per-network currency mosaic. This mosaicId is aliased
+ * with namespace name `symbol.xym`.
  *
  * @since 0.10.2
  */
-export class NetworkHarvestMosaic extends Mosaic {
+export class NetworkCurrencyPublic extends Mosaic {
 
     /**
      * namespaceId of `currency` namespace.
      *
      * @type {Id}
      */
-    public static NAMESPACE_ID = new NamespaceId('cat.harvest');
+    public static NAMESPACE_ID = new NamespaceId('symbol.xym');
 
     /**
      * Divisiblity
      * @type {number}
      */
-    public static DIVISIBILITY = 3;
+    public static DIVISIBILITY = 6;
 
     /**
      * Initial supply
      * @type {number}
      */
-    public static INITIAL_SUPPLY = 15000000;
+    public static INITIAL_SUPPLY = 8999999998;
 
     /**
      * Is tranferable
@@ -57,7 +58,7 @@ export class NetworkHarvestMosaic extends Mosaic {
      * Is Supply mutable
      * @type {boolean}
      */
-    public static SUPPLY_MUTABLE = true;
+    public static SUPPLY_MUTABLE = false;
 
     /**
      * constructor
@@ -65,33 +66,33 @@ export class NetworkHarvestMosaic extends Mosaic {
      * @param amount
      */
     private constructor(amount: UInt64) {
-        super(NetworkHarvestMosaic.NAMESPACE_ID, amount);
+        super(NetworkCurrencyPublic.NAMESPACE_ID, amount);
     }
 
     /**
-     * Create NetworkHarvestMosaic with using NetworkHarvestMosaic as unit.
+     * Create NetworkCurrencyPublic with using NetworkCurrencyPublic as unit.
      *
      * @param amount
-     * @returns {NetworkHarvestMosaic}
+     * @returns {NetworkCurrencyPublic}
      */
     public static createRelative(amount: UInt64 | number) {
         if (typeof amount === 'number') {
-            return new NetworkHarvestMosaic(UInt64.fromUint(amount * Math.pow(10, NetworkHarvestMosaic.DIVISIBILITY)));
+            return new NetworkCurrencyPublic(UInt64.fromUint(amount * Math.pow(10, NetworkCurrencyPublic.DIVISIBILITY)));
         }
-        return new NetworkHarvestMosaic(UInt64.fromUint((amount as UInt64).compact() * Math.pow(10, NetworkHarvestMosaic.DIVISIBILITY)));
+        return new NetworkCurrencyPublic(UInt64.fromUint((amount as UInt64).compact() * Math.pow(10, NetworkCurrencyPublic.DIVISIBILITY)));
     }
 
     /**
-     * Create NetworkHarvestMosaic with using micro NetworkHarvestMosaic as unit,
-     * 1 NetworkHarvestMosaic = 1000000 micro NetworkHarvestMosaic.
+     * Create NetworkCurrencyPublic with using micro NetworkCurrencyPublic as unit,
+     * 1 NetworkCurrencyPublic = 1000000 micro NetworkCurrencyPublic.
      *
      * @param amount
-     * @returns {NetworkHarvestMosaic}
+     * @returns {NetworkCurrencyPublic}
      */
     public static createAbsolute(amount: UInt64 | number) {
         if (typeof amount === 'number') {
-            return new NetworkHarvestMosaic(UInt64.fromUint(amount));
+            return new NetworkCurrencyPublic(UInt64.fromUint(amount));
         }
-        return new NetworkHarvestMosaic(amount as UInt64);
+        return new NetworkCurrencyPublic(amount as UInt64);
     }
 }

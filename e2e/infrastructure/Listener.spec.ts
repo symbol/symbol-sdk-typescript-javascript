@@ -24,7 +24,7 @@ import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { Address, CosignatureTransaction, LockFundsTransaction, Mosaic, SignedTransaction, UInt64 } from '../../src/model/model';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
-import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
+import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
@@ -45,7 +45,7 @@ describe('Listener', () => {
     let namespaceRepository: NamespaceRepository;
     let generationHash: string;
     let networkType: NetworkType;
-    const networkCurrencyMosaicId: NamespaceId = NetworkCurrencyMosaic.NAMESPACE_ID;
+    const NetworkCurrencyLocalId: NamespaceId = NetworkCurrencyLocal.NAMESPACE_ID;
     let transactionRepository: TransactionRepository;
 
     before(() => {
@@ -100,7 +100,7 @@ describe('Listener', () => {
                                                   mosaicId: MosaicId | NamespaceId) => {
         const lockFundsTransaction = LockFundsTransaction.create(
             Deadline.create(),
-            new Mosaic(mosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
+            new Mosaic(mosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
             UInt64.fromUint(1000),
             signedAggregatedTransaction,
             networkType, helper.maxFee,
@@ -180,7 +180,7 @@ describe('Listener', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 cosignAccount1.address,
-                [new Mosaic(networkCurrencyMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY)))],
+                [new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY)))],
                 PlainMessage.create('test-message'),
                 networkType, helper.maxFee,
             );
@@ -220,7 +220,7 @@ describe('Listener', () => {
 
         it('aggregateBondedTransactionsAdded', (done) => {
             const signedAggregatedTx = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
-            createHashLockTransactionAndAnnounce(signedAggregatedTx, account, networkCurrencyMosaicId);
+            createHashLockTransactionAndAnnounce(signedAggregatedTx, account, NetworkCurrencyLocalId);
             helper.listener.aggregateBondedAdded(account.address).subscribe(() => {
                 done();
             });
@@ -239,7 +239,7 @@ describe('Listener', () => {
             const signedAggregatedTx =
                 createSignedAggregatedBondTransaction(multisigAccount, cosignAccount1, account2.address);
 
-            createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, networkCurrencyMosaicId);
+            createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, NetworkCurrencyLocalId);
             helper.listener.confirmed(cosignAccount1.address).subscribe(() => {
                 helper.listener.aggregateBondedRemoved(cosignAccount1.address).subscribe(() => {
                     done();
@@ -274,7 +274,7 @@ describe('Listener', () => {
             const signedAggregatedTx =
                 createSignedAggregatedBondTransaction(multisigAccount, cosignAccount1, account2.address);
 
-            createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, networkCurrencyMosaicId);
+            createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, NetworkCurrencyLocalId);
             helper.listener.cosignatureAdded(cosignAccount1.address).subscribe(() => {
                 done();
             });
@@ -341,7 +341,7 @@ describe('Listener', () => {
     describe('Transactions Status', () => {
 
         it('transactionStatusGiven', () => {
-            const mosaics = [NetworkCurrencyMosaic.createRelative(1000000000000)];
+            const mosaics = [NetworkCurrencyLocal.createRelative(1000000000000)];
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
