@@ -73,7 +73,7 @@ export class BlockHttp extends Http implements BlockRepository {
             this.blockRoutesApi.getBlockTransactions(height.toString(),
                                                      this.queryParams(queryParams).pageSize,
                                                      this.queryParams(queryParams).id,
-                                                     this.queryParams(queryParams).order))
+                                                     this.queryParams(queryParams).ordering))
                 .pipe(map(({body}) => body.map((transactionDTO) => {
                         return CreateTransactionFromDTO(transactionDTO);
                     })),

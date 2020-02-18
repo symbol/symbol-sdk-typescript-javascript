@@ -20,6 +20,7 @@ import { from as observableFrom, Observable, of as observableOf, throwError } fr
 import { catchError, map, shareReplay } from 'rxjs/operators';
 import { NetworkType } from '../model/blockchain/NetworkType';
 import { QueryParams } from './QueryParams';
+import { TransactionSearchCriteria } from './TransactionSearchCriteria';
 
 /**
  * Http extended by all http services
@@ -52,8 +53,16 @@ export abstract class Http {
         return {
             pageSize: queryParams ? queryParams.pageSize : undefined,
             id: queryParams ? queryParams.id : undefined,
-            order: queryParams ? queryParams.order : undefined,
-            transactionType: queryParams ? queryParams.transactionType : undefined,
+            ordering: queryParams ? queryParams.order : undefined,
+        };
+    }
+
+    transactionSearchCriteria(queryParams?: TransactionSearchCriteria): any {
+        return {
+            pageSize: queryParams ? queryParams.pageSize : undefined,
+            id: queryParams ? queryParams.id : undefined,
+            ordering: queryParams ? queryParams.order : undefined,
+            type: queryParams ? queryParams.type : undefined,
         };
     }
 

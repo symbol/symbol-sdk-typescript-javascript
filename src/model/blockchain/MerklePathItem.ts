@@ -1,3 +1,5 @@
+import { PositionEnum } from "nem2-sdk-openapi-typescript-node-client/dist/model/positionEnum";
+
 /*
  * Copyright 2019 NEM
  *
@@ -26,7 +28,7 @@ export class MerklePathItem {
     constructor(/**
                  * The position
                  */
-                public readonly position?: number,
+                public readonly position?: PositionEnum,
                 /**
                  * The hash
                  */
