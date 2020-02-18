@@ -170,7 +170,8 @@ describe('TransactionService', () => {
                 networkType, helper.maxFee,
             );
             const signedLockFundsTransaction = lockFundsTransaction.signWith(account, generationHash);
-            const tx = await transactionService.announceHashLockAggregateBonded(signedLockFundsTransaction, signedAggregatedTransaction, helper.listener).toPromise();
+            const tx = await transactionService.announceHashLockAggregateBonded(
+                signedLockFundsTransaction, signedAggregatedTransaction, helper.listener).toPromise();
             expect(tx.signer!.publicKey).to.be.equal(account.publicKey);
             expect(tx.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
 
@@ -189,7 +190,8 @@ describe('TransactionService', () => {
                 networkType, helper.maxFee,
             );
             const signedLockFundsTransaction = lockFundsTransaction.signWith(account, generationHash);
-            const signedLockFundsTransactionResponse = await transactionService.announce(signedLockFundsTransaction, helper.listener).toPromise();
+            const signedLockFundsTransactionResponse =
+                await transactionService.announce(signedLockFundsTransaction, helper.listener).toPromise();
             expect(signedLockFundsTransactionResponse.transactionInfo!.hash).to.be.equal(signedLockFundsTransaction.hash);
             const tx = await transactionService.announceAggregateBonded(signedAggregatedTransaction, helper.listener).toPromise();
             expect(tx.signer!.publicKey).to.be.equal(account.publicKey);

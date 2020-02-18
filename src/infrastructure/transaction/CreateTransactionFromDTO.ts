@@ -54,7 +54,7 @@ import {TransactionInfo} from '../../model/transaction/TransactionInfo';
 import {TransactionType} from '../../model/transaction/TransactionType';
 import {TransferTransaction} from '../../model/transaction/TransferTransaction';
 import {UInt64} from '../../model/UInt64';
-
+// tslint:disable: no-use-before-declare
 /**
  * @internal
  * @param transactionDTO

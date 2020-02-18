@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 import {expect} from 'chai';
-import {Crypto, SignSchema} from '../../../src/core/crypto';
-import {Convert as convert} from '../../../src/core/format';
+import {Crypto} from '../../../src/core/crypto';
+import { KeyPair } from '../../../src/core/crypto/KeyPair';
+import {Convert, Convert as convert} from '../../../src/core/format';
 import { WalletAlgorithm } from '../../../src/model/wallet/WalletAlgorithm';
 
-const CryptoJS = require('crypto-js');
+import CryptoJS = require('crypto-js');
 describe('crypto tests', () => {
     it('Can derive a key from password and count', () => {
         // Arrange:
@@ -337,27 +338,25 @@ describe('crypto tests', () => {
     });
 
     it('Can encode and decode message', () => {
-        const senderPriv = 'E1C8521608F4896CA26A0C2DE739310EA4B06861D126CF4D6922064678A1969B';
-        const recipientPublic = '12AAD2D33020C3EAE12592875CD7D2FF54A61DD03C1FAADB84A083D41F75C229';
+        const sender = KeyPair.createKeyPairFromPrivateKeyString('E1C8521608F4896CA26A0C2DE739310EA4B06861D126CF4D6922064678A1969B');
+        const recipient = KeyPair.createKeyPairFromPrivateKeyString('A22A4BBF126A2D7D7ECE823174DFD184C5DE0FDE4CB2075D30CFA409F7EF8908');
         const message = 'NEM is awesome !';
-        const encryptedMessage = Crypto.encode(senderPriv, recipientPublic, message, SignSchema.SHA3);
-        const senderPublic = '9F784BF20318AE3CA6246C0EC2207FE095FFF7A84B6787E7E3C2CE4C3B92A2EA';
-        const recipientPriv = 'A22A4BBF126A2D7D7ECE823174DFD184C5DE0FDE4CB2075D30CFA409F7EF8908';
+        const encryptedMessage = Crypto.encode(Convert.uint8ToHex(sender.privateKey), Convert.uint8ToHex(recipient.publicKey), message);
         const expectedMessage = 'NEM is awesome !';
-        const decrypted = Crypto.decode(recipientPriv, senderPublic, encryptedMessage, SignSchema.SHA3);
+        const decrypted = Crypto.decode(Convert.uint8ToHex(recipient.privateKey), Convert.uint8ToHex(sender.publicKey), encryptedMessage);
 
         expect(decrypted).equal(convert.utf8ToHex(expectedMessage));
     });
 
     it('Can encode a message and failed decode with wrong key', () => {
-        const senderPriv = 'E1C8521608F4896CA26A0C2DE739310EA4B06861D126CF4D6922064678A1969B';
-        const recipientPublic = '12AAD2D33020C3EAE12592875CD7D2FF54A61DD03C1FAADB84A083D41F75C229';
+        const sender = KeyPair.createKeyPairFromPrivateKeyString('E1C8521608F4896CA26A0C2DE739310EA4B06861D126CF4D6922064678A1969B');
+        const recipient = KeyPair.createKeyPairFromPrivateKeyString('A22A4BBF126A2D7D7ECE823174DFD184C5DE0FDE4CB2075D30CFA409F7EF8908');
         const message = 'NEM is awesome !';
-        const encryptedMessage = Crypto.encode(senderPriv, recipientPublic, message, SignSchema.SHA3);
+        const encryptedMessage = Crypto.encode(Convert.uint8ToHex(sender.privateKey), Convert.uint8ToHex(recipient.publicKey), message);
         const senderPublic = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
         const recipientPriv = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
         const expectedMessage = 'NEM is awesome !';
-        const decrypted = Crypto.decode(recipientPriv, senderPublic, encryptedMessage, SignSchema.SHA3);
+        const decrypted = Crypto.decode(recipientPriv, senderPublic, encryptedMessage);
 
         expect(decrypted).not.equal(convert.utf8ToHex(expectedMessage));
     });
@@ -477,5 +476,51 @@ describe('crypto tests', () => {
         expect(encrypted.length).equal(128);
         expect(salt.toString().length).equal(32 * 2);
         expect(decrypted).equal(privateKey);
+    });
+
+    /**
+     * @see https://github.com/nemtech/test-vectors/blob/master/4.test-cipher.json
+     */
+    describe('test vector cipher', () => {
+        it('test vector cipher', () => {
+            // Arrange:
+            const Private_Key = '3140f94c79f249787d1ec75a97a885980eb8f0a7d9b7aa03e7200296e422b2b6';
+
+            const Public_Keys = 'C62827148875ACAF05D25D29B1BB1D947396A89CE41CB48888AE6961D9991DDF';
+
+            const ivs = [
+                'a73ff5c32f8fd055b09775817a6a3f95',
+                '91246c2d5493867c4fa3e78f85963677',
+                '9f8e33d82374dad6aac0e3dbe7aea704',
+                '6acdf8e01acc8074ddc807281b6af888',
+                'f2e9f18aeb374965f54d2f4e31189a8f',
+            ];
+
+            const cipherText = [
+                'EEF67A32E1FE96AF1401DF42DD356A1CAEC5B6B36576357C22232049D174F63E',
+                'F94355BEF2CBF73E06AF2FF57BB8D72D7090062379062B60E8EF37EA858D8FF4',
+                '18FF3AB60B01D5D39CFDD50ADDE0F49ECAEE4355B224D0D8A0607455A3DFA823',
+                'E64795B1B980A6101E9C12824FAA5A4DFC1467F767AA3DC5A990F3A28692A1FA',
+                '17817662A9B61AF1E9C6F3D7C1D02CAAACEA586E4BD777A68C0765D5231619F3',
+            ];
+
+            const clearText = [
+                '86ddb9e713a8ebf67a51830eff03b837e147c20d75e67b2a54aa29e98c',
+                '86ddb9e713a8ebf67a51830eff03b837e147c20d75e67b2a54aa29e98c',
+                '86ddb9e713a8ebf67a51830eff03b837e147c20d75e67b2a54aa29e98c',
+                '86ddb9e713a8ebf67a51830eff03b837e147c20d75e67b2a54aa29e98c',
+                '86ddb9e713a8ebf67a51830eff03b837e147c20d75e67b2a54aa29e98c',
+            ];
+
+            for (let i = 0; i < ivs.length; ++i) {
+                // Arrange:
+                const iv = Convert.hexToUint8(ivs[i]);
+
+                // Act:
+                const encoded = Crypto._encode(Private_Key, Public_Keys, clearText[i], iv);
+                // Assert:
+                expect(encoded.toUpperCase()).to.deep.equal(ivs[i].toUpperCase() + cipherText[i].toUpperCase());
+            }
+        });
     });
 });

@@ -210,7 +210,8 @@ describe('MetadataHttp', () => {
 
     describe('getAccountMetadataByKeyAndSender', () => {
         it('should return metadata given a NEM Address and metadata key and sender public key', async () => {
-            const metadata = await metadataRepository.getAccountMetadataByKeyAndSender(accountAddress, UInt64.fromUint(5).toHex(), account.publicKey).toPromise();
+            const metadata = await metadataRepository.getAccountMetadataByKeyAndSender(
+                accountAddress, UInt64.fromUint(5).toHex(), account.publicKey).toPromise();
             expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
             expect(metadata.metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
             expect(metadata.metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
@@ -248,7 +249,8 @@ describe('MetadataHttp', () => {
 
     describe('getMosaicMetadataByKeyAndSender', () => {
         it('should return metadata given a mosaicId and metadata key and sender public key', async () => {
-            const metadata = await metadataRepository.getMosaicMetadataByKeyAndSender(mosaicId, UInt64.fromUint(5).toHex(), account.publicKey).toPromise();
+            const metadata = await metadataRepository.getMosaicMetadataByKeyAndSender(
+                mosaicId, UInt64.fromUint(5).toHex(), account.publicKey).toPromise();
             expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
             expect(metadata.metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
             expect(metadata.metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
@@ -286,7 +288,8 @@ describe('MetadataHttp', () => {
 
     describe('getNamespaceMetadataByKeyAndSender', () => {
         it('should return metadata given a namespaceId and metadata key and sender public key', async () => {
-            const metadata = await metadataRepository.getNamespaceMetadataByKeyAndSender(namespaceId, UInt64.fromUint(5).toHex(), account.publicKey).toPromise();
+            const metadata = await metadataRepository.getNamespaceMetadataByKeyAndSender(
+                namespaceId, UInt64.fromUint(5).toHex(), account.publicKey).toPromise();
             expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
             expect(metadata.metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
             expect(metadata.metadataEntry.targetPublicKey).to.be.equal(account.publicKey);

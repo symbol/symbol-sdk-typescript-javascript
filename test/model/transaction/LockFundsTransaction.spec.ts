@@ -143,7 +143,7 @@ describe('LockFundsTransaction', () => {
         expect(signedTx.payload.substring(
             144,
             signedTransaction.payload.length - 104,
-        )).to.be.equal('C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFE000000000190484100000000');
+        )).to.be.equal('9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6000000000190484100000000');
     });
 
     describe('size', () => {

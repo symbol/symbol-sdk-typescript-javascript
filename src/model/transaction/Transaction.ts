@@ -15,7 +15,7 @@
  */
 
 import { EmbeddedTransactionBuilder, EmbeddedTransactionHelper } from 'catbuffer';
-import { KeyPair, SHA3Hasher, SignSchema } from '../../core/crypto';
+import { KeyPair, SHA3Hasher } from '../../core/crypto';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { SerializeTransactionToJSON } from '../../infrastructure/transaction/SerializeTransactionToJSON';
@@ -174,7 +174,7 @@ export abstract class Transaction {
 
         // 6) create SHA3 hash of transaction data
         // Note: Transaction hashing *always* uses SHA3
-        SHA3Hasher.func(entityHash, entityHashBytes, 32, SignSchema.SHA3);
+        SHA3Hasher.func(entityHash, entityHashBytes, 32);
         return Convert.uint8ToHex(entityHash);
     }
 
@@ -214,11 +214,10 @@ export abstract class Transaction {
      */
     public signWith(account: Account, generationHash: string): SignedTransaction {
         const generationHashBytes = Array.from(Convert.hexToUint8(generationHash));
-        const signSchema = SHA3Hasher.resolveSignSchema(account.networkType);
         const byteBuffer = Array.from(this.generateBytes());
         const signingBytes = this.getSigningBytes(byteBuffer, generationHashBytes);
-        const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(account.privateKey, signSchema);
-        const signature = Array.from(KeyPair.sign(account, new Uint8Array(signingBytes), signSchema));
+        const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(account.privateKey);
+        const signature = Array.from(KeyPair.sign(keyPairEncoded, new Uint8Array(signingBytes)));
         const signedTransactionBuffer = byteBuffer
             .splice(0, 8)
             .concat(signature)
@@ -299,7 +298,9 @@ export abstract class Transaction {
      */
     public isUnconfirmed(): boolean {
         return this.transactionInfo != null && this.transactionInfo.height.compact() === 0
-            && this.transactionInfo.hash === this.transactionInfo.merkleComponentHash;
+            && this.transactionInfo.hash !== undefined
+            && this.transactionInfo.merkleComponentHash !== undefined
+            && this.transactionInfo.hash.toUpperCase() === this.transactionInfo.merkleComponentHash.toUpperCase();
     }
 
     /**
@@ -315,8 +316,10 @@ export abstract class Transaction {
      * @returns {boolean}
      */
     public hasMissingSignatures(): boolean {
-        return this.transactionInfo != null && this.transactionInfo.height.compact() === 0 &&
-            this.transactionInfo.hash !== this.transactionInfo.merkleComponentHash;
+        return this.transactionInfo != null && this.transactionInfo.height.compact() === 0
+            && (this.transactionInfo.hash !== undefined
+            && this.transactionInfo.merkleComponentHash !== undefined
+            && this.transactionInfo.hash.toUpperCase() !== this.transactionInfo.merkleComponentHash.toUpperCase());
     }
 
     /**

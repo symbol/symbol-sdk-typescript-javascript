@@ -71,7 +71,7 @@ describe('PersistentHarvestingDelegationMessage', () => {
             PersistentHarvestingDelegationMessage
                 .create(delegatedPrivateKey, recipient.publicKey, NetworkType.MIJIN_TEST);
         const plainMessage =
-            PersistentHarvestingDelegationMessage.decrypt(encryptedMessage, recipient.privateKey, NetworkType.MIJIN_TEST);
+            PersistentHarvestingDelegationMessage.decrypt(encryptedMessage, recipient.privateKey);
         expect(plainMessage).to.be.equal(delegatedPrivateKey);
     });
 
@@ -89,7 +89,7 @@ describe('PersistentHarvestingDelegationMessage', () => {
             PersistentHarvestingDelegationMessage
                 .createFromPayload(signedTransaction.payload.substring(322, signedTransaction.payload.length));
         const plainMessage =
-            PersistentHarvestingDelegationMessage.decrypt(encryptMessage, recipient.privateKey, NetworkType.MIJIN_TEST);
+            PersistentHarvestingDelegationMessage.decrypt(encryptMessage, recipient.privateKey);
         expect(plainMessage).to.be.equal(delegatedPrivateKey);
     });
 
@@ -99,8 +99,7 @@ describe('PersistentHarvestingDelegationMessage', () => {
                 .create(delegatedPrivateKey, recipient_nis.publicKey, NetworkType.TEST_NET);
         const plainMessage =
             PersistentHarvestingDelegationMessage.decrypt(encryptedMessage,
-                                                          recipient_nis.privateKey,
-                                                          NetworkType.TEST_NET);
+                                                          recipient_nis.privateKey);
         expect(plainMessage).to.be.equal(delegatedPrivateKey);
     });
 

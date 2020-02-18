@@ -62,8 +62,7 @@ export class Account {
      */
     public static createFromPrivateKey(privateKey: string,
                                        networkType: NetworkType): Account {
-        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
-        const keyPair: IKeyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey, signSchema);
+        const keyPair: IKeyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey);
         const address = RawAddress.addressToString(
             RawAddress.publicKeyToAddress(keyPair.publicKey, networkType));
         return new Account(
@@ -84,8 +83,7 @@ export class Account {
         const hashKey = Convert.uint8ToHex(randomBytesArray);
 
         // Create KeyPair from hash key
-        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
-        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(hashKey, signSchema);
+        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(hashKey);
 
         const address = Address.createFromPublicKey(Convert.uint8ToHex(keyPair.publicKey), networkType);
         return new Account(address, keyPair);
@@ -100,7 +98,7 @@ export class Account {
     public encryptMessage(message: string,
                           recipientPublicAccount: PublicAccount,
                           networkType: NetworkType): EncryptedMessage {
-        return EncryptedMessage.create(message, recipientPublicAccount, this.privateKey, networkType);
+        return EncryptedMessage.create(message, recipientPublicAccount, this.privateKey);
     }
 
     /**
@@ -113,7 +111,7 @@ export class Account {
     public decryptMessage(encryptedMessage: EncryptedMessage,
                           publicAccount: PublicAccount,
                           networkType: NetworkType): PlainMessage {
-        return EncryptedMessage.decrypt(encryptedMessage, this.privateKey, publicAccount, networkType);
+        return EncryptedMessage.decrypt(encryptedMessage, this.privateKey, publicAccount);
     }
     /**
      * Account public key.
@@ -198,9 +196,6 @@ export class Account {
      * @return {string} - Signed data result
      */
     public signData(data: string): string {
-        return Convert.uint8ToHex(KeyPair.sign(this.keyPair,
-                            Convert.hexToUint8(Convert.utf8ToHex(data)),
-                            SHA3Hasher.resolveSignSchema(this.networkType),
-                        ));
+        return Convert.uint8ToHex(KeyPair.sign(this.keyPair, Convert.hexToUint8(Convert.utf8ToHex(data))));
     }
 }

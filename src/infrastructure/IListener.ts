@@ -37,7 +37,7 @@ export interface IListener {
      * returns a boolean that repressents the open state
      * @returns a boolean
      */
-    isOpen(): Boolean;
+    isOpen(): boolean;
 
     /**
      * Close web socket connection.

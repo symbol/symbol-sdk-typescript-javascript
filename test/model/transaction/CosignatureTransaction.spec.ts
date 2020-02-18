@@ -94,8 +94,8 @@ describe('CosignatureTransaction', () => {
         const cosignatureSignedTransaction = account.signCosignatureTransaction(cosignatureTransaction);
 
         expect(cosignatureSignedTransaction.parentHash).to.be.equal(aggregateTransferTransaction.transactionInfo!.hash);
-        expect(cosignatureSignedTransaction.signature).to.be.equal('BF3BC39F2292C028CB0FFA438A9F567A7C4D7' +
-            '93D2F8522C8DEAC74BEFBCB61AF6414ADF27B2176D6A24FEF612AA6DB2F562176A11C46BA6D5E05430042CB5705');
+        expect(cosignatureSignedTransaction.signature).to.be.equal('5EA75D1A2C8AD25DA4F400C1BD2DA84449FAF583AFD813E' +
+            '1179E72AF0CDF5AC1C0F7404AF6FC7268EE416204240DD3D5B11420D80215F19AA314FC86D6E03E0D');
         expect(cosignatureSignedTransaction.signerPublicKey).to.be.equal(account.publicKey);
     });
 
@@ -108,7 +108,7 @@ describe('CosignatureTransaction', () => {
 
         const signedTx = CosignatureTransaction.signTransactionPayload(account, txPayload, generationHash);
 
-        expect(signedTx.signerPublicKey).to.be.equal('C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFE');
+        expect(signedTx.signerPublicKey).to.be.equal('9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6');
         expect(signedTx.signerPublicKey).to.be.equal(account.publicKey);
     });
 });

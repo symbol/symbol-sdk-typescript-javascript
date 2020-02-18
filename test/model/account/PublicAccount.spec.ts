@@ -27,40 +27,19 @@ describe('PublicAccount', () => {
         expect(publicAccount.publicKey).to.be.equal(publicKey);
         expect(publicAccount.address.plain()).to.be.equal('SARNASAS2BIAB6LMFA3FPMGBPGIJGK6IJETM3ZSP');
     });
-
-    /**
-     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-nis1.json
-     */
-    it('should createComplete a public account from public key using NIS1', () => {
-        const publicAccount = PublicAccount.createFromPublicKey('c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
-            NetworkType.MAIN_NET);
-        expect(publicAccount.address.plain()).to.be.equal('NDD2CT6LQLIYQ56KIXI3ENTM6EK3D44P5JFXJ4R4');
-    });
 });
 
 describe('Signature verification', () => {
     it('Can verify a signature', () => {
         // Arrange:'
         const signerPublicAccount = PublicAccount.createFromPublicKey(
-            '1464953393CE96A08ABA6184601FD08864E910696B060FF7064474726E666CA8',
+            '16FB59F907524009730BCB9F860C8C5A1109A9E8F194275DA0B9F5A2085E2D02',
             NetworkType.MIJIN_TEST);
-        const data = 'I am so so so awesome as always';
-        const signature = '2092660F5BD4AE832B2E290F34A76B41506EE473B02FD7FD468B32C80C945CF60A0D60D005FA9B2DB3AD3212F8028C1449D3DCF81C9FAB3EB4975A7409D8D802'; // tslint:disable-line
+        const data = 'ff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf';
+        const signature = '2E32A8A934C2B8BC54A1594643A866CCDB3166BD41B6DE3E0C9FC779E7F3F421A0BCC798408ACCC92F47A3A45EF237D5CB7473D768991EE79AC659E1DA8CBB0C'; // tslint:disable-line
 
         // Act & Assert:
         expect(signerPublicAccount.verifySignature(data, signature)).to.be.true;
-    });
-
-    it('Verify a signature using NIS1 schema', () => {
-        // Arrange:'
-        const account = Account.createFromPrivateKey(
-            'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
-            NetworkType.TEST_NET,
-        );
-        const publicAccount = account.publicAccount;
-        const signed = account.signData('catapult rocks!');
-        expect(publicAccount.verifySignature('catapult rocks!', signed))
-            .to.be.true;
     });
 
     it('Throw error if signature has invalid length', () => {

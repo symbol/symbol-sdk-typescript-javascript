@@ -45,7 +45,7 @@ describe('Listener', () => {
     let namespaceRepository: NamespaceRepository;
     let generationHash: string;
     let networkType: NetworkType;
-    let networkCurrencyMosaicId: NamespaceId = NetworkCurrencyMosaic.NAMESPACE_ID;
+    const networkCurrencyMosaicId: NamespaceId = NetworkCurrencyMosaic.NAMESPACE_ID;
     let transactionRepository: TransactionRepository;
 
     before(() => {

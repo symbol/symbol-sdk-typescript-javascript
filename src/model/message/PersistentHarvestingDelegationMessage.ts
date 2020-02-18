@@ -40,10 +40,9 @@ export class PersistentHarvestingDelegationMessage extends Message {
     public static create(delegatedPrivateKey: string,
                          recipientPublicKey: string,
                          networkType: NetworkType): PersistentHarvestingDelegationMessage {
-        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
         const ephemeralKeypair = Account.generateNewAccount(networkType);
         const encrypted = MessageMarker.PersistentDelegationUnlock + ephemeralKeypair.publicKey +
-            Crypto.encode(ephemeralKeypair.privateKey, recipientPublicKey, delegatedPrivateKey, signSchema, true).toUpperCase();
+            Crypto.encode(ephemeralKeypair.privateKey, recipientPublicKey, delegatedPrivateKey, true).toUpperCase();
         return new PersistentHarvestingDelegationMessage(encrypted);
     }
 
@@ -60,17 +59,14 @@ export class PersistentHarvestingDelegationMessage extends Message {
      *
      * @param encryptMessage - Encrypted message to be decrypted
      * @param privateKey - Recipient private key
-     * @param {NetworkType} networkType - Catapult network type
      * @return {string}
      */
     public static decrypt(encryptMessage: PersistentHarvestingDelegationMessage,
-                          privateKey: string,
-                          networkType: NetworkType): string {
-        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
+                          privateKey: string): string {
         const markerLength = MessageMarker.PersistentDelegationUnlock.length;
         const ephemeralPublicKey = encryptMessage.payload.substring(markerLength, markerLength + 64);
         const payload = encryptMessage.payload.substring(markerLength + ephemeralPublicKey.length);
-        const decrypted = Crypto.decode(privateKey, ephemeralPublicKey, payload, signSchema);
+        const decrypted = Crypto.decode(privateKey, ephemeralPublicKey, payload);
         return decrypted.toUpperCase();
     }
 }

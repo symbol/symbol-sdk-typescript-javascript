@@ -21,6 +21,7 @@
 //
 // Implementation derived from TweetNaCl version 20140427.
 // See for details: http://tweetnacl.cr.yp.to/
+
 const _0 = new Uint8Array(16);
 const _9 = new Uint8Array(32);
 _9[0] = 9;
@@ -106,6 +107,7 @@ const M = (o, a, b) => {
         t28 = 0,
         t29 = 0,
         t30 = 0,
+        // tslint:disable: prefer-const
         b0 = b[0],
         b1 = b[1],
         b2 = b[2],
@@ -649,6 +651,7 @@ const neq25519 = (a, b) => {
         d = new Uint8Array(32);
     pack25519(c, a);
     pack25519(d, b);
+    // tslint:disable-next-line: no-use-before-declare
     return crypto_verify_32(c, 0, d, 0);
 };
 
@@ -672,16 +675,17 @@ export const cleanup = (arr) => {
     }
 };
 
-export const crypto_shared_key_hash = (shared, pk, sk, hashfunc, signSchema) => {
+export const crypto_shared_key_hash = (shared, pk, sk, hashfunc) => {
     const d = new Uint8Array(64);
     const p = [gf(), gf(), gf(), gf()];
 
-    hashfunc(d, sk, 32, signSchema);
+    hashfunc(d, sk, 32);
     d[0] &= 248;
     d[31] &= 127;
     d[31] |= 64;
 
     const q = [gf(), gf(), gf(), gf()];
+    // tslint:disable: no-use-before-declare
     unpackneg(q, pk);
     scalarmult(p, q, d);
     pack(shared, p);
@@ -893,7 +897,6 @@ export const unpack = (r, p) => {
     S(chk, r[0]);
     M(chk, chk, den);
     if (neq25519(chk, num)) {
-        console.log('not a valid Ed25519EncodedGroupElement.');
         return -1;
     }
 

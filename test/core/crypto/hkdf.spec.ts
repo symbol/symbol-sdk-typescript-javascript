@@ -16,6 +16,7 @@
 import { expect } from 'chai';
 import { Convert } from '../../../src/core/format';
 
+// tslint:disable-next-line: no-var-requires
 const hkdf = require('futoin-hkdf');
 
 describe('hkdf', () => {

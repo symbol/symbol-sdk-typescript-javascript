@@ -16,16 +16,16 @@
 
 import { RawArray as array } from '../format';
 import * as nacl from './nacl_catapult';
-import { SHA3Hasher as sha3Hasher } from './SHA3Hasher';
-import { SignSchema } from './SignSchema';
-
+// tslint:disable-next-line: no-var-requires
 export const CryptoJS = require('crypto-js');
 export const Key_Size = 32;
 export const Signature_Size = 64;
 export const Half_Signature_Size = Signature_Size / 2;
 export const Hash_Size = 64;
 export const Half_Hash_Size = Hash_Size / 2;
+// tslint:disable-next-line: no-var-requires
 export const hkdf = require('futoin-hkdf');
+import { sha512 } from 'js-sha512';
 
 /**
  * Convert an Uint8Array to WordArray
@@ -64,11 +64,6 @@ export const words2ua = (destUa, cryptoWords) => {
     return destUa;
 };
 
-export const catapult_hash = {
-    func: sha3Hasher.func,
-    createHasher: sha3Hasher.createHasher,
-};
-
 // custom catapult crypto functions
 export const catapult_crypto = (() => {
     function clamp(d) {
@@ -77,143 +72,25 @@ export const catapult_crypto = (() => {
         d[31] |= 64;
     }
 
-    function prepareForScalarMult(sk, hashfunc, signSchema: SignSchema) {
-        const d = new Uint8Array(Hash_Size);
-        hashfunc(d, sk, Hash_Size, signSchema);
+    function prepareForScalarMult(sk) {
+        const d = new Uint8Array(64);
+        const hash = sha512.arrayBuffer(sk);
+        array.copy(d, array.uint8View(hash), 32);
         clamp(d);
         return d;
     }
 
-    const encodedSChecker = (() => {
-        const Is_Reduced = 1;
-        const Is_Zero = 2;
-
-        function validateEncodedSPart(s) {
-            if (array.isZeroFilled(s)) {
-                return Is_Zero | Is_Reduced;
-            }
-            const copy = new Uint8Array(Signature_Size);
-            array.copy(copy, s, Half_Signature_Size);
-
-            nacl.reduce(copy);
-            return array.deepEqual(s, copy, Half_Signature_Size) ? Is_Reduced : 0;
-        }
-
-        return {
-            isCanonical: (s) => Is_Reduced === validateEncodedSPart(s),
-
-            requireValid: (s) => {
-                if (0 === (validateEncodedSPart(s) & Is_Reduced)) {
-                    throw Error('S part of signature invalid');
-                }
-            },
-        };
-    })();
-
     return {
-        extractPublicKey: (sk, hashfunc, signSchema: SignSchema) => {
-            const c = nacl;
-            const d = prepareForScalarMult(sk, hashfunc, signSchema);
-
-            const p = [c.gf(), c.gf(), c.gf(), c.gf()];
-            const pk = new Uint8Array(Key_Size);
-            c.scalarbase(p, d);
-            c.pack(pk, p);
-            return pk;
-        },
-
-        sign: (m, pk, sk, hasher) => {
-            const c = nacl;
-
-            const d = new Uint8Array(Hash_Size);
-            hasher.reset();
-            hasher.update(sk);
-            hasher.finalize(d);
-            clamp(d);
-
-            const r = new Uint8Array(Hash_Size);
-            hasher.reset();
-            hasher.update(d.subarray(Half_Hash_Size));
-            hasher.update(m);
-            hasher.finalize(r);
-
-            const p = [c.gf(), c.gf(), c.gf(), c.gf()];
-            const signature = new Uint8Array(Signature_Size);
-            c.reduce(r);
-            c.scalarbase(p, r);
-            c.pack(signature, p);
-
-            const h = new Uint8Array(Hash_Size);
-            hasher.reset();
-            hasher.update(signature.subarray(0, Half_Signature_Size));
-            hasher.update(pk);
-            hasher.update(m);
-            hasher.finalize(h);
-
-            c.reduce(h);
-
-            // muladd
-            const x = new Float64Array(Hash_Size);
-            array.copy(x, r, Half_Hash_Size);
-
-            for (let i = 0; i < Half_Hash_Size; ++i) {
-                for (let j = 0; j < Half_Hash_Size; ++j) {
-                    x[i + j] += h[i] * d[j];
-                }
-            }
-
-            c.modL(signature.subarray(Half_Signature_Size), x);
-            encodedSChecker.requireValid(signature.subarray(Half_Signature_Size));
-            return signature;
-        },
-
-        verify: (pk, m, signature, hasher) => {
-            // reject non canonical signature
-            if (!encodedSChecker.isCanonical(signature.subarray(Half_Signature_Size))) {
-                return false;
-            }
-
-            // reject weak (zero) public key
-            if (array.isZeroFilled(pk)) {
-                return false;
-            }
-
-            const c = nacl;
-            const p = [c.gf(), c.gf(), c.gf(), c.gf()];
-            const q = [c.gf(), c.gf(), c.gf(), c.gf()];
-
-            if (c.unpackneg(q, pk)) {
-                return false;
-            }
-
-            const h = new Uint8Array(Hash_Size);
-            hasher.reset();
-            hasher.update(signature.subarray(0, Half_Signature_Size));
-            hasher.update(pk);
-            hasher.update(m);
-            hasher.finalize(h);
-
-            c.reduce(h);
-            c.scalarmult(p, q, h);
-
-            const t = new Uint8Array(Signature_Size);
-            c.scalarbase(q, signature.subarray(Half_Signature_Size));
-            c.add(p, q);
-            c.pack(t, p);
-
-            return 0 === c.crypto_verify_32(signature, 0, t, 0);
-        },
-
-        deriveSharedKey: (privateKey: Uint8Array, publicKey: Uint8Array, hashfunc, signSchema: SignSchema): Uint8Array => {
-            const sharedSecret = catapult_crypto.deriveSharedSecret(privateKey, publicKey, hashfunc, signSchema);
+        deriveSharedKey: (privateKey: Uint8Array, publicKey: Uint8Array): Uint8Array => {
+            const sharedSecret = catapult_crypto.deriveSharedSecret(privateKey, publicKey);
             const info = 'catapult';
             const hash = 'SHA-256';
             return hkdf(sharedSecret, 32, {salt: new Uint8Array(32), info, hash});
         },
 
-        deriveSharedSecret: (privateKey: Uint8Array, publicKey: Uint8Array, hashfunc, signSchema: SignSchema): Uint8Array => {
+        deriveSharedSecret: (privateKey: Uint8Array, publicKey: Uint8Array): Uint8Array => {
             const c = nacl;
-            const d = prepareForScalarMult(privateKey, hashfunc, signSchema);
+            const d = prepareForScalarMult(privateKey);
 
             // sharedKey = pack(p = d (derived from privateKey) * q (derived from publicKey))
             const q = [c.gf(), c.gf(), c.gf(), c.gf()];

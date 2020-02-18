@@ -71,7 +71,8 @@ describe('TransactionService', () => {
             transactionHashes = [];
             transactionHashesMultiple = [];
             transactionRepository = helper.repositoryFactory.createTransactionRepository();
-            transactionService = new TransactionService(helper.repositoryFactory.createTransactionRepository(), helper.repositoryFactory.createReceiptRepository());
+            transactionService = new TransactionService(
+                helper.repositoryFactory.createTransactionRepository(), helper.repositoryFactory.createReceiptRepository());
         });
     });
     before(() => {
