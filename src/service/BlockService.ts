@@ -15,8 +15,8 @@
  */
 
 import { sha3_256 } from 'js-sha3';
-import { combineLatest, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { combineLatest, Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { BlockRepository } from '../infrastructure/BlockRepository';
 import { ReceiptRepository } from '../infrastructure/ReceiptRepository';
 import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
@@ -49,7 +49,7 @@ export class BlockService {
         const merklePathItemObservable = this.blockRepository.getMerkleTransaction(height, leaf);
         return combineLatest(rootHashObservable, merklePathItemObservable).pipe(
             map((combined) => this.validateInBlock(leaf, combined[1].merklePath, combined[0].blockTransactionsHash)),
-        );
+        ).pipe(catchError(() => of(false)));
     }
 
     /**
@@ -62,7 +62,7 @@ export class BlockService {
         const merklePathItemObservable = this.receiptRepository.getMerkleReceipts(height, leaf);
         return combineLatest(rootHashObservable, merklePathItemObservable).pipe(
             map((combined) => this.validateInBlock(leaf, combined[1].merklePath, combined[0].blockReceiptsHash)),
-        );
+        ).pipe(catchError(() => of(false)));
     }
 
     /**
