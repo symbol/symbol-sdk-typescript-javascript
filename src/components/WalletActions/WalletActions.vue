@@ -1,11 +1,6 @@
 <template>
   <div class="account-type">
     <div class="account-item">
-      <div class="img-box radius"><img src="@/views/resources/img/symbol/EncryptedMessage.png"></div>
-      <p class="access-name">{{ $t('wallets_backup_tile_title') }}</p>
-      <p class="access-info">{{ $t('wallets_backup_tile_description') }}</p>
-    </div>
-    <div class="account-item">
       <div class="img-box radius"><img src="@/views/resources/img/symbol/DelegatedHarvesting.png"></div>
       <p class="access-name">{{ $t('wallets_setup_harvesting_title') }}</p>
       <p class="access-info">{{ $t('wallets_setup_harvesting_description') }}</p>

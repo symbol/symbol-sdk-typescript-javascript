@@ -222,6 +222,26 @@ export const routes: AppRoute[] = [
             // @ts-ignore
             component: () => import('@/views/pages/wallets/WalletDetailsPage/WalletDetailsPage.vue'),
           },
+          {
+            path: 'backup',
+            name: 'wallet.backup',
+            meta: {
+              protected: true,
+              title: i18n.t('page_title_wallet_backup').toString(),
+            },
+            // @ts-ignore
+            component: () => import('@/views/pages/wallets/WalletBackupPage/WalletBackupPage.vue'),
+          },
+          {
+            path: 'contracts',
+            name: 'wallet.contracts',
+            meta: {
+              protected: true,
+              title: i18n.t('page_title_wallet_actions').toString(),
+            },
+            // @ts-ignore
+            component: () => import('@/views/pages/wallets/WalletActionsPage/WalletActionsPage.vue'),
+          },
         ],
       }, {
         path: '/mosaics',

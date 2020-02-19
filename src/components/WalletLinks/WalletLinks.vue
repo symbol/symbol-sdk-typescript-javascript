@@ -1,21 +1,20 @@
 <template>
-  <div class="wallet-links-container">
-    <div class="wallet-link" @click="$router.push({name: 'dashboard'})">
-      <div class="img-box radius"><img src="@/views/resources/img/symbol/Dashboard.png"></div>
-      <div class="info">
-        <span>{{ $t('wallets_view_dashboard') }}</span>
+  <div class="wallet-details-grid mt-3">
+    <div class="detail-row text_select">
+      <div class="wallet-detail-row">
+        <span class="label">{{ $t('wallets_links_explorer') }}</span>
+        <div class="value">
+          <a :href="explorerUrl" target="_blank">{{ $t('wallets_view_explorer_description') }}</a>
+        </div>
       </div>
     </div>
-    <div class="wallet-link" @click="openExplorer()">
-      <div class="img-box radius"><img src="@/views/resources/img/symbol/Explorer.png"></div>
-      <div class="info">
-        <span>{{ $t('wallets_view_explorer_description') }}</span>
-      </div>
-    </div>
-    <div class="wallet-link" @click="openFaucet()">
-      <div class="img-box radius"><img src="@/views/resources/img/symbol/Mosaic.png"></div>
-      <div class="info">
-        <span>{{ $t('wallets_view_open_faucet') }}</span>
+
+    <div class="detail-row text_select">
+      <div class="wallet-detail-row">
+        <span class="label">{{ $t('wallets_links_faucet') }}</span>
+        <div class="value">
+          <a :href="faucetUrl" target="_blank">{{ $t('wallets_view_open_faucet') }}</a>
+        </div>
       </div>
     </div>
   </div>

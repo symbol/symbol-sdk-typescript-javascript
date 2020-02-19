@@ -13,29 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
+// external dependencies
+import {Component, Vue} from 'vue-property-decorator'
+import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
-import {UIHelpers} from '@/core/utils/UIHelpers'
-import { mapGetters } from 'vuex'
+
+// child components
+// @ts-ignore
+import WalletBackupOptions from '@/components/WalletBackupOptions/WalletBackupOptions.vue'
 
 @Component({
+  components: {
+    WalletBackupOptions,
+  },
   computed: {...mapGetters({
-    defaultWallet: 'app/defaultWallet',
-  })}
+    currentWallet: 'wallet/currentWallet',
+  })},
 })
-export class WalletFlagsDisplayTs extends Vue {
-
-  @Prop({
-    default: null
-  }) wallet: WalletsModel
-
+export class WalletBackupPageTs extends Vue {
   /**
-   * UI Helpers
-   * @var {UIHelpers}
+   * Currently active wallet
+   * @see {Store.Wallet}
+   * @var {WalletsModel}
    */
-  public uiHelpers = UIHelpers
+  public currentWallet: WalletsModel
 
 /// region computed properties getter/setter
 /// end-region computed properties getter/setter

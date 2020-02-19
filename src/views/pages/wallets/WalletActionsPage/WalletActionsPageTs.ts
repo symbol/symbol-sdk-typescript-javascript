@@ -13,35 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
+// external dependencies
+import {Component, Vue} from 'vue-property-decorator'
+import {mapGetters} from 'vuex'
 
 // internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
-import { mapGetters } from 'vuex'
+import {WalletsModel, WalletType} from '@/core/database/entities/WalletsModel'
+
+// child components
+// @ts-ignore
+import WalletActions from '@/components/WalletActions/WalletActions.vue'
 
 @Component({
+  components: {
+    WalletActions,
+  },
   computed: {...mapGetters({
-    explorerBaseUrl: 'app/explorerUrl',
-    faucetBaseUrl: 'app/faucetUrl'
-  })}
+    currentWallet: 'wallet/currentWallet',
+  })},
 })
-export class WalletLinksTs extends Vue {
-
-  @Prop({
-    default: null
-  }) wallet: WalletsModel
-
-  public explorerBaseUrl: string
-  public faucetBaseUrl: string
-
+export class WalletActionsPageTs extends Vue {
+  /**
+   * Currently active wallet
+   * @see {Store.Wallet}
+   * @var {WalletsModel}
+   */
+  public currentWallet: WalletsModel
 /// region computed properties getter/setter
 /// end-region computed properties getter/setter
-
-  public get explorerUrl() {
-    return this.explorerBaseUrl + '/account/' + this.wallet.values.get('address')
-  }
-
-  public get faucetUrl() {
-    return this.faucetBaseUrl
-  }
 }

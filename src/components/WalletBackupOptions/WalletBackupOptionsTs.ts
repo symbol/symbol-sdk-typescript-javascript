@@ -13,4 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@import "../../views/resources/css/variables.less";
+import {Component, Vue, Prop} from 'vue-property-decorator'
+
+// internal dependencies
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
+
+@Component
+export class WalletBackupOptionsTs extends Vue {
+
+  @Prop({
+    default: null
+  }) wallet: WalletsModel
+
+/// region computed properties getter/setter
+/// end-region computed properties getter/setter
+}

@@ -19,22 +19,24 @@
 .wallet-detail-outer-container {
   width: 100%;
   display: grid;
-  grid-template-rows: 4.2rem 1.2rem 3.2rem;
+  grid-template-rows: 3.6rem 4.2rem;
   background-color: @white;
   border-radius: 0.04rem;
   overflow: hidden;
 
   .wallet-detail-inner-container {
     width: 100%;
-    padding: 0.25rem;
+    padding: 0 0.25rem 0 0.25rem;
     margin: 0;
     display: grid;
     grid-template-columns: 10rem auto;
 
     .left-container {
       width: 100%;
-      overflow: hidden;
-      padding-top: 0.3rem;
+
+      .title-row {
+        font-size: @biggerFont;
+      }
 
       .wallet-details-container {
         height: 100%;
@@ -55,7 +57,7 @@
         color: #222;
         grid-auto-rows: 0.5rem;
         padding-left: 10px;
-      }      
+      }
 
       .detail-row {
         grid-row: span 1;
@@ -67,12 +69,12 @@
 
       .wallet-detail-row-3cols {
         display: grid;
-        grid-template-columns: 1.3rem 8.5rem 0.2rem;
+        grid-template-columns: 1.4rem 8.6rem 0.2rem;
       }
 
       .wallet-detail-row {
         display: grid;
-        grid-template-columns: 1.3rem 8.7rem;
+        grid-template-columns: 1.4rem 8.6rem;
       }
 
       .wallet-detail-row,
@@ -82,11 +84,13 @@
           font-weight: 400;
           color: #666;
           margin-right: 10px;
+          width: 1.4rem;
         }
 
         .value {
           font-weight: @bolder;
         }
+  
       }
     }
 
