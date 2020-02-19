@@ -39,9 +39,69 @@ export class TableRowTs extends Vue {
    * Type of assets shown in the table
    * @type {any}
    */
-  @Prop({default: []}) rowValues: any
+  @Prop({default: {}}) rowValues: any
 
-  public async created() {
-    await this.rowValues
+  /**
+   * Owned assets hex ids
+   * @type {string[]}
+   */
+  @Prop({ default: [] }) ownedAssetHexIds: string[]
+
+  /**
+   * Whether the row is a namespace
+   * @readonly
+   * @protected
+   * @type {boolean}
+   */
+  protected get isNamespace(): boolean {
+    return Object.keys(this.rowValues).indexOf('aliasType') > -1
+  }
+
+  /**
+   * Whether the row is a root namespace
+   * @readonly
+   * @protected
+   * @type {boolean}
+   */
+  protected get isRootNamespace(): boolean {
+    if (!this.isNamespace) return false
+    return this.rowValues.name.indexOf('.') === -1
+  }
+
+  /**
+   * Whether the row is an asset that has available actions
+   * @readonly
+   * @protected
+   * @type {boolean}
+   */
+  protected get hasAvailableActions(): boolean {
+    if (this.rowValues.expiration === 'expired') return false
+    return this.ownedAssetHexIds.findIndex(hexId => hexId === this.rowValues.hexId) > -1
+  }
+
+  /**
+   * Whether the mosaic is active and supply mutable
+   * @readonly
+   * @protected
+   * @type {boolean}
+   */
+  protected get isSupplyMutableMosaic(): boolean {
+    if (Object.keys(this.rowValues).indexOf('supply') === -1) return false
+    if (!this.rowValues.supplyMutable) return false
+    return this.rowValues.expiration !== 'expired'
+  }
+
+  /**
+   * Whether link or unlink should be the alias form button label
+   * @protected
+   * @returns {string}
+   */
+  protected get aliasActionLabel(): string {
+    if (this.isNamespace) {
+      if (this.rowValues.aliasType === 'N/A') return 'action_label_alias_link'
+      return 'action_label_alias_unlink'
+    }
+    if (this.rowValues.name === 'N/A') return 'action_label_alias_link'
+    return 'action_label_alias_unlink'
   }
 }

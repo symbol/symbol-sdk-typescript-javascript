@@ -73,6 +73,7 @@ export class MosaicAmountDisplayTs extends Vue {
    */
   public async mounted() {
     const service = new MosaicService(this.$store)
+    if (!this.id) return 
     const model = await service.getMosaic(this.id)
     this.divisibility = model.values.get('divisibility')
   }

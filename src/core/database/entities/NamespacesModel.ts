@@ -16,6 +16,7 @@
 // internal dependencies
 import {DatabaseModel} from '@/core/database/DatabaseModel'
 import {DatabaseRelation} from '@/core/database/DatabaseRelation'
+import {NamespaceInfo, NamespaceRegistrationType, PublicAccount, UInt64, NamespaceId} from 'nem2-sdk'
 
 export class NamespacesModel extends DatabaseModel {
   /**
@@ -40,5 +41,40 @@ export class NamespacesModel extends DatabaseModel {
    */
   public constructor(values: Map<string, any> = new Map<string, any>()) {
     super(['hexId'], values)
+  }
+
+  /**
+   * Permits to return specific field's mapped object instances
+   * @readonly
+   * @return {{
+   *     namespaceInfo: NamespaceInfo,
+   *   }}
+   */
+  public get objects(): { namespaceInfo: NamespaceInfo } {
+    const registrationType = this.values.get('parentId') === undefined
+      ? NamespaceRegistrationType.RootNamespace : NamespaceRegistrationType.SubNamespace
+
+    const levels = [ this.values.get('level0'), this.values.get('level1'), this.values.get('level2') ]
+      .filter(x => x).map(hexId => NamespaceId.createFromEncoded(hexId))
+
+    const owner = PublicAccount.createFromPublicKey(
+      this.values.get('ownerPublicKey'), this.values.get('generationHash'),
+    )
+
+    return {
+      namespaceInfo: new NamespaceInfo(
+        this.values.get('active'),
+        0,
+        '',
+        registrationType,
+        this.values.get('depth'),
+        levels,
+        this.values.get('parentId'),
+        owner,
+        UInt64.fromUint(this.values.get('startHeight')),
+        UInt64.fromUint(this.values.get('endHeight')),
+        this.values.get('alias'),
+      ),
+    }
   }
 }

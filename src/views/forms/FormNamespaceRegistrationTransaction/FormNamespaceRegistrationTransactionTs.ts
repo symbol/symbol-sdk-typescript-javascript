@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 // external dependencies
-import {UInt64, NamespaceRegistrationTransaction, NamespaceRegistrationType, TransactionType, Transaction, NamespaceInfo} from 'nem2-sdk'
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {UInt64, NamespaceRegistrationTransaction, NamespaceRegistrationType, TransactionType, Transaction, NamespaceInfo, NamespaceId} from 'nem2-sdk'
+import {Component, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {ViewNamespaceRegistrationTransaction, NamespaceRegistrationFormFieldsType} from '@/core/transactions/ViewNamespaceRegistrationTransaction'
 import {FormTransactionBase} from '@/views/forms/FormTransactionBase/FormTransactionBase'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
-
-// configuration
-import feesConfig from '@/../config/fees.conf.json'
 
 // child components
 import {ValidationObserver, ValidationProvider} from 'vee-validate'
@@ -59,10 +56,16 @@ import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirm
     ModalTransactionConfirmation,
   },
   computed: {...mapGetters({
-    ownedNamespaces: 'wallet/currentWalletOwnedNamespaces'
-  })}
+    ownedNamespaces: 'wallet/currentWalletOwnedNamespaces',
+  })},
 })
 export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase {
+  @Prop({ default: null }) signer: string
+  @Prop({ default: null }) registrationType: NamespaceRegistrationType
+  @Prop({ default: null }) namespaceId: NamespaceId
+  @Prop({ default: null }) parentNamespaceId: NamespaceId
+  @Prop({ default: null }) duration: number
+
   /**
    * Current wallet's owned namespaces
    * @var {NamespaceInfo[]}
@@ -104,15 +107,15 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
       const transaction = this.stagedTransactions.find(staged => staged.type === TransactionType.REGISTER_NAMESPACE)
       this.setTransactions([transaction as NamespaceRegistrationTransaction])
       this.isAwaitingSignature = true
-      return ;
+      return 
     }
 
     // - set default form values
     this.formItems.signerPublicKey = this.currentWallet.values.get('publicKey')
-    this.formItems.registrationType = NamespaceRegistrationType.RootNamespace
-    this.formItems.newNamespaceName = ''
-    this.formItems.parentNamespaceName = ''
-    this.formItems.duration = 10000
+    this.formItems.registrationType = this.registrationType || NamespaceRegistrationType.RootNamespace
+    this.formItems.newNamespaceName = this.namespaceId ? this.namespaceId.fullName : ''
+    this.formItems.parentNamespaceName = this.parentNamespaceId ? this.parentNamespaceId.fullName : ''
+    this.formItems.duration = this.duration || 172800
 
     // - maxFee must be absolute
     this.formItems.maxFee = this.defaultFee
@@ -130,11 +133,11 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
       const data: NamespaceRegistrationFormFieldsType = {
         registrationType: this.formItems.registrationType,
         rootNamespaceName: NamespaceRegistrationType.RootNamespace === this.formItems.registrationType 
-        ? this.formItems.newNamespaceName
-        : this.formItems.parentNamespaceName,
+          ? this.formItems.newNamespaceName
+          : this.formItems.parentNamespaceName,
         subNamespaceName: NamespaceRegistrationType.SubNamespace === this.formItems.registrationType 
-        ? this.formItems.newNamespaceName
-        : '',
+          ? this.formItems.newNamespaceName
+          : '',
         duration: this.formItems.duration,
         maxFee: UInt64.fromUint(this.formItems.maxFee),
       }
@@ -144,9 +147,10 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
       view = view.parse(data)
       
       // - prepare mosaic definition and supply change
-      return [
+      const a = [
         this.factory.build(view),
       ]
+      return a
     } catch (error) {
       console.error('Error happened in FormNamespaceRegistrationTransaction.transactions(): ', error)
     }
@@ -171,7 +175,4 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
     // - populate maxFee
     this.formItems.maxFee = transaction.maxFee.compact()
   }
-
-/// region computed properties getter/setter
-/// end-region computed properties getter/setter
 }

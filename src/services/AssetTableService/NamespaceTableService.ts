@@ -50,37 +50,27 @@ export class NamespaceTableService extends AssetTableService {
    * Return table values to be displayed in a table rows
    * @returns {NamespaceTableRowValues}
    */
-  public async getTableRows(): Promise<any[]> {
-    const currentWalletAddress = this.$store.getters['wallet/currentWalletAddress']
+  public getTableRows(): any[] {
+    // - get owned namespaces from the store
+    const ownedNamespaces: NamespaceInfo[] = this.$store.getters['wallet/currentWalletOwnedNamespaces']
 
-    // - read REST for _owned_ namespaces
-    const ownedNamespaces: NamespaceInfo[] = await this.$store.dispatch(
-      'wallet/REST_FETCH_OWNED_NAMESPACES',
-      currentWalletAddress.plain()
-    )
-
-    // - use service to get information about mosaics
+    // - use service to get information about namespaces
     const service = new NamespaceService(this.$store)
-    const namespaces = []
-    for (let i = 0, m = ownedNamespaces.length; i < m; i++) {
-      const namespace = ownedNamespaces[i]
-      const {expired, expiration} = this.getExpiration(namespace)
 
-      // - read model
-      const model = await service.getNamespace(namespace.id)
+    return ownedNamespaces.map((namespaceInfo) => {
+      const {expired, expiration} = this.getExpiration(namespaceInfo)
+      const model = service.getNamespaceSync(namespaceInfo.id)
+      if (!model) return null
 
-      // - map table fields
-      namespaces.push({
-        "hexId": namespace.id.toHex(),
-        "name": model.values.get('name'),
-        "expiration": expiration,
-        "expired": expired,
-        "aliasIdentifier": this.getAliasIdentifier(namespace),
-        "aliasType": this.getAliasType(namespace),
-      })
-    }
-
-    return namespaces
+      return {
+        'hexId': namespaceInfo.id.toHex(),
+        'name': model.values.get('name'),
+        'expiration': expiration,
+        'expired': expired,
+        'aliasIdentifier': this.getAliasIdentifier(namespaceInfo),
+        'aliasType': this.getAliasType(namespaceInfo),
+      }
+    }).filter(x => x) // filter out namespaces that are not yet available
   }
 
   /**

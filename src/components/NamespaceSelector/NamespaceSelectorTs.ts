@@ -37,6 +37,12 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue'
 })
 export class NamespaceSelectorTs extends Vue {
   /**
+   * Field label
+   * @type {string}
+   */
+  @Prop({ default: '' }) label: string
+
+  /**
    * Value set by the parent component's v-model
    * @type {string}
    */

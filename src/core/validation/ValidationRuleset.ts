@@ -32,7 +32,7 @@ export const ValidationRuleset = {
   generationHash: 'required|min:64|max:64',
   mosaicId: 'required|mosaicId',
   message: `max:${currentNetwork.properties.maxMessageSize}`,
-  namespaceDuration: `required|min_value:${currentNetwork.properties.minNamespaceDuration}|max_value:${currentNetwork.properties.maxNamespaceDuration}`,
+  namespaceDuration: `required|min_value:${currentNetwork.properties.minNamespaceDuration}|maxNamespaceDuration`,
   namespaceName: {
     required: true,
     regex: '^[a-z0-9-_]{1,64}$',

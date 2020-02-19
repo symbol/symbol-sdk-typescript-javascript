@@ -1,11 +1,11 @@
 <template>
   <div class="form-line-container">
-    <FormLabel>{{ $t('parent_namespace') }}</FormLabel>
+    <FormLabel>{{ $t(label) }}</FormLabel>
     <ValidationProvider
       v-slot="{ errors }"
       mode="lazy"
       vid="chosenValue"
-      :name="$t('namespace_name')"
+      :name="$t('form_label_namespace_name')"
       :rules="'required'"
       tag="div"
       class="inline-container"

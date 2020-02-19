@@ -1,11 +1,11 @@
 <template>
   <div class="form-line-container">
-    <FormLabel>{{ $t('duration') }}</FormLabel>
+    <FormLabel>{{ $t(label) }}</FormLabel>
     <ValidationProvider
       v-slot="{ errors }"
       mode="lazy"
-      vid="duration"
-      :name="$t('duration')"
+      vid="form_label_duration"
+      :name="$t(label)"
       :rules="validationRule"
       class="inline-container"
     >

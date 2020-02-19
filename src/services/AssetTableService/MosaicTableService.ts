@@ -55,42 +55,37 @@ export class MosaicTableService extends AssetTableService {
   * Return table values to be displayed in a table rows
   * @returns {MosaicTableRowValues[]}
   */
-  public async getTableRows(): Promise<any[]> {
-    // - read store for _owned_ mosaics
-    const currentWalletMosaics = this.$store.getters['wallet/currentWalletMosaics'] || []
+  public getTableRows(): any[] {
+    // - get owned mosaics from the store
+    const ownedMosaics: Mosaic[] = this.$store.getters['wallet/currentWalletMosaics']
 
     // - use service to get information about mosaics
     const service = new MosaicService(this.$store)
-    const mosaics = []
-    for (let i = 0, m = currentWalletMosaics.length; i < m; i++) {
-      const mosaic = currentWalletMosaics[i]
 
-      // - read model
-      const model = await service.getMosaic(mosaic.id)
-      const flags = new MosaicFlags(model.values.get('flags'))
-
-      // - identify balance row
-      const balance = currentWalletMosaics.find(m => m.id.equals(mosaic.id))
-      const supply  = model.values.get('supply')
+    return ownedMosaics.map((mosaic) => {
+      // - use service to get information about mosaics
+      const model = service.getMosaicSync(mosaic.id)
+      if (!model) return null
+      const flags = new MosaicFlags(model.values.get('flags')) // @TODO: this property is not reactive
+      const balance = mosaic.amount.compact()
+      const supply = model.values.get('supply')
 
       // - map table fields
-      mosaics.push({
-        "hexId": mosaic.id.toHex(),
-        "name": model.values.get('name'),
-        "supply": new UInt64([supply.lower, supply.higher]).compact(),
-        "balance": balance === undefined ? 0 : (
+      return {
+        'hexId': mosaic.id.toHex(),
+        'name': model.values.get('name') || 'N/A', // @TODO: this property is not reactive
+        'supply': new UInt64([ supply.lower, supply.higher ]).compact(),
+        'balance': balance === 0 ? 0 : (
           // - get relative amount
-          balance.amount / Math.pow(10, model.values.get('divisibility'))
+          balance / Math.pow(10, model.values.get('divisibility'))
         ),
-        "expiration": this.getExpiration(model),
-        "divisibility": model.values.get('divisibility'),
-        "transferable": flags.transferable,
-        "supplyMutable": flags.supplyMutable,
-        "restrictable": flags.restrictable
-      })
-    }
-
-    return mosaics
+        'expiration': this.getExpiration(model), // @TODO: this property is not reactive
+        'divisibility': model.values.get('divisibility'),
+        'transferable': flags.transferable,
+        'supplyMutable': flags.supplyMutable,
+        'restrictable': flags.restrictable,
+      }
+    }).filter(x => x) // filter out mosaics that are not yet available
   }
 
   /**

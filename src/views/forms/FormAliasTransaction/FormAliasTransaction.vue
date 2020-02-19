@@ -1,35 +1,66 @@
 <template>
-  <FormWrapper class="account-unlock-container">
+  <FormWrapper>
     <ValidationObserver v-slot="{ handleSubmit }">
       <form
         onsubmit="event.preventDefault()"
+        class="form-container"
         @keyup.enter="disableSubmit ? '' : handleSubmit(onSubmit)"
       >
-        <!-- Form for UNLINK alias action -->
+        <!-- UNLINK alias action -->
         <div v-if="aliasAction === AliasAction.Unlink">
           <span>
             {{ $t('unlink_namespace_from', {
-              aliasTarget: formItems.aliasTarget, namespaceId: formItems.namespaceHexId,
+              aliasTarget: formItems.aliasTarget, namespaceName: namespaceId.fullName,
             }) }}
           </span>
         </div>
 
-        <!-- Form for LINK alias action -->
-        <div v-if="aliasAction === AliasAction.Link">
-          wwww{{formItems.namespaceHexId}}wwwwwwwwww
-          <NamespaceSelector
-            v-model="formItems.namespaceHexId"
-            :namespaces="linkableNamespaces"
-          />
-          dddddddddd{{formItems.aliasTarget}}dddddddd
-          <MosaicSelector
-            v-if="aliasTargetType === 'mosaic'"
-            v-model="formItems.aliasTarget"
-            :mosaics="linkableMosaics"
-          />
-          iiiiiiiiiiii
-          <!-- Transfer recipient input field -->
-          <RecipientInput v-if="aliasTargetType === 'address'" v-model="formItems.aliasTarget" />
+        <!-- LINK alias action -->
+        <div v-else>
+          <div class="form-row">
+            <ValidationProvider
+              :name="$t('registrationType')"
+              :rules="'required'"
+              tag="div"
+              mode="lazy"
+              vid="registrationType"
+            >
+              <FormLabel>{{ $t('form_label_alias_type') }}</FormLabel>
+              <select
+                v-model="aliasTargetType"
+                class="input-size input-style"
+                @change="formItems.aliasTarget = ''"
+              >
+                <option value="mosaic">
+                  {{ $t('option_link_mosaic') }}
+                </option>
+                <option value="address">
+                  {{ $t('option_link_address') }}
+                </option>
+              </select>
+            </ValidationProvider>
+          </div>
+
+          <!-- Form for LINK alias action -->
+          <div v-if="aliasAction === AliasAction.Link">
+            <NamespaceSelector
+              v-model="formItems.namespaceFullName"
+              label="form_label_choose_namespace"
+              :namespaces="linkableNamespaces"
+            />
+            <MosaicSelector
+              v-if="aliasTargetType === 'mosaic'"
+              v-model="formItems.aliasTarget"
+              :mosaics="linkableMosaics"
+              label="form_label_link_mosaic"
+            />
+            <!-- Transfer recipient input field -->
+            <AddressInput
+              v-if="aliasTargetType === 'address'"
+              v-model="formItems.aliasTarget"
+              label="form_label_link_address"
+            />
+          </div>
         </div>
 
         <!-- Transaction fee selector -->

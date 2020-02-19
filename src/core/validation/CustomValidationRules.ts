@@ -10,6 +10,10 @@ import {AccountService} from '@/services/AccountService'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {AppStore} from '@/app/AppStore'
 
+// configuration
+import networkConfig from '../../../config/network.conf.json'
+const currentNetwork = networkConfig.networks['testnet-publicTest']
+
 import {
   AddressValidator,
   AliasValidator,
@@ -47,7 +51,7 @@ export class CustomValidationRules {
         if (isValidAddress || isValidAlias) return true
         return false
       },
-      message: `${i18n.t('incorrect_field_error')}`,
+      message: `${i18n.t('error_incorrect_field')}`,
     })
 
     extend('addressOrAliasNetworkType', {
@@ -64,7 +68,7 @@ export class CustomValidationRules {
       validate: (value) => {
         return UrlValidator.validate(value)
       },
-      message: `${i18n.t('incorrect_field_error')}`,
+      message: `${i18n.t('error_incorrect_field')}`,
     })
 
     extend('confirmPassword', {
@@ -134,7 +138,14 @@ export class CustomValidationRules {
         if (isValidAddress || isValidPublicKey) return true
         return false
       },
-      message: `${i18n.t('incorrect_field_error')}`,
+      message: `${i18n.t('error_incorrect_field')}`,
+    })
+
+    extend('maxNamespaceDuration', {
+      validate: (value) => {
+        return value <= currentNetwork.properties.maxNamespaceDuration
+      },
+      message: `${i18n.t('error_new_namespace_duration_max_value', {maxValue: currentNetwork.properties.maxNamespaceDuration})}`,
     })
   }
 }

@@ -20,6 +20,7 @@ import Vue from 'vue'
 import {RESTService} from '@/services/RESTService'
 import {AwaitLock} from './AwaitLock';
 import {NamespaceService} from '@/services/NamespaceService';
+import {NamespacesModel} from '@/core/database/entities/NamespacesModel';
 const Lock = AwaitLock.create();
 
 export default {
@@ -55,9 +56,11 @@ export default {
     },
   },
   actions: {
-    async initialize({ commit, dispatch, getters }) {
+    async initialize({ commit, dispatch, getters }, withFeed) {
       const callback = async () => {
-        // update store
+        if (undefined !== withFeed && withFeed.namespaces && withFeed.namespaces.length) {
+          await dispatch('INITIALIZE_FROM_DB', withFeed)
+        }
         commit('setInitialized', true)
       }
 
@@ -71,6 +74,13 @@ export default {
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
 /// region scoped actions
+    async INITIALIZE_FROM_DB({commit, dispatch}, withFeed) {
+      dispatch('diagnostic/ADD_DEBUG', 'Store action namespace/INITIALIZE_FROM_DB dispatched', {root: true})
+      withFeed.namespaces.forEach((model: NamespacesModel) => {
+        commit('addNamespaceInfo', model.objects.namespaceInfo)
+        commit('addNamespaceName', {hex: model.getIdentifier(), name: model.values.get('name')})
+      })
+    },
     async REST_FETCH_INFO({commit, rootGetters}, namespaceId: NamespaceId) {
       const nodeUrl = rootGetters['network/currentPeer'].url
       const namespaceHttp = RESTService.create('NamespaceHttp', nodeUrl)
@@ -87,10 +97,12 @@ export default {
       // map by hex if names available
       const mappedNames = namespaceNames
         .filter(({name}) => name.length)
-        .map((namespaceName) => ({
-          hex:  namespaceName.namespaceId.toHex(),
-          name: namespaceName.name,
-        }))
+        .map((namespaceName) => {
+          return {
+            hex:  namespaceName.namespaceId.toHex(),
+            name: NamespaceService.getFullNameFromNamespaceNames(namespaceName, namespaceNames).name,
+          }
+        })
 
       // update store
       mappedNames.forEach(mappedEntry => commit('addNamespaceName', mappedEntry))

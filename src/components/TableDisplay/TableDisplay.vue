@@ -6,7 +6,7 @@
       </div>
       <div class="table-actions-container">
         <span @click="refresh()">{{ $t('refresh') }}</span>
-        <div @click="filterBy('expiration')">
+        <div @click="setFilteredBy('expiration')">
           <Checkbox :value="filteredBy.filteringType === 'show'" />
           <span v-if="assetType === 'mosaic'">{{ $t('Display_expired_mosaic') }}</span>
           <span v-else>{{ $t('Hide_expired_namespaces') }}</span>
@@ -23,7 +23,7 @@
         v-for="({name, label}, index) in tableFields"
         :key="index"
         :class="[ 'table-header-item', `${name}-header` ]"
-        @click="sortBy(name)"
+        @click="setSortedBy(name)"
       >
         <span>{{ $t(label) }}</span>
         <Icon
@@ -47,7 +47,10 @@
           :key="index"
           :row-values="rowValues"
           :asset-type="assetType"
+          :owned-asset-hex-ids="ownedAssetHexIds"
           @on-show-alias-form="showAliasForm"
+          @on-show-extend-namespace-duration-form="showExtendNamespaceDurationForm"
+          @on-show-mosaic-supply-change-form="showModifyMosaicSupplyForm"
         />
       </div>
       <div v-else class="empty-container">
@@ -63,6 +66,42 @@
         @on-change="handlePageChange"
       />
     </div>
+    <ModalFormWrap
+      v-if="modalFormsVisibility.aliasTransaction"
+      :visible="modalFormsVisibility.aliasTransaction"
+      :title="aliasModalTitle"
+      @close="closeModal('aliasTransaction')"
+    >
+      <template v-slot:form>
+        <FormAliasTransaction
+          :namespace-id="modalFormsProps.namespaceId"
+          :alias-target="modalFormsProps.aliasTarget"
+          :alias-action="modalFormsProps.aliasAction"
+        />
+      </template>
+    </ModalFormWrap>
+
+    <ModalFormWrap
+      v-if="modalFormsVisibility.extendNamespaceDurationTransaction"
+      :visible="modalFormsVisibility.extendNamespaceDurationTransaction"
+      title="modal_title_extend_namespace_duration"
+      @close="closeModal('extendNamespaceDurationTransaction')"
+    >
+      <template v-slot:form>
+        <FormExtendNamespaceDurationTransaction :namespace-id="modalFormsProps.namespaceId" />
+      </template>
+    </ModalFormWrap>
+
+    <ModalFormWrap
+      v-if="modalFormsVisibility.mosaicSupplyChangeTransaction"
+      :visible="modalFormsVisibility.mosaicSupplyChangeTransaction"
+      title="modal_title_mosaic_supply_change"
+      @close="closeModal('mosaicSupplyChangeTransaction')"
+    >
+      <template v-slot:form>
+        <FormMosaicSupplyChangeTransaction :namespace-id="modalFormsProps.mosaicId" />
+      </template>
+    </ModalFormWrap>
   </div>
 </template>
 

@@ -112,7 +112,7 @@ export abstract class AssetTableService extends AbstractService {
    * Return table values to be displayed in a table rows
    * @returns {TableRowValues[]}
    */
-  public abstract getTableRows(): Promise<any[]>
+  public abstract getTableRows(): any[]
 
   /**
    * Filter table rows according to filtering options

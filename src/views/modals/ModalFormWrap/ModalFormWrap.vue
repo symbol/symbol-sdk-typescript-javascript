@@ -1,8 +1,10 @@
 <template>
-  <Modal v-model="show" :title="title" class-name="modal-form-wrap-container">
-    <slot name="form" />
-    <div slot="footer" class="modal-form-wrap-footer" />
-  </Modal>
+  <div class="container">
+    <Modal v-model="show" :title="`${$t(title)}`" class-name="modal-form-wrap-container">
+      <slot name="form" />
+      <div slot="footer" class="modal-form-wrap-footer" />
+    </Modal>
+  </div>
 </template>
 
 <script lang="ts">

@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div class="inline-container">
+    <FormLabel v-if="label">
+      {{ $t(label) }}
+    </FormLabel>
     <ErrorTooltip field-name="selectedMosaic">
       <Select
         v-model="selectedMosaicName"

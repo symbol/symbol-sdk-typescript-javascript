@@ -64,6 +64,7 @@ const AppStore = new Vuex.Store({
         await dispatch('notification/initialize')
         await dispatch('network/initialize', getters['db/feed'])
         await dispatch('mosaic/initialize', getters['db/feed'])
+        await dispatch('namespace/initialize', getters['db/feed'])
       }
 
       // aquire async lock until initialized

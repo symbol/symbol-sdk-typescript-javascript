@@ -3,8 +3,8 @@
     <ValidationObserver v-slot="{ handleSubmit }">
       <form
         onsubmit="event.preventDefault()"
-        @keyup.enter="handleSubmit(onSubmit)"
         class="form-container mt-3"
+        @keyup.enter="handleSubmit(onSubmit)"
       >
         <SignerSelector v-model="formItems.signerPublicKey" />
 
@@ -13,14 +13,21 @@
             tag="div" mode="lazy" vid="registrationType"
             :name="$t('registrationType')"
             :rules="'required'"
-            v-slot="{ errors }"
           >
             <FormLabel>{{ $t('form_label_registration_type') }}</FormLabel>
-            <select v-model="formItems.registrationType"
-                    class="input-size input-style">
-              <option :value="typeRootNamespace">{{ $t('option_root_namespace') }}</option>
-              <option v-if="ownedNamespaces.length"
-                      :value="typeSubNamespace">{{ $t('option_sub_namespace') }}</option>
+            <select
+              v-model="formItems.registrationType"
+              class="input-size input-style"
+            >
+              <option :value="typeRootNamespace">
+                {{ $t('option_root_namespace') }}
+              </option>
+              <option
+                v-if="ownedNamespaces.length"
+                :value="typeSubNamespace"
+              >
+                {{ $t('option_sub_namespace') }}
+              </option>
             </select>
           </ValidationProvider>
         </div>
@@ -28,6 +35,7 @@
         <NamespaceSelector
           v-if="formItems.registrationType === typeSubNamespace && ownedNamespaces.length"
           v-model="formItems.parentNamespaceName"
+          label="form_label_parent_namespace"
           :namespaces="ownedNamespaces"
         />
 

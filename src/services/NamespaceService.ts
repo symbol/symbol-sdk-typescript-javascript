@@ -87,6 +87,24 @@ export class NamespaceService extends AbstractService {
   }
 
   /**
+   * Returns namespace from database
+   * if namespace is not found, fetch from REST + add to storage as a side effect
+   * @param {NamespaceId} mosaicId
+   * @returns {(NamespacesModel | null)}
+   */
+  public getNamespaceSync(namespaceId: NamespaceId): NamespacesModel | null {
+    const repository = new NamespacesRepository()
+
+    if (!repository.find(namespaceId.toHex())) {
+      // - namespace is unknown, fetch from REST + add to storage
+      this.fetchNamespaceInfo(namespaceId)
+      return null
+    }
+    // - mosaic known, read NamespacesModel
+    return repository.read(namespaceId.toHex())
+  }
+
+  /**
    * Read namespace from REST using store action.
    *
    * @internal
@@ -101,11 +119,11 @@ export class NamespaceService extends AbstractService {
 
     // - fetch INFO from REST
     const namespaceInfo: NamespaceInfo = await this.$store.dispatch('namespace/REST_FETCH_INFO', namespaceId)
-    const namespaceIds = namespaceInfo.levels.filter((info, i) => i < namespaceInfo.depth - 1)
+    const namespaceIds: NamespaceId[] = namespaceInfo.levels.map(id => id)
 
     // - fetch NAMES from REST
-    const namespaceNames = await this.$store.dispatch('namespace/REST_FETCH_NAMES', [...namespaceIds])
-    const fullName = namespaceNames.map(n => n.name).join('.')
+    const namespaceNames: {hex: string, name: string}[] = await this.$store.dispatch('namespace/REST_FETCH_NAMES', namespaceIds)
+    const fullName = namespaceNames.find(({hex}) => hex === namespaceInfo.id.toHex()).name
 
     // - use repository for storage
     const repository = new NamespacesRepository()
@@ -133,5 +151,30 @@ export class NamespaceService extends AbstractService {
     // - store and return
     repository.create(namespace.values)
     return namespace
+  }
+
+  /**
+   * Constructs a namespace fullName from namespace names
+   * @static
+   * @param {NamespaceName} reference
+   * @param {NamespaceName[]} namespaceNames
+   * @returns {NamespaceName}
+   */
+  public static getFullNameFromNamespaceNames(
+    reference: NamespaceName,
+    namespaceNames: NamespaceName[],
+  ): NamespaceName {
+    if (!reference.parentId) return reference
+
+    const parent = namespaceNames.find(
+      namespaceName => namespaceName.namespaceId.toHex() === reference.parentId.toHex(),
+    )
+
+    if (parent === undefined) return reference
+
+    return NamespaceService.getFullNameFromNamespaceNames(
+      new NamespaceName(parent.namespaceId, `${parent.name}.${reference.name}`, parent.parentId),
+      namespaceNames,
+    )
   }
 }

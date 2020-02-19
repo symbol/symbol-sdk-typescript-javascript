@@ -24,10 +24,13 @@ import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
 // child components
 // @ts-ignore
 import ErrorTooltip from '@/components//ErrorTooltip/ErrorTooltip.vue'
+// @ts-ignore
+import FormLabel from '@/components//FormLabel/FormLabel.vue'
 
 @Component({
   components: {
     ErrorTooltip,
+    FormLabel,
   },
   computed: {...mapGetters({
     networkMosaic: 'mosaic/networkMosaic',
@@ -44,7 +47,18 @@ export class MosaicSelectorTs extends Vue {
    */
   @Prop({ default: '' }) value: string
 
+  /**
+   * Mosaics to display as options
+   * @type {Mosaic[]}
+   */
   @Prop({ default: [] }) mosaics: Mosaic[]
+
+
+  /**
+   * Field labelm hidden by default
+   * @type {string}
+   */
+  @Prop({ default: null }) label: string
 
   /**
    * Networks currency mosaic

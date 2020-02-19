@@ -19,8 +19,6 @@ import {
   NamespaceInfo,
   QueryParams,
   Listener,
-  Mosaic,
-  UInt64,
   Transaction,
   SignedTransaction,
   TransactionService,
@@ -31,7 +29,6 @@ import {map} from 'rxjs/operators'
 
 // internal dependencies
 import {$eventBus} from '../events'
-import {CacheKey} from '@/core/utils/CacheKey'
 import {RESTService} from '@/services/RESTService'
 import {AwaitLock} from './AwaitLock';
 import {BroadcastResult} from '@/core/transactions/BroadcastResult';

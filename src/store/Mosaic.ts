@@ -98,7 +98,7 @@ export default {
       const callback = async () => {
 
         // - initialize CURRENCY from database if available
-        if (undefined !== withFeed && withFeed.mosaics && withFeed.mosaics.length) {
+        if (undefined !== withFeed && withFeed.mosaics && withFeed.mosaics.length && undefined !== withFeed.mosaics.find(m => m.values.get('isCurrencyMosaic'))) {
           await dispatch('INITIALIZE_FROM_DB', withFeed)
         }
         // - initialize CURRENCY from nemesis transactions
@@ -149,11 +149,11 @@ export default {
       const blockHttp = RESTService.create('BlockHttp', nodeUrl)
       blockHttp.getBlockTransactions('1', new QueryParams(100)).subscribe(
         async (transactions: Transaction[]) => {
-          const payload = dispatch('GET_CURRENCY_MOSAIC_FROM_NEMESIS', transactions)
+          const payload = await dispatch('GET_CURRENCY_MOSAIC_FROM_NEMESIS', transactions)
 
           // - will dispatch REST_FETCH_INFO+REST_FETCH_NAMES
           const service = new MosaicService(this)
-          const currencyMosaic = await service.getMosaic(payload.mosaicId)
+          const currencyMosaic = await service.getMosaic(payload.mosaicId, true)
 
           // - add to known mosaics
           commit('addMosaicInfo', currencyMosaic.objects.mosaicInfo)

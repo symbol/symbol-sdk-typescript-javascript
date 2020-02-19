@@ -31,13 +31,15 @@ import {ValidationProvider, ValidationObserver} from 'vee-validate'
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
+import FormLabel from '@/components/FormLabel/FormLabel.vue'
+// @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
 import NamespaceSelector from '@/components/NamespaceSelector/NamespaceSelector.vue'
 // @ts-ignore
 import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue'
 // @ts-ignore
-import RecipientInput from '@/components/RecipientInput/RecipientInput.vue'
+import AddressInput from '@/components/AddressInput/AddressInput.vue'
 // @ts-ignore
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
 
@@ -46,22 +48,23 @@ import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
     ValidationProvider,
     ValidationObserver,
     FormWrapper,
+    FormLabel,
     ErrorTooltip,
     NamespaceSelector,
     MosaicSelector,
-    RecipientInput,
+    AddressInput,
     MaxFeeSelector,
   },
   computed: {...mapGetters({
     ownedNamespaces: 'wallet/currentWalletOwnedNamespaces', 
     ownedMosaics: 'wallet/currentWalletOwnedMosaics',
-    mosaicsNamesByHex: 'mosaic/mosaicsNamesByHex',
+    mosaicsNamesByHex: 'mosaic/mosaicsNames',
   })},
 })
 export class FormAliasTransactionTs extends FormTransactionBase {
   @Prop({ default: null }) namespaceId: NamespaceId
   @Prop({ default: null }) aliasTarget: MosaicId | Address
-  @Prop({ default: null }) aliasAction: AliasAction
+  @Prop({ default: null, required: true }) aliasAction: AliasAction
   @Prop({ default: false }) disableSubmit: boolean
 
   /**
@@ -82,7 +85,7 @@ export class FormAliasTransactionTs extends FormTransactionBase {
    * @var {any}
    */
   protected formItems = {
-    namespaceHexId: null,
+    namespaceFullName: null,
     aliasTarget: null,
     aliasAction: null,
     maxFee: 0,
@@ -124,7 +127,7 @@ export class FormAliasTransactionTs extends FormTransactionBase {
    */
   protected get linkableNamespaces(): NamespaceInfo[] {
     return this.ownedNamespaces.filter(
-      ({alias}) => alias && alias.type !== AliasType.Address,
+      ({alias}) => alias && alias.type === AliasType.None,
     )
   }
   
@@ -155,9 +158,20 @@ export class FormAliasTransactionTs extends FormTransactionBase {
       return
     }
 
+    /**
+     * Helper function to get the alias target as a string
+     * @param {(MosaicId | Address)} aliasTarget
+     * @returns {string}
+     */
+    const getAliasTarget = (aliasTarget: MosaicId | Address): string => {
+      if (!aliasTarget) return null
+      if (aliasTarget instanceof Address) return aliasTarget.plain()
+      return aliasTarget.id.toHex()
+    }
+
     // - set default form values
-    this.formItems.namespaceHexId = this.namespaceId
-    this.formItems.aliasTarget = this.aliasTarget
+    this.formItems.namespaceFullName = this.namespaceId ? this.namespaceId.fullName : null
+    this.formItems.aliasTarget = getAliasTarget(this.aliasTarget)
     this.formItems.aliasAction = this.aliasAction
 
     // - maxFee must be absolute
@@ -181,7 +195,7 @@ export class FormAliasTransactionTs extends FormTransactionBase {
         : new MosaicId(this.formItems.aliasTarget)
 
       view = view.parse({
-        namespaceId: new NamespaceId(this.formItems.namespaceHexId),
+        namespaceId: new NamespaceId(this.formItems.namespaceFullName),
         aliasTarget: instantiatedAliasTarget,
         aliasAction: this.formItems.aliasAction,
         maxFee: UInt64.fromUint(this.formItems.maxFee),
@@ -190,7 +204,7 @@ export class FormAliasTransactionTs extends FormTransactionBase {
       // - prepare transfer transaction
       return [this.factory.build(view)]
     } catch (error) {
-      console.error('Error happened in FormTransferTransaction.transactions(): ', error)
+      console.error('Error happened in FormAliasTransactionTs.transactions(): ', error)
     }
   }
 
@@ -203,17 +217,18 @@ export class FormAliasTransactionTs extends FormTransactionBase {
   protected setTransactions(transactions: AliasTransaction[]) {
     // - this form creates only 1 transaction
     const transaction = transactions.shift()
+    if (!transaction) return
 
     // - populate for items if transaction is an address alias
     if (transaction instanceof AddressAliasTransaction) {
-      this.formItems.namespaceHexId = transaction.namespaceId
+      this.formItems.namespaceFullName = transaction.namespaceId
       this.formItems.aliasTarget = transaction.address
       this.formItems.aliasAction = transaction.aliasAction
     }
 
     // - populate for items if transaction is an mosaic alias
     if (transaction instanceof MosaicAliasTransaction) {
-      this.formItems.namespaceHexId = transaction.namespaceId
+      this.formItems.namespaceFullName = transaction.namespaceId
       this.formItems.aliasTarget = transaction.namespaceId
       this.formItems.aliasAction = transaction.aliasAction
     }

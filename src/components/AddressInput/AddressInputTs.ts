@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
+import {mapGetters} from 'vuex'
+import {NetworkType} from 'nem2-sdk'
 
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
@@ -31,21 +33,24 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue'
     ErrorTooltip,
     FormLabel,
   },
+  computed: {
+    ...mapGetters({
+      networkType: 'network/networkType',
+    }),
+  },
 })
-export class DurationInputTs extends Vue {
-  @Prop({ default: '' }) value: string
-
+export class RecipientInputTs extends Vue {
   /**
-   * Asset type
-   * @type {('mosaic' | 'namespace')}
-   */
-  @Prop({ default: 'mosaic' }) targetAsset: 'mosaic' | 'namespace'
-
-  /**
-   * Field label
+   * Value set by the parent component's v-model
    * @type {string}
    */
-  @Prop({ default: 'form_label_duration' }) label: string
+  @Prop({default: null}) value: string
+
+  /**
+   * Current network type
+   * @var {NetworkType}
+   */
+  public networkType: NetworkType
 
   /**
    * Validation rules
@@ -54,17 +59,12 @@ export class DurationInputTs extends Vue {
   public validationRules = ValidationRuleset
 
   /// region computed properties getter/setter
-  public get chosenValue(): string {
+  public get rawValue(): string {
     return this.value
   }
 
-  public set chosenValue(amount: string) {
-    this.$emit('input', amount)
+  public set rawValue(input: string) {
+    this.$emit('input', input)
   }
-   
-  public get validationRule(): string {
-    return this.targetAsset === 'mosaic'
-      ? this.validationRules.duration : this.validationRules.namespaceDuration
-  }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 }
