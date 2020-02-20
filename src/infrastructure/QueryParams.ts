@@ -55,14 +55,16 @@ export class QueryParams {
      *         id?: string;
      *     }} configuration arguments
      */
-    constructor(args: {
+    constructor(args?: {
         pageSize?: number,
         order?: Order,
         id?: string;
     }) {
-        if (args.pageSize) this.setPageSize(args.pageSize)
-        if (args.order) this.setOrder(Order[args.order])
-        if (args.id) this.setId(args.id)
+        if (args) {
+            if (args.pageSize) this.setPageSize(args.pageSize)
+            if (args.order) this.setOrder(Order[args.order])
+            if (args.id) this.setId(args.id)
+        }
     }
 
     public setPageSize(pageSize: number): QueryParams {
