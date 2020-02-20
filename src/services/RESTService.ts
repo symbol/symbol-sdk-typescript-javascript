@@ -51,12 +51,6 @@ export class RESTService extends AbstractService {
   public name: string = 'rest'
 
   /**
-   * REST repositories cache
-   * @var {Map<string, RepositoryImpl>} 
-   */
-  public static _cache: Map<string, HttpRepositoryImpl> = new Map
-
-  /**
    * Vuex Store 
    * @var {Vuex.Store}
    */
@@ -96,11 +90,6 @@ export class RESTService extends AbstractService {
     name: string,
     nodeUrl: string
   ): HttpRepositoryImpl {
-    // try to use previous instance
-    if (RESTService._cache && RESTService._cache.has(name)) {
-      return RESTService._cache.get(name)
-    }
-
     let repository: HttpRepositoryImpl
     switch (name) {
     case 'AccountHttp': repository = new AccountHttp(nodeUrl); break
@@ -120,7 +109,6 @@ export class RESTService extends AbstractService {
     default: throw new Error('Could not find a REST repository by name \'' + name + ' \'')
     }
 
-    RESTService._cache.set(name, repository)
     return repository
   }
 

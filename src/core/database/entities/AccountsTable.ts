@@ -16,6 +16,10 @@
 import {DatabaseTable, DatabaseMigration} from '@/core/database/DatabaseTable'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
 
+/// region database migrations
+import {AccountsMigrations} from '@/core/database/migrations/accounts/AccountsMigrations'
+/// end-region database migrations
+
 export class AccountsTable extends DatabaseTable {
   public constructor() {
     super('accounts', [
@@ -25,7 +29,8 @@ export class AccountsTable extends DatabaseTable {
       'hint',
       'networkType',
       'seed',
-    ])
+      'generationHash',
+    ], 2) // version=2
   }
 
   /**
@@ -43,6 +48,8 @@ export class AccountsTable extends DatabaseTable {
    * @return {any[]}
    */
   public getMigrations(): DatabaseMigration[] {
-    return []
+    return [
+      {version: 2, callback: AccountsMigrations.version2_addGenHash},
+    ]
   }
 }

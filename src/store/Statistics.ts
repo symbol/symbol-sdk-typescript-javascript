@@ -69,11 +69,10 @@ export default {
   actions: {
     async initialize({ commit, dispatch, getters, rootGetters }) {
       const callback = async () => {
-        // read first network block to identify currency mosaic
         const nodeUrl = rootGetters['network/currentPeer'].url
         const nodeHttp = RESTService.create('NodeHttp', nodeUrl)
         const diagnostic: StorageInfo = await nodeHttp.getStorageInfo().toPromise()
-        
+
         commit('countTransactions', diagnostic.numTransactions)
         commit('countBlocks', diagnostic.numBlocks)
         commit('countAccounts', diagnostic.numAccounts)

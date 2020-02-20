@@ -67,7 +67,7 @@ export class NetworkStatisticsPanelTs extends Vue {
    * Hook called when the component is mounted
    * @return {void}
    */
-  mounted() {
+  created() {
     this.$store.dispatch('statistics/initialize')
   }
 }

@@ -418,7 +418,7 @@ export default {
     },
 
     // Unsubscribe from all open websocket connections
-    UNSUBSCRIBE({ dispatch, getters }) {
+    async UNSUBSCRIBE({ dispatch, getters }) {
       const subscriptions = getters.getSubscriptions
 
       for (let i = 0, m = subscriptions.length; i < m; i++) {

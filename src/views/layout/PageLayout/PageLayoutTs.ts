@@ -54,6 +54,7 @@ import WalletSelectorField from '@/components/WalletSelectorField/WalletSelector
       currentPeer: 'network/currentPeer',
       isConnected: 'network/isConnected',
       networkType: 'network/networkType',
+      generationHash: 'network/generationHash',
       currentAccount: 'account/currentAccount',
     }),
   },
@@ -93,6 +94,13 @@ export class PageLayoutTs extends Vue {
    */
   public networkType: NetworkType
 
+  /**
+   * Current generationHash
+   * @see {Store.Network}
+   * @var {string}
+   */
+  public generationHash: string
+
 /// region computed properties getter/setter
   /**
    * Holds alert message
@@ -104,6 +112,10 @@ export class PageLayoutTs extends Vue {
     }
 
     if (this.currentAccount && this.currentAccount.values.get('networkType') !== this.networkType) {
+      return {show: true, message: 'Wallet_network_type_does_not_match_current_network_type'}
+    }
+
+    if (this.currentAccount && this.currentAccount.values.get('generationHash') !== this.generationHash) {
       return {show: true, message: 'Wallet_network_type_does_not_match_current_network_type'}
     }
 
