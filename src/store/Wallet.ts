@@ -276,6 +276,10 @@ export default {
           address: address,
         }) } catch(e) {}
 
+        // must be non-blocking
+        try { dispatch('REST_FETCH_OWNED_MOSAICS', address) } catch (e) {}
+        try { dispatch('REST_FETCH_OWNED_NAMESPACES', address) } catch (e) {}
+
         // open websocket connections
         dispatch('SUBSCRIBE', address)
         commit('setInitialized', true)

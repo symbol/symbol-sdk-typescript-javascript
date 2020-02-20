@@ -385,10 +385,4 @@ export class TableDisplayTs extends Vue {
   protected closeModal(modalIdentifier: string): void {
     Vue.set(this.modalFormsVisibility, modalIdentifier, false)
   }
-
-  @Watch('currentWalletAddress')
-  onCurrentWalletAddressChange(newValue: Address) {
-    // Force fetching owned namespaces from REST if wallet is changed
-    if (newValue) this.refresh()
-  }
 }
