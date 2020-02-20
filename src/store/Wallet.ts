@@ -195,12 +195,10 @@ export default {
     partialTransactions: (state, transactions) => Vue.set(state, 'partialTransactions', transactions),
     setSubscriptions: (state, data) => Vue.set(state, 'subscriptions', data),
     addSubscriptions: (state, payload) => {
-      if (payload && payload.length) {
-        const subscriptions = state.subscriptions
-        subscriptions.push(payload)
+      const subscriptions = state.subscriptions
+      subscriptions.push(payload)
 
-        Vue.set(state, 'subscriptions', subscriptions)
-      }
+      Vue.set(state, 'subscriptions', subscriptions)
     },
     addTransactionToCache: (state, payload) => {
       if (payload === undefined) {
@@ -422,13 +420,17 @@ export default {
     // Unsubscribe from all open websocket connections
     UNSUBSCRIBE({ dispatch, getters }) {
       const subscriptions = getters.getSubscriptions
-      subscriptions.map((subscription: SubscriptionType) => {
-        // unsubscribe channels
-        subscription.subscriptions.map(sub => sub.unsubscribe())
 
-        // close listener
-        subscription.listener.close()
-      })
+      for (let i = 0, m = subscriptions.length; i < m; i++) {
+        const subscription = subscriptions[i]
+
+        // subscribers
+        for (let j = 0, n = subscription.subscriptions; j < n; j++) {
+          await subscription.subscriptions[j].unsubscribe()
+        }
+
+        await subscription.listener.close()
+      }
 
       // update state
       dispatch('RESET_SUBSCRIPTIONS')

@@ -155,12 +155,10 @@ export default {
     setNemesisTransactions: (state, transactions) => Vue.set(state, 'nemesisTransactions', transactions),
     setSubscriptions: (state, data) => Vue.set(state, 'subscriptions', data),
     addSubscriptions: (state, payload) => {
-      if (payload && payload.length) {
-        const subscriptions = state.subscriptions
-        subscriptions.push(payload)
+      const subscriptions = state.subscriptions
+      subscriptions.push(payload)
 
-        Vue.set(state, 'subscriptions', subscriptions)
-      }
+      Vue.set(state, 'subscriptions', subscriptions)
     },
     generationHash: (state, hash) => Vue.set(state, 'generationHash', hash),
   },
@@ -270,6 +268,7 @@ export default {
         throw Error('Cannot change node. URL is not valid: ' + currentPeerUrl)
       }
 
+      dispatch('diagnostic/ADD_DEBUG', 'Store action network/SET_CURRENT_PEER dispatched with: ' + currentPeerUrl, {root: true})
       try {
         // - disconnect from previous node
         await dispatch('UNSUBSCRIBE')
@@ -285,7 +284,9 @@ export default {
           peerInfo: payload.peerInfo
         })
       }
-      catch (e) {}
+      catch (e) {
+        dispatch('diagnostic/ADD_ERROR', 'Error with store action network/SET_CURRENT_PEER: ' + JSON.stringify(e), {root: true})
+      }
     },
     ADD_KNOWN_PEER({commit}, peerUrl) {
       if (!URLHelpers.isValidURL(peerUrl)) {
@@ -332,15 +333,19 @@ export default {
     },
 
     // Unsubscribe from all open websocket connections
-    UNSUBSCRIBE({ dispatch, getters }) {
+    async UNSUBSCRIBE({ dispatch, getters }) {
       const subscriptions = getters.getSubscriptions
-      subscriptions.map((subscription: SubscriptionType) => {
-        // unsubscribe channels
-        subscription.subscriptions.map(sub => sub.unsubscribe())
 
-        // close listener
-        subscription.listener.close()
-      })
+      for (let i = 0, m = subscriptions.length; i < m; i++) {
+        const subscription = subscriptions[i]
+
+        // subscribers
+        for (let j = 0, n = subscription.subscriptions; j < n; j++) {
+          await subscription.subscriptions[j].unsubscribe()
+        }
+
+        await subscription.listener.close()
+      }
 
       // update state
       dispatch('RESET_SUBSCRIPTIONS')
