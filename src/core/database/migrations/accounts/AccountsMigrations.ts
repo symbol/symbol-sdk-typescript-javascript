@@ -23,7 +23,7 @@ export class AccountsMigrations {
    * @description Changed table structure
    *
    * Table columns added:
-   * - generationHash',
+   * - generationHash
    * 
    * @params {Map<string, AccountsModel>} rows
    * @return {Map<string, AccountsModel>}

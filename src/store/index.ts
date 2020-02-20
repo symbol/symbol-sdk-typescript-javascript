@@ -27,6 +27,7 @@ import MosaicStore from '@/store/Mosaic'
 import NamespaceStore from '@/store/Namespace'
 import StatisticsStore from '@/store/Statistics'
 import CommunityStore from '@/store/Community'
+import {onPeerConnection} from '@/store/plugins/onPeerConnection'
 
 // use AwaitLock for initialization routines
 import {AwaitLock} from '@/store/AwaitLock'
@@ -55,6 +56,9 @@ const AppStore = new Vuex.Store({
     statistics: StatisticsStore,
     community: CommunityStore,
   },
+  plugins: [
+    onPeerConnection,
+  ],
   actions: {
     async initialize({ commit, dispatch, getters }) {
       const callback = async () => {
