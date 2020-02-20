@@ -228,7 +228,7 @@ describe('AccountHttp', () => {
     describe('transactions', () => {
         it('should call transactions successfully by type', async () => {
             const transactions = await accountRepository.getAccountTransactions(
-                publicAccount.address, new QueryParams(), new TransactionFilter().setType([TransactionType.TRANSFER])).toPromise();
+                publicAccount.address, new QueryParams(), new TransactionFilter({ types: [TransactionType.TRANSFER] })).toPromise();
             expect(transactions.length).to.be.greaterThan(0);
             transactions.forEach((t) => {
                 expect(t.type).to.be.eq(TransactionType.TRANSFER);

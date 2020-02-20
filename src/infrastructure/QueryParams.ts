@@ -48,7 +48,7 @@ export class QueryParams {
     public id?: string;
 
     /**
-     * Creates an instance of QueryParams.
+     * Constructor
      * @param {{
      *         pageSize?: number,
      *         order?: Order,
@@ -62,23 +62,21 @@ export class QueryParams {
     }) {
         if (args) {
             if (args.pageSize) this.setPageSize(args.pageSize)
-            if (args.order) this.setOrder(Order[args.order])
-            if (args.id) this.setId(args.id)
+            if (args.order) this.order = args.order
+            if (args.id) this.id = args.id
         }
     }
 
-    public setPageSize(pageSize: number): QueryParams {
-        this.pageSize = (pageSize >= 10 && pageSize <= 100) ? pageSize : 10;
-        return this;
-    }
-
-    public setId(id?: string): QueryParams {
-        this.id = id;
-        return this;
-    }
-
-    public setOrder(order: Order = Order.DESC): QueryParams {
-        this.order = order;
-        return this;
+    /**
+     * Set page size
+     * @private
+     * @param {number} [pageSize]
+     * @returns {void}
+     */
+    private setPageSize(pageSize?: number): void {
+        if (pageSize && pageSize > 100) {
+            throw new Error('The page size has to be between 10 and 100')
+        }
+        this.pageSize = pageSize || 10
     }
 }

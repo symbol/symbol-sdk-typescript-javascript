@@ -20,9 +20,10 @@ import { TransactionType } from '../../src/model/transaction/TransactionType';
 
 describe('TransactionFilter', () => {
     it('should return correct query param', () => {
-        const param = new TransactionFilter()
-            .setType([TransactionType.TRANSFER, TransactionType.ACCOUNT_LINK]);
+        const param = new TransactionFilter({
+            types: [TransactionType.TRANSFER, TransactionType.ACCOUNT_LINK],
+        })
 
-        expect(param.convertCSV(param.type)).to.be.equal('16724,16716');
+        expect(param.convertCSV(param.types)).to.be.equal('16724,16716');
     });
 });
