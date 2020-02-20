@@ -95,24 +95,24 @@ export class TransactionService extends AbstractService {
     default:
       throw new Error('Transaction type not supported yet.')
     case TransactionType.TRANSFER: return transaction as TransferTransaction
-    case TransactionType.ACCOUNT_RESTRICTION_ADDRESS: return transaction as AccountAddressRestrictionTransaction
-    case TransactionType.LINK_ACCOUNT: return transaction as AccountLinkTransaction
-    case TransactionType.ACCOUNT_METADATA_TRANSACTION: return transaction as AccountMetadataTransaction
-    case TransactionType.ACCOUNT_RESTRICTION_MOSAIC: return transaction as AccountMosaicRestrictionTransaction
-    case TransactionType.ACCOUNT_RESTRICTION_OPERATION: return transaction as AccountOperationRestrictionTransaction
+    case TransactionType.ACCOUNT_ADDRESS_RESTRICTION: return transaction as AccountAddressRestrictionTransaction
+    case TransactionType.ACCOUNT_LINK: return transaction as AccountLinkTransaction
+    case TransactionType.ACCOUNT_METADATA: return transaction as AccountMetadataTransaction
+    case TransactionType.ACCOUNT_MOSAIC_RESTRICTION: return transaction as AccountMosaicRestrictionTransaction
+    case TransactionType.ACCOUNT_OPERATION_RESTRICTION: return transaction as AccountOperationRestrictionTransaction
     case TransactionType.ADDRESS_ALIAS: return transaction as AddressAliasTransaction
     case TransactionType.AGGREGATE_BONDED:
     case TransactionType.AGGREGATE_COMPLETE: return transaction as AggregateTransaction
-    case TransactionType.LOCK: return transaction as HashLockTransaction
+    case TransactionType.HASH_LOCK: return transaction as HashLockTransaction
     case TransactionType.MOSAIC_ADDRESS_RESTRICTION: return transaction as MosaicAddressRestrictionTransaction
     case TransactionType.MOSAIC_ALIAS: return transaction as MosaicAliasTransaction
     case TransactionType.MOSAIC_DEFINITION: return transaction as MosaicDefinitionTransaction
     case TransactionType.MOSAIC_GLOBAL_RESTRICTION: return transaction as MosaicGlobalRestrictionTransaction
-    case TransactionType.MOSAIC_METADATA_TRANSACTION: return transaction as MosaicMetadataTransaction
+    case TransactionType.MOSAIC_METADATA: return transaction as MosaicMetadataTransaction
     case TransactionType.MOSAIC_SUPPLY_CHANGE: return transaction as MosaicSupplyChangeTransaction
-    case TransactionType.MODIFY_MULTISIG_ACCOUNT: return transaction as MultisigAccountModificationTransaction
-    case TransactionType.NAMESPACE_METADATA_TRANSACTION: return transaction as NamespaceMetadataTransaction
-    case TransactionType.REGISTER_NAMESPACE: return transaction as NamespaceRegistrationTransaction
+    case TransactionType.MULTISIG_ACCOUNT_MODIFICATION: return transaction as MultisigAccountModificationTransaction
+    case TransactionType.NAMESPACE_METADATA: return transaction as NamespaceMetadataTransaction
+    case TransactionType.NAMESPACE_REGISTRATION: return transaction as NamespaceRegistrationTransaction
     case TransactionType.SECRET_LOCK: return transaction as SecretLockTransaction
     case TransactionType.SECRET_PROOF: return transaction as SecretProofTransaction
     case TransactionType.TRANSFER: return transaction as TransferTransaction
@@ -158,21 +158,21 @@ export class TransactionService extends AbstractService {
     let view: TransactionViewType
     switch (transaction.type) {
     /// region XXX views for transaction types not yet implemented
-    case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
-    case TransactionType.LINK_ACCOUNT:
-    case TransactionType.ACCOUNT_METADATA_TRANSACTION:
-    case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
-    case TransactionType.ACCOUNT_RESTRICTION_OPERATION:
+    case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
+    case TransactionType.ACCOUNT_LINK:
+    case TransactionType.ACCOUNT_METADATA:
+    case TransactionType.ACCOUNT_MOSAIC_RESTRICTION:
+    case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
     case TransactionType.ADDRESS_ALIAS:
     case TransactionType.AGGREGATE_BONDED:
     case TransactionType.AGGREGATE_COMPLETE:
-    case TransactionType.LOCK:
+    case TransactionType.HASH_LOCK:
     case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
     case TransactionType.MOSAIC_ALIAS:
     case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
-    case TransactionType.MOSAIC_METADATA_TRANSACTION:
-    case TransactionType.MODIFY_MULTISIG_ACCOUNT:
-    case TransactionType.NAMESPACE_METADATA_TRANSACTION:
+    case TransactionType.MOSAIC_METADATA:
+    case TransactionType.MULTISIG_ACCOUNT_MODIFICATION:
+    case TransactionType.NAMESPACE_METADATA:
     case TransactionType.SECRET_LOCK:
     case TransactionType.SECRET_PROOF:
       view = new ViewUnknownTransaction(this.$store);
@@ -189,7 +189,7 @@ export class TransactionService extends AbstractService {
       view = new ViewMosaicSupplyChangeTransaction(this.$store); 
       view = view.use(transaction as MosaicSupplyChangeTransaction)
       break;
-    case TransactionType.REGISTER_NAMESPACE:
+    case TransactionType.NAMESPACE_REGISTRATION:
       view = new ViewNamespaceRegistrationTransaction(this.$store);
       view = view.use(transaction as NamespaceRegistrationTransaction)
       break;
@@ -250,7 +250,7 @@ export class TransactionService extends AbstractService {
     const transactions = signedTransactions.filter(
       tx => ![
         TransactionType.AGGREGATE_BONDED,
-        TransactionType.LOCK
+        TransactionType.HASH_LOCK
       ].includes(tx.type))
 
     const results: BroadcastResult[] = []

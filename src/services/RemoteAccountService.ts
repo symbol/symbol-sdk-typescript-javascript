@@ -96,7 +96,9 @@ export class RemoteAccountService extends AbstractService {
       for (let i = 0; i < 10; i++) {
         // derive child account and store
         const remoteAccount = wallet.getChildAccount(nextPath, networkType)
+        // @ts-ignore // @TODO: SDK upgrade
         remoteAccounts.set(remoteAccount.address.plain(), remoteAccount)
+        // @ts-ignore // @TODO: SDK upgrade
         remoteAddresses.push(remoteAccount.address)
 
         // increment derivation path

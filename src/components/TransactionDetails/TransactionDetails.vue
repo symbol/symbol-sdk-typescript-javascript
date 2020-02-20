@@ -13,7 +13,7 @@
       v-else-if="isType(types.MOSAIC_SUPPLY_CHANGE)" />
 
     <TransactionDetailsNamespaceRegistration :view="view"
-      v-else-if="isType(types.REGISTER_NAMESPACE)" />
+      v-else-if="isType(types.NAMESPACE_REGISTRATION)" />
 
     <!-- fallback -->
     <div v-else class="bottom-transaction-details">

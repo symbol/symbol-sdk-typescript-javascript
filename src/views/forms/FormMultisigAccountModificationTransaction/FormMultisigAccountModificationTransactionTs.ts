@@ -154,7 +154,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     // - re-populate form if transaction staged
     if (this.stagedTransactions.length) {
       const transaction = this.stagedTransactions.find(
-        staged => staged.type === TransactionType.MODIFY_MULTISIG_ACCOUNT,
+        staged => staged.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION,
       )
       if (transaction === undefined) return
       this.setTransactions([transaction as MultisigAccountModificationTransaction])

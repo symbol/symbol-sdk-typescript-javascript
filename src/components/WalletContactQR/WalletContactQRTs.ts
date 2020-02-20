@@ -71,6 +71,7 @@ export class WalletContactQRTs extends Vue {
       const publicAccount: PublicAccount = this.wallet.objects.publicAccount
       return new ContactQR(
         this.wallet.values.get('name'),
+        // @ts-ignore // @TODO: SDK upgrade
         publicAccount,
         publicAccount.address.networkType,
         this.generationHash,

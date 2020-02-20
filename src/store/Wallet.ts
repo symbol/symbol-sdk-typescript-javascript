@@ -450,7 +450,7 @@ export default {
       try {
         // prepare REST parameters
         const currentPeer = rootGetters['network/currentPeer'].url
-        const queryParams = new QueryParams(pageSize, id)
+        const queryParams = new QueryParams().setPageSize(pageSize).setId(id)
         const addressObject = Address.createFromRawAddress(address)
 
         // fetch transactions from REST gateway
@@ -651,10 +651,11 @@ export default {
 
         // fetch account info from REST gateway
         const namespaceHttp = RESTService.create('NamespaceHttp', currentPeer)
-        const ownedNamespaces = await namespaceHttp.getNamespacesFromAccount(
-          addressObject, { pageSize: 100, order: Order.ASC }, // @TODO: Handle more than 100 namespaces
-        ).toPromise()
 
+        // @TODO: Handle more than 100 namespaces
+        const ownedNamespaces = await namespaceHttp.getNamespacesFromAccount(
+          addressObject, new QueryParams().setPageSize(100).setOrder(Order.ASC), 
+        ).toPromise()
         // store multisig info
         if (currentWallet && currentWallet.values.get('address') === address) {
           commit('currentWalletOwnedNamespaces', ownedNamespaces)

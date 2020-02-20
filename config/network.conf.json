@@ -4,9 +4,9 @@
   "defaultNetworkType": 152,
   "defaultNode": {
     "protocol": "http",
-    "hostname": "api-xym-harvest-3-01.eu-west-1.nemtech.network",
+    "hostname": "test-api-xym-931-01.us-west-1.nemtech.network",
     "port": 3000,
-    "url": "http://api-xym-harvest-3-01.eu-west-1.nemtech.network:3000"
+    "url": "http://test-api-xym-931-01.us-west-1.nemtech.network:3000"
   },
   "networks": {
     "testnet-publicTest": {

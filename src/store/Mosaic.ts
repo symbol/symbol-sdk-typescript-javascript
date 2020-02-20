@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, MosaicInfo, NamespaceId, QueryParams, Transaction, TransactionType, NamespaceRegistrationType} from 'nem2-sdk'
+import {MosaicInfo, QueryParams, Transaction, TransactionType, NamespaceRegistrationType, UInt64} from 'nem2-sdk'
 import Vue from 'vue'
 
 // internal dependencies
 import {RESTService} from '@/services/RESTService'
 import {MosaicService} from '@/services/MosaicService'
-import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
 import {AwaitLock} from './AwaitLock';
 const Lock = AwaitLock.create();
 
@@ -153,7 +152,7 @@ export default {
       dispatch('diagnostic/ADD_DEBUG', 'Store action mosaic/INITIALIZE_FROM_NEMESIS dispatched with nodeUrl: ' + nodeUrl, {root: true})
 
       const blockHttp = RESTService.create('BlockHttp', nodeUrl)
-      blockHttp.getBlockTransactions('1', new QueryParams(100)).subscribe(
+      blockHttp.getBlockTransactions(UInt64.fromUint(1), new QueryParams().setPageSize(100)).subscribe(
         async (transactions: Transaction[]) => {
           const payload = await dispatch('GET_CURRENCY_MOSAIC_FROM_NEMESIS', transactions)
 
@@ -192,12 +191,12 @@ export default {
     GET_CURRENCY_MOSAIC_FROM_NEMESIS({commit, dispatch}, transactions) {
       // - read first root namespace
       const rootNamespaceTx = transactions.filter(
-        tx => tx.type === TransactionType.REGISTER_NAMESPACE
+        tx => tx.type === TransactionType.NAMESPACE_REGISTRATION
            && tx.registrationType === NamespaceRegistrationType.RootNamespace).shift()
 
       // - read sub namespace
       const subNamespaceTx = transactions.filter(
-        tx => tx.type === TransactionType.REGISTER_NAMESPACE 
+        tx => tx.type === TransactionType.NAMESPACE_REGISTRATION 
            && tx.registrationType === NamespaceRegistrationType.SubNamespace
            && tx.parentId.equals(rootNamespaceTx.namespaceId)).shift()
 

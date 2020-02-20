@@ -124,7 +124,7 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
   protected resetForm() {
     // - re-populate form if transaction staged
     if (this.stagedTransactions.length) {
-      const transaction = this.stagedTransactions.find(staged => staged.type === TransactionType.REGISTER_NAMESPACE)
+      const transaction = this.stagedTransactions.find(staged => staged.type === TransactionType.NAMESPACE_REGISTRATION)
       this.setTransactions([transaction as NamespaceRegistrationTransaction])
       this.isAwaitingSignature = true
       return 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import Vue from 'vue';
-import {NetworkType, Listener, BlockInfo} from 'nem2-sdk';
+import {NetworkType, Listener, BlockInfo, UInt64} from 'nem2-sdk';
 import {Subscription} from 'rxjs'
 
 // internal dependencies
@@ -370,8 +370,8 @@ export default {
         const blockHttp = RESTService.create('BlockHttp', currentPeer)
 
         // - fetch blocks information per-range (wait 3 seconds every 4th block)
-        ranges.slice(0, 3).map(({start}, index: number) => {
-          blockHttp.getBlocksByHeightWithLimit(start.toString(), 100).subscribe(
+        ranges.slice(0, 3).map(({start}) => {
+          blockHttp.getBlocksByHeightWithLimit(UInt64.fromUint(start), 100).subscribe(
             (infos: BlockInfo[]) => {
               infos.map(b => commit('addBlock', b))
               blocks = blocks.concat(infos)
@@ -398,7 +398,7 @@ export default {
         const nodeHttp = RESTService.create('NodeHttp', nodeUrl)
 
         // - read nemesis from REST
-        const nemesis = await blockHttp.getBlockByHeight('1').toPromise()
+        const nemesis = await blockHttp.getBlockByHeight(UInt64.fromUint(1)).toPromise()
 
         // - read peer info from REST
         const peerInfo = await nodeHttp.getNodeInfo().toPromise()

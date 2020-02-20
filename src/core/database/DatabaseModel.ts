@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {SHA3Hasher, SignSchema, Convert} from 'nem2-sdk'
+import {SHA3Hasher, Convert} from 'nem2-sdk'
 
 // internal dependencies
 import {DatabaseRelation} from './DatabaseRelation'
@@ -127,7 +127,7 @@ export abstract class DatabaseModel {
 
     // to-json
     const json = JSON.stringify(raw)
-    const hasher = SHA3Hasher.createHasher(64, SignSchema.SHA3);
+    const hasher = SHA3Hasher.createHasher(64);
     hasher.reset();
     hasher.update(Convert.utf8ToHex(json));
 

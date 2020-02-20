@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Convert, Password, SHA3Hasher, SignSchema} from 'nem2-sdk'
+import {Convert, Password, SHA3Hasher} from 'nem2-sdk'
 import {Store} from 'vuex'
 
 // internal dependencies
@@ -66,7 +66,7 @@ export class AccountService extends AbstractService {
    * @return {string}
    */
   public getPasswordHash(password: Password): string {
-    const hasher = SHA3Hasher.createHasher(64, SignSchema.SHA3);
+    const hasher = SHA3Hasher.createHasher(64);
     hasher.reset();
     hasher.update(Convert.utf8ToHex(password.value));
 
