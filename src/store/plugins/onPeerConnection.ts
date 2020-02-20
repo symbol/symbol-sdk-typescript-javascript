@@ -24,11 +24,12 @@ export const onPeerConnection = store => {
 
       if (!!currentWallet) {
         console.log('onPeerConnection dispatching wallet actions..')
-
         store.dispatch('wallet/REST_FETCH_INFO', currentWallet.objects.address.plain())
+/*
         store.dispatch('wallet/REST_FETCH_TRANSACTIONS', currentWallet.objects.address.plain())
         store.dispatch('wallet/REST_FETCH_OWNED_MOSAICS', currentWallet.objects.address.plain())
         store.dispatch('wallet/REST_FETCH_OWNED_NAMESPACES', currentWallet.objects.address.plain())
+*/
       }
     }
   })
