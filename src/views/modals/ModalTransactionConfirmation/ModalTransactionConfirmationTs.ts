@@ -31,6 +31,7 @@ import FormAccountUnlock from '@/views/forms/FormAccountUnlock/FormAccountUnlock
 // @ts-ignore
 import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/HardwareConfirmationButton.vue'
 import { NotificationType } from '@/core/utils/NotificationType'
+import { WalletService } from '@/services/WalletService'
 
 @Component({
   components: {
@@ -133,22 +134,22 @@ export class ModalTransactionConfirmationTs extends Vue {
    * @return {void}
    */
   public async onTransactionsSigned(transactions: SignedTransaction[]) {
-    this.service = new TransactionService(this.$store)
+    const service = new TransactionService(this.$store)
 
     // - log about transaction signature success
     this.$store.dispatch('diagnostic/ADD_INFO', 'Signed ' + transactions.length + ' Transaction(s) on stage with Hardware Wallet')
 
     // - transactions are ready to be announced
-    transactions.map(async (signed) => await this.$store.commit('wallet/addSignedTransaction', signed))
+    for (let i = 0, m = transactions.length; i < m; i++) {
+      const signed = transactions[i]
+      this.$store.commit('wallet/addSignedTransaction', signed)
+    }
 
     // - reset transaction stage
-    this.show = false
-    this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
-
-    // - XXX end-user should be able to uncheck "announce now"
+    await this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
 
     // - broadcast signed transactions
-    const results: BroadcastResult[] = await this.service.announceSignedTransactions()
+    const results: BroadcastResult[] = await service.announceSignedTransactions()
 
     // - notify about errors
     const errors = results.filter(result => false === result.success)
@@ -172,8 +173,6 @@ export class ModalTransactionConfirmationTs extends Vue {
    * @return {void}
    */
   public onAccountUnlocked({account}: {account: Account}): void {
-    this.service = new TransactionService(this.$store)
-
     // - log about unlock success
     this.$store.dispatch('diagnostic/ADD_INFO', 'Account ' + account.address.plain() + ' unlocked successfully.')
 
@@ -194,11 +193,10 @@ export class ModalTransactionConfirmationTs extends Vue {
 
     // - notify about successful transaction announce
     this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
-  
-  
+
     // - broadcast signed transactions
-    this.service
-      .announceSignedTransactions()
+    const service = new TransactionService(this.$store)
+    service.announceSignedTransactions()
       .then(results => {
         const errors = results.filter(result => false === result.success)    // - notify about errors
         if (errors.length) {

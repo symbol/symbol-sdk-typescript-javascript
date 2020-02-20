@@ -128,8 +128,6 @@ export class PageLayoutTs extends Vue {
       return ;
     }
 
-    console.log("dispatching SET_CURRENT_WALLET")
     await this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
-    console.log("done SET_CURRENT_WALLET")
   }
 }

@@ -24,9 +24,10 @@ import {
   TransactionService,
   AggregateTransaction,
   Order,
+  TransactionAnnounceResponse,
 } from 'nem2-sdk'
 import {Subscription, Observable, from} from 'rxjs'
-import {map} from 'rxjs/operators'
+import {map, catchError, mergeMap, flatMap, tap} from 'rxjs/operators'
 
 // internal dependencies
 import {$eventBus} from '../events'
@@ -246,13 +247,18 @@ export default {
       const signed = state.signedTransactions
 
       // - find transaction by hash and delete
-      const findIndex = signed.findIndex(tx => tx.hash === transaction.hash)
-      if (undefined !== findIndex) {
-        delete signed[findIndex]
+      const idx = signed.findIndex(tx => tx.hash === transaction.hash)
+      if (undefined === idx) {
+        return ;
       }
 
+      // skip `idx`
+      const remaining = signed.splice(0, idx).concat(
+        signed.splice(idx+1, signed.length - idx - 1)
+      )
+
       // - use Array.from to reset indexes
-      return Vue.set(state, 'signedTransactions', Array.from(signed))
+      return Vue.set(state, 'signedTransactions', Array.from(remaining))
     },
   },
   actions: {
@@ -692,10 +698,10 @@ export default {
         ])
       }
     },
-    REST_ANNOUNCE_TRANSACTION(
+    async REST_ANNOUNCE_TRANSACTION(
       {commit, dispatch, rootGetters},
       signedTransaction: SignedTransaction
-    ): Observable<BroadcastResult> {
+    ): Promise<BroadcastResult> {
 
       dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_ANNOUNCE_TRANSACTION dispatched with: ' + JSON.stringify({
         hash: signedTransaction.hash,
@@ -707,22 +713,14 @@ export default {
         const currentPeer = rootGetters['network/currentPeer'].url
         const wsEndpoint = rootGetters['network/wsEndpoint']
         const transactionHttp = RESTService.create('TransactionHttp', currentPeer)
-        const receiptHttp = RESTService.create('ReceiptHttp', currentPeer)
-        const listener = new Listener(wsEndpoint)
 
         // prepare nem2-sdk TransactionService
-        const service = new TransactionService(transactionHttp, receiptHttp)
-        return service.announce(signedTransaction, listener).pipe(
-          map((transaction: Transaction) => {
-            commit('removeSignedTransaction', signedTransaction)
-            return new BroadcastResult(signedTransaction, true)
-          })
-        )
+        const response = await transactionHttp.announce(signedTransaction)
+        commit('removeSignedTransaction', signedTransaction)
+        return new BroadcastResult(signedTransaction, true)
       }
       catch(e) {
-        return from([
-          new BroadcastResult(signedTransaction, false, e.toString()),
-        ])
+        return new BroadcastResult(signedTransaction, false, e.toString())
       }
     },
 /// end-region scoped actions

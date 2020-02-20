@@ -253,8 +253,13 @@ export class TransactionService extends AbstractService {
         TransactionType.LOCK
       ].includes(tx.type))
 
-    return transactions.map(
-      async (transaction: SignedTransaction) => await this.$store.dispatch('wallet/REST_ANNOUNCE_TRANSACTION', transaction)
-    )
+    const results: BroadcastResult[] = []
+    for (let i = 0, m = transactions.length; i < m; i++) {
+      const transaction = transactions[i]
+      const result = await this.$store.dispatch('wallet/REST_ANNOUNCE_TRANSACTION', transaction)
+      results.push(result)
+    }
+    
+    return results
   }
 }
