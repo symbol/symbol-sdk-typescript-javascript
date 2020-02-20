@@ -32,14 +32,6 @@ import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
 
-const getNetworkFromNetworkType = (networkType: NetworkType): Network => {
-  if (undefined !== [NetworkType.MIJIN, NetworkType.MIJIN_TEST].find(type => networkType === type)) {
-      return Network.CATAPULT
-  }
-
-  return Network.CATAPULT_PUBLIC
-}
-
 export class WalletService extends AbstractService {
   /**
    * Service name
@@ -136,8 +128,7 @@ export class WalletService extends AbstractService {
     }
 
     // create hd extended key
-    const network = getNetworkFromNetworkType(networkType)
-    const extendedKey = ExtendedKey.createFromSeed(mnemonic.toSeed().toString('hex'), network)
+    const extendedKey = ExtendedKey.createFromSeed(mnemonic.toSeed().toString('hex'), Network.CATAPULT)
 
     // create wallet
     const wallet = new Wallet(extendedKey)
@@ -157,7 +148,7 @@ export class WalletService extends AbstractService {
   ): ExtendedKey {
     return ExtendedKey.createFromSeed(
       mnemonic.toSeed().toString('hex'),
-      getNetworkFromNetworkType(networkType)
+      Network.CATAPULT
     )
   }
 
@@ -176,7 +167,7 @@ export class WalletService extends AbstractService {
       Buffer.from(account.privateKey),
       undefined, // publicKey
       Buffer.from(''), // chainCode
-      getNetworkFromNetworkType(networkType)
+      Network.CATAPULT
     )
     return new ExtendedKey(nodeEd25519, nodeEd25519.network)
   }
