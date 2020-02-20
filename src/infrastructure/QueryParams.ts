@@ -35,20 +35,34 @@ export class QueryParams {
      */
     public pageSize = 10;
     /**
-     * Id after which we want objects to be returned
-     */
-    public id?: string;
-    /**
      * Order of transactions.
      * DESC. Newer to older.
      * ASC. Older to newer.
      */
+
     public order: Order = Order.DESC;
 
     /**
-     * Constructor
+     * Id after which we want objects to be returned
      */
-    constructor() {
+    public id?: string;
+
+    /**
+     * Creates an instance of QueryParams.
+     * @param {{
+     *         pageSize?: number,
+     *         order?: Order,
+     *         id?: string;
+     *     }} configuration arguments
+     */
+    constructor(args: {
+        pageSize?: number,
+        order?: Order,
+        id?: string;
+    }) {
+        if (args.pageSize) this.setPageSize(args.pageSize)
+        if (args.order) this.setOrder(Order[args.order])
+        if (args.id) this.setId(args.id)
     }
 
     public setPageSize(pageSize: number): QueryParams {
