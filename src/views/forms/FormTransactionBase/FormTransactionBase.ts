@@ -238,6 +238,8 @@ export class FormTransactionBase extends Vue {
   public onConfirmationSuccess() {
     this.resetForm()
     this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS_ACCOUNT_UNLOCKED)
+    this.hasConfirmationModal = false
+    this.$emit('on-confirmation-success')
   }
 
   /**
@@ -255,8 +257,8 @@ export class FormTransactionBase extends Vue {
    * @return {void}
    */
   public onConfirmationCancel() {
-    this.hasConfirmationModal = false
     this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
+    this.hasConfirmationModal = false
   }
 
   /**

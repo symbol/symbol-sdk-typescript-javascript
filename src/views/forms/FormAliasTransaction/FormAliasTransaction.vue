@@ -41,7 +41,6 @@
             </ValidationProvider>
           </div>
 
-          <!-- Form for LINK alias action -->
           <div v-if="aliasAction === AliasAction.Link">
             <NamespaceSelector
               v-model="formItems.namespaceFullName"
@@ -52,6 +51,7 @@
               v-if="aliasTargetType === 'mosaic'"
               v-model="formItems.aliasTarget"
               :mosaics="linkableMosaics"
+              default-mosaic="firstInList"
               label="form_label_link_mosaic"
             />
             <!-- Transfer recipient input field -->
@@ -75,6 +75,13 @@
         </button>
       </form>
     </ValidationObserver>
+    <ModalTransactionConfirmation
+      v-if="hasConfirmationModal"
+      :visible="hasConfirmationModal"
+      @success="onConfirmationSuccess"
+      @error="onConfirmationError"
+      @close="onConfirmationCancel"
+    />
   </FormWrapper>
 </template>
 

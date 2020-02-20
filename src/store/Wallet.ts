@@ -23,6 +23,7 @@ import {
   SignedTransaction,
   TransactionService,
   AggregateTransaction,
+  Order,
 } from 'nem2-sdk'
 import {Subscription, Observable, from} from 'rxjs'
 import {map} from 'rxjs/operators'
@@ -640,7 +641,9 @@ export default {
 
         // fetch account info from REST gateway
         const namespaceHttp = RESTService.create('NamespaceHttp', currentPeer)
-        const ownedNamespaces = await namespaceHttp.getNamespacesFromAccount(addressObject).toPromise()
+        const ownedNamespaces = await namespaceHttp.getNamespacesFromAccount(
+          addressObject, { pageSize: 100, order: Order.ASC }, // @TODO: Handle more than 100 namespaces
+        ).toPromise()
 
         // store multisig info
         if (currentWallet && currentWallet.values.get('address') === address) {

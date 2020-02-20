@@ -75,18 +75,30 @@ export class NamespaceSelectorTs extends Vue {
   set chosenValue(newValue: string) {
     this.$emit('input', newValue)
   }
-/// end-region computed properties getter/setter
 
+/// end-region computed properties getter/setter
   /**
    * Helper method to read namespace name if available
    * @param {NamespaceInfo} info 
    * @return {string}
    */
   public getName(info: NamespaceInfo): string {
+    if (!info) return null
     if (this.namespacesNames.hasOwnProperty(info.id.toHex())) {
       return this.namespacesNames[info.id.toHex()]
     }
 
     return info.id.toHex()
+  }
+
+  /**
+   * Hook called when the layout is mounted
+   * @return {void}
+   */
+  public mounted(): void {
+    // set default value to the first namespace in the list
+    if (this.namespaces.length) {
+      this.chosenValue = this.getName(this.namespaces[0])
+    }
   }
 }

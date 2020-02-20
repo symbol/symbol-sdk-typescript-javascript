@@ -134,8 +134,14 @@ export default {
         mosaicId: currencyMosaic.objects.mosaicId,
       })
 
-      // - populate known mosaics
-      withFeed.mosaics.map(m => commit('addMosaicInfo', m.objects.mosaicInfo))
+      withFeed.mosaics.forEach((model) => {
+        // - populate known mosaics
+        commit('addMosaicInfo', model.objects.mosaicInfo)
+
+        // - populate known mosaic names
+        const name = model.values.get('name')
+        if (name !== '') commit('addMosaicName', { hex: model.getIdentifier(), name })
+      })
       return {
         currencyMosaic,
         knownMosaics: withFeed.mosaics

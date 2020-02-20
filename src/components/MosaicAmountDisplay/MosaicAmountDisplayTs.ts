@@ -86,6 +86,9 @@ export class MosaicAmountDisplayTs extends Vue {
     else if (this.absolute) {
       return this.absoluteAmount
     }
+    else if (!this.absolute && this.absoluteAmount && this.divisibility >= 0) {
+      return this.absoluteAmount / Math.pow(10, this.divisibility)
+    }
 
     return this.relativeAmount
   }

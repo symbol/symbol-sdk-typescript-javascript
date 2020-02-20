@@ -58,6 +58,13 @@
         </button>
       </form>
     </ValidationObserver>
+    <ModalTransactionConfirmation
+      v-if="hasConfirmationModal"
+      :visible="hasConfirmationModal"
+      @success="onConfirmationSuccess"
+      @error="onConfirmationError"
+      @close="onConfirmationCancel"
+    />
   </FormWrapper>
 </template>
 

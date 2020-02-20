@@ -1108,12 +1108,12 @@
   "wallets_label_flags": "Flags",
   "wallets_flags_known_by_network": "Broadcasted Account",
   "wallets_flags_unknown_by_network": "Private Account",
-  "unlink_namespace_from": "Unlink {aliasTarget} from {namespaceName}",
-  "at_block": "at block {blockNumber}",
   "wallets_flags_default_wallet_explain": "This is your default wallet",
   "wallets_flags_multisig_explain": "This is a multi-signature wallet",
   "wallets_flags_simple_explain": "This is a simple wallet",
   "wallets_links_explorer": "Explorer",
   "wallets_links_faucet": "Faucet",
-  "wallets_subtitle_account_links": "Useful links"
+  "wallets_subtitle_account_links": "Useful links",
+  "unlink_namespace_from": "Unlink {aliasTarget} from {namespaceName}",
+  "at_block": "at block {blockNumber}"
 }

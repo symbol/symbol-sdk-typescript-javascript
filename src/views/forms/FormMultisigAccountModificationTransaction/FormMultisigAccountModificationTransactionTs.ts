@@ -156,6 +156,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
       const transaction = this.stagedTransactions.find(
         staged => staged.type === TransactionType.MODIFY_MULTISIG_ACCOUNT,
       )
+      if (transaction === undefined) return
       this.setTransactions([transaction as MultisigAccountModificationTransaction])
       this.isAwaitingSignature = true
       return

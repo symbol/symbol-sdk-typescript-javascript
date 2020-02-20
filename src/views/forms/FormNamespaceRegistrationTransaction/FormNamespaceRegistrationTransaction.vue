@@ -36,7 +36,7 @@
           v-if="formItems.registrationType === typeSubNamespace && ownedNamespaces.length"
           v-model="formItems.parentNamespaceName"
           label="form_label_parent_namespace"
-          :namespaces="ownedNamespaces"
+          :namespaces="fertileNamespaces"
         />
 
         <NamespaceNameInput
@@ -70,6 +70,7 @@
       :visible="hasConfirmationModal"
       @success="onConfirmationSuccess"
       @error="onConfirmationError"
+      @close="onConfirmationCancel"
     />
   </FormWrapper>
 </template>

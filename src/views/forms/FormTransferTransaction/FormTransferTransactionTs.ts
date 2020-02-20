@@ -133,6 +133,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     // - re-populate form if transaction staged
     if (this.stagedTransactions.length) {
       const transfer = this.stagedTransactions.find(staged => staged.type === TransactionType.TRANSFER)
+      if (transfer === undefined) return
       this.setTransactions([transfer as TransferTransaction])
       this.isAwaitingSignature = true
       return ;

@@ -31,9 +31,11 @@ import {NamespaceService} from '@/services/NamespaceService'
 // child components
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+// @ts-ignore
+import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
 
 @Component({
-  components: {ErrorTooltip},
+  components: {ErrorTooltip, ModalTransactionConfirmation},
   computed: {
     ...mapGetters({
       currentHeight: 'network/currentHeight',

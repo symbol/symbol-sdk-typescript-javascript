@@ -345,9 +345,9 @@ export class TableDisplayTs extends Vue {
     // populate asset form modal props if asset is a namespace
     if (this.assetType === 'namespace') {
       this.modalFormsProps.namespaceId = new NamespaceId(rowValues.name),
-      this.modalFormsProps.aliasTarget = rowValues.aliasTarget
-        ? getInstantiatedAlias(rowValues.aliasType, rowValues.aliasTarget) : null
-      this.modalFormsProps.aliasAction = rowValues.aliasTarget ? AliasAction.Unlink : AliasAction.Link
+      this.modalFormsProps.aliasTarget = rowValues.aliasIdentifier === 'N/A' ? null : rowValues.aliasIdentifier 
+        ? getInstantiatedAlias(rowValues.aliasType, rowValues.aliasIdentifier) : null
+      this.modalFormsProps.aliasAction = rowValues.aliasIdentifier === 'N/A' ? AliasAction.Link : AliasAction.Unlink
     }
 
     // show the alias form modal

@@ -18,11 +18,11 @@
             :placeholder="$t('Select_a_namespace')"
           >
             <Option
-              v-for="(info) in namespaces"
-              :key="getName(info)"
-              :value="getName(info)"
+              v-for="(namespaceInfo) in namespaces"
+              :key="getName(namespaceInfo)"
+              :value="getName(namespaceInfo)"
             >
-              {{ getName(info) }}
+              {{ getName(namespaceInfo) }}
             </Option>
           </Select>
         </div>

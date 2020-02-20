@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 import {
-  TransactionType, AliasTransaction, NamespaceId, MosaicId, Address, AliasAction, AliasType,
-  AddressAliasTransaction, MosaicAliasTransaction, MosaicInfo, NamespaceInfo, UInt64, Mosaic,
+  AliasTransaction, NamespaceId, MosaicId, Address, AliasAction, AliasType,
+  AddressAliasTransaction, MosaicAliasTransaction, MosaicInfo, NamespaceInfo,
+  UInt64, Mosaic, TransactionType,
 } from 'nem2-sdk'
 import {Component, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
@@ -42,6 +43,8 @@ import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue'
 import AddressInput from '@/components/AddressInput/AddressInput.vue'
 // @ts-ignore
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
+// @ts-ignore
+import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
 
 @Component({
   components: {
@@ -54,11 +57,13 @@ import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
     MosaicSelector,
     AddressInput,
     MaxFeeSelector,
+    ModalTransactionConfirmation,
   },
   computed: {...mapGetters({
     ownedNamespaces: 'wallet/currentWalletOwnedNamespaces', 
     ownedMosaics: 'wallet/currentWalletOwnedMosaics',
     mosaicsNamesByHex: 'mosaic/mosaicsNames',
+    currentHeight: 'network/currentHeight',
   })},
 })
 export class FormAliasTransactionTs extends FormTransactionBase {
@@ -120,6 +125,13 @@ export class FormAliasTransactionTs extends FormTransactionBase {
   private mosaicsNamesByHex: Record<string, string>
 
   /**
+   * Current network height
+   * @private
+   * @type {number}
+   */
+  private currentHeight: number
+
+  /**
    * Current wallet namespace hex Ids that can be linked
    * @readonly
    * @protected
@@ -133,13 +145,20 @@ export class FormAliasTransactionTs extends FormTransactionBase {
   
   /**
    * Current wallet mosaics hex Ids that can be linked
-   * @readonly
+   * @readonly  
    * @protected
    * @type {Mosaic}
    */
   protected get linkableMosaics(): Mosaic[] {
     return this.ownedMosaics
-      .filter(({id}) => this.mosaicsNamesByHex[id.toHex()] === undefined)
+      .filter((mosaicInfo) => {
+        // no mosaics with names
+        if (this.mosaicsNamesByHex[mosaicInfo.id.toHex()] !== undefined) return false
+
+        // mosaics must not be expired
+        if (mosaicInfo.duration.compact() == 0) return true
+        return mosaicInfo.height.compact() + mosaicInfo.duration.compact() > this.currentHeight
+      })
       .map(({id}) => new Mosaic(id, UInt64.fromUint(0)))
   }
 
@@ -201,7 +220,7 @@ export class FormAliasTransactionTs extends FormTransactionBase {
         maxFee: UInt64.fromUint(this.formItems.maxFee),
       })
       
-      // - prepare transfer transaction
+      // - prepare transaction
       return [this.factory.build(view)]
     } catch (error) {
       console.error('Error happened in FormAliasTransactionTs.transactions(): ', error)
@@ -221,15 +240,15 @@ export class FormAliasTransactionTs extends FormTransactionBase {
 
     // - populate for items if transaction is an address alias
     if (transaction instanceof AddressAliasTransaction) {
-      this.formItems.namespaceFullName = transaction.namespaceId
-      this.formItems.aliasTarget = transaction.address
+      this.formItems.namespaceFullName = transaction.namespaceId.fullName
+      this.formItems.aliasTarget = transaction.address.plain()
       this.formItems.aliasAction = transaction.aliasAction
     }
 
     // - populate for items if transaction is an mosaic alias
     if (transaction instanceof MosaicAliasTransaction) {
-      this.formItems.namespaceFullName = transaction.namespaceId
-      this.formItems.aliasTarget = transaction.namespaceId
+      this.formItems.namespaceFullName = transaction.namespaceId.fullName
+      this.formItems.aliasTarget = transaction.namespaceId.toHex()
       this.formItems.aliasAction = transaction.aliasAction
     }
     

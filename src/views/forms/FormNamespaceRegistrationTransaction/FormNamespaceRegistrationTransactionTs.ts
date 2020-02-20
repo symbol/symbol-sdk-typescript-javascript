@@ -42,6 +42,9 @@ import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
 // @ts-ignore
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
 
+// configuration
+import networkConfig from '@/../config/network.conf.json'
+
 @Component({
   components: {
     ValidationObserver,
@@ -98,6 +101,23 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
   }
 
   /**
+   * Max namespace depth allowed by the network
+   * @private
+   * @type {number}
+   */
+  private maxNamespaceDepth: number = networkConfig.networks['testnet-publicTest'].properties.maxNamespaceDepth
+
+  /**
+   * Namespaces that can have children
+   * @readonly
+   * @protected
+   * @type {NamespaceInfo[]}
+   */
+  protected get fertileNamespaces(): NamespaceInfo[] {
+    return this.ownedNamespaces.filter(({depth}) => depth < this.maxNamespaceDepth)
+  }
+
+  /**
    * Reset the form with properties
    * @return {void}
    */
@@ -142,15 +162,12 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
         maxFee: UInt64.fromUint(this.formItems.maxFee),
       }
       
-      // - prepare mosaic definition transaction
+      // - prepare transaction
       let view = new ViewNamespaceRegistrationTransaction(this.$store)
       view = view.parse(data)
       
-      // - prepare mosaic definition and supply change
-      const a = [
-        this.factory.build(view),
-      ]
-      return a
+      // - return instantiated Transaction
+      return [this.factory.build(view)]
     } catch (error) {
       console.error('Error happened in FormNamespaceRegistrationTransaction.transactions(): ', error)
     }

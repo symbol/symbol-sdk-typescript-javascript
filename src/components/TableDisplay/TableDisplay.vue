@@ -77,6 +77,7 @@
           :namespace-id="modalFormsProps.namespaceId"
           :alias-target="modalFormsProps.aliasTarget"
           :alias-action="modalFormsProps.aliasAction"
+          @on-confirmation-success="closeModal('aliasTransaction')"
         />
       </template>
     </ModalFormWrap>
@@ -88,20 +89,26 @@
       @close="closeModal('extendNamespaceDurationTransaction')"
     >
       <template v-slot:form>
-        <FormExtendNamespaceDurationTransaction :namespace-id="modalFormsProps.namespaceId" />
+        <FormExtendNamespaceDurationTransaction
+          :namespace-id="modalFormsProps.namespaceId"
+          @on-confirmation-success="closeModal('extendNamespaceDurationTransaction')"
+        />
       </template>
     </ModalFormWrap>
 
-    <ModalFormWrap
+    <!-- <ModalFormWrap
       v-if="modalFormsVisibility.mosaicSupplyChangeTransaction"
       :visible="modalFormsVisibility.mosaicSupplyChangeTransaction"
       title="modal_title_mosaic_supply_change"
       @close="closeModal('mosaicSupplyChangeTransaction')"
     >
       <template v-slot:form>
-        <FormMosaicSupplyChangeTransaction :namespace-id="modalFormsProps.mosaicId" />
+        <FormMosaicSupplyChangeTransaction
+          :namespace-id="modalFormsProps.mosaicId"
+          @on-confirmation-success="closeModal('mosaicSupplyChangeTransaction')"
+        />
       </template>
-    </ModalFormWrap>
+    </ModalFormWrap> -->
   </div>
 </template>
 

@@ -19,7 +19,7 @@
         <div v-for="(mosaic, index) in transaction.mosaics" :key="index">
           <MosaicAmountDisplay
             :id="mosaic.id"
-            :amount="mosaic.amount"
+            :absolute-amount="mosaic.amount.compact()"
             :color="isIncomingTransaction() ? 'green' : 'red'"
           />
         </div>

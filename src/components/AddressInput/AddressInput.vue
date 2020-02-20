@@ -6,7 +6,7 @@
       mode="lazy"
       vid="recipient"
       :name="$t('recipient')"
-      :rules="`address:${networkType}`"
+      :rules="`required|address:${networkType}`"
       tag="div"
       class="inline-container"
     >

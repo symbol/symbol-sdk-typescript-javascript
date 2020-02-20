@@ -3,22 +3,29 @@
     <FormLabel v-if="label">
       {{ $t(label) }}
     </FormLabel>
-    <ErrorTooltip field-name="selectedMosaic">
-      <Select
-        v-model="selectedMosaicName"
-        v-focus
-        class="select-size select-style"
-        @on-change="onChange"
-      >
-        <Option 
-          v-for="m in displayedMosaics"
-          :key="m.getIdentifier()"
-          :value="m.values.get('name')"
+    <ValidationProvider
+      v-slot="{ errors }"
+      vid="selectedMosaic"
+      :name="$t(label)"
+      :rules="'required'"
+      tag="div"
+    >
+      <ErrorTooltip :errors="errors">
+        <Select
+          v-model="selectedMosaic"
+          v-focus
+          class="select-size select-style"
         >
-          {{ m.values.get('name') !== '' ? m.values.get('name') : m.values.get('hexId') }} 
-        </Option>
-      </Select>
-    </ErrorTooltip>
+          <Option 
+            v-for="m in displayedMosaics"
+            :key="m.getIdentifier()"
+            :value="m.getIdentifier()"
+          >
+            {{ m.values.get('name') !== '' ? m.values.get('name') : m.values.get('hexId') }} 
+          </Option>
+        </Select>
+      </ErrorTooltip>
+    </ValidationProvider>
   </div>
 </template>
 

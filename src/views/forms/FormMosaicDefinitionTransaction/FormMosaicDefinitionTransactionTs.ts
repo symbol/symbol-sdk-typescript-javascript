@@ -94,6 +94,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     if (this.stagedTransactions.length) {
       const definition = this.stagedTransactions.find(staged => staged.type === TransactionType.MOSAIC_DEFINITION)
       const supply = this.stagedTransactions.find(staged => staged.type === TransactionType.MOSAIC_SUPPLY_CHANGE)
+      if (definition === undefined || supply === undefined) return
       this.setTransactions([
         definition as MosaicDefinitionTransaction,
         supply as MosaicSupplyChangeTransaction

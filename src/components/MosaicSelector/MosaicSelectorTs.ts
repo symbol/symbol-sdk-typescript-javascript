@@ -22,6 +22,7 @@ import {MosaicService} from '@/services/MosaicService'
 import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
 
 // child components
+import {ValidationProvider} from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components//ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
@@ -29,6 +30,7 @@ import FormLabel from '@/components//FormLabel/FormLabel.vue'
 
 @Component({
   components: {
+    ValidationProvider,
     ErrorTooltip,
     FormLabel,
   },
@@ -37,7 +39,7 @@ import FormLabel from '@/components//FormLabel/FormLabel.vue'
     networkMosaicName: 'mosaic/networkMosaicName',
     mosaicsInfo: 'mosaic/mosaicsInfoList',
     mosaicsNames: 'mosaic/mosaicsNames',
-  })}
+  })},
 })
 export class MosaicSelectorTs extends Vue {
 
@@ -55,11 +57,13 @@ export class MosaicSelectorTs extends Vue {
 
 
   /**
-   * Field labelm hidden by default
+   * Field label hidden by default
    * @type {string}
    */
   @Prop({ default: null }) label: string
 
+
+  @Prop({ default: 'networkMosaic' }) defaultMosaic: 'networkMosaic' | 'firstInList'
   /**
    * Networks currency mosaic
    * @var {MosaicId}
@@ -86,12 +90,6 @@ export class MosaicSelectorTs extends Vue {
    */
   public mosaicsNames: any
 
-  public created() {
-    if (this.networkMosaic) {
-      this.selectedMosaic = this.networkMosaic.toHex()
-    }
-  }
-
 /// region computed properties getter/setter
   /**
    * All mosaics stored in db
@@ -115,41 +113,34 @@ export class MosaicSelectorTs extends Vue {
       .filter(x => x) // filter out the mosaics of which info has not yet been fetched
   }
 
+  /**
+   * Sets the default input value
+   * @type {string}
+   */
   public get selectedMosaic(): string {
-    return this.value || this.networkMosaic.toHex()
+    return this.value
   }
 
+  /**
+   * Emits input value change to parent component
+   */
   public set selectedMosaic(hex: string) {
     this.$emit('input', hex)
   }
 
-  public get selectedMosaicName(): string {
-    const exists = this.allMosaics.filter(
-      m => m.getIdentifier() === this.selectedMosaic
-    )
-
-    return exists.length ? exists.shift().values.get('name') : this.selectedMosaic
-  }
-
-  public set selectedMosaicName(n: string) {
-    const exists = this.allMosaics.filter(
-      m => m.values.get('name') === n
-    )
-
-    this.selectedMosaic = exists.length ? exists.shift().getIdentifier() : this.networkMosaic.toHex()
-  }
-  /// end-region computed properties getter/setter
-
-  public onChange (input: string) {
-    const canFindByName = this.allMosaics.find(m => m.values.get('name') === input)
-    if (undefined !== canFindByName) { 
-      this.selectedMosaic = canFindByName.getIdentifier()
-      return
+  /**
+   * Hook called when the layout is mounted
+   * @return {void}
+   */
+  public mounted(): void {
+    // set default value to network mosaic
+    if (this.defaultMosaic === 'networkMosaic' && this.networkMosaic) {
+      this.selectedMosaic = this.networkMosaic.toHex()
     }
 
-    const canFindByHex = this.allMosaics.find(m => m.getIdentifier() === input)
-    if (undefined !== canFindByHex) {
-      this.selectedMosaic = canFindByHex.getIdentifier()
+    // set default value to the first mosaic from the props
+    if (this.defaultMosaic === 'firstInList' && this.mosaics.length) {
+      this.selectedMosaic = this.mosaics[0].id.toHex()
     }
   }
 }
