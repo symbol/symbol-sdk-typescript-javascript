@@ -250,7 +250,7 @@ export default class LoginPageTs extends Vue {
 
     // LOGIN SUCCESS: update app state
     await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)
-    await this.$store.dispatch('wallet/SET_CURRENT_WALLET', defaultWallet)
+    await this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: defaultWallet})
     this.$store.dispatch('wallet/SET_KNOWN_WALLETS', account.values.get('wallets'))
     this.$store.dispatch('diagnostic/ADD_DEBUG', 'Account login successful with identifier: ' + account.getIdentifier())
 

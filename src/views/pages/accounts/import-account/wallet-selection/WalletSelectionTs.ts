@@ -173,7 +173,7 @@ export default class WalletSelectionTs extends Vue {
         // Store wallets using repository
         this.walletsRepository.create(wallet.values)
         // set current wallet
-        if (index === 0) this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
+        if (index === 0) this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: wallet})
         // add wallets to account
         this.$store.dispatch('account/ADD_WALLET', wallet)
       })

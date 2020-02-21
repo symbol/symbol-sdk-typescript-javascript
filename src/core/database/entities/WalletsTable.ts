@@ -26,7 +26,7 @@ export class WalletsTable extends DatabaseTable {
       'address',
       'publicKey',
       'encPrivate',
-      'envIv',
+      'encIv',
       'path',
       'isMultisig'
     ])

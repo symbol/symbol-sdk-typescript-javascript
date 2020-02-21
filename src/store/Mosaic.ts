@@ -219,7 +219,8 @@ export default {
     },
     async REST_FETCH_INFO({commit, rootGetters}, mosaicId) {
       const nodeUrl = rootGetters['network/currentPeer'].url
-      const mosaicHttp = RESTService.create('MosaicHttp', nodeUrl)
+      const networkType = rootGetters['network/networkType']
+      const mosaicHttp = RESTService.create('MosaicHttp', nodeUrl, networkType)
       const mosaicInfo = await mosaicHttp.getMosaic(mosaicId).toPromise()
 
       commit('addMosaicInfo', mosaicInfo)
@@ -227,7 +228,8 @@ export default {
     },
     async REST_FETCH_INFOS({commit, rootGetters}, mosaicIds) {
       const nodeUrl = rootGetters['network/currentPeer'].url
-      const mosaicHttp = RESTService.create('MosaicHttp', nodeUrl)
+      const networkType = rootGetters['network/networkType']
+      const mosaicHttp = RESTService.create('MosaicHttp', nodeUrl, networkType)
       const mosaicsInfo = await mosaicHttp.getMosaics(mosaicIds).toPromise()
 
       mosaicsInfo.map(info => commit('addMosaicInfo', info))
@@ -235,7 +237,8 @@ export default {
     },
     async REST_FETCH_NAMES({commit, rootGetters}, mosaicIds): Promise<{hex: string, name: string}[]> {
       const nodeUrl = rootGetters['network/currentPeer'].url
-      const namespaceHttp = RESTService.create('NamespaceHttp', nodeUrl)
+      const networkType = rootGetters['network/networkType']
+      const namespaceHttp = RESTService.create('NamespaceHttp', nodeUrl, networkType)
       const mosaicNames = await namespaceHttp.getMosaicsNames(mosaicIds).toPromise()
 
       // map by hex if names available

@@ -137,6 +137,12 @@ export class FormTransactionBase extends Vue {
 /// end-region property watches
 
   /**
+   * The initial wallet that is active
+   * @var {WalletsModel}
+   */
+  public initialWallet: WalletsModel
+
+  /**
    * Whether the transaction should be signed by a different
    * account than the active wallet.
    * @var {boolean}
@@ -162,11 +168,20 @@ export class FormTransactionBase extends Vue {
   public mounted() {
     if (this.currentWallet) {
       this.currentSigner = this.currentWallet.objects.publicAccount.publicKey
+      this.initialWallet = this.currentWallet
 
       const address = this.currentWallet.objects.address.plain()
       try { this.$store.dispatch('wallet/REST_FETCH_MULTISIG', address) } catch(e) {}
       try { this.$store.dispatch('wallet/REST_FETCH_OWNED_NAMESPACES', address) } catch(e) {}
     }
+  }
+
+  /**
+   * Hook called when the component is being destroyed (before)
+   * @return {void}
+   */
+  public beforeDestroy() {
+    this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: this.initialWallet})
   }
 
 /// region computed properties getter/setter
@@ -228,6 +243,17 @@ export class FormTransactionBase extends Vue {
    */
   public onChangeSigner(signerPublicKey: string) {
     this.currentSigner = signerPublicKey
+
+    const isCosig = this.initialWallet.values.get('publicKey') !== signerPublicKey
+    const model = !isCosig ? this.initialWallet : {
+      networkType: this.networkType,
+      publicKey: signerPublicKey
+    }
+
+    this.$store.dispatch('wallet/SET_CURRENT_WALLET', {
+      model,
+      options: {isCosignatoryMode: isCosig}
+    })
   }
 
   /**

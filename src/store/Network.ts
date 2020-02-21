@@ -396,7 +396,9 @@ export default {
         return false
       }
     },
-    async REST_FETCH_PEER_INFO({commit}, nodeUrl: string) {
+    async REST_FETCH_PEER_INFO({commit, dispatch}, nodeUrl: string) {
+      dispatch('diagnostic/ADD_DEBUG', 'Store action network/REST_FETCH_PEER_INFO dispatched with: ' + nodeUrl, {root: true})
+
       try {
         const blockHttp = RESTService.create('BlockHttp', nodeUrl)
         const chainHttp = RESTService.create('ChainHttp', nodeUrl)

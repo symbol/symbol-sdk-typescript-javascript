@@ -37,6 +37,7 @@ import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
   computed: {...mapGetters({
     currentWallet: 'wallet/currentWallet',
     currentWalletMosaics: 'wallet/currentWalletMosaics',
+    isCosignatoryMode: 'wallet/isCosignatoryMode',
     networkMosaic: 'mosaic/networkMosaic',
     networkMosaicTicker: 'mosaic/networkMosaicTicker',
   })}
@@ -53,6 +54,12 @@ export class AccountBalancesPanelTs extends Vue {
    * @var {Mosaic[]}
    */
   public currentWalletMosaics: Mosaic[]
+
+  /**
+   * Whether currently active wallet is in cosignatory mode
+   * @var {boolean}
+   */
+  public isCosignatoryMode: boolean
 
   /**
    * Networks currency mosaic

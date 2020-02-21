@@ -222,7 +222,7 @@ export class FormSubWalletCreationTs extends Vue {
 
       // - update app state
       this.$store.dispatch('account/ADD_WALLET', subWallet)
-      this.$store.dispatch('wallet/SET_CURRENT_WALLET', subWallet)
+      this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: subWallet})
       this.$store.dispatch('wallet/SET_KNOWN_WALLETS', wallets)
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
       this.$emit('submit', this.formItems)

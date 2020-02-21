@@ -16,6 +16,7 @@
         <WindowControls />
 
         <div class="app_controller clear">
+          <button type="button" @click="hasDebugConsoleModal = true">Debug</button>
           <PeerSelector />
           <LanguageSelector />
           <WalletSelectorField @input="onChangeWallet" />
@@ -27,6 +28,13 @@
         <router-view />
       </div>
     </transition>
+
+    <ModalDebugConsole
+      v-if="hasDebugConsoleModal"
+      :visible="hasDebugConsoleModal"
+      :title="$t('modal_title_debug_console')"
+      @close="hasDebugConsoleModal = false"
+    />
   </div>
 </template>
 

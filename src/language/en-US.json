@@ -1047,6 +1047,7 @@
   "modal_title_unlink_alias": "Unlink alias from namespace",
   "modal_title_extend_namespace_duration": "Extend namespace duration",
   "modal_title_mosaic_supply_change": "Modify mosaic supply",
+  "modal_title_debug_console": "Diagnostic Console",
 
   "action_label_alias_link": "Link",
   "action_label_alias_unlink": "Unlink",

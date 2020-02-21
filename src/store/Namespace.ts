@@ -83,7 +83,8 @@ export default {
     },
     async REST_FETCH_INFO({commit, rootGetters}, namespaceId: NamespaceId) {
       const nodeUrl = rootGetters['network/currentPeer'].url
-      const namespaceHttp = RESTService.create('NamespaceHttp', nodeUrl)
+      const networkType = rootGetters['network/networkType']
+      const namespaceHttp = RESTService.create('NamespaceHttp', nodeUrl, networkType)
       const namespaceInfo = await namespaceHttp.getNamespace(namespaceId).toPromise()
 
       commit('addNamespaceInfo', namespaceInfo)
@@ -91,7 +92,8 @@ export default {
     },
     async REST_FETCH_NAMES({commit, rootGetters}, namespaceIds: NamespaceId[]): Promise<{hex: string, name: string}[]> {
       const nodeUrl = rootGetters['network/currentPeer'].url
-      const namespaceHttp = RESTService.create('NamespaceHttp', nodeUrl)
+      const networkType = rootGetters['network/networkType']
+      const namespaceHttp = RESTService.create('NamespaceHttp', nodeUrl, networkType)
       const namespaceNames = await namespaceHttp.getNamespacesName(namespaceIds).toPromise()
 
       // map by hex if names available

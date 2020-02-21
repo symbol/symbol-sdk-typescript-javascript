@@ -419,16 +419,6 @@ export const routes: AppRoute[] = [
             // @ts-ignore
             component: () => import('@/views/pages/settings/AboutPage/AboutPage.vue'),
           },
-          {
-            path: 'diagnostic',
-            name: 'settings.diagnostic',
-            meta: {
-              protected: true,
-              title: i18n.t('page_title_settings_diagnostic').toString(),
-            },
-            // @ts-ignore
-            component: () => import('@/views/pages/settings/DiagnosticPage/DiagnosticPage.vue'),
-          },
         ],
         /// end-region settings children
       },

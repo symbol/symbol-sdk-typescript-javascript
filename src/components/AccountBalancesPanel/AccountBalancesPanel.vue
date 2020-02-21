@@ -1,6 +1,11 @@
 <template>
   <div class="balances-panel-container">
-    <div class="top_wallet_address radius">
+    <div :class="{
+        'top_wallet_address': true,
+        'radius': true,
+        'grayed': isCosignatoryMode,
+        'purpled': !isCosignatoryMode
+      }">
       <div class="wallet_address">
         <span class="address">
           {{ currentWallet ? currentWallet.objects.address.plain() : $t('loading') }}

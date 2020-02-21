@@ -38,6 +38,8 @@ import PeerSelector from '@/components/PeerSelector/PeerSelector.vue'
 import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue'
 // @ts-ignore
 import WalletSelectorField from '@/components/WalletSelectorField/WalletSelectorField.vue'
+// @ts-ignore
+import ModalDebugConsole from '@/views/modals/ModalDebugConsole/ModalDebugConsole.vue'
 
 @Component({
   components: {
@@ -48,6 +50,7 @@ import WalletSelectorField from '@/components/WalletSelectorField/WalletSelector
     PeerSelector,
     LanguageSelector,
     WalletSelectorField,
+    ModalDebugConsole,
   },
   computed: {
     ...mapGetters({
@@ -101,6 +104,8 @@ export class PageLayoutTs extends Vue {
    */
   public generationHash: string
 
+  public isDisplayingDebugConsole: boolean = false
+
 /// region computed properties getter/setter
   /**
    * Holds alert message
@@ -121,6 +126,14 @@ export class PageLayoutTs extends Vue {
 
     return {show: false, message: ''}
   }
+
+  get hasDebugConsoleModal(): boolean {
+    return this.isDisplayingDebugConsole
+  }
+
+  set hasDebugConsoleModal(f: boolean) {
+    this.isDisplayingDebugConsole = f
+  }
 /// end-region computed properties getter/setter
 
   /**
@@ -140,6 +153,6 @@ export class PageLayoutTs extends Vue {
       return ;
     }
 
-    await this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
+    await this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: wallet})
   }
 }

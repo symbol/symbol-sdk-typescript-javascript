@@ -33,6 +33,7 @@ import {
   RestrictionMosaicHttp,
   TransactionHttp,
   TransactionStatusError,
+  NetworkType,
 } from 'nem2-sdk'
 import {Subscription} from 'rxjs'
 
@@ -66,19 +67,19 @@ export class RESTService extends AbstractService {
   }
 
   /// region specialised signatures
-  public static create(name: 'AccountHttp', url: string): AccountHttp
-  public static create(name: 'BlockHttp', url: string): BlockHttp
-  public static create(name: 'ChainHttp', url: string): ChainHttp
-  public static create(name: 'MetadataHttp', url: string): MetadataHttp
-  public static create(name: 'MosaicHttp', url: string): MosaicHttp
-  public static create(name: 'MultisigHttp', url: string): MultisigHttp
-  public static create(name: 'NamespaceHttp', url: string): NamespaceHttp
-  public static create(name: 'NetworkHttp', url: string): NetworkHttp
-  public static create(name: 'NodeHttp', url: string): NodeHttp
-  public static create(name: 'ReceiptHttp', url: string): ReceiptHttp
-  public static create(name: 'RestrictionAccountHttp', url: string): RestrictionAccountHttp
-  public static create(name: 'RestrictionMosaicHttp', url: string): RestrictionMosaicHttp
-  public static create(name: 'TransactionHttp', url: string): TransactionHttp
+  public static create(name: 'AccountHttp', url: string, networkType?: NetworkType): AccountHttp
+  public static create(name: 'BlockHttp', url: string, networkType?: NetworkType): BlockHttp
+  public static create(name: 'ChainHttp', url: string, networkType?: NetworkType): ChainHttp
+  public static create(name: 'MetadataHttp', url: string, networkType?: NetworkType): MetadataHttp
+  public static create(name: 'MosaicHttp', url: string, networkType?: NetworkType): MosaicHttp
+  public static create(name: 'MultisigHttp', url: string, networkType?: NetworkType): MultisigHttp
+  public static create(name: 'NamespaceHttp', url: string, networkType?: NetworkType): NamespaceHttp
+  public static create(name: 'NetworkHttp', url: string, networkType?: NetworkType): NetworkHttp
+  public static create(name: 'NodeHttp', url: string, networkType?: NetworkType): NodeHttp
+  public static create(name: 'ReceiptHttp', url: string, networkType?: NetworkType): ReceiptHttp
+  public static create(name: 'RestrictionAccountHttp', url: string, networkType?: NetworkType): RestrictionAccountHttp
+  public static create(name: 'RestrictionMosaicHttp', url: string, networkType?: NetworkType): RestrictionMosaicHttp
+  public static create(name: 'TransactionHttp', url: string, networkType?: NetworkType): TransactionHttp
   /// end-region specialised signatures
 
   /**
@@ -88,7 +89,8 @@ export class RESTService extends AbstractService {
    */
   public static create(
     name: string,
-    nodeUrl: string
+    nodeUrl: string,
+    networkType?: NetworkType,
   ): HttpRepositoryImpl {
     let repository: HttpRepositoryImpl
     switch (name) {
@@ -96,9 +98,9 @@ export class RESTService extends AbstractService {
     case 'BlockHttp': repository = new BlockHttp(nodeUrl); break
     case 'ChainHttp': repository = new ChainHttp(nodeUrl); break
     case 'MetadataHttp': repository = new MetadataHttp(nodeUrl); break
-    case 'MosaicHttp': repository = new MosaicHttp(nodeUrl); break
-    case 'MultisigHttp': repository = new MultisigHttp(nodeUrl); break
-    case 'NamespaceHttp': repository = new NamespaceHttp(nodeUrl); break
+    case 'MosaicHttp': repository = new MosaicHttp(nodeUrl, networkType); break
+    case 'MultisigHttp': repository = new MultisigHttp(nodeUrl, networkType); break
+    case 'NamespaceHttp': repository = new NamespaceHttp(nodeUrl, networkType); break
     case 'NetworkHttp': repository = new NetworkHttp(nodeUrl); break
     case 'NodeHttp': repository = new NodeHttp(nodeUrl); break
     case 'ReceiptHttp': repository = new ReceiptHttp(nodeUrl); break

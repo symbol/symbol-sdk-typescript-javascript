@@ -129,7 +129,10 @@ export class SignerSelectorTs extends Vue {
       },
     ]
 
+    console.log("musig info: ", this.multisigInfo)
     if (this.multisigInfo) {
+      console.log("...musig info: ", ...this.multisigInfo.multisigAccounts)
+
       return self.concat(...this.multisigInfo.multisigAccounts.map(
         ({publicKey}) => ({
           publicKey,
