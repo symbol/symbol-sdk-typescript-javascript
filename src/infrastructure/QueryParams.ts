@@ -35,34 +35,48 @@ export class QueryParams {
      */
     public pageSize = 10;
     /**
-     * Id after which we want objects to be returned
-     */
-    public id?: string;
-    /**
      * Order of transactions.
      * DESC. Newer to older.
      * ASC. Older to newer.
      */
+
     public order: Order = Order.DESC;
 
     /**
-     * Constructor
+     * Id after which we want objects to be returned
      */
-    constructor() {
+    public id?: string;
+
+    /**
+     * Constructor
+     * @param {{
+     *         pageSize?: number,
+     *         order?: Order,
+     *         id?: string;
+     *     }} configuration arguments
+     */
+    constructor(args?: {
+        pageSize?: number,
+        order?: Order,
+        id?: string;
+    }) {
+        if (args) {
+            if (args.pageSize) this.setPageSize(args.pageSize)
+            if (args.order) this.order = args.order
+            if (args.id) this.id = args.id
+        }
     }
 
-    public setPageSize(pageSize: number): QueryParams {
-        this.pageSize = (pageSize >= 10 && pageSize <= 100) ? pageSize : 10;
-        return this;
-    }
-
-    public setId(id?: string): QueryParams {
-        this.id = id;
-        return this;
-    }
-
-    public setOrder(order: Order = Order.DESC): QueryParams {
-        this.order = order;
-        return this;
+    /**
+     * Set page size
+     * @private
+     * @param {number} [pageSize]
+     * @returns {void}
+     */
+    private setPageSize(pageSize?: number): void {
+        if (pageSize && pageSize > 100) {
+            throw new Error('The page size has to be between 10 and 100')
+        }
+        this.pageSize = pageSize || 10
     }
 }

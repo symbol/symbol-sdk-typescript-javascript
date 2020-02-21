@@ -15,7 +15,6 @@
  */
 
 import { TransactionType } from '../model/transaction/TransactionType';
-import { QueryParams } from './QueryParams';
 
 /**
  * The Transaction filter class
@@ -24,27 +23,29 @@ export class TransactionFilter {
     /**
      * Transaction type list
      */
-    public type?: TransactionType[];
+    readonly types?: TransactionType[];
+
     /**
      * Constructor
+     * @param {{
+     *         type: TransactionType[],
+     *     }} [args]
      */
-    constructor() {
-    }
-
-    public setType(type?: TransactionType[]): TransactionFilter {
-        this.type = type;
-        return this;
+    constructor(args?: {
+        types?: TransactionType[],
+    }) {
+        if (args && args.types) this.types = args.types
     }
 
     /**
-     * Return comma seperated list
-     * @param type Transaction type list
+     * Return comma separated list
+     * @param types Transaction type list
      */
-    public convertCSV(type?: TransactionType[]): string | undefined {
-        if (!type || type.length === 0) {
+    public convertCSV(types?: TransactionType[]): string | undefined {
+        if (!types || types.length === 0) {
             return undefined;
         } else {
-            return type.map((t) => t.valueOf().toString()).join(',');
+            return types.map((t) => t.valueOf().toString()).join(',');
         }
     }
 }

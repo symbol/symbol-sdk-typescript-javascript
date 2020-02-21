@@ -59,7 +59,7 @@ export abstract class Http {
 
     transactionFilter(filter?: TransactionFilter): any {
         return {
-            type: filter ? filter.convertCSV(filter.type) : undefined,
+            type: filter ? filter.convertCSV(filter.types) : undefined,
         };
     }
 
