@@ -140,6 +140,7 @@ export class DashboardInvoicePageTs extends Vue {
 
     try {
       return QRCodeGenerator.createTransactionRequest(
+        // @ts-ignore // @TODO SDK upgrade
         transfer,
         this.networkType,
         this.generationHash,

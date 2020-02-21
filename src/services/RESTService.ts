@@ -20,7 +20,6 @@ import {
   BlockHttp,
   BlockInfo,
   ChainHttp,
-  DiagnosticHttp,
   Http,
   Listener,
   MetadataHttp,
@@ -52,12 +51,6 @@ export class RESTService extends AbstractService {
   public name: string = 'rest'
 
   /**
-   * REST repositories cache
-   * @var {Map<string, RepositoryImpl>} 
-   */
-  public static _cache: Map<string, HttpRepositoryImpl> = new Map
-
-  /**
    * Vuex Store 
    * @var {Vuex.Store}
    */
@@ -76,7 +69,6 @@ export class RESTService extends AbstractService {
   public static create(name: 'AccountHttp', url: string): AccountHttp
   public static create(name: 'BlockHttp', url: string): BlockHttp
   public static create(name: 'ChainHttp', url: string): ChainHttp
-  public static create(name: 'DiagnosticHttp', url: string): DiagnosticHttp
   public static create(name: 'MetadataHttp', url: string): MetadataHttp
   public static create(name: 'MosaicHttp', url: string): MosaicHttp
   public static create(name: 'MultisigHttp', url: string): MultisigHttp
@@ -98,17 +90,11 @@ export class RESTService extends AbstractService {
     name: string,
     nodeUrl: string
   ): HttpRepositoryImpl {
-    // try to use previous instance
-    if (RESTService._cache && RESTService._cache.has(name)) {
-      return RESTService._cache.get(name)
-    }
-
     let repository: HttpRepositoryImpl
     switch (name) {
     case 'AccountHttp': repository = new AccountHttp(nodeUrl); break
     case 'BlockHttp': repository = new BlockHttp(nodeUrl); break
     case 'ChainHttp': repository = new ChainHttp(nodeUrl); break
-    case 'DiagnosticHttp': repository = new DiagnosticHttp(nodeUrl); break
     case 'MetadataHttp': repository = new MetadataHttp(nodeUrl); break
     case 'MosaicHttp': repository = new MosaicHttp(nodeUrl); break
     case 'MultisigHttp': repository = new MultisigHttp(nodeUrl); break
@@ -123,7 +109,6 @@ export class RESTService extends AbstractService {
     default: throw new Error('Could not find a REST repository by name \'' + name + ' \'')
     }
 
-    RESTService._cache.set(name, repository)
     return repository
   }
 

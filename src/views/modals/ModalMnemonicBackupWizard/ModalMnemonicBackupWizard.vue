@@ -26,7 +26,7 @@
         <div v-if="stepIndex === 0" class="stepItem1">
           <form
             class="centered"
-            @submit.prevent="validateForm('mnemonic-dialog')"
+            onsubmit="event.preventDefault()"
             @keyup.enter="submit"
           >
             <input

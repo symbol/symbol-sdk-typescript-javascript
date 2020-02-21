@@ -24,10 +24,10 @@ import {
   TransactionService,
   AggregateTransaction,
   Order,
-  TransactionAnnounceResponse,
+  AccountInfo,
 } from 'nem2-sdk'
 import {Subscription, Observable, from} from 'rxjs'
-import {map, catchError, mergeMap, flatMap, tap} from 'rxjs/operators'
+import {map} from 'rxjs/operators'
 
 // internal dependencies
 import {$eventBus} from '../events'
@@ -195,12 +195,10 @@ export default {
     partialTransactions: (state, transactions) => Vue.set(state, 'partialTransactions', transactions),
     setSubscriptions: (state, data) => Vue.set(state, 'subscriptions', data),
     addSubscriptions: (state, payload) => {
-      if (payload && payload.length) {
-        const subscriptions = state.subscriptions
-        subscriptions.push(payload)
+      const subscriptions = state.subscriptions
+      subscriptions.push(payload)
 
-        Vue.set(state, 'subscriptions', subscriptions)
-      }
+      Vue.set(state, 'subscriptions', subscriptions)
     },
     addTransactionToCache: (state, payload) => {
       if (payload === undefined) {
@@ -313,7 +311,7 @@ export default {
       await dispatch('initialize', address.plain())
       $eventBus.$emit('onWalletChange', address.plain())
     },
-    SET_KNOWN_WALLETS({commit}, wallets) {
+    SET_KNOWN_WALLETS({commit}, wallets: string[]) {
       commit('setKnownWallets', wallets)
     },
     RESET_BALANCES({dispatch}) {
@@ -420,15 +418,19 @@ export default {
     },
 
     // Unsubscribe from all open websocket connections
-    UNSUBSCRIBE({ dispatch, getters }) {
+    async UNSUBSCRIBE({ dispatch, getters }) {
       const subscriptions = getters.getSubscriptions
-      subscriptions.map((subscription: SubscriptionType) => {
-        // unsubscribe channels
-        subscription.subscriptions.map(sub => sub.unsubscribe())
 
-        // close listener
-        subscription.listener.close()
-      })
+      for (let i = 0, m = subscriptions.length; i < m; i++) {
+        const subscription = subscriptions[i]
+
+        // subscribers
+        for (let j = 0, n = subscription.subscriptions; j < n; j++) {
+          await subscription.subscriptions[j].unsubscribe()
+        }
+
+        await subscription.listener.close()
+      }
 
       // update state
       dispatch('RESET_SUBSCRIPTIONS')
@@ -450,7 +452,7 @@ export default {
       try {
         // prepare REST parameters
         const currentPeer = rootGetters['network/currentPeer'].url
-        const queryParams = new QueryParams(pageSize, id)
+        const queryParams = new QueryParams().setPageSize(pageSize).setId(id)
         const addressObject = Address.createFromRawAddress(address)
 
         // fetch transactions from REST gateway
@@ -537,9 +539,13 @@ export default {
         return false
       }
     },
-    async REST_FETCH_INFOS({commit, dispatch, getters, rootGetters}, addresses) {
+    async REST_FETCH_INFOS({commit, dispatch, getters, rootGetters}, addresses): Promise<AccountInfo[]> {
 
-      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_INFOS dispatched with : ' + JSON.stringify(addresses.map(a => a.plain())), {root: true})
+      dispatch(
+        'diagnostic/ADD_DEBUG',
+        `Store action wallet/REST_FETCH_INFOS dispatched with : ${JSON.stringify(addresses.map(a => a.plain()))}`,
+        {root: true},
+      )
 
       try {
         // prepare REST parameters
@@ -547,22 +553,26 @@ export default {
 
         // fetch account info from REST gateway
         const accountHttp = RESTService.create('AccountHttp', currentPeer)
+        const accountsInfo = await accountHttp.getAccountsInfo(addresses).toPromise()
+        
+        // add accounts to the store
+        accountsInfo.forEach(info => commit('addWalletInfo', info))
 
-        return accountHttp.getAccountsInfo(addresses).subscribe((accountsInfo) => {
-          accountsInfo.map(info => commit('addWalletInfo', info))
+        // set current wallet info
+        const currentWalletInfo = accountsInfo.find(
+          info => info.address.equals(getters.currentWalletAddress),
+        )
+        if (currentWalletInfo !== undefined) {
+          commit('currentWalletInfo', currentWalletInfo)
+          dispatch('SET_BALANCES', currentWalletInfo.mosaics)
+        }
 
-          const currentWalletInfo = accountsInfo.find(info => info.address.equals(getters.currentWalletAddress))
-          if (currentWalletInfo !== undefined) {
-            commit('currentWalletInfo', currentWalletInfo)
-            dispatch('SET_BALANCES', currentWalletInfo.mosaics)
-          }
-
-          return accountsInfo
-        }, (error) => dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch account informations: ' + error, {root: true}))
+        // return accounts info
+        return accountsInfo
       }
       catch (e) {
-        dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch account informations: ' + e, {root: true})
-        return false
+        dispatch('diagnostic/ADD_ERROR', `An error happened while trying to fetch accounts information: ${e}`, {root: true})
+        throw new Error(e)
       }
     },
     async REST_FETCH_MULTISIG({commit, dispatch, getters, rootGetters}, address) {
@@ -651,10 +661,11 @@ export default {
 
         // fetch account info from REST gateway
         const namespaceHttp = RESTService.create('NamespaceHttp', currentPeer)
-        const ownedNamespaces = await namespaceHttp.getNamespacesFromAccount(
-          addressObject, { pageSize: 100, order: Order.ASC }, // @TODO: Handle more than 100 namespaces
-        ).toPromise()
 
+        // @TODO: Handle more than 100 namespaces
+        const ownedNamespaces = await namespaceHttp.getNamespacesFromAccount(
+          addressObject, new QueryParams().setPageSize(100).setOrder(Order.ASC), 
+        ).toPromise()
         // store multisig info
         if (currentWallet && currentWallet.values.get('address') === address) {
           commit('currentWalletOwnedNamespaces', ownedNamespaces)

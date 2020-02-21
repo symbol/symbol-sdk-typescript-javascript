@@ -146,26 +146,26 @@ export class TransactionDetailsTs extends Vue {
         return this.service.getView(this.transaction as MosaicDefinitionTransaction)
       case TransactionType.MOSAIC_SUPPLY_CHANGE:
         return this.service.getView(this.transaction as MosaicSupplyChangeTransaction)
-      case TransactionType.REGISTER_NAMESPACE:
+      case TransactionType.NAMESPACE_REGISTRATION:
         return this.service.getView(this.transaction as NamespaceRegistrationTransaction)
       case TransactionType.TRANSFER:
         return this.service.getView(this.transaction as TransferTransaction)
-      case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
+      case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
         return this.service.getView(this.transaction as AccountAddressRestrictionTransaction)
-      case TransactionType.LINK_ACCOUNT:
+      case TransactionType.ACCOUNT_LINK:
         return this.service.getView(this.transaction as AccountLinkTransaction)
-      case TransactionType.ACCOUNT_METADATA_TRANSACTION:
+      case TransactionType.ACCOUNT_METADATA:
         return this.service.getView(this.transaction as AccountMetadataTransaction)
-      case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
+      case TransactionType.ACCOUNT_MOSAIC_RESTRICTION:
         return this.service.getView(this.transaction as AccountMosaicRestrictionTransaction)
-      case TransactionType.ACCOUNT_RESTRICTION_OPERATION:
+      case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
         return this.service.getView(this.transaction as AccountOperationRestrictionTransaction)
       case TransactionType.ADDRESS_ALIAS:
         return this.service.getView(this.transaction as AddressAliasTransaction)
       case TransactionType.AGGREGATE_BONDED:
       case TransactionType.AGGREGATE_COMPLETE:
         return this.service.getView(this.transaction as AggregateTransaction)
-      case TransactionType.LOCK:
+      case TransactionType.HASH_LOCK:
         return this.service.getView(this.transaction as HashLockTransaction)
       case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
         return this.service.getView(this.transaction as MosaicAddressRestrictionTransaction)
@@ -173,11 +173,11 @@ export class TransactionDetailsTs extends Vue {
         return this.service.getView(this.transaction as MosaicAliasTransaction)
       case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
         return this.service.getView(this.transaction as MosaicGlobalRestrictionTransaction)
-      case TransactionType.MOSAIC_METADATA_TRANSACTION:
+      case TransactionType.MOSAIC_METADATA:
         return this.service.getView(this.transaction as MosaicMetadataTransaction)
-      case TransactionType.MODIFY_MULTISIG_ACCOUNT:
+      case TransactionType.MULTISIG_ACCOUNT_MODIFICATION:
         return this.service.getView(this.transaction as MultisigAccountModificationTransaction)
-      case TransactionType.NAMESPACE_METADATA_TRANSACTION:
+      case TransactionType.NAMESPACE_METADATA:
         return this.service.getView(this.transaction as NamespaceMetadataTransaction)
       case TransactionType.SECRET_LOCK:
         return this.service.getView(this.transaction as SecretLockTransaction)

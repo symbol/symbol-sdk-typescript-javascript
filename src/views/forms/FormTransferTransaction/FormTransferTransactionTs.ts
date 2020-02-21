@@ -32,6 +32,7 @@ import {Formatters} from '@/core/utils/Formatters'
 import {ViewTransferTransaction, TransferFormFieldsType} from '@/core/transactions/ViewTransferTransaction'
 import {FormTransactionBase} from '@/views/forms/FormTransactionBase/FormTransactionBase'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
+import {AddressValidator} from '@/core/validation/validators'
 
 
 // child components
@@ -236,8 +237,10 @@ export class FormTransferTransactionTs extends FormTransactionBase {
    */
   protected get instantiatedRecipient(): Address | NamespaceId {
     const {recipientRaw} = this.formItems
+
     if (!recipientRaw) return null
-    if ([ 40, 46 ].includes(recipientRaw.length)) {
+
+    if (AddressValidator.validate(recipientRaw)) {
       return Address.createFromRawAddress(recipientRaw)
     }
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {BlockchainStorageInfo} from 'nem2-sdk'
+import {StorageInfo} from 'nem2-sdk'
 import Vue from 'vue'
 import axios from 'axios'
 
@@ -69,11 +69,10 @@ export default {
   actions: {
     async initialize({ commit, dispatch, getters, rootGetters }) {
       const callback = async () => {
-        // read first network block to identify currency mosaic
         const nodeUrl = rootGetters['network/currentPeer'].url
-        const diagnosticHttp = RESTService.create('DiagnosticHttp', nodeUrl)
-        const diagnostic: BlockchainStorageInfo = await diagnosticHttp.getDiagnosticStorage().toPromise()
-        
+        const nodeHttp = RESTService.create('NodeHttp', nodeUrl)
+        const diagnostic: StorageInfo = await nodeHttp.getStorageInfo().toPromise()
+
         commit('countTransactions', diagnostic.numTransactions)
         commit('countBlocks', diagnostic.numBlocks)
         commit('countAccounts', diagnostic.numAccounts)

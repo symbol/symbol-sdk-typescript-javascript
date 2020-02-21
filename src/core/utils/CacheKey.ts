@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Convert, SHA3Hasher, SignSchema} from 'nem2-sdk'
+import {Convert, SHA3Hasher} from 'nem2-sdk'
 
 export class CacheKey {
 
@@ -51,7 +51,7 @@ export class CacheKey {
 
     // create query hash
     const hash   = new Uint8Array(64)
-    const hasher = SHA3Hasher.createHasher(64, SignSchema.SHA3)
+    const hasher = SHA3Hasher.createHasher(64)
     hasher.reset()
     hasher.update(Buffer.from(query))
     hasher.finalize(hash)

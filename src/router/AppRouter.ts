@@ -42,9 +42,9 @@ export class AppRouter extends Router {
       const hasAccounts = repository.entries().size > 0
 
       // No account when app is opened: redirect to create account page
-      const skipRedirect: string[] = ['accounts.createAccount.info']
+      const skipRedirect: string[] = ['accounts.importAccount.importStrategy']
       if (!from.name && !hasAccounts && !skipRedirect.includes(to.name)) {
-        return next({name: 'accounts.createAccount.info'})
+        return next({name: 'accounts.importAccount.importStrategy'})
       }
 
       if (!to.meta.protected) {

@@ -47,6 +47,7 @@ type NetworkNodeEntry = {value: NetworkType, label: string}
   },
   computed: {...mapGetters({
     networkType: 'network/networkType',
+    generationHash: 'network/generationHash',
     currentAccount: 'account/currentAccount',
   })},
 })
@@ -64,6 +65,13 @@ export class FormAccountCreationTs extends Vue {
    * @var {NetworkType}
    */
   public networkType: NetworkType
+
+  /**
+   * Currently active network type
+   * @see {Store.Network}
+   * @var {string}
+   */
+  public generationHash: string
 
   /**
    * Accounts repository
@@ -131,7 +139,8 @@ export class FormAccountCreationTs extends Vue {
       ['password', passwordHash],
       ['hint', this.formItems.hint],
       ['networkType', this.networkType],
-      ['seed', '']
+      ['seed', ''],
+      ['generationHash', this.generationHash]
     ]))
 
     // use repository for storage
