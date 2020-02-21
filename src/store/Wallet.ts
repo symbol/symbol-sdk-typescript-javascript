@@ -24,10 +24,10 @@ import {
   TransactionService,
   AggregateTransaction,
   Order,
-  TransactionAnnounceResponse,
+  AccountInfo,
 } from 'nem2-sdk'
 import {Subscription, Observable, from} from 'rxjs'
-import {map, catchError, mergeMap, flatMap, tap} from 'rxjs/operators'
+import {map} from 'rxjs/operators'
 
 // internal dependencies
 import {$eventBus} from '../events'
@@ -311,7 +311,7 @@ export default {
       await dispatch('initialize', address.plain())
       $eventBus.$emit('onWalletChange', address.plain())
     },
-    SET_KNOWN_WALLETS({commit}, wallets) {
+    SET_KNOWN_WALLETS({commit}, wallets: string[]) {
       commit('setKnownWallets', wallets)
     },
     RESET_BALANCES({dispatch}) {
@@ -539,9 +539,13 @@ export default {
         return false
       }
     },
-    async REST_FETCH_INFOS({commit, dispatch, getters, rootGetters}, addresses) {
+    async REST_FETCH_INFOS({commit, dispatch, getters, rootGetters}, addresses): Promise<AccountInfo[]> {
 
-      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_INFOS dispatched with : ' + JSON.stringify(addresses.map(a => a.plain())), {root: true})
+      dispatch(
+        'diagnostic/ADD_DEBUG',
+        `Store action wallet/REST_FETCH_INFOS dispatched with : ${JSON.stringify(addresses.map(a => a.plain()))}`,
+        {root: true},
+      )
 
       try {
         // prepare REST parameters
@@ -549,22 +553,26 @@ export default {
 
         // fetch account info from REST gateway
         const accountHttp = RESTService.create('AccountHttp', currentPeer)
+        const accountsInfo = await accountHttp.getAccountsInfo(addresses).toPromise()
+        
+        // add accounts to the store
+        accountsInfo.forEach(info => commit('addWalletInfo', info))
 
-        return accountHttp.getAccountsInfo(addresses).subscribe((accountsInfo) => {
-          accountsInfo.map(info => commit('addWalletInfo', info))
+        // set current wallet info
+        const currentWalletInfo = accountsInfo.find(
+          info => info.address.equals(getters.currentWalletAddress),
+        )
+        if (currentWalletInfo !== undefined) {
+          commit('currentWalletInfo', currentWalletInfo)
+          dispatch('SET_BALANCES', currentWalletInfo.mosaics)
+        }
 
-          const currentWalletInfo = accountsInfo.find(info => info.address.equals(getters.currentWalletAddress))
-          if (currentWalletInfo !== undefined) {
-            commit('currentWalletInfo', currentWalletInfo)
-            dispatch('SET_BALANCES', currentWalletInfo.mosaics)
-          }
-
-          return accountsInfo
-        }, (error) => dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch account informations: ' + error, {root: true}))
+        // return accounts info
+        return accountsInfo
       }
       catch (e) {
-        dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch account informations: ' + e, {root: true})
-        return false
+        dispatch('diagnostic/ADD_ERROR', `An error happened while trying to fetch accounts information: ${e}`, {root: true})
+        throw new Error(e)
       }
     },
     async REST_FETCH_MULTISIG({commit, dispatch, getters, rootGetters}, address) {

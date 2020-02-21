@@ -27,6 +27,7 @@ import {MosaicService} from '@/services/MosaicService'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {NotificationType} from '@/core/utils/NotificationType'
+import {Formatters} from '@/core/utils/Formatters'
 
 // child components
 // @ts-ignore
@@ -45,6 +46,12 @@ import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDi
   components: {MosaicAmountDisplay},
 })
 export default class WalletSelectionTs extends Vue {
+  /**
+   * Formatting helpers
+   * @protected
+   */
+  protected formatters = Formatters
+
   /**
    * Currently active networkType
    * @see {Store.Network}
@@ -77,7 +84,7 @@ export default class WalletSelectionTs extends Vue {
    * @see {Store.Temporary}
    * @var {MnemonicPassPhrase}
    */
-  public currentMnemonic: MnemonicPassPhrase
+  public currentMnemonic: string
 
   /**
    * Wallet Service
@@ -150,52 +157,49 @@ export default class WalletSelectionTs extends Vue {
    */
   public submit() {
     // cannot submit without selecting at least one wallet
-    if (! this.selectedAccounts.length) {
+    if (!this.selectedAccounts.length) {
       return this.$store.dispatch(
         'notification/ADD_ERROR',
-        NotificationType.INPUT_EMPTY_ERROR
+        NotificationType.INPUT_EMPTY_ERROR,
       )
     }
 
     try {
-      // selected accounts must be imported to storage
-      const wallets = this.selectedAccounts.map((index, cnt) => {
-        const wallet = this.createWalletFromPathIndex(index)
-
-        // add wallet to account
-        const wallets = this.currentAccount.values.get("wallets")
-        wallets.push(wallet.getIdentifier())
-        this.currentAccount.values.set("wallets", wallets)
-
-        // use repository for storage
+      // create wallet models
+      const wallets = this.createWalletsFromPathIndexes(this.selectedAccounts)
+      
+      // save newly created wallets
+      wallets.forEach((wallet, index) => {
+        // Store wallets using repository
         this.walletsRepository.create(wallet.values)
-        this.accountsRepository.update(
-          this.currentAccount.getIdentifier(),
-          this.currentAccount.values
-        )
-
-        // set first wallet active
-        if (cnt === 0) {
-          this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
-        }
-
-        // add wallet to account
-        this.$store.dispatch('account/ADD_WALLET', wallet.values.get('name'))
-        return wallet
+        // set current wallet
+        if (index === 0) this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
+        // add wallets to account
+        this.$store.dispatch('account/ADD_WALLET', wallet)
       })
 
+      // get wallets identifiers
+      const walletIdentifiers = wallets.map(wallet => wallet.getIdentifier())
+
       // set known wallets
-      this.$store.dispatch('wallet/SET_KNOWN_WALLETS', wallets.map(w => w.getIdentifier()))
+      this.$store.dispatch('wallet/SET_KNOWN_WALLETS', walletIdentifiers)
+
+      // add wallets to account
+      this.currentAccount.values.set('wallets', walletIdentifiers)
+      // store account using repository
+      this.accountsRepository.update(
+        this.currentAccount.getIdentifier(),
+        this.currentAccount.values,
+      )
 
       // execute store actions
       this.$store.dispatch('temporary/RESET_STATE')
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
       return this.$router.push({name: 'accounts.importAccount.finalize'})
-    }
-    catch(error) {
+    } catch(error) {
       return this.$store.dispatch(
         'notification/ADD_ERROR',
-        error
+        error,
       )
     }
   }
@@ -207,22 +211,22 @@ export default class WalletSelectionTs extends Vue {
   private async initAccounts() {
     // - generate addresses
     this.addressesList = this.walletService.getAddressesFromMnemonic(
-      this.currentMnemonic,
+      new MnemonicPassPhrase(this.currentMnemonic),
       this.networkType,
       WalletService.DEFAULT_WALLET_PATH,
-      10
+      10,
     )
 
     // fetch accounts info
     const accountsInfo = await this.$store.dispatch(
       'wallet/REST_FETCH_INFOS',
-      this.addressesList
+      this.addressesList,
     )
-
+    if (!accountsInfo) return
     // map balances
     this.addressMosaicMap = this.mosaicService.mapBalanceByAddress(
       accountsInfo,
-      this.networkMosaic
+      this.networkMosaic,
     )
   }
 
@@ -230,36 +234,39 @@ export default class WalletSelectionTs extends Vue {
    * Create a wallet instance from mnemonic and path
    * @return {WalletsModel}
    */
-  private createWalletFromPathIndex(index: number): WalletsModel {
-    const path = this.derivation.incrementPathLevel(
-      WalletService.DEFAULT_WALLET_PATH,
-      DerivationPathLevels.Account,
-      index
-    )
+  private createWalletsFromPathIndexes(indexes: number[]): WalletsModel[] {
+    const paths = indexes.map(index =>
+      this.derivation.incrementPathLevel(
+        WalletService.DEFAULT_WALLET_PATH,
+        DerivationPathLevels.Account,
+        index,
+      ))
 
-    const account = this.walletService.getAccountByPath(
-      this.currentMnemonic,
+    const accounts = this.walletService.generateAccountsFromPaths(
+      new MnemonicPassPhrase(this.currentMnemonic),
       this.networkType,
-      path
+      paths,
     )
 
-    const simpleWallet = SimpleWallet.createFromPrivateKey(
-      'SeedWallet',
-      this.currentPassword,
-      account.privateKey,
-      this.networkType
-    )
+    const simpleWallets = accounts.map(account =>
+      SimpleWallet.createFromPrivateKey(
+        'SeedWallet',
+        this.currentPassword,
+        account.privateKey,
+        this.networkType,
+      ))
 
-    return new WalletsModel(new Map<string, any>([
-      ['accountName', this.currentAccount.values.get('accountName')],
-      ['name', 'Seed Wallet' + (index+1).toString()],
-      ['type', WalletType.fromDescriptor('Seed')],
-      ['address', simpleWallet.address.plain()],
-      ['publicKey', account.publicKey],
-      ['encPrivate', simpleWallet.encryptedPrivateKey.encryptedKey],
-      ['encIv', simpleWallet.encryptedPrivateKey.iv],
-      ['path', path],
-      ['isMultisig', false]
-    ]))
+    return simpleWallets.map((simpleWallet, i) =>
+      new WalletsModel(new Map<string, any>([
+        [ 'accountName', this.currentAccount.values.get('accountName') ],
+        [ 'name', `Seed Wallet${indexes[i] + 1}` ],
+        [ 'type', WalletType.fromDescriptor('Seed') ],
+        [ 'address', simpleWallet.address.plain() ],
+        [ 'publicKey', accounts[i].publicKey ],
+        [ 'encPrivate', simpleWallet.encryptedPrivateKey.encryptedKey ],
+        [ 'encIv', simpleWallet.encryptedPrivateKey.iv ],
+        [ 'path', paths[i] ],
+        [ 'isMultisig', false ],
+      ])))
   }
 }

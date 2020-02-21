@@ -21,9 +21,12 @@ import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {NotificationType} from '@/core/utils/NotificationType'
+import {Password} from 'nem2-sdk'
+import {AESEncryptionService} from '@/services/AESEncryptionService'
 
 @Component({computed: {...mapGetters({
   currentAccount: 'account/currentAccount',
+  currentPassword: 'temporary/password',
 })}})
 export default class ImportMnemonicTs extends Vue {
   /**
@@ -32,6 +35,13 @@ export default class ImportMnemonicTs extends Vue {
    * @var {string}
    */
   public currentAccount: AccountsModel
+
+  /**
+   * Previous step's password
+   * @see {Store.Temporary}
+   * @var {Password}
+   */
+  public currentPassword: Password
 
   /**
    * Account repository
@@ -80,8 +90,19 @@ export default class ImportMnemonicTs extends Vue {
     try {
       // - verify validity of mnemonic
       const mnemonic = new MnemonicPassPhrase(this.formItems.seed)
-      if (!mnemonic.isValid())
+    
+      if (!mnemonic.isValid()) {
         throw new Error('Invalid mnemonic pass phrase')
+      }
+  
+      // encrypt seed for storage
+      const encSeed = AESEncryptionService.encrypt(
+        mnemonic.toSeed(this.currentPassword.value).toString('hex'),
+        this.currentPassword,
+      )
+      // update currentAccount instance and storage
+      this.currentAccount.values.set('seed', encSeed)
+      this.accounts.update(this.currentAccount.getIdentifier(), this.currentAccount.values)
 
       // update state
       this.$store.dispatch('notification/ADD_SUCCESS', this.$t('Generate_entropy_increase_success'))

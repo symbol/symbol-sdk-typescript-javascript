@@ -2,7 +2,7 @@
   <div class="scroll">
     <FormWrapper>
       <ValidationObserver v-slot="{ handleSubmit }">
-        <form @keyup.enter="handleSubmit(submit)">
+        <form onsubmit="event.preventDefault()" @keyup.enter="handleSubmit(submit)">
           <div class="fixed-full-width-item-container">
             <div class="form-headline">
               {{ $t('Create_an_account_and_password') }}

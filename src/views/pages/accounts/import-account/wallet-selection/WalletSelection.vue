@@ -15,7 +15,7 @@
             <div v-for="(a, index) in addressesList" :key="index" @click="selectedAccounts.push(index)">
               <div v-if="!(index in selectedAccounts)" class="table-item pointer">
                 <span class="address-id">{{ index + 1 }}</span>
-                <span class="address-value">{{ miniAddress(a) }}</span>
+                <span class="address-value">{{ formatters.miniAddress(a) }}</span>
                 <span v-if="addressMosaicMap[a.plain()]" class="address-balance overflow_ellipsis">
                   <MosaicAmountDisplay :id="networkMosaic" :amount="addressMosaicMap[a.plain()]" />
                 </span>
@@ -47,8 +47,10 @@
               @click="selectedAccounts = selectedAccounts.splice(selectedAccounts.indexOf(index), 1)"
             >
               <span class="address-id"> {{ index + 1 }} </span>
-              <span class="address-value">{{ miniAddress(value) }}</span>
-              <span class="address-balance overflow_ellipsis">{{ addressMosaicMap[value.plain()] || 'N/A' }}</span>
+              <span class="address-value">{{ formatters.miniAddress(addressesList[index]) }}</span>
+              <span class="address-balance overflow_ellipsis">
+                {{ addressMosaicMap[addressesList[index].plain()] || 'N/A' }}
+              </span>
               <span class="remove-icon"><img src="@/views/resources/img/Invisible@2x.png"></span>
             </div>
           </div>

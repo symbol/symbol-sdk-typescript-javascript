@@ -203,6 +203,24 @@ export class WalletService extends AbstractService {
   }
 
   /**
+   * Generate accounts using a mnemonic and an array of paths
+   * @param {MnemonicPassPhrase} mnemonic
+   * @param {NetworkType} networkType
+   * @param {string[]} paths
+   * @returns {Account[]}
+   */
+  public generateAccountsFromPaths(
+    mnemonic: MnemonicPassPhrase,
+    networkType: NetworkType,
+    paths: string[],
+  ): Account[] {
+    // create hd extended key
+    const xkey = this.getExtendedKeyFromMnemonic(mnemonic, networkType)
+    const wallets = paths.map(path => new Wallet(xkey.derivePath(path)))
+    return wallets.map(wallet => wallet.getAccount(networkType))
+  }
+
+  /**
    * Get list of addresses using \a mnemonic
    * @return {Address[]}
    */
