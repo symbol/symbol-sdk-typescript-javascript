@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, Mosaic, MosaicInfo, NetworkType} from 'nem2-sdk'
+import {MosaicId, Mosaic, MosaicInfo, NetworkType, Address} from 'nem2-sdk'
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
@@ -55,7 +55,7 @@ export class AccountBalancesPanelTs extends Vue {
    * Currently active signer
    * @var {any}
    */
-  public currentSigner: {networkType: NetworkType, publicKey: string}
+  public currentSigner: WalletsModel
 
   /**
    * Currently active wallet's balances
@@ -128,22 +128,36 @@ export class AccountBalancesPanelTs extends Vue {
     return this.currentWalletMosaics
   }
 
+  public get currentSignerAddress(): string {
+    if (this.isCosignatoryMode && this.currentSigner) {
+      return this.currentSigner.values.get('address')
+    }
+
+    if (!this.currentWallet) {
+      return this.$t('loading').toString()
+    }
+
+    return this.currentWallet.values.get('address')
+  }
+
   public get absoluteBalance() {
-    if (!this.currentMosaics.length) {
+    const mosaics = [...this.currentMosaics]
+
+    if (!mosaics.length) {
       return 0
     }
 
     // - search for network mosaic
-    const entry = this.currentMosaics.filter(
+    const entry = mosaics.find(
       mosaic => mosaic.id.equals(this.networkMosaic.id)
     )
 
-    if (!entry.length) {
+    if (undefined === entry) {
       return 0
     }
 
     // - format to relative
-    return entry.shift().amount.compact()
+    return entry.amount.compact()
   }
 
   public get networkMosaicBalance(): number {

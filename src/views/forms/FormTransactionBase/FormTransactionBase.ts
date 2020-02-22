@@ -145,19 +145,6 @@ export class FormTransactionBase extends Vue {
 /// end-region property watches
 
   /**
-   * The initial wallet that is active
-   * @var {WalletsModel}
-   */
-  public initialWallet: WalletsModel
-
-  /**
-   * Whether the transaction should be signed by a different
-   * account than the active wallet.
-   * @var {boolean}
-   */
-  public currentSigner: string
-
-  /**
    * List of available signers
    * @var {{publicKey: string, label: string}[]}
    */
@@ -181,9 +168,6 @@ export class FormTransactionBase extends Vue {
    */
   public async mounted() {
     if (this.currentWallet) {
-      this.currentSigner = this.currentWallet.objects.publicAccount.publicKey
-      this.initialWallet = this.currentWallet
-
       const address = this.currentWallet.objects.address.plain()
       try { this.$store.dispatch('wallet/REST_FETCH_OWNED_NAMESPACES', address) } catch(e) {}
     }
@@ -204,7 +188,7 @@ export class FormTransactionBase extends Vue {
    * @return {void}
    */
   public beforeDestroy() {
-    this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {model: this.initialWallet})
+    this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {model: this.currentWallet})
   }
 
 /// region computed properties getter/setter
@@ -260,10 +244,11 @@ export class FormTransactionBase extends Vue {
    * @param {string} signerPublicKey 
    */
   public onChangeSigner(signerPublicKey: string) {
-    this.currentSigner = signerPublicKey
+    console.log("signer: ", signerPublicKey)
+    console.log("current: ", this.currentWallet.values.get('publicKey'))
 
-    const isCosig = this.initialWallet.values.get('publicKey') !== signerPublicKey
-    const payload = !isCosig ? this.initialWallet : {
+    const isCosig = this.currentWallet.values.get('publicKey') !== signerPublicKey
+    const payload = !isCosig ? this.currentWallet : {
       networkType: this.networkType,
       publicKey: signerPublicKey
     }

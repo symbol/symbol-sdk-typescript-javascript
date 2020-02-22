@@ -8,7 +8,7 @@
       }">
       <div class="wallet_address">
         <span class="address">
-          {{ currentWallet ? currentWallet.objects.address.plain() : $t('loading') }}
+          {{ currentSignerAddress }}
         </span>
         <img class="pointer"
           src="@/views/resources/img/monitor/monitorCopyAddress.png"
@@ -30,10 +30,10 @@
     <div class="bottom_account_info radius">
       <div class="mosaicListWrap">
         <Spin
-          v-if="!currentWallet || !currentWalletMosaics.length" size="large" fix
+          v-if="!currentWallet || !currentMosaics.length" size="large" fix
           class="absolute"
         />
-        <MosaicBalanceList :mosaics="currentWalletMosaics" />
+        <MosaicBalanceList :mosaics="currentMosaics" />
       </div>
     </div>
   </div>
