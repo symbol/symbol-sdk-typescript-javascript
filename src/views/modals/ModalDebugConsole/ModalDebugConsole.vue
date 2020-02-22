@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <Modal v-model="show" :title="`${$t(title)}`" :transfer="true" class-name="modal-form-wrap-container">
+  <div class="debug-console-wrapper">
+    <Modal v-model="show" :title="`${$t(title)}`" :transfer="false">
       <div class="diagnostic-container text_select">
         <div class="form-container">
           <pre class="logger">
@@ -13,7 +13,7 @@
               }">{{ '\n' }} ({{ getTime(entry) }}) [{{ getLevel(entry) }}] {{ entry.message }}</span>
           </pre>
         </div>
-    </div>
+      </div>
     </Modal>
   </div>
 </template>
@@ -22,6 +22,9 @@
 // external dependencies
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
+
+// resources
+import './ModalDebugConsole.less'
 
 @Component({
   computed: {...mapGetters({
@@ -74,26 +77,3 @@ export default class ModalDebugConsole extends Vue {
   }
 }
 </script>
-
-<style lang="less" scoped>
-.ivu-modal-content {
-  width: 8.5rem;
-}
-
-.diagnostic-container {
-  display: block;
-  width: 100%;
-  clear: both;
-  min-height: 1rem;
-
-  pre.logger {
-    max-width: 1000px;
-    max-height: 600px;
-    overflow: auto;
-
-    .normal { color: #000000; }
-    .warning { color: #ffa500; }
-    .error { color: #ff0000; }
-  }
-}
-</style>

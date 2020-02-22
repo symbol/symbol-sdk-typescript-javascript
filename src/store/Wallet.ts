@@ -28,6 +28,7 @@ import {
   PublicAccount,
   Account,
   NetworkType,
+  MultisigAccountInfo,
 } from 'nem2-sdk'
 import {Subscription, Observable, from} from 'rxjs'
 import {map} from 'rxjs/operators'
@@ -67,7 +68,7 @@ const transactionGroupToStateVariable = (
  * @param payload
  */
 const getAddressByPayload = (
-  payload: WalletsModel | Account | PublicAccount | Address | string
+  payload: WalletsModel | Account | PublicAccount | Address | {networkType: NetworkType, publicKey?: string, name?: string}
 ): Address => {
   if (payload instanceof WalletsModel) {
     return Address.createFromRawAddress(payload.values.get('address'))
@@ -80,8 +81,12 @@ const getAddressByPayload = (
     return payload
   }
 
-  // - finally from string
-  return Address.createFromRawAddress(payload.toString())
+  // - finally from payload
+  const publicAccount = PublicAccount.createFromPublicKey(
+    payload.publicKey,
+    payload.networkType
+  )
+  return publicAccount.address
 }
 
 /**
@@ -89,7 +94,7 @@ const getAddressByPayload = (
  * @param payload
  */
 const getWalletByPayload = (
-  payload: WalletsModel | Account | PublicAccount | Address | {networkType: NetworkType, publicKey?: string, address?: string, name?: string}
+  payload: WalletsModel | Account | PublicAccount | Address | {networkType: NetworkType, publicKey?: string, name?: string}
 ): WalletsModel => {
   if (payload instanceof WalletsModel) {
     return payload
@@ -151,10 +156,13 @@ export default {
   namespaced: true,
   state: {
     initialized: false,
+    currentSigner: null,
     currentWallet: '',
     currentWalletAddress: null,
     currentWalletInfo: null,
+    currentSignerInfo: null,
     currentWalletMosaics: [],
+    currentSignerMosaics: [],
     currentMultisigInfo: null,
     currentWalletOwnedMosaics: [],
     currentWalletOwnedNamespaces: [],
@@ -179,6 +187,11 @@ export default {
       // - in case of a WalletsModel, the currentWallet instance is simply returned
       // - in case of Address/Account or other, a fake model will be created
       return getWalletByPayload(state.currentWallet)
+    },
+    currentSigner: state => {
+      // - in case of a WalletsModel, the currentWallet instance is simply returned
+      // - in case of Address/Account or other, a fake model will be created
+      return getWalletByPayload(state.currentSigner)
     },
     currentWalletAddress: state => state.currentWalletAddress,
     currentWalletInfo: state => state.currentWalletInfo,
@@ -234,9 +247,11 @@ export default {
   },
   mutations: {
     setInitialized: (state, initialized) => { state.initialized = initialized },
-    currentWallet: (state, walletName) => Vue.set(state, 'currentWallet', walletName),
+    currentWallet: (state, walletModel) => Vue.set(state, 'currentWallet', walletModel),
+    currentSigner: (state, signerPayload) => Vue.set(state, 'currentSigner', signerPayload),
     isCosignatoryMode: (state, mode) => Vue.set(state, 'isCosignatoryMode', mode),
     currentWalletAddress: (state, walletAddress) => Vue.set(state, 'currentWalletAddress', walletAddress),
+    currentSignerAddress: (state, signerAddress) => Vue.set(state, 'currentSignerAddress', signerAddress),
     currentWalletInfo: (state, currentWalletInfo) => Vue.set(state, 'currentWalletInfo', currentWalletInfo),
     currentWalletMosaics: (state, currentWalletMosaics) => Vue.set(state, 'currentWalletMosaics', currentWalletMosaics),
     currentWalletOwnedMosaics: (state, currentWalletOwnedMosaics) => Vue.set(state, 'currentWalletOwnedMosaics', currentWalletOwnedMosaics),
@@ -250,13 +265,15 @@ export default {
       // update state
       Vue.set(state, 'otherWalletsInfo', wallets)
     },
-    addOtherMultisigInfo: (state, multisigInfo) => {
+    addOtherMultisigInfo: (state, multisigInfo: MultisigAccountInfo) => {
+      const address = multisigInfo.account.address.plain()
+
       // update storage
-      let wallets = state.otherMultisigsInfo
-      wallets[multisigInfo.address.plain()] = multisigInfo
+      let othersInfo = state.otherMultisigsInfo
+      othersInfo[address] = multisigInfo
 
       // update state
-      Vue.set(state, 'otherMultisigsInfo', wallets)
+      Vue.set(state, 'otherMultisigsInfo', othersInfo)
     },
     setMultisigInfo: (state, multisigInfo) => Vue.set(state, 'currentMultisigInfo', multisigInfo),
     transactionHashes: (state, hashes) => Vue.set(state, 'transactionHashes', hashes),
@@ -339,6 +356,7 @@ export default {
      * @type {
      *    skipTransactions: boolean,
      *    skipOwnedAssets: boolean,
+     *    skipMultisig: boolean,
      * }
      */
     async initialize({ commit, dispatch, getters }, {address, options}) {
@@ -364,17 +382,21 @@ export default {
           try { dispatch('REST_FETCH_OWNED_NAMESPACES', address) } catch (e) {}
         }
 
+        if (!options || !options.skipMultisig) {
+          try { dispatch('REST_FETCH_MULTISIG', address) } catch (e) {}
+        }
+
         // open websocket connections
         dispatch('SUBSCRIBE', address)
         commit('setInitialized', true)
       }
       await Lock.initialize(callback, {commit, dispatch, getters})
     },
-    async uninitialize({ commit, dispatch, getters }, address) {
+    async uninitialize({ commit, dispatch, getters }, {address, which}) {
       const callback = async () => {
         // close websocket connections
         await dispatch('UNSUBSCRIBE', address)
-        await dispatch('RESET_BALANCES')
+        await dispatch('RESET_BALANCES', which)
         await dispatch('RESET_TRANSACTIONS')
         commit('setInitialized', false)
       }
@@ -398,33 +420,56 @@ export default {
       commit('currentWallet', model)
       commit('currentWalletAddress', address)
 
-      if (!!previous && (!options || !options.isCosignatoryMode)) {
+      console.log("got previous: ", previous)
+      if (!!previous) {
         // in normal initialize routine, old active wallet
         // connections must be closed
-        await dispatch('uninitialize', previous.values.get('address'))
+        await dispatch('uninitialize', {address: previous.values.get('address'), which: 'currentWalletMosaics'})
       }
 
-      // in case of "cosignatory mode", skip transactions fetch
-      let forwardOpts = {}
-      if (options && options.isCosignatoryMode === true) {
-        commit('isCosignatoryMode', true)
-        forwardOpts = {
-          skipTransactions: true,
-          skipOwnedAssets: false,
+      await dispatch('initialize', {address: address.plain(), options: {}})
+      $eventBus.$emit('onWalletChange', address.plain())
+    },
+    async SET_CURRENT_SIGNER({commit, dispatch, getters}, {model}) {
+      let address: Address = getAddressByPayload(model)
+      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/SET_CURRENT_SIGNER dispatched with ' + address.plain(), {root: true})
+
+      let payload = model
+      if (model instanceof WalletsModel) {
+        payload = {
+          networkType: address.networkType,
+          publicKey: model.values.get('publicKey'),
         }
       }
 
-      await dispatch('initialize', {address: address.plain(), forwardOpts})
-      $eventBus.$emit('onWalletChange', address.plain())
+      // set current signer
+      commit('currentSigner', payload)
+      commit('currentSignerAddress', address)
+
+      const previous = getters.currentSignerAddress
+      if (!!previous) {
+        // in normal SET_CURRENT_SIGNER routine, old active signer
+        // connections must be closed
+        await dispatch('uninitialize', {address: previous.plain(), which: 'currentSignerMosaics'})
+      }
+
+      // setting current signer should not fetch ALL data
+      let options = {
+        skipTransactions: true,
+        skipMultisig: true,
+        skipOwnedAssets: false,
+      }
+
+      await dispatch('initialize', {address: address.plain(), options})
     },
     SET_KNOWN_WALLETS({commit}, wallets: string[]) {
       commit('setKnownWallets', wallets)
     },
-    RESET_BALANCES({dispatch}) {
-      dispatch('SET_BALANCES', [])
+    RESET_BALANCES({dispatch}, which) {
+      dispatch('SET_BALANCES', {which, mosaics: []})
     },
-    SET_BALANCES({commit}, mosaics) {
-      commit('currentWalletMosaics', mosaics.length ? mosaics : [])
+    SET_BALANCES({commit}, {mosaics, which}) {
+      commit(which, mosaics.length ? mosaics : [])
     },
     RESET_SUBSCRIPTIONS({commit}) {
       commit('setSubscriptions', [])
@@ -632,12 +677,22 @@ export default {
           // update current wallet state if necessary
           if (address === getters.currentWalletAddress.plain()) {
             commit('currentWalletInfo', accountInfo)
-            dispatch('SET_BALANCES', accountInfo.mosaics)
+            dispatch('SET_BALANCES', {mosaics: accountInfo.mosaics, which: 'currentWalletMosaics'})
+          }
+          // update current signer state if not current wallet
+          else if (!!getters.currentSigner && address === getters.currentSignerAddress.plain()) {
+            commit('currentSignerInfo', accountInfo)
+            dispatch('SET_BALANCES', {mosaics: accountInfo.mosaics, which: 'currentSignerMosaics'})
           }
 
           return accountInfo
         }, () => {
-          dispatch('SET_BALANCES', [])
+          if (address === getters.currentWalletAddress.plain()) {
+            dispatch('SET_BALANCES', {mosaics: [], which: 'currentWalletMosaics'})
+          }
+          else if (!!getters.currentSigner && address === getters.currentSignerAddress.plain()) {
+            dispatch('SET_BALANCES', {mosaics: [], which: 'currentSignerMosaics'})
+          }
         })
       }
       catch (e) {
@@ -670,7 +725,16 @@ export default {
         )
         if (currentWalletInfo !== undefined) {
           commit('currentWalletInfo', currentWalletInfo)
-          dispatch('SET_BALANCES', currentWalletInfo.mosaics)
+          dispatch('SET_BALANCES', {mosaics: currentWalletInfo.mosaics, which: 'currentWalletMosaics'})
+        }
+
+        // .. or set current signer info
+        const currentSignerInfo = accountsInfo.find(
+          info => info.address.equals(getters.currentSignerAddress),
+        )
+        if (currentSignerInfo !== undefined) {
+          commit('currentSignerInfo', currentWalletInfo)
+          dispatch('SET_BALANCES', {mosaics: currentWalletInfo.mosaics, which: 'currentSignerMosaics'})
         }
 
         // return accounts info
@@ -691,11 +755,12 @@ export default {
       try {
         // prepare REST parameters
         const currentPeer = rootGetters['network/currentPeer'].url
+        const networkType = rootGetters['network/networkType']
         const currentWallet = getters['currentWallet']
         const addressObject = Address.createFromRawAddress(address)
 
         // fetch account info from REST gateway
-        const multisigHttp = RESTService.create('MultisigHttp', currentPeer)
+        const multisigHttp = RESTService.create('MultisigHttp', currentPeer, networkType)
         const multisigInfo = await multisigHttp.getMultisigAccountInfo(addressObject).toPromise()
 
         // store multisig info

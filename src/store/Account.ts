@@ -67,9 +67,6 @@ export default {
     },
     async SET_CURRENT_ACCOUNT({commit, dispatch}, currentAccountModel) {
 
-      // changing active account, must uninitialize wallet!
-      await dispatch('wallet/uninitialize', null, {root: true})
-
       // update state
       commit('currentAccount', currentAccountModel)
       commit('setAuthenticated', true)

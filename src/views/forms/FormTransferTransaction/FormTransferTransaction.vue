@@ -9,7 +9,8 @@
           <!-- Transaction signer selector -->
           <SignerSelector v-if="!hideSigner"
                           v-model="formItems.signerPublicKey"
-                          @input="onChangeSigner" />
+                          :signers="signers"
+                          @change="onChangeSigner" />
 
           <!-- Transfer recipient input field -->
           <RecipientInput v-model="formItems.recipientRaw" />

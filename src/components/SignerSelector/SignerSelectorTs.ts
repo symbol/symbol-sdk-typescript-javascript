@@ -28,13 +28,6 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue'
 
 @Component({
   components: {FormLabel},
-  computed: {...mapGetters({
-    networkType: 'network/networkType',
-    currentAccount: 'account/currentAccount',
-    currentWallet: 'wallet/currentWallet',
-    knownWallets: 'wallet/knownWallets',
-    multisigInfo: 'wallet/currentMultisigInfo',
-  })},
 })
 export class SignerSelectorTs extends Vue {
   /**
@@ -45,54 +38,9 @@ export class SignerSelectorTs extends Vue {
     default: '',
   }) value: string
 
-  /**
-   * Currently active networkType
-   * @see {Store.Network}
-   * @var {NetworkType}
-   */
-  public networkType: NetworkType
-
-  /**
-   * Currently active account
-   * @see {Store.Account}
-   * @var {AccountsModel}
-   */
-  public currentAccount: AccountsModel
-
-  /**
-   * Currently active wallet
-   * @see {Store.Wallet}
-   * @var {WalletsModel}
-   */
-  public currentWallet: WalletsModel
-
-  /**
-   * Active account's wallets
-   * @see {Store.Wallet}
-   * @var {WalletsModel[]}
-   */
-  public knownWallets: WalletsModel[]
-
-  /**
-   * Active wallet's multisig info
-   * @see {Store.Wallet}
-   * @var {MultisigAccountInfo}
-   */
-  public multisigInfo: MultisigAccountInfo
-
-  /**
-   * Wallet service
-   * @var {WalletService}
-   */
-  public walletService: WalletService
-
-  /**
-   * Hook called when the component is mounted
-   * @return {void}
-   */
-  public async mounted() {
-    this.walletService = new WalletService(this.$store)
-  }
+  @Prop({
+    default: () => []
+  }) signers: {publicKey: string, label: string}[]
 
   /// region computed properties getter/setter
   /**
@@ -107,40 +55,7 @@ export class SignerSelectorTs extends Vue {
    * Emit value change
    */
   set chosenSigner(newValue: string) {
-    this.$emit('input', newValue)
-  }
-
-  public get signers(): {publicKey: string, label: string}[] {
-    if (!this.currentWallet) {
-      return []
-    }
-
-    // "self"
-    const currentSigner = PublicAccount.createFromPublicKey(
-      this.currentWallet.values.get('publicKey'),
-      this.networkType,
-    )
-
-    // add multisig accounts
-    const self = [
-      {
-        publicKey: currentSigner.publicKey,
-        label: this.currentWallet.values.get('name'),
-      },
-    ]
-
-    console.log("musig info: ", this.multisigInfo)
-    if (this.multisigInfo) {
-      console.log("...musig info: ", ...this.multisigInfo.multisigAccounts)
-
-      return self.concat(...this.multisigInfo.multisigAccounts.map(
-        ({publicKey}) => ({
-          publicKey,
-          label: this.walletService.getWalletLabel(publicKey, this.networkType),
-        })))
-    }
-
-    return self
+    this.$emit('change', newValue)
   }
 /// end-region computed properties getter/setter
 }

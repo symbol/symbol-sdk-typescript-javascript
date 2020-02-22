@@ -6,7 +6,7 @@
         class="form-container mt-3"
         @keyup.enter="handleSubmit(onSubmit)"
       >
-        <SignerSelector v-model="formItems.signerPublicKey" />
+        <SignerSelector v-model="formItems.signerPublicKey" :signers="signers" />
 
         <div class="form-row">
           <ValidationProvider

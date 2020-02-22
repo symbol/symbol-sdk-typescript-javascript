@@ -5,7 +5,7 @@
         onsubmit="event.preventDefault()"
         @keyup.enter="handleSubmit(onSubmit)"
       >
-        <SignerSelector v-model="formItems.signerPublicKey" />
+        <SignerSelector v-model="formItems.signerPublicKey" :signers="signers" />
 
         <SupplyInput v-model="formItems.supply" />
 

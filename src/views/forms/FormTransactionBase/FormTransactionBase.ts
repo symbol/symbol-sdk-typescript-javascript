@@ -38,6 +38,7 @@ import {Formatters} from '@/core/utils/Formatters'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
 import {ViewTransferTransaction} from '@/core/transactions/ViewTransferTransaction'
 import {NotificationType} from '@/core/utils/NotificationType'
+import {WalletService} from '@/services/WalletService'
 
 @Component({
   computed: {...mapGetters({
@@ -47,6 +48,7 @@ import {NotificationType} from '@/core/utils/NotificationType'
     currentWallet: 'wallet/currentWallet',
     currentWalletMosaics: 'wallet/currentWalletMosaics',
     currentMultisigInfo: 'wallet/currentMultisigInfo',
+    isCosignatoryMode: 'wallet/isCosignatoryMode',
     networkMosaic: 'mosaic/networkMosaic',
     stagedTransactions: 'wallet/stagedTransactions',
     mosaicsInfo: 'mosaic/mosaicsInfoList',
@@ -97,6 +99,12 @@ export class FormTransactionBase extends Vue {
    * @var {MultisigAccountInfo}
    */
   public currentMultisigInfo: MultisigAccountInfo
+
+  /**
+   * Whether the form is in cosignatory mode (cosigner selected)
+   * @var {boolean}
+   */
+  public isCosignatoryMode: boolean
 
   /**
    * Networks currency mosaic
@@ -150,6 +158,12 @@ export class FormTransactionBase extends Vue {
   public currentSigner: string
 
   /**
+   * List of available signers
+   * @var {{publicKey: string, label: string}[]}
+   */
+  public availableSigners: {publicKey: string, label: string}[] = []
+
+  /**
    * Whether the form is currently awaiting a signature
    * @var {boolean}
    */
@@ -165,15 +179,24 @@ export class FormTransactionBase extends Vue {
    * Hook called when the component is mounted
    * @return {void}
    */
-  public mounted() {
+  public async mounted() {
     if (this.currentWallet) {
       this.currentSigner = this.currentWallet.objects.publicAccount.publicKey
       this.initialWallet = this.currentWallet
 
       const address = this.currentWallet.objects.address.plain()
-      try { this.$store.dispatch('wallet/REST_FETCH_MULTISIG', address) } catch(e) {}
       try { this.$store.dispatch('wallet/REST_FETCH_OWNED_NAMESPACES', address) } catch(e) {}
     }
+  }
+
+  /**
+   * Hook called when the component is mounted
+   * @return {void}
+   */
+  public async created() {
+    this.factory = new TransactionFactory(this.$store)
+    this.availableSigners = this.getSigners()
+    this.resetForm()
   }
 
   /**
@@ -181,27 +204,22 @@ export class FormTransactionBase extends Vue {
    * @return {void}
    */
   public beforeDestroy() {
-    this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: this.initialWallet})
+    this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {model: this.initialWallet})
   }
 
 /// region computed properties getter/setter
-  public get hasConfirmationModal(): boolean {
+  get signers(): {publicKey: string, label: string}[] {
+    return this.availableSigners
+  }
+
+  get hasConfirmationModal(): boolean {
     return this.isAwaitingSignature
   }
 
-  public set hasConfirmationModal(f: boolean) {
+  set hasConfirmationModal(f: boolean) {
     this.isAwaitingSignature = f
   }
 /// end-region computed properties getter/setter
-
-  /**
-   * Hook called when the component is created
-   * @return {void}
-   */
-  public async created() {
-    this.factory = new TransactionFactory(this.$store)
-    this.resetForm()
-  }
 
   /**
    * Reset the form with properties
@@ -245,15 +263,12 @@ export class FormTransactionBase extends Vue {
     this.currentSigner = signerPublicKey
 
     const isCosig = this.initialWallet.values.get('publicKey') !== signerPublicKey
-    const model = !isCosig ? this.initialWallet : {
+    const payload = !isCosig ? this.initialWallet : {
       networkType: this.networkType,
       publicKey: signerPublicKey
     }
 
-    this.$store.dispatch('wallet/SET_CURRENT_WALLET', {
-      model,
-      options: {isCosignatoryMode: isCosig}
-    })
+    this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {model: payload})
   }
 
   /**
@@ -346,5 +361,40 @@ export class FormTransactionBase extends Vue {
   protected getAbsoluteFee(fee: number): number {
     const divisibility = this.getDivisibility(this.networkMosaic)
     return fee * Math.pow(10, divisibility)
+  }
+
+  /**
+   * Get a list of known signers given a `currentWallet`
+   * @return {{publicKey: string, label:string}[]}
+   */
+  protected getSigners(): {publicKey: string, label: string}[] {
+    if (!this.currentWallet) {
+      return []
+    }
+
+    // "self"
+    const currentSigner = PublicAccount.createFromPublicKey(
+      this.currentWallet.values.get('publicKey'),
+      this.networkType,
+    )
+
+    // add multisig accounts
+    const self = [
+      {
+        publicKey: currentSigner.publicKey,
+        label: this.currentWallet.values.get('name'),
+      },
+    ]
+
+    if (this.currentMultisigInfo) {
+      const service = new WalletService(this.$store)
+      return self.concat(...this.currentMultisigInfo.multisigAccounts.map(
+        ({publicKey}) => ({
+          publicKey,
+          label: service.getWalletLabel(publicKey, this.networkType),
+        })))
+    }
+
+    return self
   }
 }

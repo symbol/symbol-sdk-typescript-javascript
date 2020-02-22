@@ -244,8 +244,13 @@ export class WalletService extends AbstractService {
     networkType: NetworkType
   ): string {
     const address = Address.createFromPublicKey(publicKey, networkType)
-    const known = this.$store.getters['wallet/knownWallets']
-    const findIt = known.find(wlt => publicKey === wlt.values.get('publicKey'))
+
+    // search in known wallets
+    const knownWallets = this.$store.getters['wallet/knownWallets']
+    const wallets = this.getWallets(wlt => knownWallets.includes(wlt.getIdentifier()))
+
+    // find by public key
+    const findIt = wallets.find(wlt => publicKey === wlt.values.get('publicKey'))
     if (undefined !== findIt) {
       return findIt.values.get('name')
     }

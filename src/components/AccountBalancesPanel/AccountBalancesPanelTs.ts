@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, Mosaic, MosaicInfo} from 'nem2-sdk'
+import {MosaicId, Mosaic, MosaicInfo, NetworkType} from 'nem2-sdk'
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
@@ -36,7 +36,9 @@ import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
   },
   computed: {...mapGetters({
     currentWallet: 'wallet/currentWallet',
+    currentSigner: 'wallet/currentSigner',
     currentWalletMosaics: 'wallet/currentWalletMosaics',
+    currentSignerMosaics: 'wallet/currentSignerMosaics',
     isCosignatoryMode: 'wallet/isCosignatoryMode',
     networkMosaic: 'mosaic/networkMosaic',
     networkMosaicTicker: 'mosaic/networkMosaicTicker',
@@ -50,10 +52,22 @@ export class AccountBalancesPanelTs extends Vue {
   public currentWallet: WalletsModel
 
   /**
+   * Currently active signer
+   * @var {any}
+   */
+  public currentSigner: {networkType: NetworkType, publicKey: string}
+
+  /**
    * Currently active wallet's balances
    * @var {Mosaic[]}
    */
   public currentWalletMosaics: Mosaic[]
+
+  /**
+   * Currently active signers's balances
+   * @var {Mosaic[]}
+   */
+  public currentSignerMosaics: Mosaic[]
 
   /**
    * Whether currently active wallet is in cosignatory mode
@@ -81,7 +95,6 @@ export class AccountBalancesPanelTs extends Vue {
 
   private mosaicService: MosaicService = new MosaicService(this.$store)
 
-
   /**
    * collection of known mosaics from database
    * @readonly
@@ -107,14 +120,22 @@ export class AccountBalancesPanelTs extends Vue {
   }
 
 /// region computed properties getter/setter
+  public get currentMosaics(): Mosaic[] {
+    if (this.isCosignatoryMode) {
+      return this.currentSignerMosaics
+    }
+
+    return this.currentWalletMosaics
+  }
+
   public get absoluteBalance() {
-    if (!this.currentWallet || !this.currentWalletMosaics.length) {
+    if (!this.currentMosaics.length) {
       return 0
     }
 
     // - search for network mosaic
-    const entry = this.currentWalletMosaics.filter(
-      mosaic => mosaic.id.equals(this.networkMosaic)
+    const entry = this.currentMosaics.filter(
+      mosaic => mosaic.id.equals(this.networkMosaic.id)
     )
 
     if (!entry.length) {
