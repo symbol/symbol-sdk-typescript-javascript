@@ -38,12 +38,7 @@ import {
   SecretProofTransaction,
   TransferTransaction,
   BlockInfo,
-  SignedTransaction,
-  TransactionMapping,
-  LockFundsTransaction,
 } from 'nem2-sdk'
-import {from, Observable} from 'rxjs'
-import {map, flatMap} from 'rxjs/operators'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
@@ -54,13 +49,15 @@ import {ViewMosaicSupplyChangeTransaction} from '@/core/transactions/ViewMosaicS
 import {ViewNamespaceRegistrationTransaction} from '@/core/transactions/ViewNamespaceRegistrationTransaction'
 import {ViewTransferTransaction} from '@/core/transactions/ViewTransferTransaction'
 import {ViewUnknownTransaction} from '@/core/transactions/ViewUnknownTransaction'
+import {ViewAliasTransaction} from '@/core/transactions/ViewAliasTransaction'
 
 /// region custom types
 export type TransactionViewType = ViewMosaicDefinitionTransaction
-                         | ViewMosaicSupplyChangeTransaction
-                         | ViewNamespaceRegistrationTransaction
-                         | ViewTransferTransaction
-                         | ViewUnknownTransaction
+| ViewMosaicSupplyChangeTransaction
+| ViewNamespaceRegistrationTransaction
+| ViewTransferTransaction
+| ViewUnknownTransaction
+| ViewAliasTransaction
 /// end-region custom types
 
 export class TransactionService extends AbstractService {
@@ -92,56 +89,55 @@ export class TransactionService extends AbstractService {
    */
   public getDerivateTransaction(transaction: Transaction): Transaction {
     switch(transaction.type) {
-    default:
-      throw new Error('Transaction type not supported yet.')
-    case TransactionType.TRANSFER: return transaction as TransferTransaction
-    case TransactionType.ACCOUNT_ADDRESS_RESTRICTION: return transaction as AccountAddressRestrictionTransaction
-    case TransactionType.ACCOUNT_LINK: return transaction as AccountLinkTransaction
-    case TransactionType.ACCOUNT_METADATA: return transaction as AccountMetadataTransaction
-    case TransactionType.ACCOUNT_MOSAIC_RESTRICTION: return transaction as AccountMosaicRestrictionTransaction
-    case TransactionType.ACCOUNT_OPERATION_RESTRICTION: return transaction as AccountOperationRestrictionTransaction
-    case TransactionType.ADDRESS_ALIAS: return transaction as AddressAliasTransaction
-    case TransactionType.AGGREGATE_BONDED:
-    case TransactionType.AGGREGATE_COMPLETE: return transaction as AggregateTransaction
-    case TransactionType.HASH_LOCK: return transaction as HashLockTransaction
-    case TransactionType.MOSAIC_ADDRESS_RESTRICTION: return transaction as MosaicAddressRestrictionTransaction
-    case TransactionType.MOSAIC_ALIAS: return transaction as MosaicAliasTransaction
-    case TransactionType.MOSAIC_DEFINITION: return transaction as MosaicDefinitionTransaction
-    case TransactionType.MOSAIC_GLOBAL_RESTRICTION: return transaction as MosaicGlobalRestrictionTransaction
-    case TransactionType.MOSAIC_METADATA: return transaction as MosaicMetadataTransaction
-    case TransactionType.MOSAIC_SUPPLY_CHANGE: return transaction as MosaicSupplyChangeTransaction
-    case TransactionType.MULTISIG_ACCOUNT_MODIFICATION: return transaction as MultisigAccountModificationTransaction
-    case TransactionType.NAMESPACE_METADATA: return transaction as NamespaceMetadataTransaction
-    case TransactionType.NAMESPACE_REGISTRATION: return transaction as NamespaceRegistrationTransaction
-    case TransactionType.SECRET_LOCK: return transaction as SecretLockTransaction
-    case TransactionType.SECRET_PROOF: return transaction as SecretProofTransaction
-    case TransactionType.TRANSFER: return transaction as TransferTransaction
-   }
+      default:
+        throw new Error('Transaction type not supported yet.')
+      case TransactionType.ACCOUNT_ADDRESS_RESTRICTION: return transaction as AccountAddressRestrictionTransaction
+      case TransactionType.ACCOUNT_LINK: return transaction as AccountLinkTransaction
+      case TransactionType.ACCOUNT_METADATA: return transaction as AccountMetadataTransaction
+      case TransactionType.ACCOUNT_MOSAIC_RESTRICTION: return transaction as AccountMosaicRestrictionTransaction
+      case TransactionType.ACCOUNT_OPERATION_RESTRICTION: return transaction as AccountOperationRestrictionTransaction
+      case TransactionType.ADDRESS_ALIAS: return transaction as AddressAliasTransaction
+      case TransactionType.AGGREGATE_BONDED:
+      case TransactionType.AGGREGATE_COMPLETE: return transaction as AggregateTransaction
+      case TransactionType.HASH_LOCK: return transaction as HashLockTransaction
+      case TransactionType.MOSAIC_ADDRESS_RESTRICTION: return transaction as MosaicAddressRestrictionTransaction
+      case TransactionType.MOSAIC_ALIAS: return transaction as MosaicAliasTransaction
+      case TransactionType.MOSAIC_DEFINITION: return transaction as MosaicDefinitionTransaction
+      case TransactionType.MOSAIC_GLOBAL_RESTRICTION: return transaction as MosaicGlobalRestrictionTransaction
+      case TransactionType.MOSAIC_METADATA: return transaction as MosaicMetadataTransaction
+      case TransactionType.MOSAIC_SUPPLY_CHANGE: return transaction as MosaicSupplyChangeTransaction
+      case TransactionType.MULTISIG_ACCOUNT_MODIFICATION: return transaction as MultisigAccountModificationTransaction
+      case TransactionType.NAMESPACE_METADATA: return transaction as NamespaceMetadataTransaction
+      case TransactionType.NAMESPACE_REGISTRATION: return transaction as NamespaceRegistrationTransaction
+      case TransactionType.SECRET_LOCK: return transaction as SecretLockTransaction
+      case TransactionType.SECRET_PROOF: return transaction as SecretProofTransaction
+      case TransactionType.TRANSFER: return transaction as TransferTransaction
+    }
   }
 
-/// region specialised signatures
+  /// region specialised signatures
   public getView(transaction: MosaicDefinitionTransaction): ViewMosaicDefinitionTransaction
   public getView(transaction: MosaicSupplyChangeTransaction): ViewMosaicSupplyChangeTransaction
   public getView(transaction: NamespaceRegistrationTransaction): ViewNamespaceRegistrationTransaction
   public getView(transaction: TransferTransaction): ViewTransferTransaction
-  //XXX not implemented yet
+  public getView(transaction: MosaicAliasTransaction): ViewAliasTransaction
+  public getView(transaction: AddressAliasTransaction): ViewAliasTransaction
+  // XXX not implemented yet
   public getView(transaction: AccountAddressRestrictionTransaction): ViewUnknownTransaction
   public getView(transaction: AccountLinkTransaction): ViewUnknownTransaction
   public getView(transaction: AccountMetadataTransaction): ViewUnknownTransaction
   public getView(transaction: AccountMosaicRestrictionTransaction): ViewUnknownTransaction
   public getView(transaction: AccountOperationRestrictionTransaction): ViewUnknownTransaction
-  public getView(transaction: AddressAliasTransaction): ViewUnknownTransaction
   public getView(transaction: AggregateTransaction): ViewUnknownTransaction
   public getView(transaction: HashLockTransaction): ViewUnknownTransaction
   public getView(transaction: MosaicAddressRestrictionTransaction): ViewUnknownTransaction
-  public getView(transaction: MosaicAliasTransaction): ViewUnknownTransaction
   public getView(transaction: MosaicGlobalRestrictionTransaction): ViewUnknownTransaction
   public getView(transaction: MosaicMetadataTransaction): ViewUnknownTransaction
   public getView(transaction: MultisigAccountModificationTransaction): ViewUnknownTransaction
   public getView(transaction: NamespaceMetadataTransaction): ViewUnknownTransaction
   public getView(transaction: SecretLockTransaction): ViewUnknownTransaction
   public getView(transaction: SecretProofTransaction): ViewUnknownTransaction
-/// end-region specialised signatures
+  /// end-region specialised signatures
 
   /**
    * Returns true when \a transaction is an incoming transaction
@@ -152,68 +148,73 @@ export class TransactionService extends AbstractService {
   public getView(transaction: Transaction): TransactionViewType {
     // - store shortcuts
     const currentWallet: WalletsModel = this.$store.getters['wallet/currentWallet']
-    const knownBlocks: {[h: number]: BlockInfo}= this.$store.getters['network/knownBlocks']
+    const knownBlocks: {[h: number]: BlockInfo} = this.$store.getters['network/knownBlocks']
 
     // - interpret transaction type and initialize view
     let view: TransactionViewType
+
     switch (transaction.type) {
     /// region XXX views for transaction types not yet implemented
-    case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
-    case TransactionType.ACCOUNT_LINK:
-    case TransactionType.ACCOUNT_METADATA:
-    case TransactionType.ACCOUNT_MOSAIC_RESTRICTION:
-    case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
-    case TransactionType.ADDRESS_ALIAS:
-    case TransactionType.AGGREGATE_BONDED:
-    case TransactionType.AGGREGATE_COMPLETE:
-    case TransactionType.HASH_LOCK:
-    case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
-    case TransactionType.MOSAIC_ALIAS:
-    case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
-    case TransactionType.MOSAIC_METADATA:
-    case TransactionType.MULTISIG_ACCOUNT_MODIFICATION:
-    case TransactionType.NAMESPACE_METADATA:
-    case TransactionType.SECRET_LOCK:
-    case TransactionType.SECRET_PROOF:
-      view = new ViewUnknownTransaction(this.$store);
-      view = view.use(transaction)
-      break;
+      case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
+      case TransactionType.ACCOUNT_LINK:
+      case TransactionType.ACCOUNT_METADATA:
+      case TransactionType.ACCOUNT_MOSAIC_RESTRICTION:
+      case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
+      case TransactionType.AGGREGATE_BONDED:
+      case TransactionType.AGGREGATE_COMPLETE:
+      case TransactionType.HASH_LOCK:
+      case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
+      case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
+      case TransactionType.MOSAIC_METADATA:
+      case TransactionType.MULTISIG_ACCOUNT_MODIFICATION:
+      case TransactionType.NAMESPACE_METADATA:
+      case TransactionType.SECRET_LOCK:
+      case TransactionType.SECRET_PROOF:
+        view = new ViewUnknownTransaction(this.$store)
+        view = view.use(transaction)
+        break
 
-    /// end-region XXX views for transaction types not yet implemented
-
-    case TransactionType.MOSAIC_DEFINITION:
-      view = new ViewMosaicDefinitionTransaction(this.$store);
-      view = view.use(transaction as MosaicDefinitionTransaction)
-      break;
-    case TransactionType.MOSAIC_SUPPLY_CHANGE:
-      view = new ViewMosaicSupplyChangeTransaction(this.$store); 
-      view = view.use(transaction as MosaicSupplyChangeTransaction)
-      break;
-    case TransactionType.NAMESPACE_REGISTRATION:
-      view = new ViewNamespaceRegistrationTransaction(this.$store);
-      view = view.use(transaction as NamespaceRegistrationTransaction)
-      break;
-    case TransactionType.TRANSFER:
-      view = new ViewTransferTransaction(this.$store);
-      view = view.use(transaction as TransferTransaction)
-      break;
-
-    default:
+        /// end-region XXX views for transaction types not yet implemented
+      case TransactionType.MOSAIC_DEFINITION:
+        view = new ViewMosaicDefinitionTransaction(this.$store)
+        view = view.use(transaction as MosaicDefinitionTransaction)
+        break
+      case TransactionType.MOSAIC_SUPPLY_CHANGE:
+        view = new ViewMosaicSupplyChangeTransaction(this.$store) 
+        view = view.use(transaction as MosaicSupplyChangeTransaction)
+        break
+      case TransactionType.NAMESPACE_REGISTRATION:
+        view = new ViewNamespaceRegistrationTransaction(this.$store)
+        view = view.use(transaction as NamespaceRegistrationTransaction)
+        break
+      case TransactionType.TRANSFER:
+        view = new ViewTransferTransaction(this.$store)
+        view = view.use(transaction as TransferTransaction)
+        break
+      case TransactionType.MOSAIC_ALIAS:
+        view = new ViewAliasTransaction(this.$store)
+        view = view.use(transaction as MosaicAliasTransaction)
+        break
+      case TransactionType.ADDRESS_ALIAS:
+        view = new ViewAliasTransaction(this.$store)
+        view = view.use(transaction as AddressAliasTransaction)
+        break
+      default:
       // - throw on transaction view not implemented 
-      const errorMessage = 'View not implemented for transaction type \'' + transaction.type + ' \''
-      this.$store.dispatch('diagnostic/ADD_ERROR', errorMessage)
-      throw new Error(errorMessage)
+        const errorMessage = `View not implemented for transaction type '${transaction.type} '`
+        this.$store.dispatch('diagnostic/ADD_ERROR', errorMessage)
+        throw new Error(errorMessage)
     }
 
     // - try to find block for fee information
     const height = transaction.transactionInfo ? transaction.transactionInfo.height : undefined
     const block: BlockInfo = !height ? undefined : Object.keys(knownBlocks).filter(
-      k => knownBlocks[k].height.equals(height)
+      k => knownBlocks[k].height.equals(height),
     ).map(k => knownBlocks[k]).shift()
 
     const isAggregate = [
       TransactionType.AGGREGATE_BONDED,
-      TransactionType.AGGREGATE_COMPLETE
+      TransactionType.AGGREGATE_COMPLETE,
     ].includes(transaction.type)
 
     // - set helper fields
@@ -250,11 +251,11 @@ export class TransactionService extends AbstractService {
     const transactions = signedTransactions.filter(
       tx => ![
         TransactionType.AGGREGATE_BONDED,
-        TransactionType.HASH_LOCK
+        TransactionType.HASH_LOCK,
       ].includes(tx.type))
 
     const results: BroadcastResult[] = []
-    for (let i = 0, m = transactions.length; i < m; i++) {
+    for (let i = 0, m = transactions.length; i < m; i ++) {
       const transaction = transactions[i]
       const result = await this.$store.dispatch('wallet/REST_ANNOUNCE_TRANSACTION', transaction)
       results.push(result)

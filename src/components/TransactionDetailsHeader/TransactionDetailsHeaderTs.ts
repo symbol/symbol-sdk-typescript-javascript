@@ -15,10 +15,7 @@
  */
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {
-  NetworkType,
-  MosaicId,
-} from 'nem2-sdk'
+import {NetworkType, MosaicId} from 'nem2-sdk'
 
 // internal dependencies
 import {TransactionViewType} from '@/services/TransactionService'
@@ -29,22 +26,24 @@ import networkConfig from '@/../config/network.conf.json'
 
 // child components
 // @ts-ignore
-import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
+import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
 
 @Component({
   components: {
-    MosaicAmountDisplay,
+    TransactionDetailRow,
   },
-  computed: {...mapGetters({
-    networkType: 'network/networkType',
-    networkMosaic: 'mosaic/networkMosaic',
-    networkMosaicTicker: 'mosaic/networkMosaicTicker',
-  })},
+  computed: {
+    ...mapGetters({
+      networkType: 'network/networkType',
+      networkMosaic: 'mosaic/networkMosaic',
+      networkMosaicTicker: 'mosaic/networkMosaicTicker',
+    }),
+  },
 })
 export class TransactionDetailsHeaderTs extends Vue {
 
   @Prop({
-    default: null
+    default: null,
   }) view: TransactionViewType
 
   /**
@@ -90,7 +89,43 @@ export class TransactionDetailsHeaderTs extends Vue {
     }
 
     return this.view.values.get('effectiveFee')
-        || this.view.values.get('maxFee')
-        || 0
+      || this.view.values.get('maxFee')
+      || 0
+  }
+
+  /**
+   * Displayed items
+   * @see {Store.Mosaic}
+   * @type {({ key: string, value: string | boolean, | Mosaic }[])}
+   */
+  get items(): {key: string, value: any, isMosaic?: boolean}[] {
+    return [
+      {key: 'status', value: `${this.$t(this.view.info ? 'confirmed' : 'unconfirmed')}`},
+      {
+        key: 'transaction_type',
+        value: `${this.$t(`transaction_descriptor_${this.view.transaction.type}`)}`,
+      },
+      {
+        key: 'hash',
+        value: this.view.info ? this.view.info.hash : '-',
+      },
+      {
+        key: `${this.view.info ? 'paid_fee' : 'max_fee'}`,
+        value: {
+          id: this.networkMosaic,
+          mosaicHex: this.networkMosaicTicker,
+          amount: this.getFeeAmount(),
+        },
+        isMosaic: true,
+      },
+      {
+        key: 'block_height',
+        value: this.view.info ? `${this.$t('block')} #${this.view.info.height.compact()}` : '-',
+      },
+      {
+        key: 'deadline',
+        value: `${this.view.values.get('deadline').value.toLocalDate()} ${this.view.values.get('deadline').value.toLocalTime()}`,
+      },
+    ]
   }
 }

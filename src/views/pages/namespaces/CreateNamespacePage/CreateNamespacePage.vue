@@ -5,7 +5,7 @@
     </template>
     <template v-slot:form-description>
       <div class="asset-description-title">
-        {{ $t('root_namespace_name') }}
+        {{ $t('parent_namespace') }}
       </div>
       <div class="asset-description-sub-title">
         {{ $t('namespace_name') }}

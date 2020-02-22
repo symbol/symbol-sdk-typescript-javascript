@@ -96,7 +96,7 @@
       </template>
     </ModalFormWrap>
 
-    <!-- <ModalFormWrap
+    <ModalFormWrap
       v-if="modalFormsVisibility.mosaicSupplyChangeTransaction"
       :visible="modalFormsVisibility.mosaicSupplyChangeTransaction"
       title="modal_title_mosaic_supply_change"
@@ -104,11 +104,11 @@
     >
       <template v-slot:form>
         <FormMosaicSupplyChangeTransaction
-          :namespace-id="modalFormsProps.mosaicId"
+          :namespace-hex-id="modalFormsProps.mosaicId.toHex()"
           @on-confirmation-success="closeModal('mosaicSupplyChangeTransaction')"
         />
       </template>
-    </ModalFormWrap> -->
+    </ModalFormWrap>
   </div>
 </template>
 

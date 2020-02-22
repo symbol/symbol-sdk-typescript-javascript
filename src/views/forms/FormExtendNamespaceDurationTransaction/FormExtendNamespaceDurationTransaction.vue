@@ -16,7 +16,7 @@
         <DurationInput
           v-if="formItems.registrationType === typeRootNamespace"
           v-model="formItems.duration"
-          target-asset="namespace-renewal"
+          target-asset="namespace"
           label="form_label_additional_duration"
         />
 

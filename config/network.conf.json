@@ -44,7 +44,8 @@
         "maxNamespaceDepth": 3,
         "maxAccountRestrictionValues": 512,
         "maxMosaicRestrictionValues": 20,
-        "maxMessageSize": 1024
+        "maxMessageSize": 1024,
+        "maxMosaicAtomicUnits":  9000000000000000
       }
     }
   }

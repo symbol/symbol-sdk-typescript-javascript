@@ -13,11 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// external dependencies
 import {mapGetters} from 'vuex'
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {MosaicId, MosaicInfo} from 'nem2-sdk'
 
+// internal dependencies
 import {MosaicService} from '@/services/MosaicService'
+
+// configuration
+import networkConfig from '@/../config/network.conf.json'
+const currentNetworkConfig = networkConfig.networks['testnet-publicTest']
 
 // child components
 // @ts-ignore
@@ -35,11 +41,11 @@ export class MosaicAmountDisplayTs extends Vue {
     default: null,
     required: true
   }) id: MosaicId
-    
+
   @Prop({
     default: null
   }) relativeAmount: number
-    
+
   @Prop({
     default: null
   }) absoluteAmount: number
@@ -59,26 +65,32 @@ export class MosaicAmountDisplayTs extends Vue {
     default: 'normal',
   }) size: 'normal' | 'smaller' | 'bigger' | 'biggest'
 
+  @Prop({
+    default: false,
+  }) showTicker: false
+
+  @Prop({
+    default: null,
+  }) ticker: string
+
   /**
    * Network mosaics info (all)
    * @var {MosaicInfo[]}
    */
   public mosaicsInfo: MosaicInfo[]
 
-  public divisibility: number = 0
-
+  /// region computed properties getter/setter
   /**
-   * Hook called when the component is mounted
-   * @return {void}
+   * Mosaic divisibility from database
+   * @return {number}
    */
-  public async mounted() {
+  protected get divisibility(): number {
     const service = new MosaicService(this.$store)
-    if (!this.id) return 
-    const model = await service.getMosaic(this.id)
-    this.divisibility = model.values.get('divisibility')
+    const model = service.getMosaicSync(this.id)
+    if (!model) return currentNetworkConfig.properties.maxMosaicDivisibility
+    return model.values.get('divisibility')
   }
 
-/// region computed properties getter/setter
   public get amount(): number {
     if (this.absolute && null === this.absoluteAmount) {
       return this.relativeAmount * Math.pow(10, this.divisibility)

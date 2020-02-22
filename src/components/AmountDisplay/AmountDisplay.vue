@@ -2,7 +2,7 @@
   <span class="amount-display-container">
     <span :class="['integer-part', size]">{{ integerPart }}</span>
     <span :class="['fractional-part', size]">{{ fractionalPart }}</span>
-    <span v-if="showTicker" class="ticker">&nbsp;{{ networkMosaicTicker }}</span>
+    <span v-if="showTicker" class="ticker">&nbsp;{{ displayedTicker }}</span>
   </span>
 </template>
 

@@ -116,6 +116,7 @@ export class ViewTransferTransaction extends TransactionView<TransferFormFieldsT
         const info = mosaicsInfo.find(i => i.id.equals(mosaic.id))
         const div  = info ? info.divisibility : 0
         return ({
+          id: mosaic.id,
           mosaicHex: mosaic.id.toHex(),
           amount: mosaic.amount.compact() / Math.pow(10, div)
         })

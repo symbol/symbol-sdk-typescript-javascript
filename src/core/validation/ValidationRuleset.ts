@@ -49,7 +49,7 @@ export const ValidationRuleset = {
   previousPassword: 'required|confirmLock:cipher',
   privateKey: 'min:64|max:64|privateKey',
   recipientPublicKey: 'required|publicKey',
-  supply: 'required|integer|min_value: 1',
+  supply: `required|integer|min_value: 1|max_value:${currentNetwork.properties.maxMosaicAtomicUnits}`,
   walletPassword: 'required|confirmWalletPassword:wallet',
   url: 'required|url',
   newAccountName:'required|newAccountName',

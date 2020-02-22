@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import {
-  MosaicId, UInt64, AliasTransaction, AddressAliasTransaction,
+  MosaicId, UInt64, AddressAliasTransaction,
   MosaicAliasTransaction, Address, AliasAction, NamespaceId,
 } from 'nem2-sdk'
 
@@ -66,7 +66,7 @@ export class ViewAliasTransaction extends TransactionView<AliasFormFieldsType> {
    * @param {AliasTransaction} transaction
    * @return {ViewAliasTransaction}
    */
-  public use(transaction: AliasTransaction): ViewAliasTransaction {
+  public use(transaction: MosaicAliasTransaction | AddressAliasTransaction): ViewAliasTransaction {
     // - instantiate new transaction view
     const view = new ViewAliasTransaction(this.$store)
 

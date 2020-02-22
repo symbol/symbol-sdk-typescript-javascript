@@ -210,10 +210,9 @@
   "bind": "Bind",
   "mosaic_alias_operation": "Mosaic alias operation",
   "binding_success": "Binding success",
-  "existing_supply": "Current supply",
   "change_type": "Change type",
   "increase": "Increase",
-  "cut_back": "Decrease",
+  "decrease": "Decrease",
   "change_amount": "Change amount",
   "please_enter_the_amount_of_change": "Please enter the amount of change",
   "post_change_supply": "Post change supply",
@@ -222,7 +221,7 @@
   "update_completed": "Update completed",
   "parent_name": "Parent",
   "root_namespace": "Parent",
-  "root_namespace_name": "Parent Namespace",
+  "parent_namespace": "Parent Namespace",
   "new_root_namespace": "New root namespace",
   "select_root_namespace": "Choose root namespace",
   "select_parent_namespace": "Choose parent namespace",
@@ -747,7 +746,6 @@
   "Keystore_password": "Keystore Password",
   "Network_type": "Network type",
   "mosaic_not_set": "Select a mosaic",
-  "New_supply": "New supply",
   "Expires_in": "Expires in",
   "ADD": "Add",
   "REMOVE": "Remove",
@@ -893,7 +891,7 @@
   "Remote_node_status": "Remote node status",
   "Online": "Online",
   "Unreachable": "Unreachable",
-  "MaxFee": "Max Fee",
+  "max_fee": "Max Fee",
   "total_transactions": "Total transactions",
   "password_is_invalid": "The password must contain a minimum of 8 characters with alphabet letters and numbers.",
   "all_nodes_cannot_be_deleted": "All nodes cannot be deleted",
@@ -1018,7 +1016,11 @@
   "form_label_additional_duration": "Additional duration",
   "form_label_new_expiration_time": "New expiration time",
   "form_label_namespace_name": "Namespace name",
-
+  "form_label_current_supply": "Current supply",
+  "form_label_new_supply": "New supply",
+  "form_label_supply_direction": "Supply change direction",
+  "form_label_supply_delta": "Supply change amount",
+  
   "placeholder_address": "Enter an address",
   "placeholder_address_or_alias": "Enter address or alias (e.g., nem.foundation)",
   "placeholder_address_or_public_key": "Address or public key",
@@ -1116,5 +1118,6 @@
   "wallets_links_faucet": "Faucet",
   "wallets_subtitle_account_links": "Useful links",
   "unlink_namespace_from": "Unlink {aliasTarget} from {namespaceName}",
-  "at_block": "at block {blockNumber}"
+  "at_block": "at block {blockNumber}",
+  "paid_fee": "paid fee"
 }

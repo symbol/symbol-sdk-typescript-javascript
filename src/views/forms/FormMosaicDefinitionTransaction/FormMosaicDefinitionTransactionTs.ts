@@ -17,7 +17,6 @@
 import {
   MosaicDefinitionTransaction,
   MosaicSupplyChangeTransaction,
-  PublicAccount,
   MosaicNonce,
   MosaicId,
   MosaicFlags,
@@ -26,17 +25,13 @@ import {
   TransactionType,
   Transaction,
 } from 'nem2-sdk'
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import {Component} from 'vue-property-decorator'
 
 // internal dependencies
 import {ViewMosaicDefinitionTransaction, MosaicDefinitionFormFieldsType} from '@/core/transactions/ViewMosaicDefinitionTransaction'
 import {ViewMosaicSupplyChangeTransaction, MosaicSupplyChangeFormFieldsType} from '@/core/transactions/ViewMosaicSupplyChangeTransaction'
 import {FormTransactionBase} from '@/views/forms/FormTransactionBase/FormTransactionBase'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
-
-// configuration
-import feesConfig from '@/../config/fees.conf.json'
 
 // child components
 import {ValidationObserver, ValidationProvider} from 'vee-validate'
@@ -142,7 +137,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
         maxFee: UInt64.fromUint(this.formItems.maxFee),
       }
 
-      // - read form for definition
+      // - read form for supply change
       const supplyChangeData: MosaicSupplyChangeFormFieldsType = {
         mosaicId: MosaicId.createFromNonce(randomNonce, publicAccount),
         action: MosaicSupplyChangeAction.Increase,
@@ -154,7 +149,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
       let definitionView = new ViewMosaicDefinitionTransaction(this.$store)
       definitionView = definitionView.parse(definitionData)
 
-      // - prepare mosaic definition transaction
+      // - prepare mosaic supply change transaction
       let supplyChangeView = new ViewMosaicSupplyChangeTransaction(this.$store)
       supplyChangeView = supplyChangeView.parse(supplyChangeData)
 
@@ -193,7 +188,4 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     // - populate maxFee
     this.formItems.maxFee = definition.maxFee.compact()
   }
-
-/// region computed properties getter/setter
-/// end-region computed properties getter/setter
 }
