@@ -67,7 +67,7 @@
 
           <div class="form-row">
             <button
-              class="button-style validation-button right-side-button"
+              class="button-style validation-button left-side-button"
               type="submit"
               @click="handleSubmit(onSubmit)"
             >

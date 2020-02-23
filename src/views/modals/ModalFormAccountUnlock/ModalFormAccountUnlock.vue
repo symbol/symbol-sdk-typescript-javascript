@@ -4,6 +4,7 @@
       v-model="show"
       :title="$t('modal_account_unlock_title')"
       :transfer="false"
+      class-name="modal-form-account-unlock"
     >
       <FormAccountUnlock @success="onAccountUnlocked" @error="onError" />
       <div slot="footer" class="modal-footer">
@@ -24,9 +25,14 @@ import { ModalFormAccountUnlockTs } from './ModalFormAccountUnlockTs'
 export default class ModalFormAccountUnlock extends ModalFormAccountUnlockTs {}
 </script>
 
-<style>
-.ivu-modal-content   {
-  width: 8.5rem;
+<style lang="less"> 
+.modal-form-account-unlock {
+  .ivu-modal { width: unset !important }
+  .ivu-modal-content   {
+    min-width: 8.5rem;
+    max-width: 12rem;
+    margin: auto;
+  }
 }
 
 .modal-footer {

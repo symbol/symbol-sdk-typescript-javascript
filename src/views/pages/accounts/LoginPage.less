@@ -19,14 +19,21 @@
 .login-account-wrapper {
   width: 100%;
   height: 100%;
-  background-image: linear-gradient(120deg, #5200c6ce, #44004edc);
-  background-size: cover;
+  background: linear-gradient(121deg, rgba(82, 0, 198, 1) 0%, rgba(78, 0, 167, 1) 100%);
+  opacity: 1;
   overflow: hidden;
   position: absolute;
   left: 0;
   top: 0;
   z-index: 999;
-  // opacity: .8;
+
+  .login-account-background-img {
+    width: 100%;
+    height: 100%;
+    background-image: url("../../resources/banner.png");
+    background-size: 100% 100%;
+    z-index: -999;
+  }
 
   .welcome-box {
     width: 1200px;
@@ -41,25 +48,39 @@
     align-items: center;
 
     .banner-image {
-      height: 500px;
+      height: 620px;
       width: 800px;
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-image: linear-gradient(120deg, #5200c6b7, #44004ebd);
+      background: linear-gradient(121deg, rgba(82, 0, 198, 1) 0%, rgba(78, 0, 167, 1) 100%);
       color: @white;
       padding: 30px 40px;
 
       .top-welcome-text {
-        font-size: 48px;
+        display: block;
+        font-size: 70px;
         width: 75%;
         font-weight: bolder;
+        margin-top: 108px;
+        padding-left: 37px;
+        height: 85px;
+        line-height: 85px;
+      }
+
+      .top-to-symbol-text {
+        display: block;
+        font-size: 70px;
+        width: 75%;
+        font-weight: bolder;
+        padding-left: 37px;
+        height: 85px;
+        line-height: 85px;
       }
 
       .bottom-welcome-text {
-        padding-top: 20px;
-        font-size: 20px;
-        line-height: 35px;
-        width: 90%;
+        padding-top: 28px;
+        padding-left: 37px;
+        font-size: @biggerFont;
+        line-height: 50px;
+        width: 730px;
       }
     }
 
@@ -67,10 +88,10 @@
 
   .login-card {
     float: right;
-    width: 506px;
-    height: 704px;
-    padding-left: 38px;
-    padding-top: 30px;
+    width: 420px;
+    height: 620px;
+    padding-left: 21px;
+    padding-top: 40px;
     background-color: @white;
     margin-right: 5px;
 
@@ -81,9 +102,10 @@
 
       .ivu-select-selection .ivu-select-placeholder,
       .ivu-select-selection .ivu-select-selected-value {
-        color: @black !important;
+        color: @black  !important;
 
       }
+
       .login-account-network-type {
         float: right;
         color: @grayDark;
@@ -91,33 +113,35 @@
     }
 
     .img-box {
-      height: 330px;
-      height: 120px;
-      margin-bottom: 30px;
+      height: 265px;
+      height: 72px;
+      margin-bottom: 50px;
       background-repeat: no-repeat;
-      background-size: 280px 110px;
+      background-size: 265px 72px;
       color: red;
       background-position: 0 center;
       background-image: url("../../resources/symbol_logo.png");
     }
 
     .login-title {
-      font-size: 38px;
-      font-weight: 600;
+      font-size: 42px;
+      font-weight: 400;
       @black: rgba(51, 51, 51, 1);
-      margin-bottom: 40px;
+      margin-bottom: 30px;
     }
+
     .ivu-tooltip {
       width: 100%;
     }
+
     input {
-      width: 90% ;
+      width: 90%;
       height: 37px;
       background: @white;
       border: none;
       border-bottom: 1px solid @border;
       padding-left: 11px;
-      font-size: 20px;
+      font-size: @normalFont;
       border-radius: 0;
       margin-top: 10px;
       padding-bottom: 5px;
@@ -135,8 +159,7 @@
     }
 
     .account-name {
-      margin-bottom: 10px;
-
+      margin-bottom: 0px;
     }
 
     .input-password {
@@ -150,14 +173,11 @@
     .password-tip {
       margin-top: 20px;
       width: 90%;
-      height: 50px;
-      font-size: 16px;
+      font-size: @smallerFont;
       font-weight: 400;
       color: @purple;
       line-height: 17px;
       display: flex;
-      // flex-flow: column-reverse;
-      // justify-content: space-between;
 
       .prompt {
         width: 100%;
@@ -173,12 +193,12 @@
     }
 
     .button {
-      width: 90%;
-      height: 50px;
-      font-size: 22px;
-      margin-top: 45px;
-      line-height: 36px;
-      border-radius: 25px;
+      width: 343px;
+      height: 58px;
+      font-size: 28px;
+      margin-top: 50px;
+      line-height: 40px;
+      border-radius: 10px;
     }
   }
 
@@ -195,8 +215,8 @@
 
     .ivu-select-placeholder,
     .ivu-select-selected-value {
-      color: @white !important;
-      font-size: 18px;
+      color: @white  !important;
+      font-size: @smallFont;
     }
 
     i::before {
@@ -205,7 +225,7 @@
   }
 
   .ivu-select-item {
-    font-size: 18px !important;
+    font-size: @smallFont  !important;
   }
 
 
@@ -216,7 +236,9 @@
     color: @white;
     padding: 8px 0;
     text-align: center;
-    font-size: 20px;
+    font-size: 28px;
+    word-spacing: 20px;
+    font-weight: 500;
   }
 
   .button:hover {
@@ -264,34 +286,46 @@
   .select_wallet .ivu-select-dropdown {
     z-index: 9999;
   }
+
   .network-type-head-title {
-    font-size: 18px;
+    font-size: @smallFont;
     font-weight: bold;
   }
+
   .auto-complete-sub-container {
     max-height: 400px;
     padding: 0 20px;
-    .ivu-select-item:hover{
-      background-color: @purple !important;
+
+    .ivu-select-item:hover {
+      background-color: @purple  !important;
       color: @white;
     }
 
   }
+
   .ivu-input:focus {
     border: none;
   }
+
   .ivu-auto-complete.ivu-select-dropdown {
     z-index: 9999;
   }
+
   .select-wallet {
-    input{
+    input {
       border: none;
     }
   }
+
   .tips-in-sub-container {
-    font-size: 16px;
+    font-size: @smallerFont;
     color: @border;
     padding: 10px 0;
   }
 }
 
+.account-name-input {
+  .ivu-input {
+    background-color: transparent !important;
+  }
+}

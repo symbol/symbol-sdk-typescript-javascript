@@ -25,9 +25,6 @@
         <div class="navigator-icon-container">
           <Icon :type="'md-log-out'" class="navigator-icon" />
         </div>
-        <div class="navigator-text-container">
-          {{ currentAccount.values.get('accountName') }}
-        </div>
       </div>
     </div>
   </div>

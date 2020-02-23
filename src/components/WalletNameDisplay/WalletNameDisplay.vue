@@ -5,23 +5,23 @@
       <span v-if="wallet" class="walletName">{{ wallet.values.get('name') }}</span>
       <button
         type="button"
-        class="button-style validation-button right-side-button edit-button" 
+        class="button-style validation-button right-side-button edit-button"
         @click.stop="hasNameFormModal = true"
       >
-        <Icon type="md-create"/>
+        <Icon type="md-create" />
       </button>
     </div>
 
     <ModalFormWalletNameUpdate
       v-if="hasNameFormModal"
       :visible="hasNameFormModal"
-      @close="hasNameFormModal = false" />
-
+      @close="hasNameFormModal = false"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import {WalletNameDisplayTs} from './WalletNameDisplayTs'
+import { WalletNameDisplayTs } from "./WalletNameDisplayTs";
 
 export default class WalletNameDisplay extends WalletNameDisplayTs {}
 </script>

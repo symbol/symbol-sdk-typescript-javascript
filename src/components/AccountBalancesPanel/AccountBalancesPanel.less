@@ -20,6 +20,7 @@
   height: 100%;
   grid-template-columns: 100%;
   grid-template-rows: 2.4rem auto;
+  grid-row-gap: 0.13rem;
 }
 
 .wallet-info-tile {
@@ -40,12 +41,13 @@
   padding: 22px 20px 0 21px;
   position: relative;
   background-size: cover;
-  // background-image: url("../../views/resources/img/monitor/dash-board/dashboardWalletBackground.png");
+  box-shadow: 0 0.01rem 0.15rem 0.01rem #d8c5f3;
+  background: linear-gradient(161deg, rgba(82, 0, 198, 1) 0%, rgba(68, 0, 78, 1) 100%);
+  border-radius: 10px;
 
   .wallet_address {
-    padding-bottom: 23px;
+    padding-bottom: 15px;
     display: flex;
-    align-items: center;
     justify-content: space-between;
 
     .address {
@@ -54,50 +56,29 @@
       font-weight: 400;
       display: inline-block;
       width: 360px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      word-break: break-all;
     }
 
     img {
+      float: right;
       width: 18px;
       height: 18px;
     }
   }
 
-  .split {
-    width: 90%;
-    left: 0;
-    margin-left: 5%;
-    border: 1px solid @border;
-    opacity: 0.18;
-    position: absolute;
-  }
-
   .XEM_amount {
-    margin: 20px 0 8px 0;
+    margin: 30px 0 0 5px;
     font-size: @biggerFont;
     font-weight: 400;
     color: @white;
-
-    .amount {
-      margin-left: 10px;
-    }
   }
 
-  .exchange {
-    font-size: @normalFont;
-    font-weight: 400;
-    color: @white;
-  }
-
-  .account_alias {
+  .balance-background {
+    width: 129px;
+    height: 122px;
     position: absolute;
-    bottom: 20px;
-    right: 19px;
-    font-size: @normalFont;
-    font-weight: 400;
-    color: @white;
+    right: 0;
+    bottom: 0;
   }
 }
 
@@ -109,40 +90,17 @@
   position: relative;
   overflow-x: hidden;
   overflow-y: scroll;
+  box-shadow: 0 0.01rem 0.15rem 0.01rem #d8c5f3;
 
-  .namespace_data {
-    span {
-      color: @blackLight;
-      width: 50%;
-      display: inline-block;
-      border-bottom: 1px solid @border;
-      padding: 19px 0 19px 30px;
-
-    }
-
-    .namespace_table_head {
-      span {
-        color: @grayDark;
-        font-size: @normalFont;
-      }
-    }
+  .ivu-tabs-tab-active {
+    color: @purple;
   }
 
-  .harvesting_data {
-    .harvesting_item {
-      padding: 20px 0;
+  .ivu-tabs-tab:hover {
+    color: @purple;
+  }
 
-      .top_info {
-        font-size: @normalFont;
-        font-weight: 400;
-        color: @black;
-      }
-
-      .bottom_info {
-        font-size: @normalFont;
-        font-weight: 400;
-        color: @grayDark;
-      }
-    }
+  .ivu-tabs-ink-bar {
+    background-color: @purple;
   }
 }

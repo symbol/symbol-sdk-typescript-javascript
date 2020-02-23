@@ -17,6 +17,10 @@ import {NodeInfo} from 'nem2-sdk'
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
+// configuration
+import networkConfig from '@/../config/network.conf.json'
+const currentNetworkConfig = networkConfig.networks['testnet-publicTest']
+
 // child components
 // @ts-ignore
 import AnimatedNumber from '@/components/AnimatedNumber/AnimatedNumber.vue'
@@ -33,6 +37,13 @@ import AnimatedNumber from '@/components/AnimatedNumber/AnimatedNumber.vue'
     currentPeerInfo: 'network/currentPeerInfo',
   })}})
 export class NetworkStatisticsPanelTs extends Vue {
+  /**
+   * Current network target block time
+   * @protected
+   * @var {number}
+   */
+  protected targetBlockTime: number = currentNetworkConfig.properties.targetBlockTime
+
   /**
    * Number of transactions on the network
    * @var {number}

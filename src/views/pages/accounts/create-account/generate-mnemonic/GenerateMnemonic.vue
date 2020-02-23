@@ -4,7 +4,7 @@
     <div class="progress-bar">
       {{ $t('Move_your_mouse') }}
     </div>
-    <Progress :stroke-width="20" stroke-color="#1FB6AC" :percent="percent" />
+    <Progress :stroke-width="20" stroke-color="#6401ee" :percent="percent" />
   </div>
 </template>
 

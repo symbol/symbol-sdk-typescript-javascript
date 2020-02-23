@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- @import "../../views/resources/css/variables.less";
+@import "../../views/resources/css/variables.less";
 
 .wallet-switch-container {
   width: 100%;
@@ -31,14 +31,17 @@
 
     .wallet-switch-header-left-container {
       padding: 0.17rem 0 0.4rem 0.2rem;
+
+      .section-title {
+        font-size: @normalFont;
+      }
     }
 
     .wallet-switch-header-right-container {
       text-align: right;
       padding: 0.19rem 0.2rem 0 0;
 
-      .back-up {
-      }
+      .back-up {}
     }
   }
 
@@ -49,11 +52,11 @@
     height: 100%;
     display: grid;
     grid-template-columns: 100%;
-    grid-auto-rows: 0.8rem;
-    grid-row-gap: 0.2rem;
+    grid-auto-rows: 0.9rem;
+    grid-row-gap: 0.1rem;
 
     .active-background {
-      background-color: @purple;
+      background: linear-gradient(178deg, rgba(82, 0, 198, 1) 0%, rgba(57, 0, 139, 1) 69%, rgba(41, 0, 99, 1) 100%);
       color: white;
     }
 
@@ -70,30 +73,31 @@
     }
 
     .inactive-background {
-      background-color:  @grayLight;
-      color: @passiveTextColor;
+      background: rgba(237, 233, 245, 1);
+      color: rgba(51, 51, 51, 1);
     }
 
     .wallet-tile {
       margin: 0 .24rem;
       position: relative;
-      padding: .1rem .3rem;
+      padding: .14rem .25rem;
       border-radius: 10px;
+      box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+      border-radius: 5px;
 
       .wallet-tile-inner-container {
         display: grid;
         width: 100%;
         height: 100%;
         display: grid;
-        grid-template-rows: 40% 60%;
+        grid-template-rows: 50% 50%;
         grid-template-columns: 100%;
         font-weight: 900;
 
         .wallet-tile-upper-container {
-          .wallet-name {
-          }
+          .wallet-name {}
         }
-  
+
         .wallet-tile-lower-container {
           display: grid;
           width: 100%;
@@ -102,12 +106,10 @@
           grid-template-rows: 100%;
           grid-template-columns: 80% 20%;
 
-          .wallet-amount {
-          }
-  
+          .wallet-amount {}
+
           .wallet-icons {
-            .wallet-icon {
-            }
+            .wallet-icon {}
           }
         }
       }
@@ -115,7 +117,35 @@
   }
 
   .wallet-switch-footer-container {
+    padding: 0.3rem 0.3rem;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 100%;
     text-align: center;
-    padding-top: 0.3rem;
+    font-size: @smallerFont;
+    font-weight: 400;
+    line-height: 22px;
+    color: rgba(68, 0, 78, 1);
+
+    .add-wallet {
+
+      .ivu-icon {
+        padding-right: 3px;
+        padding-bottom: 2px;
+        vertical-align: center;
+      }
+    }
+
+    .wallet-switch-header-right-container {
+
+      img {
+        width: 18px;
+        height: 16px;
+        padding-right: 5px;
+        // margin-top: 5px;
+        vertical-align: center;
+      }
+
+    }
   }
 }

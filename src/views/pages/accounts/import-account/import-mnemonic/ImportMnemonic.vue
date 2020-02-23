@@ -7,12 +7,14 @@
       <div class="create-mnemonic-left">
         <textarea v-model="formItems.seed" class="show-mnemonic" />
         <div class="button-container">
-          <button class="info-button" @click="deleteAccountAndBack">
-            {{ $t('Return_password_setting') }}
-          </button>
-          <button @click="processVerification">
-            {{ $t('Import_mnemonic') }}
-          </button>
+          <div class="flex-container mt-3">
+            <button type="button" class="button-style back-button" @click="deleteAccountAndBack">
+              {{ $t('Return_password_setting') }}
+            </button>
+            <button type="submit" class="button-style validation-button" @click="processVerification">
+              {{ $t('Import_mnemonic') }}
+            </button>
+          </div>
         </div>
       </div>
       <div class="create-mnemonic-right">
@@ -24,9 +26,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import ImportMnemonicTs from './ImportMnemonicTs'
-import "./ImportMnemonic.less";
+import './ImportMnemonic.less'
 
 export default class ImportMnemonic extends ImportMnemonicTs {}
 </script>

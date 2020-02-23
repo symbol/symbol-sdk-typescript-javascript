@@ -56,11 +56,11 @@
           </div>
         </div>
       </div>
-      <div class="button-container">
-        <button class="info-button" @click="$router.back()">
+      <div class="button-container flex-container">
+        <button class="button-style info-button back-button" @click="$router.back()">
           {{ $t('previous') }}
         </button>
-        <button @click="submit">
+        <button class="button-style validation-button" @click="submit">
           {{ $t('Access_My_Wallet') }}
         </button>
       </div>

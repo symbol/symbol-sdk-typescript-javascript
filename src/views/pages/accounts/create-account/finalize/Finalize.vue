@@ -46,7 +46,7 @@
         </div>
       </div>
       <div class="finish-right">
-        <img src="@/views/resources/img/finish.png" alt>
+        <!-- <img src="@/views/resources/img/finish.png" alt> -->
       </div>
     </div>
   </div>

@@ -1,11 +1,11 @@
 <template>
   <div class="asset-form-main-container">
-    <div class="left-container">
+    <div class="left-container xym-outline">
       <div class="form-section">
         <slot name="form-section" />
       </div>
     </div>
-    <div class="right-container">
+    <div class="right-container xym-outline">
       <slot name="form-description" />
     </div>
   </div>
