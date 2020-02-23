@@ -1020,6 +1020,7 @@
   "form_label_new_supply": "New supply",
   "form_label_supply_direction": "Supply change direction",
   "form_label_supply_delta": "Supply change amount",
+  "form_label_new_absolute_supply": "New absolute supply",
   
   "placeholder_address": "Enter an address",
   "placeholder_address_or_alias": "Enter address or alias (e.g., nem.foundation)",
@@ -1119,5 +1120,7 @@
   "wallets_subtitle_account_links": "Useful links",
   "unlink_namespace_from": "Unlink {aliasTarget} from {namespaceName}",
   "at_block": "at block {blockNumber}",
-  "paid_fee": "paid fee"
+  "paid_fee": "paid fee",
+  "relative": "relative",
+  "absolute": "absolute"
 }

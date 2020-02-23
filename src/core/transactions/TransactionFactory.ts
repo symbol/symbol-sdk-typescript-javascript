@@ -116,9 +116,9 @@ export class TransactionFactory {
     else if (view instanceof ViewMosaicSupplyChangeTransaction) {
       return MosaicSupplyChangeTransaction.create(
         deadline,
-        view.values.get('Id'),
-        view.values.get('mosaicSupplyChangeAction'),
-        view.values.get('supply'),
+        view.values.get('mosaicId'),
+        view.values.get('action'),
+        view.values.get('delta'),
         networkType,
         view.values.get('maxFee'),
       )

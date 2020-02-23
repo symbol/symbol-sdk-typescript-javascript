@@ -27,25 +27,28 @@
 
         <div class="form-row">
           <FormLabel>{{ $t('form_label_current_supply') }}</FormLabel>
-          {{ currentMosaicInfo.supply.compact() }}
+          {{ $t('relative') }}: {{ currentMosaicRelativeSupply }} ({{ $t('absolute') }}:
+          {{ currentMosaicInfo.supply.compact().toLocaleString() }})
         </div>
 
         <div class="form-row">
-          <FormLabel>{{ $t('form_label_current_supply') }}</FormLabel>
+          <FormLabel>{{ $t('form_label_new_supply') }}</FormLabel>
           <ValidationProvider
             v-slot="{ validate, errors }"
             vid="newDuration"
-            :name="$t('form_label_new_expiration_time')"
+            :name="$t('form_label_new_absolute_supply')"
             class="new-status-display-container mx-1"
             :rules="validationRules.supply"
             :immediate="true"
             tag="div"
           >
             <input v-show="false" v-model="newMosaicAbsoluteSupply" @change="validate">
-            <ErrorTooltip :errors="errors">
-              <div class="full-width-item-container">
+            <ErrorTooltip :errors="errors" class="full-width-item-container">
+              <div class="input-size">
                 <span :class="[ 'description-text', errors.length ? 'red' : '' ]">
-                  {{ newMosaicRelativeSupply }}
+                  {{ newMosaicRelativeSupply || '' }}
+                  {{ $t('relative') }}: {{ newMosaicAbsoluteSupply }} ({{ $t('absolute') }}:
+                  {{ newMosaicAbsoluteSupply && newMosaicAbsoluteSupply.toLocaleString() }})
                 </span>
               </div>
             </ErrorTooltip>
@@ -63,6 +66,13 @@
         </div>
       </form>
     </ValidationObserver>
+    <ModalTransactionConfirmation
+      v-if="hasConfirmationModal"
+      :visible="hasConfirmationModal"
+      @success="onConfirmationSuccess"
+      @error="onConfirmationError"
+      @close="onConfirmationCancel"
+    />
   </FormWrapper>
 </template>
 

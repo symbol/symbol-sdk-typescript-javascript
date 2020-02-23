@@ -104,7 +104,7 @@
     >
       <template v-slot:form>
         <FormMosaicSupplyChangeTransaction
-          :namespace-hex-id="modalFormsProps.mosaicId.toHex()"
+          :mosaic-hex-id="modalFormsProps.mosaicId.toHex()"
           @on-confirmation-success="closeModal('mosaicSupplyChangeTransaction')"
         />
       </template>

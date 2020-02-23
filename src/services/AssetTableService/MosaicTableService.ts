@@ -66,7 +66,7 @@ export class MosaicTableService extends AssetTableService {
       // - use service to get information about mosaics
       const model = service.getMosaicSync(mosaic.id)
       if (!model) return null
-      const flags = new MosaicFlags(model.values.get('flags')) // @TODO: this property is not reactive
+      const flags = model.objects.mosaicInfo.flags // @TODO: this property is not reactive
       const balance = mosaic.amount.compact()
       const supply = model.values.get('supply')
 

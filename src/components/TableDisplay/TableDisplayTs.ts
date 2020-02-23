@@ -372,7 +372,7 @@ export class TableDisplayTs extends Vue {
    * @return {void}
    */
   protected showModifyMosaicSupplyForm(rowValues: Record<string, string>): void {
-    this.modalFormsProps.mosaicId = new MosaicId(rowValues.mosaicId)
+    this.modalFormsProps.mosaicId = new MosaicId(rowValues.hexId)
     Vue.set(this.modalFormsVisibility, 'mosaicSupplyChangeTransaction', true)
   }
 

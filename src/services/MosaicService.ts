@@ -138,7 +138,7 @@ export class MosaicService extends AbstractService {
       const mosaic = repository.createModel(new Map<string, any>([
         ['hexId', mosaicId.toHex()],
         ['name', mosaicNames && mosaicNames.length ? mosaicNames.shift().name : ''],
-        ['flags', mosaicInfo.flags.toDTO()],
+        ['flags', mosaicInfo.flags.toDTO().flags],
         ['startHeight', mosaicInfo.height],
         ['duration', mosaicInfo.duration.compact()],
         ['divisibility', mosaicInfo.divisibility],

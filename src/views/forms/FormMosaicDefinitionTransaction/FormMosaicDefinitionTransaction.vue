@@ -14,7 +14,7 @@
         <DurationInput
           v-show="!formItems.permanent"
           v-model="formItems.duration"
-          target-asset="namespace"
+          target-asset="mosaic"
         />
 
         <div class="form-line-container fixed-full-width-item-container checkboxes">

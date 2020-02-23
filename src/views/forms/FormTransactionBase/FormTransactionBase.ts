@@ -292,11 +292,12 @@ export class FormTransactionBase extends Vue {
    * @return {void}
    */
   public async onSubmit() {
+    const transaction = this.getTransactions()
 
-    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Adding transaction(s) to stage (prepared & unsigned): ' + this.getTransactions().length)
+    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Adding transaction(s) to stage (prepared & unsigned): ' + transaction.length)
 
     // - add transactions to stage (to be signed)
-    await Promise.all(this.getTransactions().map(
+    await Promise.all(transaction.map(
       async (transaction) => {
         await this.$store.dispatch(
           'wallet/ADD_STAGED_TRANSACTION',

@@ -39,8 +39,15 @@ export default class ModalTransactionConfirmation extends ModalTransactionConfir
 </script>
 
 <style lang="less">
-.modal-transaction-confirmation   {
+.modal-transaction-confirmation {
   min-width: 8.5rem;
+  max-width: 12rem;
+  margin: 0 auto;
+  overflow: hidden;
+  
+  .ivu-modal-content {
+    width: 100%;
+  }
 }
 
 .modal-footer {

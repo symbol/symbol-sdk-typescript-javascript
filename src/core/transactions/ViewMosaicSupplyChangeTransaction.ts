@@ -50,7 +50,7 @@ export class ViewMosaicSupplyChangeTransaction extends TransactionView<MosaicSup
 
     // - parse form items to view values
     view.values.set('mosaicId', formItems.mosaicId)
-    view.values.set('MosaicSupplyChangeAction', formItems.action)
+    view.values.set('action', formItems.action)
     view.values.set('delta', formItems.delta)
 
     // - set fee and return

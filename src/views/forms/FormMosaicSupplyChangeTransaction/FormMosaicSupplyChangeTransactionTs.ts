@@ -15,7 +15,6 @@
  */
 // external dependencies
 import {
-  MosaicDefinitionTransaction,
   MosaicId,
   UInt64,
   MosaicSupplyChangeAction,
@@ -48,6 +47,10 @@ import DurationInput from '@/components/DurationInput/DurationInput.vue'
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
 // @ts-ignore
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
+// @ts-ignore
+import FormLabel from '@/components/FormLabel/FormLabel.vue'
+// @ts-ignore
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 
 @Component({
   components: {
@@ -60,8 +63,10 @@ import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirm
     DurationInput,
     MaxFeeSelector,
     ModalTransactionConfirmation,
+    FormLabel,
+    ErrorTooltip,
   },
-  computed: {...mapGetters({ownedMosaics: 'wallet/ownedMosaics'})},
+  computed: {...mapGetters({ownedMosaics: 'wallet/currentWalletOwnedMosaics'})},
 })
 export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
   /**
@@ -112,12 +117,25 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
   }
 
   /**
+   * Current mosaic relative supply
+   * @readonly
+   * @protected
+   * @type {number}
+   */
+  protected get currentMosaicRelativeSupply(): string | null {
+    if (!this.currentMosaicInfo) return null
+    const relative = this.currentMosaicInfo.supply.compact() / Math.pow(10, this.currentMosaicInfo.divisibility)
+    return isNaN(relative) ? null : relative.toLocaleString()
+  }
+
+  /**
    * New absolute supply
    * @readonly
    * @protected
    * @type {(number | null)}
    */
   protected get newMosaicAbsoluteSupply(): number | null {
+    if (this.currentMosaicInfo === undefined) return null
     const newSupply = this.formItems.action === MosaicSupplyChangeAction.Increase
       ? this.currentMosaicInfo.supply.compact() + Number(this.formItems.delta)
       : this.currentMosaicInfo.supply.compact() - Number(this.formItems.delta)
@@ -131,9 +149,10 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
    * @protected
    * @type {(number | null)}
    */
-  protected get newMosaicRelativeSupply(): number | null {
+  protected get newMosaicRelativeSupply(): string | null {
     if (!this.newMosaicAbsoluteSupply) return null
-    return this.newMosaicAbsoluteSupply / Math.pow(10, this.currentMosaicInfo.divisibility)
+    const relative = this.newMosaicAbsoluteSupply / Math.pow(10, this.currentMosaicInfo.divisibility)
+    return isNaN(relative) ? null : relative.toLocaleString()
   }
 
   /**
@@ -143,12 +162,7 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
   protected resetForm() {
     // - re-populate form if transaction staged
     if (this.stagedTransactions.length) {
-      const definition = this.stagedTransactions.find(
-        staged => staged instanceof MosaicDefinitionTransaction
-          && staged.mosaicId.toHex() === this.mosaicHexId,
-      )
-      if (definition === undefined) return
-      this.setTransactions([definition as MosaicDefinitionTransaction])
+      // @TODO: initialization from staged transactions
       this.isAwaitingSignature = true
       return
     }
@@ -196,7 +210,7 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
    * @throws {Error} If not overloaded in derivate component
    */
   protected setTransactions(transactions: Transaction[]) {
-    // - this form creates 2 transaction
+    // - this form creates 1 transaction
     const supplyChange = transactions.shift() as MosaicSupplyChangeTransaction
 
     // - populate from definition
