@@ -66,8 +66,8 @@ import ApprovalAndRemovalInputDisplay from '@/components/ApprovalAndRemovalInput
 export class FormMultisigAccountModificationTransactionTs extends FormTransactionBase {
   /// region component properties
   @Prop({
-    default: null,
-  }) signer: PublicAccount
+    default: '',
+  }) signer: string
 
   @Prop({
     default: 'conversion',
@@ -170,8 +170,8 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     this.formItems.minApprovalDelta = !!this.minApprovalDelta ? this.minApprovalDelta : defaultMinApprovalDelta
     this.formItems.minRemovalDelta = !!this.minRemovalDelta ? this.minRemovalDelta : defaultMinRemovalDelta
     this.formItems.cosignatoryModifications = !!this.cosignatoryModifications ? this.cosignatoryModifications : {}
-    this.formItems.signerPublicKey = !!this.signer ? this.signer.publicKey : this.currentWallet.values.get('publicKey')
-  
+    this.formItems.signerPublicKey = this.signers && this.signers.length ? this.signers.slice(1, 2).shift().publicKey : ''
+
     // - maxFee must be absolute
     this.formItems.maxFee = this.defaultFee
   }

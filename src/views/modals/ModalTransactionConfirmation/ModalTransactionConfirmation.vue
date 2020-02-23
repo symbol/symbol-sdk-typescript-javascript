@@ -44,6 +44,10 @@ export default class ModalTransactionConfirmation extends ModalTransactionConfir
   max-width: 12rem;
   margin: 0 auto;
   overflow: hidden;
+
+  .ivu-modal {
+    width: 12rem !important;
+  }
   
   .ivu-modal-content {
     width: 100%;

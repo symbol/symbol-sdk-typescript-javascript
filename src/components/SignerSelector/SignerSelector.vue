@@ -1,6 +1,6 @@
 <template>
   <div class="form-line-container">
-    <FormLabel>{{ $t('sender') }}</FormLabel>
+    <FormLabel>{{ label && label.length ? label : $t('sender') }}</FormLabel>
     <div class="inline-container">
       <div class="full-width-item-container">
         <Select

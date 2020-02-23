@@ -13,7 +13,10 @@
 
         <!-- Transaction signer selector -->
         <div v-if="multisigOperationType === 'modification'" class="form-line-container">
-          <SignerSelector v-model="formItems.signerPublicKey" @input="onChangeSigner" />
+          <SignerSelector v-model="formItems.signerPublicKey"
+                          :signers="signers.slice(1)"
+                          :label="$t('form_label_multisig_accounts')"
+                          @input="onChangeSigner" />
         </div>
 
         <!-- Min. approval and min. removal input fields -->

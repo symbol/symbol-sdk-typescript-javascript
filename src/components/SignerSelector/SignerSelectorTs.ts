@@ -42,6 +42,10 @@ export class SignerSelectorTs extends Vue {
     default: () => []
   }) signers: {publicKey: string, label: string}[]
 
+  @Prop({
+    default: '',
+  }) label: string
+
   /// region computed properties getter/setter
   /**
    * Value set by the parent component

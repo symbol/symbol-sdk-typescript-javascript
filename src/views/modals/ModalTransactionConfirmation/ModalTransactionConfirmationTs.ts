@@ -176,14 +176,19 @@ export class ModalTransactionConfirmationTs extends Vue {
     // - log about unlock success
     this.$store.dispatch('diagnostic/ADD_INFO', 'Account ' + account.address.plain() + ' unlocked successfully.')
 
+    //XXX config aggregate + lock
+
     // - get staged transactions and sign
     this.stagedTransactions.forEach((staged) => {
+      // -  sign transaction
       const signedTx = account.sign(staged, this.generationHash)
+      this.$store.commit('wallet/addSignedTransaction', signedTx)
+
+      // - notify diagnostics
       this.$store.dispatch('diagnostic/ADD_DEBUG', 'Signed transaction with account ' + account.address.plain() + ' and result: ' + JSON.stringify({
         hash: signedTx.hash,
         payload: signedTx.payload
       }))
-      this.$store.commit('wallet/addSignedTransaction', signedTx)
     })
 
     // - reset transaction stage

@@ -1019,6 +1019,7 @@
   "form_label_supply_direction": "Supply change direction",
   "form_label_supply_delta": "Supply change amount",
   "form_label_new_absolute_supply": "New absolute supply",
+  "form_label_multisig_accounts": "Multi-signature accounts",
   
   "placeholder_address": "Enter an address",
   "placeholder_address_or_alias": "Enter address or alias (e.g., nem.foundation)",
