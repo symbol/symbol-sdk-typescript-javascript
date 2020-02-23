@@ -119,17 +119,20 @@ export default {
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
 /// region scoped actions
-    async INITIALIZE_FROM_DB({commit, dispatch}, withFeed) {
-      const currencyMosaic = withFeed.mosaics.find(m => m.values.get('isCurrencyMosaic'))
-      const mosaicName = currencyMosaic.values.get('name')
+    async INITIALIZE_FROM_DB({commit, dispatch, rootGetters}, withFeed) {
+      const generationHash = rootGetters['network/generationHash']
+      const currencyMosaic = withFeed.mosaics.find(
+        m => m.values.get('isCurrencyMosaic')
+          && generationHash === m.values.get('generationHash')
+      )
 
-      dispatch('diagnostic/ADD_DEBUG', 'Store action mosaic/INITIALIZE_FROM_DB dispatched with currencyMosaic: ' + mosaicName, {root: true})
+      dispatch('diagnostic/ADD_DEBUG', 'Store action mosaic/INITIALIZE_FROM_DB dispatched with currencyMosaic: ' + currencyMosaic.values.get('name'), {root: true})
 
       // - set network currency mosaic
       dispatch('SET_NETWORK_CURRENCY_MOSAIC', {
         mosaic: currencyMosaic,
-        name: mosaicName,
-        ticker: mosaicName.split('.').pop().toUpperCase(),
+        name: currencyMosaic.values.get('name'),
+        ticker: currencyMosaic.values.get('name').split('.').pop().toUpperCase(),
         mosaicId: currencyMosaic.objects.mosaicId,
       })
 

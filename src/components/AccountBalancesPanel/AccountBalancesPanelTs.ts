@@ -149,7 +149,7 @@ export class AccountBalancesPanelTs extends Vue {
 
     // - search for network mosaic
     const entry = mosaics.find(
-      mosaic => mosaic.id.equals(this.networkMosaic.id)
+      mosaic => mosaic.id.id.equals(this.networkMosaic.id)
     )
 
     if (undefined === entry) {
