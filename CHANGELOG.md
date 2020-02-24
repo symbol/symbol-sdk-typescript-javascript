@@ -391,6 +391,7 @@ Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/nem2-sdk-opena
 **Milestone**: Alpaca
 
 - Initial code release.
+
 [0.17.1]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.17.0...v0.17.1
 [0.17.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.16.5...v0.17.0
 [0.16.5]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.16.4...v0.16.5
