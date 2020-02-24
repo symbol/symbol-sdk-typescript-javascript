@@ -1,45 +1,48 @@
 <template>
-  <div>
-    <FormWrapper>
-      <ValidationObserver v-slot="{ handleSubmit }" class="wallet-name-update-container">
-        <form
-          class="form-line-container mt-3"
-          onsubmit="event.preventDefault()"
-          @keyup.enter="handleSubmit(onSubmit)"
-        >
-          <FormLabel>{{ $t('form_label_new_wallet_name') }}</FormLabel>
-          <div class="inline-container">
-            <ValidationProvider
-              v-slot="{ errors }"
-              class="full-width-item-container"
-              tag="div"
-              mode="lazy"
-              vid="name"
-              :name="$t('name')"
-              :rules="validationRules.accountWalletName"
-            >
-              <ErrorTooltip :errors="errors">
-                <input
-                  v-model="formItems.name"
-                  v-focus
-                  type="text"
-                  name="name"
-                  class="full-width-item-container input-size input-style"
-                >
-              </ErrorTooltip>
-            </ValidationProvider>
+  <FormWrapper class="wallet-name-update-container">
+    <ValidationObserver v-slot="{ handleSubmit }" class="wallet-name-update-container" slim>
+      <form
+        class="form-line-container mt-3"
+        onsubmit="event.preventDefault()"
+        @keyup.enter="handleSubmit(onSubmit)"
+      >
+        <FormRow>
+          <template v-slot:label>
+            {{ $t('form_label_new_wallet_name') }}:
+          </template>
+          <template v-slot:inputs>
+            <div class="row-75-25 inputs-container">
+              <ValidationProvider
+                v-slot="{ errors }"
+                mode="lazy"
+                vid="name"
+                :name="$t('name')"
+                :rules="validationRules.accountWalletName"
+                slim
+              >
+                <ErrorTooltip :errors="errors">
+                  <input
+                    v-model="formItems.name"
+                    v-focus
+                    type="text"
+                    name="name"
+                    class="input-size input-style"
+                  >
+                </ErrorTooltip>
+              </ValidationProvider>
 
-            <button
-              class="button-style validation-button right-side-button"
-              type="submit"
-              @click="handleSubmit(onSubmit)"
-            >
-              {{ $t('confirm') }}
-            </button>
-          </div>
-        </form>
-      </ValidationObserver>
-    </FormWrapper>
+              <button
+                class="button-style validation-button right-side-button"
+                type="submit"
+                @click="handleSubmit(onSubmit)"
+              >
+                {{ $t('confirm') }}
+              </button>
+            </div>
+          </template>
+        </FormRow>
+      </form>
+    </ValidationObserver>
 
     <ModalFormAccountUnlock
       v-if="hasAccountUnlockModal"
@@ -47,7 +50,7 @@
       :on-success="onAccountUnlocked"
       @close="hasAccountUnlockModal = false"
     />
-  </div>
+  </FormWrapper>
 </template>
 
 <script lang="ts">
@@ -60,7 +63,7 @@ export default class FormWalletNameUpdate extends FormWalletNameUpdateTs {}
   display: block;
   width: 100%;
   clear: both;
-  min-height: 1.4rem;
+  min-height: 1rem;
 }
 </style>
 

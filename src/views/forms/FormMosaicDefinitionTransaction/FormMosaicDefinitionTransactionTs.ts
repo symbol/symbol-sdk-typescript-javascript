@@ -46,9 +46,11 @@ import DivisibilityInput from '@/components/DivisibilityInput/DivisibilityInput.
 // @ts-ignore
 import DurationInput from '@/components/DurationInput/DurationInput.vue'
 // @ts-ignore
-import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
-// @ts-ignore
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
+// @ts-ignore
+import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
+// @ts-ignore
+import FormRow from '@/components/FormRow/FormRow.vue'
 
 @Component({
   components: {
@@ -59,8 +61,9 @@ import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirm
     SupplyInput,
     DivisibilityInput,
     DurationInput,
-    MaxFeeSelector,
     ModalTransactionConfirmation,
+    MaxFeeAndSubmit,
+    FormRow,
   },
 })
 export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {

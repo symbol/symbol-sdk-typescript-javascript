@@ -1,31 +1,31 @@
 <template>
-  <div class="form-line-container mosaic-attachment-input">
-    <FormLabel>{{ $t('asset_type') }}</FormLabel>
-    <ValidationObserver v-slot="{ handleSubmit }" tag="div">
-      <div class="inline-container">
-        <div class="half-width-item-container">
-          <MosaicSelector
-            v-model="selectedMosaic"
-            :mosaics="mosaics"
-            @input="onChangeMosaic"
-          />
-        </div>
-
-        <div class="half-width-item-container">
-          <AmountInput
-            v-model="relativeAmount"
-            class="right-item"
-          />
-        </div>
-
+  <FormRow>
+    <template v-slot:label>
+      {{ $t('asset_type') }}:
+    </template>
+    <template v-slot:inputs>
+      <ValidationObserver 
+        v-slot="{ handleSubmit }"
+        class="row-mosaic-attachment-input inputs-container"
+        tag="div"
+      >
+        <MosaicSelector
+          v-model="selectedMosaic"
+          :mosaics="mosaics"
+          @input="onChangeMosaic"
+        />
+        <AmountInput
+          v-model="relativeAmount"
+          class="pl-2 pr-2"
+        />
         <ButtonAdd
           :disabled="!canClickAdd"
-          class="button-add"
+          class="button-add align-right"
           @click="handleSubmit(onClickAdd)"
         />
-      </div>
-    </ValidationObserver>
-  </div>
+      </ValidationObserver>
+    </template>
+  </FormRow>
 </template>
 
 <script lang="ts">

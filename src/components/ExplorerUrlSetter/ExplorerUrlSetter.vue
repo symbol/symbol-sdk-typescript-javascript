@@ -1,7 +1,9 @@
 <template>
-  <div>
-    <FormLabel>{{ $t('set_explorer_link') }}</FormLabel>
-    <div class="inline-container">
+  <FormRow>
+    <template v-slot:label>
+      {{ $t('set_explorer_link') }}:
+    </template>
+    <template v-slot:inputs>
       <ValidationProvider
         v-slot="{ errors }"
         mode="lazy"
@@ -9,7 +11,7 @@
         :name="$t('Explorer_Url')"
         :rules="validationRules.url"
         tag="div"
-        class="full-width-item-container"
+        class="inputs-container select-container"
       >
         <ErrorTooltip :errors="errors">
           <AutoComplete
@@ -20,8 +22,8 @@
           />
         </ErrorTooltip>
       </ValidationProvider>
-    </div>
-  </div>
+    </template>
+  </FormRow>
 </template>
 
 <script>

@@ -1,6 +1,6 @@
 <template>
   <div class="invoice-container secondary_page_animate">
-    <div class="left-container scroll">
+    <div class="invoice-inner-container scroll">
       <div class="invoice-section-container">
         <div class="image-container">
           <img id="qrImg" :src="qrCode$" alt="Transaction QR code">
@@ -42,13 +42,6 @@
         :disable-submit="true"
         @onTransactionsChange="onInvoiceChange"
       />
-    </div>
-
-    <div class="right-container">
-      CollectionRecord component
-      <!--
-      <CollectionRecord :transaction-type="transferType.SENT" />
-      -->
     </div>
   </div>
 </template>

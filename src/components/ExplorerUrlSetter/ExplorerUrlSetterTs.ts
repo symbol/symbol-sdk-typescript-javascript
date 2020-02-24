@@ -24,7 +24,7 @@ import {ValidationProvider, ValidationObserver} from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import FormRow from '@/components/FormRow/FormRow.vue'
 
 // configuration
 import networkConfig from '@/../config/network.conf.json'
@@ -34,7 +34,7 @@ import networkConfig from '@/../config/network.conf.json'
     ValidationProvider,
     ValidationObserver,
     ErrorTooltip,
-    FormLabel,
+    FormRow,
   },
   computed: {
     ...mapGetters({

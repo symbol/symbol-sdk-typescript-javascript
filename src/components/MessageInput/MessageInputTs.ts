@@ -18,7 +18,7 @@ import {Component, Vue, Prop} from 'vue-property-decorator'
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import FormRow from '@/components/FormRow/FormRow.vue'
 
 // child components
 // @ts-ignore
@@ -30,7 +30,7 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
   components: {
     ValidationProvider,
     ErrorTooltip,
-    FormLabel,
+    FormRow,
   },
 })
 export class MessageInputTs extends Vue {

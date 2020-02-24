@@ -1,36 +1,44 @@
-<template>
-  <div class="form-line-container">
-    <div class="mosaic_list_container radius">
-      <span class="mosaic_name overflow_ellipsis">{{ $t('mosaic') }}</span>
-      <span class="mosaic_amount overflow_ellipsis">{{ $t('amount') }}</span>
-      <div class="scroll">
-        <div v-if="mosaics.length < 1" class="no_data">
-          {{ $t('please_input_mosaic_and_amount') }}
+b<template>
+  <div class="rows-scroll-container">
+    <FormRow v-if="mosaics.length < 1">
+      <template v-slot:inputs>
+        <div class="row-centered-message">
+          <span>
+            {{ $t('please_input_mosaic_and_amount') }}
+          </span>
         </div>
-        <div v-else class="mosaic_list_item_container scroll">
-          <div
-            v-for="(m,index) in mosaics"
-            :key="index"
-            class="mosaic_list_item radius"
-          >
-            <span class="mosaic_name overflow_ellipsis">
+      </template>
+    </FormRow>
+    <FormRow
+      v-for="(m,index) in mosaics"
+      :key="index"
+    >
+      <template v-slot:inputs>
+        <div class="row-mosaic-attachment-display inputs-container gray-background">
+          <div class="pl-2">
+            <span class="mosaic-name overflow_ellipsis">
               {{ m.name }}
             </span>
-            <span class="mosaic_amount overflow_ellipsis">
-              <MosaicAmountDisplay :id="m.id" :relative-amount="m.amount" :absolute="absolute" :size="'normal'" />
-            </span>
-            <span class="icon_delete" @click="$emit('delete', m.id)" />
           </div>
+
+          <div class="pl-4">
+            <MosaicAmountDisplay 
+              :id="m.id" 
+              :relative-amount="m.amount" 
+              :absolute="absolute" 
+              :size="'normal'" 
+            />
+          </div>
+
+          <span class="delete-icon" @click="$emit('delete', m.id)" />
         </div>
-      </div>
-    </div>
+      </template>
+    </FormRow>
   </div>
 </template>
 
 <script lang="ts">
 import {MosaicAttachmentDisplayTs} from './MosaicAttachmentDisplayTs'
-import './MosaicAttachmentDisplay.less'
-
 export default class MosaicAttachmentDisplay extends MosaicAttachmentDisplayTs {}
 </script>
 

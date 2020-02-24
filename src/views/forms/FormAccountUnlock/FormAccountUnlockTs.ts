@@ -27,12 +27,15 @@ import {ValidationProvider} from 'vee-validate'
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
+import FormRow from '@/components/FormRow/FormRow.vue'
+// @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 
 @Component({
   components: {
     ValidationProvider,
     FormWrapper,
+    FormRow,
     ErrorTooltip,
   },
   computed: {...mapGetters({

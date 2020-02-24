@@ -5,6 +5,8 @@
     vid="amount"
     :name="$t('amount')"
     :rules="validationRules.amount"
+    tag="div"
+    class="inputs-container"
   >
     <ErrorTooltip :errors="errors">
       <input

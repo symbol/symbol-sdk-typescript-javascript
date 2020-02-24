@@ -166,7 +166,7 @@
     "cancel": "キャンセル",
     "change_password": "パスワードを変更",
     "general_settings": "一般設定",
-    "lock_password": "パスワードをロック",
+    "form_label_password": "パスワードをロック",
     "network_settings": "ネットワーク設定",
     "about": "ソフトウェア情報",
     "setting": "設定",

@@ -1,7 +1,7 @@
 <template>
   <div class="FormTransferTransaction">
     <FormWrapper>
-      <ValidationObserver v-slot="{ handleSubmit }">
+      <ValidationObserver v-slot="{ handleSubmit }" slim>
         <form
           onsubmit="event.preventDefault()"
           @keyup.enter="disableSubmit ? '' : handleSubmit(onSubmit)"
@@ -33,18 +33,12 @@
           <!-- Transfer message input field -->
           <MessageInput v-model="formItems.messagePlain" />
 
-          <!-- Transaction fee selector -->
-          <MaxFeeSelector v-model="formItems.maxFee" />
-
-          <div v-if="!disableSubmit" class="form-line-container fixed-full-width-item-container">
-            <button
-              type="submit"
-              class="centered-button button-style validation-button"
-              @click="handleSubmit(onSubmit)"
-            >
-              {{ $t('send') }}
-            </button>
-          </div>
+          <!-- Transaction fee selector and submit button -->
+          <MaxFeeAndSubmit
+            v-model="formItems.maxFee"
+            :disable-submit="disableSubmit"
+            @button-clicked="handleSubmit(onSubmit)"
+          />
         </form>
       </ValidationObserver>
 

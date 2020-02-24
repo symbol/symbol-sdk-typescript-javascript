@@ -161,7 +161,7 @@
   "save": "保存",
   "cancel": "取消",
   "general_settings": "常规设置",
-  "lock_password": "锁密码",
+  "form_label_password": "锁密码",
   "network_settings": "网络设置",
   "about": "关于",
   "setting": "设置",

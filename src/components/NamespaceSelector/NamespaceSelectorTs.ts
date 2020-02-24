@@ -23,13 +23,13 @@ import {ValidationProvider} from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import FormRow from '@/components/FormRow/FormRow.vue'
 
 @Component({
   components: {
     ValidationProvider,
     ErrorTooltip,
-    FormLabel,
+    FormRow,
   },
   computed: {...mapGetters({
     namespacesNames: 'namespace/namespacesNames',

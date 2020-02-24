@@ -1,17 +1,23 @@
 <template>
   <FormWrapper>
-    <ValidationObserver v-slot="{ handleSubmit }">
+    <ValidationObserver v-slot="{ handleSubmit }" slim>
       <form
         onsubmit="event.preventDefault()"
-        class="form-container mt-3"
+        class="form-container"
         @keyup.enter="handleSubmit(onSubmit)"
       >
-        <div class="form-row">
-          <FormLabel>{{ $t('form_label_namespace_name') }}</FormLabel>
-          <span class="description-text">
-            {{ namespaceId.fullName }}
-          </span>
-        </div>
+        <FormRow>
+          <template v-slot:label>
+            {{ $t('form_label_namespace_name') }}:
+          </template>
+          <template v-slot:inputs>
+            <div class="row-left-message">
+              <span class="pl-2">
+                {{ namespaceId.fullName }}
+              </span>
+            </div>
+          </template>
+        </FormRow>
 
         <DurationInput
           v-if="formItems.registrationType === typeRootNamespace"
@@ -20,42 +26,50 @@
           label="form_label_additional_duration"
         />
 
-        <!-- Transaction fee selector -->
-        <MaxFeeSelector v-model="formItems.maxFee" />
+        <FormRow>
+          <template v-slot:label>
+            {{ currentExpirationInfoView.expired ? $t('Expired_for') : $t('Expires_in') }}:
+          </template>
+          <template v-slot:inputs>
+            <div class="row-left-message">
+              <span class="pl-2">
+                {{ currentExpirationInfoView.expiration }}
+                ({{ $t('at_block', {blockNumber: currentNamespaceEndHeight}) }})
+              </span>
+            </div>
+          </template>
+        </FormRow>
 
-        <div class="form-row">
-          <FormLabel>{{ currentExpirationInfoView.expired ? $t('Expired_for') : $t('Expires_in') }}</FormLabel>
-          {{ currentExpirationInfoView.expiration }} ({{ $t('at_block', {blockNumber: currentNamespaceEndHeight}) }})
-        </div>
-        <div class="form-row">
-          <FormLabel>{{ $t('form_label_new_expiration_time') }}</FormLabel>
-          <ValidationProvider
-            v-slot="{ validate, errors }"
-            vid="newDuration"
-            :name="$t('form_label_new_expiration_time')"
-            class="new-status-display-container mx-1"
-            :rules="validationRules.namespaceDuration"
-            :immediate="true"
-            tag="div"
-          >
-            <input v-show="false" v-model="newDuration" @change="validate">
-            <ErrorTooltip :errors="errors">
-              <div class="full-width-item-container">
-                <span :class="[ 'description-text', errors.length ? 'red' : '' ]">
-                  {{ newExpirationInfoView }} ({{ $t('at_block', {blockNumber: newEndHeight}) }})
-                </span>
-              </div>
-            </ErrorTooltip>
-          </ValidationProvider>
-        </div>
+        <FormRow>
+          <template v-slot:label>
+            {{ $t('form_label_new_expiration_time') }}:
+          </template>
+          <template v-slot:inputs>
+            <ValidationProvider
+              v-slot="{ validate, errors }"
+              vid="newDuration"
+              :name="$t('form_label_new_expiration_time')"
+              :rules="validationRules.namespaceDuration"
+              :immediate="true"
+              slim
+            >
+              <input v-show="false" v-model="newDuration" @change="validate">
+              <ErrorTooltip :errors="errors">
+                <div class="row-left-message">
+                  <span :class="[errors.length ? 'red' : '', 'pl-2']">
+                    {{ newExpirationInfoView }} ({{ $t('at_block', {blockNumber: newEndHeight}) }})
+                  </span>
+                </div>
+              </ErrorTooltip>
+            </ValidationProvider>
+          </template>
+        </FormRow>
 
-        <button 
-          type="submit"
-          class="centered-button button-style validation-button"
-          @click="handleSubmit(onSubmit)"
-        >
-          {{ $t('send') }}
-        </button>
+
+        <MaxFeeAndSubmit
+          v-model="formItems.maxFee"
+          @button-clicked="handleSubmit(onSubmit)"
+        />
       </form>
     </ValidationObserver>
     <ModalTransactionConfirmation

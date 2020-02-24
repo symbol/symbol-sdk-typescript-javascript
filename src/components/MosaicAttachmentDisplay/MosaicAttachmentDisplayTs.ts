@@ -19,9 +19,9 @@ import {mapGetters} from 'vuex'
 
 // child components
 // @ts-ignore
-import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
-// @ts-ignore
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
+// @ts-ignore
+import FormRow from '@/components/FormRow/FormRow.vue'
 
 type MosaicAttachmentType = {
   id: MosaicId,
@@ -32,8 +32,8 @@ type MosaicAttachmentType = {
 
 @Component({
   components: {
-    ErrorTooltip,
     MosaicAmountDisplay,
+    FormRow,
   },
   computed: {...mapGetters({
     networkMosaic: 'mosaic/networkMosaic',

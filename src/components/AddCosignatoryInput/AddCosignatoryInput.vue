@@ -1,35 +1,39 @@
 <template>
-  <ValidationObserver v-slot="{ handleSubmit }">
-    <ValidationProvider
-      v-slot="{ errors }"
-      mode="lazy"
-      vid="cosignatory"
-      :name="$t('cosignatory')"
-      :rules="`${validationRules.addressOrPublicKey}`"
-      class="form-line-container"
-      tag="div"
-    >
-      <FormLabel>{{ $t('form_label_add_cosignatory') }}</FormLabel>
-      <div class="inline-container full-width-item-container">
-        <ErrorTooltip :errors="errors">
-          <input
-            v-model="cosignatory"
-            :placeholder="$t('placeholder_address_or_public_key')"
-            class="input-style input-size"
-            type="text"
-          >
-        </ErrorTooltip>
-        <div class="button-container">
-          <button
-            class="right-side-round-button round-button"
+  <FormRow>
+    <template v-slot:label>
+      {{ $t('form_label_add_cosignatory') }}:
+    </template>
+    <template v-slot:inputs>
+      <ValidationObserver
+        v-slot="{ handleSubmit }"
+        slim
+      >
+        <ValidationProvider
+          v-slot="{ errors }"
+          vid="cosignatory"
+          :name="$t('cosignatory')"
+          :rules="`${validationRules.addressOrPublicKey}`"  
+          tag="div"
+          class="row-cosignatory-action inputs-container"
+        >
+          <div class="input-container">
+            <ErrorTooltip :errors="errors">
+              <input
+                v-model="cosignatory"
+                :placeholder="$t('placeholder_address_or_public_key')"
+                class="input-style input-size"
+                type="text"
+              >
+            </ErrorTooltip>
+          </div>
+          <ButtonAdd
+            class="button-add align-right"
             @click="handleSubmit(onAddCosignatory)"
-          >
-            <Icon type="md-add-circle" />
-          </button>
-        </div>
-      </div>
-    </ValidationProvider>
-  </ValidationObserver>
+          />
+        </ValidationProvider>
+      </ValidationObserver>
+    </template>
+  </FormRow>
 </template>
 
 <script lang="ts">

@@ -31,7 +31,7 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import FormRow from '@/components/FormRow/FormRow.vue'
 
 /// region custom types
 type NetworkNodeEntry = {value: NetworkType, label: string}
@@ -43,7 +43,7 @@ type NetworkNodeEntry = {value: NetworkType, label: string}
     ValidationProvider,
     ErrorTooltip,
     FormWrapper,
-    FormLabel,
+    FormRow,
   },
   computed: {...mapGetters({
     networkType: 'network/networkType',

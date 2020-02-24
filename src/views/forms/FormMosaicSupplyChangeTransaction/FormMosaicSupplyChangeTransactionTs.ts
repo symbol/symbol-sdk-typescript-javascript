@@ -44,13 +44,13 @@ import DivisibilityInput from '@/components/DivisibilityInput/DivisibilityInput.
 // @ts-ignore
 import DurationInput from '@/components/DurationInput/DurationInput.vue'
 // @ts-ignore
-import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
-// @ts-ignore
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import FormRow from '@/components/FormRow/FormRow.vue'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+// @ts-ignore
+import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 
 @Component({
   components: {
@@ -61,10 +61,10 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
     SupplyInput,
     DivisibilityInput,
     DurationInput,
-    MaxFeeSelector,
     ModalTransactionConfirmation,
-    FormLabel,
+    FormRow,
     ErrorTooltip,
+    MaxFeeAndSubmit,
   },
   computed: {...mapGetters({ownedMosaics: 'wallet/currentWalletOwnedMosaics'})},
 })

@@ -1,29 +1,29 @@
 <template>
-  <div class="form-line-container">
-    <FormLabel>{{ $t(label) }}</FormLabel>
-    <ValidationProvider
-      v-slot="{ errors }"
-      mode="lazy"
-      vid="recipient"
-      :name="$t('recipient')"
-      :rules="`required|address:${networkType}`"
-      tag="div"
-      class="inline-container"
-    >
-      <ErrorTooltip :errors="errors">
-        <div class="full-width-item-container">
+  <FormRow>
+    <template v-slot:label>
+      {{ $t(label) }}:
+    </template>
+    <template v-slot:inputs>
+      <ValidationProvider
+        v-slot="{ errors }"
+        vid="recipient"
+        :name="$t('recipient')"
+        :rules="`required|address:${networkType}`"
+        tag="div"
+        class="inputs-container"
+      >
+        <ErrorTooltip :errors="errors">
           <input
             v-model="rawValue"
             v-focus
-            class="full-width-item-container input-size input-style"
+            class="input-size input-style"
             :placeholder="$t('placeholder_address')"
             type="text"
-            @blur="$emit('blur', rawValue)"
           >
-        </div>
-      </ErrorTooltip>
-    </ValidationProvider>
-  </div>
+        </ErrorTooltip>
+      </ValidationProvider>
+    </template>
+  </FormRow>
 </template>
 
 <script lang="ts">
@@ -39,13 +39,13 @@ import { ValidationProvider } from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import FormRow from '@/components/FormRow/FormRow.vue'
 
 @Component({
   components: {
     ValidationProvider,
     ErrorTooltip,
-    FormLabel,
+    FormRow,
   },
   computed: {
     ...mapGetters({

@@ -1,28 +1,29 @@
 <template>
-  <div class="form-line-container">
-    <FormLabel>{{ $t('form_label_namespace_name') }}</FormLabel>
-    <ValidationProvider
-      v-slot="{ errors }"
-      mode="lazy"
-      vid="form_label_namespace_name"
-      :name="$t('form_label_namespace_name')"
-      :rules="validationRule"
-      tag="div"
-      class="inline-container"
-    >
-      <ErrorTooltip :errors="errors">
-        <div class="full-width-item-container">
+  <FormRow>
+    <template v-slot:label>
+      {{ $t('form_label_namespace_name') }}:
+    </template>
+    <template v-slot:inputs>
+      <ValidationProvider
+        v-slot="{ errors }"
+        vid="form_label_namespace_name"
+        :name="$t('form_label_namespace_name')"
+        :rules="validationRule"
+        tag="div"
+        class="inputs-container"
+      >
+        <ErrorTooltip :errors="errors">
           <input
             v-model="chosenValue"
             v-focus
-            class="full-width-item-container input-size input-style"
+            class="input-size input-style"
             :placeholder="$t('Input_namespace_name')"
             type="text"
           >
-        </div>
-      </ErrorTooltip>
-    </ValidationProvider>
-  </div>
+        </ErrorTooltip>
+      </ValidationProvider>
+    </template>
+  </FormRow>
 </template>
 
 <script lang="ts">

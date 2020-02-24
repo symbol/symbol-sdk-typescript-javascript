@@ -1,6 +1,6 @@
 <template>
   <FormWrapper>
-    <ValidationObserver v-slot="{ handleSubmit }">
+    <ValidationObserver v-slot="{ handleSubmit }" slim>
       <form
         onsubmit="event.preventDefault()"
         @keyup.enter="handleSubmit(onSubmit)"
@@ -16,34 +16,30 @@
           v-model="formItems.duration"
           target-asset="mosaic"
         />
+        
+        <FormRow>
+          <template v-slot:inputs>
+            <div class="inputs-container checkboxes">
+              <Checkbox v-model="formItems.permanent">
+                {{ $t('duration_permanent') }}
+              </Checkbox>
+              <Checkbox v-model="formItems.transferable">
+                {{ $t('transmittable') }}
+              </Checkbox>
+              <Checkbox v-model="formItems.supplyMutable">
+                {{ $t('variable_supply') }}
+              </Checkbox>
+              <Checkbox v-model="formItems.restrictable">
+                {{ $t('restrictable') }}
+              </Checkbox>
+            </div>
+          </template>
+        </FormRow>
 
-        <div class="form-line-container fixed-full-width-item-container checkboxes">
-          <Checkbox v-model="formItems.transferable">
-            {{ $t('transmittable') }}
-          </Checkbox>
-          <Checkbox v-model="formItems.supplyMutable">
-            {{ $t('variable_supply') }}
-          </Checkbox>
-          <Checkbox v-model="formItems.permanent">
-            {{ $t('duration_permanent') }}
-          </Checkbox>
-          <Checkbox v-model="formItems.restrictable">
-            {{ $t('restrictable') }}
-          </Checkbox>
-        </div>
-
-        <!-- Transaction fee selector -->
-        <MaxFeeSelector v-model="formItems.maxFee" />
-
-        <div class="form-line-container fixed-full-width-item-container mt-3">
-          <button
-            type="submit"
-            class="centered-button button-style validation-button"
-            @click="handleSubmit(onSubmit)"
-          >
-            {{ $t('send') }}
-          </button>
-        </div>
+        <MaxFeeAndSubmit
+          v-model="formItems.maxFee"
+          @button-clicked="handleSubmit(onSubmit)"
+        />
       </form>
     </ValidationObserver>
 
@@ -66,5 +62,8 @@ export default class FormMosaicDefinitionTransaction extends FormMosaicDefinitio
 <style lang="less" scoped>
 .checkboxes {
   margin: 0.25rem 0 0.3rem 0;
+  display: grid;
+  grid-auto-flow: column; 
+  align-items: baseline;
 }
 </style>

@@ -19,39 +19,33 @@ import {Component, Vue, Prop} from 'vue-property-decorator'
 // child components
 import {ValidationProvider} from 'vee-validate'
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import FormRow from '@/components/FormRow/FormRow.vue'
 
 // configuration
 import networkConfig from '@/../config/network.conf.json'
 const currentNetworkConfig = networkConfig.networks['testnet-publicTest']
 
-@Component({ components: {FormLabel, ValidationProvider} })
+@Component({ components: {FormRow, ValidationProvider} })
 export class ApprovalAndRemovalInputDisplayTs extends Vue {
   /**
    * New min approval
    * @type {number}
    */
-  @Prop({
-    default: 0,
-  })
+  @Prop({ default: 0 })
   newMinApproval: number
 
   /**
    * New min removal
    * @type {number}
    */
-  @Prop({
-    default: 0,
-  })
+  @Prop({ default: 0 })
   newMinRemoval: number
 
   /**
    * New number of cosignatories
    * @type {number}
    */
-  @Prop({
-    default: null,
-  })
+  @Prop({ default: null })
   newNumberOfCosignatories: number
 
   /**

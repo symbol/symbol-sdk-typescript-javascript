@@ -4,9 +4,9 @@
     <template v-slot:form-section>
       <FormMultisigAccountModificationTransaction multisig-operation-type="modification" />
     </template>
-    <template v-slot:right-section>
+    <!-- <template v-slot:right-section>
       ManageAccountPage right section
-    </template> 
+    </template>  -->
   </MultisigFormPage>
 </template>
 

@@ -27,7 +27,7 @@ import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {WalletService} from '@/services/WalletService'
-import {WalletsModel, WalletType} from '@/core/database/entities/WalletsModel'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
 
 // child components
 import {ValidationObserver, ValidationProvider} from 'vee-validate'
@@ -36,7 +36,7 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import FormRow from '@/components/FormRow/FormRow.vue'
 // @ts-ignore
 import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
 
@@ -46,7 +46,7 @@ import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalF
     ValidationProvider,
     ErrorTooltip,
     FormWrapper,
-    FormLabel,
+    FormRow,
     ModalFormAccountUnlock,
   },
   computed: {...mapGetters({

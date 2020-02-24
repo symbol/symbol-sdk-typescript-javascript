@@ -18,7 +18,6 @@ import {Account, Address, NetworkType, SimpleWallet, Password} from 'nem2-sdk'
 import {
   ExtendedKey,
   MnemonicPassPhrase,
-  Network,
   NodeEd25519,
   Wallet,
 } from 'nem2-hd-wallets'
@@ -128,7 +127,7 @@ export class WalletService extends AbstractService {
     }
 
     // create hd extended key
-    const extendedKey = ExtendedKey.createFromSeed(mnemonic.toSeed().toString('hex'), Network.CATAPULT)
+    const extendedKey = ExtendedKey.createFromSeed(mnemonic.toSeed().toString('hex'))
 
     // create wallet
     const wallet = new Wallet(extendedKey)
@@ -148,7 +147,6 @@ export class WalletService extends AbstractService {
   ): ExtendedKey {
     return ExtendedKey.createFromSeed(
       mnemonic.toSeed().toString('hex'),
-      Network.CATAPULT
     )
   }
 
@@ -167,7 +165,6 @@ export class WalletService extends AbstractService {
       Buffer.from(account.privateKey),
       undefined, // publicKey
       Buffer.from(''), // chainCode
-      Network.CATAPULT
     )
     return new ExtendedKey(nodeEd25519, nodeEd25519.network)
   }

@@ -40,11 +40,7 @@ import {ValidationObserver} from 'vee-validate'
 // @ts-ignore
 import AmountInput from '@/components/AmountInput/AmountInput.vue'
 // @ts-ignore
-import ButtonAdd from '@/components/ButtonAdd/ButtonAdd.vue'
-// @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
-// @ts-ignore
-import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
 // @ts-ignore
 import MessageInput from '@/components/MessageInput/MessageInput.vue'
 // @ts-ignore
@@ -59,15 +55,17 @@ import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue'
 import RecipientInput from '@/components/RecipientInput/RecipientInput.vue'
 // @ts-ignore
 import SignerSelector from '@/components/SignerSelector/SignerSelector.vue'
+// @ts-ignore
+import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
+// @ts-ignore
+import FormRow from '@/components/FormRow/FormRow.vue'
 
 type MosaicAttachmentType = {id: MosaicId, mosaicHex: string, name: string, amount: number}
 
 @Component({
   components: {
     AmountInput,
-    ButtonAdd,
     FormWrapper,
-    MaxFeeSelector,
     MessageInput,
     ModalTransactionConfirmation,
     MosaicAttachmentDisplay,
@@ -76,6 +74,8 @@ type MosaicAttachmentType = {id: MosaicId, mosaicHex: string, name: string, amou
     RecipientInput,
     SignerSelector,
     ValidationObserver,
+    MaxFeeAndSubmit,
+    FormRow,
   },
 })
 export class FormTransferTransactionTs extends FormTransactionBase {

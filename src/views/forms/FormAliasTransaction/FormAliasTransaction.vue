@@ -1,45 +1,54 @@
 <template>
   <FormWrapper>
-    <ValidationObserver v-slot="{ handleSubmit }">
+    <ValidationObserver v-slot="{ handleSubmit }" slim>
       <form
         onsubmit="event.preventDefault()"
         class="form-container"
         @keyup.enter="disableSubmit ? '' : handleSubmit(onSubmit)"
       >
         <!-- UNLINK alias action -->
-        <div v-if="aliasAction === AliasAction.Unlink">
-          <span>
-            {{ $t('unlink_namespace_from', {
-              aliasTarget: formItems.aliasTarget, namespaceName: namespaceId.fullName,
-            }) }}
-          </span>
-        </div>
+        <FormRow v-if="aliasAction === AliasAction.Unlink">
+          <template v-slot:inputs>
+            <div class="row-left-message">
+              <span class="pl-2">
+                {{ $t('unlink_namespace_from', {
+                  aliasTarget: formItems.aliasTarget, namespaceName: namespaceId.fullName,
+                }) }}
+              </span>
+            </div>
+          </template>
+        </FormRow>
 
         <!-- LINK alias action -->
         <div v-else>
-          <div class="form-row">
-            <ValidationProvider
-              :name="$t('registrationType')"
-              :rules="'required'"
-              tag="div"
-              mode="lazy"
-              vid="registrationType"
-            >
-              <FormLabel>{{ $t('form_label_alias_type') }}</FormLabel>
-              <select
-                v-model="aliasTargetType"
-                class="input-size input-style"
-                @change="formItems.aliasTarget = ''"
+          <FormRow>
+            <template v-slot:label>
+              {{ $t('form_label_alias_type') }}:
+            </template>
+            <template v-slot:inputs>
+              <ValidationProvider
+                :name="$t('registrationType')"
+                :rules="'required'"
+                mode="lazy"
+                vid="registrationType"
+                tag="div"
+                class="inputs-container select-container"
               >
-                <option value="mosaic">
-                  {{ $t('option_link_mosaic') }}
-                </option>
-                <option value="address">
-                  {{ $t('option_link_address') }}
-                </option>
-              </select>
-            </ValidationProvider>
-          </div>
+                <Select
+                  v-model="aliasTargetType"
+                  class="select-size select-style"
+                  @change="formItems.aliasTarget = ''"
+                >
+                  <Option value="mosaic">
+                    {{ $t('option_link_mosaic') }}
+                  </Option>
+                  <Option value="address">
+                    {{ $t('option_link_address') }}
+                  </Option>
+                </Select>
+              </ValidationProvider>
+            </template>
+          </FormRow>
 
           <div v-if="aliasAction === AliasAction.Link">
             <NamespaceSelector
@@ -47,13 +56,21 @@
               label="form_label_choose_namespace"
               :namespaces="linkableNamespaces"
             />
-            <MosaicSelector
-              v-if="aliasTargetType === 'mosaic'"
-              v-model="formItems.aliasTarget"
-              :mosaics="linkableMosaics"
-              default-mosaic="firstInList"
-              label="form_label_link_mosaic"
-            />
+
+            <FormRow v-if="aliasTargetType === 'mosaic'">
+              <template v-slot:label>
+                {{ $t('mosaic') }}
+              </template>
+              <template v-slot:inputs>
+                <MosaicSelector
+                  v-model="formItems.aliasTarget"
+                  :mosaics="linkableMosaics"
+                  default-mosaic="firstInList"
+                  label="form_label_link_mosaic"
+                />
+              </template>
+            </FormRow>
+
             <!-- Transfer recipient input field -->
             <AddressInput
               v-if="aliasTargetType === 'address'"
@@ -63,16 +80,11 @@
           </div>
         </div>
 
-        <!-- Transaction fee selector -->
-        <MaxFeeSelector v-model="formItems.maxFee" />
-
-        <button
-          type="submit"
-          class="centered-button button-style validation-button"
-          @click="handleSubmit(onSubmit)"
-        >
-          {{ $t('send') }}
-        </button>
+        <MaxFeeAndSubmit
+          v-model="formItems.maxFee"
+          :disable-submit="disableSubmit"
+          @button-clicked="handleSubmit(onSubmit)"
+        />
       </form>
     </ValidationObserver>
     <ModalTransactionConfirmation

@@ -166,7 +166,7 @@ export default {
     currentWalletOwnedNamespaces: [],
     isCosignatoryMode: false,
     currentSigner: null,
-    currentSignerInfo: null,
+    currentSignerInfo: {},
     currentSignerAddress: null,
     currentSignerMosaics: [],
     currentSignerOwnedMosaics: [],
@@ -209,6 +209,11 @@ export default {
     currentMultisigInfo: state => state.currentMultisigInfo,
     isCosignatoryMode: state => state.isCosignatoryMode,
     currentSignerInfo: state => state.currentSignerInfo,
+    currentSignerMultisigInfo: state => {
+      const plainAddress = state.currentSignerAddress && state.currentSignerAddress.plain()
+      if(!plainAddress) return null
+      return state.otherMultisigsInfo[plainAddress] || null
+    } ,
     currentSignerAddress: state => state.currentSignerAddress,
     currentSignerMosaics: state => state.currentSignerMosaics,
     currentSignerOwnedMosaics: state => state.currentSignerOwnedMosaics,

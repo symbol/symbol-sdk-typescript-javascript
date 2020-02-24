@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Modal v-model="show" :title="`${$t(title)}`" class-name="modal-form-wrap-container">
+    <Modal v-model="show" :title="`${$t(title)}`" class-name="modal-container">
       <slot name="form" />
       <div slot="footer" class="modal-form-wrap-footer" />
     </Modal>
@@ -43,7 +43,3 @@ export default class ModalFormWrap extends Vue {
   }
 }
 </script>
-
-<style lang="less">
-@import "./ModalFormWrap.less";
-</style>

@@ -1,14 +1,7 @@
 <template>
   <div class="transfer-container secondary_page_animate">
-    <div class="left-container scroll">
+    <div class="transfer-inner-container scroll">
       <FormTransferTransaction />
-    </div>
-
-    <div class="right-container">
-      CollectionRecord component
-      <!--
-      <CollectionRecord :transaction-type="transferType.SENT" />
-      -->
     </div>
   </div>
 </template>

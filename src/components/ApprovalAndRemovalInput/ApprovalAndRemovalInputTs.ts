@@ -25,7 +25,7 @@ import {ValidationProvider} from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import FormRow from '@/components/FormRow/FormRow.vue'
 
 // configuration
 import networkConfig from '@/../config/network.conf.json'
@@ -35,7 +35,7 @@ const currentNetworkConfig = networkConfig.networks['testnet-publicTest']
   components: {
     ValidationProvider,
     ErrorTooltip,
-    FormLabel,
+    FormRow,
   },
 })
 export class ApprovalAndRemovalInputTs extends Vue {
@@ -97,6 +97,23 @@ export class ApprovalAndRemovalInputTs extends Vue {
     this.$emit('input', amount)
   }
 
+  /**
+   * Form label
+   * @readonly
+   * @protected
+   * @type {string}
+   */
+  protected get label(): string {
+    return this.approvalOrRemoval === 'approval'
+      ? 'form_label_new_min_approval'
+      : 'form_label_new_min_removal'
+  }
+
+  protected get description(): string {
+    return this.approvalOrRemoval === 'approval'
+      ? 'form_label_description_min_approval'
+      : 'form_label_description_min_removal'
+  }
   /**
    * Current minApproval or minRemoval of the target account
    * @readonly

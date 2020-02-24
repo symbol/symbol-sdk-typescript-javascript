@@ -1,7 +1,9 @@
 <template>
-  <div class="form-line-container">
-    <FormLabel>{{ $t('message') }}</FormLabel>
-    <div class="inline-container">
+  <FormRow>
+    <template v-slot:label>
+      {{ $t('message') }}:
+    </template>
+    <template v-slot:inputs>
       <ValidationProvider
         v-slot="{ errors }"
         mode="lazy"
@@ -9,18 +11,18 @@
         :name="$t('message')"
         :rules="validationRules.message"
         tag="div"
-        class="full-width-item-container"
+        class="inputs-container"
       >
         <ErrorTooltip :errors="errors">
           <textarea
             v-model="plain"
-            class="full-width-item-container textarea-size textarea-style"
+            class="textarea-size textarea-style"
             :placeholder="$t('Please_enter_notes')"
           />
         </ErrorTooltip>
       </ValidationProvider>
-    </div>
-  </div>
+    </template>
+  </FormRow>
 </template>
 
 <script lang="ts">

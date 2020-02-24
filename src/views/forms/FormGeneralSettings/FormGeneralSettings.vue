@@ -5,33 +5,55 @@
         <form
           class="form-container mt-3"
           onsubmit="event.preventDefault()"
-          @keyup.enter="handleSubmit(onSubmit)"
           autocomplete="off"
+          @keyup.enter="handleSubmit(onSubmit)"
         >
-          <div class="form-row">
-            <FormLabel>{{ $t('form_label_language') }}</FormLabel>
-            <LanguageSelector
-              v-model="formItems.language"
-              :auto-submit="false"
-              :default-form-style="true" />
-          </div>
+          <FormRow>
+            <template v-slot:label>
+              {{ $t('form_label_language') }}:
+            </template>
+            <template v-slot:inputs>
+              <div class="inputs-container select-container">
+                <LanguageSelector
+                  v-model="formItems.currentLanguage"
+                  :auto-submit="false"
+                  :default-form-style="true"
+                />
+              </div>
+            </template>
+          </FormRow>
 
-          <!-- Transaction fee selector -->
-          <MaxFeeSelector v-model="formItems.maxFee" :class-name="'form-row'" />
+          <FormRow>
+            <template v-slot:label>
+              {{ $t('form_label_default_max_fee') }}:
+            </template>
+            <template v-slot:inputs>
+              <div class="inputs-container select-container">
+                <MaxFeeSelector v-model="formItems.maxFee" />
+              </div>
+            </template>
+          </FormRow>
 
-          <div class="form-row">
-            <ExplorerUrlSetter
-              v-model="formItems.explorerUrl"
-              :auto-submit="false" />
-          </div>
+          <ExplorerUrlSetter
+            v-model="formItems.explorerUrl"
+            :auto-submit="false"
+          />
 
-          <div class="form-row">
-            <FormLabel>{{ $t('form_label_default_wallet') }}</FormLabel>
-            <WalletSelectorField
-              v-model="formItems.defaultWallet"
-              :auto-submit="false"
-              :default-form-style="true" />
-          </div>
+
+          <FormRow>
+            <template v-slot:label>
+              {{ $t('form_label_default_wallet') }}:
+            </template>
+            <template v-slot:inputs>
+              <div class="inputs-container select-container">
+                <WalletSelectorField
+                  v-model="formItems.defaultWallet"
+                  :auto-submit="false"
+                  :default-form-style="true"
+                />
+              </div>
+            </template>
+          </FormRow>
 
           <div class="form-row form-submit">
             <button
@@ -78,9 +100,10 @@ export default class FormGeneralSettings extends FormGeneralSettingsTs {}
 .form-submit {
   display: flex;
   margin-top: 25px;
+  flex-flow: row-reverse;
 
   button[type="reset"] {
-    margin-left: 35px;
+    margin-right: 35px;
   }
 }
 </style>

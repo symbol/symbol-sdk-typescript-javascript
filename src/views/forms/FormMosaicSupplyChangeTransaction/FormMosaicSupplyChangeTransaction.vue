@@ -1,69 +1,78 @@
 <template>
   <FormWrapper>
-    <ValidationObserver v-slot="{ handleSubmit }">
+    <ValidationObserver v-slot="{ handleSubmit }" slim>
       <form
         onsubmit="event.preventDefault()"
+        class="form-container"
         @keyup.enter="handleSubmit(onSubmit)"
       >
-        <div class="form-row">
-          <FormLabel>{{ $t('form_label_supply_direction') }}</FormLabel>
-          <select
-            v-model="formItems.action"
-            class="input-size input-style"
-          >
-            <option :value="MosaicSupplyChangeAction.Increase">
-              {{ $t('increase') }}
-            </option>
-            <option :value="MosaicSupplyChangeAction.Decrease">
-              {{ $t('decrease') }}
-            </option>
-          </select>
-        </div>
+        <FormRow>
+          <template v-slot:label>
+            {{ $t('form_label_supply_direction') }}:
+          </template>
+          <template v-slot:inputs>
+            <div class="inputs-container select-container">
+              <Select
+                v-model="formItems.action"
+                class="select-size select-style"
+              >
+                <Option :value="MosaicSupplyChangeAction.Increase">
+                  {{ $t('increase') }}
+                </Option>
+                <Option :value="MosaicSupplyChangeAction.Decrease">
+                  {{ $t('decrease') }}
+                </Option>
+              </Select>
+            </div>
+          </template>
+        </FormRow>
 
         <SupplyInput v-model="formItems.delta" label="form_label_supply_delta" />
 
-        <!-- Transaction fee selector -->
-        <MaxFeeSelector v-model="formItems.maxFee" />
+        <FormRow>
+          <template v-slot:label>
+            {{ $t('form_label_current_supply') }}:
+          </template>
+          <template v-slot:inputs>
+            <div class="row-left-message">
+              <span class="pl-2">
+                {{ $t('relative') }}: {{ currentMosaicRelativeSupply }} ({{ $t('absolute') }}:
+                {{ currentMosaicInfo.supply.compact().toLocaleString() }})
+              </span>
+            </div>
+          </template>
+        </FormRow>
 
-        <div class="form-row">
-          <FormLabel>{{ $t('form_label_current_supply') }}</FormLabel>
-          {{ $t('relative') }}: {{ currentMosaicRelativeSupply }} ({{ $t('absolute') }}:
-          {{ currentMosaicInfo.supply.compact().toLocaleString() }})
-        </div>
+        <FormRow>
+          <template v-slot:label>
+            {{ $t('form_label_new_supply') }}:
+          </template>
+          <template v-slot:inputs>
+            <ValidationProvider
+              v-slot="{ validate, errors }"
+              vid="newDuration"
+              :name="$t('form_label_new_absolute_supply')"
+              :rules="validationRules.supply"
+              :immediate="true"
+              slim
+            >
+              <input v-show="false" v-model="newMosaicAbsoluteSupply" @change="validate">
+              <ErrorTooltip :errors="errors">
+                <div class="input-size row-left-message">
+                  <span :class="[ 'pl-2', errors.length ? 'red' : '' ]">
+                    {{ $t('relative') }}: {{ newMosaicRelativeSupply || '' }} ({{ $t('absolute') }}:
+                    {{ newMosaicAbsoluteSupply && newMosaicAbsoluteSupply.toLocaleString() }})
+                  </span>
+                </div>
+              </ErrorTooltip>
+            </ValidationProvider>
+          </template>
+        </FormRow>
 
-        <div class="form-row">
-          <FormLabel>{{ $t('form_label_new_supply') }}</FormLabel>
-          <ValidationProvider
-            v-slot="{ validate, errors }"
-            vid="newDuration"
-            :name="$t('form_label_new_absolute_supply')"
-            class="new-status-display-container mx-1"
-            :rules="validationRules.supply"
-            :immediate="true"
-            tag="div"
-          >
-            <input v-show="false" v-model="newMosaicAbsoluteSupply" @change="validate">
-            <ErrorTooltip :errors="errors" class="full-width-item-container">
-              <div class="input-size">
-                <span :class="[ 'description-text', errors.length ? 'red' : '' ]">
-                  {{ newMosaicRelativeSupply || '' }}
-                  {{ $t('relative') }}: {{ newMosaicAbsoluteSupply }} ({{ $t('absolute') }}:
-                  {{ newMosaicAbsoluteSupply && newMosaicAbsoluteSupply.toLocaleString() }})
-                </span>
-              </div>
-            </ErrorTooltip>
-          </ValidationProvider>
-        </div>
-
-        <div class="form-line-container fixed-full-width-item-container mt-3">
-          <button
-            type="submit"
-            class="centered-button button-style validation-button"
-            @click="handleSubmit(onSubmit)"
-          >
-            {{ $t('send') }}
-          </button>
-        </div>
+        <MaxFeeAndSubmit
+          v-model="formItems.maxFee"
+          @button-clicked="handleSubmit(onSubmit)"
+        />
       </form>
     </ValidationObserver>
     <ModalTransactionConfirmation

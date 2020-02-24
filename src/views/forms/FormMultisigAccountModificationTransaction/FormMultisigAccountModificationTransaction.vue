@@ -1,45 +1,51 @@
 <template>
   <FormWrapper>
-    <ValidationObserver v-slot="{ handleSubmit }">
+    <ValidationObserver v-slot="{ handleSubmit }" slim>
       <form
         onsubmit="event.preventDefault()"
         @keyup.enter="disableSubmit ? '' : handleSubmit(onSubmit)"
       >
         <!-- Display of account to be converted -->
-        <div v-if="multisigOperationType === 'conversion'" class="form-line-container">
-          <FormLabel>{{ $t('form_label_account_to_be_converted') }}</FormLabel>
-          {{ currentWallet.objects.address.pretty() }} ({{ currentWallet.values.get('name') }})
-        </div>
+        <FormRow v-if="multisigOperationType === 'conversion'">
+          <template v-slot:label>
+            {{ $t('form_label_account_to_be_converted') }}
+          </template>
+          <template v-slot:inputs>
+            <div class="row-left-message">
+              <span class="pl-2">
+                {{ currentWallet.objects.address.pretty() }} ({{ currentWallet.values.get('name') }})
+              </span>
+            </div>
+          </template>
+        </FormRow>
 
         <!-- Transaction signer selector -->
         <div v-if="multisigOperationType === 'modification'" class="form-line-container">
-          <SignerSelector v-model="formItems.signerPublicKey"
-                          :signers="signers.slice(1)"
-                          :label="$t('form_label_multisig_accounts')"
-                          @input="onChangeSigner" />
+          <SignerSelector 
+            v-model="formItems.signerPublicKey"
+            :signers="signers"
+            :label="$t('form_label_multisig_accounts')"
+            @select="onChangeSigner"
+          />
         </div>
-
-        <!-- Min. approval and min. removal input fields -->
-        <ApprovalAndRemovalInputDisplay
+        
+        <!-- Min. approval input field -->
+        <ApprovalAndRemovalInput
+          v-model="formItems.minApprovalDelta"
+          :multisig-operation-type="multisigOperationType"
+          approval-or-removal="approval"
+          :current-multisig-info="currentSignerMultisigInfo"
           :new-number-of-cosignatories="newNumberOfCosignatories"
-          :new-min-approval="newMinApproval"
-          :new-min-removal="newMinRemoval"
-        >
-          <ApprovalAndRemovalInput
-            v-model="formItems.minApprovalDelta"
-            :multisig-operation-type="multisigOperationType"
-            approval-or-removal="approval"
-            :current-multisig-info="currentMultisigInfo"
-            :new-number-of-cosignatories="newNumberOfCosignatories"
-          />
-          <ApprovalAndRemovalInput
-            v-model="formItems.minRemovalDelta"
-            :multisig-operation-type="multisigOperationType"
-            approval-or-removal="removal"
-            :current-multisig-info="currentMultisigInfo"
-            :new-number-of-cosignatories="newNumberOfCosignatories"
-          />
-        </ApprovalAndRemovalInputDisplay>
+        />
+
+        <!-- Min. removal input field -->
+        <ApprovalAndRemovalInput
+          v-model="formItems.minRemovalDelta"
+          :multisig-operation-type="multisigOperationType"
+          approval-or-removal="removal"
+          :current-multisig-info="currentSignerMultisigInfo"
+          :new-number-of-cosignatories="newNumberOfCosignatories"
+        />
 
         <!-- Add cosignatory input field -->
         <AddCosignatoryInput
@@ -48,29 +54,31 @@
 
         <!-- Remove cosignatory input field -->
         <RemoveCosignatoryInput
-          v-if="currentMultisigInfo && currentMultisigInfo.cosignatories.length"
-          :cosignatories="currentMultisigInfo.cosignatories"
+          v-if="currentSignerMultisigInfo && currentSignerMultisigInfo.cosignatories.length"
+          :cosignatories="currentSignerMultisigInfo.cosignatories"
           @on-remove-cosignatory="onRemoveCosignatory"
         />
 
         <!-- Display of cosignatory modifications -->
         <CosignatoryModificationsDisplay
+          v-if="Object.keys(formItems.cosignatoryModifications).length"
           :cosignatory-modifications="formItems.cosignatoryModifications"
           @on-remove-cosignatory-modification="onRemoveCosignatoryModification"
         />
 
-        <!-- Transaction fee selector -->
-        <MaxFeeSelector v-model="formItems.maxFee" />
+        <!-- Displays and validates the future situation -->
+        <ApprovalAndRemovalInputDisplay
+          :new-number-of-cosignatories="newNumberOfCosignatories"
+          :new-min-approval="newMinApproval"
+          :new-min-removal="newMinRemoval"
+        />
 
-        <div v-if="!disableSubmit" class="form-line-container fixed-full-width-item-container">
-          <button
-            type="submit"
-            class="centered-button button-style validation-button"
-            @click="handleSubmit(onSubmit)"
-          >
-            {{ $t('send') }}
-          </button>
-        </div>
+        <!-- Transaction fee selector -->
+        <MaxFeeAndSubmit
+          v-model="formItems.maxFee"
+          :disable-submit="disableSubmit"
+          @button-clicked="handleSubmit(onSubmit)"
+        />
       </form>
     </ValidationObserver>
 

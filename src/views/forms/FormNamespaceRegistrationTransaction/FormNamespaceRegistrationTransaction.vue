@@ -1,6 +1,6 @@
 <template>
   <FormWrapper>
-    <ValidationObserver v-slot="{ handleSubmit }">
+    <ValidationObserver v-slot="{ handleSubmit }" slim>
       <form
         onsubmit="event.preventDefault()"
         class="form-container mt-3"
@@ -8,29 +8,29 @@
       >
         <SignerSelector v-model="formItems.signerPublicKey" :signers="signers" />
 
-        <div class="form-row">
-          <ValidationProvider
-            tag="div" mode="lazy" vid="registrationType"
-            :name="$t('registrationType')"
-            :rules="'required'"
-          >
-            <FormLabel>{{ $t('form_label_registration_type') }}</FormLabel>
-            <Select
-              v-model="formItems.registrationType"
-              class="select-size select-style"
-            >
-              <Option :value="typeRootNamespace">
-                {{ $t('option_root_namespace') }}
-              </Option>
-              <Option
-                v-if="ownedNamespaces.length"
-                :value="typeSubNamespace"
+        <FormRow>
+          <template v-slot:label>
+            {{ $t('form_label_registration_type') }}:
+          </template>
+          <template v-slot:inputs>
+            <div class="inputs-container select-container">
+              <Select
+                v-model="formItems.registrationType"
+                class="select-size select-style"
               >
-                {{ $t('option_sub_namespace') }}
-              </Option>
-            </Select>
-          </ValidationProvider>
-        </div>
+                <Option :value="typeRootNamespace">
+                  {{ $t('option_root_namespace') }}
+                </Option>
+                <Option
+                  v-if="ownedNamespaces.length"
+                  :value="typeSubNamespace"
+                >
+                  {{ $t('option_sub_namespace') }}
+                </Option>
+              </Select>
+            </div>
+          </template>
+        </FormRow>
 
         <NamespaceSelector
           v-if="formItems.registrationType === typeSubNamespace && ownedNamespaces.length"
@@ -50,18 +50,10 @@
           target-asset="namespace"
         />
 
-        <!-- Transaction fee selector -->
-        <MaxFeeSelector v-model="formItems.maxFee" />
-
-        <div class="form-line-container fixed-full-width-item-container mt-3">
-          <button
-            type="submit"
-            class="centered-button button-style validation-button"
-            @click="handleSubmit(onSubmit)"
-          >
-            {{ $t('send') }}
-          </button>
-        </div>
+        <MaxFeeAndSubmit
+          v-model="formItems.maxFee"
+          @button-clicked="handleSubmit(onSubmit)"
+        />
       </form>
     </ValidationObserver>
 

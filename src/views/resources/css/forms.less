@@ -15,11 +15,210 @@
  */
 
 @import "variables";
+
 @formFieldHeight: 0.45rem;
+@formLabelWidth: 2.4rem;
+@formInputsWidth: 8rem;
 
 /*************************************************************
  * Components
  *************************************************************/
+.form-wrapper {
+  max-width: @formLabelWidth + @formInputsWidth;
+}
+
+.select-container {
+  display: grid;
+  position: relative;
+  height: @formFieldHeight;
+}
+
+.input-container {
+  display: grid;
+  position: relative;
+  height: @formFieldHeight;
+}
+
+.rows-scroll-container {
+  max-height: @formFieldHeight * 5;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.form-row {
+  min-height: @formFieldHeight;
+  display: block;
+  width: @formLabelWidth + @formInputsWidth;
+  clear: both;
+  margin-top: 0.18rem;
+  margin-bottom: 0.18rem;
+
+  .input-size {
+    // width: @formInputsWidth;
+    width: 100%;
+    height: 100%;
+  }
+  .select-size {
+    width: 100%;
+    height: @formFieldHeight;
+  }
+  .auto-complete-size {
+    width: @formInputsWidth;
+    height: 100%;
+  }
+  .textarea-size {
+    width: @formInputsWidth;
+    height: 100%;
+  }
+
+  .form-row-inner-container {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    min-height: @formFieldHeight;
+    grid-template-columns: @formLabelWidth @formInputsWidth;
+  }
+}
+
+.form-label-container {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  text-align: right;
+  overflow: hidden;
+  padding: 0.1rem;
+  align-items: center;
+  text-transform: capitalize;
+  word-spacing: 0px;
+
+  .form-label {
+    font-size: @smallFont;
+    font-weight: @bold;
+    color: @secondary;
+  }
+
+  .form-label-description {
+    .label-description {
+      font-size: @smallFont;
+      color: @grayLight;
+    }
+  }
+}
+
+.gray-background {
+  background-color: @grayLight;
+}
+
+// FormRow modifiers classes
+.emphasis {
+  .form-label-container {
+    font-weight: @boldest;
+    color: @purpleDark;
+    text-transform: uppercase !important;
+    background-color: @grayLight;
+    border-radius: 4px 0 0 4px;
+  }
+}
+
+// FormRow inputs containers
+.row-centered-message {
+  display: grid;
+  align-items: center;
+  text-align: center;
+  font-size: @smallFont;
+  font-weight: @bolder;
+  color: @secondary;
+}
+
+.row-left-message {
+  display: grid;
+  align-items: center;
+  text-align: left;
+  font-size: @smallFont;
+  font-weight: @bolder;
+  color: #44004e;
+  height: 100%;
+}
+
+.inline-field-description {
+  display: grid;
+  align-items: center;
+  text-align: left;
+  font-size: @smallFont;
+  color: @grayDark;
+  height: 100%;
+}
+
+.row-75-25 {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: 75% 25%;
+  grid-template-rows: 100%;
+}
+
+.row-mosaic-attachment-input {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: 55% auto 0.4rem;
+  grid-template-rows: 100%;
+}
+
+.row-mosaic-attachment-display {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: 55% auto 0.4rem;
+  grid-template-rows: 100%;
+}
+
+.row-cosignatory-modification-display {
+  display: grid;
+  width: 100%;
+  height: @formFieldHeight !important;
+  grid-template-columns: 0.6rem auto 0.4rem;
+  grid-template-rows: 100%;
+}
+
+.row-approval-and-removal-input {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: 55% auto;
+  grid-template-rows: 100%;
+}
+
+.row-cosignatory-action {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: auto 0.8rem;
+  grid-template-rows: 100%;
+}
+
+.submit-button {
+  width: 100% !important;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.inputs-container {
+  align-items: center;
+  width: 100%;
+  height: 100%;
+
+  .ivu-tooltip {
+    width: 100%;
+    height: 100%;
+    .ivu-tooltip-rel {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
 
 .input-style {
   height: @formFieldHeight;
@@ -27,7 +226,7 @@
   outline: none;
   padding-left: 0.2rem;
   padding-right: 0.15rem;
-  font-size: 16px;
+  font-size: @smallerFont;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -39,7 +238,7 @@
   height: 0.8rem;
   outline: none;
   padding: 0.1rem 0.2rem;
-  font-size: 0.16rem;
+  font-size: @smallerFont;
   border: 0.01rem solid @border;
   border-radius: 0.04rem;
 }
@@ -49,7 +248,7 @@
   line-height: @formFieldHeight;
   width: 6rem;
   display: block;
-  font-size: 14px;
+  font-size: @smallerFont !important;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -59,12 +258,13 @@
   border-radius: 0.04rem;
 
   .ivu-select-selection {
-    padding-top: .07rem;
+    box-shadow: unset;
+    padding-top: 0.07rem;
     border: unset;
   }
 
   .ivu-select-selected-value {
-    font-size: 0.16rem;
+    font-size: @smallerFont !important;
     padding-left: 0;
     height: @formFieldHeight;
     line-height: @formFieldHeight;
@@ -73,7 +273,8 @@
   .ivu-select-dropdown {
     min-width: unset !important;
     margin: 0.12rem 0;
-    width: 5.8rem;
+    left: 0px !important;
+    width: 100%;
   }
 
   .ivu-select-arrow {
@@ -81,10 +282,10 @@
   }
 
   .ivu-select-placeholder {
-    font-size: 0.16rem;
+    font-size: @smallerFont;
     padding-left: 0;
     height: @formFieldHeight;
-    line-height: @formFieldHeight; 
+    line-height: @formFieldHeight;
     color: #c1b4b4 !important;
   }
 }
@@ -104,7 +305,7 @@
 
   .ivu-input {
     height: 0.4rem;
-    font-size: 16px;
+    font-size: @smallerFont;
     border-bottom: unset;
     padding: 0;
     background: none;
@@ -120,11 +321,11 @@
   text-align: center;
   height: @formFieldHeight !important;
   display: block;
-  width: auto !important;
+  // width: auto !important;
   padding: 0.08rem 0.3rem;
   border: none;
   outline: none;
-  font-size: 0.2rem;
+  font-size: @normalFont;
   font-weight: 500;
   border-radius: 0.04rem;
   cursor: pointer;
@@ -142,6 +343,14 @@
 .validation-button {
   background-color: @purple;
   color: @white;
+}
+
+.remove-button {
+  color: @red;
+}
+
+.button-add {
+  display: grid;
 }
 
 .validation-button:hover {
@@ -180,7 +389,7 @@
 .form-headline {
   margin-top: 0.1rem;
   height: 0.5rem;
-  font-size: 0.26rem;
+  font-size: @biggestFont;
   font-weight: 600;
   margin-bottom: 0.1rem;
 }
@@ -189,44 +398,20 @@
   color: @grayDark;
 }
 
-
 /*************************************************************
  * Containers
  *************************************************************/
- .clearfix {
+.clearfix {
   display: block;
   width: 100%;
   float: left;
   clear: both;
 }
 
-.mx-1 {
-  margin-top: 0.1rem;
-  margin-bottom: 0.1rem;
-}
-
-.mt-3 {
-  margin-top: 0.15rem;
-}
-
 .form-container {
   display: block;
   width: 100%;
   margin-bottom: 0.14rem;
-  
-  .form-row,
-  .full-width-item-container {
-    display: block;
-    width: 6rem;
-    clear: both;
-    margin-top: 10px;
-    margin-bottom: 10px;
-
-    .input-size { width: 6rem; }
-    .select-size { width: 6rem; }
-    .auto-complete-size { width: 6rem; }
-    .textarea-size { width: 6rem; }
-  }
 }
 
 .form-line-container {
@@ -234,7 +419,7 @@
   float: left;
   clear: both;
   width: 100%;
-  margin: .1rem 0;
+  margin: 0.1rem 0;
 
   .inline-container {
     display: inline-flex;
@@ -246,7 +431,7 @@
   width: 100%;
   height: auto;
   grid-template-columns: 50% 50%;
-  grid-column-gap: .1rem;
+  grid-column-gap: 0.1rem;
 }
 
 .half-width-item-container {
@@ -269,33 +454,52 @@
   }
 }
 
-.full-width-item-container {
-  .input-size {
-    width: 6rem;
-  }
-  .select-size {
-    width: 6rem;
-  }
-  .auto-complete-size {
-    width: 6rem;
-  }
-  .textarea-size {
-    width: 6rem;
-  }
-}
-
-.fixed-full-width-item-container {
-  width: 6rem;
-  display: block;
-  float: left;
-  clear: both;
-
-  .centered-button {
-    margin: 10px auto;
-  }
-}
-
 .flex-container {
   display: flex;
   justify-content: space-between;
+}
+
+// icons
+.delete-icon {
+  background-image: url("../img/wallet/wallet-detail/walletDetailsdelete.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 15px;
+  height: 15px;
+  margin-right: 0.5rem;
+  margin-top: 0.05rem;
+  float: right;
+  cursor: pointer;
+}
+
+.delete-icon:hover {
+  background-image: url("../img/wallet/wallet-detail/walletDetailsdeleteHover.png");
+}
+
+.modification-type-icon {
+  color: @primary;
+  font-size: 0.45rem;
+}
+
+// margin
+.mx-1 {
+  margin-top: 0.1rem;
+  margin-bottom: 0.1rem;
+}
+
+.mt-3 {
+  margin-top: 0.15rem;
+}
+
+// padding
+.pl-2 {
+  padding-left: 0.2rem;
+}
+
+.pl-4 {
+  padding-left: 0.4rem;
+}
+
+.pr-2 {
+  padding-right: 0.2rem;
 }

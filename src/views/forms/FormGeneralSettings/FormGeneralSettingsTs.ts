@@ -15,7 +15,7 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {NetworkType, Password, Account} from 'nem2-sdk'
+import {Password, Account} from 'nem2-sdk'
 
 // internal dependencies
 import {SettingService} from '@/services/SettingService'
@@ -28,7 +28,7 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import FormRow from '@/components/FormRow/FormRow.vue'
 // @ts-ignore
 import ExplorerUrlSetter from '@/components/ExplorerUrlSetter/ExplorerUrlSetter.vue'
 // @ts-ignore
@@ -39,19 +39,21 @@ import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
 import WalletSelectorField from '@/components/WalletSelectorField/WalletSelectorField.vue'
 // @ts-ignore
 import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
-
+// @ts-ignore
+import FormLabel from '@/components/FormLabel/FormLabel.vue'
 @Component({
   components: {
     ValidationObserver,
     ValidationProvider,
     ErrorTooltip,
     FormWrapper,
-    FormLabel,
+    FormRow,
     ExplorerUrlSetter,
     LanguageSelector,
     MaxFeeSelector,
     WalletSelectorField,
     ModalFormAccountUnlock,
+    FormLabel,
   },
   computed: {...mapGetters({
     currentLanguage: 'app/currentLanguage',

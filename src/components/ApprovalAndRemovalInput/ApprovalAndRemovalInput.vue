@@ -1,29 +1,31 @@
 <template>
-  <ValidationProvider
-    v-slot="{ errors }"
-    mode="lazy"
-    vid="amount"
-    :name="$t('amount')"
-    :rules="'required'"
-    class="half-width-item-container"
-    tag="div"
-  >
-    <ErrorTooltip :errors="errors">
-      <Select
-        v-model="chosenValue"
-        class="select-size select-style"
-        type="text"
-      >
-        <Option
-          v-for="{newDelta, value} in deltaOptions"
-          :key="value"
-          :value="value"
-        >
-          {{ newDelta }}
-        </Option>
-      </Select>
-    </ErrorTooltip>
-  </ValidationProvider>
+  <FormRow>
+    <template v-slot:label>
+      {{ $t(label) }}:
+    </template>
+    <template v-slot:inputs>
+      <div class="row-approval-and-removal-input inputs-container">
+        <div class="select-container">
+          <Select
+            v-model="chosenValue"
+            class="select-size select-style"
+            type="text"
+          >
+            <Option
+              v-for="{newDelta, value} in deltaOptions"
+              :key="value"
+              :value="value"
+            >
+              {{ newDelta }}
+            </Option>
+          </Select>
+        </div>
+        <div class="inline-field-description pl-2">
+          {{ $t(description) }}
+        </div>
+      </div>
+    </template>
+  </FormRow>
 </template>
 
 <script lang="ts">

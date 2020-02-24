@@ -3,7 +3,7 @@
     <img class="select_wallet_icon" src="@/views/resources/img/window/windowWalletSelect.png"
          v-if="!defaultFormStyle">
     <i-select v-model="currentWalletIdentifier"
-              :class="{'select-style': defaultFormStyle}">
+              :class="{'select-size select-style': defaultFormStyle}">
       <i-option
         v-for="({identifier, name}) in currentWallets"
         :key="identifier"

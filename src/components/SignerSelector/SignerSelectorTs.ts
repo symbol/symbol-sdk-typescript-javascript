@@ -14,20 +14,13 @@
  * limitations under the License.
  */
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
-import {MultisigAccountInfo, PublicAccount, NetworkType} from 'nem2-sdk'
-
-// internal dependencies
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
-import {WalletService} from '@/services/WalletService'
 
 // child components
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import FormRow from '@/components/FormRow/FormRow.vue'
 
 @Component({
-  components: {FormLabel},
+  components: {FormRow},
 })
 export class SignerSelectorTs extends Vue {
   /**

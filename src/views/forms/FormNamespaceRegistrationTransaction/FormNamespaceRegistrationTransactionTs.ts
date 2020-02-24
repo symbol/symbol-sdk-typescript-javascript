@@ -28,7 +28,7 @@ import {ValidationObserver, ValidationProvider} from 'vee-validate'
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import FormRow from '@/components/FormRow/FormRow.vue'
 // @ts-ignore
 import SignerSelector from '@/components/SignerSelector/SignerSelector.vue'
 // @ts-ignore
@@ -38,7 +38,7 @@ import NamespaceNameInput from '@/components/NamespaceNameInput/NamespaceNameInp
 // @ts-ignore
 import DurationInput from '@/components/DurationInput/DurationInput.vue'
 // @ts-ignore
-import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
+import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 // @ts-ignore
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
 
@@ -49,14 +49,14 @@ import networkConfig from '@/../config/network.conf.json'
   components: {
     ValidationObserver,
     ValidationProvider,
-    FormLabel,
+    FormRow,
     FormWrapper,
     SignerSelector,
     NamespaceNameInput,
     NamespaceSelector,
     DurationInput,
-    MaxFeeSelector,
     ModalTransactionConfirmation,
+    MaxFeeAndSubmit,
   },
   computed: {...mapGetters({
     ownedNamespaces: 'wallet/currentWalletOwnedNamespaces',

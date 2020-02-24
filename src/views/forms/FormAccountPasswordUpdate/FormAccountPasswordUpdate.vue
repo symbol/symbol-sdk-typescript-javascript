@@ -1,15 +1,17 @@
 <template>
-  <div>
-    <FormWrapper class="password-settings-container">
-      <ValidationObserver v-slot="{ handleSubmit }">
-        <form
-          class="form-container mt-3"
-          onsubmit="event.preventDefault()"
-          @keyup.enter="handleSubmit(onSubmit)"
-          autocomplete="off"
-        >
-          <div class="form-row">
-            <FormLabel>{{ $t('form_label_new_password') }}</FormLabel>
+  <FormWrapper class="password-settings-container">
+    <ValidationObserver v-slot="{ handleSubmit }" slim>
+      <form
+        class="form-container mt-3"
+        onsubmit="event.preventDefault()"
+        autocomplete="off"
+        @keyup.enter="handleSubmit(onSubmit)"
+      >
+        <FormRow>
+          <template v-slot:label>
+            {{ $t('form_label_new_password') }}:
+          </template>
+          <template v-slot:inputs>
             <ValidationProvider
               v-slot="{ errors }"
               vid="newPassword"
@@ -17,88 +19,91 @@
               :name="$t('password')"
               :rules="validationRules.password"
               tag="div"
-              class="inline-container"
+              class="inputs-container items-container"
             >
               <ErrorTooltip :errors="errors">
-                <div class="full-width-item-container">
-                  <input
-                    ref="passwordInput"
-                    v-model="formItems.password"
-                    class="full-width-item-container input-size input-style"
-                    :placeholder="$t('form_label_new_password')"
-                    type="password"
-                  >
-                </div>
+                <input
+                  ref="passwordInput"
+                  v-model="formItems.password"
+                  class="input-size input-style"
+                  :placeholder="$t('form_label_new_password')"
+                  type="password"
+                >
               </ErrorTooltip>
             </ValidationProvider>
-          </div>
+          </template>
+        </FormRow>
+ 
 
-          <div class="form-row">
-            <FormLabel>{{ $t('form_label_new_password_confirm') }}</FormLabel>
+        <FormRow>
+          <template v-slot:label>
+            {{ $t('form_label_new_password_confirm') }}:
+          </template>
+          <template v-slot:inputs>
             <ValidationProvider
               v-slot="{ errors }"
+              mode="lazy"
               vid="confirmPassword"
               :name="$t('confirmPassword')"
               :rules="validationRules.confirmPassword"
               tag="div"
-              class="inline-container"
+              class="inputs-container items-container"
             >
               <ErrorTooltip :errors="errors">
-                <div class="full-width-item-container">
-                  <input
-                    v-model="formItems.passwordConfirm"
-                    class="full-width-item-container input-size input-style"
-                    data-vv-name="confirmPassword"
-                    :placeholder="$t('form_label_new_password_confirm')"
-                    type="password"
-                  >
-                </div>
+                <input
+                  ref="passwordInput"
+                  v-model="formItems.passwordConfirm"
+                  class="input-size input-style"
+                  :placeholder="$t('form_label_new_password_confirm')"
+                  type="password"
+                >
               </ErrorTooltip>
             </ValidationProvider>
-          </div>
+          </template>
+        </FormRow>
 
-          <div class="form-row">
-            <FormLabel>{{ $t('form_label_new_password_hint') }}</FormLabel>
+        <FormRow>
+          <template v-slot:label>
+            {{ $t('form_label_new_password_hint') }}:
+          </template>
+          <template v-slot:inputs>
             <ValidationProvider
               v-slot="{ errors }"
               vid="hint"
               :name="$t('hint')"
               :rules="validationRules.message"
               tag="div"
-              class="inline-container"
+              class="inputs-container items-container"
             >
               <ErrorTooltip :errors="errors">
-                <div class="full-width-item-container">
-                  <input
-                    v-model="formItems.passwordHint"
-                    class="full-width-item-container input-size input-style"
-                    :placeholder="$t('form_label_new_password_hint')"
-                  >
-                </div>
+                <input
+                  v-model="formItems.passwordHint"
+                  class="input-size input-style"
+                  :placeholder="$t('form_label_new_password_hint')"
+                >
               </ErrorTooltip>
             </ValidationProvider>
-          </div>
+          </template>
+        </FormRow>
 
-          <div class="form-row">
-            <button
-              class="button-style validation-button right-side-button"
-              type="submit"
-              @click="handleSubmit(onSubmit)"
-            >
-              {{ $t('confirm') }}
-            </button>
-          </div>
-        </form>
-      </ValidationObserver>
-    </FormWrapper>
-
+        <div class="form-row">
+          <button
+            class="button-style validation-button right-side-button"
+            type="submit"
+            @click="handleSubmit(onSubmit)"
+          >
+            {{ $t('confirm') }}
+          </button>
+        </div>
+      </form>
+    </ValidationObserver>
     <ModalFormAccountUnlock
       v-if="hasAccountUnlockModal"
       :visible="hasAccountUnlockModal"
       :on-success="onAccountUnlocked"
       @close="hasAccountUnlockModal = false"
     />
-  </div>
+  </FormWrapper>
 </template>
 
 <script lang="ts">

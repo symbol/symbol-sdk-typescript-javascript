@@ -1,25 +1,28 @@
 <template>
-  <div class="form-line-container">
-    <FormLabel>{{ $t('divisibility') }}</FormLabel>
-    <ValidationProvider
-      v-slot="{ errors }"
-      mode="lazy"
-      vid="divisibility"
-      :name="$t('divisibility')"
-      :rules="validationRules.divisibility"
-      class="inline-container"
-    >
-      <ErrorTooltip :errors="errors">
-        <div class="full-width-item-container">
+  <FormRow>
+    <template v-slot:label>
+      {{ $t('divisibility') }}:
+    </template>
+    <template v-slot:inputs>
+      <ValidationProvider
+        v-slot="{ errors }"
+        mode="lazy"
+        vid="divisibility"
+        :name="$t('divisibility')"
+        :rules="validationRules.divisibility"
+        tag="div"
+        class="inputs-container"
+      >
+        <ErrorTooltip :errors="errors">
           <input
             v-model="chosenValue"
             class="input-style input-size"
             type="number"
           >
-        </div>
-      </ErrorTooltip>
-    </ValidationProvider>
-  </div>
+        </ErrorTooltip>
+      </ValidationProvider>
+    </template>
+  </FormRow>
 </template>
 
 <script lang="ts">

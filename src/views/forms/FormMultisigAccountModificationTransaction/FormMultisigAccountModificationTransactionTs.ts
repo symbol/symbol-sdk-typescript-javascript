@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 // external dependencies
-import {TransactionType, MultisigAccountModificationTransaction, PublicAccount, NetworkType} from 'nem2-sdk'
+import {TransactionType, MultisigAccountModificationTransaction, PublicAccount, MultisigAccountInfo} from 'nem2-sdk'
 import {Component, Vue, Prop} from 'vue-property-decorator'
+import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {FormTransactionBase} from '@/views/forms/FormTransactionBase/FormTransactionBase'
@@ -30,13 +31,13 @@ import {ValidationObserver} from 'vee-validate'
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
-import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
+import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 // @ts-ignore
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
 // @ts-ignore
 import SignerSelector from '@/components/SignerSelector/SignerSelector.vue'
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import FormRow from '@/components/FormRow/FormRow.vue'
 // @ts-ignore
 import ApprovalAndRemovalInput from '@/components/ApprovalAndRemovalInput/ApprovalAndRemovalInput.vue'
 // @ts-ignore
@@ -52,16 +53,19 @@ import ApprovalAndRemovalInputDisplay from '@/components/ApprovalAndRemovalInput
   components: {
     FormWrapper,
     ValidationObserver,
-    FormLabel,
+    FormRow,
     SignerSelector,
     ApprovalAndRemovalInput,
     AddCosignatoryInput,
     RemoveCosignatoryInput,
     CosignatoryModificationsDisplay,
-    MaxFeeSelector,
+    MaxFeeAndSubmit,
     ModalTransactionConfirmation,
     ApprovalAndRemovalInputDisplay,
   },
+  computed: {...mapGetters({
+    currentSignerMultisigInfo: 'wallet/currentSignerMultisigInfo',
+ })}
 })
 export class FormMultisigAccountModificationTransactionTs extends FormTransactionBase {
   /// region component properties
@@ -91,6 +95,13 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
   /// end-region component properties
 
   /**
+   * Current signer multisig info
+   * @protected
+   * @type {MultisigAccountInfo}
+   */
+  protected currentSignerMultisigInfo: MultisigAccountInfo
+
+  /**
     * Form items
     * @var {any}
     */
@@ -109,10 +120,11 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    * @type {number}
    */
   protected get newNumberOfCosignatories(): number {
-    const currentNumberOfCosignatories = this.currentMultisigInfo
-      ? this.currentMultisigInfo.cosignatories.length : 0
+    const currentNumberOfCosignatories = this.currentSignerMultisigInfo
+      ? this.currentSignerMultisigInfo.cosignatories.length : 0
 
     const newModifications = Object.values(this.formItems.cosignatoryModifications)
+    if (!newModifications.length) return currentNumberOfCosignatories
     const numberOfModifications = newModifications.length
     const numberOfRemovals = [...newModifications]
       .filter(({addOrRemove}) => addOrRemove === 'remove')
@@ -130,10 +142,9 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    */
   protected get newMinApproval(): number {
     const {minApprovalDelta} = this.formItems 
-    if(!this.currentMultisigInfo) return minApprovalDelta
-    return this.currentMultisigInfo.minApproval + minApprovalDelta
+    if(!this.currentSignerMultisigInfo) return minApprovalDelta
+    return this.currentSignerMultisigInfo.minApproval + minApprovalDelta
   }
-
 
   /**
    * New min removal value
@@ -143,9 +154,10 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    */
   protected get newMinRemoval(): number {
     const {minRemovalDelta} = this.formItems 
-    if(!this.currentMultisigInfo) return minRemovalDelta
-    return this.currentMultisigInfo.minRemoval + minRemovalDelta
+    if(!this.currentSignerMultisigInfo) return minRemovalDelta
+    return this.currentSignerMultisigInfo.minRemoval + minRemovalDelta
   }
+
   /**
     * Reset the form with properties
     * @return {void}
@@ -170,7 +182,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     this.formItems.minApprovalDelta = !!this.minApprovalDelta ? this.minApprovalDelta : defaultMinApprovalDelta
     this.formItems.minRemovalDelta = !!this.minRemovalDelta ? this.minRemovalDelta : defaultMinRemovalDelta
     this.formItems.cosignatoryModifications = !!this.cosignatoryModifications ? this.cosignatoryModifications : {}
-    this.formItems.signerPublicKey = this.signers && this.signers.length ? this.signers.slice(1, 2).shift().publicKey : ''
+    this.formItems.signerPublicKey = this.signers && this.signers.length ? this.signers[0].publicKey : ''
 
     // - maxFee must be absolute
     this.formItems.maxFee = this.defaultFee
@@ -251,6 +263,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    * @return {void}
    */
   protected onRemoveCosignatory(publicKey: string): void {
+    if (!publicKey) return 
     const publicAccount = PublicAccount.createFromPublicKey(publicKey, this.networkType)
     const modification = {cosignatory: publicAccount, addOrRemove: 'remove'}
     Vue.set(this.formItems.cosignatoryModifications, publicAccount.publicKey, modification)
@@ -262,6 +275,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    * @return {void}
    */
   protected onRemoveCosignatoryModification(publicKey: string): void {
+    if (!publicKey) return 
     const newCosignatoryModifications = {...this.formItems.cosignatoryModifications}
     delete newCosignatoryModifications[publicKey]
     Vue.set(this.formItems, 'cosignatoryModifications', newCosignatoryModifications)

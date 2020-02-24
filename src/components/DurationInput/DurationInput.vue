@@ -1,25 +1,27 @@
 <template>
-  <div class="form-line-container">
-    <FormLabel>{{ $t(label) }}</FormLabel>
-    <ValidationProvider
-      v-slot="{ errors }"
-      mode="lazy"
-      vid="form_label_duration"
-      :name="$t(label)"
-      :rules="validationRule"
-      class="inline-container"
-    >
-      <ErrorTooltip :errors="errors">
-        <div class="full-width-item-container">
+  <FormRow>
+    <template v-slot:label>
+      {{ $t(label) }}:
+    </template>
+    <template v-slot:inputs>
+      <ValidationProvider
+        v-slot="{ errors }"
+        vid="form_label_duration"
+        :name="$t(label)"
+        :rules="validationRule"
+        tag="div"
+        class="inputs-container"
+      >
+        <ErrorTooltip :errors="errors">
           <input
             v-model="chosenValue"
             class="input-style input-size"
             type="number"
           >
-        </div>
-      </ErrorTooltip>
-    </ValidationProvider>
-  </div>
+        </ErrorTooltip>
+      </ValidationProvider>
+    </template>
+  </FormRow>
 </template>
 
 <script lang="ts">

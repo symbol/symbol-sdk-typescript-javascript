@@ -1,29 +1,31 @@
 <template>
-  <div class="form-line-container">
-    <FormLabel>{{ $t('form_label_remove_cosignatory') }}</FormLabel>
-    <div class="inline-container full-width-item-container">
-      <Select
-        v-model="cosignatory"
-        class="select-size select-style"
-      >
-        <Option
-          v-for="{publicKey} in cosignatories"
-          :key="publicKey"
-          :value="publicKey"
-        >
-          {{ getAddressFromPublicKey(publicKey) }}
-        </Option>
-      </Select>
-      <div class="button-container">
-        <button
-          class="right-side-round-button round-button red"
+  <FormRow>
+    <template v-slot:label>
+      {{ $t('form_label_remove_cosignatory') }}:
+    </template>
+    <template v-slot:inputs>
+      <div class="row-cosignatory-action inputs-container">
+        <div class="select-container">
+          <Select
+            v-model="cosignatory"
+            class="select-size select-style"
+          >
+            <Option
+              v-for="{publicKey} in cosignatories"
+              :key="publicKey"
+              :value="publicKey"
+            >
+              {{ getAddressFromPublicKey(publicKey) }}
+            </Option>
+          </Select>
+        </div>
+        <ButtonRemove
+          class="button-add align-right"
           @click="onRemoveCosignatory"
-        >
-          <Icon type="md-remove-circle" />
-        </button>
+        />
       </div>
-    </div>
-  </div>
+    </template>
+  </FormRow>
 </template>
 
 <script lang="ts">

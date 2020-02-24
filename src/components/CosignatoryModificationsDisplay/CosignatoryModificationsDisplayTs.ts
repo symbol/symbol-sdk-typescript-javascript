@@ -24,7 +24,7 @@ import {CosignatoryModifications} from '@/core/transactions/ViewMultisigAccountM
 // child components
 import {ValidationProvider} from 'vee-validate'
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import FormRow from '@/components/FormRow/FormRow.vue'
 
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
@@ -33,7 +33,7 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
   components: {
     ValidationProvider,
     ErrorTooltip,
-    FormLabel,
+    FormRow,
   },
   computed: {...mapGetters({
     networkType: 'network/networkType',

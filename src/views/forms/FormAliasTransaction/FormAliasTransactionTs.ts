@@ -32,7 +32,7 @@ import {ValidationProvider, ValidationObserver} from 'vee-validate'
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import FormRow from '@/components/FormRow/FormRow.vue'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
@@ -45,19 +45,22 @@ import AddressInput from '@/components/AddressInput/AddressInput.vue'
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
 // @ts-ignore
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
+// @ts-ignore
+import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 
 @Component({
   components: {
     ValidationProvider,
     ValidationObserver,
     FormWrapper,
-    FormLabel,
+    FormRow,
     ErrorTooltip,
     NamespaceSelector,
     MosaicSelector,
     AddressInput,
     MaxFeeSelector,
     ModalTransactionConfirmation,
+    MaxFeeAndSubmit,
   },
   computed: {...mapGetters({
     ownedNamespaces: 'wallet/currentWalletOwnedNamespaces', 

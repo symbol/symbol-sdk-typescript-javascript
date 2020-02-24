@@ -19,18 +19,15 @@ import {mapGetters} from 'vuex'
 import {Address, PublicAccount, NetworkType} from 'nem2-sdk'
 
 // child components
-import {ValidationObserver, ValidationProvider} from 'vee-validate'
 // @ts-ignore
-import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+import FormRow from '@/components/FormRow/FormRow.vue'
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import ButtonRemove from '@/components/ButtonRemove/ButtonRemove.vue'
 
 @Component({
   components: {
-    ValidationObserver,
-    ValidationProvider,
-    ErrorTooltip,
-    FormLabel,
+    FormRow,
+    ButtonRemove,
   },
   computed: {
     ...mapGetters({

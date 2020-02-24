@@ -26,7 +26,7 @@ import AmountInput from '@/components/AmountInput/AmountInput.vue'
 // @ts-ignore
 import ButtonAdd from '@/components/ButtonAdd/ButtonAdd.vue'
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import FormRow from '@/components/FormRow/FormRow.vue'
 import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
 
 @Component({
@@ -35,7 +35,7 @@ import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
     MosaicSelector,
     AmountInput,
     ButtonAdd,
-    FormLabel,
+    FormRow,
   },
   computed: {...mapGetters({
     networkMosaic: 'mosaic/networkMosaic',

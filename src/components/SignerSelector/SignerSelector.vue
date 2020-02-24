@@ -1,25 +1,28 @@
 <template>
-  <div class="form-line-container">
-    <FormLabel>{{ label && label.length ? label : $t('sender') }}</FormLabel>
-    <div class="inline-container">
-      <div class="full-width-item-container">
-        <Select
+  <FormRow class-name="emphasis">
+    <template v-slot:label>
+      {{ $t('sender') }}:
+    </template>
+    <template v-slot:inputs>
+      <div class="inputs-container select-container">
+        <select
           v-model="chosenSigner"
           :placeholder="$t('publicKey')"
           class="select-size select-style"
         >
-          <Option
+          <option
             v-for="item in signers"
             :key="item.publicKey"
             :value="item.publicKey"
           >
             {{ item.label }}
-          </Option>
-        </Select>
+          </option>
+        </select>
       </div>
-    </div>
-  </div>
+    </template>
+  </FormRow>
 </template>
+
 
 <script lang="ts">
 import { SignerSelectorTs } from './SignerSelectorTs'

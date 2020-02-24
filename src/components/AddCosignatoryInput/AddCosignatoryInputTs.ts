@@ -29,14 +29,17 @@ import {ValidationObserver, ValidationProvider} from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import FormRow from '@/components/FormRow/FormRow.vue'
+// @ts-ignore
+import ButtonAdd from '@/components/ButtonAdd/ButtonAdd.vue'
 
 @Component({
   components: {
     ValidationObserver,
     ValidationProvider,
     ErrorTooltip,
-    FormLabel,
+    FormRow,
+    ButtonAdd,
   },
   computed: {
     ...mapGetters({

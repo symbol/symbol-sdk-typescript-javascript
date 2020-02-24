@@ -4,9 +4,9 @@
     <template v-slot:form-section>
       <FormMultisigAccountModificationTransaction multisig-operation-type="conversion" />
     </template>
-    <template v-slot:right-section>
+    <!-- <template v-slot:right-section>
       ConvertAccountPage right section
-    </template>
+    </template> -->
   </MultisigFormPage>
 </template>
 
