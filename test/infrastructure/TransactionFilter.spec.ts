@@ -22,7 +22,7 @@ describe('TransactionFilter', () => {
     it('should return correct query param', () => {
         const param = new TransactionFilter({
             types: [TransactionType.TRANSFER, TransactionType.ACCOUNT_LINK],
-        })
+        });
 
         expect(param.convertCSV(param.types)).to.be.equal('16724,16716');
     });

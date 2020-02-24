@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { AccountInfoDTO, AccountRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { AccountInfoDTO, AccountRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { AccountInfo } from '../model/account/AccountInfo';
 import { ActivityBucket } from '../model/account/ActivityBucket';
 import { Address } from '../model/account/Address';

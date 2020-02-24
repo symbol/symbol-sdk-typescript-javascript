@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { NetworkRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { NetworkRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { NetworkFees } from '../model/blockchain/NetworkFees';
 import { NetworkName } from '../model/blockchain/NetworkName';
 import { NetworkType } from '../model/blockchain/NetworkType';

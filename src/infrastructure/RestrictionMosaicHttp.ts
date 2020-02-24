@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
+import { from as observableFrom, Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import {
     MosaicAddressRestrictionDTO,
     MosaicGlobalRestrictionDTO,
     RestrictionMosaicRoutesApi,
 } from 'symbol-openapi-typescript-node-client';
-import { from as observableFrom, Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
 import { Address } from '../model/account/Address';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicAddressRestriction } from '../model/restriction/MosaicAddressRestriction';

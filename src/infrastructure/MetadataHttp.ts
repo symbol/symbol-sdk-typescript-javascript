@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { MetadataDTO, MetadataRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { MetadataDTO, MetadataRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { Convert } from '../core/format/Convert';
 import { Address } from '../model/account/Address';
 import { Metadata } from '../model/metadata/Metadata';

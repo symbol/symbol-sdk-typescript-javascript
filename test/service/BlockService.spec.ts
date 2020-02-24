@@ -16,6 +16,7 @@
 
 import { expect } from 'chai';
 import { of as observableOf } from 'rxjs';
+import { PositionEnum } from 'symbol-openapi-typescript-node-client';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { BlockRepository } from '../../src/infrastructure/BlockRepository';
 import { ReceiptRepository } from '../../src/infrastructure/ReceiptRepository';
@@ -28,7 +29,6 @@ import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { UInt64 } from '../../src/model/UInt64';
 import { BlockService } from '../../src/service/BlockService';
 import { TestingAccount } from '../conf/conf.spec';
-import { PositionEnum } from 'symbol-openapi-typescript-node-client';
 
 describe('BlockService', () => {
 
