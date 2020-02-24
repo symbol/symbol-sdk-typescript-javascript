@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { TransactionStateTypeEnum, TransactionStatusTypeEnum } from 'nem2-sdk-openapi-typescript-node-client';
+import { TransactionStateTypeEnum, TransactionStatusTypeEnum } from 'symbol-openapi-typescript-node-client';
 import {UInt64} from '../UInt64';
 import {Deadline} from './Deadline';
 

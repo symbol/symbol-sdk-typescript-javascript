@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { NodeRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { NodeRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { StorageInfo } from '../model/blockchain/StorageInfo';
 import { NodeHealth } from '../model/node/NodeHealth';
 import { NodeInfo } from '../model/node/NodeInfo';
@@ -34,7 +34,7 @@ import { NodeRepository } from './NodeRepository';
 export class NodeHttp extends Http implements NodeRepository {
     /**
      * @internal
-     * Nem2 Library account routes api
+     * Symbol openapi typescript-node client account routes api
      */
     private nodeRoutesApi: NodeRoutesApi;
 
@@ -64,6 +64,27 @@ export class NodeHttp extends Http implements NodeRepository {
                 body.host,
                 body.friendlyName,
             )),
+            catchError((error) =>  throwError(this.errorHandling(error))),
+        );
+    }
+
+    /**
+     * Gets the list of peers visible by the node,
+     * @summary Gets the list of peers visible by the node
+     */
+    public getNodePeers(): Observable<NodeInfo[]> {
+        return observableFrom(this.nodeRoutesApi.getNodePeers()).pipe(
+            map(({body}) => body.map((nodeInfo) =>
+                new NodeInfo(
+                    nodeInfo.publicKey,
+                    nodeInfo.networkGenerationHash,
+                    nodeInfo.port,
+                    nodeInfo.networkIdentifier,
+                    nodeInfo.version,
+                    nodeInfo.roles as number,
+                    nodeInfo.host,
+                    nodeInfo.friendlyName,
+            ))),
             catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }

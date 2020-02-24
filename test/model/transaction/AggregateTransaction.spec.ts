@@ -422,7 +422,7 @@ describe('AggregateTransaction', () => {
 
     it('Should create signed transaction with cosignatories - Aggregated Complete', () => {
         /**
-         * @see https://github.com/nemtech/nem2-sdk-typescript-javascript/issues/112
+         * @see https://github.com/nemtech/symbol-sdk-typescript-javascript/issues/112
          */
         const accountAlice = TestingAccount;
         const accountBob = CosignatoryAccount;

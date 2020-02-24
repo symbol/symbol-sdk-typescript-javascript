@@ -24,7 +24,7 @@
  * 0x80 Account restriction is interpreted as blocking operation.
  */
 
- // !!This enum will be deprecated once catbuffer code applied.
+ // !!This enum will be deprecated once catbuffer-typescript code applied.
 enum AccountRestrictionTypeEnum {
     Address = 0x0001,
     Mosaic = 0x0002,

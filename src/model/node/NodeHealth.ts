@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { NodeStatusEnum } from 'nem2-sdk-openapi-typescript-node-client';
+import { NodeStatusEnum } from 'symbol-openapi-typescript-node-client';
 
 /**
  * The node info structure describes basic information of a node health.

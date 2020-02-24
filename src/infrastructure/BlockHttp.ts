@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { BlockInfoDTO, BlockRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { BlockInfoDTO, BlockRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { PublicAccount } from '../model/account/PublicAccount';
 import { BlockInfo } from '../model/blockchain/BlockInfo';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
@@ -36,7 +36,7 @@ import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO
 export class BlockHttp extends Http implements BlockRepository {
     /**
      * @internal
-     * Nem2 Library block routes api
+     * Symbol openapi typescript-node client block routes api
      */
     private readonly blockRoutesApi: BlockRoutesApi;
 

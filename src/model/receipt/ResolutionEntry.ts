@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { GeneratorUtils } from 'catbuffer';
+import { GeneratorUtils } from 'catbuffer-typescript';
 import { RawAddress } from '../../core/format/RawAddress';
 import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';

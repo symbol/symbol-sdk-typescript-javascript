@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { EmbeddedTransactionBuilder, EmbeddedTransactionHelper } from 'catbuffer';
+import { EmbeddedTransactionBuilder, EmbeddedTransactionHelper } from 'catbuffer-typescript';
 import { KeyPair, SHA3Hasher } from '../../core/crypto';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';

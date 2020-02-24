@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { ChainRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { ChainRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { BlockchainScore } from '../model/blockchain/BlockchainScore';
 import { UInt64 } from '../model/UInt64';
 import { ChainRepository } from './ChainRepository';
@@ -30,7 +30,7 @@ import { Http } from './Http';
 export class ChainHttp extends Http implements ChainRepository {
     /**
      * @internal
-     * Nem2 Library chain routes api
+     * Symbol openapi typescript-node client chain routes api
      */
     private chainRoutesApi: ChainRoutesApi;
 

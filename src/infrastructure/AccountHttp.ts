@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { AccountInfoDTO, AccountRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { AccountInfoDTO, AccountRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { AccountInfo } from '../model/account/AccountInfo';
 import { ActivityBucket } from '../model/account/ActivityBucket';
 import { Address } from '../model/account/Address';
@@ -39,7 +39,7 @@ import { TransactionFilter } from './TransactionFilter';
 export class AccountHttp extends Http implements AccountRepository {
     /**
      * @internal
-     * Nem2 Library account routes api
+     * Symbol openapi typescript-node client account routes api
      */
     private accountRoutesApi: AccountRoutesApi;
 

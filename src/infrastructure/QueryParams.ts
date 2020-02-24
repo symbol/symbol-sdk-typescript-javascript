@@ -61,9 +61,9 @@ export class QueryParams {
         id?: string;
     }) {
         if (args) {
-            if (args.pageSize) this.setPageSize(args.pageSize)
-            if (args.order) this.order = args.order
-            if (args.id) this.id = args.id
+            if (args.pageSize) { this.setPageSize(args.pageSize); }
+            if (args.order) { this.order = args.order; }
+            if (args.id) { this.id = args.id; }
         }
     }
 
@@ -75,8 +75,8 @@ export class QueryParams {
      */
     private setPageSize(pageSize?: number): void {
         if (pageSize && pageSize > 100) {
-            throw new Error('The page size has to be between 10 and 100')
+            throw new Error('The page size has to be between 10 and 100');
         }
-        this.pageSize = pageSize || 10
+        this.pageSize = pageSize || 10;
     }
 }

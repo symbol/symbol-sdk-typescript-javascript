@@ -22,7 +22,7 @@ import {
     TransactionStateTypeEnum,
     TransactionStatusDTO,
     TransactionStatusTypeEnum,
-} from 'nem2-sdk-openapi-typescript-node-client';
+} from 'symbol-openapi-typescript-node-client';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';

@@ -21,7 +21,7 @@ import { AddressDto,
          MosaicResolutionStatementBuilder,
          ReceiptSourceBuilder,
          UnresolvedAddressDto,
-         UnresolvedMosaicIdDto } from 'catbuffer';
+         UnresolvedMosaicIdDto } from 'catbuffer-typescript';
 import { sha3_256 } from 'js-sha3';
 import { RawAddress } from '../../core/format/RawAddress';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
