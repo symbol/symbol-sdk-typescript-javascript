@@ -69,6 +69,27 @@ export class NodeHttp extends Http implements NodeRepository {
     }
 
     /**
+     * Gets the list of peers visible by the node,
+     * @summary Gets the list of peers visible by the node
+     */
+    public getNodePeers(): Observable<NodeInfo[]> {
+        return observableFrom(this.nodeRoutesApi.getNodePeers()).pipe(
+            map(({body}) => body.map((nodeInfo) =>
+                new NodeInfo(
+                    nodeInfo.publicKey,
+                    nodeInfo.networkGenerationHash,
+                    nodeInfo.port,
+                    nodeInfo.networkIdentifier,
+                    nodeInfo.version,
+                    nodeInfo.roles as number,
+                    nodeInfo.host,
+                    nodeInfo.friendlyName,
+            ))),
+            catchError((error) =>  throwError(this.errorHandling(error))),
+        );
+    }
+
+    /**
      * Gets the node time at the moment the reply was sent and received.
      * @summary Get the node time
      */
