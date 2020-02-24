@@ -6,7 +6,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 ## 24-Feb-2020
 
 **Milestone**: Fushicho.4(RC3 0.9.3.1)
-Name | Version | Link
+ Versions  |   |
 ---|---|---
 SDK Core| v0.17.1 | https://www.npmjs.com/package/symbol-sdk
 Catbuffer | v0.0.11 | https://www.npmjs.com/package/catbuffer-typescript
@@ -20,7 +20,7 @@ Client Library | v0.8.5  | https://www.npmjs.com/package/symbol-openapi-typescri
 ## 17-Feb-2020
 
 **Milestone**: Fushicho.4(RC3 0.9.3.1)
-Name | Version | Link
+ Versions  |   |
 ---|---|---
 SDK Core | v0.17.0 | https://www.npmjs.com/package/nem2-sdk
 catbuffer | v0.0.11 | https://www.npmjs.com/package/catbuffer
@@ -40,7 +40,7 @@ Client Library | v0.8.4  | https://www.npmjs.com/package/nem2-sdk-openapi-typesc
 ## 30-Jan-2020
 
 **Milestone**: Fushicho.4(RC3)
-Name | Version | Link
+ Versions  |   |
 ---|---|---
 SDK Core| v0.16.5 | https://www.npmjs.com/package/nem2-sdk
 catbuffer Library| v0.0.11 | https://www.npmjs.com/package/catbuffer
@@ -51,7 +51,7 @@ Client Library | v0.7.20-beta.7  | https://www.npmjs.com/package/nem2-sdk-openap
 ## 30-Jan-2020
 
 **Milestone**: Fushicho.4(RC3)
-Name | Version | Link
+ Versions  |   |
 ---|---|---
 SDK Core| v0.16.4 | https://www.npmjs.com/package/nem2-sdk
 catbuffer Library| v0.0.11 | https://www.npmjs.com/package/catbuffer
@@ -69,7 +69,7 @@ Client Library | v0.7.20-beta.7  | https://www.npmjs.com/package/nem2-sdk-openap
 ## 09-Jan-2020
 
 **Milestone**: Fushicho.3
-Name | Version | Link
+ Versions  |   |
 ---|---|---
 SDK Core| v0.16.3 | https://www.npmjs.com/package/nem2-sdk
 catbuffer Library| v0.0.7 | https://www.npmjs.com/package/catbuffer
@@ -80,7 +80,7 @@ Client Library | v0.7.20-beta.6  | https://www.npmjs.com/package/nem2-sdk-openap
 ## 06-Jan-2020
 
 **Milestone**: Fushicho.3
-Name | Version | Link
+ Versions  |   |
 ---|---|---
 SDK Core| v0.16.2 | https://www.npmjs.com/package/nem2-sdk
 catbuffer Library| v0.0.7 | https://www.npmjs.com/package/catbuffer
