@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## 24-Feb-2020
+## [0.17.1] - 24-Feb-2020
 
 **Milestone**: Fushicho.4(RC3 0.9.3.1)
  Versions  |   |
@@ -17,7 +17,7 @@ Client Library | v0.8.5  | https://www.npmjs.com/package/symbol-openapi-typescri
 - Added `node/peers` endpoint.
 - Fixed security issues reported by github.
 
-## 17-Feb-2020
+## [0.17.0] - 17-Feb-2020
 
 **Milestone**: Fushicho.4(RC3 0.9.3.1)
  Versions  |   |
@@ -37,7 +37,7 @@ Client Library | v0.8.4  | https://www.npmjs.com/package/nem2-sdk-openapi-typesc
 - Improved e2e testing by using `async / await`.
 - General legacy code refactoring and cleanup.
 
-## 30-Jan-2020
+## [0.16.5] - 30-Jan-2020
 
 **Milestone**: Fushicho.4(RC3)
  Versions  |   |
@@ -48,7 +48,7 @@ Client Library | v0.7.20-beta.7  | https://www.npmjs.com/package/nem2-sdk-openap
 
 - Fixed circular reference issue after removed `InnerTransaction` class.
 
-## 30-Jan-2020
+## [0.16.4] - 30-Jan-2020
 
 **Milestone**: Fushicho.4(RC3)
  Versions  |   |
@@ -66,7 +66,7 @@ Client Library | v0.7.20-beta.7  | https://www.npmjs.com/package/nem2-sdk-openap
 - Changed signature type for `Height` from `numeric string` to `UInt64` in `Block` & `Receipt` respostiories
 - Fixed a few ts lint issues.
 
-## 09-Jan-2020
+## [0.16.3] - 09-Jan-2020
 
 **Milestone**: Fushicho.3
  Versions  |   |
@@ -77,7 +77,7 @@ Client Library | v0.7.20-beta.6  | https://www.npmjs.com/package/nem2-sdk-openap
 
 - Fixed http client (OpenAPI client package) does not support ES6 issue.
 
-## 06-Jan-2020
+## [0.16.2] - 06-Jan-2020
 
 **Milestone**: Fushicho.3
  Versions  |   |
