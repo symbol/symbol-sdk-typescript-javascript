@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { BlockInfoDTO, BlockRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { BlockInfoDTO, BlockRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { PublicAccount } from '../model/account/PublicAccount';
 import { BlockInfo } from '../model/blockchain/BlockInfo';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';

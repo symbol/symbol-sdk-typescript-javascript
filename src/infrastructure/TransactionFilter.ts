@@ -34,7 +34,7 @@ export class TransactionFilter {
     constructor(args?: {
         types?: TransactionType[],
     }) {
-        if (args && args.types) this.types = args.types
+        if (args && args.types) { this.types = args.types; }
     }
 
     /**

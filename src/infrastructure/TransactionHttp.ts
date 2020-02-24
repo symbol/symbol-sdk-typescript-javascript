@@ -15,9 +15,9 @@
  */
 
 import { ClientResponse } from 'http';
-import { BlockInfoDTO, BlockRoutesApi, TransactionRoutesApi, TransactionStatusDTO } from 'symbol-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
+import { BlockInfoDTO, BlockRoutesApi, TransactionRoutesApi, TransactionStatusDTO } from 'symbol-openapi-typescript-node-client';
 import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
 import { Deadline } from '../model/transaction/Deadline';
 import { SignedTransaction } from '../model/transaction/SignedTransaction';

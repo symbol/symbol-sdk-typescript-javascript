@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { NamespaceRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
+import { NamespaceRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { Convert as convert, RawAddress as AddressLibrary } from '../core/format';
 import { AccountNames } from '../model/account/AccountNames';
 import { Address } from '../model/account/Address';

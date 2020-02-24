@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { ReceiptRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
+import { ReceiptRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
 import { NetworkType } from '../model/blockchain/NetworkType';

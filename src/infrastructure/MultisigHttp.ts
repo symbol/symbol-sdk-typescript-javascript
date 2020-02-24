@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { MultisigRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
+import { MultisigRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { Address } from '../model/account/Address';
 import { MultisigAccountGraphInfo } from '../model/account/MultisigAccountGraphInfo';
 import { MultisigAccountInfo } from '../model/account/MultisigAccountInfo';
