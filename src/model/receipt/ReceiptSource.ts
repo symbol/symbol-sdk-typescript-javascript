@@ -1,4 +1,4 @@
-import { GeneratorUtils } from 'catbuffer';
+import { GeneratorUtils } from 'catbuffer-typescript';
 
 /*
  * Copyright 2019 NEM

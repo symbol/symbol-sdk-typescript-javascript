@@ -28,7 +28,7 @@ import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { UInt64 } from '../../src/model/UInt64';
 import { BlockService } from '../../src/service/BlockService';
 import { TestingAccount } from '../conf/conf.spec';
-import { PositionEnum } from 'nem2-sdk-openapi-typescript-node-client';
+import { PositionEnum } from 'symbol-openapi-typescript-node-client';
 
 describe('BlockService', () => {
 

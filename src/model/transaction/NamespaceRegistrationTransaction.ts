@@ -24,7 +24,7 @@ import {
     NamespaceRegistrationTransactionBuilder,
     SignatureDto,
     TimestampDto,
-} from 'catbuffer';
+} from 'catbuffer-typescript';
 import { Convert, Convert as convert } from '../../core/format';
 import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
 import { PublicAccount } from '../account/PublicAccount';

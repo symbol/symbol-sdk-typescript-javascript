@@ -1283,7 +1283,7 @@ describe('TransactionHttp', () => {
         it('Announce cosign signatures given', () => {
 
             /**
-             * @see https://github.com/nemtech/nem2-sdk-typescript-javascript/issues/112
+             * @see https://github.com/nemtech/symbol-sdk-typescript-javascript/issues/112
              */
                 // AliceAccount: account
                 // BobAccount: account

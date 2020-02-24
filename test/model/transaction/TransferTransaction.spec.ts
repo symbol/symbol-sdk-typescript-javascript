@@ -221,7 +221,7 @@ describe('TransferTransaction', () => {
         });
     });
 
-    it('should create TransferTransaction and sign using catbuffer', () => {
+    it('should create TransferTransaction and sign using catbuffer-typescript', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),

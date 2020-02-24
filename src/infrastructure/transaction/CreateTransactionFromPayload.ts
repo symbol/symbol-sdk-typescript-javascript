@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { EmbeddedTransactionBuilder, TransactionBuilder } from 'catbuffer';
+import { EmbeddedTransactionBuilder, TransactionBuilder } from 'catbuffer-typescript';
 import { Convert as convert } from '../../core/format';
 import { InnerTransaction } from '../../model/model';
 import { AccountAddressRestrictionTransaction } from '../../model/transaction/AccountAddressRestrictionTransaction';

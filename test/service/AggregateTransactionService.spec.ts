@@ -33,7 +33,7 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { AggregateTransactionService } from '../../src/service/AggregateTransactionService';
 
 /**
- * For multi level multisig scenario visit: https://github.com/nemtech/nem2-docs/issues/10
+ * For multi level multisig scenario visit: https://github.com/nemtech/symbol-docs/issues/10
  */
 describe('AggregateTransactionService', () => {
     let aggregateTransactionService: AggregateTransactionService;

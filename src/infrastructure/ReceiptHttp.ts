@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ReceiptRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
+import { ReceiptRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
@@ -34,7 +34,7 @@ import { ReceiptRepository } from './ReceiptRepository';
 export class ReceiptHttp extends Http implements ReceiptRepository {
     /**
      * @internal
-     * Nem2 Library receipt routes api
+     * Symbol openapi typescript-node client receipt routes api
      */
     private readonly receiptRoutesApi: ReceiptRoutesApi;
 

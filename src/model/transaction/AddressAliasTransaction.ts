@@ -24,7 +24,7 @@ import {
     NamespaceIdDto,
     SignatureDto,
     TimestampDto,
-} from 'catbuffer';
+} from 'catbuffer-typescript';
 import { Convert, RawAddress } from '../../core/format';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { AmountDto, InflationReceiptBuilder, MosaicBuilder, MosaicIdDto } from 'catbuffer';
+import { AmountDto, InflationReceiptBuilder, MosaicBuilder, MosaicIdDto } from 'catbuffer-typescript';
 import { MosaicId } from '../mosaic/MosaicId';
 import { UInt64 } from '../UInt64';
 import { Receipt } from './Receipt';

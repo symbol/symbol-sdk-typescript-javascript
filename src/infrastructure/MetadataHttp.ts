@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { MetadataDTO, MetadataRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
+import { MetadataDTO, MetadataRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Convert } from '../core/format/Convert';
@@ -37,7 +37,7 @@ import { QueryParams } from './QueryParams';
 export class MetadataHttp extends Http implements MetadataRepository {
     /**
      * @internal
-     * Nem2 Library metadata routes api
+     * Symbol openapi typescript-node client metadata routes api
      */
     private readonly metadataRoutesApi: MetadataRoutesApi;
 

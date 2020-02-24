@@ -24,7 +24,7 @@ import {
     NamespaceIdDto,
     SignatureDto,
     TimestampDto,
-} from 'catbuffer';
+} from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';

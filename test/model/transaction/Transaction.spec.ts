@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { EmbeddedTransactionBuilder } from 'catbuffer';
+import { EmbeddedTransactionBuilder } from 'catbuffer-typescript';
 import { expect } from 'chai';
 import { Convert } from '../../../src/core/format/Convert';
 import { Account } from '../../../src/model/account/Account';

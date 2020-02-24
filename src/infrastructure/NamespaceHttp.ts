@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { NamespaceRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
+import { NamespaceRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Convert as convert, RawAddress as AddressLibrary } from '../core/format';
@@ -44,7 +44,7 @@ import { QueryParams } from './QueryParams';
 export class NamespaceHttp extends Http implements NamespaceRepository {
     /**
      * @internal
-     * Nem2 Library namespace routes api
+     * Symbol openapi typescript-node client namespace routes api
      */
     private namespaceRoutesApi: NamespaceRoutesApi;
 

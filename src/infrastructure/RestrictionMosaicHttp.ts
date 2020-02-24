@@ -18,7 +18,7 @@ import {
     MosaicAddressRestrictionDTO,
     MosaicGlobalRestrictionDTO,
     RestrictionMosaicRoutesApi,
-} from 'nem2-sdk-openapi-typescript-node-client';
+} from 'symbol-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Address } from '../model/account/Address';
