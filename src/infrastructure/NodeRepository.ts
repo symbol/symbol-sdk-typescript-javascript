@@ -35,6 +35,12 @@ export interface NodeRepository {
     getNodeInfo(): Observable<NodeInfo>;
 
     /**
+     * Gets the list of peers visible by the node,
+     * @summary Gets the list of peers visible by the node
+     */
+    getNodePeers(): Observable<NodeInfo[]>;
+
+    /**
      * Gets the node time at the moment the reply was sent and received.
      * @summary Get the node time
      */

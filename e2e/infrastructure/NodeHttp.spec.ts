@@ -41,6 +41,19 @@ describe('NodeHttp', () => {
         });
     });
 
+    describe('getNodePeers', () => {
+        it('should return node peers', async () => {
+            const nodeInfo = await nodeRepository.getNodePeers().toPromise();
+            expect(nodeInfo[0].friendlyName).not.to.be.undefined;
+            expect(nodeInfo[0].host).not.to.be.undefined;
+            expect(nodeInfo[0].networkIdentifier).not.to.be.undefined;
+            expect(nodeInfo[0].port).not.to.be.undefined;
+            expect(nodeInfo[0].publicKey).not.to.be.undefined;
+            expect(nodeInfo[0].roles).not.to.be.undefined;
+            expect(nodeInfo[0].version).not.to.be.undefined;
+        });
+    });
+
     describe('getNodeTime', () => {
         it('should return node time', async () => {
             const nodeTime = await nodeRepository.getNodeTime().toPromise();
