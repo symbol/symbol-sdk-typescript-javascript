@@ -875,6 +875,9 @@ export default {
       {commit, dispatch, rootGetters},
       {issuer, signedLock, signedPartial}
     ): Promise<BroadcastResult> {
+      if (!issuer || issuer.length !== 40) {
+        return ;
+      }
 
       dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_ANNOUNCE_PARTIAL dispatched with: ' + JSON.stringify({
         issuer: issuer,
@@ -889,15 +892,16 @@ export default {
         const transactionHttp = RESTService.create('TransactionHttp', currentPeer)
 
         // - prepare scoped *confirmation listener*
-        const listener = new Listener(wsEndpoint)
+        const listener = new Listener(wsEndpoint, WebSocket)
         await listener.open()
 
         // - announce hash lock transaction and await confirmation
-        await transactionHttp.announce(signedLock)
+        transactionHttp.announce(signedLock)
 
         // - listen for hash lock confirmation
         return new Promise((resolve, reject) => {
-          return listener.confirmed(issuer, signedLock.hash).subscribe(
+          const address = Address.createFromRawAddress(issuer)
+          return listener.confirmed(address, signedLock.hash).subscribe(
             async (success) => {
               // - hash lock confirmed, now announce partial
               const response = await transactionHttp.announceAggregateBonded(signedPartial)

@@ -181,7 +181,6 @@ export class ModalTransactionConfirmationTs extends Vue {
     const service = new TransactionService(this.$store)
 
     let signedTransactions: SignedTransaction[] = []
-    let results: BroadcastResult[] = []
 
     // - case 1 "is multisig": must create hash lock (aggregate bonded pre-requirement)
     if (options.isMultisig) {
@@ -200,24 +199,8 @@ export class ModalTransactionConfirmationTs extends Vue {
     this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
 
     // - notify about successful transaction announce
-    this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
-
-    // - broadcast signed transactions
-    if (options.isMultisig) {
-      results = await service.announcePartialTransactions()
-    }
-    else {
-      results = await service.announceSignedTransactions()
-    }
-
-    // - notify about errors and exit
-    const errors = results.filter(result => false === result.success)
-    if (errors.length) {
-      errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
-      return ;
-    }
-
-    this.$emit('success')
+    this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed')
+    this.$emit('success', account.publicAccount)
     this.show = false
   }
 

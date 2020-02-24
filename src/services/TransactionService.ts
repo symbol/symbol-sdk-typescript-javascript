@@ -45,6 +45,7 @@ import {
   CosignatureTransaction,
   LockFundsTransaction,
   Mosaic,
+  PublicAccount,
 } from 'nem2-sdk'
 
 // internal dependencies
@@ -280,7 +281,7 @@ export class TransactionService extends AbstractService {
    */
   public signStagedTransactions(account: Account): SignedTransaction[] {
     // - shortcuts
-    const transactions = this.$store.getters['wallets/stagedTransactions']
+    const transactions = this.$store.getters['wallet/stagedTransactions']
     const generationHash = this.$store.getters['network/generationHash']
     const signedTransactions = []
 
@@ -315,8 +316,9 @@ export class TransactionService extends AbstractService {
   public signAggregateStagedTransactions(account: Account): SignedTransaction[] {
     // - shortcuts
     const networkType = this.$store.getters['network/networkType']
-    const transactions = this.$store.getters['wallets/stagedTransactions']
+    const transactions = this.$store.getters['wallet/stagedTransactions']
     const generationHash = this.$store.getters['network/generationHash']
+    const defaultFee = this.$store.getters['app/defaultFee']
     const signedTransactions = []
 
     // - aggregate staged transactions
@@ -326,7 +328,7 @@ export class TransactionService extends AbstractService {
       transactions.map(t => t.toAggregate(account.publicAccount)),
       networkType,
       [],
-      UInt64.fromUint(1000000)
+      UInt64.fromUint(defaultFee)
     );
 
     // - sign aggregate transaction
@@ -359,8 +361,9 @@ export class TransactionService extends AbstractService {
   public signMultisigStagedTransactions(account: Account): SignedTransaction[] {
     // - shortcuts
     const networkType = this.$store.getters['network/networkType']
-    const transactions = this.$store.getters['wallets/stagedTransactions']
+    const transactions = this.$store.getters['wallet/stagedTransactions']
     const generationHash = this.$store.getters['network/generationHash']
+    const defaultFee = this.$store.getters['app/defaultFee']
     const signedTransactions = []
 
     // - aggregate staged transactions
@@ -370,7 +373,7 @@ export class TransactionService extends AbstractService {
       transactions.map(t => t.toAggregate(account.publicAccount)),
       networkType,
       [],
-      UInt64.fromUint(1000000)
+      UInt64.fromUint(defaultFee)
     );
 
     // - sign aggregate transaction and create lock
@@ -430,10 +433,11 @@ export class TransactionService extends AbstractService {
    * This method will pick only aggregate BONDED and hash
    * lock transactions.
    *
+   * @param {PublicAccount} issuer
    * @return {Observable<BroadcastResult[]>}
    * @throws {Error}  On missing signed hash lock transaction.
    */
-  public async announcePartialTransactions(): Promise<BroadcastResult[]> {
+  public async announcePartialTransactions(issuer: PublicAccount): Promise<BroadcastResult[]> {
     // - shortcuts
     const signedTransactions = this.$store.getters['wallet/signedTransactions']
 
@@ -448,6 +452,7 @@ export class TransactionService extends AbstractService {
 
     // - announce lock, await confirmation and announce partial
     const result = await this.$store.dispatch('wallet/REST_ANNOUNCE_PARTIAL', {
+      issuer: issuer.address.plain(),
       signedLock: hashLockTransaction,
       signedPartial: aggregateTransaction,
     })

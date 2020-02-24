@@ -39,6 +39,8 @@ import {TransactionFactory} from '@/core/transactions/TransactionFactory'
 import {ViewTransferTransaction} from '@/core/transactions/ViewTransferTransaction'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {WalletService} from '@/services/WalletService'
+import {TransactionService} from '@/services/TransactionService'
+import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 
 @Component({
   computed: {...mapGetters({
@@ -269,11 +271,40 @@ export class FormTransactionBase extends Vue {
    * the event 'success'
    * @return {void}
    */
-  public onConfirmationSuccess() {
+  public async onConfirmationSuccess(issuer: PublicAccount) {
     this.resetForm()
-    this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS_ACCOUNT_UNLOCKED)
     this.hasConfirmationModal = false
     this.$emit('on-confirmation-success')
+
+    //XXX does the user want to broadcast NOW ?
+
+    // - read transaction stage options
+    const options = this.$store.getters['wallet/stageOptions']
+    const service = new TransactionService(this.$store)
+    let results: BroadcastResult[] = []
+
+
+    // - case 1 "announce partial"
+    if (options.isMultisig) {
+      results = await service.announcePartialTransactions(issuer)
+    }
+    // - case 2 "announce complete"
+    else {
+      results = await service.announceSignedTransactions()
+    }
+
+    // - notify about errors and exit
+    const errors = results.filter(result => false === result.success)
+    if (errors.length) {
+      errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
+      return ;
+    }
+
+    // - notify about broadcast success (_transactions now unconfirmed_)
+    const message = options.isMultisig
+      ? 'success_transactions_announced'
+      : 'success_transaction_partial_announced'
+    this.$store.dispatch('notification/ADD_SUCCESS', message)
   }
 
   /**
@@ -307,7 +338,7 @@ export class FormTransactionBase extends Vue {
     // - check whether transactions must be aggregated
     // - also set isMultisig flag in case of cosignatory mode
     if (this.isAggregateMode()) {
-      await this.$store.commit('stageOptions', {
+      this.$store.commit('wallet/stageOptions', {
         isAggregate: true,
         isMultisig: this.isCosignatoryMode,
       })
