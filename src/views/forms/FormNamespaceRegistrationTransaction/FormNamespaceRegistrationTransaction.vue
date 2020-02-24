@@ -6,7 +6,7 @@
         class="form-container mt-3"
         @keyup.enter="handleSubmit(onSubmit)"
       >
-        <SignerSelector v-model="formItems.signerPublicKey" :signers="signers" />
+        <SignerSelector v-model="formItems.signerPublicKey" :signers="signers" @change="onChangeSigner" />
 
         <FormRow>
           <template v-slot:label>

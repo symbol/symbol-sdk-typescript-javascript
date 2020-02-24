@@ -25,7 +25,7 @@
             v-model="formItems.signerPublicKey"
             :signers="signers"
             :label="$t('form_label_multisig_accounts')"
-            @select="onChangeSigner"
+            @change="onChangeSigner"
           />
         </div>
         
