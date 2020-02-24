@@ -135,9 +135,10 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
       const randomNonce = MosaicNonce.createRandom()
 
       // - read form for definition
+      const mosaicId = MosaicId.createFromNonce(randomNonce, publicAccount)
       const definitionData: MosaicDefinitionFormFieldsType = {
         nonce: randomNonce,
-        mosaicId: MosaicId.createFromNonce(randomNonce, publicAccount),
+        mosaicId: mosaicId,
         mosaicFlags: MosaicFlags.create(
           this.formItems.supplyMutable,
           this.formItems.transferable,
@@ -151,7 +152,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
 
       // - read form for supply change
       const supplyChangeData: MosaicSupplyChangeFormFieldsType = {
-        mosaicId: MosaicId.createFromNonce(randomNonce, publicAccount),
+        mosaicId: mosaicId,
         action: MosaicSupplyChangeAction.Increase,
         delta: UInt64.fromUint(this.formItems.supply),
         maxFee: UInt64.fromUint(this.formItems.maxFee),

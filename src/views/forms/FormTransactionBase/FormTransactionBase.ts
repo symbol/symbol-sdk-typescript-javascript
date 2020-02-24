@@ -140,10 +140,15 @@ export class FormTransactionBase extends Vue {
 /// end-region store getters
 
 /// region property watches
-  @Watch('getTransactions')
-  onTransactionsChange(transactions: Transaction[]) {
-    this.$emit('onTransactionsChange', transactions)
+  @Watch('signers')
+  onSignersChange(signers: {publicKey: string, label: string}[] = []) {
+    this.resetForm()
   }
+
+  // @Watch('getTransactions')
+  // onTransactionsChange(transactions: Transaction[]) {
+  //   this.$emit('onTransactionsChange', transactions)
+  // }
 /// end-region property watches
 
   /**
@@ -195,7 +200,7 @@ export class FormTransactionBase extends Vue {
 
 /// region computed properties getter/setter
   get signers(): {publicKey: string, label: string}[] {
-    return this.availableSigners
+    return this.getSigners()
   }
 
   get hasConfirmationModal(): boolean {

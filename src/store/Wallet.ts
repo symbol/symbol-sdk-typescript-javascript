@@ -721,14 +721,16 @@ export default {
         return accountInfo
       }
       catch (e) {
-        dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch account information: ' + e, {root: true})
-
         if (!!currentWallet && address === getters.currentWalletAddress.plain()) {
+          commit('currentWalletInfo', null)
           dispatch('SET_BALANCES', {mosaics: [], which: 'currentWalletMosaics'})
         }
         else if (!!getters.currentSigner && address === getters.currentSignerAddress.plain()) {
+          commit('currentSignerInfo', null)
           dispatch('SET_BALANCES', {mosaics: [], which: 'currentSignerMosaics'})
         }
+
+        dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch account information: ' + e, {root: true})
         return false
       }
     },
@@ -740,10 +742,11 @@ export default {
         {root: true},
       )
 
-      try {
-        // prepare REST parameters
-        const currentPeer = rootGetters['network/currentPeer'].url
+      // read store
+      const currentPeer = rootGetters['network/currentPeer'].url
+      const currentWallet = getters['currentWallet']
 
+      try {
         // fetch account info from REST gateway
         const accountHttp = RESTService.create('AccountHttp', currentPeer)
         const accountsInfo = await accountHttp.getAccountsInfo(addresses).toPromise()
@@ -784,11 +787,13 @@ export default {
 
       dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_MULTISIG dispatched with : ' + address, {root: true})
 
+      // read store
+      const currentPeer = rootGetters['network/currentPeer'].url
+      const networkType = rootGetters['network/networkType']
+      const currentWallet = getters['currentWallet']
+
       try {
         // prepare REST parameters
-        const currentPeer = rootGetters['network/currentPeer'].url
-        const networkType = rootGetters['network/networkType']
-        const currentWallet = getters['currentWallet']
         const addressObject = Address.createFromRawAddress(address)
 
         // fetch account info from REST gateway
@@ -804,6 +809,10 @@ export default {
         return multisigInfo
       }
       catch (e) {
+        if (currentWallet && currentWallet.values.get('address') === address) {
+          commit('setMultisigInfo', null)
+        }
+
         dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch multisig information: ' + e, {root: true})
         return false
       }
@@ -815,12 +824,14 @@ export default {
 
       dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_OWNED_MOSAICS dispatched with : ' + address, {root: true})
 
+      // read store
+      const currentPeer = rootGetters['network/currentPeer'].url
+      const currentWallet = getters['currentWallet']
+      const currentSigner = getters['currentSigner']
+      const networkType = rootGetters['network/networkType']
+
       try {
         // prepare REST parameters
-        const currentPeer = rootGetters['network/currentPeer'].url
-        const currentWallet = getters['currentWallet']
-        const currentSigner = getters['currentSigner']
-        const networkType = rootGetters['network/networkType']
         const addressObject = Address.createFromRawAddress(address)
 
         // fetch account info from REST gateway
@@ -838,6 +849,13 @@ export default {
         return ownedMosaics
       }
       catch (e) {
+        if (currentWallet && currentWallet.values.get('address') === address) {
+          commit('currentWalletOwnedMosaics', [])
+        }
+        else if (currentSigner && address === getters.currentSignerAddress.plain()) {
+          commit('currentSignerOwnedMosaics', [])
+        }
+
         dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch owned mosaics: ' + e, {root: true})
         return false
       }
@@ -849,12 +867,14 @@ export default {
 
       dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_OWNED_NAMESPACES dispatched with : ' + address, {root: true})
 
+      // read store
+      const currentPeer = rootGetters['network/currentPeer'].url
+      const currentWallet = getters['currentWallet']
+      const currentSigner = getters['currentSigner']
+      const networkType = rootGetters['network/networkType']
+
       try {
         // prepare REST parameters
-        const currentPeer = rootGetters['network/currentPeer'].url
-        const currentWallet = getters['currentWallet']
-        const currentSigner = getters['currentSigner']
-        const networkType = rootGetters['network/networkType']
         const addressObject = Address.createFromRawAddress(address)
 
         // fetch account info from REST gateway
@@ -876,6 +896,13 @@ export default {
         return ownedNamespaces
       }
       catch (e) {
+        if (currentWallet && currentWallet.values.get('address') === address) {
+          commit('currentWalletOwnedNamespaces', [])
+        }
+        else if (currentSigner && address === getters.currentSignerAddress.plain()) {
+          commit('currentSignerOwnedNamespaces', [])
+        }
+
         dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch owned namespaces: ' + e, {root: true})
         return null
       }
