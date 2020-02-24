@@ -109,6 +109,15 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     this.formItems.maxFee = this.defaultFee
   }
 
+  /**
+   * Getter for whether forms should aggregate transactions
+   * @see {FormTransactionBase}
+   * @return {boolean} True if creating mosaic for multisig
+   */
+  protected isAggregateMode(): boolean {
+    return this.isCosignatoryMode
+  }
+
 /// region computed properties getter/setter
   /**
    * Getter for MOSAIC DEFINITION and SUPPLY CHANGE transactions that will be staged

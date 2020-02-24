@@ -172,42 +172,50 @@ export class ModalTransactionConfirmationTs extends Vue {
    * @param {Password} password 
    * @return {void}
    */
-  public onAccountUnlocked({account}: {account: Account}): void {
+  public async onAccountUnlocked({account}: {account: Account}): Promise<void> {
     // - log about unlock success
     this.$store.dispatch('diagnostic/ADD_INFO', 'Account ' + account.address.plain() + ' unlocked successfully.')
+    
+    // - get transaction stage config
+    const options = this.$store.getters['wallet/stageOptions']
+    const service = new TransactionService(this.$store)
 
-    //XXX config aggregate + lock
+    let signedTransactions: SignedTransaction[] = []
+    let results: BroadcastResult[] = []
 
-    // - get staged transactions and sign
-    this.stagedTransactions.forEach((staged) => {
-      // -  sign transaction
-      const signedTx = account.sign(staged, this.generationHash)
-      this.$store.commit('wallet/addSignedTransaction', signedTx)
-
-      // - notify diagnostics
-      this.$store.dispatch('diagnostic/ADD_DEBUG', 'Signed transaction with account ' + account.address.plain() + ' and result: ' + JSON.stringify({
-        hash: signedTx.hash,
-        payload: signedTx.payload
-      }))
-    })
+    // - case 1 "is multisig": must create hash lock (aggregate bonded pre-requirement)
+    if (options.isMultisig) {
+      signedTransactions = service.signMultisigStagedTransactions(account)
+    }
+    // - case 2 "is aggregate": must aggregate staged transactions and sign
+    else if (options.isAggregate) {
+      signedTransactions = service.signAggregateStagedTransactions(account)
+    }
+    // - case 3 "normal": must sign staged transactions
+    else {
+      signedTransactions = service.signStagedTransactions(account)
+    }
 
     // - reset transaction stage
     this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
-  
-    // - XXX end-user should be able to uncheck "announce now"
 
     // - notify about successful transaction announce
     this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
 
     // - broadcast signed transactions
-    const service = new TransactionService(this.$store)
-    service.announceSignedTransactions()
-      .then(results => {
-        const errors = results.filter(result => false === result.success)    // - notify about errors
-        if (errors.length) {
-          return errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
-        }
-      })
+    if (options.isMultisig) {
+      results = await service.announcePartialTransactions()
+    }
+    else {
+      results = await service.announceSignedTransactions()
+    }
+
+    // - notify about errors and exit
+    const errors = results.filter(result => false === result.success)
+    if (errors.length) {
+      errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
+      return ;
+    }
 
     this.$emit('success')
     this.show = false

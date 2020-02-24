@@ -153,6 +153,15 @@ export class FormTransferTransactionTs extends FormTransactionBase {
   }
 
   /**
+   * Getter for whether forms should aggregate transactions
+   * @see {FormTransactionBase}
+   * @return {boolean} True if creating transfer for multisig
+   */
+  protected isAggregateMode(): boolean {
+    return this.isCosignatoryMode
+  }
+
+  /**
    * Getter for TRANSFER transactions that will be staged
    * @see {FormTransactionBase}
    * @return {TransferTransaction[]}

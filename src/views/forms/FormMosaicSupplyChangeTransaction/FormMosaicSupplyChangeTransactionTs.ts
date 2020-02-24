@@ -177,6 +177,15 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
   }
 
   /**
+   * Getter for whether forms should aggregate transactions
+   * @see {FormTransactionBase}
+   * @return {boolean} True if creating supply change for multisig
+   */
+  protected isAggregateMode(): boolean {
+    return this.isCosignatoryMode
+  }
+
+  /**
    * Getter for SUPPLY CHANGE transactions that will be staged
    * @see {FormTransactionBase}
    * @return {TransferTransaction[]}

@@ -214,6 +214,14 @@ export class FormTransactionBase extends Vue {
   }
 
   /**
+   * Getter for whether forms should aggregate transactions
+   * @throws {Error} If not overloaded in derivate component
+   */
+  protected isAggregateMode(): boolean {
+    throw new Error('Method \'isAggregateMode()\' must be overloaded in derivate components.')
+  }
+
+  /**
    * Getter for transactions that will be staged
    * @throws {Error} If not overloaded in derivate component
    */
@@ -292,12 +300,21 @@ export class FormTransactionBase extends Vue {
    * @return {void}
    */
   public async onSubmit() {
-    const transaction = this.getTransactions()
+    const transactions = this.getTransactions()
 
-    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Adding transaction(s) to stage (prepared & unsigned): ' + transaction.length)
+    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Adding ' + transactions.length + ' transaction(s) to stage (prepared & unsigned)')
+
+    // - check whether transactions must be aggregated
+    // - also set isMultisig flag in case of cosignatory mode
+    if (this.isAggregateMode()) {
+      await this.$store.commit('stageOptions', {
+        isAggregate: true,
+        isMultisig: this.isCosignatoryMode,
+      })
+    }
 
     // - add transactions to stage (to be signed)
-    await Promise.all(transaction.map(
+    await Promise.all(transactions.map(
       async (transaction) => {
         await this.$store.dispatch(
           'wallet/ADD_STAGED_TRANSACTION',

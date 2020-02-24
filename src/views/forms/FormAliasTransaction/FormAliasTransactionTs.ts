@@ -198,6 +198,15 @@ export class FormAliasTransactionTs extends FormTransactionBase {
   }
 
   /**
+   * Getter for whether forms should aggregate transactions
+   * @see {FormTransactionBase}
+   * @return {boolean} True if creating alias for multisig
+   */
+  protected isAggregateMode(): boolean {
+    return this.isCosignatoryMode
+  }
+
+  /**
    * Getter for ALIAS transactions that will be staged
    * @see {FormTransactionBase}
    * @return {AliasTransaction[]}

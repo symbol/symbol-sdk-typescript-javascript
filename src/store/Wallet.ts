@@ -179,6 +179,10 @@ export default {
     confirmedTransactions: [],
     unconfirmedTransactions: [],
     partialTransactions: [],
+    stageOptions: {
+      isAggregate: false,
+      isMultisig: false,
+    },
     stagedTransactions: [],
     signedTransactions: [],
     transactionCache: {},
@@ -243,6 +247,7 @@ export default {
         return t1.transactionInfo.index - t2.transactionInfo.index
       })
     },
+    stageOptions: state => state.stageOptions,
     stagedTransactions: state => state.stagedTransactions,
     signedTransactions: state => state.signedTransactions,
     transactionCache: state => state.transactionCache,
@@ -324,6 +329,7 @@ export default {
       Vue.set(state, 'transactionCache', cache)
       return cache
     },
+    stageOptions: (state, options) => Vue.set(state, 'stageOptions', options),
     setStagedTransactions: (state, transactions: Transaction[]) => Vue.set(state, 'stagedTransactions', transactions),
     addStagedTransaction: (state, transaction: Transaction) => {
       // - get previously staged transactions
@@ -865,39 +871,46 @@ export default {
         return null
       }
     },
-    REST_ANNOUNCE_PARTIAL(
-      {commit, rootGetters},
-      {signedLock, signedPartial}
-    ): Observable<BroadcastResult> {
+    async REST_ANNOUNCE_PARTIAL(
+      {commit, dispatch, rootGetters},
+      {issuer, signedLock, signedPartial}
+    ): Promise<BroadcastResult> {
+
+      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_ANNOUNCE_PARTIAL dispatched with: ' + JSON.stringify({
+        issuer: issuer,
+        signedLockHash: signedLock.hash,
+        signedPartialHash: signedPartial.hash,
+      }), {root: true})
+
       try {
-        // prepare REST parameters
+        // - prepare REST parameters
         const currentPeer = rootGetters['network/currentPeer'].url
         const wsEndpoint = rootGetters['network/wsEndpoint']
         const transactionHttp = RESTService.create('TransactionHttp', currentPeer)
-        const receiptHttp = RESTService.create('ReceiptHttp', currentPeer)
+
+        // - prepare scoped *confirmation listener*
         const listener = new Listener(wsEndpoint)
+        await listener.open()
 
-        // prepare nem2-sdk TransactionService
-        const service = new TransactionService(transactionHttp, receiptHttp)
+        // - announce hash lock transaction and await confirmation
+        await transactionHttp.announce(signedLock)
 
-        // announce lock and aggregate only after lock confirmation
-        return service.announceHashLockAggregateBonded(
-          signedLock,
-          signedPartial,
-          listener
-        ).pipe(
-          map((announcedTransaction: AggregateTransaction) => {
-            commit('removeSignedTransaction', signedPartial)
-            commit('removeSignedTransaction', signedLock)
-
-            return new BroadcastResult(signedPartial, true)
-          })
-        )
+        // - listen for hash lock confirmation
+        return new Promise((resolve, reject) => {
+          return listener.confirmed(issuer, signedLock.hash).subscribe(
+            async (success) => {
+              // - hash lock confirmed, now announce partial
+              const response = await transactionHttp.announceAggregateBonded(signedPartial)
+              commit('removeSignedTransaction', signedLock)
+              commit('removeSignedTransaction', signedPartial)
+              return resolve(new BroadcastResult(signedPartial, true))
+            },
+            (error) => reject(new BroadcastResult(signedPartial, false))
+          )
+        })
       }
       catch(e) {
-        return from([
-          new BroadcastResult(signedPartial, false, e.toString()),
-        ])
+        return new BroadcastResult(signedPartial, false, e.toString())
       }
     },
     async REST_ANNOUNCE_TRANSACTION(
@@ -913,7 +926,6 @@ export default {
       try {
         // prepare REST parameters
         const currentPeer = rootGetters['network/currentPeer'].url
-        const wsEndpoint = rootGetters['network/wsEndpoint']
         const transactionHttp = RESTService.create('TransactionHttp', currentPeer)
 
         // prepare nem2-sdk TransactionService
