@@ -3,14 +3,28 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 24-Feb-2020
+
+**Milestone**: Fushicho.4(RC3 0.9.3.1)
+Name | Version | Link
+---|---|---
+SDK Core| v0.17.1 | https://www.npmjs.com/package/symbol-sdk
+Catbuffer | v0.0.11 | https://www.npmjs.com/package/catbuffer-typescript
+Client Library | v0.8.5  | https://www.npmjs.com/package/symbol-openapi-typescript-node-client
+
+- Rebranded `nem2-sdk` to `symbol-sdk`. Please be noted the package name changes.
+- **[BREAKING CHANGE]** Changed `QueryParameters` and `TransactionFilter` to use deconstructed argument (JSON object) in the constructor.
+- Added `node/peers` endpoint.
+- Fixed security issues reported by github.
+
 ## 17-Feb-2020
 
 **Milestone**: Fushicho.4(RC3 0.9.3.1)
- Versions  |   |
+Name | Version | Link
 ---|---|---
-SDK Core| v0.17.0 | https://www.npmjs.com/package/symbol-sdk
-catbuffer-typescript Library| v0.0.11 | https://www.npmjs.com/package/catbuffer-typescript
-Client Library | v0.8.4  | https://www.npmjs.com/package/symbol-openapi-typescript-node-client
+SDK Core | v0.17.0 | https://www.npmjs.com/package/nem2-sdk
+catbuffer | v0.0.11 | https://www.npmjs.com/package/catbuffer
+Client Library | v0.8.4  | https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client
 
 - **[BREAKING CHANGE]** Changed hashing algorithm to cope catapult-server changes. All Key derivation and signing are now using `SHA512`. Removed `SignSchema` so `NetworkType` is no longer bonded to the schema anymore (sha3 / keccak). This change will affect all existing keypairs / address (derived from public key) and  transaction signatures.
 - **[BREAKING CHANGE]** Added new `TransactionFilter` parameter to `AccountHttp` which is now support filtering with list of transaction type.
@@ -26,28 +40,28 @@ Client Library | v0.8.4  | https://www.npmjs.com/package/symbol-openapi-typescri
 ## 30-Jan-2020
 
 **Milestone**: Fushicho.4(RC3)
- Versions  |   |
+Name | Version | Link
 ---|---|---
-SDK Core| v0.16.5 | https://www.npmjs.com/package/symbol-sdk
-catbuffer-typescript Library| v0.0.11 | https://www.npmjs.com/package/catbuffer-typescript
-Client Library | v0.7.20-beta.7  | https://www.npmjs.com/package/symbol-openapi-typescript-node-client
+SDK Core| v0.16.5 | https://www.npmjs.com/package/nem2-sdk
+catbuffer Library| v0.0.11 | https://www.npmjs.com/package/catbuffer
+Client Library | v0.7.20-beta.7  | https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client
 
 - Fixed circular reference issue after removed `InnerTransaction` class.
 
 ## 30-Jan-2020
 
 **Milestone**: Fushicho.4(RC3)
- Versions  |   |
+Name | Version | Link
 ---|---|---
-SDK Core| v0.16.4 | https://www.npmjs.com/package/symbol-sdk
-catbuffer-typescript Library| v0.0.11 | https://www.npmjs.com/package/catbuffer-typescript
-Client Library | v0.7.20-beta.7  | https://www.npmjs.com/package/symbol-openapi-typescript-node-client
+SDK Core| v0.16.4 | https://www.npmjs.com/package/nem2-sdk
+catbuffer Library| v0.0.11 | https://www.npmjs.com/package/catbuffer
+Client Library | v0.7.20-beta.7  | https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client
 
 - Core 0.9.2.1 compatible. Changed hash algorithm for shared key derivation to `HKDF-HMAC-Sha256`.
 - Removed `senderPrivateKey` in `Persistent Delegation Request Transaction`. Instead, it uses an `ephemeral key pair` and the `EphemeralPublicKey` is now attached in the `PersistentDelegationMessage` payload.
 - Removed `salt` encryption and decryption functions which uses `HKDF-HMAC-Sha256` instead. This only affects the encrypted payload.
 - Added missing export in `Infrastructure` classes / interfaces.
-- Applied latest `catbuffer-typescript` builder codes for `ResolutionStatement`.
+- Applied latest `catbuffer` builder codes for `ResolutionStatement`.
 - Updated `TransactionType` & `TransactionVersion` enum key name to match `catabuffer` schema definition.
 - Changed signature type for `Height` from `numeric string` to `UInt64` in `Block` & `Receipt` respostiories
 - Fixed a few ts lint issues.
@@ -55,24 +69,24 @@ Client Library | v0.7.20-beta.7  | https://www.npmjs.com/package/symbol-openapi-
 ## 09-Jan-2020
 
 **Milestone**: Fushicho.3
- Versions  |   |
+Name | Version | Link
 ---|---|---
-SDK Core| v0.16.3 | https://www.npmjs.com/package/symbol-sdk
-catbuffer-typescript Library| v0.0.7 | https://www.npmjs.com/package/catbuffer-typescript
-Client Library | v0.7.20-beta.6  | https://www.npmjs.com/package/symbol-openapi-typescript-node-client
+SDK Core| v0.16.3 | https://www.npmjs.com/package/nem2-sdk
+catbuffer Library| v0.0.7 | https://www.npmjs.com/package/catbuffer
+Client Library | v0.7.20-beta.6  | https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client
 
 - Fixed http client (OpenAPI client package) does not support ES6 issue.
 
 ## 06-Jan-2020
 
 **Milestone**: Fushicho.3
- Versions  |   |
+Name | Version | Link
 ---|---|---
-SDK Core| v0.16.2 | https://www.npmjs.com/package/symbol-sdk
-catbuffer-typescript Library| v0.0.7 | https://www.npmjs.com/package/catbuffer-typescript
-Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/symbol-openapi-typescript-node-client
+SDK Core| v0.16.2 | https://www.npmjs.com/package/nem2-sdk
+catbuffer Library| v0.0.7 | https://www.npmjs.com/package/catbuffer
+Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client
 
-- Refactored to replace generated codes by public library package for both `catbuffer-typescript` and `OpenAPI Http Client`.
+- Refactored to replace generated codes by public library package for both `catbuffer` and `OpenAPI Http Client`.
 - Added unresolved (mosaicId, address) support in `MosaicRestrictionTransaction`.
 - Added `toHex()` in `MosaicNonce` class.
 - Exposed `MultisigAccountGraphInfo` class constructor to public.
@@ -92,7 +106,7 @@ Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/symbol-openapi
 - Fixed `TrandactionStatus` not returning correct error code bug.
 - Fixed `spread operation issue` in `SetMaxFee and ResolveAlias` which results in missing super class properties bug.
 - Fixed `epochAdjustment` static value not in UTC bug.
-- Fixed known issues in `catbuffer-typescript Typescript Generator` over `EntityTypeDto` and `AggregateTransactionBuilder`. Aggregate transaction's `InnerTransactions` and `Cosignatures` are now in array format (`EmbeddedTransactionBuilder` and `CosignatureBuilder`) instead of using `Uint8Array`.
+- Fixed known issues in `catbuffer Typescript Generator` over `EntityTypeDto` and `AggregateTransactionBuilder`. Aggregate transaction's `InnerTransactions` and `Cosignatures` are now in array format (`EmbeddedTransactionBuilder` and `CosignatureBuilder`) instead of using `Uint8Array`.
 
 ## [0.16.0] - 09-Dec-2019
 
@@ -209,7 +223,7 @@ Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/symbol-openapi
 
 - Added Metadata Transactions (Account, Mosaic and Namespace).
 - Added new account restriction type to support `Outgoing` addresses and transaction types.
-- catbuffer-typescript builder codes fully implemented. Flatbuffer codes removed.
+- catbuffer builder codes fully implemented. Flatbuffer codes removed.
 - Models and services updated to be compatible with latest server (milestone Elephant: patch-3) schema updates.
 - Refactored `Uint64` to support `UInt64 to/from: numeric/hex string`.
 - Refactored `Signature Schema` to support both `NIS1` and `Catapult`. `Network idendifier` is now used to identify `Signature Schema` on model level. PrivateKey reversal has been removed for `NIS1` schema.
@@ -377,37 +391,38 @@ Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/symbol-openapi
 **Milestone**: Alpaca
 
 - Initial code release.
-[0.17.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.16.5...v0.17.0
-[0.16.5]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.16.4...v0.16.5
-[0.16.4]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.16.3...v0.16.4
-[0.16.3]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.16.2...v0.16.3
-[0.16.2]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.16.1...v0.16.2
-[0.16.1]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.16.0...v0.16.1
-[0.16.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.15.1...v0.16.0
-[0.15.1]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.15.0...v0.15.1
-[0.15.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.14.4...v0.15.0
-[0.14.4]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.14.3...v0.14.4
-[0.14.3]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.14.2...v0.14.3
-[0.14.2]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.14.1...v0.14.2
-[0.14.1]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.14.0...v0.14.1
-[0.14.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.13.4...v0.14.0
-[0.13.4]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.13.3...v0.13.4
-[0.13.3]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.13.2...v0.13.3
-[0.13.2]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.13.1...v0.13.2
-[0.13.1]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.13.0...v0.13.1
-[0.13.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.12.4...v0.13.0
-[0.12.4]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.12.3...v0.12.4
-[0.12.3]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.12.2...v0.12.3
-[0.12.2]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.12.1...v0.12.2
-[0.12.1]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.12.0...v0.12.1
-[0.12.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.11.6...v0.12.0
-[0.11.6]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.11.5...v0.11.6
-[0.11.5]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.11.4...v0.11.5
-[0.11.4]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.11.3...v0.11.4
-[0.11.3]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.11.2...v0.11.3
-[0.11.2]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.11.1...v0.11.2
-[0.11.1]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.11.0...v0.11.1
-[0.11]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.10.1-beta...v0.11.0
-[0.10.1-beta]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.9.5...v0.10.1-beta
-[0.9.5]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.9.0...v0.9.5
-[0.9.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/releases/tag/v0.9.0
+[0.17.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.17.0...v0.17.1
+[0.17.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.5...v0.17.0
+[0.16.5]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.4...v0.16.5
+[0.16.4]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.3...v0.16.4
+[0.16.3]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.2...v0.16.3
+[0.16.2]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.1...v0.16.2
+[0.16.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.16.0...v0.16.1
+[0.16.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.15.1...v0.16.0
+[0.15.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.15.0...v0.15.1
+[0.15.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.4...v0.15.0
+[0.14.4]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.3...v0.14.4
+[0.14.3]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.2...v0.14.3
+[0.14.2]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.1...v0.14.2
+[0.14.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.0...v0.14.1
+[0.14.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.13.4...v0.14.0
+[0.13.4]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.13.3...v0.13.4
+[0.13.3]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.13.2...v0.13.3
+[0.13.2]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.13.1...v0.13.2
+[0.13.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.13.0...v0.13.1
+[0.13.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.4...v0.13.0
+[0.12.4]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.3...v0.12.4
+[0.12.3]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.2...v0.12.3
+[0.12.2]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.1...v0.12.2
+[0.12.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.0...v0.12.1
+[0.12.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.11.6...v0.12.0
+[0.11.6]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.11.5...v0.11.6
+[0.11.5]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.11.4...v0.11.5
+[0.11.4]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.11.3...v0.11.4
+[0.11.3]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.11.2...v0.11.3
+[0.11.2]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.11.1...v0.11.2
+[0.11.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.11.0...v0.11.1
+[0.11]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.10.1-beta...v0.11.0
+[0.10.1-beta]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.9.5...v0.10.1-beta
+[0.9.5]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.9.0...v0.9.5
+[0.9.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.9.0
