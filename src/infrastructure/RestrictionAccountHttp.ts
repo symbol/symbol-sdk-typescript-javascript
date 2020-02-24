@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { RestrictionAccountRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
+import { RestrictionAccountRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { DtoMapping } from '../core/utils/DtoMapping';

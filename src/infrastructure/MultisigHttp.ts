@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { MultisigRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
+import { MultisigRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Address } from '../model/account/Address';
@@ -33,7 +33,7 @@ import { MultisigRepository } from './MultisigRepository';
 export class MultisigHttp extends Http implements MultisigRepository {
     /**
      * @internal
-     * Nem2 Library account routes api
+     * Symbol openapi typescript-node client account routes api
      */
     private readonly multisigRoutesApi: MultisigRoutesApi;
     /**

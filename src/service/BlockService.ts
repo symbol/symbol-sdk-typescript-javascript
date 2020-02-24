@@ -15,7 +15,7 @@
  */
 
 import { sha3_256 } from 'js-sha3';
-import { PositionEnum } from 'nem2-sdk-openapi-typescript-node-client/dist/model/positionEnum';
+import { PositionEnum } from 'symbol-openapi-typescript-node-client/dist/model/positionEnum';
 import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { BlockRepository } from '../infrastructure/BlockRepository';

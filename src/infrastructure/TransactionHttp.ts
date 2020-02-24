@@ -15,7 +15,7 @@
  */
 
 import { ClientResponse } from 'http';
-import { BlockInfoDTO, BlockRoutesApi, TransactionRoutesApi, TransactionStatusDTO } from 'nem2-sdk-openapi-typescript-node-client';
+import { BlockInfoDTO, BlockRoutesApi, TransactionRoutesApi, TransactionStatusDTO } from 'symbol-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
@@ -39,13 +39,13 @@ import { TransactionRepository } from './TransactionRepository';
 export class TransactionHttp extends Http implements TransactionRepository {
     /**
      * @internal
-     * Nem2 Library transaction routes api
+     * Symbol openapi typescript-node client transaction routes api
      */
     private transactionRoutesApi: TransactionRoutesApi;
 
     /**
      * @internal
-     * Nem2 Library blockchain routes api
+     * Symbol openapi typescript-node client blockchain routes api
      */
     private blockRoutesApi: BlockRoutesApi;
 

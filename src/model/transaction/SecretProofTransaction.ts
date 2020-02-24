@@ -24,7 +24,7 @@ import {
     SignatureDto,
     TimestampDto,
     UnresolvedAddressDto,
-} from 'catbuffer';
+} from 'catbuffer-typescript';
 import { Convert, Convert as convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';

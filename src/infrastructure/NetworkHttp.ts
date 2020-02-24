@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { NetworkRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
+import { NetworkRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { NetworkFees } from '../model/blockchain/NetworkFees';
@@ -33,7 +33,7 @@ import { NodeHttp } from './NodeHttp';
 export class NetworkHttp extends Http implements NetworkRepository {
     /**
      * @internal
-     * Nem2 Library account routes api
+     * Symbol openapi typescript-node client account routes api
      */
     private nodeHttp: NodeHttp;
     private networkRouteApi: NetworkRoutesApi;

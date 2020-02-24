@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { NodeRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
+import { NodeRoutesApi } from 'symbol-openapi-typescript-node-client';
 // tslint:disable-next-line: ordered-imports
 import { from as observableFrom, Observable, of as observableOf, throwError } from 'rxjs';
 import { catchError, map, shareReplay } from 'rxjs/operators';

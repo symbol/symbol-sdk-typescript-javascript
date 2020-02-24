@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { MosaicRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
+import { MosaicRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Address } from '../model/account/Address';
@@ -35,7 +35,7 @@ import { MosaicRepository } from './MosaicRepository';
 export class MosaicHttp extends Http implements MosaicRepository {
     /**
      * @internal
-     * Nem2 Library mosaic routes api
+     * Symbol openapi typescript-node client mosaic routes api
      */
     private readonly mosaicRoutesApi: MosaicRoutesApi;
 

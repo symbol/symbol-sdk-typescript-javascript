@@ -1,4 +1,4 @@
-import { PositionEnum } from "nem2-sdk-openapi-typescript-node-client/dist/model/positionEnum";
+import { PositionEnum } from "symbol-openapi-typescript-node-client/dist/model/positionEnum";
 
 /*
  * Copyright 2019 NEM
