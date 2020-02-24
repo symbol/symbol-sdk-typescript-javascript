@@ -210,7 +210,7 @@ export default {
     isCosignatoryMode: state => state.isCosignatoryMode,
     currentSignerInfo: state => state.currentSignerInfo,
     currentSignerMultisigInfo: state => {
-      const plainAddress = state.currentSignerAddress && state.currentSignerAddress.plain()
+      const plainAddress = state.currentSignerAddress ? state.currentSignerAddress.plain() : null
       if(!plainAddress) return null
       return state.otherMultisigsInfo[plainAddress] || null
     } ,
@@ -447,6 +447,9 @@ export default {
       commit('currentWallet', model)
       commit('currentWalletAddress', address)
 
+      // reset current signer
+      dispatch('SET_CURRENT_SIGNER', {model, options: {skipDetails: true}})
+
       if (!!previous) {
         // in normal initialize routine, old active wallet
         // connections must be closed
@@ -456,7 +459,7 @@ export default {
       await dispatch('initialize', {address: address.plain(), options: {}})
       $eventBus.$emit('onWalletChange', address.plain())
     },
-    async SET_CURRENT_SIGNER({commit, dispatch, getters}, {model}) {
+    async SET_CURRENT_SIGNER({commit, dispatch, getters}, {model, options}) {
       let address: Address = getAddressByPayload(model)
       dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/SET_CURRENT_SIGNER dispatched with ' + address.plain(), {root: true})
 
@@ -482,13 +485,15 @@ export default {
       commit('isCosignatoryMode', isCosignatory)
 
       // setting current signer should not fetch ALL data
-      let options = {
+      let detailOpts = {
         skipTransactions: true,
         skipMultisig: true,
         skipOwnedAssets: false,
       }
 
-      await dispatch('REST_FETCH_WALLET_DETAILS', {address: address.plain(), options})
+      if (!options || !options.skipDetails) {
+        await dispatch('REST_FETCH_WALLET_DETAILS', {address: address.plain(), options: detailOpts})
+      }
     },
     SET_KNOWN_WALLETS({commit}, wallets: string[]) {
       commit('setKnownWallets', wallets)
@@ -553,12 +558,11 @@ export default {
       const transactions = getters[transactionGroup]
 
       // prepare search
-      const transaction = transactionMessage.transaction
-      const transactionHash = transaction.meta.hash
+      const transactionHash = transactionMessage.transaction
 
       // find transaction in storage
       const findHashIt = hashes.find(hash => hash === transactionHash)
-      const findIterator = transactions.find(tx => tx.meta.hash === transactionHash)
+      const findIterator = transactions.find(tx => tx.transactionInfo.hash === transactionHash)
       if (findIterator === undefined) {
         return ; // not found, do nothing
       }

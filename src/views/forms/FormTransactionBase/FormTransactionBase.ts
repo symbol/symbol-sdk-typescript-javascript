@@ -254,9 +254,6 @@ export class FormTransactionBase extends Vue {
    * @param {string} signerPublicKey 
    */
   public onChangeSigner(signerPublicKey: string) {
-    console.log("signer: ", signerPublicKey)
-    console.log("current: ", this.currentWallet.values.get('publicKey'))
-
     const isCosig = this.currentWallet.values.get('publicKey') !== signerPublicKey
     const payload = !isCosig ? this.currentWallet : {
       networkType: this.networkType,
@@ -264,6 +261,37 @@ export class FormTransactionBase extends Vue {
     }
 
     this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {model: payload})
+  }
+
+  /**
+   * Process form input
+   * @return {void}
+   */
+  public async onSubmit() {
+    const transactions = this.getTransactions()
+
+    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Adding ' + transactions.length + ' transaction(s) to stage (prepared & unsigned)')
+
+    // - check whether transactions must be aggregated
+    // - also set isMultisig flag in case of cosignatory mode
+    if (this.isAggregateMode()) {
+      this.$store.commit('wallet/stageOptions', {
+        isAggregate: true,
+        isMultisig: this.isCosignatoryMode,
+      })
+    }
+
+    // - add transactions to stage (to be signed)
+    await Promise.all(transactions.map(
+      async (transaction) => {
+        await this.$store.dispatch(
+          'wallet/ADD_STAGED_TRANSACTION',
+          transaction
+        )
+      }))
+
+    // - open signature modal
+    this.onShowConfirmationModal()
   }
 
   /**
@@ -282,7 +310,6 @@ export class FormTransactionBase extends Vue {
     const options = this.$store.getters['wallet/stageOptions']
     const service = new TransactionService(this.$store)
     let results: BroadcastResult[] = []
-
 
     // - case 1 "announce partial"
     if (options.isMultisig) {
@@ -324,37 +351,6 @@ export class FormTransactionBase extends Vue {
   public onConfirmationCancel() {
     this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
     this.hasConfirmationModal = false
-  }
-
-  /**
-   * Process form input
-   * @return {void}
-   */
-  public async onSubmit() {
-    const transactions = this.getTransactions()
-
-    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Adding ' + transactions.length + ' transaction(s) to stage (prepared & unsigned)')
-
-    // - check whether transactions must be aggregated
-    // - also set isMultisig flag in case of cosignatory mode
-    if (this.isAggregateMode()) {
-      this.$store.commit('wallet/stageOptions', {
-        isAggregate: true,
-        isMultisig: this.isCosignatoryMode,
-      })
-    }
-
-    // - add transactions to stage (to be signed)
-    await Promise.all(transactions.map(
-      async (transaction) => {
-        await this.$store.dispatch(
-          'wallet/ADD_STAGED_TRANSACTION',
-          transaction
-        )
-      }))
-
-    // - open signature modal
-    this.onShowConfirmationModal()
   }
 
   /**

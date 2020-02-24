@@ -428,6 +428,12 @@ export class TransactionService extends AbstractService {
       results.push(result)
     }
 
+    // - reset signature flow
+    this.$store.commit('wallet/stageOptions', {
+      isAggregate: false,
+      isMultisig: false,
+    })
+
     return results
   }
 
@@ -459,6 +465,12 @@ export class TransactionService extends AbstractService {
       issuer: issuer.address.plain(),
       signedLock: hashLockTransaction,
       signedPartial: aggregateTransaction,
+    })
+
+    // - reset signature flow
+    this.$store.commit('wallet/stageOptions', {
+      isAggregate: false,
+      isMultisig: false,
     })
 
     return [result]
