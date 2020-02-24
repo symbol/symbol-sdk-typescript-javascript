@@ -142,6 +142,15 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
   }
 
   /**
+   * Getter for whether forms should aggregate transactions
+   * @see {FormTransactionBase}
+   * @return {boolean} True if creating namespace for multisig
+   */
+  protected isAggregateMode(): boolean {
+    return this.isCosignatoryMode
+  }
+
+  /**
    * Getter for NAMESPACE REGISTRATION transactions that will be staged
    * @see {FormTransactionBase}
    * @return {TransferTransaction[]}

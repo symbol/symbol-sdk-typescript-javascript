@@ -177,6 +177,15 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
   }
 
   /**
+   * Getter for whether forms should aggregate transactions
+   * @see {FormTransactionBase}
+   * @return {boolean} Always true
+   */
+  protected isAggregateMode(): boolean {
+    return true
+  }
+
+  /**
     * Getter for TRANSFER transactions that will be staged
     * @see {FormTransactionBase}
     * @return {MultisigAccountModificationTransaction[]}

@@ -15,7 +15,7 @@
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Account, Transaction, SignedTransaction, Password} from 'nem2-sdk'
+import {Account, Transaction, SignedTransaction, Password, PublicAccount, NetworkType} from 'nem2-sdk'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
@@ -41,6 +41,7 @@ import { WalletService } from '@/services/WalletService'
   },
   computed: {...mapGetters({
     generationHash: 'network/generationHash',
+    networkType: 'network/networkType',
     currentAccount: 'account/currentAccount',
     currentWallet: 'wallet/currentWallet',
     stagedTransactions: 'wallet/stagedTransactions',
@@ -58,6 +59,12 @@ export class ModalTransactionConfirmationTs extends Vue {
    * @var {string}
    */
   public generationHash: string
+
+  /**
+   * Network type
+   * @var {NetworkType}
+   */
+  public networkType: NetworkType
 
   /**
    * Currently active account
@@ -172,44 +179,43 @@ export class ModalTransactionConfirmationTs extends Vue {
    * @param {Password} password 
    * @return {void}
    */
-  public onAccountUnlocked({account}: {account: Account}): void {
+  public async onAccountUnlocked({account}: {account: Account}): Promise<void> {
     // - log about unlock success
     this.$store.dispatch('diagnostic/ADD_INFO', 'Account ' + account.address.plain() + ' unlocked successfully.')
+    
+    // - get transaction stage config
+    const options = this.$store.getters['wallet/stageOptions']
+    const service = new TransactionService(this.$store)
 
-    //XXX config aggregate + lock
+    let signedTransactions: SignedTransaction[] = []
 
-    // - get staged transactions and sign
-    this.stagedTransactions.forEach((staged) => {
-      // -  sign transaction
-      const signedTx = account.sign(staged, this.generationHash)
-      this.$store.commit('wallet/addSignedTransaction', signedTx)
+    // - case 1 "is multisig": must create hash lock (aggregate bonded pre-requirement)
+    if (options.isMultisig) {
+      // - multisig account "issues" aggregate bonded
+      const currentSigner = this.$store.getters['wallet/currentSigner']
+      const multisigAccount = PublicAccount.createFromPublicKey(
+        currentSigner.values.get('publicKey'),
+        this.networkType
+      )
 
-      // - notify diagnostics
-      this.$store.dispatch('diagnostic/ADD_DEBUG', 'Signed transaction with account ' + account.address.plain() + ' and result: ' + JSON.stringify({
-        hash: signedTx.hash,
-        payload: signedTx.payload
-      }))
-    })
+      // - use multisig public account and cosignatory to sign
+      signedTransactions = service.signMultisigStagedTransactions(multisigAccount, account)
+    }
+    // - case 2 "is aggregate": must aggregate staged transactions and sign
+    else if (options.isAggregate) {
+      signedTransactions = service.signAggregateStagedTransactions(account)
+    }
+    // - case 3 "normal": must sign staged transactions
+    else {
+      signedTransactions = service.signStagedTransactions(account)
+    }
 
     // - reset transaction stage
     this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
-  
-    // - XXX end-user should be able to uncheck "announce now"
 
     // - notify about successful transaction announce
-    this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
-
-    // - broadcast signed transactions
-    const service = new TransactionService(this.$store)
-    service.announceSignedTransactions()
-      .then(results => {
-        const errors = results.filter(result => false === result.success)    // - notify about errors
-        if (errors.length) {
-          return errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
-        }
-      })
-
-    this.$emit('success')
+    this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed')
+    this.$emit('success', account.publicAccount)
     this.show = false
   }
 

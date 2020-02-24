@@ -39,6 +39,8 @@ import {TransactionFactory} from '@/core/transactions/TransactionFactory'
 import {ViewTransferTransaction} from '@/core/transactions/ViewTransferTransaction'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {WalletService} from '@/services/WalletService'
+import {TransactionService} from '@/services/TransactionService'
+import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 
 @Component({
   computed: {...mapGetters({
@@ -214,6 +216,14 @@ export class FormTransactionBase extends Vue {
   }
 
   /**
+   * Getter for whether forms should aggregate transactions
+   * @throws {Error} If not overloaded in derivate component
+   */
+  protected isAggregateMode(): boolean {
+    throw new Error('Method \'isAggregateMode()\' must be overloaded in derivate components.')
+  }
+
+  /**
    * Getter for transactions that will be staged
    * @throws {Error} If not overloaded in derivate component
    */
@@ -261,11 +271,40 @@ export class FormTransactionBase extends Vue {
    * the event 'success'
    * @return {void}
    */
-  public onConfirmationSuccess() {
+  public async onConfirmationSuccess(issuer: PublicAccount) {
     this.resetForm()
-    this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS_ACCOUNT_UNLOCKED)
     this.hasConfirmationModal = false
     this.$emit('on-confirmation-success')
+
+    //XXX does the user want to broadcast NOW ?
+
+    // - read transaction stage options
+    const options = this.$store.getters['wallet/stageOptions']
+    const service = new TransactionService(this.$store)
+    let results: BroadcastResult[] = []
+
+
+    // - case 1 "announce partial"
+    if (options.isMultisig) {
+      results = await service.announcePartialTransactions(issuer)
+    }
+    // - case 2 "announce complete"
+    else {
+      results = await service.announceSignedTransactions()
+    }
+
+    // - notify about errors and exit
+    const errors = results.filter(result => false === result.success)
+    if (errors.length) {
+      errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
+      return ;
+    }
+
+    // - notify about broadcast success (_transactions now unconfirmed_)
+    const message = options.isMultisig
+      ? 'success_transaction_partial_announced'
+      : 'success_transactions_announced'
+    this.$store.dispatch('notification/ADD_SUCCESS', message)
   }
 
   /**
@@ -292,12 +331,21 @@ export class FormTransactionBase extends Vue {
    * @return {void}
    */
   public async onSubmit() {
-    const transaction = this.getTransactions()
+    const transactions = this.getTransactions()
 
-    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Adding transaction(s) to stage (prepared & unsigned): ' + transaction.length)
+    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Adding ' + transactions.length + ' transaction(s) to stage (prepared & unsigned)')
+
+    // - check whether transactions must be aggregated
+    // - also set isMultisig flag in case of cosignatory mode
+    if (this.isAggregateMode()) {
+      this.$store.commit('wallet/stageOptions', {
+        isAggregate: true,
+        isMultisig: this.isCosignatoryMode,
+      })
+    }
 
     // - add transactions to stage (to be signed)
-    await Promise.all(transaction.map(
+    await Promise.all(transactions.map(
       async (transaction) => {
         await this.$store.dispatch(
           'wallet/ADD_STAGED_TRANSACTION',
