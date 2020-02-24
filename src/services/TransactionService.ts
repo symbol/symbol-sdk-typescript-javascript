@@ -358,7 +358,10 @@ export class TransactionService extends AbstractService {
    * @param {Account} account
    * @return {SignedTransaction[]}
    */
-  public signMultisigStagedTransactions(account: Account): SignedTransaction[] {
+  public signMultisigStagedTransactions(
+    multisigAccount: PublicAccount,
+    cosignatoryAccount: Account,
+  ): SignedTransaction[] {
     // - shortcuts
     const networkType = this.$store.getters['network/networkType']
     const transactions = this.$store.getters['wallet/stagedTransactions']
@@ -370,18 +373,18 @@ export class TransactionService extends AbstractService {
     const aggregateTx = AggregateTransaction.createBonded(
       Deadline.create(),
       // - format as `InnerTransaction`
-      transactions.map(t => t.toAggregate(account.publicAccount)),
+      transactions.map(t => t.toAggregate(multisigAccount)),
       networkType,
       [],
       UInt64.fromUint(defaultFee)
     );
 
     // - sign aggregate transaction and create lock
-    const signedTx = account.sign(aggregateTx, generationHash)
+    const signedTx = cosignatoryAccount.sign(aggregateTx, generationHash)
     const hashLock = this.createHashLockTransaction(signedTx);
 
     // - sign hash lock and push
-    const signedLock = account.sign(hashLock, generationHash)
+    const signedLock = cosignatoryAccount.sign(hashLock, generationHash)
 
     // - push signed transactions (order matters)
     this.$store.commit('wallet/addSignedTransaction', signedLock)
@@ -390,10 +393,11 @@ export class TransactionService extends AbstractService {
     signedTransactions.push(signedTx)
 
     // - notify diagnostics
-    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Signed hash lock and aggregate bonded with account ' + account.address.plain() + ' and result: ' + JSON.stringify({
-      hashLockTransactionHash: signedTransactions[0].hash,
-      aggregateTransactionHash: signedTransactions[1].hash,
-    }))
+    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Signed hash lock and aggregate bonded for account ' + multisigAccount.address.plain() 
+      + ' with cosignatory ' + cosignatoryAccount.address.plain() + ' and result: ' + JSON.stringify({
+        hashLockTransactionHash: signedTransactions[0].hash,
+        aggregateTransactionHash: signedTransactions[1].hash,
+      }))
 
     return signedTransactions
   }

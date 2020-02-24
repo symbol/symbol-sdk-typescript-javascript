@@ -15,7 +15,7 @@
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Account, Transaction, SignedTransaction, Password} from 'nem2-sdk'
+import {Account, Transaction, SignedTransaction, Password, PublicAccount, NetworkType} from 'nem2-sdk'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
@@ -41,6 +41,7 @@ import { WalletService } from '@/services/WalletService'
   },
   computed: {...mapGetters({
     generationHash: 'network/generationHash',
+    networkType: 'network/networkType',
     currentAccount: 'account/currentAccount',
     currentWallet: 'wallet/currentWallet',
     stagedTransactions: 'wallet/stagedTransactions',
@@ -58,6 +59,12 @@ export class ModalTransactionConfirmationTs extends Vue {
    * @var {string}
    */
   public generationHash: string
+
+  /**
+   * Network type
+   * @var {NetworkType}
+   */
+  public networkType: NetworkType
 
   /**
    * Currently active account
@@ -184,7 +191,15 @@ export class ModalTransactionConfirmationTs extends Vue {
 
     // - case 1 "is multisig": must create hash lock (aggregate bonded pre-requirement)
     if (options.isMultisig) {
-      signedTransactions = service.signMultisigStagedTransactions(account)
+      // - multisig account "issues" aggregate bonded
+      const currentSigner = this.$store.getters['wallet/currentSigner']
+      const multisigAccount = PublicAccount.createFromPublicKey(
+        currentSigner.values.get('publicKey'),
+        this.networkType
+      )
+
+      // - use multisig public account and cosignatory to sign
+      signedTransactions = service.signMultisigStagedTransactions(multisigAccount, account)
     }
     // - case 2 "is aggregate": must aggregate staged transactions and sign
     else if (options.isAggregate) {

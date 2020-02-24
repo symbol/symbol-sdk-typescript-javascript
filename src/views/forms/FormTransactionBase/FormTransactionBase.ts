@@ -302,8 +302,8 @@ export class FormTransactionBase extends Vue {
 
     // - notify about broadcast success (_transactions now unconfirmed_)
     const message = options.isMultisig
-      ? 'success_transactions_announced'
-      : 'success_transaction_partial_announced'
+      ? 'success_transaction_partial_announced'
+      : 'success_transactions_announced'
     this.$store.dispatch('notification/ADD_SUCCESS', message)
   }
 
