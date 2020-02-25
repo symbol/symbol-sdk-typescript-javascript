@@ -152,12 +152,6 @@ export class FormTransactionBase extends Vue {
 /// end-region property watches
 
   /**
-   * List of available signers
-   * @var {{publicKey: string, label: string}[]}
-   */
-  public availableSigners: {publicKey: string, label: string}[] = []
-
-  /**
    * Whether the form is currently awaiting a signature
    * @var {boolean}
    */
@@ -186,7 +180,6 @@ export class FormTransactionBase extends Vue {
    */
   public async created() {
     this.factory = new TransactionFactory(this.$store)
-    this.availableSigners = this.getSigners()
     this.resetForm()
   }
 
@@ -201,6 +194,21 @@ export class FormTransactionBase extends Vue {
 /// region computed properties getter/setter
   get signers(): {publicKey: string, label: string}[] {
     return this.getSigners()
+  }
+
+  get multisigs(): {publicKey: string, label: string}[] {
+    const signers = this.getSigners()
+    if (!signers.length || !this.currentWallet) {
+      return []
+    }
+
+    // in case current wallet is multisig..
+    if (this.currentMultisigInfo && this.currentMultisigInfo.isMultisig()) {
+      return signers
+    }
+
+    // all signers except current wallet
+    return signers.splice(1)
   }
 
   get hasConfirmationModal(): boolean {
@@ -407,26 +415,31 @@ export class FormTransactionBase extends Vue {
       return []
     }
 
-    // "self"
-    const currentSigner = PublicAccount.createFromPublicKey(
-      this.currentWallet.values.get('publicKey'),
-      this.networkType,
-    )
-
-    // add multisig accounts
     const self = [
       {
-        publicKey: currentSigner.publicKey,
+        publicKey: this.currentWallet.values.get('publicKey'),
         label: this.currentWallet.values.get('name'),
       },
     ]
 
-    if (this.currentMultisigInfo) {
+    if (!this.currentMultisigInfo) {
+      return self
+    }
+
+    const multisig = this.currentMultisigInfo
+
+    // in case "self" is a multi-signature account
+    if (multisig && multisig.isMultisig()) {
+      self[0].label = self[0].label + this.$t('label_postfix_multisig')
+    }
+
+    // add multisig accounts of which "self" is a cosignatory
+    if (multisig) {
       const service = new WalletService(this.$store)
-      return self.concat(...this.currentMultisigInfo.multisigAccounts.map(
+      return self.concat(...multisig.multisigAccounts.map(
         ({publicKey}) => ({
           publicKey,
-          label: service.getWalletLabel(publicKey, this.networkType),
+          label: service.getWalletLabel(publicKey, this.networkType) + this.$t('label_postfix_multisig'),
         })))
     }
 

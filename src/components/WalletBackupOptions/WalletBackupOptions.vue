@@ -1,9 +1,46 @@
 <template>
-  <div class="account-type">
-    <div class="account-item">
-      <div class="img-box radius"><img src="@/views/resources/img/symbol/EncryptedMessage.png"></div>
-      <p class="access-name">{{ $t('wallets_backup_tile_title') }}</p>
-      <p class="access-info">{{ $t('wallets_backup_tile_description') }}</p>
+  <div class="backup-options-container">
+    <div class="single-backup-option">
+      <div class="backup-explain">
+        <span class="subtitle">{{ $t('wallets_backup_title_qrcode') }}</span>
+        <p>{{ $t('wallets_backup_qrcode_explain_p1')}}</p>
+        <p>{{ $t('wallets_backup_qrcode_explain_p2')}}</p>
+      </div>
+      <div class="backup-options">
+        <div class="backup-item">
+          <div class="img-box radius"><img src="@/views/resources/img/symbol/QR.png"></div>
+          <p class="access-name">{{ $t('wallets_backup_tile_title') }}</p>
+          <p class="access-info">{{ $t('wallets_backup_tile_description') }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="single-backup-option">
+      <div class="backup-explain">
+        <span class="subtitle">{{ $t('wallets_backup_title_mnemonic') }}</span>
+        <p>{{ $t('wallets_backup_mnemonic_explain_p1')}}</p>
+        <p>{{ $t('wallets_backup_mnemonic_explain_p2')}}</p>
+      </div>
+      <div class="backup-options">
+        <div class="backup-item">
+          <div class="img-box radius"><img src="@/views/resources/img/symbol/EncryptedMessage.png"></div>
+          <p class="access-name">{{ $t('wallets_backup_tile_mnemonic') }}</p>
+          <p class="access-info">{{ $t('wallets_backup_tile_mnemonic_desc') }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="single-backup-option">
+      <div class="backup-explain">
+        <span class="subtitle">{{ $t('wallets_backup_title_keystore') }}</span>
+        <p>{{ $t('wallets_backup_keystore_explain_p1')}}</p>
+        <p>{{ $t('wallets_backup_keystore_explain_p2')}}</p>
+      </div>
+      <div class="backup-options">
+        <div class="backup-item">
+          <div class="img-box radius"><img src="@/views/resources/img/symbol/Keypair.png"></div>
+          <p class="access-name">{{ $t('wallets_backup_tile_keystore') }}</p>
+          <p class="access-info">{{ $t('wallets_backup_tile_keystore_desc') }}</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>

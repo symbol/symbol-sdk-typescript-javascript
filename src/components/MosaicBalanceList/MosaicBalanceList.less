@@ -209,14 +209,23 @@
 
     img {
       display: inline-block;
-      width: 28px;
-      height: 28px;
+      width: 0.36rem;
+      height: 0.36rem;
+    }
+
+    img.grayed-xym-logo {
+      opacity: 0.4;
+      -webkit-filter: grayscale(100%);
+        -moz-filter: grayscale(100%);
+          -o-filter: grayscale(100%);
+          -ms-filter: grayscale(100%);
+              filter: grayscale(100%);
     }
   }
 
   .mosaic_name {
     position: relative;
-    top: 3px;
+    top: 5px;
     left: 40px;
     width: 180px;
     font-size: 18px;
@@ -230,6 +239,7 @@
   .mosaic_value {
     margin-left: 50px;
     text-align: right;
+    padding-top: 0.1rem;
 
     div:first-of-type {
       font-size: 16px;

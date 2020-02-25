@@ -14,12 +14,9 @@
             class="mosaic_data text_select"
           >
             <span class="img_container">
-              <img
-                v-if="entry.id.equals(networkMosaic)"
-                src="@/views/resources/img/monitor/monitorMosaicIcon.png"
-                alt
-              >
-              <img v-else src="@/views/resources/img/monitor/mosaicDefault.png" alt>
+              <img v-if="entry.id.equals(networkMosaic)"
+                src="@/views/resources/img/symbol/XYMCoin.png" alt />
+              <img v-else src="@/views/resources/img/symbol/XYMCoin.png" class="grayed-xym-logo"/>
             </span>
             <span class="mosaic_name">{{ entry.name !== '' ? entry.name : entry.id.toHex() }}</span>
             <span class="mosaic_value">
@@ -62,12 +59,9 @@
               :src="hasHiddenMosaic(entry.mosaic.id)
                 ? dashboardImages.monitorUnselected : dashboardImages.monitorSelected"
             >
-            <img
-              v-if="entry.mosaic.id.equals(networkMosaic)"
-              class="mosaicIcon"
-              src="@/views/resources/img/monitor/monitorMosaicIcon.png"
-            >
-            <img v-else class="mosaicIcon" src="@/views/resources/img/monitor/mosaicDefault.png">
+              <img v-if="entry.id.equals(networkMosaic)"
+                src="@/views/resources/img/symbol/XYMCoin.png" class="mosaicIcon" alt />
+              <img v-else src="@/views/resources/img/symbol/XYMCoin.png" class="mosaicIcon grayed-xym-logo"/>
           </span>
           <span class="mosaic_name text_select">
             {{ entry.name !== '' ? entry.name : entry.id.toHex() }}

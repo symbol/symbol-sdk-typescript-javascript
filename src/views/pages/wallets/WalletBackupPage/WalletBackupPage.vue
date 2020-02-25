@@ -1,6 +1,6 @@
 <template>
   <div class="wallet-detail-outer-container">
-    <div class="wallet-detail-inner-container">
+    <div class="backup-mnemonic-container">
       <div class="wallet-actions-container">
         <WalletBackupOptions :wallet="currentWallet" />
       </div>

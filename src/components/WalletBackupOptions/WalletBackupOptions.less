@@ -15,50 +15,79 @@
  */
 @import "../../views/resources/css/variables.less";
 
-.account-type {
-  height: 220px;
-  margin: 0.15rem 0;
-  display: flex;
-  justify-content: space-around;
+.backup-options-container {
+  display: grid;
+  grid-template-rows: 2.6rem 2.6rem 2.6rem;
+  grid-template-columns: 100%;
 
-  .account-item:hover {
-    background: @grayLightest;
-  }
+  .single-backup-option {
+    display: grid;
+    grid-template-columns: 8rem 4.2rem;
+    padding-bottom: 0.2rem;
 
-  .account-item.danger:hover {
-    background: @redLightest;
-  }
+    .backup-explain {
+      padding: 0.2rem;
+      padding-left: 0.4rem;
+      font-size: @normalFont;
 
-  .account-item {
-    text-align: center;
-    background: @white;
-    box-shadow: 0 2px 10px 0 @boxShadow;
-    border-radius: 4px;
-    margin-right: 0.3rem;
-    cursor: pointer;
+      .subtitle {
+        color: @primary;
+        font-weight: @boldest;
+      }
 
-    .img-box {
-      img {
-        width: 68px;
-        /*border: 1px dashed @black;*/
-        margin: 30px auto 15px;
+      p {
+        padding-top: 0.05rem;
+        text-align: justify;
       }
     }
 
-    .access-name {
-      font-size: 28px;
-      font-weight: 600;
-      color: @black;
-      line-height: 24px;
-      // margin-top: -15px;
-    }
+    .backup-options {
+      height: 2.2rem;
+      min-width: 3rem;
+      margin: 0.15rem 0;
+      display: flex;
+      justify-content: space-around;
 
-    .access-info {
-      margin: 20px auto 0 auto;
-      width: 280px;
-      font-size: 20px;
-      color: @grayDark;
-      line-height: 30px;
+      .backup-item:hover {
+        background: @grayLightest;
+      }
+
+      .backup-item.danger:hover {
+        background: @redLightest;
+      }
+
+      .backup-item {
+        text-align: center;
+        background: @white;
+        box-shadow: 0 2px 10px 0 @boxShadow;
+        border-radius: 4px;
+        margin-right: 0.3rem;
+        cursor: pointer;
+
+        .img-box {
+          img {
+            width: 68px;
+            /*border: 1px dashed @black;*/
+            margin: 30px auto 15px;
+          }
+        }
+
+        .access-name {
+          font-size: 28px;
+          font-weight: 600;
+          color: @black;
+          line-height: 24px;
+          // margin-top: -15px;
+        }
+
+        .access-info {
+          margin: 20px auto 0 auto;
+          width: 280px;
+          font-size: 20px;
+          color: @grayDark;
+          line-height: 30px;
+        }
+      }
     }
   }
 }
