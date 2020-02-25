@@ -104,10 +104,10 @@ export default class GenerateMnemonicTs extends Vue {
       // act
       const entropy = CryptoJS.SHA256(this.entropy).toString()
       const seed = MnemonicPassPhrase.createFromEntropy(entropy)
-      
+
       // encrypt seed for storage
       const encSeed = AESEncryptionService.encrypt(
-        seed.toSeed(this.currentPassword.value).toString('hex'),
+        seed.plain,
         this.currentPassword
       )
 

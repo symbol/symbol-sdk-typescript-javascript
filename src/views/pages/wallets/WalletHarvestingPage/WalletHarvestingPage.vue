@@ -9,10 +9,10 @@
 </template>
 
 <script lang="ts">
-import {WalletActionsPageTs} from './WalletActionsPageTs'
-export default class WalletActionsPage extends WalletActionsPageTs {}
+import {WalletHarvestingPageTs} from './WalletHarvestingPageTs'
+export default class WalletHarvestingPage extends WalletHarvestingPageTs {}
 </script>
 
 <style lang="less">
-@import './WalletActionsPage.less';
+@import './WalletHarvestingPage.less';
 </style>

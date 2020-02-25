@@ -18,7 +18,7 @@
         <div class="app_controller clear">
           <div @click="hasDebugConsoleModal = true" class="debug-console-trigger">
             <Icon :type="'ios-code-working'" size="18" />
-            <span>Debug</span>
+            <span>&nbsp;{{$t('top_window_console')}}</span>
           </div>
 
           <PeerSelector />

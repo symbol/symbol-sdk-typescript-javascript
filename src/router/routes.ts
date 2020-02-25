@@ -233,14 +233,14 @@ export const routes: AppRoute[] = [
             component: () => import('@/views/pages/wallets/WalletBackupPage/WalletBackupPage.vue'),
           },
           {
-            path: 'contracts',
-            name: 'wallet.contracts',
+            path: 'harvesting',
+            name: 'wallet.harvesting',
             meta: {
               protected: true,
-              title: i18n.t('page_title_wallet_actions').toString(),
+              title: i18n.t('page_title_wallet_harvesting').toString(),
             },
             // @ts-ignore
-            component: () => import('@/views/pages/wallets/WalletActionsPage/WalletActionsPage.vue'),
+            component: () => import('@/views/pages/wallets/WalletHarvestingPage/WalletHarvestingPage.vue'),
           },
         ],
       }, {

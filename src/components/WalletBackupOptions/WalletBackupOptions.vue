@@ -7,11 +7,7 @@
         <p>{{ $t('wallets_backup_qrcode_explain_p2')}}</p>
       </div>
       <div class="backup-options">
-        <div class="backup-item">
-          <div class="img-box radius"><img src="@/views/resources/img/symbol/QR.png"></div>
-          <p class="access-name">{{ $t('wallets_backup_tile_title') }}</p>
-          <p class="access-info">{{ $t('wallets_backup_tile_description') }}</p>
-        </div>
+        <ProtectedMnemonicQRButton :wallet="wallet" />
       </div>
     </div>
     <div class="single-backup-option">

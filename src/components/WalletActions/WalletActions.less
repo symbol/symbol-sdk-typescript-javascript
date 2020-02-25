@@ -13,52 +13,82 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@import "../../views/resources/css/variables.less";
+ @import "../../views/resources/css/variables.less";
 
-.account-type {
-  height: 220px;
-  margin: 0.15rem 0;
-  display: flex;
-  justify-content: space-around;
-
-  .account-item:hover {
-    background: @grayLightest;
-  }
-
-  .account-item.danger:hover {
-    background: @redLightest;
-  }
-
-  .account-item {
-    text-align: center;
-    background: @white;
-    box-shadow: 0 2px 10px 0 @boxShadow;
-    border-radius: 4px;
-    margin-right: 0.3rem;
-    cursor: pointer;
-
-    .img-box {
-      img {
-        width: 68px;
-        /*border: 1px dashed @black;*/
-        margin: 30px auto 15px;
-      }
-    }
-
-    .access-name {
-      font-size: 28px;
-      font-weight: 600;
-      color: @black;
-      line-height: 24px;
-      // margin-top: -15px;
-    }
-
-    .access-info {
-      margin: 20px auto 0 auto;
-      width: 280px;
-      font-size: 20px;
-      color: @grayDark;
-      line-height: 30px;
-    }
-  }
-}
+ .harvesting-options-container {
+   display: grid;
+   grid-template-rows: 2.6rem 2.6rem 2.6rem;
+   grid-template-columns: 100%;
+ 
+   .single-harvesting-option {
+     display: grid;
+     grid-template-columns: 8rem 4.2rem;
+     padding-bottom: 0.2rem;
+ 
+     .harvesting-explain {
+       padding: 0.2rem;
+       padding-left: 0.4rem;
+       font-size: @normalFont;
+ 
+       .subtitle {
+         color: @primary;
+         font-weight: @boldest;
+       }
+ 
+       p {
+         padding-top: 0.05rem;
+         text-align: justify;
+       }
+     }
+ 
+     .harvesting-options {
+       height: 2.2rem;
+       min-width: 3rem;
+       margin: 0.15rem 0;
+       display: flex;
+       justify-content: space-around;
+ 
+       .harvesting-item:hover {
+         background: @grayLightest;
+       }
+ 
+       .harvesting-item.danger:hover {
+         background: @redLightest;
+       }
+ 
+       .harvesting-item {
+         text-align: center;
+         background: @white;
+         box-shadow: 0 2px 10px 0 @boxShadow;
+         border-radius: 4px;
+         margin-right: 0.3rem;
+         cursor: pointer;
+ 
+         .img-box {
+           img {
+             width: 68px;
+             /*border: 1px dashed @black;*/
+             margin: 30px auto 15px;
+           }
+         }
+ 
+         .access-name {
+           font-size: 28px;
+           font-weight: 600;
+           color: @black;
+           line-height: 24px;
+           // margin-top: -15px;
+         }
+ 
+         .access-info {
+           margin: 20px auto 0 auto;
+           width: 280px;
+           font-size: 20px;
+           color: @grayDark;
+           line-height: 30px;
+         }
+       }
+     }
+   }
+ }
+ 

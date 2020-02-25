@@ -94,12 +94,13 @@ export default class ImportMnemonicTs extends Vue {
       if (!mnemonic.isValid()) {
         throw new Error('Invalid mnemonic pass phrase')
       }
-  
+
       // encrypt seed for storage
       const encSeed = AESEncryptionService.encrypt(
-        mnemonic.toSeed(this.currentPassword.value).toString('hex'),
-        this.currentPassword,
+        mnemonic.plain,
+        this.currentPassword
       )
+
       // update currentAccount instance and storage
       this.currentAccount.values.set('seed', encSeed)
       this.accounts.update(this.currentAccount.getIdentifier(), this.currentAccount.values)

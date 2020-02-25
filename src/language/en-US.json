@@ -955,6 +955,7 @@
   "page_title_settings_diagnostic": "Diagnostic",
   "page_title_wallet_backup": "Wallet Backup",
   "page_title_wallet_actions": "Actions",
+  "page_title_wallet_harvesting": "Harvesting",
   "error_wallet_name_already_exists": "This wallet name already exists. Please, enter a unique wallet name.",
   "error_invalid_password": "This password is invalid",
   "error_peer_unreachable": "Network node is unreachable.",
@@ -1110,6 +1111,16 @@
   "wallets_setup_harvesting_description": "Configure delegated harvesting",
   "wallets_change_password_title": "Change Password",
   "wallets_change_password_description": "Change your password",
+  "wallets_harvesting_tile_remote": "Remote account",
+  "wallets_harvesting_tile_remote_description": "Importance transfer",
+  "wallets_harvesting_title_remote": "Setup a remote account",
+  "wallets_harvesting_remote_explain_p1": "Use the button on the right to configure a remote account for harvesting. This will later permit your account to activate delegated harvesting.",
+  "wallets_harvesting_remote_explain_p2": "You will be asked to unlock your account and will then view options for the setup of a remote account for harvesting.",
+  "wallets_harvesting_tile_request": "Delegation request(s)",
+  "wallets_harvesting_tile_request_description": "Start harvesting!",
+  "wallets_harvesting_title_request": "Send delegation request(s)",
+  "wallets_harvesting_request_explain_p1": "Use the button on the right to send a harvesting delegation request. If approved by the node, this will activate harvesting for your account.",
+  "wallets_harvesting_request_explain_p2": "You will be asked to unlock your account and will then view options for sending harvesting delegation requests to Peer nodes.",
   "wallets_view_explorer_description": "Open in explorer",
   "wallets_view_open_faucet": "Open the faucet",
   "wallets_view_dashboard": "View in dashboard",
@@ -1134,5 +1145,6 @@
   "relative": "relative",
   "absolute": "absolute",
   "label_postfix_multisig": " (Multisig)",
-  "label_of": " ({min} of {max})"
+  "label_of": " ({min} of {max})",
+  "top_window_console": "Console"
 }

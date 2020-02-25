@@ -32,7 +32,7 @@ import WalletActions from '@/components/WalletActions/WalletActions.vue'
     currentWallet: 'wallet/currentWallet',
   })},
 })
-export class WalletActionsPageTs extends Vue {
+export class WalletHarvestingPageTs extends Vue {
   /**
    * Currently active wallet
    * @see {Store.Wallet}

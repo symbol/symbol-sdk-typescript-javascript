@@ -14,26 +14,45 @@
  * limitations under the License.
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
+import {mapGetters} from 'vuex'
+import {Account, Password, Convert} from 'nem2-sdk'
+import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 
 // internal dependencies
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
+import {UIHelpers} from '@/core/utils/UIHelpers'
+import {AESEncryptionService} from '@/services/AESEncryptionService'
 
 // child components
 // @ts-ignore
 import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
-// @ts-ignore
-import ProtectedMnemonicQRButton from '@/components/ProtectedMnemonicQRButton/ProtectedMnemonicQRButton.vue'
 
 @Component({
   components: {
     ModalFormAccountUnlock,
-    ProtectedMnemonicQRButton,
-  }})
-export class WalletBackupOptionsTs extends Vue {
-
+  },
+  computed: {...mapGetters({
+    currentAccount: 'account/currentAccount',
+  })}
+})
+export class ProtectedMnemonicQRButtonTs extends Vue {
   @Prop({
     default: null
   }) wallet: WalletsModel
+
+  /**
+   * Currently active account
+   * @see {Store.Account}
+   * @var {AccountsModel}
+   */
+  public currentAccount: AccountsModel
+
+  /**
+   * UI Helpers
+   * @var {UIHelpers}
+   */
+  public uiHelpers = UIHelpers
 
   /**
    * Whether account is currently being unlocked
@@ -51,4 +70,26 @@ export class WalletBackupOptionsTs extends Vue {
   }
 /// end-region computed properties getter/setter
 
+  /**
+   * Hook called when the account unlock modal must open
+   * @return {void}
+   */
+  public onClickDisplay() {
+    this.hasAccountUnlockModal = true
+  }
+
+  /**
+   * Hook called when the account has been unlocked
+   * @param {Account} account 
+   * @return {boolean}
+   */
+  public onAccountUnlocked(account: Account, password: Password): boolean {
+
+    // decrypt seed + create QR
+    const encSeed = this.currentAccount.values.get('seed')
+    const plnSeed = AESEncryptionService.decrypt(encSeed, password)
+
+    this.hasAccountUnlockModal = false
+    return true
+  }
 }
