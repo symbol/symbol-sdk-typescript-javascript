@@ -23,9 +23,17 @@ import {
 
 // internal dependencies
 import { TransactionViewType } from '@/services/TransactionService'
+import { MosaicService } from '@/services/MosaicService'
 
 // child components
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
+
+// @TODO: this type should be used more globally
+interface AttachedMosaic {
+  id: MosaicId | NamespaceId
+  mosaicHex: string
+  amount: number
+}
 
 @Component({ components: { TransactionDetailRow } })
 export default class Transfer extends Vue {
@@ -51,20 +59,36 @@ export default class Transfer extends Vue {
    * @type {({ key: string, value: string | boolean, isMosaic: boolean }[])}
    */
   protected get items(): { key: string, value: any, isMosaic?: boolean }[] {
-    const attachedMosaics: {
-      id: MosaicId
-      mosaicHex: string
-      amount: number
-    }[] = this.view.values.get('mosaics')
+    const attachedMosaics: AttachedMosaic[] = this.view.values.get('mosaics')
     const message: Message = this.view.values.get('message')
 
-    const mosaicItems = attachedMosaics.map((mosaic, index, self) => ({
-      key: `${this.$t('mosaic')} (${index + 1}/${self.length})`,
-      value: mosaic,
-      isMosaic: true,
-    }))
+    const mosaicItems = attachedMosaics.map((mosaic, index, self) => {
+      // If the mosaicId is a namespaceId, try to substitute the namespaceId for a mosaicId
+      const _mosaic = mosaic.id instanceof NamespaceId
+        ? this.getMosaicWithMosaicIdFromNamespaceId(mosaic)
+        : mosaic
+
+      return {
+        key: `${this.$t('mosaic')} (${index + 1}/${self.length})`,
+        value: _mosaic,
+        isMosaic: true,
+      }
+    })
+
 
     return [ ...mosaicItems, { key: 'message', value: message.payload || '-' }]
+  }
+
+  // @TODO: quickfix, should be a service method
+  private getMosaicWithMosaicIdFromNamespaceId(attachedMosaic: AttachedMosaic): AttachedMosaic {
+    const service = new MosaicService(this.$store)
+    const model = service.getMosaicSync(attachedMosaic.id)
+    if (!model) return attachedMosaic
+    return {
+      id: new MosaicId(model.getIdentifier()),
+      amount: attachedMosaic.amount,
+      mosaicHex: model.getIdentifier(),
+    }
   }
 }
 </script>

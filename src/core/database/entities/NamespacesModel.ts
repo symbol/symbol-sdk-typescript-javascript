@@ -16,7 +16,7 @@
 // internal dependencies
 import {DatabaseModel} from '@/core/database/DatabaseModel'
 import {DatabaseRelation} from '@/core/database/DatabaseRelation'
-import {NamespaceInfo, NamespaceRegistrationType, PublicAccount, UInt64, NamespaceId} from 'nem2-sdk'
+import {NamespaceInfo, NamespaceRegistrationType, PublicAccount, UInt64, NamespaceId, Alias, MosaicId, Address, MosaicAlias, EmptyAlias, AddressAlias} from 'nem2-sdk'
 
 export class NamespacesModel extends DatabaseModel {
   /**
@@ -60,6 +60,23 @@ export class NamespacesModel extends DatabaseModel {
     const owner = PublicAccount.createFromPublicKey(
       this.values.get('ownerPublicKey'), this.values.get('generationHash'),
     )
+    
+    // instantiate a namespace alias
+    const getAlias = (alias: any): Alias => {
+      if (alias.mosaicId) {
+        return new MosaicAlias(
+          new MosaicId([alias.mosaicId.id.lower, alias.mosaicId.id.higher]),
+        )
+      }
+
+      if (alias.address) {
+        return new AddressAlias(
+          Address.createFromRawAddress(alias.address.address),
+        )
+      }
+
+      return new EmptyAlias()
+    }
 
     return {
       namespaceInfo: new NamespaceInfo(
@@ -73,7 +90,7 @@ export class NamespacesModel extends DatabaseModel {
         owner,
         UInt64.fromUint(this.values.get('startHeight')),
         UInt64.fromUint(this.values.get('endHeight')),
-        this.values.get('alias'),
+        getAlias(this.values.get('alias')),
       ),
     }
   }

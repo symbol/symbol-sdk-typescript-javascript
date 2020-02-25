@@ -20,6 +20,7 @@ import {MosaicId, AccountInfo, NamespaceId} from 'nem2-sdk'
 import {AbstractService} from './AbstractService'
 import {MosaicsRepository} from '@/repositories/MosaicsRepository'
 import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
+import {NamespaceService} from './NamespaceService'
 
 export class MosaicService extends AbstractService {
   /**
@@ -95,6 +96,17 @@ export class MosaicService extends AbstractService {
    */
   public getMosaicSync(mosaicId: MosaicId | NamespaceId): MosaicsModel | null {
     const repository = new MosaicsRepository()
+
+    // If the id is a NamespaceId, get the mosaicId from the namespace Id
+    if (mosaicId instanceof NamespaceId) {
+      const model = new NamespaceService(this.$store).getNamespaceSync(mosaicId)
+      if (!model) return null
+
+      const namespaceInfo = model.objects.namespaceInfo
+      if (namespaceInfo.hasAlias() && namespaceInfo.alias.mosaicId) {
+        return this.getMosaicSync(namespaceInfo.alias.mosaicId)
+      }
+    }
 
     if (!repository.find(mosaicId.toHex())) {
       // - mosaic is unknown, fetch from REST + add to storage
