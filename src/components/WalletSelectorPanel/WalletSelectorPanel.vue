@@ -40,7 +40,7 @@
       <span class="add-wallet pointer" @click="hasAddWalletModal = true">
         <Icon type="md-add-circle" />{{ $t('button_add_wallet') }}
       </span>
-      <div class="wallet-switch-header-right-container">
+      <div class="wallet-switch-header-right-container"  @click="hasMnemonicExportModal = true">
         <span>
           <img src="@/views/resources/img/back-up.png" alt="">
         </span>
@@ -52,6 +52,12 @@
       v-if="hasAddWalletModal"
       :visible="hasAddWalletModal"
       @close="hasAddWalletModal = false"
+    />
+
+    <ModalMnemonicExport
+      v-if="hasMnemonicExportModal"
+      :visible="hasMnemonicExportModal"
+      @close="hasMnemonicExportModal = false"
     />
   </div>
 </template>

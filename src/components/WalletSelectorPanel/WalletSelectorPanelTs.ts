@@ -30,22 +30,22 @@ import {WalletsRepository} from '@/repositories/WalletsRepository'
 // @ts-ignore
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
 // @ts-ignore
-import ModalMnemonicBackupWizard from '@/views/modals/ModalMnemonicBackupWizard/ModalMnemonicBackupWizard.vue'
-// @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
 import FormLabel from '@/components/FormLabel/FormLabel.vue'
 // @ts-ignore
 import ModalFormSubWalletCreation from '@/views/modals/ModalFormSubWalletCreation/ModalFormSubWalletCreation.vue'
+// @ts-ignore
+import ModalMnemonicExport from '@/views/modals/ModalMnemonicExport/ModalMnemonicExport.vue'
 
 @Component({
   components: {
     MosaicAmountDisplay,
-    ModalMnemonicBackupWizard,
     ModalFormSubWalletCreation,
     ErrorTooltip,
     FormLabel,
     ValidationProvider,
+    ModalMnemonicExport,
   }, 
   computed: {...mapGetters({
     networkType: 'network/networkType',
@@ -111,7 +111,11 @@ export class WalletSelectorPanelTs extends Vue {
    * Whether user is currently adding a wallet (modal)
    * @var {boolean}
    */
-  public isAddingWallet: boolean = false
+  public isAddingWallet: boolean = false/**
+  * Whether currently viewing export
+  * @var {boolean}
+  */
+ public isViewingExportModal: boolean = false
 
   /**
    * Validation rules
@@ -225,6 +229,14 @@ export class WalletSelectorPanelTs extends Vue {
 
   public set hasAddWalletModal(f: boolean) {
     this.isAddingWallet = f
+  }
+
+  public get hasMnemonicExportModal(): boolean {
+    return this.isViewingExportModal
+  }
+ 
+  public set hasMnemonicExportModal(f: boolean) {
+    this.isViewingExportModal = f
   }
 /// end-region computed properties getter/setter
 

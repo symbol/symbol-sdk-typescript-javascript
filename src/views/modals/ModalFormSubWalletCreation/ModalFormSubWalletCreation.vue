@@ -2,6 +2,7 @@
   <div class="container">
     <Modal
       v-model="show"
+      class-name="modal-container"
       :title="$t('modal_title_enter_wallet_name')"
       :transfer="false"
     >
@@ -25,10 +26,6 @@ export default class ModalFormSubWalletCreation extends ModalFormSubWalletCreati
 </script>
 
 <style scoped>
-.ivu-modal-content   {
-  width: 8.5rem;
-}
-
 .modal-footer {
   height: 0.46rem;
   padding-right: 0.4rem;

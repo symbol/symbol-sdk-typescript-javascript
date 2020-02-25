@@ -5,7 +5,6 @@
       class-name="modal-transaction-confirmation"
       :title="$t('modal_title_transaction_confirmation')"
       :transfer="false"
-      @close="show = false"
     >
       <div class="transactionConfirmationBody">
         <div class="stepItem1">

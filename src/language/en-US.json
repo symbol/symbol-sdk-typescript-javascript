@@ -1054,6 +1054,8 @@
   "modal_title_extend_namespace_duration": "Extend namespace duration",
   "modal_title_mosaic_supply_change": "Modify mosaic supply",
   "modal_title_debug_console": "Diagnostic Console",
+  "modal_title_backup_mnemonic_qrcode": "Export Mnemonic QR Code",
+  "modal_title_backup_mnemonic_display": "Display Mnemonic Passphrase",
   "action_label_alias_link": "Link",
   "action_label_alias_unlink": "Unlink",
   "action_label_extend_duration": "Extend duration",
@@ -1098,11 +1100,13 @@
   "wallets_backup_title_qrcode": "Encrypted Mnemonic QRCode",
   "wallets_backup_qrcode_explain_p1": "Use the button on the right to backup your mnemonic passphrase by downloading a QRCode.",
   "wallets_backup_qrcode_explain_p2": "You will be asked to unlock your account. After unlocking your account, the download will start automatically.",
-  "wallets_backup_tile_mnemonic": "Backup Mnemonic",
+  "wallets_backup_tile_mnemonic": "Display Mnemonic",
   "wallets_backup_tile_mnemonic_desc": "Display your passphrase",
   "wallets_backup_title_mnemonic": "Mnemonic passphrase",
   "wallets_backup_mnemonic_explain_p1": "Use the button on the right to backup your mnemonic passphrase by displaying the 24 words on the screen.",
   "wallets_backup_mnemonic_explain_p2": "You will be asked to unlock your account. After unlocking your account, the mnemonic passphrase will appear.",
+  "wallets_backup_mnemonic_explain_p3": "Please, make sure to backup the following {num} words in a safe place. These {num} words represent your mnemonic passphrase and can be used to import your wallet and its' child wallets at a later point in time.",
+  "wallets_backup_mnemonic_explain_qrcode": "Please, make sure to backup the following QRCode in a safe place. This QRCode can be used to import your wallet and its' child wallets at a later point in time.",
   "wallets_backup_tile_keystore": "Download keys",
   "wallets_backup_tile_keystore_desc": "Download a keys file",
   "wallets_backup_title_keystore": "Download keys",
@@ -1149,5 +1153,6 @@
   "label_of": " ({min} of {max})",
   "top_window_console": "Console",
   "public_key_addition": "Added cosigner",
-  "public_key_deletion": "Removed cosigner"
+  "public_key_deletion": "Removed cosigner",
+  "button_download_qr": "Download"
 }

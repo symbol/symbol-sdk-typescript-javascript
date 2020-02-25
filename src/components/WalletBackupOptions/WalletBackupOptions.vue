@@ -17,11 +17,7 @@
         <p>{{ $t('wallets_backup_mnemonic_explain_p2')}}</p>
       </div>
       <div class="backup-options">
-        <div class="backup-item">
-          <div class="img-box radius"><img src="@/views/resources/img/symbol/EncryptedMessage.png"></div>
-          <p class="access-name">{{ $t('wallets_backup_tile_mnemonic') }}</p>
-          <p class="access-info">{{ $t('wallets_backup_tile_mnemonic_desc') }}</p>
-        </div>
+        <ProtectedMnemonicDisplayButton :wallet="wallet" />
       </div>
     </div>
     <div class="single-backup-option">

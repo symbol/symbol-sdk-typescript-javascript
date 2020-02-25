@@ -14,44 +14,61 @@
  * limitations under the License.
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
+import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {UIHelpers} from '@/core/utils/UIHelpers'
 
 // child components
 // @ts-ignore
 import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
 // @ts-ignore
-import ProtectedMnemonicQRButton from '@/components/ProtectedMnemonicQRButton/ProtectedMnemonicQRButton.vue'
-// @ts-ignore
-import ProtectedMnemonicDisplayButton from '@/components/ProtectedMnemonicDisplayButton/ProtectedMnemonicDisplayButton.vue'
+import ModalMnemonicDisplay from '@/views/modals/ModalMnemonicDisplay/ModalMnemonicDisplay.vue'
 
 @Component({
   components: {
     ModalFormAccountUnlock,
-    ProtectedMnemonicQRButton,
-    ProtectedMnemonicDisplayButton,
-  }})
-export class WalletBackupOptionsTs extends Vue {
-
+    ModalMnemonicDisplay,
+  },
+  computed: {...mapGetters({
+    currentAccount: 'account/currentAccount',
+    networkType: 'network/networkType',
+    generationHash: 'network/generationHash',
+  })},
+})
+export class ProtectedMnemonicDisplayButtonTs extends Vue {
   @Prop({
     default: null
   }) wallet: WalletsModel
 
   /**
-   * Whether account is currently being unlocked
+   * UI Helpers
+   * @var {UIHelpers}
+   */
+  public uiHelpers = UIHelpers
+
+  /**
+   * Whether currently viewing export
    * @var {boolean}
    */
-  public isUnlockingAccount: boolean = false
+  public isViewingExportModal: boolean = false
 
 /// region computed properties getter/setter
-  public get hasAccountUnlockModal(): boolean {
-    return this.isUnlockingAccount
+  public get hasMnemonicExportModal(): boolean {
+    return this.isViewingExportModal
   }
 
-  public set hasAccountUnlockModal(f: boolean) {
-    this.isUnlockingAccount = f
+  public set hasMnemonicExportModal(f: boolean) {
+    this.isViewingExportModal = f
   }
 /// end-region computed properties getter/setter
 
+  /**
+   * Hook called when the account unlock modal must open
+   * @return {void}
+   */
+  public onClickDisplay() {
+    this.hasMnemonicExportModal = true
+  }
 }

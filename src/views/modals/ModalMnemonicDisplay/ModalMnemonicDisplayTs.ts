@@ -28,20 +28,19 @@ import {AccountsModel} from '@/core/database/entities/AccountsModel'
 // child components
 // @ts-ignore
 import FormAccountUnlock from '@/views/forms/FormAccountUnlock/FormAccountUnlock.vue'
-
-// resources
 // @ts-ignore
-import failureIcon from '@/views/resources/img/monitor/failure.png'
+import MnemonicDisplay from '@/components/MnemonicDisplay/MnemonicDisplay.vue'
 
 @Component({
-  components: {FormAccountUnlock},
+  components: {
+    FormAccountUnlock,
+    MnemonicDisplay,
+  },
   computed: {...mapGetters({
     currentAccount: 'account/currentAccount',
-    networkType: 'network/networkType',
-    generationHash: 'network/generationHash',
   })},
 })
-export class ModalMnemonicExportTs extends Vue {
+export class ModalMnemonicDisplayTs extends Vue {
   @Prop({
     default: false
   }) visible: boolean
@@ -52,32 +51,9 @@ export class ModalMnemonicExportTs extends Vue {
    * @var {AccountsModel}
    */
   public currentAccount: AccountsModel
-
-  /**
-   * Current networkType
-   * @see {Store.Network}
-   * @var {NetworkType}
-   */
-  public networkType: NetworkType
-
-  /**
-   * Current generationHash
-   * @see {Store.Network}
-   * @var {string}
-   */
-  public generationHash: string
   
-  public qrBase64: string = failureIcon
   public hasMnemonicInfo: boolean = false
-  public exportMnemonicQR: MnemonicQR
-
-  public created() {
-    this.$eventToObservable('onAccountUnlocked').subscribe(
-      async (event) => {
-        this.qrBase64 = await this.exportMnemonicQR.toBase64().toPromise()
-      }
-    )
-  }
+  public mnemonic: MnemonicPassPhrase
 
   /**
    * Visibility state
@@ -96,6 +72,11 @@ export class ModalMnemonicExportTs extends Vue {
     }
   }
 
+  get words(): string[] {
+    if (!this.mnemonic) return []
+    return this.mnemonic.plain.split(' ')
+  }
+
   /**
    * Hook called when the account has been unlocked
    * @param {Account} account 
@@ -108,14 +89,7 @@ export class ModalMnemonicExportTs extends Vue {
     const plnSeed = AESEncryptionService.decrypt(encSeed, payload.password)
 
     try {
-      this.exportMnemonicQR = QRCodeGenerator.createExportMnemonic(
-        new MnemonicPassPhrase(plnSeed),
-        payload.password.value,
-        this.networkType,
-        this.generationHash,
-      )
-
-      this.$emit('onAccountUnlocked', this.exportMnemonicQR)
+      this.mnemonic = new MnemonicPassPhrase(plnSeed)
 
       // display mnemonic
       this.hasMnemonicInfo = true
@@ -136,12 +110,5 @@ export class ModalMnemonicExportTs extends Vue {
    */
   public onError(error: string) {
     this.$emit('error', error)
-  }
-
-  /**
-   * 
-   */
-  public onDownloadQR() {
-
   }
 }

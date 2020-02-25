@@ -3,7 +3,7 @@
     <Modal
       v-model="show"
       class-name="modal-container"
-      :title="$t('modal_title_backup_mnemonic_qrcode')"
+      :title="$t('modal_title_backup_mnemonic_display')"
       :transfer="false"
     >
       <div class="form-unlock">
@@ -11,16 +11,11 @@
       </div>
       <div v-if="hasMnemonicInfo" class="body">
         <div class="explain">
-          <span class="subtitle">{{ $t('wallets_backup_title_qrcode') }}</span>
-          <p>{{ $t('wallets_backup_mnemonic_explain_qrcode') }}</p>
+          <span class="subtitle">{{ $t('wallets_backup_title_mnemonic') }}</span>
+          <p>{{ $t('wallets_backup_mnemonic_explain_p3', {num: mnemonic.plain.split(' ').length})}}</p>
         </div>
 
-        <img id="qrImg" class="qr-image" :src="qrBase64" alt="Mnemonic QR code" />
-
-        <button class="button-style validation-button download-button" type="button" @click="onDownloadQR">
-          <Icon :type="'md-download'" size="20" />
-          <span>&nbsp;{{ $t('button_download_qr') }}</span>
-        </button>
+        <MnemonicDisplay :words="words" />
       </div>
 
       <div slot="footer" class="modal-footer">
@@ -37,10 +32,10 @@
 </template>
 
 <script lang="ts">
-import { ModalMnemonicExportTs } from './ModalMnemonicExportTs'
-export default class ModalMnemonicExport extends ModalMnemonicExportTs {}
+import { ModalMnemonicDisplayTs } from './ModalMnemonicDisplayTs'
+export default class ModalMnemonicDisplay extends ModalMnemonicDisplayTs {}
 </script>
 
 <style lang="less" scoped>
-@import "./ModalMnemonicExport.less";
+@import "./ModalMnemonicDisplay.less";
 </style>
