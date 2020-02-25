@@ -191,6 +191,26 @@ export class TransactionListTs extends Vue {
     }
   }
 
+  public currentPartialTransactions(): {total: number, items: Transaction[]} {
+    if (!this.partialTransactions) return {total: 0, items: []}
+
+    const items = [...this.partialTransactions]
+    return {
+      total: items.length,
+      items
+    }
+  }
+
+  public currentUnconfirmedTransactions(): {total: number, items: Transaction[]} {
+    if (!this.unconfirmedTransactions) return {total: 0, items: []}
+
+    const items = [...this.unconfirmedTransactions]
+    return {
+      total: items.length,
+      items
+    }
+  }
+
   public get hasDetailModal(): boolean {
     return this.isDisplayingDetails
   }

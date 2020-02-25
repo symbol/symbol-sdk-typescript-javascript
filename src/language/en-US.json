@@ -1154,5 +1154,8 @@
   "top_window_console": "Console",
   "public_key_addition": "Added cosigner",
   "public_key_deletion": "Removed cosigner",
-  "button_download_qr": "Download"
+  "button_download_qr": "Download",
+  "transactions_tab_confirmed": "Confirmed transactions",
+  "transactions_tab_unconfirmed": "Unconfirmed transactions",
+  "transactions_tab_partial": "Partial transactions"
 }
