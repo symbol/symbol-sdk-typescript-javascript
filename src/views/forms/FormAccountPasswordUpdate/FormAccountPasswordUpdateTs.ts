@@ -78,6 +78,16 @@ export class FormAccountPasswordUpdateTs extends Vue {
     passwordHint: ''
   }
 
+  /**
+   * Type the ValidationObserver refs 
+   * @type {{
+    *     observer: InstanceType<typeof ValidationObserver>
+    *   }}
+    */
+  public $refs!: {
+    observer: InstanceType<typeof ValidationObserver>
+  }
+
 /// region computed properties getter/setter
   public get hasAccountUnlockModal(): boolean {
     return this.isUnlockingAccount
@@ -94,6 +104,11 @@ export class FormAccountPasswordUpdateTs extends Vue {
    */
   public onSubmit() {
     this.hasAccountUnlockModal = true
+
+    // resets form validation
+    this.$nextTick(() => {
+      this.$refs.observer.reset()
+    })
   }
   /**
    * When account is unlocked, the sub wallet can be created

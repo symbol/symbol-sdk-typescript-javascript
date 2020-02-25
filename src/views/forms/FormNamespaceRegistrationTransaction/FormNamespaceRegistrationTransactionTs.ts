@@ -94,7 +94,7 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
   public formItems = {
     signerPublicKey: '',
     registrationType: NamespaceRegistrationType.RootNamespace,
-    newNamespaceName: null,
+    newNamespaceName: '',
     parentNamespaceName: '',
     duration: 172800,
     maxFee: 0,

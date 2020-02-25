@@ -108,6 +108,16 @@ export class FormAccountCreationTs extends Vue {
     {value: NetworkType.MIJIN, label: 'MIJIN'},
   ]
 
+  /**
+   * Type the ValidationObserver refs 
+   * @type {{
+    *     observer: InstanceType<typeof ValidationObserver>
+    *   }}
+    */
+  public $refs!: {
+    observer: InstanceType<typeof ValidationObserver>
+  }
+
 /// region computed properties getter/setter
   get nextPage() {
     return this.$route.meta.nextPage
@@ -121,6 +131,10 @@ export class FormAccountCreationTs extends Vue {
   public submit() {
     // @VEE
     this.persistAccountAndContinue()
+    // resets form validation
+    this.$nextTick(() => {
+      this.$refs.observer.reset()
+    })
   }
 
   /**

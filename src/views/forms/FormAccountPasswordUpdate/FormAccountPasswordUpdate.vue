@@ -1,6 +1,6 @@
 <template>
   <FormWrapper class="password-settings-container">
-    <ValidationObserver v-slot="{ handleSubmit }" slim>
+    <ValidationObserver ref="observer" v-slot="{ handleSubmit }" slim>
       <form
         class="form-container mt-3"
         onsubmit="event.preventDefault()"

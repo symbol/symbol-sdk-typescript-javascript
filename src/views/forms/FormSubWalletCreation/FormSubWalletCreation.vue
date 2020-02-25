@@ -1,6 +1,6 @@
 <template>
   <div>
-    <FormWrapper class="sub-wallet-creation-container" slim>
+    <FormWrapper ref="observer" class="sub-wallet-creation-container" slim>
       <ValidationObserver v-slot="{ handleSubmit }">
         <form
           class="form-container mt-3"

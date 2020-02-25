@@ -1,6 +1,6 @@
 <template>
   <FormWrapper>
-    <ValidationObserver v-slot="{ handleSubmit }" slim>
+    <ValidationObserver ref="observer" v-slot="{ handleSubmit }" slim>
       <form
         onsubmit="event.preventDefault()"
         class="form-container"

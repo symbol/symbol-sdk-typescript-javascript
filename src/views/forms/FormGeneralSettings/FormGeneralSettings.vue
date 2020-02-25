@@ -1,7 +1,7 @@
 <template>
   <div>
     <FormWrapper class="general-settings-container">
-      <ValidationObserver v-slot="{ handleSubmit }">
+      <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
         <form
           class="form-container mt-3"
           onsubmit="event.preventDefault()"

@@ -1,7 +1,7 @@
 <template>
   <div class="form-account-creation-container">
     <FormWrapper>
-      <ValidationObserver v-slot="{ handleSubmit }" slim>
+      <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
         <form onsubmit="event.preventDefault()" @keyup.enter="handleSubmit(submit)">
           <div class="form-row">
             <div class="form-headline">

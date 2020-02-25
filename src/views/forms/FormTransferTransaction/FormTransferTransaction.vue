@@ -1,7 +1,7 @@
 <template>
   <div class="FormTransferTransaction">
     <FormWrapper>
-      <ValidationObserver v-slot="{ handleSubmit }" slim>
+      <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
         <form
           onsubmit="event.preventDefault()"
           @keyup.enter="disableSubmit ? '' : handleSubmit(onSubmit)"

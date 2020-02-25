@@ -109,6 +109,16 @@ export class FormWalletNameUpdateTs extends Vue {
     name: '',
   }
 
+  /**
+   * Type the ValidationObserver refs 
+   * @type {{
+    *     observer: InstanceType<typeof ValidationObserver>
+    *   }}
+    */
+  public $refs!: {
+    observer: InstanceType<typeof ValidationObserver>
+  }
+ 
   public created() {
     this.wallets = new WalletService(this.$store)
     this.walletsRepository = new WalletsRepository()
@@ -130,6 +140,11 @@ export class FormWalletNameUpdateTs extends Vue {
    */
   public onSubmit() {
     this.hasAccountUnlockModal = true
+
+    // resets form validation
+    this.$nextTick(() => {
+      this.$refs.observer.reset()
+    })
   }
 
   /**

@@ -41,6 +41,7 @@ import {NotificationType} from '@/core/utils/NotificationType'
 import {WalletService} from '@/services/WalletService'
 import {TransactionService} from '@/services/TransactionService'
 import {BroadcastResult} from '@/core/transactions/BroadcastResult'
+import {ValidationObserver} from 'vee-validate'
 
 @Component({
   computed: {...mapGetters({
@@ -137,6 +138,17 @@ export class FormTransactionBase extends Vue {
    * @var {any}
    */
   public namespacesNames: any
+
+  /**
+   * Type the ValidationObserver refs 
+   * @type {{
+   *     observer: InstanceType<typeof ValidationObserver>
+   *   }}
+   */
+  public $refs!: {
+    observer: InstanceType<typeof ValidationObserver>
+  }
+
 /// end-region store getters
 
 /// region property watches
@@ -305,6 +317,11 @@ export class FormTransactionBase extends Vue {
 
     // - open signature modal
     this.onShowConfirmationModal()
+
+    // resets form validation
+    this.$nextTick(() => {
+      this.$refs.observer.reset()
+    })
   }
 
   /**
