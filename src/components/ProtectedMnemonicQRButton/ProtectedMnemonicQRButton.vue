@@ -6,11 +6,10 @@
       <p class="access-info">{{ $t('wallets_backup_tile_description') }}</p>
     </div>
 
-    <ModalFormAccountUnlock
-      v-if="hasAccountUnlockModal"
-      :visible="hasAccountUnlockModal"
-      :on-success="onAccountUnlocked"
-      @close="hasAccountUnlockModal = false"
+    <ModalMnemonicExport
+      v-if="hasMnemonicExportModal"
+      :visible="hasMnemonicExportModal"
+      @close="hasMnemonicExportModal = false"
     />
   </div>
 </template>

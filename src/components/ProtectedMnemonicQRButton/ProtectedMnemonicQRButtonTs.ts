@@ -15,38 +15,32 @@
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Account, Password, Convert} from 'nem2-sdk'
-import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 
 // internal dependencies
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {UIHelpers} from '@/core/utils/UIHelpers'
-import {AESEncryptionService} from '@/services/AESEncryptionService'
 
 // child components
 // @ts-ignore
 import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
+// @ts-ignore
+import ModalMnemonicExport from '@/views/modals/ModalMnemonicExport/ModalMnemonicExport.vue'
 
 @Component({
   components: {
     ModalFormAccountUnlock,
+    ModalMnemonicExport,
   },
   computed: {...mapGetters({
     currentAccount: 'account/currentAccount',
-  })}
+    networkType: 'network/networkType',
+    generationHash: 'network/generationHash',
+  })},
 })
 export class ProtectedMnemonicQRButtonTs extends Vue {
   @Prop({
     default: null
   }) wallet: WalletsModel
-
-  /**
-   * Currently active account
-   * @see {Store.Account}
-   * @var {AccountsModel}
-   */
-  public currentAccount: AccountsModel
 
   /**
    * UI Helpers
@@ -55,18 +49,18 @@ export class ProtectedMnemonicQRButtonTs extends Vue {
   public uiHelpers = UIHelpers
 
   /**
-   * Whether account is currently being unlocked
+   * Whether currently viewing export
    * @var {boolean}
    */
-  public isUnlockingAccount: boolean = false
+  public isViewingExportModal: boolean = false
 
 /// region computed properties getter/setter
-  public get hasAccountUnlockModal(): boolean {
-    return this.isUnlockingAccount
+  public get hasMnemonicExportModal(): boolean {
+    return this.isViewingExportModal
   }
 
-  public set hasAccountUnlockModal(f: boolean) {
-    this.isUnlockingAccount = f
+  public set hasMnemonicExportModal(f: boolean) {
+    this.isViewingExportModal = f
   }
 /// end-region computed properties getter/setter
 
@@ -75,21 +69,6 @@ export class ProtectedMnemonicQRButtonTs extends Vue {
    * @return {void}
    */
   public onClickDisplay() {
-    this.hasAccountUnlockModal = true
-  }
-
-  /**
-   * Hook called when the account has been unlocked
-   * @param {Account} account 
-   * @return {boolean}
-   */
-  public onAccountUnlocked(account: Account, password: Password): boolean {
-
-    // decrypt seed + create QR
-    const encSeed = this.currentAccount.values.get('seed')
-    const plnSeed = AESEncryptionService.decrypt(encSeed, password)
-
-    this.hasAccountUnlockModal = false
-    return true
+    this.hasMnemonicExportModal = true
   }
 }

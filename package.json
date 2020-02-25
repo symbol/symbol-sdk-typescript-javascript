@@ -2,7 +2,7 @@
   "name": "symbol-desktop-wallet",
   "description": "Symbol Wallet",
   "homepage": "https://github.com/nemfoundation/symbol-desktop-wallet",
-  "version": "0.9.3",
+  "version": "0.9.3-beta",
   "scripts": {
     "dev": "vue-cli-service serve ",
     "build": "rm -rf dist && mkdir dist && tsc && vue-cli-service build",
