@@ -1147,5 +1147,7 @@
   "absolute": "absolute",
   "label_postfix_multisig": " (Multisig)",
   "label_of": " ({min} of {max})",
-  "top_window_console": "Console"
+  "top_window_console": "Console",
+  "public_key_addition": "Added cosigner",
+  "public_key_deletion": "Removed cosigner"
 }
