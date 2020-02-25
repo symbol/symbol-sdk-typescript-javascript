@@ -35,7 +35,7 @@ import ActionDisplay from '@/components/ActionDisplay/ActionDisplay.vue'
 import networkConfig from '@/../config/network.conf.json'
 
 // resources
-import {transferIcons, transactionTypeToIcon} from '@/views/resources/Images'
+import {transactionTypeToIcon, officialIcons} from '@/views/resources/Images'
 
 @Component({
   components: {
@@ -106,8 +106,8 @@ export class TransactionRowTs extends Vue {
     // - transfers have specific incoming/outgoing icons
     if (view.transaction.type === this.transactionType.TRANSFER) {
       return view.values.get('isIncoming')
-        ? transferIcons.transferReceived
-        : transferIcons.transferSent
+        ? officialIcons.receive
+        : officialIcons.sent
     }
 
     // - otherwise use per-type icon

@@ -82,6 +82,7 @@ export class WalletService extends AbstractService {
     identifier: string 
   ): WalletsModel {
     try {
+      this.wallets.fetch()
       const wallet = this.wallets.read(identifier)
       return wallet
     }
