@@ -22,13 +22,10 @@ import {UIHelpers} from '@/core/utils/UIHelpers'
 
 // child components
 // @ts-ignore
-import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
-// @ts-ignore
 import ModalMnemonicExport from '@/views/modals/ModalMnemonicExport/ModalMnemonicExport.vue'
 
 @Component({
   components: {
-    ModalFormAccountUnlock,
     ModalMnemonicExport,
   },
   computed: {...mapGetters({

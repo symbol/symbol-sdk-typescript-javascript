@@ -59,6 +59,7 @@ import ModalDebugConsole from '@/views/modals/ModalDebugConsole/ModalDebugConsol
       networkType: 'network/networkType',
       generationHash: 'network/generationHash',
       currentAccount: 'account/currentAccount',
+      isCosignatoryMode: 'wallet/isCosignatoryMode',
     }),
   },
 })
@@ -104,6 +105,17 @@ export class PageLayoutTs extends Vue {
    */
   public generationHash: string
 
+  /**
+   * Whether cosignatory mode is active
+   * @see {Store.Wallet}
+   * @var {boolean}
+   */
+  public isCosignatoryMode: boolean
+
+  /**
+   * Whether currently displaying debug console
+   * @var {boolean}
+   */
   public isDisplayingDebugConsole: boolean = false
 
 /// region computed properties getter/setter
@@ -122,6 +134,14 @@ export class PageLayoutTs extends Vue {
 
     if (this.currentAccount && this.currentAccount.values.get('generationHash') !== this.generationHash) {
       return {show: true, message: 'Wallet_network_type_does_not_match_current_network_type'}
+    }
+
+    return {show: false, message: ''}
+  }
+
+  get info(): {show: boolean, message: string} {
+    if (this.isCosignatoryMode) {
+      return {show: true, message: 'info_active_cosignatory_mode'}
     }
 
     return {show: false, message: ''}

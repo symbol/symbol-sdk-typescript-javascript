@@ -6,6 +6,12 @@
         {{ $t(`${alert.message}`) }}
       </Alert>
     </div>
+    <div v-else-if="info.show">
+      <Alert class="alert success_alert" type="success">
+        <Icon type="ios-bulb-outline" />
+        {{ $t(`${info.message}`) }}
+      </Alert>
+    </div>
 
     <PageNavigator v-if="!$route.matched.map(({name}) => name).includes('accounts')" />
 

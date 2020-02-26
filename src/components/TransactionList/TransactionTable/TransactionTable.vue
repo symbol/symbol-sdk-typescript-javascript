@@ -13,7 +13,7 @@
     </div>
 
     <div v-if="!transactions.length" class="no-data-container">
-      {{ $t('no_confirmed_transactions') }}
+      {{ $t(this.emptyMessage) }}
     </div>
   </div>
 </template>
@@ -35,6 +35,7 @@ import TransactionListHeader from '@/components/TransactionList/TransactionListH
 })
 export default class TransactionTable extends Vue {
   @Prop({ default: [] }) transactions: Transaction[]
+  @Prop({ default: 'no_data'}) emptyMessage: string
 
   get transactionsList(): Transaction[] {
     return this.transactions

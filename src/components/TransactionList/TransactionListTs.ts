@@ -191,7 +191,7 @@ export class TransactionListTs extends Vue {
     }
   }
 
-  public currentPartialTransactions(): {total: number, items: Transaction[]} {
+  public get currentPartialTransactions(): {total: number, items: Transaction[]} {
     if (!this.partialTransactions) return {total: 0, items: []}
 
     const items = [...this.partialTransactions]
@@ -201,7 +201,7 @@ export class TransactionListTs extends Vue {
     }
   }
 
-  public currentUnconfirmedTransactions(): {total: number, items: Transaction[]} {
+  public get currentUnconfirmedTransactions(): {total: number, items: Transaction[]} {
     if (!this.unconfirmedTransactions) return {total: 0, items: []}
 
     const items = [...this.unconfirmedTransactions]
@@ -227,15 +227,17 @@ export class TransactionListTs extends Vue {
   public async refresh(grp?) {
     const group = grp ? grp : this.currentTab
 
-    console.log("refreshing...")
     await this.$store.dispatch('wallet/REST_FETCH_TRANSACTIONS', {
       group: group,
       address: this.currentWallet.objects.address.plain(),
       pageSize: 100,
     })
 
-    const newPage = this.currentPageTransactions
-    console.log("transactions: ", newPage)
+    // force-refresh with getters
+    let newPage: {total: number, items: Transaction[]}
+    if ('unconfirmed' === grp) newPage = this.currentUnconfirmedTransactions
+    else if ('partial' === grp) newPage = this.currentPartialTransactions
+    else newPage = this.currentPageTransactions
   }
 
   /**
@@ -257,6 +259,7 @@ export class TransactionListTs extends Vue {
    */
   onTabChange(tab: string): void {
     this.currentTab = tab
+    this.refresh(this.currentTab)
   }
 
   /**

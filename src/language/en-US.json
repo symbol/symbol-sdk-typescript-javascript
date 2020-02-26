@@ -72,8 +72,9 @@
   "unconfirmed_transaction": "Unconfirmed",
   "total": "Total:",
   "data": "Items",
-  "no_unconfirmed_transactions": "No unconfirmed transactions",
-  "no_confirmed_transactions": "No confirmed transactions",
+  "no_unconfirmed_transactions": "There is currently no unconfirmed transactions",
+  "no_confirmed_transactions": "There is currently no confirmed transactions",
+  "no_partial_transactions": "There is currently no partial transactions",
   "highest_price": "Highest",
   "lowest_price": "Lowest",
   "average_price": "Average",
@@ -1157,5 +1158,6 @@
   "button_download_qr": "Download",
   "transactions_tab_confirmed": "Confirmed transactions",
   "transactions_tab_unconfirmed": "Unconfirmed transactions",
-  "transactions_tab_partial": "Partial transactions"
+  "transactions_tab_partial": "Partial transactions",
+  "info_active_cosignatory_mode": "The selected transaction signer is a multi-signature account."
 }
