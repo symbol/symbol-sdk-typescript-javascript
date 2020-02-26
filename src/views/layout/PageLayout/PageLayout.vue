@@ -7,7 +7,7 @@
       </Alert>
     </div>
 
-    <PageNavigator />
+    <PageNavigator v-if="!$route.matched.map(({name}) => name).includes('accounts')" />
 
     <div class="top_window">
       <AppLogo />
