@@ -45,6 +45,7 @@ describe('BlockInfo', () => {
                 generationHash: '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
                 hash: '24E92B511B54EDB48A4850F9B42485FDD1A30589D92C775632DDDD71D7D1D691',
                 numTransactions: 25,
+                numStatements: 1,
                 totalFee: new UInt64([ 0, 0 ]),
             },
         };
@@ -68,6 +69,7 @@ describe('BlockInfo', () => {
             blockDTO.block.blockReceiptsHash,
             blockDTO.block.stateHash,
             PublicAccount.createFromPublicKey(blockDTO.block.beneficiaryPublicKey, blockDTO.block.network),
+            blockDTO.meta.numStatements,
         );
 
         expect(blockInfo.hash).to.be.equal(blockDTO.meta.hash);
@@ -88,6 +90,7 @@ describe('BlockInfo', () => {
         expect(blockInfo.blockReceiptsHash).to.be.equal(blockDTO.block.blockReceiptsHash);
         expect(blockInfo.stateHash).to.be.equal(blockDTO.block.stateHash);
         expect((blockInfo.beneficiaryPublicKey as PublicAccount).publicKey).to.be.equal(blockDTO.block.beneficiaryPublicKey);
+        expect(blockInfo.numStatements).to.be.equal(blockDTO.meta.numStatements);
 
     });
 });
