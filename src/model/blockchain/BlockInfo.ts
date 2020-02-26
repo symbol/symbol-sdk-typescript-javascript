@@ -42,6 +42,7 @@ export class BlockInfo {
      * @param blockReceiptsHash
      * @param blockStateHash
      * @param beneficiaryPublicKey
+     * @param numStatements
      */
     constructor(/**
                  * The block hash.
@@ -117,7 +118,11 @@ export class BlockInfo {
                 /**
                  * The beneficiary public key.
                  */
-                public readonly beneficiaryPublicKey?: PublicAccount | undefined) {
+                public readonly beneficiaryPublicKey?: PublicAccount | undefined,
+                /**
+                 * The number of statements included.
+                 */
+                public readonly numStatements?: number) {
 
     }
 }

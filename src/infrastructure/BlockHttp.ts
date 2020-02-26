@@ -123,6 +123,7 @@ export class BlockHttp extends Http implements BlockRepository {
             dto.block.receiptsHash,
             dto.block.stateHash,
             dto.block.beneficiaryPublicKey ? PublicAccount.createFromPublicKey(dto.block.beneficiaryPublicKey, networkType) : undefined,
+            dto.meta.numStatements,
         );
     }
 
