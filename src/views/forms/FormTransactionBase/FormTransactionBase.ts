@@ -140,6 +140,12 @@ export class FormTransactionBase extends Vue {
   public namespacesNames: any
 
   /**
+   * Public key of the current signer
+   * @var {any}
+   */
+  public currentSigner: PublicAccount
+
+  /**
    * Type the ValidationObserver refs 
    * @type {{
    *     observer: InstanceType<typeof ValidationObserver>
@@ -181,6 +187,7 @@ export class FormTransactionBase extends Vue {
    */
   public async mounted() {
     if (this.currentWallet) {
+      this.currentSigner = this.currentWallet.objects.publicAccount
       const address = this.currentWallet.objects.address.plain()
       try { this.$store.dispatch('wallet/REST_FETCH_OWNED_NAMESPACES', address) } catch(e) {}
     }
@@ -279,6 +286,8 @@ export class FormTransactionBase extends Vue {
    * @param {string} signerPublicKey 
    */
   public onChangeSigner(signerPublicKey: string) {
+    this.currentSigner = PublicAccount.createFromPublicKey(signerPublicKey, this.networkType)
+
     const isCosig = this.currentWallet.values.get('publicKey') !== signerPublicKey
     const payload = !isCosig ? this.currentWallet : {
       networkType: this.networkType,

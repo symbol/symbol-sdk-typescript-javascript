@@ -24,6 +24,7 @@ import {
   MosaicSupplyChangeAction,
   TransactionType,
   Transaction,
+  PublicAccount,
 } from 'nem2-sdk'
 import {Component} from 'vue-property-decorator'
 
@@ -118,7 +119,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
    * @return {boolean} True if creating mosaic for multisig
    */
   protected isAggregateMode(): boolean {
-    return this.isCosignatoryMode
+    return true
   }
 
 /// region computed properties getter/setter
@@ -130,8 +131,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
   protected getTransactions(): Transaction[] {
     this.factory = new TransactionFactory(this.$store)
     try {
-      //XXX signer selector
-      const publicAccount = this.currentWallet.objects.publicAccount
+      const publicAccount = this.currentSigner
       const randomNonce = MosaicNonce.createRandom()
 
       // - read form for definition
