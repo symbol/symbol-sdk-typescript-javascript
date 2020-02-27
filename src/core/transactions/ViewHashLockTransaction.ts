@@ -1,0 +1,99 @@
+/**
+ * 
+ * Copyright 2020 Grégory Saive for NEM (https://nem.io)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// external dependencies
+import { HashLockTransaction, SignedTransaction, MosaicId, UInt64, RawUInt64, Mosaic } from 'nem2-sdk'
+
+// internal dependencies
+import { TransactionView } from './TransactionView'
+import { AttachedMosaic, MosaicService } from '@/services/MosaicService'
+
+export type HashLockTransactionFormFieldsType = {
+  mosaic: { mosaicHex: string, amount: number }
+  duration: number
+  signedTransaction: SignedTransaction
+  maxFee: number
+}
+
+// eslint-disable-next-line max-len
+export class ViewHashLockTransaction extends TransactionView<HashLockTransactionFormFieldsType> {
+  /**
+   * Fields that are specific to transfer transactions
+   * @var {string[]}
+   */
+  protected readonly fields: string[] = [
+    'mosaic',
+    'duration',
+    'signedTransaction',
+    'maxFee',
+  ]
+
+  /**
+   * Parse form items and return a ViewHashLockTransaction
+   * @param {HashLockTransactionFormFieldsType} formItems
+   * @return {ViewHashLockTransaction}
+   */
+  public parse(formItems: HashLockTransactionFormFieldsType): ViewHashLockTransaction {
+    // - instantiate new transaction view
+    const view = new ViewHashLockTransaction(this.$store)
+
+    // - prepare mosaic entry
+    const mosaicsInfo = this.$store.getters['mosaic/mosaicsInfoList']
+    const mosaicInfo = mosaicsInfo.find(i => i.id.toHex() === formItems.mosaic.mosaicHex)
+    const mosaicDivisibility = mosaicInfo ? mosaicInfo.divisibility : 0
+    // - create mosaic object
+    const mosaic = new Mosaic(
+      new MosaicId(RawUInt64.fromHex(formItems.mosaic.mosaicHex)),
+      UInt64.fromUint(formItems.mosaic.amount * Math.pow(10, mosaicDivisibility)),
+    )
+
+    // - set values
+    view.values.set('mosaic', mosaic)
+    view.values.set('duration', UInt64.fromUint(formItems.duration))
+    view.values.set('signedTransaction', formItems.signedTransaction)
+
+    // - set fee and return
+    view.values.set('maxFee', UInt64.fromUint(formItems.maxFee))
+    return view
+  }
+
+  /**
+   * Use a transaction object and return a ViewTransferTransaction
+   * @param {ViewHashLockTransaction} transaction
+   * @returns {ViewHashLockTransaction}
+   */
+  public use(transaction: HashLockTransaction): ViewHashLockTransaction {
+    // - instantiate new transaction view
+    const view = new ViewHashLockTransaction(this.$store)
+
+    // - set transaction
+    view.transaction = transaction
+
+    // - populate common values
+    view.initialize(transaction)
+
+    // get attached mosaic
+    const [mosaic]: AttachedMosaic[] = new MosaicService(this.$store)
+      .getAttachedMosaicsFromMosaics([transaction.mosaic])
+    
+    // - prepare
+    view.values.set('mosaic', mosaic)
+    view.values.set('duration', transaction.duration.compact())
+    view.values.set('signedTransaction', transaction.signedTransaction)
+
+    return view
+  }
+}

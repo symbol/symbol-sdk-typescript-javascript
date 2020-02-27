@@ -6,7 +6,7 @@
       </span>
     </div>
     <div class="transaction-details-row-value-container">
-      <span v-if="label === 'hash'">
+      <span v-if="label === 'hash' || label === 'inner_transaction_hash'">
         <a
           class="url_text"
           target="_blank"

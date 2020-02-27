@@ -18,6 +18,7 @@ import {Address, Mosaic, MosaicId, NamespaceId, UInt64, RawUInt64, PlainMessage,
 
 // internal dependencies
 import {TransactionView} from './TransactionView'
+import {MosaicService} from '@/services/MosaicService'
 
 /// region custom types
 export type TransferFormFieldsType = {
@@ -107,20 +108,11 @@ export class ViewTransferTransaction extends TransactionView<TransferFormFieldsT
     // - map recipient
     view.values.set('recipient', transaction.recipientAddress)
 
-    // - get known mosaics
-    const mosaicsInfo = this.$store.getters['mosaic/mosaicsInfoList']
-
-    // - set mosaics (return RELATIVE amount)
-    view.values.set('mosaics', transaction.mosaics.map(
-      mosaic => {
-        const info = mosaicsInfo.find(i => i.id.equals(mosaic.id))
-        const div  = info ? info.divisibility : 0
-        return ({
-          id: mosaic.id,
-          mosaicHex: mosaic.id.toHex(),
-          amount: mosaic.amount.compact() / Math.pow(10, div)
-        })
-      }))
+    // - set mosaics (RELATIVE amount)
+    view.values.set(
+      'mosaics',
+      new MosaicService(this.$store).getAttachedMosaicsFromMosaics(transaction.mosaics),
+    )
 
     // - set message
     view.values.set('message', transaction.message)

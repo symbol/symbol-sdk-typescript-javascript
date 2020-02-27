@@ -56,9 +56,10 @@ import {ViewMosaicDefinitionTransaction} from '@/core/transactions/ViewMosaicDef
 import {ViewMosaicSupplyChangeTransaction} from '@/core/transactions/ViewMosaicSupplyChangeTransaction'
 import {ViewNamespaceRegistrationTransaction} from '@/core/transactions/ViewNamespaceRegistrationTransaction'
 import {ViewTransferTransaction} from '@/core/transactions/ViewTransferTransaction'
-import {ViewUnknownTransaction} from '@/core/transactions/ViewUnknownTransaction'
 import {ViewAliasTransaction} from '@/core/transactions/ViewAliasTransaction'
 import {ViewMultisigAccountModificationTransaction} from '@/core/transactions/ViewMultisigAccountModificationTransaction'
+import {ViewHashLockTransaction} from '@/core/transactions/ViewHashLockTransaction'
+import {ViewUnknownTransaction} from '@/core/transactions/ViewUnknownTransaction'
 
 /// region custom types
 export type TransactionViewType = ViewMosaicDefinitionTransaction
@@ -69,6 +70,7 @@ export type TransactionViewType = ViewMosaicDefinitionTransaction
 | ViewAliasTransaction
 | ViewAliasTransaction
 | ViewMultisigAccountModificationTransaction
+| ViewHashLockTransaction
 
 /// end-region custom types
 
@@ -135,6 +137,7 @@ export class TransactionService extends AbstractService {
   public getView(transaction: MosaicAliasTransaction): ViewAliasTransaction
   public getView(transaction: AddressAliasTransaction): ViewAliasTransaction
   public getView(transaction: MultisigAccountModificationTransaction): ViewMultisigAccountModificationTransaction
+  public getView(transaction: HashLockTransaction): ViewHashLockTransaction
   // XXX not implemented yet
   public getView(transaction: AccountAddressRestrictionTransaction): ViewUnknownTransaction
   public getView(transaction: AccountLinkTransaction): ViewUnknownTransaction
@@ -142,7 +145,6 @@ export class TransactionService extends AbstractService {
   public getView(transaction: AccountMosaicRestrictionTransaction): ViewUnknownTransaction
   public getView(transaction: AccountOperationRestrictionTransaction): ViewUnknownTransaction
   public getView(transaction: AggregateTransaction): ViewUnknownTransaction
-  public getView(transaction: HashLockTransaction): ViewUnknownTransaction
   public getView(transaction: MosaicAddressRestrictionTransaction): ViewUnknownTransaction
   public getView(transaction: MosaicGlobalRestrictionTransaction): ViewUnknownTransaction
   public getView(transaction: MosaicMetadataTransaction): ViewUnknownTransaction
@@ -174,7 +176,6 @@ export class TransactionService extends AbstractService {
       case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
       case TransactionType.AGGREGATE_BONDED:
       case TransactionType.AGGREGATE_COMPLETE:
-      case TransactionType.HASH_LOCK:
       case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
       case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
       case TransactionType.MOSAIC_METADATA:
@@ -185,7 +186,11 @@ export class TransactionService extends AbstractService {
         view = view.use(transaction)
         break
 
-        /// end-region XXX views for transaction types not yet implemented
+      /// end-region XXX views for transaction types not yet implemented
+      case TransactionType.HASH_LOCK:
+        view = new ViewHashLockTransaction(this.$store)
+        view = view.use(transaction as HashLockTransaction)
+        break
       case TransactionType.MULTISIG_ACCOUNT_MODIFICATION:
         view = new ViewMultisigAccountModificationTransaction(this.$store)
         view = view.use(transaction as MultisigAccountModificationTransaction)

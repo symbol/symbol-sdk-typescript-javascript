@@ -1159,5 +1159,7 @@
   "transactions_tab_confirmed": "Confirmed transactions",
   "transactions_tab_unconfirmed": "Unconfirmed transactions",
   "transactions_tab_partial": "Partial transactions",
-  "info_active_cosignatory_mode": "The selected transaction signer is a multi-signature account."
+  "info_active_cosignatory_mode": "The selected transaction signer is a multi-signature account.",
+  "inner_transaction_hash": "inner transaction hash",
+  "locked_mosaic": "locked mosaic"
 }

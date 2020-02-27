@@ -14,13 +14,23 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {MosaicId, AccountInfo, NamespaceId} from 'nem2-sdk'
+import {MosaicId, AccountInfo, NamespaceId, Mosaic} from 'nem2-sdk'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
 import {MosaicsRepository} from '@/repositories/MosaicsRepository'
 import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
 import {NamespaceService} from './NamespaceService'
+
+
+export interface AttachedMosaic {
+  id: MosaicId | NamespaceId
+  mosaicHex: string
+  /**
+   * Relative amount
+   */
+  amount: number
+}
 
 export class MosaicService extends AbstractService {
   /**
@@ -224,5 +234,30 @@ export class MosaicService extends AbstractService {
         balance: this.getRelativeAmount(balance, mosaic),
       }
     }).reduce((acc, {address, balance}) => ({...acc, [address]: balance}), {})
+  }
+
+  public getAttachedMosaicsFromMosaics(mosaics: Mosaic[]): AttachedMosaic[] {
+    return mosaics.map(
+      mosaic => {
+        const model = this.getMosaicSync(mosaic.id)
+        
+        // Skip and return default values until the model is fetched
+        if (!model) {
+          return {
+            id: mosaic.id,
+            mosaicHex: mosaic.id.toHex(),
+            amount: mosaic.amount.compact() / Math.pow(10, 0),
+          }
+        }
+
+        const info = model.objects.mosaicInfo
+        const divisibility = info ? info.divisibility : 0
+
+        return ({
+          id: new MosaicId(model.getIdentifier()),
+          mosaicHex: mosaic.id.toHex(),
+          amount: mosaic.amount.compact() / Math.pow(10, divisibility),
+        })
+      })
   }
 }
