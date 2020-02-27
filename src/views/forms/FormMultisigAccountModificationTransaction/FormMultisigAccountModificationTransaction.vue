@@ -23,7 +23,7 @@
         <div v-if="multisigOperationType === 'modification'" class="form-line-container">
           <SignerSelector 
             v-model="formItems.signerPublicKey"
-            :signers="multisigs"
+            :signers="multisigAccounts"
             :label="$t('form_label_multisig_accounts')"
             @change="onChangeSigner"
           />

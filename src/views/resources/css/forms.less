@@ -24,6 +24,8 @@
  * Components
  *************************************************************/
 .form-wrapper {
+  display: block;
+  position: relative;
   max-width: @formLabelWidth + @formInputsWidth;
 }
 
@@ -157,6 +159,21 @@
   grid-template-rows: 100%;
 }
 
+.signer-selector-single-signer-container {
+  height: @formFieldHeight;
+  line-height: @formFieldHeight;
+  width: 100%;
+  display: block;
+  font-size: @smallerFont;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 0.2rem;
+  padding-right: 0.24rem;
+  border: 0.01rem solid @border;
+  border-radius: 0.04rem;
+}
+
 .row-mosaic-attachment-input {
   display: grid;
   width: 100%;
@@ -246,7 +263,6 @@
 .select-style {
   height: @formFieldHeight;
   line-height: @formFieldHeight;
-  width: 6rem;
   display: block;
   font-size: @smallerFont !important;
   overflow: hidden;

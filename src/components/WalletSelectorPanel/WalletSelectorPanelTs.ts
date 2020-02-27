@@ -52,7 +52,7 @@ import ModalMnemonicExport from '@/views/modals/ModalMnemonicExport/ModalMnemoni
     currentAccount: 'account/currentAccount',
     currentWallet: 'wallet/currentWallet',
     knownWallets: 'wallet/knownWallets',
-    otherWalletsInfo: 'wallet/otherWalletsInfo',
+    knownWalletsInfo: 'wallet/knownWalletsInfo',
     networkMosaic: 'mosaic/networkMosaic',
   })}})
 export class WalletSelectorPanelTs extends Vue {
@@ -87,7 +87,7 @@ export class WalletSelectorPanelTs extends Vue {
    * Currently active wallet's balances
    * @var {Mosaic[]}
    */
-  public otherWalletsInfo: AccountInfo[]
+  public knownWalletsInfo: AccountInfo[]
 
   /**
    * Networks currency mosaic
@@ -143,14 +143,14 @@ export class WalletSelectorPanelTs extends Vue {
     await this.$store.dispatch('wallet/REST_FETCH_INFOS', addresses)
 
     // - filter available wallets info
-    const knownWallets = Object.keys(this.otherWalletsInfo).filter(
+    const knownWallets = Object.keys(this.knownWalletsInfo).filter(
       k => {
         const wallet = Array.from(repository.entries(
           (w: WalletsModel) => k === w.values.get('address')
         ).values())
 
         return wallet.length === 1
-      }).map(k => this.otherWalletsInfo[k])
+      }).map(k => this.knownWalletsInfo[k])
 
     // - format balances
     for (let i = 0, m = knownWallets.length; i < m; i++) {

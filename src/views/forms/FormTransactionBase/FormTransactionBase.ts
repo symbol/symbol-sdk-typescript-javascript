@@ -17,27 +17,18 @@ import {
   MosaicId, 
   Mosaic,
   MultisigAccountInfo,
-  TransferTransaction,
   Transaction,
-  TransactionType,
   MosaicInfo,
-  Address,
-  Message,
   PublicAccount,
-  RawUInt64,
   NamespaceId,
-  UInt64,
   NetworkType,
 } from 'nem2-sdk'
-import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {Component, Vue, Watch} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
-import {Formatters} from '@/core/utils/Formatters'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
-import {ViewTransferTransaction} from '@/core/transactions/ViewTransferTransaction'
-import {NotificationType} from '@/core/utils/NotificationType'
 import {WalletService} from '@/services/WalletService'
 import {TransactionService} from '@/services/TransactionService'
 import {BroadcastResult} from '@/core/transactions/BroadcastResult'
@@ -50,14 +41,15 @@ import {ValidationObserver} from 'vee-validate'
     defaultFee: 'app/defaultFee',
     currentWallet: 'wallet/currentWallet',
     currentWalletMosaics: 'wallet/currentWalletMosaics',
-    currentMultisigInfo: 'wallet/currentMultisigInfo',
+    currentWalletMultisigInfo: 'wallet/currentWalletMultisigInfo',
     isCosignatoryMode: 'wallet/isCosignatoryMode',
     networkMosaic: 'mosaic/networkMosaic',
     stagedTransactions: 'wallet/stagedTransactions',
     mosaicsInfo: 'mosaic/mosaicsInfoList',
     mosaicsNames: 'mosaic/mosaicsNames',
     namespacesNames: 'namespace/namespacesNames',
-  })}
+    currentSignerMultisigInfo: 'wallet/currentSignerMultisigInfo',
+  })},
 })
 export class FormTransactionBase extends Vue {
 /// region store getters
@@ -98,10 +90,10 @@ export class FormTransactionBase extends Vue {
   public currentMultisigAccountMosaics: Mosaic[] = []
 
   /**
-   * Currently active wallet's multisig info
-   * @var {MultisigAccountInfo}
+   * Current wallet multisig info
+   * @type {MultisigAccountInfo}
    */
-  public currentMultisigInfo: MultisigAccountInfo
+  public currentWalletMultisigInfo: MultisigAccountInfo
 
   /**
    * Whether the form is in cosignatory mode (cosigner selected)
@@ -144,6 +136,12 @@ export class FormTransactionBase extends Vue {
    * @var {any}
    */
   public currentSigner: PublicAccount
+
+  /**
+   * Current signer multisig info
+   * @var {MultisigAccountInfo}
+   */
+  public currentSignerMultisigInfo: MultisigAccountInfo
 
   /**
    * Type the ValidationObserver refs 
@@ -215,19 +213,24 @@ export class FormTransactionBase extends Vue {
     return this.getSigners()
   }
 
-  get multisigs(): {publicKey: string, label: string}[] {
+  /**
+   * Current signer's multisig accounts
+   * @readonly
+   * @type {{publicKey: string, label: string}[]}
+   */
+  get multisigAccounts(): {publicKey: string, label: string}[] {
     const signers = this.getSigners()
     if (!signers.length || !this.currentWallet) {
       return []
     }
 
-    // in case current wallet is multisig..
-    if (this.currentMultisigInfo && this.currentMultisigInfo.isMultisig()) {
-      return signers
+    // Signers are irrelevant to multisig accounts as they can't initiate transactions
+    if (this.currentWalletMultisigInfo && this.currentWalletMultisigInfo.isMultisig()) {
+      return []
     }
 
     // all signers except current wallet
-    return signers.splice(1)
+    return [...signers].splice(1)
   }
 
   get hasConfirmationModal(): boolean {
@@ -437,9 +440,7 @@ export class FormTransactionBase extends Vue {
    * @return {{publicKey: string, label:string}[]}
    */
   protected getSigners(): {publicKey: string, label: string}[] {
-    if (!this.currentWallet) {
-      return []
-    }
+    if (!this.currentWallet) return []
 
     const self = [
       {
@@ -448,21 +449,19 @@ export class FormTransactionBase extends Vue {
       },
     ]
 
-    if (!this.currentMultisigInfo) {
-      return self
-    }
+    const multisigInfo = this.currentWalletMultisigInfo
 
-    const multisig = this.currentMultisigInfo
+    if (!multisigInfo) return self
 
     // in case "self" is a multi-signature account
-    if (multisig && multisig.isMultisig()) {
+    if (multisigInfo && multisigInfo.isMultisig()) {
       self[0].label = self[0].label + this.$t('label_postfix_multisig')
     }
 
     // add multisig accounts of which "self" is a cosignatory
-    if (multisig) {
+    if (multisigInfo) {
       const service = new WalletService(this.$store)
-      return self.concat(...multisig.multisigAccounts.map(
+      return self.concat(...multisigInfo.multisigAccounts.map(
         ({publicKey}) => ({
           publicKey,
           label: service.getWalletLabel(publicKey, this.networkType) + this.$t('label_postfix_multisig'),

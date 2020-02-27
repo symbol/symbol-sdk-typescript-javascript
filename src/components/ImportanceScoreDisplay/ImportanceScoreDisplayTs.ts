@@ -23,7 +23,7 @@ import { mapGetters } from 'vuex'
 
 @Component({
   computed: {...mapGetters({
-    'otherWalletsInfo': 'wallet/otherWalletsInfo'
+    'knownWalletsInfo': 'wallet/knownWalletsInfo'
   })}
 })
 export class ImportanceScoreDisplayTs extends Vue {
@@ -35,16 +35,16 @@ export class ImportanceScoreDisplayTs extends Vue {
   /**
    * 
    */
-  public otherWalletsInfo: any
+  public knownWalletsInfo: any
 
 /// region computed properties getter/setter
   get score(): string {
-    const addr = Object.keys(this.otherWalletsInfo).find(k => k === this.wallet.objects.address.plain())
+    const addr = Object.keys(this.knownWalletsInfo).find(k => k === this.wallet.objects.address.plain())
     if (undefined === addr) {
       return '0'
     }
 
-    const accountInfo: AccountInfo = this.otherWalletsInfo[addr]
+    const accountInfo: AccountInfo = this.knownWalletsInfo[addr]
     const importance = accountInfo.importance.compact()
     return importance.toString()
   }

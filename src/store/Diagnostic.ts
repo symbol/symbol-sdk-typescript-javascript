@@ -70,7 +70,7 @@ export default {
         commit('setInitialized', true)
       }
 
-      // aquire async lock until initialized
+      // acquire async lock until initialized
       await Lock.initialize(callback, {commit, dispatch, getters})
     },
     async uninitialize({ commit, dispatch, getters }) {

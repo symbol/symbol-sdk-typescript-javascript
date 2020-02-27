@@ -56,20 +56,10 @@ export default {
     setNetworkMosaicTicker: (state, ticker) => Vue.set(state, 'networkMosaicTicker', ticker),
     setNemesisTransactions: (state, transactions) => Vue.set(state, 'nemesisTransactions', transactions),
     addMosaicInfo: (state, mosaicInfo: MosaicInfo) => {
-      let info = state.mosaicsInfoByHex
-      let hex = mosaicInfo.id.toHex()
-
-      // register mosaic info
-      info[hex] = mosaicInfo
-      Vue.set(state, 'mosaicsInfoByHex', info)
+      Vue.set(state.mosaicsInfoByHex, mosaicInfo.id.toHex(), mosaicInfo)
     },
     addMosaicName: (state, payload: {hex: string, name: string}) => {
-      let names = state.mosaicsNamesByHex
-      let hex = payload.hex
-
-      // register mosaic name
-      names[hex] = payload.name
-      Vue.set(state, 'mosaicsNamesByHex', names)
+      Vue.set(state.mosaicsNamesByHex, payload.hex, name)
     },
     hideMosaic: (state, mosaicId) => {
       const hiddenMosaics = state.hiddenMosaics

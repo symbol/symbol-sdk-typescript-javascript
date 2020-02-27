@@ -39,20 +39,10 @@ export default {
   mutations: {
     setInitialized: (state, initialized) => { state.initialized = initialized },
     addNamespaceInfo: (state, namespaceInfo: NamespaceInfo) => {
-      let info = state.namespacesInfoByHex
-      let hex = namespaceInfo.id.toHex()
-
-      // register mosaic info
-      info[hex] = namespaceInfo
-      Vue.set(state, 'namespacesInfoByHex', info)
+      Vue.set(state.namespacesInfoByHex, namespaceInfo.id.toHex(), namespaceInfo)
     },
     addNamespaceName: (state, payload: {hex: string, name: string}) => {
-      let names = state.namespacesNamesByHex
-      let hex = payload.hex
-
-      // register mosaic name
-      names[hex] = payload.name
-      Vue.set(state, 'namespacesNamesByHex', names)
+      Vue.set(state.namespacesNamesByHex, payload.hex, name)
     },
   },
   actions: {
