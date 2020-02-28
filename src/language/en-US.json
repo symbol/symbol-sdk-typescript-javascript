@@ -995,6 +995,7 @@
   "fee_speed_fastest": "Fastest",
   "form_label_account_to_be_converted": "Account to be converted",
   "form_label_add_cosignatory": "Add a cosignatory",
+  "form_label_multisig_operation_type": "Operation type",
   "form_label_additional_duration": "Additional duration",
   "form_label_alias_type": "Alias type",
   "form_label_choose_namespace": "Choose a namespace",
@@ -1011,6 +1012,8 @@
   "form_label_min_approval": "Min. approval",
   "form_label_min_removal": "Min. removal",
   "form_label_multisig_accounts": "Multi-signature accounts",
+  "form_label_multisig_account": "Multi-signature account",
+  "form_label_multisig_current_info": "Cosignatories",
   "form_label_namespace_name": "Namespace name",
   "form_label_new_absolute_supply": "New absolute supply",
   "form_label_new_expiration_time": "New expiration time",
@@ -1029,6 +1032,9 @@
   "form_label_remove_cosignatory": "Remove a cosignatory",
   "form_label_supply_delta": "Supply change amount",
   "form_label_supply_direction": "Supply change direction",
+  "form_label_removed_cosignatories": "Removed cosignatories",
+  "form_label_new_cosignatories": "Added cosignatories",
+  "message_empty_cosignatories": "This account does not have co-signatories.",
 
   "placeholder_address": "Enter an address",
   "placeholder_address_or_alias": "Enter address or alias (e.g., nem.foundation)",
@@ -1151,7 +1157,9 @@
   "relative": "relative",
   "absolute": "absolute",
   "label_postfix_multisig": " (Multisig)",
-  "label_of": " ({min} of {max})",
+  "label_of": "{min} of {max}",
+  "label_for_approvals": " co-signatures required for approving transactions",
+  "label_for_removals": " co-signatures required for removing cosignatories",
   "top_window_console": "Console",
   "public_key_addition": "Added cosigner",
   "public_key_deletion": "Removed cosigner",
@@ -1161,5 +1169,8 @@
   "transactions_tab_partial": "Partial transactions",
   "info_active_cosignatory_mode": "The selected transaction signer is a multi-signature account.",
   "inner_transaction_hash": "inner transaction hash",
-  "locked_mosaic": "locked mosaic"
+  "locked_mosaic": "locked mosaic",
+  "label_multisig_operation_conversion": "Converting account to multi-signature",
+  "label_multisig_operation_modification": "Modifying account co-signatories",
+  "label_add_cosignatory": "Add a cosignatory"
 }

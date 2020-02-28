@@ -1,8 +1,5 @@
 <template>
   <FormRow>
-    <template v-slot:label>
-      {{ $t('form_label_add_cosignatory') }}:
-    </template>
     <template v-slot:inputs>
       <ValidationObserver
         v-slot="{ handleSubmit }"

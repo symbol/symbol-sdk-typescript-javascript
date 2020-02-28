@@ -1,7 +1,9 @@
 <template>
-  <FormRow class-name="emphasis">
+  <FormRow class-name="emphasis" :no-label="noLabel">
     <template v-slot:label>
-      {{ $t('sender') }}:
+      <div v-if="!noLabel">
+        {{ $t(label) }}:
+      </div>
     </template>
     <template v-slot:inputs>
       <div v-if="signers.length > 1" class="inputs-container select-container">

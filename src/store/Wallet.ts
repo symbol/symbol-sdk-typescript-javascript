@@ -469,7 +469,7 @@ export default {
           publicKey: model.values.get('publicKey'),
         }
       }
-      
+
       // set current signer
       commit('currentSigner', payload)
       commit('currentSignerAddress', address)

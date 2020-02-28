@@ -36,8 +36,12 @@ export class SignerSelectorTs extends Vue {
   }) signers: {publicKey: string, label: string}[]
 
   @Prop({
-    default: '',
+    default: 'sender',
   }) label: string
+
+  @Prop({
+    default: false,
+  }) noLabel: boolean
 
   /// region computed properties getter/setter
   /**

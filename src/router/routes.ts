@@ -320,20 +320,21 @@ export const routes: AppRoute[] = [
           title: i18n.t('sidebar_item_multisig').toString(),
           icon: 'md-contacts',
         },
-        redirect: '/multisigConversion',
+        redirect: '/multisigManagement',
         // @ts-ignore
         component: () => import('@/views/pages/multisig/MultisigDashboardPage/MultisigDashboardPage.vue'),
         children: [
+          // {
+          //   path: '/multisigConversion',
+          //   name: 'multisig.conversion',
+          //   meta: {
+          //     protected: true,
+          //     title: i18n.t('page_title_multisig_convert').toString(),
+          //   },
+          //   // @ts-ignore
+          //   component: () => import('@/views/pages/multisig/ConvertAccountPage/ConvertAccountPage.vue'),
+          // }, 
           {
-            path: '/multisigConversion',
-            name: 'multisig.conversion',
-            meta: {
-              protected: true,
-              title: i18n.t('page_title_multisig_convert').toString(),
-            },
-            // @ts-ignore
-            component: () => import('@/views/pages/multisig/ConvertAccountPage/ConvertAccountPage.vue'),
-          }, {
             path: '/multisigManagement',
             name: 'multisig.management',
             meta: {

@@ -2,7 +2,7 @@
 <template>
   <MultisigFormPage>
     <template v-slot:form-section>
-      <FormMultisigAccountModificationTransaction multisig-operation-type="modification" />
+      <FormMultisigAccountModificationTransaction />
     </template>
     <!-- <template v-slot:right-section>
       ManageAccountPage right section

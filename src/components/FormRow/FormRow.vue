@@ -1,7 +1,10 @@
 <template>
   <div :class="['form-row', className ]">
-    <div class="form-row-inner-container">
-      <div class="label-container">
+    <div :class="{
+      'form-row-inner-container': !noLabel,
+      'form-row-inner-container-value-only': noLabel,
+    }">
+      <div v-if="!noLabel" class="label-container">
         <FormLabel>
           <slot name="label" />
         </FormLabel>
@@ -22,5 +25,6 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue'
 @Component({ components: { FormLabel }})
 export default class FormRow extends Vue {
   @Prop({ default: '' }) className: 'emphasis'
+  @Prop({ default: false }) noLabel: boolean
 }
 </script>

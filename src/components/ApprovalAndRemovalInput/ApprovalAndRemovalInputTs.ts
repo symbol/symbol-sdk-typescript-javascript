@@ -16,6 +16,7 @@
 // external dependencies
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {MultisigAccountInfo} from 'nem2-sdk'
+import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
@@ -52,24 +53,16 @@ export class ApprovalAndRemovalInputTs extends Vue {
    * @type {('conversion' | 'modification')}
    */
   @Prop({
-    default: null,
-  }) multisigOperationType: 'conversion' | 'modification'
+    default: 'conversion',
+  }) operation: 'conversion' | 'modification'
 
   /**
    * Type of field
    * @type {('approval' | 'removal')}
    */
   @Prop({
-    default: null,
-  }) approvalOrRemoval: 'approval' | 'removal'
-
-  /**
-   * Current min approval or mun removal value of the target account
-   * @type {number}
-   */
-  @Prop({
-    default: {},
-  }) currentMultisigInfo: MultisigAccountInfo
+    default: 'approval',
+  }) type: 'approval' | 'removal'
 
   /**
    * Current min approval or mun removal value of the target account
@@ -77,7 +70,7 @@ export class ApprovalAndRemovalInputTs extends Vue {
    */
   @Prop({
     default: null,
-  }) newNumberOfCosignatories: number
+  }) multisig: MultisigAccountInfo
 
   /// region computed properties getter/setter
   /**
@@ -104,13 +97,13 @@ export class ApprovalAndRemovalInputTs extends Vue {
    * @type {string}
    */
   protected get label(): string {
-    return this.approvalOrRemoval === 'approval'
+    return this.type === 'approval'
       ? 'form_label_new_min_approval'
       : 'form_label_new_min_removal'
   }
 
   protected get description(): string {
-    return this.approvalOrRemoval === 'approval'
+    return this.type === 'approval'
       ? 'form_label_description_min_approval'
       : 'form_label_description_min_removal'
   }
@@ -121,9 +114,9 @@ export class ApprovalAndRemovalInputTs extends Vue {
    * @type {number}
    */
   protected get currentValue(): number {
-    if (!this.currentMultisigInfo) return 0
-    if (this.approvalOrRemoval === 'approval') return this.currentMultisigInfo.minApproval
-    return this.currentMultisigInfo.minRemoval
+    if (!this.multisig) return 0
+    if (this.type === 'approval') return this.multisig.minApproval
+    return this.multisig.minRemoval
   }
 
   /**
@@ -140,22 +133,35 @@ export class ApprovalAndRemovalInputTs extends Vue {
    */
   protected get deltaOptions(): {value: number, newDelta: number}[] {
     // For an account conversion, the minimum delta is 1
-    const isConversion = this.multisigOperationType === 'conversion'
+    const isConversion = this.operation === 'conversion'
 
     // minimum possible delta
     const {maxCosignatoriesPerAccount} = currentNetworkConfig.properties
     const minDelta = isConversion ? 1 : 0 - this.currentValue
-    const maxDelta = isConversion ? maxCosignatoriesPerAccount : maxCosignatoriesPerAccount + 1
 
-    // array with a number of items equal to the new number of cosigners
-    return [...Array(maxDelta).keys()].map(
+    return [...Array(maxCosignatoriesPerAccount).keys()].map(
       (index: number) => {
-        // populate the array with all possibilities starting with the minimum delta
         const delta = minDelta + index
-        const newDelta = this.currentValue + delta
-        return {value: delta, newDelta}
-      },
+        const newValue = this.currentValue + delta
+        return {value: delta, newDelta: newValue}
+      }
     )
+
+
+
+
+    // const minDelta = isConversion ? 1 : 0 - this.currentValue
+    // const maxDelta = isConversion ? maxCosignatoriesPerAccount : maxCosignatoriesPerAccount + 1
+
+    // // array with a number of items equal to the new number of cosigners
+    // return [...Array(maxDelta).keys()].map(
+    //   (index: number) => {
+    //     // populate the array with all possibilities starting with the minimum delta
+    //     const delta = minDelta + index
+    //     const newDelta = this.currentValue + delta
+    //     return {value: delta, newDelta}
+    //   },
+    // )
   }
   /// end-region computed properties getter/setter
 }

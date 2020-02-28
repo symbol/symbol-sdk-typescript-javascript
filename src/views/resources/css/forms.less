@@ -42,9 +42,16 @@
 }
 
 .rows-scroll-container {
-  max-height: @formFieldHeight * 5;
+  max-height: @formFieldHeight * 10;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.rows-scroll-container.mt-0 {
+  .form-row {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
 }
 
 .form-row {
@@ -80,6 +87,14 @@
     min-height: @formFieldHeight;
     grid-template-columns: @formLabelWidth @formInputsWidth;
   }
+
+  .form-row-inner-container-value-only {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    min-height: @formFieldHeight;
+    grid-template-columns: @formInputsWidth;
+  }
 }
 
 .form-label-container {
@@ -110,6 +125,19 @@
 .gray-background {
   background-color: @grayLight;
 }
+
+.accent-pink-background {
+  background-color: @accentPinkLight;
+}
+
+.green-background {
+  background-color: @accentGreenLight;
+}
+
+.red-background {
+  background-color: @redLight;
+}
+
 
 // FormRow modifiers classes
 .emphasis {
@@ -194,8 +222,27 @@
   display: grid;
   width: 100%;
   height: @formFieldHeight !important;
-  grid-template-columns: 0.6rem auto 0.4rem;
+  grid-template-columns: auto 0.4rem;
   grid-template-rows: 100%;
+  font-size: @normalFont;
+  margin-left: 0.2rem;
+  padding-left: 0.05rem;
+
+  .cosignatory-removed {
+    text-decoration: line-through;
+  }
+}
+
+.row-cosignatory-modification-display.link {
+  display: flex;
+  justify-content: flex-end;
+  width: 97%;
+}
+
+.row-cosignatory-modification-display.empty-message {
+  display: flex;
+  justify-content: center;
+  width: 97%;
 }
 
 .row-approval-and-removal-input {
@@ -480,8 +527,8 @@
   background-image: url("../img/wallet/wallet-detail/walletDetailsdelete.png");
   background-repeat: no-repeat;
   background-size: contain;
-  width: 15px;
-  height: 15px;
+  width: 20px;
+  height: 20px;
   margin-right: 0.5rem;
   margin-top: 0.05rem;
   float: right;
@@ -505,6 +552,10 @@
 
 .mt-3 {
   margin-top: 0.15rem;
+}
+
+.ml-2 {
+  margin-left: 0.2rem;
 }
 
 // padding

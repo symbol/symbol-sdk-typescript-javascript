@@ -6,19 +6,19 @@
     <template v-slot:inputs>
       <div class="row-approval-and-removal-input inputs-container">
         <div class="select-container">
-          <Select
+          <select
             v-model="chosenValue"
             class="select-size select-style"
             type="text"
           >
-            <Option
+            <option
               v-for="{newDelta, value} in deltaOptions"
               :key="value"
               :value="value"
             >
               {{ newDelta }}
-            </Option>
-          </Select>
+            </option>
+          </select>
         </div>
         <div class="inline-field-description pl-2">
           {{ $t(description) }}

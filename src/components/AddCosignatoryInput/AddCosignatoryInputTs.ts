@@ -84,10 +84,12 @@ export class AddCosignatoryInputTs extends Vue {
   protected onAddCosignatory(): void {
     if (AddressValidator.validate(this.cosignatory)) {
       this.addCosignerFromAddress()
+      this.cosignatory = ''
       return
     }
 
     this.addCosignerFromPublicKey()
+    this.cosignatory = ''
   }
 
   /**
@@ -98,7 +100,7 @@ export class AddCosignatoryInputTs extends Vue {
   private addCosignerFromPublicKey(): void {
     if (!this.cosignatory) return
     const publicAccount = PublicAccount.createFromPublicKey(this.cosignatory, this.networkType)
-    this.$emit('on-add-cosignatory', publicAccount)
+    this.$emit('added', publicAccount)
   }
 
   /**
@@ -131,7 +133,7 @@ export class AddCosignatoryInputTs extends Vue {
             this.$store.dispatch('notification/ADD_WARNING', `${this.$t(NotificationType.ADDRESS_UNKNOWN)}`)
             return
           }
-          this.$emit('on-add-cosignatory', accountInfo.publicAccount)
+          this.$emit('added', accountInfo.publicAccount)
         },
         () => {
           this.$store.dispatch('notification/ADD_WARNING', `${this.$t(NotificationType.ADDRESS_UNKNOWN)}`)

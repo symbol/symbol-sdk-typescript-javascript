@@ -5,72 +5,83 @@
         onsubmit="event.preventDefault()"
         @keyup.enter="disableSubmit ? '' : handleSubmit(onSubmit)"
       >
-        <!-- Display of account to be converted -->
-        <FormRow v-if="multisigOperationType === 'conversion'">
-          <template v-slot:label>
-            {{ $t('form_label_account_to_be_converted') }}
-          </template>
+        <FormRow :class-name="'emphasis'">
+          <template v-slot:label>{{ $t('form_label_multisig_operation_type') }}</template>
+
           <template v-slot:inputs>
             <div class="row-left-message">
               <span class="pl-2">
-                {{ currentWallet.objects.address.pretty() }} ({{ currentWallet.values.get('name') }})
+                {{ $t('label_multisig_operation_' + multisigOperationType) }}
               </span>
             </div>
           </template>
         </FormRow>
 
-        <!-- Transaction signer selector -->
-        <div v-if="multisigOperationType === 'modification'" class="form-line-container">
-          <SignerSelector 
-            v-model="formItems.signerPublicKey"
-            :signers="multisigAccounts"
-            :label="$t('form_label_multisig_accounts')"
-            @change="onChangeSigner"
-          />
-        </div>
-        
-        <!-- Min. approval input field -->
+        <FormRow>
+          <template v-slot:label>
+            <div v-if="multisigOperationType === 'conversion'">
+              {{$t('form_label_account_to_be_converted')}}
+            </div>
+            <div v-else>
+              {{$t('form_label_multisig_account')}}
+            </div>
+          </template>
+          <template v-slot:inputs>
+            <div class="row-left-message">
+              <span class="pl-2">
+                <SignerSelector 
+                  v-model="formItems.signerPublicKey"
+                  :signers="signers"
+                  :no-label="true"
+                  @change="onChangeSigner"
+                />
+              </span>
+            </div>
+          </template>
+        </FormRow>
+
+        <FormRow v-if="multisigOperationType === 'modification' && currentMultisigInfo"
+          :class-name="'emphasis'">
+          <template v-slot:label>{{ $t('form_label_multisig_current_info') }}</template>
+
+          <template v-slot:inputs>
+            <div class="row-left-message">
+              <span class="pl-2">
+                {{ $t('label_of', {
+                  min: currentMultisigInfo.minApproval,
+                  max: currentMultisigInfo.cosignatories.length
+                }) }} {{ $t('label_for_approvals')}}
+              </span>
+              <span class="pl-2">
+                {{ $t('label_of', {
+                  min: currentMultisigInfo.minRemoval,
+                  max: currentMultisigInfo.cosignatories.length
+                }) }} {{ $t('label_for_removals')}}
+              </span>
+            </div>
+          </template>
+        </FormRow>
+
+        <MultisigCosignatoriesDisplay
+          :multisig="currentMultisigInfo"
+          :modifiable="true"
+          @remove="onClickRemove"
+          @add="onClickAdd"
+          @undo="onClickUndo"
+        />
+
         <ApprovalAndRemovalInput
           v-model="formItems.minApprovalDelta"
-          :multisig-operation-type="multisigOperationType"
-          approval-or-removal="approval"
-          :current-multisig-info="currentSignerMultisigInfo"
-          :new-number-of-cosignatories="newNumberOfCosignatories"
+          :type="'approval'"
+          :operation="multisigOperationType"
+          :multisig="currentMultisigInfo"
         />
 
-        <!-- Min. removal input field -->
         <ApprovalAndRemovalInput
           v-model="formItems.minRemovalDelta"
-          :multisig-operation-type="multisigOperationType"
-          approval-or-removal="removal"
-          :current-multisig-info="currentSignerMultisigInfo"
-          :new-number-of-cosignatories="newNumberOfCosignatories"
-        />
-
-        <!-- Add cosignatory input field -->
-        <AddCosignatoryInput
-          @on-add-cosignatory="onAddCosignatory"
-        />
-
-        <!-- Remove cosignatory input field -->
-        <RemoveCosignatoryInput
-          v-if="currentSignerMultisigInfo && currentSignerMultisigInfo.cosignatories.length"
-          :cosignatories="currentSignerMultisigInfo.cosignatories"
-          @on-remove-cosignatory="onRemoveCosignatory"
-        />
-
-        <!-- Display of cosignatory modifications -->
-        <CosignatoryModificationsDisplay
-          v-if="Object.keys(formItems.cosignatoryModifications).length"
-          :cosignatory-modifications="formItems.cosignatoryModifications"
-          @on-remove-cosignatory-modification="onRemoveCosignatoryModification"
-        />
-
-        <!-- Displays and validates the future situation -->
-        <ApprovalAndRemovalInputDisplay
-          :new-number-of-cosignatories="newNumberOfCosignatories"
-          :new-min-approval="newMinApproval"
-          :new-min-removal="newMinRemoval"
+          :type="'removal'"
+          :operation="multisigOperationType"
+          :multisig="currentMultisigInfo"
         />
 
         <!-- Transaction fee selector -->

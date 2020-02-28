@@ -40,6 +40,7 @@ import {ValidationObserver} from 'vee-validate'
     networkType: 'network/networkType',
     defaultFee: 'app/defaultFee',
     currentWallet: 'wallet/currentWallet',
+    selectedSigner: 'wallet/currentSigner',
     currentWalletMosaics: 'wallet/currentWalletMosaics',
     currentWalletMultisigInfo: 'wallet/currentWalletMultisigInfo',
     isCosignatoryMode: 'wallet/isCosignatoryMode',
@@ -78,6 +79,12 @@ export class FormTransactionBase extends Vue {
   public currentWallet: WalletsModel
 
   /**
+   * Currently active signer
+   * @var {WalletsModel}
+   */
+  public selectedSigner: WalletsModel
+
+  /**
    * Currently active wallet's balances
    * @var {Mosaic[]}
    */
@@ -94,6 +101,12 @@ export class FormTransactionBase extends Vue {
    * @type {MultisigAccountInfo}
    */
   public currentWalletMultisigInfo: MultisigAccountInfo
+
+  /**
+   * Current signer multisig info
+   * @var {MultisigAccountInfo}
+   */
+  public currentSignerMultisigInfo: MultisigAccountInfo
 
   /**
    * Whether the form is in cosignatory mode (cosigner selected)
@@ -138,12 +151,6 @@ export class FormTransactionBase extends Vue {
   public currentSigner: PublicAccount
 
   /**
-   * Current signer multisig info
-   * @var {MultisigAccountInfo}
-   */
-  public currentSignerMultisigInfo: MultisigAccountInfo
-
-  /**
    * Type the ValidationObserver refs 
    * @type {{
    *     observer: InstanceType<typeof ValidationObserver>
@@ -156,10 +163,10 @@ export class FormTransactionBase extends Vue {
 /// end-region store getters
 
 /// region property watches
-  @Watch('signers')
-  onSignersChange(signers: {publicKey: string, label: string}[] = []) {
-    this.resetForm()
-  }
+  // @Watch('signers')
+  // onSignersChange(signers: {publicKey: string, label: string}[] = []) {
+  //   this.resetForm()
+  // }
 
   // @Watch('getTransactions')
   // onTransactionsChange(transactions: Transaction[]) {
@@ -185,9 +192,15 @@ export class FormTransactionBase extends Vue {
    */
   public async mounted() {
     if (this.currentWallet) {
-      this.currentSigner = this.currentWallet.objects.publicAccount
       const address = this.currentWallet.objects.address.plain()
       try { this.$store.dispatch('wallet/REST_FETCH_OWNED_NAMESPACES', address) } catch(e) {}
+
+      if (!this.isCosignatoryMode) {
+        this.currentSigner = this.currentWallet.objects.publicAccount
+      }
+      else {
+        this.currentSigner = this.selectedSigner.objects.publicAccount
+      }
     }
   }
 
@@ -224,9 +237,9 @@ export class FormTransactionBase extends Vue {
       return []
     }
 
-    // Signers are irrelevant to multisig accounts as they can't initiate transactions
+    // if "self" is multisig, also return self
     if (this.currentWalletMultisigInfo && this.currentWalletMultisigInfo.isMultisig()) {
-      return []
+      return signers
     }
 
     // all signers except current wallet
@@ -259,6 +272,14 @@ export class FormTransactionBase extends Vue {
   }
 
   /**
+   * Getter for whether forms should aggregate transactions in BONDED
+   * @return {boolean}
+   */
+  protected isMultisigMode(): boolean {
+    return this.isCosignatoryMode
+  }
+
+  /**
    * Getter for transactions that will be staged
    * @throws {Error} If not overloaded in derivate component
    */
@@ -288,7 +309,7 @@ export class FormTransactionBase extends Vue {
    * Hook called when a signer is selected.
    * @param {string} signerPublicKey 
    */
-  public onChangeSigner(signerPublicKey: string) {
+  public async onChangeSigner(signerPublicKey: string) {
     this.currentSigner = PublicAccount.createFromPublicKey(signerPublicKey, this.networkType)
 
     const isCosig = this.currentWallet.values.get('publicKey') !== signerPublicKey
@@ -297,7 +318,7 @@ export class FormTransactionBase extends Vue {
       publicKey: signerPublicKey
     }
 
-    this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {model: payload})
+    await this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {model: payload})
   }
 
   /**
@@ -314,7 +335,7 @@ export class FormTransactionBase extends Vue {
     if (this.isAggregateMode()) {
       this.$store.commit('wallet/stageOptions', {
         isAggregate: true,
-        isMultisig: this.isCosignatoryMode,
+        isMultisig: this.isMultisigMode(),
       })
     }
 
@@ -450,7 +471,6 @@ export class FormTransactionBase extends Vue {
     ]
 
     const multisigInfo = this.currentWalletMultisigInfo
-
     if (!multisigInfo) return self
 
     // in case "self" is a multi-signature account
