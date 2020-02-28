@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 // external dependencies
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 import {Address, NetworkType, MultisigAccountInfo, PublicAccount} from 'nem2-sdk'
-
-// internal dependencies
-import {CosignatoryModifications} from '@/core/transactions/ViewMultisigAccountModificationTransaction'
 
 // child components
 import {ValidationProvider} from 'vee-validate'
@@ -50,7 +47,6 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
   private networkType: NetworkType
 
   public isAddingCosignatory: boolean = false
-  public actors: {publicKey: string, address: string}[]
   public addedActors: {publicKey: string, address: string}[] = []
   public removedActors: {publicKey: string, address: string}[] = []
 
@@ -110,5 +106,19 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
   public onUndoRemoveModification(publicKey: string) {
     this.removedActors = this.removedActors.filter(a => a.publicKey !== publicKey)
     this.$emit('undo', publicKey)
+  }
+
+  /**
+   * Reset modifications when provided multisig info changes
+   * @param {MultisigAccountInfo} oldInfo
+   * @param {MultisigAccountInfo} newInfo
+   */
+  @Watch('multisig')
+  onMultisigInfoChange(oldInfo: MultisigAccountInfo, newInfo: MultisigAccountInfo) {
+    if (!oldInfo) return
+    if (!newInfo || !(oldInfo.account.equals(newInfo.account))) {
+      this.addedActors = []
+      this.removedActors = []
+    }
   }
 }

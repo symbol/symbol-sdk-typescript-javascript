@@ -494,9 +494,6 @@
   "min_approval_amount_illegal": "The minimum number of co-signatories needed for approval must be a number",
   "min_removal_amount_illegal": "The minimum number of co-signatories needed for removal must be a number",
   "current": "Current",
-  "There_are_no_more_accounts_under_this_account": "This account does not have children",
-  "There_are_no_more_accounts_under_this_account_or_cosigner": "This account is not a co-signatory, nor a multisig account.",
-  "This_account_is_already_a_multi_sign_account": "This account is already a multi-signature account",
   "mosaic_hex_format_error": "Mosaic hexadecimal format error",
   "alias_name_format_error": "alias hexadecimal format error",
   "max_approval_amount_more_than_10": "The maximum number of co-signatories needed for approval cannot exceed 10",
@@ -1171,11 +1168,12 @@
   "inner_transaction_hash": "inner transaction hash",
   "locked_mosaic": "locked mosaic",
   "label_multisig_operation_conversion": "Converting account to multi-signature",
-  "label_multisig_operation_modification": "Modifying account co-signatories",
+  "label_multisig_operation_modification": "Modifying account multisig properties",
   "label_add_cosignatory": "Add a cosignatory",
   "transaction_needs_cosignature": "Transaction awaiting co-signature(s)",
   "transaction_needs_cosignature_explain": "This transaction needs multiple parties to approve by sending co-signature. Please, unlock your account to send a co-signature transaction now.",
   "transaction_needs_cosignature_explain_signed": "This transaction needs multiple parties to approve by sending co-signature. You have already send a co-signature for this transaction. Please, wait until other co-signatories approve.",
   "transaction_has_cosignature": "Co-signatures received",
-  "label_signed_by": "Signed by co-signatory: "
+  "label_signed_by": "Signed by co-signatory: ",
+  "warning_already_a_cosignatory": "This account is already a cosignatory!"
 }

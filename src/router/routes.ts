@@ -187,16 +187,16 @@ export const routes: AppRoute[] = [
             // @ts-ignore
             component: () => import('@/views/pages/dashboard/invoice/DashboardInvoicePage.vue'),
           },
-          {
-            path: '/harvesting',
-            name: 'dashboard.harvesting',
-            meta: {
-              protected: true,
-              title: i18n.t('page_title_harvesting').toString(),
-            },
-            // @ts-ignore
-            component: () => import('@/views/pages/dashboard/harvesting/DashboardHarvestingPage.vue'),
-          }
+          // {
+          //   path: '/harvesting',
+          //   name: 'dashboard.harvesting',
+          //   meta: {
+          //     protected: true,
+          //     title: i18n.t('page_title_harvesting').toString(),
+          //   },
+          //   // @ts-ignore
+          //   component: () => import('@/views/pages/dashboard/harvesting/DashboardHarvestingPage.vue'),
+          // }
         ],
       },
       {

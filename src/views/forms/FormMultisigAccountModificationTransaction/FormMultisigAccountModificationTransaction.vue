@@ -6,7 +6,9 @@
         @keyup.enter="disableSubmit ? '' : handleSubmit(onSubmit)"
       >
         <FormRow :class-name="'emphasis'">
-          <template v-slot:label>{{ $t('form_label_multisig_operation_type') }}</template>
+          <template v-slot:label>
+            {{ $t('form_label_multisig_operation_type') }}
+          </template>
 
           <template v-slot:inputs>
             <div class="row-left-message">
@@ -20,29 +22,29 @@
         <FormRow>
           <template v-slot:label>
             <div v-if="multisigOperationType === 'conversion'">
-              {{$t('form_label_account_to_be_converted')}}
+              {{ $t('form_label_account_to_be_converted') }}
             </div>
             <div v-else>
-              {{$t('form_label_multisig_account')}}
+              {{ $t('form_label_multisig_account') }}:
             </div>
           </template>
           <template v-slot:inputs>
-            <div class="row-left-message">
-              <span class="pl-2">
-                <SignerSelector 
-                  v-model="formItems.signerPublicKey"
-                  :signers="signers"
-                  :no-label="true"
-                  @change="onChangeSigner"
-                />
-              </span>
-            </div>
+            <SignerSelector
+              v-model="formItems.signerPublicKey"
+              :signers="signers"
+              :no-label="true"
+              @change="onChangeSigner"
+            />
           </template>
         </FormRow>
 
-        <FormRow v-if="multisigOperationType === 'modification' && currentMultisigInfo"
-          :class-name="'emphasis'">
-          <template v-slot:label>{{ $t('form_label_multisig_current_info') }}</template>
+        <FormRow
+          v-if="multisigOperationType === 'modification' && currentMultisigInfo"
+          :class-name="'emphasis'"
+        >
+          <template v-slot:label>
+            {{ $t('form_label_multisig_current_info') }}
+          </template>
 
           <template v-slot:inputs>
             <div class="row-left-message">
@@ -50,13 +52,13 @@
                 {{ $t('label_of', {
                   min: currentMultisigInfo.minApproval,
                   max: currentMultisigInfo.cosignatories.length
-                }) }} {{ $t('label_for_approvals')}}
+                }) }} {{ $t('label_for_approvals') }}
               </span>
               <span class="pl-2">
                 {{ $t('label_of', {
                   min: currentMultisigInfo.minRemoval,
                   max: currentMultisigInfo.cosignatories.length
-                }) }} {{ $t('label_for_removals')}}
+                }) }} {{ $t('label_for_removals') }}
               </span>
             </div>
           </template>
@@ -84,11 +86,16 @@
           :multisig="currentMultisigInfo"
         />
 
+        <!-- global form input validation -->
+        <ValidationProvider rules="required|is:OK">
+          <input v-show="false" v-model="areInputsValid">
+        </ValidationProvider>
+
         <!-- Transaction fee selector -->
         <MaxFeeAndSubmit
           v-model="formItems.maxFee"
           :disable-submit="disableSubmit"
-          @button-clicked="handleSubmit(onSubmit)"
+          @button-clicked="handleSubmit(onSubmit); showErrorNotification()"
         />
       </form>
     </ValidationObserver>

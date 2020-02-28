@@ -16,7 +16,6 @@
 // external dependencies
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {MultisigAccountInfo} from 'nem2-sdk'
-import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
@@ -144,24 +143,8 @@ export class ApprovalAndRemovalInputTs extends Vue {
         const delta = minDelta + index
         const newValue = this.currentValue + delta
         return {value: delta, newDelta: newValue}
-      }
+      },
     )
-
-
-
-
-    // const minDelta = isConversion ? 1 : 0 - this.currentValue
-    // const maxDelta = isConversion ? maxCosignatoriesPerAccount : maxCosignatoriesPerAccount + 1
-
-    // // array with a number of items equal to the new number of cosigners
-    // return [...Array(maxDelta).keys()].map(
-    //   (index: number) => {
-    //     // populate the array with all possibilities starting with the minimum delta
-    //     const delta = minDelta + index
-    //     const newDelta = this.currentValue + delta
-    //     return {value: delta, newDelta}
-    //   },
-    // )
   }
   /// end-region computed properties getter/setter
 }

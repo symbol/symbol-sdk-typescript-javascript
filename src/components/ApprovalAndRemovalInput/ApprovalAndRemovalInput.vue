@@ -9,7 +9,7 @@
           <select
             v-model="chosenValue"
             class="select-size select-style"
-            type="text"
+            type="number"
           >
             <option
               v-for="{newDelta, value} in deltaOptions"
