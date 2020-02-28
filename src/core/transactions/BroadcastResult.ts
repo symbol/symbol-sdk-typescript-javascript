@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {SignedTransaction} from 'nem2-sdk'
+import {SignedTransaction, CosignatureSignedTransaction} from 'nem2-sdk'
 
 export class BroadcastResult {
   /**
@@ -29,7 +29,7 @@ export class BroadcastResult {
      * The transaction that was announced
      * @var {SignedTransaction}
      */
-    public readonly transaction: SignedTransaction,
+    public readonly transaction: SignedTransaction | CosignatureSignedTransaction,
     /**
      * Whether broadcasting was successfull
      * @var {boolean}

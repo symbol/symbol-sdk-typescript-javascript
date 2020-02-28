@@ -151,7 +151,10 @@ export class RESTService extends AbstractService {
 
     // partial listeners
     const cosignatureAdded = listener.cosignatureAdded(address).subscribe(
-      transaction => context.dispatch('notification/ADD_SUCCESS', NotificationType.COSIGNATURE_ADDED, {root: true}),
+      cosignature => {
+        context.dispatch('wallet/ADD_COSIGNATURE', cosignature, {root: true})
+        context.dispatch('notification/ADD_SUCCESS', NotificationType.COSIGNATURE_ADDED, {root: true})
+      },
       err => context.dispatch('diagnostic/ADD_ERROR', err, {root: true}))
 
     const partialAdded = listener.aggregateBondedAdded(address).subscribe(

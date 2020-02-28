@@ -46,6 +46,7 @@ import {
   LockFundsTransaction,
   Mosaic,
   PublicAccount,
+  CosignatureSignedTransaction,
 } from 'nem2-sdk'
 
 // internal dependencies
@@ -286,6 +287,30 @@ export class TransactionService extends AbstractService {
   }
 
   /**
+   * Co-sign transaction \a partial with \a account
+   *
+   * @param {Account} account
+   * @param {AggregateTransaction} partial
+   * @return {CosignatureSignedTransaction[]}
+   */
+  public cosignPartialTransaction(account: Account, partial: AggregateTransaction): CosignatureSignedTransaction {
+    // - shortcuts
+    const generationHash = this.$store.getters['network/generationHash']
+
+    // - create cosignature and sign
+    const cosignature = CosignatureTransaction.create(partial);
+    const signedCosig = account.signCosignatureTransaction(cosignature);
+
+    // - notify diagnostics
+    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Co-signed transaction with account ' + account.address.plain() + ' and result: ' + JSON.stringify({
+      parentHash: signedCosig.parentHash,
+      signature: signedCosig.signature
+    }))
+
+    return signedCosig
+  }
+
+  /**
    * Sign transactions that are on stage with \a account
    *
    * @param {Account} account
@@ -486,5 +511,23 @@ export class TransactionService extends AbstractService {
     })
 
     return [result]
+  }
+
+  /**
+   * Announce _cosignature_ transactions.
+   *
+   * @param {PublicAccount} issuer
+   * @return {Observable<BroadcastResult[]>}
+   * @throws {Error}  On missing signed hash lock transaction.
+   */
+  public async announceCosignatureTransactions(cosignatures: CosignatureSignedTransaction[]): Promise<BroadcastResult[]> {
+    const results: BroadcastResult[] = []
+    for (let i = 0, m = cosignatures.length; i < m; i ++) {
+      const cosignature = cosignatures[i]
+      const result = await this.$store.dispatch('wallet/REST_ANNOUNCE_COSIGNATURE', cosignature)
+      results.push(result)
+    }
+
+    return results
   }
 }

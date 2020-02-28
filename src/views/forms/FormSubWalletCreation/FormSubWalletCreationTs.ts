@@ -182,10 +182,10 @@ export class FormSubWalletCreationTs extends Vue {
   public onSubmit() {
     this.hasAccountUnlockModal = true
 
-    // resets form validation
-    this.$nextTick(() => {
-      this.$refs.observer.reset()
-    })
+    // // resets form validation
+    // this.$nextTick(() => {
+    //   this.$refs.observer.reset()
+    // })
   }
 
   /**
@@ -262,7 +262,14 @@ export class FormSubWalletCreationTs extends Vue {
 
     // - increment last path
     const lastPath = knownPaths.pop()
-    const nextPath = this.paths.incrementPathLevel(lastPath, DerivationPathLevels.Account, 1)
+    let nextPath: string
+    try {
+      nextPath = this.paths.incrementPathLevel(lastPath, DerivationPathLevels.Account, 1)
+    }
+    // - or use default
+    catch(e) {
+      nextPath = WalletService.DEFAULT_WALLET_PATH
+    }
 
     this.$store.dispatch('diagnostic/ADD_DEBUG', 'Adding child wallet with derivation path: ' + nextPath)
 

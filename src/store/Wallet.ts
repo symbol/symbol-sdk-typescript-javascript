@@ -29,6 +29,7 @@ import {
   MultisigAccountInfo,
   Mosaic,
   MosaicInfo,
+  CosignatureSignedTransaction,
 } from 'nem2-sdk'
 import {Subscription} from 'rxjs'
 
@@ -511,14 +512,30 @@ export default {
       commit('unconfirmedTransactions', [])
       commit('partialTransactions', [])
     },
-    ADD_TRANSACTION({commit, dispatch, getters}, transactionMessage) {
-
-      if (!transactionMessage || !transactionMessage.group) {
-        throw Error('Missing mandatory field \'group\' for action wallet/addTransaction.')
+    ADD_COSIGNATURE({commit, dispatch, getters}, cosignatureMessage) {
+      if (!cosignatureMessage || !cosignatureMessage.parentHash) {
+        throw Error('Missing mandatory field \'parentHash\' for action wallet/ADD_COSIGNATURE.')
       }
 
-      const message = 'Adding transaction to ' + transactionMessage.group + ' Type: ' + transactionMessage.transaction.type
-      dispatch('diagnostic/ADD_DEBUG', message, {root: true})
+      const hashes = getters['transactionHashes']
+      const transactions = getters['partialTransactions']
+      const index = transactions.findIndex(t => t.transactionInfo.hash === cosignatureMessage.parentHash)
+
+      if (index === undefined) {
+        // partial tx unknown, fetch partials...
+        return ;
+      }
+
+      transactions[index] = transactions[index].addCosignatures(cosignatureMessage)
+      commit('partialTransactions', transactions)
+    },
+    ADD_TRANSACTION({commit, dispatch, getters}, transactionMessage) {
+      if (!transactionMessage || !transactionMessage.group) {
+        throw Error('Missing mandatory field \'group\' for action wallet/ADD_TRANSACTION.')
+      }
+
+      //const message = 'Adding transaction to ' + transactionMessage.group + ' Type: ' + transactionMessage.transaction.type
+      //dispatch('diagnostic/ADD_DEBUG', message, {root: true})
 
       // format transactionGroup to store variable name
       let transactionGroup = transactionGroupToStateVariable(transactionMessage.group);
@@ -930,7 +947,11 @@ export default {
               commit('removeSignedTransaction', signedPartial)
               return resolve(new BroadcastResult(signedPartial, true))
             },
-            (error) => reject(new BroadcastResult(signedPartial, false))
+            (error) => {
+              commit('removeSignedTransaction', signedLock)
+              commit('removeSignedTransaction', signedPartial)
+              reject(new BroadcastResult(signedPartial, false))
+            }
           )
         })
       }
@@ -959,7 +980,32 @@ export default {
         return new BroadcastResult(signedTransaction, true)
       }
       catch(e) {
+        commit('removeSignedTransaction', signedTransaction)
         return new BroadcastResult(signedTransaction, false, e.toString())
+      }
+    },
+    async REST_ANNOUNCE_COSIGNATURE(
+      {commit, dispatch, rootGetters},
+      cosignature: CosignatureSignedTransaction
+    ): Promise<BroadcastResult> {
+
+      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_ANNOUNCE_COSIGNATURE dispatched with: ' + JSON.stringify({
+        hash: cosignature.parentHash,
+        signature: cosignature.signature,
+        signerPublicKey: cosignature.signerPublicKey,
+      }), {root: true})
+
+      try {
+        // prepare REST parameters
+        const currentPeer = rootGetters['network/currentPeer'].url
+        const transactionHttp = RESTService.create('TransactionHttp', currentPeer)
+
+        // prepare nem2-sdk TransactionService
+        const response = await transactionHttp.announceAggregateBondedCosignature(cosignature)
+        return new BroadcastResult(cosignature, true)
+      }
+      catch(e) {
+        return new BroadcastResult(cosignature, false, e.toString())
       }
     },
 /// end-region scoped actions

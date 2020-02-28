@@ -276,7 +276,7 @@ export class FormTransactionBase extends Vue {
    * @return {boolean}
    */
   protected isMultisigMode(): boolean {
-    return this.isCosignatoryMode
+    return this.isCosignatoryMode === true
   }
 
   /**
@@ -350,11 +350,6 @@ export class FormTransactionBase extends Vue {
 
     // - open signature modal
     this.onShowConfirmationModal()
-
-    // resets form validation
-    this.$nextTick(() => {
-      this.$refs.observer.reset()
-    })
   }
 
   /**
@@ -395,6 +390,11 @@ export class FormTransactionBase extends Vue {
       ? 'success_transaction_partial_announced'
       : 'success_transactions_announced'
     this.$store.dispatch('notification/ADD_SUCCESS', message)
+
+    // resets form validation
+    this.$nextTick(() => {
+      this.$refs.observer.reset()
+    })
   }
 
   /**

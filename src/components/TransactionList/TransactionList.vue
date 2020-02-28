@@ -70,6 +70,13 @@
       @close="onCloseDetailModal"
       :transaction="activeTransaction"
     />
+
+    <ModalTransactionCosignature
+      v-if="hasCosignatureModal"
+      :visible="hasCosignatureModal"
+      @close="onCloseCosignatureModal"
+      :transaction="activePartialTransaction"
+    />
   </div>
 </template>
 

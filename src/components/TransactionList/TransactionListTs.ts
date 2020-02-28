@@ -15,7 +15,7 @@
  */
 import {mapGetters} from 'vuex'
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {Transaction, MosaicId} from 'nem2-sdk'
+import {Transaction, MosaicId, AggregateTransaction} from 'nem2-sdk'
 import {of, Observable} from 'rxjs'
 import {pluck, concatMap} from 'rxjs/operators'
 
@@ -28,6 +28,8 @@ import {TransactionService} from '@/services/TransactionService'
 // @ts-ignore
 import ModalTransactionDetails from '@/views/modals/ModalTransactionDetails/ModalTransactionDetails.vue'
 // @ts-ignore
+import ModalTransactionCosignature from '@/views/modals/ModalTransactionCosignature/ModalTransactionCosignature.vue'
+// @ts-ignore
 import TransactionTable from '@/components/TransactionList/TransactionTable/TransactionTable.vue'
 // @ts-ignore
 import PageTitle from '@/components/PageTitle/PageTitle.vue'
@@ -35,6 +37,7 @@ import PageTitle from '@/components/PageTitle/PageTitle.vue'
 @Component({
   components: {
     ModalTransactionDetails,
+    ModalTransactionCosignature,
     TransactionTable,
     PageTitle,
   },
@@ -141,10 +144,22 @@ export class TransactionListTs extends Vue {
   public activeTransaction: Transaction = null
 
   /**
+   * Active bonded transaction (in-modal)
+   * @var {AggregateTransaction}
+   */
+  public activePartialTransaction: AggregateTransaction = null
+
+  /**
    * Whether the detail modal box is open
    * @var {boolean}
    */
   public isDisplayingDetails: boolean = false
+
+  /**
+   * Whether the cosignature modal box is open
+   * @var {boolean}
+   */
+  public isAwaitingCosignature: boolean = false
 
   /**
    * Hook called when the component is mounted
@@ -218,6 +233,14 @@ export class TransactionListTs extends Vue {
   public set hasDetailModal(f: boolean) {
     this.isDisplayingDetails = f
   }
+
+  public get hasCosignatureModal(): boolean {
+    return this.isAwaitingCosignature
+  }
+
+  public set hasCosignatureModal(f: boolean) {
+    this.isAwaitingCosignature = f
+  }
   /// end-region computed properties getter/setter
 
   /**
@@ -244,9 +267,15 @@ export class TransactionListTs extends Vue {
    * Hook called when a transaction is clicked
    * @param {Transaction} transaction 
    */
-  public onClickTransaction(transaction: Transaction) {
-    this.activeTransaction = transaction
-    this.hasDetailModal = true
+  public onClickTransaction(transaction: Transaction | AggregateTransaction) {
+    if (transaction.hasMissingSignatures()) {
+      this.activePartialTransaction = transaction as AggregateTransaction
+      this.hasCosignatureModal = true
+    }
+    else {
+      this.activeTransaction = transaction
+      this.hasDetailModal = true
+    }
   }
 
   public onCloseDetailModal() {
@@ -254,10 +283,15 @@ export class TransactionListTs extends Vue {
     this.activeTransaction = undefined
   }
 
+  public onCloseCosignatureModal() {
+    this.hasCosignatureModal = false
+    this.activePartialTransaction = undefined
+  }
+
   /**
    * Hook called at each tab change
    */
-  onTabChange(tab: string): void {
+  public onTabChange(tab: string): void {
     this.currentTab = tab
     this.refresh(this.currentTab)
   }
@@ -265,7 +299,7 @@ export class TransactionListTs extends Vue {
   /**
    * Hook called at each page change
    */
-  onPageChange(page: number): void {
+  public onPageChange(page: number): void {
     if (page > this.countPages) page = this.countPages
     else if (page < 1) page = 1
 
