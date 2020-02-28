@@ -213,7 +213,6 @@ export default class WalletSelectionTs extends Vue {
     this.addressesList = this.walletService.getAddressesFromMnemonic(
       new MnemonicPassPhrase(this.currentMnemonic),
       this.networkType,
-      WalletService.DEFAULT_WALLET_PATH,
       10,
     )
 
@@ -235,12 +234,16 @@ export default class WalletSelectionTs extends Vue {
    * @return {WalletsModel}
    */
   private createWalletsFromPathIndexes(indexes: number[]): WalletsModel[] {
-    const paths = indexes.map(index =>
-      this.derivation.incrementPathLevel(
+    const paths = indexes.map(index => {
+      if (index == 0) return WalletService.DEFAULT_WALLET_PATH
+
+      return this.derivation.incrementPathLevel(
         WalletService.DEFAULT_WALLET_PATH,
         DerivationPathLevels.Account,
         index,
-      ))
+      )
+    })
+
 
     const accounts = this.walletService.generateAccountsFromPaths(
       new MnemonicPassPhrase(this.currentMnemonic),

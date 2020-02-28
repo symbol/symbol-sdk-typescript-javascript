@@ -729,8 +729,7 @@ export default {
         return false
       }
     },
-    async REST_FETCH_INFOS({commit, dispatch, getters, rootGetters}, addresses): Promise<AccountInfo[]> {
-
+    async REST_FETCH_INFOS({commit, dispatch, getters, rootGetters}, addresses: Address[]): Promise<AccountInfo[]> {
       dispatch(
         'diagnostic/ADD_DEBUG',
         `Store action wallet/REST_FETCH_INFOS dispatched with : ${JSON.stringify(addresses.map(a => a.plain()))}`,

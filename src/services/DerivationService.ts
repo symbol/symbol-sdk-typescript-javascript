@@ -69,6 +69,7 @@ export class DerivationService extends AbstractService {
     which: DerivationPathLevels = DerivationPathLevels.Account,
     step: number = 1,
   ): string {
+
     // make sure derivation path is valid
     this.assertValidPath(path)
 

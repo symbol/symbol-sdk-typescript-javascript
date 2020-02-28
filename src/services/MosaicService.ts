@@ -208,10 +208,24 @@ export class MosaicService extends AbstractService {
   }
 
   /**
+   * Format a mosaic amount to relative format
+   * @param {number} amount 
+   * @param {MosaicId} mosaic 
+   * @return {number}
+   */
+  public getRelativeAmountSync(
+    amount: number,
+    mosaic: MosaicId,
+  ): number {
+    const info = this.getMosaicSync(mosaic)
+    return amount / Math.pow(10, info.values.get('divisibility') || 0)
+  }
+
+  /**
    * Get list of balances mapped by address
    * @param {AccountInfo[]} accountsInfo 
    * @param {MosaicId} mosaic 
-   * @return {any}  Object with address as key and balance as value
+   * @return {Record<string, number>}  Object with address as key and balance as value
    */
   public mapBalanceByAddress(
     accountsInfo: AccountInfo[],
@@ -231,7 +245,7 @@ export class MosaicService extends AbstractService {
       const balance = hasNetworkMosaic.amount.compact()
       return {
         address: address.plain(),
-        balance: this.getRelativeAmount(balance, mosaic),
+        balance: this.getRelativeAmountSync(balance, mosaic),
       }
     }).reduce((acc, {address, balance}) => ({...acc, [address]: balance}), {})
   }

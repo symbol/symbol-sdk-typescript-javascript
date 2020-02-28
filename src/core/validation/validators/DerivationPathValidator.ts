@@ -25,7 +25,7 @@ export class DerivationPathValidator {
    * @returns {({valid: boolean|string})}
    */
   public static validate(value: any): boolean {
-    if (value.match(/^m\/44'\/43'\/[0-9]+'\/[0-9]+'\/[0-9]+'/)) {
+    if (value.match(/^m\/44'\/4343'\/[0-9]+'\/[0-9]+'\/[0-9]+'/)) {
       return value
     }
 

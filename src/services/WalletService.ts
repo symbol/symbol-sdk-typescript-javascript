@@ -54,7 +54,7 @@ export class WalletService extends AbstractService {
    * Default wallet derivation path
    * @var {string}
    */
-  public static readonly DEFAULT_WALLET_PATH = 'm/44\'/43\'/0\'/0\'/0\''
+  public static readonly DEFAULT_WALLET_PATH = 'm/44\'/4343\'/0\'/0\'/0\''
 
   /**
    * Construct a service instance around \a store
@@ -144,7 +144,6 @@ export class WalletService extends AbstractService {
    */
   public getExtendedKeyFromMnemonic(
     mnemonic: MnemonicPassPhrase,
-    networkType: NetworkType,
   ): ExtendedKey {
     return ExtendedKey.createFromSeed(
       mnemonic.toSeed().toString('hex'),
@@ -159,7 +158,6 @@ export class WalletService extends AbstractService {
    */
   public getExtendedKeyFromAccount(
     account: Account,
-    networkType: NetworkType,
   ): ExtendedKey {
     // create HD node using curve ED25519
     const nodeEd25519 = new NodeEd25519(
@@ -181,19 +179,24 @@ export class WalletService extends AbstractService {
   public generateAccountsFromMnemonic(
     mnemonic: MnemonicPassPhrase,
     networkType: NetworkType,
-    startPath: string = WalletService.DEFAULT_WALLET_PATH,
     count: number = 10,
   ): Account[] {
-    const helpers = new DerivationService(this.$store)
+    const derivationService = new DerivationService(this.$store)
 
     // create hd extended key
-    const xkey = this.getExtendedKeyFromMnemonic(mnemonic, networkType)
+    const xkey = this.getExtendedKeyFromMnemonic(mnemonic)
 
     // increment derivation path \a count times
-    let current = startPath
-    const paths = [...Array(count).keys()].map(
-      index => count === 0 ? current : (current = helpers.incrementPathLevel(current, DerivationPathLevels.Account))
-    )
+    const paths = [...Array(count).keys()].map(index => {
+      if (index == 0) return WalletService.DEFAULT_WALLET_PATH
+
+      return derivationService.incrementPathLevel(
+        WalletService.DEFAULT_WALLET_PATH,
+        DerivationPathLevels.Account,
+        index,
+      )
+    })
+ 
 
     const wallets = paths.map(path => new Wallet(xkey.derivePath(path)))
     // @ts-ignore // @TODO: SDK Upgrade
@@ -213,7 +216,7 @@ export class WalletService extends AbstractService {
     paths: string[],
   ): Account[] {
     // create hd extended key
-    const xkey = this.getExtendedKeyFromMnemonic(mnemonic, networkType)
+    const xkey = this.getExtendedKeyFromMnemonic(mnemonic)
     const wallets = paths.map(path => new Wallet(xkey.derivePath(path)))
     // @ts-ignore
     return wallets.map(wallet => wallet.getAccount(networkType))
@@ -226,10 +229,9 @@ export class WalletService extends AbstractService {
   public getAddressesFromMnemonic(
     mnemonic: MnemonicPassPhrase,
     networkType: NetworkType,
-    startPath: string = WalletService.DEFAULT_WALLET_PATH,
     count: number = 10,
   ): Address[] {
-    const accounts = this.generateAccountsFromMnemonic(mnemonic, networkType, startPath, count)
+    const accounts = this.generateAccountsFromMnemonic(mnemonic, networkType, count)
     return accounts.map(acct => acct.address)
   }
 
