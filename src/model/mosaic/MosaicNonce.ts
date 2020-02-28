@@ -71,8 +71,8 @@ export class MosaicNonce {
      * @internal
      * @returns {[number,number,number,number]}
      */
-    public toDTO(): Uint8Array {
-        return this.nonce;
+    public toDTO(): number {
+        return (this.nonce[0] + (this.nonce[1] << 8) + (this.nonce[2] << 16) + (this.nonce[3] << 24)) >>> 0;
     }
 
     /**
