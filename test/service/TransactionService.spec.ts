@@ -26,11 +26,16 @@ import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
+import { Mosaic } from '../../src/model/mosaic/Mosaic';
+import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
+import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
+import { HashLockTransaction } from '../../src/model/transaction/HashLockTransaction';
 import { TransactionAnnounceResponse } from '../../src/model/transaction/TransactionAnnounceResponse';
 import { TransactionStatusError } from '../../src/model/transaction/TransactionStatusError';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
+import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
 
 /**
@@ -38,6 +43,7 @@ import { TransactionService } from '../../src/service/TransactionService';
  */
 describe('TransactionService', () => {
 
+    const generationHash = '82DB2528834C9926F0FCCE042466B24A266F5B685CB66D2869AF6648C043E950';
     const account = Account.generateNewAccount(NetworkType.MIJIN_TEST);
     const transferTransaction = TransferTransaction.create(
         Deadline.create(1, ChronoUnit.HOURS),
@@ -47,11 +53,23 @@ describe('TransactionService', () => {
         NetworkType.MIJIN_TEST,
     );
 
-    const aggregateTransaction = AggregateTransaction.createComplete(
+    const aggregateCompleteTransaction = AggregateTransaction.createComplete(
         Deadline.create(),
         [transferTransaction.toAggregate(account.publicAccount)],
         NetworkType.MIJIN_TEST,
         []);
+
+    const aggregateBondedTransaction = AggregateTransaction.createBonded(
+        Deadline.create(),
+        [transferTransaction.toAggregate(account.publicAccount)],
+        NetworkType.MIJIN_TEST,
+        []);
+
+    const hashLockTransaction = HashLockTransaction.create(Deadline.create(),
+        new Mosaic(new NamespaceId('cat.currency'), UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
+        UInt64.fromUint(10000),
+        account.sign(aggregateBondedTransaction, generationHash),
+        NetworkType.MIJIN_TEST);
 
     let transactionRepositoryMock: TransactionRepository;
     let mockedReceiptRepository: ReceiptRepository;
@@ -66,7 +84,7 @@ describe('TransactionService', () => {
 
     it('announce when valid transaction', async () => {
 
-        const signedTransaction = account.sign(transferTransaction, '82DB2528834C9926F0FCCE042466B24A266F5B685CB66D2869AF6648C043E950');
+        const signedTransaction = account.sign(transferTransaction, generationHash);
 
         const transactionAnnounceResponse = new TransactionAnnounceResponse('Some Message');
 
@@ -88,7 +106,7 @@ describe('TransactionService', () => {
 
     it('announce when status error', async () => {
 
-        const signedTransaction = account.sign(transferTransaction, '82DB2528834C9926F0FCCE042466B24A266F5B685CB66D2869AF6648C043E950');
+        const signedTransaction = account.sign(transferTransaction, generationHash);
 
         const transactionAnnounceResponse = new TransactionAnnounceResponse('Some Message');
 
@@ -112,7 +130,7 @@ describe('TransactionService', () => {
 
     it('Basic announceAggregateBonded when valid transaction', async () => {
 
-        const signedTransaction = account.sign(aggregateTransaction, '82DB2528834C9926F0FCCE042466B24A266F5B685CB66D2869AF6648C043E950');
+        const signedTransaction = account.sign(aggregateCompleteTransaction, generationHash);
 
         const transactionAnnounceResponse = new TransactionAnnounceResponse('Some Message');
 
@@ -120,7 +138,7 @@ describe('TransactionService', () => {
         .thenReturn(observableOf(transactionAnnounceResponse));
 
         when(listener.aggregateBondedAdded(deepEqual(account.address), deepEqual(signedTransaction.hash)))
-        .thenReturn(observableOf(aggregateTransaction));
+        .thenReturn(observableOf(aggregateCompleteTransaction));
         when(listener.status(deepEqual(account.address))).thenReturn(EMPTY);
 
         const service = new TransactionService(instance(transactionRepositoryMock), instance(mockedReceiptRepository));
@@ -128,13 +146,13 @@ describe('TransactionService', () => {
         const announcedTransaction = service.announceAggregateBonded(signedTransaction, instance(listener));
 
         const transaction = await announcedTransaction.toPromise();
-        expect(transaction).to.be.equal(aggregateTransaction);
+        expect(transaction).to.be.equal(aggregateCompleteTransaction);
     });
 
     it('announceAggregateBonded when status error', async () => {
 
-        const signedTransaction = account.sign(aggregateTransaction,
-            '82DB2528834C9926F0FCCE042466B24A266F5B685CB66D2869AF6648C043E950');
+        const signedTransaction = account.sign(aggregateCompleteTransaction,
+            generationHash);
 
         const transactionAnnounceResponse = new TransactionAnnounceResponse('Some Message');
 
@@ -154,6 +172,38 @@ describe('TransactionService', () => {
         } catch (e) {
             expect(e.message).to.be.equal('Some Error');
         }
+
+    });
+
+    it('announceHashLockAggregateBonded when ok', async () => {
+
+        const aggregateBondedSignedTransaction = account.sign(aggregateBondedTransaction, generationHash);
+
+        const hashLockSignedTransaction = account.sign(hashLockTransaction, generationHash);
+
+        const transactionAnnounceResponse = new TransactionAnnounceResponse('Some Message');
+
+        when(transactionRepositoryMock.announceAggregateBonded(deepEqual(aggregateBondedSignedTransaction)))
+        .thenReturn(observableOf(transactionAnnounceResponse));
+
+        when(transactionRepositoryMock.announce(deepEqual(hashLockSignedTransaction)))
+        .thenReturn(observableOf(transactionAnnounceResponse));
+
+        when(listener.confirmed(deepEqual(account.address), deepEqual(hashLockSignedTransaction.hash)))
+        .thenReturn(observableOf(hashLockTransaction));
+
+        when(listener.aggregateBondedAdded(deepEqual(account.address), deepEqual(aggregateBondedSignedTransaction.hash)))
+        .thenReturn(observableOf(aggregateBondedTransaction));
+
+        when(listener.status(deepEqual(account.address))).thenReturn(EMPTY);
+
+        const service = new TransactionService(instance(transactionRepositoryMock), instance(mockedReceiptRepository));
+
+        const announcedTransaction = service.announceHashLockAggregateBonded(hashLockSignedTransaction, aggregateBondedSignedTransaction,
+            instance(listener));
+
+        const transaction = await announcedTransaction.toPromise();
+        expect(transaction).to.be.equal(aggregateBondedTransaction);
 
     });
 
