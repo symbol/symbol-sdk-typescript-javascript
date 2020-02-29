@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import { Observable, of } from 'rxjs';
-import { flatMap, map, mergeMap, toArray } from 'rxjs/operators';
+import { merge, Observable, of } from 'rxjs';
+import { filter, first, flatMap, map, mergeMap, toArray } from 'rxjs/operators';
 import { IListener } from '../infrastructure/IListener';
 import { ReceiptRepository } from '../infrastructure/ReceiptRepository';
 import { TransactionRepository } from '../infrastructure/TransactionRepository';
+import { Address } from '../model/account/Address';
 import { NamespaceId } from '../model/namespace/NamespaceId';
 import { AccountAddressRestrictionTransaction } from '../model/transaction/AccountAddressRestrictionTransaction';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
@@ -31,6 +32,7 @@ import { SecretLockTransaction } from '../model/transaction/SecretLockTransactio
 import { SecretProofTransaction } from '../model/transaction/SecretProofTransaction';
 import { SignedTransaction } from '../model/transaction/SignedTransaction';
 import { Transaction } from '../model/transaction/Transaction';
+import { TransactionStatusError } from '../model/transaction/TransactionStatusError';
 import { TransactionType } from '../model/transaction/TransactionType';
 import { TransferTransaction } from '../model/transaction/TransferTransaction';
 import { ITransactionService } from './interfaces/ITransactionService';
@@ -52,7 +54,6 @@ export class TransactionService implements ITransactionService {
     /**
      * Resolve unresolved mosaic / address from array of transactions
      * @param transationHashes List of transaction hashes.
-     * @param listener Websocket listener
      * @returns Observable<Transaction[]>
      */
     public resolveAliases(transationHashes: string[]): Observable<Transaction[]> {
@@ -69,9 +70,11 @@ export class TransactionService implements ITransactionService {
      * @returns {Observable<Transaction>}
      */
     public announce(signedTransaction: SignedTransaction, listener: IListener): Observable<Transaction> {
-        return this.transactionRepository.announce(signedTransaction).pipe(
-            flatMap(() => listener.confirmed(signedTransaction.getSignerAddress(), signedTransaction.hash)),
+        const signerAddress = signedTransaction.getSignerAddress();
+        const transactionObservable = this.transactionRepository.announce(signedTransaction).pipe(
+            flatMap(() => listener.confirmed(signerAddress, signedTransaction.hash)),
         );
+        return this.getTransactionOrRaiseError(listener, signerAddress, signedTransaction.hash, transactionObservable);
     }
 
     /**
@@ -82,13 +85,18 @@ export class TransactionService implements ITransactionService {
      * @returns {Observable<AggregateTransaction>}
      */
     public announceAggregateBonded(signedTransaction: SignedTransaction, listener: IListener): Observable<AggregateTransaction> {
-        return this.transactionRepository.announceAggregateBonded(signedTransaction).pipe(
-            flatMap(() => listener.aggregateBondedAdded(signedTransaction.getSignerAddress(), signedTransaction.hash)),
+        const signerAddress = signedTransaction.getSignerAddress();
+        const transactionObservable = this.transactionRepository.announceAggregateBonded(signedTransaction).pipe(
+            flatMap(() => listener.aggregateBondedAdded(signerAddress, signedTransaction.hash)),
         );
+        return this.getTransactionOrRaiseError(listener, signerAddress, signedTransaction.hash, transactionObservable);
     }
 
     /**
-     * Announce aggregate bonded transaction with lock fund
+     * This method announces an a hash lock transaction followed by a aggregate bonded transaction
+     * while waiting for being confirmed by listing to the /confirmed and /aggregateBondedAdded web
+     * socket. If an error is sent while processing any of the given transaction an Error is raised.
+     *
      * @param signedHashLockTransaction Signed hash lock transaction.
      * @param signedAggregateTransaction Signed aggregate bonded transaction.
      * @param listener Websocket listener
@@ -100,7 +108,27 @@ export class TransactionService implements ITransactionService {
         return this.announce(signedHashLockTransaction, listener).pipe(
             flatMap(() => this.announceAggregateBonded(signedAggregateTransaction, listener)),
         );
+    }
 
+    /**
+     * @internal
+     *
+     * This method publishes an error if the listener receives an error code for the given address and transaction hash. Otherwise, it returns the passed transactionObservable
+     *
+     * @param listener the listener.
+     * @param address the signer address
+     * @param transactionHash the transaction hash
+     * @param transactionObservable the observable with the valid transaction
+     */
+    private getTransactionOrRaiseError<T extends Transaction>(listener: IListener, address: Address, transactionHash: string, transactionObservable: Observable<T>): Observable<T> {
+        const errorObservable = listener.status(address).pipe(filter((t) => t.hash.toUpperCase() === transactionHash.toUpperCase()));
+        return merge(transactionObservable, errorObservable).pipe(first(), map((errorOrTransaction) => {
+            if (errorOrTransaction instanceof TransactionStatusError) {
+                throw new Error(errorOrTransaction.code);
+            } else {
+                return errorOrTransaction;
+            }
+        }));
     }
 
     /**

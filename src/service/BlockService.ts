@@ -23,12 +23,15 @@ import { ReceiptRepository } from '../infrastructure/ReceiptRepository';
 import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { UInt64 } from '../model/UInt64';
+import { IBlockService } from './interfaces/IBlockService';
 
 /**
  * Transaction Service
  */
-export class BlockService {
+export class BlockService implements IBlockService {
+
     private readonly blockRepository: BlockRepository;
+
     private readonly receiptRepository: ReceiptRepository;
 
     /**
@@ -48,7 +51,7 @@ export class BlockService {
     public validateTransactionInBlock(leaf: string, height: UInt64): Observable<boolean> {
         const rootHashObservable = this.blockRepository.getBlockByHeight(height);
         const merklePathItemObservable = this.blockRepository.getMerkleTransaction(height, leaf);
-        return combineLatest(rootHashObservable, merklePathItemObservable).pipe(
+        return combineLatest([rootHashObservable, merklePathItemObservable]).pipe(
             map((combined) => this.validateInBlock(leaf, combined[1].merklePath, combined[0].blockTransactionsHash)),
         ).pipe(catchError(() => of(false)));
     }
@@ -61,7 +64,7 @@ export class BlockService {
     public validateStatementInBlock(leaf: string, height: UInt64): Observable<boolean> {
         const rootHashObservable = this.blockRepository.getBlockByHeight(height);
         const merklePathItemObservable = this.receiptRepository.getMerkleReceipts(height, leaf);
-        return combineLatest(rootHashObservable, merklePathItemObservable).pipe(
+        return combineLatest([rootHashObservable, merklePathItemObservable]).pipe(
             map((combined) => this.validateInBlock(leaf, combined[1].merklePath, combined[0].blockReceiptsHash)),
         ).pipe(catchError(() => of(false)));
     }
