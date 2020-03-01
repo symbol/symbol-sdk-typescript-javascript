@@ -347,7 +347,7 @@ describe('CreateTransactionFromDTO', () => {
                     deadline: '1',
                     maxFee: '0',
                     id: '85BBEA6CC462B244',
-                    nonce: '1',
+                    nonce: 1177824765,
                     flags: 7,
                     diversibility: 6,
                     duration: '1000',
@@ -398,7 +398,7 @@ describe('CreateTransactionFromDTO', () => {
                             },
                             transaction: {
                                 id: '85BBEA6CC462B244',
-                                nonce: '1',
+                                nonce: 1177824765,
                                 flags: 7,
                                 divisibility: 6,
                                 duration: '1000',
