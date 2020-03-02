@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import { NodeRoutesApi } from 'symbol-openapi-typescript-node-client';
+import * as http from 'http';
 // tslint:disable-next-line: ordered-imports
 import { from as observableFrom, Observable, of as observableOf, throwError } from 'rxjs';
 import { catchError, map, shareReplay } from 'rxjs/operators';
+import { NodeRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { NetworkType } from '../model/blockchain/NetworkType';
 import { QueryParams } from './QueryParams';
 import { TransactionFilter } from './TransactionFilter';
@@ -59,7 +60,7 @@ export abstract class Http {
 
     transactionFilter(filter?: TransactionFilter): any {
         return {
-            type: filter ? filter.convertCSV(filter.types) : undefined,
+            type: filter ? filter.types : undefined,
         };
     }
 
@@ -79,5 +80,17 @@ export abstract class Http {
             return new Error(`Cannot reach node: ${error.address}:${error.port}`);
         }
         return new Error(error);
+    }
+
+    /**
+     * This method knows how to call, convert and handle exception when doing remote http operations.
+     * @param remoteCall the remote call
+     * @param mapper the mapper from dto to the model object.
+     */
+    protected call<D, M>(remoteCall: Promise<{ response: http.IncomingMessage; body: D; }>, mapper: (value: D, index: number) => M) {
+        return observableFrom(remoteCall).pipe(
+            map(({body}, index) => mapper(body, index)),
+            catchError((error) => throwError(this.errorHandling(error))),
+        );
     }
 }

@@ -25,6 +25,7 @@ import {EmptyMessage, PlainMessage} from '../../model/message/PlainMessage';
 import {Mosaic} from '../../model/mosaic/Mosaic';
 import {MosaicFlags} from '../../model/mosaic/MosaicFlags';
 import {MosaicId} from '../../model/mosaic/MosaicId';
+import { MosaicNonce } from '../../model/mosaic/MosaicNonce';
 import {NamespaceId} from '../../model/namespace/NamespaceId';
 import {AccountAddressRestrictionTransaction} from '../../model/transaction/AccountAddressRestrictionTransaction';
 import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
@@ -54,6 +55,7 @@ import {TransactionInfo} from '../../model/transaction/TransactionInfo';
 import {TransactionType} from '../../model/transaction/TransactionType';
 import {TransferTransaction} from '../../model/transaction/TransferTransaction';
 import {UInt64} from '../../model/UInt64';
+
 // tslint:disable: no-use-before-declare
 /**
  * @internal
@@ -159,7 +161,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.version,
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
-            transactionDTO.nonce,
+            MosaicNonce.createFromHex(transactionDTO.nonce.toString(16)),
             new MosaicId(transactionDTO.id),
             new MosaicFlags(transactionDTO.flags),
             transactionDTO.divisibility,
