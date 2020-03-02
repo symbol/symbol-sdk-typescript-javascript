@@ -138,11 +138,11 @@ export abstract class Transaction {
             TransactionType.AGGREGATE_COMPLETE,
         ].find((type: TransactionType) => entityType === type) !== undefined;
 
-        // 1) take "R" part of a signature (first 32 bytes)
-        const signatureR: Uint8Array = transactionBytes.slice(8, 8 + 32);
+        // 1) add full signature
+        const signature: Uint8Array = transactionBytes.slice(8, 8 + 64);
 
         // 2) add public key to match sign/verify behavior (32 bytes)
-        const pubKeyIdx: number = signatureR.length;
+        const pubKeyIdx: number = signature.length;
         const publicKey: Uint8Array = transactionBytes.slice(8 + 64, 8 + 64 + 32);
 
         // 3) add generationHash (32 bytes)
@@ -162,12 +162,12 @@ export abstract class Transaction {
         // 5) concatenate binary hash parts
         // layout: `signature_R || signerPublicKey || generationHash || EntityDataBuffer`
         const entityHashBytes: Uint8Array = new Uint8Array(
-            signatureR.length
+            signature.length
           + publicKey.length
           + generationHash.length
           + transactionBody.length,
         );
-        entityHashBytes.set(signatureR, 0);
+        entityHashBytes.set(signature, 0);
         entityHashBytes.set(publicKey, pubKeyIdx);
         entityHashBytes.set(generationHash, generationHashIdx);
         entityHashBytes.set(transactionBody, transactionBodyIdx);

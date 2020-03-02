@@ -255,7 +255,7 @@ describe('Transaction', () => {
         );
 
         // expected values
-        const knownHash_sha3 = '709373248659274C5933BEA2920942D6C7B48B9C2DA4BAEE233510E71495931F';
+        const knownHash_sha3 = 'F0F5A62A0863D45E832B50EFF4E2F68157268A5D1674EC1068D82EC5F88D950B';
         const generationHashBytes = Array.from(Convert.hexToUint8('988C4CDCE4D188013C13DE7914C7FD4D626169EF256722F61C52EFBE06BD5A2C'));
         const generationHashBytes_mt = Array.from(Convert.hexToUint8('17FA4747F5014B50413CCF968749604D728D7065DC504291EEE556899A534CBB'));
 
