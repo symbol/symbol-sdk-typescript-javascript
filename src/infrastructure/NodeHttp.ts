@@ -16,7 +16,7 @@
 
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { NodeRoutesApi } from 'symbol-openapi-typescript-node-client';
+import { NodeInfoDTO, NodeRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { StorageInfo } from '../model/blockchain/StorageInfo';
 import { NodeHealth } from '../model/node/NodeHealth';
 import { NodeInfo } from '../model/node/NodeInfo';
@@ -32,20 +32,14 @@ import { NodeRepository } from './NodeRepository';
  * @since 1.0
  */
 export class NodeHttp extends Http implements NodeRepository {
-    /**
-     * @internal
-     * Symbol openapi typescript-node client account routes api
-     */
-    private nodeRoutesApi: NodeRoutesApi;
 
     /**
      * Constructor
-     * @param url
+     * @param url symbol server url.
+     * @param nodeRoutesApi the rest api node client. Parameter provided only when unit testing.
      */
-    constructor(url: string) {
+    constructor(url: string, private readonly nodeRoutesApi = new NodeRoutesApi(url)) {
         super(url);
-        this.nodeRoutesApi = new NodeRoutesApi(url);
-
     }
 
     /**
@@ -54,17 +48,8 @@ export class NodeHttp extends Http implements NodeRepository {
      */
     public getNodeInfo(): Observable<NodeInfo> {
         return observableFrom(this.nodeRoutesApi.getNodeInfo()).pipe(
-            map(({body}) => new NodeInfo(
-                body.publicKey,
-                body.networkGenerationHash,
-                body.port,
-                body.networkIdentifier,
-                body.version,
-                body.roles as number,
-                body.host,
-                body.friendlyName,
-            )),
-            catchError((error) =>  throwError(this.errorHandling(error))),
+            map(({body}) => this.toNodeInfo(body)),
+            catchError((error) => throwError(this.errorHandling(error))),
         );
     }
 
@@ -75,17 +60,8 @@ export class NodeHttp extends Http implements NodeRepository {
     public getNodePeers(): Observable<NodeInfo[]> {
         return observableFrom(this.nodeRoutesApi.getNodePeers()).pipe(
             map(({body}) => body.map((nodeInfo) =>
-                new NodeInfo(
-                    nodeInfo.publicKey,
-                    nodeInfo.networkGenerationHash,
-                    nodeInfo.port,
-                    nodeInfo.networkIdentifier,
-                    nodeInfo.version,
-                    nodeInfo.roles as number,
-                    nodeInfo.host,
-                    nodeInfo.friendlyName,
-            ))),
-            catchError((error) =>  throwError(this.errorHandling(error))),
+                this.toNodeInfo(nodeInfo))),
+            catchError((error) => throwError(this.errorHandling(error))),
         );
     }
 
@@ -144,6 +120,25 @@ export class NodeHttp extends Http implements NodeRepository {
             this.nodeRoutesApi.getNodeHealth()).pipe(
                 map(({body}) => new NodeHealth(body.status.apiNode, body.status.db)),
                 catchError((error) =>  throwError(this.errorHandling(error))),
+        );
+    }
+
+    /**
+     * It maps NodeInfoDTO to NodeInfo
+     *
+     * @param nodeInfo the dto object.
+     * @returns the model object
+     */
+    private toNodeInfo(nodeInfo: NodeInfoDTO): NodeInfo {
+        return new NodeInfo(
+            nodeInfo.publicKey,
+            nodeInfo.networkGenerationHash,
+            nodeInfo.port,
+            nodeInfo.networkIdentifier,
+            nodeInfo.version,
+            nodeInfo.roles as number,
+            nodeInfo.host,
+            nodeInfo.friendlyName,
         );
     }
 }

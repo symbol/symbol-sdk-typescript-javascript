@@ -16,7 +16,7 @@
 
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { NetworkRoutesApi } from 'symbol-openapi-typescript-node-client';
+import { NetworkRoutesApi, NodeRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { NetworkFees } from '../model/blockchain/NetworkFees';
 import { NetworkName } from '../model/blockchain/NetworkName';
 import { NetworkType } from '../model/blockchain/NetworkType';
@@ -36,16 +36,16 @@ export class NetworkHttp extends Http implements NetworkRepository {
      * Symbol openapi typescript-node client account routes api
      */
     private nodeHttp: NodeHttp;
-    private networkRouteApi: NetworkRoutesApi;
 
     /**
      * Constructor
-     * @param url
+     * @param url symbol server url.
+     * @param nodeRoutesApi the rest api node client. Parameter provided only when unit testing.
+     * @param networkRouteApi the rest api network client. Parameter provided only when unit testing.
      */
-    constructor(url: string) {
+    constructor(url: string, nodeRoutesApi = new NodeRoutesApi(url), private readonly networkRouteApi = new NetworkRoutesApi(url)) {
         super(url);
-        this.nodeHttp = new NodeHttp(url);
-        this.networkRouteApi = new NetworkRoutesApi(url);
+        this.nodeHttp = new NodeHttp(url, nodeRoutesApi);
 
     }
 
