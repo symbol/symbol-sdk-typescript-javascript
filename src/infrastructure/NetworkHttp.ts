@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { from as observableFrom, Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { NetworkRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { NetworkFees } from '../model/blockchain/NetworkFees';
 import { NetworkName } from '../model/blockchain/NetworkName';
@@ -35,8 +35,8 @@ export class NetworkHttp extends Http implements NetworkRepository {
      * @internal
      * Symbol openapi typescript-node client account routes api
      */
-    private nodeHttp: NodeHttp;
-    private networkRouteApi: NetworkRoutesApi;
+    private readonly nodeHttp: NodeHttp;
+    private readonly networkRoutesApi: NetworkRoutesApi;
 
     /**
      * Constructor
@@ -45,7 +45,7 @@ export class NetworkHttp extends Http implements NetworkRepository {
     constructor(url: string) {
         super(url);
         this.nodeHttp = new NodeHttp(url);
-        this.networkRouteApi = new NetworkRoutesApi(url);
+        this.networkRoutesApi = new NetworkRoutesApi(url);
 
     }
 
@@ -55,10 +55,7 @@ export class NetworkHttp extends Http implements NetworkRepository {
      * @return network identifier.
      */
     public getNetworkType(): Observable<NetworkType> {
-        return observableFrom(this.nodeHttp.getNodeInfo()).pipe(
-            map(((nodeInfo: NodeInfo) => nodeInfo.networkIdentifier),
-            catchError((error) =>  throwError(this.errorHandling(error)))),
-        );
+        return this.nodeHttp.getNodeInfo().pipe(map((nodeInfo: NodeInfo) => nodeInfo.networkIdentifier));
     }
 
     /**
@@ -67,10 +64,7 @@ export class NetworkHttp extends Http implements NetworkRepository {
      * @return current network type name and description
      */
     public getNetworkName(): Observable<NetworkName> {
-        return observableFrom(this.networkRouteApi.getNetworkType()).pipe(
-            map((({body}) => new NetworkName(body.name, body.description))),
-            catchError((error) =>  throwError(this.errorHandling(error))),
-        );
+        return this.call(this.networkRoutesApi.getNetworkType(), (body) => new NetworkName(body.name, body.description));
     }
 
     /**
@@ -80,10 +74,7 @@ export class NetworkHttp extends Http implements NetworkRepository {
      * @summary Get transaction fees information
      */
     public getNetworkFees(): Observable<NetworkFees> {
-        return observableFrom(this.networkRouteApi.getNetworkFees()).pipe(
-            map((({body}) =>
-                new NetworkFees(body.averageFeeMultiplier, body.medianFeeMultiplier, body.highestFeeMultiplier, body.lowestFeeMultiplier))),
-            catchError((error) =>  throwError(this.errorHandling(error))),
-        );
+        return this.call(this.networkRoutesApi.getNetworkFees(), (body) =>
+            new NetworkFees(body.averageFeeMultiplier, body.medianFeeMultiplier, body.highestFeeMultiplier, body.lowestFeeMultiplier));
     }
 }
