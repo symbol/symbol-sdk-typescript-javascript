@@ -9,22 +9,30 @@
           <div class="banner-image">
             <span class="top-welcome-text">{{ $t('welcome') }}</span>
             <span class="top-to-symbol-text">{{ $t('to_symbol') }}</span>
-            <div class="bottom-welcome-text">{{ $t('program_description') }}</div>
+            <div class="bottom-welcome-text">
+              {{ $t('program_description') }}
+            </div>
           </div>
           <div class="login-card radius">
             <div class="img-box" />
-            <p class="login-title">{{ $t('login_account') }}</p>
-            <p class="account-name">{{ $t('account_name') }}</p>
-
+            <p class="login-title">
+              {{ $t('login_account') }}
+            </p>
+            <p class="account-name">
+              {{ $t('account_name') }}
+            </p>
             <AutoComplete
               v-model="formItems.currentAccountName"
               placeholder=" "
-              :class="[ 'select-wallet', !accountsClassifiedByNetworkType ? 'un_click' : 'account-name-input' ]"
+              :class="[
+                'select-wallet',
+                !accountsClassifiedByNetworkType ? 'un_click' : 'account-name-input',
+              ]"
             >
               <div class="auto-complete-sub-container scroll">
                 <div class="tips-in-sub-container">
                   {{ $t(accountsClassifiedByNetworkType
-                  ? 'Select_a_wallet_in_local_storage' : 'No_wallet_in_local_storage'
+                    ? 'Select_a_wallet_in_local_storage' : 'No_wallet_in_local_storage'
                   ) }}
                 </div>
                 <div v-if="accountsClassifiedByNetworkType">
@@ -47,7 +55,9 @@
                 </div>
               </div>
             </AutoComplete>
-            <p class="input-password">{{ $t('password') }}</p>
+            <p class="input-password">
+              {{ $t('password') }}
+            </p>
             <ValidationProvider
               v-slot="{ errors }"
               mode="lazy"
@@ -59,11 +69,11 @@
                 <input
                   v-model="formItems.password"
                   v-focus
-                  :class="[!accountsClassifiedByNetworkType ? 'un_click' : '' ]"
+                  :class="[!accountsClassifiedByNetworkType ? 'un_click' : '']"
                   :placeholder="$t('please_enter_your_wallet_password')"
                   type="password"
                   :disabled="!accountsClassifiedByNetworkType"
-                />
+                >
               </ErrorTooltip>
             </ValidationProvider>
 
@@ -80,17 +90,23 @@
             <div
               v-if="formItems.hasHint"
               class="hint"
-            >{{ $t('Password_hint') }}: {{ getPasswordHint() }}</div>
+            >
+              {{ $t('Password_hint') }}: {{ getPasswordHint() }}
+            </div>
             <div
               v-if="accountsClassifiedByNetworkType"
               class="pointer button"
               @click="submit"
-            >{{ $t('login') }}</div>
+            >
+              {{ $t('login') }}
+            </div>
             <div
               v-else
               class="pointer button"
               @click="$router.push({name: 'accounts.importAccount.importStrategy'})"
-            >{{ $t('register') }}</div>
+            >
+              {{ $t('register') }}
+            </div>
           </div>
         </div>
       </form>
@@ -99,8 +115,8 @@
 </template>
 
 <script lang="ts">
-import LoginPageTs from "./LoginPageTs";
-import "./LoginPage.less";
+import LoginPageTs from './LoginPageTs'
+import './LoginPage.less'
 
 export default class LoginPage extends LoginPageTs {}
 </script>

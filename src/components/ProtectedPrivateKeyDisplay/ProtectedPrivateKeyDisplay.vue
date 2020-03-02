@@ -2,20 +2,25 @@
   <div class="wallet-detail-row-3cols">
     <span class="label">{{ $t('privatekey') }}</span>
     <div v-if="hasPlainPrivateKey" class="value">
-      <span>{{ plainInformation }}</span>
-      &nbsp;<img src="@/views/resources/img/wallet/copyIcon.png"
-          class="copy-icon"
-          @click="uiHelpers.copyToClipboard(plainInformation)" />
-      <span> ({{ $t('x_seconds', {seconds: secondsCounter}) }})</span>
+      {{ plainInformation }}
+      <img
+        src="@/views/resources/img/wallet/copyIcon.png"
+        class="copy-icon"
+        @click="uiHelpers.copyToClipboard(plainInformation)"
+      >
+      <span class="timer-span"> &nbsp; ({{ $t('x_seconds', {seconds: secondsCounter}) }})</span>
     </div>
     <div v-else>
-      <span class="value">********</span>
-      <button type="button"
-        class="button-style validation-button right-side-button eye-button" 
-        @click="onClickDisplay"
-      >
-        <Icon type="md-eye" />
-      </button>
+      <div class="value">
+        ********
+        <button
+          type="button"
+          class="button-style validation-button right-side-button eye-button" 
+          @click="onClickDisplay"
+        >
+          <Icon type="md-eye" />
+        </button>
+      </div>
     </div>
 
     <ModalFormAccountUnlock
@@ -43,5 +48,15 @@ export default class ProtectedPrivateKeyDisplay extends ProtectedPrivateKeyDispl
   height: 0.35rem !important;
   padding: 0 0.3rem;
   max-width: 75px;
+}
+
+.value {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+}
+
+.timer-span {
+  padding-left: 8px;
 }
 </style>

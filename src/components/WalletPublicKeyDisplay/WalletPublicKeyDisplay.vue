@@ -1,12 +1,13 @@
 <template>
   <div class="wallet-detail-row-3cols">
     <span class="label">{{ $t('Wallet_public_key') }}</span>
-    <span class="value walletPublicKey">{{ wallet.objects.publicAccount.publicKey }}</span>
-    <span><img
-      src="@/views/resources/img/wallet/copyIcon.png"
-      class="copy-icon"
-      @click="uiHelpers.copyToClipboard(wallet.objects.publicAccount.publicKey)"
-    ></span>
+    <div class="value walletPublicKey">{{ wallet.objects.publicAccount.publicKey }}
+      <img
+        src="@/views/resources/img/wallet/copyIcon.png"
+        class="copy-icon"
+        @click="uiHelpers.copyToClipboard(wallet.objects.publicAccount.publicKey)"
+      >
+    </div>
   </div>
 </template>
 
@@ -21,5 +22,11 @@ export default class WalletPublicKeyDisplay extends WalletPublicKeyDisplayTs {}
   height: .24rem;
   margin-left: .18rem;
   cursor: pointer;
+}
+
+.walletPublicKey {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
 }
 </style>

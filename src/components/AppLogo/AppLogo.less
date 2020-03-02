@@ -17,29 +17,17 @@
 
 .wrap {
   .top_window {
-    .nem_logo_wrap {
-      width: 170px;
-      height: 50px;
+    .app-logo-container {
+      display: grid;
+      position: relative;
       float: left;
-      overflow-y: hidden;
-      margin-left: 1px;
+      height: 100%;
+      text-align: center;
+      padding-left: .2rem;
+      align-items: center;
 
-      .nem_logo {
-        width: 170px;
-        height: 50px;
-        position: relative;
-        box-shadow: 0 0 10px @purpleDark;
-
-        img {
-          height: 48px;
-        }
-      }
-    }
-
-    .controller {
-      .absolute {
-        background-color: @whiteLight;
-        z-index:1;
+      img {
+        height: 48px;
       }
     }
   }

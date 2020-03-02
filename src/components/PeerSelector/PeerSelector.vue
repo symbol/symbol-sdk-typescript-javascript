@@ -1,5 +1,5 @@
 <template>
-<div :class="[isConnected ? 'point_healthy' : 'point_unhealthy']">
+<div :class="[isConnected ? 'endpoint-healthy' : 'endpoint-unhealthy']">
   <Poptip placement="bottom-end">
     <i class="pointer point" />
     <span v-if="isConnected" class="network_type_text">
@@ -18,7 +18,7 @@
               @click="switchPeer(nodeUrl)"
           >
             <img :src="currentPeer.url === nodeUrl ? imageResources.selected : imageResources.unselected">
-            <span class="node_url text_select">{{ nodeUrl }}</span>
+            <span class="node_url">{{ nodeUrl }}</span>
             <img
               class="remove_icon" src="@/views/resources/img/service/multisig/multisigDelete.png"
               @click.stop="removePeer(nodeUrl)">

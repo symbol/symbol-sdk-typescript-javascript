@@ -23,7 +23,7 @@
 
         <div class="app_controller clear">
           <div @click="hasDebugConsoleModal = true" class="debug-console-trigger">
-            <Icon :type="'ios-code-working'" size="18" />
+            <Icon :type="'ios-code-working'" size="22" class="debug-console-trigger-icon" />
             <span>&nbsp;{{$t('top_window_console')}}</span>
           </div>
 

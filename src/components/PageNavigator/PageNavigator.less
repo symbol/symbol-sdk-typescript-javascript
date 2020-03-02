@@ -56,6 +56,9 @@
           font-size: 0.5rem;
           margin-top: .15rem;
         }
+        .ivu-icon {
+          color: @purpleDark;
+        }
       }
 
       .navigator-text-container {
@@ -69,10 +72,13 @@
     }
 
     .active {
-      background-color: @purple;
+      background-color: @purpleDark;
       color: @white;
       opacity: 1;
       cursor: not-allowed;
+      .ivu-icon {
+        color: @white !important;
+      }
     }
   }
 }

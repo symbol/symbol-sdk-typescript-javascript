@@ -1,12 +1,13 @@
 <template>
   <div class="wallet-detail-row-3cols">
     <span class="label">{{ $t('Wallet_address') }}</span>
-    <span class="value walletAddress">{{ wallet.objects.address.pretty() }}</span>
-    <span><img
-      src="@/views/resources/img/wallet/copyIcon.png"
-      class="copy-icon"
-      @click="uiHelpers.copyToClipboard(wallet.objects.address.plain())"
-    ></span>
+    <div class="value walletAddress">{{ wallet.objects.address.pretty() }}
+      <img
+        src="@/views/resources/img/wallet/copyIcon.png"
+        class="copy-icon"
+        @click="uiHelpers.copyToClipboard(wallet.objects.address.plain())"
+      >
+    </div>
   </div>
 </template>
 
@@ -21,5 +22,11 @@ export default class WalletAddressDisplay extends WalletAddressDisplayTs {}
   height: .24rem;
   margin-left: .18rem;
   cursor: pointer;
+}
+
+.walletAddress {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
 }
 </style>

@@ -83,12 +83,8 @@ export class NamespaceSelectorTs extends Vue {
    * @return {string}
    */
   public getName(info: NamespaceInfo): string {
-    if (!info) return null
-    if (this.namespacesNames.hasOwnProperty(info.id.toHex())) {
-      return this.namespacesNames[info.id.toHex()]
-    }
-
-    return info.id.toHex()
+    if (!info || !info.id) return null
+    return this.namespacesNames[info.id.toHex()] || info.id.toHex()
   }
 
   /**

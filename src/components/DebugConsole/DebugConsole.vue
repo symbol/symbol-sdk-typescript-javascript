@@ -3,7 +3,7 @@
     <Modal
       v-if="show"
       v-model="show"
-      class-name="vertical-center-modal text_select"
+      class-name="vertical-center-modal"
       :footer-hide="true"
       :transfer="false"
     >

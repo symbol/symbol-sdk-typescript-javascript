@@ -42,7 +42,7 @@ export default {
       Vue.set(state.namespacesInfoByHex, namespaceInfo.id.toHex(), namespaceInfo)
     },
     addNamespaceName: (state, payload: {hex: string, name: string}) => {
-      Vue.set(state.namespacesNamesByHex, payload.hex, name)
+      Vue.set(state.namespacesNamesByHex, payload.hex, payload.name)
     },
   },
   actions: {
