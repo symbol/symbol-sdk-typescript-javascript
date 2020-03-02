@@ -47,6 +47,6 @@ export default class ImportAccountTs extends Vue {
   }
 
   public getStepClassName(index: number): string {
-    return this.getCurrentStep() > index ? 'white' : 'gray'
+    return this.getCurrentStep() >= index ? 'white' : 'gray'
   }
 }

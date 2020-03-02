@@ -30,6 +30,7 @@
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: auto @iconHeight;
+    color: @secondary;
 
     .navigator-items-container {
       display: grid;
@@ -52,6 +53,7 @@
         display: block;
         width: 100%;
         height: 100%;
+
         .navigator-icon {
           font-size: 0.5rem;
           margin-top: .15rem;
@@ -72,7 +74,7 @@
     }
 
     .active {
-      background-color: @purpleDark;
+      background: linear-gradient(120deg, @primary, @secondary);
       color: @white;
       opacity: 1;
       cursor: not-allowed;

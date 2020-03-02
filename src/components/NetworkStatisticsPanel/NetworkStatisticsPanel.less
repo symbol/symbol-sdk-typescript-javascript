@@ -22,12 +22,12 @@
   }
 
   .top_wallet_info {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(4, 23.56%);
+    grid-template-rows: 100%;
+    column-gap: 25px;
 
     >div {
-      width: 295px;
-      height: 126px;
       padding: 18px 0 18px 30px;
       position: relative;
 

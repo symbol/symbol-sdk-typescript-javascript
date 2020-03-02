@@ -967,7 +967,7 @@
   "transaction_descriptor_16708": "Account metadata",
   "transaction_descriptor_16964": "Mosaic metadata",
   "transaction_descriptor_17220": "Namespace metadata",
-  "new_password_label": "密码（需要包含至少8个字符，1个字母和1个数字）",
+  "new_password_label": "密码",
   "repeat_password_label": "确认密码",
   "form_label_registration_type": "命名空间类型",
   "form_label_account_to_be_converted": "要转换的帐户",

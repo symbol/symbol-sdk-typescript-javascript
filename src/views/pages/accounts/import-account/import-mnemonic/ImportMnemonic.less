@@ -6,13 +6,15 @@
   }
 
   .create-mnemonic-col {
-    display: flex;
+    display: grid;
+    grid-template-columns: 9.5rem 4.66rem;
+    column-gap: 0.8rem;
 
     .create-mnemonic-left {
-      width: 950px;
+      width: 100%;
 
       .show-mnemonic {
-        width: 930px;
+        width: 100%;
         height: 260px;
         padding: 20px;
         border: 1px solid rgba(51, 51, 51, 0.2);
@@ -23,8 +25,7 @@
     }
 
     .create-mnemonic-right {
-      padding-left: 80px;
-      width: 560px;
+      width: 100%;
 
     }
   }
