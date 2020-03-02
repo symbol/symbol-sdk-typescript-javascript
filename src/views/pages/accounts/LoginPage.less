@@ -94,12 +94,17 @@
     padding-top: 40px;
     background-color: @white;
     margin-right: 5px;
-
+    position: relative;
 
     .ivu-select {
       width: 90%;
       border-bottom: 1px solid @border;
 
+      .ivu-select-dropdown {
+        top: unset !important;
+        left: unset !important;
+        width: 3.4rem !important;
+      }
       .ivu-select-selection .ivu-select-placeholder,
       .ivu-select-selection .ivu-select-selected-value {
         color: @black  !important;
@@ -312,6 +317,7 @@
   }
 
   .select-wallet {
+    position: relative;
     input {
       border: none;
     }

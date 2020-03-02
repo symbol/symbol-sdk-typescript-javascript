@@ -24,7 +24,6 @@
               'pl-2',
               'pr-2',
               'mx-1',
-              'text_select',
             ]"
           >
             <div class="cosignatory-address-container">
@@ -51,7 +50,6 @@
               'mx-1',
               'pl-2',
               'pr-2',
-              'text_select',
               'red-background',
             ]"
           >
@@ -78,7 +76,6 @@
               'mx-1',
               'pl-2',
               'pr-2',
-              'text_select',
               'green-background',
             ]"
           >

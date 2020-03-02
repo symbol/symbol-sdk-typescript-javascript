@@ -1,7 +1,7 @@
 <template>
   <div class="debug-console-wrapper">
     <Modal v-model="show" :title="`${$t(title)}`" :transfer="false">
-      <div class="diagnostic-container text_select">
+      <div class="diagnostic-container">
         <div class="form-container">
           <pre class="logger">
               <span v-for="(entry, index) in logs"

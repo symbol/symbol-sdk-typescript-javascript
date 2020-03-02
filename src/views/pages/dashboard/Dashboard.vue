@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-left-container xym-outline">
+    <div class="dashboard-left-container">
       <AccountBalancesPanel />
     </div>
 

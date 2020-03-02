@@ -12,7 +12,7 @@
         <div class="explain">
           <span class="subtitle">{{ $t('transaction_has_cosignature') }}</span>
           <div v-for="(cosignature, index) in cosignatures" :key="index"
-               class="row-cosignatory-modification-display-cosignature accent-pink-background inputs-container mx-1 text_select">
+               class="row-cosignatory-modification-display-cosignature accent-pink-background inputs-container mx-1">
             <div>
               <Icon :type="'md-checkbox-outline'" size="20" />
               <span>{{$t('label_signed_by')}}</span>

@@ -28,7 +28,7 @@ export default class MultisigDashboardPage extends Vue {}
   position: relative;
   width: 100%;
   height: 100%;
-  padding: 0.2rem 0 0.35rem 0.2rem;
+  padding: 0.2rem 0 0.35rem 0;
   display: grid;
   grid-template-columns: 100%;
   grid-template-rows: 0.6rem auto;

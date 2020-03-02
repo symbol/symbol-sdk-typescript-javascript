@@ -1,5 +1,5 @@
 <template>
-  <div class="about-container text_select">
+  <div class="about-container">
     <div class="form-container">
       <div class="form-row">
         <div class="label">{{ $t('about_app_release') }}</div>

@@ -1,6 +1,6 @@
 <template>
   <div class="wallet-details-grid mt-3">
-    <div class="detail-row text_select">
+    <div class="detail-row">
       <div class="wallet-detail-row">
         <span class="label">{{ $t('wallets_links_explorer') }}</span>
         <div class="value">
@@ -9,7 +9,7 @@
       </div>
     </div>
 
-    <div class="detail-row text_select">
+    <div class="detail-row">
       <div class="wallet-detail-row">
         <span class="label">{{ $t('wallets_links_faucet') }}</span>
         <div class="value">

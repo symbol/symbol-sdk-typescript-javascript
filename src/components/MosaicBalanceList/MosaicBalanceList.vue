@@ -11,7 +11,7 @@
           <div
             v-for="(entry, index) in filteredBalanceEntries"
             :key="index"
-            class="mosaic_data text_select"
+            class="mosaic_data"
           >
             <span class="img_container">
               <img v-if="entry.id.equals(networkMosaic)"
@@ -49,7 +49,7 @@
           v-for="(entry, index) in filteredBalanceEntries"
           :key="index"
           :class="[ 'mosaic_data',index === 0 ? 'padding_top_0' : '' ]"
-          class="mosaic_data pointer text_select"
+          class="mosaic_data pointer"
           @click="toggleMosaicDisplay(entry.mosaic.id)"
         >
           <!-- @TODO: Mosaic list actions not working -->
@@ -63,7 +63,7 @@
                 src="@/views/resources/img/symbol/XYMCoin.png" class="mosaicIcon" alt />
               <img v-else src="@/views/resources/img/symbol/XYMCoin.png" class="mosaicIcon grayed-xym-logo"/>
           </span>
-          <span class="mosaic_name text_select">
+          <span class="mosaic_name">
             {{ entry.name !== '' ? entry.name : entry.id.toHex() }}
           </span>
           <span class="mosaic_value">

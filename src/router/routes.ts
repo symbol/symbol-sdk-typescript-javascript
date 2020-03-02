@@ -15,7 +15,6 @@
  */
 import {createStepImage, importStepImage} from '@/views/resources/Images'
 import {AppRoute} from './AppRoute'
-import i18n from '@/language'
 
 export const routes: AppRoute[] = [
   {
@@ -152,7 +151,7 @@ export const routes: AppRoute[] = [
         meta: {
           protected: true,
           clickable: true,
-          title: i18n.t('sidebar_item_home').toString(),
+          title: 'sidebar_item_home',
           icon: 'md-home',
         },
         redirect: '/home',
@@ -164,7 +163,7 @@ export const routes: AppRoute[] = [
             name: 'dashboard.index',
             meta: {
               protected: true,
-              title: i18n.t('page_title_dashboard').toString(),
+              title: 'page_title_dashboard',
             },
             // @ts-ignore
             component: () => import('@/views/pages/dashboard/home/DashboardHomePage.vue'),
@@ -173,7 +172,7 @@ export const routes: AppRoute[] = [
             name: 'dashboard.transfer',
             meta: {
               protected: true,
-              title: i18n.t('page_title_transfer').toString(),
+              title: 'page_title_transfer',
             },
             // @ts-ignore
             component: () => import('@/views/pages/dashboard/transfer/DashboardTransferPage.vue'),
@@ -182,7 +181,7 @@ export const routes: AppRoute[] = [
             name: 'dashboard.invoice',
             meta: {
               protected: true,
-              title: i18n.t('page_title_invoice').toString(),
+              title: 'page_title_invoice',
             },
             // @ts-ignore
             component: () => import('@/views/pages/dashboard/invoice/DashboardInvoicePage.vue'),
@@ -192,7 +191,7 @@ export const routes: AppRoute[] = [
           //   name: 'dashboard.harvesting',
           //   meta: {
           //     protected: true,
-          //     title: i18n.t('page_title_harvesting').toString(),
+          //     title: 'page_title_harvesting',
           //   },
           //   // @ts-ignore
           //   component: () => import('@/views/pages/dashboard/harvesting/DashboardHarvestingPage.vue'),
@@ -206,7 +205,7 @@ export const routes: AppRoute[] = [
         meta: {
           protected: true,
           clickable: true,
-          title: i18n.t('sidebar_item_wallets').toString(),
+          title: 'sidebar_item_wallets',
           icon: 'md-card',
         },
         // @ts-ignore
@@ -217,7 +216,7 @@ export const routes: AppRoute[] = [
             name: 'wallet.details',
             meta: {
               protected: true,
-              title: i18n.t('page_title_wallet_details').toString(),
+              title: 'page_title_wallet_details',
             },
             // @ts-ignore
             component: () => import('@/views/pages/wallets/WalletDetailsPage/WalletDetailsPage.vue'),
@@ -227,7 +226,7 @@ export const routes: AppRoute[] = [
             name: 'wallet.backup',
             meta: {
               protected: true,
-              title: i18n.t('page_title_wallet_backup').toString(),
+              title: 'page_title_wallet_backup',
             },
             // @ts-ignore
             component: () => import('@/views/pages/wallets/WalletBackupPage/WalletBackupPage.vue'),
@@ -237,7 +236,7 @@ export const routes: AppRoute[] = [
             name: 'wallet.harvesting',
             meta: {
               protected: true,
-              title: i18n.t('page_title_wallet_harvesting').toString(),
+              title: 'page_title_wallet_harvesting',
             },
             // @ts-ignore
             component: () => import('@/views/pages/wallets/WalletHarvestingPage/WalletHarvestingPage.vue'),
@@ -250,7 +249,7 @@ export const routes: AppRoute[] = [
         meta: {
           protected: true,
           clickable: true,
-          title: i18n.t('sidebar_item_mosaics').toString(),
+          title: 'sidebar_item_mosaics',
           icon: 'md-apps',
         },
         // @ts-ignore
@@ -261,7 +260,7 @@ export const routes: AppRoute[] = [
             name: 'mosaics.list',
             meta: {
               protected: true,
-              title: i18n.t('page_title_mosaics').toString(),
+              title: 'page_title_mosaics',
             },
             // @ts-ignore
             component: () => import('@/views/pages/mosaics/MosaicListPage/MosaicListPage.vue'),
@@ -270,7 +269,7 @@ export const routes: AppRoute[] = [
             name: 'mosaics.create',
             meta: {
               protected: true,
-              title: i18n.t('page_title_mosaics_create').toString(),
+              title: 'page_title_mosaics_create',
             },
             // @ts-ignore
             component: () => import('@/views/pages/mosaics/CreateMosaicPage/CreateMosaicPage.vue'),
@@ -283,7 +282,7 @@ export const routes: AppRoute[] = [
         meta: {
           protected: true,
           clickable: true,
-          title: i18n.t('sidebar_item_namespaces').toString(),
+          title: 'sidebar_item_namespaces',
           icon: 'md-text',
         },
         redirect: '/namespaceList',
@@ -295,7 +294,7 @@ export const routes: AppRoute[] = [
             name: 'namespaces.list',
             meta: {
               protected: true,
-              title: i18n.t('page_title_namespaces').toString(),
+              title: 'page_title_namespaces',
             },
             // @ts-ignore
             component: () => import('@/views/pages/namespaces/NamespaceListPage/NamespaceListPage.vue'),
@@ -305,7 +304,7 @@ export const routes: AppRoute[] = [
             name: 'namespaces.createRootNamespace',
             meta: {
               protected: true,
-              title: i18n.t('page_title_namespaces_create').toString(),
+              title: 'page_title_namespaces_create',
             },
             // @ts-ignore
             component: () => import('@/views/pages/namespaces/CreateNamespacePage/CreateNamespacePage.vue'),
@@ -317,7 +316,7 @@ export const routes: AppRoute[] = [
         meta: {
           protected: true,
           clickable: true,
-          title: i18n.t('sidebar_item_multisig').toString(),
+          title: 'sidebar_item_multisig',
           icon: 'md-contacts',
         },
         redirect: '/multisigManagement',
@@ -329,7 +328,7 @@ export const routes: AppRoute[] = [
           //   name: 'multisig.conversion',
           //   meta: {
           //     protected: true,
-          //     title: i18n.t('page_title_multisig_convert').toString(),
+          //     title: 'page_title_multisig_convert',
           //   },
           //   // @ts-ignore
           //   component: () => import('@/views/pages/multisig/ConvertAccountPage/ConvertAccountPage.vue'),
@@ -339,7 +338,7 @@ export const routes: AppRoute[] = [
             name: 'multisig.management',
             meta: {
               protected: true,
-              title: i18n.t('page_title_multisig_manage').toString(),
+              title: 'page_title_multisig_manage',
             },
             // @ts-ignore
             component: () => import('@/views/pages/multisig/ManageAccountPage/ManageAccountPage.vue'),
@@ -348,7 +347,7 @@ export const routes: AppRoute[] = [
             name: 'multisig.cosign',
             meta: {
               protected: true,
-              title: i18n.t('page_title_multisig_cosign').toString(),
+              title: 'page_title_multisig_cosign',
             },
             // @ts-ignore
             component: () => import('@/views/pages/multisig/PartialTransactionDashboardPage/PartialTransactionDashboardPage.vue'),
@@ -361,7 +360,7 @@ export const routes: AppRoute[] = [
         meta: {
           protected: true,
           clickable: true,
-          title: i18n.t('sidebar_item_community').toString(),
+          title: 'sidebar_item_community',
           icon: 'md-chatbubbles',
         },
         // @ts-ignore
@@ -383,7 +382,7 @@ export const routes: AppRoute[] = [
         meta: {
           protected: true,
           clickable: true,
-          title: i18n.t('sidebar_item_settings').toString(),
+          title: 'sidebar_item_settings',
           icon: 'md-settings',
         },
         // @ts-ignore
@@ -395,7 +394,7 @@ export const routes: AppRoute[] = [
             name: 'settings.general',
             meta: {
               protected: true,
-              title: i18n.t('page_title_settings_general').toString(),
+              title: 'page_title_settings_general',
             },
             // @ts-ignore
             component: () => import('@/views/forms/FormGeneralSettings/FormGeneralSettings.vue'),
@@ -405,7 +404,7 @@ export const routes: AppRoute[] = [
             name: 'settings.password',
             meta: {
               protected: true,
-              title: i18n.t('page_title_settings_password').toString(),
+              title: 'page_title_settings_password',
             },
             // @ts-ignore
             component: () => import('@/views/forms/FormAccountPasswordUpdate/FormAccountPasswordUpdate.vue'),
@@ -415,7 +414,7 @@ export const routes: AppRoute[] = [
             name: 'settings.about',
             meta: {
               protected: true,
-              title: i18n.t('page_title_settings_about').toString(),
+              title: 'page_title_settings_about',
             },
             // @ts-ignore
             component: () => import('@/views/pages/settings/AboutPage/AboutPage.vue'),

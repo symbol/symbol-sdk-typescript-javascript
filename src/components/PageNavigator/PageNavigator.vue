@@ -15,7 +15,7 @@
           <Icon :type="route.meta.icon" class="navigator-icon" />
         </div>
         <div class="navigator-text-container">
-          <div>{{ route.meta.title }}</div>
+          <div>{{ $t(route.meta.title) }}</div>
         </div>
       </div>
     </div>

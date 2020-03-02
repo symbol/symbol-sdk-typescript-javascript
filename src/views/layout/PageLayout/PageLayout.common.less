@@ -27,7 +27,7 @@
 }
 
 .wrap {
-  padding: 0.5rem 0 0 1rem;
+  padding: 0.6rem 0 0 1rem;
   height: 100vh;
   max-height: 100vh;
   width: 100%;
@@ -184,7 +184,7 @@
           position: relative;
         }
 
-        .point_healthy, .point_unhealthy {
+        .endpoint-healthy, .endpoint-unhealthy {
           cursor: pointer;
           -webkit-app-region: no-drag;
 
@@ -201,13 +201,13 @@
           }
 
           .network_type_text {
-            font-size: 16px;
-            vertical-align: middle;
+            font-size: @smallerFont;
+            vertical-align: unset;
             color: #fff;
           }
         }
 
-        .point_unhealthy {
+        .endpoint-unhealthy {
           i {
             background-color: red;
           }
@@ -218,6 +218,16 @@
         font-size: @smallerFont;
         color: @white;
         cursor: pointer;
+
+        .debug-console-trigger-icon {
+          font-size: 22px;
+          position: relative;
+          display: block;
+          float: left;
+          height: .6rem;
+          padding-top: 0.17rem;
+          padding-right: .04rem;
+        }
       }
     }
 

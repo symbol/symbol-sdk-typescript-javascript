@@ -1,8 +1,6 @@
 <template>
-  <div class="nem_logo_wrap">
-    <div class="nem_logo">
-      <img class="absolute" :src="logo" alt="appTitle">
-    </div>
+  <div class="app-logo-container">
+    <img :src="logo" alt="appTitle">
   </div>
 </template>
 

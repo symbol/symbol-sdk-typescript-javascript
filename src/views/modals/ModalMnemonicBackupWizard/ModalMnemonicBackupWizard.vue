@@ -103,7 +103,7 @@
           <p class="tit">
             {{ $t('please_accurately_copy_the_safety_backup_mnemonic') }}
           </p>
-          <div class="mnemonicWords text_select">
+          <div class="mnemonicWords">
             {{ mnemonic }}
           </div>
           <div class="buttons_container" @keyup.enter.native="stepIndex = 3">

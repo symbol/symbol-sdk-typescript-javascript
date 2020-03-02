@@ -3,22 +3,22 @@
     <div class="wallet-detail-inner-container">
       <div class="left-container">
         <div class="wallet-details-grid  mt-3">
-          <div class="detail-row text_select">
+          <div class="detail-row">
             <WalletNameDisplay 
               :wallet="currentWallet"
               :editable="true"
             />
           </div>
 
-          <div class="detail-row text_select">
+          <div class="detail-row">
             <ImportanceScoreDisplay :wallet="currentWallet" />
           </div>
 
-          <div class="detail-row text_select">
+          <div class="detail-row">
             <WalletAddressDisplay :wallet="currentWallet" />
           </div>
 
-          <div class="detail-row text_select">
+          <div class="detail-row">
             <WalletPublicKeyDisplay :wallet="currentWallet" />
           </div>
 
@@ -27,7 +27,7 @@
           </div>
 
           <!-- default wallet flag -->
-          <div v-if="defaultWallet === currentWallet.getIdentifier()" class="detail-row text_select">
+          <div v-if="defaultWallet === currentWallet.getIdentifier()" class="detail-row">
             <div class="wallet-detail-row">
               <span class="label">{{ $t('wallets_flags_default_wallet') }}</span>
               <div class="value">
@@ -37,7 +37,7 @@
           </div>
 
           <!-- simple/multisig flag -->
-          <div v-if="currentWallet.values.get('isMultisig')" class="detail-row text_select">
+          <div v-if="currentWallet.values.get('isMultisig')" class="detail-row">
             <div class="wallet-detail-row">
               <span class="label">{{ $t('wallets_flags_default_wallet') }}</span>
               <div class="value">

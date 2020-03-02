@@ -1,6 +1,6 @@
 <template>
   <div class="mnemonic_container">
-    <div class="mnemonicWordDiv clear text_select">
+    <div class="mnemonicWordDiv clear">
       <span v-for="(word, index) in words" :key="index" class="ghost">
         <Tag closable @on-close="removeWord(word)">
           {{ word }}
