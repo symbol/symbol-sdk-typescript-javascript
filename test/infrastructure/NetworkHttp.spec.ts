@@ -16,17 +16,31 @@
 import { expect } from 'chai';
 import * as http from 'http';
 import { NetworkFeesDTO, NetworkRoutesApi, NetworkTypeDTO, NodeInfoDTO, NodeRoutesApi } from 'symbol-openapi-typescript-node-client';
-import { instance, mock, when } from 'ts-mockito';
+import { instance, mock, reset, when } from 'ts-mockito';
+import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { NetworkHttp } from '../../src/infrastructure/NetworkHttp';
+import { NodeHttp } from '../../src/infrastructure/NodeHttp';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
 
 describe('NetworkHttp', () => {
     const url = 'http://someHost';
 
-    it('getNetworkFees', async () => {
+    const response: http.IncomingMessage = mock();
+    const nodeRoutesApi: NodeRoutesApi = mock();
+    const networkRoutesApi: NetworkRoutesApi = mock();
+    const nodeHttp = DtoMapping.assign(new NodeHttp(url), {nodeRoutesApi: instance(nodeRoutesApi)});
+    const networkRepository = DtoMapping.assign(new NetworkHttp(url), {
+        networkRoutesApi: instance(networkRoutesApi),
+        nodeHttp,
+    });
 
-        const nodeRoutesApi: NodeRoutesApi = mock();
-        const networkRoutesApi: NetworkRoutesApi = mock();
+    before(() => {
+        reset(response);
+        reset(nodeRoutesApi);
+        reset(networkRoutesApi);
+    });
+
+    it('getNetworkFees', async () => {
 
         const body = new NetworkFeesDTO();
         body.averageFeeMultiplier = 1;
@@ -34,9 +48,7 @@ describe('NetworkHttp', () => {
         body.lowestFeeMultiplier = 3;
         body.medianFeeMultiplier = 4;
 
-        const response: http.IncomingMessage = mock();
         when(networkRoutesApi.getNetworkFees()).thenReturn(Promise.resolve({response, body}));
-        const networkRepository = new NetworkHttp(url, instance(nodeRoutesApi), instance(networkRoutesApi));
 
         const networkFees = await networkRepository.getNetworkFees().toPromise();
         expect(networkFees).to.be.not.null;
@@ -48,15 +60,10 @@ describe('NetworkHttp', () => {
 
     it('getNetworkType', async () => {
 
-        const nodeRoutesApi: NodeRoutesApi = mock();
-        const networkRoutesApi: NetworkRoutesApi = mock();
-
         const body = new NodeInfoDTO();
         body.networkIdentifier = NetworkType.MIJIN_TEST;
 
-        const response: http.IncomingMessage = mock();
         when(nodeRoutesApi.getNodeInfo()).thenReturn(Promise.resolve({response, body}));
-        const networkRepository = new NetworkHttp(url, instance(nodeRoutesApi), instance(networkRoutesApi));
 
         const networkType = await networkRepository.getNetworkType().toPromise();
         expect(networkType).to.be.equals(NetworkType.MIJIN_TEST);
@@ -64,16 +71,11 @@ describe('NetworkHttp', () => {
 
     it('getNetworkName', async () => {
 
-        const nodeRoutesApi: NodeRoutesApi = mock();
-        const networkRoutesApi: NetworkRoutesApi = mock();
-
         const body = new NetworkTypeDTO();
         body.name = 'Some Name';
         body.description = 'Some Description';
 
-        const response: http.IncomingMessage = mock();
         when(networkRoutesApi.getNetworkType()).thenReturn(Promise.resolve({response, body}));
-        const networkRepository = new NetworkHttp(url, instance(nodeRoutesApi), instance(networkRoutesApi));
 
         const networkName = await networkRepository.getNetworkName().toPromise();
         expect(networkName.description).to.be.equals(body.description);

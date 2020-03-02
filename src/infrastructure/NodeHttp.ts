@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { from as observableFrom, Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { NodeInfoDTO, NodeRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { StorageInfo } from '../model/blockchain/StorageInfo';
 import { NodeHealth } from '../model/node/NodeHealth';
@@ -32,14 +31,20 @@ import { NodeRepository } from './NodeRepository';
  * @since 1.0
  */
 export class NodeHttp extends Http implements NodeRepository {
+    /**
+     * @internal
+     * Symbol openapi typescript-node client account routes api
+     */
+    private readonly nodeRoutesApi: NodeRoutesApi;
 
     /**
      * Constructor
-     * @param url symbol server url.
-     * @param nodeRoutesApi the rest api node client. Parameter provided only when unit testing.
+     * @param url
      */
-    constructor(url: string, private readonly nodeRoutesApi = new NodeRoutesApi(url)) {
+    constructor(url: string) {
         super(url);
+        this.nodeRoutesApi = new NodeRoutesApi(url);
+
     }
 
     /**
@@ -47,10 +52,7 @@ export class NodeHttp extends Http implements NodeRepository {
      * @summary Get the node information
      */
     public getNodeInfo(): Observable<NodeInfo> {
-        return observableFrom(this.nodeRoutesApi.getNodeInfo()).pipe(
-            map(({body}) => this.toNodeInfo(body)),
-            catchError((error) => throwError(this.errorHandling(error))),
-        );
+        return this.call(this.nodeRoutesApi.getNodeInfo(), (body) => this.toNodeInfo(body));
     }
 
     /**
@@ -58,11 +60,7 @@ export class NodeHttp extends Http implements NodeRepository {
      * @summary Gets the list of peers visible by the node
      */
     public getNodePeers(): Observable<NodeInfo[]> {
-        return observableFrom(this.nodeRoutesApi.getNodePeers()).pipe(
-            map(({body}) => body.map((nodeInfo) =>
-                this.toNodeInfo(nodeInfo))),
-            catchError((error) => throwError(this.errorHandling(error))),
-        );
+        return this.call(this.nodeRoutesApi.getNodePeers(), (body) => body.map((nodeInfo) => this.toNodeInfo(nodeInfo)));
     }
 
     /**
@@ -70,16 +68,15 @@ export class NodeHttp extends Http implements NodeRepository {
      * @summary Get the node time
      */
     public getNodeTime(): Observable<NodeTime> {
-        return observableFrom(this.nodeRoutesApi.getNodeTime()).pipe(
-            map(({body}) => {
+        return this.call(this.nodeRoutesApi.getNodeTime(),
+            (body) => {
                 const nodeTimeDTO = body;
                 if (nodeTimeDTO.communicationTimestamps.sendTimestamp && nodeTimeDTO.communicationTimestamps.receiveTimestamp) {
                     return new NodeTime(UInt64.fromNumericString(nodeTimeDTO.communicationTimestamps.sendTimestamp).toDTO(),
-                                    UInt64.fromNumericString(nodeTimeDTO.communicationTimestamps.receiveTimestamp).toDTO());
+                        UInt64.fromNumericString(nodeTimeDTO.communicationTimestamps.receiveTimestamp).toDTO());
                 }
-                throw Error ('Node time not available');
-            }),
-            catchError((error) =>  throwError(this.errorHandling(error))),
+                throw Error('Node time not available');
+            },
         );
     }
 
@@ -88,14 +85,13 @@ export class NodeHttp extends Http implements NodeRepository {
      * @returns Observable<BlockchainStorageInfo>
      */
     public getStorageInfo(): Observable<StorageInfo> {
-        return observableFrom(
-            this.nodeRoutesApi.getNodeStorage()).pipe(
-                map(({body}) => new StorageInfo(
-                        body.numBlocks,
-                        body.numTransactions,
-                        body.numAccounts,
-                    )),
-                catchError((error) =>  throwError(this.errorHandling(error))),
+        return this.call(
+            this.nodeRoutesApi.getNodeStorage(),
+            (body) => new StorageInfo(
+                body.numBlocks,
+                body.numTransactions,
+                body.numAccounts,
+            ),
         );
     }
 
@@ -104,10 +100,8 @@ export class NodeHttp extends Http implements NodeRepository {
      * @returns Observable<Server>
      */
     public getServerInfo(): Observable<ServerInfo> {
-        return observableFrom(
-            this.nodeRoutesApi.getServerInfo()).pipe(
-                map(({body}) => new ServerInfo(body.serverInfo.restVersion, body.serverInfo.sdkVersion)),
-                catchError((error) =>  throwError(this.errorHandling(error))),
+        return this.call(this.nodeRoutesApi.getServerInfo(),
+            (body) => new ServerInfo(body.serverInfo.restVersion, body.serverInfo.sdkVersion),
         );
     }
 
@@ -116,11 +110,8 @@ export class NodeHttp extends Http implements NodeRepository {
      * @returns Observable<Server>
      */
     public getNodeHealth(): Observable<NodeHealth> {
-        return observableFrom(
-            this.nodeRoutesApi.getNodeHealth()).pipe(
-                map(({body}) => new NodeHealth(body.status.apiNode, body.status.db)),
-                catchError((error) =>  throwError(this.errorHandling(error))),
-        );
+        return this.call(this.nodeRoutesApi.getNodeHealth(),
+            (body) => new NodeHealth(body.status.apiNode, body.status.db));
     }
 
     /**

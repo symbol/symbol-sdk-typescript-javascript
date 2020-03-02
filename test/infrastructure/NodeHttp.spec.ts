@@ -28,26 +28,31 @@ import {
     ServerInfoDTO,
     StorageInfoDTO
 } from 'symbol-openapi-typescript-node-client';
-import { instance, mock, when } from 'ts-mockito';
+import { instance, mock, reset, when } from 'ts-mockito';
+import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { NodeHttp } from '../../src/infrastructure/NodeHttp';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
 
 describe('NodeHttp', () => {
 
     const url = 'http://someHost';
+    const response: http.IncomingMessage = mock();
+    const nodeRoutesApi: NodeRoutesApi = mock();
+    const nodeRepository = DtoMapping.assign(new NodeHttp(url), {nodeRoutesApi: instance(nodeRoutesApi)});
+
+    before(() => {
+        reset(response);
+        reset(nodeRoutesApi);
+    });
 
     it('getNodeHealth', async () => {
-
-        const nodeRoutesApi: NodeRoutesApi = mock();
 
         const body = new NodeHealthInfoDTO();
         body.status = new NodeHealthDTO();
         body.status.apiNode = NodeStatusEnum.Down;
         body.status.db = NodeStatusEnum.Up;
 
-        const response: http.IncomingMessage = mock();
         when(nodeRoutesApi.getNodeHealth()).thenReturn(Promise.resolve({response, body}));
-        const nodeRepository = new NodeHttp(url, instance(nodeRoutesApi));
 
         const nodeHealth = await nodeRepository.getNodeHealth().toPromise();
         expect(nodeHealth).to.be.not.null;
@@ -57,16 +62,12 @@ describe('NodeHttp', () => {
 
     it('getServerInfo', async () => {
 
-        const nodeRoutesApi: NodeRoutesApi = mock();
-
         const body = new ServerInfoDTO();
         body.serverInfo = new ServerDTO();
         body.serverInfo.restVersion = 'Some Rest Version';
         body.serverInfo.sdkVersion = 'Some SDK Version';
 
-        const response: http.IncomingMessage = mock();
         when(nodeRoutesApi.getServerInfo()).thenReturn(Promise.resolve({response, body}));
-        const nodeRepository = new NodeHttp(url, instance(nodeRoutesApi));
 
         const serverInfo = await nodeRepository.getServerInfo().toPromise();
         expect(serverInfo).to.be.not.null;
@@ -76,8 +77,6 @@ describe('NodeHttp', () => {
 
     it('getNodeInfo', async () => {
 
-        const nodeRoutesApi: NodeRoutesApi = mock();
-
         const body = new NodeInfoDTO();
         body.networkIdentifier = NetworkType.TEST_NET;
         body.friendlyName = 'Some Friendly name';
@@ -88,9 +87,7 @@ describe('NodeHttp', () => {
         body.roles = RolesTypeEnum.NUMBER_1;
         body.version = 4567;
 
-        const response: http.IncomingMessage = mock();
         when(nodeRoutesApi.getNodeInfo()).thenReturn(Promise.resolve({response, body}));
-        const nodeRepository = new NodeHttp(url, instance(nodeRoutesApi));
 
         const nodeInfo = await nodeRepository.getNodeInfo().toPromise();
         expect(nodeInfo).to.be.not.null;
@@ -99,8 +96,6 @@ describe('NodeHttp', () => {
 
     it('getNodePeers', async () => {
 
-        const nodeRoutesApi: NodeRoutesApi = mock();
-
         const body = new NodeInfoDTO();
         body.networkIdentifier = NetworkType.TEST_NET;
         body.friendlyName = 'Some Friendly name';
@@ -111,9 +106,7 @@ describe('NodeHttp', () => {
         body.roles = RolesTypeEnum.NUMBER_1;
         body.version = 4567;
 
-        const response: http.IncomingMessage = mock();
         when(nodeRoutesApi.getNodePeers()).thenReturn(Promise.resolve({response, body: [body]}));
-        const nodeRepository = new NodeHttp(url, instance(nodeRoutesApi));
 
         const nodeInfoList = await nodeRepository.getNodePeers().toPromise();
         const nodeInfo = nodeInfoList[0];
@@ -123,16 +116,12 @@ describe('NodeHttp', () => {
 
     it('getNodeTime', async () => {
 
-        const nodeRoutesApi: NodeRoutesApi = mock();
-
         const body = new NodeTimeDTO();
         body.communicationTimestamps = new CommunicationTimestampsDTO();
         body.communicationTimestamps.receiveTimestamp = '1111';
         body.communicationTimestamps.sendTimestamp = '2222';
 
-        const response: http.IncomingMessage = mock();
         when(nodeRoutesApi.getNodeTime()).thenReturn(Promise.resolve({response, body}));
-        const nodeRepository = new NodeHttp(url, instance(nodeRoutesApi));
 
         const nodeTime = await nodeRepository.getNodeTime().toPromise();
         expect(nodeTime).to.be.not.null;
@@ -140,20 +129,45 @@ describe('NodeHttp', () => {
         expect(nodeTime.sendTimeStamp).to.deep.equals([2222, 0]);
     });
 
-    it('getStorageInfo', async () => {
+    it('getNodeTim When No Timestamp', async () => {
 
-        const nodeRoutesApi: NodeRoutesApi = mock();
+        const body = new NodeTimeDTO();
+        body.communicationTimestamps = new CommunicationTimestampsDTO();
+        body.communicationTimestamps.receiveTimestamp = '1111';
+
+        when(nodeRoutesApi.getNodeTime()).thenReturn(Promise.resolve({response, body}));
+
+        try {
+            await nodeRepository.getNodeTime().toPromise();
+        } catch (e) {
+            expect(e.message).to.deep.equals('Error: Node time not available');
+        }
+    });
+
+    it('getStorageInfo', async () => {
 
         const body = new StorageInfoDTO();
         body.numAccounts = 1;
         body.numBlocks = 2;
         body.numTransactions = 3;
 
-        const response: http.IncomingMessage = mock();
         when(nodeRoutesApi.getNodeStorage()).thenReturn(Promise.resolve({response, body}));
-        const nodeRepository = new NodeHttp(url, instance(nodeRoutesApi));
 
         const storageInfo = await nodeRepository.getStorageInfo().toPromise();
         expect(storageInfo).to.deep.equals(body);
+    });
+
+    it('getStorageInfo on Exception', async () => {
+
+        when(nodeRoutesApi.getNodeStorage()).thenReturn(Promise.reject({
+            response: {statusCode: 500, statusMessage: 'Some Error'},
+            body: 'The Body',
+        }));
+        try {
+            await nodeRepository.getStorageInfo().toPromise();
+        } catch (e) {
+            expect(e.message).to.deep.equals('{"statusCode":500,"errorDetails":{"statusCode":500,"statusMessage":"Some Error"},"body":"The Body"}');
+        }
+
     });
 });
