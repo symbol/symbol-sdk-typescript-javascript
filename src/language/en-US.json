@@ -484,8 +484,6 @@
   "add_entity_type": "Add entity type",
   "Any_information_cannot_be_empty": "Fields cannot be empty. Please, verify your input.",
   "success": "The operation was successful",
-  "Transaction_sending": "New unconfirmed transaction",
-  "Transaction_Reception": "New transaction confirmed",
   "Multisig_Transaction_Reception": "New aggregate bonded transaction confirmed",
   "co_signers_amount_less_than_0": "Multi-signature accounts must have at least 1 co-signatory",
   "min_approval_amount_less_than_0": "The minimum number of co-signatories needed for approval cannot be smaller than 1",
@@ -749,8 +747,6 @@
   "REMOVE": "Remove",
   "Refresh_all": "Refresh all",
   "cosigned_by": "Co-signed by",
-  "new_aggregate_bonded": "A new aggregate transaction has been announced",
-  "new_cosignature": "An aggregate transaction has been co-signed",
   "Expired_for": "Expired for",
   "nodes": "Nodes",
   "chain_height": "Chain height",
@@ -1175,5 +1171,9 @@
   "transaction_needs_cosignature_explain_signed": "This transaction needs multiple parties to approve by sending co-signature. You have already send a co-signature for this transaction. Please, wait until other co-signatories approve.",
   "transaction_has_cosignature": "Co-signatures received",
   "label_signed_by": "Signed by co-signatory: ",
-  "warning_already_a_cosignatory": "This account is already a cosignatory!"
+  "warning_already_a_cosignatory": "This account is already a cosignatory!",
+  "notification_new_transaction_confirmed": "New transaction confirmed",
+  "notification_new_unconfirmed_transaction": "New unconfirmed confirmed",
+  "notification_new_aggregate_bonded": "A new aggregate transaction has been announced",
+  "notification_new_cosignature": "An aggregate transaction has been co-signed"
 }
