@@ -178,7 +178,7 @@ export class MosaicDefinitionTransaction extends Transaction {
      * @memberof MosaicDefinitionTransaction
      */
     public getMosaicNonceIntValue(): number {
-        return GeneratorUtils.readUint32At(this.nonce.toDTO(), 0);
+        return this.nonce.toDTO();
     }
 
     /**

@@ -25,13 +25,14 @@ import { MosaicId } from './MosaicId';
 export class MosaicInfo {
 
     /**
-     * @param active
-     * @param index
-     * @param nonce
+     * @param id
      * @param supply
      * @param height
      * @param owner
-     * @param properties
+     * @param revision
+     * @param flags
+     * @param divisibility
+     * @param duration
      */
     constructor(
                 /**

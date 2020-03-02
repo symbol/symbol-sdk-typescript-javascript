@@ -19,9 +19,11 @@ import { IdGenerator } from '../../core/format';
 
 export class NamespaceMosaicIdGenerator {
     /**
+     * @param {Uint8Array} nonce Mosaic nonce
+     * @param {Uint8Array} ownerPublicId Public key
      * @returns mosaic Id
      */
-    public static mosaicId = (nonce, ownerPublicId) => {
+    public static mosaicId = (nonce: Uint8Array, ownerPublicId: Uint8Array) => {
         return IdGenerator.generateMosaicId(nonce, ownerPublicId);
     }
 
@@ -36,7 +38,7 @@ export class NamespaceMosaicIdGenerator {
      * @param {string} namespaceName - The namespace name
      * @returns sub namespace id
      */
-    public static namespaceId = (namespaceName) => {
+    public static namespaceId = (namespaceName: string) => {
         const path = IdGenerator.generateNamespacePath(namespaceName);
         return path.length ? IdGenerator.generateNamespacePath(namespaceName)[path.length - 1] : [];
     }
@@ -55,7 +57,7 @@ export class NamespaceMosaicIdGenerator {
      * @param {string} namespaceName - The namespace name
      * @returns sub namespace id
      */
-    public static subnamespaceNamespaceId = (parentNamespaceName, namespaceName) => {
+    public static subnamespaceNamespaceId = (parentNamespaceName: string, namespaceName: string) => {
         const path = IdGenerator.generateNamespacePath(`${parentNamespaceName}.${namespaceName}`);
         return path[path.length - 1];
     }
