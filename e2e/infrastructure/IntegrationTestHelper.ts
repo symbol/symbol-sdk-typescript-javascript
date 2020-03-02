@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { combineLatest } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { IListener } from '../../src/infrastructure/IListener';
 import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
 import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
@@ -23,6 +23,7 @@ import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
 import { Transaction } from '../../src/model/transaction/Transaction';
 import { UInt64 } from '../../src/model/UInt64';
+import { TransactionService } from '../../src/service/TransactionService';
 
 export class IntegrationTestHelper {
     public readonly yaml = require('js-yaml');
@@ -41,6 +42,7 @@ export class IntegrationTestHelper {
     public listener: IListener;
     public maxFee: UInt64;
     public harvestingAccount: Account;
+    public transactionService: TransactionService;
 
     start(): Promise<IntegrationTestHelper> {
         return new Promise<IntegrationTestHelper>(
@@ -55,6 +57,7 @@ export class IntegrationTestHelper {
                     console.log(`Running tests against: ${json.apiUrl}`);
                     this.apiUrl = json.apiUrl;
                     this.repositoryFactory = new RepositoryFactoryHttp(json.apiUrl);
+                    this.transactionService = new TransactionService(this.repositoryFactory.createTransactionRepository(), this.repositoryFactory.createReceiptRepository());
                     combineLatest(this.repositoryFactory.getGenerationHash(),
                         this.repositoryFactory.getNetworkType()).subscribe(([generationHash, networkType]) => {
                         this.networkType = networkType;
@@ -107,20 +110,10 @@ export class IntegrationTestHelper {
     }
 
     announce(signedTransaction: SignedTransaction): Promise<Transaction> {
-        return new Promise<Transaction>(
-            (resolve, reject) => {
-                const address = signedTransaction.getSignerAddress();
-                console.log(`Announcing transaction: ${signedTransaction.type}`);
-                this.listener.confirmed(address, signedTransaction.hash).subscribe((transaction) => {
-                    console.log(`Transaction ${signedTransaction.type} confirmed`);
-                    resolve(transaction);
-                });
-                this.listener.status(address).pipe(filter((status) => status.hash === signedTransaction.hash)).subscribe((error) => {
-                    console.log(`Error processing transaction ${signedTransaction.type}`, error);
-                    reject(error);
-                });
-                this.repositoryFactory.createTransactionRepository().announce(signedTransaction);
-            },
-        );
+        console.log(`Announcing transaction: ${signedTransaction.type}`);
+        return this.transactionService.announce(signedTransaction, this.listener).pipe(map((t) => {
+            console.log(`Transaction ${signedTransaction.type} confirmed`);
+            return t;
+        })).toPromise();
     }
 }

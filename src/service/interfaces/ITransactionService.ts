@@ -32,14 +32,46 @@ export interface ITransactionService {
     resolveAliases(transactionHashes: string[]): Observable<Transaction[]>;
 
     /**
+     *
+     * This method announces a transaction while waiting for being confirmed by listing to the
+     * /confirmed web socket. If an error to the given transaction is sent to the /status web
+     * socket, the TransactionStatusError is raised.
+     *
+     * Steps:
+     *
+     * 1) It announces the transaction to the TransactionRepository
+     *
+     * 2) It calls the IListener's confirmed method waiting for the transaction to be
+     * confirmed.
+     *
+     * 3) It calls the IListener's status method waiting for an error to occurred.
+     *
+     * The observable will resolve the transaction from 2) or it will raise an error from 3).
+     *
      * @param signedTransaction Signed transaction to be announced.
-     * @param listener Websocket listener
+     * @param listener the web socket listener used to detect confirmed transaction or status errors
+     * coming from the catapult server.
      * @returns {Observable<Transaction>}
      */
     announce(signedTransaction: SignedTransaction, listener: IListener): Observable<Transaction>;
 
     /**
-     * Announce aggregate transaction
+     * This method announces an aggregate bonded transaction while waiting for being added by
+     * listing to the /aggregateBondedAdded web socket. If an error to the given transaction is sent
+     * to the /status web socket, the TransactionStatusError is raised.
+     * is raised.
+     *
+     * Steps:
+     *
+     * 1) It announceAggregateBonded the transaction to the TransactionRepository
+     *
+     * 2) It calls the IListener's aggregateBondedAdded method waiting for the transaction to
+     * be confirmed.
+     *
+     * 3) It calls the IListener's status method waiting for an error to occurred.
+     *
+     * The observable will resolve the transaction from 2) or it will raise an error from 3)
+     *
      * @param signedTransaction Signed aggregate bonded transaction.
      * @param listener Websocket listener
      * @returns {Observable<AggregateTransaction>}
@@ -47,6 +79,11 @@ export interface ITransactionService {
     announceAggregateBonded(signedTransaction: SignedTransaction, listener: IListener): Observable<AggregateTransaction>;
 
     /**
+     *
+     * This method announces an a hash lock transaction followed by a aggregate bonded transaction
+     * while waiting for being confirmed by listing to the /confirmed and /aggregateBondedAdded web
+     * socket. If a status ws error is sent while processing any of the given transaction the TransactionStatusError is raised.
+     *
      * Announce aggregate bonded transaction with lock fund
      * @param signedHashLockTransaction Signed hash lock transaction.
      * @param signedAggregateTransaction Signed aggregate bonded transaction.
