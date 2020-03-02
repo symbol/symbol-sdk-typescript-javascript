@@ -36,12 +36,15 @@ describe('store/Account ==>', () => {
     test('dispatch "RESET_STATE"', () => {
       // prepare
       const dispatch = jest.fn()
+      const rootGetters = {'wallet/currentWallet': getFakeModel('1234')}
 
       // act
-      AccountStore.actions.LOG_OUT({dispatch})
+      AccountStore.actions.LOG_OUT({dispatch, rootGetters})
 
       // assert
       expect(dispatch).toHaveBeenCalled()
+      expect(dispatch).toHaveBeenCalledWith('wallet/uninitialize')
+      expect(dispatch).toHaveBeenCalledWith('wallet/SET_KNOWN_WALLETS')
       expect(dispatch).toHaveBeenCalledWith('RESET_STATE')
     })
   })

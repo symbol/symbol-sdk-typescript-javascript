@@ -62,7 +62,10 @@ export default {
       commit('currentAccount', null)
       commit('setAuthenticated', false)
     },
-    LOG_OUT({dispatch}) {
+    LOG_OUT({dispatch, rootGetters}) {
+      const currentWallet = rootGetters['wallet/currentWallet']
+      dispatch('wallet/uninitialize', {address: currentWallet.values.get('address')}, {root: true})
+      dispatch('wallet/SET_KNOWN_WALLETS', [], {root: true})
       return dispatch('RESET_STATE')
     },
     async SET_CURRENT_ACCOUNT({commit, dispatch}, currentAccountModel) {

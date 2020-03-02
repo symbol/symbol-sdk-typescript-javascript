@@ -499,6 +499,7 @@ export default {
       commit('setKnownWallets', wallets)
     },
     RESET_BALANCES({dispatch}, which) {
+      if (!which) which = 'currentWalletMosaics'
       dispatch('SET_BALANCES', {which, mosaics: []})
     },
     SET_BALANCES({commit}, {mosaics, which}) {
@@ -619,6 +620,12 @@ export default {
     // Unsubscribe from all open websocket connections
     async UNSUBSCRIBE({ dispatch, getters }, address) {
       const subscriptions = getters.getSubscriptions
+      const currentWallet = getters.currentWallet
+
+      if (!address) {
+        address = currentWallet.values.get('address')
+      }
+
       const subsByAddress = subscriptions.hasOwnProperty(address) ? subscriptions[address] : []
       for (let i = 0, m = subsByAddress.length; i < m; i++) {
         const subscription = subsByAddress[i]

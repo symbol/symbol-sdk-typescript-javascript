@@ -45,7 +45,7 @@ export default class Transfer extends Vue {
       .recipientAddress
     if (recipient instanceof NamespaceId) {
       const name = (recipient as NamespaceId).fullName
-      return name.length ? name : (recipient as NamespaceId).toHex()
+      return name && name.length ? name : (recipient as NamespaceId).toHex()
     }
 
     return (recipient as Address).pretty()
