@@ -72,8 +72,8 @@ export class NodeHttp extends Http implements NodeRepository {
             (body) => {
                 const nodeTimeDTO = body;
                 if (nodeTimeDTO.communicationTimestamps.sendTimestamp && nodeTimeDTO.communicationTimestamps.receiveTimestamp) {
-                    return new NodeTime(UInt64.fromNumericString(nodeTimeDTO.communicationTimestamps.sendTimestamp).toDTO(),
-                        UInt64.fromNumericString(nodeTimeDTO.communicationTimestamps.receiveTimestamp).toDTO());
+                    return new NodeTime(UInt64.fromNumericString(nodeTimeDTO.communicationTimestamps.sendTimestamp),
+                        UInt64.fromNumericString(nodeTimeDTO.communicationTimestamps.receiveTimestamp));
                 }
                 throw Error('Node time not available');
             },
