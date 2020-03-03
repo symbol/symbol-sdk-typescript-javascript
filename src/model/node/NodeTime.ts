@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
-import { RoleType } from './RoleType';
 /**
  * The node info structure describes basic information of a node.
  */
@@ -28,9 +26,9 @@ export class NodeTime {
     constructor(/**
                  * The request send timestamp
                  */
-                public readonly sendTimeStamp?: number[],
+                public readonly sendTimeStamp?: UInt64,
                 /**
                  * The request received timestamp
                  */
-                public readonly receiveTimeStamp?: number[] ) {}
+                public readonly receiveTimeStamp?: UInt64 ) {}
 }

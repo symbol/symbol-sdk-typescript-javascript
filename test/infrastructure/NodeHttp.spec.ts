@@ -26,7 +26,7 @@ import {
     RolesTypeEnum,
     ServerDTO,
     ServerInfoDTO,
-    StorageInfoDTO
+    StorageInfoDTO,
 } from 'symbol-openapi-typescript-node-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
@@ -125,8 +125,10 @@ describe('NodeHttp', () => {
 
         const nodeTime = await nodeRepository.getNodeTime().toPromise();
         expect(nodeTime).to.be.not.null;
-        expect(nodeTime.receiveTimeStamp).to.deep.equals([1111, 0]);
-        expect(nodeTime.sendTimeStamp).to.deep.equals([2222, 0]);
+        if (nodeTime.receiveTimeStamp && nodeTime.sendTimeStamp) {
+            expect(nodeTime.receiveTimeStamp.toDTO()).to.deep.equals([1111, 0]);
+            expect(nodeTime.sendTimeStamp.toDTO()).to.deep.equals([2222, 0]);
+        }
     });
 
     it('getNodeTim When No Timestamp', async () => {
