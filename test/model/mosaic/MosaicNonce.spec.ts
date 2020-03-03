@@ -47,6 +47,26 @@ describe('MosaicNonce', () => {
         deepEqual(nonce.toDTO(), 0);
     });
 
+    it('should create nonce from hexadecimal notation throw exception', () => {
+        expect(() => {
+            MosaicNonce.createFromHex('111100000000');
+        }).to.throw(Error, 'Expected 4 bytes for Nonce and got ' + '111100000000'.length + ' instead.');
+    });
+
+    it('should create nonce from hexadecimal notation with uint32 input - 0 value', () => {
+        const nonce = MosaicNonce.createFromHex((0).toString(16));
+        expect(nonce.nonce).to.not.be.null;
+        deepEqual(nonce.nonce, new Uint8Array([0x0, 0x0, 0x0, 0x0]));
+        deepEqual(nonce.toDTO(), 0);
+    });
+
+    it('should create nonce from hexadecimal notation with uint32 input', () => {
+        const nonce = MosaicNonce.createFromHex((11).toString(16));
+        expect(nonce.nonce).to.not.be.null;
+        deepEqual(nonce.nonce, new Uint8Array([0, 0, 0, 11]));
+        deepEqual(nonce.toDTO(), 184549376);
+    });
+
     describe('toHex()', () => {
         it('should return string value of nonce', () => {
             const nonce = new MosaicNonce(new Uint8Array([0x0, 0x0, 0x0, 0x0]));
