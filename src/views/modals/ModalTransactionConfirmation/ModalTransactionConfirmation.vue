@@ -49,6 +49,8 @@ export default class ModalTransactionConfirmation extends ModalTransactionConfir
   
   .ivu-modal-content {
     width: 100%;
+    max-height: 80vh;
+    overflow-y: scroll;
   }
 }
 

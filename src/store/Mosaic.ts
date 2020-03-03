@@ -60,7 +60,7 @@ export default {
     },
     addMosaicName: (state, payload: {hex: string, name: string}) => {
       Vue.set(state.mosaicsNamesByHex, payload.hex, name)
-    },
+    },  
     hideMosaic: (state, mosaicId) => {
       const hiddenMosaics = state.hiddenMosaics
       const iter = hiddenMosaics.findIndex(mosaicId.toHex())
@@ -85,9 +85,14 @@ export default {
   actions: {
     async initialize({ commit, dispatch, getters, rootGetters }, withFeed) {
       const callback = async () => {
+        const generationHash = rootGetters['network/generationHash']
 
         // - initialize CURRENCY from database if available
-        if (undefined !== withFeed && withFeed.mosaics && withFeed.mosaics.length && undefined !== withFeed.mosaics.find(m => m.values.get('isCurrencyMosaic'))) {
+        if (undefined !== withFeed
+            && withFeed.mosaics
+            && withFeed.mosaics.length
+            && undefined !== withFeed.mosaics.find(m => m.values.get('isCurrencyMosaic') && generationHash === m.values.get('generationHash'))
+        ) {
           await dispatch('INITIALIZE_FROM_DB', withFeed)
         }
         // - initialize CURRENCY from nemesis transactions
@@ -99,7 +104,7 @@ export default {
         commit('setInitialized', true)
       }
 
-      // aquire async lock until initialized
+      // acquire async lock until initialized
       await Lock.initialize(callback, {commit, dispatch, getters})
     },
     async uninitialize({ commit, dispatch, getters }) {
