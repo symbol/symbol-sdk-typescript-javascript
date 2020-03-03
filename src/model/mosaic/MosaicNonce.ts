@@ -45,7 +45,7 @@ export class MosaicNonce {
      * @return  {MosaicNonce}
      */
     public static createFromHex(hex: string): MosaicNonce {
-        const uint8 = convert.hexToUint8(hex);
+        const uint8 = convert.hexToUint8(hex.padStart(8, '0'));
 
         if (uint8.length !== 4) {
             throw new Error('Expected 4 bytes for Nonce and got ' + hex.length + ' instead.');
