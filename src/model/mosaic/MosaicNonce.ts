@@ -13,14 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Crypto} from '../../core/crypto';
-import { Convert as convert} from '../../core/format';
+import { Crypto } from '../../core/crypto';
+import { Convert as convert } from '../../core/format';
+
 /**
  * The mosaic nonce structure
  *
  * @since 1.0
  */
 export class MosaicNonce {
+
+    /**
+     * Create MosaicNonce from int
+     *
+     * @param nonce nonce
+     */
+    constructor(nonce: Uint8Array) {
+        if (nonce.length !== 4) {
+            throw Error('Invalid byte size for nonce, should be 4 bytes but received ' + nonce.length);
+        }
+        this.nonce = nonce;
+    }
 
     /**
      * Mosaic nonce
@@ -35,7 +48,27 @@ export class MosaicNonce {
     public static createRandom(): MosaicNonce {
         const bytes = Crypto.randomBytes(4);
         const nonce = new Uint8Array(bytes);
+        return this.createFromUint8Array(nonce);
+    }
+
+    /**
+     * Create a MosaicNonce from a Uint8Array notation.
+     *
+     * @param   nonce {number}
+     * @return  {MosaicNonce}
+     */
+    public static createFromUint8Array(nonce: Uint8Array): MosaicNonce {
         return new MosaicNonce(nonce);
+    }
+
+    /**
+     * Create a MosaicNonce from a number notation.
+     *
+     * @param   nonce {number}
+     * @return  {MosaicNonce}
+     */
+    public static createFromNumber(nonce: number): MosaicNonce {
+        return new MosaicNonce(convert.numberToUint8Array(nonce, 4));
     }
 
     /**
@@ -45,39 +78,27 @@ export class MosaicNonce {
      * @return  {MosaicNonce}
      */
     public static createFromHex(hex: string): MosaicNonce {
-        const uint8 = convert.hexToUint8(hex.padStart(8, '0'));
-
-        if (uint8.length !== 4) {
-            throw new Error('Expected 4 bytes for Nonce and got ' + hex.length + ' instead.');
-        }
-
-        return new MosaicNonce(uint8);
+        return new MosaicNonce(convert.hexToUint8(hex));
     }
 
     /**
-     * Create MosaicNonce from Uint8Array
-     *
-     * @param id
+     * @returns the nonce as an array of 4 digits
      */
-    constructor(nonce: Uint8Array) {
-        if (nonce.length !== 4) {
-            throw Error('Invalid byte size for nonce, should be 4 bytes but received ' + nonce.length);
-        }
-
-        this.nonce = nonce;
+    public toUint8Array(): Uint8Array {
+        return this.nonce;
     }
 
     /**
      * @internal
-     * @returns {[number,number,number,number]}
+     * @returns the nonce as number
      */
     public toDTO(): number {
-        return (this.nonce[0] + (this.nonce[1] << 8) + (this.nonce[2] << 16) + (this.nonce[3] << 24)) >>> 0;
+        return convert.uintArray8ToNumber(this.nonce);
     }
 
     /**
      * Get string value of nonce
-     * @returns {string}
+     * @returns the nonce as hex
      */
     public toHex(): string {
         return convert.uint8ToHex(this.nonce);

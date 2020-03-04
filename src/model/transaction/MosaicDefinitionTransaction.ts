@@ -19,7 +19,6 @@ import {
     BlockDurationDto,
     EmbeddedMosaicDefinitionTransactionBuilder,
     EmbeddedTransactionBuilder,
-    GeneratorUtils,
     KeyDto,
     MosaicDefinitionTransactionBuilder,
     MosaicIdDto,
@@ -138,7 +137,7 @@ export class MosaicDefinitionTransaction extends Transaction {
         const transaction = MosaicDefinitionTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO(
                 (builder as MosaicDefinitionTransactionBuilder).getDeadline().timestamp),
-            new MosaicNonce(builder.getNonce().serialize()),
+            MosaicNonce.createFromUint8Array(builder.getNonce().serialize()),
             new MosaicId(builder.getId().mosaicId),
             MosaicFlags.create(
                 (builder.getFlags() & 1) === 1,

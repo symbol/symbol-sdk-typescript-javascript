@@ -65,14 +65,14 @@ export abstract class Http {
     }
 
     errorHandling(error: any): Error {
-        if (error.response && error.response.statusCode && error.body) {
+        if (error.response && error.response.statusCode && error.response.body) {
             const formattedError = {
                 statusCode: error.response.statusCode,
                 errorDetails: {
                     statusCode: error.response.statusCode,
                     statusMessage: error.response.statusMessage,
                 },
-                body: error.body,
+                body: error.response.body,
             };
             return new Error(JSON.stringify(formattedError));
         }

@@ -229,4 +229,31 @@ export class Convert {
         }
         return Convert.uint8ToHex(Uint8Array.from(delta));
     }
+
+    /**
+     * It splits the number's bytes into a an array.
+     * @param number the number
+     * @param arraySize the expected size of the array.
+     */
+    public static numberToUint8Array(number: number, arraySize: number): Uint8Array {
+        const uint8Array = new Uint8Array(arraySize);
+        for (let index = 0; index < uint8Array.length; index++) {
+            const byte = number & 0xff;
+            uint8Array [index] = byte;
+            number = (number - byte) / 256;
+        }
+        return uint8Array;
+    }
+
+    /**
+     * It creates a number from the bytes in the array.
+     * @param array the number from the bytes.
+     */
+    public static uintArray8ToNumber(array: Uint8Array): number {
+        let value = 0;
+        for (let index = 0; index < array.length; index++) {
+            value += array[index] << (index * 8);
+        }
+        return value >>> 0;
+    }
 }

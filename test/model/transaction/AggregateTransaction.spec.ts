@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {ChronoUnit} from 'js-joda';
-import {Convert} from '../../../src/core/format';
+import { expect } from 'chai';
+import { ChronoUnit } from 'js-joda';
+import { Convert } from '../../../src/core/format';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
-import {CreateTransactionFromDTO} from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
-import { CreateTransactionFromPayload } from '../../../src/infrastructure/transaction/CreateTransactionFromPayload';
-import {Account} from '../../../src/model/account/Account';
-import {Address} from '../../../src/model/account/Address';
-import {PublicAccount} from '../../../src/model/account/PublicAccount';
-import {NetworkType} from '../../../src/model/blockchain/NetworkType';
-import {PlainMessage} from '../../../src/model/message/PlainMessage';
+import { CreateTransactionFromDTO } from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
+import { Account } from '../../../src/model/account/Account';
+import { Address } from '../../../src/model/account/Address';
+import { PublicAccount } from '../../../src/model/account/PublicAccount';
+import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { PlainMessage } from '../../../src/model/message/PlainMessage';
 import { Mosaic } from '../../../src/model/mosaic/Mosaic';
-import {MosaicFlags} from '../../../src/model/mosaic/MosaicFlags';
-import {MosaicId} from '../../../src/model/mosaic/MosaicId';
-import {MosaicNonce} from '../../../src/model/mosaic/MosaicNonce';
-import {MosaicSupplyChangeAction} from '../../../src/model/mosaic/MosaicSupplyChangeAction';
+import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { MosaicNonce } from '../../../src/model/mosaic/MosaicNonce';
+import { MosaicSupplyChangeAction } from '../../../src/model/mosaic/MosaicSupplyChangeAction';
 import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
@@ -37,20 +36,20 @@ import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
 import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { Statement } from '../../../src/model/receipt/Statement';
-import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
-import {AggregateTransactionCosignature} from '../../../src/model/transaction/AggregateTransactionCosignature';
+import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
+import { AggregateTransactionCosignature } from '../../../src/model/transaction/AggregateTransactionCosignature';
 import { CosignatureSignedTransaction } from '../../../src/model/transaction/CosignatureSignedTransaction';
 import { CosignatureTransaction } from '../../../src/model/transaction/CosignatureTransaction';
-import {Deadline} from '../../../src/model/transaction/Deadline';
-import {MosaicDefinitionTransaction} from '../../../src/model/transaction/MosaicDefinitionTransaction';
-import {MosaicSupplyChangeTransaction} from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
-import {MultisigAccountModificationTransaction} from '../../../src/model/transaction/MultisigAccountModificationTransaction';
-import {NamespaceRegistrationTransaction} from '../../../src/model/transaction/NamespaceRegistrationTransaction';
+import { Deadline } from '../../../src/model/transaction/Deadline';
+import { MosaicDefinitionTransaction } from '../../../src/model/transaction/MosaicDefinitionTransaction';
+import { MosaicSupplyChangeTransaction } from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
+import { MultisigAccountModificationTransaction } from '../../../src/model/transaction/MultisigAccountModificationTransaction';
+import { NamespaceRegistrationTransaction } from '../../../src/model/transaction/NamespaceRegistrationTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
-import {TransferTransaction} from '../../../src/model/transaction/TransferTransaction';
-import {UInt64} from '../../../src/model/UInt64';
-import {Cosignatory2Account, CosignatoryAccount, MultisigAccount, TestingAccount} from '../../conf/conf.spec';
+import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
+import { UInt64 } from '../../../src/model/UInt64';
+import { Cosignatory2Account, CosignatoryAccount, MultisigAccount, TestingAccount } from '../../conf/conf.spec';
 
 describe('AggregateTransaction', () => {
     let account: Account;
@@ -164,7 +163,7 @@ describe('AggregateTransaction', () => {
     it('should createComplete an AggregateTransaction object with MosaicDefinitionTransaction', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
-            new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(true, true, true),
             3,

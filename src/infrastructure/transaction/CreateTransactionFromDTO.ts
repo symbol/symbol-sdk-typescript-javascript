@@ -13,48 +13,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Convert as convert} from '../../core/format';
+import { Convert as convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
-import {Address} from '../../model/account/Address';
-import {PublicAccount} from '../../model/account/PublicAccount';
-import {NetworkType} from '../../model/blockchain/NetworkType';
+import { Address } from '../../model/account/Address';
+import { PublicAccount } from '../../model/account/PublicAccount';
 import { EncryptedMessage } from '../../model/message/EncryptedMessage';
 import { MessageType } from '../../model/message/MessageType';
 import { PersistentHarvestingDelegationMessage } from '../../model/message/PersistentHarvestingDelegationMessage';
-import {EmptyMessage, PlainMessage} from '../../model/message/PlainMessage';
-import {Mosaic} from '../../model/mosaic/Mosaic';
-import {MosaicFlags} from '../../model/mosaic/MosaicFlags';
-import {MosaicId} from '../../model/mosaic/MosaicId';
+import { EmptyMessage, PlainMessage } from '../../model/message/PlainMessage';
+import { Mosaic } from '../../model/mosaic/Mosaic';
+import { MosaicFlags } from '../../model/mosaic/MosaicFlags';
+import { MosaicId } from '../../model/mosaic/MosaicId';
 import { MosaicNonce } from '../../model/mosaic/MosaicNonce';
-import {NamespaceId} from '../../model/namespace/NamespaceId';
-import {AccountAddressRestrictionTransaction} from '../../model/transaction/AccountAddressRestrictionTransaction';
+import { NamespaceId } from '../../model/namespace/NamespaceId';
+import { AccountAddressRestrictionTransaction } from '../../model/transaction/AccountAddressRestrictionTransaction';
 import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
 import { AccountMetadataTransaction } from '../../model/transaction/AccountMetadataTransaction';
-import {AccountMosaicRestrictionTransaction} from '../../model/transaction/AccountMosaicRestrictionTransaction';
-import {AccountOperationRestrictionTransaction} from '../../model/transaction/AccountOperationRestrictionTransaction';
-import {AddressAliasTransaction} from '../../model/transaction/AddressAliasTransaction';
-import {AggregateTransaction} from '../../model/transaction/AggregateTransaction';
-import {AggregateTransactionCosignature} from '../../model/transaction/AggregateTransactionCosignature';
-import {AggregateTransactionInfo} from '../../model/transaction/AggregateTransactionInfo';
-import {Deadline} from '../../model/transaction/Deadline';
-import {LockFundsTransaction} from '../../model/transaction/LockFundsTransaction';
+import { AccountMosaicRestrictionTransaction } from '../../model/transaction/AccountMosaicRestrictionTransaction';
+import { AccountOperationRestrictionTransaction } from '../../model/transaction/AccountOperationRestrictionTransaction';
+import { AddressAliasTransaction } from '../../model/transaction/AddressAliasTransaction';
+import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
+import { AggregateTransactionCosignature } from '../../model/transaction/AggregateTransactionCosignature';
+import { AggregateTransactionInfo } from '../../model/transaction/AggregateTransactionInfo';
+import { Deadline } from '../../model/transaction/Deadline';
+import { LockFundsTransaction } from '../../model/transaction/LockFundsTransaction';
 import { MosaicAddressRestrictionTransaction } from '../../model/transaction/MosaicAddressRestrictionTransaction';
-import {MosaicAliasTransaction} from '../../model/transaction/MosaicAliasTransaction';
-import {MosaicDefinitionTransaction} from '../../model/transaction/MosaicDefinitionTransaction';
+import { MosaicAliasTransaction } from '../../model/transaction/MosaicAliasTransaction';
+import { MosaicDefinitionTransaction } from '../../model/transaction/MosaicDefinitionTransaction';
 import { MosaicGlobalRestrictionTransaction } from '../../model/transaction/MosaicGlobalRestrictionTransaction';
 import { MosaicMetadataTransaction } from '../../model/transaction/MosaicMetadataTransaction';
-import {MosaicSupplyChangeTransaction} from '../../model/transaction/MosaicSupplyChangeTransaction';
-import {MultisigAccountModificationTransaction} from '../../model/transaction/MultisigAccountModificationTransaction';
+import { MosaicSupplyChangeTransaction } from '../../model/transaction/MosaicSupplyChangeTransaction';
+import { MultisigAccountModificationTransaction } from '../../model/transaction/MultisigAccountModificationTransaction';
 import { NamespaceMetadataTransaction } from '../../model/transaction/NamespaceMetadataTransaction';
-import {NamespaceRegistrationTransaction} from '../../model/transaction/NamespaceRegistrationTransaction';
-import {SecretLockTransaction} from '../../model/transaction/SecretLockTransaction';
-import {SecretProofTransaction} from '../../model/transaction/SecretProofTransaction';
-import {SignedTransaction} from '../../model/transaction/SignedTransaction';
-import {Transaction} from '../../model/transaction/Transaction';
-import {TransactionInfo} from '../../model/transaction/TransactionInfo';
-import {TransactionType} from '../../model/transaction/TransactionType';
-import {TransferTransaction} from '../../model/transaction/TransferTransaction';
-import {UInt64} from '../../model/UInt64';
+import { NamespaceRegistrationTransaction } from '../../model/transaction/NamespaceRegistrationTransaction';
+import { SecretLockTransaction } from '../../model/transaction/SecretLockTransaction';
+import { SecretProofTransaction } from '../../model/transaction/SecretProofTransaction';
+import { SignedTransaction } from '../../model/transaction/SignedTransaction';
+import { Transaction } from '../../model/transaction/Transaction';
+import { TransactionInfo } from '../../model/transaction/TransactionInfo';
+import { TransactionType } from '../../model/transaction/TransactionType';
+import { TransferTransaction } from '../../model/transaction/TransferTransaction';
+import { UInt64 } from '../../model/UInt64';
 
 // tslint:disable: no-use-before-declare
 /**
@@ -161,7 +160,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.version,
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
-            MosaicNonce.createFromHex(transactionDTO.nonce.toString(16)),
+            MosaicNonce.createFromNumber(transactionDTO.nonce),
             new MosaicId(transactionDTO.id),
             new MosaicFlags(transactionDTO.flags),
             transactionDTO.divisibility,
