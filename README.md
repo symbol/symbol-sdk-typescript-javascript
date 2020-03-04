@@ -3,17 +3,17 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Build Status](https://travis-ci.org/nemfoundation/symbol-desktop-wallet.svg?branch=master)](https://travis-ci.org/nemfoundation/symbol-desktop-wallet)
 
-Cross-platform client for Catapult.
+Cross-platform client for Symbol.
 
-[Download Symbol Desktop Wallet](https://github.com/nemfoundation/symbol-desktop-wallet/branches) for Mac, Linux, or Windows.
+[Download Symbol Desktop Wallet](https://github.com/nemfoundation/symbol-desktop-wallet/releases) for Mac, Linux, or Windows.
 
-:warning: **This program is currently in development and only available for the Catapult test network. Do not use it for other purposes.**
+:warning: **This program is currently in development and only available for the Symbol test network. Do not use it for other purposes.**
+
 ## Requirements
 
 ### NodeJS
 - NodeJS 10.X.X
 - NodeJS 12.X.X
-
 
 ## Installation
 
@@ -42,11 +42,10 @@ Please, use the following available resources to get help:
 
 ## Contributing
 
-This project is developed and maintained by NEM Foundation. Contributions are welcome and appreciated. You can find [catapult-explorer on GitHub][self]; Feel free to start an issue or create a pull request. Check [CONTRIBUTING](CONTRIBUTING.md) before start.
+This project is developed and maintained by NEM Foundation. Contributions are welcome and appreciated. Feel free to start an issue or create a pull request. Check [CONTRIBUTING](CONTRIBUTING.md) before start.
 
 ## License
-Copyright (c) 2018-2019 NEM Licensed under the Apache License 2.0
+Copyright (c) 2018-2020 NEM Licensed under the Apache License 2.0
 
-[self]: https://github.com/nemfoundation/symbol-desktop-wallet
 [docs]: https://nemtech.github.io
 [issues]: https://github.com/nemfoundation/symbol-desktop-wallet/issues
