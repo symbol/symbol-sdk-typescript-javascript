@@ -12,7 +12,7 @@
 
 <script lang="ts">
 // extenrnal dependencies
-import {PublicAccount, NetworkType, Address} from 'nem2-sdk'
+import {PublicAccount, NetworkType, Address} from 'symbol-sdk'
 import {mapGetters} from 'vuex'
 import {Component, Prop, Vue} from 'vue-property-decorator'
 

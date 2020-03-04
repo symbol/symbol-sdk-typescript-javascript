@@ -694,7 +694,7 @@
     "supplyMutable": "供給量の変更",
     "Increase": "増加",
     "transferable": "転送可能",
-    "no_network_currency_alert": "ウォレットにはネットワーク通貨に関するデータを取得できません (例: nem:xem) 有効なノードに接続してください。",
+    "no_network_currency_alert": "ウォレットにはネットワーク通貨に関するデータを取得できません (例: symbol:xym) 有効なノードに接続してください。",
     "cosign_transactions": "トランザクションの連署",
     "User_aborted_transaction_confirmation": "ユーザーがトランザクションの承認を中止しました",
     "Expired": "期限切れ",

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
-import {Transaction} from 'nem2-sdk'
+import {Transaction} from 'symbol-sdk'
 
 // child components
 // @ts-ignore

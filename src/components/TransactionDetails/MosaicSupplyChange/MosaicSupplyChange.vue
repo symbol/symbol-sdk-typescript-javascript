@@ -13,7 +13,7 @@
 <script lang="ts">
 // external dependencies
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { MosaicSupplyChangeAction, MosaicId, UInt64 } from 'nem2-sdk'
+import { MosaicSupplyChangeAction, MosaicId, UInt64 } from 'symbol-sdk'
 
 // internal dependencies
 import { TransactionViewType } from '@/services/TransactionService'

@@ -24,7 +24,7 @@ import {
   RawUInt64,
   NamespaceId,
   UInt64,
-} from 'nem2-sdk'
+} from 'symbol-sdk'
 import {Component, Vue, Prop} from 'vue-property-decorator'
 
 // internal dependencies

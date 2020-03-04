@@ -1,8 +1,8 @@
-# Contributing to nem2-desktop-wallet
+# Contributing to symbol-desktop-wallet
 
-First off, thank you for considering contributing to nem2-desktop-wallet.
+First off, thank you for considering contributing to symbol-desktop-wallet.
 
-The nem2-desktop-wallet is an open source project and we love to receive contributions from our community — you!
+The symbol-desktop-wallet is an open source project and we love to receive contributions from our community — you!
 
 Following these guidelines helps to communicate that you respect the time of
 the developers managing and developing this open source project. In return,
@@ -11,8 +11,8 @@ and help you finalize your pull requests.
 
 ## Error reports
 
-If you think you have found an error in the nem2-desktop-wallet, first make sure that you
-are testing against the latest version of nem2-desktop-wallet - your issue may already
+If you think you have found an error in the symbol-desktop-wallet, first make sure that you
+are testing against the latest version of symbol-desktop-wallet - your issue may already
 have been fixed. If not, search our issues list on GitHub in case a similar
 issue has already been opened.
 
@@ -41,7 +41,7 @@ Open a new issue [here][github-issues].
 
 ## Contributing code and documentation changes
 
-To expand and improve the nem2-desktop-wallet, please find or open an issue about it first.
+To expand and improve the symbol-desktop-wallet, please find or open an issue about it first.
 
 Talk about what you would like to do. It may be that somebody is already working on it,
 or that there are particular issues that you should know about before implementing the change.
@@ -68,9 +68,9 @@ Once your changes and tests are ready to submit for review:
 
     Push your local changes to your forked copy of the repository and [submit a pull request](https://help.github.com/articles/about-pull-requests/) targeting the **master branch**. In the pull request, choose a title which sums up the changes that you have made, and in the body provide more details about what your changes do. Also mention the number of the issue where discussion has taken place, eg "Closes #123".
 
-Then sit back and wait. There will probably be a discussion about the pull request and, if any changes are needed, we would love to work with you to get your pull request merged into nem2-desktop-wallet.
+Then sit back and wait. There will probably be a discussion about the pull request and, if any changes are needed, we would love to work with you to get your pull request merged into symbol-desktop-wallet.
 
 *CONTRIBUTING.md is based on [CONTRIBUTING-template.md](https://github.com/nayafia/contributing-template/blob/master/CONTRIBUTING-template.md)* , [elasticsearch/CONTRIBUTING](https://github.com/elastic/elasticsearch/blob/master/CONTRIBUTING.md) and [spark/CONTRIBUTING](https://github.com/apache/spark/blob/master/CONTRIBUTING.md)
 
 [pull-request]: https://help.github.com/articles/about-pull-requests/
-[github-issues]: https://github.com/nemfoundation/nem2-desktop-wallet/issues
+[github-issues]: https://github.com/nemfoundation/symbol-desktop-wallet/issues

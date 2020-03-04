@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NetworkHttp, NetworkType} from 'nem2-sdk'
+import {NetworkHttp, NetworkType} from 'symbol-sdk'
 import {Store} from 'vuex'
 
 // internal dependencies

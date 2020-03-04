@@ -17,7 +17,7 @@ import {
   AliasTransaction, NamespaceId, MosaicId, Address, AliasAction, AliasType,
   AddressAliasTransaction, MosaicAliasTransaction, MosaicInfo, NamespaceInfo,
   UInt64, Mosaic, TransactionType,
-} from 'nem2-sdk'
+} from 'symbol-sdk'
 import {Component, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 

@@ -16,7 +16,7 @@
 // internal dependencies
 import {DatabaseModel} from '@/core/database/DatabaseModel'
 import {DatabaseRelation} from '@/core/database/DatabaseRelation'
-import {NamespaceInfo, NamespaceRegistrationType, PublicAccount, UInt64, NamespaceId, Alias, MosaicId, Address, MosaicAlias, EmptyAlias, AddressAlias} from 'nem2-sdk'
+import {NamespaceInfo, NamespaceRegistrationType, PublicAccount, UInt64, NamespaceId, Alias, MosaicId, Address, MosaicAlias, EmptyAlias, AddressAlias} from 'symbol-sdk'
 
 export class NamespacesModel extends DatabaseModel {
   /**

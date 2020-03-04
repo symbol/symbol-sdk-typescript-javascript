@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, UInt64, MosaicDefinitionTransaction, MosaicFlags, MosaicNonce} from 'nem2-sdk'
+import {MosaicId, UInt64, MosaicDefinitionTransaction, MosaicFlags, MosaicNonce} from 'symbol-sdk'
 
 // internal dependencies
 import {TransactionView} from './TransactionView'

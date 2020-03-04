@@ -16,7 +16,7 @@
 // external dependencies
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Address, AccountHttp, PublicAccount, NetworkType} from 'nem2-sdk'
+import {Address, AccountHttp, PublicAccount, NetworkType} from 'symbol-sdk'
 import {timeout, finalize} from 'rxjs/operators'
 
 // internal dependencies

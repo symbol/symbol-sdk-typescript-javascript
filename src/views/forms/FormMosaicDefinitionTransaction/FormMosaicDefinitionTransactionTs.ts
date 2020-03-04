@@ -25,7 +25,7 @@ import {
   TransactionType,
   Transaction,
   PublicAccount,
-} from 'nem2-sdk'
+} from 'symbol-sdk'
 import {Component} from 'vue-property-decorator'
 
 // internal dependencies

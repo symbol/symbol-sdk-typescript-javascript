@@ -21,7 +21,7 @@
 <script lang="ts">
 // external dependenies
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import { Transaction } from 'nem2-sdk'
+import { Transaction } from 'symbol-sdk'
 
 // child components
 import TransactionRow from '@/components/TransactionList/TransactionRow/TransactionRow.vue'

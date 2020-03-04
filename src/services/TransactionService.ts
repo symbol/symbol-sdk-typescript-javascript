@@ -47,7 +47,7 @@ import {
   Mosaic,
   PublicAccount,
   CosignatureSignedTransaction,
-} from 'nem2-sdk'
+} from 'symbol-sdk'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'

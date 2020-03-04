@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 // external dependencies
-import {UInt64, NamespaceRegistrationTransaction, NamespaceRegistrationType, TransactionType, Transaction, NamespaceInfo, NamespaceId} from 'nem2-sdk'
+import {UInt64, NamespaceRegistrationTransaction, NamespaceRegistrationType, TransactionType, Transaction, NamespaceInfo, NamespaceId} from 'symbol-sdk'
 import {Component, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 

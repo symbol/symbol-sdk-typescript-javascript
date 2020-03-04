@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {Mosaic, MosaicInfo, MosaicFlags, RawUInt64, UInt64} from 'nem2-sdk'
+import {Mosaic, MosaicInfo, MosaicFlags, RawUInt64, UInt64} from 'symbol-sdk'
 
 // internal dependencies
 import {AssetTableService, TableField} from './AssetTableService'

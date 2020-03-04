@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {Account, Address, NetworkType, SimpleWallet, Password} from 'nem2-sdk'
+import {Account, Address, NetworkType, SimpleWallet, Password} from 'symbol-sdk'
 import {
   ExtendedKey,
   MnemonicPassPhrase,
   NodeEd25519,
   Wallet,
-} from 'nem2-hd-wallets'
+} from 'symbol-hd-wallets'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 // external dependencies
-import { HashLockTransaction, SignedTransaction, MosaicId, UInt64, RawUInt64, Mosaic } from 'nem2-sdk'
+import { HashLockTransaction, SignedTransaction, MosaicId, UInt64, RawUInt64, Mosaic } from 'symbol-sdk'
 
 // internal dependencies
 import { TransactionView } from './TransactionView'

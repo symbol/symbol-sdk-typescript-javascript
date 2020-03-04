@@ -16,7 +16,7 @@
 // external dependencies
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Transaction, TransactionType, MosaicId} from 'nem2-sdk'
+import {Transaction, TransactionType, MosaicId} from 'symbol-sdk'
 
 // internal dependencies
 import {TransactionService, TransactionViewType} from '@/services/TransactionService'

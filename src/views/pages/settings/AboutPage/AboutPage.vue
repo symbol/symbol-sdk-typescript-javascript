@@ -44,7 +44,7 @@
 
       <div class="form-row">
         <div class="label">{{ $t('about_sdk_version') }}</div>
-        <div class="value">{{ configs.package.dependencies['nem2-sdk'] }}</div>
+        <div class="value">{{ configs.package.dependencies['symbol-sdk'] }}</div>
       </div>
 
       <div class="form-row">
@@ -68,7 +68,7 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator'
-import {NetworkType} from 'nem2-sdk'
+import {NetworkType} from 'symbol-sdk'
 
 // child components
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'

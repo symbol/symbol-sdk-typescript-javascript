@@ -34,7 +34,7 @@ import {
   TransactionHttp,
   TransactionStatusError,
   NetworkType,
-} from 'nem2-sdk'
+} from 'symbol-sdk'
 import {Subscription} from 'rxjs'
 
 // internal dependencies

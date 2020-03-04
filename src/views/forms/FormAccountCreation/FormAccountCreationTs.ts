@@ -15,7 +15,7 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {NetworkType, Password} from 'nem2-sdk'
+import {NetworkType, Password} from 'symbol-sdk'
 
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
@@ -46,7 +46,6 @@ type NetworkNodeEntry = {value: NetworkType, label: string}
     FormRow,
   },
   computed: {...mapGetters({
-    networkType: 'network/networkType',
     generationHash: 'network/generationHash',
     currentAccount: 'account/currentAccount',
   })},
@@ -58,13 +57,6 @@ export class FormAccountCreationTs extends Vue {
    * @var {string}
    */
   public currentAccount: AccountsModel
-
-  /**
-   * Currently active network type
-   * @see {Store.Network}
-   * @var {NetworkType}
-   */
-  public networkType: NetworkType
 
   /**
    * Currently active network type
@@ -94,7 +86,7 @@ export class FormAccountCreationTs extends Vue {
     password: '',
     passwordAgain: '',
     hint: '',
-    networkType: NetworkType.TEST_NET,
+    networkType: this.$store.getters['network/networkType'],
   }
 
   /**
@@ -148,13 +140,13 @@ export class FormAccountCreationTs extends Vue {
     
     // - populate model
     const model = new AccountsModel(new Map<string, any>([
-      ['accountName', this.formItems.accountName],
-      ['wallets', []],
-      ['password', passwordHash],
-      ['hint', this.formItems.hint],
-      ['networkType', this.networkType],
-      ['seed', ''],
-      ['generationHash', this.generationHash]
+      [ 'accountName', this.formItems.accountName ],
+      [ 'wallets', [] ],
+      [ 'password', passwordHash ],
+      [ 'hint', this.formItems.hint ],
+      [ 'networkType', this.formItems.networkType ],
+      [ 'seed', '' ],
+      [ 'generationHash', this.generationHash ],
     ]))
 
     // use repository for storage

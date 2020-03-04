@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 // external dependencies
-import {PublicAccount, MultisigAccountModificationTransaction, UInt64} from 'nem2-sdk'
+import {PublicAccount, MultisigAccountModificationTransaction, UInt64} from 'symbol-sdk'
 
 // internal dependencies
 import {TransactionView} from './TransactionView'

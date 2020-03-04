@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {Password} from 'nem2-sdk'
+import {Password} from 'symbol-sdk'
 import CryptoJS from "crypto-js";
 
 // internal dependencies

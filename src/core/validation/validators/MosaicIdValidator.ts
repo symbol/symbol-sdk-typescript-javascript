@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId} from 'nem2-sdk'
+import {MosaicId} from 'symbol-sdk'
 
 // internal dependencies
 import {Validator, staticImplements} from './Validator' 

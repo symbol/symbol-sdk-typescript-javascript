@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Address, MosaicInfo} from 'nem2-sdk'
+import {Address, MosaicInfo} from 'symbol-sdk'
 import {decode} from 'utf8'
 
 // configuration

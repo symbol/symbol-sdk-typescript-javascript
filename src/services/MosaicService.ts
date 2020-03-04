@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {MosaicId, AccountInfo, NamespaceId, Mosaic} from 'nem2-sdk'
+import {MosaicId, AccountInfo, NamespaceId, Mosaic} from 'symbol-sdk'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'

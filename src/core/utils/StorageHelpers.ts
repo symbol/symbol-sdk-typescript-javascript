@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NetworkType} from 'nem2-sdk'
+import {NetworkType} from 'symbol-sdk'
 
 // internal dependencies
 import networkConfig from '../../../config/network.conf.json'

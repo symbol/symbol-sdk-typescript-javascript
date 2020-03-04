@@ -15,7 +15,7 @@
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {MosaicId, MosaicInfo} from 'nem2-sdk'
+import {MosaicId, MosaicInfo} from 'symbol-sdk'
 
 // configuration
 import feesConfig from '@/../config/fees.conf.json'

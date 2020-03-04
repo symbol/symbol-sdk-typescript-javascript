@@ -16,7 +16,7 @@
 // external dependencies
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Address, NetworkType} from 'nem2-sdk'
+import {Address, NetworkType} from 'symbol-sdk'
 
 // internal dependencies
 import {CosignatoryModifications} from '@/core/transactions/ViewMultisigAccountModificationTransaction'

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Convert, SHA3Hasher} from 'nem2-sdk'
+import {Convert, SHA3Hasher} from 'symbol-sdk'
 
 export class CacheKey {
 

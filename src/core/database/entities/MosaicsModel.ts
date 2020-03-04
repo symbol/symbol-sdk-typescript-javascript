@@ -16,7 +16,7 @@
 // internal dependencies
 import {DatabaseModel} from '@/core/database/DatabaseModel'
 import {DatabaseRelation} from '@/core/database/DatabaseRelation'
-import {UInt64, MosaicId, RawUInt64, MosaicInfo, PublicAccount, NetworkType, MosaicFlags} from 'nem2-sdk'
+import {UInt64, MosaicId, RawUInt64, MosaicInfo, PublicAccount, NetworkType, MosaicFlags} from 'symbol-sdk'
 
 export class MosaicsModel extends DatabaseModel {
   /**

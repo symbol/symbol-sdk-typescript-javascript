@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import {Address} from 'nem2-sdk'
+import {Address} from 'symbol-sdk'
 
 @Component
 export class AddressDisplayTs extends Vue {

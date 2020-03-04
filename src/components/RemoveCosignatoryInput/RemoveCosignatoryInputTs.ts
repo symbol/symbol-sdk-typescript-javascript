@@ -16,7 +16,7 @@
 // external dependencies
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Address, PublicAccount, NetworkType} from 'nem2-sdk'
+import {Address, PublicAccount, NetworkType} from 'symbol-sdk'
 
 // child components
 // @ts-ignore

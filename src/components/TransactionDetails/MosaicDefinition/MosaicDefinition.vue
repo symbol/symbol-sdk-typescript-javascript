@@ -13,7 +13,7 @@
 <script lang="ts">
 // external dependencies
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { MosaicFlags, MosaicId } from 'nem2-sdk'
+import { MosaicFlags, MosaicId } from 'symbol-sdk'
 
 // internal dependencies
 import { TransactionViewType } from '@/services/TransactionService'

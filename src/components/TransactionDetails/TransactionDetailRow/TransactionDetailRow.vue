@@ -31,7 +31,7 @@
 <script lang="ts">
 // external dependencies
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { Mosaic } from 'nem2-sdk'
+import { Mosaic } from 'symbol-sdk'
 
 // configuration
 import networkConfig from '@/../config/network.conf.json'

@@ -40,7 +40,7 @@ import {
   Transaction,
   TransactionType,
   TransferTransaction,
-} from 'nem2-sdk'
+} from 'symbol-sdk'
 
 // internal dependencies
 import {TransactionService, TransactionViewType} from '@/services/TransactionService'

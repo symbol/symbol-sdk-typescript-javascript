@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {StorageInfo} from 'nem2-sdk'
+import {StorageInfo} from 'symbol-sdk'
 import Vue from 'vue'
 import axios from 'axios'
 

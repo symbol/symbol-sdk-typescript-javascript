@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import Vue from 'vue';
-import {NetworkType, Listener, BlockInfo, UInt64} from 'nem2-sdk';
+import {NetworkType, Listener, BlockInfo, UInt64} from 'symbol-sdk';
 import {Subscription} from 'rxjs'
 
 // internal dependencies
@@ -75,7 +75,7 @@ export default {
     defaultPeer: URLHelpers.formatUrl(networkConfig.defaultNode.url),
     currentPeer: URLHelpers.formatUrl(networkConfig.defaultNode.url),
     explorerUrl: networkConfig.explorerUrl,
-    networkType: NetworkType.MIJIN_TEST,
+    networkType: NetworkType.TEST_NET,
     generationHash: networkConfig.networks['testnet-publicTest'].generationHash,
     properties: networkConfig.networks['testnet-publicTest'].properties,
     isConnected: false,
@@ -150,11 +150,10 @@ export default {
           break;
 
         default:
-          Vue.set(state, 'networkType', NetworkType.MIJIN_TEST)
+          Vue.set(state, 'networkType', NetworkType.TEST_NET)
           break;
       }
     },
-    setNemesisTransactions: (state, transactions) => Vue.set(state, 'nemesisTransactions', transactions),
     setSubscriptions: (state, data) => Vue.set(state, 'subscriptions', data),
     addSubscriptions: (state, payload) => {
       const subscriptions = state.subscriptions
@@ -228,7 +227,7 @@ export default {
         nodeUrl: nodeUrl
       }
     },
-    async INITIALIZE_FROM_CONFIG({commit, dispatch}, nodeUrl) {
+    async INITIALIZE_FROM_CONFIG({dispatch}, nodeUrl) {
       try {
         const payload = await dispatch('REST_FETCH_PEER_INFO', nodeUrl)
 
@@ -254,6 +253,7 @@ export default {
       }
     },
     async OPEN_PEER_CONNECTION({state, commit, dispatch}, payload) {
+      // @TODO: handle the case when the payload is undefined
       commit('currentPeer', payload.url)
       commit('networkType', payload.networkType)
       commit('setConnected', true)

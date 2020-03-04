@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import {MosaicId, Address, NamespaceId, AliasAction } from 'nem2-sdk'
+import {MosaicId, Address, NamespaceId, AliasAction } from 'symbol-sdk'
 
 // internal dependencies
 import {TransactionViewType} from '@/services/TransactionService'

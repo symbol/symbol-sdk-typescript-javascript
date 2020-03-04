@@ -16,7 +16,7 @@
 // external dependencies
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {NamespaceId, AliasAction, MosaicId, Address, MosaicInfo, NamespaceInfo} from 'nem2-sdk'
+import {NamespaceId, AliasAction, MosaicId, Address, MosaicInfo, NamespaceInfo} from 'symbol-sdk'
 
 // internal dependencies
 import {

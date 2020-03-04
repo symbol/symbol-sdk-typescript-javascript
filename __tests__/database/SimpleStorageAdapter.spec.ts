@@ -15,7 +15,7 @@
  */
 import {getAdapter} from '@MOCKS/Database'
 import {AESEncryptionService} from '@/services/AESEncryptionService'
-import {Password} from 'nem2-sdk'
+import {Password} from 'symbol-sdk'
 
 describe('database/BaseStorageAdapter ==>', () => {
   describe('getSessionId() should', () => {

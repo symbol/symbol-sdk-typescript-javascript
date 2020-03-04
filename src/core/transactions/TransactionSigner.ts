@@ -22,7 +22,7 @@ import {
   TransactionType,
   CosignatureSignedTransaction,
   CosignatureTransaction,
-} from 'nem2-sdk';
+} from 'symbol-sdk';
 
 export class TransactionSigner {
   /**

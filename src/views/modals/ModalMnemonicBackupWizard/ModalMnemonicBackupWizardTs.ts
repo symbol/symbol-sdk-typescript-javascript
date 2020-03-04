@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
-import {Transaction} from 'nem2-sdk'
+import {Transaction} from 'symbol-sdk'
 
 // child components
 
@@ -27,8 +27,8 @@ export class ModalMnemonicBackupWizardTs extends Vue {
 
 /*
 
-import {MnemonicQR} from 'nem2-qr-library'
-import {MnemonicPassPhrase} from 'nem2-hd-wallets'
+import {MnemonicQR} from 'symbol-qr-library'
+import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 import {Component, Vue, Prop, Provide} from 'vue-property-decorator'
 import {mapState} from 'vuex'
 import {of} from 'rxjs'

@@ -38,7 +38,7 @@
 <script lang="ts">
 // external dependencies
 import {Component, Vue} from 'vue-property-decorator'
-import {NamespaceRegistrationType} from 'nem2-sdk'
+import {NamespaceRegistrationType} from 'symbol-sdk'
 
 // child components
 import AssetFormPageWrap from '@/views/pages/assets/AssetFormPageWrap/AssetFormPageWrap.vue'

@@ -19,7 +19,7 @@ import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {FormNamespaceRegistrationTransactionTs} from '../FormNamespaceRegistrationTransaction/FormNamespaceRegistrationTransactionTs'
-import {NamespaceId} from 'nem2-sdk'
+import {NamespaceId} from 'symbol-sdk'
 import {TimeHelpers} from '@/core/utils/TimeHelpers'
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 

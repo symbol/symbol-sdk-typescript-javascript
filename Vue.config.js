@@ -1,5 +1,4 @@
 const path = require('path')
-const GoogleFontsPlugin  = require('google-fonts-webpack-plugin')
 
 module.exports = {
   // base url
@@ -7,21 +6,13 @@ module.exports = {
       ? './'
       : '/',
   // output dir
-  outputDir: './www',
+  outputDir: './dist',
   assetsDir: 'static',
   // eslint-loader check
   lintOnSave: true,
   // webpack
   // see https://github.com/vuejs/vue-cli/blob/dev/docs/webpack.md
-  chainWebpack: config => {
-    plugins: [
-      new GoogleFontsPlugin({
-        fonts: [
-          { family: "Noto Sans" }
-        ]
-      })
-    ]
- },
+  chainWebpack: config => {},
   // generate map
   productionSourceMap: true,
   //use template in vue

@@ -13,7 +13,7 @@
 <script lang="ts">
 // external dependencies
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { UInt64, NamespaceRegistrationType } from 'nem2-sdk'
+import { UInt64, NamespaceRegistrationType } from 'symbol-sdk'
 
 // internal dependencies
 import { TransactionViewType } from '@/services/TransactionService'

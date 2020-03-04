@@ -13,7 +13,7 @@
 <script lang="ts">
 // external dependencies
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { TransferTransaction, NamespaceId, Address, Message } from 'nem2-sdk'
+import { TransferTransaction, NamespaceId, Address, Message } from 'symbol-sdk'
 
 // internal dependencies
 import { ViewTransferTransaction } from '@/core/transactions/ViewTransferTransaction'

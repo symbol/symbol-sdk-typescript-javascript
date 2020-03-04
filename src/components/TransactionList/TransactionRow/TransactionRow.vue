@@ -16,10 +16,10 @@
     <div class="amount-cell">
       <!-- Display details if transfer -->
       <div v-if="transaction.type === transactionType.TRANSFER">
-        <div v-for="(mosaic, index) in transaction.mosaics" :key="index">
+        <div v-if="transaction.mosaics.length">
           <MosaicAmountDisplay
-            :id="mosaic.id"
-            :absolute-amount="mosaic.amount.compact()"
+            :id="transaction.mosaics[0].id"
+            :absolute-amount="transaction.mosaics[0].amount.compact()"
             :color="isIncomingTransaction() ? 'green' : 'red'"
           />
         </div>

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Address, PublicAccount} from 'nem2-sdk'
+import {Address, PublicAccount} from 'symbol-sdk'
 
 // internal dependencies
 import {DatabaseModel} from '@/core/database/DatabaseModel'

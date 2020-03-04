@@ -15,7 +15,7 @@
  */
 // external dependencies
 import {Component, Vue, Prop} from 'vue-property-decorator'
-import {MultisigAccountInfo} from 'nem2-sdk'
+import {MultisigAccountInfo} from 'symbol-sdk'
 
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'

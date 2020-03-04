@@ -21,7 +21,7 @@ import {
   Transaction,
   MosaicInfo,
   MosaicSupplyChangeTransaction,
-} from 'nem2-sdk'
+} from 'symbol-sdk'
 import {Component, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 

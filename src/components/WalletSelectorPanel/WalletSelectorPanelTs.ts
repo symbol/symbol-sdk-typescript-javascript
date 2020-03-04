@@ -15,7 +15,7 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Mosaic, MosaicId, NetworkType, AccountInfo, Address} from 'nem2-sdk'
+import {Mosaic, MosaicId, NetworkType, AccountInfo, Address} from 'symbol-sdk'
 import {ValidationProvider} from 'vee-validate'
 
 // internal dependencies

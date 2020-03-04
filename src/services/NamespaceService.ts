@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {NamespaceId, NamespaceInfo, NamespaceName} from 'nem2-sdk'
+import {NamespaceId, NamespaceInfo, NamespaceName} from 'symbol-sdk'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Account, NetworkType} from 'nem2-sdk'
+import {Account, NetworkType} from 'symbol-sdk'
 
 const TEST_ACCOUNTS = {
   "cosigner1": {

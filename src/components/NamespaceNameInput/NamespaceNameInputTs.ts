@@ -16,7 +16,7 @@
 // external dependencies
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {NetworkType, NamespaceRegistrationType} from 'nem2-sdk'
+import {NetworkType, NamespaceRegistrationType} from 'symbol-sdk'
 
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'

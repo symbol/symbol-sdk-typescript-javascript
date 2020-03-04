@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {SignedTransaction, CosignatureSignedTransaction} from 'nem2-sdk'
+import {SignedTransaction, CosignatureSignedTransaction} from 'symbol-sdk'
 
 export class BroadcastResult {
   /**

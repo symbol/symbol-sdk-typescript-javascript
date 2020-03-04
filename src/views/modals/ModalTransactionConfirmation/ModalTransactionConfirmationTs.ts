@@ -15,7 +15,7 @@
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Account, Transaction, SignedTransaction, Password, PublicAccount, NetworkType} from 'nem2-sdk'
+import {Account, Transaction, SignedTransaction, Password, PublicAccount, NetworkType} from 'symbol-sdk'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'

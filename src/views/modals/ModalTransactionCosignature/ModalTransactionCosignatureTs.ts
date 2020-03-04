@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
-import {Transaction, CosignatureSignedTransaction, Account, AggregateTransaction, AggregateTransactionCosignature} from 'nem2-sdk'
+import {Transaction, CosignatureSignedTransaction, Account, AggregateTransaction, AggregateTransactionCosignature} from 'symbol-sdk'
 import {mapGetters} from 'vuex'
 
 import {WalletsModel, WalletType} from '@/core/database/entities/WalletsModel'

@@ -34,18 +34,18 @@
                 tag="div"
                 class="inputs-container select-container"
               >
-                <Select
+                <select
                   v-model="aliasTargetType"
                   class="select-size select-style"
                   @change="formItems.aliasTarget = ''"
                 >
-                  <Option value="mosaic">
+                  <option value="mosaic">
                     {{ $t('option_link_mosaic') }}
-                  </Option>
-                  <Option value="address">
+                  </option>
+                  <option value="address">
                     {{ $t('option_link_address') }}
-                  </Option>
-                </Select>
+                  </option>
+                </select>
               </ValidationProvider>
             </template>
           </FormRow>

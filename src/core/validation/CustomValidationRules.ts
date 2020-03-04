@@ -1,7 +1,7 @@
 // external dependencies
 import {extend} from 'vee-validate'
 import i18n from '@/language'
-import {Address, Password, Account, NetworkType} from 'nem2-sdk'
+import {Address, Password, Account, NetworkType} from 'symbol-sdk'
 
 // internal dependencies
 import {AccountsRepository} from '@/repositories/AccountsRepository'

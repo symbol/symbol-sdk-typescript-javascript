@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
-import {Account, EncryptedPrivateKey} from 'nem2-sdk'
+import {Account, EncryptedPrivateKey} from 'symbol-sdk'
 
 // internal dependencies
 import {WalletsModel} from '@/core/database/entities/WalletsModel'

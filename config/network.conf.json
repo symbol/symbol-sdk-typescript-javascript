@@ -1,34 +1,29 @@
 {
-  "explorerUrl": "http://explorer-xym.nemtech.network",
-  "faucetUrl": "http://faucet-xym-01.nemtech.network",
+  "explorerUrl": "http://explorer.symboldev.network",
+  "faucetUrl": "http://faucet-01.symboldev.network",
   "defaultNetworkType": 152,
   "defaultNode": {
     "protocol": "http",
-    "hostname": "api-harvest-01.us-west-1.symboldev.network",
+    "hostname": "api-2-01.eu-west-1.symboldev.network",
     "port": 3000,
-    "url": "http://api-harvest-01.us-west-1.symboldev.network:3000"
+    "url": "http://api-2-01.eu-west-1.symboldev.network:3000"
   },
   "networks": {
     "testnet-publicTest": {
-      "generationHash": "E3522B86CA411B2C48E7F4F9B723582967697918EB14DAF13E8D6E926594496F",
+      "generationHash": "44D2225B8932C9A96DCB13508CBCDFFA9A9663BFBA2354FEEC8FCFCB7E19846C",
       "currencyMosaic": "symbol.xym",
       "harvestMosaic": "symbol.xym",
       "networkType": 152,
       "nodes": [
-        {"friendly": "Dual US West 1", "roles": 3, "url": "http://test-api-xym-931-01.us-west-1.nemtech.network:3000"},
-        {"friendly": "Dual US West 2", "roles": 3, "url": "http://api-harvest-01.us-west-1.symboldev.network:3000"},
-        {"friendly": "Dual EU Central 1", "roles": 3, "url": "http://api-harvest-01.eu-central-1.symboldev.network:3000"},
-        {"friendly": "Dual EU West 1", "roles": 3, "url": "http://api-harvest-01.eu-west-1.symboldev.network:3000"},
-        {"friendly": "API US West 1", "roles": 2, "url": "http://api-01.us-west-1.symboldev.network:3000"},
-        {"friendly": "API US West 2", "roles": 2, "url": "http://api-01.us-west-2.symboldev.network:3000"},
-        {"friendly": "API AP North-East 1", "roles": 2, "url": "http://api-01.ap-northeast-1.symboldev.network:3000"},
-        {"friendly": "API AP South-East 1", "roles": 2, "url": "http://api-01.ap-southeast-1.symboldev.network:3000"},
-        {"friendly": "API EU West 1", "roles": 2, "url": "http://api-3-02.eu-west-1.symboldev.network:3000"},
-        {"friendly": "API EU Central 1", "roles": 2, "url": "http://api-01.eu-central-1.symboldev.network:3000"}
+        {"friendly": "API US West 1", "roles": 2, "url": "http://api-2-01.us-west-1.symboldev.network:3000"},
+        {"friendly": "API EU West 1", "roles": 2, "url": "http://api-2-01.eu-west-1.symboldev.network:3000"},
+        {"friendly": "API AP North-East 1", "roles": 2, "url": "http://api-2-01.ap-northeast-1.symboldev.network:3000"},
+        {"friendly": "API AP South-East 1", "roles": 2, "url": "http://api-2-01.ap-southeast-1.symboldev.network:3000"},
+        {"friendly": "API EU Central 1", "roles": 2, "url": "http://api-2-01.eu-central-1.symboldev.network:3000"},
+        {"friendly": "Dual US West 1", "roles": 3, "url": "http://api-harvest-2-01.us-west-1.symboldev.network:3000"},
+        {"friendly": "Dual EU West 1", "roles": 3, "url": "http://api-harvest-2-01.eu-west-1.symboldev.network:3000"}
       ],
       "properties": {
-        "mosaicRentalFeeSinkPublicKey": "4428A4DA56362C2293A277159F7C1E270FE7BD6CED461877494006C7D69F1172",
-        "namespaceRentalFeeSinkPublicKey": "4428A4DA56362C2293A277159F7C1E270FE7BD6CED461877494006C7D69F1172",
         "reservedRootNamespaceNames": ["xem", "nem", "user", "account", "org", "com", "biz", "net", "edu", "mil", "gov", "info", "symbol", "symbl", "xym"],
         "targetBlockTime": 15,
         "defaultDynamicFeeMultiplier": 1000,

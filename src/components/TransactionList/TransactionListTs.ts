@@ -15,7 +15,7 @@
  */
 import {mapGetters} from 'vuex'
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {Transaction, MosaicId, AggregateTransaction} from 'nem2-sdk'
+import {Transaction, MosaicId, AggregateTransaction} from 'symbol-sdk'
 import {of, Observable} from 'rxjs'
 import {pluck, concatMap} from 'rxjs/operators'
 

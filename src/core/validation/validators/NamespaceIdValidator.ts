@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NamespaceId} from 'nem2-sdk'
+import {NamespaceId} from 'symbol-sdk'
 
 // internal dependencies
 import {Validator, staticImplements} from './Validator' 

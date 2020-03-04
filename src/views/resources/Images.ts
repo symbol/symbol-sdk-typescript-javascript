@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {TransactionType} from 'nem2-sdk'
+import {TransactionType} from 'symbol-sdk'
 
 // @ts-ignore
 import seedImg from '@/views/resources/img/login/seed.png'

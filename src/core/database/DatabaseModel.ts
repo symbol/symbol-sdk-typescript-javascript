@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {SHA3Hasher, Convert} from 'nem2-sdk'
+import {SHA3Hasher, Convert} from 'symbol-sdk'
 
 // internal dependencies
 import {DatabaseRelation} from './DatabaseRelation'

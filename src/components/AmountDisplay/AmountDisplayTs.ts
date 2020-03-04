@@ -16,7 +16,7 @@
 // external dependencies
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {MosaicId} from 'nem2-sdk'
+import {MosaicId} from 'symbol-sdk'
 
 // configuration
 import networkConfig from '@/../config/network.conf.json'

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NamespaceInfo, NamespaceId} from 'nem2-sdk'
+import {NamespaceInfo, NamespaceId} from 'symbol-sdk'
 import Vue from 'vue'
 
 // internal dependencies

@@ -16,7 +16,7 @@
 // external dependencies
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Address, NetworkType, MultisigAccountInfo, PublicAccount} from 'nem2-sdk'
+import {Address, NetworkType, MultisigAccountInfo, PublicAccount} from 'symbol-sdk'
 
 // child components
 import {ValidationProvider} from 'vee-validate'

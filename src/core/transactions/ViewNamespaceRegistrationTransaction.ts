@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {UInt64, NamespaceRegistrationType, NamespaceRegistrationTransaction} from 'nem2-sdk'
+import {UInt64, NamespaceRegistrationType, NamespaceRegistrationTransaction} from 'symbol-sdk'
 
 // internal dependencies
 import {TransactionView} from './TransactionView'

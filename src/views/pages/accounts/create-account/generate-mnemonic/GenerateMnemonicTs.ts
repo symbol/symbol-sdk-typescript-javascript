@@ -15,8 +15,8 @@
  */
 import {Vue, Component} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Password} from 'nem2-sdk'
-import {MnemonicPassPhrase} from 'nem2-hd-wallets'
+import {Password} from 'symbol-sdk'
+import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 import CryptoJS from 'crypto-js'
 
 // internal dependencies

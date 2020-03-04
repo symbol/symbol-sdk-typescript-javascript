@@ -15,7 +15,7 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Password, Account} from 'nem2-sdk'
+import {Password, Account} from 'symbol-sdk'
 
 // internal dependencies
 import {SettingService} from '@/services/SettingService'

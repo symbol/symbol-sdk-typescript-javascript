@@ -3,7 +3,7 @@
     <Modal v-model="show" :title="`${$t(title)}`" :transfer="false">
       <div class="diagnostic-container">
         <div class="form-container">
-          <pre class="logger">
+          <pre id="logs-container" class="logger">
               <span v-for="(entry, index) in logs"
               :key="index"
               :class="{
@@ -20,7 +20,7 @@
 
 <script lang="ts">
 // external dependencies
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 
 // resources
@@ -29,10 +29,6 @@ import './ModalDebugConsole.less'
 @Component({
   computed: {...mapGetters({
     logs: 'diagnostic/logs',
-    infos: 'diagnostic/infos',
-    debugs: 'diagnostic/debugs',
-    warnings: 'diagnostic/warnings',
-    errors: 'diagnostic/errors',
   })}
 })
 export default class ModalDebugConsole extends Vue {
@@ -74,6 +70,17 @@ export default class ModalDebugConsole extends Vue {
 
   public getTime(entry): string {
     return entry.time.toLocaleString()
+  }
+
+  /**
+   * Hook called when component is mounted
+   */
+  mounted() {
+    // Scrolls logs div to bottom
+    Vue.nextTick().then(() =>{
+      const container = this.$el.querySelector('#logs-container')
+      container.scrollTop = container.scrollHeight
+    })
   }
 }
 </script>

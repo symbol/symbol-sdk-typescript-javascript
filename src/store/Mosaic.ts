@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicInfo, QueryParams, Transaction, TransactionType, NamespaceRegistrationType, UInt64} from 'nem2-sdk'
+import {MosaicInfo, QueryParams, Transaction, TransactionType, NamespaceRegistrationType, UInt64} from 'symbol-sdk'
 import Vue from 'vue'
 
 // internal dependencies
@@ -21,10 +21,6 @@ import {RESTService} from '@/services/RESTService'
 import {MosaicService} from '@/services/MosaicService'
 import {AwaitLock} from './AwaitLock';
 const Lock = AwaitLock.create();
-
-// configuration
-import networkConfig from '@/../config/network.conf.json'
-const networkCurrencyName = networkConfig.networks['testnet-publicTest'].currencyMosaic
 
 export default {
   namespaced: true,
@@ -54,7 +50,6 @@ export default {
     setNetworkMosaicId: (state, mosaic) => Vue.set(state, 'networkMosaicId', mosaic),
     setNetworkMosaicName: (state, name) => Vue.set(state, 'networkMosaicName', name),
     setNetworkMosaicTicker: (state, ticker) => Vue.set(state, 'networkMosaicTicker', ticker),
-    setNemesisTransactions: (state, transactions) => Vue.set(state, 'nemesisTransactions', transactions),
     addMosaicInfo: (state, mosaicInfo: MosaicInfo) => {
       Vue.set(state.mosaicsInfoByHex, mosaicInfo.id.toHex(), mosaicInfo)
     },
@@ -144,13 +139,13 @@ export default {
         knownMosaics: withFeed.mosaics
       }
     },
-    async INITIALIZE_FROM_NEMESIS({commit, dispatch, rootGetters}, nodeUrl) {
+    async INITIALIZE_FROM_NEMESIS({commit, dispatch}, nodeUrl) {
       // read first network block to identify currency mosaic
 
       dispatch('diagnostic/ADD_DEBUG', 'Store action mosaic/INITIALIZE_FROM_NEMESIS dispatched with nodeUrl: ' + nodeUrl, {root: true})
 
       const blockHttp = RESTService.create('BlockHttp', nodeUrl)
-      blockHttp.getBlockTransactions(UInt64.fromUint(1), new QueryParams().setPageSize(100)).subscribe(
+      blockHttp.getBlockTransactions(UInt64.fromUint(1), new QueryParams({pageSize: 100})).subscribe(
         async (transactions: Transaction[]) => {
           const payload = await dispatch('GET_CURRENCY_MOSAIC_FROM_NEMESIS', transactions)
 
@@ -168,7 +163,12 @@ export default {
             ticker: payload.ticker,
             mosaicId: payload.mosaicId,
           })
-        })
+        },
+        err => dispatch(
+          'diagnostic/ADD_DEBUG',
+          `Store action mosaic/INITIALIZE_FROM_NEMESIS error: ${JSON.stringify(err)}`,
+          {root: true},
+        ))
     },
     SET_NETWORK_CURRENCY_MOSAIC({commit}, payload) {
       commit('setNetworkMosaicName', payload.name)

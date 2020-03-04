@@ -15,8 +15,8 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {NetworkType, Password, Account} from 'nem2-sdk'
-import { MnemonicPassPhrase } from 'nem2-hd-wallets'
+import {NetworkType, Password, Account} from 'symbol-sdk'
+import { MnemonicPassPhrase } from 'symbol-hd-wallets'
 
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'

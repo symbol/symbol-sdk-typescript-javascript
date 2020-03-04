@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {Transaction, TransactionInfo} from 'nem2-sdk'
+import {Transaction, TransactionInfo} from 'symbol-sdk'
 
 // internal dependencies
 import {AppStore} from '@/app/AppStore'

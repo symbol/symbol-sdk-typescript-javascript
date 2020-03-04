@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NodeInfo} from 'nem2-sdk'
+import {NodeInfo} from 'symbol-sdk'
 
 // internal dependencies
 import {PeersTable} from '@/core/database/entities/PeersTable'

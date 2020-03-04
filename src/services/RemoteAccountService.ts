@@ -19,8 +19,8 @@ import {
   AccountType,
   Address,
   PublicAccount,
-} from 'nem2-sdk'
-import {Wallet} from 'nem2-hd-wallets'
+} from 'symbol-sdk'
+import {Wallet} from 'symbol-hd-wallets'
 
 // internal dependencies
 import {AbstractService} from '@/services/AbstractService'

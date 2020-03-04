@@ -16,7 +16,7 @@
 // external dependencies
 import {mapGetters} from 'vuex'
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import {MosaicId, MosaicInfo} from 'nem2-sdk'
+import {MosaicId, MosaicInfo} from 'symbol-sdk'
 
 // internal dependencies
 import {MosaicService} from '@/services/MosaicService'

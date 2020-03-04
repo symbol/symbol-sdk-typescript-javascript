@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import {Address, Transaction, TransactionType, TransferTransaction, NamespaceId, NamespaceName} from 'nem2-sdk'
+import {Address, Transaction, TransactionType, TransferTransaction, NamespaceId, NamespaceName} from 'symbol-sdk'
 
 @Component
 export class ActionDisplayTs extends Vue {

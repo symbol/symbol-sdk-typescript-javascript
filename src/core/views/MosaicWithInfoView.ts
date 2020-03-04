@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Mosaic, MosaicInfo } from 'nem2-sdk';
+import { Mosaic, MosaicInfo } from 'symbol-sdk';
 
 export type MosaicWithInfoView = {
   mosaicInfo: MosaicInfo,

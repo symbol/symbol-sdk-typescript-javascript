@@ -17,7 +17,7 @@
 import {
   MosaicId, UInt64, AddressAliasTransaction,
   MosaicAliasTransaction, Address, AliasAction, NamespaceId,
-} from 'nem2-sdk'
+} from 'symbol-sdk'
 
 // internal dependencies
 import {TransactionView} from './TransactionView'

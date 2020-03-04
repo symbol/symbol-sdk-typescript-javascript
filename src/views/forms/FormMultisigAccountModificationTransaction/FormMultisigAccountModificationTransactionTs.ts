@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 // external dependencies
-import {TransactionType, MultisigAccountModificationTransaction, PublicAccount, MultisigAccountInfo} from 'nem2-sdk'
+import {TransactionType, MultisigAccountModificationTransaction, PublicAccount, MultisigAccountInfo} from 'symbol-sdk'
 import {Component, Vue, Prop} from 'vue-property-decorator'
 
 // internal dependencies

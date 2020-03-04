@@ -15,7 +15,7 @@
  */
 // external dependencies
 import {Store} from 'vuex'
-import {NamespaceInfo, AliasType} from 'nem2-sdk'
+import {NamespaceInfo, AliasType} from 'symbol-sdk'
 
 // internal dependencies
 import {AssetTableService, TableField} from './AssetTableService'

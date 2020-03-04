@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Password} from 'nem2-sdk'
+import {Password} from 'symbol-sdk'
 import CryptoJS from "crypto-js";
 
 // internal dependencies

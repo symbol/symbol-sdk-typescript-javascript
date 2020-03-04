@@ -16,7 +16,7 @@
 // external dependencies
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {NamespaceInfo} from 'nem2-sdk'
+import {NamespaceInfo} from 'symbol-sdk'
 
 // child components
 import {ValidationProvider} from 'vee-validate'

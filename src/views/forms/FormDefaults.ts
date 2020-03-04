@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NetworkType, MosaicSupplyChangeAction} from 'nem2-sdk'
+import {NetworkType, MosaicSupplyChangeAction} from 'symbol-sdk'
 
 // configuration
 import networkConfig from '@/../config/network.conf.json'
