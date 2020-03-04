@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {expect} from 'chai';
-import {Convert as convert} from '../../../src/core/format';
+import { expect } from 'chai';
+import { Convert as convert } from '../../../src/core/format';
 
 describe('convert', () => {
     describe('toByte', () => {
@@ -193,9 +193,9 @@ describe('convert', () => {
         it('uint8 array with length not multiple of four cannot be converted to uint32 array', () => {
             // Assert:
             expect(() => {
-                    convert.uint8ToUint32(Uint8Array.of(0x02, 0x6E, 0xE4, 0x15, 0x15));
-                })
-                .to.throw('byte length of Uint32Array should be a multiple of 4');
+                convert.uint8ToUint32(Uint8Array.of(0x02, 0x6E, 0xE4, 0x15, 0x15));
+            })
+            .to.throw('byte length of Uint32Array should be a multiple of 4');
         });
     });
 
@@ -245,10 +245,10 @@ describe('convert', () => {
 
     describe('signed <-> unsigned byte', () => {
         const testCases = [{
-                signed: -128,
-                unsigned: 0x80,
-                description: 'min negative',
-            },
+            signed: -128,
+            unsigned: 0x80,
+            description: 'min negative',
+        },
             {
                 signed: -127,
                 unsigned: 0x81,
@@ -293,9 +293,9 @@ describe('convert', () => {
 
         describe('uint8ToInt8', () => {
             const failureTestCases = [{
-                    input: 256,
-                    description: 'one too large',
-                },
+                input: 256,
+                description: 'one too large',
+            },
                 {
                     input: 1000,
                     description: 'very large',
@@ -322,9 +322,9 @@ describe('convert', () => {
 
         describe('int8ToUint8', () => {
             const failureTestCases = [{
-                    input: -1000,
-                    description: 'very small',
-                },
+                input: -1000,
+                description: 'very small',
+            },
                 {
                     input: -129,
                     description: 'one too small',
@@ -402,4 +402,17 @@ describe('convert', () => {
             expect(result).to.be.equal(expected);
         });
     });
+
+    describe('uint8ToNumber', () => {
+        it('should convert to number and back', () => {
+            const expected = 123456789;
+            const array = convert.numberToUint8Array(expected, 4);
+            // Act:
+            const result = convert.uintArray8ToNumber(array);
+
+            // Assert:
+            expect(result).to.be.equal(expected);
+        });
+    });
+
 });

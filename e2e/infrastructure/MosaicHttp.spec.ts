@@ -65,8 +65,8 @@ describe('MosaicHttp', () => {
      */
     describe('Setup test MosaicId', () => {
 
-        it('Announce MosaicDefinitionTransaction', () => {
-            const nonce = MosaicNonce.createRandom();
+        it('Announce MosaicDefinitionTransaction', async () => {
+            const nonce = MosaicNonce.createFromNumber(999999999);
             mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
@@ -74,13 +74,16 @@ describe('MosaicHttp', () => {
                 mosaicId,
                 MosaicFlags.create(true, true, false),
                 3,
-                UInt64.fromUint(0),
+                UInt64.fromUint(100),
                 networkType,
                 helper.maxFee,
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
-            return helper.announce(signedTransaction);
+            const listenedTransaction = await helper.announce(signedTransaction) as MosaicDefinitionTransaction;
+            expect(mosaicDefinitionTransaction.nonce.toHex()).to.be.equal(listenedTransaction.nonce.toHex());
+            expect(mosaicDefinitionTransaction.nonce).to.deep.equal(listenedTransaction.nonce);
+            expect(mosaicDefinitionTransaction.getMosaicNonceIntValue()).to.be.equal(listenedTransaction.getMosaicNonceIntValue());
         });
     });
 

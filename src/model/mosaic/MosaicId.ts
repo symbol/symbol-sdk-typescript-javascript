@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 import { Convert as convert, RawUInt64 as uint64_t } from '../../core/format';
-import {NamespaceMosaicIdGenerator} from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
-import {PublicAccount} from '../account/PublicAccount';
-import {Id} from '../Id';
-import {MosaicNonce} from '../mosaic/MosaicNonce';
+import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
+import { PublicAccount } from '../account/PublicAccount';
+import { Id } from '../Id';
+import { MosaicNonce } from '../mosaic/MosaicNonce';
 
 /**
  * The mosaic id structure describes mosaic id
@@ -39,7 +39,7 @@ export class MosaicId {
      * @return  {MosaicId}
      */
     public static createFromNonce(nonce: MosaicNonce, owner: PublicAccount): MosaicId {
-        const mosaicId = NamespaceMosaicIdGenerator.mosaicId(nonce.nonce, convert.hexToUint8(owner.publicKey));
+        const mosaicId = NamespaceMosaicIdGenerator.mosaicId(nonce.toUint8Array(), convert.hexToUint8(owner.publicKey));
         return new MosaicId(mosaicId);
     }
 
