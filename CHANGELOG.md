@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.17.3] - 04-Mar-2020
+
+**Milestone**: Fushicho.4(RC3 0.9.3.1)
+ Versions  |   |
+---|---|---
+SDK Core| v0.17.3 | https://www.npmjs.com/package/symbol-sdk
+Catbuffer | v0.0.11 | https://www.npmjs.com/package/catbuffer-typescript
+Client Library | v0.8.5  | https://www.npmjs.com/package/symbol-openapi-typescript-node-client
+
+- Fixed `MosaicNonce` issue handling signed integer from rest payload.
+- **[BREAKING CHANGE]** Updated `NodeTime` model to use `UInt64`.
+
 ## [0.17.2] - 02-Mar-2020
 
 **Milestone**: Fushicho.4(RC3 0.9.3.1)
@@ -407,7 +419,8 @@ Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/nem2-sdk-opena
 
 - Initial code release.
 
-[0.17.1]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.17.1...v0.17.2
+[0.17.3]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.17.2...v0.17.3
+[0.17.2]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.17.1...v0.17.2
 [0.17.1]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.17.0...v0.17.1
 [0.17.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.16.5...v0.17.0
 [0.16.5]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.16.4...v0.16.5
