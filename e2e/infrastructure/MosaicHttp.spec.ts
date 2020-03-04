@@ -66,7 +66,7 @@ describe('MosaicHttp', () => {
     describe('Setup test MosaicId', () => {
 
         it('Announce MosaicDefinitionTransaction', async () => {
-            const nonce = MosaicNonce.createFromUint8Array(new Uint8Array([255, 255, 255, 255]));
+            const nonce = MosaicNonce.createFromUint8Array(new Uint8Array([200, 255, 255, 255]));
             mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
@@ -84,6 +84,11 @@ describe('MosaicHttp', () => {
             expect(mosaicDefinitionTransaction.nonce.toHex()).to.be.equal(listenedTransaction.nonce.toHex());
             expect(mosaicDefinitionTransaction.nonce).to.deep.equal(listenedTransaction.nonce);
             expect(mosaicDefinitionTransaction.getMosaicNonceIntValue()).to.be.equal(listenedTransaction.getMosaicNonceIntValue());
+
+            const savedTransaction = await helper.repositoryFactory.createTransactionRepository().getTransaction(signedTransaction.hash).toPromise() as MosaicDefinitionTransaction;
+            expect(mosaicDefinitionTransaction.nonce.toHex()).to.be.equal(savedTransaction.nonce.toHex());
+            expect(mosaicDefinitionTransaction.nonce).to.deep.equal(savedTransaction.nonce);
+            expect(mosaicDefinitionTransaction.getMosaicNonceIntValue()).to.be.equal(savedTransaction.getMosaicNonceIntValue());
         });
     });
 
