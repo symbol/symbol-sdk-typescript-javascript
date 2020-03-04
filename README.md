@@ -13,9 +13,9 @@ The Symbol SDK for TypeScript / JavaScript allows you to develop web, mobile, an
 
 **!!! Please be noted that the NEM2-SDK is rebranded to SYMBOL-SDK now**.
 
-Due to a network upgrade with [catapult-server@Fushicho](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.1) version, **it is recommended to use this package's 0.17.2 version and upwards to use this package with Fushicho versioned networks**.
+Due to a network upgrade with [catapult-server@Fushicho](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.1) version, **it is recommended to use this package's 0.17.3 version and upwards to use this package with Fushicho versioned networks**.
 
-The upgrade to this package's [version v0.17.2](https://github.com/nemtech/symbol-sdk-typescript-javascript/releases/tag/v0.17.2) is mandatory for **fushicho compatibility**.
+The upgrade to this package's [version v0.17.3](https://github.com/nemtech/symbol-sdk-typescript-javascript/releases/tag/v0.17.3) is mandatory for **fushicho compatibility**.
 
 You can find the complete changelog [here](CHANGELOG.md).
 
