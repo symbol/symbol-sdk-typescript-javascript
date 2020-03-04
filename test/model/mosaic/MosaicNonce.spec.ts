@@ -59,6 +59,15 @@ describe('MosaicNonce', () => {
         }).to.throw(Error, 'Invalid byte size for nonce, should be 4 bytes but received 6');
     });
 
+    it('should createFromHex from nonce', () => {
+        const nonce = MosaicNonce.createFromHex('FFFFFFC8');
+        deepEqual(nonce.toHex().toUpperCase(), 'FFFFFFC8');
+        deepEqual(nonce.toDTO(), 3372220415);
+
+        const nonce2 = MosaicNonce.createFromNumber(nonce.toDTO());
+        deepEqual(nonce2.toHex().toUpperCase(), 'FFFFFFC8');
+    });
+
     it('should create nonce from hexadecimal notation with uint32 input - 0 value', () => {
         const nonce = MosaicNonce.createFromHex((0).toString(16).padStart(8, '0'));
         expect(nonce.nonce).to.not.be.null;

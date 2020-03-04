@@ -403,7 +403,7 @@ describe('convert', () => {
         });
     });
 
-    describe('uint8ToNumber', () => {
+    describe('numberToUint8Array', () => {
         it('should convert to number and back', () => {
             const input = 123456789;
             const array = convert.numberToUint8Array(input, 4);
@@ -413,18 +413,16 @@ describe('convert', () => {
             // Assert:
             expect(result).to.be.equal(input);
         });
-    });
 
-    describe('uint8ToNumber', () => {
         it('should convert to number and back when negative', () => {
-            const input = 123456789 >> (Number.MAX_SAFE_INTEGER);
+            const input = -123456789;
             const array = convert.numberToUint8Array(input, 4);
             // Act:
             const result = convert.uintArray8ToNumber(array);
 
             // Assert:
-            expect(result).to.be.equal(123456789);
-            expect(input).to.be.equal(123456789);
+            expect(result).to.be.equal(4171510507);
+            expect(input).to.be.equal(-123456789);
         });
     });
 

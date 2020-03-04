@@ -66,7 +66,9 @@ describe('MosaicHttp', () => {
     describe('Setup test MosaicId', () => {
 
         it('Announce MosaicDefinitionTransaction', async () => {
-            const nonce = MosaicNonce.createFromUint8Array(new Uint8Array([200, 255, 255, 255]));
+            const nonce = MosaicNonce.createFromNumber(-1501238750);
+            expect(nonce.toDTO()).to.be.equals(2793728546);
+            expect(nonce.toHex()).to.be.equals('22EA84A6');
             mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
