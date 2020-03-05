@@ -71,10 +71,9 @@ export class TransactionService implements ITransactionService {
      */
     public announce(signedTransaction: SignedTransaction, listener: IListener): Observable<Transaction> {
         const signerAddress = signedTransaction.getSignerAddress();
-        const transactionObservable = this.transactionRepository.announce(signedTransaction).pipe(
-            flatMap(() => listener.confirmed(signerAddress, signedTransaction.hash)),
-        );
-        return this.getTransactionOrRaiseError(listener, signerAddress, signedTransaction.hash, transactionObservable);
+        this.transactionRepository.announce(signedTransaction);
+        return this.getTransactionOrRaiseError(listener,
+            signerAddress, signedTransaction.hash, listener.confirmed(signerAddress, signedTransaction.hash));
     }
 
     /**

@@ -16,7 +16,7 @@
 
 import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
-import {Convert as convert} from '../../src/core/format';
+import { Convert as convert } from '../../src/core/format';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
@@ -45,7 +45,7 @@ import { MultisigAccountModificationTransaction } from '../../src/model/transact
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { SecretLockTransaction } from '../../src/model/transaction/SecretLockTransaction';
 import { SecretProofTransaction } from '../../src/model/transaction/SecretProofTransaction';
-import { TransactionType } from '../../src/model/transaction/TransactionType' ;
+import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TestingAccount } from '../conf/conf.spec';
@@ -159,7 +159,7 @@ describe('SerializeTransactionToJSON', () => {
     it('should create MosaicDefinitionTransaction', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
-            new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(true, true, true),
             5,
@@ -179,7 +179,7 @@ describe('SerializeTransactionToJSON', () => {
     it('should create MosaicDefinitionTransaction without duration', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
-            new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(true, false),
             3,

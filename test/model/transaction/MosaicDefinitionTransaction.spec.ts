@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {Convert} from '../../../src/core/format';
-import {Account} from '../../../src/model/account/Account';
-import {NetworkType} from '../../../src/model/blockchain/NetworkType';
-import {MosaicFlags} from '../../../src/model/mosaic/MosaicFlags';
-import {MosaicId} from '../../../src/model/mosaic/MosaicId';
-import {MosaicNonce} from '../../../src/model/mosaic/MosaicNonce';
-import {Deadline} from '../../../src/model/transaction/Deadline';
-import {MosaicDefinitionTransaction} from '../../../src/model/transaction/MosaicDefinitionTransaction';
-import {UInt64} from '../../../src/model/UInt64';
-import {TestingAccount} from '../../conf/conf.spec';
+import { expect } from 'chai';
+import { Convert } from '../../../src/core/format';
+import { Account } from '../../../src/model/account/Account';
+import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { MosaicNonce } from '../../../src/model/mosaic/MosaicNonce';
+import { Deadline } from '../../../src/model/transaction/Deadline';
+import { MosaicDefinitionTransaction } from '../../../src/model/transaction/MosaicDefinitionTransaction';
+import { UInt64 } from '../../../src/model/UInt64';
+import { TestingAccount } from '../../conf/conf.spec';
 
 describe('MosaicDefinitionTransaction', () => {
     let account: Account;
@@ -36,7 +36,7 @@ describe('MosaicDefinitionTransaction', () => {
     it('should default maxFee field be set to 0', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
-            new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(true, true, true),
             3,
@@ -51,7 +51,7 @@ describe('MosaicDefinitionTransaction', () => {
     it('should filled maxFee override transaction maxFee', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
-            new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(true, true, true),
             3,
@@ -67,7 +67,7 @@ describe('MosaicDefinitionTransaction', () => {
     it('should createComplete an MosaicDefinitionTransaction object and sign it with flags 7', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
-            new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(true, true, true),
             3,
@@ -95,7 +95,7 @@ describe('MosaicDefinitionTransaction', () => {
 
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
-            new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(false, false, false),
             3,
@@ -123,7 +123,7 @@ describe('MosaicDefinitionTransaction', () => {
         it('should return 150 for MosaicDefinition transaction byte size', () => {
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
-                new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+                MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
                 new MosaicId(UInt64.fromUint(1).toDTO()), // ID
                 MosaicFlags.create(true, true, false),
                 3,
@@ -139,7 +139,7 @@ describe('MosaicDefinitionTransaction', () => {
 
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
-            new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(false, false, false),
             3,
@@ -163,7 +163,7 @@ describe('MosaicDefinitionTransaction', () => {
     it('Test set maxFee using multiplier', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
-            new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(false, false, false),
             3,
