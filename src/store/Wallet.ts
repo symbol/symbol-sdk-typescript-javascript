@@ -573,6 +573,7 @@ export default {
       return commit('transactionHashes', hashes)
     },
     REMOVE_TRANSACTION({commit, getters}, transactionMessage) {
+
       if (!transactionMessage || !transactionMessage.group) {
         throw Error('Missing mandatory field \'group\' for action wallet/removeTransaction.')
       }
@@ -588,17 +589,22 @@ export default {
       const transactionHash = transactionMessage.transaction
 
       // find transaction in storage
-      const findHashIt = hashes.find(hash => hash === transactionHash)
-      const findIterator = transactions.find(tx => tx.transactionInfo.hash === transactionHash)
+      const findIterator = transactions.findIndex(tx => tx.transactionInfo.hash === transactionHash)
       if (findIterator === undefined) {
         return ; // not found, do nothing
       }
 
-      // remove transaction
-      delete transactions[findIterator]
-      delete hashes[findHashIt]
-      commit(transactionGroup, transactions)
-      return commit('transactionHashes', hashes)
+      // commit empty array
+      if (transactions.length === 1) {
+        return commit(transactionGroup, [])
+      }
+
+      // skip `idx`
+      const remaining = transactions.splice(0, findIterator).concat(
+        transactions.splice(findIterator+1, transactions.length - findIterator - 1)
+      )
+
+      commit(transactionGroup, Array.from(remaining))
     },
     ADD_STAGED_TRANSACTION({commit}, stagedTransaction: Transaction) {
       commit('addStagedTransaction', stagedTransaction)
