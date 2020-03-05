@@ -14,9 +14,11 @@
             class="mosaic_data"
           >
             <span class="img_container">
-              <img v-if="entry.id.equals(networkMosaic)"
-                src="@/views/resources/img/symbol/XYMCoin.png" alt />
-              <img v-else src="@/views/resources/img/symbol/XYMCoin.png" class="grayed-xym-logo"/>
+              <img
+                v-if="entry.id.equals(networkMosaic)"
+                src="@/views/resources/img/symbol/XYMCoin.png" alt
+              >
+              <img v-else src="@/views/resources/img/symbol/XYMCoin.png" class="grayed-xym-logo">
             </span>
             <span class="mosaic_name">{{ entry.name !== '' ? entry.name : entry.id.toHex() }}</span>
             <span class="mosaic_value">
@@ -50,24 +52,36 @@
           :key="index"
           :class="[ 'mosaic_data',index === 0 ? 'padding_top_0' : '' ]"
           class="mosaic_data pointer"
-          @click="toggleMosaicDisplay(entry.mosaic.id)"
+          @click="toggleMosaicDisplay(entry.id)"
         >
           <!-- @TODO: Mosaic list actions not working -->
           <span class="namege_img">
             <img
               class="small_icon"
-              :src="hasHiddenMosaic(entry.mosaic.id)
-                ? dashboardImages.monitorUnselected : dashboardImages.monitorSelected"
+              :src="hasHiddenMosaic(entry.id)
+                ? dashboardImages.monitorUnselected
+                : dashboardImages.monitorSelected"
             >
-              <img v-if="entry.id.equals(networkMosaic)"
-                src="@/views/resources/img/symbol/XYMCoin.png" class="mosaicIcon" alt />
-              <img v-else src="@/views/resources/img/symbol/XYMCoin.png" class="mosaicIcon grayed-xym-logo"/>
+            <img
+              v-if="entry.id.equals(networkMosaic)"
+              src="@/views/resources/img/symbol/XYMCoin.png"
+              class="mosaicIcon"
+            >
+            <img
+              v-else
+              src="@/views/resources/img/symbol/XYMCoin.png"
+              class="mosaicIcon grayed-xym-logo"
+            >
           </span>
           <span class="mosaic_name">
             {{ entry.name !== '' ? entry.name : entry.id.toHex() }}
           </span>
           <span class="mosaic_value">
-            <MosaicAmountDisplay :id="entry.id" :relative-amount="entry.amount" :size="'normal'" />
+            <MosaicAmountDisplay
+              :id="entry.id"
+              :relative-amount="entry.amount"
+              :size="'normal'"
+            />
           </span>
         </div>
         <div class="complete_container">

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {MosaicId, AccountInfo, NamespaceId, Mosaic} from 'symbol-sdk'
+import {MosaicId, AccountInfo, NamespaceId, Mosaic, MosaicInfo} from 'symbol-sdk'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
@@ -65,10 +65,41 @@ export class MosaicService extends AbstractService {
       value: MosaicsModel,
       index: number,
       array: MosaicsModel[]
-    ) => boolean = (e) => true
+    ) => boolean = (e) => true,  
   ): MosaicsModel[] {
     const repository = new MosaicsRepository()
     return repository.collect().filter(filterFn)
+  }
+
+  /**
+   * Refresh mosaic models data
+   * @param {Mosaic[] | MosaicInfo[]} mosaics Mosaics to create / refresh in the database
+   * @param {boolean} [forceUpdate=false]     Option to bypass the cache
+   */
+  public refreshMosaicModels(
+    mosaics: Mosaic[] | MosaicInfo[],
+    forceUpdate = false,
+  ): void {
+    // @ts-ignore
+    const mosaicIds = mosaics.map(mosaic => mosaic.id)
+
+    // initialize repository
+    const repository = new MosaicsRepository()
+
+    // if force update is selected, fetch info for all mosaics
+    if (forceUpdate) {
+      this.fetchMosaicsInfos(mosaicIds as MosaicId[])
+      return
+    }
+
+    // determine mosaics known and unknown from the repository
+    const mosaicsInRepository: {id: MosaicId, known: boolean}[] = mosaicIds.map(
+      id => ({ id: id as MosaicId, known: repository.find(id.toHex()) }),
+    )
+
+    // dispatch async handling for unknown mosaics
+    const unknownMosaics = mosaicsInRepository.filter(({known}) => !known).map(({id}) => id)
+    if(unknownMosaics.length) this.fetchMosaicsInfos(unknownMosaics)
   }
 
   /**
@@ -105,6 +136,8 @@ export class MosaicService extends AbstractService {
    * @returns {(MosaicsModel | null)}
    */
   public getMosaicSync(mosaicId: MosaicId | NamespaceId): MosaicsModel | null {
+    if (!mosaicId) return // @TODO: find route cause, should not happen
+
     const repository = new MosaicsRepository()
 
     // If the id is a NamespaceId, get the mosaicId from the namespace Id
@@ -125,6 +158,71 @@ export class MosaicService extends AbstractService {
     }
 
     return repository.read(mosaicId.toHex())
+  }
+
+  /**
+   * Fetch mosaics infos and updates the mosaic repository
+   * @private
+   * @param {Mosaic[]} mosaic
+   * @returns {Promise<void>}
+   */
+  private async fetchMosaicsInfos(mosaicIds: MosaicId[]): Promise<void> {
+    try {
+      // call REST_FETCH_INFO and REST_FETCH_NAMES
+      const [
+        mosaicsInfo, mosaicNames,
+      ]: [ MosaicInfo[], {hex: string, name: string}[] ] = await Promise.all([
+        this.$store.dispatch('mosaic/REST_FETCH_INFOS', mosaicIds),
+        this.$store.dispatch('mosaic/REST_FETCH_NAMES', mosaicIds),
+      ])
+
+      // initialize repository
+      const repository = new MosaicsRepository()
+      
+      // - get network info from store
+      const generationHash = this.$store.getters['network/generationHash']
+      const networkMosaic: MosaicId = this.$store.getters['network/networkMosaic']
+
+      // Create and store models
+      mosaicIds.forEach(mosaicId => {
+        // get mosaic info
+        const mosaicInfo = mosaicsInfo.find(({id}) => id.equals(mosaicId))
+        if (mosaicsInfo === undefined) return
+
+        // get mosaic name
+        const nameEntry = mosaicNames.find(({hex}) => hex === mosaicId.toHex())
+        const name = nameEntry ? nameEntry.name : ''
+
+        // create model
+        const model = repository.createModel(new Map<string, any>([
+          [ 'hexId', mosaicId.toHex() ],
+          [ 'name', name ],
+          [ 'flags', mosaicInfo.flags.toDTO().flags ],
+          [ 'startHeight', mosaicInfo.height ],
+          [ 'duration', mosaicInfo.duration.compact() ],
+          [ 'divisibility', mosaicInfo.divisibility ],
+          [ 'supply', mosaicInfo.supply ],
+          [ 'ownerPublicKey', mosaicInfo.owner.publicKey ],
+          [ 'generationHash', generationHash ],
+          [ 'isCurrencyMosaic', mosaicId.equals(networkMosaic) ],
+          [ 'isHarvestMosaic', false ], // @TODO: not managed
+        ]))
+        
+        // - update model if found
+        if (repository.find(mosaicId.toHex())) {
+          repository.update(mosaicId.toHex(), model.values)
+          return
+        }
+
+        // - store model
+        repository.create(model.values)
+      })
+    } catch (error) {
+      this.$store.dispatch(
+        'diagnostic/ADD_DEBUG',
+        `MosaicService/fetchMosaicsInfos error: ${JSON.stringify(error)}`,
+      )
+    }
   }
 
   /**
@@ -151,44 +249,46 @@ export class MosaicService extends AbstractService {
 
       // - use repository for storage
       const repository = new MosaicsRepository()
-      if (repository.find(mosaicId.toHex())) {
-        //XXX update instead of just read
-        return repository.read(mosaicId.toHex())
-      }
 
       // - CREATE
       const mosaic = repository.createModel(new Map<string, any>([
-        ['hexId', mosaicId.toHex()],
-        ['name', mosaicNames && mosaicNames.length ? mosaicNames.shift().name : ''],
-        ['flags', mosaicInfo.flags.toDTO().flags],
-        ['startHeight', mosaicInfo.height],
-        ['duration', mosaicInfo.duration.compact()],
-        ['divisibility', mosaicInfo.divisibility],
-        ['supply', mosaicInfo.supply],
-        ['ownerPublicKey', mosaicInfo.owner.publicKey],
-        ['generationHash', generationHash],
-        ['isCurrencyMosaic', isCurrencyMosaic],
-        ['isHarvestMosaic', isHarvestMosaic],
+        [ 'hexId', mosaicId.toHex() ],
+        [ 'name', mosaicNames && mosaicNames.length ? mosaicNames.shift().name : '' ],
+        [ 'flags', mosaicInfo.flags.toDTO().flags ],
+        [ 'startHeight', mosaicInfo.height ],
+        [ 'duration', mosaicInfo.duration.compact() ],
+        [ 'divisibility', mosaicInfo.divisibility ],
+        [ 'supply', mosaicInfo.supply ],
+        [ 'ownerPublicKey', mosaicInfo.owner.publicKey ],
+        [ 'generationHash', generationHash ],
+        [ 'isCurrencyMosaic', isCurrencyMosaic ],
+        [ 'isHarvestMosaic', isHarvestMosaic ],
       ]))
 
-      // - store and return
-      repository.create(mosaic.values)
+      // - update the model if it exists in the repository
+      if (repository.find(mosaicId.toHex())) {
+        repository.update(mosaicId.toHex(), mosaic.values)
+      } else {
+        // - create a new entry in the repository
+        repository.create(mosaic.values)
+      }
+
       return mosaic
     }
     catch (e) {
       const repository = new MosaicsRepository()
       return repository.createModel(new Map<string, any>([
-        ['hexId', mosaicId.toHex()],
-        ['name', mosaicId.toHex()],
-        ['flags', null],
-        ['startHeight', 0],
-        ['duration', 0],
-        ['divisibility', 0],
-        ['supply', 0],
-        ['ownerPublicKey', ''],
-        ['generationHash', generationHash],
-        ['isCurrencyMosaic', isCurrencyMosaic],
-        ['isHarvestMosaic', isHarvestMosaic],
+        [ 'hexId', mosaicId.toHex() ],
+        [ 'name', mosaicId.toHex() ],
+        [ 'flags', null ],
+        [ 'startHeight', 0 ],
+        [ 'duration', 0 ],
+        [ 'divisibility', 0 ],
+        [ 'supply', 0 ],
+        [ 'ownerPublicKey', '' ],
+        [ 'generationHash', generationHash ],
+        [ 'isCurrencyMosaic', isCurrencyMosaic ],
+        [ 'isHarvestMosaic', isHarvestMosaic ],
       ]))
     }
   }

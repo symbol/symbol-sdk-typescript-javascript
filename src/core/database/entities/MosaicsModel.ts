@@ -18,6 +18,13 @@ import {DatabaseModel} from '@/core/database/DatabaseModel'
 import {DatabaseRelation} from '@/core/database/DatabaseRelation'
 import {UInt64, MosaicId, RawUInt64, MosaicInfo, PublicAccount, NetworkType, MosaicFlags} from 'symbol-sdk'
 
+// Custom types
+export interface BalanceEntry {
+  id: MosaicId
+  name: string
+  amount: number
+}
+
 export class MosaicsModel extends DatabaseModel {
   /**
    * Entity identifier *field names*. The identifier

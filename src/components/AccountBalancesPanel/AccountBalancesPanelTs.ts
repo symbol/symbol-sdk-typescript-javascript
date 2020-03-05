@@ -143,7 +143,7 @@ export class AccountBalancesPanelTs extends Vue {
   public get absoluteBalance() {
     const mosaics = [...this.currentMosaics]
 
-    if (!mosaics.length) {
+    if (!mosaics.length || !this.networkMosaic) {
       return 0
     }
 

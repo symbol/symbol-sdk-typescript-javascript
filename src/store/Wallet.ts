@@ -836,10 +836,11 @@ export default {
         return false
       }
     },
-    async REST_FETCH_OWNED_MOSAICS({commit, dispatch, getters, rootGetters}, address) {
-      if (!address || address.length !== 40) {
-        return ;
-      }
+    async REST_FETCH_OWNED_MOSAICS(
+      {commit, dispatch, getters, rootGetters},
+      address,
+    ): Promise<MosaicInfo[]> {
+      if (!address || address.length !== 40) return
 
       dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_OWNED_MOSAICS dispatched with : ' + address, {root: true})
 
@@ -876,7 +877,7 @@ export default {
         }
 
         dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch owned mosaics: ' + e, {root: true})
-        return false
+        return null
       }
     },
     async REST_FETCH_OWNED_NAMESPACES({commit, dispatch, getters, rootGetters}, address): Promise<NamespaceInfo[]> {
@@ -930,7 +931,10 @@ export default {
       {commit, dispatch, rootGetters},
       {issuer, signedLock, signedPartial}
     ): Promise<BroadcastResult> {
-      if (!issuer || issuer.length !== 40) return
+
+      if (!issuer || issuer.length !== 40) {
+        return ;
+      }
 
       dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_ANNOUNCE_PARTIAL dispatched with: ' + JSON.stringify({
         issuer: issuer,

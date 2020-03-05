@@ -54,7 +54,7 @@ export default {
       Vue.set(state.mosaicsInfoByHex, mosaicInfo.id.toHex(), mosaicInfo)
     },
     addMosaicName: (state, payload: {hex: string, name: string}) => {
-      Vue.set(state.mosaicsNamesByHex, payload.hex, name)
+      Vue.set(state.mosaicsNamesByHex, payload.hex, payload.name)
     },  
     hideMosaic: (state, mosaicId) => {
       const hiddenMosaics = state.hiddenMosaics
@@ -215,7 +215,7 @@ export default {
         ticker: subNamespaceTx.namespaceName.toUpperCase()
       }
     },
-    async REST_FETCH_INFO({commit, rootGetters}, mosaicId) {
+    async REST_FETCH_INFO({commit, rootGetters}, mosaicId): Promise<MosaicInfo> {
       const nodeUrl = rootGetters['network/currentPeer'].url
       const networkType = rootGetters['network/networkType']
       const mosaicHttp = RESTService.create('MosaicHttp', nodeUrl, networkType)
@@ -224,13 +224,13 @@ export default {
       commit('addMosaicInfo', mosaicInfo)
       return mosaicInfo
     },
-    async REST_FETCH_INFOS({commit, rootGetters}, mosaicIds) {
+    async REST_FETCH_INFOS({commit, rootGetters}, mosaicIds): Promise<MosaicInfo[]> {
       const nodeUrl = rootGetters['network/currentPeer'].url
       const networkType = rootGetters['network/networkType']
       const mosaicHttp = RESTService.create('MosaicHttp', nodeUrl, networkType)
       const mosaicsInfo = await mosaicHttp.getMosaics(mosaicIds).toPromise()
 
-      mosaicsInfo.map(info => commit('addMosaicInfo', info))
+      mosaicsInfo.forEach(info => commit('addMosaicInfo', info))
       return mosaicsInfo
     },
     async REST_FETCH_NAMES({commit, rootGetters}, mosaicIds): Promise<{hex: string, name: string}[]> {
@@ -245,7 +245,12 @@ export default {
         .map(({mosaicId, names}) => ({hex: mosaicId.toHex(), name: names.shift().name}))
 
       // update store
-      mappedNames.forEach(mappedEntry => commit('addMosaicName', mappedEntry))
+      mosaicIds.forEach(id => {
+        const hexId = id.toHex()
+        const mappedName = mappedNames.find(({hex}) => hex === hexId)
+        const name = mappedName ? mappedName.name : ''
+        commit('addMosaicName', { hex: hexId, name })
+      })
 
       return mappedNames
     },

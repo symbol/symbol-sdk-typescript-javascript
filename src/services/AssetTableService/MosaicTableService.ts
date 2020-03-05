@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {Mosaic, MosaicInfo, MosaicFlags, RawUInt64, UInt64} from 'symbol-sdk'
+import {Mosaic, UInt64, MosaicInfo} from 'symbol-sdk'
 
 // internal dependencies
 import {AssetTableService, TableField} from './AssetTableService'
-import {MosaicService} from '@/services/MosaicService'
-import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
 
 export class MosaicTableService extends AssetTableService {
   private currentWalletMosaics: Mosaic[]
@@ -56,31 +54,34 @@ export class MosaicTableService extends AssetTableService {
   * @returns {MosaicTableRowValues[]}
   */
   public getTableRows(): any[] {
-    // - get owned mosaics from the store
+    // - get reactive mosaic data from the store
     const ownedMosaics: Mosaic[] = this.$store.getters['wallet/currentWalletMosaics']
-
-    // - use service to get information about mosaics
-    const service = new MosaicService(this.$store)
+    const mosaicsInfo: Record<string, MosaicInfo> = this.$store.getters['mosaic/mosaicsInfo']
+    const mosaicNames: Record<string, string> = this.$store.getters['mosaic/mosaicsNames']
 
     return ownedMosaics.map((mosaic) => {
-      // - use service to get information about mosaics
-      const model = service.getMosaicSync(mosaic.id)
-      if (!model) return null
-      const flags = model.objects.mosaicInfo.flags // @TODO: this property is not reactive
+      const hexId = mosaic.id.toHex()
+
+      // get mosaic info, return and wait for re-render if not available
+      const mosaicInfo = mosaicsInfo[hexId]
+      if (!mosaicInfo) return null
+
+      // extract useful info
+      const flags = mosaicInfo.flags
       const balance = mosaic.amount.compact()
-      const supply = model.values.get('supply')
+      const {supply, divisibility} = mosaicInfo
 
       // - map table fields
       return {
-        'hexId': mosaic.id.toHex(),
-        'name': model.values.get('name') || 'N/A', // @TODO: this property is not reactive
+        'hexId': hexId,
+        'name': mosaicNames[hexId] || 'N/A',
         'supply': new UInt64([ supply.lower, supply.higher ]).compact(),
         'balance': balance === 0 ? 0 : (
           // - get relative amount
-          balance / Math.pow(10, model.values.get('divisibility'))
+          balance / Math.pow(10, divisibility)
         ),
-        'expiration': this.getExpiration(model), // @TODO: this property is not reactive
-        'divisibility': model.values.get('divisibility'),
+        'expiration': this.getExpiration(mosaicInfo),
+        'divisibility': divisibility,
         'transferable': flags.transferable,
         'supplyMutable': flags.supplyMutable,
         'restrictable': flags.restrictable,
@@ -91,20 +92,24 @@ export class MosaicTableService extends AssetTableService {
   /**
    * Returns a view of a mosaic expiration info
    * @private
-   * @param {MosaicsModel} mosaic
+   * @param {MosaicsInfo} mosaic
    * @returns {string}
    */
-  private getExpiration(mosaic: MosaicsModel): string {
-    const duration = mosaic.values.get('duration')
-    const startHeight = mosaic.objects.startHeight
+  private getExpiration(mosaicInfo: MosaicInfo): string {
+    const duration = mosaicInfo.duration
+    const startHeight = mosaicInfo.height
+
+    // @TODO
+    const _duration = new UInt64([ duration.lower, duration.higher ]).compact() 
+    const _startHeight = new UInt64([ startHeight.lower, startHeight.higher ]).compact()
 
     // - unlimited mosaics have duration=0
-    if (duration === 0) {
+    if (_duration === 0) {
       return 'unlimited'
     }
 
     // - calculate expiration
-    const expiresIn = (startHeight.compact() + duration) - this.getCurrentHeight()
+    const expiresIn = _startHeight + _duration - this.getCurrentHeight()
     if (expiresIn <= 0) {
       return 'expired'
     }

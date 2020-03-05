@@ -26,14 +26,10 @@ import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDi
 
 // resources
 import {dashboardImages} from '@/views/resources/Images' 
+import {BalanceEntry} from '@/core/database/entities/MosaicsModel'
 
 // custom types
-interface BalanceEntry {
-  id: MosaicId
-  name: string
-  amount: number
-  mosaic: Mosaic
-}
+
 
 @Component({
   components: {
@@ -111,29 +107,13 @@ export class MosaicBalanceListTs extends Vue {
     hasShowExpired: false,
   }
 
-  public async mounted() {
-    // - *asynchronously* fetching name/amount info
-    return this.mosaics.map(async (mosaic) => {
-      const currentMosaicId = mosaic.id as MosaicId
-      const currentBalance = mosaic.amount.compact() || 0
+  /**
+   * Mosaic names
+   * @private
+   * @type {Record<string, string>}
+   */
+  private mosaicsNames: Record<string, string>
 
-      // read name from db/store/network
-      const model = await this.mosaicService.getMosaic(mosaic.id as MosaicId)
-      const mosaicName = model.values.get('name')
-
-      // use mosaic info to format amount (skip REST)
-      const relativeAmount = await this.mosaicService.getRelativeAmount(currentBalance, currentMosaicId)
-
-      // prepare formatted entry
-      const balanceEntry: {id: MosaicId, name: string, amount: number, mosaic: Mosaic} = {
-        id: currentMosaicId,
-        name: mosaicName,
-        amount: relativeAmount,
-        mosaic: mosaic
-      }
-      this.formatted.push(balanceEntry)
-    })
-  }
 
 /// region computed properties getter/setter
   /**
@@ -142,32 +122,15 @@ export class MosaicBalanceListTs extends Vue {
    * @type {BalanceEntry}
    */
   get balanceEntries(): BalanceEntry[] {
-    return this.mosaics
-      .map(mosaic => {
-        const mosaicInfo = this.mosaicsInfo[mosaic.id.toHex()]
-
-        const mosaicFromStorage = this.mosaicService.getMosaicSync(mosaic.id)
-        // Mosaics not found from store are skipped, 
-        // Until next component rendering
-        if (!mosaicFromStorage) return null
-
-        // @TODO: Dirty fix: Force reactivity by taking the getter
-        // mosaic/mosaicInfo as a systematic source
-        const divisibility = mosaicInfo
-          ? mosaicInfo.divisibility : mosaicFromStorage.values.get('divisibility')
-        const balance = mosaic.amount.compact() || 0
-        const amount = balance / Math.pow(10, divisibility)
-
-        return {
-          id: mosaic.id as MosaicId,
-          // Mosaic names are not reactive
-          name: mosaicFromStorage.values.get('name'), 
-          amount,
-          mosaic: mosaic,
-        }
-      })
-      // filter out skipped mosaics
-      .filter(x => x) 
+    // get mosaicsModel from getter
+    
+    return this.mosaics.map(mosaic => {
+      return {
+        id: mosaic.id as MosaicId,
+        name: this.mosaicsNames[mosaic.id.toHex()] || '',
+        amount: mosaic ? mosaic.amount.compact() : 0,
+      }
+    })
   }
 
   /**
@@ -215,5 +178,13 @@ export class MosaicBalanceListTs extends Vue {
     const action = this.formItems.hasCheckedAll ? 'HIDE_MOSAIC' : 'SHOW_MOSAIC'
     return this.mosaics.map(
       mosaic => this.$store.dispatch('mosaic/' + action, mosaic.id))
+  }
+
+  /**
+   * Hook called when the component is mounted
+   */
+  mounted() {
+    // refresh mosaic models
+    this.mosaicService.refreshMosaicModels(this.mosaics)
   }
 }

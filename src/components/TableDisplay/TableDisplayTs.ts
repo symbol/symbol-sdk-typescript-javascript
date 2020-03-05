@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 // external dependencies
-import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
+import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 import {NamespaceId, AliasAction, MosaicId, Address, MosaicInfo, NamespaceInfo} from 'symbol-sdk'
 
@@ -29,6 +29,7 @@ import {
 } from '@/services/AssetTableService/AssetTableService'
 import {MosaicTableService} from '@/services/AssetTableService/MosaicTableService'
 import {NamespaceTableService} from '@/services/AssetTableService/NamespaceTableService'
+import {MosaicService} from '@/services/MosaicService'
 
 // child components
 // @ts-ignore
@@ -249,12 +250,13 @@ export class TableDisplayTs extends Vue {
    * Refreshes the owned assets
    * @returns {void}
    */
-  private refresh(): void {
+  private async refresh(): Promise<void> {
     if (this.assetType === 'namespace') {
       this.$store.dispatch('wallet/REST_FETCH_OWNED_NAMESPACES', this.currentWalletAddress.plain())
     }
 
-    this.$store.dispatch('wallet/REST_FETCH_OWNED_MOSAICS', this.currentWalletAddress.plain())
+    const mosaics = await this.$store.dispatch('wallet/REST_FETCH_OWNED_MOSAICS', this.currentWalletAddress.plain())
+    new MosaicService(this.$store).refreshMosaicModels(mosaics, true)
   }
   /**
    * Sets the default filtering state
