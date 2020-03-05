@@ -323,16 +323,6 @@ export const routes: AppRoute[] = [
         // @ts-ignore
         component: () => import('@/views/pages/multisig/MultisigDashboardPage/MultisigDashboardPage.vue'),
         children: [
-          // {
-          //   path: '/multisigConversion',
-          //   name: 'multisig.conversion',
-          //   meta: {
-          //     protected: true,
-          //     title: 'page_title_multisig_convert',
-          //   },
-          //   // @ts-ignore
-          //   component: () => import('@/views/pages/multisig/ConvertAccountPage/ConvertAccountPage.vue'),
-          // }, 
           {
             path: '/multisigManagement',
             name: 'multisig.management',
@@ -342,16 +332,17 @@ export const routes: AppRoute[] = [
             },
             // @ts-ignore
             component: () => import('@/views/pages/multisig/ManageAccountPage/ManageAccountPage.vue'),
-          }, {
-            path: '/multisigCosign',
-            name: 'multisig.cosign',
-            meta: {
-              protected: true,
-              title: 'page_title_multisig_cosign',
-            },
-            // @ts-ignore
-            component: () => import('@/views/pages/multisig/PartialTransactionDashboardPage/PartialTransactionDashboardPage.vue'),
           },
+          // {
+          //   path: '/multisigCosign',
+          //   name: 'multisig.cosign',
+          //   meta: {
+          //     protected: true,
+          //     title: 'page_title_multisig_cosign',
+          //   },
+          //   // @ts-ignore
+          //   component: () => import('@/views/pages/multisig/PartialTransactionDashboardPage/PartialTransactionDashboardPage.vue'),
+          // },
         ],
       }, {
         path: '/communityPanel',

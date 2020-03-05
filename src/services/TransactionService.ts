@@ -294,9 +294,6 @@ export class TransactionService extends AbstractService {
    * @return {CosignatureSignedTransaction[]}
    */
   public cosignPartialTransaction(account: Account, partial: AggregateTransaction): CosignatureSignedTransaction {
-    // - shortcuts
-    const generationHash = this.$store.getters['network/generationHash']
-
     // - create cosignature and sign
     const cosignature = CosignatureTransaction.create(partial);
     const signedCosig = account.signCosignatureTransaction(cosignature);
@@ -346,7 +343,7 @@ export class TransactionService extends AbstractService {
    * Aggregate transactions that are on stage, then sign
    * with \a account. This will sign an AGGREGATE COMPLETE
    * transaction and should not be used for multi-signature.
-   *
+   * 
    * @param {Account} account
    * @return {SignedTransaction[]}
    */

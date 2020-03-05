@@ -1174,6 +1174,6 @@
   "warning_already_a_cosignatory": "This account is already a cosignatory!",
   "notification_new_transaction_confirmed": "New transaction confirmed",
   "notification_new_unconfirmed_transaction": "New unconfirmed transaction",
-  "notification_new_aggregate_bonded": "A new aggregate transaction has been announced",
+  "notification_new_aggregate_bonded": "A new aggregate partial transaction has been announced",
   "notification_new_cosignature": "An aggregate transaction has been co-signed"
 }

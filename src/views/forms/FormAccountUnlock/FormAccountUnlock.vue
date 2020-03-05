@@ -1,5 +1,5 @@
 <template>
-  <FormWrapper class="account-unlock-container">
+  <FormWrapper class="account-unlock-container" :whitelisted="true">
     <form
       action="processSubmit"
       onsubmit="event.preventDefault()"

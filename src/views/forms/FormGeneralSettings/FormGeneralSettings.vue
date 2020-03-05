@@ -1,6 +1,6 @@
 <template>
   <div>
-    <FormWrapper class="general-settings-container">
+    <FormWrapper class="general-settings-container" :whitelisted="true">
       <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
         <form
           class="form-container mt-3"

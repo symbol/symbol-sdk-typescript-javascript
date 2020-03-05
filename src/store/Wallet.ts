@@ -930,13 +930,7 @@ export default {
       {commit, dispatch, rootGetters},
       {issuer, signedLock, signedPartial}
     ): Promise<BroadcastResult> {
-      console.log("issuer REST_ANNOUNCE_PARTIAL", issuer)
-      console.log("signedLock REST_ANNOUNCE_PARTIAL", signedLock)
-      console.log("signedPartial REST_ANNOUNCE_PARTIAL", signedPartial)
-      
-      if (!issuer || issuer.length !== 40) {
-        return ;
-      }
+      if (!issuer || issuer.length !== 40) return
 
       dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_ANNOUNCE_PARTIAL dispatched with: ' + JSON.stringify({
         issuer: issuer,
@@ -958,17 +952,13 @@ export default {
         // - announce hash lock transaction and await confirmation
         transactionHttp.announce(signedLock)
 
-        console.log("SIGNED LOCK HASH", signedLock.hash)
-        
         // - listen for hash lock confirmation
         return new Promise((resolve, reject) => {
           const address = Address.createFromRawAddress(issuer)
           return listener.confirmed(address).subscribe(
             async (success) => {
-              console.log("SUCCESS", success)
               // - hash lock confirmed, now announce partial
               const response = await transactionHttp.announceAggregateBonded(signedPartial)
-              console.log("response", response)
               commit('removeSignedTransaction', signedLock)
               commit('removeSignedTransaction', signedPartial)
               return resolve(new BroadcastResult(signedPartial, true))

@@ -15,7 +15,7 @@
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Account, Transaction, SignedTransaction, Password, PublicAccount, NetworkType} from 'symbol-sdk'
+import {Account, Transaction, SignedTransaction, PublicAccount, NetworkType} from 'symbol-sdk'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
@@ -30,8 +30,6 @@ import TransactionDetails from '@/components/TransactionDetails/TransactionDetai
 import FormAccountUnlock from '@/views/forms/FormAccountUnlock/FormAccountUnlock.vue'
 // @ts-ignore
 import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/HardwareConfirmationButton.vue'
-import { NotificationType } from '@/core/utils/NotificationType'
-import { WalletService } from '@/services/WalletService'
 
 @Component({
   components: {

@@ -1,6 +1,6 @@
 <template>
   <div class="form-account-creation-container">
-    <FormWrapper>
+    <FormWrapper :whitelisted="true">
       <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
         <form onsubmit="event.preventDefault()" @keyup.enter="handleSubmit(submit)">
           <div class="form-row">

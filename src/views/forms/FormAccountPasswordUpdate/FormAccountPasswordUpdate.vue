@@ -1,5 +1,5 @@
 <template>
-  <FormWrapper class="password-settings-container">
+  <FormWrapper class="password-settings-container" :whitelisted="true">
     <ValidationObserver ref="observer" v-slot="{ handleSubmit }" slim>
       <form
         class="form-container mt-3"

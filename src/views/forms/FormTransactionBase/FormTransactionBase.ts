@@ -165,7 +165,7 @@ export class FormTransactionBase extends Vue {
 /// region property watches
   @Watch('currentWallet')
   onCurrentWalletChange() {
-    // Reset form validation
+    this.resetForm() // @TODO: probably not the best way
     this.resetFormValidation()
   }
 /// end-region property watches

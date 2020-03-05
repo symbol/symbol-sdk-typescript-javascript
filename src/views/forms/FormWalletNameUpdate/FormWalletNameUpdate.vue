@@ -1,5 +1,5 @@
 <template>
-  <FormWrapper class="wallet-name-update-container">
+  <FormWrapper class="wallet-name-update-container" :whitelisted="true">
     <ValidationObserver
       v-slot="{ handleSubmit }"
       ref="observer"

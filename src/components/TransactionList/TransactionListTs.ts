@@ -16,8 +16,6 @@
 import {mapGetters} from 'vuex'
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Transaction, MosaicId, AggregateTransaction} from 'symbol-sdk'
-import {of, Observable} from 'rxjs'
-import {pluck, concatMap} from 'rxjs/operators'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
@@ -167,18 +165,7 @@ export class TransactionListTs extends Vue {
    */
   public async created() {
     this.service = new TransactionService(this.$store)
-
-    // if (!this.confirmedTransactions || !this.confirmedTransactions.length) {
-    //  await this.refresh()
-    // }
   }
-
-/// region property watches
-  // @Watch('totalCountItems')
-  // onCountItemsChange(totalCount: number) {
-  //   this.refresh()
-  // }
-/// end-region property watches
 
   /// region computed properties getter/setter
   public get countPages(): number {
