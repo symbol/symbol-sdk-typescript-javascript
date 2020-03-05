@@ -781,6 +781,10 @@ export default {
         // add accounts to the store
         accountsInfo.forEach(info => commit('addKnownWalletsInfo', info))
 
+        // if no current wallet address is available, skip and return accountsInfo
+        // (used in account import process)
+        if (!getters.currentWalletAddress) return accountsInfo
+
         // set current wallet info
         const currentWalletInfo = accountsInfo.find(
           info => info.address.equals(getters.currentWalletAddress),
