@@ -28,9 +28,6 @@ import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDi
 import {dashboardImages} from '@/views/resources/Images' 
 import {BalanceEntry} from '@/core/database/entities/MosaicsModel'
 
-// custom types
-
-
 @Component({
   components: {
     MosaicAmountDisplay,
@@ -122,15 +119,19 @@ export class MosaicBalanceListTs extends Vue {
    * @type {BalanceEntry}
    */
   get balanceEntries(): BalanceEntry[] {
-    // get mosaicsModel from getter
-    
     return this.mosaics.map(mosaic => {
+      const mosaicInfo = this.mosaicsInfo[mosaic.id.toHex()]
+      // if mosaicInfo is unavailable, skip and wait for re-render
+      if (!mosaicInfo) return null
+
       return {
         id: mosaic.id as MosaicId,
         name: this.mosaicsNames[mosaic.id.toHex()] || '',
-        amount: mosaic ? mosaic.amount.compact() : 0,
+        amount: mosaic
+          ? mosaic.amount.compact() / Math.pow(10, mosaicInfo.divisibility)
+          : 0,
       }
-    })
+    }).filter(x => x) // filter out mosaics without info available
   }
 
   /**
