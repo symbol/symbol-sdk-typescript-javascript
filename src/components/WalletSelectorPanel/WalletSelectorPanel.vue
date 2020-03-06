@@ -26,7 +26,7 @@
           <div class="wallet-tile-lower-container">
             <div class="wallet-amount">
               <MosaicAmountDisplay
-                :relative-amount="addressesBalances[item.address]"
+                :relative-amount="balances[item.address]"
                 :id="networkMosaic"
                 :size="'bigger'"
               />

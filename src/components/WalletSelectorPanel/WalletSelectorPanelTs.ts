@@ -15,7 +15,7 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Mosaic, MosaicId, NetworkType, AccountInfo, Address} from 'symbol-sdk'
+import {Mosaic, MosaicId, NetworkType, AccountInfo, Address, RawUInt64, UInt64} from 'symbol-sdk'
 import {ValidationProvider} from 'vee-validate'
 
 // internal dependencies
@@ -140,17 +140,17 @@ export class WalletSelectorPanelTs extends Vue {
     ).values()).map(w => Address.createFromRawAddress(w.values.get('address')))
 
     // - fetch latest accounts infos (1 request)
-    await this.$store.dispatch('wallet/REST_FETCH_INFOS', addresses)
+    const knownWalletsInfo = await this.$store.dispatch('wallet/REST_FETCH_INFOS', addresses)
 
     // - filter available wallets info
-    const knownWallets = Object.keys(this.knownWalletsInfo).filter(
-      k => {
+    const knownWallets = knownWalletsInfo.filter(
+      info => {
         const wallet = Array.from(repository.entries(
-          (w: WalletsModel) => k === w.values.get('address')
+          (w: WalletsModel) => info.address.plain() === w.values.get('address')
         ).values())
 
-        return wallet.length === 1
-      }).map(k => this.knownWalletsInfo[k])
+        return wallet.length > 0
+      })
 
     // - format balances
     for (let i = 0, m = knownWallets.length; i < m; i++) {
@@ -166,14 +166,15 @@ export class WalletSelectorPanelTs extends Vue {
         this.networkMosaic
       )
 
-      this.addressesBalances[address] = balance
+      Vue.set(this.addressesBalances, address, balance)
     }
-
-    // - "fake click" to enable balances (nextTick)
-    this.currentWalletIdentifier = this.currentWallet.getIdentifier()
   }
 
 /// region computed properties getter/setter
+  public get balances(): any {
+    return this.addressesBalances
+  }
+
   public get currentWalletIdentifier(): string {
     return !this.currentWallet ? '' : {...this.currentWallet}.identifier
   }

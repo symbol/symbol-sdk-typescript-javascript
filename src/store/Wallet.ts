@@ -800,7 +800,7 @@ export default {
         // fetch account info from REST gateway
         const accountHttp = RESTService.create('AccountHttp', currentPeer)
         const accountsInfo = await accountHttp.getAccountsInfo(addresses).toPromise()
-        
+
         // add accounts to the store
         accountsInfo.forEach(info => commit('addKnownWalletsInfo', info))
 

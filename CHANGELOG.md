@@ -3,7 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.9.5-beta1] - 06-Mar-2020
+## [v0.9.5-beta2][v0.9.5-beta2] - 
+
+#### Fixed
+
+- Fixed WalletSelectorPanel balances listing (fixes #27)
+
+
+## [v0.9.5-beta1][v0.9.5-beta1] - 06-Mar-2020
 
 ### Milestone: [catapult-server@v0.9.3.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.1)
 
@@ -26,7 +33,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Missing harvesting setup (account link & persistent delegation requests)
 - Some missing UI fixes for Symbol rebrand
 
-## [0.9.4-beta] - 25-Feb-2020
+## [v0.9.4-beta][v0.9.4-beta] - 25-Feb-2020
 
 ### Milestone: [catapult-server@v0.9.2.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.2.1)
 
@@ -54,7 +61,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Some missing UI fixes for Symbol rebrand
 - Mosaic definition *multi-signature* feature bug with signer selection (aggregate bonded only)
 
-## All versions
 
+[v0.9.5-beta2]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.9.4-beta...v0.9.5-beta2
 [v0.9.5-beta1]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.9.4-beta...v0.9.5-beta1
 [v0.9.4-beta]: https://github.com/nemtech/symbol-sdk-typescript-javascript/releases/tag/v0.9.4-beta
