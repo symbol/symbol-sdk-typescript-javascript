@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/symbol-sdk.svg)](https://badge.fury.io/js/symbol-sdk)
 [![Build Status](https://api.travis-ci.org/nemtech/symbol-sdk-typescript-javascript.svg?branch=master)](https://travis-ci.org/nemtech/symbol-sdk-typescript-javascript)
-[![Coverage Status](https://coveralls.io/repos/github/nemtech/symbol-sdk-typescript-javascript/badge.svg?branch=travis-ci)](https://coveralls.io/github/nemtech/symbol-sdk-typescript-javascript?branch=travis-ci)
+[![Coverage Status](https://coveralls.io/repos/github/nemtech/symbol-sdk-typescript-javascript/badge.svg)](https://coveralls.io/github/nemtech/symbol-sdk-typescript-javascript?branch=travis-ci)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 The Symbol SDK for TypeScript / JavaScript allows you to develop web, mobile, and Node.js applications.
