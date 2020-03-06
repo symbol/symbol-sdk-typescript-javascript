@@ -265,7 +265,7 @@ export default {
       // subscribe to updates
       dispatch('SUBSCRIBE')
     },
-    async SET_CURRENT_PEER({ commit, dispatch }, currentPeerUrl) {
+    async SET_CURRENT_PEER({ commit, dispatch, rootGetters }, currentPeerUrl) {
       if (!URLHelpers.isValidURL(currentPeerUrl)) {
         throw Error('Cannot change node. URL is not valid: ' + currentPeerUrl)
       }
@@ -285,6 +285,17 @@ export default {
           currentHeight: payload.currentHeight,
           peerInfo: payload.peerInfo
         })
+
+        const currentWallet = rootGetters['wallet/currentWallet']
+
+        // - shutdown websocket connections
+        await dispatch('wallet/uninitialize', {
+          address: currentWallet.values.get('address'),
+          which: 'currentWalletMosaics',
+        }, {root: true})
+
+        // - re-open listeners
+        dispatch('wallet/initialize', {address: currentWallet.values.get('address')}, {root: true})
       }
       catch (e) {
         dispatch('diagnostic/ADD_ERROR', 'Error with store action network/SET_CURRENT_PEER: ' + JSON.stringify(e), {root: true})

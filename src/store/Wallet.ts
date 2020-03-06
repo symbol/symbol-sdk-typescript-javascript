@@ -41,6 +41,7 @@ import {RESTService} from '@/services/RESTService'
 import {AwaitLock} from './AwaitLock';
 import {BroadcastResult} from '@/core/transactions/BroadcastResult';
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import { RESTDispatcher } from '@/core/utils/RESTDispatcher';
 
 /**
  * Helper to format transaction group in name of state variable.
@@ -227,27 +228,32 @@ export default {
     currentWalletInfo: (state: WalletState): AccountInfo | null => {
       const plainAddress = state.currentWalletAddress ? state.currentWalletAddress.plain() : null
       if(!plainAddress) return null
-      return state.knownWalletsInfo[plainAddress] || null
+      if(!state.knownWalletsInfo.hasOwnProperty(plainAddress)) return null
+      return state.knownWalletsInfo[plainAddress]
     },
     currentWalletMosaics: (state: WalletState) => state.currentWalletMosaics,
     currentWalletOwnedMosaics: (state: WalletState) => state.currentWalletOwnedMosaics,
     currentWalletOwnedNamespaces: (state: WalletState) => state.currentWalletOwnedNamespaces,
     currentWalletMultisigInfo: (state: WalletState) => {
-      if (!state.currentWalletAddress) return null
-      return state.knownMultisigsInfo[state.currentWalletAddress.plain()]
+      const plainAddress = state.currentWalletAddress ? state.currentWalletAddress.plain() : null
+      if(!plainAddress) return null
+      if(!state.knownMultisigsInfo.hasOwnProperty(plainAddress)) return null
+      return state.knownMultisigsInfo[plainAddress]
     },
     isCosignatoryMode: (state: WalletState) => state.isCosignatoryMode,
     currentSignerAddress: (state: WalletState) => state.currentSignerAddress,
     currentSignerInfo: (state: WalletState): AccountInfo | null => {
       const plainAddress = state.currentSignerAddress ? state.currentSignerAddress.plain() : null
       if(!plainAddress) return null
-      return state.knownWalletsInfo[plainAddress] || null
+      if(!state.knownWalletsInfo.hasOwnProperty(plainAddress)) return null
+      return state.knownWalletsInfo[plainAddress]
     },
     currentSignerMultisigInfo: (state: WalletState) => {
       const plainAddress = state.currentSignerAddress ? state.currentSignerAddress.plain() : null
       if(!plainAddress) return null
-      return state.knownMultisigsInfo[plainAddress] || null
-    } ,
+      if(!state.knownMultisigsInfo.hasOwnProperty(plainAddress)) return null
+      return state.knownMultisigsInfo[plainAddress]
+    },
     currentSignerMosaics: (state: WalletState) => state.currentSignerMosaics,
     currentSignerOwnedMosaics: (state: WalletState) => state.currentSignerOwnedMosaics,
     currentSignerOwnedNamespaces: (state: WalletState) => state.currentSignerOwnedNamespaces,
@@ -311,6 +317,7 @@ export default {
     addKnownMultisigInfo: (state, multisigInfo: MultisigAccountInfo) => {
       Vue.set(state.knownMultisigsInfo, multisigInfo.account.address.plain(), multisigInfo)
     },
+    setKnownMultisigInfo: (state, payload) => Vue.set(state, 'knownMultisigsInfo', payload),
     transactionHashes: (state, hashes) => Vue.set(state, 'transactionHashes', hashes),
     confirmedTransactions: (state, transactions) => Vue.set(state, 'confirmedTransactions', transactions),
     unconfirmedTransactions: (state, transactions) => Vue.set(state, 'unconfirmedTransactions', transactions),
@@ -405,6 +412,7 @@ export default {
         // close websocket connections
         await dispatch('UNSUBSCRIBE', address)
         await dispatch('RESET_BALANCES', which)
+        await dispatch('RESET_MULTISIG')
         await dispatch('RESET_TRANSACTIONS')
         commit('setInitialized', false)
       }
@@ -412,25 +420,31 @@ export default {
     },
 /// region scoped actions
     async REST_FETCH_WALLET_DETAILS({dispatch}, {address, options}) {
-      try { await dispatch('REST_FETCH_INFO', address) } catch (e) {}
+      const dispatcher = new RESTDispatcher(dispatch)
 
+      // - blocking first action
+      dispatcher.add('REST_FETCH_INFO', address, null, true)
+
+      // - other actions are all optional and can be disabled
       if (!options || !options.skipMultisig) {
-        try { dispatch('REST_FETCH_MULTISIG', address) } catch (e) {}
+        dispatcher.add('REST_FETCH_MULTISIG', address)
       }
 
       if (!options || !options.skipTransactions) {
-        try { await dispatch('REST_FETCH_TRANSACTIONS', {
+        dispatcher.add('REST_FETCH_TRANSACTIONS', {
           group: 'confirmed',
           pageSize: 100,
           address: address,
-        }) } catch(e) {}
+        })
       }
 
-      // must be non-blocking
       if (!options || !options.skipOwnedAssets) {
-        try { dispatch('REST_FETCH_OWNED_MOSAICS', address) } catch (e) {}
-        try { dispatch('REST_FETCH_OWNED_NAMESPACES', address) } catch (e) {}
+        dispatcher.add('REST_FETCH_OWNED_MOSAICS', address)
+        dispatcher.add('REST_FETCH_OWNED_NAMESPACES', address)
       }
+
+      // - delays of 1000ms will be added every second request
+      dispatcher.throttle_dispatch()
     },
     /**
      * Possible `options` values include: 
@@ -522,6 +536,9 @@ export default {
       commit('confirmedTransactions', [])
       commit('unconfirmedTransactions', [])
       commit('partialTransactions', [])
+    },
+    RESET_MULTISIG({commit}) {
+      commit('setKnownMultisigInfo', {})
     },
     ADD_COSIGNATURE({commit, dispatch, getters}, cosignatureMessage) {
       if (!cosignatureMessage || !cosignatureMessage.parentHash) {
