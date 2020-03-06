@@ -20,19 +20,26 @@ const {MIN_PASSWORD_LENGTH} = appConfig.constants
 
 // XXX network store config getter
 const currentNetwork = networkConfig.networks['testnet-publicTest']
+const {
+  maxMessageSize,
+  maxMosaicAtomicUnits,
+  maxMosaicDivisibility,
+  maxMosaicDuration,
+  minNamespaceDuration,
+} = currentNetwork.properties
 
 export const ValidationRuleset = {
   address: 'required|address|addressNetworkType:currentAccount',
   accountPassword: 'required|accountPassword',
   addressOrAlias: 'required|addressOrAlias|addressOrAliasNetworkType:currentAccount',
-  amount: 'excluded:""|is_not:0|min_value:0|maxDecimals:6',
+  amount: `excluded:""|is_not:0|min_value:0|maxDecimals:${maxMosaicDivisibility}|max_value:${maxMosaicAtomicUnits}`,
   confirmPassword: 'required|confirmPassword:@newPassword',
   divisibility: 'required|min_value:0|max_value:6|integer',
-  duration: `required|min_value:0|max_value:${currentNetwork.properties.maxMosaicDuration}`,
+  duration: `required|min_value:0|max_value:${maxMosaicDuration}`,
   generationHash: 'required|min:64|max:64',
   mosaicId: 'required|mosaicId',
-  message: `max:${currentNetwork.properties.maxMessageSize}`,
-  namespaceDuration: `required|min_value:${currentNetwork.properties.minNamespaceDuration}|maxNamespaceDuration`,
+  message: `max:${maxMessageSize}`,
+  namespaceDuration: `required|min_value:${minNamespaceDuration}|maxNamespaceDuration`,
   namespaceName: {
     required: true,
     regex: '^[a-z0-9-_]{1,64}$',
@@ -49,7 +56,7 @@ export const ValidationRuleset = {
   previousPassword: 'required|confirmLock:cipher',
   privateKey: 'min:64|max:64|privateKey',
   recipientPublicKey: 'required|publicKey',
-  supply: `required|integer|min_value: 1|max_value:${currentNetwork.properties.maxMosaicAtomicUnits}`,
+  supply: `required|integer|min_value: 1|max_value:${maxMosaicAtomicUnits}`,
   walletPassword: 'required|confirmWalletPassword:wallet',
   url: 'required|url',
   newAccountName:'required|newAccountName',

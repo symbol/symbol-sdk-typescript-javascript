@@ -34,12 +34,14 @@ import FormLabel from '@/components//FormLabel/FormLabel.vue'
     ErrorTooltip,
     FormLabel,
   },
-  computed: {...mapGetters({
-    networkMosaic: 'mosaic/networkMosaic',
-    networkMosaicName: 'mosaic/networkMosaicName',
-    mosaicsInfo: 'mosaic/mosaicsInfoList',
-    mosaicsNames: 'mosaic/mosaicsNames',
-  })},
+  computed: {
+    ...mapGetters({
+      networkMosaic: 'mosaic/networkMosaic',
+      networkMosaicName: 'mosaic/networkMosaicName',
+      mosaicsInfo: 'mosaic/mosaicsInfoList',
+      mosaicsNames: 'mosaic/mosaicsNames',
+    }),
+  },
 })
 export class MosaicSelectorTs extends Vue {
 
@@ -47,23 +49,23 @@ export class MosaicSelectorTs extends Vue {
    * Prop bound to the parent v-model
    * @type {string}
    */
-  @Prop({ default: '' }) value: string
+  @Prop({default: ''}) value: string
 
   /**
    * Mosaics to display as options
    * @type {Mosaic[]}
    */
-  @Prop({ default: [] }) mosaics: Mosaic[]
+  @Prop({default: []}) mosaics: Mosaic[]
 
 
   /**
    * Field label hidden by default
    * @type {string}
    */
-  @Prop({ default: null }) label: string
+  @Prop({default: null}) label: string
 
 
-  @Prop({ default: 'networkMosaic' }) defaultMosaic: 'networkMosaic' | 'firstInList'
+  @Prop({default: 'networkMosaic'}) defaultMosaic: 'networkMosaic' | 'firstInList'
   /**
    * Networks currency mosaic
    * @var {MosaicId}
@@ -90,7 +92,7 @@ export class MosaicSelectorTs extends Vue {
    */
   public mosaicsNames: any
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   /**
    * All mosaics stored in db
    * @readonly
@@ -133,12 +135,15 @@ export class MosaicSelectorTs extends Vue {
    * @return {void}
    */
   public mounted(): void {
-    // set default value to network mosaic
+    // if a value is provided, return
+    if (this.value && this.value.length > 0) return
+
+    // else... set default value to network mosaic
     if (this.defaultMosaic === 'networkMosaic' && this.networkMosaic) {
       this.selectedMosaic = this.networkMosaic.toHex()
     }
 
-    // set default value to the first mosaic from the props
+    // otherwise... set default value to the first mosaic from the props
     if (this.defaultMosaic === 'firstInList' && this.mosaics.length) {
       this.selectedMosaic = this.mosaics[0].id.toHex()
     }

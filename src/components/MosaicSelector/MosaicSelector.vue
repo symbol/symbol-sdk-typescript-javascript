@@ -8,19 +8,19 @@
     class="select-container"
   >
     <ErrorTooltip :errors="errors">
-      <Select
+      <select
         v-model="selectedMosaic"
         v-focus
         class="select-size select-style"
       >
-        <Option 
+        <option 
           v-for="m in displayedMosaics"
           :key="m.getIdentifier()"
           :value="m.getIdentifier()"
         >
           {{ m.values.get('name') !== '' ? m.values.get('name') : m.values.get('hexId') }} 
-        </Option>
-      </Select>
+        </option>
+      </select>
     </ErrorTooltip>
   </ValidationProvider>
 </template>

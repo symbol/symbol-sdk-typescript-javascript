@@ -21,7 +21,6 @@ import {
   Address,
   Message,
   PublicAccount,
-  RawUInt64,
   NamespaceId,
   UInt64,
 } from 'symbol-sdk'
@@ -33,7 +32,15 @@ import {ViewTransferTransaction, TransferFormFieldsType} from '@/core/transactio
 import {FormTransactionBase} from '@/views/forms/FormTransactionBase/FormTransactionBase'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
 import {AddressValidator} from '@/core/validation/validators'
+import {MosaicInputsManager} from './MosaicInputsManager'
 
+interface MosaicAttachment {
+  mosaicHex: string
+  /**
+   * Relative amount
+   */
+  amount: number
+}
 
 // child components
 import {ValidationObserver} from 'vee-validate'
@@ -45,8 +52,6 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 import MessageInput from '@/components/MessageInput/MessageInput.vue'
 // @ts-ignore
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
-// @ts-ignore
-import MosaicAttachmentDisplay from '@/components/MosaicAttachmentDisplay/MosaicAttachmentDisplay.vue'
 // @ts-ignore
 import MosaicAttachmentInput from '@/components/MosaicAttachmentInput/MosaicAttachmentInput.vue'
 // @ts-ignore
@@ -60,7 +65,13 @@ import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
 
-type MosaicAttachmentType = {id: MosaicId, mosaicHex: string, name: string, amount: number}
+type MosaicAttachmentType = {
+  id: MosaicId,
+  mosaicHex: string,
+  name: string,
+  amount: number,
+  uid: number,
+}
 
 @Component({
   components: {
@@ -68,7 +79,6 @@ type MosaicAttachmentType = {id: MosaicId, mosaicHex: string, name: string, amou
     FormWrapper,
     MessageInput,
     ModalTransactionConfirmation,
-    MosaicAttachmentDisplay,
     MosaicAttachmentInput,
     MosaicSelector,
     RecipientInput,
@@ -126,11 +136,16 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     maxFee: 0
   }
 
+  protected mosaicInputsManager = MosaicInputsManager.initialize(this.currentWalletMosaics)
+
   /**
    * Reset the form with properties
    * @return {void}
    */
   protected resetForm() {
+    // - initialize mosaic inputs manager
+    this.mosaicInputsManager = MosaicInputsManager.initialize(this.currentWalletMosaics)
+
     // - re-populate form if transaction staged
     if (this.stagedTransactions.length) {
       const transfer = this.stagedTransactions.find(staged => staged.type === TransactionType.TRANSFER)
@@ -145,11 +160,19 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     this.formItems.selectedMosaicHex = this.networkMosaic.toHex()
     this.formItems.recipientRaw = !!this.recipient ? this.recipient.plain() : ''
     this.formItems.recipient = !!this.recipient ? this.recipient : null
-    this.formItems.attachedMosaics = !!this.mosaics && this.mosaics.length ? this.mosaicsToAttachments(this.mosaics) : []
+    this.formItems.attachedMosaics = !!this.mosaics && this.mosaics.length
+      ? this.mosaicsToAttachments(this.mosaics)
+      : [{mosaicHex: this.networkMosaic.id.toHex(), amount: 0, uid: 1}]
+
     this.formItems.messagePlain = !!this.message ? Formatters.hexToUtf8(this.message.payload) : ''
 
     // - maxFee must be absolute
     this.formItems.maxFee = this.defaultFee
+
+    // - affect attached mosaics slots
+    this.formItems.attachedMosaics.forEach(
+      ({mosaicHex, uid}) => this.mosaicInputsManager.setSlot(mosaicHex, uid),
+    )
   }
 
   /**
@@ -170,12 +193,15 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     this.factory = new TransactionFactory(this.$store)
     try {
       // - read form
-      const data: TransferFormFieldsType = {
+        const data: TransferFormFieldsType = {
         recipient: this.instantiatedRecipient,
-        mosaics: this.attachedMosaics.map(
-          (spec: {mosaicHex: string, amount: number}): {mosaicHex: string, amount: number} => ({
-            mosaicHex: spec.mosaicHex,
-            amount: spec.amount // amount is relative
+        mosaics: this.attachedMosaics
+          .filter(({uid}) => uid) // filter out null values
+          .map((spec: {
+            mosaicHex: string, amount: number,
+          }): {mosaicHex: string, amount: number} => ({
+              mosaicHex: spec.mosaicHex,
+              amount: spec.amount // amount is relative
           })),
         message: this.formItems.messagePlain,
         maxFee: UInt64.fromUint(this.formItems.maxFee),
@@ -204,8 +230,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
     // - populate recipient
     this.formItems.recipientRaw = transaction.recipientAddress instanceof Address
-    ? transaction.recipientAddress.plain()
-    : (transaction.recipientAddress as NamespaceId).fullName
+      ? transaction.recipientAddress.plain()
+      : (transaction.recipientAddress as NamespaceId).fullName
     
     // - populate attached mosaics
     this.attachedMosaics = this.mosaicsToAttachments(transaction.mosaics)
@@ -275,26 +301,35 @@ export class FormTransferTransactionTs extends FormTransactionBase {
    * the event 'click'
    * @return {void}
    */
-  public async onAddMosaic(formItems: {mosaicHex: string, amount: number}) {
-    // - update form data
-    const attachments = [].concat(...this.formItems.attachedMosaics)
-    const id = new MosaicId(RawUInt64.fromHex(formItems.mosaicHex))
-    const exists = attachments.findIndex(m => m.id.equals(id))
-    if (-1 !== exists) {
-      // - mosaic was already added, only increment amount
-      attachments[exists].amount += formItems.amount // amount is relative
-    }
-    else {
-      // - mosaic newly added
-      attachments.push({
-        id: id,
-        mosaicHex: formItems.mosaicHex,
-        name: this.getMosaicName(id),
-        amount: formItems.amount, // amount is relative
-      })
-    }
+  protected onMosaicInputChange(payload: {
+    mosaicAttachment: MosaicAttachment
+    inputIndex: number
+  }): void {
+    const {mosaicAttachment, inputIndex} = payload
 
-    this.attachedMosaics = attachments
+    // set slot
+    this.mosaicInputsManager.setSlot(mosaicAttachment.mosaicHex, inputIndex)
+
+    // update formItems
+    const newAttachedMosaics = [...this.formItems.attachedMosaics]
+    const indexToUpdate = newAttachedMosaics.findIndex(({uid}) => uid == inputIndex)
+    newAttachedMosaics[indexToUpdate] = mosaicAttachment
+    Vue.set(this.formItems, 'attachedMosaics', newAttachedMosaics)
+  }
+
+  /**
+   * Handle deletion of a mosaic input
+   * @protected
+   * @param {number} inputIndex
+   */
+  protected onDeleteMosaicInput(index: number): void {
+    console.table(this.formItems.attachedMosaics.map(x => x))
+    // unset mosaic input slot
+    this.mosaicInputsManager.unsetSlot(index)
+
+    // update formItems, set input uid to null
+    const indexToUpdate = this.formItems.attachedMosaics.findIndex(({uid}) => uid == index)
+    Vue.set(this.formItems.attachedMosaics, indexToUpdate, {uid: null})
   }
 
   /**
@@ -314,8 +349,21 @@ export class FormTransferTransactionTs extends FormTransactionBase {
           id: mosaic.id as MosaicId, //XXX resolve mosaicId from namespaceId
           mosaicHex: mosaic.id.toHex(), // XXX resolve mosaicId from namespaceId
           name: this.getMosaicName(mosaic.id),
-          amount: mosaic.amount.compact() / Math.pow(10, div)
+          amount: mosaic.amount.compact() / Math.pow(10, div),
+          uid: Math.floor(Math.random() * 10e6), // used to index dynamic inputs
         }
       })
+  }
+
+  protected addMosaicAttachmentInput() {
+    if (!this.mosaicInputsManager.hasFreeSlots()) return
+    const uid = Math.floor(Math.random() * 10e6)
+    const [mosaicToAffectToNewInput] = this.mosaicInputsManager.getMosaicsBySlot(uid)
+    this.mosaicInputsManager.setSlot(mosaicToAffectToNewInput, uid)
+    this.formItems.attachedMosaics.push({
+      mosaicHex: mosaicToAffectToNewInput,
+      amount: 0,
+      uid,
+    })
   }
 }

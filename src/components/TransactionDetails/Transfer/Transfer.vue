@@ -58,7 +58,6 @@ export default class Transfer extends Vue {
   protected get items(): { key: string, value: any, isMosaic?: boolean }[] {
     const attachedMosaics: AttachedMosaic[] = this.view.values.get('mosaics')
     const message: Message = this.view.values.get('message')
-    
 
     const mosaicItems = attachedMosaics.map((mosaic, index, self) => {
       return {

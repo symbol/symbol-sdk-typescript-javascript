@@ -480,7 +480,7 @@
   "XEM_market_trend_nearly_24_hours": "24-hours market trend",
   "This_password_will_be_used_for_all_transactions_in_your_wallet_account_Please_remember_your_password_and_keep_it_safe": "1. This password will be used for all transactions in your account. Please, make a backup in a safe place.",
   "add_address": "Add address",
-  "add_mosaic": "Add mosaic",
+  "add_mosaic": "Add a mosaic",
   "add_entity_type": "Add entity type",
   "Any_information_cannot_be_empty": "Fields cannot be empty. Please, verify your input.",
   "success": "The operation was successful",

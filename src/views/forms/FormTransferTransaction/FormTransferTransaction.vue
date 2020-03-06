@@ -12,23 +12,26 @@
                           :signers="signers"
                           @change="onChangeSigner" />
 
-          <!-- Transfer recipient input field -->
+          <!-- Transfer recipient input field --> 
           <RecipientInput v-model="formItems.recipientRaw" />
 
           <!-- Mosaics attachments input fields -->
-          <MosaicAttachmentInput
-            v-model="formItems.attachedMosaics"
-            :mosaics="currentWalletMosaics"
-            :absolute="false"
-            @add="onAddMosaic"
-          />
+          <div v-for="(attachedMosaic, index) in attachedMosaics" :key="index">
+            <MosaicAttachmentInput
+              v-if="attachedMosaic.uid"
+              :mosaic-attachment="attachedMosaic"
+              :mosaic-hex-ids="mosaicInputsManager.getMosaicsBySlot(attachedMosaic.uid)"
+              :absolute="false"
+              :uid="attachedMosaic.uid"
+              @input-changed="onMosaicInputChange"
+              @input-deleted="onDeleteMosaicInput"
+            />
+          </div>
 
-          <!-- Display of attached mosaics -->
-          <MosaicAttachmentDisplay
-            v-model="formItems.attachedMosaics"
-            :absolute="false"
-            @delete="onDeleteMosaic"
-          />
+          <!-- Add mosaic button -->
+          <div v-if="mosaicInputsManager.hasFreeSlots()" class="form-row align-right action-link">
+            <a @click="addMosaicAttachmentInput">{{ $t('add_mosaic') }}</a>
+          </div>
 
           <!-- Transfer message input field -->
           <MessageInput v-model="formItems.messagePlain" />

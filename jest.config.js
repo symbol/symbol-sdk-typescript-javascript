@@ -35,6 +35,7 @@ module.exports = {
     '**/__tests__/repositories/**/*.spec.ts',
     '**/__tests__/store/**/*.spec.ts',
     '**/__tests__/components/**/*.spec.ts',
+    '**/__tests__/views/**/*.spec.ts',
   ],
   testURL: 'http://localhost/',
   globals: {
