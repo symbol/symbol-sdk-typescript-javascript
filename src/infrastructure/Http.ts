@@ -79,7 +79,10 @@ export abstract class Http {
         if (error.code && error.address && error.code === 'ECONNREFUSED') {
             return new Error(`Cannot reach node: ${error.address}:${error.port}`);
         }
-        return error;
+        if (error instanceof Error) {
+            return error;
+        }
+        return new Error(error);
     }
 
     /**
