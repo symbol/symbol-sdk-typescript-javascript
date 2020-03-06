@@ -8,17 +8,22 @@ cache:
     - "node_modules"
 before_script:
   - npm run build
-script: 
+script:
   - npm run test:cov
   - npm run coveralls-report
   - npm install --global typedoc
   - typedoc --out ts-docs src
   - touch ./ts-docs/.nojekyll
 deploy:
-  provider: pages
-  skip_cleanup: true
-  local_dir: ts-docs
-  github_token: $GITHUB_TOKEN
-  on:
-    branch: master
-
+  - provider: pages
+    skip_cleanup: true
+    local_dir: ts-docs
+    github_token: $GITHUB_TOKEN
+    on:
+      branch: master
+  - provider: script
+    skip_cleanup: true
+    script: /bin/sh travis/uploadArchives.sh
+    on:
+      branch: master
+      node_js: "8"

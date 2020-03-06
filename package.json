@@ -1,6 +1,6 @@
 {
   "name": "symbol-sdk",
-  "version": "0.17.3",
+  "version": "0.17.4",
   "description": "Reactive symbol sdk for typescript and javascript",
   "scripts": {
     "pretest": "npm run build",
@@ -11,7 +11,8 @@
     "build": "rm -rf dist/ && tsc && npm run e2econfigcopy",
     "test:cov": "nyc --reporter=lcov --reporter=text-summary npm t",
     "test:coveralls": "npm run test:cov | coveralls",
-    "coveralls-report": "cat ./coverage/lcov.info | coveralls"
+    "coveralls-report": "cat ./coverage/lcov.info | coveralls",
+    "version": "echo $npm_package_version"
   },
   "contributors": [
     {

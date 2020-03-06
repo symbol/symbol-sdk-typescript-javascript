@@ -142,7 +142,7 @@ describe('NodeHttp', () => {
         try {
             await nodeRepository.getNodeTime().toPromise();
         } catch (e) {
-            expect(e.message).to.deep.equals('Error: Node time not available');
+            expect(e.message).to.deep.equals('Node time not available');
         }
     });
 

@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { from as observableFrom, Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { AccountInfoDTO, AccountRoutesApi } from 'symbol-openapi-typescript-node-client';
+import { Observable } from 'rxjs';
+import { AccountIds, AccountInfoDTO, AccountRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { AccountInfo } from '../model/account/AccountInfo';
 import { ActivityBucket } from '../model/account/ActivityBucket';
 import { Address } from '../model/account/Address';
@@ -58,25 +57,18 @@ export class AccountHttp extends Http implements AccountRepository {
      * @returns Observable<AccountInfo>
      */
     public getAccountInfo(address: Address): Observable<AccountInfo> {
-        return observableFrom(this.accountRoutesApi.getAccountInfo(address.plain())).pipe(
-            map(({body}) => this.toAccountInfo(body)),
-            catchError((error) =>  throwError(this.errorHandling(error))),
-        );
+        return this.call(this.accountRoutesApi.getAccountInfo(address.plain()), (body) => this.toAccountInfo(body));
     }
+
     /**
      * Gets AccountsInfo for different accounts.
      * @param addresses List of Address
      * @returns Observable<AccountInfo[]>
      */
     public getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]> {
-        const accountIdsBody = {
-            addresses: addresses.map((address) => address.plain()),
-        };
-        return observableFrom(
-            this.accountRoutesApi.getAccountsInfo(accountIdsBody)).pipe(
-                map(({body}) => body.map(this.toAccountInfo)),
-                catchError((error) =>  throwError(this.errorHandling(error))),
-        );
+        const accountIds = new AccountIds();
+        accountIds.addresses = addresses.map((address) => address.plain());
+        return this.call(this.accountRoutesApi.getAccountsInfo(accountIds), (body) => body.map(this.toAccountInfo));
     }
 
     /**
@@ -122,17 +114,13 @@ export class AccountHttp extends Http implements AccountRepository {
     public getAccountTransactions(address: Address,
                                   queryParams?: QueryParams,
                                   transactionFilter?: TransactionFilter): Observable<Transaction[]> {
-        return observableFrom(
-            this.accountRoutesApi.getAccountConfirmedTransactions(address.plain(),
-                this.queryParams(queryParams).pageSize,
-                this.queryParams(queryParams).id,
-                this.queryParams(queryParams).ordering,
-                this.transactionFilter(transactionFilter).type)).pipe(
-                    map(({body}) => body.map((transactionDTO) => {
-                            return CreateTransactionFromDTO(transactionDTO);
-                        })),
-                    catchError((error) =>  throwError(this.errorHandling(error))),
-                );
+
+        return this.call(this.accountRoutesApi.getAccountConfirmedTransactions(address.plain(),
+            this.queryParams(queryParams).pageSize,
+            this.queryParams(queryParams).id,
+            this.queryParams(queryParams).ordering,
+            this.transactionFilter(transactionFilter).type),
+            (body) => body.map((transactionDTO) => CreateTransactionFromDTO(transactionDTO)));
     }
 
     /**
@@ -145,18 +133,13 @@ export class AccountHttp extends Http implements AccountRepository {
      */
     public getAccountIncomingTransactions(address: Address,
                                           queryParams?: QueryParams,
-                                          transactionFilter?: TransactionFilter): Observable <Transaction[]> {
-        return observableFrom(
-            this.accountRoutesApi.getAccountIncomingTransactions(address.plain(),
-                this.queryParams(queryParams).pageSize,
-                this.queryParams(queryParams).id,
-                this.queryParams(queryParams).ordering),
-                this.transactionFilter(transactionFilter).type).pipe(
-                    map(({body}) => body.map((transactionDTO) => {
-                            return CreateTransactionFromDTO(transactionDTO);
-                        })),
-                    catchError((error) =>  throwError(this.errorHandling(error))),
-        );
+                                          transactionFilter?: TransactionFilter): Observable<Transaction[]> {
+        return this.call(this.accountRoutesApi.getAccountIncomingTransactions(address.plain(),
+            this.queryParams(queryParams).pageSize,
+            this.queryParams(queryParams).id,
+            this.queryParams(queryParams).ordering,
+            this.transactionFilter(transactionFilter).type),
+            (body) => body.map((transactionDTO) => CreateTransactionFromDTO(transactionDTO)));
     }
 
     /**
@@ -169,18 +152,13 @@ export class AccountHttp extends Http implements AccountRepository {
      */
     public getAccountOutgoingTransactions(address: Address,
                                           queryParams?: QueryParams,
-                                          transactionFilter?: TransactionFilter): Observable <Transaction[]> {
-        return observableFrom(
-            this.accountRoutesApi.getAccountOutgoingTransactions(address.plain(),
-                this.queryParams(queryParams).pageSize,
-                this.queryParams(queryParams).id,
-                this.queryParams(queryParams).ordering),
-                this.transactionFilter(transactionFilter).type).pipe(
-                    map(({body}) => body.map((transactionDTO) => {
-                            return CreateTransactionFromDTO(transactionDTO);
-                        })),
-                    catchError((error) =>  throwError(this.errorHandling(error))),
-                );
+                                          transactionFilter?: TransactionFilter): Observable<Transaction[]> {
+        return this.call(this.accountRoutesApi.getAccountOutgoingTransactions(address.plain(),
+            this.queryParams(queryParams).pageSize,
+            this.queryParams(queryParams).id,
+            this.queryParams(queryParams).ordering,
+            this.transactionFilter(transactionFilter).type),
+            (body) => body.map((transactionDTO) => CreateTransactionFromDTO(transactionDTO)));
     }
 
     /**
@@ -194,18 +172,13 @@ export class AccountHttp extends Http implements AccountRepository {
      */
     public getAccountUnconfirmedTransactions(address: Address,
                                              queryParams?: QueryParams,
-                                             transactionFilter?: TransactionFilter): Observable <Transaction[]> {
-        return observableFrom(
-            this.accountRoutesApi.getAccountUnconfirmedTransactions(address.plain(),
-                this.queryParams(queryParams).pageSize,
-                this.queryParams(queryParams).id,
-                this.queryParams(queryParams).ordering),
-                this.transactionFilter(transactionFilter).type).pipe(
-                    map(({body}) => body.map((transactionDTO) => {
-                            return CreateTransactionFromDTO(transactionDTO);
-                        })),
-                    catchError((error) =>  throwError(this.errorHandling(error))),
-                );
+                                             transactionFilter?: TransactionFilter): Observable<Transaction[]> {
+        return this.call(this.accountRoutesApi.getAccountUnconfirmedTransactions(address.plain(),
+            this.queryParams(queryParams).pageSize,
+            this.queryParams(queryParams).id,
+            this.queryParams(queryParams).ordering,
+            this.transactionFilter(transactionFilter).type),
+            (body) => body.map((transactionDTO) => CreateTransactionFromDTO(transactionDTO)));
     }
 
     /**
@@ -218,17 +191,12 @@ export class AccountHttp extends Http implements AccountRepository {
      */
     public getAccountPartialTransactions(address: Address,
                                          queryParams?: QueryParams,
-                                         transactionFilter?: TransactionFilter): Observable <AggregateTransaction[]> {
-        return observableFrom(
-            this.accountRoutesApi.getAccountPartialTransactions(address.plain(),
-                this.queryParams(queryParams).pageSize,
-                this.queryParams(queryParams).id,
-                this.queryParams(queryParams).ordering),
-                this.transactionFilter(transactionFilter).type).pipe(
-                    map(({body}) => body.map((transactionDTO) => {
-                            return CreateTransactionFromDTO(transactionDTO) as AggregateTransaction;
-                        })),
-                    catchError((error) =>  throwError(this.errorHandling(error))),
-                );
+                                         transactionFilter?: TransactionFilter): Observable<AggregateTransaction[]> {
+        return this.call(this.accountRoutesApi.getAccountPartialTransactions(address.plain(),
+            this.queryParams(queryParams).pageSize,
+            this.queryParams(queryParams).id,
+            this.queryParams(queryParams).ordering,
+            this.transactionFilter(transactionFilter).type),
+            (body) => body.map((transactionDTO) => CreateTransactionFromDTO(transactionDTO) as AggregateTransaction));
     }
 }
