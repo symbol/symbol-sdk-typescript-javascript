@@ -26,7 +26,10 @@
           {{ $t('Nem_wallet_can_not_recover_your_mnemonic') }}
         </p>
         <div class="jump-btn">
-          <button @click="$router.push({name: 'dashboard'})">
+          <button
+            class="button-style validation-button"
+            @click="$router.push({name: 'dashboard'})"
+          >
             {{ $t('next') }}
           </button>
         </div>

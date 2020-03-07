@@ -1,19 +1,23 @@
 <template>
-  <div class="choose-wallet-sec" @keyup.enter="submit">
+  <div class="wallet-selection-container" @keyup.enter="submit">
     <div class="left-container">
       <div class="dialog-sub-tips">
         {{ $t('Address_to_Interact_With') }}
       </div>
-      <div class="choose-hd-path radius">
+      <div class="choose-hd-path radius scroll">
         <div class="address-list">
           <div class="table-title">
             <span class="address-id">{{ $t('ID') }}</span>
             <span class="address-value">{{ $t('Address') }}</span>
             <span class="address-balance">{{ $t('Balance') }}</span>
           </div>
-          <div class="scroll">
-            <div v-for="(a, index) in addressesList" :key="index" @click="selectedAccounts.push(index)">
-              <div v-if="!(index in selectedAccounts)" class="table-item pointer">
+          <div>
+            <div
+              v-for="(a, index) in addressesList"
+              :key="index"
+              @click="onAddAddress(index)"
+            >
+              <div v-if="!(selectedAccounts.includes(index))" class="table-item pointer">
                 <span class="address-id">{{ index + 1 }}</span>
                 <span class="address-value">{{ formatters.miniAddress(a) }}</span>
                 <span v-if="addressMosaicMap[a.plain()]" class="address-balance overflow_ellipsis">
@@ -36,7 +40,7 @@
       <div class="right-container-title">
         {{ $t('Choose_Wallets') }}
       </div>
-      <div class="address-list-container radius">
+      <div class="address-list-container radius scroll">
         <div class="address-list">
           <div class="table-title">
             <span class="address-id">{{ $t('ID') }}</span>
@@ -44,10 +48,10 @@
             <span class="address-balance overflow_ellipsis">{{ $t('Balance') }}</span>
             <span class="remove-icon" />
           </div>
-          <div class="scroll radius">
+          <div class="radius">
             <div
-              v-for="(index, key) in selectedAccounts" :key="key" class="table-item pointer"
-              @click="selectedAccounts = selectedAccounts.splice(selectedAccounts.indexOf(index), 1)"
+              v-for="index in selectedAccounts" :key="index" class="table-item pointer"
+              @click="onRemoveAddress(index)"
             >
               <span class="address-id"> {{ index + 1 }} </span>
               <span class="address-value">{{ formatters.miniAddress(addressesList[index]) }}</span>

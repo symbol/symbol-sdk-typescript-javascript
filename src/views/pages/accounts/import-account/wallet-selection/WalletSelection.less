@@ -1,25 +1,37 @@
-.choose-wallet-sec {
+@import "../../../../resources/css/variables.less";
+
+
+.wallet-selection-container {
+  display: grid;
+  grid-template-rows: 100%;
+  grid-template-columns: repeat(2, 50%);
+  grid-column-gap: 25px;
   height: calc(100% - 160px);
+
   .left-container {
-    height: calc(100% - 10px);
+    display: grid;
+    height: 100%;
+    grid-template-rows: 55px auto;
 
     .dialog-title {
-      font-size: 28px;
+      font-size: @biggerFont;
       color: rgba(51, 51, 51);
       padding: 0 0 10px 0;
+      padding: 0.1rem;
     }
 
     .dialog-sub-tips {
       font-size: 22px;
       color: rgba(51, 51, 51, 1);
-      padding: 10px 0 20px 0;
+      padding: 0.1rem;
       font-weight: bolder;
     }
 
     .choose-hd-path {
+      position: relative;
       border: 1px solid rgba(224, 223, 229);
-      width: 700px;
-      height: calc(100% - 60px);
+      width: 100%;
+      height: 100%;
       padding: 10px 0;
     }
 
@@ -43,15 +55,15 @@
   }
 
   .right-container {
-    position: absolute;
-    top: 262px;
-    right: 210px;
-    min-height: 500px;
+    display: grid;
+    height: 100%;
+    grid-template-rows: 55px auto 0.8rem;
 
     .address-list-container {
+      position: relative;
       border: 1px solid rgba(224, 223, 229);
       width: 700px;
-      height: 470px;
+      height: 100%;
       padding: 10px 0 5px 0;
       font-size: 16px;
       color: rgba(51, 51, 51);
@@ -81,7 +93,7 @@
 
   .address-list {
     font-size: 16px;
-    height: 300px;
+    min-height: 300px;
 
     .scroll {
       max-height: 520px;
@@ -145,10 +157,10 @@
     display: flex;
     padding-top: 20px;
     align-items: center;
+    width: 700px;
 
     button {
       margin-top: 20px;
-      width: 407px;
       height: 50px;
     }
   }

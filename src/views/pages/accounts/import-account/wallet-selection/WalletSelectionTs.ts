@@ -266,4 +266,27 @@ export default class WalletSelectionTs extends Vue {
         [ 'isMultisig', false ],
       ])))
   }
+
+  /**
+   * Called when clicking on an address to add it to the selection
+   * @param {number} pathNumber
+   */
+  protected onAddAddress(pathNumber: number): void {
+    const selectedAccounts = [...this.selectedAccounts]
+    selectedAccounts.push(pathNumber)
+    this.selectedAccounts = selectedAccounts
+  }
+
+  /**
+   * Called when clicking on an address to remove it from the selection
+   * @protected
+   * @param {number} pathNumber
+   */
+  protected onRemoveAddress(pathNumber: number): void {
+    const selectedAccounts = [...this.selectedAccounts]
+    const indexToDelete = selectedAccounts.indexOf(pathNumber)
+    selectedAccounts.splice(indexToDelete, 1)
+    this.selectedAccounts = selectedAccounts
+  }
+
 }

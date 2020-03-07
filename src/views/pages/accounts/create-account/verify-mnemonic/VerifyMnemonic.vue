@@ -11,7 +11,7 @@
         <MnemonicVerification
           :words="mnemonicWordsList"
           @success="$router.push({name: 'accounts.createAccount.finalize'})"
-          @canceled="$router.back()"
+          @cancelled="$router.back()"
         />
       </div>
       <div class="check-mnemonic-right">
