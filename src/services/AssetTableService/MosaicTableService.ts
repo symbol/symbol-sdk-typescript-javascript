@@ -104,7 +104,8 @@ export class MosaicTableService extends AssetTableService {
     const _startHeight = new UInt64([ startHeight.lower, startHeight.higher ]).compact()
 
     // - unlimited mosaics have duration=0
-    if (_duration === 0) {
+    // @ts-ignore // @TODO: quickfix waiting for SDK update
+    if (duration === 0) {
       return 'unlimited'
     }
 
