@@ -33,7 +33,6 @@ import {BalanceEntry} from '@/core/database/entities/MosaicsModel'
     MosaicAmountDisplay,
   },
   computed: {...mapGetters({
-    currentWalletMosaics: 'wallet/currentWalletMosaics',
     hiddenMosaics: 'mosaic/hiddenMosaics',
     mosaicsInfo: 'mosaic/mosaicsInfo',
     mosaicsNames: 'mosaic/mosaicsNames',
@@ -63,12 +62,6 @@ export class MosaicBalanceListTs extends Vue {
    * @var {MosaicInfo[]}
    */
   public mosaicsInfo: MosaicInfo[]
-
-  /**
-   * Currently active wallet's balances
-   * @var {Mosaic[]}
-   */
-  public currentWalletMosaics: Mosaic[]
 
   /**
    * List of mosaics that are hidden

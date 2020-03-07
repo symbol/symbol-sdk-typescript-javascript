@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {
-  MosaicId, 
+  MosaicId,
   Mosaic,
   TransferTransaction,
   TransactionType,
@@ -24,7 +24,8 @@ import {
   NamespaceId,
   UInt64,
 } from 'symbol-sdk'
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {Formatters} from '@/core/utils/Formatters'
@@ -87,9 +88,10 @@ type MosaicAttachmentType = {
     MaxFeeAndSubmit,
     FormRow,
   },
+  computed: {...mapGetters({currentSignerMosaics: 'wallet/currentSignerMosaics'})}
 })
 export class FormTransferTransactionTs extends FormTransactionBase {
-/// region component properties
+  /// region component properties
   @Prop({
     default: null
   }) signer: PublicAccount
@@ -113,7 +115,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
   @Prop({
     default: false
   }) hideSigner: boolean
-/// end-region component properties
+  /// end-region component properties
 
   /**
    * Formatters helpers
@@ -136,31 +138,30 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     maxFee: 0
   }
 
-  protected mosaicInputsManager = MosaicInputsManager.initialize(this.currentWalletMosaics)
+  protected mosaicInputsManager = MosaicInputsManager.initialize([])
+
+  /**
+   * Current signer mosaics
+   * @protected
+   * @type {Mosaic[]}
+   */
+  protected currentSignerMosaics: Mosaic[]
 
   /**
    * Reset the form with properties
    * @return {void}
    */
   protected resetForm() {
-    // - initialize mosaic inputs manager
-    this.mosaicInputsManager = MosaicInputsManager.initialize(this.currentWalletMosaics)
-
-    // - re-populate form if transaction staged
-    if (this.stagedTransactions.length) {
-      const transfer = this.stagedTransactions.find(staged => staged.type === TransactionType.TRANSFER)
-      if (transfer === undefined) return
-      this.setTransactions([transfer as TransferTransaction])
-      this.isAwaitingSignature = true
-      return ;
-    }
+    // - reset attached mosaics
+    this.formItems.attachedMosaics = []
 
     // - set default form values
     this.formItems.signerPublicKey = !!this.signer ? this.signer.publicKey : this.currentWallet.values.get('publicKey')
     this.formItems.selectedMosaicHex = this.networkMosaic.toHex()
     this.formItems.recipientRaw = !!this.recipient ? this.recipient.plain() : ''
     this.formItems.recipient = !!this.recipient ? this.recipient : null
-    this.formItems.attachedMosaics = !!this.mosaics && this.mosaics.length
+
+    const attachedMosaics = !!this.mosaics && this.mosaics.length
       ? this.mosaicsToAttachments(this.mosaics)
       : [{mosaicHex: this.networkMosaic.id.toHex(), amount: 0, uid: 1}]
 
@@ -169,10 +170,19 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     // - maxFee must be absolute
     this.formItems.maxFee = this.defaultFee
 
-    // - affect attached mosaics slots
-    this.formItems.attachedMosaics.forEach(
-      ({mosaicHex, uid}) => this.mosaicInputsManager.setSlot(mosaicHex, uid),
-    )
+    // - initialize mosaics input manager
+    this.mosaicInputsManager = MosaicInputsManager.initialize(this.currentMosaicList())
+
+    // - set attachedMosaics and allocate slots
+    Vue.nextTick(() => {
+      // Vue.set(this.formItems, 'attachedMosaics', [])
+      attachedMosaics.forEach(
+        (attachedMosaic, index) => {
+          this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid)
+          Vue.set(this.formItems.attachedMosaics, index, attachedMosaic)
+        },
+      )
+    })
   }
 
   /**
@@ -185,6 +195,23 @@ export class FormTransferTransactionTs extends FormTransactionBase {
   }
 
   /**
+   * Returns the mosaic list of the current wallet or current signer  
+   * depending on the multisig situation
+   * @protected
+   * @returns 
+   */
+  protected currentMosaicList(): Mosaic[] {
+    if (!this.networkMosaic) return [] // @TODO: quickfix    
+
+    const mosaics = this.isCosignatoryMode ? this.currentSignerMosaics : this.currentWalletMosaics
+    const defaultedMosaicList = mosaics && mosaics.length ? mosaics : [new Mosaic(this.networkMosaic, UInt64.fromUint(0))]
+
+    // add eventual new mosaics in the mosaic inputs manager
+    if (this.mosaicInputsManager) this.mosaicInputsManager.addMosaics(defaultedMosaicList)
+    return defaultedMosaicList
+  }
+
+  /**
    * Getter for TRANSFER transactions that will be staged
    * @see {FormTransactionBase}
    * @return {TransferTransaction[]}
@@ -193,31 +220,31 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     this.factory = new TransactionFactory(this.$store)
     try {
       // - read form
-        const data: TransferFormFieldsType = {
+      const data: TransferFormFieldsType = {
         recipient: this.instantiatedRecipient,
-        mosaics: this.attachedMosaics
+        mosaics: this.formItems.attachedMosaics
           .filter(({uid}) => uid) // filter out null values
           .map((spec: {
             mosaicHex: string, amount: number,
           }): {mosaicHex: string, amount: number} => ({
-              mosaicHex: spec.mosaicHex,
-              amount: spec.amount // amount is relative
+            mosaicHex: spec.mosaicHex,
+            amount: spec.amount // amount is relative
           })),
         message: this.formItems.messagePlain,
         maxFee: UInt64.fromUint(this.formItems.maxFee),
       }
-      
+
       // - prepare transaction parameters
       let view = new ViewTransferTransaction(this.$store)
       view = view.parse(data)
-      
+
       // - prepare transfer transaction
       return [this.factory.build(view)]
     } catch (error) {
       console.error('Error happened in FormTransferTransaction.transactions(): ', error)
     }
   }
-  
+
   /**
    * Setter for TRANSFER transactions that will be staged
    * @see {FormTransactionBase}
@@ -232,38 +259,18 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     this.formItems.recipientRaw = transaction.recipientAddress instanceof Address
       ? transaction.recipientAddress.plain()
       : (transaction.recipientAddress as NamespaceId).fullName
-    
+
     // - populate attached mosaics
-    this.attachedMosaics = this.mosaicsToAttachments(transaction.mosaics)
-    
+    this.formItems.attachedMosaics = this.mosaicsToAttachments(transaction.mosaics)
+
     // - convert and populate message
     this.formItems.messagePlain = Formatters.hexToUtf8(transaction.message.payload)
-    
+
     // - populate maxFee
     this.formItems.maxFee = transaction.maxFee.compact()
   }
 
-/// region computed properties getter/setter
-  /**
-   * Getter for attached mosaics
-   * @return {MosaicAttachmentType[]}
-   */
-  public get attachedMosaics(): MosaicAttachmentType[] {
-    if (this.mosaics && this.mosaics.length) {
-      return this.mosaicsToAttachments(this.mosaics)
-    }
-
-    return this.formItems.attachedMosaics || []
-  }
-
-  /**
-   * Setter for attached mosaics
-   * @param {MosaicAttachmentType[]} attachments
-   */
-  public set attachedMosaics(attachments: MosaicAttachmentType[]) {
-    this.formItems.attachedMosaics = attachments
-  }
-
+  /// region computed properties getter/setter
   /**
    * Recipient used in the transaction
    * @readonly
@@ -281,7 +288,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
     return new NamespaceId(recipientRaw)
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Hook called when the child component MosaicAttachmentDisplay triggers
@@ -323,7 +330,6 @@ export class FormTransferTransactionTs extends FormTransactionBase {
    * @param {number} inputIndex
    */
   protected onDeleteMosaicInput(index: number): void {
-    console.table(this.formItems.attachedMosaics.map(x => x))
     // unset mosaic input slot
     this.mosaicInputsManager.unsetSlot(index)
 
@@ -355,7 +361,11 @@ export class FormTransferTransactionTs extends FormTransactionBase {
       })
   }
 
-  protected addMosaicAttachmentInput() {
+  /** 
+   *  Hook called when adding a new mosaic attachment input
+   * @protected
+   */
+  protected addMosaicAttachmentInput(): void {
     if (!this.mosaicInputsManager.hasFreeSlots()) return
     const uid = Math.floor(Math.random() * 10e6)
     const [mosaicToAffectToNewInput] = this.mosaicInputsManager.getMosaicsBySlot(uid)
@@ -365,5 +375,14 @@ export class FormTransferTransactionTs extends FormTransactionBase {
       amount: 0,
       uid,
     })
+  }
+
+  /**
+   * Resetting the form when choosing a multisig signer and changing multisig signer
+   * Is necessary to make the mosaic inputs reactive
+   */
+  @Watch("selectedSigner")
+  onSelectedSignerChange() {
+    if (this.isMultisigMode) this.resetForm()
   }
 }

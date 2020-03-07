@@ -16,7 +16,7 @@
           <RecipientInput v-model="formItems.recipientRaw" />
 
           <!-- Mosaics attachments input fields -->
-          <div v-for="(attachedMosaic, index) in attachedMosaics" :key="index">
+          <div v-for="(attachedMosaic, index) in formItems.attachedMosaics" :key="index">
             <MosaicAttachmentInput
               v-if="attachedMosaic.uid"
               :mosaic-attachment="attachedMosaic"
@@ -29,8 +29,8 @@
           </div>
 
           <!-- Add mosaic button -->
-          <div v-if="mosaicInputsManager.hasFreeSlots()" class="form-row align-right action-link">
-            <a @click="addMosaicAttachmentInput">{{ $t('add_mosaic') }}</a>
+          <div class="form-row align-right action-link">
+            <a v-if="mosaicInputsManager.hasFreeSlots()" @click="addMosaicAttachmentInput">{{ $t('add_mosaic') }}</a>
           </div>
 
           <!-- Transfer message input field -->
@@ -53,6 +53,9 @@
         @close="onConfirmationCancel"
       />
     </FormWrapper>
+
+    <!-- force mosaic list reactivity -->
+    <div v-show="false">{{ currentMosaicList() }}</div>
   </div>
 </template>
 

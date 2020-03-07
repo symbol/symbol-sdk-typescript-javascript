@@ -26,7 +26,20 @@ export class MosaicInputsManager {
    */
   private constructor(mosaics: Mosaic[]) {
     // Set mosaicMap with null values
-    mosaics.forEach(mosaic => Vue.set(this.mosaicMap, mosaic.id.toHex(), null))
+    mosaics.forEach(({id}) => Vue.set(this.mosaicMap, id.toHex(), null))
+  }
+
+  /**
+   * Add mosaics to the manager after initialization
+   * @param {Mosaic[]} mosaics
+   */
+  public addMosaics(mosaics: Mosaic[]): void {
+    mosaics.forEach(({id}) => {
+      // skip if the mosaic is known
+      if (this.mosaicMap[id.toHex()]) return 
+      // add the mosaic
+      Vue.set(this.mosaicMap, id.toHex(), null)
+    })
   }
 
   /**

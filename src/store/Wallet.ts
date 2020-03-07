@@ -463,6 +463,9 @@ export default {
       commit('currentWallet', model)
       commit('currentWalletAddress', address)
 
+      // reset current wallet mosaics 
+      commit('currentWalletMosaics', [])
+
       // reset current signer
       dispatch('SET_CURRENT_SIGNER', {model, options: {skipDetails: true}})
 

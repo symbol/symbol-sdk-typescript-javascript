@@ -91,12 +91,6 @@ export class FormTransactionBase extends Vue {
   public currentWalletMosaics: Mosaic[]
 
   /**
-   * Currently active multisig account's balances
-   * @var {Mosaic[]}
-   */
-  public currentMultisigAccountMosaics: Mosaic[] = []
-
-  /**
    * Current wallet multisig info
    * @type {MultisigAccountInfo}
    */
