@@ -8,6 +8,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 #### Fixed
 
 - Fixed WalletSelectorPanel balances listing (fixes #27)
+- Fixed account import pages (fixes #54)
+- Fixed newly added transfer mosaic attachments
 
 
 ## [v0.9.5-beta1][v0.9.5-beta1] - 06-Mar-2020
