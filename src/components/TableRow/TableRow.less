@@ -5,8 +5,13 @@
   width: 100%;
   height: 100%;
   grid-auto-flow: column;
-  border-bottom: 1px solid #d0d0d0;
+  border-bottom: 1px solid @line;
   grid-auto-rows: 0.6rem;
+
+  &:hover {
+    background-color: @accentPinkLight;
+    cursor: pointer;
+  }
 }
 
 .table-cell {
@@ -27,11 +32,11 @@
 
 .edit-icon-cell {
   text-align: center;
-  padding-top: .1rem;
   cursor: pointer;
+  line-height: 0.6rem;
 
   .edit-icon {
-    font-size: 0.38rem;
+    font-size: 0.25rem;
   }
 }
 

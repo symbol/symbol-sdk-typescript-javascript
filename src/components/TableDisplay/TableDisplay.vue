@@ -4,14 +4,6 @@
       <div class="table-title-container section-title">
         <slot name="table-title" />
       </div>
-      <div class="table-actions-container">
-        <span @click="refresh()">{{ $t('refresh') }}</span>
-        <div @click="setFilteredBy('expiration')">
-          <Checkbox :value="filteredBy.filteringType === 'show'" />
-          <span v-if="assetType === 'mosaic'">{{ $t('Display_expired_mosaic') }}</span>
-          <span v-else>{{ $t('Hide_expired_namespaces') }}</span>
-        </div>
-      </div>
     </div>
     <div
       :class="[                                         
@@ -54,7 +46,7 @@
         />
       </div>
       <div v-else class="empty-container">
-        <span class="no-data">{{ $t('no_data') }}</span>
+        <div v-for="item in nodata" :key="item"></div>
       </div>
     </div>
 
@@ -114,10 +106,6 @@
 
 <script lang="ts">
 import { TableDisplayTs } from './TableDisplayTs'
-
 export default class TableDisplay extends TableDisplayTs {}
+import "./TableDisplay.less";
 </script>
-
-<style scoped lang="less">
-@import "./TableDisplay.less";
-</style>

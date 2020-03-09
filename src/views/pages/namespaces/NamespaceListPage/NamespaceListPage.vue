@@ -58,7 +58,7 @@ export default class NamespaceListPage extends Vue { }
 
 <style scoped lang="css">
 .table-section {
-  padding: 0.2rem;
+  padding: 0.2rem 0 0 0.2rem;
   height: 100%;
 }
 </style>

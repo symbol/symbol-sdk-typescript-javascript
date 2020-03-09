@@ -13,22 +13,27 @@
     position: relative;
   }
 
-  .dashboard-right-container {
-    display: grid;
-    grid-template-rows: 1.3rem auto;
-    grid-template-columns: 100%;
-    grid-row-gap: 0.25rem;
-    width: 100%;
+  .right-container {
 
-    .right-bottom-container  {
+    .dashboard-right-container {
       height: 100%;
       position: relative;
-      overflow: hidden;
       display: grid;
-      grid-template-rows: 0.6rem auto;
-
-      .bottom_router_view {
-        overflow: hidden;
+      grid-template-rows: 1.3rem auto;
+      grid-template-columns: 100%;
+      grid-row-gap: 0.25rem;
+      width: 100%;
+  
+      .right-bottom-container  {
+        position: relative;
+        display: grid;
+        grid-template-rows: 0.6rem auto;
+        grid-template-columns: 100%;
+        overflow-y: hidden;
+  
+        // .bottom_router_view {
+        //   overflow-y: auto;
+        // }
       }
     }
   }

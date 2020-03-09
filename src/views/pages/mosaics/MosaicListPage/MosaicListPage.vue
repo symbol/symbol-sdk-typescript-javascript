@@ -4,30 +4,10 @@
       <TableDisplay asset-type="mosaic" class="table-section">
         <template v-slot:table-title>
           <h1 class="section-title">
-            {{ $t('Mosaics') }}
+            {{ $t('mosaics_list') }}
           </h1>
         </template>
       </TableDisplay>
-    </template>
-    <template v-slot:asset-description>
-      <div class="asset-description-title">
-        {{ $t('mosaic_assets') }}
-      </div>
-      <div class="asset-description-sub-title"> 
-        {{ $t('describe') }}
-      </div>
-      <div class="asset-description-emphasis">
-        {{ $t('mosaic_describe_text') }}
-      </div>
-      <div class="asset-description-sub-title">
-        {{ $t('attribute') }}
-      </div>
-      <div class="asset-description-emphasis">
-        {{ $t('mosaic_attribute_text') }}
-      </div>
-      <div class="asset-description-sub-title">
-        {{ $t('mosaic_attribute_text_2') }}
-      </div>
     </template>
   </AssetListPageWrap>
 </template>
@@ -51,7 +31,7 @@ export default class MosaicListPage extends Vue { }
 
 <style scoped lang="css">
 .table-section {
-  padding: 0.2rem;
+  padding: 0.2rem 0 0 0.2rem;
   height: 100%;
 }
 </style>

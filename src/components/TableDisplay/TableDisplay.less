@@ -1,9 +1,11 @@
+@import "../../views/resources/css/variables.less";
 .mosaic-columns {
-  grid-template-columns: repeat(4, 9.5%) repeat(4, 12%) 10% 4%;
+  grid-template-columns: repeat(4, 14%) repeat(5, 8%) 4%;
+  grid-template-rows: 100%;
 }
 
 .namespace-columns {
-  grid-template-columns: 13% auto 14% 14% 14% 18% 4%;
+  grid-template-columns: repeat(3, 20%) repeat(4, 10%);
   .name-header {
     text-align: left;
   }
@@ -14,6 +16,10 @@
 }
 
 .hexId-header {
+  text-align: left;
+}
+
+.supply-header,.balance-header,.expiration-header {
   text-align: left;
 }
 
@@ -45,6 +51,10 @@
   text-align: left;
 }
 
+.supply-cell,.balance-cell,.expiration-cell {
+  text-align: left;
+}
+
 .divisibility-cell {
   text-align: center;
 }
@@ -65,19 +75,28 @@
   display: grid;
   width: 100%;
   height: 100%;
-  grid-template-rows: 0.8rem 0.6rem auto 0.6rem;
+  grid-template-rows: 0.8rem 0.35rem auto 0.6rem;
   grid-template-columns: 100%;
   font-size: 0.16rem;
+  overflow-y: auto;
 
   .upper-section-container {
     display: grid;
     width: 100%;
     height: 100%;
     grid-template-rows: 100%;
-    grid-template-columns: 70% 30%;
+    grid-template-columns: 100%;
 
     .table-title-container {
-      padding-left: 0.1rem;
+      padding-left: 0.2rem;
+      padding-top: 0.1rem;
+
+      .section-title {
+        font-size:28px;
+        font-weight:400;
+        line-height:38px;
+        color:@grayDark;
+      }
     }
 
     .table-actions-container {
@@ -93,10 +112,13 @@
     display: grid;
     width: 100%;
     text-align: right;
+    color: @purpleDark;
+    background-color: @grayLightest;
 
     .table-header-item {
-      padding: 0.1rem;
-      font-weight: 600;
+      padding: 0 0.1rem;
+      line-height: 0.35rem;
+      font-weight: 300;
       cursor: pointer;
 
       .header-label {}
@@ -107,23 +129,53 @@
 
   .table-body-container {
     text-align: right;
+    overflow-y: auto;
 
     .table-rows-container {
       width: 100%;
       height: 100%;
       display: grid;
-      grid-auto-rows: .7rem;
+      grid-auto-rows: .6rem;
       grid-template-columns: 100%;
     }
 
     .empty-container {
-      padding: 1rem;
-      text-align: center;
+      display: grid;
+      grid-auto-rows: .6rem;
+      grid-template-columns: 100%;
+      
+      >div {
+        border-bottom: 1px solid @line;
+      }
     }
   }
 
   .table-footer-container {
-    text-align: center;
-    padding-top: 0.2rem;
+    text-align: right;
+    padding-top: 0.1rem;
+    padding-right: 0.7rem;
+
+    .page {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .ivu-page-item {
+      width: 30px;
+      min-width: 30px;
+      height: 30px;
+      border: none;
+      box-shadow:0px 0px 6px rgba(0,0,0,0.16);
+      color: @grayDark;
+    }
+
+    .ivu-page-item-active a,
+    .ivu-page-item-active:hover a {
+      color: @primary !important;
+    }
+
+    .ivu-page-prev,.ivu-page-next {
+      border: none !important;
+    }
   }
 }

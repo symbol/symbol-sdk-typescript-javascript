@@ -12,11 +12,10 @@
             :label="$t('transactions_tab_confirmed')"
             :tab="'confirmed'"
             :name="'confirmed'"
-            :icon="'md-checkmark-circle-outline'"
+            :icon="''"
             class="transaction-tab-inner-container"
             @input="currentTab = 'confirmed'"
           >
-            <PageTitle :title="$t('transactions')" @refresh="refresh('confirmed')" />
 
             <!-- Confirmed transactions tab -->
             <TransactionTable :transactions="currentPageTransactions.items"
@@ -27,10 +26,9 @@
             :label="$t('transactions_tab_unconfirmed')"
             :tab="'unconfirmed'"
             :name="'unconfirmed'"
-            :icon="'ios-remove-circle-outline'"
+            :icon="''"
             @input="currentTab = 'unconfirmed'"
           >
-            <PageTitle :title="$t('unconfirmed')" @refresh="refresh('unconfirmed')" />
 
             <!-- Unconfirmed transactions tab -->
             <TransactionTable :transactions="currentUnconfirmedTransactions.items"
@@ -41,10 +39,9 @@
             :label="$t('transactions_tab_partial')"
             :tab="'partial'"
             :name="'partial'"
-            :icon="'ios-people-outline'"
+            :icon="''"
             @input="currentTab = 'partial'"
           >
-            <PageTitle :title="$t('partial')" @refresh="refresh('partial')" />
 
             <!-- Partial transactions tab -->
             <TransactionTable :transactions="currentPartialTransactions.items"
@@ -55,7 +52,7 @@
       </div>
 
       <div class="transaction-list-pagination-container">
-        <span>{{ $t('total_transactions') }}：{{ totalCountItems }}</span>
+        <!-- <span>{{ $t('total_transactions') }}：{{ totalCountItems }}</span> -->
         <Page
           :total="totalCountItems"
           class="page_content"

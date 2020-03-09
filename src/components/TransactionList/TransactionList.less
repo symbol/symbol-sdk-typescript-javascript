@@ -20,13 +20,14 @@
   display: block;
   position: relative;
   overflow: hidden;
-  color: #515a6e;
+  // color: @dustyBlue;
   zoom: 1;
   width: 100%;
   height: 100%;
 
   .ivu-tabs-bar {
     border: 0;
+    margin-bottom: 0.2rem;
   }
 
   .ivu-tabs-content {
@@ -38,35 +39,37 @@
     display: block !important;
     height: 100%;
     overflow: hidden;
-    padding: 0 0.1rem 0 0.2rem;
+    padding-left: 0.2rem;
   }
 
   .ivu-tabs-tab {
     font-size: @smallFont;
     font-family: @symbolFont;
-    color: @accentPink;
+    color: @grayDark;
     font-weight: @bolder;
+    font-size: 0.24rem;
+    margin-top: 0.15rem;
   }
 
   .ivu-tabs-tab:active,
   .ivu-tabs-tab:hover {
-    color: @accentPinkHover;
+    color: @secondary;
   }
 
   .ivu-tabs-tab-active {
-    color: @accentPink !important;
+    color: @secondary;
   }
 
-  .ivu-tabs-tab-active::after {
-    display: block;
-    position: absolute;
-    width: 90%;
-    height: 0.04rem;
-    background: @accentPink;
-    content: "";
-    left: 0.15rem;
-    bottom: 0;
-  }
+  // .ivu-tabs-tab-active::after {
+  //   display: block;
+  //   position: absolute;
+  //   width: 90%;
+  //   height: 0.04rem;
+  //   background: @secondary;
+  //   content: "";
+  //   left: 0.15rem;
+  //   bottom: 0;
+  // }
 
   .ivu-tabs-ink-bar {
     display: none;
@@ -76,7 +79,7 @@
 .transaction-list-outer-container {
   background-color: @white;
   position: relative;
-  overflow: hidden;
+  // overflow: auto;
   height: 100%;
 
   .transaction-list-inner-container {
@@ -85,31 +88,34 @@
     height: 100%;
     width: 100%;
     overflow: hidden;
-    grid-template-rows: auto 0.6rem;
+    grid-template-rows: auto 0.5rem;
     grid-template-columns: 100%;
 
     .transaction-list-tabs-container {
       height: 100%;
       width: 100%;
       display: block;
-      overflow: hidden;
+      overflow: auto;
     }
 
     .transaction-list-pagination-container {
       font-size: @normalFont;
-      text-align: center;
-      height: 100%;
+      text-align: right;
       width: 100%;
       display: block;
       overflow: hidden;
-      padding-top: 0.13rem;
 
       .ivu-page-item {
-        width: 30px;
-        min-width: 30px;
+        width: 31px;
+        min-width: 31px;
         height: 30px;
         border: none;
+        background:@white;
+        box-shadow:0px 0px 6px @boxShadow;
         color: @grayDark;
+        user-select: none;
+        border: 0.01rem solid @border;
+        transition: all .2s ease-in-out;
       }
 
       .ivu-page-item-active a,
@@ -117,29 +123,24 @@
         color: @primary !important;
       }
 
-      .ivu-page-prev,
-      .ivu-page-next {
-        border: none;
+      .ivu-icon{
+        border:none;
       }
 
       span {
         vertical-align: middle;
       }
-
+      .page_total{
+        padding-right: 0.1rem;
+      }
       .page_content {
         display: inline-block;
         vertical-align: middle;
-      }
-
-      .ivu-page-item-active {
-        border-radius: 50%;
+        padding-right: 0.45rem;
       }
     }
   }
 }
-
-
-
 
 .transaction-list-container {
   float: left;

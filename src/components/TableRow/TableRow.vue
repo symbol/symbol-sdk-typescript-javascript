@@ -10,7 +10,7 @@
       :key="index"
       :class="[ 'table-cell', `${name}-cell` ]"
     >
-      <div v-if="name === 'balance'" class="amount-display">
+      <div v-if="name === 'balance'">
         <AmountDisplay :value="value" />
       </div>
       <div v-else>
