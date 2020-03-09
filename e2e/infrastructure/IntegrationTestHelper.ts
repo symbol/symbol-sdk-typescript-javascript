@@ -57,7 +57,8 @@ export class IntegrationTestHelper {
                     console.log(`Running tests against: ${json.apiUrl}`);
                     this.apiUrl = json.apiUrl;
                     this.repositoryFactory = new RepositoryFactoryHttp(json.apiUrl);
-                    this.transactionService = new TransactionService(this.repositoryFactory.createTransactionRepository(), this.repositoryFactory.createReceiptRepository());
+                    this.transactionService = new TransactionService(
+                        this.repositoryFactory.createTransactionRepository(), this.repositoryFactory.createReceiptRepository());
                     combineLatest(this.repositoryFactory.getGenerationHash(),
                         this.repositoryFactory.getNetworkType()).subscribe(([generationHash, networkType]) => {
                         this.networkType = networkType;

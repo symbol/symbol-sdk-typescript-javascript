@@ -15,7 +15,7 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
-import { NetworkFeesDTO, NetworkRoutesApi, NetworkTypeDTO, NodeInfoDTO, NodeRoutesApi } from 'symbol-openapi-typescript-node-client';
+import { NetworkRoutesApi, NetworkTypeDTO, NodeInfoDTO, NodeRoutesApi, TransactionFeesDTO } from 'symbol-openapi-typescript-node-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { NetworkHttp } from '../../src/infrastructure/NetworkHttp';
@@ -42,15 +42,15 @@ describe('NetworkHttp', () => {
 
     it('getNetworkFees', async () => {
 
-        const body = new NetworkFeesDTO();
+        const body = new TransactionFeesDTO();
         body.averageFeeMultiplier = 1;
         body.highestFeeMultiplier = 2;
         body.lowestFeeMultiplier = 3;
         body.medianFeeMultiplier = 4;
 
-        when(networkRoutesApi.getNetworkFees()).thenReturn(Promise.resolve({response, body}));
+        when(networkRoutesApi.getTransactionFees()).thenReturn(Promise.resolve({response, body}));
 
-        const networkFees = await networkRepository.getNetworkFees().toPromise();
+        const networkFees = await networkRepository.getTransactionFees().toPromise();
         expect(networkFees).to.be.not.null;
         expect(networkFees.averageFeeMultiplier).to.be.equals(1);
         expect(networkFees.highestFeeMultiplier).to.be.equals(2);

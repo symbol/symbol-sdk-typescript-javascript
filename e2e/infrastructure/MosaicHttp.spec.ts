@@ -87,7 +87,8 @@ describe('MosaicHttp', () => {
             expect(mosaicDefinitionTransaction.nonce).to.deep.equal(listenedTransaction.nonce);
             expect(mosaicDefinitionTransaction.getMosaicNonceIntValue()).to.be.equal(listenedTransaction.getMosaicNonceIntValue());
 
-            const savedTransaction = await helper.repositoryFactory.createTransactionRepository().getTransaction(signedTransaction.hash).toPromise() as MosaicDefinitionTransaction;
+            const savedTransaction = await helper.repositoryFactory.createTransactionRepository()
+                .getTransaction(signedTransaction.hash).toPromise() as MosaicDefinitionTransaction;
             expect(mosaicDefinitionTransaction.nonce.toHex()).to.be.equal(savedTransaction.nonce.toHex());
             expect(mosaicDefinitionTransaction.nonce).to.deep.equal(savedTransaction.nonce);
             expect(mosaicDefinitionTransaction.getMosaicNonceIntValue()).to.be.equal(savedTransaction.getMosaicNonceIntValue());

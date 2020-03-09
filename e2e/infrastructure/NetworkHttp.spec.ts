@@ -47,7 +47,7 @@ describe('NetworkHttp', () => {
 
     describe('getNetworkFees', () => {
         it('should return network fees', async () => {
-            const fees = await networkRepository.getNetworkFees().toPromise();
+            const fees = await networkRepository.getTransactionFees().toPromise();
             expect(fees.averageFeeMultiplier).to.be.not.null;
             expect(fees.highestFeeMultiplier).to.be.not.null;
             expect(fees.lowestFeeMultiplier).to.be.not.null;
