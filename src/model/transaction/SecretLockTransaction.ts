@@ -32,7 +32,7 @@ import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
-import { NetworkType } from '../blockchain/NetworkType';
+import { NetworkType } from '../network/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { Statement } from '../receipt/Statement';

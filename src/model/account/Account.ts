@@ -17,7 +17,7 @@
 import {Crypto, KeyPair} from '../../core/crypto';
 import {SHA3Hasher} from '../../core/crypto/SHA3Hasher';
 import {Convert, RawAddress} from '../../core/format';
-import {NetworkType} from '../blockchain/NetworkType';
+import {NetworkType} from '../network/NetworkType';
 import {EncryptedMessage} from '../message/EncryptedMessage';
 import {PlainMessage} from '../message/PlainMessage';
 import {AggregateTransaction} from '../transaction/AggregateTransaction';

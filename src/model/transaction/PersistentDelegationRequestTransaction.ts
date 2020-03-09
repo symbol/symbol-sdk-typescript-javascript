@@ -15,7 +15,7 @@
  */
 
 import { Address } from '../account/Address';
-import { NetworkType } from '../blockchain/NetworkType';
+import { NetworkType } from '../network/NetworkType';
 import { PersistentHarvestingDelegationMessage } from '../message/PersistentHarvestingDelegationMessage';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';

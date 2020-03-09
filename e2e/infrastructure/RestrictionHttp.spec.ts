@@ -20,7 +20,7 @@ import { RestrictionAccountRepository } from '../../src/infrastructure/Restricti
 import { RestrictionMosaicRepository } from '../../src/infrastructure/RestrictionMosaicRepository';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';

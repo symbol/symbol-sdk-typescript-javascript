@@ -27,7 +27,7 @@ import { deepEqual, instance, mock, when } from 'ts-mockito';
 
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { Address } from '../../src/model/account/Address';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';

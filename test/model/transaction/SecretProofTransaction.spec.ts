@@ -19,7 +19,7 @@ import {keccak_256, sha3_256} from 'js-sha3';
 import {Convert, Convert as convert} from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
-import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import {NetworkType} from '../../../src/model/network/NetworkType';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
 import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';

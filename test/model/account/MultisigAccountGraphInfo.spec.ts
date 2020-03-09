@@ -19,7 +19,7 @@ import {expect} from 'chai';
 import {MultisigAccountGraphInfo} from '../../../src/model/account/MultisigAccountGraphInfo';
 import {MultisigAccountInfo} from '../../../src/model/account/MultisigAccountInfo';
 import {PublicAccount} from '../../../src/model/account/PublicAccount';
-import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import {NetworkType} from '../../../src/model/network/NetworkType';
 
 describe('MultisigAccountGraphInfo', () => {
 

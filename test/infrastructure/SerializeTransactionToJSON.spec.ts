@@ -20,7 +20,7 @@ import { Convert as convert } from '../../src/core/format';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';

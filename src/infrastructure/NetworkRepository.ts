@@ -15,9 +15,9 @@
  */
 
 import {Observable} from 'rxjs';
-import { NetworkFees } from '../model/blockchain/NetworkFees';
-import { NetworkName } from '../model/blockchain/NetworkName';
-import {NetworkType} from '../model/blockchain/NetworkType';
+import { NetworkFees } from '../model/network/NetworkFees';
+import { NetworkName } from '../model/network/NetworkName';
+import {NetworkType} from '../model/network/NetworkType';
 
 /**
  * Network interface repository.

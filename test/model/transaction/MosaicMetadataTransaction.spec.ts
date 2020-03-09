@@ -17,7 +17,7 @@
 import { expect } from 'chai';
 import { Convert } from '../../../src/core/format/Convert';
 import { Account } from '../../../src/model/account/Account';
-import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';

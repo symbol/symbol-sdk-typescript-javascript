@@ -23,7 +23,7 @@ import { QueryParams } from '../../src/infrastructure/QueryParams';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
 import { AliasAction } from '../../src/model/namespace/AliasAction';

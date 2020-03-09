@@ -17,7 +17,7 @@
 import { expect } from 'chai';
 import { Account } from '../../../src/model/account/Account';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
-import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 
 describe('PublicAccount', () => {
     const publicKey = 'b4f12e7c9f6946091e2cb8b6d3a12b50d17ccbbf646386ea27ce2946a7423dcf';

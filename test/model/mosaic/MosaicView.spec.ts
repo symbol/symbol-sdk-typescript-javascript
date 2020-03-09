@@ -16,7 +16,7 @@
 
 import {expect} from 'chai';
 import {PublicAccount} from '../../../src/model/account/PublicAccount';
-import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import {NetworkType} from '../../../src/model/network/NetworkType';
 import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {MosaicInfo} from '../../../src/model/mosaic/MosaicInfo';

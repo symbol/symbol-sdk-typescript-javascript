@@ -17,7 +17,7 @@
 import { expect } from 'chai';
 import {Convert} from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
-import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 import { AccountLinkTransaction } from '../../../src/model/transaction/AccountLinkTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { LinkAction } from '../../../src/model/transaction/LinkAction';

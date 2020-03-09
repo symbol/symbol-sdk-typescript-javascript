@@ -21,7 +21,7 @@ import { mergeMap } from 'rxjs/operators';
 import { NamespaceRepository } from '../infrastructure/NamespaceRepository';
 import { RestrictionMosaicRepository } from '../infrastructure/RestrictionMosaicRepository';
 import { Address } from '../model/account/Address';
-import { NetworkType } from '../model/blockchain/NetworkType';
+import { NetworkType } from '../model/network/NetworkType';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { NamespaceId } from '../model/namespace/NamespaceId';
 import { MosaicGlobalRestriction } from '../model/restriction/MosaicGlobalRestriction';

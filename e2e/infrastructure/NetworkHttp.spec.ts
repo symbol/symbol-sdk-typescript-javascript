@@ -15,7 +15,7 @@
  */
 import { expect } from 'chai';
 import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('NetworkHttp', () => {

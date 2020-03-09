@@ -19,7 +19,7 @@ import { ChronoUnit } from 'js-joda';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';

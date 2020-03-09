@@ -21,7 +21,7 @@ import { BlockRepository } from '../../src/infrastructure/BlockRepository';
 import { QueryParams } from '../../src/infrastructure/QueryParams';
 import { ReceiptRepository } from '../../src/infrastructure/ReceiptRepository';
 import { Account } from '../../src/model/account/Account';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
 import { Deadline } from '../../src/model/transaction/Deadline';

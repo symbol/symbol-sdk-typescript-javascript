@@ -28,7 +28,7 @@ import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { PublicAccount } from '../account/PublicAccount';
-import { NetworkType } from '../blockchain/NetworkType';
+import { NetworkType } from '../network/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { MosaicSupplyChangeAction } from '../mosaic/MosaicSupplyChangeAction';
 import { NamespaceId } from '../namespace/NamespaceId';

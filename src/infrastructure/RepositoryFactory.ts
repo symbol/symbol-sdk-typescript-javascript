@@ -15,7 +15,7 @@
  */
 
 import { Observable } from 'rxjs';
-import { NetworkType } from '../model/blockchain/NetworkType';
+import { NetworkType } from '../model/network/NetworkType';
 import { AccountRepository } from './AccountRepository';
 import { BlockRepository } from './BlockRepository';
 import { ChainRepository } from './ChainRepository';

@@ -17,7 +17,7 @@ import {deepEqual} from 'assert';
 import {expect} from 'chai';
 import {Convert} from '../../../src/core/format';
 import {Account} from '../../../src/model/account/Account';
-import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import {NetworkType} from '../../../src/model/network/NetworkType';
 import { Mosaic } from '../../../src/model/mosaic/Mosaic';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import {NetworkCurrencyLocal} from '../../../src/model/mosaic/NetworkCurrencyLocal';

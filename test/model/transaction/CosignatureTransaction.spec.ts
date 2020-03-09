@@ -17,7 +17,7 @@
 import {expect} from 'chai';
 import {CreateTransactionFromDTO} from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
 import {Account} from '../../../src/model/account/Account';
-import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 import { PlainMessage } from '../../../src/model/message/PlainMessage';
 import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
 import {CosignatureTransaction} from '../../../src/model/transaction/CosignatureTransaction';

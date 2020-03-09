@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { Convert } from '../../src/core/format';
 import { MetadataRepository } from '../../src/infrastructure/MetadataRepository';
 import { Account } from '../../src/model/account/Account';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { MetadataType } from '../../src/model/metadata/MetadataType';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';

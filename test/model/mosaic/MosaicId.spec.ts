@@ -15,7 +15,7 @@
  */
 import { deepEqual } from 'assert';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
-import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 import { Id } from '../../../src/model/Id';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../../src/model/mosaic/MosaicNonce';

@@ -17,7 +17,7 @@ import { expect } from 'chai';
 import { Crypto, KeyPair } from '../../../src/core/crypto';
 import * as Utility from '../../../src/core/crypto/Utilities';
 import { Convert } from '../../../src/core/format/Convert';
-import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 
 describe('key pair', () => {
     const randomKeyPair = () =>

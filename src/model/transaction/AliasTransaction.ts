@@ -15,7 +15,7 @@
  */
 
 import { Address } from '../account/Address';
-import { NetworkType } from '../blockchain/NetworkType';
+import { NetworkType } from '../network/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { AliasAction } from '../namespace/AliasAction';
 import { NamespaceId } from '../namespace/NamespaceId';

@@ -28,7 +28,7 @@ import {
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
-import { NetworkType } from '../blockchain/NetworkType';
+import { NetworkType } from '../network/NetworkType';
 import { MosaicFlags } from '../mosaic/MosaicFlags';
 import { MosaicId } from '../mosaic/MosaicId';
 import { MosaicNonce } from '../mosaic/MosaicNonce';

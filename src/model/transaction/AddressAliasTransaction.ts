@@ -28,7 +28,7 @@ import {
 import { Convert, RawAddress } from '../../core/format';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
-import { NetworkType } from '../blockchain/NetworkType';
+import { NetworkType } from '../network/NetworkType';
 import { AliasAction } from '../namespace/AliasAction';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';

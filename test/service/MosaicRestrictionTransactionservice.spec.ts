@@ -21,7 +21,7 @@ import { KeyGenerator } from '../../src/core/format/KeyGenerator';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { RestrictionMosaicRepository } from '../../src/infrastructure/RestrictionMosaicRepository';
 import { Account } from '../../src/model/account/Account';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { MosaicAddressRestriction } from '../../src/model/restriction/MosaicAddressRestriction';

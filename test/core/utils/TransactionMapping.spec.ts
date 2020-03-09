@@ -22,7 +22,7 @@ import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
-import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 import { EncryptedMessage } from '../../../src/model/message/EncryptedMessage';
 import { MessageType } from '../../../src/model/message/MessageType';
 import { PlainMessage } from '../../../src/model/message/PlainMessage';

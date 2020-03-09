@@ -17,9 +17,9 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { NetworkRoutesApi } from 'symbol-openapi-typescript-node-client';
-import { NetworkFees } from '../model/blockchain/NetworkFees';
-import { NetworkName } from '../model/blockchain/NetworkName';
-import { NetworkType } from '../model/blockchain/NetworkType';
+import { NetworkFees } from '../model/network/NetworkFees';
+import { NetworkName } from '../model/network/NetworkName';
+import { NetworkType } from '../model/network/NetworkType';
 import { NodeInfo } from '../model/node/NodeInfo';
 import { Http } from './Http';
 import { NetworkRepository } from './NetworkRepository';

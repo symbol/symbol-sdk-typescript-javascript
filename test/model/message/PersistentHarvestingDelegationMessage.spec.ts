@@ -16,7 +16,7 @@
 
 import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
-import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 import { MessageType } from '../../../src/model/message/MessageType';
 import {PersistentHarvestingDelegationMessage} from '../../../src/model/message/PersistentHarvestingDelegationMessage';
 import { Deadline } from '../../../src/model/transaction/Deadline';

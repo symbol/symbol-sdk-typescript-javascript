@@ -20,7 +20,7 @@ import { Convert } from '../core/format/Convert';
 import { MetadataRepository } from '../infrastructure/MetadataRepository';
 import { Address } from '../model/account/Address';
 import { PublicAccount } from '../model/account/PublicAccount';
-import { NetworkType } from '../model/blockchain/NetworkType';
+import { NetworkType } from '../model/network/NetworkType';
 import { Metadata } from '../model/metadata/Metadata';
 import { MetadataType } from '../model/metadata/MetadataType';
 import { MosaicId } from '../model/mosaic/MosaicId';

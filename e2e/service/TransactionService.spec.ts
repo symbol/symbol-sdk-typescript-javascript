@@ -19,7 +19,7 @@ import { Convert } from '../../src/core/format/Convert';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';

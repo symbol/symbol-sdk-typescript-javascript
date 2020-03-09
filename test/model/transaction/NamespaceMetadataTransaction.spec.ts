@@ -17,7 +17,7 @@
 import { expect } from 'chai';
 import { Convert } from '../../../src/core/format/Convert';
 import { Account } from '../../../src/model/account/Account';
-import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { NamespaceMetadataTransaction } from '../../../src/model/transaction/NamespaceMetadataTransaction';

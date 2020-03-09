@@ -28,7 +28,7 @@ import {
 import { Convert, Convert as convert } from '../../core/format';
 import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
 import { PublicAccount } from '../account/PublicAccount';
-import { NetworkType } from '../blockchain/NetworkType';
+import { NetworkType } from '../network/NetworkType';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NamespaceRegistrationType } from '../namespace/NamespaceRegistrationType';
 import { UInt64 } from '../UInt64';

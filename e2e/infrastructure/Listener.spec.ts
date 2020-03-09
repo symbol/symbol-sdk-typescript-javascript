@@ -20,7 +20,7 @@ import { AccountRepository } from '../../src/infrastructure/AccountRepository';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { Address, CosignatureTransaction, LockFundsTransaction, Mosaic, SignedTransaction, UInt64 } from '../../src/model/model';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';

@@ -19,7 +19,7 @@ import { catchError, map, mergeMap } from 'rxjs/operators';
 import { MosaicRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { Address } from '../model/account/Address';
 import { PublicAccount } from '../model/account/PublicAccount';
-import { NetworkType } from '../model/blockchain/NetworkType';
+import { NetworkType } from '../model/network/NetworkType';
 import { MosaicFlags } from '../model/mosaic/MosaicFlags';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicInfo } from '../model/mosaic/MosaicInfo';

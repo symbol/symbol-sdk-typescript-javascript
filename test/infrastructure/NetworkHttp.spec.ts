@@ -20,7 +20,7 @@ import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { NetworkHttp } from '../../src/infrastructure/NetworkHttp';
 import { NodeHttp } from '../../src/infrastructure/NodeHttp';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/network/NetworkType';
 
 describe('NetworkHttp', () => {
     const url = 'http://someHost';

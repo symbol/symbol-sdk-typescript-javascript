@@ -20,7 +20,7 @@ import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { Convert } from '../../src/core/format/Convert';
 import { MetadataRepository } from '../../src/infrastructure/MetadataRepository';
 import { Account } from '../../src/model/account/Account';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { Metadata } from '../../src/model/metadata/Metadata';
 import { MetadataEntry } from '../../src/model/metadata/MetadataEntry';
 import { MetadataType } from '../../src/model/metadata/MetadataType';

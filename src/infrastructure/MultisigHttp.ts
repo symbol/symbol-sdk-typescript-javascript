@@ -21,7 +21,7 @@ import { Address } from '../model/account/Address';
 import { MultisigAccountGraphInfo } from '../model/account/MultisigAccountGraphInfo';
 import { MultisigAccountInfo } from '../model/account/MultisigAccountInfo';
 import { PublicAccount } from '../model/account/PublicAccount';
-import { NetworkType } from '../model/blockchain/NetworkType';
+import { NetworkType } from '../model/network/NetworkType';
 import { Http } from './Http';
 import { MultisigRepository } from './MultisigRepository';
 

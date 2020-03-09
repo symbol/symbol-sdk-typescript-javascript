@@ -32,10 +32,10 @@ export * from './account/AccountNames';
 export * from './blockchain/BlockchainScore';
 export * from './blockchain/StorageInfo';
 export * from './blockchain/BlockInfo';
-export * from './blockchain/NetworkType';
+export * from './network/NetworkType';
 export * from './blockchain/MerklePathItem';
 export * from './blockchain/MerkleProofInfo';
-export * from './blockchain/NetworkName';
+export * from './network/NetworkName';
 
 // Diagnostic
 export * from './node/ServerInfo';
