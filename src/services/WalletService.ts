@@ -132,7 +132,6 @@ export class WalletService extends AbstractService {
 
     // create wallet
     const wallet = new Wallet(extendedKey)
-    // @ts-ignore //@TODO: SDK upgrade
     return wallet.getChildAccount(path, networkType)
   }
 
@@ -196,10 +195,8 @@ export class WalletService extends AbstractService {
         index,
       )
     })
- 
 
     const wallets = paths.map(path => new Wallet(xkey.derivePath(path)))
-    // @ts-ignore // @TODO: SDK Upgrade
     return wallets.map(wallet => wallet.getAccount(networkType))
   }
 
@@ -218,7 +215,7 @@ export class WalletService extends AbstractService {
     // create hd extended key
     const xkey = this.getExtendedKeyFromMnemonic(mnemonic)
     const wallets = paths.map(path => new Wallet(xkey.derivePath(path)))
-    // @ts-ignore
+
     return wallets.map(wallet => wallet.getAccount(networkType))
   }
 

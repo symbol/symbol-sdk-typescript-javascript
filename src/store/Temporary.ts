@@ -59,10 +59,10 @@ export default {
       commit('setPassword', null)
       commit('setMnemonic', null)
     },
-    async SET_PASSWORD({commit, dispatch}, password) {
+    SET_PASSWORD({commit}, password) {
       commit('setPassword', new Password(password))
     },
-    async SET_MNEMONIC({commit, dispatch}, mnemonic) {
+    SET_MNEMONIC({commit}, mnemonic) {
       commit('setMnemonic', mnemonic)
     },
 /// end-region scoped actions

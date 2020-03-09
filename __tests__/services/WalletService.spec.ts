@@ -58,48 +58,87 @@ const expectedAddresses = expectedAccounts.map(({address}) => address)
 
 describe('services/WalletServices ==>', () => {
   describe('generateAccountsFromMnemonic() should', () => {
-    it('produce 10 accounts', () => {
+    test('generate correct child account given mnemonic', () => {
       const accounts = new WalletService().generateAccountsFromMnemonic(
         mnemonic,
         NetworkType.TEST_NET,
+        1
       )
-      
-      expect(accounts).toStrictEqual(expectedAccounts)
+
+      expect(accounts).toBeDefined()
+      expect(accounts.length).toBe(1)
+      expect(accounts[0].privateKey).toBe(expectedAccounts[0].privateKey)
+      expect(accounts[0].publicKey).toBe(expectedAccounts[0].publicKey)
+      expect(accounts[0].address.plain()).toBe(expectedAccounts[0].address.plain())
+    })
+
+    test('generate multiple correct children accounts given mnemonic and count', () => {
+      const accounts = new WalletService().generateAccountsFromMnemonic(
+        mnemonic,
+        NetworkType.TEST_NET,
+        4
+      )
+
+      expect(accounts).toBeDefined()
+      expect(accounts.length).toBe(4)
+      expect(accounts[0].privateKey).toBe(expectedAccounts[0].privateKey)
+      expect(accounts[1].privateKey).toBe(expectedAccounts[1].privateKey)
+      expect(accounts[2].privateKey).toBe(expectedAccounts[2].privateKey)
+      expect(accounts[3].privateKey).toBe(expectedAccounts[3].privateKey)
     })
   })
 
   describe('generateAccountsFromPaths() should', () => {
-    it('produce 10 accounts', () => {
+    test('generate correct account given mnemonic and paths', () => {
       const accounts = new WalletService().generateAccountsFromPaths(
         mnemonic,
         NetworkType.TEST_NET,
-        Object.values(standardPaths),
+        Object.values(standardPaths).slice(0, 1),
       )
 
-      expect(accounts).toStrictEqual(expectedAccounts)
+      expect(accounts).toBeDefined()
+      expect(accounts.length).toBe(1)
+      expect(accounts[0].privateKey).toBe(expectedAccounts[0].privateKey)
+      expect(accounts[0].publicKey).toBe(expectedAccounts[0].publicKey)
+      expect(accounts[0].address.plain()).toBe(expectedAccounts[0].address.plain())
     })
   })
 
   describe('getAddressesFromMnemonic() should', () => {
-    it('produce 10 addresses', () => {
+    test('generate correct address given mnemonic', () => {
       const addresses = new WalletService().getAddressesFromMnemonic(
         mnemonic,
         NetworkType.TEST_NET,
+        1
       )
 
-      expect(addresses).toEqual(expectedAddresses)
+      expect(addresses).toBeDefined()
+      expect(addresses.length).toBe(1)
+      expect(addresses[0].plain()).toBe(expectedAccounts[0].address.plain())
+    })
+
+    test('generate multiple correct addresses given mnemonic and count', () => {
+      const addresses = new WalletService().getAddressesFromMnemonic(
+        mnemonic,
+        NetworkType.TEST_NET,
+        3
+      )
+
+      expect(addresses).toBeDefined()
+      expect(addresses.length).toBe(3)
+      expect(addresses[0].plain()).toBe(expectedAccounts[0].address.plain())
+      expect(addresses[1].plain()).toBe(expectedAccounts[1].address.plain())
+      expect(addresses[2].plain()).toBe(expectedAccounts[2].address.plain())
     })
   })
 
   describe('getAccountByPath() should', () => {
-    it('produce expected accounts', () => {
-      const networkType = NetworkType.TEST_NET
+    test('generate correct account given mnemonic and path', () => {
+      const account_1 = new WalletService().getAccountByPath(mnemonic, NetworkType.TEST_NET, standardPaths[1])
+      const account_8 = new WalletService().getAccountByPath(mnemonic, NetworkType.TEST_NET, standardPaths[8])
 
-      expect(new WalletService().getAccountByPath(mnemonic, networkType, standardPaths[1]))
-        .toEqual(expectedAccounts[0])
-       
-      expect(new WalletService().getAccountByPath(mnemonic, networkType, standardPaths[8]))
-        .toEqual(expectedAccounts[7])
+      expect(account_1.privateKey).toBe(expectedAccounts[0].privateKey)
+      expect(account_8.privateKey).toBe(expectedAccounts[7].privateKey)
     })
   })
 })

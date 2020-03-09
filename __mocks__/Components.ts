@@ -45,6 +45,8 @@ export const getComponent = (
   component,
   storeModules: {[name: string]: any},
   stateChanges?: {[field: string]: any},
+  propsData?: {[field: string]: any},
+  stubsData?: {[field: string]: any},
 ) => {
   // - format store module overwrites
   const modules = Object.keys(storeModules).map(k => ({
@@ -63,9 +65,21 @@ export const getComponent = (
 
   // - create fake store
   const store = createStore({modules})
+  const params = {
+    store,
+    localVue
+  }
+
+  if (propsData && Object.keys(propsData).length) {
+    params['propsData'] = propsData
+  }
+
+  if (stubsData && Object.keys(stubsData).length) {
+    params['stubs'] = stubsData
+  } 
 
   // - mount component
-  const wrapper = shallowMount(component, {store, localVue})
+  const wrapper = shallowMount(component, params)
   return wrapper
 }
 /// end-region helpers

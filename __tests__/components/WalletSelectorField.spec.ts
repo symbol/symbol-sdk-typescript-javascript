@@ -22,9 +22,9 @@ import WalletStore from '@/store/Wallet'
 import WalletSelectorField from '@/components/WalletSelectorField/WalletSelectorField.vue'
 import {WalletService} from '@/services/WalletService'
 
-describe('store/WalletSelectorField ==>', () => {
+describe('components/WalletSelectorField', () => {
   describe('getter for property "currentWalletIdentifier" should', () => {
-    test('return empty string given no currentWallet', () => {
+    test('return empty string given no currentWallet and no value', () => {
       // prepare
       const wrapper = getComponent(WalletSelectorField, {wallet: WalletStore}, {
         currentWallet: null
@@ -39,11 +39,11 @@ describe('store/WalletSelectorField ==>', () => {
       expect(actual.length).toBe(0)
     })
 
-    test('return wallet identifier given currentWallet', () => {
+    test('return wallet identifier given value', () => {
       // prepare
       const wallet = getFakeModel('5678')
-      const wrapper = getComponent(WalletSelectorField, {wallet: WalletStore}, {
-        currentWallet: wallet
+      const wrapper = getComponent(WalletSelectorField, {wallet: WalletStore}, {}, {
+        value: wallet.getIdentifier()
       })
       const component = (wrapper.vm as WalletSelectorField)
 
@@ -81,30 +81,6 @@ describe('store/WalletSelectorField ==>', () => {
         'notification/ADD_ERROR',
         'Wallet with identifier \'1234\' does not exist.'
       )
-    })
-
-    test('dispatch "SET_CURRENT_WALLET" given valid identifier', () => {
-      // prepare
-      const wallet = getFakeModel('abcd', [
-        ['name', 'w_one'],
-        ['address', 'w_addr'],
-      ])
-      const wrapper = getComponent(WalletSelectorField, {wallet: WalletStore}, {})
-      const service = new WalletService(wrapper.vm.$store, getAdapter())
-      const component = (wrapper.vm as WalletSelectorField)
-      component.service = service
-
-      // act
-      component.currentWalletIdentifier = 'abcd'
-
-      // assert
-      expect(component.$store.dispatch).toHaveBeenCalledWith(
-        'wallet/SET_CURRENT_WALLET',
-        wallet
-      )
-      expect(wrapper.emitted().change).toBeTruthy()
-      expect(wrapper.emitted().change.length).toBe(1)
-      expect(wrapper.emitted().change[0]).toEqual(['abcd'])
     })
   })
 

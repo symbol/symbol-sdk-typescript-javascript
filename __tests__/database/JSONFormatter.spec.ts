@@ -72,7 +72,8 @@ describe('database/JSONFormatter ==>', () => {
         + '"db_column1":"value1",'
         + '"db_column2":"value2",'
         + '"db_column3":"value3",'
-        + '"id":"' + model.getIdentifier() + '"'
+        + '"id":"' + model.getIdentifier() + '",'
+        + '"version":0'
         + '}}'
       const json = formatter.format(
         new FakeTable('table', ['col1']),
@@ -164,13 +165,6 @@ describe('database/JSONFormatter ==>', () => {
   })
 
   describe('parse() should', () => {
-    it('throw if schema is undefined', () => {
-      const formatter = new JSONFormatter()
-      expect(() => {
-        formatter.parse(new FakeTable('table', ['item']), '{"item":"1"}')
-      }).toThrow('Error parsing JSON: Schema must be set before data can be parsed.')
-    })
-
     it('return empty map given no values', () => {
       // prepare
       const formatter = getFormatter()
