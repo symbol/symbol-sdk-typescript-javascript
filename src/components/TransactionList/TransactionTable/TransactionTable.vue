@@ -4,16 +4,22 @@
     <div v-if="transactions.length" class="transaction-rows-outer-container">
       <div v-if="transactions.length" class="transaction-rows-inner-container">
         <TransactionRow
-          v-for="(transaction, index) in transactionsList"
+          v-for="transaction in transactionsList"
           :key="transaction.transactionInfo.hash"
           :transaction="transaction"
           @click="$emit('click', transaction)"
         />
       </div>
     </div>
-
-    <div v-if="!transactions.length" class="no-data-container">
-      <div v-for="item in nodata" :key="item"></div>
+    <div v-if="!transactions.length" class="no-data-outer-container">
+      <div class="no-data-message-container">
+        <div>{{ $t('no_data_transactions') }}</div>
+      </div>
+      <div class="no-data-inner-container">
+        <div v-for="item in nodata" :key="item">
+          &nbsp;
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -36,7 +42,7 @@ import TransactionListHeader from '@/components/TransactionList/TransactionListH
 export default class TransactionTable extends Vue {
   @Prop({ default: [] }) transactions: Transaction[]
   @Prop({ default: 'no_data'}) emptyMessage: string
-  public nodata = [1,2,3,4,5,6];
+  public nodata = [ 1,2,3,4,5,6 ]
 
   get transactionsList(): Transaction[] {
     return this.transactions

@@ -45,8 +45,20 @@
           @on-show-mosaic-supply-change-form="showModifyMosaicSupplyForm"
         />
       </div>
-      <div v-else class="empty-container">
-        <div v-for="item in nodata" :key="item"></div>
+      <div v-else class="no-data-outer-container">
+        <div class="no-data-message-container">
+          <div>
+            {{ assetType === 'mosaic'
+              ? $t('no_data_mosaics')
+              : $t('no_data_namespaces') 
+            }}
+          </div>
+        </div>
+        <div class="no-data-inner-container">
+          <div v-for="item in nodata" :key="item">
+            &nbsp;
+          </div>
+        </div>
       </div>
     </div>
 
@@ -107,5 +119,5 @@
 <script lang="ts">
 import { TableDisplayTs } from './TableDisplayTs'
 export default class TableDisplay extends TableDisplayTs {}
-import "./TableDisplay.less";
+import './TableDisplay.less'
 </script>
