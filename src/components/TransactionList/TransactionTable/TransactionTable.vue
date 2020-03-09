@@ -13,7 +13,7 @@
     </div>
     <div v-if="!transactions.length" class="no-data-outer-container">
       <div class="no-data-message-container">
-        <div>{{ $t('no_data_transactions') }}</div>
+        <div>{{ $t(emptyMessage) }}</div>
       </div>
       <div class="no-data-inner-container">
         <div v-for="item in nodata" :key="item">
@@ -41,7 +41,7 @@ import TransactionListHeader from '@/components/TransactionList/TransactionListH
 })
 export default class TransactionTable extends Vue {
   @Prop({ default: [] }) transactions: Transaction[]
-  @Prop({ default: 'no_data'}) emptyMessage: string
+  @Prop({ default: 'no_data_transactions'}) emptyMessage: string
   public nodata = [...Array(10).keys()]
 
   get transactionsList(): Transaction[] {
