@@ -3,7 +3,22 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [v0.9.5-beta2][v0.9.5-beta2] - 
+## [v0.9.5][v0.9.5] - 
+
+### Milestone: [catapult-server@v0.9.3.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.1)
+
+### [v0.9.5-beta3][v0.9.5-beta3] - 09-Mar-2020
+
+#### Fixed
+
+- Fixed PeerSelector component with loading state (fixes #23)
+- Fixed transaction list layout for better readability
+- Added beautified empty messages for table displays
+- Fixed FormAliasTransaction for mosaic aliases
+- Fixed pagination component layout
+- Fixed mnemonic import wallet selection screen
+
+### [v0.9.5-beta2][v0.9.5-beta2] - 06-Mar-2020
 
 #### Fixed
 
@@ -11,10 +26,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Fixed account import pages (fixes #54)
 - Fixed newly added transfer mosaic attachments
 
-
-## [v0.9.5-beta1][v0.9.5-beta1] - 06-Mar-2020
-
-### Milestone: [catapult-server@v0.9.3.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.1)
+### [v0.9.5-beta1][v0.9.5-beta1] - 06-Mar-2020
 
 #### Added
 
@@ -64,6 +76,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Mosaic definition *multi-signature* feature bug with signer selection (aggregate bonded only)
 
 
-[v0.9.5-beta2]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.9.4-beta...v0.9.5-beta2
-[v0.9.5-beta1]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.9.4-beta...v0.9.5-beta1
-[v0.9.4-beta]: https://github.com/nemtech/symbol-sdk-typescript-javascript/releases/tag/v0.9.4-beta
+[v0.9.5]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.5-beta3
+[v0.9.5-beta3]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta2...v0.9.5-beta3
+[v0.9.5-beta2]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta1...v0.9.5-beta2
+[v0.9.5-beta1]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.4-beta...v0.9.5-beta1
+[v0.9.4-beta]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.4-beta
