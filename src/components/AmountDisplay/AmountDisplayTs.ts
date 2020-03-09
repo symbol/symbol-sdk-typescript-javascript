@@ -53,7 +53,7 @@ export class AmountDisplayTs extends Vue {
 
 /// region computed properties getter/setter
   get integerPart(): string {
-    return Math.floor(this.value).toString()
+    return Math.floor(this.value).toLocaleString()
   }
 
   get fractionalPart(): string {

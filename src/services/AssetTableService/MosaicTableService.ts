@@ -75,7 +75,7 @@ export class MosaicTableService extends AssetTableService {
       return {
         'hexId': hexId,
         'name': mosaicNames[hexId] || 'N/A',
-        'supply': new UInt64([ supply.lower, supply.higher ]).compact(),
+        'supply': new UInt64([ supply.lower, supply.higher ]).compact().toLocaleString(),
         'balance': balance === 0 ? 0 : (
           // - get relative amount
           balance / Math.pow(10, divisibility)
@@ -116,6 +116,6 @@ export class MosaicTableService extends AssetTableService {
     }
 
     // - number of blocks remaining
-    return expiresIn.toString()
+    return expiresIn.toLocaleString()
   }
 }
