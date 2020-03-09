@@ -162,7 +162,7 @@ describe('NodeHttp', () => {
     it('getStorageInfo on Exception', async () => {
 
         when(nodeRoutesApi.getNodeStorage()).thenReturn(Promise.reject({
-            response: {statusCode: 500, statusMessage: 'Some Error', body: 'The Body',},
+            response: {statusCode: 500, statusMessage: 'Some Error', body: 'The Body'},
         }));
         try {
             await nodeRepository.getStorageInfo().toPromise();

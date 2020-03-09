@@ -20,7 +20,6 @@ import { Convert as convert } from '../../src/core/format';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
-import { NetworkType } from '../../src/model/network/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
@@ -29,6 +28,7 @@ import { MosaicSupplyChangeAction } from '../../src/model/mosaic/MosaicSupplyCha
 import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { AccountRestrictionFlags } from '../../src/model/restriction/AccountRestrictionType';
 import { AccountLinkTransaction } from '../../src/model/transaction/AccountLinkTransaction';
 import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';

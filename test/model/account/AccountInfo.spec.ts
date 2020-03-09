@@ -20,9 +20,9 @@ import {AccountInfo} from '../../../src/model/account/AccountInfo';
 import { ActivityBucket } from '../../../src/model/account/ActivityBucket';
 import {Address} from '../../../src/model/account/Address';
 import {PublicAccount} from '../../../src/model/account/PublicAccount';
-import {NetworkType} from '../../../src/model/network/NetworkType';
 import {Mosaic} from '../../../src/model/mosaic/Mosaic';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
+import {NetworkType} from '../../../src/model/network/NetworkType';
 import {UInt64} from '../../../src/model/UInt64';
 
 describe('AccountInfo', () => {

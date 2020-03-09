@@ -17,10 +17,10 @@
 import {deepEqual} from 'assert';
 import {expect} from 'chai';
 import {PublicAccount} from '../../../src/model/account/PublicAccount';
-import {NetworkType} from '../../../src/model/network/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
 import {NamespaceInfo} from '../../../src/model/namespace/NamespaceInfo';
+import {NetworkType} from '../../../src/model/network/NetworkType';
 import {UInt64} from '../../../src/model/UInt64';
 
 describe('NamespaceInfo', () => {

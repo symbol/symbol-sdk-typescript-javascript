@@ -17,10 +17,10 @@
 import {expect} from 'chai';
 import {Convert} from '../../../src/core/format';
 import {Account} from '../../../src/model/account/Account';
-import {NetworkType} from '../../../src/model/network/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {MosaicSupplyChangeAction} from '../../../src/model/mosaic/MosaicSupplyChangeAction';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import {NetworkType} from '../../../src/model/network/NetworkType';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
 import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';

@@ -19,11 +19,11 @@ import { of as observableOf } from 'rxjs';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
-import { NetworkType } from '../../src/model/network/NetworkType';
 import { EmptyAlias } from '../../src/model/namespace/EmptyAlias';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { NamespaceInfo } from '../../src/model/namespace/NamespaceInfo';
 import { NamespaceName } from '../../src/model/namespace/NamespaceName';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { UInt64 } from '../../src/model/UInt64';
 import { NamespaceService } from '../../src/service/NamespaceService';
 

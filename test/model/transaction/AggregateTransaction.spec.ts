@@ -22,7 +22,6 @@ import { CreateTransactionFromDTO } from '../../../src/infrastructure/transactio
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
-import { NetworkType } from '../../../src/model/network/NetworkType';
 import { PlainMessage } from '../../../src/model/message/PlainMessage';
 import { Mosaic } from '../../../src/model/mosaic/Mosaic';
 import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
@@ -31,6 +30,7 @@ import { MosaicNonce } from '../../../src/model/mosaic/MosaicNonce';
 import { MosaicSupplyChangeAction } from '../../../src/model/mosaic/MosaicSupplyChangeAction';
 import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
 import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';

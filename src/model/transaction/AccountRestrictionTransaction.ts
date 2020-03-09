@@ -15,9 +15,9 @@
  */
 
 import { Address } from '../account/Address';
-import { NetworkType } from '../network/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { NetworkType } from '../network/NetworkType';
 import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
 import { UInt64 } from '../UInt64';
 import { AccountAddressRestrictionTransaction } from './AccountAddressRestrictionTransaction';

@@ -15,8 +15,8 @@
  */
 import {expect} from 'chai';
 import {Convert} from '../../../src/core/format';
-import {NetworkType} from '../../../src/model/network/NetworkType';
 import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
+import {NetworkType} from '../../../src/model/network/NetworkType';
 import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {HashLockTransaction} from '../../../src/model/transaction/HashLockTransaction';

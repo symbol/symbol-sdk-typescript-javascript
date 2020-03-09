@@ -17,8 +17,8 @@
 import {expect} from 'chai';
 import {Convert} from '../../../src/core/format';
 import {Account} from '../../../src/model/account/Account';
-import {NetworkType} from '../../../src/model/network/NetworkType';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import {NetworkType} from '../../../src/model/network/NetworkType';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {NamespaceRegistrationTransaction} from '../../../src/model/transaction/NamespaceRegistrationTransaction';
 import {UInt64} from '../../../src/model/UInt64';
