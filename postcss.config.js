@@ -1,5 +1,3 @@
-const isWin32 = process.platform === 'win32'
-const propList = isWin32 ? ["*", '!font-size'] : ["*"]
 
 module.exports = {
     plugins: {
@@ -7,7 +5,7 @@ module.exports = {
         "autoprefixer": {},
         "postcss-pxtorem": {
             "rootValue": 100,
-            "propList": propList,
+            "propList": ["*"],
             "selectorBlackList": ["mint-"],
         }
     }
