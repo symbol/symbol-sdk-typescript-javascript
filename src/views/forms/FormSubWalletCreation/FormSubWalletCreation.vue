@@ -1,6 +1,11 @@
 <template>
   <div>
-    <FormWrapper ref="observer" class="sub-wallet-creation-container" slim>
+    <FormWrapper
+      ref="observer"
+      class="sub-wallet-creation-container"
+      :whitelisted="true"
+      slim
+    >
       <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
         <form
           class="form-container mt-3"
