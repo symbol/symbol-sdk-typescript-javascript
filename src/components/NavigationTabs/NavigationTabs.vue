@@ -1,5 +1,5 @@
 <template>
-  <div :class="[direction]">
+  <div :class="[direction==='horizontal'?'tabs':'',direction]">
     <span
       v-for="(tabEntry, index) in tabEntries"
       :key="index"

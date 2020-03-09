@@ -1,12 +1,12 @@
 <template>
-  <div class="multisig-dashboard-main-container">
-    <div class="header-container">
+  <div class="multisig-outer-container">
+    <div class="multisig-inner-container xym-outline">
+    <div class="bottom-container">
       <NavigationTabs direction="horizontal" :parent-route-name="'multisig'" />
-    </div>
-
-    <div class="body-container">
       <router-view />
     </div>
+    </div>
+    
   </div>
 </template>
 <script>
@@ -24,22 +24,19 @@ export default class MultisigDashboardPage extends Vue {}
 </script>
 
 <style lang="less" scoped>
-.multisig-dashboard-main-container {
+.multisig-outer-container {
   position: relative;
   width: 100%;
   height: 100%;
-  padding: 0.2rem 0 0.35rem 0;
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: 0.6rem auto;
-
-  .header-container {
+  padding: 0.2rem 0 0.35rem 0.2rem;
+  .multisig-inner-container{
     width: 100%;
     height: 100%;
-  }
-
-  .body-container {
-    border-radius: 4px;
+    background: transparent;
+    .header-container {
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 </style>

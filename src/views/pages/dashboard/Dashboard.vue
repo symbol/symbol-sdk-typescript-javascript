@@ -3,13 +3,14 @@
     <div class="dashboard-left-container">
       <AccountBalancesPanel />
     </div>
-
-    <div class="dashboard-right-container">
-      <NetworkStatisticsPanel />
-      <div class="right-bottom-container xym-outline">
-        <NavigationTabs direction="horizontal" :parent-route-name="parentRouteName" />
-        <div class="radius bottom_router_view">
-          <router-view />
+    <div class="right-container">
+      <div class="dashboard-right-container">
+        <NetworkStatisticsPanel />
+        <div class="right-bottom-container xym-outline">
+          <NavigationTabs direction="horizontal" :parent-route-name="parentRouteName" />
+          <div class="radius bottom_router_view">
+            <router-view />
+          </div>
         </div>
       </div>
     </div>
@@ -18,8 +19,8 @@
 
 <script lang="ts">
 // @ts-ignore
-import {DashboardTs} from './DashboardTs'
-import './Dashboard.less'
+import { DashboardTs } from "./DashboardTs";
+import "./Dashboard.less";
 
 export default class Dashboard extends DashboardTs {}
 </script>

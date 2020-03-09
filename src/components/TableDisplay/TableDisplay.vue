@@ -4,14 +4,6 @@
       <div class="table-title-container section-title">
         <slot name="table-title" />
       </div>
-      <div class="table-actions-container">
-        <span @click="refresh()">{{ $t('refresh') }}</span>
-        <div @click="setFilteredBy('expiration')">
-          <Checkbox :value="filteredBy.filteringType === 'show'" />
-          <span v-if="assetType === 'mosaic'">{{ $t('Display_expired_mosaic') }}</span>
-          <span v-else>{{ $t('Hide_expired_namespaces') }}</span>
-        </div>
-      </div>
     </div>
     <div
       :class="[                                         
@@ -53,8 +45,20 @@
           @on-show-mosaic-supply-change-form="showModifyMosaicSupplyForm"
         />
       </div>
-      <div v-else class="empty-container">
-        <span class="no-data">{{ $t('no_data') }}</span>
+      <div v-else class="no-data-outer-container">
+        <div class="no-data-message-container">
+          <div>
+            {{ assetType === 'mosaic'
+              ? $t('no_data_mosaics')
+              : $t('no_data_namespaces') 
+            }}
+          </div>
+        </div>
+        <div class="no-data-inner-container">
+          <div v-for="item in nodata" :key="item">
+            &nbsp;
+          </div>
+        </div>
       </div>
     </div>
 
@@ -114,10 +118,6 @@
 
 <script lang="ts">
 import { TableDisplayTs } from './TableDisplayTs'
-
 export default class TableDisplay extends TableDisplayTs {}
+import './TableDisplay.less'
 </script>
-
-<style scoped lang="less">
-@import "./TableDisplay.less";
-</style>

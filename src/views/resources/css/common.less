@@ -87,7 +87,7 @@ input::placeholder {
   min-height: 100vh;
   max-height: 100vh;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
 
@@ -179,12 +179,12 @@ input::placeholder {
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  border-radius: 5px;
+  border-radius: 2.5px;
   background-color: @whiteDark;
 }
 
@@ -412,4 +412,32 @@ textarea {
 
 .xym-outline {
   box-shadow: 0 0.01rem 0.15rem 0.01rem @boxShadow;
+}
+
+.no-data-outer-container {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  .no-data-message-container {
+    position: absolute;
+    width: 50%;
+    height: 40%;
+    text-align: center;
+    top: 30%;
+    right: 25%;
+    bottom: 30%;
+    left: 25%;
+    background-color: @white;
+    border-radius: 8px;
+    box-shadow: 0 0.01rem 0.08rem 0.01rem @grayLight;
+    display: grid;
+
+    >div {
+      font-size: @smallFont;
+      color: @primary;
+      margin: auto;
+    }
+  }
 }

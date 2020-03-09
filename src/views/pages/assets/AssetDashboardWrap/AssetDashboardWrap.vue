@@ -1,12 +1,13 @@
 <template>
-  <div class="asset-dashboard-main-container">
-    <div class="header-container">
-      <NavigationTabs direction="horizontal" :parent-route-name="parentRouteName" />
-    </div>
-
-    <div class="body-container">
-      <router-view />
-    </div>
+  <div class="dashboard-outer-container">
+    <div class="dashboard-inner-container xym-outline">
+      <div class="header-container">
+        <NavigationTabs direction="horizontal" :parent-route-name="parentRouteName" />
+      </div>
+      <div class="bottom-container">
+         <router-view />
+      </div>
+    </div> 
   </div>
 </template>
 

@@ -15,10 +15,10 @@
  */
 @import "../../../views/resources/css/variables.less";
 
-@headerHeight: 0.5rem;
+@headerHeight: 0.35rem;
 @rowHeight: 0.65rem;
-@rowGap: 0.12rem;
-@maxDisplayedRow: 10;
+@rowGap: 0.1rem;
+@maxDisplayedRow: 6;
 
 .transaction-tab-inner-container {
   display: block;
@@ -29,30 +29,30 @@
   display: grid;
   width: 100%;
   grid-template-columns: 100%;
-  grid-template-rows: @headerHeight auto;
-  height: 100%;
+  grid-template-rows: @headerHeight 4.6rem;
   overflow: hidden;
+  padding-top: 0.2rem;
 
   .transaction-table-columns {
-    grid-template-columns: 0.45rem auto 2rem 1.5rem 3.5rem;
+    grid-template-columns: 0.45rem auto 1.8rem 2rem 3.5rem;
   }
 
   .transaction-rows-outer-container {
     display: block;
     position: relative;
-    overflow-x: hidden;
+    overflow: hidden;
     overflow-y: scroll;
     width: 100%;
-    height: 100%;
+    padding-top: 0.1rem;
   }
 
   .transaction-rows-inner-container {
     display: grid;
     grid-auto-rows: @rowHeight;
-    grid-row-gap: @rowGap;
     width: 100%;
-    height: (@maxDisplayedRow + 1) * (@rowHeight + @rowGap);
+    height: (@maxDisplayedRow) * (@rowHeight + @rowGap);
     position: relative;
+    overflow-y: auto;
   }
 
   .transaction-row-container:hover {
@@ -64,8 +64,9 @@
     width: 100%;
     height: 100%;
     margin: 0;
-    padding: 0;
+    padding: 0.05rem 0;
     cursor: pointer;
+    border-bottom: 1px solid @line;
 
     .icon-cell {
       position: relative;
@@ -75,8 +76,8 @@
       padding-top: 0.15rem;
 
       .icon-cell-image {
-        width: 0.35rem;
-        height: 0.35rem;
+        width: 0.28rem;
+        height: 0.28rem;
         margin: auto;
         display: block;
         position: relative;
@@ -84,31 +85,33 @@
     }
 
     .address-cell {
-      font-size: @normalFont;
+      font-size: @smallerFont;
       display: grid;
       width: 100%;
       height: 100%;
       grid-template-columns: 100%;
       grid-template-rows: repeat(2, 50%);
       padding-left: 0.1rem;
+      padding-top: 0.08rem;
       overflow: hidden;
     }
 
     .amount-cell {
-      text-align: right;
+      text-align: left;
       padding: .13rem;
+      padding-left: 0.3rem;
     }
 
     .confirmation-cell {
-      font-size: @normalFont;
-      text-align: right;
+      font-size: @smallerFont;
+      text-align: left;
       padding: .13rem;
     }
 
     .hash-cell {
       font-size: @smallerFont;
-      text-align: right;
-      padding: 0.13rem 0.2rem 0.1rem 0.1rem;
+      text-align: left;
+      padding: 0.08rem 0.1rem 0 0.1rem;
       overflow: hidden;
       display: grid;
       grid-template-columns: 100%;
@@ -116,14 +119,18 @@
 
       .hash-cell-transaction-hash {
         overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
   }
+}
 
-  .no-data-container {
-    color: @secondary;
-    font-size: @normalFont;
-    padding-top: 0.6rem;
-    text-align: center;
+.no-data-inner-container {
+  display: grid;
+  grid-auto-rows: @rowHeight;
+  grid-row-gap: @rowGap;
+  
+  >div {
+    border-bottom: 1px solid @line;
   }
 }

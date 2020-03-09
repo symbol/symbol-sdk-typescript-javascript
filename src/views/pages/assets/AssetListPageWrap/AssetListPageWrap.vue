@@ -1,12 +1,9 @@
 <template>
   <div class="asset-list-main-container">
-    <div class="left-container xym-outline">
+    <div class="left-container">
       <div class="table-section">
         <slot name="table-section" />
       </div>
-    </div>
-    <div class="right-container xym-outline">
-      <slot name="asset-description" />
     </div>
   </div>
 </template>

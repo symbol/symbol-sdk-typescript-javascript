@@ -1,30 +1,30 @@
 <template>
   <div class="about-container">
     <div class="form-container">
-      <div class="form-row">
+      <div class="form-row about-list">
         <div class="label">{{ $t('about_app_release') }}</div>
         <div class="value">
           {{ configs.package.description }} v{{ configs.package.version }}
         </div>
       </div>
-      <div class="form-row">
+      <div class="form-row about-list">
         <div class="label">{{ $t('about_app_url') }}</div>
         <div class="value">
           <a :href="configs.package.homepage" target="_blank">{{ configs.package.homepage }}</a>
         </div>
       </div>
-      <div class="form-row"></div>
+      <!-- <div class="form-row"></div> -->
 
       <div class="subtitle">{{ $t('about_network') }}</div>
 
-      <div class="form-row">
+      <div class="form-row about-list">
         <div class="label">{{ $t('about_default_node') }}</div>
         <div class="value">
           <a :href="getNodeLink()" target="_blank">{{ configs.network.defaultNode.url }}</a>
         </div>
       </div>
 
-      <div class="form-row">
+      <div class="form-row about-list">
         <div class="label">{{ $t('about_network_type') }}</div>
         <div class="value">
           <span v-if="isNetworkType(types.MAIN_NET)">MAINNET</span>
@@ -34,34 +34,34 @@
         </div>
       </div>
 
-      <div class="form-row">
+      <div class="form-row about-list">
         <div class="label">{{ $t('about_generation_hash') }}</div>
         <div class="value">{{ configs.network.networks['testnet-publicTest'].generationHash }}</div>
       </div>
-      <div class="form-row"></div>
+      <!-- <div class="form-row about-list"></div> -->
 
       <div class="subtitle">{{ $t('about_dependencies') }}</div>
 
-      <div class="form-row">
+      <div class="form-row about-list">
         <div class="label">{{ $t('about_sdk_version') }}</div>
         <div class="value">{{ configs.package.dependencies['symbol-sdk'] }}</div>
       </div>
 
-      <div class="form-row">
+      <div class="form-row about-list">
         <div class="label">{{ $t('about_typescript_version') }}</div>
         <div class="value">{{ configs.package.dependencies['typescript'] }}</div>
       </div>
 
-      <div class="form-row">
+      <div class="form-row about-list">
         <div class="label">{{ $t('about_rxjs_version') }}</div>
         <div class="value">{{ configs.package.dependencies['rxjs'] }}</div>
       </div>
 
-      <div class="form-row">
+      <div class="form-row about-list">
         <div class="label">{{ $t('about_vue_version') }}</div>
         <div class="value">{{ configs.package.dependencies['vue'] }}</div>
       </div>
-      <div class="form-row"></div>
+      <!-- <div class="form-row"></div> -->
     </div>
   </div>
 </template>
