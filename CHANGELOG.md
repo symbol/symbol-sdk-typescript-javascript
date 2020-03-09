@@ -7,10 +7,11 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ### Milestone: [catapult-server@v0.9.3.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.1)
 
-### [v0.9.5-beta3][v0.9.5-beta3] - 09-Mar-2020
+### [v0.9.5-beta4][v0.9.5-beta4] - 09-Mar-2020
 
 #### Fixed
 
+- Patched windows build postcss properties
 - Fixed PeerSelector component with loading state (fixes #23)
 - Fixed transaction list layout for better readability
 - Added beautified empty messages for table displays
@@ -76,8 +77,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Mosaic definition *multi-signature* feature bug with signer selection (aggregate bonded only)
 
 
-[v0.9.5]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.5-beta3
-[v0.9.5-beta3]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta2...v0.9.5-beta3
+[v0.9.5]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.5-beta4
+[v0.9.5-beta4]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta2...v0.9.5-beta4
 [v0.9.5-beta2]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta1...v0.9.5-beta2
 [v0.9.5-beta1]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.4-beta...v0.9.5-beta1
 [v0.9.4-beta]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.4-beta
