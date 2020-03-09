@@ -80,20 +80,28 @@ export default {
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
 /// region scoped actions
-    async ADD_LOG({commit}, {level, message}) {
+    ADD_LOG({commit}, {level, message}) {
       commit('addLog', {level, message, time: new Date()})
     },
-    async ADD_INFO({commit}, message) {
-      commit('addLog', {level: LogLevels.INFO, message, time: new Date()})
+    ADD_INFO({commit}, message) {
+      const time = new Date()
+      commit('addLog', {level: LogLevels.INFO, message, time})
+      return time
     },
-    async ADD_DEBUG({commit}, message) {
-      commit('addLog', {level: LogLevels.DEBUG, message, time: new Date()})
+    ADD_DEBUG({commit}, message) {
+      const time = new Date()
+      commit('addLog', {level: LogLevels.DEBUG, message, time})
+      return time
     },
-    async ADD_WARNING({commit}, message) {
-      commit('addLog', {level: LogLevels.WARNING, message, time: new Date()})
+    ADD_WARNING({commit}, message) {
+      const time = new Date()
+      commit('addLog', {level: LogLevels.WARNING, message, time})
+      return time
     },
-    async ADD_ERROR({commit}, message) {
-      commit('addLog', {level: LogLevels.ERROR, message, time: new Date()})
+    ADD_ERROR({commit}, message) {
+      const time = new Date()
+      commit('addLog', {level: LogLevels.ERROR, message, time})
+      return time
     },
 /// end-region scoped actions
   }

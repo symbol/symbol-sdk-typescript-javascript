@@ -44,5 +44,13 @@ describe('store/Account', () => {
       expect(commit).toHaveBeenCalledTimes(1)
       expect(commit).toHaveBeenNthCalledWith(1, 'setPassword', new Password('1234567a'))
     })
+
+    test('throw password error if less than 8 characters', () => {
+      // prepare
+      const commit = jest.fn()
+
+      // act + assert
+      expect(() => TemporaryStore.actions.SET_PASSWORD({commit}, '1234567')).toThrowError()
+    })
   })
 })

@@ -16,65 +16,49 @@
 import {Password} from 'symbol-sdk'
 import {AESEncryptionService} from '@/services/AESEncryptionService'
 
-describe('services/AESEncryptionService ==>', () => {
+const cipher1 = AESEncryptionService.encrypt('a', new Password('password'))
+const cipher2 = AESEncryptionService.encrypt('a', new Password('password'))
+const knownPass = new Password("password")
+const knownValue = "987654321"
+const knownCipher = "9c3afe1b658403d7522886cda510a3714c389ce697128ab8d3877bbbb53c2ecdY+QgfP/KHmUl+wk7rPwmEQ=="
+
+describe('services/AESEncryptionService', () => {
   describe('encrypt() should', () => {
-    it('produce distinct values always', () => {
-      const enc1 = AESEncryptionService.encrypt('a', new Password('password'))
-      const enc2 = AESEncryptionService.encrypt('a', new Password('password'))
-      const enc3 = AESEncryptionService.encrypt('a', new Password('password'))
-      const enc4 = AESEncryptionService.encrypt('a', new Password('password'))
-
-      expect(enc1 === enc2).toBe(false)
-      expect(enc1 === enc3).toBe(false)
-      expect(enc1 === enc4).toBe(false)
-      expect(enc2 === enc3).toBe(false)
-      expect(enc2 === enc4).toBe(false)
-      expect(enc3 === enc4).toBe(false)
-    })
-
-    it('include iv and salt in ciphertext', () => {
-      const cipher = AESEncryptionService.encrypt('a', new Password('password'))
-
-      // decrypting should work with only ciphertext + password
-      const plain = AESEncryptionService.decrypt(cipher, new Password('password'))
-      expect(plain).toBe('a')
+    it('generate distinct values always', () => {
+      expect(cipher1 === cipher2).toBe(false)
     })
   })
 
   describe('decrypt() should', () => {
-    it('return value given valid ciphertext', () => {
-      const expval = "987654321"
-      const cipher = "9c3afe1b658403d7522886cda510a3714c389ce697128ab8d3877bbbb53c2ecdY+QgfP/KHmUl+wk7rPwmEQ=="
-      const plain = AESEncryptionService.decrypt(cipher, new Password("password"))
-      expect(plain.length).toBe(9)
-      expect(plain).toBe(expval)
+    it('return value given valid ciphertext and password', () => {
+      const plain = AESEncryptionService.decrypt(knownCipher, knownPass)
+      expect(plain.length).toBe(knownValue.length)
+      expect(plain).toBe(knownValue)
     })
 
     it('return empty given invalid ciphertext', () => {
       const cipher = "+QgfP/KHmUl+wk7rPwmEQ==" // invalid ciphertext
-      const plain = AESEncryptionService.decrypt(cipher, new Password("password"))
+      const plain = AESEncryptionService.decrypt(cipher, knownPass)
       expect(plain.length).toBe(0)
       expect(plain).toBe('')
     })
 
     it('return empty given invalid password', () => {
-      const cipher = "9c3afe1b658403d7522886cda510a3714c389ce697128ab8d3877bbbb53c2ecdY+QgfP/KHmUl+wk7rPwmEQ=="
-      const plain = AESEncryptionService.decrypt(cipher, new Password("password1")) // invalid password
+      const plain = AESEncryptionService.decrypt(knownCipher, new Password("password1")) // invalid password
       expect(plain.length).toBe(0)
       expect(plain).toBe('')
     })
 
     it('accept ciphertext given encrypt', () => {
       const data = [
-        'this', 'is', 'data', 'to', 'separately',
-        'encrypt', 'and', 'decrypt', 'using', 'the',
-        'AES', 'encryption', 'service'
+        'encrypt',
+        'this',
       ]
 
       data.map((word: string) => {
-        const pw = AESEncryptionService.generateRandomBytes(10)
-        const cipher = AESEncryptionService.encrypt(word, new Password(pw))
-        const plain = AESEncryptionService.decrypt(cipher, new Password(pw))
+        const pw = new Password("1234567a")
+        const cipher = AESEncryptionService.encrypt(word, pw)
+        const plain = AESEncryptionService.decrypt(cipher, pw)
         expect(plain).toBe(word)
       })
     })
