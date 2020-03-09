@@ -68,7 +68,7 @@ export class CustomValidationRules {
       validate: (value) => {
         return UrlValidator.validate(value)
       },
-      message: `${i18n.t('error_incorrect_field')}`,
+      message: `${i18n.t('error_incorrect_url')}`,
     })
 
     extend('confirmPassword', {

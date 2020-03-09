@@ -77,4 +77,68 @@ export class PeerService extends AbstractService {
     const url = URLHelpers.formatUrl(fixedUrl)
     return url.protocol + '//' + url.hostname + (url.port ? ':' + url.port : ':3000')
   }
+
+  /**
+   * Delete endpoint from the database
+   * @param {string} url
+   */
+  public deleteEndpoint(url: string): void {
+    // get full node url
+    const fullUrl = this.getNodeUrl(url)
+
+    // find node model in database
+    const endpoint = this.getEndpoints().find(
+      model => model.values.get('rest_url') === fullUrl,
+    )
+
+    // throw if node is not found in the database
+    if (endpoint === undefined) {
+      throw new Error('This url was not found in the peer repository: ' + url)
+    }
+
+    // delete the node from the database
+    new PeersRepository().delete(endpoint.getIdentifier())
+  }
+
+  /**
+   * Update the default node in the database
+   * @param {string} url
+   */
+  public setDefaultNode(url: string): void {
+    // get full node url
+    const fullUrl = this.getNodeUrl(url)
+
+    // find node model in database
+    const selectedEndpoint = this.getEndpoints().find(
+      model => model.values.get('rest_url') === fullUrl,
+    )
+
+    // throw if node is not found in the database
+    if (selectedEndpoint === undefined) {
+      throw new Error('This url was not found in the peer repository: ' + url)
+    }
+
+    const currentlyActiveEndpoint = this.getEndpoints().find(
+      model => model.values.get('is_default') === true,
+    )
+
+    // throw if current active node is not found in the database
+    if (currentlyActiveEndpoint === undefined) {
+      throw new Error('The default endpoint was not found in the database')
+    }
+
+    // return if the node has not changed
+    if (selectedEndpoint.getIdentifier() === currentlyActiveEndpoint.getIdentifier()) return
+
+    // get the peers repository
+    const peersRepository = new PeersRepository()
+
+    // update the currently active endpoint
+    currentlyActiveEndpoint.values.set('is_default', false)
+    peersRepository.update(currentlyActiveEndpoint.getIdentifier(), currentlyActiveEndpoint.values)
+
+    // set the selected endpoint as default
+    selectedEndpoint.values.set('is_default', true)
+    peersRepository.update(selectedEndpoint.getIdentifier(), selectedEndpoint.values)
+  } 
 }

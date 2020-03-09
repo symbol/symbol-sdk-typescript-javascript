@@ -36,6 +36,7 @@ export enum NotificationType {
   DURATION_VALUE_LESS_THAN_1_ERROR = 'The_value_of_duration_cannot_be_less_than_1',
   ERROR_PEER_UNREACHABLE = 'error_peer_unreachable',
   ERROR_WALLET_NAME_ALREADY_EXISTS = 'error_wallet_name_already_exists',
+  ERROR_DELETE_ALL_PEERS = 'error_delete_all_peers',
   FEE_LESS_THAN_0_ERROR = 'fee_can_not_be_less_than_0',
   HD_WALLET_PATH_ERROR = 'hd_wallet_path_error',
   ILLEGAL_MIN_APPROVAL_ERROR = 'min_approval_amount_illegal',

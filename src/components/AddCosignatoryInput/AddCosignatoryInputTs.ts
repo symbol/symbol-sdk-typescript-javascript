@@ -120,8 +120,6 @@ export class AddCosignatoryInputTs extends Vue {
       .pipe(
         timeout(6000),
         finalize(() => {
-          // @ts-ignore
-          this.$Spin.hide()
           this.$store.dispatch('app/SET_LOADING_OVERLAY', {
             show: false,
             message: '',

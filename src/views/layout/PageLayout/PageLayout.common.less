@@ -96,13 +96,14 @@
     .reset-icon,
     .sure_button {
       display: inline-block;
-      width: 43px;
-      height: 40px;
       text-align: center;
       font-size: 35px;
-      line-height: 40px;
+      line-height: 40px;  
+      height: 40px !important;
+      width: 40px !important;
       background-color: @purpleLight;
       color: white;
+      justify-self: center;
     }
     .reset-icon:hover,
     .sure_button:hover {
@@ -110,13 +111,12 @@
     }
     .reset-icon {
       font-size: 25px;
-      left: 20px;
-      position: relative;
       i {
+        height: 40px !important;
+        width: 40px !important;
         background-color: transparent !important;
       }
       i:before{
-        position: relative;
         right: 8px;
       }
     }

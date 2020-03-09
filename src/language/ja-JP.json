@@ -60,7 +60,7 @@
     "date": "日付",
     "block_height": "ブロック高",
     "block_time": "ブロック時間",
-    "point": "ノード",
+    "endpoint": "ノード",
     "number_of_transactions": "トランザクション",
     "transfer_type": "転送タイプ",
     "payment": "支払い",

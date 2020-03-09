@@ -13,32 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export class URLHelpers {
-  public static isValidURL = (_str: string) => {
-    let str = _str.replace('ws', 'http')
-    let pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-      '(\\#[-a-z\\d_]*)?$', 'i') // fragment locator
-    return !!pattern.test(str)
-  }
+// internal dependencies
+import {UrlValidator} from '../validation/validators'
 
+export class URLHelpers {
   public static formatUrl = (rawUrl: string) => {
-    if (URLHelpers.isValidURL(rawUrl)) {
-      let url = new URL(rawUrl)
-      return {
-        protocol: url.protocol,
-        hostname: url.hostname,
-        port: url.port,
-        url: rawUrl
-      }
+    if (!UrlValidator.validate(rawUrl)) {
+      throw new Error(`Invalid URL: ${rawUrl}`)
+    }
+
+    const url = new URL(rawUrl)
+    return {
+      protocol: url.protocol,
+      hostname: url.hostname,
+      port: url.port,
+      url: rawUrl
     }
   }
 
   public static httpToWsUrl = (url: string) => {
-    if (URLHelpers.isValidURL(url)) {
+    if (UrlValidator.validate(url)) {
       return url.replace('http', 'ws')
     }
   }

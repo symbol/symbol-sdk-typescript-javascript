@@ -66,7 +66,7 @@
   "date": "日期",
   "block_height": "块高",
   "block_time": "产块时间",
-  "point": "节点",
+  "endpoint": "节点",
   "number_of_transactions": "交易数",
   "transfer_type": "转账类型",
   "receipt": "收款",

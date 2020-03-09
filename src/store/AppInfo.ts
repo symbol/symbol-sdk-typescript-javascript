@@ -17,6 +17,7 @@ import Vue from 'vue';
 
 // internal dependencies
 import i18n from '@/language'
+import app from '@/main'
 import {AwaitLock} from './AwaitLock';
 const Lock = AwaitLock.create();
 
@@ -32,6 +33,8 @@ export default {
     timezone: new Date().getTimezoneOffset() / 60,
     languages: appConfig.languages,
     hasLoadingOverlay: false,
+    loadingOverlayMessage: '',
+    loadingDisableCloseButton: false,
     hasControlsDisabled: false,
     controlsDisabledMessage: '',
     explorerUrl: networkConfig.explorerUrl,
@@ -40,13 +43,13 @@ export default {
     defaultWallet: '',
   },
   getters: {
-    getInitialized: state => state.initialized,
+    getInitialized: (state) => state.initialized,
     currentTimezone: (state) => state.timezone,
-    currentLanguage: (state) => {
-      return i18n.locale
-    },
-    languages: state => state.languages,
+    currentLanguage: () => i18n.locale,
+    languages: (state) => state.languages,
     shouldShowLoadingOverlay: (state) => state.hasLoadingOverlay,
+    loadingOverlayMessage: (state) => state.loadingOverlayMessage,
+    loadingDisableCloseButton: (state) => state.loadingDisableCloseButton,
     shouldDisableControls: (state) => state.hasControlsDisabled,
     controlsDisabledMessage: (state) => state.controlsDisabledMessage,
     explorerUrl: (state) => state.explorerUrl,
@@ -62,6 +65,8 @@ export default {
       Vue.set(state, 'controlsDisabledMessage', message || '')
     },
     toggleLoadingOverlay: (state, display) => Vue.set(state, 'hasLoadingOverlay', display),
+    setLoadingOverlayMessage: (state, message) => Vue.set(state, 'loadingOverlayMessage', message),
+    setLoadingDisableCloseButton: (state, bool) => Vue.set(state, 'loadingDisableCloseButton', bool),
     setExplorerUrl: (state, url) => Vue.set(state, 'explorerUrl', url),
     setCurrentLanguage: (state, lang) => {
       i18n.locale = lang
@@ -77,7 +82,7 @@ export default {
         commit('setInitialized', true)
       }
 
-      // aquire async lock until initialized
+      // acquire async lock until initialized
       await Lock.initialize(callback, {commit, dispatch, getters})
     },
     async uninitialize({ commit, dispatch, getters }) {
@@ -94,8 +99,11 @@ export default {
       commit('toggleControlsDisabled', {disable: isDisabled, message: message})
     },
     SET_LOADING_OVERLAY({commit}, loadingOverlay) {
-      const hasLoadingOverlay = loadingOverlay && loadingOverlay.show
-      commit('toggleLoadingOverlay', hasLoadingOverlay)
+      // @ts-ignore
+      if (!loadingOverlay.show) app.$Spin.hide()
+      commit('toggleLoadingOverlay', loadingOverlay.show)
+      commit('setLoadingOverlayMessage', loadingOverlay.message)
+      commit('setLoadingDisableCloseButton', loadingOverlay.disableCloseButton || false)
     },
     SET_EXPLORER_URL({commit}, url: string) {
       commit('setExplorerUrl', url)

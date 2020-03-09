@@ -39,6 +39,7 @@ const getNetworkTypeText = (networkType: NetworkType) => {
 }
 
 // child components
+import {ValidationObserver, ValidationProvider} from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 
@@ -53,7 +54,7 @@ import {dashboardImages} from '@/views/resources/Images'
     generationHash: 'network/generationHash',
     knownPeers: 'network/knownPeers',
   })},
-  components: {ErrorTooltip},
+  components: {ValidationObserver, ValidationProvider, ErrorTooltip},
 })
 export class PeerSelectorTs extends Vue {
   /**
@@ -85,7 +86,7 @@ export class PeerSelectorTs extends Vue {
   public generationHash: string
 
   /**
-   * Knwown peers
+   * Known peers
    * @see {Store.Network}
    * @var {string[]}
    */
@@ -117,6 +118,16 @@ export class PeerSelectorTs extends Vue {
    */
   public imageResources = dashboardImages
 
+ /**
+  * Type the ValidationObserver refs 
+  * @type {{
+  *     observer: InstanceType<typeof ValidationObserver>
+  *   }}
+  */
+  public $refs!: {
+    observer: InstanceType<typeof ValidationObserver>
+  }
+
 /// region computed properties getter/setter
   get peersList(): string[] {
     return this.knownPeers
@@ -133,11 +144,7 @@ export class PeerSelectorTs extends Vue {
    * @param peer 
    */
   public switchPeer(url: string) {
-    const peer = URLHelpers.formatUrl(url)
     this.$store.dispatch('network/SET_CURRENT_PEER', url)
-
-    // update inner state
-    //this.currentPeer = this.peers.read(peer.hostname)
   }
 
   /**
@@ -145,8 +152,6 @@ export class PeerSelectorTs extends Vue {
    * @return {void}
    */
   public async addPeer() {
-    // @VVV
-
     const service = new PeerService(this.$store)
     const repository = new PeersRepository()
 
@@ -154,7 +159,20 @@ export class PeerSelectorTs extends Vue {
     const nodeUrl = service.getNodeUrl(this.formItems.nodeUrl)
     const node = URLHelpers.formatUrl(nodeUrl)
 
-    // - XXX set loading
+    // return if node already exists in the database
+    if (service
+      .getEndpoints()
+      .map(model => model.values.get('rest_url'))
+      .findIndex(url => url === nodeUrl) > -1) {
+      this.$store.dispatch('notification/ADD_ERROR', NotificationType.NODE_EXISTS_ERROR)
+      return
+    }
+
+    // show loading overlay
+    this.$store.dispatch('app/SET_LOADING_OVERLAY', {
+      show: true,
+      message: `${this.$t('info_connecting_peer', {peerUrl: node.url})}`,
+    })
 
     // read network type from node pre-saving
     try {
@@ -164,7 +182,8 @@ export class PeerSelectorTs extends Vue {
         peerInfo,
       } = await this.$store.dispatch('network/REST_FETCH_PEER_INFO', nodeUrl)
 
-      // - XXX remove loading
+      // hide loading overlay
+      this.$store.dispatch('app/SET_LOADING_OVERLAY', {show: false})
 
       // prepare model
       const peer = new PeersModel(new Map<string, any>([
@@ -185,12 +204,21 @@ export class PeerSelectorTs extends Vue {
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
       this.$store.dispatch('diagnostic/ADD_DEBUG', 'PeerSelector added peer: '+ nodeUrl)
 
-      // reset
+      // reset the form input
       this.formItems.nodeUrl = ''
-      // @VVV
-      // this.$validator.reset()
+
+      Vue.nextTick().then(() =>{
+        // reset the form validation
+        this.$refs.observer.reset()
+
+        // scroll to the bottom of the node list
+        const container = this.$el.querySelector('#node-list-container')
+        container.scrollTop = container.scrollHeight
+      })
     }
     catch(e) {
+      // hide loading overlay
+      this.$store.dispatch('app/SET_LOADING_OVERLAY', {show: false})
       this.$store.dispatch('diagnostic/ADD_ERROR', 'PeerSelector unreachable host with URL: '+ nodeUrl)
       this.$store.dispatch('notification/ADD_ERROR', NotificationType.ERROR_PEER_UNREACHABLE)
     }
@@ -201,15 +229,24 @@ export class PeerSelectorTs extends Vue {
    * @return {void}
    */
   public removePeer(url: string) {
-
-    //XXX currently not removing from storage
-
+    // get peer service
     const service = new PeerService(this.$store)
+
+    // don't allow deleting all the nodes
+    if (service.getEndpoints().length === 1) {
+      this.$store.dispatch('notification/ADD_ERROR', NotificationType.ERROR_DELETE_ALL_PEERS)
+      return
+    }
+
+    // get full node URL
     const nodeUrl = service.getNodeUrl(url)
 
-    // removes only from vuex store
+    // remove the mode from the vuex store
     this.$store.dispatch('network/REMOVE_KNOWN_PEER', nodeUrl)
     this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
+
+    // remove the node from the storage
+    service.deleteEndpoint(url)
   }
 
   /**

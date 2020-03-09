@@ -22,12 +22,15 @@ import {$eventBus} from '../events'
 import {RESTService} from '@/services/RESTService'
 import {PeersModel} from '@/core/database/entities/PeersModel'
 import {URLHelpers} from '@/core/utils/URLHelpers'
+import app from '@/main'
 import {AwaitLock} from './AwaitLock'
 const Lock = AwaitLock.create();
 
 // configuration
 import networkConfig from '../../config/network.conf.json';
 import { PeersRepository } from '@/repositories/PeersRepository';
+import {UrlValidator} from '@/core/validation/validators';
+import {PeerService} from '@/services/PeerService';
 
 /// region internal helpers
 /**
@@ -93,7 +96,7 @@ export default {
     networkType: state => state.networkType,
     generationHash: state => state.generationHash,
     properties: state => state.properties,
-    defaultPeer: state => URLHelpers.formatUrl(networkConfig.defaultNode.url),
+    defaultPeer: state => state.defaultPeer,
     currentPeer: state => state.currentPeer,
     currentPeerInfo: state => state.currentPeerInfo,
     explorerUrl: state => state.explorerUrl,
@@ -193,7 +196,7 @@ export default {
         commit('setInitialized', true)
       }
 
-      // aquire async lock until initialized
+      // acquire async lock until initialized
       await Lock.initialize(callback, {commit, dispatch, getters})
     },
     async uninitialize({ commit, dispatch, getters }) {
@@ -231,6 +234,7 @@ export default {
       try {
         const payload = await dispatch('REST_FETCH_PEER_INFO', nodeUrl)
 
+        // @OFFLINE: value should be defaulted to config data when REST_FETCH_PEER_INFO throws
         // - set current peer connection
         dispatch('OPEN_PEER_CONNECTION', {
           url: payload.url,
@@ -253,7 +257,6 @@ export default {
       }
     },
     async OPEN_PEER_CONNECTION({state, commit, dispatch}, payload) {
-      // @TODO: handle the case when the payload is undefined
       commit('currentPeer', payload.url)
       commit('networkType', payload.networkType)
       commit('setConnected', true)
@@ -265,12 +268,20 @@ export default {
       // subscribe to updates
       dispatch('SUBSCRIBE')
     },
-    async SET_CURRENT_PEER({ commit, dispatch, rootGetters }, currentPeerUrl) {
-      if (!URLHelpers.isValidURL(currentPeerUrl)) {
+    async SET_CURRENT_PEER({ dispatch, rootGetters }, currentPeerUrl) {
+      if (!UrlValidator.validate(currentPeerUrl)) {
         throw Error('Cannot change node. URL is not valid: ' + currentPeerUrl)
       }
 
+      // - show loading overlay
+      dispatch('app/SET_LOADING_OVERLAY', {
+        show: true,
+        message: `${app.$t('info_connecting_peer', {peerUrl: currentPeerUrl})}`,
+        disableCloseButton: true,
+      }, {root: true})
+
       dispatch('diagnostic/ADD_DEBUG', 'Store action network/SET_CURRENT_PEER dispatched with: ' + currentPeerUrl, {root: true})
+
       try {
         // - disconnect from previous node
         await dispatch('UNSUBSCRIBE')
@@ -288,7 +299,7 @@ export default {
 
         const currentWallet = rootGetters['wallet/currentWallet']
 
-        // - shutdown websocket connections
+        // - clear wallet balances
         await dispatch('wallet/uninitialize', {
           address: currentWallet.values.get('address'),
           which: 'currentWalletMosaics',
@@ -296,13 +307,23 @@ export default {
 
         // - re-open listeners
         dispatch('wallet/initialize', {address: currentWallet.values.get('address')}, {root: true})
-      }
-      catch (e) {
+        
+        // - set chosen endpoint as the new default in the database
+        new PeerService().setDefaultNode(currentPeerUrl)
+      } catch (e) {
+        dispatch(
+          'notification/ADD_ERROR',
+          `${app.$t('error_peer_connection_went_wrong', {peerUrl: currentPeerUrl})}`,
+          {root: true},
+        )
         dispatch('diagnostic/ADD_ERROR', 'Error with store action network/SET_CURRENT_PEER: ' + JSON.stringify(e), {root: true})
+      } finally {
+        // - hide loading overlay
+        dispatch('app/SET_LOADING_OVERLAY', {show: false}, {root: true})
       }
     },
     ADD_KNOWN_PEER({commit}, peerUrl) {
-      if (!URLHelpers.isValidURL(peerUrl)) {
+      if (!UrlValidator.validate(peerUrl)) {
         throw Error('Cannot add node. URL is not valid: ' + peerUrl)
       }
 
@@ -435,7 +456,7 @@ export default {
         }
       }
       catch(e) {
-        return NetworkType.TEST_NET
+        throw new Error(e)
       }
     },
 /// end-region scoped actions
