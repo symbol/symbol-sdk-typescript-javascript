@@ -15,15 +15,15 @@
  */
 import {FakeModel} from '@MOCKS/Database'
 
-describe('database/DatabaseModel ==>', () => {
+describe('database/DatabaseModel', () => {
   describe('constructor() should', () => {
-    it('set primary keys given array', () => {
+    test('set primary keys given array', () => {
       const model = new FakeModel(['pk1', 'pk2'])
       expect(model).toBeDefined()
       expect(model.primaryKeys).toMatchObject(['pk1', 'pk2'])
     })
 
-    it('set values given map', () => {
+    test('set values given map', () => {
       const model = new FakeModel(['pk1'], new Map<string, any>([
         ['pk1', 'id_value'],
         ['db_field2', true],
@@ -33,7 +33,7 @@ describe('database/DatabaseModel ==>', () => {
       expect(model.values.get('db_field2')).toBe(true)
     })
 
-    it('set identifier given primary key value', () => {
+    test('set identifier given primary key value', () => {
       const model = new FakeModel(['pk1'], new Map<string, any>([
         ['pk1', 'id_value']
       ]))
@@ -41,7 +41,7 @@ describe('database/DatabaseModel ==>', () => {
       expect(model.identifier).toBe('id_value')
     })
 
-    it('auto-generate identifier given \'id\' primary key', () => {
+    test('auto-generate identifier given \'id\' primary key', () => {
       const model = new FakeModel(['id'], new Map<string, any>([
         ['other', 'field_value']
       ]))
@@ -52,7 +52,7 @@ describe('database/DatabaseModel ==>', () => {
   })
 
   describe('generatedIdentifier() should', () => {
-    it('generate distinct identifier values always', () => {
+    test('generate distinct identifier values always', () => {
       const model1 = new FakeModel(['id'], new Map<string, any>([]))
       const model2 = new FakeModel(['id'], new Map<string, any>([]))
       const model3 = new FakeModel(['id'], new Map<string, any>([]))
@@ -73,26 +73,26 @@ describe('database/DatabaseModel ==>', () => {
   })
 
   describe('hasIdentifier() should', () => {
-    it('return false given custom primary key and no value', () => {
+    test('return false given custom primary key and no value', () => {
       const model = new FakeModel(['pk1'], new Map<string, any>())
       expect(model.hasIdentifier()).toBe(false)
     })
 
-    it('return true given custom primary key and value', () => {
+    test('return true given custom primary key and value', () => {
       const model = new FakeModel(['pk1'], new Map<string, any>([
         ['pk1', 'id_value']
       ]))
       expect(model.hasIdentifier()).toBe(true)
     })
 
-    it('return true given \'id\' primary key and no value', () => {
+    test('return true given \'id\' primary key and no value', () => {
       const model = new FakeModel(['id'], new Map<string, any>())
       expect(model.hasIdentifier()).toBe(true)
     })
   })
 
   describe('getIdentifier() should', () => {
-    it('get identifier value given primary key value', () => {
+    test('get identifier value given primary key value', () => {
       const model = new FakeModel(['pk1'], new Map<string, any>([
         ['pk1', 'id_value']
       ]))
@@ -101,7 +101,7 @@ describe('database/DatabaseModel ==>', () => {
       expect(model.getIdentifier()).toBe('id_value')
     })
 
-    it('get dash-separated identifier value given multiple primary key values', () => {
+    test('get dash-separated identifier value given multiple primary key values', () => {
       const model = new FakeModel(['pk1', 'pk2'], new Map<string, any>([
         ['pk1', 'id_value_part1'],
         ['pk2', 'id_value_part2']
@@ -111,7 +111,7 @@ describe('database/DatabaseModel ==>', () => {
       expect(model.getIdentifier()).toBe('id_value_part1-id_value_part2')
     })
 
-    it('get pre-defined identifier value given \'id\' primary key', () => {
+    test('get pre-defined identifier value given \'id\' primary key', () => {
       const model = new FakeModel(['id'], new Map<string, any>([
         ['id', 'id_value']
       ]))
@@ -120,7 +120,7 @@ describe('database/DatabaseModel ==>', () => {
       expect(model.getIdentifier()).toBe('id_value')
     })
 
-    it('get auto-generated identifier value given \'id\' primary key and no value', () => {
+    test('get auto-generated identifier value given \'id\' primary key and no value', () => {
       const model = new FakeModel(['id'], new Map<string, any>([]))
 
       expect(model).toBeDefined()

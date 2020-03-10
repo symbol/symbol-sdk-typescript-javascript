@@ -32,7 +32,7 @@ const standardPaths = {
 
 describe('services/DerivationService ==>', () => {
   describe('incrementPathLevel() should', () => {
-    it('increase standard paths as expected', () => {
+    test('increase standard paths as expected', () => {
       expect(
         [...Array(9).keys()].map(index => new DerivationService().incrementPathLevel(
           WalletService.DEFAULT_WALLET_PATH, DerivationPathLevels.Account, index + 1,
@@ -41,7 +41,7 @@ describe('services/DerivationService ==>', () => {
   })
 
   describe('decrementPathLevel() should', () => {
-    it('decrease standard paths as expected', () => {
+    test('decrease standard paths as expected', () => {
       expect(
         [...Array(9).keys()].map(index => new DerivationService().decrementPathLevel(
           standardPaths[10], DerivationPathLevels.Account, index + 1,

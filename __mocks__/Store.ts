@@ -13,20 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {FakeTable} from '@MOCKS/Database'
+import Vuex from 'vuex'
 
-describe('database/DatabaseTable ==>', () => {
-  describe('constructor() should', () => {
-    test('set table name', () => {
-      const table = new FakeTable('table')
-      expect(table).toBeDefined()
-      expect(table.tableName).toBe('table')
-    })
-
-    test('set columns names', () => {
-      const table = new FakeTable('table', ['col1', 'col2', 'col3'])
-      expect(table).toBeDefined()
-      expect(table.columns).toMatchObject(['col1', 'col2', 'col3'])
-    })
-  })
-})
+/**
+ * Create a fake store
+ * @internal
+ * @param {any} storeOptions 
+ */
+export const createStore = (storeOptions?: any) => {
+  const store = new Vuex.Store(storeOptions)
+  store.dispatch = jest.fn()
+  store.commit = jest.fn()
+  return store
+}

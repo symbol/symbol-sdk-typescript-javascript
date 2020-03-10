@@ -40,13 +40,13 @@ export class FakeTable extends DatabaseTable {
 export const getAdapter = (data: any = undefined): FakeAdapter => {
   const adapter = new FakeAdapter(new ObjectStorageBackend(data || {
     accounts: '{'
-      + '"1234":{"id":"1234","name":"one"},'
-      + '"5678":{"id":"5678","name":"two"}'
+      + '"1234":{"id":"1234","name":"one","version":0},'
+      + '"5678":{"id":"5678","name":"two","version":0}'
     + '}',
     wallets: '{'
-      + '"abcd":{"id":"abcd","name":"w_one","address":"w_addr"},'
-      + '"efgh":{"id":"efgh","name":"w_two","address":"w_addr2"},'
-      + '"ijkl":{"id":"ijkl","name":"w_thr","address":"w_addr3"}'
+      + '"abcd":{"id":"abcd","name":"w_one","address":"w_addr","version":0},'
+      + '"efgh":{"id":"efgh","name":"w_two","address":"w_addr2","version":0},'
+      + '"ijkl":{"id":"ijkl","name":"w_thr","address":"w_addr3","version":0}'
     + '}',
     crashes: '[{item: "this is a corrupted table data format"}]'
   }))

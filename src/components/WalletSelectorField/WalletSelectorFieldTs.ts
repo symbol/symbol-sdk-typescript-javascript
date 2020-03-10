@@ -62,7 +62,7 @@ export class WalletSelectorFieldTs extends Vue {
 
 /// region computed properties getter/setter
   public get currentWalletIdentifier(): string {
-    if (this.autoSubmit) {
+    if (this.currentWallet) {
       return {...this.currentWallet}.identifier
     }
 

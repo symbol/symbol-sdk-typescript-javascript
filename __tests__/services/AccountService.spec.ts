@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {FakeTable} from '@MOCKS/Database'
+import {AccountService} from '@/services/AccountService'
+import { Password } from 'symbol-sdk'
 
-describe('database/DatabaseTable ==>', () => {
-  describe('constructor() should', () => {
-    test('set table name', () => {
-      const table = new FakeTable('table')
-      expect(table).toBeDefined()
-      expect(table.tableName).toBe('table')
-    })
+// prepare all
+const service = new AccountService()
 
-    test('set columns names', () => {
-      const table = new FakeTable('table', ['col1', 'col2', 'col3'])
-      expect(table).toBeDefined()
-      expect(table.columns).toMatchObject(['col1', 'col2', 'col3'])
+describe('services/AccountService', () => {
+  describe('getPasswordHash() should', () => {
+    test('create 64 bytes hash of password', () => {
+      // act
+      const hash = service.getPasswordHash(new Password("1234567a"))
+
+      // assert
+      expect(hash).toBeDefined()
+      expect(hash.length).toBe(128)
     })
   })
 })

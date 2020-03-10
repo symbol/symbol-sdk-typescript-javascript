@@ -16,7 +16,7 @@
 import {getFakeModel} from '@MOCKS/Database'
 import AccountStore from '@/store/Account'
 
-describe('store/Account ==>', () => {
+describe('store/Account', () => {
   describe('action "RESET_STATE" should', () => {
     test('mutate currentAccount and isAuthenticated', () => {
       // prepare
@@ -43,28 +43,13 @@ describe('store/Account ==>', () => {
 
       // assert
       expect(dispatch).toHaveBeenCalled()
-      expect(dispatch).toHaveBeenCalledWith('wallet/uninitialize')
-      expect(dispatch).toHaveBeenCalledWith('wallet/SET_KNOWN_WALLETS')
+      expect(dispatch).toHaveBeenCalledWith('wallet/uninitialize', {"address": undefined}, {root: true})
+      expect(dispatch).toHaveBeenCalledWith('wallet/SET_KNOWN_WALLETS', [], {root: true})
       expect(dispatch).toHaveBeenCalledWith('RESET_STATE')
     })
   })
 
   describe('action "SET_CURRENT_ACCOUNT" should', () => {
-    test('dispatch "wallet/uninitialize"', () => {
-      // prepare
-      const commit = jest.fn()
-      const dispatch = jest.fn()
-
-      // act
-      AccountStore.actions.SET_CURRENT_ACCOUNT(
-        {commit, dispatch},
-        getFakeModel('1234')
-      )
-
-      // assert
-      expect(dispatch).toHaveBeenNthCalledWith(1, 'wallet/uninitialize', null, {root: true})
-    })
-
     test('mutate currentAccount and isAuthenticated', async () => {
       // prepare
       const commit = jest.fn()
@@ -81,21 +66,6 @@ describe('store/Account ==>', () => {
       expect(commit).toHaveBeenCalledTimes(2)
       expect(commit).toHaveBeenNthCalledWith(1, 'currentAccount', model)
       expect(commit).toHaveBeenNthCalledWith(2, 'setAuthenticated', true)
-    })
-
-    test('dispatch "account/initialize"', async () => {
-      // prepare
-      const commit = jest.fn()
-      const dispatch = jest.fn()
-
-      // act
-      await AccountStore.actions.SET_CURRENT_ACCOUNT(
-        {commit, dispatch},
-        getFakeModel('1234')
-      )
-
-      // assert
-      expect(dispatch).toHaveBeenNthCalledWith(2, 'initialize')
     })
   })
 })

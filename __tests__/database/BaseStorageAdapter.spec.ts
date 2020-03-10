@@ -23,13 +23,13 @@ import {JSONFormatter} from '@/core/database/formatters/JSONFormatter'
 
 describe('database/BaseStorageAdapter ==>', () => {
   describe('constructor() should', () => {
-    it('set default backend given no parameters', () => {
+    test('set default backend given no parameters', () => {
       const adapter = new FakeAdapter()
       expect(adapter).toBeDefined()
       expect(adapter.storage).toBeDefined()
     })
 
-    it('set default formatter given no parameters', () => {
+    test('set default formatter given no parameters', () => {
       const adapter = new FakeAdapter()
       expect(adapter).toBeDefined()
       expect(adapter.formatter).toBeDefined()
@@ -38,7 +38,7 @@ describe('database/BaseStorageAdapter ==>', () => {
   })
 
   describe('setSchemas() should', () => {
-    it('map schemas to names', () => {
+    test('map schemas to names', () => {
       const adapter = getAdapter()
 
       expect(adapter.schemas.has('accounts')).toBe(true)
@@ -59,7 +59,7 @@ describe('database/BaseStorageAdapter ==>', () => {
   })
 
   describe('getSchema() should', () => {
-    it('throw given unregistered schema', () => {
+    test('throw given unregistered schema', () => {
       const adapter = getAdapter()
       expect(() => {
         adapter.write('unknown_table', new Map<string, FakeModel>())
@@ -68,20 +68,20 @@ describe('database/BaseStorageAdapter ==>', () => {
   })
 
   describe('read() should', () => {
-    it('throw given corrupted/invalid JSON data', () => {
+    test('throw given corrupted/invalid JSON data', () => {
       const adapter = getAdapter()
       expect(() => {
         adapter.read('crashes')
       }).toThrow('Data stored for schema \'crashes\' does not comply with JSONFormatter derivate.')
     })
 
-    it('return empty map given empty table', () => {
+    test('return empty map given empty table', () => {
       const adapter = getAdapter()
       const peers = adapter.read('endpoints')
       expect(peers.size).toBe(0)
     })
 
-    it('return correct rows count given populated table', () => {
+    test('return correct rows count given populated table', () => {
       const adapter = getAdapter()
       const accounts = adapter.read('accounts')
       const wallets = adapter.read('wallets')
@@ -89,7 +89,7 @@ describe('database/BaseStorageAdapter ==>', () => {
       expect(wallets.size).toBe(3)
     })
 
-    it('return correct values given populated table', () => {
+    test('return correct values given populated table', () => {
       const adapter = getAdapter()
       const accounts = adapter.read('accounts')
       const wallets = adapter.read('wallets')
@@ -119,13 +119,13 @@ describe('database/BaseStorageAdapter ==>', () => {
   })
 
   describe('write() should', () => {
-    it('write empty table given no values', () => {
+    test('write empty table given no values', () => {
       const adapter = getAdapter()
       const entries = adapter.write('endpoints', new Map<string, FakeModel>())
       expect(entries).toBe(0)
     })
 
-    it('update storage during write operation', () => {
+    test('update storage during write operation', () => {
       const adapter = getAdapter()
       const entries = adapter.write('endpoints', new Map<string, FakeModel>([
         ['http://localhost:3000', new FakeModel(['host'], new Map<string, any>([
