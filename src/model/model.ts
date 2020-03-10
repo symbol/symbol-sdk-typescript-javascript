@@ -32,10 +32,8 @@ export * from './account/AccountNames';
 export * from './blockchain/BlockchainScore';
 export * from './blockchain/StorageInfo';
 export * from './blockchain/BlockInfo';
-export * from './blockchain/NetworkType';
 export * from './blockchain/MerklePathItem';
 export * from './blockchain/MerkleProofInfo';
-export * from './blockchain/NetworkName';
 
 // Diagnostic
 export * from './node/ServerInfo';
@@ -71,6 +69,28 @@ export * from './namespace/NamespaceName';
 export * from './namespace/NamespaceRegistrationType';
 export * from './namespace/AliasAction';
 export * from './namespace/EmptyAlias';
+
+// Network
+
+export * from './network/AccountLinkNetworkProperties';
+export * from './network/AccountRestrictionNetworkProperties';
+export * from './network/AggregateNetworkProperties';
+export * from './network/ChainProperties';
+export * from './network/HashLockNetworkProperties';
+export * from './network/MetadataNetworkProperties';
+export * from './network/MosaicNetworkProperties';
+export * from './network/MosaicRestrictionNetworkProperties';
+export * from './network/MultisigNetworkProperties';
+export * from './network/NamespaceNetworkProperties';
+export * from './network/NetworkConfiguration';
+export * from './network/NetworkName';
+export * from './network/NetworkProperties';
+export * from './network/NetworkType';
+export * from './network/PluginProperties';
+export * from './network/RentalFees';
+export * from './network/SecretLockNetworkProperties';
+export * from './network/TransactionFees';
+export * from './network/TransferNetworkProperties';
 
 // Node
 export * from './node/NodeInfo';

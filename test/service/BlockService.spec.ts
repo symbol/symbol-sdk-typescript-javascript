@@ -25,7 +25,7 @@ import { Account } from '../../src/model/account/Account';
 import { BlockInfo } from '../../src/model/blockchain/BlockInfo';
 import { MerklePathItem } from '../../src/model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../../src/model/blockchain/MerkleProofInfo';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { UInt64 } from '../../src/model/UInt64';
 import { BlockService } from '../../src/service/BlockService';
 import { TestingAccount } from '../conf/conf.spec';

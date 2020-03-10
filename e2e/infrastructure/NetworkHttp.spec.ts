@@ -15,7 +15,7 @@
  */
 import { expect } from 'chai';
 import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('NetworkHttp', () => {
@@ -45,13 +45,30 @@ describe('NetworkHttp', () => {
         });
     });
 
-    describe('getNetworkFees', () => {
-        it('should return network fees', async () => {
-            const fees = await networkRepository.getNetworkFees().toPromise();
+    describe('getTransactionFees', () => {
+        it('should return transaction fees', async () => {
+            const fees = await networkRepository.getTransactionFees().toPromise();
             expect(fees.averageFeeMultiplier).to.be.not.null;
             expect(fees.highestFeeMultiplier).to.be.not.null;
             expect(fees.lowestFeeMultiplier).to.be.not.null;
             expect(fees.medianFeeMultiplier).to.be.not.null;
+        });
+    });
+    describe('getRentalFees', () => {
+        it('should return rental fees', async () => {
+            const fees = await networkRepository.getRentalFees().toPromise();
+            expect(fees.effectiveChildNamespaceRentalFee).to.be.not.null;
+            expect(fees.effectiveMosaicRentalFee).to.be.not.null;
+            expect(fees.effectiveRootNamespaceRentalFeePerBlock).to.be.not.null;
+        });
+    });
+
+    describe('getNetworkProperties', () => {
+        it('should return network configuration', async () => {
+            const config = await networkRepository.getNetworkProperties().toPromise();
+            expect(config.network).to.be.not.null;
+            expect(config.chain).to.be.not.null;
+            expect(config.plugins).to.be.not.null;
         });
     });
 });

@@ -20,7 +20,6 @@ import { Convert as convert, RawAddress as AddressLibrary } from '../core/format
 import { AccountNames } from '../model/account/AccountNames';
 import { Address } from '../model/account/Address';
 import { PublicAccount } from '../model/account/PublicAccount';
-import { NetworkType } from '../model/blockchain/NetworkType';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicNames } from '../model/mosaic/MosaicNames';
 import { AddressAlias } from '../model/namespace/AddressAlias';
@@ -31,6 +30,7 @@ import { MosaicAlias } from '../model/namespace/MosaicAlias';
 import { NamespaceId } from '../model/namespace/NamespaceId';
 import { NamespaceInfo } from '../model/namespace/NamespaceInfo';
 import { NamespaceName } from '../model/namespace/NamespaceName';
+import { NetworkType } from '../model/network/NetworkType';
 import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { NamespaceRepository } from './NamespaceRepository';

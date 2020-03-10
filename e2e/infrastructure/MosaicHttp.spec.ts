@@ -17,12 +17,12 @@ import { expect } from 'chai';
 import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { Account } from '../../src/model/account/Account';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
@@ -87,7 +87,8 @@ describe('MosaicHttp', () => {
             expect(mosaicDefinitionTransaction.nonce).to.deep.equal(listenedTransaction.nonce);
             expect(mosaicDefinitionTransaction.getMosaicNonceIntValue()).to.be.equal(listenedTransaction.getMosaicNonceIntValue());
 
-            const savedTransaction = await helper.repositoryFactory.createTransactionRepository().getTransaction(signedTransaction.hash).toPromise() as MosaicDefinitionTransaction;
+            const savedTransaction = await helper.repositoryFactory.createTransactionRepository()
+                .getTransaction(signedTransaction.hash).toPromise() as MosaicDefinitionTransaction;
             expect(mosaicDefinitionTransaction.nonce.toHex()).to.be.equal(savedTransaction.nonce.toHex());
             expect(mosaicDefinitionTransaction.nonce).to.deep.equal(savedTransaction.nonce);
             expect(mosaicDefinitionTransaction.getMosaicNonceIntValue()).to.be.equal(savedTransaction.getMosaicNonceIntValue());
