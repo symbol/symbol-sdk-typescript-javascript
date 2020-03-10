@@ -14,11 +14,7 @@ script:
   - CURRENT_VERSION=$(npm run version --silent)
   - typedoc --out "ts-docs/$CURRENT_VERSION" src
   - touch ./ts-docs/.nojekyll
-jobs:
-  include:
-    - stage: coveralls-report
-      node_js: 8
-      script: npm run coveralls-report
+  - if [ "$TRAVIS_NODE_VERSION" = "8" ]; then npm run coveralls-report; fi
 deploy:
   - provider: pages
     skip_cleanup: true
