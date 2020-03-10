@@ -246,6 +246,9 @@ describe('id generator', () => {
                 expect(() => idGenerator.generateNamespacePath(name), `name ${name}`).to.throw('invalid part name'));
         });
 
+        it('rejects names depth exceeds maxDepth', () => {
+            expect(() => idGenerator.generateNamespacePath('nem.xem', 1)).to.throw(Error, 'too many parts');
+        });
         addBasicTests(idGenerator.generateNamespacePath);
     });
 });
