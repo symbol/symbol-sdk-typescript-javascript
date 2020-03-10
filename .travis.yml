@@ -10,11 +10,15 @@ before_script:
   - npm run build
 script:
   - npm run test:cov
-  - npm run coveralls-report
   - npm install --global typedoc
   - CURRENT_VERSION=$(npm run version --silent)
   - typedoc --out "ts-docs/$CURRENT_VERSION" src
   - touch ./ts-docs/.nojekyll
+jobs:
+  include:
+    - stage: coveralls-report
+      node_js: 8
+      script: npm run coveralls-report
 deploy:
   - provider: pages
     skip_cleanup: true
