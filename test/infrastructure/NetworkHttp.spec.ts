@@ -91,9 +91,9 @@ describe('NetworkHttp', () => {
 
         const rentalFees = await networkRepository.getRentalFees().toPromise();
         expect(rentalFees).to.be.not.null;
-        expect(rentalFees.effectiveChildNamespaceRentalFee).to.be.equals('1');
-        expect(rentalFees.effectiveMosaicRentalFee).to.be.equals('2');
-        expect(rentalFees.effectiveRootNamespaceRentalFeePerBlock).to.be.equals('3');
+        expect(rentalFees.effectiveChildNamespaceRentalFee.toString()).to.be.equals('1');
+        expect(rentalFees.effectiveMosaicRentalFee.toString()).to.be.equals('2');
+        expect(rentalFees.effectiveRootNamespaceRentalFeePerBlock.toString()).to.be.equals('3');
     });
 
     it('getNetworkType', async () => {
