@@ -18,17 +18,15 @@ import {Mosaic, UInt64, MosaicInfo} from 'symbol-sdk'
 
 // internal dependencies
 import {AssetTableService, TableField} from './AssetTableService'
+import {MosaicService} from '../MosaicService'
 
 export class MosaicTableService extends AssetTableService {
-  private currentWalletMosaics: Mosaic[]
-
-  /**
+/**
   * Creates an instance of MosaicTableService.
   * @param {*} store
   */
   constructor(store?: Store<any>) {
     super(store)
-    this.currentWalletMosaics = this.$store.getters['wallet/currentWalletMosaics'] || []
   }
 
   /**
@@ -71,6 +69,9 @@ export class MosaicTableService extends AssetTableService {
       const balance = mosaic.amount.compact()
       const {supply, divisibility} = mosaicInfo
 
+      // get expiration from mosaics service
+      const expiration = new MosaicService(this.$store).getExpiration(mosaicInfo)
+
       // - map table fields
       return {
         'hexId': hexId,
@@ -80,42 +81,12 @@ export class MosaicTableService extends AssetTableService {
           // - get relative amount
           balance / Math.pow(10, divisibility)
         ),
-        'expiration': this.getExpiration(mosaicInfo),
+        'expiration': expiration,
         'divisibility': divisibility,
         'transferable': flags.transferable,
         'supplyMutable': flags.supplyMutable,
         'restrictable': flags.restrictable,
       }
     }).filter(x => x) // filter out mosaics that are not yet available
-  }
-
-  /**
-   * Returns a view of a mosaic expiration info
-   * @private
-   * @param {MosaicsInfo} mosaic
-   * @returns {string}
-   */
-  private getExpiration(mosaicInfo: MosaicInfo): string {
-    const duration = mosaicInfo.duration
-    const startHeight = mosaicInfo.height
-
-    // @TODO
-    const _duration = new UInt64([ duration.lower, duration.higher ]).compact() 
-    const _startHeight = new UInt64([ startHeight.lower, startHeight.higher ]).compact()
-
-    // - unlimited mosaics have duration=0
-    // @ts-ignore // @TODO: quickfix waiting for SDK update
-    if (duration === 0) {
-      return 'unlimited'
-    }
-
-    // - calculate expiration
-    const expiresIn = _startHeight + _duration - this.getCurrentHeight()
-    if (expiresIn <= 0) {
-      return 'expired'
-    }
-
-    // - number of blocks remaining
-    return expiresIn.toLocaleString()
   }
 }

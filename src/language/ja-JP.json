@@ -577,7 +577,7 @@
     "remark_type": "メッセージタイプ",
     "encryption": "暗号化",
     "Not_encrypted": "平文",
-    "all_unchecked": "すべてキャンセル",
+    "uncheck_all": "すべてキャンセル",
     "Display_expired_mosaic": "期限切れモザイクを表示",
     "Hide_expired_mosaic": "期限切れモザイクを隠す",
     "Please_enter_notes": "メッセージの入力",

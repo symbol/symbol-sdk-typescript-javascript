@@ -93,7 +93,6 @@ export class MosaicBalanceListTs extends Vue {
    */
   public formItems: any = {
     name: '',
-    hasCheckedAll: true,
     hasShowExpired: false,
   }
 
@@ -128,15 +127,38 @@ export class MosaicBalanceListTs extends Vue {
   }
 
   /**
-   * Filtered balance entries displayed in the view
-   *
+   * All balance entries except expired mosaics
+   * @readonly
+   * @type {BalanceEntry[]}
+   */
+  get allBalanceEntries(): BalanceEntry[] {
+    // get mosaicService
+    const mosaicService = new MosaicService(this.$store)
+
+    return this.balanceEntries.filter((entry) => {
+      // get mosaic info
+      const mosaicInfo = this.mosaicsInfo[entry.id.toHex()]
+      // skip if mosaic info is not available
+      if (!mosaicInfo) return false
+
+      // calculate expiration
+      const expiration = mosaicService.getExpiration(mosaicInfo)
+      // skip if mosaic is expired
+      if (expiration === 'expired') return false
+
+      return true
+    })
+  }
+
+  /**
+   * Balance entries of active and not hidden mosaics
    * @readonly
    * @type {BalanceEntry[]}
    */
   get filteredBalanceEntries(): BalanceEntry[] {
-    // internal helper
-    return this.balanceEntries.filter(
-      entry => -1 === this.hiddenMosaics.indexOf(entry.id.toHex()),
+    // filter out hidden mosaics
+    return this.allBalanceEntries.filter(
+      entry => this.hiddenMosaics.indexOf(entry.id.toHex()) === -1,
     )
   }
 /// end-region computed properties getter/setter
@@ -146,11 +168,16 @@ export class MosaicBalanceListTs extends Vue {
    * @param {MosaicId} mosaicId 
    * @return {boolean}
    */
-  public hasHiddenMosaic(mosaicId: MosaicId | NamespaceId): boolean {
-    return 1 === this.mosaics.filter(mosaic => {
-      return mosaic.id.equals(mosaicId)
-          && -1 === this.hiddenMosaics.indexOf(mosaic.id.toHex())
-    }).length
+  public isMosaicHidden(mosaicId: MosaicId | NamespaceId): boolean {
+    return this.hiddenMosaics.indexOf(mosaicId.toHex()) > -1
+  }
+
+  /**
+   * Returns true if no mosaic is hidden
+   * @returns {boolean}
+   */
+  public areAllMosaicsShown(): boolean {
+    return this.hiddenMosaics.length === 0
   }
 
   /**
@@ -160,18 +187,16 @@ export class MosaicBalanceListTs extends Vue {
   public toggleMosaicDisplay(mosaicId?: MosaicId| NamespaceId) {
     // - clicked singular checkbox
     if (mosaicId !== undefined) {
-      const isHidden = this.hasHiddenMosaic(mosaicId)
+      const isHidden = this.isMosaicHidden(mosaicId)
       const action = isHidden ? 'SHOW_MOSAIC' : 'HIDE_MOSAIC'
       return this.$store.dispatch('mosaic/' + action, mosaicId)
     }
 
-    // - clicked "check all"
-    this.formItems.hasCheckedAll = !this.formItems.hasCheckedAll
-
     // - update state
-    const action = this.formItems.hasCheckedAll ? 'HIDE_MOSAIC' : 'SHOW_MOSAIC'
-    return this.mosaics.map(
-      mosaic => this.$store.dispatch('mosaic/' + action, mosaic.id))
+    const action = this.areAllMosaicsShown() ? 'HIDE_MOSAIC' : 'SHOW_MOSAIC'
+    return this.mosaics.forEach(
+      mosaic => this.$store.dispatch('mosaic/' + action, mosaic.id)
+    )
   }
 
   /**

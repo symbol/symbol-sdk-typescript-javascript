@@ -57,9 +57,7 @@ export class MosaicsModel extends DatabaseModel {
   public get objects(): {
     mosaicId: MosaicId,
     mosaicInfo: MosaicInfo,
-    startHeight: UInt64
   } {
-    const rawStartHeight = this.values.get('startHeight')
     const hexId = this.getIdentifier()
     const mosaicId = new MosaicId(RawUInt64.fromHex(hexId))
     const ownerPub = PublicAccount.createFromPublicKey(
@@ -71,15 +69,14 @@ export class MosaicsModel extends DatabaseModel {
       mosaicId,
       mosaicInfo: new MosaicInfo(
         mosaicId,
-        this.values.get('supply'),
-        rawStartHeight,
+        UInt64.fromHex(this.values.get('supply')),
+        UInt64.fromHex(this.values.get('startHeight')),
         ownerPub,
         1,
         new MosaicFlags(this.values.get('flags')),
         this.values.get('divisibility'),
-        this.values.get('duration')
+        UInt64.fromHex(this.values.get('duration')),
       ),
-      startHeight: new UInt64([ rawStartHeight.lower, rawStartHeight.higher ]),
     }
   }
 }

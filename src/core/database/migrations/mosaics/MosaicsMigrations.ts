@@ -15,6 +15,7 @@
  */
 // internal dependencies
 import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
+import {UInt64} from 'symbol-sdk'
 
 export class MosaicsMigrations {
   /**
@@ -85,6 +86,55 @@ export class MosaicsMigrations {
     const migrated = new Map<string, MosaicsModel>()
     entities.map((outOfDate: MosaicsModel) => {
       outOfDate.values.set('flags', outOfDate.values.get('flags').flags)
+      migrated.set(outOfDate.getIdentifier(), outOfDate)
+    })
+
+    return migrated
+  }
+
+  /**
+   * Version 5 migration
+   * @description Uint64 should be stored as hex numbers
+   * @param {Map<string, MosaicsModel>} rows
+   * @returns {Map<string, MosaicsModel>}
+   */
+  public static version5_uint_as_hex(
+    rows: Map<string, MosaicsModel>,
+  ): Map<string, MosaicsModel> {
+    const entities = Array.from(rows.values())
+    const migrated = new Map<string, MosaicsModel>()
+    entities.forEach((outOfDate: MosaicsModel) => {
+      const oldSupply = outOfDate.values.get('supply')
+      const newSupply = new UInt64([ oldSupply.lower, oldSupply.higher ])
+      outOfDate.values.set('supply', newSupply.toHex())
+
+      const oldStartHeight = outOfDate.values.get('startHeight')
+      const newStartHeight = new UInt64([ oldStartHeight.lower, oldStartHeight.higher ])
+      outOfDate.values.set('startHeight', newStartHeight.toHex())
+
+      const oldDuration = outOfDate.values.get('duration')
+      const newDuration = UInt64.fromUint(oldDuration)
+      outOfDate.values.set('duration', newDuration.toHex())
+
+      migrated.set(outOfDate.getIdentifier(), outOfDate)
+    })
+
+    return migrated
+  }
+
+  /**
+   * Version 6 migration
+   * @description add isHidden field
+   * @param {Map<string, MosaicsModel>} rows
+   * @returns {Map<string, MosaicsModel>}
+   */
+  public static version6_isHidden(
+    rows: Map<string, MosaicsModel>,
+  ): Map<string, MosaicsModel> {
+    const entities = Array.from(rows.values())
+    const migrated = new Map<string, MosaicsModel>()
+    entities.forEach((outOfDate: MosaicsModel) => {
+      outOfDate.values.set('isHidden', false)
       migrated.set(outOfDate.getIdentifier(), outOfDate)
     })
 

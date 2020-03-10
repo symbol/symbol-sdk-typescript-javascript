@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {NamespaceId, NamespaceInfo, NamespaceName} from 'symbol-sdk'
+import {NamespaceId, NamespaceInfo, NamespaceName, Alias, AliasType} from 'symbol-sdk'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
@@ -140,10 +140,10 @@ export class NamespaceService extends AbstractService {
       ['level0', namespaceInfo.levels[0].toHex()],
       ['level1', namespaceInfo.levels.length > 1 ? namespaceInfo.levels[1].toHex() : ''],
       ['level2', namespaceInfo.levels.length > 2 ? namespaceInfo.levels[2].toHex() : ''],
-      ['alias', namespaceInfo.alias],
+      ['alias', this.getAliasInStorageFormat(namespaceInfo.alias)],
       ['parentId', namespaceInfo.depth !== 1 ? namespaceInfo.parentNamespaceId().toHex() : ''],
-      ['startHeight', namespaceInfo.startHeight.compact()],
-      ['endHeight', namespaceInfo.endHeight.compact()],
+      ['startHeight', namespaceInfo.startHeight.toHex()],
+      ['endHeight', namespaceInfo.endHeight.toHex()],
       ['ownerPublicKey', namespaceInfo.owner.publicKey],
       ['generationHash', generationHash],
     ]))
@@ -176,5 +176,18 @@ export class NamespaceService extends AbstractService {
       new NamespaceName(parent.namespaceId, `${parent.name}.${reference.name}`, parent.parentId),
       namespaceNames,
     )
+  }
+
+  /**
+   * Converts an alias in the format used for alias storage in database
+   * @private
+   * @param {Alias} alias
+   * @returns {{type: number, mosaicId?: string, address?: string}}
+   */
+  private getAliasInStorageFormat(alias: Alias): {type: number, mosaicId?: string, address?: string} {
+    const {type} = alias 
+    if (type === AliasType.None) return {type}
+    if (type === AliasType.Mosaic) return {type, mosaicId: alias.mosaicId.toHex()}
+    if (type === AliasType.Address) return {type, address: alias.address.plain()}
   }
 }

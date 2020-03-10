@@ -15,6 +15,7 @@
  */
 import {DatabaseTable, DatabaseMigration} from '@/core/database/DatabaseTable'
 import {NamespacesModel} from '@/core/database/entities/NamespacesModel'
+import {NamespacesMigrations} from '../migrations/namespaces/NamespacesMigrations'
 
 export class NamespacesTable extends DatabaseTable {
   public constructor() {
@@ -32,7 +33,7 @@ export class NamespacesTable extends DatabaseTable {
       'endHeight',
       'ownerPublicKey',
       'generationHash',
-    ], 2) // version=2
+    ], 3) // version=3
   }
 
   /**
@@ -49,6 +50,8 @@ export class NamespacesTable extends DatabaseTable {
    * @return {any[]}
    */
   public getMigrations(): DatabaseMigration[] {
-    return []
+    return [
+      {version: 3, callback: NamespacesMigrations.version3_uint_as_hex},
+    ]
   }
 }

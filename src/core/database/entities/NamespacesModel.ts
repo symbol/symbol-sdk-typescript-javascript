@@ -63,18 +63,8 @@ export class NamespacesModel extends DatabaseModel {
     
     // instantiate a namespace alias
     const getAlias = (alias: any): Alias => {
-      if (alias.mosaicId) {
-        return new MosaicAlias(
-          new MosaicId([alias.mosaicId.id.lower, alias.mosaicId.id.higher]),
-        )
-      }
-
-      if (alias.address) {
-        return new AddressAlias(
-          Address.createFromRawAddress(alias.address.address),
-        )
-      }
-
+      if (alias.mosaicId) return new MosaicAlias(alias.mosaicId)
+      if (alias.address) return new AddressAlias(Address.createFromRawAddress(alias.address))
       return new EmptyAlias()
     }
 
@@ -88,8 +78,8 @@ export class NamespacesModel extends DatabaseModel {
         levels,
         this.values.get('parentId'),
         owner,
-        UInt64.fromUint(this.values.get('startHeight')),
-        UInt64.fromUint(this.values.get('endHeight')),
+        UInt64.fromHex(this.values.get('startHeight')),
+        UInt64.fromHex(this.values.get('endHeight')),
         getAlias(this.values.get('alias')),
       ),
     }

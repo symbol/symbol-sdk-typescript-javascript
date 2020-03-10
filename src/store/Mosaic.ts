@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicInfo, QueryParams, Transaction, TransactionType, NamespaceRegistrationType, UInt64} from 'symbol-sdk'
+import {MosaicInfo, QueryParams, Transaction, TransactionType, NamespaceRegistrationType, UInt64, MosaicId} from 'symbol-sdk'
 import Vue from 'vue'
 
 // internal dependencies
@@ -22,58 +22,80 @@ import {MosaicService} from '@/services/MosaicService'
 import {AwaitLock} from './AwaitLock';
 const Lock = AwaitLock.create();
 
+// mosaic state typing
+interface MosaicState {
+  initialized: boolean,
+  networkMosaicId: MosaicId,
+  networkMosaicName: string,
+  networkMosaicTicker: string,
+  nemesisTransactions: Transaction[],
+  mosaicsInfoByHex: Record<string, MosaicInfo>,
+  mosaicsNamesByHex: Record<string, string>,
+  hiddenMosaics: string[],
+}
+
+// mosaic state initial definition
+const mosaicState: MosaicState = {
+  initialized: false,
+  networkMosaicId: null,
+  networkMosaicName: '',
+  networkMosaicTicker: '',
+  nemesisTransactions: [],
+  mosaicsInfoByHex: {},
+  mosaicsNamesByHex: {},
+  hiddenMosaics: [],
+}
+
 export default {
   namespaced: true,
-  state: {
-    initialized: false,
-    networkMosaicId: null,
-    networkMosaicName: '',
-    networkMosaicTicker: '',
-    nemesisTransactions: [],
-    mosaicsInfoByHex: {},
-    mosaicsNamesByHex: {},
-    hiddenMosaics: [],
-  },
+  state: mosaicState,
   getters: {
-    getInitialized: state => state.initialized,
-    networkMosaic: state => state.networkMosaicId,
-    networkMosaicTicker: state => state.networkMosaicTicker,
-    nemesisTransactions: state => state.nemesisTransactions,
-    mosaicsInfo: state => state.mosaicsInfoByHex,
-    mosaicsInfoList: state => Object.keys(state.mosaicsInfoByHex).map(hex => state.mosaicsInfoByHex[hex]),
-    mosaicsNames: state => state.mosaicsNamesByHex,
-    hiddenMosaics: state => state.hiddenMosaics,
-    networkMosaicName: state => state.networkMosaicName,
+    getInitialized: (state: MosaicState) => state.initialized,
+    networkMosaic: (state: MosaicState) => state.networkMosaicId,
+    networkMosaicTicker: (state: MosaicState) => state.networkMosaicTicker,
+    nemesisTransactions: (state: MosaicState) => state.nemesisTransactions,
+    mosaicsInfo: (state: MosaicState) => state.mosaicsInfoByHex,
+    mosaicsInfoList: (state: MosaicState) => Object.keys(state.mosaicsInfoByHex).map(hex => state.mosaicsInfoByHex[hex]),
+    mosaicsNames: (state: MosaicState) => state.mosaicsNamesByHex,
+    hiddenMosaics: (state: MosaicState) => state.hiddenMosaics,
+    networkMosaicName: (state: MosaicState) => state.networkMosaicName,
   },
   mutations: {
-    setInitialized: (state, initialized) => { state.initialized = initialized },
-    setNetworkMosaicId: (state, mosaic) => Vue.set(state, 'networkMosaicId', mosaic),
-    setNetworkMosaicName: (state, name) => Vue.set(state, 'networkMosaicName', name),
-    setNetworkMosaicTicker: (state, ticker) => Vue.set(state, 'networkMosaicTicker', ticker),
-    addMosaicInfo: (state, mosaicInfo: MosaicInfo) => {
+    setInitialized: (state: MosaicState, initialized) => { state.initialized = initialized },
+    setNetworkMosaicId: (state: MosaicState, mosaic) => Vue.set(state, 'networkMosaicId', mosaic),
+    setNetworkMosaicName: (state: MosaicState, name) => Vue.set(state, 'networkMosaicName', name),
+    setNetworkMosaicTicker: (state: MosaicState, ticker) => Vue.set(state, 'networkMosaicTicker', ticker),
+    addMosaicInfo: (state: MosaicState, mosaicInfo: MosaicInfo) => {
       Vue.set(state.mosaicsInfoByHex, mosaicInfo.id.toHex(), mosaicInfo)
     },
-    addMosaicName: (state, payload: {hex: string, name: string}) => {
+    addMosaicName: (state: MosaicState, payload: {hex: string, name: string}) => {
       Vue.set(state.mosaicsNamesByHex, payload.hex, payload.name)
     },  
-    hideMosaic: (state, mosaicId) => {
-      const hiddenMosaics = state.hiddenMosaics
-      const iter = hiddenMosaics.findIndex(mosaicId.toHex())
-      if (iter !== undefined) {
-        return
-      }
+    hideMosaic: (state: MosaicState, mosaicId) => {
+      const hiddenMosaics = [...state.hiddenMosaics]
 
-      hiddenMosaics.push(mosaicId.toHex())
-      Vue.set(state, 'hiddenMosaics', hiddenMosaics)
+      // find the index of the mosaic to hide
+      const index = hiddenMosaics.indexOf(mosaicId.toHex())
+
+      // the mosaic is already in the list, return
+      if (index > -1) return
+
+      // update the state
+      Vue.set(state, 'hiddenMosaics', [...hiddenMosaics, mosaicId.toHex()])
     },
-    showMosaic: (state, mosaicId) => {
-      const hiddenMosaics = state.hiddenMosaics
-      const iter = hiddenMosaics.findIndex(mosaicId.toHex())
-      if (iter === undefined) {
-        return
-      }
+    showMosaic: (state: MosaicState, mosaicId) => {
+      const hiddenMosaics = [...state.hiddenMosaics]
 
-      delete hiddenMosaics[iter]
+      // find the index of the mosaic to show
+      const index = hiddenMosaics.indexOf(mosaicId.toHex())
+
+      // the mosaic is not in the list, return
+      if (index === -1) return
+
+      // remove the mosaic from the list
+      hiddenMosaics.splice(index, 1)
+
+      // update the state
       Vue.set(state, 'hiddenMosaics', hiddenMosaics)
     }
   },
@@ -130,6 +152,9 @@ export default {
         // - populate known mosaics
         commit('addMosaicInfo', model.objects.mosaicInfo)
 
+        // - set hidden state
+        if (model.values.get('isHidden')) commit('hideMosaic', new MosaicId(model.getIdentifier))
+
         // - populate known mosaic names
         const name = model.values.get('name')
         if (name !== '') commit('addMosaicName', { hex: model.getIdentifier(), name })
@@ -181,9 +206,11 @@ export default {
       })
     },
     HIDE_MOSAIC({commit}, mosaicId) {
+      new MosaicService().toggleHiddenState(mosaicId, true)
       commit('hideMosaic', mosaicId)
     },
     SHOW_MOSAIC({commit}, mosaicId) {
+      new MosaicService().toggleHiddenState(mosaicId, false)
       commit('showMosaic', mosaicId)
     },
     GET_CURRENCY_MOSAIC_FROM_NEMESIS({commit, dispatch}, transactions) {

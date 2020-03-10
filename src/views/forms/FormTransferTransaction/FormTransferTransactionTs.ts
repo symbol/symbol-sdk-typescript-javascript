@@ -17,7 +17,6 @@ import {
   MosaicId,
   Mosaic,
   TransferTransaction,
-  TransactionType,
   Address,
   Message,
   PublicAccount,
@@ -34,6 +33,7 @@ import {FormTransactionBase} from '@/views/forms/FormTransactionBase/FormTransac
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
 import {AddressValidator} from '@/core/validation/validators'
 import {MosaicInputsManager} from './MosaicInputsManager'
+import {MosaicService} from '@/services/MosaicService'
 
 interface MosaicAttachment {
   mosaicHex: string
@@ -203,12 +203,31 @@ export class FormTransferTransactionTs extends FormTransactionBase {
   protected currentMosaicList(): Mosaic[] {
     if (!this.networkMosaic) return [] // @TODO: quickfix    
 
+    // get mosaic list according to the multisig status
     const mosaics = this.isCosignatoryMode ? this.currentSignerMosaics : this.currentWalletMosaics
     const defaultedMosaicList = mosaics && mosaics.length ? mosaics : [new Mosaic(this.networkMosaic, UInt64.fromUint(0))]
 
+    // get mosaicService
+    const mosaicService = new MosaicService(this.$store)
+
+    // filter out expired mosaics
+    const currentMosaicList = defaultedMosaicList.filter(mosaic => {
+      // get mosaic info
+      const mosaicInfo = this.mosaicsInfoByHex[mosaic.id.toHex()]
+      // skip if mosaic info is not available
+      if (!mosaicInfo) return false
+
+      // calculate expiration
+      const expiration = mosaicService.getExpiration(mosaicInfo)
+      // skip if mosaic is expired
+      if (expiration === 'expired') return false
+
+      return true
+    })
+
     // add eventual new mosaics in the mosaic inputs manager
-    if (this.mosaicInputsManager) this.mosaicInputsManager.addMosaics(defaultedMosaicList)
-    return defaultedMosaicList
+    if (this.mosaicInputsManager) this.mosaicInputsManager.addMosaics(currentMosaicList)
+    return currentMosaicList
   }
 
   /**

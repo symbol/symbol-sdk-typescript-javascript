@@ -47,6 +47,7 @@ import {ValidationObserver} from 'vee-validate'
     networkMosaic: 'mosaic/networkMosaic',
     stagedTransactions: 'wallet/stagedTransactions',
     mosaicsInfo: 'mosaic/mosaicsInfoList',
+    mosaicsInfoByHex: 'mosaic/mosaicsInfo',
     mosaicsNames: 'mosaic/mosaicsNames',
     namespacesNames: 'namespace/namespacesNames',
     currentSignerMultisigInfo: 'wallet/currentSignerMultisigInfo',
@@ -125,6 +126,12 @@ export class FormTransactionBase extends Vue {
    * @var {MosaicInfo[]}
    */
   public mosaicsInfo: MosaicInfo[]
+
+  /**
+   * List of known mosaics
+   * @type {Record<string, MosaicInfo>}
+   */
+  public mosaicsInfoByHex: Record<string, MosaicInfo>
 
   /**
    * List of known mosaics names

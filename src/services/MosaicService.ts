@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {MosaicId, AccountInfo, NamespaceId, Mosaic, MosaicInfo} from 'symbol-sdk'
+import {MosaicId, AccountInfo, NamespaceId, Mosaic, MosaicInfo, UInt64} from 'symbol-sdk'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
@@ -22,6 +22,8 @@ import {MosaicsRepository} from '@/repositories/MosaicsRepository'
 import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
 import {NamespaceService} from './NamespaceService'
 
+// custom types
+export type ExpirationStatus = 'unlimited' | 'expired' | string
 
 export interface AttachedMosaic {
   id: MosaicId | NamespaceId
@@ -185,31 +187,38 @@ export class MosaicService extends AbstractService {
 
       // Create and store models
       mosaicIds.forEach(mosaicId => {
+        const hexId = mosaicId.toHex()
+
         // get mosaic info
         const mosaicInfo = mosaicsInfo.find(({id}) => id.equals(mosaicId))
         if (mosaicsInfo === undefined) return
 
         // get mosaic name
-        const nameEntry = mosaicNames.find(({hex}) => hex === mosaicId.toHex())
+        const nameEntry = mosaicNames.find(({hex}) => hex === hexId)
         const name = nameEntry ? nameEntry.name : ''
+
+        
+        // - find eventual existing model
+        const existingModel = repository.find(hexId) ? repository.read(hexId) : null
 
         // create model
         const model = repository.createModel(new Map<string, any>([
-          [ 'hexId', mosaicId.toHex() ],
+          [ 'hexId', hexId ],
           [ 'name', name ],
           [ 'flags', mosaicInfo.flags.toDTO().flags ],
-          [ 'startHeight', mosaicInfo.height ],
-          [ 'duration', mosaicInfo.duration.compact() ],
+          [ 'startHeight', mosaicInfo.height.toHex() ],
+          [ 'duration', mosaicInfo.duration.toHex() ],
           [ 'divisibility', mosaicInfo.divisibility ],
-          [ 'supply', mosaicInfo.supply ],
+          [ 'supply', mosaicInfo.supply.toHex() ],
           [ 'ownerPublicKey', mosaicInfo.owner.publicKey ],
           [ 'generationHash', generationHash ],
           [ 'isCurrencyMosaic', mosaicId.equals(networkMosaic) ],
           [ 'isHarvestMosaic', false ], // @TODO: not managed
+          [ 'isHidden', existingModel ? existingModel.values.get('isHidden') : false ],
         ]))
         
         // - update model if found
-        if (repository.find(mosaicId.toHex())) {
+        if (existingModel) {
           repository.update(mosaicId.toHex(), model.values)
           return
         }
@@ -241,6 +250,8 @@ export class MosaicService extends AbstractService {
     const generationHash = this.$store.getters['network/generationHash']
 
     try {
+      const hexId = mosaicId.toHex()
+
       // - fetch INFO from REST
       const mosaicInfo = await this.$store.dispatch('mosaic/REST_FETCH_INFO', mosaicId)
 
@@ -250,23 +261,27 @@ export class MosaicService extends AbstractService {
       // - use repository for storage
       const repository = new MosaicsRepository()
 
-      // - CREATE
+      // - find eventual existing model
+      const existingModel = repository.find(hexId) ? repository.read(hexId) : null
+      
+      // - CREATE model
       const mosaic = repository.createModel(new Map<string, any>([
-        [ 'hexId', mosaicId.toHex() ],
+        [ 'hexId', hexId ],
         [ 'name', mosaicNames && mosaicNames.length ? mosaicNames.shift().name : '' ],
         [ 'flags', mosaicInfo.flags.toDTO().flags ],
-        [ 'startHeight', mosaicInfo.height ],
-        [ 'duration', mosaicInfo.duration.compact() ],
+        [ 'startHeight', mosaicInfo.height.toHex() ],
+        [ 'duration', mosaicInfo.duration.toHex() ],
         [ 'divisibility', mosaicInfo.divisibility ],
-        [ 'supply', mosaicInfo.supply ],
+        [ 'supply', mosaicInfo.supply.toHex() ],
         [ 'ownerPublicKey', mosaicInfo.owner.publicKey ],
         [ 'generationHash', generationHash ],
         [ 'isCurrencyMosaic', isCurrencyMosaic ],
         [ 'isHarvestMosaic', isHarvestMosaic ],
+        [ 'isHidden', existingModel ? existingModel.values.get('isHidden') : false ],
       ]))
 
       // - update the model if it exists in the repository
-      if (repository.find(mosaicId.toHex())) {
+      if (existingModel) {
         repository.update(mosaicId.toHex(), mosaic.values)
       } else {
         // - create a new entry in the repository
@@ -281,14 +296,15 @@ export class MosaicService extends AbstractService {
         [ 'hexId', mosaicId.toHex() ],
         [ 'name', mosaicId.toHex() ],
         [ 'flags', null ],
-        [ 'startHeight', 0 ],
-        [ 'duration', 0 ],
+        [ 'startHeight', UInt64.fromUint(0).toHex() ],
+        [ 'duration', UInt64.fromUint(0).toHex() ],
         [ 'divisibility', 0 ],
-        [ 'supply', 0 ],
+        [ 'supply', UInt64.fromUint(0).toHex() ],
         [ 'ownerPublicKey', '' ],
         [ 'generationHash', generationHash ],
         [ 'isCurrencyMosaic', isCurrencyMosaic ],
         [ 'isHarvestMosaic', isHarvestMosaic ],
+        [ 'isHidden', false ],
       ]))
     }
   }
@@ -373,5 +389,57 @@ export class MosaicService extends AbstractService {
           amount: mosaic.amount.compact() / Math.pow(10, divisibility),
         })
       })
+  }
+
+  /**
+   * Returns a view of a mosaic expiration info
+   * @private
+   * @param {MosaicsInfo} mosaic
+   * @returns {ExpirationStatus}
+   */
+  public getExpiration(mosaicInfo: MosaicInfo): ExpirationStatus {
+    const duration = mosaicInfo.duration.compact()
+    const startHeight = mosaicInfo.height.compact()
+
+    // unlimited duration mosaics are flagged as duration == 0
+    if (duration === 0) return 'unlimited'
+
+    // get current height
+    const currentHeight = this.$store.getters['network/currentHeight'] || 0
+
+    // calculate expiration
+    const expiresIn = startHeight + duration - currentHeight
+    if (expiresIn <= 0) return 'expired'
+
+    // number of blocks remaining
+    return expiresIn.toLocaleString()
+  }
+
+  /**
+   * Set the hidden state of a mosaic
+   * If no param is provided, the hidden state will be toggled
+   * @param {(MosaicId | NamespaceId)} mosaicId
+   * @param {boolean} [hide] Should the mosaic be hidden?
+   */
+  public toggleHiddenState(mosaicId: MosaicId | NamespaceId, hide?: boolean): void {
+    const hexId = mosaicId.toHex()
+
+    // get repository
+    const repository = new MosaicsRepository()
+    
+    // return if the mosaic is not found in the database
+    if (!repository.find(hexId)) return
+
+    // get model
+    const model = repository.read(hexId)
+
+    // get next visibility state
+    const nextVisibilityState = hide === undefined ? !model.values.get('isHidden') : hide
+    
+    // update visibility state
+    model.values.set('isHidden', nextVisibilityState)
+
+    // persist change
+    repository.update(hexId, model.values)
   }
 }

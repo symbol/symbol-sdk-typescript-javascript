@@ -38,29 +38,25 @@
       <div class="mosaicList">
         <div class="toggle_all_checked">
           <span @click="toggleMosaicDisplay()">
-            <div :class="[ 'choose', formItems.hasCheckedAll ? 'true' : 'false' ]" />
-            {{ !formItems.hasCheckedAll ? $t('select_all') : $t('all_unchecked') }}
-          </span>
-          <span @click="return false">
-            <div :class="[ 'choose', formItems.hasShowExpired ? 'true' : 'false' ]" />
-            {{ $t('Display_expired_mosaic') }}
+            <div :class="[ 'choose', areAllMosaicsShown() ? 'true' : 'false' ]" />
+            {{ areAllMosaicsShown() ? $t('uncheck_all') : $t('select_all') }}
           </span>
         </div>
 
         <div
-          v-for="(entry, index) in filteredBalanceEntries"
+          v-for="(entry, index) in allBalanceEntries"
           :key="index"
           :class="[ 'mosaic_data',index === 0 ? 'padding_top_0' : '' ]"
           class="mosaic_data pointer"
           @click="toggleMosaicDisplay(entry.id)"
-        >
+        > 
           <!-- @TODO: Mosaic list actions not working -->
           <span class="namege_img">
             <img
               class="small_icon"
-              :src="hasHiddenMosaic(entry.id)
-                ? dashboardImages.monitorUnselected
-                : dashboardImages.monitorSelected"
+              :src="isMosaicHidden(entry.id)
+                ? dashboardImages.unselected
+                : dashboardImages.selected"
             >
             <img
               v-if="entry.id.equals(networkMosaic)"
