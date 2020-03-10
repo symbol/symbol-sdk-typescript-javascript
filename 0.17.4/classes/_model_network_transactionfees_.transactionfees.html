@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>NetworkType | symbol-sdk</title>
+	<title>TransactionFees | symbol-sdk</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,13 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_model_blockchain_networktype_.html">&quot;model/blockchain/NetworkType&quot;</a>
+					<a href="../modules/_model_network_transactionfees_.html">&quot;model/network/TransactionFees&quot;</a>
 				</li>
 				<li>
-					<a href="_model_blockchain_networktype_.networktype.html">NetworkType</a>
+					<a href="_model_network_transactionfees_.transactionfees.html">TransactionFees</a>
 				</li>
 			</ul>
-			<h1>Enumeration NetworkType</h1>
+			<h1>Class TransactionFees</h1>
 		</div>
 	</div>
 </header>
@@ -72,85 +72,156 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Static class containing network type constants.</p>
+						<p>Transacation Fees</p>
 					</div>
 				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">TransactionFees</span>
+					</li>
+				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Enumeration members</h3>
+							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_model_blockchain_networktype_.networktype.html#main_net" class="tsd-kind-icon">MAIN_<wbr>NET</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_model_blockchain_networktype_.networktype.html#mijin" class="tsd-kind-icon">MIJIN</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_model_blockchain_networktype_.networktype.html#mijin_test" class="tsd-kind-icon">MIJIN_<wbr>TEST</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_model_blockchain_networktype_.networktype.html#test_net" class="tsd-kind-icon">TEST_<wbr>NET</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_model_network_transactionfees_.transactionfees.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_network_transactionfees_.transactionfees.html#averagefeemultiplier" class="tsd-kind-icon">average<wbr>Fee<wbr>Multiplier</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_network_transactionfees_.transactionfees.html#highestfeemultiplier" class="tsd-kind-icon">highest<wbr>Fee<wbr>Multiplier</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_network_transactionfees_.transactionfees.html#lowestfeemultiplier" class="tsd-kind-icon">lowest<wbr>Fee<wbr>Multiplier</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_network_transactionfees_.transactionfees.html#medianfeemultiplier" class="tsd-kind-icon">median<wbr>Fee<wbr>Multiplier</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Enumeration members</h2>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="main_net" class="tsd-anchor"></a>
-					<h3>MAIN_<wbr>NET</h3>
-					<div class="tsd-signature tsd-kind-icon">MAIN_<wbr>NET<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 104</span></div>
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Transaction<wbr>Fees<span class="tsd-signature-symbol">(</span>averageFeeMultiplier<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, medianFeeMultiplier<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, highestFeeMultiplier<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, lowestFeeMultiplier<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_network_transactionfees_.transactionfees.html" class="tsd-signature-type">TransactionFees</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/41d6c77/src/model/network/TransactionFees.ts#L20">model/network/TransactionFees.ts:20</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>averageFeeMultiplier: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Average fee multiplier over the last &quot;numBlocksTransactionFeeStats&quot;.</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>medianFeeMultiplier: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Median fee multiplier over the last &quot;numBlocksTransactionFeeStats&quot;.</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>highestFeeMultiplier: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Highest fee multiplier over the last &quot;numBlocksTransactionFeeStats&quot;.</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>lowestFeeMultiplier: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Lowest fee multiplier over the last &quot;numBlocksTransactionFeeStats&quot;.</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_model_network_transactionfees_.transactionfees.html" class="tsd-signature-type">TransactionFees</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="averagefeemultiplier" class="tsd-anchor"></a>
+					<h3>average<wbr>Fee<wbr>Multiplier</h3>
+					<div class="tsd-signature tsd-kind-icon">average<wbr>Fee<wbr>Multiplier<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/40053d1/src/model/blockchain/NetworkType.ts#L25">model/blockchain/NetworkType.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/41d6c77/src/model/network/TransactionFees.ts#L28">model/network/TransactionFees.ts:28</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Main net network</p>
+							<p>Average fee multiplier over the last &quot;numBlocksTransactionFeeStats&quot;.</p>
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="mijin" class="tsd-anchor"></a>
-					<h3>MIJIN</h3>
-					<div class="tsd-signature tsd-kind-icon">MIJIN<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 96</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="highestfeemultiplier" class="tsd-anchor"></a>
+					<h3>highest<wbr>Fee<wbr>Multiplier</h3>
+					<div class="tsd-signature tsd-kind-icon">highest<wbr>Fee<wbr>Multiplier<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/40053d1/src/model/blockchain/NetworkType.ts#L35">model/blockchain/NetworkType.ts:35</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/41d6c77/src/model/network/TransactionFees.ts#L30">model/network/TransactionFees.ts:30</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Mijin net network</p>
+							<p>Highest fee multiplier over the last &quot;numBlocksTransactionFeeStats&quot;.</p>
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="mijin_test" class="tsd-anchor"></a>
-					<h3>MIJIN_<wbr>TEST</h3>
-					<div class="tsd-signature tsd-kind-icon">MIJIN_<wbr>TEST<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 144</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="lowestfeemultiplier" class="tsd-anchor"></a>
+					<h3>lowest<wbr>Fee<wbr>Multiplier</h3>
+					<div class="tsd-signature tsd-kind-icon">lowest<wbr>Fee<wbr>Multiplier<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/40053d1/src/model/blockchain/NetworkType.ts#L40">model/blockchain/NetworkType.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/41d6c77/src/model/network/TransactionFees.ts#L31">model/network/TransactionFees.ts:31</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Mijin test net network</p>
+							<p>Lowest fee multiplier over the last &quot;numBlocksTransactionFeeStats&quot;.</p>
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="test_net" class="tsd-anchor"></a>
-					<h3>TEST_<wbr>NET</h3>
-					<div class="tsd-signature tsd-kind-icon">TEST_<wbr>NET<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 152</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="medianfeemultiplier" class="tsd-anchor"></a>
+					<h3>median<wbr>Fee<wbr>Multiplier</h3>
+					<div class="tsd-signature tsd-kind-icon">median<wbr>Fee<wbr>Multiplier<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/40053d1/src/model/blockchain/NetworkType.ts#L30">model/blockchain/NetworkType.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/41d6c77/src/model/network/TransactionFees.ts#L29">model/network/TransactionFees.ts:29</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Test net network</p>
+							<p>Median fee multiplier over the last &quot;numBlocksTransactionFeeStats&quot;.</p>
 						</div>
 					</div>
 				</section>
@@ -163,7 +234,7 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/_model_blockchain_networktype_.html">&quot;model/blockchain/<wbr>Network<wbr>Type&quot;</a>
+						<a href="../modules/_model_network_transactionfees_.html">&quot;model/network/<wbr>Transaction<wbr>Fees&quot;</a>
 					</li>
 				</ul>
 			</nav>
@@ -171,20 +242,23 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-enum tsd-parent-kind-external-module">
-						<a href="_model_blockchain_networktype_.networktype.html" class="tsd-kind-icon">Network<wbr>Type</a>
+					<li class="current tsd-kind-class tsd-parent-kind-external-module">
+						<a href="_model_network_transactionfees_.transactionfees.html" class="tsd-kind-icon">Transaction<wbr>Fees</a>
 						<ul>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_model_blockchain_networktype_.networktype.html#main_net" class="tsd-kind-icon">MAIN_<wbr>NET</a>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="_model_network_transactionfees_.transactionfees.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_model_blockchain_networktype_.networktype.html#mijin" class="tsd-kind-icon">MIJIN</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_model_network_transactionfees_.transactionfees.html#averagefeemultiplier" class="tsd-kind-icon">average<wbr>Fee<wbr>Multiplier</a>
 							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_model_blockchain_networktype_.networktype.html#mijin_test" class="tsd-kind-icon">MIJIN_<wbr>TEST</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_model_network_transactionfees_.transactionfees.html#highestfeemultiplier" class="tsd-kind-icon">highest<wbr>Fee<wbr>Multiplier</a>
 							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_model_blockchain_networktype_.networktype.html#test_net" class="tsd-kind-icon">TEST_<wbr>NET</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_model_network_transactionfees_.transactionfees.html#lowestfeemultiplier" class="tsd-kind-icon">lowest<wbr>Fee<wbr>Multiplier</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_model_network_transactionfees_.transactionfees.html#medianfeemultiplier" class="tsd-kind-icon">median<wbr>Fee<wbr>Multiplier</a>
 							</li>
 						</ul>
 					</li>

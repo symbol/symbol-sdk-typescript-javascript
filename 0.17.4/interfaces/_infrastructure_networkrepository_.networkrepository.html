@@ -102,9 +102,11 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_networkrepository_.networkrepository.html#getnetworkfees" class="tsd-kind-icon">get<wbr>Network<wbr>Fees</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_networkrepository_.networkrepository.html#getnetworkname" class="tsd-kind-icon">get<wbr>Network<wbr>Name</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_networkrepository_.networkrepository.html#getnetworkproperties" class="tsd-kind-icon">get<wbr>Network<wbr>Properties</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_networkrepository_.networkrepository.html#getnetworktype" class="tsd-kind-icon">get<wbr>Network<wbr>Type</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_networkrepository_.networkrepository.html#getrentalfees" class="tsd-kind-icon">get<wbr>Rental<wbr>Fees</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_networkrepository_.networkrepository.html#gettransactionfees" class="tsd-kind-icon">get<wbr>Transaction<wbr>Fees</a></li>
 							</ul>
 						</section>
 					</div>
@@ -113,39 +115,16 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="getnetworkfees" class="tsd-anchor"></a>
-					<h3>get<wbr>Network<wbr>Fees</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Network<wbr>Fees<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_blockchain_networkfees_.networkfees.html" class="tsd-signature-type">NetworkFees</a><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/40053d1/src/infrastructure/NetworkRepository.ts#L46">infrastructure/NetworkRepository.ts:46</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Returns information about the average, median, highest and lower fee multiplier over the last &quot;numBlocksTransactionFeeStats&quot;.</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_blockchain_networkfees_.networkfees.html" class="tsd-signature-type">NetworkFees</a><span class="tsd-signature-symbol">&gt;</span></h4>
-							<p>the NetworkFees</p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
 					<a name="getnetworkname" class="tsd-anchor"></a>
 					<h3>get<wbr>Network<wbr>Name</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Network<wbr>Name<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_blockchain_networkname_.networkname.html" class="tsd-signature-type">NetworkName</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Network<wbr>Name<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_network_networkname_.networkname.html" class="tsd-signature-type">NetworkName</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/40053d1/src/infrastructure/NetworkRepository.ts#L40">infrastructure/NetworkRepository.ts:40</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/41d6c77/src/infrastructure/NetworkRepository.ts#L36">infrastructure/NetworkRepository.ts:36</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -153,8 +132,37 @@
 									<p>Get current network type name and description</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_blockchain_networkname_.networkname.html" class="tsd-signature-type">NetworkName</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_network_networkname_.networkname.html" class="tsd-signature-type">NetworkName</a><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>current network type name and description</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="getnetworkproperties" class="tsd-anchor"></a>
+					<h3>get<wbr>Network<wbr>Properties</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Network<wbr>Properties<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_network_networkconfiguration_.networkconfiguration.html" class="tsd-signature-type">NetworkConfiguration</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/41d6c77/src/infrastructure/NetworkRepository.ts#L44">infrastructure/NetworkRepository.ts:44</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the content from a catapult-server network configuration file (resources/config-network.properties).
+										To enable this feature, the REST setting &quot;network.propertiesFilePath&quot; must define where the file is located.
+									This is adjustable via the configuration file (rest/resources/rest.json) per REST instance.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>summary</dt>
+									<dd><p>Get the network properties</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_network_networkconfiguration_.networkconfiguration.html" class="tsd-signature-type">NetworkConfiguration</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -162,13 +170,13 @@
 					<a name="getnetworktype" class="tsd-anchor"></a>
 					<h3>get<wbr>Network<wbr>Type</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Network<wbr>Type<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/_model_blockchain_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Network<wbr>Type<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/40053d1/src/infrastructure/NetworkRepository.ts#L33">infrastructure/NetworkRepository.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/41d6c77/src/infrastructure/NetworkRepository.ts#L50">infrastructure/NetworkRepository.ts:50</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -176,8 +184,65 @@
 									<p>Get current network type.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/_model_blockchain_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>network type enum.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="getrentalfees" class="tsd-anchor"></a>
+					<h3>get<wbr>Rental<wbr>Fees</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Rental<wbr>Fees<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_network_rentalfees_.rentalfees.html" class="tsd-signature-type">RentalFees</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/41d6c77/src/infrastructure/NetworkRepository.ts#L58">infrastructure/NetworkRepository.ts:58</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the estimated effective rental fees for namespaces and mosaics. This endpoint is only available
+										if the REST instance has access to catapult-server <code>resources/config-network.properties</code> file.
+									To activate this feature, add the setting &quot;network.propertiesFilePath&quot; in the configuration file (rest/resources/rest.json).</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>summary</dt>
+									<dd><p>Get rental fees information</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_network_rentalfees_.rentalfees.html" class="tsd-signature-type">RentalFees</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="gettransactionfees" class="tsd-anchor"></a>
+					<h3>get<wbr>Transaction<wbr>Fees</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Transaction<wbr>Fees<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_network_transactionfees_.transactionfees.html" class="tsd-signature-type">TransactionFees</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/41d6c77/src/infrastructure/NetworkRepository.ts#L65">infrastructure/NetworkRepository.ts:65</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the average, median, highest and lower fee multiplier over the last &quot;numBlocksTransactionFeeStats&quot;.
+									The setting &quot;numBlocksTransactionFeeStats&quot; is adjustable via the configuration file (rest/resources/rest.json) per REST instance.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>summary</dt>
+									<dd><p>Get transaction fees information</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_network_transactionfees_.transactionfees.html" class="tsd-signature-type">TransactionFees</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -202,13 +267,19 @@
 						<a href="_infrastructure_networkrepository_.networkrepository.html" class="tsd-kind-icon">Network<wbr>Repository</a>
 						<ul>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="_infrastructure_networkrepository_.networkrepository.html#getnetworkfees" class="tsd-kind-icon">get<wbr>Network<wbr>Fees</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="_infrastructure_networkrepository_.networkrepository.html#getnetworkname" class="tsd-kind-icon">get<wbr>Network<wbr>Name</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="_infrastructure_networkrepository_.networkrepository.html#getnetworkproperties" class="tsd-kind-icon">get<wbr>Network<wbr>Properties</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="_infrastructure_networkrepository_.networkrepository.html#getnetworktype" class="tsd-kind-icon">get<wbr>Network<wbr>Type</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="_infrastructure_networkrepository_.networkrepository.html#getrentalfees" class="tsd-kind-icon">get<wbr>Rental<wbr>Fees</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="_infrastructure_networkrepository_.networkrepository.html#gettransactionfees" class="tsd-kind-icon">get<wbr>Transaction<wbr>Fees</a>
 							</li>
 						</ul>
 					</li>
