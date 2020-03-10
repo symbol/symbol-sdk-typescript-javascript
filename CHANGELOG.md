@@ -7,6 +7,16 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ### Milestone: [catapult-server@v0.9.3.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.1)
 
+### [v0.9.5-beta5][v0.9.5-beta5] - 10-Mar-2020
+
+#### Fixed
+
+- Fixed namespaces and mosaics database schema to hold hex instead of UInt64 (fixes #59)
+- Hide expired mosaics in transfer inputs, (fixes #61)
+- Fix mosaic balance list, (fixes #65)
+- Type store / mosaic state
+- Persist mosaic hidden state to database
+
 ### [v0.9.5-beta4][v0.9.5-beta4] - 09-Mar-2020
 
 #### Fixed
@@ -77,7 +87,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Mosaic definition *multi-signature* feature bug with signer selection (aggregate bonded only)
 
 
-[v0.9.5]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.5-beta4
+[v0.9.5]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.5-beta5
+[v0.9.5-beta5]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta4...v0.9.5-beta5
 [v0.9.5-beta4]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta2...v0.9.5-beta4
 [v0.9.5-beta2]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta1...v0.9.5-beta2
 [v0.9.5-beta1]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.4-beta...v0.9.5-beta1
