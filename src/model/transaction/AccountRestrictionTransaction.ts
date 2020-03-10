@@ -41,8 +41,8 @@ export class AccountRestrictionTransaction {
     public static createAddressRestrictionModificationTransaction(
         deadline: Deadline,
         restrictionFlags: AccountRestrictionFlags,
-        restrictionAdditions: Array<Address | NamespaceId>,
-        restrictionDeletions: Array<Address | NamespaceId>,
+        restrictionAdditions: (Address | NamespaceId)[],
+        restrictionDeletions: (Address | NamespaceId)[],
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
     ): AccountAddressRestrictionTransaction {
@@ -75,8 +75,8 @@ export class AccountRestrictionTransaction {
     public static createMosaicRestrictionModificationTransaction(
         deadline: Deadline,
         restrictionFlags: AccountRestrictionFlags,
-        restrictionAdditions: Array<MosaicId | NamespaceId>,
-        restrictionDeletions: Array<MosaicId | NamespaceId>,
+        restrictionAdditions: (MosaicId | NamespaceId)[],
+        restrictionDeletions: (MosaicId | NamespaceId)[],
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
     ): AccountMosaicRestrictionTransaction {

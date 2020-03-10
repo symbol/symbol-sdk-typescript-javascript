@@ -55,8 +55,8 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
      */
     public static create(deadline: Deadline,
                          restrictionFlags: AccountRestrictionFlags,
-                         restrictionAdditions: Array<MosaicId | NamespaceId>,
-                         restrictionDeletions: Array<MosaicId | NamespaceId>,
+                         restrictionAdditions: (MosaicId | NamespaceId)[],
+                         restrictionDeletions: (MosaicId | NamespaceId)[],
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): AccountMosaicRestrictionTransaction {
         return new AccountMosaicRestrictionTransaction(networkType,
@@ -85,8 +85,8 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
                 deadline: Deadline,
                 maxFee: UInt64,
                 public readonly restrictionFlags: AccountRestrictionFlags,
-                public readonly restrictionAdditions: Array<MosaicId | NamespaceId>,
-                public readonly restrictionDeletions: Array<MosaicId | NamespaceId>,
+                public readonly restrictionAdditions: (MosaicId | NamespaceId)[],
+                public readonly restrictionDeletions: (MosaicId | NamespaceId)[],
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {

@@ -55,8 +55,8 @@ export class AccountAddressRestrictionTransaction extends Transaction {
      */
     public static create(deadline: Deadline,
                          restrictionFlags: AccountRestrictionFlags,
-                         restrictionAdditions: Array<Address | NamespaceId>,
-                         restrictionDeletions: Array<Address | NamespaceId>,
+                         restrictionAdditions: (Address | NamespaceId)[],
+                         restrictionDeletions: (Address | NamespaceId)[],
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): AccountAddressRestrictionTransaction {
         return new AccountAddressRestrictionTransaction(networkType,
@@ -85,8 +85,8 @@ export class AccountAddressRestrictionTransaction extends Transaction {
                 deadline: Deadline,
                 maxFee: UInt64,
                 public readonly restrictionFlags: AccountRestrictionFlags,
-                public readonly restrictionAdditions: Array<Address | NamespaceId>,
-                public readonly restrictionDeletions: Array<Address | NamespaceId>,
+                public readonly restrictionAdditions: (Address | NamespaceId)[],
+                public readonly restrictionDeletions: (Address | NamespaceId)[],
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
