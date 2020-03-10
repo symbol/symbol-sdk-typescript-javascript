@@ -19,14 +19,14 @@ import {Password} from 'symbol-sdk'
 
 describe('database/BaseStorageAdapter ==>', () => {
   describe('getSessionId() should', () => {
-    it('auto-generate session id given no value', () => {
+    test('auto-generate session id given no value', () => {
       const adapter = getAdapter()
       const sessionId = adapter.getSessionId()
       expect(sessionId).toBeDefined()
       expect(sessionId.length).toBe(64)
     })
 
-    it('read stored session id given storage', () => {
+    test('read stored session id given storage', () => {
       const adapter = getAdapter({sessionId: "123456789"})
       const sessionId = adapter.getSessionId()
       expect(sessionId).toBe("123456789")
@@ -34,14 +34,14 @@ describe('database/BaseStorageAdapter ==>', () => {
   })
 
   describe('getSaltForSession() should', () => {
-    it('auto-generate salt given no value', () => {
+    test('auto-generate salt given no value', () => {
       const adapter = getAdapter()
       const salt = adapter.getSaltForSession()
       expect(salt).toBeDefined()
       expect(salt.length).toBe(64)
     })
 
-    it('encrypt access salt given session id', () => {
+    test('encrypt access salt given session id', () => {
       const adapter = getAdapter({
         sessionId: "password",
       })
@@ -53,7 +53,7 @@ describe('database/BaseStorageAdapter ==>', () => {
       expect(decrypted).toBe(salt)
     })
 
-    it('read encrypted salt given storage', () => {
+    test('read encrypted salt given storage', () => {
       const adapter = getAdapter({
         sessionId: "password",
         accessSalt: "9c3afe1b658403d7522886cda510a3714c389ce697128ab8d3877bbbb53c2ecdY+QgfP/KHmUl+wk7rPwmEQ=="

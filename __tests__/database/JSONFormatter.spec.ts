@@ -34,7 +34,7 @@ const getFormatter = (): JSONFormatter => {
 
 describe('database/AbstractFormatter ==>', () => {
   describe('setSchema() should', () => {
-    it('update $schema property', () => {
+    test('update $schema property', () => {
       const formatter = new JSONFormatter()
       formatter.setSchema(new FakeTable('table', ['col1']))
 
@@ -47,7 +47,7 @@ describe('database/AbstractFormatter ==>', () => {
 
 describe('database/JSONFormatter ==>', () => {
   describe('format() should', () => {
-    it('return empty JSON object given no values', () => {
+    test('return empty JSON object given no values', () => {
       // prepare
       const formatter = getFormatter()
 
@@ -56,7 +56,7 @@ describe('database/JSONFormatter ==>', () => {
       expect(json).toBe('{}')
     })
 
-    it('return correctly formatted JSON from single entry', () => {
+    test('return correctly formatted JSON from single entry', () => {
       // prepare
       const formatter = getFormatter()
 
@@ -88,7 +88,7 @@ describe('database/JSONFormatter ==>', () => {
       } catch(e) {}
     })
 
-    it('return entries mapped by identifier in JSON', () => {
+    test('return entries mapped by identifier in JSON', () => {
       // prepare
       const formatter = getFormatter()
 
@@ -119,7 +119,7 @@ describe('database/JSONFormatter ==>', () => {
       } catch(e) {}
     })
 
-    it('return entries values in JSON', () => {
+    test('return entries values in JSON', () => {
       // prepare
       const formatter = getFormatter()
 
@@ -165,7 +165,7 @@ describe('database/JSONFormatter ==>', () => {
   })
 
   describe('parse() should', () => {
-    it('return empty map given no values', () => {
+    test('return empty map given no values', () => {
       // prepare
       const formatter = getFormatter()
       const json = '{}'
@@ -175,7 +175,7 @@ describe('database/JSONFormatter ==>', () => {
       expect(map.size).toBe(0)
     })
 
-    it('return model mapped by identifier given values', () => {
+    test('return model mapped by identifier given values', () => {
       // prepare
       const formatter = getFormatter()
 
@@ -196,7 +196,7 @@ describe('database/JSONFormatter ==>', () => {
       expect(map.get('123456789')).toBeInstanceOf(FakeModel)
     })
 
-    it('return multiple models mapped by identifier given multiple rows', () => {
+    test('return multiple models mapped by identifier given multiple rows', () => {
       // prepare
       const formatter = getFormatter()
 
@@ -224,7 +224,7 @@ describe('database/JSONFormatter ==>', () => {
       expect(map.get('5678')).toBeInstanceOf(FakeModel)
     })
 
-    it('return parsed models with values given multiple rows', () => {
+    test('return parsed models with values given multiple rows', () => {
       // prepare
       const formatter = getFormatter()
 

@@ -15,6 +15,7 @@
  */
 import {shallowMount, createLocalVue} from '@vue/test-utils'
 import Vuex from 'vuex'
+import {createStore} from '@MOCKS/Store'
 
 /// region globals
 const localVue = createLocalVue()
@@ -22,18 +23,6 @@ localVue.use(Vuex)
 /// end-region globals
 
 /// region helpers
-/**
- * Create a fake store
- * @internal
- * @param {any} storeOptions 
- */
-const createStore = (storeOptions?: any) => {
-  const store = new Vuex.Store(storeOptions)
-  store.dispatch = jest.fn()
-  store.commit = jest.fn()
-  return store
-}
-
 /**
  * Create and *shallow* mount a component injecting
  * store \a modules and \a state (namespaced).

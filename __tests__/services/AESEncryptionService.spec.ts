@@ -24,32 +24,32 @@ const knownCipher = "9c3afe1b658403d7522886cda510a3714c389ce697128ab8d3877bbbb53
 
 describe('services/AESEncryptionService', () => {
   describe('encrypt() should', () => {
-    it('generate distinct values always', () => {
+    test('generate distinct values always', () => {
       expect(cipher1 === cipher2).toBe(false)
     })
   })
 
   describe('decrypt() should', () => {
-    it('return value given valid ciphertext and password', () => {
+    test('return value given valid ciphertext and password', () => {
       const plain = AESEncryptionService.decrypt(knownCipher, knownPass)
       expect(plain.length).toBe(knownValue.length)
       expect(plain).toBe(knownValue)
     })
 
-    it('return empty given invalid ciphertext', () => {
+    test('return empty given invalid ciphertext', () => {
       const cipher = "+QgfP/KHmUl+wk7rPwmEQ==" // invalid ciphertext
       const plain = AESEncryptionService.decrypt(cipher, knownPass)
       expect(plain.length).toBe(0)
       expect(plain).toBe('')
     })
 
-    it('return empty given invalid password', () => {
+    test('return empty given invalid password', () => {
       const plain = AESEncryptionService.decrypt(knownCipher, new Password("password1")) // invalid password
       expect(plain.length).toBe(0)
       expect(plain).toBe('')
     })
 
-    it('accept ciphertext given encrypt', () => {
+    test('accept ciphertext given encrypt', () => {
       const data = [
         'encrypt',
         'this',
