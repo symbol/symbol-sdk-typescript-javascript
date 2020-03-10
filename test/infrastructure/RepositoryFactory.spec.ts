@@ -21,7 +21,7 @@ import { BlockRepository } from '../../src/infrastructure/BlockRepository';
 import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
 import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
 import { BlockInfo } from '../../src/model/blockchain/BlockInfo';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { UInt64 } from '../../src/model/UInt64';
 
 describe('RepositoryFactory', () => {

@@ -33,7 +33,7 @@ import { DtoMapping } from '../../core/utils/DtoMapping';
 import { CreateTransactionFromPayload } from '../../infrastructure/transaction/CreateTransactionFromPayload';
 import { Account } from '../account/Account';
 import { PublicAccount } from '../account/PublicAccount';
-import { NetworkType } from '../blockchain/NetworkType';
+import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { AggregateTransactionCosignature } from './AggregateTransactionCosignature';

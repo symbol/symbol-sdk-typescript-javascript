@@ -19,7 +19,7 @@ import * as http from 'http';
 import { from as observableFrom, Observable, of as observableOf, throwError } from 'rxjs';
 import { catchError, map, shareReplay } from 'rxjs/operators';
 import { NodeRoutesApi } from 'symbol-openapi-typescript-node-client';
-import { NetworkType } from '../model/blockchain/NetworkType';
+import { NetworkType } from '../model/network/NetworkType';
 import { QueryParams } from './QueryParams';
 import { TransactionFilter } from './TransactionFilter';
 

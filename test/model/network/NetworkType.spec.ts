@@ -15,7 +15,7 @@
  */
 
 import {expect} from 'chai';
-import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import {NetworkType} from '../../../src/model/network/NetworkType';
 
 describe('NetworkType', () => {
     it('MAIN_NET is 0x68', () => {

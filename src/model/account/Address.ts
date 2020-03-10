@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { Convert, RawAddress } from '../../core/format';
-import { NetworkType } from '../blockchain/NetworkType';
+import { NetworkType } from '../network/NetworkType';
 
 /**
  * The address structure describes an address with its network
