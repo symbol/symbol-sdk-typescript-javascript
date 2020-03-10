@@ -47,9 +47,6 @@ export class ViewHashLockTransaction extends TransactionView<HashLockTransaction
    * @return {ViewHashLockTransaction}
    */
   public parse(formItems: HashLockTransactionFormFieldsType): ViewHashLockTransaction {
-    // - instantiate new transaction view
-    const view = new ViewHashLockTransaction(this.$store)
-
     // - prepare mosaic entry
     const mosaicsInfo = this.$store.getters['mosaic/mosaicsInfoList']
     const mosaicInfo = mosaicsInfo.find(i => i.id.toHex() === formItems.mosaic.mosaicHex)
@@ -61,13 +58,13 @@ export class ViewHashLockTransaction extends TransactionView<HashLockTransaction
     )
 
     // - set values
-    view.values.set('mosaic', mosaic)
-    view.values.set('duration', UInt64.fromUint(formItems.duration))
-    view.values.set('signedTransaction', formItems.signedTransaction)
+    this.values.set('mosaic', mosaic)
+    this.values.set('duration', UInt64.fromUint(formItems.duration))
+    this.values.set('signedTransaction', formItems.signedTransaction)
 
     // - set fee and return
-    view.values.set('maxFee', UInt64.fromUint(formItems.maxFee))
-    return view
+    this.values.set('maxFee', UInt64.fromUint(formItems.maxFee))
+    return this
   }
 
   /**
@@ -76,24 +73,21 @@ export class ViewHashLockTransaction extends TransactionView<HashLockTransaction
    * @returns {ViewHashLockTransaction}
    */
   public use(transaction: HashLockTransaction): ViewHashLockTransaction {
-    // - instantiate new transaction view
-    const view = new ViewHashLockTransaction(this.$store)
-
     // - set transaction
-    view.transaction = transaction
+    this.transaction = transaction
 
     // - populate common values
-    view.initialize(transaction)
+    this.initialize(transaction)
 
     // get attached mosaic
     const [mosaic]: AttachedMosaic[] = new MosaicService(this.$store)
       .getAttachedMosaicsFromMosaics([transaction.mosaic])
     
     // - prepare
-    view.values.set('mosaic', mosaic)
-    view.values.set('duration', transaction.duration.compact())
-    view.values.set('signedTransaction', transaction.signedTransaction)
+    this.values.set('mosaic', mosaic)
+    this.values.set('duration', transaction.duration.compact())
+    this.values.set('signedTransaction', transaction.signedTransaction)
 
-    return view
+    return this
   }
 }

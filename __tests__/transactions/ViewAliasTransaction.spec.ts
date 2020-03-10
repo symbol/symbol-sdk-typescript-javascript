@@ -13,36 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Deadline, NetworkType, PlainMessage, TransferTransaction, UInt64, TransactionType} from 'symbol-sdk'
+import {Deadline, NetworkType, UInt64, NamespaceId, AliasAction, TransactionType, MosaicId, MosaicAliasTransaction} from 'symbol-sdk'
 import {createStore} from '@MOCKS/Store'
 import {getTestAccount} from '@MOCKS/accounts'
 import {getFakeTransaction} from '@MOCKS/Transactions'
-import {TransferFormFieldsType, ViewTransferTransaction} from '@/core/transactions/ViewTransferTransaction'
+import {AliasFormFieldsType, ViewAliasTransaction} from '@/core/transactions/ViewAliasTransaction'
 
 const store = createStore({})
 
-describe('transactions/ViewTransferTransaction', () => {
+describe('transactions/ViewAliasTransaction', () => {
   describe('use() should', () => {
     test('populate transfer transaction fields', () => {
       // prepare
-      const view = new ViewTransferTransaction(store)
-      const transfer2 = getFakeTransaction(TransactionType.TRANSFER, {
+      const view = new ViewAliasTransaction(store)
+      const alias = getFakeTransaction(TransactionType.MOSAIC_ALIAS, {
         deadline: Deadline.create(),
         networkType: NetworkType.TEST_NET,
-        recipient: getTestAccount('cosigner1').address,
-        mosaics: [],
-        message: PlainMessage.create('ViewTransferTransaction')
-      }) as TransferTransaction
+        namespaceId: new NamespaceId('symbol.xym'),
+        aliasAction: AliasAction.Link,
+        mosaicId: new MosaicId('747B276C30626442'),
+      }) as MosaicAliasTransaction
 
       // act
-      view.use(transfer2)
+      view.use(alias)
 
       // assert
       expect(view).toBeDefined()
       expect(view.transaction).toBeDefined()
-      expect(view.values.has('recipient')).toBe(true)
-      expect(view.values.has('mosaics')).toBe(true)
-      expect(view.values.has('message')).toBe(true)
+      expect(view.values.has('namespaceId')).toBe(true)
+      expect(view.values.has('aliasTarget')).toBe(true)
+      expect(view.values.has('aliasAction')).toBe(true)
     })
 
     //XXX test recognition of Namespace vs Address for recipient
@@ -52,11 +52,12 @@ describe('transactions/ViewTransferTransaction', () => {
   describe('parse() should', () => {
     test('populate transfer transaction fields', () => {
       // prepare
-      const view = new ViewTransferTransaction(store)
-      const formItems: TransferFormFieldsType = {
-        recipient: getTestAccount('cosigner1').address,
-        mosaics: [],
-        message: 'ViewTransferTransaction',
+      const symbol = new NamespaceId('symbol.xym')
+      const view = new ViewAliasTransaction(store)
+      const formItems: AliasFormFieldsType = {
+        namespaceId: symbol,
+        aliasTarget: getTestAccount('cosigner1').address,
+        aliasAction: AliasAction.Unlink,
         maxFee: UInt64.fromUint(0),
       }
 
@@ -65,11 +66,12 @@ describe('transactions/ViewTransferTransaction', () => {
 
       // assert
       expect(view.values).toBeDefined()
-      expect(view.values.has('recipient')).toBe(true)
-      expect(view.values.has('mosaics')).toBe(true)
-      expect(view.values.has('message')).toBe(true)
-      expect(view.values.get('recipient').plain()).toBe(getTestAccount('cosigner1').address.plain())
-      expect(view.values.get('message').payload).toBe('ViewTransferTransaction')
+      expect(view.values.has('namespaceId')).toBe(true)
+      expect(view.values.has('aliasTarget')).toBe(true)
+      expect(view.values.has('aliasAction')).toBe(true)
+      expect(view.values.get('namespaceId').toHex()).toBe(symbol.toHex())
+      expect(view.values.get('aliasTarget').plain()).toBe(getTestAccount('cosigner1').address.plain())
+      expect(view.values.get('aliasAction')).toBe(AliasAction.Unlink)
     })
   })
 })

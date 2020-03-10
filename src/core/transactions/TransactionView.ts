@@ -17,9 +17,6 @@
 import {Store} from 'vuex'
 import {Transaction, TransactionInfo} from 'symbol-sdk'
 
-// internal dependencies
-import {AppStore} from '@/app/AppStore'
-
 export abstract class TransactionView<FormFieldsType> {
 
   /**
@@ -71,7 +68,7 @@ export abstract class TransactionView<FormFieldsType> {
    * Construct a transaction view around \a store
    * @param {Store<any>} store 
    */
-  public constructor(store: Store<any> = AppStore) {
+  public constructor(store: Store<any>) {
     this.$store = store
     this.values = new Map<string, any>()
   }

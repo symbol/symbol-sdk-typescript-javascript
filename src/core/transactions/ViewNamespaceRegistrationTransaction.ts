@@ -47,18 +47,15 @@ export class ViewNamespaceRegistrationTransaction extends TransactionView<Namesp
    * @return {ViewNamespaceRegistrationTransaction}
    */
   public parse(formItems: NamespaceRegistrationFormFieldsType): ViewNamespaceRegistrationTransaction {
-    // - instantiate new transaction view
-    const view = new ViewNamespaceRegistrationTransaction(this.$store)
-
     // - parse form items to view values
-    view.values.set('rootNamespaceName', formItems.rootNamespaceName)
-    view.values.set('registrationType', formItems.registrationType)
-    view.values.set('subNamespaceName', formItems.subNamespaceName || null)
-    view.values.set('duration', formItems.duration ? UInt64.fromUint(formItems.duration) : null)
+    this.values.set('rootNamespaceName', formItems.rootNamespaceName)
+    this.values.set('registrationType', formItems.registrationType)
+    this.values.set('subNamespaceName', formItems.subNamespaceName || null)
+    this.values.set('duration', formItems.duration ? UInt64.fromUint(formItems.duration) : null)
 
     // - set fee and return
-    view.values.set('maxFee', formItems.maxFee)
-    return view
+    this.values.set('maxFee', formItems.maxFee)
+    return this
   }
 
   /**
@@ -67,33 +64,30 @@ export class ViewNamespaceRegistrationTransaction extends TransactionView<Namesp
    * @return {ViewNamespaceRegistrationTransaction}
    */
   public use(transaction: NamespaceRegistrationTransaction): ViewNamespaceRegistrationTransaction {
-    // - instantiate new transaction view
-    const view = new ViewNamespaceRegistrationTransaction(this.$store)
-
     // - set transaction
-    view.transaction = transaction
+    this.transaction = transaction
 
     // - populate common values
-    view.initialize(transaction)
+    this.initialize(transaction)
 
     // - read transaction fields
     if (NamespaceRegistrationType.RootNamespace === transaction.registrationType) {
-      view.values.set('rootNamespaceName', transaction.namespaceName)
+      this.values.set('rootNamespaceName', transaction.namespaceName)
     }
     else {
-      view.values.set('subNamespaceName', transaction.namespaceName)
+      this.values.set('subNamespaceName', transaction.namespaceName)
 
       // - try to identify root namespace by id
       const parentId = transaction.parentId
       const namespaceNames = this.$store.getters['namespace/namespacesNames']
       if (namespaceNames.hasOwnProperty(parentId.toHex())) {
-        view.values.set('rootNamespaceName', namespaceNames[parentId.toHex()])
+        this.values.set('rootNamespaceName', namespaceNames[parentId.toHex()])
       }
     }
 
     // - set type and duration
-    view.values.set('registrationType', transaction.registrationType)
-    view.values.set('duration', transaction.duration || null)
-    return view
+    this.values.set('registrationType', transaction.registrationType)
+    this.values.set('duration', transaction.duration || null)
+    return this
   }
 }

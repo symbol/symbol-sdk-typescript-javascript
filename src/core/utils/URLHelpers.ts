@@ -38,18 +38,18 @@ export class URLHelpers {
   }
 
   public static completeUrlWithHostAndProtocol(inputNodeValue: string): string {
-    const numberOfColon = inputNodeValue.match(/:/img) ? inputNodeValue.match(/:/img).length : 0
-    const pointIndex = inputNodeValue.indexOf('.')
-    const colonIndex = inputNodeValue.indexOf(':')
-    if (numberOfColon >= 2) return inputNodeValue
-    if (numberOfColon === 0) {
-      return `http://${inputNodeValue}:3000`
+
+    const protocolIdx = inputNodeValue.indexOf('http')
+
+    let out: string = inputNodeValue
+    if (-1 === protocolIdx) {
+      out = 'http://' + out
     }
-    if (pointIndex > colonIndex) {
-      return `${inputNodeValue}:3000`
+
+    if (-1 === inputNodeValue.indexOf(':', protocolIdx+6)) {
+      out = out + ':3000'
     }
-    if (pointIndex < colonIndex) {
-      return `http://${inputNodeValue}`
-    }
+
+    return out
   }
 }

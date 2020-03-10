@@ -40,12 +40,9 @@ export class ViewUnknownTransaction extends TransactionView<UnknownTransactionFo
    * @return {ViewUnknownTransaction}
    */
   public parse(formItems: UnknownTransactionFormFields): ViewUnknownTransaction {
-    // - instantiate new transaction view
-    const view = new ViewUnknownTransaction(this.$store)
-
     // - set fee and return
-    view.values.set('maxFee', formItems.maxFee)
-    return view
+    this.values.set('maxFee', formItems.maxFee)
+    return this
   }
 
   /**
@@ -54,14 +51,11 @@ export class ViewUnknownTransaction extends TransactionView<UnknownTransactionFo
    * @return {ViewUnknownTransaction}
    */
   public use(transaction: Transaction): ViewUnknownTransaction {
-    // - instantiate new transaction view
-    const view = new ViewUnknownTransaction(this.$store)
-
     // - set transaction
-    view.transaction = transaction
+    this.transaction = transaction
 
     // - populate common values
-    view.initialize(transaction)
-    return view
+    this.initialize(transaction)
+    return this
   }
 }

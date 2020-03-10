@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Transaction, TransferTransaction, UInt64, Deadline, EmptyMessage, NetworkType} from 'symbol-sdk'
+import {Transaction, TransferTransaction, UInt64, Deadline, EmptyMessage, NetworkType, TransactionType, MosaicAliasTransaction, AliasAction, NamespaceId, MosaicId} from 'symbol-sdk'
 import {TransactionView} from '@/core/transactions/TransactionView'
 import {getTestAccount} from '@MOCKS/accounts'
 
@@ -37,12 +37,9 @@ export class FakeTransactionView extends TransactionView<DummyTransactionFormFie
    * @return {FakeTransactionView}
    */
   public parse(formItems: DummyTransactionFormFields): FakeTransactionView {
-    // - instantiate new transaction view
-    const view = new FakeTransactionView(this.$store)
-
     // - set fee and return
-    view.values.set('maxFee', formItems.maxFee)
-    return view
+    this.values.set('maxFee', formItems.maxFee)
+    return this
   }
 
   /**
@@ -51,15 +48,12 @@ export class FakeTransactionView extends TransactionView<DummyTransactionFormFie
    * @return {FakeTransactionView}
    */
   public use(transaction: Transaction): FakeTransactionView {
-    // - instantiate new transaction view
-    const view = new FakeTransactionView(this.$store)
-
     // - set transaction
-    view.transaction = transaction
+    this.transaction = transaction
 
     // - populate common values
-    view.initialize(transaction)
-    return view
+    this.initialize(transaction)
+    return this
   }
 }
 /// end-region mocks
@@ -69,7 +63,26 @@ export class FakeTransactionView extends TransactionView<DummyTransactionFormFie
  * Mock transfer transaction
  * @return {Transaction}
  */
-export const getFakeTransaction = (data: any = undefined): Transaction => {
+export const getFakeTransaction = (type: number, data: any = undefined): Transaction => {
+  switch(type) {
+    default:
+    case TransactionType.MOSAIC_ALIAS: return getFakeMosaicAliasTransaction(data)
+    case TransactionType.TRANSFER: return getFakeTransferTransaction(data)
+  }
+}
+
+export const getFakeMosaicAliasTransaction = (data: any = undefined): MosaicAliasTransaction => {
+  return MosaicAliasTransaction.create(
+    data && data.deadline ? data.deadline : Deadline.create(),
+    data && data.aliasAction ? data.aliasAction : AliasAction.Link,
+    data && data.namespaceId ? data.namespaceId : new NamespaceId('symbol.xym'),
+    data && data.mosaicId ? data.mosaicId : new MosaicId('747B276C30626442'),
+    data && data.networkType ? data.networkType : NetworkType.TEST_NET,
+    data && data.hasOwnProperty('maxFee') ? data.maxFee : UInt64.fromUint(1234)
+  )
+}
+
+export const getFakeTransferTransaction = (data: any = undefined): TransferTransaction => {
   return TransferTransaction.create(
     data && data.deadline ? data.deadline : Deadline.create(),
     data && data.recipient ? data.recipient : getTestAccount('cosigner1').address,

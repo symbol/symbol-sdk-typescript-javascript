@@ -59,12 +59,9 @@ export class ViewMultisigAccountModificationTransaction extends TransactionView<
    * @return {ViewMultisigAccountModificationTransaction}
    */
   public parse(formItems: MultisigAccountModificationFormFieldsType): ViewMultisigAccountModificationTransaction {
-    // - instantiate new transaction view
-    const view = new ViewMultisigAccountModificationTransaction(this.$store)
-
     // set approval and removal deltas
-    view.values.set('minApprovalDelta', formItems.minApprovalDelta)
-    view.values.set('minRemovalDelta', formItems.minRemovalDelta)
+    this.values.set('minApprovalDelta', formItems.minApprovalDelta)
+    this.values.set('minRemovalDelta', formItems.minRemovalDelta)
 
     // get public keys additions and deletions
     const publicKeyAdditions = Object
@@ -79,12 +76,12 @@ export class ViewMultisigAccountModificationTransaction extends TransactionView<
 
 
     // set public keys additions and deletions
-    view.values.set('publicKeyAdditions', publicKeyAdditions)
-    view.values.set('publicKeyDeletions', publicKeyDeletions)
+    this.values.set('publicKeyAdditions', publicKeyAdditions)
+    this.values.set('publicKeyDeletions', publicKeyDeletions)
 
     // - set fee and return
-    view.values.set('maxFee', UInt64.fromUint(formItems.maxFee))
-    return view
+    this.values.set('maxFee', UInt64.fromUint(formItems.maxFee))
+    return this
   }
 
   /**
@@ -93,23 +90,20 @@ export class ViewMultisigAccountModificationTransaction extends TransactionView<
    * @returns {ViewMultisigAccountModificationTransaction}
    */
   public use(transaction: MultisigAccountModificationTransaction): ViewMultisigAccountModificationTransaction {
-    // - instantiate new transaction view
-    const view = new ViewMultisigAccountModificationTransaction(this.$store)
-
     // - set transaction
-    view.transaction = transaction
+    this.transaction = transaction
 
     // - populate common values
-    view.initialize(transaction)
+    this.initialize(transaction)
 
     // set approval and removal deltas
-    view.values.set('minApprovalDelta', transaction.minApprovalDelta)
-    view.values.set('minRemovalDelta', transaction.minRemovalDelta)
+    this.values.set('minApprovalDelta', transaction.minApprovalDelta)
+    this.values.set('minRemovalDelta', transaction.minRemovalDelta)
 
     // set public keys additions and deletions
-    view.values.set('publicKeyAdditions', transaction.publicKeyAdditions)
-    view.values.set('publicKeyDeletions', transaction.publicKeyDeletions)
+    this.values.set('publicKeyAdditions', transaction.publicKeyAdditions)
+    this.values.set('publicKeyDeletions', transaction.publicKeyDeletions)
 
-    return view
+    return this
   }
 }

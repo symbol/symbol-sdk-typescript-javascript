@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Deadline, NetworkType} from 'symbol-sdk'
+import {Deadline, NetworkType, TransactionType} from 'symbol-sdk'
 import {createStore} from '@MOCKS/Store'
 import {FakeTransactionView, getFakeTransaction} from '@MOCKS/Transactions'
 
 const store = createStore({})
-const transfer = getFakeTransaction({})
+const transfer = getFakeTransaction(TransactionType.TRANSFER, {})
 
 describe('transactions/TransactionView', () => {
   describe('constructor() should', () => {
@@ -36,7 +36,7 @@ describe('transactions/TransactionView', () => {
   describe('use() should', () => {
     test('set transaction property', () => {
       // prepare
-      const view = new FakeTransactionView(store)
+      let view = new FakeTransactionView(store)
 
       // act
       view.use(transfer)
@@ -67,7 +67,7 @@ describe('transactions/TransactionView', () => {
     test('populate common transaction fields correctly', () => {
       // prepare
       const deadline = Deadline.create()
-      const transfer2 = getFakeTransaction({
+      const transfer2 = getFakeTransaction(TransactionType.TRANSFER, {
         deadline,
         networkType: NetworkType.TEST_NET
       })
@@ -80,7 +80,7 @@ describe('transactions/TransactionView', () => {
       expect(view).toBeDefined()
       expect(view.values).toBeDefined()
       expect(view.values.size).toBe(5)
-      expect(view.values.get('signature')).toBe('')
+      expect(view.values.get('signature')).toBe(undefined)
       expect(view.values.get('networkType')).toBe(NetworkType.TEST_NET)
       expect(view.values.get('deadline').value).toBe(deadline.value)
     })

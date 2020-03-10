@@ -45,17 +45,14 @@ export class ViewMosaicSupplyChangeTransaction extends TransactionView<MosaicSup
    * @return {ViewMosaicSupplyChangeTransaction}
    */
   public parse(formItems: MosaicSupplyChangeFormFieldsType): ViewMosaicSupplyChangeTransaction {
-    // - instantiate new transaction view
-    const view = new ViewMosaicSupplyChangeTransaction(this.$store)
-
     // - parse form items to view values
-    view.values.set('mosaicId', formItems.mosaicId)
-    view.values.set('action', formItems.action)
-    view.values.set('delta', formItems.delta)
+    this.values.set('mosaicId', formItems.mosaicId)
+    this.values.set('action', formItems.action)
+    this.values.set('delta', formItems.delta)
 
     // - set fee and return
-    view.values.set('maxFee', formItems.maxFee)
-    return view
+    this.values.set('maxFee', formItems.maxFee)
+    return this
   }
 
   /**
@@ -64,19 +61,16 @@ export class ViewMosaicSupplyChangeTransaction extends TransactionView<MosaicSup
    * @return {ViewMosaicSupplyChangeTransaction}
    */
   public use(transaction: MosaicSupplyChangeTransaction): ViewMosaicSupplyChangeTransaction {
-    // - instantiate new transaction view
-    const view = new ViewMosaicSupplyChangeTransaction(this.$store)
-
     // - set transaction
-    view.transaction = transaction
+    this.transaction = transaction
 
     // - populate common values
-    view.initialize(transaction)
+    this.initialize(transaction)
 
     // - read transaction fields
-    view.values.set('mosaicId', transaction.mosaicId)
-    view.values.set('action', transaction.action)
-    view.values.set('delta', transaction.delta)
-    return view
+    this.values.set('mosaicId', transaction.mosaicId)
+    this.values.set('action', transaction.action)
+    this.values.set('delta', transaction.delta)
+    return this
   }
 }

@@ -54,7 +54,7 @@ const generatedAddresses = new WalletService().getAddressesFromMnemonic(
   2
 )
 
-describe('services/WalletServices ==>', () => {
+describe('services/WalletServices', () => {
   describe('generateAccountsFromMnemonic() should', () => {
     test('generate correct child account given mnemonic', () => {
       expect(generatedAccounts).toBeDefined()

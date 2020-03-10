@@ -50,11 +50,8 @@ export class ViewTransferTransaction extends TransactionView<TransferFormFieldsT
    * @return {ViewTransferTransaction}
    */
   public parse(formItems: TransferFormFieldsType): ViewTransferTransaction {
-    // - instantiate new transaction view
-    const view = new ViewTransferTransaction(this.$store)
-
     // - set recipient from form field (no formatting needed)
-    view.values.set('recipient', formItems.recipient)
+    this.values.set('recipient', formItems.recipient)
 
     // - set mosaics from form fields (requires divisibility info)
     const mosaics: Mosaic[] = []
@@ -77,17 +74,17 @@ export class ViewTransferTransaction extends TransactionView<TransferFormFieldsT
       })
     }
 
-    view.values.set('mosaics', mosaics)
+    this.values.set('mosaics', mosaics)
 
     // - set message empty or populate
-    view.values.set('message', EmptyMessage)
+    this.values.set('message', EmptyMessage)
     if (formItems.message && formItems.message.length) {
-      view.values.set('message', PlainMessage.create(formItems.message))
+      this.values.set('message', PlainMessage.create(formItems.message))
     }
 
     // - set fee and return
-    view.values.set('maxFee', formItems.maxFee)
-    return view
+    this.values.set('maxFee', formItems.maxFee)
+    return this
   }
 
   /**
@@ -96,26 +93,23 @@ export class ViewTransferTransaction extends TransactionView<TransferFormFieldsT
    * @return {ViewTransferTransaction}
    */
   public use(transaction: TransferTransaction): ViewTransferTransaction {
-    // - instantiate new transaction view
-    const view = new ViewTransferTransaction(this.$store)
-
     // - set transaction
-    view.transaction = transaction
+    this.transaction = transaction
 
     // - populate common values
-    view.initialize(transaction)
+    this.initialize(transaction)
 
     // - map recipient
-    view.values.set('recipient', transaction.recipientAddress)
+    this.values.set('recipient', transaction.recipientAddress)
 
     // - set mosaics (RELATIVE amount)
-    view.values.set(
+    this.values.set(
       'mosaics',
       new MosaicService(this.$store).getAttachedMosaicsFromMosaics(transaction.mosaics),
     )
 
     // - set message
-    view.values.set('message', transaction.message)
-    return view
+    this.values.set('message', transaction.message)
+    return this
   }
 }

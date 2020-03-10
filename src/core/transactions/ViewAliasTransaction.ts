@@ -48,17 +48,14 @@ export class ViewAliasTransaction extends TransactionView<AliasFormFieldsType> {
    * @return {ViewAliasTransaction}
    */
   public parse(formItems: AliasFormFieldsType): ViewAliasTransaction {
-    // - instantiate new transaction view
-    const view = new ViewAliasTransaction(this.$store)
-
     // - parse form items to view values
-    view.values.set('namespaceId', formItems.namespaceId)
-    view.values.set('aliasTarget', formItems.aliasTarget)
-    view.values.set('aliasAction', formItems.aliasAction)
+    this.values.set('namespaceId', formItems.namespaceId)
+    this.values.set('aliasTarget', formItems.aliasTarget)
+    this.values.set('aliasAction', formItems.aliasAction)
 
     // - set fee and return
-    view.values.set('maxFee', formItems.maxFee)
-    return view
+    this.values.set('maxFee', formItems.maxFee)
+    return this
   }
 
   /**
@@ -67,29 +64,26 @@ export class ViewAliasTransaction extends TransactionView<AliasFormFieldsType> {
    * @return {ViewAliasTransaction}
    */
   public use(transaction: MosaicAliasTransaction | AddressAliasTransaction): ViewAliasTransaction {
-    // - instantiate new transaction view
-    const view = new ViewAliasTransaction(this.$store)
-
     // - set transaction
-    view.transaction = transaction
+    this.transaction = transaction
 
     // - populate common values
-    view.initialize(transaction)
+    this.initialize(transaction)
 
     if (transaction instanceof AddressAliasTransaction) {
       // - read transaction fields if transaction is an address alias transaction
-      view.values.set('namespaceId', transaction.namespaceId)
-      view.values.set('aliasTarget', transaction.address)
-      view.values.set('aliasAction', transaction.aliasAction)
+      this.values.set('namespaceId', transaction.namespaceId)
+      this.values.set('aliasTarget', transaction.address)
+      this.values.set('aliasAction', transaction.aliasAction)
     }
 
     if (transaction instanceof MosaicAliasTransaction) {
       // - read transaction fields if transaction is a mosaic alias transaction
-      view.values.set('namespaceId', transaction.namespaceId)
-      view.values.set('aliasTarget', transaction.mosaicId)
-      view.values.set('aliasAction', transaction.aliasAction)
+      this.values.set('namespaceId', transaction.namespaceId)
+      this.values.set('aliasTarget', transaction.mosaicId)
+      this.values.set('aliasAction', transaction.aliasAction)
     }
 
-    return view
+    return this
   }
 }

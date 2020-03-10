@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {shallowMount, createLocalVue} from '@vue/test-utils'
 import Vuex from 'vuex'
+
+const localVue = createLocalVue()
+localVue.use(Vuex)
 
 /**
  * Create a fake store

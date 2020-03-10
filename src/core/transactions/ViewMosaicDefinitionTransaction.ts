@@ -50,19 +50,16 @@ export class ViewMosaicDefinitionTransaction extends TransactionView<MosaicDefin
    * @return {ViewMosaicDefinitionTransaction}
    */
   public parse(formItems: MosaicDefinitionFormFieldsType): ViewMosaicDefinitionTransaction {
-    // - instantiate new transaction view
-    const view = new ViewMosaicDefinitionTransaction(this.$store)
-
     // - parse form items to view values
-    view.values.set('nonce', formItems.nonce)
-    view.values.set('mosaicId', formItems.mosaicId)
-    view.values.set('mosaicFlags', formItems.mosaicFlags)
-    view.values.set('divisibility', formItems.divisibility)
-    view.values.set('duration', formItems.permanent ? undefined : UInt64.fromUint(formItems.duration))
+    this.values.set('nonce', formItems.nonce)
+    this.values.set('mosaicId', formItems.mosaicId)
+    this.values.set('mosaicFlags', formItems.mosaicFlags)
+    this.values.set('divisibility', formItems.divisibility)
+    this.values.set('duration', formItems.permanent ? undefined : UInt64.fromUint(formItems.duration))
 
     // - set fee and return
-    view.values.set('maxFee', formItems.maxFee)
-    return view
+    this.values.set('maxFee', formItems.maxFee)
+    return this
   }
 
   /**
@@ -71,24 +68,21 @@ export class ViewMosaicDefinitionTransaction extends TransactionView<MosaicDefin
    * @return {ViewMosaicDefinitionTransaction}
    */
   public use(transaction: MosaicDefinitionTransaction): ViewMosaicDefinitionTransaction {
-    // - instantiate new transaction view
-    const view = new ViewMosaicDefinitionTransaction(this.$store)
-
     // - set transaction
-    view.transaction = transaction
+    this.transaction = transaction
 
     // - populate common values
-    view.initialize(transaction)
+    this.initialize(transaction)
 
     // - read transaction fields
-    view.values.set('nonce', transaction.nonce)
-    view.values.set('mosaicId', transaction.mosaicId)
-    view.values.set('mosaicFlags', transaction.flags)
-    view.values.set('divisibility', transaction.divisibility)
+    this.values.set('nonce', transaction.nonce)
+    this.values.set('mosaicId', transaction.mosaicId)
+    this.values.set('mosaicFlags', transaction.flags)
+    this.values.set('divisibility', transaction.divisibility)
 
     // - set duration if applying
     const isPermanent = 0 === transaction.duration.compact()
-    view.values.set('duration', isPermanent ? undefined : transaction.duration)
-    return view
+    this.values.set('duration', isPermanent ? undefined : transaction.duration)
+    return this
   }
 }
