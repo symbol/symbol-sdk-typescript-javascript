@@ -16,14 +16,12 @@ script:
   - touch ./ts-docs/.nojekyll
   - if [ "$TRAVIS_NODE_VERSION" = "8" ]; then npm run coveralls-report; fi
 deploy:
-  - provider: pages
+  - provider: script
     skip_cleanup: true
-    local_dir: ts-docs
-    keep_history: true
-    github_token: $GITHUB_TOKEN
+    script: /bin/sh travis/github-pages.sh
     on:
       branch: master
-      node_js: "8"
+      node_js: "9"
   - provider: script
     skip_cleanup: true
     script: /bin/sh travis/uploadArchives.sh
