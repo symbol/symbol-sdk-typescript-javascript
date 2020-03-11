@@ -50,6 +50,7 @@ export enum NotificationType {
   LOADING = 'Loading',
   MAX_APPROVAL_MORE_THAN_10_ERROR = 'max_approval_amount_more_than_10',
   MAX_REMOVAL_MORE_THAN_10_ERROR = 'max_removal_amount_more_than_10',
+  TOO_MANY_SEED_WALLETS_ERROR = 'error_too_many_seed_wallets',
   MIN_APPROVAL_LESS_THAN_0_ERROR = 'min_approval_amount_less_than_0',
   MIN_REMOVAL_LESS_THAN_0_ERROR = 'min_removal_amount_less_than_0',
   MNEMONIC_GENERATION_ERROR = 'mnemonic_generation_error',

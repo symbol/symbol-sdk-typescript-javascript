@@ -18,6 +18,7 @@ import {Store} from 'vuex'
 // internal dependencies
 import {AbstractService} from './AbstractService'
 import {DerivationPathValidator} from '@/core/validation/validators'
+import {WalletService} from '@/services/WalletService'
 
 export enum DerivationPathLevels {
   Purpose = 1,
@@ -90,6 +91,46 @@ export class DerivationService extends AbstractService {
       }
       return '' + next + '\''
     }).join('/')
+  }
+
+  /**
+   * Returns the first missing consecutive account path in a path array
+   * @param {string[]} paths
+   * @returns {string}
+   */
+  public getNextAccountPath(paths: string[]): string {
+    const defaultPath = WalletService.DEFAULT_WALLET_PATH
+
+    // return the default path if no path in the array
+    if (!paths.length) return defaultPath
+
+    // return the default path if it is not in the array
+    if (paths.indexOf(defaultPath) === -1) return defaultPath
+
+    // get the sorted path indexes for the given derivation path level
+    const pathsSortedByIndexes = paths
+      .map(path => ({
+        path,
+        pathIndex: parseInt(path.split('/')[DerivationPathLevels.Account], 10),
+      }))
+      .sort((a, b) => a.pathIndex - b.pathIndex)
+
+    // get the first non consecutive path index
+    const firstCandidate = pathsSortedByIndexes
+      // fill an array with indexes with no consecutive next index, and the last index
+      .filter(({pathIndex}, i, self) => {
+        // the last path is always a candidate
+        if (i === self.length - 1) return true
+
+        // next path is not consecutive, add it to candidates
+        if (self[i + 1].pathIndex !== pathIndex + 1) return true
+
+        // next path is consecutive, skip
+        return false
+      }).find(path => path) // find the first candidate
+    
+    // return path incremented from the first candidate
+    return this.incrementPathLevel(firstCandidate.path, DerivationPathLevels.Account)
   }
 
   /**

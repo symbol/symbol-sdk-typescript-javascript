@@ -958,6 +958,7 @@
   "error_peer_connection_went_wrong": "Something went wrong when connecting to the node {peerUrl} timed out",
   "error_incorrect_url": "This is not a valid URL",
   "error_delete_all_peers": "You can not delete all the nodes",
+  "error_too_many_seed_wallets": "You cannot create more than {maxSeedWalletsNumber} child wallets",
   "success_account_unlocked": "Account unlocked successfully",
   "success_password_changed": "Your password was updated successfully. You will now be logged out.",
   "success_settings_updated": "Your settings have been updated successfully.",

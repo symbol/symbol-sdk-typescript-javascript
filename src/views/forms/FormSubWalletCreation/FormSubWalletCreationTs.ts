@@ -21,7 +21,7 @@ import { MnemonicPassPhrase } from 'symbol-hd-wallets'
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {DerivationPathLevels, DerivationService} from '@/services/DerivationService'
+import {DerivationService} from '@/services/DerivationService'
 import {AESEncryptionService} from '@/services/AESEncryptionService'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
@@ -39,6 +39,10 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 import FormRow from '@/components/FormRow/FormRow.vue'
 // @ts-ignore
 import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
+
+// configuration
+import appConfig from '@/../config/app.conf.json'
+const {MAX_SEED_WALLETS_NUMBER} = appConfig.constants
 
 @Component({
   components: {
@@ -154,7 +158,7 @@ export class FormSubWalletCreationTs extends Vue {
     this.isUnlockingAccount = f
   }
 
-  public get sortedKnownPaths(): string[] {
+  public get knownPaths(): string[] {
     if (!this.knownWallets || !this.knownWallets.length) {
       return []
     }
@@ -171,7 +175,7 @@ export class FormSubWalletCreationTs extends Vue {
       }),
     ).filter(
       w => w.path && w.path.length
-    ).map(w => w.path).sort()
+    ).map(w => w.path)
   }
 /// end-region computed properties getter/setter
 
@@ -220,6 +224,9 @@ export class FormSubWalletCreationTs extends Vue {
         break;
       }
 
+      // - return if subWallet is undefined
+      if (!subWallet) return
+
       // - remove password before GC
       this.currentPassword = null
 
@@ -256,20 +263,18 @@ export class FormSubWalletCreationTs extends Vue {
    * @param {string} childWalletName 
    * @return {WalletsModel}
    */
-  private deriveNextChildWallet(childWalletName: string): WalletsModel {
-    // - read all known paths
-    const knownPaths = this.sortedKnownPaths
+  private deriveNextChildWallet(childWalletName: string): WalletsModel | null {
+    // - don't allow creating more than 10 wallets
+    if (this.knownPaths.length >= MAX_SEED_WALLETS_NUMBER) { 
+      this.$store.dispatch(
+        'notification/ADD_ERROR',
+        this.$t(NotificationType.TOO_MANY_SEED_WALLETS_ERROR, {maxSeedWalletsNumber: MAX_SEED_WALLETS_NUMBER}),
+      )
+      return null
+    }
 
-    // - increment last path
-    const lastPath = knownPaths.pop()
-    let nextPath: string
-    try {
-      nextPath = this.paths.incrementPathLevel(lastPath, DerivationPathLevels.Account, 1)
-    }
-    // - or use default
-    catch(e) {
-      nextPath = WalletService.DEFAULT_WALLET_PATH
-    }
+    // - get next path
+    const nextPath = this.paths.getNextAccountPath(this.knownPaths)
 
     this.$store.dispatch('diagnostic/ADD_DEBUG', 'Adding child wallet with derivation path: ' + nextPath)
 
