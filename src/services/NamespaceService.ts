@@ -114,27 +114,45 @@ export class NamespaceService extends AbstractService {
   protected async fetchNamespaceInfo(
     namespaceId: NamespaceId 
   ): Promise<NamespacesModel> {
-    // - get network info from store
-    const generationHash = this.$store.getters['network/generationHash']
-
     // - fetch INFO from REST
     const namespaceInfo: NamespaceInfo = await this.$store.dispatch('namespace/REST_FETCH_INFO', namespaceId)
-    const namespaceIds: NamespaceId[] = namespaceInfo.levels.map(id => id)
 
-    // - fetch NAMES from REST
-    const namespaceNames: {hex: string, name: string}[] = await this.$store.dispatch('namespace/REST_FETCH_NAMES', namespaceIds)
-    const fullName = namespaceNames.find(({hex}) => hex === namespaceInfo.id.toHex()).name
+    // - update and return namespace model
+    return this.updateNamespace(namespaceInfo)
+  }
+
+  /**
+   * Update namespaces in database
+   * @param {NamespaceInfo[]} namespacesInfo
+   * @returns {Promise<void>}
+   */
+  public async updateNamespaces(namespacesInfo: NamespaceInfo[]): Promise<void> {
+    for (const namespaceInfo of namespacesInfo) await this.updateNamespace(namespaceInfo)
+  }
+
+  /**
+   * Update and return a namespace model
+   * @private
+   * @param {NamespaceInfo} namespaceInfo
+   * @returns {Promise<NamespacesModel>}
+   */
+  private async updateNamespace(namespaceInfo: NamespaceInfo): Promise<NamespacesModel> {
+    const hexId = namespaceInfo.id.toHex()
 
     // - use repository for storage
     const repository = new NamespacesRepository()
-    if (repository.find(namespaceId.toHex())) {
-      //XXX update instead of just read
-      return repository.read(namespaceId.toHex())
-    }
 
-    // - CREATE
+    // - get namespace model from database if it exists
+    const existingModel = repository.find(hexId) ? repository.read(hexId) : null
+
+    // - get namespace full name
+    const fullName = existingModel
+      ? existingModel.values.get('name')
+      : await this.getNamespaceFullName(namespaceInfo)
+
+    // - create model
     const namespace = repository.createModel(new Map<string, any>([
-      ['hexId', namespaceId.toHex()],
+      ['hexId', hexId],
       ['name', fullName],
       ['depth', namespaceInfo.depth],
       ['level0', namespaceInfo.levels[0].toHex()],
@@ -145,12 +163,29 @@ export class NamespaceService extends AbstractService {
       ['startHeight', namespaceInfo.startHeight.toHex()],
       ['endHeight', namespaceInfo.endHeight.toHex()],
       ['ownerPublicKey', namespaceInfo.owner.publicKey],
-      ['generationHash', generationHash],
+      ['generationHash', this.$store.getters['network/generationHash']],
     ]))
 
-    // - store and return
-    repository.create(namespace.values)
+    // - update the model in database if it exists...
+    if (existingModel) repository.update(hexId, namespace.values)
+    // ... or create a new model
+    if (!existingModel) repository.create(namespace.values)
+
     return namespace
+  }
+
+  /**
+   * Get a namespace full name from REST
+   * @private
+   * @param {NamespaceInfo} namespaceInfo
+   * @returns {Promise<string>}
+   */
+  private async getNamespaceFullName(namespaceInfo: NamespaceInfo): Promise<string> {
+    const namespaceIds: NamespaceId[] = namespaceInfo.levels.map(id => id)
+    const namespaceNames: {
+      hex: string, name: string,
+    }[] = await this.$store.dispatch('namespace/REST_FETCH_NAMES', namespaceIds)
+    return namespaceNames.find(({hex}) => hex === namespaceInfo.id.toHex()).name
   }
 
   /**

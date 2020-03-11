@@ -30,7 +30,6 @@ import {
   Mosaic,
   MosaicInfo,
   CosignatureSignedTransaction,
-  TransactionType,
   UInt64,
 } from 'symbol-sdk'
 import {Subscription} from 'rxjs'
@@ -42,6 +41,7 @@ import {AwaitLock} from './AwaitLock';
 import {BroadcastResult} from '@/core/transactions/BroadcastResult';
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import { RESTDispatcher } from '@/core/utils/RESTDispatcher';
+import {NamespaceService} from '@/services/NamespaceService';
 
 /**
  * Helper to format transaction group in name of state variable.
@@ -720,7 +720,7 @@ export default {
           await dispatch('ADD_TRANSACTION', { address, group, transaction })
         }
 
-        // fetch block informations if necessary
+        // fetch block information if necessary
         if (blockHeights.length) {
           // - non-blocking
           dispatch('network/REST_FETCH_BLOCKS', blockHeights, {root: true})
@@ -911,6 +911,8 @@ export default {
       }
     },
     async REST_FETCH_OWNED_NAMESPACES({commit, dispatch, getters, rootGetters}, address): Promise<NamespaceInfo[]> {
+      // @TODO: This method should be called by NamespaceService, like NamespaceService.fetchNamespaceInfo
+      // To be fixed that along with "Owned" namespaces getters (see below)
       if (!address || address.length !== 40) {
         return ;
       }
@@ -935,7 +937,15 @@ export default {
           addressObject, new QueryParams({pageSize: 100, order: Order.ASC}), 
         ).toPromise()
 
+        // return if no namespace found
+        if (!ownedNamespaces.length) return
+
+        // update namespaces in database
+        new NamespaceService(this).updateNamespaces(ownedNamespaces)
+
         // store multisig info
+        // @TODO: all namespaces should be stored in the same object
+        // "Owned" namespaces should be returned from it with a filter on the owner property 
         if (currentWallet && currentWallet.values.get('address') === address) {
           commit('currentWalletOwnedNamespaces', ownedNamespaces)
         }
