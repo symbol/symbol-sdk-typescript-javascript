@@ -147,6 +147,49 @@ describe('convert', () => {
         });
     });
 
+    describe('hexToUint8Reverse', () => {
+        it('can parse empty hex string into array', () => {
+            // Act:
+            const actual = convert.hexToUint8Reverse('');
+
+            // Assert:
+            const expected = Uint8Array.of();
+            expect(actual).to.deep.equal(expected);
+        });
+
+        it('can parse valid hex string into array', () => {
+            // Act:
+            const actual = convert.hexToUint8Reverse('026ee415fc15');
+
+            // Assert:
+            const expected = Uint8Array.of(0x15, 0xFC, 0x15, 0xE4, 0x6E, 0x02);
+            expect(actual).to.deep.equal(expected);
+        });
+
+        it('can parse valid hex string containing all valid hex characters into array', () => {
+            // Act:
+            const actual = convert.hexToUint8Reverse('abcdef0123456789ABCDEF');
+
+            // Assert:
+            const expected = Uint8Array.of(0xEF, 0xCD, 0xAB, 0x89, 0x67, 0x45, 0x23, 0x01, 0xEF, 0xCD, 0xAB);
+            expect(actual).to.deep.equal(expected);
+        });
+
+        it('cannot parse hex string with invalid characters into array', () => {
+            // Assert:
+            expect(() => {
+                convert.hexToUint8Reverse('abcdef012345G789ABCDEF');
+            }).to.throw('unrecognized hex char');
+        });
+
+        it('cannot parse hex string with invalid size into array', () => {
+            // Assert:
+            expect(() => {
+                convert.hexToUint8Reverse('abcdef012345G789ABCDE');
+            }).to.throw('hex string has unexpected size');
+        });
+    });
+
     describe('uint8ToHex', () => {
         it('can format empty array into hex string', () => {
             // Act:
