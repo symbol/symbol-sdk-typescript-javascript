@@ -35,10 +35,9 @@ export class IdGenerator {
     /**
      * Parses a unified namespace name into a path.
      * @param {string} name The unified namespace name.
-     * @param {number} maxDepth The max namespace depth (network configuration, default: 3)
      * @returns {array<module:coders/uint64~uint64>} The namespace path.
      */
-    public static generateNamespacePath = (name: string, maxDepth: number = idGeneratorConst.default_namespace_max_depth) => {
+    public static generateNamespacePath = (name: string) => {
         if (0 >= name.length) {
             utilities.throwInvalidFqn('having zero length', name);
         }
@@ -46,10 +45,10 @@ export class IdGenerator {
         const path = [];
         const start = utilities.split(name, (substringStart, size) => {
             namespaceId = utilities.generateNamespaceId(namespaceId, utilities.extractPartName(name, substringStart, size));
-            utilities.append(path, namespaceId, name, maxDepth);
+            utilities.append(path, namespaceId, name);
         });
         namespaceId = utilities.generateNamespaceId(namespaceId, utilities.extractPartName(name, start, name.length - start));
-        utilities.append(path, namespaceId, name, maxDepth);
+        utilities.append(path, namespaceId, name);
         return path;
     }
 }

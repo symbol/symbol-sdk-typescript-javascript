@@ -234,20 +234,10 @@ describe('id generator', () => {
             expect(idGenerator.generateNamespacePath('foo.bar.baz')).to.deep.equal(expected);
         });
 
-        it('rejects names with too many parts', () => {
-            // Assert:
-            ['a.b.c.d', 'a.b.c.d.e'].forEach((name) =>
-                expect(() => idGenerator.generateNamespacePath(name), `name ${name}`).to.throw('too many parts'));
-        });
-
         it('rejects improper qualified names', () => {
             // Assert:
             ['a:b:c', 'a::b'].forEach((name) =>
                 expect(() => idGenerator.generateNamespacePath(name), `name ${name}`).to.throw('invalid part name'));
-        });
-
-        it('rejects names depth exceeds maxDepth', () => {
-            expect(() => idGenerator.generateNamespacePath('nem.xem', 1)).to.throw(Error, 'too many parts');
         });
         addBasicTests(idGenerator.generateNamespacePath);
     });
