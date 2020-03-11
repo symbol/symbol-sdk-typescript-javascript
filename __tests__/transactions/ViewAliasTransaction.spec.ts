@@ -23,7 +23,7 @@ const store = createStore({})
 
 describe('transactions/ViewAliasTransaction', () => {
   describe('use() should', () => {
-    test('populate transfer transaction fields', () => {
+    test('populate mosaic alias transaction fields', () => {
       // prepare
       const view = new ViewAliasTransaction(store)
       const alias = getFakeTransaction(TransactionType.MOSAIC_ALIAS, {
@@ -50,7 +50,7 @@ describe('transactions/ViewAliasTransaction', () => {
   })
 
   describe('parse() should', () => {
-    test('populate transfer transaction fields', () => {
+    test('populate mosaic alias transaction fields', () => {
       // prepare
       const symbol = new NamespaceId('symbol.xym')
       const view = new ViewAliasTransaction(store)

@@ -13,7 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Transaction, TransferTransaction, UInt64, Deadline, EmptyMessage, NetworkType, TransactionType, MosaicAliasTransaction, AliasAction, NamespaceId, MosaicId} from 'symbol-sdk'
+import {
+  Transaction,
+  TransferTransaction,
+  UInt64,
+  Deadline,
+  EmptyMessage,
+  NetworkType,
+  TransactionType,
+  MosaicAliasTransaction,
+  AliasAction,
+  NamespaceId,
+  MosaicId,
+  Mosaic,
+  HashLockTransaction,
+  LockFundsTransaction,
+  AggregateTransaction,
+} from 'symbol-sdk'
 import {TransactionView} from '@/core/transactions/TransactionView'
 import {getTestAccount} from '@MOCKS/accounts'
 
@@ -66,9 +82,32 @@ export class FakeTransactionView extends TransactionView<DummyTransactionFormFie
 export const getFakeTransaction = (type: number, data: any = undefined): Transaction => {
   switch(type) {
     default:
+    case TransactionType.AGGREGATE_BONDED: return getFakeAggregateBondedTransaction(data)
     case TransactionType.MOSAIC_ALIAS: return getFakeMosaicAliasTransaction(data)
+    case TransactionType.HASH_LOCK: return getFakeHashLockTransaction(data)
     case TransactionType.TRANSFER: return getFakeTransferTransaction(data)
   }
+}
+
+export const getFakeAggregateBondedTransaction = (data: any = undefined): AggregateTransaction => {
+  return AggregateTransaction.createBonded(
+    data && data.deadline ? data.deadline : Deadline.create(),
+    data && data.transactions ? data.transactions : [],
+    data && data.networkType ? data.networkType : NetworkType.TEST_NET,
+    data && data.cosignatures ? data.cosignatures : [],
+    data && data.hasOwnProperty('maxFee') ? data.maxFee : UInt64.fromUint(1234)
+  )
+}
+
+export const getFakeHashLockTransaction = (data: any = undefined): HashLockTransaction => {
+  return LockFundsTransaction.create(
+    data && data.deadline ? data.deadline : Deadline.create(),
+    data && data.mosaic ? data.mosaic : new Mosaic(new NamespaceId('symbol.xym'), UInt64.fromUint(100)),
+    data && data.duration ? data.duration : UInt64.fromUint(1000),
+    data && data.parent ? data.parent : null,
+    data && data.networkType ? data.networkType : NetworkType.TEST_NET,
+    data && data.hasOwnProperty('maxFee') ? data.maxFee : UInt64.fromUint(1234)
+  )
 }
 
 export const getFakeMosaicAliasTransaction = (data: any = undefined): MosaicAliasTransaction => {

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 // external dependencies
-import { HashLockTransaction, SignedTransaction, MosaicId, UInt64, RawUInt64, Mosaic } from 'symbol-sdk'
+import { HashLockTransaction, SignedTransaction, MosaicId, UInt64, RawUInt64, Mosaic, MosaicInfo } from 'symbol-sdk'
 
 // internal dependencies
 import { TransactionView } from './TransactionView'
@@ -49,21 +49,31 @@ export class ViewHashLockTransaction extends TransactionView<HashLockTransaction
   public parse(formItems: HashLockTransactionFormFieldsType): ViewHashLockTransaction {
     // - prepare mosaic entry
     const mosaicsInfo = this.$store.getters['mosaic/mosaicsInfoList']
-    const mosaicInfo = mosaicsInfo.find(i => i.id.toHex() === formItems.mosaic.mosaicHex)
-    const mosaicDivisibility = mosaicInfo ? mosaicInfo.divisibility : 0
-    // - create mosaic object
-    const mosaic = new Mosaic(
-      new MosaicId(RawUInt64.fromHex(formItems.mosaic.mosaicHex)),
-      UInt64.fromUint(formItems.mosaic.amount * Math.pow(10, mosaicDivisibility)),
-    )
+    if (undefined !== mosaicsInfo) {
+      const mosaicInfo = mosaicsInfo.find(i => i.id.toHex() === formItems.mosaic.mosaicHex)
+      const mosaicDivisibility = mosaicInfo ? mosaicInfo.divisibility : 0
+      // - create mosaic object
+      const mosaic = new Mosaic(
+        new MosaicId(RawUInt64.fromHex(formItems.mosaic.mosaicHex)),
+        UInt64.fromUint(formItems.mosaic.amount * Math.pow(10, mosaicDivisibility)),
+      )
 
-    // - set values
-    this.values.set('mosaic', mosaic)
-    this.values.set('duration', UInt64.fromUint(formItems.duration))
+      // - set values
+      this.values.set('mosaic', mosaic)
+    }
+    // unknown mosaic info
+    else {
+      this.values.set('mosaic', new Mosaic(
+        new MosaicId(formItems.mosaic.mosaicHex),
+        UInt64.fromUint(formItems.mosaic.amount)
+      ))
+    }
+
+    this.values.set('duration', formItems.duration)
     this.values.set('signedTransaction', formItems.signedTransaction)
 
     // - set fee and return
-    this.values.set('maxFee', UInt64.fromUint(formItems.maxFee))
+    this.values.set('maxFee', formItems.maxFee)
     return this
   }
 
