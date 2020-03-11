@@ -106,8 +106,8 @@ export class TransactionRowTs extends Vue {
     // - transfers have specific incoming/outgoing icons
     if (view.transaction.type === this.transactionType.TRANSFER) {
       return view.values.get('isIncoming')
-        ? officialIcons.receive
-        : officialIcons.sent
+        ? officialIcons.incoming
+        : officialIcons.outgoing
     }
 
     // - otherwise use per-type icon

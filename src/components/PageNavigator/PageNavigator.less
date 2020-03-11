@@ -45,7 +45,7 @@
       text-align: center;
       display: grid;
       grid-template-columns: 100%;
-      grid-template-rows: 0.6rem 0.4rem;
+      grid-template-rows: 0.7rem 0.3rem;
       background-color: @white;
       cursor: pointer;
 
@@ -55,8 +55,10 @@
         height: 100%;
 
         .navigator-icon {
-          font-size: 0.5rem;
-          margin-top: .15rem;
+          font-size: 0.55rem;
+          margin-top: 0.10rem;
+          width: 0.55rem;
+          height: 0.55rem;
         }
         .ivu-icon {
           color: @purpleDark;
@@ -80,6 +82,9 @@
       cursor: not-allowed;
       .ivu-icon {
         color: @white !important;
+      }
+      .navigator-icon {
+        filter: brightness(0) invert(1);  
       }
     }
   }

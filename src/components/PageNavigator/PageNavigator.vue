@@ -12,7 +12,7 @@
         @click="!currentAccount ? '' : $router.push({name: route.name})"
       >
         <div class="navigator-icon-container">
-          <Icon :type="route.meta.icon" class="navigator-icon" />
+          <img :src="route.meta.icon" class="navigator-icon">
         </div>
         <div class="navigator-text-container">
           <div>{{ $t(route.meta.title) }}</div>

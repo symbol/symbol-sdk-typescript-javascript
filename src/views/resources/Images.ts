@@ -93,6 +93,8 @@ import aggregateTransaction from '@/views/resources/img/icons/aggregate-transact
 // @ts-ignore
 import alias from '@/views/resources/img/icons/alias.png'
 // @ts-ignore
+import apiNode from '@/views/resources/img/icons/api-node.png'
+// @ts-ignore
 import blockchainBlock from '@/views/resources/img/icons/blockchain-block.png'
 // @ts-ignore
 import blockchain from '@/views/resources/img/icons/blockchain.png'
@@ -262,6 +264,7 @@ export const officialIcons = {
   aggregate,
   aggregateTransaction,
   alias,
+  apiNode,
   blockchainBlock,
   blockchain,
   block,
@@ -324,7 +327,7 @@ export const officialIcons = {
 export const transactionTypeToIcon = {
   [TransactionType.NAMESPACE_REGISTRATION] : officialIcons.namespace,
   [TransactionType.ADDRESS_ALIAS] : officialIcons.alias,
-  [TransactionType.MOSAIC_ALIAS] : officialIcons.alias,
+  [TransactionType.MOSAIC_ALIAS] : officialIcons.namespace,
   [TransactionType.MOSAIC_DEFINITION] : officialIcons.mosaic,
   [TransactionType.MOSAIC_SUPPLY_CHANGE] : officialIcons.mosaic,
   [TransactionType.MULTISIG_ACCOUNT_MODIFICATION] : officialIcons.multipleParties,

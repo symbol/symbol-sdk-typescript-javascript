@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {createStepImage, importStepImage} from '@/views/resources/Images'
+import {createStepImage, importStepImage, officialIcons} from '@/views/resources/Images'
 import {AppRoute} from './AppRoute'
 
 export const routes: AppRoute[] = [
@@ -152,7 +152,7 @@ export const routes: AppRoute[] = [
           protected: true,
           clickable: true,
           title: 'sidebar_item_home',
-          icon: 'md-home',
+          icon: officialIcons.dashboard,
         },
         redirect: '/home',
         // @ts-ignore
@@ -206,7 +206,7 @@ export const routes: AppRoute[] = [
           protected: true,
           clickable: true,
           title: 'sidebar_item_wallets',
-          icon: 'md-card',
+          icon: officialIcons.wallet,
         },
         // @ts-ignore
         component: () => import('@/views/pages/wallets/Wallets.vue'),
@@ -250,7 +250,7 @@ export const routes: AppRoute[] = [
           protected: true,
           clickable: true,
           title: 'sidebar_item_mosaics',
-          icon: 'md-apps',
+          icon: officialIcons.mosaic,
         },
         // @ts-ignore
         component: () => import('@/views/pages/mosaics/MosaicsDashboardPage/MosaicsDashboardPage.vue'),
@@ -283,7 +283,7 @@ export const routes: AppRoute[] = [
           protected: true,
           clickable: true,
           title: 'sidebar_item_namespaces',
-          icon: 'md-text',
+          icon: officialIcons.namespace,
         },
         redirect: '/namespaceList',
         // @ts-ignore
@@ -317,7 +317,7 @@ export const routes: AppRoute[] = [
           protected: true,
           clickable: true,
           title: 'sidebar_item_multisig',
-          icon: 'md-contacts',
+          icon: officialIcons.multipleParties,
         },
         redirect: '/multisigManagement',
         // @ts-ignore
@@ -352,7 +352,7 @@ export const routes: AppRoute[] = [
           protected: true,
           clickable: true,
           title: 'sidebar_item_community',
-          icon: 'md-chatbubbles',
+          icon: officialIcons.news,
         },
         // @ts-ignore
         component: () => import('@/views/pages/community/Community.vue'),
@@ -374,7 +374,7 @@ export const routes: AppRoute[] = [
           protected: true,
           clickable: true,
           title: 'sidebar_item_settings',
-          icon: 'md-settings',
+          icon: officialIcons.apiNode,
         },
         // @ts-ignore
         component: () => import('@/views/pages/settings/Settings.vue'),
