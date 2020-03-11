@@ -19,7 +19,7 @@ import { IListener } from '../../src/infrastructure/IListener';
 import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
 import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
 import { Account } from '../../src/model/account/Account';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
 import { Transaction } from '../../src/model/transaction/Transaction';
 import { UInt64 } from '../../src/model/UInt64';
@@ -57,7 +57,8 @@ export class IntegrationTestHelper {
                     console.log(`Running tests against: ${json.apiUrl}`);
                     this.apiUrl = json.apiUrl;
                     this.repositoryFactory = new RepositoryFactoryHttp(json.apiUrl);
-                    this.transactionService = new TransactionService(this.repositoryFactory.createTransactionRepository(), this.repositoryFactory.createReceiptRepository());
+                    this.transactionService = new TransactionService(
+                        this.repositoryFactory.createTransactionRepository(), this.repositoryFactory.createReceiptRepository());
                     combineLatest(this.repositoryFactory.getGenerationHash(),
                         this.repositoryFactory.getNetworkType()).subscribe(([generationHash, networkType]) => {
                         this.networkType = networkType;

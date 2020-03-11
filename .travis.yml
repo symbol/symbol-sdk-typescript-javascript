@@ -10,20 +10,27 @@ before_script:
   - npm run build
 script:
   - npm run test:cov
-  - npm run coveralls-report
   - npm install --global typedoc
-  - typedoc --out ts-docs src
+  - CURRENT_VERSION=$(npm run version --silent)
+  - typedoc --out "ts-docs/$CURRENT_VERSION" src
   - touch ./ts-docs/.nojekyll
+  - if [ "$TRAVIS_NODE_VERSION" = "8" ]; then npm run coveralls-report; fi
 deploy:
-  - provider: pages
+  - provider: script
     skip_cleanup: true
-    local_dir: ts-docs
-    github_token: $GITHUB_TOKEN
+    script: /bin/sh travis/github-pages.sh
     on:
       branch: master
+      node_js: "9"
   - provider: script
     skip_cleanup: true
     script: /bin/sh travis/uploadArchives.sh
     on:
       branch: master
+      node_js: "8"
+  - provider: script
+    skip_cleanup: true
+    script: /bin/sh travis/release.sh
+    on:
+      branch: $RELEASE_BRANCH
       node_js: "8"

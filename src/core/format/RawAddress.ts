@@ -16,7 +16,7 @@
 
 import { sha3_256 } from 'js-sha3';
 import RIPEMD160 = require('ripemd160');
-import { NetworkType } from '../../model/blockchain/NetworkType';
+import { NetworkType } from '../../model/network/NetworkType';
 import { Base32 } from './Base32';
 import { Convert } from './Convert';
 import { RawArray } from './RawArray';

@@ -15,7 +15,7 @@
  */
 import {expect} from 'chai';
 
-import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import {NetworkType} from '../../../src/model/network/NetworkType';
 import {SignedTransaction} from '../../../src/model/transaction/SignedTransaction';
 import {TransactionType} from '../../../src/model/transaction/TransactionType';
 

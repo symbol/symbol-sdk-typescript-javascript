@@ -20,10 +20,10 @@ import { RestrictionAccountRepository } from '../../src/infrastructure/Restricti
 import { RestrictionMosaicRepository } from '../../src/infrastructure/RestrictionMosaicRepository';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { AccountRestrictionFlags } from '../../src/model/restriction/AccountRestrictionType';
 import { MosaicRestrictionEntryType } from '../../src/model/restriction/MosaicRestrictionEntryType';
 import { MosaicRestrictionType } from '../../src/model/restriction/MosaicRestrictionType';

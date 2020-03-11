@@ -16,14 +16,31 @@
 
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { NetworkRoutesApi } from 'symbol-openapi-typescript-node-client';
-import { NetworkFees } from '../model/blockchain/NetworkFees';
-import { NetworkName } from '../model/blockchain/NetworkName';
-import { NetworkType } from '../model/blockchain/NetworkType';
+import { NetworkConfigurationDTO, NetworkRoutesApi } from 'symbol-openapi-typescript-node-client';
+import { AccountLinkNetworkProperties } from '../model/network/AccountLinkNetworkProperties';
+import { AccountRestrictionNetworkProperties } from '../model/network/AccountRestrictionNetworkProperties';
+import { AggregateNetworkProperties } from '../model/network/AggregateNetworkProperties';
+import { ChainProperties } from '../model/network/ChainProperties';
+import { HashLockNetworkProperties } from '../model/network/HashLockNetworkProperties';
+import { MetadataNetworkProperties } from '../model/network/MetadataNetworkProperties';
+import { MosaicNetworkProperties } from '../model/network/MosaicNetworkProperties';
+import { MosaicRestrictionNetworkProperties } from '../model/network/MosaicRestrictionNetworkProperties';
+import { MultisigNetworkProperties } from '../model/network/MultisigNetworkProperties';
+import { NamespaceNetworkProperties } from '../model/network/NamespaceNetworkProperties';
+import { NetworkConfiguration } from '../model/network/NetworkConfiguration';
+import { NetworkName } from '../model/network/NetworkName';
+import { NetworkProperties } from '../model/network/NetworkProperties';
+import { NetworkType } from '../model/network/NetworkType';
+import { PluginProperties } from '../model/network/PluginProperties';
+import { RentalFees } from '../model/network/RentalFees';
+import { SecretLockNetworkProperties } from '../model/network/SecretLockNetworkProperties';
+import { TransactionFees } from '../model/network/TransactionFees';
+import { TransferNetworkProperties } from '../model/network/TransferNetworkProperties';
 import { NodeInfo } from '../model/node/NodeInfo';
 import { Http } from './Http';
 import { NetworkRepository } from './NetworkRepository';
 import { NodeHttp } from './NodeHttp';
+import { UInt64 } from '../model/UInt64';
 
 /**
  * Network http repository.
@@ -68,13 +85,80 @@ export class NetworkHttp extends Http implements NetworkRepository {
     }
 
     /**
+     * Returns the content from a catapult-server network configuration file (resources/config-network.properties).
+     * To enable this feature, the REST setting \"network.propertiesFilePath\" must define where the file is located.
+     * This is adjustable via the configuration file (rest/resources/rest.json) per REST instance.
+     * @summary Get the network properties
+     */
+    public getNetworkProperties(): Observable<NetworkConfiguration> {
+        return this.call(this.networkRoutesApi.getNetworkProperties(), (body) =>
+            this.mapNetworkConfigurationDto(body),
+        );
+    }
+
+    /**
+     * Returns the estimated effective rental fees for namespaces and mosaics. This endpoint is only available
+     * if the REST instance has access to catapult-server ``resources/config-network.properties`` file.
+     * To activate this feature, add the setting \"network.propertiesFilePath\" in the configuration file (rest/resources/rest.json).
+     * @summary Get rental fees information
+     */
+    public getRentalFees(): Observable<RentalFees> {
+        return this.call(this.networkRoutesApi.getRentalFees(), (body) =>
+            new RentalFees(UInt64.fromNumericString(body.effectiveRootNamespaceRentalFeePerBlock),
+                UInt64.fromNumericString(body.effectiveChildNamespaceRentalFee),
+                UInt64.fromNumericString(body.effectiveMosaicRentalFee)));
+    }
+
+    /**
      * Returns information about the average, median, highest and lower fee multiplier over the last
      * \"numBlocksTransactionFeeStats\". The setting \"numBlocksTransactionFeeStats\" is adjustable
      * via a configuration file (rest/resources/rest.json) per REST instance.
      * @summary Get transaction fees information
      */
-    public getNetworkFees(): Observable<NetworkFees> {
-        return this.call(this.networkRoutesApi.getNetworkFees(), (body) =>
-            new NetworkFees(body.averageFeeMultiplier, body.medianFeeMultiplier, body.highestFeeMultiplier, body.lowestFeeMultiplier));
+    public getTransactionFees(): Observable<TransactionFees> {
+        return this.call(this.networkRoutesApi.getTransactionFees(), (body) =>
+            new TransactionFees(body.averageFeeMultiplier, body.medianFeeMultiplier, body.highestFeeMultiplier, body.lowestFeeMultiplier));
+    }
+
+    /**
+     * Map dto to sdk models
+     * @param dto dto object returned from rest
+     */
+    private mapNetworkConfigurationDto(dto: NetworkConfigurationDTO): NetworkConfiguration {
+        return new NetworkConfiguration(
+            new NetworkProperties(dto.network.identifier, dto.network.nodeEqualityStrategy,
+                dto.network.publicKey, dto.network.generationHash, dto.network.epochAdjustment),
+            new ChainProperties(dto.chain.enableVerifiableState, dto.chain.enableVerifiableReceipts,
+                dto.chain.currencyMosaicId, dto.chain.harvestingMosaicId, dto.chain.blockGenerationTargetTime,
+                dto.chain.blockTimeSmoothingFactor, dto.chain.importanceGrouping, dto.chain.importanceActivityPercentage,
+                dto.chain.maxRollbackBlocks, dto.chain.maxDifficultyBlocks, dto.chain.defaultDynamicFeeMultiplier,
+                dto.chain.maxTransactionLifetime, dto.chain.maxBlockFutureTime, dto.chain.initialCurrencyAtomicUnits,
+                dto.chain.maxMosaicAtomicUnits, dto.chain.totalChainImportance, dto.chain.minHarvesterBalance,
+                dto.chain.maxHarvesterBalance, dto.chain.harvestBeneficiaryPercentage, dto.chain.blockPruneInterval,
+                dto.chain.maxTransactionsPerBlock),
+            new PluginProperties(
+                new AccountLinkNetworkProperties(dto.plugins.accountlink?.dummy),
+                new AggregateNetworkProperties(dto.plugins.aggregate?.maxTransactionsPerAggregate,
+                    dto.plugins.aggregate?.maxCosignaturesPerAggregate, dto.plugins.aggregate?.enableStrictCosignatureCheck,
+                    dto.plugins.aggregate?.enableBondedAggregateSupport, dto.plugins.aggregate?.maxBondedTransactionLifetime),
+                new HashLockNetworkProperties(dto.plugins.lockhash?.lockedFundsPerAggregate, dto.plugins.lockhash?.maxHashLockDuration),
+                new SecretLockNetworkProperties(dto.plugins.locksecret?.maxSecretLockDuration, dto.plugins.locksecret?.minProofSize,
+                    dto.plugins.locksecret?.maxProofSize),
+                new MetadataNetworkProperties(dto.plugins.metadata?.maxValueSize),
+                new MosaicNetworkProperties(dto.plugins.mosaic?.maxMosaicsPerAccount, dto.plugins.mosaic?.maxMosaicDuration,
+                    dto.plugins.mosaic?.maxMosaicDivisibility, dto.plugins.mosaic?.mosaicRentalFeeSinkPublicKey,
+                    dto.plugins.mosaic?.mosaicRentalFee),
+                new MultisigNetworkProperties(dto.plugins.multisig?.maxMultisigDepth, dto.plugins.multisig?.maxCosignatoriesPerAccount,
+                    dto.plugins.multisig?.maxCosignedAccountsPerAccount),
+                new NamespaceNetworkProperties(dto.plugins.namespace?.maxNameSize, dto.plugins.namespace?.maxChildNamespaces,
+                    dto.plugins.namespace?.maxNamespaceDepth, dto.plugins.namespace?.minNamespaceDuration,
+                    dto.plugins.namespace?.maxNamespaceDuration, dto.plugins.namespace?.namespaceGracePeriodDuration,
+                    dto.plugins.namespace?.reservedRootNamespaceNames, dto.plugins.namespace?.namespaceRentalFeeSinkPublicKey,
+                    dto.plugins.namespace?.rootNamespaceRentalFeePerBlock, dto.plugins.namespace?.childNamespaceRentalFee),
+                new AccountRestrictionNetworkProperties(dto.plugins.restrictionaccount?.maxAccountRestrictionValues),
+                new MosaicRestrictionNetworkProperties(dto.plugins.restrictionmosaic?.maxMosaicRestrictionValues),
+                new TransferNetworkProperties(dto.plugins.transfer?.maxMessageSize),
+            ),
+        );
     }
 }
