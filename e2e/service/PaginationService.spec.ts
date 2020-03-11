@@ -18,7 +18,7 @@ import { toArray } from 'rxjs/operators';
 import { Order } from '../../src/infrastructure/QueryParams';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { UInt64 } from '../../src/model/UInt64';
 import { IPaginationService } from '../../src/service/interfaces/IPaginationService';
 import { PaginationService } from '../../src/service/PaginationService';
