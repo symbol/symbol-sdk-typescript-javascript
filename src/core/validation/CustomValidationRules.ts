@@ -12,7 +12,9 @@ import {AppStore} from '@/app/AppStore'
 
 // configuration
 import networkConfig from '../../../config/network.conf.json'
+import appConfig from '../../../config/app.conf.json'
 const currentNetwork = networkConfig.networks['testnet-publicTest']
+const {MIN_PASSWORD_LENGTH} = appConfig.constants
 
 import {
   AddressValidator,
@@ -146,6 +148,13 @@ export class CustomValidationRules {
         return value <= currentNetwork.properties.maxNamespaceDuration
       },
       message: `${i18n.t('error_new_namespace_duration_max_value', {maxValue: currentNetwork.properties.maxNamespaceDuration})}`,
+    })
+
+    extend('passwordRegex', {
+      validate: (value) => {
+        return new RegExp(`(?=.*[0-9])(?=.*[a-zA-Z])(.{${MIN_PASSWORD_LENGTH},})$`).test(value)
+      },
+      message: `${i18n.t('error_new_password_format')}`,
     })
   }
 }
