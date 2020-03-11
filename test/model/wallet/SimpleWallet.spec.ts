@@ -16,7 +16,7 @@
 
 import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
-import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import {NetworkType} from '../../../src/model/network/NetworkType';
 import {Password} from '../../../src/model/wallet/Password';
 import {SimpleWallet} from '../../../src/model/wallet/SimpleWallet';
 

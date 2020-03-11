@@ -24,11 +24,11 @@ import { TransactionRepository } from '../../src/infrastructure/TransactionRepos
 
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { HashLockTransaction } from '../../src/model/transaction/HashLockTransaction';

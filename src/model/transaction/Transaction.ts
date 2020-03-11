@@ -21,7 +21,7 @@ import { DtoMapping } from '../../core/utils/DtoMapping';
 import { SerializeTransactionToJSON } from '../../infrastructure/transaction/SerializeTransactionToJSON';
 import { Account } from '../account/Account';
 import { PublicAccount } from '../account/PublicAccount';
-import { NetworkType } from '../blockchain/NetworkType';
+import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { AggregateTransactionInfo } from './AggregateTransactionInfo';

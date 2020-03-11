@@ -112,14 +112,16 @@ export class TransactionService implements ITransactionService {
     /**
      * @internal
      *
-     * This method publishes an error if the listener receives an error code for the given address and transaction hash. Otherwise, it returns the passed transactionObservable
+     * This method publishes an error if the listener receives an error code for the given address & transaction hash.
+     * Otherwise, it returns the passed transactionObservable
      *
      * @param listener the listener.
      * @param address the signer address
      * @param transactionHash the transaction hash
      * @param transactionObservable the observable with the valid transaction
      */
-    private getTransactionOrRaiseError<T extends Transaction>(listener: IListener, address: Address, transactionHash: string, transactionObservable: Observable<T>): Observable<T> {
+    private getTransactionOrRaiseError<T extends Transaction>(listener: IListener, address: Address, transactionHash: string,
+        transactionObservable: Observable<T>): Observable<T> {
         const errorObservable = listener.status(address).pipe(filter((t) => t.hash.toUpperCase() === transactionHash.toUpperCase()));
         return merge(transactionObservable, errorObservable).pipe(first(), map((errorOrTransaction) => {
             if (errorOrTransaction instanceof TransactionStatusError) {

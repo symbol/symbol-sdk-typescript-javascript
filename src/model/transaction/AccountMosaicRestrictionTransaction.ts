@@ -28,9 +28,9 @@ import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { PublicAccount } from '../account/PublicAccount';
-import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
 import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
 import { UInt64 } from '../UInt64';
@@ -55,8 +55,8 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
      */
     public static create(deadline: Deadline,
                          restrictionFlags: AccountRestrictionFlags,
-                         restrictionAdditions: Array<MosaicId | NamespaceId>,
-                         restrictionDeletions: Array<MosaicId | NamespaceId>,
+                         restrictionAdditions: (MosaicId | NamespaceId)[],
+                         restrictionDeletions: (MosaicId | NamespaceId)[],
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): AccountMosaicRestrictionTransaction {
         return new AccountMosaicRestrictionTransaction(networkType,
@@ -85,8 +85,8 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
                 deadline: Deadline,
                 maxFee: UInt64,
                 public readonly restrictionFlags: AccountRestrictionFlags,
-                public readonly restrictionAdditions: Array<MosaicId | NamespaceId>,
-                public readonly restrictionDeletions: Array<MosaicId | NamespaceId>,
+                public readonly restrictionAdditions: (MosaicId | NamespaceId)[],
+                public readonly restrictionDeletions: (MosaicId | NamespaceId)[],
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {

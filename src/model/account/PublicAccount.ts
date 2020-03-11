@@ -16,7 +16,7 @@
 
 import { KeyPair } from '../../core/crypto';
 import { Convert } from '../../core/format';
-import { NetworkType } from '../blockchain/NetworkType';
+import { NetworkType } from '../network/NetworkType';
 import { Address } from './Address';
 
 const Hash512 = 64;

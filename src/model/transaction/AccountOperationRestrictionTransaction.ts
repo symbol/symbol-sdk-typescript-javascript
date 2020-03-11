@@ -25,7 +25,7 @@ import {
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
-import { NetworkType } from '../blockchain/NetworkType';
+import { NetworkType } from '../network/NetworkType';
 import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
