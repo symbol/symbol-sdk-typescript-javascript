@@ -92,8 +92,11 @@ export class PaginationService implements IPaginationService {
         order?: Order,
         lastIdRead?: string,
     ): Observable<T> {
-        // getPageReader will change when we change how pages are read. We may use page index/number instead of last id read
-        // getPageReader can be used for entities of other types like Account, Namespace, Mosaic etc once they support pagination
+        // getPageReader will change when we change how pages are read.
+        // We may use page index/number instead of last id read
+        // getPageReader can be used for entities of other types like Account, Namespace,
+        // Mosaic etc once they support pagination
+       // getIdCallback won't be necessary when using generic pageIndex/pageNumber instead of entity driven lastIdRead ids.
         return new Observable((subscriber: Subscriber<T>) => {
             const pageSize = 10;
             const queryParams = new QueryParams({
@@ -101,15 +104,15 @@ export class PaginationService implements IPaginationService {
                 id: lastIdRead,
                 order,
             });
-            readPageCallback(queryParams).subscribe((transactions) => {
+            readPageCallback(queryParams).subscribe((entities) => {
                 try {
-                    transactions.forEach((t) => {
+                    entities.forEach((t) => {
                         subscriber.next(t);
                     });
-                    if (transactions.length < pageSize) {
+                    if (entities.length < pageSize) {
                         subscriber.complete();
                     } else {
-                        const lastEntityId = getIdCallback(transactions[transactions.length - 1]);
+                        const lastEntityId = getIdCallback(entities[entities.length - 1]);
                         this.getPageReader(readPageCallback, getIdCallback, order, lastEntityId).subscribe(subscriber);
                     }
                 } catch (e) {
