@@ -189,6 +189,8 @@ import send from '@/views/resources/img/icons/send.png'
 // @ts-ignore
 import sent from '@/views/resources/img/icons/sent.png'
 // @ts-ignore
+import settings from '@/views/resources/img/icons/settings.png'
+// @ts-ignore
 import signatureRequired from '@/views/resources/img/icons/signature-required.png'
 // @ts-ignore
 import signCosign from '@/views/resources/img/icons/sign-cosign.png'
@@ -312,6 +314,7 @@ export const officialIcons = {
   receive,
   send,
   sent,
+  settings,
   signatureRequired,
   signCosign,
   spamThrottle,
