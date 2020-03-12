@@ -62,6 +62,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
         super(url);
         this.namespaceRoutesApi = new NamespaceRoutesApi(url);
         this.networkTypeObservable = this.createNetworkTypeObservable(networkType);
+        this.namespaceRoutesApi.useQuerystring = true;
     }
 
     /**

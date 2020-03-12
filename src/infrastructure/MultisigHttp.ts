@@ -50,6 +50,7 @@ export class MultisigHttp extends Http implements MultisigRepository {
         super(url);
         this.multisigRoutesApi = new MultisigRoutesApi(url);
         this.networkTypeObservable = this.createNetworkTypeObservable(networkType);
+        this.multisigRoutesApi.useQuerystring = true;
     }
 
     /**
