@@ -49,6 +49,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
     constructor(url: string) {
         super(url);
         this.metadataRoutesApi = new MetadataRoutesApi(url);
+        this.metadataRoutesApi.useQuerystring = true;
     }
 
     /**

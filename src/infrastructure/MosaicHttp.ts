@@ -53,6 +53,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
         super(url);
         this.mosaicRoutesApi = new MosaicRoutesApi(url);
         this.networkTypeObservable = this.createNetworkTypeObservable(networkType);
+        this.mosaicRoutesApi.useQuerystring = true;
     }
 
     /**

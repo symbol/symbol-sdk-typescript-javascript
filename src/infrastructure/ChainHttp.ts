@@ -40,6 +40,7 @@ export class ChainHttp extends Http implements ChainRepository {
     constructor(url: string) {
         super(url);
         this.chainRoutesApi = new ChainRoutesApi(url);
+        this.chainRoutesApi.useQuerystring = true;
     }
 
     /**

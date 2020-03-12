@@ -63,6 +63,7 @@ export class NetworkHttp extends Http implements NetworkRepository {
         super(url);
         this.nodeHttp = new NodeHttp(url);
         this.networkRoutesApi = new NetworkRoutesApi(url);
+        this.networkRoutesApi.useQuerystring = true;
 
     }
 

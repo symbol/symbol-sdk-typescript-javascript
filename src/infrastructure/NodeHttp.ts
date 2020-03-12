@@ -44,6 +44,7 @@ export class NodeHttp extends Http implements NodeRepository {
     constructor(url: string) {
         super(url);
         this.nodeRoutesApi = new NodeRoutesApi(url);
+        this.nodeRoutesApi.useQuerystring = true;
 
     }
 

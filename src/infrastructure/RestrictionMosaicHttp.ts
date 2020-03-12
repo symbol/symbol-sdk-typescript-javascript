@@ -48,6 +48,7 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
     constructor(url: string) {
         super(url);
         this.restrictionMosaicRoutesApi = new RestrictionMosaicRoutesApi(url);
+        this.restrictionMosaicRoutesApi.useQuerystring = true;
 
     }
 
