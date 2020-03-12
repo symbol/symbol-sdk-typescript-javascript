@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { Observable, Subscriber } from 'rxjs';
+import { concat, defer, from, Observable } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 import { AccountRepository } from '../infrastructure/AccountRepository';
 import { BlockRepository } from '../infrastructure/BlockRepository';
 import { Order, QueryParams } from '../infrastructure/QueryParams';
@@ -96,32 +97,26 @@ export class PaginationService implements IPaginationService {
         // We may use page index/number instead of last id read
         // getPageReader can be used for entities of other types like Account, Namespace,
         // Mosaic etc once they support pagination
-       // getIdCallback won't be necessary when using generic pageIndex/pageNumber instead of entity driven lastIdRead ids.
-        return new Observable((subscriber: Subscriber<T>) => {
-            const pageSize = 10;
-            const queryParams = new QueryParams({
-                pageSize,
-                id: lastIdRead,
-                order,
-            });
-            readPageCallback(queryParams).subscribe((entities) => {
-                try {
-                    entities.forEach((t) => {
-                        subscriber.next(t);
-                    });
+        // getIdCallback won't be necessary when using generic pageIndex/pageNumber instead of entity driven lastIdRead ids.
+        //
+        // https://stackoverflow.com/questions/35254323/rxjs-observable-pagination
+        const pageSize = 10;
+        const queryParams = new QueryParams({
+            pageSize,
+            id: lastIdRead,
+            order,
+        });
+        return defer(() => readPageCallback(queryParams)).pipe(
+            mergeMap((entities) => {
                     if (entities.length < pageSize) {
-                        subscriber.complete();
+                        return from(entities);
                     } else {
                         const lastEntityId = getIdCallback(entities[entities.length - 1]);
-                        this.getPageReader(readPageCallback, getIdCallback, order, lastEntityId).subscribe(subscriber);
+                        return concat(from(entities), this.getPageReader(readPageCallback, getIdCallback, order, lastEntityId));
                     }
-                } catch (e) {
-                    subscriber.error(e);
                 }
-            }, (error) => {
-                subscriber.error(error);
-            });
-        });
+            )
+        );
     }
 
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { toArray } from 'rxjs/operators';
+import { take, toArray } from 'rxjs/operators';
 import { Order } from '../../src/infrastructure/QueryParams';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
@@ -64,7 +64,7 @@ describe('PaginationService', () => {
     });
 
     it('getAccountTransactionsDesc', async () => {
-        const accountTransactions = paginationService.getAccountTransactions(helper.account.address,undefined, Order.DESC);
+        const accountTransactions = paginationService.getAccountTransactions(helper.account.address, undefined, Order.DESC);
         // Note toArray() puts all the transactions of all the pages into one array but you can do other stuff like filtering, peek 1, etc.
         const transactions = await accountTransactions.pipe(toArray()).toPromise();
         console.log(transactions.length);
@@ -82,7 +82,7 @@ describe('PaginationService', () => {
     it('getBlockTransactionsDesc', async () => {
         const accountTransactions = paginationService.getBlockTransactions(UInt64.fromNumericString('1'), Order.DESC);
         // Note toArray() puts all the transactions of all the pages into one array but you can do other stuff like filtering, peek 1, etc.
-        const transactions = await accountTransactions.pipe(toArray()).toPromise();
+        const transactions = await accountTransactions.pipe(take(3), toArray()).toPromise();
         console.log(transactions.length);
         console.log(transactions.map((t) => t.transactionInfo!.id));
     });
