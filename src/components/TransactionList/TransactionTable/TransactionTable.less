@@ -63,9 +63,8 @@
     width: 100%;
     height: 100%;
     margin: 0;
-    padding: 0.05rem 0;
     cursor: pointer;
-    border-bottom: 1px solid @line;
+    border-bottom: 0.01rem solid @line;
 
     .icon-cell {
       position: relative;
@@ -109,7 +108,7 @@
       overflow: hidden;
       display: grid;
       grid-template-columns: 100%;
-      grid-template-rows: repeat(2, 40%);
+      grid-template-rows: repeat(2, 50%);
 
       .hash-cell-transaction-hash {
         overflow: hidden;
@@ -133,7 +132,7 @@
       overflow-y: auto;
       
       >div {
-        border-bottom: 1px solid @line;
+        border-bottom: 0.01rem solid @line;
       }
     }
   }

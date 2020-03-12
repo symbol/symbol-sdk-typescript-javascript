@@ -47,7 +47,7 @@ export default class TransactionTable extends Vue {
   public nodata = [...Array(10).keys()]
 
   get transactionsList(): Transaction[] {
-    return this.transactions;
+    return this.transactions
   }
 }
 </script>
