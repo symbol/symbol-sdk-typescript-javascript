@@ -16,6 +16,8 @@
 import {TransactionType} from 'symbol-sdk'
 
 // @ts-ignore
+import createImg from '@/views/resources/img/login/create.png'
+// @ts-ignore
 import seedImg from '@/views/resources/img/login/seed.png'
 // @ts-ignore
 import trezorImg from '@/views/resources/img/login/trezor.png'
@@ -213,6 +215,7 @@ import xymCoin from '@/views/resources/img/icons/xym-coin.png'
 
 /// region exported image objects
 export const walletTypeImages = {
+  createImg,
   seedImg,
   trezorImg,
   ledgerImg,
