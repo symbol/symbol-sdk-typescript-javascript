@@ -161,11 +161,11 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
    */
   protected resetForm() {
     // - re-populate form if transaction staged
-    if (this.stagedTransactions.length) {
-      // @TODO: initialization from staged transactions
-      this.isAwaitingSignature = true
-      return
-    }
+    // if (this.stagedTransactions.length) {
+    //   // @TODO: initialization from staged transactions
+    //   this.isAwaitingSignature = true
+    //   return
+    // }
 
     // - set default form values
     this.formItems.mosaicHexId = this.mosaicHexId

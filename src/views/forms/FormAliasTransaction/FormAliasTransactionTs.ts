@@ -172,14 +172,14 @@ export class FormAliasTransactionTs extends FormTransactionBase {
    */
   protected resetForm() {
     // - re-populate form if transaction staged
-    if (this.stagedTransactions.length) {
-      const transaction = this.stagedTransactions.find(
-        staged => staged.type === TransactionType.MOSAIC_ALIAS || staged.type === TransactionType.ADDRESS_ALIAS,
-      )
-      this.setTransactions([transaction as AliasTransaction])
-      this.isAwaitingSignature = true
-      return
-    }
+    // if (this.stagedTransactions.length) {
+    //   const transaction = this.stagedTransactions.find(
+    //     staged => staged.type === TransactionType.MOSAIC_ALIAS || staged.type === TransactionType.ADDRESS_ALIAS,
+    //   )
+    //   this.setTransactions([transaction as AliasTransaction])
+    //   this.isAwaitingSignature = true
+    //   return
+    // }
 
     /**
      * Helper function to get the alias target as a string

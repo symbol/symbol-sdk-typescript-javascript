@@ -175,7 +175,6 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
     // - set attachedMosaics and allocate slots
     Vue.nextTick(() => {
-      // Vue.set(this.formItems, 'attachedMosaics', [])
       attachedMosaics.forEach(
         (attachedMosaic, index) => {
           this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid)

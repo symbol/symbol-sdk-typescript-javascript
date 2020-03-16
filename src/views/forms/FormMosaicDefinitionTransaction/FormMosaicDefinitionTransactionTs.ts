@@ -90,17 +90,17 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
    */
   protected resetForm() {
     // - re-populate form if transaction staged
-    if (this.stagedTransactions.length) {
-      const definition = this.stagedTransactions.find(staged => staged.type === TransactionType.MOSAIC_DEFINITION)
-      const supply = this.stagedTransactions.find(staged => staged.type === TransactionType.MOSAIC_SUPPLY_CHANGE)
-      if (definition === undefined || supply === undefined) return
-      this.setTransactions([
-        definition as MosaicDefinitionTransaction,
-        supply as MosaicSupplyChangeTransaction
-      ])
-      this.isAwaitingSignature = true
-      return ;
-    }
+    // if (this.stagedTransactions.length) {
+    //   const definition = this.stagedTransactions.find(staged => staged.type === TransactionType.MOSAIC_DEFINITION)
+    //   const supply = this.stagedTransactions.find(staged => staged.type === TransactionType.MOSAIC_SUPPLY_CHANGE)
+    //   if (definition === undefined || supply === undefined) return
+    //   this.setTransactions([
+    //     definition as MosaicDefinitionTransaction,
+    //     supply as MosaicSupplyChangeTransaction
+    //   ])
+    //   this.isAwaitingSignature = true
+    //   return ;
+    // }
 
     // - set default form values
     this.formItems.signerPublicKey = this.currentWallet.values.get('publicKey')
