@@ -870,7 +870,7 @@ export default {
       }
       catch (e) {
         dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch multisig information: ' + e, {root: true})
-        return false
+        return ; 
       }
     },
     async REST_FETCH_OWNED_MOSAICS(
