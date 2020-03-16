@@ -356,7 +356,14 @@ export class FormTransactionBase extends Vue {
    * @return {void}
    */
   public async onConfirmationSuccess(issuer: PublicAccount) {
-    this.resetForm()
+    // if the form was in multisig, set the signer to be the main wallet
+    // this triggers resetForm in the @Watch('currentWallet') hook
+    if (this.isMultisigMode) {
+      this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: this.currentWallet})
+    } else {
+      this.resetForm()
+    }
+
     this.hasConfirmationModal = false
     this.$emit('on-confirmation-success')
 

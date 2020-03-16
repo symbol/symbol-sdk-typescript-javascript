@@ -66,6 +66,7 @@
 
         <MultisigCosignatoriesDisplay
           :multisig="currentMultisigInfo"
+          :cosignatory-modifications="formItems.cosignatoryModifications"
           :modifiable="true"
           @remove="onClickRemove"
           @add="onClickAdd"

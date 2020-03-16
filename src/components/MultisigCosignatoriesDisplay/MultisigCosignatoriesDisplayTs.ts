@@ -25,6 +25,12 @@ import FormRow from '@/components/FormRow/FormRow.vue'
 // @ts-ignore
 import AddCosignatoryInput from '@/components/AddCosignatoryInput/AddCosignatoryInput.vue'
 
+// custom types
+interface Modification {
+  cosignatory: PublicAccount,
+  addOrRemove: 'add' | 'remove',
+}
+
 @Component({
   components: {
     ValidationProvider,
@@ -36,13 +42,11 @@ import AddCosignatoryInput from '@/components/AddCosignatoryInput/AddCosignatory
   })},
 })
 export class MultisigCosignatoriesDisplayTs extends Vue {
-  @Prop({
-    default: null,
-  }) multisig: MultisigAccountInfo
+  @Prop({ default: null }) multisig: MultisigAccountInfo
 
-  @Prop({
-    default: false
-  }) modifiable: boolean
+  @Prop({ default: false }) modifiable: boolean
+
+  @Prop({ default: {} }) cosignatoryModifications: Record<string, Modification>
 
   private networkType: NetworkType
 
@@ -63,11 +67,21 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
   }
 
   get addModifications(): {publicKey: string, address: string}[] {
-    return this.addedActors
+    return Object.values(this.cosignatoryModifications)
+      .filter(({addOrRemove}) => addOrRemove === 'add')
+      .map(({cosignatory}) => ({
+        publicKey: cosignatory.publicKey,
+        address: cosignatory.address.pretty(),
+      }))
   }
 
   get removeModifications(): {publicKey: string, address: string}[] {
-    return this.removedActors
+    return Object.values(this.cosignatoryModifications)
+      .filter(({addOrRemove}) => addOrRemove === 'remove')
+      .map(({cosignatory}) => ({
+        publicKey: cosignatory.publicKey,
+        address: cosignatory.address.pretty(),
+      }))
   }
 
   public onAddCosignatory(publicAccount: PublicAccount) {
@@ -77,11 +91,6 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
       this.$store.dispatch('notification/ADD_WARNING', 'warning_already_a_cosignatory')
       return ;
     }
-
-    this.addedActors.push({
-      publicKey: publicAccount.publicKey,
-      address: publicAccount.address.pretty()
-    })
 
     this.$emit('add', publicAccount)
     this.isAddingCosignatory = false
@@ -99,26 +108,10 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
   }
 
   public onRemoveModification(publicKey: string) {
-    this.addedActors = this.addedActors.filter(a => a.publicKey !== publicKey)
     this.$emit('undo', publicKey)
   }
 
   public onUndoRemoveModification(publicKey: string) {
-    this.removedActors = this.removedActors.filter(a => a.publicKey !== publicKey)
     this.$emit('undo', publicKey)
-  }
-
-  /**
-   * Reset modifications when provided multisig info changes
-   * @param {MultisigAccountInfo} oldInfo
-   * @param {MultisigAccountInfo} newInfo
-   */
-  @Watch('multisig')
-  onMultisigInfoChange(oldInfo: MultisigAccountInfo, newInfo: MultisigAccountInfo) {
-    if (!oldInfo) return
-    if (!newInfo || !(oldInfo.account.equals(newInfo.account))) {
-      this.addedActors = []
-      this.removedActors = []
-    }
   }
 }
