@@ -442,7 +442,7 @@
   "login_account": "登 录",
   "login": "登 录",
   "create_a_new_account": "还没有账户",
-  "Login_Directly": "直接登陆",
+  "go_to_login": "直接登陆",
   "Access_My_Account": "欢迎访问SYMBOL",
   "Existing_Account": "已有账户",
   "Create_Mnemonic": "创建新助记词账户",

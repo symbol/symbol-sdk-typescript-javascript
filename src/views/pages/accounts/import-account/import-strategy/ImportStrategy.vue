@@ -11,7 +11,7 @@
             class="create-account"
             @click="$router.push({name:'accounts.login'})"
           >
-            {{ $t('Login_Directly') }}
+            {{ $t('go_to_login') }}
           </span>
         </p>
       </div>
