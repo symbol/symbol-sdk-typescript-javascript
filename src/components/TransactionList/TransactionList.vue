@@ -16,11 +16,12 @@
             class="transaction-tab-inner-container"
             @input="currentTab = 'confirmed'"
           >
-
             <!-- Confirmed transactions tab -->
-            <TransactionTable :transactions="currentPageTransactions.items"
-                              :empty-message="'no_confirmed_transactions'"
-                              @click="onClickTransaction" />
+            <TransactionTable
+              :transactions="currentPageTransactions.items"
+              :empty-message="'no_confirmed_transactions'"
+              @click="onClickTransaction"
+            />
           </TabPane>
           <TabPane
             :label="$t('transactions_tab_unconfirmed')"
@@ -29,11 +30,12 @@
             :icon="''"
             @input="currentTab = 'unconfirmed'"
           >
-
             <!-- Unconfirmed transactions tab -->
-            <TransactionTable :transactions="currentUnconfirmedTransactions.items"
-                              :empty-message="'no_unconfirmed_transactions'"
-                              @click="onClickTransaction" />
+            <TransactionTable
+              :transactions="currentUnconfirmedTransactions.items"
+              :empty-message="'no_unconfirmed_transactions'"
+              @click="onClickTransaction"
+            />
           </TabPane>
           <TabPane
             :label="$t('transactions_tab_partial')"
@@ -42,37 +44,34 @@
             :icon="''"
             @input="currentTab = 'partial'"
           >
-
             <!-- Partial transactions tab -->
-            <TransactionTable :transactions="currentPartialTransactions.items"
-                              :empty-message="'no_partial_transactions'"
-                              @click="onClickTransaction" />
+            <TransactionTable
+              :transactions="currentPartialTransactions.items"
+              :empty-message="'no_partial_transactions'"
+              @click="onClickTransaction"
+            />
           </TabPane>
+          <TransactionListOptions slot="extra" :current-tab="currentTab" />
         </Tabs>
       </div>
-
       <div class="transaction-list-pagination-container">
         <!-- <span>{{ $t('total_transactions') }}：{{ totalCountItems }}</span> -->
-        <Page
-          :total="totalCountItems"
-          class="page_content"
-          @on-change="onPageChange"
-        />
+        <Page :total="totalCountItems" class="page_content" @on-change="onPageChange" />
       </div>
     </div>
 
     <ModalTransactionDetails
       v-if="hasDetailModal"
       :visible="hasDetailModal"
-      @close="onCloseDetailModal"
       :transaction="activeTransaction"
+      @close="onCloseDetailModal"
     />
 
     <ModalTransactionCosignature
       v-if="hasCosignatureModal"
       :visible="hasCosignatureModal"
-      @close="onCloseCosignatureModal"
       :transaction="activePartialTransaction"
+      @close="onCloseCosignatureModal"
     />
   </div>
 </template>

@@ -42,6 +42,7 @@ import {BroadcastResult} from '@/core/transactions/BroadcastResult';
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import { RESTDispatcher } from '@/core/utils/RESTDispatcher';
 import {NamespaceService} from '@/services/NamespaceService';
+import {MultisigService} from '@/services/MultisigService';
 
 /**
  * Helper to format transaction group in name of state variable.
@@ -548,14 +549,15 @@ export default {
         throw Error('Missing mandatory field \'parentHash\' for action wallet/ADD_COSIGNATURE.')
       }
 
-      const hashes = getters['transactionHashes']
       const transactions = getters['partialTransactions']
-      const index = transactions.findIndex(t => t.transactionInfo.hash === cosignatureMessage.parentHash)
 
-      if (index === undefined) {
-        // partial tx unknown, fetch partials...
-        return ;
-      }
+      // return if no transactions
+      if (!transactions.length) return
+
+      const index = transactions.findIndex(t => t.transactionInfo.hash === cosignatureMessage.parentHash)
+      
+      // partial tx unknown, @TODO: handle this case (fetch partials)
+      if (index === -1) return
 
       transactions[index] = transactions[index].addCosignatures(cosignatureMessage)
       commit('partialTransactions', transactions)
@@ -837,7 +839,7 @@ export default {
         throw new Error(e)
       }
     },
-    async REST_FETCH_MULTISIG({commit, dispatch, getters, rootGetters}, address) {
+    async REST_FETCH_MULTISIG({commit, dispatch, getters, rootGetters}, address): Promise<void> {
       if (!address || address.length !== 40) {
         return ;
       }
@@ -852,14 +854,15 @@ export default {
         // prepare REST parameters
         const addressObject = Address.createFromRawAddress(address)
 
-        // fetch account info from REST gateway
+        // fetch multisig graph info from REST gateway
         const multisigHttp = RESTService.create('MultisigHttp', currentPeer, networkType)
-        const multisigInfo = await multisigHttp.getMultisigAccountInfo(addressObject).toPromise()
+        const multisigGraphInfo = await multisigHttp.getMultisigAccountGraphInfo(addressObject).toPromise()
+
+        // extract all available multisigInfo from multisigGraphInfo
+        const multisigsInfo = MultisigService.getMultisigInfoFromMultisigGraphInfo(multisigGraphInfo)
 
         // store multisig info
-        commit('addKnownMultisigInfo', multisigInfo)
-
-        return multisigInfo
+        multisigsInfo.forEach(multisigInfo => commit('addKnownMultisigInfo', multisigInfo))
       }
       catch (e) {
         dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch multisig information: ' + e, {root: true})

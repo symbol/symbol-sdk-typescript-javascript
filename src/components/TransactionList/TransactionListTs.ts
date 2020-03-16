@@ -24,20 +24,23 @@ import {TransactionService} from '@/services/TransactionService'
 
 // child components
 // @ts-ignore
-import ModalTransactionDetails from '@/views/modals/ModalTransactionDetails/ModalTransactionDetails.vue'
-// @ts-ignore
 import ModalTransactionCosignature from '@/views/modals/ModalTransactionCosignature/ModalTransactionCosignature.vue'
 // @ts-ignore
-import TransactionTable from '@/components/TransactionList/TransactionTable/TransactionTable.vue'
+import ModalTransactionDetails from '@/views/modals/ModalTransactionDetails/ModalTransactionDetails.vue'
 // @ts-ignore
 import PageTitle from '@/components/PageTitle/PageTitle.vue'
+// @ts-ignore
+import TransactionListOptions from '@/components/TransactionListOptions/TransactionListOptions.vue'
+// @ts-ignore
+import TransactionTable from '@/components/TransactionList/TransactionTable/TransactionTable.vue'
 
 @Component({
   components: {
-    ModalTransactionDetails,
     ModalTransactionCosignature,
-    TransactionTable,
+    ModalTransactionDetails,
     PageTitle,
+    TransactionListOptions,
+    TransactionTable,
   },
   computed: {...mapGetters({
     currentAccount: 'account/currentAccount',
