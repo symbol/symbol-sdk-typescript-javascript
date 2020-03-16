@@ -357,6 +357,7 @@ export default {
       // - update state
       return Vue.set(state, 'stagedTransactions', staged)
     },
+    clearStagedTransaction: (state) => Vue.set(state, 'stagedTransactions', []),
     addSignedTransaction: (state, transaction: SignedTransaction) => {
       // - get previously signed transactions
       const signed = state.signedTransactions
@@ -630,6 +631,9 @@ export default {
     },
     ADD_STAGED_TRANSACTION({commit}, stagedTransaction: Transaction) {
       commit('addStagedTransaction', stagedTransaction)
+    },
+    CLEAR_STAGED_TRANSACTIONS({commit}, stagedTransaction: Transaction) {
+      commit('clearStagedTransaction')
     },
     RESET_TRANSACTION_STAGE({commit}) {
       commit('setStagedTransactions', [])

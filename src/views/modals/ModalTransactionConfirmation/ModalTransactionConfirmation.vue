@@ -27,7 +27,16 @@
         </div>
       </div>
 
-      <div slot="footer" class="modal-footer"></div>
+      <div slot="footer" class="modal-footer">
+        <div v-if="stagedTransactions && stagedTransactions.length > 1">
+          <span
+            class="clear-staged-transactions"
+            @click="$store.dispatch('wallet/CLEAR_STAGED_TRANSACTIONS'); show = false"
+          >
+            {{ $t('clear_staged_transactions') }}
+          </span>
+        </div>
+      </div>
     </Modal>
   </div>
 </template>
@@ -38,6 +47,8 @@ export default class ModalTransactionConfirmation extends ModalTransactionConfir
 </script>
 
 <style lang="less">
+@import '../../resources/css/variables.less';
+
 .modal-transaction-confirmation {
   min-width: 8.5rem;
   max-width: 12rem;
@@ -61,5 +72,10 @@ export default class ModalTransactionConfirmation extends ModalTransactionConfir
 
 .float-right {
   float: right;
+}
+
+.clear-staged-transactions {
+  font-size: @smallFont;
+  cursor: pointer;
 }
 </style>
