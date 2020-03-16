@@ -16,7 +16,10 @@
 
 <script>
 import {SettingsTs} from './SettingsTs'
-import './Settings.less'
 
 export default class Settings extends SettingsTs {}
 </script>
+
+<style lang="less" scoped>
+@import './Settings.less';
+</style>
