@@ -19,20 +19,6 @@ import draggable from 'vuedraggable'
 // internal dependencies
 import {NotificationType} from '@/core/utils/NotificationType'
 
-/// region helpers
-/**
- * Shuffles array in place. ES6 version
- * @param {Array} a items An array containing the items.
- */
-const shuffle = (a) => {
-  for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-/// end-region helpers
-
 /**
  * Emits: success, error, canceled
  */
@@ -40,44 +26,50 @@ const shuffle = (a) => {
   components:{draggable},
 })
 export class MnemonicVerificationTs extends Vue {
-  @Prop({
-    default: []
-  })
-  words: string[]
+  @Prop({ default: [] }) words: string[]
 
   /**
    * Randomized words
-   * @var {string[]}
+   * @var {Record<number, string>}
    */
-  public shuffledWords: string[] = []
+  public shuffledWords: Record<number, string> = {}
 
   /**
-   * Selected words
-   * @var {string[]}
+   * Randomized words indexes
+   * @var {number[]}
    */
-  public selectedWords: string[] = []
+  public shuffledWordsIndexes: number[] = []
 
   /**
-   * Hook called when the component is mounted
+   * Selected words indexes
+   * @var {number[]}
+   */
+  public selectedWordIndexes: number[] = []
+
+  /**
+   * Hook called when the component is created
    * @return {void}
    */
-  public mounted() {
-    this.shuffledWords = shuffle([...this.words])
+  public created() {
+    const shuffledWordsArray: string[] = [...this.words].sort((a, b) => a.localeCompare(b))
+    this.shuffledWords = shuffledWordsArray.reduce(
+      (acc, word, index) => ({...acc, ...{[index]: word}}), {}
+    )
+    this.shuffledWordsIndexes = [...Array(shuffledWordsArray.length).keys()]
   }
 
   /**
-   * Add confirmed word
+   * Toggle a word presence in the confirmed words
    * @param {string} word 
-   * @return {string[]}
+   * @return {void}
    */
-  public addWord(word: string): string[] {
-    if (this.selectedWords.includes(word)) {
-      this.removeWord(word)
+  public onWordClicked(index: number): void {
+    if (this.selectedWordIndexes.includes(index)) {
+      this.removeWord(index)
       return
     }
 
-    this.selectedWords.push(word)
-    return this.selectedWords
+    this.selectedWordIndexes.push(index)
   }
 
   /**
@@ -85,9 +77,8 @@ export class MnemonicVerificationTs extends Vue {
    * @param {string} word 
    * @return {string[]}
    */
-  public removeWord(word: string) {
-    this.selectedWords = this.selectedWords.filter(sel => sel !== word)
-    return this.selectedWords
+  public removeWord(index: number): void {
+    this.selectedWordIndexes = [...this.selectedWordIndexes].filter(sel => sel !== index)
   }
 
   /**
@@ -96,11 +87,11 @@ export class MnemonicVerificationTs extends Vue {
    */
   public processVerification(): boolean {
     const origin = this.words.join(' ')
-    const rebuilt = this.selectedWords.join(' ')
+    const rebuilt = this.selectedWordIndexes.map(i => this.shuffledWords[i]).join(' ')
 
     // - origin words list does not match
     if (origin !== rebuilt) {
-      const errorMsg = this.selectedWords.length < 1 ? 
+      const errorMsg = this.selectedWordIndexes.length < 1 ? 
               NotificationType.PLEASE_ENTER_MNEMONIC_INFO
             : NotificationType.MNEMONIC_INCONSISTENCY_ERROR
       this.$store.dispatch('notification/ADD_WARNING', errorMsg)
