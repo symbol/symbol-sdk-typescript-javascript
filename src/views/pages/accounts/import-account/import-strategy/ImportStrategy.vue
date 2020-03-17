@@ -6,7 +6,7 @@
           {{ $t('Access_My_Account') }}
         </p>
         <p class="title-tips">
-          {{ $t('Existing_Account') }},
+          {{ $t('Existing_Account') }}
           <span
             class="create-account"
             @click="$router.push({name:'accounts.login'})"
