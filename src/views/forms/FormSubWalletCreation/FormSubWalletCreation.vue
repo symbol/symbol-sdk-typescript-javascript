@@ -22,7 +22,6 @@
                 v-model="formItems.type"
                 class="input-size input-style"
               >
-                <option>{{ $t('please_select') }}</option>
                 <option value="child_wallet">
                   {{ $t('option_child_wallet') }}
                 </option>
