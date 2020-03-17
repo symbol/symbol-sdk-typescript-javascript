@@ -3,7 +3,32 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [v0.9.5][v0.9.5] - 
+## [v0.9.6][v0.9.6] - 
+
+### Milestone: [catapult-server@v0.9.3.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.1)
+
+### [v0.9.6-beta1][v0.9.6-beta1] - 17-Mar-2020
+
+#### Added
+
+- Permit to query partial transactions of multisig accounts (fixes #68)
+- Skip expired mosaics in transfer form (fixes #61)
+
+#### Changed
+
+- Changed navigation bar logos to use Symbol branding (fixes #72)
+- Add reactivity to confirmed transaction events (fixes #69)
+
+#### Fixed
+
+- Fixed sub wallet creation form (fixes #103)
+- Added unsubscription from websocket channels (fixes #99)
+- Fixed duplicate words in mnemonic passphrases (fixes #87)
+- Reset cosignatories from multisig form (fixes #85)
+- Fix reactivity of account balance panel (fixes #79)
+
+
+## [v0.9.5][v0.9.5] - 11-Mar-2020
 
 ### Milestone: [catapult-server@v0.9.3.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.1)
 
@@ -97,6 +122,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Mosaic definition *multi-signature* feature bug with signer selection (aggregate bonded only)
 
 
+[v0.9.6]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.6-beta1
+[v0.9.6-beta1]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta6...v0.9.6-beta1
 [v0.9.5]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.5-beta6
 [v0.9.5-beta6]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta5...v0.9.5-beta6
 [v0.9.5-beta5]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta4...v0.9.5-beta5
