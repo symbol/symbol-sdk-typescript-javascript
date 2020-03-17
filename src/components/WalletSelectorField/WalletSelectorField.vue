@@ -1,9 +1,13 @@
 <template>
   <div v-if="currentWallets.length" class="switch_wallet">
-    <img class="select_wallet_icon" src="@/views/resources/img/window/windowWalletSelect.png"
-         v-if="!defaultFormStyle">
-    <i-select v-model="currentWalletIdentifier"
-              :class="{'select-size select-style': defaultFormStyle}">
+    <img
+      v-if="!defaultFormStyle" class="select_wallet_icon"
+      src="@/views/resources/img/window/windowWalletSelect.png"
+    >
+    <i-select
+      v-model="currentWalletIdentifier"
+      :class="{'select-size select-style': defaultFormStyle, 'max-z-index': true }"
+    >
       <i-option
         v-for="({identifier, name}) in currentWallets"
         :key="identifier"

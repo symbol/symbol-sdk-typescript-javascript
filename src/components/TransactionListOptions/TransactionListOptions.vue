@@ -1,19 +1,20 @@
 <template>
   <div class="transaction-list-options-container">
-    <div v-if="currentTab === 'partial'" class="transaction-list-options-button-container">
-      <button
-        class="button-style validation-button submit-button"
-        @click="refresh"
-      >
-        {{ $t('refresh') }}
-      </button>
-    </div>
     <SignerSelector
       v-if="currentTab === 'partial'"
       v-model="selectedSigner"
       :signers="signers"
       :no-label="true"
+      @change="onSignerSelectorChange"
     />
+    <div v-if="currentTab === 'partial'" class="transaction-list-options-button-container">
+      <button
+        class="button-style validation-button submit-button"
+        @click="refresh(chosenSigner)"
+      >
+        {{ $t('refresh') }}
+      </button>
+    </div>
   </div>
 </template>
 
@@ -34,7 +35,7 @@ export default class TransactionListOptions extends TransactionListOptionsTs {}
     width: 100%;
     display: grid;
     grid-template-rows: 100%;
-    grid-template-columns: 1.5rem 4rem;
+    grid-template-columns: 4rem 1.5rem;
     column-gap: 0.2rem;
       .form-row-inner-container-value-only {
         grid-template-columns: unset;
