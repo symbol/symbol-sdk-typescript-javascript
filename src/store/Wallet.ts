@@ -324,17 +324,17 @@ export default {
     unconfirmedTransactions: (state, transactions) => Vue.set(state, 'unconfirmedTransactions', transactions),
     partialTransactions: (state, transactions) => Vue.set(state, 'partialTransactions', transactions),
     setSubscriptions: (state, data) => Vue.set(state, 'subscriptions', data),
-    addSubscriptions: (state, payload) => {
+    addSubscriptions: (state, payload: {address: string, subscriptions: SubscriptionType}) => {
       const {address, subscriptions} = payload
       // skip when subscriptions is an empty array
-      if (!subscriptions.length) return
+      if (!subscriptions.subscriptions.length) return
       // get current subscriptions from state
       const oldSubscriptions = state.subscriptions[address] || []
       // update subscriptions
-      const newSubscriptions = oldSubscriptions.push(subscriptions)
+      const newSubscriptions = [...oldSubscriptions, subscriptions]
       // update state
       Vue.set(state.subscriptions, address, newSubscriptions)
-    },
+     },
     addTransactionToCache: (state, payload): Record<string, Transaction[]> => {
       if (payload === undefined) return
       const {transaction, hash, cacheKey} = payload
