@@ -7,13 +7,15 @@
           @keyup.enter="disableSubmit ? '' : handleSubmit(onSubmit)"
         >
           <!-- Transaction signer selector -->
-          <SignerSelector v-if="!hideSigner"
-                          v-model="formItems.signerPublicKey"
-                          :signers="signers"
-                          @change="onChangeSigner" />
+          <SignerSelector 
+            v-if="!hideSigner"
+            v-model="formItems.signerPublicKey"
+            :signers="signers"
+            @change="onChangeSigner"
+          />
 
           <!-- Transfer recipient input field --> 
-          <RecipientInput v-model="formItems.recipientRaw" />
+          <RecipientInput v-model="formItems.recipientRaw" @input="onChangeRecipient" />
 
           <!-- Mosaics attachments input fields -->
           <div v-for="(attachedMosaic, index) in formItems.attachedMosaics" :key="index">
@@ -34,13 +36,14 @@
           </div>
 
           <!-- Transfer message input field -->
-          <MessageInput v-model="formItems.messagePlain" />
+          <MessageInput v-model="formItems.messagePlain" @input="onChangeMessage" />
 
           <!-- Transaction fee selector and submit button -->
           <MaxFeeAndSubmit
             v-model="formItems.maxFee"
             :disable-submit="disableSubmit"
             @button-clicked="handleSubmit(onSubmit)"
+            @input="onChangeMaxFee"
           />
         </form>
       </ValidationObserver>
