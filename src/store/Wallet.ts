@@ -31,6 +31,8 @@ import {
   MosaicInfo,
   CosignatureSignedTransaction,
   UInt64,
+  TransactionType,
+  AggregateTransaction,
 } from 'symbol-sdk'
 import {Subscription} from 'rxjs'
 
@@ -40,7 +42,7 @@ import {RESTService} from '@/services/RESTService'
 import {AwaitLock} from './AwaitLock';
 import {BroadcastResult} from '@/core/transactions/BroadcastResult';
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
-import { RESTDispatcher } from '@/core/utils/RESTDispatcher';
+import {RESTDispatcher} from '@/core/utils/RESTDispatcher';
 import {NamespaceService} from '@/services/NamespaceService';
 import {MultisigService} from '@/services/MultisigService';
 
@@ -1073,6 +1075,43 @@ export default {
       catch(e) {
         return new BroadcastResult(cosignature, false, e.toString())
       }
+    },
+    ON_NEW_TRANSACTION({dispatch, rootGetters}, transaction: Transaction): void {
+      if (!transaction) return
+      
+      // get current wallet address from store
+      const address: Address = rootGetters['wallet/currentWalletAddress']
+      if (!address) return
+      const plainAddress = address.plain()
+
+      // instantiate a dispatcher
+      const dispatcher = new RESTDispatcher(dispatch)
+      
+      // always refresh wallet balances
+      dispatcher.add(dispatch('REST_FETCH_INFO', plainAddress))
+
+      // extract transaction types from the transaction
+      const transactionTypes: TransactionType[] = transaction instanceof AggregateTransaction
+        ? transaction.innerTransactions
+          .map(({type}) => type)
+          .filter((el, i, a) => i === a.indexOf(el))
+        : [transaction.type]
+
+      // add actions to the dispatcher according to the transaction types
+      if ([
+        TransactionType.NAMESPACE_REGISTRATION,
+        TransactionType.MOSAIC_ALIAS,
+        TransactionType.ADDRESS_ALIAS,
+      ].some(a => transactionTypes.some(b => b === a))) {
+        dispatcher.add(dispatch('REST_FETCH_OWNED_NAMESPACES', plainAddress))
+      }
+  
+      if (transactionTypes.includes(TransactionType.MULTISIG_ACCOUNT_MODIFICATION)) {
+        dispatcher.add(dispatch('REST_FETCH_MULTISIG', plainAddress))
+      }
+
+      // dispatch actions
+      dispatcher.throttle_dispatch()
     },
 /// end-region scoped actions
   },

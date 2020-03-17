@@ -175,6 +175,7 @@ export class RESTService extends AbstractService {
     const confirmed = listener.confirmed(address).subscribe(
       transaction => {
         context.dispatch('wallet/ADD_TRANSACTION', {group: 'confirmed', transaction}, {root: true})
+        context.dispatch('wallet/ON_NEW_TRANSACTION', transaction, {root: true})
         context.dispatch('notification/ADD_SUCCESS', NotificationType.NEW_CONFIRMED_TRANSACTION, {root: true})
       },
       err => context.dispatch('diagnostic/ADD_ERROR', err, {root: true}))
