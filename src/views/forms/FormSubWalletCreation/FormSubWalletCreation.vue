@@ -11,7 +11,6 @@
           class="form-container mt-3"
           onsubmit="event.preventDefault()"
           autocomplete="off"
-          @keyup.enter="handleSubmit(onSubmit)"
         >
           <FormRow>
             <template v-slot:label>

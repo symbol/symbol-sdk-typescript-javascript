@@ -4,7 +4,6 @@
       <form
         onsubmit="event.preventDefault()"
         class="form-container"
-        @keyup.enter="disableSubmit ? '' : handleSubmit(onSubmit)"
       >
         <!-- UNLINK alias action -->
         <FormRow v-if="aliasAction === AliasAction.Unlink">
@@ -83,7 +82,7 @@
         <MaxFeeAndSubmit
           v-model="formItems.maxFee"
           :disable-submit="disableSubmit"
-          @button-clicked="handleSubmit(onSubmit)"
+          @button-clicked="disableSubmit ? '' : handleSubmit(onSubmit)"
         />
       </form>
     </ValidationObserver>

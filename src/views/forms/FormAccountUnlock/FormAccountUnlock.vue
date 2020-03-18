@@ -4,7 +4,6 @@
       action="processSubmit"
       onsubmit="event.preventDefault()"
       class="form-line-container mt-3"
-      @keyup.enter="processVerification"
     >
       <FormRow>
         <template v-slot:label>

@@ -4,7 +4,6 @@
       <form
         onsubmit="event.preventDefault()"
         class="form-container"
-        @keyup.enter="handleSubmit(onSubmit)"
       >
         <FormRow>
           <template v-slot:label>

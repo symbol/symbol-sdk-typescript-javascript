@@ -9,7 +9,6 @@
       <form
         class="form-line-container mt-3"
         onsubmit="event.preventDefault()"
-        @keyup.enter="handleSubmit(onSubmit)"
       >
         <FormRow>
           <template v-slot:label>
