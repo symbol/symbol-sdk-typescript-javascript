@@ -47,7 +47,6 @@
               <div class="inputs-container select-container">
                 <WalletSelectorField
                   v-model="formItems.defaultWallet"
-                  :auto-submit="false"
                   :default-form-style="true"
                 />
               </div>

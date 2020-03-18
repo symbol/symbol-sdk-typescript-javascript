@@ -92,31 +92,15 @@ export class TransactionListOptionsTs extends Vue {
   public selectedSigner: string = this.$store.getters['wallet/currentWallet'].values.get('publicKey')
 
   /**
-   * Signer chosen in the signer selector
-   * @type {string}
-   */
-  public chosenSigner: string = this.$store.getters['wallet/currentWallet'].values.get('publicKey')
-
-  /**
-   * Hook called on signer selector change
-   * @protected
-   * @param {string} publicKey
-   */
-  protected onSignerSelectorChange(publicKey: string) {
-    this.chosenSigner = publicKey
-    this.refresh(publicKey)
-  }
-
-  /**
    * Hook called when refresh button is clicked
    * @protected
    */
-  protected refresh(chosenSigner: string): void {
+  protected refresh(): void {
     // @TODO: add support for confirmed and unconfirmed
     if (this.currentTab !== 'partial') return
 
     // push a new refresh request to the stream
-    this.refreshStream$.next({publicKey: chosenSigner, group: this.currentTab})
+    this.refreshStream$.next({publicKey: this.selectedSigner, group: this.currentTab})
   }
 
   /**

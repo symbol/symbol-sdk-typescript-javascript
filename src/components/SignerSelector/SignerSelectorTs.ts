@@ -56,7 +56,7 @@ export class SignerSelectorTs extends Vue {
    * Emit value change
    */
   set chosenSigner(newValue: string) {
-    this.$emit('change', newValue)
+    this.$emit('input', newValue)
   }
 /// end-region computed properties getter/setter
 }

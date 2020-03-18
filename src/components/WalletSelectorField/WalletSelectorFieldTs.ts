@@ -26,16 +26,12 @@ import {WalletService} from '@/services/WalletService'
 })}})
 export class WalletSelectorFieldTs extends Vue {
   @Prop({
-    default: ''
+    default: null
   }) value: string
 
   @Prop({
     default: false
   }) defaultFormStyle: boolean
-
-  @Prop({
-    default: true
-  }) autoSubmit: boolean
 
   /**
    * Currently active wallet
@@ -62,24 +58,20 @@ export class WalletSelectorFieldTs extends Vue {
 
 /// region computed properties getter/setter
   public get currentWalletIdentifier(): string {
+    if (this.value) return this.value
+
     if (this.currentWallet) {
       return {...this.currentWallet}.identifier
     }
-
-    return this.value
   }
 
   public set currentWalletIdentifier(identifier: string) {
-    if (!identifier || !identifier.length) {
-      return ;
-    }
+    if (!identifier || !identifier.length) return
+
+    this.$emit('input', identifier)
 
     const wallet = this.service.getWallet(identifier)
-    if (!wallet) {
-      return ;
-    }
-
-    this.$emit('input', wallet.getIdentifier())
+    if (!wallet) return
   }
 
   public get currentWallets(): {identifier: string, name: string}[] {
