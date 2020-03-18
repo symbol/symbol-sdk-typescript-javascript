@@ -10,7 +10,7 @@ before_script:
   - npm run build
 script:
   - npm run test:cov
-  - npm install --global typedoc
+  - npm install --global typedoc typescript
   - CURRENT_VERSION=$(npm run version --silent)
   - typedoc --out "ts-docs/$CURRENT_VERSION" src
   - touch ./ts-docs/.nojekyll
