@@ -457,11 +457,12 @@ export default {
       * }
       */
     async SET_CURRENT_WALLET({commit, dispatch, getters}, {model, options}) {
-
       const previous = getters.currentWallet
-
-      let address: Address = getAddressByPayload(model)
+      const address: Address = getAddressByPayload(model)
       dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/SET_CURRENT_WALLET dispatched with ' + address.plain(), {root: true})
+
+      // skip if the wallet has not changed
+      if (!!previous && previous.values.get('address') === address.plain()) return
 
       // set current wallet
       commit('currentWallet', model)
@@ -1088,7 +1089,7 @@ export default {
       const dispatcher = new RESTDispatcher(dispatch)
       
       // always refresh wallet balances
-      dispatcher.add(dispatch('REST_FETCH_INFO', plainAddress))
+      dispatcher.add('REST_FETCH_INFO', plainAddress)
 
       // extract transaction types from the transaction
       const transactionTypes: TransactionType[] = transaction instanceof AggregateTransaction
@@ -1103,11 +1104,18 @@ export default {
         TransactionType.MOSAIC_ALIAS,
         TransactionType.ADDRESS_ALIAS,
       ].some(a => transactionTypes.some(b => b === a))) {
-        dispatcher.add(dispatch('REST_FETCH_OWNED_NAMESPACES', plainAddress))
+        dispatcher.add('REST_FETCH_OWNED_NAMESPACES', plainAddress)
+      }
+
+      if ([
+        TransactionType.MOSAIC_DEFINITION,
+        TransactionType.MOSAIC_SUPPLY_CHANGE,
+      ].some(a => transactionTypes.some(b => b === a))) {
+        dispatcher.add('REST_FETCH_OWNED_MOSAICS', plainAddress)
       }
   
       if (transactionTypes.includes(TransactionType.MULTISIG_ACCOUNT_MODIFICATION)) {
-        dispatcher.add(dispatch('REST_FETCH_MULTISIG', plainAddress))
+        dispatcher.add('REST_FETCH_MULTISIG', plainAddress)
       }
 
       // dispatch actions

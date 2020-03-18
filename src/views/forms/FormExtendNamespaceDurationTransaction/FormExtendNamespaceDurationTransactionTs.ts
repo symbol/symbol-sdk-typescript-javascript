@@ -75,7 +75,7 @@ export class FormExtendNamespaceDurationTransactionTs extends FormNamespaceRegis
     // @TODO: Should be read from store
     const allNamespaces: NamespacesModel[] = new NamespaceService(this.$store).getNamespaces()
     const currentNamespace = allNamespaces.find(model => model.getIdentifier() === this.namespaceId.toHex())
-    return currentNamespace.values.get('endHeight')
+    return currentNamespace.objects.namespaceInfo.endHeight.compact()
   }
 
   /**
