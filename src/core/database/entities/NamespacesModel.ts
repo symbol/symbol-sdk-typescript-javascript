@@ -63,11 +63,10 @@ export class NamespacesModel extends DatabaseModel {
     
     // instantiate a namespace alias
     const getAlias = (alias: any): Alias => {
-      if (alias.mosaicId) return new MosaicAlias(alias.mosaicId)
+      if (alias.mosaicId) return new MosaicAlias(new MosaicId(alias.mosaicId))
       if (alias.address) return new AddressAlias(Address.createFromRawAddress(alias.address))
       return new EmptyAlias()
     }
-
     return {
       namespaceInfo: new NamespaceInfo(
         this.values.get('active'),
