@@ -17,7 +17,7 @@ Due to a network upgrade with [catapult-server@Fushicho](https://github.com/nemt
 
 The upgrade to this package's [version v0.17.3](https://github.com/nemtech/symbol-sdk-typescript-javascript/releases/tag/v0.17.3) is mandatory for **fushicho compatibility**.
 
-Find the complete changelog [here](CHANGELOG.md).
+Find the complete release notes [here](CHANGELOG.md).
 
 ## Requirements
 
