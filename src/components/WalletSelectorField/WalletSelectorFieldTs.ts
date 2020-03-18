@@ -63,6 +63,9 @@ export class WalletSelectorFieldTs extends Vue {
     if (this.currentWallet) {
       return {...this.currentWallet}.identifier
     }
+
+    // fallback value
+    return ''
   }
 
   public set currentWalletIdentifier(identifier: string) {
