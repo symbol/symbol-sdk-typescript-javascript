@@ -35,7 +35,7 @@ npm install symbol-sdk rxjs
 
 ## Usage
 
-Surf the [developer documentation][docs] to get started into Symbol development.
+Surf the [documentation][docs] to get started into Symbol development.
 You will find self-paced guides and useful code snippets using the TypeScript/Javascript SDK.
 
 To get the full description of the available classes and their functions, check the [SDK reference][sdk-ref].
