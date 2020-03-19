@@ -146,7 +146,7 @@
               <button
                 type="button"
                 class="button-style back-button" 
-                @click="$router.push({name: 'accounts.login'})"
+                @click="$router.back(-1)"
               >
                 {{ $t('back') }}
               </button>
