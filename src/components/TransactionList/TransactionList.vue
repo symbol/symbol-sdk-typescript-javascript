@@ -18,7 +18,7 @@
           >
             <!-- Confirmed transactions tab -->
             <TransactionTable
-              :transactions="currentPageTransactions.items"
+              :transactions="getCurrentPageTransactions('confirmed')"
               :empty-message="'no_confirmed_transactions'"
               @click="onClickTransaction"
             />
@@ -32,7 +32,7 @@
           >
             <!-- Unconfirmed transactions tab -->
             <TransactionTable
-              :transactions="currentUnconfirmedTransactions.items"
+              :transactions="getCurrentPageTransactions('unconfirmed')"
               :empty-message="'no_unconfirmed_transactions'"
               @click="onClickTransaction"
             />
@@ -46,7 +46,7 @@
           >
             <!-- Partial transactions tab -->
             <TransactionTable
-              :transactions="currentPartialTransactions.items"
+              :transactions="getCurrentPageTransactions('partial')"
               :empty-message="'no_partial_transactions'"
               @click="onClickTransaction"
             />
@@ -56,7 +56,11 @@
       </div>
       <div class="transaction-list-pagination-container">
         <!-- <span>{{ $t('total_transactions') }}：{{ totalCountItems }}</span> -->
-        <Page :total="totalCountItems" class="page_content" @on-change="onPageChange" />
+        <Page
+          :total="totalCountItems"
+          class="page_content"
+          @on-change="onPageChange"
+        />
       </div>
     </div>
 

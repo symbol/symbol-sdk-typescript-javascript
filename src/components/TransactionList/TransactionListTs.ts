@@ -34,6 +34,9 @@ import TransactionListOptions from '@/components/TransactionListOptions/Transact
 // @ts-ignore
 import TransactionTable from '@/components/TransactionList/TransactionTable/TransactionTable.vue'
 
+// custom types
+type TabName = 'confirmed' | 'unconfirmed' | 'partial'
+
 @Component({
   components: {
     ModalTransactionCosignature,
@@ -130,7 +133,7 @@ export class TransactionListTs extends Vue {
    * The current tab
    * @var {string} One of 'confirmed', 'unconfirmed' or 'partial'
    */
-  public currentTab: string = 'confirmed'
+  public currentTab: TabName = 'confirmed'
 
   /**
    * The current page number
@@ -177,43 +180,39 @@ export class TransactionListTs extends Vue {
   }
 
   public get totalCountItems(): number {
-    return [...this.confirmedTransactions].length
+    return this.getCurrentTabTransactions(this.currentTab).length
   }
 
-  public get currentPageTransactions(): {total: number, items: Transaction[]} {
+  /**
+   * Returns the transactions of the current page
+   * from the getter that matches the provided tab name
+   * @param {TabName} tabName
+   * @returns {Transaction[]}
+   */
+  public getCurrentPageTransactions(tabName: TabName): Transaction[] {
+    // get current tab transactions
+    const transactions = this.getCurrentTabTransactions(tabName)
+    if (!transactions || !transactions.length) return []
+
+    // get pagination params
     const start = (this.currentPage - 1) * this.pageSize
     const end = this.currentPage * this.pageSize
-    const total = this.totalCountItems
-
-    if (!this.confirmedTransactions || !total) {
-      return {total: 0, items: []}
-    }
-
-    const items = [...this.confirmedTransactions].reverse().slice(start, end)
-    return {
-      total,
-      items
-    }
+    
+    // slice and return
+    return [...transactions].reverse().slice(start, end)
   }
 
-  public get currentPartialTransactions(): {total: number, items: Transaction[]} {
-    if (!this.partialTransactions) return {total: 0, items: []}
-
-    const items = [...this.partialTransactions]
-    return {
-      total: items.length,
-      items
-    }
-  }
-
-  public get currentUnconfirmedTransactions(): {total: number, items: Transaction[]} {
-    if (!this.unconfirmedTransactions) return {total: 0, items: []}
-
-    const items = [...this.unconfirmedTransactions]
-    return {
-      total: items.length,
-      items
-    }
+    /**
+   * Returns all the transactions,
+   * from the getter that matches the provided tab name
+   * @param {TabName} tabName
+   * @returns {Transaction[]}
+   */
+  public getCurrentTabTransactions(tabName: TabName): Transaction[] {
+    if (tabName === 'confirmed') return this.confirmedTransactions || []
+    if (tabName === 'unconfirmed') return this.unconfirmedTransactions || []
+    if (tabName === 'partial') return this.partialTransactions || []
+    return []
   }
 
   public get hasDetailModal(): boolean {
@@ -240,17 +239,11 @@ export class TransactionListTs extends Vue {
   public async refresh(grp?) {
     const group = grp ? grp : this.currentTab
 
-    await this.$store.dispatch('wallet/REST_FETCH_TRANSACTIONS', {
+    this.$store.dispatch('wallet/REST_FETCH_TRANSACTIONS', {
       group: group,
       address: this.currentWallet.objects.address.plain(),
       pageSize: 100,
     })
-
-    // force-refresh with getters
-    let newPage: {total: number, items: Transaction[]}
-    if ('unconfirmed' === grp) newPage = this.currentUnconfirmedTransactions
-    else if ('partial' === grp) newPage = this.currentPartialTransactions
-    else newPage = this.currentPageTransactions
   }
 
   /**
@@ -281,7 +274,7 @@ export class TransactionListTs extends Vue {
   /**
    * Hook called at each tab change
    */
-  public onTabChange(tab: string): void {
+  public onTabChange(tab: TabName): void {
     this.currentTab = tab
     this.refresh(this.currentTab)
   }
