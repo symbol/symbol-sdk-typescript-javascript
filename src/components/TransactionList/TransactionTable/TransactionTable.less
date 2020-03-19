@@ -31,9 +31,10 @@
   grid-template-rows: @headerHeight auto;
   overflow: auto;
   padding-top: 0.2rem;
-
+  height: 100%;
   .transaction-table-columns {
-    grid-template-columns: 0.45rem auto 1.8rem 2rem 3.5rem;
+    // grid-template-columns: 0.45rem auto 1.8rem 2rem 3.5rem;
+    grid-template-columns: 0.45rem 5.05rem 1.8rem 2rem auto;
   }
 
   .transaction-rows-outer-container {
@@ -42,15 +43,16 @@
     overflow: hidden;
     overflow-y: scroll;
     width: 100%;
+    padding-bottom: 0.7rem;
+    max-height: 100%;
+    overflow-y: auto;
   }
 
   .transaction-rows-inner-container {
     display: grid;
     grid-auto-rows: @rowHeight;
     width: 100%;
-    height: (@maxDisplayedRow) * (@rowHeight);
     position: relative;
-    overflow-y: auto;
   }
 
   .transaction-row-container:hover {
@@ -93,18 +95,18 @@
     }
 
     .amount-cell {
-      text-align: left;
+      text-align: right;
       padding: .2rem .13rem .2rem .3rem;
     }
 
     .confirmation-cell {
-      text-align: left;
-      padding: .2rem .13rem;
+      text-align: right;
+      padding: 0.2rem 0.5rem 0.2rem 0;
     }
 
     .hash-cell {
       text-align: left;
-      padding: 0.1rem 0 0.1rem 0.1rem;
+      padding: 0.1rem 0 0.1rem 0;
       overflow: hidden;
       display: grid;
       grid-template-columns: 100%;

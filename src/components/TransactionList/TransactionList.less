@@ -20,7 +20,6 @@
   display: block;
   position: relative;
   overflow: hidden;
-  // color: @dustyBlue;
   zoom: 1;
   width: 100%;
   height: 100%;
@@ -99,12 +98,11 @@
       overflow: hidden;
 
       .ivu-page-item {
-        width: 0.31rem;
         min-width: 0.31rem;
         height: 0.3rem;
         border: none;
         background:@white;
-        box-shadow:0rem 0rem 0.06rem @boxShadow;
+        box-shadow:0 0 0.06rem @boxShadow;
         color: @grayDark;
         user-select: none;
         border: 0.01rem solid @border;
@@ -129,7 +127,7 @@
       .page_content {
         display: inline-block;
         vertical-align: middle;
-        padding-right: 0.45rem;
+        padding: 0.1rem 0.45rem;
       }
     }
   }
@@ -165,149 +163,3 @@
     z-index: 1;
   }
 }
-
-//   .bottom_transactions {
-//     .split_page {
-//       font-size: 16px;
-//       position: absolute;
-//       bottom: 0;
-//       left: 10px;
-//       z-index: 0;
-
-//       .ivu-page-item {
-//         width: 30px;
-//         min-width: 30px;
-//         height: 30px;
-//         border: none;
-//         color: @grayDark;
-//       }
-
-//       .ivu-page-item-active a,
-//       .ivu-page-item-active:hover a {
-//         color: @primary !important;
-//       }
-
-//       .ivu-page-prev,
-//       .ivu-page-next {
-//         border: none;
-//       }
-
-//       span {
-//         vertical-align: middle;
-//       }
-
-//       .page_content {
-//         display: inline-block;
-//         vertical-align: middle;
-//       }
-
-//       .ivu-page-item-active {
-//         border-radius: 50%;
-//       }
-//     }
-
-//     span {
-//       display: inline-block;
-//     }
-
-//     .active_select {
-//       border: 2px solid @border;
-//     }
-
-//     .account {
-//       text-align: left;
-//       width: 600px;
-//     }
-
-//     .transfer_type {
-//       width: 200px;
-//     }
-
-//     .mosaicId {
-//       width: 106px;
-//     }
-
-//     .amount {
-//       width: 154px;
-//       padding-left: 0 !important;
-//     }
-
-//     .date {
-//       width: 205px;
-//     }
-//   }
-
-//   .table_container_unconfirmed {
-//     .account {
-//       width: 300px;
-//     }
-
-//     .transfer_type {
-//       width: 300px;
-//     }
-
-//     .amount {
-//       width: 200px;
-//     }
-
-//     .date {
-//       width: 300px;
-//     }
-//   }
-
-//   .disappear {
-//     animation: fadeOutDown 0.5s infinite;
-//     -webkit-animation: fadeOutDown 0.5s;
-//   }
-
-//   .appear {
-//     animation: fadeOutUp 0.5s infinite;
-//     -webkit-animation: fadeOutUp 0.5s;
-//   }
-
-//   .orange {
-//     color: #f1642a !important;
-//   }
-
-//   .blue {
-//     color: @primary !important;
-//   }
-
-//   .red {
-//     color: #f65c5c;
-//   }
-
-//   .long {
-//     width: 500px !important;
-//     height: 40px;
-//     line-height: 40px !important;
-//     overflow: hidden;
-//     text-overflow: ellipsis;
-//     white-space: nowrap;
-//   }
-
-//   .ivu-modal-footer {
-//     display: none;
-//   }
-// }
-
-// .ivu-tabs-nav .ivu-tabs-tab-active {
-//   color: @primary;
-// }
-
-// .ivu-tabs-nav .ivu-tabs-tab:hover {
-//   color: @primary;
-// }
-
-// .ivu-tabs-ink-bar {
-//   background-color: @primary;
-// }
-
-// .ivu-tabs-nav-prev {
-//   top: 4px;
-//   left: -12px;
-// }
-
-// .ivu-tabs-mini .ivu-tabs-tab {
-//   font-size: 0.16rem;
-// }
