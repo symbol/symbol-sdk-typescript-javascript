@@ -113,6 +113,7 @@ export default class ImportMnemonicTs extends Vue {
       return this.$router.push({name: 'accounts.importAccount.walletSelection'})
     }
     catch(e) {
+      console.log('An error happened while importing Mnenomic:', e)
       return this.$store.dispatch('notification/ADD_ERROR', this.$t('invalid_mnemonic_input'))
     }
   }

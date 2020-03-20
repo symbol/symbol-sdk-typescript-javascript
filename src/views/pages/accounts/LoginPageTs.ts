@@ -224,20 +224,6 @@ export default class LoginPageTs extends Vue {
       'wallets'
     )
 
-    // read default wallet from settings
-    const defaultWalletId = settings.values.get('default_wallet').length 
-                        ? settings.values.get('default_wallet')
-                        : Array.from(knownWallets.values()).shift().getIdentifier()
-    const defaultWallet = Array.from(knownWallets.values()).filter(
-      w => w.getIdentifier() === defaultWalletId
-    ).shift()
-
-    // if account setup was not finalized, redirect
-    if (!account.values.has('seed') || ! account.values.get('seed').length) {
-      this.$store.dispatch('diagnostic/ADD_WARNING', 'Account has not setup mnemonic pass phrase, redirecting: ' + account.getIdentifier())
-      return this.$router.push({name: 'accounts.createAccount.generateMnemonic'})
-    }
-
     // use service to generate password hash
     const passwordHash = accountService.getPasswordHash(new Password(this.formItems.password))
 
@@ -247,6 +233,22 @@ export default class LoginPageTs extends Vue {
     if (accountPass !== passwordHash) {
       return this.$store.dispatch('notification/ADD_ERROR', NotificationType.WRONG_PASSWORD_ERROR)
     }
+
+    // if account setup was not finalized, redirect
+    if (!account.values.has('seed') || ! account.values.get('seed').length) {
+      this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)
+      this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password)
+      this.$store.dispatch('diagnostic/ADD_WARNING', 'Account has not setup mnemonic pass phrase, redirecting: ' + account.getIdentifier())
+      return this.$router.push({name: 'accounts.createAccount.generateMnemonic'})
+    }
+
+    // read default wallet from settings
+    const defaultWalletId = settings.values.get('default_wallet').length
+                        ? settings.values.get('default_wallet')
+                        : Array.from(knownWallets.values()).shift().getIdentifier()
+    const defaultWallet = Array.from(knownWallets.values()).filter(
+      w => w.getIdentifier() === defaultWalletId
+    ).shift()
 
     // LOGIN SUCCESS: update app state
     await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)

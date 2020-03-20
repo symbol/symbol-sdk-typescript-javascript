@@ -124,6 +124,7 @@ export default class GenerateMnemonicTs extends Vue {
       return this.$router.push({name: 'accounts.createAccount.showMnemonic'})
     }
     catch (error) {
+      console.log('An error happened while generating Mnenomic:', error)
       this.$store.dispatch('notification/ADD_ERROR', NotificationType.MNEMONIC_GENERATION_ERROR)
     }
   }
