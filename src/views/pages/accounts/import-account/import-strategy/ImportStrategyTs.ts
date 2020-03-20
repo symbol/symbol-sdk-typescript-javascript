@@ -27,8 +27,14 @@ export default class ImportStrategyTs extends Vue {
    */
   public importInfoList = [
     {
+      image: walletTypeImages.createImg,
+      title: 'Create_Mnemonic',
+      description: 'Create_a_new_account',
+      route: 'accounts.createAccount.info',
+    },
+    {
       image: walletTypeImages.seedImg,
-      title: 'Import_Seed',
+      title: 'Import_Mnemonic',
       description: 'Import_Mnemonic_phrase_directly_to_make_an_account',
       route: 'accounts.importAccount.info',
     },

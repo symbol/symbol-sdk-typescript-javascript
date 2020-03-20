@@ -6,12 +6,12 @@
           {{ $t('Access_My_Account') }}
         </p>
         <p class="title-tips">
-          {{ $t('Do_not_have_Account') }}
+          {{ $t('Existing_Account') }}
           <span
             class="create-account"
-            @click="$router.push({name:'accounts.createAccount.info', params:{nextPage:'accounts.createAccount.generateMnemonic'}})"
+            @click="$router.push({name:'accounts.login'})"
           >
-            {{ $t('create_a_new_account') }}
+            {{ $t('go_to_login') }}
           </span>
         </p>
       </div>

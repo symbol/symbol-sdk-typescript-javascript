@@ -26,19 +26,20 @@
   justify-content: center;
 
   .welcome-head {
-    margin: 0 auto 100px auto;
+    margin: 0 auto 1.52rem auto;
     text-align: center;
 
     .title {
-      font-size: 44px;
+      font-size: @biggestFont;
       color: @black;
-      line-height: 36px;
+      line-height: 0.58rem;
+      font-weight: @bold;
     }
 
     .title-tips {
-      margin-top: 30px;
-      font-size: 24px;
-      color: @black;
+      margin-top: 0.1rem;
+      font-size: @normalFont;
+      color: @grayDark;
     }
 
     .create-account {
@@ -49,52 +50,59 @@
   }
 
   .account-type {
-    width: 1350px;
-    height: 220px;
+    width: 14.48rem;
+    height: 2.46rem;
     margin: 0 auto;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 
     .account-item {
       text-align: center;
-      width: 405px;
-      height: 300px;
+      width: 3.32rem;
+      height: 2.46rem;
       background: @white;
-      box-shadow: 0 2px 10px 0 @boxShadow;
-      border-radius: 4px;
+      box-shadow: 0 0 10px @boxShadow;
+      border-radius: 0.05rem;
       cursor: pointer;
 
       .img-box {
+        height: 1.44rem;
         img {
-          width: 68px;
-          margin: 30px auto 15px;
+          margin-top: 0.57rem;
+          width: 0.58rem;
+          height: 0.54rem;
         }
       }
 
       .access-name {
-        font-size: 28px;
-        font-weight: 600;
-        color: @black;
-        line-height: 24px;
-        // margin-top: -15px;
+        font-size: @biggerFont;
+        font-weight: 500;
+        color: @blackLight;
+        line-height: 0.33rem;
       }
 
       .access-info {
-        margin: 20px auto 0 auto;
-        width: 280px;
-        font-size: 20px;
+        margin: 0.1rem auto 0 auto;
+        width: 2.6rem;
+        font-size: @smallerFont;
         color: @grayDark;
-        line-height: 30px;
+        line-height: 0.22rem;
+        opacity: 0.6;
+      }
+
+      &:hover {
+        box-shadow: 0 0 0.05rem @purple;
       }
     }
   }
 
   .bottom-text {
-    margin-top: 200px;
+    margin-top: 1.83rem;
     text-align: center;
     height: 20px;
-    font-size: 24px;
+    font-size: @smallerFont;
     font-weight: 400;
     color: @grayDark;
+    opacity: 0.6;
   }
 }
