@@ -73,6 +73,7 @@ export default class ImportMnemonicTs extends Vue {
     // - delete the temporary account from storage
     const identifier = this.currentAccount.getIdentifier()
     this.accounts.delete(identifier)
+    this.$store.dispatch('account/RESET_STATE')
 
     // - back to previous page
     this.$router.push({name: 'accounts.importAccount.info'})
