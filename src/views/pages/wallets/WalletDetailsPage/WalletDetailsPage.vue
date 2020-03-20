@@ -45,6 +45,10 @@
               </div>
             </div>
           </div>
+
+          <div class="detail-row">
+            <WalletAliasDisplay :wallet="currentWallet" />
+          </div>
         </div>
       </div>
       <div class="right-container">

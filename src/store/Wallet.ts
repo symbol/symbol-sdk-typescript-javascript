@@ -953,6 +953,9 @@ export default {
         // update namespaces in database
         new NamespaceService(this).updateNamespaces(ownedNamespaces)
 
+        // update namespaces info in the store
+        dispatch('namespace/ADD_NAMESPACE_INFOS', ownedNamespaces, { root: true })
+
         // store multisig info
         // @TODO: all namespaces should be stored in the same object
         // "Owned" namespaces should be returned from it with a filter on the owner property 

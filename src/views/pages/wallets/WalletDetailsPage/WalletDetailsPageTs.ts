@@ -18,7 +18,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
-import {WalletsModel, WalletType} from '@/core/database/entities/WalletsModel'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
 
 // child components
 // @ts-ignore
@@ -37,6 +37,8 @@ import WalletPublicKeyDisplay from '@/components/WalletPublicKeyDisplay/WalletPu
 import WalletActions from '@/components/WalletActions/WalletActions.vue'
 // @ts-ignore
 import WalletLinks from '@/components/WalletLinks/WalletLinks.vue'
+// @ts-ignore
+import WalletAliasDisplay from '@/components/WalletAliasDisplay/WalletAliasDisplay.vue'
 
 @Component({
   components: {
@@ -48,6 +50,7 @@ import WalletLinks from '@/components/WalletLinks/WalletLinks.vue'
     WalletLinks,
     WalletAddressDisplay,
     WalletPublicKeyDisplay,
+    WalletAliasDisplay,
   },
   computed: {...mapGetters({
     defaultWallet: 'app/defaultWallet',

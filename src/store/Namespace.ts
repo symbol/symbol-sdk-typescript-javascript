@@ -100,6 +100,9 @@ export default {
       mappedNames.forEach(mappedEntry => commit('addNamespaceName', mappedEntry))
       return mappedNames 
     },
+    ADD_NAMESPACE_INFOS({commit}, namespacesInfo: NamespaceInfo[]): void {
+      namespacesInfo.forEach(namespace => commit('addNamespaceInfo', namespace))
+    }
 /// end-region scoped actions
   }
 }
