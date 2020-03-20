@@ -690,6 +690,8 @@ export default {
  * REST API
  */
     async REST_FETCH_TRANSACTIONS({dispatch, getters, rootGetters}, {group, address, pageSize, id}) {
+      dispatch('app/SET_FETCHING_TRANSACTIONS', true, {root: true})
+
       if (!group || ! ['partial', 'unconfirmed', 'confirmed'].includes(group)) {
         group = 'confirmed'
       }
@@ -740,6 +742,8 @@ export default {
       catch (e) {
         dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch transactions: ' + e, {root: true})
         return false
+      } finally {
+        dispatch('app/SET_FETCHING_TRANSACTIONS', false, {root: true})
       }
     },
     async REST_FETCH_BALANCES({dispatch}, address) {

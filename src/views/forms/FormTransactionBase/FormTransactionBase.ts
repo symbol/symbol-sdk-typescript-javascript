@@ -29,10 +29,10 @@ import {mapGetters} from 'vuex'
 // internal dependencies
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
-import {WalletService} from '@/services/WalletService'
 import {TransactionService} from '@/services/TransactionService'
 import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 import {ValidationObserver} from 'vee-validate'
+import {MultisigService} from '@/services/MultisigService'
 
 @Component({
   computed: {...mapGetters({
@@ -215,13 +215,15 @@ export class FormTransactionBase extends Vue {
    * @return {void}
    */
   public beforeDestroy() {
-    this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {model: this.currentWallet})
+    // reset the selected signer if it is not the current wallet
+    if (this.selectedSigner !== this.currentWallet.values.get('publicKey')) {
+      this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {model: this.currentWallet})
+    }
   }
 
 /// region computed properties getter/setter
   get signers(): {publicKey: string, label: string}[] {
     return this.getSigners()
-    // return this.getSigners()
   }
 
   /**
@@ -474,33 +476,6 @@ export class FormTransactionBase extends Vue {
    * @return {{publicKey: string, label:string}[]}
    */
   protected getSigners(): {publicKey: string, label: string}[] {
-    if (!this.currentWallet) return []
-
-    const self = [
-      {
-        publicKey: this.currentWallet.values.get('publicKey'),
-        label: this.currentWallet.values.get('name'),
-      },
-    ]
-
-    const multisigInfo = this.currentWalletMultisigInfo
-    if (!multisigInfo) return self
-
-    // in case "self" is a multi-signature account
-    if (multisigInfo && multisigInfo.isMultisig()) {
-      self[0].label = self[0].label + this.$t('label_postfix_multisig')
-    }
-
-    // add multisig accounts of which "self" is a cosignatory
-    if (multisigInfo) {
-      const service = new WalletService(this.$store)
-      return self.concat(...multisigInfo.multisigAccounts.map(
-        ({publicKey}) => ({
-          publicKey,
-          label: service.getWalletLabel(publicKey, this.networkType) + this.$t('label_postfix_multisig'),
-        })))
-    }
-
-    return self
+    return new MultisigService(this.$store, this.$i18n).getSigners()
   }
 }

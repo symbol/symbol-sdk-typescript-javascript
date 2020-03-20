@@ -1,20 +1,23 @@
 <template>
   <div class="transaction-list-options-container">
-    <SignerSelector
-      v-if="currentTab === 'partial'"
-      v-model="selectedSigner"
-      :signers="signers"
-      :no-label="true"
-      @input="refresh"
-    />
-    <div v-if="currentTab === 'partial'" class="transaction-list-options-button-container">
-      <button
-        class="button-style validation-button submit-button"
-        @click="refresh"
-      >
-        {{ $t('refresh') }}
-      </button>
+    <div v-if="signers && signers.length > 1">
+      <div v-if="!showSignerSelector" class="show-signer-selector">
+        <span @click="showSignerSelector = true">
+          {{ $t('see_transactions_other_account') }}
+        </span>
+      </div>
+      <SignerSelector
+        v-else
+        v-model="selectedSigner"
+        :signers="signers"
+        :no-label="true"
+        @input="onSignerSelectorChange"
+      />
     </div>
+    <div v-else>
+      &nbsp;
+    </div>
+    <Icon @click="refresh" type="md-refresh" class="refresh-button" size="30" />
   </div>
 </template>
 
@@ -27,19 +30,22 @@ export default class TransactionListOptions extends TransactionListOptionsTs {}
 </script>
 
 <style lang="less">
+@import '../../views/resources/css/variables.less';
+
 .ivu-tabs-nav-right {
-  width: 5.8rem;
+  width: 4.8rem;
   display: grid;
   padding-top: 0.15rem;
+  
   .transaction-list-options-container {
     width: 100%;
     display: grid;
     grid-template-rows: 100%;
-    grid-template-columns: 4rem 1.5rem;
-    column-gap: 0.2rem;
-      .form-row-inner-container-value-only {
-        grid-template-columns: unset;
-      }
+    grid-template-columns: 4rem 0.8rem;
+
+    .form-row-inner-container-value-only {
+      grid-template-columns: unset;
+    }
     .form-row {
       width: 100%;
       grid-template-columns: unset;
@@ -50,6 +56,21 @@ export default class TransactionListOptions extends TransactionListOptionsTs {}
     .inputs-container {
       width: 100%;
     }
+
+    .show-signer-selector {
+      display: grid;
+      align-content: center;
+      text-align: center;
+      cursor: pointer;
+      font-size: @smallFont;
+      height: 100%;
+      color: @secondary;
+      text-decoration: underline;
+    }
+  }
+
+  .refresh-button {
+    color: @secondary;
   }
 }
 </style>

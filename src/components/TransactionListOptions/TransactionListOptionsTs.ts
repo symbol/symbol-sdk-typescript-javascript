@@ -21,19 +21,13 @@ import {asyncScheduler, Subject} from 'rxjs'
 import {throttleTime} from 'rxjs/operators'
 
 // internal dependencies
-import {WalletService} from '@/services/WalletService'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
 
 // child components
 // @ts-ignore
 import SignerSelector from '@/components/SignerSelector/SignerSelector.vue'
-
-/**
-// To implement for confirmed and unconfirmed tx:
-- state 0 : "link 'View other accounts'"
-- state 1 = clicked : "selector with known wallets"
-- state 2 = selected : "changes address used"
-*/
+import {RESTDispatcher} from '@/core/utils/RESTDispatcher'
+import {MultisigService} from '@/services/MultisigService'
 
 // custom types
 type group = 'confirmed' | 'unconfirmed' | 'partial'
@@ -89,17 +83,46 @@ export class TransactionListOptionsTs extends Vue {
    * @protected
    * @type {string}
    */
-  public selectedSigner: string = this.$store.getters['wallet/currentWallet'].values.get('publicKey')
+  protected selectedSigner: string = this.$store.getters['wallet/currentWallet'].values.get('publicKey')
 
+  /**
+   * Whether to show the signer selector
+   * @protected
+   * @type {boolean}
+   */
+  protected showSignerSelector: boolean = false
+
+  /**
+   * Hook called when the signer selector has changed
+   * @protected
+   */
+  protected onSignerSelectorChange(publicKey: string): void {
+    // set selected signer if the chosen account is a multisig one
+    const isCosig = this.currentWallet.values.get('publicKey') !== publicKey
+    const payload = !isCosig ? this.currentWallet : {
+      networkType: this.networkType,
+      publicKey: publicKey
+    }
+
+    // clear previous account transactions
+    this.$store.dispatch('wallet/RESET_TRANSACTIONS', {model: payload})
+
+    // dispatch actions using the rest dispatcher
+    const dispatcher = new RESTDispatcher(this.$store.dispatch)
+    dispatcher.add('wallet/SET_CURRENT_SIGNER', {model: payload})
+    dispatcher.add('wallet/REST_FETCH_TRANSACTIONS', {
+      group: this.currentTab,
+      address: Address.createFromPublicKey(publicKey, this.networkType).plain(),
+      pageSize: 100,
+    })
+
+    dispatcher.throttle_dispatch()
+  }
   /**
    * Hook called when refresh button is clicked
    * @protected
    */
   protected refresh(): void {
-    // @TODO: add support for confirmed and unconfirmed
-    if (this.currentTab !== 'partial') return
-
-    // push a new refresh request to the stream
     this.refreshStream$.next({publicKey: this.selectedSigner, group: this.currentTab})
   }
 
@@ -110,34 +133,7 @@ export class TransactionListOptionsTs extends Vue {
    * @type {{publicKey: string, label: string}[]}
    */
   protected get signers(): {publicKey: string, label: string}[] {
-    if (!this.currentWallet) return []
-
-    const self = [
-      {
-        publicKey: this.currentWallet.values.get('publicKey'),
-        label: this.currentWallet.values.get('name'),
-      },
-    ]
-
-    const multisigInfo = this.currentWalletMultisigInfo
-    if (!multisigInfo) return self
-
-    // in case "self" is a multi-signature account
-    if (multisigInfo && multisigInfo.isMultisig()) {
-      self[0].label = self[0].label + this.$t('label_postfix_multisig')
-    }
-
-    // add multisig accounts of which "self" is a cosignatory
-    if (multisigInfo) {
-      const service = new WalletService(this.$store)
-      return self.concat(...multisigInfo.multisigAccounts.map(
-        ({publicKey}) => ({
-          publicKey,
-          label: service.getWalletLabel(publicKey, this.networkType) + this.$t('label_postfix_multisig'),
-        })))
-    }
-
-    return self
+    return new MultisigService(this.$store, this.$i18n).getSigners()
   }
 
   /**
@@ -167,5 +163,13 @@ export class TransactionListOptionsTs extends Vue {
   @Watch('currentWallet')
   onCurrentWalletChange(newCurrentWallet: WalletsModel): void {
     this.selectedSigner = newCurrentWallet.values.get('publicKey')
+  }
+
+  /**
+   * Hook called before the component is destroyed
+   */
+  beforeDestroy(): void {
+    // reset the selected signer if it is not the current wallet
+    this.onSignerSelectorChange(this.currentWallet.values.get('publicKey'))
   }
 }

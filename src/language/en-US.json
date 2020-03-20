@@ -1191,5 +1191,6 @@
   "no_data_namespaces": "No namespaces were found for this account",
   "no_data_mosaics": "No mosaics were found for this account",
   "clear_staged_transactions": "Discard all transactions",
+  "see_transactions_other_account": "Display multi-signature account transactions",
   "mnemonic_copy":"Copy"
 }

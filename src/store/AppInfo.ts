@@ -41,6 +41,7 @@ export default {
     faucetUrl: networkConfig.faucetUrl,
     defaultFee: feesConfig.normal,
     defaultWallet: '',
+    isFetchingTransactions: false,
   },
   getters: {
     getInitialized: (state) => state.initialized,
@@ -56,6 +57,7 @@ export default {
     faucetUrl: (state) => state.faucetUrl,
     defaultFee: (state) => state.defaultFee,
     defaultWallet: (state) => state.defaultWallet,
+    isFetchingTransactions: (state) => state.isFetchingTransactions,
   },
   mutations: {
     setInitialized: (state, initialized) => { state.initialized = initialized },
@@ -74,6 +76,7 @@ export default {
     },
     setDefaultFee: (state, maxFee) => Vue.set(state, 'defaultFee', maxFee),
     setDefaultWallet: (state, defaultWallet) => Vue.set(state, 'defaultWallet', defaultWallet),
+    setFetchingTransactions: (state, bool: boolean) => Vue.set(state, 'isFetchingTransactions', bool),
   },
   actions: {
     async initialize({ commit, dispatch, getters }) {
@@ -122,7 +125,10 @@ export default {
       commit('setCurrentLanguage', settingsModel.values.get('language'))
       commit('setDefaultFee', settingsModel.values.get('default_fee'))
       commit('setDefaultWallet', settingsModel.values.get('default_wallet'))
-    }
+    },
+    SET_FETCHING_TRANSACTIONS({commit}, bool: boolean) {
+      commit('setFetchingTransactions', bool)
+    },
 /// end-region scoped actions
   }
 }

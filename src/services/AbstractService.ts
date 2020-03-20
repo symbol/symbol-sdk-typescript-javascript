@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// external dependencies
 import {Store} from 'vuex'
+import VueI18n from 'vue-i18n'
 
 // internal dependencies
 import {IService} from './IService'
@@ -30,6 +32,12 @@ export abstract class AbstractService implements IService {
    * @var {Vuex.Store}
    */
   public $store: Store<any>
+
+    /**
+   * Vuex Store 
+   * @var {VueI18n}
+   */
+  public $i18n: VueI18n
 
   /**
    * Construct a service instance around \a store
