@@ -23,7 +23,7 @@ export default class ImportAccountTs extends Vue {
    */
   public StepBarTitleList = [
     'Create_Account',
-    'Type_Mnemonic_Phrase',
+    'Mnemonic_Phrase',
     'Choose_Wallets',
     'Finish',
   ]

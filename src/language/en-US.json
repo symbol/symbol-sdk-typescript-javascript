@@ -803,7 +803,7 @@
   "Input_mnemonic": "Enter a mnemonic passphrase",
   "Return_password_setting": "Return to password settings",
   "Select_public_key": "Select the imported wallets",
-  "Input_mnemonic_tips": "The mnemonic passphrase is composed of 24 randomly chosen words. After setting the words, your assets will be restored.",
+  "Input_mnemonic_tips": "Enter the 12 or 24 words of your mnemonic passphrase separated by space.  The mnemonic passphrase is composed of 12 or 24 randomly chosen words. After setting the words, your assets will be restored.",
   "Import_successful": "Congratulations, the account was imported successfully!",
   "Create_successful": "Congratulations, the account was created successfully!",
   "Import_your_account_successful": "The account was imported successfully!",
@@ -906,7 +906,7 @@
   "Backup_Mnemonic_Phrase": "Backup Mnemonic Phrase",
   "Verify_Mnemonic_phrase": "Verify Mnemonic phrase",
   "Finish": "Finish",
-  "Type_Mnemonic_Phrase": "Type Mnemonic Phrase",
+  "Mnemonic_Phrase": "Mnemonic Passphrase",
   "Are_you_sure_to_unlink_this_account": "Are you sure to unlink this account?",
   "remote_account_being_created": "Please click the 'Generate' button to generate a valid remote account",
   "link_Or_Change": "Remote account link",
@@ -1190,5 +1190,6 @@
   "no_data_transactions": "No transactions were found for this account",
   "no_data_namespaces": "No namespaces were found for this account",
   "no_data_mosaics": "No mosaics were found for this account",
-  "clear_staged_transactions": "Discard all transactions"
+  "clear_staged_transactions": "Discard all transactions",
+  "mnemonic_copy":"Copy"
 }

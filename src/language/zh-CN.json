@@ -475,7 +475,7 @@
   "Input_mnemonic": "输入助记词",
   "Return_password_setting": "返回密码设置",
   "Select_public_key": "选择导入钱包",
-  "Input_mnemonic_tips": "助记词是遵循HD-WALLET协议的种子文件，由24个随机单词成，导入本文件后，将会恢复你种子下的所有资产。导入记助词后，将会被你上一步设置的密码保存在你的本地设备中，使用中请注意网络安全！",
+  "Input_mnemonic_tips": "请在输入单词之间用空格隔开，助记词数量为12或24个的英文单词。助记词是遵循HD-WALLET协议的种子文件，由12或24个随机单词成，导入本文件后，将会恢复你种子下的所有资产。导入记助词后，将会被你上一步设置的密码保存在你的本地设备中，使用中请注意网络安全！",
   "Import_successful": "恭喜，导入账户成功！",
   "Create_successful": "恭喜，创建账户成功！",
   "Import_your_account_successful": "你已成功导入自己的账户",
@@ -965,7 +965,7 @@
   "Enter_your_password_to_create_a_remote_account": "输入密码以生成新的远程账户",
   "Please_set_transaction_fee": "请设置交易费用",
   "Please_set_transaction_fee_and_password": "请设置交易费用及账户密码",
-  "Type_Mnemonic_Phrase": "类型助记词",
+  "Mnemonic_Phrase": "助记词",
   "Are_you_sure_to_unlink_this_account": "您确定要与此地址取消连接吗?",
   "link_Or_Change": "链接或修改远程账户",
   "node_Network": "节点设置",
@@ -1015,5 +1015,6 @@
   "page_title_multisig_cosign": "签名",
   "approval_greater_than_cosignatories": "最小批准所需余项比可用余项多 {delta}。请添加余数或减少最小批准号。",
   "removal_greater_than_cosignatories": "最小删除所需余弦比可用余弦多{delta}。请添加余弦或减少最小删除数。",
-  "page_title_transfer": "转账"
+  "page_title_transfer": "转账",
+  "mnemonic_copy":"复制"
 }

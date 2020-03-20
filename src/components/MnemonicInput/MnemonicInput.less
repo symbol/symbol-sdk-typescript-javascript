@@ -1,0 +1,39 @@
+@import "../../views/resources/css/variables.less";
+
+.show-mnemonic {
+  width        : 100%;
+  min-height   : 2.6rem;
+  padding      : .2rem;
+  border       : 1px solid rgba(51, 51, 51, 0.2);
+  border-radius: .05rem;
+  margin-bottom: .2rem;
+  position: relative;
+
+  .input-already {
+    display         : inline-block;
+    padding         : 0.08rem .2rem;
+    background-color: @purple;
+    color           : @mnemonicColor;
+    border-radius   : .05rem;
+    margin-right    : .15rem;
+    margin-bottom   : .2rem;
+    text-transform  : lowercase;
+  }
+
+  .mnemonic-input-container {
+    display: inline-block;
+
+    .mnemonic-input {
+      background-color: transparent;
+      outline         : none;
+      max-width       : 2rem;
+      border          : 0;
+      width           : 100%;
+    }
+  }
+  .copy-button{
+    position: absolute;
+    bottom: 0.01rem;
+    right: 0.01rem;
+  }
+}
