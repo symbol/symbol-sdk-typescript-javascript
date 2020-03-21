@@ -13,13 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicInfo, QueryParams, Transaction, TransactionType, NamespaceRegistrationType, UInt64, MosaicId} from 'symbol-sdk'
+import {
+  MosaicId,
+  MosaicInfo,
+  NamespaceRegistrationType,
+  QueryParams,
+  RepositoryFactory,
+  Transaction,
+  TransactionType,
+  UInt64
+} from 'symbol-sdk'
 import Vue from 'vue'
-
 // internal dependencies
-import {RESTService} from '@/services/RESTService'
 import {MosaicService} from '@/services/MosaicService'
 import {AwaitLock} from './AwaitLock';
+
 const Lock = AwaitLock.create();
 
 // mosaic state typing
@@ -114,7 +122,9 @@ export default {
         }
         // - initialize CURRENCY from nemesis transactions
         else {
-          await dispatch('INITIALIZE_FROM_NEMESIS', rootGetters['network/currentPeer'].url)
+          const nodeUrl = rootGetters['network/currentPeer'].url;
+          const repositoryFactory = rootGetters['network/repositoryFactory'];
+          await dispatch('INITIALIZE_FROM_NEMESIS', {nodeUrl, repositoryFactory})
         }
 
         // update store
@@ -164,12 +174,12 @@ export default {
         knownMosaics: withFeed.mosaics
       }
     },
-    async INITIALIZE_FROM_NEMESIS({commit, dispatch}, nodeUrl) {
+    async INITIALIZE_FROM_NEMESIS({commit, dispatch}, {repositoryFactory, nodeUrl}) {
       // read first network block to identify currency mosaic
 
       dispatch('diagnostic/ADD_DEBUG', 'Store action mosaic/INITIALIZE_FROM_NEMESIS dispatched with nodeUrl: ' + nodeUrl, {root: true})
 
-      const blockHttp = RESTService.create('BlockHttp', nodeUrl)
+      const blockHttp = repositoryFactory.createBlockRepository();
       blockHttp.getBlockTransactions(UInt64.fromUint(1), new QueryParams({pageSize: 100})).subscribe(
         async (transactions: Transaction[]) => {
           const payload = await dispatch('GET_CURRENCY_MOSAIC_FROM_NEMESIS', transactions)
@@ -243,27 +253,24 @@ export default {
       }
     },
     async REST_FETCH_INFO({commit, rootGetters}, mosaicId): Promise<MosaicInfo> {
-      const nodeUrl = rootGetters['network/currentPeer'].url
-      const networkType = rootGetters['network/networkType']
-      const mosaicHttp = RESTService.create('MosaicHttp', nodeUrl, networkType)
+      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+      const mosaicHttp = repositoryFactory.createMosaicRepository();
       const mosaicInfo = await mosaicHttp.getMosaic(mosaicId).toPromise()
 
       commit('addMosaicInfo', mosaicInfo)
       return mosaicInfo
     },
     async REST_FETCH_INFOS({commit, rootGetters}, mosaicIds): Promise<MosaicInfo[]> {
-      const nodeUrl = rootGetters['network/currentPeer'].url
-      const networkType = rootGetters['network/networkType']
-      const mosaicHttp = RESTService.create('MosaicHttp', nodeUrl, networkType)
+      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
+      const mosaicHttp = repositoryFactory.createMosaicRepository();
       const mosaicsInfo = await mosaicHttp.getMosaics(mosaicIds).toPromise()
 
       mosaicsInfo.forEach(info => commit('addMosaicInfo', info))
       return mosaicsInfo
     },
     async REST_FETCH_NAMES({commit, rootGetters}, mosaicIds): Promise<{hex: string, name: string}[]> {
-      const nodeUrl = rootGetters['network/currentPeer'].url
-      const networkType = rootGetters['network/networkType']
-      const namespaceHttp = RESTService.create('NamespaceHttp', nodeUrl, networkType)
+      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+      const namespaceHttp = repositoryFactory.createNamespaceRepository();
       const mosaicNames = await namespaceHttp.getMosaicsNames(mosaicIds).toPromise()
 
       // map by hex if names available

@@ -6,6 +6,7 @@ node_modules
 .git
 .idea
 .vscode
+*.iml
 *.js.map
 /www
 src/**/*.map

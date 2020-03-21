@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 import Vue from 'vue';
-import {NetworkType, Listener, BlockInfo, UInt64} from 'symbol-sdk';
+import {BlockInfo, IListener, NetworkType, RepositoryFactory, UInt64} from 'symbol-sdk';
 import {Subscription} from 'rxjs'
-
 // internal dependencies
 import {$eventBus} from '../events'
 import {RESTService} from '@/services/RESTService'
@@ -24,19 +23,19 @@ import {PeersModel} from '@/core/database/entities/PeersModel'
 import {URLHelpers} from '@/core/utils/URLHelpers'
 import app from '@/main'
 import {AwaitLock} from './AwaitLock'
-const Lock = AwaitLock.create();
-
 // configuration
 import networkConfig from '../../config/network.conf.json';
-import { PeersRepository } from '@/repositories/PeersRepository';
+import {PeersRepository} from '@/repositories/PeersRepository';
 import {UrlValidator} from '@/core/validation/validators';
 import {PeerService} from '@/services/PeerService';
+
+const Lock = AwaitLock.create();
 
 /// region internal helpers
 /**
  * Recursive function helper to determine block ranges
  * needed to fetch data about all block \a heights
- * @param {number[]} heights 
+ * @param {number[]} heights
  * @return {BlockRangeType[]}
  */
 const getBlockRanges = (heights: number[], ranges: BlockRangeType[] = []): BlockRangeType[] => {
@@ -60,7 +59,7 @@ const getBlockRanges = (heights: number[], ranges: BlockRangeType[] = []): Block
  * Type SubscriptionType for Wallet Store
  * @type {SubscriptionType}
  */
-type SubscriptionType = {listener: Listener, subscriptions: Subscription[]}
+type SubscriptionType = {listener: IListener, subscriptions: Subscription[]}
 
 /**
  * Type BlockRangeType for Wallet Store
@@ -73,7 +72,6 @@ export default {
   namespaced: true,
   state: {
     initialized: false,
-    wsEndpoint: '',
     config: networkConfig,
     defaultPeer: URLHelpers.formatUrl(networkConfig.defaultNode.url),
     currentPeer: URLHelpers.formatUrl(networkConfig.defaultNode.url),
@@ -81,6 +79,7 @@ export default {
     networkType: NetworkType.TEST_NET,
     generationHash: networkConfig.networks['testnet-publicTest'].generationHash,
     properties: networkConfig.networks['testnet-publicTest'].properties,
+    repositoryFactory: RESTService.createRepositoryFactory(networkConfig.defaultNode.url),
     isConnected: false,
     nemesisTransactions: [],
     knownPeers: [],
@@ -92,9 +91,9 @@ export default {
   getters: {
     getInitialized: state => state.initialized,
     getSubscriptions: state => state.subscriptions,
-    wsEndpoint: state => state.wsEndpoint,
     networkType: state => state.networkType,
     generationHash: state => state.generationHash,
+    repositoryFactory: state => state.repositoryFactory,
     properties: state => state.properties,
     defaultPeer: state => state.defaultPeer,
     currentPeer: state => state.currentPeer,
@@ -111,12 +110,12 @@ export default {
     setConnected: (state, connected) => { state.isConnected = connected },
     currentHeight: (state, height) => Vue.set(state, 'currentHeight', height),
     currentPeerInfo: (state, info) => Vue.set(state, 'currentPeerInfo', info),
+    repositoryFactory: (state, repositoryFactory) => Vue.set(state, 'repositoryFactory', repositoryFactory),
     currentPeer: (state, payload) => {
       if (undefined !== payload) {
         let currentPeer = URLHelpers.formatUrl(payload)
-        let wsEndpoint = URLHelpers.httpToWsUrl(currentPeer.url)
         Vue.set(state, 'currentPeer', currentPeer)
-        Vue.set(state, 'wsEndpoint', wsEndpoint)
+        Vue.set(state, 'repositoryFactory', RESTService.createRepositoryFactory(currentPeer.url))
       }
     },
     addPeer: (state, peerUrl) => {
@@ -144,18 +143,7 @@ export default {
       Vue.set(state, 'knownBlocks', knownBlocks)
     },
     networkType: (state, type) => {
-      switch (type) {
-        case NetworkType.MIJIN_TEST:
-        case NetworkType.MIJIN:
-        case NetworkType.TEST_NET:
-        case NetworkType.MAIN_NET:
-          Vue.set(state, 'networkType', type)
-          break;
-
-        default:
-          Vue.set(state, 'networkType', NetworkType.TEST_NET)
-          break;
-      }
+      Vue.set(state, 'networkType', type || NetworkType.TEST_NET)
     },
     setSubscriptions: (state, data) => Vue.set(state, 'subscriptions', data),
     addSubscriptions: (state, payload) => {
@@ -210,13 +198,15 @@ export default {
     async INITIALIZE_FROM_DB({dispatch}, withFeed) {
       const defaultPeer = withFeed.endpoints.find(m => m.values.get('is_default'))
       const nodeUrl = defaultPeer.values.get('rest_url')
+      const repositoryFactory: RepositoryFactory = RESTService.createRepositoryFactory(nodeUrl)
 
       // - height always from network
-      const chainHttp = RESTService.create('ChainHttp', nodeUrl)
+      const chainHttp = repositoryFactory.createChainRepository();
       const currentHeight = await chainHttp.getBlockchainHeight().toPromise()
 
       // - set current peer connection
       dispatch('OPEN_PEER_CONNECTION', {
+        repositoryFactory: repositoryFactory,
         url: nodeUrl,
         networkType: defaultPeer.values.get('networkType'),
         generationHash: defaultPeer.values.get('generationHash'),
@@ -236,13 +226,7 @@ export default {
 
         // @OFFLINE: value should be defaulted to config data when REST_FETCH_PEER_INFO throws
         // - set current peer connection
-        dispatch('OPEN_PEER_CONNECTION', {
-          url: payload.url,
-          networkType: payload.networkType,
-          generationHash: payload.generationHash,
-          currentHeight: payload.currentHeight,
-          peerInfo: payload.peerInfo
-        })
+        dispatch('OPEN_PEER_CONNECTION', {...payload})
 
         // - initialize from config must populate DB
         const repository = new PeersRepository()
@@ -261,7 +245,7 @@ export default {
       commit('networkType', payload.networkType)
       commit('setConnected', true)
       $eventBus.$emit('newConnection', payload.url)
- 
+
       commit('currentHeight', payload.currentHeight.compact())
       commit('currentPeerInfo', payload.peerInfo)
 
@@ -289,13 +273,7 @@ export default {
         // - fetch info / connect to new node
         const payload = await dispatch('REST_FETCH_PEER_INFO', currentPeerUrl)
 
-        dispatch('OPEN_PEER_CONNECTION', {
-          url: payload.url,
-          networkType: payload.networkType,
-          generationHash: payload.generationHash,
-          currentHeight: payload.currentHeight,
-          peerInfo: payload.peerInfo
-        })
+        dispatch('OPEN_PEER_CONNECTION', {...payload})
 
         const currentWallet = rootGetters['wallet/currentWallet']
 
@@ -307,7 +285,7 @@ export default {
 
         // - re-open listeners
         dispatch('wallet/initialize', {address: currentWallet.values.get('address')}, {root: true})
-        
+
         // - set chosen endpoint as the new default in the database
         new PeerService().setDefaultNode(currentPeerUrl)
       } catch (e) {
@@ -356,10 +334,10 @@ export default {
     // Subscribe to latest account transactions.
     async SUBSCRIBE({ commit, dispatch, getters }) {
       // use RESTService to open websocket channel subscriptions
-      const websocketUrl = getters['wsEndpoint']
+      const repositoryFactory = getters['repositoryFactory'] as RepositoryFactory;
       const subscriptions: SubscriptionType  = await RESTService.subscribeBlocks(
         {commit, dispatch},
-        websocketUrl,
+        repositoryFactory,
       )
 
       // update state of listeners & subscriptions
@@ -405,8 +383,8 @@ export default {
 
       try {
         // - prepare REST gateway connection
-        const currentPeer = rootGetters['network/currentPeer'].url
-        const blockHttp = RESTService.create('BlockHttp', currentPeer)
+        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+        const blockHttp = repositoryFactory.createBlockRepository();
 
         // - fetch blocks information per-range (wait 3 seconds every 4th block)
         ranges.slice(0, 3).map(({start}) => {
@@ -434,12 +412,13 @@ export default {
       dispatch('diagnostic/ADD_DEBUG', 'Store action network/REST_FETCH_PEER_INFO dispatched with: ' + nodeUrl, {root: true})
 
       try {
-        const blockHttp = RESTService.create('BlockHttp', nodeUrl)
-        const chainHttp = RESTService.create('ChainHttp', nodeUrl)
-        const nodeHttp = RESTService.create('NodeHttp', nodeUrl)
+        const repositoryFactory: RepositoryFactory = RESTService.createRepositoryFactory(nodeUrl)
+        const chainHttp = repositoryFactory.createChainRepository()
+        const nodeHttp = repositoryFactory.createNodeRepository()
 
         // - read nemesis from REST
-        const nemesis = await blockHttp.getBlockByHeight(UInt64.fromUint(1)).toPromise()
+        const generationHash = await repositoryFactory.getGenerationHash().toPromise()
+        const networkType = await repositoryFactory.getNetworkType().toPromise()
 
         // - read peer info from REST
         const peerInfo = await nodeHttp.getNodeInfo().toPromise()
@@ -449,10 +428,11 @@ export default {
 
         return {
           url: nodeUrl,
-          networkType: nemesis.networkType,
-          generationHash: nemesis.generationHash,
-          currentHeight: currentHeight,
-          peerInfo: peerInfo
+          repositoryFactory,
+          networkType,
+          generationHash,
+          currentHeight,
+          peerInfo
         }
       }
       catch(e) {

@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NamespaceInfo, NamespaceId} from 'symbol-sdk'
+import {NamespaceId, NamespaceInfo, RepositoryFactory} from 'symbol-sdk'
 import Vue from 'vue'
-
 // internal dependencies
-import {RESTService} from '@/services/RESTService'
 import {AwaitLock} from './AwaitLock';
 import {NamespaceService} from '@/services/NamespaceService';
 import {NamespacesModel} from '@/core/database/entities/NamespacesModel';
+
 const Lock = AwaitLock.create();
 
 export default {
@@ -72,18 +71,16 @@ export default {
       })
     },
     async REST_FETCH_INFO({commit, rootGetters}, namespaceId: NamespaceId) {
-      const nodeUrl = rootGetters['network/currentPeer'].url
-      const networkType = rootGetters['network/networkType']
-      const namespaceHttp = RESTService.create('NamespaceHttp', nodeUrl, networkType)
+      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
+      const namespaceHttp = repositoryFactory.createNamespaceRepository()
       const namespaceInfo = await namespaceHttp.getNamespace(namespaceId).toPromise()
 
       commit('addNamespaceInfo', namespaceInfo)
       return namespaceInfo
     },
     async REST_FETCH_NAMES({commit, rootGetters}, namespaceIds: NamespaceId[]): Promise<{hex: string, name: string}[]> {
-      const nodeUrl = rootGetters['network/currentPeer'].url
-      const networkType = rootGetters['network/networkType']
-      const namespaceHttp = RESTService.create('NamespaceHttp', nodeUrl, networkType)
+      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+      const namespaceHttp = repositoryFactory.createNamespaceRepository();
       const namespaceNames = await namespaceHttp.getNamespacesName(namespaceIds).toPromise()
 
       // map by hex if names available

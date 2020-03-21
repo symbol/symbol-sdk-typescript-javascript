@@ -16,14 +16,12 @@
 // external dependencies
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Address, AccountHttp, PublicAccount, NetworkType} from 'symbol-sdk'
-import {timeout, finalize} from 'rxjs/operators'
-
+import {Address, NetworkType, PublicAccount, RepositoryFactory} from 'symbol-sdk'
+import {finalize, timeout} from 'rxjs/operators'
 // internal dependencies
 import {AddressValidator} from '@/core/validation/validators'
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 import {NotificationType} from '@/core/utils/NotificationType'
-
 // child components
 import {ValidationObserver, ValidationProvider} from 'vee-validate'
 // @ts-ignore
@@ -43,7 +41,7 @@ import ButtonAdd from '@/components/ButtonAdd/ButtonAdd.vue'
   },
   computed: {
     ...mapGetters({
-      currentPeer: 'network/currentPeer',
+      repositoryFactory: 'network/repositoryFactory',
       networkType: 'network/networkType',
     }),
   },
@@ -60,7 +58,7 @@ export class AddCosignatoryInputTs extends Vue {
    * @private
    * @type {string}
    */
-  private currentPeer: any
+  private repositoryFactory: RepositoryFactory
 
   /**
    * Current network type
@@ -115,7 +113,7 @@ export class AddCosignatoryInputTs extends Vue {
       message: `${this.$t('resolving_address', {address: address.pretty()})}`,
     })
 
-    new AccountHttp(this.currentPeer.url)
+   this.repositoryFactory.createAccountRepository()
       .getAccountInfo(address)
       .pipe(
         timeout(6000),

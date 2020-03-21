@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {StorageInfo} from 'symbol-sdk'
+import {RepositoryFactory, StorageInfo} from 'symbol-sdk'
 import Vue from 'vue'
 import axios from 'axios'
-
 // internal dependencies
-import {RESTService} from '@/services/RESTService'
 import {AwaitLock} from './AwaitLock';
+
 const Lock = AwaitLock.create();
 
 /// region protected helpers
@@ -69,8 +68,8 @@ export default {
   actions: {
     async initialize({ commit, dispatch, getters, rootGetters }) {
       const callback = async () => {
-        const nodeUrl = rootGetters['network/currentPeer'].url
-        const nodeHttp = RESTService.create('NodeHttp', nodeUrl)
+        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+        const nodeHttp = repositoryFactory.createNodeRepository();
         const diagnostic: StorageInfo = await nodeHttp.getStorageInfo().toPromise()
 
         commit('countTransactions', diagnostic.numTransactions)
@@ -78,7 +77,7 @@ export default {
         commit('countAccounts', diagnostic.numAccounts)
         
         // - fetch nodes (not yet in SDK)
-        const nodes = await REST_request(nodeUrl + '/node/peers')
+        const nodes = await nodeHttp.getNodePeers().toPromise()
         commit('countNodes', nodes.length)
 
         // update store
