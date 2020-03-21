@@ -7,6 +7,25 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ### Milestone: [catapult-server@v0.9.3.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.1)
 
+### [v0.9.6-beta2][v0.9.6-beta2] - 21-Mar-2020
+
+#### Added
+
+- Added aliases to wallet details (fixes #26)
+- Added multisig accounts transaction list link (fixes #84)
+
+#### Changed
+
+- Added usage of repository factory for REST (fixes #131)
+
+#### Fixed
+
+- Fixed account import cancellation (fixes #135)
+- Fixed transaction pagination (fixes #112)
+- Fixed dashboard CSS (fixes #111)
+- Fixed SignerSelector mutation (fixes #115)
+- Fixed form submit behaviour (fixes #98)
+
 ### [v0.9.6-beta1][v0.9.6-beta1] - 17-Mar-2020
 
 #### Added
@@ -122,7 +141,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Mosaic definition *multi-signature* feature bug with signer selection (aggregate bonded only)
 
 
-[v0.9.6]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.6-beta1
+[v0.9.6]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.6-beta2
+[v0.9.6-beta2]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.6-beta1...v0.9.6-beta2
 [v0.9.6-beta1]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta6...v0.9.6-beta1
 [v0.9.5]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.5-beta6
 [v0.9.5-beta6]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta5...v0.9.5-beta6
