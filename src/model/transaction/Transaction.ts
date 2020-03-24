@@ -235,12 +235,11 @@ export abstract class Transaction {
     }
 
     /**
-     * @internal
      * Generate signing bytes
      * @param payloadBytes Payload buffer
      * @param generationHashBytes GenerationHash buffer
      */
-    protected getSigningBytes(payloadBytes: number[], generationHashBytes: number[]) {
+    public getSigningBytes(payloadBytes: number[], generationHashBytes: number[]) {
         const byteBufferWithoutHeader = payloadBytes.slice(4 + 64 + 32 + 8);
         if (this.type === TransactionType.AGGREGATE_BONDED || this.type === TransactionType.AGGREGATE_COMPLETE) {
             return generationHashBytes.concat(byteBufferWithoutHeader.slice(0, 52));

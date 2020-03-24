@@ -53,6 +53,7 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
         super(url);
         this.receiptRoutesApi = new ReceiptRoutesApi(url);
         this.networkTypeObservable = this.createNetworkTypeObservable(networkType);
+        this.receiptRoutesApi.useQuerystring = true;
     }
 
     /**

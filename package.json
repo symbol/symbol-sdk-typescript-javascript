@@ -69,6 +69,7 @@
     "js-sha512": "^0.8.0",
     "long": "^4.0.0",
     "merkletreejs": "^0.1.7",
+    "minimist": "^1.2.5",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.5",
     "ripemd160": "^2.0.2",

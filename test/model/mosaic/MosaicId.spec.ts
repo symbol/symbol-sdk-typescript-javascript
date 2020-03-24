@@ -19,6 +19,7 @@ import { Id } from '../../../src/model/Id';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../../src/model/mosaic/MosaicNonce';
 import { NetworkType } from '../../../src/model/network/NetworkType';
+import { expect } from 'chai';
 
 describe('MosaicId', () => {
     const publicKey = 'b4f12e7c9f6946091e2cb8b6d3a12b50d17ccbbf646386ea27ce2946a7423dcf';
@@ -45,5 +46,11 @@ describe('MosaicId', () => {
         const id2 = MosaicId.createFromNonce(MosaicNonce.createFromNumber(12), owner);
 
         deepEqual(id1.id, id2.id);
+    });
+
+    it('should throw invalid size', () => {
+        expect(() => {
+            new MosaicId('85BBEA6CC462B24499');
+        }).to.throw(Error, 'Invalid size for MosaicId hexadecimal notation');
     });
 });

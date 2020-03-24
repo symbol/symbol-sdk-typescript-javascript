@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { from as observableFrom, Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { MetadataDTO, MetadataRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { Convert } from '../core/format/Convert';
 import { Address } from '../model/account/Address';
@@ -43,12 +42,12 @@ export class MetadataHttp extends Http implements MetadataRepository {
 
     /**
      * Constructor
-     * @param url
-     * @param networkType
+     * @param url the url.
      */
     constructor(url: string) {
         super(url);
         this.metadataRoutesApi = new MetadataRoutesApi(url);
+        this.metadataRoutesApi.useQuerystring = true;
     }
 
     /**
@@ -58,15 +57,12 @@ export class MetadataHttp extends Http implements MetadataRepository {
      * @returns Observable<Metadata[]>
      */
     public getAccountMetadata(address: Address, queryParams?: QueryParams): Observable<Metadata[]> {
-        return observableFrom(
+        return this.call(
             this.metadataRoutesApi.getAccountMetadata(address.plain(),
-                                                      this.queryParams(queryParams).pageSize,
-                                                      this.queryParams(queryParams).id,
-                                                      this.queryParams(queryParams).ordering)).pipe(
-            map(({body}) => body.metadataEntries.map((metadataEntry) => {
-                    return this.buildMetadata(metadataEntry);
-                })),
-            catchError((error) =>  throwError(this.errorHandling(error))),
+                this.queryParams(queryParams).pageSize,
+                this.queryParams(queryParams).id,
+                this.queryParams(queryParams).ordering),
+            (body) => body.metadataEntries.map((metadataEntry) => this.buildMetadata(metadataEntry))
         );
     }
 
@@ -77,12 +73,9 @@ export class MetadataHttp extends Http implements MetadataRepository {
      * @returns Observable<Metadata[]>
      */
     getAccountMetadataByKey(address: Address, key: string): Observable<Metadata[]> {
-        return observableFrom(
-            this.metadataRoutesApi.getAccountMetadataByKey(address.plain(), key)).pipe(
-            map(({body}) => body.metadataEntries.map((metadataEntry) => {
-                    return this.buildMetadata(metadataEntry);
-                })),
-            catchError((error) =>  throwError(this.errorHandling(error))),
+        return this.call(
+            this.metadataRoutesApi.getAccountMetadataByKey(address.plain(), key),
+            (body) => body.metadataEntries.map((metadataEntry) => this.buildMetadata(metadataEntry))
         );
     }
 
@@ -94,10 +87,9 @@ export class MetadataHttp extends Http implements MetadataRepository {
      * @returns Observable<Metadata>
      */
     getAccountMetadataByKeyAndSender(address: Address, key: string, publicKey: string): Observable<Metadata> {
-        return observableFrom(
-            this.metadataRoutesApi.getAccountMetadataByKeyAndSender(address.plain(), key, publicKey)).pipe(
-            map(({body}) => this.buildMetadata(body)),
-            catchError((error) =>  throwError(this.errorHandling(error))),
+        return this.call(
+            this.metadataRoutesApi.getAccountMetadataByKeyAndSender(address.plain(), key, publicKey),
+            (body) => this.buildMetadata(body)
         );
     }
 
@@ -108,15 +100,12 @@ export class MetadataHttp extends Http implements MetadataRepository {
      * @returns Observable<Metadata[]>
      */
     getMosaicMetadata(mosaicId: MosaicId, queryParams?: QueryParams): Observable<Metadata[]> {
-        return observableFrom(
+        return this.call(
             this.metadataRoutesApi.getMosaicMetadata(mosaicId.toHex(),
-                                                     this.queryParams(queryParams).pageSize,
-                                                     this.queryParams(queryParams).id,
-                                                     this.queryParams(queryParams).ordering)).pipe(
-            map(({body}) => body.metadataEntries.map((metadataEntry) => {
-                    return this.buildMetadata(metadataEntry);
-                })),
-            catchError((error) =>  throwError(this.errorHandling(error))),
+                this.queryParams(queryParams).pageSize,
+                this.queryParams(queryParams).id,
+                this.queryParams(queryParams).ordering),
+            (body) => body.metadataEntries.map((metadataEntry) => this.buildMetadata(metadataEntry))
         );
     }
 
@@ -127,12 +116,9 @@ export class MetadataHttp extends Http implements MetadataRepository {
      * @returns Observable<Metadata[]>
      */
     getMosaicMetadataByKey(mosaicId: MosaicId, key: string): Observable<Metadata[]> {
-        return observableFrom(
-            this.metadataRoutesApi.getMosaicMetadataByKey(mosaicId.toHex(), key)).pipe(
-            map(({body}) => body.metadataEntries.map((metadataEntry) => {
-                    return this.buildMetadata(metadataEntry);
-                })),
-            catchError((error) =>  throwError(this.errorHandling(error))),
+        return this.call(
+            this.metadataRoutesApi.getMosaicMetadataByKey(mosaicId.toHex(), key),
+            (body) => body.metadataEntries.map((metadataEntry) => this.buildMetadata(metadataEntry))
         );
     }
 
@@ -144,10 +130,8 @@ export class MetadataHttp extends Http implements MetadataRepository {
      * @returns Observable<Metadata>
      */
     getMosaicMetadataByKeyAndSender(mosaicId: MosaicId, key: string, publicKey: string): Observable<Metadata> {
-        return observableFrom(
-            this.metadataRoutesApi.getMosaicMetadataByKeyAndSender(mosaicId.toHex(), key, publicKey)).pipe(
-            map(({body}) => this.buildMetadata(body)),
-            catchError((error) =>  throwError(this.errorHandling(error))),
+        return this.call(
+            this.metadataRoutesApi.getMosaicMetadataByKeyAndSender(mosaicId.toHex(), key, publicKey), this.buildMetadata
         );
     }
 
@@ -158,15 +142,11 @@ export class MetadataHttp extends Http implements MetadataRepository {
      * @returns Observable<Metadata[]>
      */
     public getNamespaceMetadata(namespaceId: NamespaceId, queryParams?: QueryParams): Observable<Metadata[]> {
-        return observableFrom(
+        return this.call(
             this.metadataRoutesApi.getNamespaceMetadata(namespaceId.toHex(),
-                                                     this.queryParams(queryParams).pageSize,
-                                                     this.queryParams(queryParams).id,
-                                                     this.queryParams(queryParams).ordering)).pipe(
-            map(({body}) => body.metadataEntries.map((metadataEntry) => {
-                    return this.buildMetadata(metadataEntry);
-                })),
-            catchError((error) =>  throwError(this.errorHandling(error))),
+                this.queryParams(queryParams).pageSize,
+                this.queryParams(queryParams).id,
+                this.queryParams(queryParams).ordering), body => body.metadataEntries.map(this.buildMetadata)
         );
     }
 
@@ -177,12 +157,9 @@ export class MetadataHttp extends Http implements MetadataRepository {
      * @returns Observable<Metadata[]>
      */
     public getNamespaceMetadataByKey(namespaceId: NamespaceId, key: string): Observable<Metadata[]> {
-        return observableFrom(
-            this.metadataRoutesApi.getNamespaceMetadataByKey(namespaceId.toHex(), key)).pipe(
-            map(({body}) => body.metadataEntries.map((metadataEntry) => {
-                    return this.buildMetadata(metadataEntry);
-                })),
-            catchError((error) =>  throwError(this.errorHandling(error))),
+        return this.call(
+            this.metadataRoutesApi.getNamespaceMetadataByKey(namespaceId.toHex(), key),
+            (body) => body.metadataEntries.map(this.buildMetadata)
         );
     }
 
@@ -194,18 +171,14 @@ export class MetadataHttp extends Http implements MetadataRepository {
      * @returns Observable<Metadata>
      */
     public getNamespaceMetadataByKeyAndSender(namespaceId: NamespaceId, key: string, publicKey: string): Observable<Metadata> {
-        return observableFrom(
-            this.metadataRoutesApi.getNamespaceMetadataByKeyAndSender(namespaceId.toHex(), key, publicKey)).pipe(
-            map(({body}) => this.buildMetadata(body)),
-            catchError((error) =>  throwError(this.errorHandling(error))),
-        );
+        return this.call(
+            this.metadataRoutesApi.getNamespaceMetadataByKeyAndSender(namespaceId.toHex(), key, publicKey), this.buildMetadata);
     }
 
     /**
-     * Returns the mosaic metadata given a mosaic id.
-     * @param namespaceId - Namespace identifier.
-     * @param queryParams - Optional query parameters
-     * @returns Observable<Metadata[]>
+     * It maps MetadataDTO into a Metadata
+     * @param metadata - the dto
+     * @returns the model Metadata.
      */
     private buildMetadata(metadata: MetadataDTO): Metadata {
         const metadataEntry = metadata.metadataEntry;

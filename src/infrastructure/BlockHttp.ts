@@ -46,6 +46,7 @@ export class BlockHttp extends Http implements BlockRepository {
     constructor(url: string) {
         super(url);
         this.blockRoutesApi = new BlockRoutesApi(url);
+        this.blockRoutesApi.useQuerystring = true;
     }
 
     /**
