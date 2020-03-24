@@ -126,6 +126,12 @@ export class WalletSelectorPanelTs extends Vue {
   public addressesBalances: any = {}
 
   /**
+   * the toggle of the Spin
+   * @type string
+   */
+  public isLoading: boolean = true
+
+  /**
    * Hook called when the component is created
    * @return {void}
    */
@@ -167,6 +173,8 @@ export class WalletSelectorPanelTs extends Vue {
       )
 
       Vue.set(this.addressesBalances, address, balance)
+      //close the toggle
+      this.isLoading=false;
     }
   }
 

@@ -6,7 +6,8 @@
       </div>
     </div>
     <div class="wallet-switch-body-container scroll">
-      <div
+      <Spin  fix v-show="isLoading"></Spin>
+      <div v-show="!isLoading"
         v-for="(item, index) in currentWallets"
         :key="index"
         :class="[
@@ -34,6 +35,7 @@
           </div>
         </div>
       </div>
+      
     </div>
 
     <div class="wallet-switch-footer-container">
