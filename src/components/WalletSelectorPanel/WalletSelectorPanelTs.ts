@@ -158,6 +158,10 @@ export class WalletSelectorPanelTs extends Vue {
         return wallet.length > 0
       })
 
+    if (!knownWallets.length) {
+      this.isLoading = false
+    }
+
     // - format balances
     for (let i = 0, m = knownWallets.length; i < m; i++) {
       const currentInfo = knownWallets[i]
@@ -173,8 +177,9 @@ export class WalletSelectorPanelTs extends Vue {
       )
 
       Vue.set(this.addressesBalances, address, balance)
-      //close the toggle
-      this.isLoading=false;
+
+      // remove spin
+      this.isLoading = false
     }
   }
 
