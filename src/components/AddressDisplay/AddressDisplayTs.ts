@@ -20,10 +20,10 @@ import {Address} from 'symbol-sdk'
 export class AddressDisplayTs extends Vue {
 
   @Prop({
-    default: null
+    default: null,
   }) address: Address
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get pretty(): string {
     return this.address.pretty()
   }

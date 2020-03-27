@@ -18,15 +18,15 @@ import {FakeModel} from '@MOCKS/Database'
 describe('database/DatabaseModel', () => {
   describe('constructor() should', () => {
     test('set primary keys given array', () => {
-      const model = new FakeModel(['pk1', 'pk2'])
+      const model = new FakeModel([ 'pk1', 'pk2' ])
       expect(model).toBeDefined()
-      expect(model.primaryKeys).toMatchObject(['pk1', 'pk2'])
+      expect(model.primaryKeys).toMatchObject([ 'pk1', 'pk2' ])
     })
 
     test('set values given map', () => {
       const model = new FakeModel(['pk1'], new Map<string, any>([
-        ['pk1', 'id_value'],
-        ['db_field2', true],
+        [ 'pk1', 'id_value' ],
+        [ 'db_field2', true ],
       ]))
 
       expect(model.values.get('pk1')).toBe('id_value')
@@ -35,7 +35,7 @@ describe('database/DatabaseModel', () => {
 
     test('set identifier given primary key value', () => {
       const model = new FakeModel(['pk1'], new Map<string, any>([
-        ['pk1', 'id_value']
+        [ 'pk1', 'id_value' ],
       ]))
 
       expect(model.identifier).toBe('id_value')
@@ -43,7 +43,7 @@ describe('database/DatabaseModel', () => {
 
     test('auto-generate identifier given \'id\' primary key', () => {
       const model = new FakeModel(['id'], new Map<string, any>([
-        ['other', 'field_value']
+        [ 'other', 'field_value' ],
       ]))
 
       expect(model.identifier).toBeDefined()
@@ -80,7 +80,7 @@ describe('database/DatabaseModel', () => {
 
     test('return true given custom primary key and value', () => {
       const model = new FakeModel(['pk1'], new Map<string, any>([
-        ['pk1', 'id_value']
+        [ 'pk1', 'id_value' ],
       ]))
       expect(model.hasIdentifier()).toBe(true)
     })
@@ -94,7 +94,7 @@ describe('database/DatabaseModel', () => {
   describe('getIdentifier() should', () => {
     test('get identifier value given primary key value', () => {
       const model = new FakeModel(['pk1'], new Map<string, any>([
-        ['pk1', 'id_value']
+        [ 'pk1', 'id_value' ],
       ]))
 
       expect(model).toBeDefined()
@@ -102,9 +102,9 @@ describe('database/DatabaseModel', () => {
     })
 
     test('get dash-separated identifier value given multiple primary key values', () => {
-      const model = new FakeModel(['pk1', 'pk2'], new Map<string, any>([
-        ['pk1', 'id_value_part1'],
-        ['pk2', 'id_value_part2']
+      const model = new FakeModel([ 'pk1', 'pk2' ], new Map<string, any>([
+        [ 'pk1', 'id_value_part1' ],
+        [ 'pk2', 'id_value_part2' ],
       ]))
 
       expect(model).toBeDefined()
@@ -113,7 +113,7 @@ describe('database/DatabaseModel', () => {
 
     test('get pre-defined identifier value given \'id\' primary key', () => {
       const model = new FakeModel(['id'], new Map<string, any>([
-        ['id', 'id_value']
+        [ 'id', 'id_value' ],
       ]))
 
       expect(model).toBeDefined()

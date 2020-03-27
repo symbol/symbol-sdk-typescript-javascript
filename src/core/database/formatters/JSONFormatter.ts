@@ -31,9 +31,9 @@ export class JSONFormatter
     entities: Map<string, DatabaseModel>,
   ): string {
     // format each entity individually
-    let iterator = entities.keys()
-    let data: {} = {}
-    for (let i = 0, m = entities.size; i < m; i++) {
+    const iterator = entities.keys()
+    const data: {} = {}
+    for (let i = 0, m = entities.size; i < m; i ++) {
       // read next identifier and model data
       const id = iterator.next().value
       if (!id.length) {
@@ -45,7 +45,7 @@ export class JSONFormatter
       const identifier = dto.getIdentifier()
 
       // expose only "values" from model + add VERSION
-      let raw = {}
+      const raw = {}
       const row: Map<string, any> = dto.values
       const keys = row.keys()
       const values = row.values()
@@ -96,7 +96,7 @@ export class JSONFormatter
       const entity = parsed[identifier]
       const fields = Object.keys(entity)
       const values = []
-      fields.map(field => values.push([field, entity[field]]))
+      fields.map(field => values.push([ field, entity[field] ]))
 
       // create model & populate fields
       const model = schema.createModel(new Map<string, any>(values))
@@ -114,15 +114,18 @@ export class JSONFormatter
    * @return {boolean}
    */
   public validate(data: string): boolean {
-    try {
-      if (!data || data === null || !data.length) {
+    try {
+      if (!data || data === null || !data.length) {
         return false
       }
 
       JSON.parse(data)
       return true
     }
-    catch (e) {}
-    return false;
+    catch (e) {
+      return false
+    }
+
+    return false
   }
 }

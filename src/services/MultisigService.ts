@@ -27,7 +27,7 @@ export class MultisigService extends AbstractService {
    * Construct a service instance around \a store
    * @param store
    */
-  constructor(store?: Store<any>, i18n?:  VueI18n) {
+  constructor(store?: Store<any>, i18n?: VueI18n) {
     super()
     this.name = 'multisig'
     this.$store = store
@@ -45,10 +45,10 @@ export class MultisigService extends AbstractService {
   ): MultisigAccountInfo[] {
     const {multisigAccounts} = graphInfo
 
-    const multisigsInfo =  [...multisigAccounts.keys()]
-        .sort((a, b) => b - a) // Get addresses from top to bottom
-        .map((key) => multisigAccounts.get(key) || [])
-        .filter((x) => x.length > 0)
+    const multisigsInfo = [...multisigAccounts.keys()]
+      .sort((a, b) => b - a) // Get addresses from top to bottom
+      .map((key) => multisigAccounts.get(key) || [])
+      .filter((x) => x.length > 0)
 
     return [].concat(...multisigsInfo).map(item => item) // flatten
   }
@@ -58,7 +58,7 @@ export class MultisigService extends AbstractService {
    * @param {string} label_postfix_multisig
    * @returns {{publicKey: any; label: any;}[]}
    */
-  public getSigners(): {publicKey: any; label: any;}[] {
+  public getSigners(): {publicKey: any, label: any}[] {
     if (!this.$store || !this.$i18n) {
       throw new Error('multisig service getSigners method needs the store and i18n')
     }
@@ -80,7 +80,7 @@ export class MultisigService extends AbstractService {
 
     // in case "self" is a multi-signature account
     if (multisigInfo && multisigInfo.isMultisig()) {
-      self[0].label = self[0].label + `${this.$i18n.t('label_postfix_multisig')}`
+      self[0].label = `${self[0].label}${this.$i18n.t('label_postfix_multisig')}`
     }
 
     // add multisig accounts of which "self" is a cosignatory
@@ -90,7 +90,7 @@ export class MultisigService extends AbstractService {
       return self.concat(...multisigInfo.multisigAccounts.map(
         ({publicKey}) => ({
           publicKey,
-          label: service.getWalletLabel(publicKey, networkType) + `${this.$i18n.t('label_postfix_multisig')}`,
+          label: `${service.getWalletLabel(publicKey, networkType)}${this.$i18n.t('label_postfix_multisig')}`,
         })))
     }
 

@@ -27,8 +27,8 @@ import SpinnerLoading from '@/components/SpinnerLoading/SpinnerLoading.vue'
     ...mapGetters({
       hasLoadingOverlay: 'app/shouldShowLoadingOverlay',
       currentPeer: 'network/currentPeer',
-      currentAccount: 'account/currentAccount'
-    })
+      currentAccount: 'account/currentAccount',
+    }),
   },
   components: {
     DisabledUiOverlay,
@@ -54,7 +54,7 @@ export class AppTs extends Vue {
    * @see {Store.Network}
    * @var {Object}
    */
-  public currentPeer: Object
+  public currentPeer: Record<string, any>
 
   /**
    * Whether a loading overlay must be displayed
@@ -85,7 +85,7 @@ export class AppTs extends Vue {
    */
   protected initialize() {
     this.$store.dispatch('initialize')
-        .catch(error => console.log(error))
+      .catch(error => console.log(error))
   }
 
   /**

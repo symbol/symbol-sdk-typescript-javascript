@@ -27,11 +27,11 @@ export class WalletType {
 
   public static fromDescriptor(descriptor: string) {
     switch(descriptor) {
-    default:
-    case 'Ks': return WalletType.KEYSTORE
-    case 'Pk': return WalletType.PRIVATE_KEY
-    case 'Seed': return WalletType.SEED
-    case 'Trezor': return WalletType.TREZOR
+      default:
+      case 'Ks': return WalletType.KEYSTORE
+      case 'Pk': return WalletType.PRIVATE_KEY
+      case 'Seed': return WalletType.SEED
+      case 'Trezor': return WalletType.TREZOR
     }
   }
 }

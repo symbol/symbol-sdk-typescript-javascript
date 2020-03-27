@@ -89,7 +89,7 @@ export class DerivationService extends AbstractService {
       if (idx !== index) {
         return level
       }
-      return '' + next + '\''
+      return `${next}'`
     }).join('/')
   }
 
@@ -163,7 +163,7 @@ export class DerivationService extends AbstractService {
       if (idx !== index) {
         return level
       }
-      return '' + next + '\''
+      return `${next}'`
     }).join('/')
   }
 
@@ -174,8 +174,8 @@ export class DerivationService extends AbstractService {
    * @throws {Error} On \a path with invalid derivation path
    */
   public assertValidPath(path: string): void {
-    if (! this.isValidPath(path)) {
-      const errorMessage = 'Invalid derivation path: ' + path
+    if (!this.isValidPath(path)) {
+      const errorMessage = `Invalid derivation path: ${path}`
       this.$store.dispatch('diagnostic/ADD_ERROR', errorMessage)
       throw new Error(errorMessage)
     }
@@ -190,7 +190,7 @@ export class DerivationService extends AbstractService {
   public assertCanModifyLevel(which: DerivationPathLevels): void {
     const protect = [
       DerivationPathLevels.Purpose,
-      DerivationPathLevels.CoinType
+      DerivationPathLevels.CoinType,
     ]
     if (undefined !== protect.find(type => which === type)) {
       const errorMessage = 'Cannot modify a derivation path\'s purpose and coin type levels.'

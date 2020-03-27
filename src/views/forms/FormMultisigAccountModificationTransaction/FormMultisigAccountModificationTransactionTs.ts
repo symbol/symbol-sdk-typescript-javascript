@@ -227,7 +227,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    * @override
    * @param {string} signerPublicKey 
    */
-  public async onChangeSigner(signerPublicKey: string) {
+  public async onChangeSigner(signerPublicKey: string) {
     // whether the new signer is a multisig account
     const signerIsMultisigAccount = this.currentWallet.values.get('publicKey') !== signerPublicKey
 
@@ -263,7 +263,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     const modifications = this.formItems.cosignatoryModifications
 
     // - in case public key is part of "modifications"
-    if (modifications.hasOwnProperty(publicKey)) {
+    if (modifications && modifications[publicKey]) {
       Vue.delete(this.formItems.cosignatoryModifications, publicKey)
       return
     }

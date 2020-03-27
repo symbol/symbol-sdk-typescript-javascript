@@ -27,7 +27,7 @@ export abstract class AbstractFormatter {
 
   /**
    * Setter for active database table (schema)
-   * @param {DatabaseTable} schema 
+   * @param {DatabaseTable} schema 
    * @return {AbstractFormatter}
    */
   public setSchema(schema: DatabaseTable): AbstractFormatter {
@@ -55,7 +55,7 @@ export abstract class AbstractFormatter {
       return true
     }
 
-    throw new Error('Expected JSON format for data but got: ' + data);
+    throw new Error(`Expected JSON format for data but got: ${data}`)
   }
 
   /// region abstract methods

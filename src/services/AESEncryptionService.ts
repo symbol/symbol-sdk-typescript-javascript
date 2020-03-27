@@ -15,7 +15,7 @@
  */
 import {Store} from 'vuex'
 import {Password} from 'symbol-sdk'
-import CryptoJS from "crypto-js";
+import CryptoJS from 'crypto-js'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
@@ -57,20 +57,20 @@ export class AESEncryptionService extends AbstractService {
     // generate password based key
     const key = CryptoJS.PBKDF2(password.value, salt, {
       keySize: 8,
-      iterations: 1024
-    });
+      iterations: 1024,
+    })
 
     // encrypt using random IV
     const iv = CryptoJS.lib.WordArray.random(16)
     const encrypted = CryptoJS.AES.encrypt(data, key, { 
       iv: iv, 
       padding: CryptoJS.pad.Pkcs7,
-      mode: CryptoJS.mode.CBC
-    });
+      mode: CryptoJS.mode.CBC,
+    })
 
     // salt (16 bytes) + iv (16 bytes)
     // prepend them to the ciphertext for use in decryption
-    return salt.toString() + iv.toString() + encrypted.toString();
+    return salt.toString() + iv.toString() + encrypted.toString()
   }
 
   /**
@@ -81,26 +81,26 @@ export class AESEncryptionService extends AbstractService {
    */
   public static decrypt(
     data: string,
-    password: Password
+    password: Password,
   ): string {
     const salt = CryptoJS.enc.Hex.parse(data.substr(0, 32))
     const iv = CryptoJS.enc.Hex.parse(data.substr(32, 32))
-    const encrypted = data.substring(64);
+    const encrypted = data.substring(64)
 
     // generate password based key
     const key = CryptoJS.PBKDF2(password.value, salt, {
       keySize: 8,
-      iterations: 1024
-    });
+      iterations: 1024,
+    })
 
     // decrypt using custom IV
     const decrypted = CryptoJS.AES.decrypt(encrypted, key, { 
       iv: iv, 
       padding: CryptoJS.pad.Pkcs7,
-      mode: CryptoJS.mode.CBC
+      mode: CryptoJS.mode.CBC,
     })
 
-    return decrypted.toString(CryptoJS.enc.Utf8);
+    return decrypted.toString(CryptoJS.enc.Utf8)
   }
 
   /**
@@ -111,7 +111,7 @@ export class AESEncryptionService extends AbstractService {
    */
   public static generateRandomBytes(
     count: number,
-    raw: boolean = false
+    raw: boolean = false,
   ): string {
     const bytes = CryptoJS.lib.WordArray.random(count)
     if (raw === true) return bytes

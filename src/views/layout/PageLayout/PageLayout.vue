@@ -22,9 +22,9 @@
         <WindowControls />
 
         <div class="app_controller clear">
-          <div @click="hasDebugConsoleModal = true" class="debug-console-trigger">
+          <div class="debug-console-trigger" @click="hasDebugConsoleModal = true">
             <Icon :type="'ios-code-working'" size="22" class="debug-console-trigger-icon" />
-            <span>&nbsp;{{$t('top_window_console')}}</span>
+            <span>&nbsp;{{ $t('top_window_console') }}</span>
           </div>
 
           <PeerSelector />

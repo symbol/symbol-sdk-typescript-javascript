@@ -36,7 +36,7 @@ export default class DisabledFormOverlay extends Vue {
    */
   public currentWalletMultisigInfo: MultisigAccountInfo
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   /**
    * Whether a form should be disabled to a multisig account
    * @returns {boolean}

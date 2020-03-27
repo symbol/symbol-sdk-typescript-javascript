@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {mapGetters} from 'vuex'
-import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {Component, Vue, Prop} from 'vue-property-decorator'
 import {Transaction, MosaicId, AggregateTransaction} from 'symbol-sdk'
 
 // internal dependencies
@@ -202,7 +202,7 @@ export class TransactionListTs extends Vue {
     return [...transactions].reverse().slice(start, end)
   }
 
-    /**
+  /**
    * Returns all the transactions,
    * from the getter that matches the provided tab name
    * @param {TabName} tabName

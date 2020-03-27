@@ -22,23 +22,23 @@ import { mapGetters } from 'vuex'
 @Component({
   computed: {...mapGetters({
     explorerBaseUrl: 'app/explorerUrl',
-    faucetBaseUrl: 'app/faucetUrl'
-  })}
+    faucetBaseUrl: 'app/faucetUrl',
+  })},
 })
 export class WalletLinksTs extends Vue {
 
   @Prop({
-    default: null
+    default: null,
   }) wallet: WalletsModel
 
   public explorerBaseUrl: string
   public faucetBaseUrl: string
 
-/// region computed properties getter/setter
-/// end-region computed properties getter/setter
+  /// region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   public get explorerUrl() {
-    return this.explorerBaseUrl + '/account/' + this.wallet.values.get('address')
+    return `${this.explorerBaseUrl}/account/${this.wallet.values.get('address')}`
   }
 
   public get faucetUrl() {

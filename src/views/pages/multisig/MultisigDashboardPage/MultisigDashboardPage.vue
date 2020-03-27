@@ -1,12 +1,11 @@
 <template>
   <div class="multisig-outer-container">
     <div class="multisig-inner-container xym-outline">
-    <div class="bottom-container">
-      <NavigationTabs direction="horizontal" :parent-route-name="'multisig'" />
-      <router-view />
+      <div class="bottom-container">
+        <NavigationTabs direction="horizontal" :parent-route-name="'multisig'" />
+        <router-view />
+      </div>
     </div>
-    </div>
-    
   </div>
 </template>
 <script>

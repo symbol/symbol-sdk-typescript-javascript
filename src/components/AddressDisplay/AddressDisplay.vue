@@ -2,7 +2,7 @@
   <span
     class="col2-item overflow_ellipsis"
   >
-    {{ this.pretty }}
+    {{ pretty }}
   </span>
 </template>
 

@@ -46,7 +46,7 @@ export class NamespaceService extends AbstractService {
   /**
    * Read the collection of known namespaces from database.
    *
-   * @param {Function} filterFn
+   * @param {Function} filterFn
    * @return {MosaicsModel[]}
    */
   public getNamespaces(
@@ -54,7 +54,7 @@ export class NamespaceService extends AbstractService {
       value: NamespacesModel,
       index: number,
       array: NamespacesModel[]
-    ) => boolean = (e) => true
+    ) => boolean = () => true,
   ): NamespacesModel[] {
     const repository = new NamespacesRepository()
     return repository.collect().filter(filterFn)
@@ -68,7 +68,7 @@ export class NamespaceService extends AbstractService {
    * @return {NamespacesModel}
    */
   public async getNamespace(
-    namespaceId: NamespaceId 
+    namespaceId: NamespaceId, 
   ): Promise<NamespacesModel> {
 
     const repository = new NamespacesRepository()
@@ -112,7 +112,7 @@ export class NamespaceService extends AbstractService {
    * @return {MosaicsModel}
    */
   protected async fetchNamespaceInfo(
-    namespaceId: NamespaceId 
+    namespaceId: NamespaceId, 
   ): Promise<NamespacesModel> {
     // - fetch INFO from REST
     const namespaceInfo: NamespaceInfo = await this.$store.dispatch('namespace/REST_FETCH_INFO', namespaceId)
@@ -152,24 +152,24 @@ export class NamespaceService extends AbstractService {
 
     // - create model
     const namespace = repository.createModel(new Map<string, any>([
-      ['hexId', hexId],
-      ['name', fullName],
-      ['depth', namespaceInfo.depth],
-      ['level0', namespaceInfo.levels[0].toHex()],
-      ['level1', namespaceInfo.levels.length > 1 ? namespaceInfo.levels[1].toHex() : ''],
-      ['level2', namespaceInfo.levels.length > 2 ? namespaceInfo.levels[2].toHex() : ''],
-      ['alias', this.getAliasInStorageFormat(namespaceInfo.alias)],
-      ['parentId', namespaceInfo.depth !== 1 ? namespaceInfo.parentNamespaceId().toHex() : ''],
-      ['startHeight', namespaceInfo.startHeight.toHex()],
-      ['endHeight', namespaceInfo.endHeight.toHex()],
-      ['ownerPublicKey', namespaceInfo.owner.publicKey],
-      ['generationHash', this.$store.getters['network/generationHash']],
+      [ 'hexId', hexId ],
+      [ 'name', fullName ],
+      [ 'depth', namespaceInfo.depth ],
+      [ 'level0', namespaceInfo.levels[0].toHex() ],
+      [ 'level1', namespaceInfo.levels.length > 1 ? namespaceInfo.levels[1].toHex() : '' ],
+      [ 'level2', namespaceInfo.levels.length > 2 ? namespaceInfo.levels[2].toHex() : '' ],
+      [ 'alias', this.getAliasInStorageFormat(namespaceInfo.alias) ],
+      [ 'parentId', namespaceInfo.depth !== 1 ? namespaceInfo.parentNamespaceId().toHex() : '' ],
+      [ 'startHeight', namespaceInfo.startHeight.toHex() ],
+      [ 'endHeight', namespaceInfo.endHeight.toHex() ],
+      [ 'ownerPublicKey', namespaceInfo.owner.publicKey ],
+      [ 'generationHash', this.$store.getters['network/generationHash'] ],
     ]))
 
     // - update the model in database if it exists...
     if (existingModel) repository.update(hexId, namespace.values)
     // ... or create a new model
-    if (!existingModel) repository.create(namespace.values)
+    else repository.create(namespace.values)
 
     return namespace
   }
@@ -183,7 +183,8 @@ export class NamespaceService extends AbstractService {
   private async getNamespaceFullName(namespaceInfo: NamespaceInfo): Promise<string> {
     const namespaceIds: NamespaceId[] = namespaceInfo.levels.map(id => id)
     const namespaceNames: {
-      hex: string, name: string,
+      hex: string
+      name: string
     }[] = await this.$store.dispatch('namespace/REST_FETCH_NAMES', namespaceIds)
     return namespaceNames.find(({hex}) => hex === namespaceInfo.id.toHex()).name
   }

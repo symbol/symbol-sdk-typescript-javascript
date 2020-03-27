@@ -23,7 +23,7 @@ describe('services/AccountService', () => {
   describe('getPasswordHash() should', () => {
     test('create 64 bytes hash of password', () => {
       // act
-      const hash = service.getPasswordHash(new Password("1234567a"))
+      const hash = service.getPasswordHash(new Password('1234567a'))
 
       // assert
       expect(hash).toBeDefined()

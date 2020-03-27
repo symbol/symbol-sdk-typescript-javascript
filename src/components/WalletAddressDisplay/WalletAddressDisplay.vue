@@ -1,7 +1,8 @@
 <template>
   <div class="wallet-detail-row-3cols">
     <span class="label">{{ $t('Wallet_address') }}</span>
-    <div class="value walletAddress">{{ wallet.objects.address.pretty() }}
+    <div class="value walletAddress">
+      {{ wallet.objects.address.pretty() }}
       <img
         src="@/views/resources/img/wallet/copyIcon.png"
         class="copy-icon"

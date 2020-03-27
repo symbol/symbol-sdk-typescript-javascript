@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import ImportStrategyTs from './ImportStrategyTs'
-import "./ImportStrategy.less";
+import './ImportStrategy.less'
 
 export default class ImportStrategy extends ImportStrategyTs {}
 </script>

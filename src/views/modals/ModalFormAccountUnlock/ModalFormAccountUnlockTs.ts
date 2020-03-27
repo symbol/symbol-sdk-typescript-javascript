@@ -19,7 +19,6 @@ import {Account, Password} from 'symbol-sdk'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {AESEncryptionService} from '@/services/AESEncryptionService'
 
 // child components
 // @ts-ignore
@@ -31,15 +30,15 @@ import FormAccountUnlock from '@/views/forms/FormAccountUnlock/FormAccountUnlock
   },
   computed: {...mapGetters({
     currentAccount: 'account/currentAccount',
-  })}
+  })},
 })
 export class ModalFormAccountUnlockTs extends Vue {
   @Prop({
-    default: false
+    default: false,
   }) visible: boolean
 
   @Prop({
-    default: (a: Account, p: Password) => true
+    default: () => true,
   }) onSuccess: (a: Account, p: Password) => boolean
 
   /**
@@ -74,7 +73,7 @@ export class ModalFormAccountUnlockTs extends Vue {
    */
   public onAccountUnlocked(payload: {account: Account, password: Password}) {
     // - log about unlock success
-    this.$store.dispatch('diagnostic/ADD_INFO', 'Account ' + payload.account.address.plain() + ' unlocked successfully.')
+    this.$store.dispatch('diagnostic/ADD_INFO', `Account ${payload.account.address.plain()} unlocked successfully.`)
 
     // - emit success
     this.$emit('success', payload.account.publicAccount)

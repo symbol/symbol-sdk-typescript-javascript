@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Transaction, SignedTransaction, NetworkType, TransactionType} from 'symbol-sdk'
+import {Transaction, SignedTransaction, NetworkType} from 'symbol-sdk'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
@@ -81,14 +81,14 @@ export class HardwareConfirmationButtonTs extends Vue {
   public async processHardware() {
     // - read transaction stage
     const transactions = this.stagedTransactions
-    if (! transactions.length) {
+    if (!transactions.length) {
       this.$emit('error', this.$t('no_transaction_on_stage'))
       return this.$store.dispatch('notification/ADD_ERROR', this.$t('no_transaction_on_stage'))
     }
 
     const countStaged: number = transactions.length
     const signedTxes: SignedTransaction[] = []
-    for (let i = 0, m = transactions.length; i < m; i++) {
+    for (let i = 0, m = transactions.length; i < m; i ++) {
       // - order matters, get first transaction on-stage
       const stagedTx = transactions.shift()
       
@@ -99,7 +99,7 @@ export class HardwareConfirmationButtonTs extends Vue {
       })
 
       // - in case of error, display notification and exit
-      if (! result.success) {
+      if (!result.success) {
         this.$emit('error', result.payload.error)
         return this.$store.dispatch('notification/ADD_ERROR', result.payload.error)
       }
@@ -110,7 +110,7 @@ export class HardwareConfirmationButtonTs extends Vue {
         stagedTx.transactionInfo.hash,
         stagedTx.signer.publicKey,
         stagedTx.type,
-        this.networkType
+        this.networkType,
       )
 
       signedTxes.push(signedTx)

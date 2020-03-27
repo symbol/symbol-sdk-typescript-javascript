@@ -45,8 +45,8 @@ describe('transactions/ViewAliasTransaction', () => {
       expect(view.values.has('aliasAction')).toBe(true)
     })
 
-    //XXX test recognition of Namespace vs Address for recipient
-    //XXX test recognition of Namespace vs MosaicId for mosaics
+    // XXX test recognition of Namespace vs Address for recipient
+    // XXX test recognition of Namespace vs MosaicId for mosaics
   })
 
   describe('parse() should', () => {

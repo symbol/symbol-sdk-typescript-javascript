@@ -47,9 +47,9 @@ export class PeersModel extends DatabaseModel {
    * @return any
    */
   public get objects(): any {
-    const url = this.values.get('protocol')
-    + this.values.get('host') + ':'
-    + this.values.get('port')
+    const url = `${this.values.get('protocol')
+    + this.values.get('host')}:${
+      this.values.get('port')}`
 
     return {url}
   }

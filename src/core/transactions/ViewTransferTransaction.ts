@@ -22,13 +22,13 @@ import {MosaicService} from '@/services/MosaicService'
 
 /// region custom types
 export type TransferFormFieldsType = {
-  recipient: Address | NamespaceId,
+  recipient: Address | NamespaceId
   mosaics: {
-    mosaicHex: string,
+    mosaicHex: string
     amount: number
-  }[],
-  message?: string,
-  maxFee: UInt64,
+  }[]
+  message?: string
+  maxFee: UInt64
 }
 /// end-region custom types
 
@@ -55,7 +55,7 @@ export class ViewTransferTransaction extends TransactionView<TransferFormFieldsT
 
     // - set mosaics from form fields (requires divisibility info)
     const mosaics: Mosaic[] = []
-    if (!!formItems.mosaics && formItems.mosaics.length) {
+    if (!!formItems.mosaics && formItems.mosaics.length) {
 
       // - get known mosaics
       const mosaicsInfo = this.$store.getters['mosaic/mosaicsInfoList']
@@ -68,7 +68,7 @@ export class ViewTransferTransaction extends TransactionView<TransferFormFieldsT
         // - format amount to absolute
         const mosaic = new Mosaic(
           new MosaicId(RawUInt64.fromHex(spec.mosaicHex)),
-          UInt64.fromUint(spec.amount * Math.pow(10, div))
+          UInt64.fromUint(spec.amount * Math.pow(10, div)),
         )
         mosaics.push(mosaic)
       })

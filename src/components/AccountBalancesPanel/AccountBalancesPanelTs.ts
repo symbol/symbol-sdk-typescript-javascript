@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, Mosaic, MosaicInfo, NetworkType, Address} from 'symbol-sdk'
+import {MosaicId, Mosaic} from 'symbol-sdk'
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
@@ -42,7 +42,7 @@ import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
     isCosignatoryMode: 'wallet/isCosignatoryMode',
     networkMosaic: 'mosaic/networkMosaic',
     networkMosaicTicker: 'mosaic/networkMosaicTicker',
-  })}
+  })},
 })
 export class AccountBalancesPanelTs extends Vue {
   /**
@@ -119,7 +119,7 @@ export class AccountBalancesPanelTs extends Vue {
     return networkMosaicModel.values.get('divisibility')
   }
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get currentMosaics(): Mosaic[] {
     if (this.isCosignatoryMode) {
       return this.currentSignerMosaics
@@ -149,7 +149,7 @@ export class AccountBalancesPanelTs extends Vue {
 
     // - search for network mosaic
     const entry = mosaics.find(
-      mosaic => mosaic.id.id.equals(this.networkMosaic.id)
+      mosaic => mosaic.id.id.equals(this.networkMosaic.id),
     )
 
     if (undefined === entry) {

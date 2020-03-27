@@ -1,7 +1,8 @@
 <template>
   <div class="wallet-detail-row-3cols">
     <span class="label">{{ $t('Wallet_public_key') }}</span>
-    <div class="value walletPublicKey">{{ wallet.objects.publicAccount.publicKey }}
+    <div class="value walletPublicKey">
+      {{ wallet.objects.publicAccount.publicKey }}
       <img
         src="@/views/resources/img/wallet/copyIcon.png"
         class="copy-icon"

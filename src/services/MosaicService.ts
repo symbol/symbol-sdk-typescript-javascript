@@ -59,7 +59,7 @@ export class MosaicService extends AbstractService {
   /**
    * Read the collection of known mosaics from database.
    *
-   * @param {Function} filterFn
+   * @param {Function} filterFn
    * @return {MosaicsModel[]}
    */
   public getMosaics(
@@ -67,7 +67,7 @@ export class MosaicService extends AbstractService {
       value: MosaicsModel,
       index: number,
       array: MosaicsModel[]
-    ) => boolean = (e) => true,  
+    ) => boolean = () => true,  
   ): MosaicsModel[] {
     const repository = new MosaicsRepository()
     return repository.collect().filter(filterFn)
@@ -319,7 +319,7 @@ export class MosaicService extends AbstractService {
     amount: number,
     mosaic: MosaicId,
   ): Promise<number> {
-    let info = await this.getMosaic(mosaic)
+    const info = await this.getMosaic(mosaic)
     return amount / Math.pow(10, info.values.get('divisibility') || 0)
   }
 

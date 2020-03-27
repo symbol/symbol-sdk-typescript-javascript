@@ -7,10 +7,15 @@
       :transfer="false"
     >
       <div class="transactionConfirmationBody">
-        <div class="stepItem1">
-          <div v-if="!!stagedTransactions"
-               v-for="(transaction, index) in stagedTransactions"
-               class="info_container">
+        <div 
+          v-if="!!stagedTransactions"
+          class="stepItem1"
+        >
+          <div
+            v-for="(transaction, index) in stagedTransactions"
+            :key="index"
+            class="info_container"
+          >
             <TransactionDetails :transaction="transaction" />
           </div>
 

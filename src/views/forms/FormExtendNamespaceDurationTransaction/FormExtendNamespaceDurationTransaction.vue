@@ -55,7 +55,7 @@
               <input v-show="false" v-model="newDuration" @change="validate">
               <ErrorTooltip :errors="errors">
                 <div class="row-left-message">
-                  <span :class="[errors.length ? 'red' : '', 'pl-2']">
+                  <span :class="[ errors.length ? 'red' : '', 'pl-2' ]">
                     {{ newExpirationInfoView }} ({{ $t('at_block', {blockNumber: newEndHeight}) }})
                   </span>
                 </div>

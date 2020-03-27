@@ -18,7 +18,7 @@ import {Store} from 'vuex'
 // internal dependencies
 import {AbstractService} from './AbstractService'
 
-//XXX network config store getter
+// XXX network config store getter
 import networkConfig from '../../config/network.conf.json'
 const {defaultDynamicFeeMultiplier} = networkConfig.networks['testnet-publicTest'].properties
 

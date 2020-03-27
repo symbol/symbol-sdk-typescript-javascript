@@ -36,7 +36,7 @@ import FormRow from '@/components/FormRow/FormRow.vue'
   },
   computed: {...mapGetters({
     networkType: 'network/networkType',
-  })}
+  })},
 })
 export class NamespaceNameInputTs extends Vue {
   @Prop({ default: null }) value: string
@@ -56,7 +56,7 @@ export class NamespaceNameInputTs extends Vue {
    */
   public validationRules = ValidationRuleset
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get chosenValue(): string {
     return this.value
   }

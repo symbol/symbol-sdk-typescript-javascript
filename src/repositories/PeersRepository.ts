@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NodeInfo} from 'symbol-sdk'
-
 // internal dependencies
 import {PeersTable} from '@/core/database/entities/PeersTable'
 import {PeersModel} from '@/core/database/entities/PeersModel'
@@ -75,7 +73,7 @@ export class PeersRepository
       value: PeersModel,
       index: number,
       array: PeersModel[]
-    ) => boolean = (e) => true
+    ) => boolean = () => true,
   ): Map<string, PeersModel> {
     const filtered = this.collect().filter(filterFn)
     const mapped = new Map<string, PeersModel>()
@@ -94,14 +92,14 @@ export class PeersRepository
     const mapped = this.createModel(values)
 
     // created object must contain values for all primary keys
-    if (! mapped.hasIdentifier()) {
-      throw new Error('Missing value for mandatory identifier fields \'' + mapped.primaryKeys.join(', ') + '\'.')
+    if (!mapped.hasIdentifier()) {
+      throw new Error(`Missing value for mandatory identifier fields '${mapped.primaryKeys.join(', ')}'.`)
     }
 
     // verify uniqueness
     const identifier = mapped.getIdentifier()
     if (this.find(identifier)) {
-      throw new Error('Peer with host \'' + identifier + '\' already exists.')
+      throw new Error(`Peer with host '${identifier}' already exists.`)
     }
 
     // update collection
@@ -120,7 +118,7 @@ export class PeersRepository
   public read(identifier: string): PeersModel {
     // verify existence
     if (!this.find(identifier)) {
-      throw new Error('Peer with host \'' + identifier + '\' does not exist.')
+      throw new Error(`Peer with host '${identifier}' does not exist.`)
     }
 
     return this._collection.get(identifier)
@@ -137,8 +135,8 @@ export class PeersRepository
     const previous = this.read(identifier)
 
     // populate/update values
-    let iterator = values.keys()
-    for (let i = 0, m = values.size; i < m; i++) {
+    const iterator = values.keys()
+    for (let i = 0, m = values.size; i < m; i ++) {
       const key = iterator.next()
       const value = values.get(key.value)
 
@@ -162,11 +160,11 @@ export class PeersRepository
   public delete(identifier: string): boolean {
     // require existing
     if (!this.find(identifier)) {
-      throw new Error('Peer with host \'' + identifier + '\' does not exist.')
+      throw new Error(`Peer with host '${identifier}' does not exist.`)
     }
 
     // update collection
-    if(! this._collection.delete(identifier)) {
+    if(!this._collection.delete(identifier)) {
       return false
     }
 
@@ -178,7 +176,7 @@ export class PeersRepository
 
   /**
    * Populates the database from configuration file network.conf.json
-   * @param {string} generationHash 
+   * @param {string} generationHash 
    * @return {PeersModel[]}
    */
   public repopulateFromConfig(
@@ -198,21 +196,21 @@ export class PeersRepository
     const peers: PeersModel[] = []
     const nodes = networkConfig.networks[networkLabel].nodes
 
-    for (let i = 0, m = nodes.length; i < m; i++) {
+    for (let i = 0, m = nodes.length; i < m; i ++) {
       const spec = nodes[i]
       const node = URLHelpers.formatUrl(spec.url)
       const isDefault = networkConfig.defaultNode.url === spec.url
 
       const model = new PeersModel(new Map<string, any>([
-        ['rest_url', spec.url],
-        ['host', node.hostname],
-        ['port', parseInt(node.port)],
-        ['protocol', node.protocol],
-        ['networkType', networkType],
-        ['generationHash', generationHash],
-        ['roles', spec.roles],
-        ['is_default', isDefault],
-        ['friendly_name', spec.friendly],
+        [ 'rest_url', spec.url ],
+        [ 'host', node.hostname ],
+        [ 'port', parseInt(node.port) ],
+        [ 'protocol', node.protocol ],
+        [ 'networkType', networkType ],
+        [ 'generationHash', generationHash ],
+        [ 'roles', spec.roles ],
+        [ 'is_default', isDefault ],
+        [ 'friendly_name', spec.friendly ],
       ]))
 
       this.create(model.values)

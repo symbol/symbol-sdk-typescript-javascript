@@ -28,12 +28,12 @@ describe('store/Database', () => {
       expect(commit).toHaveBeenCalledTimes(2)
       expect(commit).toHaveBeenNthCalledWith(1, 'setHasFeed', false) // no accounts = no feed
       expect(commit).toHaveBeenNthCalledWith(2, 'setFeed', {
-        "accounts": [],
-        "endpoints": [],
-        "mosaics": [],
-        "namespaces": [],
-        "settings": [],
-        "wallets": []
+        'accounts': [],
+        'endpoints': [],
+        'mosaics': [],
+        'namespaces': [],
+        'settings': [],
+        'wallets': [],
       })
     })
   })

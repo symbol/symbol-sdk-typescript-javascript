@@ -4,13 +4,15 @@
       <div class="diagnostic-container">
         <div class="form-container">
           <pre id="logs-container" class="logger">
-              <span v-for="(entry, index) in logs"
+              <span
+v-for="(entry, index) in logs"
               :key="index"
               :class="{
                   'normal': entry.level === 1 || entry.level === 2,
                   'warning': entry.level === 3,
                   'error': entry.level === 4,
-              }">{{ '\n' }} ({{ getTime(entry) }}) [{{ getLevel(entry) }}] {{ entry.message }}</span>
+              }"
+>{{ '\n' }} ({{ getTime(entry) }}) [{{ getLevel(entry) }}] {{ entry.message }}</span>
           </pre>
         </div>
       </div>
@@ -20,7 +22,7 @@
 
 <script lang="ts">
 // external dependencies
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 
 // resources
@@ -29,7 +31,7 @@ import './ModalDebugConsole.less'
 @Component({
   computed: {...mapGetters({
     logs: 'diagnostic/logs',
-  })}
+  })},
 })
 export default class ModalDebugConsole extends Vue {
   /**
@@ -63,9 +65,9 @@ export default class ModalDebugConsole extends Vue {
 
   public getLevel(entry): string {
     return entry.level === 1
-         ? 'INFO' : (entry.level === 2
-         ? 'DEBUG': (entry.level === 3
-         ? 'WARNING': 'ERROR')) 
+      ? 'INFO' : (entry.level === 2
+        ? 'DEBUG' : (entry.level === 3
+          ? 'WARNING' : 'ERROR')) 
   }
 
   public getTime(entry): string {

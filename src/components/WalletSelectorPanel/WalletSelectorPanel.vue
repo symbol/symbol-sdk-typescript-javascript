@@ -2,13 +2,16 @@
   <div class="wallet-switch-container">
     <div class="wallet-switch-header-container">
       <div class="wallet-switch-header-left-container">
-        <h1 class="section-title">{{ $t('Wallet_management') }}</h1>
+        <h1 class="section-title">
+          {{ $t('Wallet_management') }}
+        </h1>
       </div>
     </div>
     <div class="wallet-switch-body-container scroll">
-      <Spin  fix v-show="isLoading"></Spin>
-      <div v-show="!isLoading"
+      <Spin v-show="isLoading" fix />
+      <div
         v-for="(item, index) in currentWallets"
+        v-show="!isLoading"
         :key="index"
         :class="[
           'wallet-tile',
@@ -27,22 +30,21 @@
           <div class="wallet-tile-lower-container">
             <div class="wallet-amount">
               <MosaicAmountDisplay
-                :relative-amount="balances[item.address]"
                 :id="networkMosaic"
+                :relative-amount="balances[item.address]"
                 :size="'bigger'"
               />
             </div>
           </div>
         </div>
       </div>
-      
     </div>
 
     <div class="wallet-switch-footer-container">
       <span class="add-wallet pointer" @click="hasAddWalletModal = true">
         <Icon type="md-add-circle" />{{ $t('button_add_wallet') }}
       </span>
-      <div class="wallet-switch-header-right-container"  @click="hasMnemonicExportModal = true">
+      <div class="wallet-switch-header-right-container" @click="hasMnemonicExportModal = true">
         <span>
           <img src="@/views/resources/img/back-up.png" alt="">
         </span>
@@ -65,8 +67,8 @@
 </template>
 
 <script lang="ts">
-import { WalletSelectorPanelTs } from "./WalletSelectorPanelTs";
-import "./WalletSelectorPanel.less";
+import { WalletSelectorPanelTs } from './WalletSelectorPanelTs'
+import './WalletSelectorPanel.less'
 
 export default class WalletSelectorPanel extends WalletSelectorPanelTs {}
 </script>

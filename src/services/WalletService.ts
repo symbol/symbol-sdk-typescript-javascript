@@ -79,7 +79,7 @@ export class WalletService extends AbstractService {
    * @return {Promise<MosaicInfo>}
    */
   public getWallet(
-    identifier: string 
+    identifier: string, 
   ): WalletsModel {
     try {
       this.wallets.fetch()
@@ -87,7 +87,7 @@ export class WalletService extends AbstractService {
       return wallet
     }
     catch (e) {
-      this.$store.dispatch('notification/ADD_ERROR', 'Wallet with identifier \'' + identifier + '\' does not exist.')
+      this.$store.dispatch('notification/ADD_ERROR', `Wallet with identifier '${identifier}' does not exist.`)
     }
 
     return null
@@ -103,7 +103,7 @@ export class WalletService extends AbstractService {
       value: WalletsModel,
       index: number,
       array: WalletsModel[]
-    ) => boolean = (e) => true
+    ) => boolean = () => true,
   ): WalletsModel[] {
     const repository = new WalletsRepository()
     return repository.collect().filter(filterFn)
@@ -113,7 +113,7 @@ export class WalletService extends AbstractService {
    * Derive \a path using \a mnemonic pass phrase
    * @param {MnemonicPassPhrase} mnemonic 
    * @param {string} path 
-   * @param {NetworkType} networkType 
+   * @param {NetworkType} networkType 
    * @return {Account}
    */
   public getAccountByPath(
@@ -122,7 +122,7 @@ export class WalletService extends AbstractService {
     path: string = WalletService.DEFAULT_WALLET_PATH,
   ): Account {
     if (false === DerivationPathValidator.validate(path)) {
-      const errorMessage = 'Invalid derivation path: ' + path
+      const errorMessage = `Invalid derivation path: ${path}`
       this.$store.dispatch('diagnostic/ADD_ERROR', errorMessage)
       throw new Error(errorMessage)
     }
@@ -138,7 +138,7 @@ export class WalletService extends AbstractService {
   /**
    * Get extended key around \a mnemonic for \a networkTypw
    * @param {MnemonicPassPhrase} mnemonic 
-   * @param {NetworkType} networkType 
+   * @param {NetworkType} networkType 
    * @return {ExtendedKey}
    */
   public getExtendedKeyFromMnemonic(
@@ -152,7 +152,7 @@ export class WalletService extends AbstractService {
   /**
    * Get extended key around \a account for \a networkTypw
    * @param {MnemonicPassPhrase} mnemonic 
-   * @param {NetworkType} networkType 
+   * @param {NetworkType} networkType 
    * @return {ExtendedKey}
    */
   public getExtendedKeyFromAccount(
@@ -238,7 +238,7 @@ export class WalletService extends AbstractService {
    */
   public getWalletLabel(
     publicKey: string,
-    networkType: NetworkType
+    networkType: NetworkType,
   ): string {
     const address = Address.createFromPublicKey(publicKey, networkType)
 
@@ -269,26 +269,26 @@ export class WalletService extends AbstractService {
     const account = this.getAccountByPath(
       mnemonic,
       networkType,
-      WalletService.DEFAULT_WALLET_PATH
+      WalletService.DEFAULT_WALLET_PATH,
     )
 
     const simpleWallet = SimpleWallet.createFromPrivateKey(
       'SeedWallet 1',
       password,
       account.privateKey,
-      networkType
+      networkType,
     )
 
     return new WalletsModel(new Map<string, any>([
-      ['accountName', currentAccount.getIdentifier()],
-      ['name', 'Seed Wallet 1'],
-      ['type', WalletType.fromDescriptor('Seed')],
-      ['address', simpleWallet.address.plain()],
-      ['publicKey', account.publicKey],
-      ['encPrivate', simpleWallet.encryptedPrivateKey.encryptedKey],
-      ['encIv', simpleWallet.encryptedPrivateKey.iv],
-      ['path', WalletService.DEFAULT_WALLET_PATH],
-      ['isMultisig', false]
+      [ 'accountName', currentAccount.getIdentifier() ],
+      [ 'name', 'Seed Wallet 1' ],
+      [ 'type', WalletType.fromDescriptor('Seed') ],
+      [ 'address', simpleWallet.address.plain() ],
+      [ 'publicKey', account.publicKey ],
+      [ 'encPrivate', simpleWallet.encryptedPrivateKey.encryptedKey ],
+      [ 'encIv', simpleWallet.encryptedPrivateKey.iv ],
+      [ 'path', WalletService.DEFAULT_WALLET_PATH ],
+      [ 'isMultisig', false ],
     ]))
   }
 
@@ -309,26 +309,26 @@ export class WalletService extends AbstractService {
     const account = this.getAccountByPath(
       mnemonic,
       networkType,
-      nextPath
+      nextPath,
     )
 
     const simpleWallet = SimpleWallet.createFromPrivateKey(
       childWalletName,
       password,
       account.privateKey,
-      networkType
+      networkType,
     )
 
     return new WalletsModel(new Map<string, any>([
-      ['accountName', currentAccount.getIdentifier()],
-      ['name', childWalletName],
-      ['type', WalletType.fromDescriptor('Seed')],
-      ['address', simpleWallet.address.plain()],
-      ['publicKey', account.publicKey],
-      ['encPrivate', simpleWallet.encryptedPrivateKey.encryptedKey],
-      ['encIv', simpleWallet.encryptedPrivateKey.iv],
-      ['path', nextPath],
-      ['isMultisig', false]
+      [ 'accountName', currentAccount.getIdentifier() ],
+      [ 'name', childWalletName ],
+      [ 'type', WalletType.fromDescriptor('Seed') ],
+      [ 'address', simpleWallet.address.plain() ],
+      [ 'publicKey', account.publicKey ],
+      [ 'encPrivate', simpleWallet.encryptedPrivateKey.encryptedKey ],
+      [ 'encIv', simpleWallet.encryptedPrivateKey.iv ],
+      [ 'path', nextPath ],
+      [ 'isMultisig', false ],
     ]))
   }
 
@@ -353,19 +353,19 @@ export class WalletService extends AbstractService {
       childWalletName,
       password,
       account.privateKey,
-      networkType
+      networkType,
     )
 
     return new WalletsModel(new Map<string, any>([
-      ['accountName', currentAccount.getIdentifier()],
-      ['name', childWalletName],
-      ['type', WalletType.fromDescriptor('Pk')],
-      ['address', simpleWallet.address.plain()],
-      ['publicKey', account.publicKey],
-      ['encPrivate', simpleWallet.encryptedPrivateKey.encryptedKey],
-      ['encIv', simpleWallet.encryptedPrivateKey.iv],
-      ['path', ''],
-      ['isMultisig', false]
+      [ 'accountName', currentAccount.getIdentifier() ],
+      [ 'name', childWalletName ],
+      [ 'type', WalletType.fromDescriptor('Pk') ],
+      [ 'address', simpleWallet.address.plain() ],
+      [ 'publicKey', account.publicKey ],
+      [ 'encPrivate', simpleWallet.encryptedPrivateKey.encryptedKey ],
+      [ 'encIv', simpleWallet.encryptedPrivateKey.iv ],
+      [ 'path', '' ],
+      [ 'isMultisig', false ],
     ]))
   }
 }

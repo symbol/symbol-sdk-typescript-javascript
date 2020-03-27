@@ -83,7 +83,7 @@ export class DashboardInvoicePageTs extends Vue {
    */
   public transactions: ITransactionEntry[] = []
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   /**
    * Recipient to be shown in the view
    * @readonly
@@ -157,7 +157,7 @@ export class DashboardInvoicePageTs extends Vue {
     return this.transactionEntry.attachments
   }
 
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Hook called when the child component FormTransferTransaction

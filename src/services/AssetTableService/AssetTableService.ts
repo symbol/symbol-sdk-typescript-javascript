@@ -25,7 +25,7 @@ import {AbstractService} from '../AbstractService'
  * @interface TableField
  */
 export interface TableField {
-  name: string,
+  name: string
   label: string
 }
 
@@ -42,7 +42,7 @@ export type SortingDirections = 'asc' | 'desc'
  * @type {TableSortingOptions}
  */
 export type TableSortingOptions = {
-  fieldName: string,
+  fieldName: string
   direction: SortingDirections
 }
 
@@ -59,7 +59,7 @@ export type FilteringTypes = 'show' | 'hide'
  * @type {TableFilteringOptions}
  */
 export type TableFilteringOptions = {
-  fieldName: string,
+  fieldName: string
   filteringType: FilteringTypes
 }
 

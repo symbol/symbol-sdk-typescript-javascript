@@ -18,7 +18,6 @@ import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import router from '@/router/AppRouter'
 
 @Component({
   computed: {

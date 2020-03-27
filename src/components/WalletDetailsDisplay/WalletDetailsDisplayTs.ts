@@ -23,7 +23,7 @@ import {UIHelpers} from '@/core/utils/UIHelpers'
 export class WalletDetailsDisplayTs extends Vue {
 
   @Prop({
-    default: null
+    default: null,
   }) wallet: WalletsModel
 
   /**

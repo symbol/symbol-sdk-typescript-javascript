@@ -31,7 +31,7 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 })
 export class AmountInputTs extends Vue {
   @Prop({
-    default: ''
+    default: '',
   }) value: string
 
   /**
@@ -40,7 +40,7 @@ export class AmountInputTs extends Vue {
    */
   public validationRules = ValidationRuleset
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get relativeValue(): string {
     return this.value
   }

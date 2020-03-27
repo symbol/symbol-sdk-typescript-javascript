@@ -55,7 +55,7 @@ module.exports = {
      ignoreStrings: true,
      ignoreTemplateLiterals: true,
    }],
-   "no-console": ["error", { allow: ["info", "error"] }],
+   "no-console": ["error", { allow: ["log", "info", "error"] }],
    "no-ex-assign": "error",
    "no-extra-boolean-cast": 0,
    "no-loop-func": "error",
@@ -68,7 +68,7 @@ module.exports = {
    "no-var": "error",
    "object-literal-sort-keys": 0,
    "prefer-const": "error",
-   "prefer-template": 2,
+   "prefer-template": "off",
    "quotes": ["error", "single"],
    "space-infix-ops": "error",
    "space-unary-ops": [
@@ -100,6 +100,6 @@ module.exports = {
      }],
      "vue/require-v-for-key": "error",
      "vue/space-infix-ops": "error",
-     // "vue/no-v-html": "error",
+     "vue/no-v-html": "off",
    }
  };

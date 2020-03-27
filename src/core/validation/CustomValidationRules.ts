@@ -113,7 +113,7 @@ export class CustomValidationRules {
         const knownWallets = Array.from(accountsRepository.fetchRelations(
           walletsRepository,
           currentAccount,
-          'wallets'
+          'wallets',
         ).values())
 
         return undefined === knownWallets.find(w => value === w.values.get('name'))
@@ -127,8 +127,9 @@ export class CustomValidationRules {
           Account.createFromPrivateKey(value, NetworkType.MIJIN_TEST)
           return true
         }
-        catch (e) {}
-        return false 
+        catch (e) {
+          return false
+        }
       },
       message: `${i18n.t(`${NotificationType.ACCOUNT_NAME_EXISTS_ERROR}`)}`,
     })

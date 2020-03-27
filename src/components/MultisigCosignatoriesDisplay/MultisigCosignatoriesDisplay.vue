@@ -1,6 +1,8 @@
 <template>
   <div>
-    <FormRow v-if="!(multisig && multisig.cosignatories.length) && !addModifications.length && !removeModifications.length">
+    <FormRow 
+      v-if="!(multisig && multisig.cosignatories.length) && !addModifications.length && !removeModifications.length"
+    >
       <template v-slot:inputs>
         <div>
           <div class="row-cosignatory-modification-display inputs-container empty-message mx-1">

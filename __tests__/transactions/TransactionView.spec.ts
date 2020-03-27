@@ -36,7 +36,7 @@ describe('transactions/TransactionView', () => {
   describe('use() should', () => {
     test('set transaction property', () => {
       // prepare
-      let view = new FakeTransactionView(store)
+      const view = new FakeTransactionView(store)
 
       // act
       view.use(transfer)
@@ -69,7 +69,7 @@ describe('transactions/TransactionView', () => {
       const deadline = Deadline.create()
       const transfer2 = getFakeTransaction(TransactionType.TRANSFER, {
         deadline,
-        networkType: NetworkType.TEST_NET
+        networkType: NetworkType.TEST_NET,
       })
 
       // act

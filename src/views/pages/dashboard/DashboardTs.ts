@@ -17,8 +17,6 @@
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
-
 // child components
 // @ts-ignore
 import AccountBalancesPanel from '@/components/AccountBalancesPanel/AccountBalancesPanel.vue'
@@ -35,7 +33,7 @@ import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue'
   },
   computed: {...mapGetters({
     currentWallet: 'wallet/currentWallet',
-  })}
+  })},
 })
 export class DashboardTs extends Vue {
   /**

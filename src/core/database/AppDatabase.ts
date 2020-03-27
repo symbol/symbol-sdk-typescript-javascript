@@ -35,12 +35,12 @@ export class AppDatabase {
 
     // - configure database tables
     adapter.setSchemas(new Map<string, DatabaseTable>([
-      ['accounts', new AccountsTable()],
-      ['wallets', new WalletsTable()],
-      ['endpoints', new PeersTable()],
-      ['mosaics', new MosaicsTable()],
-      ['namespaces', new NamespacesTable()],
-      ['settings', new SettingsTable()]
+      [ 'accounts', new AccountsTable() ],
+      [ 'wallets', new WalletsTable() ],
+      [ 'endpoints', new PeersTable() ],
+      [ 'mosaics', new MosaicsTable() ],
+      [ 'namespaces', new NamespacesTable() ],
+      [ 'settings', new SettingsTable() ],
     ]))
 
     return adapter

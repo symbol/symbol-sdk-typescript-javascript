@@ -25,7 +25,7 @@ describe('store/Diagnostic', () => {
       // act
       DiagnosticStore.actions.ADD_LOG({commit}, {
         level: LogLevels.DEBUG,
-        message: 'debug message'
+        message: 'debug message',
       })
 
       // assert

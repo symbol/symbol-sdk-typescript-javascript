@@ -17,8 +17,8 @@ import Vue from 'vue'
 
 // internal dependencies
 import app from '@/main'
-import {AwaitLock} from './AwaitLock';
-const Lock = AwaitLock.create();
+import {AwaitLock} from './AwaitLock'
+const Lock = AwaitLock.create()
 
 export default {
   namespaced: true,
@@ -32,18 +32,18 @@ export default {
     lastNotification: state => state.history.pop(),
     successes: state => {
       return state.history
-          .filter(row => row.level === 'success')
-          .map(log => log.message)
+        .filter(row => row.level === 'success')
+        .map(log => log.message)
     },
     warnings: state => {
       return state.history
-          .filter(row => row.level === 'warning')
-          .map(log => log.message)
+        .filter(row => row.level === 'warning')
+        .map(log => log.message)
     },
     errors: state => {
       return state.history
-          .filter(row => row.level === 'error')
-          .map(log => log.message)
+        .filter(row => row.level === 'error')
+        .map(log => log.message)
     },
   },
   mutations: {
@@ -52,7 +52,7 @@ export default {
       const history = state.history
       history.push({
         level: payload.level || 'warning',
-        message: payload.message
+        message: payload.message,
       })
       Vue.set(state, 'history', history)
 
@@ -63,7 +63,7 @@ export default {
     },
   },
   actions: {
-    async initialize({ commit, dispatch, getters }) {
+    async initialize({ commit, getters }) {
       const callback = async () => {
         /// region initialize $Notice
         app.$Notice.config({duration: 4})
@@ -74,27 +74,27 @@ export default {
       }
 
       // aquire async lock until initialized
-      await Lock.initialize(callback, {commit, dispatch, getters})
+      await Lock.initialize(callback, {getters})
     },
-    async uninitialize({ commit, dispatch, getters }) {
+    async uninitialize({ commit, getters }) {
       const callback = async () => {
         commit('setInitialized', false)
       }
-      await Lock.uninitialize(callback, {commit, dispatch, getters})
+      await Lock.uninitialize(callback, {getters})
     },
-/// region scoped actions
+    /// region scoped actions
     async ADD_SUCCESS({commit, dispatch}, message) {
       commit('add', {level: 'success', message})
-      dispatch('diagnostic/ADD_INFO', 'Notification (Success): ' + message, {root: true})
+      dispatch('diagnostic/ADD_INFO', `Notification (Success): ${message}`, {root: true})
     },
     async ADD_WARNING({commit, dispatch}, message) {
       commit('add', {level: 'warning', message})
-      dispatch('diagnostic/ADD_WARNING', 'Notification (Warning): ' + message, {root: true})
+      dispatch('diagnostic/ADD_WARNING', `Notification (Warning): ${message}`, {root: true})
     },
     async ADD_ERROR({commit, dispatch}, message) {
       commit('add', {level: 'error', message})
-      dispatch('diagnostic/ADD_ERROR', 'Notification (Error): ' + message, {root: true})
+      dispatch('diagnostic/ADD_ERROR', `Notification (Error): ${message}`, {root: true})
     },
-/// end-region scoped actions
-  }
+    /// end-region scoped actions
+  },
 }

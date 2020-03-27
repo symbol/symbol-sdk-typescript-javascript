@@ -117,7 +117,7 @@ export class TableDisplayTs extends Vue {
    */
   public currentPage: number = 1
 
-  public nodata = [...new Array(this.pageSize).keys()];
+  public nodata = [...new Array(this.pageSize).keys()]
 
   protected get ownedAssetHexIds(): string[] {
     return this.assetType === 'namespace'

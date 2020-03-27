@@ -4,7 +4,7 @@
       <div class="wallet-detail-row">
         <span class="label">{{ $t('wallets_links_explorer') }}</span>
         <div class="value">
-          <a :href="explorerUrl" target="_blank">{{ $t('wallets_view_explorer_description') }}</a>
+          <a :href="explorerUrl" target="_blank">{{ $t('wallets_view_explorer_description') }}</a>
         </div>
       </div>
     </div>
@@ -13,7 +13,7 @@
       <div class="wallet-detail-row">
         <span class="label">{{ $t('wallets_links_faucet') }}</span>
         <div class="value">
-          <a :href="faucetUrl" target="_blank">{{ $t('wallets_view_open_faucet') }}</a>
+          <a :href="faucetUrl" target="_blank">{{ $t('wallets_view_open_faucet') }}</a>
         </div>
       </div>
     </div>

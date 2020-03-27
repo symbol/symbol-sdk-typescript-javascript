@@ -35,12 +35,12 @@ import FormRow from '@/components/FormRow/FormRow.vue'
   },
   computed: {...mapGetters({
     networkType: 'network/networkType',
-  })}
+  })},
 })
 export class RecipientInputTs extends Vue {
 
   @Prop({
-    default: null
+    default: null,
   }) value: string
 
   /**
@@ -55,7 +55,7 @@ export class RecipientInputTs extends Vue {
    */
   public validationRules = ValidationRuleset
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get rawValue(): string {
     return this.value
   }

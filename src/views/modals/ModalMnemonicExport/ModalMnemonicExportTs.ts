@@ -18,8 +18,6 @@ import {mapGetters} from 'vuex'
 import {Account, Password, NetworkType} from 'symbol-sdk'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 import {QRCodeGenerator, MnemonicQR} from 'symbol-qr-library'
-import {pluck, concatMap} from 'rxjs/operators'
-import {of, Observable} from 'rxjs'
 
 // internal dependencies
 import {AESEncryptionService} from '@/services/AESEncryptionService'
@@ -43,7 +41,7 @@ import failureIcon from '@/views/resources/img/monitor/failure.png'
 })
 export class ModalMnemonicExportTs extends Vue {
   @Prop({
-    default: false
+    default: false,
   }) visible: boolean
 
   /**
@@ -73,9 +71,9 @@ export class ModalMnemonicExportTs extends Vue {
 
   public created() {
     this.$eventToObservable('onAccountUnlocked').subscribe(
-      async (event) => {
+      async () => {
         this.qrBase64 = await this.exportMnemonicQR.toBase64().toPromise()
-      }
+      },
     )
   }
 
@@ -122,7 +120,7 @@ export class ModalMnemonicExportTs extends Vue {
       return true
     }
     catch (e) {
-      console.error("error mnemonic: ", e)
+      console.error('error mnemonic: ', e)
     }
 
     return false
@@ -136,12 +134,5 @@ export class ModalMnemonicExportTs extends Vue {
    */
   public onError(error: string) {
     this.$emit('error', error)
-  }
-
-  /**
-   * 
-   */
-  public onDownloadQR() {
-
   }
 }

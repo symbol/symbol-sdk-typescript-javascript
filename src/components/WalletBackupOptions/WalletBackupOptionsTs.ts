@@ -35,7 +35,7 @@ import ProtectedMnemonicDisplayButton from '@/components/ProtectedMnemonicDispla
 export class WalletBackupOptionsTs extends Vue {
 
   @Prop({
-    default: null
+    default: null,
   }) wallet: WalletsModel
 
   /**
@@ -44,7 +44,7 @@ export class WalletBackupOptionsTs extends Vue {
    */
   public isUnlockingAccount: boolean = false
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get hasAccountUnlockModal(): boolean {
     return this.isUnlockingAccount
   }
@@ -52,6 +52,6 @@ export class WalletBackupOptionsTs extends Vue {
   public set hasAccountUnlockModal(f: boolean) {
     this.isUnlockingAccount = f
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
 }

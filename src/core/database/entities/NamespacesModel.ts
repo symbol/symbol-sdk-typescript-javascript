@@ -32,7 +32,7 @@ export class NamespacesModel extends DatabaseModel {
    * Entity relationships
    * @var {Map<string, DatabaseRelation>}
    */
-  public relations: Map<string, DatabaseRelation> =  new Map<string, DatabaseRelation>()
+  public relations: Map<string, DatabaseRelation> = new Map<string, DatabaseRelation>()
 
   /**
    * Construct a namespace model instance

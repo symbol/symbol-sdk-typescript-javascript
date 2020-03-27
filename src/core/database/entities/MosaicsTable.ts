@@ -52,7 +52,7 @@ export class MosaicsTable extends DatabaseTable {
    * @return {any[]}
    */
   public getMigrations(): {
-    version: number,
+    version: number
     callback: (rows: Map<string, MosaicsModel>) => Map<string, MosaicsModel>
   }[] {
     return [

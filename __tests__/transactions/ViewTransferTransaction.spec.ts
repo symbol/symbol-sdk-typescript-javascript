@@ -31,7 +31,7 @@ describe('transactions/ViewTransferTransaction', () => {
         networkType: NetworkType.TEST_NET,
         recipient: getTestAccount('cosigner1').address,
         mosaics: [],
-        message: PlainMessage.create('ViewTransferTransaction')
+        message: PlainMessage.create('ViewTransferTransaction'),
       }) as TransferTransaction
 
       // act
@@ -45,8 +45,8 @@ describe('transactions/ViewTransferTransaction', () => {
       expect(view.values.has('message')).toBe(true)
     })
 
-    //XXX test recognition of Namespace vs Address for recipient
-    //XXX test recognition of Namespace vs MosaicId for mosaics
+    // XXX test recognition of Namespace vs Address for recipient
+    // XXX test recognition of Namespace vs MosaicId for mosaics
   })
 
   describe('parse() should', () => {

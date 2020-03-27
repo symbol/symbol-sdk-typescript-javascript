@@ -28,8 +28,8 @@ import TransactionList from '@/components/TransactionList/TransactionList.vue'
     TransactionList,
   },
   computed: {...mapGetters({
-    currentWallet: 'wallet/currentWallet'
-  })}
+    currentWallet: 'wallet/currentWallet',
+  })},
 })
 export class DashboardHomePageTs extends Vue {
   /**

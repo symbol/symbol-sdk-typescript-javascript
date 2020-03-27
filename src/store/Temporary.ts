@@ -17,9 +17,8 @@ import {Password} from 'symbol-sdk'
 import Vue from 'vue'
 
 // internal dependencies
-import {LogLevels} from '@/core/utils/LogLevels'
-import {AwaitLock} from './AwaitLock';
-const Lock = AwaitLock.create();
+import {AwaitLock} from './AwaitLock'
+const Lock = AwaitLock.create()
 
 export default {
   namespaced: true,
@@ -39,22 +38,22 @@ export default {
     setMnemonic: (state, mnemonic) => Vue.set(state, 'mnemonic', mnemonic),
   },
   actions: {
-    async initialize({ commit, dispatch, getters }) {
+    async initialize({ commit, getters }) {
       const callback = async () => {
         // update store
         commit('setInitialized', true)
       }
 
       // aquire async lock until initialized
-      await Lock.initialize(callback, {commit, dispatch, getters})
+      await Lock.initialize(callback, {getters})
     },
-    async uninitialize({ commit, dispatch, getters }) {
+    async uninitialize({ commit, getters }) {
       const callback = async () => {
         commit('setInitialized', false)
       }
-      await Lock.uninitialize(callback, {commit, dispatch, getters})
+      await Lock.uninitialize(callback, {getters})
     },
-/// region scoped actions
+    /// region scoped actions
     RESET_STATE({commit}) {
       commit('setPassword', null)
       commit('setMnemonic', null)
@@ -65,6 +64,6 @@ export default {
     SET_MNEMONIC({commit}, mnemonic) {
       commit('setMnemonic', mnemonic)
     },
-/// end-region scoped actions
-  }
+    /// end-region scoped actions
+  },
 }

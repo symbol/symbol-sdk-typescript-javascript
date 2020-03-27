@@ -27,7 +27,7 @@ describe('components/WalletSelectorField', () => {
     test('return empty string given no currentWallet and no value', () => {
       // prepare
       const wrapper = getComponent(WalletSelectorField, {wallet: WalletStore}, {
-        currentWallet: null
+        currentWallet: null,
       })
       const component = (wrapper.vm as WalletSelectorField)
 
@@ -43,7 +43,7 @@ describe('components/WalletSelectorField', () => {
       // prepare
       const wallet = getFakeModel('5678')
       const wrapper = getComponent(WalletSelectorField, {wallet: WalletStore}, {}, {
-        value: wallet.getIdentifier()
+        value: wallet.getIdentifier(),
       })
       const component = (wrapper.vm as WalletSelectorField)
 
@@ -79,7 +79,7 @@ describe('components/WalletSelectorField', () => {
       component.currentWalletIdentifier = '1234' // wallet identifier does not exist
       expect(component.$store.dispatch).toHaveBeenCalledWith(
         'notification/ADD_ERROR',
-        'Wallet with identifier \'1234\' does not exist.'
+        'Wallet with identifier \'1234\' does not exist.',
       )
     })
   })
@@ -88,7 +88,7 @@ describe('components/WalletSelectorField', () => {
     test('return empty array given no knownWallets', () => {
       // prepare
       const wrapper = getComponent(WalletSelectorField, {wallet: WalletStore}, {
-        knownWallets: []
+        knownWallets: [],
       })
       const component = (wrapper.vm as WalletSelectorField)
 

@@ -27,12 +27,12 @@ export class NamespacesMigrations {
    * @returns {Map<string, NamespacesModel>}
    */
   public static version3_uint_as_hex(
-    rows: Map<string, NamespacesModel>
+    rows: Map<string, NamespacesModel>,
   ): Map<string, NamespacesModel> {
     const entities = Array.from(rows.values())
     const migrated = new Map<string, NamespacesModel>()
 
-    entities.forEach((outOfDate: NamespacesModel, i: number) => {
+    entities.forEach((outOfDate: NamespacesModel) => {
       const oldStartHeight = outOfDate.values.get('startHeight')
       const newStartHeight = UInt64.fromUint(oldStartHeight)
       outOfDate.values.set('startHeight', newStartHeight.toHex())
@@ -46,7 +46,7 @@ export class NamespacesMigrations {
 
       // if alias is a mosaic, convert the mosaicId to an hex number
       if (oldAlias && oldAlias.type == AliasType.Mosaic) {
-        const oldMosaicId = new MosaicId([oldAlias.mosaicId.id.lower, oldAlias.mosaicId.id.higher]) 
+        const oldMosaicId = new MosaicId([ oldAlias.mosaicId.id.lower, oldAlias.mosaicId.id.higher ]) 
         const newMosaicId = oldMosaicId.toHex()
         outOfDate.values.set('alias', {type: oldAlias.type, mosaicId: newMosaicId})
       }

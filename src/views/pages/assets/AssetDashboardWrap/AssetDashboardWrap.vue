@@ -5,7 +5,7 @@
         <NavigationTabs direction="horizontal" :parent-route-name="parentRouteName" />
       </div>
       <div class="bottom-container">
-         <router-view />
+        <router-view />
       </div>
     </div> 
   </div>

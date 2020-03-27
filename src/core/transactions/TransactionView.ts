@@ -73,7 +73,7 @@ export abstract class TransactionView<FormFieldsType> {
     this.values = new Map<string, any>()
   }
 
-/// region abstract methods
+  /// region abstract methods
   /**
    * Parse form items and return a TransactionView
    * @param {FormFieldsType} formItems
@@ -87,7 +87,7 @@ export abstract class TransactionView<FormFieldsType> {
    * @return {TransactionView<FormFieldsType>}
    */
   public abstract use(transaction: Transaction): TransactionView<FormFieldsType>
-/// end-region abstract methods
+  /// end-region abstract methods
 
   /**
    * Initialize a transaction view around \a transaction

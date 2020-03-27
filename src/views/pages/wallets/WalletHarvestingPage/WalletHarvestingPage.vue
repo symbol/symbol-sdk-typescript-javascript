@@ -4,7 +4,7 @@
       <div class="wallet-actions-container">
         <WalletActions :wallet="currentWallet" />
       </div>
-   </div>
+    </div>
   </div>
 </template>
 

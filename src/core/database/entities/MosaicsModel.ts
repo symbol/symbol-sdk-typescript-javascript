@@ -39,7 +39,7 @@ export class MosaicsModel extends DatabaseModel {
    * Entity relationships
    * @var {Map<string, DatabaseRelation>}
    */
-  public relations: Map<string, DatabaseRelation> =  new Map<string, DatabaseRelation>()
+  public relations: Map<string, DatabaseRelation> = new Map<string, DatabaseRelation>()
 
   /**
    * Construct a mosaic model instance
@@ -55,14 +55,14 @@ export class MosaicsModel extends DatabaseModel {
    * @return any
    */
   public get objects(): {
-    mosaicId: MosaicId,
-    mosaicInfo: MosaicInfo,
+    mosaicId: MosaicId
+    mosaicInfo: MosaicInfo
   } {
     const hexId = this.getIdentifier()
     const mosaicId = new MosaicId(RawUInt64.fromHex(hexId))
     const ownerPub = PublicAccount.createFromPublicKey(
       this.values.get('ownerPublicKey'),
-      NetworkType.MIJIN_TEST // ignored
+      NetworkType.MIJIN_TEST, // ignored
     )
 
     return {

@@ -31,7 +31,7 @@
             <div class="wallet-detail-row">
               <span class="label">{{ $t('wallets_flags_default_wallet') }}</span>
               <div class="value">
-                <span>{{ $t('wallets_flags_default_wallet_explain') }}</span>
+                <span>{{ $t('wallets_flags_default_wallet_explain') }}</span>
               </div>
             </div>
           </div>
@@ -41,7 +41,7 @@
             <div class="wallet-detail-row">
               <span class="label">{{ $t('wallets_flags_default_wallet') }}</span>
               <div class="value">
-                <span>{{ $t('wallets_flags_default_wallet_explain') }}</span>
+                <span>{{ $t('wallets_flags_default_wallet_explain') }}</span>
               </div>
             </div>
           </div>

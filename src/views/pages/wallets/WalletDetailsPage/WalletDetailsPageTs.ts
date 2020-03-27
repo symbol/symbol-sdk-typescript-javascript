@@ -77,8 +77,8 @@ export class WalletDetailsPageTs extends Vue {
    * @type {boolean}
    */
   hasNameForm: boolean = false
-/// region computed properties getter/setter
-/// end-region computed properties getter/setter
+  /// region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Whether the wallet item is a seed wallet

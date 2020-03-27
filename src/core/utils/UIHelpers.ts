@@ -41,7 +41,8 @@ export class UIHelpers {
       document.body.removeChild(input)
       return true
     }
-    catch(e) {}
-    return false
+    catch(e) {
+      return false
+    }
   }
 }

@@ -15,32 +15,11 @@
  */
 import {RepositoryFactory, StorageInfo} from 'symbol-sdk'
 import Vue from 'vue'
-import axios from 'axios'
+
 // internal dependencies
-import {AwaitLock} from './AwaitLock';
+import {AwaitLock} from './AwaitLock'
 
-const Lock = AwaitLock.create();
-
-/// region protected helpers
-/**
- * Request REST data
- * @internal
- * @return {Promise<any[]>}
- */
-const REST_request = async (queryUrl: string): Promise<any[]> => {
-  // execute request
-  try {
-    const response = await axios.get(queryUrl, { params: {pageSize: 100} })
-    if (response.status !== 200) {
-      return []
-    }
-
-    const items = JSON.parse(response.data)
-    return items
-  }
-  catch(e) { return [] }
-}
-/// end-region protected helpers
+const Lock = AwaitLock.create()
 
 export default {
   namespaced: true,
@@ -66,10 +45,10 @@ export default {
     countNodes: (state, cnt) => Vue.set(state, 'countNodes', cnt),
   },
   actions: {
-    async initialize({ commit, dispatch, getters, rootGetters }) {
+    async initialize({ commit, getters, rootGetters }) {
       const callback = async () => {
-        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
-        const nodeHttp = repositoryFactory.createNodeRepository();
+        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
+        const nodeHttp = repositoryFactory.createNodeRepository()
         const diagnostic: StorageInfo = await nodeHttp.getStorageInfo().toPromise()
 
         commit('countTransactions', diagnostic.numTransactions)
@@ -85,16 +64,16 @@ export default {
       }
 
       // aquire async lock until initialized
-      await Lock.initialize(callback, {commit, dispatch, getters})
+      await Lock.initialize(callback, {getters})
     },
-    async uninitialize({ commit, dispatch, getters }) {
+    async uninitialize({ commit, getters }) {
       const callback = async () => {
         commit('setInitialized', false)
       }
-      await Lock.uninitialize(callback, {commit, dispatch, getters})
+      await Lock.uninitialize(callback, {getters})
     },
-/// region scoped actions
+    /// region scoped actions
 
-/// end-region scoped actions
-  }
+    /// end-region scoped actions
+  },
 }

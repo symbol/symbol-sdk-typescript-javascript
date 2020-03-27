@@ -5,7 +5,7 @@
         <div class="title">
           <span class="title_txt">{{ $t('accounts') }}</span>
         </div>
-        <img src="@/views/resources/img/monitor/peer_number.png" />
+        <img src="@/views/resources/img/monitor/peer_number.png">
         <span class="txt_info">
           <AnimatedNumber v-model="countAccounts" />
         </span>
@@ -14,7 +14,7 @@
         <div class="title">
           <span class="title_txt">{{ $t('chain_height') }}</span>
         </div>
-        <img src="@/views/resources/img/monitor/height.png" />
+        <img src="@/views/resources/img/monitor/height.png">
         <span class="txt_info">
           <AnimatedNumber v-model="currentHeight" />
         </span>
@@ -23,7 +23,7 @@
         <div class="title">
           <span class="title_txt">{{ $t('speed') }}</span>
         </div>
-        <img src="@/views/resources/img/monitor/speed.png" />
+        <img src="@/views/resources/img/monitor/speed.png">
         <span class="txt_info speed">
           {{ targetBlockTime }}s
         </span>
@@ -33,7 +33,7 @@
         <div class="title">
           <span class="title_txt">{{ $t('peers_number') }}</span>
         </div>
-        <img src="@/views/resources/img/monitor/peer.png" />
+        <img src="@/views/resources/img/monitor/peer.png">
         <span class="txt_info">
           <AnimatedNumber v-model="countNodes" />
         </span>
@@ -43,8 +43,8 @@
 </template>
 
 <script lang="ts">
-import { NetworkStatisticsPanelTs } from "./NetworkStatisticsPanelTs";
-import "./NetworkStatisticsPanel.less";
+import { NetworkStatisticsPanelTs } from './NetworkStatisticsPanelTs'
+import './NetworkStatisticsPanel.less'
 
 export default class NetworkStatisticsPanel extends NetworkStatisticsPanelTs {}
 </script>

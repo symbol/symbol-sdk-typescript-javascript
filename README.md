@@ -9,13 +9,7 @@ Cross-platform client for Symbol.
 
 :warning: **This program is currently in development and only available for the Symbol test network. Do not use it for other purposes.**
 
-## Requirements
-
-### NodeJS
-- NodeJS 10.X.X
-- NodeJS 12.X.X
-
-## Installation
+## Developer Instructions
 
 1. Clone the project.
 
@@ -37,12 +31,13 @@ npm run dev
 
 We use GitHub issues for tracking bugs and have limited bandwidth to address them.
 Please, use the following available resources to get help:
+
 - [NEM Developer Center][docs]
 - If you found a bug, [open a new issue][issues]
 
 ## Contributing
 
-This project is developed and maintained by NEM Foundation. Contributions are welcome and appreciated. Feel free to start an issue or create a pull request. Check [CONTRIBUTING](CONTRIBUTING.md) before start.
+This project is developed and maintained by NEM Foundation. Contributions are welcome and appreciated. Feel free to start an issue or create a pull request. Check [CONTRIBUTING](CONTRIBUTING.md) before you start.
 
 ## License
 Copyright (c) 2018-2020 NEM Licensed under the Apache License 2.0

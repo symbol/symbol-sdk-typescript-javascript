@@ -21,7 +21,7 @@ import draggable from 'vuedraggable'
 })
 export class MnemonicDisplayTs extends Vue {
   @Prop({
-    default: []
+    default: [],
   })
   words: string[]
 }

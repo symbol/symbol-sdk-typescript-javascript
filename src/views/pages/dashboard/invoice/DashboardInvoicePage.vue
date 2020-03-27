@@ -23,7 +23,7 @@
                 <span class="gray">（{{ mosaicHex }}）</span>
               </div>
             </div>
-            <span v-else>{{ 'N/A' }}</span>
+            <span v-else>{{ 'N/A' }}</span>
           </div>
 
           <div class="top-qr-text">

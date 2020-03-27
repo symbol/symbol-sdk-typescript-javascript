@@ -17,7 +17,7 @@ import {
   FakeAdapter,
   FakeTable,
   FakeModel,
-  getAdapter
+  getAdapter,
 } from '@MOCKS/Database'
 import {JSONFormatter} from '@/core/database/formatters/JSONFormatter'
 
@@ -128,14 +128,14 @@ describe('database/BaseStorageAdapter ==>', () => {
     test('update storage during write operation', () => {
       const adapter = getAdapter()
       const entries = adapter.write('endpoints', new Map<string, FakeModel>([
-        ['http://localhost:3000', new FakeModel(['host'], new Map<string, any>([
-          ['host', 'http://localhost:3000'],
-          ['port', '3000']
-        ]))],
-        ['http://localhost:3001', new FakeModel(['host'], new Map<string, any>([
-          ['host', 'http://localhost:3001'],
-          ['port', '3001']
-        ]))],
+        [ 'http://localhost:3000', new FakeModel(['host'], new Map<string, any>([
+          [ 'host', 'http://localhost:3000' ],
+          [ 'port', '3000' ],
+        ])) ],
+        [ 'http://localhost:3001', new FakeModel(['host'], new Map<string, any>([
+          [ 'host', 'http://localhost:3001' ],
+          [ 'port', '3001' ],
+        ])) ],
       ]))
       expect(entries).toBe(2)
 

@@ -36,7 +36,7 @@ import ModalMnemonicExport from '@/views/modals/ModalMnemonicExport/ModalMnemoni
 })
 export class ProtectedMnemonicQRButtonTs extends Vue {
   @Prop({
-    default: null
+    default: null,
   }) wallet: WalletsModel
 
   /**
@@ -51,7 +51,7 @@ export class ProtectedMnemonicQRButtonTs extends Vue {
    */
   public isViewingExportModal: boolean = false
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get hasMnemonicExportModal(): boolean {
     return this.isViewingExportModal
   }
@@ -59,7 +59,7 @@ export class ProtectedMnemonicQRButtonTs extends Vue {
   public set hasMnemonicExportModal(f: boolean) {
     this.isViewingExportModal = f
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Hook called when the account unlock modal must open

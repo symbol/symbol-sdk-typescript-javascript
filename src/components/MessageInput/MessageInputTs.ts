@@ -36,7 +36,7 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 export class MessageInputTs extends Vue {
 
   @Prop({
-    default: ''
+    default: '',
   }) value: string
 
   /**
@@ -45,7 +45,7 @@ export class MessageInputTs extends Vue {
    */
   public validationRules = ValidationRuleset
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   get plain(): string {
     return this.value
   }

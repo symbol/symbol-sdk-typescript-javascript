@@ -32,7 +32,7 @@ export class SignerSelectorTs extends Vue {
   }) value: string
 
   @Prop({
-    default: () => []
+    default: () => [],
   }) signers: {publicKey: string, label: string}[]
 
   @Prop({

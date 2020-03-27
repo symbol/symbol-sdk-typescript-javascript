@@ -68,7 +68,7 @@ export class NamespacesRepository
       value: NamespacesModel,
       index: number,
       array: NamespacesModel[]
-    ) => boolean = (e) => true
+    ) => boolean = () => true,
   ): Map<string, NamespacesModel> {
     const filtered = this.collect().filter(filterFn)
     const mapped = new Map<string, NamespacesModel>()
@@ -87,14 +87,14 @@ export class NamespacesRepository
     const mapped = this.createModel(values)
 
     // created object must contain values for all primary keys
-    if (! mapped.hasIdentifier()) {
-      throw new Error('Missing value for mandatory identifier fields \'' + mapped.primaryKeys.join(', ') + '\'.')
+    if (!mapped.hasIdentifier()) {
+      throw new Error(`Missing value for mandatory identifier fields '${mapped.primaryKeys.join(', ')}'.`)
     }
 
     // verify uniqueness
     const identifier = mapped.getIdentifier()
     if (this.find(identifier)) {
-      throw new Error('Namespace with identifier \'' + identifier + '\' already exists.')
+      throw new Error(`Namespace with identifier '${identifier}' already exists.`)
     }
 
     // update collection
@@ -113,7 +113,7 @@ export class NamespacesRepository
   public read(identifier: string): NamespacesModel {
     // verify existence
     if (!this.find(identifier)) {
-      throw new Error('Namespace with identifier \'' + identifier + '\' does not exist.')
+      throw new Error(`Namespace with identifier '${identifier}' does not exist.`)
     }
 
     return this._collection.get(identifier)
@@ -130,8 +130,8 @@ export class NamespacesRepository
     const previous = this.read(identifier)
 
     // populate/update values
-    let iterator = values.keys()
-    for (let i = 0, m = values.size; i < m; i++) {
+    const iterator = values.keys()
+    for (let i = 0, m = values.size; i < m; i ++) {
       const key = iterator.next()
       const value = values.get(key.value)
 
@@ -155,11 +155,11 @@ export class NamespacesRepository
   public delete(identifier: string): boolean {
     // require existing
     if (!this.find(identifier)) {
-      throw new Error('Namespace with identifier \'' + identifier + '\' does not exist.')
+      throw new Error(`Namespace with identifier '${identifier}' does not exist.`)
     }
 
     // update collection
-    if(! this._collection.delete(identifier)) {
+    if(!this._collection.delete(identifier)) {
       return false
     }
 

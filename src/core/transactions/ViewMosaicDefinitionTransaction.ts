@@ -21,13 +21,13 @@ import {TransactionView} from './TransactionView'
 
 /// region custom types
 export type MosaicDefinitionFormFieldsType = {
-  nonce: MosaicNonce,
-  mosaicId: MosaicId,
-  mosaicFlags: MosaicFlags,
-  divisibility: number,
-  permanent: boolean,
-  duration: number,
-  maxFee: UInt64,
+  nonce: MosaicNonce
+  mosaicId: MosaicId
+  mosaicFlags: MosaicFlags
+  divisibility: number
+  permanent: boolean
+  duration: number
+  maxFee: UInt64
 }
 /// end-region custom types
 

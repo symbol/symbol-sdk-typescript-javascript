@@ -18,6 +18,6 @@ import {Component, Vue, Prop} from 'vue-property-decorator'
 @Component
 export class PageTitleTs extends Vue {
   @Prop({
-    default: ''
+    default: '',
   }) title: string
 }

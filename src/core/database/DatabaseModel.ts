@@ -59,7 +59,7 @@ export abstract class DatabaseModel {
    */
   public constructor(
     primaryKeys: string[] = [],
-    values: Map<string, any> = new Map<string, any>()
+    values: Map<string, any> = new Map<string, any>(),
   ) {
     this.primaryKeys = primaryKeys
     this.values = values
@@ -96,8 +96,8 @@ export abstract class DatabaseModel {
     }
 
     // check value of *all* primary keys
-    for (let i = 0, m = this.primaryKeys.length; i < m; i++) {
-      if (! this.values.has(this.primaryKeys[i])) {
+    for (let i = 0, m = this.primaryKeys.length; i < m; i ++) {
+      if (!this.values.has(this.primaryKeys[i])) {
         return false
       }
     }
@@ -110,9 +110,9 @@ export abstract class DatabaseModel {
    * @return {string}
    */
   protected generateIdentifier(): string {
-    let raw = {
+    const raw = {
       time: new Date().valueOf(),
-      seed: AESEncryptionService.generateRandomBytes(8)
+      seed: AESEncryptionService.generateRandomBytes(8),
     }
 
     const fields = this.values.keys()
@@ -127,12 +127,12 @@ export abstract class DatabaseModel {
 
     // to-json
     const json = JSON.stringify(raw)
-    const hasher = SHA3Hasher.createHasher(64);
-    hasher.reset();
-    hasher.update(Convert.utf8ToHex(json));
+    const hasher = SHA3Hasher.createHasher(64)
+    hasher.reset()
+    hasher.update(Convert.utf8ToHex(json))
 
-    const hash = new Uint8Array(64);
-    hasher.finalize(hash);
+    const hash = new Uint8Array(64)
+    hasher.finalize(hash)
     return Convert.uint8ToHex(hash).substr(0, 16)
   }
 

@@ -76,7 +76,7 @@ export class NamespaceSelectorTs extends Vue {
     this.$emit('input', newValue)
   }
 
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
   /**
    * Helper method to read namespace name if available
    * @param {NamespaceInfo} info 

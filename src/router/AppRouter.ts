@@ -92,10 +92,10 @@ export class AppRouter extends Router {
     const routes = [...this.routes]
 
     // - read custom route configuration
-    // - first top level route contain all app routes
+    // - first top level route contains all app routes
     // - second top level route contains login
     const appRoute = routes.shift()
-    const loginRoute = routes.shift()
+    /* const loginRoute =*/routes.shift()
 
     if (!parentRouteName.length) {
       return appRoute
@@ -114,7 +114,7 @@ export class AppRouter extends Router {
 
     // - app modules
     const moduleRoutes = appRoute.children.filter(
-      ({name}) => modules.includes(name)
+      ({name}) => modules.includes(name),
     )
 
     // - find by name
@@ -122,7 +122,7 @@ export class AppRouter extends Router {
 
     // - name does not represent a top level route
     if (undefined === module) {
-      throw new Error('Top level (module) route with name \'' + parentRouteName + '\' does not exist.')
+      throw new Error(`Top level (module) route with name '${parentRouteName}' does not exist.`)
     }
 
     return module

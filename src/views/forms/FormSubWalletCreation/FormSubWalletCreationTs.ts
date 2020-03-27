@@ -94,13 +94,13 @@ export class FormSubWalletCreationTs extends Vue {
 
   /**
    * Accounts repository
-   * @var {AccountsRepository}
+   * @var {AccountsRepository}
    */
   public accountsRepository: AccountsRepository
 
   /**
    * Wallets repository
-   * @var {WalletsRepository}
+   * @var {WalletsRepository}
    */
   public walletsRepository: WalletsRepository
 
@@ -149,7 +149,7 @@ export class FormSubWalletCreationTs extends Vue {
     this.walletsRepository = new WalletsRepository()
   }
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get hasAccountUnlockModal(): boolean {
     return this.isUnlockingAccount
   }
@@ -165,7 +165,7 @@ export class FormSubWalletCreationTs extends Vue {
 
     // filter wallets to only known wallet names
     const knownWallets = this.wallets.getWallets(
-      (e) => this.knownWallets.includes(e.getIdentifier())
+      (e) => this.knownWallets.includes(e.getIdentifier()),
     )
   
     return [...knownWallets].map(
@@ -174,10 +174,10 @@ export class FormSubWalletCreationTs extends Vue {
         path: values.get('path'),
       }),
     ).filter(
-      w => w.path && w.path.length
+      w => w.path && w.path.length,
     ).map(w => w.path)
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Submit action asks for account unlock
@@ -200,28 +200,28 @@ export class FormSubWalletCreationTs extends Vue {
 
     // - interpret form items
     const values = {...this.formItems}
-    const type = values.type && ['child_wallet', 'privatekey_wallet'].includes(values.type)
-               ? values.type
-               : 'child_wallet'
+    const type = values.type && [ 'child_wallet', 'privatekey_wallet' ].includes(values.type)
+      ? values.type
+      : 'child_wallet'
 
     try {
       // - create sub wallet (can be either derived or by private key)
       let subWallet: WalletsModel
       switch(type) {
-      default:
-      case 'child_wallet':
-        subWallet = this.deriveNextChildWallet(values.name)
-        break;
+        default:
+        case 'child_wallet':
+          subWallet = this.deriveNextChildWallet(values.name)
+          break
 
-      case 'privatekey_wallet':
-        subWallet = this.wallets.getSubWalletByPrivateKey(
-          this.currentAccount,
-          this.currentPassword,
-          this.formItems.name,
-          this.formItems.privateKey,
-          this.networkType,
-        )
-        break;
+        case 'privatekey_wallet':
+          subWallet = this.wallets.getSubWalletByPrivateKey(
+            this.currentAccount,
+            this.currentPassword,
+            this.formItems.name,
+            this.formItems.privateKey,
+            this.networkType,
+          )
+          break
       }
 
       // - return if subWallet is undefined
@@ -235,14 +235,14 @@ export class FormSubWalletCreationTs extends Vue {
       walletsRepo.create(subWallet.values)
 
       // - also add wallet to account (in storage)
-      const wallets = this.currentAccount.values.get("wallets")
+      const wallets = this.currentAccount.values.get('wallets')
       wallets.push(subWallet.getIdentifier())
-      this.currentAccount.values.set("wallets", wallets)
+      this.currentAccount.values.set('wallets', wallets)
 
       const accountsRepo = new AccountsRepository()
       accountsRepo.update(
         this.currentAccount.getIdentifier(),
-        this.currentAccount.values
+        this.currentAccount.values,
       )
 
       // - update app state
@@ -276,7 +276,7 @@ export class FormSubWalletCreationTs extends Vue {
     // - get next path
     const nextPath = this.paths.getNextAccountPath(this.knownPaths)
 
-    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Adding child wallet with derivation path: ' + nextPath)
+    this.$store.dispatch('diagnostic/ADD_DEBUG', `Adding child wallet with derivation path: ${nextPath}`)
 
     // - decrypt mnemonic
     const encSeed = this.currentAccount.values.get('seed')

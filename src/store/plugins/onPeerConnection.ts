@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 export const onPeerConnection = store => {
-  store.subscribe((mutation, state) => {
-    if (mutation.type === "network/currentPeerInfo") {
+  store.subscribe((mutation) => {
+    if (mutation.type === 'network/currentPeerInfo') {
       // - Done connection to new node
       const nodeUrl = store.getters['network/currentPeer'].url
       const currentWallet = store.getters['wallet/currentWallet']
@@ -25,11 +25,6 @@ export const onPeerConnection = store => {
       if (!!currentWallet) {
         console.log('onPeerConnection dispatching wallet actions..')
         store.dispatch('wallet/REST_FETCH_INFO', currentWallet.objects.address.plain())
-/*
-        store.dispatch('wallet/REST_FETCH_TRANSACTIONS', currentWallet.objects.address.plain())
-        store.dispatch('wallet/REST_FETCH_OWNED_MOSAICS', currentWallet.objects.address.plain())
-        store.dispatch('wallet/REST_FETCH_OWNED_NAMESPACES', currentWallet.objects.address.plain())
-*/
       }
     }
   })

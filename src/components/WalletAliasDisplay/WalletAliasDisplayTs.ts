@@ -22,10 +22,10 @@ import {NamespaceInfo} from 'symbol-sdk'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
 
 @Component({
- computed: mapGetters({
-  namespacesInfo: 'namespace/namespacesInfo',
-  namespacesNames: 'namespace/namespacesNames',
- })
+  computed: mapGetters({
+    namespacesInfo: 'namespace/namespacesInfo',
+    namespacesNames: 'namespace/namespacesNames',
+  }),
 })
 export class WalletAliasDisplayTs extends Vue {
   @Prop({ default: null }) wallet: WalletsModel
@@ -45,17 +45,17 @@ export class WalletAliasDisplayTs extends Vue {
   protected namespacesNames: Record<string, string>
 
   get walletAliases(): string[] {
-   if (!this.namespacesInfo || !this.wallet) return []
+    if (!this.namespacesInfo || !this.wallet) return []
 
-   // get an array of namespaceInfo
-   const namespacesInfo = Object.values(this.namespacesInfo)
+    // get an array of namespaceInfo
+    const namespacesInfo = Object.values(this.namespacesInfo)
 
-   // get the current wallet address
-   const address = this.wallet.values.get('address')
+    // get the current wallet address
+    const address = this.wallet.values.get('address')
 
-   // return the current wallet aliases
-   return namespacesInfo
-    .filter(({alias}) => alias.address && alias.address.plain() === address)
-    .map(({id}) => this.namespacesNames[id.toHex()] || id.toHex())
+    // return the current wallet aliases
+    return namespacesInfo
+      .filter(({alias}) => alias.address && alias.address.plain() === address)
+      .map(({id}) => this.namespacesNames[id.toHex()] || id.toHex())
   }
 }

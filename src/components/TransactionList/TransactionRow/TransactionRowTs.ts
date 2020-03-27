@@ -96,7 +96,7 @@ export class TransactionRowTs extends Vue {
 
   /**
    * Get icon per-transaction
-   * @param {Transaction} transaction 
+   * @param {Transaction} transaction 
    * @return {string}
    */
   public getIcon() {

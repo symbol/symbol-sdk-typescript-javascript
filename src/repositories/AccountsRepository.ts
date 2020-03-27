@@ -70,7 +70,7 @@ export class AccountsRepository
       value: AccountsModel,
       index: number,
       array: AccountsModel[]
-    ) => boolean = (e) => true
+    ) => boolean = () => true,
   ): Map<string, AccountsModel> {
     const filtered = this.collect().filter(filterFn)
     const mapped = new Map<string, AccountsModel>()
@@ -89,14 +89,14 @@ export class AccountsRepository
     const mapped = this.createModel(values)
 
     // created object must contain values for all primary keys
-    if (! mapped.hasIdentifier()) {
-      throw new Error('Missing value for mandatory identifier fields \'' + mapped.primaryKeys.join(', ') + '\'.')
+    if (!mapped.hasIdentifier()) {
+      throw new Error(`Missing value for mandatory identifier fields '${mapped.primaryKeys.join(', ')}'.`)
     }
 
     // verify uniqueness
     const identifier = mapped.getIdentifier()
     if (this.find(identifier)) {
-      throw new Error('Account with name \'' + identifier + '\' already exists.')
+      throw new Error(`Account with name '${identifier}' already exists.`)
     }
 
     // update collection
@@ -115,7 +115,7 @@ export class AccountsRepository
   public read(identifier: string): AccountsModel {
     // verify existence
     if (!this.find(identifier)) {
-      throw new Error('Account with name \'' + identifier + '\' does not exist.')
+      throw new Error(`Account with name '${identifier}' does not exist.`)
     }
 
     return this._collection.get(identifier)
@@ -133,7 +133,7 @@ export class AccountsRepository
 
     // populate/update values
     const iterator = values.keys()
-    for (let i = 0, m = values.size; i < m; i++) {
+    for (let i = 0, m = values.size; i < m; i ++) {
       const key = iterator.next()
       const value = values.get(key.value)
 
@@ -157,11 +157,11 @@ export class AccountsRepository
   public delete(identifier: string): boolean {
     // require existing
     if (!this.find(identifier)) {
-      throw new Error('Account with name \'' + identifier + '\' does not exist.')
+      throw new Error(`Account with name '${identifier}' does not exist.`)
     }
 
     // update collection
-    if(! this._collection.delete(identifier)) {
+    if(!this._collection.delete(identifier)) {
       return false
     }
 
@@ -183,7 +183,7 @@ export class AccountsRepository
       [NetworkType.TEST_NET]: [],
       [NetworkType.MAIN_NET]: [],
     }
-    for (let i = 0, m = accounts.length; i < m; i++) {
+    for (let i = 0, m = accounts.length; i < m; i ++) {
       const account = accounts[i]
       const networkType = account.values.get('networkType')
       accountsMap[networkType].push(account.values.get('accountName'))

@@ -33,32 +33,32 @@ import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue'
   components: {AmountDisplay},
   computed: {...mapGetters({
     mosaicsInfo: 'mosaic/mosaicsInfoList',
-  })}
+  })},
 })
 export class MosaicAmountDisplayTs extends Vue {
 
   @Prop({
     default: null,
-    required: true
+    required: true,
   }) id: MosaicId
 
   @Prop({
-    default: null
+    default: null,
   }) relativeAmount: number
 
   @Prop({
-    default: null
+    default: null,
   }) absoluteAmount: number
 
   /**
    * Whether to show absolute amount or not
    */
   @Prop({
-    default: false
+    default: false,
   }) absolute: boolean
 
   @Prop({
-    default: 'green'
+    default: 'green',
   }) color: 'red' | 'green'
 
   @Prop({

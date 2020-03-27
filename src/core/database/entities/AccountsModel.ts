@@ -31,7 +31,7 @@ export class AccountsModel extends DatabaseModel {
    * @var {Map<string, DatabaseRelation>}
    */
   public relations: Map<string, DatabaseRelation> = new Map<string, DatabaseRelation>([
-    ['wallets', new DatabaseRelation(DatabaseRelationType.ONE_TO_MANY)]
+    [ 'wallets', new DatabaseRelation(DatabaseRelationType.ONE_TO_MANY) ],
   ])
 
   /**

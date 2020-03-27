@@ -53,7 +53,7 @@ export class MnemonicVerificationTs extends Vue {
   public created() {
     const shuffledWordsArray: string[] = [...this.words].sort((a, b) => a.localeCompare(b))
     this.shuffledWords = shuffledWordsArray.reduce(
-      (acc, word, index) => ({...acc, ...{[index]: word}}), {}
+      (acc, word, index) => ({...acc, ...{[index]: word}}), {},
     )
     this.shuffledWordsIndexes = [...Array(shuffledWordsArray.length).keys()]
   }
@@ -92,8 +92,8 @@ export class MnemonicVerificationTs extends Vue {
     // - origin words list does not match
     if (origin !== rebuilt) {
       const errorMsg = this.selectedWordIndexes.length < 1 ? 
-              NotificationType.PLEASE_ENTER_MNEMONIC_INFO
-            : NotificationType.MNEMONIC_INCONSISTENCY_ERROR
+        NotificationType.PLEASE_ENTER_MNEMONIC_INFO
+        : NotificationType.MNEMONIC_INCONSISTENCY_ERROR
       this.$store.dispatch('notification/ADD_WARNING', errorMsg)
       this.$emit('error', errorMsg)
       return false

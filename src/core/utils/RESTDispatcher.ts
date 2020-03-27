@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Store} from 'vuex'
-import {from, of, timer} from 'rxjs';
-import {concatMap, delayWhen} from 'rxjs/operators';
-
 export class RESTDispatcher {
   /**
    * 
@@ -31,10 +27,10 @@ export class RESTDispatcher {
    * 
    */
   protected actions: {
-    action: string,
-    payload?: any,
-    options?: any,
-    await: boolean,
+    action: string
+    payload?: any
+    options?: any
+    await: boolean
   }[] = []
 
   /**
@@ -46,7 +42,7 @@ export class RESTDispatcher {
       action: string,
       payload?: any,
       options?: any
-    ) => void
+    ) => void,
   ) {
     this.dispatch = dispatchFn
   }
@@ -62,13 +58,13 @@ export class RESTDispatcher {
     action: string,
     payload?: any,
     options?: any,
-    shouldAwait: boolean = false
+    shouldAwait: boolean = false,
   ) {
     this.actions.push({
       action,
       payload: payload,
       options: options,
-      await: shouldAwait
+      await: shouldAwait,
     })
   }
 
@@ -82,7 +78,7 @@ export class RESTDispatcher {
     const promises: Promise<any>[] = []
     this.actions.map((action, index: number) => {
       // - every second value, delay 1000ms
-      const delay = index+1 % 2 === 0 ? 1000 : 0
+      const delay = index + 1 % 2 === 0 ? 1000 : 0
 
       // - configure promises to include delay
       promises.push(
@@ -96,7 +92,7 @@ export class RESTDispatcher {
               return reject(e)
             }
           }, delay)
-        })
+        }),
       )
     })
 

@@ -16,16 +16,16 @@
 import Vue from 'vue'
 
 // internal dependencies
-import {AwaitLock} from './AwaitLock';
-import {MosaicService} from '@/services/MosaicService';
-import {NamespaceService} from '@/services/NamespaceService';
-import {AccountService} from '@/services/AccountService';
-import {WalletService} from '@/services/WalletService';
-import {SettingService} from '@/services/SettingService';
-import {PeerService} from '@/services/PeerService';
+import {AwaitLock} from './AwaitLock'
+import {MosaicService} from '@/services/MosaicService'
+import {NamespaceService} from '@/services/NamespaceService'
+import {AccountService} from '@/services/AccountService'
+import {WalletService} from '@/services/WalletService'
+import {SettingService} from '@/services/SettingService'
+import {PeerService} from '@/services/PeerService'
 
 /// region globals
-const Lock = AwaitLock.create();
+const Lock = AwaitLock.create()
 const mosaicService = new MosaicService()
 const namespaceService = new NamespaceService()
 const accountService = new AccountService()
@@ -40,7 +40,7 @@ export default {
     initialized: false,
     hasFeed: false,
     dataFeed: {
-      accounts: [],
+      accounts: [],
       mosaics: [],
       namespaces: [],
       wallets: [],
@@ -67,13 +67,13 @@ export default {
       }
 
       // aquire async lock until initialized
-      await Lock.initialize(callback, {commit, dispatch, getters})
+      await Lock.initialize(callback, {getters})
     },
-    async uninitialize({ commit, dispatch, getters }) {
+    async uninitialize({ commit, getters }) {
       const callback = async () => {
         commit('setInitialized', false)
       }
-      await Lock.uninitialize(callback, {commit, dispatch, getters})
+      await Lock.uninitialize(callback, {getters})
     },
     async SYNCHRONIZE({commit}) {
       // - sync with database (this will run migrations if needed)
@@ -93,8 +93,8 @@ export default {
         endpoints,
         settings,
       })
-    }
-/// region scoped actions
-/// end-region scoped actions
-  }
+    },
+    /// region scoped actions
+    /// end-region scoped actions
+  },
 }

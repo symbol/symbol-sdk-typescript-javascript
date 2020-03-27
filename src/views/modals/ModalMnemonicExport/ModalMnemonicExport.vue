@@ -15,7 +15,10 @@
           <p>{{ $t('wallets_backup_mnemonic_explain_qrcode') }}</p>
         </div>
 
-        <img id="qrImg" class="qr-image" :src="qrBase64" alt="Mnemonic QR code" />
+        <img
+          id="qrImg" class="qr-image" :src="qrBase64"
+          alt="Mnemonic QR code"
+        >
 
         <button class="button-style validation-button download-button" type="button" @click="onDownloadQR">
           <Icon :type="'md-download'" size="20" />

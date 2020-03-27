@@ -1,9 +1,11 @@
 <template>
-  <div :class="['form-row', className ]">
-    <div :class="{
-      'form-row-inner-container': !noLabel,
-      'form-row-inner-container-value-only': noLabel,
-    }">
+  <div :class="[ 'form-row', className ]">
+    <div
+      :class="{
+        'form-row-inner-container': !noLabel,
+        'form-row-inner-container-value-only': noLabel,
+      }"
+    >
       <div v-if="!noLabel" class="label-container">
         <FormLabel>
           <slot name="label" />

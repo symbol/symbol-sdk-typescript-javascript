@@ -23,11 +23,11 @@ import VueNumber from 'vue-number-animation'
 export class AnimatedNumberTs extends Vue {
 
   @Prop({
-    default: 2
+    default: 2,
   }) time: number
 
   @Prop({
-    default: 0
+    default: 0,
   }) value: number
 
   /**

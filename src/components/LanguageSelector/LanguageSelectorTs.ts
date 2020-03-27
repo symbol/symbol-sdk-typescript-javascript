@@ -22,15 +22,15 @@ import {mapGetters} from 'vuex'
 })}})
 export class LanguageSelectorTs extends Vue {
   @Prop({
-    default: ''
+    default: '',
   }) value: string
 
   @Prop({
-    default: false
+    default: false,
   }) defaultFormStyle: boolean
 
   @Prop({
-    default: true
+    default: true,
   }) autoSubmit: boolean
 
   /**

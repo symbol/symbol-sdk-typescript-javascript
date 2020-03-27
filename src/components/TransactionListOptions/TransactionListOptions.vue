@@ -17,7 +17,10 @@
     <div v-else>
       &nbsp;
     </div>
-    <Icon @click="refresh" type="md-refresh" class="refresh-button" size="30" />
+    <Icon
+      type="md-refresh" class="refresh-button" size="30"
+      @click="refresh"
+    />
   </div>
 </template>
 

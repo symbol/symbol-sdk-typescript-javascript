@@ -43,7 +43,7 @@ describe('store/Account', () => {
 
       // assert
       expect(dispatch).toHaveBeenCalled()
-      expect(dispatch).toHaveBeenCalledWith('wallet/uninitialize', {"address": undefined}, {root: true})
+      expect(dispatch).toHaveBeenCalledWith('wallet/uninitialize', {'address': undefined}, {root: true})
       expect(dispatch).toHaveBeenCalledWith('wallet/SET_KNOWN_WALLETS', [], {root: true})
       expect(dispatch).toHaveBeenCalledWith('RESET_STATE')
     })
@@ -59,7 +59,7 @@ describe('store/Account', () => {
       // act
       await AccountStore.actions.SET_CURRENT_ACCOUNT(
         {commit, dispatch},
-        model
+        model,
       )
 
       // assert

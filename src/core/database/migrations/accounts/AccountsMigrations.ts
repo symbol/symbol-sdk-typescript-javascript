@@ -29,14 +29,14 @@ export class AccountsMigrations {
    * @return {Map<string, AccountsModel>}
    */
   public static version2_addGenHash(
-    rows: Map<string, AccountsModel>
+    rows: Map<string, AccountsModel>,
   ): Map<string, AccountsModel> {
 
     const entities = Array.from(rows.values())
     const migrated = new Map<string, AccountsModel>()
 
     // each row must be migrated (added table columns)
-    entities.map((outOfDate: AccountsModel, i: number) => {
+    entities.map((outOfDate: AccountsModel) => {
       outOfDate.values.set('generationHash', '45870419226A7E51D61D94AD728231EDC6C9B3086EF9255A8421A4F26870456A')
       migrated.set(outOfDate.getIdentifier(), outOfDate)
     })

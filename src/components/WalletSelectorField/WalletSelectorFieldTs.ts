@@ -26,11 +26,11 @@ import {WalletService} from '@/services/WalletService'
 })}})
 export class WalletSelectorFieldTs extends Vue {
   @Prop({
-    default: null
+    default: null,
   }) value: string
 
   @Prop({
-    default: false
+    default: false,
   }) defaultFormStyle: boolean
 
   /**
@@ -56,7 +56,7 @@ export class WalletSelectorFieldTs extends Vue {
     this.service = new WalletService(this.$store)
   }
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get currentWalletIdentifier(): string {
     if (this.value) return this.value
 
@@ -69,7 +69,7 @@ export class WalletSelectorFieldTs extends Vue {
   }
 
   public set currentWalletIdentifier(identifier: string) {
-    if (!identifier || !identifier.length) return
+    if (!identifier || !identifier.length) return
 
     this.$emit('input', identifier)
 
@@ -84,7 +84,7 @@ export class WalletSelectorFieldTs extends Vue {
 
     // filter wallets to only known wallet names
     const knownWallets = this.service.getWallets(
-      (e) => this.knownWallets.includes(e.getIdentifier())
+      (e) => this.knownWallets.includes(e.getIdentifier()),
     )
 
     return [...knownWallets].map(

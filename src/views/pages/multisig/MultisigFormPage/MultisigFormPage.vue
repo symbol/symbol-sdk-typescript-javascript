@@ -2,10 +2,10 @@
   <div class="multisig-form-main-container">
     <div class="main-out-container">
       <div class="left-container">
-      <div class="form-section">
-        <slot name="form-section" />
+        <div class="form-section">
+          <slot name="form-section" />
+        </div>
       </div>
-    </div>
     <!-- <div class="right-container xym-outline">
       <slot name="right-section" />
     </div> -->

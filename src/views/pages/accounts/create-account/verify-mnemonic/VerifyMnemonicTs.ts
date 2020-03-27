@@ -29,9 +29,9 @@ import MnemonicVerification from '@/components/MnemonicVerification/MnemonicVeri
     MnemonicVerification,
   },
   computed: {...mapGetters({
-      currentAccount: 'account/currentAccount',
-      currentMnemonic: 'temporary/mnemonic',
-    }),
+    currentAccount: 'account/currentAccount',
+    currentMnemonic: 'temporary/mnemonic',
+  }),
   },
 })
 export default class VerifyMnemonicTs extends Vue {
@@ -48,7 +48,7 @@ export default class VerifyMnemonicTs extends Vue {
    */
   public currentMnemonic: MnemonicPassPhrase
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   get mnemonicWordsList(): string[] {
     return this.currentMnemonic.plain.split(' ')
   }

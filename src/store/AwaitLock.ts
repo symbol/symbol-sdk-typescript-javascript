@@ -41,7 +41,7 @@ export class AwaitLock {
    * @param callback 
    * @param store
    */
-  async initialize(callback, {commit, dispatch, getters}) {
+  async initialize(callback, {getters}) {
     await this.lock.acquireAsync()
     try {
       if (!getters.getInitialized) {
@@ -58,7 +58,7 @@ export class AwaitLock {
    * @param callback 
    * @param store
    */
-  async uninitialize(callback, {commit, dispatch, getters}) {
+  async uninitialize(callback, {getters}) {
     await this.lock.acquireAsync()
     try {
       if (getters.getInitialized) {

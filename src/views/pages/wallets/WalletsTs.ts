@@ -36,7 +36,7 @@ import WalletSelectorPanel from '@/components/WalletSelectorPanel/WalletSelector
     currentAccount: 'account/currentAccount',
     currentWallet: 'wallet/currentWallet',
     knownWallets: 'wallet/knownWallets',
-  })}
+  })},
 })
 export class WalletsTs extends Vue {
   /**

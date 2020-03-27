@@ -33,15 +33,9 @@ export abstract class AbstractService implements IService {
    */
   public $store: Store<any>
 
-    /**
+  /**
    * Vuex Store 
    * @var {VueI18n}
    */
   public $i18n: VueI18n
-
-  /**
-   * Construct a service instance around \a store
-   * @param {Vuex.Store} store 
-   */
-  public constructor() {}
 }

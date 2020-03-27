@@ -26,7 +26,7 @@ describe('database/ObjectStorageBackend ==>', () => {
 
     test('create instances given any data', () => {
       const b1 = getBackend(false)
-      const b2 = getBackend([1, 2, 3])
+      const b2 = getBackend([ 1, 2, 3 ])
       const b3 = getBackend({field: 'value'})
       const b4 = getBackend('text')
 
@@ -71,14 +71,14 @@ describe('database/ObjectStorageBackend ==>', () => {
         boolField: true,
         numberField: 1,
         stringField: 'value',
-        arrayField: [1, 2, 3],
-        objectField: {item: 'value'}
+        arrayField: [ 1, 2, 3 ],
+        objectField: {item: 'value'},
       })
       expect(backend.length).toBe(5)
       expect(backend.getItem('boolField')).toBe(true)
       expect(backend.getItem('numberField')).toBe(1)
       expect(backend.getItem('stringField')).toBe('value')
-      expect(backend.getItem('arrayField')).toMatchObject([1, 2, 3])
+      expect(backend.getItem('arrayField')).toMatchObject([ 1, 2, 3 ])
       expect(backend.getItem('objectField')).toMatchObject({item: 'value'})
     })
   })
@@ -89,14 +89,14 @@ describe('database/ObjectStorageBackend ==>', () => {
       backend.setItem('boolField', true)
       backend.setItem('numberField', 1)
       backend.setItem('stringField', 'value')
-      backend.setItem('arrayField', [1, 2, 3])
+      backend.setItem('arrayField', [ 1, 2, 3 ])
       backend.setItem('objectField', {item: 'value'})
 
       expect(backend.length).toBe(5)
       expect(backend.getItem('boolField')).toBe(true)
       expect(backend.getItem('numberField')).toBe(1)
       expect(backend.getItem('stringField')).toBe('value')
-      expect(backend.getItem('arrayField')).toMatchObject([1, 2, 3])
+      expect(backend.getItem('arrayField')).toMatchObject([ 1, 2, 3 ])
       expect(backend.getItem('objectField')).toMatchObject({item: 'value'})
     })
 

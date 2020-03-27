@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Vue from 'vue';
-import {BlockInfo, IListener, NetworkType, RepositoryFactory, UInt64} from 'symbol-sdk';
+import Vue from 'vue'
+import {BlockInfo, IListener, NetworkType, RepositoryFactory, UInt64} from 'symbol-sdk'
 import {Subscription} from 'rxjs'
 // internal dependencies
 import {$eventBus} from '../events'
@@ -24,12 +24,12 @@ import {URLHelpers} from '@/core/utils/URLHelpers'
 import app from '@/main'
 import {AwaitLock} from './AwaitLock'
 // configuration
-import networkConfig from '../../config/network.conf.json';
-import {PeersRepository} from '@/repositories/PeersRepository';
-import {UrlValidator} from '@/core/validation/validators';
-import {PeerService} from '@/services/PeerService';
+import networkConfig from '../../config/network.conf.json'
+import {PeersRepository} from '@/repositories/PeersRepository'
+import {UrlValidator} from '@/core/validation/validators'
+import {PeerService} from '@/services/PeerService'
 
-const Lock = AwaitLock.create();
+const Lock = AwaitLock.create()
 
 /// region internal helpers
 /**
@@ -113,7 +113,7 @@ export default {
     repositoryFactory: (state, repositoryFactory) => Vue.set(state, 'repositoryFactory', repositoryFactory),
     currentPeer: (state, payload) => {
       if (undefined !== payload) {
-        let currentPeer = URLHelpers.formatUrl(payload)
+        const currentPeer = URLHelpers.formatUrl(payload)
         Vue.set(state, 'currentPeer', currentPeer)
         Vue.set(state, 'repositoryFactory', RESTService.createRepositoryFactory(currentPeer.url))
       }
@@ -126,11 +126,11 @@ export default {
     removePeer: (state, peerUrl) => {
       const idx = state.knownPeers.findIndex(p => p === peerUrl)
       if (idx === undefined) {
-        return ;
+        return 
       }
 
-      let leftPeers = state.knownPeers.splice(0, idx)
-      let rightPeers = state.knownPeers.splice(idx+1, state.knownPeers.length - idx - 1)
+      const leftPeers = state.knownPeers.splice(0, idx)
+      const rightPeers = state.knownPeers.splice(idx + 1, state.knownPeers.length - idx - 1)
       const knownPeers = leftPeers.concat(rightPeers)
       Vue.set(state, 'knownPeers', knownPeers)
     },
@@ -159,7 +159,7 @@ export default {
       const callback = async () => {
 
         let initPayload: {
-          knownPeers: PeersModel[],
+          knownPeers: PeersModel[]
           nodeUrl: string
         }
 
@@ -175,7 +175,7 @@ export default {
         const knownPeers: PeersModel[] = initPayload.knownPeers
         const nodeUrl: string = initPayload.nodeUrl
 
-        dispatch('diagnostic/ADD_DEBUG', 'Store action network/initialize selected peer: ' + nodeUrl, {root: true})
+        dispatch('diagnostic/ADD_DEBUG', `Store action network/initialize selected peer: ${nodeUrl}`, {root: true})
 
         // - populate known peers
         knownPeers.map(peer => commit('addPeer', peer.values.get('rest_url')))
@@ -185,23 +185,23 @@ export default {
       }
 
       // acquire async lock until initialized
-      await Lock.initialize(callback, {commit, dispatch, getters})
+      await Lock.initialize(callback, {getters})
     },
     async uninitialize({ commit, dispatch, getters }) {
       const callback = async () => {
         dispatch('UNSUBSCRIBE')
         commit('setInitialized', false)
       }
-      await Lock.uninitialize(callback, {commit, dispatch, getters})
+      await Lock.uninitialize(callback, {getters})
     },
-/// region scoped actions
+    /// region scoped actions
     async INITIALIZE_FROM_DB({dispatch}, withFeed) {
       const defaultPeer = withFeed.endpoints.find(m => m.values.get('is_default'))
       const nodeUrl = defaultPeer.values.get('rest_url')
       const repositoryFactory: RepositoryFactory = RESTService.createRepositoryFactory(nodeUrl)
 
       // - height always from network
-      const chainHttp = repositoryFactory.createChainRepository();
+      const chainHttp = repositoryFactory.createChainRepository()
       const currentHeight = await chainHttp.getBlockchainHeight().toPromise()
 
       // - set current peer connection
@@ -211,13 +211,13 @@ export default {
         networkType: defaultPeer.values.get('networkType'),
         generationHash: defaultPeer.values.get('generationHash'),
         currentHeight: currentHeight,
-        peerInfo: defaultPeer.objects.info
+        peerInfo: defaultPeer.objects.info,
       })
 
       // - populate known peers
       return {
         knownPeers: withFeed.endpoints,
-        nodeUrl: nodeUrl
+        nodeUrl: nodeUrl,
       }
     },
     async INITIALIZE_FROM_CONFIG({dispatch}, nodeUrl) {
@@ -233,14 +233,14 @@ export default {
         const knownPeers: PeersModel[] = repository.repopulateFromConfig(payload.generationHash)
         return {
           knownPeers: knownPeers,
-          nodeUrl: nodeUrl
+          nodeUrl: nodeUrl,
         }
       }
       catch (e) {
-        dispatch('diagnostic/ADD_ERROR', 'Store action network/initialize default peer unreachable: ' + e.toString(), {root: true})
+        dispatch('diagnostic/ADD_ERROR', `Store action network/initialize default peer unreachable: ${e.toString()}`, {root: true})
       }
     },
-    async OPEN_PEER_CONNECTION({state, commit, dispatch}, payload) {
+    async OPEN_PEER_CONNECTION({commit, dispatch}, payload) {
       commit('currentPeer', payload.url)
       commit('networkType', payload.networkType)
       commit('setConnected', true)
@@ -254,7 +254,7 @@ export default {
     },
     async SET_CURRENT_PEER({ dispatch, rootGetters }, currentPeerUrl) {
       if (!UrlValidator.validate(currentPeerUrl)) {
-        throw Error('Cannot change node. URL is not valid: ' + currentPeerUrl)
+        throw Error(`Cannot change node. URL is not valid: ${currentPeerUrl}`)
       }
 
       // - show loading overlay
@@ -264,7 +264,7 @@ export default {
         disableCloseButton: true,
       }, {root: true})
 
-      dispatch('diagnostic/ADD_DEBUG', 'Store action network/SET_CURRENT_PEER dispatched with: ' + currentPeerUrl, {root: true})
+      dispatch('diagnostic/ADD_DEBUG', `Store action network/SET_CURRENT_PEER dispatched with: ${currentPeerUrl}`, {root: true})
 
       try {
         // - disconnect from previous node
@@ -294,7 +294,7 @@ export default {
           `${app.$t('error_peer_connection_went_wrong', {peerUrl: currentPeerUrl})}`,
           {root: true},
         )
-        dispatch('diagnostic/ADD_ERROR', 'Error with store action network/SET_CURRENT_PEER: ' + JSON.stringify(e), {root: true})
+        dispatch('diagnostic/ADD_ERROR', `Error with store action network/SET_CURRENT_PEER: ${JSON.stringify(e)}`, {root: true})
       } finally {
         // - hide loading overlay
         dispatch('app/SET_LOADING_OVERLAY', {show: false}, {root: true})
@@ -302,7 +302,7 @@ export default {
     },
     ADD_KNOWN_PEER({commit}, peerUrl) {
       if (!UrlValidator.validate(peerUrl)) {
-        throw Error('Cannot add node. URL is not valid: ' + peerUrl)
+        throw Error(`Cannot add node. URL is not valid: ${peerUrl}`)
       }
 
       commit('addPeer', peerUrl)
@@ -328,14 +328,14 @@ export default {
     ADD_BLOCK({commit}, block: BlockInfo) {
       commit('addBlock', block)
     },
-/**
+    /**
  * Websocket API
  */
     // Subscribe to latest account transactions.
     async SUBSCRIBE({ commit, dispatch, getters }) {
       // use RESTService to open websocket channel subscriptions
-      const repositoryFactory = getters['repositoryFactory'] as RepositoryFactory;
-      const subscriptions: SubscriptionType  = await RESTService.subscribeBlocks(
+      const repositoryFactory = getters['repositoryFactory'] as RepositoryFactory
+      const subscriptions: SubscriptionType = await RESTService.subscribeBlocks(
         {commit, dispatch},
         repositoryFactory,
       )
@@ -348,11 +348,11 @@ export default {
     async UNSUBSCRIBE({ dispatch, getters }) {
       const subscriptions = getters.getSubscriptions
 
-      for (let i = 0, m = subscriptions.length; i < m; i++) {
+      for (let i = 0, m = subscriptions.length; i < m; i ++) {
         const subscription = subscriptions[i]
 
         // subscribers
-        for (let j = 0, n = subscription.subscriptions; j < n; j++) {
+        for (let j = 0, n = subscription.subscriptions; j < n; j ++) {
           await subscription.subscriptions[j].unsubscribe()
         }
 
@@ -369,8 +369,8 @@ export default {
 
       // - filter out known blocks
       const knownBlocks: {[h: number]: BlockInfo} = getters['knownBlocks']
-      const unknownHeights = blockHeights.filter(height => !knownBlocks.hasOwnProperty(height))
-      const knownHeights = blockHeights.filter(height => knownBlocks.hasOwnProperty(height))
+      const unknownHeights = blockHeights.filter(height => !knownBlocks || !knownBlocks[height])
+      const knownHeights = blockHeights.filter(height => knownBlocks && knownBlocks[height])
 
       // - initialize blocks list with known blocks
       let blocks: BlockInfo[] = knownHeights.map(known => knownBlocks[known])
@@ -379,12 +379,12 @@ export default {
       }
 
       // - use block ranges helper to minimize number of requests (recent blocks first)
-      let ranges: {start: number}[] = getBlockRanges(unknownHeights).reverse()
+      const ranges: {start: number}[] = getBlockRanges(unknownHeights).reverse()
 
       try {
         // - prepare REST gateway connection
-        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
-        const blockHttp = repositoryFactory.createBlockRepository();
+        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
+        const blockHttp = repositoryFactory.createBlockRepository()
 
         // - fetch blocks information per-range (wait 3 seconds every 4th block)
         ranges.slice(0, 3).map(({start}) => {
@@ -398,18 +398,18 @@ export default {
         const nextHeights = ranges.slice(3).map(r => r.start)
         if (nextHeights.length) {
           setTimeout(() => {
-            dispatch('diagnostic/ADD_DEBUG', 'Store action network/REST_FETCH_BLOCKS delaying heights discovery for 2 seconds: ' + JSON.stringify(nextHeights), {root: true})
+            dispatch('diagnostic/ADD_DEBUG', `Store action network/REST_FETCH_BLOCKS delaying heights discovery for 2 seconds: ${JSON.stringify(nextHeights)}`, {root: true})
             return dispatch('REST_FETCH_BLOCKS', nextHeights)
           }, 2000)
         }
       }
       catch (e) {
-        dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch blocks information: ' + e, {root: true})
+        dispatch('diagnostic/ADD_ERROR', `An error happened while trying to fetch blocks information: ${e}`, {root: true})
         return false
       }
     },
-    async REST_FETCH_PEER_INFO({commit, dispatch}, nodeUrl: string) {
-      dispatch('diagnostic/ADD_DEBUG', 'Store action network/REST_FETCH_PEER_INFO dispatched with: ' + nodeUrl, {root: true})
+    async REST_FETCH_PEER_INFO({dispatch}, nodeUrl: string) {
+      dispatch('diagnostic/ADD_DEBUG', `Store action network/REST_FETCH_PEER_INFO dispatched with: ${nodeUrl}`, {root: true})
 
       try {
         const repositoryFactory: RepositoryFactory = RESTService.createRepositoryFactory(nodeUrl)
@@ -432,13 +432,13 @@ export default {
           networkType,
           generationHash,
           currentHeight,
-          peerInfo
+          peerInfo,
         }
       }
       catch(e) {
         throw new Error(e)
       }
     },
-/// end-region scoped actions
-  }
-};
+    /// end-region scoped actions
+  },
+}

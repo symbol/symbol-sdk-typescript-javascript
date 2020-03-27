@@ -39,14 +39,14 @@ export const routes: AppRoute[] = [
           {
             path: 'create',
             name: 'accounts.importAccount.importStrategy',
-            meta: { protected: false },
+            meta: { protected: false },
             // @ts-ignore
             component: () => import('@/views/pages/accounts/import-account/import-strategy/ImportStrategy.vue'),
           },
           {
             path: 'create',
             name: 'accounts.createAccount',
-            meta: { protected: false },
+            meta: { protected: false },
             // @ts-ignore
             component: () => import('@/views/pages/accounts/create-account/CreateAccount.vue'),
             children: [
@@ -65,7 +65,7 @@ export const routes: AppRoute[] = [
                 name: 'accounts.createAccount.generateMnemonic',
                 meta: {
                   protected: false,
-                  icon: createStepImage.createStepImage2
+                  icon: createStepImage.createStepImage2,
                 },
                 // @ts-ignore
                 component: () => import('@/views/pages/accounts/create-account/generate-mnemonic/GenerateMnemonic.vue'),
@@ -74,7 +74,7 @@ export const routes: AppRoute[] = [
                 name: 'accounts.createAccount.showMnemonic',
                 meta: {
                   protected: false,
-                  icon: createStepImage.createStepImage3
+                  icon: createStepImage.createStepImage3,
                 },
                 // @ts-ignore
                 component: () => import('@/views/pages/accounts/create-account/show-mnemonic/ShowMnemonic.vue'),
@@ -83,7 +83,7 @@ export const routes: AppRoute[] = [
                 name: 'accounts.createAccount.verifyMnemonic',
                 meta: {
                   protected: false,
-                  icon: createStepImage.createStepImage4
+                  icon: createStepImage.createStepImage4,
                 },
                 // @ts-ignore
                 component: () => import('@/views/pages/accounts/create-account/verify-mnemonic/VerifyMnemonic.vue'),
@@ -92,7 +92,7 @@ export const routes: AppRoute[] = [
                 name: 'accounts.createAccount.finalize',
                 meta: {
                   protected: false,
-                  icon: createStepImage.createStepImage5
+                  icon: createStepImage.createStepImage5,
                 },
                 // @ts-ignore
                 component: () => import('@/views/pages/accounts/create-account/finalize/Finalize.vue'),
@@ -101,7 +101,7 @@ export const routes: AppRoute[] = [
           {
             path: 'import',
             name: 'accounts.importAccount',
-            meta: { protected: false },
+            meta: { protected: false },
             // @ts-ignore
             component: () => import('@/views/pages/accounts/import-account/ImportAccount.vue'),
             children: [{
@@ -119,7 +119,7 @@ export const routes: AppRoute[] = [
               name: 'accounts.importAccount.importMnemonic',
               meta: {
                 protected: false,
-                icon: importStepImage.importStepImage2
+                icon: importStepImage.importStepImage2,
               },
               // @ts-ignore
               component: () => import('@/views/pages/accounts/import-account/import-mnemonic/ImportMnemonic.vue'),
@@ -128,7 +128,7 @@ export const routes: AppRoute[] = [
               name: 'accounts.importAccount.walletSelection',
               meta: {
                 protected: false,
-                icon: importStepImage.importStepImage3
+                icon: importStepImage.importStepImage3,
               },
               // @ts-ignore
               component: () => import('@/views/pages/accounts/import-account/wallet-selection/WalletSelection.vue'),
@@ -137,7 +137,7 @@ export const routes: AppRoute[] = [
               name: 'accounts.importAccount.finalize',
               meta: {
                 protected: false,
-                icon: importStepImage.importStepImage4
+                icon: importStepImage.importStepImage4,
               },
               // @ts-ignore
               component: () => import('@/views/pages/accounts/import-account/finalize/Finalize.vue'),
@@ -333,16 +333,6 @@ export const routes: AppRoute[] = [
             // @ts-ignore
             component: () => import('@/views/pages/multisig/ManageAccountPage/ManageAccountPage.vue'),
           },
-          // {
-          //   path: '/multisigCosign',
-          //   name: 'multisig.cosign',
-          //   meta: {
-          //     protected: true,
-          //     title: 'page_title_multisig_cosign',
-          //   },
-          //   // @ts-ignore
-          //   component: () => import('@/views/pages/multisig/PartialTransactionDashboardPage/PartialTransactionDashboardPage.vue'),
-          // },
         ],
       }, {
         path: '/communityPanel',
@@ -418,7 +408,7 @@ export const routes: AppRoute[] = [
   }, {
     path: '/login',
     name: 'accounts.login',
-    meta: { protected: false },
+    meta: { protected: false },
     // @ts-ignore
     component: () => import('@/views/pages/accounts/LoginPage.vue'),
   },

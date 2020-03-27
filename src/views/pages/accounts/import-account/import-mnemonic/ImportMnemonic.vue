@@ -5,13 +5,18 @@
     </p>
     <div class="create-mnemonic-col">
       <div class="create-mnemonic-left">
-        <MnemonicInput @handle-words='setSeed'></MnemonicInput>
+        <MnemonicInput @handle-words="setSeed" />
         <div class="button-container">
           <div class="flex-container mt-3">
             <button type="button" class="button-style back-button" @click="deleteAccountAndBack">
               {{ $t('Return_password_setting') }}
             </button>
-            <button type="submit" class="button-style validation-button"  @click="processVerification" :disabled="!(wordsArray.length==12||wordsArray.length==24)">
+            <button
+              type="submit"
+              class="button-style validation-button"
+              :disabled="!(wordsArray.length === 12 || wordsArray.length === 24)"
+              @click="processVerification"
+            >
               {{ $t('Import_mnemonic') }}
             </button>
           </div>
@@ -27,9 +32,9 @@
 </template>
 
 <script lang="ts">
-  import ImportMnemonicTs from './ImportMnemonicTs'
+import ImportMnemonicTs from './ImportMnemonicTs'
 
-  export default class ImportMnemonic extends ImportMnemonicTs {}
+export default class ImportMnemonic extends ImportMnemonicTs {}
 </script>
 <style lang="less" scoped>
 @import "./ImportMnemonic.less";

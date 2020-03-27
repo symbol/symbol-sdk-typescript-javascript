@@ -46,11 +46,11 @@ export class CacheKey {
    * @return {string}
    */
   public getHash(): string {
-    const query  = this.argv.reduce(
-      (prev, cur, idx) => prev + ',' + cur)
+    const query = this.argv.reduce(
+      (prev, cur) => `${prev},${cur}`)
 
     // create query hash
-    const hash   = new Uint8Array(64)
+    const hash = new Uint8Array(64)
     const hasher = SHA3Hasher.createHasher(64)
     hasher.reset()
     hasher.update(Buffer.from(query))

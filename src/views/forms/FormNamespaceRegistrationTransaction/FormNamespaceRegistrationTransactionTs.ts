@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 // external dependencies
-import {UInt64, NamespaceRegistrationTransaction, NamespaceRegistrationType, TransactionType, Transaction, NamespaceInfo, NamespaceId} from 'symbol-sdk'
+import {UInt64, NamespaceRegistrationTransaction, NamespaceRegistrationType, Transaction, NamespaceInfo, NamespaceId} from 'symbol-sdk'
 import {Component, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
@@ -122,14 +122,6 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
    * @return {void}
    */
   protected resetForm() {
-    // - re-populate form if transaction staged
-    // if (this.stagedTransactions.length) {
-    //   const transaction = this.stagedTransactions.find(staged => staged.type === TransactionType.NAMESPACE_REGISTRATION)
-    //   this.setTransactions([transaction as NamespaceRegistrationTransaction])
-    //   this.isAwaitingSignature = true
-    //   return 
-    // }
-
     // - set default form values
     this.formItems.signerPublicKey = this.currentWallet.values.get('publicKey')
     this.formItems.registrationType = this.registrationType || NamespaceRegistrationType.RootNamespace

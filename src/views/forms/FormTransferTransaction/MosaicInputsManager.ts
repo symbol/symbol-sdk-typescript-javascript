@@ -104,11 +104,11 @@ export class MosaicInputsManager {
 
     // get non-allocated entries
     const nonAllocatedEntries = Object.entries(this.mosaicMap)
-      .filter(([, slot]) => slot === null)
+      .filter(([ , slot ]) => slot === null)
       .map(([hex]) => hex)
 
     return allocatedEntry
-      ? [allocatedEntry[0], ...nonAllocatedEntries]
+      ? [ allocatedEntry[0], ...nonAllocatedEntries ]
       : nonAllocatedEntries
   }
 
@@ -119,6 +119,6 @@ export class MosaicInputsManager {
    * @returns {([string, number] | undefined)}
    */
   private getEntryBySlot(index: number): [string, number] | undefined {
-    return Object.entries(this.mosaicMap).find(([, slot]) => slot == index)
+    return Object.entries(this.mosaicMap).find(([ , slot ]) => slot == index)
   }
 }

@@ -21,10 +21,10 @@ import {TransactionView} from './TransactionView'
 
 /// region custom types
 export type MosaicSupplyChangeFormFieldsType = {
-  mosaicId: MosaicId,
-  action: MosaicSupplyChangeAction,
-  delta: UInt64,
-  maxFee: UInt64,
+  mosaicId: MosaicId
+  action: MosaicSupplyChangeAction
+  delta: UInt64
+  maxFee: UInt64
 }
 /// end-region custom types
 

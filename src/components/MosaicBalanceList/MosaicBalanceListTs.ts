@@ -37,12 +37,12 @@ import {BalanceEntry} from '@/core/database/entities/MosaicsModel'
     mosaicsInfo: 'mosaic/mosaicsInfo',
     mosaicsNames: 'mosaic/mosaicsNames',
     networkMosaic: 'mosaic/networkMosaic',
-  })}
+  })},
 })
 export class MosaicBalanceListTs extends Vue {
 
   @Prop({
-    default: []
+    default: [],
   }) mosaics: Mosaic[]
 
   /**
@@ -104,7 +104,7 @@ export class MosaicBalanceListTs extends Vue {
   private mosaicsNames: Record<string, string>
 
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   /**
    * Balance entries from the currently active wallet's mosaics
    * @readonly
@@ -161,7 +161,7 @@ export class MosaicBalanceListTs extends Vue {
       entry => this.hiddenMosaics.indexOf(entry.id.toHex()) === -1,
     )
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Returns true when mosaic \a mosaicId is hidden
@@ -189,13 +189,13 @@ export class MosaicBalanceListTs extends Vue {
     if (mosaicId !== undefined) {
       const isHidden = this.isMosaicHidden(mosaicId)
       const action = isHidden ? 'SHOW_MOSAIC' : 'HIDE_MOSAIC'
-      return this.$store.dispatch('mosaic/' + action, mosaicId)
+      return this.$store.dispatch(`mosaic/${action}`, mosaicId)
     }
 
     // - update state
     const action = this.areAllMosaicsShown() ? 'HIDE_MOSAIC' : 'SHOW_MOSAIC'
     return this.mosaics.forEach(
-      mosaic => this.$store.dispatch('mosaic/' + action, mosaic.id)
+      mosaic => this.$store.dispatch(`mosaic/${action}`, mosaic.id),
     )
   }
 

@@ -44,7 +44,6 @@ const app = new Vue({
   router,
   store: AppStore,
   i18n,
-  render: h => h(App),
   created: function () {
     // This will execute following processes:
     // - configure $Notice
@@ -52,6 +51,7 @@ const app = new Vue({
     // - configure Vue directives
     UIBootstrapper.configure(this)
   },
+  render: h => h(App),
 })
 
 app.$mount('#app')

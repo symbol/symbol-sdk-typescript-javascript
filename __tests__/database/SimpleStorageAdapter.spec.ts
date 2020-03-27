@@ -27,9 +27,9 @@ describe('database/BaseStorageAdapter ==>', () => {
     })
 
     test('read stored session id given storage', () => {
-      const adapter = getAdapter({sessionId: "123456789"})
+      const adapter = getAdapter({sessionId: '123456789'})
       const sessionId = adapter.getSessionId()
-      expect(sessionId).toBe("123456789")
+      expect(sessionId).toBe('123456789')
     })
   })
 
@@ -43,7 +43,7 @@ describe('database/BaseStorageAdapter ==>', () => {
 
     test('encrypt access salt given session id', () => {
       const adapter = getAdapter({
-        sessionId: "password",
+        sessionId: 'password',
       })
 
       const salt = adapter.getSaltForSession()
@@ -55,12 +55,12 @@ describe('database/BaseStorageAdapter ==>', () => {
 
     test('read encrypted salt given storage', () => {
       const adapter = getAdapter({
-        sessionId: "password",
-        accessSalt: "9c3afe1b658403d7522886cda510a3714c389ce697128ab8d3877bbbb53c2ecdY+QgfP/KHmUl+wk7rPwmEQ=="
+        sessionId: 'password',
+        accessSalt: '9c3afe1b658403d7522886cda510a3714c389ce697128ab8d3877bbbb53c2ecdY+QgfP/KHmUl+wk7rPwmEQ==',
       })
 
       const salt = adapter.getSaltForSession()
-      expect(salt).toBe("987654321")
+      expect(salt).toBe('987654321')
     })
   })
 })

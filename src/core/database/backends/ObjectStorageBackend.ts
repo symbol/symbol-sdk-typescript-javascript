@@ -53,7 +53,7 @@ export class ObjectStorageBackend implements IStorageBackend {
    * @return {any}
    */
   public getItem(key: string): any {
-    if (! this.backend.hasOwnProperty(key)) {
+    if (!this.backend || !this.backend[key]) {
       return null
     }
 

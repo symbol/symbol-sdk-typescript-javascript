@@ -15,7 +15,7 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Password, Account} from 'symbol-sdk'
+import {Password} from 'symbol-sdk'
 
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
@@ -46,7 +46,7 @@ import { NotificationType } from '@/core/utils/NotificationType'
   },
   computed: {...mapGetters({
     currentAccount: 'account/currentAccount',
-  })}
+  })},
 })
 export class FormAccountPasswordUpdateTs extends Vue {
   /**
@@ -75,7 +75,7 @@ export class FormAccountPasswordUpdateTs extends Vue {
   public formItems = {
     password: '',
     passwordConfirm: '',
-    passwordHint: ''
+    passwordHint: '',
   }
 
   /**
@@ -88,7 +88,7 @@ export class FormAccountPasswordUpdateTs extends Vue {
     observer: InstanceType<typeof ValidationObserver>
   }
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get hasAccountUnlockModal(): boolean {
     return this.isUnlockingAccount
   }
@@ -96,7 +96,7 @@ export class FormAccountPasswordUpdateTs extends Vue {
   public set hasAccountUnlockModal(f: boolean) {
     this.isUnlockingAccount = f
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Submit action asks for account unlock
@@ -113,20 +113,20 @@ export class FormAccountPasswordUpdateTs extends Vue {
   /**
    * When account is unlocked, the sub wallet can be created
    */
-  public async onAccountUnlocked(account: Account, password: Password) {
+  public async onAccountUnlocked() {
     try {
       const service = new AccountService(this.$store)
       const repository = new AccountsRepository()
 
       // - create new password hash
       const passwordHash = service.getPasswordHash(new Password(this.formItems.password))
-      this.currentAccount.values.set("password", passwordHash)
-      this.currentAccount.values.set("hint", this.formItems.passwordHint)
+      this.currentAccount.values.set('password', passwordHash)
+      this.currentAccount.values.set('hint', this.formItems.passwordHint)
 
       // - update in storage
       repository.update(
         this.currentAccount.getIdentifier(),
-        this.currentAccount.values
+        this.currentAccount.values,
       )
 
       // - update state and finalize

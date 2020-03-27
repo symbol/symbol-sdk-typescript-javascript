@@ -55,7 +55,9 @@
     </FormWrapper>
 
     <!-- force mosaic list reactivity -->
-    <div v-show="false">{{ currentMosaicList() }}</div>
+    <div v-show="false">
+      {{ currentMosaicList() }}
+    </div>
   </div>
 </template>
 

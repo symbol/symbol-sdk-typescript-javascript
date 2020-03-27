@@ -221,10 +221,9 @@ export class TransactionService extends AbstractService {
         view = view.use(transaction as AddressAliasTransaction)
         break
       default:
-      // - throw on transaction view not implemented 
-        const errorMessage = `View not implemented for transaction type '${transaction.type} '`
-        this.$store.dispatch('diagnostic/ADD_ERROR', errorMessage)
-        throw new Error(errorMessage)
+      // - throw on transaction view not implemented
+        this.$store.dispatch('diagnostic/ADD_ERROR', `View not implemented for transaction type '${transaction.type}'`)
+        throw new Error(`View not implemented for transaction type '${transaction.type}'`)
     }
 
     // - try to find block for fee information
@@ -277,7 +276,7 @@ export class TransactionService extends AbstractService {
       Deadline.create(),
       new Mosaic(
         networkMosaic,
-        UInt64.fromUint(networkProps.lockedFundsPerAggregate)
+        UInt64.fromUint(networkProps.lockedFundsPerAggregate),
       ),
       UInt64.fromUint(1000), // duration=1000
       aggregateTx,
@@ -295,14 +294,14 @@ export class TransactionService extends AbstractService {
    */
   public cosignPartialTransaction(account: Account, partial: AggregateTransaction): CosignatureSignedTransaction {
     // - create cosignature and sign
-    const cosignature = CosignatureTransaction.create(partial);
-    const signedCosig = account.signCosignatureTransaction(cosignature);
+    const cosignature = CosignatureTransaction.create(partial)
+    const signedCosig = account.signCosignatureTransaction(cosignature)
 
     // - notify diagnostics
-    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Co-signed transaction with account ' + account.address.plain() + ' and result: ' + JSON.stringify({
+    this.$store.dispatch('diagnostic/ADD_DEBUG', `Co-signed transaction with account ${account.address.plain()} and result: ${JSON.stringify({
       parentHash: signedCosig.parentHash,
-      signature: signedCosig.signature
-    }))
+      signature: signedCosig.signature,
+    })}`)
 
     return signedCosig
   }
@@ -320,7 +319,7 @@ export class TransactionService extends AbstractService {
     const signedTransactions = []
 
     // - iterate transaction that are "on stage"
-    for (let i = 0, m = transactions.length; i < m; i++) {
+    for (let i = 0, m = transactions.length; i < m; i ++) {
       // - read transaction from stage
       const staged = transactions[i]
 
@@ -330,10 +329,10 @@ export class TransactionService extends AbstractService {
       signedTransactions.push(signedTx)
 
       // - notify diagnostics
-      this.$store.dispatch('diagnostic/ADD_DEBUG', 'Signed transaction with account ' + account.address.plain() + ' and result: ' + JSON.stringify({
+      this.$store.dispatch('diagnostic/ADD_DEBUG', `Signed transaction with account ${account.address.plain()} and result: ${JSON.stringify({
         hash: signedTx.hash,
-        payload: signedTx.payload
-      }))
+        payload: signedTx.payload,
+      })}`)
     }
 
     return signedTransactions
@@ -362,8 +361,8 @@ export class TransactionService extends AbstractService {
       transactions.map(t => t.toAggregate(account.publicAccount)),
       networkType,
       [],
-      UInt64.fromUint(defaultFee)
-    );
+      UInt64.fromUint(defaultFee),
+    )
 
     // - sign aggregate transaction
     const signedTx = account.sign(aggregateTx, generationHash)
@@ -371,10 +370,10 @@ export class TransactionService extends AbstractService {
     signedTransactions.push(signedTx)
 
     // - notify diagnostics
-    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Signed aggregate transaction with account ' + account.address.plain() + ' and result: ' + JSON.stringify({
+    this.$store.dispatch('diagnostic/ADD_DEBUG', `Signed aggregate transaction with account ${account.address.plain()} and result: ${JSON.stringify({
       hash: signedTx.hash,
-      payload: signedTx.payload
-    }))
+      payload: signedTx.payload,
+    })}`)
 
     return signedTransactions
   }
@@ -410,12 +409,12 @@ export class TransactionService extends AbstractService {
       transactions.map(t => t.toAggregate(multisigAccount)),
       networkType,
       [],
-      UInt64.fromUint(defaultFee)
-    );
+      UInt64.fromUint(defaultFee),
+    )
 
     // - sign aggregate transaction and create lock
     const signedTx = cosignatoryAccount.sign(aggregateTx, generationHash)
-    const hashLock = this.createHashLockTransaction(signedTx);
+    const hashLock = this.createHashLockTransaction(signedTx)
 
     // - sign hash lock and push
     const signedLock = cosignatoryAccount.sign(hashLock, generationHash)
@@ -427,11 +426,11 @@ export class TransactionService extends AbstractService {
     signedTransactions.push(signedTx)
 
     // - notify diagnostics
-    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Signed hash lock and aggregate bonded for account ' + multisigAccount.address.plain() 
-      + ' with cosignatory ' + cosignatoryAccount.address.plain() + ' and result: ' + JSON.stringify({
-        hashLockTransactionHash: signedTransactions[0].hash,
-        aggregateTransactionHash: signedTransactions[1].hash,
-      }))
+    this.$store.dispatch('diagnostic/ADD_DEBUG', `Signed hash lock and aggregate bonded for account ${multisigAccount.address.plain() 
+    } with cosignatory ${cosignatoryAccount.address.plain()} and result: ${JSON.stringify({
+      hashLockTransactionHash: signedTransactions[0].hash,
+      aggregateTransactionHash: signedTransactions[1].hash,
+    })}`)
 
     return signedTransactions
   }
@@ -517,7 +516,9 @@ export class TransactionService extends AbstractService {
    * @return {Observable<BroadcastResult[]>}
    * @throws {Error}  On missing signed hash lock transaction.
    */
-  public async announceCosignatureTransactions(cosignatures: CosignatureSignedTransaction[]): Promise<BroadcastResult[]> {
+  public async announceCosignatureTransactions(
+    cosignatures: CosignatureSignedTransaction[],
+  ): Promise<BroadcastResult[]> {
     const results: BroadcastResult[] = []
     for (let i = 0, m = cosignatures.length; i < m; i ++) {
       const cosignature = cosignatures[i]

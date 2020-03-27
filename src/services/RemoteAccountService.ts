@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {Account, AccountType, Address, PublicAccount, RepositoryFactory,} from 'symbol-sdk'
+import {Account, AccountType, Address, PublicAccount, RepositoryFactory} from 'symbol-sdk'
 import {Wallet} from 'symbol-hd-wallets'
 // internal dependencies
 import {AbstractService} from '@/services/AbstractService'
@@ -78,15 +78,15 @@ export class RemoteAccountService extends AbstractService {
 
     try {
       // prepare discovery process
-      const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
+      const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory
       const networkType = this.$store.getters['network/networkType']
-      const accountHttp = repositoryFactory.createAccountRepository();
+      const accountHttp = repositoryFactory.createAccountRepository()
 
       // generate 10 remote accounts
       let nextPath: string = path
       const remoteAccounts: Map<string, Account> = new Map<string, Account>()
       const remoteAddresses: Address[] = []
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 10; i ++) {
         // derive child account and store
         const remoteAccount = wallet.getChildAccount(nextPath, networkType)
         // @ts-ignore // @TODO: SDK upgrade
@@ -108,7 +108,7 @@ export class RemoteAccountService extends AbstractService {
       return PublicAccount.createFromPublicKey(firstLinkable.publicKey, networkType)
     }
     catch (error) {
-      const errorMessage = 'An error happened while generating remote account: ' + error
+      const errorMessage = `An error happened while generating remote account: ${error}`
       this.$store.dispatch('diagnostic/ADD_ERROR', errorMessage)
       throw new Error(errorMessage)
     }

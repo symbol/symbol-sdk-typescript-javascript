@@ -23,5 +23,5 @@ import Vue from 'vue'
  * - onAccountChange with \a accountName
  * - onWalletChange with \a walletAddress
  */
-export const $eventBus = new Vue();
+export const $eventBus = new Vue()
 /// end-region event bus

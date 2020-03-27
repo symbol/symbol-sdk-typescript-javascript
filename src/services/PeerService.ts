@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NetworkHttp, NetworkType} from 'symbol-sdk'
 import {Store} from 'vuex'
 
 // internal dependencies
@@ -54,7 +53,7 @@ export class PeerService extends AbstractService {
       value: PeersModel,
       index: number,
       array: PeersModel[]
-    ) => boolean = (e) => true
+    ) => boolean = () => true,
   ): PeersModel[] {
     const repository = new PeersRepository()
     return repository.collect().filter(filterFn)
@@ -67,15 +66,15 @@ export class PeerService extends AbstractService {
    */
   public getNodeUrl(fromUrl: string): string {
     let fixedUrl = -1 === fromUrl.indexOf('://')
-                  ? 'http://' + fromUrl
-                  : fromUrl
+      ? `http://${fromUrl}`
+      : fromUrl
 
     fixedUrl = !fixedUrl.match(/https?:\/\/[^:]+:([0-9]+)\/?$/)
-             ? fixedUrl + ':3000' // default adds :3000
-             : fixedUrl
+      ? `${fixedUrl}:3000` // default adds :3000
+      : fixedUrl
 
     const url = URLHelpers.formatUrl(fixedUrl)
-    return url.protocol + '//' + url.hostname + (url.port ? ':' + url.port : ':3000')
+    return `${url.protocol}//${url.hostname}${url.port ? `:${url.port}` : ':3000'}`
   }
 
   /**
@@ -93,7 +92,7 @@ export class PeerService extends AbstractService {
 
     // throw if node is not found in the database
     if (endpoint === undefined) {
-      throw new Error('This url was not found in the peer repository: ' + url)
+      throw new Error(`This url was not found in the peer repository: ${url}`)
     }
 
     // delete the node from the database
@@ -115,7 +114,7 @@ export class PeerService extends AbstractService {
 
     // throw if node is not found in the database
     if (selectedEndpoint === undefined) {
-      throw new Error('This url was not found in the peer repository: ' + url)
+      throw new Error(`This url was not found in the peer repository: ${url}`)
     }
 
     const currentlyActiveEndpoint = this.getEndpoints().find(

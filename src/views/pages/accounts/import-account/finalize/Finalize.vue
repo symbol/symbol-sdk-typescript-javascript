@@ -43,7 +43,7 @@
 
 <script>
 import FinalizeTs from './FinalizeTs'
-import "./Finalize.less";
+import './Finalize.less'
 
 export default class Finalize extends FinalizeTs {}
 </script>

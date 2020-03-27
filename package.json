@@ -10,8 +10,8 @@
     "lint:all": "npm run lint:ts && npm run lint:vue && npm run lint:tests",
     "lint:ts": "eslint src/ --ext .ts",
     "lint:vue": "eslint src/ --ext .vue",
-    "lint:tests": "eslint tests/ --ext .ts",
-    "lint:all:fix": "eslint src/ --ext .ts --fix && eslint src/ --ext .vue --fix && eslint tests/ --ext .ts --fix"
+    "lint:tests": "eslint __tests__/ --ext .ts",
+    "lint:all:fix": "eslint src/ --ext .ts --fix && eslint src/ --ext .vue --fix && eslint __tests__/ --ext .ts --fix"
   },
   "dependencies": {
     "@types/crypto-js": "^3.1.43",

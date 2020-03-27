@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import networkConfig from '../../../config/network.conf.json';
+import networkConfig from '../../../config/network.conf.json'
 
-//XXX network store getters
+// XXX network store getters
 const {targetBlockTime} = networkConfig.networks['testnet-publicTest'].properties
 
 export class TimeHelpers {

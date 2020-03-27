@@ -46,7 +46,7 @@ export class AccountService extends AbstractService {
   /**
    * Read the collection of known accounts from database.
    *
-   * @param {Function} filterFn
+   * @param {Function} filterFn
    * @return {MosaicsModel[]}
    */
   public getAccounts(
@@ -54,7 +54,7 @@ export class AccountService extends AbstractService {
       value: AccountsModel,
       index: number,
       array: AccountsModel[]
-    ) => boolean = (e) => true
+    ) => boolean = () => true,
   ): AccountsModel[] {
     const repository = new AccountsRepository()
     return repository.collect().filter(filterFn)
@@ -62,16 +62,16 @@ export class AccountService extends AbstractService {
 
   /**
    * Return password hash that can be compared
-   * @param {Password} password 
+   * @param {Password} password 
    * @return {string}
    */
   public getPasswordHash(password: Password): string {
-    const hasher = SHA3Hasher.createHasher(64);
-    hasher.reset();
-    hasher.update(Convert.utf8ToHex(password.value));
+    const hasher = SHA3Hasher.createHasher(64)
+    hasher.reset()
+    hasher.update(Convert.utf8ToHex(password.value))
 
-    const hash = new Uint8Array(64);
-    hasher.finalize(hash);
+    const hash = new Uint8Array(64)
+    hasher.finalize(hash)
     return Convert.uint8ToHex(hash)
   }
 }

@@ -40,7 +40,7 @@
     <div class="bottom_account_info radius xym-outline">
       <div class="mosaicListWrap">
         <Spin
-          v-if="!currentWallet || !currentMosaics.length" size="large" fix
+          v-if="!currentWallet || !currentMosaics.length" size="large" fix
           class="absolute"
         />
         <MosaicBalanceList :mosaics="currentMosaics" />

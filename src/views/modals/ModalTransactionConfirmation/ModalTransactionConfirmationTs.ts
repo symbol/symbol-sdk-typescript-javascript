@@ -49,7 +49,7 @@ import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/
 export class ModalTransactionConfirmationTs extends Vue {
 
   @Prop({
-    default: false
+    default: false,
   }) visible: boolean
 
   /**
@@ -98,13 +98,13 @@ export class ModalTransactionConfirmationTs extends Vue {
    */
   public service: TransactionService
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   /**
    * Returns whether current wallets is a hardware wallet
    * @return {boolean}
    */
   public get isUsingHardwareWallet(): boolean {
-    //XXX should use "stagedTransaction.signer" to identify wallet
+    // XXX should use "stagedTransaction.signer" to identify wallet
     return WalletType.TREZOR === this.currentWallet.values.get('type')
   }
 
@@ -114,8 +114,8 @@ export class ModalTransactionConfirmationTs extends Vue {
    */
   public get show(): boolean {
     return this.visible 
-        //&& !!this.stagedTransactions
-        //&& this.stagedTransactions.length > 0
+    // && !!this.stagedTransactions
+    // && this.stagedTransactions.length > 0
   }
 
   /**
@@ -126,7 +126,7 @@ export class ModalTransactionConfirmationTs extends Vue {
       this.$emit('close')
     }
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Hook called when child component HardwareConfirmationButton emits
@@ -142,10 +142,10 @@ export class ModalTransactionConfirmationTs extends Vue {
     const service = new TransactionService(this.$store)
 
     // - log about transaction signature success
-    this.$store.dispatch('diagnostic/ADD_INFO', 'Signed ' + transactions.length + ' Transaction(s) on stage with Hardware Wallet')
+    this.$store.dispatch('diagnostic/ADD_INFO', `Signed ${transactions.length} Transaction(s) on stage with Hardware Wallet`)
 
     // - transactions are ready to be announced
-    for (let i = 0, m = transactions.length; i < m; i++) {
+    for (let i = 0, m = transactions.length; i < m; i ++) {
       const signed = transactions[i]
       this.$store.commit('wallet/addSignedTransaction', signed)
     }
@@ -179,13 +179,13 @@ export class ModalTransactionConfirmationTs extends Vue {
    */
   public async onAccountUnlocked({account}: {account: Account}): Promise<void> {
     // - log about unlock success
-    this.$store.dispatch('diagnostic/ADD_INFO', 'Account ' + account.address.plain() + ' unlocked successfully.')
+    this.$store.dispatch('diagnostic/ADD_INFO', `Account ${account.address.plain()} unlocked successfully.`)
     
     // - get transaction stage config
     const options = this.$store.getters['wallet/stageOptions']
     const service = new TransactionService(this.$store)
 
-    let signedTransactions: SignedTransaction[] = []
+    let signedTransactions: SignedTransaction[]
 
     // - case 1 "is multisig": must create hash lock (aggregate bonded pre-requirement)
     if (options.isMultisig) {
@@ -193,7 +193,7 @@ export class ModalTransactionConfirmationTs extends Vue {
       const currentSigner = this.$store.getters['wallet/currentSigner']
       const multisigAccount = PublicAccount.createFromPublicKey(
         currentSigner.values.get('publicKey'),
-        this.networkType
+        this.networkType,
       )
 
       // - use multisig public account and cosignatory to sign
@@ -212,6 +212,8 @@ export class ModalTransactionConfirmationTs extends Vue {
     this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
 
     // - notify about successful transaction announce
+    const debug = `Count of transactions signed:  ${signedTransactions.length}`
+    this.$store.dispatch('notification/ADD_DEBUG', debug)
     this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed')
     this.$emit('success', account.publicAccount)
     this.show = false

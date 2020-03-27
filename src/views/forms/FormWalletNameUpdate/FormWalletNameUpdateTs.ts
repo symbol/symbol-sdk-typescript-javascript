@@ -15,7 +15,7 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {NetworkType, Password, Account} from 'symbol-sdk'
+import {NetworkType, Password} from 'symbol-sdk'
 
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
@@ -79,7 +79,7 @@ export class FormWalletNameUpdateTs extends Vue {
 
   /**
    * Wallets repository
-   * @var {WalletsRepository}
+   * @var {WalletsRepository}
    */
   public walletsRepository: WalletsRepository
 
@@ -124,7 +124,7 @@ export class FormWalletNameUpdateTs extends Vue {
     this.walletsRepository = new WalletsRepository()
   }
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get hasAccountUnlockModal(): boolean {
     return this.isUnlockingAccount
   }
@@ -132,7 +132,7 @@ export class FormWalletNameUpdateTs extends Vue {
   public set hasAccountUnlockModal(f: boolean) {
     this.isUnlockingAccount = f
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Submit action asks for account unlock
@@ -150,7 +150,7 @@ export class FormWalletNameUpdateTs extends Vue {
   /**
    * When account is unlocked, the sub wallet can be created
    */
-  public onAccountUnlocked(account: Account, password: Password) {
+  public onAccountUnlocked() {
     // - interpret form items
     const values = this.formItems
 
@@ -161,7 +161,7 @@ export class FormWalletNameUpdateTs extends Vue {
       // - use repositories for storage
       this.walletsRepository.update(
         this.currentWallet.getIdentifier(),
-        this.currentWallet.values
+        this.currentWallet.values,
       )
 
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)

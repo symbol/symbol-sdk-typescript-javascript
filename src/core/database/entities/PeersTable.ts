@@ -51,7 +51,7 @@ export class PeersTable extends DatabaseTable {
    */
   public getMigrations(): DatabaseMigration[] {
     return [
-      {version: 2, callback: PeersMigrations.version2_addGenHash}
+      {version: 2, callback: PeersMigrations.version2_addGenHash},
     ]
   }
 }

@@ -33,7 +33,7 @@ export class PeersMigrations {
    * @return {Map<string, PeersModel>}
    */
   public static version2_addGenHash(
-    rows: Map<string, PeersModel>
+    rows: Map<string, PeersModel>,
   ): Map<string, PeersModel> {
 
     const entities = Array.from(rows.values())

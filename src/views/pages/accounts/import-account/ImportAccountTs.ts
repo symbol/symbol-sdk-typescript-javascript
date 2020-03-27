@@ -38,11 +38,11 @@ export default class ImportAccountTs extends Vue {
 
   public getCurrentStep(): number {
     switch(this.$route.name) {
-    default:
-    case 'accounts.importAccount.info': return 0
-    case 'accounts.importAccount.importMnemonic': return 1
-    case 'accounts.importAccount.walletSelection': return 2
-    case 'accounts.importAccount.finalize': return 3
+      default:
+      case 'accounts.importAccount.info': return 0
+      case 'accounts.importAccount.importMnemonic': return 1
+      case 'accounts.importAccount.walletSelection': return 2
+      case 'accounts.importAccount.finalize': return 3
     }
   }
 

@@ -46,7 +46,7 @@ export default class ShowMnemonicTs extends Vue {
    */
   public showMnemonic: boolean = false
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   get mnemonicWordsList() {
     return this.currentMnemonic.plain.split(' ')
   }

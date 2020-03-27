@@ -16,38 +16,19 @@
  */
 import {Store} from 'vuex'
 import {
-  AccountAddressRestrictionTransaction,
-  AccountLinkTransaction,
-  AccountMetadataTransaction,
-  AccountMosaicRestrictionTransaction,
-  AccountOperationRestrictionTransaction,
   Address,
   AddressAliasTransaction,
-  AggregateTransaction,
   AliasTransaction,
-  BlockInfo,
   Deadline,
   EmptyMessage,
-  HashLockTransaction,
-  LockFundsTransaction,
-  MosaicAddressRestrictionTransaction,
   MosaicAliasTransaction,
   MosaicDefinitionTransaction,
-  MosaicGlobalRestrictionTransaction,
-  MosaicMetadataTransaction,
   MosaicSupplyChangeTransaction,
   MultisigAccountModificationTransaction,
-  NamespaceMetadataTransaction,
   NamespaceRegistrationTransaction,
   NamespaceRegistrationType,
-  SecretLockTransaction,
-  SecretProofTransaction,
-  SignedTransaction,
   Transaction,
-  TransactionMapping,
-  TransactionType,
   TransferTransaction,
-  UInt64,
 } from 'symbol-sdk'
 
 // internal dependencies
@@ -148,7 +129,7 @@ export class TransactionFactory {
         deadline,
         view.values.get('recipient'),
         view.values.get('mosaics'),
-        view.values.get('message') || EmptyMessage,
+        view.values.get('message') || EmptyMessage,
         networkType,
         view.values.get('maxFee'),
       )

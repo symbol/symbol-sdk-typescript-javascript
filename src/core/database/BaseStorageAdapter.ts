@@ -24,7 +24,7 @@ import {AbstractFormatter} from './formatters/AbstractFormatter'
 import {JSONFormatter} from './formatters/JSONFormatter'
 
 export abstract class BaseStorageAdapter 
-  implements IStorageAdapter {
+implements IStorageAdapter {
   /**
    * Storage backend
    * @var {IStorageBackend}
@@ -49,7 +49,7 @@ export abstract class BaseStorageAdapter
    */
   public constructor(
     storageBackend: IStorageBackend = !!localStorage ? new LocalStorageBackend() : new ObjectStorageBackend(),
-    dataFormatter: AbstractFormatter = new JSONFormatter()
+    dataFormatter: AbstractFormatter = new JSONFormatter(),
   ) {
     this.storage = storageBackend
     this.formatter = dataFormatter
@@ -67,7 +67,7 @@ export abstract class BaseStorageAdapter
 
   /**
    * Find schema by *alias* or by *table name*.
-   * @param {string} schemaId 
+   * @param {string} schemaId 
    * @return {DatabaseTable}
    */
   public getSchema(schemaId: string): DatabaseTable {
@@ -75,12 +75,12 @@ export abstract class BaseStorageAdapter
     if (!this.schemas.has(schemaKey)) {
       // try to find aliased schema
       schemaKey = [...this.schemas.keys()].find(
-        s => this.schemas.get(s).tableName === schemaId
+        s => this.schemas.get(s).tableName === schemaId,
       )
 
       // catch unregistered schema
       if (schemaKey === undefined) {
-        throw new Error('Schema with identifier \'' + schemaId + '\' is not registered.')
+        throw new Error(`Schema with identifier '${schemaId}' is not registered.`)
       }
     }
 
@@ -99,13 +99,13 @@ export abstract class BaseStorageAdapter
 
     // read from storage
     const data = this.storage.getItem(schema.tableName)
-    if (!data || data === null || !data.length) {
+    if (!data || data === null || !data.length) {
       return new Map<string, DatabaseModel>()
     }
 
     // valid stored data to identify invalid data format
     if (!this.formatter.validate(data)) {
-      throw new Error('Data stored for schema \'' + schemaId + '\' does not comply with JSONFormatter derivate.')
+      throw new Error(`Data stored for schema '${schemaId}' does not comply with JSONFormatter derivate.`)
     }
 
     // map on-the-fly + validate singular entities format
@@ -150,11 +150,11 @@ export abstract class BaseStorageAdapter
    */
   protected checkSchemaVersion(
     schema: DatabaseTable,
-    rows: Map<string, DatabaseModel>
+    rows: Map<string, DatabaseModel>,
   ): boolean {
     const migratees = Array.from(rows.values()).filter(
       model => !model.values.has('version') 
-             || model.values.get('version') < schema.version
+             || model.values.get('version') < schema.version,
     )
 
     return !migratees.length

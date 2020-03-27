@@ -18,7 +18,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
-import {WalletsModel, WalletType} from '@/core/database/entities/WalletsModel'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
 
 // child components
 // @ts-ignore
@@ -39,6 +39,4 @@ export class WalletHarvestingPageTs extends Vue {
    * @var {WalletsModel}
    */
   public currentWallet: WalletsModel
-/// region computed properties getter/setter
-/// end-region computed properties getter/setter
 }

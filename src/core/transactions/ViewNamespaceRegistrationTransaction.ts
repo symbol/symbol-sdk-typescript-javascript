@@ -22,10 +22,10 @@ import {TransactionView} from './TransactionView'
 /// region custom types
 export type NamespaceRegistrationFormFieldsType = {
   rootNamespaceName: string
-  subNamespaceName?: string,
-  registrationType: NamespaceRegistrationType,
-  duration?: number,
-  maxFee: UInt64,
+  subNamespaceName?: string
+  registrationType: NamespaceRegistrationType
+  duration?: number
+  maxFee: UInt64
 }
 /// end-region custom types
 
@@ -80,7 +80,7 @@ export class ViewNamespaceRegistrationTransaction extends TransactionView<Namesp
       // - try to identify root namespace by id
       const parentId = transaction.parentId
       const namespaceNames = this.$store.getters['namespace/namespacesNames']
-      if (namespaceNames.hasOwnProperty(parentId.toHex())) {
+      if (namespaceNames && namespaceNames[parentId.toHex()]) {
         this.values.set('rootNamespaceName', namespaceNames[parentId.toHex()])
       }
     }

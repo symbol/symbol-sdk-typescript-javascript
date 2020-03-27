@@ -52,7 +52,7 @@ export class SupplyInputTs extends Vue {
    */
   public validationRules = ValidationRuleset
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get chosenValue(): number {
     return this.value
   }

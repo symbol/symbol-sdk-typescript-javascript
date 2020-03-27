@@ -110,11 +110,11 @@ export class FormAccountCreationTs extends Vue {
     observer: InstanceType<typeof ValidationObserver>
   }
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   get nextPage() {
     return this.$route.meta.nextPage
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Submit action, validates form and creates account in storage

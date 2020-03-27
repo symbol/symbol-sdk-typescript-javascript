@@ -23,7 +23,6 @@ import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import i18n from '@/language'
 
 // configuration
-import appConfig from '@/../config/app.conf.json'
 import feesConfig from '@/../config/fees.conf.json'
 import networkConfig from '@/../config/network.conf.json'
 
@@ -59,7 +58,7 @@ export class SettingService extends AbstractService {
       value: SettingsModel,
       index: number,
       array: SettingsModel[]
-    ) => boolean = (e) => true
+    ) => boolean = () => true,
   ): SettingsModel[] {
     const repository = new SettingsRepository()
     return repository.collect().filter(filterFn)
@@ -80,10 +79,10 @@ export class SettingService extends AbstractService {
 
     // - defaults
     return repository.createModel(new Map<string, any>([
-      ['explorer_url', networkConfig.explorerUrl],
-      ['default_fee', feesConfig.normal],
-      ['default_wallet', ''],
-      ['language', i18n.locale]
+      [ 'explorer_url', networkConfig.explorerUrl ],
+      [ 'default_fee', feesConfig.normal ],
+      [ 'default_wallet', '' ],
+      [ 'language', i18n.locale ],
     ]))
   }
 
@@ -94,20 +93,20 @@ export class SettingService extends AbstractService {
    */
   public saveSettingsForm(
     formItems: {
-      currentLanguage: string,
-      explorerUrl: string,
-      maxFee: number,
-      defaultWallet: string,
-    }
+      currentLanguage: string
+      explorerUrl: string
+      maxFee: number
+      defaultWallet: string
+    },
   ) {
     // - prepare
     const currentAccount = this.$store.getters['account/currentAccount']
     const repository = new SettingsRepository()
     const values = new Map<string, any>([
-      ['language', formItems.currentLanguage],
-      ['default_fee', formItems.maxFee],
-      ['explorer_url', formItems.explorerUrl],
-      ['default_wallet', formItems.defaultWallet],
+      [ 'language', formItems.currentLanguage ],
+      [ 'default_fee', formItems.maxFee ],
+      [ 'explorer_url', formItems.explorerUrl ],
+      [ 'default_wallet', formItems.defaultWallet ],
     ])
 
     // - UPDATE when possible

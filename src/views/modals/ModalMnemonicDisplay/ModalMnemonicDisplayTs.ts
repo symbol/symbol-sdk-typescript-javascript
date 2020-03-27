@@ -15,11 +15,8 @@
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Account, Password, NetworkType} from 'symbol-sdk'
+import {Account, Password} from 'symbol-sdk'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
-import {QRCodeGenerator, MnemonicQR} from 'symbol-qr-library'
-import {pluck, concatMap} from 'rxjs/operators'
-import {of, Observable} from 'rxjs'
 
 // internal dependencies
 import {AESEncryptionService} from '@/services/AESEncryptionService'
@@ -42,7 +39,7 @@ import MnemonicDisplay from '@/components/MnemonicDisplay/MnemonicDisplay.vue'
 })
 export class ModalMnemonicDisplayTs extends Vue {
   @Prop({
-    default: false
+    default: false,
   }) visible: boolean
 
   /**
@@ -96,7 +93,7 @@ export class ModalMnemonicDisplayTs extends Vue {
       return true
     }
     catch (e) {
-      console.error("error mnemonic: ", e)
+      console.error('error mnemonic: ', e)
     }
 
     return false

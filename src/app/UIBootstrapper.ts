@@ -40,7 +40,7 @@ export class UIBootstrapper {
     Vue.directive('click-focus', {
       inserted: function (el) {
         el.addEventListener('click',function(){
-          el.querySelector('input').focus();
+          el.querySelector('input').focus()
         })
       },
     })

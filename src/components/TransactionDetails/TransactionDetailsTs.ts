@@ -186,7 +186,6 @@ export class TransactionDetailsTs extends Vue {
     }
 
     return [this.getView(this.transaction)]
-    // return [this.getView(this.transaction)]
   }
 
   private getView(transaction: Transaction): TransactionViewType {
@@ -237,11 +236,10 @@ export class TransactionDetailsTs extends Vue {
 
   /**
    * Whether set transaction is of type \a type
-   * @param {TransactionType} type 
+   * @param {TransactionType} type 
    * @return {boolean}
    */
   public isType(type: TransactionType, view: TransactionViewType): boolean {
     return view.transaction.type === type
-    // return view.transaction.type === type
   }
 }

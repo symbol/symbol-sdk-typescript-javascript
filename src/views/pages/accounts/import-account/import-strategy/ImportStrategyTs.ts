@@ -57,7 +57,7 @@ export default class ImportStrategyTs extends Vue {
    * @param link 
    */
   public redirect(routeName: string) {
-    if (!routeName || !routeName.length) {
+    if (!routeName || !routeName.length) {
       return this.$store.dispatch('notification/ADD_WARNING', this.$t('not_yet_open'))
     }
 

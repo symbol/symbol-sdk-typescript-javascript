@@ -27,14 +27,14 @@ import TransactionDetails from '@/components/TransactionDetails/TransactionDetai
 })
 export class ModalTransactionDetailsTs extends Vue {
   @Prop({
-    default: false
+    default: false,
   }) visible: boolean
 
   @Prop({
-    default: null
+    default: null,
   }) transaction: Transaction
 
-/// region computed properties
+  /// region computed properties
   
   /**
    * Visibility state

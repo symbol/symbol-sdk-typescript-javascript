@@ -101,7 +101,7 @@ export abstract class ModelRepository implements IStorable<SimpleStorageAdapter>
     this.persist()
     return true
   }
-/// end-region implements IStorable
+  /// end-region implements IStorable
 
   /**
    * Fetch many relations using \a repository and values from \a model
@@ -135,7 +135,7 @@ export abstract class ModelRepository implements IStorable<SimpleStorageAdapter>
   public fetchRelation(
     repository: ModelRepository,
     model: DatabaseModel,
-    fieldName: string
+    fieldName: string,
   ): DatabaseModel {
     return repository.read(model.values.get(fieldName))
   }

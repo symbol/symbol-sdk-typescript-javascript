@@ -34,16 +34,16 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue'
     ValidationProvider,
     ErrorTooltip,
     FormLabel,
-  }
+  },
 })
 export class WalletNameDisplayTs extends Vue {
 
   @Prop({
-    default: null
+    default: null,
   }) wallet: WalletsModel
 
   @Prop({
-    default: false
+    default: false,
   }) editable: boolean
 
   /**
@@ -58,7 +58,7 @@ export class WalletNameDisplayTs extends Vue {
    */
   public validationRules = ValidationRuleset
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get hasNameFormModal(): boolean {
     return this.editable && this.isEditingName
   }

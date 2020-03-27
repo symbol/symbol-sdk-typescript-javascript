@@ -27,7 +27,7 @@ export class URLHelpers {
       protocol: url.protocol,
       hostname: url.hostname,
       port: url.port,
-      url: rawUrl
+      url: rawUrl,
     }
   }
 
@@ -43,11 +43,11 @@ export class URLHelpers {
 
     let out: string = inputNodeValue
     if (-1 === protocolIdx) {
-      out = 'http://' + out
+      out = `http://${out}`
     }
 
-    if (-1 === inputNodeValue.indexOf(':', protocolIdx+6)) {
-      out = out + ':3000'
+    if (-1 === inputNodeValue.indexOf(':', protocolIdx + 6)) {
+      out = `${out}:3000`
     }
 
     return out

@@ -39,8 +39,8 @@ type group = 'confirmed' | 'unconfirmed' | 'partial'
       currentWallet: 'wallet/currentWallet',
       currentWalletMultisigInfo: 'wallet/currentWalletMultisigInfo',
       networkType: 'network/networkType',
-    })
-  }
+    }),
+  },
 })
 export class TransactionListOptionsTs extends Vue {
   @Prop({default: 'confirmed'}) currentTab: group
@@ -101,7 +101,7 @@ export class TransactionListOptionsTs extends Vue {
     const isCosig = this.currentWallet.values.get('publicKey') !== publicKey
     const payload = !isCosig ? this.currentWallet : {
       networkType: this.networkType,
-      publicKey: publicKey
+      publicKey: publicKey,
     }
 
     // clear previous account transactions

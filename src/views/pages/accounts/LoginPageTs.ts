@@ -116,7 +116,7 @@ export default class LoginPageTs extends Vue {
     hasHint: false,
   }
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   get language() {
     return this.currentLanguage
   }
@@ -129,7 +129,7 @@ export default class LoginPageTs extends Vue {
     const repository = new AccountsRepository()
     return repository.getNamesByNetworkType()
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Hook called when the page is mounted
@@ -143,7 +143,7 @@ export default class LoginPageTs extends Vue {
 
     // no account pre-selected, select first if available
     const accounts = this.accountsRepository.entries()
-    if (! accounts.size) {
+    if (!accounts.size) {
       return
     }
 
@@ -174,7 +174,7 @@ export default class LoginPageTs extends Vue {
     const identifier = this.formItems.currentAccountName
 
     // if account doesn't exist, authentication is not valid
-    if (! this.accountsRepository.find(identifier)) {
+    if (!this.accountsRepository.find(identifier)) {
       return ''
     }
 
@@ -187,17 +187,17 @@ export default class LoginPageTs extends Vue {
    * Submit action, validates form and logs in user if valid
    * @return {void}
    */
-  public async submit() {
-    if (! this.formItems.currentAccountName.length) {
+  public submit() {
+    if (!this.formItems.currentAccountName.length) {
       return this.$store.dispatch('notification/ADD_ERROR', NotificationType.ACCOUNT_NAME_INPUT_ERROR)
     }
 
-    if (! this.formItems.password.length || this.formItems.password.length < 8) {
+    if (!this.formItems.password.length || this.formItems.password.length < 8) {
       return this.$store.dispatch('notification/ADD_ERROR', NotificationType.WRONG_PASSWORD_ERROR)
     }
 
     // now compare password hashes
-    return await this.processLogin()
+    return this.processLogin()
   }
 
   /**
@@ -210,7 +210,7 @@ export default class LoginPageTs extends Vue {
     const settingService = new SettingService(this.$store)
 
     // if account doesn't exist, authentication is not valid
-    if (! this.accountsRepository.find(identifier)) {
+    if (!this.accountsRepository.find(identifier)) {
       this.$store.dispatch('diagnostic/ADD_ERROR', 'Invalid login attempt')
       return this.$router.push({name: 'accounts.login'})
     }
@@ -221,7 +221,7 @@ export default class LoginPageTs extends Vue {
     const knownWallets: Map<string, WalletsModel> = this.accountsRepository.fetchRelations(
       this.walletsRepository,
       account,
-      'wallets'
+      'wallets',
     )
 
     // use service to generate password hash
@@ -235,26 +235,26 @@ export default class LoginPageTs extends Vue {
     }
 
     // if account setup was not finalized, redirect
-    if (!account.values.has('seed') || ! account.values.get('seed').length) {
+    if (!account.values.has('seed') || !account.values.get('seed').length) {
       this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)
       this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password)
-      this.$store.dispatch('diagnostic/ADD_WARNING', 'Account has not setup mnemonic pass phrase, redirecting: ' + account.getIdentifier())
+      this.$store.dispatch('diagnostic/ADD_WARNING', `Account has not setup mnemonic pass phrase, redirecting: ${account.getIdentifier()}`)
       return this.$router.push({name: 'accounts.createAccount.generateMnemonic'})
     }
 
     // read default wallet from settings
     const defaultWalletId = settings.values.get('default_wallet').length
-                        ? settings.values.get('default_wallet')
-                        : Array.from(knownWallets.values()).shift().getIdentifier()
+      ? settings.values.get('default_wallet')
+      : Array.from(knownWallets.values()).shift().getIdentifier()
     const defaultWallet = Array.from(knownWallets.values()).filter(
-      w => w.getIdentifier() === defaultWalletId
+      w => w.getIdentifier() === defaultWalletId,
     ).shift()
 
     // LOGIN SUCCESS: update app state
     await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)
     await this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: defaultWallet})
     this.$store.dispatch('wallet/SET_KNOWN_WALLETS', account.values.get('wallets'))
-    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Account login successful with identifier: ' + account.getIdentifier())
+    this.$store.dispatch('diagnostic/ADD_DEBUG', `Account login successful with identifier: ${account.getIdentifier()}`)
 
     $eventBus.$emit('onLogin', identifier)
     return this.$router.push({name: 'dashboard'})

@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Address, MosaicInfo} from 'symbol-sdk'
+import {Address} from 'symbol-sdk'
 import {decode} from 'utf8'
 
 // configuration
-import networkConfig from '../../../config/network.conf.json';
+import networkConfig from '../../../config/network.conf.json'
 
 export class Formatters {
   public static formatNumber = (number: number): string => {
@@ -68,14 +68,14 @@ export class Formatters {
   }
 
   public static hexToUtf8(hex: string): string {
-    let str = '';
+    let str = ''
     for (let i = 0; i < hex.length; i += 2) {
-        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+      str += String.fromCharCode(parseInt(hex.substr(i, 2), 16))
     }
     try {
-        return decode(str);
+      return decode(str)
     } catch (e) {
-        return str;
+      return str
     }
   }
 

@@ -44,11 +44,11 @@ import networkConfig from '@/../config/network.conf.json'
 })
 export class ExplorerUrlSetterTs extends Vue {
   @Prop({
-    default: ''
+    default: '',
   }) value: string
 
   @Prop({
-    default: true
+    default: true,
   }) autoSubmit: boolean
 
   /**

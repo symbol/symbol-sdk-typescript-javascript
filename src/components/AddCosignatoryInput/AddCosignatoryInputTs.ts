@@ -113,7 +113,7 @@ export class AddCosignatoryInputTs extends Vue {
       message: `${this.$t('resolving_address', {address: address.pretty()})}`,
     })
 
-   this.repositoryFactory.createAccountRepository()
+    this.repositoryFactory.createAccountRepository()
       .getAccountInfo(address)
       .pipe(
         timeout(6000),

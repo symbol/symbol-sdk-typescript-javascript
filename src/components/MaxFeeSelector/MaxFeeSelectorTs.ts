@@ -36,7 +36,7 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue'
 export class MaxFeeSelectorTs extends Vue {
 
   @Prop({
-    default: 'form-line-container'
+    default: 'form-line-container',
   }) className: string
 
   /**
@@ -64,7 +64,7 @@ export class MaxFeeSelectorTs extends Vue {
   public defaultFee: number
 
   @Prop({
-    default: 1
+    default: 1,
   }) multiplier: number
 
   /**
@@ -72,7 +72,7 @@ export class MaxFeeSelectorTs extends Vue {
    * @type {number}
    */
   @Prop({
-    default: feesConfig.normal
+    default: feesConfig.normal,
   }) value: number
 
   /**
@@ -81,7 +81,7 @@ export class MaxFeeSelectorTs extends Vue {
    */
   public feeValues = feesConfig
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   /**
    * Value set by the parent component
    * @type {number}
@@ -96,7 +96,7 @@ export class MaxFeeSelectorTs extends Vue {
   set chosenMaxFee(newValue: number) {
     this.$emit('input', newValue)
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Convert a relative amount to absolute using mosaicInfo

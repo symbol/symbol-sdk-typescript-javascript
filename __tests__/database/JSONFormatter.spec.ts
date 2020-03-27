@@ -20,7 +20,7 @@ import {
 import {JSONFormatter} from '@/core/database/formatters/JSONFormatter'
 
 // HELPERS
-const getFormatter = (): JSONFormatter => { 
+const getFormatter = (): JSONFormatter => {
   const formatter = new JSONFormatter()
   formatter.setSchema(new FakeTable('db_table', [
     'id',
@@ -62,9 +62,9 @@ describe('database/JSONFormatter ==>', () => {
 
       // use "id" auto generation
       const model = new FakeModel(['id'], new Map<string, any>([
-        ['db_column1', 'value1'],
-        ['db_column2', 'value2'],
-        ['db_column3', 'value3'],
+        [ 'db_column1', 'value1' ],
+        [ 'db_column2', 'value2' ],
+        [ 'db_column3', 'value3' ],
       ]))
 
       // act
@@ -77,15 +77,13 @@ describe('database/JSONFormatter ==>', () => {
         + '}}'
       const json = formatter.format(
         new FakeTable('table', ['col1']),
-        new Map<string, FakeModel>([[model.getIdentifier(), model]])
+        new Map<string, FakeModel>([[ model.getIdentifier(), model ]]),
       )
       expect(json).toBe(expected)
 
       // make sure JSON is valid
-      try {
-        const parsed = JSON.parse(json)
-        expect(parsed).toMatchObject(JSON.parse(expected))
-      } catch(e) {}
+      const parsed = JSON.parse(json)
+      expect(parsed).toMatchObject(JSON.parse(expected))
     })
 
     test('return entries mapped by identifier in JSON', () => {
@@ -93,30 +91,28 @@ describe('database/JSONFormatter ==>', () => {
       const formatter = getFormatter()
 
       const model1 = new FakeModel(['id'], new Map<string, any>([
-        ['db_column1', 'value1'],
-        ['db_column2', 'value2'],
-        ['db_column3', 'value3'],
+        [ 'db_column1', 'value1' ],
+        [ 'db_column2', 'value2' ],
+        [ 'db_column3', 'value3' ],
       ]))
 
       const model2 = new FakeModel(['id'], new Map<string, any>([
-        ['db_column1', 'value1'],
-        ['db_column2', 'value2'],
-        ['db_column3', 'value3'],
+        [ 'db_column1', 'value1' ],
+        [ 'db_column2', 'value2' ],
+        [ 'db_column3', 'value3' ],
       ]))
 
       // act
       const json = formatter.format(
         new FakeTable('table', ['col1']),
         new Map<string, FakeModel>([
-          [model1.getIdentifier(), model1],
-          [model2.getIdentifier(), model2],
+          [ model1.getIdentifier(), model1 ],
+          [ model2.getIdentifier(), model2 ],
         ]))
 
-      try {
-        const parsed = JSON.parse(json)
-        expect(parsed.hasOwnProperty(model1.getIdentifier())).toBe(true)
-        expect(parsed.hasOwnProperty(model2.getIdentifier())).toBe(true)
-      } catch(e) {}
+      const parsed = JSON.parse(json)
+      expect(parsed[model1.getIdentifier()]).toBeDefined()
+      expect(parsed[model2.getIdentifier()]).toBeDefined()
     })
 
     test('return entries values in JSON', () => {
@@ -124,43 +120,43 @@ describe('database/JSONFormatter ==>', () => {
       const formatter = getFormatter()
 
       const model1 = new FakeModel(['id'], new Map<string, any>([
-        ['db_column1', 'value1'],
-        ['db_column2', 'value2'],
-        ['db_column3', 'value3'],
+        [ 'db_column1', 'value1' ],
+        [ 'db_column2', 'value2' ],
+        [ 'db_column3', 'value3' ],
       ]))
 
       const model2 = new FakeModel(['id'], new Map<string, any>([
-        ['db_column1', 'value1_2'],
-        ['db_column2', 'value2_2'],
-        ['db_column3', 'value3_2'],
+        [ 'db_column1', 'value1_2' ],
+        [ 'db_column2', 'value2_2' ],
+        [ 'db_column3', 'value3_2' ],
       ]))
 
       // act
       const json = formatter.format(
         new FakeTable('table', ['col1']),
         new Map<string, FakeModel>([
-          [model1.getIdentifier(), model1],
-          [model2.getIdentifier(), model2],
+          [ model1.getIdentifier(), model1 ],
+          [ model2.getIdentifier(), model2 ],
         ]))
 
-      try {
-        const parsed = JSON.parse(json)
-        expect(Object.keys(parsed).length).toBe(2)
+      const parsed = JSON.parse(json)
+      expect(Object.keys(parsed).length).toBe(2)
 
-        // model 1
-        expect(Object.keys(parsed[model1.getIdentifier()]).length).toBe(4)
-        expect(parsed[model1.getIdentifier()].id).toBe(model1.getIdentifier())
-        expect(parsed[model1.getIdentifier()].db_column1).toBe('value1')
-        expect(parsed[model1.getIdentifier()].db_column2).toBe('value2')
-        expect(parsed[model1.getIdentifier()].db_column3).toBe('value2')
+      // model 1
+      expect(Object.keys(parsed[model1.getIdentifier()]).length).toBe(5)
+      expect(parsed[model1.getIdentifier()].id).toBe(model1.getIdentifier())
+      expect(parsed[model1.getIdentifier()].db_column1).toBe('value1')
+      expect(parsed[model1.getIdentifier()].db_column2).toBe('value2')
+      expect(parsed[model1.getIdentifier()].db_column3).toBe('value3')
+      expect(parsed[model1.getIdentifier()].version).toBe(0)
 
-        // model 2
-        expect(Object.keys(parsed[model2.getIdentifier()]).length).toBe(4)
-        expect(parsed[model2.getIdentifier()].id).toBe(model2.getIdentifier())
-        expect(parsed[model2.getIdentifier()].db_column1).toBe('value1_2')
-        expect(parsed[model2.getIdentifier()].db_column2).toBe('value2_2')
-        expect(parsed[model2.getIdentifier()].db_column3).toBe('value2_2')
-      } catch(e) {}
+      // model 2
+      expect(Object.keys(parsed[model2.getIdentifier()]).length).toBe(5)
+      expect(parsed[model2.getIdentifier()].id).toBe(model2.getIdentifier())
+      expect(parsed[model2.getIdentifier()].db_column1).toBe('value1_2')
+      expect(parsed[model2.getIdentifier()].db_column2).toBe('value2_2')
+      expect(parsed[model2.getIdentifier()].db_column3).toBe('value3_2')
+      expect(parsed[model1.getIdentifier()].version).toBe(0)
     })
   })
 
@@ -188,8 +184,8 @@ describe('database/JSONFormatter ==>', () => {
 
       // act
       const map = formatter.parse(
-        new FakeTable('table', ['db_column1', 'db_column2', 'db_column3']), 
-        json
+        new FakeTable('table', [ 'db_column1', 'db_column2', 'db_column3' ]), 
+        json,
       )
       expect(map.size).toBe(1)
       expect(map.has('123456789')).toBe(true)
@@ -214,8 +210,8 @@ describe('database/JSONFormatter ==>', () => {
 
       // act
       const map = formatter.parse(
-        new FakeTable('table', ['db_column1', 'db_column2', 'db_column3']), 
-        json
+        new FakeTable('table', [ 'db_column1', 'db_column2', 'db_column3' ]), 
+        json,
       )
       expect(map.size).toBe(2)
       expect(map.has('1234')).toBe(true)
@@ -242,8 +238,8 @@ describe('database/JSONFormatter ==>', () => {
 
       // act
       const map = formatter.parse(
-        new FakeTable('table', ['db_column1', 'db_column2', 'db_column3']), 
-        json
+        new FakeTable('table', [ 'db_column1', 'db_column2', 'db_column3' ]), 
+        json,
       )
       const model1 = map.get('1234')
       const model2 = map.get('5678')

@@ -24,9 +24,9 @@ describe('database/DatabaseTable ==>', () => {
     })
 
     test('set columns names', () => {
-      const table = new FakeTable('table', ['col1', 'col2', 'col3'])
+      const table = new FakeTable('table', [ 'col1', 'col2', 'col3' ])
       expect(table).toBeDefined()
-      expect(table.columns).toMatchObject(['col1', 'col2', 'col3'])
+      expect(table.columns).toMatchObject([ 'col1', 'col2', 'col3' ])
     })
   })
 })

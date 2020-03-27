@@ -20,7 +20,6 @@ import {mapGetters} from 'vuex'
 // internal dependencies
 import {Electron} from '@/core/utils/Electron'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {WalletService} from '@/services/WalletService'
 
 // child components
@@ -82,7 +81,7 @@ export class PageLayoutTs extends Vue {
    * @see {Store.Network}
    * @var {Object}
    */
-  public currentPeer: Object
+  public currentPeer: Record<string, any>
 
   /**
    * Whether the connection is up
@@ -118,13 +117,13 @@ export class PageLayoutTs extends Vue {
    */
   public isDisplayingDebugConsole: boolean = false
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   /**
    * Holds alert message
    * @var {Object}
    */
   get alert(): {show: boolean, message: string} {
-    if (! this.currentPeer || ! this.isConnected) {
+    if (!this.currentPeer || !this.isConnected) {
       return {show: true, message: 'Node_not_available_please_check_your_node_or_network_settings'}
     }
 
@@ -154,7 +153,7 @@ export class PageLayoutTs extends Vue {
   set hasDebugConsoleModal(f: boolean) {
     this.isDisplayingDebugConsole = f
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Hook called when the layout is created (used)
@@ -162,15 +161,15 @@ export class PageLayoutTs extends Vue {
    */
   created() {
     if (process.platform === 'win32')
-      Electron.windowSizeChange()
+    {Electron.windowSizeChange()}
   }
 
   public async onChangeWallet(walletId: string) {
     const service = new WalletService(this.$store)
     const wallet = service.getWallet(walletId)
     if (!wallet) {
-      console.log("Wallet not found: ", walletId)
-      return ;
+      console.log('Wallet not found: ', walletId)
+      return 
     }
 
     await this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: wallet})

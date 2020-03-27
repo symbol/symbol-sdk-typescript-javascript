@@ -1,6 +1,8 @@
 <template>
   <div class="wallet-detail-row">
-    <div class="label">{{ $t('Wallet_name') }}</div>
+    <div class="label">
+      {{ $t('Wallet_name') }}
+    </div>
     <div class="value">
       <span v-if="wallet" class="walletName">{{ wallet.values.get('name') }}</span>
       <button
@@ -21,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { WalletNameDisplayTs } from "./WalletNameDisplayTs";
+import { WalletNameDisplayTs } from './WalletNameDisplayTs'
 
 export default class WalletNameDisplay extends WalletNameDisplayTs {}
 </script>

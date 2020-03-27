@@ -107,7 +107,7 @@ export class MosaicAttachmentInputTs extends Vue {
     relativeAmount: 0,
   }
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   /**
    * Mosaics to be shown as options
    * @readonly
@@ -134,8 +134,7 @@ export class MosaicAttachmentInputTs extends Vue {
   }
 
   get canClickAdd(): boolean {
-    if (!this.formItems.selectedMosaicHex
-        || undefined === this.formItems.relativeAmount) {
+    if (!this.formItems.selectedMosaicHex || undefined === this.formItems.relativeAmount) {
       return false
     }
 

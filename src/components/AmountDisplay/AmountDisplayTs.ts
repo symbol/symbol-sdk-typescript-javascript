@@ -51,7 +51,7 @@ export class AmountDisplayTs extends Vue {
    */
   public networkMosaic: MosaicId
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   get integerPart(): string {
     return Math.floor(this.value).toLocaleString()
   }

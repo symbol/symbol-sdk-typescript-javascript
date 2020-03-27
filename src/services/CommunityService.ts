@@ -48,22 +48,22 @@ export interface ArticleEntry {
    * Publication date
    * @var {string}
    */
-  pubDate: string,
+  pubDate: string
   /**
    * Article creator 
    * @var {string}
    */
-  creator: string,
+  creator: string
   /**
    * Article title
    * @var {string}
    */
-  title: string,
+  title: string
   /**
    * Article content
    * @var {string}
    */
-  content: string,
+  content: string
 }
 
 export class CommunityService extends AbstractService {
@@ -99,13 +99,13 @@ export class CommunityService extends AbstractService {
     return new Promise((resolve, reject) => {
       parser.parseString(data, (err, parsed) => {
         if (err)
-          return reject(`Error occured while parsing RSS Feed ${err.toString()}`)
+        {return reject(`Error occured while parsing RSS Feed ${err.toString()}`)}
       
         // - parse item and sanitize content
         const articles = parsed.items.map(item => {
           return Object.assign({}, item, {
             content: XSSSanitizer.filterXSS(item['content:encoded']),
-            pubDate: Formatters.formatDate(Date.parse(item.pubDate))
+            pubDate: Formatters.formatDate(Date.parse(item.pubDate)),
           })
         })
       

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Vue from 'vue';
+import Vue from 'vue'
 
 // internal dependencies
-import {AwaitLock} from './AwaitLock';
-import {CommunityService} from '@/services/CommunityService';
-const Lock = AwaitLock.create();
+import {AwaitLock} from './AwaitLock'
+import {CommunityService} from '@/services/CommunityService'
+const Lock = AwaitLock.create()
 
 /**
  * Community Store
@@ -45,7 +45,7 @@ export default {
       articles.unshift(article)
       Vue.set(state, 'articles', articles)
       return article
-    }
+    },
   },
   actions: {
     async initialize({ state, commit, dispatch, getters }) {
@@ -55,20 +55,20 @@ export default {
         commit('currentArticle', [...state.articles].shift())
         commit('setInitialized', true)
       }
-      await Lock.initialize(callback, {commit, dispatch, getters})
+      await Lock.initialize(callback, {getters})
     },
-    async uninitialize({ commit, dispatch, getters }) {
+    async uninitialize({ commit, getters }) {
       const callback = async () => {
         // close websocket connections
         commit('setInitialized', false)
       }
-      await Lock.uninitialize(callback, {commit, dispatch, getters})
+      await Lock.uninitialize(callback, {getters})
     },
-/// region scoped actions
+    /// region scoped actions
     SET_CURRENT_ARTICLE({commit}, article) {
       commit('currentArticle', article)
     },
-    async FETCH_ARTICLES({commit, dispatch}) {
+    async FETCH_ARTICLES({commit}) {
       // fetch articles from external feed
       try {
         const service = new CommunityService()
@@ -81,6 +81,6 @@ export default {
         throw new Error(e)
       }
     },
-/// end-region scoped actions
+    /// end-region scoped actions
   },
-};
+}

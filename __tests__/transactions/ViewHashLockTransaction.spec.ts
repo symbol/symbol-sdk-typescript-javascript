@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Deadline, NetworkType, UInt64, NamespaceId, AliasAction, TransactionType, MosaicId, HashLockTransaction, Mosaic, AggregateTransactionCosignature} from 'symbol-sdk'
+import {Deadline, NetworkType, UInt64, TransactionType, MosaicId, HashLockTransaction, Mosaic} from 'symbol-sdk'
 import {createStore} from '@MOCKS/Store'
 import {getTestAccount} from '@MOCKS/accounts'
 import {getFakeTransaction} from '@MOCKS/Transactions'
@@ -46,9 +46,6 @@ describe('transactions/ViewHashLockTransaction', () => {
       expect(view.values.has('duration')).toBe(true)
       expect(view.values.has('signedTransaction')).toBe(true)
     })
-
-    //XXX test recognition of Namespace vs Address for recipient
-    //XXX test recognition of Namespace vs MosaicId for mosaics
   })
 
   describe('parse() should', () => {

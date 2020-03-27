@@ -45,7 +45,7 @@ import { mapGetters } from 'vuex'
 export class WalletContactQRTs extends Vue {
 
   @Prop({
-    default: null
+    default: null,
   }) wallet: WalletsModel
 
   /**
@@ -61,7 +61,7 @@ export class WalletContactQRTs extends Vue {
    */
   public qrCode$: Observable<string>
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   get qrCodeArgs(): ContactQR {
     if (!this.wallet) {
       return null

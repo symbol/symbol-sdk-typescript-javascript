@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 // external dependencies
-import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 import {Address, NetworkType, MultisigAccountInfo, PublicAccount} from 'symbol-sdk'
 
@@ -27,8 +27,8 @@ import AddCosignatoryInput from '@/components/AddCosignatoryInput/AddCosignatory
 
 // custom types
 interface Modification {
-  cosignatory: PublicAccount,
-  addOrRemove: 'add' | 'remove',
+  cosignatory: PublicAccount
+  addOrRemove: 'add' | 'remove'
 }
 
 @Component({
@@ -89,7 +89,7 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
     const existsMod = this.addedActors.find(a => a.publicKey === publicAccount.publicKey)
     if (exists !== undefined || existsMod !== undefined) {
       this.$store.dispatch('notification/ADD_WARNING', 'warning_already_a_cosignatory')
-      return ;
+      return 
     }
 
     this.$emit('add', publicAccount)
@@ -101,8 +101,8 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
       publicKey,
       address: Address.createFromPublicKey(
         publicKey,
-        this.networkType
-      ).pretty()
+        this.networkType,
+      ).pretty(),
     })
     this.$emit('remove', publicKey)
   }

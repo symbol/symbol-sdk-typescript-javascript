@@ -26,7 +26,7 @@ import FormWalletNameUpdate from '@/views/forms/FormWalletNameUpdate/FormWalletN
 })
 export class ModalFormWalletNameUpdateTs extends Vue {
   @Prop({
-    default: false
+    default: false,
   }) visible: boolean
 
   /**
@@ -52,7 +52,7 @@ export class ModalFormWalletNameUpdateTs extends Vue {
    * @param {Password} password 
    * @return {void}
    */
-  public onSubmit(formItems: any) {
+  public onSubmit() {
     this.show = false
   }
 }

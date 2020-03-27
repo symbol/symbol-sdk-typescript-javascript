@@ -22,7 +22,7 @@ import {WalletsModel} from '@/core/database/entities/WalletsModel'
 export class WalletActionsTs extends Vue {
 
   @Prop({
-    default: null
+    default: null,
   }) wallet: WalletsModel
 
 /// region computed properties getter/setter

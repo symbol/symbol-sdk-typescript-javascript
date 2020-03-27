@@ -30,11 +30,11 @@ import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 // helpers
 const getNetworkTypeText = (networkType: NetworkType) => {
   switch (networkType) {
-  default:
-  case NetworkType.MIJIN_TEST: return 'MIJIN_TEST'
-  case NetworkType.MIJIN: return 'MIJIN'
-  case NetworkType.TEST_NET: return 'TEST_NET'
-  case NetworkType.MAIN_NET: return 'MAIN_NET'
+    default:
+    case NetworkType.MIJIN_TEST: return 'MIJIN_TEST'
+    case NetworkType.MIJIN: return 'MIJIN'
+    case NetworkType.TEST_NET: return 'TEST_NET'
+    case NetworkType.MAIN_NET: return 'MAIN_NET'
   }
 }
 
@@ -62,7 +62,7 @@ export class PeerSelectorTs extends Vue {
    * @see {Store.Network}
    * @var {Object}
    */
-  public currentPeer: Object
+  public currentPeer: Record<string, any>
 
   /**
    * Whether the connection is up
@@ -118,7 +118,7 @@ export class PeerSelectorTs extends Vue {
    */
   public imageResources = dashboardImages
 
- /**
+  /**
   * Type the ValidationObserver refs 
   * @type {{
   *     observer: InstanceType<typeof ValidationObserver>
@@ -128,7 +128,7 @@ export class PeerSelectorTs extends Vue {
     observer: InstanceType<typeof ValidationObserver>
   }
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   get peersList(): string[] {
     return this.knownPeers
   }
@@ -137,7 +137,7 @@ export class PeerSelectorTs extends Vue {
     if (!this.isConnected) return this.$t('Invalid_node').toString()
     return !!this.networkType ? getNetworkTypeText(this.networkType) : this.$t('Loading').toString()
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Switch the currently active peer
@@ -187,22 +187,22 @@ export class PeerSelectorTs extends Vue {
 
       // prepare model
       const peer = new PeersModel(new Map<string, any>([
-        ['rest_url', nodeUrl],
-        ['host', node.hostname],
-        ['port', parseInt(node.port)],
-        ['protocol', node.protocol],
-        ['networkType', networkType],
-        ['generationHash', generationHash],
-        ['roles', peerInfo.roles],
-        ['is_default', this.formItems.setDefault],
-        ['friendly_name', peerInfo.friendlyName]
+        [ 'rest_url', nodeUrl ],
+        [ 'host', node.hostname ],
+        [ 'port', parseInt(node.port) ],
+        [ 'protocol', node.protocol ],
+        [ 'networkType', networkType ],
+        [ 'generationHash', generationHash ],
+        [ 'roles', peerInfo.roles ],
+        [ 'is_default', this.formItems.setDefault ],
+        [ 'friendly_name', peerInfo.friendlyName ],
       ]))
 
       // save in storage
       repository.create(peer.values)
       this.$store.dispatch('network/ADD_KNOWN_PEER', nodeUrl)
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
-      this.$store.dispatch('diagnostic/ADD_DEBUG', 'PeerSelector added peer: '+ nodeUrl)
+      this.$store.dispatch('diagnostic/ADD_DEBUG', `PeerSelector added peer: ${nodeUrl}`)
 
       // reset the form input
       this.formItems.nodeUrl = ''
@@ -219,7 +219,7 @@ export class PeerSelectorTs extends Vue {
     catch(e) {
       // hide loading overlay
       this.$store.dispatch('app/SET_LOADING_OVERLAY', {show: false})
-      this.$store.dispatch('diagnostic/ADD_ERROR', 'PeerSelector unreachable host with URL: '+ nodeUrl)
+      this.$store.dispatch('diagnostic/ADD_ERROR', `PeerSelector unreachable host with URL: ${nodeUrl}`)
       this.$store.dispatch('notification/ADD_ERROR', NotificationType.ERROR_PEER_UNREACHABLE)
     }
   }

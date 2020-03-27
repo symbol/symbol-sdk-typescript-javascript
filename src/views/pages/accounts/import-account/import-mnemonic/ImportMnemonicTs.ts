@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Vue, Component, Watch } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 import { MnemonicPassPhrase } from 'symbol-hd-wallets'
 
@@ -23,7 +23,7 @@ import { AccountsRepository } from '@/repositories/AccountsRepository'
 import { NotificationType } from '@/core/utils/NotificationType'
 import { Password } from 'symbol-sdk'
 import { AESEncryptionService } from '@/services/AESEncryptionService'
-//@ts-ignore
+// @ts-ignore
 import MnemonicInput from '@/components/MnemonicInput/MnemonicInput.vue'
 
 
@@ -33,8 +33,8 @@ import MnemonicInput from '@/components/MnemonicInput/MnemonicInput.vue'
     ...mapGetters({
       currentAccount: 'account/currentAccount',
       currentPassword: 'temporary/password',
-    })
-  }
+    }),
+  },
 })
 export default class ImportMnemonicTs extends Vue {
   /**
@@ -62,13 +62,13 @@ export default class ImportMnemonicTs extends Vue {
    * @var {any}
    */
   public formItems = {
-    seed: ''
+    seed: '',
   }
   /**
    * @description: Receive the Input words
    * @type: Array<string> 
    */
-  public wordsArray:Array<string>=[]
+  public wordsArray: Array<string>=[]
   /**
    * Hook called when the component is mounted
    * @return {void}
@@ -90,14 +90,14 @@ export default class ImportMnemonicTs extends Vue {
     // - back to previous page
     this.$router.push({ name: 'accounts.importAccount.info' })
   }
- /**
+  /**
    * @description: receive input words and control the ui
    * @return: void
    */
   public setSeed(wordsArray){
-    this.wordsArray=wordsArray
-    if(wordsArray.length>0){
-      this.formItems.seed=wordsArray.join(" ");
+    this.wordsArray = wordsArray
+    if(wordsArray.length > 0){
+      this.formItems.seed = wordsArray.join(' ')
     }
   }
   /**
@@ -120,7 +120,7 @@ export default class ImportMnemonicTs extends Vue {
       // encrypt seed for storage
       const encSeed = AESEncryptionService.encrypt(
         mnemonic.plain,
-        this.currentPassword
+        this.currentPassword,
       )
 
       // update currentAccount instance and storage

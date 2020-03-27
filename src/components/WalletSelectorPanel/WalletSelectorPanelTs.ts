@@ -15,7 +15,7 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Mosaic, MosaicId, NetworkType, AccountInfo, Address, RawUInt64, UInt64} from 'symbol-sdk'
+import {MosaicId, NetworkType, AccountInfo, Address} from 'symbol-sdk'
 import {ValidationProvider} from 'vee-validate'
 
 // internal dependencies
@@ -115,7 +115,7 @@ export class WalletSelectorPanelTs extends Vue {
   * Whether currently viewing export
   * @var {boolean}
   */
- public isViewingExportModal: boolean = false
+  public isViewingExportModal: boolean = false
 
   /**
    * Validation rules
@@ -142,7 +142,7 @@ export class WalletSelectorPanelTs extends Vue {
     // - read known addresses
     const repository = new WalletsRepository()
     const addresses = Array.from(repository.entries(
-      (w: WalletsModel) => this.knownWallets.includes(w.getIdentifier())
+      (w: WalletsModel) => this.knownWallets.includes(w.getIdentifier()),
     ).values()).map(w => Address.createFromRawAddress(w.values.get('address')))
 
     // - fetch latest accounts infos (1 request)
@@ -152,7 +152,7 @@ export class WalletSelectorPanelTs extends Vue {
     const knownWallets = knownWalletsInfo.filter(
       info => {
         const wallet = Array.from(repository.entries(
-          (w: WalletsModel) => info.address.plain() === w.values.get('address')
+          (w: WalletsModel) => info.address.plain() === w.values.get('address'),
         ).values())
 
         return wallet.length > 0
@@ -163,7 +163,7 @@ export class WalletSelectorPanelTs extends Vue {
     }
 
     // - format balances
-    for (let i = 0, m = knownWallets.length; i < m; i++) {
+    for (let i = 0, m = knownWallets.length; i < m; i ++) {
       const currentInfo = knownWallets[i]
 
       // read info and balance
@@ -173,7 +173,7 @@ export class WalletSelectorPanelTs extends Vue {
       // store relative balance
       const balance = await mosaicService.getRelativeAmount(
         {...netBalance}.amount.compact(),
-        this.networkMosaic
+        this.networkMosaic,
       )
 
       Vue.set(this.addressesBalances, address, balance)
@@ -183,7 +183,7 @@ export class WalletSelectorPanelTs extends Vue {
     }
   }
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get balances(): any {
     return this.addressesBalances
   }
@@ -193,13 +193,13 @@ export class WalletSelectorPanelTs extends Vue {
   }
 
   public set currentWalletIdentifier(identifier: string) {
-    if (!identifier || !identifier.length) {
-      return ;
+    if (!identifier || !identifier.length) {
+      return 
     }
 
     const wallet = this.service.getWallet(identifier)
     if (!wallet) {
-      return ;
+      return 
     }
 
     if (!this.currentWallet || identifier !== this.currentWallet.getIdentifier()) {
@@ -209,11 +209,11 @@ export class WalletSelectorPanelTs extends Vue {
   }
 
   public get currentWallets(): {
-    identifier: string,
-    address: string,
-    name: string,
-    type: number,
-    isMultisig: boolean,
+    identifier: string
+    address: string
+    name: string
+    type: number
+    isMultisig: boolean
     path: string
   }[] {
     if (!this.knownWallets || !this.knownWallets.length) {
@@ -222,7 +222,7 @@ export class WalletSelectorPanelTs extends Vue {
 
     // filter wallets to only known wallet names
     const knownWallets = this.service.getWallets(
-      (e) => this.knownWallets.includes(e.getIdentifier())
+      (e) => this.knownWallets.includes(e.getIdentifier()),
     )
   
     return [...knownWallets].map(
@@ -252,7 +252,7 @@ export class WalletSelectorPanelTs extends Vue {
   public set hasMnemonicExportModal(f: boolean) {
     this.isViewingExportModal = f
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Whether the wallet item is the current wallet
