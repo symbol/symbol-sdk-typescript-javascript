@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { from as observableFrom, Observable, throwError } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, mergeMap } from 'rxjs/operators';
 import { MosaicRoutesApi, MosaicIds, AccountIds, MosaicInfoDTO, MosaicDTO } from 'symbol-openapi-typescript-node-client';
 import { Address } from '../model/account/Address';
 import { PublicAccount } from '../model/account/PublicAccount';
@@ -65,7 +65,6 @@ export class MosaicHttp extends Http implements MosaicRepository {
         return this.networkTypeObservable.pipe(
             mergeMap((networkType) =>
                 this.call(this.mosaicRoutesApi.getMosaic(mosaicId.toHex()), (body) => this.toMosaicInfo(body, networkType))),
-                catchError((error) =>  throwError(this.errorHandling(error))),
             );
     }
 
@@ -80,7 +79,6 @@ export class MosaicHttp extends Http implements MosaicRepository {
         return this.networkTypeObservable.pipe(
             mergeMap((networkType) =>
                 this.call(this.mosaicRoutesApi.getMosaics(ids), (body) => body.map((b) => this.toMosaicInfo(b, networkType)))),
-                catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -94,8 +92,6 @@ export class MosaicHttp extends Http implements MosaicRepository {
             mergeMap((networkType) =>
                 this.call(this.mosaicRoutesApi.getMosaicsFromAccount(address.plain()),
                     (body) => body.mosaics.map((b) => this.toMosaicInfoFromMosaicDto(b, networkType)))),
-            catchError((error) =>  throwError(this.errorHandling(error))),
-
         );
     }
 
@@ -111,8 +107,6 @@ export class MosaicHttp extends Http implements MosaicRepository {
             mergeMap((networkType) =>
                 this.call(this.mosaicRoutesApi.getMosaicsFromAccounts(accountIds),
                     (body) => body.mosaics.map((b) => this.toMosaicInfoFromMosaicDto(b, networkType)))),
-            catchError((error) =>  throwError(this.errorHandling(error))),
-
         );
     }
 
