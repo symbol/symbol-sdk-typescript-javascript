@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es2016",
+    "target": "es2019",
     "noImplicitAny": false,
     "strictNullChecks": true,
     "preserveConstEnums": true,
@@ -14,7 +14,10 @@
     "allowJs": false,
     "skipLibCheck": true,
     "lib": [
-      "es2017",
+      "es2019",
+      "es2020.bigint",
+      "es2020.string",
+      "es2020.symbol.wellknown",
       "dom"
     ],
     "typeRoots": [
