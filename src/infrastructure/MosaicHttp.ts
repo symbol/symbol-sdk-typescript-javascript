@@ -16,7 +16,7 @@
 
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { MosaicRoutesApi } from 'symbol-openapi-typescript-node-client';
+import { MosaicRoutesApi, MosaicIds, AccountIds } from 'symbol-openapi-typescript-node-client';
 import { Address } from '../model/account/Address';
 import { PublicAccount } from '../model/account/PublicAccount';
 import { MosaicFlags } from '../model/mosaic/MosaicFlags';
@@ -86,12 +86,11 @@ export class MosaicHttp extends Http implements MosaicRepository {
      * @returns Observable<MosaicInfo[]>
      */
     public getMosaics(mosaicIds: MosaicId[]): Observable<MosaicInfo[]> {
-        const mosaicIdsBody = {
-            mosaicIds: mosaicIds.map((id) => id.toHex()),
-        };
+        const ids = new MosaicIds();
+        ids.mosaicIds = mosaicIds.map((id) => id.toHex());
         return this.networkTypeObservable.pipe(
             mergeMap((networkType) => observableFrom(
-                this.mosaicRoutesApi.getMosaics(mosaicIdsBody)).pipe(
+                this.mosaicRoutesApi.getMosaics(ids)).pipe(
                     map(({body}) => body.map((mosaicInfoDTO) => {
                         return new MosaicInfo(
                             new MosaicId(mosaicInfoDTO.mosaic.id),
@@ -140,12 +139,11 @@ export class MosaicHttp extends Http implements MosaicRepository {
      * @param addresses Array of addresses
      */
     public getMosaicsFromAccounts(addresses: Address[]): Observable<MosaicInfo[]> {
-        const accountIdsBody = {
-            addresses: addresses.map((address) => address.plain()),
-        };
+        const accountIds = new AccountIds();
+        accountIds.addresses = addresses.map((address) => address.plain());
         return this.networkTypeObservable.pipe(
             mergeMap((networkType) => observableFrom(
-                this.mosaicRoutesApi.getMosaicsFromAccounts(accountIdsBody)).pipe(
+                this.mosaicRoutesApi.getMosaicsFromAccounts(accountIds)).pipe(
                     map(({body}) => body.mosaics.map((mosaicInfoDTO) => {
                         return new MosaicInfo(
                             new MosaicId(mosaicInfoDTO.id),
