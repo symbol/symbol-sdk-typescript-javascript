@@ -32,6 +32,7 @@ import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicInfo } from '../../src/model/mosaic/MosaicInfo';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { AccountIds } from 'symbol-openapi-typescript-node-client';
+import { assert } from 'chai';
 
 describe('MosaicHttp', () => {
 
@@ -110,5 +111,33 @@ describe('MosaicHttp', () => {
             .thenReturn(Promise.resolve({response, body: mosaicsInfoDto}));
         const mosaicsInfo = await mosaicRepository.getMosaicsFromAccounts([address]).toPromise();
             assertMosaicInfo(mosaicsInfo[0]);
+    });
+
+    it('getMosaic - Error', async () => {
+        when(mosaicRoutesApi.getMosaic(mosaicId.toHex())).thenThrow(new Error('Mocked Error'));
+        await mosaicRepository.getMosaic(mosaicId).toPromise().catch((error) =>
+            expect(error).not.to.be.undefined);
+    });
+
+    it('getMosaics - Error', async () => {
+        const mosaicIds = new MosaicIds();
+        mosaicIds.mosaicIds = [mosaicId.toHex()];
+        when(mosaicRoutesApi.getMosaics(deepEqual(mosaicIds))).thenThrow(new Error('Mocked Error'));
+        await mosaicRepository.getMosaics([mosaicId]).toPromise().catch((error) =>
+        expect(error).not.to.be.undefined);
+    });
+
+    it('getMosaicsFromAccount - Error', async () => {
+        when(mosaicRoutesApi.getMosaicsFromAccount(address.plain())).thenThrow(new Error('Mocked Error'));
+        await mosaicRepository.getMosaicsFromAccount(address).toPromise().catch((error) =>
+        expect(error).not.to.be.undefined);
+    });
+
+    it('getMosaicsFromAccounts - Error', async () => {
+        const accountIds = new AccountIds();
+        accountIds.addresses = [address.plain()];
+        when(mosaicRoutesApi.getMosaicsFromAccounts(deepEqual(accountIds))).thenThrow(new Error('Mocked Error'));
+        await mosaicRepository.getMosaicsFromAccounts([address]).toPromise().catch((error) =>
+        expect(error).not.to.be.undefined);
     });
 });
