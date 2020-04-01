@@ -1,15 +1,25 @@
-## symbol-desktop-wallet
+## Symbol Desktop Wallet
 
+[![Build Status](https://travis-ci.com/nemfoundation/symbol-desktop-wallet.svg?branch=master)](https://travis-ci.com/nemfoundation/symbol-desktop-wallet)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Build Status](https://travis-ci.org/nemfoundation/symbol-desktop-wallet.svg?branch=master)](https://travis-ci.org/nemfoundation/symbol-desktop-wallet)
 
-Cross-platform client for Symbol.
+Cross-platform client for Symbol to manage accounts, mosaics, namespaces, and issue transactions.
 
-[Download Symbol Desktop Wallet](https://github.com/nemfoundation/symbol-desktop-wallet/releases) for Mac, Linux, or Windows.
+## Installation
 
-:warning: **This program is currently in development and only available for the Symbol test network. Do not use it for other purposes.**
+Symbol Desktop Wallet is available for Mac, Windows, and as a web application.
 
-## Developer Instructions
+1. Download Symbol Desktop Wallet from the [releases section](https://github.com/nemfoundation/symbol-desktop-wallet/releases).
+
+2. Launch the executable file and follow the installation instructions.
+
+3. Create an account. Remember to save the mnemonic somewhere safe (offline).
+
+**NOTE**: This program is currently in development and only available for the Symbol test network. Do not use it for other purposes.
+
+## Building instructions
+
+Symbol CLI require **Node.js 10 or 12 LTS** to execute.
 
 1. Clone the project.
 
@@ -19,28 +29,40 @@ git clone https://github.com/nemfoundation/symbol-desktop-wallet.git
 
 2. Install the dependencies.
 ```
+cd symbol-desktop-wallet
 npm install 
 ```
 
 3. Start the development server.
+
 ```
 npm run dev 
 ```
 
+4. Visit http://localhost:8080/#/ in your browser.
+
 ## Getting help
 
-We use GitHub issues for tracking bugs and have limited bandwidth to address them.
-Please, use the following available resources to get help:
+Use the following available resources to get help:
 
-- [NEM Developer Center][docs]
+- [Symbol Documentation][docs]
+- Join the community [slack group (#sig-client)][slack] 
 - If you found a bug, [open a new issue][issues]
 
 ## Contributing
 
-This project is developed and maintained by NEM Foundation. Contributions are welcome and appreciated. Feel free to start an issue or create a pull request. Check [CONTRIBUTING](CONTRIBUTING.md) before you start.
+This project is developed and maintained by NEM Foundation.
+
+Contributions are welcome and appreciated. 
+Check [CONTRIBUTING](CONTRIBUTING.md) for information on how to contribute.
 
 ## License
-Copyright (c) 2018-2020 NEM Licensed under the Apache License 2.0
 
+Copyright 2018-present NEM
+
+Licensed under the [Apache License 2.0](LICENSE)
+
+[self]: https://github.com/nemfoundation/symbol-desktop-wallet
 [docs]: https://nemtech.github.io
 [issues]: https://github.com/nemfoundation/symbol-desktop-wallet/issues
+[slack]: https://join.slack.com/t/nem2/shared_invite/enQtMzY4MDc2NTg0ODgyLWZmZWRiMjViYTVhZjEzOTA0MzUyMTA1NTA5OWQ0MWUzNTA4NjM5OTJhOGViOTBhNjkxYWVhMWRiZDRkOTE0YmU
