@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="edit-icon-cell">
-      <Poptip v-if="hasAvailableActions" placement="bottom">
+      <Poptip v-if="hasAvailableActions" placement="bottom-end">
         <Icon type="md-create" class="edit-icon" />
         <div slot="content" class="asset-action-section">
           <p class="poptip-actions" @click="$emit('on-show-alias-form', rowValues)">

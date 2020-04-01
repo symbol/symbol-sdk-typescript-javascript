@@ -9,7 +9,7 @@
         <FormRow v-if="aliasAction === AliasAction.Unlink">
           <template v-slot:inputs>
             <div class="row-left-message">
-              <span class="pl-2">
+              <span>
                 {{ $t('unlink_namespace_from', {
                   aliasTarget: formItems.aliasTarget, namespaceName: namespaceId.fullName,
                 }) }}
@@ -58,7 +58,7 @@
 
             <FormRow v-if="aliasTargetType === 'mosaic'">
               <template v-slot:label>
-                {{ $t('mosaic') }}
+                {{ $t('mosaic') }}:
               </template>
               <template v-slot:inputs>
                 <MosaicSelector
@@ -107,5 +107,11 @@ export default class FormAliasTransaction extends FormAliasTransactionTs {}
   width: 100%;
   clear: both;
   min-height: 1rem;
+}
+.row-left-message{
+  padding-left: 0.1rem;
+}
+.select-container{
+  padding-left: 0.1rem;
 }
 </style>

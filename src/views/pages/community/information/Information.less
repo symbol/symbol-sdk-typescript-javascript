@@ -1,3 +1,4 @@
+@import "../../../resources/css/variables.less";
 .information-main-container {
   position: relative;
   width: 100%;
@@ -66,13 +67,13 @@
 
     .article_summary_item:hover {
       //box-shadow: 0px 0px 10px rgba(32, 181, 172, 0.2);
-      border-color: rgba(38, 180, 176, 1);
+      border-color:@purple;
     }
 
     .selected {
-      background: rgba(38, 180, 176, 1);
+      background:@purple;
       color: white;
-      border: 1px solid rgba(38, 180, 176, 1);
+      border: 1px solid @purple;
 
       .tag {
         color: #FFE18B !important;
@@ -93,7 +94,7 @@
       bottom: 53px;
       border: 10px solid transparent;
       border-width: 15px 30px;
-      border-left: 15px solid #20B5AC;
+      border-left: 15px solid @purple;
     }
   }
 

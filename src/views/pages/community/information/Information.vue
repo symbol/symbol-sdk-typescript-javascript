@@ -10,8 +10,8 @@
         <div
           v-for="(a,index) in latestArticles"
           :key="index"
-          :class="[ 'article_summary_item', a.isSelect ? 'selected' : '','pointer' ]"
-          @click="switchArticle(a)"
+          :class="[ 'article_summary_item', currentArticleIndex === index ? 'selected' : '','pointer' ]"
+          @click="switchArticle(a,index)"
         >
           <div class="title">
             {{ a.title }}

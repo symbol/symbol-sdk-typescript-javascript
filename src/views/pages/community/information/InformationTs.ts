@@ -30,6 +30,7 @@ export class InformationTs extends Vue {
    */
   public currentArticle: string
 
+  public currentArticleIndex: number
   /**
    * List of latest articles
    * @var {ArticleEntry[]}
@@ -44,12 +45,14 @@ export class InformationTs extends Vue {
     await this.$store.dispatch('community/initialize')
   }
 
+  
   /**
    * Switch the active article
    * @param {string} title
    * @return {void}
    */
-  public switchArticle(article: ArticleEntry) {
+  public switchArticle(article: ArticleEntry,index) {
+    this.currentArticleIndex = index
     this.$store.dispatch('community/SET_CURRENT_ARTICLE', article)
   }
 }
