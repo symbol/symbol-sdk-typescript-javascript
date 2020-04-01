@@ -169,15 +169,15 @@ export class WalletSelectorPanelTs extends Vue {
       // read info and balance
       const address = currentInfo.address.plain()
       const netBalance = currentInfo.mosaics.find(m => m.id.equals(this.networkMosaic))
+      if(netBalance){
+        // store relative balance
+        const balance = await mosaicService.getRelativeAmount(
+          {...netBalance}.amount.compact(),
+          this.networkMosaic,
+        )
 
-      // store relative balance
-      const balance = await mosaicService.getRelativeAmount(
-        {...netBalance}.amount.compact(),
-        this.networkMosaic,
-      )
-
-      Vue.set(this.addressesBalances, address, balance)
-
+        Vue.set(this.addressesBalances, address, balance)
+      }
       // remove spin
       this.isLoading = false
     }
