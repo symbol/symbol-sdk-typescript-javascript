@@ -16,14 +16,12 @@
       </div>
     </div>
     <div v-if="!transactions.length && !isFetchingTransactions" class="no-data-outer-container">
-      <div class="no-data">
-        <div class="no-data-message-container">
-          <div>{{ $t(emptyMessage) }}</div>
-        </div>
-        <div class="no-data-inner-container">
-          <div v-for="item in nodata" :key="item">
-           &nbsp;
-          </div>
+      <div class="no-data-message-container">
+        <div>{{ $t(emptyMessage) }}</div>
+      </div>
+      <div class="no-data-inner-container">
+        <div v-for="item in nodata" :key="item">
+          &nbsp;
         </div>
       </div>
     </div>

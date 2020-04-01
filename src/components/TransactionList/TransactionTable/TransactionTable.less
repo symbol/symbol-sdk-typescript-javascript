@@ -120,24 +120,4 @@
   }
 }
 
-.no-data-outer-container {
-  overflow-y: scroll;
-
-  .no-data {
-
-    .no-data-inner-container {
-      display: grid;
-      grid-auto-rows: @rowHeight;
-      width: 100%;
-      height: (@maxDisplayedRow) * (@rowHeight);
-      position: relative;
-      overflow-y: auto;
-      
-      >div {
-        border-bottom: 0.01rem solid @line;
-      }
-    }
-  }
-}
-
 
