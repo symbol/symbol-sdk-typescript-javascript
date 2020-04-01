@@ -85,7 +85,7 @@
           </template>
         </FormRow>
 
-        <div class="form-row">
+        <div class="form-row text-right">
           <button
             class="button-style validation-button right-side-button"
             type="submit"
@@ -116,6 +116,9 @@ export default class FormAccountPasswordUpdate extends FormAccountPasswordUpdate
   width: 100%;
   clear: both;
   min-height: 1rem;
+}
+.text-right{
+  text-align: right;
 }
 </style>
 

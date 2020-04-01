@@ -31,7 +31,7 @@
         <span class="from">{{ currentArticle.creator }}</span>
         <span class="date">{{ currentArticle.pubDate }}</span>
       </div>
-      <div class="article_content scroll content">
+      <div class="article_content content">
         <div v-html="currentArticle.content" />
       </div>
     </div>

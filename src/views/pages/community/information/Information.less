@@ -102,6 +102,9 @@
     width: 100%;
     height: 100%;
     background: white;
+    overflow-x: auto;
+    overflow-y: auto;
+    word-break: break-word;
 
     .article_container {
       height: 100%;
@@ -159,13 +162,13 @@
       color: rgba(34, 34, 34, 1);
       line-height: 32px;
       margin-top: 50px;
-      padding-right: 50px;
       position: relative;
-      height: calc(100% - 120px);
-
-      img {
-        width: 900px !important;
+      width: 100%;
+      /deep/ img {
+        max-width: 100%;
         height: auto;
+        display: block;
+        margin: 0 auto;
       }
 
       pre {

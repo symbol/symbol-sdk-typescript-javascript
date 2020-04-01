@@ -47,7 +47,6 @@ export default class ProtectedPrivateKeyDisplay extends ProtectedPrivateKeyDispl
 .eye-button {
   height: 0.35rem !important;
   padding: 0 0.3rem;
-  max-width: 75px;
 }
 
 .value {

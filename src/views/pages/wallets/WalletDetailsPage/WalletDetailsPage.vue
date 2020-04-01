@@ -2,7 +2,7 @@
   <div class="wallet-detail-outer-container">
     <div class="wallet-detail-inner-container">
       <div class="left-container">
-        <div class="wallet-details-grid  mt-3">
+        <div class="wallet-details-grid">
           <div class="detail-row">
             <WalletNameDisplay 
               :wallet="currentWallet"
@@ -73,6 +73,6 @@ import {WalletDetailsPageTs} from './WalletDetailsPageTs'
 export default class WalletDetailsPage extends WalletDetailsPageTs {}
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import './WalletDetailsPage.less';
 </style>

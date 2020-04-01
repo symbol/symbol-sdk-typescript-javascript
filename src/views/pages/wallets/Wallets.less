@@ -16,7 +16,11 @@
 .right-container {
   display: grid;
   grid-template-columns: 100%;
-  grid-template-rows: 0.6rem 100%;
+  grid-template-rows: 0.6rem auto;
   background-color: white;
   overflow: hidden;
+  &>.bottom-container{
+    height: 100%;
+    overflow-y: auto;
+  }
 }
