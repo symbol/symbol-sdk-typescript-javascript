@@ -78,10 +78,10 @@ export class MosaicService extends AbstractService {
    * @param {Mosaic[] | MosaicInfo[]} mosaics Mosaics to create / refresh in the database
    * @param {boolean} [forceUpdate=false]     Option to bypass the cache
    */
-  public refreshMosaicModels(
+  public async refreshMosaicModels(
     mosaics: Mosaic[] | MosaicInfo[],
     forceUpdate = false,
-  ): void {
+  ) {
     // @ts-ignore
     const mosaicIds = mosaics.map(mosaic => mosaic.id)
 
@@ -90,7 +90,7 @@ export class MosaicService extends AbstractService {
 
     // if force update is selected, fetch info for all mosaics
     if (forceUpdate) {
-      this.fetchMosaicsInfos(mosaicIds as MosaicId[])
+      await this.fetchMosaicsInfos(mosaicIds as MosaicId[])
       return
     }
 

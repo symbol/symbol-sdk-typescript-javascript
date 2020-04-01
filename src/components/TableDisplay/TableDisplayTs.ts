@@ -70,7 +70,7 @@ export class TableDisplayTs extends Vue {
   * Loading state of the data to be shown in the table
   * @type {boolean}
   */
-  @Prop({default: false}) loading: boolean
+  loading: boolean =false
 
   /**
    * Current wallet owned mosaics
@@ -223,6 +223,16 @@ export class TableDisplayTs extends Vue {
       this.currentPage * this.pageSize,
     )
   }
+  /**
+   * getter and setter for the showExpired button
+   * 
+   */
+  get showExpired(): boolean{
+    return this.filteredBy.fieldName === 'expiration' && this.filteredBy.filteringType === 'show'
+  }
+  set showExpired(newVal: boolean){
+    this.setFilteredBy('expiration')
+  }
 
   /**
    * Alias form modal title
@@ -253,12 +263,14 @@ export class TableDisplayTs extends Vue {
    * @returns {void}
    */
   private async refresh(): Promise<void> {
+    this.loading = true
     if (this.assetType === 'namespace') {
       this.$store.dispatch('wallet/REST_FETCH_OWNED_NAMESPACES', this.currentWalletAddress.plain())
     }
 
     const mosaics = await this.$store.dispatch('wallet/REST_FETCH_OWNED_MOSAICS', this.currentWalletAddress.plain())
     new MosaicService(this.$store).refreshMosaicModels(mosaics, true)
+    this.loading = false
   }
   /**
    * Sets the default filtering state
@@ -388,5 +400,24 @@ export class TableDisplayTs extends Vue {
    */
   protected closeModal(modalIdentifier: string): void {
     Vue.set(this.modalFormsVisibility, modalIdentifier, false)
+  }
+  /**
+   * avoid multiple clicks
+   * @protected
+   * @param {string} 
+   * @return {void}
+   */
+  public isRefreshing: boolean = false
+  protected async onRefresh() {
+    if (!this.isRefreshing) {
+      this.isRefreshing = true
+      try {
+        await this.refresh()
+        this.$store.dispatch('notification/ADD_SUCCESS', `${this.$t('refresh_success')}`)
+      } catch{
+        this.$store.dispatch('notification/ADD_ERROR', `${this.$t('refresh_failed')}`)
+      }
+      this.isRefreshing = false
+    }
   }
 }

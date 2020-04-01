@@ -1016,5 +1016,8 @@
   "approval_greater_than_cosignatories": "最小批准所需余项比可用余项多 {delta}。请添加余数或减少最小批准号。",
   "removal_greater_than_cosignatories": "最小删除所需余弦比可用余弦多{delta}。请添加余弦或减少最小删除数。",
   "page_title_transfer": "转账",
-  "mnemonic_copy":"复制"
+  "mnemonic_copy":"复制",
+  "show_expired_mosaic":"显示过期马赛克",
+  "refresh_success":"刷新成功",
+  "refresh_failed":"刷新失败"
 }

@@ -1192,5 +1192,8 @@
   "no_data_mosaics": "No mosaics were found for this account",
   "clear_staged_transactions": "Discard all transactions",
   "see_transactions_other_account": "Display multi-signature account transactions",
-  "mnemonic_copy":"Copy"
+  "mnemonic_copy":"Copy",
+  "show_expired_mosaic":"Show expired mosaics",
+  "refresh_success":"Mosaics updated successfully",
+  "refresh_failed":"An error ocurred. Please, try again later."
 }
