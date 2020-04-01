@@ -25,6 +25,7 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
 
+import { TimeHelpers } from '@/core/utils/TimeHelpers' 
 @Component({
   components: {
     ValidationProvider,
@@ -53,12 +54,25 @@ export class DurationInputTs extends Vue {
    */
   public validationRules = ValidationRuleset
 
+  /**
+   * the toggle for the display of realativeTime
+   * @type boolean
+   */
+  @Prop({ default: false }) showRelativeTime: boolean
+  /**
+   * relativeTime example: 56d 21h 18m
+   * @var {string}
+   */
+  public relativeTime=TimeHelpers.durationToRelativeTime(parseInt(this.value))
+
   /// region computed properties getter/setter
   public get chosenValue(): string {
     return this.value
   }
 
   public set chosenValue(amount: string) {
+    // toSetTheRelative
+    this.relativeTime = TimeHelpers.durationToRelativeTime(parseInt(amount))
     this.$emit('input', amount)
   }
    

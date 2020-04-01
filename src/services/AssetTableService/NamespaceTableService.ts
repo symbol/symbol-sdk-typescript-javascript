@@ -98,11 +98,11 @@ export class NamespaceTableService extends AssetTableService {
 
   /**
    * Returns a view of a namespace expiration info
-   * @private
+   * @public
    * @param {NamespaceInfo} mosaicInfo
    * @returns {string}
    */
-  private getExpiration (
+  public getExpiration (
     namespaceInfo: NamespaceInfo,
   ): {expiration: string, expired: boolean} {
     const {currentHeight} = this

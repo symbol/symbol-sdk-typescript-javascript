@@ -44,6 +44,8 @@ export class NamespaceNameInputTs extends Vue {
   @Prop({ default: NamespaceRegistrationType.RootNamespace })
   namespaceRegistrationType: NamespaceRegistrationType
 
+  @Prop({default:true}) isNeedAutoFocus: boolean
+  
   /**
    * Current network type
    * @var {NetworkType}

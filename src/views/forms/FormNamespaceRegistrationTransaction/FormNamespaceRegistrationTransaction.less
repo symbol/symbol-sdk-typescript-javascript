@@ -1,0 +1,42 @@
+@import "../../resources/css/variables.less";
+
+/deep/.create-namespace-form {
+  grid-column-gap: 0.2rem;
+  align-items    : center;
+
+  .form-label-container {
+    background-color: inherit;
+
+    .form-label {
+      color      : @black;
+      font-size  : @smallerFont;
+      font-weight: 300;
+    }
+  }
+
+  .inputs-container {
+    display: flex;
+
+    .signer-selector-single-signer-container {
+      border      : none;
+      padding-left: 0;
+      font-weight : 600;
+      font-size   : @smallerFont;
+    }
+
+    .display-value {
+      font-weight: 600;
+      font-size  : @smallerFont;
+    }
+  }
+}
+
+.section-title {
+  padding-left: 0.2rem;
+  padding-top : 0.1rem;
+  font-size   : 28px;
+  font-weight : 400;
+  line-height : 38px;
+  color       : @grayDark;
+  height      : 0.65rem;
+}

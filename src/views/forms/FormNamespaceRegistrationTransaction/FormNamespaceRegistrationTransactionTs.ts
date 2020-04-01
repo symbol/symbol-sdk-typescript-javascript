@@ -44,7 +44,7 @@ import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirm
 
 // configuration
 import networkConfig from '@/../config/network.conf.json'
-
+import { NamespaceTableService } from '@/services/AssetTableService/NamespaceTableService'
 @Component({
   components: {
     ValidationObserver,
@@ -60,6 +60,7 @@ import networkConfig from '@/../config/network.conf.json'
   },
   computed: {...mapGetters({
     ownedNamespaces: 'wallet/currentWalletOwnedNamespaces',
+    namespacesNames: 'namespace/namespacesNames',
   })},
 })
 export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase {
@@ -192,5 +193,22 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
     
     // - populate maxFee
     this.formItems.maxFee = transaction.maxFee.compact()
+  }
+
+  public relativeTimetoParent = ''
+  /**
+ * Namespaces names
+ * @type {[h: string]: string}
+ */
+  public namespacesNames: { [h: string]: string }
+  public getTimeByparentNamespaceName() {
+    const selectedNamespace = this.fertileNamespaces.find((item) =>
+      this.namespacesNames[item.id.toHex()] === this.formItems.parentNamespaceName,
+    )
+    this.relativeTimetoParent = new NamespaceTableService(this.$store).getExpiration(selectedNamespace).expiration
+  }
+  setParentNamespaceName(val) {
+    this.formItems.parentNamespaceName = val
+    this.getTimeByparentNamespaceName()
   }
 }

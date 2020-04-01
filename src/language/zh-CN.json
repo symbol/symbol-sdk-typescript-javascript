@@ -1019,5 +1019,10 @@
   "mnemonic_copy":"复制",
   "show_expired_mosaic":"显示过期马赛克",
   "refresh_success":"刷新成功",
-  "refresh_failed":"刷新失败"
+  "refresh_failed":"刷新失败",
+  "create_sub_namespace":"创建子命名空间",
+  "rules_describe":"规则描述",
+  "Estimated_period_of_validity":"预估有效期",
+  "no_data_namespace_tips":"您还没有父命名空间，请先创建一个父命名空间",
+  "current_validity":"当前有效期"
 }

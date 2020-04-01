@@ -1,7 +1,10 @@
 <template>
   <AssetFormPageWrap>
     <template v-slot:form-section>
-      <FormNamespaceRegistrationTransaction />
+      <FormNamespaceRegistrationTransaction v-if="ownedNamespaces.length > 0" :registration-type="1" />
+      <div v-else class="no-data">
+        {{ $t("no_data_namespace_tips") }}
+      </div>
     </template>
     <template v-slot:form-description>
       <div class="asset-description-title">
@@ -34,18 +37,11 @@
     </template>
   </AssetFormPageWrap>
 </template>
-
 <script lang="ts">
-// external dependencies
-import {Component, Vue} from 'vue-property-decorator'
-import {NamespaceRegistrationType} from 'symbol-sdk'
-// child components
-import AssetFormPageWrap from '@/views/pages/assets/AssetFormPageWrap/AssetFormPageWrap.vue'
-import FormNamespaceRegistrationTransaction from '@/views/forms/FormNamespaceRegistrationTransaction/FormNamespaceRegistrationTransaction.vue'
-// @ts-ignore
-@Component({
-  components: {AssetFormPageWrap, FormNamespaceRegistrationTransaction},
-  data() {return {NamespaceRegistrationType}},
-})
-export default class CreateNamespacePage extends Vue {}
+import { CreateSubNamespaceTs } from './CreateSubNamespaceTs'
+export default class CreateSubNamespace extends CreateSubNamespaceTs { }
+
 </script>
+<style lang="less" scoped>
+  @import "./CreateSubNamespace.less";
+</style>

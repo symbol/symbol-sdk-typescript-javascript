@@ -309,6 +309,16 @@ export const routes: AppRoute[] = [
             // @ts-ignore
             component: () => import('@/views/pages/namespaces/CreateNamespacePage/CreateNamespacePage.vue'),
           },
+          {
+            path: '/createSubNamespace',
+            name: 'namespaces.createSubNamespace',
+            meta: {
+              protected: true,
+              title: 'create_sub_namespace',
+            },
+            // @ts-ignore
+            component: () => import('@/views/pages/namespaces/createSubNamespace/CreateSubNamespace.vue'),
+          },
         ],
       }, {
         path: '/multisig',

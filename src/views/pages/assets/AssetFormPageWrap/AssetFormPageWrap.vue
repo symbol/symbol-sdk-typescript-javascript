@@ -1,30 +1,27 @@
 <template>
   <div class="asset-form-main-container">
-    <div class="left-container xym-outline">
-      <div class="form-section">
-        <slot name="form-section" />
-      </div>
+    <div class="form-section">
+      <slot name="form-section" />
     </div>
-    <div class="right-container xym-outline">
-      <slot name="form-description" />
+    <Icon type="ios-help-circle-outline" size="20" @click="hasHelpModal = true" />
+    <div class="container">
+      <Modal v-model="hasHelpModal" :footer-hide="true" :transfer="false">
+        <h1 slot="header">
+          {{ $t('rules_describe') }}
+        </h1>
+        <p>
+          <slot name="form-description" />
+        </p>
+      </Modal>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-// external dependencies
-import {Component, Vue} from 'vue-property-decorator'
-
-// child components
-import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue'
-
-@Component({ components: {NavigationTabs} })
-export default class AssetFormPageWrap extends Vue { }
+import {AssetFormPageWrapTs} from './AssetFormPageWrapTs'
+export default class AssetFormPageWrap extends AssetFormPageWrapTs { }
 </script>
 
 <style lang="less" scoped>
 @import './AssetFormPageWrap.less';
-</style>
-
-<style scoped> 
 </style>
