@@ -50,19 +50,18 @@
         </span>
         <span class="back-up pointer">{{ $t('backup_mnemonic') }}</span>
       </div>
+      <ModalFormSubWalletCreation
+        v-if="hasAddWalletModal"
+        :visible="hasAddWalletModal"
+        @close="hasAddWalletModal = false"
+      />
+
+      <ModalMnemonicExport
+        v-if="hasMnemonicExportModal"
+        :visible="hasMnemonicExportModal"
+        @close="hasMnemonicExportModal = false"
+      />
     </div>
-
-    <ModalFormSubWalletCreation
-      v-if="hasAddWalletModal"
-      :visible="hasAddWalletModal"
-      @close="hasAddWalletModal = false"
-    />
-
-    <ModalMnemonicExport
-      v-if="hasMnemonicExportModal"
-      :visible="hasMnemonicExportModal"
-      @close="hasMnemonicExportModal = false"
-    />
   </div>
 </template>
 
