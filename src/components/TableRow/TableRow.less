@@ -13,11 +13,22 @@
     cursor: pointer;
   }
 }
-
+.namespace-columns,.mosaic-columns{
+  .table-cell>div{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+.mosaic-columns ::v-deep{
+  .normal{
+    font-size: .16rem ;
+  }
+  .integer-part{
+    opacity: 1;
+  }
+}
 .table-cell {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   padding: 0.2rem 0.1rem 0 0.1rem;
 }
 

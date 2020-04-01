@@ -1,17 +1,25 @@
 @import "../../views/resources/css/variables.less";
 .mosaic-columns {
-  grid-template-columns: repeat(4, 14%) repeat(5, 8%) 4%;
+  grid-template-columns: 14% 10% repeat(2, 14%) 12% repeat(4, 8%) 4%;
   grid-template-rows: 100%;
 }
 
 .namespace-columns {
-  grid-template-columns: repeat(3, 20%) repeat(4, 10%);
-  .name-header {
+  grid-template-columns: 15% 15% 10% 15% 10% 25% 10% ;
+  .name-header,.name-cell {
     text-align: left;
   }
-
-  .name-cell {
+  .expiration-header,.expiration-cell{
     text-align: left;
+  }
+  .expired-header,.expired-cell{
+    text-align: center;
+  }
+  .aliasIdentifier-header,.aliasIdentifier-cell{
+    text-align: center;
+  }
+  .aliasType-header,.aliasType-cell{
+    text-align: center;
   }
 }
 

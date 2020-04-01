@@ -21,9 +21,10 @@ import {AbstractService} from './AbstractService'
 import {MosaicsRepository} from '@/repositories/MosaicsRepository'
 import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
 import {NamespaceService} from './NamespaceService'
+import { TimeHelpers } from '@/core/utils/TimeHelpers'
 
 // custom types
-export type ExpirationStatus = 'unlimited' | 'expired' | string
+export type ExpirationStatus = 'unlimited' | 'expired' | string | number
 
 export interface AttachedMosaic {
   id: MosaicId | NamespaceId
@@ -412,7 +413,7 @@ export class MosaicService extends AbstractService {
     if (expiresIn <= 0) return 'expired'
 
     // number of blocks remaining
-    return expiresIn.toLocaleString()
+    return TimeHelpers.durationToRelativeTime(expiresIn)
   }
 
   /**
