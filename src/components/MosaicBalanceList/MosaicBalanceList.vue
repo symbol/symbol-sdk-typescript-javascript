@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mosaics-list-container">
     <Tabs v-if="!isEditionMode" size="small">
       <TabPane :label="$t('assets')" name="name1">
         <img
@@ -85,7 +85,6 @@
             {{ $t('Close') }}
           </div>
         </div>
-        <div class="mosaic_data" />
       </div>
     </div>
   </div>
