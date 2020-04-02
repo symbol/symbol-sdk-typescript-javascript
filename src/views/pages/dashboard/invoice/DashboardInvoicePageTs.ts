@@ -93,7 +93,7 @@ export class DashboardInvoicePageTs extends Vue {
 
     // if (!this.transactions.length) return ''
     
-    if (!this.currentTransaction) return ''
+    if (!this.currentTransaction || !this.currentTransaction.recipientAddress) return ''
 
     // - read TransferTransaction instance
     // const transfer = this.transactions.shift() as TransferTransaction

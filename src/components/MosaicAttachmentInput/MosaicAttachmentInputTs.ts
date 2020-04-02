@@ -62,6 +62,15 @@ export class MosaicAttachmentInputTs extends Vue {
   @Prop({ default: false }) absolute: boolean
 
   /**
+   * the item index in the Array
+   */
+  @Prop({default:true}) isShowDelete: boolean
+  
+  /**
+   * whether to show the label accord to isFirstItem
+   */
+  @Prop({default:true}) isFirstItem: boolean
+  /**
    * Updated value to sync with the parent formItems
    * @protected 
    * @type {{mosaicHex: string, amount: number}}

@@ -212,8 +212,9 @@
   display: grid;
   width: 100%;
   height: @formFieldHeight !important;
-  grid-template-columns: 55% auto 0.4rem;
+  grid-template-columns: 55% auto;
   grid-template-rows: 100%;
+  position: relative;
 }
 
 .row-mosaic-attachment-display {
@@ -553,7 +554,9 @@
 }
 
 .delete-mosaic-container {
-  width: 100%;
+  position: absolute;
+  right: -0.3rem;
+  top: 0;
   height: 100%;
   display: grid;
   align-items: center;
@@ -568,6 +571,7 @@
   width: 20px;
   height: 20px;
   cursor: pointer;
+  display: block
 }
 
 .delete-icon:hover {

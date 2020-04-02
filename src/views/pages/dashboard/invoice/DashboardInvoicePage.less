@@ -37,7 +37,7 @@
       height: auto;
       display: grid;
       grid-template-rows: 100%;
-      grid-template-columns: 2.2rem auto;
+      grid-template-columns: 2.4rem auto;
       margin: 0.3rem 0;
       overflow: hidden;
 
@@ -50,14 +50,15 @@
       .description-container {
         width: 100%;
         height: 100%;
-        padding: 0.2rem 0.4rem;
-        display: grid;
-        grid-template-rows: 1fr 1fr 1fr 2fr;
-        align-items: start;
+        padding-top: 0.08rem;
+        letter-spacing: 0.01rem;
 
         .top-qr-text {
           display: grid;
-          grid-template-columns: 1rem 1fr;
+          grid-template-columns: 1rem auto;
+          grid-gap: 0.1rem auto;
+          align-items: center;
+          margin-bottom: 0.1rem;
 
           .top-qr-text-title {
             font-size: @smallFont;

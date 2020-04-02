@@ -22,6 +22,8 @@
               :mosaic-hex-ids="mosaicInputsManager.getMosaicsBySlot(attachedMosaic.uid)"
               :absolute="false"
               :uid="attachedMosaic.uid"
+              :is-show-delete="index > 0 && index === formItems.attachedMosaics.length - 1"
+              :is-first-item="index === 0"
               @input-changed="onMosaicInputChange"
               @input-deleted="onDeleteMosaicInput"
             />

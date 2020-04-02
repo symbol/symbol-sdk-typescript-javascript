@@ -18,9 +18,9 @@
                 v-for="({mosaicHex, name, amount}, index) in balanceEntries"
                 :key="index"
               >
-                <span class="blue">{{ amount }}&nbsp;</span>
+                <span class="blue">{{ amount }}&nbsp;&nbsp;</span>
                 <span class="blue">{{ name }}</span>
-                <span class="gray">（{{ mosaicHex }}）</span>
+                <span class="gray">({{ mosaicHex }});</span>
               </div>
             </div>
             <span v-else>{{ 'N/A' }}</span>
