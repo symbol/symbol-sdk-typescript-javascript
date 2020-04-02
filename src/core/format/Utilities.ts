@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {sha3_256} from 'js-sha3';
+import { sha3_256 } from 'js-sha3';
 
 export const createBuilder = () => {
     const map = {};
@@ -112,9 +112,7 @@ export const extractPartName = (name, start, size) => {
     return partName;
 };
 
-export const append = (path, id, name) => {
-    path.push(id);
-};
+
 
 export const split = (name, processor) => {
     let start = 0;

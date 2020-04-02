@@ -16,6 +16,7 @@
 
 import { Observable } from 'rxjs';
 import { MetadataDTO, MetadataRoutesApi } from 'symbol-openapi-typescript-node-client';
+import { BigIntUtilities } from '../core/format/BigIntUtilities';
 import { Convert } from '../core/format/Convert';
 import { Address } from '../model/account/Address';
 import { Metadata } from '../model/metadata/Metadata';
@@ -199,7 +200,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
                 metadataEntry.compositeHash,
                 metadataEntry.senderPublicKey,
                 metadataEntry.targetPublicKey,
-                BigInt(metadataEntry.scopedMetadataKey),
+                BigIntUtilities.HexToBigInt(metadataEntry.scopedMetadataKey),
                 metadataEntry.metadataType.valueOf(),
                 Convert.decodeHex(metadataEntry.value),
                 targetId,

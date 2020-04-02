@@ -22,7 +22,7 @@ describe('key generator', () => {
             expect(() => KeyGenerator.generateUInt64Key('')).to.throw(Error, 'Input must not be empty');
         });
         it('returns UInt64', () => {
-            expect(KeyGenerator.generateUInt64Key('a')).to.be.instanceOf(BigInt);
+            expect(typeof KeyGenerator.generateUInt64Key('a')).to.be.eq('bigint');
         });
         it('generates correct keys', () => {
             expect(KeyGenerator.generateUInt64Key('a')).to.equal(BigInt('0xF524A0FBF24B0880'));

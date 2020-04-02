@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-    expect,
-} from 'chai';
-import { Convert as convert, RawUInt64 as uint64} from '../../../src/core/format';
+import { expect, } from 'chai';
+import { Convert as convert, RawUInt64 as uint64 } from '../../../src/core/format';
+import { BigIntUtilities } from "../../../src/core/format/BigIntUtilities";
 
 describe('uint64', () => {
     describe('compact', () => {
@@ -83,10 +82,10 @@ describe('uint64', () => {
         // });
 
         const successTestCases = [{
-                number: 0,
-                uint64: [0, 0],
-                description: '0',
-            },
+            number: 0,
+            uint64: [0, 0],
+            description: '0',
+        },
             {
                 number: 0xA1B2,
                 uint64: [0xA1B2, 0],
@@ -120,16 +119,16 @@ describe('uint64', () => {
                 const value = BigInt(testCase.number);
 
                 // Assert:
-                expect(value).to.deep.equal(testCase.uint64);
+                expect(value.toString()).to.deep.equal(BigIntUtilities.UInt64ToBigInt(testCase.uint64).toString());
             });
         });
     });
 
     const hexTestCases = [{
-            str: '0000000000000000',
-            value: [0, 0],
-            description: '0',
-        },
+        str: '0000000000000000',
+        value: [0, 0],
+        description: '0',
+    },
         {
             str: '000000000000A1B2',
             value: [0xA1B2, 0],
@@ -186,10 +185,10 @@ describe('uint64', () => {
 
     describe('fromBytes32', () => {
         const fromBytes32TestCases = [{
-                str: '00000000',
-                value: [0, 0],
-                description: '0',
-            },
+            str: '00000000',
+            value: [0, 0],
+            description: '0',
+        },
             {
                 str: '0000A1B2',
                 value: [0xA1B2, 0],
@@ -237,10 +236,11 @@ describe('uint64', () => {
         hexTestCases.forEach((testCase) => {
             it(`can parse hex string with ${testCase.description} significant digits`, () => {
                 // Act:
-                const value = BigInt(testCase.str);
+                const value = BigIntUtilities.HexToBigInt(testCase.str);
 
                 // Assert:
-                expect(value).to.deep.equal(testCase.value);
+                const testCaseValue = BigIntUtilities.UInt64ToBigInt(testCase.value, false);
+                expect(value.toString()).to.deep.equal(testCaseValue.toString());
             });
         });
 
@@ -248,7 +248,7 @@ describe('uint64', () => {
             // Assert:
             expect(() => {
                 BigInt('0x0000000012345G78');
-            }).to.throw('unrecognized hex char'); // contains 'G'
+            }).to.throw('Cannot convert 0x0000000012345G78 to a BigInt'); // contains 'G'
         });
 
         it('cannot parse hex string with invalid size into uint64', () => {
@@ -258,7 +258,7 @@ describe('uint64', () => {
             // Assert:
             expect(() => {
                 BigInt('');
-            }).to.throw(errorMessage); // empty string
+            }).to.be(errorMessage); // empty string
             expect(() => {
                 BigInt('1');
             }).to.throw(errorMessage); // odd number of chars
@@ -285,10 +285,10 @@ describe('uint64', () => {
 
     describe('isZero', () => {
         const zeroTestCases = [{
-                description: 'low and high are zero',
-                value: [0, 0],
-                isZero: true,
-            },
+            description: 'low and high are zero',
+            value: [0, 0],
+            isZero: true,
+        },
             {
                 description: 'low is nonzero and high is zero',
                 value: [1, 0],

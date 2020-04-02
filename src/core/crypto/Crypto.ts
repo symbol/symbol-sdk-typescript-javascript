@@ -21,6 +21,7 @@ import * as utility from './Utilities';
 
 // tslint:disable-next-line: no-var-requires
 const CryptoJS = require('crypto-js');
+
 export class Crypto {
     /**
      * Encrypt a private key for mobile apps (AES_PBKF2)
@@ -32,7 +33,9 @@ export class Crypto {
      */
     public static toMobileKey = (password, privateKey) => {
         // Errors
-        if (!password || !privateKey) { throw new Error('Missing argument !'); }
+        if (!password || !privateKey) {
+            throw new Error('Missing argument !');
+        }
         // Processing
         const salt = CryptoJS.lib.WordArray.random(256 / 8);
         const key = CryptoJS.PBKDF2(password, salt, {
@@ -47,7 +50,7 @@ export class Crypto {
         // Result
         return {
             encrypted: convert.uint8ToHex(iv) + encrypted.ciphertext,
-            salt:  salt.toString(),
+            salt: salt.toString(),
         };
     }
 
@@ -61,8 +64,12 @@ export class Crypto {
      */
     public static derivePassSha = (password, count) => {
         // Errors
-        if (!password) { throw new Error('Missing argument !'); }
-        if (!count || count <= 0) { throw new Error('Please provide a count number above 0'); }
+        if (!password) {
+            throw new Error('Missing argument !');
+        }
+        if (!count || count <= 0) {
+            throw new Error('Please provide a count number above 0');
+        }
         // Processing
         let data = password;
         for (let i = 0; i < count; ++i) {
@@ -86,7 +93,9 @@ export class Crypto {
      */
     public static encrypt = (data, key) => {
         // Errors
-        if (!data || !key) { throw new Error('Missing argument !'); }
+        if (!data || !key) {
+            throw new Error('Missing argument !');
+        }
         // Processing
         const iv = Crypto.randomBytes(16);
         const encKey = utility.ua2words(key, 32);
@@ -111,7 +120,9 @@ export class Crypto {
      */
     public static decrypt = (data) => {
         // Errors
-        if (!data) { throw new Error('Missing argument !'); }
+        if (!data) {
+            throw new Error('Missing argument !');
+        }
         // Processing
         const encKey = utility.ua2words(data.key, 32);
         const encIv = {
@@ -132,7 +143,9 @@ export class Crypto {
      */
     public static passwordToPrivateKey = (common, walletAccount, algo) => {
         // Errors
-        if (!common || !common.password || !walletAccount || !algo) { throw new Error('Missing argument !'); }
+        if (!common || !common.password || !walletAccount || !algo) {
+            throw new Error('Missing argument !');
+        }
         // Processing
         let r;
         if (algo === WalletAlgorithm.Pass_6k) { // Brain wallets
@@ -151,7 +164,7 @@ export class Crypto {
                     key: convert.hexToUint8(pass.priv),
                 };
                 const d = Crypto.decrypt(obj);
-                r = { priv: d };
+                r = {priv: d};
             }
         } else if (algo === WalletAlgorithm.Pass_bip32) { // Wallets from PRNG
             const pass = Crypto.derivePassSha(common.password, 20);
@@ -161,7 +174,7 @@ export class Crypto {
                 key: convert.hexToUint8(pass.priv),
             };
             const d = Crypto.decrypt(obj);
-            r = { priv: d };
+            r = {priv: d};
         } else if (algo === WalletAlgorithm.Pass_enc) { // Private Key wallets
             const pass = Crypto.derivePassSha(common.password, 20);
             const obj = {
@@ -170,9 +183,9 @@ export class Crypto {
                 key: convert.hexToUint8(pass.priv),
             };
             const d = Crypto.decrypt(obj);
-            r = { priv: d };
+            r = {priv: d};
         } else if (algo === WalletAlgorithm.Trezor) { // HW wallet
-            r = { priv: '' };
+            r = {priv: ''};
             common.isHW = true;
         } else {
             return false;
@@ -201,7 +214,9 @@ export class Crypto {
      */
     public static encodePrivateKey = (privateKey, password) => {
         // Errors
-        if (!privateKey || !password) { throw new Error('Missing argument !'); }
+        if (!privateKey || !password) {
+            throw new Error('Missing argument !');
+        }
         // Processing
         const pass = Crypto.derivePassSha(password, 20);
         const r = Crypto.encrypt(privateKey, convert.hexToUint8(pass.priv));
@@ -227,7 +242,9 @@ export class Crypto {
                              msg: string,
                              iv: Uint8Array): string => {
         // Errors
-        if (!senderPriv || !recipientPub || !msg || !iv) { throw new Error('Missing argument !'); }
+        if (!senderPriv || !recipientPub || !msg || !iv) {
+            throw new Error('Missing argument !');
+        }
         // Processing
         const keyPair = KeyPair.createKeyPairFromPrivateKeyString(senderPriv);
         const pk = convert.hexToUint8(recipientPub);
@@ -255,7 +272,9 @@ export class Crypto {
                             msg: string,
                             isHexString: boolean = false): string => {
         // Errors
-        if (!senderPriv || !recipientPub || !msg) { throw new Error('Missing argument !'); }
+        if (!senderPriv || !recipientPub || !msg) {
+            throw new Error('Missing argument !');
+        }
         // Processing
         const iv = Crypto.randomBytes(16);
         const encoded = Crypto._encode(senderPriv, recipientPub, isHexString ? msg : convert.utf8ToHex(msg), iv);
@@ -277,7 +296,9 @@ export class Crypto {
                              payload: Uint8Array,
                              iv: Uint8Array): string => {
         // Error
-        if (!recipientPrivate || !senderPublic || !payload) { throw new Error('Missing argument !'); }
+        if (!recipientPrivate || !senderPublic || !payload) {
+            throw new Error('Missing argument !');
+        }
         // Processing
         const keyPair = KeyPair.createKeyPairFromPrivateKeyString(recipientPrivate);
         const pk = convert.hexToUint8(senderPublic);
@@ -305,7 +326,9 @@ export class Crypto {
                             senderPublic: string,
                             payload: string): string => {
         // Error
-        if (!recipientPrivate || !senderPublic || !payload) { throw new Error('Missing argument !'); }
+        if (!recipientPrivate || !senderPublic || !payload) {
+            throw new Error('Missing argument !');
+        }
         // Processing
         const binPayload = convert.hexToUint8(payload);
         const payloadBuffer = new Uint8Array(binPayload.buffer, 16);
@@ -320,7 +343,7 @@ export class Crypto {
      *
      * @return {Uint8Array}
      */
-    public static randomBytes = (length) => {
+    public static randomBytes = (length: number): Uint8Array => {
         const crypto = require('crypto');
         return crypto.randomBytes(length);
     }

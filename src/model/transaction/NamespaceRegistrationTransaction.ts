@@ -86,19 +86,22 @@ export class NamespaceRegistrationTransaction extends Transaction {
                                      maxFee: bigint = BigInt(0)): NamespaceRegistrationTransaction {
         let parentId: NamespaceId;
         if (typeof parentNamespace === 'string') {
-            parentId = new NamespaceId(NamespaceMosaicIdGenerator.subnamespaceParentId(parentNamespace, namespaceName));
+            parentId = new NamespaceId(BigIntUtilities.UInt64ToBigInt(NamespaceMosaicIdGenerator
+            .subnamespaceParentId(parentNamespace, namespaceName)));
         } else {
             parentId = parentNamespace;
         }
+        const currentNamespaceId = typeof parentNamespace === 'string' ?
+            new NamespaceId(BigIntUtilities.UInt64ToBigInt(NamespaceMosaicIdGenerator
+            .subnamespaceNamespaceId(parentNamespace, namespaceName))) :
+            new NamespaceId(BigIntUtilities.UInt64ToBigInt(NamespaceMosaicIdGenerator.namespaceId(namespaceName)));
         return new NamespaceRegistrationTransaction(networkType,
             TransactionVersion.NAMESPACE_REGISTRATION,
             deadline,
             maxFee,
             NamespaceRegistrationType.SubNamespace,
             namespaceName,
-            typeof parentNamespace === 'string' ?
-                new NamespaceId(NamespaceMosaicIdGenerator.subnamespaceNamespaceId(parentNamespace, namespaceName)) :
-                new NamespaceId(BigIntUtilities.UInt64ToBigInt(NamespaceMosaicIdGenerator.namespaceId(namespaceName))),
+            currentNamespaceId,
             undefined,
             parentId,
         );
@@ -166,17 +169,17 @@ export class NamespaceRegistrationTransaction extends Transaction {
             NamespaceRegistrationTransaction.createRootNamespace(
                 isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
                     (builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp),
-            Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
-            builder.getDuration()!.blockDuration,
-            networkType,
-            isEmbedded ? BigInt(0) : (builder as NamespaceRegistrationTransactionBuilder).fee.amount) :
-                NamespaceRegistrationTransaction.createSubNamespace(
-            isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
-                (builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp),
-            Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
-            new NamespaceId(builder.getParentId()!.namespaceId),
-            networkType,
-            isEmbedded ? BigInt(0) : (builder as NamespaceRegistrationTransactionBuilder).fee.amount);
+                Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
+                builder.getDuration()!.blockDuration,
+                networkType,
+                isEmbedded ? BigInt(0) : (builder as NamespaceRegistrationTransactionBuilder).fee.amount) :
+            NamespaceRegistrationTransaction.createSubNamespace(
+                isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
+                    (builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp),
+                Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
+                new NamespaceId(builder.getParentId()!.namespaceId),
+                networkType,
+                isEmbedded ? BigInt(0) : (builder as NamespaceRegistrationTransactionBuilder).fee.amount);
         return isEmbedded ?
             transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
