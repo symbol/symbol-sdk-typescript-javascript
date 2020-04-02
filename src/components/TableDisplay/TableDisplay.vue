@@ -3,9 +3,10 @@
     <div class="upper-section-container">
       <div class="table-title-container section-title">
         <slot name="table-title" />
-        <div v-if="assetType === 'mosaic'" class="user-operation">
+        <div class="user-operation">
           <Checkbox v-model="showExpired">
-            {{ $t('show_expired_mosaic') }}
+            <span v-show="assetType === 'mosaic'">{{ $t('show_expired_mosaics') }}</span>
+            <span v-show="assetType === 'namespace'">{{ $t('show_expired_namespaces') }}</span>
           </Checkbox>
           <span @click="onRefresh"><Icon :class="{'animation-rotate':isRefreshing}" type="ios-sync" /></span>
         </div>
