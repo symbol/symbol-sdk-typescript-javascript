@@ -70,7 +70,7 @@ export class MosaicId {
      * @returns {string}
      */
     public toHex(): string {
-        return BigIntUtilities.BigIntToHex(this.id).toUpperCase();
+        return BigIntUtilities.BigIntToHex(this.id);
     }
 
     /**

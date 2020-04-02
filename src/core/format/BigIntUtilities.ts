@@ -23,8 +23,7 @@ export class BigIntUtilities {
      * @returns {string}
      */
     public static BigIntToHex(input: bigint): string {
-        const uint8 = BigIntUtilities.BigIntToUint8(input);
-        return Convert.uint8ToHex(uint8);
+        return input.toString(16).padStart(16, '0').toUpperCase();
     }
 
     /**
@@ -33,8 +32,7 @@ export class BigIntUtilities {
      * @returns {bigint}
      */
     public static HexToBigInt(input: string): bigint {
-        const uint8 = Convert.hexToUint8(input);
-        return BigIntUtilities.Uint8ToBigInt(uint8);
+        return BigInt('0x' + input);
     }
 
     /**

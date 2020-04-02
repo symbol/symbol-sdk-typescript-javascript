@@ -56,8 +56,8 @@ describe('Receipt', () => {
                 statement: {
                     height: '52',
                     source: {
-                    primaryId: 0,
-                    secondaryId: 0,
+                        primaryId: 0,
+                        secondaryId: 0,
                     },
                     receipts: [
                         {
@@ -77,13 +77,13 @@ describe('Receipt', () => {
                     height: '1488',
                     unresolved: '9103B60AAF2762688300000000000000000000000000000000',
                     resolutionEntries: [
-                    {
-                        source: {
-                        primaryId: 4,
-                        secondaryId: 0,
+                        {
+                            source: {
+                                primaryId: 4,
+                                secondaryId: 0,
+                            },
+                            resolved: '917E7E29A01014C2F300000000000000000000000000000000',
                         },
-                        resolved: '917E7E29A01014C2F300000000000000000000000000000000',
-                    },
                     ],
                 },
             },
@@ -92,13 +92,13 @@ describe('Receipt', () => {
                     height: '1488',
                     unresolved: '917E7E29A01014C2F300000000000000000000000000000000',
                     resolutionEntries: [
-                    {
-                        source: {
-                        primaryId: 2,
-                        secondaryId: 0,
+                        {
+                            source: {
+                                primaryId: 2,
+                                secondaryId: 0,
+                            },
+                            resolved: '9103B60AAF2762688300000000000000000000000000000000',
                         },
-                        resolved: '9103B60AAF2762688300000000000000000000000000000000',
-                    },
                     ],
                 },
             },
@@ -109,13 +109,13 @@ describe('Receipt', () => {
                     height: '1506',
                     unresolved: '85BBEA6CC462B244',
                     resolutionEntries: [
-                    {
-                        source: {
-                        primaryId: 1,
-                        secondaryId: 0,
+                        {
+                            source: {
+                                primaryId: 1,
+                                secondaryId: 0,
+                            },
+                            resolved: '941299B2B7E1291C',
                         },
-                        resolved: '941299B2B7E1291C',
-                    },
                     ],
                 },
             },
@@ -124,13 +124,13 @@ describe('Receipt', () => {
                     height: '1506',
                     unresolved: '85BBEA6CC462B244',
                     resolutionEntries: [
-                    {
-                        source: {
-                        primaryId: 5,
-                        secondaryId: 0,
+                        {
+                            source: {
+                                primaryId: 5,
+                                secondaryId: 0,
+                            },
+                            resolved: '941299B2B7E1291C',
                         },
-                        resolved: '941299B2B7E1291C',
-                    },
                     ],
                 },
             },
@@ -151,7 +151,7 @@ describe('Receipt', () => {
             recipientAddress: '9103B60AAF2762688300000000000000000000000000000000',
             mosaicId: '941299B2B7E1291C',
             amount: '1000',
-          };
+        };
         const receipt = new BalanceTransferReceipt(
             PublicAccount.createFromPublicKey(receiptDTO.senderPublicKey, netWorkType),
             Address.createFromEncoded(receiptDTO.recipientAddress),
@@ -250,7 +250,7 @@ describe('Receipt', () => {
         };
 
         const receipt = new ArtifactExpiryReceipt(
-            new NamespaceId(BigInt('0xD525AD41D95FCF29')),
+            new NamespaceId(BigIntUtilities.UInt64ToBigInt([3646934825, 3576016193], false)),
             receiptDTO.version,
             receiptDTO.type,
         );
@@ -281,9 +281,9 @@ describe('Receipt', () => {
         const statementDto = transactionStatementsDTO[0];
         const statement = new TransactionStatement(
             statementDto.statement.height,
-            new ReceiptSource( statementDto.statement.source.primaryId, statementDto.statement.source.secondaryId),
+            new ReceiptSource(statementDto.statement.source.primaryId, statementDto.statement.source.secondaryId),
             statementDto.statement.receipts.map((receipt) =>
-            CreateReceiptFromDTO(receipt, netWorkType)),
+                CreateReceiptFromDTO(receipt, netWorkType)),
         );
         deepEqual(statement.source.primaryId, statementDto.statement.source.primaryId);
         deepEqual(statement.source.secondaryId, statementDto.statement.source.secondaryId);
@@ -298,7 +298,7 @@ describe('Receipt', () => {
             new MosaicId(statementDto.statement.unresolved),
             statementDto.statement.resolutionEntries.map((resolved) => {
                 return new ResolutionEntry(new MosaicId(resolved.resolved),
-                new ReceiptSource( resolved.source.primaryId, resolved.source.secondaryId));
+                    new ReceiptSource(resolved.source.primaryId, resolved.source.secondaryId));
             }),
         );
         deepEqual((statement.unresolved as MosaicId).toHex(), statementDto.statement.unresolved);
@@ -313,7 +313,7 @@ describe('Receipt', () => {
             Address.createFromEncoded(statementDto.statement.unresolved),
             statementDto.statement.resolutionEntries.map((resolved) => {
                 return new ResolutionEntry(Address.createFromEncoded(resolved.resolved),
-                new ReceiptSource( resolved.source.primaryId, resolved.source.secondaryId));
+                    new ReceiptSource(resolved.source.primaryId, resolved.source.secondaryId));
             }),
         );
         deepEqual((statement.unresolved as Address).plain(),

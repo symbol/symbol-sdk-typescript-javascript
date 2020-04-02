@@ -35,10 +35,10 @@ const basicMosaicInfo = {
 
 const mosaicTestVector = {
     rows: [{
-        publicKey: '4AFF7B4BA8C1C26A7917575993346627CB6C80DE62CD92F7F9AEDB7064A3DE62',
-        nonce: 'B76FE378',
-        expectedMosaicId: '3AD842A8C0AFC518',
-    },
+            publicKey: '4AFF7B4BA8C1C26A7917575993346627CB6C80DE62CD92F7F9AEDB7064A3DE62',
+            nonce: 'B76FE378',
+            expectedMosaicId: '3AD842A8C0AFC518',
+        },
         {
             publicKey: '3811EDF245F1D30171FF1474B24C4366FECA365A8457AAFA084F3DE4AEA0BA60',
             nonce: '21832A2A',
@@ -182,7 +182,7 @@ describe('id generator', () => {
         it('generates correct well known id', () => {
             // Assert:
             expect(idGenerator.generateMosaicId(basicMosaicInfo.nonce, basicMosaicInfo.publicId))
-            .to.deep.equal(basicMosaicInfo.id);
+                .to.deep.equal(basicMosaicInfo.id);
         });
 
         // @dataProvider mosaicTestVector
@@ -190,7 +190,7 @@ describe('id generator', () => {
             mosaicTestVector.rows.map((row, i) => {
                 const pubKey = convert.hexToUint8(row.publicKey);
                 const nonce = convert.hexToUint8(row.nonce).reverse(); // Little-Endianness!
-                const mosaicId = BigIntUtilities.UInt64ToBigInt(idGenerator.generateMosaicId(nonce, pubKey), false);
+                const mosaicId = BigIntUtilities.UInt64ToBigInt(idGenerator.generateMosaicId(nonce, pubKey));
                 const expectedId = BigIntUtilities.HexToBigInt(row.expectedMosaicId);
 
                 // Assert:

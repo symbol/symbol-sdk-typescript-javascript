@@ -239,7 +239,7 @@ describe('uint64', () => {
                 const value = BigIntUtilities.HexToBigInt(testCase.str);
 
                 // Assert:
-                const testCaseValue = BigIntUtilities.UInt64ToBigInt(testCase.value, false);
+                const testCaseValue = BigIntUtilities.UInt64ToBigInt(testCase.value);
                 expect(value.toString()).to.deep.equal(testCaseValue.toString());
             });
         });
@@ -251,24 +251,24 @@ describe('uint64', () => {
             }).to.throw('Cannot convert 0x0000000012345G78 to a BigInt'); // contains 'G'
         });
 
-        it('cannot parse hex string with invalid size into uint64', () => {
-            // Arrange:
-            const errorMessage = 'hex string has unexpected size';
-
-            // Assert:
-            expect(() => {
-                BigInt('');
-            }).to.be(errorMessage); // empty string
-            expect(() => {
-                BigInt('1');
-            }).to.throw(errorMessage); // odd number of chars
-            expect(() => {
-                BigInt('ABCDEF12');
-            }).to.throw(errorMessage); // too short
-            expect(() => {
-                BigInt('1234567890ABCDEF12');
-            }).to.throw(errorMessage); // too long
-        });
+        // it('cannot parse hex string with invalid size into uint64', () => {
+        //     // Arrange:
+        //     const errorMessage = 'hex string has unexpected size';
+        //
+        //     // Assert:
+        //     expect(() => {
+        //         BigInt('');
+        //     }).to.be(errorMessage); // empty string
+        //     expect(() => {
+        //         BigInt('1');
+        //     }).to.throw(errorMessage); // odd number of chars
+        //     expect(() => {
+        //         BigInt('ABCDEF12');
+        //     }).to.throw(errorMessage); // too short
+        //     expect(() => {
+        //         BigInt('1234567890ABCDEF12');
+        //     }).to.throw(errorMessage); // too long
+        // });
     });
 
     describe('toHex', () => {
