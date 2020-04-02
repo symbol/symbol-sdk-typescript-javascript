@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { AmountDto, InflationReceiptBuilder, MosaicBuilder, MosaicIdDto } from 'catbuffer-typescript';
+import { AmountDto, InflationReceiptBuilder, MosaicBuilder, MosaicIdDto } from 'catbuffer';
 import { MosaicId } from '../mosaic/MosaicId';
-import { UInt64 } from '../UInt64';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
 import { ReceiptVersion } from './ReceiptVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * Balance Transfer: A mosaic transfer was triggered.
@@ -42,7 +42,7 @@ export class InflationReceipt extends Receipt {
                 /**
                  * The amount of mosaic.
                  */
-                public readonly amount: UInt64,
+                public readonly amount: bigint,
                 version: ReceiptVersion,
                 type: ReceiptType,
                 size?: number) {
@@ -57,7 +57,8 @@ export class InflationReceipt extends Receipt {
     public serialize(): Uint8Array {
        return new InflationReceiptBuilder(
             ReceiptVersion.INFLATION_RECEIPT, this.type.valueOf(),
-            new MosaicBuilder(new MosaicIdDto(this.mosaicId.toDTO()), new AmountDto(this.amount.toDTO())),
+            new MosaicBuilder(new MosaicIdDto(this.mosaicId.id),
+                new AmountDto(this.amount)),
         ).serialize();
     }
 }

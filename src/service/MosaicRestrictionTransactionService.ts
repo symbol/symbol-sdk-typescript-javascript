@@ -31,15 +31,15 @@ import { Deadline } from '../model/transaction/Deadline';
 import { MosaicAddressRestrictionTransaction } from '../model/transaction/MosaicAddressRestrictionTransaction';
 import { MosaicGlobalRestrictionTransaction } from '../model/transaction/MosaicGlobalRestrictionTransaction';
 import { Transaction } from '../model/transaction/Transaction';
-import { UInt64 } from '../model/UInt64';
+import Long = require('long');
 
 /**
  * MosaicRestrictionTransactionService service
  */
 export class MosaicRestrictionTransactionService {
 
-    private readonly defaultMosaicAddressRestrictionValue = UInt64.fromHex('FFFFFFFFFFFFFFFF');
-    private readonly defaultMosaicGlobalRestrictionValue = UInt64.fromUint(0);
+    private readonly defaultMosaicAddressRestrictionValue = BigInt('0xFFFFFFFFFFFFFFFF');
+    private readonly defaultMosaicGlobalRestrictionValue = BigInt(0);
 
     /**
      * Constructor
@@ -64,16 +64,16 @@ export class MosaicRestrictionTransactionService {
     public createMosaicGlobalRestrictionTransaction(deadline: Deadline,
                                                     networkType: NetworkType,
                                                     mosaicId: MosaicId | NamespaceId,
-                                                    restrictionKey: UInt64,
+                                                    restrictionKey: bigint,
                                                     restrictionValue: string,
                                                     restrictionType: MosaicRestrictionType,
-                                                    referenceMosaicId: MosaicId | NamespaceId = new MosaicId(UInt64.fromUint(0).toDTO()),
-                                                    maxFee: UInt64 = new UInt64([0, 0])): Observable<Transaction> {
+                                                    referenceMosaicId: MosaicId | NamespaceId = new MosaicId(BigInt(0)),
+                                                    maxFee: bigint = BigInt(0)): Observable<Transaction> {
         this.validateInput(restrictionValue);
         return this.getResolvedMosaicId(mosaicId).pipe(
             mergeMap((resolvedMosaicId) => this.getGlobalRestrictionEntry(resolvedMosaicId, restrictionKey).pipe(
                 map((restrictionEntry: MosaicGlobalRestrictionItem | undefined) => {
-                    const currentValue = restrictionEntry ? UInt64.fromNumericString(restrictionEntry.restrictionValue) :
+                    const currentValue = restrictionEntry ? BigInt(restrictionEntry.restrictionValue) :
                         this.defaultMosaicGlobalRestrictionValue;
                     const currentType = restrictionEntry ? restrictionEntry.restrictionType : MosaicRestrictionType.NONE;
                     return MosaicGlobalRestrictionTransaction.create(
@@ -82,7 +82,7 @@ export class MosaicRestrictionTransactionService {
                         restrictionKey,
                         currentValue,
                         currentType,
-                        UInt64.fromNumericString(restrictionValue),
+                        BigInt(restrictionValue),
                         restrictionType,
                         networkType,
                         referenceMosaicId,
@@ -105,10 +105,10 @@ export class MosaicRestrictionTransactionService {
     public createMosaicAddressRestrictionTransaction(deadline: Deadline,
                                                      networkType: NetworkType,
                                                      mosaicId: MosaicId | NamespaceId,
-                                                     restrictionKey: UInt64,
+                                                     restrictionKey: bigint,
                                                      targetAddress: Address | NamespaceId,
                                                      restrictionValue: string,
-                                                     maxFee: UInt64 = new UInt64([0, 0])): Observable<Transaction> {
+                                                     maxFee: bigint = BigInt(0)): Observable<Transaction> {
         this.validateInput(restrictionValue);
         const combinedUnresolved = combineLatest(this.getResolvedMosaicId(mosaicId), this.getResolvedAddress(targetAddress));
         return combinedUnresolved.pipe(
@@ -120,13 +120,13 @@ export class MosaicRestrictionTransactionService {
                     return this.getAddressRestrictionEntry(resolvedMosaicId, restrictionKey, resolvedAddress).pipe(
                         map((optionalValue) => {
                             const currentValue = optionalValue ?
-                                UInt64.fromNumericString(optionalValue) : this.defaultMosaicAddressRestrictionValue;
+                                BigInt(optionalValue) : this.defaultMosaicAddressRestrictionValue;
                             return MosaicAddressRestrictionTransaction.create(
                                 deadline,
                                 mosaicId,
                                 restrictionKey,
                                 targetAddress,
-                                UInt64.fromNumericString(restrictionValue),
+                                BigInt(restrictionValue),
                                 networkType,
                                 currentValue,
                                 maxFee,
@@ -145,7 +145,7 @@ export class MosaicRestrictionTransactionService {
      * @param targetAddress - The target address
      * @return {Observable<string | undefined>}
      */
-    private getAddressRestrictionEntry(mosaicId: MosaicId, restrictionKey: UInt64, targetAddress: Address): Observable<string | undefined> {
+    private getAddressRestrictionEntry(mosaicId: MosaicId, restrictionKey: bigint, targetAddress: Address): Observable<string | undefined> {
         return this.restrictionMosaicRepository.getMosaicAddressRestriction(mosaicId, targetAddress).pipe(
             map((mosaicRestriction) => {
                 return mosaicRestriction.restrictions.get(restrictionKey.toString());
@@ -165,7 +165,7 @@ export class MosaicRestrictionTransactionService {
      * @param restrictionKey - Mosaic global restriction key
      * @return {Observable<MosaicGlobalRestrictionItem | undefined>}
      */
-    private getGlobalRestrictionEntry(mosaicId: MosaicId, restrictionKey: UInt64): Observable<MosaicGlobalRestrictionItem | undefined> {
+    private getGlobalRestrictionEntry(mosaicId: MosaicId, restrictionKey: bigint): Observable<MosaicGlobalRestrictionItem | undefined> {
         return this.restrictionMosaicRepository.getMosaicGlobalRestriction(mosaicId).pipe(
             map((mosaicRestriction: MosaicGlobalRestriction) => {
                 return mosaicRestriction.restrictions.get(restrictionKey.toString());
@@ -184,7 +184,8 @@ export class MosaicRestrictionTransactionService {
      * @param value - Restriction value
      */
     private validateInput(value: string) {
-        if (!UInt64.isLongNumericString(value)) {
+        const input_long = Long.fromString(value, true);
+        if (! /^\d+$/.test(value) || (value.substr(0, 1) === '0' && value.length > 1) || !Long.isLong(input_long)) {
             throw new Error(`RestrictionValue: ${value} is not a valid numeric string.`);
         }
     }

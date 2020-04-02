@@ -15,7 +15,6 @@
  */
 
 import {PublicAccount} from '../account/PublicAccount';
-import {UInt64} from '../UInt64';
 import {Alias} from './Alias';
 import {NamespaceId} from './NamespaceId';
 
@@ -71,11 +70,11 @@ export class NamespaceInfo {
                 /**
                  * The height at which the ownership begins.
                  */
-                public readonly startHeight: UInt64,
+                public readonly startHeight: bigint,
                 /**
                  * The height at which the ownership ends.
                  */
-                public readonly endHeight: UInt64,
+                public readonly endHeight: bigint,
                 /**
                  * The alias linked to a namespace.
                  */

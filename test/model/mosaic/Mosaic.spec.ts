@@ -17,14 +17,13 @@
 import {deepEqual} from 'assert';
 import {Mosaic} from '../../../src/model/mosaic/Mosaic';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
-import {UInt64} from '../../../src/model/UInt64';
 
 describe('Mosaic', () => {
 
     it('should createComplete an Mosaic object', () => {
         const mosaicDTO = {
-            amount: new UInt64([ 1, 0 ]),
-            mosaicId: new MosaicId([3646934825, 3576016193]),
+            amount: BigInt(1),
+            mosaicId: new MosaicId('D525AD41D95FCF29'),
         };
 
         const mosaic = new Mosaic(

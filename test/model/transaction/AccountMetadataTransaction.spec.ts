@@ -20,7 +20,6 @@ import { Account } from '../../../src/model/account/Account';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { AccountMetadataTransaction } from '../../../src/model/transaction/AccountMetadataTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
-import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
 describe('AccountMetadataTransaction', () => {
@@ -34,36 +33,34 @@ describe('AccountMetadataTransaction', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
+            BigInt(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
         );
 
-        expect(accountMetadataTransaction.maxFee.higher).to.be.equal(0);
-        expect(accountMetadataTransaction.maxFee.lower).to.be.equal(0);
+        expect(accountMetadataTransaction.maxFee).to.be.equal(BigInt(0));
     });
 
     it('should filled maxFee override transaction maxFee', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
+            BigInt(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0]),
+            BigInt(1),
         );
 
-        expect(accountMetadataTransaction.maxFee.higher).to.be.equal(0);
-        expect(accountMetadataTransaction.maxFee.lower).to.be.equal(1);
+        expect(accountMetadataTransaction.maxFee).to.be.equal(BigInt(1));
     });
 
     it('should create and sign an AccountMetadataTransaction object', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
+            BigInt(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
@@ -82,7 +79,7 @@ describe('AccountMetadataTransaction', () => {
             AccountMetadataTransaction.create(
                 Deadline.create(),
                 account.publicKey,
-                UInt64.fromUint(1000),
+                BigInt(1000),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(1025)),
                 NetworkType.MIJIN_TEST,
@@ -95,7 +92,7 @@ describe('AccountMetadataTransaction', () => {
             const accountMetadataTransaction = AccountMetadataTransaction.create(
                 Deadline.create(),
                 account.publicKey,
-                UInt64.fromUint(1000),
+                BigInt(1000),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
                 NetworkType.MIJIN_TEST,

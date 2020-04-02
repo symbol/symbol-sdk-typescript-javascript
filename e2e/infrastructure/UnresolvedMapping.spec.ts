@@ -39,7 +39,6 @@ import { MosaicMetadataTransaction } from '../../src/model/transaction/MosaicMet
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { Transaction } from '../../src/model/transaction/Transaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('TransactionHttp', () => {
@@ -95,7 +94,7 @@ describe('TransactionHttp', () => {
                 mosaicId,
                 MosaicFlags.create(true, true, true),
                 3,
-                UInt64.fromUint(1000),
+                BigInt(1000),
                 networkType, helper.maxFee,
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
@@ -111,7 +110,7 @@ describe('TransactionHttp', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
-                UInt64.fromUint(50),
+                BigInt(50),
                 networkType, helper.maxFee,
             );
             namespaceIdMosaic = new NamespaceId(namespaceName);
@@ -128,7 +127,7 @@ describe('TransactionHttp', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
-                UInt64.fromUint(50),
+                BigInt(50),
                 networkType, helper.maxFee,
             );
             namespaceIdAddress = new NamespaceId(namespaceName);
@@ -182,7 +181,7 @@ describe('TransactionHttp', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
                 Deadline.create(),
                 account.publicKey,
-                UInt64.fromUint(5),
+                BigInt(5),
                 namespaceIdMosaic,
                 10,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
@@ -210,10 +209,10 @@ describe('TransactionHttp', () => {
             const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
                 Deadline.create(),
                 namespaceIdMosaic,
-                UInt64.fromUint(60641),
-                UInt64.fromUint(0),
+                BigInt(60641),
+                BigInt(0),
                 MosaicRestrictionType.NONE,
-                UInt64.fromUint(0),
+                BigInt(0),
                 MosaicRestrictionType.GE,
                 networkType, undefined, helper.maxFee,
             );
@@ -232,9 +231,9 @@ describe('TransactionHttp', () => {
             const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
                 Deadline.create(),
                 namespaceIdMosaic,
-                UInt64.fromUint(60641),
+                BigInt(60641),
                 namespaceIdAddress,
-                UInt64.fromUint(2),
+                BigInt(2),
                 networkType, helper.maxFee,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),

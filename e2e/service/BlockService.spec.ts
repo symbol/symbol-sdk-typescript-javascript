@@ -23,7 +23,6 @@ import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLoca
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { UInt64 } from '../../src/model/UInt64';
 import { BlockService } from '../../src/service/BlockService';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
@@ -102,9 +101,9 @@ describe('BlockService', () => {
 
     describe('Validate receipt', () => {
         it('call block service', async () => {
-            const statements = await receiptRepository.getBlockReceipts(UInt64.fromUint(1)).toPromise();
+            const statements = await receiptRepository.getBlockReceipts(BigInt(1)).toPromise();
             const statement = statements.transactionStatements[0];
-            const validationResult = await blockService.validateStatementInBlock(statement.generateHash(), UInt64.fromUint(1)).toPromise();
+            const validationResult = await blockService.validateStatementInBlock(statement.generateHash(), BigInt(1)).toPromise();
             expect(validationResult).to.be.true;
         });
     });

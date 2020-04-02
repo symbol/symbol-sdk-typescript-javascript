@@ -15,7 +15,6 @@
  */
 
 import { PublicAccount } from '../account/PublicAccount';
-import { UInt64 } from '../UInt64';
 import { MosaicFlags } from './MosaicFlags';
 import { MosaicId } from './MosaicId';
 
@@ -42,11 +41,11 @@ export class MosaicInfo {
                 /**
                  * The mosaic supply.
                  */
-                public readonly supply: UInt64,
+                public readonly supply: bigint,
                 /**
                  * The block height were mosaic was created.
                  */
-                public readonly height: UInt64,
+                public readonly height: bigint,
                 /**
                  * The public key of the mosaic creator.
                  */
@@ -66,7 +65,7 @@ export class MosaicInfo {
                 /**
                  * Mosaic duration
                  */
-                public readonly duration: UInt64,
+                public readonly duration: bigint,
             ) {
     }
 

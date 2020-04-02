@@ -31,14 +31,14 @@ import { Deadline } from '../../src/model/transaction/Deadline';
 import { MosaicMetadataTransaction } from '../../src/model/transaction/MosaicMetadataTransaction';
 import { NamespaceMetadataTransaction } from '../../src/model/transaction/NamespaceMetadataTransaction';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
-import { UInt64 } from '../../src/model/UInt64';
 import { MetadataTransactionService } from '../../src/service/MetadataTransactionService';
 import { TestingAccount } from '../conf/conf.spec';
+import { BigIntUtilities } from '../../src/core/format/BigIntUtilities';
 
 describe('MetadataTransactionService', () => {
     let account: Account;
     let metadataTransactionService: MetadataTransactionService;
-    const key = UInt64.fromHex('85BBEA6CC462B244');
+    const key = BigInt('0x85BBEA6CC462B244');
     const value = 'TEST';
     const deltaValue = 'dalta';
     const targetIdHex = '941299B2B7E1291C';
@@ -48,13 +48,14 @@ describe('MetadataTransactionService', () => {
         const mockMetadataRepository: MetadataRepository = mock();
 
         when(mockMetadataRepository
-            .getAccountMetadataByKeyAndSender(deepEqual(account.address), key.toHex(), account.publicKey))
+            .getAccountMetadataByKeyAndSender(deepEqual(account.address), BigIntUtilities.BigIntToHex(key), account.publicKey))
             .thenReturn(observableOf(mockMetadata(MetadataType.Account)));
         when(mockMetadataRepository
-            .getMosaicMetadataByKeyAndSender(deepEqual(new MosaicId(targetIdHex)), key.toHex(), account.publicKey))
+            .getMosaicMetadataByKeyAndSender(deepEqual(new MosaicId(targetIdHex)), BigIntUtilities.BigIntToHex(key), account.publicKey))
                 .thenReturn(observableOf(mockMetadata(MetadataType.Mosaic)));
         when(mockMetadataRepository
-            .getNamespaceMetadataByKeyAndSender(deepEqual(NamespaceId.createFromEncoded(targetIdHex)), key.toHex(), account.publicKey))
+            .getNamespaceMetadataByKeyAndSender(deepEqual(NamespaceId.createFromEncoded(targetIdHex)),
+                BigIntUtilities.BigIntToHex(key), account.publicKey))
             .thenReturn(observableOf(mockMetadata(MetadataType.Namespace)));
         const metadataRepository = instance(mockMetadataRepository);
         metadataTransactionService = new MetadataTransactionService(metadataRepository);
@@ -70,7 +71,7 @@ describe('MetadataTransactionService', () => {
                                                              account.publicAccount)
             .subscribe((transaction: AccountMetadataTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA);
-                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
+                expect(transaction.scopedMetadataKey).to.be.equal(key);
                 expect(Convert.utf8ToHex(transaction.value))
                     .to.be.equal(Convert.xor(Convert.utf8ToUint8(value), Convert.utf8ToUint8(value + deltaValue)));
                 expect(transaction.valueSizeDelta).to.be.equal(deltaValue.length);
@@ -90,7 +91,7 @@ describe('MetadataTransactionService', () => {
                                                              new MosaicId(targetIdHex))
             .subscribe((transaction: MosaicMetadataTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
-                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
+                expect(transaction.scopedMetadataKey).to.be.equal(key);
                 expect(Convert.utf8ToHex(transaction.value))
                     .to.be.equal(Convert.xor(Convert.utf8ToUint8(value), Convert.utf8ToUint8(value + deltaValue)));
                 expect(transaction.targetMosaicId.toHex()).to.be.equal(targetIdHex);
@@ -111,7 +112,7 @@ describe('MetadataTransactionService', () => {
                                                              NamespaceId.createFromEncoded(targetIdHex))
             .subscribe((transaction: NamespaceMetadataTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
-                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
+                expect(transaction.scopedMetadataKey).to.be.equal(key);
                 expect(Convert.utf8ToHex(transaction.value))
                     .to.be.equal(Convert.xor(Convert.utf8ToUint8(value), Convert.utf8ToUint8(value + deltaValue)));
                 expect(transaction.targetNamespaceId.toHex()).to.be.equal(targetIdHex);

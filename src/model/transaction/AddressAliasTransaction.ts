@@ -24,20 +24,20 @@ import {
     NamespaceIdDto,
     SignatureDto,
     TimestampDto,
-} from 'catbuffer-typescript';
+} from 'catbuffer';
 import { Convert, RawAddress } from '../../core/format';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { AliasAction } from '../namespace/AliasAction';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
-import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * In case a mosaic has the flag 'supplyMutable' set to true, the creator of the mosaic can change the supply,
@@ -60,7 +60,7 @@ export class AddressAliasTransaction extends Transaction {
                          namespaceId: NamespaceId,
                          address: Address,
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): AddressAliasTransaction {
+                         maxFee: bigint = BigInt(0)): AddressAliasTransaction {
         return new AddressAliasTransaction(networkType,
             TransactionVersion.ADDRESS_ALIAS,
             deadline,
@@ -86,7 +86,7 @@ export class AddressAliasTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                maxFee: UInt64,
+                maxFee: bigint,
                 /**
                  * The alias action type.
                  */
@@ -118,14 +118,13 @@ export class AddressAliasTransaction extends Transaction {
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = AddressAliasTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AddressAliasTransactionBuilder).getDeadline().timestamp),
+            isEmbedded ? Deadline.create() : Deadline.createFromBigInt((builder as AddressAliasTransactionBuilder).getDeadline().timestamp),
             builder.getAliasAction().valueOf(),
             new NamespaceId(builder.getNamespaceId().namespaceId),
             Address.createFromEncoded(
                 Convert.uint8ToHex(builder.getAddress().address)),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AddressAliasTransactionBuilder).fee.amount),
-        );
+            isEmbedded ? BigInt(0) : (builder as AddressAliasTransactionBuilder).fee.amount);
         return isEmbedded ?
             transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -161,9 +160,9 @@ export class AddressAliasTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ADDRESS_ALIAS.valueOf(),
-            new AmountDto(this.maxFee.toDTO()),
-            new TimestampDto(this.deadline.toDTO()),
-            new NamespaceIdDto(this.namespaceId.id.toDTO()),
+            new AmountDto(this.maxFee),
+            new TimestampDto(this.deadline.toBigInt()),
+            new NamespaceIdDto(this.namespaceId.id),
             new AddressDto(RawAddress.stringToAddress(this.address.plain())),
             this.aliasAction.valueOf(),
         );
@@ -180,7 +179,7 @@ export class AddressAliasTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ADDRESS_ALIAS.valueOf(),
-            new NamespaceIdDto(this.namespaceId.id.toDTO()),
+            new NamespaceIdDto(this.namespaceId.id),
             new AddressDto(RawAddress.stringToAddress(this.address.plain())),
             this.aliasAction.valueOf(),
         );

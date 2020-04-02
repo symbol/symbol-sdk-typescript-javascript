@@ -32,6 +32,7 @@ import { Metadata } from '../../src/model/metadata/Metadata';
 import { MetadataType } from '../../src/model/metadata/MetadataType';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { BigIntUtilities } from '../../src/core/format/BigIntUtilities';
 
 describe('MetadataHttp', () => {
 
@@ -104,7 +105,7 @@ describe('MetadataHttp', () => {
             expect(metadataInfo.metadataEntry.targetId!.toHex()).to.be.equals(dto.metadataEntry.targetId);
         }
         expect(metadataInfo.metadataEntry.targetPublicKey).to.be.equals(dto.metadataEntry.targetPublicKey);
-        expect(metadataInfo.metadataEntry.scopedMetadataKey.toHex()).to.be.equals(dto.metadataEntry.scopedMetadataKey);
+        expect(BigIntUtilities.BigIntToHex(metadataInfo.metadataEntry.scopedMetadataKey)).to.be.equals(dto.metadataEntry.scopedMetadataKey);
         expect(metadataInfo.metadataEntry.compositeHash).to.be.equals(dto.metadataEntry.compositeHash);
     }
 

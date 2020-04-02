@@ -47,7 +47,6 @@ import { SecretLockTransaction } from '../../src/model/transaction/SecretLockTra
 import { SecretProofTransaction } from '../../src/model/transaction/SecretProofTransaction';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { UInt64 } from '../../src/model/UInt64';
 import { TestingAccount } from '../conf/conf.spec';
 
 describe('SerializeTransactionToJSON', () => {
@@ -89,7 +88,7 @@ describe('SerializeTransactionToJSON', () => {
     });
 
     it('should create AccountRestrictionMosaicTransaction', () => {
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
             AccountRestrictionFlags.AllowMosaic,
@@ -123,7 +122,7 @@ describe('SerializeTransactionToJSON', () => {
     });
 
     it('should create AddressAliasTransaction', () => {
-        const namespaceId = new NamespaceId([33347626, 3779697293]);
+        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
@@ -140,8 +139,8 @@ describe('SerializeTransactionToJSON', () => {
     });
 
     it('should create MosaicAliasTransaction', () => {
-        const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
             AliasAction.Link,
@@ -160,10 +159,10 @@ describe('SerializeTransactionToJSON', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
-            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            new MosaicId(BigInt(1)), // ID
             MosaicFlags.create(true, true, true),
             5,
-            UInt64.fromUint(1000),
+            BigInt(1000),
             NetworkType.MIJIN_TEST,
         );
 
@@ -180,10 +179,10 @@ describe('SerializeTransactionToJSON', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
-            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            new MosaicId(BigInt(1)), // ID
             MosaicFlags.create(true, false),
             3,
-            UInt64.fromUint(0),
+            BigInt(0),
             NetworkType.MIJIN_TEST,
         );
 
@@ -196,12 +195,12 @@ describe('SerializeTransactionToJSON', () => {
     });
 
     it('should create MosaicSupplyChangeTransaction', () => {
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
-            UInt64.fromUint(10),
+            BigInt(10),
             NetworkType.MIJIN_TEST,
         );
 
@@ -237,7 +236,7 @@ describe('SerializeTransactionToJSON', () => {
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
-            UInt64.fromUint(100),
+            BigInt(100),
             HashType.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
@@ -342,7 +341,7 @@ describe('SerializeTransactionToJSON', () => {
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockTransaction = LockFundsTransaction.create(Deadline.create(),
             NetworkCurrencyLocal.createRelative(10),
-            UInt64.fromUint(10),
+            BigInt(10),
             signedTransaction,
             NetworkType.MIJIN_TEST);
 
@@ -356,7 +355,7 @@ describe('SerializeTransactionToJSON', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
             Deadline.create(),
             'root-test-namespace',
-            UInt64.fromUint(1000),
+            BigInt(1000),
             NetworkType.MIJIN_TEST,
         );
 

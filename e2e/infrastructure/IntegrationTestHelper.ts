@@ -22,7 +22,6 @@ import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
 import { Transaction } from '../../src/model/transaction/Transaction';
-import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
 
 export class IntegrationTestHelper {
@@ -40,7 +39,7 @@ export class IntegrationTestHelper {
     public networkType: NetworkType;
     public generationHash: string;
     public listener: IListener;
-    public maxFee: UInt64;
+    public maxFee: bigint;
     public harvestingAccount: Account;
     public transactionService: TransactionService;
 
@@ -75,7 +74,7 @@ export class IntegrationTestHelper {
                         this.listener = this.repositoryFactory.createListener();
 
                         // What would be the best maxFee? In the future we will load the fee multiplier from rest.
-                        this.maxFee = UInt64.fromUint(1000000);
+                        this.maxFee = BigInt(1000000);
 
                         const bootstrapRoot = process.env.CATAPULT_SERVICE_BOOTSTRAP || path.resolve(__dirname, '../../../../catapult-service-bootstrap');
                         const bootstrapPath = `${bootstrapRoot}/build/generated-addresses/addresses.yaml`;

@@ -21,7 +21,6 @@ import { NetworkType } from '../../../src/model/network/NetworkType';
 import { AccountLinkTransaction } from '../../../src/model/transaction/AccountLinkTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { LinkAction } from '../../../src/model/transaction/LinkAction';
-import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
 describe('AccountLinkTransaction', () => {
@@ -39,8 +38,7 @@ describe('AccountLinkTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        expect(accountLinkTransaction.maxFee.higher).to.be.equal(0);
-        expect(accountLinkTransaction.maxFee.lower).to.be.equal(0);
+        expect(accountLinkTransaction.maxFee).to.be.equal(BigInt(0));
     });
 
     it('should filled maxFee override transaction maxFee', () => {
@@ -49,11 +47,10 @@ describe('AccountLinkTransaction', () => {
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0]),
+            BigInt(1),
         );
 
-        expect(accountLinkTransaction.maxFee.higher).to.be.equal(0);
-        expect(accountLinkTransaction.maxFee.lower).to.be.equal(1);
+        expect(accountLinkTransaction.maxFee).to.be.equal(BigInt(1));
     });
 
     it('should create an AccountLinkTransaction object with link action', () => {
@@ -115,7 +112,7 @@ describe('AccountLinkTransaction', () => {
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
 ​
-        expect(accountLinkTransaction.maxFee.compact()).to.be.equal(322);
+        expect(accountLinkTransaction.maxFee).to.be.equal(BigInt(322));
 
         const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;

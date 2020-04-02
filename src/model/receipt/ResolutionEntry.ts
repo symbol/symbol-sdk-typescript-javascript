@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { GeneratorUtils } from 'catbuffer-typescript';
+import { GeneratorUtils } from 'catbuffer';
 import { RawAddress } from '../../core/format/RawAddress';
 import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';
-import { UInt64 } from '../UInt64';
 import { ReceiptSource } from './ReceiptSource';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * The receipt source object.
@@ -52,7 +52,7 @@ export class ResolutionEntry {
       if (this.resolved instanceof Address) {
         resolvedBytes = RawAddress.stringToAddress((this.resolved as Address).plain());
       } else {
-        resolvedBytes = GeneratorUtils.uint64ToBuffer(UInt64.fromHex((this.resolved as MosaicId).toHex()).toDTO());
+        resolvedBytes = BigIntUtilities.BigIntToUint8((this.resolved as MosaicId).id);
       }
       const sourceBytes = this.source.serialize();
       return GeneratorUtils.concatTypedArrays(resolvedBytes, sourceBytes);

@@ -20,12 +20,11 @@ import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
-import { UInt64 } from '../../../src/model/UInt64';
 
 const ValidateTransaction = {
     validateStandaloneTx: (transaction, transactionDTO) => {
         deepEqual(transaction.transactionInfo.height,
-            UInt64.fromNumericString(transactionDTO.meta.height));
+            BigInt(transactionDTO.meta.height));
         expect(transaction.transactionInfo.hash)
             .to.be.equal(transactionDTO.meta.hash);
         expect(transaction.transactionInfo.merkleComponentHash)
@@ -46,7 +45,7 @@ const ValidateTransaction = {
         expect(transaction.type)
             .to.be.equal(transactionDTO.transaction.type);
         deepEqual(transaction.maxFee,
-            UInt64.fromNumericString(transactionDTO.transaction.maxFee));
+            BigInt(transactionDTO.transaction.maxFee));
         deepEqual(transaction.deadline.toString(),
             transactionDTO.transaction.deadline);
 
@@ -64,7 +63,7 @@ const ValidateTransaction = {
     },
     validateAggregateTx: (aggregateTransaction, aggregateTransactionDTO) => {
         deepEqual(aggregateTransaction.transactionInfo.height,
-            UInt64.fromNumericString(aggregateTransactionDTO.meta.height));
+            BigInt(aggregateTransactionDTO.meta.height));
         expect(aggregateTransaction.transactionInfo.hash)
             .to.be.equal(aggregateTransactionDTO.meta.hash);
         expect(aggregateTransaction.transactionInfo.merkleComponentHash)
@@ -85,7 +84,7 @@ const ValidateTransaction = {
         expect(aggregateTransaction.type)
             .to.be.equal(aggregateTransactionDTO.transaction.type);
         deepEqual(aggregateTransaction.maxFee,
-            UInt64.fromNumericString(aggregateTransactionDTO.transaction.maxFee));
+            BigInt(aggregateTransactionDTO.transaction.maxFee));
         deepEqual(aggregateTransaction.deadline.toString(),
             aggregateTransactionDTO.transaction.deadline);
 
@@ -99,7 +98,7 @@ const ValidateTransaction = {
         expect(mosaicDefinitionTransaction.divisibility)
             .to.be.equal(mosaicDefinitionTransactionDTO.transaction.divisibility);
         deepEqual(mosaicDefinitionTransaction.duration,
-            UInt64.fromNumericString(mosaicDefinitionTransactionDTO.transaction.duration));
+            BigInt(mosaicDefinitionTransactionDTO.transaction.duration));
 
         expect(mosaicDefinitionTransaction.flags.supplyMutable)
             .to.be.equal(true);
@@ -112,7 +111,7 @@ const ValidateTransaction = {
         expect(mosaicSupplyChangeTransaction.action)
             .to.be.equal(mosaicSupplyChangeTransactionDTO.transaction.action);
         deepEqual(mosaicSupplyChangeTransaction.delta,
-            UInt64.fromNumericString(mosaicSupplyChangeTransactionDTO.transaction.delta));
+            BigInt(mosaicSupplyChangeTransactionDTO.transaction.delta));
     },
     validateMultisigModificationTx: (modifyMultisigAccountTransaction, modifyMultisigAccountTransactionDTO) => {
         expect(modifyMultisigAccountTransaction.minApprovalDelta)
@@ -132,7 +131,7 @@ const ValidateTransaction = {
 
         if (registerNamespaceTransaction.registrationType === 0) {
             deepEqual(registerNamespaceTransaction.duration,
-                UInt64.fromNumericString(registerNamespaceTransactionDTO.transaction.duration));
+                BigInt(registerNamespaceTransactionDTO.transaction.duration));
         } else {
             deepEqual(registerNamespaceTransaction.parentId,
                 NamespaceId.createFromEncoded(registerNamespaceTransactionDTO.transaction.parentId));

@@ -29,7 +29,7 @@ import { AccountMetadataTransaction } from '../model/transaction/AccountMetadata
 import { Deadline } from '../model/transaction/Deadline';
 import { MosaicMetadataTransaction } from '../model/transaction/MosaicMetadataTransaction';
 import { NamespaceMetadataTransaction } from '../model/transaction/NamespaceMetadataTransaction';
-import { UInt64 } from '../model/UInt64';
+import { BigIntUtilities } from '../core/format/BigIntUtilities';
 
 /**
  * MetadataTransaction service
@@ -60,11 +60,11 @@ export class MetadataTransactionService {
                                      networkType: NetworkType,
                                      metadataType: MetadataType,
                                      targetPublicAccount: PublicAccount,
-                                     key: UInt64,
+                                     key: bigint,
                                      value: string,
                                      senderPublicAccount: PublicAccount,
                                      targetId?: MosaicId | NamespaceId,
-                                     maxFee: UInt64 = new UInt64([0, 0])):
+                                     maxFee: bigint = BigInt(0)):
                                      Observable<AccountMetadataTransaction | MosaicMetadataTransaction | NamespaceMetadataTransaction> {
         switch (metadataType) {
             case MetadataType.Account:
@@ -124,12 +124,12 @@ export class MetadataTransactionService {
     private createAccountMetadataTransaction(deadline: Deadline,
                                              networkType: NetworkType,
                                              targetPublicKey: string,
-                                             key: UInt64,
+                                             key: bigint,
                                              value: string,
                                              senderPublicKey: string,
-                                             maxFee: UInt64): Observable<AccountMetadataTransaction> {
+                                             maxFee: bigint): Observable<AccountMetadataTransaction> {
         return this.metadataRepository.getAccountMetadataByKeyAndSender(Address.createFromPublicKey(targetPublicKey, networkType),
-                                                                  key.toHex(), senderPublicKey)
+                BigIntUtilities.BigIntToHex(key), senderPublicKey)
             .pipe(map((metadata: Metadata) => {
                 const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
                 const newValueBytes = Convert.utf8ToUint8(value);
@@ -177,12 +177,12 @@ export class MetadataTransactionService {
                                             networkType: NetworkType,
                                             targetPublicKey: string,
                                             mosaicId: MosaicId,
-                                            key: UInt64,
+                                            key: bigint,
                                             value: string,
                                             senderPublicKey: string,
-                                            maxFee: UInt64): Observable<MosaicMetadataTransaction> {
+                                            maxFee: bigint): Observable<MosaicMetadataTransaction> {
         return this.metadataRepository.getMosaicMetadataByKeyAndSender(mosaicId,
-                                                                  key.toHex(), senderPublicKey)
+                BigIntUtilities.BigIntToHex(key), senderPublicKey)
             .pipe(map((metadata: Metadata) => {
                 const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
                 const newValueBytes = Convert.utf8ToUint8(value);
@@ -232,12 +232,12 @@ export class MetadataTransactionService {
                                                networkType: NetworkType,
                                                targetPublicKey: string,
                                                namespaceId: NamespaceId,
-                                               key: UInt64,
+                                               key: bigint,
                                                value: string,
                                                senderPublicKey: string,
-                                               maxFee: UInt64): Observable<NamespaceMetadataTransaction> {
+                                               maxFee: bigint): Observable<NamespaceMetadataTransaction> {
         return this.metadataRepository.getNamespaceMetadataByKeyAndSender(namespaceId,
-                                                                  key.toHex(), senderPublicKey)
+                BigIntUtilities.BigIntToHex(key), senderPublicKey)
             .pipe(map((metadata: Metadata) => {
                 const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
                 const newValueBytes = Convert.utf8ToUint8(value);

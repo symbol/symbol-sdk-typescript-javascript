@@ -26,7 +26,6 @@ import { AccountRestrictionModification } from '../../../src/model/transaction/A
 import {AccountRestrictionTransaction} from '../../../src/model/transaction/AccountRestrictionTransaction';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
-import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
 
 describe('AccountRestrictionTransaction', () => {
@@ -46,14 +45,13 @@ describe('AccountRestrictionTransaction', () => {
     });
 
     it('should create mosaic restriction filter', () => {
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicRestrictionFilter = AccountRestrictionModification.createForMosaic(
             AccountRestrictionModificationAction.Add,
             mosaicId,
         );
         expect(mosaicRestrictionFilter.modificationAction).to.be.equal(AccountRestrictionModificationAction.Add);
-        expect(mosaicRestrictionFilter.value[0]).to.be.equal(mosaicId.id.lower);
-        expect(mosaicRestrictionFilter.value[1]).to.be.equal(mosaicId.id.higher);
+        expect(mosaicRestrictionFilter.value).to.be.equal(mosaicId.id);
     });
 
     it('should create operation restriction filter', () => {
@@ -82,7 +80,7 @@ describe('AccountRestrictionTransaction', () => {
         });
 
         it('should return 144 for AccountMosaicRestrictionTransaction transaction byte size with 1 modification', () => {
-            const mosaicId = new MosaicId([2262289484, 3405110546]);
+            const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
             const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
                 Deadline.create(),
                 AccountRestrictionFlags.AllowMosaic,
@@ -116,8 +114,7 @@ describe('AccountRestrictionTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        expect(addressRestrictionTransaction.maxFee.higher).to.be.equal(0);
-        expect(addressRestrictionTransaction.maxFee.lower).to.be.equal(0);
+        expect(addressRestrictionTransaction.maxFee).to.be.equal(BigInt(0));
     });
 
     it('should filled maxFee override transaction maxFee', () => {
@@ -128,11 +125,10 @@ describe('AccountRestrictionTransaction', () => {
             [address],
             [],
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0]),
+            BigInt(1),
         );
 
-        expect(addressRestrictionTransaction.maxFee.higher).to.be.equal(0);
-        expect(addressRestrictionTransaction.maxFee.lower).to.be.equal(1);
+        expect(addressRestrictionTransaction.maxFee).to.be.equal(BigInt(1));
     });
 
     it('should create allow incmoing address restriction transaction', () => {
@@ -180,7 +176,7 @@ describe('AccountRestrictionTransaction', () => {
 
     it('should create mosaic restriction transaction', () => {
 
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
             AccountRestrictionFlags.AllowMosaic,
@@ -200,7 +196,7 @@ describe('AccountRestrictionTransaction', () => {
 
     it('should throw exception when create account mosaic restriction transaction with wrong type', () => {
 
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const invalidType = [AccountRestrictionFlags.AllowIncomingTransactionType,
                              AccountRestrictionFlags.AllowIncomingAddress,
                              AccountRestrictionFlags.AllowOutgoingTransactionType,

@@ -24,7 +24,6 @@ import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { NamespaceInfo } from '../../src/model/namespace/NamespaceInfo';
 import { NamespaceName } from '../../src/model/namespace/NamespaceName';
 import { NetworkType } from '../../src/model/network/NetworkType';
-import { UInt64 } from '../../src/model/UInt64';
 import { NamespaceService } from '../../src/service/NamespaceService';
 
 describe('NamespaceService', () => {
@@ -38,11 +37,11 @@ describe('NamespaceService', () => {
         when(mockedNamespaceRepository.getNamespace(subnamespace.id))
             .thenReturn(observableOf(subnamespace));
         when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id])))
-            .thenReturn(observableOf([new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'symboltests')]));
+            .thenReturn(observableOf([new NamespaceName(new NamespaceId(BigInt('0xE43F43D2C5A8F299')), 'symboltests')]));
         when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id, subnamespace.id])))
             .thenReturn(observableOf([
-                new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'symboltests'),
-                new NamespaceName(new NamespaceId([1781696705, 4157485863]), 'level2'),
+                new NamespaceName(new NamespaceId(BigInt('0xE43F43D2C5A8F299')), 'symboltests'),
+                new NamespaceName(new NamespaceId(BigInt('0xF7CE33276A3288C1')), 'level2'),
             ]));
         const namespaceRepository = instance(mockedNamespaceRepository);
         const namespaceService = new NamespaceService(namespaceRepository);
@@ -60,13 +59,13 @@ describe('NamespaceService', () => {
         when(mockedNamespaceRepository.getNamespace(subnamespace.id))
             .thenReturn(observableOf(subnamespace));
         when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id])))
-            .thenReturn(observableOf([new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'symboltests')]));
+            .thenReturn(observableOf([new NamespaceName(new NamespaceId(BigInt('0xE43F43D2C5A8F299')), 'symboltests')]));
         when(mockedNamespaceRepository.getNamespacesName(deepEqual([subnamespace.id])))
-            .thenReturn(observableOf([new NamespaceName(new NamespaceId([1781696705, 4157485863]), 'level2')]));
+            .thenReturn(observableOf([new NamespaceName(new NamespaceId(BigInt('0xF7CE33276A3288C1')), 'level2')]));
         when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id, subnamespace.id])))
             .thenReturn(observableOf([
-                new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'symboltests'),
-                new NamespaceName(new NamespaceId([1781696705, 4157485863]), 'level2'),
+                new NamespaceName(new NamespaceId(BigInt('0xE43F43D2C5A8F299')), 'symboltests'),
+                new NamespaceName(new NamespaceId(BigInt('0xF7CE33276A3288C1')), 'level2'),
             ]));
         const namespaceRepository = instance(mockedNamespaceRepository);
         const namespaceService = new NamespaceService(namespaceRepository);
@@ -82,14 +81,11 @@ describe('NamespaceService', () => {
             '59DFBA84B2E9E7000135E80C',
             0,
             1,
-            [new NamespaceId([
-                3316183705,
-                3829351378,
-            ])],
-            new NamespaceId([0, 0]),
+            [new NamespaceId(BigInt('0xE43F43D2C5A8F299'))],
+            new NamespaceId(BigInt(0)),
             PublicAccount.createFromPublicKey('1026D70E1954775749C6811084D6450A3184D977383F0E4282CD47118AF37755', NetworkType.MIJIN_TEST),
-            new UInt64([795, 0]),
-            new UInt64([50795, 0]),
+            BigInt(795),
+            BigInt(50795),
             new EmptyAlias());
     }
 
@@ -99,11 +95,11 @@ describe('NamespaceService', () => {
             '5A1D85A1D53061000117D1EE',
             1,
             2,
-            [new NamespaceId([3316183705, 3829351378]), new NamespaceId([1781696705, 4157485863])],
-            new NamespaceId([3316183705, 3829351378]),
+            [new NamespaceId(BigInt('0xE43F43D2C5A8F299')), new NamespaceId(BigInt('0xF7CE33276A3288C1'))],
+            new NamespaceId(BigInt('0xE43F43D2C5A8F299')),
             PublicAccount.createFromPublicKey('1026D70E1954775749C6811084D6450A3184D977383F0E4282CD47118AF37755', NetworkType.MIJIN_TEST),
-            new UInt64([795, 0]),
-            new UInt64([50795, 0]),
+            BigInt(795),
+            BigInt(50795),
             new EmptyAlias());
     }
 });

@@ -29,7 +29,6 @@ import { Statement } from '../../../src/model/receipt/Statement';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicSupplyChangeTransaction} from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
-import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
 
 describe('MosaicSupplyChangeTransaction', () => {
@@ -42,55 +41,51 @@ describe('MosaicSupplyChangeTransaction', () => {
         account = TestingAccount;
         statement = new Statement([],
             [],
-            [new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromUint(2), unresolvedMosaicId,
+            [new ResolutionStatement(ResolutionType.Mosaic, BigInt(2), unresolvedMosaicId,
                 [new ResolutionEntry(resolvedMosaicId, new ReceiptSource(1, 0))])],
         );
     });
 
     it('should default maxFee field be set to 0', () => {
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
-            UInt64.fromUint(10),
+            BigInt(10),
             NetworkType.MIJIN_TEST,
         );
 
-        expect(mosaicSupplyChangeTransaction.maxFee.higher).to.be.equal(0);
-        expect(mosaicSupplyChangeTransaction.maxFee.lower).to.be.equal(0);
+        expect(mosaicSupplyChangeTransaction.maxFee).to.be.equal(BigInt(0));
     });
 
     it('should filled maxFee override transaction maxFee', () => {
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
-            UInt64.fromUint(10),
+            BigInt(10),
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0]),
+            BigInt(1),
         );
 
-        expect(mosaicSupplyChangeTransaction.maxFee.higher).to.be.equal(0);
-        expect(mosaicSupplyChangeTransaction.maxFee.lower).to.be.equal(1);
+        expect(mosaicSupplyChangeTransaction.maxFee).to.be.equal(BigInt(1));
     });
 
     it('should createComplete an MosaicSupplyChangeTransaction object and sign it', () => {
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
-            UInt64.fromUint(10),
+            BigInt(10),
             NetworkType.MIJIN_TEST,
         );
 
         expect(mosaicSupplyChangeTransaction.action).to.be.equal(MosaicSupplyChangeAction.Increase);
-        expect(mosaicSupplyChangeTransaction.delta.lower).to.be.equal(10);
-        expect(mosaicSupplyChangeTransaction.delta.higher).to.be.equal(0);
-        expect(mosaicSupplyChangeTransaction.mosaicId.id.lower).to.be.equal(2262289484);
-        expect(mosaicSupplyChangeTransaction.mosaicId.id.higher).to.be.equal(3405110546);
+        expect(mosaicSupplyChangeTransaction.delta).to.be.equal(BigInt(10));
+        expect(mosaicSupplyChangeTransaction.mosaicId.id).to.be.equal(BigInt('0xCAF5DD1286D7CC4C'));
 
         const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
 
@@ -103,12 +98,12 @@ describe('MosaicSupplyChangeTransaction', () => {
 
     describe('size', () => {
         it('should return 145 for MosaicSupplyChange transaction byte size', () => {
-            const mosaicId = new MosaicId([2262289484, 3405110546]);
+            const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
             const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
                 Deadline.create(),
                 mosaicId,
                 MosaicSupplyChangeAction.Increase,
-                UInt64.fromUint(10),
+                BigInt(10),
                 NetworkType.MIJIN_TEST,
             );
             expect(mosaicSupplyChangeTransaction.size).to.be.equal(145);
@@ -117,16 +112,16 @@ describe('MosaicSupplyChangeTransaction', () => {
     });
 
     it('Test set maxFee using multiplier', () => {
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
-            UInt64.fromUint(10),
+            BigInt(10),
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
 ​
-        expect(mosaicSupplyChangeTransaction.maxFee.compact()).to.be.equal(290);
+        expect(mosaicSupplyChangeTransaction.maxFee).to.be.equal(BigInt(290));
         const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
     });
@@ -136,13 +131,13 @@ describe('MosaicSupplyChangeTransaction', () => {
             NetworkType.MIJIN_TEST,
             1,
             Deadline.createFromDTO('1'),
-            UInt64.fromUint(0),
+            BigInt(0),
             unresolvedMosaicId,
             MosaicSupplyChangeAction.Increase,
-            UInt64.fromUint(10),
+            BigInt(10),
             '',
             account.publicAccount,
-            new TransactionInfo(UInt64.fromUint(2), 0, '')).resolveAliases(statement);
+            new TransactionInfo(BigInt(2), 0, '')).resolveAliases(statement);
 ​
         expect(mosaicSupplyChangeTransaction.mosaicId instanceof MosaicId).to.be.true;
         expect((mosaicSupplyChangeTransaction.mosaicId as MosaicId).equals(resolvedMosaicId)).to.be.true;

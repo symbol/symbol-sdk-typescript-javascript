@@ -28,7 +28,6 @@ import { Statement } from '../../../src/model/receipt/Statement';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { MosaicMetadataTransaction } from '../../../src/model/transaction/MosaicMetadataTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
-import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
 describe('MosaicMetadataTransaction', () => {
@@ -41,7 +40,7 @@ describe('MosaicMetadataTransaction', () => {
         account = TestingAccount;
         statement = new Statement([],
             [],
-            [new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromUint(2), unresolvedMosaicId,
+            [new ResolutionStatement(ResolutionType.Mosaic, BigInt(2), unresolvedMosaicId,
                 [new ResolutionEntry(resolvedMosaicId, new ReceiptSource(1, 0))])],
         );
     });
@@ -50,39 +49,37 @@ describe('MosaicMetadataTransaction', () => {
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
-            new MosaicId([2262289484, 3405110546]),
+            BigInt(1000),
+            new MosaicId('CAF5DD1286D7CC4C'),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
         );
 
-        expect(mosaicMetadataTransaction.maxFee.higher).to.be.equal(0);
-        expect(mosaicMetadataTransaction.maxFee.lower).to.be.equal(0);
+        expect(mosaicMetadataTransaction.maxFee).to.be.equal(BigInt(0));
     });
 
     it('should filled maxFee override transaction maxFee', () => {
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
-            new MosaicId([2262289484, 3405110546]),
+            BigInt(1000),
+            new MosaicId('CAF5DD1286D7CC4C'),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0]),
+            BigInt(1),
         );
 
-        expect(mosaicMetadataTransaction.maxFee.higher).to.be.equal(0);
-        expect(mosaicMetadataTransaction.maxFee.lower).to.be.equal(1);
+        expect(mosaicMetadataTransaction.maxFee).to.be.equal(BigInt(1));
     });
 
     it('should create and sign an MosaicMetadataTransaction object', () => {
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
-            new MosaicId([2262289484, 3405110546]),
+            BigInt(1000),
+            new MosaicId('CAF5DD1286D7CC4C'),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
@@ -102,8 +99,8 @@ describe('MosaicMetadataTransaction', () => {
             MosaicMetadataTransaction.create(
                 Deadline.create(),
                 account.publicKey,
-                UInt64.fromUint(1000),
-                new MosaicId([2262289484, 3405110546]),
+                BigInt(1000),
+                new MosaicId('CAF5DD1286D7CC4C'),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(1025)),
                 NetworkType.MIJIN_TEST,
@@ -116,7 +113,7 @@ describe('MosaicMetadataTransaction', () => {
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
+            BigInt(1000),
             namespacId,
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
@@ -137,8 +134,8 @@ describe('MosaicMetadataTransaction', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
                 Deadline.create(),
                 account.publicKey,
-                UInt64.fromUint(1000),
-                new MosaicId([2262289484, 3405110546]),
+                BigInt(1000),
+                new MosaicId('CAF5DD1286D7CC4C'),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
                 NetworkType.MIJIN_TEST,
@@ -153,14 +150,14 @@ describe('MosaicMetadataTransaction', () => {
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
-            new MosaicId([2262289484, 3405110546]),
+            BigInt(1000),
+            new MosaicId('CAF5DD1286D7CC4C'),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
 ​
-        expect(mosaicMetadataTransaction.maxFee.compact()).to.be.equal(380);
+        expect(mosaicMetadataTransaction.maxFee).to.be.equal(BigInt(380));
 
         const signedTransaction = mosaicMetadataTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
@@ -171,15 +168,15 @@ describe('MosaicMetadataTransaction', () => {
             NetworkType.MIJIN_TEST,
             1,
             Deadline.createFromDTO('1'),
-            UInt64.fromUint(0),
+            BigInt(0),
             account.publicKey,
-            UInt64.fromUint(1000),
+            BigInt(1000),
             unresolvedMosaicId,
             10,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             '',
             account.publicAccount,
-            new TransactionInfo(UInt64.fromUint(2), 0, '')).resolveAliases(statement);
+            new TransactionInfo(BigInt(2), 0, '')).resolveAliases(statement);
 ​
         expect(mosaicMetadataTransaction.targetMosaicId instanceof MosaicId).to.be.true;
         expect((mosaicMetadataTransaction.targetMosaicId as MosaicId).equals(resolvedMosaicId)).to.be.true;

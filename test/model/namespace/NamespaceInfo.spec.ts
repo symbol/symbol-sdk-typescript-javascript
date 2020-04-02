@@ -21,7 +21,6 @@ import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
 import {NamespaceInfo} from '../../../src/model/namespace/NamespaceInfo';
 import {NetworkType} from '../../../src/model/network/NetworkType';
-import {UInt64} from '../../../src/model/UInt64';
 
 describe('NamespaceInfo', () => {
     let rootNamespaceDTO;
@@ -36,13 +35,13 @@ describe('NamespaceInfo', () => {
             },
             namespace: {
                 depth: 1,
-                endHeight: new UInt64([4294967295, 4294967295]),
-                level0: new NamespaceId([929036875, 2226345261]),
+                endHeight: BigInt('0xFFFFFFFFFFFFFFFF'),
+                level0: new NamespaceId(BigInt('0x84B3552D375FFA4B')),
                 owner: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
-                parentId: new NamespaceId([0, 0]),
-                startHeight: new UInt64([1, 0]),
+                parentId: new NamespaceId(BigInt(0)),
+                startHeight: BigInt(1),
                 type: 0,
-                alias: {type: 1, mosaicId: new MosaicId([481110499, 231112638])},
+                alias: {type: 1, mosaicId: new MosaicId('0DC67FBE1CAD29E3')},
             },
         };
         subNamespaceDTO = {
@@ -54,18 +53,9 @@ describe('NamespaceInfo', () => {
             namespace: {
                 type: 1,
                 depth: 2,
-                level0: new NamespaceId([
-                    3316183705,
-                    3829351378,
-                ]),
-                level1: new NamespaceId([
-                    1781696705,
-                    4157485863,
-                ]),
-                parentId: new NamespaceId([
-                    3316183705,
-                    3829351378,
-                ]),
+                level0: new NamespaceId(BigInt('E43F43D2C5A8F299')),
+                level1: new NamespaceId(BigInt('F7CE33276A3288C1')),
+                parentId: new NamespaceId(BigInt('E43F43D2C5A8F299')),
                 owner: '846B4439154579A5903B1459C9CF69CB8153F6D0110A7A0ED61DE29AE4810BF2',
                 startHeight: [
                     795,

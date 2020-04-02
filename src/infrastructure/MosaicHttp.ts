@@ -23,7 +23,6 @@ import { MosaicFlags } from '../model/mosaic/MosaicFlags';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicInfo } from '../model/mosaic/MosaicInfo';
 import { NetworkType } from '../model/network/NetworkType';
-import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { MosaicRepository } from './MosaicRepository';
 
@@ -119,13 +118,13 @@ export class MosaicHttp extends Http implements MosaicRepository {
     private toMosaicInfo(mosaicInfo: MosaicInfoDTO, networkType: NetworkType): MosaicInfo {
         return new MosaicInfo(
             new MosaicId(mosaicInfo.mosaic.id),
-                UInt64.fromNumericString(mosaicInfo.mosaic.supply),
-                UInt64.fromNumericString(mosaicInfo.mosaic.startHeight),
+                BigInt(mosaicInfo.mosaic.supply),
+                BigInt(mosaicInfo.mosaic.startHeight),
                 PublicAccount.createFromPublicKey(mosaicInfo.mosaic.ownerPublicKey, networkType),
                 mosaicInfo.mosaic.revision,
                 new MosaicFlags(mosaicInfo.mosaic.flags),
                 mosaicInfo.mosaic.divisibility,
-                UInt64.fromNumericString(mosaicInfo.mosaic.duration),
+                BigInt(mosaicInfo.mosaic.duration),
         );
     }
 
@@ -138,13 +137,13 @@ export class MosaicHttp extends Http implements MosaicRepository {
     private toMosaicInfoFromMosaicDto(mosaicInfo: MosaicDTO, networkType: NetworkType): MosaicInfo {
         return new MosaicInfo(
             new MosaicId(mosaicInfo.id),
-                UInt64.fromNumericString(mosaicInfo.supply),
-                UInt64.fromNumericString(mosaicInfo.startHeight),
+                BigInt(mosaicInfo.supply),
+                BigInt(mosaicInfo.startHeight),
                 PublicAccount.createFromPublicKey(mosaicInfo.ownerPublicKey, networkType),
                 mosaicInfo.revision,
                 new MosaicFlags(mosaicInfo.flags),
                 mosaicInfo.divisibility,
-                UInt64.fromNumericString(mosaicInfo.duration),
+                BigInt(mosaicInfo.duration),
         );
     }
 }

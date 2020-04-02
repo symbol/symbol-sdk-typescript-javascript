@@ -29,7 +29,6 @@ import { MosaicRestrictionType } from '../../../src/model/restriction/MosaicRest
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicGlobalRestrictionTransaction} from '../../../src/model/transaction/MosaicGlobalRestrictionTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
-import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
 
 describe('MosaicGlobalRestrictionTransaction', () => {
@@ -42,21 +41,21 @@ describe('MosaicGlobalRestrictionTransaction', () => {
         account = TestingAccount;
         statement = new Statement([],
             [],
-            [new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromUint(2), unresolvedMosaicId,
+            [new ResolutionStatement(ResolutionType.Mosaic, BigInt(2), unresolvedMosaicId,
                 [new ResolutionEntry(resolvedMosaicId, new ReceiptSource(1, 0))])],
         );
     });
 
     it('should createComplete an MosaicGlobalRestrictionTransaction object and sign', () => {
-        const mosaicId = new MosaicId(UInt64.fromUint(1).toDTO());
-        const referenceMosaicId = new MosaicId(UInt64.fromUint(2).toDTO());
+        const mosaicId = new MosaicId(BigInt(1));
+        const referenceMosaicId = new MosaicId(BigInt(2));
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
             Deadline.create(),
             mosaicId,
-            UInt64.fromUint(1),
-            UInt64.fromUint(9),
+            BigInt(1),
+            BigInt(9),
             MosaicRestrictionType.EQ,
-            UInt64.fromUint(8),
+            BigInt(8),
             MosaicRestrictionType.GE,
             NetworkType.MIJIN_TEST,
             referenceMosaicId,
@@ -64,9 +63,9 @@ describe('MosaicGlobalRestrictionTransaction', () => {
 
         expect(mosaicGlobalRestrictionTransaction.mosaicId.toHex()).to.be.equal(mosaicId.toHex());
         expect(mosaicGlobalRestrictionTransaction.referenceMosaicId.toHex()).to.be.equal(referenceMosaicId.toHex());
-        expect(mosaicGlobalRestrictionTransaction.restrictionKey.toHex()).to.be.equal(UInt64.fromUint(1).toHex());
-        expect(mosaicGlobalRestrictionTransaction.previousRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(9).toHex());
-        expect(mosaicGlobalRestrictionTransaction.newRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(8).toHex());
+        expect(mosaicGlobalRestrictionTransaction.restrictionKey).to.be.equal(BigInt(1));
+        expect(mosaicGlobalRestrictionTransaction.previousRestrictionValue).to.be.equal(BigInt(9));
+        expect(mosaicGlobalRestrictionTransaction.newRestrictionValue).to.be.equal(BigInt(8));
         expect(mosaicGlobalRestrictionTransaction.previousRestrictionType).to.be.equal(MosaicRestrictionType.EQ);
         expect(mosaicGlobalRestrictionTransaction.newRestrictionType).to.be.equal(MosaicRestrictionType.GE);
 
@@ -81,14 +80,14 @@ describe('MosaicGlobalRestrictionTransaction', () => {
 
     it('should createComplete an MosaicGlobalRestrictionTransaction use mosaic alias', () => {
         const namespacId = NamespaceId.createFromEncoded('9550CA3FC9B41FC5');
-        const referenceMosaicId = new MosaicId(UInt64.fromUint(2).toDTO());
+        const referenceMosaicId = new MosaicId(BigInt(2));
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
             Deadline.create(),
             namespacId,
-            UInt64.fromUint(1),
-            UInt64.fromUint(9),
+            BigInt(1),
+            BigInt(9),
             MosaicRestrictionType.EQ,
-            UInt64.fromUint(8),
+            BigInt(8),
             MosaicRestrictionType.GE,
             NetworkType.MIJIN_TEST,
             referenceMosaicId,
@@ -96,9 +95,9 @@ describe('MosaicGlobalRestrictionTransaction', () => {
 
         expect(mosaicGlobalRestrictionTransaction.mosaicId.toHex()).to.be.equal(namespacId.toHex());
         expect(mosaicGlobalRestrictionTransaction.referenceMosaicId.toHex()).to.be.equal(referenceMosaicId.toHex());
-        expect(mosaicGlobalRestrictionTransaction.restrictionKey.toHex()).to.be.equal(UInt64.fromUint(1).toHex());
-        expect(mosaicGlobalRestrictionTransaction.previousRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(9).toHex());
-        expect(mosaicGlobalRestrictionTransaction.newRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(8).toHex());
+        expect(mosaicGlobalRestrictionTransaction.restrictionKey).to.be.equal(BigInt(1));
+        expect(mosaicGlobalRestrictionTransaction.previousRestrictionValue).to.be.equal(BigInt(9));
+        expect(mosaicGlobalRestrictionTransaction.newRestrictionValue).to.be.equal(BigInt(8));
         expect(mosaicGlobalRestrictionTransaction.previousRestrictionType).to.be.equal(MosaicRestrictionType.EQ);
         expect(mosaicGlobalRestrictionTransaction.newRestrictionType).to.be.equal(MosaicRestrictionType.GE);
 
@@ -116,14 +115,14 @@ describe('MosaicGlobalRestrictionTransaction', () => {
 
     it('should createComplete an MosaicGlobalRestrictionTransaction use mosaic alias reference', () => {
         const namespacId = NamespaceId.createFromEncoded('9550CA3FC9B41FC5');
-        const mosaicId = new MosaicId(UInt64.fromUint(1).toDTO());
+        const mosaicId = new MosaicId(BigInt(1));
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
             Deadline.create(),
             mosaicId,
-            UInt64.fromUint(1),
-            UInt64.fromUint(9),
+            BigInt(1),
+            BigInt(9),
             MosaicRestrictionType.EQ,
-            UInt64.fromUint(8),
+            BigInt(8),
             MosaicRestrictionType.GE,
             NetworkType.MIJIN_TEST,
             namespacId,
@@ -131,9 +130,9 @@ describe('MosaicGlobalRestrictionTransaction', () => {
 
         expect(mosaicGlobalRestrictionTransaction.mosaicId.toHex()).to.be.equal(mosaicId.toHex());
         expect(mosaicGlobalRestrictionTransaction.referenceMosaicId.toHex()).to.be.equal(namespacId.toHex());
-        expect(mosaicGlobalRestrictionTransaction.restrictionKey.toHex()).to.be.equal(UInt64.fromUint(1).toHex());
-        expect(mosaicGlobalRestrictionTransaction.previousRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(9).toHex());
-        expect(mosaicGlobalRestrictionTransaction.newRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(8).toHex());
+        expect(mosaicGlobalRestrictionTransaction.restrictionKey).to.be.equal(BigInt(1));
+        expect(mosaicGlobalRestrictionTransaction.previousRestrictionValue).to.be.equal(BigInt(9));
+        expect(mosaicGlobalRestrictionTransaction.newRestrictionValue).to.be.equal(BigInt(8));
         expect(mosaicGlobalRestrictionTransaction.previousRestrictionType).to.be.equal(MosaicRestrictionType.EQ);
         expect(mosaicGlobalRestrictionTransaction.newRestrictionType).to.be.equal(MosaicRestrictionType.GE);
 
@@ -147,21 +146,21 @@ describe('MosaicGlobalRestrictionTransaction', () => {
     });
 
     it('Test set maxFee using multiplier', () => {
-        const mosaicId = new MosaicId(UInt64.fromUint(1).toDTO());
-        const referenceMosaicId = new MosaicId(UInt64.fromUint(2).toDTO());
+        const mosaicId = new MosaicId(BigInt(1));
+        const referenceMosaicId = new MosaicId(BigInt(2));
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
             Deadline.create(),
             mosaicId,
-            UInt64.fromUint(1),
-            UInt64.fromUint(9),
+            BigInt(1),
+            BigInt(9),
             MosaicRestrictionType.EQ,
-            UInt64.fromUint(8),
+            BigInt(8),
             MosaicRestrictionType.GE,
             NetworkType.MIJIN_TEST,
             referenceMosaicId,
         ).setMaxFee(2);
 ​
-        expect(mosaicGlobalRestrictionTransaction.maxFee.compact()).to.be.equal(340);
+        expect(mosaicGlobalRestrictionTransaction.maxFee).to.be.equal(BigInt(340));
 
         const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
@@ -172,17 +171,17 @@ describe('MosaicGlobalRestrictionTransaction', () => {
             NetworkType.MIJIN_TEST,
             1,
             Deadline.createFromDTO('1'),
-            UInt64.fromUint(0),
+            BigInt(0),
             unresolvedMosaicId,
             unresolvedMosaicId,
-            UInt64.fromUint(1),
-            UInt64.fromUint(9),
+            BigInt(1),
+            BigInt(9),
             MosaicRestrictionType.EQ,
-            UInt64.fromUint(8),
+            BigInt(8),
             MosaicRestrictionType.GE,
             '',
             account.publicAccount,
-            new TransactionInfo(UInt64.fromUint(2), 0, '')).resolveAliases(statement);
+            new TransactionInfo(BigInt(2), 0, '')).resolveAliases(statement);
 ​
         expect(mosaicGlobalRestrictionTransaction.mosaicId instanceof MosaicId).to.be.true;
         expect((mosaicGlobalRestrictionTransaction.mosaicId as MosaicId).equals(resolvedMosaicId)).to.be.true;

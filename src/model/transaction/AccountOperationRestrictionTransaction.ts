@@ -22,18 +22,18 @@ import {
     KeyDto,
     SignatureDto,
     TimestampDto,
-} from 'catbuffer-typescript';
+} from 'catbuffer';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../network/NetworkType';
 import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
-import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 export class AccountOperationRestrictionTransaction extends Transaction {
 
@@ -52,7 +52,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
                          restrictionAdditions: TransactionType[],
                          restrictionDeletions: TransactionType[],
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): AccountOperationRestrictionTransaction {
+                         maxFee: bigint = BigInt(0)): AccountOperationRestrictionTransaction {
         return new AccountOperationRestrictionTransaction(networkType,
             TransactionVersion.MODIFY_ACCOUNT_RESTRICTION_ENTITY_TYPE,
             deadline,
@@ -77,7 +77,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                maxFee: UInt64,
+                maxFee: bigint,
                 public readonly restrictionFlags: AccountRestrictionFlags,
                 public readonly restrictionAdditions: TransactionType[],
                 public readonly restrictionDeletions: TransactionType[],
@@ -101,14 +101,13 @@ export class AccountOperationRestrictionTransaction extends Transaction {
         const signer = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = AccountOperationRestrictionTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+            isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
                 (builder as AccountOperationRestrictionTransactionBuilder).getDeadline().timestamp),
             builder.getRestrictionFlags().valueOf(),
             builder.getRestrictionAdditions(),
             builder.getRestrictionDeletions(),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountOperationRestrictionTransactionBuilder).fee.amount),
-        );
+            isEmbedded ? BigInt(0) : (builder as AccountOperationRestrictionTransactionBuilder).fee.amount);
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType)) : transaction;
     }
 
@@ -148,8 +147,8 @@ export class AccountOperationRestrictionTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ACCOUNT_OPERATION_RESTRICTION.valueOf(),
-            new AmountDto(this.maxFee.toDTO()),
-            new TimestampDto(this.deadline.toDTO()),
+            new AmountDto(this.maxFee),
+            new TimestampDto(this.deadline.toBigInt()),
             this.restrictionFlags.valueOf(),
             this.restrictionAdditions,
             this.restrictionDeletions,

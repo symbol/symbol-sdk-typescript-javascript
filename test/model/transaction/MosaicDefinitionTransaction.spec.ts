@@ -23,7 +23,6 @@ import { MosaicNonce } from '../../../src/model/mosaic/MosaicNonce';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { MosaicDefinitionTransaction } from '../../../src/model/transaction/MosaicDefinitionTransaction';
-import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
 describe('MosaicDefinitionTransaction', () => {
@@ -37,46 +36,42 @@ describe('MosaicDefinitionTransaction', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
-            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            new MosaicId(BigInt(1)), // ID
             MosaicFlags.create(true, true, true),
             3,
-            UInt64.fromUint(1000),
+            BigInt(1000),
             NetworkType.MIJIN_TEST,
         );
-
-        expect(mosaicDefinitionTransaction.maxFee.higher).to.be.equal(0);
-        expect(mosaicDefinitionTransaction.maxFee.lower).to.be.equal(0);
+        expect(mosaicDefinitionTransaction.maxFee).to.be.equal(BigInt(0));
     });
 
     it('should filled maxFee override transaction maxFee', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
-            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            new MosaicId(BigInt(1)), // ID
             MosaicFlags.create(true, true, true),
             3,
-            UInt64.fromUint(1000),
+            BigInt(1000),
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0]),
+            BigInt(1),
         );
 
-        expect(mosaicDefinitionTransaction.maxFee.higher).to.be.equal(0);
-        expect(mosaicDefinitionTransaction.maxFee.lower).to.be.equal(1);
+        expect(mosaicDefinitionTransaction.maxFee).to.be.equal(BigInt(1));
     });
 
     it('should createComplete an MosaicDefinitionTransaction object and sign it with flags 7', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
-            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            new MosaicId(BigInt(1)), // ID
             MosaicFlags.create(true, true, true),
             3,
-            UInt64.fromUint(1000),
+            BigInt(1000),
             NetworkType.MIJIN_TEST,
         );
 
-        expect(mosaicDefinitionTransaction.duration!.lower).to.be.equal(1000);
-        expect(mosaicDefinitionTransaction.duration!.higher).to.be.equal(0);
+        expect(mosaicDefinitionTransaction.duration).to.be.equal(BigInt(1000));
         expect(mosaicDefinitionTransaction.divisibility).to.be.equal(3);
         expect(mosaicDefinitionTransaction.flags.supplyMutable).to.be.equal(true);
         expect(mosaicDefinitionTransaction.flags.transferable).to.be.equal(true);
@@ -96,15 +91,14 @@ describe('MosaicDefinitionTransaction', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
-            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            new MosaicId(BigInt(1)), // ID
             MosaicFlags.create(false, false, false),
             3,
-            UInt64.fromUint(1000),
+            BigInt(1000),
             NetworkType.MIJIN_TEST,
         );
 
-        expect(mosaicDefinitionTransaction.duration!.lower).to.be.equal(1000);
-        expect(mosaicDefinitionTransaction.duration!.higher).to.be.equal(0);
+        expect(mosaicDefinitionTransaction.duration).to.be.equal(BigInt(1000));
         expect(mosaicDefinitionTransaction.divisibility).to.be.equal(3);
         expect(mosaicDefinitionTransaction.flags.supplyMutable).to.be.equal(false);
         expect(mosaicDefinitionTransaction.flags.transferable).to.be.equal(false);
@@ -124,10 +118,10 @@ describe('MosaicDefinitionTransaction', () => {
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
-                new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+                new MosaicId(BigInt(1)), // ID
                 MosaicFlags.create(true, true, false),
                 3,
-                UInt64.fromUint(1000),
+                BigInt(1000),
                 NetworkType.MIJIN_TEST,
             );
             expect(mosaicDefinitionTransaction.size).to.be.equal(150);
@@ -140,10 +134,10 @@ describe('MosaicDefinitionTransaction', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
-            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            new MosaicId(BigInt(1)), // ID
             MosaicFlags.create(false, false, false),
             3,
-            UInt64.fromUint(0),
+            BigInt(0),
             NetworkType.MIJIN_TEST,
         );
 
@@ -164,14 +158,14 @@ describe('MosaicDefinitionTransaction', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
-            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            new MosaicId(BigInt(1)), // ID
             MosaicFlags.create(false, false, false),
             3,
-            UInt64.fromUint(0),
+            BigInt(0),
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
 ​
-        expect(mosaicDefinitionTransaction.maxFee.compact()).to.be.equal(300);
+        expect(mosaicDefinitionTransaction.maxFee).to.be.equal(BigInt(300));
 
         const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import {UInt64} from '../UInt64';
 import {TransactionInfo} from './TransactionInfo';
 
 /**
@@ -29,7 +28,7 @@ export class AggregateTransactionInfo extends TransactionInfo {
      * @param aggregateHash
      * @param aggregateId
      */
-    constructor(height: UInt64,
+    constructor(height: bigint,
                 index: number,
                 id: string,
                 /**

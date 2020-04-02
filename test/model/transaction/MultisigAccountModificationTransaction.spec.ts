@@ -21,7 +21,6 @@ import {PublicAccount} from '../../../src/model/account/PublicAccount';
 import {NetworkType} from '../../../src/model/network/NetworkType';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MultisigAccountModificationTransaction} from '../../../src/model/transaction/MultisigAccountModificationTransaction';
-import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
 
 describe('MultisigAccountModificationTransaction', () => {
@@ -45,8 +44,7 @@ describe('MultisigAccountModificationTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        expect(modifyMultisigAccountTransaction.maxFee.higher).to.be.equal(0);
-        expect(modifyMultisigAccountTransaction.maxFee.lower).to.be.equal(0);
+        expect(modifyMultisigAccountTransaction.maxFee).to.be.equal(BigInt(0));
     });
 
     it('should filled maxFee override transaction maxFee', () => {
@@ -61,11 +59,9 @@ describe('MultisigAccountModificationTransaction', () => {
             ],
             [],
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0]),
+            BigInt(1),
         );
-
-        expect(modifyMultisigAccountTransaction.maxFee.higher).to.be.equal(0);
-        expect(modifyMultisigAccountTransaction.maxFee.lower).to.be.equal(1);
+        expect(modifyMultisigAccountTransaction.maxFee).to.be.equal(BigInt(1));
     });
 
     it('should createComplete an MultisigAccountModificationTransaction object and sign it', () => {
@@ -133,7 +129,7 @@ describe('MultisigAccountModificationTransaction', () => {
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
 ​
-        expect(modifyMultisigAccountTransaction.maxFee.compact()).to.be.equal(336);
+        expect(modifyMultisigAccountTransaction.maxFee).to.be.equal(BigInt(336));
 
         const signedTransaction = modifyMultisigAccountTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;

@@ -24,7 +24,6 @@ import {AliasType} from '../../../src/model/namespace/AliasType';
 import {EmptyAlias} from '../../../src/model/namespace/EmptyAlias';
 import {MosaicAlias} from '../../../src/model/namespace/MosaicAlias';
 import {NetworkType} from '../../../src/model/network/NetworkType';
-import {UInt64} from '../../../src/model/UInt64';
 
 describe('Alias', () => {
     let emptyAliasDTO;
@@ -41,7 +40,7 @@ describe('Alias', () => {
         };
         mosaicAliasDTO = {
             type: AliasType.Mosaic,
-            mosaicId: new MosaicId([481110499, 231112638]),
+            mosaicId: new MosaicId('0DC67FBE1CAD29E3'),
         };
         addressAliasDTO = {
             type: AliasType.Address,
@@ -78,7 +77,7 @@ describe('Alias', () => {
     it('should compare mosaicIds in MosaicAlias.equals()', () => {
         const alias1 = new MosaicAlias(mosaicAliasDTO.mosaicId);
         const alias2 = new MosaicAlias(mosaicAliasDTO.mosaicId);
-        const alias3 = new MosaicAlias(new MosaicId([481110498, 231112637]));
+        const alias3 = new MosaicAlias(new MosaicId('0DC67FBD1CAD29E2'));
 
         expect(alias1.equals(alias2)).to.be.equal(true);
         expect(alias1.equals(alias3)).to.be.equal(false);

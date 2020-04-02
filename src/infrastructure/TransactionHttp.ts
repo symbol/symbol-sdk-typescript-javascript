@@ -26,7 +26,6 @@ import { TransactionAnnounceResponse } from '../model/transaction/TransactionAnn
 import { TransactionInfo } from '../model/transaction/TransactionInfo';
 import { TransactionStatus } from '../model/transaction/TransactionStatus';
 import { TransactionType } from '../model/transaction/TransactionType';
-import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
 import { TransactionRepository } from './TransactionRepository';
@@ -130,9 +129,9 @@ export class TransactionHttp extends Http implements TransactionRepository {
         return new TransactionStatus(
             dto.group,
             dto.hash,
-            Deadline.createFromDTO(UInt64.fromNumericString(dto.deadline).toDTO()),
+            Deadline.createFromDTO(BigInt(dto.deadline).toString()),
             dto.code,
-            dto.height ? UInt64.fromNumericString(dto.height) : undefined);
+            dto.height ? BigInt(dto.height) : undefined);
     }
 
     /**

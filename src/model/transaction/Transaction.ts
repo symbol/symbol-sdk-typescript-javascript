@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { EmbeddedTransactionBuilder, EmbeddedTransactionHelper } from 'catbuffer-typescript';
+import { EmbeddedTransactionBuilder, EmbeddedTransactionHelper } from 'catbuffer';
 import { KeyPair, SHA3Hasher } from '../../core/crypto';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
@@ -23,7 +23,6 @@ import { Account } from '../account/Account';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
-import { UInt64 } from '../UInt64';
 import { AggregateTransactionInfo } from './AggregateTransactionInfo';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -97,7 +96,7 @@ export abstract class Transaction {
                  * A sender of a transaction must specify during the transaction definition a max_fee,
                  * meaning the maximum fee the account allows to spend for this transaction.
                  */
-                public readonly maxFee: UInt64,
+                public readonly maxFee: bigint,
                 /**
                  * The transaction signature (missing if part of an aggregate transaction).
                  */
@@ -202,7 +201,7 @@ export abstract class Transaction {
      * @returns {TransferTransaction}
      */
     public setMaxFee(feeMultiplier: number): Transaction {
-        return DtoMapping.assign(this, {maxFee: UInt64.fromUint(this.size * feeMultiplier)});
+        return DtoMapping.assign(this, {maxFee: BigInt(this.size * feeMultiplier)});
     }
 
     /**
@@ -296,7 +295,7 @@ export abstract class Transaction {
      * @returns {boolean}
      */
     public isUnconfirmed(): boolean {
-        return this.transactionInfo != null && this.transactionInfo.height.compact() === 0
+        return this.transactionInfo != null && this.transactionInfo.height === BigInt(0)
             && this.transactionInfo.hash !== undefined
             && this.transactionInfo.merkleComponentHash !== undefined
             && this.transactionInfo.hash.toUpperCase() === this.transactionInfo.merkleComponentHash.toUpperCase();
@@ -307,7 +306,7 @@ export abstract class Transaction {
      * @returns {boolean}
      */
     public isConfirmed(): boolean {
-        return this.transactionInfo != null && this.transactionInfo.height.compact() > 0;
+        return this.transactionInfo != null && this.transactionInfo.height > BigInt(0);
     }
 
     /**
@@ -315,7 +314,7 @@ export abstract class Transaction {
      * @returns {boolean}
      */
     public hasMissingSignatures(): boolean {
-        return this.transactionInfo != null && this.transactionInfo.height.compact() === 0
+        return this.transactionInfo != null && this.transactionInfo.height === BigInt(0)
             && (this.transactionInfo.hash !== undefined
             && this.transactionInfo.merkleComponentHash !== undefined
             && this.transactionInfo.hash.toUpperCase() !== this.transactionInfo.merkleComponentHash.toUpperCase());

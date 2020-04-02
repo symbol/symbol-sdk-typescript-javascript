@@ -26,7 +26,7 @@ import {
     UnresolvedAddressDto,
     UnresolvedMosaicBuilder,
     UnresolvedMosaicIdDto,
-} from 'catbuffer-typescript';
+} from 'catbuffer';
 import { Convert, Convert as convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
@@ -36,7 +36,6 @@ import { Mosaic } from '../mosaic/Mosaic';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
-import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { HashType, HashTypeLengthValidator } from './HashType';
 import { InnerTransaction } from './InnerTransaction';
@@ -44,6 +43,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 export class SecretLockTransaction extends Transaction {
 
@@ -63,12 +63,12 @@ export class SecretLockTransaction extends Transaction {
      */
     public static create(deadline: Deadline,
                          mosaic: Mosaic,
-                         duration: UInt64,
+                         duration: bigint,
                          hashType: HashType,
                          secret: string,
                          recipientAddress: Address | NamespaceId,
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): SecretLockTransaction {
+                         maxFee: bigint = BigInt(0)): SecretLockTransaction {
         return new SecretLockTransaction(
             networkType,
             TransactionVersion.SECRET_LOCK,
@@ -99,7 +99,7 @@ export class SecretLockTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                maxFee: UInt64,
+                maxFee: bigint,
                 /**
                  * The locked mosaic.
                  */
@@ -107,7 +107,7 @@ export class SecretLockTransaction extends Transaction {
                 /**
                  * The duration for the funds to be released or returned.
                  */
-                public readonly duration: UInt64,
+                public readonly duration: bigint,
                 /**
                  * The hash algorithm, secret is generated with.
                  */
@@ -142,19 +142,18 @@ export class SecretLockTransaction extends Transaction {
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = SecretLockTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+            isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
                 (builder as SecretLockTransactionBuilder).getDeadline().timestamp),
             new Mosaic(
-                UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getMosaic().mosaicId.unresolvedMosaicId).toHex()),
-                new UInt64(builder.getMosaic().amount.amount),
+                UnresolvedMapping.toUnresolvedMosaic(BigIntUtilities.BigIntToHex(builder.getMosaic().mosaicId.unresolvedMosaicId)),
+                builder.getMosaic().amount.amount,
             ),
-            new UInt64(builder.getDuration().blockDuration),
+            builder.getDuration().blockDuration,
             builder.getHashAlgorithm().valueOf(),
             Convert.uint8ToHex(builder.getSecret().hash256),
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as SecretLockTransactionBuilder).fee.amount),
-        );
+            isEmbedded ? BigInt(0) : (builder as SecretLockTransactionBuilder).fee.amount);
         return isEmbedded ?
             transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -204,12 +203,12 @@ export class SecretLockTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.SECRET_LOCK.valueOf(),
-            new AmountDto(this.maxFee.toDTO()),
-            new TimestampDto(this.deadline.toDTO()),
+            new AmountDto(this.maxFee),
+            new TimestampDto(this.deadline.toBigInt()),
             new Hash256Dto(this.getSecretByte()),
-            new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id.toDTO()),
-                                                   new AmountDto(this.mosaic.amount.toDTO())),
-            new BlockDurationDto(this.duration.toDTO()),
+            new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id),
+                new AmountDto(this.mosaic.amount)),
+            new BlockDurationDto(this.duration),
             this.hashType.valueOf(),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
         );
@@ -227,9 +226,9 @@ export class SecretLockTransaction extends Transaction {
             this.networkType.valueOf(),
             TransactionType.SECRET_LOCK.valueOf(),
             new Hash256Dto(this.getSecretByte()),
-            new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id.toDTO()),
-                                                   new AmountDto(this.mosaic.amount.toDTO())),
-            new BlockDurationDto(this.duration.toDTO()),
+            new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id),
+                new AmountDto(this.mosaic.amount)),
+            new BlockDurationDto(this.duration),
             this.hashType.valueOf(),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
         );

@@ -22,17 +22,17 @@ import {
     MultisigAccountModificationTransactionBuilder,
     SignatureDto,
     TimestampDto,
-} from 'catbuffer-typescript';
+} from 'catbuffer';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../network/NetworkType';
-import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * Modify multisig account transactions are part of the NEM's multisig account system.
@@ -59,7 +59,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
                          publicKeyAdditions: PublicAccount[],
                          publicKeyDeletions: PublicAccount[],
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): MultisigAccountModificationTransaction {
+                         maxFee: bigint = BigInt(0)): MultisigAccountModificationTransaction {
         return new MultisigAccountModificationTransaction(networkType,
             TransactionVersion.MULTISIG_ACCOUNT_MODIFICATION,
             deadline,
@@ -86,7 +86,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                maxFee: UInt64,
+                maxFee: bigint,
                 /**
                  * The number of signatures needed to approve a transaction.
                  * If we are modifying and existing multi-signature account this indicates the relative change of the minimum cosignatories.
@@ -124,7 +124,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = MultisigAccountModificationTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+            isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
                 (builder as MultisigAccountModificationTransactionBuilder).getDeadline().timestamp),
             builder.getMinApprovalDelta(),
             builder.getMinRemovalDelta(),
@@ -135,8 +135,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
                 return PublicAccount.createFromPublicKey(Convert.uint8ToHex(deletion.getKey()), networkType);
             }),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MultisigAccountModificationTransactionBuilder).fee.amount),
-        );
+            isEmbedded ? BigInt(0) : (builder as MultisigAccountModificationTransactionBuilder).fee.amount);
         return isEmbedded ?
             transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -177,8 +176,8 @@ export class MultisigAccountModificationTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.MULTISIG_ACCOUNT_MODIFICATION.valueOf(),
-            new AmountDto(this.maxFee.toDTO()),
-            new TimestampDto(this.deadline.toDTO()),
+            new AmountDto(this.maxFee),
+            new TimestampDto(this.deadline.toBigInt()),
             this.minRemovalDelta,
             this.minApprovalDelta,
             this.publicKeyAdditions.map((addition) => {

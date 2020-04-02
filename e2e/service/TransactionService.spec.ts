@@ -39,7 +39,6 @@ import { MosaicSupplyChangeTransaction } from '../../src/model/transaction/Mosai
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
@@ -95,7 +94,7 @@ describe('TransactionService', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
-                UInt64.fromUint(20),
+                BigInt(20),
                 networkType,
                 helper.maxFee,
             );
@@ -113,7 +112,7 @@ describe('TransactionService', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
-                UInt64.fromUint(50),
+                BigInt(50),
                 networkType, helper.maxFee,
             );
             mosaicAlias = new NamespaceId(namespaceName);
@@ -151,7 +150,7 @@ describe('TransactionService', () => {
                 mosaicId,
                 MosaicFlags.create(true, true, false),
                 3,
-                UInt64.fromUint(50),
+                BigInt(50),
                 networkType, helper.maxFee,
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
@@ -168,7 +167,7 @@ describe('TransactionService', () => {
                 Deadline.create(),
                 mosaicId,
                 MosaicSupplyChangeAction.Increase,
-                UInt64.fromUint(200000),
+                BigInt(200000),
                 networkType, helper.maxFee,
             );
             const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
@@ -200,7 +199,7 @@ describe('TransactionService', () => {
                 addressAlias,
                 [
                     NetworkCurrencyLocal.createAbsolute(1),
-                    new Mosaic(mosaicAlias, UInt64.fromUint(1)),
+                    new Mosaic(mosaicAlias, BigInt(1)),
                 ],
                 PlainMessage.create('test-message'),
                 networkType, helper.maxFee,
@@ -241,7 +240,7 @@ describe('TransactionService', () => {
                 Deadline.create(),
                 account3.address,
                 [
-                    new Mosaic(mosaicAlias, UInt64.fromUint(200)),
+                    new Mosaic(mosaicAlias, BigInt(200)),
                 ],
                 PlainMessage.create('test-message'),
                 networkType, helper.maxFee,
@@ -261,7 +260,7 @@ describe('TransactionService', () => {
                 Deadline.create(),
                 account2.address,
                 [
-                    new Mosaic(mosaicAlias, UInt64.fromUint(1)),
+                    new Mosaic(mosaicAlias, BigInt(1)),
                 ],
                 PlainMessage.create('test-message'),
                 networkType, helper.maxFee,
@@ -273,7 +272,7 @@ describe('TransactionService', () => {
                 Deadline.create(),
                 cosignAccount4.address,
                 [
-                    new Mosaic(mosaicAlias, UInt64.fromUint(1)),
+                    new Mosaic(mosaicAlias, BigInt(1)),
                 ],
                 PlainMessage.create('test-message'),
                 networkType, helper.maxFee,
@@ -354,7 +353,7 @@ describe('TransactionService', () => {
             addressAlias,
             [
                 NetworkCurrencyLocal.createAbsolute(1),
-                new Mosaic(mosaicAlias, UInt64.fromUint(1)),
+                new Mosaic(mosaicAlias, BigInt(1)),
             ],
             PlainMessage.create('test-message'),
             networkType, helper.maxFee,
@@ -377,7 +376,7 @@ describe('TransactionService', () => {
             newMosaicId,
             MosaicFlags.create(true, true, false),
             3,
-            UInt64.fromUint(0),
+            BigInt(0),
             networkType, helper.maxFee,
         );
 
@@ -394,7 +393,7 @@ describe('TransactionService', () => {
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(5),
+            BigInt(5),
             mosaicAlias,
             10,
             Convert.uint8ToUtf8(new Uint8Array(10)),

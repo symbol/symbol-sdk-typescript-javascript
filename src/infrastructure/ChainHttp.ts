@@ -17,7 +17,6 @@
 import { Observable } from 'rxjs';
 import { ChainRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { BlockchainScore } from '../model/blockchain/BlockchainScore';
-import { UInt64 } from '../model/UInt64';
 import { ChainRepository } from './ChainRepository';
 import { Http } from './Http';
 
@@ -45,10 +44,10 @@ export class ChainHttp extends Http implements ChainRepository {
 
     /**
      * Gets current blockchain height
-     * @returns Observable<UInt64>
+     * @returns Observable<BigInt>
      */
-    public getBlockchainHeight(): Observable<UInt64> {
-        return this.call(this.chainRoutesApi.getChainHeight(), (body) => UInt64.fromNumericString(body.height));
+    public getBlockchainHeight(): Observable<BigInt> {
+        return this.call(this.chainRoutesApi.getChainHeight(), (body) => BigInt(body.height));
     }
 
     /**
@@ -57,8 +56,8 @@ export class ChainHttp extends Http implements ChainRepository {
      */
     public getChainScore(): Observable<BlockchainScore> {
         return this.call(this.chainRoutesApi.getChainScore(), (body) => new BlockchainScore(
-            UInt64.fromNumericString(body.scoreLow),
-            UInt64.fromNumericString(body.scoreHigh),
+            BigInt(body.scoreLow),
+            BigInt(body.scoreHigh),
             ),
         );
     }

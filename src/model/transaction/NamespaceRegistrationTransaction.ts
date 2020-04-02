@@ -24,20 +24,20 @@ import {
     NamespaceRegistrationTransactionBuilder,
     SignatureDto,
     TimestampDto,
-} from 'catbuffer-typescript';
+} from 'catbuffer';
 import { Convert, Convert as convert } from '../../core/format';
 import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
 import { PublicAccount } from '../account/PublicAccount';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NamespaceRegistrationType } from '../namespace/NamespaceRegistrationType';
 import { NetworkType } from '../network/NetworkType';
-import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * Accounts can rent a namespace for an amount of blocks and after a this renew the contract.
@@ -56,9 +56,9 @@ export class NamespaceRegistrationTransaction extends Transaction {
      */
     public static createRootNamespace(deadline: Deadline,
                                       namespaceName: string,
-                                      duration: UInt64,
+                                      duration: bigint,
                                       networkType: NetworkType,
-                                      maxFee: UInt64 = new UInt64([0, 0])): NamespaceRegistrationTransaction {
+                                      maxFee: bigint = BigInt(0)): NamespaceRegistrationTransaction {
         return new NamespaceRegistrationTransaction(networkType,
             TransactionVersion.NAMESPACE_REGISTRATION,
             deadline,
@@ -83,7 +83,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                                      namespaceName: string,
                                      parentNamespace: string | NamespaceId,
                                      networkType: NetworkType,
-                                     maxFee: UInt64 = new UInt64([0, 0])): NamespaceRegistrationTransaction {
+                                     maxFee: bigint = BigInt(0)): NamespaceRegistrationTransaction {
         let parentId: NamespaceId;
         if (typeof parentNamespace === 'string') {
             parentId = new NamespaceId(NamespaceMosaicIdGenerator.subnamespaceParentId(parentNamespace, namespaceName));
@@ -98,7 +98,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
             namespaceName,
             typeof parentNamespace === 'string' ?
                 new NamespaceId(NamespaceMosaicIdGenerator.subnamespaceNamespaceId(parentNamespace, namespaceName)) :
-                new NamespaceId(NamespaceMosaicIdGenerator.namespaceId(namespaceName)),
+                new NamespaceId(BigIntUtilities.UInt64ToBigInt(NamespaceMosaicIdGenerator.namespaceId(namespaceName))),
             undefined,
             parentId,
         );
@@ -121,7 +121,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                maxFee: UInt64,
+                maxFee: bigint,
                 /**
                  * The namespace type could be namespace or sub namespace
                  */
@@ -138,7 +138,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                 /**
                  * The number of blocks a namespace is active
                  */
-                public readonly duration?: UInt64,
+                public readonly duration?: bigint,
                 /**
                  * The id of the parent sub namespace
                  */
@@ -164,20 +164,19 @@ export class NamespaceRegistrationTransaction extends Transaction {
         const networkType = builder.getNetwork().valueOf();
         const transaction = registrationType === NamespaceRegistrationType.RootNamespace ?
             NamespaceRegistrationTransaction.createRootNamespace(
-                isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+                isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
                     (builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp),
             Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
-            new UInt64(builder.getDuration()!.blockDuration),
+            builder.getDuration()!.blockDuration,
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
-        ) : NamespaceRegistrationTransaction.createSubNamespace(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+            isEmbedded ? BigInt(0) : (builder as NamespaceRegistrationTransactionBuilder).fee.amount) :
+                NamespaceRegistrationTransaction.createSubNamespace(
+            isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
                 (builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp),
             Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
             new NamespaceId(builder.getParentId()!.namespaceId),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
-        );
+            isEmbedded ? BigInt(0) : (builder as NamespaceRegistrationTransactionBuilder).fee.amount);
         return isEmbedded ?
             transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -218,11 +217,11 @@ export class NamespaceRegistrationTransaction extends Transaction {
                 this.versionToDTO(),
                 this.networkType.valueOf(),
                 TransactionType.NAMESPACE_REGISTRATION.valueOf(),
-                new AmountDto(this.maxFee.toDTO()),
-                new TimestampDto(this.deadline.toDTO()),
-                new NamespaceIdDto(this.namespaceId.id.toDTO()),
+                new AmountDto(this.maxFee),
+                new TimestampDto(this.deadline.toBigInt()),
+                new NamespaceIdDto(this.namespaceId.id),
                 Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
-                new BlockDurationDto(this.duration!.toDTO()),
+                new BlockDurationDto(this.duration ? this.duration : BigInt(0)),
                 undefined,
             );
         } else {
@@ -232,12 +231,12 @@ export class NamespaceRegistrationTransaction extends Transaction {
                 this.versionToDTO(),
                 this.networkType.valueOf(),
                 TransactionType.NAMESPACE_REGISTRATION.valueOf(),
-                new AmountDto(this.maxFee.toDTO()),
-                new TimestampDto(this.deadline.toDTO()),
-                new NamespaceIdDto(this.namespaceId.id.toDTO()),
+                new AmountDto(this.maxFee),
+                new TimestampDto(this.deadline.toBigInt()),
+                new NamespaceIdDto(this.namespaceId.id),
                 Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
                 undefined,
-                new NamespaceIdDto(this.parentId!.id.toDTO()),
+                new NamespaceIdDto(this.parentId!.id),
             );
         }
         return transactionBuilder.serialize();
@@ -254,9 +253,9 @@ export class NamespaceRegistrationTransaction extends Transaction {
                 this.versionToDTO(),
                 this.networkType.valueOf(),
                 TransactionType.NAMESPACE_REGISTRATION.valueOf(),
-                new NamespaceIdDto(this.namespaceId.id.toDTO()),
+                new NamespaceIdDto(this.namespaceId.id),
                 Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
-                new BlockDurationDto(this.duration!.toDTO()),
+                new BlockDurationDto(this.duration ? this.duration : BigInt(0)),
                 undefined,
             );
         }
@@ -265,10 +264,10 @@ export class NamespaceRegistrationTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.NAMESPACE_REGISTRATION.valueOf(),
-            new NamespaceIdDto(this.namespaceId.id.toDTO()),
+            new NamespaceIdDto(this.namespaceId.id),
             Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
             undefined,
-            new NamespaceIdDto(this.parentId!.id.toDTO()),
+            new NamespaceIdDto(this.parentId!.id),
         );
     }
 

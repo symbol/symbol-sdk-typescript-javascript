@@ -40,7 +40,6 @@ import { NodeInfo } from '../model/node/NodeInfo';
 import { Http } from './Http';
 import { NetworkRepository } from './NetworkRepository';
 import { NodeHttp } from './NodeHttp';
-import { UInt64 } from '../model/UInt64';
 
 /**
  * Network http repository.
@@ -105,9 +104,8 @@ export class NetworkHttp extends Http implements NetworkRepository {
      */
     public getRentalFees(): Observable<RentalFees> {
         return this.call(this.networkRoutesApi.getRentalFees(), (body) =>
-            new RentalFees(UInt64.fromNumericString(body.effectiveRootNamespaceRentalFeePerBlock),
-                UInt64.fromNumericString(body.effectiveChildNamespaceRentalFee),
-                UInt64.fromNumericString(body.effectiveMosaicRentalFee)));
+            new RentalFees(BigInt(body.effectiveRootNamespaceRentalFeePerBlock),
+                BigInt(body.effectiveChildNamespaceRentalFee), BigInt(body.effectiveMosaicRentalFee)));
     }
 
     /**

@@ -31,7 +31,6 @@ import {AggregateTransaction} from '../../../src/model/transaction/AggregateTran
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {LockFundsTransaction} from '../../../src/model/transaction/LockFundsTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
-import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
 
 describe('LockFundsTransaction', () => {
@@ -44,7 +43,7 @@ describe('LockFundsTransaction', () => {
         account = TestingAccount;
         statement = new Statement([],
             [],
-            [new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromUint(2), unresolvedMosaicId,
+            [new ResolutionStatement(ResolutionType.Mosaic, BigInt(2), unresolvedMosaicId,
                 [new ResolutionEntry(resolvedMosaicId, new ReceiptSource(1, 0))])],
         );
     });
@@ -59,13 +58,12 @@ describe('LockFundsTransaction', () => {
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
             NetworkCurrencyLocal.createRelative(10),
-            UInt64.fromUint(10),
+            BigInt(10),
             signedTransaction,
             NetworkType.MIJIN_TEST,
         );
 
-        expect(lockFundsTransaction.maxFee.higher).to.be.equal(0);
-        expect(lockFundsTransaction.maxFee.lower).to.be.equal(0);
+        expect(lockFundsTransaction.maxFee).to.be.equal(BigInt(0));
         expect(Convert.hexToUint8(lockFundsTransaction.serialize()).length).to.be.equal(lockFundsTransaction.size);
     });
 
@@ -79,14 +77,13 @@ describe('LockFundsTransaction', () => {
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
             NetworkCurrencyLocal.createRelative(10),
-            UInt64.fromUint(10),
+            BigInt(10),
             signedTransaction,
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0]),
+            BigInt(1),
         );
 
-        expect(lockFundsTransaction.maxFee.higher).to.be.equal(0);
-        expect(lockFundsTransaction.maxFee.lower).to.be.equal(1);
+        expect(lockFundsTransaction.maxFee).to.be.equal(BigInt(1));
     });
 
     it('creation with an aggregate bonded tx', () => {
@@ -99,11 +96,11 @@ describe('LockFundsTransaction', () => {
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const transaction = LockFundsTransaction.create(Deadline.create(),
             NetworkCurrencyLocal.createRelative(10),
-            UInt64.fromUint(10),
+            BigInt(10),
             signedTransaction,
             NetworkType.MIJIN_TEST);
         deepEqual(transaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
-        expect(transaction.mosaic.amount.compact()).to.be.equal(10000000);
+        expect(transaction.mosaic.amount).to.be.equal(BigInt(10000000));
         expect(transaction.hash).to.be.equal(signedTransaction.hash);
     });
 
@@ -118,7 +115,7 @@ describe('LockFundsTransaction', () => {
         expect(() => {
             LockFundsTransaction.create(Deadline.create(),
                 NetworkCurrencyLocal.createRelative(10),
-                UInt64.fromUint(10),
+                BigInt(10),
                 signedTransaction,
                 NetworkType.MIJIN_TEST);
         }).to.throw(Error);
@@ -134,7 +131,7 @@ describe('LockFundsTransaction', () => {
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
             NetworkCurrencyLocal.createRelative(10),
-            UInt64.fromUint(10),
+            BigInt(10),
             signedTransaction,
             NetworkType.MIJIN_TEST,
         );
@@ -157,7 +154,7 @@ describe('LockFundsTransaction', () => {
             const signedTransaction = account.sign(aggregateTransaction, generationHash);
             const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
                 NetworkCurrencyLocal.createRelative(10),
-                UInt64.fromUint(10),
+                BigInt(10),
                 signedTransaction,
                 NetworkType.MIJIN_TEST,
             );
@@ -175,12 +172,12 @@ describe('LockFundsTransaction', () => {
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
             NetworkCurrencyLocal.createRelative(10),
-            UInt64.fromUint(10),
+            BigInt(10),
             signedTransaction,
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
 ​
-        expect(lockFundsTransaction.maxFee.compact()).to.be.equal(368);
+        expect(lockFundsTransaction.maxFee).to.be.equal(BigInt(368));
 
         const signedTransactionTest = lockFundsTransaction.signWith(account, generationHash);
         expect(signedTransactionTest.hash).not.to.be.undefined;
@@ -198,13 +195,13 @@ describe('LockFundsTransaction', () => {
             NetworkType.MIJIN_TEST,
             1,
             Deadline.createFromDTO('1'),
-            UInt64.fromUint(0),
-            new Mosaic(unresolvedMosaicId, UInt64.fromUint(1)),
-            UInt64.fromUint(10),
+            BigInt(0),
+            new Mosaic(unresolvedMosaicId, BigInt(1)),
+            BigInt(10),
             signedTransaction,
             '',
             account.publicAccount,
-            new TransactionInfo(UInt64.fromUint(2), 0, '')).resolveAliases(statement);
+            new TransactionInfo(BigInt(2), 0, '')).resolveAliases(statement);
 ​
         expect(transaction.mosaic.id instanceof MosaicId).to.be.true;
         expect((transaction.mosaic.id as MosaicId).equals(resolvedMosaicId)).to.be.true;

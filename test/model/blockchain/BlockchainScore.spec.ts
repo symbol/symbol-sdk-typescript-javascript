@@ -16,14 +16,13 @@
 
 import {deepEqual} from 'assert';
 import {BlockchainScore} from '../../../src/model/blockchain/BlockchainScore';
-import {UInt64} from '../../../src/model/UInt64';
 
 describe('BlockchainScore', () => {
 
     it('should createComplete an BlockchainScore object', () => {
         const blockchainScoreDTO = {
-            scoreHigh: new UInt64([0, 0]),
-            scoreLow: new UInt64([0, 0]),
+            scoreHigh: BigInt(0),
+            scoreLow: BigInt(0),
         };
 
         const blockchainScore = new BlockchainScore(

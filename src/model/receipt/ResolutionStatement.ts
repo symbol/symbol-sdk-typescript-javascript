@@ -21,7 +21,7 @@ import { AddressDto,
          MosaicResolutionStatementBuilder,
          ReceiptSourceBuilder,
          UnresolvedAddressDto,
-         UnresolvedMosaicIdDto } from 'catbuffer-typescript';
+         UnresolvedMosaicIdDto } from 'catbuffer';
 import { sha3_256 } from 'js-sha3';
 import { RawAddress } from '../../core/format/RawAddress';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
@@ -29,11 +29,11 @@ import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
-import { UInt64 } from '../UInt64';
 import { ReceiptType } from './ReceiptType';
 import { ReceiptVersion } from './ReceiptVersion';
 import { ResolutionEntry } from './ResolutionEntry';
 import { ResolutionType } from './ResolutionType';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * When a transaction includes an alias, a so called resolution statement reflects the resolved value for that block:
@@ -57,7 +57,7 @@ export class ResolutionStatement {
                 /**
                  * The block height.
                  */
-                public readonly height: UInt64,
+                public readonly height: bigint,
                 /**
                  * An unresolved address or unresolved mosaicId.
                  */
@@ -85,10 +85,10 @@ export class ResolutionStatement {
             )),
         ) : new MosaicResolutionStatementBuilder(ReceiptVersion.RESOLUTION_STATEMENT,
                 type.valueOf(),
-                new UnresolvedMosaicIdDto(UInt64.fromHex((this.unresolved as MosaicId | NamespaceId).toHex()).toDTO()),
+                new UnresolvedMosaicIdDto((this.unresolved as MosaicId | NamespaceId).id),
                 this.resolutionEntries.map((entry) => new MosaicResolutionEntryBuilder(
                     new ReceiptSourceBuilder(entry.source.primaryId, entry.source.secondaryId),
-                    new MosaicIdDto((entry.resolved as MosaicId).toDTO()),
+                    new MosaicIdDto((entry.resolved as MosaicId).id),
                 )),
         );
         const hasher = sha3_256.create();

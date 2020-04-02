@@ -21,7 +21,6 @@ import {MosaicFlags} from '../../../src/model/mosaic/MosaicFlags';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {MosaicInfo} from '../../../src/model/mosaic/MosaicInfo';
 import {NetworkType} from '../../../src/model/network/NetworkType';
-import {UInt64} from '../../../src/model/UInt64';
 
 describe('MosaicInfo', () => {
     const mosaicInfoDTO = {
@@ -29,9 +28,9 @@ describe('MosaicInfo', () => {
             id: '59FDA0733F17CF0001772CBC',
         },
         mosaic: {
-            mosaicId: new MosaicId([3646934825, 3576016193]),
-            supply: new UInt64([3403414400, 2095475]),
-            height: new UInt64([1, 0]),
+            mosaicId: new MosaicId('D525AD41D95FCF29'),
+            supply: BigInt(8999999998),
+            height: BigInt(1),
             owner: PublicAccount.createFromPublicKey(
                 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                 NetworkType.MIJIN_TEST),
@@ -55,7 +54,7 @@ describe('MosaicInfo', () => {
             mosaicInfoDTO.mosaic.revision,
             new MosaicFlags(mosaicInfoDTO.mosaic.flags),
             mosaicInfoDTO.mosaic.divisibility,
-            UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
+            BigInt(mosaicInfoDTO.mosaic.duration),
         );
 
         deepEqual(mosaicInfo.id, mosaicInfoDTO.mosaic.mosaicId);
@@ -79,7 +78,7 @@ describe('MosaicInfo', () => {
             mosaicInfoDTO.mosaic.revision,
             new MosaicFlags(mosaicInfoDTO.mosaic.flags),
             mosaicInfoDTO.mosaic.divisibility,
-            UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration,
+            BigInt(mosaicInfoDTO.mosaic.duration,
             ),
         );
 
@@ -90,7 +89,7 @@ describe('MosaicInfo', () => {
         deepEqual(mosaicInfo.revision, mosaicInfoDTO.mosaic.revision);
 
         expect(mosaicInfo.divisibility).to.be.equal(mosaicInfoDTO.mosaic.divisibility);
-        deepEqual(mosaicInfo.duration.toDTO(), [0, 0]);
+        deepEqual(mosaicInfo.duration, BigInt(0));
 
     });
 
@@ -104,7 +103,7 @@ describe('MosaicInfo', () => {
                 mosaicInfoDTO.mosaic.revision,
                 MosaicFlags.create(true, false, false),
                 mosaicInfoDTO.mosaic.divisibility,
-                UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
+                BigInt(mosaicInfoDTO.mosaic.duration),
                 )
             ;
             expect(mosaicInfo.isSupplyMutable()).to.be.equal(true);
@@ -119,7 +118,7 @@ describe('MosaicInfo', () => {
                 mosaicInfoDTO.mosaic.revision,
                 MosaicFlags.create(false, false, false),
                 mosaicInfoDTO.mosaic.divisibility,
-                UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
+                BigInt(mosaicInfoDTO.mosaic.duration),
             );
             expect(mosaicInfo.isSupplyMutable()).to.be.equal(false);
         });
@@ -135,7 +134,7 @@ describe('MosaicInfo', () => {
                 mosaicInfoDTO.mosaic.revision,
                 MosaicFlags.create(false, true, false),
                 mosaicInfoDTO.mosaic.divisibility,
-                UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
+                BigInt(mosaicInfoDTO.mosaic.duration),
             );
             expect(mosaicInfo.isTransferable()).to.be.equal(true);
         });
@@ -149,7 +148,7 @@ describe('MosaicInfo', () => {
                 mosaicInfoDTO.mosaic.revision,
                 MosaicFlags.create(false, false, false),
                 mosaicInfoDTO.mosaic.divisibility,
-                UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
+                BigInt(mosaicInfoDTO.mosaic.duration),
             );
             expect(mosaicInfo.isTransferable()).to.be.equal(false);
         });
@@ -165,7 +164,7 @@ describe('MosaicInfo', () => {
                 mosaicInfoDTO.mosaic.revision,
                 MosaicFlags.create(false, false, true),
                 mosaicInfoDTO.mosaic.divisibility,
-                UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
+                BigInt(mosaicInfoDTO.mosaic.duration),
             );
             expect(mosaicInfo.isRestrictable()).to.be.equal(true);
         });
@@ -179,7 +178,7 @@ describe('MosaicInfo', () => {
                 mosaicInfoDTO.mosaic.revision,
                 MosaicFlags.create(false, false, false),
                 mosaicInfoDTO.mosaic.divisibility,
-                UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
+                BigInt(mosaicInfoDTO.mosaic.duration),
             );
             expect(mosaicInfo.isRestrictable()).to.be.equal(false);
         });

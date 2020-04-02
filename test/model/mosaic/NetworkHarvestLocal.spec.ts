@@ -19,7 +19,7 @@ import {expect} from 'chai';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {NetworkHarvestLocal} from '../../../src/model/mosaic/NetworkHarvestLocal';
 import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
-import { UInt64 } from '../../../src/model/UInt64';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('NetworkHarvestLocal', () => {
 
@@ -27,18 +27,18 @@ describe('NetworkHarvestLocal', () => {
 
         const currency = NetworkHarvestLocal.createRelative(1000);
 
-        deepEqual(currency.id.id.toHex(), '941299B2B7E1291C');
-        expect(currency.amount.compact()).to.be.equal(1000 * 1000);
+        deepEqual(BigIntUtilities.BigIntToHex(currency.id.id), '941299B2B7E1291C');
+        expect(currency.amount).to.be.equal(BigInt(1000 * 1000));
     });
 
     it('should set amount in smallest unit when toDTO()', () => {
 
         const currency = NetworkHarvestLocal.createRelative(1000);
-        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000 * 1000);
+        expect(BigInt(currency.toDTO().amount)).to.be.equal(BigInt(1000 * 1000));
     });
 
     it('should have valid statics', () => {
-        deepEqual(NetworkHarvestLocal.NAMESPACE_ID.id, new NamespaceId([3084986652, 2484246962]).id);
+        deepEqual(NetworkHarvestLocal.NAMESPACE_ID.id, new NamespaceId(BigInt('0x941299B2B7E1291C')).id);
         expect(NetworkHarvestLocal.DIVISIBILITY).to.be.equal(3);
         expect(NetworkHarvestLocal.TRANSFERABLE).to.be.equal(true);
         expect(NetworkHarvestLocal.SUPPLY_MUTABLE).to.be.equal(true);

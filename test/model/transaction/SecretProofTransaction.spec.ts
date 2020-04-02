@@ -30,7 +30,6 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {HashType} from '../../../src/model/transaction/HashType';
 import {SecretProofTransaction} from '../../../src/model/transaction/SecretProofTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
-import {UInt64} from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
 describe('SecretProofTransaction', () => {
@@ -41,7 +40,7 @@ describe('SecretProofTransaction', () => {
     before(() => {
         account = TestingAccount;
         statement = new Statement([],
-            [new ResolutionStatement(ResolutionType.Address, UInt64.fromUint(2), unresolvedAddress,
+            [new ResolutionStatement(ResolutionType.Address, BigInt(2), unresolvedAddress,
                 [new ResolutionEntry(account.address, new ReceiptSource(1, 0))])],
             [],
         );
@@ -58,8 +57,7 @@ describe('SecretProofTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        expect(secretProofTransaction.maxFee.higher).to.be.equal(0);
-        expect(secretProofTransaction.maxFee.lower).to.be.equal(0);
+        expect(secretProofTransaction.maxFee).to.be.equal(BigInt(0));
     });
 
     it('should filled maxFee override transaction maxFee', () => {
@@ -71,11 +69,10 @@ describe('SecretProofTransaction', () => {
             account.address,
             proof,
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0]),
+            BigInt(1),
         );
 
-        expect(secretProofTransaction.maxFee.higher).to.be.equal(0);
-        expect(secretProofTransaction.maxFee.lower).to.be.equal(1);
+        expect(secretProofTransaction.maxFee).to.be.equal(BigInt(1));
     });
 
     it('should be created with HashType: Op_Sha3_256 secret', () => {
@@ -256,7 +253,7 @@ describe('SecretProofTransaction', () => {
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
 ​
-        expect(secretProofTransaction.maxFee.compact()).to.be.equal(440);
+        expect(secretProofTransaction.maxFee).to.be.equal(BigInt(440));
         const signedTransaction = secretProofTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
     });
@@ -267,14 +264,14 @@ describe('SecretProofTransaction', () => {
             NetworkType.MIJIN_TEST,
             1,
             Deadline.create(),
-            UInt64.fromUint(0),
+            BigInt(0),
             HashType.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             unresolvedAddress,
             proof,
             '',
             account.publicAccount,
-            new TransactionInfo(UInt64.fromUint(2), 0, '')).resolveAliases(statement);
+            new TransactionInfo(BigInt(2), 0, '')).resolveAliases(statement);
 ​
         expect(transferTransaction.recipientAddress instanceof Address).to.be.true;
         expect((transferTransaction.recipientAddress as Address).equals(account.address)).to.be.true;

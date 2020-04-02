@@ -23,7 +23,6 @@ import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
 import {NetworkType} from '../../../src/model/network/NetworkType';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicAliasTransaction} from '../../../src/model/transaction/MosaicAliasTransaction';
-import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
 
 describe('MosaicAliasTransaction', () => {
@@ -34,8 +33,8 @@ describe('MosaicAliasTransaction', () => {
     });
 
     it('should default maxFee field be set to 0', () => {
-        const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
             AliasAction.Link,
@@ -44,29 +43,27 @@ describe('MosaicAliasTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        expect(mosaicAliasTransaction.maxFee.higher).to.be.equal(0);
-        expect(mosaicAliasTransaction.maxFee.lower).to.be.equal(0);
+        expect(mosaicAliasTransaction.maxFee).to.be.equal(BigInt(0));
     });
 
     it('should filled maxFee override transaction maxFee', () => {
-        const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
             AliasAction.Link,
             namespaceId,
             mosaicId,
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0]),
+            BigInt(1),
         );
 
-        expect(mosaicAliasTransaction.maxFee.higher).to.be.equal(0);
-        expect(mosaicAliasTransaction.maxFee.lower).to.be.equal(1);
+        expect(mosaicAliasTransaction.maxFee).to.be.equal(BigInt(1));
     });
 
     it('should createComplete an MosaicAliasTransaction object and sign it', () => {
-        const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
             AliasAction.Link,
@@ -76,10 +73,8 @@ describe('MosaicAliasTransaction', () => {
         );
 
         expect(mosaicAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
-        expect(mosaicAliasTransaction.namespaceId.id.lower).to.be.equal(33347626);
-        expect(mosaicAliasTransaction.namespaceId.id.higher).to.be.equal(3779697293);
-        expect(mosaicAliasTransaction.mosaicId.id.lower).to.be.equal(2262289484);
-        expect(mosaicAliasTransaction.mosaicId.id.higher).to.be.equal(3405110546);
+        expect(mosaicAliasTransaction.namespaceId.id).to.be.equal(BigInt('0xE1499A8D01FCD82A'));
+        expect(mosaicAliasTransaction.mosaicId.id).to.be.equal(BigInt('0xCAF5DD1286D7CC4C'));
 
         const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
 
@@ -92,8 +87,8 @@ describe('MosaicAliasTransaction', () => {
 
     describe('size', () => {
         it('should return 145 for MosaicAliasTransaction transaction byte size', () => {
-            const namespaceId = new NamespaceId([33347626, 3779697293]);
-            const mosaicId = new MosaicId([2262289484, 3405110546]);
+            const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
+            const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
                 Deadline.create(),
                 AliasAction.Link,
@@ -107,8 +102,8 @@ describe('MosaicAliasTransaction', () => {
     });
 
     it('Test set maxFee using multiplier', () => {
-        const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
             AliasAction.Link,
@@ -117,7 +112,7 @@ describe('MosaicAliasTransaction', () => {
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
 ​
-        expect(mosaicAliasTransaction.maxFee.compact()).to.be.equal(290);
+        expect(mosaicAliasTransaction.maxFee).to.be.equal(BigInt(290));
 
         const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;

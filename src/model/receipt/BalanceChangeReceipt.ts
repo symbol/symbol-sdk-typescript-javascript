@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { AmountDto, BalanceChangeReceiptBuilder, KeyDto, MosaicBuilder, MosaicIdDto } from 'catbuffer-typescript';
+import { AmountDto, BalanceChangeReceiptBuilder, KeyDto, MosaicBuilder, MosaicIdDto } from 'catbuffer';
 import { Convert } from '../../core/format/Convert';
 import { PublicAccount } from '../account/PublicAccount';
 import { MosaicId } from '../mosaic/MosaicId';
-import { UInt64 } from '../UInt64';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
 import { ReceiptVersion } from './ReceiptVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * Balance Change: A mosaic credit or debit was triggered.
@@ -49,7 +49,7 @@ export class BalanceChangeReceipt extends Receipt {
                 /**
                  * The amount of mosaic.
                  */
-                public readonly amount: UInt64,
+                public readonly amount: bigint,
                 version: ReceiptVersion,
                 type: ReceiptType,
                 size?: number) {
@@ -63,7 +63,8 @@ export class BalanceChangeReceipt extends Receipt {
      */
     public serialize(): Uint8Array {
         return new BalanceChangeReceiptBuilder(ReceiptVersion.BALANCE_CHANGE, this.type.valueOf(),
-            new MosaicBuilder(new MosaicIdDto(this.mosaicId.toDTO()), new AmountDto(this.amount.toDTO())),
+            new MosaicBuilder(new MosaicIdDto(this.mosaicId.id),
+                new AmountDto(this.amount)),
             new KeyDto(Convert.hexToUint8(this.targetPublicAccount.publicKey)),
         ).serialize();
     }

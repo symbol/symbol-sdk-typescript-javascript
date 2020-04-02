@@ -22,7 +22,6 @@ import { BlockRepository } from '../infrastructure/BlockRepository';
 import { ReceiptRepository } from '../infrastructure/ReceiptRepository';
 import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
-import { UInt64 } from '../model/UInt64';
 import { IBlockService } from './interfaces/IBlockService';
 
 /**
@@ -48,7 +47,7 @@ export class BlockService implements IBlockService {
      * @param leaf transaction hash
      * @param height block height
      */
-    public validateTransactionInBlock(leaf: string, height: UInt64): Observable<boolean> {
+    public validateTransactionInBlock(leaf: string, height: bigint): Observable<boolean> {
         const rootHashObservable = this.blockRepository.getBlockByHeight(height);
         const merklePathItemObservable = this.blockRepository.getMerkleTransaction(height, leaf);
         return combineLatest([rootHashObservable, merklePathItemObservable]).pipe(
@@ -61,7 +60,7 @@ export class BlockService implements IBlockService {
      * @param leaf statement hash
      * @param height block height
      */
-    public validateStatementInBlock(leaf: string, height: UInt64): Observable<boolean> {
+    public validateStatementInBlock(leaf: string, height: bigint): Observable<boolean> {
         const rootHashObservable = this.blockRepository.getBlockByHeight(height);
         const merklePathItemObservable = this.receiptRepository.getMerkleReceipts(height, leaf);
         return combineLatest([rootHashObservable, merklePathItemObservable]).pipe(

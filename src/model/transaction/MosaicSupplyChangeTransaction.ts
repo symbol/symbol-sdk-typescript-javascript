@@ -23,7 +23,7 @@ import {
     SignatureDto,
     TimestampDto,
     UnresolvedMosaicIdDto,
-} from 'catbuffer-typescript';
+} from 'catbuffer';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
@@ -33,13 +33,13 @@ import { MosaicSupplyChangeAction } from '../mosaic/MosaicSupplyChangeAction';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
-import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * In case a mosaic has the flag 'supplyMutable' set to true, the creator of the mosaic can change the supply,
@@ -60,9 +60,9 @@ export class MosaicSupplyChangeTransaction extends Transaction {
     public static create(deadline: Deadline,
                          mosaicId: MosaicId | NamespaceId,
                          action: MosaicSupplyChangeAction,
-                         delta: UInt64,
+                         delta: bigint,
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): MosaicSupplyChangeTransaction {
+                         maxFee: bigint = BigInt(0)): MosaicSupplyChangeTransaction {
         return new MosaicSupplyChangeTransaction(networkType,
             TransactionVersion.MOSAIC_SUPPLY_CHANGE,
             deadline,
@@ -88,7 +88,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                maxFee: UInt64,
+                maxFee: bigint,
                 /**
                  * The unresolved mosaic id.
                  */
@@ -100,7 +100,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
                 /**
                  * The supply change in units for the mosaic.
                  */
-                public readonly delta: UInt64,
+                public readonly delta: bigint,
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
@@ -120,14 +120,13 @@ export class MosaicSupplyChangeTransaction extends Transaction {
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = MosaicSupplyChangeTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+            isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
                 (builder as MosaicSupplyChangeTransactionBuilder).getDeadline().timestamp),
-            UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getMosaicId().unresolvedMosaicId).toHex()),
+            UnresolvedMapping.toUnresolvedMosaic(BigIntUtilities.BigIntToHex(builder.getMosaicId().unresolvedMosaicId)),
             builder.getAction().valueOf(),
-            new UInt64(builder.getDelta().amount),
+            builder.getDelta().amount,
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicSupplyChangeTransactionBuilder).fee.amount),
-        );
+            isEmbedded ? BigInt(0) : (builder as MosaicSupplyChangeTransactionBuilder).fee.amount);
         return isEmbedded ?
             transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -163,10 +162,10 @@ export class MosaicSupplyChangeTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.MOSAIC_SUPPLY_CHANGE.valueOf(),
-            new AmountDto(this.maxFee.toDTO()),
-            new TimestampDto(this.deadline.toDTO()),
-            new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
-            new AmountDto(this.delta.toDTO()),
+            new AmountDto(this.maxFee),
+            new TimestampDto(this.deadline.toBigInt()),
+            new UnresolvedMosaicIdDto(this.mosaicId.id),
+            new AmountDto(this.delta),
             this.action.valueOf(),
         );
         return transactionBuilder.serialize();
@@ -182,8 +181,8 @@ export class MosaicSupplyChangeTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.MOSAIC_SUPPLY_CHANGE.valueOf(),
-            new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
-            new AmountDto(this.delta.toDTO()),
+            new UnresolvedMosaicIdDto(this.mosaicId.id),
+            new AmountDto(this.delta),
             this.action.valueOf(),
         );
     }

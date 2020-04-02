@@ -23,7 +23,6 @@ import {PublicAccount} from '../../../src/model/account/PublicAccount';
 import {Mosaic} from '../../../src/model/mosaic/Mosaic';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {NetworkType} from '../../../src/model/network/NetworkType';
-import {UInt64} from '../../../src/model/UInt64';
 
 describe('AccountInfo', () => {
 
@@ -31,9 +30,9 @@ describe('AccountInfo', () => {
         const accountInfoDTO = {
             account: {
                 address: Address.createFromEncoded('9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142'),
-                addressHeight: new UInt64([1, 0]),
-                importance: new UInt64([405653170, 0]),
-                importanceHeight: new UInt64([6462, 0]),
+                addressHeight: BigInt(1),
+                importance: BigInt(405653170),
+                importanceHeight: BigInt(6462),
                 accountType: 0,
                 linkedAccountKey: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142',
                 activityBucket: [{
@@ -43,11 +42,11 @@ describe('AccountInfo', () => {
                     rawScore: 20,
                 }],
                 mosaics: [{
-                    amount: new UInt64([1830592442, 94387]),
-                    id: new MosaicId([3646934825, 3576016193]),
+                    amount: BigInt('0x000170B36D1C9FBA'),
+                    id: new MosaicId('D525AD41D95FCF29'),
                 }],
                 publicKey: '846B4439154579A5903B1459C9CF69CB8153F6D0110A7A0ED61DE29AE4810BF2',
-                publicKeyHeight: new UInt64([13, 0]),
+                publicKeyHeight: BigInt(13),
             },
         };
 

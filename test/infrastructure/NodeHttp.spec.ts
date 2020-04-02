@@ -126,8 +126,8 @@ describe('NodeHttp', () => {
         const nodeTime = await nodeRepository.getNodeTime().toPromise();
         expect(nodeTime).to.be.not.null;
         if (nodeTime.receiveTimeStamp && nodeTime.sendTimeStamp) {
-            expect(nodeTime.receiveTimeStamp.toDTO()).to.deep.equals([1111, 0]);
-            expect(nodeTime.sendTimeStamp.toDTO()).to.deep.equals([2222, 0]);
+            expect(nodeTime.receiveTimeStamp).to.deep.equals(BigInt(1111));
+            expect(nodeTime.sendTimeStamp).to.deep.equals(BigInt(2222));
         }
     });
 

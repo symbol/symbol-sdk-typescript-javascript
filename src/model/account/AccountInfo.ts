@@ -15,7 +15,6 @@
  */
 
 import {Mosaic} from '../mosaic/Mosaic';
-import {UInt64} from '../UInt64';
 import { AccountType } from './AccountType';
 import { ActivityBucket } from './ActivityBucket';
 import {Address} from './Address';
@@ -37,7 +36,7 @@ export class AccountInfo {
         /**
          * Height when the address was published.
          */
-        public readonly addressHeight: UInt64,
+        public readonly addressHeight: bigint,
         /**
          * Public key of the account.
          */
@@ -45,7 +44,7 @@ export class AccountInfo {
         /**
          * Height when the public key was published.
          */
-        public readonly publicKeyHeight: UInt64,
+        public readonly publicKeyHeight: bigint,
         /**
          * Account type
          */
@@ -65,11 +64,11 @@ export class AccountInfo {
         /**
          * Importance of the account.
          */
-        public readonly importance: UInt64,
+        public readonly importance: bigint,
         /**
          * Importance height of the account.
          */
-        public readonly importanceHeight: UInt64) {
+        public readonly importanceHeight: bigint) {
 
     }
 

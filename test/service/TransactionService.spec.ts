@@ -35,7 +35,6 @@ import { HashLockTransaction } from '../../src/model/transaction/HashLockTransac
 import { TransactionAnnounceResponse } from '../../src/model/transaction/TransactionAnnounceResponse';
 import { TransactionStatusError } from '../../src/model/transaction/TransactionStatusError';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
 
 /**
@@ -66,8 +65,8 @@ describe('TransactionService', () => {
         []);
 
     const hashLockTransaction = HashLockTransaction.create(Deadline.create(),
-        new Mosaic(new NamespaceId('cat.currency'), UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
-        UInt64.fromUint(10000),
+        new Mosaic(new NamespaceId('cat.currency'), BigInt(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
+        BigInt(10000),
         account.sign(aggregateBondedTransaction, generationHash),
         NetworkType.MIJIN_TEST);
 

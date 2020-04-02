@@ -25,20 +25,20 @@ import {
     MosaicNonceDto,
     SignatureDto,
     TimestampDto,
-} from 'catbuffer-typescript';
+} from 'catbuffer';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
 import { MosaicFlags } from '../mosaic/MosaicFlags';
 import { MosaicId } from '../mosaic/MosaicId';
 import { MosaicNonce } from '../mosaic/MosaicNonce';
 import { NetworkType } from '../network/NetworkType';
-import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * Before a mosaic can be created or transferred, a corresponding definition of the mosaic has to be created and published to the network.
@@ -63,9 +63,9 @@ export class MosaicDefinitionTransaction extends Transaction {
                          mosaicId: MosaicId,
                          flags: MosaicFlags,
                          divisibility: number,
-                         duration: UInt64,
+                         duration: bigint,
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): MosaicDefinitionTransaction {
+                         maxFee: bigint = BigInt(0)): MosaicDefinitionTransaction {
         return new MosaicDefinitionTransaction(networkType,
             TransactionVersion.MOSAIC_DEFINITION,
             deadline,
@@ -95,7 +95,7 @@ export class MosaicDefinitionTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                maxFee: UInt64,
+                maxFee: bigint,
                 /**
                  * The mosaic nonce.
                  */
@@ -115,7 +115,7 @@ export class MosaicDefinitionTransaction extends Transaction {
                 /**
                  * Mosaic duration, 0 value for eternal mosaic
                  */
-                public readonly duration: UInt64 = UInt64.fromUint(0),
+                public readonly duration: bigint = BigInt(0),
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
@@ -135,7 +135,7 @@ export class MosaicDefinitionTransaction extends Transaction {
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = MosaicDefinitionTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+            isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
                 (builder as MosaicDefinitionTransactionBuilder).getDeadline().timestamp),
             MosaicNonce.createFromUint8Array(builder.getNonce().serialize()),
             new MosaicId(builder.getId().mosaicId),
@@ -144,10 +144,9 @@ export class MosaicDefinitionTransaction extends Transaction {
                 (builder.getFlags() & 2) === 2,
                 (builder.getFlags() & 4) === 4),
             builder.getDivisibility(),
-            new UInt64(builder.getDuration().blockDuration),
+            builder.getDuration().blockDuration,
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicDefinitionTransactionBuilder).fee.amount),
-        );
+            isEmbedded ? BigInt(0) : (builder as MosaicDefinitionTransactionBuilder).fee.amount);
         return isEmbedded ?
             transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -194,10 +193,10 @@ export class MosaicDefinitionTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.MOSAIC_DEFINITION.valueOf(),
-            new AmountDto(this.maxFee.toDTO()),
-            new TimestampDto(this.deadline.toDTO()),
-            new MosaicIdDto(this.mosaicId.id.toDTO()),
-            new BlockDurationDto(this.duration.toDTO()),
+            new AmountDto(this.maxFee),
+            new TimestampDto(this.deadline.toBigInt()),
+            new MosaicIdDto(this.mosaicId.id),
+            new BlockDurationDto(this.duration),
             new MosaicNonceDto(this.getMosaicNonceIntValue()),
             this.flags.getValue(),
             this.divisibility,
@@ -215,8 +214,8 @@ export class MosaicDefinitionTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.MOSAIC_DEFINITION.valueOf(),
-            new MosaicIdDto(this.mosaicId.id.toDTO()),
-            new BlockDurationDto(this.duration.toDTO()),
+            new MosaicIdDto(this.mosaicId.id),
+            new BlockDurationDto(this.duration),
             new MosaicNonceDto(this.getMosaicNonceIntValue()),
             this.flags.getValue(),
             this.divisibility,

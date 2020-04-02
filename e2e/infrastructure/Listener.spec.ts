@@ -21,7 +21,7 @@ import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepositor
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { Address, CosignatureTransaction, LockFundsTransaction, Mosaic, SignedTransaction, UInt64 } from '../../src/model/model';
+import { Address, CosignatureTransaction, LockFundsTransaction, Mosaic, SignedTransaction } from '../../src/model/model';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
@@ -100,8 +100,8 @@ describe('Listener', () => {
                                                   mosaicId: MosaicId | NamespaceId) => {
         const lockFundsTransaction = LockFundsTransaction.create(
             Deadline.create(),
-            new Mosaic(mosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
-            UInt64.fromUint(1000),
+            new Mosaic(mosaicId, BigInt(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
+            BigInt(1000),
             signedAggregatedTransaction,
             networkType, helper.maxFee,
         );
@@ -180,7 +180,7 @@ describe('Listener', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 cosignAccount1.address,
-                [new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY)))],
+                [new Mosaic(NetworkCurrencyLocalId, BigInt(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY)))],
                 PlainMessage.create('test-message'),
                 networkType, helper.maxFee,
             );

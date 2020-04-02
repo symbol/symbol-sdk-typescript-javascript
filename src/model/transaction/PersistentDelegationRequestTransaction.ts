@@ -17,7 +17,6 @@
 import { Address } from '../account/Address';
 import { PersistentHarvestingDelegationMessage } from '../message/PersistentHarvestingDelegationMessage';
 import { NetworkType } from '../network/NetworkType';
-import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { TransferTransaction } from './TransferTransaction';
 
@@ -37,7 +36,7 @@ export class PersistentDelegationRequestTransaction extends TransferTransaction 
                     delegatedPrivateKey: string,
                     recipientPublicKey: string,
                     networkType: NetworkType,
-                    maxFee: UInt64 = new UInt64([0, 0])): PersistentDelegationRequestTransaction {
+                    maxFee: bigint = BigInt(0)): PersistentDelegationRequestTransaction {
         const message = PersistentHarvestingDelegationMessage
             .create(delegatedPrivateKey, recipientPublicKey, networkType);
         return super.create(deadline, Address.createFromPublicKey(recipientPublicKey, networkType), [], message, networkType, maxFee);

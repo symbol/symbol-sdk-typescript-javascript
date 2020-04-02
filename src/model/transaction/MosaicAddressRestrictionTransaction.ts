@@ -24,7 +24,7 @@ import {
     TimestampDto,
     UnresolvedAddressDto,
     UnresolvedMosaicIdDto,
-} from 'catbuffer-typescript';
+} from 'catbuffer';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
@@ -34,13 +34,13 @@ import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
-import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 export class MosaicAddressRestrictionTransaction extends Transaction {
 
@@ -67,12 +67,12 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      */
     public static create(deadline: Deadline,
                          mosaicId: MosaicId | NamespaceId,
-                         restrictionKey: UInt64,
+                         restrictionKey: bigint,
                          targetAddress: Address | NamespaceId,
-                         newRestrictionValue: UInt64,
+                         newRestrictionValue: bigint,
                          networkType: NetworkType,
-                         previousRestrictionValue: UInt64 = UInt64.fromHex('FFFFFFFFFFFFFFFF'),
-                         maxFee: UInt64 = new UInt64([0, 0])): MosaicAddressRestrictionTransaction {
+                         previousRestrictionValue: bigint = BigInt('0xFFFFFFFFFFFFFFFF'),
+                         maxFee: bigint = BigInt(0)): MosaicAddressRestrictionTransaction {
         return new MosaicAddressRestrictionTransaction(networkType,
             TransactionVersion.MOSAIC_ADDRESS_RESTRICTION,
             deadline,
@@ -103,7 +103,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                maxFee: UInt64,
+                maxFee: bigint,
                 /**
                  * The mosaic id.
                  */
@@ -111,7 +111,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
                 /**
                  * The restriction key.
                  */
-                public readonly restrictionKey: UInt64,
+                public readonly restrictionKey: bigint,
                 /**
                  * The affected unresolved address.
                  */
@@ -119,11 +119,11 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
                 /**
                  * The previous restriction value.
                  */
-                public readonly previousRestrictionValue: UInt64,
+                public readonly previousRestrictionValue: bigint,
                 /**
                  * The new restriction value.
                  */
-                public readonly newRestrictionValue: UInt64,
+                public readonly newRestrictionValue: bigint,
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
@@ -143,16 +143,15 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = MosaicAddressRestrictionTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+            isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
                 (builder as MosaicAddressRestrictionTransactionBuilder).getDeadline().timestamp),
-            UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getMosaicId().unresolvedMosaicId).toHex()),
-            new UInt64(builder.getRestrictionKey()),
+            UnresolvedMapping.toUnresolvedMosaic(BigIntUtilities.BigIntToHex(builder.getMosaicId().unresolvedMosaicId)),
+            builder.getRestrictionKey(),
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getTargetAddress().unresolvedAddress)),
-            new UInt64(builder.getNewRestrictionValue()),
+            builder.getNewRestrictionValue(),
             networkType,
-            new UInt64(builder.getPreviousRestrictionValue()),
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicAddressRestrictionTransactionBuilder).fee.amount),
-        );
+            builder.getPreviousRestrictionValue(),
+            isEmbedded ? BigInt(0) : (builder as MosaicAddressRestrictionTransactionBuilder).fee.amount);
         return isEmbedded ?
             transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -207,12 +206,12 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.MOSAIC_ADDRESS_RESTRICTION.valueOf(),
-            new AmountDto(this.maxFee.toDTO()),
-            new TimestampDto(this.deadline.toDTO()),
-            new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
-            this.restrictionKey.toDTO(),
-            this.previousRestrictionValue.toDTO(),
-            this.newRestrictionValue.toDTO(),
+            new AmountDto(this.maxFee),
+            new TimestampDto(this.deadline.toBigInt()),
+            new UnresolvedMosaicIdDto(this.mosaicId.id),
+            this.restrictionKey,
+            this.previousRestrictionValue,
+            this.newRestrictionValue,
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.targetAddress, this.networkType)),
         );
         return transactionBuilder.serialize();
@@ -228,10 +227,10 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.MOSAIC_ADDRESS_RESTRICTION.valueOf(),
-            new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
-            this.restrictionKey.toDTO(),
-            this.previousRestrictionValue.toDTO(),
-            this.newRestrictionValue.toDTO(),
+            new UnresolvedMosaicIdDto(this.mosaicId.id),
+            this.restrictionKey,
+            this.previousRestrictionValue,
+            this.newRestrictionValue,
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.targetAddress, this.networkType)),
         );
     }

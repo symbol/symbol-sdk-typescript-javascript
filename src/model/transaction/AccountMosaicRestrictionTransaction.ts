@@ -23,7 +23,7 @@ import {
     SignatureDto,
     TimestampDto,
     UnresolvedMosaicIdDto,
-} from 'catbuffer-typescript';
+} from 'catbuffer';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
@@ -33,13 +33,13 @@ import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
 import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
-import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 export class AccountMosaicRestrictionTransaction extends Transaction {
 
@@ -58,7 +58,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
                          restrictionAdditions: (MosaicId | NamespaceId)[],
                          restrictionDeletions: (MosaicId | NamespaceId)[],
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): AccountMosaicRestrictionTransaction {
+                         maxFee: bigint = BigInt(0)): AccountMosaicRestrictionTransaction {
         return new AccountMosaicRestrictionTransaction(networkType,
             TransactionVersion.ACCOUNT_MOSAIC_RESTRICTION,
             deadline,
@@ -83,7 +83,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                maxFee: UInt64,
+                maxFee: bigint,
                 public readonly restrictionFlags: AccountRestrictionFlags,
                 public readonly restrictionAdditions: (MosaicId | NamespaceId)[],
                 public readonly restrictionDeletions: (MosaicId | NamespaceId)[],
@@ -107,18 +107,17 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = AccountMosaicRestrictionTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+            isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
                 (builder as AccountMosaicRestrictionTransactionBuilder).getDeadline().timestamp),
             builder.getRestrictionFlags().valueOf(),
             builder.getRestrictionAdditions().map((addition) => {
-                return UnresolvedMapping.toUnresolvedMosaic(new UInt64(addition.unresolvedMosaicId).toHex());
+                return UnresolvedMapping.toUnresolvedMosaic(BigIntUtilities.BigIntToHex(addition.unresolvedMosaicId));
             }),
             builder.getRestrictionDeletions().map((deletion) => {
-                return UnresolvedMapping.toUnresolvedMosaic(new UInt64(deletion.unresolvedMosaicId).toHex());
+                return UnresolvedMapping.toUnresolvedMosaic(BigIntUtilities.BigIntToHex(deletion.unresolvedMosaicId));
             }),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountMosaicRestrictionTransactionBuilder).fee.amount),
-        );
+            isEmbedded ? BigInt(0) : (builder as AccountMosaicRestrictionTransactionBuilder).fee.amount);
         return isEmbedded ?
             transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -159,14 +158,14 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ACCOUNT_MOSAIC_RESTRICTION.valueOf(),
-            new AmountDto(this.maxFee.toDTO()),
-            new TimestampDto(this.deadline.toDTO()),
+            new AmountDto(this.maxFee),
+            new TimestampDto(this.deadline.toBigInt()),
             this.restrictionFlags.valueOf(),
             this.restrictionAdditions.map((addition) => {
-                return new UnresolvedMosaicIdDto(addition.id.toDTO());
+                return new UnresolvedMosaicIdDto(addition.id);
             }),
             this.restrictionDeletions.map((deletion) => {
-                return new UnresolvedMosaicIdDto(deletion.id.toDTO());
+                return new UnresolvedMosaicIdDto(deletion.id);
             }),
         );
         return transactionBuilder.serialize();
@@ -184,10 +183,10 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
             TransactionType.ACCOUNT_MOSAIC_RESTRICTION.valueOf(),
             this.restrictionFlags.valueOf(),
             this.restrictionAdditions.map((addition) => {
-                return new UnresolvedMosaicIdDto(addition.id.toDTO());
+                return new UnresolvedMosaicIdDto(addition.id);
             }),
             this.restrictionDeletions.map((deletion) => {
-                return new UnresolvedMosaicIdDto(deletion.id.toDTO());
+                return new UnresolvedMosaicIdDto(deletion.id);
             }),
         );
     }

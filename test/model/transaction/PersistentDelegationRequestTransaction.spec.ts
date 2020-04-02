@@ -23,7 +23,6 @@ import { Deadline } from '../../../src/model/transaction/Deadline';
 import {
     PersistentDelegationRequestTransaction,
 } from '../../../src/model/transaction/PersistentDelegationRequestTransaction';
-import {UInt64} from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
 describe('PersistentDelegationRequestTransaction', () => {
@@ -46,8 +45,7 @@ describe('PersistentDelegationRequestTransaction', () => {
                 NetworkType.MIJIN_TEST,
             );
 
-        expect(persistentDelegationRequestTransaction.maxFee.higher).to.be.equal(0);
-        expect(persistentDelegationRequestTransaction.maxFee.lower).to.be.equal(0);
+            expect(persistentDelegationRequestTransaction.maxFee).to.be.equal(BigInt(0));
     });
 
     it('should filled maxFee override transaction maxFee', () => {
@@ -57,11 +55,10 @@ describe('PersistentDelegationRequestTransaction', () => {
                 delegatedPrivateKey,
                 recipientPublicKey,
                 NetworkType.MIJIN_TEST,
-                new UInt64([1, 0]),
+                BigInt(1),
             );
 
-        expect(persistentDelegationRequestTransaction.maxFee.higher).to.be.equal(0);
-        expect(persistentDelegationRequestTransaction.maxFee.lower).to.be.equal(1);
+        expect(persistentDelegationRequestTransaction.maxFee).to.be.equal(BigInt(1));
     });
 
     it('should createComplete an persistentDelegationRequestTransaction object and sign it', () => {
@@ -95,7 +92,7 @@ describe('PersistentDelegationRequestTransaction', () => {
                 'abc',
                 recipientPublicKey,
                 NetworkType.MIJIN_TEST,
-                new UInt64([1, 0]),
+                BigInt(1),
             );
         }).to.throw();
     });

@@ -33,8 +33,8 @@ import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatem
 import { Statement } from '../../../src/model/receipt/Statement';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
-import {UInt64} from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('TransferTransaction', () => {
     let account: Account;
@@ -52,9 +52,9 @@ describe('TransferTransaction', () => {
     before(() => {
         account = TestingAccount;
         statement = new Statement([],
-            [new ResolutionStatement(ResolutionType.Address, UInt64.fromUint(2), unresolvedAddress,
+            [new ResolutionStatement(ResolutionType.Address, BigInt(2), unresolvedAddress,
                 [new ResolutionEntry(account.address, new ReceiptSource(1, 0))])],
-            [new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromUint(2), unresolvedMosaicId,
+            [new ResolutionStatement(ResolutionType.Mosaic, BigInt(2), unresolvedMosaicId,
                 [new ResolutionEntry(mosaicId, new ReceiptSource(1, 0))])],
         );
     });
@@ -68,8 +68,7 @@ describe('TransferTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        expect(transferTransaction.maxFee.higher).to.be.equal(0);
-        expect(transferTransaction.maxFee.lower).to.be.equal(0);
+        expect(transferTransaction.maxFee).to.be.equal(BigInt(0));
     });
 
     it('should filled maxFee override transaction maxFee', () => {
@@ -79,11 +78,10 @@ describe('TransferTransaction', () => {
             [],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0]),
+            BigInt(1),
         );
 
-        expect(transferTransaction.maxFee.higher).to.be.equal(0);
-        expect(transferTransaction.maxFee.lower).to.be.equal(1);
+        expect(transferTransaction.maxFee).to.be.equal(BigInt(1));
     });
 
     it('should createComplete an TransferTransaction object and sign it without mosaics', () => {
@@ -323,8 +321,8 @@ describe('TransferTransaction', () => {
 
     it('should sort the Mosaic array', () => {
         const mosaics = [
-            new Mosaic(new MosaicId(UInt64.fromUint(200).toDTO()), UInt64.fromUint(0)),
-            new Mosaic(new MosaicId(UInt64.fromUint(100).toDTO()), UInt64.fromUint(0)),
+            new Mosaic(new MosaicId(BigInt(200)), BigInt(0)),
+            new Mosaic(new MosaicId(BigInt(100)), BigInt(0)),
         ];
 
         const transferTransaction = TransferTransaction.create(
@@ -335,8 +333,8 @@ describe('TransferTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        expect(transferTransaction.mosaics[0].id.id.compact()).to.be.equal(200);
-        expect(transferTransaction.mosaics[1].id.id.compact()).to.be.equal(100);
+        expect(transferTransaction.mosaics[0].id.id).to.be.equal(BigInt(200));
+        expect(transferTransaction.mosaics[1].id.id).to.be.equal(BigInt(100));
 
         const signedTransaction = transferTransaction.signWith(account, generationHash);
 
@@ -347,15 +345,15 @@ describe('TransferTransaction', () => {
             '64000000000000000000000000000000C8000000000000000000000000000000');
 
         const sorted = CreateTransactionFromPayload(signedTransaction.payload) as TransferTransaction;
-        expect(sorted.mosaics[0].id.id.compact()).to.be.equal(100);
-        expect(sorted.mosaics[1].id.id.compact()).to.be.equal(200);
+        expect(sorted.mosaics[0].id.id).to.be.equal(BigInt(100));
+        expect(sorted.mosaics[1].id.id).to.be.equal(BigInt(200));
     });
 
     it('should sort the Mosaic array - using Hex MosaicId', () => {
         const mosaics = [
-            new Mosaic(new MosaicId('D525AD41D95FCF29'), UInt64.fromUint(5)),
-            new Mosaic(new MosaicId('77A1969932D987D7'), UInt64.fromUint(6)),
-            new Mosaic(new MosaicId('67F2B76F28BD36BA'), UInt64.fromUint(10)),
+            new Mosaic(new MosaicId('D525AD41D95FCF29'), BigInt(5)),
+            new Mosaic(new MosaicId('77A1969932D987D7'), BigInt(6)),
+            new Mosaic(new MosaicId('67F2B76F28BD36BA'), BigInt(10)),
         ];
 
         const transferTransaction = TransferTransaction.create(
@@ -406,7 +404,7 @@ describe('TransferTransaction', () => {
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
 ​
-        expect(transferTransaction.maxFee.compact()).to.be.equal(378);
+        expect(transferTransaction.maxFee).to.be.equal(BigInt(378));
 
         const signedTransaction = transferTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
@@ -417,13 +415,13 @@ describe('TransferTransaction', () => {
             NetworkType.MIJIN_TEST,
             1,
             Deadline.createFromDTO('1'),
-            UInt64.fromUint(0),
+            BigInt(0),
             unresolvedAddress,
-            [new Mosaic(unresolvedMosaicId, UInt64.fromUint(1))],
+            [new Mosaic(unresolvedMosaicId, BigInt(1))],
             PlainMessage.create('test'),
             '',
             account.publicAccount,
-            new TransactionInfo(UInt64.fromUint(2), 0, '')).resolveAliases(statement);
+            new TransactionInfo(BigInt(2), 0, '')).resolveAliases(statement);
 ​
         expect(transferTransaction.recipientAddress instanceof Address).to.be.true;
         expect(transferTransaction.mosaics[0].id instanceof MosaicId).to.be.true;

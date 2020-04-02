@@ -26,7 +26,7 @@ import {
     UnresolvedAddressDto,
     UnresolvedMosaicBuilder,
     UnresolvedMosaicIdDto,
-} from 'catbuffer-typescript';
+} from 'catbuffer';
 import * as Long from 'long';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
@@ -41,13 +41,13 @@ import { Mosaic } from '../mosaic/Mosaic';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
-import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * Transfer transactions contain data about transfers of mosaics and message to another account.
@@ -71,7 +71,7 @@ export class TransferTransaction extends Transaction {
                          mosaics: Mosaic[],
                          message: Message,
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): TransferTransaction {
+                         maxFee: bigint = BigInt(0)): TransferTransaction {
         return new TransferTransaction(networkType,
             TransactionVersion.TRANSFER,
             deadline,
@@ -96,7 +96,7 @@ export class TransferTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                maxFee: UInt64,
+                maxFee: bigint,
                 /**
                  * The address of the recipient address.
                  */
@@ -131,21 +131,19 @@ export class TransferTransaction extends Transaction {
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = TransferTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
-                (builder as TransferTransactionBuilder).getDeadline().timestamp),
+            isEmbedded ? Deadline.create() : Deadline.createFromBigInt((builder as TransferTransactionBuilder).getDeadline().timestamp),
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
             builder.getMosaics().map((mosaic) => {
-                const id = new UInt64(mosaic.mosaicId.unresolvedMosaicId).toHex();
+                const id = mosaic.mosaicId.unresolvedMosaicId;
                 return new Mosaic(
-                    UnresolvedMapping.toUnresolvedMosaic(id),
-                    new UInt64(mosaic.amount.amount));
+                    UnresolvedMapping.toUnresolvedMosaic(BigIntUtilities.BigIntToHex(id)),
+                    mosaic.amount.amount);
             }),
             messageType === MessageType.PlainMessage ?
                 PlainMessage.createFromPayload(messageHex) :
                 EncryptedMessage.createFromPayload(messageHex),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as TransferTransactionBuilder).fee.amount),
-        );
+            isEmbedded ? BigInt(0) : (builder as TransferTransactionBuilder).fee.amount);
         return isEmbedded ?
             transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -187,8 +185,10 @@ export class TransferTransaction extends Transaction {
      */
     public sortMosaics(): Mosaic[] {
         return this.mosaics.sort((a, b) => {
-            const long_a = Long.fromBits(a.id.id.lower, a.id.id.higher, true);
-            const long_b = Long.fromBits(b.id.id.lower, b.id.id.higher, true);
+            const uint64_a = BigIntUtilities.BigIntToUInt64(a.id.id, false);
+            const uint64_b = BigIntUtilities.BigIntToUInt64(b.id.id, false);
+            const long_a = Long.fromBits(uint64_a[0], uint64_a[1], true);
+            const long_b = Long.fromBits(uint64_b[0], uint64_b[1], true);
             return long_a.compare(long_b);
         });
     }
@@ -246,12 +246,12 @@ export class TransferTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.TRANSFER.valueOf(),
-            new AmountDto(this.maxFee.toDTO()),
-            new TimestampDto(this.deadline.toDTO()),
+            new AmountDto(this.maxFee),
+            new TimestampDto(this.deadline.toBigInt()),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
             this.sortMosaics().map((mosaic) => {
-                return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id.toDTO()),
-                    new AmountDto(mosaic.amount.toDTO()));
+                return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id),
+                    new AmountDto(mosaic.amount));
             }),
             this.getMessageBuffer(),
         );
@@ -270,8 +270,8 @@ export class TransferTransaction extends Transaction {
             TransactionType.TRANSFER.valueOf(),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
             this.sortMosaics().map((mosaic) => {
-                return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id.toDTO()),
-                    new AmountDto(mosaic.amount.toDTO()));
+                return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id),
+                    new AmountDto(mosaic.amount));
             }),
             this.getMessageBuffer(),
         );

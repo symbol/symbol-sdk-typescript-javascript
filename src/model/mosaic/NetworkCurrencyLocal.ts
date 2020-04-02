@@ -15,7 +15,6 @@
  */
 
 import {NamespaceId} from '../namespace/NamespaceId';
-import {UInt64} from '../UInt64';
 import {Mosaic} from './Mosaic';
 import {MosaicId} from './MosaicId';
 
@@ -65,7 +64,7 @@ export class NetworkCurrencyLocal extends Mosaic {
      * @param owner
      * @param amount
      */
-    private constructor(amount: UInt64) {
+    private constructor(amount: bigint) {
         super(NetworkCurrencyLocal.NAMESPACE_ID, amount);
     }
 
@@ -75,11 +74,11 @@ export class NetworkCurrencyLocal extends Mosaic {
      * @param amount
      * @returns {NetworkCurrencyLocal}
      */
-    public static createRelative(amount: UInt64 | number) {
+    public static createRelative(amount: bigint | number) {
         if (typeof amount === 'number') {
-            return new NetworkCurrencyLocal(UInt64.fromUint(amount * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY)));
+            return new NetworkCurrencyLocal(BigInt(amount * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY)));
         }
-        return new NetworkCurrencyLocal(UInt64.fromUint((amount as UInt64).compact() * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY)));
+        return new NetworkCurrencyLocal(BigInt(Number(amount) * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY)));
     }
 
     /**
@@ -89,10 +88,10 @@ export class NetworkCurrencyLocal extends Mosaic {
      * @param amount
      * @returns {NetworkCurrencyLocal}
      */
-    public static createAbsolute(amount: UInt64 | number) {
+    public static createAbsolute(amount: bigint | number) {
         if (typeof amount === 'number') {
-            return new NetworkCurrencyLocal(UInt64.fromUint(amount));
+            return new NetworkCurrencyLocal(BigInt(amount));
         }
-        return new NetworkCurrencyLocal(amount as UInt64);
+        return new NetworkCurrencyLocal(amount);
     }
 }

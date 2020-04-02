@@ -24,7 +24,7 @@ import {
     SignatureDto,
     TimestampDto,
     UnresolvedAddressDto,
-} from 'catbuffer-typescript';
+} from 'catbuffer';
 import { Convert, Convert as convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
@@ -33,7 +33,6 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
-import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { HashType, HashTypeLengthValidator } from './HashType';
 import { InnerTransaction } from './InnerTransaction';
@@ -41,6 +40,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 export class SecretProofTransaction extends Transaction {
 
@@ -63,7 +63,7 @@ export class SecretProofTransaction extends Transaction {
                          recipientAddress: Address | NamespaceId,
                          proof: string,
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): SecretProofTransaction {
+                         maxFee: bigint = BigInt(0)): SecretProofTransaction {
         return new SecretProofTransaction(
             networkType,
             TransactionVersion.SECRET_PROOF,
@@ -92,7 +92,7 @@ export class SecretProofTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                maxFee: UInt64,
+                maxFee: bigint,
                 public readonly hashType: HashType,
                 public readonly secret: string,
                 public readonly recipientAddress: Address | NamespaceId,
@@ -119,15 +119,14 @@ export class SecretProofTransaction extends Transaction {
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = SecretProofTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+            isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
                 (builder as SecretProofTransactionBuilder).getDeadline().timestamp),
             builder.getHashAlgorithm().valueOf(),
             Convert.uint8ToHex(builder.getSecret().hash256),
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
             Convert.uint8ToHex(builder.getProof()),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as SecretProofTransactionBuilder).fee.amount),
-        );
+            isEmbedded ? BigInt(0) : (builder as SecretProofTransactionBuilder).fee.amount);
         return isEmbedded ?
             transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -185,8 +184,8 @@ export class SecretProofTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.SECRET_PROOF.valueOf(),
-            new AmountDto(this.maxFee.toDTO()),
-            new TimestampDto(this.deadline.toDTO()),
+            new AmountDto(this.maxFee),
+            new TimestampDto(this.deadline.toBigInt()),
             new Hash256Dto(this.getSecretByte()),
             this.hashType.valueOf(),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),

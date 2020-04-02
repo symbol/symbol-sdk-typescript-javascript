@@ -15,13 +15,12 @@ import { MosaicMetadataTransaction } from '../../src/model/transaction/MosaicMet
 import { NamespaceMetadataTransaction } from '../../src/model/transaction/NamespaceMetadataTransaction';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
-import { UInt64 } from '../../src/model/UInt64';
 import { MetadataTransactionService } from '../../src/service/MetadataTransactionService';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
 describe('MetadataTransactionService', () => {
     const deadline = Deadline.create();
-    const key = UInt64.fromUint(123);
+    const key = BigInt(123);
     const newValue = 'new test value';
 
     const helper = new IntegrationTestHelper();
@@ -67,7 +66,7 @@ describe('MetadataTransactionService', () => {
                 mosaicId,
                 MosaicFlags.create(true, true, true),
                 3,
-                UInt64.fromUint(1000),
+                BigInt(1000),
                 networkType, helper.maxFee,
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(targetAccount, generationHash);
@@ -82,7 +81,7 @@ describe('MetadataTransactionService', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
-                UInt64.fromUint(9),
+                BigInt(9),
                 networkType, helper.maxFee,
             );
             namespaceId = new NamespaceId(namespaceName);
@@ -163,7 +162,7 @@ describe('MetadataTransactionService', () => {
             ).toPromise();
 
             expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA);
-            expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
+            expect(transaction.scopedMetadataKey).to.be.equal(key);
             expect(transaction.value).to.be.equal(newValue);
             expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
         });
@@ -182,7 +181,7 @@ describe('MetadataTransactionService', () => {
                 mosaicId,
             ).toPromise() as MosaicMetadataTransaction;
             expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
-            expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
+            expect(transaction.scopedMetadataKey).to.be.equal(key);
             expect(transaction.valueSizeDelta).to.be.equal(5);
             expect(transaction.value).to.be.equals(
                 Convert.decodeHex(Convert.xor(Convert.utf8ToUint8(newValue), Convert.utf8ToUint8(updateValue))));
@@ -206,7 +205,7 @@ describe('MetadataTransactionService', () => {
             ).toPromise() as NamespaceMetadataTransaction;
 
             expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
-            expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
+            expect(transaction.scopedMetadataKey).to.be.equal(key);
             expect(transaction.valueSizeDelta).to.be.equal(5);
             expect(transaction.value).to.be.equals( Convert.decodeHex(
                 Convert.xor(Convert.utf8ToUint8(newValue), Convert.utf8ToUint8(updateValue))));

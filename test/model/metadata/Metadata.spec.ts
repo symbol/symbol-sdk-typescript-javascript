@@ -19,7 +19,6 @@ import { Account } from '../../../src/model/account/Account';
 import { Metadata } from '../../../src/model/metadata/Metadata';
 import { MetadataEntry } from '../../../src/model/metadata/MetadataEntry';
 import { MetadataType } from '../../../src/model/metadata/MetadataType';
-import {UInt64} from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
 describe('Metadata', () => {
@@ -52,7 +51,7 @@ describe('Metadata', () => {
                 metadataDTO.metadataEntry.compositeHash,
                 metadataDTO.metadataEntry.senderPublicKey,
                 metadataDTO.metadataEntry.targetPublicKey,
-                UInt64.fromHex(metadataDTO.metadataEntry.scopedMetadataKey),
+                BigInt(metadataDTO.metadataEntry.scopedMetadataKey),
                 metadataDTO.metadataEntry.metadataType,
                 metadataDTO.metadataEntry.value,
             ),
@@ -62,7 +61,7 @@ describe('Metadata', () => {
         deepEqual(metadata.metadataEntry.senderPublicKey, account.publicKey);
         deepEqual(metadata.metadataEntry.compositeHash, hash);
         deepEqual(metadata.metadataEntry.targetPublicKey, account.publicKey);
-        deepEqual(metadata.metadataEntry.scopedMetadataKey, UInt64.fromHex('85BBEA6CC462B244'));
+        deepEqual(metadata.metadataEntry.scopedMetadataKey, BigInt('0x85BBEA6CC462B244'));
         deepEqual(metadata.metadataEntry.targetId, undefined);
         deepEqual(metadata.metadataEntry.metadataType, MetadataType.Account);
         deepEqual(metadata.metadataEntry.value, '12345');

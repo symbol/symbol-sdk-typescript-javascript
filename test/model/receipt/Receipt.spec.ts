@@ -37,7 +37,7 @@ import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
 import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { TransactionStatement } from '../../../src/model/receipt/TransactionStatement';
-import { UInt64 } from '../../../src/model/UInt64';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('Receipt', () => {
     let account: Account;
@@ -156,7 +156,7 @@ describe('Receipt', () => {
             PublicAccount.createFromPublicKey(receiptDTO.senderPublicKey, netWorkType),
             Address.createFromEncoded(receiptDTO.recipientAddress),
             new MosaicId(receiptDTO.mosaicId),
-            UInt64.fromNumericString(receiptDTO.amount),
+            BigInt(receiptDTO.amount),
             receiptDTO.version,
             receiptDTO.type,
         );
@@ -182,7 +182,7 @@ describe('Receipt', () => {
             PublicAccount.createFromPublicKey(receiptDTO.senderPublicKey, netWorkType),
             Address.createFromEncoded(receiptDTO.recipientAddress),
             new MosaicId(receiptDTO.mosaicId),
-            UInt64.fromNumericString(receiptDTO.amount),
+            BigInt(receiptDTO.amount),
             receiptDTO.version,
             receiptDTO.type,
         );
@@ -206,7 +206,7 @@ describe('Receipt', () => {
         const receipt = new BalanceChangeReceipt(
             PublicAccount.createFromPublicKey(receiptDTO.targetPublicKey, netWorkType),
             new MosaicId(receiptDTO.mosaicId),
-            UInt64.fromNumericString(receiptDTO.amount),
+            BigInt(receiptDTO.amount),
             receiptDTO.version,
             receiptDTO.type,
         );
@@ -230,7 +230,7 @@ describe('Receipt', () => {
         const receipt = new BalanceChangeReceipt(
             PublicAccount.createFromPublicKey(receiptDTO.targetPublicKey, netWorkType),
             new MosaicId(receiptDTO.mosaicId),
-            UInt64.fromNumericString(receiptDTO.amount),
+            BigInt(receiptDTO.amount),
             receiptDTO.version,
             receiptDTO.type,
         );
@@ -250,12 +250,12 @@ describe('Receipt', () => {
         };
 
         const receipt = new ArtifactExpiryReceipt(
-            new NamespaceId([3646934825, 3576016193]),
+            new NamespaceId(BigInt('0xD525AD41D95FCF29')),
             receiptDTO.version,
             receiptDTO.type,
         );
 
-        deepEqual(receipt.artifactId.id.toHex().toUpperCase(), receiptDTO.artifactId);
+        deepEqual(BigIntUtilities.BigIntToHex(receipt.artifactId.id).toUpperCase(), receiptDTO.artifactId);
         deepEqual(receipt.type, ReceiptType.Namespace_Expired);
         deepEqual(receipt.version, ReceiptVersion.ARTIFACT_EXPIRY);
     });
@@ -332,12 +332,12 @@ describe('Receipt', () => {
 
         const receipt = new InflationReceipt(
             new MosaicId(receiptDTO.mosaicId),
-            UInt64.fromNumericString(receiptDTO.amount),
+            BigInt(receiptDTO.amount),
             receiptDTO.version,
             receiptDTO.type,
         );
 
-        deepEqual(receipt.amount.compact().toString(), receiptDTO.amount);
+        deepEqual(receipt.amount.toString(), receiptDTO.amount);
         deepEqual(receipt.mosaicId.toHex().toUpperCase(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Inflation);
         deepEqual(receipt.version, ReceiptVersion.INFLATION_RECEIPT);

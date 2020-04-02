@@ -23,7 +23,6 @@ import { MetadataEntry } from '../model/metadata/MetadataEntry';
 import { MetadataType } from '../model/metadata/MetadataType';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { NamespaceId } from '../model/namespace/NamespaceId';
-import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { MetadataRepository } from './MetadataRepository';
 import { QueryParams } from './QueryParams';
@@ -200,7 +199,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
                 metadataEntry.compositeHash,
                 metadataEntry.senderPublicKey,
                 metadataEntry.targetPublicKey,
-                UInt64.fromHex(metadataEntry.scopedMetadataKey),
+                BigInt(metadataEntry.scopedMetadataKey),
                 metadataEntry.metadataType.valueOf(),
                 Convert.decodeHex(metadataEntry.value),
                 targetId,

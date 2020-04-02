@@ -20,6 +20,7 @@ import {
     IdGenerator as idGenerator,
     RawUInt64 as uint64,
 } from '../../../src/core/format';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 const constants = {
     nem_id: [0x375FFA4B, 0x84B3552D],
@@ -194,7 +195,7 @@ describe('id generator', () => {
                 const pubKey = convert.hexToUint8(row.publicKey);
                 const nonce = convert.hexToUint8(row.nonce).reverse(); // Little-Endianness!
                 const mosaicId = idGenerator.generateMosaicId(nonce, pubKey);
-                const expectedId = uint64.fromHex(row.expectedMosaicId);
+                const expectedId = BigIntUtilities.HexToBigInt(row.expectedMosaicId);
 
                 // Assert:
                 expect(mosaicId)

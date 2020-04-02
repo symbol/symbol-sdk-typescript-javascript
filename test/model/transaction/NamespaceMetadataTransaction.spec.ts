@@ -21,7 +21,6 @@ import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { NamespaceMetadataTransaction } from '../../../src/model/transaction/NamespaceMetadataTransaction';
-import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
 describe('NamespaceMetadataTransaction', () => {
@@ -35,39 +34,37 @@ describe('NamespaceMetadataTransaction', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
-            new NamespaceId([2262289484, 3405110546]),
+            BigInt(1000),
+            new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
         );
 
-        expect(namespaceMetadataTransaction.maxFee.higher).to.be.equal(0);
-        expect(namespaceMetadataTransaction.maxFee.lower).to.be.equal(0);
+        expect(namespaceMetadataTransaction.maxFee).to.be.equal(BigInt(0));
     });
 
     it('should filled maxFee override transaction maxFee', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
-            new NamespaceId([2262289484, 3405110546]),
+            BigInt(1000),
+            new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0]),
+            BigInt(1),
         );
 
-        expect(namespaceMetadataTransaction.maxFee.higher).to.be.equal(0);
-        expect(namespaceMetadataTransaction.maxFee.lower).to.be.equal(1);
+        expect(namespaceMetadataTransaction.maxFee).to.be.equal(BigInt(1));
     });
 
     it('should create and sign an NamespaceMetadataTransaction object', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
-            new NamespaceId([2262289484, 3405110546]),
+            BigInt(1000),
+            new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
@@ -87,8 +84,8 @@ describe('NamespaceMetadataTransaction', () => {
             NamespaceMetadataTransaction.create(
                 Deadline.create(),
                 account.publicKey,
-                UInt64.fromUint(1000),
-                new NamespaceId([2262289484, 3405110546]),
+                BigInt(1000),
+                new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(1025)),
                 NetworkType.MIJIN_TEST,
@@ -101,8 +98,8 @@ describe('NamespaceMetadataTransaction', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
                 Deadline.create(),
                 account.publicKey,
-                UInt64.fromUint(1000),
-                new NamespaceId([2262289484, 3405110546]),
+                BigInt(1000),
+                new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
                 NetworkType.MIJIN_TEST,
@@ -116,14 +113,14 @@ describe('NamespaceMetadataTransaction', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
-            new NamespaceId([2262289484, 3405110546]),
+            BigInt(1000),
+            new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
 ​
-        expect(namespaceMetadataTransaction.maxFee.compact()).to.be.equal(380);
+        expect(namespaceMetadataTransaction.maxFee).to.be.equal(BigInt(380));
 
         const signedTransaction = namespaceMetadataTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;

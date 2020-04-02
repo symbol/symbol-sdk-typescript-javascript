@@ -19,7 +19,6 @@ import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
-import { UInt64 } from '../UInt64';
 import { AccountAddressRestrictionTransaction } from './AccountAddressRestrictionTransaction';
 import { AccountMosaicRestrictionTransaction } from './AccountMosaicRestrictionTransaction';
 import { AccountOperationRestrictionTransaction } from './AccountOperationRestrictionTransaction';
@@ -44,7 +43,7 @@ export class AccountRestrictionTransaction {
         restrictionAdditions: (Address | NamespaceId)[],
         restrictionDeletions: (Address | NamespaceId)[],
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: bigint = BigInt(0),
     ): AccountAddressRestrictionTransaction {
         if (![AccountRestrictionFlags.AllowIncomingAddress,
             AccountRestrictionFlags.AllowOutgoingAddress,
@@ -78,7 +77,7 @@ export class AccountRestrictionTransaction {
         restrictionAdditions: (MosaicId | NamespaceId)[],
         restrictionDeletions: (MosaicId | NamespaceId)[],
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: bigint = BigInt(0),
     ): AccountMosaicRestrictionTransaction {
         if (![AccountRestrictionFlags.AllowMosaic, AccountRestrictionFlags.BlockMosaic].includes(restrictionFlags)) {
             throw new Error ('Restriction type is not allowed.');
@@ -109,7 +108,7 @@ export class AccountRestrictionTransaction {
         restrictionAdditions: TransactionType[],
         restrictionDeletions: TransactionType[],
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: bigint = BigInt(0),
     ): AccountOperationRestrictionTransaction {
         if (![AccountRestrictionFlags.AllowIncomingTransactionType,
             AccountRestrictionFlags.AllowOutgoingTransactionType,

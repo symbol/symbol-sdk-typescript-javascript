@@ -22,7 +22,6 @@ import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
 import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
 import { BlockInfo } from '../../src/model/blockchain/BlockInfo';
 import { NetworkType } from '../../src/model/network/NetworkType';
-import { UInt64 } from '../../src/model/UInt64';
 
 describe('RepositoryFactory', () => {
     it('Should create repositories', () => {
@@ -52,7 +51,7 @@ describe('RepositoryFactory', () => {
             counter++;
             return v;
         }));
-        when(repositoryMock.getBlockByHeight(deepEqual(UInt64.fromUint(1)))).thenReturn(observableOfBlockInfo);
+        when(repositoryMock.getBlockByHeight(deepEqual(BigInt(1)))).thenReturn(observableOfBlockInfo);
         expect(observableOfBlockInfo).to.be.equals(observableOfBlockInfo);
         const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
 

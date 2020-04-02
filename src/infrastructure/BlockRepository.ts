@@ -18,7 +18,6 @@ import {Observable} from 'rxjs';
 import {BlockInfo} from '../model/blockchain/BlockInfo';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
 import {Transaction} from '../model/transaction/Transaction';
-import { UInt64 } from '../model/UInt64';
 import {QueryParams} from './QueryParams';
 
 /**
@@ -33,7 +32,7 @@ export interface BlockRepository {
      * @param height - Block height
      * @returns Observable<BlockInfo>
      */
-    getBlockByHeight(height: UInt64): Observable<BlockInfo>;
+    getBlockByHeight(height: bigint): Observable<BlockInfo>;
 
     /**
      * Gets array of transactions included in a block for a block height
@@ -41,7 +40,7 @@ export interface BlockRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    getBlockTransactions(height: UInt64,
+    getBlockTransactions(height: bigint,
                          queryParams?: QueryParams): Observable<Transaction[]>;
 
     /**
@@ -51,7 +50,7 @@ export interface BlockRepository {
      * @returns Observable<BlockInfo[]>
      */
 
-    getBlocksByHeightWithLimit(height: UInt64, limit: number): Observable<BlockInfo[]>;
+    getBlocksByHeightWithLimit(height: bigint, limit: number): Observable<BlockInfo[]>;
 
     /**
      * Get the merkle path for a given a transaction and block
@@ -63,5 +62,5 @@ export interface BlockRepository {
      * @param hash The hash of the transaction.
      * @return Observable<MerkleProofInfo>
      */
-    getMerkleTransaction(height: UInt64, hash: string): Observable<MerkleProofInfo>;
+    getMerkleTransaction(height: bigint, hash: string): Observable<MerkleProofInfo>;
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { EmbeddedTransactionBuilder, TransactionBuilder } from 'catbuffer-typescript';
+import { EmbeddedTransactionBuilder, TransactionBuilder } from 'catbuffer';
 import { Convert as convert } from '../../core/format';
 import { InnerTransaction } from '../../model/model';
 import { AccountAddressRestrictionTransaction } from '../../model/transaction/AccountAddressRestrictionTransaction';
@@ -39,9 +39,6 @@ import { SecretProofTransaction } from '../../model/transaction/SecretProofTrans
 import { Transaction } from '../../model/transaction/Transaction';
 import { TransactionType } from '../../model/transaction/TransactionType';
 import { TransferTransaction } from '../../model/transaction/TransferTransaction';
-import { InnerTransactionBigInt } from '../../model/transaction/BigInt/InnerTransactionBigInt';
-import { TransactionBigInt } from '../../model/transaction/BigInt/TransactionBigInt';
-import { TransferTransactionBigInt } from '../../model/transaction/BigInt/TransferTransactionBigInt';
 
 /**
  * @internal
@@ -106,24 +103,4 @@ export const CreateTransactionFromPayload = (payload: string,
         default:
             throw new Error ('Transaction type not implemented yet.');
         }
-};
-
-/**
- * @internal
- * @param payload - The transaction binary data
- * @param isEmbedded - Is the transaction an embedded inner transaction
- * @returns {TransactionBigInt | InnerTransactionBigInt}
- * @constructor
- */
-export const CreateTransactionFromPayloadBigInt = (payload: string,
-    isEmbedded = false): TransactionBigInt | InnerTransactionBigInt => {
-    const transactionBuilder = isEmbedded ? EmbeddedTransactionBuilder.loadFromBinary(convert.hexToUint8(payload)) :
-    TransactionBuilder.loadFromBinary(convert.hexToUint8(payload));
-    const type = transactionBuilder.getType().valueOf();
-    switch (type) {
-        case TransactionType.TRANSFER:
-            return TransferTransactionBigInt.createFromPayload(payload, isEmbedded);
-        default:
-        throw new Error ('Transaction type not implemented yet.');
-    }
 };

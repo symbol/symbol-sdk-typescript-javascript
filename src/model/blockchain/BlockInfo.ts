@@ -16,7 +16,6 @@
 
 import {PublicAccount} from '../account/PublicAccount';
 import {NetworkType} from '../network/NetworkType';
-import {UInt64} from '../UInt64';
 
 /**
  * The block info structure describes basic information of a block.
@@ -55,7 +54,7 @@ export class BlockInfo {
                 /**
                  * The sum of all transaction fees included in the block.
                  */
-                public readonly totalFee: UInt64,
+                public readonly totalFee: bigint,
                 /**
                  * The number of transactions included.
                  */
@@ -86,15 +85,15 @@ export class BlockInfo {
                  * The height of which the block was confirmed.
                  * Each block has a unique height. Subsequent blocks differ in height by 1.
                  */
-                public readonly height: UInt64,
+                public readonly height: bigint,
                 /**
                  * The number of milliseconds elapsed since the creation of the nemesis blockchain.
                  */
-                public readonly timestamp: UInt64,
+                public readonly timestamp: bigint,
                 /**
                  * The POI difficulty to harvest a block.
                  */
-                public readonly difficulty: UInt64,
+                public readonly difficulty: bigint,
                 /**
                  * The feeMultiplier defined by the harvester.
                  */

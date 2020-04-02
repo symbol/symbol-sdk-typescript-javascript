@@ -31,7 +31,6 @@ import { NamespaceId } from '../model/namespace/NamespaceId';
 import { NamespaceInfo } from '../model/namespace/NamespaceInfo';
 import { NamespaceName } from '../model/namespace/NamespaceName';
 import { NetworkType } from '../model/network/NetworkType';
-import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { NamespaceRepository } from './NamespaceRepository';
 import { QueryParams } from './QueryParams';
@@ -130,8 +129,8 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
                             this.extractLevels(body.namespace),
                             NamespaceId.createFromEncoded(body.namespace.parentId),
                             PublicAccount.createFromPublicKey(body.namespace.ownerPublicKey, networkType),
-                            UInt64.fromNumericString(body.namespace.startHeight),
-                            UInt64.fromNumericString(body.namespace.endHeight),
+                            BigInt(body.namespace.startHeight),
+                            BigInt(body.namespace.endHeight),
                             this.extractAlias(body.namespace),
                         )),
                     catchError((error) =>  throwError(this.errorHandling(error))),
@@ -164,8 +163,8 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
                         this.extractLevels(namespaceInfoDTO.namespace),
                         NamespaceId.createFromEncoded(namespaceInfoDTO.namespace.parentId),
                         PublicAccount.createFromPublicKey(namespaceInfoDTO.namespace.ownerPublicKey, networkType),
-                        UInt64.fromNumericString(namespaceInfoDTO.namespace.startHeight),
-                        UInt64.fromNumericString(namespaceInfoDTO.namespace.endHeight),
+                        BigInt(namespaceInfoDTO.namespace.startHeight),
+                        BigInt(namespaceInfoDTO.namespace.endHeight),
                         this.extractAlias(namespaceInfoDTO.namespace),
                     );
                 })),
@@ -198,8 +197,8 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
                         this.extractLevels(namespaceInfoDTO.namespace),
                         NamespaceId.createFromEncoded(namespaceInfoDTO.namespace.parentId),
                         PublicAccount.createFromPublicKey(namespaceInfoDTO.namespace.ownerPublicKey, networkType),
-                        UInt64.fromNumericString(namespaceInfoDTO.namespace.startHeight),
-                        UInt64.fromNumericString(namespaceInfoDTO.namespace.endHeight),
+                        BigInt(namespaceInfoDTO.namespace.startHeight),
+                        BigInt(namespaceInfoDTO.namespace.endHeight),
                         this.extractAlias(namespaceInfoDTO.namespace),
                     );
                 })),

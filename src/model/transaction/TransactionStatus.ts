@@ -15,7 +15,6 @@
  */
 
 import { TransactionStateTypeEnum, TransactionStatusTypeEnum } from 'symbol-openapi-typescript-node-client';
-import {UInt64} from '../UInt64';
 import {Deadline} from './Deadline';
 
 /**
@@ -50,5 +49,5 @@ export class TransactionStatus {
                 /**
                  * The height of the block at which it was confirmed or rejected.
                  */
-                public readonly height?: UInt64) {}
+                public readonly height?: bigint) {}
 }

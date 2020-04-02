@@ -15,7 +15,7 @@
  */
 
 import {ChronoUnit, Instant, LocalDateTime, ZoneId} from 'js-joda';
-import {UInt64} from '../UInt64';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * The deadline of the transaction. The deadline is given as the number of seconds elapsed since the creation of the nemesis block.
@@ -58,15 +58,27 @@ export class Deadline {
      * @param value
      * @returns {Deadline}
      */
-    public static createFromDTO(value: string | number[]): Deadline {
-        const uint64Value = 'string' === typeof value ? UInt64.fromNumericString(value) : new UInt64(value);
-        const dateSeconds = uint64Value.compact();
+    public static createFromDTO(value: string ): Deadline {
+        const uint64Value = BigInt(value);
+        const dateSeconds = Number(uint64Value);
         const deadline = LocalDateTime.ofInstant(
             Instant.ofEpochMilli(Math.round(dateSeconds + Deadline.timestampNemesisBlock * 1000)),
             ZoneId.SYSTEM);
         return new Deadline(deadline);
     }
 
+    /**
+     * @internal
+     * @param value
+     * @returns {Deadline}
+     */
+    public static createFromBigInt(value: bigint): Deadline {
+        const dateSeconds = Number(value);
+        const deadline = LocalDateTime.ofInstant(
+            Instant.ofEpochMilli(Math.round(dateSeconds + Deadline.timestampNemesisBlock * 1000)),
+            ZoneId.SYSTEM);
+        return new Deadline(deadline);
+    }
     /**
      * @param deadline
      */
@@ -78,16 +90,26 @@ export class Deadline {
      * @internal
      */
     public toDTO(): number[] {
-        return UInt64.fromUint(
+        return BigIntUtilities.BigIntToUInt64(BigInt(
             (this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000),
-        ).toDTO();
+        ));
     }
 
     /**
      * @internal
      */
+    public toBigInt(): bigint {
+        return BigInt(
+            (this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000),
+        );
+    }
+
+
+    /**
+     * @internal
+     */
     public toString(): string {
-        return UInt64.fromUint(
+        return BigInt(
             (this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000),
         ).toString();
     }

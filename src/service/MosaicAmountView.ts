@@ -15,7 +15,6 @@
  */
 
 import {MosaicInfo} from '../model/mosaic/MosaicInfo';
-import {UInt64} from '../model/UInt64';
 
 /**
  * Class representing mosaic view information with amount
@@ -35,7 +34,7 @@ export class MosaicAmountView {
                 /**
                  * The amount of absolute mosaics we have
                  */
-                public readonly amount: UInt64) {
+                public readonly amount: bigint) {
 
     }
 
@@ -45,9 +44,9 @@ export class MosaicAmountView {
      */
     public relativeAmount(): number {
         if (this.mosaicInfo.divisibility === 0) {
-            return this.amount.compact();
+            return Number(this.amount);
         }
-        return this.amount.compact() / Math.pow(10, this.mosaicInfo.divisibility);
+        return Number(this.amount) / Math.pow(10, this.mosaicInfo.divisibility);
     }
 
     /**

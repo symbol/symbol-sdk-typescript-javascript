@@ -31,7 +31,6 @@ import { ResolutionStatement } from '../../model/receipt/ResolutionStatement';
 import { ResolutionType } from '../../model/receipt/ResolutionType';
 import { Statement } from '../../model/receipt/Statement';
 import { TransactionStatement } from '../../model/receipt/TransactionStatement';
-import {UInt64} from '../../model/UInt64';
 
 /**
  * @interal
@@ -63,7 +62,7 @@ const createResolutionStatement = (statementDTO, resolutionType): ResolutionStat
         case ResolutionType.Address:
             return new ResolutionStatement(
                 ResolutionType.Address,
-                UInt64.fromNumericString(statementDTO.height),
+                BigInt(statementDTO.height),
                 extractUnresolvedAddress(statementDTO.unresolved),
                 statementDTO.resolutionEntries.map((entry) => {
                     return new ResolutionEntry(Address.createFromEncoded(entry.resolved),
@@ -73,7 +72,7 @@ const createResolutionStatement = (statementDTO, resolutionType): ResolutionStat
         case ResolutionType.Mosaic:
             return new ResolutionStatement(
                 ResolutionType.Mosaic,
-                UInt64.fromNumericString(statementDTO.height),
+                BigInt(statementDTO.height),
                 UnresolvedMapping.toUnresolvedMosaic(statementDTO.unresolved),
                 statementDTO.resolutionEntries.map((entry) => {
                     return new ResolutionEntry(new MosaicId(entry.resolved),
@@ -96,7 +95,7 @@ const createBalanceChangeReceipt = (receiptDTO, networkType): Receipt => {
     return new BalanceChangeReceipt(
         PublicAccount.createFromPublicKey(receiptDTO.targetPublicKey, networkType),
         new MosaicId(receiptDTO.mosaicId),
-        UInt64.fromNumericString(receiptDTO.amount),
+        BigInt(receiptDTO.amount),
         receiptDTO.version,
         receiptDTO.type,
     );
@@ -114,7 +113,7 @@ const createBalanceTransferReceipt = (receiptDTO, networkType): Receipt => {
         PublicAccount.createFromPublicKey(receiptDTO.senderPublicKey, networkType),
         Address.createFromEncoded(receiptDTO.recipientAddress),
         new MosaicId(receiptDTO.mosaicId),
-        UInt64.fromNumericString(receiptDTO.amount),
+        BigInt(receiptDTO.amount),
         receiptDTO.version,
         receiptDTO.type,
     );
@@ -161,7 +160,7 @@ const createArtifactExpiryReceipt = (receiptDTO): Receipt => {
 const createInflationReceipt = (receiptDTO): Receipt => {
     return new InflationReceipt(
         new MosaicId(receiptDTO.mosaicId),
-        UInt64.fromNumericString(receiptDTO.amount),
+        BigInt(receiptDTO.amount),
         receiptDTO.version,
         receiptDTO.type,
     );
@@ -207,7 +206,7 @@ export const CreateReceiptFromDTO = (receiptDTO, networkType): Receipt => {
  */
 const createTransactionStatement = (statementDTO, networkType): TransactionStatement => {
     return new TransactionStatement(
-        UInt64.fromNumericString(statementDTO.height),
+        BigInt(statementDTO.height),
         new ReceiptSource(statementDTO.source.primaryId, statementDTO.source.secondaryId),
         statementDTO.receipts.map((receipt) => {
             return CreateReceiptFromDTO(receipt, networkType);

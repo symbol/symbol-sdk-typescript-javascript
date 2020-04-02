@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { UInt64 } from '../UInt64';
 /**
  * The node info structure describes basic information of a node.
  */
@@ -26,9 +25,9 @@ export class NodeTime {
     constructor(/**
                  * The request send timestamp
                  */
-                public readonly sendTimeStamp?: UInt64,
+                public readonly sendTimeStamp?: bigint,
                 /**
                  * The request received timestamp
                  */
-                public readonly receiveTimeStamp?: UInt64 ) {}
+                public readonly receiveTimeStamp?: bigint ) {}
 }

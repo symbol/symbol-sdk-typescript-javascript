@@ -16,7 +16,6 @@
 
 import {MosaicId} from '../mosaic/MosaicId';
 import {NamespaceId} from '../namespace/NamespaceId';
-import { UInt64 } from '../UInt64';
 import { MetadataType } from './MetadataType';
 
 /**
@@ -30,7 +29,7 @@ export class MetadataEntry {
      * @param {string} compositeHash - The composite hash
      * @param {string} senderPublicKey - The metadata sender's public key
      * @param {string} targetPublicKey - The metadata target public key
-     * @param {UInt64} scopedMetadataKey - The key scoped to source, target and type
+     * @param {BigInt} scopedMetadataKey - The key scoped to source, target and type
      * @param {MetadatType} metadataType - The metadata type (Account | Mosaic | Namespace)
      * @param {string} value - The metadata value
      * @param {MosaicId | NamespaceId | undefined} targetId - The target mosaic or namespace identifier
@@ -51,7 +50,7 @@ export class MetadataEntry {
                 /**
                  * The key scoped to source, target and type
                  */
-                public readonly scopedMetadataKey: UInt64,
+                public readonly scopedMetadataKey: bigint,
                 /**
                  * The metadata type
                  */

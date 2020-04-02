@@ -17,7 +17,6 @@
 import {deepEqual} from 'assert';
 import {expect} from 'chai';
 import {MosaicFlags} from '../../../src/model/mosaic/MosaicFlags';
-import {UInt64} from '../../../src/model/UInt64';
 
 describe('MosaicFlags', () => {
 
@@ -29,7 +28,7 @@ describe('MosaicFlags', () => {
     });
 
     it('should createComplete an mosaicFlags object with static method', () => {
-        const duration = UInt64.fromUint(1000);
+        const duration = BigInt(1000);
 
         const mosaicFlags = MosaicFlags.create(false, false, false);
 

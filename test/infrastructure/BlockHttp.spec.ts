@@ -32,7 +32,6 @@ import { BlockRepository } from '../../src/infrastructure/BlockRepository';
 import { BlockInfo } from '../../src/model/blockchain/BlockInfo';
 import { MerklePathItem } from '../../src/model/blockchain/MerklePathItem';
 import { Transaction } from '../../src/model/transaction/Transaction';
-import { UInt64 } from '../../src/model/UInt64';
 
 describe('BlockHttp', () => {
 
@@ -129,7 +128,7 @@ describe('BlockHttp', () => {
 
     it('getBlockInfo', async () => {
         when(blockRoutesApi.getBlockByHeight('1')).thenReturn(Promise.resolve({response, body: blockInfoDto}));
-        const blockInfo = await blockRepository.getBlockByHeight(UInt64.fromUint(1)).toPromise();
+        const blockInfo = await blockRepository.getBlockByHeight(BigInt(1)).toPromise();
         assertBlockInfo(blockInfo);
     });
 
@@ -138,7 +137,7 @@ describe('BlockHttp', () => {
             response,
             body: [blockInfoDto],
         }));
-        const blockInfos = await blockRepository.getBlocksByHeightWithLimit(UInt64.fromUint(2), 10).toPromise();
+        const blockInfos = await blockRepository.getBlocksByHeightWithLimit(BigInt(2), 10).toPromise();
         assertBlockInfo(blockInfos[0]);
     });
 
@@ -147,7 +146,7 @@ describe('BlockHttp', () => {
             response,
             body: [transactionInfoDTO],
         }));
-        const transactions = await blockRepository.getBlockTransactions(UInt64.fromUint(2)).toPromise();
+        const transactions = await blockRepository.getBlockTransactions(BigInt(2)).toPromise();
         assertTransaction(transactions[0]);
     });
 
@@ -162,7 +161,7 @@ describe('BlockHttp', () => {
             response,
             body: merkleProofInfoDTO,
         }));
-        const merkleProofInfo = await blockRepository.getMerkleTransaction(UInt64.fromUint(2), 'abc').toPromise();
+        const merkleProofInfo = await blockRepository.getMerkleTransaction(BigInt(2), 'abc').toPromise();
         expect(merkleProofInfo).to.be.not.null;
         expect(merkleProofInfo.merklePath).to.deep.equals([new MerklePathItem(PositionEnum.Left, 'bbb')]);
     });

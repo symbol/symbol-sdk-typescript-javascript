@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { GeneratorUtils } from 'catbuffer-typescript';
+import { GeneratorUtils } from 'catbuffer';
 import { sha3_256 } from 'js-sha3';
-import { UInt64 } from '../UInt64';
 import { Receipt } from './Receipt';
 import { ReceiptSource } from './ReceiptSource';
 import { ReceiptType } from './ReceiptType';
@@ -40,7 +39,7 @@ export class TransactionStatement {
                 /**
                  * The block height.
                  */
-                public readonly height: UInt64,
+                public readonly height: bigint,
                 /**
                  * The receipt source.
                  */

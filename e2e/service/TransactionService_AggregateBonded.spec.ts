@@ -32,7 +32,6 @@ import { MultisigAccountModificationTransaction } from '../../src/model/transact
 import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
@@ -164,8 +163,8 @@ describe('TransactionService', () => {
             const signedAggregatedTransaction = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
             const lockFundsTransaction = LockFundsTransaction.create(
                 Deadline.create(),
-                new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
-                UInt64.fromUint(1000),
+                new Mosaic(NetworkCurrencyLocalId, BigInt(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
+                BigInt(1000),
                 signedAggregatedTransaction,
                 networkType, helper.maxFee,
             );
@@ -184,8 +183,8 @@ describe('TransactionService', () => {
             const signedAggregatedTransaction = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
             const lockFundsTransaction = LockFundsTransaction.create(
                 Deadline.create(),
-                new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
-                UInt64.fromUint(1000),
+                new Mosaic(NetworkCurrencyLocalId, BigInt(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
+                BigInt(1000),
                 signedAggregatedTransaction,
                 networkType, helper.maxFee,
             );

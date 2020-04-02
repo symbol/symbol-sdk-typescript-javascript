@@ -26,7 +26,6 @@ import { BlockInfo } from '../../src/model/blockchain/BlockInfo';
 import { MerklePathItem } from '../../src/model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../../src/model/blockchain/MerkleProofInfo';
 import { NetworkType } from '../../src/model/network/NetworkType';
-import { UInt64 } from '../../src/model/UInt64';
 import { BlockService } from '../../src/service/BlockService';
 import { TestingAccount } from '../conf/conf.spec';
 
@@ -42,17 +41,17 @@ describe('BlockService', () => {
         const mockReceiptRepository = mock<ReceiptRepository>();
         const mockRepoFactory = mock<RepositoryFactory>();
 
-        when(mockBlockRepository.getBlockByHeight(deepEqual(UInt64.fromUint(1))))
+        when(mockBlockRepository.getBlockByHeight(deepEqual(BigInt(1))))
             .thenReturn(observableOf(mockBlockInfo()));
-        when(mockBlockRepository.getBlockByHeight(deepEqual(UInt64.fromUint(2))))
+        when(mockBlockRepository.getBlockByHeight(deepEqual(BigInt(2))))
             .thenReturn(observableOf(mockBlockInfo(true)));
-        when(mockBlockRepository.getMerkleTransaction(deepEqual(UInt64.fromUint(1)), leaf))
+        when(mockBlockRepository.getMerkleTransaction(deepEqual(BigInt(1)), leaf))
             .thenReturn(observableOf(mockMerklePath()));
-        when(mockBlockRepository.getMerkleTransaction(deepEqual(UInt64.fromUint(2)), leaf))
+        when(mockBlockRepository.getMerkleTransaction(deepEqual(BigInt(2)), leaf))
             .thenReturn(observableOf(mockMerklePath()));
-        when(mockReceiptRepository.getMerkleReceipts(deepEqual(UInt64.fromUint(1)), leaf))
+        when(mockReceiptRepository.getMerkleReceipts(deepEqual(BigInt(1)), leaf))
             .thenReturn(observableOf(mockMerklePath()));
-        when(mockReceiptRepository.getMerkleReceipts(deepEqual(UInt64.fromUint(2)), leaf))
+        when(mockReceiptRepository.getMerkleReceipts(deepEqual(BigInt(2)), leaf))
             .thenReturn(observableOf(mockMerklePath()));
         const blockRepository = instance(mockBlockRepository);
         const receiptRepository = instance(mockReceiptRepository);
@@ -64,36 +63,36 @@ describe('BlockService', () => {
     });
 
     it('should validate transaction', async () => {
-        const result = await blockService.validateTransactionInBlock(leaf, UInt64.fromUint(1)).toPromise();
+        const result = await blockService.validateTransactionInBlock(leaf, BigInt(1)).toPromise();
         expect(result).to.be.true;
     });
 
     it('should validate transaction - wrong hash', async () => {
-        const result = await blockService.validateTransactionInBlock(leaf, UInt64.fromUint(2)).toPromise();
+        const result = await blockService.validateTransactionInBlock(leaf, BigInt(2)).toPromise();
         expect(result).to.be.false;
     });
 
     it('should validate statement', async () => {
-        const result = await blockService.validateStatementInBlock(leaf, UInt64.fromUint(1)).toPromise();
+        const result = await blockService.validateStatementInBlock(leaf, BigInt(1)).toPromise();
         expect(result).to.be.true;
     });
 
     it('should validate statement - wrong hash', async () => {
-        const result = await blockService.validateStatementInBlock(leaf, UInt64.fromUint(2)).toPromise();
+        const result = await blockService.validateStatementInBlock(leaf, BigInt(2)).toPromise();
         expect(result).to.be.false;
     });
 
     function mockBlockInfo(isFake: boolean = false): BlockInfo {
         if (isFake) {
             return new BlockInfo(
-                'hash', 'generationHash', UInt64.fromNumericString('0'), 1, 'signature', account.publicAccount,
-                NetworkType.MIJIN_TEST, 0, 0, UInt64.fromUint(1), UInt64.fromUint(0), UInt64.fromUint(0), 0, 'previousHash',
+                'hash', 'generationHash', BigInt('0'), 1, 'signature', account.publicAccount,
+                NetworkType.MIJIN_TEST, 0, 0, BigInt(1), BigInt(0), BigInt(0), 0, 'previousHash',
                 'fakeHash', 'fakeHash', 'stateHash', undefined,
             );
         }
         return new BlockInfo(
-            'hash', 'generationHash', UInt64.fromNumericString('0'), 1, 'signature', account.publicAccount,
-            NetworkType.MIJIN_TEST, 0, 0, UInt64.fromUint(1), UInt64.fromUint(0), UInt64.fromUint(0), 0, 'previousHash',
+            'hash', 'generationHash', BigInt('0'), 1, 'signature', account.publicAccount,
+            NetworkType.MIJIN_TEST, 0, 0, BigInt(1), BigInt(0), BigInt(0), 0, 'previousHash',
             mockBlockHash, mockBlockHash, 'stateHash', undefined,
         );
     }

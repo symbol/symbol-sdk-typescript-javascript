@@ -379,7 +379,7 @@ Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/nem2-sdk-opena
 **Milestone**: Cow
 
 - Fixed NetworkCurrencyMosaic, NetworkHarvestMosaic
-- Added exposed UInt64.fromHex and UInt64.toHex
+- Added exposed BigInt and UInt64.toHex
 - Added MosaicId.createFromNonce
 - Added MosaicNonce, MosaicNonce.createRandom
 - Fixed AliasDTO.mosaicId to be UInt64

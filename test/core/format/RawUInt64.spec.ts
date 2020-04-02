@@ -78,7 +78,7 @@ describe('uint64', () => {
         // failureTestCases.forEach(testCase => {
         // 	it(`cannot parse number that is ${testCase.description}`, () => {
         // 		// Assert:
-        // 		expect(() => uint64.fromUint(testCase.number)).to.throw(`number cannot be converted to uint '${testCase.number}'`);
+        // 		expect(() => BigInt(testCase.number)).to.throw(`number cannot be converted to uint '${testCase.number}'`);
         // 	});
         // });
 
@@ -117,7 +117,7 @@ describe('uint64', () => {
         successTestCases.forEach((testCase) => {
             it(`can parse numeric with ${testCase.description} significant digits`, () => {
                 // Act:
-                const value = uint64.fromUint(testCase.number);
+                const value = BigInt(testCase.number);
 
                 // Assert:
                 expect(value).to.deep.equal(testCase.uint64);
@@ -237,7 +237,7 @@ describe('uint64', () => {
         hexTestCases.forEach((testCase) => {
             it(`can parse hex string with ${testCase.description} significant digits`, () => {
                 // Act:
-                const value = uint64.fromHex(testCase.str);
+                const value = BigInt(testCase.str);
 
                 // Assert:
                 expect(value).to.deep.equal(testCase.value);
@@ -247,7 +247,7 @@ describe('uint64', () => {
         it('cannot parse hex string with invalid characters into uint64', () => {
             // Assert:
             expect(() => {
-                uint64.fromHex('0000000012345G78');
+                BigInt('0x0000000012345G78');
             }).to.throw('unrecognized hex char'); // contains 'G'
         });
 
@@ -257,16 +257,16 @@ describe('uint64', () => {
 
             // Assert:
             expect(() => {
-                uint64.fromHex('');
+                BigInt('');
             }).to.throw(errorMessage); // empty string
             expect(() => {
-                uint64.fromHex('1');
+                BigInt('1');
             }).to.throw(errorMessage); // odd number of chars
             expect(() => {
-                uint64.fromHex('ABCDEF12');
+                BigInt('ABCDEF12');
             }).to.throw(errorMessage); // too short
             expect(() => {
-                uint64.fromHex('1234567890ABCDEF12');
+                BigInt('1234567890ABCDEF12');
             }).to.throw(errorMessage); // too long
         });
     });

@@ -24,7 +24,6 @@ import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
-import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('NamespaceHttp', () => {
@@ -58,7 +57,7 @@ describe('NamespaceHttp', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
-                UInt64.fromUint(1000),
+                BigInt(1000),
                 helper.networkType,
                 helper.maxFee,
             );
@@ -87,8 +86,7 @@ describe('NamespaceHttp', () => {
     describe('getNamespace', () => {
         it('should return namespace data given namepsaceId', async () => {
             const namespace = await namespaceRepository.getNamespace(defaultNamespaceId).toPromise();
-            expect(namespace.startHeight.lower).to.be.equal(1);
-            expect(namespace.startHeight.higher).to.be.equal(0);
+            expect(namespace.startHeight).to.be.equal(BigInt(1));
         });
     });
 

@@ -30,7 +30,6 @@ import { MultisigAccountModificationTransaction } from '../model/transaction/Mul
 import { Transaction } from '../model/transaction/Transaction';
 import { TransactionStatusError } from '../model/transaction/TransactionStatusError';
 import { TransferTransaction } from '../model/transaction/TransferTransaction';
-import { UInt64 } from '../model/UInt64';
 import { IListener } from './IListener';
 import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
 
@@ -139,16 +138,16 @@ export class Listener implements IListener {
                 channelName: ListenerChannelName.block, message: new BlockInfo(
                     message.meta.hash,
                     message.meta.generationHash,
-                    message.meta.totalFee ? UInt64.fromNumericString(message.meta.totalFee) : new UInt64([0, 0]),
+                    message.meta.totalFee ? BigInt(message.meta.totalFee) : BigInt(0),
                     message.meta.numTransactions,
                     message.block.signature,
                     PublicAccount.createFromPublicKey(message.block.signerPublicKey, message.block.network),
                     message.block.network,
                     message.block.version,
                     message.block.type,
-                    UInt64.fromNumericString(message.block.height),
-                    UInt64.fromNumericString(message.block.timestamp),
-                    UInt64.fromNumericString(message.block.difficulty),
+                    BigInt(message.block.height),
+                    BigInt(message.block.timestamp),
+                    BigInt(message.block.difficulty),
                     message.block.feeMultiplier,
                     message.block.previousBlockHash,
                     message.block.blockTransactionsHash,

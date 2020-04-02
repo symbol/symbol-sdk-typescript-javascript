@@ -23,18 +23,18 @@ import {
     NamespaceMetadataTransactionBuilder,
     SignatureDto,
     TimestampDto,
-} from 'catbuffer-typescript';
+} from 'catbuffer';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
-import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * Announce an namespace metadata transaction to associate a key-value state to an account.
@@ -56,12 +56,12 @@ export class NamespaceMetadataTransaction extends Transaction {
      */
     public static create(deadline: Deadline,
                          targetPublicKey: string,
-                         scopedMetadataKey: UInt64,
+                         scopedMetadataKey: bigint,
                          targetNamespaceId: NamespaceId,
                          valueSizeDelta: number,
                          value: string,
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): NamespaceMetadataTransaction {
+                         maxFee: bigint = BigInt(0)): NamespaceMetadataTransaction {
         return new NamespaceMetadataTransaction(networkType,
             TransactionVersion.NAMESPACE_METADATA,
             deadline,
@@ -90,7 +90,7 @@ export class NamespaceMetadataTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                maxFee: UInt64,
+                maxFee: bigint,
                 /**
                  * Public key of the target account.
                  */
@@ -98,7 +98,7 @@ export class NamespaceMetadataTransaction extends Transaction {
                 /**
                  * Metadata key scoped to source, target and type.
                  */
-                public readonly scopedMetadataKey: UInt64,
+                public readonly scopedMetadataKey: bigint,
                 /**
                  * Target namespace identifier.
                  */
@@ -135,15 +135,14 @@ export class NamespaceMetadataTransaction extends Transaction {
         const networkType = builder.getNetwork().valueOf();
         const transaction = NamespaceMetadataTransaction.create(
             isEmbedded ? Deadline.create() :
-                Deadline.createFromDTO((builder as NamespaceMetadataTransactionBuilder).getDeadline().timestamp),
+                Deadline.createFromBigInt((builder as NamespaceMetadataTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getTargetPublicKey().key),
-            new UInt64(builder.getScopedMetadataKey()),
+            builder.getScopedMetadataKey(),
             new NamespaceId(builder.getTargetNamespaceId().namespaceId),
             builder.getValueSizeDelta(),
             Convert.uint8ToUtf8(builder.getValue()),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceMetadataTransactionBuilder).fee.amount),
-        );
+            isEmbedded ? BigInt(0) : (builder as NamespaceMetadataTransactionBuilder).fee.amount);
         return isEmbedded ?
             transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -182,11 +181,11 @@ export class NamespaceMetadataTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.NAMESPACE_METADATA.valueOf(),
-            new AmountDto(this.maxFee.toDTO()),
-            new TimestampDto(this.deadline.toDTO()),
+            new AmountDto(this.maxFee),
+            new TimestampDto(this.deadline.toBigInt()),
             new KeyDto(Convert.hexToUint8(this.targetPublicKey)),
-            this.scopedMetadataKey.toDTO(),
-            new NamespaceIdDto(this.targetNamespaceId.id.toDTO()),
+            this.scopedMetadataKey,
+            new NamespaceIdDto(this.targetNamespaceId.id),
             this.valueSizeDelta,
             Convert.utf8ToUint8(this.value),
         );
@@ -204,8 +203,8 @@ export class NamespaceMetadataTransaction extends Transaction {
             this.networkType.valueOf(),
             TransactionType.NAMESPACE_METADATA.valueOf(),
             new KeyDto(Convert.hexToUint8(this.targetPublicKey)),
-            this.scopedMetadataKey.toDTO(),
-            new NamespaceIdDto(this.targetNamespaceId.id.toDTO()),
+            this.scopedMetadataKey,
+            new NamespaceIdDto(this.targetNamespaceId.id),
             this.valueSizeDelta,
             Convert.utf8ToUint8(this.value),
         );

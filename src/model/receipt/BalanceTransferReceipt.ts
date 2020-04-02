@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import { AddressDto, AmountDto, BalanceTransferReceiptBuilder, KeyDto, MosaicBuilder, MosaicIdDto } from 'catbuffer-typescript';
+import { AddressDto, AmountDto, BalanceTransferReceiptBuilder, KeyDto, MosaicBuilder, MosaicIdDto } from 'catbuffer';
 import { Convert } from '../../core/format/Convert';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
-import { UInt64 } from '../UInt64';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
 import { ReceiptVersion } from './ReceiptVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * Balance Transfer: A mosaic transfer was triggered.
@@ -57,7 +57,7 @@ export class BalanceTransferReceipt extends Receipt {
                 /**
                  * The amount of mosaic.
                  */
-                public readonly amount: UInt64,
+                public readonly amount: bigint,
                 version: ReceiptVersion,
                 type: ReceiptType,
                 size?: number) {
@@ -71,7 +71,8 @@ export class BalanceTransferReceipt extends Receipt {
      */
     public serialize(): Uint8Array {
         return new BalanceTransferReceiptBuilder(ReceiptVersion.BALANCE_TRANSFER, this.type.valueOf(),
-            new MosaicBuilder(new MosaicIdDto(this.mosaicId.toDTO()), new AmountDto(this.amount.toDTO())),
+            new MosaicBuilder(new MosaicIdDto(this.mosaicId.id),
+                new AmountDto(this.amount)),
             new KeyDto(Convert.hexToUint8(this.sender.publicKey)),
             new AddressDto(this.getRecipientBytes()),
         ).serialize();

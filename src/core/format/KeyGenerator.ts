@@ -15,7 +15,7 @@
  */
 
 import { sha3_256 } from 'js-sha3';
-import { UInt64 } from '../../model/UInt64';
+import { BigIntUtilities } from './BigIntUtilities';
 
 export class KeyGenerator {
     /**
@@ -23,12 +23,12 @@ export class KeyGenerator {
      * @param {string} input Input string
      * @returns {UInt64} Deterministic uint64 value for the given string
      */
-    public static generateUInt64Key(input: string): UInt64 {
+    public static generateUInt64Key(input: string): bigint {
         if (input.length === 0) {
             throw Error(`Input must not be empty`);
         }
         const buf = sha3_256.arrayBuffer(input);
         const result = new Uint32Array(buf);
-        return new UInt64([result[0], (result[1] | 0x80000000) >>> 0]);
+        return BigIntUtilities.UInt64ToBigInt([result[0], (result[1] | 0x80000000) >>> 0]);
     }
 }

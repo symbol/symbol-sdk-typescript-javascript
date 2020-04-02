@@ -64,8 +64,8 @@ import { SecretLockTransaction } from '../../../src/model/transaction/SecretLock
 import { SecretProofTransaction } from '../../../src/model/transaction/SecretProofTransaction';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
-import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('TransactionMapping - createFromPayload', () => {
     let account: Account;
@@ -99,7 +99,7 @@ describe('TransactionMapping - createFromPayload', () => {
     });
 
     it('should create AccountRestrictionMosaicTransaction', () => {
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
             AccountRestrictionFlags.AllowMosaic,
@@ -137,7 +137,7 @@ describe('TransactionMapping - createFromPayload', () => {
     });
 
     it('should create AddressAliasTransaction', () => {
-        const namespaceId = new NamespaceId([33347626, 3779697293]);
+        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
@@ -152,14 +152,13 @@ describe('TransactionMapping - createFromPayload', () => {
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AddressAliasTransaction;
 
         expect(transaction.aliasAction).to.be.equal(AliasAction.Link);
-        expect(transaction.namespaceId.id.lower).to.be.equal(33347626);
-        expect(transaction.namespaceId.id.higher).to.be.equal(3779697293);
+        expect(transaction.namespaceId.id).to.be.equal(BigInt('0xE1499A8D01FCD82A'));
         expect(transaction.address.plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
     });
 
     it('should create MosaicAliasTransaction', () => {
-        const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
             AliasAction.Link,
@@ -172,10 +171,8 @@ describe('TransactionMapping - createFromPayload', () => {
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicAliasTransaction;
 
         expect(mosaicAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
-        expect(mosaicAliasTransaction.namespaceId.id.lower).to.be.equal(33347626);
-        expect(mosaicAliasTransaction.namespaceId.id.higher).to.be.equal(3779697293);
-        expect(mosaicAliasTransaction.mosaicId.id.lower).to.be.equal(2262289484);
-        expect(mosaicAliasTransaction.mosaicId.id.higher).to.be.equal(3405110546);
+        expect(mosaicAliasTransaction.namespaceId.id).to.be.equal(BigInt('0xE1499A8D01FCD82A'));
+        expect(mosaicAliasTransaction.mosaicId.id).to.be.equal(BigInt('0xCAF5DD1286D7CC4C'));
 
     });
 
@@ -183,10 +180,10 @@ describe('TransactionMapping - createFromPayload', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
-            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            new MosaicId(BigInt(1)), // ID
             MosaicFlags.create(false, false, false),
             3,
-            UInt64.fromUint(1000),
+            BigInt(1000),
             NetworkType.MIJIN_TEST,
         );
 
@@ -194,8 +191,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
 
-        expect(transaction.duration!.lower).to.be.equal(1000);
-        expect(transaction.duration!.higher).to.be.equal(0);
+        expect(transaction.duration).to.be.equal(BigInt(1000));
         expect(transaction.divisibility).to.be.equal(3);
         expect(transaction.flags.supplyMutable).to.be.equal(false);
         expect(transaction.flags.transferable).to.be.equal(false);
@@ -207,10 +203,10 @@ describe('TransactionMapping - createFromPayload', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
-            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            new MosaicId(BigInt(1)), // ID
             MosaicFlags.create(false, false, false),
             3,
-            UInt64.fromUint(0),
+            BigInt(0),
             NetworkType.MIJIN_TEST,
         );
 
@@ -229,10 +225,10 @@ describe('TransactionMapping - createFromPayload', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
-            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            new MosaicId(BigInt(1)), // ID
             MosaicFlags.create(false, false, false),
             3,
-            UInt64.fromUint(0),
+            BigInt(0),
             NetworkType.MIJIN_TEST,
         );
 
@@ -251,10 +247,10 @@ describe('TransactionMapping - createFromPayload', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
-            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            new MosaicId(BigInt(1)), // ID
             MosaicFlags.create(false, false, false),
             3,
-            UInt64.fromUint(0),
+            BigInt(0),
             NetworkType.MIJIN_TEST,
         );
 
@@ -273,10 +269,10 @@ describe('TransactionMapping - createFromPayload', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
-            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            new MosaicId(BigInt(1)), // ID
             MosaicFlags.create(false, false, false),
             3,
-            UInt64.fromUint(0),
+            BigInt(0),
             NetworkType.MIJIN_TEST,
         );
 
@@ -292,12 +288,12 @@ describe('TransactionMapping - createFromPayload', () => {
     });
 
     it('should create MosaicSupplyChangeTransaction', () => {
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
-            UInt64.fromUint(10),
+            BigInt(10),
             NetworkType.MIJIN_TEST,
         );
 
@@ -306,10 +302,8 @@ describe('TransactionMapping - createFromPayload', () => {
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicSupplyChangeTransaction;
 
         expect(transaction.action).to.be.equal(MosaicSupplyChangeAction.Increase);
-        expect(transaction.delta.lower).to.be.equal(10);
-        expect(transaction.delta.higher).to.be.equal(0);
-        expect(transaction.mosaicId.id.lower).to.be.equal(2262289484);
-        expect(transaction.mosaicId.id.higher).to.be.equal(3405110546);
+        expect(transaction.delta).to.be.equal(BigInt(10));
+        expect(transaction.mosaicId.id).to.be.equal(BigInt('0xCAF5DD1286D7CC4C'));
 
     });
 
@@ -339,8 +333,8 @@ describe('TransactionMapping - createFromPayload', () => {
         const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
-            NetworkCurrencyLocal.createAbsolute(10),
-            UInt64.fromUint(100),
+            NetworkCurrencyLocal.createAbsolute(BigInt(10)),
+            BigInt(100),
             HashType.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             recipientAddress,
@@ -351,8 +345,8 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as SecretLockTransaction;
 
-        expect(transaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
-        expect(transaction.duration.equals(UInt64.fromUint(100))).to.be.equal(true);
+        expect(transaction.mosaic.amount === BigInt(10)).to.be.equal(true);
+        expect(transaction.duration === BigInt(100)).to.be.equal(true);
         expect(transaction.hashType).to.be.equal(0);
         expect(transaction.secret).to.be.equal('9B3155B37159DA50AA52D5967C509B410F5A36A3B1E31ECB5AC76675D79B4A5E');
         expect((transaction.recipientAddress as Address).plain()).to.be.equal(recipientAddress.plain());
@@ -461,7 +455,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockTransaction = LockFundsTransaction.create(Deadline.create(),
             NetworkCurrencyLocal.createRelative(10),
-            UInt64.fromUint(10),
+            BigInt(10),
             signedTransaction,
             NetworkType.MIJIN_TEST);
 
@@ -470,7 +464,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const transaction = TransactionMapping.createFromPayload(signedLockFundTransaction.payload) as LockFundsTransaction;
 
         deepEqual(transaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
-        expect(transaction.mosaic.amount.compact()).to.be.equal(10000000);
+        expect(transaction.mosaic.amount).to.be.equal(BigInt(10000000));
         expect(transaction.hash).to.be.equal(signedTransaction.hash);
     });
 
@@ -493,7 +487,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
             Deadline.create(),
             'root-test-namespace',
-            UInt64.fromUint(1000),
+            BigInt(1000),
             NetworkType.MIJIN_TEST,
         );
 
@@ -525,11 +519,11 @@ describe('TransactionMapping - createFromPayload', () => {
     it('should create MosaicGlobalRestrictionTransaction', () => {
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
             Deadline.create(),
-            new MosaicId(UInt64.fromUint(1).toDTO()),
-            UInt64.fromUint(4444),
-            UInt64.fromUint(0),
+            new MosaicId(BigInt(1)),
+            BigInt(4444),
+            BigInt(0),
             MosaicRestrictionType.NONE,
-            UInt64.fromUint(0),
+            BigInt(0),
             MosaicRestrictionType.GE,
             NetworkType.MIJIN_TEST,
         );
@@ -539,24 +533,24 @@ describe('TransactionMapping - createFromPayload', () => {
         const transaction = TransactionMapping.createFromPayload(signedTx.payload) as MosaicGlobalRestrictionTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
-        expect(transaction.mosaicId.toHex()).to.be.equal(new MosaicId(UInt64.fromUint(1).toDTO()).toHex());
-        expect(transaction.referenceMosaicId.toHex()).to.be.equal(new MosaicId(UInt64.fromUint(0).toDTO()).toHex());
-        expect(transaction.restrictionKey.toHex()).to.be.equal(UInt64.fromUint(4444).toHex());
-        expect(transaction.previousRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(0).toHex());
+        expect(transaction.mosaicId.toHex()).to.be.equal(new MosaicId(BigInt(1)).toHex());
+        expect(transaction.referenceMosaicId.toHex()).to.be.equal(new MosaicId(BigInt(0)).toHex());
+        expect(transaction.restrictionKey).to.be.equal(BigInt(4444));
+        expect(transaction.previousRestrictionValue).to.be.equal(BigInt(0));
         expect(transaction.previousRestrictionType).to.be.equal(MosaicRestrictionType.NONE);
-        expect(transaction.newRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(0).toHex());
+        expect(transaction.newRestrictionValue).to.be.equal(BigInt(0));
         expect(transaction.newRestrictionType).to.be.equal(MosaicRestrictionType.GE);
     });
 
     it('should create MosaicAddressRestrictionTransaction', () => {
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
             Deadline.create(),
-            new MosaicId(UInt64.fromUint(1).toDTO()),
-            UInt64.fromUint(4444),
+            new MosaicId(BigInt(1)),
+            BigInt(4444),
             account.address,
-            UInt64.fromUint(0),
+            BigInt(0),
             NetworkType.MIJIN_TEST,
-            UInt64.fromUint(0),
+            BigInt(0),
         );
 
         const signedTx = mosaicAddressRestrictionTransaction.signWith(account, generationHash);
@@ -564,22 +558,22 @@ describe('TransactionMapping - createFromPayload', () => {
         const transaction = TransactionMapping.createFromPayload(signedTx.payload) as MosaicAddressRestrictionTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ADDRESS_RESTRICTION);
-        expect(transaction.mosaicId.toHex()).to.be.equal(new MosaicId(UInt64.fromUint(1).toDTO()).toHex());
-        expect(transaction.restrictionKey.toHex()).to.be.equal(UInt64.fromUint(4444).toHex());
+        expect(transaction.mosaicId.toHex()).to.be.equal(new MosaicId(BigInt(1)).toHex());
+        expect(transaction.restrictionKey).to.be.equal(BigInt(4444));
         expect(transaction.targetAddressToString()).to.be.equal(account.address.plain());
-        expect(transaction.previousRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(0).toHex());
-        expect(transaction.newRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(0).toHex());
+        expect(transaction.previousRestrictionValue).to.be.equal(BigInt(0));
+        expect(transaction.newRestrictionValue).to.be.equal(BigInt(0));
     });
 
     it('should create MosaicAddressRestrictionTransaction - MosaicAlias', () => {
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
             Deadline.create(),
             new NamespaceId('test'),
-            UInt64.fromUint(4444),
+            BigInt(4444),
             account.address,
-            UInt64.fromUint(0),
+            BigInt(0),
             NetworkType.MIJIN_TEST,
-            UInt64.fromUint(0),
+            BigInt(0),
         );
 
         const signedTx = mosaicAddressRestrictionTransaction.signWith(account, generationHash);
@@ -589,17 +583,17 @@ describe('TransactionMapping - createFromPayload', () => {
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ADDRESS_RESTRICTION);
         expect(transaction.mosaicId.toHex()).to.be.equal(new NamespaceId('test').toHex());
         expect(transaction.mosaicId instanceof NamespaceId).to.be.true;
-        expect(transaction.restrictionKey.toHex()).to.be.equal(UInt64.fromUint(4444).toHex());
+        expect(transaction.restrictionKey).to.be.equal(BigInt(4444));
         expect(transaction.targetAddressToString()).to.be.equal(account.address.plain());
-        expect(transaction.previousRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(0).toHex());
-        expect(transaction.newRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(0).toHex());
+        expect(transaction.previousRestrictionValue).to.be.equal(BigInt(0));
+        expect(transaction.newRestrictionValue).to.be.equal(BigInt(0));
     });
 
     it('should create AddressMetadataTransaction', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
+            BigInt(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
@@ -610,7 +604,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA);
         expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
-        expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
+        expect(transaction.scopedMetadataKey).to.be.equal(BigInt(1000));
         expect(transaction.valueSizeDelta).to.be.equal(1);
         expect(Convert.uint8ToHex(transaction.value)).to.be.equal(Convert.uint8ToHex(new Uint8Array(10)));
     });
@@ -619,8 +613,8 @@ describe('TransactionMapping - createFromPayload', () => {
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
-            new MosaicId([2262289484, 3405110546]),
+            BigInt(1000),
+            new MosaicId('CAF5DD1286D7CC4C'),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
@@ -632,9 +626,9 @@ describe('TransactionMapping - createFromPayload', () => {
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
         expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
-        expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
+        expect(transaction.scopedMetadataKey).to.be.equal(BigInt(1000));
         expect(transaction.valueSizeDelta).to.be.equal(1);
-        expect(transaction.targetMosaicId.toHex()).to.be.equal(new MosaicId([2262289484, 3405110546]).toHex());
+        expect(transaction.targetMosaicId.toHex()).to.be.equal(new MosaicId('CAF5DD1286D7CC4C').toHex());
         expect(Convert.uint8ToHex(transaction.value)).to.be.equal(Convert.uint8ToHex(new Uint8Array(10)));
     });
 
@@ -642,8 +636,8 @@ describe('TransactionMapping - createFromPayload', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
-            new NamespaceId([2262289484, 3405110546]),
+            BigInt(1000),
+            new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
@@ -655,9 +649,9 @@ describe('TransactionMapping - createFromPayload', () => {
 
         expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
         expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
-        expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
+        expect(transaction.scopedMetadataKey).to.be.equal(BigInt(1000));
         expect(transaction.valueSizeDelta).to.be.equal(1);
-        expect(transaction.targetNamespaceId.toHex()).to.be.equal(new NamespaceId([2262289484, 3405110546]).toHex());
+        expect(transaction.targetNamespaceId.toHex()).to.be.equal(new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')).toHex());
         expect(Convert.uint8ToHex(transaction.value)).to.be.equal(Convert.uint8ToHex(new Uint8Array(10)));
     });
 });
@@ -689,7 +683,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
     it('should create TransferTransaction - NamespaceId', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
-            new NamespaceId([33347626, 3779697293]),
+            new NamespaceId(BigInt('0xE1499A8D01FCD82A')),
             [
                 NetworkCurrencyLocal.createRelative(100),
             ],
@@ -698,8 +692,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         );
 
         const transaction = TransactionMapping.createFromDTO(transferTransaction.toJSON()) as TransferTransaction;
-        expect((transaction.recipientAddress as NamespaceId).id.toHex().toUpperCase())
-            .to.be.equal(new UInt64([33347626, 3779697293]).toHex());
+        expect((transaction.recipientAddress as NamespaceId).id).to.be.equal(BigInt('0xE1499A8D01FCD82A'));
         expect(transaction.message.payload).to.be.equal('test-message');
     });
 
@@ -753,7 +746,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
     });
 
     it('should create AccountRestrictionMosaicTransaction', () => {
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
             AccountRestrictionFlags.AllowMosaic,
@@ -789,7 +782,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
     });
 
     it('should create AddressAliasTransaction', () => {
-        const namespaceId = new NamespaceId([33347626, 3779697293]);
+        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
@@ -807,8 +800,8 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
     });
 
     it('should create MosaicAliasTransaction', () => {
-        const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
             AliasAction.Link,
@@ -828,10 +821,10 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
-            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            new MosaicId(BigInt(1)), // ID
             MosaicFlags.create(false, false, false),
             3,
-            UInt64.fromUint(1000),
+            BigInt(1000),
             NetworkType.MIJIN_TEST,
         );
 
@@ -847,12 +840,12 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
     });
 
     it('should create MosaicSupplyChangeTransaction', () => {
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
-            UInt64.fromUint(10),
+            BigInt(10),
             NetworkType.MIJIN_TEST,
         );
 
@@ -869,8 +862,8 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
-            NetworkCurrencyLocal.createAbsolute(10),
-            UInt64.fromUint(100),
+            NetworkCurrencyLocal.createAbsolute(BigInt(10)),
+            BigInt(100),
             HashType.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             recipientAddress,
@@ -890,8 +883,8 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const recipientAddress = new NamespaceId('test');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
-            NetworkCurrencyLocal.createAbsolute(10),
-            UInt64.fromUint(100),
+            NetworkCurrencyLocal.createAbsolute(BigInt(10)),
+            BigInt(100),
             HashType.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             recipientAddress,
@@ -903,7 +896,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         expect(transaction.type).to.be.equal(TransactionType.SECRET_LOCK);
         expect(transaction.hashType).to.be.equal(HashType.Op_Sha3_256);
-        expect((transaction.recipientAddress as NamespaceId).id.toHex()).to.be.equal(recipientAddress.toHex());
+        expect(BigIntUtilities.BigIntToHex((transaction.recipientAddress as NamespaceId).id)).to.be.equal(recipientAddress.toHex());
 
     });
 
@@ -913,8 +906,8 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const mosaicId = new NamespaceId('test');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
-            new Mosaic(new MosaicId([1, 1]), UInt64.fromUint(10)),
-            UInt64.fromUint(100),
+            new Mosaic(new MosaicId(BigInt(1)), BigInt(10)),
+            BigInt(100),
             HashType.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             recipientAddress,
@@ -926,7 +919,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         expect(transaction.type).to.be.equal(TransactionType.SECRET_LOCK);
         expect(transaction.hashType).to.be.equal(HashType.Op_Sha3_256);
-        expect(transaction.mosaic.id.toHex()).to.be.equal((new MosaicId([1, 1])).toHex());
+        expect(transaction.mosaic.id.toHex()).to.be.equal((new MosaicId(BigInt(1))).toHex());
 
     });
 
@@ -971,7 +964,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.hashType).to.be.equal(HashType.Op_Sha3_256);
         expect(transaction.secret).to.be.equal(sha3_256.create().update(Convert.hexToUint8(proof)).hex());
         expect(transaction.proof).to.be.equal(proof);
-        expect((transaction.recipientAddress as NamespaceId).id.toHex()).to.be.equal(recipientAddress.toHex());
+        expect(BigIntUtilities.BigIntToHex((transaction.recipientAddress as NamespaceId).id)).to.be.equal(recipientAddress.toHex());
 
     });
 
@@ -1047,8 +1040,8 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         );
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockTransaction = LockFundsTransaction.create(Deadline.create(),
-            NetworkCurrencyLocal.createRelative(10),
-            UInt64.fromUint(10),
+            NetworkCurrencyLocal.createRelative(BigInt(10)),
+            BigInt(10),
             signedTransaction,
             NetworkType.MIJIN_TEST);
 
@@ -1063,7 +1056,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
             Deadline.create(),
             'root-test-namespace',
-            UInt64.fromUint(1000),
+            BigInt(1000),
             NetworkType.MIJIN_TEST,
         );
 
@@ -1090,11 +1083,11 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
     it('should create MosaicGlobalRestrictionTransaction', () => {
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
             Deadline.create(),
-            new MosaicId(UInt64.fromUint(1).toDTO()),
-            UInt64.fromUint(4444),
-            UInt64.fromUint(0),
+            new MosaicId(BigInt(1)),
+            BigInt(4444),
+            BigInt(0),
             MosaicRestrictionType.NONE,
-            UInt64.fromUint(0),
+            BigInt(0),
             MosaicRestrictionType.GE,
             NetworkType.MIJIN_TEST,
         );
@@ -1103,42 +1096,42 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             TransactionMapping.createFromDTO(mosaicGlobalRestrictionTransaction.toJSON()) as MosaicGlobalRestrictionTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
-        expect(transaction.mosaicId.id.compact()).to.be.equal(1);
-        expect(transaction.referenceMosaicId.id.compact()).to.be.equal(0);
-        expect(transaction.restrictionKey.toHex()).to.be.equal(UInt64.fromUint(4444).toHex());
-        expect(transaction.previousRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(0).toHex());
+        expect(transaction.mosaicId.id).to.be.equal(BigInt(1));
+        expect(transaction.referenceMosaicId.id).to.be.equal(BigInt(0));
+        expect(transaction.restrictionKey).to.be.equal(BigInt(4444));
+        expect(transaction.previousRestrictionValue).to.be.equal(BigInt(0));
         expect(transaction.previousRestrictionType).to.be.equal(MosaicRestrictionType.NONE);
-        expect(transaction.newRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(0).toHex());
+        expect(transaction.newRestrictionValue).to.be.equal(BigInt(0));
         expect(transaction.newRestrictionType).to.be.equal(MosaicRestrictionType.GE);
     });
 
     it('should create MosaicAddressRestrictionTransaction', () => {
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
             Deadline.create(),
-            new MosaicId(UInt64.fromUint(1).toDTO()),
-            UInt64.fromUint(4444),
+            new MosaicId(BigInt(1)),
+            BigInt(4444),
             account.address,
-            UInt64.fromUint(0),
+            BigInt(0),
             NetworkType.MIJIN_TEST,
-            UInt64.fromUint(0),
+            BigInt(0),
         );
 
         const transaction =
             TransactionMapping.createFromDTO(mosaicAddressRestrictionTransaction.toJSON()) as MosaicAddressRestrictionTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ADDRESS_RESTRICTION);
-        expect(transaction.mosaicId.id.compact()).to.be.equal(1);
-        expect(transaction.restrictionKey.toHex()).to.be.equal(UInt64.fromUint(4444).toHex());
+        expect(transaction.mosaicId.id).to.be.equal(BigInt(1));
+        expect(transaction.restrictionKey).to.be.equal(BigInt(4444));
         expect(transaction.targetAddressToString()).to.be.equal(account.address.plain());
-        expect(transaction.previousRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(0).toHex());
-        expect(transaction.newRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(0).toHex());
+        expect(transaction.previousRestrictionValue).to.be.equal(BigInt(0));
+        expect(transaction.newRestrictionValue).to.be.equal(BigInt(0));
     });
 
     it('should create AddressMetadataTransaction', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
+            BigInt(1000),
             1,
             'Test Value',
             NetworkType.MIJIN_TEST,
@@ -1149,7 +1142,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA);
         expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
-        expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
+        expect(transaction.scopedMetadataKey).to.be.equal(BigInt(1000));
         expect(transaction.valueSizeDelta).to.be.equal(1);
         expect(transaction.value).to.be.equal('Test Value');
     });
@@ -1158,8 +1151,8 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
-            new MosaicId([2262289484, 3405110546]),
+            BigInt(1000),
+            new MosaicId('CAF5DD1286D7CC4C'),
             1,
             'Test Value',
             NetworkType.MIJIN_TEST,
@@ -1170,9 +1163,9 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
         expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
-        expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
+        expect(transaction.scopedMetadataKey).to.be.equal(BigInt(1000));
         expect(transaction.valueSizeDelta).to.be.equal(1);
-        expect(transaction.targetMosaicId.toHex()).to.be.equal(new MosaicId([2262289484, 3405110546]).toHex());
+        expect(transaction.targetMosaicId.toHex()).to.be.equal(new MosaicId('CAF5DD1286D7CC4C').toHex());
         expect(transaction.value).to.be.equal('Test Value');
     });
 
@@ -1180,8 +1173,8 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
-            new NamespaceId([2262289484, 3405110546]),
+            BigInt(1000),
+            new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')),
             1,
             'Test Value',
             NetworkType.MIJIN_TEST,
@@ -1192,9 +1185,9 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
         expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
-        expect(transaction.scopedMetadataKey.toString()).to.be.equal(UInt64.fromUint(1000).toString());
+        expect(transaction.scopedMetadataKey.toString()).to.be.equal(BigInt(1000).toString());
         expect(transaction.valueSizeDelta).to.be.equal(1);
-        expect(transaction.targetNamespaceId.toHex()).to.be.equal(new NamespaceId([2262289484, 3405110546]).toHex());
+        expect(transaction.targetNamespaceId.toHex()).to.be.equal(new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')).toHex());
         expect(transaction.value).to.be.equal('Test Value');
     });
 });

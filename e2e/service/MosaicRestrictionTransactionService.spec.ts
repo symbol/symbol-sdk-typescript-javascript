@@ -19,7 +19,6 @@ import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicD
 import { MosaicGlobalRestrictionTransaction } from '../../src/model/transaction/MosaicGlobalRestrictionTransaction';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
-import { UInt64 } from '../../src/model/UInt64';
 import { MosaicRestrictionTransactionService } from '../../src/service/MosaicRestrictionTransactionService';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
@@ -71,7 +70,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 mosaicId,
                 MosaicFlags.create(true, true, true),
                 3,
-                UInt64.fromUint(1000),
+                BigInt(1000),
                 networkType, helper.maxFee,
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
@@ -86,9 +85,9 @@ describe('MosaicRestrictionTransactionService', () => {
                 Deadline.create(),
                 mosaicId,
                 key,
-                UInt64.fromUint(0),
+                BigInt(0),
                 MosaicRestrictionType.NONE,
-                UInt64.fromUint(0),
+                BigInt(0),
                 MosaicRestrictionType.GE,
                 networkType,
                 undefined,
@@ -107,7 +106,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 mosaicId,
                 key,
                 account.address,
-                UInt64.fromUint(2),
+                BigInt(2),
                 networkType,
                 undefined,
                 helper.maxFee,
@@ -129,7 +128,7 @@ describe('MosaicRestrictionTransactionService', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
-                UInt64.fromUint(50),
+                BigInt(50),
                 networkType, helper.maxFee,
             );
             namespaceIdMosaic = new NamespaceId(namespaceName);
@@ -146,7 +145,7 @@ describe('MosaicRestrictionTransactionService', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
-                UInt64.fromUint(50),
+                BigInt(50),
                 networkType, helper.maxFee,
             );
             namespaceIdAddress = new NamespaceId(namespaceName);
@@ -210,7 +209,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 expect(transaction.previousRestrictionType).to.be.equal(MosaicRestrictionType.GE);
                 expect(transaction.newRestrictionValue.toString()).to.be.equal('1');
                 expect(transaction.newRestrictionType).to.be.equal(MosaicRestrictionType.GE);
-                expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
+                expect(transaction.restrictionKey).to.be.equal(key);
             });
         });
     });
@@ -231,7 +230,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 expect(transaction.previousRestrictionType).to.be.equal(MosaicRestrictionType.GE);
                 expect(transaction.newRestrictionValue.toString()).to.be.equal('2');
                 expect(transaction.newRestrictionType).to.be.equal(MosaicRestrictionType.GE);
-                expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
+                expect(transaction.restrictionKey).to.be.equal(key);
             });
         });
     });
@@ -252,7 +251,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal('2');
                 expect(transaction.newRestrictionValue.toString()).to.be.equal('3');
                 expect(transaction.targetAddressToString()).to.be.equal(account.address.plain());
-                expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
+                expect(transaction.restrictionKey).to.be.equal(key);
             });
         });
     });
@@ -274,7 +273,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal('3');
                 expect(transaction.newRestrictionValue.toString()).to.be.equal('4');
                 expect(transaction.targetAddressToString()).to.be.equal(account.address.plain());
-                expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
+                expect(transaction.restrictionKey).to.be.equal(key);
             });
         });
     });

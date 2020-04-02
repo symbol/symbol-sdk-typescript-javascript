@@ -22,17 +22,17 @@ import {
     KeyDto,
     SignatureDto,
     TimestampDto,
-} from 'catbuffer-typescript';
+} from 'catbuffer';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../network/NetworkType';
-import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * Announce an account metadata transaction to associate a key-value state to an account.
@@ -53,11 +53,11 @@ export class AccountMetadataTransaction extends Transaction {
      */
     public static create(deadline: Deadline,
                          targetPublicKey: string,
-                         scopedMetadataKey: UInt64,
+                         scopedMetadataKey: bigint,
                          valueSizeDelta: number,
                          value: string,
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): AccountMetadataTransaction {
+                         maxFee: bigint = BigInt(0)): AccountMetadataTransaction {
         return new AccountMetadataTransaction(networkType,
             TransactionVersion.ACCOUNT_METADATA,
             deadline,
@@ -84,7 +84,7 @@ export class AccountMetadataTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                maxFee: UInt64,
+                maxFee: bigint,
                 /**
                  * Public key of the target account.
                  */
@@ -92,7 +92,7 @@ export class AccountMetadataTransaction extends Transaction {
                 /**
                  * Metadata key scoped to source, target and type.
                  */
-                public readonly scopedMetadataKey: UInt64,
+                public readonly scopedMetadataKey: bigint,
                 /**
                  * Change in value size in bytes.
                  */
@@ -124,14 +124,14 @@ export class AccountMetadataTransaction extends Transaction {
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = AccountMetadataTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AccountMetadataTransactionBuilder).getDeadline().timestamp),
+            isEmbedded ? Deadline.create() :
+                Deadline.createFromBigInt((builder as AccountMetadataTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getTargetPublicKey().key),
-            new UInt64(builder.getScopedMetadataKey()),
+            builder.getScopedMetadataKey(),
             builder.getValueSizeDelta(),
             Convert.uint8ToUtf8(builder.getValue()),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountMetadataTransactionBuilder).fee.amount),
-        );
+            isEmbedded ? BigInt(0) : (builder as AccountMetadataTransactionBuilder).fee.amount);
         return isEmbedded ?
             transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -169,10 +169,10 @@ export class AccountMetadataTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ACCOUNT_METADATA.valueOf(),
-            new AmountDto(this.maxFee.toDTO()),
-            new TimestampDto(this.deadline.toDTO()),
+            new AmountDto(this.maxFee),
+            new TimestampDto(this.deadline.toBigInt()),
             new KeyDto(Convert.hexToUint8(this.targetPublicKey)),
-            this.scopedMetadataKey.toDTO(),
+            this.scopedMetadataKey,
             this.valueSizeDelta,
             Convert.utf8ToUint8(this.value),
         );
@@ -190,7 +190,7 @@ export class AccountMetadataTransaction extends Transaction {
             this.networkType.valueOf(),
             TransactionType.ACCOUNT_METADATA.valueOf(),
             new KeyDto(Convert.hexToUint8(this.targetPublicKey)),
-            this.scopedMetadataKey.toDTO(),
+            this.scopedMetadataKey,
             this.valueSizeDelta,
             Convert.utf8ToUint8(this.value),
         );

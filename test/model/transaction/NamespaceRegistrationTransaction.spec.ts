@@ -21,7 +21,6 @@ import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import {NetworkType} from '../../../src/model/network/NetworkType';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {NamespaceRegistrationTransaction} from '../../../src/model/transaction/NamespaceRegistrationTransaction';
-import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
 
 describe('NamespaceRegistrationTransaction', () => {
@@ -35,37 +34,34 @@ describe('NamespaceRegistrationTransaction', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
             Deadline.create(),
             'root-test-namespace',
-            UInt64.fromUint(1000),
+            BigInt(1000),
             NetworkType.MIJIN_TEST,
         );
 
-        expect(registerNamespaceTransaction.maxFee.higher).to.be.equal(0);
-        expect(registerNamespaceTransaction.maxFee.lower).to.be.equal(0);
+        expect(registerNamespaceTransaction.maxFee).to.be.equal(BigInt(0));
     });
 
     it('should filled maxFee override transaction maxFee', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
             Deadline.create(),
             'root-test-namespace',
-            UInt64.fromUint(1000),
+            BigInt(1000),
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0]),
+            BigInt(1),
         );
 
-        expect(registerNamespaceTransaction.maxFee.higher).to.be.equal(0);
-        expect(registerNamespaceTransaction.maxFee.lower).to.be.equal(1);
+        expect(registerNamespaceTransaction.maxFee).to.be.equal(BigInt(1));
     });
 
     it('should createComplete an root NamespaceRegistrationTransaction object and sign it', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
             Deadline.create(),
             'root-test-namespace',
-            UInt64.fromUint(1000),
+            BigInt(1000),
             NetworkType.MIJIN_TEST,
         );
 
-        expect(registerNamespaceTransaction.duration!.lower).to.be.equal(1000);
-        expect(registerNamespaceTransaction.duration!.higher).to.be.equal(0);
+        expect(registerNamespaceTransaction.duration).to.be.equal(BigInt(1000));
 
         const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
 
@@ -97,7 +93,7 @@ describe('NamespaceRegistrationTransaction', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createSubNamespace(
             Deadline.create(),
             'root-test-namespace',
-            new NamespaceId([929036875, 2226345261]),
+            new NamespaceId(BigInt('0x84B3552D375FFA4B')),
             NetworkType.MIJIN_TEST,
         );
 
@@ -114,7 +110,7 @@ describe('NamespaceRegistrationTransaction', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 'root-test-namespace',
-                UInt64.fromUint(1000),
+                BigInt(1000),
                 NetworkType.MIJIN_TEST,
             );
             expect(registerNamespaceTransaction.size).to.be.equal(165);
@@ -126,11 +122,11 @@ describe('NamespaceRegistrationTransaction', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
             Deadline.create(),
             'root-test-namespace',
-            UInt64.fromUint(1000),
+            BigInt(1000),
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
 ​
-        expect(registerNamespaceTransaction.maxFee.compact()).to.be.equal(330);
+        expect(registerNamespaceTransaction.maxFee).to.be.equal(BigInt(330));
 
         const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;

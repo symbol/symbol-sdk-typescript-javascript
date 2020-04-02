@@ -22,11 +22,10 @@ import {
     KeyDto,
     SignatureDto,
     TimestampDto,
-} from 'catbuffer-typescript';
+} from 'catbuffer';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../network/NetworkType';
-import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { LinkAction } from './LinkAction';
@@ -34,6 +33,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * Announce an AccountLinkTransaction to delegate the account importance to a proxy account.
@@ -52,7 +52,7 @@ export class AccountLinkTransaction extends Transaction {
                          remotePublicKey: string,
                          linkAction: LinkAction,
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): AccountLinkTransaction {
+                         maxFee: bigint = BigInt(0)): AccountLinkTransaction {
         return new AccountLinkTransaction(networkType,
             TransactionVersion.ACCOUNT_LINK,
             deadline,
@@ -75,7 +75,7 @@ export class AccountLinkTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                maxFee: UInt64,
+                maxFee: bigint,
                 /**
                  * The public key of the remote account.
                  */
@@ -103,12 +103,11 @@ export class AccountLinkTransaction extends Transaction {
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = AccountLinkTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AccountLinkTransactionBuilder).getDeadline().timestamp),
+            isEmbedded ? Deadline.create() : Deadline.createFromBigInt((builder as AccountLinkTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getRemotePublicKey().key),
             builder.getLinkAction().valueOf(),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountLinkTransactionBuilder).fee.amount),
-        );
+            isEmbedded ? BigInt(0) : (builder as AccountLinkTransactionBuilder).fee.amount);
         return isEmbedded ?
             transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -143,8 +142,8 @@ export class AccountLinkTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ACCOUNT_LINK.valueOf(),
-            new AmountDto(this.maxFee.toDTO()),
-            new TimestampDto(this.deadline.toDTO()),
+            new AmountDto(this.maxFee),
+            new TimestampDto(this.deadline.toBigInt()),
             new KeyDto(Convert.hexToUint8(this.remotePublicKey)),
             this.linkAction.valueOf(),
         );

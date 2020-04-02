@@ -16,7 +16,6 @@
 
 import { expect } from 'chai';
 import { mergeMap } from 'rxjs/operators';
-import { BlockHttp } from '../../src/infrastructure/BlockHttp';
 import { BlockRepository } from '../../src/infrastructure/BlockRepository';
 import { QueryParams } from '../../src/infrastructure/QueryParams';
 import { ReceiptRepository } from '../../src/infrastructure/ReceiptRepository';
@@ -27,7 +26,6 @@ import { NetworkType } from '../../src/model/network/NetworkType';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { TransactionInfo } from '../../src/model/transaction/TransactionInfo';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('BlockHttp', () => {
@@ -88,13 +86,11 @@ describe('BlockHttp', () => {
 
     describe('getBlockByHeight', () => {
         it('should return block info given height', async () => {
-            const blockInfo = await blockRepository.getBlockByHeight(UInt64.fromUint(1)).toPromise();
+            const blockInfo = await blockRepository.getBlockByHeight(BigInt(1)).toPromise();
             blockReceiptHash = blockInfo.blockReceiptsHash;
             blockTransactionHash = blockInfo.blockTransactionsHash;
-            expect(blockInfo.height.lower).to.be.equal(1);
-            expect(blockInfo.height.higher).to.be.equal(0);
-            expect(blockInfo.timestamp.lower).to.be.equal(0);
-            expect(blockInfo.timestamp.higher).to.be.equal(0);
+            expect(blockInfo.height).to.be.equal(BigInt(1));
+            expect(blockInfo.timestamp).to.be.equal(BigInt(0));
             expect(blockInfo.beneficiaryPublicKey).not.to.be.undefined;
             expect(blockInfo.numStatements).not.to.be.undefined;
         });
@@ -105,14 +101,14 @@ describe('BlockHttp', () => {
         let firstId: string;
 
         it('should return block transactions data given height', async () => {
-            const transactions = await blockRepository.getBlockTransactions(UInt64.fromUint(1)).toPromise();
+            const transactions = await blockRepository.getBlockTransactions(BigInt(1)).toPromise();
             nextId = transactions[0].transactionInfo!.id;
             firstId = transactions[1].transactionInfo!.id;
             expect(transactions.length).to.be.greaterThan(0);
         });
 
         it('should return block transactions data given height with paginated transactionId', async () => {
-            const transactions = await blockRepository.getBlockTransactions(UInt64.fromUint(1),
+            const transactions = await blockRepository.getBlockTransactions(BigInt(1),
                 new QueryParams({ pageSize: 10, id: nextId})).toPromise();
             expect(transactions[0].transactionInfo!.id).to.be.equal(firstId);
             expect(transactions.length).to.be.greaterThan(0);

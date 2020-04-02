@@ -15,8 +15,8 @@
  */
 
 import {NamespaceId} from '../namespace/NamespaceId';
-import {UInt64} from '../UInt64';
 import {MosaicId} from './MosaicId';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * A mosaic describes an instance of a mosaic definition.
@@ -33,12 +33,12 @@ export class Mosaic {
                 /**
                  * The mosaic id
                  */
-                public readonly id: MosaicId|NamespaceId,
+                public readonly id: MosaicId | NamespaceId,
                 /**
                  * The mosaic amount. The quantity is always given in smallest units for the mosaic
                  * i.e. if it has a divisibility of 3 the quantity is given in millis.
                  */
-                public readonly amount: UInt64) {
+                public readonly amount: bigint) {
 
     }
 
@@ -49,7 +49,7 @@ export class Mosaic {
     public toDTO() {
         return {
             amount: this.amount.toString(),
-            id: this.id.id.toHex(),
+            id: BigIntUtilities.BigIntToHex(this.id.id),
         };
     }
 

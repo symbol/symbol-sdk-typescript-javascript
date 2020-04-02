@@ -34,7 +34,6 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {HashType} from '../../../src/model/transaction/HashType';
 import {SecretLockTransaction} from '../../../src/model/transaction/SecretLockTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
-import {UInt64} from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
 describe('SecretLockTransaction', () => {
@@ -47,9 +46,9 @@ describe('SecretLockTransaction', () => {
     before(() => {
         account = TestingAccount;
         statement = new Statement([],
-            [new ResolutionStatement(ResolutionType.Address, UInt64.fromUint(2), unresolvedAddress,
+            [new ResolutionStatement(ResolutionType.Address, BigInt(2), unresolvedAddress,
                 [new ResolutionEntry(account.address, new ReceiptSource(1, 0))])],
-            [new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromUint(2), unresolvedMosaicId,
+            [new ResolutionStatement(ResolutionType.Mosaic, BigInt(2), unresolvedMosaicId,
                 [new ResolutionEntry(mosaicId, new ReceiptSource(1, 0))])],
         );
     });
@@ -60,15 +59,14 @@ describe('SecretLockTransaction', () => {
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
-            UInt64.fromUint(100),
+            BigInt(100),
             HashType.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.MIJIN_TEST,
         );
 
-        expect(secretLockTransaction.maxFee.higher).to.be.equal(0);
-        expect(secretLockTransaction.maxFee.lower).to.be.equal(0);
+        expect(secretLockTransaction.maxFee).to.be.equal(BigInt(0));
     });
 
     it('should filled maxFee override transaction maxFee', () => {
@@ -77,16 +75,15 @@ describe('SecretLockTransaction', () => {
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
-            UInt64.fromUint(100),
+            BigInt(100),
             HashType.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0]),
+            BigInt(1),
         );
 
-        expect(secretLockTransaction.maxFee.higher).to.be.equal(0);
-        expect(secretLockTransaction.maxFee.lower).to.be.equal(1);
+        expect(secretLockTransaction.maxFee).to.be.equal(BigInt(1));
     });
 
     it('should be created with HashType: Op_Sha3_256 secret', () => {
@@ -95,15 +92,15 @@ describe('SecretLockTransaction', () => {
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
-            UInt64.fromUint(100),
+            BigInt(100),
             HashType.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.MIJIN_TEST,
         );
         deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
-        expect(secretLockTransaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
-        expect(secretLockTransaction.duration.equals(UInt64.fromUint(100))).to.be.equal(true);
+        expect(secretLockTransaction.mosaic.amount === BigInt(10)).to.be.equal(true);
+        expect(secretLockTransaction.duration === BigInt(100)).to.be.equal(true);
         expect(secretLockTransaction.hashType).to.be.equal(0);
         expect(secretLockTransaction.secret).to.be.equal('9b3155b37159da50aa52d5967c509b410f5a36a3b1e31ecb5ac76675d79b4a5e');
         expect(secretLockTransaction.recipientAddress).to.be.equal(recipientAddress);
@@ -115,7 +112,7 @@ describe('SecretLockTransaction', () => {
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
-            UInt64.fromUint(100),
+            BigInt(100),
             HashType.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
@@ -136,7 +133,7 @@ describe('SecretLockTransaction', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
                 NetworkCurrencyLocal.createAbsolute(10),
-                UInt64.fromUint(100),
+                BigInt(100),
                 HashType.Op_Sha3_256,
                 'non valid hash',
                 recipientAddress,
@@ -151,15 +148,15 @@ describe('SecretLockTransaction', () => {
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
-            UInt64.fromUint(100),
+            BigInt(100),
             HashType.Op_Keccak_256,
             keccak_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.MIJIN_TEST,
         );
         deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
-        expect(secretLockTransaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
-        expect(secretLockTransaction.duration.equals(UInt64.fromUint(100))).to.be.equal(true);
+        expect(secretLockTransaction.mosaic.amount === BigInt(10)).to.be.equal(true);
+        expect(secretLockTransaction.duration === BigInt(100)).to.be.equal(true);
         expect(secretLockTransaction.hashType).to.be.equal(1);
         expect(secretLockTransaction.secret).to.be.equal('241c1d54c18c8422def03aa16b4b243a8ba491374295a1a6965545e6ac1af314');
         expect(secretLockTransaction.recipientAddress).to.be.equal(recipientAddress);
@@ -171,7 +168,7 @@ describe('SecretLockTransaction', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
                 NetworkCurrencyLocal.createAbsolute(10),
-                UInt64.fromUint(100),
+                BigInt(100),
                 HashType.Op_Keccak_256,
                 'non valid hash',
                 recipientAddress,
@@ -185,15 +182,15 @@ describe('SecretLockTransaction', () => {
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
-            UInt64.fromUint(100),
+            BigInt(100),
             HashType.Op_Hash_160,
             CryptoJS.RIPEMD160(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
             recipientAddress,
             NetworkType.MIJIN_TEST,
         );
         deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
-        expect(secretLockTransaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
-        expect(secretLockTransaction.duration.equals(UInt64.fromUint(100))).to.be.equal(true);
+        expect(secretLockTransaction.mosaic.amount === BigInt(10)).to.be.equal(true);
+        expect(secretLockTransaction.duration === BigInt(100)).to.be.equal(true);
         expect(secretLockTransaction.hashType).to.be.equal(2);
         expect(secretLockTransaction.secret).to.be.equal('3fc43d717d824302e3821de8129ea2f7786912e5');
         expect(secretLockTransaction.recipientAddress).to.be.equal(recipientAddress);
@@ -205,7 +202,7 @@ describe('SecretLockTransaction', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
                 NetworkCurrencyLocal.createAbsolute(10),
-                UInt64.fromUint(100),
+                BigInt(100),
                 HashType.Op_Hash_160,
                 'non valid hash',
                 recipientAddress,
@@ -219,15 +216,15 @@ describe('SecretLockTransaction', () => {
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
-            UInt64.fromUint(100),
+            BigInt(100),
             HashType.Op_Hash_256,
             CryptoJS.SHA256(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
             recipientAddress,
             NetworkType.MIJIN_TEST,
         );
         deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
-        expect(secretLockTransaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
-        expect(secretLockTransaction.duration.equals(UInt64.fromUint(100))).to.be.equal(true);
+        expect(secretLockTransaction.mosaic.amount === BigInt(10)).to.be.equal(true);
+        expect(secretLockTransaction.duration === BigInt(100)).to.be.equal(true);
         expect(secretLockTransaction.hashType).to.be.equal(3);
         expect(secretLockTransaction.secret).to.be.equal('c346f5ecf5bcfa54ab14fad815c8239bdeb051df8835d212dba2af59f688a00e');
         expect(secretLockTransaction.recipientAddress).to.be.equal(recipientAddress);
@@ -239,7 +236,7 @@ describe('SecretLockTransaction', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
                 NetworkCurrencyLocal.createAbsolute(10),
-                UInt64.fromUint(100),
+                BigInt(100),
                 HashType.Op_Hash_256,
                 'non valid hash',
                 recipientAddress,
@@ -255,7 +252,7 @@ describe('SecretLockTransaction', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
                 NetworkCurrencyLocal.createAbsolute(10),
-                UInt64.fromUint(100),
+                BigInt(100),
                 HashType.Op_Hash_256,
                 CryptoJS.SHA256(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
                 recipientAddress,
@@ -272,15 +269,15 @@ describe('SecretLockTransaction', () => {
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
-            UInt64.fromUint(100),
+            BigInt(100),
             HashType.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.MIJIN_TEST,
         );
         deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
-        expect(secretLockTransaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
-        expect(secretLockTransaction.duration.equals(UInt64.fromUint(100))).to.be.equal(true);
+        expect(secretLockTransaction.mosaic.amount === BigInt(10)).to.be.equal(true);
+        expect(secretLockTransaction.duration === BigInt(100)).to.be.equal(true);
         expect(secretLockTransaction.hashType).to.be.equal(0);
         expect(secretLockTransaction.secret).to.be.equal('9b3155b37159da50aa52d5967c509b410f5a36a3b1e31ecb5ac76675d79b4a5e');
         expect(secretLockTransaction.recipientAddress).to.be.equal(recipientAddress);
@@ -292,14 +289,14 @@ describe('SecretLockTransaction', () => {
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
-            UInt64.fromUint(100),
+            BigInt(100),
             HashType.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
 ​
-        expect(secretLockTransaction.maxFee.compact()).to.be.equal(420);
+        expect(secretLockTransaction.maxFee).to.be.equal(BigInt(420));
         const signedTransaction = secretLockTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
     });
@@ -310,15 +307,15 @@ describe('SecretLockTransaction', () => {
             NetworkType.MIJIN_TEST,
             1,
             Deadline.createFromDTO('1'),
-            UInt64.fromUint(0),
-            new Mosaic(unresolvedMosaicId, UInt64.fromUint(1)),
-            UInt64.fromUint(100),
+            BigInt(0),
+            new Mosaic(unresolvedMosaicId, BigInt(1)),
+            BigInt(100),
             HashType.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             unresolvedAddress,
             '',
             account.publicAccount,
-            new TransactionInfo(UInt64.fromUint(2), 0, '')).resolveAliases(statement);
+            new TransactionInfo(BigInt(2), 0, '')).resolveAliases(statement);
 ​
         expect(secretLockTransaction.recipientAddress instanceof Address).to.be.true;
         expect(secretLockTransaction.mosaic.id instanceof MosaicId).to.be.true;

@@ -23,7 +23,7 @@ import {
     SignatureDto,
     TimestampDto,
     UnresolvedAddressDto,
-} from 'catbuffer-typescript';
+} from 'catbuffer';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
@@ -33,13 +33,13 @@ import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
 import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
-import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 export class AccountAddressRestrictionTransaction extends Transaction {
 
@@ -58,7 +58,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
                          restrictionAdditions: (Address | NamespaceId)[],
                          restrictionDeletions: (Address | NamespaceId)[],
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): AccountAddressRestrictionTransaction {
+                         maxFee: bigint = BigInt(0)): AccountAddressRestrictionTransaction {
         return new AccountAddressRestrictionTransaction(networkType,
             TransactionVersion.ACCOUNT_ADDRESS_RESTRICTION,
             deadline,
@@ -83,7 +83,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                maxFee: UInt64,
+                maxFee: bigint,
                 public readonly restrictionFlags: AccountRestrictionFlags,
                 public readonly restrictionAdditions: (Address | NamespaceId)[],
                 public readonly restrictionDeletions: (Address | NamespaceId)[],
@@ -107,7 +107,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = AccountAddressRestrictionTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+            isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
                 (builder as AccountAddressRestrictionTransactionBuilder).getDeadline().timestamp),
             builder.getRestrictionFlags().valueOf(),
             builder.getRestrictionAdditions().map((addition) => {
@@ -117,8 +117,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
                 return UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(deletion.unresolvedAddress));
             }),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountAddressRestrictionTransactionBuilder).fee.amount),
-        );
+            isEmbedded ? BigInt(0) : (builder as AccountAddressRestrictionTransactionBuilder).fee.amount);
         return isEmbedded ?
             transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -159,8 +158,8 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ACCOUNT_ADDRESS_RESTRICTION.valueOf(),
-            new AmountDto(this.maxFee.toDTO()),
-            new TimestampDto(this.deadline.toDTO()),
+            new AmountDto(this.maxFee),
+            new TimestampDto(this.deadline.toBigInt()),
             this.restrictionFlags.valueOf(),
             this.restrictionAdditions.map((addition) => {
                 return new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(addition, this.networkType));

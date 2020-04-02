@@ -26,7 +26,7 @@ import {
     KeyDto,
     SignatureDto,
     TimestampDto,
-} from 'catbuffer-typescript';
+} from 'catbuffer';
 import { KeyPair, MerkleHashBuilder, SHA3Hasher } from '../../core/crypto';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
@@ -35,7 +35,6 @@ import { Account } from '../account/Account';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
-import { UInt64 } from '../UInt64';
 import { AggregateTransactionCosignature } from './AggregateTransactionCosignature';
 import { CosignatureSignedTransaction } from './CosignatureSignedTransaction';
 import { Deadline } from './Deadline';
@@ -45,6 +44,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * Aggregate innerTransactions contain multiple innerTransactions that can be initiated by different accounts.
@@ -67,7 +67,7 @@ export class AggregateTransaction extends Transaction {
                 type: number,
                 version: number,
                 deadline: Deadline,
-                maxFee: UInt64,
+                maxFee: bigint,
                 /**
                  * The array of innerTransactions included in the aggregate transaction.
                  */
@@ -95,7 +95,7 @@ export class AggregateTransaction extends Transaction {
                                  innerTransactions: InnerTransaction[],
                                  networkType: NetworkType,
                                  cosignatures: AggregateTransactionCosignature[],
-                                 maxFee: UInt64 = new UInt64([0, 0])): AggregateTransaction {
+                                 maxFee: bigint = BigInt(0)): AggregateTransaction {
         return new AggregateTransaction(networkType,
             TransactionType.AGGREGATE_COMPLETE,
             TransactionVersion.AGGREGATE_COMPLETE,
@@ -112,14 +112,14 @@ export class AggregateTransaction extends Transaction {
      * @param {InnerTransaction[]} innerTransactions
      * @param {NetworkType} networkType
      * @param {AggregateTransactionCosignature[]} cosignatures
-     * @param {UInt64} maxFee - (Optional) Max fee defined by the sender
+     * @param {BigInt} maxFee - (Optional) Max fee defined by the sender
      * @return {AggregateTransaction}
      */
     public static createBonded(deadline: Deadline,
                                innerTransactions: InnerTransaction[],
                                networkType: NetworkType,
                                cosignatures: AggregateTransactionCosignature[] = [],
-                               maxFee: UInt64 = new UInt64([0, 0])): AggregateTransaction {
+                               maxFee: bigint = BigInt(0)): AggregateTransaction {
         return new AggregateTransaction(networkType,
             TransactionType.AGGREGATE_BONDED,
             TransactionVersion.AGGREGATE_BONDED,
@@ -155,21 +155,21 @@ export class AggregateTransaction extends Transaction {
 
         return type === TransactionType.AGGREGATE_COMPLETE ?
             AggregateTransaction.createComplete(
-                Deadline.createFromDTO(builder.deadline.timestamp),
+                Deadline.createFromBigInt(builder.deadline.timestamp),
                 innerTransactions.map((transactionRaw) => {
                     return CreateTransactionFromPayload(transactionRaw, true) as InnerTransaction;
                 }),
                 networkType,
                 consignatures,
-                new UInt64(builder.fee.amount),
+                builder.fee.amount,
             ) : AggregateTransaction.createBonded(
-                Deadline.createFromDTO(builder.deadline.timestamp),
+                Deadline.createFromBigInt(builder.deadline.timestamp),
                 innerTransactions.map((transactionRaw) => {
                     return CreateTransactionFromPayload(transactionRaw, true) as InnerTransaction;
                 }),
                 networkType,
                 consignatures,
-                new UInt64(builder.fee.amount),
+                builder.fee.amount,
             );
     }
 
@@ -317,8 +317,8 @@ export class AggregateTransaction extends Transaction {
                 this.versionToDTO(),
                 this.networkType.valueOf(),
                 this.type.valueOf(),
-                new AmountDto(this.maxFee.toDTO()),
-                new TimestampDto(this.deadline.toDTO()),
+                new AmountDto(this.maxFee),
+                new TimestampDto(this.deadline.toBigInt()),
                 new Hash256Dto(this.calculateInnerTransactionHash()),
                 transactions,
                 cosignatures,
@@ -329,8 +329,8 @@ export class AggregateTransaction extends Transaction {
                 this.versionToDTO(),
                 this.networkType.valueOf(),
                 this.type.valueOf(),
-                new AmountDto(this.maxFee.toDTO()),
-                new TimestampDto(this.deadline.toDTO()),
+                new AmountDto(this.maxFee),
+                new TimestampDto(this.deadline.toBigInt()),
                 new Hash256Dto(this.calculateInnerTransactionHash()),
                 transactions,
                 cosignatures,

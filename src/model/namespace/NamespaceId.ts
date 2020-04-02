@@ -15,7 +15,7 @@
  */
 import {Convert as convert} from '../../core/format';
 import {NamespaceMosaicIdGenerator} from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
-import {Id} from '../Id';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * The namespace id structure describes namespace id
@@ -27,7 +27,7 @@ export class NamespaceId {
     /**
      * Namespace id
      */
-    public readonly id: Id;
+    public readonly id: bigint;
 
     /**
      * Namespace full name
@@ -40,12 +40,13 @@ export class NamespaceId {
      *
      * @param id
      */
-    constructor(id: string | number[]) {
-        if (id instanceof Array) {
-            this.id = new Id(id);
+    constructor(id: string | bigint) {
+        // tslint:disable-next-line: typeof-compare
+        if (typeof id === 'bigint') {
+            this.id = id;
         } else if (typeof id === 'string') {
             this.fullName = id;
-            this.id = new Id(NamespaceMosaicIdGenerator.namespaceId(id));
+            this.id = BigIntUtilities.UInt64ToBigInt(NamespaceMosaicIdGenerator.namespaceId(id));
         }
     }
 
@@ -56,8 +57,7 @@ export class NamespaceId {
      */
     public static createFromEncoded(encoded: string): NamespaceId {
         const uint = convert.hexToUint8(encoded);
-        const hex  = convert.uint8ToHex(uint);
-        const namespace = new NamespaceId(Id.fromHex(hex).toDTO());
+        const namespace = new NamespaceId(BigIntUtilities.Uint8ToBigInt(uint));
         return namespace;
     }
 
@@ -66,7 +66,7 @@ export class NamespaceId {
      * @returns {string}
      */
     public toHex(): string {
-        return this.id.toHex();
+        return BigIntUtilities.BigIntToHex(this.id);
     }
 
     /**
@@ -76,7 +76,7 @@ export class NamespaceId {
      */
     public equals(id: any): boolean {
         if (id instanceof NamespaceId) {
-            return this.id.equals(id.id);
+            return this.id === id.id;
         }
         return false;
     }
@@ -86,7 +86,7 @@ export class NamespaceId {
      */
     public toDTO() {
         return {
-            id: this.id.toHex(),
+            id: BigIntUtilities.BigIntToHex(this.id),
             fullName: this.fullName ? this.fullName : '',
         };
     }

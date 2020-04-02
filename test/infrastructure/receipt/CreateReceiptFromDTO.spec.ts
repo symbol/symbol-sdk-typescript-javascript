@@ -23,7 +23,6 @@ import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { ReceiptType } from '../../../src/model/receipt/ReceiptType';
-import { UInt64 } from '../../../src/model/UInt64';
 
 describe('Receipt - CreateStatementFromDTO', () => {
     let account: Account;
@@ -129,18 +128,18 @@ describe('Receipt - CreateStatementFromDTO', () => {
         expect(statement.mosaicResolutionStatements.length).to.be.equal(2);
 
         expect(statement.transactionStatements[0].receipts.length).to.be.equal(1);
-        deepEqual(statement.transactionStatements[0].height, UInt64.fromNumericString('52'));
+        deepEqual(statement.transactionStatements[0].height, BigInt('52'));
         expect(statement.transactionStatements[0].source.primaryId).to.be.equal(0);
         expect(statement.transactionStatements[0].source.secondaryId).to.be.equal(0);
         expect(statement.transactionStatements[0].receipts[0].type).to.be.equal(ReceiptType.Harvest_Fee);
 
-        deepEqual(statement.addressResolutionStatements[0].height, UInt64.fromNumericString('1488'));
+        deepEqual(statement.addressResolutionStatements[0].height, BigInt('1488'));
         deepEqual(unresolvedAddress.toHex(), '83686227AF0AB603');
         expect(statement.addressResolutionStatements[0].resolutionEntries.length).to.be.equal(1);
         expect((statement.addressResolutionStatements[0].resolutionEntries[0].resolved as Address).plain())
             .to.be.equal(Address.createFromEncoded('917E7E29A01014C2F300000000000000000000000000000000').plain());
 
-        deepEqual(statement.mosaicResolutionStatements[0].height, UInt64.fromNumericString('1506'));
+        deepEqual(statement.mosaicResolutionStatements[0].height, BigInt('1506'));
         deepEqual(unresolvedMosaicId.toHex(), '85BBEA6CC462B244');
         expect(statement.mosaicResolutionStatements[0].resolutionEntries.length).to.be.equal(1);
         deepEqual((statement.mosaicResolutionStatements[0].resolutionEntries[0].resolved as MosaicId)

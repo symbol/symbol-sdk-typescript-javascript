@@ -20,7 +20,6 @@ import {MosaicFlags} from '../../../src/model/mosaic/MosaicFlags';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {MosaicInfo} from '../../../src/model/mosaic/MosaicInfo';
 import {NetworkType} from '../../../src/model/network/NetworkType';
-import {UInt64} from '../../../src/model/UInt64';
 import {MosaicAmountView} from '../../../src/service/MosaicAmountView';
 
 describe('MosaicAmountView', () => {
@@ -29,32 +28,32 @@ describe('MosaicAmountView', () => {
 
     before(() => {
         mosaicInfo = new MosaicInfo(
-            new MosaicId([3294802500, 2243684972]), // mosaicId
-            new UInt64([3403414400, 2095475]), // supply
-            new UInt64([1, 0]), // height
+            new MosaicId('85BBEA6CC462B244'), // mosaicId
+            BigInt('0x001FF973CADBFB80'), // supply
+            BigInt(1), // height
             PublicAccount.createFromPublicKey('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF', NetworkType.MIJIN_TEST),
             1, // revision
             MosaicFlags.create(true, true, true),
             3,
-            UInt64.fromUint(1000),
+            BigInt(1000),
         );
     });
 
     it('should createComplete a Mosaic Amount View', () => {
-        const mosaicAmountView = new MosaicAmountView(mosaicInfo, UInt64.fromUint(100));
-        expect(mosaicAmountView.amount.compact()).to.be.equal(100);
+        const mosaicAmountView = new MosaicAmountView(mosaicInfo, BigInt(100));
+        expect(mosaicAmountView.amount).to.be.equal(BigInt(100));
         expect(mosaicAmountView.mosaicInfo).to.be.an.instanceof(MosaicInfo);
     });
 
     it('should createComplete a Mosaic Amount View get relative amount', () => {
-        const mosaicAmountView = new MosaicAmountView(mosaicInfo, UInt64.fromUint(100));
+        const mosaicAmountView = new MosaicAmountView(mosaicInfo, BigInt(100));
         expect(mosaicAmountView.relativeAmount()).to.be.equal(100 / Math.pow(10, 3));
         expect(mosaicAmountView.mosaicInfo).to.be.an.instanceof(MosaicInfo);
     });
 
     it('should createComplete a Mosaic Amount View get correct amount', () => {
-        const mosaicAmountView = new MosaicAmountView(mosaicInfo, UInt64.fromUint(100));
+        const mosaicAmountView = new MosaicAmountView(mosaicInfo, BigInt(100));
         expect(mosaicAmountView.mosaicInfo).to.be.an.instanceof(MosaicInfo);
-        expect(mosaicAmountView.amount.compact()).to.be.equal(100);
+        expect(mosaicAmountView.amount).to.be.equal(BigInt(100));
     });
 });

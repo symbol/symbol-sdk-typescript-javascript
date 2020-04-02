@@ -27,7 +27,6 @@ import { Deadline } from '../../src/model/transaction/Deadline';
 import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
-import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('MosaicHttp', () => {
@@ -76,7 +75,7 @@ describe('MosaicHttp', () => {
                 mosaicId,
                 MosaicFlags.create(true, true, false),
                 3,
-                UInt64.fromUint(100),
+                BigInt(100),
                 networkType,
                 helper.maxFee,
             );
@@ -102,7 +101,7 @@ describe('MosaicHttp', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
-                UInt64.fromUint(1000),
+                BigInt(1000),
                 networkType,
                 helper.maxFee,
             );
@@ -136,7 +135,7 @@ describe('MosaicHttp', () => {
     describe('getMosaic', () => {
         it('should return mosaic given mosaicId', async () => {
             const mosaicInfo = await mosaicRepository.getMosaic(mosaicId).toPromise();
-            expect(mosaicInfo.height.lower).not.to.be.null;
+            expect(mosaicInfo.height).not.to.be.null;
             expect(mosaicInfo.divisibility).to.be.equal(3);
             expect(mosaicInfo.isSupplyMutable()).to.be.equal(true);
             expect(mosaicInfo.isTransferable()).to.be.equal(true);
@@ -146,7 +145,7 @@ describe('MosaicHttp', () => {
     describe('getMosaics', () => {
         it('should return mosaics given array of mosaicIds', async () => {
             const mosaicInfos = await mosaicRepository.getMosaics([mosaicId]).toPromise();
-            expect(mosaicInfos[0].height.lower).not.to.be.null;
+            expect(mosaicInfos[0].height).not.to.be.null;
             expect(mosaicInfos[0].divisibility).to.be.equal(3);
             expect(mosaicInfos[0].isSupplyMutable()).to.be.equal(true);
             expect(mosaicInfos[0].isTransferable()).to.be.equal(true);

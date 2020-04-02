@@ -23,7 +23,6 @@ import { Mosaic } from '../model/mosaic/Mosaic';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
 import { Transaction } from '../model/transaction/Transaction';
-import { UInt64 } from '../model/UInt64';
 import { AccountRepository } from './AccountRepository';
 import { Http } from './Http';
 import { QueryParams } from './QueryParams';
@@ -82,9 +81,9 @@ export class AccountHttp extends Http implements AccountRepository {
     private toAccountInfo(dto: AccountInfoDTO): AccountInfo {
         return new AccountInfo(
             Address.createFromEncoded(dto.account.address),
-            UInt64.fromNumericString(dto.account.addressHeight),
+            BigInt(dto.account.addressHeight),
             dto.account.publicKey,
-            UInt64.fromNumericString(dto.account.publicKeyHeight),
+            BigInt(dto.account.publicKeyHeight),
             dto.account.accountType.valueOf(),
             dto.account.linkedAccountKey,
             dto.account.activityBuckets.map((bucket) => {
@@ -97,10 +96,10 @@ export class AccountHttp extends Http implements AccountRepository {
             }),
             dto.account.mosaics.map((mosaicDTO) => new Mosaic(
                 new MosaicId(mosaicDTO.id),
-                UInt64.fromNumericString(mosaicDTO.amount),
+                BigInt(mosaicDTO.amount),
             )),
-            UInt64.fromNumericString(dto.account.importance),
-            UInt64.fromNumericString(dto.account.importanceHeight),
+            BigInt(dto.account.importance),
+            BigInt(dto.account.importanceHeight),
         );
 
     }

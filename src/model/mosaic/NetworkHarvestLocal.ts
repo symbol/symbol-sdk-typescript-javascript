@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import {NamespaceId} from '../namespace/NamespaceId';
-import {UInt64} from '../UInt64';
 import {Mosaic} from './Mosaic';
 import {MosaicId} from './MosaicId';
 
@@ -64,7 +63,7 @@ export class NetworkHarvestLocal extends Mosaic {
      * @param owner
      * @param amount
      */
-    private constructor(amount: UInt64) {
+    private constructor(amount: bigint) {
         super(NetworkHarvestLocal.NAMESPACE_ID, amount);
     }
 
@@ -74,11 +73,11 @@ export class NetworkHarvestLocal extends Mosaic {
      * @param amount
      * @returns {NetworkHarvestLocal}
      */
-    public static createRelative(amount: UInt64 | number) {
+    public static createRelative(amount: bigint | number) {
         if (typeof amount === 'number') {
-            return new NetworkHarvestLocal(UInt64.fromUint(amount * Math.pow(10, NetworkHarvestLocal.DIVISIBILITY)));
+            return new NetworkHarvestLocal(BigInt(amount * Math.pow(10, NetworkHarvestLocal.DIVISIBILITY)));
         }
-        return new NetworkHarvestLocal(UInt64.fromUint((amount as UInt64).compact() * Math.pow(10, NetworkHarvestLocal.DIVISIBILITY)));
+        return new NetworkHarvestLocal(BigInt(Number(amount) * Math.pow(10, NetworkHarvestLocal.DIVISIBILITY)));
     }
 
     /**
@@ -88,10 +87,10 @@ export class NetworkHarvestLocal extends Mosaic {
      * @param amount
      * @returns {NetworkHarvestLocal}
      */
-    public static createAbsolute(amount: UInt64 | number) {
+    public static createAbsolute(amount: bigint | number) {
         if (typeof amount === 'number') {
-            return new NetworkHarvestLocal(UInt64.fromUint(amount));
+            return new NetworkHarvestLocal(BigInt(amount));
         }
-        return new NetworkHarvestLocal(amount as UInt64);
+        return new NetworkHarvestLocal(amount);
     }
 }

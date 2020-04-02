@@ -29,7 +29,6 @@ import { Statement } from '../../../src/model/receipt/Statement';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicAddressRestrictionTransaction} from '../../../src/model/transaction/MosaicAddressRestrictionTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
-import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
 
 describe('MosaicAddressRestrictionTransaction', () => {
@@ -42,28 +41,28 @@ describe('MosaicAddressRestrictionTransaction', () => {
     before(() => {
         account = TestingAccount;
         statement = new Statement([],
-            [new ResolutionStatement(ResolutionType.Address, UInt64.fromUint(2), unresolvedAddress,
+            [new ResolutionStatement(ResolutionType.Address, BigInt(2), unresolvedAddress,
                 [new ResolutionEntry(account.address, new ReceiptSource(1, 0))])],
-            [new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromUint(2), unresolvedMosaicId,
+            [new ResolutionStatement(ResolutionType.Mosaic, BigInt(2), unresolvedMosaicId,
                 [new ResolutionEntry(resolvedMosaicId, new ReceiptSource(1, 0))])],
         );
     });
 
     it('should createComplete an MosaicAddressRestrictionTransaction object and sign', () => {
-        const mosaicId = new MosaicId(UInt64.fromUint(1).toDTO());
+        const mosaicId = new MosaicId(BigInt(1));
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
             Deadline.create(),
             mosaicId,
-            UInt64.fromUint(1),
+            BigInt(1),
             account.address,
-            UInt64.fromUint(8),
+            BigInt(8),
             NetworkType.MIJIN_TEST,
-            UInt64.fromUint(9),
+            BigInt(9),
         );
         expect(mosaicAddressRestrictionTransaction.mosaicId.toHex()).to.be.equal(mosaicId.toHex());
-        expect(mosaicAddressRestrictionTransaction.restrictionKey.toHex()).to.be.equal(UInt64.fromUint(1).toHex());
-        expect(mosaicAddressRestrictionTransaction.previousRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(9).toHex());
-        expect(mosaicAddressRestrictionTransaction.newRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(8).toHex());
+        expect(mosaicAddressRestrictionTransaction.restrictionKey).to.be.equal(BigInt(1));
+        expect(mosaicAddressRestrictionTransaction.previousRestrictionValue).to.be.equal(BigInt(9));
+        expect(mosaicAddressRestrictionTransaction.newRestrictionValue).to.be.equal(BigInt(8));
         expect(mosaicAddressRestrictionTransaction.targetAddressToString()).to.be.equal(account.address.plain());
 
         const signedTransaction = mosaicAddressRestrictionTransaction.signWith(account, generationHash);
@@ -80,16 +79,16 @@ describe('MosaicAddressRestrictionTransaction', () => {
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
             Deadline.create(),
             namespacId,
-            UInt64.fromUint(1),
+            BigInt(1),
             account.address,
-            UInt64.fromUint(8),
+            BigInt(8),
             NetworkType.MIJIN_TEST,
-            UInt64.fromUint(9),
+            BigInt(9),
         );
         expect(mosaicAddressRestrictionTransaction.mosaicId.toHex()).to.be.equal(namespacId.toHex());
-        expect(mosaicAddressRestrictionTransaction.restrictionKey.toHex()).to.be.equal(UInt64.fromUint(1).toHex());
-        expect(mosaicAddressRestrictionTransaction.previousRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(9).toHex());
-        expect(mosaicAddressRestrictionTransaction.newRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(8).toHex());
+        expect(mosaicAddressRestrictionTransaction.restrictionKey).to.be.equal(BigInt(1));
+        expect(mosaicAddressRestrictionTransaction.previousRestrictionValue).to.be.equal(BigInt(9));
+        expect(mosaicAddressRestrictionTransaction.newRestrictionValue).to.be.equal(BigInt(8));
         expect(mosaicAddressRestrictionTransaction.targetAddressToString()).to.be.equal(account.address.plain());
 
         const signedTransaction = mosaicAddressRestrictionTransaction.signWith(account, generationHash);
@@ -102,21 +101,21 @@ describe('MosaicAddressRestrictionTransaction', () => {
     });
 
     it('should createComplete an MosaicAddressRestrictionTransaction use address alias', () => {
-        const mosaicId = new MosaicId(UInt64.fromUint(1).toDTO());
+        const mosaicId = new MosaicId(BigInt(1));
         const namespacId = NamespaceId.createFromEncoded('9550CA3FC9B41FC5');
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
             Deadline.create(),
             mosaicId,
-            UInt64.fromUint(1),
+            BigInt(1),
             namespacId,
-            UInt64.fromUint(8),
+            BigInt(8),
             NetworkType.MIJIN_TEST,
-            UInt64.fromUint(9),
+            BigInt(9),
         );
         expect(mosaicAddressRestrictionTransaction.mosaicId.toHex()).to.be.equal(mosaicId.toHex());
-        expect(mosaicAddressRestrictionTransaction.restrictionKey.toHex()).to.be.equal(UInt64.fromUint(1).toHex());
-        expect(mosaicAddressRestrictionTransaction.previousRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(9).toHex());
-        expect(mosaicAddressRestrictionTransaction.newRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(8).toHex());
+        expect(mosaicAddressRestrictionTransaction.restrictionKey).to.be.equal(BigInt(1));
+        expect(mosaicAddressRestrictionTransaction.previousRestrictionValue).to.be.equal(BigInt(9));
+        expect(mosaicAddressRestrictionTransaction.newRestrictionValue).to.be.equal(BigInt(8));
         expect(mosaicAddressRestrictionTransaction.targetAddressToString()).to.be.equal(namespacId.toHex());
 
         const signedTransaction = mosaicAddressRestrictionTransaction.signWith(account, generationHash);
@@ -131,12 +130,12 @@ describe('MosaicAddressRestrictionTransaction', () => {
     it('should format targetAddress payload with 8 bytes binary namespaceId - targetAddressToString', () => {
         const transaction = MosaicAddressRestrictionTransaction.create(
             Deadline.create(),
-            new MosaicId(UInt64.fromUint(1).toDTO()),
-            UInt64.fromUint(1),
+            new MosaicId(BigInt(1)),
+            BigInt(1),
             new NamespaceId('nem.owner'),
-            UInt64.fromUint(8),
+            BigInt(8),
             NetworkType.MIJIN_TEST,
-            UInt64.fromUint(9),
+            BigInt(9),
         );
 
         // test targetAddressToString with NamespaceId recipient
@@ -155,15 +154,15 @@ describe('MosaicAddressRestrictionTransaction', () => {
     it('Test set maxFee using multiplier', () => {
         const transaction = MosaicAddressRestrictionTransaction.create(
             Deadline.create(),
-            new MosaicId(UInt64.fromUint(1).toDTO()),
-            UInt64.fromUint(1),
+            new MosaicId(BigInt(1)),
+            BigInt(1),
             new NamespaceId('nem.owner'),
-            UInt64.fromUint(8),
+            BigInt(8),
             NetworkType.MIJIN_TEST,
-            UInt64.fromUint(9),
+            BigInt(9),
         ).setMaxFee(2);
 ​
-        expect(transaction.maxFee.compact()).to.be.equal(370);
+        expect(transaction.maxFee).to.be.equal(BigInt(370));
 
         const signedTransaction = transaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
@@ -174,15 +173,15 @@ describe('MosaicAddressRestrictionTransaction', () => {
             NetworkType.MIJIN_TEST,
             1,
             Deadline.createFromDTO('1'),
-            UInt64.fromUint(0),
+            BigInt(0),
             unresolvedMosaicId,
-            UInt64.fromUint(8),
+            BigInt(8),
             unresolvedAddress,
-            UInt64.fromUint(8),
-            UInt64.fromUint(9),
+            BigInt(8),
+            BigInt(9),
             '',
             account.publicAccount,
-            new TransactionInfo(UInt64.fromUint(2), 0, '')).resolveAliases(statement);
+            new TransactionInfo(BigInt(2), 0, '')).resolveAliases(statement);
 ​
         expect(transaction.targetAddress instanceof Address).to.be.true;
         expect(transaction.mosaicId instanceof MosaicId).to.be.true;

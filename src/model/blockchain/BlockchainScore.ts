@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import {UInt64} from '../UInt64';
-
 /**
  * The blockchain score structure describes blockchain difficulty.
  */
@@ -28,11 +26,11 @@ export class BlockchainScore {
     constructor(/**
                  * Low part of the blockchain score.
                  */
-                public readonly scoreLow: UInt64,
+                public readonly scoreLow: bigint,
                 /**
                  * High part of the blockchain score.
                  */
-                public readonly scoreHigh: UInt64) {
+                public readonly scoreHigh: bigint) {
 
     }
 }

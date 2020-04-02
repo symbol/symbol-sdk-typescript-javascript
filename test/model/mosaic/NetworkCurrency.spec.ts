@@ -19,7 +19,7 @@ import {expect} from 'chai';
 import {NetworkCurrencyLocal} from '../../../src/model/mosaic/NetworkCurrencyLocal';
 import { NetworkCurrencyPublic } from '../../../src/model/mosaic/NetworkCurrencyPublic';
 import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
-import { UInt64 } from '../../../src/model/UInt64';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('NetworkCurrencyLocal', () => {
 
@@ -27,18 +27,18 @@ describe('NetworkCurrencyLocal', () => {
 
         const currency = NetworkCurrencyLocal.createRelative(1000);
 
-        deepEqual(currency.id.id.toHex(), '85BBEA6CC462B244'); // holds NAMESPACE_ID
-        expect(currency.amount.compact()).to.be.equal(1000 * 1000000);
+        deepEqual(BigIntUtilities.BigIntToHex(currency.id.id), '85BBEA6CC462B244'); // holds NAMESPACE_ID
+        expect(currency.amount).to.be.equal(BigInt(1000 * 1000000));
     });
 
     it('should set amount in smallest unit when toDTO()', () => {
 
         const currency = NetworkCurrencyLocal.createRelative(1000);
-        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000 * 1000000);
+        expect(BigInt(currency.toDTO().amount)).to.be.equal(BigInt(1000 * 1000000));
     });
 
     it('should have valid statics', () => {
-        deepEqual(NetworkCurrencyLocal.NAMESPACE_ID.id, new NamespaceId([3294802500, 2243684972]).id);
+        deepEqual(NetworkCurrencyLocal.NAMESPACE_ID.id, new NamespaceId(BigInt('0x85BBEA6CC462B244')).id);
         expect(NetworkCurrencyLocal.DIVISIBILITY).to.be.equal(6);
         expect(NetworkCurrencyLocal.TRANSFERABLE).to.be.equal(true);
         expect(NetworkCurrencyLocal.SUPPLY_MUTABLE).to.be.equal(false);
@@ -50,18 +50,18 @@ describe('NetworkCurrencyPublic', () => {
     it('should createComplete an NetworkCurrencyPublic object', () => {
 
         const currency = NetworkCurrencyPublic.createRelative(1000);
-        deepEqual(currency.id.id.toHex(), 'E74B99BA41F4AFEE'); // holds NAMESPACE_ID
-        expect(currency.amount.compact()).to.be.equal(1000 * 1000000);
+        deepEqual(currency.id.id, BigInt('0xE74B99BA41F4AFEE')); // holds NAMESPACE_ID
+        expect(currency.amount).to.be.equal(BigInt(1000 * 1000000));
     });
 
     it('should set amount in smallest unit when toDTO()', () => {
 
         const currency = NetworkCurrencyPublic.createRelative(1000);
-        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000 * 1000000);
+        expect(BigInt(currency.toDTO().amount)).to.be.equal(BigInt(1000 * 1000000));
     });
 
     it('should have valid statics', () => {
-        deepEqual(NetworkCurrencyPublic.NAMESPACE_ID.id, new NamespaceId([1106554862, 3880491450]).id);
+        deepEqual(NetworkCurrencyPublic.NAMESPACE_ID.id, new NamespaceId(BigInt('0xE74B99BA41F4AFEE')).id);
         expect(NetworkCurrencyPublic.DIVISIBILITY).to.be.equal(6);
         expect(NetworkCurrencyPublic.TRANSFERABLE).to.be.equal(true);
         expect(NetworkCurrencyPublic.SUPPLY_MUTABLE).to.be.equal(false);

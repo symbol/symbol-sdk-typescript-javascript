@@ -19,7 +19,6 @@ import { expect } from 'chai';
 import { Listener } from '../../src/infrastructure/Listener';
 import { Address } from '../../src/model/account/Address';
 import { TransactionStatusError } from '../../src/model/transaction/TransactionStatusError';
-import { UInt64 } from '../../src/model/UInt64';
 
 describe('Listener', () => {
     it('should createComplete a WebSocket instance given url parameter', () => {
@@ -76,7 +75,7 @@ describe('Listener', () => {
             expect(transactionStatusError.address).to.deep.equal(errorAddress);
             expect(transactionStatusError.hash).to.be.equal(statusInfoErrorDTO.hash);
             expect(transactionStatusError.code).to.be.equal(statusInfoErrorDTO.code);
-            deepEqual(transactionStatusError.deadline.toDTO(), UInt64.fromNumericString(statusInfoErrorDTO.deadline).toDTO());
+            deepEqual(transactionStatusError.deadline.toBigInt(), BigInt(statusInfoErrorDTO.deadline));
 
         });
     });

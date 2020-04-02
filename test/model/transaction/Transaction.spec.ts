@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { EmbeddedTransactionBuilder } from 'catbuffer-typescript';
+import { EmbeddedTransactionBuilder } from 'catbuffer';
 import { expect } from 'chai';
 import { Convert } from '../../../src/core/format/Convert';
 import { Account } from '../../../src/model/account/Account';
@@ -28,7 +28,6 @@ import { Transaction } from '../../../src/model/transaction/Transaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
-import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
 // tslint:disable: no-use-before-declare
@@ -45,7 +44,7 @@ describe('Transaction', () => {
                 NetworkType.MIJIN_TEST,
                 1,
                 Deadline.create(),
-                UInt64.fromUint(0),
+                BigInt(0),
                 undefined,
                 undefined,
                 undefined,
@@ -60,10 +59,10 @@ describe('Transaction', () => {
                 NetworkType.MIJIN_TEST,
                 1,
                 Deadline.create(),
-                UInt64.fromUint(0),
+                BigInt(0),
                 undefined,
                 undefined,
-                new TransactionInfo(UInt64.fromUint(0), 1, 'id_hash', 'hash', 'hash'),
+                new TransactionInfo(BigInt(0), 1, 'id_hash', 'hash', 'hash'),
             );
             expect(transaction.isUnconfirmed()).to.be.equal(true);
         });
@@ -73,10 +72,10 @@ describe('Transaction', () => {
                 NetworkType.MIJIN_TEST,
                 1,
                 Deadline.create(),
-                UInt64.fromUint(0),
+                BigInt(0),
                 undefined,
                 undefined,
-                new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', 'hash', 'hash'),
+                new TransactionInfo(BigInt(100), 1, 'id_hash', 'hash', 'hash'),
             );
             expect(transaction.isUnconfirmed()).to.be.equal(false);
         });
@@ -88,10 +87,10 @@ describe('Transaction', () => {
                 NetworkType.MIJIN_TEST,
                 1,
                 Deadline.create(),
-                UInt64.fromUint(0),
+                BigInt(0),
                 undefined,
                 undefined,
-                new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', 'hash', 'hash'),
+                new TransactionInfo(BigInt(100), 1, 'id_hash', 'hash', 'hash'),
             );
             expect(transaction.isConfirmed()).to.be.equal(true);
         });
@@ -103,10 +102,10 @@ describe('Transaction', () => {
                 NetworkType.MIJIN_TEST,
                 1,
                 Deadline.create(),
-                UInt64.fromUint(0),
+                BigInt(0),
                 undefined,
                 undefined,
-                new TransactionInfo(UInt64.fromUint(0), 1, 'id_hash', 'hash', 'hash_2'),
+                new TransactionInfo(BigInt(0), 1, 'id_hash', 'hash', 'hash_2'),
             );
             expect(transaction.hasMissingSignatures()).to.be.equal(true);
         });
@@ -118,10 +117,10 @@ describe('Transaction', () => {
                 NetworkType.MIJIN_TEST,
                 1,
                 Deadline.create(),
-                UInt64.fromUint(0),
+                BigInt(0),
                 undefined,
                 undefined,
-                new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', 'hash', 'hash'),
+                new TransactionInfo(BigInt(100), 1, 'id_hash', 'hash', 'hash'),
             );
             expect(() => {
                 transaction.reapplyGiven(Deadline.create());
@@ -132,7 +131,7 @@ describe('Transaction', () => {
                 NetworkType.MIJIN_TEST,
                 1,
                 Deadline.create(),
-                UInt64.fromUint(0),
+                BigInt(0),
                 undefined,
                 undefined,
             );
@@ -145,7 +144,7 @@ describe('Transaction', () => {
                 NetworkType.MIJIN_TEST,
                 1,
                 Deadline.create(),
-                UInt64.fromUint(0),
+                BigInt(0),
                 undefined,
                 undefined,
             );
@@ -166,7 +165,7 @@ describe('Transaction', () => {
                 NetworkType.MIJIN_TEST,
                 1,
                 Deadline.create(),
-                UInt64.fromUint(0),
+                BigInt(0),
                 undefined,
                 undefined,
             );
@@ -207,10 +206,10 @@ describe('Transaction', () => {
                 NetworkType.MIJIN_TEST,
                 1,
                 Deadline.create(),
-                UInt64.fromUint(0),
+                BigInt(0),
                 undefined,
                 undefined,
-                new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', 'hash', 'hash'),
+                new TransactionInfo(BigInt(100), 1, 'id_hash', 'hash', 'hash'),
             );
             expect(transaction.size).to.be.equal(128);
         });
@@ -222,10 +221,10 @@ describe('Transaction', () => {
                 NetworkType.MIJIN_TEST,
                 1,
                 Deadline.create(),
-                UInt64.fromUint(0),
+                BigInt(0),
                 undefined,
                 undefined,
-                new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', 'hash', 'hash'),
+                new TransactionInfo(BigInt(100), 1, 'id_hash', 'hash', 'hash'),
             );
             expect(transaction.versionToHex()).to.be.equal('0x9001');
         });

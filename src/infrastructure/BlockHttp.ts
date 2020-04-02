@@ -21,7 +21,6 @@ import { BlockInfo } from '../model/blockchain/BlockInfo';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
 import { Transaction } from '../model/transaction/Transaction';
-import { UInt64 } from '../model/UInt64';
 import { BlockRepository } from './BlockRepository';
 import { Http } from './Http';
 import { QueryParams } from './QueryParams';
@@ -54,7 +53,7 @@ export class BlockHttp extends Http implements BlockRepository {
      * @param height - Block height
      * @returns Observable<BlockInfo>
      */
-    public getBlockByHeight(height: UInt64): Observable<BlockInfo> {
+    public getBlockByHeight(height: bigint): Observable<BlockInfo> {
         return this.call(this.blockRoutesApi.getBlockByHeight(height.toString()), (body) => this.toBlockInfo(body));
     }
 
@@ -64,7 +63,7 @@ export class BlockHttp extends Http implements BlockRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    public getBlockTransactions(height: UInt64,
+    public getBlockTransactions(height: bigint,
                                 queryParams?: QueryParams): Observable<Transaction[]> {
         return this.call(this.blockRoutesApi.getBlockTransactions(height.toString(),
             this.queryParams(queryParams).pageSize,
@@ -81,7 +80,7 @@ export class BlockHttp extends Http implements BlockRepository {
      * @param limit - Number of blocks returned.
      * @returns Observable<BlockInfo[]>
      */
-    public getBlocksByHeightWithLimit(height: UInt64, limit: number): Observable<BlockInfo[]> {
+    public getBlocksByHeightWithLimit(height: bigint, limit: number): Observable<BlockInfo[]> {
         return this.call(this.blockRoutesApi.getBlocksByHeightWithLimit(height.toString(), limit), (body) =>
             body.map((blockDTO) => this.toBlockInfo(blockDTO)));
     }
@@ -98,16 +97,16 @@ export class BlockHttp extends Http implements BlockRepository {
         return new BlockInfo(
             dto.meta.hash,
             dto.meta.generationHash,
-            UInt64.fromNumericString(dto.meta.totalFee),
+            BigInt(dto.meta.totalFee),
             dto.meta.numTransactions,
             dto.block.signature,
             PublicAccount.createFromPublicKey(dto.block.signerPublicKey, networkType),
             networkType,
             dto.block.version,
             dto.block.type,
-            UInt64.fromNumericString(dto.block.height),
-            UInt64.fromNumericString(dto.block.timestamp),
-            UInt64.fromNumericString(dto.block.difficulty),
+            BigInt(dto.block.height),
+            BigInt(dto.block.timestamp),
+            BigInt(dto.block.difficulty),
             dto.block.feeMultiplier,
             dto.block.previousBlockHash,
             dto.block.transactionsHash,
@@ -128,7 +127,7 @@ export class BlockHttp extends Http implements BlockRepository {
      * @param hash The hash of the transaction.
      * @return Observable<MerkleProofInfo>
      */
-    public getMerkleTransaction(height: UInt64, hash: string): Observable<MerkleProofInfo> {
+    public getMerkleTransaction(height: bigint, hash: string): Observable<MerkleProofInfo> {
         return this.call(
             this.blockRoutesApi.getMerkleTransaction(height.toString(), hash), (body) => new MerkleProofInfo(
                 body.merklePath!.map((payload) => new MerklePathItem(payload.position, payload.hash)),

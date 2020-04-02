@@ -19,7 +19,6 @@ import { MosaicId } from '../mosaic/MosaicId';
 import { AliasAction } from '../namespace/AliasAction';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
-import { UInt64 } from '../UInt64';
 import { AddressAliasTransaction } from './AddressAliasTransaction';
 import { Deadline } from './Deadline';
 import { MosaicAliasTransaction } from './MosaicAliasTransaction';
@@ -42,7 +41,7 @@ export abstract class AliasTransaction extends Transaction {
                                    namespaceId: NamespaceId,
                                    address: Address,
                                    networkType: NetworkType,
-                                   maxFee: UInt64 = new UInt64([0, 0])): AliasTransaction {
+                                   maxFee: bigint = BigInt(0)): AliasTransaction {
         return AddressAliasTransaction.create(
             deadline,
             aliasAction,
@@ -68,7 +67,7 @@ export abstract class AliasTransaction extends Transaction {
                                   namespaceId: NamespaceId,
                                   mosaicId: MosaicId,
                                   networkType: NetworkType,
-                                  maxFee: UInt64 = new UInt64([0, 0])): AliasTransaction {
+                                  maxFee: bigint = BigInt(0)): AliasTransaction {
         return MosaicAliasTransaction.create(
             deadline,
             aliasAction,

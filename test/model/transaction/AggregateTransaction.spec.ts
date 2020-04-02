@@ -48,7 +48,6 @@ import { NamespaceRegistrationTransaction } from '../../../src/model/transaction
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
-import { UInt64 } from '../../../src/model/UInt64';
 import { Cosignatory2Account, CosignatoryAccount, MultisigAccount, TestingAccount } from '../../conf/conf.spec';
 
 describe('AggregateTransaction', () => {
@@ -64,9 +63,9 @@ describe('AggregateTransaction', () => {
     before(() => {
         account = TestingAccount;
         statement = new Statement([],
-            [new ResolutionStatement(ResolutionType.Address, UInt64.fromUint(2), unresolvedAddress,
+            [new ResolutionStatement(ResolutionType.Address, BigInt(2), unresolvedAddress,
                 [new ResolutionEntry(account.address, new ReceiptSource(1, 1))])],
-            [new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromUint(2), unresolvedMosaicId,
+            [new ResolutionStatement(ResolutionType.Mosaic, BigInt(2), unresolvedMosaicId,
                 [new ResolutionEntry(resolvedMosaicId, new ReceiptSource(1, 1))])],
         );
     });
@@ -87,8 +86,7 @@ describe('AggregateTransaction', () => {
             [],
         );
 
-        expect(aggregateTransaction.maxFee.higher).to.be.equal(0);
-        expect(aggregateTransaction.maxFee.lower).to.be.equal(0);
+        expect(aggregateTransaction.maxFee).to.be.equal(BigInt(0));
     });
 
     it('should filled maxFee override transaction maxFee', () => {
@@ -105,11 +103,10 @@ describe('AggregateTransaction', () => {
             [transferTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
-            new UInt64([1, 0]),
+            BigInt(1),
         );
 
-        expect(aggregateTransaction.maxFee.higher).to.be.equal(0);
-        expect(aggregateTransaction.maxFee.lower).to.be.equal(1);
+        expect(aggregateTransaction.maxFee).to.be.equal(BigInt(1));
     });
 
     it('should createComplete an AggregateTransaction object with TransferTransaction', () => {
@@ -139,7 +136,7 @@ describe('AggregateTransaction', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
             Deadline.create(),
             'root-test-namespace',
-            UInt64.fromUint(1000),
+            BigInt(1000),
             NetworkType.MIJIN_TEST,
         );
 
@@ -164,10 +161,10 @@ describe('AggregateTransaction', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
-            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            new MosaicId(BigInt(1)), // ID
             MosaicFlags.create(true, true, true),
             3,
-            UInt64.fromUint(1000),
+            BigInt(1000),
             NetworkType.MIJIN_TEST,
         );
 
@@ -189,12 +186,12 @@ describe('AggregateTransaction', () => {
     });
 
     it('should createComplete an AggregateTransaction object with MosaicSupplyChangeTransaction', () => {
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
-            UInt64.fromUint(10),
+            BigInt(10),
             NetworkType.MIJIN_TEST,
         );
 
@@ -568,7 +565,7 @@ describe('AggregateTransaction', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(1, ChronoUnit.HOURS),
             unresolvedAddress,
-            [new Mosaic(unresolvedMosaicId, UInt64.fromUint(1))],
+            [new Mosaic(unresolvedMosaicId, BigInt(1))],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
         );
@@ -580,7 +577,7 @@ describe('AggregateTransaction', () => {
             [],
         ).setMaxFee(2);
 ​
-        expect(aggregateTransaction.maxFee.compact()).to.be.equal(560);
+        expect(aggregateTransaction.maxFee).to.be.equal(BigInt(560));
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
@@ -591,25 +588,25 @@ describe('AggregateTransaction', () => {
             NetworkType.MIJIN_TEST,
             1,
             Deadline.createFromDTO('1'),
-            UInt64.fromUint(0),
+            BigInt(0),
             unresolvedAddress,
-            [new Mosaic(unresolvedMosaicId, UInt64.fromUint(1))],
+            [new Mosaic(unresolvedMosaicId, BigInt(1))],
             PlainMessage.create('test'),
             '',
             account.publicAccount,
-            new TransactionInfo(UInt64.fromUint(2), 0, ''));
+            new TransactionInfo(BigInt(2), 0, ''));
 
         const aggregateTransaction = new AggregateTransaction(
             NetworkType.MIJIN_TEST,
             TransactionType.AGGREGATE_COMPLETE,
             1,
             Deadline.createFromDTO('1'),
-            UInt64.fromUint(100),
+            BigInt(100),
             [transferTransaction.toAggregate(account.publicAccount)],
             [],
             '',
             account.publicAccount,
-            new TransactionInfo(UInt64.fromUint(2), 0, '')).resolveAliases(statement);
+            new TransactionInfo(BigInt(2), 0, '')).resolveAliases(statement);
 ​
         const innerTransaction = aggregateTransaction.innerTransactions[0] as TransferTransaction;
         expect(innerTransaction.recipientAddress instanceof Address).to.be.true;

@@ -36,6 +36,7 @@ import { AccountType } from '../../src/model/account/AccountType';
 import { Address } from '../../src/model/account/Address';
 import { Transaction } from '../../src/model/transaction/Transaction';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
+import { BigIntUtilities } from '../../src/core/format/BigIntUtilities';
 
 describe('AccountHttp', () => {
 
@@ -116,7 +117,7 @@ describe('AccountHttp', () => {
         expect(accountInfo.publicKey).to.be.equals(accountDTO.publicKey);
         expect(accountInfo.linkedAccountKey).to.be.equals(accountDTO.linkedAccountKey);
         expect(accountInfo.mosaics.length).to.be.equals(1);
-        expect(accountInfo.mosaics[0].id.id.toHex()).to.be.equals(mosaic.id);
+        expect(BigIntUtilities.BigIntToHex(accountInfo.mosaics[0].id.id)).to.be.equals(mosaic.id);
         expect(accountInfo.mosaics[0].amount.toString()).to.be.equals(mosaic.amount);
 
         expect(accountInfo.activityBucket.length).to.be.equals(1);

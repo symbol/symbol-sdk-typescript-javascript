@@ -24,20 +24,20 @@ import {
     NamespaceIdDto,
     SignatureDto,
     TimestampDto,
-} from 'catbuffer-typescript';
+} from 'catbuffer';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
 import { MosaicId } from '../mosaic/MosaicId';
 import { AliasAction } from '../namespace/AliasAction';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
-import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 export class MosaicAliasTransaction extends Transaction {
 
@@ -56,7 +56,7 @@ export class MosaicAliasTransaction extends Transaction {
                          namespaceId: NamespaceId,
                          mosaicId: MosaicId,
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): MosaicAliasTransaction {
+                         maxFee: bigint = BigInt(0)): MosaicAliasTransaction {
         return new MosaicAliasTransaction(networkType,
             TransactionVersion.MOSAIC_ALIAS,
             deadline,
@@ -82,7 +82,7 @@ export class MosaicAliasTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                maxFee: UInt64,
+                maxFee: bigint,
                 /**
                  * The alias action type.
                  */
@@ -114,13 +114,12 @@ export class MosaicAliasTransaction extends Transaction {
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = MosaicAliasTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as MosaicAliasTransactionBuilder).getDeadline().timestamp),
+            isEmbedded ? Deadline.create() : Deadline.createFromBigInt((builder as MosaicAliasTransactionBuilder).getDeadline().timestamp),
             builder.getAliasAction().valueOf(),
             new NamespaceId(builder.getNamespaceId().namespaceId),
             new MosaicId(builder.getMosaicId().mosaicId),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicAliasTransactionBuilder).fee.amount),
-        );
+            isEmbedded ? BigInt(0) : (builder as MosaicAliasTransactionBuilder).fee.amount);
         return isEmbedded ?
             transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -156,10 +155,10 @@ export class MosaicAliasTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.MOSAIC_ALIAS.valueOf(),
-            new AmountDto(this.maxFee.toDTO()),
-            new TimestampDto(this.deadline.toDTO()),
-            new NamespaceIdDto(this.namespaceId.id.toDTO()),
-            new MosaicIdDto(this.mosaicId.id.toDTO()),
+            new AmountDto(this.maxFee),
+            new TimestampDto(this.deadline.toBigInt()),
+            new NamespaceIdDto(this.namespaceId.id),
+            new MosaicIdDto(this.mosaicId.id),
             this.aliasAction.valueOf(),
         );
         return transactionBuilder.serialize();
@@ -175,8 +174,8 @@ export class MosaicAliasTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.MOSAIC_ALIAS.valueOf(),
-            new NamespaceIdDto(this.namespaceId.id.toDTO()),
-            new MosaicIdDto(this.mosaicId.id.toDTO()),
+            new NamespaceIdDto(this.namespaceId.id),
+            new MosaicIdDto(this.mosaicId.id),
             this.aliasAction.valueOf(),
         );
     }

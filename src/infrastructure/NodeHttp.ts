@@ -21,7 +21,6 @@ import { NodeHealth } from '../model/node/NodeHealth';
 import { NodeInfo } from '../model/node/NodeInfo';
 import { NodeTime } from '../model/node/NodeTime';
 import { ServerInfo } from '../model/node/ServerInfo';
-import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { NodeRepository } from './NodeRepository';
 
@@ -73,8 +72,8 @@ export class NodeHttp extends Http implements NodeRepository {
             (body) => {
                 const nodeTimeDTO = body;
                 if (nodeTimeDTO.communicationTimestamps.sendTimestamp && nodeTimeDTO.communicationTimestamps.receiveTimestamp) {
-                    return new NodeTime(UInt64.fromNumericString(nodeTimeDTO.communicationTimestamps.sendTimestamp),
-                        UInt64.fromNumericString(nodeTimeDTO.communicationTimestamps.receiveTimestamp));
+                    return new NodeTime(BigInt(nodeTimeDTO.communicationTimestamps.sendTimestamp),
+                        BigInt(nodeTimeDTO.communicationTimestamps.receiveTimestamp));
                 }
                 throw Error('Node time not available');
             },

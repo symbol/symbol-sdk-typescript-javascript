@@ -19,7 +19,6 @@ import {expect} from 'chai';
 import {Address} from '../../../src/model/account/Address';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {TransactionStatusError} from '../../../src/model/transaction/TransactionStatusError';
-import { UInt64 } from '../../../src/model/UInt64';
 
 describe('TransactionStatusError', () => {
 
@@ -39,6 +38,6 @@ describe('TransactionStatusError', () => {
         expect(transactionStatusError.address).to.be.equal(statusInfoErrorDTO.address);
         expect(transactionStatusError.hash).to.be.equal(statusInfoErrorDTO.hash);
         expect(transactionStatusError.code).to.be.equal(statusInfoErrorDTO.code);
-        deepEqual(transactionStatusError.deadline.toDTO(), UInt64.fromNumericString(statusInfoErrorDTO.deadline).toDTO());
+        deepEqual(transactionStatusError.deadline.toBigInt(), BigInt(statusInfoErrorDTO.deadline));
     });
 });

@@ -33,7 +33,6 @@ import { Deadline } from '../../src/model/transaction/Deadline';
 import { MosaicAddressRestrictionTransaction } from '../../src/model/transaction/MosaicAddressRestrictionTransaction';
 import { MosaicGlobalRestrictionTransaction } from '../../src/model/transaction/MosaicGlobalRestrictionTransaction';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
-import { UInt64 } from '../../src/model/UInt64';
 import { MosaicRestrictionTransactionService } from '../../src/service/MosaicRestrictionTransactionService';
 import { TestingAccount } from '../conf/conf.spec';
 
@@ -96,7 +95,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 expect(transaction.restrictionKey.toString()).to.be.equal(key.toString());
                 expect(transaction.previousRestrictionType).to.be.equal(globalRestrictionType);
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal(globalRestrictionValue);
-                expect(transaction.referenceMosaicId.toHex()).to.be.equal(new MosaicId(UInt64.fromUint(0).toDTO()).toHex());
+                expect(transaction.referenceMosaicId.id).to.be.equal(new MosaicId(BigInt(0)).id);
                 done();
         });
     });
@@ -112,7 +111,7 @@ describe('MosaicRestrictionTransactionService', () => {
                                             referenceMosaicId)
             .subscribe((transaction: MosaicGlobalRestrictionTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
-                expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
+                expect(transaction.restrictionKey).to.be.equal(key);
                 expect(transaction.previousRestrictionType).to.be.equal(globalRestrictionType);
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal(globalRestrictionValue);
                 expect(transaction.referenceMosaicId.toHex()).to.be.equal(referenceMosaicId.toHex());
@@ -147,10 +146,10 @@ describe('MosaicRestrictionTransactionService', () => {
                                             MosaicRestrictionType.LE)
             .subscribe((transaction: MosaicGlobalRestrictionTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
-                expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
+                expect(transaction.restrictionKey).to.be.equal(key);
                 expect(transaction.previousRestrictionType).to.be.equal(globalRestrictionType);
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal(globalRestrictionValue);
-                expect(transaction.referenceMosaicId.toHex()).to.be.equal(new MosaicId(UInt64.fromUint(0).toDTO()).toHex());
+                expect(transaction.referenceMosaicId.id).to.be.equal(new MosaicId(BigInt(0)).id);
                 done();
         });
     });

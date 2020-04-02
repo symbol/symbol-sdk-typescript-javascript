@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import {UInt64} from '../UInt64';
-
 /**
  * Transaction information model included in all transactions
  */
@@ -32,7 +30,7 @@ export class TransactionInfo {
                 /**
                  * The block height in which the transaction was included.
                  */
-                public readonly height: UInt64,
+                public readonly height: bigint,
                 /**
                  * The index representing either transaction index/position within block or within an aggregate transaction.
                  */

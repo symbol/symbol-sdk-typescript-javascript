@@ -37,6 +37,7 @@ import { SecretProofTransaction } from '../../model/transaction/SecretProofTrans
 import { Transaction } from '../../model/transaction/Transaction';
 import { TransactionType } from '../../model/transaction/TransactionType';
 import { TransferTransaction } from '../../model/transaction/TransferTransaction';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * @internal
@@ -173,7 +174,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
         case TransactionType.SECRET_LOCK:
             const secretLockTx = transaction as SecretLockTransaction;
             return {
-                mosaicId: secretLockTx.mosaic.id.id.toHex(),
+                mosaicId: BigIntUtilities.BigIntToHex(secretLockTx.mosaic.id.id),
                 amount: secretLockTx.mosaic.amount.toString(),
                 duration: secretLockTx.duration.toString(),
                 hashAlgorithm: secretLockTx.hashType,
@@ -202,7 +203,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             return {
                 mosaicId: mosaicGlobalRestrictionTx.mosaicId.toHex(),
                 referenceMosaicId: mosaicGlobalRestrictionTx.referenceMosaicId.toHex(),
-                restrictionKey: mosaicGlobalRestrictionTx.restrictionKey.toHex(),
+                restrictionKey: BigIntUtilities.BigIntToHex(mosaicGlobalRestrictionTx.restrictionKey),
                 previousRestrictionValue: mosaicGlobalRestrictionTx.previousRestrictionValue.toString(),
                 previousRestrictionType: mosaicGlobalRestrictionTx.previousRestrictionType,
                 newRestrictionValue: mosaicGlobalRestrictionTx.newRestrictionValue.toString(),
@@ -212,7 +213,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             const mosaicAddressRestrictionTx = transaction as MosaicAddressRestrictionTransaction;
             return {
                 mosaicId: mosaicAddressRestrictionTx.mosaicId.toHex(),
-                restrictionKey: mosaicAddressRestrictionTx.restrictionKey.toHex(),
+                restrictionKey: BigIntUtilities.BigIntToHex(mosaicAddressRestrictionTx.restrictionKey),
                 targetAddress: mosaicAddressRestrictionTx.targetAddress.toDTO(),
                 previousRestrictionValue: mosaicAddressRestrictionTx.previousRestrictionValue.toString(),
                 newRestrictionValue: mosaicAddressRestrictionTx.newRestrictionValue.toString(),
@@ -222,7 +223,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             const accountMetadataTx = transaction as AccountMetadataTransaction;
             return {
                 targetPublicKey: accountMetadataTx.targetPublicKey,
-                scopedMetadataKey: accountMetadataTx.scopedMetadataKey.toHex(),
+                scopedMetadataKey: BigIntUtilities.BigIntToHex(accountMetadataTx.scopedMetadataKey),
                 valueSizeDelta: accountMetadataTx.valueSizeDelta,
                 valueSize: accountMetadataTx.value.length,
                 value: Convert.utf8ToHex(accountMetadataTx.value),
@@ -232,9 +233,9 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             const mosaicMetadataTx = transaction as MosaicMetadataTransaction;
             return {
                 targetPublicKey: mosaicMetadataTx.targetPublicKey,
-                scopedMetadataKey: mosaicMetadataTx.scopedMetadataKey.toHex(),
+                scopedMetadataKey: BigIntUtilities.BigIntToHex(mosaicMetadataTx.scopedMetadataKey),
                 valueSizeDelta: mosaicMetadataTx.valueSizeDelta,
-                targetMosaicId: mosaicMetadataTx.targetMosaicId.id.toHex(),
+                targetMosaicId: BigIntUtilities.BigIntToHex(mosaicMetadataTx.targetMosaicId.id),
                 valueSize: mosaicMetadataTx.value.length,
                 value: Convert.utf8ToHex(mosaicMetadataTx.value),
 
@@ -243,9 +244,9 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             const namespaceMetaTx = transaction as NamespaceMetadataTransaction;
             return {
                 targetPublicKey: namespaceMetaTx.targetPublicKey,
-                scopedMetadataKey: namespaceMetaTx.scopedMetadataKey.toHex(),
+                scopedMetadataKey: BigIntUtilities.BigIntToHex(namespaceMetaTx.scopedMetadataKey),
                 valueSizeDelta: namespaceMetaTx.valueSizeDelta,
-                targetNamespaceId: namespaceMetaTx.targetNamespaceId.id.toHex(),
+                targetNamespaceId: BigIntUtilities.BigIntToHex(namespaceMetaTx.targetNamespaceId.id),
                 valueSize: namespaceMetaTx.value.length,
                 value: Convert.utf8ToHex(namespaceMetaTx.value),
 

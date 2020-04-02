@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Convert as convert, RawUInt64 as uint64_t } from '../../core/format';
+import { Convert as convert } from '../../core/format';
 import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
 import { PublicAccount } from '../account/PublicAccount';
-import { Id } from '../Id';
 import { MosaicNonce } from '../mosaic/MosaicNonce';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * The mosaic id structure describes mosaic id
@@ -29,7 +29,7 @@ export class MosaicId {
     /**
      * Mosaic id
      */
-    public readonly id: Id;
+    public readonly id: bigint;
 
     /**
      * Create a MosaicId for given `nonce` MosaicNonce and `owner` PublicAccount.
@@ -40,7 +40,7 @@ export class MosaicId {
      */
     public static createFromNonce(nonce: MosaicNonce, owner: PublicAccount): MosaicId {
         const mosaicId = NamespaceMosaicIdGenerator.mosaicId(nonce.toUint8Array(), convert.hexToUint8(owner.publicKey));
-        return new MosaicId(mosaicId);
+        return new MosaicId(BigIntUtilities.UInt64ToBigInt(mosaicId));
     }
 
     /**
@@ -49,19 +49,19 @@ export class MosaicId {
      *
      * @param id
      */
-    constructor(id: string | number[]) {
+    constructor(id: string | bigint) {
         if (id === undefined) {
             throw new Error('MosaicId undefined');
         }
-        if (id instanceof Array) {
-            this.id = new Id(id);
+        // tslint:disable-next-line: typeof-compare
+        if (typeof id === 'bigint') {
+            this.id = id;
         } else if (typeof id === 'string') {
             if (! /^[0-9A-Fa-f]{16}$/i.test(id)) {
                 throw new Error('Invalid size for MosaicId hexadecimal notation');
             }
-
             // hexadecimal formatted MosaicId
-            this.id = new Id(uint64_t.fromHex(id));
+            this.id = BigIntUtilities.HexToBigInt(id);
         }
     }
 
@@ -70,7 +70,7 @@ export class MosaicId {
      * @returns {string}
      */
     public toHex(): string {
-        return this.id.toHex().toUpperCase();
+        return BigIntUtilities.BigIntToHex(this.id).toUpperCase();
     }
 
     /**
@@ -80,7 +80,7 @@ export class MosaicId {
      */
     public equals(other: any): boolean {
         if (other instanceof MosaicId) {
-            return this.id.equals(other.id);
+            return this.id === other.id;
         }
         return false;
     }
@@ -89,6 +89,6 @@ export class MosaicId {
      * Create DTO object.
      */
     toDTO() {
-        return this.id.toDTO();
+        return this.toHex();
     }
 }
