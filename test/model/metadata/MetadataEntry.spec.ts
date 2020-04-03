@@ -20,6 +20,7 @@ import { MetadataEntry } from '../../../src/model/metadata/MetadataEntry';
 import { MetadataType } from '../../../src/model/metadata/MetadataType';
 import { MosaicId, NamespaceId } from '../../../src/model/model';
 import { TestingAccount } from '../../conf/conf.spec';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('MetadataEntry', () => {
     let account: Account;
@@ -43,7 +44,7 @@ describe('MetadataEntry', () => {
             metadataEntryDTO.compositeHash,
             metadataEntryDTO.senderPublicKey,
             metadataEntryDTO.targetPublicKey,
-            BigInt(metadataEntryDTO.scopedMetadataKey),
+            BigIntUtilities.HexToBigInt(metadataEntryDTO.scopedMetadataKey),
             metadataEntryDTO.metadataType,
             metadataEntryDTO.value,
         );
@@ -73,7 +74,7 @@ describe('MetadataEntry', () => {
             metadataEntryDTO.compositeHash,
             metadataEntryDTO.senderPublicKey,
             metadataEntryDTO.targetPublicKey,
-            BigInt(metadataEntryDTO.scopedMetadataKey),
+            BigIntUtilities.HexToBigInt(metadataEntryDTO.scopedMetadataKey),
             metadataEntryDTO.metadataType,
             metadataEntryDTO.value,
             new MosaicId(metadataEntryDTO.targetId),
@@ -103,7 +104,7 @@ describe('MetadataEntry', () => {
             metadataEntryDTO.compositeHash,
             metadataEntryDTO.senderPublicKey,
             metadataEntryDTO.targetPublicKey,
-            BigInt(metadataEntryDTO.scopedMetadataKey),
+            BigIntUtilities.HexToBigInt(metadataEntryDTO.scopedMetadataKey),
             metadataEntryDTO.metadataType,
             metadataEntryDTO.value,
             NamespaceId.createFromEncoded(metadataEntryDTO.targetId),

@@ -83,27 +83,27 @@ export class BigIntUtilities {
     }
 
     /**
-     * Convert UInt64 to BigInt (Little Endian default)
+     * Convert UInt64 to BigInt
      * @param input UInt64 in Uint32 array
-     * @param littleEndian Using little endian
+     * @param littleEndian Reverse uint32 array
      * @returns {BigInt}
      */
-    public static UInt64ToBigInt(input: number[], littleEndian: boolean = true): bigint {
+    public static UInt64ToBigInt(input: number[], reverse: boolean = false): bigint {
         const uint32Array = new Uint32Array(input);
         let uint8 = new Uint8Array(uint32Array.buffer);
-        uint8 = littleEndian ? uint8.reverse() : uint8;
+        uint8 = reverse ? uint8.reverse() : uint8;
         return BigInt('0x' + Convert.uint8ToHex(uint8));
 
     }
 
     /**
-     * Convert UInt64 to hex (Little Endian default)
+     * Convert UInt64 to hex 
      * @param input UInt64 in Uint32 array
-     * @param littleEndian Using little endian
+     * @param littleEndian Reverse uint32 array
      * @returns {string}
      */
-    public static UInt64ToHex(input: number[], littleEndian: boolean = true): string {
-        const bigInt = BigIntUtilities.UInt64ToBigInt(input, littleEndian);
+    public static UInt64ToHex(input: number[], reverse: boolean = false): string {
+        const bigInt = BigIntUtilities.UInt64ToBigInt(input, reverse);
         return BigIntUtilities.BigIntToHex(bigInt);
 
     }
