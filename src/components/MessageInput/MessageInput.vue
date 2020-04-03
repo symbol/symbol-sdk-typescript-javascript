@@ -6,7 +6,6 @@
     <template v-slot:inputs>
       <ValidationProvider
         v-slot="{ errors }"
-        mode="lazy"
         vid="message"
         :name="$t('message')"
         :rules="validationRules.message"
