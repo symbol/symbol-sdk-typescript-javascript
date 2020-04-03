@@ -23,6 +23,7 @@ import {Formatters} from '@/core/utils/Formatters'
 
 // configuration
 import networkConfig from '@/../config/network.conf.json'
+const currentNetworkConfig = networkConfig.networks['testnet-publicTest']
 
 // child components
 // @ts-ignore
@@ -80,17 +81,15 @@ export class TransactionDetailsHeaderTs extends Vue {
   public formatters = Formatters
 
   /**
-   * Returns the effective fee paid if available
+   * Returns the relative effective fee paid if available
    * @return {number}
    */
   public getFeeAmount(): number {
-    if (!this.view) {
-      return 0
-    }
-
-    return this.view.values.get('effectiveFee')
-      || this.view.values.get('maxFee')
-      || 0
+    if (!this.view) return 0
+    const absoluteFee = this.view.values.get('effectiveFee') || this.view.values.get('maxFee')
+    if (!absoluteFee) return 0
+    const networkMosaicDivisibility = currentNetworkConfig.properties.maxMosaicDivisibility
+    return absoluteFee / Math.pow(10, networkMosaicDivisibility)
   }
 
   /**
