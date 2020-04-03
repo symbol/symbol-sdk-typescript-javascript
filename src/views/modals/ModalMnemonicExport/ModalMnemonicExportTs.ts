@@ -135,4 +135,27 @@ export class ModalMnemonicExportTs extends Vue {
   public onError(error: string) {
     this.$emit('error', error)
   }
+
+  /**
+   * Hook called when the download QR button is pressed
+   * @return {void}
+   */
+  public onDownloadQR() {
+    if (!this.exportMnemonicQR) return
+
+    // - read QR code base64
+    const QRCode: any = document.querySelector('#qrImg')
+    if (!QRCode) return
+    const url = QRCode.src
+
+    // - create link (<a>)
+    const a = document.createElement('a')
+    const event = new MouseEvent('click')
+    const accountName = this.currentAccount.values.get('accountName')
+    a.download = `qr_account_mnemonic_${accountName}`
+    a.href = url
+
+    // - start download
+    a.dispatchEvent(event)
+  }
 }
