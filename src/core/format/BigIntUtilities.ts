@@ -61,10 +61,9 @@ export class BigIntUtilities {
      * @returns {BigInt}
      */
     public static UInt64ToBigInt(input: number[]): bigint {
-        const littleEndian = true;
         const uint32Array = new Uint32Array(input);
         let uint8 = new Uint8Array(uint32Array.buffer);
-        uint8 = littleEndian ? uint8.reverse() : uint8;
+        uint8 = uint8.reverse();
         return BigInt('0x' + Convert.uint8ToHex(uint8));
 
     }
