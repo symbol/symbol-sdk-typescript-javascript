@@ -21,7 +21,7 @@ export class KeyGenerator {
     /**
      * Generate UInt64 from a string
      * @param {string} input Input string
-     * @returns {UInt64} Deterministic uint64 value for the given string
+     * @returns {bigint} Deterministic bigint value for the given string
      */
     public static generateUInt64Key(input: string): bigint {
         if (input.length === 0) {
