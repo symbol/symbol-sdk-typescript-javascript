@@ -16,8 +16,8 @@
 
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../../model/account/Address';
-import {PublicAccount} from '../../model/account/PublicAccount';
-import {MosaicId} from '../../model/mosaic/MosaicId';
+import { PublicAccount } from '../../model/account/PublicAccount';
+import { MosaicId } from '../../model/mosaic/MosaicId';
 import { NamespaceId } from '../../model/namespace/NamespaceId';
 import { ArtifactExpiryReceipt } from '../../model/receipt/ArtifactExpiryReceipt';
 import { BalanceChangeReceipt } from '../../model/receipt/BalanceChangeReceipt';
@@ -31,13 +31,16 @@ import { ResolutionStatement } from '../../model/receipt/ResolutionStatement';
 import { ResolutionType } from '../../model/receipt/ResolutionType';
 import { Statement } from '../../model/receipt/Statement';
 import { TransactionStatement } from '../../model/receipt/TransactionStatement';
+import { ResolutionStatementBodyDTO, StatementsDTO } from 'symbol-openapi-typescript-node-client';
+import { NetworkType } from '../../model/network/NetworkType';
+import { TransactionStatementBodyDTO } from 'symbol-openapi-typescript-node-client/model/transactionStatementBodyDTO';
 
 /**
  * @interal
  * @param unresolvedAddress unresolved address
  * @returns {Address | NamespaceId}
  */
-const extractUnresolvedAddress = (unresolvedAddress: any): Address | NamespaceId => {
+const extractUnresolvedAddress = (unresolvedAddress: any): Address | NamespaceId => {
     if (typeof unresolvedAddress === 'string') {
         return UnresolvedMapping.toUnresolvedAddress(unresolvedAddress);
     } else if (typeof unresolvedAddress === 'object') { // Is JSON object
@@ -57,7 +60,7 @@ const extractUnresolvedAddress = (unresolvedAddress: any): Address | NamespaceI
  * @returns {ResolutionStatement}
  * @constructor
  */
-const createResolutionStatement = (statementDTO, resolutionType): ResolutionStatement => {
+const createResolutionStatement = (statementDTO: ResolutionStatementBodyDTO, resolutionType: ResolutionType): ResolutionStatement => {
     switch (resolutionType) {
         case ResolutionType.Address:
             return new ResolutionStatement(
@@ -80,7 +83,7 @@ const createResolutionStatement = (statementDTO, resolutionType): ResolutionStat
                 }),
             );
         default:
-            throw new Error ('Resolution type invalid');
+            throw new Error('Resolution type invalid');
     }
 };
 
@@ -91,7 +94,7 @@ const createResolutionStatement = (statementDTO, resolutionType): ResolutionStat
  * @returns {BalanceChangeReceipt}
  * @constructor
  */
-const createBalanceChangeReceipt = (receiptDTO, networkType): Receipt => {
+const createBalanceChangeReceipt = (receiptDTO, networkType: NetworkType): Receipt => {
     return new BalanceChangeReceipt(
         PublicAccount.createFromPublicKey(receiptDTO.targetPublicKey, networkType),
         new MosaicId(receiptDTO.mosaicId),
@@ -108,7 +111,7 @@ const createBalanceChangeReceipt = (receiptDTO, networkType): Receipt => {
  * @returns {BalanceTransferReceipt}
  * @constructor
  */
-const createBalanceTransferReceipt = (receiptDTO, networkType): Receipt => {
+const createBalanceTransferReceipt = (receiptDTO, networkType: NetworkType): Receipt => {
     return new BalanceTransferReceipt(
         PublicAccount.createFromPublicKey(receiptDTO.senderPublicKey, networkType),
         Address.createFromEncoded(receiptDTO.recipientAddress),
@@ -172,7 +175,7 @@ const createInflationReceipt = (receiptDTO): Receipt => {
  * @returns {Receipt}
  * @constructor
  */
-export const CreateReceiptFromDTO = (receiptDTO, networkType): Receipt => {
+export const CreateReceiptFromDTO = (receiptDTO, networkType: NetworkType): Receipt => {
     switch (receiptDTO.type) {
         case ReceiptType.Harvest_Fee:
         case ReceiptType.LockHash_Created:
@@ -189,7 +192,7 @@ export const CreateReceiptFromDTO = (receiptDTO, networkType): Receipt => {
         case ReceiptType.Mosaic_Expired:
         case ReceiptType.Namespace_Expired:
         case ReceiptType.Namespace_Deleted:
-            return  createArtifactExpiryReceipt(receiptDTO);
+            return createArtifactExpiryReceipt(receiptDTO);
         case ReceiptType.Inflation:
             return createInflationReceipt(receiptDTO);
         default:
@@ -204,7 +207,7 @@ export const CreateReceiptFromDTO = (receiptDTO, networkType): Receipt => {
  * @returns {TransactionStatement}
  * @constructor
  */
-const createTransactionStatement = (statementDTO, networkType): TransactionStatement => {
+const createTransactionStatement = (statementDTO: TransactionStatementBodyDTO, networkType: NetworkType): TransactionStatement => {
     return new TransactionStatement(
         BigInt(statementDTO.height),
         new ReceiptSource(statementDTO.source.primaryId, statementDTO.source.secondaryId),
@@ -222,7 +225,7 @@ const createTransactionStatement = (statementDTO, networkType): TransactionState
  * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/ReceiptType.cpp
  * @constructor
  */
-export const CreateStatementFromDTO = (receiptDTO, networkType): Statement => {
+export const CreateStatementFromDTO = (receiptDTO: StatementsDTO, networkType: NetworkType): Statement => {
     return new Statement(
         receiptDTO.transactionStatements.map((statement) => createTransactionStatement(statement.statement, networkType)),
         receiptDTO.addressResolutionStatements.map((statement) => createResolutionStatement(statement.statement, ResolutionType.Address)),

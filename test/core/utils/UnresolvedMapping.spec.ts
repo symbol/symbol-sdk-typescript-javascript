@@ -34,22 +34,17 @@ describe('UnresolvedMapping', () => {
 
     describe('toUnresolvedMosaic', () => {
         it('can map hex string to MosaicId', () => {
-            const unresolved = UnresolvedMapping.toUnresolvedMosaic(mosaicId.toHex());
+            const unresolved = UnresolvedMapping.toUnresolvedMosaic(mosaicId.id);
             expect(unresolved instanceof MosaicId).to.be.true;
             expect(unresolved instanceof NamespaceId).to.be.false;
         });
 
         it('can map hex string to NamespaceId', () => {
-            const unresolved = UnresolvedMapping.toUnresolvedMosaic(namespacId.toHex());
+            const unresolved = UnresolvedMapping.toUnresolvedMosaic(namespacId.id);
             expect(unresolved instanceof MosaicId).to.be.false;
             expect(unresolved instanceof NamespaceId).to.be.true;
         });
 
-        it('should throw error if id not in hex', () => {
-            expect(() => {
-                UnresolvedMapping.toUnresolvedMosaic('test');
-            }).to.throw(Error, 'Input string is not in valid hexadecimal notation.');
-        });
     });
 
     describe('toUnresolvedAddress', () => {
@@ -61,7 +56,7 @@ describe('UnresolvedMapping', () => {
         });
 
         it('can map hex string to NamespaceId', () => {
-            const unresolved = UnresolvedMapping.toUnresolvedMosaic(namespacId.toHex());
+            const unresolved = UnresolvedMapping.toUnresolvedMosaic(namespacId.id);
             expect(unresolved instanceof Address).to.be.false;
             expect(unresolved instanceof NamespaceId).to.be.true;
         });

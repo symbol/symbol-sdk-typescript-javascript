@@ -24,7 +24,7 @@ import {
     NamespaceIdDto,
     SignatureDto,
     TimestampDto,
-} from 'catbuffer';
+} from 'catbuffer-typescript';
 import { Convert, RawAddress } from '../../core/format';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
@@ -37,7 +37,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * In case a mosaic has the flag 'supplyMutable' set to true, the creator of the mosaic can change the supply,

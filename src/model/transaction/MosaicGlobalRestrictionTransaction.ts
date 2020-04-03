@@ -23,7 +23,7 @@ import {
     SignatureDto,
     TimestampDto,
     UnresolvedMosaicIdDto,
-} from 'catbuffer';
+} from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
@@ -39,7 +39,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 export class MosaicGlobalRestrictionTransaction extends Transaction {
 
@@ -78,7 +77,7 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
                          newRestrictionType: MosaicRestrictionType,
                          networkType: NetworkType,
                          referenceMosaicId: MosaicId | NamespaceId =
-                            UnresolvedMapping.toUnresolvedMosaic(BigIntUtilities.BigIntToHex(BigInt(0))),
+                            UnresolvedMapping.toUnresolvedMosaic(BigInt(0)),
                          maxFee: bigint = BigInt(0)): MosaicGlobalRestrictionTransaction {
         return new MosaicGlobalRestrictionTransaction(networkType,
             TransactionVersion.MOSAIC_GLOBAL_RESTRICTION,
@@ -163,14 +162,14 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
         const transaction = MosaicGlobalRestrictionTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
                 (builder as MosaicGlobalRestrictionTransactionBuilder).getDeadline().timestamp),
-            UnresolvedMapping.toUnresolvedMosaic(BigIntUtilities.BigIntToHex(builder.getMosaicId().unresolvedMosaicId)),
+            UnresolvedMapping.toUnresolvedMosaic(builder.getMosaicId().unresolvedMosaicId),
             builder.getRestrictionKey(),
             builder.getPreviousRestrictionValue(),
             builder.getPreviousRestrictionType().valueOf(),
             builder.getNewRestrictionValue(),
             builder.getNewRestrictionType().valueOf(),
             networkType,
-            UnresolvedMapping.toUnresolvedMosaic(BigIntUtilities.BigIntToHex(builder.getReferenceMosaicId().unresolvedMosaicId)),
+            UnresolvedMapping.toUnresolvedMosaic(builder.getReferenceMosaicId().unresolvedMosaicId),
             isEmbedded ? BigInt(0) : (builder as MosaicGlobalRestrictionTransactionBuilder).fee.amount,
         );
         return isEmbedded ?

@@ -26,7 +26,7 @@ import {
     KeyDto,
     SignatureDto,
     TimestampDto,
-} from 'catbuffer';
+} from 'catbuffer-typescript';
 import { KeyPair, MerkleHashBuilder, SHA3Hasher } from '../../core/crypto';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
@@ -44,7 +44,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * Aggregate innerTransactions contain multiple innerTransactions that can be initiated by different accounts.

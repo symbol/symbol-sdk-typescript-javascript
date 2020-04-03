@@ -24,7 +24,7 @@ import {
     NamespaceIdDto,
     SignatureDto,
     TimestampDto,
-} from 'catbuffer';
+} from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
 import { MosaicId } from '../mosaic/MosaicId';
@@ -37,7 +37,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 export class MosaicAliasTransaction extends Transaction {
 

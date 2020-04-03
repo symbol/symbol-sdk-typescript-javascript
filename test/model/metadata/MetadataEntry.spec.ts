@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-import {deepEqual} from 'assert';
+import { deepEqual } from 'assert';
 import { Account } from '../../../src/model/account/Account';
 import { MetadataEntry } from '../../../src/model/metadata/MetadataEntry';
 import { MetadataType } from '../../../src/model/metadata/MetadataType';
 import { MosaicId, NamespaceId } from '../../../src/model/model';
 import { TestingAccount } from '../../conf/conf.spec';
+import { MetadataEntryDTO } from 'symbol-openapi-typescript-node-client';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('MetadataEntry', () => {
     let account: Account;
@@ -29,7 +31,7 @@ describe('MetadataEntry', () => {
     });
 
     it('should createComplete an Account Metadata object', () => {
-        const metadataEntryDTO = {
+        const metadataEntryDTO: MetadataEntryDTO = {
             compositeHash: hash,
             senderPublicKey: account.publicKey,
             targetPublicKey: account.publicKey,
@@ -43,8 +45,8 @@ describe('MetadataEntry', () => {
             metadataEntryDTO.compositeHash,
             metadataEntryDTO.senderPublicKey,
             metadataEntryDTO.targetPublicKey,
-            BigInt(metadataEntryDTO.scopedMetadataKey),
-            metadataEntryDTO.metadataType,
+            BigIntUtilities.HexToBigInt(metadataEntryDTO.scopedMetadataKey),
+            metadataEntryDTO.metadataType.valueOf(),
             metadataEntryDTO.value,
         );
 
@@ -73,7 +75,7 @@ describe('MetadataEntry', () => {
             metadataEntryDTO.compositeHash,
             metadataEntryDTO.senderPublicKey,
             metadataEntryDTO.targetPublicKey,
-            BigInt(metadataEntryDTO.scopedMetadataKey),
+            BigIntUtilities.HexToBigInt(metadataEntryDTO.scopedMetadataKey),
             metadataEntryDTO.metadataType,
             metadataEntryDTO.value,
             new MosaicId(metadataEntryDTO.targetId),
@@ -89,7 +91,7 @@ describe('MetadataEntry', () => {
     });
 
     it('should createComplete an Namespace Metadata object', () => {
-        const metadataEntryDTO = {
+        const metadataEntryDTO: MetadataEntryDTO = {
             compositeHash: hash,
             senderPublicKey: account.publicKey,
             targetPublicKey: account.publicKey,
@@ -103,10 +105,10 @@ describe('MetadataEntry', () => {
             metadataEntryDTO.compositeHash,
             metadataEntryDTO.senderPublicKey,
             metadataEntryDTO.targetPublicKey,
-            BigInt(metadataEntryDTO.scopedMetadataKey),
-            metadataEntryDTO.metadataType,
+            BigIntUtilities.HexToBigInt(metadataEntryDTO.scopedMetadataKey),
+            metadataEntryDTO.metadataType.valueOf(),
             metadataEntryDTO.value,
-            NamespaceId.createFromEncoded(metadataEntryDTO.targetId),
+            metadataEntryDTO.targetId ? NamespaceId.createFromEncoded(metadataEntryDTO.targetId) : undefined,
         );
 
         deepEqual(metadata.senderPublicKey, account.publicKey);

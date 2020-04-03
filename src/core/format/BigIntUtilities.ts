@@ -52,57 +52,20 @@ export class BigIntUtilities {
             i += 1;
             j += 2;
         }
-
-        return uint8.reverse();
-    }
-
-    /**
-     * Convert buffer to BigInt
-     * @param input Buffer array
-     * @returns {BigInt}
-     */
-    public static Uint8ToBigInt(input: Uint8Array): bigint {
-        return BigInt('0x' + Convert.uint8ToHex(input.reverse()));
-    }
-
-    /**
-     * Convert BigInt to UInt32 array (Little Endian)
-     * @param input BigInt value
-     * @param littleEndian Using little endian
-     * @returns {number[]}
-     */
-    public static BigIntToUInt64(input: bigint, littleEndian: boolean = true): number[] {
-        const uint8 = BigIntUtilities.BigIntToUint8(input);
-        if (8 !== uint8.length) {
-            throw Error(`byte array has unexpected size '${uint8.length}'`);
-        }
-        const view = new DataView(uint8.buffer);
-        return littleEndian ? [view.getUint32(4), view.getUint32(0)] : [view.getUint32(0), view.getUint32(4)];
+        return uint8;
     }
 
     /**
      * Convert UInt64 to BigInt (Little Endian default)
      * @param input UInt64 in Uint32 array
-     * @param littleEndian Using little endian
      * @returns {BigInt}
      */
-    public static UInt64ToBigInt(input: number[], littleEndian: boolean = true): bigint {
+    public static UInt64ToBigInt(input: number[]): bigint {
+        const littleEndian = true;
         const uint32Array = new Uint32Array(input);
         let uint8 = new Uint8Array(uint32Array.buffer);
         uint8 = littleEndian ? uint8.reverse() : uint8;
         return BigInt('0x' + Convert.uint8ToHex(uint8));
-
-    }
-
-    /**
-     * Convert UInt64 to hex (Little Endian default)
-     * @param input UInt64 in Uint32 array
-     * @param littleEndian Using little endian
-     * @returns {string}
-     */
-    public static UInt64ToHex(input: number[], littleEndian: boolean = true): string {
-        const bigInt = BigIntUtilities.UInt64ToBigInt(input, littleEndian);
-        return BigIntUtilities.BigIntToHex(bigInt);
 
     }
 }

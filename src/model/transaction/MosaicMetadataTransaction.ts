@@ -23,7 +23,7 @@ import {
     SignatureDto,
     TimestampDto,
     UnresolvedMosaicIdDto,
-} from 'catbuffer';
+} from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
@@ -38,7 +38,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * Announce an mosaic metadata transaction to associate a key-value state to an account.
@@ -141,7 +140,7 @@ export class MosaicMetadataTransaction extends Transaction {
             Deadline.createFromBigInt((builder as MosaicMetadataTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getTargetPublicKey().key),
             builder.getScopedMetadataKey(),
-            UnresolvedMapping.toUnresolvedMosaic(BigIntUtilities.BigIntToHex(builder.getTargetMosaicId().unresolvedMosaicId)),
+            UnresolvedMapping.toUnresolvedMosaic(builder.getTargetMosaicId().unresolvedMosaicId),
             builder.getValueSizeDelta(),
             Convert.uint8ToUtf8(builder.getValue()),
             networkType,

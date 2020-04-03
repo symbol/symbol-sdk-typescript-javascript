@@ -19,6 +19,7 @@ import { NamespaceId } from '../../model/namespace/NamespaceId';
 import { NetworkType } from '../../model/network/NetworkType';
 import { Convert } from '../format/Convert';
 import { RawAddress } from '../format/RawAddress';
+import { BigIntUtilities } from '../format/BigIntUtilities';
 
 /**
  * @internal
@@ -26,21 +27,21 @@ import { RawAddress } from '../format/RawAddress';
 export class UnresolvedMapping {
 
     /**
+     * Note: Catbuffer uses bigint values directly, rest client hex values.
+     *
      * @internal
      * Map unresolved mosaic string to MosaicId or NamespaceId
-     * @param {string} mosaicId The unresolvedMosaic id in hex.
+     * @param mosaicIdOrHex The unresolvedMosaic id in bigint or hex.
      * @returns {MosaicId | NamespaceId}
      */
-    public static toUnresolvedMosaic(mosaicId: string): MosaicId | NamespaceId {
-        if (!Convert.isHexString(mosaicId)) {
-            throw new Error('Input string is not in valid hexadecimal notation.');
-        }
-        const bytes = Convert.hexToUint8(mosaicId);
+    public static toUnresolvedMosaic(mosaicIdOrHex: bigint | string): MosaicId | NamespaceId {
+        const mosaicId: bigint = typeof mosaicIdOrHex === 'string' ? BigIntUtilities.HexToBigInt(mosaicIdOrHex) : mosaicIdOrHex;
+        const bytes = BigIntUtilities.BigIntToUint8(mosaicId);
         const byte0 = bytes[0];
 
         // if most significant bit of byte 0 is set, then we have a namespaceId
         if ((byte0 & 128) === 128) {
-            return NamespaceId.createFromEncoded(mosaicId);
+            return new NamespaceId(mosaicId);
         }
         // most significant bit of byte 0 is not set => mosaicId
         return new MosaicId(mosaicId);

@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-import {deepEqual} from 'assert';
+import { deepEqual } from 'assert';
 import { Account } from '../../../src/model/account/Account';
 import { Metadata } from '../../../src/model/metadata/Metadata';
 import { MetadataEntry } from '../../../src/model/metadata/MetadataEntry';
 import { MetadataType } from '../../../src/model/metadata/MetadataType';
 import { TestingAccount } from '../../conf/conf.spec';
+import { MetadataEntryDTO } from 'symbol-openapi-typescript-node-client';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('Metadata', () => {
     let account: Account;
@@ -29,7 +31,7 @@ describe('Metadata', () => {
     });
 
     it('should createComplete an Metadata object', () => {
-        const metadataEntryDTO = {
+        const metadataEntryDTO: MetadataEntryDTO = {
             compositeHash: hash,
             senderPublicKey: account.publicKey,
             targetPublicKey: account.publicKey,
@@ -51,8 +53,8 @@ describe('Metadata', () => {
                 metadataDTO.metadataEntry.compositeHash,
                 metadataDTO.metadataEntry.senderPublicKey,
                 metadataDTO.metadataEntry.targetPublicKey,
-                BigInt(metadataDTO.metadataEntry.scopedMetadataKey),
-                metadataDTO.metadataEntry.metadataType,
+                BigIntUtilities.HexToBigInt(metadataDTO.metadataEntry.scopedMetadataKey),
+                metadataDTO.metadataEntry.metadataType.valueOf(),
                 metadataDTO.metadataEntry.value,
             ),
         );

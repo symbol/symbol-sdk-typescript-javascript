@@ -24,7 +24,7 @@ import {
     TimestampDto,
     UnresolvedAddressDto,
     UnresolvedMosaicIdDto,
-} from 'catbuffer';
+} from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
@@ -40,7 +40,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 export class MosaicAddressRestrictionTransaction extends Transaction {
 
@@ -145,7 +144,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
         const transaction = MosaicAddressRestrictionTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
                 (builder as MosaicAddressRestrictionTransactionBuilder).getDeadline().timestamp),
-            UnresolvedMapping.toUnresolvedMosaic(BigIntUtilities.BigIntToHex(builder.getMosaicId().unresolvedMosaicId)),
+            UnresolvedMapping.toUnresolvedMosaic(builder.getMosaicId().unresolvedMosaicId),
             builder.getRestrictionKey(),
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getTargetAddress().unresolvedAddress)),
             builder.getNewRestrictionValue(),

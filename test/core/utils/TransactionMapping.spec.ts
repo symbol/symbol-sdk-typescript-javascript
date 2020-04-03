@@ -35,7 +35,6 @@ import { AliasAction } from '../../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NamespaceRegistrationType } from '../../../src/model/namespace/NamespaceRegistrationType';
 import { NetworkType } from '../../../src/model/network/NetworkType';
-import { AccountRestrictionModificationAction } from '../../../src/model/restriction/AccountRestrictionModificationAction';
 import { AccountRestrictionFlags } from '../../../src/model/restriction/AccountRestrictionType';
 import { MosaicRestrictionType } from '../../../src/model/restriction/MosaicRestrictionType';
 import { AccountAddressRestrictionTransaction } from '../../../src/model/transaction/AccountAddressRestrictionTransaction';
@@ -43,7 +42,6 @@ import { AccountLinkTransaction } from '../../../src/model/transaction/AccountLi
 import { AccountMetadataTransaction } from '../../../src/model/transaction/AccountMetadataTransaction';
 import { AccountMosaicRestrictionTransaction } from '../../../src/model/transaction/AccountMosaicRestrictionTransaction';
 import { AccountOperationRestrictionTransaction } from '../../../src/model/transaction/AccountOperationRestrictionTransaction';
-import { AccountRestrictionModification } from '../../../src/model/transaction/AccountRestrictionModification';
 import { AccountRestrictionTransaction } from '../../../src/model/transaction/AccountRestrictionTransaction';
 import { AddressAliasTransaction } from '../../../src/model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
@@ -66,7 +64,6 @@ import { TransactionType } from '../../../src/model/transaction/TransactionType'
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import { TestingAccount } from '../../conf/conf.spec';
 import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
-import { MosaicIdDto } from "catbuffer";
 
 describe('TransactionMapping - createFromPayload', () => {
     let account: Account;
@@ -77,10 +74,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create AccountRestrictionAddressTransaction', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
-            AccountRestrictionModificationAction.Add,
-            address,
-        );
+        ;
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
             AccountRestrictionFlags.AllowIncomingAddress,
@@ -100,18 +94,9 @@ describe('TransactionMapping - createFromPayload', () => {
     });
 
 
-    it('Basic catbuffer test', () => {
-        const mosaicIdDto1 = new MosaicIdDto(BigInt(20));
-        console.log(Convert.uint8ToHex(mosaicIdDto1.serialize()));
-        const mosaicIdDto2 = MosaicIdDto.loadFromBinary(mosaicIdDto1.serialize());
-        console.log(Convert.uint8ToHex(mosaicIdDto2.serialize()));
-        expect(mosaicIdDto2.getMosaicId().toString()).eq(mosaicIdDto1.getMosaicId().toString());
-    });
-
     it('should create AccountRestrictionMosaicTransaction', () => {
-        const mosaicId = new MosaicId(BigIntUtilities.UInt64ToBigInt([2262289484, 3405110546]));
-
-
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
+        expect(mosaicId.toHex()).to.be.equal('CAF5DD1286D7CC4C');
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
             AccountRestrictionFlags.AllowMosaic,
@@ -149,7 +134,8 @@ describe('TransactionMapping - createFromPayload', () => {
     });
 
     it('should create AddressAliasTransaction', () => {
-        const namespaceId = new NamespaceId(BigIntUtilities.UInt64ToBigInt([33347626, 3779697293]));
+        const namespaceId = NamespaceId.createFromEncoded('2AD8FC018D9A49E1');
+        expect(BigIntUtilities.BigIntToHex(namespaceId.id)).to.eq('2AD8FC018D9A49E1');
 
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressAliasTransaction = AddressAliasTransaction.create(
@@ -165,13 +151,16 @@ describe('TransactionMapping - createFromPayload', () => {
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AddressAliasTransaction;
 
         expect(transaction.aliasAction).to.be.equal(AliasAction.Link);
-        expect(transaction.namespaceId.id).to.be.equal(BigInt('0xE1499A8D01FCD82A'));
+        expect(transaction.namespaceId.id.toString()).to.be.equal(BigInt('0x2AD8FC018D9A49E1').toString());
         expect(transaction.address.plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
     });
 
     it('should create MosaicAliasTransaction', () => {
-        const namespaceId = new NamespaceId(BigIntUtilities.UInt64ToBigInt([33347626, 3779697293]));
-        const mosaicId = new MosaicId(BigIntUtilities.UInt64ToBigInt(([2262289484, 3405110546])));
+        const namespaceId = NamespaceId.createFromEncoded('E1499A8D01FCD82A');
+        const mosaicId = new MosaicId('4CCCD78612DDF5CA');
+        expect(namespaceId.toHex()).to.eq('E1499A8D01FCD82A');
+        expect(mosaicId.toHex()).to.eq('4CCCD78612DDF5CA');
+
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
             AliasAction.Link,
@@ -183,9 +172,9 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicAliasTransaction;
 
-        expect(mosaicAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
-        expect(mosaicAliasTransaction.namespaceId.id).to.be.equal(BigInt('0xE1499A8D01FCD82A'));
-        expect(mosaicAliasTransaction.mosaicId.id).to.be.equal(BigInt('0xCAF5DD1286D7CC4C'));
+        expect(transaction.aliasAction).to.be.equal(AliasAction.Link);
+        expect(transaction.namespaceId.id.toString()).to.be.equal(namespaceId.id.toString());
+        expect(transaction.mosaicId.id.toString()).to.be.equal(mosaicId.id.toString());
 
     });
 
@@ -204,7 +193,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
 
-        expect(transaction.duration).to.be.equal(BigInt(1000));
+        expect(transaction.duration.toString()).to.be.equal(BigInt(1000).toString());
         expect(transaction.divisibility).to.be.equal(3);
         expect(transaction.flags.supplyMutable).to.be.equal(false);
         expect(transaction.flags.transferable).to.be.equal(false);
@@ -302,6 +291,10 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create MosaicSupplyChangeTransaction', () => {
         const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
+        const mosaicIdNumber = mosaicId.id;
+
+        expect(mosaicId.toHex()).to.be.equal('CAF5DD1286D7CC4C');
+
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicId,
@@ -315,8 +308,8 @@ describe('TransactionMapping - createFromPayload', () => {
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicSupplyChangeTransaction;
 
         expect(transaction.action).to.be.equal(MosaicSupplyChangeAction.Increase);
-        expect(transaction.delta).to.be.equal(BigInt(10));
-        expect(transaction.mosaicId.id).to.be.equal(BigInt('0xCAF5DD1286D7CC4C'));
+        expect(transaction.delta.toString()).to.be.equal(BigInt(10).toString());
+        expect(transaction.mosaicId.id.toString()).to.be.deep.equal(mosaicIdNumber.toString());
 
     });
 
@@ -694,9 +687,10 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
     });
 
     it('should create TransferTransaction - NamespaceId', () => {
+        const namespaceId = NamespaceId.createFromEncoded('E1499A8D01FCD82A');
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
-            new NamespaceId(BigInt('0xE1499A8D01FCD82A')),
+            namespaceId,
             [
                 NetworkCurrencyLocal.createRelative(100),
             ],
@@ -705,7 +699,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         );
 
         const transaction = TransactionMapping.createFromDTO(transferTransaction.toJSON()) as TransferTransaction;
-        expect((transaction.recipientAddress as NamespaceId).id).to.be.equal(BigInt('0xE1499A8D01FCD82A'));
+        expect((transaction.recipientAddress as NamespaceId).id.toString()).to.be.equal(BigInt('0xE1499A8D01FCD82A').toString());
         expect(transaction.message.payload).to.be.equal('test-message');
     });
 
@@ -795,7 +789,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
     });
 
     it('should create AddressAliasTransaction', () => {
-        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
+        const namespaceId = new NamespaceId(BigIntUtilities.UInt64ToBigInt([33347626, 3779697293]));
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
@@ -1200,7 +1194,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
         expect(transaction.scopedMetadataKey.toString()).to.be.equal(BigInt(1000).toString());
         expect(transaction.valueSizeDelta).to.be.equal(1);
-        expect(transaction.targetNamespaceId.toHex()).to.be.equal(new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')).toHex());
+        expect(transaction.targetNamespaceId.toHex()).to.be.equal('CAF5DD1286D7CC4C');
         expect(transaction.value).to.be.equal('Test Value');
     });
 });

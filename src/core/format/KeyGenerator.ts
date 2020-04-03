@@ -29,7 +29,6 @@ export class KeyGenerator {
         }
         const buf = sha3_256.arrayBuffer(input);
         const result = new Uint32Array(buf);
-        const bigint = BigIntUtilities.UInt64ToBigInt([result[0], (result[1] | 0x80000000) >>> 0]);
-        return bigint;
+        return BigIntUtilities.UInt64ToBigInt([result[0], (result[1] | 0x80000000) >>> 0]);
     }
 }

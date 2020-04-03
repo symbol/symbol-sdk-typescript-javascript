@@ -377,7 +377,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             Deadline.createFromDTO(transactionDTO.deadline),
             BigInt(transactionDTO.maxFee || '0'),
             transactionDTO.targetPublicKey,
-            BigInt(transactionDTO.scopedMetadataKey),
+            BigIntUtilities.HexToBigInt(transactionDTO.scopedMetadataKey),
             transactionDTO.valueSizeDelta,
             convert.decodeHex(transactionDTO.value),
             transactionDTO.signature,

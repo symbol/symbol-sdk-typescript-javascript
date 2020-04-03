@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { GeneratorUtils } from 'catbuffer';
+import { GeneratorUtils } from 'catbuffer-typescript';
 import { sha3_256 } from 'js-sha3';
 import { Receipt } from './Receipt';
 import { ReceiptSource } from './ReceiptSource';
@@ -36,18 +36,18 @@ export class TransactionStatement {
      * @param receipts - The array of receipt headers.
      */
     constructor(
-                /**
-                 * The block height.
-                 */
-                public readonly height: bigint,
-                /**
-                 * The receipt source.
-                 */
-                public readonly source: ReceiptSource,
-                /**
-                 * The array of receipt headers.
-                 */
-                public readonly receipts: Receipt[]) {
+        /**
+         * The block height.
+         */
+        public readonly height: bigint,
+        /**
+         * The receipt source.
+         */
+        public readonly source: ReceiptSource,
+        /**
+         * The array of receipt headers.
+         */
+        public readonly receipts: Receipt[]) {
     }
 
     /**

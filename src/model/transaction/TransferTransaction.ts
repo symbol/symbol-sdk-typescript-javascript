@@ -26,8 +26,7 @@ import {
     UnresolvedAddressDto,
     UnresolvedMosaicBuilder,
     UnresolvedMosaicIdDto,
-} from 'catbuffer';
-import * as Long from 'long';
+} from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
@@ -47,7 +46,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * Transfer transactions contain data about transfers of mosaics and message to another account.
@@ -135,9 +133,7 @@ export class TransferTransaction extends Transaction {
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
             builder.getMosaics().map((mosaic) => {
                 const id = mosaic.mosaicId.unresolvedMosaicId;
-                return new Mosaic(
-                    UnresolvedMapping.toUnresolvedMosaic(BigIntUtilities.BigIntToHex(id)),
-                    mosaic.amount.amount);
+                return new Mosaic(UnresolvedMapping.toUnresolvedMosaic(id), mosaic.amount.amount);
             }),
             messageType === MessageType.PlainMessage ?
                 PlainMessage.createFromPayload(messageHex) :
@@ -185,11 +181,13 @@ export class TransferTransaction extends Transaction {
      */
     public sortMosaics(): Mosaic[] {
         return this.mosaics.sort((a, b) => {
-            const uint64_a = BigIntUtilities.BigIntToUInt64(a.id.id, false);
-            const uint64_b = BigIntUtilities.BigIntToUInt64(b.id.id, false);
-            const long_a = Long.fromBits(uint64_a[0], uint64_a[1], true);
-            const long_b = Long.fromBits(uint64_b[0], uint64_b[1], true);
-            return long_a.compare(long_b);
+            if (a.id.id === b.id.id) {
+                return 0;
+            }
+            if (a.id.id < b.id.id) {
+                return -1;
+            }
+            return 1;
         });
     }
 
@@ -229,7 +227,7 @@ export class TransferTransaction extends Transaction {
         const byteMosaics = (8 + 8) * this.mosaics.length;
 
         return byteSize + byteMosaicsCount + byteRecipientAddress +
-               + byteTransferTransactionBody_Reserved1 + byteMessageSize + bytePayload + byteMosaics;
+            +byteTransferTransactionBody_Reserved1 + byteMessageSize + bytePayload + byteMosaics;
     }
 
     /**
@@ -285,9 +283,11 @@ export class TransferTransaction extends Transaction {
      */
     public resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): TransferTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return DtoMapping.assign(this, {recipientAddress: statement.resolveAddress(this.recipientAddress, transactionInfo.height.toString(),
-            transactionInfo.index, aggregateTransactionIndex),
+        return DtoMapping.assign(this, {
+            recipientAddress: statement.resolveAddress(this.recipientAddress, transactionInfo.height.toString(),
+                transactionInfo.index, aggregateTransactionIndex),
             mosaics: this.mosaics.map((mosaic) => statement.resolveMosaic(mosaic, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex))});
+                transactionInfo.index, aggregateTransactionIndex))
+        });
     }
 }

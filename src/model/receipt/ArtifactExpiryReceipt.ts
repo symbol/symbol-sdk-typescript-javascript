@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-import { MosaicExpiryReceiptBuilder, MosaicIdDto, NamespaceExpiryReceiptBuilder, NamespaceIdDto } from 'catbuffer';
+import {
+    MosaicExpiryReceiptBuilder,
+    MosaicIdDto,
+    NamespaceExpiryReceiptBuilder,
+    NamespaceIdDto,
+} from 'catbuffer-typescript';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
 import { ReceiptVersion } from './ReceiptVersion';
-import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * Artifact Expiry: An artifact (e.g. namespace, mosaic) expired.

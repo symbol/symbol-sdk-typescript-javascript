@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-import { GeneratorUtils } from 'catbuffer';
-import { RawAddress } from '../../core/format/RawAddress';
 import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';
 import { ReceiptSource } from './ReceiptSource';
-import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * The receipt source object.
@@ -42,19 +39,5 @@ export class ResolutionEntry {
                 public readonly source: ReceiptSource) {
     }
 
-    /**
-     * @internal
-     * Generate buffer
-     * @return {Uint8Array}
-     */
-    public serialize(): Uint8Array {
-      let resolvedBytes: Uint8Array;
-      if (this.resolved instanceof Address) {
-        resolvedBytes = RawAddress.stringToAddress((this.resolved as Address).plain());
-      } else {
-        resolvedBytes = BigIntUtilities.BigIntToUint8((this.resolved as MosaicId).id);
-      }
-      const sourceBytes = this.source.serialize();
-      return GeneratorUtils.concatTypedArrays(resolvedBytes, sourceBytes);
-    }
+
 }

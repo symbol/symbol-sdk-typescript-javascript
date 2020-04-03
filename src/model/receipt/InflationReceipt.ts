@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-import { AmountDto, InflationReceiptBuilder, MosaicBuilder, MosaicIdDto } from 'catbuffer';
+import {
+    AmountDto,
+    InflationReceiptBuilder,
+    MosaicBuilder,
+    MosaicIdDto,
+} from 'catbuffer-typescript';
 import { MosaicId } from '../mosaic/MosaicId';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
 import { ReceiptVersion } from './ReceiptVersion';
-import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * Balance Transfer: A mosaic transfer was triggered.

@@ -37,7 +37,6 @@ import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
 import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { TransactionStatement } from '../../../src/model/receipt/TransactionStatement';
-import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('Receipt', () => {
     let account: Account;
@@ -250,12 +249,12 @@ describe('Receipt', () => {
         };
 
         const receipt = new ArtifactExpiryReceipt(
-            new NamespaceId(BigIntUtilities.UInt64ToBigInt([3646934825, 3576016193], false)),
+            NamespaceId.createFromEncoded('D525AD41D95FCF29'),
             receiptDTO.version,
             receiptDTO.type,
         );
 
-        deepEqual(BigIntUtilities.BigIntToHex(receipt.artifactId.id).toUpperCase(), receiptDTO.artifactId);
+        deepEqual(receipt.artifactId.toHex(), receiptDTO.artifactId);
         deepEqual(receipt.type, ReceiptType.Namespace_Expired);
         deepEqual(receipt.version, ReceiptVersion.ARTIFACT_EXPIRY);
     });

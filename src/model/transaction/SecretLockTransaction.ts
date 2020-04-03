@@ -26,7 +26,7 @@ import {
     UnresolvedAddressDto,
     UnresolvedMosaicBuilder,
     UnresolvedMosaicIdDto,
-} from 'catbuffer';
+} from 'catbuffer-typescript';
 import { Convert, Convert as convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
@@ -43,7 +43,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 export class SecretLockTransaction extends Transaction {
 
@@ -145,7 +144,7 @@ export class SecretLockTransaction extends Transaction {
             isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
                 (builder as SecretLockTransactionBuilder).getDeadline().timestamp),
             new Mosaic(
-                UnresolvedMapping.toUnresolvedMosaic(BigIntUtilities.BigIntToHex(builder.getMosaic().mosaicId.unresolvedMosaicId)),
+                UnresolvedMapping.toUnresolvedMosaic(builder.getMosaic().mosaicId.unresolvedMosaicId),
                 builder.getMosaic().amount.amount,
             ),
             builder.getDuration().blockDuration,

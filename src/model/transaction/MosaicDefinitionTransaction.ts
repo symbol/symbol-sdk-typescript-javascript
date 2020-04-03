@@ -25,7 +25,7 @@ import {
     MosaicNonceDto,
     SignatureDto,
     TimestampDto,
-} from 'catbuffer';
+} from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
 import { MosaicFlags } from '../mosaic/MosaicFlags';
@@ -38,7 +38,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * Before a mosaic can be created or transferred, a corresponding definition of the mosaic has to be created and published to the network.

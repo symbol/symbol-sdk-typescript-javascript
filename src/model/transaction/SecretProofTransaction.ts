@@ -24,7 +24,7 @@ import {
     SignatureDto,
     TimestampDto,
     UnresolvedAddressDto,
-} from 'catbuffer';
+} from 'catbuffer-typescript';
 import { Convert, Convert as convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
@@ -40,7 +40,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 export class SecretProofTransaction extends Transaction {
 

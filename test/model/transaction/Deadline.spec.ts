@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {ChronoUnit, Instant, LocalDateTime, ZoneId} from 'js-joda';
-import {Deadline} from '../../../src/model/transaction/Deadline';
+import { expect } from 'chai';
+import { ChronoUnit, Instant, LocalDateTime, ZoneId } from 'js-joda';
+import { Deadline } from '../../../src/model/transaction/Deadline';
 
 describe('Deadline', () => {
     it('should createComplete timestamp today', () => {
@@ -46,9 +46,7 @@ describe('Deadline', () => {
 
     it('should createComplete date with Deadline array', () => {
         const deadline = Deadline.createFromDTO('51110867862');
-
-        expect(deadline.toDTO()[0]).to.be.equal(3866227606);
-        expect(deadline.toDTO()[1]).to.be.equal(11);
+        expect(deadline.toDTO().toString()).to.be.equal('51110867862');
     });
 
     it('make sure epochAdjustment is correct', () => {

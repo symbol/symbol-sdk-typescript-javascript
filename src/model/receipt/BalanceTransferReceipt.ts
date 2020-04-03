@@ -14,7 +14,14 @@
  * limitations under the License.
  */
 
-import { AddressDto, AmountDto, BalanceTransferReceiptBuilder, KeyDto, MosaicBuilder, MosaicIdDto } from 'catbuffer';
+import {
+    AddressDto,
+    AmountDto,
+    BalanceTransferReceiptBuilder,
+    KeyDto,
+    MosaicBuilder,
+    MosaicIdDto,
+} from 'catbuffer-typescript';
 import { Convert } from '../../core/format/Convert';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../account/Address';
@@ -24,7 +31,6 @@ import { NamespaceId } from '../namespace/NamespaceId';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
 import { ReceiptVersion } from './ReceiptVersion';
-import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * Balance Transfer: A mosaic transfer was triggered.

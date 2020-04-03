@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-import { AddressDto,
-         AddressResolutionEntryBuilder,
-         AddressResolutionStatementBuilder,
-         MosaicIdDto, MosaicResolutionEntryBuilder,
-         MosaicResolutionStatementBuilder,
-         ReceiptSourceBuilder,
-         UnresolvedAddressDto,
-         UnresolvedMosaicIdDto } from 'catbuffer';
+import {
+    AddressDto,
+    AddressResolutionEntryBuilder,
+    AddressResolutionStatementBuilder,
+    MosaicIdDto,
+    MosaicResolutionEntryBuilder,
+    MosaicResolutionStatementBuilder,
+    ReceiptSourceBuilder,
+    UnresolvedAddressDto,
+    UnresolvedMosaicIdDto,
+} from 'catbuffer-typescript';
 import { sha3_256 } from 'js-sha3';
 import { RawAddress } from '../../core/format/RawAddress';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
@@ -33,7 +36,6 @@ import { ReceiptType } from './ReceiptType';
 import { ReceiptVersion } from './ReceiptVersion';
 import { ResolutionEntry } from './ResolutionEntry';
 import { ResolutionType } from './ResolutionType';
-import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
  * When a transaction includes an alias, a so called resolution statement reflects the resolved value for that block:

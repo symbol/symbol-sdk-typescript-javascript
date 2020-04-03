@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import {ChronoUnit, Instant, LocalDateTime, ZoneId} from 'js-joda';
-import { BigIntUtilities } from '../../core/format/BigIntUtilities';
+import { ChronoUnit, Instant, LocalDateTime, ZoneId } from 'js-joda';
 
 /**
  * The deadline of the transaction. The deadline is given as the number of seconds elapsed since the creation of the nemesis block.
@@ -58,7 +57,7 @@ export class Deadline {
      * @param value
      * @returns {Deadline}
      */
-    public static createFromDTO(value: string ): Deadline {
+    public static createFromDTO(value: string): Deadline {
         const uint64Value = BigInt(value);
         const dateSeconds = Number(uint64Value);
         const deadline = LocalDateTime.ofInstant(
@@ -79,6 +78,7 @@ export class Deadline {
             ZoneId.SYSTEM);
         return new Deadline(deadline);
     }
+
     /**
      * @param deadline
      */
@@ -89,10 +89,8 @@ export class Deadline {
     /**
      * @internal
      */
-    public toDTO(): number[] {
-        return BigIntUtilities.BigIntToUInt64(BigInt(
-            (this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000),
-        ));
+    public toDTO(): bigint {
+        return BigInt((this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000));
     }
 
     /**

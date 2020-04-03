@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Convert as convert} from '../../core/format';
-import {NamespaceMosaicIdGenerator} from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
+import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
 import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
@@ -56,9 +55,7 @@ export class NamespaceId {
      * @returns {NamespaceId}
      */
     public static createFromEncoded(encoded: string): NamespaceId {
-        const uint = convert.hexToUint8(encoded);
-        const namespace = new NamespaceId(BigIntUtilities.Uint8ToBigInt(uint));
-        return namespace;
+        return new NamespaceId(BigIntUtilities.HexToBigInt(encoded));
     }
 
     /**
