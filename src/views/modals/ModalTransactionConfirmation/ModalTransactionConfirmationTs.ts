@@ -213,7 +213,7 @@ export class ModalTransactionConfirmationTs extends Vue {
 
     // - notify about successful transaction announce
     const debug = `Count of transactions signed:  ${signedTransactions.length}`
-    this.$store.dispatch('notification/ADD_DEBUG', debug)
+    this.$store.dispatch('diagnostic/ADD_DEBUG', debug)
     this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed')
     this.$emit('success', account.publicAccount)
     this.show = false
