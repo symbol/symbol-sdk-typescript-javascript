@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {Convert} from '../../../src/core/format';
-import {Account} from '../../../src/model/account/Account';
-import {Address} from '../../../src/model/account/Address';
-import {MosaicId} from '../../../src/model/mosaic/MosaicId';
-import {AliasAction} from '../../../src/model/namespace/AliasAction';
-import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
-import {NetworkType} from '../../../src/model/network/NetworkType';
-import {AddressAliasTransaction} from '../../../src/model/transaction/AddressAliasTransaction';
-import {Deadline} from '../../../src/model/transaction/Deadline';
-import {TestingAccount} from '../../conf/conf.spec';
+import { expect } from 'chai';
+import { Convert } from '../../../src/core/format';
+import { Account } from '../../../src/model/account/Account';
+import { Address } from '../../../src/model/account/Address';
+import { AliasAction } from '../../../src/model/namespace/AliasAction';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { NetworkType } from '../../../src/model/network/NetworkType';
+import { AddressAliasTransaction } from '../../../src/model/transaction/AddressAliasTransaction';
+import { Deadline } from '../../../src/model/transaction/Deadline';
+import { TestingAccount } from '../../conf/conf.spec';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('AddressAliasTransaction', () => {
     let account: Account;
@@ -34,7 +34,7 @@ describe('AddressAliasTransaction', () => {
     });
 
     it('should default maxFee field be set to 0', () => {
-        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
+        const namespaceId = new NamespaceId(BigIntUtilities.HexToBigInt('E1499A8D01FCD82A'));
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
@@ -48,7 +48,7 @@ describe('AddressAliasTransaction', () => {
     });
 
     it('should filled maxFee override transaction maxFee', () => {
-        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
+        const namespaceId = new NamespaceId(BigIntUtilities.HexToBigInt('E1499A8D01FCD82A'));
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
@@ -63,7 +63,7 @@ describe('AddressAliasTransaction', () => {
     });
 
     it('should createComplete an AddressAliasTransaction object and sign it', () => {
-        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
+        const namespaceId = new NamespaceId(BigIntUtilities.HexToBigInt('E1499A8D01FCD82A'));
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
@@ -74,7 +74,7 @@ describe('AddressAliasTransaction', () => {
         );
 
         expect(addressAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
-        expect(addressAliasTransaction.namespaceId.id).to.be.equal(BigInt('0xE1499A8D01FCD82A'));
+        expect(addressAliasTransaction.namespaceId.id).to.be.equal(BigIntUtilities.HexToBigInt('E1499A8D01FCD82A'));
         expect(addressAliasTransaction.address.plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
 
         const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
@@ -88,7 +88,7 @@ describe('AddressAliasTransaction', () => {
 
     describe('size', () => {
         it('should return 162 for AggregateTransaction byte size with TransferTransaction with 1 mosaic and message NEM', () => {
-            const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
+            const namespaceId = new NamespaceId(BigIntUtilities.HexToBigInt('E1499A8D01FCD82A'));
             const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
@@ -103,7 +103,7 @@ describe('AddressAliasTransaction', () => {
     });
 
     it('Test set maxFee using multiplier', () => {
-        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
+        const namespaceId = new NamespaceId(BigIntUtilities.HexToBigInt('E1499A8D01FCD82A'));
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),

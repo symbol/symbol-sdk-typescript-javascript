@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import {deepEqual} from 'assert';
-import {expect} from 'chai';
-import {MosaicId} from '../../../src/model/mosaic/MosaicId';
-import {NetworkHarvestLocal} from '../../../src/model/mosaic/NetworkHarvestLocal';
-import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
+import { deepEqual } from 'assert';
+import { expect } from 'chai';
+import { NetworkHarvestLocal } from '../../../src/model/mosaic/NetworkHarvestLocal';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('NetworkHarvestLocal', () => {
@@ -38,7 +37,7 @@ describe('NetworkHarvestLocal', () => {
     });
 
     it('should have valid statics', () => {
-        deepEqual(NetworkHarvestLocal.NAMESPACE_ID.id, new NamespaceId(BigInt('0x941299B2B7E1291C')).id);
+        deepEqual(NetworkHarvestLocal.NAMESPACE_ID.id, new NamespaceId(BigIntUtilities.HexToBigInt('941299B2B7E1291C')).id);
         expect(NetworkHarvestLocal.DIVISIBILITY).to.be.equal(3);
         expect(NetworkHarvestLocal.TRANSFERABLE).to.be.equal(true);
         expect(NetworkHarvestLocal.SUPPLY_MUTABLE).to.be.equal(true);

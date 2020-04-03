@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {Convert} from '../../../src/core/format';
-import {Account} from '../../../src/model/account/Account';
-import {MosaicId} from '../../../src/model/mosaic/MosaicId';
-import {MosaicSupplyChangeAction} from '../../../src/model/mosaic/MosaicSupplyChangeAction';
+import { expect } from 'chai';
+import { Convert } from '../../../src/core/format';
+import { Account } from '../../../src/model/account/Account';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { MosaicSupplyChangeAction } from '../../../src/model/mosaic/MosaicSupplyChangeAction';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
-import {NetworkType} from '../../../src/model/network/NetworkType';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
 import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
 import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { Statement } from '../../../src/model/receipt/Statement';
-import {Deadline} from '../../../src/model/transaction/Deadline';
-import {MosaicSupplyChangeTransaction} from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
+import { Deadline } from '../../../src/model/transaction/Deadline';
+import { MosaicSupplyChangeTransaction } from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
-import {TestingAccount} from '../../conf/conf.spec';
+import { TestingAccount } from '../../conf/conf.spec';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('MosaicSupplyChangeTransaction', () => {
     let account: Account;
@@ -85,7 +86,7 @@ describe('MosaicSupplyChangeTransaction', () => {
 
         expect(mosaicSupplyChangeTransaction.action).to.be.equal(MosaicSupplyChangeAction.Increase);
         expect(mosaicSupplyChangeTransaction.delta).to.be.equal(BigInt(10));
-        expect(mosaicSupplyChangeTransaction.mosaicId.id).to.be.equal(BigInt('0xCAF5DD1286D7CC4C'));
+        expect(mosaicSupplyChangeTransaction.mosaicId.id).to.be.equal(BigIntUtilities.HexToBigInt('CAF5DD1286D7CC4C'));
 
         const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
 

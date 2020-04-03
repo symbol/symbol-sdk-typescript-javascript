@@ -38,7 +38,7 @@ import { BigIntUtilities } from '../../src/core/format/BigIntUtilities';
 describe('MetadataTransactionService', () => {
     let account: Account;
     let metadataTransactionService: MetadataTransactionService;
-    const key = BigInt('0x85BBEA6CC462B244');
+    const key = BigIntUtilities.HexToBigInt('85BBEA6CC462B244');
     const value = 'TEST';
     const deltaValue = 'dalta';
     const targetIdHex = '941299B2B7E1291C';

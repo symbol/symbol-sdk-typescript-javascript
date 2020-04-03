@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-import { Observable, of } from 'rxjs';
-import { combineLatest } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { mergeMap } from 'rxjs/operators';
+import { combineLatest, Observable, of } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { NamespaceRepository } from '../infrastructure/NamespaceRepository';
 import { RestrictionMosaicRepository } from '../infrastructure/RestrictionMosaicRepository';
 import { Address } from '../model/account/Address';
@@ -31,6 +29,7 @@ import { Deadline } from '../model/transaction/Deadline';
 import { MosaicAddressRestrictionTransaction } from '../model/transaction/MosaicAddressRestrictionTransaction';
 import { MosaicGlobalRestrictionTransaction } from '../model/transaction/MosaicGlobalRestrictionTransaction';
 import { Transaction } from '../model/transaction/Transaction';
+import { BigIntUtilities } from '../core/format/BigIntUtilities';
 import Long = require('long');
 
 /**
@@ -38,7 +37,7 @@ import Long = require('long');
  */
 export class MosaicRestrictionTransactionService {
 
-    private readonly defaultMosaicAddressRestrictionValue = BigInt('0xFFFFFFFFFFFFFFFF');
+    private readonly defaultMosaicAddressRestrictionValue = BigIntUtilities.HexToBigInt('FFFFFFFFFFFFFFFF');
     private readonly defaultMosaicGlobalRestrictionValue = BigInt(0);
 
     /**

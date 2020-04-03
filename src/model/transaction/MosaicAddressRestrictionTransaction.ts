@@ -40,6 +40,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 export class MosaicAddressRestrictionTransaction extends Transaction {
 
@@ -70,7 +71,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
                          targetAddress: Address | NamespaceId,
                          newRestrictionValue: bigint,
                          networkType: NetworkType,
-                         previousRestrictionValue: bigint = BigInt('0xFFFFFFFFFFFFFFFF'),
+                         previousRestrictionValue: bigint = BigIntUtilities.HexToBigInt('FFFFFFFFFFFFFFFF'),
                          maxFee: bigint = BigInt(0)): MosaicAddressRestrictionTransaction {
         return new MosaicAddressRestrictionTransaction(networkType,
             TransactionVersion.MOSAIC_ADDRESS_RESTRICTION,
@@ -138,7 +139,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
     public static createFromPayload(payload: string,
                                     isEmbedded: boolean = false): Transaction | InnerTransaction {
         const builder = isEmbedded ? EmbeddedMosaicAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-        MosaicAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+            MosaicAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = MosaicAddressRestrictionTransaction.create(
@@ -172,7 +173,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
         const byteTargetAddress = 25;
 
         return byteSize + byteMosaicId + byteRestrictionKey +
-               byteTargetAddress + bytePreviousRestrictionValue + byteNewRestrictionValue;
+            byteTargetAddress + bytePreviousRestrictionValue + byteNewRestrictionValue;
     }
 
     /**
@@ -246,6 +247,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
             mosaicId: statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
                 transactionInfo.index, aggregateTransactionIndex),
             targetAddress: statement.resolveAddress(this.targetAddress,
-                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex)});
+                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
+        });
     }
 }

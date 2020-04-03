@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {Convert} from '../../../src/core/format';
-import {Account} from '../../../src/model/account/Account';
+import { expect } from 'chai';
+import { Convert } from '../../../src/core/format';
+import { Account } from '../../../src/model/account/Account';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
-import {NetworkType} from '../../../src/model/network/NetworkType';
-import {Deadline} from '../../../src/model/transaction/Deadline';
-import {NamespaceRegistrationTransaction} from '../../../src/model/transaction/NamespaceRegistrationTransaction';
-import {TestingAccount} from '../../conf/conf.spec';
+import { NetworkType } from '../../../src/model/network/NetworkType';
+import { Deadline } from '../../../src/model/transaction/Deadline';
+import { NamespaceRegistrationTransaction } from '../../../src/model/transaction/NamespaceRegistrationTransaction';
+import { TestingAccount } from '../../conf/conf.spec';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('NamespaceRegistrationTransaction', () => {
     let account: Account;
@@ -93,7 +94,7 @@ describe('NamespaceRegistrationTransaction', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createSubNamespace(
             Deadline.create(),
             'root-test-namespace',
-            new NamespaceId(BigInt('0x84B3552D375FFA4B')),
+            new NamespaceId(BigIntUtilities.HexToBigInt('84B3552D375FFA4B')),
             NetworkType.MIJIN_TEST,
         );
 

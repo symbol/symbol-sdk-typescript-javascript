@@ -25,6 +25,7 @@ import { NamespaceInfo } from '../../src/model/namespace/NamespaceInfo';
 import { NamespaceName } from '../../src/model/namespace/NamespaceName';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { NamespaceService } from '../../src/service/NamespaceService';
+import { BigIntUtilities } from '../../src/core/format/BigIntUtilities';
 
 describe('NamespaceService', () => {
 
@@ -37,11 +38,11 @@ describe('NamespaceService', () => {
         when(mockedNamespaceRepository.getNamespace(subnamespace.id))
             .thenReturn(observableOf(subnamespace));
         when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id])))
-            .thenReturn(observableOf([new NamespaceName(new NamespaceId(BigInt('0xE43F43D2C5A8F299')), 'symboltests')]));
+            .thenReturn(observableOf([new NamespaceName(new NamespaceId(BigIntUtilities.HexToBigInt('E43F43D2C5A8F299')), 'symboltests')]));
         when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id, subnamespace.id])))
             .thenReturn(observableOf([
-                new NamespaceName(new NamespaceId(BigInt('0xE43F43D2C5A8F299')), 'symboltests'),
-                new NamespaceName(new NamespaceId(BigInt('0xF7CE33276A3288C1')), 'level2'),
+                new NamespaceName(new NamespaceId(BigIntUtilities.HexToBigInt('E43F43D2C5A8F299')), 'symboltests'),
+                new NamespaceName(new NamespaceId(BigIntUtilities.HexToBigInt('F7CE33276A3288C1')), 'level2'),
             ]));
         const namespaceRepository = instance(mockedNamespaceRepository);
         const namespaceService = new NamespaceService(namespaceRepository);
@@ -59,13 +60,13 @@ describe('NamespaceService', () => {
         when(mockedNamespaceRepository.getNamespace(subnamespace.id))
             .thenReturn(observableOf(subnamespace));
         when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id])))
-            .thenReturn(observableOf([new NamespaceName(new NamespaceId(BigInt('0xE43F43D2C5A8F299')), 'symboltests')]));
+            .thenReturn(observableOf([new NamespaceName(new NamespaceId(BigIntUtilities.HexToBigInt('E43F43D2C5A8F299')), 'symboltests')]));
         when(mockedNamespaceRepository.getNamespacesName(deepEqual([subnamespace.id])))
-            .thenReturn(observableOf([new NamespaceName(new NamespaceId(BigInt('0xF7CE33276A3288C1')), 'level2')]));
+            .thenReturn(observableOf([new NamespaceName(new NamespaceId(BigIntUtilities.HexToBigInt('F7CE33276A3288C1')), 'level2')]));
         when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id, subnamespace.id])))
             .thenReturn(observableOf([
-                new NamespaceName(new NamespaceId(BigInt('0xE43F43D2C5A8F299')), 'symboltests'),
-                new NamespaceName(new NamespaceId(BigInt('0xF7CE33276A3288C1')), 'level2'),
+                new NamespaceName(new NamespaceId(BigIntUtilities.HexToBigInt('E43F43D2C5A8F299')), 'symboltests'),
+                new NamespaceName(new NamespaceId(BigIntUtilities.HexToBigInt('F7CE33276A3288C1')), 'level2'),
             ]));
         const namespaceRepository = instance(mockedNamespaceRepository);
         const namespaceService = new NamespaceService(namespaceRepository);
@@ -81,7 +82,7 @@ describe('NamespaceService', () => {
             '59DFBA84B2E9E7000135E80C',
             0,
             1,
-            [new NamespaceId(BigInt('0xE43F43D2C5A8F299'))],
+            [new NamespaceId(BigIntUtilities.HexToBigInt('E43F43D2C5A8F299'))],
             new NamespaceId(BigInt(0)),
             PublicAccount.createFromPublicKey('1026D70E1954775749C6811084D6450A3184D977383F0E4282CD47118AF37755', NetworkType.MIJIN_TEST),
             BigInt(795),
@@ -95,8 +96,8 @@ describe('NamespaceService', () => {
             '5A1D85A1D53061000117D1EE',
             1,
             2,
-            [new NamespaceId(BigInt('0xE43F43D2C5A8F299')), new NamespaceId(BigInt('0xF7CE33276A3288C1'))],
-            new NamespaceId(BigInt('0xE43F43D2C5A8F299')),
+            [new NamespaceId(BigIntUtilities.HexToBigInt('E43F43D2C5A8F299')), new NamespaceId(BigIntUtilities.HexToBigInt('F7CE33276A3288C1'))],
+            new NamespaceId(BigIntUtilities.HexToBigInt('E43F43D2C5A8F299')),
             PublicAccount.createFromPublicKey('1026D70E1954775749C6811084D6450A3184D977383F0E4282CD47118AF37755', NetworkType.MIJIN_TEST),
             BigInt(795),
             BigInt(50795),
