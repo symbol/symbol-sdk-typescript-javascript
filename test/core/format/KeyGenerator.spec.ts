@@ -15,6 +15,7 @@
  */
 import { expect } from 'chai';
 import { KeyGenerator } from '../../../src/core/format/KeyGenerator';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('key generator', () => {
     describe('generate key from string', () => {
@@ -25,14 +26,14 @@ describe('key generator', () => {
             expect(KeyGenerator.generateUInt64Key('a')).to.be.instanceOf(BigInt);
         });
         it('generates correct keys', () => {
-            expect(KeyGenerator.generateUInt64Key('a')).to.equal(BigInt('0xF524A0FBF24B0880'));
+            expect(KeyGenerator.generateUInt64Key('a')).to.equal(BigIntUtilities.HexToBigInt('F524A0FBF24B0880'));
         });
         it('generates keys deterministically', () => {
-            expect(KeyGenerator.generateUInt64Key('abc')).to.equal(BigInt('0xB225E24FA75D983A'));
-            expect(KeyGenerator.generateUInt64Key('abc')).to.equal(BigInt('0xB225E24FA75D983A'));
-            expect(KeyGenerator.generateUInt64Key('def')).to.equal(BigInt('0xB0AC5222678F0D8E'));
-            expect(KeyGenerator.generateUInt64Key('def')).to.equal(BigInt('0xB0AC5222678F0D8E'));
-            expect(KeyGenerator.generateUInt64Key('abc')).to.equal(BigInt('0xB225E24FA75D983A'));
+            expect(KeyGenerator.generateUInt64Key('abc')).to.equal(BigIntUtilities.HexToBigInt('B225E24FA75D983A'));
+            expect(KeyGenerator.generateUInt64Key('abc')).to.equal(BigIntUtilities.HexToBigInt('B225E24FA75D983A'));
+            expect(KeyGenerator.generateUInt64Key('def')).to.equal(BigIntUtilities.HexToBigInt('B0AC5222678F0D8E'));
+            expect(KeyGenerator.generateUInt64Key('def')).to.equal(BigIntUtilities.HexToBigInt('B0AC5222678F0D8E'));
+            expect(KeyGenerator.generateUInt64Key('abc')).to.equal(BigIntUtilities.HexToBigInt('B225E24FA75D983A'));
         });
     });
 });

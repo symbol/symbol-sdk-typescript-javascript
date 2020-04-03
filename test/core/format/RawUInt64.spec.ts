@@ -17,6 +17,7 @@ import {
     expect,
 } from 'chai';
 import { Convert as convert, RawUInt64 as uint64} from '../../../src/core/format';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('uint64', () => {
     describe('compact', () => {
@@ -247,7 +248,7 @@ describe('uint64', () => {
         it('cannot parse hex string with invalid characters into uint64', () => {
             // Assert:
             expect(() => {
-                BigInt('0x0000000012345G78');
+                BigIntUtilities.HexToBigInt('0000000012345G78');
             }).to.throw('unrecognized hex char'); // contains 'G'
         });
 

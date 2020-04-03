@@ -48,6 +48,7 @@ import { SecretProofTransaction } from '../../src/model/transaction/SecretProofT
 import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { TestingAccount } from '../conf/conf.spec';
+import { BigIntUtilities } from '../../src/core/format/BigIntUtilities';
 
 describe('SerializeTransactionToJSON', () => {
     let account: Account;
@@ -122,7 +123,7 @@ describe('SerializeTransactionToJSON', () => {
     });
 
     it('should create AddressAliasTransaction', () => {
-        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
+        const namespaceId = new NamespaceId(BigIntUtilities.HexToBigInt('E1499A8D01FCD82A'));
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
@@ -139,7 +140,7 @@ describe('SerializeTransactionToJSON', () => {
     });
 
     it('should create MosaicAliasTransaction', () => {
-        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
+        const namespaceId = new NamespaceId(BigIntUtilities.HexToBigInt('E1499A8D01FCD82A'));
         const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),

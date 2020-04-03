@@ -23,6 +23,7 @@ import {PublicAccount} from '../../../src/model/account/PublicAccount';
 import {Mosaic} from '../../../src/model/mosaic/Mosaic';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {NetworkType} from '../../../src/model/network/NetworkType';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('AccountInfo', () => {
 
@@ -42,7 +43,7 @@ describe('AccountInfo', () => {
                     rawScore: 20,
                 }],
                 mosaics: [{
-                    amount: BigInt('0x000170B36D1C9FBA'),
+                    amount: BigIntUtilities.HexToBigInt('000170B36D1C9FBA'),
                     id: new MosaicId('D525AD41D95FCF29'),
                 }],
                 publicKey: '846B4439154579A5903B1459C9CF69CB8153F6D0110A7A0ED61DE29AE4810BF2',

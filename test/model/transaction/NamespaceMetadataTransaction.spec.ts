@@ -22,6 +22,7 @@ import { NetworkType } from '../../../src/model/network/NetworkType';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { NamespaceMetadataTransaction } from '../../../src/model/transaction/NamespaceMetadataTransaction';
 import { TestingAccount } from '../../conf/conf.spec';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('NamespaceMetadataTransaction', () => {
     let account: Account;
@@ -35,7 +36,7 @@ describe('NamespaceMetadataTransaction', () => {
             Deadline.create(),
             account.publicKey,
             BigInt(1000),
-            new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')),
+            new NamespaceId(BigIntUtilities.HexToBigInt('CAF5DD1286D7CC4C')),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
@@ -49,7 +50,7 @@ describe('NamespaceMetadataTransaction', () => {
             Deadline.create(),
             account.publicKey,
             BigInt(1000),
-            new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')),
+            new NamespaceId(BigIntUtilities.HexToBigInt('CAF5DD1286D7CC4C')),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
@@ -64,7 +65,7 @@ describe('NamespaceMetadataTransaction', () => {
             Deadline.create(),
             account.publicKey,
             BigInt(1000),
-            new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')),
+            new NamespaceId(BigIntUtilities.HexToBigInt('CAF5DD1286D7CC4C')),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
@@ -85,7 +86,7 @@ describe('NamespaceMetadataTransaction', () => {
                 Deadline.create(),
                 account.publicKey,
                 BigInt(1000),
-                new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')),
+                new NamespaceId(BigIntUtilities.HexToBigInt('CAF5DD1286D7CC4C')),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(1025)),
                 NetworkType.MIJIN_TEST,
@@ -99,7 +100,7 @@ describe('NamespaceMetadataTransaction', () => {
                 Deadline.create(),
                 account.publicKey,
                 BigInt(1000),
-                new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')),
+                new NamespaceId(BigIntUtilities.HexToBigInt('CAF5DD1286D7CC4C')),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
                 NetworkType.MIJIN_TEST,
@@ -114,7 +115,7 @@ describe('NamespaceMetadataTransaction', () => {
             Deadline.create(),
             account.publicKey,
             BigInt(1000),
-            new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')),
+            new NamespaceId(BigIntUtilities.HexToBigInt('CAF5DD1286D7CC4C')),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,

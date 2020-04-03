@@ -32,13 +32,14 @@ import { MosaicAddressRestrictionTransaction } from '../model/transaction/Mosaic
 import { MosaicGlobalRestrictionTransaction } from '../model/transaction/MosaicGlobalRestrictionTransaction';
 import { Transaction } from '../model/transaction/Transaction';
 import Long = require('long');
+import { BigIntUtilities } from '../core/format/BigIntUtilities';
 
 /**
  * MosaicRestrictionTransactionService service
  */
 export class MosaicRestrictionTransactionService {
 
-    private readonly defaultMosaicAddressRestrictionValue = BigInt('0xFFFFFFFFFFFFFFFF');
+    private readonly defaultMosaicAddressRestrictionValue = BigIntUtilities.HexToBigInt('FFFFFFFFFFFFFFFF');
     private readonly defaultMosaicGlobalRestrictionValue = BigInt(0);
 
     /**

@@ -21,6 +21,7 @@ import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {MosaicInfo} from '../../../src/model/mosaic/MosaicInfo';
 import {NetworkType} from '../../../src/model/network/NetworkType';
 import {MosaicView} from '../../../src/service/MosaicView';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('MosaicView', () => {
 
@@ -29,7 +30,7 @@ describe('MosaicView', () => {
     before(() => {
         mosaicInfo = new MosaicInfo(
             new MosaicId('85BBEA6CC462B244'),
-            BigInt('0x001FF973CADBFB80'), // supply
+            BigIntUtilities.HexToBigInt('001FF973CADBFB80'), // supply
             BigInt(1), // height
             PublicAccount.createFromPublicKey('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF', NetworkType.MIJIN_TEST),
             1, // revision

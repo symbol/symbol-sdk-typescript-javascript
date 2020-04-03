@@ -250,7 +250,7 @@ describe('Receipt', () => {
         };
 
         const receipt = new ArtifactExpiryReceipt(
-            new NamespaceId(BigInt('0xD525AD41D95FCF29')),
+            new NamespaceId(BigIntUtilities.HexToBigInt('D525AD41D95FCF29')),
             receiptDTO.version,
             receiptDTO.type,
         );

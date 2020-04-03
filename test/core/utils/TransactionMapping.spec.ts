@@ -137,7 +137,7 @@ describe('TransactionMapping - createFromPayload', () => {
     });
 
     it('should create AddressAliasTransaction', () => {
-        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
+        const namespaceId = new NamespaceId(BigIntUtilities.HexToBigInt('E1499A8D01FCD82A'));
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
@@ -152,12 +152,12 @@ describe('TransactionMapping - createFromPayload', () => {
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AddressAliasTransaction;
 
         expect(transaction.aliasAction).to.be.equal(AliasAction.Link);
-        expect(transaction.namespaceId.id).to.be.equal(BigInt('0xE1499A8D01FCD82A'));
+        expect(transaction.namespaceId.id).to.be.equal(BigIntUtilities.HexToBigInt('E1499A8D01FCD82A'));
         expect(transaction.address.plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
     });
 
     it('should create MosaicAliasTransaction', () => {
-        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
+        const namespaceId = new NamespaceId(BigIntUtilities.HexToBigInt('E1499A8D01FCD82A'));
         const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
@@ -171,8 +171,8 @@ describe('TransactionMapping - createFromPayload', () => {
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicAliasTransaction;
 
         expect(mosaicAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
-        expect(mosaicAliasTransaction.namespaceId.id).to.be.equal(BigInt('0xE1499A8D01FCD82A'));
-        expect(mosaicAliasTransaction.mosaicId.id).to.be.equal(BigInt('0xCAF5DD1286D7CC4C'));
+        expect(mosaicAliasTransaction.namespaceId.id).to.be.equal(BigIntUtilities.HexToBigInt('E1499A8D01FCD82A'));
+        expect(mosaicAliasTransaction.mosaicId.id).to.be.equal(BigIntUtilities.HexToBigInt('CAF5DD1286D7CC4C'));
 
     });
 
@@ -303,7 +303,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         expect(transaction.action).to.be.equal(MosaicSupplyChangeAction.Increase);
         expect(transaction.delta).to.be.equal(BigInt(10));
-        expect(transaction.mosaicId.id).to.be.equal(BigInt('0xCAF5DD1286D7CC4C'));
+        expect(transaction.mosaicId.id).to.be.equal(BigIntUtilities.HexToBigInt('CAF5DD1286D7CC4C'));
 
     });
 
@@ -637,7 +637,7 @@ describe('TransactionMapping - createFromPayload', () => {
             Deadline.create(),
             account.publicKey,
             BigInt(1000),
-            new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')),
+            new NamespaceId(BigIntUtilities.HexToBigInt('CAF5DD1286D7CC4C')),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
@@ -651,7 +651,7 @@ describe('TransactionMapping - createFromPayload', () => {
         expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
         expect(transaction.scopedMetadataKey).to.be.equal(BigInt(1000));
         expect(transaction.valueSizeDelta).to.be.equal(1);
-        expect(transaction.targetNamespaceId.toHex()).to.be.equal(new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')).toHex());
+        expect(transaction.targetNamespaceId.toHex()).to.be.equal(new NamespaceId(BigIntUtilities.HexToBigInt('CAF5DD1286D7CC4C')).toHex());
         expect(Convert.uint8ToHex(transaction.value)).to.be.equal(Convert.uint8ToHex(new Uint8Array(10)));
     });
 });
@@ -683,7 +683,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
     it('should create TransferTransaction - NamespaceId', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
-            new NamespaceId(BigInt('0xE1499A8D01FCD82A')),
+            new NamespaceId(BigIntUtilities.HexToBigInt('E1499A8D01FCD82A')),
             [
                 NetworkCurrencyLocal.createRelative(100),
             ],
@@ -692,7 +692,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         );
 
         const transaction = TransactionMapping.createFromDTO(transferTransaction.toJSON()) as TransferTransaction;
-        expect((transaction.recipientAddress as NamespaceId).id).to.be.equal(BigInt('0xE1499A8D01FCD82A'));
+        expect((transaction.recipientAddress as NamespaceId).id).to.be.equal(BigIntUtilities.HexToBigInt('E1499A8D01FCD82A'));
         expect(transaction.message.payload).to.be.equal('test-message');
     });
 
@@ -782,7 +782,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
     });
 
     it('should create AddressAliasTransaction', () => {
-        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
+        const namespaceId = new NamespaceId(BigIntUtilities.HexToBigInt('E1499A8D01FCD82A'));
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
@@ -800,7 +800,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
     });
 
     it('should create MosaicAliasTransaction', () => {
-        const namespaceId = new NamespaceId(BigInt('0xE1499A8D01FCD82A'));
+        const namespaceId = new NamespaceId(BigIntUtilities.HexToBigInt('E1499A8D01FCD82A'));
         const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
@@ -1174,7 +1174,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             Deadline.create(),
             account.publicKey,
             BigInt(1000),
-            new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')),
+            new NamespaceId(BigIntUtilities.HexToBigInt('CAF5DD1286D7CC4C')),
             1,
             'Test Value',
             NetworkType.MIJIN_TEST,
@@ -1187,7 +1187,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
         expect(transaction.scopedMetadataKey.toString()).to.be.equal(BigInt(1000).toString());
         expect(transaction.valueSizeDelta).to.be.equal(1);
-        expect(transaction.targetNamespaceId.toHex()).to.be.equal(new NamespaceId(BigInt('0xCAF5DD1286D7CC4C')).toHex());
+        expect(transaction.targetNamespaceId.toHex()).to.be.equal(new NamespaceId(BigIntUtilities.HexToBigInt('CAF5DD1286D7CC4C')).toHex());
         expect(transaction.value).to.be.equal('Test Value');
     });
 });

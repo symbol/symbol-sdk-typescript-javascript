@@ -97,7 +97,7 @@ export class BigIntUtilities {
     }
 
     /**
-     * Convert UInt64 to hex 
+     * Convert UInt64 to hex
      * @param input UInt64 in Uint32 array
      * @param littleEndian Reverse uint32 array
      * @returns {string}

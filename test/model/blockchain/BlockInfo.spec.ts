@@ -18,6 +18,7 @@ import {deepEqual} from 'assert';
 import {expect} from 'chai';
 import {PublicAccount} from '../../../src/model/account/PublicAccount';
 import {BlockInfo} from '../../../src/model/blockchain/BlockInfo';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('BlockInfo', () => {
 
@@ -27,7 +28,7 @@ describe('BlockInfo', () => {
                 blockTransactionsHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
                 blockReceiptsHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
                 stateHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
-                difficulty: BigInt('0x00005AF3107A4000'),
+                difficulty: BigIntUtilities.HexToBigInt('00005AF3107A4000'),
                 feeMultiplier: 1,
                 height: BigInt(1),
                 previousBlockHash: '0000000000000000000000000000000000000000000000000000000000000000',

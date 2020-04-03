@@ -38,7 +38,7 @@ describe('NetworkCurrencyLocal', () => {
     });
 
     it('should have valid statics', () => {
-        deepEqual(NetworkCurrencyLocal.NAMESPACE_ID.id, new NamespaceId(BigInt('0x85BBEA6CC462B244')).id);
+        deepEqual(NetworkCurrencyLocal.NAMESPACE_ID.id, new NamespaceId(BigIntUtilities.HexToBigInt('85BBEA6CC462B244')).id);
         expect(NetworkCurrencyLocal.DIVISIBILITY).to.be.equal(6);
         expect(NetworkCurrencyLocal.TRANSFERABLE).to.be.equal(true);
         expect(NetworkCurrencyLocal.SUPPLY_MUTABLE).to.be.equal(false);
@@ -50,7 +50,7 @@ describe('NetworkCurrencyPublic', () => {
     it('should createComplete an NetworkCurrencyPublic object', () => {
 
         const currency = NetworkCurrencyPublic.createRelative(1000);
-        deepEqual(currency.id.id, BigInt('0xE74B99BA41F4AFEE')); // holds NAMESPACE_ID
+        deepEqual(currency.id.id, BigIntUtilities.HexToBigInt('E74B99BA41F4AFEE')); // holds NAMESPACE_ID
         expect(currency.amount).to.be.equal(BigInt(1000 * 1000000));
     });
 
@@ -61,7 +61,7 @@ describe('NetworkCurrencyPublic', () => {
     });
 
     it('should have valid statics', () => {
-        deepEqual(NetworkCurrencyPublic.NAMESPACE_ID.id, new NamespaceId(BigInt('0xE74B99BA41F4AFEE')).id);
+        deepEqual(NetworkCurrencyPublic.NAMESPACE_ID.id, new NamespaceId(BigIntUtilities.HexToBigInt('E74B99BA41F4AFEE')).id);
         expect(NetworkCurrencyPublic.DIVISIBILITY).to.be.equal(6);
         expect(NetworkCurrencyPublic.TRANSFERABLE).to.be.equal(true);
         expect(NetworkCurrencyPublic.SUPPLY_MUTABLE).to.be.equal(false);

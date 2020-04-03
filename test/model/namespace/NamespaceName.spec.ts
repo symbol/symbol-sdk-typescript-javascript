@@ -18,14 +18,15 @@ import {deepEqual} from 'assert';
 import {expect} from 'chai';
 import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
 import {NamespaceName} from '../../../src/model/namespace/NamespaceName';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('NamespaceName', () => {
 
     it('should createComplete an NamespaceName object', () => {
         const namespaceNameDTO = {
             name: 'nem',
-            namespaceId: new NamespaceId(BigInt('0x84B3552D375FFA4B')),
-            parentId: new NamespaceId(BigInt('0x4EEF8E1D554EE6B9')),
+            namespaceId: new NamespaceId(BigIntUtilities.HexToBigInt('84B3552D375FFA4B')),
+            parentId: new NamespaceId(BigIntUtilities.HexToBigInt('4EEF8E1D554EE6B9')),
         };
 
         const namespaceName = new NamespaceName(

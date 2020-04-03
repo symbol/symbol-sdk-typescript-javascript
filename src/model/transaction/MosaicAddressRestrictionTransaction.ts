@@ -71,7 +71,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
                          targetAddress: Address | NamespaceId,
                          newRestrictionValue: bigint,
                          networkType: NetworkType,
-                         previousRestrictionValue: bigint = BigInt('0xFFFFFFFFFFFFFFFF'),
+                         previousRestrictionValue: bigint = BigIntUtilities.HexToBigInt('FFFFFFFFFFFFFFFF'),
                          maxFee: bigint = BigInt(0)): MosaicAddressRestrictionTransaction {
         return new MosaicAddressRestrictionTransaction(networkType,
             TransactionVersion.MOSAIC_ADDRESS_RESTRICTION,

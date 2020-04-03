@@ -52,7 +52,7 @@ describe('MetadataEntry', () => {
         deepEqual(metadata.senderPublicKey, account.publicKey);
         deepEqual(metadata.compositeHash, hash);
         deepEqual(metadata.targetPublicKey, account.publicKey);
-        deepEqual(metadata.scopedMetadataKey, BigInt('0x85BBEA6CC462B244'));
+        deepEqual(metadata.scopedMetadataKey, BigIntUtilities.HexToBigInt('85BBEA6CC462B244'));
         deepEqual(metadata.targetId, undefined);
         deepEqual(metadata.metadataType, MetadataType.Account);
         deepEqual(metadata.value, '12345');
@@ -83,7 +83,7 @@ describe('MetadataEntry', () => {
         deepEqual(metadata.senderPublicKey, account.publicKey);
         deepEqual(metadata.compositeHash, hash);
         deepEqual(metadata.targetPublicKey, account.publicKey);
-        deepEqual(metadata.scopedMetadataKey, BigInt('0x85BBEA6CC462B244'));
+        deepEqual(metadata.scopedMetadataKey, BigIntUtilities.HexToBigInt('85BBEA6CC462B244'));
         deepEqual((metadata.targetId as MosaicId).toHex(), '85BBEA6CC462B244');
         deepEqual(metadata.metadataType, MetadataType.Mosaic);
         deepEqual(metadata.value, '12345');
@@ -113,7 +113,7 @@ describe('MetadataEntry', () => {
         deepEqual(metadata.senderPublicKey, account.publicKey);
         deepEqual(metadata.compositeHash, hash);
         deepEqual(metadata.targetPublicKey, account.publicKey);
-        deepEqual(metadata.scopedMetadataKey, BigInt('0x85BBEA6CC462B244'));
+        deepEqual(metadata.scopedMetadataKey, BigIntUtilities.HexToBigInt('85BBEA6CC462B244'));
         deepEqual((metadata.targetId as NamespaceId).toHex(), '85BBEA6CC462B244');
         deepEqual(metadata.metadataType, MetadataType.Namespace);
         deepEqual(metadata.value, '12345');

@@ -21,6 +21,7 @@ import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
 import {NamespaceInfo} from '../../../src/model/namespace/NamespaceInfo';
 import {NetworkType} from '../../../src/model/network/NetworkType';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('NamespaceInfo', () => {
     let rootNamespaceDTO;
@@ -35,8 +36,8 @@ describe('NamespaceInfo', () => {
             },
             namespace: {
                 depth: 1,
-                endHeight: BigInt('0xFFFFFFFFFFFFFFFF'),
-                level0: new NamespaceId(BigInt('0x84B3552D375FFA4B')),
+                endHeight: BigIntUtilities.HexToBigInt('FFFFFFFFFFFFFFFF'),
+                level0: new NamespaceId(BigIntUtilities.HexToBigInt('84B3552D375FFA4B')),
                 owner: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                 parentId: new NamespaceId(BigInt(0)),
                 startHeight: BigInt(1),

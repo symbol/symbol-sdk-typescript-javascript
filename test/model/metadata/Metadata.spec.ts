@@ -20,6 +20,7 @@ import { Metadata } from '../../../src/model/metadata/Metadata';
 import { MetadataEntry } from '../../../src/model/metadata/MetadataEntry';
 import { MetadataType } from '../../../src/model/metadata/MetadataType';
 import { TestingAccount } from '../../conf/conf.spec';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('Metadata', () => {
     let account: Account;
@@ -61,7 +62,7 @@ describe('Metadata', () => {
         deepEqual(metadata.metadataEntry.senderPublicKey, account.publicKey);
         deepEqual(metadata.metadataEntry.compositeHash, hash);
         deepEqual(metadata.metadataEntry.targetPublicKey, account.publicKey);
-        deepEqual(metadata.metadataEntry.scopedMetadataKey, BigInt('0x85BBEA6CC462B244'));
+        deepEqual(metadata.metadataEntry.scopedMetadataKey, BigIntUtilities.HexToBigInt('85BBEA6CC462B244'));
         deepEqual(metadata.metadataEntry.targetId, undefined);
         deepEqual(metadata.metadataEntry.metadataType, MetadataType.Account);
         deepEqual(metadata.metadataEntry.value, '12345');

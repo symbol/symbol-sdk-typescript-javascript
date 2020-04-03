@@ -30,6 +30,7 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicSupplyChangeTransaction} from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import {TestingAccount} from '../../conf/conf.spec';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('MosaicSupplyChangeTransaction', () => {
     let account: Account;
@@ -85,7 +86,7 @@ describe('MosaicSupplyChangeTransaction', () => {
 
         expect(mosaicSupplyChangeTransaction.action).to.be.equal(MosaicSupplyChangeAction.Increase);
         expect(mosaicSupplyChangeTransaction.delta).to.be.equal(BigInt(10));
-        expect(mosaicSupplyChangeTransaction.mosaicId.id).to.be.equal(BigInt('0xCAF5DD1286D7CC4C'));
+        expect(mosaicSupplyChangeTransaction.mosaicId.id).to.be.equal(BigIntUtilities.HexToBigInt('CAF5DD1286D7CC4C'));
 
         const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
 

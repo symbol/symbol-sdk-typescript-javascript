@@ -38,7 +38,7 @@ describe('NetworkHarvestLocal', () => {
     });
 
     it('should have valid statics', () => {
-        deepEqual(NetworkHarvestLocal.NAMESPACE_ID.id, new NamespaceId(BigInt('0x941299B2B7E1291C')).id);
+        deepEqual(NetworkHarvestLocal.NAMESPACE_ID.id, new NamespaceId(BigIntUtilities.HexToBigInt('941299B2B7E1291C')).id);
         expect(NetworkHarvestLocal.DIVISIBILITY).to.be.equal(3);
         expect(NetworkHarvestLocal.TRANSFERABLE).to.be.equal(true);
         expect(NetworkHarvestLocal.SUPPLY_MUTABLE).to.be.equal(true);

@@ -17,23 +17,24 @@
 import {deepEqual} from 'assert';
 import {expect} from 'chai';
 import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('NamespaceId', () => {
     it('should be created from root namespace name', () => {
         const id = new NamespaceId('nem');
-        deepEqual(id.id, BigInt('0x84B3552D375FFA4B'));
+        deepEqual(id.id, BigIntUtilities.HexToBigInt('84B3552D375FFA4B'));
         expect(id.fullName).to.be.equal('nem');
     });
 
     it('should be created from subnamespace name ', () => {
         const id = new NamespaceId('nem.subnem');
-        deepEqual(id.id, BigInt('0xE42900AF163F33B2'));
+        deepEqual(id.id, BigIntUtilities.HexToBigInt('E42900AF163F33B2'));
         expect(id.fullName).to.be.equal('nem.subnem');
     });
 
     it('should be created from id', () => {
-        const id = new NamespaceId(BigInt('0xD525AD41D95FCF29'));
-        deepEqual(id.id, BigInt('0xD525AD41D95FCF29'));
+        const id = new NamespaceId(BigIntUtilities.HexToBigInt('D525AD41D95FCF29'));
+        deepEqual(id.id, BigIntUtilities.HexToBigInt('D525AD41D95FCF29'));
         expect(id.fullName).to.be.equal(undefined);
     });
 });
