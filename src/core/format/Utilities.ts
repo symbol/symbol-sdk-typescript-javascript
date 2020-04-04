@@ -38,7 +38,7 @@ export const createBuilder = () => {
     };
 };
 
-const Char_To_Nibble_Map = () => {
+const Char_To_Nibble_Map = (): Record<string, number> => {
     const builder = createBuilder();
     builder.addRange('0', '9', 0);
     builder.addRange('a', 'f', 10);
@@ -54,7 +54,7 @@ const Char_To_Digit_Map = () => {
 
 export const Nibble_To_Char_Map = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
 export const Alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-export const  Decoded_Block_Size = 5;
+export const Decoded_Block_Size = 5;
 export const Encoded_Block_Size = 8;
 export const tryParseByte = (char1, char2) => {
     const charMap = Char_To_Nibble_Map();
@@ -113,7 +113,6 @@ export const extractPartName = (name, start, size) => {
 };
 
 
-
 export const split = (name, processor) => {
     let start = 0;
     for (let index = 0; index < name.length; ++index) {
@@ -125,7 +124,7 @@ export const split = (name, processor) => {
     return start;
 };
 
-export const generateNamespaceId = (parentId, name) => {
+export const generateNamespaceId = (parentId: number[], name: string): number[] => {
     const hash = sha3_256.create();
     hash.update(Uint32Array.from(parentId).buffer as any);
     hash.update(name);

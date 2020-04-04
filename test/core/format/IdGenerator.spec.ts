@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import { sha3_256 } from 'js-sha3';
-import { Convert as convert, IdGenerator as idGenerator, } from '../../../src/core/format';
+import { Convert as convert, IdGenerator as idGenerator } from '../../../src/core/format';
 import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
+import { generateNamespaceId } from '../../../src/core/format/Utilities';
 
 const constants = {
     nem_id: [0x375FFA4B, 0x84B3552D],
@@ -35,10 +35,10 @@ const basicMosaicInfo = {
 
 const mosaicTestVector = {
     rows: [{
-            publicKey: '4AFF7B4BA8C1C26A7917575993346627CB6C80DE62CD92F7F9AEDB7064A3DE62',
-            nonce: 'B76FE378',
-            expectedMosaicId: '3AD842A8C0AFC518',
-        },
+        publicKey: '4AFF7B4BA8C1C26A7917575993346627CB6C80DE62CD92F7F9AEDB7064A3DE62',
+        nonce: 'B76FE378',
+        expectedMosaicId: '3AD842A8C0AFC518',
+    },
         {
             publicKey: '3811EDF245F1D30171FF1474B24C4366FECA365A8457AAFA084F3DE4AEA0BA60',
             nonce: '21832A2A',
@@ -138,14 +138,6 @@ const mosaicTestVector = {
 };
 
 describe('id generator', () => {
-    function generateNamespaceId(parentId, name) {
-        const hash = sha3_256.create();
-        hash.update(Uint32Array.from(parentId).buffer as any);
-        hash.update(name);
-        const result = new Uint32Array(hash.arrayBuffer());
-        // right zero-filling required to keep unsigned number representation
-        return [result[0], (result[1] | 0x80000000) >>> 0];
-    }
 
     function addBasicTests(generator) {
         it('produces different results for different names', () => {
@@ -182,7 +174,7 @@ describe('id generator', () => {
         it('generates correct well known id', () => {
             // Assert:
             expect(idGenerator.generateMosaicId(basicMosaicInfo.nonce, basicMosaicInfo.publicId))
-                .to.deep.equal(basicMosaicInfo.id);
+            .to.deep.equal(basicMosaicInfo.id);
         });
 
         // @dataProvider mosaicTestVector
@@ -221,7 +213,7 @@ describe('id generator', () => {
 
         it('supports multi level namespaces', () => {
             // Arrange:
-            const expected: any = [];
+            const expected: number[][] = [];
             expected.push(generateNamespaceId(constants.namespace_base_id, 'foo'));
             expected.push(generateNamespaceId(expected[0], 'bar'));
             expected.push(generateNamespaceId(expected[1], 'baz'));
