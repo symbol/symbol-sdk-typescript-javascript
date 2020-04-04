@@ -123,6 +123,14 @@ export class SimpleWallet extends Wallet {
     }
 
     /**
+     * Creates a SimpleWallet DTO
+     * @returns {ISimpleWalletDTO}
+     */
+    public toDTO(): ISimpleWalletDTO {
+        return JSON.parse(JSON.stringify(this))
+    }
+
+    /**
      * Open a wallet and generate an Account
      * @param password - Password to decrypt private key
      * @returns {Account}
