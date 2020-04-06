@@ -86,7 +86,7 @@ export class MultisigService extends AbstractService {
     // add multisig accounts of which "self" is a cosignatory
     if (multisigInfo) {
       const service = new WalletService(this.$store)
-      const networkType = this.$store.getters['wallet/currentWalletMultisigInfo']
+      const networkType = this.$store.getters['network/networkType']
       return self.concat(...multisigInfo.multisigAccounts.map(
         ({publicKey}) => ({
           publicKey,
