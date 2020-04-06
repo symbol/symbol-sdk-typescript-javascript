@@ -281,7 +281,7 @@ export class WalletService extends AbstractService {
 
     return new WalletsModel(new Map<string, any>([
       [ 'accountName', currentAccount.getIdentifier() ],
-      [ 'name', 'Seed Wallet 1' ],
+      [ 'name', 'Seed Account 1' ],
       [ 'type', WalletType.fromDescriptor('Seed') ],
       [ 'address', simpleWallet.address.plain() ],
       [ 'publicKey', account.publicKey ],

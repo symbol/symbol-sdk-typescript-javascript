@@ -256,7 +256,7 @@ export default class WalletSelectionTs extends Vue {
     return simpleWallets.map((simpleWallet, i) =>
       new WalletsModel(new Map<string, any>([
         [ 'accountName', this.currentAccount.values.get('accountName') ],
-        [ 'name', `Seed Wallet${indexes[i] + 1}` ],
+        [ 'name', `Seed Account ${indexes[i] + 1}` ],
         [ 'type', WalletType.fromDescriptor('Seed') ],
         [ 'address', simpleWallet.address.plain() ],
         [ 'publicKey', accounts[i].publicKey ],
