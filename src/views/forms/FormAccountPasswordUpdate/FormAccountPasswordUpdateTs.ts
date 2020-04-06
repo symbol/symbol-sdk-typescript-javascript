@@ -18,10 +18,13 @@ import {mapGetters} from 'vuex'
 import {Password} from 'symbol-sdk'
 
 // internal dependencies
-import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {AccountService} from '@/services/AccountService'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
+import {NotificationType} from '@/core/utils/NotificationType'
+import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
+import {WalletService} from '@/services/WalletService'
+import {WalletsRepository} from '@/repositories/WalletsRepository'
 
 // child components
 import {ValidationObserver, ValidationProvider} from 'vee-validate'
@@ -33,7 +36,6 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 import FormRow from '@/components/FormRow/FormRow.vue'
 // @ts-ignore
 import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
-import { NotificationType } from '@/core/utils/NotificationType'
 
 @Component({
   components: {
@@ -113,26 +115,40 @@ export class FormAccountPasswordUpdateTs extends Vue {
   /**
    * When account is unlocked, the sub wallet can be created
    */
-  public async onAccountUnlocked() {
+  public async onAccountUnlocked(account: Account, oldPassword: Password) {
     try {
       const service = new AccountService(this.$store)
       const repository = new AccountsRepository()
+      const accountModel = this.currentAccount
+      const newPassword = new Password(this.formItems.password)
 
       // - create new password hash
-      const passwordHash = service.getPasswordHash(new Password(this.formItems.password))
-      this.currentAccount.values.set('password', passwordHash)
-      this.currentAccount.values.set('hint', this.formItems.passwordHint)
+      const passwordHash = service.getPasswordHash(newPassword)
+      accountModel.values.set('password', passwordHash)
+      accountModel.values.set('hint', this.formItems.passwordHint)
 
       // - update in storage
-      repository.update(
-        this.currentAccount.getIdentifier(),
-        this.currentAccount.values,
-      )
+      repository.update(accountModel.getIdentifier(), accountModel.values)
+
+      // - update wallets passwords
+      const walletsRepository = new WalletsRepository()
+      const walletService = new WalletService()
+
+      const walletIdentifiers = accountModel.values.get('wallets')
+      const walletModels = walletIdentifiers.map(id => walletsRepository.read(id))
+      for (const model of walletModels) {
+        const updatedModel = walletService.updateWalletPassord(model, oldPassword, newPassword)
+        const updatedValues = new Map<string, string>([
+          [ 'encPrivate', updatedModel.values.get('encPrivate') ],
+          [ 'encIv', updatedModel.values.get('encIv') ],
+        ])
+        walletsRepository.update(model.getIdentifier(), updatedValues)
+      }
 
       // - update state and finalize
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS_PASSWORD_CHANGED)
-      this.$store.dispatch('account/LOG_OUT')
-      this.$router.push({name: 'accounts.login'})
+      await this.$store.dispatch('account/LOG_OUT')
+      setTimeout(() => {this.$router.push({name: 'accounts.login'})}, 500)
     }
     catch (e) {
       this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.')

@@ -129,7 +129,7 @@ export class FormGeneralSettingsTs extends Vue {
     this.formItems.explorerUrl = this.explorerUrl
     this.formItems.defaultWallet = this.defaultWallet && this.defaultWallet.length
       ? this.defaultWallet : (this.knownWallets.length
-        ? this.knownWallets.shift()
+        ? this.knownWallets[0]
         : '')
   }
 

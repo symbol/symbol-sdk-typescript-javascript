@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {Account, Address, NetworkType, SimpleWallet, Password} from 'symbol-sdk'
+import {Account, Address, NetworkType, SimpleWallet, Password, EncryptedPrivateKey} from 'symbol-sdk'
 import {
   ExtendedKey,
   MnemonicPassPhrase,
@@ -367,5 +367,45 @@ export class WalletService extends AbstractService {
       [ 'path', '' ],
       [ 'isMultisig', false ],
     ]))
+  }
+
+  /**
+   * Returns a WalletsModel with an updated SimpleWallet
+   * @param {string} walletIdentifier
+   * @param {Password} oldPassword
+   * @param {Password} newPassword
+   */
+  public updateWalletPassord(
+    wallet: WalletsModel,
+    oldPassword: Password,
+    newPassword: Password,
+  ): WalletsModel {
+    // Password modification is not allowed for hardware wallets
+    if (wallet.values.get('type') !== WalletType.fromDescriptor('Seed')
+      && wallet.values.get('type') !== WalletType.fromDescriptor('Pk')) {
+      return wallet
+    }
+
+    // Get the private key
+    const encryptedPrivateKey = new EncryptedPrivateKey(
+      wallet.values.get('encPrivate'),
+      wallet.values.get('encIv'),
+    )
+
+    const privateKey = encryptedPrivateKey.decrypt(oldPassword)
+
+    // Encrypt the private key with the new password
+    const newSimpleWallet = SimpleWallet.createFromPrivateKey(
+      wallet.values.get('name'),
+      newPassword,
+      privateKey,
+      wallet.objects.address.networkType,
+    )
+
+    // Update the wallet model
+    wallet.values.set('encPrivate', newSimpleWallet.encryptedPrivateKey.encryptedKey)
+    wallet.values.set('encIv', newSimpleWallet.encryptedPrivateKey.iv)
+    
+    return wallet
   }
 }

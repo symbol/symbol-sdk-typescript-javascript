@@ -96,7 +96,7 @@
             <div
               v-if="accountsClassifiedByNetworkType"
               class="pointer button"
-              @click="submit"
+              @click.stop="submit"
             >
               {{ $t('login') }}
             </div>

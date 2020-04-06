@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NetworkType, Account} from 'symbol-sdk'
+import {NetworkType, Account, Password, EncryptedPrivateKey} from 'symbol-sdk'
 import {WalletService} from '@/services/WalletService'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
+import {wallet1Params, WalletsModel1} from '@MOCKS/Wallets'
 
 // Sample mnemonic passphrase
 const mnemonic = new MnemonicPassPhrase('limit sing post cross matrix pizza topple rack cigar skirt girl hurt outer humble fancy elegant bunker pipe ensure grain regret bulk renew trim')
@@ -105,6 +106,44 @@ describe('services/WalletServices', () => {
       const account_3 = new WalletService().getAccountByPath(mnemonic, NetworkType.TEST_NET, standardPaths[3])
 
       expect(account_3.privateKey).toBe(expectedAccounts[2].privateKey)
+    })
+  })
+
+  describe('updateWalletPassword', () => {
+    test('should update a wallet password', () => {
+      // initialize wallet service
+      const service = new WalletService()
+
+      // get initial encrypted private key values
+      const initialEncPrivate = WalletsModel1.values.get('encPrivate')
+      const initialEncIv = WalletsModel1.values.get('encIv')
+
+      // update the model
+      const updatedWallet = service.updateWalletPassord(
+        WalletsModel1, wallet1Params.password, new Password('password2'),
+      )
+      
+      // decrypt the new model's private key
+      const newEncPrivate = updatedWallet.values.get('encPrivate')
+      const newEncIv = updatedWallet.values.get('encIv')
+      const privateKey = new EncryptedPrivateKey(newEncPrivate, newEncIv)
+        .decrypt(new Password('password2'))
+
+      // assert the encrypted private key changed
+      expect(newEncPrivate).not.toBe(initialEncPrivate)
+      expect(newEncIv).not.toBe(initialEncIv)
+
+      // assert the plain private key did not change
+      expect(privateKey).toBe(wallet1Params.privateKey)
+    })
+
+    test('should throw if provided with an incorrect password', () => {
+      const service = new WalletService()
+      expect(() => {
+        service.updateWalletPassord(
+          WalletsModel1,new Password('wrong_password'), new Password('password2'),
+        )
+      }).toThrow()
     })
   })
 })

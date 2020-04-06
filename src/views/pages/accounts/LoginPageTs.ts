@@ -245,10 +245,10 @@ export default class LoginPageTs extends Vue {
     // read default wallet from settings
     const defaultWalletId = settings.values.get('default_wallet').length
       ? settings.values.get('default_wallet')
-      : Array.from(knownWallets.values()).shift().getIdentifier()
+      : Array.from(knownWallets.values())[0].getIdentifier()
     const defaultWallet = Array.from(knownWallets.values()).filter(
       w => w.getIdentifier() === defaultWalletId,
-    ).shift()
+    )[0]
 
     // LOGIN SUCCESS: update app state
     await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)
