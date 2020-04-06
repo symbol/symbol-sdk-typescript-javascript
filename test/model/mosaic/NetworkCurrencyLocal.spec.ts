@@ -18,17 +18,17 @@ import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
-import { NetworkHarvestLocal } from '../../../src/model/mosaic/NetworkHarvestLocal';
+import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
 
-describe('NetworkHarvestLocal', () => {
+describe('NetworkCurrencyLocal', () => {
 
-    const hexId = '941299B2B7E1291C';
-    const multiplier = BigInt(1000);
+    const hexId = '85BBEA6CC462B244';
+    const multiplier = BigInt(1000000);
 
     it('should set amount when relative and number', () => {
 
         const amount = 900000000000000;
-        const currency = NetworkHarvestLocal.createRelative(amount);
+        const currency = NetworkCurrencyLocal.createRelative(amount);
         deepEqual(BigIntUtilities.BigIntToHex(currency.id.id), hexId);
         expect(currency.toDTO().amount).to.be.equal((BigInt(amount) * multiplier).toString());
         expect(currency.amount.toString()).to.be.equal((BigInt(amount) * multiplier).toString());
@@ -36,7 +36,7 @@ describe('NetworkHarvestLocal', () => {
 
     it('should set amount when relative and bigint', () => {
         const amount = BigInt(900000000000000);
-        const currency = NetworkHarvestLocal.createRelative(amount);
+        const currency = NetworkCurrencyLocal.createRelative(amount);
         deepEqual(BigIntUtilities.BigIntToHex(currency.id.id), hexId);
         expect(currency.toDTO().amount).to.be.equal((BigInt(amount) * multiplier).toString());
         expect(currency.amount.toString()).to.be.equal((BigInt(amount) * multiplier).toString());
@@ -44,7 +44,7 @@ describe('NetworkHarvestLocal', () => {
 
     it('should set amount when absolute and number', () => {
         const amount = 900000000000000123;
-        const currency = NetworkHarvestLocal.createAbsolute(amount);
+        const currency = NetworkCurrencyLocal.createAbsolute(amount);
         deepEqual(BigIntUtilities.BigIntToHex(currency.id.id), hexId);
         expect(currency.toDTO().amount).to.be.equal((BigInt(amount)).toString());
         expect(currency.amount.toString()).to.be.equal((BigInt(amount)).toString());
@@ -52,16 +52,16 @@ describe('NetworkHarvestLocal', () => {
 
     it('should set amount when absolute and bigint', () => {
         const amount = BigInt(900000000000000123);
-        const currency = NetworkHarvestLocal.createAbsolute(amount);
+        const currency = NetworkCurrencyLocal.createAbsolute(amount);
         deepEqual(BigIntUtilities.BigIntToHex(currency.id.id), hexId);
         expect(currency.toDTO().amount).to.be.equal((BigInt(amount)).toString());
         expect(currency.amount.toString()).to.be.equal((BigInt(amount)).toString());
     });
 
     it('should have valid statics', () => {
-        deepEqual(NetworkHarvestLocal.NAMESPACE_ID.id, new NamespaceId(BigIntUtilities.HexToBigInt(hexId)).id);
-        expect(NetworkHarvestLocal.DIVISIBILITY).to.be.equal(3);
-        expect(NetworkHarvestLocal.TRANSFERABLE).to.be.equal(true);
-        expect(NetworkHarvestLocal.SUPPLY_MUTABLE).to.be.equal(true);
+        deepEqual(NetworkCurrencyLocal.NAMESPACE_ID.id, new NamespaceId(BigIntUtilities.HexToBigInt(hexId)).id);
+        expect(NetworkCurrencyLocal.DIVISIBILITY).to.be.equal(6);
+        expect(NetworkCurrencyLocal.TRANSFERABLE).to.be.equal(true);
+        expect(NetworkCurrencyLocal.SUPPLY_MUTABLE).to.be.equal(false);
     });
 });

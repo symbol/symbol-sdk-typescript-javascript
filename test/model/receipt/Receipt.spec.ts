@@ -37,14 +37,17 @@ import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
 import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { TransactionStatement } from '../../../src/model/receipt/TransactionStatement';
+import { StatementsDTO } from 'symbol-openapi-typescript-node-client';
+import { TransactionStatementDTO } from 'symbol-openapi-typescript-node-client/model/transactionStatementDTO';
+import { ResolutionStatementDTO } from 'symbol-openapi-typescript-node-client/model/resolutionStatementDTO';
 
 describe('Receipt', () => {
     let account: Account;
     let account2: Account;
-    let transactionStatementsDTO;
-    let addressResolutionStatementsDTO;
-    let mosaicResolutionStatementsDTO;
-    let statementDTO;
+    let transactionStatementsDTO: TransactionStatementDTO[];
+    let addressResolutionStatementsDTO: ResolutionStatementDTO[];
+    let mosaicResolutionStatementsDTO: ResolutionStatementDTO[];
+    let statementDTO: StatementsDTO;
     const netWorkType = NetworkType.MIJIN_TEST;
 
     before(() => {
@@ -279,7 +282,7 @@ describe('Receipt', () => {
     it('should createComplete a transaction statement', () => {
         const statementDto = transactionStatementsDTO[0];
         const statement = new TransactionStatement(
-            statementDto.statement.height,
+            BigInt(statementDto.statement.height),
             new ReceiptSource(statementDto.statement.source.primaryId, statementDto.statement.source.secondaryId),
             statementDto.statement.receipts.map((receipt) =>
                 CreateReceiptFromDTO(receipt, netWorkType)),
@@ -293,7 +296,7 @@ describe('Receipt', () => {
         const statementDto = mosaicResolutionStatementsDTO[0];
         const statement = new ResolutionStatement(
             ResolutionType.Mosaic,
-            statementDto.statement.height,
+            BigInt(statementDto.statement.height),
             new MosaicId(statementDto.statement.unresolved),
             statementDto.statement.resolutionEntries.map((resolved) => {
                 return new ResolutionEntry(new MosaicId(resolved.resolved),
@@ -308,7 +311,7 @@ describe('Receipt', () => {
         const statementDto = addressResolutionStatementsDTO[0];
         const statement = new ResolutionStatement(
             ResolutionType.Address,
-            statementDto.statement.height,
+            BigInt(statementDto.statement.height),
             Address.createFromEncoded(statementDto.statement.unresolved),
             statementDto.statement.resolutionEntries.map((resolved) => {
                 return new ResolutionEntry(Address.createFromEncoded(resolved.resolved),

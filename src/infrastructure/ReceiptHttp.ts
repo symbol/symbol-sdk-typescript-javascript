@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { from as observableFrom, Observable, throwError } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 import { ReceiptRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
@@ -66,29 +66,24 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
      * @return Observable<MerkleProofInfo>
      */
     public getMerkleReceipts(height: bigint, hash: string): Observable<MerkleProofInfo> {
-        return observableFrom(
-            this.receiptRoutesApi.getMerkleReceipts(height.toString(), hash)).pipe(
-                map(({body}) => new MerkleProofInfo(
-                        body.merklePath!.map(
-                            (payload) => new MerklePathItem(payload.position, payload.hash)),
-                    )),
-                catchError((error) =>  throwError(this.errorHandling(error))),
+        return this.call(
+            this.receiptRoutesApi.getMerkleReceipts(height.toString(), hash),
+            (body) => new MerkleProofInfo(
+                body.merklePath!.map((payload) => new MerklePathItem(payload.position, payload.hash)),
+            ),
         );
     }
 
     /**
      * Gets an array receipts for a block height.
      * @param height - Block height from which will be the first block in the array
-     * @param queryParams - (Optional) Query params
      * @returns Observable<Statement>
      */
     public getBlockReceipts(height: bigint): Observable<Statement> {
         return this.networkTypeObservable.pipe(
-            mergeMap((networkType) => observableFrom(
-                this.receiptRoutesApi.getBlockReceipts(height.toString())).pipe(
-                    map(({body}) => CreateStatementFromDTO(body, networkType)),
-                    catchError((error) =>  throwError(this.errorHandling(error))),
-                ),
+            mergeMap((networkType) => this.call(
+                this.receiptRoutesApi.getBlockReceipts(height.toString()),
+                (body) => CreateStatementFromDTO(body, networkType)),
             ),
         );
     }

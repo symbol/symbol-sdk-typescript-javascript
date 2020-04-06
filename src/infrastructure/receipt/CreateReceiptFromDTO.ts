@@ -31,27 +31,17 @@ import { ResolutionStatement } from '../../model/receipt/ResolutionStatement';
 import { ResolutionType } from '../../model/receipt/ResolutionType';
 import { Statement } from '../../model/receipt/Statement';
 import { TransactionStatement } from '../../model/receipt/TransactionStatement';
-import { ResolutionStatementBodyDTO, StatementsDTO } from 'symbol-openapi-typescript-node-client';
+import {
+    BalanceChangeReceiptDTO,
+    BalanceTransferReceiptDTO,
+    InflationReceiptDTO,
+    MosaicExpiryReceiptDTO,
+    NamespaceExpiryReceiptDTO,
+    ResolutionStatementBodyDTO,
+    StatementsDTO,
+} from 'symbol-openapi-typescript-node-client';
 import { NetworkType } from '../../model/network/NetworkType';
 import { TransactionStatementBodyDTO } from 'symbol-openapi-typescript-node-client/model/transactionStatementBodyDTO';
-
-/**
- * @interal
- * @param unresolvedAddress unresolved address
- * @returns {Address | NamespaceId}
- */
-const extractUnresolvedAddress = (unresolvedAddress: any): Address | NamespaceId => {
-    if (typeof unresolvedAddress === 'string') {
-        return UnresolvedMapping.toUnresolvedAddress(unresolvedAddress);
-    } else if (typeof unresolvedAddress === 'object') { // Is JSON object
-        if (unresolvedAddress.hasOwnProperty('address')) {
-            return Address.createFromRawAddress(unresolvedAddress.address);
-        } else if (unresolvedAddress.hasOwnProperty('id')) {
-            return NamespaceId.createFromEncoded(unresolvedAddress.id);
-        }
-    }
-    throw new Error(`UnresolvedAddress: ${unresolvedAddress} type is not recognised`);
-};
 
 /**
  * @internal
@@ -66,7 +56,7 @@ const createResolutionStatement = (statementDTO: ResolutionStatementBodyDTO, res
             return new ResolutionStatement(
                 ResolutionType.Address,
                 BigInt(statementDTO.height),
-                extractUnresolvedAddress(statementDTO.unresolved),
+                UnresolvedMapping.toUnresolvedAddress(statementDTO.unresolved),
                 statementDTO.resolutionEntries.map((entry) => {
                     return new ResolutionEntry(Address.createFromEncoded(entry.resolved),
                         new ReceiptSource(entry.source.primaryId, entry.source.secondaryId));
@@ -94,13 +84,13 @@ const createResolutionStatement = (statementDTO: ResolutionStatementBodyDTO, res
  * @returns {BalanceChangeReceipt}
  * @constructor
  */
-const createBalanceChangeReceipt = (receiptDTO, networkType: NetworkType): Receipt => {
+const createBalanceChangeReceipt = (receiptDTO: BalanceChangeReceiptDTO, networkType: NetworkType): Receipt => {
     return new BalanceChangeReceipt(
         PublicAccount.createFromPublicKey(receiptDTO.targetPublicKey, networkType),
         new MosaicId(receiptDTO.mosaicId),
         BigInt(receiptDTO.amount),
         receiptDTO.version,
-        receiptDTO.type,
+        receiptDTO.type.valueOf(),
     );
 };
 
@@ -111,14 +101,14 @@ const createBalanceChangeReceipt = (receiptDTO, networkType: NetworkType): Recei
  * @returns {BalanceTransferReceipt}
  * @constructor
  */
-const createBalanceTransferReceipt = (receiptDTO, networkType: NetworkType): Receipt => {
+const createBalanceTransferReceipt = (receiptDTO: BalanceTransferReceiptDTO, networkType: NetworkType): Receipt => {
     return new BalanceTransferReceipt(
         PublicAccount.createFromPublicKey(receiptDTO.senderPublicKey, networkType),
         Address.createFromEncoded(receiptDTO.recipientAddress),
         new MosaicId(receiptDTO.mosaicId),
         BigInt(receiptDTO.amount),
         receiptDTO.version,
-        receiptDTO.type,
+        receiptDTO.type.valueOf(),
     );
 };
 
@@ -146,11 +136,11 @@ const extractArtifactId = (receiptType: ReceiptType, id: string): MosaicId | Nam
  * @returns {ArtifactExpiryReceipt}
  * @constructor
  */
-const createArtifactExpiryReceipt = (receiptDTO): Receipt => {
+const createArtifactExpiryReceipt = (receiptDTO: MosaicExpiryReceiptDTO | NamespaceExpiryReceiptDTO): Receipt => {
     return new ArtifactExpiryReceipt(
-        extractArtifactId(receiptDTO.type, receiptDTO.artifactId),
+        extractArtifactId(receiptDTO.type.valueOf(), receiptDTO.artifactId),
         receiptDTO.version,
-        receiptDTO.type,
+        receiptDTO.type.valueOf(),
     );
 };
 
@@ -160,12 +150,12 @@ const createArtifactExpiryReceipt = (receiptDTO): Receipt => {
  * @returns {InflationReceipt}
  * @constructor
  */
-const createInflationReceipt = (receiptDTO): Receipt => {
+const createInflationReceipt = (receiptDTO: InflationReceiptDTO): Receipt => {
     return new InflationReceipt(
         new MosaicId(receiptDTO.mosaicId),
         BigInt(receiptDTO.amount),
         receiptDTO.version,
-        receiptDTO.type,
+        receiptDTO.type.valueOf(),
     );
 };
 
@@ -175,8 +165,11 @@ const createInflationReceipt = (receiptDTO): Receipt => {
  * @returns {Receipt}
  * @constructor
  */
-export const CreateReceiptFromDTO = (receiptDTO, networkType: NetworkType): Receipt => {
-    switch (receiptDTO.type) {
+export const CreateReceiptFromDTO = (receiptDTO: BalanceTransferReceiptDTO |
+    BalanceChangeReceiptDTO | NamespaceExpiryReceiptDTO |
+    MosaicExpiryReceiptDTO | InflationReceiptDTO, networkType: NetworkType): Receipt => {
+
+    switch (receiptDTO.type.valueOf()) {
         case ReceiptType.Harvest_Fee:
         case ReceiptType.LockHash_Created:
         case ReceiptType.LockHash_Completed:
@@ -184,17 +177,18 @@ export const CreateReceiptFromDTO = (receiptDTO, networkType: NetworkType): Rece
         case ReceiptType.LockSecret_Created:
         case ReceiptType.LockSecret_Completed:
         case ReceiptType.LockSecret_Expired:
-            return createBalanceChangeReceipt(receiptDTO, networkType);
+            return createBalanceChangeReceipt(receiptDTO as BalanceChangeReceiptDTO, networkType);
         case ReceiptType.Mosaic_Levy:
         case ReceiptType.Mosaic_Rental_Fee:
         case ReceiptType.Namespace_Rental_Fee:
-            return createBalanceTransferReceipt(receiptDTO, networkType);
+            return createBalanceTransferReceipt(receiptDTO as BalanceTransferReceiptDTO, networkType);
         case ReceiptType.Mosaic_Expired:
+            return createArtifactExpiryReceipt(receiptDTO as MosaicExpiryReceiptDTO);
         case ReceiptType.Namespace_Expired:
         case ReceiptType.Namespace_Deleted:
-            return createArtifactExpiryReceipt(receiptDTO);
+            return createArtifactExpiryReceipt(receiptDTO as NamespaceExpiryReceiptDTO);
         case ReceiptType.Inflation:
-            return createInflationReceipt(receiptDTO);
+            return createInflationReceipt(receiptDTO as InflationReceiptDTO);
         default:
             throw new Error(`Receipt type: ${receiptDTO.type} not recognized.`);
     }
@@ -211,9 +205,7 @@ const createTransactionStatement = (statementDTO: TransactionStatementBodyDTO, n
     return new TransactionStatement(
         BigInt(statementDTO.height),
         new ReceiptSource(statementDTO.source.primaryId, statementDTO.source.secondaryId),
-        statementDTO.receipts.map((receipt) => {
-            return CreateReceiptFromDTO(receipt, networkType);
-        }),
+        statementDTO.receipts.map((receipt) => CreateReceiptFromDTO(receipt, networkType)),
     );
 };
 

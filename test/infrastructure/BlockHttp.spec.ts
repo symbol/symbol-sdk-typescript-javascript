@@ -32,6 +32,7 @@ import { BlockRepository } from '../../src/infrastructure/BlockRepository';
 import { BlockInfo } from '../../src/model/blockchain/BlockInfo';
 import { MerklePathItem } from '../../src/model/blockchain/MerklePathItem';
 import { Transaction } from '../../src/model/transaction/Transaction';
+import { TransactionInfoDTO } from 'symbol-openapi-typescript-node-client/model/transactionInfoDTO';
 
 describe('BlockHttp', () => {
 
@@ -65,7 +66,7 @@ describe('BlockHttp', () => {
     const blockRoutesApi: BlockRoutesApi = mock();
     const blockRepository: BlockRepository = DtoMapping.assign(new BlockHttp(url), {blockRoutesApi: instance(blockRoutesApi)});
 
-    const transactionInfoDTO = {
+    const transactionInfoDTO: TransactionInfoDTO = {
         meta: {
             hash: '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96',
             height: '18160',
@@ -81,13 +82,8 @@ describe('BlockHttp', () => {
             signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
             minApprovalDelta: 1,
             minRemovalDelta: 1,
-            modifications: [
-                {
-                    cosignatoryPublicKey: '589B73FBC22063E9AE6FBAC67CB9C6EA865EF556E5' +
-                        'FB8B7310D45F77C1250B97',
-                    modificationAction: 0,
-                },
-            ],
+            publicKeyAdditions: ['7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2F'],
+            publicKeyDeletions: [],
             type: 16725,
             version: 1,
             network: 144,
@@ -127,7 +123,10 @@ describe('BlockHttp', () => {
     }
 
     it('getBlockInfo', async () => {
-        when(blockRoutesApi.getBlockByHeight('1')).thenReturn(Promise.resolve({response, body: blockInfoDto}));
+        when(blockRoutesApi.getBlockByHeight('1')).thenReturn(Promise.resolve({
+            response,
+            body: blockInfoDto,
+        }));
         const blockInfo = await blockRepository.getBlockByHeight(BigInt(1)).toPromise();
         assertBlockInfo(blockInfo);
     });

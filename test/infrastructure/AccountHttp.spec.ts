@@ -37,6 +37,7 @@ import { Address } from '../../src/model/account/Address';
 import { Transaction } from '../../src/model/transaction/Transaction';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { BigIntUtilities } from '../../src/core/format/BigIntUtilities';
+import { TransactionInfoDTO } from 'symbol-openapi-typescript-node-client/model/transactionInfoDTO';
 
 describe('AccountHttp', () => {
 
@@ -73,7 +74,7 @@ describe('AccountHttp', () => {
     const accountRoutesApi: AccountRoutesApi = mock();
     const accountRepository: AccountRepository = DtoMapping.assign(new AccountHttp(url), {accountRoutesApi: instance(accountRoutesApi)});
 
-    const transactionInfoDTO = {
+    const transactionInfoDTO: TransactionInfoDTO = {
         meta: {
             hash: '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96',
             height: '18160',
@@ -89,13 +90,8 @@ describe('AccountHttp', () => {
             signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
             minApprovalDelta: 1,
             minRemovalDelta: 1,
-            modifications: [
-                {
-                    cosignatoryPublicKey: '589B73FBC22063E9AE6FBAC67CB9C6EA865EF556E5' +
-                        'FB8B7310D45F77C1250B97',
-                    modificationAction: 0,
-                },
-            ],
+            publicKeyAdditions: ['7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2F'],
+            publicKeyDeletions: [],
             type: 16725,
             version: 1,
             network: 144,
@@ -134,7 +130,10 @@ describe('AccountHttp', () => {
     }
 
     it('getAccountInfo', async () => {
-        when(accountRoutesApi.getAccountInfo(address.plain())).thenReturn(Promise.resolve({response, body: accountInfoDto}));
+        when(accountRoutesApi.getAccountInfo(address.plain())).thenReturn(Promise.resolve({
+            response,
+            body: accountInfoDto,
+        }));
         const accountInfo = await accountRepository.getAccountInfo(address).toPromise();
         assertAccountInfo(accountInfo);
     });
@@ -142,7 +141,10 @@ describe('AccountHttp', () => {
     it('getAccountsInfo', async () => {
         const accountIds = new AccountIds();
         accountIds.addresses = [address.plain()];
-        when(accountRoutesApi.getAccountsInfo(deepEqual(accountIds))).thenReturn(Promise.resolve({response, body: [accountInfoDto]}));
+        when(accountRoutesApi.getAccountsInfo(deepEqual(accountIds))).thenReturn(Promise.resolve({
+            response,
+            body: [accountInfoDto],
+        }));
         const accountInfos = await accountRepository.getAccountsInfo([address]).toPromise();
         assertAccountInfo(accountInfos[0]);
     });

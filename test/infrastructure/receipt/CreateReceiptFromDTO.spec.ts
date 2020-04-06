@@ -17,106 +17,109 @@
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { CreateStatementFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
-import {Account} from '../../../src/model/account/Account';
+import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { ReceiptType } from '../../../src/model/receipt/ReceiptType';
+import { StatementsDTO } from 'symbol-openapi-typescript-node-client';
 
 describe('Receipt - CreateStatementFromDTO', () => {
     let account: Account;
     let account2: Account;
-    let statementDto;
+    let statementDto: StatementsDTO;
     const netWorkType = NetworkType.MIJIN_TEST;
 
     before(() => {
         account = Account.createFromPrivateKey('D242FB34C2C4DD36E995B9C865F93940065E326661BA5A4A247331D211FE3A3D', NetworkType.MIJIN_TEST);
         account2 = Account.createFromPrivateKey('E5DCCEBDB01A8B03A7DB7BA5888E2E33FD4617B5F6FED48C4C09C0780F422713', NetworkType.MIJIN_TEST);
-        statementDto = {transactionStatements:  [
-          {
-            statement: {
-                height: '52',
-                source: {
-                primaryId: 0,
-                secondaryId: 0,
-                },
-                receipts: [
-                    {
-                        version: 1,
-                        type: 8515,
-                        targetPublicKey: account.publicKey,
-                        mosaicId: '85BBEA6CC462B244',
-                        amount: '1000',
-                    },
-                ],
-            },
-        },
-        ],
-        addressResolutionStatements: [
-          {
-            statement: {
-                height: '1488',
-                unresolved: '9103B60AAF2762688300000000000000000000000000000000',
-                resolutionEntries: [
+        statementDto = {
+            transactionStatements: [
                 {
-                    source: {
-                    primaryId: 4,
-                    secondaryId: 0,
+                    statement: {
+                        height: '52',
+                        source: {
+                            primaryId: 0,
+                            secondaryId: 0,
+                        },
+                        receipts: [
+                            {
+                                version: 1,
+                                type: 8515,
+                                targetPublicKey: account.publicKey,
+                                mosaicId: '85BBEA6CC462B244',
+                                amount: '1000',
+                            },
+                        ],
                     },
-                    resolved: '917E7E29A01014C2F300000000000000000000000000000000',
                 },
-                ],
-            },
-        },
-        {
-            statement: {
-                height: '1488',
-                unresolved: '917E7E29A01014C2F300000000000000000000000000000000',
-                resolutionEntries: [
+            ],
+            addressResolutionStatements: [
                 {
-                    source: {
-                    primaryId: 2,
-                    secondaryId: 0,
+                    statement: {
+                        height: '1488',
+                        unresolved: '9103B60AAF2762688300000000000000000000000000000000',
+                        resolutionEntries: [
+                            {
+                                source: {
+                                    primaryId: 4,
+                                    secondaryId: 0,
+                                },
+                                resolved: '917E7E29A01014C2F300000000000000000000000000000000',
+                            },
+                        ],
                     },
-                    resolved: '9103B60AAF2762688300000000000000000000000000000000',
                 },
-                ],
-            },
-        },
-        ],
-        mosaicResolutionStatements: [
-          {
-            statement: {
-                height: '1506',
-                unresolved: '85BBEA6CC462B244',
-                resolutionEntries: [
                 {
-                    source: {
-                    primaryId: 1,
-                    secondaryId: 0,
+                    statement: {
+                        height: '1488',
+                        unresolved: '917E7E29A01014C2F300000000000000000000000000000000',
+                        resolutionEntries: [
+                            {
+                                source: {
+                                    primaryId: 2,
+                                    secondaryId: 0,
+                                },
+                                resolved: '9103B60AAF2762688300000000000000000000000000000000',
+                            },
+                        ],
                     },
-                    resolved: '941299B2B7E1291C',
                 },
-                ],
-            },
-        },
-        {
-            statement: {
-                height: '1506',
-                unresolved: '85BBEA6CC462B244',
-                resolutionEntries: [
+            ],
+            mosaicResolutionStatements: [
                 {
-                    source: {
-                    primaryId: 5,
-                    secondaryId: 0,
+                    statement: {
+                        height: '1506',
+                        unresolved: '85BBEA6CC462B244',
+                        resolutionEntries: [
+                            {
+                                source: {
+                                    primaryId: 1,
+                                    secondaryId: 0,
+                                },
+                                resolved: '941299B2B7E1291C',
+                            },
+                        ],
                     },
-                    resolved: '941299B2B7E1291C',
                 },
-                ],
-            },
-        },
-        ]};
+                {
+                    statement: {
+                        height: '1506',
+                        unresolved: '85BBEA6CC462B244',
+                        resolutionEntries: [
+                            {
+                                source: {
+                                    primaryId: 5,
+                                    secondaryId: 0,
+                                },
+                                resolved: '941299B2B7E1291C',
+                            },
+                        ],
+                    },
+                },
+            ],
+        };
     });
     it('should create Statement', () => {
         const statement = CreateStatementFromDTO(statementDto, netWorkType);
@@ -137,12 +140,12 @@ describe('Receipt - CreateStatementFromDTO', () => {
         deepEqual(unresolvedAddress.toHex(), '83686227AF0AB603');
         expect(statement.addressResolutionStatements[0].resolutionEntries.length).to.be.equal(1);
         expect((statement.addressResolutionStatements[0].resolutionEntries[0].resolved as Address).plain())
-            .to.be.equal(Address.createFromEncoded('917E7E29A01014C2F300000000000000000000000000000000').plain());
+        .to.be.equal(Address.createFromEncoded('917E7E29A01014C2F300000000000000000000000000000000').plain());
 
         deepEqual(statement.mosaicResolutionStatements[0].height, BigInt('1506'));
         deepEqual(unresolvedMosaicId.toHex(), '85BBEA6CC462B244');
         expect(statement.mosaicResolutionStatements[0].resolutionEntries.length).to.be.equal(1);
         deepEqual((statement.mosaicResolutionStatements[0].resolutionEntries[0].resolved as MosaicId)
-                .toHex(), '941299B2B7E1291C');
+        .toHex(), '941299B2B7E1291C');
     });
 });
