@@ -375,7 +375,7 @@ export class WalletService extends AbstractService {
    * @param {Password} oldPassword
    * @param {Password} newPassword
    */
-  public updateWalletPassord(
+  public updateWalletPassword(
     wallet: WalletsModel,
     oldPassword: Password,
     newPassword: Password,

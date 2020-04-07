@@ -119,7 +119,7 @@ describe('services/WalletServices', () => {
       const initialEncIv = WalletsModel1.values.get('encIv')
 
       // update the model
-      const updatedWallet = service.updateWalletPassord(
+      const updatedWallet = service.updateWalletPassword(
         WalletsModel1, wallet1Params.password, new Password('password2'),
       )
       
@@ -140,7 +140,7 @@ describe('services/WalletServices', () => {
     test('should throw if provided with an incorrect password', () => {
       const service = new WalletService()
       expect(() => {
-        service.updateWalletPassord(
+        service.updateWalletPassword(
           WalletsModel1,new Password('wrong_password'), new Password('password2'),
         )
       }).toThrow()

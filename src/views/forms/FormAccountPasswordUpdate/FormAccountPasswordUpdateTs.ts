@@ -36,6 +36,7 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 import FormRow from '@/components/FormRow/FormRow.vue'
 // @ts-ignore
 import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
+import {AESEncryptionService} from '@/services/AESEncryptionService'
 
 @Component({
   components: {
@@ -127,6 +128,12 @@ export class FormAccountPasswordUpdateTs extends Vue {
       accountModel.values.set('password', passwordHash)
       accountModel.values.set('hint', this.formItems.passwordHint)
 
+      // - encrypt the seed with the new password
+      const oldSeed = accountModel.values.get('seed')
+      const plainSeed = AESEncryptionService.decrypt(oldSeed , oldPassword)
+      const newSeed = AESEncryptionService.encrypt(plainSeed, newPassword)
+      this.currentAccount.values.set('seed', newSeed)
+
       // - update in storage
       repository.update(accountModel.getIdentifier(), accountModel.values)
 
@@ -136,8 +143,9 @@ export class FormAccountPasswordUpdateTs extends Vue {
 
       const walletIdentifiers = accountModel.values.get('wallets')
       const walletModels = walletIdentifiers.map(id => walletsRepository.read(id))
+
       for (const model of walletModels) {
-        const updatedModel = walletService.updateWalletPassord(model, oldPassword, newPassword)
+        const updatedModel = walletService.updateWalletPassword(model, oldPassword, newPassword)
         const updatedValues = new Map<string, string>([
           [ 'encPrivate', updatedModel.values.get('encPrivate') ],
           [ 'encIv', updatedModel.values.get('encIv') ],

@@ -95,7 +95,7 @@ export default class FinalizeTs extends Vue {
    * the wallet created from mnemonic pass phrase.
    * @return {void}
    */
-  public submit() {
+  public async submit() {
     try {
       // create account by mnemonic
       const wallet = this.walletService.getDefaultWallet(
@@ -105,24 +105,19 @@ export default class FinalizeTs extends Vue {
         this.networkType,
       )
 
-      // add wallet to account
-      const wallets = this.currentAccount.values.get('wallets')
-      wallets.push(wallet.getIdentifier())
-      this.currentAccount.values.set('wallets', wallets)
+      // execute store actions
+      await this.$store.dispatch('account/ADD_WALLET', wallet)
+      await this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: wallet})
+      await this.$store.dispatch('wallet/SET_KNOWN_WALLETS', [wallet.getIdentifier()])
+      await this.$store.dispatch('temporary/RESET_STATE')
+      await this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
 
-      // use repository for storage
+      // update account in storage
       this.walletsRepository.create(wallet.values)
       this.accountsRepository.update(
         this.currentAccount.getIdentifier(),
         this.currentAccount.values,
       )
-
-      // execute store actions
-      this.$store.dispatch('account/ADD_WALLET', wallet)
-      this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: wallet})
-      this.$store.dispatch('wallet/SET_KNOWN_WALLETS', wallets)
-      this.$store.dispatch('temporary/RESET_STATE')
-      this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
 
       // flush and continue
       return this.$router.push({name: 'dashboard'})
