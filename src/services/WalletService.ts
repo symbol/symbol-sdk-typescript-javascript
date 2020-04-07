@@ -379,11 +379,11 @@ export class WalletService extends AbstractService {
     wallet: WalletsModel,
     oldPassword: Password,
     newPassword: Password,
-  ): WalletsModel {
+  ): EncryptedPrivateKey {
     // Password modification is not allowed for hardware wallets
     if (wallet.values.get('type') !== WalletType.fromDescriptor('Seed')
       && wallet.values.get('type') !== WalletType.fromDescriptor('Pk')) {
-      return wallet
+      throw new Error('Hardware wallet password cannot be changed')
     }
 
     // Get the private key
@@ -402,10 +402,7 @@ export class WalletService extends AbstractService {
       wallet.objects.address.networkType,
     )
 
-    // Update the wallet model
-    wallet.values.set('encPrivate', newSimpleWallet.encryptedPrivateKey.encryptedKey)
-    wallet.values.set('encIv', newSimpleWallet.encryptedPrivateKey.iv)
-    
-    return wallet
+    // return new encrypted private key
+    return newSimpleWallet.encryptedPrivateKey
   }
 }

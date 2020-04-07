@@ -120,8 +120,8 @@ export class FormAccountPasswordUpdateTs extends Vue {
     try {
       const service = new AccountService(this.$store)
       const repository = new AccountsRepository()
-      const accountModel = this.currentAccount
       const newPassword = new Password(this.formItems.password)
+      const accountModel = this.currentAccount
 
       // - create new password hash
       const passwordHash = service.getPasswordHash(newPassword)
@@ -132,25 +132,27 @@ export class FormAccountPasswordUpdateTs extends Vue {
       const oldSeed = accountModel.values.get('seed')
       const plainSeed = AESEncryptionService.decrypt(oldSeed , oldPassword)
       const newSeed = AESEncryptionService.encrypt(plainSeed, newPassword)
-      this.currentAccount.values.set('seed', newSeed)
+      accountModel.values.set('seed', newSeed)
 
       // - update in storage
-      repository.update(accountModel.getIdentifier(), accountModel.values)
+      repository.update(this.currentAccount.getIdentifier(), accountModel.values)
 
       // - update wallets passwords
       const walletsRepository = new WalletsRepository()
       const walletService = new WalletService()
 
       const walletIdentifiers = accountModel.values.get('wallets')
-      const walletModels = walletIdentifiers.map(id => walletsRepository.read(id))
+      const walletModels = walletIdentifiers.map(id => walletsRepository.read(id)).filter(
+        (v, i, s) => s.indexOf(v) === i,
+      )
 
       for (const model of walletModels) {
-        const updatedModel = walletService.updateWalletPassword(model, oldPassword, newPassword)
-        const updatedValues = new Map<string, string>([
-          [ 'encPrivate', updatedModel.values.get('encPrivate') ],
-          [ 'encIv', updatedModel.values.get('encIv') ],
-        ])
-        walletsRepository.update(model.getIdentifier(), updatedValues)
+        const encryptedKey = walletService.updateWalletPassword(model, oldPassword, newPassword)
+
+        model.values.set('encPrivate', encryptedKey.encryptedKey)
+        model.values.set('encIv', encryptedKey.iv)
+
+        walletsRepository.update(model.getIdentifier(), model.values)
       }
 
       // - update state and finalize

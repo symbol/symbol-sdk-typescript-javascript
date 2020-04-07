@@ -15,6 +15,7 @@
  */
 import {getFakeModel} from '@MOCKS/Database'
 import AccountStore from '@/store/Account'
+import flushPromises from 'flush-promises'
 
 describe('store/Account', () => {
   describe('action "RESET_STATE" should', () => {
@@ -33,18 +34,22 @@ describe('store/Account', () => {
   })
 
   describe('action "LOG_OUT" should', () => {
-    test('dispatch "RESET_STATE"', () => {
+    test('dispatch "RESET_STATE"', async (done) => {
       // prepare
       const dispatch = jest.fn()
       const rootGetters = {'wallet/currentWallet': getFakeModel('1234')}
 
       // act
       AccountStore.actions.LOG_OUT({dispatch, rootGetters})
+      await flushPromises()
 
       // assert
       expect(dispatch).toHaveBeenCalled()
       expect(dispatch).toHaveBeenCalledWith('wallet/uninitialize', {'address': undefined}, {root: true})
+      expect(dispatch).toHaveBeenCalledWith('wallet/SET_KNOWN_WALLETS', [], {root: true})
+      expect(dispatch).toHaveBeenCalledWith('wallet/RESET_CURRENT_WALLET', undefined, {root: true})
       expect(dispatch).toHaveBeenCalledWith('RESET_STATE')
+      done()
     })
   })
 

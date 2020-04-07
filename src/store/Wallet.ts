@@ -424,7 +424,6 @@ export default {
         await dispatch('RESET_BALANCES', which)
         await dispatch('RESET_MULTISIG')
         await dispatch('RESET_TRANSACTIONS')
-        await dispatch('RESET_CURRENT_WALLET')
         commit('setInitialized', false)
       }
       await Lock.uninitialize(callback, {getters})

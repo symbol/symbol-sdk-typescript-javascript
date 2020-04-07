@@ -195,7 +195,7 @@ export class FormSubWalletCreationTs extends Vue {
   /**
    * When account is unlocked, the sub wallet can be created
    */
-  public onAccountUnlocked(account: Account, password: Password) {
+  public async onAccountUnlocked(account: Account, password: Password) {
     this.currentPassword = password
 
     // - interpret form items
@@ -246,9 +246,9 @@ export class FormSubWalletCreationTs extends Vue {
       )
 
       // - update app state
-      this.$store.dispatch('account/ADD_WALLET', subWallet)
-      this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: subWallet})
-      this.$store.dispatch('wallet/SET_KNOWN_WALLETS', wallets)
+      await this.$store.dispatch('account/ADD_WALLET', subWallet)
+      await this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: subWallet})
+      await this.$store.dispatch('wallet/SET_KNOWN_WALLETS', wallets)
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
       this.$emit('submit', this.formItems)
     }

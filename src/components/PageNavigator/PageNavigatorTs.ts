@@ -38,8 +38,8 @@ export class PageNavigatorTs extends Vue {
    * Executes action of logout
    * @return {void}
    */
-  public logout() {
-    this.$store.dispatch('account/LOG_OUT')
+  public async logout() {
+    await this.$store.dispatch('account/LOG_OUT')
     this.$router.push({name: 'accounts.login'})
   }
 }
