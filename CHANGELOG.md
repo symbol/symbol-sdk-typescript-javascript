@@ -3,6 +3,24 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.17.4] - 07-Apr-2020
+
+**Milestone**: Fushicho.4(RC3 0.9.3.2)
+ Versions  |   |
+---|---|---
+SDK Core| v0.17.4 | https://www.npmjs.com/package/symbol-sdk
+Catbuffer | v0.0.11 | https://www.npmjs.com/package/catbuffer-typescript
+Client Library | v0.8.9  | https://www.npmjs.com/package/symbol-openapi-typescript-node-client
+
+- Added `SimpleWallet.toDTO()` method which returns JSON serialized object.
+- Applied latest Symbol OpenAPI generated code (`v0.8.9`).
+- Added automated release scripts for Travis.
+- Added multiple version spport for TS-Doc.
+- Optimised unit tests and improved test coverage.
+- Changed internal method `getSigningByte` to public.
+- Removed constant of namespace `MaxDepth (default: 3)` which can be retrieved from network properties endpoint.
+- Fixed Github security alert on `minimist` package.
+
 ## [0.17.3] - 04-Mar-2020
 
 **Milestone**: Fushicho.4(RC3 0.9.3.1)
@@ -419,6 +437,7 @@ Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/nem2-sdk-opena
 
 - Initial code release.
 
+[0.17.4]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.17.3...v0.17.4
 [0.17.3]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.17.2...v0.17.3
 [0.17.2]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.17.1...v0.17.2
 [0.17.1]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.17.0...v0.17.1
