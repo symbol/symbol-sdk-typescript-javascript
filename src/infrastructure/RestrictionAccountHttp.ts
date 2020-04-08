@@ -41,6 +41,7 @@ export class RestrictionAccountHttp extends Http implements RestrictionAccountRe
     constructor(url: string) {
         super(url);
         this.restrictionAccountRoutesApi = new RestrictionAccountRoutesApi(url);
+        this.restrictionAccountRoutesApi.useQuerystring = true;
     }
 
     /**

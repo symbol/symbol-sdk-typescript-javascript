@@ -19,7 +19,7 @@ import {Crypto, KeyPair, SHA3Hasher} from '../../core/crypto';
 import {Convert as convert} from '../../core/format';
 import {Account} from '../account/Account';
 import {Address} from '../account/Address';
-import {NetworkType} from '../blockchain/NetworkType';
+import {NetworkType} from '../network/NetworkType';
 import {EncryptedPrivateKey} from './EncryptedPrivateKey';
 import {ISimpleWalletDTO} from './ISimpleWalletDTO';
 import {Password} from './Password';
@@ -120,6 +120,14 @@ export class SimpleWallet extends Wallet {
                 simpleWalletDTO.encryptedPrivateKey.iv,
             ),
         );
+    }
+
+    /**
+     * Creates a SimpleWallet DTO
+     * @returns {ISimpleWalletDTO}
+     */
+    public toDTO(): ISimpleWalletDTO {
+        return JSON.parse(JSON.stringify(this))
     }
 
     /**

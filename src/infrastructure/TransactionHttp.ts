@@ -57,6 +57,8 @@ export class TransactionHttp extends Http implements TransactionRepository {
         super(url);
         this.transactionRoutesApi = new TransactionRoutesApi(url);
         this.blockRoutesApi = new BlockRoutesApi(url);
+        this.transactionRoutesApi.useQuerystring = true;
+        this.blockRoutesApi.useQuerystring = true;
     }
 
     /**

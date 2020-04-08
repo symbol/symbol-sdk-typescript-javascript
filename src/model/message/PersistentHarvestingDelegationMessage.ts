@@ -17,7 +17,7 @@
 import {Crypto, SHA3Hasher} from '../../core/crypto';
 import { Convert } from '../../core/format/Convert';
 import { Account } from '../account/Account';
-import { NetworkType } from '../blockchain/NetworkType';
+import { NetworkType } from '../network/NetworkType';
 import { Message } from './Message';
 import { MessageMarker } from './MessageMarker';
 import { MessageType } from './MessageType';

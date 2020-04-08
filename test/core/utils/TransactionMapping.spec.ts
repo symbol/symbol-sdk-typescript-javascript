@@ -22,7 +22,6 @@ import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
-import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import { EncryptedMessage } from '../../../src/model/message/EncryptedMessage';
 import { MessageType } from '../../../src/model/message/MessageType';
 import { PlainMessage } from '../../../src/model/message/PlainMessage';
@@ -35,6 +34,7 @@ import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyL
 import { AliasAction } from '../../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NamespaceRegistrationType } from '../../../src/model/namespace/NamespaceRegistrationType';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 import { AccountRestrictionModificationAction } from '../../../src/model/restriction/AccountRestrictionModificationAction';
 import { AccountRestrictionFlags } from '../../../src/model/restriction/AccountRestrictionType';
 import { MosaicRestrictionType } from '../../../src/model/restriction/MosaicRestrictionType';

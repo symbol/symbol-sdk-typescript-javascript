@@ -49,6 +49,7 @@ export class AccountHttp extends Http implements AccountRepository {
     constructor(url: string) {
         super(url);
         this.accountRoutesApi = new AccountRoutesApi(url);
+        this.accountRoutesApi.useQuerystring = true;
     }
 
     /**

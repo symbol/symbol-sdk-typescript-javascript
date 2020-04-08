@@ -17,7 +17,7 @@
 import {LocalDateTime} from 'js-joda';
 import {Account} from '../account/Account';
 import {Address} from '../account/Address';
-import {NetworkType} from '../blockchain/NetworkType';
+import {NetworkType} from '../network/NetworkType';
 import {Password} from './Password';
 
 /**

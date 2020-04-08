@@ -15,9 +15,11 @@
  */
 
 import {Observable} from 'rxjs';
-import { NetworkFees } from '../model/blockchain/NetworkFees';
-import { NetworkName } from '../model/blockchain/NetworkName';
-import {NetworkType} from '../model/blockchain/NetworkType';
+import { NetworkConfiguration } from '../model/network/NetworkConfiguration';
+import { NetworkName } from '../model/network/NetworkName';
+import {NetworkType} from '../model/network/NetworkType';
+import { RentalFees } from '../model/network/RentalFees';
+import { TransactionFees } from '../model/network/TransactionFees';
 
 /**
  * Network interface repository.
@@ -27,12 +29,6 @@ import {NetworkType} from '../model/blockchain/NetworkType';
 export interface NetworkRepository {
 
     /**
-     * Get current network type.
-     * @return network type enum.
-     */
-    getNetworkType(): Observable<NetworkType>;
-
-    /**
      * Get current network type name and description
      *
      * @return current network type name and description
@@ -40,9 +36,31 @@ export interface NetworkRepository {
     getNetworkName(): Observable<NetworkName>;
 
     /**
-     * Returns information about the average, median, highest and lower fee multiplier over the last "numBlocksTransactionFeeStats".
-     * @return the NetworkFees
+     * Returns the content from a catapult-server network configuration file (resources/config-network.properties).
+     * To enable this feature, the REST setting \"network.propertiesFilePath\" must define where the file is located.
+     * This is adjustable via the configuration file (rest/resources/rest.json) per REST instance.
+     * @summary Get the network properties
      */
-    getNetworkFees(): Observable<NetworkFees> ;
+    getNetworkProperties(): Observable<NetworkConfiguration>;
 
+    /**
+     * Get current network type.
+     * @return network type enum.
+     */
+    getNetworkType(): Observable<NetworkType>;
+
+    /**
+     * Returns the estimated effective rental fees for namespaces and mosaics. This endpoint is only available
+     * if the REST instance has access to catapult-server ``resources/config-network.properties`` file.
+     * To activate this feature, add the setting \"network.propertiesFilePath\" in the configuration file (rest/resources/rest.json).
+     * @summary Get rental fees information
+     */
+    getRentalFees(): Observable<RentalFees>;
+
+    /**
+     * Returns the average, median, highest and lower fee multiplier over the last \"numBlocksTransactionFeeStats\".
+     * The setting \"numBlocksTransactionFeeStats\" is adjustable via the configuration file (rest/resources/rest.json) per REST instance.
+     * @summary Get transaction fees information
+     */
+    getTransactionFees(): Observable<TransactionFees>;
 }

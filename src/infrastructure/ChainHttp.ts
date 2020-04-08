@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { from as observableFrom, Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { ChainRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { BlockchainScore } from '../model/blockchain/BlockchainScore';
 import { UInt64 } from '../model/UInt64';
@@ -41,6 +40,7 @@ export class ChainHttp extends Http implements ChainRepository {
     constructor(url: string) {
         super(url);
         this.chainRoutesApi = new ChainRoutesApi(url);
+        this.chainRoutesApi.useQuerystring = true;
     }
 
     /**
@@ -48,10 +48,7 @@ export class ChainHttp extends Http implements ChainRepository {
      * @returns Observable<UInt64>
      */
     public getBlockchainHeight(): Observable<UInt64> {
-        return observableFrom(this.chainRoutesApi.getChainHeight()).pipe(
-            map(({body}) => UInt64.fromNumericString(body.height)),
-            catchError((error) =>  throwError(this.errorHandling(error))),
-        );
+        return this.call(this.chainRoutesApi.getChainHeight(), (body) => UInt64.fromNumericString(body.height));
     }
 
     /**
@@ -59,12 +56,10 @@ export class ChainHttp extends Http implements ChainRepository {
      * @returns Observable<BlockchainScore>
      */
     public getChainScore(): Observable<BlockchainScore> {
-        return observableFrom(this.chainRoutesApi.getChainScore()).pipe(
-            map(({body}) => new BlockchainScore(
-                    UInt64.fromNumericString(body.scoreLow),
-                    UInt64.fromNumericString(body.scoreHigh),
-                )),
-            catchError((error) =>  throwError(this.errorHandling(error))),
+        return this.call(this.chainRoutesApi.getChainScore(), (body) => new BlockchainScore(
+            UInt64.fromNumericString(body.scoreLow),
+            UInt64.fromNumericString(body.scoreHigh),
+            ),
         );
     }
 }

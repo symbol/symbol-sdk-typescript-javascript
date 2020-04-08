@@ -19,7 +19,7 @@ import { catchError, map, mergeMap } from 'rxjs/operators';
 import { ReceiptRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
-import { NetworkType } from '../model/blockchain/NetworkType';
+import { NetworkType } from '../model/network/NetworkType';
 import { Statement } from '../model/receipt/Statement';
 import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
@@ -53,6 +53,7 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
         super(url);
         this.receiptRoutesApi = new ReceiptRoutesApi(url);
         this.networkTypeObservable = this.createNetworkTypeObservable(networkType);
+        this.receiptRoutesApi.useQuerystring = true;
     }
 
     /**

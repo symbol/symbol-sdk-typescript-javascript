@@ -31,7 +31,7 @@ import {
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { NodeHttp } from '../../src/infrastructure/NodeHttp';
-import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { NetworkType } from '../../src/model/network/NetworkType';
 
 describe('NodeHttp', () => {
 
@@ -162,7 +162,7 @@ describe('NodeHttp', () => {
     it('getStorageInfo on Exception', async () => {
 
         when(nodeRoutesApi.getNodeStorage()).thenReturn(Promise.reject({
-            response: {statusCode: 500, statusMessage: 'Some Error', body: 'The Body',},
+            response: {statusCode: 500, statusMessage: 'Some Error', body: 'The Body'},
         }));
         try {
             await nodeRepository.getStorageInfo().toPromise();

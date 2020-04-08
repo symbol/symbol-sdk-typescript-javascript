@@ -19,9 +19,9 @@ import { expect } from 'chai';
 import { CreateStatementFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
 import {Account} from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
-import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 import { ReceiptType } from '../../../src/model/receipt/ReceiptType';
 import { UInt64 } from '../../../src/model/UInt64';
 

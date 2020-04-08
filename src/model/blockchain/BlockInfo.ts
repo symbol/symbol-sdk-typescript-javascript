@@ -15,8 +15,8 @@
  */
 
 import {PublicAccount} from '../account/PublicAccount';
+import {NetworkType} from '../network/NetworkType';
 import {UInt64} from '../UInt64';
-import {NetworkType} from './NetworkType';
 
 /**
  * The block info structure describes basic information of a block.

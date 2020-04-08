@@ -15,15 +15,15 @@
  */
 
 /**
- * Network Fees
+ * Transacation Fees
  */
-export class NetworkFees {
+export class TransactionFees {
 
     /**
      * @param averageFeeMultiplier - Average fee multiplier over the last \"numBlocksTransactionFeeStats\".
      * @param medianFeeMultiplier - Median fee multiplier over the last \"numBlocksTransactionFeeStats\".
-     * @param highestFeeMultiplier - Fee multiplier applied to transactions contained in block.
-     * @param lowestFeeMultiplier - Fee multiplier applied to transactions contained in block.
+     * @param highestFeeMultiplier - Highest fee multiplier over the last "numBlocksTransactionFeeStats".
+     * @param lowestFeeMultiplier - Lowest fee multiplier over the last "numBlocksTransactionFeeStats".
      */
     constructor(public readonly averageFeeMultiplier: number,
                 public readonly medianFeeMultiplier: number,

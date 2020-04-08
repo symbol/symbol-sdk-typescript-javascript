@@ -94,7 +94,6 @@ export const tryParseUint = (str) => {
 
 export const idGeneratorConst = {
     namespace_base_id: [0, 0],
-    namespace_max_depth: 3,
     name_pattern: /^[a-z0-9][a-z0-9-_]*$/,
 };
 
@@ -114,9 +113,6 @@ export const extractPartName = (name, start, size) => {
 };
 
 export const append = (path, id, name) => {
-    if (idGeneratorConst.namespace_max_depth === path.length) {
-        this.throwInvalidFqn('too many parts', name);
-    }
     path.push(id);
 };
 

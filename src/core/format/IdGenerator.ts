@@ -15,6 +15,7 @@
  */
 import {sha3_256} from 'js-sha3';
 import * as utilities from './Utilities';
+import { idGeneratorConst } from './Utilities';
 
 export class IdGenerator {
     /**

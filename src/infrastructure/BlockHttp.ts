@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { from as observableFrom, Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { BlockInfoDTO, BlockRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { PublicAccount } from '../model/account/PublicAccount';
 import { BlockInfo } from '../model/blockchain/BlockInfo';
@@ -47,6 +46,7 @@ export class BlockHttp extends Http implements BlockRepository {
     constructor(url: string) {
         super(url);
         this.blockRoutesApi = new BlockRoutesApi(url);
+        this.blockRoutesApi.useQuerystring = true;
     }
 
     /**
@@ -55,10 +55,7 @@ export class BlockHttp extends Http implements BlockRepository {
      * @returns Observable<BlockInfo>
      */
     public getBlockByHeight(height: UInt64): Observable<BlockInfo> {
-        return observableFrom(this.blockRoutesApi.getBlockByHeight(height.toString())).pipe(
-            map(({body}) => this.toBlockInfo(body)),
-            catchError((error) =>  throwError(this.errorHandling(error))),
-        );
+        return this.call(this.blockRoutesApi.getBlockByHeight(height.toString()), (body) => this.toBlockInfo(body));
     }
 
     /**
@@ -69,15 +66,12 @@ export class BlockHttp extends Http implements BlockRepository {
      */
     public getBlockTransactions(height: UInt64,
                                 queryParams?: QueryParams): Observable<Transaction[]> {
-        return observableFrom(
-            this.blockRoutesApi.getBlockTransactions(height.toString(),
-                                                     this.queryParams(queryParams).pageSize,
-                                                     this.queryParams(queryParams).id,
-                                                     this.queryParams(queryParams).ordering))
-                .pipe(map(({body}) => body.map((transactionDTO) => {
-                        return CreateTransactionFromDTO(transactionDTO);
-                    })),
-                catchError((error) =>  throwError(this.errorHandling(error))),
+        return this.call(this.blockRoutesApi.getBlockTransactions(height.toString(),
+            this.queryParams(queryParams).pageSize,
+            this.queryParams(queryParams).id,
+            this.queryParams(queryParams).ordering), (body) => body.map((transactionDTO) => {
+                return CreateTransactionFromDTO(transactionDTO);
+            }),
         );
     }
 
@@ -88,11 +82,8 @@ export class BlockHttp extends Http implements BlockRepository {
      * @returns Observable<BlockInfo[]>
      */
     public getBlocksByHeightWithLimit(height: UInt64, limit: number): Observable<BlockInfo[]> {
-        return observableFrom(
-            this.blockRoutesApi.getBlocksByHeightWithLimit(height.toString(), limit)).pipe(
-                map(({body}) => body.map((blockDTO) => this.toBlockInfo(blockDTO))),
-                catchError((error) =>  throwError(this.errorHandling(error))),
-        );
+        return this.call(this.blockRoutesApi.getBlocksByHeightWithLimit(height.toString(), limit), (body) =>
+            body.map((blockDTO) => this.toBlockInfo(blockDTO)));
     }
 
     /**
@@ -138,12 +129,10 @@ export class BlockHttp extends Http implements BlockRepository {
      * @return Observable<MerkleProofInfo>
      */
     public getMerkleTransaction(height: UInt64, hash: string): Observable<MerkleProofInfo> {
-        return observableFrom(
-            this.blockRoutesApi.getMerkleTransaction(height.toString(), hash)).pipe(
-                map(({body}) => new MerkleProofInfo(
-                        body.merklePath!.map((payload) => new MerklePathItem(payload.position, payload.hash)),
-                    )),
-                catchError((error) =>  throwError(this.errorHandling(error))),
-        );
+        return this.call(
+            this.blockRoutesApi.getMerkleTransaction(height.toString(), hash), (body) => new MerkleProofInfo(
+                body.merklePath!.map((payload) => new MerklePathItem(payload.position, payload.hash)),
+            ));
     }
+
 }
