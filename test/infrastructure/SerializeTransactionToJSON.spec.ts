@@ -35,7 +35,7 @@ import { AccountRestrictionTransaction } from '../../src/model/transaction/Accou
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
-import { HashType } from '../../src/model/transaction/HashType';
+import { LockHashAlgorithm } from '../../src/model/transaction/LockHashAlgorithm';
 import { LinkAction } from '../../src/model/transaction/LinkAction';
 import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
 import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
@@ -238,7 +238,7 @@ describe('SerializeTransactionToJSON', () => {
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
-            HashType.Op_Sha3_256,
+            LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.MIJIN_TEST,
@@ -247,7 +247,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = secretLockTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.SECRET_LOCK);
-        expect(json.transaction.hashAlgorithm).to.be.equal(HashType.Op_Sha3_256);
+        expect(json.transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
 
     });
 
@@ -255,7 +255,7 @@ describe('SerializeTransactionToJSON', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(),
-            HashType.Op_Sha3_256,
+            LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,
             proof,
@@ -265,7 +265,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = secretProofTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.SECRET_PROOF);
-        expect(json.transaction.hashAlgorithm).to.be.equal(HashType.Op_Sha3_256);
+        expect(json.transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
         expect(json.transaction.secret).to.be.equal(sha3_256.create().update(convert.hexToUint8(proof)).hex());
         expect(json.transaction.proof).to.be.equal(proof);
 
