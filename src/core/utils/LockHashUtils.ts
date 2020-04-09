@@ -15,7 +15,7 @@
  */
 
 import { sha3_256 } from 'js-sha3';
-import { Convert } from '../format/Convert';
+import { LockHashAlgorithm } from '../../model/transaction/LockHashAlgorithm';
 
 /**
  * Hash utilities for SecretLock hashing
@@ -29,7 +29,7 @@ export class LockHashUtils {
      * @returns {string} Hash in hexidecimal format
      */
     public static Op_Sha3_256(input: Uint8Array): string {
-        return sha3_256.create().update(input).hex();
+        return sha3_256.create().update(input).hex().toUpperCase();
     }
 
     /**
@@ -38,8 +38,8 @@ export class LockHashUtils {
      * @returns {string} Hash in hexidecimal format
      */
     public static Op_Hash_256(input: Uint8Array): string {
-        const hash = LockHashUtils.sha256(Buffer.from(Convert.uint8ToHex(input), 'hex'));
-        return LockHashUtils.sha256(Buffer.from(hash, 'hex'));
+        const hash = LockHashUtils.sha256(input, 'hex');
+        return LockHashUtils.sha256(Buffer.from(hash, 'hex')).toUpperCase();
     }
 
     /**
@@ -48,7 +48,26 @@ export class LockHashUtils {
      * @returns {string} Hash in hexidecimal format
      */
     public static Op_Hash_160(input: Uint8Array): string {
-        const sha256Hash = LockHashUtils.sha256(Buffer.from(Convert.uint8ToHex(input), 'hex'));
-        return new LockHashUtils.ripemd160().update(Buffer.from(sha256Hash, 'hex')).digest('hex');
+        const sha256Hash = LockHashUtils.sha256(input);
+        return new LockHashUtils.ripemd160().update(Buffer.from(sha256Hash, 'hex')).digest('hex').toUpperCase();
+    }
+
+    /**
+     * Perform hash for SecretLock with proficed hash algorithm
+     * @param hashAlgorithm Hash algorithm
+     * @param input buffer to be hashed
+     * @returns {string} Hash in hexidecimal format
+     */
+    public static Hash(hashAlgorithm: LockHashAlgorithm, input: Uint8Array): string {
+        switch (hashAlgorithm) {
+            case LockHashAlgorithm.Op_Hash_160:
+                return LockHashUtils.Op_Hash_160(input);
+            case LockHashAlgorithm.Op_Hash_256:
+                return LockHashUtils.Op_Hash_256(input);
+            case LockHashAlgorithm.Op_Sha3_256:
+                return LockHashUtils.Op_Sha3_256(input);
+            default:
+                throw new Error('HashAlgorithm is invalid.');
+        }
     }
 }
