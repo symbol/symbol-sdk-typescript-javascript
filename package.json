@@ -48,6 +48,7 @@
     "coveralls": "^3.0.9",
     "gulp": "^4.0.2",
     "gulp-typescript": "^5.0.1",
+    "kind-of": ">=6.0.3",
     "mocha": "^4.0.1",
     "nyc": "^15.0.0",
     "secure-random": "^1.1.1",
