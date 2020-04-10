@@ -82,20 +82,6 @@ describe('NamespaceMetadataTransaction', () => {
                        'A8787B6E8030000000000004CCCD78612DDF5CA01000A0000000000000000000000');
     });
 
-    it('should throw error if value size is bigger than 1024', () => {
-        expect(() => {
-            NamespaceMetadataTransaction.create(
-                Deadline.create(),
-                account.publicKey,
-                UInt64.fromUint(1000),
-                new NamespaceId([2262289484, 3405110546]),
-                1,
-                Convert.uint8ToUtf8(new Uint8Array(1025)),
-                NetworkType.MIJIN_TEST,
-            );
-        }).to.throw(Error, 'The maximum value size is 1024');
-    });
-
     describe('size', () => {
         it('should return 190 for NamespaceMetadataTransaction byte size', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(

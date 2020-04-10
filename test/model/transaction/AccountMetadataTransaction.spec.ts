@@ -77,19 +77,6 @@ describe('AccountMetadataTransaction', () => {
         )).to.be.equal('9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6E80300000000000001000A0000000000000000000000');
     });
 
-    it('should throw error if value size is bigger than 1024', () => {
-        expect(() => {
-            AccountMetadataTransaction.create(
-                Deadline.create(),
-                account.publicKey,
-                UInt64.fromUint(1000),
-                1,
-                Convert.uint8ToUtf8(new Uint8Array(1025)),
-                NetworkType.MIJIN_TEST,
-            );
-        }).to.throw(Error, 'The maximum value size is 1024');
-    });
-
     describe('size', () => {
         it('should return 182 for AccountMetadataTransaction byte size', () => {
             const accountMetadataTransaction = AccountMetadataTransaction.create(
