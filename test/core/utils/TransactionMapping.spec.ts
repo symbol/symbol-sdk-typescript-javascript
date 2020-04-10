@@ -414,9 +414,76 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
+        const accountLinkTransaction = AccountLinkTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            LinkAction.Link,
+            NetworkType.MIJIN_TEST,
+        );
+        const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
+            Deadline.create(),
+            'root-test-namespace',
+            UInt64.fromUint(1000),
+            NetworkType.MIJIN_TEST,
+        );
+        const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
+            Deadline.create(),
+            new MosaicId(UInt64.fromUint(1).toDTO()),
+            UInt64.fromUint(4444),
+            UInt64.fromUint(0),
+            MosaicRestrictionType.NONE,
+            UInt64.fromUint(0),
+            MosaicRestrictionType.GE,
+            NetworkType.MIJIN_TEST,
+        );
+        const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
+            Deadline.create(),
+            new NamespaceId('test'),
+            UInt64.fromUint(4444),
+            account.address,
+            UInt64.fromUint(0),
+            NetworkType.MIJIN_TEST,
+            UInt64.fromUint(0),
+        );
+        const accountMetadataTransaction = AccountMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            1,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        );
+        const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            new MosaicId([2262289484, 3405110546]),
+            1,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        );
+        const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            new NamespaceId([2262289484, 3405110546]),
+            1,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        );
+
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
-            [transferTransaction.toAggregate(account.publicAccount)],
+            [
+                transferTransaction.toAggregate(account.publicAccount),
+                accountLinkTransaction.toAggregate(account.publicAccount),
+                registerNamespaceTransaction.toAggregate(account.publicAccount),
+                mosaicGlobalRestrictionTransaction.toAggregate(account.publicAccount),
+                mosaicAddressRestrictionTransaction.toAggregate(account.publicAccount),
+                mosaicMetadataTransaction.toAggregate(account.publicAccount),
+                namespaceMetadataTransaction.toAggregate(account.publicAccount),
+                accountMetadataTransaction.toAggregate(account.publicAccount),
+            ],
             NetworkType.MIJIN_TEST,
             []);
 
@@ -426,6 +493,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         expect(transaction.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
         expect(transaction.innerTransactions[0].type).to.be.equal(TransactionType.TRANSFER);
+        expect(transaction.innerTransactions.length).to.be.equal(8);
     });
 
     it('should create AggregatedTransaction - Bonded', () => {
