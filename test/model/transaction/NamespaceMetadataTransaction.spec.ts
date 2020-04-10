@@ -23,6 +23,9 @@ import { Deadline } from '../../../src/model/transaction/Deadline';
 import { NamespaceMetadataTransaction } from '../../../src/model/transaction/NamespaceMetadataTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/builders/EmbeddedTransactionBuilder';
+import { TransactionType } from '../../../src/model/transaction/TransactionType';
+import { deepEqual } from 'assert';
 
 describe('NamespaceMetadataTransaction', () => {
     let account: Account;
@@ -113,5 +116,41 @@ describe('NamespaceMetadataTransaction', () => {
 
         const signedTransaction = namespaceMetadataTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
+    });
+
+    it('should create EmbeddedTransactionBuilder', () => {
+        const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            new NamespaceId([2262289484, 3405110546]),
+            1,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        );
+
+        Object.assign(namespaceMetadataTransaction, {signer: account.publicAccount});
+
+        const embedded = namespaceMetadataTransaction.toEmbeddedTransaction();
+
+        expect(embedded).to.be.instanceOf(EmbeddedTransactionBuilder);
+        expect(Convert.uint8ToHex(embedded.signerPublicKey.key)).to.be.equal(account.publicKey);
+        expect(embedded.type.valueOf()).to.be.equal(TransactionType.NAMESPACE_METADATA.valueOf());
+    });
+
+    it('should resolve alias', () => {
+        const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            new NamespaceId([2262289484, 3405110546]),
+            1,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        );
+        const resolved = namespaceMetadataTransaction.resolveAliases();
+
+        expect(resolved).to.be.instanceOf(NamespaceMetadataTransaction);
+        deepEqual(namespaceMetadataTransaction, resolved);
     });
 });
