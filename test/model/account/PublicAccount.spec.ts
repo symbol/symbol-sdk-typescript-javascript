@@ -18,6 +18,7 @@ import { expect } from 'chai';
 import { Account } from '../../../src/model/account/Account';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { NetworkType } from '../../../src/model/network/NetworkType';
+import { TestingAccount } from '../../conf/conf.spec';
 
 describe('PublicAccount', () => {
     const publicKey = 'b4f12e7c9f6946091e2cb8b6d3a12b50d17ccbbf646386ea27ce2946a7423dcf';
@@ -32,12 +33,9 @@ describe('PublicAccount', () => {
 describe('Signature verification', () => {
     it('Can verify a signature', () => {
         // Arrange:'
-        const signerPublicAccount = PublicAccount.createFromPublicKey(
-            '16FB59F907524009730BCB9F860C8C5A1109A9E8F194275DA0B9F5A2085E2D02',
-            NetworkType.MIJIN_TEST);
+        const signerPublicAccount = TestingAccount.publicAccount;
         const data = 'ff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf';
-        const signature = '2E32A8A934C2B8BC54A1594643A866CCDB3166BD41B6DE3E0C9FC779E7F3F421A0BCC798408ACCC92F47A3A45EF237D5CB7473D768991EE79AC659E1DA8CBB0C'; // tslint:disable-line
-
+        const signature = 'EC956CEABF8E831786DAC730803D4F60413EE46C04AA1CD58EB2D3533AC626BFB9B7AB814E454EC33BA321201EA553E65A5463FC9DDBAD5820C5FFC0A2FE1E03'; // tslint:disable-line
         // Act & Assert:
         expect(signerPublicAccount.verifySignature(data, signature)).to.be.true;
     });

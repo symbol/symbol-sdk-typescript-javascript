@@ -76,11 +76,14 @@ export class PublicAccount {
         if (!Convert.isHexString(signature)) {
             throw new Error('Signature must be hexadecimal only');
         }
+
+        if (Convert.isHexString(data) && data.substring(0, 2) !== '0x') {
+            data = '0x' + data;
+        }
         // Convert signature key to Uint8Array
         const convertedSignature = Convert.hexToUint8(signature);
 
         // Convert to Uint8Array
-
         const convertedData = Convert.hexToUint8(Convert.isHexString(data) ? data : Convert.utf8ToHex(data));
         return KeyPair.verify(Convert.hexToUint8(this.publicKey), convertedData, convertedSignature);
     }

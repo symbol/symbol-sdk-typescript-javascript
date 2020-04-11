@@ -196,6 +196,8 @@ export class Account {
      * @return {string} - Signed data result
      */
     public signData(data: string): string {
-        return Convert.uint8ToHex(KeyPair.sign(this.keyPair, Convert.hexToUint8(Convert.utf8ToHex(data))));
+        const isHexadecimal = Convert.isHexString(data);
+        const formatData = isHexadecimal && data.substring(0, 2) !== '0x' ? '0x' + data : data;
+        return Convert.uint8ToHex(KeyPair.sign(this.keyPair, Convert.hexToUint8(Convert.utf8ToHex(formatData))));
     }
 }

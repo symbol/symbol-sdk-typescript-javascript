@@ -127,7 +127,7 @@ export class SimpleWallet extends Wallet {
      * @returns {ISimpleWalletDTO}
      */
     public toDTO(): ISimpleWalletDTO {
-        return JSON.parse(JSON.stringify(this))
+        return JSON.parse(JSON.stringify(this));
     }
 
     /**
