@@ -120,8 +120,8 @@ describe('NamespaceMetadataTransaction', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
-            new NamespaceId([2262289484, 3405110546]),
+            BigInt(1000),
+            new NamespaceId(BigIntUtilities.HexToBigInt('CAF5DD1286D7CC4C')),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
@@ -140,8 +140,8 @@ describe('NamespaceMetadataTransaction', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
-            new NamespaceId([2262289484, 3405110546]),
+            BigInt(1000),
+            new NamespaceId(BigIntUtilities.HexToBigInt('CAF5DD1286D7CC4C')),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,

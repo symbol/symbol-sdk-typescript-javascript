@@ -16,7 +16,7 @@
 import { expect } from 'chai';
 import * as CryptoJS from 'crypto-js';
 import { ChronoUnit } from 'js-joda';
-import { keccak_256, sha3_256 } from 'js-sha3';
+import { sha3_256 } from 'js-sha3';
 import { Crypto } from '../../src/core/crypto';
 import { Convert, Convert as convert } from '../../src/core/format';
 import { TransactionMapping } from '../../src/core/utils/TransactionMapping';
@@ -870,7 +870,7 @@ describe('TransactionHttp', () => {
         it('standalone', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyLocal.createAbsolute(10),
+                helper.createNetworkCurrency(10),
                 BigInt(100),
                 LockHashAlgorithm.Op_Sha3_256,
                 sha3_256.create().update(Crypto.randomBytes(20)).hex(),
@@ -1028,7 +1028,7 @@ describe('TransactionHttp', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
                 helper.createNetworkCurrency(10, false),
-                BigInt(100)),
+                BigInt(100),
                 LockHashAlgorithm.Op_Sha3_256,
                 secret,
                 account2.address,

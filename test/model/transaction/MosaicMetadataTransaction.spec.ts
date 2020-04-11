@@ -174,11 +174,12 @@ describe('MosaicMetadataTransaction', () => {
     });
 
     it('should create EmbeddedTransactionBuilder', () => {
+        const mosaicId = new MosaicId('CAF5DD1286D7CC4C');
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
-            new MosaicId([2262289484, 3405110546]),
+            BigInt(1000),
+            mosaicId,
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,

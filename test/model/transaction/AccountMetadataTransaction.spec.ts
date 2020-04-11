@@ -100,7 +100,7 @@ describe('AccountMetadataTransaction', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
+            BigInt(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
@@ -119,7 +119,7 @@ describe('AccountMetadataTransaction', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
+            BigInt(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,

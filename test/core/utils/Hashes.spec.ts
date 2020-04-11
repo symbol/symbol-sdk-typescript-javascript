@@ -33,7 +33,7 @@ describe('Hashes', () => {
 
     it('Op_Sha_256', () => {
         const randomBytes = Crypto.randomBytes(32);
-        const secretSeed = randomBytes.toString('hex');
+        const secretSeed = Buffer.from(randomBytes).toString('hex');
         const hash256 = sha256(Buffer.from(secretSeed, 'hex'));
         const expected = sha256(Buffer.from(hash256, 'hex'));
         const hash = LockHashUtils.Op_Hash_256(randomBytes);
@@ -42,7 +42,7 @@ describe('Hashes', () => {
 
     it('Op_Hash_160', () => {
         const secretSeed = Crypto.randomBytes(20);
-        const hash256 = sha256(Buffer.from(secretSeed, 'hex'));
+        const hash256 = sha256(Buffer.from(secretSeed));
         const expected = new ripemd160().update(Buffer.from(hash256, 'hex')).digest('hex');
 
         const hash = LockHashUtils.Op_Hash_160(secretSeed);
@@ -56,7 +56,7 @@ describe('Hashes', () => {
         const hashSHA3 = LockHashUtils.Hash(LockHashAlgorithm.Op_Sha3_256, secretSeed);
         expect(expectedSHA3.toUpperCase()).to.be.equal(hashSHA3);
 
-        const h256 = sha256(Buffer.from(secretSeed, 'hex'));
+        const h256 = sha256(Buffer.from(secretSeed));
         const expected256 = sha256(Buffer.from(h256, 'hex'));
         const hash256 = LockHashUtils.Hash(LockHashAlgorithm.Op_Hash_256, secretSeed);
         expect(expected256.toUpperCase()).to.be.equal(hash256);
@@ -75,8 +75,6 @@ describe('Hashes', () => {
 });
 
 describe('Hashes - static vector', () => {
-    const ripemd160 = require('ripemd160');
-    const sha256 = require('js-sha256');
 
     const inputs = ['', 'CC', '41FB', '1F877C', 'C1ECFDFC',
     '9F2FCC7C90DE090D6B87CD7E9718C1EA6CB21118FC2D5DE9F97E5DB6AC1E9C10',

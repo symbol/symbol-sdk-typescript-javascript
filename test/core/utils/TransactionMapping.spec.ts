@@ -353,7 +353,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         expect(transaction.mosaic.amount === BigInt(10)).to.be.equal(true);
         expect(transaction.duration === BigInt(100)).to.be.equal(true);
-        expect(transaction.hashType).to.be.equal(0);
+        expect(transaction.hashAlgorithm).to.be.equal(0);
         expect(transaction.secret).to.be.equal('9B3155B37159DA50AA52D5967C509B410F5A36A3B1E31ECB5AC76675D79B4A5E');
         expect((transaction.recipientAddress as Address).plain()).to.be.equal(recipientAddress.plain());
 
@@ -373,7 +373,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const signedTransaction = secretProofTransaction.signWith(account, generationHash);
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as SecretProofTransaction;
 
-        expect(secretProofTransaction.hashType).to.be.equal(0);
+        expect(transaction.hashAlgorithm).to.be.equal(0);
         expect(secretProofTransaction.secret).to.be.equal('9b3155b37159da50aa52d5967c509b410f5a36a3b1e31ecb5ac76675d79b4a5e');
         expect(secretProofTransaction.proof).to.be.equal(proof);
         expect((secretProofTransaction.recipientAddress as Address).plain()).to.be.equal(account.address.plain());
@@ -423,32 +423,32 @@ describe('TransactionMapping - createFromPayload', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
             Deadline.create(),
             'root-test-namespace',
-            UInt64.fromUint(1000),
+            BigInt(1000),
             NetworkType.MIJIN_TEST,
         );
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
             Deadline.create(),
-            new MosaicId(UInt64.fromUint(1).toDTO()),
-            UInt64.fromUint(4444),
-            UInt64.fromUint(0),
+            new MosaicId(BigInt(1)),
+            BigInt(4444),
+            BigInt(0),
             MosaicRestrictionType.NONE,
-            UInt64.fromUint(0),
+            BigInt(0),
             MosaicRestrictionType.GE,
             NetworkType.MIJIN_TEST,
         );
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
             Deadline.create(),
             new NamespaceId('test'),
-            UInt64.fromUint(4444),
+            BigInt(4444),
             account.address,
-            UInt64.fromUint(0),
+            BigInt(0),
             NetworkType.MIJIN_TEST,
-            UInt64.fromUint(0),
+            BigInt(0),
         );
         const accountMetadataTransaction = AccountMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
+            BigInt(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
@@ -456,8 +456,8 @@ describe('TransactionMapping - createFromPayload', () => {
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
-            new MosaicId([2262289484, 3405110546]),
+            BigInt(1000),
+            new MosaicId('77A1969932D987D7'),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
@@ -465,8 +465,8 @@ describe('TransactionMapping - createFromPayload', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
             Deadline.create(),
             account.publicKey,
-            UInt64.fromUint(1000),
-            new NamespaceId([2262289484, 3405110546]),
+            BigInt(1000),
+            new NamespaceId('mosaic'),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
@@ -981,7 +981,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const mosaicId = new NamespaceId('test');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
-            new Mosaic(new MosaicId([1, 1]), UInt64.fromUint(10)),
+            new Mosaic(mosaicId, BigInt(10)),
             BigInt(100),
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
@@ -994,7 +994,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         expect(transaction.type).to.be.equal(TransactionType.SECRET_LOCK);
         expect(transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
-        expect(transaction.mosaic.id.toHex()).to.be.equal((new MosaicId([1, 1])).toHex());
+        expect(transaction.mosaic.id.toHex()).to.be.equal(mosaicId.toHex());
 
     });
 
