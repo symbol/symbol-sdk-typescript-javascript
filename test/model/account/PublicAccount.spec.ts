@@ -35,9 +35,9 @@ describe('Signature verification', () => {
         // Arrange:'
         const signerPublicAccount = TestingAccount.publicAccount;
         const data = 'ff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf';
-        const signature = 'EC956CEABF8E831786DAC730803D4F60413EE46C04AA1CD58EB2D3533AC626BFB9B7AB814E454EC33BA321201EA553E65A5463FC9DDBAD5820C5FFC0A2FE1E03'; // tslint:disable-line
+        const signature = TestingAccount.signData(data);
         // Act & Assert:
-        expect(signerPublicAccount.verifySignature(data, signature, true)).to.be.true;
+        expect(signerPublicAccount.verifySignature(data, signature)).to.be.true;
     });
 
     it('Throw error if signature has invalid length', () => {
@@ -61,15 +61,6 @@ describe('Signature verification', () => {
         // Act & Assert:
         expect(() => { signerPublicAccount.verifySignature(data, signature); })
             .to.throw('Signature must be hexadecimal only');
-    });
-
-    it('should throw if data invalid hex error', () => {
-        const signerPublicAccount = PublicAccount.createFromPublicKey('22816F825B4CACEA334723D51297D8582332D8B875A5829908AAE85831ABB508',
-            NetworkType.MIJIN_TEST);
-        expect(() => {
-            signerPublicAccount.verifySignature('test',
-                'EC956CEABF8E831786DAC730803D4F60413EE46C04AA1CD58EB2D3533AC626BFB9B7AB814E454EC33BA321201EA553E65A5463FC9DDBAD5820C5FFC0A2FE1E03', true);
-        }).to.throw(Error, 'Input data is not in valid hexadecimal format.');
     });
 
     it('Return false if wrong public key provided', () => {

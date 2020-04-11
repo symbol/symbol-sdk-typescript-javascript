@@ -62,32 +62,20 @@ export class PublicAccount {
      *
      * @param {string} data - The data to verify.
      * @param {string} signature - The signature to verify.
-     * @param {boolean} isDataHexadecimal - Indicate if the input data is in hexadecimal format
      * @return {boolean}  - True if the signature is valid, false otherwise.
      */
-    public verifySignature(data: string, signature: string, isDataHexadecimal: boolean = false): boolean {
+    public verifySignature(data: string, signature: string): boolean {
         if (!signature) {
             throw new Error('Missing argument');
         }
-
         if (signature.length / 2 !== Hash512) {
             throw new Error('Signature length is incorrect');
         }
-
         if (!Convert.isHexString(signature)) {
             throw new Error('Signature must be hexadecimal only');
         }
-
-        if (isDataHexadecimal && !Convert.isHexString(data)) {
-            throw new Error('Input data is not in valid hexadecimal format.');
-        }
-
-        if (isDataHexadecimal && data.substring(0, 2) !== '0x') {
-            data = '0x' + data;
-        }
         // Convert signature key to Uint8Array
         const convertedSignature = Convert.hexToUint8(signature);
-
         // Convert to Uint8Array
         const convertedData = Convert.hexToUint8(Convert.utf8ToHex(data));
         return KeyPair.verify(Convert.hexToUint8(this.publicKey), convertedData, convertedSignature);

@@ -193,14 +193,9 @@ export class Account {
     /**
      * Sign raw data
      * @param data - Data to be signed
-     * @param isHexadecimal - Indicate if the input data is in hexadecimal format
      * @return {string} - Signed data result
      */
-    public signData(data: string, isHexadecimal: boolean = false): string {
-        if (isHexadecimal && !Convert.isHexString(data)) {
-            throw new Error('Input data is not in valid hexadecimal format.');
-        }
-        const formatData = isHexadecimal && data.substring(0, 2) !== '0x' ? '0x' + data : data;
-        return Convert.uint8ToHex(KeyPair.sign(this.keyPair, Convert.hexToUint8(Convert.utf8ToHex(formatData))));
+    public signData(data: string): string {
+        return Convert.uint8ToHex(KeyPair.sign(this.keyPair, Convert.hexToUint8(Convert.utf8ToHex(data))));
     }
 }
