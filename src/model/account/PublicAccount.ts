@@ -62,9 +62,10 @@ export class PublicAccount {
      *
      * @param {string} data - The data to verify.
      * @param {string} signature - The signature to verify.
+     * @param {boolean} isDataHexadecimal - Indicate if the input data is in hexadecimal format
      * @return {boolean}  - True if the signature is valid, false otherwise.
      */
-    public verifySignature(data: string, signature: string): boolean {
+    public verifySignature(data: string, signature: string, isDataHexadecimal: boolean = false): boolean {
         if (!signature) {
             throw new Error('Missing argument');
         }
@@ -77,7 +78,11 @@ export class PublicAccount {
             throw new Error('Signature must be hexadecimal only');
         }
 
-        if (Convert.isHexString(data) && data.substring(0, 2) !== '0x') {
+        if (isDataHexadecimal && !Convert.isHexString(data)) {
+            throw new Error('Input data is not in valid hexadecimal format.');
+        }
+
+        if (isDataHexadecimal && data.substring(0, 2) !== '0x') {
             data = '0x' + data;
         }
         // Convert signature key to Uint8Array

@@ -104,8 +104,8 @@ describe('Account', () => {
                 NetworkType.MIJIN_TEST,
             );
             const publicAccount = account.publicAccount;
-            const signed = account.signData('66128B29E8197352A2FEB51B50CF5D02F1D05B20D44B3F7953B98ACD2BCA15D4');
-            expect(publicAccount.verifySignature('66128B29E8197352A2FEB51B50CF5D02F1D05B20D44B3F7953B98ACD2BCA15D4', signed))
+            const signed = account.signData('66128B29E8197352A2FEB51B50CF5D02F1D05B20D44B3F7953B98ACD2BCA15D4', true);
+            expect(publicAccount.verifySignature('66128B29E8197352A2FEB51B50CF5D02F1D05B20D44B3F7953B98ACD2BCA15D4', signed, true))
                 .to.be.true;
         });
 
@@ -115,11 +115,11 @@ describe('Account', () => {
                 NetworkType.MIJIN_TEST,
             );
             const publicAccount = account.publicAccount;
-            const signed = account.signData('AA');
+            const signed = account.signData('AA', true);
             const signedWith0x = account.signData('0xAA');
-            expect(publicAccount.verifySignature('AA', signed))
+            expect(publicAccount.verifySignature('AA', signed, true))
                 .to.be.true;
-            expect(publicAccount.verifySignature('AA', signedWith0x))
+            expect(publicAccount.verifySignature('AA', signedWith0x, true))
                 .to.be.true;
             expect(publicAccount.verifySignature('0xAA', signedWith0x))
                 .to.be.true;
@@ -131,13 +131,15 @@ describe('Account', () => {
                 NetworkType.MIJIN_TEST,
             );
             const publicAccount = account.publicAccount;
-            const signed = account.signData('ff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf');
-            const signedWith0x = account.signData('0xff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf');
+            const signed = account.signData('ff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf', true);
+            const signedWith0x =
+                account.signData('0xff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf');
             expect(
-                publicAccount.verifySignature('ff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf', signed))
+                publicAccount
+                    .verifySignature('ff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf', signed, true))
                 .to.be.true;
             expect(publicAccount
-                .verifySignature('ff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf', signedWith0x))
+                .verifySignature('ff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf', signedWith0x, true))
                 .to.be.true;
             expect(publicAccount
                 .verifySignature('0xff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf', signedWith0x))
@@ -150,17 +152,27 @@ describe('Account', () => {
                 NetworkType.MIJIN_TEST,
             );
             const publicAccount = account.publicAccount;
-            const signed = account.signData('');
+            const signed = account.signData('', true);
             const signedWith0x = account.signData('0x');
             expect(
-                publicAccount.verifySignature('', signed))
+                publicAccount.verifySignature('', signed, true))
                 .to.be.true;
             expect(publicAccount
-                .verifySignature('', signedWith0x))
+                .verifySignature('', signedWith0x, true))
                 .to.be.true;
             expect(publicAccount
                 .verifySignature('0x', signedWith0x))
                 .to.be.true;
+        });
+
+        it('should throw invalid hex error', () => {
+            const account = Account.createFromPrivateKey(
+                'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
+                NetworkType.MIJIN_TEST,
+            );
+            expect(() => {
+                account.signData('test', true);
+            }).to.throw(Error, 'Input data is not in valid hexadecimal format.');
         });
     });
 });
