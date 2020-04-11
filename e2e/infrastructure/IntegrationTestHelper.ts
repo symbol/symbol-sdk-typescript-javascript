@@ -24,6 +24,10 @@ import { SignedTransaction } from '../../src/model/transaction/SignedTransaction
 import { Transaction } from '../../src/model/transaction/Transaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
+import { NetworkHarvestLocal } from '../../src/model/mosaic/NetworkHarvestLocal';
+import { NetworkCurrencyPublic } from '../../src/model/mosaic/NetworkCurrencyPublic';
+import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
+import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 
 export class IntegrationTestHelper {
     public readonly yaml = require('js-yaml');
@@ -43,6 +47,8 @@ export class IntegrationTestHelper {
     public maxFee: UInt64;
     public harvestingAccount: Account;
     public transactionService: TransactionService;
+    public networkCurrencyNamespaceId: NamespaceId;
+    public networkCurrencyDivisibility: number;
 
     start(): Promise<IntegrationTestHelper> {
         return new Promise<IntegrationTestHelper>(
@@ -77,6 +83,12 @@ export class IntegrationTestHelper {
                         // What would be the best maxFee? In the future we will load the fee multiplier from rest.
                         this.maxFee = UInt64.fromUint(1000000);
 
+                        // network Currency
+                        this.networkCurrencyNamespaceId = this.apiUrl.toLowerCase().includes('localhost') ?
+                            NetworkCurrencyLocal.NAMESPACE_ID : NetworkCurrencyPublic.NAMESPACE_ID;
+                        this.networkCurrencyDivisibility = this.apiUrl.toLowerCase().includes('localhost') ?
+                            NetworkCurrencyLocal.DIVISIBILITY : NetworkCurrencyPublic.DIVISIBILITY;
+
                         const bootstrapRoot = process.env.CATAPULT_SERVICE_BOOTSTRAP || path.resolve(__dirname, '../../../../catapult-service-bootstrap');
                         const bootstrapPath = `${bootstrapRoot}/build/generated-addresses/addresses.yaml`;
                         require('fs').readFile(bootstrapPath, (error: any, yamlData: any) => {
@@ -108,6 +120,13 @@ export class IntegrationTestHelper {
 
     createAccount(data): Account {
         return Account.createFromPrivateKey(data.privateKey ? data.privateKey : data.private, this.networkType);
+    }
+
+    createNetworkCurrency(amount: number, isRelative: boolean = true): NetworkCurrencyPublic | NetworkCurrencyLocal {
+        if (this.apiUrl.toLowerCase().includes('localhost')) {
+            return isRelative ? NetworkCurrencyLocal.createRelative(amount) : NetworkCurrencyLocal.createAbsolute(amount);
+        }
+        return isRelative ? NetworkCurrencyPublic.createRelative(amount) : NetworkCurrencyPublic.createAbsolute(amount);
     }
 
     announce(signedTransaction: SignedTransaction): Promise<Transaction> {
