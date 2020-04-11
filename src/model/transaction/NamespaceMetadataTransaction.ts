@@ -116,9 +116,6 @@ export class NamespaceMetadataTransaction extends Transaction {
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
         super(TransactionType.NAMESPACE_METADATA, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
-        if (value.length > 1024) {
-            throw new Error('The maximum value size is 1024');
-        }
     }
 
     /**
