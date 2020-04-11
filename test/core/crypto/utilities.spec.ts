@@ -20,11 +20,11 @@ import {Convert} from '../../../src/core/format';
 describe('crypto utilities', () => {
     it('words2ua creates an ua from a word array', () => {
         // Arrange:
-        const key = '4344645752e57065f814b51713d05810'
+        const key = '4344645752e57065f814b51713d05810';
         const words = [ 1128555607, 1390768229, -132860649, 332421136 ];
 
         // Act:
-        const ua = words2ua(new Uint8Array(16), {words})
+        const ua = words2ua(new Uint8Array(16), {words});
 
         // Assert:
         expect(ua).deep.equal(Convert.hexToUint8(key));
