@@ -65,7 +65,7 @@ describe('SimpleWallet', () => {
         const privateKey = '5149a02ca2b2610138376717daaff8477f1639796aa108b7eee83e99e585b250';
         const password = new Password('password');
         const simpleWallet = SimpleWallet.createFromPrivateKey('wallet-name', password, privateKey, NetworkType.MIJIN_TEST);
-        const simpleWalletDTO = simpleWallet.toDTO()
-        expect(simpleWalletDTO).to.deep.equal(JSON.parse(JSON.stringify(simpleWallet)))
-    })
+        const simpleWalletDTO = simpleWallet.toDTO();
+        expect(simpleWalletDTO).to.deep.equal(JSON.parse(JSON.stringify(simpleWallet)));
+    });
 });

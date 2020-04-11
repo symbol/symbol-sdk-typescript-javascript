@@ -68,20 +68,16 @@ export class PublicAccount {
         if (!signature) {
             throw new Error('Missing argument');
         }
-
         if (signature.length / 2 !== Hash512) {
             throw new Error('Signature length is incorrect');
         }
-
         if (!Convert.isHexString(signature)) {
             throw new Error('Signature must be hexadecimal only');
         }
         // Convert signature key to Uint8Array
         const convertedSignature = Convert.hexToUint8(signature);
-
         // Convert to Uint8Array
-
-        const convertedData = Convert.hexToUint8(Convert.isHexString(data) ? data : Convert.utf8ToHex(data));
+        const convertedData = Convert.hexToUint8(Convert.utf8ToHex(data));
         return KeyPair.verify(Convert.hexToUint8(this.publicKey), convertedData, convertedSignature);
     }
 
