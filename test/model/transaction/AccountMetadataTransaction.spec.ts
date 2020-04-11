@@ -21,6 +21,9 @@ import { NetworkType } from '../../../src/model/network/NetworkType';
 import { AccountMetadataTransaction } from '../../../src/model/transaction/AccountMetadataTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { TestingAccount } from '../../conf/conf.spec';
+import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/builders/EmbeddedTransactionBuilder';
+import { TransactionType } from '../../../src/model/transaction/TransactionType';
+import { deepEqual } from 'assert';
 
 describe('AccountMetadataTransaction', () => {
     let account: Account;
@@ -74,19 +77,6 @@ describe('AccountMetadataTransaction', () => {
         )).to.be.equal('9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6E80300000000000001000A0000000000000000000000');
     });
 
-    it('should throw error if value size is bigger than 1024', () => {
-        expect(() => {
-            AccountMetadataTransaction.create(
-                Deadline.create(),
-                account.publicKey,
-                BigInt(1000),
-                1,
-                Convert.uint8ToUtf8(new Uint8Array(1025)),
-                NetworkType.MIJIN_TEST,
-            );
-        }).to.throw(Error, 'The maximum value size is 1024');
-    });
-
     describe('size', () => {
         it('should return 182 for AccountMetadataTransaction byte size', () => {
             const accountMetadataTransaction = AccountMetadataTransaction.create(
@@ -104,5 +94,40 @@ describe('AccountMetadataTransaction', () => {
             const signedTransaction = accountMetadataTransaction.signWith(account, generationHash);
             expect(signedTransaction.hash).not.to.be.undefined;
         });
+    });
+
+    it('should create EmbeddedTransactionBuilder', () => {
+        const accountMetadataTransaction = AccountMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            1,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        );
+
+        Object.assign(accountMetadataTransaction, {signer: account.publicAccount});
+
+        const embedded = accountMetadataTransaction.toEmbeddedTransaction();
+
+        expect(embedded).to.be.instanceOf(EmbeddedTransactionBuilder);
+        expect(Convert.uint8ToHex(embedded.signerPublicKey.key)).to.be.equal(account.publicKey);
+        expect(embedded.type.valueOf()).to.be.equal(TransactionType.ACCOUNT_METADATA.valueOf());
+    });
+
+    it('should resolve alias', () => {
+        const accountMetadataTransaction = AccountMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            1,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const resolved = accountMetadataTransaction.resolveAliases();
+
+        expect(resolved).to.be.instanceOf(AccountMetadataTransaction);
+        deepEqual(accountMetadataTransaction, resolved);
     });
 });

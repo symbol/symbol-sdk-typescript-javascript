@@ -37,7 +37,7 @@ import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
 import { Deadline } from './Deadline';
-import { HashType, HashTypeLengthValidator } from './HashType';
+import { LockHashAlgorithmLengthValidator, LockHashAlgorithm } from './LockHashAlgorithm';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
@@ -52,7 +52,7 @@ export class SecretLockTransaction extends Transaction {
      * @param deadline - The deadline to include the transaction.
      * @param mosaic - The locked mosaic.
      * @param duration - The funds lock duration.
-     * @param hashType - The hash algorithm secret is generated with.
+     * @param hashAlgorithm - The hash algorithm secret is generated with.
      * @param secret - The proof hashed.
      * @param recipientAddress - The unresolved recipient address of the funds.
      * @param networkType - The network type.
@@ -63,7 +63,7 @@ export class SecretLockTransaction extends Transaction {
     public static create(deadline: Deadline,
                          mosaic: Mosaic,
                          duration: bigint,
-                         hashType: HashType,
+                         hashAlgorithm: LockHashAlgorithm,
                          secret: string,
                          recipientAddress: Address | NamespaceId,
                          networkType: NetworkType,
@@ -75,7 +75,7 @@ export class SecretLockTransaction extends Transaction {
             maxFee,
             mosaic,
             duration,
-            hashType,
+            hashAlgorithm,
             secret,
             recipientAddress,
         );
@@ -88,7 +88,7 @@ export class SecretLockTransaction extends Transaction {
      * @param maxFee
      * @param mosaic
      * @param duration
-     * @param hashType
+     * @param hashAlgorithm
      * @param secret
      * @param recipientAddress
      * @param signature
@@ -110,7 +110,7 @@ export class SecretLockTransaction extends Transaction {
                 /**
                  * The hash algorithm, secret is generated with.
                  */
-                public readonly hashType: HashType,
+                public readonly hashAlgorithm: LockHashAlgorithm,
                 /**
                  * The proof hashed.
                  */
@@ -123,8 +123,8 @@ export class SecretLockTransaction extends Transaction {
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
         super(TransactionType.SECRET_LOCK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
-        if (!HashTypeLengthValidator(hashType, this.secret)) {
-            throw new Error('HashType and Secret have incompatible length or not hexadecimal string');
+        if (!LockHashAlgorithmLengthValidator(hashAlgorithm, this.secret)) {
+            throw new Error('HashAlgorithm and Secret have incompatible length or not hexadecimal string');
         }
     }
 
@@ -208,7 +208,7 @@ export class SecretLockTransaction extends Transaction {
             new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id),
                 new AmountDto(this.mosaic.amount)),
             new BlockDurationDto(this.duration),
-            this.hashType.valueOf(),
+            this.hashAlgorithm.valueOf(),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
         );
         return transactionBuilder.serialize();
@@ -228,7 +228,7 @@ export class SecretLockTransaction extends Transaction {
             new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id),
                 new AmountDto(this.mosaic.amount)),
             new BlockDurationDto(this.duration),
-            this.hashType.valueOf(),
+            this.hashAlgorithm.valueOf(),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
         );
     }

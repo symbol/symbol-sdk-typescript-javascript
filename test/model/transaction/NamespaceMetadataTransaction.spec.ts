@@ -22,6 +22,9 @@ import { NetworkType } from '../../../src/model/network/NetworkType';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { NamespaceMetadataTransaction } from '../../../src/model/transaction/NamespaceMetadataTransaction';
 import { TestingAccount } from '../../conf/conf.spec';
+import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/builders/EmbeddedTransactionBuilder';
+import { TransactionType } from '../../../src/model/transaction/TransactionType';
+import { deepEqual } from 'assert';
 import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('NamespaceMetadataTransaction', () => {
@@ -80,20 +83,6 @@ describe('NamespaceMetadataTransaction', () => {
                        'A8787B6E8030000000000004CCCD78612DDF5CA01000A0000000000000000000000');
     });
 
-    it('should throw error if value size is bigger than 1024', () => {
-        expect(() => {
-            NamespaceMetadataTransaction.create(
-                Deadline.create(),
-                account.publicKey,
-                BigInt(1000),
-                new NamespaceId(BigIntUtilities.HexToBigInt('CAF5DD1286D7CC4C')),
-                1,
-                Convert.uint8ToUtf8(new Uint8Array(1025)),
-                NetworkType.MIJIN_TEST,
-            );
-        }).to.throw(Error, 'The maximum value size is 1024');
-    });
-
     describe('size', () => {
         it('should return 190 for NamespaceMetadataTransaction byte size', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
@@ -125,5 +114,41 @@ describe('NamespaceMetadataTransaction', () => {
 
         const signedTransaction = namespaceMetadataTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
+    });
+
+    it('should create EmbeddedTransactionBuilder', () => {
+        const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            new NamespaceId([2262289484, 3405110546]),
+            1,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        );
+
+        Object.assign(namespaceMetadataTransaction, {signer: account.publicAccount});
+
+        const embedded = namespaceMetadataTransaction.toEmbeddedTransaction();
+
+        expect(embedded).to.be.instanceOf(EmbeddedTransactionBuilder);
+        expect(Convert.uint8ToHex(embedded.signerPublicKey.key)).to.be.equal(account.publicKey);
+        expect(embedded.type.valueOf()).to.be.equal(TransactionType.NAMESPACE_METADATA.valueOf());
+    });
+
+    it('should resolve alias', () => {
+        const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            new NamespaceId([2262289484, 3405110546]),
+            1,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        );
+        const resolved = namespaceMetadataTransaction.resolveAliases();
+
+        expect(resolved).to.be.instanceOf(NamespaceMetadataTransaction);
+        deepEqual(namespaceMetadataTransaction, resolved);
     });
 });

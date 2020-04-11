@@ -46,7 +46,7 @@ import { AccountRestrictionTransaction } from '../../../src/model/transaction/Ac
 import { AddressAliasTransaction } from '../../../src/model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
-import { HashType } from '../../../src/model/transaction/HashType';
+import { LockHashAlgorithm } from '../../../src/model/transaction/LockHashAlgorithm';
 import { LinkAction } from '../../../src/model/transaction/LinkAction';
 import { LockFundsTransaction } from '../../../src/model/transaction/LockFundsTransaction';
 import { MosaicAddressRestrictionTransaction } from '../../../src/model/transaction/MosaicAddressRestrictionTransaction';
@@ -339,9 +339,9 @@ describe('TransactionMapping - createFromPayload', () => {
         const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
-            NetworkCurrencyLocal.createAbsolute(BigInt(10)),
+            NetworkCurrencyLocal.createAbsolute(10),
             BigInt(100),
-            HashType.Op_Sha3_256,
+            LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.MIJIN_TEST,
@@ -363,7 +363,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(),
-            HashType.Op_Sha3_256,
+            LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             account.address,
             proof,
@@ -414,9 +414,76 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
+        const accountLinkTransaction = AccountLinkTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            LinkAction.Link,
+            NetworkType.MIJIN_TEST,
+        );
+        const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
+            Deadline.create(),
+            'root-test-namespace',
+            UInt64.fromUint(1000),
+            NetworkType.MIJIN_TEST,
+        );
+        const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
+            Deadline.create(),
+            new MosaicId(UInt64.fromUint(1).toDTO()),
+            UInt64.fromUint(4444),
+            UInt64.fromUint(0),
+            MosaicRestrictionType.NONE,
+            UInt64.fromUint(0),
+            MosaicRestrictionType.GE,
+            NetworkType.MIJIN_TEST,
+        );
+        const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
+            Deadline.create(),
+            new NamespaceId('test'),
+            UInt64.fromUint(4444),
+            account.address,
+            UInt64.fromUint(0),
+            NetworkType.MIJIN_TEST,
+            UInt64.fromUint(0),
+        );
+        const accountMetadataTransaction = AccountMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            1,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        );
+        const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            new MosaicId([2262289484, 3405110546]),
+            1,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        );
+        const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            new NamespaceId([2262289484, 3405110546]),
+            1,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        );
+
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
-            [transferTransaction.toAggregate(account.publicAccount)],
+            [
+                transferTransaction.toAggregate(account.publicAccount),
+                accountLinkTransaction.toAggregate(account.publicAccount),
+                registerNamespaceTransaction.toAggregate(account.publicAccount),
+                mosaicGlobalRestrictionTransaction.toAggregate(account.publicAccount),
+                mosaicAddressRestrictionTransaction.toAggregate(account.publicAccount),
+                mosaicMetadataTransaction.toAggregate(account.publicAccount),
+                namespaceMetadataTransaction.toAggregate(account.publicAccount),
+                accountMetadataTransaction.toAggregate(account.publicAccount),
+            ],
             NetworkType.MIJIN_TEST,
             []);
 
@@ -426,6 +493,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         expect(transaction.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
         expect(transaction.innerTransactions[0].type).to.be.equal(TransactionType.TRANSFER);
+        expect(transaction.innerTransactions.length).to.be.equal(8);
     });
 
     it('should create AggregatedTransaction - Bonded', () => {
@@ -869,9 +937,9 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
-            NetworkCurrencyLocal.createAbsolute(BigInt(10)),
+            NetworkCurrencyLocal.createAbsolute(10),
             BigInt(100),
-            HashType.Op_Sha3_256,
+            LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.MIJIN_TEST,
@@ -881,7 +949,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             TransactionMapping.createFromDTO(secretLockTransaction.toJSON()) as SecretLockTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.SECRET_LOCK);
-        expect(transaction.hashType).to.be.equal(HashType.Op_Sha3_256);
+        expect(transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
 
     });
 
@@ -890,9 +958,9 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const recipientAddress = new NamespaceId('test');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
-            NetworkCurrencyLocal.createAbsolute(BigInt(10)),
+            NetworkCurrencyLocal.createAbsolute(10),
             BigInt(100),
-            HashType.Op_Sha3_256,
+            LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.MIJIN_TEST,
@@ -902,7 +970,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             TransactionMapping.createFromDTO(secretLockTransaction.toJSON()) as SecretLockTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.SECRET_LOCK);
-        expect(transaction.hashType).to.be.equal(HashType.Op_Sha3_256);
+        expect(transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
         expect(BigIntUtilities.BigIntToHex((transaction.recipientAddress as NamespaceId).id)).to.be.equal(recipientAddress.toHex());
 
     });
@@ -913,9 +981,9 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const mosaicId = new NamespaceId('test');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
-            new Mosaic(new MosaicId(BigInt(1)), BigInt(10)),
+            new Mosaic(new MosaicId([1, 1]), UInt64.fromUint(10)),
             BigInt(100),
-            HashType.Op_Sha3_256,
+            LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.MIJIN_TEST,
@@ -925,8 +993,8 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             TransactionMapping.createFromDTO(secretLockTransaction.toJSON()) as SecretLockTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.SECRET_LOCK);
-        expect(transaction.hashType).to.be.equal(HashType.Op_Sha3_256);
-        expect(transaction.mosaic.id.toHex()).to.be.equal((new MosaicId(BigInt(1))).toHex());
+        expect(transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
+        expect(transaction.mosaic.id.toHex()).to.be.equal((new MosaicId([1, 1])).toHex());
 
     });
 
@@ -934,7 +1002,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(),
-            HashType.Op_Sha3_256,
+            LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             account.address,
             proof,
@@ -945,7 +1013,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             TransactionMapping.createFromDTO(secretProofTransaction.toJSON()) as SecretProofTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.SECRET_PROOF);
-        expect(transaction.hashType).to.be.equal(HashType.Op_Sha3_256);
+        expect(transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
         expect(transaction.secret).to.be.equal(sha3_256.create().update(Convert.hexToUint8(proof)).hex());
         deepEqual(transaction.recipientAddress, account.address);
         expect(transaction.proof).to.be.equal(proof);
@@ -957,7 +1025,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const recipientAddress = new NamespaceId('test');
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(),
-            HashType.Op_Sha3_256,
+            LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             recipientAddress,
             proof,
@@ -968,7 +1036,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             TransactionMapping.createFromDTO(secretProofTransaction.toJSON()) as SecretProofTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.SECRET_PROOF);
-        expect(transaction.hashType).to.be.equal(HashType.Op_Sha3_256);
+        expect(transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
         expect(transaction.secret).to.be.equal(sha3_256.create().update(Convert.hexToUint8(proof)).hex());
         expect(transaction.proof).to.be.equal(proof);
         expect(BigIntUtilities.BigIntToHex((transaction.recipientAddress as NamespaceId).id)).to.be.equal(recipientAddress.toHex());

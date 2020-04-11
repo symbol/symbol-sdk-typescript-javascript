@@ -177,14 +177,14 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 mosaicId: BigIntUtilities.BigIntToHex(secretLockTx.mosaic.id.id),
                 amount: secretLockTx.mosaic.amount.toString(),
                 duration: secretLockTx.duration.toString(),
-                hashAlgorithm: secretLockTx.hashType,
+                hashAlgorithm: secretLockTx.hashAlgorithm,
                 secret: secretLockTx.secret,
                 recipientAddress: secretLockTx.recipientAddress.toDTO(),
             };
         case TransactionType.SECRET_PROOF:
             const secretProofTx = transaction as SecretProofTransaction;
             return {
-                hashAlgorithm: secretProofTx.hashType,
+                hashAlgorithm: secretProofTx.hashAlgorithm,
                 secret: secretProofTx.secret,
                 recipientAddress: secretProofTx.recipientAddress.toDTO(),
                 proof: secretProofTx.proof,

@@ -29,6 +29,8 @@ import { Deadline } from '../../../src/model/transaction/Deadline';
 import { MosaicMetadataTransaction } from '../../../src/model/transaction/MosaicMetadataTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { TestingAccount } from '../../conf/conf.spec';
+import { EmbeddedTransactionBuilder } from 'catbuffer-typescript';
+import { TransactionType } from '../../../src/model/model';
 
 describe('MosaicMetadataTransaction', () => {
     let account: Account;
@@ -92,20 +94,6 @@ describe('MosaicMetadataTransaction', () => {
             signedTransaction.payload.length,
         )).to.be.equal('9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8' +
                        '787B6E8030000000000004CCCD78612DDF5CA01000A0000000000000000000000');
-    });
-
-    it('should throw error if value size is bigger than 1024', () => {
-        expect(() => {
-            MosaicMetadataTransaction.create(
-                Deadline.create(),
-                account.publicKey,
-                BigInt(1000),
-                new MosaicId('CAF5DD1286D7CC4C'),
-                1,
-                Convert.uint8ToUtf8(new Uint8Array(1025)),
-                NetworkType.MIJIN_TEST,
-            );
-        }).to.throw(Error, 'The maximum value size is 1024');
     });
 
     it('should create and sign an MosaicMetadataTransaction object using alias', () => {
@@ -183,5 +171,25 @@ describe('MosaicMetadataTransaction', () => {
 
         const signedTransaction = mosaicMetadataTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
+    });
+
+    it('should create EmbeddedTransactionBuilder', () => {
+        const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            new MosaicId([2262289484, 3405110546]),
+            1,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        );
+
+        Object.assign(mosaicMetadataTransaction, {signer: account.publicAccount});
+
+        const embedded = mosaicMetadataTransaction.toEmbeddedTransaction();
+
+        expect(embedded).to.be.instanceOf(EmbeddedTransactionBuilder);
+        expect(Convert.uint8ToHex(embedded.signerPublicKey.key)).to.be.equal(account.publicKey);
+        expect(embedded.type.valueOf()).to.be.equal(TransactionType.MOSAIC_METADATA.valueOf());
     });
 });

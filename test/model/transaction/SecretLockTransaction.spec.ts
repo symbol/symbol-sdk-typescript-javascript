@@ -31,7 +31,7 @@ import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatem
 import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { Statement } from '../../../src/model/receipt/Statement';
 import {Deadline} from '../../../src/model/transaction/Deadline';
-import {HashType} from '../../../src/model/transaction/HashType';
+import { LockHashAlgorithm } from '../../../src/model/transaction/LockHashAlgorithm';
 import {SecretLockTransaction} from '../../../src/model/transaction/SecretLockTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { TestingAccount } from '../../conf/conf.spec';
@@ -60,7 +60,7 @@ describe('SecretLockTransaction', () => {
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
             BigInt(100),
-            HashType.Op_Sha3_256,
+            LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.MIJIN_TEST,
@@ -76,7 +76,7 @@ describe('SecretLockTransaction', () => {
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
             BigInt(100),
-            HashType.Op_Sha3_256,
+            LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.MIJIN_TEST,
@@ -86,14 +86,14 @@ describe('SecretLockTransaction', () => {
         expect(secretLockTransaction.maxFee).to.be.equal(BigInt(1));
     });
 
-    it('should be created with HashType: Op_Sha3_256 secret', () => {
+    it('should be created with LockHashAlgorithm: Op_Sha3_256 secret', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
             BigInt(100),
-            HashType.Op_Sha3_256,
+            LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.MIJIN_TEST,
@@ -113,7 +113,7 @@ describe('SecretLockTransaction', () => {
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
             BigInt(100),
-            HashType.Op_Sha3_256,
+            LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.MIJIN_TEST,
@@ -134,7 +134,7 @@ describe('SecretLockTransaction', () => {
                 Deadline.create(),
                 NetworkCurrencyLocal.createAbsolute(10),
                 BigInt(100),
-                HashType.Op_Sha3_256,
+                LockHashAlgorithm.Op_Sha3_256,
                 'non valid hash',
                 recipientAddress,
                 NetworkType.MIJIN_TEST,
@@ -142,14 +142,14 @@ describe('SecretLockTransaction', () => {
         }).to.throw(Error);
     });
 
-    it('should be created with HashType: Op_Keccak_256 secret', () => {
+    it('should be created with LockHashAlgorithm: Op_Keccak_256 secret', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
             BigInt(100),
-            HashType.Op_Keccak_256,
+            LockHashAlgorithm.Op_Keccak_256,
             keccak_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.MIJIN_TEST,
@@ -169,21 +169,22 @@ describe('SecretLockTransaction', () => {
                 Deadline.create(),
                 NetworkCurrencyLocal.createAbsolute(10),
                 BigInt(100),
-                HashType.Op_Keccak_256,
+                LockHashAlgorithm.Op_Keccak_256,
                 'non valid hash',
                 recipientAddress,
                 NetworkType.MIJIN_TEST,
             );
         }).to.throw(Error);
     });
-    it('should be created with HashType: Op_Hash_160 secret', () => {
+
+    it('should be created with LockHashAlgorithm: Op_Hash_160 secret', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9';
         const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
             BigInt(100),
-            HashType.Op_Hash_160,
+            LockHashAlgorithm.Op_Hash_160,
             CryptoJS.RIPEMD160(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
             recipientAddress,
             NetworkType.MIJIN_TEST,
@@ -203,21 +204,21 @@ describe('SecretLockTransaction', () => {
                 Deadline.create(),
                 NetworkCurrencyLocal.createAbsolute(10),
                 BigInt(100),
-                HashType.Op_Hash_160,
+                LockHashAlgorithm.Op_Hash_160,
                 'non valid hash',
                 recipientAddress,
                 NetworkType.MIJIN_TEST,
             );
         }).to.throw(Error);
     });
-    it('should be created with HashType: Op_Hash_256 secret', () => {
+    it('should be created with LockHashAlgorithm: Op_Hash_256 secret', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
             BigInt(100),
-            HashType.Op_Hash_256,
+            LockHashAlgorithm.Op_Hash_256,
             CryptoJS.SHA256(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
             recipientAddress,
             NetworkType.MIJIN_TEST,
@@ -237,7 +238,7 @@ describe('SecretLockTransaction', () => {
                 Deadline.create(),
                 NetworkCurrencyLocal.createAbsolute(10),
                 BigInt(100),
-                HashType.Op_Hash_256,
+                LockHashAlgorithm.Op_Hash_256,
                 'non valid hash',
                 recipientAddress,
                 NetworkType.MIJIN_TEST,
@@ -253,7 +254,7 @@ describe('SecretLockTransaction', () => {
                 Deadline.create(),
                 NetworkCurrencyLocal.createAbsolute(10),
                 BigInt(100),
-                HashType.Op_Hash_256,
+                LockHashAlgorithm.Op_Hash_256,
                 CryptoJS.SHA256(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
                 recipientAddress,
                 NetworkType.MIJIN_TEST,
@@ -270,7 +271,7 @@ describe('SecretLockTransaction', () => {
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
             BigInt(100),
-            HashType.Op_Sha3_256,
+            LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.MIJIN_TEST,
@@ -290,7 +291,7 @@ describe('SecretLockTransaction', () => {
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
             BigInt(100),
-            HashType.Op_Sha3_256,
+            LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.MIJIN_TEST,
@@ -310,7 +311,7 @@ describe('SecretLockTransaction', () => {
             BigInt(0),
             new Mosaic(unresolvedMosaicId, BigInt(1)),
             BigInt(100),
-            HashType.Op_Sha3_256,
+            LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             unresolvedAddress,
             '',

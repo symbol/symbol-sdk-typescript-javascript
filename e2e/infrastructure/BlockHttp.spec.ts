@@ -21,7 +21,6 @@ import { QueryParams } from '../../src/infrastructure/QueryParams';
 import { ReceiptRepository } from '../../src/infrastructure/ReceiptRepository';
 import { Account } from '../../src/model/account/Account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { TransactionInfo } from '../../src/model/transaction/TransactionInfo';
@@ -71,7 +70,7 @@ describe('BlockHttp', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
-                [NetworkCurrencyLocal.createAbsolute(1)],
+                [helper.createNetworkCurrency(1, false)],
                 PlainMessage.create('test-message'),
                 networkType,
                 helper.maxFee,

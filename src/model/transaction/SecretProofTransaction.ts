@@ -34,7 +34,7 @@ import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
 import { Deadline } from './Deadline';
-import { HashType, HashTypeLengthValidator } from './HashType';
+import { LockHashAlgorithmLengthValidator, LockHashAlgorithm } from './LockHashAlgorithm';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
@@ -47,7 +47,7 @@ export class SecretProofTransaction extends Transaction {
      * Create a secret proof transaction object.
      *
      * @param deadline - The deadline to include the transaction.
-     * @param hashType - The hash algorithm secret is generated with.
+     * @param hashAlgorithm - The hash algorithm secret is generated with.
      * @param secret - The seed proof hashed.
      * @param recipientAddress - UnresolvedAddress
      * @param proof - The seed proof.
@@ -57,7 +57,7 @@ export class SecretProofTransaction extends Transaction {
      * @return a SecretProofTransaction instance
      */
     public static create(deadline: Deadline,
-                         hashType: HashType,
+                         hashAlgorithm: LockHashAlgorithm,
                          secret: string,
                          recipientAddress: Address | NamespaceId,
                          proof: string,
@@ -68,7 +68,7 @@ export class SecretProofTransaction extends Transaction {
             TransactionVersion.SECRET_PROOF,
             deadline,
             maxFee,
-            hashType,
+            hashAlgorithm,
             secret,
             recipientAddress,
             proof,
@@ -80,7 +80,7 @@ export class SecretProofTransaction extends Transaction {
      * @param version
      * @param deadline
      * @param maxFee
-     * @param hashType
+     * @param hashAlgorithm
      * @param secret
      * @param recipientAddress
      * @param proof
@@ -92,7 +92,7 @@ export class SecretProofTransaction extends Transaction {
                 version: number,
                 deadline: Deadline,
                 maxFee: bigint,
-                public readonly hashType: HashType,
+                public readonly hashAlgorithm: LockHashAlgorithm,
                 public readonly secret: string,
                 public readonly recipientAddress: Address | NamespaceId,
                 public readonly proof: string,
@@ -100,7 +100,7 @@ export class SecretProofTransaction extends Transaction {
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
         super(TransactionType.SECRET_PROOF, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
-        if (!HashTypeLengthValidator(hashType, this.secret)) {
+        if (!LockHashAlgorithmLengthValidator(hashAlgorithm, this.secret)) {
             throw new Error('HashType and Secret have incompatible length or not hexadecimal string');
         }
     }
@@ -186,7 +186,7 @@ export class SecretProofTransaction extends Transaction {
             new AmountDto(this.maxFee),
             new TimestampDto(this.deadline.toBigInt()),
             new Hash256Dto(this.getSecretByte()),
-            this.hashType.valueOf(),
+            this.hashAlgorithm.valueOf(),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
             this.getProofByte(),
         );
@@ -204,7 +204,7 @@ export class SecretProofTransaction extends Transaction {
             this.networkType.valueOf(),
             TransactionType.SECRET_PROOF.valueOf(),
             new Hash256Dto(this.getSecretByte()),
-            this.hashType.valueOf(),
+            this.hashAlgorithm.valueOf(),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
             this.getProofByte(),
         );
