@@ -45,7 +45,7 @@ export default class MultisigAccountModification extends Vue {
     // push approval and removal deltas to view items
     const items = [
       { key: 'minApprovalDelta', value: `${minApprovalDelta}`},
-      { key: 'maxRemovalDelta', value: `${minRemovalDelta}`},
+      { key: 'minRemovalDelta', value: `${minRemovalDelta}`},
     ]
 
     // render views for public key additions and deletions
