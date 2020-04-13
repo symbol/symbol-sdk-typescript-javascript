@@ -123,10 +123,14 @@ export class FormAccountCreationTs extends Vue {
   public submit() {
     // @VEE
     this.persistAccountAndContinue()
-    // resets form validation
-    this.$nextTick(() => {
-      this.$refs.observer.reset()
-    })
+    this.resetValidations()
+  }
+
+  /**
+   *  resets form validation    
+   */ 
+  public resetValidations(): void{
+    this.$refs && this.$refs.observer && this.$refs.observer.reset()
   }
 
   /**
