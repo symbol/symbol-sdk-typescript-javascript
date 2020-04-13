@@ -70,8 +70,8 @@ describe('TransactionHttp', () => {
         blockRoutesApi = mock();
         clientResponse = mock();
         transactionHttp = new TransactionHttp(NIS2_URL);
-        (transactionHttp as object).transactionRoutesApi = instance(transactionRoutesApi);
-        (transactionHttp as object).blockRoutesApi = instance(blockRoutesApi);
+        (transactionHttp as any).transactionRoutesApi = instance(transactionRoutesApi);
+        (transactionHttp as any).blockRoutesApi = instance(blockRoutesApi);
     });
 
     it('Test getTransactionStatus method', async () => {
