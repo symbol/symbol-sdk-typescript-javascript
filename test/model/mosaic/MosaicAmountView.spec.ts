@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {PublicAccount} from '../../../src/model/account/PublicAccount';
-import {MosaicFlags} from '../../../src/model/mosaic/MosaicFlags';
-import {MosaicId} from '../../../src/model/mosaic/MosaicId';
-import {MosaicInfo} from '../../../src/model/mosaic/MosaicInfo';
-import {NetworkType} from '../../../src/model/network/NetworkType';
-import {UInt64} from '../../../src/model/UInt64';
-import {MosaicAmountView} from '../../../src/service/MosaicAmountView';
+import { expect } from 'chai';
+import { PublicAccount } from '../../../src/model/account/PublicAccount';
+import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { MosaicInfo } from '../../../src/model/mosaic/MosaicInfo';
+import { NetworkType } from '../../../src/model/network/NetworkType';
+import { UInt64 } from '../../../src/model/UInt64';
+import { MosaicAmountView } from '../../../src/service/MosaicAmountView';
 
 describe('MosaicAmountView', () => {
-
     let mosaicInfo: MosaicInfo;
 
     before(() => {

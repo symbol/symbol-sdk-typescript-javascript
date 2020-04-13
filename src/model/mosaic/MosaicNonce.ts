@@ -22,7 +22,6 @@ import { Convert as convert } from '../../core/format';
  * @since 1.0
  */
 export class MosaicNonce {
-
     /**
      * Create MosaicNonce from int
      *

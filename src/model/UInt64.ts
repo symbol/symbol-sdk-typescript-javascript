@@ -21,7 +21,6 @@ import { RawUInt64 as uint64 } from '../core/format';
  * UInt64 data model
  */
 export class UInt64 {
-
     /**
      * uint64 lower part
      */
@@ -74,7 +73,7 @@ export class UInt64 {
      */
     public static isLongNumericString(input: string): boolean {
         const input_long = Long.fromString(input, true);
-        if (! /^\d+$/.test(input) || (input.substr(0, 1) === '0' && input.length > 1) || !Long.isLong(input_long)) {
+        if (!/^\d+$/.test(input) || (input.substr(0, 1) === '0' && input.length > 1) || !Long.isLong(input_long)) {
             return false;
         }
         return true;

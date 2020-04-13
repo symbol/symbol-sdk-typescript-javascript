@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
+import { expect } from 'chai';
 import { Convert } from '../../../src/core/format/Convert';
-import {Account} from '../../../src/model/account/Account';
-import {NetworkType} from '../../../src/model/network/NetworkType';
+import { Account } from '../../../src/model/account/Account';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 
 describe('Account', () => {
     const accountInformation = {
@@ -61,8 +61,7 @@ describe('Account', () => {
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('catapult rocks!');
-            expect(publicAccount.verifySignature('catapult rocks!', signed))
-                .to.be.true;
+            expect(publicAccount.verifySignature('catapult rocks!', signed)).to.be.true;
         });
 
         it('hexa', () => {
@@ -72,8 +71,7 @@ describe('Account', () => {
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('0xAA');
-            expect(publicAccount.verifySignature('0xAA', signed))
-                .to.be.true;
+            expect(publicAccount.verifySignature('0xAA', signed)).to.be.true;
         });
 
         it('utf-8 - NIS1', () => {
@@ -83,8 +81,7 @@ describe('Account', () => {
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('catapult rocks!');
-            expect(publicAccount.verifySignature('catapult rocks!', signed))
-                .to.be.true;
+            expect(publicAccount.verifySignature('catapult rocks!', signed)).to.be.true;
         });
 
         it('hexa - NIS1', () => {
@@ -94,8 +91,7 @@ describe('Account', () => {
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('0xAA');
-            expect(publicAccount.verifySignature('0xAA', signed))
-                .to.be.true;
+            expect(publicAccount.verifySignature('0xAA', signed)).to.be.true;
         });
 
         it('hexa without 0x previx', () => {
@@ -105,8 +101,7 @@ describe('Account', () => {
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('66128B29E8197352A2FEB51B50CF5D02F1D05B20D44B3F7953B98ACD2BCA15D4');
-            expect(publicAccount.verifySignature('66128B29E8197352A2FEB51B50CF5D02F1D05B20D44B3F7953B98ACD2BCA15D4', signed))
-                .to.be.true;
+            expect(publicAccount.verifySignature('66128B29E8197352A2FEB51B50CF5D02F1D05B20D44B3F7953B98ACD2BCA15D4', signed)).to.be.true;
         });
 
         it('hexa without 0x previx should be the same as with 0x', () => {
@@ -117,10 +112,8 @@ describe('Account', () => {
             const publicAccount = account.publicAccount;
             const signed = account.signData('AA');
             const signedWith0x = account.signData('0xAA');
-            expect(publicAccount.verifySignature('AA', signed))
-                .to.be.true;
-            expect(publicAccount.verifySignature('0xAA', signedWith0x))
-                .to.be.true;
+            expect(publicAccount.verifySignature('AA', signed)).to.be.true;
+            expect(publicAccount.verifySignature('0xAA', signedWith0x)).to.be.true;
         });
 
         it('hexa without 0x previx should be the same as with 0x', () => {
@@ -130,15 +123,16 @@ describe('Account', () => {
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('ff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf');
-            const signedWith0x =
-                account.signData('0xff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf');
+            const signedWith0x = account.signData('0xff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf');
             expect(
-                publicAccount
-                    .verifySignature('ff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf', signed))
-                .to.be.true;
-            expect(publicAccount
-                .verifySignature('0xff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf', signedWith0x))
-                .to.be.true;
+                publicAccount.verifySignature('ff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf', signed),
+            ).to.be.true;
+            expect(
+                publicAccount.verifySignature(
+                    '0xff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf',
+                    signedWith0x,
+                ),
+            ).to.be.true;
         });
 
         it('sign empty', () => {
@@ -149,12 +143,8 @@ describe('Account', () => {
             const publicAccount = account.publicAccount;
             const signed = account.signData('');
             const signedWith0x = account.signData('0x');
-            expect(
-                publicAccount.verifySignature('', signed))
-                .to.be.true;
-            expect(publicAccount
-                .verifySignature('0x', signedWith0x))
-                .to.be.true;
+            expect(publicAccount.verifySignature('', signed)).to.be.true;
+            expect(publicAccount.verifySignature('0x', signedWith0x)).to.be.true;
         });
     });
 });

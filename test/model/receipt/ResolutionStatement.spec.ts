@@ -34,8 +34,8 @@ describe('ResolutionStatement', () => {
                 statement: {
                     height: '1473',
                     source: {
-                    primaryId: 0,
-                    secondaryId: 0,
+                        primaryId: 0,
+                        secondaryId: 0,
                     },
                     receipts: [
                         {
@@ -55,13 +55,13 @@ describe('ResolutionStatement', () => {
                     height: '1473',
                     unresolved: '9156258DE356F030A500000000000000000000000000000000',
                     resolutionEntries: [
-                    {
-                        source: {
-                        primaryId: 1,
-                        secondaryId: 0,
+                        {
+                            source: {
+                                primaryId: 1,
+                                secondaryId: 0,
+                            },
+                            resolved: '90AB9480887275E559F3BCA87E6158AA7AFF339BE85E77A0F3',
                         },
-                        resolved: '90AB9480887275E559F3BCA87E6158AA7AFF339BE85E77A0F3',
-                    },
                     ],
                 },
             },
@@ -72,20 +72,20 @@ describe('ResolutionStatement', () => {
                     height: '1473',
                     unresolved: '85BBEA6CC462B244',
                     resolutionEntries: [
-                    {
-                        source: {
-                        primaryId: 1,
-                        secondaryId: 0,
+                        {
+                            source: {
+                                primaryId: 1,
+                                secondaryId: 0,
+                            },
+                            resolved: '504677C3281108DB',
                         },
-                        resolved: '504677C3281108DB',
-                    },
-                    {
-                        source: {
-                        primaryId: 3,
-                        secondaryId: 5,
+                        {
+                            source: {
+                                primaryId: 3,
+                                secondaryId: 5,
+                            },
+                            resolved: '401F622A3111A3E4',
                         },
-                        resolved: '401F622A3111A3E4',
-                    },
                     ],
                 },
             },
@@ -94,13 +94,13 @@ describe('ResolutionStatement', () => {
                     height: '1473',
                     unresolved: 'E81F622A5B11A340',
                     resolutionEntries: [
-                    {
-                        source: {
-                        primaryId: 3,
-                        secondaryId: 1,
+                        {
+                            source: {
+                                primaryId: 3,
+                                secondaryId: 1,
+                            },
+                            resolved: '756482FB80FD406C',
                         },
-                        resolved: '756482FB80FD406C',
-                    },
                     ],
                 },
             },
@@ -109,34 +109,34 @@ describe('ResolutionStatement', () => {
                     height: '1500',
                     unresolved: '85BBEA6CC462B244',
                     resolutionEntries: [
-                    {
-                        source: {
-                        primaryId: 1,
-                        secondaryId: 1,
+                        {
+                            source: {
+                                primaryId: 1,
+                                secondaryId: 1,
+                            },
+                            resolved: '0DC67FBE1CAD29E5',
                         },
-                        resolved: '0DC67FBE1CAD29E5',
-                    },
-                    {
-                        source: {
-                        primaryId: 1,
-                        secondaryId: 4,
+                        {
+                            source: {
+                                primaryId: 1,
+                                secondaryId: 4,
+                            },
+                            resolved: '7CDF3B117A3C40CC',
                         },
-                        resolved: '7CDF3B117A3C40CC',
-                    },
-                    {
-                        source: {
-                        primaryId: 1,
-                        secondaryId: 7,
+                        {
+                            source: {
+                                primaryId: 1,
+                                secondaryId: 7,
+                            },
+                            resolved: '0DC67FBE1CAD29E5',
                         },
-                        resolved: '0DC67FBE1CAD29E5',
-                    },
-                    {
-                        source: {
-                        primaryId: 2,
-                        secondaryId: 4,
+                        {
+                            source: {
+                                primaryId: 2,
+                                secondaryId: 4,
+                            },
+                            resolved: '7CDF3B117A3C40CC',
                         },
-                        resolved: '7CDF3B117A3C40CC',
-                    },
                     ],
                 },
             },
@@ -214,5 +214,4 @@ describe('ResolutionStatement', () => {
         expect((resolution.getResolutionEntryById(1, 6)!.resolved as MosaicId).toHex()).to.be.equal('7CDF3B117A3C40CC');
         expect((resolution.getResolutionEntryById(1, 2)!.resolved as MosaicId).toHex()).to.be.equal('0DC67FBE1CAD29E5');
     });
-
 });

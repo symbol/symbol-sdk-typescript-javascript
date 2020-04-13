@@ -42,7 +42,6 @@ import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
 export class MosaicGlobalRestrictionTransaction extends Transaction {
-
     /**
      * Create a mosaic address restriction transaction object
      *
@@ -69,17 +68,20 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {MosaicGlobalRestrictionTransaction}
      */
-    public static create(deadline: Deadline,
-                         mosaicId: MosaicId | NamespaceId,
-                         restrictionKey: UInt64,
-                         previousRestrictionValue: UInt64,
-                         previousRestrictionType: MosaicRestrictionType,
-                         newRestrictionValue: UInt64,
-                         newRestrictionType: MosaicRestrictionType,
-                         networkType: NetworkType,
-                         referenceMosaicId: MosaicId | NamespaceId = UnresolvedMapping.toUnresolvedMosaic(UInt64.fromUint(0).toHex()),
-                         maxFee: UInt64 = new UInt64([0, 0])): MosaicGlobalRestrictionTransaction {
-        return new MosaicGlobalRestrictionTransaction(networkType,
+    public static create(
+        deadline: Deadline,
+        mosaicId: MosaicId | NamespaceId,
+        restrictionKey: UInt64,
+        previousRestrictionValue: UInt64,
+        previousRestrictionType: MosaicRestrictionType,
+        newRestrictionValue: UInt64,
+        newRestrictionType: MosaicRestrictionType,
+        networkType: NetworkType,
+        referenceMosaicId: MosaicId | NamespaceId = UnresolvedMapping.toUnresolvedMosaic(UInt64.fromUint(0).toHex()),
+        maxFee: UInt64 = new UInt64([0, 0]),
+    ): MosaicGlobalRestrictionTransaction {
+        return new MosaicGlobalRestrictionTransaction(
+            networkType,
             TransactionVersion.MOSAIC_GLOBAL_RESTRICTION,
             deadline,
             maxFee,
@@ -109,41 +111,43 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
      * @param signer - The signer
      * @param transactionInfo - The transaction info
      */
-    constructor(networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: UInt64,
-                /**
-                 * The mosaic id.
-                 */
-                public readonly mosaicId: MosaicId | NamespaceId,
-                /**
-                 * The refrence mosaic id.
-                 */
-                public readonly referenceMosaicId: MosaicId | NamespaceId,
-                /**
-                 * The restriction key.
-                 */
-                public readonly restrictionKey: UInt64,
-                /**
-                 * The previous restriction value.
-                 */
-                public readonly previousRestrictionValue: UInt64,
-                /**
-                 * The previous restriction type.
-                 */
-                public readonly previousRestrictionType: MosaicRestrictionType,
-                /**
-                 * The new restriction value.
-                 */
-                public readonly newRestrictionValue: UInt64,
-                /**
-                 * The new restriction type.
-                 */
-                public readonly newRestrictionType: MosaicRestrictionType,
-                signature?: string,
-                signer?: PublicAccount,
-                transactionInfo?: TransactionInfo) {
+    constructor(
+        networkType: NetworkType,
+        version: number,
+        deadline: Deadline,
+        maxFee: UInt64,
+        /**
+         * The mosaic id.
+         */
+        public readonly mosaicId: MosaicId | NamespaceId,
+        /**
+         * The refrence mosaic id.
+         */
+        public readonly referenceMosaicId: MosaicId | NamespaceId,
+        /**
+         * The restriction key.
+         */
+        public readonly restrictionKey: UInt64,
+        /**
+         * The previous restriction value.
+         */
+        public readonly previousRestrictionValue: UInt64,
+        /**
+         * The previous restriction type.
+         */
+        public readonly previousRestrictionType: MosaicRestrictionType,
+        /**
+         * The new restriction value.
+         */
+        public readonly newRestrictionValue: UInt64,
+        /**
+         * The new restriction type.
+         */
+        public readonly newRestrictionType: MosaicRestrictionType,
+        signature?: string,
+        signer?: PublicAccount,
+        transactionInfo?: TransactionInfo,
+    ) {
         super(TransactionType.MOSAIC_GLOBAL_RESTRICTION, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
@@ -153,15 +157,16 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedMosaicGlobalRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            MosaicGlobalRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+        const builder = isEmbedded
+            ? EmbeddedMosaicGlobalRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : MosaicGlobalRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = MosaicGlobalRestrictionTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
-                (builder as MosaicGlobalRestrictionTransactionBuilder).getDeadline().timestamp),
+            isEmbedded
+                ? Deadline.create()
+                : Deadline.createFromDTO((builder as MosaicGlobalRestrictionTransactionBuilder).getDeadline().timestamp),
             UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getMosaicId().unresolvedMosaicId).toHex()),
             new UInt64(builder.getRestrictionKey()),
             new UInt64(builder.getPreviousRestrictionValue()),
@@ -172,8 +177,7 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
             UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getReferenceMosaicId().unresolvedMosaicId).toHex()),
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicGlobalRestrictionTransactionBuilder).fee.amount),
         );
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**
@@ -194,9 +198,16 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
         const bytePreviousRestrictionType = 1;
         const byteNewRestrictionType = 1;
 
-        return byteSize + byteMosaicId + byteRestrictionKey + byteReferenceMosaicId +
-               bytePreviousRestrictionValue + byteNewRestrictionValue + byteNewRestrictionType +
-               bytePreviousRestrictionType;
+        return (
+            byteSize +
+            byteMosaicId +
+            byteRestrictionKey +
+            byteReferenceMosaicId +
+            bytePreviousRestrictionValue +
+            byteNewRestrictionValue +
+            byteNewRestrictionType +
+            bytePreviousRestrictionType
+        );
     }
 
     /**
@@ -252,12 +263,21 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
      * @param aggregateTransactionIndex Transaction index for aggregated transaction
      * @returns {MosaicGlobalRestrictionTransaction}
      */
-    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): MosaicGlobalRestrictionTransaction {
+    resolveAliases(statement: Statement, aggregateTransactionIndex = 0): MosaicGlobalRestrictionTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
         return DtoMapping.assign(this, {
-            mosaicId: statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex),
-            referenceMosaicId: statement.resolveMosaicId(this.referenceMosaicId, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex)});
+            mosaicId: statement.resolveMosaicId(
+                this.mosaicId,
+                transactionInfo.height.toString(),
+                transactionInfo.index,
+                aggregateTransactionIndex,
+            ),
+            referenceMosaicId: statement.resolveMosaicId(
+                this.referenceMosaicId,
+                transactionInfo.height.toString(),
+                transactionInfo.index,
+                aggregateTransactionIndex,
+            ),
+        });
     }
 }

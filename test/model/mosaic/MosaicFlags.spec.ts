@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import {deepEqual} from 'assert';
-import {expect} from 'chai';
-import {MosaicFlags} from '../../../src/model/mosaic/MosaicFlags';
-import {UInt64} from '../../../src/model/UInt64';
+import { deepEqual } from 'assert';
+import { expect } from 'chai';
+import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
+import { UInt64 } from '../../../src/model/UInt64';
 
 describe('MosaicFlags', () => {
-
     it('should createComplete an MosaicFlags object with constructor', () => {
         const mosaicFlags = new MosaicFlags(7);
         expect(mosaicFlags.supplyMutable).to.be.equal(true);

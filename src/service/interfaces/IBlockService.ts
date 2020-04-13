@@ -21,7 +21,6 @@ import { UInt64 } from '../../model/UInt64';
  * Block Service Interface
  */
 export interface IBlockService {
-
     /**
      * Validate transaction hash in block
      * @param leaf transaction hash

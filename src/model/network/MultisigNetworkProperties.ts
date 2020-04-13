@@ -15,14 +15,14 @@
  */
 
 export class MultisigNetworkProperties {
-
     /**
      * @param maxMultisigDepth - Maximum number of multisig levels.
      * @param maxCosignatoriesPerAccount - Maximum number of cosignatories per account.
      * @param maxCosignedAccountsPerAccount - Maximum number of accounts a single account can cosign.
      */
-    constructor(public readonly maxMultisigDepth?: string,
-                public readonly maxCosignatoriesPerAccount?: string,
-                public readonly maxCosignedAccountsPerAccount?: string) {
-    }
+    constructor(
+        public readonly maxMultisigDepth?: string,
+        public readonly maxCosignatoriesPerAccount?: string,
+        public readonly maxCosignedAccountsPerAccount?: string,
+    ) {}
 }

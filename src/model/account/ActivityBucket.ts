@@ -18,29 +18,27 @@
  * Account activity bucket.
  */
 export class ActivityBucket {
-
     /**
      * Constructor
      * @param meta
      * @param accountRestrictions
      */
     constructor(
-                /**
-                 * Start height
-                 */
-                public readonly startHeight: string,
-                /**
-                 * Total fees paid.
-                 */
-                public readonly totalFeesPaid: number,
-                /**
-                 * Beneficiary count.
-                 */
-                public readonly beneficiaryCount: number,
-                /**
-                 * Raw score.
-                 */
-                public readonly rawScore: number) {
-
-    }
+        /**
+         * Start height
+         */
+        public readonly startHeight: string,
+        /**
+         * Total fees paid.
+         */
+        public readonly totalFeesPaid: number,
+        /**
+         * Beneficiary count.
+         */
+        public readonly beneficiaryCount: number,
+        /**
+         * Raw score.
+         */
+        public readonly rawScore: number,
+    ) {}
 }

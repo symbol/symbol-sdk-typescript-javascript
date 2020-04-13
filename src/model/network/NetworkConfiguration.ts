@@ -22,14 +22,14 @@ import { PluginProperties } from './PluginProperties';
  * Network Configuration
  */
 export class NetworkConfiguration {
-
     /**
      * @param network - Network related configuration properties.
      * @param chain - Chain related configuration properties.
      * @param plugins - Plugin related configuration properties.
      */
-    constructor(public readonly network: NetworkProperties,
-                public readonly chain: ChainProperties,
-                public readonly plugins: PluginProperties) {
-    }
+    constructor(
+        public readonly network: NetworkProperties,
+        public readonly chain: ChainProperties,
+        public readonly plugins: PluginProperties,
+    ) {}
 }

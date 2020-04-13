@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
+import { expect } from 'chai';
 
 describe('Health test', () => {
-
     it('should success', () => {
-       expect(true).to.be.equal(true);
+        expect(true).to.be.equal(true);
     });
 });

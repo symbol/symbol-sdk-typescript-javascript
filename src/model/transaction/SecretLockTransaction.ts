@@ -46,7 +46,6 @@ import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
 export class SecretLockTransaction extends Transaction {
-
     /**
      * Create a secret lock transaction object.
      *
@@ -61,14 +60,16 @@ export class SecretLockTransaction extends Transaction {
      *
      * @return a SecretLockTransaction instance
      */
-    public static create(deadline: Deadline,
-                         mosaic: Mosaic,
-                         duration: UInt64,
-                         hashAlgorithm: LockHashAlgorithm,
-                         secret: string,
-                         recipientAddress: Address | NamespaceId,
-                         networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): SecretLockTransaction {
+    public static create(
+        deadline: Deadline,
+        mosaic: Mosaic,
+        duration: UInt64,
+        hashAlgorithm: LockHashAlgorithm,
+        secret: string,
+        recipientAddress: Address | NamespaceId,
+        networkType: NetworkType,
+        maxFee: UInt64 = new UInt64([0, 0]),
+    ): SecretLockTransaction {
         return new SecretLockTransaction(
             networkType,
             TransactionVersion.SECRET_LOCK,
@@ -96,33 +97,35 @@ export class SecretLockTransaction extends Transaction {
      * @param signer
      * @param transactionInfo
      */
-    constructor(networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: UInt64,
-                /**
-                 * The locked mosaic.
-                 */
-                public readonly mosaic: Mosaic,
-                /**
-                 * The duration for the funds to be released or returned.
-                 */
-                public readonly duration: UInt64,
-                /**
-                 * The hash algorithm, secret is generated with.
-                 */
-                public readonly hashAlgorithm: LockHashAlgorithm,
-                /**
-                 * The proof hashed.
-                 */
-                public readonly secret: string,
-                /**
-                 * The unresolved recipientAddress of the funds.
-                 */
-                public readonly recipientAddress: Address | NamespaceId,
-                signature?: string,
-                signer?: PublicAccount,
-                transactionInfo?: TransactionInfo) {
+    constructor(
+        networkType: NetworkType,
+        version: number,
+        deadline: Deadline,
+        maxFee: UInt64,
+        /**
+         * The locked mosaic.
+         */
+        public readonly mosaic: Mosaic,
+        /**
+         * The duration for the funds to be released or returned.
+         */
+        public readonly duration: UInt64,
+        /**
+         * The hash algorithm, secret is generated with.
+         */
+        public readonly hashAlgorithm: LockHashAlgorithm,
+        /**
+         * The proof hashed.
+         */
+        public readonly secret: string,
+        /**
+         * The unresolved recipientAddress of the funds.
+         */
+        public readonly recipientAddress: Address | NamespaceId,
+        signature?: string,
+        signer?: PublicAccount,
+        transactionInfo?: TransactionInfo,
+    ) {
         super(TransactionType.SECRET_LOCK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
         if (!LockHashAlgorithmLengthValidator(hashAlgorithm, this.secret)) {
             throw new Error('HashAlgorithm and Secret have incompatible length or not hexadecimal string');
@@ -135,15 +138,14 @@ export class SecretLockTransaction extends Transaction {
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedSecretLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            SecretLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+        const builder = isEmbedded
+            ? EmbeddedSecretLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : SecretLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = SecretLockTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
-                (builder as SecretLockTransactionBuilder).getDeadline().timestamp),
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as SecretLockTransactionBuilder).getDeadline().timestamp),
             new Mosaic(
                 UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getMosaic().mosaicId.unresolvedMosaicId).toHex()),
                 new UInt64(builder.getMosaic().amount.amount),
@@ -155,8 +157,7 @@ export class SecretLockTransaction extends Transaction {
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as SecretLockTransactionBuilder).fee.amount),
         );
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**
@@ -207,8 +208,7 @@ export class SecretLockTransaction extends Transaction {
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
             new Hash256Dto(this.getSecretByte()),
-            new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id.toDTO()),
-                                                   new AmountDto(this.mosaic.amount.toDTO())),
+            new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id.toDTO()), new AmountDto(this.mosaic.amount.toDTO())),
             new BlockDurationDto(this.duration.toDTO()),
             this.hashAlgorithm.valueOf(),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
@@ -227,8 +227,7 @@ export class SecretLockTransaction extends Transaction {
             this.networkType.valueOf(),
             TransactionType.SECRET_LOCK.valueOf(),
             new Hash256Dto(this.getSecretByte()),
-            new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id.toDTO()),
-                                                   new AmountDto(this.mosaic.amount.toDTO())),
+            new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id.toDTO()), new AmountDto(this.mosaic.amount.toDTO())),
             new BlockDurationDto(this.duration.toDTO()),
             this.hashAlgorithm.valueOf(),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
@@ -241,12 +240,21 @@ export class SecretLockTransaction extends Transaction {
      * @param aggregateTransactionIndex Transaction index for aggregated transaction
      * @returns {SecretLockTransaction}
      */
-    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): SecretLockTransaction {
+    resolveAliases(statement: Statement, aggregateTransactionIndex = 0): SecretLockTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
         return DtoMapping.assign(this, {
-            recipientAddress: statement.resolveAddress(this.recipientAddress,
-                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
-            mosaic: statement.resolveMosaic(this.mosaic, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex)});
+            recipientAddress: statement.resolveAddress(
+                this.recipientAddress,
+                transactionInfo.height.toString(),
+                transactionInfo.index,
+                aggregateTransactionIndex,
+            ),
+            mosaic: statement.resolveMosaic(
+                this.mosaic,
+                transactionInfo.height.toString(),
+                transactionInfo.index,
+                aggregateTransactionIndex,
+            ),
+        });
     }
 }

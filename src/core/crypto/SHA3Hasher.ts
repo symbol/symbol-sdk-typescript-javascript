@@ -28,7 +28,7 @@ export class SHA3Hasher {
         const hasher = SHA3Hasher.getHasher(length);
         const hash = hasher.arrayBuffer(data);
         array.copy(dest, array.uint8View(hash));
-    }
+    };
 
     /**
      * Creates a hasher object.
@@ -54,7 +54,7 @@ export class SHA3Hasher {
                 array.copy(result, array.uint8View(hash.arrayBuffer()));
             },
         };
-    }
+    };
 
     /**
      * Get a hasher instance.
@@ -65,6 +65,6 @@ export class SHA3Hasher {
         return {
             32: sha3_256,
             64: sha3_512,
-        } [length];
-    }
+        }[length];
+    };
 }

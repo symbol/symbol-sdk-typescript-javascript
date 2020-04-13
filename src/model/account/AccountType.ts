@@ -21,7 +21,7 @@
  * 3 - Remote harvester eligible account that is unlinked.
  */
 
- export enum AccountType {
+export enum AccountType {
     Unlinked = 0,
     Main = 1,
     Remote = 2,

@@ -54,15 +54,18 @@ export class NamespaceMetadataTransaction extends Transaction {
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {NamespaceMetadataTransaction}
      */
-    public static create(deadline: Deadline,
-                         targetPublicKey: string,
-                         scopedMetadataKey: UInt64,
-                         targetNamespaceId: NamespaceId,
-                         valueSizeDelta: number,
-                         value: string,
-                         networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): NamespaceMetadataTransaction {
-        return new NamespaceMetadataTransaction(networkType,
+    public static create(
+        deadline: Deadline,
+        targetPublicKey: string,
+        scopedMetadataKey: UInt64,
+        targetNamespaceId: NamespaceId,
+        valueSizeDelta: number,
+        value: string,
+        networkType: NetworkType,
+        maxFee: UInt64 = new UInt64([0, 0]),
+    ): NamespaceMetadataTransaction {
+        return new NamespaceMetadataTransaction(
+            networkType,
             TransactionVersion.NAMESPACE_METADATA,
             deadline,
             maxFee,
@@ -70,7 +73,8 @@ export class NamespaceMetadataTransaction extends Transaction {
             scopedMetadataKey,
             targetNamespaceId,
             valueSizeDelta,
-            value);
+            value,
+        );
     }
 
     /**
@@ -87,34 +91,36 @@ export class NamespaceMetadataTransaction extends Transaction {
      * @param signer
      * @param transactionInfo
      */
-    constructor(networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: UInt64,
-                /**
-                 * Public key of the target account.
-                 */
-                public readonly targetPublicKey: string,
-                /**
-                 * Metadata key scoped to source, target and type.
-                 */
-                public readonly scopedMetadataKey: UInt64,
-                /**
-                 * Target namespace identifier.
-                 */
-                public readonly targetNamespaceId: NamespaceId,
-                /**
-                 * Change in value size in bytes.
-                 */
-                public readonly valueSizeDelta: number,
-                /**
-                 * String value with UTF-8 encoding.
-                 * Difference between the previous value and new value.
-                 */
-                public readonly value: string,
-                signature?: string,
-                signer?: PublicAccount,
-                transactionInfo?: TransactionInfo) {
+    constructor(
+        networkType: NetworkType,
+        version: number,
+        deadline: Deadline,
+        maxFee: UInt64,
+        /**
+         * Public key of the target account.
+         */
+        public readonly targetPublicKey: string,
+        /**
+         * Metadata key scoped to source, target and type.
+         */
+        public readonly scopedMetadataKey: UInt64,
+        /**
+         * Target namespace identifier.
+         */
+        public readonly targetNamespaceId: NamespaceId,
+        /**
+         * Change in value size in bytes.
+         */
+        public readonly valueSizeDelta: number,
+        /**
+         * String value with UTF-8 encoding.
+         * Difference between the previous value and new value.
+         */
+        public readonly value: string,
+        signature?: string,
+        signer?: PublicAccount,
+        transactionInfo?: TransactionInfo,
+    ) {
         super(TransactionType.NAMESPACE_METADATA, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
@@ -124,15 +130,16 @@ export class NamespaceMetadataTransaction extends Transaction {
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedNamespaceMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            NamespaceMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+        const builder = isEmbedded
+            ? EmbeddedNamespaceMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : NamespaceMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = NamespaceMetadataTransaction.create(
-            isEmbedded ? Deadline.create() :
-                Deadline.createFromDTO((builder as NamespaceMetadataTransactionBuilder).getDeadline().timestamp),
+            isEmbedded
+                ? Deadline.create()
+                : Deadline.createFromDTO((builder as NamespaceMetadataTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getTargetPublicKey().key),
             new UInt64(builder.getScopedMetadataKey()),
             new NamespaceId(builder.getTargetNamespaceId().namespaceId),
@@ -141,8 +148,7 @@ export class NamespaceMetadataTransaction extends Transaction {
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceMetadataTransactionBuilder).fee.amount),
         );
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**
@@ -161,8 +167,15 @@ export class NamespaceMetadataTransaction extends Transaction {
         const byteValueSizeDelta = 2;
         const byteValueSize = 2;
 
-        return byteSize + targetPublicKey + byteScopedMetadataKey +
-               byteTargetNamespaceId + byteValueSizeDelta + byteValueSize + this.value.length;
+        return (
+            byteSize +
+            targetPublicKey +
+            byteScopedMetadataKey +
+            byteTargetNamespaceId +
+            byteValueSizeDelta +
+            byteValueSize +
+            this.value.length
+        );
     }
 
     /**

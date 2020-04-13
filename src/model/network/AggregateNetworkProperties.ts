@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
- // tslint:disable: max-line-length
 export class AggregateNetworkProperties {
     /**
      * @param maxTransactionsPerAggregate - Maximum number of transactions per aggregate.
@@ -23,10 +22,11 @@ export class AggregateNetworkProperties {
      * @param enableBondedAggregateSupport - Set to true if bonded aggregates should be allowed. Set to false if bonded aggregates should be rejected.
      * @param maxBondedTransactionLifetime - Maximum lifetime a bonded transaction can have before it expires.
      */
-    constructor(public readonly maxTransactionsPerAggregate?: string,
-                public readonly maxCosignaturesPerAggregate?: string,
-                public readonly enableStrictCosignatureCheck?: boolean,
-                public readonly enableBondedAggregateSupport?: boolean,
-                public readonly maxBondedTransactionLifetime?: string) {
-    }
+    constructor(
+        public readonly maxTransactionsPerAggregate?: string,
+        public readonly maxCosignaturesPerAggregate?: string,
+        public readonly enableStrictCosignatureCheck?: boolean,
+        public readonly enableBondedAggregateSupport?: boolean,
+        public readonly maxBondedTransactionLifetime?: string,
+    ) {}
 }

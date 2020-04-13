@@ -16,11 +16,7 @@
 
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import {
-    MosaicAddressRestrictionDTO,
-    MosaicGlobalRestrictionDTO,
-    RestrictionMosaicRoutesApi,
-} from 'symbol-openapi-typescript-node-client';
+import { MosaicAddressRestrictionDTO, MosaicGlobalRestrictionDTO, RestrictionMosaicRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { Address } from '../model/account/Address';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicAddressRestriction } from '../model/restriction/MosaicAddressRestriction';
@@ -49,7 +45,6 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
         super(url);
         this.restrictionMosaicRoutesApi = new RestrictionMosaicRoutesApi(url);
         this.restrictionMosaicRoutesApi.useQuerystring = true;
-
     }
 
     /**
@@ -60,10 +55,9 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
      * @returns Observable<MosaicAddressRestriction>
      */
     getMosaicAddressRestriction(mosaicId: MosaicId, address: Address): Observable<MosaicAddressRestriction> {
-        return observableFrom(
-            this.restrictionMosaicRoutesApi.getMosaicAddressRestriction(mosaicId.toHex(), address.plain())).pipe(
-                map(({body}) => this.toMosaicAddressRestriction(body)),
-                catchError((error) =>  throwError(this.errorHandling(error))),
+        return observableFrom(this.restrictionMosaicRoutesApi.getMosaicAddressRestriction(mosaicId.toHex(), address.plain())).pipe(
+            map(({ body }) => this.toMosaicAddressRestriction(body)),
+            catchError((error) => throwError(this.errorHandling(error))),
         );
     }
 
@@ -78,10 +72,9 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
         const accountIds = {
             addresses: addresses.map((address) => address.plain()),
         };
-        return observableFrom(
-            this.restrictionMosaicRoutesApi.getMosaicAddressRestrictions(mosaicId.toHex(), accountIds)).pipe(
-                map(({body}) => body.map(this.toMosaicAddressRestriction)),
-                catchError((error) =>  throwError(this.errorHandling(error))),
+        return observableFrom(this.restrictionMosaicRoutesApi.getMosaicAddressRestrictions(mosaicId.toHex(), accountIds)).pipe(
+            map(({ body }) => body.map(this.toMosaicAddressRestriction)),
+            catchError((error) => throwError(this.errorHandling(error))),
         );
     }
 
@@ -113,10 +106,9 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
      * @returns Observable<MosaicGlobalRestriction>
      */
     getMosaicGlobalRestriction(mosaicId: MosaicId): Observable<MosaicGlobalRestriction> {
-        return observableFrom(
-            this.restrictionMosaicRoutesApi.getMosaicGlobalRestriction(mosaicId.toHex())).pipe(
-                map(({body}) => this.toMosaicGlobalRestriction(body)),
-                catchError((error) =>  throwError(this.errorHandling(error))),
+        return observableFrom(this.restrictionMosaicRoutesApi.getMosaicGlobalRestriction(mosaicId.toHex())).pipe(
+            map(({ body }) => this.toMosaicGlobalRestriction(body)),
+            catchError((error) => throwError(this.errorHandling(error))),
         );
     }
 
@@ -130,10 +122,9 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
         const mosaicIdsBody = {
             mosaicIds: mosaicIds.map((id) => id.toHex()),
         };
-        return observableFrom(
-            this.restrictionMosaicRoutesApi.getMosaicGlobalRestrictions(mosaicIdsBody)).pipe(
-                map(({body}) => body.map(this.toMosaicGlobalRestriction)),
-                catchError((error) =>  throwError(this.errorHandling(error))),
+        return observableFrom(this.restrictionMosaicRoutesApi.getMosaicGlobalRestrictions(mosaicIdsBody)).pipe(
+            map(({ body }) => body.map(this.toMosaicGlobalRestriction)),
+            catchError((error) => throwError(this.errorHandling(error))),
         );
     }
 
@@ -147,12 +138,15 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
     private toMosaicGlobalRestriction(dto: MosaicGlobalRestrictionDTO): MosaicGlobalRestriction {
         const restirctionItems = new Map<string, MosaicGlobalRestrictionItem>();
         dto.mosaicRestrictionEntry.restrictions.forEach((restriction) =>
-            restirctionItems.set(restriction.key,
+            restirctionItems.set(
+                restriction.key,
                 new MosaicGlobalRestrictionItem(
                     new MosaicId(restriction.restriction.referenceMosaicId),
                     restriction.restriction.restrictionValue,
                     restriction.restriction.restrictionType.valueOf(),
-                )));
+                ),
+            ),
+        );
         return new MosaicGlobalRestriction(
             dto.mosaicRestrictionEntry.compositeHash,
             dto.mosaicRestrictionEntry.entryType.valueOf(),

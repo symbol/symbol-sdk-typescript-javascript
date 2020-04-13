@@ -74,10 +74,9 @@ describe('AccountMetadataTransaction', () => {
 
         const signedTransaction = accountMetadataTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(
-            256,
-            signedTransaction.payload.length,
-        )).to.be.equal('9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6E80300000000000001000A0000000000000000000000');
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6E80300000000000001000A0000000000000000000000',
+        );
     });
 
     describe('size', () => {
@@ -109,7 +108,7 @@ describe('AccountMetadataTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        Object.assign(accountMetadataTransaction, {signer: account.publicAccount});
+        Object.assign(accountMetadataTransaction, { signer: account.publicAccount });
 
         const embedded = accountMetadataTransaction.toEmbeddedTransaction();
 

@@ -66,7 +66,6 @@ describe('BlockHttp', () => {
      */
 
     describe('Setup Test Data', () => {
-
         it('Announce TransferTransaction', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
@@ -110,8 +109,9 @@ describe('BlockHttp', () => {
         });
 
         it('should return block transactions data given height with paginated transactionId', async () => {
-            const transactions = await blockRepository.getBlockTransactions(UInt64.fromUint(1),
-                new QueryParams({ pageSize: 10, id: nextId})).toPromise();
+            const transactions = await blockRepository
+                .getBlockTransactions(UInt64.fromUint(1), new QueryParams({ pageSize: 10, id: nextId }))
+                .toPromise();
             expect(transactions[0].transactionInfo!.id).to.be.equal(firstId);
             expect(transactions.length).to.be.greaterThan(0);
         });
@@ -125,24 +125,32 @@ describe('BlockHttp', () => {
     });
     describe('getMerkleReceipts', () => {
         it('should return Merkle Receipts', async () => {
-            const merkleReceipts = await receiptRepository.getBlockReceipts(chainHeight).pipe(
-                mergeMap((_) => {
-                    return receiptRepository.getMerkleReceipts(chainHeight, _.transactionStatements[0].generateHash());
-                })).toPromise();
+            const merkleReceipts = await receiptRepository
+                .getBlockReceipts(chainHeight)
+                .pipe(
+                    mergeMap((_) => {
+                        return receiptRepository.getMerkleReceipts(chainHeight, _.transactionStatements[0].generateHash());
+                    }),
+                )
+                .toPromise();
             expect(merkleReceipts.merklePath).not.to.be.null;
         });
     });
     describe('getMerkleTransaction', () => {
         it('should return Merkle Transaction', async () => {
-            const merkleTransactionss = await blockRepository.getBlockTransactions(chainHeight).pipe(
-                mergeMap((_) => {
-                    const hash = (_[0].transactionInfo as TransactionInfo).hash;
-                    if (hash) {
-                        return blockRepository.getMerkleTransaction(chainHeight, hash);
-                    }
-                    // If reaching this line, something is not right
-                    throw new Error('Tansacation hash is undefined');
-                })).toPromise();
+            const merkleTransactionss = await blockRepository
+                .getBlockTransactions(chainHeight)
+                .pipe(
+                    mergeMap((_) => {
+                        const hash = (_[0].transactionInfo as TransactionInfo).hash;
+                        if (hash) {
+                            return blockRepository.getMerkleTransaction(chainHeight, hash);
+                        }
+                        // If reaching this line, something is not right
+                        throw new Error('Tansacation hash is undefined');
+                    }),
+                )
+                .toPromise();
             expect(merkleTransactionss.merklePath).not.to.be.null;
         });
     });

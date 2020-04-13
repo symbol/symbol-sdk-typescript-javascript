@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {UInt64} from './UInt64';
+import { UInt64 } from './UInt64';
 
 /**
  * This class is used to define mosaicIds and namespaceIds
@@ -44,7 +44,6 @@ export class Id extends UInt64 {
      * @returns {string}
      */
     private pad(str, maxVal): string {
-        return (str.length < maxVal ? this.pad(`0${str}`, maxVal) : str);
+        return str.length < maxVal ? this.pad(`0${str}`, maxVal) : str;
     }
-
 }

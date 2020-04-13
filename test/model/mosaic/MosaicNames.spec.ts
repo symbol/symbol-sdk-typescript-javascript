@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {MosaicId} from '../../../src/model/mosaic/MosaicId';
+import { expect } from 'chai';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { MosaicNames } from '../../../src/model/mosaic/MosaicNames';
 import { NamespaceName } from '../../../src/model/namespace/NamespaceName';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 
 describe('MosaicNames', () => {
-
     let namespaceName: NamespaceName[];
     let mosaicId: MosaicId;
 

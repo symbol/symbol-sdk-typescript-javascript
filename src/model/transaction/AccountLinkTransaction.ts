@@ -48,17 +48,14 @@ export class AccountLinkTransaction extends Transaction {
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {AccountLinkTransaction}
      */
-    public static create(deadline: Deadline,
-                         remotePublicKey: string,
-                         linkAction: LinkAction,
-                         networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): AccountLinkTransaction {
-        return new AccountLinkTransaction(networkType,
-            TransactionVersion.ACCOUNT_LINK,
-            deadline,
-            maxFee,
-            remotePublicKey,
-            linkAction);
+    public static create(
+        deadline: Deadline,
+        remotePublicKey: string,
+        linkAction: LinkAction,
+        networkType: NetworkType,
+        maxFee: UInt64 = new UInt64([0, 0]),
+    ): AccountLinkTransaction {
+        return new AccountLinkTransaction(networkType, TransactionVersion.ACCOUNT_LINK, deadline, maxFee, remotePublicKey, linkAction);
     }
 
     /**
@@ -72,21 +69,23 @@ export class AccountLinkTransaction extends Transaction {
      * @param signer
      * @param transactionInfo
      */
-    constructor(networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: UInt64,
-                /**
-                 * The public key of the remote account.
-                 */
-                public readonly remotePublicKey: string,
-                /**
-                 * The account link action.
-                 */
-                public readonly linkAction: LinkAction,
-                signature?: string,
-                signer?: PublicAccount,
-                transactionInfo?: TransactionInfo) {
+    constructor(
+        networkType: NetworkType,
+        version: number,
+        deadline: Deadline,
+        maxFee: UInt64,
+        /**
+         * The public key of the remote account.
+         */
+        public readonly remotePublicKey: string,
+        /**
+         * The account link action.
+         */
+        public readonly linkAction: LinkAction,
+        signature?: string,
+        signer?: PublicAccount,
+        transactionInfo?: TransactionInfo,
+    ) {
         super(TransactionType.ACCOUNT_LINK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
@@ -96,10 +95,10 @@ export class AccountLinkTransaction extends Transaction {
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedAccountLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-                        AccountLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+        const builder = isEmbedded
+            ? EmbeddedAccountLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : AccountLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = AccountLinkTransaction.create(
@@ -109,8 +108,7 @@ export class AccountLinkTransaction extends Transaction {
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountLinkTransactionBuilder).fee.amount),
         );
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { Observable, throwError } from 'rxjs';
-import { catchError, mergeMap } from 'rxjs/operators';
-import { MosaicRoutesApi, MosaicIds, AccountIds, MosaicInfoDTO, MosaicDTO } from 'symbol-openapi-typescript-node-client';
+import { Observable } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
+import { AccountIds, MosaicDTO, MosaicIds, MosaicInfoDTO, MosaicRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { Address } from '../model/account/Address';
 import { PublicAccount } from '../model/account/PublicAccount';
 import { MosaicFlags } from '../model/mosaic/MosaicFlags';
@@ -64,8 +64,9 @@ export class MosaicHttp extends Http implements MosaicRepository {
     public getMosaic(mosaicId: MosaicId): Observable<MosaicInfo> {
         return this.networkTypeObservable.pipe(
             mergeMap((networkType) =>
-                this.call(this.mosaicRoutesApi.getMosaic(mosaicId.toHex()), (body) => this.toMosaicInfo(body, networkType))),
-            );
+                this.call(this.mosaicRoutesApi.getMosaic(mosaicId.toHex()), (body) => this.toMosaicInfo(body, networkType)),
+            ),
+        );
     }
 
     /**
@@ -78,7 +79,8 @@ export class MosaicHttp extends Http implements MosaicRepository {
         ids.mosaicIds = mosaicIds.map((id) => id.toHex());
         return this.networkTypeObservable.pipe(
             mergeMap((networkType) =>
-                this.call(this.mosaicRoutesApi.getMosaics(ids), (body) => body.map((b) => this.toMosaicInfo(b, networkType)))),
+                this.call(this.mosaicRoutesApi.getMosaics(ids), (body) => body.map((b) => this.toMosaicInfo(b, networkType))),
+            ),
         );
     }
 
@@ -90,8 +92,10 @@ export class MosaicHttp extends Http implements MosaicRepository {
     public getMosaicsFromAccount(address: Address): Observable<MosaicInfo[]> {
         return this.networkTypeObservable.pipe(
             mergeMap((networkType) =>
-                this.call(this.mosaicRoutesApi.getMosaicsFromAccount(address.plain()),
-                    (body) => body.mosaics.map((b) => this.toMosaicInfoFromMosaicDto(b, networkType)))),
+                this.call(this.mosaicRoutesApi.getMosaicsFromAccount(address.plain()), (body) =>
+                    body.mosaics.map((b) => this.toMosaicInfoFromMosaicDto(b, networkType)),
+                ),
+            ),
         );
     }
 
@@ -105,8 +109,10 @@ export class MosaicHttp extends Http implements MosaicRepository {
         accountIds.addresses = addresses.map((address) => address.plain());
         return this.networkTypeObservable.pipe(
             mergeMap((networkType) =>
-                this.call(this.mosaicRoutesApi.getMosaicsFromAccounts(accountIds),
-                    (body) => body.mosaics.map((b) => this.toMosaicInfoFromMosaicDto(b, networkType)))),
+                this.call(this.mosaicRoutesApi.getMosaicsFromAccounts(accountIds), (body) =>
+                    body.mosaics.map((b) => this.toMosaicInfoFromMosaicDto(b, networkType)),
+                ),
+            ),
         );
     }
 
@@ -119,13 +125,13 @@ export class MosaicHttp extends Http implements MosaicRepository {
     private toMosaicInfo(mosaicInfo: MosaicInfoDTO, networkType: NetworkType): MosaicInfo {
         return new MosaicInfo(
             new MosaicId(mosaicInfo.mosaic.id),
-                UInt64.fromNumericString(mosaicInfo.mosaic.supply),
-                UInt64.fromNumericString(mosaicInfo.mosaic.startHeight),
-                PublicAccount.createFromPublicKey(mosaicInfo.mosaic.ownerPublicKey, networkType),
-                mosaicInfo.mosaic.revision,
-                new MosaicFlags(mosaicInfo.mosaic.flags),
-                mosaicInfo.mosaic.divisibility,
-                UInt64.fromNumericString(mosaicInfo.mosaic.duration),
+            UInt64.fromNumericString(mosaicInfo.mosaic.supply),
+            UInt64.fromNumericString(mosaicInfo.mosaic.startHeight),
+            PublicAccount.createFromPublicKey(mosaicInfo.mosaic.ownerPublicKey, networkType),
+            mosaicInfo.mosaic.revision,
+            new MosaicFlags(mosaicInfo.mosaic.flags),
+            mosaicInfo.mosaic.divisibility,
+            UInt64.fromNumericString(mosaicInfo.mosaic.duration),
         );
     }
 
@@ -138,13 +144,13 @@ export class MosaicHttp extends Http implements MosaicRepository {
     private toMosaicInfoFromMosaicDto(mosaicInfo: MosaicDTO, networkType: NetworkType): MosaicInfo {
         return new MosaicInfo(
             new MosaicId(mosaicInfo.id),
-                UInt64.fromNumericString(mosaicInfo.supply),
-                UInt64.fromNumericString(mosaicInfo.startHeight),
-                PublicAccount.createFromPublicKey(mosaicInfo.ownerPublicKey, networkType),
-                mosaicInfo.revision,
-                new MosaicFlags(mosaicInfo.flags),
-                mosaicInfo.divisibility,
-                UInt64.fromNumericString(mosaicInfo.duration),
+            UInt64.fromNumericString(mosaicInfo.supply),
+            UInt64.fromNumericString(mosaicInfo.startHeight),
+            PublicAccount.createFromPublicKey(mosaicInfo.ownerPublicKey, networkType),
+            mosaicInfo.revision,
+            new MosaicFlags(mosaicInfo.flags),
+            mosaicInfo.divisibility,
+            UInt64.fromNumericString(mosaicInfo.duration),
         );
     }
 }

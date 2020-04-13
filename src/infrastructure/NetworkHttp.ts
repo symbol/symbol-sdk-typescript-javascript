@@ -64,7 +64,6 @@ export class NetworkHttp extends Http implements NetworkRepository {
         this.nodeHttp = new NodeHttp(url);
         this.networkRoutesApi = new NetworkRoutesApi(url);
         this.networkRoutesApi.useQuerystring = true;
-
     }
 
     /**
@@ -92,9 +91,7 @@ export class NetworkHttp extends Http implements NetworkRepository {
      * @summary Get the network properties
      */
     public getNetworkProperties(): Observable<NetworkConfiguration> {
-        return this.call(this.networkRoutesApi.getNetworkProperties(), (body) =>
-            this.mapNetworkConfigurationDto(body),
-        );
+        return this.call(this.networkRoutesApi.getNetworkProperties(), (body) => this.mapNetworkConfigurationDto(body));
     }
 
     /**
@@ -104,10 +101,15 @@ export class NetworkHttp extends Http implements NetworkRepository {
      * @summary Get rental fees information
      */
     public getRentalFees(): Observable<RentalFees> {
-        return this.call(this.networkRoutesApi.getRentalFees(), (body) =>
-            new RentalFees(UInt64.fromNumericString(body.effectiveRootNamespaceRentalFeePerBlock),
-                UInt64.fromNumericString(body.effectiveChildNamespaceRentalFee),
-                UInt64.fromNumericString(body.effectiveMosaicRentalFee)));
+        return this.call(
+            this.networkRoutesApi.getRentalFees(),
+            (body) =>
+                new RentalFees(
+                    UInt64.fromNumericString(body.effectiveRootNamespaceRentalFeePerBlock),
+                    UInt64.fromNumericString(body.effectiveChildNamespaceRentalFee),
+                    UInt64.fromNumericString(body.effectiveMosaicRentalFee),
+                ),
+        );
     }
 
     /**
@@ -117,8 +119,16 @@ export class NetworkHttp extends Http implements NetworkRepository {
      * @summary Get transaction fees information
      */
     public getTransactionFees(): Observable<TransactionFees> {
-        return this.call(this.networkRoutesApi.getTransactionFees(), (body) =>
-            new TransactionFees(body.averageFeeMultiplier, body.medianFeeMultiplier, body.highestFeeMultiplier, body.lowestFeeMultiplier));
+        return this.call(
+            this.networkRoutesApi.getTransactionFees(),
+            (body) =>
+                new TransactionFees(
+                    body.averageFeeMultiplier,
+                    body.medianFeeMultiplier,
+                    body.highestFeeMultiplier,
+                    body.lowestFeeMultiplier,
+                ),
+        );
     }
 
     /**
@@ -127,35 +137,76 @@ export class NetworkHttp extends Http implements NetworkRepository {
      */
     private mapNetworkConfigurationDto(dto: NetworkConfigurationDTO): NetworkConfiguration {
         return new NetworkConfiguration(
-            new NetworkProperties(dto.network.identifier, dto.network.nodeEqualityStrategy,
-                dto.network.publicKey, dto.network.generationHash, dto.network.epochAdjustment),
-            new ChainProperties(dto.chain.enableVerifiableState, dto.chain.enableVerifiableReceipts,
-                dto.chain.currencyMosaicId, dto.chain.harvestingMosaicId, dto.chain.blockGenerationTargetTime,
-                dto.chain.blockTimeSmoothingFactor, dto.chain.importanceGrouping, dto.chain.importanceActivityPercentage,
-                dto.chain.maxRollbackBlocks, dto.chain.maxDifficultyBlocks, dto.chain.defaultDynamicFeeMultiplier,
-                dto.chain.maxTransactionLifetime, dto.chain.maxBlockFutureTime, dto.chain.initialCurrencyAtomicUnits,
-                dto.chain.maxMosaicAtomicUnits, dto.chain.totalChainImportance, dto.chain.minHarvesterBalance,
-                dto.chain.maxHarvesterBalance, dto.chain.harvestBeneficiaryPercentage, dto.chain.blockPruneInterval,
-                dto.chain.maxTransactionsPerBlock),
+            new NetworkProperties(
+                dto.network.identifier,
+                dto.network.nodeEqualityStrategy,
+                dto.network.publicKey,
+                dto.network.generationHash,
+                dto.network.epochAdjustment,
+            ),
+            new ChainProperties(
+                dto.chain.enableVerifiableState,
+                dto.chain.enableVerifiableReceipts,
+                dto.chain.currencyMosaicId,
+                dto.chain.harvestingMosaicId,
+                dto.chain.blockGenerationTargetTime,
+                dto.chain.blockTimeSmoothingFactor,
+                dto.chain.importanceGrouping,
+                dto.chain.importanceActivityPercentage,
+                dto.chain.maxRollbackBlocks,
+                dto.chain.maxDifficultyBlocks,
+                dto.chain.defaultDynamicFeeMultiplier,
+                dto.chain.maxTransactionLifetime,
+                dto.chain.maxBlockFutureTime,
+                dto.chain.initialCurrencyAtomicUnits,
+                dto.chain.maxMosaicAtomicUnits,
+                dto.chain.totalChainImportance,
+                dto.chain.minHarvesterBalance,
+                dto.chain.maxHarvesterBalance,
+                dto.chain.harvestBeneficiaryPercentage,
+                dto.chain.blockPruneInterval,
+                dto.chain.maxTransactionsPerBlock,
+            ),
             new PluginProperties(
                 new AccountLinkNetworkProperties(dto.plugins.accountlink?.dummy),
-                new AggregateNetworkProperties(dto.plugins.aggregate?.maxTransactionsPerAggregate,
-                    dto.plugins.aggregate?.maxCosignaturesPerAggregate, dto.plugins.aggregate?.enableStrictCosignatureCheck,
-                    dto.plugins.aggregate?.enableBondedAggregateSupport, dto.plugins.aggregate?.maxBondedTransactionLifetime),
+                new AggregateNetworkProperties(
+                    dto.plugins.aggregate?.maxTransactionsPerAggregate,
+                    dto.plugins.aggregate?.maxCosignaturesPerAggregate,
+                    dto.plugins.aggregate?.enableStrictCosignatureCheck,
+                    dto.plugins.aggregate?.enableBondedAggregateSupport,
+                    dto.plugins.aggregate?.maxBondedTransactionLifetime,
+                ),
                 new HashLockNetworkProperties(dto.plugins.lockhash?.lockedFundsPerAggregate, dto.plugins.lockhash?.maxHashLockDuration),
-                new SecretLockNetworkProperties(dto.plugins.locksecret?.maxSecretLockDuration, dto.plugins.locksecret?.minProofSize,
-                    dto.plugins.locksecret?.maxProofSize),
+                new SecretLockNetworkProperties(
+                    dto.plugins.locksecret?.maxSecretLockDuration,
+                    dto.plugins.locksecret?.minProofSize,
+                    dto.plugins.locksecret?.maxProofSize,
+                ),
                 new MetadataNetworkProperties(dto.plugins.metadata?.maxValueSize),
-                new MosaicNetworkProperties(dto.plugins.mosaic?.maxMosaicsPerAccount, dto.plugins.mosaic?.maxMosaicDuration,
-                    dto.plugins.mosaic?.maxMosaicDivisibility, dto.plugins.mosaic?.mosaicRentalFeeSinkPublicKey,
-                    dto.plugins.mosaic?.mosaicRentalFee),
-                new MultisigNetworkProperties(dto.plugins.multisig?.maxMultisigDepth, dto.plugins.multisig?.maxCosignatoriesPerAccount,
-                    dto.plugins.multisig?.maxCosignedAccountsPerAccount),
-                new NamespaceNetworkProperties(dto.plugins.namespace?.maxNameSize, dto.plugins.namespace?.maxChildNamespaces,
-                    dto.plugins.namespace?.maxNamespaceDepth, dto.plugins.namespace?.minNamespaceDuration,
-                    dto.plugins.namespace?.maxNamespaceDuration, dto.plugins.namespace?.namespaceGracePeriodDuration,
-                    dto.plugins.namespace?.reservedRootNamespaceNames, dto.plugins.namespace?.namespaceRentalFeeSinkPublicKey,
-                    dto.plugins.namespace?.rootNamespaceRentalFeePerBlock, dto.plugins.namespace?.childNamespaceRentalFee),
+                new MosaicNetworkProperties(
+                    dto.plugins.mosaic?.maxMosaicsPerAccount,
+                    dto.plugins.mosaic?.maxMosaicDuration,
+                    dto.plugins.mosaic?.maxMosaicDivisibility,
+                    dto.plugins.mosaic?.mosaicRentalFeeSinkPublicKey,
+                    dto.plugins.mosaic?.mosaicRentalFee,
+                ),
+                new MultisigNetworkProperties(
+                    dto.plugins.multisig?.maxMultisigDepth,
+                    dto.plugins.multisig?.maxCosignatoriesPerAccount,
+                    dto.plugins.multisig?.maxCosignedAccountsPerAccount,
+                ),
+                new NamespaceNetworkProperties(
+                    dto.plugins.namespace?.maxNameSize,
+                    dto.plugins.namespace?.maxChildNamespaces,
+                    dto.plugins.namespace?.maxNamespaceDepth,
+                    dto.plugins.namespace?.minNamespaceDuration,
+                    dto.plugins.namespace?.maxNamespaceDuration,
+                    dto.plugins.namespace?.namespaceGracePeriodDuration,
+                    dto.plugins.namespace?.reservedRootNamespaceNames,
+                    dto.plugins.namespace?.namespaceRentalFeeSinkPublicKey,
+                    dto.plugins.namespace?.rootNamespaceRentalFeePerBlock,
+                    dto.plugins.namespace?.childNamespaceRentalFee,
+                ),
                 new AccountRestrictionNetworkProperties(dto.plugins.restrictionaccount?.maxAccountRestrictionValues),
                 new MosaicRestrictionNetworkProperties(dto.plugins.restrictionmosaic?.maxMosaicRestrictionValues),
                 new TransferNetworkProperties(dto.plugins.transfer?.maxMessageSize),

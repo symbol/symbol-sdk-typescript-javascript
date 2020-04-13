@@ -34,7 +34,6 @@ import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 
 describe('MetadataHttp', () => {
-
     const address = Address.createFromRawAddress('MCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPR72DYSX');
     const mosaicId = new MosaicId('941299B2B7E1291C');
     const namespaceId = new NamespaceId('some.address');
@@ -84,8 +83,9 @@ describe('MetadataHttp', () => {
     const url = 'http://someHost';
     const response: http.IncomingMessage = mock();
     const metadataRoutesApi: MetadataRoutesApi = mock();
-    const metadataRepository: MetadataRepository = DtoMapping.assign(
-        new MetadataHttp(url), {metadataRoutesApi: instance(metadataRoutesApi)});
+    const metadataRepository: MetadataRepository = DtoMapping.assign(new MetadataHttp(url), {
+        metadataRoutesApi: instance(metadataRoutesApi),
+    });
     before(() => {
         reset(response);
         reset(metadataRoutesApi);
@@ -109,14 +109,21 @@ describe('MetadataHttp', () => {
     }
 
     it('getAccountMetadata', async () => {
-        when(metadataRoutesApi.getAccountMetadata(address.plain(), 1, 'a', '-id')).thenReturn(Promise.resolve({
-            response,
-            body: metadataEntriesDTO,
-        }));
-        const metadatas = await metadataRepository.getAccountMetadata(address, new QueryParams({
-            pageSize: 1,
-            id: 'a',
-        })).toPromise();
+        when(metadataRoutesApi.getAccountMetadata(address.plain(), 1, 'a', '-id')).thenReturn(
+            Promise.resolve({
+                response,
+                body: metadataEntriesDTO,
+            }),
+        );
+        const metadatas = await metadataRepository
+            .getAccountMetadata(
+                address,
+                new QueryParams({
+                    pageSize: 1,
+                    id: 'a',
+                }),
+            )
+            .toPromise();
         expect(metadatas.length).to.be.equals(3);
         assertMetadataInfo(metadatas[0], metadataDTOMosaic);
         assertMetadataInfo(metadatas[1], metadataDTOAddress);
@@ -124,10 +131,12 @@ describe('MetadataHttp', () => {
     });
 
     it('getAccountMetadataByKey', async () => {
-        when(metadataRoutesApi.getAccountMetadataByKey(address.plain(), 'aaa')).thenReturn(Promise.resolve({
-            response,
-            body: metadataEntriesDTO,
-        }));
+        when(metadataRoutesApi.getAccountMetadataByKey(address.plain(), 'aaa')).thenReturn(
+            Promise.resolve({
+                response,
+                body: metadataEntriesDTO,
+            }),
+        );
         const metadatas = await metadataRepository.getAccountMetadataByKey(address, 'aaa').toPromise();
         assertMetadataInfo(metadatas[0], metadataDTOMosaic);
         assertMetadataInfo(metadatas[1], metadataDTOAddress);
@@ -135,23 +144,32 @@ describe('MetadataHttp', () => {
     });
 
     it('getAccountMetadataByKeyAndSender', async () => {
-        when(metadataRoutesApi.getAccountMetadataByKeyAndSender(address.plain(), 'aaa', 'sender')).thenReturn(Promise.resolve({
-            response,
-            body: metadataDTOMosaic,
-        }));
+        when(metadataRoutesApi.getAccountMetadataByKeyAndSender(address.plain(), 'aaa', 'sender')).thenReturn(
+            Promise.resolve({
+                response,
+                body: metadataDTOMosaic,
+            }),
+        );
         const metadata = await metadataRepository.getAccountMetadataByKeyAndSender(address, 'aaa', 'sender').toPromise();
         assertMetadataInfo(metadata, metadataDTOMosaic);
     });
 
     it('getMosaicMetadata', async () => {
-        when(metadataRoutesApi.getMosaicMetadata(mosaicId.toHex(), 1, 'a', '-id')).thenReturn(Promise.resolve({
-            response,
-            body: metadataEntriesDTO,
-        }));
-        const metadatas = await metadataRepository.getMosaicMetadata(mosaicId, new QueryParams({
-            pageSize: 1,
-            id: 'a',
-        })).toPromise();
+        when(metadataRoutesApi.getMosaicMetadata(mosaicId.toHex(), 1, 'a', '-id')).thenReturn(
+            Promise.resolve({
+                response,
+                body: metadataEntriesDTO,
+            }),
+        );
+        const metadatas = await metadataRepository
+            .getMosaicMetadata(
+                mosaicId,
+                new QueryParams({
+                    pageSize: 1,
+                    id: 'a',
+                }),
+            )
+            .toPromise();
         expect(metadatas.length).to.be.equals(3);
         assertMetadataInfo(metadatas[0], metadataDTOMosaic);
         assertMetadataInfo(metadatas[1], metadataDTOAddress);
@@ -159,10 +177,12 @@ describe('MetadataHttp', () => {
     });
 
     it('getMosaicMetadataByKey', async () => {
-        when(metadataRoutesApi.getMosaicMetadataByKey(mosaicId.toHex(), 'aaa')).thenReturn(Promise.resolve({
-            response,
-            body: metadataEntriesDTO,
-        }));
+        when(metadataRoutesApi.getMosaicMetadataByKey(mosaicId.toHex(), 'aaa')).thenReturn(
+            Promise.resolve({
+                response,
+                body: metadataEntriesDTO,
+            }),
+        );
         const metadatas = await metadataRepository.getMosaicMetadataByKey(mosaicId, 'aaa').toPromise();
         assertMetadataInfo(metadatas[0], metadataDTOMosaic);
         assertMetadataInfo(metadatas[1], metadataDTOAddress);
@@ -170,23 +190,32 @@ describe('MetadataHttp', () => {
     });
 
     it('getMosaicMetadataByKeyAndSender', async () => {
-        when(metadataRoutesApi.getMosaicMetadataByKeyAndSender(mosaicId.toHex(), 'aaa', 'sender')).thenReturn(Promise.resolve({
-            response,
-            body: metadataDTOMosaic,
-        }));
+        when(metadataRoutesApi.getMosaicMetadataByKeyAndSender(mosaicId.toHex(), 'aaa', 'sender')).thenReturn(
+            Promise.resolve({
+                response,
+                body: metadataDTOMosaic,
+            }),
+        );
         const metadata = await metadataRepository.getMosaicMetadataByKeyAndSender(mosaicId, 'aaa', 'sender').toPromise();
         assertMetadataInfo(metadata, metadataDTOMosaic);
     });
 
     it('getNamespaceMetadata', async () => {
-        when(metadataRoutesApi.getNamespaceMetadata(namespaceId.toHex(), 2, 'a', '-id')).thenReturn(Promise.resolve({
-            response,
-            body: metadataEntriesDTO,
-        }));
-        const metadatas = await metadataRepository.getNamespaceMetadata(namespaceId, new QueryParams({
-            pageSize: 2,
-            id: 'a',
-        })).toPromise();
+        when(metadataRoutesApi.getNamespaceMetadata(namespaceId.toHex(), 2, 'a', '-id')).thenReturn(
+            Promise.resolve({
+                response,
+                body: metadataEntriesDTO,
+            }),
+        );
+        const metadatas = await metadataRepository
+            .getNamespaceMetadata(
+                namespaceId,
+                new QueryParams({
+                    pageSize: 2,
+                    id: 'a',
+                }),
+            )
+            .toPromise();
         expect(metadatas.length).to.be.equals(3);
         assertMetadataInfo(metadatas[0], metadataDTOMosaic);
         assertMetadataInfo(metadatas[1], metadataDTOAddress);
@@ -194,10 +223,12 @@ describe('MetadataHttp', () => {
     });
 
     it('getNamespaceMetadataByKey', async () => {
-        when(metadataRoutesApi.getNamespaceMetadataByKey(namespaceId.toHex(), 'bbb')).thenReturn(Promise.resolve({
-            response,
-            body: metadataEntriesDTO,
-        }));
+        when(metadataRoutesApi.getNamespaceMetadataByKey(namespaceId.toHex(), 'bbb')).thenReturn(
+            Promise.resolve({
+                response,
+                body: metadataEntriesDTO,
+            }),
+        );
         const metadatas = await metadataRepository.getNamespaceMetadataByKey(namespaceId, 'bbb').toPromise();
         assertMetadataInfo(metadatas[0], metadataDTOMosaic);
         assertMetadataInfo(metadatas[1], metadataDTOAddress);
@@ -205,12 +236,13 @@ describe('MetadataHttp', () => {
     });
 
     it('getNamespaceMetadataByKeyAndSender', async () => {
-        when(metadataRoutesApi.getNamespaceMetadataByKeyAndSender(namespaceId.toHex(), 'cccc', 'sender1')).thenReturn(Promise.resolve({
-            response,
-            body: metadataDTOMosaic,
-        }));
+        when(metadataRoutesApi.getNamespaceMetadataByKeyAndSender(namespaceId.toHex(), 'cccc', 'sender1')).thenReturn(
+            Promise.resolve({
+                response,
+                body: metadataDTOMosaic,
+            }),
+        );
         const metadata = await metadataRepository.getNamespaceMetadataByKeyAndSender(namespaceId, 'cccc', 'sender1').toPromise();
         assertMetadataInfo(metadata, metadataDTOMosaic);
     });
-
 });

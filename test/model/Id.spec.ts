@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {Id} from '../../src/model/Id';
+import { expect } from 'chai';
+import { Id } from '../../src/model/Id';
 
 describe('Id', () => {
     describe('toHex()', () => {

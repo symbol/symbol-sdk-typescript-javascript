@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {EmptyMessage, PlainMessage} from '../../../src/model/message/PlainMessage';
+import { expect } from 'chai';
+import { EmptyMessage, PlainMessage } from '../../../src/model/message/PlainMessage';
 
 describe('PlainMessage', () => {
-
     it('should createComplete an empty message', () => {
         expect(EmptyMessage.payload).to.be.equal('');
     });
@@ -35,7 +34,7 @@ describe('PlainMessage', () => {
         expect(message.payload).to.be.equal('test-message');
     });
 
-    it('should decode hex message', ()  => {
+    it('should decode hex message', () => {
         const hexMessage = '746573742D6D657373616765';
         const decodedMessage = PlainMessage.decodeHex(hexMessage);
         expect(decodedMessage).to.be.equal('test-message');

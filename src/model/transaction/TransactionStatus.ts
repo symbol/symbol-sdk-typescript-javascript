@@ -15,14 +15,13 @@
  */
 
 import { TransactionStateTypeEnum, TransactionStatusTypeEnum } from 'symbol-openapi-typescript-node-client';
-import {UInt64} from '../UInt64';
-import {Deadline} from './Deadline';
+import { UInt64 } from '../UInt64';
+import { Deadline } from './Deadline';
 
 /**
  * Transaction status contains basic of a transaction announced to the blockchain.
  */
 export class TransactionStatus {
-
     /**
      * @param group
      * @param code
@@ -31,24 +30,25 @@ export class TransactionStatus {
      * @param height
      */
     constructor(
-                /**
-                 * The transaction status group "failed", "unconfirmed", "confirmed", etc...
-                 */
-                public readonly group: TransactionStateTypeEnum,
-                /**
-                 * The transaction hash.
-                 */
-                public readonly hash: string,
-                /**
-                 * The transaction deadline.
-                 */
-                public readonly deadline: Deadline,
-                /**
-                 * The transaction status code being the error name in case of failure and success otherwise.
-                 */
-                public readonly code?: TransactionStatusTypeEnum,
-                /**
-                 * The height of the block at which it was confirmed or rejected.
-                 */
-                public readonly height?: UInt64) {}
+        /**
+         * The transaction status group "failed", "unconfirmed", "confirmed", etc...
+         */
+        public readonly group: TransactionStateTypeEnum,
+        /**
+         * The transaction hash.
+         */
+        public readonly hash: string,
+        /**
+         * The transaction deadline.
+         */
+        public readonly deadline: Deadline,
+        /**
+         * The transaction status code being the error name in case of failure and success otherwise.
+         */
+        public readonly code?: TransactionStatusTypeEnum,
+        /**
+         * The height of the block at which it was confirmed or rejected.
+         */
+        public readonly height?: UInt64,
+    ) {}
 }

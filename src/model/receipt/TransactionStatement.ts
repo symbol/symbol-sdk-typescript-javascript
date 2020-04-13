@@ -29,7 +29,6 @@ import { ReceiptVersion } from './ReceiptVersion';
  * - Artifact Expiry: An artifact (e.g. namespace, mosaic) expired.
  */
 export class TransactionStatement {
-
     /**
      * Receipt - transaction statement object
      * @param height - The block height
@@ -37,19 +36,19 @@ export class TransactionStatement {
      * @param receipts - The array of receipt headers.
      */
     constructor(
-                /**
-                 * The block height.
-                 */
-                public readonly height: UInt64,
-                /**
-                 * The receipt source.
-                 */
-                public readonly source: ReceiptSource,
-                /**
-                 * The array of receipt headers.
-                 */
-                public readonly receipts: Receipt[]) {
-    }
+        /**
+         * The block height.
+         */
+        public readonly height: UInt64,
+        /**
+         * The receipt source.
+         */
+        public readonly source: ReceiptSource,
+        /**
+         * The array of receipt headers.
+         */
+        public readonly receipts: Receipt[],
+    ) {}
 
     /**
      * Generate receipt hash

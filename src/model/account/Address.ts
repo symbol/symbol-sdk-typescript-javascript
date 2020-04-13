@@ -26,11 +26,9 @@ export class Address {
      * @param networkType - The NEM network type.
      * @returns {Address}
      */
-    public static createFromPublicKey(publicKey: string,
-                                      networkType: NetworkType): Address {
+    public static createFromPublicKey(publicKey: string, networkType: NetworkType): Address {
         const publicKeyUint8 = Convert.hexToUint8(publicKey);
-        const address = RawAddress
-        .addressToString(RawAddress.publicKeyToAddress(publicKeyUint8, networkType));
+        const address = RawAddress.addressToString(RawAddress.publicKeyToAddress(publicKeyUint8, networkType));
         return new Address(address, networkType);
     }
 
@@ -42,10 +40,7 @@ export class Address {
      */
     public static createFromRawAddress(rawAddress: string): Address {
         let networkType: NetworkType;
-        const addressTrimAndUpperCase: string = rawAddress
-        .trim()
-        .toUpperCase()
-        .replace(/-/g, '');
+        const addressTrimAndUpperCase: string = rawAddress.trim().toUpperCase().replace(/-/g, '');
         if (addressTrimAndUpperCase.length !== 40) {
             throw new Error('Address ' + addressTrimAndUpperCase + ' has to be 40 characters long');
         }
@@ -69,8 +64,7 @@ export class Address {
      * @return {Address}
      */
     public static createFromEncoded(encoded: string): Address {
-        return Address.createFromRawAddress(RawAddress
-        .addressToString(Convert.hexToUint8(encoded)));
+        return Address.createFromRawAddress(RawAddress.addressToString(Convert.hexToUint8(encoded)));
     }
 
     /**
@@ -85,7 +79,7 @@ export class Address {
         } catch (err) {
             return false;
         }
-    }
+    };
 
     /**
      * Determines the validity of an encoded address string.
@@ -99,22 +93,23 @@ export class Address {
         } catch (err) {
             return false;
         }
-    }
+    };
 
     /**
      * @internal
      * @param address
      * @param networkType
      */
-    private constructor(/**
-                         * The address value.
-                         */
-                        private readonly address: string,
-                        /**
-                         * The NEM network type.
-                         */
-                        public readonly networkType: NetworkType) {
-    }
+    private constructor(
+        /**
+         * The address value.
+         */
+        private readonly address: string,
+        /**
+         * The NEM network type.
+         */
+        public readonly networkType: NetworkType,
+    ) {}
 
     /**
      * Get address in plain format ex: SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3.

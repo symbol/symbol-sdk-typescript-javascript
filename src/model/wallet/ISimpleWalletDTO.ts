@@ -21,13 +21,13 @@ export interface ISimpleWalletDTO {
     name: string;
     network: number;
     address: {
-        address: string
-        networkType: number,
+        address: string;
+        networkType: number;
     };
     creationDate: string;
     schema: string;
     encryptedPrivateKey: {
-        encryptedKey: string
-        iv: string,
+        encryptedKey: string;
+        iv: string;
     };
 }

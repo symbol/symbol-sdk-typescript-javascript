@@ -47,10 +47,10 @@ import { TransferTransaction } from '../../model/transaction/TransferTransaction
  * @returns {Transaction | InnerTransaction}
  * @constructor
  */
-export const CreateTransactionFromPayload = (payload: string,
-                                             isEmbedded = false): Transaction | InnerTransaction => {
-    const transactionBuilder = isEmbedded ? EmbeddedTransactionBuilder.loadFromBinary(convert.hexToUint8(payload)) :
-        TransactionBuilder.loadFromBinary(convert.hexToUint8(payload));
+export const CreateTransactionFromPayload = (payload: string, isEmbedded = false): Transaction | InnerTransaction => {
+    const transactionBuilder = isEmbedded
+        ? EmbeddedTransactionBuilder.loadFromBinary(convert.hexToUint8(payload))
+        : TransactionBuilder.loadFromBinary(convert.hexToUint8(payload));
     const type = transactionBuilder.getType().valueOf();
     switch (type) {
         case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
@@ -64,7 +64,7 @@ export const CreateTransactionFromPayload = (payload: string,
                 case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
                     return AccountOperationRestrictionTransaction.createFromPayload(payload, isEmbedded);
             }
-            throw new Error ('Account restriction transaction type not recognised.');
+            throw new Error('Account restriction transaction type not recognised.');
         case TransactionType.ACCOUNT_LINK:
             return AccountLinkTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.ADDRESS_ALIAS:
@@ -101,6 +101,6 @@ export const CreateTransactionFromPayload = (payload: string,
         case TransactionType.AGGREGATE_BONDED:
             return AggregateTransaction.createFromPayload(payload);
         default:
-            throw new Error ('Transaction type not implemented yet.');
-        }
+            throw new Error('Transaction type not implemented yet.');
+    }
 };

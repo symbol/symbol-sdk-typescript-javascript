@@ -23,5 +23,5 @@
 export enum MessageType {
     PlainMessage = 0x00,
     EncryptedMessage = 0x01,
-    PersistentHarvestingDelegationMessage = 0xFE,
+    PersistentHarvestingDelegationMessage = 0xfe,
 }

@@ -26,7 +26,6 @@ describe('MerkleHashBuilder should', () => {
         const rootHash = builder.getRootHash();
 
         expect(Convert.uint8ToHex(rootHash)).equal('0000000000000000000000000000000000000000000000000000000000000000');
-
     });
 
     it('return first hash given single child', () => {
@@ -38,7 +37,6 @@ describe('MerkleHashBuilder should', () => {
         const rootHash = builder.getRootHash();
 
         expect(Convert.uint8ToHex(rootHash)).equal('215B158F0BD416B596271BCE527CD9DC8E4A639CC271D896F9156AF6F441EEB9');
-
     });
 
     it('create correct merkle hash given two children', () => {
@@ -51,7 +49,6 @@ describe('MerkleHashBuilder should', () => {
         const rootHash = builder.getRootHash();
 
         expect(Convert.uint8ToHex(rootHash).toLocaleLowerCase()).equal('1c704e3ac99b124f92d2648649ec72c7a19ea4e2bb24f669b976180a295876fa');
-
     });
 
     it('create correct merkle hash given three children', () => {
@@ -65,7 +62,5 @@ describe('MerkleHashBuilder should', () => {
         const rootHash = builder.getRootHash();
 
         expect(Convert.uint8ToHex(rootHash).toLocaleLowerCase()).equal('5dc17b2409d50bcc7c1faa720d0ec8b79a1705d0c517bcc0bdbd316540974d5e');
-
     });
-
 });

@@ -23,7 +23,6 @@ import { MosaicId } from './MosaicId';
  * The mosaic info structure describes a mosaic.
  */
 export class MosaicInfo {
-
     /**
      * @param id
      * @param supply
@@ -35,40 +34,39 @@ export class MosaicInfo {
      * @param duration
      */
     constructor(
-                /**
-                 * The mosaic id.
-                 */
-                public readonly id: MosaicId,
-                /**
-                 * The mosaic supply.
-                 */
-                public readonly supply: UInt64,
-                /**
-                 * The block height were mosaic was created.
-                 */
-                public readonly height: UInt64,
-                /**
-                 * The public key of the mosaic creator.
-                 */
-                public readonly owner: PublicAccount,
-                /**
-                 * The mosaic revision
-                 */
-                public readonly revision: number,
-                /**
-                 * The mosaic flags.
-                 */
-                public readonly flags: MosaicFlags,
-                /**
-                 * Mosaic divisibility
-                 */
-                public readonly divisibility: number,
-                /**
-                 * Mosaic duration
-                 */
-                public readonly duration: UInt64,
-            ) {
-    }
+        /**
+         * The mosaic id.
+         */
+        public readonly id: MosaicId,
+        /**
+         * The mosaic supply.
+         */
+        public readonly supply: UInt64,
+        /**
+         * The block height were mosaic was created.
+         */
+        public readonly height: UInt64,
+        /**
+         * The public key of the mosaic creator.
+         */
+        public readonly owner: PublicAccount,
+        /**
+         * The mosaic revision
+         */
+        public readonly revision: number,
+        /**
+         * The mosaic flags.
+         */
+        public readonly flags: MosaicFlags,
+        /**
+         * Mosaic divisibility
+         */
+        public readonly divisibility: number,
+        /**
+         * Mosaic duration
+         */
+        public readonly duration: UInt64,
+    ) {}
 
     /**
      * Is mosaic supply mutable

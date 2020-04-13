@@ -21,21 +21,19 @@ import { MetadataEntry } from './MetadataEntry';
  * Mosaics can be transferred by means of a transfer transaction.
  */
 export class Metadata {
-
     /**
      * Constructor
      * @param id - The metadata id
      * @param metadataEntry - The metadata entry
      */
     constructor(
-                /**
-                 * The metadata id
-                 */
-                public readonly id: string,
-                /**
-                 * The metadata entry
-                 */
-                public readonly metadataEntry: MetadataEntry) {
-
-    }
+        /**
+         * The metadata id
+         */
+        public readonly id: string,
+        /**
+         * The metadata entry
+         */
+        public readonly metadataEntry: MetadataEntry,
+    ) {}
 }

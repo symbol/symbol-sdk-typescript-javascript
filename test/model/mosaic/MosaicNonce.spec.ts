@@ -18,7 +18,6 @@ import { expect } from 'chai';
 import { MosaicNonce } from '../../../src/model/mosaic/MosaicNonce';
 
 describe('MosaicNonce', () => {
-
     it('should be created from Uint8Array', () => {
         const nonce = new MosaicNonce(new Uint8Array([0, 0, 0, 0]));
         deepEqual(nonce.toDTO(), 0);

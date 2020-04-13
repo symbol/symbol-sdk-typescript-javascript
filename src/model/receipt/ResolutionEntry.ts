@@ -25,22 +25,21 @@ import { ReceiptSource } from './ReceiptSource';
  * The receipt source object.
  */
 export class ResolutionEntry {
-
     /**
      * @constructor
      * @param resolved - A resolved address or resolved mosaicId (alias).
      * @param source - The receipt source.
      */
     constructor(
-                /**
-                 * A resolved address or resolved mosaicId (alias).
-                 */
-                public readonly resolved: Address | MosaicId,
-                /**
-                 * The receipt source.
-                 */
-                public readonly source: ReceiptSource) {
-    }
+        /**
+         * A resolved address or resolved mosaicId (alias).
+         */
+        public readonly resolved: Address | MosaicId,
+        /**
+         * The receipt source.
+         */
+        public readonly source: ReceiptSource,
+    ) {}
 
     /**
      * @internal
@@ -48,13 +47,13 @@ export class ResolutionEntry {
      * @return {Uint8Array}
      */
     public serialize(): Uint8Array {
-      let resolvedBytes: Uint8Array;
-      if (this.resolved instanceof Address) {
-        resolvedBytes = RawAddress.stringToAddress((this.resolved as Address).plain());
-      } else {
-        resolvedBytes = GeneratorUtils.uint64ToBuffer(UInt64.fromHex((this.resolved as MosaicId).toHex()).toDTO());
-      }
-      const sourceBytes = this.source.serialize();
-      return GeneratorUtils.concatTypedArrays(resolvedBytes, sourceBytes);
+        let resolvedBytes: Uint8Array;
+        if (this.resolved instanceof Address) {
+            resolvedBytes = RawAddress.stringToAddress((this.resolved as Address).plain());
+        } else {
+            resolvedBytes = GeneratorUtils.uint64ToBuffer(UInt64.fromHex((this.resolved as MosaicId).toHex()).toDTO());
+        }
+        const sourceBytes = this.source.serialize();
+        return GeneratorUtils.concatTypedArrays(resolvedBytes, sourceBytes);
     }
 }

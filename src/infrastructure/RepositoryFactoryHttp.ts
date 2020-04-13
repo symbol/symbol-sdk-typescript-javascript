@@ -53,7 +53,6 @@ import { TransactionRepository } from './TransactionRepository';
  *
  */
 export class RepositoryFactoryHttp implements RepositoryFactory {
-
     private readonly url: string;
     private readonly networkType: Observable<NetworkType>;
     private readonly generationHash: Observable<string>;
@@ -67,8 +66,12 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     constructor(url: string, networkType?: NetworkType, generationHash?: string) {
         this.url = url;
         this.networkType = networkType ? observableOf(networkType) : this.createNetworkRepository().getNetworkType().pipe(shareReplay(1));
-        this.generationHash = generationHash ? observableOf(generationHash) :
-            this.createBlockRepository().getBlockByHeight(UInt64.fromUint(1)).pipe(map((b) => b.generationHash)).pipe(shareReplay(1));
+        this.generationHash = generationHash
+            ? observableOf(generationHash)
+            : this.createBlockRepository()
+                  .getBlockByHeight(UInt64.fromUint(1))
+                  .pipe(map((b) => b.generationHash))
+                  .pipe(shareReplay(1));
     }
 
     createAccountRepository(): AccountRepository {

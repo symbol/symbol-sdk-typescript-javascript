@@ -41,10 +41,14 @@ describe('MosaicMetadataTransaction', () => {
     const resolvedMosaicId = new MosaicId('0DC67FBE1CAD29E5');
     before(() => {
         account = TestingAccount;
-        statement = new Statement([],
+        statement = new Statement(
             [],
-            [new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromUint(2), unresolvedMosaicId,
-                [new ResolutionEntry(resolvedMosaicId, new ReceiptSource(1, 0))])],
+            [],
+            [
+                new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromUint(2), unresolvedMosaicId, [
+                    new ResolutionEntry(resolvedMosaicId, new ReceiptSource(1, 0)),
+                ]),
+            ],
         );
     });
 
@@ -92,11 +96,10 @@ describe('MosaicMetadataTransaction', () => {
 
         const signedTransaction = mosaicMetadataTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(
-            256,
-            signedTransaction.payload.length,
-        )).to.be.equal('9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8' +
-                       '787B6E8030000000000004CCCD78612DDF5CA01000A0000000000000000000000');
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8' +
+                '787B6E8030000000000004CCCD78612DDF5CA01000A0000000000000000000000',
+        );
     });
 
     it('should create and sign an MosaicMetadataTransaction object using alias', () => {
@@ -113,11 +116,10 @@ describe('MosaicMetadataTransaction', () => {
 
         const signedTransaction = mosaicMetadataTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(
-            256,
-            signedTransaction.payload.length,
-        )).to.be.equal('9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA878' +
-                       '7B6E803000000000000C51FB4C93FCA509501000A0000000000000000000000');
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA878' +
+                '7B6E803000000000000C51FB4C93FCA509501000A0000000000000000000000',
+        );
     });
 
     describe('size', () => {
@@ -133,7 +135,6 @@ describe('MosaicMetadataTransaction', () => {
             );
             expect(mosaicMetadataTransaction.size).to.be.equal(190);
             expect(Convert.hexToUint8(mosaicMetadataTransaction.serialize()).length).to.be.equal(mosaicMetadataTransaction.size);
-
         });
     });
 
@@ -147,7 +148,6 @@ describe('MosaicMetadataTransaction', () => {
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
-​
         expect(mosaicMetadataTransaction.maxFee.compact()).to.be.equal(380);
 
         const signedTransaction = mosaicMetadataTransaction.signWith(account, generationHash);
@@ -167,8 +167,8 @@ describe('MosaicMetadataTransaction', () => {
             Convert.uint8ToUtf8(new Uint8Array(10)),
             '',
             account.publicAccount,
-            new TransactionInfo(UInt64.fromUint(2), 0, '')).resolveAliases(statement);
-​
+            new TransactionInfo(UInt64.fromUint(2), 0, ''),
+        ).resolveAliases(statement);
         expect(mosaicMetadataTransaction.targetMosaicId instanceof MosaicId).to.be.true;
         expect((mosaicMetadataTransaction.targetMosaicId as MosaicId).equals(resolvedMosaicId)).to.be.true;
 
@@ -187,7 +187,7 @@ describe('MosaicMetadataTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        Object.assign(mosaicMetadataTransaction, {signer: account.publicAccount});
+        Object.assign(mosaicMetadataTransaction, { signer: account.publicAccount });
 
         const embedded = mosaicMetadataTransaction.toEmbeddedTransaction();
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Crypto} from '../../core/crypto';
+import { Crypto } from '../../core/crypto';
 import { IdGenerator } from '../../core/format';
 
 export class NamespaceMosaicIdGenerator {
@@ -25,14 +25,14 @@ export class NamespaceMosaicIdGenerator {
      */
     public static mosaicId = (nonce: Uint8Array, ownerPublicId: Uint8Array) => {
         return IdGenerator.generateMosaicId(nonce, ownerPublicId);
-    }
+    };
 
     /**
      * @returns random mosaic nonce
      */
     public static generateRandomMosaicNonce = () => {
         return Crypto.randomBytes(4);
-    }
+    };
 
     /**
      * @param {string} namespaceName - The namespace name
@@ -41,7 +41,7 @@ export class NamespaceMosaicIdGenerator {
     public static namespaceId = (namespaceName: string) => {
         const path = IdGenerator.generateNamespacePath(namespaceName);
         return path.length ? IdGenerator.generateNamespacePath(namespaceName)[path.length - 1] : [];
-    }
+    };
     /**
      * @param {string} parentNamespaceName - The parent namespace name
      * @param {string} namespaceName - The namespace name
@@ -50,7 +50,7 @@ export class NamespaceMosaicIdGenerator {
     public static subnamespaceParentId = (parentNamespaceName: string, namespaceName: string) => {
         const path = IdGenerator.generateNamespacePath(`${parentNamespaceName}.${namespaceName}`);
         return IdGenerator.generateNamespacePath(parentNamespaceName)[path.length - 2];
-    }
+    };
 
     /**
      * @param {string} parentNamespaceName - The parent namespace name
@@ -60,6 +60,5 @@ export class NamespaceMosaicIdGenerator {
     public static subnamespaceNamespaceId = (parentNamespaceName: string, namespaceName: string) => {
         const path = IdGenerator.generateNamespacePath(`${parentNamespaceName}.${namespaceName}`);
         return path[path.length - 1];
-    }
-
+    };
 }

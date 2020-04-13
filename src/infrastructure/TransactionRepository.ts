@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import {Observable} from 'rxjs';
-import {CosignatureSignedTransaction} from '../model/transaction/CosignatureSignedTransaction';
-import {SignedTransaction} from '../model/transaction/SignedTransaction';
-import {Transaction} from '../model/transaction/Transaction';
-import {TransactionAnnounceResponse} from '../model/transaction/TransactionAnnounceResponse';
-import {TransactionStatus} from '../model/transaction/TransactionStatus';
+import { Observable } from 'rxjs';
+import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
+import { SignedTransaction } from '../model/transaction/SignedTransaction';
+import { Transaction } from '../model/transaction/Transaction';
+import { TransactionAnnounceResponse } from '../model/transaction/TransactionAnnounceResponse';
+import { TransactionStatus } from '../model/transaction/TransactionStatus';
 
 /**
  * Transaction interface repository.
@@ -27,7 +27,6 @@ import {TransactionStatus} from '../model/transaction/TransactionStatus';
  * @since 1.0
  */
 export interface TransactionRepository {
-
     /**
      * Gets a transaction for a transactionId
      * @param transactionId - Transaction id or hash.

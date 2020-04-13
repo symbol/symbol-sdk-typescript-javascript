@@ -18,17 +18,18 @@ import { UInt64 } from '../UInt64';
  * The node info structure describes basic information of a node.
  */
 export class NodeTime {
-
     /**
      * @param sendTimeStamp
      * @param receiveTimeStamp
      */
-    constructor(/**
-                 * The request send timestamp
-                 */
-                public readonly sendTimeStamp?: UInt64,
-                /**
-                 * The request received timestamp
-                 */
-                public readonly receiveTimeStamp?: UInt64 ) {}
+    constructor(
+        /**
+         * The request send timestamp
+         */
+        public readonly sendTimeStamp?: UInt64,
+        /**
+         * The request received timestamp
+         */
+        public readonly receiveTimeStamp?: UInt64,
+    ) {}
 }

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import {deepEqual} from 'assert';
-import {expect} from 'chai';
-import {PublicAccount} from '../../../src/model/account/PublicAccount';
-import {MosaicId} from '../../../src/model/mosaic/MosaicId';
-import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
-import {NamespaceInfo} from '../../../src/model/namespace/NamespaceInfo';
-import {NetworkType} from '../../../src/model/network/NetworkType';
-import {UInt64} from '../../../src/model/UInt64';
+import { deepEqual } from 'assert';
+import { expect } from 'chai';
+import { PublicAccount } from '../../../src/model/account/PublicAccount';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { NamespaceInfo } from '../../../src/model/namespace/NamespaceInfo';
+import { NetworkType } from '../../../src/model/network/NetworkType';
+import { UInt64 } from '../../../src/model/UInt64';
 
 describe('NamespaceInfo', () => {
     let rootNamespaceDTO;
@@ -42,7 +42,7 @@ describe('NamespaceInfo', () => {
                 parentId: new NamespaceId([0, 0]),
                 startHeight: new UInt64([1, 0]),
                 type: 0,
-                alias: {type: 1, mosaicId: new MosaicId([481110499, 231112638])},
+                alias: { type: 1, mosaicId: new MosaicId([481110499, 231112638]) },
             },
         };
         subNamespaceDTO = {
@@ -54,28 +54,13 @@ describe('NamespaceInfo', () => {
             namespace: {
                 type: 1,
                 depth: 2,
-                level0: new NamespaceId([
-                    3316183705,
-                    3829351378,
-                ]),
-                level1: new NamespaceId([
-                    1781696705,
-                    4157485863,
-                ]),
-                parentId: new NamespaceId([
-                    3316183705,
-                    3829351378,
-                ]),
+                level0: new NamespaceId([3316183705, 3829351378]),
+                level1: new NamespaceId([1781696705, 4157485863]),
+                parentId: new NamespaceId([3316183705, 3829351378]),
                 owner: '846B4439154579A5903B1459C9CF69CB8153F6D0110A7A0ED61DE29AE4810BF2',
-                startHeight: [
-                    795,
-                    0,
-                ],
-                endHeight: [
-                    50795,
-                    0,
-                ],
-                alias: {type: 0},
+                startHeight: [795, 0],
+                endHeight: [50795, 0],
+                alias: { type: 0 },
             },
         };
     });

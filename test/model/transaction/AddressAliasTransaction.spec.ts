@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {Convert} from '../../../src/core/format';
-import {Account} from '../../../src/model/account/Account';
-import {Address} from '../../../src/model/account/Address';
-import {MosaicId} from '../../../src/model/mosaic/MosaicId';
-import {AliasAction} from '../../../src/model/namespace/AliasAction';
-import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
-import {NetworkType} from '../../../src/model/network/NetworkType';
-import {AddressAliasTransaction} from '../../../src/model/transaction/AddressAliasTransaction';
-import {Deadline} from '../../../src/model/transaction/Deadline';
-import {UInt64} from '../../../src/model/UInt64';
-import {TestingAccount} from '../../conf/conf.spec';
+import { expect } from 'chai';
+import { Convert } from '../../../src/core/format';
+import { Account } from '../../../src/model/account/Account';
+import { Address } from '../../../src/model/account/Address';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { AliasAction } from '../../../src/model/namespace/AliasAction';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { NetworkType } from '../../../src/model/network/NetworkType';
+import { AddressAliasTransaction } from '../../../src/model/transaction/AddressAliasTransaction';
+import { Deadline } from '../../../src/model/transaction/Deadline';
+import { UInt64 } from '../../../src/model/UInt64';
+import { TestingAccount } from '../../conf/conf.spec';
 
 describe('AddressAliasTransaction', () => {
     let account: Account;
@@ -83,11 +83,9 @@ describe('AddressAliasTransaction', () => {
 
         const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(
-            256,
-            signedTransaction.payload.length,
-        )).to.be.equal('2AD8FC018D9A49E19050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E14201');
-
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            '2AD8FC018D9A49E19050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E14201',
+        );
     });
 
     describe('size', () => {
@@ -116,7 +114,6 @@ describe('AddressAliasTransaction', () => {
             address,
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
-​
         expect(addressAliasTransaction.maxFee.compact()).to.be.equal(324);
     });
 });

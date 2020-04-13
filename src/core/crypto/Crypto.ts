@@ -18,8 +18,7 @@ import { WalletAlgorithm } from '../../model/wallet/WalletAlgorithm';
 import { Convert as convert } from '../format/Convert';
 import { KeyPair } from './KeyPair';
 import * as utility from './Utilities';
-
-// tslint:disable-next-line: no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const CryptoJS = require('crypto-js');
 export class Crypto {
     /**
@@ -32,7 +31,9 @@ export class Crypto {
      */
     public static toMobileKey = (password, privateKey) => {
         // Errors
-        if (!password || !privateKey) { throw new Error('Missing argument !'); }
+        if (!password || !privateKey) {
+            throw new Error('Missing argument !');
+        }
         // Processing
         const salt = CryptoJS.lib.WordArray.random(256 / 8);
         const key = CryptoJS.PBKDF2(password, salt, {
@@ -47,9 +48,9 @@ export class Crypto {
         // Result
         return {
             encrypted: convert.uint8ToHex(iv) + encrypted.ciphertext,
-            salt:  salt.toString(),
+            salt: salt.toString(),
         };
-    }
+    };
 
     /**
      * Derive a private key from a password using count iterations of SHA3-256
@@ -61,8 +62,12 @@ export class Crypto {
      */
     public static derivePassSha = (password, count) => {
         // Errors
-        if (!password) { throw new Error('Missing argument !'); }
-        if (!count || count <= 0) { throw new Error('Please provide a count number above 0'); }
+        if (!password) {
+            throw new Error('Missing argument !');
+        }
+        if (!count || count <= 0) {
+            throw new Error('Please provide a count number above 0');
+        }
         // Processing
         let data = password;
         for (let i = 0; i < count; ++i) {
@@ -74,7 +79,7 @@ export class Crypto {
         return {
             priv: CryptoJS.enc.Hex.stringify(data),
         };
-    }
+    };
 
     /**
      * Encrypt hex data using a key
@@ -86,7 +91,9 @@ export class Crypto {
      */
     public static encrypt = (data, key) => {
         // Errors
-        if (!data || !key) { throw new Error('Missing argument !'); }
+        if (!data || !key) {
+            throw new Error('Missing argument !');
+        }
         // Processing
         const iv = Crypto.randomBytes(16);
         const encKey = utility.ua2words(key, 32);
@@ -100,7 +107,7 @@ export class Crypto {
             iv,
             key,
         };
-    }
+    };
 
     /**
      * Decrypt data
@@ -111,7 +118,9 @@ export class Crypto {
      */
     public static decrypt = (data) => {
         // Errors
-        if (!data) { throw new Error('Missing argument !'); }
+        if (!data) {
+            throw new Error('Missing argument !');
+        }
         // Processing
         const encKey = utility.ua2words(data.key, 32);
         const encIv = {
@@ -119,7 +128,7 @@ export class Crypto {
         };
         // Result
         return CryptoJS.enc.Hex.stringify(CryptoJS.AES.decrypt(data, encKey, encIv));
-    }
+    };
 
     /**
      * Reveal the private key of an account or derive it from the wallet password
@@ -132,10 +141,13 @@ export class Crypto {
      */
     public static passwordToPrivateKey = (common, walletAccount, algo) => {
         // Errors
-        if (!common || !common.password || !walletAccount || !algo) { throw new Error('Missing argument !'); }
+        if (!common || !common.password || !walletAccount || !algo) {
+            throw new Error('Missing argument !');
+        }
         // Processing
         let r;
-        if (algo === WalletAlgorithm.Pass_6k) { // Brain wallets
+        if (algo === WalletAlgorithm.Pass_6k) {
+            // Brain wallets
             if (!walletAccount.encrypted && !walletAccount.iv) {
                 // Account private key is generated simply using a passphrase so it has no encrypted and iv
                 r = Crypto.derivePassSha(common.password, 6000);
@@ -153,7 +165,8 @@ export class Crypto {
                 const d = Crypto.decrypt(obj);
                 r = { priv: d };
             }
-        } else if (algo === WalletAlgorithm.Pass_bip32) { // Wallets from PRNG
+        } else if (algo === WalletAlgorithm.Pass_bip32) {
+            // Wallets from PRNG
             const pass = Crypto.derivePassSha(common.password, 20);
             const obj = {
                 ciphertext: CryptoJS.enc.Hex.parse(walletAccount.encrypted),
@@ -162,7 +175,8 @@ export class Crypto {
             };
             const d = Crypto.decrypt(obj);
             r = { priv: d };
-        } else if (algo === WalletAlgorithm.Pass_enc) { // Private Key wallets
+        } else if (algo === WalletAlgorithm.Pass_enc) {
+            // Private Key wallets
             const pass = Crypto.derivePassSha(common.password, 20);
             const obj = {
                 ciphertext: CryptoJS.enc.Hex.parse(walletAccount.encrypted),
@@ -171,7 +185,8 @@ export class Crypto {
             };
             const d = Crypto.decrypt(obj);
             r = { priv: d };
-        } else if (algo === WalletAlgorithm.Trezor) { // HW wallet
+        } else if (algo === WalletAlgorithm.Trezor) {
+            // HW wallet
             r = { priv: '' };
             common.isHW = true;
         } else {
@@ -180,7 +195,7 @@ export class Crypto {
         // Result
         common.privateKey = r.priv;
         return true;
-    }
+    };
 
     /**
      * Generate a random key
@@ -189,7 +204,7 @@ export class Crypto {
      */
     public static randomKey = () => {
         return Crypto.randomBytes(32);
-    }
+    };
 
     /**
      * Encode a private key using a password
@@ -201,7 +216,9 @@ export class Crypto {
      */
     public static encodePrivateKey = (privateKey, password) => {
         // Errors
-        if (!privateKey || !password) { throw new Error('Missing argument !'); }
+        if (!privateKey || !password) {
+            throw new Error('Missing argument !');
+        }
         // Processing
         const pass = Crypto.derivePassSha(password, 20);
         const r = Crypto.encrypt(privateKey, convert.hexToUint8(pass.priv));
@@ -210,7 +227,7 @@ export class Crypto {
             ciphertext: CryptoJS.enc.Hex.stringify(r.ciphertext),
             iv: convert.uint8ToHex(r.iv),
         };
-    }
+    };
 
     /***
      * Encode a message, separated from encode() to help testing
@@ -222,12 +239,11 @@ export class Crypto {
      * @param {Uint8Array} salt - A salt
      * @return {string} - The encoded message
      */
-    public static _encode = (senderPriv: string,
-                             recipientPub: string,
-                             msg: string,
-                             iv: Uint8Array): string => {
+    public static _encode = (senderPriv: string, recipientPub: string, msg: string, iv: Uint8Array): string => {
         // Errors
-        if (!senderPriv || !recipientPub || !msg || !iv) { throw new Error('Missing argument !'); }
+        if (!senderPriv || !recipientPub || !msg || !iv) {
+            throw new Error('Missing argument !');
+        }
         // Processing
         const keyPair = KeyPair.createKeyPairFromPrivateKeyString(senderPriv);
         const pk = convert.hexToUint8(recipientPub);
@@ -239,7 +255,7 @@ export class Crypto {
         // Result
         const result = convert.uint8ToHex(iv) + CryptoJS.enc.Hex.stringify(encrypted.ciphertext);
         return result;
-    }
+    };
 
     /**
      * Encode a message
@@ -250,18 +266,17 @@ export class Crypto {
      * @param {boolean} isHexString - Is payload string a hexadecimal string (default = false)
      * @return {string} - The encoded message
      */
-    public static encode = (senderPriv: string,
-                            recipientPub: string,
-                            msg: string,
-                            isHexString: boolean = false): string => {
+    public static encode = (senderPriv: string, recipientPub: string, msg: string, isHexString = false): string => {
         // Errors
-        if (!senderPriv || !recipientPub || !msg) { throw new Error('Missing argument !'); }
+        if (!senderPriv || !recipientPub || !msg) {
+            throw new Error('Missing argument !');
+        }
         // Processing
         const iv = Crypto.randomBytes(16);
         const encoded = Crypto._encode(senderPriv, recipientPub, isHexString ? msg : convert.utf8ToHex(msg), iv);
         // Result
         return encoded;
-    }
+    };
 
     /**
      * Decode an encrypted message payload
@@ -272,12 +287,11 @@ export class Crypto {
      * @param {Uint8Array} iv - 16-byte AES initialization vector
      * @return {string} - The decoded payload as hex
      */
-    public static _decode = (recipientPrivate: string,
-                             senderPublic: string,
-                             payload: Uint8Array,
-                             iv: Uint8Array): string => {
+    public static _decode = (recipientPrivate: string, senderPublic: string, payload: Uint8Array, iv: Uint8Array): string => {
         // Error
-        if (!recipientPrivate || !senderPublic || !payload) { throw new Error('Missing argument !'); }
+        if (!recipientPrivate || !senderPublic || !payload) {
+            throw new Error('Missing argument !');
+        }
         // Processing
         const keyPair = KeyPair.createKeyPairFromPrivateKeyString(recipientPrivate);
         const pk = convert.hexToUint8(senderPublic);
@@ -291,7 +305,7 @@ export class Crypto {
         const plain = CryptoJS.AES.decrypt(encrypted, encKey, encIv);
         // Result
         return CryptoJS.enc.Hex.stringify(plain);
-    }
+    };
 
     /**
      * Decode an encrypted message payload
@@ -301,18 +315,18 @@ export class Crypto {
      * @param {string} payload - An encrypted message payload
      * @return {string} - The decoded payload as hex
      */
-    public static decode = (recipientPrivate: string,
-                            senderPublic: string,
-                            payload: string): string => {
+    public static decode = (recipientPrivate: string, senderPublic: string, payload: string): string => {
         // Error
-        if (!recipientPrivate || !senderPublic || !payload) { throw new Error('Missing argument !'); }
+        if (!recipientPrivate || !senderPublic || !payload) {
+            throw new Error('Missing argument !');
+        }
         // Processing
         const binPayload = convert.hexToUint8(payload);
         const payloadBuffer = new Uint8Array(binPayload.buffer, 16);
         const iv = new Uint8Array(binPayload.buffer, 0, 16);
         const decoded = Crypto._decode(recipientPrivate, senderPublic, payloadBuffer, iv);
         return decoded.toUpperCase();
-    }
+    };
 
     /**
      * Generate random bytes by length
@@ -321,7 +335,8 @@ export class Crypto {
      * @return {Uint8Array}
      */
     public static randomBytes = (length) => {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const crypto = require('crypto');
         return crypto.randomBytes(length);
-    }
+    };
 }

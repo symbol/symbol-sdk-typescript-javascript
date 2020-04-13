@@ -44,7 +44,6 @@ import { TransactionVersion } from './TransactionVersion';
  * This is done via a NamespaceRegistrationTransaction.
  */
 export class NamespaceRegistrationTransaction extends Transaction {
-
     /**
      * Create a root namespace object
      * @param deadline - The deadline to include the transaction.
@@ -54,12 +53,15 @@ export class NamespaceRegistrationTransaction extends Transaction {
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {NamespaceRegistrationTransaction}
      */
-    public static createRootNamespace(deadline: Deadline,
-                                      namespaceName: string,
-                                      duration: UInt64,
-                                      networkType: NetworkType,
-                                      maxFee: UInt64 = new UInt64([0, 0])): NamespaceRegistrationTransaction {
-        return new NamespaceRegistrationTransaction(networkType,
+    public static createRootNamespace(
+        deadline: Deadline,
+        namespaceName: string,
+        duration: UInt64,
+        networkType: NetworkType,
+        maxFee: UInt64 = new UInt64([0, 0]),
+    ): NamespaceRegistrationTransaction {
+        return new NamespaceRegistrationTransaction(
+            networkType,
             TransactionVersion.NAMESPACE_REGISTRATION,
             deadline,
             maxFee,
@@ -79,26 +81,29 @@ export class NamespaceRegistrationTransaction extends Transaction {
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {NamespaceRegistrationTransaction}
      */
-    public static createSubNamespace(deadline: Deadline,
-                                     namespaceName: string,
-                                     parentNamespace: string | NamespaceId,
-                                     networkType: NetworkType,
-                                     maxFee: UInt64 = new UInt64([0, 0])): NamespaceRegistrationTransaction {
+    public static createSubNamespace(
+        deadline: Deadline,
+        namespaceName: string,
+        parentNamespace: string | NamespaceId,
+        networkType: NetworkType,
+        maxFee: UInt64 = new UInt64([0, 0]),
+    ): NamespaceRegistrationTransaction {
         let parentId: NamespaceId;
         if (typeof parentNamespace === 'string') {
             parentId = new NamespaceId(NamespaceMosaicIdGenerator.subnamespaceParentId(parentNamespace, namespaceName));
         } else {
             parentId = parentNamespace;
         }
-        return new NamespaceRegistrationTransaction(networkType,
+        return new NamespaceRegistrationTransaction(
+            networkType,
             TransactionVersion.NAMESPACE_REGISTRATION,
             deadline,
             maxFee,
             NamespaceRegistrationType.SubNamespace,
             namespaceName,
-            typeof parentNamespace === 'string' ?
-                new NamespaceId(NamespaceMosaicIdGenerator.subnamespaceNamespaceId(parentNamespace, namespaceName)) :
-                new NamespaceId(NamespaceMosaicIdGenerator.namespaceId(namespaceName)),
+            typeof parentNamespace === 'string'
+                ? new NamespaceId(NamespaceMosaicIdGenerator.subnamespaceNamespaceId(parentNamespace, namespaceName))
+                : new NamespaceId(NamespaceMosaicIdGenerator.namespaceId(namespaceName)),
             undefined,
             parentId,
         );
@@ -118,34 +123,36 @@ export class NamespaceRegistrationTransaction extends Transaction {
      * @param signer
      * @param transactionInfo
      */
-    constructor(networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: UInt64,
-                /**
-                 * The namespace type could be namespace or sub namespace
-                 */
-                public readonly registrationType: NamespaceRegistrationType,
-                /**
-                 * The namespace name
-                 */
-                public readonly namespaceName: string,
-                /**
-                 * The id of the namespace derived from namespaceName.
-                 * When creating a sub namespace the namespaceId is derived from namespaceName and parentName.
-                 */
-                public readonly namespaceId: NamespaceId,
-                /**
-                 * The number of blocks a namespace is active
-                 */
-                public readonly duration?: UInt64,
-                /**
-                 * The id of the parent sub namespace
-                 */
-                public readonly parentId?: NamespaceId,
-                signature?: string,
-                signer?: PublicAccount,
-                transactionInfo?: TransactionInfo) {
+    constructor(
+        networkType: NetworkType,
+        version: number,
+        deadline: Deadline,
+        maxFee: UInt64,
+        /**
+         * The namespace type could be namespace or sub namespace
+         */
+        public readonly registrationType: NamespaceRegistrationType,
+        /**
+         * The namespace name
+         */
+        public readonly namespaceName: string,
+        /**
+         * The id of the namespace derived from namespaceName.
+         * When creating a sub namespace the namespaceId is derived from namespaceName and parentName.
+         */
+        public readonly namespaceId: NamespaceId,
+        /**
+         * The number of blocks a namespace is active
+         */
+        public readonly duration?: UInt64,
+        /**
+         * The id of the parent sub namespace
+         */
+        public readonly parentId?: NamespaceId,
+        signature?: string,
+        signer?: PublicAccount,
+        transactionInfo?: TransactionInfo,
+    ) {
         super(TransactionType.NAMESPACE_REGISTRATION, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
@@ -155,31 +162,34 @@ export class NamespaceRegistrationTransaction extends Transaction {
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedNamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            NamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+        const builder = isEmbedded
+            ? EmbeddedNamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : NamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const registrationType = builder.getRegistrationType().valueOf();
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
-        const transaction = registrationType === NamespaceRegistrationType.RootNamespace ?
-            NamespaceRegistrationTransaction.createRootNamespace(
-                isEmbedded ? Deadline.create() : Deadline.createFromDTO(
-                    (builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp),
-            Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
-            new UInt64(builder.getDuration()!.blockDuration),
-            networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
-        ) : NamespaceRegistrationTransaction.createSubNamespace(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
-                (builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp),
-            Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
-            new NamespaceId(builder.getParentId()!.namespaceId),
-            networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
-        );
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
+        const transaction =
+            registrationType === NamespaceRegistrationType.RootNamespace
+                ? NamespaceRegistrationTransaction.createRootNamespace(
+                      isEmbedded
+                          ? Deadline.create()
+                          : Deadline.createFromDTO((builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp),
+                      Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
+                      new UInt64(builder.getDuration()!.blockDuration),
+                      networkType,
+                      isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
+                  )
+                : NamespaceRegistrationTransaction.createSubNamespace(
+                      isEmbedded
+                          ? Deadline.create()
+                          : Deadline.createFromDTO((builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp),
+                      Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
+                      new NamespaceId(builder.getParentId()!.namespaceId),
+                      networkType,
+                      isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
+                  );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**

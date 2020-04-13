@@ -20,19 +20,18 @@ import { PositionEnum } from 'symbol-openapi-typescript-node-client/dist/model/p
  * The block merkle path item
  */
 export class MerklePathItem {
-
     /**
      * @param position
      * @param hash
      */
-    constructor(/**
-                 * The position
-                 */
-                public readonly position?: PositionEnum,
-                /**
-                 * The hash
-                 */
-                public readonly hash?: string) {
-
-    }
+    constructor(
+        /**
+         * The position
+         */
+        public readonly position?: PositionEnum,
+        /**
+         * The hash
+         */
+        public readonly hash?: string,
+    ) {}
 }

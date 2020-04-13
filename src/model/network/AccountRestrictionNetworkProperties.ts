@@ -15,10 +15,8 @@
  */
 
 export class AccountRestrictionNetworkProperties {
-
     /**
      * @param maxAccountRestrictionValues - Maximum number of account restriction values.
      */
-    constructor(public readonly maxAccountRestrictionValues?: string) {
-    }
+    constructor(public readonly maxAccountRestrictionValues?: string) {}
 }

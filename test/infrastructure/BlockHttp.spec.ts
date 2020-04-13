@@ -35,7 +35,6 @@ import { Transaction } from '../../src/model/transaction/Transaction';
 import { UInt64 } from '../../src/model/UInt64';
 
 describe('BlockHttp', () => {
-
     const blockDTO = new BlockDTO();
     blockDTO.version = 1;
     blockDTO.network = NetworkTypeEnum.NUMBER_152;
@@ -64,7 +63,9 @@ describe('BlockHttp', () => {
     const url = 'http://someHost';
     const response: http.IncomingMessage = mock();
     const blockRoutesApi: BlockRoutesApi = mock();
-    const blockRepository: BlockRepository = DtoMapping.assign(new BlockHttp(url), {blockRoutesApi: instance(blockRoutesApi)});
+    const blockRepository: BlockRepository = DtoMapping.assign(new BlockHttp(url), {
+        blockRoutesApi: instance(blockRoutesApi),
+    });
 
     const transactionInfoDTO = {
         meta: {
@@ -77,15 +78,15 @@ describe('BlockHttp', () => {
         transaction: {
             deadline: '1000',
             maxFee: '0',
-            signature: '939673209A13FF82397578D22CC96EB8516A6760C894D9B7535E3A1E0680' +
+            signature:
+                '939673209A13FF82397578D22CC96EB8516A6760C894D9B7535E3A1E0680' +
                 '07B9255CFA9A914C97142A7AE18533E381C846B69D2AE0D60D1DC8A55AD120E2B606',
             signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
             minApprovalDelta: 1,
             minRemovalDelta: 1,
             modifications: [
                 {
-                    cosignatoryPublicKey: '589B73FBC22063E9AE6FBAC67CB9C6EA865EF556E5' +
-                        'FB8B7310D45F77C1250B97',
+                    cosignatoryPublicKey: '589B73FBC22063E9AE6FBAC67CB9C6EA865EF556E5' + 'FB8B7310D45F77C1250B97',
                     modificationAction: 0,
                 },
             ],
@@ -128,25 +129,29 @@ describe('BlockHttp', () => {
     }
 
     it('getBlockInfo', async () => {
-        when(blockRoutesApi.getBlockByHeight('1')).thenReturn(Promise.resolve({response, body: blockInfoDto}));
+        when(blockRoutesApi.getBlockByHeight('1')).thenReturn(Promise.resolve({ response, body: blockInfoDto }));
         const blockInfo = await blockRepository.getBlockByHeight(UInt64.fromUint(1)).toPromise();
         assertBlockInfo(blockInfo);
     });
 
     it('getBlocksByHeightWithLimit', async () => {
-        when(blockRoutesApi.getBlocksByHeightWithLimit('2', 10)).thenReturn(Promise.resolve({
-            response,
-            body: [blockInfoDto],
-        }));
+        when(blockRoutesApi.getBlocksByHeightWithLimit('2', 10)).thenReturn(
+            Promise.resolve({
+                response,
+                body: [blockInfoDto],
+            }),
+        );
         const blockInfos = await blockRepository.getBlocksByHeightWithLimit(UInt64.fromUint(2), 10).toPromise();
         assertBlockInfo(blockInfos[0]);
     });
 
     it('getBlockTransactions', async () => {
-        when(blockRoutesApi.getBlockTransactions('2', undefined, undefined, undefined)).thenReturn(Promise.resolve({
-            response,
-            body: [transactionInfoDTO],
-        }));
+        when(blockRoutesApi.getBlockTransactions('2', undefined, undefined, undefined)).thenReturn(
+            Promise.resolve({
+                response,
+                body: [transactionInfoDTO],
+            }),
+        );
         const transactions = await blockRepository.getBlockTransactions(UInt64.fromUint(2)).toPromise();
         assertTransaction(transactions[0]);
     });
@@ -158,13 +163,14 @@ describe('BlockHttp', () => {
         merklePathItemDTO.position = PositionEnum.Left;
         merkleProofInfoDTO.merklePath = [merklePathItemDTO];
 
-        when(blockRoutesApi.getMerkleTransaction('2', 'abc')).thenReturn(Promise.resolve({
-            response,
-            body: merkleProofInfoDTO,
-        }));
+        when(blockRoutesApi.getMerkleTransaction('2', 'abc')).thenReturn(
+            Promise.resolve({
+                response,
+                body: merkleProofInfoDTO,
+            }),
+        );
         const merkleProofInfo = await blockRepository.getMerkleTransaction(UInt64.fromUint(2), 'abc').toPromise();
         expect(merkleProofInfo).to.be.not.null;
         expect(merkleProofInfo.merklePath).to.deep.equals([new MerklePathItem(PositionEnum.Left, 'bbb')]);
     });
-
 });
