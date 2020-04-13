@@ -960,9 +960,6 @@ export default {
           addressObject, new QueryParams({pageSize: 100, order: Order.ASC}),
         ).toPromise()
 
-        // return if no namespace found
-        if (!ownedNamespaces.length) return
-
         // update namespaces in database
         new NamespaceService(this).updateNamespaces(ownedNamespaces)
 
