@@ -41,7 +41,7 @@
                   <option value="mosaic">
                     {{ $t('option_link_mosaic') }}
                   </option>
-                  <option value="address">
+                  <option v-show="assetType === 'namespace'" value="address">
                     {{ $t('option_link_address') }}
                   </option>
                 </select>

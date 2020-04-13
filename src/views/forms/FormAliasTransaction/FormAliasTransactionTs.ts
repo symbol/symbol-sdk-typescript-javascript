@@ -74,6 +74,11 @@ export class FormAliasTransactionTs extends FormTransactionBase {
   @Prop({ default: null }) aliasTarget: MosaicId | Address
   @Prop({ default: null, required: true }) aliasAction: AliasAction
   @Prop({ default: false }) disableSubmit: boolean
+  /**
+   * Type of assets shown in the form alias
+   * @type {string}
+   */
+  @Prop({default: 'namespace'}) assetType: string
 
   /**
    * Alias action

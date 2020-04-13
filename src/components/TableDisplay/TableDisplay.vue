@@ -88,6 +88,7 @@
           :namespace-id="modalFormsProps.namespaceId"
           :alias-target="modalFormsProps.aliasTarget"
           :alias-action="modalFormsProps.aliasAction"
+          :asset-type="assetType"
           @on-confirmation-success="closeModal('aliasTransaction')"
         />
       </template>
