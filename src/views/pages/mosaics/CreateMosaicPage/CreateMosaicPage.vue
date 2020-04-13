@@ -4,9 +4,6 @@
       <FormMosaicDefinitionTransaction />
     </template>
     <template v-slot:form-description>
-      <div class="asset-description-title">
-        {{ $t('mosaic') }}
-      </div>
       <div class="asset-description-sub-title">
         {{ $t('supply') }}
       </div>
@@ -14,16 +11,16 @@
         {{ $t('mosaic_describe_text') }}
       </div>
       <div class="asset-description-emphasis">
-        {{ $t('divisibility_can_not_less_than_0') }}
-      </div>
-      <div class="asset-description-emphasis">
-        {{ $t('divisibility_can_not_more_than_6') }}
+        {{ $t('supply_can_not_less_than_0') }}
       </div>
       <div class="asset-description-sub-title">
         {{ $t('divisibility') }}
       </div>
       <div class="asset-description-emphasis">
-        {{ $t('supply_can_not_less_than_0') }}
+        {{ $t('divisibility_can_not_less_than_0') }}
+      </div>
+      <div class="asset-description-emphasis">
+        {{ $t('divisibility_can_not_more_than_6') }}
       </div>
     </template>
   </AssetFormPageWrap>

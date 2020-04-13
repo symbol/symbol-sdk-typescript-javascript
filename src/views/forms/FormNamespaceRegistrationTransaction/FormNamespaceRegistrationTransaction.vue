@@ -1,10 +1,5 @@
 <template>
   <div>
-    <div>
-      <h1 class="section-title">
-        {{ $t('Namespace_and_Sub_Namespace') }}
-      </h1>
-    </div>
     <FormWrapper>
       <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
         <form onsubmit="event.preventDefault()" class="form-container mt-3 create-namespace-form">
