@@ -14,7 +14,7 @@ module.exports = {
         "@typescript-eslint/interface-name-prefix": "off",
         "@typescript-eslint/camelcase": "off",
         // TODO fix all the warnings
-        "@typescript-eslint/explicit-function-return-type": "error",
+        "@typescript-eslint/explicit-function-return-type": "warn",
         "@typescript-eslint/no-unused-vars": "warn",
         "@typescript-eslint/no-inferrable-types": "warn",
         "@typescript-eslint/no-use-before-define": "warn"
