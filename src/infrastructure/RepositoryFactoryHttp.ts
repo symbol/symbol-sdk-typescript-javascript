@@ -54,7 +54,9 @@ import { TransactionRepository } from './TransactionRepository';
  */
 export class RepositoryFactoryHttp implements RepositoryFactory {
     private readonly url: string;
+
     private readonly networkType: Observable<NetworkType>;
+
     private readonly generationHash: Observable<string>;
 
     /**

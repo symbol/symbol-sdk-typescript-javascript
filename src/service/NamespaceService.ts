@@ -41,17 +41,11 @@ export class NamespaceService {
         return this.namespaceRepository.getNamespace(id).pipe(
             mergeMap((namespaceInfo: NamespaceInfo) =>
                 this.namespaceRepository.getNamespacesName(namespaceInfo.levels).pipe(
-                    map((names) =>
-                        Object.assign(
-                            {
-                                __proto__: Object.getPrototypeOf(namespaceInfo),
-                            },
-                            namespaceInfo,
-                            {
-                                name: this.extractFullNamespace(namespaceInfo, names),
-                            },
-                        ),
-                    ),
+                    map((names) => ({
+                        __proto__: Object.getPrototypeOf(namespaceInfo),
+                        ...namespaceInfo,
+                        name: this.extractFullNamespace(namespaceInfo, names),
+                    })),
                 ),
             ),
         );

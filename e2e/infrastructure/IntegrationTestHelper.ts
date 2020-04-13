@@ -31,23 +31,41 @@ import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 
 export class IntegrationTestHelper {
     public readonly yaml = require('js-yaml');
+
     public apiUrl: string;
+
     public repositoryFactory: RepositoryFactory;
+
     public account: Account;
+
     public account2: Account;
+
     public account3: Account;
+
     public multisigAccount: Account;
+
     public cosignAccount1: Account;
+
     public cosignAccount2: Account;
+
     public cosignAccount3: Account;
+
     public cosignAccount4: Account;
+
     public networkType: NetworkType;
+
     public generationHash: string;
+
     public listener: IListener;
+
     public maxFee: UInt64;
+
     public harvestingAccount: Account;
+
     public transactionService: TransactionService;
+
     public networkCurrencyNamespaceId: NamespaceId;
+
     public networkCurrencyDivisibility: number;
 
     start(): Promise<IntegrationTestHelper> {
@@ -101,18 +119,17 @@ export class IntegrationTestHelper {
                                     `catapult-service-bootstrap generated address could not be loaded from path ${bootstrapPath}. Ignoring and using accounts from network.conf.`,
                                 );
                                 return resolve(this);
-                            } else {
-                                console.log(`catapult-service-bootstrap generated address loaded from path ${bootstrapPath}.`);
-                                const parsedYaml = this.yaml.safeLoad(yamlData);
-                                this.account = this.createAccount(parsedYaml.nemesis_addresses[0]);
-                                this.account2 = this.createAccount(parsedYaml.nemesis_addresses[1]);
-                                this.account3 = this.createAccount(parsedYaml.nemesis_addresses[2]);
-                                this.multisigAccount = this.createAccount(parsedYaml.nemesis_addresses[3]);
-                                this.cosignAccount1 = this.createAccount(parsedYaml.nemesis_addresses[4]);
-                                this.cosignAccount4 = this.createAccount(parsedYaml.nemesis_addresses[5]);
-                                this.harvestingAccount = this.createAccount(parsedYaml.nemesis_addresses_harvesting[0]);
-                                return resolve(this);
                             }
+                            console.log(`catapult-service-bootstrap generated address loaded from path ${bootstrapPath}.`);
+                            const parsedYaml = this.yaml.safeLoad(yamlData);
+                            this.account = this.createAccount(parsedYaml.nemesis_addresses[0]);
+                            this.account2 = this.createAccount(parsedYaml.nemesis_addresses[1]);
+                            this.account3 = this.createAccount(parsedYaml.nemesis_addresses[2]);
+                            this.multisigAccount = this.createAccount(parsedYaml.nemesis_addresses[3]);
+                            this.cosignAccount1 = this.createAccount(parsedYaml.nemesis_addresses[4]);
+                            this.cosignAccount4 = this.createAccount(parsedYaml.nemesis_addresses[5]);
+                            this.harvestingAccount = this.createAccount(parsedYaml.nemesis_addresses_harvesting[0]);
+                            return resolve(this);
                         });
                     },
                     (error) => {

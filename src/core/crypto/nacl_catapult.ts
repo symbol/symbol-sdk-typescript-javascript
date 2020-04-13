@@ -37,99 +37,99 @@ export const gf = (init?) => {
     return r;
 };
 
-const gf0 = gf(),
-    gf1 = gf([1]),
-    _121665 = gf([0xdb41, 1]),
-    D = gf([
-        0x78a3,
-        0x1359,
-        0x4dca,
-        0x75eb,
-        0xd8ab,
-        0x4141,
-        0x0a4d,
-        0x0070,
-        0xe898,
-        0x7779,
-        0x4079,
-        0x8cc7,
-        0xfe73,
-        0x2b6f,
-        0x6cee,
-        0x5203,
-    ]),
-    D2 = gf([
-        0xf159,
-        0x26b2,
-        0x9b94,
-        0xebd6,
-        0xb156,
-        0x8283,
-        0x149a,
-        0x00e0,
-        0xd130,
-        0xeef3,
-        0x80f2,
-        0x198e,
-        0xfce7,
-        0x56df,
-        0xd9dc,
-        0x2406,
-    ]),
-    X = gf([
-        0xd51a,
-        0x8f25,
-        0x2d60,
-        0xc956,
-        0xa7b2,
-        0x9525,
-        0xc760,
-        0x692c,
-        0xdc5c,
-        0xfdd6,
-        0xe231,
-        0xc0a4,
-        0x53fe,
-        0xcd6e,
-        0x36d3,
-        0x2169,
-    ]),
-    Y = gf([
-        0x6658,
-        0x6666,
-        0x6666,
-        0x6666,
-        0x6666,
-        0x6666,
-        0x6666,
-        0x6666,
-        0x6666,
-        0x6666,
-        0x6666,
-        0x6666,
-        0x6666,
-        0x6666,
-        0x6666,
-        0x6666,
-    ]),
-    I = gf([
-        0xa0b0,
-        0x4a0e,
-        0x1b27,
-        0xc4ee,
-        0xe478,
-        0xad2f,
-        0x1806,
-        0x2f43,
-        0xd7a7,
-        0x3dfb,
-        0x0099,
-        0x2b4d,
-        0xdf0b,
-        0x4fc1,
-        0x2480,
-        0x2b83,
-    ]);
+const gf0 = gf();
+const gf1 = gf([1]);
+const _121665 = gf([0xdb41, 1]);
+const D = gf([
+    0x78a3,
+    0x1359,
+    0x4dca,
+    0x75eb,
+    0xd8ab,
+    0x4141,
+    0x0a4d,
+    0x0070,
+    0xe898,
+    0x7779,
+    0x4079,
+    0x8cc7,
+    0xfe73,
+    0x2b6f,
+    0x6cee,
+    0x5203,
+]);
+const D2 = gf([
+    0xf159,
+    0x26b2,
+    0x9b94,
+    0xebd6,
+    0xb156,
+    0x8283,
+    0x149a,
+    0x00e0,
+    0xd130,
+    0xeef3,
+    0x80f2,
+    0x198e,
+    0xfce7,
+    0x56df,
+    0xd9dc,
+    0x2406,
+]);
+const X = gf([
+    0xd51a,
+    0x8f25,
+    0x2d60,
+    0xc956,
+    0xa7b2,
+    0x9525,
+    0xc760,
+    0x692c,
+    0xdc5c,
+    0xfdd6,
+    0xe231,
+    0xc0a4,
+    0x53fe,
+    0xcd6e,
+    0x36d3,
+    0x2169,
+]);
+const Y = gf([
+    0x6658,
+    0x6666,
+    0x6666,
+    0x6666,
+    0x6666,
+    0x6666,
+    0x6666,
+    0x6666,
+    0x6666,
+    0x6666,
+    0x6666,
+    0x6666,
+    0x6666,
+    0x6666,
+    0x6666,
+    0x6666,
+]);
+const I = gf([
+    0xa0b0,
+    0x4a0e,
+    0x1b27,
+    0xc4ee,
+    0xe478,
+    0xad2f,
+    0x1806,
+    0x2f43,
+    0xd7a7,
+    0x3dfb,
+    0x0099,
+    0x2b4d,
+    0xdf0b,
+    0x4fc1,
+    0x2480,
+    0x2b83,
+]);
 const L = new Float64Array([
     0xed,
     0xd3,
@@ -178,55 +178,55 @@ const Z = (o, a, b) => {
 };
 
 const M = (o, a, b) => {
-    let v,
-        c,
-        t0 = 0,
-        t1 = 0,
-        t2 = 0,
-        t3 = 0,
-        t4 = 0,
-        t5 = 0,
-        t6 = 0,
-        t7 = 0,
-        t8 = 0,
-        t9 = 0,
-        t10 = 0,
-        t11 = 0,
-        t12 = 0,
-        t13 = 0,
-        t14 = 0,
-        t15 = 0,
-        t16 = 0,
-        t17 = 0,
-        t18 = 0,
-        t19 = 0,
-        t20 = 0,
-        t21 = 0,
-        t22 = 0,
-        t23 = 0,
-        t24 = 0,
-        t25 = 0,
-        t26 = 0,
-        t27 = 0,
-        t28 = 0,
-        t29 = 0,
-        t30 = 0;
-    const b0 = b[0],
-        b1 = b[1],
-        b2 = b[2],
-        b3 = b[3],
-        b4 = b[4],
-        b5 = b[5],
-        b6 = b[6],
-        b7 = b[7],
-        b8 = b[8],
-        b9 = b[9],
-        b10 = b[10],
-        b11 = b[11],
-        b12 = b[12],
-        b13 = b[13],
-        b14 = b[14],
-        b15 = b[15];
+    let v;
+    let c;
+    let t0 = 0;
+    let t1 = 0;
+    let t2 = 0;
+    let t3 = 0;
+    let t4 = 0;
+    let t5 = 0;
+    let t6 = 0;
+    let t7 = 0;
+    let t8 = 0;
+    let t9 = 0;
+    let t10 = 0;
+    let t11 = 0;
+    let t12 = 0;
+    let t13 = 0;
+    let t14 = 0;
+    let t15 = 0;
+    let t16 = 0;
+    let t17 = 0;
+    let t18 = 0;
+    let t19 = 0;
+    let t20 = 0;
+    let t21 = 0;
+    let t22 = 0;
+    let t23 = 0;
+    let t24 = 0;
+    let t25 = 0;
+    let t26 = 0;
+    let t27 = 0;
+    let t28 = 0;
+    let t29 = 0;
+    let t30 = 0;
+    const b0 = b[0];
+    const b1 = b[1];
+    const b2 = b[2];
+    const b3 = b[3];
+    const b4 = b[4];
+    const b5 = b[5];
+    const b6 = b[6];
+    const b7 = b[7];
+    const b8 = b[8];
+    const b9 = b[9];
+    const b10 = b[10];
+    const b11 = b[11];
+    const b12 = b[12];
+    const b13 = b[13];
+    const b14 = b[14];
+    const b15 = b[15];
 
     v = a[0];
     t0 += v * b0;
@@ -644,8 +644,8 @@ const S = (o, a) => {
     M(o, a, a);
 };
 const vn = (x, xi, y, yi, n) => {
-    let i,
-        d = 0;
+    let i;
+    let d = 0;
     for (i = 0; i < n; i++) {
         d |= x[xi + i] ^ y[yi + i];
     }
@@ -692,9 +692,9 @@ const set25519 = (r, a) => {
 };
 
 const car25519 = (o) => {
-    let i,
-        v,
-        c = 1;
+    let i;
+    let v;
+    let c = 1;
     for (i = 0; i < 16; i++) {
         v = o[i] + c + 65535;
         c = Math.floor(v / 65536);
@@ -704,9 +704,9 @@ const car25519 = (o) => {
 };
 
 const sel25519 = (p, q, b) => {
-    let t,
-        // eslint-disable-next-line prefer-const
-        c = ~(b - 1);
+    let t;
+    // eslint-disable-next-line prefer-const
+    let c = ~(b - 1);
     for (let i = 0; i < 16; i++) {
         t = c & (p[i] ^ q[i]);
         p[i] ^= t;
@@ -715,9 +715,11 @@ const sel25519 = (p, q, b) => {
 };
 
 const pack25519 = (o, n) => {
-    let i, j, b;
-    const m = gf(),
-        t = gf();
+    let i;
+    let j;
+    let b;
+    const m = gf();
+    const t = gf();
     for (i = 0; i < 16; i++) {
         t[i] = n[i];
     }
@@ -749,8 +751,8 @@ const cswap = (p, q, b) => {
 };
 
 const neq25519 = (a, b) => {
-    const c = new Uint8Array(32),
-        d = new Uint8Array(32);
+    const c = new Uint8Array(32);
+    const d = new Uint8Array(32);
     pack25519(c, a);
     pack25519(d, b);
     return crypto_verify_32(c, 0, d, 0);
@@ -775,15 +777,15 @@ export const crypto_verify_32 = (x, xi, y, yi) => {
 };
 
 export const add = (p, q) => {
-    const a = gf(),
-        b = gf(),
-        c = gf(),
-        d = gf(),
-        e = gf(),
-        f = gf(),
-        g = gf(),
-        h = gf(),
-        t = gf();
+    const a = gf();
+    const b = gf();
+    const c = gf();
+    const d = gf();
+    const e = gf();
+    const f = gf();
+    const g = gf();
+    const h = gf();
+    const t = gf();
 
     Z(a, p[1], p[0]);
     Z(t, q[1], q[0]);
@@ -807,9 +809,9 @@ export const add = (p, q) => {
 };
 
 export const pack = (r, p) => {
-    const tx = gf(),
-        ty = gf(),
-        zi = gf();
+    const tx = gf();
+    const ty = gf();
+    const zi = gf();
     inv25519(zi, p[2]);
     M(tx, p[0], zi);
     M(ty, p[1], zi);
@@ -818,7 +820,8 @@ export const pack = (r, p) => {
 };
 
 export const scalarmult = (p, q, s) => {
-    let b, i;
+    let b;
+    let i;
     set25519(p[0], gf0);
     set25519(p[1], gf1);
     set25519(p[2], gf1);
@@ -833,13 +836,13 @@ export const scalarmult = (p, q, s) => {
 };
 
 export const unpack = (r, p) => {
-    const t = gf(),
-        chk = gf(),
-        num = gf(),
-        den = gf(),
-        den2 = gf(),
-        den4 = gf(),
-        den6 = gf();
+    const t = gf();
+    const chk = gf();
+    const num = gf();
+    const den = gf();
+    const den2 = gf();
+    const den4 = gf();
+    const den6 = gf();
 
     set25519(r[2], gf1);
     unpack25519(r[1], p);

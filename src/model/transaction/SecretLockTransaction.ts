@@ -188,7 +188,7 @@ export class SecretLockTransaction extends Transaction {
      * @memberof SecretLockTransaction
      */
     public getSecretByte(): Uint8Array {
-        return convert.hexToUint8(64 > this.secret.length ? this.secret + '0'.repeat(64 - this.secret.length) : this.secret);
+        return convert.hexToUint8(this.secret.length < 64 ? this.secret + '0'.repeat(64 - this.secret.length) : this.secret);
     }
 
     /**

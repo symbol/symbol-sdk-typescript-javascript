@@ -455,7 +455,7 @@ describe('crypto tests', () => {
 
         // Act:
         const result = Crypto.toMobileKey(password, privateKey);
-        const encrypted = result.encrypted;
+        const { encrypted } = result;
         const salt = CryptoJS.enc.Hex.parse(result.salt);
 
         const key = CryptoJS.PBKDF2(password, salt, {

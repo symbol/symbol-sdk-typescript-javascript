@@ -42,6 +42,7 @@ export class NamespaceMosaicIdGenerator {
         const path = IdGenerator.generateNamespacePath(namespaceName);
         return path.length ? IdGenerator.generateNamespacePath(namespaceName)[path.length - 1] : [];
     };
+
     /**
      * @param {string} parentNamespaceName - The parent namespace name
      * @param {string} namespaceName - The namespace name

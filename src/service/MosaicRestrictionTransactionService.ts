@@ -36,6 +36,7 @@ import { UInt64 } from '../model/UInt64';
  */
 export class MosaicRestrictionTransactionService {
     private readonly defaultMosaicAddressRestrictionValue = UInt64.fromHex('FFFFFFFFFFFFFFFF');
+
     private readonly defaultMosaicGlobalRestrictionValue = UInt64.fromUint(0);
 
     /**
@@ -122,7 +123,7 @@ export class MosaicRestrictionTransactionService {
                 this.getGlobalRestrictionEntry(resolvedMosaicId, restrictionKey).pipe(
                     mergeMap((restrictionEntry: MosaicGlobalRestrictionItem | undefined) => {
                         if (!restrictionEntry) {
-                            throw new Error('Global restriction is not valid for RestrictionKey: ' + restrictionKey);
+                            throw new Error(`Global restriction is not valid for RestrictionKey: ${restrictionKey}`);
                         }
                         return this.getAddressRestrictionEntry(resolvedMosaicId, restrictionKey, resolvedAddress).pipe(
                             map((optionalValue) => {

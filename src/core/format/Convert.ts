@@ -37,7 +37,7 @@ export class Convert {
      * @returns {boolean} true if the input is a hex string, false otherwise.
      */
     public static isHexString = (input: string): boolean => {
-        if (0 !== input.length % 2) {
+        if (input.length % 2 !== 0) {
             return false;
         }
         for (let i = 0; i < input.length; i += 2) {
@@ -54,7 +54,7 @@ export class Convert {
      * @returns {Uint8Array} A uint8 array corresponding to the input.
      */
     public static hexToUint8 = (input: string): Uint8Array => {
-        if (0 !== input.length % 2) {
+        if (input.length % 2 !== 0) {
             throw Error(`hex string has unexpected size '${input.length}'`);
         }
         const output = new Uint8Array(input.length / 2);
@@ -70,7 +70,7 @@ export class Convert {
      * @returns {Uint8Array} A uint8 array corresponding to the input.
      */
     public static hexToUint8Reverse = (input: string): Uint8Array => {
-        if (0 !== input.length % 2) {
+        if (input.length % 2 !== 0) {
             throw Error(`hex string has unexpected size '${input.length}'`);
         }
         const output = new Uint8Array(input.length / 2);
@@ -115,7 +115,7 @@ export class Convert {
      *
      */
     public static uint8ToInt8 = (input: number): number => {
-        if (0xff < input) {
+        if (input > 0xff) {
             throw Error(`input '${input}' is out of range`);
         }
         return (input << 24) >> 24;
@@ -126,7 +126,7 @@ export class Convert {
      * @returns {number} An unsigned byte with the same binary representation as the input.
      */
     public static int8ToUint8 = (input: number): number => {
-        if (127 < input || -128 > input) {
+        if (input > 127 || input < -128) {
             throw Error(`input '${input}' is out of range`);
         }
         return input & 0xff;
@@ -144,9 +144,9 @@ export class Convert {
         for (let n = 0; n < input.length; n++) {
             const c = input.charCodeAt(n);
 
-            if (128 > c) {
+            if (c < 128) {
                 output += String.fromCharCode(c);
-            } else if (127 < c && 2048 > c) {
+            } else if (c > 127 && c < 2048) {
                 output += String.fromCharCode((c >> 6) | 192);
                 output += String.fromCharCode((c & 63) | 128);
             } else {

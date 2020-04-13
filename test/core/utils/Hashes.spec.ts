@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import { Crypto } from '../../../src/core/crypto';
 import { sha3_256 } from 'js-sha3';
+import { Crypto } from '../../../src/core/crypto';
 import { LockHashUtils } from '../../../src/core/utils/LockHashUtils';
 import { LockHashAlgorithm } from '../../../src/model/transaction/LockHashAlgorithm';
 import { Convert } from '../../../src/core/format/Convert';

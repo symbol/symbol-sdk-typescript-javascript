@@ -53,6 +53,7 @@ export class NetworkHttp extends Http implements NetworkRepository {
      * Symbol openapi typescript-node client account routes api
      */
     private readonly nodeHttp: NodeHttp;
+
     private readonly networkRoutesApi: NetworkRoutesApi;
 
     /**

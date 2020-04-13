@@ -54,6 +54,7 @@ export class LockFundsTransaction extends Transaction {
      * Aggregate bonded hash.
      */
     public readonly hash: string;
+
     signedTransaction: SignedTransaction;
 
     /**

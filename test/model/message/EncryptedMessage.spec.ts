@@ -52,7 +52,7 @@ describe('EncryptedMessage', () => {
 
     it('should decrypt message from raw encrypted message payload', () => {
         const encryptedMessage = sender.encryptMessage('Testing simple transfer', recipient.publicAccount, NetworkType.MIJIN_TEST);
-        const payload = encryptedMessage.payload;
+        const { payload } = encryptedMessage;
         const plainMessage = recipient.decryptMessage(new EncryptedMessage(payload), sender.publicAccount, NetworkType.MIJIN_TEST);
         expect(plainMessage.payload).to.be.equal('Testing simple transfer');
     });
@@ -76,7 +76,7 @@ describe('EncryptedMessage', () => {
 
     it('should encrypt and decrypt message using NIS1 schema', () => {
         const encryptedMessage = sender_nis.encryptMessage('Testing simple transfer', recipient_nis.publicAccount, NetworkType.TEST_NET);
-        const payload = encryptedMessage.payload;
+        const { payload } = encryptedMessage;
         const plainMessage = recipient_nis.decryptMessage(new EncryptedMessage(payload), sender_nis.publicAccount, NetworkType.TEST_NET);
         expect(plainMessage.payload).to.be.equal('Testing simple transfer');
     });

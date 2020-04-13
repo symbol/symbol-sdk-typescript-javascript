@@ -59,7 +59,7 @@ describe('Account', () => {
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
                 NetworkType.MIJIN_TEST,
             );
-            const publicAccount = account.publicAccount;
+            const { publicAccount } = account;
             const signed = account.signData('catapult rocks!');
             expect(publicAccount.verifySignature('catapult rocks!', signed)).to.be.true;
         });
@@ -69,7 +69,7 @@ describe('Account', () => {
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
                 NetworkType.MIJIN_TEST,
             );
-            const publicAccount = account.publicAccount;
+            const { publicAccount } = account;
             const signed = account.signData('0xAA');
             expect(publicAccount.verifySignature('0xAA', signed)).to.be.true;
         });
@@ -79,7 +79,7 @@ describe('Account', () => {
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
                 NetworkType.TEST_NET,
             );
-            const publicAccount = account.publicAccount;
+            const { publicAccount } = account;
             const signed = account.signData('catapult rocks!');
             expect(publicAccount.verifySignature('catapult rocks!', signed)).to.be.true;
         });
@@ -89,7 +89,7 @@ describe('Account', () => {
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
                 NetworkType.TEST_NET,
             );
-            const publicAccount = account.publicAccount;
+            const { publicAccount } = account;
             const signed = account.signData('0xAA');
             expect(publicAccount.verifySignature('0xAA', signed)).to.be.true;
         });
@@ -99,7 +99,7 @@ describe('Account', () => {
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
                 NetworkType.MIJIN_TEST,
             );
-            const publicAccount = account.publicAccount;
+            const { publicAccount } = account;
             const signed = account.signData('66128B29E8197352A2FEB51B50CF5D02F1D05B20D44B3F7953B98ACD2BCA15D4');
             expect(publicAccount.verifySignature('66128B29E8197352A2FEB51B50CF5D02F1D05B20D44B3F7953B98ACD2BCA15D4', signed)).to.be.true;
         });
@@ -109,7 +109,7 @@ describe('Account', () => {
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
                 NetworkType.MIJIN_TEST,
             );
-            const publicAccount = account.publicAccount;
+            const { publicAccount } = account;
             const signed = account.signData('AA');
             const signedWith0x = account.signData('0xAA');
             expect(publicAccount.verifySignature('AA', signed)).to.be.true;
@@ -121,7 +121,7 @@ describe('Account', () => {
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
                 NetworkType.MIJIN_TEST,
             );
-            const publicAccount = account.publicAccount;
+            const { publicAccount } = account;
             const signed = account.signData('ff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf');
             const signedWith0x = account.signData('0xff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf');
             expect(
@@ -140,7 +140,7 @@ describe('Account', () => {
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
                 NetworkType.MIJIN_TEST,
             );
-            const publicAccount = account.publicAccount;
+            const { publicAccount } = account;
             const signed = account.signData('');
             const signedWith0x = account.signData('0x');
             expect(publicAccount.verifySignature('', signed)).to.be.true;

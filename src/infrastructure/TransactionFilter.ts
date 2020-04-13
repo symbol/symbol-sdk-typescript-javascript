@@ -44,8 +44,7 @@ export class TransactionFilter {
     public convertCSV(types?: TransactionType[]): string | undefined {
         if (!types || types.length === 0) {
             return undefined;
-        } else {
-            return types.map((t) => t.valueOf().toString()).join(',');
         }
+        return types.map((t) => t.valueOf().toString()).join(',');
     }
 }

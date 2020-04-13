@@ -19,6 +19,7 @@ import { expect } from 'chai';
 import { Address } from '../../../src/model/account/Address';
 import { AccountRestriction } from '../../../src/model/restriction/AccountRestriction';
 import { AccountRestrictionFlags } from '../../../src/model/restriction/AccountRestrictionType';
+
 describe('AccountRestriction', () => {
     it('should createComplete an AccountRestriction object', () => {
         const accountRestrictionDTO = {

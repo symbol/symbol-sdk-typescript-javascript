@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+import { sha512 } from 'js-sha512';
 import { RawArray as array } from '../format';
 import * as nacl from './nacl_catapult';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export const CryptoJS = require('crypto-js');
+
 export const Key_Size = 32;
 export const Signature_Size = 64;
 export const Half_Signature_Size = Signature_Size / 2;
@@ -25,7 +27,6 @@ export const Hash_Size = 64;
 export const Half_Hash_Size = Hash_Size / 2;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export const hkdf = require('futoin-hkdf');
-import { sha512 } from 'js-sha512';
 
 /**
  * Convert an Uint8Array to WordArray

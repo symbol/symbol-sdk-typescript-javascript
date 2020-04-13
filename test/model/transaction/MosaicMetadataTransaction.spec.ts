@@ -15,6 +15,7 @@
  */
 
 import { expect } from 'chai';
+import { EmbeddedTransactionBuilder } from 'catbuffer-typescript';
 import { Convert } from '../../../src/core/format/Convert';
 import { Account } from '../../../src/model/account/Account';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
@@ -30,7 +31,6 @@ import { MosaicMetadataTransaction } from '../../../src/model/transaction/Mosaic
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-import { EmbeddedTransactionBuilder } from 'catbuffer-typescript';
 import { TransactionType } from '../../../src/model/model';
 
 describe('MosaicMetadataTransaction', () => {

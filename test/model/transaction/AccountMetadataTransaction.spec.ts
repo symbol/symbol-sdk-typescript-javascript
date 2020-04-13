@@ -15,6 +15,8 @@
  */
 
 import { expect } from 'chai';
+import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/builders/EmbeddedTransactionBuilder';
+import { deepEqual } from 'assert';
 import { Convert } from '../../../src/core/format/Convert';
 import { Account } from '../../../src/model/account/Account';
 import { NetworkType } from '../../../src/model/network/NetworkType';
@@ -22,9 +24,7 @@ import { AccountMetadataTransaction } from '../../../src/model/transaction/Accou
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/builders/EmbeddedTransactionBuilder';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
-import { deepEqual } from 'assert';
 
 describe('AccountMetadataTransaction', () => {
     let account: Account;

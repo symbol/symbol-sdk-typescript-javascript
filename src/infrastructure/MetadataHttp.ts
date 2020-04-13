@@ -184,7 +184,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
      * @returns the model Metadata.
      */
     private buildMetadata(metadata: MetadataDTO): Metadata {
-        const metadataEntry = metadata.metadataEntry;
+        const { metadataEntry } = metadata;
         let targetId;
 
         switch (metadataEntry.metadataType.valueOf()) {

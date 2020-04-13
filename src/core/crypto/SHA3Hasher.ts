@@ -44,7 +44,7 @@ export class SHA3Hasher {
             update: (data: any) => {
                 if (data instanceof Uint8Array) {
                     hash.update(data);
-                } else if ('string' === typeof data) {
+                } else if (typeof data === 'string') {
                     hash.update(convert.hexToUint8(data));
                 } else {
                     throw Error('unsupported data type');

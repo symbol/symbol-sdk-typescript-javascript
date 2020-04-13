@@ -90,7 +90,7 @@ describe('BlockService', () => {
     describe('Validate transansaction', () => {
         it('call block service', async () => {
             const transaction = await transactionRepository.getTransaction(transactionHash).toPromise();
-            const transactionInfo = transaction.transactionInfo;
+            const { transactionInfo } = transaction;
             if (transactionInfo && transactionInfo.height !== undefined) {
                 const validationResult = await blockService.validateTransactionInBlock(transactionHash, transactionInfo.height).toPromise();
                 expect(validationResult).to.be.true;

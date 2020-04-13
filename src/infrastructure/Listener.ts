@@ -56,16 +56,19 @@ interface ListenerMessage {
  */
 export class Listener implements IListener {
     public readonly url: string;
+
     /**
      * @internal
      * WebSocket connector
      */
     private webSocket: WebSocket;
+
     /**
      * @internal
      * Message subject for all requests
      */
     private messageSubject: Subject<ListenerMessage>;
+
     /**
      * @internal
      * id
@@ -240,10 +243,9 @@ export class Listener implements IListener {
             filter((_) => {
                 if (transactionHash === undefined) {
                     return true;
-                } else {
-                    const metaHash = _.transactionInfo!.hash;
-                    return metaHash !== undefined ? metaHash.toUpperCase() === transactionHash.toUpperCase() : false;
                 }
+                const metaHash = _.transactionInfo!.hash;
+                return metaHash !== undefined ? metaHash.toUpperCase() === transactionHash.toUpperCase() : false;
             }),
         );
     }
@@ -302,10 +304,9 @@ export class Listener implements IListener {
             filter((_) => {
                 if (transactionHash === undefined) {
                     return true;
-                } else {
-                    const metaHash = _.transactionInfo!.hash;
-                    return metaHash !== undefined ? metaHash.toUpperCase() === transactionHash.toUpperCase() : false;
                 }
+                const metaHash = _.transactionInfo!.hash;
+                return metaHash !== undefined ? metaHash.toUpperCase() === transactionHash.toUpperCase() : false;
             }),
         );
     }

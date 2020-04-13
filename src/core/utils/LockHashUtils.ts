@@ -22,7 +22,9 @@ import { LockHashAlgorithm } from '../../model/transaction/LockHashAlgorithm';
  */
 export class LockHashUtils {
     private static sha256 = require('js-sha256');
+
     private static ripemd160 = require('ripemd160');
+
     /**
      * Perform SHA3_256 hash
      * @param input buffer to be hashed

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 import { deepEqual } from 'assert';
+import { expect } from 'chai';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { Id } from '../../../src/model/Id';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../../src/model/mosaic/MosaicNonce';
 import { NetworkType } from '../../../src/model/network/NetworkType';
-import { expect } from 'chai';
 
 describe('MosaicId', () => {
     const publicKey = 'b4f12e7c9f6946091e2cb8b6d3a12b50d17ccbbf646386ea27ce2946a7423dcf';

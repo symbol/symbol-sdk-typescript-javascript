@@ -142,7 +142,7 @@ describe('BlockHttp', () => {
                 .getBlockTransactions(chainHeight)
                 .pipe(
                     mergeMap((_) => {
-                        const hash = (_[0].transactionInfo as TransactionInfo).hash;
+                        const { hash } = _[0].transactionInfo as TransactionInfo;
                         if (hash) {
                             return blockRepository.getMerkleTransaction(chainHeight, hash);
                         }

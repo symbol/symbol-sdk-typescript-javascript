@@ -40,11 +40,11 @@ import {
     TransferNetworkPropertiesDTO,
 } from 'symbol-openapi-typescript-node-client';
 import { instance, mock, reset, when } from 'ts-mockito';
+import { deepEqual } from 'assert';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { NetworkHttp } from '../../src/infrastructure/NetworkHttp';
 import { NodeHttp } from '../../src/infrastructure/NodeHttp';
 import { NetworkType } from '../../src/model/network/NetworkType';
-import { deepEqual } from 'assert';
 import * as testResources from '../resource/TestResources';
 
 describe('NetworkHttp', () => {

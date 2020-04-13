@@ -36,11 +36,13 @@ export class MultisigHttp extends Http implements MultisigRepository {
      * Symbol openapi typescript-node client account routes api
      */
     private readonly multisigRoutesApi: MultisigRoutesApi;
+
     /**
      * @internal
      * network type for the mappings.
      */
     private readonly networkTypeObservable: Observable<NetworkType>;
+
     /**
      * Constructor
      * @param url

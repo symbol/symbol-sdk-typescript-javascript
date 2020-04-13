@@ -48,6 +48,7 @@ export class AccountRestrictionModification<T> {
     ): AccountRestrictionModification<string> {
         return new AccountRestrictionModification<string>(modificationAction, value.plain());
     }
+
     /**
      * Create an mosaic filter for account restriction modification
      * @param modificationAction - modification type. 0: Add, 1: Remove

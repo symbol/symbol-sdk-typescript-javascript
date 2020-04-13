@@ -36,7 +36,7 @@ export class RawUInt64 {
         const high = uint64[1];
 
         // don't compact if the value is >= 2^53
-        if (0x00200000 <= high) {
+        if (high >= 0x00200000) {
             return uint64;
         }
 
@@ -60,7 +60,7 @@ export class RawUInt64 {
      * @returns {module:coders/uint64~uint64} The uint64 representation of the input.
      */
     public static fromBytes = (uint8Array) => {
-        if (8 !== uint8Array.length) {
+        if (uint8Array.length !== 8) {
             throw Error(`byte array has unexpected size '${uint8Array.length}'`);
         }
         return [RawUInt64.readUint32At(uint8Array, 0), RawUInt64.readUint32At(uint8Array, 4)];
@@ -72,7 +72,7 @@ export class RawUInt64 {
      * @returns {module:coders/uint64~uint64} The uint64 representation of the input.
      */
     public static fromBytes32 = (uint8Array) => {
-        if (4 !== uint8Array.length) {
+        if (uint8Array.length !== 4) {
             throw Error(`byte array has unexpected size '${uint8Array.length}'`);
         }
         return [RawUInt64.readUint32At(uint8Array, 0), 0];
@@ -84,11 +84,11 @@ export class RawUInt64 {
      * @returns {module:coders/uint64~uint64} The uint64 representation of the input.
      */
     public static fromHex = (input) => {
-        if (16 !== input.length) {
+        if (input.length !== 16) {
             throw Error(`hex string has unexpected size '${input.length}'`);
         }
         let hexString = input;
-        if (16 > hexString.length) {
+        if (hexString.length < 16) {
             hexString = '0'.repeat(16 - hexString.length) + hexString;
         }
         const uint8Array = Convert.hexToUint8(hexString);
@@ -112,5 +112,5 @@ export class RawUInt64 {
      * @param {module:coders/uint64~uint64} uint64 A uint64 value.
      * @returns {boolean} true if the value is zero.
      */
-    public static isZero = (uint64) => 0 === uint64[0] && 0 === uint64[1];
+    public static isZero = (uint64) => uint64[0] === 0 && uint64[1] === 0;
 }

@@ -124,7 +124,7 @@ describe('MosaicRestrictionTransactionService', () => {
 
     describe('NamespaceRegistrationTransaction', () => {
         it('standalone', () => {
-            const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
+            const namespaceName = `root-test-namespace-${Math.floor(Math.random() * 10000)}`;
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
@@ -141,7 +141,7 @@ describe('MosaicRestrictionTransactionService', () => {
 
     describe('NamespaceRegistrationTransaction', () => {
         it('standalone', () => {
-            const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
+            const namespaceName = `root-test-namespace-${Math.floor(Math.random() * 10000)}`;
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,

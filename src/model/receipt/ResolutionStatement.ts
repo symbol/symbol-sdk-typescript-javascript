@@ -139,7 +139,8 @@ export class ResolutionStatement {
         */
         if (resolvedPrimaryId === 0) {
             return undefined;
-        } else if (primaryId > resolvedPrimaryId) {
+        }
+        if (primaryId > resolvedPrimaryId) {
             /*
             If the transaction index is greater than the overall most recent source primary id.
             Use the most recent resolution entry (Max.PrimaryId + Max.SecondaryId)

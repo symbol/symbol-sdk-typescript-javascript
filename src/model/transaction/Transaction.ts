@@ -240,9 +240,8 @@ export abstract class Transaction {
         const byteBufferWithoutHeader = payloadBytes.slice(4 + 64 + 32 + 8);
         if (this.type === TransactionType.AGGREGATE_BONDED || this.type === TransactionType.AGGREGATE_COMPLETE) {
             return generationHashBytes.concat(byteBufferWithoutHeader.slice(0, 52));
-        } else {
-            return generationHashBytes.concat(byteBufferWithoutHeader);
         }
+        return generationHashBytes.concat(byteBufferWithoutHeader);
     }
 
     /**
@@ -343,7 +342,7 @@ export abstract class Transaction {
      * @internal
      */
     public versionToHex(): string {
-        return '0x' + this.versionToDTO().toString(16);
+        return `0x${this.versionToDTO().toString(16)}`;
     }
 
     /**

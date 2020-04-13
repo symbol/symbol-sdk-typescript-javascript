@@ -38,7 +38,7 @@ export class IdGenerator {
      * @returns {array<module:coders/uint64~uint64>} The namespace path.
      */
     public static generateNamespacePath = (name: string) => {
-        if (0 >= name.length) {
+        if (name.length <= 0) {
             utilities.throwInvalidFqn('having zero length', name);
         }
         let namespaceId = utilities.idGeneratorConst.namespace_base_id;

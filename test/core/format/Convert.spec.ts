@@ -274,7 +274,7 @@ describe('convert', () => {
 
         it('utf8 text to hex with control char', () => {
             // Act:
-            const actual = convert.utf8ToHex(String.fromCodePoint(0x0f) + ' Hello World!');
+            const actual = convert.utf8ToHex(`${String.fromCodePoint(0x0f)} Hello World!`);
 
             // Assert:
             expect(actual).to.equal('0F2048656C6C6F20576F726C6421');

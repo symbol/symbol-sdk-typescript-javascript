@@ -15,8 +15,17 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
-import { Mosaic, MosaicRoutesApi, MosaicInfoDTO, MosaicDTO, MosaicsInfoDTO, MosaicIds } from 'symbol-openapi-typescript-node-client';
+import {
+    Mosaic,
+    MosaicRoutesApi,
+    MosaicInfoDTO,
+    MosaicDTO,
+    MosaicsInfoDTO,
+    MosaicIds,
+    AccountIds,
+} from 'symbol-openapi-typescript-node-client';
 import { instance, mock, reset, when, deepEqual } from 'ts-mockito';
+import { assert } from 'chai';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
 import { MosaicHttp } from '../../src/infrastructure/MosaicHttp';
@@ -24,15 +33,13 @@ import { NetworkType } from '../../src/model/network/NetworkType';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicInfo } from '../../src/model/mosaic/MosaicInfo';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
-import { AccountIds } from 'symbol-openapi-typescript-node-client';
-import { assert } from 'chai';
 
 describe('MosaicHttp', () => {
     const publicAccount = PublicAccount.createFromPublicKey(
         '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6',
         NetworkType.MIJIN_TEST,
     );
-    const address = publicAccount.address;
+    const { address } = publicAccount;
     const mosaicId = new MosaicId('941299B2B7E1291C');
     const mosaic = new Mosaic();
     mosaic.amount = '777';

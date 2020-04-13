@@ -23,7 +23,8 @@ export class RawArray {
     public static uint8View = (input) => {
         if (ArrayBuffer === input.constructor) {
             return new Uint8Array(input);
-        } else if (Uint8Array === input.constructor) {
+        }
+        if (Uint8Array === input.constructor) {
             return input;
         }
 
@@ -50,7 +51,7 @@ export class RawArray {
      * @param {Array} array The array to check.
      * @returns {boolean} true if the array is zero-filled, false otherwise.
      */
-    public static isZeroFilled = (array) => array.every((value) => 0 === value);
+    public static isZeroFilled = (array) => array.every((value) => value === 0);
 
     /**
      * Deeply checks the equality of two arrays.

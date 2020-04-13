@@ -20,6 +20,7 @@ import { KeyPair } from './KeyPair';
 import * as utility from './Utilities';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CryptoJS = require('crypto-js');
+
 export class Crypto {
     /**
      * Encrypt a private key for mobile apps (AES_PBKF2)
@@ -229,7 +230,7 @@ export class Crypto {
         };
     };
 
-    /***
+    /** *
      * Encode a message, separated from encode() to help testing
      *
      * @param {string} senderPriv - A sender private key

@@ -39,13 +39,14 @@ export class MosaicFlags {
      * property appears disabled by default, as it is undesirable for autonomous tokens like the public network currency.
      */
     public readonly restrictable: boolean;
+
     /**
      * @param flags
      * @param divisibility
      * @param duration
      */
     constructor(flags: number) {
-        let binaryFlags = '00' + (flags >>> 0).toString(2);
+        let binaryFlags = `00${(flags >>> 0).toString(2)}`;
         binaryFlags = binaryFlags.substr(binaryFlags.length - 3, 3);
         this.supplyMutable = binaryFlags[2] === '1';
         this.transferable = binaryFlags[1] === '1';

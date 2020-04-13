@@ -29,7 +29,7 @@ export class MosaicNonce {
      */
     constructor(nonce: Uint8Array) {
         if (nonce.length !== 4) {
-            throw Error('Invalid byte size for nonce, should be 4 bytes but received ' + nonce.length);
+            throw Error(`Invalid byte size for nonce, should be 4 bytes but received ${nonce.length}`);
         }
         this.nonce = nonce;
     }

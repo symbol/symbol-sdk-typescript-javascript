@@ -23,7 +23,7 @@ describe('Char Mapping', () => {
             const builder = utilities.createBuilder();
 
             // Act:
-            const map = builder.map;
+            const { map } = builder;
 
             // Assert:
             expect(map).to.deep.equal({});
@@ -35,7 +35,7 @@ describe('Char Mapping', () => {
 
             // Act:
             builder.addRange('d', 'f', 0);
-            const map = builder.map;
+            const { map } = builder;
 
             // Assert:
             expect(map).to.deep.equal({
@@ -51,7 +51,7 @@ describe('Char Mapping', () => {
 
             // Act:
             builder.addRange('d', 'f', 17);
-            const map = builder.map;
+            const { map } = builder;
 
             // Assert:
             expect(map).to.deep.equal({
@@ -69,7 +69,7 @@ describe('Char Mapping', () => {
             builder.addRange('b', 'b', 8);
             builder.addRange('d', 'f', 17);
             builder.addRange('y', 'z', 0);
-            const map = builder.map;
+            const { map } = builder;
 
             // Assert:
             expect(map).to.deep.equal({
@@ -90,7 +90,7 @@ describe('Char Mapping', () => {
             builder.addRange('b', 'b', 18);
             builder.addRange('d', 'f', 17);
             builder.addRange('y', 'z', 19);
-            const map = builder.map;
+            const { map } = builder;
 
             // Assert:
             expect(map).to.deep.equal({

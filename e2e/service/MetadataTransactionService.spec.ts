@@ -77,7 +77,7 @@ describe('MetadataTransactionService', () => {
 
     describe('Setup test NamespaceId', () => {
         it('Announce NamespaceRegistrationTransaction', () => {
-            const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
+            const namespaceName = `root-test-namespace-${Math.floor(Math.random() * 10000)}`;
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
@@ -171,7 +171,7 @@ describe('MetadataTransactionService', () => {
 
         it('should create MosaicMetadataTransaction', async () => {
             const metaDataService = new MetadataTransactionService(metadataRepository);
-            const updateValue = newValue + 'delta';
+            const updateValue = `${newValue}delta`;
             const transaction = (await metaDataService
                 .createMetadataTransaction(
                     deadline,
@@ -197,7 +197,7 @@ describe('MetadataTransactionService', () => {
         it('should create NamespaceMetadataTransaction', async () => {
             const metaDataService = new MetadataTransactionService(metadataRepository);
 
-            const updateValue = newValue + 'delta';
+            const updateValue = `${newValue}delta`;
             const transaction = (await metaDataService
                 .createMetadataTransaction(
                     deadline,
@@ -233,7 +233,7 @@ describe('MetadataTransactionService', () => {
                     MetadataType.Mosaic,
                     targetAccount.publicAccount,
                     key,
-                    newValue + 'delta',
+                    `${newValue}delta`,
                     targetAccount.publicAccount,
                     mosaicId,
                     helper.maxFee,
@@ -262,7 +262,7 @@ describe('MetadataTransactionService', () => {
                     MetadataType.Mosaic,
                     targetAccount.publicAccount,
                     key,
-                    newValue + 'delta' + 'extra delta',
+                    `${newValue}delta` + `extra delta`,
                     targetAccount.publicAccount,
                     mosaicId,
                     helper.maxFee,

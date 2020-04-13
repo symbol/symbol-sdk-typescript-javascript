@@ -110,18 +110,17 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
                   )
                 : undefined,
         );
-    } else {
-        const transactionInfo = transactionDTO.meta
-            ? new TransactionInfo(
-                  UInt64.fromNumericString(transactionDTO.meta.height),
-                  transactionDTO.meta.index,
-                  transactionDTO.meta.id,
-                  transactionDTO.meta.hash,
-                  transactionDTO.meta.merkleComponentHash,
-              )
-            : undefined;
-        return CreateStandaloneTransactionFromDTO(transactionDTO.transaction, transactionInfo);
     }
+    const transactionInfo = transactionDTO.meta
+        ? new TransactionInfo(
+              UInt64.fromNumericString(transactionDTO.meta.height),
+              transactionDTO.meta.index,
+              transactionDTO.meta.id,
+              transactionDTO.meta.hash,
+              transactionDTO.meta.merkleComponentHash,
+          )
+        : undefined;
+    return CreateStandaloneTransactionFromDTO(transactionDTO.transaction, transactionInfo);
 };
 
 /**
@@ -147,7 +146,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.NAMESPACE_REGISTRATION) {
+    }
+    if (transactionDTO.type === TransactionType.NAMESPACE_REGISTRATION) {
         return new NamespaceRegistrationTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -164,7 +164,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.MOSAIC_DEFINITION) {
+    }
+    if (transactionDTO.type === TransactionType.MOSAIC_DEFINITION) {
         return new MosaicDefinitionTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -181,7 +182,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.MOSAIC_SUPPLY_CHANGE) {
+    }
+    if (transactionDTO.type === TransactionType.MOSAIC_SUPPLY_CHANGE) {
         return new MosaicSupplyChangeTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -196,7 +198,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION) {
+    }
+    if (transactionDTO.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION) {
         return new MultisigAccountModificationTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -216,7 +219,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.HASH_LOCK) {
+    }
+    if (transactionDTO.type === TransactionType.HASH_LOCK) {
         const networkType = transactionDTO.network;
         return new LockFundsTransaction(
             networkType,
@@ -230,8 +234,9 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, networkType) : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.SECRET_LOCK) {
-        const recipientAddress = transactionDTO.recipientAddress;
+    }
+    if (transactionDTO.type === TransactionType.SECRET_LOCK) {
+        const { recipientAddress } = transactionDTO;
         const mosaicId = UnresolvedMapping.toUnresolvedMosaic(transactionDTO.mosaicId);
         return new SecretLockTransaction(
             transactionDTO.network,
@@ -249,8 +254,9 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.SECRET_PROOF) {
-        const recipientAddress = transactionDTO.recipientAddress;
+    }
+    if (transactionDTO.type === TransactionType.SECRET_PROOF) {
+        const { recipientAddress } = transactionDTO;
         return new SecretProofTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -266,7 +272,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.MOSAIC_ALIAS) {
+    }
+    if (transactionDTO.type === TransactionType.MOSAIC_ALIAS) {
         return new MosaicAliasTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -281,7 +288,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.ADDRESS_ALIAS) {
+    }
+    if (transactionDTO.type === TransactionType.ADDRESS_ALIAS) {
         return new AddressAliasTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -296,7 +304,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.ACCOUNT_ADDRESS_RESTRICTION) {
+    }
+    if (transactionDTO.type === TransactionType.ACCOUNT_ADDRESS_RESTRICTION) {
         return new AccountAddressRestrictionTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -311,7 +320,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.ACCOUNT_OPERATION_RESTRICTION) {
+    }
+    if (transactionDTO.type === TransactionType.ACCOUNT_OPERATION_RESTRICTION) {
         return new AccountOperationRestrictionTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -326,7 +336,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.ACCOUNT_MOSAIC_RESTRICTION) {
+    }
+    if (transactionDTO.type === TransactionType.ACCOUNT_MOSAIC_RESTRICTION) {
         return new AccountMosaicRestrictionTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -345,7 +356,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.ACCOUNT_LINK) {
+    }
+    if (transactionDTO.type === TransactionType.ACCOUNT_LINK) {
         return new AccountLinkTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -359,7 +371,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.MOSAIC_GLOBAL_RESTRICTION) {
+    }
+    if (transactionDTO.type === TransactionType.MOSAIC_GLOBAL_RESTRICTION) {
         return new MosaicGlobalRestrictionTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -378,7 +391,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.MOSAIC_ADDRESS_RESTRICTION) {
+    }
+    if (transactionDTO.type === TransactionType.MOSAIC_ADDRESS_RESTRICTION) {
         return new MosaicAddressRestrictionTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -395,7 +409,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.ACCOUNT_METADATA) {
+    }
+    if (transactionDTO.type === TransactionType.ACCOUNT_METADATA) {
         return new AccountMetadataTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -411,7 +426,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.MOSAIC_METADATA) {
+    }
+    if (transactionDTO.type === TransactionType.MOSAIC_METADATA) {
         return new MosaicMetadataTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -428,7 +444,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.NAMESPACE_METADATA) {
+    }
+    if (transactionDTO.type === TransactionType.NAMESPACE_METADATA) {
         return new NamespaceMetadataTransaction(
             transactionDTO.network,
             transactionDTO.version,
@@ -446,7 +463,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionInfo,
         );
     }
-    throw new Error('Unimplemented transaction with type ' + transactionDTO.type);
+    throw new Error(`Unimplemented transaction with type ${transactionDTO.type}`);
 };
 
 /**
@@ -461,11 +478,13 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
 export const extractRecipient = (recipientAddress: any): Address | NamespaceId => {
     if (typeof recipientAddress === 'string') {
         return UnresolvedMapping.toUnresolvedAddress(recipientAddress);
-    } else if (typeof recipientAddress === 'object') {
+    }
+    if (typeof recipientAddress === 'object') {
         // Is JSON object
         if (recipientAddress.hasOwnProperty('address')) {
             return Address.createFromRawAddress(recipientAddress.address);
-        } else if (recipientAddress.hasOwnProperty('id')) {
+        }
+        if (recipientAddress.hasOwnProperty('id')) {
             return NamespaceId.createFromEncoded(recipientAddress.id);
         }
     }

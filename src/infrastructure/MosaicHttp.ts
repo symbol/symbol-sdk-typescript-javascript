@@ -44,6 +44,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
      * network type for the mappings.
      */
     private readonly networkTypeObservable: Observable<NetworkType>;
+
     /**
      * Constructor
      * @param url

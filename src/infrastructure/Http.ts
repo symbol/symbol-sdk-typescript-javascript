@@ -39,16 +39,16 @@ export abstract class Http {
     createNetworkTypeObservable(networkType?: NetworkType | Observable<NetworkType>): Observable<NetworkType> {
         if (networkType && networkType instanceof Observable) {
             return networkType as Observable<NetworkType>;
-        } else if (networkType) {
-            return observableOf(networkType as NetworkType);
-        } else {
-            return observableFrom(new NodeRoutesApi(this.url).getNodeInfo())
-                .pipe(
-                    map(({ body }) => body.networkIdentifier),
-                    catchError((error) => throwError(this.errorHandling(error))),
-                )
-                .pipe(shareReplay(1));
         }
+        if (networkType) {
+            return observableOf(networkType as NetworkType);
+        }
+        return observableFrom(new NodeRoutesApi(this.url).getNodeInfo())
+            .pipe(
+                map(({ body }) => body.networkIdentifier),
+                catchError((error) => throwError(this.errorHandling(error))),
+            )
+            .pipe(shareReplay(1));
     }
 
     queryParams(queryParams?: QueryParams): any {

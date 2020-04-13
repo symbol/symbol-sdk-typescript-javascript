@@ -79,9 +79,8 @@ export class UnresolvedMapping {
         if (unresolvedAddress instanceof NamespaceId) {
             // received hexadecimal notation of namespaceId (alias)
             return RawAddress.aliasToRecipient(Convert.hexToUint8((unresolvedAddress as NamespaceId).toHex()), networkType);
-        } else {
-            // received recipient address
-            return RawAddress.stringToAddress((unresolvedAddress as Address).plain());
         }
+        // received recipient address
+        return RawAddress.stringToAddress((unresolvedAddress as Address).plain());
     }
 }

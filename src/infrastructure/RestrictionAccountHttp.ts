@@ -34,6 +34,7 @@ export class RestrictionAccountHttp extends Http implements RestrictionAccountRe
      * @internal
      */
     private restrictionAccountRoutesApi: RestrictionAccountRoutesApi;
+
     /**
      * Constructor
      * @param url

@@ -17,7 +17,7 @@ import { Convert as convert, RawUInt64 as uint64_t } from '../../core/format';
 import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
 import { PublicAccount } from '../account/PublicAccount';
 import { Id } from '../Id';
-import { MosaicNonce } from '../mosaic/MosaicNonce';
+import { MosaicNonce } from './MosaicNonce';
 
 /**
  * The mosaic id structure describes mosaic id

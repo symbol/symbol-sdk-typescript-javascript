@@ -68,6 +68,6 @@ export class DtoMapping {
      * @returns a copy of the first object with the new attributes added.
      */
     public static assign<T>(object: T, attributes: any): T {
-        return Object.assign({ __proto__: Object.getPrototypeOf(object) }, object, attributes);
+        return { __proto__: Object.getPrototypeOf(object), ...object, ...attributes };
     }
 }

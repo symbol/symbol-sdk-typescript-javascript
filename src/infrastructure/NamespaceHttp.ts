@@ -53,6 +53,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      * network type for the mappings.
      */
     private readonly networkTypeObservable: Observable<NetworkType>;
+
     /**
      * Constructor
      * @param url
@@ -265,7 +266,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
                             namespaceInfoDTO.namespace.alias.type.valueOf() !== AliasType.Mosaic ||
                             !namespaceInfoDTO.namespace.alias.mosaicId
                         ) {
-                            throw new Error("No mosaicId is linked to namespace '" + namespaceInfoDTO.namespace.level0 + "'");
+                            throw new Error(`No mosaicId is linked to namespace '${namespaceInfoDTO.namespace.level0}'`);
                         }
                         return new MosaicId(namespaceInfoDTO.namespace.alias.mosaicId);
                     }),
@@ -296,7 +297,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
                             namespaceInfoDTO.namespace.alias.type.valueOf() !== AliasType.Address ||
                             !namespaceInfoDTO.namespace.alias.address
                         ) {
-                            throw new Error("No address is linked to namespace '" + namespaceInfoDTO.namespace.level0 + "'");
+                            throw new Error(`No address is linked to namespace '${namespaceInfoDTO.namespace.level0}'`);
                         }
 
                         const addressDecoded = namespaceInfoDTO.namespace.alias.address;
@@ -333,7 +334,8 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
     private extractAlias(namespace: any): Alias {
         if (namespace.alias && namespace.alias.type === AliasType.Mosaic) {
             return new MosaicAlias(new MosaicId(namespace.alias.mosaicId));
-        } else if (namespace.alias && namespace.alias.type === AliasType.Address) {
+        }
+        if (namespace.alias && namespace.alias.type === AliasType.Address) {
             return new AddressAlias(Address.createFromEncoded(namespace.alias.address));
         }
 

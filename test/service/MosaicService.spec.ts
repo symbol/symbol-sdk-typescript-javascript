@@ -15,6 +15,8 @@
  */
 
 import { expect } from 'chai';
+import { mock, when, instance, deepEqual } from 'ts-mockito';
+import { of as observableOf } from 'rxjs';
 import { MosaicFlags, AccountInfo, AccountType } from '../../src/model/model';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
@@ -24,9 +26,7 @@ import { MosaicAmountView } from '../../src/service/MosaicAmountView';
 import { MosaicService } from '../../src/service/MosaicService';
 import { MosaicView } from '../../src/service/MosaicView';
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
-import { mock, when, instance, deepEqual } from 'ts-mockito';
 import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
-import { of as observableOf } from 'rxjs';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { TestingAccount } from '../conf/conf.spec';
 

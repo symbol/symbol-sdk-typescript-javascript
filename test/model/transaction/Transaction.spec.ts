@@ -270,7 +270,7 @@ describe('Transaction', () => {
             const hash1 = Transaction.createTransactionHash(knownPayload, generationHashBytes, NetworkType.MIJIN_TEST);
 
             // modify signature part of the payload ; this must affect produced hash
-            const tamperedSig = knownPayload.substr(0, 16) + '12' + knownPayload.substr(18);
+            const tamperedSig = `${knownPayload.substr(0, 16)}12${knownPayload.substr(18)}`;
             const hash2 = Transaction.createTransactionHash(
                 tamperedSig, // replaced two first bytes of signature
                 generationHashBytes,
@@ -284,7 +284,7 @@ describe('Transaction', () => {
             const hash1 = Transaction.createTransactionHash(knownPayload, generationHashBytes, NetworkType.MIJIN_TEST);
 
             // modify signer public key part of the payload ; this must affect produced hash
-            const tamperedSigner = knownPayload.substr(0, 16 + 128) + '12' + knownPayload.substr(16 + 128 + 2);
+            const tamperedSigner = `${knownPayload.substr(0, 16 + 128)}12${knownPayload.substr(16 + 128 + 2)}`;
             const hash2 = Transaction.createTransactionHash(
                 tamperedSigner, // replaced two first bytes of signer public key
                 generationHashBytes,
@@ -310,10 +310,9 @@ describe('Transaction', () => {
             const hash1 = Transaction.createTransactionHash(knownPayload, generationHashBytes, NetworkType.MIJIN_TEST);
 
             // modify "transaction body" part of payload ; this must affect produced transaction hash
-            const tamperedBody =
-                knownAggregatePayload.substr(0, Transaction.Body_Index * 2) +
-                '12' +
-                knownAggregatePayload.substr(Transaction.Body_Index * 2 + 2);
+            const tamperedBody = `${knownAggregatePayload.substr(0, Transaction.Body_Index * 2)}12${knownAggregatePayload.substr(
+                Transaction.Body_Index * 2 + 2,
+            )}`;
             const hash2 = Transaction.createTransactionHash(
                 tamperedBody,
                 generationHashBytes, // uses different generation hash
@@ -343,7 +342,7 @@ describe('Transaction', () => {
 
             // modify end of payload ; this must not affect produced transaction hash
             // this test is valid only for Aggregate Transactions
-            const tamperedSize = '12' + knownAggregatePayload.substr(2);
+            const tamperedSize = `12${knownAggregatePayload.substr(2)}`;
             const hashTamperedBody = Transaction.createTransactionHash(
                 tamperedSize, // replace in size (header change should not affect hash)
                 generationHashBytes,
@@ -351,10 +350,9 @@ describe('Transaction', () => {
             );
 
             // modify "merkle hash" part of payload ; this must affect produced transaction hash
-            const tamperedPayload =
-                knownAggregatePayload.substr(0, Transaction.Body_Index * 2) +
-                '12' +
-                knownAggregatePayload.substr(Transaction.Body_Index * 2 + 2);
+            const tamperedPayload = `${knownAggregatePayload.substr(0, Transaction.Body_Index * 2)}12${knownAggregatePayload.substr(
+                Transaction.Body_Index * 2 + 2,
+            )}`;
             const hashTamperedMerkle = Transaction.createTransactionHash(
                 tamperedPayload, // replace in merkle hash (will affect hash)
                 generationHashBytes,
@@ -379,6 +377,7 @@ class FakeTransaction extends Transaction {
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
         throw new Error('Not implemented');
     }
+
     resolveAliases(): TransferTransaction {
         throw new Error('Not implemented');
     }

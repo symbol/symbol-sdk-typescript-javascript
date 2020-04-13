@@ -32,11 +32,13 @@ export class ReceiptVersion {
      * @type {number}
      */
     public static readonly BALANCE_CHANGE = 0x1;
+
     /**
      * Artifact expiry receipt version
      * @type {number}
      */
     public static readonly ARTIFACT_EXPIRY = 0x1;
+
     /**
      * Transaction statement version
      * @type {number}

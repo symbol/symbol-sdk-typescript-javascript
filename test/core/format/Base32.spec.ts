@@ -66,7 +66,7 @@ describe('base32', () => {
         it('accepts all byte values', () => {
             // Arrange:
             const data: any = [];
-            for (let i = 0; 260 > i; ++i) {
+            for (let i = 0; i < 260; ++i) {
                 data.push(i & 0xff);
             }
 
@@ -91,7 +91,7 @@ describe('base32', () => {
 
         it('throws if input size is not a multiple of block size', () => {
             // Arrange:
-            for (let i = 2; 10 > i; i += 2) {
+            for (let i = 2; i < 10; i += 2) {
                 const input = new Uint8Array(i);
 
                 // Act + Assert:
@@ -132,7 +132,7 @@ describe('base32', () => {
 
         it('throws if input size is not a multiple of block size', () => {
             // Arrange:
-            for (let i = 1; 8 > i; ++i) {
+            for (let i = 1; i < 8; ++i) {
                 const input = 'A'.repeat(i);
 
                 // Act + Assert:

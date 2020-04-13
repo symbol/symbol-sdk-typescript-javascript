@@ -92,7 +92,7 @@ describe('TransactionService', () => {
      */
     describe('Create address alias NamespaceId', () => {
         it('Announce NamespaceRegistrationTransaction', () => {
-            const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
+            const namespaceName = `root-test-namespace-${Math.floor(Math.random() * 10000)}`;
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
@@ -109,7 +109,7 @@ describe('TransactionService', () => {
 
     describe('Create mosaic alias NamespaceId', () => {
         it('Announce NamespaceRegistrationTransaction', () => {
-            const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
+            const namespaceName = `root-test-namespace-${Math.floor(Math.random() * 10000)}`;
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,

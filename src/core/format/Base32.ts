@@ -23,7 +23,7 @@ export class Base32 {
      * @returns {string} The base32 encoded string corresponding to the input data.
      */
     public static Base32Encode = (data: Uint8Array): string => {
-        if (0 !== data.length % utilities.Decoded_Block_Size) {
+        if (data.length % utilities.Decoded_Block_Size !== 0) {
             throw Error(`decoded size must be multiple of ${utilities.Decoded_Block_Size}`);
         }
         const output = new Array((data.length / utilities.Decoded_Block_Size) * utilities.Encoded_Block_Size);
@@ -39,7 +39,7 @@ export class Base32 {
      * @returns {Uint8Array} The binary data corresponding to the input string.
      */
     public static Base32Decode = (encoded: string): Uint8Array => {
-        if (0 !== encoded.length % utilities.Encoded_Block_Size) {
+        if (encoded.length % utilities.Encoded_Block_Size !== 0) {
             throw Error(`encoded size must be multiple of ${utilities.Encoded_Block_Size}`);
         }
 

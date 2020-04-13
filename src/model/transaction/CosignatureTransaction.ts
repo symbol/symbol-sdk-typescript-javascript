@@ -76,10 +76,10 @@ export class CosignatureTransaction {
         if (!this.transactionToCosign.transactionInfo!.hash) {
             throw new Error('Transaction to cosign should be announced first');
         }
-        const hash = this.transactionToCosign.transactionInfo!.hash;
-        const hashBytes = Convert.hexToUint8(hash ? hash : '');
+        const { hash } = this.transactionToCosign.transactionInfo!;
+        const hashBytes = Convert.hexToUint8(hash || '');
         const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(account.privateKey);
         const signature = KeyPair.sign(keyPairEncoded, new Uint8Array(hashBytes));
-        return new CosignatureSignedTransaction(hash ? hash : '', Convert.uint8ToHex(signature), account.publicKey);
+        return new CosignatureSignedTransaction(hash || '', Convert.uint8ToHex(signature), account.publicKey);
     }
 }

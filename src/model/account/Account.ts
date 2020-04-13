@@ -82,6 +82,7 @@ export class Account {
         const address = Address.createFromPublicKey(Convert.uint8ToHex(keyPair.publicKey), networkType);
         return new Account(address, keyPair);
     }
+
     /**
      * Create a new encrypted Message
      * @param message - Plain message to be encrypted
@@ -103,6 +104,7 @@ export class Account {
     public decryptMessage(encryptedMessage: EncryptedMessage, publicAccount: PublicAccount, networkType: NetworkType): PlainMessage {
         return EncryptedMessage.decrypt(encryptedMessage, this.privateKey, publicAccount);
     }
+
     /**
      * Account public key.
      * @return {string}
@@ -175,6 +177,7 @@ export class Account {
     ): SignedTransaction {
         return transaction.signTransactionGivenSignatures(this, cosignatureSignedTransactions, generationHash);
     }
+
     /**
      * Sign aggregate signature transaction
      * @param cosignatureTransaction - The aggregate signature transaction.

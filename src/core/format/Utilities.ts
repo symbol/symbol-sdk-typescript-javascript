@@ -69,14 +69,14 @@ export const tryParseByte = (char1, char2) => {
  * @returns {number} The number represented by the input or undefined.
  */
 export const tryParseUint = (str) => {
-    if ('0' === str) {
+    if (str === '0') {
         return 0;
     }
     let value = 0;
     for (const char of str) {
         const charMap = Char_To_Digit_Map();
         const digit = charMap[char];
-        if (undefined === digit || (0 === value && 0 === digit)) {
+        if (undefined === digit || (value === 0 && digit === 0)) {
             return undefined;
         }
 
@@ -100,7 +100,7 @@ export const throwInvalidFqn = (reason, name) => {
 };
 
 export const extractPartName = (name, start, size) => {
-    if (0 === size) {
+    if (size === 0) {
         this.throwInvalidFqn('empty part', name);
     }
     const partName = name.substr(start, size);
@@ -117,7 +117,7 @@ export const append = (path, id, name) => {
 export const split = (name, processor) => {
     let start = 0;
     for (let index = 0; index < name.length; ++index) {
-        if ('.' === name[index]) {
+        if (name[index] === '.') {
             processor(start, index - start);
             start = index + 1;
         }

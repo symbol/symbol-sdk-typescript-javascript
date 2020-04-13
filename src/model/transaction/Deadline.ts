@@ -58,7 +58,7 @@ export class Deadline {
      * @returns {Deadline}
      */
     public static createFromDTO(value: string | number[]): Deadline {
-        const uint64Value = 'string' === typeof value ? UInt64.fromNumericString(value) : new UInt64(value);
+        const uint64Value = typeof value === 'string' ? UInt64.fromNumericString(value) : new UInt64(value);
         const dateSeconds = uint64Value.compact();
         const deadline = LocalDateTime.ofInstant(
             Instant.ofEpochMilli(Math.round(dateSeconds + Deadline.timestampNemesisBlock * 1000)),

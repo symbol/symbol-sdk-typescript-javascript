@@ -15,11 +15,12 @@
  */
 
 import { sha3_256 } from 'js-sha3';
-import RIPEMD160 = require('ripemd160');
 import { NetworkType } from '../../model/network/NetworkType';
 import { Base32 } from './Base32';
 import { Convert } from './Convert';
 import { RawArray } from './RawArray';
+
+import RIPEMD160 = require('ripemd160');
 
 export class RawAddress {
     static readonly constants = {
@@ -31,6 +32,7 @@ export class RawAddress {
             checksum: 4,
         },
     };
+
     /**
      * Converts an encoded address string to a decoded address.
      * @param {string} encoded The encoded address string.

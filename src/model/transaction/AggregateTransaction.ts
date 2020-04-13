@@ -387,7 +387,7 @@ export class AggregateTransaction extends Transaction {
      * @param alignment Next multiple alignment
      */
     private getInnerTransactionPaddingSize(size: number, alignment: number): number {
-        return 0 === size % alignment ? 0 : alignment - (size % alignment);
+        return size % alignment === 0 ? 0 : alignment - (size % alignment);
     }
 
     /**

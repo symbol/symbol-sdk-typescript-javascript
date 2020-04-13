@@ -15,7 +15,6 @@
  */
 
 import { expect } from 'chai';
-import http = require('http');
 import {
     BlockRoutesApi,
     TransactionRoutesApi,
@@ -33,6 +32,8 @@ import { AggregateTransaction } from '../../src/model/transaction/AggregateTrans
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { NIS2_URL, TestingAccount } from '../conf/conf.spec';
+
+import http = require('http');
 
 describe('TransactionHttp', () => {
     const account = TestingAccount;
@@ -69,8 +70,8 @@ describe('TransactionHttp', () => {
         blockRoutesApi = mock();
         clientResponse = mock();
         transactionHttp = new TransactionHttp(NIS2_URL);
-        (transactionHttp as object)['transactionRoutesApi'] = instance(transactionRoutesApi);
-        (transactionHttp as object)['blockRoutesApi'] = instance(blockRoutesApi);
+        (transactionHttp as object).transactionRoutesApi = instance(transactionRoutesApi);
+        (transactionHttp as object).blockRoutesApi = instance(blockRoutesApi);
     });
 
     it('Test getTransactionStatus method', async () => {

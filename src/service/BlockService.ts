@@ -84,10 +84,9 @@ export class BlockService implements IBlockService {
             // Left
             if (pathItem.position !== undefined && pathItem.position === PositionEnum.Left) {
                 return hasher.update(Buffer.from(pathItem.hash + proofHash, 'hex')).hex();
-            } else {
-                // Right
-                return hasher.update(Buffer.from(proofHash + pathItem.hash, 'hex')).hex();
             }
+            // Right
+            return hasher.update(Buffer.from(proofHash + pathItem.hash, 'hex')).hex();
         }, leaf);
         return rootToCompare.toUpperCase() === rootHash.toUpperCase();
     }

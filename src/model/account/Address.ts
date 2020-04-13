@@ -42,7 +42,7 @@ export class Address {
         let networkType: NetworkType;
         const addressTrimAndUpperCase: string = rawAddress.trim().toUpperCase().replace(/-/g, '');
         if (addressTrimAndUpperCase.length !== 40) {
-            throw new Error('Address ' + addressTrimAndUpperCase + ' has to be 40 characters long');
+            throw new Error(`Address ${addressTrimAndUpperCase} has to be 40 characters long`);
         }
         if (addressTrimAndUpperCase.charAt(0) === 'S') {
             networkType = NetworkType.MIJIN_TEST;

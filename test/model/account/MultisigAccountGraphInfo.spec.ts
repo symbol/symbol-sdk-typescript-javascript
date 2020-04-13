@@ -96,7 +96,7 @@ describe('MultisigAccountGraphInfo', () => {
         );
     });
 
-    //TODO finish tests!
+    // TODO finish tests!
     describe('hasCosigner', () => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         it('should return true when account is in the cosignatories list', () => {});

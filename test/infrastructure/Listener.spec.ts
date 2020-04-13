@@ -87,6 +87,7 @@ describe('Listener', () => {
 
             class WebSocketMock {
                 constructor(public readonly url: string) {}
+
                 send(payload: string) {
                     expect(payload).to.be.eq(`{"subscribe":"status/${subscribedAddress.plain()}"}`);
                 }

@@ -41,11 +41,13 @@ import { UInt64 } from '../../model/UInt64';
 const extractUnresolvedAddress = (unresolvedAddress: any): Address | NamespaceId => {
     if (typeof unresolvedAddress === 'string') {
         return UnresolvedMapping.toUnresolvedAddress(unresolvedAddress);
-    } else if (typeof unresolvedAddress === 'object') {
+    }
+    if (typeof unresolvedAddress === 'object') {
         // Is JSON object
         if (unresolvedAddress.hasOwnProperty('address')) {
             return Address.createFromRawAddress(unresolvedAddress.address);
-        } else if (unresolvedAddress.hasOwnProperty('id')) {
+        }
+        if (unresolvedAddress.hasOwnProperty('id')) {
             return NamespaceId.createFromEncoded(unresolvedAddress.id);
         }
     }
