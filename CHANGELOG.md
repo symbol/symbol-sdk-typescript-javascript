@@ -3,7 +3,28 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [v0.9.6][v0.9.6] - 
+## [v0.9.7][v0.9.7] - 
+
+### Milestone: [catapult-server@v0.9.3.2](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.2)
+
+### [v0.9.7-beta1][v0.9.7-beta1] - 06-Apr-2020
+
+#### Added
+
+- Added refresh button for namespace list (fixes #186)
+- Added refresh button for mosaics list (fixes #146)
+- Added automatic generation of QR Code for Invoices (fixes #168)
+- Added eslint and linter configuration (fixes #166)
+
+#### Fixed
+
+- SignerSelector address format bug starting with A (fixes #205)
+- Password change related bug fixes (fixes #195)
+- Fix incorrect max fee display (fixes #188)
+- Fixed mosaic balance panel list Close button (fixes #151)
+
+
+## [v0.9.6][v0.9.6] - 21-Mar-2020
 
 ### Milestone: [catapult-server@v0.9.3.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.1)
 
@@ -141,6 +162,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Mosaic definition *multi-signature* feature bug with signer selection (aggregate bonded only)
 
 
+[v0.9.7]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.7-beta1
+[v0.9.7-beta1]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.6...v0.9.7-beta1
 [v0.9.6]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.6-beta2
 [v0.9.6-beta2]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.6-beta1...v0.9.6-beta2
 [v0.9.6-beta1]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta6...v0.9.6-beta1
