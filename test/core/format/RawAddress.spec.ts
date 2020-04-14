@@ -69,6 +69,13 @@ describe('address', () => {
             // Assert:
             expect(encoded).to.equal(expected);
         });
+
+        it('can create encoded address from address to throw', () => {
+            // Arrange:
+            const decodedHex = '60000000C089D996585466380EDBDC19D4959184893E38CA6';
+            // Assert:
+            expect(() => address.addressToString(convert.hexToUint8(decodedHex))).to.throw();
+        });
     });
 
     describe('publicKeyToAddress', () => {
@@ -169,6 +176,14 @@ describe('address', () => {
             const decoded = convert.hexToUint8(validHex);
             decoded[5] ^= 0xff; // ruin ripemd160 hash
 
+            // Assert:
+            expect(address.isValidAddress(decoded)).to.equal(false);
+        });
+
+        it('returns false for address with invalid length', () => {
+            // Arrange:
+            const validHex = '6823BB7C3C089D996585466380EDBDC19D4959184893E38CA6AABB';
+            const decoded = convert.hexToUint8(validHex);
             // Assert:
             expect(address.isValidAddress(decoded)).to.equal(false);
         });

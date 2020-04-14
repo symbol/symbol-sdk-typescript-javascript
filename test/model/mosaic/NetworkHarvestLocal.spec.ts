@@ -28,6 +28,13 @@ describe('NetworkHarvestLocal', () => {
         expect(currency.amount.compact()).to.be.equal(1000 * 1000);
     });
 
+    it('should createComplete an NetworkHarvestLocal object', () => {
+        const currency = NetworkHarvestLocal.createRelative(UInt64.fromUint(1000));
+
+        deepEqual(currency.id.id.toHex(), '941299B2B7E1291C');
+        expect(currency.amount.compact()).to.be.equal(1000 * 1000);
+    });
+
     it('should set amount in smallest unit when toDTO()', () => {
         const currency = NetworkHarvestLocal.createRelative(1000);
         expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000 * 1000);
