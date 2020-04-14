@@ -105,7 +105,7 @@ describe('Account', () => {
         ];
         const recreatedTx = TransactionMapping.createFromPayload(aliceSignedTransaction.payload) as AggregateTransaction;
 
-        const signedTransaction = recreatedTx.signTransactionGivenSignatures(account, cosignatureSignedTransactions, generationHash);
+        const signedTransaction = account.signTransactionGivenSignatures(recreatedTx, cosignatureSignedTransactions, generationHash);
 
         expect(signedTransaction.payload).not.to.be.undefined;
         expect(signedTransaction.payload.length).to.be.greaterThan(0);

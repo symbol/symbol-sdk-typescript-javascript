@@ -29,6 +29,13 @@ describe('NetworkCurrencyLocal', () => {
         expect(currency.amount.compact()).to.be.equal(1000 * 1000000);
     });
 
+    it('should createComplete an NetworkCurrencyLocal object', () => {
+        const currency = NetworkCurrencyLocal.createRelative(UInt64.fromUint(1000));
+
+        deepEqual(currency.id.id.toHex(), '85BBEA6CC462B244'); // holds NAMESPACE_ID
+        expect(currency.amount.compact()).to.be.equal(1000 * 1000000);
+    });
+
     it('should set amount in smallest unit when toDTO()', () => {
         const currency = NetworkCurrencyLocal.createRelative(1000);
         expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000 * 1000000);
