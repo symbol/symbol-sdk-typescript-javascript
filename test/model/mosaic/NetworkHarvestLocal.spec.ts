@@ -39,4 +39,14 @@ describe('NetworkHarvestLocal', () => {
         expect(NetworkHarvestLocal.TRANSFERABLE).to.be.equal(true);
         expect(NetworkHarvestLocal.SUPPLY_MUTABLE).to.be.equal(true);
     });
+
+    it('should create network currency with absolute amount', () => {
+        const currency = NetworkHarvestLocal.createAbsolute(1000);
+        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000);
+    });
+
+    it('should create network currency with absolute amount in Uint64', () => {
+        const currency = NetworkHarvestLocal.createAbsolute(UInt64.fromUint(1000));
+        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000);
+    });
 });

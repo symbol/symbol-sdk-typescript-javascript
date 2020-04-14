@@ -40,6 +40,16 @@ describe('NetworkCurrencyLocal', () => {
         expect(NetworkCurrencyLocal.TRANSFERABLE).to.be.equal(true);
         expect(NetworkCurrencyLocal.SUPPLY_MUTABLE).to.be.equal(false);
     });
+
+    it('should create network currency with absolute amount', () => {
+        const currency = NetworkCurrencyLocal.createAbsolute(1000);
+        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000);
+    });
+
+    it('should create network currency with absolute amount in Uint64', () => {
+        const currency = NetworkCurrencyLocal.createAbsolute(UInt64.fromUint(1000));
+        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000);
+    });
 });
 
 describe('NetworkCurrencyPublic', () => {
@@ -59,5 +69,15 @@ describe('NetworkCurrencyPublic', () => {
         expect(NetworkCurrencyPublic.DIVISIBILITY).to.be.equal(6);
         expect(NetworkCurrencyPublic.TRANSFERABLE).to.be.equal(true);
         expect(NetworkCurrencyPublic.SUPPLY_MUTABLE).to.be.equal(false);
+    });
+
+    it('should create network currency with absolute amount', () => {
+        const currency = NetworkCurrencyPublic.createAbsolute(1000);
+        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000);
+    });
+
+    it('should create network currency with absolute amount in Uint64', () => {
+        const currency = NetworkCurrencyPublic.createAbsolute(UInt64.fromUint(1000));
+        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000);
     });
 });
