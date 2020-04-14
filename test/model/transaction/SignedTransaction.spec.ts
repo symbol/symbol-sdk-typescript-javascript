@@ -20,7 +20,6 @@ import { SignedTransaction } from '../../../src/model/transaction/SignedTransact
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 
 describe('SignedTransaction', () => {
-    const hash = '8498B38D89C1DC8A448EA5824938FF828926CD9F7747B1844B59B4B6807E878B';
     const publicKey = '5D58EC16F07BF00BDE9B040E7451A37F9908C59E143A01438C04345D8E9DDF39';
 
     it('should return transfer transaction type', () => {

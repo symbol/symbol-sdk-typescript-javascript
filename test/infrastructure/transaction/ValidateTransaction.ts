@@ -23,7 +23,7 @@ import { TransactionType } from '../../../src/model/transaction/TransactionType'
 import { UInt64 } from '../../../src/model/UInt64';
 
 const ValidateTransaction = {
-    validateStandaloneTx: (transaction, transactionDTO) => {
+    validateStandaloneTx: (transaction: any, transactionDTO: any): void => {
         deepEqual(transaction.transactionInfo.height, UInt64.fromNumericString(transactionDTO.meta.height));
         expect(transaction.transactionInfo.hash).to.be.equal(transactionDTO.meta.hash);
         expect(transaction.transactionInfo.merkleComponentHash).to.be.equal(transactionDTO.meta.merkleComponentHash);
@@ -50,7 +50,7 @@ const ValidateTransaction = {
             ValidateTransaction.validateMultisigModificationTx(transaction, transactionDTO);
         }
     },
-    validateAggregateTx: (aggregateTransaction, aggregateTransactionDTO) => {
+    validateAggregateTx: (aggregateTransaction: any, aggregateTransactionDTO: any): void => {
         deepEqual(aggregateTransaction.transactionInfo.height, UInt64.fromNumericString(aggregateTransactionDTO.meta.height));
         expect(aggregateTransaction.transactionInfo.hash).to.be.equal(aggregateTransactionDTO.meta.hash);
         expect(aggregateTransaction.transactionInfo.merkleComponentHash).to.be.equal(aggregateTransactionDTO.meta.merkleComponentHash);
@@ -70,7 +70,7 @@ const ValidateTransaction = {
             aggregateTransactionDTO.transaction.transactions[0],
         );
     },
-    validateMosaicCreationTx: (mosaicDefinitionTransaction, mosaicDefinitionTransactionDTO) => {
+    validateMosaicCreationTx: (mosaicDefinitionTransaction: any, mosaicDefinitionTransactionDTO: any): void => {
         deepEqual(mosaicDefinitionTransaction.mosaicId, new MosaicId(mosaicDefinitionTransactionDTO.transaction.id));
         expect(mosaicDefinitionTransaction.divisibility).to.be.equal(mosaicDefinitionTransactionDTO.transaction.divisibility);
         deepEqual(mosaicDefinitionTransaction.duration, UInt64.fromNumericString(mosaicDefinitionTransactionDTO.transaction.duration));
@@ -78,12 +78,12 @@ const ValidateTransaction = {
         expect(mosaicDefinitionTransaction.flags.supplyMutable).to.be.equal(true);
         expect(mosaicDefinitionTransaction.flags.transferable).to.be.equal(true);
     },
-    validateMosaicSupplyChangeTx: (mosaicSupplyChangeTransaction, mosaicSupplyChangeTransactionDTO) => {
+    validateMosaicSupplyChangeTx: (mosaicSupplyChangeTransaction: any, mosaicSupplyChangeTransactionDTO: any): void => {
         deepEqual(mosaicSupplyChangeTransaction.mosaicId, new MosaicId(mosaicSupplyChangeTransactionDTO.transaction.mosaicId));
         expect(mosaicSupplyChangeTransaction.action).to.be.equal(mosaicSupplyChangeTransactionDTO.transaction.action);
         deepEqual(mosaicSupplyChangeTransaction.delta, UInt64.fromNumericString(mosaicSupplyChangeTransactionDTO.transaction.delta));
     },
-    validateMultisigModificationTx: (modifyMultisigAccountTransaction, modifyMultisigAccountTransactionDTO) => {
+    validateMultisigModificationTx: (modifyMultisigAccountTransaction: any, modifyMultisigAccountTransactionDTO: any): void => {
         expect(modifyMultisigAccountTransaction.minApprovalDelta).to.be.equal(
             modifyMultisigAccountTransactionDTO.transaction.minApprovalDelta,
         );
@@ -93,7 +93,7 @@ const ValidateTransaction = {
         expect(modifyMultisigAccountTransaction.publicKeyAdditions.length).to.be.equal(1);
         expect(modifyMultisigAccountTransaction.publicKeyDeletions.length).to.be.equal(0);
     },
-    validateNamespaceCreationTx: (registerNamespaceTransaction, registerNamespaceTransactionDTO) => {
+    validateNamespaceCreationTx: (registerNamespaceTransaction: any, registerNamespaceTransactionDTO: any): void => {
         expect(registerNamespaceTransaction.registrationType).to.be.equal(registerNamespaceTransactionDTO.transaction.registrationType);
         expect(registerNamespaceTransaction.namespaceName).to.be.equal(registerNamespaceTransactionDTO.transaction.name);
         deepEqual(registerNamespaceTransaction.namespaceId, NamespaceId.createFromEncoded(registerNamespaceTransactionDTO.transaction.id));
@@ -110,7 +110,7 @@ const ValidateTransaction = {
             );
         }
     },
-    validateTransferTx: (transferTransaction, transferTransactionDTO) => {
+    validateTransferTx: (transferTransaction: any, transferTransactionDTO: any): void => {
         deepEqual(transferTransaction.recipientAddress, Address.createFromEncoded(transferTransactionDTO.transaction.recipientAddress));
         expect(transferTransaction.message.payload).to.be.equal('test-message');
     },

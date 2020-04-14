@@ -107,7 +107,7 @@ describe('AccountHttp', () => {
         reset(accountRoutesApi);
     });
 
-    function assertAccountInfo(accountInfo: AccountInfo) {
+    function assertAccountInfo(accountInfo: AccountInfo): void {
         expect(accountInfo).to.be.not.null;
         expect(accountInfo.accountType).to.be.equals(AccountType.Main);
         expect(accountInfo.addressHeight.toString()).to.be.equals(accountDTO.addressHeight);
@@ -127,7 +127,7 @@ describe('AccountHttp', () => {
         expect(accountInfo.activityBucket[0].totalFeesPaid).to.be.equals(activityBucketDTO.totalFeesPaid);
     }
 
-    function assertTransaction(transaction: Transaction) {
+    function assertTransaction(transaction: Transaction): void {
         expect(transaction).to.be.not.null;
         expect(transaction.type).to.be.equals(transactionInfoDTO.transaction.type);
         expect(transaction.deadline.toString()).to.be.equals(transactionInfoDTO.transaction.deadline);

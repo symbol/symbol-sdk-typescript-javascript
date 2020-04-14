@@ -168,16 +168,16 @@ const mosaicTestVector = {
 };
 
 describe('id generator', () => {
-    function generateNamespaceId(parentId, name) {
+    function generateNamespaceId(parentId, name): number[] {
         const hash = sha3_256.create();
-        hash.update(Uint32Array.from(parentId).buffer as any);
+        hash.update(Uint32Array.from(parentId).buffer);
         hash.update(name);
         const result = new Uint32Array(hash.arrayBuffer());
         // right zero-filling required to keep unsigned number representation
         return [result[0], (result[1] | 0x80000000) >>> 0];
     }
 
-    function addBasicTests(generator) {
+    function addBasicTests(generator): void {
         it('produces different results for different names', () => {
             // Assert:
             ['bloodyrookie.alice', 'nem.mex', 'bloodyrookie.xem', 'bloody_rookie.xem'].forEach((name) =>
@@ -220,7 +220,7 @@ describe('id generator', () => {
 
         // @dataProvider mosaicTestVector
         it('generates correct mosaicId given nonce and public key', () => {
-            mosaicTestVector.rows.map((row, i) => {
+            mosaicTestVector.rows.map((row) => {
                 const pubKey = convert.hexToUint8(row.publicKey);
                 const nonce = convert.hexToUint8(row.nonce).reverse(); // Little-Endianness!
                 const mosaicId = idGenerator.generateMosaicId(nonce, pubKey);
@@ -254,7 +254,7 @@ describe('id generator', () => {
 
         it('supports multi level namespaces', () => {
             // Arrange:
-            const expected: any = [];
+            const expected: number[][] = [];
             expected.push(generateNamespaceId(constants.namespace_base_id, 'foo'));
             expected.push(generateNamespaceId(expected[0], 'bar'));
             expected.push(generateNamespaceId(expected[1], 'baz'));

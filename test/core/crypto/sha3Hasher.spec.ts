@@ -20,7 +20,7 @@ import { Convert as convert } from '../../../src/core/format';
 describe('hasher', () => {
     const inputs = ['', 'CC', '41FB', '1F877C', 'C1ECFDFC', '9F2FCC7C90DE090D6B87CD7E9718C1EA6CB21118FC2D5DE9F97E5DB6AC1E9C10'];
 
-    function addSha3Tests(length, expectedOutputs) {
+    function addSha3Tests(length, expectedOutputs): void {
         describe('func', () => {
             it('can hash test vectors', () => {
                 // Sanity:

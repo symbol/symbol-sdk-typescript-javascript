@@ -105,10 +105,9 @@ export class RawAddress {
     /**
      * Determines the validity of a decoded address.
      * @param {Uint8Array} decoded The decoded address.
-     * @param {NetworkType} networkType The network identifier.
      * @returns {boolean} true if the decoded address is valid, false otherwise.
      */
-    public static isValidAddress = (decoded: Uint8Array, networkType: NetworkType): boolean => {
+    public static isValidAddress = (decoded: Uint8Array): boolean => {
         if (RawAddress.constants.sizes.addressDecoded !== decoded.length) {
             return false;
         }

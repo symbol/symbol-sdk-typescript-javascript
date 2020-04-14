@@ -25,7 +25,6 @@ import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicInfo } from '../../src/model/mosaic/MosaicInfo';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { AccountIds } from 'symbol-openapi-typescript-node-client';
-import { assert } from 'chai';
 
 describe('MosaicHttp', () => {
     const publicAccount = PublicAccount.createFromPublicKey(
@@ -66,7 +65,7 @@ describe('MosaicHttp', () => {
         reset(mosaicRoutesApi);
     });
 
-    function assertMosaicInfo(mosaicInfo: MosaicInfo) {
+    function assertMosaicInfo(mosaicInfo: MosaicInfo): void {
         expect(mosaicInfo).to.be.not.null;
         expect(mosaicInfo.divisibility).to.be.equals(6);
         expect(mosaicInfo.duration.toString()).to.be.equals(mosaicDto.duration);

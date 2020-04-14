@@ -16,7 +16,7 @@
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import * as CryptoJS from 'crypto-js';
-import { keccak_256, sha3_256 } from 'js-sha3';
+import { sha3_256 } from 'js-sha3';
 import { Convert, Convert as convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
@@ -138,7 +138,7 @@ describe('SecretLockTransaction', () => {
     it('should throw exception when the input is not related to HashTyp: Op_Sha3_256', () => {
         expect(() => {
             const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
-            const secretLockTransaction = SecretLockTransaction.create(
+            SecretLockTransaction.create(
                 Deadline.create(),
                 NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
@@ -173,7 +173,7 @@ describe('SecretLockTransaction', () => {
     it('should throw exception when the input is not related to HashTyp: Op_Hash_160', () => {
         expect(() => {
             const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
-            const secretLockTransaction = SecretLockTransaction.create(
+            SecretLockTransaction.create(
                 Deadline.create(),
                 NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
@@ -207,7 +207,7 @@ describe('SecretLockTransaction', () => {
     it('should throw exception when the input is not related to HashTyp: Op_Hash_256', () => {
         expect(() => {
             const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
-            const secretLockTransaction = SecretLockTransaction.create(
+            SecretLockTransaction.create(
                 Deadline.create(),
                 NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),

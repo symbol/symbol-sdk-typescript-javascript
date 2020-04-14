@@ -18,7 +18,6 @@ import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { Id } from '../../../src/model/Id';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
-import { UInt64 } from '../../../src/model/UInt64';
 
 describe('NamespaceId', () => {
     it('should be created from root namespace name', () => {

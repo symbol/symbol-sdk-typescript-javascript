@@ -101,7 +101,7 @@ describe('BlockHttp', () => {
         reset(blockRoutesApi);
     });
 
-    function assertBlockInfo(blockInfo: BlockInfo) {
+    function assertBlockInfo(blockInfo: BlockInfo): void {
         expect(blockInfo).to.be.not.null;
         expect(blockInfo.type).to.be.equals(blockInfoDto.block.type);
         expect(blockInfo.previousBlockHash).to.be.equals(blockInfoDto.block.previousBlockHash);
@@ -122,7 +122,7 @@ describe('BlockHttp', () => {
         expect(blockInfo.totalFee.toString()).to.be.equals(blockInfoDto.meta.totalFee);
     }
 
-    function assertTransaction(transaction: Transaction) {
+    function assertTransaction(transaction: Transaction): void {
         expect(transaction).to.be.not.null;
         expect(transaction.type).to.be.equals(transactionInfoDTO.transaction.type);
         expect(transaction.deadline.toString()).to.be.equals(transactionInfoDTO.transaction.deadline);

@@ -100,7 +100,7 @@ export class Convert {
      * @param {Uint8Array} input A uint8 array.
      * @returns {Uint32Array} A uint32 array created from the input.
      */
-    public static uint8ToUint32 = (input) => new Uint32Array(input.buffer);
+    public static uint8ToUint32 = (input): Uint32Array => new Uint32Array(input.buffer);
 
     /**
      * Converts a uint32 array to a uint8 array.

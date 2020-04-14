@@ -29,7 +29,7 @@ export class Crypto {
      *
      * @return {object} - The encrypted data
      */
-    public static toMobileKey = (password, privateKey) => {
+    public static toMobileKey = (password: string, privateKey: string): any => {
         // Errors
         if (!password || !privateKey) {
             throw new Error('Missing argument !');
@@ -60,7 +60,7 @@ export class Crypto {
      *
      * @return {object} - The derived private key
      */
-    public static derivePassSha = (password, count) => {
+    public static derivePassSha = (password: string, count: number): any => {
         // Errors
         if (!password) {
             throw new Error('Missing argument !');
@@ -89,7 +89,7 @@ export class Crypto {
      *
      * @return {object} - The encrypted data
      */
-    public static encrypt = (data, key) => {
+    public static encrypt = (data: string, key: Uint8Array): any => {
         // Errors
         if (!data || !key) {
             throw new Error('Missing argument !');
@@ -116,7 +116,7 @@ export class Crypto {
      *
      * @return {string} - The decrypted hex string
      */
-    public static decrypt = (data) => {
+    public static decrypt = (data: any): string => {
         // Errors
         if (!data) {
             throw new Error('Missing argument !');
@@ -139,7 +139,7 @@ export class Crypto {
      *
      * @return {object|boolean} - The account private key in and object or false
      */
-    public static passwordToPrivateKey = (common, walletAccount, algo) => {
+    public static passwordToPrivateKey = (common: any, walletAccount: any, algo: WalletAlgorithm): any => {
         // Errors
         if (!common || !common.password || !walletAccount || !algo) {
             throw new Error('Missing argument !');
@@ -202,7 +202,7 @@ export class Crypto {
      *
      * @return {Uint8Array} - A random key
      */
-    public static randomKey = () => {
+    public static randomKey = (): Uint8Array => {
         return Crypto.randomBytes(32);
     };
 
@@ -214,7 +214,7 @@ export class Crypto {
      *
      * @return {object} - The encoded data
      */
-    public static encodePrivateKey = (privateKey, password) => {
+    public static encodePrivateKey = (privateKey: string, password: string): any => {
         // Errors
         if (!privateKey || !password) {
             throw new Error('Missing argument !');
@@ -334,7 +334,7 @@ export class Crypto {
      *
      * @return {Uint8Array}
      */
-    public static randomBytes = (length) => {
+    public static randomBytes = (length: number): any => {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const crypto = require('crypto');
         return crypto.randomBytes(length);

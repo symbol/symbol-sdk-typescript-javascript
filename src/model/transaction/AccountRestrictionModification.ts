@@ -77,7 +77,7 @@ export class AccountRestrictionModification<T> {
     /**
      * @internal
      */
-    toDTO() {
+    toDTO(): any {
         return {
             value: this.value,
             modificationAction: this.modificationAction,

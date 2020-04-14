@@ -16,7 +16,6 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NetworkHarvestLocal } from '../../../src/model/mosaic/NetworkHarvestLocal';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { UInt64 } from '../../../src/model/UInt64';

@@ -152,7 +152,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<NamespaceInfo[]>
      */
-    public getNamespacesFromAccounts(addresses: Address[], queryParams?: QueryParams): Observable<NamespaceInfo[]> {
+    public getNamespacesFromAccounts(addresses: Address[]): Observable<NamespaceInfo[]> {
         const publicKeysBody = {
             addresses: addresses.map((address) => address.plain()),
         };

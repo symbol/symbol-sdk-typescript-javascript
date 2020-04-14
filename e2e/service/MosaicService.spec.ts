@@ -17,7 +17,6 @@
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
 import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
 import { Address } from '../../src/model/account/Address';
-import { NetworkType } from '../../src/model/network/NetworkType';
 import { MosaicService } from '../../src/service/MosaicService';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 

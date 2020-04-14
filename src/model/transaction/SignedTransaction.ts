@@ -60,7 +60,7 @@ export class SignedTransaction {
     /**
      * Create DTO object
      */
-    toDTO() {
+    toDTO(): any {
         return {
             payload: this.payload,
             hash: this.hash,

@@ -27,13 +27,11 @@ import { UInt64 } from '../../../src/model/UInt64';
 
 describe('Receipt - CreateStatementFromDTO', () => {
     let account: Account;
-    let account2: Account;
     let statementDto;
     const netWorkType = NetworkType.MIJIN_TEST;
 
     before(() => {
         account = Account.createFromPrivateKey('D242FB34C2C4DD36E995B9C865F93940065E326661BA5A4A247331D211FE3A3D', NetworkType.MIJIN_TEST);
-        account2 = Account.createFromPrivateKey('E5DCCEBDB01A8B03A7DB7BA5888E2E33FD4617B5F6FED48C4C09C0780F422713', NetworkType.MIJIN_TEST);
         statementDto = {
             transactionStatements: [
                 {

@@ -17,7 +17,6 @@
 import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Mosaic } from './Mosaic';
-import { MosaicId } from './MosaicId';
 
 /**
  * NetworkCurrencyLocal mosaic for local test network (local bootstrap server)
@@ -74,7 +73,7 @@ export class NetworkCurrencyLocal extends Mosaic {
      * @param amount
      * @returns {NetworkCurrencyLocal}
      */
-    public static createRelative(amount: UInt64 | number) {
+    public static createRelative(amount: UInt64 | number): NetworkCurrencyLocal {
         if (typeof amount === 'number') {
             return new NetworkCurrencyLocal(UInt64.fromUint(amount * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY)));
         }
@@ -88,7 +87,7 @@ export class NetworkCurrencyLocal extends Mosaic {
      * @param amount
      * @returns {NetworkCurrencyLocal}
      */
-    public static createAbsolute(amount: UInt64 | number) {
+    public static createAbsolute(amount: UInt64 | number): NetworkCurrencyLocal {
         if (typeof amount === 'number') {
             return new NetworkCurrencyLocal(UInt64.fromUint(amount));
         }

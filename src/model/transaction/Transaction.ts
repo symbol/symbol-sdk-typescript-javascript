@@ -120,10 +120,9 @@ export abstract class Transaction {
      * @see https://github.com/nemtech/catapult-server/blob/master/sdk/src/extensions/TransactionExtensions.cpp#L46
      * @param {string} transactionPayload HexString Payload
      * @param {Array<number>} generationHashBuffer Network generation hash byte
-     * @param {NetworkType} networkType Catapult network identifier
      * @returns {string} Returns Transaction Payload hash
      */
-    public static createTransactionHash(transactionPayload: string, generationHashBuffer: number[], networkType: NetworkType): string {
+    public static createTransactionHash(transactionPayload: string, generationHashBuffer: number[]): string {
         // prepare
         const entityHash: Uint8Array = new Uint8Array(32);
         const transactionBytes: Uint8Array = Convert.hexToUint8(transactionPayload);
@@ -224,7 +223,7 @@ export abstract class Transaction {
         const payload = Convert.uint8ToHex(signedTransactionBuffer);
         return new SignedTransaction(
             payload,
-            Transaction.createTransactionHash(payload, generationHashBytes, account.networkType),
+            Transaction.createTransactionHash(payload, generationHashBytes),
             account.publicKey,
             this.type,
             this.networkType,
@@ -235,8 +234,9 @@ export abstract class Transaction {
      * Generate signing bytes
      * @param payloadBytes Payload buffer
      * @param generationHashBytes GenerationHash buffer
+     * @return {number[]}
      */
-    public getSigningBytes(payloadBytes: number[], generationHashBytes: number[]) {
+    public getSigningBytes(payloadBytes: number[], generationHashBytes: number[]): number[] {
         const byteBufferWithoutHeader = payloadBytes.slice(4 + 64 + 32 + 8);
         if (this.type === TransactionType.AGGREGATE_BONDED || this.type === TransactionType.AGGREGATE_COMPLETE) {
             return generationHashBytes.concat(byteBufferWithoutHeader.slice(0, 52));
@@ -284,7 +284,7 @@ export abstract class Transaction {
      *
      * @return transaction with signer serialized to be part of an aggregate transaction
      */
-    public toAggregateTransactionBytes() {
+    public toAggregateTransactionBytes(): Uint8Array {
         return EmbeddedTransactionHelper.serialize(this.toEmbeddedTransaction());
     }
 
@@ -394,7 +394,7 @@ export abstract class Transaction {
      * @returns {Object}
      * @memberof Transaction
      */
-    public toJSON() {
+    public toJSON(): any {
         const commonTransactionObject = {
             type: this.type,
             network: this.networkType,

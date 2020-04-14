@@ -24,7 +24,6 @@ import { SignedTransaction } from '../../src/model/transaction/SignedTransaction
 import { Transaction } from '../../src/model/transaction/Transaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
-import { NetworkHarvestLocal } from '../../src/model/mosaic/NetworkHarvestLocal';
 import { NetworkCurrencyPublic } from '../../src/model/mosaic/NetworkCurrencyPublic';
 import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';

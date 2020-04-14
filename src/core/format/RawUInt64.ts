@@ -17,7 +17,7 @@
 import { Convert } from './Convert';
 
 export class RawUInt64 {
-    static readonly readUint32At = (bytes, i) => (bytes[i] + (bytes[i + 1] << 8) + (bytes[i + 2] << 16) + (bytes[i + 3] << 24)) >>> 0;
+    static readonly readUint32At = (bytes, i): any => (bytes[i] + (bytes[i + 1] << 8) + (bytes[i + 2] << 16) + (bytes[i + 3] << 24)) >>> 0;
 
     /**
      * An exact uint64 representation composed of two 32bit values.
@@ -31,7 +31,7 @@ export class RawUInt64 {
      * @returns {number|module:coders/uint64~uint64}
      * A numeric if the uint64 is no greater than Number.MAX_SAFE_INTEGER or the original uint64 value otherwise.
      */
-    public static compact = (uint64) => {
+    public static compact = (uint64): any => {
         const low = uint64[0];
         const high = uint64[1];
 
@@ -49,7 +49,7 @@ export class RawUInt64 {
      * @param {number} number The unsigned integer.
      * @returns {module:coders/uint64~uint64} The uint64 representation of the input.
      */
-    public static fromUint = (number) => {
+    public static fromUint = (number): number[] => {
         const value = [(number & 0xffffffff) >>> 0, (number / 0x100000000) >>> 0];
         return value;
     };
@@ -59,7 +59,7 @@ export class RawUInt64 {
      * @param {Uint8Array} uint8Array A uint8 array.
      * @returns {module:coders/uint64~uint64} The uint64 representation of the input.
      */
-    public static fromBytes = (uint8Array) => {
+    public static fromBytes = (uint8Array): number[] => {
         if (8 !== uint8Array.length) {
             throw Error(`byte array has unexpected size '${uint8Array.length}'`);
         }
@@ -71,7 +71,7 @@ export class RawUInt64 {
      * @param {Uint8Array} uint8Array A uint8 array.
      * @returns {module:coders/uint64~uint64} The uint64 representation of the input.
      */
-    public static fromBytes32 = (uint8Array) => {
+    public static fromBytes32 = (uint8Array): number[] => {
         if (4 !== uint8Array.length) {
             throw Error(`byte array has unexpected size '${uint8Array.length}'`);
         }
@@ -83,7 +83,7 @@ export class RawUInt64 {
      * @param {string} input A hex encoded string.
      * @returns {module:coders/uint64~uint64} The uint64 representation of the input.
      */
-    public static fromHex = (input) => {
+    public static fromHex = (input): number[] => {
         if (16 !== input.length) {
             throw Error(`hex string has unexpected size '${input.length}'`);
         }
@@ -101,7 +101,7 @@ export class RawUInt64 {
      * @param {module:coders/uint64~uint64} uint64 A uint64 value.
      * @returns {string} A hex encoded string representing the uint64.
      */
-    public static toHex = (uint64) => {
+    public static toHex = (uint64): string => {
         const uint32Array = new Uint32Array(uint64);
         const uint8Array = Convert.uint32ToUint8(uint32Array).reverse();
         return Convert.uint8ToHex(uint8Array);
@@ -112,5 +112,5 @@ export class RawUInt64 {
      * @param {module:coders/uint64~uint64} uint64 A uint64 value.
      * @returns {boolean} true if the value is zero.
      */
-    public static isZero = (uint64) => 0 === uint64[0] && 0 === uint64[1];
+    public static isZero = (uint64): boolean => 0 === uint64[0] && 0 === uint64[1];
 }

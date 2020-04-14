@@ -21,7 +21,7 @@ const Address_Decoded_Size = 25;
 
 describe('address', () => {
     describe('stringToAddress', () => {
-        function assertCannotCreateAddress(encoded, message) {
+        function assertCannotCreateAddress(encoded, message): void {
             // Assert:
             expect(() => {
                 address.stringToAddress(encoded);
@@ -37,7 +37,7 @@ describe('address', () => {
             const decoded = address.stringToAddress(encoded);
 
             // Assert:
-            expect(address.isValidAddress(decoded, NetworkType.MIJIN_TEST)).to.equal(true);
+            expect(address.isValidAddress(decoded)).to.equal(true);
             expect(convert.uint8ToHex(decoded)).to.equal(expectedHex);
         });
 
@@ -82,7 +82,7 @@ describe('address', () => {
 
             // Assert:
             expect(decoded[0]).to.equal(NetworkType.MIJIN);
-            expect(address.isValidAddress(decoded, NetworkType.MIJIN)).to.equal(true);
+            expect(address.isValidAddress(decoded)).to.equal(true);
             expect(convert.uint8ToHex(decoded)).to.equal(expectedHex);
         });
 
@@ -96,7 +96,7 @@ describe('address', () => {
 
             // Assert:
             expect(decoded[0]).to.equal(NetworkType.MIJIN_TEST);
-            expect(address.isValidAddress(decoded, NetworkType.MIJIN_TEST)).to.equal(true);
+            expect(address.isValidAddress(decoded)).to.equal(true);
             expect(convert.uint8ToHex(decoded)).to.equal(expectedHex);
         });
 
@@ -109,7 +109,7 @@ describe('address', () => {
             const decoded2 = address.publicKeyToAddress(publicKey, NetworkType.MIJIN_TEST);
 
             // Assert:
-            expect(address.isValidAddress(decoded1, NetworkType.MIJIN_TEST)).to.equal(true);
+            expect(address.isValidAddress(decoded1)).to.equal(true);
             expect(decoded1).to.deep.equal(decoded2);
         });
 
@@ -123,8 +123,8 @@ describe('address', () => {
             const decoded2 = address.publicKeyToAddress(publicKey2, NetworkType.MIJIN_TEST);
 
             // Assert:
-            expect(address.isValidAddress(decoded1, NetworkType.MIJIN_TEST)).to.equal(true);
-            expect(address.isValidAddress(decoded2, NetworkType.MIJIN_TEST)).to.equal(true);
+            expect(address.isValidAddress(decoded1)).to.equal(true);
+            expect(address.isValidAddress(decoded2)).to.equal(true);
             expect(decoded1).to.not.deep.equal(decoded2);
         });
 
@@ -137,8 +137,8 @@ describe('address', () => {
             const decoded2 = address.publicKeyToAddress(publicKey, NetworkType.TEST_NET);
 
             // Assert:
-            expect(address.isValidAddress(decoded1, NetworkType.MIJIN_TEST)).to.equal(true);
-            expect(address.isValidAddress(decoded2, NetworkType.TEST_NET)).to.equal(true);
+            expect(address.isValidAddress(decoded1)).to.equal(true);
+            expect(address.isValidAddress(decoded2)).to.equal(true);
             expect(decoded1).to.not.deep.equal(decoded2);
         });
     });
@@ -150,7 +150,7 @@ describe('address', () => {
             const decoded = convert.hexToUint8(validHex);
 
             // Assert:
-            expect(address.isValidAddress(decoded, NetworkType.MIJIN_TEST)).to.equal(true);
+            expect(address.isValidAddress(decoded)).to.equal(true);
         });
 
         it('returns false for address with invalid checksum', () => {
@@ -160,7 +160,7 @@ describe('address', () => {
             decoded[Address_Decoded_Size - 1] ^= 0xff; // ruin checksum
 
             // Assert:
-            expect(address.isValidAddress(decoded, NetworkType.MIJIN_TEST)).to.equal(false);
+            expect(address.isValidAddress(decoded)).to.equal(false);
         });
 
         it('returns false for address with invalid hash', () => {
@@ -170,7 +170,7 @@ describe('address', () => {
             decoded[5] ^= 0xff; // ruin ripemd160 hash
 
             // Assert:
-            expect(address.isValidAddress(decoded, NetworkType.MIJIN_TEST)).to.equal(false);
+            expect(address.isValidAddress(decoded)).to.equal(false);
         });
     });
 

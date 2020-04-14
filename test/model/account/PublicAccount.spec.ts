@@ -15,7 +15,6 @@
  */
 
 import { expect } from 'chai';
-import { Account } from '../../../src/model/account/Account';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { TestingAccount } from '../../conf/conf.spec';

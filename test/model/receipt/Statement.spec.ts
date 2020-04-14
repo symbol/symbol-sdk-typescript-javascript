@@ -18,7 +18,7 @@ import { expect } from 'chai';
 import { UnresolvedMapping } from '../../../src/core/utils/UnresolvedMapping';
 import { CreateStatementFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
 import { Account } from '../../../src/model/account/Account';
-import { Address, MosaicId, NamespaceId, ResolutionType } from '../../../src/model/model';
+import { Address, MosaicId, NamespaceId } from '../../../src/model/model';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 
 describe('Statement', () => {

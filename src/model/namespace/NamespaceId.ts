@@ -83,7 +83,7 @@ export class NamespaceId {
     /**
      * Create DTO object
      */
-    public toDTO() {
+    public toDTO(): any {
         return {
             id: this.id.toHex(),
             fullName: this.fullName ? this.fullName : '',

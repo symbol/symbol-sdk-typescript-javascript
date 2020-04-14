@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { AddressAlias } from '../../../src/model/namespace/AddressAlias';
-import { Alias } from '../../../src/model/namespace/Alias';
 import { AliasType } from '../../../src/model/namespace/AliasType';
 import { EmptyAlias } from '../../../src/model/namespace/EmptyAlias';
 import { MosaicAlias } from '../../../src/model/namespace/MosaicAlias';
-import { NetworkType } from '../../../src/model/network/NetworkType';
-import { UInt64 } from '../../../src/model/UInt64';
 
 describe('Alias', () => {
-    let emptyAliasDTO;
     let addressAliasDTO;
     let mosaicAliasDTO;
     let address;
@@ -36,9 +31,6 @@ describe('Alias', () => {
     before(() => {
         address = Address.createFromRawAddress('SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2');
         address2 = Address.createFromRawAddress('SARNASAS2BIAB6LMFA3FPMGBPGIJGK6IJETM3ZSP');
-        emptyAliasDTO = {
-            type: 0,
-        };
         mosaicAliasDTO = {
             type: AliasType.Mosaic,
             mosaicId: new MosaicId([481110499, 231112638]),

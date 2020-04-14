@@ -42,6 +42,29 @@ describe('MetadataTransactionService', () => {
     const value = 'TEST';
     const deltaValue = 'dalta';
     const targetIdHex = '941299B2B7E1291C';
+    function mockMetadata(type: MetadataType): Metadata {
+        let targetId;
+
+        if (type === MetadataType.Account) {
+            targetId = undefined;
+        } else if (type === MetadataType.Mosaic) {
+            targetId = new MosaicId(targetIdHex);
+        } else if (type === MetadataType.Namespace) {
+            targetId = NamespaceId.createFromEncoded(targetIdHex);
+        }
+        return new Metadata(
+            '59DFBA84B2E9E7000135E80C',
+            new MetadataEntry(
+                '5E628EA59818D97AA4118780D9A88C5512FCE7A21C195E1574727EFCE5DF7C0D',
+                account.publicKey,
+                account.publicKey,
+                key,
+                MetadataType.Account,
+                value,
+                targetId,
+            ),
+        );
+    }
 
     before(() => {
         account = TestingAccount;
@@ -178,28 +201,4 @@ describe('MetadataTransactionService', () => {
             );
         }).to.throw(Error, 'TargetId for NamespaceMetadataTransaction is invalid');
     });
-
-    function mockMetadata(type: MetadataType): Metadata {
-        let targetId;
-
-        if (type === MetadataType.Account) {
-            targetId = undefined;
-        } else if (type === MetadataType.Mosaic) {
-            targetId = new MosaicId(targetIdHex);
-        } else if (type === MetadataType.Namespace) {
-            targetId = NamespaceId.createFromEncoded(targetIdHex);
-        }
-        return new Metadata(
-            '59DFBA84B2E9E7000135E80C',
-            new MetadataEntry(
-                '5E628EA59818D97AA4118780D9A88C5512FCE7A21C195E1574727EFCE5DF7C0D',
-                account.publicKey,
-                account.publicKey,
-                key,
-                MetadataType.Account,
-                value,
-                targetId,
-            ),
-        );
-    }
 });

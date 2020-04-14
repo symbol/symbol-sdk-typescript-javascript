@@ -17,10 +17,9 @@ import { expect } from 'chai';
 import { Crypto, KeyPair } from '../../../src/core/crypto';
 import * as Utility from '../../../src/core/crypto/Utilities';
 import { Convert } from '../../../src/core/format/Convert';
-import { NetworkType } from '../../../src/model/network/NetworkType';
 
 describe('key pair', () => {
-    const randomKeyPair = () => KeyPair.createKeyPairFromPrivateKeyString(Convert.uint8ToHex(Crypto.randomBytes(32)));
+    const randomKeyPair = (): any => KeyPair.createKeyPairFromPrivateKeyString(Convert.uint8ToHex(Crypto.randomBytes(32)));
     const Private_Key_Size = 32;
     const Signature_Size = 64;
 
@@ -281,7 +280,7 @@ describe('key pair', () => {
         });
 
         it('cannot verify non canonical signature', () => {
-            function scalarAddGroupOrder(scalar) {
+            function scalarAddGroupOrder(scalar): void {
                 // 2^252 + 27742317777372353535851937790883648493, little endian
                 const Group_Order = [
                     0xed,

@@ -108,7 +108,7 @@ describe('array', () => {
             expect(isZero).to.equal(true);
         });
 
-        function assertIsNonZero(length, nonZeroOffset) {
+        function assertIsNonZero(length, nonZeroOffset): void {
             // Arrange:
             const src = new Uint16Array(length);
             src[nonZeroOffset] = 2;
@@ -155,7 +155,7 @@ describe('array', () => {
             expect(isEqual2).to.equal(false);
         });
 
-        function assertNotEqual(lhs, unequalOffset) {
+        function assertNotEqual(lhs, unequalOffset): void {
             // Arrange:
             const rhs = new Uint8Array(lhs.length);
             array.copy(rhs, lhs);

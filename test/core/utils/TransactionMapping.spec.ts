@@ -35,7 +35,6 @@ import { AliasAction } from '../../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NamespaceRegistrationType } from '../../../src/model/namespace/NamespaceRegistrationType';
 import { NetworkType } from '../../../src/model/network/NetworkType';
-import { AccountRestrictionModificationAction } from '../../../src/model/restriction/AccountRestrictionModificationAction';
 import { AccountRestrictionFlags } from '../../../src/model/restriction/AccountRestrictionType';
 import { MosaicRestrictionType } from '../../../src/model/restriction/MosaicRestrictionType';
 import { AccountAddressRestrictionTransaction } from '../../../src/model/transaction/AccountAddressRestrictionTransaction';
@@ -43,7 +42,6 @@ import { AccountLinkTransaction } from '../../../src/model/transaction/AccountLi
 import { AccountMetadataTransaction } from '../../../src/model/transaction/AccountMetadataTransaction';
 import { AccountMosaicRestrictionTransaction } from '../../../src/model/transaction/AccountMosaicRestrictionTransaction';
 import { AccountOperationRestrictionTransaction } from '../../../src/model/transaction/AccountOperationRestrictionTransaction';
-import { AccountRestrictionModification } from '../../../src/model/transaction/AccountRestrictionModification';
 import { AccountRestrictionTransaction } from '../../../src/model/transaction/AccountRestrictionTransaction';
 import { AddressAliasTransaction } from '../../../src/model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
@@ -76,7 +74,6 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create AccountRestrictionAddressTransaction', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        const addressRestrictionFilter = AccountRestrictionModification.createForAddress(AccountRestrictionModificationAction.Add, address);
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
             AccountRestrictionFlags.AllowIncomingAddress,
@@ -161,9 +158,6 @@ describe('TransactionMapping - createFromPayload', () => {
             mosaicId,
             NetworkType.MIJIN_TEST,
         );
-        const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
-
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicAliasTransaction;
 
         expect(mosaicAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
         expect(mosaicAliasTransaction.namespaceId.id.lower).to.be.equal(33347626);
@@ -352,9 +346,6 @@ describe('TransactionMapping - createFromPayload', () => {
             proof,
             NetworkType.MIJIN_TEST,
         );
-
-        const signedTransaction = secretProofTransaction.signWith(account, generationHash);
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as SecretProofTransaction;
 
         expect(secretProofTransaction.hashAlgorithm).to.be.equal(0);
         expect(secretProofTransaction.secret).to.be.equal('9b3155b37159da50aa52d5967c509b410f5a36a3b1e31ecb5ac76675d79b4a5e');
@@ -938,7 +929,6 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
     it('should create SecretLockTransaction - resolved Mosaic', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
-        const mosaicId = new NamespaceId('test');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             new Mosaic(new MosaicId([1, 1]), UInt64.fromUint(10)),

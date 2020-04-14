@@ -17,7 +17,6 @@ import { assert, expect } from 'chai';
 import { ChronoUnit } from 'js-joda';
 import { filter } from 'rxjs/operators';
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
-import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
@@ -40,7 +39,6 @@ describe('Listener', () => {
     let cosignAccount2: Account;
     let cosignAccount3: Account;
     let accountRepository: AccountRepository;
-    let namespaceRepository: NamespaceRepository;
     let generationHash: string;
     let networkType: NetworkType;
     const NetworkCurrencyLocalId: NamespaceId = helper.networkCurrencyNamespaceId;
@@ -57,7 +55,6 @@ describe('Listener', () => {
             generationHash = helper.generationHash;
             networkType = helper.networkType;
             accountRepository = helper.repositoryFactory.createAccountRepository();
-            namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
             transactionRepository = helper.repositoryFactory.createTransactionRepository();
         });
     });
@@ -97,7 +94,7 @@ describe('Listener', () => {
         signedAggregatedTransaction: SignedTransaction,
         signer: Account,
         mosaicId: MosaicId | NamespaceId,
-    ) => {
+    ): void => {
         const lockFundsTransaction = LockFundsTransaction.create(
             Deadline.create(),
             new Mosaic(mosaicId, UInt64.fromUint(10 * Math.pow(10, helper.networkCurrencyDivisibility))),

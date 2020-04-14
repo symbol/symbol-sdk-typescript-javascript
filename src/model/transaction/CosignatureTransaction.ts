@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { KeyPair, SHA3Hasher } from '../../core/crypto';
+import { KeyPair } from '../../core/crypto';
 import { Convert } from '../../core/format/Convert';
 import { Account } from '../account/Account';
 import { AggregateTransaction } from './AggregateTransaction';
@@ -56,11 +56,7 @@ export class CosignatureTransaction {
         /**
          * For aggregated complete transaction, cosignatories are gathered off chain announced.
          */
-        const transactionHash = Transaction.createTransactionHash(
-            payload,
-            Array.from(Convert.hexToUint8(generationHash)),
-            account.networkType,
-        );
+        const transactionHash = Transaction.createTransactionHash(payload, Array.from(Convert.hexToUint8(generationHash)));
         const hashBytes = Convert.hexToUint8(transactionHash);
         const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(account.privateKey);
         const signature = KeyPair.sign(keyPairEncoded, new Uint8Array(hashBytes));

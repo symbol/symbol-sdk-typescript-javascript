@@ -23,7 +23,7 @@ export class KeyPair {
      * @param {string} privateKeyString A hex encoded private key string.
      * @returns {module:crypto/keyPair~KeyPair} The key pair.
      */
-    public static createKeyPairFromPrivateKeyString(privateKeyString: string) {
+    public static createKeyPairFromPrivateKeyString(privateKeyString: string): any {
         const privateKey = convert.hexToUint8(privateKeyString);
         if (Utility.Key_Size !== privateKey.length) {
             throw Error(`private key has unexpected size: ${privateKey.length}`);

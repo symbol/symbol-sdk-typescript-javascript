@@ -32,7 +32,6 @@ describe('BlockService', () => {
     let generationHash: string;
     let account: Account;
     let account2: Account;
-    let account3: Account;
     let networkType: NetworkType;
     let transactionHash: string;
     let blockService: BlockService;
@@ -43,7 +42,6 @@ describe('BlockService', () => {
         return helper.start().then(() => {
             account = helper.account;
             account2 = helper.account2;
-            account3 = helper.account3;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
             transactionRepository = helper.repositoryFactory.createTransactionRepository();

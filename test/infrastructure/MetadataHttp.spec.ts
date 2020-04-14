@@ -91,7 +91,7 @@ describe('MetadataHttp', () => {
         reset(metadataRoutesApi);
     });
 
-    function assertMetadataInfo(metadataInfo: Metadata, dto: MetadataDTO) {
+    function assertMetadataInfo(metadataInfo: Metadata, dto: MetadataDTO): void {
         expect(metadataInfo).to.be.not.null;
         expect(metadataInfo.id).to.be.equals(dto.id);
         if (metadataInfo.metadataEntry.metadataType === MetadataType.Mosaic) {

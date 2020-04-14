@@ -1,4 +1,4 @@
-export const getDummyNetworkProperties = () => {
+export const getDummyNetworkProperties = (): any => {
     return JSON.parse(`{
       "network": {
         "identifier": "public-test",

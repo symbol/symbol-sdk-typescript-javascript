@@ -25,8 +25,6 @@ import { PersistentDelegationRequestTransaction } from '../../../src/model/trans
 describe('PersistentHarvestingDelegationMessage', () => {
     let sender: Account;
     let recipient: Account;
-
-    let sender_nis: Account;
     let recipient_nis: Account;
     const delegatedPrivateKey = 'F0AB1010EFEE19EE5373719881DF5123C13E643C519655F7E97347BFF77175BF';
     before(() => {
@@ -35,8 +33,6 @@ describe('PersistentHarvestingDelegationMessage', () => {
             'B72F2950498111BADF276D6D9D5E345F04E0D5C9B8342DA983C3395B4CF18F08',
             NetworkType.MIJIN_TEST,
         );
-
-        sender_nis = Account.createFromPrivateKey('2602F4236B199B3DF762B2AAB46FC3B77D8DDB214F0B62538D3827576C46C108', NetworkType.TEST_NET);
         recipient_nis = Account.createFromPrivateKey(
             'B72F2950498111BADF276D6D9D5E345F04E0D5C9B8342DA983C3395B4CF18F08',
             NetworkType.TEST_NET,

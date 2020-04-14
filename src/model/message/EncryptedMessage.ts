@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { Crypto, SHA3Hasher } from '../../core/crypto';
+import { Crypto } from '../../core/crypto';
 import { PublicAccount } from '../account/PublicAccount';
-import { NetworkType } from '../network/NetworkType';
 import { Message } from './Message';
 import { MessageType } from './MessageType';
 import { PlainMessage } from './PlainMessage';

@@ -51,6 +51,28 @@ describe('MosaicRestrictionTransactionService', () => {
     const globalRestrictionType = MosaicRestrictionType.LE;
     const addressRestrictionValue = '10';
 
+    function mockGlobalRestriction(): MosaicGlobalRestriction {
+        return new MosaicGlobalRestriction(
+            '59DFBA84B2E9E7000135E80C',
+            MosaicRestrictionEntryType.GLOBAL,
+            mosaicId,
+            new Map<string, MosaicGlobalRestrictionItem>().set(
+                key.toString(),
+                new MosaicGlobalRestrictionItem(referenceMosaicId, globalRestrictionValue, globalRestrictionType),
+            ),
+        );
+    }
+
+    function mockAddressRestriction(): MosaicAddressRestriction {
+        return new MosaicAddressRestriction(
+            '59DFBA84B2E9E7000135E80C',
+            MosaicRestrictionEntryType.GLOBAL,
+            mosaicId,
+            account.address,
+            new Map<string, string>().set(key.toString(), addressRestrictionValue),
+        );
+    }
+
     before(() => {
         account = TestingAccount;
         mosaicId = new MosaicId('85BBEA6CC462B244');
@@ -236,26 +258,4 @@ describe('MosaicRestrictionTransactionService', () => {
                 },
             );
     });
-
-    function mockGlobalRestriction(): MosaicGlobalRestriction {
-        return new MosaicGlobalRestriction(
-            '59DFBA84B2E9E7000135E80C',
-            MosaicRestrictionEntryType.GLOBAL,
-            mosaicId,
-            new Map<string, MosaicGlobalRestrictionItem>().set(
-                key.toString(),
-                new MosaicGlobalRestrictionItem(referenceMosaicId, globalRestrictionValue, globalRestrictionType),
-            ),
-        );
-    }
-
-    function mockAddressRestriction(): MosaicAddressRestriction {
-        return new MosaicAddressRestriction(
-            '59DFBA84B2E9E7000135E80C',
-            MosaicRestrictionEntryType.GLOBAL,
-            mosaicId,
-            account.address,
-            new Map<string, string>().set(key.toString(), addressRestrictionValue),
-        );
-    }
 });

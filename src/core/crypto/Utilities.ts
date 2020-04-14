@@ -26,6 +26,7 @@ export const Half_Hash_Size = Hash_Size / 2;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export const hkdf = require('futoin-hkdf');
 import { sha512 } from 'js-sha512';
+import { WordArray } from 'crypto-js';
 
 /**
  * Convert an Uint8Array to WordArray
@@ -35,7 +36,7 @@ import { sha512 } from 'js-sha512';
  *
  * @return {WordArray}
  */
-export const ua2words = (ua, uaLength) => {
+export const ua2words = (ua, uaLength): WordArray => {
     const temp: number[] = [];
     for (let i = 0; i < uaLength; i += 4) {
         const x = ua[i] * 0x1000000 + (ua[i + 1] || 0) * 0x10000 + (ua[i + 2] || 0) * 0x100 + (ua[i + 3] || 0);
@@ -52,7 +53,7 @@ export const ua2words = (ua, uaLength) => {
  *
  * @return {Uint8Array}
  */
-export const words2ua = (destUa, cryptoWords) => {
+export const words2ua = (destUa, cryptoWords): Uint8Array => {
     for (let i = 0; i < destUa.length; i += 4) {
         let v = cryptoWords.words[i / 4];
         if (v < 0) {
@@ -67,14 +68,14 @@ export const words2ua = (destUa, cryptoWords) => {
 };
 
 // custom catapult crypto functions
-export const catapult_crypto = (() => {
-    function clamp(d) {
+export const catapult_crypto = ((): any => {
+    function clamp(d): void {
         d[0] &= 248;
         d[31] &= 127;
         d[31] |= 64;
     }
 
-    function prepareForScalarMult(sk) {
+    function prepareForScalarMult(sk): Uint8Array {
         const d = new Uint8Array(64);
         const hash = sha512.arrayBuffer(sk);
         array.copy(d, array.uint8View(hash), 32);

@@ -45,15 +45,15 @@ describe('EncryptedMessage', () => {
     });
 
     it('should return encrypted message dto', () => {
-        const encryptedMessage = sender.encryptMessage('test transaction', recipient.publicAccount, NetworkType.MIJIN_TEST);
-        const plainMessage = recipient.decryptMessage(encryptedMessage, sender.publicAccount, NetworkType.MIJIN_TEST);
+        const encryptedMessage = sender.encryptMessage('test transaction', recipient.publicAccount);
+        const plainMessage = recipient.decryptMessage(encryptedMessage, sender.publicAccount);
         expect(plainMessage.payload).to.be.equal('test transaction');
     });
 
     it('should decrypt message from raw encrypted message payload', () => {
-        const encryptedMessage = sender.encryptMessage('Testing simple transfer', recipient.publicAccount, NetworkType.MIJIN_TEST);
+        const encryptedMessage = sender.encryptMessage('Testing simple transfer', recipient.publicAccount);
         const payload = encryptedMessage.payload;
-        const plainMessage = recipient.decryptMessage(new EncryptedMessage(payload), sender.publicAccount, NetworkType.MIJIN_TEST);
+        const plainMessage = recipient.decryptMessage(new EncryptedMessage(payload), sender.publicAccount);
         expect(plainMessage.payload).to.be.equal('Testing simple transfer');
     });
 
@@ -63,21 +63,21 @@ describe('EncryptedMessage', () => {
             Deadline.create(),
             recipient.address,
             [NetworkCurrencyLocal.createAbsolute(1)],
-            sender.encryptMessage('Testing simple transfer', recipient.publicAccount, NetworkType.MIJIN_TEST),
+            sender.encryptMessage('Testing simple transfer', recipient.publicAccount),
             NetworkType.MIJIN_TEST,
         );
         const signedTransaction = transferTransaction.signWith(sender, generationHash);
         const encryptMessage = EncryptedMessage.createFromPayload(
             signedTransaction.payload.substring(354, signedTransaction.payload.length),
         );
-        const plainMessage = recipient.decryptMessage(encryptMessage, sender.publicAccount, NetworkType.MIJIN_TEST);
+        const plainMessage = recipient.decryptMessage(encryptMessage, sender.publicAccount);
         expect(plainMessage.payload).to.be.equal('Testing simple transfer');
     });
 
     it('should encrypt and decrypt message using NIS1 schema', () => {
-        const encryptedMessage = sender_nis.encryptMessage('Testing simple transfer', recipient_nis.publicAccount, NetworkType.TEST_NET);
+        const encryptedMessage = sender_nis.encryptMessage('Testing simple transfer', recipient_nis.publicAccount);
         const payload = encryptedMessage.payload;
-        const plainMessage = recipient_nis.decryptMessage(new EncryptedMessage(payload), sender_nis.publicAccount, NetworkType.TEST_NET);
+        const plainMessage = recipient_nis.decryptMessage(new EncryptedMessage(payload), sender_nis.publicAccount);
         expect(plainMessage.payload).to.be.equal('Testing simple transfer');
     });
 });

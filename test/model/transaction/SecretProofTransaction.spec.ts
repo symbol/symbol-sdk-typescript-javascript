@@ -15,7 +15,7 @@
  */
 import { expect } from 'chai';
 import * as CryptoJS from 'crypto-js';
-import { keccak_256, sha3_256 } from 'js-sha3';
+import { sha3_256 } from 'js-sha3';
 import { Convert, Convert as convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
@@ -100,7 +100,7 @@ describe('SecretProofTransaction', () => {
     it('should throw exception when the input is not related to LockHashAlgorithm', () => {
         expect(() => {
             const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
-            const secretProofTransaction = SecretProofTransaction.create(
+            SecretProofTransaction.create(
                 Deadline.create(),
                 LockHashAlgorithm.Op_Sha3_256,
                 'non valid hash',
@@ -129,7 +129,7 @@ describe('SecretProofTransaction', () => {
     it('should throw exception when the input is not related to LockHashAlgorithm', () => {
         expect(() => {
             const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
-            const secretProofTransaction = SecretProofTransaction.create(
+            SecretProofTransaction.create(
                 Deadline.create(),
                 LockHashAlgorithm.Op_Hash_160,
                 'non valid hash',
@@ -158,7 +158,7 @@ describe('SecretProofTransaction', () => {
     it('should throw exception when the input is not related to LockHashAlgorithm', () => {
         expect(() => {
             const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
-            const secretProofTransaction = SecretProofTransaction.create(
+            SecretProofTransaction.create(
                 Deadline.create(),
                 LockHashAlgorithm.Op_Hash_256,
                 'non valid hash',

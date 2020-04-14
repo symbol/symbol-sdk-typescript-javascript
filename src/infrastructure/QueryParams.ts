@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import { TransactionType } from '../model/transaction/TransactionType';
-
 /**
  * @since 0.11.3
  */

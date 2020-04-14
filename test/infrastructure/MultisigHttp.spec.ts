@@ -57,7 +57,7 @@ describe('MultisigHttp', () => {
         reset(multisigRoutesApi);
     });
 
-    function assertMultisigInfo(accountInfo: MultisigAccountInfo) {
+    function assertMultisigInfo(accountInfo: MultisigAccountInfo): void {
         expect(accountInfo).to.be.not.null;
         expect(accountInfo.isMultisig()).to.be.equals(true);
         expect(accountInfo.account).to.be.deep.equals(account.publicAccount);

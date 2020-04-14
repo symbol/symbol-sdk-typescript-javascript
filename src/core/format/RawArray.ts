@@ -20,7 +20,7 @@ export class RawArray {
      * @param {ArrayBuffer|Uint8Array} input The input array.
      * @returns {Uint8Array} A Uint8Array view on top of input.
      */
-    public static uint8View = (input) => {
+    public static uint8View = (input): Uint8Array => {
         if (ArrayBuffer === input.constructor) {
             return new Uint8Array(input);
         } else if (Uint8Array === input.constructor) {
@@ -38,7 +38,7 @@ export class RawArray {
      * @param {number} [destOffset=0] The first index of the destination to write.
      * @param {number} [srcOffset=0] The first index of the source to read.
      */
-    public static copy = (dest, src, numElementsToCopy?, destOffset = 0, srcOffset = 0) => {
+    public static copy = (dest, src, numElementsToCopy?, destOffset = 0, srcOffset = 0): any => {
         const length = undefined === numElementsToCopy ? dest.length : numElementsToCopy;
         for (let i = 0; i < length; ++i) {
             dest[destOffset + i] = src[srcOffset + i];
@@ -50,7 +50,7 @@ export class RawArray {
      * @param {Array} array The array to check.
      * @returns {boolean} true if the array is zero-filled, false otherwise.
      */
-    public static isZeroFilled = (array) => array.every((value) => 0 === value);
+    public static isZeroFilled = (array): boolean => array.every((value) => 0 === value);
 
     /**
      * Deeply checks the equality of two arrays.
@@ -59,7 +59,7 @@ export class RawArray {
      * @param {number} [numElementsToCompare=undefined] The number of elements to compare.
      * @returns {boolean} true if all compared elements are equal, false otherwise.
      */
-    public static deepEqual = (lhs, rhs, numElementsToCompare?) => {
+    public static deepEqual = (lhs, rhs, numElementsToCompare?): boolean => {
         let length = numElementsToCompare;
         if (undefined === length) {
             if (lhs.length !== rhs.length) {
