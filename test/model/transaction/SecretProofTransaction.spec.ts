@@ -32,6 +32,8 @@ import { SecretProofTransaction } from '../../../src/model/transaction/SecretPro
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/builders/EmbeddedTransactionBuilder';
+import { TransactionType } from '../../../src/model/transaction/TransactionType';
 
 describe('SecretProofTransaction', () => {
     let account: Account;
@@ -255,5 +257,44 @@ describe('SecretProofTransaction', () => {
 
         const signedTransaction = transferTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
+    });
+
+    it('should create EmbeddedTransactionBuilder', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const secretProofTransaction = new SecretProofTransaction(
+            NetworkType.MIJIN_TEST,
+            1,
+            Deadline.create(),
+            UInt64.fromUint(0),
+            LockHashAlgorithm.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            unresolvedAddress,
+            proof,
+            '',
+            account.publicAccount,
+            new TransactionInfo(UInt64.fromUint(2), 0, ''),
+        );
+        Object.assign(secretProofTransaction, { signer: account.publicAccount });
+
+        const embedded = secretProofTransaction.toEmbeddedTransaction();
+
+        expect(embedded).to.be.instanceOf(EmbeddedTransactionBuilder);
+        expect(Convert.uint8ToHex(embedded.signerPublicKey.key)).to.be.equal(account.publicKey);
+        expect(embedded.type.valueOf()).to.be.equal(TransactionType.SECRET_PROOF.valueOf());
+    });
+
+    it('should return secret bytes', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const secretProofTransaction = SecretProofTransaction.create(
+            Deadline.create(),
+            LockHashAlgorithm.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            account.address,
+            proof,
+            NetworkType.MIJIN_TEST,
+        );
+        const secretBytes = secretProofTransaction.getSecretByte();
+        expect(secretBytes).not.to.be.undefined;
+        expect(Convert.uint8ToHex(secretBytes)).to.be.equal('9B3155B37159DA50AA52D5967C509B410F5A36A3B1E31ECB5AC76675D79B4A5E');
     });
 });

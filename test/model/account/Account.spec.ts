@@ -52,6 +52,11 @@ describe('Account', () => {
         expect(account.address).to.not.be.equal(undefined);
     });
 
+    it('should return networkType', () => {
+        const account = Account.generateNewAccount(NetworkType.TEST_NET);
+        expect(account.networkType).to.be.equal(NetworkType.TEST_NET);
+    });
+
     describe('signData', () => {
         it('utf-8', () => {
             const account = Account.createFromPrivateKey(
