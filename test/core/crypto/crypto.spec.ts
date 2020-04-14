@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {expect} from 'chai';
-import {Crypto} from '../../../src/core/crypto';
+import { expect } from 'chai';
+import { Crypto } from '../../../src/core/crypto';
 import { KeyPair } from '../../../src/core/crypto/KeyPair';
-import {Convert, Convert as convert} from '../../../src/core/format';
+import { Convert, Convert as convert } from '../../../src/core/format';
 import { WalletAlgorithm } from '../../../src/model/wallet/WalletAlgorithm';
 
 import CryptoJS = require('crypto-js');
@@ -406,7 +406,8 @@ describe('crypto tests', () => {
             const senderPublic = '9291abb3c52134be9d20ef21a796743497df7776d2661237bda9cadade34e44c';
             const recipientPriv = '';
             const message = 'NEM is awesome !';
-            const encryptedMessage = 'dd31d6b4111c1023bae6533399e74f73a29c6e6b48ab550f8a7bea127e27ddd' +
+            const encryptedMessage =
+                'dd31d6b4111c1023bae6533399e74f73a29c6e6b48ab550f8a7bea127e27ddd' +
                 'b4fd3fe4fad3c835307c0da52d9c268f56237d1810e07912e6a6568cba09d9a9176ee6b1ade9569c2e1e273e9675bd4ff';
 
             // Act:
@@ -421,7 +422,8 @@ describe('crypto tests', () => {
             const senderPublic = '';
             const recipientPriv = '2618090794e9c9682f2ac6504369a2f4fb9fe7ee7746f9560aca228d355b1cb9';
             const message = 'NEM is awesome !';
-            const encryptedMessage = 'dd31d6b4111c1023bae6533399e74f73a29c6e6b48ab550f8a7bea127e27ddd' +
+            const encryptedMessage =
+                'dd31d6b4111c1023bae6533399e74f73a29c6e6b48ab550f8a7bea127e27ddd' +
                 'b4fd3fe4fad3c835307c0da52d9c268f56237d1810e07912e6a6568cba09d9a9176ee6b1ade9569c2e1e273e9675bd4ff';
 
             // Act:

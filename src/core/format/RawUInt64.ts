@@ -41,8 +41,8 @@ export class RawUInt64 {
         }
 
         // multiply because javascript bit operations operate on 32bit values
-        return (high * 0x100000000) + low;
-    }
+        return high * 0x100000000 + low;
+    };
 
     /**
      * Converts a numeric unsigned integer into a uint64.
@@ -50,9 +50,9 @@ export class RawUInt64 {
      * @returns {module:coders/uint64~uint64} The uint64 representation of the input.
      */
     public static fromUint = (number) => {
-        const value = [(number & 0xFFFFFFFF) >>> 0, (number / 0x100000000) >>> 0];
+        const value = [(number & 0xffffffff) >>> 0, (number / 0x100000000) >>> 0];
         return value;
-    }
+    };
 
     /**
      * Converts a (64bit) uint8 array into a uint64.
@@ -64,7 +64,7 @@ export class RawUInt64 {
             throw Error(`byte array has unexpected size '${uint8Array.length}'`);
         }
         return [RawUInt64.readUint32At(uint8Array, 0), RawUInt64.readUint32At(uint8Array, 4)];
-    }
+    };
 
     /**
      * Converts a (32bit) uint8 array into a uint64.
@@ -76,7 +76,7 @@ export class RawUInt64 {
             throw Error(`byte array has unexpected size '${uint8Array.length}'`);
         }
         return [RawUInt64.readUint32At(uint8Array, 0), 0];
-    }
+    };
 
     /**
      * Parses a hex string into a uint64.
@@ -94,7 +94,7 @@ export class RawUInt64 {
         const uint8Array = Convert.hexToUint8(hexString);
         const view = new DataView(uint8Array.buffer);
         return [view.getUint32(4), view.getUint32(0)];
-    }
+    };
 
     /**
      * Converts a uint64 into a hex string.
@@ -105,7 +105,7 @@ export class RawUInt64 {
         const uint32Array = new Uint32Array(uint64);
         const uint8Array = Convert.uint32ToUint8(uint32Array).reverse();
         return Convert.uint8ToHex(uint8Array);
-    }
+    };
 
     /**
      * Returns true if a uint64 is zero.

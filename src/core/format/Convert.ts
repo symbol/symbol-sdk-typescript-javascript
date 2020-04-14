@@ -17,7 +17,6 @@ import { decode } from 'utf8';
 import * as utilities from './Utilities';
 
 export class Convert {
-
     /**
      * Decodes two hex characters into a byte.
      * @param {string} char1 The first hex digit.
@@ -30,7 +29,7 @@ export class Convert {
             throw Error(`unrecognized hex char`);
         }
         return byte;
-    }
+    };
 
     /**
      * Determines whether or not a string is a hex string.
@@ -47,7 +46,7 @@ export class Convert {
             }
         }
         return true;
-    }
+    };
 
     /**
      * Converts a hex string to a uint8 array.
@@ -63,7 +62,7 @@ export class Convert {
             output[i / 2] = Convert.toByte(input[i], input[i + 1]);
         }
         return output;
-    }
+    };
 
     /**
      * Reversed convertion hex string to a uint8 array.
@@ -76,10 +75,10 @@ export class Convert {
         }
         const output = new Uint8Array(input.length / 2);
         for (let i = 0; i < input.length; i += 2) {
-            output[output.length - 1 - (i / 2)] = Convert.toByte(input[i], input[i + 1]);
+            output[output.length - 1 - i / 2] = Convert.toByte(input[i], input[i + 1]);
         }
         return output;
-    }
+    };
 
     /**
      * Converts a uint8 array to a hex string.
@@ -90,11 +89,11 @@ export class Convert {
         let s = '';
         for (const byte of input) {
             s += utilities.Nibble_To_Char_Map[byte >> 4];
-            s += utilities.Nibble_To_Char_Map[byte & 0x0F];
+            s += utilities.Nibble_To_Char_Map[byte & 0x0f];
         }
 
         return s;
-    }
+    };
 
     /**
      * Converts a uint8 array to a uint32 array.
@@ -116,11 +115,11 @@ export class Convert {
      *
      */
     public static uint8ToInt8 = (input: number): number => {
-        if (0xFF < input) {
+        if (0xff < input) {
             throw Error(`input '${input}' is out of range`);
         }
-        return input << 24 >> 24;
-    }
+        return (input << 24) >> 24;
+    };
 
     /** Converts a signed byte to an unsigned byte with the same binary representation.
      * @param {number} input A signed byte.
@@ -130,8 +129,8 @@ export class Convert {
         if (127 < input || -128 > input) {
             throw Error(`input '${input}' is out of range`);
         }
-        return input & 0xFF;
-    }
+        return input & 0xff;
+    };
 
     /**
      * Converts a raw javascript string into a string of single byte characters using utf8 encoding.
@@ -147,7 +146,7 @@ export class Convert {
 
             if (128 > c) {
                 output += String.fromCharCode(c);
-            } else if ((127 < c) && (2048 > c)) {
+            } else if (127 < c && 2048 > c) {
                 output += String.fromCharCode((c >> 6) | 192);
                 output += String.fromCharCode((c & 63) | 128);
             } else {
@@ -158,7 +157,7 @@ export class Convert {
         }
 
         return output;
-    }
+    };
 
     /**
      * Convert UTF-8 to hex
@@ -172,7 +171,7 @@ export class Convert {
             result += rawString.charCodeAt(i).toString(16).padStart(2, '0');
         }
         return result.toUpperCase();
-    }
+    };
 
     /**
      * Convert UTF-8 string to Uint8Array
@@ -182,7 +181,7 @@ export class Convert {
     public static utf8ToUint8 = (input: string): Uint8Array => {
         const hex = Convert.utf8ToHex(Convert.rstr2utf8(input));
         return Convert.hexToUint8(hex);
-    }
+    };
 
     /**
      * Convert Uint8Array to string with UTF-8 encoding
@@ -193,7 +192,7 @@ export class Convert {
         // return new TextDecoder().decode(input);
         const hex = Convert.uint8ToHex(input);
         return Convert.decodeHex(hex);
-    }
+    };
 
     /**
      * decode hex to uft8 string
@@ -210,7 +209,7 @@ export class Convert {
         } catch (e) {
             return str;
         }
-    }
+    };
 
     /**
      * Generate xor for two byte arrays and return in hex string
@@ -239,7 +238,7 @@ export class Convert {
         const uint8Array = new Uint8Array(arraySize);
         for (let index = 0; index < uint8Array.length; index++) {
             const byte = number & 0xff;
-            uint8Array [index] = byte;
+            uint8Array[index] = byte;
             number = (number - byte) / 256;
         }
         return uint8Array;

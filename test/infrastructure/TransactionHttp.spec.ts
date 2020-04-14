@@ -47,9 +47,7 @@ describe('TransactionHttp', () => {
         );
         const aggTx = AggregateTransaction.createComplete(
             Deadline.create(),
-            [
-                tx.toAggregate(account.publicAccount),
-            ],
+            [tx.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
         );
@@ -57,9 +55,7 @@ describe('TransactionHttp', () => {
         const signedTx = account.sign(aggTx, generationHash);
         const trnsHttp = new TransactionHttp(NIS2_URL);
         expect(() => {
-            trnsHttp.announceAggregateBonded(signedTx)
-            .toPromise()
-            .then();
+            trnsHttp.announceAggregateBonded(signedTx).toPromise().then();
         }).to.throw(Error, 'Only Transaction Type 0x4241 is allowed for announce aggregate bonded');
     });
 
@@ -86,8 +82,9 @@ describe('TransactionHttp', () => {
         transactionStatusDTO.group = TransactionStateTypeEnum.Failed;
         transactionStatusDTO.height = '567';
 
-        when(transactionRoutesApi.getTransactionStatus(deepEqual(hash)))
-        .thenReturn(Promise.resolve({response: instance(clientResponse), body: transactionStatusDTO}));
+        when(transactionRoutesApi.getTransactionStatus(deepEqual(hash))).thenReturn(
+            Promise.resolve({ response: instance(clientResponse), body: transactionStatusDTO }),
+        );
 
         const transactionStatus = await transactionHttp.getTransactionStatus(hash).toPromise();
 
@@ -105,8 +102,9 @@ describe('TransactionHttp', () => {
         transactionStatusDTO.hash = hash;
         transactionStatusDTO.group = TransactionStateTypeEnum.Failed;
         transactionStatusDTO.height = '567';
-        when(transactionRoutesApi.getTransactionsStatuses(deepEqual({hashes: [hash]})))
-        .thenReturn(Promise.resolve({response: instance(clientResponse), body: [transactionStatusDTO]}));
+        when(transactionRoutesApi.getTransactionsStatuses(deepEqual({ hashes: [hash] }))).thenReturn(
+            Promise.resolve({ response: instance(clientResponse), body: [transactionStatusDTO] }),
+        );
 
         const transactionStatuses = await transactionHttp.getTransactionsStatuses([hash]).toPromise();
         expect(transactionStatuses.length).to.be.equal(1);
@@ -116,6 +114,5 @@ describe('TransactionHttp', () => {
         expect(transactionStatus.hash).to.be.equal(hash);
         expect(transactionStatus.code).to.be.equal('Failure_AccountLink_Invalid_Action');
         expect(transactionStatus.group).to.be.equal('failed');
-
     });
 });

@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-import {deepEqual} from 'assert';
-import {expect} from 'chai';
-import {Address} from '../../../src/model/account/Address';
-import {Deadline} from '../../../src/model/transaction/Deadline';
-import {TransactionStatusError} from '../../../src/model/transaction/TransactionStatusError';
+import { deepEqual } from 'assert';
+import { expect } from 'chai';
+import { Address } from '../../../src/model/account/Address';
+import { Deadline } from '../../../src/model/transaction/Deadline';
+import { TransactionStatusError } from '../../../src/model/transaction/TransactionStatusError';
 import { UInt64 } from '../../../src/model/UInt64';
 
 describe('TransactionStatusError', () => {
-
     it('should createComplete an TransactionStatusError object', () => {
         const statusInfoErrorDTO = {
             address: Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
@@ -34,7 +33,8 @@ describe('TransactionStatusError', () => {
             statusInfoErrorDTO.address,
             statusInfoErrorDTO.hash,
             statusInfoErrorDTO.code,
-            Deadline.createFromDTO(statusInfoErrorDTO.deadline));
+            Deadline.createFromDTO(statusInfoErrorDTO.deadline),
+        );
 
         expect(transactionStatusError.address).to.be.equal(statusInfoErrorDTO.address);
         expect(transactionStatusError.hash).to.be.equal(statusInfoErrorDTO.hash);

@@ -15,12 +15,9 @@
  */
 
 export class HashLockNetworkProperties {
-
     /**
      * @param lockedFundsPerAggregate - Amount that has to be locked per aggregate in partial cache.
      * @param maxHashLockDuration - Maximum number of blocks for which a hash lock can exist.
      */
-    constructor(public readonly lockedFundsPerAggregate?: string,
-                public readonly maxHashLockDuration?: string) {
-    }
+    constructor(public readonly lockedFundsPerAggregate?: string, public readonly maxHashLockDuration?: string) {}
 }

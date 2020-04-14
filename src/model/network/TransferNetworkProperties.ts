@@ -15,10 +15,8 @@
  */
 
 export class TransferNetworkProperties {
-
     /**
      * @param maxMessageSize - Maximum transaction message size.
      */
-    constructor(public readonly maxMessageSize?: string) {
-    }
+    constructor(public readonly maxMessageSize?: string) {}
 }

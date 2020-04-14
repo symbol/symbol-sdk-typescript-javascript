@@ -28,7 +28,7 @@ export class RawArray {
         }
 
         throw Error('unsupported type passed to uint8View');
-    }
+    };
 
     /**
      * Copies elements from a source array to a destination array.
@@ -43,7 +43,7 @@ export class RawArray {
         for (let i = 0; i < length; ++i) {
             dest[destOffset + i] = src[srcOffset + i];
         }
-    }
+    };
 
     /**
      * Determines whether or not an array is zero-filled.
@@ -80,5 +80,5 @@ export class RawArray {
         }
 
         return true;
-    }
+    };
 }

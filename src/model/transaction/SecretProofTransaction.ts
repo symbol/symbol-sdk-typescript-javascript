@@ -43,7 +43,6 @@ import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
 export class SecretProofTransaction extends Transaction {
-
     /**
      * Create a secret proof transaction object.
      *
@@ -57,13 +56,15 @@ export class SecretProofTransaction extends Transaction {
      *
      * @return a SecretProofTransaction instance
      */
-    public static create(deadline: Deadline,
-                         hashAlgorithm: LockHashAlgorithm,
-                         secret: string,
-                         recipientAddress: Address | NamespaceId,
-                         proof: string,
-                         networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): SecretProofTransaction {
+    public static create(
+        deadline: Deadline,
+        hashAlgorithm: LockHashAlgorithm,
+        secret: string,
+        recipientAddress: Address | NamespaceId,
+        proof: string,
+        networkType: NetworkType,
+        maxFee: UInt64 = new UInt64([0, 0]),
+    ): SecretProofTransaction {
         return new SecretProofTransaction(
             networkType,
             TransactionVersion.SECRET_PROOF,
@@ -89,17 +90,19 @@ export class SecretProofTransaction extends Transaction {
      * @param signer
      * @param transactionInfo
      */
-    constructor(networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: UInt64,
-                public readonly hashAlgorithm: LockHashAlgorithm,
-                public readonly secret: string,
-                public readonly recipientAddress: Address | NamespaceId,
-                public readonly proof: string,
-                signature?: string,
-                signer?: PublicAccount,
-                transactionInfo?: TransactionInfo) {
+    constructor(
+        networkType: NetworkType,
+        version: number,
+        deadline: Deadline,
+        maxFee: UInt64,
+        public readonly hashAlgorithm: LockHashAlgorithm,
+        public readonly secret: string,
+        public readonly recipientAddress: Address | NamespaceId,
+        public readonly proof: string,
+        signature?: string,
+        signer?: PublicAccount,
+        transactionInfo?: TransactionInfo,
+    ) {
         super(TransactionType.SECRET_PROOF, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
         if (!LockHashAlgorithmLengthValidator(hashAlgorithm, this.secret)) {
             throw new Error('HashType and Secret have incompatible length or not hexadecimal string');
@@ -112,15 +115,14 @@ export class SecretProofTransaction extends Transaction {
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedSecretProofTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            SecretProofTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+        const builder = isEmbedded
+            ? EmbeddedSecretProofTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : SecretProofTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = SecretProofTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
-                (builder as SecretProofTransactionBuilder).getDeadline().timestamp),
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as SecretProofTransactionBuilder).getDeadline().timestamp),
             builder.getHashAlgorithm().valueOf(),
             Convert.uint8ToHex(builder.getSecret().hash256),
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
@@ -128,8 +130,7 @@ export class SecretProofTransaction extends Transaction {
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as SecretProofTransactionBuilder).fee.amount),
         );
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**
@@ -218,10 +219,15 @@ export class SecretProofTransaction extends Transaction {
      * @param aggregateTransactionIndex Transaction index for aggregated transaction
      * @returns {SecretProofTransaction}
      */
-    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): SecretProofTransaction {
+    resolveAliases(statement: Statement, aggregateTransactionIndex = 0): SecretProofTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
         return DtoMapping.assign(this, {
-            recipientAddress: statement.resolveAddress(this.recipientAddress,
-                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex)});
+            recipientAddress: statement.resolveAddress(
+                this.recipientAddress,
+                transactionInfo.height.toString(),
+                transactionInfo.index,
+                aggregateTransactionIndex,
+            ),
+        });
     }
 }

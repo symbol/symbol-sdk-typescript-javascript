@@ -21,7 +21,9 @@ import { LockHashAlgorithm } from '../../../src/model/transaction/LockHashAlgori
 import { Convert } from '../../../src/core/format/Convert';
 
 describe('Hashes', () => {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const ripemd160 = require('ripemd160');
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const sha256 = require('js-sha256');
 
     it('Op_Sha3_256', () => {
@@ -61,7 +63,6 @@ describe('Hashes', () => {
         const hash256 = LockHashUtils.Hash(LockHashAlgorithm.Op_Hash_256, secretSeed);
         expect(expected256.toUpperCase()).to.be.equal(hash256);
 
-
         const expected160 = new ripemd160().update(Buffer.from(h256, 'hex')).digest('hex');
         const hash160 = LockHashUtils.Hash(LockHashAlgorithm.Op_Hash_160, secretSeed);
         expect(expected160.toUpperCase()).to.be.equal(hash160);
@@ -75,12 +76,15 @@ describe('Hashes', () => {
 });
 
 describe('Hashes - static vector', () => {
-    const ripemd160 = require('ripemd160');
-    const sha256 = require('js-sha256');
-
-    const inputs = ['', 'CC', '41FB', '1F877C', 'C1ECFDFC',
-    '9F2FCC7C90DE090D6B87CD7E9718C1EA6CB21118FC2D5DE9F97E5DB6AC1E9C10',
-    '414243442C31322C34353637'];
+    const inputs = [
+        '',
+        'CC',
+        '41FB',
+        '1F877C',
+        'C1ECFDFC',
+        '9F2FCC7C90DE090D6B87CD7E9718C1EA6CB21118FC2D5DE9F97E5DB6AC1E9C10',
+        '414243442C31322C34353637',
+    ];
 
     const expectedSHA3_256 = [
         'A7FFC6F8BF1ED76651C14756A061D662F580FF4DE43B49FA82D80A4B80F8434A',
@@ -89,7 +93,7 @@ describe('Hashes - static vector', () => {
         'BC22345E4BD3F792A341CF18AC0789F1C9C966712A501B19D1B6632CCD408EC5',
         'C5859BE82560CC8789133F7C834A6EE628E351E504E601E8059A0667FF62C124',
         '2F1A5F7159E34EA19CDDC70EBF9B81F1A66DB40615D7EAD3CC1F1B954D82A3AF',
-        'BBB389B70F13B89A0D544D87E9BF6AC981FC1744EB6AB808A7FF3ECF7FB6A3B9'
+        'BBB389B70F13B89A0D544D87E9BF6AC981FC1744EB6AB808A7FF3ECF7FB6A3B9',
     ];
 
     const expectedHash_256 = [
@@ -99,7 +103,7 @@ describe('Hashes - static vector', () => {
         '67CC26E4B3534A4EC6E5973BF8A2FFA8C0DAAEFAEDB984A3B4A15930E0091418',
         'DEA31FB4B63E158E92037CE6C9696EEE4344FAAB22808A00FF5B94A7FDC1CFA0',
         'ABED1BA808548F4FD0D239C8BA4840C81F52F91C7D8E6543D40ADE934DC7D886',
-        'E6173EF758919BEC5F9FA28A6C28133D791D3C17C0D79AB10E449D5B4CBB453A'
+        'E6173EF758919BEC5F9FA28A6C28133D791D3C17C0D79AB10E449D5B4CBB453A',
     ];
 
     const expectedHash_160 = [
@@ -109,7 +113,7 @@ describe('Hashes - static vector', () => {
         '5ACCBEB2A17F9257E769D9636BB3FE21B9F98531',
         'C849C5A5F6BCA84EF1829B2A84C0BAC9D765383D',
         'C7B080DF005A269059B68DE318BE136396B02948',
-        '76A380402DE6B84B170AB433A96C6B1E0DE05AF0'
+        '76A380402DE6B84B170AB433A96C6B1E0DE05AF0',
     ];
 
     it('Test', () => {

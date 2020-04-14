@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import {deepEqual} from 'assert';
-import {expect} from 'chai';
-import {Address} from '../../../src/model/account/Address';
-import {MosaicId} from '../../../src/model/mosaic/MosaicId';
-import {AddressAlias} from '../../../src/model/namespace/AddressAlias';
-import {Alias} from '../../../src/model/namespace/Alias';
-import {AliasType} from '../../../src/model/namespace/AliasType';
-import {EmptyAlias} from '../../../src/model/namespace/EmptyAlias';
-import {MosaicAlias} from '../../../src/model/namespace/MosaicAlias';
-import {NetworkType} from '../../../src/model/network/NetworkType';
-import {UInt64} from '../../../src/model/UInt64';
+import { deepEqual } from 'assert';
+import { expect } from 'chai';
+import { Address } from '../../../src/model/account/Address';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { AddressAlias } from '../../../src/model/namespace/AddressAlias';
+import { Alias } from '../../../src/model/namespace/Alias';
+import { AliasType } from '../../../src/model/namespace/AliasType';
+import { EmptyAlias } from '../../../src/model/namespace/EmptyAlias';
+import { MosaicAlias } from '../../../src/model/namespace/MosaicAlias';
+import { NetworkType } from '../../../src/model/network/NetworkType';
+import { UInt64 } from '../../../src/model/UInt64';
 
 describe('Alias', () => {
     let emptyAliasDTO;
@@ -55,7 +55,7 @@ describe('Alias', () => {
     });
 
     it('should create a AddressAlias object', () => {
-        const alias = new AddressAlias( addressAliasDTO.address);
+        const alias = new AddressAlias(addressAliasDTO.address);
         expect(alias.type).to.be.equal(AliasType.Address);
         expect(alias.address).to.be.equal(addressAliasDTO.address);
     });

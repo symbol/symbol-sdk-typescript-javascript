@@ -13,28 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {deepEqual} from 'assert';
-import {expect} from 'chai';
+import { deepEqual } from 'assert';
+import { expect } from 'chai';
 import * as CryptoJS from 'crypto-js';
-import {keccak_256, sha3_256} from 'js-sha3';
-import {Convert, Convert as convert} from '../../../src/core/format';
+import { keccak_256, sha3_256 } from 'js-sha3';
+import { Convert, Convert as convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
-import {Address} from '../../../src/model/account/Address';
+import { Address } from '../../../src/model/account/Address';
 import { Mosaic } from '../../../src/model/mosaic/Mosaic';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
-import {NetworkCurrencyLocal} from '../../../src/model/mosaic/NetworkCurrencyLocal';
+import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
-import {NetworkType} from '../../../src/model/network/NetworkType';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
 import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
 import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { Statement } from '../../../src/model/receipt/Statement';
-import {Deadline} from '../../../src/model/transaction/Deadline';
+import { Deadline } from '../../../src/model/transaction/Deadline';
 import { LockHashAlgorithm } from '../../../src/model/transaction/LockHashAlgorithm';
-import {SecretLockTransaction} from '../../../src/model/transaction/SecretLockTransaction';
+import { SecretLockTransaction } from '../../../src/model/transaction/SecretLockTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
-import {UInt64} from '../../../src/model/UInt64';
+import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
 describe('SecretLockTransaction', () => {
@@ -46,11 +46,18 @@ describe('SecretLockTransaction', () => {
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     before(() => {
         account = TestingAccount;
-        statement = new Statement([],
-            [new ResolutionStatement(ResolutionType.Address, UInt64.fromUint(2), unresolvedAddress,
-                [new ResolutionEntry(account.address, new ReceiptSource(1, 0))])],
-            [new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromUint(2), unresolvedMosaicId,
-                [new ResolutionEntry(mosaicId, new ReceiptSource(1, 0))])],
+        statement = new Statement(
+            [],
+            [
+                new ResolutionStatement(ResolutionType.Address, UInt64.fromUint(2), unresolvedAddress, [
+                    new ResolutionEntry(account.address, new ReceiptSource(1, 0)),
+                ]),
+            ],
+            [
+                new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromUint(2), unresolvedMosaicId, [
+                    new ResolutionEntry(mosaicId, new ReceiptSource(1, 0)),
+                ]),
+            ],
         );
     });
 
@@ -122,12 +129,10 @@ describe('SecretLockTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
         const signedTx = secretLockTransaction.signWith(account, generationHash);
-        expect(signedTx.payload.substring(
-            256,
-            signedTx.payload.length,
-        )).to.be.equal(
+        expect(signedTx.payload.substring(256, signedTx.payload.length)).to.be.equal(
             '9B3155B37159DA50AA52D5967C509B410F5A36A3B1E31ECB5AC76675D79B4A5E44B262C46CEABB850A' +
-            '0000000000000064000000000000000090C2337113E6D8F15B56E0821149299F340C01706FC1CAD6CB');
+                '0000000000000064000000000000000090C2337113E6D8F15B56E0821149299F340C01706FC1CAD6CB',
+        );
     });
 
     it('should throw exception when the input is not related to HashTyp: Op_Sha3_256', () => {
@@ -264,7 +269,6 @@ describe('SecretLockTransaction', () => {
             recipientAddress,
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
-​
         expect(secretLockTransaction.maxFee.compact()).to.be.equal(420);
         const signedTransaction = secretLockTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
@@ -284,8 +288,8 @@ describe('SecretLockTransaction', () => {
             unresolvedAddress,
             '',
             account.publicAccount,
-            new TransactionInfo(UInt64.fromUint(2), 0, '')).resolveAliases(statement);
-​
+            new TransactionInfo(UInt64.fromUint(2), 0, ''),
+        ).resolveAliases(statement);
         expect(secretLockTransaction.recipientAddress instanceof Address).to.be.true;
         expect(secretLockTransaction.mosaic.id instanceof MosaicId).to.be.true;
         expect((secretLockTransaction.recipientAddress as Address).equals(account.address)).to.be.true;

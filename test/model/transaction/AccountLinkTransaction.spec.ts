@@ -15,7 +15,7 @@
  */
 
 import { expect } from 'chai';
-import {Convert} from '../../../src/core/format';
+import { Convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { AccountLinkTransaction } from '../../../src/model/transaction/AccountLinkTransaction';
@@ -69,10 +69,9 @@ describe('AccountLinkTransaction', () => {
 
         const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(
-            256,
-            signedTransaction.payload.length,
-        )).to.be.equal('9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B601');
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B601',
+        );
     });
 
     it('should create an AccountLinkTransaction object with unlink action', () => {
@@ -88,10 +87,9 @@ describe('AccountLinkTransaction', () => {
 
         const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(
-            256,
-            signedTransaction.payload.length,
-        )).to.be.equal('9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B600');
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B600',
+        );
     });
 
     describe('size', () => {
@@ -114,7 +112,6 @@ describe('AccountLinkTransaction', () => {
             LinkAction.Unlink,
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
-​
         expect(accountLinkTransaction.maxFee.compact()).to.be.equal(322);
 
         const signedTransaction = accountLinkTransaction.signWith(account, generationHash);

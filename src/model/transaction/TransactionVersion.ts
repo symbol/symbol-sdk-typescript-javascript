@@ -26,7 +26,6 @@
  * @see https://github.com/nemtech/catapult-server/blob/master/plugins/txes/transfer/src/model/TransferTransaction.h#L37
  */
 export class TransactionVersion {
-
     /**
      * Transfer Transaction transaction version.
      * @type {number}

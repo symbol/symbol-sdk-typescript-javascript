@@ -25,25 +25,24 @@ describe('MosaicService', () => {
     let accountAddress: Address;
     let accountRepository: AccountRepository;
     let mosaicRepository: MosaicRepository;
-    let generationHash: string;
     const helper = new IntegrationTestHelper();
-    let networkType: NetworkType;
 
     before(() => {
         return helper.start().then(() => {
             accountAddress = helper.account.address;
-            generationHash = helper.generationHash;
-            networkType = helper.networkType;
             accountRepository = helper.repositoryFactory.createAccountRepository();
             mosaicRepository = helper.repositoryFactory.createMosaicRepository();
         });
     });
     it('should return the mosaic list skipping the expired mosaics', () => {
         const mosaicService = new MosaicService(accountRepository, mosaicRepository);
-        return mosaicService.mosaicsAmountViewFromAddress(accountAddress).toPromise().then((amountViews) => {
-            return amountViews.map((v) => {
-                return {mosaicId: v.fullName(), amount: v.relativeAmount()};
+        return mosaicService
+            .mosaicsAmountViewFromAddress(accountAddress)
+            .toPromise()
+            .then((amountViews) => {
+                return amountViews.map((v) => {
+                    return { mosaicId: v.fullName(), amount: v.relativeAmount() };
+                });
             });
-        });
     });
 });

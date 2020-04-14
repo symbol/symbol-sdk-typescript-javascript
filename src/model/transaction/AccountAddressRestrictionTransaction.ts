@@ -42,7 +42,6 @@ import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
 export class AccountAddressRestrictionTransaction extends Transaction {
-
     /**
      * Create a modify account address restriction transaction object
      * @param deadline - The deadline to include the transaction.
@@ -53,19 +52,23 @@ export class AccountAddressRestrictionTransaction extends Transaction {
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {AccountAddressRestrictionTransaction}
      */
-    public static create(deadline: Deadline,
-                         restrictionFlags: AccountRestrictionFlags,
-                         restrictionAdditions: (Address | NamespaceId)[],
-                         restrictionDeletions: (Address | NamespaceId)[],
-                         networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): AccountAddressRestrictionTransaction {
-        return new AccountAddressRestrictionTransaction(networkType,
+    public static create(
+        deadline: Deadline,
+        restrictionFlags: AccountRestrictionFlags,
+        restrictionAdditions: (Address | NamespaceId)[],
+        restrictionDeletions: (Address | NamespaceId)[],
+        networkType: NetworkType,
+        maxFee: UInt64 = new UInt64([0, 0]),
+    ): AccountAddressRestrictionTransaction {
+        return new AccountAddressRestrictionTransaction(
+            networkType,
             TransactionVersion.ACCOUNT_ADDRESS_RESTRICTION,
             deadline,
             maxFee,
             restrictionFlags,
             restrictionAdditions,
-            restrictionDeletions);
+            restrictionDeletions,
+        );
     }
 
     /**
@@ -80,18 +83,19 @@ export class AccountAddressRestrictionTransaction extends Transaction {
      * @param signer
      * @param transactionInfo
      */
-    constructor(networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: UInt64,
-                public readonly restrictionFlags: AccountRestrictionFlags,
-                public readonly restrictionAdditions: (Address | NamespaceId)[],
-                public readonly restrictionDeletions: (Address | NamespaceId)[],
-                signature?: string,
-                signer?: PublicAccount,
-                transactionInfo?: TransactionInfo) {
-        super(TransactionType.ACCOUNT_ADDRESS_RESTRICTION,
-              networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+    constructor(
+        networkType: NetworkType,
+        version: number,
+        deadline: Deadline,
+        maxFee: UInt64,
+        public readonly restrictionFlags: AccountRestrictionFlags,
+        public readonly restrictionAdditions: (Address | NamespaceId)[],
+        public readonly restrictionDeletions: (Address | NamespaceId)[],
+        signature?: string,
+        signer?: PublicAccount,
+        transactionInfo?: TransactionInfo,
+    ) {
+        super(TransactionType.ACCOUNT_ADDRESS_RESTRICTION, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
@@ -100,15 +104,16 @@ export class AccountAddressRestrictionTransaction extends Transaction {
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedAccountAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-                        AccountAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+        const builder = isEmbedded
+            ? EmbeddedAccountAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : AccountAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = AccountAddressRestrictionTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
-                (builder as AccountAddressRestrictionTransactionBuilder).getDeadline().timestamp),
+            isEmbedded
+                ? Deadline.create()
+                : Deadline.createFromDTO((builder as AccountAddressRestrictionTransactionBuilder).getDeadline().timestamp),
             builder.getRestrictionFlags().valueOf(),
             builder.getRestrictionAdditions().map((addition) => {
                 return UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(addition.unresolvedAddress));
@@ -119,8 +124,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountAddressRestrictionTransactionBuilder).fee.amount),
         );
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**
@@ -140,9 +144,15 @@ export class AccountAddressRestrictionTransaction extends Transaction {
         const byteRestrictionAdditions = 25 * this.restrictionAdditions.length;
         const byteRestrictionDeletions = 25 * this.restrictionDeletions.length;
 
-        return byteSize + byteRestrictionType + byteAdditionCount + byteDeletionCount +
-               byteRestrictionAdditions + byteRestrictionDeletions +
-               byteAccountRestrictionTransactionBody_Reserved1;
+        return (
+            byteSize +
+            byteRestrictionType +
+            byteAdditionCount +
+            byteDeletionCount +
+            byteRestrictionAdditions +
+            byteRestrictionDeletions +
+            byteAccountRestrictionTransactionBody_Reserved1
+        );
     }
 
     /**
@@ -198,15 +208,15 @@ export class AccountAddressRestrictionTransaction extends Transaction {
      * @param aggregateTransactionIndex Transaction index for aggregated transaction
      * @returns {AccountAddressRestrictionTransaction}
      */
-    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): AccountAddressRestrictionTransaction {
+    resolveAliases(statement: Statement, aggregateTransactionIndex = 0): AccountAddressRestrictionTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
         return DtoMapping.assign(this, {
-            restrictionAdditions:
-                this.restrictionAdditions.map((addition) => statement.resolveAddress(addition, transactionInfo.height.toString(),
-                    transactionInfo.index, aggregateTransactionIndex)),
-            restrictionDeletions:
-                this.restrictionDeletions.map((deletion) => statement.resolveAddress(deletion, transactionInfo.height.toString(),
-                    transactionInfo.index, aggregateTransactionIndex)),
+            restrictionAdditions: this.restrictionAdditions.map((addition) =>
+                statement.resolveAddress(addition, transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
+            ),
+            restrictionDeletions: this.restrictionDeletions.map((deletion) =>
+                statement.resolveAddress(deletion, transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
+            ),
         });
     }
 }

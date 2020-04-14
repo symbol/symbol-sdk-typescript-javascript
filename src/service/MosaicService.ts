@@ -29,16 +29,12 @@ import { MosaicView } from './MosaicView';
  * Mosaic service
  */
 export class MosaicService {
-
     /**
      * Constructor
      * @param accountRepository
      * @param mosaicRepository
      */
-    constructor(private readonly accountRepository: AccountRepository,
-                private readonly mosaicRepository: MosaicRepository) {
-
-    }
+    constructor(private readonly accountRepository: AccountRepository, private readonly mosaicRepository: MosaicRepository) {}
 
     /**
      * Get mosaic view given mosaicIds
@@ -47,12 +43,16 @@ export class MosaicService {
      */
     mosaicsView(mosaicIds: MosaicId[]): Observable<MosaicView[]> {
         return observableOf(mosaicIds).pipe(
-            mergeMap((_) => this.mosaicRepository.getMosaics(mosaicIds).pipe(
-                mergeMap((info) => info),
-                map((mosaicInfo: MosaicInfo) => {
-                    return new MosaicView(mosaicInfo);
-                }),
-                toArray())));
+            mergeMap(() =>
+                this.mosaicRepository.getMosaics(mosaicIds).pipe(
+                    mergeMap((info) => info),
+                    map((mosaicInfo: MosaicInfo) => {
+                        return new MosaicView(mosaicInfo);
+                    }),
+                    toArray(),
+                ),
+            ),
+        );
     }
 
     /**
@@ -74,7 +74,8 @@ export class MosaicService {
                     }
                 });
                 return results;
-            }));
+            }),
+        );
     }
 
     /**
@@ -85,6 +86,7 @@ export class MosaicService {
     mosaicsAmountViewFromAddress(address: Address): Observable<MosaicAmountView[]> {
         return observableOf(address).pipe(
             mergeMap((_) => this.accountRepository.getAccountInfo(_)),
-            mergeMap((_) => this.mosaicsAmountView(_.mosaics)));
+            mergeMap((_) => this.mosaicsAmountView(_.mosaics)),
+        );
     }
 }

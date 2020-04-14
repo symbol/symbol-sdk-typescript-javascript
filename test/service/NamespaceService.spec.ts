@@ -28,22 +28,21 @@ import { UInt64 } from '../../src/model/UInt64';
 import { NamespaceService } from '../../src/service/NamespaceService';
 
 describe('NamespaceService', () => {
-
     it('should return the NamespaceInfo + name for a root namespace', () => {
         const mockedNamespaceRepository: NamespaceRepository = mock();
         const rootNamespace = givenRootNamespace();
         const subnamespace = givenSubnamespace();
-        when(mockedNamespaceRepository.getNamespace(rootNamespace.id))
-            .thenReturn(observableOf(rootNamespace));
-        when(mockedNamespaceRepository.getNamespace(subnamespace.id))
-            .thenReturn(observableOf(subnamespace));
-        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id])))
-            .thenReturn(observableOf([new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'symboltests')]));
-        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id, subnamespace.id])))
-            .thenReturn(observableOf([
+        when(mockedNamespaceRepository.getNamespace(rootNamespace.id)).thenReturn(observableOf(rootNamespace));
+        when(mockedNamespaceRepository.getNamespace(subnamespace.id)).thenReturn(observableOf(subnamespace));
+        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id]))).thenReturn(
+            observableOf([new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'symboltests')]),
+        );
+        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id, subnamespace.id]))).thenReturn(
+            observableOf([
                 new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'symboltests'),
                 new NamespaceName(new NamespaceId([1781696705, 4157485863]), 'level2'),
-            ]));
+            ]),
+        );
         const namespaceRepository = instance(mockedNamespaceRepository);
         const namespaceService = new NamespaceService(namespaceRepository);
         namespaceService.namespace(rootNamespace.id).subscribe((namespace) => {
@@ -55,19 +54,20 @@ describe('NamespaceService', () => {
         const mockedNamespaceRepository: NamespaceRepository = mock();
         const rootNamespace = givenRootNamespace();
         const subnamespace = givenSubnamespace();
-        when(mockedNamespaceRepository.getNamespace(rootNamespace.id))
-            .thenReturn(observableOf(rootNamespace));
-        when(mockedNamespaceRepository.getNamespace(subnamespace.id))
-            .thenReturn(observableOf(subnamespace));
-        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id])))
-            .thenReturn(observableOf([new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'symboltests')]));
-        when(mockedNamespaceRepository.getNamespacesName(deepEqual([subnamespace.id])))
-            .thenReturn(observableOf([new NamespaceName(new NamespaceId([1781696705, 4157485863]), 'level2')]));
-        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id, subnamespace.id])))
-            .thenReturn(observableOf([
+        when(mockedNamespaceRepository.getNamespace(rootNamespace.id)).thenReturn(observableOf(rootNamespace));
+        when(mockedNamespaceRepository.getNamespace(subnamespace.id)).thenReturn(observableOf(subnamespace));
+        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id]))).thenReturn(
+            observableOf([new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'symboltests')]),
+        );
+        when(mockedNamespaceRepository.getNamespacesName(deepEqual([subnamespace.id]))).thenReturn(
+            observableOf([new NamespaceName(new NamespaceId([1781696705, 4157485863]), 'level2')]),
+        );
+        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id, subnamespace.id]))).thenReturn(
+            observableOf([
                 new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'symboltests'),
                 new NamespaceName(new NamespaceId([1781696705, 4157485863]), 'level2'),
-            ]));
+            ]),
+        );
         const namespaceRepository = instance(mockedNamespaceRepository);
         const namespaceService = new NamespaceService(namespaceRepository);
 
@@ -77,24 +77,24 @@ describe('NamespaceService', () => {
     });
 
     function givenRootNamespace(): NamespaceInfo {
-        return new NamespaceInfo(true,
+        return new NamespaceInfo(
+            true,
             0,
             '59DFBA84B2E9E7000135E80C',
             0,
             1,
-            [new NamespaceId([
-                3316183705,
-                3829351378,
-            ])],
+            [new NamespaceId([3316183705, 3829351378])],
             new NamespaceId([0, 0]),
             PublicAccount.createFromPublicKey('1026D70E1954775749C6811084D6450A3184D977383F0E4282CD47118AF37755', NetworkType.MIJIN_TEST),
             new UInt64([795, 0]),
             new UInt64([50795, 0]),
-            new EmptyAlias());
+            new EmptyAlias(),
+        );
     }
 
     function givenSubnamespace(): NamespaceInfo {
-        return new NamespaceInfo(true,
+        return new NamespaceInfo(
+            true,
             0,
             '5A1D85A1D53061000117D1EE',
             1,
@@ -104,6 +104,7 @@ describe('NamespaceService', () => {
             PublicAccount.createFromPublicKey('1026D70E1954775749C6811084D6450A3184D977383F0E4282CD47118AF37755', NetworkType.MIJIN_TEST),
             new UInt64([795, 0]),
             new UInt64([50795, 0]),
-            new EmptyAlias());
+            new EmptyAlias(),
+        );
     }
 });

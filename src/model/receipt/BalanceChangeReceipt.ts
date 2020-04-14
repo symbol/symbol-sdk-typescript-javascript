@@ -27,7 +27,6 @@ import { ReceiptVersion } from './ReceiptVersion';
  * Balance Change: A mosaic credit or debit was triggered.
  */
 export class BalanceChangeReceipt extends Receipt {
-
     /**
      * Balance change expiry receipt
      * @param targetPublicAccount - The target account public account.
@@ -38,21 +37,22 @@ export class BalanceChangeReceipt extends Receipt {
      * @param size - the receipt size
      */
     constructor(
-                /**
-                 * The target targetPublicKey public account.
-                 */
-                public readonly targetPublicAccount: PublicAccount,
-                /**
-                 * The mosaic id.
-                 */
-                public readonly mosaicId: MosaicId,
-                /**
-                 * The amount of mosaic.
-                 */
-                public readonly amount: UInt64,
-                version: ReceiptVersion,
-                type: ReceiptType,
-                size?: number) {
+        /**
+         * The target targetPublicKey public account.
+         */
+        public readonly targetPublicAccount: PublicAccount,
+        /**
+         * The mosaic id.
+         */
+        public readonly mosaicId: MosaicId,
+        /**
+         * The amount of mosaic.
+         */
+        public readonly amount: UInt64,
+        version: ReceiptVersion,
+        type: ReceiptType,
+        size?: number,
+    ) {
         super(version, type, size);
     }
 
@@ -62,7 +62,9 @@ export class BalanceChangeReceipt extends Receipt {
      * @return {Uint8Array}
      */
     public serialize(): Uint8Array {
-        return new BalanceChangeReceiptBuilder(ReceiptVersion.BALANCE_CHANGE, this.type.valueOf(),
+        return new BalanceChangeReceiptBuilder(
+            ReceiptVersion.BALANCE_CHANGE,
+            this.type.valueOf(),
             new MosaicBuilder(new MosaicIdDto(this.mosaicId.toDTO()), new AmountDto(this.amount.toDTO())),
             new KeyDto(Convert.hexToUint8(this.targetPublicAccount.publicKey)),
         ).serialize();

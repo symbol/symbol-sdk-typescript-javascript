@@ -23,7 +23,6 @@ import { ResolutionType } from './ResolutionType';
 import { TransactionStatement } from './TransactionStatement';
 
 export class Statement {
-
     /**
      * Receipt - transaction statement object
      * @param transactionStatements - The transaction statements.
@@ -31,19 +30,19 @@ export class Statement {
      * @param mosaicResolutionStatements - The mosaic resolution statements.
      */
     constructor(
-                /**
-                 * The transaction statements.
-                 */
-                public readonly transactionStatements: TransactionStatement[],
-                /**
-                 * The address resolution statements.
-                 */
-                public readonly addressResolutionStatements: ResolutionStatement[],
-                /**
-                 * The mosaic resolution statements.
-                 */
-                public readonly mosaicResolutionStatements: ResolutionStatement[]) {
-    }
+        /**
+         * The transaction statements.
+         */
+        public readonly transactionStatements: TransactionStatement[],
+        /**
+         * The address resolution statements.
+         */
+        public readonly addressResolutionStatements: ResolutionStatement[],
+        /**
+         * The mosaic resolution statements.
+         */
+        public readonly mosaicResolutionStatements: ResolutionStatement[],
+    ) {}
 
     /**
      * Resolve unresolvedAddress from statement
@@ -53,14 +52,21 @@ export class Statement {
      * @param aggregateTransactionIndex Aggregate transaction index
      * @returns {Address}
      */
-    public resolveAddress(unresolvedAddress: Address | NamespaceId,
-                          height: string,
-                          transactionIndex: number,
-                          aggregateTransactionIndex: number = 0): Address {
-        return unresolvedAddress instanceof NamespaceId ?
-                this.getResolvedFromReceipt(ResolutionType.Address, unresolvedAddress as NamespaceId,
-                    transactionIndex, height, aggregateTransactionIndex) as Address :
-                unresolvedAddress;
+    public resolveAddress(
+        unresolvedAddress: Address | NamespaceId,
+        height: string,
+        transactionIndex: number,
+        aggregateTransactionIndex = 0,
+    ): Address {
+        return unresolvedAddress instanceof NamespaceId
+            ? (this.getResolvedFromReceipt(
+                  ResolutionType.Address,
+                  unresolvedAddress as NamespaceId,
+                  transactionIndex,
+                  height,
+                  aggregateTransactionIndex,
+              ) as Address)
+            : unresolvedAddress;
     }
 
     /**
@@ -71,14 +77,21 @@ export class Statement {
      * @param aggregateTransactionIndex Aggregate transaction index
      * @returns {MosaicId}
      */
-    public resolveMosaicId(unresolvedMosaicId: MosaicId | NamespaceId,
-                           height: string,
-                           transactionIndex: number,
-                           aggregateTransactionIndex: number = 0): MosaicId {
-        return unresolvedMosaicId instanceof NamespaceId ?
-                this.getResolvedFromReceipt(ResolutionType.Mosaic, unresolvedMosaicId as NamespaceId,
-                    transactionIndex, height, aggregateTransactionIndex) as MosaicId :
-                unresolvedMosaicId;
+    public resolveMosaicId(
+        unresolvedMosaicId: MosaicId | NamespaceId,
+        height: string,
+        transactionIndex: number,
+        aggregateTransactionIndex = 0,
+    ): MosaicId {
+        return unresolvedMosaicId instanceof NamespaceId
+            ? (this.getResolvedFromReceipt(
+                  ResolutionType.Mosaic,
+                  unresolvedMosaicId as NamespaceId,
+                  transactionIndex,
+                  height,
+                  aggregateTransactionIndex,
+              ) as MosaicId)
+            : unresolvedMosaicId;
     }
 
     /**
@@ -89,14 +102,19 @@ export class Statement {
      * @param aggregateTransactionIndex Aggregate transaction index
      * @returns {Mosaic}
      */
-    public resolveMosaic(unresolvedMosaic: Mosaic,
-                         height: string,
-                         transactionIndex: number,
-                         aggregateTransactionIndex: number = 0): Mosaic {
-        return unresolvedMosaic.id instanceof NamespaceId ?
-                new Mosaic(this.getResolvedFromReceipt(ResolutionType.Mosaic, unresolvedMosaic.id as NamespaceId,
-                    transactionIndex, height, aggregateTransactionIndex) as MosaicId, unresolvedMosaic.amount) :
-                unresolvedMosaic;
+    public resolveMosaic(unresolvedMosaic: Mosaic, height: string, transactionIndex: number, aggregateTransactionIndex = 0): Mosaic {
+        return unresolvedMosaic.id instanceof NamespaceId
+            ? new Mosaic(
+                  this.getResolvedFromReceipt(
+                      ResolutionType.Mosaic,
+                      unresolvedMosaic.id as NamespaceId,
+                      transactionIndex,
+                      height,
+                      aggregateTransactionIndex,
+                  ) as MosaicId,
+                  unresolvedMosaic.amount,
+              )
+            : unresolvedMosaic;
     }
 
     /**
@@ -109,15 +127,17 @@ export class Statement {
      * @param aggregateTransactionIndex Transaction index for aggregate
      * @returns {MosaicId | Address}
      */
-    private getResolvedFromReceipt(resolutionType: ResolutionType,
-                                   unresolved: NamespaceId,
-                                   transactionIndex: number,
-                                   height: string,
-                                   aggregateTransactionIndex?: number): MosaicId | Address {
-
-        const resolutionStatement = (resolutionType === ResolutionType.Address ? this.addressResolutionStatements :
-            this.mosaicResolutionStatements).find((resolution) => resolution.height.toString() === height &&
-            (resolution.unresolved as NamespaceId).equals(unresolved));
+    private getResolvedFromReceipt(
+        resolutionType: ResolutionType,
+        unresolved: NamespaceId,
+        transactionIndex: number,
+        height: string,
+        aggregateTransactionIndex?: number,
+    ): MosaicId | Address {
+        const resolutionStatement = (resolutionType === ResolutionType.Address
+            ? this.addressResolutionStatements
+            : this.mosaicResolutionStatements
+        ).find((resolution) => resolution.height.toString() === height && (resolution.unresolved as NamespaceId).equals(unresolved));
 
         if (!resolutionStatement) {
             throw new Error(`No resolution statement found on block: ${height} for unresolved: ${unresolved.toHex()}`);

@@ -15,7 +15,6 @@
  */
 
 import * as http from 'http';
-// tslint:disable-next-line: ordered-imports
 import { from as observableFrom, Observable, of as observableOf, throwError } from 'rxjs';
 import { catchError, map, shareReplay } from 'rxjs/operators';
 import { NodeRoutesApi } from 'symbol-openapi-typescript-node-client';
@@ -43,10 +42,12 @@ export abstract class Http {
         } else if (networkType) {
             return observableOf(networkType as NetworkType);
         } else {
-            return observableFrom(new NodeRoutesApi(this.url).getNodeInfo()).pipe(
-                map(({body}) => body.networkIdentifier),
-                catchError((error) => throwError(this.errorHandling(error))),
-            ).pipe(shareReplay(1));
+            return observableFrom(new NodeRoutesApi(this.url).getNodeInfo())
+                .pipe(
+                    map(({ body }) => body.networkIdentifier),
+                    catchError((error) => throwError(this.errorHandling(error))),
+                )
+                .pipe(shareReplay(1));
         }
     }
 
@@ -90,9 +91,9 @@ export abstract class Http {
      * @param remoteCall the remote call
      * @param mapper the mapper from dto to the model object.
      */
-    protected call<D, M>(remoteCall: Promise<{ response: http.IncomingMessage; body: D; }>, mapper: (value: D, index: number) => M) {
+    protected call<D, M>(remoteCall: Promise<{ response: http.IncomingMessage; body: D }>, mapper: (value: D, index: number) => M) {
         return observableFrom(remoteCall).pipe(
-            map(({body}, index) => mapper(body, index)),
+            map(({ body }, index) => mapper(body, index)),
             catchError((error) => throwError(this.errorHandling(error))),
         );
     }

@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-import {LocalDateTime} from 'js-joda';
-import {Crypto, KeyPair, SHA3Hasher} from '../../core/crypto';
-import {Convert as convert} from '../../core/format';
-import {Account} from '../account/Account';
-import {Address} from '../account/Address';
-import {NetworkType} from '../network/NetworkType';
-import {EncryptedPrivateKey} from './EncryptedPrivateKey';
-import {ISimpleWalletDTO} from './ISimpleWalletDTO';
-import {Password} from './Password';
-import {Wallet} from './Wallet';
+import { LocalDateTime } from 'js-joda';
+import { Crypto, KeyPair } from '../../core/crypto';
+import { Convert as convert } from '../../core/format';
+import { Account } from '../account/Account';
+import { Address } from '../account/Address';
+import { NetworkType } from '../network/NetworkType';
+import { EncryptedPrivateKey } from './EncryptedPrivateKey';
+import { ISimpleWalletDTO } from './ISimpleWalletDTO';
+import { Password } from './Password';
+import { Wallet } from './Wallet';
 
 /**
  * Simple wallet model generates a private key from a PRNG
  */
 export class SimpleWallet extends Wallet {
-
     /**
      * @param name
      * @param network
@@ -37,14 +36,16 @@ export class SimpleWallet extends Wallet {
      * @param creationDate
      * @param encryptedPrivateKey
      */
-    constructor(name: string,
-                network: NetworkType,
-                address: Address,
-                creationDate: LocalDateTime,
-                /**
-                 * The encrypted private key and information to decrypt it
-                 */
-                public readonly encryptedPrivateKey: EncryptedPrivateKey) {
+    constructor(
+        name: string,
+        network: NetworkType,
+        address: Address,
+        creationDate: LocalDateTime,
+        /**
+         * The encrypted private key and information to decrypt it
+         */
+        public readonly encryptedPrivateKey: EncryptedPrivateKey,
+    ) {
         super(name, network, address, creationDate, 'simple_v1');
     }
 
@@ -55,9 +56,7 @@ export class SimpleWallet extends Wallet {
      * @param network - Network id
      * @returns {SimpleWallet}
      */
-    public static create(name: string,
-                         password: Password,
-                         network: NetworkType): SimpleWallet {
+    public static create(name: string, password: Password, network: NetworkType): SimpleWallet {
         // Create random bytes
         const randomBytesArray = Crypto.randomBytes(32);
         // Hash random bytes with entropy seed
@@ -86,10 +85,7 @@ export class SimpleWallet extends Wallet {
      * @param network - Network id
      * @returns {SimpleWallet}
      */
-    static createFromPrivateKey(name: string,
-                                password: Password,
-                                privateKey: string,
-                                network: NetworkType): SimpleWallet {
+    static createFromPrivateKey(name: string, password: Password, privateKey: string, network: NetworkType): SimpleWallet {
         // Create KeyPair from hash key
         const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey);
 
@@ -115,10 +111,7 @@ export class SimpleWallet extends Wallet {
             simpleWalletDTO.network,
             Address.createFromRawAddress(simpleWalletDTO.address.address),
             LocalDateTime.now(),
-            new EncryptedPrivateKey(
-                simpleWalletDTO.encryptedPrivateKey.encryptedKey,
-                simpleWalletDTO.encryptedPrivateKey.iv,
-            ),
+            new EncryptedPrivateKey(simpleWalletDTO.encryptedPrivateKey.encryptedKey, simpleWalletDTO.encryptedPrivateKey.iv),
         );
     }
 
@@ -138,5 +131,4 @@ export class SimpleWallet extends Wallet {
     public open(password: Password): Account {
         return Account.createFromPrivateKey(this.encryptedPrivateKey.decrypt(password), this.network);
     }
-
 }

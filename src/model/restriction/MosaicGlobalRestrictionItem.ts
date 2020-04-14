@@ -21,7 +21,6 @@ import { MosaicRestrictionType } from './MosaicRestrictionType';
  * Mosaic global restriction item structure .
  */
 export class MosaicGlobalRestrictionItem {
-
     /**
      * Constructor
      * @param referenceMosaicId
@@ -29,18 +28,17 @@ export class MosaicGlobalRestrictionItem {
      * @param restrictionType
      */
     constructor(
-                /**
-                 * Reference mosaic identifier
-                 */
-                public readonly referenceMosaicId: MosaicId,
-                /**
-                 * Mosaic restriction value.
-                 */
-                public readonly restrictionValue: string,
-                /**
-                 * Mosaic restriction type.
-                 */
-                public readonly restrictionType: MosaicRestrictionType) {
-
-    }
+        /**
+         * Reference mosaic identifier
+         */
+        public readonly referenceMosaicId: MosaicId,
+        /**
+         * Mosaic restriction value.
+         */
+        public readonly restrictionValue: string,
+        /**
+         * Mosaic restriction type.
+         */
+        public readonly restrictionType: MosaicRestrictionType,
+    ) {}
 }

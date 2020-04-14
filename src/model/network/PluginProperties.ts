@@ -31,7 +31,6 @@ import { TransferNetworkProperties } from './TransferNetworkProperties';
  * Network related configuration properties.
  */
 export class PluginProperties {
-
     /**
      * @param accountlink - Network identifier.
      * @param aggregate - Nemesis public key.
@@ -45,16 +44,17 @@ export class PluginProperties {
      * @param restrictionmosaic -
      * @param transfer -
      */
-    constructor(public readonly accountlink?: AccountLinkNetworkProperties,
-                public readonly aggregate?: AggregateNetworkProperties,
-                public readonly lockhash?: HashLockNetworkProperties,
-                public readonly locksecret?: SecretLockNetworkProperties,
-                public readonly metadata?: MetadataNetworkProperties,
-                public readonly mosaic?: MosaicNetworkProperties,
-                public readonly multisig?: MultisigNetworkProperties,
-                public readonly namespace?: NamespaceNetworkProperties,
-                public readonly restrictionaccount?: AccountRestrictionNetworkProperties,
-                public readonly restrictionmosaic?: MosaicRestrictionNetworkProperties,
-                public readonly transfer?: TransferNetworkProperties) {
-    }
+    constructor(
+        public readonly accountlink?: AccountLinkNetworkProperties,
+        public readonly aggregate?: AggregateNetworkProperties,
+        public readonly lockhash?: HashLockNetworkProperties,
+        public readonly locksecret?: SecretLockNetworkProperties,
+        public readonly metadata?: MetadataNetworkProperties,
+        public readonly mosaic?: MosaicNetworkProperties,
+        public readonly multisig?: MultisigNetworkProperties,
+        public readonly namespace?: NamespaceNetworkProperties,
+        public readonly restrictionaccount?: AccountRestrictionNetworkProperties,
+        public readonly restrictionmosaic?: MosaicRestrictionNetworkProperties,
+        public readonly transfer?: TransferNetworkProperties,
+    ) {}
 }

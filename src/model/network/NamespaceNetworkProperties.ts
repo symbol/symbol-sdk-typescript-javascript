@@ -15,7 +15,6 @@
  */
 
 export class NamespaceNetworkProperties {
-
     /**
      * @param maxNameSize - Maximum namespace name size.
      * @param maxChildNamespaces - Maximum number of children for a root namespace.
@@ -28,15 +27,16 @@ export class NamespaceNetworkProperties {
      * @param rootNamespaceRentalFeePerBlock - Root namespace rental fee per block.
      * @param childNamespaceRentalFee - Child namespace rental fee.
      */
-    constructor(public readonly maxNameSize?: string,
-                public readonly maxChildNamespaces?: string,
-                public readonly maxNamespaceDepth?: string,
-                public readonly minNamespaceDuration?: string,
-                public readonly maxNamespaceDuration?: string,
-                public readonly namespaceGracePeriodDuration?: string,
-                public readonly reservedRootNamespaceNames?: string,
-                public readonly namespaceRentalFeeSinkPublicKey?: string,
-                public readonly rootNamespaceRentalFeePerBlock?: string,
-                public readonly childNamespaceRentalFee?: string) {
-    }
+    constructor(
+        public readonly maxNameSize?: string,
+        public readonly maxChildNamespaces?: string,
+        public readonly maxNamespaceDepth?: string,
+        public readonly minNamespaceDuration?: string,
+        public readonly maxNamespaceDuration?: string,
+        public readonly namespaceGracePeriodDuration?: string,
+        public readonly reservedRootNamespaceNames?: string,
+        public readonly namespaceRentalFeeSinkPublicKey?: string,
+        public readonly rootNamespaceRentalFeePerBlock?: string,
+        public readonly childNamespaceRentalFee?: string,
+    ) {}
 }

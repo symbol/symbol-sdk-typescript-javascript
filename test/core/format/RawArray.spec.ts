@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {expect} from 'chai';
-import { Convert as convert, RawArray as array} from '../../../src/core/format';
+import { expect } from 'chai';
+import { Convert as convert, RawArray as array } from '../../../src/core/format';
 
 describe('array', () => {
     describe('uint8View', () => {
@@ -159,7 +159,7 @@ describe('array', () => {
             // Arrange:
             const rhs = new Uint8Array(lhs.length);
             array.copy(rhs, lhs);
-            rhs[unequalOffset] ^= 0xFF;
+            rhs[unequalOffset] ^= 0xff;
 
             // Act
             const isEqual = array.deepEqual(lhs, rhs);

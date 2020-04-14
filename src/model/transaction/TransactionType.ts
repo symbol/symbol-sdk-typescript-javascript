@@ -18,7 +18,6 @@
  * Enum containing transaction type constants.
  */
 export enum TransactionType {
-
     /** Reserved entity type. */
     RESERVED = 0,
     /**
@@ -31,31 +30,31 @@ export enum TransactionType {
      * Register namespace transaction type.
      * @type {number}
      */
-    NAMESPACE_REGISTRATION = 0x414E,
+    NAMESPACE_REGISTRATION = 0x414e,
 
     /**
      * Address alias transaction type
      * @type {number}
      */
-    ADDRESS_ALIAS = 0x424E,
+    ADDRESS_ALIAS = 0x424e,
 
     /**
      * Mosaic alias transaction type
      * @type {number}
      */
-    MOSAIC_ALIAS = 0x434E,
+    MOSAIC_ALIAS = 0x434e,
 
     /**
      * Mosaic definition transaction type.
      * @type {number}
      */
-    MOSAIC_DEFINITION = 0x414D,
+    MOSAIC_DEFINITION = 0x414d,
 
     /**
      * Mosaic supply change transaction.
      * @type {number}
      */
-    MOSAIC_SUPPLY_CHANGE = 0x424D,
+    MOSAIC_SUPPLY_CHANGE = 0x424d,
 
     /**
      * Modify multisig account transaction type.
@@ -114,7 +113,7 @@ export enum TransactionType {
      * Link account transaction type
      * @type {number}
      */
-    ACCOUNT_LINK = 0x414C,
+    ACCOUNT_LINK = 0x414c,
 
     /**
      * Mosaic address restriction type

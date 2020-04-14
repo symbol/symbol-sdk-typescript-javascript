@@ -34,7 +34,6 @@ import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('MetadataHttp', () => {
-
     const helper = new IntegrationTestHelper();
     let account: Account;
     let accountAddress: Address;
@@ -69,7 +68,6 @@ describe('MetadataHttp', () => {
      */
 
     describe('MosaicDefinitionTransaction', () => {
-
         it('standalone', () => {
             const nonce = MosaicNonce.createRandom();
             mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
@@ -89,7 +87,6 @@ describe('MetadataHttp', () => {
     });
 
     describe('Setup test NamespaceId', () => {
-
         it('Announce NamespaceRegistrationTransaction', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
@@ -117,7 +114,8 @@ describe('MetadataHttp', () => {
                 helper.maxFee,
             );
 
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [accountMetadataTransaction.toAggregate(account.publicAccount)],
                 networkType,
                 [],
@@ -140,7 +138,8 @@ describe('MetadataHttp', () => {
                 helper.maxFee,
             );
 
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [mosaicMetadataTransaction.toAggregate(account.publicAccount)],
                 networkType,
                 [],
@@ -152,7 +151,6 @@ describe('MetadataHttp', () => {
     });
 
     describe('NamespaceMetadataTransaction', () => {
-
         it('aggregate', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
                 Deadline.create(),
@@ -165,7 +163,8 @@ describe('MetadataHttp', () => {
                 helper.maxFee,
             );
 
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [namespaceMetadataTransaction.toAggregate(account.publicAccount)],
                 networkType,
                 [],
@@ -210,8 +209,9 @@ describe('MetadataHttp', () => {
 
     describe('getAccountMetadataByKeyAndSender', () => {
         it('should return metadata given a NEM Address and metadata key and sender public key', async () => {
-            const metadata = await metadataRepository.getAccountMetadataByKeyAndSender(
-                accountAddress, UInt64.fromUint(5).toHex(), account.publicKey).toPromise();
+            const metadata = await metadataRepository
+                .getAccountMetadataByKeyAndSender(accountAddress, UInt64.fromUint(5).toHex(), account.publicKey)
+                .toPromise();
             expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
             expect(metadata.metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
             expect(metadata.metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
@@ -249,8 +249,9 @@ describe('MetadataHttp', () => {
 
     describe('getMosaicMetadataByKeyAndSender', () => {
         it('should return metadata given a mosaicId and metadata key and sender public key', async () => {
-            const metadata = await metadataRepository.getMosaicMetadataByKeyAndSender(
-                mosaicId, UInt64.fromUint(5).toHex(), account.publicKey).toPromise();
+            const metadata = await metadataRepository
+                .getMosaicMetadataByKeyAndSender(mosaicId, UInt64.fromUint(5).toHex(), account.publicKey)
+                .toPromise();
             expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
             expect(metadata.metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
             expect(metadata.metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
@@ -288,8 +289,9 @@ describe('MetadataHttp', () => {
 
     describe('getNamespaceMetadataByKeyAndSender', () => {
         it('should return metadata given a namespaceId and metadata key and sender public key', async () => {
-            const metadata = await metadataRepository.getNamespaceMetadataByKeyAndSender(
-                namespaceId, UInt64.fromUint(5).toHex(), account.publicKey).toPromise();
+            const metadata = await metadataRepository
+                .getNamespaceMetadataByKeyAndSender(namespaceId, UInt64.fromUint(5).toHex(), account.publicKey)
+                .toPromise();
             expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
             expect(metadata.metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
             expect(metadata.metadataEntry.targetPublicKey).to.be.equal(account.publicKey);

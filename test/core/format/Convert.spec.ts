@@ -39,7 +39,7 @@ describe('convert', () => {
                     const byte = convert.toByte(pair1[0], pair2[0]);
 
                     // Assert:
-                    const expected = (pair1[1] * 16) + pair2[1];
+                    const expected = pair1[1] * 16 + pair2[1];
                     expect(byte, `input: ${pair1[0]}${pair2[0]}`).to.equal(expected);
                     ++numTests;
                 });
@@ -72,11 +72,7 @@ describe('convert', () => {
     describe('isHexString', () => {
         it('returns true for valid hex strings', () => {
             // Arrange:
-            const inputs = [
-                '',
-                '026ee415fc15',
-                'abcdef0123456789ABCDEF',
-            ];
+            const inputs = ['', '026ee415fc15', 'abcdef0123456789ABCDEF'];
 
             // Act:
             for (const input of inputs) {
@@ -119,7 +115,7 @@ describe('convert', () => {
             const actual = convert.hexToUint8('026ee415fc15');
 
             // Assert:
-            const expected = Uint8Array.of(0x02, 0x6E, 0xE4, 0x15, 0xFC, 0x15);
+            const expected = Uint8Array.of(0x02, 0x6e, 0xe4, 0x15, 0xfc, 0x15);
             expect(actual).to.deep.equal(expected);
         });
 
@@ -128,7 +124,7 @@ describe('convert', () => {
             const actual = convert.hexToUint8('abcdef0123456789ABCDEF');
 
             // Assert:
-            const expected = Uint8Array.of(0xAB, 0xCD, 0xEF, 0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF);
+            const expected = Uint8Array.of(0xab, 0xcd, 0xef, 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef);
             expect(actual).to.deep.equal(expected);
         });
 
@@ -162,7 +158,7 @@ describe('convert', () => {
             const actual = convert.hexToUint8Reverse('026ee415fc15');
 
             // Assert:
-            const expected = Uint8Array.of(0x15, 0xFC, 0x15, 0xE4, 0x6E, 0x02);
+            const expected = Uint8Array.of(0x15, 0xfc, 0x15, 0xe4, 0x6e, 0x02);
             expect(actual).to.deep.equal(expected);
         });
 
@@ -171,7 +167,7 @@ describe('convert', () => {
             const actual = convert.hexToUint8Reverse('abcdef0123456789ABCDEF');
 
             // Assert:
-            const expected = Uint8Array.of(0xEF, 0xCD, 0xAB, 0x89, 0x67, 0x45, 0x23, 0x01, 0xEF, 0xCD, 0xAB);
+            const expected = Uint8Array.of(0xef, 0xcd, 0xab, 0x89, 0x67, 0x45, 0x23, 0x01, 0xef, 0xcd, 0xab);
             expect(actual).to.deep.equal(expected);
         });
 
@@ -201,7 +197,7 @@ describe('convert', () => {
 
         it('can format single value array into hex string', () => {
             // Act:
-            const actual = convert.uint8ToHex(Uint8Array.of(0xD2));
+            const actual = convert.uint8ToHex(Uint8Array.of(0xd2));
 
             // Assert:
             expect(actual).to.equal('D2');
@@ -209,7 +205,7 @@ describe('convert', () => {
 
         it('can format multi value array into hex string', () => {
             // Act:
-            const actual = convert.uint8ToHex(Uint8Array.of(0x02, 0x6E, 0xE4, 0x15, 0xFC, 0x15));
+            const actual = convert.uint8ToHex(Uint8Array.of(0x02, 0x6e, 0xe4, 0x15, 0xfc, 0x15));
 
             // Assert:
             expect(actual).to.equal('026EE415FC15');
@@ -227,18 +223,17 @@ describe('convert', () => {
 
         it('uint8 array with length multiple of four can be converted to uint32 array', () => {
             // Act:
-            const actual = convert.uint8ToUint32(Uint8Array.of(0x02, 0x6E, 0x89, 0xAB, 0xCD, 0xEF, 0xE4, 0x15));
+            const actual = convert.uint8ToUint32(Uint8Array.of(0x02, 0x6e, 0x89, 0xab, 0xcd, 0xef, 0xe4, 0x15));
 
             // Assert:
-            expect(actual).to.deep.equal(Uint32Array.of(0xAB896E02, 0x15E4EFCD));
+            expect(actual).to.deep.equal(Uint32Array.of(0xab896e02, 0x15e4efcd));
         });
 
         it('uint8 array with length not multiple of four cannot be converted to uint32 array', () => {
             // Assert:
             expect(() => {
-                convert.uint8ToUint32(Uint8Array.of(0x02, 0x6E, 0xE4, 0x15, 0x15));
-            })
-            .to.throw('byte length of Uint32Array should be a multiple of 4');
+                convert.uint8ToUint32(Uint8Array.of(0x02, 0x6e, 0xe4, 0x15, 0x15));
+            }).to.throw('byte length of Uint32Array should be a multiple of 4');
         });
     });
 
@@ -253,10 +248,10 @@ describe('convert', () => {
 
         it('uint32 array with nonzero length can be converted to uint8 array', () => {
             // Act:
-            const actual = convert.uint32ToUint8(Uint32Array.of(0xAB896E02, 0x15E4EFCD));
+            const actual = convert.uint32ToUint8(Uint32Array.of(0xab896e02, 0x15e4efcd));
 
             // Assert:
-            expect(actual).to.deep.equal(Uint8Array.of(0x02, 0x6E, 0x89, 0xAB, 0xCD, 0xEF, 0xE4, 0x15));
+            expect(actual).to.deep.equal(Uint8Array.of(0x02, 0x6e, 0x89, 0xab, 0xcd, 0xef, 0xe4, 0x15));
         });
     });
 
@@ -287,11 +282,12 @@ describe('convert', () => {
     });
 
     describe('signed <-> unsigned byte', () => {
-        const testCases = [{
-            signed: -128,
-            unsigned: 0x80,
-            description: 'min negative',
-        },
+        const testCases = [
+            {
+                signed: -128,
+                unsigned: 0x80,
+                description: 'min negative',
+            },
             {
                 signed: -127,
                 unsigned: 0x81,
@@ -299,12 +295,12 @@ describe('convert', () => {
             },
             {
                 signed: -87,
-                unsigned: 0xA9,
+                unsigned: 0xa9,
                 description: 'negative',
             },
             {
                 signed: -1,
-                unsigned: 0xFF,
+                unsigned: 0xff,
                 description: 'negative one',
             },
             {
@@ -324,21 +320,22 @@ describe('convert', () => {
             },
             {
                 signed: 126,
-                unsigned: 0x7E,
+                unsigned: 0x7e,
                 description: 'max positive minus one',
             },
             {
                 signed: 127,
-                unsigned: 0x7F,
+                unsigned: 0x7f,
                 description: 'max positive',
             },
         ];
 
         describe('uint8ToInt8', () => {
-            const failureTestCases = [{
-                input: 256,
-                description: 'one too large',
-            },
+            const failureTestCases = [
+                {
+                    input: 256,
+                    description: 'one too large',
+                },
                 {
                     input: 1000,
                     description: 'very large',
@@ -364,10 +361,11 @@ describe('convert', () => {
         });
 
         describe('int8ToUint8', () => {
-            const failureTestCases = [{
-                input: -1000,
-                description: 'very small',
-            },
+            const failureTestCases = [
+                {
+                    input: -1000,
+                    description: 'very small',
+                },
                 {
                     input: -129,
                     description: 'one too small',
@@ -468,5 +466,4 @@ describe('convert', () => {
             expect(input).to.be.equal(-123456789);
         });
     });
-
 });

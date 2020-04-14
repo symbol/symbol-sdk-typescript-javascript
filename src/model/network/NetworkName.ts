@@ -18,11 +18,9 @@
  * Network Name
  */
 export class NetworkName {
-
     /**
      * @param name - Network name
      * @param description - Network description
      */
-    constructor(public readonly name: string, public readonly description: string) {
-    }
+    constructor(public readonly name: string, public readonly description: string) {}
 }

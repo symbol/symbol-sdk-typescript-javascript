@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {Convert} from '../../../src/core/format';
-import {Account} from '../../../src/model/account/Account';
+import { expect } from 'chai';
+import { Convert } from '../../../src/core/format';
+import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
-import {MosaicId} from '../../../src/model/mosaic/MosaicId';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
-import {NetworkType} from '../../../src/model/network/NetworkType';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
 import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
 import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { Statement } from '../../../src/model/receipt/Statement';
-import {Deadline} from '../../../src/model/transaction/Deadline';
-import {MosaicAddressRestrictionTransaction} from '../../../src/model/transaction/MosaicAddressRestrictionTransaction';
+import { Deadline } from '../../../src/model/transaction/Deadline';
+import { MosaicAddressRestrictionTransaction } from '../../../src/model/transaction/MosaicAddressRestrictionTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
-import {UInt64} from '../../../src/model/UInt64';
-import {TestingAccount} from '../../conf/conf.spec';
+import { UInt64 } from '../../../src/model/UInt64';
+import { TestingAccount } from '../../conf/conf.spec';
 
 describe('MosaicAddressRestrictionTransaction', () => {
     let account: Account;
@@ -41,11 +41,18 @@ describe('MosaicAddressRestrictionTransaction', () => {
     const resolvedMosaicId = new MosaicId('0DC67FBE1CAD29E5');
     before(() => {
         account = TestingAccount;
-        statement = new Statement([],
-            [new ResolutionStatement(ResolutionType.Address, UInt64.fromUint(2), unresolvedAddress,
-                [new ResolutionEntry(account.address, new ReceiptSource(1, 0))])],
-            [new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromUint(2), unresolvedMosaicId,
-                [new ResolutionEntry(resolvedMosaicId, new ReceiptSource(1, 0))])],
+        statement = new Statement(
+            [],
+            [
+                new ResolutionStatement(ResolutionType.Address, UInt64.fromUint(2), unresolvedAddress, [
+                    new ResolutionEntry(account.address, new ReceiptSource(1, 0)),
+                ]),
+            ],
+            [
+                new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromUint(2), unresolvedMosaicId, [
+                    new ResolutionEntry(resolvedMosaicId, new ReceiptSource(1, 0)),
+                ]),
+            ],
         );
     });
 
@@ -68,11 +75,9 @@ describe('MosaicAddressRestrictionTransaction', () => {
 
         const signedTransaction = mosaicAddressRestrictionTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(
-            256,
-            signedTransaction.payload.length,
-        )).to.be.equal('010000000000000001000000000000000900000000000000080' +
-                       '000000000000090D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1204EA451');
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            '010000000000000001000000000000000900000000000000080' + '000000000000090D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1204EA451',
+        );
     });
 
     it('should createComplete an MosaicAddressRestrictionTransaction use mosaic alias', () => {
@@ -94,11 +99,9 @@ describe('MosaicAddressRestrictionTransaction', () => {
 
         const signedTransaction = mosaicAddressRestrictionTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(
-            256,
-            signedTransaction.payload.length,
-        )).to.be.equal('C51FB4C93FCA509501000000000000000900000000000000080000000000' +
-                       '000090D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1204EA451');
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            'C51FB4C93FCA509501000000000000000900000000000000080000000000' + '000090D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1204EA451',
+        );
     });
 
     it('should createComplete an MosaicAddressRestrictionTransaction use address alias', () => {
@@ -121,11 +124,9 @@ describe('MosaicAddressRestrictionTransaction', () => {
 
         const signedTransaction = mosaicAddressRestrictionTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(
-            256,
-            signedTransaction.payload.length,
-        )).to.be.equal('01000000000000000100000000000000090000000000000008000000000' +
-                       '0000091C51FB4C93FCA509500000000000000000000000000000000');
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            '01000000000000000100000000000000090000000000000008000000000' + '0000091C51FB4C93FCA509500000000000000000000000000000000',
+        );
     });
 
     it('should format targetAddress payload with 8 bytes binary namespaceId - targetAddressToString', () => {
@@ -144,10 +145,7 @@ describe('MosaicAddressRestrictionTransaction', () => {
 
         const signedTransaction = transaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(
-            256,
-            304,
-        )).to.be.equal('010000000000000001000000000000000900000000000000');
+        expect(signedTransaction.payload.substring(256, 304)).to.be.equal('010000000000000001000000000000000900000000000000');
 
         expect(Convert.hexToUint8(transaction.serialize()).length).to.be.equal(transaction.size);
     });
@@ -162,7 +160,6 @@ describe('MosaicAddressRestrictionTransaction', () => {
             NetworkType.MIJIN_TEST,
             UInt64.fromUint(9),
         ).setMaxFee(2);
-​
         expect(transaction.maxFee.compact()).to.be.equal(370);
 
         const signedTransaction = transaction.signWith(account, generationHash);
@@ -182,8 +179,8 @@ describe('MosaicAddressRestrictionTransaction', () => {
             UInt64.fromUint(9),
             '',
             account.publicAccount,
-            new TransactionInfo(UInt64.fromUint(2), 0, '')).resolveAliases(statement);
-​
+            new TransactionInfo(UInt64.fromUint(2), 0, ''),
+        ).resolveAliases(statement);
         expect(transaction.targetAddress instanceof Address).to.be.true;
         expect(transaction.mosaicId instanceof MosaicId).to.be.true;
         expect((transaction.targetAddress as Address).equals(account.address)).to.be.true;

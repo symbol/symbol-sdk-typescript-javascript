@@ -15,10 +15,8 @@
  */
 
 export class MosaicRestrictionNetworkProperties {
-
     /**
      * @param maxMosaicRestrictionValues - Maximum number of mosaic restriction values.
      */
-    constructor(public readonly maxMosaicRestrictionValues?: string) {
-    }
+    constructor(public readonly maxMosaicRestrictionValues?: string) {}
 }

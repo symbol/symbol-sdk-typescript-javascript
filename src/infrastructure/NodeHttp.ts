@@ -45,7 +45,6 @@ export class NodeHttp extends Http implements NodeRepository {
         super(url);
         this.nodeRoutesApi = new NodeRoutesApi(url);
         this.nodeRoutesApi.useQuerystring = true;
-
     }
 
     /**
@@ -69,16 +68,16 @@ export class NodeHttp extends Http implements NodeRepository {
      * @summary Get the node time
      */
     public getNodeTime(): Observable<NodeTime> {
-        return this.call(this.nodeRoutesApi.getNodeTime(),
-            (body) => {
-                const nodeTimeDTO = body;
-                if (nodeTimeDTO.communicationTimestamps.sendTimestamp && nodeTimeDTO.communicationTimestamps.receiveTimestamp) {
-                    return new NodeTime(UInt64.fromNumericString(nodeTimeDTO.communicationTimestamps.sendTimestamp),
-                        UInt64.fromNumericString(nodeTimeDTO.communicationTimestamps.receiveTimestamp));
-                }
-                throw Error('Node time not available');
-            },
-        );
+        return this.call(this.nodeRoutesApi.getNodeTime(), (body) => {
+            const nodeTimeDTO = body;
+            if (nodeTimeDTO.communicationTimestamps.sendTimestamp && nodeTimeDTO.communicationTimestamps.receiveTimestamp) {
+                return new NodeTime(
+                    UInt64.fromNumericString(nodeTimeDTO.communicationTimestamps.sendTimestamp),
+                    UInt64.fromNumericString(nodeTimeDTO.communicationTimestamps.receiveTimestamp),
+                );
+            }
+            throw Error('Node time not available');
+        });
     }
 
     /**
@@ -88,11 +87,7 @@ export class NodeHttp extends Http implements NodeRepository {
     public getStorageInfo(): Observable<StorageInfo> {
         return this.call(
             this.nodeRoutesApi.getNodeStorage(),
-            (body) => new StorageInfo(
-                body.numBlocks,
-                body.numTransactions,
-                body.numAccounts,
-            ),
+            (body) => new StorageInfo(body.numBlocks, body.numTransactions, body.numAccounts),
         );
     }
 
@@ -101,7 +96,8 @@ export class NodeHttp extends Http implements NodeRepository {
      * @returns Observable<Server>
      */
     public getServerInfo(): Observable<ServerInfo> {
-        return this.call(this.nodeRoutesApi.getServerInfo(),
+        return this.call(
+            this.nodeRoutesApi.getServerInfo(),
             (body) => new ServerInfo(body.serverInfo.restVersion, body.serverInfo.sdkVersion),
         );
     }
@@ -111,8 +107,7 @@ export class NodeHttp extends Http implements NodeRepository {
      * @returns Observable<Server>
      */
     public getNodeHealth(): Observable<NodeHealth> {
-        return this.call(this.nodeRoutesApi.getNodeHealth(),
-            (body) => new NodeHealth(body.status.apiNode, body.status.db));
+        return this.call(this.nodeRoutesApi.getNodeHealth(), (body) => new NodeHealth(body.status.apiNode, body.status.db));
     }
 
     /**

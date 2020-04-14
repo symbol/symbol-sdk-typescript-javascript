@@ -20,7 +20,6 @@ import { NodeIdentityEqualityStrategy } from 'symbol-openapi-typescript-node-cli
  * Network related configuration properties.
  */
 export class NetworkProperties {
-
     /**
      * @param identifier - Network identifier.
      * @param nodeEqualityStrategy - Node equality strategy. Defines if the identifier for the node must be its public key or host.
@@ -28,10 +27,11 @@ export class NetworkProperties {
      * @param generationHash - Nemesis generation hash.
      * @param epochAdjustment - Nemesis epoch time adjustment.
      */
-    constructor(public readonly identifier?: string,
-                public readonly nodeEqualityStrategy?: NodeIdentityEqualityStrategy,
-                public readonly publicKey?: string,
-                public readonly generationHash?: string,
-                public readonly epochAdjustment?: string) {
-    }
+    constructor(
+        public readonly identifier?: string,
+        public readonly nodeEqualityStrategy?: NodeIdentityEqualityStrategy,
+        public readonly publicKey?: string,
+        public readonly generationHash?: string,
+        public readonly epochAdjustment?: string,
+    ) {}
 }

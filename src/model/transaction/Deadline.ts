@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-import {ChronoUnit, Instant, LocalDateTime, ZoneId} from 'js-joda';
-import {UInt64} from '../UInt64';
+import { ChronoUnit, Instant, LocalDateTime, ZoneId } from 'js-joda';
+import { UInt64 } from '../UInt64';
 
 /**
  * The deadline of the transaction. The deadline is given as the number of seconds elapsed since the creation of the nemesis block.
  * If a transaction does not get included in a block before the deadline is reached, it is deleted.
  */
 export class Deadline {
-
     /**
      * @type {number}
      */
@@ -39,8 +38,8 @@ export class Deadline {
      * @param chronoUnit
      * @returns {Deadline}
      */
-    public static create(deadline: number = 2, chronoUnit: ChronoUnit = ChronoUnit.HOURS): Deadline {
-        const networkTimeStamp = (new Date()).getTime();
+    public static create(deadline = 2, chronoUnit: ChronoUnit = ChronoUnit.HOURS): Deadline {
+        const networkTimeStamp = new Date().getTime();
         const timeStampDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(networkTimeStamp), ZoneId.SYSTEM);
         const deadlineDateTime = timeStampDateTime.plus(deadline, chronoUnit);
 
@@ -63,7 +62,8 @@ export class Deadline {
         const dateSeconds = uint64Value.compact();
         const deadline = LocalDateTime.ofInstant(
             Instant.ofEpochMilli(Math.round(dateSeconds + Deadline.timestampNemesisBlock * 1000)),
-            ZoneId.SYSTEM);
+            ZoneId.SYSTEM,
+        );
         return new Deadline(deadline);
     }
 
@@ -78,9 +78,7 @@ export class Deadline {
      * @internal
      */
     public toDTO(): number[] {
-        return UInt64.fromUint(
-            (this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000),
-        ).toDTO();
+        return UInt64.fromUint(this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000).toDTO();
     }
 
     /**
@@ -88,7 +86,7 @@ export class Deadline {
      */
     public toString(): string {
         return UInt64.fromUint(
-            (this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000),
+            this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000,
         ).toString();
     }
 }

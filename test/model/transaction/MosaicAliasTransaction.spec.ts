@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {Convert} from '../../../src/core/format';
-import {Account} from '../../../src/model/account/Account';
-import {MosaicId} from '../../../src/model/mosaic/MosaicId';
-import {AliasAction} from '../../../src/model/namespace/AliasAction';
-import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
-import {NetworkType} from '../../../src/model/network/NetworkType';
-import {Deadline} from '../../../src/model/transaction/Deadline';
-import {MosaicAliasTransaction} from '../../../src/model/transaction/MosaicAliasTransaction';
-import {UInt64} from '../../../src/model/UInt64';
-import {TestingAccount} from '../../conf/conf.spec';
+import { expect } from 'chai';
+import { Convert } from '../../../src/core/format';
+import { Account } from '../../../src/model/account/Account';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { AliasAction } from '../../../src/model/namespace/AliasAction';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { NetworkType } from '../../../src/model/network/NetworkType';
+import { Deadline } from '../../../src/model/transaction/Deadline';
+import { MosaicAliasTransaction } from '../../../src/model/transaction/MosaicAliasTransaction';
+import { UInt64 } from '../../../src/model/UInt64';
+import { TestingAccount } from '../../conf/conf.spec';
 
 describe('MosaicAliasTransaction', () => {
     let account: Account;
@@ -83,11 +83,9 @@ describe('MosaicAliasTransaction', () => {
 
         const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(
-            256,
-            signedTransaction.payload.length,
-        )).to.be.equal('2AD8FC018D9A49E14CCCD78612DDF5CA01');
-
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            '2AD8FC018D9A49E14CCCD78612DDF5CA01',
+        );
     });
 
     describe('size', () => {
@@ -116,7 +114,6 @@ describe('MosaicAliasTransaction', () => {
             mosaicId,
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
-​
         expect(mosaicAliasTransaction.maxFee.compact()).to.be.equal(290);
 
         const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);

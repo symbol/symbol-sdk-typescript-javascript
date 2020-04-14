@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {sha3_256} from 'js-sha3';
+import { sha3_256 } from 'js-sha3';
 import * as utilities from './Utilities';
 import { idGeneratorConst } from './Utilities';
 
@@ -29,8 +29,8 @@ export class IdGenerator {
         hash.update(nonce);
         hash.update(ownerPublicId);
         const result = new Uint32Array(hash.arrayBuffer());
-        return [result[0], result[1] & 0x7FFFFFFF];
-    }
+        return [result[0], result[1] & 0x7fffffff];
+    };
 
     /**
      * Parses a unified namespace name into a path.
@@ -50,5 +50,5 @@ export class IdGenerator {
         namespaceId = utilities.generateNamespaceId(namespaceId, utilities.extractPartName(name, start, name.length - start));
         utilities.append(path, namespaceId, name);
         return path;
-    }
+    };
 }

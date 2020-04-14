@@ -21,7 +21,6 @@ import { MosaicRestrictionEntryType } from './MosaicRestrictionEntryType';
  * Mosaic address restriction structure describes restriction information for an mosaic.
  */
 export class MosaicAddressRestriction {
-
     /**
      * Constructor
      * @param compositeHash
@@ -31,26 +30,25 @@ export class MosaicAddressRestriction {
      * @param restrictions
      */
     constructor(
-                /**
-                 * composite hash
-                 */
-                public readonly compositeHash: string,
-                /**
-                 * Mosaic restriction entry type.
-                 */
-                public readonly entryType: MosaicRestrictionEntryType,
-                /**
-                 * Mosaic identifier.
-                 */
-                public readonly mosaicId: MosaicId,
-                /**
-                 * Target address
-                 */
-                public readonly targetAddress: Address,
-                /**
-                 * Mosaic restriction items
-                 */
-                public readonly restrictions: Map<string, string>) {
-
-    }
+        /**
+         * composite hash
+         */
+        public readonly compositeHash: string,
+        /**
+         * Mosaic restriction entry type.
+         */
+        public readonly entryType: MosaicRestrictionEntryType,
+        /**
+         * Mosaic identifier.
+         */
+        public readonly mosaicId: MosaicId,
+        /**
+         * Target address
+         */
+        public readonly targetAddress: Address,
+        /**
+         * Mosaic restriction items
+         */
+        public readonly restrictions: Map<string, string>,
+    ) {}
 }

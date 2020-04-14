@@ -50,9 +50,9 @@ export class RestrictionAccountHttp extends Http implements RestrictionAccountRe
      * @returns Observable<AccountRestrictions[]>
      */
     public getAccountRestrictions(address: Address): Observable<AccountRestriction[]> {
-        return observableFrom(this.restrictionAccountRoutesApi.getAccountRestrictions(address.plain()))
-            .pipe(map(({body}) => DtoMapping.extractAccountRestrictionFromDto(body).accountRestrictions.restrictions),
-            catchError((error) =>  throwError(this.errorHandling(error))),
+        return observableFrom(this.restrictionAccountRoutesApi.getAccountRestrictions(address.plain())).pipe(
+            map(({ body }) => DtoMapping.extractAccountRestrictionFromDto(body).accountRestrictions.restrictions),
+            catchError((error) => throwError(this.errorHandling(error))),
         );
     }
 
@@ -65,12 +65,13 @@ export class RestrictionAccountHttp extends Http implements RestrictionAccountRe
         const accountIds = {
             addresses: addresses.map((address) => address.plain()),
         };
-        return observableFrom(
-            this.restrictionAccountRoutesApi.getAccountRestrictionsFromAccounts(accountIds))
-                .pipe(map(({body}) => body.map((restriction) => {
-                        return DtoMapping.extractAccountRestrictionFromDto(restriction).accountRestrictions;
-                })),
-                catchError((error) =>  throwError(this.errorHandling(error))),
+        return observableFrom(this.restrictionAccountRoutesApi.getAccountRestrictionsFromAccounts(accountIds)).pipe(
+            map(({ body }) =>
+                body.map((restriction) => {
+                    return DtoMapping.extractAccountRestrictionFromDto(restriction).accountRestrictions;
+                }),
+            ),
+            catchError((error) => throwError(this.errorHandling(error))),
         );
     }
 }

@@ -15,10 +15,8 @@
  */
 
 export class MetadataNetworkProperties {
-
     /**
      * @param maxValueSize - Maximum metadata value size.
      */
-    constructor(public readonly maxValueSize?: string) {
-    }
+    constructor(public readonly maxValueSize?: string) {}
 }

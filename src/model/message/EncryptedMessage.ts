@@ -14,22 +14,20 @@
  * limitations under the License.
  */
 
-import {Crypto, SHA3Hasher} from '../../core/crypto';
-import {PublicAccount} from '../account/PublicAccount';
+import { Crypto, SHA3Hasher } from '../../core/crypto';
+import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../network/NetworkType';
-import {Message} from './Message';
-import {MessageType} from './MessageType';
-import {PlainMessage} from './PlainMessage';
+import { Message } from './Message';
+import { MessageType } from './MessageType';
+import { PlainMessage } from './PlainMessage';
 
 /**
  * Encrypted Message model
  */
 export class EncryptedMessage extends Message {
-
     public readonly recipientPublicAccount?: PublicAccount;
 
-    constructor(payload: string,
-                recipientPublicAccount?: PublicAccount) {
+    constructor(payload: string, recipientPublicAccount?: PublicAccount) {
         super(MessageType.EncryptedMessage, payload);
         this.recipientPublicAccount = recipientPublicAccount;
     }
@@ -41,14 +39,11 @@ export class EncryptedMessage extends Message {
      * @param privateKey - Sender private key
      * @return {EncryptedMessage}
      */
-    public static create(message: string,
-                         recipientPublicAccount: PublicAccount,
-                         privateKey: string): EncryptedMessage {
+    public static create(message: string, recipientPublicAccount: PublicAccount, privateKey: string): EncryptedMessage {
         return new EncryptedMessage(
-            Crypto.encode(privateKey,
-                          recipientPublicAccount.publicKey,
-                          message).toUpperCase(),
-            recipientPublicAccount);
+            Crypto.encode(privateKey, recipientPublicAccount.publicKey, message).toUpperCase(),
+            recipientPublicAccount,
+        );
     }
 
     /**
@@ -66,12 +61,7 @@ export class EncryptedMessage extends Message {
      * @param recipientPublicAccount - Sender public account
      * @return {PlainMessage}
      */
-    public static decrypt(encryptMessage: EncryptedMessage,
-                          privateKey,
-                          recipientPublicAccount: PublicAccount): PlainMessage {
-        return new PlainMessage(this.decodeHex(
-                Crypto.decode(privateKey,
-                              recipientPublicAccount.publicKey,
-                              encryptMessage.payload)));
+    public static decrypt(encryptMessage: EncryptedMessage, privateKey, recipientPublicAccount: PublicAccount): PlainMessage {
+        return new PlainMessage(this.decodeHex(Crypto.decode(privateKey, recipientPublicAccount.publicKey, encryptMessage.payload)));
     }
 }

@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {expect} from 'chai';
-import {Convert as convert} from '../../../src/core/format';
-import {Base32 as base32} from '../../../src/core/format/Base32';
+import { expect } from 'chai';
+import { Convert as convert } from '../../../src/core/format';
+import { Base32 as base32 } from '../../../src/core/format/Base32';
 
 describe('base32', () => {
-    const Test_Vectors = [{
+    const Test_Vectors = [
+        {
             decoded: '68BA9E8D1AA4502E1F73DA19784B5D7DA16CA1E4AF895FAC12',
             encoded: 'NC5J5DI2URIC4H3T3IMXQS25PWQWZIPEV6EV7LAS',
         },
@@ -66,7 +67,7 @@ describe('base32', () => {
             // Arrange:
             const data: any = [];
             for (let i = 0; 260 > i; ++i) {
-                data.push(i & 0xFF);
+                data.push(i & 0xff);
             }
 
             // Act:

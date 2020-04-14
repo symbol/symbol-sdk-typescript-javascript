@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {Message} from './Message';
-import {MessageType} from './MessageType';
+import { Message } from './Message';
+import { MessageType } from './MessageType';
 
 /**
  * The plain message model defines a plain string. When sending it to the network we transform the payload to hex-string.
@@ -43,7 +43,6 @@ export class PlainMessage extends Message {
     constructor(payload: string) {
         super(MessageType.PlainMessage, payload);
     }
-
 }
 
 /**

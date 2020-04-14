@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {deepEqual} from 'assert';
-import {Address} from '../../../src/model/account/Address';
+import { deepEqual } from 'assert';
+import { Address } from '../../../src/model/account/Address';
 import { AccountRestriction } from '../../../src/model/restriction/AccountRestriction';
 import { AccountRestrictionModificationAction } from '../../../src/model/restriction/AccountRestrictionModificationAction';
 import { AccountRestrictions } from '../../../src/model/restriction/AccountRestrictions';
@@ -23,35 +23,47 @@ import { AccountRestrictionsInfo } from '../../../src/model/restriction/AccountR
 import { AccountRestrictionFlags } from '../../../src/model/restriction/AccountRestrictionType';
 
 describe('AccountRestrictionsInfo', () => {
-
     it('should createComplete an AccountRestrictionsInfo object', () => {
-
         const accountRestrictionsInfoDTO = {
-            meta: {id: '12345'},
+            meta: { id: '12345' },
             accountRestrictions: {
                 address: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142',
-                restrictions: [{
-                    restrictionFlags: AccountRestrictionFlags.AllowIncomingAddress,
-                    values: [{modificationAction: AccountRestrictionModificationAction.Add,
-                              value: 'SDUP5PLHDXKBX3UU5Q52LAY4WYEKGEWC6IB3VBFM',
-                             }],
-                }],
+                restrictions: [
+                    {
+                        restrictionFlags: AccountRestrictionFlags.AllowIncomingAddress,
+                        values: [
+                            {
+                                modificationAction: AccountRestrictionModificationAction.Add,
+                                value: 'SDUP5PLHDXKBX3UU5Q52LAY4WYEKGEWC6IB3VBFM',
+                            },
+                        ],
+                    },
+                ],
             },
         };
 
         const accountRestrictionsInfo = new AccountRestrictionsInfo(
             accountRestrictionsInfoDTO.meta,
-            new AccountRestrictions(Address.createFromEncoded(accountRestrictionsInfoDTO.accountRestrictions.address),
-                accountRestrictionsInfoDTO.accountRestrictions.restrictions.map((prop) =>
-                                            new AccountRestriction(prop.restrictionFlags, prop.values))),
+            new AccountRestrictions(
+                Address.createFromEncoded(accountRestrictionsInfoDTO.accountRestrictions.address),
+                accountRestrictionsInfoDTO.accountRestrictions.restrictions.map(
+                    (prop) => new AccountRestriction(prop.restrictionFlags, prop.values),
+                ),
+            ),
         );
 
         deepEqual(accountRestrictionsInfo.meta.id, accountRestrictionsInfoDTO.meta.id);
-        deepEqual(accountRestrictionsInfo.accountRestrictions.address,
-                    Address.createFromEncoded(accountRestrictionsInfoDTO.accountRestrictions.address));
-        deepEqual(accountRestrictionsInfo.accountRestrictions.restrictions.length,
-            accountRestrictionsInfoDTO.accountRestrictions.restrictions.length);
-        deepEqual(accountRestrictionsInfo.accountRestrictions.restrictions[0].values[0],
-            accountRestrictionsInfoDTO.accountRestrictions.restrictions[0].values[0]);
+        deepEqual(
+            accountRestrictionsInfo.accountRestrictions.address,
+            Address.createFromEncoded(accountRestrictionsInfoDTO.accountRestrictions.address),
+        );
+        deepEqual(
+            accountRestrictionsInfo.accountRestrictions.restrictions.length,
+            accountRestrictionsInfoDTO.accountRestrictions.restrictions.length,
+        );
+        deepEqual(
+            accountRestrictionsInfo.accountRestrictions.restrictions[0].values[0],
+            accountRestrictionsInfoDTO.accountRestrictions.restrictions[0].values[0],
+        );
     });
 });

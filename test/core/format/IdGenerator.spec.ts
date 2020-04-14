@@ -13,31 +13,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {expect} from 'chai';
-import {sha3_256} from 'js-sha3';
-import {
-    Convert as convert,
-    IdGenerator as idGenerator,
-    RawUInt64 as uint64,
-} from '../../../src/core/format';
+import { expect } from 'chai';
+import { sha3_256 } from 'js-sha3';
+import { Convert as convert, IdGenerator as idGenerator, RawUInt64 as uint64 } from '../../../src/core/format';
 
 const constants = {
-    nem_id: [0x375FFA4B, 0x84B3552D],
-    xem_id: [0xD95FCF29, 0xD525AD41],
+    nem_id: [0x375ffa4b, 0x84b3552d],
+    xem_id: [0xd95fcf29, 0xd525ad41],
     namespace_base_id: [0, 0],
 };
 
 const basicMosaicInfo = {
-    nonce: [0x78, 0xE3, 0x6F, 0xB7],
+    nonce: [0x78, 0xe3, 0x6f, 0xb7],
     publicId: [
-        0x4A, 0xFF, 0x7B, 0x4B, 0xA8, 0xC1, 0xC2, 0x6A, 0x79, 0x17, 0x57, 0x59, 0x93, 0x34, 0x66, 0x27,
-        0xCB, 0x6C, 0x80, 0xDE, 0x62, 0xCD, 0x92, 0xF7, 0xF9, 0xAE, 0xDB, 0x70, 0x64, 0xA3, 0xDE, 0x62,
+        0x4a,
+        0xff,
+        0x7b,
+        0x4b,
+        0xa8,
+        0xc1,
+        0xc2,
+        0x6a,
+        0x79,
+        0x17,
+        0x57,
+        0x59,
+        0x93,
+        0x34,
+        0x66,
+        0x27,
+        0xcb,
+        0x6c,
+        0x80,
+        0xde,
+        0x62,
+        0xcd,
+        0x92,
+        0xf7,
+        0xf9,
+        0xae,
+        0xdb,
+        0x70,
+        0x64,
+        0xa3,
+        0xde,
+        0x62,
     ],
-    id: [0xC0AFC518, 0x3AD842A8],
+    id: [0xc0afc518, 0x3ad842a8],
 };
 
 const mosaicTestVector = {
-    rows: [{
+    rows: [
+        {
             publicKey: '4AFF7B4BA8C1C26A7917575993346627CB6C80DE62CD92F7F9AEDB7064A3DE62',
             nonce: 'B76FE378',
             expectedMosaicId: '3AD842A8C0AFC518',
@@ -154,25 +181,29 @@ describe('id generator', () => {
         it('produces different results for different names', () => {
             // Assert:
             ['bloodyrookie.alice', 'nem.mex', 'bloodyrookie.xem', 'bloody_rookie.xem'].forEach((name) =>
-                expect(generator(name), `nem.xem vs ${name}`).to.not.equal(generator('nem.xem')));
+                expect(generator(name), `nem.xem vs ${name}`).to.not.equal(generator('nem.xem')),
+            );
         });
 
         it('rejects names with uppercase characters', () => {
             // Assert:
             ['NEM.xem', 'NEM.XEM', 'nem.XEM', 'nEm.XeM', 'NeM.xEm'].forEach((name) =>
-                expect(() => generator(name), `name ${name}`).to.throw('invalid part name'));
+                expect(() => generator(name), `name ${name}`).to.throw('invalid part name'),
+            );
         });
 
         it('rejects improper qualified names', () => {
             // Assert:
             ['.', '..', '...', '.a', 'b.', 'a..b', '.a.b', 'b.a.'].forEach((name) =>
-                expect(() => generator(name), `name ${name}`).to.throw('empty part'));
+                expect(() => generator(name), `name ${name}`).to.throw('empty part'),
+            );
         });
 
         it('rejects improper part names', () => {
             // Assert:
             ['alpha.bet@.zeta', 'a!pha.beta.zeta', 'alpha.beta.ze^a'].forEach((name) =>
-                expect(() => generator(name), `name ${name}`).to.throw('invalid part name'));
+                expect(() => generator(name), `name ${name}`).to.throw('invalid part name'),
+            );
         });
 
         it('rejects empty string', () => {
@@ -184,8 +215,7 @@ describe('id generator', () => {
     describe('generate mosaic id', () => {
         it('generates correct well known id', () => {
             // Assert:
-            expect(idGenerator.generateMosaicId(basicMosaicInfo.nonce, basicMosaicInfo.publicId))
-                .to.deep.equal(basicMosaicInfo.id);
+            expect(idGenerator.generateMosaicId(basicMosaicInfo.nonce, basicMosaicInfo.publicId)).to.deep.equal(basicMosaicInfo.id);
         });
 
         // @dataProvider mosaicTestVector
@@ -197,8 +227,7 @@ describe('id generator', () => {
                 const expectedId = uint64.fromHex(row.expectedMosaicId);
 
                 // Assert:
-                expect(mosaicId)
-                    .to.deep.equal(expectedId);
+                expect(mosaicId).to.deep.equal(expectedId);
             });
         });
     });
@@ -237,7 +266,8 @@ describe('id generator', () => {
         it('rejects improper qualified names', () => {
             // Assert:
             ['a:b:c', 'a::b'].forEach((name) =>
-                expect(() => idGenerator.generateNamespacePath(name), `name ${name}`).to.throw('invalid part name'));
+                expect(() => idGenerator.generateNamespacePath(name), `name ${name}`).to.throw('invalid part name'),
+            );
         });
         addBasicTests(idGenerator.generateNamespacePath);
     });

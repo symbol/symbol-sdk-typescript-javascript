@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
+import { expect } from 'chai';
 import { EncryptedMessage } from '../../../src/model/message/EncryptedMessage';
 import { Message } from '../../../src/model/message/Message';
 import { MessageType } from '../../../src/model/message/MessageType';
 import { PersistentHarvestingDelegationMessage } from '../../../src/model/message/PersistentHarvestingDelegationMessage';
-import {PlainMessage} from '../../../src/model/message/PlainMessage';
+import { PlainMessage } from '../../../src/model/message/PlainMessage';
 
 describe('Message', () => {
-
     it('should create an plain message dto object', () => {
         const message = new PlainMessage('test');
         expect(message.toDTO().type).to.be.equal(MessageType.PlainMessage);

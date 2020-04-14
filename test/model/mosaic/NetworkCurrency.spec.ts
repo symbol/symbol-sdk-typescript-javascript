@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-import {deepEqual} from 'assert';
-import {expect} from 'chai';
-import {NetworkCurrencyLocal} from '../../../src/model/mosaic/NetworkCurrencyLocal';
+import { deepEqual } from 'assert';
+import { expect } from 'chai';
+import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
 import { NetworkCurrencyPublic } from '../../../src/model/mosaic/NetworkCurrencyPublic';
-import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { UInt64 } from '../../../src/model/UInt64';
 
 describe('NetworkCurrencyLocal', () => {
-
     it('should createComplete an NetworkCurrencyLocal object', () => {
-
         const currency = NetworkCurrencyLocal.createRelative(1000);
 
         deepEqual(currency.id.id.toHex(), '85BBEA6CC462B244'); // holds NAMESPACE_ID
@@ -32,7 +30,6 @@ describe('NetworkCurrencyLocal', () => {
     });
 
     it('should set amount in smallest unit when toDTO()', () => {
-
         const currency = NetworkCurrencyLocal.createRelative(1000);
         expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000 * 1000000);
     });
@@ -46,16 +43,13 @@ describe('NetworkCurrencyLocal', () => {
 });
 
 describe('NetworkCurrencyPublic', () => {
-
     it('should createComplete an NetworkCurrencyPublic object', () => {
-
         const currency = NetworkCurrencyPublic.createRelative(1000);
         deepEqual(currency.id.id.toHex(), 'E74B99BA41F4AFEE'); // holds NAMESPACE_ID
         expect(currency.amount.compact()).to.be.equal(1000 * 1000000);
     });
 
     it('should set amount in smallest unit when toDTO()', () => {
-
         const currency = NetworkCurrencyPublic.createRelative(1000);
         expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000 * 1000000);
     });

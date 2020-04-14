@@ -78,11 +78,10 @@ describe('NamespaceMetadataTransaction', () => {
 
         const signedTransaction = namespaceMetadataTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(
-            256,
-            signedTransaction.payload.length,
-        )).to.be.equal('9801508C58666C746F471538E43002B85B1CD542F9874B2861183919B' +
-                       'A8787B6E8030000000000004CCCD78612DDF5CA01000A0000000000000000000000');
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919B' +
+                'A8787B6E8030000000000004CCCD78612DDF5CA01000A0000000000000000000000',
+        );
     });
 
     describe('size', () => {
@@ -111,7 +110,6 @@ describe('NamespaceMetadataTransaction', () => {
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
-​
         expect(namespaceMetadataTransaction.maxFee.compact()).to.be.equal(380);
 
         const signedTransaction = namespaceMetadataTransaction.signWith(account, generationHash);
@@ -129,7 +127,7 @@ describe('NamespaceMetadataTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        Object.assign(namespaceMetadataTransaction, {signer: account.publicAccount});
+        Object.assign(namespaceMetadataTransaction, { signer: account.publicAccount });
 
         const embedded = namespaceMetadataTransaction.toEmbeddedTransaction();
 

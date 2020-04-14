@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { from as observableFrom, Observable, throwError } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
-import { MultisigRoutesApi } from 'symbol-openapi-typescript-node-client';
+import { Observable } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
+import { MultisigAccountInfoDTO, MultisigRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { Address } from '../model/account/Address';
 import { MultisigAccountGraphInfo } from '../model/account/MultisigAccountGraphInfo';
 import { MultisigAccountInfo } from '../model/account/MultisigAccountInfo';
@@ -41,6 +41,7 @@ export class MultisigHttp extends Http implements MultisigRepository {
      * network type for the mappings.
      */
     private readonly networkTypeObservable: Observable<NetworkType>;
+
     /**
      * Constructor
      * @param url
@@ -60,19 +61,12 @@ export class MultisigHttp extends Http implements MultisigRepository {
      */
     public getMultisigAccountInfo(address: Address): Observable<MultisigAccountInfo> {
         return this.networkTypeObservable.pipe(
-            mergeMap((networkType) => observableFrom(
-                this.multisigRoutesApi.getAccountMultisig(address.plain()))
-                    .pipe(map(({body}) => new MultisigAccountInfo(
-                        PublicAccount.createFromPublicKey(body.multisig.accountPublicKey, networkType),
-                        body.multisig.minApproval,
-                        body.multisig.minRemoval,
-                        body.multisig.cosignatoryPublicKeys
-                            .map((cosigner) => PublicAccount.createFromPublicKey(cosigner, networkType)),
-                        body.multisig.multisigPublicKeys
-                            .map((multisigAccount) => PublicAccount.createFromPublicKey(multisigAccount, networkType)),
-                    )),
-                catchError((error) =>  throwError(this.errorHandling(error))),
-        )));
+            mergeMap((networkType) =>
+                this.call(this.multisigRoutesApi.getAccountMultisig(address.plain()), (body) =>
+                    this.toMultisigAccountInfo(body, networkType),
+                ),
+            ),
+        );
     }
 
     /**
@@ -82,29 +76,36 @@ export class MultisigHttp extends Http implements MultisigRepository {
      */
     public getMultisigAccountGraphInfo(address: Address): Observable<MultisigAccountGraphInfo> {
         return this.networkTypeObservable.pipe(
-            mergeMap((networkType) => observableFrom(
-                this.multisigRoutesApi.getAccountMultisigGraph(address.plain()))
-                    .pipe(map(({body}) => {
-                        const multisigAccountGraphInfosDTO = body;
-                        const multisigAccounts = new Map<number, MultisigAccountInfo[]>();
-                        multisigAccountGraphInfosDTO.map((multisigAccountGraphInfoDTO) => {
-                            multisigAccounts.set(multisigAccountGraphInfoDTO.level,
-                                multisigAccountGraphInfoDTO.multisigEntries.map((multisigAccountInfoDTO) => {
-                                    return new MultisigAccountInfo(
-                                        PublicAccount.createFromPublicKey(multisigAccountInfoDTO.multisig.accountPublicKey, networkType),
-                                        multisigAccountInfoDTO.multisig.minApproval,
-                                        multisigAccountInfoDTO.multisig.minRemoval,
-                                        multisigAccountInfoDTO.multisig.cosignatoryPublicKeys
-                                            .map((cosigner) => PublicAccount.createFromPublicKey(cosigner, networkType)),
-                                        multisigAccountInfoDTO.multisig.multisigPublicKeys
-                                            .map((multisigAccountDTO) =>
-                                                PublicAccount.createFromPublicKey(multisigAccountDTO, networkType)));
-                                }),
-                            );
-                        });
-                        return new MultisigAccountGraphInfo(multisigAccounts);
-                    }),
-                    catchError((error) =>  throwError(this.errorHandling(error))),
-        )));
+            mergeMap((networkType) =>
+                this.call(this.multisigRoutesApi.getAccountMultisigGraph(address.plain()), (body) => {
+                    const multisigAccountGraphInfosDTO = body;
+                    const multisigAccounts = new Map<number, MultisigAccountInfo[]>();
+                    multisigAccountGraphInfosDTO.map((multisigAccountGraphInfoDTO) => {
+                        multisigAccounts.set(
+                            multisigAccountGraphInfoDTO.level,
+                            multisigAccountGraphInfoDTO.multisigEntries.map((multisigAccountInfoDTO) => {
+                                return this.toMultisigAccountInfo(multisigAccountInfoDTO, networkType);
+                            }),
+                        );
+                    });
+                    return new MultisigAccountGraphInfo(multisigAccounts);
+                }),
+            ),
+        );
+    }
+
+    /**
+     * It maps from MultisigAccountInfoDTO to MultisigAccountInfo
+     * @param dto the DTO
+     * @param networkType the network type
+     */
+    private toMultisigAccountInfo(dto: MultisigAccountInfoDTO, networkType: NetworkType): MultisigAccountInfo {
+        return new MultisigAccountInfo(
+            PublicAccount.createFromPublicKey(dto.multisig.accountPublicKey, networkType),
+            dto.multisig.minApproval,
+            dto.multisig.minRemoval,
+            dto.multisig.cosignatoryPublicKeys.map((cosigner) => PublicAccount.createFromPublicKey(cosigner, networkType)),
+            dto.multisig.multisigPublicKeys.map((multisigAccount) => PublicAccount.createFromPublicKey(multisigAccount, networkType)),
+        );
     }
 }

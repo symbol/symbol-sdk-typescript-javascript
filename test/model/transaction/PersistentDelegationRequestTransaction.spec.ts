@@ -20,10 +20,8 @@ import { Address } from '../../../src/model/account/Address';
 import { MessageMarker } from '../../../src/model/message/MessageMarker';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { Deadline } from '../../../src/model/transaction/Deadline';
-import {
-    PersistentDelegationRequestTransaction,
-} from '../../../src/model/transaction/PersistentDelegationRequestTransaction';
-import {UInt64} from '../../../src/model/UInt64';
+import { PersistentDelegationRequestTransaction } from '../../../src/model/transaction/PersistentDelegationRequestTransaction';
+import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
 describe('PersistentDelegationRequestTransaction', () => {
@@ -38,54 +36,53 @@ describe('PersistentDelegationRequestTransaction', () => {
     });
 
     it('should default maxFee field be set to 0', () => {
-        const persistentDelegationRequestTransaction =
-            PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
-                Deadline.create(),
-                delegatedPrivateKey,
-                recipientPublicKey,
-                NetworkType.MIJIN_TEST,
-            );
+        const persistentDelegationRequestTransaction = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
+            Deadline.create(),
+            delegatedPrivateKey,
+            recipientPublicKey,
+            NetworkType.MIJIN_TEST,
+        );
 
         expect(persistentDelegationRequestTransaction.maxFee.higher).to.be.equal(0);
         expect(persistentDelegationRequestTransaction.maxFee.lower).to.be.equal(0);
     });
 
     it('should filled maxFee override transaction maxFee', () => {
-        const persistentDelegationRequestTransaction =
-            PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
-                Deadline.create(),
-                delegatedPrivateKey,
-                recipientPublicKey,
-                NetworkType.MIJIN_TEST,
-                new UInt64([1, 0]),
-            );
+        const persistentDelegationRequestTransaction = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
+            Deadline.create(),
+            delegatedPrivateKey,
+            recipientPublicKey,
+            NetworkType.MIJIN_TEST,
+            new UInt64([1, 0]),
+        );
 
         expect(persistentDelegationRequestTransaction.maxFee.higher).to.be.equal(0);
         expect(persistentDelegationRequestTransaction.maxFee.lower).to.be.equal(1);
     });
 
     it('should createComplete an persistentDelegationRequestTransaction object and sign it', () => {
-        const persistentDelegationRequestTransaction =
-            PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
-                Deadline.create(),
-                delegatedPrivateKey,
-                recipientPublicKey,
-                NetworkType.MIJIN_TEST,
-            );
+        const persistentDelegationRequestTransaction = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
+            Deadline.create(),
+            delegatedPrivateKey,
+            recipientPublicKey,
+            NetworkType.MIJIN_TEST,
+        );
 
         expect(persistentDelegationRequestTransaction.message.payload.length).to.be.equal(192 + messageMarker.length);
         expect(persistentDelegationRequestTransaction.message.payload.includes(messageMarker)).to.be.true;
         expect(persistentDelegationRequestTransaction.mosaics.length).to.be.equal(0);
         expect(persistentDelegationRequestTransaction.recipientAddress).to.be.instanceof(Address);
-        expect((persistentDelegationRequestTransaction.recipientAddress as Address).plain())
-            .to.be.equal('SDBC4JE7GTJAKN2XJCQWWRJMYA35AFOYQBATXOUA');
+        expect((persistentDelegationRequestTransaction.recipientAddress as Address).plain()).to.be.equal(
+            'SDBC4JE7GTJAKN2XJCQWWRJMYA35AFOYQBATXOUA',
+        );
 
         const signedTransaction = persistentDelegationRequestTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(
-            256,
-            signedTransaction.payload.length,
-        ).includes(persistentDelegationRequestTransaction.message.payload)).to.be.true;
+        expect(
+            signedTransaction.payload
+                .substring(256, signedTransaction.payload.length)
+                .includes(persistentDelegationRequestTransaction.message.payload),
+        ).to.be.true;
     });
 
     it('should throw exception with invalid harvester publicKey (message)', () => {

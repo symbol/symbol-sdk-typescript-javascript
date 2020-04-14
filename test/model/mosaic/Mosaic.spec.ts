@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-import {deepEqual} from 'assert';
-import {Mosaic} from '../../../src/model/mosaic/Mosaic';
-import {MosaicId} from '../../../src/model/mosaic/MosaicId';
-import {UInt64} from '../../../src/model/UInt64';
+import { deepEqual } from 'assert';
+import { Mosaic } from '../../../src/model/mosaic/Mosaic';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { UInt64 } from '../../../src/model/UInt64';
 
 describe('Mosaic', () => {
-
     it('should createComplete an Mosaic object', () => {
         const mosaicDTO = {
-            amount: new UInt64([ 1, 0 ]),
+            amount: new UInt64([1, 0]),
             mosaicId: new MosaicId([3646934825, 3576016193]),
         };
 
-        const mosaic = new Mosaic(
-            mosaicDTO.mosaicId,
-            mosaicDTO.amount,
-        );
+        const mosaic = new Mosaic(mosaicDTO.mosaicId, mosaicDTO.amount);
 
         deepEqual(mosaic.id, mosaicDTO.mosaicId);
         deepEqual(mosaic.amount, mosaicDTO.amount);

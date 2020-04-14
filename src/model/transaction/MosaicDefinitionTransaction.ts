@@ -45,7 +45,6 @@ import { TransactionVersion } from './TransactionVersion';
  * This is done via a mosaic definition transaction.
  */
 export class MosaicDefinitionTransaction extends Transaction {
-
     /**
      * Create a mosaic creation transaction object
      * @param deadline - The deadline to include the transaction.
@@ -58,15 +57,18 @@ export class MosaicDefinitionTransaction extends Transaction {
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {MosaicDefinitionTransaction}
      */
-    public static create(deadline: Deadline,
-                         nonce: MosaicNonce,
-                         mosaicId: MosaicId,
-                         flags: MosaicFlags,
-                         divisibility: number,
-                         duration: UInt64,
-                         networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): MosaicDefinitionTransaction {
-        return new MosaicDefinitionTransaction(networkType,
+    public static create(
+        deadline: Deadline,
+        nonce: MosaicNonce,
+        mosaicId: MosaicId,
+        flags: MosaicFlags,
+        divisibility: number,
+        duration: UInt64,
+        networkType: NetworkType,
+        maxFee: UInt64 = new UInt64([0, 0]),
+    ): MosaicDefinitionTransaction {
+        return new MosaicDefinitionTransaction(
+            networkType,
             TransactionVersion.MOSAIC_DEFINITION,
             deadline,
             maxFee,
@@ -92,33 +94,35 @@ export class MosaicDefinitionTransaction extends Transaction {
      * @param signer
      * @param transactionInfo
      */
-    constructor(networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: UInt64,
-                /**
-                 * The mosaic nonce.
-                 */
-                public readonly nonce: MosaicNonce,
-                /**
-                 * The mosaic id.
-                 */
-                public readonly mosaicId: MosaicId,
-                /**
-                 * The mosaic properties.
-                 */
-                public readonly flags: MosaicFlags,
-                /**
-                 * Mosaic divisibility
-                 */
-                public readonly divisibility: number,
-                /**
-                 * Mosaic duration, 0 value for eternal mosaic
-                 */
-                public readonly duration: UInt64 = UInt64.fromUint(0),
-                signature?: string,
-                signer?: PublicAccount,
-                transactionInfo?: TransactionInfo) {
+    constructor(
+        networkType: NetworkType,
+        version: number,
+        deadline: Deadline,
+        maxFee: UInt64,
+        /**
+         * The mosaic nonce.
+         */
+        public readonly nonce: MosaicNonce,
+        /**
+         * The mosaic id.
+         */
+        public readonly mosaicId: MosaicId,
+        /**
+         * The mosaic properties.
+         */
+        public readonly flags: MosaicFlags,
+        /**
+         * Mosaic divisibility
+         */
+        public readonly divisibility: number,
+        /**
+         * Mosaic duration, 0 value for eternal mosaic
+         */
+        public readonly duration: UInt64 = UInt64.fromUint(0),
+        signature?: string,
+        signer?: PublicAccount,
+        transactionInfo?: TransactionInfo,
+    ) {
         super(TransactionType.MOSAIC_DEFINITION, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
@@ -128,28 +132,25 @@ export class MosaicDefinitionTransaction extends Transaction {
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedMosaicDefinitionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            MosaicDefinitionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+        const builder = isEmbedded
+            ? EmbeddedMosaicDefinitionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : MosaicDefinitionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = MosaicDefinitionTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
-                (builder as MosaicDefinitionTransactionBuilder).getDeadline().timestamp),
+            isEmbedded
+                ? Deadline.create()
+                : Deadline.createFromDTO((builder as MosaicDefinitionTransactionBuilder).getDeadline().timestamp),
             MosaicNonce.createFromUint8Array(builder.getNonce().serialize()),
             new MosaicId(builder.getId().mosaicId),
-            MosaicFlags.create(
-                (builder.getFlags() & 1) === 1,
-                (builder.getFlags() & 2) === 2,
-                (builder.getFlags() & 4) === 4),
+            MosaicFlags.create((builder.getFlags() & 1) === 1, (builder.getFlags() & 2) === 2, (builder.getFlags() & 4) === 4),
             builder.getDivisibility(),
             new UInt64(builder.getDuration().blockDuration),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicDefinitionTransactionBuilder).fee.amount),
         );
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**

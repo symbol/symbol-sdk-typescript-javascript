@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-import {MultisigAccountInfo} from './MultisigAccountInfo';
+import { MultisigAccountInfo } from './MultisigAccountInfo';
 
 /**
  * Multisig account graph info model
  */
 export class MultisigAccountGraphInfo {
-
     /**
      * @param multisigAccounts
      */
-    constructor(/**
-                 * The multisig accounts.
-                 */
-                public readonly multisigAccounts: Map<number, MultisigAccountInfo[]>) {
-    }
+    constructor(
+        /**
+         * The multisig accounts.
+         */
+        public readonly multisigAccounts: Map<number, MultisigAccountInfo[]>,
+    ) {}
 }

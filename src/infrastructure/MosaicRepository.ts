@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import { Address } from '../model/account/Address';
-import {MosaicId} from '../model/mosaic/MosaicId';
-import {MosaicInfo} from '../model/mosaic/MosaicInfo';
+import { MosaicId } from '../model/mosaic/MosaicId';
+import { MosaicInfo } from '../model/mosaic/MosaicInfo';
 
 /**
  * Mosaic interface repository.
@@ -25,7 +25,6 @@ import {MosaicInfo} from '../model/mosaic/MosaicInfo';
  * @since 1.0
  */
 export interface MosaicRepository {
-
     /**
      * Gets a MosaicInfo for a given mosaicId
      * @param mosaicId - Mosaic id
@@ -40,11 +39,11 @@ export interface MosaicRepository {
      */
     getMosaics(mosaicIds: MosaicId[]): Observable<MosaicInfo[]>;
 
-     /**
-      * Gets mosaics created for a given address.
-      * @summary Get mosaics created for given address
-      * @param address Address
-      */
+    /**
+     * Gets mosaics created for a given address.
+     * @summary Get mosaics created for given address
+     * @param address Address
+     */
     getMosaicsFromAccount(address: Address): Observable<MosaicInfo[]>;
 
     /**

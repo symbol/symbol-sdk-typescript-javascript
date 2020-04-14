@@ -16,7 +16,7 @@
 
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
-import {NetworkType} from '../network/NetworkType';
+import { NetworkType } from '../network/NetworkType';
 import { TransactionType } from './TransactionType';
 
 /**
@@ -30,26 +30,28 @@ export class SignedTransaction {
      * @param type
      * @param networkType
      */
-    constructor(/**
-                 * Transaction serialized data
-                 */
-                public readonly payload: string,
-                /**
-                 * Transaction hash
-                 */
-                public readonly hash: string,
-                /**
-                 * Transaction signerPublicKey
-                 */
-                public readonly signerPublicKey: string,
-                /**
-                 * Transaction type
-                 */
-                public readonly type: TransactionType,
-                /**
-                 * Signer network type
-                 */
-                public readonly networkType: NetworkType) {
+    constructor(
+        /**
+         * Transaction serialized data
+         */
+        public readonly payload: string,
+        /**
+         * Transaction hash
+         */
+        public readonly hash: string,
+        /**
+         * Transaction signerPublicKey
+         */
+        public readonly signerPublicKey: string,
+        /**
+         * Transaction type
+         */
+        public readonly type: TransactionType,
+        /**
+         * Signer network type
+         */
+        public readonly networkType: NetworkType,
+    ) {
         if (hash.length !== 64) {
             throw new Error('hash must be 64 characters long');
         }

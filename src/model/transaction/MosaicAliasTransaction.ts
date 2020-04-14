@@ -40,7 +40,6 @@ import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
 export class MosaicAliasTransaction extends Transaction {
-
     /**
      * Create a mosaic alias transaction object
      * @param deadline - The deadline to include the transaction.
@@ -51,13 +50,16 @@ export class MosaicAliasTransaction extends Transaction {
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {MosaicAliasTransaction}
      */
-    public static create(deadline: Deadline,
-                         aliasAction: AliasAction,
-                         namespaceId: NamespaceId,
-                         mosaicId: MosaicId,
-                         networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): MosaicAliasTransaction {
-        return new MosaicAliasTransaction(networkType,
+    public static create(
+        deadline: Deadline,
+        aliasAction: AliasAction,
+        namespaceId: NamespaceId,
+        mosaicId: MosaicId,
+        networkType: NetworkType,
+        maxFee: UInt64 = new UInt64([0, 0]),
+    ): MosaicAliasTransaction {
+        return new MosaicAliasTransaction(
+            networkType,
             TransactionVersion.MOSAIC_ALIAS,
             deadline,
             maxFee,
@@ -79,25 +81,27 @@ export class MosaicAliasTransaction extends Transaction {
      * @param signer
      * @param transactionInfo
      */
-    constructor(networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: UInt64,
-                /**
-                 * The alias action type.
-                 */
-                public readonly aliasAction: AliasAction,
-                /**
-                 * The namespace id that will be an alias.
-                 */
-                public readonly namespaceId: NamespaceId,
-                /**
-                 * The mosaic id.
-                 */
-                public readonly mosaicId: MosaicId,
-                signature?: string,
-                signer?: PublicAccount,
-                transactionInfo?: TransactionInfo) {
+    constructor(
+        networkType: NetworkType,
+        version: number,
+        deadline: Deadline,
+        maxFee: UInt64,
+        /**
+         * The alias action type.
+         */
+        public readonly aliasAction: AliasAction,
+        /**
+         * The namespace id that will be an alias.
+         */
+        public readonly namespaceId: NamespaceId,
+        /**
+         * The mosaic id.
+         */
+        public readonly mosaicId: MosaicId,
+        signature?: string,
+        signer?: PublicAccount,
+        transactionInfo?: TransactionInfo,
+    ) {
         super(TransactionType.MOSAIC_ALIAS, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
@@ -107,10 +111,10 @@ export class MosaicAliasTransaction extends Transaction {
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedMosaicAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            MosaicAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+        const builder = isEmbedded
+            ? EmbeddedMosaicAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : MosaicAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = MosaicAliasTransaction.create(
@@ -121,8 +125,7 @@ export class MosaicAliasTransaction extends Transaction {
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicAliasTransactionBuilder).fee.amount),
         );
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**

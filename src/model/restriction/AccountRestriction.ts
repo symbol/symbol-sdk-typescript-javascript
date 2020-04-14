@@ -19,22 +19,19 @@ import { AccountRestrictionFlags } from './AccountRestrictionType';
  * Account restriction structure describes restriction information.
  */
 export class AccountRestriction {
-
     /**
      * Constructor
      * @param restrictionFlags
      * @param values
      */
     constructor(
-            /**
-             * Account restriction type
-             */
-            public readonly restrictionFlags: AccountRestrictionFlags,
-            /**
-             * Restriction values.
-             */
-            public readonly values: object[]) {
-
-    }
-
+        /**
+         * Account restriction type
+         */
+        public readonly restrictionFlags: AccountRestrictionFlags,
+        /**
+         * Restriction values.
+         */
+        public readonly values: object[],
+    ) {}
 }

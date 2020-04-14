@@ -111,8 +111,8 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 restrictionAdditionsCount: accountMosaicRestrictionTx.restrictionAdditions.length,
                 restrictionDeletionsCount: accountMosaicRestrictionTx.restrictionDeletions.length,
                 restrictionAdditions: accountMosaicRestrictionTx.restrictionAdditions.map((addition) => {
-                        return addition.toHex();
-                    }),
+                    return addition.toHex();
+                }),
                 restrictionDeletions: accountMosaicRestrictionTx.restrictionDeletions.map((deletion) => {
                     return deletion.toHex();
                 }),
@@ -123,8 +123,8 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 minApprovalDelta: multisigTx.minApprovalDelta,
                 minRemovalDelta: multisigTx.minRemovalDelta,
                 publicKeyAdditions: multisigTx.publicKeyAdditions.map((addition) => {
-                        return addition.publicKey;
-                    }),
+                    return addition.publicKey;
+                }),
                 publicKeyDeletions: multisigTx.publicKeyDeletions.map((deletion) => {
                     return deletion.publicKey;
                 }),
@@ -164,10 +164,14 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             };
 
             if (registerNamespaceDuration) {
-                Object.assign(jsonObject, {duration: registerNamespaceDuration.toString()});
+                Object.assign(jsonObject, {
+                    duration: registerNamespaceDuration.toString(),
+                });
             }
             if (registerNamespaceParentId) {
-                Object.assign(jsonObject, {parentId: registerNamespaceParentId.toHex()});
+                Object.assign(jsonObject, {
+                    parentId: registerNamespaceParentId.toHex(),
+                });
             }
             return jsonObject;
         case TransactionType.SECRET_LOCK:
@@ -216,7 +220,6 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 targetAddress: mosaicAddressRestrictionTx.targetAddress.toDTO(),
                 previousRestrictionValue: mosaicAddressRestrictionTx.previousRestrictionValue.toString(),
                 newRestrictionValue: mosaicAddressRestrictionTx.newRestrictionValue.toString(),
-
             };
         case TransactionType.ACCOUNT_METADATA:
             const accountMetadataTx = transaction as AccountMetadataTransaction;
@@ -226,7 +229,6 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 valueSizeDelta: accountMetadataTx.valueSizeDelta,
                 valueSize: accountMetadataTx.value.length,
                 value: Convert.utf8ToHex(accountMetadataTx.value),
-
             };
         case TransactionType.MOSAIC_METADATA:
             const mosaicMetadataTx = transaction as MosaicMetadataTransaction;
@@ -237,7 +239,6 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 targetMosaicId: mosaicMetadataTx.targetMosaicId.id.toHex(),
                 valueSize: mosaicMetadataTx.value.length,
                 value: Convert.utf8ToHex(mosaicMetadataTx.value),
-
             };
         case TransactionType.NAMESPACE_METADATA:
             const namespaceMetaTx = transaction as NamespaceMetadataTransaction;
@@ -248,10 +249,8 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 targetNamespaceId: namespaceMetaTx.targetNamespaceId.id.toHex(),
                 valueSize: namespaceMetaTx.value.length,
                 value: Convert.utf8ToHex(namespaceMetaTx.value),
-
             };
         default:
-            throw new Error ('Transaction type not implemented yet.');
+            throw new Error('Transaction type not implemented yet.');
     }
-
 };
