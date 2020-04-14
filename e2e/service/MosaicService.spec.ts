@@ -25,15 +25,11 @@ describe('MosaicService', () => {
     let accountAddress: Address;
     let accountRepository: AccountRepository;
     let mosaicRepository: MosaicRepository;
-    let generationHash: string;
     const helper = new IntegrationTestHelper();
-    let networkType: NetworkType;
 
     before(() => {
         return helper.start().then(() => {
             accountAddress = helper.account.address;
-            generationHash = helper.generationHash;
-            networkType = helper.networkType;
             accountRepository = helper.repositoryFactory.createAccountRepository();
             mosaicRepository = helper.repositoryFactory.createMosaicRepository();
         });

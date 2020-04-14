@@ -38,6 +38,27 @@ describe('Transaction', () => {
         account = TestingAccount;
     });
 
+    class FakeTransaction extends Transaction {
+        public signWith(): SignedTransaction {
+            throw new Error('Method not implemented.');
+        }
+
+        protected generateBytes(): Uint8Array {
+            throw new Error('Not implemented');
+        }
+
+        public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
+            throw new Error('Not implemented');
+        }
+        resolveAliases(): TransferTransaction {
+            throw new Error('Not implemented');
+        }
+
+        setMaxFee(): TransferTransaction {
+            throw new Error('Not implemented');
+        }
+    }
+
     describe('isUnannounced', () => {
         it('should return true when there is no Transaction Info', () => {
             const transaction = new FakeTransaction(
@@ -366,24 +387,3 @@ describe('Transaction', () => {
         });
     });
 });
-
-class FakeTransaction extends Transaction {
-    public signWith(account: Account): SignedTransaction {
-        throw new Error('Method not implemented.');
-    }
-
-    protected generateBytes(): Uint8Array {
-        throw new Error('Not implemented');
-    }
-
-    public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
-        throw new Error('Not implemented');
-    }
-    resolveAliases(): TransferTransaction {
-        throw new Error('Not implemented');
-    }
-
-    setMaxFee(): TransferTransaction {
-        throw new Error('Not implemented');
-    }
-}
