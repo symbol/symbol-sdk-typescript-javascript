@@ -41,15 +41,12 @@ import { ITransactionService } from './interfaces/ITransactionService';
  * Transaction Service
  */
 export class TransactionService implements ITransactionService {
-
     /**
      * Constructor
      * @param transactionRepository
      * @param receiptRepository
      */
-    constructor(private readonly transactionRepository: TransactionRepository,
-                private readonly receiptRepository: ReceiptRepository) {
-    }
+    constructor(private readonly transactionRepository: TransactionRepository, private readonly receiptRepository: ReceiptRepository) {}
 
     /**
      * Resolve unresolved mosaic / address from array of transactions
@@ -72,8 +69,12 @@ export class TransactionService implements ITransactionService {
     public announce(signedTransaction: SignedTransaction, listener: IListener): Observable<Transaction> {
         const signerAddress = signedTransaction.getSignerAddress();
         this.transactionRepository.announce(signedTransaction);
-        return this.getTransactionOrRaiseError(listener,
-            signerAddress, signedTransaction.hash, listener.confirmed(signerAddress, signedTransaction.hash));
+        return this.getTransactionOrRaiseError(
+            listener,
+            signerAddress,
+            signedTransaction.hash,
+            listener.confirmed(signerAddress, signedTransaction.hash),
+        );
     }
 
     /**
@@ -85,9 +86,9 @@ export class TransactionService implements ITransactionService {
      */
     public announceAggregateBonded(signedTransaction: SignedTransaction, listener: IListener): Observable<AggregateTransaction> {
         const signerAddress = signedTransaction.getSignerAddress();
-        const transactionObservable = this.transactionRepository.announceAggregateBonded(signedTransaction).pipe(
-            flatMap(() => listener.aggregateBondedAdded(signerAddress, signedTransaction.hash)),
-        );
+        const transactionObservable = this.transactionRepository
+            .announceAggregateBonded(signedTransaction)
+            .pipe(flatMap(() => listener.aggregateBondedAdded(signerAddress, signedTransaction.hash)));
         return this.getTransactionOrRaiseError(listener, signerAddress, signedTransaction.hash, transactionObservable);
     }
 
@@ -101,9 +102,11 @@ export class TransactionService implements ITransactionService {
      * @param listener Websocket listener
      * @returns {Observable<AggregateTransaction>}
      */
-    public announceHashLockAggregateBonded(signedHashLockTransaction: SignedTransaction,
-                                           signedAggregateTransaction: SignedTransaction,
-                                           listener: IListener): Observable<AggregateTransaction> {
+    public announceHashLockAggregateBonded(
+        signedHashLockTransaction: SignedTransaction,
+        signedAggregateTransaction: SignedTransaction,
+        listener: IListener,
+    ): Observable<AggregateTransaction> {
         return this.announce(signedHashLockTransaction, listener).pipe(
             flatMap(() => this.announceAggregateBonded(signedAggregateTransaction, listener)),
         );
@@ -120,16 +123,23 @@ export class TransactionService implements ITransactionService {
      * @param transactionHash the transaction hash
      * @param transactionObservable the observable with the valid transaction
      */
-    private getTransactionOrRaiseError<T extends Transaction>(listener: IListener, address: Address, transactionHash: string,
-        transactionObservable: Observable<T>): Observable<T> {
+    private getTransactionOrRaiseError<T extends Transaction>(
+        listener: IListener,
+        address: Address,
+        transactionHash: string,
+        transactionObservable: Observable<T>,
+    ): Observable<T> {
         const errorObservable = listener.status(address).pipe(filter((t) => t.hash.toUpperCase() === transactionHash.toUpperCase()));
-        return merge(transactionObservable, errorObservable).pipe(first(), map((errorOrTransaction) => {
-            if (errorOrTransaction instanceof TransactionStatusError) {
-                throw new Error(errorOrTransaction.code);
-            } else {
-                return errorOrTransaction;
-            }
-        }));
+        return merge(transactionObservable, errorObservable).pipe(
+            first(),
+            map((errorOrTransaction) => {
+                if (errorOrTransaction instanceof TransactionStatusError) {
+                    throw new Error(errorOrTransaction.code);
+                } else {
+                    return errorOrTransaction;
+                }
+            }),
+        );
     }
 
     /**
@@ -139,7 +149,7 @@ export class TransactionService implements ITransactionService {
      */
     private resolveTransaction(transaction: Transaction): Observable<Transaction> {
         if ([TransactionType.AGGREGATE_BONDED, TransactionType.AGGREGATE_COMPLETE].includes(transaction.type)) {
-            if ((transaction as AggregateTransaction).innerTransactions.find((tx) => this.checkShouldResolve((tx as Transaction)))) {
+            if ((transaction as AggregateTransaction).innerTransactions.find((tx) => this.checkShouldResolve(tx as Transaction))) {
                 return this.resolvedFromReceipt(transaction, transaction.transactionInfo!.index);
             }
             return of(transaction);
@@ -167,22 +177,30 @@ export class TransactionService implements ITransactionService {
                 return false;
             case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
                 const accountAddressRestriction = transaction as AccountAddressRestrictionTransaction;
-                return accountAddressRestriction.restrictionAdditions.find((address) => address instanceof NamespaceId) !== undefined ||
-                    accountAddressRestriction.restrictionDeletions.find((address) => address instanceof NamespaceId) !== undefined;
+                return (
+                    accountAddressRestriction.restrictionAdditions.find((address) => address instanceof NamespaceId) !== undefined ||
+                    accountAddressRestriction.restrictionDeletions.find((address) => address instanceof NamespaceId) !== undefined
+                );
             case TransactionType.ACCOUNT_MOSAIC_RESTRICTION:
                 const accountMosaicRestriction = transaction as AccountAddressRestrictionTransaction;
-                return accountMosaicRestriction.restrictionAdditions.find((mosaicId) => mosaicId instanceof NamespaceId) !== undefined ||
-                    accountMosaicRestriction.restrictionDeletions.find((mosaicId) => mosaicId instanceof NamespaceId) !== undefined;
+                return (
+                    accountMosaicRestriction.restrictionAdditions.find((mosaicId) => mosaicId instanceof NamespaceId) !== undefined ||
+                    accountMosaicRestriction.restrictionDeletions.find((mosaicId) => mosaicId instanceof NamespaceId) !== undefined
+                );
             case TransactionType.HASH_LOCK:
                 return (transaction as LockFundsTransaction).mosaic.id instanceof NamespaceId;
             case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
                 const mosaicAddressRestriction = transaction as MosaicAddressRestrictionTransaction;
-                return mosaicAddressRestriction.targetAddress instanceof NamespaceId ||
-                    mosaicAddressRestriction.mosaicId instanceof NamespaceId;
+                return (
+                    mosaicAddressRestriction.targetAddress instanceof NamespaceId ||
+                    mosaicAddressRestriction.mosaicId instanceof NamespaceId
+                );
             case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
                 const mosaicGlobalRestriction = transaction as MosaicGlobalRestrictionTransaction;
-                return mosaicGlobalRestriction.referenceMosaicId instanceof NamespaceId ||
-                    mosaicGlobalRestriction.mosaicId instanceof NamespaceId;
+                return (
+                    mosaicGlobalRestriction.referenceMosaicId instanceof NamespaceId ||
+                    mosaicGlobalRestriction.mosaicId instanceof NamespaceId
+                );
             case TransactionType.MOSAIC_METADATA:
                 return (transaction as MosaicMetadataTransaction).targetMosaicId instanceof NamespaceId;
             case TransactionType.MOSAIC_SUPPLY_CHANGE:
@@ -191,12 +209,13 @@ export class TransactionService implements ITransactionService {
                 return (transaction as SecretProofTransaction).recipientAddress instanceof NamespaceId;
             case TransactionType.SECRET_LOCK:
                 const secretLock = transaction as SecretLockTransaction;
-                return secretLock.recipientAddress instanceof NamespaceId ||
-                    secretLock.mosaic.id instanceof NamespaceId;
+                return secretLock.recipientAddress instanceof NamespaceId || secretLock.mosaic.id instanceof NamespaceId;
             case TransactionType.TRANSFER:
                 const transfer = transaction as TransferTransaction;
-                return transfer.recipientAddress instanceof NamespaceId ||
-                    transfer.mosaics.find((mosaic) => mosaic.id instanceof NamespaceId) !== undefined;
+                return (
+                    transfer.recipientAddress instanceof NamespaceId ||
+                    transfer.mosaics.find((mosaic) => mosaic.id instanceof NamespaceId) !== undefined
+                );
             default:
                 throw new Error('Transaction type not not recogonised.');
         }
@@ -210,8 +229,8 @@ export class TransactionService implements ITransactionService {
      * @return {Observable<Transaction>}
      */
     private resolvedFromReceipt(transaction: Transaction, aggregateIndex: number): Observable<Transaction> {
-        return this.receiptRepository.getBlockReceipts(transaction.transactionInfo!.height).pipe(
-            map((statement) => transaction.resolveAliases(statement, aggregateIndex)),
-        );
+        return this.receiptRepository
+            .getBlockReceipts(transaction.transactionInfo!.height)
+            .pipe(map((statement) => transaction.resolveAliases(statement, aggregateIndex)));
     }
 }

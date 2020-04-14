@@ -42,7 +42,7 @@ describe('NamespaceInfo', () => {
                 parentId: new NamespaceId(BigInt(0)),
                 startHeight: BigInt(1),
                 type: 0,
-                alias: {type: 1, mosaicId: new MosaicId('0DC67FBE1CAD29E3')},
+                alias: { type: 1, mosaicId: new MosaicId('0DC67FBE1CAD29E3') },
             },
         };
         subNamespaceDTO = {
@@ -58,15 +58,9 @@ describe('NamespaceInfo', () => {
                 level1: new NamespaceId(BigIntUtilities.HexToBigInt('F7CE33276A3288C1')),
                 parentId: new NamespaceId(BigIntUtilities.HexToBigInt('E43F43D2C5A8F299')),
                 owner: '846B4439154579A5903B1459C9CF69CB8153F6D0110A7A0ED61DE29AE4810BF2',
-                startHeight: [
-                    795,
-                    0,
-                ],
-                endHeight: [
-                    50795,
-                    0,
-                ],
-                alias: {type: 0},
+                startHeight: [795, 0],
+                endHeight: [50795, 0],
+                alias: { type: 0 },
             },
         };
     });

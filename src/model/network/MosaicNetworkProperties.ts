@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
- export class MosaicNetworkProperties {
+export class MosaicNetworkProperties {
     /**
      * @param maxMosaicsPerAccount - Maximum number of mosaics that an account can own.
      * @param maxMosaicDuration - Maximum mosaic duration.
@@ -22,10 +22,11 @@
      * @param mosaicRentalFeeSinkPublicKey - Public key of the mosaic rental fee sink account.
      * @param mosaicRentalFee - Mosaic rental fee.
      */
-    constructor(public readonly maxMosaicsPerAccount?: string,
-                public readonly maxMosaicDuration?: string,
-                public readonly maxMosaicDivisibility?: string,
-                public readonly mosaicRentalFeeSinkPublicKey?: string,
-                public readonly mosaicRentalFee?: string) {
-    }
+    constructor(
+        public readonly maxMosaicsPerAccount?: string,
+        public readonly maxMosaicDuration?: string,
+        public readonly maxMosaicDivisibility?: string,
+        public readonly mosaicRentalFeeSinkPublicKey?: string,
+        public readonly mosaicRentalFee?: string,
+    ) {}
 }

@@ -15,14 +15,14 @@
  */
 
 export class SecretLockNetworkProperties {
-
     /**
      * @param maxSecretLockDuration - Maximum number of blocks for which a secret lock can exist.
      * @param minProofSize - Minimum size of a proof in bytes.
      * @param maxProofSize - Maximum size of a proof in bytes.
      */
-    constructor(public readonly maxSecretLockDuration?: string,
-                public readonly minProofSize?: string,
-                public readonly maxProofSize?: string) {
-    }
+    constructor(
+        public readonly maxSecretLockDuration?: string,
+        public readonly minProofSize?: string,
+        public readonly maxProofSize?: string,
+    ) {}
 }

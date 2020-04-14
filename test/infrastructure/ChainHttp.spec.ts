@@ -15,18 +15,19 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
-import { ChainRoutesApi, ChainScoreDTO, HeightInfoDTO, } from 'symbol-openapi-typescript-node-client';
+import { ChainRoutesApi, ChainScoreDTO, HeightInfoDTO } from 'symbol-openapi-typescript-node-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { ChainHttp } from '../../src/infrastructure/ChainHttp';
 import { ChainRepository } from '../../src/infrastructure/ChainRepository';
 
 describe('ChainHttp', () => {
-
     const url = 'http://someHost';
     const response: http.IncomingMessage = mock();
     const chainRoutesApi: ChainRoutesApi = mock();
-    const chainRepository: ChainRepository = DtoMapping.assign(new ChainHttp(url), {chainRoutesApi: instance(chainRoutesApi)});
+    const chainRepository: ChainRepository = DtoMapping.assign(new ChainHttp(url), {
+        chainRoutesApi: instance(chainRoutesApi),
+    });
 
     before(() => {
         reset(response);
@@ -36,7 +37,7 @@ describe('ChainHttp', () => {
     it('getBlockchainHeight', async () => {
         const heightInfoDTO = new HeightInfoDTO();
         heightInfoDTO.height = '3';
-        when(chainRoutesApi.getChainHeight()).thenReturn(Promise.resolve({response, body: heightInfoDTO}));
+        when(chainRoutesApi.getChainHeight()).thenReturn(Promise.resolve({ response, body: heightInfoDTO }));
         const heightInfo = await chainRepository.getBlockchainHeight().toPromise();
         expect(heightInfo).to.be.not.null;
         expect(heightInfo.toString()).to.be.equals('3');
@@ -46,11 +47,10 @@ describe('ChainHttp', () => {
         const chainScoreDTO = new ChainScoreDTO();
         chainScoreDTO.scoreLow = '2';
         chainScoreDTO.scoreHigh = '3';
-        when(chainRoutesApi.getChainScore()).thenReturn(Promise.resolve({response, body: chainScoreDTO}));
+        when(chainRoutesApi.getChainScore()).thenReturn(Promise.resolve({ response, body: chainScoreDTO }));
         const chainScore = await chainRepository.getChainScore().toPromise();
         expect(chainScore).to.be.not.null;
         expect(chainScore.scoreLow.toString()).to.be.equals('2');
         expect(chainScore.scoreHigh.toString()).to.be.equals('3');
     });
-
 });

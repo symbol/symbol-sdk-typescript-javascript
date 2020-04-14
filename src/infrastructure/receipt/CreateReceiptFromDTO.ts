@@ -58,8 +58,10 @@ const createResolutionStatement = (statementDTO: ResolutionStatementBodyDTO, res
                 BigInt(statementDTO.height),
                 UnresolvedMapping.toUnresolvedAddress(statementDTO.unresolved),
                 statementDTO.resolutionEntries.map((entry) => {
-                    return new ResolutionEntry(Address.createFromEncoded(entry.resolved),
-                        new ReceiptSource(entry.source.primaryId, entry.source.secondaryId));
+                    return new ResolutionEntry(
+                        Address.createFromEncoded(entry.resolved),
+                        new ReceiptSource(entry.source.primaryId, entry.source.secondaryId),
+                    );
                 }),
             );
         case ResolutionType.Mosaic:
@@ -68,8 +70,10 @@ const createResolutionStatement = (statementDTO: ResolutionStatementBodyDTO, res
                 BigInt(statementDTO.height),
                 UnresolvedMapping.toUnresolvedMosaic(statementDTO.unresolved),
                 statementDTO.resolutionEntries.map((entry) => {
-                    return new ResolutionEntry(new MosaicId(entry.resolved),
-                        new ReceiptSource(entry.source.primaryId, entry.source.secondaryId));
+                    return new ResolutionEntry(
+                        new MosaicId(entry.resolved),
+                        new ReceiptSource(entry.source.primaryId, entry.source.secondaryId),
+                    );
                 }),
             );
         default:
@@ -165,10 +169,15 @@ const createInflationReceipt = (receiptDTO: InflationReceiptDTO): Receipt => {
  * @returns {Receipt}
  * @constructor
  */
-export const CreateReceiptFromDTO = (receiptDTO: BalanceTransferReceiptDTO |
-    BalanceChangeReceiptDTO | NamespaceExpiryReceiptDTO |
-    MosaicExpiryReceiptDTO | InflationReceiptDTO, networkType: NetworkType): Receipt => {
-
+export const CreateReceiptFromDTO = (
+    receiptDTO:
+        | BalanceTransferReceiptDTO
+        | BalanceChangeReceiptDTO
+        | NamespaceExpiryReceiptDTO
+        | MosaicExpiryReceiptDTO
+        | InflationReceiptDTO,
+    networkType: NetworkType,
+): Receipt => {
     switch (receiptDTO.type.valueOf()) {
         case ReceiptType.Harvest_Fee:
         case ReceiptType.LockHash_Created:

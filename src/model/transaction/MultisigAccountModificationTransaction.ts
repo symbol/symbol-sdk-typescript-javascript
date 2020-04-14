@@ -40,7 +40,6 @@ import { TransactionVersion } from './TransactionVersion';
  * @since 1.0
  */
 export class MultisigAccountModificationTransaction extends Transaction {
-
     /**
      * Create a modify multisig account transaction object
      * @param deadline - The deadline to include the transaction.
@@ -52,21 +51,25 @@ export class MultisigAccountModificationTransaction extends Transaction {
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {MultisigAccountModificationTransaction}
      */
-    public static create(deadline: Deadline,
-                         minApprovalDelta: number,
-                         minRemovalDelta: number,
-                         publicKeyAdditions: PublicAccount[],
-                         publicKeyDeletions: PublicAccount[],
-                         networkType: NetworkType,
-                         maxFee: bigint = BigInt(0)): MultisigAccountModificationTransaction {
-        return new MultisigAccountModificationTransaction(networkType,
+    public static create(
+        deadline: Deadline,
+        minApprovalDelta: number,
+        minRemovalDelta: number,
+        publicKeyAdditions: PublicAccount[],
+        publicKeyDeletions: PublicAccount[],
+        networkType: NetworkType,
+        maxFee = BigInt(0),
+    ): MultisigAccountModificationTransaction {
+        return new MultisigAccountModificationTransaction(
+            networkType,
             TransactionVersion.MULTISIG_ACCOUNT_MODIFICATION,
             deadline,
             maxFee,
             minApprovalDelta,
             minRemovalDelta,
             publicKeyAdditions,
-            publicKeyDeletions);
+            publicKeyDeletions,
+        );
     }
 
     /**
@@ -82,31 +85,33 @@ export class MultisigAccountModificationTransaction extends Transaction {
      * @param signer
      * @param transactionInfo
      */
-    constructor(networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: bigint,
-                /**
-                 * The number of signatures needed to approve a transaction.
-                 * If we are modifying and existing multi-signature account this indicates the relative change of the minimum cosignatories.
-                 */
-                public readonly minApprovalDelta: number,
-                /**
-                 * The number of signatures needed to remove a cosignatory.
-                 * If we are modifying and existing multi-signature account this indicates the relative change of the minimum cosignatories.
-                 */
-                public readonly minRemovalDelta: number,
-                /**
-                 * The Cosignatory public key additions.
-                 */
-                public readonly  publicKeyAdditions: PublicAccount[],
-                /**
-                 * The Cosignatory public key deletion.
-                 */
-                public readonly  publicKeyDeletions: PublicAccount[],
-                signature?: string,
-                signer?: PublicAccount,
-                transactionInfo?: TransactionInfo) {
+    constructor(
+        networkType: NetworkType,
+        version: number,
+        deadline: Deadline,
+        maxFee: bigint,
+        /**
+         * The number of signatures needed to approve a transaction.
+         * If we are modifying and existing multi-signature account this indicates the relative change of the minimum cosignatories.
+         */
+        public readonly minApprovalDelta: number,
+        /**
+         * The number of signatures needed to remove a cosignatory.
+         * If we are modifying and existing multi-signature account this indicates the relative change of the minimum cosignatories.
+         */
+        public readonly minRemovalDelta: number,
+        /**
+         * The Cosignatory public key additions.
+         */
+        public readonly publicKeyAdditions: PublicAccount[],
+        /**
+         * The Cosignatory public key deletion.
+         */
+        public readonly publicKeyDeletions: PublicAccount[],
+        signature?: string,
+        signer?: PublicAccount,
+        transactionInfo?: TransactionInfo,
+    ) {
         super(TransactionType.MULTISIG_ACCOUNT_MODIFICATION, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
@@ -116,15 +121,16 @@ export class MultisigAccountModificationTransaction extends Transaction {
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedMultisigAccountModificationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            MultisigAccountModificationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+        const builder = isEmbedded
+            ? EmbeddedMultisigAccountModificationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : MultisigAccountModificationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = MultisigAccountModificationTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
-                (builder as MultisigAccountModificationTransactionBuilder).getDeadline().timestamp),
+            isEmbedded
+                ? Deadline.create()
+                : Deadline.createFromBigInt((builder as MultisigAccountModificationTransactionBuilder).getDeadline().timestamp),
             builder.getMinApprovalDelta(),
             builder.getMinRemovalDelta(),
             builder.getPublicKeyAdditions().map((addition) => {
@@ -134,9 +140,9 @@ export class MultisigAccountModificationTransaction extends Transaction {
                 return PublicAccount.createFromPublicKey(Convert.uint8ToHex(deletion.getKey()), networkType);
             }),
             networkType,
-            isEmbedded ? BigInt(0) : (builder as MultisigAccountModificationTransactionBuilder).fee.amount);
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
+            isEmbedded ? BigInt(0) : (builder as MultisigAccountModificationTransactionBuilder).fee.amount,
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**
@@ -157,8 +163,16 @@ export class MultisigAccountModificationTransaction extends Transaction {
         const bytePublicKeyDeletions = 32 * this.publicKeyDeletions.length;
         const byteReserved1 = 4;
 
-        return byteSize + byteRemovalDelta + byteApprovalDelta + byteAdditionCount +
-        byteDeletionCount + bytePublicKeyAdditions + bytePublicKeyDeletions + byteReserved1;
+        return (
+            byteSize +
+            byteRemovalDelta +
+            byteApprovalDelta +
+            byteAdditionCount +
+            byteDeletionCount +
+            bytePublicKeyAdditions +
+            bytePublicKeyDeletions +
+            byteReserved1
+        );
     }
 
     /**

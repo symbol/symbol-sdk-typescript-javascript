@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {Account} from '../../../src/model/account/Account';
-import {NetworkType} from '../../../src/model/network/NetworkType';
-import {Password} from '../../../src/model/wallet/Password';
-import {SimpleWallet} from '../../../src/model/wallet/SimpleWallet';
+import { expect } from 'chai';
+import { Account } from '../../../src/model/account/Account';
+import { NetworkType } from '../../../src/model/network/NetworkType';
+import { Password } from '../../../src/model/wallet/Password';
+import { SimpleWallet } from '../../../src/model/wallet/SimpleWallet';
 
 describe('SimpleWallet', () => {
     it('should createComplete a new simple wallet', () => {

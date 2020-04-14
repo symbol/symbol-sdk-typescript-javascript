@@ -203,5 +203,4 @@ describe('Statement', () => {
         expect(resolved instanceof MosaicId).to.be.true;
         expect((resolved as MosaicId).equals(new MosaicId('756482FB80FD406C'))).to.be.true;
     });
-
 });

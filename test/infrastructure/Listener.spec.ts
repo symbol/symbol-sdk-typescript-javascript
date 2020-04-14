@@ -37,14 +37,12 @@ describe('Listener', () => {
 
     describe('onStatusWhenAddressIsTheSame', () => {
         it('Should forward status', () => {
-
             const errorEncodedAddress = '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB';
 
             const errorAddress = Address.createFromEncoded(errorEncodedAddress);
 
             class WebSocketMock {
-                constructor(public readonly  url: string) {
-                }
+                constructor(public readonly url: string) {}
 
                 send(payload: string) {
                     expect(payload).to.be.eq(`{"subscribe":"status/${errorAddress.plain()}"}`);
@@ -76,13 +74,11 @@ describe('Listener', () => {
             expect(transactionStatusError.hash).to.be.equal(statusInfoErrorDTO.hash);
             expect(transactionStatusError.code).to.be.equal(statusInfoErrorDTO.code);
             deepEqual(transactionStatusError.deadline.toBigInt(), BigInt(statusInfoErrorDTO.deadline));
-
         });
     });
 
     describe('onStatusWhenAddressIsDifferentAddress', () => {
         it('Should not forward status', () => {
-
             const errorEncodedAddress = '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB';
 
             const subscribedEncodedAddress = '906415867F121D037AF447E711B0F5E4D52EBBF066D96AAAAA';
@@ -90,8 +86,7 @@ describe('Listener', () => {
 
             // tslint:disable-next-line: max-classes-per-file
             class WebSocketMock {
-                constructor(public readonly  url: string) {
-                }
+                constructor(public readonly url: string) {}
                 send(payload: string) {
                     expect(payload).to.be.eq(`{"subscribe":"status/${subscribedAddress.plain()}"}`);
                 }
@@ -117,20 +112,20 @@ describe('Listener', () => {
             listener.handleMessage(statusInfoErrorDTO, null);
 
             expect(reportedStatus.length).to.be.equal(0);
-
         });
     });
 
     describe('onerror', () => {
         it('should reject because of wrong server url', async () => {
             const listener = new Listener('https://notcorrecturl:0000');
-            await listener.open()
-            .then(() => {
-                throw new Error('This should not be called when expecting error');
-            })
-            .catch((error) => {
-                expect(error.message.toString()).not.to.be.equal('');
-            });
+            await listener
+                .open()
+                .then(() => {
+                    throw new Error('This should not be called when expecting error');
+                })
+                .catch((error) => {
+                    expect(error.message.toString()).not.to.be.equal('');
+                });
         });
     });
 });

@@ -32,17 +32,15 @@ import { TransactionStatementDTO } from 'symbol-openapi-typescript-node-client/m
 import { ResolutionStatementDTO } from 'symbol-openapi-typescript-node-client/model/resolutionStatementDTO';
 
 describe('ReceiptHttp', () => {
-
     const url = 'http://someHost';
     const response: http.IncomingMessage = mock();
     const receiptRoutesApi: ReceiptRoutesApi = mock();
     const networkType = NetworkType.MIJIN_TEST;
-    const receiptRepository: ReceiptRepository = DtoMapping.assign(new ReceiptHttp(url, networkType),
-        {receiptRoutesApi: instance(receiptRoutesApi)});
+    const receiptRepository: ReceiptRepository = DtoMapping.assign(new ReceiptHttp(url, networkType), {
+        receiptRoutesApi: instance(receiptRoutesApi),
+    });
 
-
-    const account = Account.createFromPrivateKey('D242FB34C2C4DD36E995B9C865F93940065E326661BA5A4A247331D211FE3A3D',
-        networkType);
+    const account = Account.createFromPrivateKey('D242FB34C2C4DD36E995B9C865F93940065E326661BA5A4A247331D211FE3A3D', networkType);
     const transactionStatementsDTO: TransactionStatementDTO[] = [
         {
             statement: {
@@ -139,17 +137,18 @@ describe('ReceiptHttp', () => {
         mosaicResolutionStatements: mosaicResolutionStatementsDTO,
     };
 
-
     it('getMerkleReceipts', async () => {
         const merkleProofInfoDTO = new MerkleProofInfoDTO();
         const merlePathDto = new MerklePathItemDTO();
         merlePathDto.position = PositionEnum.Left;
         merlePathDto.hash = 'bcd';
         merkleProofInfoDTO.merklePath = [merlePathDto];
-        when(receiptRoutesApi.getMerkleReceipts('1', 'abc')).thenReturn(Promise.resolve({
-            response,
-            body: merkleProofInfoDTO,
-        }));
+        when(receiptRoutesApi.getMerkleReceipts('1', 'abc')).thenReturn(
+            Promise.resolve({
+                response,
+                body: merkleProofInfoDTO,
+            }),
+        );
         const merkleProofInfo = await receiptRepository.getMerkleReceipts(BigInt(1), 'abc').toPromise();
         expect(merkleProofInfo.merklePath && merkleProofInfo.merklePath.length).to.be.equals(1);
         expect(merkleProofInfo.merklePath && merkleProofInfo.merklePath[0].position).to.be.equals(PositionEnum.Left);
@@ -157,15 +156,15 @@ describe('ReceiptHttp', () => {
     });
 
     it('getBlockReceipts', async () => {
-
-        when(receiptRoutesApi.getBlockReceipts('1')).thenReturn(Promise.resolve({
-            response,
-            body: statementDTO,
-        }));
+        when(receiptRoutesApi.getBlockReceipts('1')).thenReturn(
+            Promise.resolve({
+                response,
+                body: statementDTO,
+            }),
+        );
         const statements = await receiptRepository.getBlockReceipts(BigInt(1)).toPromise();
         expect(statements.transactionStatements.length).to.be.equals(1);
         expect(statements.addressResolutionStatements.length).to.be.equals(2);
         expect(statements.mosaicResolutionStatements.length).to.be.equals(2);
     });
-
 });

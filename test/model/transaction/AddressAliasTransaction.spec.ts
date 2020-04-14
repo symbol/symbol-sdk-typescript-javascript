@@ -79,11 +79,9 @@ describe('AddressAliasTransaction', () => {
 
         const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(
-            256,
-            signedTransaction.payload.length,
-        )).to.be.equal('2AD8FC018D9A49E19050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E14201');
-
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            '2AD8FC018D9A49E19050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E14201',
+        );
     });
 
     describe('size', () => {
@@ -112,7 +110,6 @@ describe('AddressAliasTransaction', () => {
             address,
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
-​
         expect(addressAliasTransaction.maxFee).to.be.equal(BigInt(324));
     });
 });

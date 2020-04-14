@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import {PublicAccount} from './PublicAccount';
+import { PublicAccount } from './PublicAccount';
 
 /**
  * The multisig account graph info structure describes the information of all the mutlisig levels an account is involved in.
  */
 export class MultisigAccountInfo {
-
     /**
      * @param account
      * @param minApproval
@@ -28,28 +27,28 @@ export class MultisigAccountInfo {
      * @param cosignatories
      * @param multisigAccounts
      */
-    constructor(/**
-                 * The account multisig public account.
-                 */
-                public readonly account: PublicAccount,
-                /**
-                 * The number of signatures needed to approve a transaction.
-                 */
-                public readonly minApproval: number,
-                /**
-                 * The number of signatures needed to remove a cosignatory.
-                 */
-                public readonly minRemoval: number,
-                /**
-                 * The multisig account cosignatories.
-                 */
-                public readonly cosignatories: PublicAccount[],
-                /**
-                 * The multisig accounts this account is cosigner of.
-                 */
-                public readonly multisigAccounts: PublicAccount[]) {
-
-    }
+    constructor(
+        /**
+         * The account multisig public account.
+         */
+        public readonly account: PublicAccount,
+        /**
+         * The number of signatures needed to approve a transaction.
+         */
+        public readonly minApproval: number,
+        /**
+         * The number of signatures needed to remove a cosignatory.
+         */
+        public readonly minRemoval: number,
+        /**
+         * The multisig account cosignatories.
+         */
+        public readonly cosignatories: PublicAccount[],
+        /**
+         * The multisig accounts this account is cosigner of.
+         */
+        public readonly multisigAccounts: PublicAccount[],
+    ) {}
 
     /**
      * Checks if the account is a multisig account.

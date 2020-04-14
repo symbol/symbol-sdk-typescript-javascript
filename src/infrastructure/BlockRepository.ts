@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import {Observable} from 'rxjs';
-import {BlockInfo} from '../model/blockchain/BlockInfo';
+import { Observable } from 'rxjs';
+import { BlockInfo } from '../model/blockchain/BlockInfo';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
-import {Transaction} from '../model/transaction/Transaction';
-import {QueryParams} from './QueryParams';
+import { Transaction } from '../model/transaction/Transaction';
+import { QueryParams } from './QueryParams';
 
 /**
  * Blockchain interface repository.
@@ -26,7 +26,6 @@ import {QueryParams} from './QueryParams';
  * @since 1.0
  */
 export interface BlockRepository {
-
     /**
      * Gets a BlockInfo for a given block height
      * @param height - Block height
@@ -40,8 +39,7 @@ export interface BlockRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    getBlockTransactions(height: bigint,
-                         queryParams?: QueryParams): Observable<Transaction[]>;
+    getBlockTransactions(height: bigint, queryParams?: QueryParams): Observable<Transaction[]>;
 
     /**
      * Gets array of BlockInfo for a block height with limit

@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-import {Address} from '../account/Address';
-import {Deadline} from './Deadline';
+import { Address } from '../account/Address';
+import { Deadline } from './Deadline';
 
 /**
  * Transaction status error model returned by listeners
  */
 export class TransactionStatusError {
-
     /**
      * @internal
      * @param address
@@ -30,23 +29,22 @@ export class TransactionStatusError {
      * @param deadline
      */
     constructor(
-                /**
-                 *  The address of the account that signed the invalid transaction.
-                 *  It's the address listened when calling Lister.status.
-                 */
-                public readonly address: Address,
-                /**
-                 * The transaction hash.
-                 */
-                public readonly hash: string,
-                /**
-                 * The error code.
-                 */
-                public readonly code: string,
-                /**
-                 * The transaction deadline.
-                 */
-                public readonly deadline: Deadline) {
-
-    }
+        /**
+         *  The address of the account that signed the invalid transaction.
+         *  It's the address listened when calling Lister.status.
+         */
+        public readonly address: Address,
+        /**
+         * The transaction hash.
+         */
+        public readonly hash: string,
+        /**
+         * The error code.
+         */
+        public readonly code: string,
+        /**
+         * The transaction deadline.
+         */
+        public readonly deadline: Deadline,
+    ) {}
 }

@@ -49,7 +49,6 @@ import { TransactionVersion } from './TransactionVersion';
  * @since 1.0
  */
 export class LockFundsTransaction extends Transaction {
-
     /**
      * Aggregate bonded hash.
      */
@@ -66,21 +65,15 @@ export class LockFundsTransaction extends Transaction {
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {LockFundsTransaction}
      */
-    public static create(deadline: Deadline,
-                         mosaic: Mosaic,
-                         duration: bigint,
-                         signedTransaction: SignedTransaction,
-                         networkType: NetworkType,
-                         maxFee: bigint = BigInt(0)): LockFundsTransaction {
-        return new LockFundsTransaction(
-            networkType,
-            TransactionVersion.HASH_LOCK,
-            deadline,
-            maxFee,
-            mosaic,
-            duration,
-            signedTransaction,
-        );
+    public static create(
+        deadline: Deadline,
+        mosaic: Mosaic,
+        duration: bigint,
+        signedTransaction: SignedTransaction,
+        networkType: NetworkType,
+        maxFee = BigInt(0),
+    ): LockFundsTransaction {
+        return new LockFundsTransaction(networkType, TransactionVersion.HASH_LOCK, deadline, maxFee, mosaic, duration, signedTransaction);
     }
 
     /**
@@ -95,22 +88,24 @@ export class LockFundsTransaction extends Transaction {
      * @param signer
      * @param transactionInfo
      */
-    constructor(networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: bigint,
-                /**
-                 * The locked mosaic.
-                 */
-                public readonly mosaic: Mosaic,
-                /**
-                 * The funds lock duration.
-                 */
-                public readonly duration: bigint,
-                signedTransaction: SignedTransaction,
-                signature?: string,
-                signer?: PublicAccount,
-                transactionInfo?: TransactionInfo) {
+    constructor(
+        networkType: NetworkType,
+        version: number,
+        deadline: Deadline,
+        maxFee: bigint,
+        /**
+         * The locked mosaic.
+         */
+        public readonly mosaic: Mosaic,
+        /**
+         * The funds lock duration.
+         */
+        public readonly duration: bigint,
+        signedTransaction: SignedTransaction,
+        signature?: string,
+        signer?: PublicAccount,
+        transactionInfo?: TransactionInfo,
+    ) {
         super(TransactionType.HASH_LOCK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
         this.hash = signedTransaction.hash;
         this.signedTransaction = signedTransaction;
@@ -125,24 +120,21 @@ export class LockFundsTransaction extends Transaction {
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedHashLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            HashLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+        const builder = isEmbedded
+            ? EmbeddedHashLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : HashLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = LockFundsTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromBigInt((builder as HashLockTransactionBuilder).getDeadline().timestamp),
-            new Mosaic(
-                new MosaicId(builder.getMosaic().mosaicId.unresolvedMosaicId),
-                builder.getMosaic().amount.amount,
-            ),
+            new Mosaic(new MosaicId(builder.getMosaic().mosaicId.unresolvedMosaicId), builder.getMosaic().amount.amount),
             builder.getDuration().blockDuration,
             new SignedTransaction('', Convert.uint8ToHex(builder.getHash().hash256), '', TransactionType.AGGREGATE_BONDED, networkType),
             networkType,
-            isEmbedded ? BigInt(0) : (builder as HashLockTransactionBuilder).fee.amount);
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
+            isEmbedded ? BigInt(0) : (builder as HashLockTransactionBuilder).fee.amount,
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**
@@ -179,8 +171,7 @@ export class LockFundsTransaction extends Transaction {
             TransactionType.HASH_LOCK.valueOf(),
             new AmountDto(this.maxFee),
             new TimestampDto(this.deadline.toBigInt()),
-            new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id),
-                new AmountDto(this.mosaic.amount)),
+            new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id), new AmountDto(this.mosaic.amount)),
             new BlockDurationDto(this.duration),
             new Hash256Dto(Convert.hexToUint8(this.hash)),
         );
@@ -197,8 +188,7 @@ export class LockFundsTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.HASH_LOCK.valueOf(),
-            new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id),
-                new AmountDto(this.mosaic.amount)),
+            new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id), new AmountDto(this.mosaic.amount)),
             new BlockDurationDto(this.duration),
             new Hash256Dto(Convert.hexToUint8(this.hash)),
         );
@@ -210,10 +200,15 @@ export class LockFundsTransaction extends Transaction {
      * @param aggregateTransactionIndex Transaction index for aggregated transaction
      * @returns {LockFundsTransaction}
      */
-    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): LockFundsTransaction {
+    resolveAliases(statement: Statement, aggregateTransactionIndex = 0): LockFundsTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
         return DtoMapping.assign(this, {
-            mosaic: statement.resolveMosaic(this.mosaic, transactionInfo.height.toString(),
-            transactionInfo.index, aggregateTransactionIndex)});
+            mosaic: statement.resolveMosaic(
+                this.mosaic,
+                transactionInfo.height.toString(),
+                transactionInfo.index,
+                aggregateTransactionIndex,
+            ),
+        });
     }
 }

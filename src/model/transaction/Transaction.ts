@@ -34,7 +34,6 @@ import { TransactionType } from './TransactionType';
  * An abstract transaction class that serves as the base class of all NEM transactions.
  */
 export abstract class Transaction {
-
     /**
      * Transaction header size
      *
@@ -76,40 +75,41 @@ export abstract class Transaction {
      * @param signer
      * @param transactionInfo
      */
-    constructor(/**
-                 * The transaction type.
-                 */
-                public readonly type: number,
-                /**
-                 * The network type.
-                 */
-                public readonly networkType: NetworkType,
-                /**
-                 * The transaction version number.
-                 */
-                public readonly version: number,
-                /**
-                 * The deadline to include the transaction.
-                 */
-                public readonly deadline: Deadline,
-                /**
-                 * A sender of a transaction must specify during the transaction definition a max_fee,
-                 * meaning the maximum fee the account allows to spend for this transaction.
-                 */
-                public readonly maxFee: bigint,
-                /**
-                 * The transaction signature (missing if part of an aggregate transaction).
-                 */
-                public readonly signature?: string,
-                /**
-                 * The account of the transaction creator.
-                 */
-                public readonly signer?: PublicAccount,
-                /**
-                 * Transactions meta data object contains additional information about the transaction.
-                 */
-                public readonly transactionInfo?: TransactionInfo | AggregateTransactionInfo) {
-    }
+    constructor(
+        /**
+         * The transaction type.
+         */
+        public readonly type: number,
+        /**
+         * The network type.
+         */
+        public readonly networkType: NetworkType,
+        /**
+         * The transaction version number.
+         */
+        public readonly version: number,
+        /**
+         * The deadline to include the transaction.
+         */
+        public readonly deadline: Deadline,
+        /**
+         * A sender of a transaction must specify during the transaction definition a max_fee,
+         * meaning the maximum fee the account allows to spend for this transaction.
+         */
+        public readonly maxFee: bigint,
+        /**
+         * The transaction signature (missing if part of an aggregate transaction).
+         */
+        public readonly signature?: string,
+        /**
+         * The account of the transaction creator.
+         */
+        public readonly signer?: PublicAccount,
+        /**
+         * Transactions meta data object contains additional information about the transaction.
+         */
+        public readonly transactionInfo?: TransactionInfo | AggregateTransactionInfo,
+    ) {}
 
     /**
      * Generate transaction hash hex
@@ -123,7 +123,6 @@ export abstract class Transaction {
      * @returns {string} Returns Transaction Payload hash
      */
     public static createTransactionHash(transactionPayload: string, generationHashBuffer: number[], networkType: NetworkType): string {
-
         // prepare
         const entityHash: Uint8Array = new Uint8Array(32);
         const transactionBytes: Uint8Array = Convert.hexToUint8(transactionPayload);
@@ -132,10 +131,9 @@ export abstract class Transaction {
         const typeIdx: number = Transaction.Type_Index;
         const typeBytes: Uint8Array = transactionBytes.slice(typeIdx, typeIdx + 2).reverse(); // REVERSED
         const entityType: TransactionType = parseInt(Convert.uint8ToHex(typeBytes), 16);
-        const isAggregateTransaction = [
-            TransactionType.AGGREGATE_BONDED,
-            TransactionType.AGGREGATE_COMPLETE,
-        ].find((type: TransactionType) => entityType === type) !== undefined;
+        const isAggregateTransaction =
+            [TransactionType.AGGREGATE_BONDED, TransactionType.AGGREGATE_COMPLETE].find((type: TransactionType) => entityType === type) !==
+            undefined;
 
         // 1) add full signature
         const signature: Uint8Array = transactionBytes.slice(8, 8 + 64);
@@ -161,10 +159,7 @@ export abstract class Transaction {
         // 5) concatenate binary hash parts
         // layout: `signature_R || signerPublicKey || generationHash || EntityDataBuffer`
         const entityHashBytes: Uint8Array = new Uint8Array(
-            signature.length
-          + publicKey.length
-          + generationHash.length
-          + transactionBody.length,
+            signature.length + publicKey.length + generationHash.length + transactionBody.length,
         );
         entityHashBytes.set(signature, 0);
         entityHashBytes.set(publicKey, pubKeyIdx);
@@ -201,7 +196,7 @@ export abstract class Transaction {
      * @returns {TransferTransaction}
      */
     public setMaxFee(feeMultiplier: number): Transaction {
-        return DtoMapping.assign(this, {maxFee: BigInt(this.size * feeMultiplier)});
+        return DtoMapping.assign(this, { maxFee: BigInt(this.size * feeMultiplier) });
     }
 
     /**
@@ -222,15 +217,15 @@ export abstract class Transaction {
             .concat(signature)
             .concat(Array.from(keyPairEncoded.publicKey))
             .concat(Array.from(new Uint8Array(4)))
-            .concat(byteBuffer
-                .splice(64 + 32 + 4, byteBuffer.length));
+            .concat(byteBuffer.splice(64 + 32 + 4, byteBuffer.length));
         const payload = Convert.uint8ToHex(signedTransactionBuffer);
         return new SignedTransaction(
             payload,
             Transaction.createTransactionHash(payload, generationHashBytes, account.networkType),
             account.publicKey,
             this.type,
-            this.networkType);
+            this.networkType,
+        );
     }
 
     /**
@@ -257,12 +252,14 @@ export abstract class Transaction {
         resultBytes.splice(0, 4 + 64 + 32);
         resultBytes = Array.from(signerPublicKey).concat(resultBytes);
         resultBytes.splice(32 + 2 + 2, 16);
-        return Array.from((new Uint8Array([
-            (resultBytes.length + 4 & 0x000000ff),
-            (resultBytes.length + 4 & 0x0000ff00) >> 8,
-            (resultBytes.length + 4 & 0x00ff0000) >> 16,
-            (resultBytes.length + 4 & 0xff000000) >> 24,
-        ]))).concat(resultBytes);
+        return Array.from(
+            new Uint8Array([
+                (resultBytes.length + 4) & 0x000000ff,
+                ((resultBytes.length + 4) & 0x0000ff00) >> 8,
+                ((resultBytes.length + 4) & 0x00ff0000) >> 16,
+                ((resultBytes.length + 4) & 0xff000000) >> 24,
+            ]),
+        ).concat(resultBytes);
     }
 
     /**
@@ -276,7 +273,7 @@ export abstract class Transaction {
         if (this.type === TransactionType.AGGREGATE_BONDED || this.type === TransactionType.AGGREGATE_COMPLETE) {
             throw new Error('Inner transaction cannot be an aggregated transaction.');
         }
-        return DtoMapping.assign(this, {signer});
+        return DtoMapping.assign(this, { signer });
     }
 
     /**
@@ -285,9 +282,7 @@ export abstract class Transaction {
      * @return transaction with signer serialized to be part of an aggregate transaction
      */
     public toAggregateTransactionBytes() {
-        return EmbeddedTransactionHelper.serialize(
-            this.toEmbeddedTransaction(),
-        );
+        return EmbeddedTransactionHelper.serialize(this.toEmbeddedTransaction());
     }
 
     /**
@@ -295,10 +290,13 @@ export abstract class Transaction {
      * @returns {boolean}
      */
     public isUnconfirmed(): boolean {
-        return this.transactionInfo != null && this.transactionInfo.height === BigInt(0)
-            && this.transactionInfo.hash !== undefined
-            && this.transactionInfo.merkleComponentHash !== undefined
-            && this.transactionInfo.hash.toUpperCase() === this.transactionInfo.merkleComponentHash.toUpperCase();
+        return (
+            this.transactionInfo != null &&
+            this.transactionInfo.height === BigInt(0) &&
+            this.transactionInfo.hash !== undefined &&
+            this.transactionInfo.merkleComponentHash !== undefined &&
+            this.transactionInfo.hash.toUpperCase() === this.transactionInfo.merkleComponentHash.toUpperCase()
+        );
     }
 
     /**
@@ -314,10 +312,13 @@ export abstract class Transaction {
      * @returns {boolean}
      */
     public hasMissingSignatures(): boolean {
-        return this.transactionInfo != null && this.transactionInfo.height === BigInt(0)
-            && (this.transactionInfo.hash !== undefined
-            && this.transactionInfo.merkleComponentHash !== undefined
-            && this.transactionInfo.hash.toUpperCase() !== this.transactionInfo.merkleComponentHash.toUpperCase());
+        return (
+            this.transactionInfo != null &&
+            this.transactionInfo.height === BigInt(0) &&
+            this.transactionInfo.hash !== undefined &&
+            this.transactionInfo.merkleComponentHash !== undefined &&
+            this.transactionInfo.hash.toUpperCase() !== this.transactionInfo.merkleComponentHash.toUpperCase()
+        );
     }
 
     /**
@@ -350,9 +351,9 @@ export abstract class Transaction {
      */
     public reapplyGiven(deadline: Deadline = Deadline.create()): Transaction {
         if (this.isUnannounced()) {
-            return DtoMapping.assign(this, {deadline});
+            return DtoMapping.assign(this, { deadline });
         }
-        throw new Error('an Announced transaction can\'t be modified');
+        throw new Error("an Announced transaction can't be modified");
     }
 
     /**
@@ -361,16 +362,17 @@ export abstract class Transaction {
      * @memberof Transaction
      */
     public get size(): number {
-        const byteSize = 4 // size
-                        + 4 // verifiableEntityHeader_Reserved1
-                        + 64 // signature
-                        + 32 // signerPublicKey
-                        + 4 // entityBody_Reserved1
-                        + 1 // version
-                        + 1 // networkType
-                        + 2 // type
-                        + 8 // maxFee
-                        + 8; // deadline
+        const byteSize =
+            4 + // size
+            4 + // verifiableEntityHeader_Reserved1
+            64 + // signature
+            32 + // signerPublicKey
+            4 + // entityBody_Reserved1
+            1 + // version
+            1 + // networkType
+            2 + // type
+            8 + // maxFee
+            8; // deadline
 
         return byteSize;
     }
@@ -400,11 +402,11 @@ export abstract class Transaction {
         };
 
         if (this.signer) {
-            Object.assign(commonTransactionObject, {signerPublicKey: this.signer.publicKey});
+            Object.assign(commonTransactionObject, { signerPublicKey: this.signer.publicKey });
         }
 
         const childClassObject = SerializeTransactionToJSON(this);
-        return {transaction: Object.assign(commonTransactionObject, childClassObject)};
+        return { transaction: Object.assign(commonTransactionObject, childClassObject) };
     }
 
     /**
@@ -413,9 +415,7 @@ export abstract class Transaction {
      * @returns TransactionInfo
      */
     protected checkTransactionHeightAndIndex(): TransactionInfo {
-        if (this.transactionInfo === undefined ||
-            this.transactionInfo.height === undefined ||
-            this.transactionInfo.index === undefined) {
+        if (this.transactionInfo === undefined || this.transactionInfo.height === undefined || this.transactionInfo.index === undefined) {
             throw new Error('Transaction height or index undefined');
         }
         return this.transactionInfo;

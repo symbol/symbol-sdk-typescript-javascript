@@ -29,13 +29,11 @@ import { TransactionType } from '../model/transaction/TransactionType';
  * Aggregated Transaction service
  */
 export class AggregateTransactionService {
-
     /**
      * Constructor
      * @param multisigRepository
      */
-    constructor(private readonly multisigRepository: MultisigRepository) {
-    }
+    constructor(private readonly multisigRepository: MultisigRepository) {}
 
     /**
      * Check if an aggregate complete transaction has all cosignatories attached
@@ -47,30 +45,33 @@ export class AggregateTransactionService {
         /**
          * Include both initiator & cosigners
          */
-        const signers = (aggregateTransaction.cosignatures.map((cosigner) => cosigner.signer.publicKey));
+        const signers = aggregateTransaction.cosignatures.map((cosigner) => cosigner.signer.publicKey);
         if (signedTransaction.signerPublicKey) {
             signers.push(signedTransaction.signerPublicKey);
         }
-        return observableFrom(aggregateTransaction.innerTransactions).pipe(
-            mergeMap((innerTransaction) => this.multisigRepository.getMultisigAccountInfo(innerTransaction.signer!.address)
-                .pipe(
-                    /**
-                     * For multisig account, we need to get the graph info in case it has multiple levels
-                     */
-                    mergeMap((_) => _.minApproval !== 0 && _.minRemoval !== 0 ?
-                        this.multisigRepository.getMultisigAccountGraphInfo(_.account.address)
-                        .pipe(
-                            map((graphInfo) => this.validateCosignatories(graphInfo, signers, innerTransaction)),
-                        ) : observableOf(signers.find((s) => s === _.account.publicKey ) !== undefined),
+        return observableFrom(aggregateTransaction.innerTransactions)
+            .pipe(
+                mergeMap((innerTransaction) =>
+                    this.multisigRepository.getMultisigAccountInfo(innerTransaction.signer!.address).pipe(
+                        /**
+                         * For multisig account, we need to get the graph info in case it has multiple levels
+                         */
+                        mergeMap((_) =>
+                            _.minApproval !== 0 && _.minRemoval !== 0
+                                ? this.multisigRepository
+                                      .getMultisigAccountGraphInfo(_.account.address)
+                                      .pipe(map((graphInfo) => this.validateCosignatories(graphInfo, signers, innerTransaction)))
+                                : observableOf(signers.find((s) => s === _.account.publicKey) !== undefined),
                         ),
                     ),
                 ),
-            toArray(),
-        ).pipe(
-            flatMap((results) => {
-                return observableOf(results.every((isComplete) => isComplete));
-            }),
-        );
+                toArray(),
+            )
+            .pipe(
+                flatMap((results) => {
+                    return observableOf(results.every((isComplete) => isComplete));
+                }),
+            );
     }
 
     /**
@@ -80,9 +81,11 @@ export class AggregateTransactionService {
      * @param innerTransaction - the inner transaction of the aggregated transaction
      * @returns {boolean}
      */
-    private validateCosignatories(graphInfo: MultisigAccountGraphInfo,
-                                  cosignatories: string[],
-                                  innerTransaction: InnerTransaction): boolean {
+    private validateCosignatories(
+        graphInfo: MultisigAccountGraphInfo,
+        cosignatories: string[],
+        innerTransaction: InnerTransaction,
+    ): boolean {
         /**
          *  Validate cosignatories from bottom level to top
          */
@@ -98,7 +101,7 @@ export class AggregateTransactionService {
          */
         if (innerTransaction.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION) {
             if ((innerTransaction as MultisigAccountModificationTransaction).publicKeyDeletions.length) {
-                        isMultisigRemoval = true;
+                isMultisigRemoval = true;
             }
         }
 
@@ -106,20 +109,25 @@ export class AggregateTransactionService {
             const multisigInfo = graphInfo.multisigAccounts.get(key);
             if (multisigInfo && !validationResult) {
                 multisigInfo.forEach((multisig) => {
-                    if (multisig.minApproval >= 1 && multisig.minRemoval) { // To make sure it is multisig account
-                        const matchedCosignatories = this.compareArrays(cosignatoriesReceived,
-                                        multisig.cosignatories.map((cosig) => cosig.publicKey));
+                    if (multisig.minApproval >= 1 && multisig.minRemoval) {
+                        // To make sure it is multisig account
+                        const matchedCosignatories = this.compareArrays(
+                            cosignatoriesReceived,
+                            multisig.cosignatories.map((cosig) => cosig.publicKey),
+                        );
 
                         /**
                          * if minimal signature requirement met at current level, push the multisig account
                          * into the received signatories array for next level validation.
                          * Otherwise return validation failed.
                          */
-                        if ((matchedCosignatories.length >= multisig.minApproval && !isMultisigRemoval) ||
-                            (matchedCosignatories.length >= multisig.minRemoval && isMultisigRemoval)) {
+                        if (
+                            (matchedCosignatories.length >= multisig.minApproval && !isMultisigRemoval) ||
+                            (matchedCosignatories.length >= multisig.minRemoval && isMultisigRemoval)
+                        ) {
                             if (cosignatoriesReceived.indexOf(multisig.account.publicKey) === -1) {
                                 cosignatoriesReceived.push(multisig.account.publicKey);
-                              }
+                            }
                             validationResult = true;
                         } else {
                             validationResult = false;
@@ -140,11 +148,13 @@ export class AggregateTransactionService {
      */
     private compareArrays(array1: string[], array2: string[]): string[] {
         const results: string[] = [];
-        array1.forEach((a1) => array2.forEach((a2) => {
-            if (a1 === a2) {
-                results.push(a1);
-            }
-        }));
+        array1.forEach((a1) =>
+            array2.forEach((a2) => {
+                if (a1 === a2) {
+                    results.push(a1);
+                }
+            }),
+        );
 
         return results;
     }

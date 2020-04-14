@@ -119,7 +119,6 @@ describe('AccountHttp', () => {
     });
 
     describe('Setup test AddressAlias', () => {
-
         it('Announce addressAliasTransaction', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
@@ -135,29 +134,29 @@ describe('AccountHttp', () => {
     });
 
     describe('Setup test multisig account', () => {
-
         it('Announce MultisigAccountModificationTransaction', () => {
             const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
                 2,
                 1,
-                [
-                    cosignAccount1.publicAccount,
-                    cosignAccount2.publicAccount,
-                    cosignAccount3.publicAccount,
-                ],
+                [cosignAccount1.publicAccount, cosignAccount2.publicAccount, cosignAccount3.publicAccount],
                 [],
                 networkType,
                 helper.maxFee,
             );
 
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [modifyMultisigAccountTransaction.toAggregate(multisigAccount.publicAccount)],
                 networkType,
                 [],
-                helper.maxFee);
-            const signedTransaction = aggregateTransaction
-            .signTransactionWithCosignatories(multisigAccount, [cosignAccount1, cosignAccount2, cosignAccount3], generationHash);
+                helper.maxFee,
+            );
+            const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(
+                multisigAccount,
+                [cosignAccount1, cosignAccount2, cosignAccount3],
+                generationHash,
+            );
 
             return helper.announce(signedTransaction);
         });
@@ -185,8 +184,9 @@ describe('AccountHttp', () => {
 
     describe('getMultisigAccountGraphInfo', () => {
         it('should call getMultisigAccountGraphInfo successfully', async () => {
-            const multisigAccountGraphInfo =
-                await multisigRepository.getMultisigAccountGraphInfo(multisigAccount.publicAccount.address).toPromise();
+            const multisigAccountGraphInfo = await multisigRepository
+                .getMultisigAccountGraphInfo(multisigAccount.publicAccount.address)
+                .toPromise();
             expect(multisigAccountGraphInfo.multisigAccounts.get(0)![0].account.publicKey).to.be.equal(multisigAccount.publicKey);
         });
     });
@@ -212,26 +212,37 @@ describe('AccountHttp', () => {
 
     describe('transactions', () => {
         it('should not return accounts when account does not exist', () => {
-            return accountRepository.getAccountInfo(Account.generateNewAccount(networkType).address).toPromise().then(() => {
-                return Promise.reject('should fail!');
-            }, (err) => {
-                const error = JSON.parse(err.message);
-                expect(error.statusCode).to.be.eq(404);
-                expect(error.errorDetails.statusMessage).to.be.eq('Not Found');
-                return Promise.resolve();
-            });
+            return accountRepository
+                .getAccountInfo(Account.generateNewAccount(networkType).address)
+                .toPromise()
+                .then(
+                    () => {
+                        return Promise.reject('should fail!');
+                    },
+                    (err) => {
+                        const error = JSON.parse(err.message);
+                        expect(error.statusCode).to.be.eq(404);
+                        expect(error.errorDetails.statusMessage).to.be.eq('Not Found');
+                        return Promise.resolve();
+                    },
+                );
         });
     });
 
     describe('transactions', () => {
         it('should call transactions successfully by type', async () => {
-            const transactions = await accountRepository.getAccountTransactions(
-                publicAccount.address, new QueryParams(), new TransactionFilter({
-                    types: [TransactionType.TRANSFER, TransactionType.AGGREGATE_COMPLETE],
-                })).toPromise();
+            const transactions = await accountRepository
+                .getAccountTransactions(
+                    publicAccount.address,
+                    new QueryParams(),
+                    new TransactionFilter({
+                        types: [TransactionType.TRANSFER, TransactionType.AGGREGATE_COMPLETE],
+                    }),
+                )
+                .toPromise();
             expect(transactions.length).to.be.greaterThan(0);
             transactions.forEach((t) => {
-                expect((t.type === TransactionType.TRANSFER || t.type === TransactionType.AGGREGATE_COMPLETE)).to.be.eq(true);
+                expect(t.type === TransactionType.TRANSFER || t.type === TransactionType.AGGREGATE_COMPLETE).to.be.eq(true);
             });
         });
     });
@@ -284,8 +295,7 @@ describe('AccountHttp', () => {
                 -1,
                 0,
                 [],
-                [cosignAccount1.publicAccount,
-                ],
+                [cosignAccount1.publicAccount],
                 networkType,
                 helper.maxFee,
             );
@@ -294,9 +304,7 @@ describe('AccountHttp', () => {
                 0,
                 0,
                 [],
-                [
-                    cosignAccount2.publicAccount,
-                ],
+                [cosignAccount2.publicAccount],
                 networkType,
                 helper.maxFee,
             );
@@ -306,21 +314,27 @@ describe('AccountHttp', () => {
                 -1,
                 -1,
                 [],
-                [
-                    cosignAccount3.publicAccount,
-                ],
+                [cosignAccount3.publicAccount],
                 networkType,
                 helper.maxFee,
             );
 
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
-                [removeCosigner1.toAggregate(multisigAccount.publicAccount),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
+                [
+                    removeCosigner1.toAggregate(multisigAccount.publicAccount),
                     removeCosigner2.toAggregate(multisigAccount.publicAccount),
-                    removeCosigner3.toAggregate(multisigAccount.publicAccount)],
+                    removeCosigner3.toAggregate(multisigAccount.publicAccount),
+                ],
                 networkType,
-                [], helper.maxFee);
-            const signedTransaction = aggregateTransaction
-            .signTransactionWithCosignatories(cosignAccount1, [cosignAccount2, cosignAccount3], generationHash);
+                [],
+                helper.maxFee,
+            );
+            const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(
+                cosignAccount1,
+                [cosignAccount2, cosignAccount3],
+                generationHash,
+            );
             return helper.announce(signedTransaction);
         });
     });

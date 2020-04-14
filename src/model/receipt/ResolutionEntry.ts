@@ -22,22 +22,19 @@ import { ReceiptSource } from './ReceiptSource';
  * The receipt source object.
  */
 export class ResolutionEntry {
-
     /**
      * @constructor
      * @param resolved - A resolved address or resolved mosaicId (alias).
      * @param source - The receipt source.
      */
     constructor(
-                /**
-                 * A resolved address or resolved mosaicId (alias).
-                 */
-                public readonly resolved: Address | MosaicId,
-                /**
-                 * The receipt source.
-                 */
-                public readonly source: ReceiptSource) {
-    }
-
-
+        /**
+         * A resolved address or resolved mosaicId (alias).
+         */
+        public readonly resolved: Address | MosaicId,
+        /**
+         * The receipt source.
+         */
+        public readonly source: ReceiptSource,
+    ) {}
 }

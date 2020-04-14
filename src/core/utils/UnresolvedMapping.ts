@@ -25,7 +25,6 @@ import { BigIntUtilities } from '../format/BigIntUtilities';
  * @internal
  */
 export class UnresolvedMapping {
-
     /**
      * Note: Catbuffer uses bigint values directly, rest client hex values.
      *

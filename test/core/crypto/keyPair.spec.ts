@@ -20,8 +20,7 @@ import { Convert } from '../../../src/core/format/Convert';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 
 describe('key pair', () => {
-    const randomKeyPair = () =>
-        KeyPair.createKeyPairFromPrivateKeyString(Convert.uint8ToHex(Crypto.randomBytes(32)));
+    const randomKeyPair = () => KeyPair.createKeyPairFromPrivateKeyString(Convert.uint8ToHex(Crypto.randomBytes(32)));
     const Private_Key_Size = 32;
     const Signature_Size = 64;
 
@@ -32,9 +31,9 @@ describe('key pair', () => {
         'e8bf9bc0f35c12d8c8bf94dd3a8b5b4034f1063948e3cc5304e55e31aa4b95a6'.toUpperCase(),
         'c325ea529674396db5675939e7988883d59a5fc17a28ca977e3ba85370232a83'.toUpperCase(),
     ];
-     /**
-      * @see https://github.com/nemtech/test-vectors/blob/master/1.test-keys.json
-      */
+    /**
+     * @see https://github.com/nemtech/test-vectors/blob/master/1.test-keys.json
+     */
     describe('construction', () => {
         it('can extract from private key test vectors', () => {
             // Arrange:
@@ -76,9 +75,8 @@ describe('key pair', () => {
             invalidPrivateKeys.forEach((privateKey) => {
                 // Assert:
                 expect(() => {
-                        KeyPair.createKeyPairFromPrivateKeyString(privateKey);
-                    }, `from ${privateKey}`)
-                    .to.throw('private key has unexpected size');
+                    KeyPair.createKeyPairFromPrivateKeyString(privateKey);
+                }, `from ${privateKey}`).to.throw('private key has unexpected size');
             });
         });
     });
@@ -120,8 +118,9 @@ describe('key pair', () => {
 
                 // Assert:
                 const message = ` from ${Catapult_Private_Key[i]}`;
-                expect(Convert.uint8ToHex(signature).toUpperCase(),
-                    `private ${message}`).to.deep.equal(Expected_Signature[i].toUpperCase());
+                expect(Convert.uint8ToHex(signature).toUpperCase(), `private ${message}`).to.deep.equal(
+                    Expected_Signature[i].toUpperCase(),
+                );
                 const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature);
                 expect(isVerified, `private ${message}`).to.equal(true);
             }
@@ -169,7 +168,6 @@ describe('key pair', () => {
             // Assert:
             expect(signature2).to.not.deep.equal(signature1);
         });
-
     });
 
     describe('verify', () => {
@@ -207,7 +205,7 @@ describe('key pair', () => {
 
             for (let i = 0; i < Signature_Size; i += 4) {
                 const signature = KeyPair.sign(keyPair, payload);
-                signature[i] ^= 0xFF;
+                signature[i] ^= 0xff;
 
                 // Act:
                 const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature);
@@ -224,7 +222,7 @@ describe('key pair', () => {
 
             for (let i = 0; i < payload.length; i += 4) {
                 const signature = KeyPair.sign(keyPair, payload);
-                payload[i] ^= 0xFF;
+                payload[i] ^= 0xff;
 
                 // Act:
                 const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature);
@@ -257,7 +255,7 @@ describe('key pair', () => {
             const signature = KeyPair.sign(keyPair, payload);
 
             for (let i = 0; i < keyPair.publicKey.length; ++i) {
-                keyPair.publicKey[i] ^= 0xFF;
+                keyPair.publicKey[i] ^= 0xff;
             }
 
             // Act:
@@ -286,15 +284,45 @@ describe('key pair', () => {
             function scalarAddGroupOrder(scalar) {
                 // 2^252 + 27742317777372353535851937790883648493, little endian
                 const Group_Order = [
-                    0xed, 0xd3, 0xf5, 0x5c, 0x1a, 0x63, 0x12, 0x58, 0xd6, 0x9c, 0xf7, 0xa2, 0xde, 0xf9, 0xde, 0x14,
-                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10,
+                    0xed,
+                    0xd3,
+                    0xf5,
+                    0x5c,
+                    0x1a,
+                    0x63,
+                    0x12,
+                    0x58,
+                    0xd6,
+                    0x9c,
+                    0xf7,
+                    0xa2,
+                    0xde,
+                    0xf9,
+                    0xde,
+                    0x14,
+                    0x00,
+                    0x00,
+                    0x00,
+                    0x00,
+                    0x00,
+                    0x00,
+                    0x00,
+                    0x00,
+                    0x00,
+                    0x00,
+                    0x00,
+                    0x00,
+                    0x00,
+                    0x00,
+                    0x00,
+                    0x10,
                 ];
 
                 let r = 0;
                 for (let i = 0; i < scalar.length; ++i) {
                     const t = scalar[i] + Group_Order[i];
                     scalar[i] += Group_Order[i] + r;
-                    r = (t >> 8) & 0xFF;
+                    r = (t >> 8) & 0xff;
                 }
             }
 
@@ -318,7 +346,6 @@ describe('key pair', () => {
     });
 
     describe('derive shared key', () => {
-
         it('derives same shared key for both partners', () => {
             // Arrange:
             const keyPair1 = randomKeyPair();

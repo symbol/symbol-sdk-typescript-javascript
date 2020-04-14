@@ -24,7 +24,6 @@ import { MosaicAmountView } from '../../../src/service/MosaicAmountView';
 import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('MosaicAmountView', () => {
-
     let mosaicInfo: MosaicInfo;
 
     before(() => {

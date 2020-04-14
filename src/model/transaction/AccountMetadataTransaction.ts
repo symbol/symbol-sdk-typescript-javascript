@@ -50,21 +50,25 @@ export class AccountMetadataTransaction extends Transaction {
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {AccountMetadataTransaction}
      */
-    public static create(deadline: Deadline,
-                         targetPublicKey: string,
-                         scopedMetadataKey: bigint,
-                         valueSizeDelta: number,
-                         value: string,
-                         networkType: NetworkType,
-                         maxFee: bigint = BigInt(0)): AccountMetadataTransaction {
-        return new AccountMetadataTransaction(networkType,
+    public static create(
+        deadline: Deadline,
+        targetPublicKey: string,
+        scopedMetadataKey: bigint,
+        valueSizeDelta: number,
+        value: string,
+        networkType: NetworkType,
+        maxFee = BigInt(0),
+    ): AccountMetadataTransaction {
+        return new AccountMetadataTransaction(
+            networkType,
             TransactionVersion.ACCOUNT_METADATA,
             deadline,
             maxFee,
             targetPublicKey,
             scopedMetadataKey,
             valueSizeDelta,
-            value);
+            value,
+        );
     }
 
     /**
@@ -80,30 +84,32 @@ export class AccountMetadataTransaction extends Transaction {
      * @param signer
      * @param transactionInfo
      */
-    constructor(networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: bigint,
-                /**
-                 * Public key of the target account.
-                 */
-                public readonly targetPublicKey: string,
-                /**
-                 * Metadata key scoped to source, target and type.
-                 */
-                public readonly scopedMetadataKey: bigint,
-                /**
-                 * Change in value size in bytes.
-                 */
-                public readonly valueSizeDelta: number,
-                /**
-                 * String value with UTF-8 encoding.
-                 * Difference between the previous value and new value.
-                 */
-                public readonly value: string,
-                signature?: string,
-                signer?: PublicAccount,
-                transactionInfo?: TransactionInfo) {
+    constructor(
+        networkType: NetworkType,
+        version: number,
+        deadline: Deadline,
+        maxFee: bigint,
+        /**
+         * Public key of the target account.
+         */
+        public readonly targetPublicKey: string,
+        /**
+         * Metadata key scoped to source, target and type.
+         */
+        public readonly scopedMetadataKey: bigint,
+        /**
+         * Change in value size in bytes.
+         */
+        public readonly valueSizeDelta: number,
+        /**
+         * String value with UTF-8 encoding.
+         * Difference between the previous value and new value.
+         */
+        public readonly value: string,
+        signature?: string,
+        signer?: PublicAccount,
+        transactionInfo?: TransactionInfo,
+    ) {
         super(TransactionType.ACCOUNT_METADATA, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
@@ -113,23 +119,24 @@ export class AccountMetadataTransaction extends Transaction {
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedAccountMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            AccountMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+        const builder = isEmbedded
+            ? EmbeddedAccountMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : AccountMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = AccountMetadataTransaction.create(
-            isEmbedded ? Deadline.create() :
-                Deadline.createFromBigInt((builder as AccountMetadataTransactionBuilder).getDeadline().timestamp),
+            isEmbedded
+                ? Deadline.create()
+                : Deadline.createFromBigInt((builder as AccountMetadataTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getTargetPublicKey().key),
             builder.getScopedMetadataKey(),
             builder.getValueSizeDelta(),
             Convert.uint8ToUtf8(builder.getValue()),
             networkType,
-            isEmbedded ? BigInt(0) : (builder as AccountMetadataTransactionBuilder).fee.amount);
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
+            isEmbedded ? BigInt(0) : (builder as AccountMetadataTransactionBuilder).fee.amount,
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**
@@ -147,8 +154,7 @@ export class AccountMetadataTransaction extends Transaction {
         const byteValueSizeDelta = 2;
         const valueSize = 2;
 
-        return byteSize + targetPublicKey + byteScopedMetadataKey +
-            byteValueSizeDelta + valueSize + this.value.length;
+        return byteSize + targetPublicKey + byteScopedMetadataKey + byteValueSizeDelta + valueSize + this.value.length;
     }
 
     /**

@@ -20,7 +20,6 @@ import { Observable } from 'rxjs';
  * Block Service Interface
  */
 export interface IBlockService {
-
     /**
      * Validate transaction hash in block
      * @param leaf transaction hash

@@ -21,7 +21,6 @@ import { ChronoUnit, Instant, LocalDateTime, ZoneId } from 'js-joda';
  * If a transaction does not get included in a block before the deadline is reached, it is deleted.
  */
 export class Deadline {
-
     /**
      * @type {number}
      */
@@ -38,8 +37,8 @@ export class Deadline {
      * @param chronoUnit
      * @returns {Deadline}
      */
-    public static create(deadline: number = 2, chronoUnit: ChronoUnit = ChronoUnit.HOURS): Deadline {
-        const networkTimeStamp = (new Date()).getTime();
+    public static create(deadline = 2, chronoUnit: ChronoUnit = ChronoUnit.HOURS): Deadline {
+        const networkTimeStamp = new Date().getTime();
         const timeStampDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(networkTimeStamp), ZoneId.SYSTEM);
         const deadlineDateTime = timeStampDateTime.plus(deadline, chronoUnit);
 
@@ -62,7 +61,8 @@ export class Deadline {
         const dateSeconds = Number(uint64Value);
         const deadline = LocalDateTime.ofInstant(
             Instant.ofEpochMilli(Math.round(dateSeconds + Deadline.timestampNemesisBlock * 1000)),
-            ZoneId.SYSTEM);
+            ZoneId.SYSTEM,
+        );
         return new Deadline(deadline);
     }
 
@@ -75,7 +75,8 @@ export class Deadline {
         const dateSeconds = Number(value);
         const deadline = LocalDateTime.ofInstant(
             Instant.ofEpochMilli(Math.round(dateSeconds + Deadline.timestampNemesisBlock * 1000)),
-            ZoneId.SYSTEM);
+            ZoneId.SYSTEM,
+        );
         return new Deadline(deadline);
     }
 
@@ -90,25 +91,20 @@ export class Deadline {
      * @internal
      */
     public toDTO(): bigint {
-        return BigInt((this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000));
+        return BigInt(this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000);
     }
 
     /**
      * @internal
      */
     public toBigInt(): bigint {
-        return BigInt(
-            (this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000),
-        );
+        return BigInt(this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000);
     }
-
 
     /**
      * @internal
      */
     public toString(): string {
-        return BigInt(
-            (this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000),
-        ).toString();
+        return BigInt(this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000).toString();
     }
 }

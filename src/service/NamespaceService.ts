@@ -26,13 +26,11 @@ import { Namespace } from './Namespace';
  * Namespace service
  */
 export class NamespaceService {
-
     /**
      * Constructor
      * @param namespaceRepository
      */
-    constructor(private readonly namespaceRepository: NamespaceRepository) {
-    }
+    constructor(private readonly namespaceRepository: NamespaceRepository) {}
 
     /**
      * Get namespace info and name from namespace Id
@@ -41,22 +39,33 @@ export class NamespaceService {
      */
     namespace(id: NamespaceId): Observable<Namespace> {
         return this.namespaceRepository.getNamespace(id).pipe(
-            mergeMap((namespaceInfo: NamespaceInfo) => this.namespaceRepository
-                .getNamespacesName(namespaceInfo.levels).pipe(
-                map((names) => Object.assign(
-                    {__proto__: Object.getPrototypeOf(namespaceInfo)},
-                    namespaceInfo,
-                    {name: this.extractFullNamespace(namespaceInfo, names)})))));
+            mergeMap((namespaceInfo: NamespaceInfo) =>
+                this.namespaceRepository.getNamespacesName(namespaceInfo.levels).pipe(
+                    map((names) =>
+                        Object.assign(
+                            {
+                                __proto__: Object.getPrototypeOf(namespaceInfo),
+                            },
+                            namespaceInfo,
+                            {
+                                name: this.extractFullNamespace(namespaceInfo, names),
+                            },
+                        ),
+                    ),
+                ),
+            ),
+        );
     }
 
     private extractFullNamespace(namespace: NamespaceInfo, namespaceNames: NamespaceName[]): string {
-        return namespace.levels.map((level) => {
-            const namespaceName = namespaceNames.find((name) => name.namespaceId.equals(level));
-            if (namespace === undefined) {
-                throw new Error('Not found');
-            }
-            return namespaceName;
-        })
+        return namespace.levels
+            .map((level) => {
+                const namespaceName = namespaceNames.find((name) => name.namespaceId.equals(level));
+                if (namespace === undefined) {
+                    throw new Error('Not found');
+                }
+                return namespaceName;
+            })
             .map((namespaceName: NamespaceName) => namespaceName.name)
             .join('.');
     }

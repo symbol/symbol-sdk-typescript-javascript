@@ -40,10 +40,14 @@ describe('MosaicSupplyChangeTransaction', () => {
     const resolvedMosaicId = new MosaicId('0DC67FBE1CAD29E5');
     before(() => {
         account = TestingAccount;
-        statement = new Statement([],
+        statement = new Statement(
             [],
-            [new ResolutionStatement(ResolutionType.Mosaic, BigInt(2), unresolvedMosaicId,
-                [new ResolutionEntry(resolvedMosaicId, new ReceiptSource(1, 0))])],
+            [],
+            [
+                new ResolutionStatement(ResolutionType.Mosaic, BigInt(2), unresolvedMosaicId, [
+                    new ResolutionEntry(resolvedMosaicId, new ReceiptSource(1, 0)),
+                ]),
+            ],
         );
     });
 
@@ -90,11 +94,9 @@ describe('MosaicSupplyChangeTransaction', () => {
 
         const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(
-            256,
-            signedTransaction.payload.length,
-        )).to.be.equal('4CCCD78612DDF5CA0A0000000000000001');
-
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            '4CCCD78612DDF5CA0A0000000000000001',
+        );
     });
 
     describe('size', () => {
@@ -121,7 +123,6 @@ describe('MosaicSupplyChangeTransaction', () => {
             BigInt(10),
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
-​
         expect(mosaicSupplyChangeTransaction.maxFee).to.be.equal(BigInt(290));
         const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
@@ -138,8 +139,8 @@ describe('MosaicSupplyChangeTransaction', () => {
             BigInt(10),
             '',
             account.publicAccount,
-            new TransactionInfo(BigInt(2), 0, '')).resolveAliases(statement);
-​
+            new TransactionInfo(BigInt(2), 0, ''),
+        ).resolveAliases(statement);
         expect(mosaicSupplyChangeTransaction.mosaicId instanceof MosaicId).to.be.true;
         expect((mosaicSupplyChangeTransaction.mosaicId as MosaicId).equals(resolvedMosaicId)).to.be.true;
 

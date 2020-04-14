@@ -45,11 +45,18 @@ describe('SecretLockTransaction', () => {
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     before(() => {
         account = TestingAccount;
-        statement = new Statement([],
-            [new ResolutionStatement(ResolutionType.Address, BigInt(2), unresolvedAddress,
-                [new ResolutionEntry(account.address, new ReceiptSource(1, 0))])],
-            [new ResolutionStatement(ResolutionType.Mosaic, BigInt(2), unresolvedMosaicId,
-                [new ResolutionEntry(mosaicId, new ReceiptSource(1, 0))])],
+        statement = new Statement(
+            [],
+            [
+                new ResolutionStatement(ResolutionType.Address, BigInt(2), unresolvedAddress, [
+                    new ResolutionEntry(account.address, new ReceiptSource(1, 0)),
+                ]),
+            ],
+            [
+                new ResolutionStatement(ResolutionType.Mosaic, BigInt(2), unresolvedMosaicId, [
+                    new ResolutionEntry(mosaicId, new ReceiptSource(1, 0)),
+                ]),
+            ],
         );
     });
 
@@ -119,12 +126,10 @@ describe('SecretLockTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
         const signedTx = secretLockTransaction.signWith(account, generationHash);
-        expect(signedTx.payload.substring(
-            256,
-            signedTx.payload.length,
-        )).to.be.equal(
+        expect(signedTx.payload.substring(256, signedTx.payload.length)).to.be.equal(
             '9B3155B37159DA50AA52D5967C509B410F5A36A3B1E31ECB5AC76675D79B4A5E44B262C46CEABB850A' +
-            '0000000000000064000000000000000090C2337113E6D8F15B56E0821149299F340C01706FC1CAD6CB');
+                '0000000000000064000000000000000090C2337113E6D8F15B56E0821149299F340C01706FC1CAD6CB',
+        );
     });
 
     it('should throw exception when the input is not related to HashTyp: Op_Sha3_256', () => {
@@ -141,7 +146,6 @@ describe('SecretLockTransaction', () => {
             );
         }).to.throw(Error);
     });
-
 
     it('should be created with LockHashAlgorithm: Op_Hash_160 secret', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9';
@@ -262,7 +266,6 @@ describe('SecretLockTransaction', () => {
             recipientAddress,
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
-​
         expect(secretLockTransaction.maxFee).to.be.equal(BigInt(420));
         const signedTransaction = secretLockTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
@@ -282,8 +285,8 @@ describe('SecretLockTransaction', () => {
             unresolvedAddress,
             '',
             account.publicAccount,
-            new TransactionInfo(BigInt(2), 0, '')).resolveAliases(statement);
-​
+            new TransactionInfo(BigInt(2), 0, ''),
+        ).resolveAliases(statement);
         expect(secretLockTransaction.recipientAddress instanceof Address).to.be.true;
         expect(secretLockTransaction.mosaic.id instanceof MosaicId).to.be.true;
         expect((secretLockTransaction.recipientAddress as Address).equals(account.address)).to.be.true;

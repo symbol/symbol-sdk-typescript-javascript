@@ -57,15 +57,18 @@ export class MosaicMetadataTransaction extends Transaction {
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {MosaicMetadataTransaction}
      */
-    public static create(deadline: Deadline,
-                         targetPublicKey: string,
-                         scopedMetadataKey: bigint,
-                         targetMosaicId: MosaicId | NamespaceId,
-                         valueSizeDelta: number,
-                         value: string,
-                         networkType: NetworkType,
-                         maxFee: bigint = BigInt(0)): MosaicMetadataTransaction {
-        return new MosaicMetadataTransaction(networkType,
+    public static create(
+        deadline: Deadline,
+        targetPublicKey: string,
+        scopedMetadataKey: bigint,
+        targetMosaicId: MosaicId | NamespaceId,
+        valueSizeDelta: number,
+        value: string,
+        networkType: NetworkType,
+        maxFee = BigInt(0),
+    ): MosaicMetadataTransaction {
+        return new MosaicMetadataTransaction(
+            networkType,
             TransactionVersion.MOSAIC_METADATA,
             deadline,
             maxFee,
@@ -73,7 +76,8 @@ export class MosaicMetadataTransaction extends Transaction {
             scopedMetadataKey,
             targetMosaicId,
             valueSizeDelta,
-            value);
+            value,
+        );
     }
 
     /**
@@ -90,34 +94,36 @@ export class MosaicMetadataTransaction extends Transaction {
      * @param signer
      * @param transactionInfo
      */
-    constructor(networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: bigint,
-                /**
-                 * Public key of the target account.
-                 */
-                public readonly targetPublicKey: string,
-                /**
-                 * Metadata key scoped to source, target and type.
-                 */
-                public readonly scopedMetadataKey: bigint,
-                /**
-                 * Target mosaic identifier.
-                 */
-                public readonly targetMosaicId: MosaicId | NamespaceId,
-                /**
-                 * Change in value size in bytes.
-                 */
-                public readonly valueSizeDelta: number,
-                /**
-                 * String value with UTF-8 encoding.
-                 * Difference between the previous value and new value.
-                 */
-                public readonly value: string,
-                signature?: string,
-                signer?: PublicAccount,
-                transactionInfo?: TransactionInfo) {
+    constructor(
+        networkType: NetworkType,
+        version: number,
+        deadline: Deadline,
+        maxFee: bigint,
+        /**
+         * Public key of the target account.
+         */
+        public readonly targetPublicKey: string,
+        /**
+         * Metadata key scoped to source, target and type.
+         */
+        public readonly scopedMetadataKey: bigint,
+        /**
+         * Target mosaic identifier.
+         */
+        public readonly targetMosaicId: MosaicId | NamespaceId,
+        /**
+         * Change in value size in bytes.
+         */
+        public readonly valueSizeDelta: number,
+        /**
+         * String value with UTF-8 encoding.
+         * Difference between the previous value and new value.
+         */
+        public readonly value: string,
+        signature?: string,
+        signer?: PublicAccount,
+        transactionInfo?: TransactionInfo,
+    ) {
         super(TransactionType.MOSAIC_METADATA, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
@@ -127,23 +133,25 @@ export class MosaicMetadataTransaction extends Transaction {
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedMosaicMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            MosaicMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+        const builder = isEmbedded
+            ? EmbeddedMosaicMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : MosaicMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
-        const transaction = MosaicMetadataTransaction.create( isEmbedded ? Deadline.create() :
-            Deadline.createFromBigInt((builder as MosaicMetadataTransactionBuilder).getDeadline().timestamp),
+        const transaction = MosaicMetadataTransaction.create(
+            isEmbedded
+                ? Deadline.create()
+                : Deadline.createFromBigInt((builder as MosaicMetadataTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getTargetPublicKey().key),
             builder.getScopedMetadataKey(),
             UnresolvedMapping.toUnresolvedMosaic(builder.getTargetMosaicId().unresolvedMosaicId),
             builder.getValueSizeDelta(),
             Convert.uint8ToUtf8(builder.getValue()),
             networkType,
-            isEmbedded ? BigInt(0) : (builder as MosaicMetadataTransactionBuilder).fee.amount);
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
+            isEmbedded ? BigInt(0) : (builder as MosaicMetadataTransactionBuilder).fee.amount,
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**
@@ -162,8 +170,7 @@ export class MosaicMetadataTransaction extends Transaction {
         const byteValueSizeDelta = 2;
         const valueSize = 2;
 
-        return byteSize + targetPublicKey + byteScopedMetadataKey +
-               byteTargetMosaicId + byteValueSizeDelta + valueSize + this.value.length;
+        return byteSize + targetPublicKey + byteScopedMetadataKey + byteTargetMosaicId + byteValueSizeDelta + valueSize + this.value.length;
     }
 
     /**
@@ -215,10 +222,15 @@ export class MosaicMetadataTransaction extends Transaction {
      * @param aggregateTransactionIndex Transaction index for aggregated transaction
      * @returns {MosaicMetadataTransaction}
      */
-    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): MosaicMetadataTransaction {
+    resolveAliases(statement: Statement, aggregateTransactionIndex = 0): MosaicMetadataTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
         return DtoMapping.assign(this, {
-            targetMosaicId: statement.resolveMosaicId(this.targetMosaicId, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex)});
+            targetMosaicId: statement.resolveMosaicId(
+                this.targetMosaicId,
+                transactionInfo.height.toString(),
+                transactionInfo.index,
+                aggregateTransactionIndex,
+            ),
+        });
     }
 }

@@ -18,16 +18,16 @@
  * Transacation Fees
  */
 export class TransactionFees {
-
     /**
      * @param averageFeeMultiplier - Average fee multiplier over the last \"numBlocksTransactionFeeStats\".
      * @param medianFeeMultiplier - Median fee multiplier over the last \"numBlocksTransactionFeeStats\".
      * @param highestFeeMultiplier - Highest fee multiplier over the last "numBlocksTransactionFeeStats".
      * @param lowestFeeMultiplier - Lowest fee multiplier over the last "numBlocksTransactionFeeStats".
      */
-    constructor(public readonly averageFeeMultiplier: number,
-                public readonly medianFeeMultiplier: number,
-                public readonly highestFeeMultiplier: number,
-                public readonly lowestFeeMultiplier: number) {
-    }
+    constructor(
+        public readonly averageFeeMultiplier: number,
+        public readonly medianFeeMultiplier: number,
+        public readonly highestFeeMultiplier: number,
+        public readonly lowestFeeMultiplier: number,
+    ) {}
 }

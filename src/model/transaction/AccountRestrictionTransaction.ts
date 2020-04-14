@@ -43,13 +43,17 @@ export class AccountRestrictionTransaction {
         restrictionAdditions: (Address | NamespaceId)[],
         restrictionDeletions: (Address | NamespaceId)[],
         networkType: NetworkType,
-        maxFee: bigint = BigInt(0),
+        maxFee = BigInt(0),
     ): AccountAddressRestrictionTransaction {
-        if (![AccountRestrictionFlags.AllowIncomingAddress,
-            AccountRestrictionFlags.AllowOutgoingAddress,
-            AccountRestrictionFlags.BlockOutgoingAddress,
-            AccountRestrictionFlags.BlockIncomingAddress].includes(restrictionFlags)) {
-            throw new Error ('Restriction type is not allowed.');
+        if (
+            ![
+                AccountRestrictionFlags.AllowIncomingAddress,
+                AccountRestrictionFlags.AllowOutgoingAddress,
+                AccountRestrictionFlags.BlockOutgoingAddress,
+                AccountRestrictionFlags.BlockIncomingAddress,
+            ].includes(restrictionFlags)
+        ) {
+            throw new Error('Restriction type is not allowed.');
         }
         return AccountAddressRestrictionTransaction.create(
             deadline,
@@ -77,10 +81,10 @@ export class AccountRestrictionTransaction {
         restrictionAdditions: (MosaicId | NamespaceId)[],
         restrictionDeletions: (MosaicId | NamespaceId)[],
         networkType: NetworkType,
-        maxFee: bigint = BigInt(0),
+        maxFee = BigInt(0),
     ): AccountMosaicRestrictionTransaction {
         if (![AccountRestrictionFlags.AllowMosaic, AccountRestrictionFlags.BlockMosaic].includes(restrictionFlags)) {
-            throw new Error ('Restriction type is not allowed.');
+            throw new Error('Restriction type is not allowed.');
         }
         return AccountMosaicRestrictionTransaction.create(
             deadline,
@@ -108,13 +112,17 @@ export class AccountRestrictionTransaction {
         restrictionAdditions: TransactionType[],
         restrictionDeletions: TransactionType[],
         networkType: NetworkType,
-        maxFee: bigint = BigInt(0),
+        maxFee = BigInt(0),
     ): AccountOperationRestrictionTransaction {
-        if (![AccountRestrictionFlags.AllowIncomingTransactionType,
-            AccountRestrictionFlags.AllowOutgoingTransactionType,
-            AccountRestrictionFlags.BlockIncomingTransactionType,
-            AccountRestrictionFlags.BlockOutgoingTransactionType].includes(restrictionFlags)) {
-            throw new Error ('Restriction type is not allowed.');
+        if (
+            ![
+                AccountRestrictionFlags.AllowIncomingTransactionType,
+                AccountRestrictionFlags.AllowOutgoingTransactionType,
+                AccountRestrictionFlags.BlockIncomingTransactionType,
+                AccountRestrictionFlags.BlockOutgoingTransactionType,
+            ].includes(restrictionFlags)
+        ) {
+            throw new Error('Restriction type is not allowed.');
         }
         return AccountOperationRestrictionTransaction.create(
             deadline,

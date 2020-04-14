@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NEM
+ * Copyright 2020 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,10 @@
  * limitations under the License.
  */
 
-import { NamespaceName } from '../namespace/NamespaceName';
-import { Address } from './Address';
-
-/**
- * Account with linked names
- */
-export class AccountNames {
-    /**
-     *
-     */
-    constructor(
-        /**
-         * Address of the account.
-         */
-        public readonly address: Address,
-        /**
-         * Address linked namespace Ids
-         */
-        public readonly names: NamespaceName[],
-    ) {}
-}
+module.exports = {
+    semi: true,
+    trailingComma: "all",
+    singleQuote: true,
+    printWidth: 140,
+    tabWidth: 4
+};

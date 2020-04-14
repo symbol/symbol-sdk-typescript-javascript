@@ -30,7 +30,6 @@ import { NamespaceRegistrationTransaction } from '../../src/model/transaction/Na
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('MosaicHttp', () => {
-
     let mosaicId: MosaicId;
     let mosaicRepository: MosaicRepository;
     let account: Account;
@@ -63,7 +62,6 @@ describe('MosaicHttp', () => {
      * =========================
      */
     describe('Setup test MosaicId', () => {
-
         it('Announce MosaicDefinitionTransaction', async () => {
             const nonce = MosaicNonce.createFromNumber(-1501238750);
             expect(nonce.toDTO()).to.be.equals(2793728546);
@@ -81,13 +79,15 @@ describe('MosaicHttp', () => {
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
-            const listenedTransaction = await helper.announce(signedTransaction) as MosaicDefinitionTransaction;
+            const listenedTransaction = (await helper.announce(signedTransaction)) as MosaicDefinitionTransaction;
             expect(mosaicDefinitionTransaction.nonce.toHex()).to.be.equal(listenedTransaction.nonce.toHex());
             expect(mosaicDefinitionTransaction.nonce).to.deep.equal(listenedTransaction.nonce);
             expect(mosaicDefinitionTransaction.getMosaicNonceIntValue()).to.be.equal(listenedTransaction.getMosaicNonceIntValue());
 
-            const savedTransaction = await helper.repositoryFactory.createTransactionRepository()
-                .getTransaction(signedTransaction.hash).toPromise() as MosaicDefinitionTransaction;
+            const savedTransaction = (await helper.repositoryFactory
+                .createTransactionRepository()
+                .getTransaction(signedTransaction.hash)
+                .toPromise()) as MosaicDefinitionTransaction;
             expect(mosaicDefinitionTransaction.nonce.toHex()).to.be.equal(savedTransaction.nonce.toHex());
             expect(mosaicDefinitionTransaction.nonce).to.deep.equal(savedTransaction.nonce);
             expect(mosaicDefinitionTransaction.getMosaicNonceIntValue()).to.be.equal(savedTransaction.getMosaicNonceIntValue());
@@ -95,7 +95,6 @@ describe('MosaicHttp', () => {
     });
 
     describe('Setup test NamespaceId', () => {
-
         it('Announce NamespaceRegistrationTransaction', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
@@ -112,7 +111,6 @@ describe('MosaicHttp', () => {
         });
     });
     describe('Setup test MosaicAlias', () => {
-
         it('Announce MosaicAliasTransaction', () => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
                 Deadline.create(),
@@ -181,7 +179,6 @@ describe('MosaicHttp', () => {
      * =========================
      */
     describe('Remove test MosaicAlias', () => {
-
         it('Announce MosaicAliasTransaction', () => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
                 Deadline.create(),

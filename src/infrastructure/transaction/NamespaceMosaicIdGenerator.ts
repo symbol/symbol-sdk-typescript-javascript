@@ -24,7 +24,7 @@ export class NamespaceMosaicIdGenerator {
      */
     public static mosaicId = (nonce: Uint8Array, ownerPublicId: Uint8Array): number[] => {
         return IdGenerator.generateMosaicId(nonce, ownerPublicId);
-    }
+    };
 
     /**
      * @param {string} namespaceName - The namespace name
@@ -33,7 +33,7 @@ export class NamespaceMosaicIdGenerator {
     public static namespaceId = (namespaceName: string): number[] => {
         const path = IdGenerator.generateNamespacePath(namespaceName);
         return path.length ? IdGenerator.generateNamespacePath(namespaceName)[path.length - 1] : [];
-    }
+    };
     /**
      * @param {string} parentNamespaceName - The parent namespace name
      * @param {string} namespaceName - The namespace name
@@ -42,7 +42,7 @@ export class NamespaceMosaicIdGenerator {
     public static subnamespaceParentId = (parentNamespaceName: string, namespaceName: string): number[] => {
         const path = IdGenerator.generateNamespacePath(`${parentNamespaceName}.${namespaceName}`);
         return IdGenerator.generateNamespacePath(parentNamespaceName)[path.length - 2];
-    }
+    };
 
     /**
      * @param {string} parentNamespaceName - The parent namespace name
@@ -52,6 +52,5 @@ export class NamespaceMosaicIdGenerator {
     public static subnamespaceNamespaceId = (parentNamespaceName: string, namespaceName: string): number[] => {
         const path = IdGenerator.generateNamespacePath(`${parentNamespaceName}.${namespaceName}`);
         return path[path.length - 1];
-    }
-
+    };
 }

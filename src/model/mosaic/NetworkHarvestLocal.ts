@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NamespaceId} from '../namespace/NamespaceId';
-import {Mosaic} from './Mosaic';
-import {MosaicId} from './MosaicId';
+import { NamespaceId } from '../namespace/NamespaceId';
+import { Mosaic } from './Mosaic';
+import { MosaicId } from './MosaicId';
 
 /**
  * NetworkHarvestLocal mosaic
@@ -26,7 +26,6 @@ import {MosaicId} from './MosaicId';
  * @since 0.10.2
  */
 export class NetworkHarvestLocal extends Mosaic {
-
     /**
      * namespaceId of `currency` namespace.
      *

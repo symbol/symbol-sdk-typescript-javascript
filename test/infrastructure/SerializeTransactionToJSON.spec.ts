@@ -153,13 +153,12 @@ describe('SerializeTransactionToJSON', () => {
 
         expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_ALIAS);
         expect(json.transaction.aliasAction).to.be.equal(AliasAction.Link);
-
     });
 
     it('should create MosaicDefinitionTransaction', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
-            MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(BigInt(1)), // ID
             MosaicFlags.create(true, true, true),
             5,
@@ -173,13 +172,12 @@ describe('SerializeTransactionToJSON', () => {
         expect(json.transaction.flags).to.be.equal(7);
         expect(json.transaction.divisibility).to.be.equal(5);
         expect(json.transaction.duration).to.be.equal('1000');
-
     });
 
     it('should create MosaicDefinitionTransaction without duration', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
-            MosaicNonce.createFromUint8Array(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(BigInt(1)), // ID
             MosaicFlags.create(true, false),
             3,
@@ -192,7 +190,6 @@ describe('SerializeTransactionToJSON', () => {
         expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_DEFINITION);
         expect(json.transaction.divisibility).to.be.equal(3);
         expect(json.transaction.flags).to.be.equal(1);
-
     });
 
     it('should create MosaicSupplyChangeTransaction', () => {
@@ -209,16 +206,13 @@ describe('SerializeTransactionToJSON', () => {
 
         expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_SUPPLY_CHANGE);
         expect(json.transaction.action).to.be.equal(MosaicSupplyChangeAction.Increase);
-
     });
 
     it('should create TransferTransaction', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
-            [
-                NetworkCurrencyLocal.createRelative(100),
-            ],
+            [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
         );
@@ -228,7 +222,6 @@ describe('SerializeTransactionToJSON', () => {
         expect(json.transaction.type).to.be.equal(TransactionType.TRANSFER);
         expect(json.transaction.message.payload).to.be.equal('test-message');
         expect(json.transaction.message.type).to.be.equal(0);
-
     });
 
     it('should create SecretLockTransaction', () => {
@@ -248,7 +241,6 @@ describe('SerializeTransactionToJSON', () => {
 
         expect(json.transaction.type).to.be.equal(TransactionType.SECRET_LOCK);
         expect(json.transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
-
     });
 
     it('should create SecretProofTransaction', () => {
@@ -268,7 +260,6 @@ describe('SerializeTransactionToJSON', () => {
         expect(json.transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
         expect(json.transaction.secret).to.be.equal(sha3_256.create().update(convert.hexToUint8(proof)).hex());
         expect(json.transaction.proof).to.be.equal(proof);
-
     });
 
     it('should create ModifyMultiSigTransaction', () => {
@@ -276,8 +267,7 @@ describe('SerializeTransactionToJSON', () => {
             Deadline.create(),
             2,
             1,
-            [PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
-            NetworkType.MIJIN_TEST)],
+            [PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24', NetworkType.MIJIN_TEST)],
             [],
             NetworkType.MIJIN_TEST,
         );
@@ -302,7 +292,8 @@ describe('SerializeTransactionToJSON', () => {
             Deadline.create(),
             [transferTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
-            []);
+            [],
+        );
 
         const json = aggregateTransaction.toJSON();
 
@@ -323,7 +314,8 @@ describe('SerializeTransactionToJSON', () => {
             Deadline.create(),
             [transferTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
-            []);
+            [],
+        );
 
         const json = aggregateTransaction.toJSON();
 
@@ -333,18 +325,15 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create LockFundTransaction', () => {
         const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
-        const aggregateTransaction = AggregateTransaction.createBonded(
-            Deadline.create(),
-            [],
-            NetworkType.MIJIN_TEST,
-            [],
-        );
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
-        const lockTransaction = LockFundsTransaction.create(Deadline.create(),
+        const lockTransaction = LockFundsTransaction.create(
+            Deadline.create(),
             NetworkCurrencyLocal.createRelative(10),
             BigInt(10),
             signedTransaction,
-            NetworkType.MIJIN_TEST);
+            NetworkType.MIJIN_TEST,
+        );
 
         const json = lockTransaction.toJSON();
 
@@ -363,7 +352,6 @@ describe('SerializeTransactionToJSON', () => {
         const json = registerNamespaceTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.NAMESPACE_REGISTRATION);
-
     });
 
     it('should create NamespaceRegistrationTransaction - Sub', () => {

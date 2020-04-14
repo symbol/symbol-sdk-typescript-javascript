@@ -26,12 +26,12 @@ export class Base32 {
         if (0 !== data.length % utilities.Decoded_Block_Size) {
             throw Error(`decoded size must be multiple of ${utilities.Decoded_Block_Size}`);
         }
-        const output = new Array(data.length / utilities.Decoded_Block_Size * utilities.Encoded_Block_Size);
+        const output = new Array((data.length / utilities.Decoded_Block_Size) * utilities.Encoded_Block_Size);
         for (let i = 0; i < data.length / utilities.Decoded_Block_Size; ++i) {
             utilities.encodeBlock(data, i * utilities.Decoded_Block_Size, output, i * utilities.Encoded_Block_Size);
         }
         return output.join('');
-    }
+    };
 
     /**
      * Base32 decodes a base32 encoded string.
@@ -43,10 +43,10 @@ export class Base32 {
             throw Error(`encoded size must be multiple of ${utilities.Encoded_Block_Size}`);
         }
 
-        const output = new Uint8Array(encoded.length / utilities.Encoded_Block_Size * utilities.Decoded_Block_Size);
+        const output = new Uint8Array((encoded.length / utilities.Encoded_Block_Size) * utilities.Decoded_Block_Size);
         for (let i = 0; i < encoded.length / utilities.Encoded_Block_Size; ++i) {
             utilities.decodeBlock(encoded, i * utilities.Encoded_Block_Size, output, i * utilities.Decoded_Block_Size);
         }
         return output;
-    }
+    };
 }

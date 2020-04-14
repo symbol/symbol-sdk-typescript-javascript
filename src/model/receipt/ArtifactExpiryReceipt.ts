@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-import {
-    MosaicExpiryReceiptBuilder,
-    MosaicIdDto,
-    NamespaceExpiryReceiptBuilder,
-    NamespaceIdDto,
-} from 'catbuffer-typescript';
+import { MosaicExpiryReceiptBuilder, MosaicIdDto, NamespaceExpiryReceiptBuilder, NamespaceIdDto } from 'catbuffer-typescript';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { Receipt } from './Receipt';
@@ -30,7 +25,6 @@ import { ReceiptVersion } from './ReceiptVersion';
  * Artifact Expiry: An artifact (e.g. namespace, mosaic) expired.
  */
 export class ArtifactExpiryReceipt extends Receipt {
-
     /**
      * Artifact expiry receipt
      * @param artifactId -The id of the artifact (eg. namespace, mosaic).
@@ -38,10 +32,7 @@ export class ArtifactExpiryReceipt extends Receipt {
      * @param type - The receipt type
      * @param size - the receipt size
      */
-    constructor(public readonly  artifactId: MosaicId | NamespaceId,
-                version: ReceiptVersion,
-                type: ReceiptType,
-                size?: number) {
+    constructor(public readonly artifactId: MosaicId | NamespaceId, version: ReceiptVersion, type: ReceiptType, size?: number) {
         super(version, type, size);
     }
 
@@ -52,10 +43,16 @@ export class ArtifactExpiryReceipt extends Receipt {
      */
     public serialize(): Uint8Array {
         if (this.artifactId instanceof MosaicId) {
-            return new MosaicExpiryReceiptBuilder(ReceiptVersion.ARTIFACT_EXPIRY, this.type.valueOf(),
-                new MosaicIdDto(this.artifactId.id)).serialize();
+            return new MosaicExpiryReceiptBuilder(
+                ReceiptVersion.ARTIFACT_EXPIRY,
+                this.type.valueOf(),
+                new MosaicIdDto(this.artifactId.id),
+            ).serialize();
         }
-        return new NamespaceExpiryReceiptBuilder(ReceiptVersion.ARTIFACT_EXPIRY, this.type.valueOf(),
-            new NamespaceIdDto(this.artifactId.id)).serialize();
+        return new NamespaceExpiryReceiptBuilder(
+            ReceiptVersion.ARTIFACT_EXPIRY,
+            this.type.valueOf(),
+            new NamespaceIdDto(this.artifactId.id),
+        ).serialize();
     }
 }

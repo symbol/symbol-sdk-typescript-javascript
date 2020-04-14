@@ -19,7 +19,6 @@ import { CreateTransactionFromPayload } from '../../infrastructure/transaction/C
 import { InnerTransaction } from '../../model/transaction/InnerTransaction';
 import { Transaction } from '../../model/transaction/Transaction';
 export class TransactionMapping {
-
     /**
      * Create transaction class from Json.
      * @param {object} dataJson The transaction json object.
@@ -35,8 +34,7 @@ export class TransactionMapping {
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction} The transaction class.
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded = false): Transaction | InnerTransaction {
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
         return CreateTransactionFromPayload(payload, isEmbedded);
     }
 }

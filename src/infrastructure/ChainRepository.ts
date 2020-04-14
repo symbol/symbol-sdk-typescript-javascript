@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {Observable} from 'rxjs';
-import {BlockchainScore} from '../model/blockchain/BlockchainScore';
+import { Observable } from 'rxjs';
+import { BlockchainScore } from '../model/blockchain/BlockchainScore';
 
 /**
  * Chain interface repository.

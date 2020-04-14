@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// tslint:disable: max-line-length
 /**
  * Chain related configuration properties.
  */
@@ -41,26 +40,27 @@ export class ChainProperties {
      * @param blockPruneInterval - Number of blocks between cache pruning.
      * @param maxTransactionsPerBlock - Maximum number of transactions per block.
      */
-    constructor(public readonly enableVerifiableState?: boolean,
-                public readonly enableVerifiableReceipts?: boolean,
-                public readonly currencyMosaicId?: string,
-                public readonly harvestingMosaicId?: string,
-                public readonly blockGenerationTargetTime?: string,
-                public readonly blockTimeSmoothingFactor?: string,
-                public readonly importanceGrouping?: string,
-                public readonly importanceActivityPercentage?: string,
-                public readonly maxRollbackBlocks?: string,
-                public readonly maxDifficultyBlocks?: string,
-                public readonly defaultDynamicFeeMultiplier?: string,
-                public readonly maxTransactionLifetime?: string,
-                public readonly maxBlockFutureTime?: string,
-                public readonly initialCurrencyAtomicUnits?: string,
-                public readonly maxMosaicAtomicUnits?: string,
-                public readonly totalChainImportance?: string,
-                public readonly minHarvesterBalance?: string,
-                public readonly maxHarvesterBalance?: string,
-                public readonly harvestBeneficiaryPercentage?: string,
-                public readonly blockPruneInterval?: string,
-                public readonly maxTransactionsPerBlock?: string) {
-    }
+    constructor(
+        public readonly enableVerifiableState?: boolean,
+        public readonly enableVerifiableReceipts?: boolean,
+        public readonly currencyMosaicId?: string,
+        public readonly harvestingMosaicId?: string,
+        public readonly blockGenerationTargetTime?: string,
+        public readonly blockTimeSmoothingFactor?: string,
+        public readonly importanceGrouping?: string,
+        public readonly importanceActivityPercentage?: string,
+        public readonly maxRollbackBlocks?: string,
+        public readonly maxDifficultyBlocks?: string,
+        public readonly defaultDynamicFeeMultiplier?: string,
+        public readonly maxTransactionLifetime?: string,
+        public readonly maxBlockFutureTime?: string,
+        public readonly initialCurrencyAtomicUnits?: string,
+        public readonly maxMosaicAtomicUnits?: string,
+        public readonly totalChainImportance?: string,
+        public readonly minHarvesterBalance?: string,
+        public readonly maxHarvesterBalance?: string,
+        public readonly harvestBeneficiaryPercentage?: string,
+        public readonly blockPruneInterval?: string,
+        public readonly maxTransactionsPerBlock?: string,
+    ) {}
 }

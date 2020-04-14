@@ -43,7 +43,6 @@ import { TransactionVersion } from './TransactionVersion';
 import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 export class MosaicAddressRestrictionTransaction extends Transaction {
-
     /**
      * Create a mosaic address restriction transaction object
      *
@@ -65,15 +64,18 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {MosaicAddressRestrictionTransaction}
      */
-    public static create(deadline: Deadline,
-                         mosaicId: MosaicId | NamespaceId,
-                         restrictionKey: bigint,
-                         targetAddress: Address | NamespaceId,
-                         newRestrictionValue: bigint,
-                         networkType: NetworkType,
-                         previousRestrictionValue: bigint = BigIntUtilities.HexToBigInt('FFFFFFFFFFFFFFFF'),
-                         maxFee: bigint = BigInt(0)): MosaicAddressRestrictionTransaction {
-        return new MosaicAddressRestrictionTransaction(networkType,
+    public static create(
+        deadline: Deadline,
+        mosaicId: MosaicId | NamespaceId,
+        restrictionKey: bigint,
+        targetAddress: Address | NamespaceId,
+        newRestrictionValue: bigint,
+        networkType: NetworkType,
+        previousRestrictionValue: bigint = BigIntUtilities.HexToBigInt('FFFFFFFFFFFFFFFF'),
+        maxFee = BigInt(0),
+    ): MosaicAddressRestrictionTransaction {
+        return new MosaicAddressRestrictionTransaction(
+            networkType,
             TransactionVersion.MOSAIC_ADDRESS_RESTRICTION,
             deadline,
             maxFee,
@@ -100,33 +102,35 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      * @param signer
      * @param transactionInfo
      */
-    constructor(networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: bigint,
-                /**
-                 * The mosaic id.
-                 */
-                public readonly mosaicId: MosaicId | NamespaceId,
-                /**
-                 * The restriction key.
-                 */
-                public readonly restrictionKey: bigint,
-                /**
-                 * The affected unresolved address.
-                 */
-                public readonly targetAddress: Address | NamespaceId,
-                /**
-                 * The previous restriction value.
-                 */
-                public readonly previousRestrictionValue: bigint,
-                /**
-                 * The new restriction value.
-                 */
-                public readonly newRestrictionValue: bigint,
-                signature?: string,
-                signer?: PublicAccount,
-                transactionInfo?: TransactionInfo) {
+    constructor(
+        networkType: NetworkType,
+        version: number,
+        deadline: Deadline,
+        maxFee: bigint,
+        /**
+         * The mosaic id.
+         */
+        public readonly mosaicId: MosaicId | NamespaceId,
+        /**
+         * The restriction key.
+         */
+        public readonly restrictionKey: bigint,
+        /**
+         * The affected unresolved address.
+         */
+        public readonly targetAddress: Address | NamespaceId,
+        /**
+         * The previous restriction value.
+         */
+        public readonly previousRestrictionValue: bigint,
+        /**
+         * The new restriction value.
+         */
+        public readonly newRestrictionValue: bigint,
+        signature?: string,
+        signer?: PublicAccount,
+        transactionInfo?: TransactionInfo,
+    ) {
         super(TransactionType.MOSAIC_ADDRESS_RESTRICTION, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
@@ -136,24 +140,25 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedMosaicAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            MosaicAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+        const builder = isEmbedded
+            ? EmbeddedMosaicAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : MosaicAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = MosaicAddressRestrictionTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
-                (builder as MosaicAddressRestrictionTransactionBuilder).getDeadline().timestamp),
+            isEmbedded
+                ? Deadline.create()
+                : Deadline.createFromBigInt((builder as MosaicAddressRestrictionTransactionBuilder).getDeadline().timestamp),
             UnresolvedMapping.toUnresolvedMosaic(builder.getMosaicId().unresolvedMosaicId),
             builder.getRestrictionKey(),
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getTargetAddress().unresolvedAddress)),
             builder.getNewRestrictionValue(),
             networkType,
             builder.getPreviousRestrictionValue(),
-            isEmbedded ? BigInt(0) : (builder as MosaicAddressRestrictionTransactionBuilder).fee.amount);
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
+            isEmbedded ? BigInt(0) : (builder as MosaicAddressRestrictionTransactionBuilder).fee.amount,
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**
@@ -172,8 +177,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
         const byteNewRestrictionValue = 8;
         const byteTargetAddress = 25;
 
-        return byteSize + byteMosaicId + byteRestrictionKey +
-            byteTargetAddress + bytePreviousRestrictionValue + byteNewRestrictionValue;
+        return byteSize + byteMosaicId + byteRestrictionKey + byteTargetAddress + bytePreviousRestrictionValue + byteNewRestrictionValue;
     }
 
     /**
@@ -182,7 +186,6 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      * @returns {string}
      */
     public targetAddressToString(): string {
-
         if (this.targetAddress instanceof NamespaceId) {
             // namespaceId recipient, return hexadecimal notation
             return (this.targetAddress as NamespaceId).toHex();
@@ -241,13 +244,21 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      * @param aggregateTransactionIndex Transaction index for aggregated transaction
      * @returns {MosaicAddressRestrictionTransaction}
      */
-    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): MosaicAddressRestrictionTransaction {
+    resolveAliases(statement: Statement, aggregateTransactionIndex = 0): MosaicAddressRestrictionTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
         return DtoMapping.assign(this, {
-            mosaicId: statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex),
-            targetAddress: statement.resolveAddress(this.targetAddress,
-                transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
+            mosaicId: statement.resolveMosaicId(
+                this.mosaicId,
+                transactionInfo.height.toString(),
+                transactionInfo.index,
+                aggregateTransactionIndex,
+            ),
+            targetAddress: statement.resolveAddress(
+                this.targetAddress,
+                transactionInfo.height.toString(),
+                transactionInfo.index,
+                aggregateTransactionIndex,
+            ),
         });
     }
 }

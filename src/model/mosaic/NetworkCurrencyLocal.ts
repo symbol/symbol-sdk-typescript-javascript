@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {NamespaceId} from '../namespace/NamespaceId';
-import {Mosaic} from './Mosaic';
-import {MosaicId} from './MosaicId';
+import { NamespaceId } from '../namespace/NamespaceId';
+import { Mosaic } from './Mosaic';
+import { MosaicId } from './MosaicId';
 
 /**
  * NetworkCurrencyLocal mosaic for local test network (local bootstrap server)
@@ -27,7 +27,6 @@ import {MosaicId} from './MosaicId';
  * @since 0.10.2
  */
 export class NetworkCurrencyLocal extends Mosaic {
-
     /**
      * namespaceId of `currency` namespace.
      *

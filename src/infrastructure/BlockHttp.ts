@@ -63,14 +63,18 @@ export class BlockHttp extends Http implements BlockRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    public getBlockTransactions(height: bigint,
-                                queryParams?: QueryParams): Observable<Transaction[]> {
-        return this.call(this.blockRoutesApi.getBlockTransactions(height.toString(),
-            this.queryParams(queryParams).pageSize,
-            this.queryParams(queryParams).id,
-            this.queryParams(queryParams).ordering), (body) => body.map((transactionDTO) => {
-                return CreateTransactionFromDTO(transactionDTO);
-            }),
+    public getBlockTransactions(height: bigint, queryParams?: QueryParams): Observable<Transaction[]> {
+        return this.call(
+            this.blockRoutesApi.getBlockTransactions(
+                height.toString(),
+                this.queryParams(queryParams).pageSize,
+                this.queryParams(queryParams).id,
+                this.queryParams(queryParams).ordering,
+            ),
+            (body) =>
+                body.map((transactionDTO) => {
+                    return CreateTransactionFromDTO(transactionDTO);
+                }),
         );
     }
 
@@ -82,7 +86,8 @@ export class BlockHttp extends Http implements BlockRepository {
      */
     public getBlocksByHeightWithLimit(height: bigint, limit: number): Observable<BlockInfo[]> {
         return this.call(this.blockRoutesApi.getBlocksByHeightWithLimit(height.toString(), limit), (body) =>
-            body.map((blockDTO) => this.toBlockInfo(blockDTO)));
+            body.map((blockDTO) => this.toBlockInfo(blockDTO)),
+        );
     }
 
     /**
@@ -129,9 +134,8 @@ export class BlockHttp extends Http implements BlockRepository {
      */
     public getMerkleTransaction(height: bigint, hash: string): Observable<MerkleProofInfo> {
         return this.call(
-            this.blockRoutesApi.getMerkleTransaction(height.toString(), hash), (body) => new MerkleProofInfo(
-                body.merklePath!.map((payload) => new MerklePathItem(payload.position, payload.hash)),
-            ));
+            this.blockRoutesApi.getMerkleTransaction(height.toString(), hash),
+            (body) => new MerkleProofInfo(body.merklePath!.map((payload) => new MerklePathItem(payload.position, payload.hash))),
+        );
     }
-
 }

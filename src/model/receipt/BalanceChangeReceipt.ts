@@ -14,13 +14,7 @@
  * limitations under the License.
  */
 
-import {
-    AmountDto,
-    BalanceChangeReceiptBuilder,
-    KeyDto,
-    MosaicBuilder,
-    MosaicIdDto,
-} from 'catbuffer-typescript';
+import { AmountDto, BalanceChangeReceiptBuilder, KeyDto, MosaicBuilder, MosaicIdDto } from 'catbuffer-typescript';
 import { Convert } from '../../core/format/Convert';
 import { PublicAccount } from '../account/PublicAccount';
 import { MosaicId } from '../mosaic/MosaicId';
@@ -32,7 +26,6 @@ import { ReceiptVersion } from './ReceiptVersion';
  * Balance Change: A mosaic credit or debit was triggered.
  */
 export class BalanceChangeReceipt extends Receipt {
-
     /**
      * Balance change expiry receipt
      * @param targetPublicAccount - The target account public account.
@@ -43,21 +36,22 @@ export class BalanceChangeReceipt extends Receipt {
      * @param size - the receipt size
      */
     constructor(
-                /**
-                 * The target targetPublicKey public account.
-                 */
-                public readonly targetPublicAccount: PublicAccount,
-                /**
-                 * The mosaic id.
-                 */
-                public readonly mosaicId: MosaicId,
-                /**
-                 * The amount of mosaic.
-                 */
-                public readonly amount: bigint,
-                version: ReceiptVersion,
-                type: ReceiptType,
-                size?: number) {
+        /**
+         * The target targetPublicKey public account.
+         */
+        public readonly targetPublicAccount: PublicAccount,
+        /**
+         * The mosaic id.
+         */
+        public readonly mosaicId: MosaicId,
+        /**
+         * The amount of mosaic.
+         */
+        public readonly amount: bigint,
+        version: ReceiptVersion,
+        type: ReceiptType,
+        size?: number,
+    ) {
         super(version, type, size);
     }
 
@@ -67,9 +61,10 @@ export class BalanceChangeReceipt extends Receipt {
      * @return {Uint8Array}
      */
     public serialize(): Uint8Array {
-        return new BalanceChangeReceiptBuilder(ReceiptVersion.BALANCE_CHANGE, this.type.valueOf(),
-            new MosaicBuilder(new MosaicIdDto(this.mosaicId.id),
-                new AmountDto(this.amount)),
+        return new BalanceChangeReceiptBuilder(
+            ReceiptVersion.BALANCE_CHANGE,
+            this.type.valueOf(),
+            new MosaicBuilder(new MosaicIdDto(this.mosaicId.id), new AmountDto(this.amount)),
             new KeyDto(Convert.hexToUint8(this.targetPublicAccount.publicKey)),
         ).serialize();
     }

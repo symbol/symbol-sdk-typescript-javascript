@@ -79,11 +79,9 @@ describe('MosaicAliasTransaction', () => {
 
         const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(
-            256,
-            signedTransaction.payload.length,
-        )).to.be.equal('2AD8FC018D9A49E14CCCD78612DDF5CA01');
-
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            '2AD8FC018D9A49E14CCCD78612DDF5CA01',
+        );
     });
 
     describe('size', () => {
@@ -112,7 +110,6 @@ describe('MosaicAliasTransaction', () => {
             mosaicId,
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
-​
         expect(mosaicAliasTransaction.maxFee).to.be.equal(BigInt(290));
 
         const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);

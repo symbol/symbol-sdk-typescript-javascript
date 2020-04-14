@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {CreateTransactionFromDTO} from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
-import {Account} from '../../../src/model/account/Account';
+import { expect } from 'chai';
+import { CreateTransactionFromDTO } from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
+import { Account } from '../../../src/model/account/Account';
 import { PlainMessage } from '../../../src/model/message/PlainMessage';
 import { NetworkType } from '../../../src/model/network/NetworkType';
-import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
-import {CosignatureTransaction} from '../../../src/model/transaction/CosignatureTransaction';
+import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
+import { CosignatureTransaction } from '../../../src/model/transaction/CosignatureTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
-import {TestingAccount} from '../../conf/conf.spec';
+import { TestingAccount } from '../../conf/conf.spec';
 
 describe('CosignatureTransaction', () => {
     let account: Account;
@@ -33,7 +33,6 @@ describe('CosignatureTransaction', () => {
     });
 
     it('should createComplete an TransferTransaction object and sign it', () => {
-
         const aggregateTransferTransactionDTO = {
             meta: {
                 hash: '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96',
@@ -45,15 +44,17 @@ describe('CosignatureTransaction', () => {
             transaction: {
                 cosignatures: [
                     {
-                        signature: '5780C8DF9D46BA2BCF029DCC5D3BF55FE1CB5BE7ABCF30387C4637DD' +
-                        'EDFC2152703CA0AD95F21BB9B942F3CC52FCFC2064C7B84CF60D1A9E69195F1943156C07',
+                        signature:
+                            '5780C8DF9D46BA2BCF029DCC5D3BF55FE1CB5BE7ABCF30387C4637DD' +
+                            'EDFC2152703CA0AD95F21BB9B942F3CC52FCFC2064C7B84CF60D1A9E69195F1943156C07',
                         signerPublicKey: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
                     },
                 ],
                 deadline: '1000',
                 maxFee: '0',
-                signature: '939673209A13FF82397578D22CC96EB8516A6760C894D9B7535E3A1E0680' +
-                '07B9255CFA9A914C97142A7AE18533E381C846B69D2AE0D60D1DC8A55AD120E2B606',
+                signature:
+                    '939673209A13FF82397578D22CC96EB8516A6760C894D9B7535E3A1E0680' +
+                    '07B9255CFA9A914C97142A7AE18533E381C846B69D2AE0D60D1DC8A55AD120E2B606',
                 signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
                 transactions: [
                     {
@@ -94,17 +95,21 @@ describe('CosignatureTransaction', () => {
         const cosignatureSignedTransaction = account.signCosignatureTransaction(cosignatureTransaction);
 
         expect(cosignatureSignedTransaction.parentHash).to.be.equal(aggregateTransferTransaction.transactionInfo!.hash);
-        expect(cosignatureSignedTransaction.signature).to.be.equal('5EA75D1A2C8AD25DA4F400C1BD2DA84449FAF583AFD813E' +
-            '1179E72AF0CDF5AC1C0F7404AF6FC7268EE416204240DD3D5B11420D80215F19AA314FC86D6E03E0D');
+        expect(cosignatureSignedTransaction.signature).to.be.equal(
+            '5EA75D1A2C8AD25DA4F400C1BD2DA84449FAF583AFD813E' +
+                '1179E72AF0CDF5AC1C0F7404AF6FC7268EE416204240DD3D5B11420D80215F19AA314FC86D6E03E0D',
+        );
         expect(cosignatureSignedTransaction.signerPublicKey).to.be.equal(account.publicKey);
     });
 
     it('should sign a transaction with transaction payload', () => {
-        const txPayload = TransferTransaction.create(Deadline.create(),
-                                              account.address,
-                                              [],
-                                              PlainMessage.create('a to b'),
-                                              NetworkType.MIJIN_TEST).serialize();
+        const txPayload = TransferTransaction.create(
+            Deadline.create(),
+            account.address,
+            [],
+            PlainMessage.create('a to b'),
+            NetworkType.MIJIN_TEST,
+        ).serialize();
 
         const signedTx = CosignatureTransaction.signTransactionPayload(account, txPayload, generationHash);
 

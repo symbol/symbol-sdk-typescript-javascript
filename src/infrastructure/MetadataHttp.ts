@@ -58,11 +58,13 @@ export class MetadataHttp extends Http implements MetadataRepository {
      */
     public getAccountMetadata(address: Address, queryParams?: QueryParams): Observable<Metadata[]> {
         return this.call(
-            this.metadataRoutesApi.getAccountMetadata(address.plain(),
+            this.metadataRoutesApi.getAccountMetadata(
+                address.plain(),
                 this.queryParams(queryParams).pageSize,
                 this.queryParams(queryParams).id,
-                this.queryParams(queryParams).ordering),
-            (body) => body.metadataEntries.map((metadataEntry) => this.buildMetadata(metadataEntry))
+                this.queryParams(queryParams).ordering,
+            ),
+            (body) => body.metadataEntries.map((metadataEntry) => this.buildMetadata(metadataEntry)),
         );
     }
 
@@ -73,9 +75,8 @@ export class MetadataHttp extends Http implements MetadataRepository {
      * @returns Observable<Metadata[]>
      */
     getAccountMetadataByKey(address: Address, key: string): Observable<Metadata[]> {
-        return this.call(
-            this.metadataRoutesApi.getAccountMetadataByKey(address.plain(), key),
-            (body) => body.metadataEntries.map((metadataEntry) => this.buildMetadata(metadataEntry))
+        return this.call(this.metadataRoutesApi.getAccountMetadataByKey(address.plain(), key), (body) =>
+            body.metadataEntries.map((metadataEntry) => this.buildMetadata(metadataEntry)),
         );
     }
 
@@ -87,9 +88,8 @@ export class MetadataHttp extends Http implements MetadataRepository {
      * @returns Observable<Metadata>
      */
     getAccountMetadataByKeyAndSender(address: Address, key: string, publicKey: string): Observable<Metadata> {
-        return this.call(
-            this.metadataRoutesApi.getAccountMetadataByKeyAndSender(address.plain(), key, publicKey),
-            (body) => this.buildMetadata(body)
+        return this.call(this.metadataRoutesApi.getAccountMetadataByKeyAndSender(address.plain(), key, publicKey), (body) =>
+            this.buildMetadata(body),
         );
     }
 
@@ -101,11 +101,13 @@ export class MetadataHttp extends Http implements MetadataRepository {
      */
     getMosaicMetadata(mosaicId: MosaicId, queryParams?: QueryParams): Observable<Metadata[]> {
         return this.call(
-            this.metadataRoutesApi.getMosaicMetadata(mosaicId.toHex(),
+            this.metadataRoutesApi.getMosaicMetadata(
+                mosaicId.toHex(),
                 this.queryParams(queryParams).pageSize,
                 this.queryParams(queryParams).id,
-                this.queryParams(queryParams).ordering),
-            (body) => body.metadataEntries.map((metadataEntry) => this.buildMetadata(metadataEntry))
+                this.queryParams(queryParams).ordering,
+            ),
+            (body) => body.metadataEntries.map((metadataEntry) => this.buildMetadata(metadataEntry)),
         );
     }
 
@@ -116,9 +118,8 @@ export class MetadataHttp extends Http implements MetadataRepository {
      * @returns Observable<Metadata[]>
      */
     getMosaicMetadataByKey(mosaicId: MosaicId, key: string): Observable<Metadata[]> {
-        return this.call(
-            this.metadataRoutesApi.getMosaicMetadataByKey(mosaicId.toHex(), key),
-            (body) => body.metadataEntries.map((metadataEntry) => this.buildMetadata(metadataEntry))
+        return this.call(this.metadataRoutesApi.getMosaicMetadataByKey(mosaicId.toHex(), key), (body) =>
+            body.metadataEntries.map((metadataEntry) => this.buildMetadata(metadataEntry)),
         );
     }
 
@@ -130,9 +131,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
      * @returns Observable<Metadata>
      */
     getMosaicMetadataByKeyAndSender(mosaicId: MosaicId, key: string, publicKey: string): Observable<Metadata> {
-        return this.call(
-            this.metadataRoutesApi.getMosaicMetadataByKeyAndSender(mosaicId.toHex(), key, publicKey), this.buildMetadata
-        );
+        return this.call(this.metadataRoutesApi.getMosaicMetadataByKeyAndSender(mosaicId.toHex(), key, publicKey), this.buildMetadata);
     }
 
     /**
@@ -143,10 +142,13 @@ export class MetadataHttp extends Http implements MetadataRepository {
      */
     public getNamespaceMetadata(namespaceId: NamespaceId, queryParams?: QueryParams): Observable<Metadata[]> {
         return this.call(
-            this.metadataRoutesApi.getNamespaceMetadata(namespaceId.toHex(),
+            this.metadataRoutesApi.getNamespaceMetadata(
+                namespaceId.toHex(),
                 this.queryParams(queryParams).pageSize,
                 this.queryParams(queryParams).id,
-                this.queryParams(queryParams).ordering), body => body.metadataEntries.map(this.buildMetadata)
+                this.queryParams(queryParams).ordering,
+            ),
+            (body) => body.metadataEntries.map(this.buildMetadata),
         );
     }
 
@@ -157,9 +159,8 @@ export class MetadataHttp extends Http implements MetadataRepository {
      * @returns Observable<Metadata[]>
      */
     public getNamespaceMetadataByKey(namespaceId: NamespaceId, key: string): Observable<Metadata[]> {
-        return this.call(
-            this.metadataRoutesApi.getNamespaceMetadataByKey(namespaceId.toHex(), key),
-            (body) => body.metadataEntries.map(this.buildMetadata)
+        return this.call(this.metadataRoutesApi.getNamespaceMetadataByKey(namespaceId.toHex(), key), (body) =>
+            body.metadataEntries.map(this.buildMetadata),
         );
     }
 
@@ -172,7 +173,9 @@ export class MetadataHttp extends Http implements MetadataRepository {
      */
     public getNamespaceMetadataByKeyAndSender(namespaceId: NamespaceId, key: string, publicKey: string): Observable<Metadata> {
         return this.call(
-            this.metadataRoutesApi.getNamespaceMetadataByKeyAndSender(namespaceId.toHex(), key, publicKey), this.buildMetadata);
+            this.metadataRoutesApi.getNamespaceMetadataByKeyAndSender(namespaceId.toHex(), key, publicKey),
+            this.buildMetadata,
+        );
     }
 
     /**

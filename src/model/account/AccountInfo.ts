@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-import {Mosaic} from '../mosaic/Mosaic';
+import { Mosaic } from '../mosaic/Mosaic';
 import { AccountType } from './AccountType';
 import { ActivityBucket } from './ActivityBucket';
-import {Address} from './Address';
-import {PublicAccount} from './PublicAccount';
+import { Address } from './Address';
+import { PublicAccount } from './PublicAccount';
 
 /**
  * The account info structure describes basic information for an account.
  */
 export class AccountInfo {
-
     /**
      *
      */
@@ -68,9 +67,8 @@ export class AccountInfo {
         /**
          * Importance height of the account.
          */
-        public readonly importanceHeight: bigint) {
-
-    }
+        public readonly importanceHeight: bigint,
+    ) {}
 
     /**
      * Returns account public account.

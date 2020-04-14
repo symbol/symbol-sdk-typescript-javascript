@@ -18,19 +18,18 @@
  * The blockchain score structure describes blockchain difficulty.
  */
 export class BlockchainScore {
-
     /**
      * @param scoreLow
      * @param scoreHigh
      */
-    constructor(/**
-                 * Low part of the blockchain score.
-                 */
-                public readonly scoreLow: bigint,
-                /**
-                 * High part of the blockchain score.
-                 */
-                public readonly scoreHigh: bigint) {
-
-    }
+    constructor(
+        /**
+         * Low part of the blockchain score.
+         */
+        public readonly scoreLow: bigint,
+        /**
+         * High part of the blockchain score.
+         */
+        public readonly scoreHigh: bigint,
+    ) {}
 }

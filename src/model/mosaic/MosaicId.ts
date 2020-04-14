@@ -25,7 +25,6 @@ import { BigIntUtilities } from '../../core/format/BigIntUtilities';
  * @since 1.0
  */
 export class MosaicId {
-
     /**
      * Mosaic id
      */
@@ -57,7 +56,7 @@ export class MosaicId {
         if (typeof id === 'bigint') {
             this.id = id;
         } else if (typeof id === 'string') {
-            if (! /^[0-9A-Fa-f]{16}$/i.test(id)) {
+            if (!/^[0-9A-Fa-f]{16}$/i.test(id)) {
                 throw new Error('Invalid size for MosaicId hexadecimal notation');
             }
             // hexadecimal formatted MosaicId

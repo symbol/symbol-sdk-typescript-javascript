@@ -65,6 +65,5 @@ export class BigIntUtilities {
         let uint8 = new Uint8Array(uint32Array.buffer);
         uint8 = uint8.reverse();
         return BigInt('0x' + Convert.uint8ToHex(uint8));
-
     }
 }

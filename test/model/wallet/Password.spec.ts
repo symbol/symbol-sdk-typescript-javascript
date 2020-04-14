@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {Password} from '../../../src/model/wallet/Password';
+import { expect } from 'chai';
+import { Password } from '../../../src/model/wallet/Password';
 
 describe('Password', () => {
-
     it('should throw Error if Password is empty', () => {
         expect(() => {
             new Password('');

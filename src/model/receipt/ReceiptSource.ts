@@ -20,22 +20,21 @@ import { GeneratorUtils } from 'catbuffer-typescript';
  * The receipt source object.
  */
 export class ReceiptSource {
-
     /**
      * @constructor
      * @param primaryId - The transaction primary source (e.g. index within block).
      * @param secondaryId - The transaction secondary source (e.g. index within aggregate).
      */
     constructor(
-                /**
-                 * The transaction primary source (e.g. index within block).
-                 */
-                public readonly primaryId: number,
-                /**
-                 * The transaction secondary source (e.g. index within aggregate).
-                 */
-                public readonly secondaryId: number) {
-    }
+        /**
+         * The transaction primary source (e.g. index within block).
+         */
+        public readonly primaryId: number,
+        /**
+         * The transaction secondary source (e.g. index within aggregate).
+         */
+        public readonly secondaryId: number,
+    ) {}
 
     /**
      * @internal
@@ -44,6 +43,8 @@ export class ReceiptSource {
      */
     public serialize(): Uint8Array {
         return GeneratorUtils.concatTypedArrays(
-            GeneratorUtils.uintToBuffer(this.primaryId, 4), GeneratorUtils.uintToBuffer(this.secondaryId, 4));
+            GeneratorUtils.uintToBuffer(this.primaryId, 4),
+            GeneratorUtils.uintToBuffer(this.secondaryId, 4),
+        );
     }
 }

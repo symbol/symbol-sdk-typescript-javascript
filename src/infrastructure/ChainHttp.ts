@@ -55,10 +55,6 @@ export class ChainHttp extends Http implements ChainRepository {
      * @returns Observable<BlockchainScore>
      */
     public getChainScore(): Observable<BlockchainScore> {
-        return this.call(this.chainRoutesApi.getChainScore(), (body) => new BlockchainScore(
-            BigInt(body.scoreLow),
-            BigInt(body.scoreHigh),
-            ),
-        );
+        return this.call(this.chainRoutesApi.getChainScore(), (body) => new BlockchainScore(BigInt(body.scoreLow), BigInt(body.scoreHigh)));
     }
 }

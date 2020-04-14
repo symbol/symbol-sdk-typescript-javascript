@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import { StorageInfo } from '../model/blockchain/StorageInfo';
 import { NodeHealth } from '../model/node/NodeHealth';
 import { NodeInfo } from '../model/node/NodeInfo';
@@ -27,7 +27,6 @@ import { ServerInfo } from '../model/node/ServerInfo';
  * @since 1.0
  */
 export interface NodeRepository {
-
     /**
      * Supplies additional information about the application running on a node.
      * @summary Get the node information
@@ -64,5 +63,4 @@ export interface NodeRepository {
      * @returns Observable<Server>
      */
     getServerInfo(): Observable<ServerInfo>;
-
 }

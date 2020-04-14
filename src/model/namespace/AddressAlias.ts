@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import { RawAddress } from '../../core/format/RawAddress';
-import {Address} from '../account/Address';
-import {Alias} from './Alias';
+import { Address } from '../account/Address';
+import { Alias } from './Alias';
 import { AliasType } from './AliasType';
 
 /**
@@ -24,15 +24,16 @@ import { AliasType } from './AliasType';
  * @since 0.10.2
  */
 export class AddressAlias extends Alias {
-
     /**
      * Create AddressAlias object
      * @param content
      */
-    constructor(/**
-                 * The alias address
-                 */
-                public readonly address: Address) {
+    constructor(
+        /**
+         * The alias address
+         */
+        public readonly address: Address,
+    ) {
         super(AliasType.Address, address, undefined);
     }
 

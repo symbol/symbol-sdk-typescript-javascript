@@ -31,10 +31,10 @@ export class TransactionFilter {
      *         type: TransactionType[],
      *     }} [args]
      */
-    constructor(args?: {
-        types?: TransactionType[],
-    }) {
-        if (args && args.types) { this.types = args.types; }
+    constructor(args?: { types?: TransactionType[] }) {
+        if (args && args.types) {
+            this.types = args.types;
+        }
     }
 
     /**

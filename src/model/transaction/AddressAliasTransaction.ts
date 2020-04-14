@@ -43,7 +43,6 @@ import { TransactionVersion } from './TransactionVersion';
  * i.e. increase or decrease the supply.
  */
 export class AddressAliasTransaction extends Transaction {
-
     /**
      * Create a address alias transaction object
      * @param deadline - The deadline to include the transaction.
@@ -54,13 +53,16 @@ export class AddressAliasTransaction extends Transaction {
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {AddressAliasTransaction}
      */
-    public static create(deadline: Deadline,
-                         aliasAction: AliasAction,
-                         namespaceId: NamespaceId,
-                         address: Address,
-                         networkType: NetworkType,
-                         maxFee: bigint = BigInt(0)): AddressAliasTransaction {
-        return new AddressAliasTransaction(networkType,
+    public static create(
+        deadline: Deadline,
+        aliasAction: AliasAction,
+        namespaceId: NamespaceId,
+        address: Address,
+        networkType: NetworkType,
+        maxFee = BigInt(0),
+    ): AddressAliasTransaction {
+        return new AddressAliasTransaction(
+            networkType,
             TransactionVersion.ADDRESS_ALIAS,
             deadline,
             maxFee,
@@ -82,25 +84,27 @@ export class AddressAliasTransaction extends Transaction {
      * @param signer
      * @param transactionInfo
      */
-    constructor(networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: bigint,
-                /**
-                 * The alias action type.
-                 */
-                public readonly aliasAction: AliasAction,
-                /**
-                 * The namespace id that will be an alias.
-                 */
-                public readonly namespaceId: NamespaceId,
-                /**
-                 * The address.
-                 */
-                public readonly address: Address,
-                signature?: string,
-                signer?: PublicAccount,
-                transactionInfo?: TransactionInfo) {
+    constructor(
+        networkType: NetworkType,
+        version: number,
+        deadline: Deadline,
+        maxFee: bigint,
+        /**
+         * The alias action type.
+         */
+        public readonly aliasAction: AliasAction,
+        /**
+         * The namespace id that will be an alias.
+         */
+        public readonly namespaceId: NamespaceId,
+        /**
+         * The address.
+         */
+        public readonly address: Address,
+        signature?: string,
+        signer?: PublicAccount,
+        transactionInfo?: TransactionInfo,
+    ) {
         super(TransactionType.ADDRESS_ALIAS, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
@@ -110,22 +114,21 @@ export class AddressAliasTransaction extends Transaction {
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedAddressAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            AddressAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+        const builder = isEmbedded
+            ? EmbeddedAddressAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : AddressAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = AddressAliasTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromBigInt((builder as AddressAliasTransactionBuilder).getDeadline().timestamp),
             builder.getAliasAction().valueOf(),
             new NamespaceId(builder.getNamespaceId().namespaceId),
-            Address.createFromEncoded(
-                Convert.uint8ToHex(builder.getAddress().address)),
+            Address.createFromEncoded(Convert.uint8ToHex(builder.getAddress().address)),
             networkType,
-            isEmbedded ? BigInt(0) : (builder as AddressAliasTransactionBuilder).fee.amount);
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
+            isEmbedded ? BigInt(0) : (builder as AddressAliasTransactionBuilder).fee.amount,
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**

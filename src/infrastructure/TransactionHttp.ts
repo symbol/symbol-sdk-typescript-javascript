@@ -67,7 +67,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
      */
     public getTransaction(transactionId: string): Observable<Transaction> {
         return observableFrom(this.transactionRoutesApi.getTransaction(transactionId)).pipe(
-            map(({body}) => CreateTransactionFromDTO(body)),
+            map(({ body }) => CreateTransactionFromDTO(body)),
             catchError((error) => throwError(this.errorHandling(error))),
         );
     }
@@ -81,11 +81,12 @@ export class TransactionHttp extends Http implements TransactionRepository {
         const transactionIdsBody = {
             transactionIds,
         };
-        return observableFrom(
-            this.transactionRoutesApi.getTransactions(transactionIdsBody)).pipe(
-            map(({body}) => body.map((transactionDTO) => {
-                return CreateTransactionFromDTO(transactionDTO);
-            })),
+        return observableFrom(this.transactionRoutesApi.getTransactions(transactionIdsBody)).pipe(
+            map(({ body }) =>
+                body.map((transactionDTO) => {
+                    return CreateTransactionFromDTO(transactionDTO);
+                }),
+            ),
             catchError((error) => throwError(this.errorHandling(error))),
         );
     }
@@ -97,7 +98,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
      */
     public getTransactionStatus(transactionHash: string): Observable<TransactionStatus> {
         return observableFrom(this.transactionRoutesApi.getTransactionStatus(transactionHash)).pipe(
-            map(({body}) => this.toTransactionStatus(body)),
+            map(({ body }) => this.toTransactionStatus(body)),
             catchError((error) => throwError(this.errorHandling(error))),
         );
     }
@@ -111,9 +112,8 @@ export class TransactionHttp extends Http implements TransactionRepository {
         const transactionHashesBody = {
             hashes: transactionHashes,
         };
-        return observableFrom(
-            this.transactionRoutesApi.getTransactionsStatuses(transactionHashesBody)).pipe(
-            map(({body}) => body.map(this.toTransactionStatus)),
+        return observableFrom(this.transactionRoutesApi.getTransactionsStatuses(transactionHashesBody)).pipe(
+            map(({ body }) => body.map(this.toTransactionStatus)),
             catchError((error) => throwError(this.errorHandling(error))),
         );
     }
@@ -131,7 +131,8 @@ export class TransactionHttp extends Http implements TransactionRepository {
             dto.hash,
             Deadline.createFromDTO(BigInt(dto.deadline).toString()),
             dto.code,
-            dto.height ? BigInt(dto.height) : undefined);
+            dto.height ? BigInt(dto.height) : undefined,
+        );
     }
 
     /**
@@ -141,10 +142,10 @@ export class TransactionHttp extends Http implements TransactionRepository {
      */
     public announce(signedTransaction: SignedTransaction): Observable<TransactionAnnounceResponse> {
         if (signedTransaction.type === TransactionType.AGGREGATE_BONDED) {
-            throw new Error('Announcing aggregate bonded transaction should use \'announceAggregateBonded\'');
+            throw new Error("Announcing aggregate bonded transaction should use 'announceAggregateBonded'");
         }
         return observableFrom(this.transactionRoutesApi.announceTransaction(signedTransaction)).pipe(
-            map(({body}) => new TransactionAnnounceResponse(body.message)),
+            map(({ body }) => new TransactionAnnounceResponse(body.message)),
             catchError((error) => throwError(this.errorHandling(error))),
         );
     }
@@ -159,7 +160,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
             throw new Error('Only Transaction Type 0x4241 is allowed for announce aggregate bonded');
         }
         return observableFrom(this.transactionRoutesApi.announcePartialTransaction(signedTransaction)).pipe(
-            map(({body}) => new TransactionAnnounceResponse(body.message)),
+            map(({ body }) => new TransactionAnnounceResponse(body.message)),
             catchError((error) => throwError(this.errorHandling(error))),
         );
     }
@@ -170,9 +171,10 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @returns Observable<TransactionAnnounceResponse>
      */
     public announceAggregateBondedCosignature(
-        cosignatureSignedTransaction: CosignatureSignedTransaction): Observable<TransactionAnnounceResponse> {
+        cosignatureSignedTransaction: CosignatureSignedTransaction,
+    ): Observable<TransactionAnnounceResponse> {
         return observableFrom(this.transactionRoutesApi.announceCosignatureTransaction(cosignatureSignedTransaction)).pipe(
-            map(({body}) => new TransactionAnnounceResponse(body.message)),
+            map(({ body }) => new TransactionAnnounceResponse(body.message)),
             catchError((error) => throwError(this.errorHandling(error))),
         );
     }
@@ -184,22 +186,25 @@ export class TransactionHttp extends Http implements TransactionRepository {
      */
     public getTransactionEffectiveFee(transactionId: string): Observable<number> {
         return observableFrom(this.transactionRoutesApi.getTransaction(transactionId)).pipe(
-            mergeMap(({body}) => {
+            mergeMap(({ body }) => {
                 // parse transaction to take advantage of `size` getter overload
                 const transaction = CreateTransactionFromDTO(body);
                 const uintHeight = (transaction.transactionInfo as TransactionInfo).height;
 
                 // now read block details
                 return observableFrom(this.blockRoutesApi.getBlockByHeight(uintHeight.toString())).pipe(
-                    map((blockResponse: { response: ClientResponse; body: BlockInfoDTO; }) => {
+                    map((blockResponse: { response: ClientResponse; body: BlockInfoDTO }) => {
                         const blockDTO = blockResponse.body;
                         // @see https://nemtech.github.io/concepts/transaction.html#fees
                         // effective_fee = feeMultiplier x transaction::size
                         return blockDTO.block.feeMultiplier * transaction.size;
                     }),
-                    catchError((error) => throwError(this.errorHandling(error))));
-            }), catchError((err) => {
+                    catchError((error) => throwError(this.errorHandling(error))),
+                );
+            }),
+            catchError((err) => {
                 return throwError(err);
-            }));
+            }),
+        );
     }
 }

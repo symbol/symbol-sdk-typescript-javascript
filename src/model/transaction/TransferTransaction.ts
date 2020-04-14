@@ -64,19 +64,15 @@ export class TransferTransaction extends Transaction {
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {TransferTransaction}
      */
-    public static create(deadline: Deadline,
-                         recipientAddress: Address | NamespaceId,
-                         mosaics: Mosaic[],
-                         message: Message,
-                         networkType: NetworkType,
-                         maxFee: bigint = BigInt(0)): TransferTransaction {
-        return new TransferTransaction(networkType,
-            TransactionVersion.TRANSFER,
-            deadline,
-            maxFee,
-            recipientAddress,
-            mosaics,
-            message);
+    public static create(
+        deadline: Deadline,
+        recipientAddress: Address | NamespaceId,
+        mosaics: Mosaic[],
+        message: Message,
+        networkType: NetworkType,
+        maxFee = BigInt(0),
+    ): TransferTransaction {
+        return new TransferTransaction(networkType, TransactionVersion.TRANSFER, deadline, maxFee, recipientAddress, mosaics, message);
     }
 
     /**
@@ -91,25 +87,27 @@ export class TransferTransaction extends Transaction {
      * @param signer
      * @param transactionInfo
      */
-    constructor(networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: bigint,
-                /**
-                 * The address of the recipient address.
-                 */
-                public readonly recipientAddress: Address | NamespaceId,
-                /**
-                 * The array of Mosaic objects.
-                 */
-                public readonly mosaics: Mosaic[],
-                /**
-                 * The transaction message of 2048 characters.
-                 */
-                public readonly message: Message,
-                signature?: string,
-                signer?: PublicAccount,
-                transactionInfo?: TransactionInfo) {
+    constructor(
+        networkType: NetworkType,
+        version: number,
+        deadline: Deadline,
+        maxFee: bigint,
+        /**
+         * The address of the recipient address.
+         */
+        public readonly recipientAddress: Address | NamespaceId,
+        /**
+         * The array of Mosaic objects.
+         */
+        public readonly mosaics: Mosaic[],
+        /**
+         * The transaction message of 2048 characters.
+         */
+        public readonly message: Message,
+        signature?: string,
+        signer?: PublicAccount,
+        transactionInfo?: TransactionInfo,
+    ) {
         super(TransactionType.TRANSFER, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
         this.validate();
     }
@@ -120,10 +118,10 @@ export class TransferTransaction extends Transaction {
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedTransferTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            TransferTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+        const builder = isEmbedded
+            ? EmbeddedTransferTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : TransferTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const messageType = builder.getMessage()[0];
         const messageHex = Convert.uint8ToHex(builder.getMessage()).substring(2);
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
@@ -135,13 +133,13 @@ export class TransferTransaction extends Transaction {
                 const id = mosaic.mosaicId.unresolvedMosaicId;
                 return new Mosaic(UnresolvedMapping.toUnresolvedMosaic(id), mosaic.amount.amount);
             }),
-            messageType === MessageType.PlainMessage ?
-                PlainMessage.createFromPayload(messageHex) :
-                EncryptedMessage.createFromPayload(messageHex),
+            messageType === MessageType.PlainMessage
+                ? PlainMessage.createFromPayload(messageHex)
+                : EncryptedMessage.createFromPayload(messageHex),
             networkType,
-            isEmbedded ? BigInt(0) : (builder as TransferTransactionBuilder).fee.amount);
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
+            isEmbedded ? BigInt(0) : (builder as TransferTransactionBuilder).fee.amount,
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**
@@ -164,7 +162,6 @@ export class TransferTransaction extends Transaction {
      * @returns {string}
      */
     public recipientToString(): string {
-
         if (this.recipientAddress instanceof NamespaceId) {
             // namespaceId recipient, return hexadecimal notation
             return (this.recipientAddress as NamespaceId).toHex();
@@ -197,12 +194,15 @@ export class TransferTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     public getMessageBuffer(): Uint8Array {
-        const messgeHex = this.message.type === MessageType.PersistentHarvestingDelegationMessage ?
-            this.message.payload : Convert.utf8ToHex(this.message.payload);
+        const messgeHex =
+            this.message.type === MessageType.PersistentHarvestingDelegationMessage
+                ? this.message.payload
+                : Convert.utf8ToHex(this.message.payload);
         const payloadBuffer = Convert.hexToUint8(messgeHex);
         const typeBuffer = GeneratorUtils.uintToBuffer(this.message.type, 1);
-        return this.message.type === MessageType.PersistentHarvestingDelegationMessage ?
-            payloadBuffer : GeneratorUtils.concatTypedArrays(typeBuffer, payloadBuffer);
+        return this.message.type === MessageType.PersistentHarvestingDelegationMessage
+            ? payloadBuffer
+            : GeneratorUtils.concatTypedArrays(typeBuffer, payloadBuffer);
     }
 
     /**
@@ -226,8 +226,15 @@ export class TransferTransaction extends Transaction {
         // mosaicId / namespaceId are written on 8 bytes + 8 bytes for the amount.
         const byteMosaics = (8 + 8) * this.mosaics.length;
 
-        return byteSize + byteMosaicsCount + byteRecipientAddress +
-            +byteTransferTransactionBody_Reserved1 + byteMessageSize + bytePayload + byteMosaics;
+        return (
+            byteSize +
+            byteMosaicsCount +
+            byteRecipientAddress +
+            +byteTransferTransactionBody_Reserved1 +
+            byteMessageSize +
+            bytePayload +
+            byteMosaics
+        );
     }
 
     /**
@@ -248,8 +255,7 @@ export class TransferTransaction extends Transaction {
             new TimestampDto(this.deadline.toBigInt()),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
             this.sortMosaics().map((mosaic) => {
-                return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id),
-                    new AmountDto(mosaic.amount));
+                return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id), new AmountDto(mosaic.amount));
             }),
             this.getMessageBuffer(),
         );
@@ -268,8 +274,7 @@ export class TransferTransaction extends Transaction {
             TransactionType.TRANSFER.valueOf(),
             new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
             this.sortMosaics().map((mosaic) => {
-                return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id),
-                    new AmountDto(mosaic.amount));
+                return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id), new AmountDto(mosaic.amount));
             }),
             this.getMessageBuffer(),
         );
@@ -281,13 +286,18 @@ export class TransferTransaction extends Transaction {
      * @param aggregateTransactionIndex Transaction index for aggregated transaction
      * @returns {TransferTransaction}
      */
-    public resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): TransferTransaction {
+    public resolveAliases(statement: Statement, aggregateTransactionIndex = 0): TransferTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
         return DtoMapping.assign(this, {
-            recipientAddress: statement.resolveAddress(this.recipientAddress, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex),
-            mosaics: this.mosaics.map((mosaic) => statement.resolveMosaic(mosaic, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex))
+            recipientAddress: statement.resolveAddress(
+                this.recipientAddress,
+                transactionInfo.height.toString(),
+                transactionInfo.index,
+                aggregateTransactionIndex,
+            ),
+            mosaics: this.mosaics.map((mosaic) =>
+                statement.resolveMosaic(mosaic, transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
+            ),
         });
     }
 }

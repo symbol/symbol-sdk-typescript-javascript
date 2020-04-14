@@ -14,25 +14,27 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {EncryptedPrivateKey} from '../../../src/model/wallet/EncryptedPrivateKey';
-import {Password} from '../../../src/model/wallet/Password';
+import { expect } from 'chai';
+import { EncryptedPrivateKey } from '../../../src/model/wallet/EncryptedPrivateKey';
+import { Password } from '../../../src/model/wallet/Password';
 
 describe('EncryptedPrivateKey', () => {
-
     it('should createComplete a private key encrypted object', () => {
         const privateKeyEncrypted = new EncryptedPrivateKey(
             'b6edb40bae6d099f099775bc828e36961f7fbb5e3ee62236714ad1e980ac8986bd4ed690f576abb5268ba0915ae575e7',
-            '4344645752e57065f814b51713d05810');
-        expect(privateKeyEncrypted.encryptedKey)
-            .to.be.equal('b6edb40bae6d099f099775bc828e36961f7fbb5e3ee62236714ad1e980ac8986bd4ed690f576abb5268ba0915ae575e7');
+            '4344645752e57065f814b51713d05810',
+        );
+        expect(privateKeyEncrypted.encryptedKey).to.be.equal(
+            'b6edb40bae6d099f099775bc828e36961f7fbb5e3ee62236714ad1e980ac8986bd4ed690f576abb5268ba0915ae575e7',
+        );
         expect(privateKeyEncrypted.iv).to.be.equal('4344645752e57065f814b51713d05810');
     });
 
     it('should decrypt a private key encrypted object', () => {
         const privateKeyEncrypted = new EncryptedPrivateKey(
             'b6edb40bae6d099f099775bc828e36961f7fbb5e3ee62236714ad1e980ac8986bd4ed690f576abb5268ba0915ae575e7',
-            '4344645752e57065f814b51713d05810');
+            '4344645752e57065f814b51713d05810',
+        );
         const privateKeyDecrypted = privateKeyEncrypted.decrypt(new Password('password'));
         expect(privateKeyDecrypted).to.be.equal('e85467d94fdf70b5713d3b3b083597e0962f38843feb10259158a3fa6dc444b6');
     });

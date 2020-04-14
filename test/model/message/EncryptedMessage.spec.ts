@@ -14,28 +14,29 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {Account} from '../../../src/model/account/Account';
-import {EncryptedMessage} from '../../../src/model/message/EncryptedMessage';
+import { expect } from 'chai';
+import { Account } from '../../../src/model/account/Account';
+import { EncryptedMessage } from '../../../src/model/message/EncryptedMessage';
 import { Deadline, NetworkCurrencyLocal, NetworkType, TransferTransaction } from '../../../src/model/model';
 
 describe('EncryptedMessage', () => {
-
     let sender: Account;
     let recipient: Account;
 
     let sender_nis: Account;
     let recipient_nis: Account;
     before(() => {
-        sender = Account.createFromPrivateKey('2602F4236B199B3DF762B2AAB46FC3B77D8DDB214F0B62538D3827576C46C108',
-                                              NetworkType.MIJIN_TEST);
-        recipient = Account.createFromPrivateKey('B72F2950498111BADF276D6D9D5E345F04E0D5C9B8342DA983C3395B4CF18F08',
-                                              NetworkType.MIJIN_TEST);
+        sender = Account.createFromPrivateKey('2602F4236B199B3DF762B2AAB46FC3B77D8DDB214F0B62538D3827576C46C108', NetworkType.MIJIN_TEST);
+        recipient = Account.createFromPrivateKey(
+            'B72F2950498111BADF276D6D9D5E345F04E0D5C9B8342DA983C3395B4CF18F08',
+            NetworkType.MIJIN_TEST,
+        );
 
-        sender_nis = Account.createFromPrivateKey('2602F4236B199B3DF762B2AAB46FC3B77D8DDB214F0B62538D3827576C46C108',
-                                              NetworkType.TEST_NET);
-        recipient_nis = Account.createFromPrivateKey('B72F2950498111BADF276D6D9D5E345F04E0D5C9B8342DA983C3395B4CF18F08',
-                                              NetworkType.TEST_NET);
+        sender_nis = Account.createFromPrivateKey('2602F4236B199B3DF762B2AAB46FC3B77D8DDB214F0B62538D3827576C46C108', NetworkType.TEST_NET);
+        recipient_nis = Account.createFromPrivateKey(
+            'B72F2950498111BADF276D6D9D5E345F04E0D5C9B8342DA983C3395B4CF18F08',
+            NetworkType.TEST_NET,
+        );
     });
 
     it('should create a encrypted message from a DTO', () => {
@@ -66,8 +67,9 @@ describe('EncryptedMessage', () => {
             NetworkType.MIJIN_TEST,
         );
         const signedTransaction = transferTransaction.signWith(sender, generationHash);
-        const encryptMessage = EncryptedMessage
-            .createFromPayload(signedTransaction.payload.substring(354, signedTransaction.payload.length));
+        const encryptMessage = EncryptedMessage.createFromPayload(
+            signedTransaction.payload.substring(354, signedTransaction.payload.length),
+        );
         const plainMessage = recipient.decryptMessage(encryptMessage, sender.publicAccount, NetworkType.MIJIN_TEST);
         expect(plainMessage.payload).to.be.equal('Testing simple transfer');
     });
@@ -78,5 +80,4 @@ describe('EncryptedMessage', () => {
         const plainMessage = recipient_nis.decryptMessage(new EncryptedMessage(payload), sender_nis.publicAccount, NetworkType.TEST_NET);
         expect(plainMessage.payload).to.be.equal('Testing simple transfer');
     });
-
 });

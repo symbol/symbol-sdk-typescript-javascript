@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { NamespaceMosaicIdGenerator } from "../../../src/infrastructure/transaction/NamespaceMosaicIdGenerator";
-import { expect } from "chai";
+import { NamespaceMosaicIdGenerator } from '../../../src/infrastructure/transaction/NamespaceMosaicIdGenerator';
+import { expect } from 'chai';
 
 describe('NamespaceMosaicIdGenerator', () => {
-
     it('namespaceId of xym', async () => {
         const namespaceId = NamespaceMosaicIdGenerator.namespaceId('xym');
         expect(namespaceId).to.be.deep.equal([2235463876, 2227923525]);
@@ -25,8 +24,7 @@ describe('NamespaceMosaicIdGenerator', () => {
 
     it('namespaceId of my.custom.currency', async () => {
         const namespaceId = NamespaceMosaicIdGenerator.namespaceId('my.custom.currency');
-        const subnamespaceNamespaceId = NamespaceMosaicIdGenerator
-        .subnamespaceNamespaceId('my.custom', 'currency');
+        const subnamespaceNamespaceId = NamespaceMosaicIdGenerator.subnamespaceNamespaceId('my.custom', 'currency');
 
         expect(namespaceId).to.be.deep.equal([4191522918, 3224088180]);
         expect(namespaceId).to.be.deep.equal(subnamespaceNamespaceId);
@@ -34,8 +32,7 @@ describe('NamespaceMosaicIdGenerator', () => {
 
     it('namespaceId of my.custom', async () => {
         const namespaceId = NamespaceMosaicIdGenerator.namespaceId('my.custom');
-        const namespaceParentId = NamespaceMosaicIdGenerator
-        .subnamespaceParentId('my.custom', 'currency');
+        const namespaceParentId = NamespaceMosaicIdGenerator.subnamespaceParentId('my.custom', 'currency');
 
         expect(namespaceId).to.be.deep.equal([3250622501, 2426098581]);
         expect(namespaceId).to.be.deep.equal(namespaceParentId);

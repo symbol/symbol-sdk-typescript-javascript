@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-import {deepEqual} from 'assert';
-import {BlockchainScore} from '../../../src/model/blockchain/BlockchainScore';
+import { deepEqual } from 'assert';
+import { BlockchainScore } from '../../../src/model/blockchain/BlockchainScore';
 
 describe('BlockchainScore', () => {
-
     it('should createComplete an BlockchainScore object', () => {
         const blockchainScoreDTO = {
             scoreHigh: BigInt(0),
             scoreLow: BigInt(0),
         };
 
-        const blockchainScore = new BlockchainScore(
-            blockchainScoreDTO.scoreLow,
-            blockchainScoreDTO.scoreHigh,
-        );
+        const blockchainScore = new BlockchainScore(blockchainScoreDTO.scoreLow, blockchainScoreDTO.scoreHigh);
 
         deepEqual(blockchainScore.scoreLow, blockchainScoreDTO.scoreLow);
         deepEqual(blockchainScore.scoreHigh, blockchainScoreDTO.scoreHigh);

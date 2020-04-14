@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Crypto, SHA3Hasher} from '../../core/crypto';
+import { Crypto, SHA3Hasher } from '../../core/crypto';
 import { Convert } from '../../core/format/Convert';
 import { Account } from '../account/Account';
 import { NetworkType } from '../network/NetworkType';
@@ -37,11 +37,15 @@ export class PersistentHarvestingDelegationMessage extends Message {
      * @param {NetworkType} networkType - Catapult network type
      * @return {PersistentHarvestingDelegationMessage}
      */
-    public static create(delegatedPrivateKey: string,
-                         recipientPublicKey: string,
-                         networkType: NetworkType): PersistentHarvestingDelegationMessage {
+    public static create(
+        delegatedPrivateKey: string,
+        recipientPublicKey: string,
+        networkType: NetworkType,
+    ): PersistentHarvestingDelegationMessage {
         const ephemeralKeypair = Account.generateNewAccount(networkType);
-        const encrypted = MessageMarker.PersistentDelegationUnlock + ephemeralKeypair.publicKey +
+        const encrypted =
+            MessageMarker.PersistentDelegationUnlock +
+            ephemeralKeypair.publicKey +
             Crypto.encode(ephemeralKeypair.privateKey, recipientPublicKey, delegatedPrivateKey, true).toUpperCase();
         return new PersistentHarvestingDelegationMessage(encrypted);
     }
@@ -61,8 +65,7 @@ export class PersistentHarvestingDelegationMessage extends Message {
      * @param privateKey - Recipient private key
      * @return {string}
      */
-    public static decrypt(encryptMessage: PersistentHarvestingDelegationMessage,
-                          privateKey: string): string {
+    public static decrypt(encryptMessage: PersistentHarvestingDelegationMessage, privateKey: string): string {
         const markerLength = MessageMarker.PersistentDelegationUnlock.length;
         const ephemeralPublicKey = encryptMessage.payload.substring(markerLength, markerLength + 64);
         const payload = encryptMessage.payload.substring(markerLength + ephemeralPublicKey.length);

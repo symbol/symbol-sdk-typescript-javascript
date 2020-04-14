@@ -25,23 +25,21 @@ const Hash512 = 64;
  * The public account structure contains account's address and public key.
  */
 export class PublicAccount {
-
     /**
      * @internal
      * @param publicKey
      * @param address
      */
     constructor(
-                /**
-                 * The account public private.
-                 */
-                public readonly publicKey: string,
-                /**
-                 * The account address.
-                 */
-                public readonly address: Address) {
-
-    }
+        /**
+         * The account public private.
+         */
+        public readonly publicKey: string,
+        /**
+         * The account address.
+         */
+        public readonly address: Address,
+    ) {}
 
     /**
      * Create a PublicAccount from a public key and network type.

@@ -24,8 +24,9 @@ export class RentalFees {
      * @param effectiveChildNamespaceRentalFee - Absolute amount. An amount of 123456789 (absolute) for a mosaic with divisibility 6 means 123.456789 (relative).
      * @param effectiveMosaicRentalFee - bsolute amount. An amount of 123456789 (absolute) for a mosaic with divisibility 6 means 123.456789 (relative).
      */
-    constructor(public readonly effectiveRootNamespaceRentalFeePerBlock: bigint,
-                public readonly effectiveChildNamespaceRentalFee: bigint,
-                public readonly effectiveMosaicRentalFee: bigint) {
-    }
+    constructor(
+        public readonly effectiveRootNamespaceRentalFeePerBlock: bigint,
+        public readonly effectiveChildNamespaceRentalFee: bigint,
+        public readonly effectiveMosaicRentalFee: bigint,
+    ) {}
 }

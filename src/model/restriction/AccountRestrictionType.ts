@@ -24,7 +24,7 @@
  * 0x80 Account restriction is interpreted as blocking operation.
  */
 
- // !!This enum will be deprecated once catbuffer-typescript code applied.
+// !!This enum will be deprecated once catbuffer-typescript code applied.
 enum AccountRestrictionTypeEnum {
     Address = 0x0001,
     Mosaic = 0x0002,
@@ -52,40 +52,36 @@ export enum AccountRestrictionFlags {
     /**
      * Allow only outgoing transactions to a given address.
      */
-    AllowOutgoingAddress = (AccountRestrictionTypeEnum.Address + AccountRestrictionTypeEnum.Outgoing),
+    AllowOutgoingAddress = AccountRestrictionTypeEnum.Address + AccountRestrictionTypeEnum.Outgoing,
 
     /**
      * Allow only outgoing transactions with a given transaction type.
      */
-    AllowOutgoingTransactionType = (AccountRestrictionTypeEnum.TransactionType +
-                                                           AccountRestrictionTypeEnum.Outgoing),
+    AllowOutgoingTransactionType = AccountRestrictionTypeEnum.TransactionType + AccountRestrictionTypeEnum.Outgoing,
 
     /**
      * Block incoming transactions from a given address.
      */
-    BlockIncomingAddress = (AccountRestrictionTypeEnum.Address + AccountRestrictionTypeEnum.Block),
+    BlockIncomingAddress = AccountRestrictionTypeEnum.Address + AccountRestrictionTypeEnum.Block,
 
     /**
      * Block incoming transactions containing a given mosaic identifier.
      */
-    BlockMosaic = (AccountRestrictionTypeEnum.Mosaic + AccountRestrictionTypeEnum.Block),
+    BlockMosaic = AccountRestrictionTypeEnum.Mosaic + AccountRestrictionTypeEnum.Block,
 
     /**
      * Block incoming transactions with a given transaction type.
      */
-    BlockIncomingTransactionType = (AccountRestrictionTypeEnum.TransactionType +
-                                                           AccountRestrictionTypeEnum.Block),
+    BlockIncomingTransactionType = AccountRestrictionTypeEnum.TransactionType + AccountRestrictionTypeEnum.Block,
 
     /**
      * Block outgoing transactions from a given address.
      */
-    BlockOutgoingAddress = (AccountRestrictionTypeEnum.Address +
-                                                   AccountRestrictionTypeEnum.Block +
-                                                   AccountRestrictionTypeEnum.Outgoing),
+    BlockOutgoingAddress = AccountRestrictionTypeEnum.Address + AccountRestrictionTypeEnum.Block + AccountRestrictionTypeEnum.Outgoing,
     /**
      * Block outgoing transactions with a given transaction type.
      */
-    BlockOutgoingTransactionType = (AccountRestrictionTypeEnum.TransactionType +
-                                                           AccountRestrictionTypeEnum.Block +
-                                                           AccountRestrictionTypeEnum.Outgoing),
+    BlockOutgoingTransactionType = AccountRestrictionTypeEnum.TransactionType +
+        AccountRestrictionTypeEnum.Block +
+        AccountRestrictionTypeEnum.Outgoing,
 }

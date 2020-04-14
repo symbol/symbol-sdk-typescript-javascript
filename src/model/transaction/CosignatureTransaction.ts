@@ -16,9 +16,9 @@
 
 import { KeyPair, SHA3Hasher } from '../../core/crypto';
 import { Convert } from '../../core/format/Convert';
-import {Account} from '../account/Account';
-import {AggregateTransaction} from './AggregateTransaction';
-import {CosignatureSignedTransaction} from './CosignatureSignedTransaction';
+import { Account } from '../account/Account';
+import { AggregateTransaction } from './AggregateTransaction';
+import { CosignatureSignedTransaction } from './CosignatureSignedTransaction';
 import { Transaction } from './Transaction';
 
 /**
@@ -28,12 +28,12 @@ export class CosignatureTransaction {
     /**
      * @param transactionToCosign
      */
-    constructor(/**
-                 * Transaction to cosign.
-                 */
-                public readonly transactionToCosign: AggregateTransaction) {
-
-    }
+    constructor(
+        /**
+         * Transaction to cosign.
+         */
+        public readonly transactionToCosign: AggregateTransaction,
+    ) {}
 
     /**
      * Create a cosignature transaction
@@ -52,22 +52,19 @@ export class CosignatureTransaction {
      * @param generationHash - Network generation hash
      * @returns {CosignatureSignedTransaction}
      */
-    public static signTransactionPayload(account: Account,
-                                         payload: string,
-                                         generationHash: string): CosignatureSignedTransaction {
+    public static signTransactionPayload(account: Account, payload: string, generationHash: string): CosignatureSignedTransaction {
         /**
          * For aggregated complete transaction, cosignatories are gathered off chain announced.
          */
-        const transactionHash =
-            Transaction.createTransactionHash(payload, Array.from(Convert.hexToUint8(generationHash)), account.networkType);
+        const transactionHash = Transaction.createTransactionHash(
+            payload,
+            Array.from(Convert.hexToUint8(generationHash)),
+            account.networkType,
+        );
         const hashBytes = Convert.hexToUint8(transactionHash);
         const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(account.privateKey);
         const signature = KeyPair.sign(keyPairEncoded, new Uint8Array(hashBytes));
-        return new CosignatureSignedTransaction(
-            Convert.uint8ToHex(hashBytes),
-            Convert.uint8ToHex(signature),
-            account.publicKey,
-        );
+        return new CosignatureSignedTransaction(Convert.uint8ToHex(hashBytes), Convert.uint8ToHex(signature), account.publicKey);
     }
 
     /**
@@ -83,10 +80,6 @@ export class CosignatureTransaction {
         const hashBytes = Convert.hexToUint8(hash ? hash : '');
         const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(account.privateKey);
         const signature = KeyPair.sign(keyPairEncoded, new Uint8Array(hashBytes));
-        return new CosignatureSignedTransaction(
-            hash ? hash : '',
-            Convert.uint8ToHex(signature),
-            account.publicKey,
-        );
+        return new CosignatureSignedTransaction(hash ? hash : '', Convert.uint8ToHex(signature), account.publicKey);
     }
 }

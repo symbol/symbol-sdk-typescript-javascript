@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
+import { expect } from 'chai';
 import { StorageInfo } from '../../../src/model/blockchain/StorageInfo';
 
 describe('BlockchainStorageInfo', () => {
-
     it('should createComplete an StorageInfo object', () => {
         const blockchainStorageInfoDTO = {
             numBlocks: 1,

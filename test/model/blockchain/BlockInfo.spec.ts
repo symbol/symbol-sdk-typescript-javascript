@@ -21,10 +21,9 @@ import { BlockInfo } from '../../../src/model/blockchain/BlockInfo';
 import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('BlockInfo', () => {
-
     it('should createComplete an BlockInfo object', () => {
         const blockDTO = {
-            block:  {
+            block: {
                 blockTransactionsHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
                 blockReceiptsHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
                 stateHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
@@ -32,8 +31,9 @@ describe('BlockInfo', () => {
                 feeMultiplier: 1,
                 height: BigInt(1),
                 previousBlockHash: '0000000000000000000000000000000000000000000000000000000000000000',
-                signature: '37351C8244AC166BE6664E3FA954E99A3239AC46E51E2B32CEA1C72DD0851100A7731868' +
-                'E932E1A9BEF8A27D48E1FFEE401E933EB801824373E7537E51733E0F',
+                signature:
+                    '37351C8244AC166BE6664E3FA954E99A3239AC46E51E2B32CEA1C72DD0851100A7731868' +
+                    'E932E1A9BEF8A27D48E1FFEE401E933EB801824373E7537E51733E0F',
                 signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                 beneficiaryPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                 timestamp: BigInt(0),
@@ -91,6 +91,5 @@ describe('BlockInfo', () => {
         expect(blockInfo.stateHash).to.be.equal(blockDTO.block.stateHash);
         expect((blockInfo.beneficiaryPublicKey as PublicAccount).publicKey).to.be.equal(blockDTO.block.beneficiaryPublicKey);
         expect(blockInfo.numStatements).to.be.equal(blockDTO.meta.numStatements);
-
     });
 });

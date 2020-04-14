@@ -68,9 +68,7 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
     public getMerkleReceipts(height: bigint, hash: string): Observable<MerkleProofInfo> {
         return this.call(
             this.receiptRoutesApi.getMerkleReceipts(height.toString(), hash),
-            (body) => new MerkleProofInfo(
-                body.merklePath!.map((payload) => new MerklePathItem(payload.position, payload.hash)),
-            ),
+            (body) => new MerkleProofInfo(body.merklePath!.map((payload) => new MerklePathItem(payload.position, payload.hash))),
         );
     }
 
@@ -81,9 +79,8 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
      */
     public getBlockReceipts(height: bigint): Observable<Statement> {
         return this.networkTypeObservable.pipe(
-            mergeMap((networkType) => this.call(
-                this.receiptRoutesApi.getBlockReceipts(height.toString()),
-                (body) => CreateStatementFromDTO(body, networkType)),
+            mergeMap((networkType) =>
+                this.call(this.receiptRoutesApi.getBlockReceipts(height.toString()), (body) => CreateStatementFromDTO(body, networkType)),
             ),
         );
     }

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
+import { expect } from 'chai';
 import { MosaicFlags, AccountInfo, AccountType } from '../../src/model/model';
-import {Mosaic} from '../../src/model/mosaic/Mosaic';
-import {MosaicId} from '../../src/model/mosaic/MosaicId';
-import {MosaicInfo} from '../../src/model/mosaic/MosaicInfo';
-import {MosaicAmountView} from '../../src/service/MosaicAmountView';
-import {MosaicService} from '../../src/service/MosaicService';
-import {MosaicView} from '../../src/service/MosaicView';
+import { Mosaic } from '../../src/model/mosaic/Mosaic';
+import { MosaicId } from '../../src/model/mosaic/MosaicId';
+import { MosaicInfo } from '../../src/model/mosaic/MosaicInfo';
+import { MosaicAmountView } from '../../src/service/MosaicAmountView';
+import { MosaicService } from '../../src/service/MosaicService';
+import { MosaicView } from '../../src/service/MosaicView';
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
 import { mock, when, instance, deepEqual } from 'ts-mockito';
 import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
@@ -35,9 +35,9 @@ describe('MosaicService', () => {
 
     it('mosaicsView', () => {
         const mosaicId = new MosaicId('85BBEA6CC462B244');
-        when(mosaicRepositoryMock.getMosaics(deepEqual([mosaicId]))).thenReturn(observableOf(
-            [buildMosaicInfo(mosaicId, TestingAccount.publicAccount)]
-        ));
+        when(mosaicRepositoryMock.getMosaics(deepEqual([mosaicId]))).thenReturn(
+            observableOf([buildMosaicInfo(mosaicId, TestingAccount.publicAccount)]),
+        );
         const mosaicService = new MosaicService(instance(accountRepositoryMock), instance(mosaicRepositoryMock));
         return mosaicService.mosaicsView([mosaicId]).subscribe((mosaicsView: MosaicView[]) => {
             const mosaicView = mosaicsView[0];
@@ -47,9 +47,7 @@ describe('MosaicService', () => {
 
     it('mosaicsView of no existing mosaicId', () => {
         const mosaicId = new MosaicId('85BBEA6CC462B244');
-        when(mosaicRepositoryMock.getMosaics(deepEqual([mosaicId]))).thenReturn(observableOf(
-            []
-        ));
+        when(mosaicRepositoryMock.getMosaics(deepEqual([mosaicId]))).thenReturn(observableOf([]));
         const mosaicService = new MosaicService(instance(accountRepositoryMock), instance(mosaicRepositoryMock));
         return mosaicService.mosaicsView([mosaicId]).subscribe((mosaicsView: MosaicView[]) => {
             expect(mosaicsView.length).to.be.equal(0);
@@ -58,42 +56,34 @@ describe('MosaicService', () => {
 
     it('mosaicsAmountView', () => {
         const mosaicId = new MosaicId('85BBEA6CC462B244');
-        when(mosaicRepositoryMock.getMosaics(deepEqual([mosaicId]))).thenReturn(observableOf(
-            [buildMosaicInfo(mosaicId, TestingAccount.publicAccount)]
-        ));
-        when(accountRepositoryMock.getAccountInfo(deepEqual(TestingAccount.address))).thenReturn(observableOf(
-            buildAccountInfo(mosaicId),
-        ));
+        when(mosaicRepositoryMock.getMosaics(deepEqual([mosaicId]))).thenReturn(
+            observableOf([buildMosaicInfo(mosaicId, TestingAccount.publicAccount)]),
+        );
+        when(accountRepositoryMock.getAccountInfo(deepEqual(TestingAccount.address))).thenReturn(observableOf(buildAccountInfo(mosaicId)));
 
         const mosaicService = new MosaicService(instance(accountRepositoryMock), instance(mosaicRepositoryMock));
-        return mosaicService.mosaicsAmountViewFromAddress(TestingAccount.address)
-            .subscribe((mosaicsAmountView: MosaicAmountView[]) => {
-                const mosaicAmountView = mosaicsAmountView[0];
-                expect(mosaicAmountView.mosaicInfo).to.be.an.instanceof(MosaicInfo);
-            });
+        return mosaicService.mosaicsAmountViewFromAddress(TestingAccount.address).subscribe((mosaicsAmountView: MosaicAmountView[]) => {
+            const mosaicAmountView = mosaicsAmountView[0];
+            expect(mosaicAmountView.mosaicInfo).to.be.an.instanceof(MosaicInfo);
+        });
     });
 
     it('mosaicsAmountView of no existing account', () => {
         const mosaicId = new MosaicId('85BBEA6CC462B244');
-        when(mosaicRepositoryMock.getMosaics(deepEqual([mosaicId]))).thenReturn(observableOf(
-            []
-        ));
-        when(accountRepositoryMock.getAccountInfo(deepEqual(TestingAccount.address))).thenReturn(observableOf(
-            buildAccountInfo(mosaicId),
-        ));
+        when(mosaicRepositoryMock.getMosaics(deepEqual([mosaicId]))).thenReturn(observableOf([]));
+        when(accountRepositoryMock.getAccountInfo(deepEqual(TestingAccount.address))).thenReturn(observableOf(buildAccountInfo(mosaicId)));
 
         const mosaicService = new MosaicService(instance(accountRepositoryMock), instance(mosaicRepositoryMock));
-        return mosaicService.mosaicsAmountViewFromAddress(TestingAccount.address)
-            .subscribe((mosaicsAmountView: MosaicAmountView[]) => {
-                expect(mosaicsAmountView.length).to.be.equal(0);
-            });
+        return mosaicService.mosaicsAmountViewFromAddress(TestingAccount.address).subscribe((mosaicsAmountView: MosaicAmountView[]) => {
+            expect(mosaicsAmountView.length).to.be.equal(0);
+        });
     });
 
     it('mosaicsAmountView', () => {
         const mosaicId = new MosaicId('85BBEA6CC462B244');
-        when(mosaicRepositoryMock.getMosaics(deepEqual([mosaicId]))).thenReturn(observableOf(
-            [buildMosaicInfo(mosaicId, TestingAccount.publicAccount)]
-        ));
+        when(mosaicRepositoryMock.getMosaics(deepEqual([mosaicId]))).thenReturn(
+            observableOf([buildMosaicInfo(mosaicId, TestingAccount.publicAccount)]),
+        );
 
         const mosaicService = new MosaicService(instance(accountRepositoryMock), instance(mosaicRepositoryMock));
         const mosaic = new Mosaic(mosaicId, BigInt(1000));
@@ -105,18 +95,21 @@ describe('MosaicService', () => {
     });
 
     function buildMosaicInfo(mosaicId: MosaicId, publicAccount: PublicAccount): MosaicInfo {
-        return new MosaicInfo(
-            mosaicId, BigInt(10), BigInt(1), publicAccount, 0,
-            new MosaicFlags(1), 6, BigInt(1)
-        );
+        return new MosaicInfo(mosaicId, BigInt(10), BigInt(1), publicAccount, 0, new MosaicFlags(1), 6, BigInt(1));
     }
 
-    function buildAccountInfo(mosaicId: MosaicId, isEmptyMosaic: boolean = false): AccountInfo {
+    function buildAccountInfo(mosaicId: MosaicId, isEmptyMosaic = false): AccountInfo {
         return new AccountInfo(
-            TestingAccount.address, BigInt(1), TestingAccount.publicKey, BigInt(1),
-            AccountType.Main, '', [], isEmptyMosaic ? [] : [new Mosaic(mosaicId, BigInt(100))], BigInt(1),
+            TestingAccount.address,
+            BigInt(1),
+            TestingAccount.publicKey,
+            BigInt(1),
+            AccountType.Main,
+            '',
+            [],
+            isEmptyMosaic ? [] : [new Mosaic(mosaicId, BigInt(100))],
+            BigInt(1),
             BigInt(1),
         );
     }
-
 });

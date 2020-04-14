@@ -14,29 +14,39 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {MultisigAccountInfo} from '../../../src/model/account/MultisigAccountInfo';
-import {PublicAccount} from '../../../src/model/account/PublicAccount';
-import {NetworkType} from '../../../src/model/network/NetworkType';
+import { expect } from 'chai';
+import { MultisigAccountInfo } from '../../../src/model/account/MultisigAccountInfo';
+import { PublicAccount } from '../../../src/model/account/PublicAccount';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 
 describe('MultisigAccountInfo', () => {
     const multisigAccountInfoDTO = {
         multisig: {
-            account: PublicAccount.createFromPublicKey('B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D',
-                NetworkType.MIJIN_TEST),
+            account: PublicAccount.createFromPublicKey(
+                'B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D',
+                NetworkType.MIJIN_TEST,
+            ),
             cosignatories: [
-                PublicAccount.createFromPublicKey('CF893FFCC47C33E7F68AB1DB56365C156B0736824A0C1E273F9E00B8DF8F01EB',
-                    NetworkType.MIJIN_TEST),
-                PublicAccount.createFromPublicKey('68B3FBB18729C1FDE225C57F8CE080FA828F0067E451A3FD81FA628842B0B763',
-                    NetworkType.MIJIN_TEST),
-                PublicAccount.createFromPublicKey('DAB1C38C3E1642494FCCB33138B95E81867B5FB59FC4277A1D53761C8B9F6D14',
-                    NetworkType.MIJIN_TEST),
+                PublicAccount.createFromPublicKey(
+                    'CF893FFCC47C33E7F68AB1DB56365C156B0736824A0C1E273F9E00B8DF8F01EB',
+                    NetworkType.MIJIN_TEST,
+                ),
+                PublicAccount.createFromPublicKey(
+                    '68B3FBB18729C1FDE225C57F8CE080FA828F0067E451A3FD81FA628842B0B763',
+                    NetworkType.MIJIN_TEST,
+                ),
+                PublicAccount.createFromPublicKey(
+                    'DAB1C38C3E1642494FCCB33138B95E81867B5FB59FC4277A1D53761C8B9F6D14',
+                    NetworkType.MIJIN_TEST,
+                ),
             ],
             minApproval: 3,
             minRemoval: 3,
             multisigAccounts: [
-                PublicAccount.createFromPublicKey('1674016C27FE2C2EB5DFA73996FA54A183B38AED0AA64F756A3918BAF08E061B',
-                    NetworkType.MIJIN_TEST),
+                PublicAccount.createFromPublicKey(
+                    '1674016C27FE2C2EB5DFA73996FA54A183B38AED0AA64F756A3918BAF08E061B',
+                    NetworkType.MIJIN_TEST,
+                ),
             ],
         },
     };
@@ -102,9 +112,14 @@ describe('MultisigAccountInfo', () => {
                 multisigAccountInfoDTO.multisig.multisigAccounts,
             );
 
-            expect(multisigAccountInfo.hasCosigner(
-                PublicAccount.createFromPublicKey('CF893FFCC47C33E7F68AB1DB56365C156B0736824A0C1E273F9E00B8DF8F01EB',
-                    NetworkType.MIJIN_TEST))).to.be.equal(true);
+            expect(
+                multisigAccountInfo.hasCosigner(
+                    PublicAccount.createFromPublicKey(
+                        'CF893FFCC47C33E7F68AB1DB56365C156B0736824A0C1E273F9E00B8DF8F01EB',
+                        NetworkType.MIJIN_TEST,
+                    ),
+                ),
+            ).to.be.equal(true);
         });
 
         it('should return false when account is not in the cosignatories list', () => {
@@ -116,9 +131,14 @@ describe('MultisigAccountInfo', () => {
                 multisigAccountInfoDTO.multisig.multisigAccounts,
             );
 
-            expect(multisigAccountInfo.hasCosigner(
-                PublicAccount.createFromPublicKey('B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D',
-                    NetworkType.MIJIN_TEST))).to.be.equal(false);
+            expect(
+                multisigAccountInfo.hasCosigner(
+                    PublicAccount.createFromPublicKey(
+                        'B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D',
+                        NetworkType.MIJIN_TEST,
+                    ),
+                ),
+            ).to.be.equal(false);
         });
     });
 
@@ -132,9 +152,14 @@ describe('MultisigAccountInfo', () => {
                 multisigAccountInfoDTO.multisig.multisigAccounts,
             );
 
-            expect(multisigAccountInfo.isCosignerOfMultisigAccount(
-                PublicAccount.createFromPublicKey('1674016C27FE2C2EB5DFA73996FA54A183B38AED0AA64F756A3918BAF08E061B',
-                    NetworkType.MIJIN_TEST))).to.be.equal(true);
+            expect(
+                multisigAccountInfo.isCosignerOfMultisigAccount(
+                    PublicAccount.createFromPublicKey(
+                        '1674016C27FE2C2EB5DFA73996FA54A183B38AED0AA64F756A3918BAF08E061B',
+                        NetworkType.MIJIN_TEST,
+                    ),
+                ),
+            ).to.be.equal(true);
         });
 
         it('should return false when account is not in the multisig account list', () => {
@@ -146,9 +171,14 @@ describe('MultisigAccountInfo', () => {
                 multisigAccountInfoDTO.multisig.multisigAccounts,
             );
 
-            expect(multisigAccountInfo.isCosignerOfMultisigAccount(
-                PublicAccount.createFromPublicKey('B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D',
-                    NetworkType.MIJIN_TEST))).to.be.equal(false);
+            expect(
+                multisigAccountInfo.isCosignerOfMultisigAccount(
+                    PublicAccount.createFromPublicKey(
+                        'B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D',
+                        NetworkType.MIJIN_TEST,
+                    ),
+                ),
+            ).to.be.equal(false);
         });
     });
 });

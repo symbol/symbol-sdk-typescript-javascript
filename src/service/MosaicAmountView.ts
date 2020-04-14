@@ -14,29 +14,28 @@
  * limitations under the License.
  */
 
-import {MosaicInfo} from '../model/mosaic/MosaicInfo';
+import { MosaicInfo } from '../model/mosaic/MosaicInfo';
 
 /**
  * Class representing mosaic view information with amount
  */
 export class MosaicAmountView {
-
     /**
      * @param mosaicInfo
      * @param namespaceName
      * @param mosaicName
      * @param amount
      */
-    constructor(/**
-                 * The mosaic information
-                 */
-                public readonly mosaicInfo: MosaicInfo,
-                /**
-                 * The amount of absolute mosaics we have
-                 */
-                public readonly amount: bigint) {
-
-    }
+    constructor(
+        /**
+         * The mosaic information
+         */
+        public readonly mosaicInfo: MosaicInfo,
+        /**
+         * The amount of absolute mosaics we have
+         */
+        public readonly amount: bigint,
+    ) {}
 
     /**
      * Relative amount dividing amount by the divisibility

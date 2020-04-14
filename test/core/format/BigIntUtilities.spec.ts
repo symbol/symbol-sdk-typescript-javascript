@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { expect } from "chai";
-import { BigIntUtilities } from "../../../src/core/format/BigIntUtilities";
+import { expect } from 'chai';
+import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('BigIntUtilities', () => {
-
     it('BigIntToHex of 100', async () => {
         expect(BigIntUtilities.BigIntToHex(BigInt(100))).to.be.equal('0000000000000064');
         expect(BigIntUtilities.HexToBigInt('0000000000000064').toString()).to.be.equal(BigInt(100).toString());

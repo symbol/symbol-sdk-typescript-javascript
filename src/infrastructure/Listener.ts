@@ -76,14 +76,16 @@ export class Listener implements IListener {
      * @param config - Listener configuration
      * @param websocketInjected - (Optional) WebSocket injected when using listeners in client
      */
-    constructor(/**
-                 * Listener configuration.
-                 */
-                private config: string,
-                /**
-                 * WebSocket injected when using listeners in client.
-                 */
-                private websocketInjected?: any) {
+    constructor(
+        /**
+         * Listener configuration.
+         */
+        private config: string,
+        /**
+         * WebSocket injected when using listeners in client.
+         */
+        private websocketInjected?: any,
+    ) {
         this.config = config.replace(/\/$/, '');
         this.url = `${this.config}/ws`;
         this.messageSubject = new Subject();
@@ -101,8 +103,8 @@ export class Listener implements IListener {
                 } else {
                     this.webSocket = new WebSocket(this.url);
                 }
-                this.webSocket.onopen = () => {
-                };
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                this.webSocket.onopen = () => {};
                 this.webSocket.onerror = (err) => {
                     reject(err);
                 };
@@ -135,7 +137,8 @@ export class Listener implements IListener {
             });
         } else if (message.block) {
             this.messageSubject.next({
-                channelName: ListenerChannelName.block, message: new BlockInfo(
+                channelName: ListenerChannelName.block,
+                message: new BlockInfo(
                     message.meta.hash,
                     message.meta.generationHash,
                     message.meta.totalFee ? BigInt(message.meta.totalFee) : BigInt(0),
@@ -158,11 +161,13 @@ export class Listener implements IListener {
             });
         } else if (message.code) {
             this.messageSubject.next({
-                channelName: ListenerChannelName.status, message: new TransactionStatusError(
+                channelName: ListenerChannelName.status,
+                message: new TransactionStatusError(
                     Address.createFromEncoded(message.address),
                     message.hash,
                     message.code,
-                    Deadline.createFromDTO(message.deadline)),
+                    Deadline.createFromDTO(message.deadline),
+                ),
             });
         } else if (message.parentHash) {
             this.messageSubject.next({
@@ -207,12 +212,12 @@ export class Listener implements IListener {
      */
     public newBlock(): Observable<BlockInfo> {
         this.subscribeTo('block');
-        return this.messageSubject
-        .asObservable().pipe(
+        return this.messageSubject.asObservable().pipe(
             share(),
             filter((_) => _.channelName === ListenerChannelName.block),
             filter((_) => _.message instanceof BlockInfo),
-            map((_) => _.message as BlockInfo));
+            map((_) => _.message as BlockInfo),
+        );
     }
 
     /**
@@ -237,7 +242,8 @@ export class Listener implements IListener {
                 } else {
                     const metaHash = _.transactionInfo!.hash;
                     return metaHash !== undefined ? metaHash.toUpperCase() === transactionHash.toUpperCase() : false;
-                }}),
+                }
+            }),
         );
     }
 
@@ -255,7 +261,8 @@ export class Listener implements IListener {
             filter((_) => _.channelName === ListenerChannelName.unconfirmedAdded),
             filter((_) => _.message instanceof Transaction),
             map((_) => _.message as Transaction),
-            filter((_) => this.transactionFromAddress(_, address)));
+            filter((_) => this.transactionFromAddress(_, address)),
+        );
     }
 
     /**
@@ -271,7 +278,8 @@ export class Listener implements IListener {
         return this.messageSubject.asObservable().pipe(
             filter((_) => _.channelName === ListenerChannelName.unconfirmedRemoved),
             filter((_) => typeof _.message === 'string'),
-            map((_) => _.message as string));
+            map((_) => _.message as string),
+        );
     }
 
     /**
@@ -296,7 +304,8 @@ export class Listener implements IListener {
                 } else {
                     const metaHash = _.transactionInfo!.hash;
                     return metaHash !== undefined ? metaHash.toUpperCase() === transactionHash.toUpperCase() : false;
-                }}),
+                }
+            }),
         );
     }
 
@@ -313,7 +322,8 @@ export class Listener implements IListener {
         return this.messageSubject.asObservable().pipe(
             filter((_) => _.channelName === ListenerChannelName.aggregateBondedRemoved),
             filter((_) => typeof _.message === 'string'),
-            map((_) => _.message as string));
+            map((_) => _.message as string),
+        );
     }
 
     /**
@@ -330,7 +340,8 @@ export class Listener implements IListener {
             filter((_) => _.channelName === ListenerChannelName.status),
             filter((_) => _.message instanceof TransactionStatusError),
             map((_) => _.message as TransactionStatusError),
-            filter((_) => address.equals(_.address)));
+            filter((_) => address.equals(_.address)),
+        );
     }
 
     /**
@@ -346,7 +357,8 @@ export class Listener implements IListener {
         return this.messageSubject.asObservable().pipe(
             filter((_) => _.channelName.toUpperCase() === ListenerChannelName.cosignature.toUpperCase()),
             filter((_) => _.message instanceof CosignatureSignedTransaction),
-            map((_) => _.message as CosignatureSignedTransaction));
+            map((_) => _.message as CosignatureSignedTransaction),
+        );
     }
 
     /**
@@ -379,8 +391,10 @@ export class Listener implements IListener {
                 }
             });
             transaction.innerTransactions.map((innerTransaction: InnerTransaction) => {
-                if (this.transactionHasSignerOrReceptor(innerTransaction, address) ||
-                    this.accountAddedToMultiSig(innerTransaction, address)) {
+                if (
+                    this.transactionHasSignerOrReceptor(innerTransaction, address) ||
+                    this.accountAddedToMultiSig(innerTransaction, address)
+                ) {
                     transactionFromAddress = true;
                 }
             });
@@ -395,15 +409,13 @@ export class Listener implements IListener {
      * @returns {boolean}
      */
     private transactionHasSignerOrReceptor(transaction: Transaction, address: Address | NamespaceId): boolean {
-
         if (address instanceof NamespaceId) {
-            return transaction instanceof TransferTransaction
-                && (transaction.recipientAddress as NamespaceId).equals(address);
+            return transaction instanceof TransferTransaction && (transaction.recipientAddress as NamespaceId).equals(address);
         }
 
-        return transaction.signer!.address.equals(address) || (
-            transaction instanceof TransferTransaction
-            && (transaction.recipientAddress as Address).equals(address)
+        return (
+            transaction.signer!.address.equals(address) ||
+            (transaction instanceof TransferTransaction && (transaction.recipientAddress as Address).equals(address))
         );
     }
 
@@ -416,10 +428,10 @@ export class Listener implements IListener {
      */
     private accountAddedToMultiSig(transaction: Transaction, address: Address): boolean {
         if (transaction instanceof MultisigAccountModificationTransaction) {
-            return transaction.publicKeyAdditions.find((_: PublicAccount) =>
-                    _.address.equals(address)) !== undefined ||
-                transaction.publicKeyDeletions.find((_: PublicAccount) =>
-                    _.address.equals(address)) !== undefined;
+            return (
+                transaction.publicKeyAdditions.find((_: PublicAccount) => _.address.equals(address)) !== undefined ||
+                transaction.publicKeyDeletions.find((_: PublicAccount) => _.address.equals(address)) !== undefined
+            );
         }
         return false;
     }

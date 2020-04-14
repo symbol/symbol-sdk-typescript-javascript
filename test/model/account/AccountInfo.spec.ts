@@ -26,7 +26,6 @@ import { NetworkType } from '../../../src/model/network/NetworkType';
 import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('AccountInfo', () => {
-
     it('should createComplete an AccountInfo object', () => {
         const accountInfoDTO = {
             account: {
@@ -36,16 +35,20 @@ describe('AccountInfo', () => {
                 importanceHeight: BigInt(6462),
                 accountType: 0,
                 linkedAccountKey: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142',
-                activityBucket: [{
-                    startHeight: '1000',
-                    totalFeesPaid: 100,
-                    beneficiaryCount: 1,
-                    rawScore: 20,
-                }],
-                mosaics: [{
-                    amount: BigIntUtilities.HexToBigInt('000170B36D1C9FBA'),
-                    id: new MosaicId('D525AD41D95FCF29'),
-                }],
+                activityBucket: [
+                    {
+                        startHeight: '1000',
+                        totalFeesPaid: 100,
+                        beneficiaryCount: 1,
+                        rawScore: 20,
+                    },
+                ],
+                mosaics: [
+                    {
+                        amount: BigIntUtilities.HexToBigInt('000170B36D1C9FBA'),
+                        id: new MosaicId('D525AD41D95FCF29'),
+                    },
+                ],
                 publicKey: '846B4439154579A5903B1459C9CF69CB8153F6D0110A7A0ED61DE29AE4810BF2',
                 publicKeyHeight: BigInt(13),
             },
@@ -58,12 +61,9 @@ describe('AccountInfo', () => {
             accountInfoDTO.account.publicKeyHeight,
             accountInfoDTO.account.accountType,
             accountInfoDTO.account.linkedAccountKey,
-            accountInfoDTO.account.activityBucket.map((bucket) => new ActivityBucket(
-                bucket.startHeight,
-                bucket.totalFeesPaid,
-                bucket.beneficiaryCount,
-                bucket.rawScore,
-            )),
+            accountInfoDTO.account.activityBucket.map(
+                (bucket) => new ActivityBucket(bucket.startHeight, bucket.totalFeesPaid, bucket.beneficiaryCount, bucket.rawScore),
+            ),
             accountInfoDTO.account.mosaics.map((mosaicDTO) => new Mosaic(mosaicDTO.id, mosaicDTO.amount)),
             accountInfoDTO.account.importance,
             accountInfoDTO.account.importanceHeight,
@@ -75,6 +75,5 @@ describe('AccountInfo', () => {
         deepEqual(accountInfo.importance, accountInfoDTO.account.importance);
         deepEqual(accountInfo.importanceHeight, accountInfoDTO.account.importanceHeight);
         deepEqual(accountInfo.publicAccount, PublicAccount.createFromPublicKey(accountInfoDTO.account.publicKey, NetworkType.MIJIN_TEST));
-
     });
 });

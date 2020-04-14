@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {MosaicId} from '../mosaic/MosaicId';
-import {NamespaceId} from '../namespace/NamespaceId';
+import { MosaicId } from '../mosaic/MosaicId';
+import { NamespaceId } from '../namespace/NamespaceId';
 import { MetadataType } from './MetadataType';
 
 /**
@@ -23,7 +23,6 @@ import { MetadataType } from './MetadataType';
  * Mosaics can be transferred by means of a transfer transaction.
  */
 export class MetadataEntry {
-
     /**
      * Constructor
      * @param {string} compositeHash - The composite hash
@@ -35,34 +34,33 @@ export class MetadataEntry {
      * @param {MosaicId | NamespaceId | undefined} targetId - The target mosaic or namespace identifier
      */
     constructor(
-                /**
-                 * The composite hash
-                 */
-                public readonly compositeHash: string,
-                /**
-                 * The metadata sender's public key
-                 */
-                public readonly senderPublicKey: string,
-                /**
-                 * The metadata target public key
-                 */
-                public readonly targetPublicKey: string,
-                /**
-                 * The key scoped to source, target and type
-                 */
-                public readonly scopedMetadataKey: bigint,
-                /**
-                 * The metadata type
-                 */
-                public readonly metadataType: MetadataType,
-                /**
-                 * The metadata value
-                 */
-                public readonly value: string,
-                /**
-                 * The target mosaic or namespace identifier
-                 */
-                public readonly targetId?: MosaicId | NamespaceId) {
-
-    }
+        /**
+         * The composite hash
+         */
+        public readonly compositeHash: string,
+        /**
+         * The metadata sender's public key
+         */
+        public readonly senderPublicKey: string,
+        /**
+         * The metadata target public key
+         */
+        public readonly targetPublicKey: string,
+        /**
+         * The key scoped to source, target and type
+         */
+        public readonly scopedMetadataKey: bigint,
+        /**
+         * The metadata type
+         */
+        public readonly metadataType: MetadataType,
+        /**
+         * The metadata value
+         */
+        public readonly value: string,
+        /**
+         * The target mosaic or namespace identifier
+         */
+        public readonly targetId?: MosaicId | NamespaceId,
+    ) {}
 }

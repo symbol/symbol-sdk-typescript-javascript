@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {NetworkType} from '../../../src/model/network/NetworkType';
+import { expect } from 'chai';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 
 describe('NetworkType', () => {
     it('MAIN_NET is 0x68', () => {

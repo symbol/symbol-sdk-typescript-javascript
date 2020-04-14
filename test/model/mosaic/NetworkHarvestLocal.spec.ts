@@ -21,12 +21,10 @@ import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 import { NetworkHarvestLocal } from '../../../src/model/mosaic/NetworkHarvestLocal';
 
 describe('NetworkHarvestLocal', () => {
-
     const hexId = '941299B2B7E1291C';
     const multiplier = BigInt(1000);
 
     it('should set amount when relative and number', () => {
-
         const amount = 900000000000000;
         const currency = NetworkHarvestLocal.createRelative(amount);
         deepEqual(BigIntUtilities.BigIntToHex(currency.id.id), hexId);
@@ -46,16 +44,16 @@ describe('NetworkHarvestLocal', () => {
         const amount = 900000000000000123;
         const currency = NetworkHarvestLocal.createAbsolute(amount);
         deepEqual(BigIntUtilities.BigIntToHex(currency.id.id), hexId);
-        expect(currency.toDTO().amount).to.be.equal((BigInt(amount)).toString());
-        expect(currency.amount.toString()).to.be.equal((BigInt(amount)).toString());
+        expect(currency.toDTO().amount).to.be.equal(BigInt(amount).toString());
+        expect(currency.amount.toString()).to.be.equal(BigInt(amount).toString());
     });
 
     it('should set amount when absolute and bigint', () => {
         const amount = BigInt(900000000000000123);
         const currency = NetworkHarvestLocal.createAbsolute(amount);
         deepEqual(BigIntUtilities.BigIntToHex(currency.id.id), hexId);
-        expect(currency.toDTO().amount).to.be.equal((BigInt(amount)).toString());
-        expect(currency.amount.toString()).to.be.equal((BigInt(amount)).toString());
+        expect(currency.toDTO().amount).to.be.equal(BigInt(amount).toString());
+        expect(currency.amount.toString()).to.be.equal(BigInt(amount).toString());
     });
 
     it('should have valid statics', () => {

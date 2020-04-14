@@ -28,22 +28,21 @@ import { NamespaceService } from '../../src/service/NamespaceService';
 import { BigIntUtilities } from '../../src/core/format/BigIntUtilities';
 
 describe('NamespaceService', () => {
-
     it('should return the NamespaceInfo + name for a root namespace', () => {
         const mockedNamespaceRepository: NamespaceRepository = mock();
         const rootNamespace = givenRootNamespace();
         const subnamespace = givenSubnamespace();
-        when(mockedNamespaceRepository.getNamespace(rootNamespace.id))
-            .thenReturn(observableOf(rootNamespace));
-        when(mockedNamespaceRepository.getNamespace(subnamespace.id))
-            .thenReturn(observableOf(subnamespace));
-        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id])))
-            .thenReturn(observableOf([new NamespaceName(new NamespaceId(BigIntUtilities.HexToBigInt('E43F43D2C5A8F299')), 'symboltests')]));
-        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id, subnamespace.id])))
-            .thenReturn(observableOf([
+        when(mockedNamespaceRepository.getNamespace(rootNamespace.id)).thenReturn(observableOf(rootNamespace));
+        when(mockedNamespaceRepository.getNamespace(subnamespace.id)).thenReturn(observableOf(subnamespace));
+        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id]))).thenReturn(
+            observableOf([new NamespaceName(new NamespaceId(BigIntUtilities.HexToBigInt('E43F43D2C5A8F299')), 'symboltests')]),
+        );
+        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id, subnamespace.id]))).thenReturn(
+            observableOf([
                 new NamespaceName(new NamespaceId(BigIntUtilities.HexToBigInt('E43F43D2C5A8F299')), 'symboltests'),
                 new NamespaceName(new NamespaceId(BigIntUtilities.HexToBigInt('F7CE33276A3288C1')), 'level2'),
-            ]));
+            ]),
+        );
         const namespaceRepository = instance(mockedNamespaceRepository);
         const namespaceService = new NamespaceService(namespaceRepository);
         namespaceService.namespace(rootNamespace.id).subscribe((namespace) => {
@@ -55,19 +54,20 @@ describe('NamespaceService', () => {
         const mockedNamespaceRepository: NamespaceRepository = mock();
         const rootNamespace = givenRootNamespace();
         const subnamespace = givenSubnamespace();
-        when(mockedNamespaceRepository.getNamespace(rootNamespace.id))
-            .thenReturn(observableOf(rootNamespace));
-        when(mockedNamespaceRepository.getNamespace(subnamespace.id))
-            .thenReturn(observableOf(subnamespace));
-        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id])))
-            .thenReturn(observableOf([new NamespaceName(new NamespaceId(BigIntUtilities.HexToBigInt('E43F43D2C5A8F299')), 'symboltests')]));
-        when(mockedNamespaceRepository.getNamespacesName(deepEqual([subnamespace.id])))
-            .thenReturn(observableOf([new NamespaceName(new NamespaceId(BigIntUtilities.HexToBigInt('F7CE33276A3288C1')), 'level2')]));
-        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id, subnamespace.id])))
-            .thenReturn(observableOf([
+        when(mockedNamespaceRepository.getNamespace(rootNamespace.id)).thenReturn(observableOf(rootNamespace));
+        when(mockedNamespaceRepository.getNamespace(subnamespace.id)).thenReturn(observableOf(subnamespace));
+        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id]))).thenReturn(
+            observableOf([new NamespaceName(new NamespaceId(BigIntUtilities.HexToBigInt('E43F43D2C5A8F299')), 'symboltests')]),
+        );
+        when(mockedNamespaceRepository.getNamespacesName(deepEqual([subnamespace.id]))).thenReturn(
+            observableOf([new NamespaceName(new NamespaceId(BigIntUtilities.HexToBigInt('F7CE33276A3288C1')), 'level2')]),
+        );
+        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id, subnamespace.id]))).thenReturn(
+            observableOf([
                 new NamespaceName(new NamespaceId(BigIntUtilities.HexToBigInt('E43F43D2C5A8F299')), 'symboltests'),
                 new NamespaceName(new NamespaceId(BigIntUtilities.HexToBigInt('F7CE33276A3288C1')), 'level2'),
-            ]));
+            ]),
+        );
         const namespaceRepository = instance(mockedNamespaceRepository);
         const namespaceService = new NamespaceService(namespaceRepository);
 
@@ -77,7 +77,8 @@ describe('NamespaceService', () => {
     });
 
     function givenRootNamespace(): NamespaceInfo {
-        return new NamespaceInfo(true,
+        return new NamespaceInfo(
+            true,
             0,
             '59DFBA84B2E9E7000135E80C',
             0,
@@ -87,20 +88,26 @@ describe('NamespaceService', () => {
             PublicAccount.createFromPublicKey('1026D70E1954775749C6811084D6450A3184D977383F0E4282CD47118AF37755', NetworkType.MIJIN_TEST),
             BigInt(795),
             BigInt(50795),
-            new EmptyAlias());
+            new EmptyAlias(),
+        );
     }
 
     function givenSubnamespace(): NamespaceInfo {
-        return new NamespaceInfo(true,
+        return new NamespaceInfo(
+            true,
             0,
             '5A1D85A1D53061000117D1EE',
             1,
             2,
-            [new NamespaceId(BigIntUtilities.HexToBigInt('E43F43D2C5A8F299')), new NamespaceId(BigIntUtilities.HexToBigInt('F7CE33276A3288C1'))],
+            [
+                new NamespaceId(BigIntUtilities.HexToBigInt('E43F43D2C5A8F299')),
+                new NamespaceId(BigIntUtilities.HexToBigInt('F7CE33276A3288C1')),
+            ],
             new NamespaceId(BigIntUtilities.HexToBigInt('E43F43D2C5A8F299')),
             PublicAccount.createFromPublicKey('1026D70E1954775749C6811084D6450A3184D977383F0E4282CD47118AF37755', NetworkType.MIJIN_TEST),
             BigInt(795),
             BigInt(50795),
-            new EmptyAlias());
+            new EmptyAlias(),
+        );
     }
 });

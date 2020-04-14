@@ -35,7 +35,6 @@ import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
 export class AccountOperationRestrictionTransaction extends Transaction {
-
     /**
      * Create a modify account operation restriction type transaction object
      * @param deadline - The deadline to include the transaction.
@@ -46,19 +45,23 @@ export class AccountOperationRestrictionTransaction extends Transaction {
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {AccountOperationRestrictionTransaction}
      */
-    public static create(deadline: Deadline,
-                         restrictionFlags: AccountRestrictionFlags,
-                         restrictionAdditions: TransactionType[],
-                         restrictionDeletions: TransactionType[],
-                         networkType: NetworkType,
-                         maxFee: bigint = BigInt(0)): AccountOperationRestrictionTransaction {
-        return new AccountOperationRestrictionTransaction(networkType,
+    public static create(
+        deadline: Deadline,
+        restrictionFlags: AccountRestrictionFlags,
+        restrictionAdditions: TransactionType[],
+        restrictionDeletions: TransactionType[],
+        networkType: NetworkType,
+        maxFee = BigInt(0),
+    ): AccountOperationRestrictionTransaction {
+        return new AccountOperationRestrictionTransaction(
+            networkType,
             TransactionVersion.MODIFY_ACCOUNT_RESTRICTION_ENTITY_TYPE,
             deadline,
             maxFee,
             restrictionFlags,
             restrictionAdditions,
-            restrictionDeletions);
+            restrictionDeletions,
+        );
     }
 
     /**
@@ -73,18 +76,19 @@ export class AccountOperationRestrictionTransaction extends Transaction {
      * @param signer
      * @param transactionInfo
      */
-    constructor(networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: bigint,
-                public readonly restrictionFlags: AccountRestrictionFlags,
-                public readonly restrictionAdditions: TransactionType[],
-                public readonly restrictionDeletions: TransactionType[],
-                signature?: string,
-                signer?: PublicAccount,
-                transactionInfo?: TransactionInfo) {
-        super(TransactionType.ACCOUNT_OPERATION_RESTRICTION,
-              networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+    constructor(
+        networkType: NetworkType,
+        version: number,
+        deadline: Deadline,
+        maxFee: bigint,
+        public readonly restrictionFlags: AccountRestrictionFlags,
+        public readonly restrictionAdditions: TransactionType[],
+        public readonly restrictionDeletions: TransactionType[],
+        signature?: string,
+        signer?: PublicAccount,
+        transactionInfo?: TransactionInfo,
+    ) {
+        super(TransactionType.ACCOUNT_OPERATION_RESTRICTION, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
@@ -93,20 +97,22 @@ export class AccountOperationRestrictionTransaction extends Transaction {
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedAccountOperationRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            AccountOperationRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+        const builder = isEmbedded
+            ? EmbeddedAccountOperationRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : AccountOperationRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signer = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = AccountOperationRestrictionTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
-                (builder as AccountOperationRestrictionTransactionBuilder).getDeadline().timestamp),
+            isEmbedded
+                ? Deadline.create()
+                : Deadline.createFromBigInt((builder as AccountOperationRestrictionTransactionBuilder).getDeadline().timestamp),
             builder.getRestrictionFlags().valueOf(),
             builder.getRestrictionAdditions(),
             builder.getRestrictionDeletions(),
             networkType,
-            isEmbedded ? BigInt(0) : (builder as AccountOperationRestrictionTransactionBuilder).fee.amount);
+            isEmbedded ? BigInt(0) : (builder as AccountOperationRestrictionTransactionBuilder).fee.amount,
+        );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType)) : transaction;
     }
 
@@ -127,9 +133,15 @@ export class AccountOperationRestrictionTransaction extends Transaction {
         const byteRestrictionAdditions = 2 * this.restrictionAdditions.length;
         const byteRestrictionDeletions = 2 * this.restrictionDeletions.length;
 
-        return byteSize + byteRestrictionType + byteAdditionCount + byteDeletionCount +
-               byteRestrictionAdditions + byteRestrictionDeletions +
-               byteAccountRestrictionTransactionBody_Reserved1;
+        return (
+            byteSize +
+            byteRestrictionType +
+            byteAdditionCount +
+            byteDeletionCount +
+            byteRestrictionAdditions +
+            byteRestrictionDeletions +
+            byteAccountRestrictionTransactionBody_Reserved1
+        );
     }
 
     /**

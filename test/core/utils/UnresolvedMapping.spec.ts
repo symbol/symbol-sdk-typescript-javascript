@@ -44,13 +44,11 @@ describe('UnresolvedMapping', () => {
             expect(unresolved instanceof MosaicId).to.be.false;
             expect(unresolved instanceof NamespaceId).to.be.true;
         });
-
     });
 
     describe('toUnresolvedAddress', () => {
         it('can map hex string to Address', () => {
-            const unresolved = UnresolvedMapping.toUnresolvedAddress(
-                Convert.uint8ToHex(RawAddress.stringToAddress(address.plain())));
+            const unresolved = UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(RawAddress.stringToAddress(address.plain())));
             expect(unresolved instanceof Address).to.be.true;
             expect(unresolved instanceof NamespaceId).to.be.false;
         });

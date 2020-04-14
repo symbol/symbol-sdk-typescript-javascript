@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-import {PublicAccount} from '../account/PublicAccount';
-import {Alias} from './Alias';
-import {NamespaceId} from './NamespaceId';
+import { PublicAccount } from '../account/PublicAccount';
+import { Alias } from './Alias';
+import { NamespaceId } from './NamespaceId';
 
 /**
  * Object containing information of a namespace.
  */
 export class NamespaceInfo {
-
     /**
      * @param active
      * @param index
@@ -35,52 +34,52 @@ export class NamespaceInfo {
      * @param startHeight
      * @param endHeight
      */
-    constructor(/**
-                 * Namespace is active.
-                 */
-                public readonly active: boolean,
-                /**
-                 * The namespace index.
-                 */
-                public readonly index: number,
-                /**
-                 * The meta data id.
-                 */
-                public readonly metaId: string,
-                /**
-                 * The namespace registration type, namespace and sub namespace.
-                 */
-                private readonly registrationType: number,
-                /**
-                 * The level of namespace.
-                 */
-                public readonly depth: number,
-                /**
-                 * The namespace id levels.
-                 */
-                public readonly levels: NamespaceId[],
-                /**
-                 * The namespace parent id.
-                 */
-                private readonly parentId: NamespaceId,
-                /**
-                 * The owner of the namespace.
-                 */
-                public readonly owner: PublicAccount,
-                /**
-                 * The height at which the ownership begins.
-                 */
-                public readonly startHeight: bigint,
-                /**
-                 * The height at which the ownership ends.
-                 */
-                public readonly endHeight: bigint,
-                /**
-                 * The alias linked to a namespace.
-                 */
-                public readonly alias: Alias) {
-
-    }
+    constructor(
+        /**
+         * Namespace is active.
+         */
+        public readonly active: boolean,
+        /**
+         * The namespace index.
+         */
+        public readonly index: number,
+        /**
+         * The meta data id.
+         */
+        public readonly metaId: string,
+        /**
+         * The namespace registration type, namespace and sub namespace.
+         */
+        private readonly registrationType: number,
+        /**
+         * The level of namespace.
+         */
+        public readonly depth: number,
+        /**
+         * The namespace id levels.
+         */
+        public readonly levels: NamespaceId[],
+        /**
+         * The namespace parent id.
+         */
+        private readonly parentId: NamespaceId,
+        /**
+         * The owner of the namespace.
+         */
+        public readonly owner: PublicAccount,
+        /**
+         * The height at which the ownership begins.
+         */
+        public readonly startHeight: bigint,
+        /**
+         * The height at which the ownership ends.
+         */
+        public readonly endHeight: bigint,
+        /**
+         * The alias linked to a namespace.
+         */
+        public readonly alias: Alias,
+    ) {}
 
     /**
      * Namespace id

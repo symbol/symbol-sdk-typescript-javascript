@@ -24,7 +24,6 @@ import { MosaicView } from '../../../src/service/MosaicView';
 import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('MosaicView', () => {
-
     let mosaicInfo: MosaicInfo;
 
     before(() => {
@@ -36,7 +35,8 @@ describe('MosaicView', () => {
             1, // revision
             MosaicFlags.create(true, true, true),
             2,
-            BigInt(1000));
+            BigInt(1000),
+        );
     });
 
     it('should createComplete a Mosaic View', () => {

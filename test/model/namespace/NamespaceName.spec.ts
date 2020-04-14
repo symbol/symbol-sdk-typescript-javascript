@@ -21,7 +21,6 @@ import { NamespaceName } from '../../../src/model/namespace/NamespaceName';
 import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('NamespaceName', () => {
-
     it('should createComplete an NamespaceName object', () => {
         const namespaceNameDTO = {
             name: 'nem',
@@ -29,11 +28,7 @@ describe('NamespaceName', () => {
             parentId: new NamespaceId(BigIntUtilities.HexToBigInt('4EEF8E1D554EE6B9')),
         };
 
-        const namespaceName = new NamespaceName(
-            namespaceNameDTO.namespaceId,
-            namespaceNameDTO.name,
-            namespaceNameDTO.parentId,
-        );
+        const namespaceName = new NamespaceName(namespaceNameDTO.namespaceId, namespaceNameDTO.name, namespaceNameDTO.parentId);
 
         deepEqual(namespaceName.namespaceId, namespaceNameDTO.namespaceId);
         deepEqual(namespaceName.parentId, namespaceNameDTO.parentId);

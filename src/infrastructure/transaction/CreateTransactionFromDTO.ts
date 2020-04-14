@@ -63,16 +63,20 @@ import { BigIntUtilities } from '../../core/format/BigIntUtilities';
  * @constructor
  */
 export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
-    if (transactionDTO.transaction.type === TransactionType.AGGREGATE_COMPLETE ||
-        transactionDTO.transaction.type === TransactionType.AGGREGATE_BONDED) {
+    if (
+        transactionDTO.transaction.type === TransactionType.AGGREGATE_COMPLETE ||
+        transactionDTO.transaction.type === TransactionType.AGGREGATE_BONDED
+    ) {
         const innerTransactions = transactionDTO.transaction.transactions.map((innerTransactionDTO) => {
-            const aggregateTransactionInfo = innerTransactionDTO.meta ? new AggregateTransactionInfo(
-                BigInt(innerTransactionDTO.meta.height),
-                innerTransactionDTO.meta.index,
-                innerTransactionDTO.meta.id,
-                innerTransactionDTO.meta.aggregateHash,
-                innerTransactionDTO.meta.aggregateId,
-            ) : undefined;
+            const aggregateTransactionInfo = innerTransactionDTO.meta
+                ? new AggregateTransactionInfo(
+                      BigInt(innerTransactionDTO.meta.height),
+                      innerTransactionDTO.meta.index,
+                      innerTransactionDTO.meta.id,
+                      innerTransactionDTO.meta.aggregateHash,
+                      innerTransactionDTO.meta.aggregateId,
+                  )
+                : undefined;
             innerTransactionDTO.transaction.maxFee = transactionDTO.transaction.maxFee;
             innerTransactionDTO.transaction.deadline = transactionDTO.transaction.deadline;
             innerTransactionDTO.transaction.signature = transactionDTO.transaction.signature;
@@ -85,32 +89,38 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
             Deadline.createFromDTO(transactionDTO.transaction.deadline),
             BigInt(transactionDTO.transaction.maxFee || '0'),
             innerTransactions,
-            transactionDTO.transaction.cosignatures ? transactionDTO.transaction.cosignatures
-                .map((aggregateCosignatureDTO) => {
-                    return new AggregateTransactionCosignature(
-                        aggregateCosignatureDTO.signature,
-                        PublicAccount.createFromPublicKey(aggregateCosignatureDTO.signerPublicKey,
-                            transactionDTO.transaction.network));
-                }) : [],
+            transactionDTO.transaction.cosignatures
+                ? transactionDTO.transaction.cosignatures.map((aggregateCosignatureDTO) => {
+                      return new AggregateTransactionCosignature(
+                          aggregateCosignatureDTO.signature,
+                          PublicAccount.createFromPublicKey(aggregateCosignatureDTO.signerPublicKey, transactionDTO.transaction.network),
+                      );
+                  })
+                : [],
             transactionDTO.transaction.signature,
-            transactionDTO.transaction.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.transaction.signerPublicKey,
-                            transactionDTO.transaction.network) : undefined,
-            transactionDTO.meta ? new TransactionInfo(
-                BigInt(transactionDTO.meta.height),
-                transactionDTO.meta.index,
-                transactionDTO.meta.id,
-                transactionDTO.meta.hash,
-                transactionDTO.meta.merkleComponentHash,
-            ) : undefined,
+            transactionDTO.transaction.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.transaction.signerPublicKey, transactionDTO.transaction.network)
+                : undefined,
+            transactionDTO.meta
+                ? new TransactionInfo(
+                      BigInt(transactionDTO.meta.height),
+                      transactionDTO.meta.index,
+                      transactionDTO.meta.id,
+                      transactionDTO.meta.hash,
+                      transactionDTO.meta.merkleComponentHash,
+                  )
+                : undefined,
         );
     } else {
-        const transactionInfo = transactionDTO.meta ? new TransactionInfo(
-            BigInt(transactionDTO.meta.height),
-            transactionDTO.meta.index,
-            transactionDTO.meta.id,
-            transactionDTO.meta.hash,
-            transactionDTO.meta.merkleComponentHash,
-        ) : undefined;
+        const transactionInfo = transactionDTO.meta
+            ? new TransactionInfo(
+                  BigInt(transactionDTO.meta.height),
+                  transactionDTO.meta.index,
+                  transactionDTO.meta.id,
+                  transactionDTO.meta.hash,
+                  transactionDTO.meta.merkleComponentHash,
+              )
+            : undefined;
         return CreateStandaloneTransactionFromDTO(transactionDTO.transaction, transactionInfo);
     }
 };
@@ -123,7 +133,6 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
  * @constructor
  */
 const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Transaction => {
-
     if (transactionDTO.type === TransactionType.TRANSFER) {
         return new TransferTransaction(
             transactionDTO.network,
@@ -134,8 +143,9 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractMosaics(transactionDTO.mosaics),
             extractMessage(transactionDTO.message !== undefined ? transactionDTO.message : undefined),
             transactionDTO.signature,
-            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
-                    transactionDTO.network) : undefined,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.NAMESPACE_REGISTRATION) {
@@ -150,8 +160,9 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.registrationType === 0 ? BigInt(transactionDTO.duration) : undefined,
             transactionDTO.registrationType === 1 ? NamespaceId.createFromEncoded(transactionDTO.parentId) : undefined,
             transactionDTO.signature,
-            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
-                            transactionDTO.network) : undefined,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.MOSAIC_DEFINITION) {
@@ -166,8 +177,9 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.divisibility,
             BigInt(transactionDTO.duration),
             transactionDTO.signature,
-            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
-                            transactionDTO.network) : undefined,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.MOSAIC_SUPPLY_CHANGE) {
@@ -180,8 +192,9 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.action,
             BigInt(transactionDTO.delta),
             transactionDTO.signature,
-            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
-                            transactionDTO.network) : undefined,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION) {
@@ -192,13 +205,16 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             BigInt(transactionDTO.maxFee || '0'),
             transactionDTO.minApprovalDelta,
             transactionDTO.minRemovalDelta,
-            transactionDTO.publicKeyAdditions ? transactionDTO.publicKeyAdditions.map((addition) =>
-                PublicAccount.createFromPublicKey(addition, transactionDTO.network)) : [],
-            transactionDTO.publicKeyDeletions ? transactionDTO.publicKeyDeletions.map((deletion) =>
-                PublicAccount.createFromPublicKey(deletion, transactionDTO.network)) : [],
+            transactionDTO.publicKeyAdditions
+                ? transactionDTO.publicKeyAdditions.map((addition) => PublicAccount.createFromPublicKey(addition, transactionDTO.network))
+                : [],
+            transactionDTO.publicKeyDeletions
+                ? transactionDTO.publicKeyDeletions.map((deletion) => PublicAccount.createFromPublicKey(deletion, transactionDTO.network))
+                : [],
             transactionDTO.signature,
-            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
-                            transactionDTO.network) : undefined,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.HASH_LOCK) {
@@ -229,8 +245,9 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.secret,
             extractRecipient(recipientAddress),
             transactionDTO.signature,
-            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
-                            transactionDTO.network) : undefined,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.SECRET_PROOF) {
@@ -245,8 +262,9 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractRecipient(recipientAddress),
             transactionDTO.proof,
             transactionDTO.signature,
-            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
-                            transactionDTO.network) : undefined,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.MOSAIC_ALIAS) {
@@ -259,8 +277,9 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             NamespaceId.createFromEncoded(transactionDTO.namespaceId),
             new MosaicId(transactionDTO.mosaicId),
             transactionDTO.signature,
-            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
-                            transactionDTO.network) : undefined,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.ADDRESS_ALIAS) {
@@ -273,8 +292,9 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             NamespaceId.createFromEncoded(transactionDTO.namespaceId),
             extractRecipient(transactionDTO.address) as Address,
             transactionDTO.signature,
-            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
-                            transactionDTO.network) : undefined,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.ACCOUNT_ADDRESS_RESTRICTION) {
@@ -284,13 +304,12 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             Deadline.createFromDTO(transactionDTO.deadline),
             BigInt(transactionDTO.maxFee || '0'),
             transactionDTO.restrictionFlags,
-            transactionDTO.restrictionAdditions ? transactionDTO.restrictionAdditions.map((addition) =>
-                extractRecipient(addition)) : [],
-            transactionDTO.restrictionDeletions ? transactionDTO.restrictionDeletions.map((deletion) =>
-                extractRecipient(deletion)) : [],
+            transactionDTO.restrictionAdditions ? transactionDTO.restrictionAdditions.map((addition) => extractRecipient(addition)) : [],
+            transactionDTO.restrictionDeletions ? transactionDTO.restrictionDeletions.map((deletion) => extractRecipient(deletion)) : [],
             transactionDTO.signature,
-            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
-                            transactionDTO.network) : undefined,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.ACCOUNT_OPERATION_RESTRICTION) {
@@ -303,8 +322,9 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.restrictionAdditions ? transactionDTO.restrictionAdditions : [],
             transactionDTO.restrictionDeletions ? transactionDTO.restrictionDeletions : [],
             transactionDTO.signature,
-            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
-                            transactionDTO.network) : undefined,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.ACCOUNT_MOSAIC_RESTRICTION) {
@@ -314,13 +334,16 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             Deadline.createFromDTO(transactionDTO.deadline),
             BigInt(transactionDTO.maxFee || '0'),
             transactionDTO.restrictionFlags,
-            transactionDTO.restrictionAdditions ? transactionDTO.restrictionAdditions.map((addition) =>
-                UnresolvedMapping.toUnresolvedMosaic(addition)) : [],
-            transactionDTO.restrictionDeletions ? transactionDTO.restrictionDeletions.map((deletion) =>
-                UnresolvedMapping.toUnresolvedMosaic(deletion)) : [],
+            transactionDTO.restrictionAdditions
+                ? transactionDTO.restrictionAdditions.map((addition) => UnresolvedMapping.toUnresolvedMosaic(addition))
+                : [],
+            transactionDTO.restrictionDeletions
+                ? transactionDTO.restrictionDeletions.map((deletion) => UnresolvedMapping.toUnresolvedMosaic(deletion))
+                : [],
             transactionDTO.signature,
-            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
-                            transactionDTO.network) : undefined,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.ACCOUNT_LINK) {
@@ -332,8 +355,9 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.remotePublicKey,
             transactionDTO.linkAction,
             transactionDTO.signature,
-            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
-                    transactionDTO.network) : undefined,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.MOSAIC_GLOBAL_RESTRICTION) {
@@ -350,8 +374,9 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             BigIntUtilities.HexToBigInt(transactionDTO.newRestrictionValue),
             transactionDTO.newRestrictionType,
             transactionDTO.signature,
-            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
-                    transactionDTO.network) : undefined,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.MOSAIC_ADDRESS_RESTRICTION) {
@@ -366,8 +391,9 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             BigIntUtilities.HexToBigInt(transactionDTO.previousRestrictionValue),
             BigIntUtilities.HexToBigInt(transactionDTO.newRestrictionValue),
             transactionDTO.signature,
-            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
-                    transactionDTO.network) : undefined,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.ACCOUNT_METADATA) {
@@ -381,8 +407,9 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.valueSizeDelta,
             convert.decodeHex(transactionDTO.value),
             transactionDTO.signature,
-            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
-                    transactionDTO.network) : undefined,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.MOSAIC_METADATA) {
@@ -397,8 +424,9 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.valueSizeDelta,
             convert.decodeHex(transactionDTO.value),
             transactionDTO.signature,
-            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
-                    transactionDTO.network) : undefined,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.NAMESPACE_METADATA) {
@@ -413,8 +441,9 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.valueSizeDelta,
             convert.decodeHex(transactionDTO.value),
             transactionDTO.signature,
-            transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
-                    transactionDTO.network) : undefined,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
             transactionInfo,
         );
     }
@@ -430,10 +459,11 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
  * @param recipientAddress {string} Encoded hexadecimal recipientAddress notation
  * @return {Address | NamespaceId}
  */
-export const extractRecipient = (recipientAddress: any): Address | NamespaceId => {
+export const extractRecipient = (recipientAddress: any): Address | NamespaceId => {
     if (typeof recipientAddress === 'string') {
         return UnresolvedMapping.toUnresolvedAddress(recipientAddress);
-    } else if (typeof recipientAddress === 'object') { // Is JSON object
+    } else if (typeof recipientAddress === 'object') {
+        // Is JSON object
         if (recipientAddress.hasOwnProperty('address')) {
             return Address.createFromRawAddress(recipientAddress.address);
         } else if (recipientAddress.hasOwnProperty('id')) {
@@ -472,8 +502,9 @@ const extractMessage = (message: any): PlainMessage | EncryptedMessage => {
     let msgObj = EmptyMessage;
     if (message) {
         if (message.type === MessageType.PlainMessage) {
-            msgObj = convert.isHexString(message.payload) ? PlainMessage.createFromPayload(message.payload) :
-                                                    PlainMessage.create(message.payload);
+            msgObj = convert.isHexString(message.payload)
+                ? PlainMessage.createFromPayload(message.payload)
+                : PlainMessage.create(message.payload);
         } else if (message.type === MessageType.EncryptedMessage) {
             msgObj = EncryptedMessage.createFromPayload(message.payload);
         } else if (message.type === MessageType.PersistentHarvestingDelegationMessage) {

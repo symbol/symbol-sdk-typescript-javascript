@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-import {
-    AmountDto,
-    InflationReceiptBuilder,
-    MosaicBuilder,
-    MosaicIdDto,
-} from 'catbuffer-typescript';
+import { AmountDto, InflationReceiptBuilder, MosaicBuilder, MosaicIdDto } from 'catbuffer-typescript';
 import { MosaicId } from '../mosaic/MosaicId';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
@@ -29,7 +24,6 @@ import { ReceiptVersion } from './ReceiptVersion';
  * Balance Transfer: A mosaic transfer was triggered.
  */
 export class InflationReceipt extends Receipt {
-
     /**
      * Balance transfer expiry receipt
      * @param mosaicId - The mosaic id.
@@ -39,17 +33,18 @@ export class InflationReceipt extends Receipt {
      * @param size - the receipt size
      */
     constructor(
-                /**
-                 * The mosaic id.
-                 */
-                public readonly mosaicId: MosaicId,
-                /**
-                 * The amount of mosaic.
-                 */
-                public readonly amount: bigint,
-                version: ReceiptVersion,
-                type: ReceiptType,
-                size?: number) {
+        /**
+         * The mosaic id.
+         */
+        public readonly mosaicId: MosaicId,
+        /**
+         * The amount of mosaic.
+         */
+        public readonly amount: bigint,
+        version: ReceiptVersion,
+        type: ReceiptType,
+        size?: number,
+    ) {
         super(version, type, size);
     }
 
@@ -59,10 +54,10 @@ export class InflationReceipt extends Receipt {
      * @return {Uint8Array}
      */
     public serialize(): Uint8Array {
-       return new InflationReceiptBuilder(
-            ReceiptVersion.INFLATION_RECEIPT, this.type.valueOf(),
-            new MosaicBuilder(new MosaicIdDto(this.mosaicId.id),
-                new AmountDto(this.amount)),
+        return new InflationReceiptBuilder(
+            ReceiptVersion.INFLATION_RECEIPT,
+            this.type.valueOf(),
+            new MosaicBuilder(new MosaicIdDto(this.mosaicId.id), new AmountDto(this.amount)),
         ).serialize();
     }
 }

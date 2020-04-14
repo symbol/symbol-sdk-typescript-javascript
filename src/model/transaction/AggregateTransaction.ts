@@ -49,7 +49,6 @@ import { TransactionVersion } from './TransactionVersion';
  * Aggregate innerTransactions contain multiple innerTransactions that can be initiated by different accounts.
  */
 export class AggregateTransaction extends Transaction {
-
     /**
      * @param networkType
      * @param type
@@ -62,22 +61,24 @@ export class AggregateTransaction extends Transaction {
      * @param signer
      * @param transactionInfo
      */
-    constructor(networkType: NetworkType,
-                type: number,
-                version: number,
-                deadline: Deadline,
-                maxFee: bigint,
-                /**
-                 * The array of innerTransactions included in the aggregate transaction.
-                 */
-                public readonly innerTransactions: InnerTransaction[],
-                /**
-                 * The array of transaction cosigners signatures.
-                 */
-                public readonly cosignatures: AggregateTransactionCosignature[],
-                signature?: string,
-                signer?: PublicAccount,
-                transactionInfo?: TransactionInfo) {
+    constructor(
+        networkType: NetworkType,
+        type: number,
+        version: number,
+        deadline: Deadline,
+        maxFee: bigint,
+        /**
+         * The array of innerTransactions included in the aggregate transaction.
+         */
+        public readonly innerTransactions: InnerTransaction[],
+        /**
+         * The array of transaction cosigners signatures.
+         */
+        public readonly cosignatures: AggregateTransactionCosignature[],
+        signature?: string,
+        signer?: PublicAccount,
+        transactionInfo?: TransactionInfo,
+    ) {
         super(type, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
@@ -90,12 +91,15 @@ export class AggregateTransaction extends Transaction {
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {AggregateTransaction}
      */
-    public static createComplete(deadline: Deadline,
-                                 innerTransactions: InnerTransaction[],
-                                 networkType: NetworkType,
-                                 cosignatures: AggregateTransactionCosignature[],
-                                 maxFee: bigint = BigInt(0)): AggregateTransaction {
-        return new AggregateTransaction(networkType,
+    public static createComplete(
+        deadline: Deadline,
+        innerTransactions: InnerTransaction[],
+        networkType: NetworkType,
+        cosignatures: AggregateTransactionCosignature[],
+        maxFee = BigInt(0),
+    ): AggregateTransaction {
+        return new AggregateTransaction(
+            networkType,
             TransactionType.AGGREGATE_COMPLETE,
             TransactionVersion.AGGREGATE_COMPLETE,
             deadline,
@@ -114,12 +118,15 @@ export class AggregateTransaction extends Transaction {
      * @param {BigInt} maxFee - (Optional) Max fee defined by the sender
      * @return {AggregateTransaction}
      */
-    public static createBonded(deadline: Deadline,
-                               innerTransactions: InnerTransaction[],
-                               networkType: NetworkType,
-                               cosignatures: AggregateTransactionCosignature[] = [],
-                               maxFee: bigint = BigInt(0)): AggregateTransaction {
-        return new AggregateTransaction(networkType,
+    public static createBonded(
+        deadline: Deadline,
+        innerTransactions: InnerTransaction[],
+        networkType: NetworkType,
+        cosignatures: AggregateTransactionCosignature[] = [],
+        maxFee = BigInt(0),
+    ): AggregateTransaction {
+        return new AggregateTransaction(
+            networkType,
             TransactionType.AGGREGATE_BONDED,
             TransactionVersion.AGGREGATE_BONDED,
             deadline,
@@ -140,9 +147,10 @@ export class AggregateTransaction extends Transaction {
          * As buffer uses separate builder class for Complete and bonded
          */
         const type = parseInt(Convert.uint8ToHex(Convert.hexToUint8(payload.substring(220, 224)).reverse()), 16);
-        const builder = type === TransactionType.AGGREGATE_COMPLETE ?
-            AggregateCompleteTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            AggregateBondedTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const builder =
+            type === TransactionType.AGGREGATE_COMPLETE
+                ? AggregateCompleteTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+                : AggregateBondedTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const innerTransactions = builder.getTransactions().map((t) => Convert.uint8ToHex(EmbeddedTransactionHelper.serialize(t)));
         const networkType = builder.getNetwork().valueOf();
         const consignatures = builder.getCosignatures().map((cosig) => {
@@ -152,24 +160,25 @@ export class AggregateTransaction extends Transaction {
             );
         });
 
-        return type === TransactionType.AGGREGATE_COMPLETE ?
-            AggregateTransaction.createComplete(
-                Deadline.createFromBigInt(builder.deadline.timestamp),
-                innerTransactions.map((transactionRaw) => {
-                    return CreateTransactionFromPayload(transactionRaw, true) as InnerTransaction;
-                }),
-                networkType,
-                consignatures,
-                builder.fee.amount,
-            ) : AggregateTransaction.createBonded(
-                Deadline.createFromBigInt(builder.deadline.timestamp),
-                innerTransactions.map((transactionRaw) => {
-                    return CreateTransactionFromPayload(transactionRaw, true) as InnerTransaction;
-                }),
-                networkType,
-                consignatures,
-                builder.fee.amount,
-            );
+        return type === TransactionType.AGGREGATE_COMPLETE
+            ? AggregateTransaction.createComplete(
+                  Deadline.createFromBigInt(builder.deadline.timestamp),
+                  innerTransactions.map((transactionRaw) => {
+                      return CreateTransactionFromPayload(transactionRaw, true) as InnerTransaction;
+                  }),
+                  networkType,
+                  consignatures,
+                  builder.fee.amount,
+              )
+            : AggregateTransaction.createBonded(
+                  Deadline.createFromBigInt(builder.deadline.timestamp),
+                  innerTransactions.map((transactionRaw) => {
+                      return CreateTransactionFromPayload(transactionRaw, true) as InnerTransaction;
+                  }),
+                  networkType,
+                  consignatures,
+                  builder.fee.amount,
+              );
     }
 
     /**
@@ -180,7 +189,7 @@ export class AggregateTransaction extends Transaction {
      */
     public addTransactions(transactions: InnerTransaction[]): AggregateTransaction {
         const innerTransactions = this.innerTransactions.concat(transactions);
-        return DtoMapping.assign(this, {innerTransactions});
+        return DtoMapping.assign(this, { innerTransactions });
     }
 
     /**
@@ -191,7 +200,7 @@ export class AggregateTransaction extends Transaction {
      */
     public addCosignatures(cosigs: AggregateTransactionCosignature[]): AggregateTransaction {
         const cosignatures = this.cosignatures.concat(cosigs);
-        return DtoMapping.assign(this, {cosignatures});
+        return DtoMapping.assign(this, { cosignatures });
     }
 
     /**
@@ -202,9 +211,11 @@ export class AggregateTransaction extends Transaction {
      * @param generationHash - Network generation hash hex
      * @returns {SignedTransaction}
      */
-    public signTransactionWithCosignatories(initiatorAccount: Account,
-                                            cosignatories: Account[],
-                                            generationHash: string): SignedTransaction {
+    public signTransactionWithCosignatories(
+        initiatorAccount: Account,
+        cosignatories: Account[],
+        generationHash: string,
+    ): SignedTransaction {
         const signedTransaction = this.signWith(initiatorAccount, generationHash);
         const transactionHashBytes = Convert.hexToUint8(signedTransaction.hash);
         let signedPayload = signedTransaction.payload;
@@ -217,12 +228,11 @@ export class AggregateTransaction extends Transaction {
         // Calculate new size
         const size = `00000000${(signedPayload.length / 2).toString(16)}`;
         const formatedSize = size.substr(size.length - 8, size.length);
-        const littleEndianSize = formatedSize.substr(6, 2) + formatedSize.substr(4, 2) +
-            formatedSize.substr(2, 2) + formatedSize.substr(0, 2);
+        const littleEndianSize =
+            formatedSize.substr(6, 2) + formatedSize.substr(4, 2) + formatedSize.substr(2, 2) + formatedSize.substr(0, 2);
 
         signedPayload = littleEndianSize + signedPayload.substr(8, signedPayload.length - 8);
-        return new SignedTransaction(signedPayload, signedTransaction.hash, initiatorAccount.publicKey,
-            this.type, this.networkType);
+        return new SignedTransaction(signedPayload, signedTransaction.hash, initiatorAccount.publicKey, this.type, this.networkType);
     }
 
     /**
@@ -234,9 +244,11 @@ export class AggregateTransaction extends Transaction {
      * @param generationHash - Network generation hash hex
      * @return {SignedTransaction}
      */
-    public signTransactionGivenSignatures(initiatorAccount: Account,
-                                          cosignatureSignedTransactions: CosignatureSignedTransaction[],
-                                          generationHash: string): SignedTransaction {
+    public signTransactionGivenSignatures(
+        initiatorAccount: Account,
+        cosignatureSignedTransactions: CosignatureSignedTransaction[],
+        generationHash: string,
+    ): SignedTransaction {
         const signedTransaction = this.signWith(initiatorAccount, generationHash);
         let signedPayload = signedTransaction.payload;
         cosignatureSignedTransactions.forEach((cosignedTransaction) => {
@@ -246,12 +258,11 @@ export class AggregateTransaction extends Transaction {
         // Calculate new size
         const size = `00000000${(signedPayload.length / 2).toString(16)}`;
         const formatedSize = size.substr(size.length - 8, size.length);
-        const littleEndianSize = formatedSize.substr(6, 2) + formatedSize.substr(4, 2) +
-            formatedSize.substr(2, 2) + formatedSize.substr(0, 2);
+        const littleEndianSize =
+            formatedSize.substr(6, 2) + formatedSize.substr(4, 2) + formatedSize.substr(2, 2) + formatedSize.substr(0, 2);
 
         signedPayload = littleEndianSize + signedPayload.substr(8, signedPayload.length - 8);
-        return new SignedTransaction(signedPayload, signedTransaction.hash, initiatorAccount.publicKey,
-            this.type, this.networkType);
+        return new SignedTransaction(signedPayload, signedTransaction.hash, initiatorAccount.publicKey, this.type, this.networkType);
     }
 
     /**
@@ -260,8 +271,10 @@ export class AggregateTransaction extends Transaction {
      * @returns {boolean}
      */
     public signedByAccount(publicAccount: PublicAccount): boolean {
-        return this.cosignatures.find((cosignature) => cosignature.signer.equals(publicAccount)) !== undefined
-            || (this.signer !== undefined && this.signer.equals(publicAccount));
+        return (
+            this.cosignatures.find((cosignature) => cosignature.signer.equals(publicAccount)) !== undefined ||
+            (this.signer !== undefined && this.signer.equals(publicAccount))
+        );
     }
 
     /**
@@ -288,8 +301,7 @@ export class AggregateTransaction extends Transaction {
         });
 
         const byteCosignatures = this.cosignatures.length * 96;
-        return byteSize + byteTransactionHash + bytePayloadSize + byteHeader_Reserved1 +
-               byteTransactions + byteCosignatures;
+        return byteSize + byteTransactionHash + bytePayloadSize + byteHeader_Reserved1 + byteTransactions + byteCosignatures;
     }
 
     /**
@@ -303,37 +315,35 @@ export class AggregateTransaction extends Transaction {
         const cosignatures = this.cosignatures.map((cosignature) => {
             const signerBytes = Convert.hexToUint8(cosignature.signer.publicKey);
             const signatureBytes = Convert.hexToUint8(cosignature.signature);
-            return new CosignatureBuilder(
-                new KeyDto(signerBytes),
-                new SignatureDto(signatureBytes),
-            );
+            return new CosignatureBuilder(new KeyDto(signerBytes), new SignatureDto(signatureBytes));
         });
 
-        const transactionBuilder = this.type === TransactionType.AGGREGATE_COMPLETE ?
-            new AggregateCompleteTransactionBuilder(
-                new SignatureDto(signatureBuffer),
-                new KeyDto(signerBuffer),
-                this.versionToDTO(),
-                this.networkType.valueOf(),
-                this.type.valueOf(),
-                new AmountDto(this.maxFee),
-                new TimestampDto(this.deadline.toBigInt()),
-                new Hash256Dto(this.calculateInnerTransactionHash()),
-                transactions,
-                cosignatures,
-            ) :
-            new AggregateBondedTransactionBuilder(
-                new SignatureDto(signatureBuffer),
-                new KeyDto(signerBuffer),
-                this.versionToDTO(),
-                this.networkType.valueOf(),
-                this.type.valueOf(),
-                new AmountDto(this.maxFee),
-                new TimestampDto(this.deadline.toBigInt()),
-                new Hash256Dto(this.calculateInnerTransactionHash()),
-                transactions,
-                cosignatures,
-            );
+        const transactionBuilder =
+            this.type === TransactionType.AGGREGATE_COMPLETE
+                ? new AggregateCompleteTransactionBuilder(
+                      new SignatureDto(signatureBuffer),
+                      new KeyDto(signerBuffer),
+                      this.versionToDTO(),
+                      this.networkType.valueOf(),
+                      this.type.valueOf(),
+                      new AmountDto(this.maxFee),
+                      new TimestampDto(this.deadline.toBigInt()),
+                      new Hash256Dto(this.calculateInnerTransactionHash()),
+                      transactions,
+                      cosignatures,
+                  )
+                : new AggregateBondedTransactionBuilder(
+                      new SignatureDto(signatureBuffer),
+                      new KeyDto(signerBuffer),
+                      this.versionToDTO(),
+                      this.networkType.valueOf(),
+                      this.type.valueOf(),
+                      new AmountDto(this.maxFee),
+                      new TimestampDto(this.deadline.toBigInt()),
+                      new Hash256Dto(this.calculateInnerTransactionHash()),
+                      transactions,
+                      cosignatures,
+                  );
         return transactionBuilder.serialize();
     }
 
@@ -352,7 +362,7 @@ export class AggregateTransaction extends Transaction {
      */
     private calculateInnerTransactionHash(): Uint8Array {
         // Note: Transaction hashing *always* uses SHA3
-        const hasher  = SHA3Hasher.createHasher(32);
+        const hasher = SHA3Hasher.createHasher(32);
         const builder = new MerkleHashBuilder(32);
         this.innerTransactions.forEach((transaction) => {
             const entityHash: Uint8Array = new Uint8Array(32);
@@ -385,8 +395,10 @@ export class AggregateTransaction extends Transaction {
      */
     resolveAliases(statement: Statement): AggregateTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
-        return DtoMapping.assign(this,
-            {innerTransactions: this.innerTransactions.map((tx) => tx.resolveAliases(statement, transactionInfo.index))
-            .sort((a, b) => a.transactionInfo!.index - b.transactionInfo!.index)});
+        return DtoMapping.assign(this, {
+            innerTransactions: this.innerTransactions
+                .map((tx) => tx.resolveAliases(statement, transactionInfo.index))
+                .sort((a, b) => a.transactionInfo!.index - b.transactionInfo!.index),
+        });
     }
 }

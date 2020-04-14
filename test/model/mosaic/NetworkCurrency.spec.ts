@@ -22,9 +22,7 @@ import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 
 describe('NetworkCurrencyLocal', () => {
-
     it('should createComplete an NetworkCurrencyLocal object', () => {
-
         const currency = NetworkCurrencyLocal.createRelative(1000);
 
         deepEqual(BigIntUtilities.BigIntToHex(currency.id.id), '85BBEA6CC462B244'); // holds NAMESPACE_ID
@@ -32,7 +30,6 @@ describe('NetworkCurrencyLocal', () => {
     });
 
     it('should set amount in smallest unit when toDTO()', () => {
-
         const currency = NetworkCurrencyLocal.createRelative(1000);
         expect(BigInt(currency.toDTO().amount)).to.be.equal(BigInt(1000 * 1000000));
     });
@@ -46,16 +43,13 @@ describe('NetworkCurrencyLocal', () => {
 });
 
 describe('NetworkCurrencyPublic', () => {
-
     it('should createComplete an NetworkCurrencyPublic object', () => {
-
         const currency = NetworkCurrencyPublic.createRelative(1000);
         deepEqual(currency.id.id, BigIntUtilities.HexToBigInt('E74B99BA41F4AFEE')); // holds NAMESPACE_ID
         expect(currency.amount).to.be.equal(BigInt(1000 * 1000000));
     });
 
     it('should set amount in smallest unit when toDTO()', () => {
-
         const currency = NetworkCurrencyPublic.createRelative(1000);
         expect(BigInt(currency.toDTO().amount)).to.be.equal(BigInt(1000 * 1000000));
     });

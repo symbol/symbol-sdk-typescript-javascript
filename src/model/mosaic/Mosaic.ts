@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {NamespaceId} from '../namespace/NamespaceId';
-import {MosaicId} from './MosaicId';
+import { NamespaceId } from '../namespace/NamespaceId';
+import { MosaicId } from './MosaicId';
 import { BigIntUtilities } from '../../core/format/BigIntUtilities';
 
 /**
@@ -23,24 +23,22 @@ import { BigIntUtilities } from '../../core/format/BigIntUtilities';
  * Mosaics can be transferred by means of a transfer transaction.
  */
 export class Mosaic {
-
     /**
      * Constructor
      * @param id
      * @param amount
      */
     constructor(
-                /**
-                 * The mosaic id
-                 */
-                public readonly id: MosaicId | NamespaceId,
-                /**
-                 * The mosaic amount. The quantity is always given in smallest units for the mosaic
-                 * i.e. if it has a divisibility of 3 the quantity is given in millis.
-                 */
-                public readonly amount: bigint) {
-
-    }
+        /**
+         * The mosaic id
+         */
+        public readonly id: MosaicId | NamespaceId,
+        /**
+         * The mosaic amount. The quantity is always given in smallest units for the mosaic
+         * i.e. if it has a divisibility of 3 the quantity is given in millis.
+         */
+        public readonly amount: bigint,
+    ) {}
 
     /**
      * @internal
@@ -52,5 +50,4 @@ export class Mosaic {
             id: BigIntUtilities.BigIntToHex(this.id.id),
         };
     }
-
 }

@@ -51,7 +51,6 @@ describe('NamespaceHttp', () => {
     });
 
     describe('NamespaceRegistrationTransaction', () => {
-
         it('standalone', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
@@ -67,7 +66,6 @@ describe('NamespaceHttp', () => {
         });
     });
     describe('AddressAliasTransaction', () => {
-
         it('standalone', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
@@ -102,7 +100,6 @@ describe('NamespaceHttp', () => {
             const namespaces = await namespaceRepository.getNamespacesFromAccounts([account.address]).toPromise();
             deepEqual(namespaces[0].owner, account.publicAccount);
         });
-
     });
 
     describe('getNamespacesName', () => {

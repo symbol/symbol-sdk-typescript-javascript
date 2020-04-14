@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import { AccountNames } from '../model/account/AccountNames';
-import {Address} from '../model/account/Address';
-import {MosaicId} from '../model/mosaic/MosaicId';
+import { Address } from '../model/account/Address';
+import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicNames } from '../model/mosaic/MosaicNames';
-import {NamespaceId} from '../model/namespace/NamespaceId';
-import {NamespaceInfo} from '../model/namespace/NamespaceInfo';
-import {NamespaceName} from '../model/namespace/NamespaceName';
-import {QueryParams} from './QueryParams';
+import { NamespaceId } from '../model/namespace/NamespaceId';
+import { NamespaceInfo } from '../model/namespace/NamespaceInfo';
+import { NamespaceName } from '../model/namespace/NamespaceName';
+import { QueryParams } from './QueryParams';
 
 /**
  * Namespace interface repository.
@@ -30,7 +30,6 @@ import {QueryParams} from './QueryParams';
  * @since 1.0
  */
 export interface NamespaceRepository {
-
     /**
      * Get readable names for a set of accountIds.
      * Returns friendly names for accounts.
@@ -60,8 +59,7 @@ export interface NamespaceRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<NamespaceInfo[]>
      */
-    getNamespacesFromAccount(address: Address,
-                             queryParams?: QueryParams): Observable<NamespaceInfo[]>;
+    getNamespacesFromAccount(address: Address, queryParams?: QueryParams): Observable<NamespaceInfo[]>;
 
     /**
      * Gets array of NamespaceInfo for different account
@@ -69,8 +67,7 @@ export interface NamespaceRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<NamespaceInfo[]>
      */
-    getNamespacesFromAccounts(addresses: Address[],
-                              queryParams?: QueryParams): Observable<NamespaceInfo[]>;
+    getNamespacesFromAccounts(addresses: Address[], queryParams?: QueryParams): Observable<NamespaceInfo[]>;
 
     /**
      * Gets array of NamespaceName for different namespaceIds
@@ -84,12 +81,12 @@ export interface NamespaceRepository {
      * @param namespaceId - the namespaceId of the namespace
      * @returns Observable<MosaicId | null>
      */
-    getLinkedMosaicId(namespaceId: NamespaceId): Observable<MosaicId | null>;
+    getLinkedMosaicId(namespaceId: NamespaceId): Observable<MosaicId | null>;
 
     /**
      * Gets the Address from a AddressAlias
      * @param namespaceId - the namespaceId of the namespace
      * @returnsObservable<Address | null>
      */
-    getLinkedAddress(namespaceId: NamespaceId): Observable<Address | null>;
+    getLinkedAddress(namespaceId: NamespaceId): Observable<Address | null>;
 }

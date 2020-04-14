@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {Crypto} from '../../core/crypto';
-import {Password} from './Password';
+import { Crypto } from '../../core/crypto';
+import { Password } from './Password';
 import { WalletAlgorithm } from './WalletAlgorithm';
 
 /**
@@ -27,16 +27,15 @@ export class EncryptedPrivateKey {
      * @param iv
      */
     constructor(
-                /**
-                 * Encrypted private key data
-                 */
-                public readonly encryptedKey: string,
-                /**
-                 * Initialization vector used in the decrypt process
-                 */
-                public readonly iv: string) {
-
-    }
+        /**
+         * Encrypted private key data
+         */
+        public readonly encryptedKey: string,
+        /**
+         * Initialization vector used in the decrypt process
+         */
+        public readonly iv: string,
+    ) {}
 
     /**
      * Decrypt an encrypted private key

@@ -17,17 +17,18 @@
  * The node info structure describes basic information of a node.
  */
 export class NodeTime {
-
     /**
      * @param sendTimeStamp
      * @param receiveTimeStamp
      */
-    constructor(/**
-                 * The request send timestamp
-                 */
-                public readonly sendTimeStamp?: bigint,
-                /**
-                 * The request received timestamp
-                 */
-                public readonly receiveTimeStamp?: bigint ) {}
+    constructor(
+        /**
+         * The request send timestamp
+         */
+        public readonly sendTimeStamp?: bigint,
+        /**
+         * The request received timestamp
+         */
+        public readonly receiveTimeStamp?: bigint,
+    ) {}
 }

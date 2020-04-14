@@ -18,10 +18,8 @@ import { WalletAlgorithm } from '../../model/wallet/WalletAlgorithm';
 import { Convert as convert } from '../format/Convert';
 import { KeyPair } from './KeyPair';
 import * as utility from './Utilities';
-
-// tslint:disable-next-line: no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const CryptoJS = require('crypto-js');
-
 export class Crypto {
     /**
      * Encrypt a private key for mobile apps (AES_PBKF2)
@@ -52,7 +50,7 @@ export class Crypto {
             encrypted: convert.uint8ToHex(iv) + encrypted.ciphertext,
             salt: salt.toString(),
         };
-    }
+    };
 
     /**
      * Derive a private key from a password using count iterations of SHA3-256
@@ -81,7 +79,7 @@ export class Crypto {
         return {
             priv: CryptoJS.enc.Hex.stringify(data),
         };
-    }
+    };
 
     /**
      * Encrypt hex data using a key
@@ -109,7 +107,7 @@ export class Crypto {
             iv,
             key,
         };
-    }
+    };
 
     /**
      * Decrypt data
@@ -130,7 +128,7 @@ export class Crypto {
         };
         // Result
         return CryptoJS.enc.Hex.stringify(CryptoJS.AES.decrypt(data, encKey, encIv));
-    }
+    };
 
     /**
      * Reveal the private key of an account or derive it from the wallet password
@@ -148,7 +146,8 @@ export class Crypto {
         }
         // Processing
         let r;
-        if (algo === WalletAlgorithm.Pass_6k) { // Brain wallets
+        if (algo === WalletAlgorithm.Pass_6k) {
+            // Brain wallets
             if (!walletAccount.encrypted && !walletAccount.iv) {
                 // Account private key is generated simply using a passphrase so it has no encrypted and iv
                 r = Crypto.derivePassSha(common.password, 6000);
@@ -164,9 +163,10 @@ export class Crypto {
                     key: convert.hexToUint8(pass.priv),
                 };
                 const d = Crypto.decrypt(obj);
-                r = {priv: d};
+                r = { priv: d };
             }
-        } else if (algo === WalletAlgorithm.Pass_bip32) { // Wallets from PRNG
+        } else if (algo === WalletAlgorithm.Pass_bip32) {
+            // Wallets from PRNG
             const pass = Crypto.derivePassSha(common.password, 20);
             const obj = {
                 ciphertext: CryptoJS.enc.Hex.parse(walletAccount.encrypted),
@@ -174,8 +174,9 @@ export class Crypto {
                 key: convert.hexToUint8(pass.priv),
             };
             const d = Crypto.decrypt(obj);
-            r = {priv: d};
-        } else if (algo === WalletAlgorithm.Pass_enc) { // Private Key wallets
+            r = { priv: d };
+        } else if (algo === WalletAlgorithm.Pass_enc) {
+            // Private Key wallets
             const pass = Crypto.derivePassSha(common.password, 20);
             const obj = {
                 ciphertext: CryptoJS.enc.Hex.parse(walletAccount.encrypted),
@@ -183,9 +184,10 @@ export class Crypto {
                 key: convert.hexToUint8(pass.priv),
             };
             const d = Crypto.decrypt(obj);
-            r = {priv: d};
-        } else if (algo === WalletAlgorithm.Trezor) { // HW wallet
-            r = {priv: ''};
+            r = { priv: d };
+        } else if (algo === WalletAlgorithm.Trezor) {
+            // HW wallet
+            r = { priv: '' };
             common.isHW = true;
         } else {
             return false;
@@ -193,7 +195,7 @@ export class Crypto {
         // Result
         common.privateKey = r.priv;
         return true;
-    }
+    };
 
     /**
      * Generate a random key
@@ -202,7 +204,7 @@ export class Crypto {
      */
     public static randomKey = () => {
         return Crypto.randomBytes(32);
-    }
+    };
 
     /**
      * Encode a private key using a password
@@ -225,7 +227,7 @@ export class Crypto {
             ciphertext: CryptoJS.enc.Hex.stringify(r.ciphertext),
             iv: convert.uint8ToHex(r.iv),
         };
-    }
+    };
 
     /***
      * Encode a message, separated from encode() to help testing
@@ -237,10 +239,7 @@ export class Crypto {
      * @param {Uint8Array} salt - A salt
      * @return {string} - The encoded message
      */
-    public static _encode = (senderPriv: string,
-                             recipientPub: string,
-                             msg: string,
-                             iv: Uint8Array): string => {
+    public static _encode = (senderPriv: string, recipientPub: string, msg: string, iv: Uint8Array): string => {
         // Errors
         if (!senderPriv || !recipientPub || !msg || !iv) {
             throw new Error('Missing argument !');
@@ -256,7 +255,7 @@ export class Crypto {
         // Result
         const result = convert.uint8ToHex(iv) + CryptoJS.enc.Hex.stringify(encrypted.ciphertext);
         return result;
-    }
+    };
 
     /**
      * Encode a message
@@ -267,10 +266,7 @@ export class Crypto {
      * @param {boolean} isHexString - Is payload string a hexadecimal string (default = false)
      * @return {string} - The encoded message
      */
-    public static encode = (senderPriv: string,
-                            recipientPub: string,
-                            msg: string,
-                            isHexString: boolean = false): string => {
+    public static encode = (senderPriv: string, recipientPub: string, msg: string, isHexString = false): string => {
         // Errors
         if (!senderPriv || !recipientPub || !msg) {
             throw new Error('Missing argument !');
@@ -280,7 +276,7 @@ export class Crypto {
         const encoded = Crypto._encode(senderPriv, recipientPub, isHexString ? msg : convert.utf8ToHex(msg), iv);
         // Result
         return encoded;
-    }
+    };
 
     /**
      * Decode an encrypted message payload
@@ -291,10 +287,7 @@ export class Crypto {
      * @param {Uint8Array} iv - 16-byte AES initialization vector
      * @return {string} - The decoded payload as hex
      */
-    public static _decode = (recipientPrivate: string,
-                             senderPublic: string,
-                             payload: Uint8Array,
-                             iv: Uint8Array): string => {
+    public static _decode = (recipientPrivate: string, senderPublic: string, payload: Uint8Array, iv: Uint8Array): string => {
         // Error
         if (!recipientPrivate || !senderPublic || !payload) {
             throw new Error('Missing argument !');
@@ -312,7 +305,7 @@ export class Crypto {
         const plain = CryptoJS.AES.decrypt(encrypted, encKey, encIv);
         // Result
         return CryptoJS.enc.Hex.stringify(plain);
-    }
+    };
 
     /**
      * Decode an encrypted message payload
@@ -322,9 +315,7 @@ export class Crypto {
      * @param {string} payload - An encrypted message payload
      * @return {string} - The decoded payload as hex
      */
-    public static decode = (recipientPrivate: string,
-                            senderPublic: string,
-                            payload: string): string => {
+    public static decode = (recipientPrivate: string, senderPublic: string, payload: string): string => {
         // Error
         if (!recipientPrivate || !senderPublic || !payload) {
             throw new Error('Missing argument !');
@@ -335,7 +326,7 @@ export class Crypto {
         const iv = new Uint8Array(binPayload.buffer, 0, 16);
         const decoded = Crypto._decode(recipientPrivate, senderPublic, payloadBuffer, iv);
         return decoded.toUpperCase();
-    }
+    };
 
     /**
      * Generate random bytes by length
@@ -343,8 +334,9 @@ export class Crypto {
      *
      * @return {Uint8Array}
      */
-    public static randomBytes = (length: number): Uint8Array => {
+    public static randomBytes = (length) => {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const crypto = require('crypto');
         return crypto.randomBytes(length);
-    }
+    };
 }

@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {expect} from 'chai';
-import {
-    Convert as convert,
-    RawAddress as address,
-} from '../../../src/core/format';
+import { expect } from 'chai';
+import { Convert as convert, RawAddress as address } from '../../../src/core/format';
 import { NetworkType } from '../../../src/model/model';
 
 const Address_Decoded_Size = 25;
@@ -208,8 +205,7 @@ describe('address', () => {
                 const expectedAddress = Addresses[i];
 
                 // Act:
-                const result = address.addressToString(
-                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MAIN_NET));
+                const result = address.addressToString(address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MAIN_NET));
 
                 // Assert:
                 const message = ` from ${publicKeyHex}`;
@@ -249,8 +245,7 @@ describe('address', () => {
                 const expectedAddress = Addresses[i];
 
                 // Act:
-                const result = address.addressToString(
-                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.TEST_NET));
+                const result = address.addressToString(address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.TEST_NET));
 
                 // Assert:
                 const message = ` from ${publicKeyHex}`;
@@ -290,8 +285,7 @@ describe('address', () => {
                 const expectedAddress = Addresses[i];
 
                 // Act:
-                const result = address.addressToString(
-                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN));
+                const result = address.addressToString(address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN));
 
                 // Assert:
                 const message = ` from ${publicKeyHex}`;
@@ -332,7 +326,8 @@ describe('address', () => {
 
                 // Act:
                 const result = address.addressToString(
-                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN_TEST));
+                    address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN_TEST),
+                );
 
                 // Assert:
                 const message = ` from ${publicKeyHex}`;

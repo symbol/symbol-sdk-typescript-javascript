@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Address} from '../account/Address';
-import {MosaicId} from '../mosaic/MosaicId';
+import { Address } from '../account/Address';
+import { MosaicId } from '../mosaic/MosaicId';
 
 /**
  * Abtract class for Aliases
@@ -46,8 +46,8 @@ export abstract class Alias {
         /**
          * The alias mosaicId
          */
-        public readonly mosaicId?: MosaicId) {
-    }
+        public readonly mosaicId?: MosaicId,
+    ) {}
 
     /**
      * @internal

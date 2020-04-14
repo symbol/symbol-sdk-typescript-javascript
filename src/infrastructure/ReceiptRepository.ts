@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
 import { Statement } from '../model/receipt/Statement';
 
@@ -24,7 +24,6 @@ import { Statement } from '../model/receipt/Statement';
  * @since 1.0
  */
 export interface ReceiptRepository {
-
     /**
      * Get receipts from a block
      * Returns the receipts linked to a block.

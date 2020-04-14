@@ -71,7 +71,9 @@ describe('TransactionService', () => {
             transactionHashesMultiple = [];
             transactionRepository = helper.repositoryFactory.createTransactionRepository();
             transactionService = new TransactionService(
-                helper.repositoryFactory.createTransactionRepository(), helper.repositoryFactory.createReceiptRepository());
+                helper.repositoryFactory.createTransactionRepository(),
+                helper.repositoryFactory.createReceiptRepository(),
+            );
         });
     });
     before(() => {
@@ -88,7 +90,6 @@ describe('TransactionService', () => {
      * =========================
      */
     describe('Create address alias NamespaceId', () => {
-
         it('Announce NamespaceRegistrationTransaction', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
@@ -106,14 +107,14 @@ describe('TransactionService', () => {
     });
 
     describe('Create mosaic alias NamespaceId', () => {
-
         it('Announce NamespaceRegistrationTransaction', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
                 BigInt(50),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             mosaicAlias = new NamespaceId(namespaceName);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
@@ -123,14 +124,14 @@ describe('TransactionService', () => {
     });
 
     describe('Setup test AddressAlias', () => {
-
         it('Announce addressAliasTransaction', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
                 AliasAction.Link,
                 addressAlias,
                 account.address,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
             transactionHashes.push(signedTransaction.hash);
@@ -140,7 +141,6 @@ describe('TransactionService', () => {
     });
 
     describe('Setup test MosaicId', () => {
-
         it('Announce MosaicDefinitionTransaction', () => {
             const nonce = MosaicNonce.createRandom();
             mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
@@ -151,7 +151,8 @@ describe('TransactionService', () => {
                 MosaicFlags.create(true, true, false),
                 3,
                 BigInt(50),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
             transactionHashes.push(signedTransaction.hash);
@@ -161,14 +162,14 @@ describe('TransactionService', () => {
     });
 
     describe('MosaicSupplyChangeTransaction', () => {
-
         it('standalone', () => {
             const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
                 Deadline.create(),
                 mosaicId,
                 MosaicSupplyChangeAction.Increase,
                 BigInt(200000),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
             transactionHashes.push(signedTransaction.hash);
@@ -177,14 +178,14 @@ describe('TransactionService', () => {
     });
 
     describe('Setup MosaicAlias', () => {
-
         it('Announce MosaicAliasTransaction', () => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
                 Deadline.create(),
                 AliasAction.Link,
                 mosaicAlias,
                 mosaicId,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
             transactionHashes.push(signedTransaction.hash);
@@ -197,12 +198,10 @@ describe('TransactionService', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 addressAlias,
-                [
-                    NetworkCurrencyLocal.createAbsolute(1),
-                    new Mosaic(mosaicAlias, BigInt(1)),
-                ],
+                [NetworkCurrencyLocal.createAbsolute(1), new Mosaic(mosaicAlias, BigInt(1))],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = transferTransaction.signWith(account, generationHash);
 
@@ -219,7 +218,6 @@ describe('TransactionService', () => {
      */
 
     describe('Create Aggreate TransferTransaction', () => {
-
         it('aggregate', () => {
             const signedTransaction = buildAggregateTransaction().signWith(account, generationHash);
             transactionHashes.push(signedTransaction.hash);
@@ -234,16 +232,14 @@ describe('TransactionService', () => {
      */
 
     describe('Transfer mosaic to account 3', () => {
-
         it('Announce TransferTransaction', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account3.address,
-                [
-                    new Mosaic(mosaicAlias, BigInt(200)),
-                ],
+                [new Mosaic(mosaicAlias, BigInt(200))],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = transferTransaction.signWith(account, generationHash);
             transactionHashes.push(signedTransaction.hash);
@@ -252,18 +248,16 @@ describe('TransactionService', () => {
     });
 
     describe('Create multiple transfers with alias', () => {
-
         it('Announce TransferTransaction', (done) => {
             const transactions: SignedTransaction[] = [];
             // 1. Transfer A -> B
             const transaction1 = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
-                [
-                    new Mosaic(mosaicAlias, BigInt(1)),
-                ],
+                [new Mosaic(mosaicAlias, BigInt(1))],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             transactions.push(transaction1.signWith(account, generationHash));
 
@@ -271,11 +265,10 @@ describe('TransactionService', () => {
             const transaction2 = TransferTransaction.create(
                 Deadline.create(),
                 cosignAccount4.address,
-                [
-                    new Mosaic(mosaicAlias, BigInt(1)),
-                ],
+                [new Mosaic(mosaicAlias, BigInt(1))],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             transactions.push(transaction2.signWith(account3, generationHash));
 
@@ -311,39 +304,48 @@ describe('TransactionService', () => {
 
     describe('should return resolved transaction', () => {
         it('call transaction service', () => {
-            return transactionService.resolveAliases(transactionHashes).toPromise().then((transactions) => {
-                expect(transactions.length).to.be.equal(8);
-                transactions.map((tx) => {
-                    if (tx instanceof TransferTransaction) {
-                        expect((tx.recipientAddress as Address).plain()).to.be.equal(account.address.plain());
-                        expect(tx.mosaics.find((m) => m.id.toHex() === mosaicId.toHex())).not.to.equal(undefined);
-                    } else if (tx instanceof AggregateTransaction) {
-                        expect(tx.innerTransactions.length).to.be.equal(5);
-                        // Assert Transfer
-                        expect(((tx.innerTransactions[0] as TransferTransaction).recipientAddress as Address)
-                        .plain()).to.be.equal(account.address.plain());
-                        expect((tx.innerTransactions[0] as TransferTransaction).mosaics
-                        .find((m) => m.id.toHex() === mosaicId.toHex())).not.to.equal(undefined);
-                        // Assert MosaicMeta
-                        expect((tx.innerTransactions[4] as MosaicMetadataTransaction)
-                        .targetMosaicId.toHex() === newMosaicId.toHex()).to.be.true;
-                    }
-                    return tx;
+            return transactionService
+                .resolveAliases(transactionHashes)
+                .toPromise()
+                .then((transactions) => {
+                    expect(transactions.length).to.be.equal(8);
+                    transactions.map((tx) => {
+                        if (tx instanceof TransferTransaction) {
+                            expect((tx.recipientAddress as Address).plain()).to.be.equal(account.address.plain());
+                            expect(tx.mosaics.find((m) => m.id.toHex() === mosaicId.toHex())).not.to.equal(undefined);
+                        } else if (tx instanceof AggregateTransaction) {
+                            expect(tx.innerTransactions.length).to.be.equal(5);
+                            // Assert Transfer
+                            expect(((tx.innerTransactions[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
+                                account.address.plain(),
+                            );
+                            expect(
+                                (tx.innerTransactions[0] as TransferTransaction).mosaics.find((m) => m.id.toHex() === mosaicId.toHex()),
+                            ).not.to.equal(undefined);
+                            // Assert MosaicMeta
+                            expect((tx.innerTransactions[4] as MosaicMetadataTransaction).targetMosaicId.toHex() === newMosaicId.toHex()).to
+                                .be.true;
+                        }
+                        return tx;
+                    });
                 });
-            });
         });
     });
 
     describe('Test resolve alias with multiple transaction in single block', () => {
         it('call transaction service', () => {
-            return transactionService.resolveAliases(transactionHashesMultiple).toPromise().then((tx) => {
-                expect(tx.length).to.be.equal(3);
-                expect((tx[0] as TransferTransaction).mosaics[0].id.toHex()).to.be.equal(mosaicId.toHex());
-                expect((tx[1] as TransferTransaction).mosaics[0].id.toHex()).to.be.equal(mosaicId.toHex());
-                expect(((tx[2] as AggregateTransaction).innerTransactions[4] as MosaicMetadataTransaction)
-                .targetMosaicId.toHex()).to.be.equal(newMosaicId.toHex());
-                return tx;
-            });
+            return transactionService
+                .resolveAliases(transactionHashesMultiple)
+                .toPromise()
+                .then((tx) => {
+                    expect(tx.length).to.be.equal(3);
+                    expect((tx[0] as TransferTransaction).mosaics[0].id.toHex()).to.be.equal(mosaicId.toHex());
+                    expect((tx[1] as TransferTransaction).mosaics[0].id.toHex()).to.be.equal(mosaicId.toHex());
+                    expect(
+                        ((tx[2] as AggregateTransaction).innerTransactions[4] as MosaicMetadataTransaction).targetMosaicId.toHex(),
+                    ).to.be.equal(newMosaicId.toHex());
+                    return tx;
+                });
         });
     });
 
@@ -351,12 +353,10 @@ describe('TransactionService', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
             addressAlias,
-            [
-                NetworkCurrencyLocal.createAbsolute(1),
-                new Mosaic(mosaicAlias, BigInt(1)),
-            ],
+            [NetworkCurrencyLocal.createAbsolute(1), new Mosaic(mosaicAlias, BigInt(1))],
             PlainMessage.create('test-message'),
-            networkType, helper.maxFee,
+            networkType,
+            helper.maxFee,
         );
         // Unlink MosaicAlias
         const mosaicAliasTransactionUnlink = MosaicAliasTransaction.create(
@@ -364,7 +364,8 @@ describe('TransactionService', () => {
             AliasAction.Unlink,
             mosaicAlias,
             mosaicId,
-            networkType, helper.maxFee,
+            networkType,
+            helper.maxFee,
         );
 
         // Create a new Mosaic
@@ -377,7 +378,8 @@ describe('TransactionService', () => {
             MosaicFlags.create(true, true, false),
             3,
             BigInt(0),
-            networkType, helper.maxFee,
+            networkType,
+            helper.maxFee,
         );
 
         // Link namespace with new MosaicId
@@ -386,7 +388,8 @@ describe('TransactionService', () => {
             AliasAction.Link,
             mosaicAlias,
             newMosaicId,
-            networkType, helper.maxFee,
+            networkType,
+            helper.maxFee,
         );
 
         // Use new mosaicAlias in metadata
@@ -397,20 +400,21 @@ describe('TransactionService', () => {
             mosaicAlias,
             10,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            networkType, helper.maxFee,
+            networkType,
+            helper.maxFee,
         );
-        return AggregateTransaction.createComplete(Deadline.create(),
+        return AggregateTransaction.createComplete(
+            Deadline.create(),
             [
                 transferTransaction.toAggregate(account.publicAccount),
                 mosaicAliasTransactionUnlink.toAggregate(account.publicAccount),
                 mosaicDefinitionTransaction.toAggregate(account.publicAccount),
                 mosaicAliasTransactionRelink.toAggregate(account.publicAccount),
                 mosaicMetadataTransaction.toAggregate(account.publicAccount),
-
             ],
             networkType,
-            [], helper.maxFee,
+            [],
+            helper.maxFee,
         );
     }
-
 });

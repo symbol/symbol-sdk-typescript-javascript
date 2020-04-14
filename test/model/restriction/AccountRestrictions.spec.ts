@@ -14,34 +14,35 @@
  * limitations under the License.
  */
 
-import {deepEqual} from 'assert';
-import {expect} from 'chai';
-import {Address} from '../../../src/model/account/Address';
+import { deepEqual } from 'assert';
+import { expect } from 'chai';
+import { Address } from '../../../src/model/account/Address';
 import { AccountRestriction } from '../../../src/model/restriction/AccountRestriction';
 import { AccountRestrictionModificationAction } from '../../../src/model/restriction/AccountRestrictionModificationAction';
 import { AccountRestrictions } from '../../../src/model/restriction/AccountRestrictions';
 import { AccountRestrictionFlags } from '../../../src/model/restriction/AccountRestrictionType';
 
 describe('AccountRestrictions', () => {
-
     it('should createComplete an AccountRestrictions object', () => {
         const accountRestrictionsDTO = {
             address: Address.createFromEncoded('9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142'),
-            restrictions: [{
-                restrictionFlags: AccountRestrictionFlags.AllowIncomingAddress,
-                values: [{modificationAction: AccountRestrictionModificationAction.Add,
-                          value: 'SDUP5PLHDXKBX3UU5Q52LAY4WYEKGEWC6IB3VBFM',
-                         }],
-            }],
+            restrictions: [
+                {
+                    restrictionFlags: AccountRestrictionFlags.AllowIncomingAddress,
+                    values: [
+                        {
+                            modificationAction: AccountRestrictionModificationAction.Add,
+                            value: 'SDUP5PLHDXKBX3UU5Q52LAY4WYEKGEWC6IB3VBFM',
+                        },
+                    ],
+                },
+            ],
         };
 
         const accountRestrictions = new AccountRestrictions(
             accountRestrictionsDTO.address,
             accountRestrictionsDTO.restrictions.map((r) => {
-                return new AccountRestriction(
-                    r.restrictionFlags,
-                    r.values,
-                );
+                return new AccountRestriction(r.restrictionFlags, r.values);
             }),
         );
 
@@ -49,8 +50,10 @@ describe('AccountRestrictions', () => {
         deepEqual(accountRestrictions.restrictions.length, accountRestrictionsDTO.restrictions.length);
         deepEqual(accountRestrictions.restrictions[0].restrictionFlags, accountRestrictionsDTO.restrictions[0].restrictionFlags);
         deepEqual(accountRestrictions.restrictions[0].values.length, accountRestrictionsDTO.restrictions[0].values.length);
-        deepEqual((accountRestrictions.restrictions[0].values[0] as any).modificationAction,
-            accountRestrictionsDTO.restrictions[0].values[0].modificationAction);
+        deepEqual(
+            (accountRestrictions.restrictions[0].values[0] as any).modificationAction,
+            accountRestrictionsDTO.restrictions[0].values[0].modificationAction,
+        );
         deepEqual((accountRestrictions.restrictions[0].values[0] as any).value, accountRestrictionsDTO.restrictions[0].values[0].value);
     });
 });

@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 
-import {
-    AddressDto,
-    AmountDto,
-    BalanceTransferReceiptBuilder,
-    KeyDto,
-    MosaicBuilder,
-    MosaicIdDto,
-} from 'catbuffer-typescript';
+import { AddressDto, AmountDto, BalanceTransferReceiptBuilder, KeyDto, MosaicBuilder, MosaicIdDto } from 'catbuffer-typescript';
 import { Convert } from '../../core/format/Convert';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../account/Address';
@@ -36,7 +29,6 @@ import { ReceiptVersion } from './ReceiptVersion';
  * Balance Transfer: A mosaic transfer was triggered.
  */
 export class BalanceTransferReceipt extends Receipt {
-
     /**
      * Balance transfer expiry receipt
      * @param sender - The public account of the sender.
@@ -48,25 +40,26 @@ export class BalanceTransferReceipt extends Receipt {
      * @param size - the receipt size
      */
     constructor(
-                /**
-                 * The public account of the sender.
-                 */
-                public readonly sender: PublicAccount,
-                /**
-                 * The mosaic recipient address.
-                 */
-                public readonly recipientAddress: Address | NamespaceId,
-                /**
-                 * The mosaic id.
-                 */
-                public readonly mosaicId: MosaicId,
-                /**
-                 * The amount of mosaic.
-                 */
-                public readonly amount: bigint,
-                version: ReceiptVersion,
-                type: ReceiptType,
-                size?: number) {
+        /**
+         * The public account of the sender.
+         */
+        public readonly sender: PublicAccount,
+        /**
+         * The mosaic recipient address.
+         */
+        public readonly recipientAddress: Address | NamespaceId,
+        /**
+         * The mosaic id.
+         */
+        public readonly mosaicId: MosaicId,
+        /**
+         * The amount of mosaic.
+         */
+        public readonly amount: bigint,
+        version: ReceiptVersion,
+        type: ReceiptType,
+        size?: number,
+    ) {
         super(version, type, size);
     }
 
@@ -76,9 +69,10 @@ export class BalanceTransferReceipt extends Receipt {
      * @return {Uint8Array}
      */
     public serialize(): Uint8Array {
-        return new BalanceTransferReceiptBuilder(ReceiptVersion.BALANCE_TRANSFER, this.type.valueOf(),
-            new MosaicBuilder(new MosaicIdDto(this.mosaicId.id),
-                new AmountDto(this.amount)),
+        return new BalanceTransferReceiptBuilder(
+            ReceiptVersion.BALANCE_TRANSFER,
+            this.type.valueOf(),
+            new MosaicBuilder(new MosaicIdDto(this.mosaicId.id), new AmountDto(this.amount)),
             new KeyDto(Convert.hexToUint8(this.sender.publicKey)),
             new AddressDto(this.getRecipientBytes()),
         ).serialize();

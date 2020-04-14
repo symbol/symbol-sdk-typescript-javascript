@@ -45,7 +45,6 @@ import { TransactionVersion } from './TransactionVersion';
  * i.e. increase or decrease the supply.
  */
 export class MosaicSupplyChangeTransaction extends Transaction {
-
     /**
      * Create a mosaic supply change transaction object
      * @param deadline - The deadline to include the transaction.
@@ -56,13 +55,16 @@ export class MosaicSupplyChangeTransaction extends Transaction {
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {MosaicSupplyChangeTransaction}
      */
-    public static create(deadline: Deadline,
-                         mosaicId: MosaicId | NamespaceId,
-                         action: MosaicSupplyChangeAction,
-                         delta: bigint,
-                         networkType: NetworkType,
-                         maxFee: bigint = BigInt(0)): MosaicSupplyChangeTransaction {
-        return new MosaicSupplyChangeTransaction(networkType,
+    public static create(
+        deadline: Deadline,
+        mosaicId: MosaicId | NamespaceId,
+        action: MosaicSupplyChangeAction,
+        delta: bigint,
+        networkType: NetworkType,
+        maxFee = BigInt(0),
+    ): MosaicSupplyChangeTransaction {
+        return new MosaicSupplyChangeTransaction(
+            networkType,
             TransactionVersion.MOSAIC_SUPPLY_CHANGE,
             deadline,
             maxFee,
@@ -84,25 +86,27 @@ export class MosaicSupplyChangeTransaction extends Transaction {
      * @param signer
      * @param transactionInfo
      */
-    constructor(networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: bigint,
-                /**
-                 * The unresolved mosaic id.
-                 */
-                public readonly mosaicId: MosaicId | NamespaceId,
-                /**
-                 * The supply type.
-                 */
-                public readonly action: MosaicSupplyChangeAction,
-                /**
-                 * The supply change in units for the mosaic.
-                 */
-                public readonly delta: bigint,
-                signature?: string,
-                signer?: PublicAccount,
-                transactionInfo?: TransactionInfo) {
+    constructor(
+        networkType: NetworkType,
+        version: number,
+        deadline: Deadline,
+        maxFee: bigint,
+        /**
+         * The unresolved mosaic id.
+         */
+        public readonly mosaicId: MosaicId | NamespaceId,
+        /**
+         * The supply type.
+         */
+        public readonly action: MosaicSupplyChangeAction,
+        /**
+         * The supply change in units for the mosaic.
+         */
+        public readonly delta: bigint,
+        signature?: string,
+        signer?: PublicAccount,
+        transactionInfo?: TransactionInfo,
+    ) {
         super(TransactionType.MOSAIC_SUPPLY_CHANGE, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
@@ -112,22 +116,23 @@ export class MosaicSupplyChangeTransaction extends Transaction {
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedMosaicSupplyChangeTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            MosaicSupplyChangeTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+        const builder = isEmbedded
+            ? EmbeddedMosaicSupplyChangeTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : MosaicSupplyChangeTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const transaction = MosaicSupplyChangeTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromBigInt(
-                (builder as MosaicSupplyChangeTransactionBuilder).getDeadline().timestamp),
+            isEmbedded
+                ? Deadline.create()
+                : Deadline.createFromBigInt((builder as MosaicSupplyChangeTransactionBuilder).getDeadline().timestamp),
             UnresolvedMapping.toUnresolvedMosaic(builder.getMosaicId().unresolvedMosaicId),
             builder.getAction().valueOf(),
             builder.getDelta().amount,
             networkType,
-            isEmbedded ? BigInt(0) : (builder as MosaicSupplyChangeTransactionBuilder).fee.amount);
-        return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
+            isEmbedded ? BigInt(0) : (builder as MosaicSupplyChangeTransactionBuilder).fee.amount,
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**
@@ -192,10 +197,15 @@ export class MosaicSupplyChangeTransaction extends Transaction {
      * @param aggregateTransactionIndex Transaction index for aggregated transaction
      * @returns {MosaicSupplyChangeTransaction}
      */
-    resolveAliases(statement: Statement, aggregateTransactionIndex: number = 0): MosaicSupplyChangeTransaction {
+    resolveAliases(statement: Statement, aggregateTransactionIndex = 0): MosaicSupplyChangeTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
         return DtoMapping.assign(this, {
-            mosaicId: statement.resolveMosaicId(this.mosaicId, transactionInfo.height.toString(),
-                transactionInfo.index, aggregateTransactionIndex)});
+            mosaicId: statement.resolveMosaicId(
+                this.mosaicId,
+                transactionInfo.height.toString(),
+                transactionInfo.index,
+                aggregateTransactionIndex,
+            ),
+        });
     }
 }

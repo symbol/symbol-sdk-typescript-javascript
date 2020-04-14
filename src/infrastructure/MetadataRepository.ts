@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import { Address } from '../model/account/Address';
 import { Metadata } from '../model/metadata/Metadata';
-import {MosaicId} from '../model/mosaic/MosaicId';
+import { MosaicId } from '../model/mosaic/MosaicId';
 import { NamespaceId } from '../model/namespace/NamespaceId';
 import { QueryParams } from './QueryParams';
 
@@ -27,7 +27,6 @@ import { QueryParams } from './QueryParams';
  * @since 1.0
  */
 export interface MetadataRepository {
-
     /**
      * Returns the account metadata given an account id.
      * @param address - Account address to be created from PublicKey or RawAddress
@@ -101,7 +100,5 @@ export interface MetadataRepository {
      * @param publicKey - Sender public key
      * @returns Observable<Metadata>
      */
-    getNamespaceMetadataByKeyAndSender(namespaceId: NamespaceId,
-                                       key: string,
-                                       publicKey: string): Observable<Metadata>;
+    getNamespaceMetadataByKeyAndSender(namespaceId: NamespaceId, key: string, publicKey: string): Observable<Metadata>;
 }

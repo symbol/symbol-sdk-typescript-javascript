@@ -36,7 +36,6 @@ import Long = require('long');
  * MosaicRestrictionTransactionService service
  */
 export class MosaicRestrictionTransactionService {
-
     private readonly defaultMosaicAddressRestrictionValue = BigIntUtilities.HexToBigInt('FFFFFFFFFFFFFFFF');
     private readonly defaultMosaicGlobalRestrictionValue = BigInt(0);
 
@@ -45,9 +44,10 @@ export class MosaicRestrictionTransactionService {
      * @param restrictionMosaicRepository
      * @param namespaceRepository
      */
-    constructor(private readonly restrictionMosaicRepository: RestrictionMosaicRepository,
-                private readonly namespaceRepository: NamespaceRepository) {
-    }
+    constructor(
+        private readonly restrictionMosaicRepository: RestrictionMosaicRepository,
+        private readonly namespaceRepository: NamespaceRepository,
+    ) {}
 
     /**
      * Create a MosaicGlobalRestrictionTransaction object without previous restriction data
@@ -60,35 +60,41 @@ export class MosaicRestrictionTransactionService {
      * @param referenceMosaicId - Reference mosaic Id
      * @param maxFee - Max fee
      */
-    public createMosaicGlobalRestrictionTransaction(deadline: Deadline,
-                                                    networkType: NetworkType,
-                                                    mosaicId: MosaicId | NamespaceId,
-                                                    restrictionKey: bigint,
-                                                    restrictionValue: string,
-                                                    restrictionType: MosaicRestrictionType,
-                                                    referenceMosaicId: MosaicId | NamespaceId = new MosaicId(BigInt(0)),
-                                                    maxFee: bigint = BigInt(0)): Observable<Transaction> {
+    public createMosaicGlobalRestrictionTransaction(
+        deadline: Deadline,
+        networkType: NetworkType,
+        mosaicId: MosaicId | NamespaceId,
+        restrictionKey: bigint,
+        restrictionValue: string,
+        restrictionType: MosaicRestrictionType,
+        referenceMosaicId: MosaicId | NamespaceId = new MosaicId(BigInt(0)),
+        maxFee = BigInt(0),
+    ): Observable<Transaction> {
         this.validateInput(restrictionValue);
         return this.getResolvedMosaicId(mosaicId).pipe(
-            mergeMap((resolvedMosaicId) => this.getGlobalRestrictionEntry(resolvedMosaicId, restrictionKey).pipe(
-                map((restrictionEntry: MosaicGlobalRestrictionItem | undefined) => {
-                    const currentValue = restrictionEntry ? BigInt(restrictionEntry.restrictionValue) :
-                        this.defaultMosaicGlobalRestrictionValue;
-                    const currentType = restrictionEntry ? restrictionEntry.restrictionType : MosaicRestrictionType.NONE;
-                    return MosaicGlobalRestrictionTransaction.create(
-                        deadline,
-                        resolvedMosaicId,
-                        restrictionKey,
-                        currentValue,
-                        currentType,
-                        BigInt(restrictionValue),
-                        restrictionType,
-                        networkType,
-                        referenceMosaicId,
-                        maxFee,
-                    );
-                }),
-            )));
+            mergeMap((resolvedMosaicId) =>
+                this.getGlobalRestrictionEntry(resolvedMosaicId, restrictionKey).pipe(
+                    map((restrictionEntry: MosaicGlobalRestrictionItem | undefined) => {
+                        const currentValue = restrictionEntry
+                            ? BigInt(restrictionEntry.restrictionValue)
+                            : this.defaultMosaicGlobalRestrictionValue;
+                        const currentType = restrictionEntry ? restrictionEntry.restrictionType : MosaicRestrictionType.NONE;
+                        return MosaicGlobalRestrictionTransaction.create(
+                            deadline,
+                            resolvedMosaicId,
+                            restrictionKey,
+                            currentValue,
+                            currentType,
+                            BigInt(restrictionValue),
+                            restrictionType,
+                            networkType,
+                            referenceMosaicId,
+                            maxFee,
+                        );
+                    }),
+                ),
+            ),
+        );
     }
 
     /**
@@ -101,39 +107,42 @@ export class MosaicRestrictionTransactionService {
      * @param restrictionValue - New restriction value
      * @param maxFee - Max fee
      */
-    public createMosaicAddressRestrictionTransaction(deadline: Deadline,
-                                                     networkType: NetworkType,
-                                                     mosaicId: MosaicId | NamespaceId,
-                                                     restrictionKey: bigint,
-                                                     targetAddress: Address | NamespaceId,
-                                                     restrictionValue: string,
-                                                     maxFee: bigint = BigInt(0)): Observable<Transaction> {
+    public createMosaicAddressRestrictionTransaction(
+        deadline: Deadline,
+        networkType: NetworkType,
+        mosaicId: MosaicId | NamespaceId,
+        restrictionKey: bigint,
+        targetAddress: Address | NamespaceId,
+        restrictionValue: string,
+        maxFee = BigInt(0),
+    ): Observable<Transaction> {
         this.validateInput(restrictionValue);
         const combinedUnresolved = combineLatest(this.getResolvedMosaicId(mosaicId), this.getResolvedAddress(targetAddress));
         return combinedUnresolved.pipe(
-            mergeMap(([resolvedMosaicId, resolvedAddress]) => this.getGlobalRestrictionEntry(resolvedMosaicId, restrictionKey).pipe(
-                mergeMap((restrictionEntry: MosaicGlobalRestrictionItem | undefined) => {
-                    if (!restrictionEntry) {
-                        throw new Error('Global restriction is not valid for RestrictionKey: ' + restrictionKey);
-                    }
-                    return this.getAddressRestrictionEntry(resolvedMosaicId, restrictionKey, resolvedAddress).pipe(
-                        map((optionalValue) => {
-                            const currentValue = optionalValue ?
-                                BigInt(optionalValue) : this.defaultMosaicAddressRestrictionValue;
-                            return MosaicAddressRestrictionTransaction.create(
-                                deadline,
-                                mosaicId,
-                                restrictionKey,
-                                targetAddress,
-                                BigInt(restrictionValue),
-                                networkType,
-                                currentValue,
-                                maxFee,
-                            );
-                        }),
-                    );
-                }),
-            )),
+            mergeMap(([resolvedMosaicId, resolvedAddress]) =>
+                this.getGlobalRestrictionEntry(resolvedMosaicId, restrictionKey).pipe(
+                    mergeMap((restrictionEntry: MosaicGlobalRestrictionItem | undefined) => {
+                        if (!restrictionEntry) {
+                            throw new Error('Global restriction is not valid for RestrictionKey: ' + restrictionKey);
+                        }
+                        return this.getAddressRestrictionEntry(resolvedMosaicId, restrictionKey, resolvedAddress).pipe(
+                            map((optionalValue) => {
+                                const currentValue = optionalValue ? BigInt(optionalValue) : this.defaultMosaicAddressRestrictionValue;
+                                return MosaicAddressRestrictionTransaction.create(
+                                    deadline,
+                                    mosaicId,
+                                    restrictionKey,
+                                    targetAddress,
+                                    BigInt(restrictionValue),
+                                    networkType,
+                                    currentValue,
+                                    maxFee,
+                                );
+                            }),
+                        );
+                    }),
+                ),
+            ),
         );
     }
 
@@ -155,7 +164,8 @@ export class MosaicRestrictionTransactionService {
                     return of(undefined);
                 }
                 throw new Error(err.message);
-            }));
+            }),
+        );
     }
 
     /**
@@ -175,7 +185,8 @@ export class MosaicRestrictionTransactionService {
                     return of(undefined);
                 }
                 throw new Error(err.message);
-            }));
+            }),
+        );
     }
 
     /**
@@ -184,7 +195,7 @@ export class MosaicRestrictionTransactionService {
      */
     private validateInput(value: string) {
         const input_long = Long.fromString(value, true);
-        if (! /^\d+$/.test(value) || (value.substr(0, 1) === '0' && value.length > 1) || !Long.isLong(input_long)) {
+        if (!/^\d+$/.test(value) || (value.substr(0, 1) === '0' && value.length > 1) || !Long.isLong(input_long)) {
             throw new Error(`RestrictionValue: ${value} is not a valid numeric string.`);
         }
     }

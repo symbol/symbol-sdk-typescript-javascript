@@ -217,5 +217,4 @@ describe('ResolutionStatement', () => {
         expect((resolution.getResolutionEntryById(1, 6)!.resolved as MosaicId).toHex()).to.be.equal('7CDF3B117A3C40CC');
         expect((resolution.getResolutionEntryById(1, 2)!.resolved as MosaicId).toHex()).to.be.equal('0DC67FBE1CAD29E5');
     });
-
 });

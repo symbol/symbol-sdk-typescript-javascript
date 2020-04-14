@@ -22,7 +22,6 @@ import { BigIntUtilities } from '../../core/format/BigIntUtilities';
  * @since 1.0
  */
 export class NamespaceId {
-
     /**
      * Namespace id
      */

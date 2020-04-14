@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {Convert} from '../../../src/core/format';
-import {Account} from '../../../src/model/account/Account';
-import {MosaicId} from '../../../src/model/mosaic/MosaicId';
+import { expect } from 'chai';
+import { Convert } from '../../../src/core/format';
+import { Account } from '../../../src/model/account/Account';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
-import {NetworkType} from '../../../src/model/network/NetworkType';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
 import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
 import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { Statement } from '../../../src/model/receipt/Statement';
 import { MosaicRestrictionType } from '../../../src/model/restriction/MosaicRestrictionType';
-import {Deadline} from '../../../src/model/transaction/Deadline';
-import {MosaicGlobalRestrictionTransaction} from '../../../src/model/transaction/MosaicGlobalRestrictionTransaction';
+import { Deadline } from '../../../src/model/transaction/Deadline';
+import { MosaicGlobalRestrictionTransaction } from '../../../src/model/transaction/MosaicGlobalRestrictionTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
-import {TestingAccount} from '../../conf/conf.spec';
+import { TestingAccount } from '../../conf/conf.spec';
 
 describe('MosaicGlobalRestrictionTransaction', () => {
     let account: Account;
@@ -39,10 +39,14 @@ describe('MosaicGlobalRestrictionTransaction', () => {
     const resolvedMosaicId = new MosaicId('0DC67FBE1CAD29E5');
     before(() => {
         account = TestingAccount;
-        statement = new Statement([],
+        statement = new Statement(
             [],
-            [new ResolutionStatement(ResolutionType.Mosaic, BigInt(2), unresolvedMosaicId,
-                [new ResolutionEntry(resolvedMosaicId, new ReceiptSource(1, 0))])],
+            [],
+            [
+                new ResolutionStatement(ResolutionType.Mosaic, BigInt(2), unresolvedMosaicId, [
+                    new ResolutionEntry(resolvedMosaicId, new ReceiptSource(1, 0)),
+                ]),
+            ],
         );
     });
 
@@ -71,11 +75,9 @@ describe('MosaicGlobalRestrictionTransaction', () => {
 
         const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(
-            256,
-            signedTransaction.payload.length,
-        )).to.be.equal('010000000000000002000000000000000100000000000000090000000000000008000000000000000106');
-
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            '010000000000000002000000000000000100000000000000090000000000000008000000000000000106',
+        );
     });
 
     it('should createComplete an MosaicGlobalRestrictionTransaction use mosaic alias', () => {
@@ -103,14 +105,13 @@ describe('MosaicGlobalRestrictionTransaction', () => {
 
         const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(
-            256,
-            signedTransaction.payload.length,
-        )).to.be.equal('C51FB4C93FCA509502000000000000000100000000000000090000000000000008000000000000000106');
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            'C51FB4C93FCA509502000000000000000100000000000000090000000000000008000000000000000106',
+        );
 
-        expect(Convert.hexToUint8(mosaicGlobalRestrictionTransaction.serialize()).length)
-            .to.be.equal(mosaicGlobalRestrictionTransaction.size);
-
+        expect(Convert.hexToUint8(mosaicGlobalRestrictionTransaction.serialize()).length).to.be.equal(
+            mosaicGlobalRestrictionTransaction.size,
+        );
     });
 
     it('should createComplete an MosaicGlobalRestrictionTransaction use mosaic alias reference', () => {
@@ -138,11 +139,9 @@ describe('MosaicGlobalRestrictionTransaction', () => {
 
         const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(
-            256,
-            signedTransaction.payload.length,
-        )).to.be.equal('0100000000000000C51FB4C93FCA50950100000000000000090000000000000008000000000000000106');
-
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            '0100000000000000C51FB4C93FCA50950100000000000000090000000000000008000000000000000106',
+        );
     });
 
     it('Test set maxFee using multiplier', () => {
@@ -159,7 +158,6 @@ describe('MosaicGlobalRestrictionTransaction', () => {
             NetworkType.MIJIN_TEST,
             referenceMosaicId,
         ).setMaxFee(2);
-​
         expect(mosaicGlobalRestrictionTransaction.maxFee).to.be.equal(BigInt(340));
 
         const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
@@ -181,8 +179,8 @@ describe('MosaicGlobalRestrictionTransaction', () => {
             MosaicRestrictionType.GE,
             '',
             account.publicAccount,
-            new TransactionInfo(BigInt(2), 0, '')).resolveAliases(statement);
-​
+            new TransactionInfo(BigInt(2), 0, ''),
+        ).resolveAliases(statement);
         expect(mosaicGlobalRestrictionTransaction.mosaicId instanceof MosaicId).to.be.true;
         expect((mosaicGlobalRestrictionTransaction.mosaicId as MosaicId).equals(resolvedMosaicId)).to.be.true;
         expect(mosaicGlobalRestrictionTransaction.referenceMosaicId instanceof MosaicId).to.be.true;

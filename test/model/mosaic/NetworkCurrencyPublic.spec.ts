@@ -21,12 +21,10 @@ import { BigIntUtilities } from '../../../src/core/format/BigIntUtilities';
 import { NetworkCurrencyPublic } from '../../../src/model/mosaic/NetworkCurrencyPublic';
 
 describe('NetworkCurrencyPublic', () => {
-
     const hexId = 'E74B99BA41F4AFEE';
     const multiplier = BigInt(1000000);
 
     it('should set amount when relative and number', () => {
-
         const amount = 900000000000000;
         const currency = NetworkCurrencyPublic.createRelative(amount);
         deepEqual(BigIntUtilities.BigIntToHex(currency.id.id), hexId);
@@ -46,16 +44,16 @@ describe('NetworkCurrencyPublic', () => {
         const amount = 900000000000000123;
         const currency = NetworkCurrencyPublic.createAbsolute(amount);
         deepEqual(BigIntUtilities.BigIntToHex(currency.id.id), hexId);
-        expect(currency.toDTO().amount).to.be.equal((BigInt(amount)).toString());
-        expect(currency.amount.toString()).to.be.equal((BigInt(amount)).toString());
+        expect(currency.toDTO().amount).to.be.equal(BigInt(amount).toString());
+        expect(currency.amount.toString()).to.be.equal(BigInt(amount).toString());
     });
 
     it('should set amount when absolute and bigint', () => {
         const amount = BigInt(900000000000000123);
         const currency = NetworkCurrencyPublic.createAbsolute(amount);
         deepEqual(BigIntUtilities.BigIntToHex(currency.id.id), hexId);
-        expect(currency.toDTO().amount).to.be.equal((BigInt(amount)).toString());
-        expect(currency.amount.toString()).to.be.equal((BigInt(amount)).toString());
+        expect(currency.toDTO().amount).to.be.equal(BigInt(amount).toString());
+        expect(currency.amount.toString()).to.be.equal(BigInt(amount).toString());
     });
 
     it('should have valid statics', () => {

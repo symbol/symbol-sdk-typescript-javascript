@@ -21,7 +21,6 @@ import { MosaicId } from './MosaicId';
  * Mosaic with linked names
  */
 export class MosaicNames {
-
     /**
      *
      */
@@ -33,7 +32,6 @@ export class MosaicNames {
         /**
          * Address linked namespace names
          */
-        public readonly names: NamespaceName[]) {
-
-    }
+        public readonly names: NamespaceName[],
+    ) {}
 }
