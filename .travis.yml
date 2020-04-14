@@ -1,38 +1,39 @@
 language: node_js
 node_js:
-    - '8'
-    - '9'
-    - '10'
+  - '8'
+  - '9'
+  - '10'
+  - '12'
 cache:
-    directories:
-        - 'node_modules'
-        - .eslintcache
+  directories:
+    - 'node_modules'
+    - .eslintcache
 before_script:
-    - npm run build
-    - npm run lint
+  - npm run build
+  - if [ "$TRAVIS_NODE_VERSION" = "10" ] || [ "$TRAVIS_NODE_VERSION" = "12" ]; then npm run lint; fi
 script:
-    - npm run test:cov
-    - npm install --global typedoc typescript
-    - CURRENT_VERSION=$(npm run version --silent)
-    - typedoc --out "ts-docs/$CURRENT_VERSION" src
-    - touch ./ts-docs/.nojekyll
-    - if [ "$TRAVIS_NODE_VERSION" = "8" ]; then npm run coveralls-report; fi
+  - npm run test:cov
+  - npm install --global typedoc typescript
+  - CURRENT_VERSION=$(npm run version --silent)
+  - typedoc --out "ts-docs/$CURRENT_VERSION" src
+  - touch ./ts-docs/.nojekyll
+  - if [ "$TRAVIS_NODE_VERSION" = "10" ]; then npm run coveralls-report; fi
 deploy:
-    - provider: script
-      skip_cleanup: true
-      script: /bin/sh travis/github-pages.sh
-      on:
-          branch: master
-          node_js: '9'
-    - provider: script
-      skip_cleanup: true
-      script: /bin/sh travis/uploadArchives.sh
-      on:
-          branch: master
-          node_js: '8'
-    - provider: script
-      skip_cleanup: true
-      script: /bin/sh travis/release.sh
-      on:
-          branch: $RELEASE_BRANCH
-          node_js: '8'
+  - provider: script
+    skip_cleanup: true
+    script: /bin/sh travis/github-pages.sh
+    on:
+      branch: master
+      node_js: '12'
+  - provider: script
+    skip_cleanup: true
+    script: /bin/sh travis/uploadArchives.sh
+    on:
+      branch: master
+      node_js: '10'
+  - provider: script
+    skip_cleanup: true
+    script: /bin/sh travis/release.sh
+    on:
+      branch: $RELEASE_BRANCH
+      node_js: '10'
