@@ -15,10 +15,7 @@
  */
 import { expect } from 'chai';
 import { Convert } from '../../src/core/format';
-import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
-import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { Account } from '../../src/model/account/Account';
-import { Address } from '../../src/model/account/Address';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
@@ -46,11 +43,9 @@ describe('TransactionHttp', () => {
     const helper = new IntegrationTestHelper();
     let account: Account;
     let account2: Account;
-    let namespaceRepository: NamespaceRepository;
     let generationHash: string;
     let networkType: NetworkType;
     let mosaicId: MosaicId;
-    let NetworkCurrencyLocalId: MosaicId;
     let namespaceIdAddress: NamespaceId;
     let namespaceIdMosaic: NamespaceId;
 
@@ -60,7 +55,6 @@ describe('TransactionHttp', () => {
             account2 = helper.account2;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
-            namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
         });
     });
 
@@ -77,11 +71,6 @@ describe('TransactionHttp', () => {
      * Setup test data
      * =========================
      */
-    describe('Get network currency mosaic id', () => {
-        it('get mosaicId', async () => {
-            NetworkCurrencyLocalId = (await namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).toPromise()) as MosaicId;
-        });
-    });
 
     describe('MosaicDefinitionTransaction', () => {
         it('standalone', () => {

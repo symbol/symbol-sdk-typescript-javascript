@@ -15,9 +15,16 @@
  */
 
 import { expect } from 'chai';
-import { Convert } from '../../../src/core/format/Convert';
 import { Account } from '../../../src/model/account/Account';
 import { NetworkType } from '../../../src/model/network/NetworkType';
+import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
+import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
+import { Deadline } from '../../../src/model/transaction/Deadline';
+import { PlainMessage } from '../../../src/model/message/PlainMessage';
+import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
+import { CosignatureTransaction } from '../../../src/model/transaction/CosignatureTransaction';
+import { CosignatureSignedTransaction } from '../../../src/model/transaction/CosignatureSignedTransaction';
+import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
 
 describe('Account', () => {
     const accountInformation = {
@@ -51,6 +58,57 @@ describe('Account', () => {
         expect(account.publicKey).to.not.be.equal(undefined);
         expect(account.privateKey).to.not.be.equal(undefined);
         expect(account.address).to.not.be.equal(undefined);
+    });
+
+    it('should return networkType', () => {
+        const account = Account.generateNewAccount(NetworkType.TEST_NET);
+        expect(account.networkType).to.be.equal(NetworkType.TEST_NET);
+    });
+
+    it('should sign tranaction with given signature', () => {
+        const sendAmount = NetworkCurrencyLocal.createAbsolute(1000);
+        const backAmount = NetworkCurrencyLocal.createAbsolute(1);
+        const account = Account.generateNewAccount(NetworkType.TEST_NET);
+        const account2 = Account.generateNewAccount(NetworkType.TEST_NET);
+        const generationHash = 'C422CC3C9257A1568036E1726E64EB5923C8363A13D4344F9E66CD89C8789BC7';
+        const aliceTransferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            account2.address,
+            [sendAmount],
+            PlainMessage.create('payout'),
+            NetworkType.TEST_NET,
+        );
+        const bobTransferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            account.address,
+            [backAmount],
+            PlainMessage.create('payout'),
+            NetworkType.TEST_NET,
+        );
+
+        // 01. Alice creates the aggregated tx and sign it. Then payload send to Bob
+        const aggregateTransaction = AggregateTransaction.createComplete(
+            Deadline.create(),
+            [aliceTransferTransaction.toAggregate(account.publicAccount), bobTransferTransaction.toAggregate(account2.publicAccount)],
+            NetworkType.TEST_NET,
+            [],
+        );
+
+        const aliceSignedTransaction = aggregateTransaction.signWith(account, generationHash);
+
+        // 02 Bob cosigns the tx and sends it back to Alice
+        const signedTxBob = CosignatureTransaction.signTransactionPayload(account2, aliceSignedTransaction.payload, generationHash);
+
+        // 03. Alice collects the cosignatures, recreate, sign, and announces the transaction
+        const cosignatureSignedTransactions = [
+            new CosignatureSignedTransaction(signedTxBob.parentHash, signedTxBob.signature, signedTxBob.signerPublicKey),
+        ];
+        const recreatedTx = TransactionMapping.createFromPayload(aliceSignedTransaction.payload) as AggregateTransaction;
+
+        const signedTransaction = account.signTransactionGivenSignatures(recreatedTx, cosignatureSignedTransactions, generationHash);
+
+        expect(signedTransaction.payload).not.to.be.undefined;
+        expect(signedTransaction.payload.length).to.be.greaterThan(0);
     });
 
     describe('signData', () => {

@@ -22,6 +22,7 @@
 // Implementation derived from TweetNaCl version 20140427.
 // See for details: http://tweetnacl.cr.yp.to/
 
+/* eslint-disable */
 const _0 = new Uint8Array(16);
 const _9 = new Uint8Array(32);
 _9[0] = 9;

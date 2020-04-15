@@ -15,7 +15,6 @@
  */
 
 import { PublicAccount } from '../account/PublicAccount';
-import { NetworkType } from '../network/NetworkType';
 /**
  * Model representing cosignature of an aggregate transaction.
  */
@@ -38,7 +37,7 @@ export class AggregateTransactionCosignature {
     /**
      * Create DTO object
      */
-    public toDTO() {
+    public toDTO(): any {
         return {
             signature: this.signature,
             signerPublicKey: this.signer.toDTO(),

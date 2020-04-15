@@ -107,7 +107,7 @@ describe('Char Mapping', () => {
 
 describe('Convert', () => {
     describe('tryParseUint', () => {
-        function addTryParseSuccessTest(name, str, expectedValue) {
+        function addTryParseSuccessTest(name, str, expectedValue): void {
             it(name, () => {
                 // Act:
                 const value = utilities.tryParseUint(str);
@@ -123,7 +123,7 @@ describe('Convert', () => {
         addTryParseSuccessTest('can parse decimal string with zeros', '10002', 10002);
         addTryParseSuccessTest('can parse max safe integer decimal string', Number.MAX_SAFE_INTEGER.toString(), 9007199254740991);
 
-        function addTryParseFailureTest(name, str) {
+        function addTryParseFailureTest(name, str): void {
             it(name, () => {
                 // Act:
                 const value = utilities.tryParseUint(str);

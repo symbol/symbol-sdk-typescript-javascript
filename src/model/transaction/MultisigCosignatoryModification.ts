@@ -43,7 +43,7 @@ export class MultisigCosignatoryModification {
     /**
      * @internal
      */
-    toDTO() {
+    toDTO(): any {
         return {
             cosignatoryPublicKey: this.cosignatoryPublicAccount.publicKey,
             modificationAction: this.modificationAction,

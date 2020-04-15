@@ -34,8 +34,6 @@ describe('BlockHttp', () => {
     let account2: Account;
     let blockRepository: BlockRepository;
     let receiptRepository: ReceiptRepository;
-    let blockReceiptHash = '';
-    let blockTransactionHash = '';
     let chainHeight;
     let generationHash: string;
     let networkType: NetworkType;
@@ -86,8 +84,6 @@ describe('BlockHttp', () => {
     describe('getBlockByHeight', () => {
         it('should return block info given height', async () => {
             const blockInfo = await blockRepository.getBlockByHeight(UInt64.fromUint(1)).toPromise();
-            blockReceiptHash = blockInfo.blockReceiptsHash;
-            blockTransactionHash = blockInfo.blockTransactionsHash;
             expect(blockInfo.height.lower).to.be.equal(1);
             expect(blockInfo.height.higher).to.be.equal(0);
             expect(blockInfo.timestamp.lower).to.be.equal(0);

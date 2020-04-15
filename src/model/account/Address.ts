@@ -70,12 +70,11 @@ export class Address {
     /**
      * Determines the validity of an raw address string.
      * @param {string} rawAddress The raw address string. Expected format SCHCZBZ6QVJAHGJTKYVPW5FBSO2IXXJQBPV5XE6P
-     * @param {NetworkType} networkType The network identifier.
      * @returns {boolean} true if the raw address string is valid, false otherwise.
      */
-    public static isValidRawAddress = (rawAddress: string, networkType: NetworkType): boolean => {
+    public static isValidRawAddress = (rawAddress: string): boolean => {
         try {
-            return RawAddress.isValidAddress(RawAddress.stringToAddress(rawAddress), networkType);
+            return RawAddress.isValidAddress(RawAddress.stringToAddress(rawAddress));
         } catch (err) {
             return false;
         }
@@ -84,12 +83,11 @@ export class Address {
     /**
      * Determines the validity of an encoded address string.
      * @param {string} encoded The encoded address string. Expected format: 9085215E4620D383C2DF70235B9EF7607F6A28EF6D16FD7B9C
-     * @param {NetworkType} networkType The network identifier.
      * @returns {boolean} true if the encoded address string is valid, false otherwise.
      */
-    public static isValidEncodedAddress = (encoded: string, networkType: NetworkType): boolean => {
+    public static isValidEncodedAddress = (encoded: string): boolean => {
         try {
-            return RawAddress.isValidAddress(Convert.hexToUint8(encoded), networkType);
+            return RawAddress.isValidAddress(Convert.hexToUint8(encoded));
         } catch (err) {
             return false;
         }
@@ -147,7 +145,7 @@ export class Address {
     /**
      * Create DTO object
      */
-    public toDTO() {
+    public toDTO(): any {
         return {
             address: this.address,
             networkType: this.networkType,

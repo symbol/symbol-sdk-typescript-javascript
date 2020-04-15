@@ -91,7 +91,10 @@ export abstract class Http {
      * @param remoteCall the remote call
      * @param mapper the mapper from dto to the model object.
      */
-    protected call<D, M>(remoteCall: Promise<{ response: http.IncomingMessage; body: D }>, mapper: (value: D, index: number) => M) {
+    protected call<D, M>(
+        remoteCall: Promise<{ response: http.IncomingMessage; body: D }>,
+        mapper: (value: D, index: number) => M,
+    ): Observable<M> {
         return observableFrom(remoteCall).pipe(
             map(({ body }, index) => mapper(body, index)),
             catchError((error) => throwError(this.errorHandling(error))),

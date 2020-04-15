@@ -91,7 +91,7 @@ export class PublicAccount {
     /**
      * Create DTO object
      */
-    toDTO() {
+    toDTO(): any {
         return {
             publicKey: this.publicKey,
             address: this.address.toDTO(),

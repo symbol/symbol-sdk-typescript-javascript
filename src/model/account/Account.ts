@@ -15,7 +15,6 @@
  */
 
 import { Crypto, KeyPair } from '../../core/crypto';
-import { SHA3Hasher } from '../../core/crypto/SHA3Hasher';
 import { Convert, RawAddress } from '../../core/format';
 import { EncryptedMessage } from '../message/EncryptedMessage';
 import { PlainMessage } from '../message/PlainMessage';
@@ -89,7 +88,7 @@ export class Account {
      * @param networkType - Network type
      * @returns {EncryptedMessage}
      */
-    public encryptMessage(message: string, recipientPublicAccount: PublicAccount, networkType: NetworkType): EncryptedMessage {
+    public encryptMessage(message: string, recipientPublicAccount: PublicAccount): EncryptedMessage {
         return EncryptedMessage.create(message, recipientPublicAccount, this.privateKey);
     }
 
@@ -100,7 +99,7 @@ export class Account {
      * @param networkType - Network type
      * @returns {PlainMessage}
      */
-    public decryptMessage(encryptedMessage: EncryptedMessage, publicAccount: PublicAccount, networkType: NetworkType): PlainMessage {
+    public decryptMessage(encryptedMessage: EncryptedMessage, publicAccount: PublicAccount): PlainMessage {
         return EncryptedMessage.decrypt(encryptedMessage, this.privateKey, publicAccount);
     }
     /**

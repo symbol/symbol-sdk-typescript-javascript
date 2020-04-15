@@ -26,6 +26,37 @@ import { UInt64 } from '../../../src/model/UInt64';
 describe('NamespaceInfo', () => {
     let rootNamespaceDTO;
     let subNamespaceDTO;
+    function createRootFromDTO(dto): NamespaceInfo {
+        return new NamespaceInfo(
+            dto.meta.active,
+            dto.meta.index,
+            dto.meta.id,
+            dto.namespace.type,
+            dto.namespace.depth,
+            [dto.namespace.level0],
+            dto.namespace.parentId,
+            PublicAccount.createFromPublicKey(dto.namespace.owner, NetworkType.MIJIN_TEST),
+            dto.namespace.startHeight,
+            dto.namespace.endHeight,
+            dto.namespace.alias,
+        );
+    }
+
+    function createSubnamespaceFromDTO(dto): NamespaceInfo {
+        return new NamespaceInfo(
+            dto.meta.active,
+            dto.meta.index,
+            dto.meta.id,
+            dto.namespace.type,
+            dto.namespace.depth,
+            [dto.namespace.level0, dto.namespace.level1],
+            dto.namespace.parentId,
+            PublicAccount.createFromPublicKey(dto.namespace.owner, NetworkType.MIJIN_TEST),
+            dto.namespace.startHeight,
+            dto.namespace.endHeight,
+            dto.namespace.alias,
+        );
+    }
 
     before(() => {
         rootNamespaceDTO = {
@@ -142,39 +173,4 @@ describe('NamespaceInfo', () => {
         const namespaceInfo = createSubnamespaceFromDTO(subNamespaceDTO);
         expect(namespaceInfo.hasAlias()).to.be.equal(false);
     });
-
-    // region functions
-    function createRootFromDTO(dto): NamespaceInfo {
-        return new NamespaceInfo(
-            dto.meta.active,
-            dto.meta.index,
-            dto.meta.id,
-            dto.namespace.type,
-            dto.namespace.depth,
-            [dto.namespace.level0],
-            dto.namespace.parentId,
-            PublicAccount.createFromPublicKey(dto.namespace.owner, NetworkType.MIJIN_TEST),
-            dto.namespace.startHeight,
-            dto.namespace.endHeight,
-            dto.namespace.alias,
-        );
-    }
-
-    function createSubnamespaceFromDTO(dto): NamespaceInfo {
-        return new NamespaceInfo(
-            dto.meta.active,
-            dto.meta.index,
-            dto.meta.id,
-            dto.namespace.type,
-            dto.namespace.depth,
-            [dto.namespace.level0, dto.namespace.level1],
-            dto.namespace.parentId,
-            PublicAccount.createFromPublicKey(dto.namespace.owner, NetworkType.MIJIN_TEST),
-            dto.namespace.startHeight,
-            dto.namespace.endHeight,
-            dto.namespace.alias,
-        );
-    }
-
-    // endregion
 });

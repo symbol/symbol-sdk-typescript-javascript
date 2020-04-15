@@ -85,6 +85,75 @@ describe('TransactionService', () => {
         helper.listener.close();
     });
 
+    function buildAggregateTransaction(): AggregateTransaction {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            addressAlias,
+            [NetworkCurrencyLocal.createAbsolute(1), new Mosaic(mosaicAlias, UInt64.fromUint(1))],
+            PlainMessage.create('test-message'),
+            networkType,
+            helper.maxFee,
+        );
+        // Unlink MosaicAlias
+        const mosaicAliasTransactionUnlink = MosaicAliasTransaction.create(
+            Deadline.create(),
+            AliasAction.Unlink,
+            mosaicAlias,
+            mosaicId,
+            networkType,
+            helper.maxFee,
+        );
+
+        // Create a new Mosaic
+        const nonce = MosaicNonce.createRandom();
+        newMosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
+        const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
+            Deadline.create(),
+            nonce,
+            newMosaicId,
+            MosaicFlags.create(true, true, false),
+            3,
+            UInt64.fromUint(0),
+            networkType,
+            helper.maxFee,
+        );
+
+        // Link namespace with new MosaicId
+        const mosaicAliasTransactionRelink = MosaicAliasTransaction.create(
+            Deadline.create(),
+            AliasAction.Link,
+            mosaicAlias,
+            newMosaicId,
+            networkType,
+            helper.maxFee,
+        );
+
+        // Use new mosaicAlias in metadata
+        const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(5),
+            mosaicAlias,
+            10,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            networkType,
+            helper.maxFee,
+        );
+        return AggregateTransaction.createComplete(
+            Deadline.create(),
+            [
+                transferTransaction.toAggregate(account.publicAccount),
+                mosaicAliasTransactionUnlink.toAggregate(account.publicAccount),
+                mosaicDefinitionTransaction.toAggregate(account.publicAccount),
+                mosaicAliasTransactionRelink.toAggregate(account.publicAccount),
+                mosaicMetadataTransaction.toAggregate(account.publicAccount),
+            ],
+            networkType,
+            [],
+            helper.maxFee,
+        );
+    }
+
     /**
      * =========================
      * Setup test data
@@ -349,73 +418,4 @@ describe('TransactionService', () => {
                 });
         });
     });
-
-    function buildAggregateTransaction(): AggregateTransaction {
-        const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
-            addressAlias,
-            [NetworkCurrencyLocal.createAbsolute(1), new Mosaic(mosaicAlias, UInt64.fromUint(1))],
-            PlainMessage.create('test-message'),
-            networkType,
-            helper.maxFee,
-        );
-        // Unlink MosaicAlias
-        const mosaicAliasTransactionUnlink = MosaicAliasTransaction.create(
-            Deadline.create(),
-            AliasAction.Unlink,
-            mosaicAlias,
-            mosaicId,
-            networkType,
-            helper.maxFee,
-        );
-
-        // Create a new Mosaic
-        const nonce = MosaicNonce.createRandom();
-        newMosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
-        const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-            Deadline.create(),
-            nonce,
-            newMosaicId,
-            MosaicFlags.create(true, true, false),
-            3,
-            UInt64.fromUint(0),
-            networkType,
-            helper.maxFee,
-        );
-
-        // Link namespace with new MosaicId
-        const mosaicAliasTransactionRelink = MosaicAliasTransaction.create(
-            Deadline.create(),
-            AliasAction.Link,
-            mosaicAlias,
-            newMosaicId,
-            networkType,
-            helper.maxFee,
-        );
-
-        // Use new mosaicAlias in metadata
-        const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
-            Deadline.create(),
-            account.publicKey,
-            UInt64.fromUint(5),
-            mosaicAlias,
-            10,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
-            networkType,
-            helper.maxFee,
-        );
-        return AggregateTransaction.createComplete(
-            Deadline.create(),
-            [
-                transferTransaction.toAggregate(account.publicAccount),
-                mosaicAliasTransactionUnlink.toAggregate(account.publicAccount),
-                mosaicDefinitionTransaction.toAggregate(account.publicAccount),
-                mosaicAliasTransactionRelink.toAggregate(account.publicAccount),
-                mosaicMetadataTransaction.toAggregate(account.publicAccount),
-            ],
-            networkType,
-            [],
-            helper.maxFee,
-        );
-    }
 });

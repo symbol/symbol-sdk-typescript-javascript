@@ -288,47 +288,44 @@ describe('Transaction', () => {
         const generationHashBytes_mt = Array.from(Convert.hexToUint8('17FA4747F5014B50413CCF968749604D728D7065DC504291EEE556899A534CBB'));
 
         it('create different hash given different signatures', () => {
-            const hash1 = Transaction.createTransactionHash(knownPayload, generationHashBytes, NetworkType.MIJIN_TEST);
+            const hash1 = Transaction.createTransactionHash(knownPayload, generationHashBytes);
 
             // modify signature part of the payload ; this must affect produced hash
             const tamperedSig = knownPayload.substr(0, 16) + '12' + knownPayload.substr(18);
             const hash2 = Transaction.createTransactionHash(
                 tamperedSig, // replaced two first bytes of signature
                 generationHashBytes,
-                NetworkType.MIJIN_TEST,
             );
 
             expect(hash1).to.not.equal(hash2);
         });
 
         it('create different hash given different signer public key', () => {
-            const hash1 = Transaction.createTransactionHash(knownPayload, generationHashBytes, NetworkType.MIJIN_TEST);
+            const hash1 = Transaction.createTransactionHash(knownPayload, generationHashBytes);
 
             // modify signer public key part of the payload ; this must affect produced hash
             const tamperedSigner = knownPayload.substr(0, 16 + 128) + '12' + knownPayload.substr(16 + 128 + 2);
             const hash2 = Transaction.createTransactionHash(
                 tamperedSigner, // replaced two first bytes of signer public key
                 generationHashBytes,
-                NetworkType.MIJIN_TEST,
             );
 
             expect(hash1).to.not.equal(hash2);
         });
 
         it('create different hash given different generation hash', () => {
-            const hash1 = Transaction.createTransactionHash(knownPayload, generationHashBytes, NetworkType.MIJIN_TEST);
+            const hash1 = Transaction.createTransactionHash(knownPayload, generationHashBytes);
 
             const hash2 = Transaction.createTransactionHash(
                 knownPayload,
                 generationHashBytes_mt, // uses different generation hash
-                NetworkType.MIJIN_TEST,
             );
 
             expect(hash1).to.not.equal(hash2);
         });
 
         it('create different hash given different transaction body', () => {
-            const hash1 = Transaction.createTransactionHash(knownPayload, generationHashBytes, NetworkType.MIJIN_TEST);
+            const hash1 = Transaction.createTransactionHash(knownPayload, generationHashBytes);
 
             // modify "transaction body" part of payload ; this must affect produced transaction hash
             const tamperedBody =
@@ -338,29 +335,28 @@ describe('Transaction', () => {
             const hash2 = Transaction.createTransactionHash(
                 tamperedBody,
                 generationHashBytes, // uses different generation hash
-                NetworkType.MIJIN_TEST,
             );
 
             expect(hash1).to.not.equal(hash2);
         });
 
         it('create same hash given same payloads', () => {
-            const hash1 = Transaction.createTransactionHash(knownPayload, generationHashBytes, NetworkType.MIJIN_TEST);
-            const hash2 = Transaction.createTransactionHash(knownPayload, generationHashBytes, NetworkType.MIJIN_TEST);
+            const hash1 = Transaction.createTransactionHash(knownPayload, generationHashBytes);
+            const hash2 = Transaction.createTransactionHash(knownPayload, generationHashBytes);
 
             expect(hash1).to.equal(hash2);
         });
 
         it('create correct SHA3 transaction hash given network type MIJIN or MIJIN_TEST', () => {
-            const hash1 = Transaction.createTransactionHash(knownPayload, generationHashBytes, NetworkType.MIJIN_TEST);
-            const hash2 = Transaction.createTransactionHash(knownPayload, generationHashBytes, NetworkType.MIJIN);
+            const hash1 = Transaction.createTransactionHash(knownPayload, generationHashBytes);
+            const hash2 = Transaction.createTransactionHash(knownPayload, generationHashBytes);
 
             expect(hash1).to.equal(knownHash_sha3);
             expect(hash2).to.equal(knownHash_sha3);
         });
 
         it('hash only merkle transaction hash for aggregate transactions', () => {
-            const hash1 = Transaction.createTransactionHash(knownAggregatePayload, generationHashBytes, NetworkType.MIJIN_TEST);
+            const hash1 = Transaction.createTransactionHash(knownAggregatePayload, generationHashBytes);
 
             // modify end of payload ; this must not affect produced transaction hash
             // this test is valid only for Aggregate Transactions
@@ -368,7 +364,6 @@ describe('Transaction', () => {
             const hashTamperedBody = Transaction.createTransactionHash(
                 tamperedSize, // replace in size (header change should not affect hash)
                 generationHashBytes,
-                NetworkType.MIJIN_TEST,
             );
 
             // modify "merkle hash" part of payload ; this must affect produced transaction hash
@@ -379,7 +374,6 @@ describe('Transaction', () => {
             const hashTamperedMerkle = Transaction.createTransactionHash(
                 tamperedPayload, // replace in merkle hash (will affect hash)
                 generationHashBytes,
-                NetworkType.MIJIN_TEST,
             );
 
             expect(hash1).to.equal(hashTamperedBody);

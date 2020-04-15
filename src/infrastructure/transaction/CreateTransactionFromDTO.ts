@@ -56,72 +56,67 @@ import { TransferTransaction } from '../../model/transaction/TransferTransaction
 import { UInt64 } from '../../model/UInt64';
 
 /**
- * @internal
- * @param transactionDTO
- * @returns {Transaction}
- * @constructor
+ * Extract recipientAddress value from encoded hexadecimal notation.
+ *
+ * If bit 0 of byte 0 is not set (e.g. 0x90), then it is a regular address.
+ * Else (e.g. 0x91) it represents a namespace id which starts at byte 1.
+ *
+ * @param recipientAddress {string} Encoded hexadecimal recipientAddress notation
+ * @return {Address | NamespaceId}
  */
-export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
-    if (
-        transactionDTO.transaction.type === TransactionType.AGGREGATE_COMPLETE ||
-        transactionDTO.transaction.type === TransactionType.AGGREGATE_BONDED
-    ) {
-        const innerTransactions = transactionDTO.transaction.transactions.map((innerTransactionDTO) => {
-            const aggregateTransactionInfo = innerTransactionDTO.meta
-                ? new AggregateTransactionInfo(
-                      UInt64.fromNumericString(innerTransactionDTO.meta.height),
-                      innerTransactionDTO.meta.index,
-                      innerTransactionDTO.meta.id,
-                      innerTransactionDTO.meta.aggregateHash,
-                      innerTransactionDTO.meta.aggregateId,
-                  )
-                : undefined;
-            innerTransactionDTO.transaction.maxFee = transactionDTO.transaction.maxFee;
-            innerTransactionDTO.transaction.deadline = transactionDTO.transaction.deadline;
-            innerTransactionDTO.transaction.signature = transactionDTO.transaction.signature;
-            return CreateStandaloneTransactionFromDTO(innerTransactionDTO.transaction, aggregateTransactionInfo);
-        });
-        return new AggregateTransaction(
-            transactionDTO.transaction.network,
-            transactionDTO.transaction.type,
-            transactionDTO.transaction.version,
-            Deadline.createFromDTO(transactionDTO.transaction.deadline),
-            UInt64.fromNumericString(transactionDTO.transaction.maxFee || '0'),
-            innerTransactions,
-            transactionDTO.transaction.cosignatures
-                ? transactionDTO.transaction.cosignatures.map((aggregateCosignatureDTO) => {
-                      return new AggregateTransactionCosignature(
-                          aggregateCosignatureDTO.signature,
-                          PublicAccount.createFromPublicKey(aggregateCosignatureDTO.signerPublicKey, transactionDTO.transaction.network),
-                      );
-                  })
-                : [],
-            transactionDTO.transaction.signature,
-            transactionDTO.transaction.signerPublicKey
-                ? PublicAccount.createFromPublicKey(transactionDTO.transaction.signerPublicKey, transactionDTO.transaction.network)
-                : undefined,
-            transactionDTO.meta
-                ? new TransactionInfo(
-                      UInt64.fromNumericString(transactionDTO.meta.height),
-                      transactionDTO.meta.index,
-                      transactionDTO.meta.id,
-                      transactionDTO.meta.hash,
-                      transactionDTO.meta.merkleComponentHash,
-                  )
-                : undefined,
-        );
-    } else {
-        const transactionInfo = transactionDTO.meta
-            ? new TransactionInfo(
-                  UInt64.fromNumericString(transactionDTO.meta.height),
-                  transactionDTO.meta.index,
-                  transactionDTO.meta.id,
-                  transactionDTO.meta.hash,
-                  transactionDTO.meta.merkleComponentHash,
-              )
-            : undefined;
-        return CreateStandaloneTransactionFromDTO(transactionDTO.transaction, transactionInfo);
+export const extractRecipient = (recipientAddress: any): Address | NamespaceId => {
+    if (typeof recipientAddress === 'string') {
+        return UnresolvedMapping.toUnresolvedAddress(recipientAddress);
+    } else if (typeof recipientAddress === 'object') {
+        // Is JSON object
+        if (recipientAddress.hasOwnProperty('address')) {
+            return Address.createFromRawAddress(recipientAddress.address);
+        } else if (recipientAddress.hasOwnProperty('id')) {
+            return NamespaceId.createFromEncoded(recipientAddress.id);
+        }
     }
+    throw new Error(`Recipient: ${recipientAddress} type is not recognised`);
+};
+
+/**
+ * Extract mosaics from encoded UInt64 notation.
+ *
+ * If most significant bit of byte 0 is set, then it is a namespaceId.
+ * If most significant bit of byte 0 is not set, then it is a mosaicId.
+ *
+ * @param mosaics {Array | undefined} The DTO array of mosaics (with UInt64 Id notation)
+ * @return {Mosaic[]}
+ */
+export const extractMosaics = (mosaics: any): Mosaic[] => {
+    if (mosaics === undefined) {
+        return [];
+    }
+    return mosaics.map((mosaicDTO) => {
+        const id = UnresolvedMapping.toUnresolvedMosaic(mosaicDTO.id);
+        return new Mosaic(id, UInt64.fromNumericString(mosaicDTO.amount));
+    });
+};
+
+/**
+ * Extract message from either JSON payload (unencoded) or DTO (encoded)
+ *
+ * @param message - message payload
+ * @return {PlainMessage}
+ */
+const extractMessage = (message: any): PlainMessage | EncryptedMessage => {
+    let msgObj = EmptyMessage;
+    if (message) {
+        if (message.type === MessageType.PlainMessage) {
+            msgObj = convert.isHexString(message.payload)
+                ? PlainMessage.createFromPayload(message.payload)
+                : PlainMessage.create(message.payload);
+        } else if (message.type === MessageType.EncryptedMessage) {
+            msgObj = EncryptedMessage.createFromPayload(message.payload);
+        } else if (message.type === MessageType.PersistentHarvestingDelegationMessage) {
+            msgObj = PersistentHarvestingDelegationMessage.createFromPayload(message.payload);
+        }
+    }
+    return msgObj;
 };
 
 /**
@@ -450,65 +445,70 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
 };
 
 /**
- * Extract recipientAddress value from encoded hexadecimal notation.
- *
- * If bit 0 of byte 0 is not set (e.g. 0x90), then it is a regular address.
- * Else (e.g. 0x91) it represents a namespace id which starts at byte 1.
- *
- * @param recipientAddress {string} Encoded hexadecimal recipientAddress notation
- * @return {Address | NamespaceId}
+ * @internal
+ * @param transactionDTO
+ * @returns {Transaction}
+ * @constructor
  */
-export const extractRecipient = (recipientAddress: any): Address | NamespaceId => {
-    if (typeof recipientAddress === 'string') {
-        return UnresolvedMapping.toUnresolvedAddress(recipientAddress);
-    } else if (typeof recipientAddress === 'object') {
-        // Is JSON object
-        if (recipientAddress.hasOwnProperty('address')) {
-            return Address.createFromRawAddress(recipientAddress.address);
-        } else if (recipientAddress.hasOwnProperty('id')) {
-            return NamespaceId.createFromEncoded(recipientAddress.id);
-        }
+export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
+    if (
+        transactionDTO.transaction.type === TransactionType.AGGREGATE_COMPLETE ||
+        transactionDTO.transaction.type === TransactionType.AGGREGATE_BONDED
+    ) {
+        const innerTransactions = transactionDTO.transaction.transactions.map((innerTransactionDTO) => {
+            const aggregateTransactionInfo = innerTransactionDTO.meta
+                ? new AggregateTransactionInfo(
+                      UInt64.fromNumericString(innerTransactionDTO.meta.height),
+                      innerTransactionDTO.meta.index,
+                      innerTransactionDTO.meta.id,
+                      innerTransactionDTO.meta.aggregateHash,
+                      innerTransactionDTO.meta.aggregateId,
+                  )
+                : undefined;
+            innerTransactionDTO.transaction.maxFee = transactionDTO.transaction.maxFee;
+            innerTransactionDTO.transaction.deadline = transactionDTO.transaction.deadline;
+            innerTransactionDTO.transaction.signature = transactionDTO.transaction.signature;
+            return CreateStandaloneTransactionFromDTO(innerTransactionDTO.transaction, aggregateTransactionInfo);
+        });
+        return new AggregateTransaction(
+            transactionDTO.transaction.network,
+            transactionDTO.transaction.type,
+            transactionDTO.transaction.version,
+            Deadline.createFromDTO(transactionDTO.transaction.deadline),
+            UInt64.fromNumericString(transactionDTO.transaction.maxFee || '0'),
+            innerTransactions,
+            transactionDTO.transaction.cosignatures
+                ? transactionDTO.transaction.cosignatures.map((aggregateCosignatureDTO) => {
+                      return new AggregateTransactionCosignature(
+                          aggregateCosignatureDTO.signature,
+                          PublicAccount.createFromPublicKey(aggregateCosignatureDTO.signerPublicKey, transactionDTO.transaction.network),
+                      );
+                  })
+                : [],
+            transactionDTO.transaction.signature,
+            transactionDTO.transaction.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.transaction.signerPublicKey, transactionDTO.transaction.network)
+                : undefined,
+            transactionDTO.meta
+                ? new TransactionInfo(
+                      UInt64.fromNumericString(transactionDTO.meta.height),
+                      transactionDTO.meta.index,
+                      transactionDTO.meta.id,
+                      transactionDTO.meta.hash,
+                      transactionDTO.meta.merkleComponentHash,
+                  )
+                : undefined,
+        );
+    } else {
+        const transactionInfo = transactionDTO.meta
+            ? new TransactionInfo(
+                  UInt64.fromNumericString(transactionDTO.meta.height),
+                  transactionDTO.meta.index,
+                  transactionDTO.meta.id,
+                  transactionDTO.meta.hash,
+                  transactionDTO.meta.merkleComponentHash,
+              )
+            : undefined;
+        return CreateStandaloneTransactionFromDTO(transactionDTO.transaction, transactionInfo);
     }
-    throw new Error(`Recipient: ${recipientAddress} type is not recognised`);
-};
-
-/**
- * Extract mosaics from encoded UInt64 notation.
- *
- * If most significant bit of byte 0 is set, then it is a namespaceId.
- * If most significant bit of byte 0 is not set, then it is a mosaicId.
- *
- * @param mosaics {Array | undefined} The DTO array of mosaics (with UInt64 Id notation)
- * @return {Mosaic[]}
- */
-export const extractMosaics = (mosaics: any): Mosaic[] => {
-    if (mosaics === undefined) {
-        return [];
-    }
-    return mosaics.map((mosaicDTO) => {
-        const id = UnresolvedMapping.toUnresolvedMosaic(mosaicDTO.id);
-        return new Mosaic(id, UInt64.fromNumericString(mosaicDTO.amount));
-    });
-};
-
-/**
- * Extract message from either JSON payload (unencoded) or DTO (encoded)
- *
- * @param message - message payload
- * @return {PlainMessage}
- */
-const extractMessage = (message: any): PlainMessage | EncryptedMessage => {
-    let msgObj = EmptyMessage;
-    if (message) {
-        if (message.type === MessageType.PlainMessage) {
-            msgObj = convert.isHexString(message.payload)
-                ? PlainMessage.createFromPayload(message.payload)
-                : PlainMessage.create(message.payload);
-        } else if (message.type === MessageType.EncryptedMessage) {
-            msgObj = EncryptedMessage.createFromPayload(message.payload);
-        } else if (message.type === MessageType.PersistentHarvestingDelegationMessage) {
-            msgObj = PersistentHarvestingDelegationMessage.createFromPayload(message.payload);
-        }
-    }
-    return msgObj;
 };

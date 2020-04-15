@@ -44,7 +44,7 @@ export class Mosaic {
      * @internal
      * @returns {{amount: number[], id: number[]}}
      */
-    public toDTO() {
+    public toDTO(): any {
         return {
             amount: this.amount.toString(),
             id: this.id.id.toHex(),

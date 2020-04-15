@@ -16,7 +16,6 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NetworkHarvestLocal } from '../../../src/model/mosaic/NetworkHarvestLocal';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { UInt64 } from '../../../src/model/UInt64';
@@ -24,6 +23,13 @@ import { UInt64 } from '../../../src/model/UInt64';
 describe('NetworkHarvestLocal', () => {
     it('should createComplete an NetworkHarvestLocal object', () => {
         const currency = NetworkHarvestLocal.createRelative(1000);
+
+        deepEqual(currency.id.id.toHex(), '941299B2B7E1291C');
+        expect(currency.amount.compact()).to.be.equal(1000 * 1000);
+    });
+
+    it('should createComplete an NetworkHarvestLocal object', () => {
+        const currency = NetworkHarvestLocal.createRelative(UInt64.fromUint(1000));
 
         deepEqual(currency.id.id.toHex(), '941299B2B7E1291C');
         expect(currency.amount.compact()).to.be.equal(1000 * 1000);
@@ -39,5 +45,15 @@ describe('NetworkHarvestLocal', () => {
         expect(NetworkHarvestLocal.DIVISIBILITY).to.be.equal(3);
         expect(NetworkHarvestLocal.TRANSFERABLE).to.be.equal(true);
         expect(NetworkHarvestLocal.SUPPLY_MUTABLE).to.be.equal(true);
+    });
+
+    it('should create network currency with absolute amount', () => {
+        const currency = NetworkHarvestLocal.createAbsolute(1000);
+        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000);
+    });
+
+    it('should create network currency with absolute amount in Uint64', () => {
+        const currency = NetworkHarvestLocal.createAbsolute(UInt64.fromUint(1000));
+        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000);
     });
 });

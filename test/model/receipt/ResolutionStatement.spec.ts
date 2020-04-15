@@ -17,7 +17,7 @@
 import { expect } from 'chai';
 import { CreateStatementFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
 import { Account } from '../../../src/model/account/Account';
-import { Address, MosaicId, NamespaceId, ResolutionType } from '../../../src/model/model';
+import { Address, MosaicId } from '../../../src/model/model';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 
 describe('ResolutionStatement', () => {

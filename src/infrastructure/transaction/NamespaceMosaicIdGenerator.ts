@@ -21,16 +21,16 @@ export class NamespaceMosaicIdGenerator {
     /**
      * @param {Uint8Array} nonce Mosaic nonce
      * @param {Uint8Array} ownerPublicId Public key
-     * @returns mosaic Id
+     * @returns {number[]} mosaic Id
      */
-    public static mosaicId = (nonce: Uint8Array, ownerPublicId: Uint8Array) => {
+    public static mosaicId = (nonce: Uint8Array, ownerPublicId: Uint8Array): number[] => {
         return IdGenerator.generateMosaicId(nonce, ownerPublicId);
     };
 
     /**
      * @returns random mosaic nonce
      */
-    public static generateRandomMosaicNonce = () => {
+    public static generateRandomMosaicNonce = (): any => {
         return Crypto.randomBytes(4);
     };
 
@@ -38,7 +38,7 @@ export class NamespaceMosaicIdGenerator {
      * @param {string} namespaceName - The namespace name
      * @returns sub namespace id
      */
-    public static namespaceId = (namespaceName: string) => {
+    public static namespaceId = (namespaceName: string): any => {
         const path = IdGenerator.generateNamespacePath(namespaceName);
         return path.length ? IdGenerator.generateNamespacePath(namespaceName)[path.length - 1] : [];
     };
@@ -47,7 +47,7 @@ export class NamespaceMosaicIdGenerator {
      * @param {string} namespaceName - The namespace name
      * @returns sub namespace parent id
      */
-    public static subnamespaceParentId = (parentNamespaceName: string, namespaceName: string) => {
+    public static subnamespaceParentId = (parentNamespaceName: string, namespaceName: string): any => {
         const path = IdGenerator.generateNamespacePath(`${parentNamespaceName}.${namespaceName}`);
         return IdGenerator.generateNamespacePath(parentNamespaceName)[path.length - 2];
     };
@@ -57,7 +57,7 @@ export class NamespaceMosaicIdGenerator {
      * @param {string} namespaceName - The namespace name
      * @returns sub namespace id
      */
-    public static subnamespaceNamespaceId = (parentNamespaceName: string, namespaceName: string) => {
+    public static subnamespaceNamespaceId = (parentNamespaceName: string, namespaceName: string): any => {
         const path = IdGenerator.generateNamespacePath(`${parentNamespaceName}.${namespaceName}`);
         return path[path.length - 1];
     };

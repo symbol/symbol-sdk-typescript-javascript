@@ -35,46 +35,6 @@ describe('BlockService', () => {
     const leaf = '2717C8AAB0A21896D0C56375209E761F84383C3882F37A11D9D0159007263EB2';
     let blockService: BlockService;
     let account: Account;
-    before(() => {
-        account = TestingAccount;
-        const mockBlockRepository = mock<BlockRepository>();
-        const mockReceiptRepository = mock<ReceiptRepository>();
-        const mockRepoFactory = mock<RepositoryFactory>();
-
-        when(mockBlockRepository.getBlockByHeight(deepEqual(UInt64.fromUint(1)))).thenReturn(observableOf(mockBlockInfo()));
-        when(mockBlockRepository.getBlockByHeight(deepEqual(UInt64.fromUint(2)))).thenReturn(observableOf(mockBlockInfo(true)));
-        when(mockBlockRepository.getMerkleTransaction(deepEqual(UInt64.fromUint(1)), leaf)).thenReturn(observableOf(mockMerklePath()));
-        when(mockBlockRepository.getMerkleTransaction(deepEqual(UInt64.fromUint(2)), leaf)).thenReturn(observableOf(mockMerklePath()));
-        when(mockReceiptRepository.getMerkleReceipts(deepEqual(UInt64.fromUint(1)), leaf)).thenReturn(observableOf(mockMerklePath()));
-        when(mockReceiptRepository.getMerkleReceipts(deepEqual(UInt64.fromUint(2)), leaf)).thenReturn(observableOf(mockMerklePath()));
-        const blockRepository = instance(mockBlockRepository);
-        const receiptRepository = instance(mockReceiptRepository);
-
-        when(mockRepoFactory.createBlockRepository()).thenReturn(blockRepository);
-        when(mockRepoFactory.createReceiptRepository()).thenReturn(receiptRepository);
-        const repoFactory = instance(mockRepoFactory);
-        blockService = new BlockService(repoFactory);
-    });
-
-    it('should validate transaction', async () => {
-        const result = await blockService.validateTransactionInBlock(leaf, UInt64.fromUint(1)).toPromise();
-        expect(result).to.be.true;
-    });
-
-    it('should validate transaction - wrong hash', async () => {
-        const result = await blockService.validateTransactionInBlock(leaf, UInt64.fromUint(2)).toPromise();
-        expect(result).to.be.false;
-    });
-
-    it('should validate statement', async () => {
-        const result = await blockService.validateStatementInBlock(leaf, UInt64.fromUint(1)).toPromise();
-        expect(result).to.be.true;
-    });
-
-    it('should validate statement - wrong hash', async () => {
-        const result = await blockService.validateStatementInBlock(leaf, UInt64.fromUint(2)).toPromise();
-        expect(result).to.be.false;
-    });
 
     function mockBlockInfo(isFake = false): BlockInfo {
         if (isFake) {
@@ -130,4 +90,45 @@ describe('BlockService', () => {
             new MerklePathItem(PositionEnum.Right, '9981EBDBCA8E36BA4D4D4A450072026AC8C85BA6497666219E0E049BE3362E51'),
         ]);
     }
+
+    before(() => {
+        account = TestingAccount;
+        const mockBlockRepository = mock<BlockRepository>();
+        const mockReceiptRepository = mock<ReceiptRepository>();
+        const mockRepoFactory = mock<RepositoryFactory>();
+
+        when(mockBlockRepository.getBlockByHeight(deepEqual(UInt64.fromUint(1)))).thenReturn(observableOf(mockBlockInfo()));
+        when(mockBlockRepository.getBlockByHeight(deepEqual(UInt64.fromUint(2)))).thenReturn(observableOf(mockBlockInfo(true)));
+        when(mockBlockRepository.getMerkleTransaction(deepEqual(UInt64.fromUint(1)), leaf)).thenReturn(observableOf(mockMerklePath()));
+        when(mockBlockRepository.getMerkleTransaction(deepEqual(UInt64.fromUint(2)), leaf)).thenReturn(observableOf(mockMerklePath()));
+        when(mockReceiptRepository.getMerkleReceipts(deepEqual(UInt64.fromUint(1)), leaf)).thenReturn(observableOf(mockMerklePath()));
+        when(mockReceiptRepository.getMerkleReceipts(deepEqual(UInt64.fromUint(2)), leaf)).thenReturn(observableOf(mockMerklePath()));
+        const blockRepository = instance(mockBlockRepository);
+        const receiptRepository = instance(mockReceiptRepository);
+
+        when(mockRepoFactory.createBlockRepository()).thenReturn(blockRepository);
+        when(mockRepoFactory.createReceiptRepository()).thenReturn(receiptRepository);
+        const repoFactory = instance(mockRepoFactory);
+        blockService = new BlockService(repoFactory);
+    });
+
+    it('should validate transaction', async () => {
+        const result = await blockService.validateTransactionInBlock(leaf, UInt64.fromUint(1)).toPromise();
+        expect(result).to.be.true;
+    });
+
+    it('should validate transaction - wrong hash', async () => {
+        const result = await blockService.validateTransactionInBlock(leaf, UInt64.fromUint(2)).toPromise();
+        expect(result).to.be.false;
+    });
+
+    it('should validate statement', async () => {
+        const result = await blockService.validateStatementInBlock(leaf, UInt64.fromUint(1)).toPromise();
+        expect(result).to.be.true;
+    });
+
+    it('should validate statement - wrong hash', async () => {
+        const result = await blockService.validateStatementInBlock(leaf, UInt64.fromUint(2)).toPromise();
+        expect(result).to.be.false;
+    });
 });

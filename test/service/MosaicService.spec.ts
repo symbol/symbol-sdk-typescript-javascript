@@ -34,6 +34,34 @@ describe('MosaicService', () => {
     const accountRepositoryMock = mock<AccountRepository>();
     const mosaicRepositoryMock = mock<MosaicRepository>();
 
+    function buildMosaicInfo(mosaicId: MosaicId, publicAccount: PublicAccount): MosaicInfo {
+        return new MosaicInfo(
+            mosaicId,
+            UInt64.fromUint(10),
+            UInt64.fromUint(1),
+            publicAccount,
+            0,
+            new MosaicFlags(1),
+            6,
+            UInt64.fromUint(1),
+        );
+    }
+
+    function buildAccountInfo(mosaicId: MosaicId, isEmptyMosaic = false): AccountInfo {
+        return new AccountInfo(
+            TestingAccount.address,
+            UInt64.fromUint(1),
+            TestingAccount.publicKey,
+            UInt64.fromUint(1),
+            AccountType.Main,
+            '',
+            [],
+            isEmptyMosaic ? [] : [new Mosaic(mosaicId, UInt64.fromUint(100))],
+            UInt64.fromUint(1),
+            UInt64.fromUint(1),
+        );
+    }
+
     it('mosaicsView', () => {
         const mosaicId = new MosaicId([3294802500, 2243684972]);
         when(mosaicRepositoryMock.getMosaics(deepEqual([mosaicId]))).thenReturn(
@@ -94,32 +122,4 @@ describe('MosaicService', () => {
             expect(mosaicAmountView.amount.compact()).to.be.equal(1000);
         });
     });
-
-    function buildMosaicInfo(mosaicId: MosaicId, publicAccount: PublicAccount): MosaicInfo {
-        return new MosaicInfo(
-            mosaicId,
-            UInt64.fromUint(10),
-            UInt64.fromUint(1),
-            publicAccount,
-            0,
-            new MosaicFlags(1),
-            6,
-            UInt64.fromUint(1),
-        );
-    }
-
-    function buildAccountInfo(mosaicId: MosaicId, isEmptyMosaic = false): AccountInfo {
-        return new AccountInfo(
-            TestingAccount.address,
-            UInt64.fromUint(1),
-            TestingAccount.publicKey,
-            UInt64.fromUint(1),
-            AccountType.Main,
-            '',
-            [],
-            isEmptyMosaic ? [] : [new Mosaic(mosaicId, UInt64.fromUint(100))],
-            UInt64.fromUint(1),
-            UInt64.fromUint(1),
-        );
-    }
 });

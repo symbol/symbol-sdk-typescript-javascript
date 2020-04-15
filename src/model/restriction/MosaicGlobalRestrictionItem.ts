@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';
 import { MosaicRestrictionType } from './MosaicRestrictionType';
 /**

@@ -15,7 +15,6 @@
  */
 
 import { expect } from 'chai';
-import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { MosaicAddressRestriction } from '../../../src/model/restriction/MosaicAddressRestriction';
@@ -23,14 +22,9 @@ import { MosaicGlobalRestriction } from '../../../src/model/restriction/MosaicGl
 import { MosaicGlobalRestrictionItem } from '../../../src/model/restriction/MosaicGlobalRestrictionItem';
 import { MosaicRestrictionEntryType } from '../../../src/model/restriction/MosaicRestrictionEntryType';
 import { MosaicRestrictionType } from '../../../src/model/restriction/MosaicRestrictionType';
-import { TestingAccount } from '../../conf/conf.spec';
 
 describe('MosaicRestrictions', () => {
-    let account: Account;
     const hash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
-    before(() => {
-        account = TestingAccount;
-    });
 
     it('should createComplete an MosaicAddressRestriction object', () => {
         const mosaicAddressRestrictionDTO = {

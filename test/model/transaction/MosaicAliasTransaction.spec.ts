@@ -25,6 +25,9 @@ import { Deadline } from '../../../src/model/transaction/Deadline';
 import { MosaicAliasTransaction } from '../../../src/model/transaction/MosaicAliasTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { deepEqual } from 'assert';
+import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/builders/EmbeddedTransactionBuilder';
+import { TransactionType } from '../../../src/model/transaction/TransactionType';
 
 describe('MosaicAliasTransaction', () => {
     let account: Account;
@@ -118,5 +121,39 @@ describe('MosaicAliasTransaction', () => {
 
         const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
+    });
+
+    it('Test resolveAlias can resolve', () => {
+        const namespaceId = new NamespaceId([33347626, 3779697293]);
+        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicAliasTransaction = MosaicAliasTransaction.create(
+            Deadline.create(),
+            AliasAction.Link,
+            namespaceId,
+            mosaicId,
+            NetworkType.MIJIN_TEST,
+        );
+        const resolved = mosaicAliasTransaction.resolveAliases();
+        deepEqual(mosaicAliasTransaction, resolved);
+    });
+
+    it('should create EmbeddedTransactionBuilder', () => {
+        const namespaceId = new NamespaceId([33347626, 3779697293]);
+        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicAliasTransaction = MosaicAliasTransaction.create(
+            Deadline.create(),
+            AliasAction.Link,
+            namespaceId,
+            mosaicId,
+            NetworkType.MIJIN_TEST,
+        );
+
+        Object.assign(mosaicAliasTransaction, { signer: account.publicAccount });
+
+        const embedded = mosaicAliasTransaction.toEmbeddedTransaction();
+
+        expect(embedded).to.be.instanceOf(EmbeddedTransactionBuilder);
+        expect(Convert.uint8ToHex(embedded.signerPublicKey.key)).to.be.equal(account.publicKey);
+        expect(embedded.type.valueOf()).to.be.equal(TransactionType.MOSAIC_ALIAS.valueOf());
     });
 });

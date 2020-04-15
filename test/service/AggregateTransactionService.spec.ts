@@ -89,6 +89,48 @@ describe('AggregateTransactionService', () => {
     );
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
 
+    function givenMultisig2AccountInfo(): MultisigAccountInfo {
+        return new MultisigAccountInfo(multisig2.publicAccount, 2, 1, [multisig1.publicAccount, account1.publicAccount], []);
+    }
+    function givenMultisig3AccountInfo(): MultisigAccountInfo {
+        return new MultisigAccountInfo(multisig3.publicAccount, 2, 2, [account2.publicAccount, account3.publicAccount], []);
+    }
+
+    function givenAccount1Info(): MultisigAccountInfo {
+        return new MultisigAccountInfo(account1.publicAccount, 0, 0, [], [multisig2.publicAccount]);
+    }
+    function givenAccount2Info(): MultisigAccountInfo {
+        return new MultisigAccountInfo(account2.publicAccount, 0, 0, [], [multisig2.publicAccount, multisig3.publicAccount]);
+    }
+    function givenAccount3Info(): MultisigAccountInfo {
+        return new MultisigAccountInfo(account3.publicAccount, 0, 0, [], [multisig2.publicAccount, multisig3.publicAccount]);
+    }
+    function givenAccount4Info(): MultisigAccountInfo {
+        return new MultisigAccountInfo(account4.publicAccount, 0, 0, [], []);
+    }
+
+    function givenMultisig2AccountGraphInfo(): MultisigAccountGraphInfo {
+        const map = new Map<number, MultisigAccountInfo[]>();
+        map.set(0, [new MultisigAccountInfo(multisig2.publicAccount, 2, 1, [multisig1.publicAccount, account1.publicAccount], [])]).set(1, [
+            new MultisigAccountInfo(
+                multisig1.publicAccount,
+                1,
+                1,
+                [account2.publicAccount, account3.publicAccount],
+                [multisig2.publicAccount],
+            ),
+        ]);
+
+        return new MultisigAccountGraphInfo(map);
+    }
+
+    function givenMultisig3AccountGraphInfo(): MultisigAccountGraphInfo {
+        const map = new Map<number, MultisigAccountInfo[]>();
+        map.set(0, [new MultisigAccountInfo(multisig3.publicAccount, 2, 2, [account2.publicAccount, account3.publicAccount], [])]);
+
+        return new MultisigAccountGraphInfo(map);
+    }
+
     before(() => {
         const mockedAccountRepository: MultisigRepository = mock();
 
@@ -538,46 +580,4 @@ describe('AggregateTransactionService', () => {
                 expect(isComplete).to.be.false;
             });
     });
-
-    function givenMultisig2AccountInfo(): MultisigAccountInfo {
-        return new MultisigAccountInfo(multisig2.publicAccount, 2, 1, [multisig1.publicAccount, account1.publicAccount], []);
-    }
-    function givenMultisig3AccountInfo(): MultisigAccountInfo {
-        return new MultisigAccountInfo(multisig3.publicAccount, 2, 2, [account2.publicAccount, account3.publicAccount], []);
-    }
-
-    function givenAccount1Info(): MultisigAccountInfo {
-        return new MultisigAccountInfo(account1.publicAccount, 0, 0, [], [multisig2.publicAccount]);
-    }
-    function givenAccount2Info(): MultisigAccountInfo {
-        return new MultisigAccountInfo(account2.publicAccount, 0, 0, [], [multisig2.publicAccount, multisig3.publicAccount]);
-    }
-    function givenAccount3Info(): MultisigAccountInfo {
-        return new MultisigAccountInfo(account3.publicAccount, 0, 0, [], [multisig2.publicAccount, multisig3.publicAccount]);
-    }
-    function givenAccount4Info(): MultisigAccountInfo {
-        return new MultisigAccountInfo(account4.publicAccount, 0, 0, [], []);
-    }
-
-    function givenMultisig2AccountGraphInfo(): MultisigAccountGraphInfo {
-        const map = new Map<number, MultisigAccountInfo[]>();
-        map.set(0, [new MultisigAccountInfo(multisig2.publicAccount, 2, 1, [multisig1.publicAccount, account1.publicAccount], [])]).set(1, [
-            new MultisigAccountInfo(
-                multisig1.publicAccount,
-                1,
-                1,
-                [account2.publicAccount, account3.publicAccount],
-                [multisig2.publicAccount],
-            ),
-        ]);
-
-        return new MultisigAccountGraphInfo(map);
-    }
-
-    function givenMultisig3AccountGraphInfo(): MultisigAccountGraphInfo {
-        const map = new Map<number, MultisigAccountInfo[]>();
-        map.set(0, [new MultisigAccountInfo(multisig3.publicAccount, 2, 2, [account2.publicAccount, account3.publicAccount], [])]);
-
-        return new MultisigAccountGraphInfo(map);
-    }
 });

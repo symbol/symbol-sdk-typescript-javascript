@@ -75,7 +75,7 @@ export class MosaicFlags {
     /**
      * Create DTO object
      */
-    toDTO() {
+    toDTO(): any {
         return {
             flags: this.getValue(),
         };

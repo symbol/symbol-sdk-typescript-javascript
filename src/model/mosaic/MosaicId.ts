@@ -87,7 +87,7 @@ export class MosaicId {
     /**
      * Create DTO object.
      */
-    toDTO() {
+    toDTO(): any {
         return this.id.toDTO();
     }
 }

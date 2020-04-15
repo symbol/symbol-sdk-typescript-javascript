@@ -56,7 +56,7 @@ export abstract class Message {
     /**
      * Create DTO object
      */
-    toDTO() {
+    toDTO(): any {
         return {
             type: this.type,
             payload: this.payload,

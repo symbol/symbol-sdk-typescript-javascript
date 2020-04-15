@@ -1,109 +1,109 @@
 {
-  "name": "symbol-sdk",
-  "version": "0.17.5",
-  "description": "Reactive symbol sdk for typescript and javascript",
-  "scripts": {
-    "pretest": "npm run build",
-    "test": "mocha --ui bdd --recursive ./dist/test --timeout 90000",
-    "e2econfigcopy": "gulp",
-    "test:e2e": "npm run build && mocha --ui bdd --recursive ./dist/e2e --timeout 90000",
-    "test:all": "mocha --ui bdd --recursive ./dist/ --timeout 90000",
-    "build": "rm -rf dist/ && tsc && npm run e2econfigcopy",
-    "test:cov": "nyc --reporter=lcov --reporter=text-summary npm t",
-    "test:coveralls": "npm run test:cov | coveralls",
-    "coveralls-report": "cat ./coverage/lcov.info | coveralls",
-    "version": "echo $npm_package_version",
-    "prettier": "prettier --write ./src ./test ./e2e",
-    "lint": "eslint --cache src/ test/ e2e/ --ext .ts",
-    "lint:fix": "eslint src/ test/ e2e/ --ext .ts --fix",
-    "style:fix": "npm run prettier && npm run lint:fix"
-  },
-  "pre-commit": [
-    "lint"
-  ],
-  "contributors": [
-    {
-      "name": "Aleix",
-      "email": "aleix@nemeurope.eu"
+    "name": "symbol-sdk",
+    "version": "0.18.0",
+    "description": "Reactive symbol sdk for typescript and javascript",
+    "scripts": {
+        "pretest": "npm run build",
+        "test": "mocha --ui bdd --recursive ./dist/test --timeout 90000",
+        "e2econfigcopy": "gulp",
+        "test:e2e": "npm run build && mocha --ui bdd --recursive ./dist/e2e --timeout 90000",
+        "test:all": "mocha --ui bdd --recursive ./dist/ --timeout 90000",
+        "build": "rm -rf dist/ && tsc && npm run e2econfigcopy",
+        "test:cov": "nyc --reporter=lcov --reporter=text-summary npm t",
+        "test:coveralls": "npm run test:cov | coveralls",
+        "coveralls-report": "cat ./coverage/lcov.info | coveralls",
+        "version": "echo $npm_package_version",
+        "prettier": "prettier --write ./src ./test ./e2e",
+        "lint": "eslint --cache src/ test/ e2e/ --ext .ts",
+        "lint:fix": "eslint src/ test/ e2e/ --ext .ts --fix",
+        "style:fix": "npm run prettier && npm run lint:fix"
     },
-    {
-      "name": "Guillem",
-      "email": "guillem@nemeurope.eu"
+    "pre-commit": [
+        "lint"
+    ],
+    "contributors": [
+        {
+            "name": "Aleix",
+            "email": "aleix@nemeurope.eu"
+        },
+        {
+            "name": "Guillem",
+            "email": "guillem@nemeurope.eu"
+        }
+    ],
+    "bugs": "https://github.com/nemtech/symbol-sdk-typescript-javascript/issues",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/nemtech/symbol-sdk-typescript-javascript.git"
+    },
+    "license": "Apache-2.0",
+    "homepage": "https://github.com/nemtech/symbol-sdk-typescript-javascript#readme",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts",
+    "devDependencies": {
+        "@types/chai": "^4.0.4",
+        "@types/crypto-js": "^3.1.43",
+        "@types/lodash": "^4.14.85",
+        "@types/long": "^4.0.0",
+        "@types/mocha": "^2.2.44",
+        "@types/request": "^2.47.0",
+        "@types/request-promise-native": "^1.0.14",
+        "@types/utf8": "^2.1.6",
+        "@types/ws": "^3.2.0",
+        "@typescript-eslint/eslint-plugin": "^2.27.0",
+        "@typescript-eslint/parser": "^2.27.0",
+        "assert": "^1.4.1",
+        "chai": "^4.1.2",
+        "coveralls": "^3.0.9",
+        "eslint": "^6.8.0",
+        "eslint-config-prettier": "^6.10.1",
+        "eslint-plugin-prettier": "^3.1.3",
+        "gulp": "^4.0.2",
+        "gulp-typescript": "^5.0.1",
+        "kind-of": ">=6.0.3",
+        "mocha": "^4.0.1",
+        "nyc": "^15.0.0",
+        "pre-commit": "^1.2.2",
+        "prettier": "^2.0.4",
+        "secure-random": "^1.1.1",
+        "ts-mockito": "^2.4.0",
+        "ts-node": "^8.6.2",
+        "typescript": "^3.7.5",
+        "typescript-require": "^0.2.10"
+    },
+    "dependencies": {
+        "bluebird": "^3.7.2",
+        "catbuffer-typescript": "0.0.11",
+        "crypto-js": "^3.1.9-1",
+        "diff": "^4.0.2",
+        "futoin-hkdf": "^1.3.1",
+        "js-joda": "^1.6.2",
+        "js-sha256": "^0.9.0",
+        "js-sha3": "^0.8.0",
+        "js-sha512": "^0.8.0",
+        "long": "^4.0.0",
+        "merkletreejs": "^0.1.7",
+        "minimist": "^1.2.5",
+        "request": "^2.88.0",
+        "request-promise-native": "^1.0.5",
+        "ripemd160": "^2.0.2",
+        "rxjs": "^6.5.3",
+        "rxjs-compat": "^6.5.3",
+        "symbol-openapi-typescript-node-client": "0.8.9",
+        "tweetnacl": "^1.0.3",
+        "utf8": "^3.0.0",
+        "ws": "^7.2.3"
+    },
+    "peerDependencies": {
+        "js-joda": "^1.6.2",
+        "utf8": "^2.1.2",
+        "rxjs": "^6.5.3"
+    },
+    "nyc": {
+        "exclude-after-remap": false,
+        "exclude": [
+            "**/*.spec.js",
+            "gulpfile.js"
+        ]
     }
-  ],
-  "bugs": "https://github.com/nemtech/symbol-sdk-typescript-javascript/issues",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/nemtech/symbol-sdk-typescript-javascript.git"
-  },
-  "license": "Apache-2.0",
-  "homepage": "https://github.com/nemtech/symbol-sdk-typescript-javascript#readme",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "devDependencies": {
-    "@types/chai": "^4.0.4",
-    "@types/crypto-js": "^3.1.43",
-    "@types/lodash": "^4.14.85",
-    "@types/long": "^4.0.0",
-    "@types/mocha": "^2.2.44",
-    "@types/request": "^2.47.0",
-    "@types/request-promise-native": "^1.0.14",
-    "@types/utf8": "^2.1.6",
-    "@types/ws": "^3.2.0",
-    "@typescript-eslint/eslint-plugin": "^2.27.0",
-    "@typescript-eslint/parser": "^2.27.0",
-    "assert": "^1.4.1",
-    "chai": "^4.1.2",
-    "coveralls": "^3.0.9",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.10.1",
-    "eslint-plugin-prettier": "^3.1.3",
-    "gulp": "^4.0.2",
-    "gulp-typescript": "^5.0.1",
-    "kind-of": ">=6.0.3",
-    "mocha": "^4.0.1",
-    "nyc": "^15.0.0",
-    "pre-commit": "^1.2.2",
-    "prettier": "^2.0.4",
-    "secure-random": "^1.1.1",
-    "ts-mockito": "^2.4.0",
-    "ts-node": "^8.6.2",
-    "typescript": "^3.7.5",
-    "typescript-require": "^0.2.10"
-  },
-  "dependencies": {
-    "bluebird": "^3.7.2",
-    "catbuffer-typescript": "0.0.11",
-    "crypto-js": "^3.1.9-1",
-    "diff": "^4.0.2",
-    "futoin-hkdf": "^1.3.1",
-    "js-joda": "^1.6.2",
-    "js-sha256": "^0.9.0",
-    "js-sha3": "^0.8.0",
-    "js-sha512": "^0.8.0",
-    "long": "^4.0.0",
-    "merkletreejs": "^0.1.7",
-    "minimist": "^1.2.5",
-    "request": "^2.88.0",
-    "request-promise-native": "^1.0.5",
-    "ripemd160": "^2.0.2",
-    "rxjs": "^6.5.3",
-    "rxjs-compat": "^6.5.3",
-    "symbol-openapi-typescript-node-client": "0.8.9",
-    "tweetnacl": "^1.0.3",
-    "utf8": "^3.0.0",
-    "ws": "^7.2.3"
-  },
-  "peerDependencies": {
-    "js-joda": "^1.6.2",
-    "utf8": "^2.1.2",
-    "rxjs": "^6.5.3"
-  },
-  "nyc": {
-    "exclude-after-remap": false,
-    "exclude": [
-      "**/*.spec.js",
-      "gulpfile.js"
-    ]
-  }
 }

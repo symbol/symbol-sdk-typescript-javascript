@@ -15,7 +15,7 @@
  */
 import { sha3_256 } from 'js-sha3';
 
-export const createBuilder = () => {
+export const createBuilder = (): any => {
     const map = {};
     return {
         map,
@@ -27,7 +27,7 @@ export const createBuilder = () => {
          * @memberof module:utils/charMapping~CharacterMapBuilder
          * @instance
          */
-        addRange: (start, end, base) => {
+        addRange: (start: string, end: string, base: number): void => {
             const startCode = start.charCodeAt(0);
             const endCode = end.charCodeAt(0);
 
@@ -38,7 +38,7 @@ export const createBuilder = () => {
     };
 };
 
-const Char_To_Nibble_Map = () => {
+const Char_To_Nibble_Map = (): any => {
     const builder = createBuilder();
     builder.addRange('0', '9', 0);
     builder.addRange('a', 'f', 10);
@@ -46,7 +46,7 @@ const Char_To_Nibble_Map = () => {
     return builder.map;
 };
 
-const Char_To_Digit_Map = () => {
+const Char_To_Digit_Map = (): any => {
     const builder = createBuilder();
     builder.addRange('0', '9', 0);
     return builder.map;
@@ -56,7 +56,7 @@ export const Nibble_To_Char_Map = ['0', '1', '2', '3', '4', '5', '6', '7', '8', 
 export const Alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
 export const Decoded_Block_Size = 5;
 export const Encoded_Block_Size = 8;
-export const tryParseByte = (char1, char2) => {
+export const tryParseByte = (char1, char2): any => {
     const charMap = Char_To_Nibble_Map();
     const nibble1 = charMap[char1];
     const nibble2 = charMap[char2];
@@ -66,9 +66,9 @@ export const tryParseByte = (char1, char2) => {
 /**
  * Tries to parse a string representing an unsigned integer.
  * @param {string} str The string to parse.
- * @returns {number} The number represented by the input or undefined.
+ * @returns { number | undefined} The number represented by the input or undefined.
  */
-export const tryParseUint = (str) => {
+export const tryParseUint = (str: string): number | undefined => {
     if ('0' === str) {
         return 0;
     }
@@ -95,11 +95,11 @@ export const idGeneratorConst = {
     name_pattern: /^[a-z0-9][a-z0-9-_]*$/,
 };
 
-export const throwInvalidFqn = (reason, name) => {
+export const throwInvalidFqn = (reason: any, name: any): void => {
     throw Error(`fully qualified id is invalid due to ${reason} (${name})`);
 };
 
-export const extractPartName = (name, start, size) => {
+export const extractPartName = (name: string, start: number, size: number): string => {
     if (0 === size) {
         this.throwInvalidFqn('empty part', name);
     }
@@ -110,11 +110,11 @@ export const extractPartName = (name, start, size) => {
     return partName;
 };
 
-export const append = (path, id, name) => {
+export const append = (path: any, id: any): any => {
     path.push(id);
 };
 
-export const split = (name, processor) => {
+export const split = (name: string, processor: any): any => {
     let start = 0;
     for (let index = 0; index < name.length; ++index) {
         if ('.' === name[index]) {
@@ -125,7 +125,7 @@ export const split = (name, processor) => {
     return start;
 };
 
-export const generateNamespaceId = (parentId, name) => {
+export const generateNamespaceId = (parentId: number[], name: string): number[] => {
     const hash = sha3_256.create();
     hash.update(Uint32Array.from(parentId).buffer as any);
     hash.update(name);
@@ -134,7 +134,7 @@ export const generateNamespaceId = (parentId, name) => {
     return [result[0], (result[1] | 0x80000000) >>> 0];
 };
 
-export const encodeBlock = (input, inputOffset, output, outputOffset) => {
+export const encodeBlock = (input: any, inputOffset: number, output: any, outputOffset: number): any => {
     output[outputOffset + 0] = Alphabet[input[inputOffset + 0] >> 3];
     output[outputOffset + 1] = Alphabet[((input[inputOffset + 0] & 0x07) << 2) | (input[inputOffset + 1] >> 6)];
     output[outputOffset + 2] = Alphabet[(input[inputOffset + 1] & 0x3e) >> 1];
@@ -145,14 +145,14 @@ export const encodeBlock = (input, inputOffset, output, outputOffset) => {
     output[outputOffset + 7] = Alphabet[input[inputOffset + 4] & 0x1f];
 };
 
-export const Char_To_Decoded_Char_Map = () => {
+export const Char_To_Decoded_Char_Map = (): any => {
     const builder = createBuilder();
     builder.addRange('A', 'Z', 0);
     builder.addRange('2', '7', 26);
     return builder.map;
 };
 
-export const decodeChar = (c) => {
+export const decodeChar = (c: any): any => {
     const charMap = Char_To_Decoded_Char_Map();
     const decodedChar = charMap[c];
     if (undefined !== decodedChar) {
@@ -161,7 +161,7 @@ export const decodeChar = (c) => {
     throw Error(`illegal base32 character ${c}`);
 };
 
-export const decodeBlock = (input, inputOffset, output, outputOffset) => {
+export const decodeBlock = (input: any, inputOffset: number, output: any, outputOffset: number): any => {
     const bytes = new Uint8Array(Encoded_Block_Size);
     for (let i = 0; i < Encoded_Block_Size; ++i) {
         bytes[i] = decodeChar(input[inputOffset + i]);

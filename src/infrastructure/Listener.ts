@@ -105,11 +105,11 @@ export class Listener implements IListener {
                     this.webSocket = new WebSocket(this.url);
                 }
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
-                this.webSocket.onopen = () => {};
-                this.webSocket.onerror = (err) => {
+                this.webSocket.onopen = (): void => {};
+                this.webSocket.onerror = (err: Error): void => {
                     reject(err);
                 };
-                this.webSocket.onmessage = (msg) => {
+                this.webSocket.onmessage = (msg: any): void => {
                     const message = JSON.parse(msg.data as string);
                     this.handleMessage(message, resolve);
                 };
@@ -127,7 +127,7 @@ export class Listener implements IListener {
      * @param message the object payload.
      * @param resolve the method to notify when the uid has been resolved and the listener connection has been stablished.
      */
-    handleMessage(message: any, resolve) {
+    handleMessage(message: any, resolve: any): void {
         if (message.uid) {
             this.uid = message.uid;
             resolve();
@@ -367,7 +367,7 @@ export class Listener implements IListener {
      * Subscribes to a channelName.
      * @param channel - Channel subscribed to.
      */
-    private subscribeTo(channel: string) {
+    private subscribeTo(channel: string): void {
         const subscriptionMessage = {
             uid: this.uid,
             subscribe: channel,
