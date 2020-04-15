@@ -102,7 +102,7 @@ export class AggregateTransactionService {
     }
 
     /**
-     * Get max cosignature allowed per aggregate from network properties
+     * Get max cosignatures allowed per aggregate from network properties
      * @returns {Observable<number>}
      */
     public getNetworkMaxCosignaturesPerAggregate(): Observable<number> {
