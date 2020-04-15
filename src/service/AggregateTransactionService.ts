@@ -38,7 +38,7 @@ export class AggregateTransactionService {
      * Constructor
      * @param multisigRepository
      */
-    constructor(public readonly repositoryFactory: RepositoryFactory) {
+    constructor(repositoryFactory: RepositoryFactory) {
         this.multisigRepository = repositoryFactory.createMultisigRepository();
         this.networkRepository = repositoryFactory.createNetworkRepository();
     }
@@ -108,11 +108,10 @@ export class AggregateTransactionService {
     public getNetworkMaxCosignaturesPerAggregate(): Observable<number> {
         return this.networkRepository.getNetworkProperties().pipe(
             map((properties) => {
-                console.log(!properties.plugins.aggregate?.maxCosignaturesPerAggregate);
                 if (!properties.plugins.aggregate?.maxCosignaturesPerAggregate) {
                     throw new Error('Cannot get maxCosignaturesPerAggregate from network properties.');
                 }
-                return parseInt(properties.plugins.aggregate?.maxCosignaturesPerAggregate);
+                return parseInt(properties.plugins.aggregate?.maxCosignaturesPerAggregate.replace(`'`, ''));
             }),
         );
     }
