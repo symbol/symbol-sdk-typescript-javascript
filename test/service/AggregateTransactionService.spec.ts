@@ -606,6 +606,12 @@ describe('AggregateTransactionService', () => {
         expect(max).to.be.equal(15);
     });
 
+    it('should call getNetworkMaxCosignaturesPerAggregate and returns with single quote', async () => {
+        when(mockNetworkRepository.getNetworkProperties()).thenReturn(observableOf(getNetworkProperties(`1'000`)));
+        const max = await aggregateTransactionService.getNetworkMaxCosignaturesPerAggregate().toPromise();
+        expect(max).to.be.equal(1000);
+    });
+
     it('should call getNetworkMaxCosignaturesPerAggregate and throw', () => {
         when(mockNetworkRepository.getNetworkProperties()).thenReturn(observableOf(getNetworkProperties('')));
         aggregateTransactionService
