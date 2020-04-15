@@ -24,16 +24,24 @@ import { InnerTransaction } from '../model/transaction/InnerTransaction';
 import { MultisigAccountModificationTransaction } from '../model/transaction/MultisigAccountModificationTransaction';
 import { SignedTransaction } from '../model/transaction/SignedTransaction';
 import { TransactionType } from '../model/transaction/TransactionType';
+import { Address } from '../model/account/Address';
+import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
+import { NetworkRepository } from '../infrastructure/NetworkRepository';
 
 /**
  * Aggregated Transaction service
  */
 export class AggregateTransactionService {
+    private readonly multisigRepository: MultisigRepository;
+    private readonly networkRepository: NetworkRepository;
     /**
      * Constructor
      * @param multisigRepository
      */
-    constructor(private readonly multisigRepository: MultisigRepository) {}
+    constructor(public readonly repositoryFactory: RepositoryFactory) {
+        this.multisigRepository = repositoryFactory.createMultisigRepository();
+        this.networkRepository = repositoryFactory.createNetworkRepository();
+    }
 
     /**
      * Check if an aggregate complete transaction has all cosignatories attached
@@ -72,6 +80,41 @@ export class AggregateTransactionService {
                     return observableOf(results.every((isComplete) => isComplete));
                 }),
             );
+    }
+
+    /**
+     * Get total multisig account cosigner count
+     * @param address multisig account address
+     * @returns {Observable<number>}
+     */
+    public getMaxCosignatures(address: Address): Observable<number> {
+        return this.multisigRepository.getMultisigAccountGraphInfo(address).pipe(
+            map((graph) => {
+                let count = 0;
+                graph.multisigAccounts.forEach((multisigInfo) => {
+                    multisigInfo.map((multisig) => {
+                        count += multisig.cosignatories.length;
+                    });
+                });
+                return count;
+            }),
+        );
+    }
+
+    /**
+     * Get next cosignature allowed per aggregate
+     * @returns {Observable<number>}
+     */
+    public getNetworkMaxCosignaturesPerAggregate(): Observable<number> {
+        return this.networkRepository.getNetworkProperties().pipe(
+            map((properties) => {
+                console.log(!properties.plugins.aggregate?.maxCosignaturesPerAggregate);
+                if (!properties.plugins.aggregate?.maxCosignaturesPerAggregate) {
+                    throw new Error('Cannot get maxCosignaturesPerAggregate from network properties.');
+                }
+                return parseInt(properties.plugins.aggregate?.maxCosignaturesPerAggregate);
+            }),
+        );
     }
 
     /**

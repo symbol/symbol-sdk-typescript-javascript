@@ -191,11 +191,14 @@ export abstract class Transaction {
     abstract resolveAliases(statement?: Statement, aggregateTransactionIndex?: number): Transaction;
 
     /**
-     * Set transaction maxFee using fee multiplier
+     * Set transaction maxFee using fee multiplier for **ONLY NONE AGGREGATE TRANSACTIONS**
      * @param feeMultiplier The fee multiplier
      * @returns {TransferTransaction}
      */
     public setMaxFee(feeMultiplier: number): Transaction {
+        if (this.type === TransactionType.AGGREGATE_BONDED || this.type === TransactionType.AGGREGATE_COMPLETE) {
+            throw new Error('setMaxFee can only be used for none aggregate transactions.');
+        }
         return DtoMapping.assign(this, {
             maxFee: UInt64.fromUint(this.size * feeMultiplier),
         });
