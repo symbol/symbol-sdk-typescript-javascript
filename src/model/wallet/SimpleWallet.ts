@@ -55,7 +55,7 @@ export class SimpleWallet extends Wallet {
         const address = Address.createFromPublicKey(convert.uint8ToHex(publicKey), network);
 
         // Encrypt private key using password
-        const encryptedPrivateKey = AESEncryptionService.encrypt(convert.uint8ToHex(privateKey), password);
+        const encryptedPrivateKey = AESEncryptionService.encrypt(convert.uint8ToHex(privateKey), password.value);
 
         return new SimpleWallet(name, address, encryptedPrivateKey);
     }
@@ -76,7 +76,7 @@ export class SimpleWallet extends Wallet {
         const address = Address.createFromPublicKey(convert.uint8ToHex(keyPair.publicKey), network);
 
         // Encrypt private key using password
-        const encryptedPrivateKey = AESEncryptionService.encrypt(privateKey, password);
+        const encryptedPrivateKey = AESEncryptionService.encrypt(privateKey, password.value);
 
         return new SimpleWallet(name, address, encryptedPrivateKey);
     }
@@ -108,7 +108,7 @@ export class SimpleWallet extends Wallet {
      * @returns {Account}
      */
     public open(password: Password): Account {
-        const privateKey = AESEncryptionService.decrypt(this.encryptedPrivateKey, password);
+        const privateKey = AESEncryptionService.decrypt(this.encryptedPrivateKey, password.value);
         return Account.createFromPrivateKey(privateKey, this.networkType);
     }
 }

@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import { Password } from '../../model/wallet/Password';
-
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CryptoJS = require('crypto-js');
 
@@ -24,13 +22,13 @@ export class AESEncryptionService {
      * Encrypt data
      * @param {string} data
      * @param {string} salt
-     * @param {Password} password!
+     * @param {string} password
      */
-    public static encrypt(data: string, password: Password): string {
+    public static encrypt(data: string, password: string): string {
         const salt = CryptoJS.lib.WordArray.random(16);
 
         // generate password based key
-        const key = CryptoJS.PBKDF2(password.value, salt, {
+        const key = CryptoJS.PBKDF2(password, salt, {
             keySize: 8,
             iterations: 1024,
         });
@@ -52,15 +50,15 @@ export class AESEncryptionService {
      * Decrypt data
      * @param {string} data
      * @param {string} salt
-     * @param {Password} password
+     * @param {string} password
      */
-    public static decrypt(data: string, password: Password): string {
+    public static decrypt(data: string, password: string): string {
         const salt = CryptoJS.enc.Hex.parse(data.substr(0, 32));
         const iv = CryptoJS.enc.Hex.parse(data.substr(32, 32));
         const encrypted = data.substring(64);
 
         // generate password based key
-        const key = CryptoJS.PBKDF2(password.value, salt, {
+        const key = CryptoJS.PBKDF2(password, salt, {
             keySize: 8,
             iterations: 1024,
         });

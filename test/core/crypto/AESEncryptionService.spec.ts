@@ -15,11 +15,11 @@
  */
 
 import { expect } from 'chai';
-import { Password, AESEncryptionService } from '../../..';
+import { AESEncryptionService } from '../../..';
 
-const cipher1 = AESEncryptionService.encrypt('a', new Password('password'));
-const cipher2 = AESEncryptionService.encrypt('a', new Password('password'));
-const knownPass = new Password('password');
+const cipher1 = AESEncryptionService.encrypt('a', 'password');
+const cipher2 = AESEncryptionService.encrypt('a', 'password');
+const knownPass = 'password';
 const knownValue = '987654321';
 const knownCipher = '9c3afe1b658403d7522886cda510a3714c389ce697128ab8d3877bbbb53c2ecdY+QgfP/KHmUl+wk7rPwmEQ==';
 
@@ -42,7 +42,7 @@ it('services/AESEncryptionService', () => {
     });
 
     it('decrypt() should return empty given invalid password', () => {
-        const plain = AESEncryptionService.decrypt(knownCipher, new Password('password1')); // invalid password
+        const plain = AESEncryptionService.decrypt(knownCipher, 'password1'); // invalid password
         expect(plain.length).to.equal(0);
         expect(plain).to.equal('');
     });
@@ -51,7 +51,7 @@ it('services/AESEncryptionService', () => {
         const data = ['encrypt', 'this'];
 
         data.map((word: string) => {
-            const pw = new Password('1234567a');
+            const pw = '1234567a';
             const cipher = AESEncryptionService.encrypt(word, pw);
             const plain = AESEncryptionService.decrypt(cipher, pw);
             expect(plain).to.equal(word);
