@@ -37,12 +37,6 @@ import SpinnerLoading from '@/components/SpinnerLoading/SpinnerLoading.vue'
 })
 export class AppTs extends Vue {
   /**
-   * Whether the app is running on windows platform
-   * @var {boolean}
-   */
-  public isWindows = process.platform === 'win32'
-
-  /**
    * Currently active account
    * @see {Store.Account}
    * @var {string}

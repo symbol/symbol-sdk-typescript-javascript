@@ -2,11 +2,6 @@
   <div class="mosaics-list-container">
     <Tabs v-if="!isEditionMode" size="small">
       <TabPane :label="$t('assets')" name="name1">
-        <img
-          class="asset_list pointer"
-          src="@/views/resources/img/monitor/monitorAssetList.png"
-          @click="isEditionMode = true"
-        >
         <div class="mosaicList secondary_page_animate">
           <div
             v-for="(entry, index) in filteredBalanceEntries"
@@ -38,7 +33,12 @@
       <div class="mosaicList">
         <div class="toggle_all_checked">
           <span @click="toggleMosaicDisplay()">
-            <div :class="[ 'choose', areAllMosaicsShown() ? 'true' : 'false' ]" />
+            <img
+              class="toggle-mosaic-display-icon"
+              :src=" areAllMosaicsShown()
+                ? dashboardImages.selected
+                : dashboardImages.unselected"
+            >
             {{ areAllMosaicsShown() ? $t('uncheck_all') : $t('select_all') }}
           </span>
         </div>
@@ -50,7 +50,6 @@
           class="mosaic_data pointer"
           @click="toggleMosaicDisplay(entry.id)"
         > 
-          <!-- @TODO: Mosaic list actions not working -->
           <span class="namege_img">
             <img
               class="small_icon"

@@ -15,12 +15,14 @@
  */
 @import "../../views/resources/css/variables.less";
 
-.balances-panel-container {
-  display: grid;
-  height: 100%;
-  grid-template-columns: 100%;
-  grid-template-rows: 2.4rem auto;
-  grid-row-gap: 0.13rem;
+.balances-panel-outer-container {
+  .balances-panel-container {
+    display: grid;
+    height: 100%;
+    grid-template-columns: 100%;
+    grid-template-rows: 2.4rem auto;
+    grid-row-gap: 0.13rem;
+  }
 }
 .mosaicListWrap{
   height: 100%;
@@ -84,12 +86,13 @@
 }
 
 .bottom_account_info {
-  height: 100%;
-  background-color: @white;
   width: 100%;
-  padding: 0.1rem;
+  padding: 0.27rem 0.18rem 0.27rem 0.28rem;
   position: relative;
-  overflow: hidden;
+  display: grid;
+  grid-template-rows: 100%;
+  grid-template-columns: 100%;
+  overflow-y: hidden;
 
   .ivu-tabs-tab-active {
     color: @purple;
@@ -102,4 +105,10 @@
   .ivu-tabs-ink-bar {
     background-color: @purple;
   }
+}
+
+.mosaicListWrap {
+  height: 100%;
+  display: block;
+  overflow: hidden;
 }

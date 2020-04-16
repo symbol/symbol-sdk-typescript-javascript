@@ -12,7 +12,7 @@ install:
 
 script:
   - npm run lint:all
-  - npm run build
+  - npm run build:web
   - npm run test
 
 after_script:
@@ -28,5 +28,3 @@ after_script:
 branches:
   only:
     - master
-    - develop
-

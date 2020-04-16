@@ -1,5 +1,5 @@
 <template>
-  <div :class="[ isWindows ? 'windows' : 'mac','wrap' ]">
+  <div class="mac wrap">
     <div v-if="alert.show">
       <Alert class="alert warning_alert" type="error">
         <Icon type="ios-warning-outline" />
@@ -52,7 +52,6 @@
 import { PageLayoutTs } from './PageLayoutTs'
 import './PageLayout.common.less'
 import './PageLayout.mac.less'
-import './PageLayout.win32.less'
 
 export default class PageLayout extends PageLayoutTs {}
 </script>

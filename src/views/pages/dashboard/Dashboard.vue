@@ -1,9 +1,7 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-left-container">
-      <AccountBalancesPanel />
-    </div>
-    <div class="right-container">
+    <AccountBalancesPanel />
+    <div class="dashboard-right-outer-container">
       <div class="dashboard-right-container">
         <NetworkStatisticsPanel />
         <div class="right-bottom-container xym-outline">

@@ -11,8 +11,7 @@
 
 <script lang="ts">
 import {WindowControlsTs} from './WindowControlsTs'
-import './WindowControls.mac.less'
-import './WindowControls.win32.less'
+import './WindowControls.less'
 
 export default class WindowControls extends WindowControlsTs {}
 </script>

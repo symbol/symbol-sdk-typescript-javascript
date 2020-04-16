@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="[isWindows ? 'windows' : 'mac']">
+  <div id="app" class="mac">
     <router-view />
     <DisabledUiOverlay />
     <SpinnerLoading v-if="hasLoadingOverlay" />
@@ -15,8 +15,6 @@ export default class App extends AppTs { }
 <style lang="less">
 @import "../views/resources/css/common.less";
 @import "../views/resources/css/forms.less";
-// @import "../views/resources/css/ivewWindows.less";
-@import "../views/resources/css/iviewMac.less";
 @import "../views/resources/css/modals.less";
 @import "../views/resources/css/text.less";
 </style>

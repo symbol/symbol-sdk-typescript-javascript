@@ -25,10 +25,6 @@ export class UIBootstrapper {
   public static configure(app: Vue): Vue {
     /// region electron fixes
     Electron.htmlRem()
-    if (process.platform === 'win32') {
-      Electron.resetFontSize()
-      Electron.checkInstall()
-    }
     /// end-region electron fixes
 
     /// region vue directives

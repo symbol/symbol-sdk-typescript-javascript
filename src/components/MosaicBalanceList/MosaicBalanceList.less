@@ -31,6 +31,7 @@
     display: flex;
     align-items: center;
     margin-right: 0.1rem;
+    cursor: pointer;
   }
 }
 
@@ -55,6 +56,9 @@
 }
 
 .mosaicList {
+  height: 100%;
+  display: block;
+
   .complete_container {
     width: 100%;
     height: 0.8rem;
@@ -163,7 +167,7 @@
 
 .mosaic_data {
   height: 0.65rem;
-  padding: 0.15rem 0;
+  padding: 0.15rem 0.25rem 0.15rem 0;
   display: flex;
   flex-direction: row;
   justify-items: center;
@@ -201,10 +205,10 @@
     img.grayed-xym-logo {
       opacity: 0.4;
       -webkit-filter: grayscale(100%);
-        -moz-filter: grayscale(100%);
-          -o-filter: grayscale(100%);
-          -ms-filter: grayscale(100%);
-              filter: grayscale(100%);
+      -moz-filter: grayscale(100%);
+      -o-filter: grayscale(100%);
+      -ms-filter: grayscale(100%);
+      filter: grayscale(100%);
     }
   }
 
@@ -263,7 +267,7 @@
   font-size: 0.2rem !important;
   color: @purpleDark !important;
   padding: 0.08rem 0.1rem !important;
-  font-weight:400;
+  font-weight: 400;
 }
 
 .ivu-tabs-ink-bar {
@@ -273,6 +277,7 @@
 .ivu-tabs-bar {
   margin-bottom: 0 !important;
 }
+
 .mosaics-list-container{
   height: 100%;
   .ivu-tabs{
@@ -283,3 +288,37 @@
     overflow-y: auto;
   }
 }
+
+.mosaic-balance-list-tabs-container {
+  height: 100%;
+  position: relative;
+}
+
+.ivu-tabs-content {
+  display: block;
+  overflow: visible;
+  height: 100%;
+}
+
+.ivu-tabs-tabpane {
+  height: 100%;
+  position: relative;
+  overflow-y: overlay;
+  display: block !important;
+}
+
+.edit-icon {
+  position: absolute;
+  top: -0.4rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  right: 0;
+  cursor: pointer;
+}
+
+.toggle-mosaic-display-icon {
+  height: 0.2rem;
+  width: 0.2rem;
+  margin-right: 0.13rem;
+}
+

@@ -32,6 +32,8 @@ export default class MultisigDashboardPage extends Vue {}
     width: 100%;
     height: 100%;
     background: transparent;
+    overflow-x: hidden;
+    overflow-y: auto;
     .header-container {
       width: 100%;
       height: 100%;

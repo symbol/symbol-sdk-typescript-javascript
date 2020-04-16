@@ -64,12 +64,6 @@ import ModalDebugConsole from '@/views/modals/ModalDebugConsole/ModalDebugConsol
 })
 export class PageLayoutTs extends Vue {
   /**
-   * Whether the app is running on windows platform
-   * @var {boolean}
-   */
-  public isWindows = process.platform === 'win32'
-
-  /**
    * Currently active account
    * @see {Store.Account}
    * @var {string}
@@ -154,15 +148,6 @@ export class PageLayoutTs extends Vue {
     this.isDisplayingDebugConsole = f
   }
   /// end-region computed properties getter/setter
-
-  /**
-   * Hook called when the layout is created (used)
-   * @return {void}
-   */
-  created() {
-    if (process.platform === 'win32')
-    {Electron.windowSizeChange()}
-  }
 
   public async onChangeWallet(walletId: string) {
     const service = new WalletService(this.$store)
