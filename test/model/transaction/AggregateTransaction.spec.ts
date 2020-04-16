@@ -607,11 +607,30 @@ describe('AggregateTransaction', () => {
             [transferTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
-        ).setMaxFee(2);
-        expect(aggregateTransaction.maxFee.compact()).to.be.equal(560);
+        ).setMaxFeeForAggregate(2, 10);
+        expect(aggregateTransaction.maxFee.compact()).to.be.equal(560 + 960 * 2);
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
+    });
+
+    it('Test set maxFee using multiplier', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(1, ChronoUnit.HOURS),
+            unresolvedAddress,
+            [new Mosaic(unresolvedMosaicId, UInt64.fromUint(1))],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(() => {
+            AggregateTransaction.createComplete(
+                Deadline.create(),
+                [transferTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            ).setMaxFee(2);
+        }).to.throw();
     });
 
     it('Test resolveAlias can resolve', () => {
