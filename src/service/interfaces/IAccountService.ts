@@ -25,14 +25,14 @@ import { NamespaceInfoWithName } from '../../model/namespace/NamespaceInfoWithNa
 export interface IAccountService {
     /**
      * Get account info with resolved mosaic
-     * @param address Address
+     * @param addresses Array of addresses
      */
-    accountInfoWithResolvedMosaic(address: Address): Observable<AccountInfoResolvedMosaic>;
+    accountInfoWithResolvedMosaic(addresses: Address[]): Observable<AccountInfoResolvedMosaic[]>;
 
     /**
      * Get namespace info for account with namespace name
-     * @param address Address
+     * @param addresses Array of addresses
      * @returns {Observable<NamespaceInfoWithName[]>}
      */
-    accountNamespacesWithName(address: Address): Observable<NamespaceInfoWithName[]>;
+    accountNamespacesWithName(addresses: Address[]): Observable<NamespaceInfoWithName[]>;
 }

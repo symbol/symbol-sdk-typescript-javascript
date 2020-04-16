@@ -42,7 +42,7 @@ describe('AccountService', () => {
     let account: Account;
     let account2: Account;
 
-    function mockAccountInfo(withMosaic = false): AccountInfo {
+    function mockAccountInfo(withMosaic = false): AccountInfo[] {
         const mosaic = new Mosaic(new MosaicId('941299B2B7E1291C'), UInt64.fromUint(1));
         const mosaics = [
             NetworkCurrencyLocal.createAbsolute(1),
@@ -52,18 +52,20 @@ describe('AccountService', () => {
         if (withMosaic) {
             mosaics.push(mosaic);
         }
-        return new AccountInfo(
-            account.address,
-            UInt64.fromUint(100),
-            account.publicKey,
-            UInt64.fromUint(100),
-            AccountType.Main,
-            '0',
-            [new ActivityBucket('0', 1, 1, 1)],
-            mosaics,
-            UInt64.fromUint(100),
-            UInt64.fromUint(100),
-        );
+        return [
+            new AccountInfo(
+                account.address,
+                UInt64.fromUint(100),
+                account.publicKey,
+                UInt64.fromUint(100),
+                AccountType.Main,
+                '0',
+                [new ActivityBucket('0', 1, 1, 1)],
+                mosaics,
+                UInt64.fromUint(100),
+                UInt64.fromUint(100),
+            ),
+        ];
     }
 
     function mockNamespaceInfo(): NamespaceInfo[] {
@@ -121,10 +123,12 @@ describe('AccountService', () => {
         const mockNamespaceRepository = mock<NamespaceRepository>();
         const mockRepoFactory = mock<RepositoryFactory>();
 
-        when(mockAccountRepository.getAccountInfo(deepEqual(account.address))).thenReturn(observableOf(mockAccountInfo()));
-        when(mockAccountRepository.getAccountInfo(deepEqual(account2.address))).thenReturn(observableOf(mockAccountInfo(true)));
-        when(mockNamespaceRepository.getNamespacesFromAccount(deepEqual(account.address))).thenReturn(observableOf(mockNamespaceInfo()));
-        when(mockNamespaceRepository.getNamespacesFromAccount(deepEqual(account2.address))).thenReturn(observableOf(mockNamespaceInfo()));
+        when(mockAccountRepository.getAccountsInfo(deepEqual([account.address]))).thenReturn(observableOf(mockAccountInfo()));
+        when(mockAccountRepository.getAccountsInfo(deepEqual([account2.address]))).thenReturn(observableOf(mockAccountInfo(true)));
+        when(mockNamespaceRepository.getNamespacesFromAccounts(deepEqual([account.address]))).thenReturn(observableOf(mockNamespaceInfo()));
+        when(mockNamespaceRepository.getNamespacesFromAccounts(deepEqual([account2.address]))).thenReturn(
+            observableOf(mockNamespaceInfo()),
+        );
 
         when(mockNamespaceRepository.getNamespacesName(deepEqual([NetworkCurrencyLocal.NAMESPACE_ID]))).thenReturn(
             observableOf([mockNamespaceName(NetworkCurrencyLocal.NAMESPACE_ID, 'catapult.currency')]),
@@ -158,25 +162,25 @@ describe('AccountService', () => {
     });
 
     it('should return accountInfo with resolved mosaic name', async () => {
-        const result = await accountService.accountInfoWithResolvedMosaic(account.address).toPromise();
-        expect(result.resolvedMosaics).to.not.be.undefined;
-        expect(result.resolvedMosaics![0].namespaceName?.name).to.be.equal('catapult.currency');
-        expect(result.resolvedMosaics![1].namespaceName?.name).to.be.equal('symbol.xym');
-        expect(result.resolvedMosaics![2].namespaceName?.name).to.be.equal('catapult.harvest');
+        const result = await accountService.accountInfoWithResolvedMosaic([account.address]).toPromise();
+        expect(result[0].resolvedMosaics).to.not.be.undefined;
+        expect(result[0].resolvedMosaics![0].namespaceName?.name).to.be.equal('catapult.currency');
+        expect(result[0].resolvedMosaics![1].namespaceName?.name).to.be.equal('symbol.xym');
+        expect(result[0].resolvedMosaics![2].namespaceName?.name).to.be.equal('catapult.harvest');
     });
 
     it('should return accountInfo with mosaicId', async () => {
-        const result = await accountService.accountInfoWithResolvedMosaic(account2.address).toPromise();
-        expect(result.resolvedMosaics).to.not.be.undefined;
-        expect(result.resolvedMosaics![0].namespaceName?.name).to.be.equal('catapult.currency');
-        expect(result.resolvedMosaics![1].namespaceName?.name).to.be.equal('symbol.xym');
-        expect(result.resolvedMosaics![2].namespaceName?.name).to.be.equal('catapult.harvest');
-        expect(result.resolvedMosaics![3]).to.not.be.undefined;
-        expect(result.resolvedMosaics![3].namespaceName).to.be.undefined;
+        const result = await accountService.accountInfoWithResolvedMosaic([account2.address]).toPromise();
+        expect(result[0].resolvedMosaics).to.not.be.undefined;
+        expect(result[0].resolvedMosaics![0].namespaceName?.name).to.be.equal('catapult.currency');
+        expect(result[0].resolvedMosaics![1].namespaceName?.name).to.be.equal('symbol.xym');
+        expect(result[0].resolvedMosaics![2].namespaceName?.name).to.be.equal('catapult.harvest');
+        expect(result[0].resolvedMosaics![3]).to.not.be.undefined;
+        expect(result[0].resolvedMosaics![3].namespaceName).to.be.undefined;
     });
 
     it('should return namespaceInfo with resolved name', async () => {
-        const result = await accountService.accountNamespacesWithName(account.address).toPromise();
+        const result = await accountService.accountNamespacesWithName([account.address]).toPromise();
         expect(result).to.not.be.undefined;
         expect(result.length).to.be.greaterThan(0);
         expect(result![0].namespaceName).to.be.equal('catapult.currency');
