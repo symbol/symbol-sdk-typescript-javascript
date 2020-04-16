@@ -26,7 +26,7 @@ import { UInt64 } from '../model/UInt64';
 import { IBlockService } from './interfaces/IBlockService';
 
 /**
- * Transaction Service
+ * Block Service
  */
 export class BlockService implements IBlockService {
     private readonly blockRepository: BlockRepository;
