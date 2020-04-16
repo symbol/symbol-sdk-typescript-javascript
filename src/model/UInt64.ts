@@ -124,7 +124,11 @@ export class UInt64 {
      * @returns {number}
      */
     public compact(): number {
-        return uint64.compact(this.toDTO());
+        const result = uint64.compact(this.toDTO());
+        if (Array.isArray(result)) {
+            throw new Error('Compacted value is greater than Number.Max_Value.');
+        }
+        return result;
     }
 
     /**
