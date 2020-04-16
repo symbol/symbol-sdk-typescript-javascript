@@ -52,6 +52,7 @@ import ModalMnemonicExport from '@/views/modals/ModalMnemonicExport/ModalMnemoni
     currentAccount: 'account/currentAccount',
     currentWallet: 'wallet/currentWallet',
     knownWallets: 'wallet/knownWallets',
+    currentWallets: 'wallet/currentWallets',
     knownWalletsInfo: 'wallet/knownWalletsInfo',
     networkMosaic: 'mosaic/networkMosaic',
   })}})
@@ -82,6 +83,12 @@ export class WalletSelectorPanelTs extends Vue {
    * @var {string[]}
    */
   public knownWallets: string[]
+
+  /**
+   * current wallets identifiers
+   * @var {string[]}
+   */
+  public currentWallets: string[]
 
   /**
    * Currently active wallet's balances
@@ -206,35 +213,6 @@ export class WalletSelectorPanelTs extends Vue {
       this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: wallet})
       this.$emit('input', wallet.getIdentifier())
     }
-  }
-
-  public get currentWallets(): {
-    identifier: string
-    address: string
-    name: string
-    type: number
-    isMultisig: boolean
-    path: string
-  }[] {
-    if (!this.knownWallets || !this.knownWallets.length) {
-      return []
-    }
-
-    // filter wallets to only known wallet names
-    const knownWallets = this.service.getWallets(
-      (e) => this.knownWallets.includes(e.getIdentifier()),
-    )
-  
-    return [...knownWallets].map(
-      ({identifier, values}) => ({
-        identifier,
-        address: values.get('address'),
-        name: values.get('name'),
-        type: values.get('type'),
-        isMultisig: values.get('isMultisig'),
-        path: values.get('path'),
-      }),
-    )
   }
 
   public get hasAddWalletModal(): boolean {

@@ -45,6 +45,7 @@ import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {RESTDispatcher} from '@/core/utils/RESTDispatcher'
 import {NamespaceService} from '@/services/NamespaceService'
 import {MultisigService} from '@/services/MultisigService'
+import {WalletService} from '@/services/WalletService'
 
 /**
  * Helper to format transaction group in name of state variable.
@@ -268,6 +269,23 @@ export default {
     currentSignerOwnedNamespaces: (state: WalletState) => state.currentSignerOwnedNamespaces,
     knownWallets: (state: WalletState) => state.knownWallets,
     knownWalletsInfo: (state: WalletState) => state.knownWalletsInfo,
+    currentWallets:(state: WalletState)=>{
+      const knownWallets = state.knownWallets
+      if(!knownWallets || !knownWallets.length) return []
+      const currentWallets = new WalletService().getWallets(
+        (e) => knownWallets.includes(e.getIdentifier()),
+      )
+      return currentWallets.map(
+        ({identifier, values}) => ({
+          identifier,
+          address: values.get('address'),
+          name: values.get('name'),
+          type: values.get('type'),
+          isMultisig: values.get('isMultisig'),
+          path: values.get('path'),
+        }),
+      )
+    },
     knownMultisigsInfo: (state: WalletState) => state.knownMultisigsInfo,
     getSubscriptions: (state: WalletState) => state.subscriptions,
     transactionHashes: (state: WalletState) => state.transactionHashes,
