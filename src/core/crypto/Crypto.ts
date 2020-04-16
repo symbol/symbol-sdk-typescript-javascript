@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { WalletAlgorithm } from '../../model/wallet/WalletAlgorithm';
 import { Convert as convert } from '../format/Convert';
 import { KeyPair } from './KeyPair';
 import * as utility from './Utilities';
@@ -29,7 +28,7 @@ export class Crypto {
      *
      * @return {object} - The encrypted data
      */
-    public static toMobileKey = (password: string, privateKey: string): any => {
+    public static encryptPBKDF2 = (password: string, privateKey: string): any => {
         // Errors
         if (!password || !privateKey) {
             throw new Error('Missing argument !');
@@ -128,73 +127,6 @@ export class Crypto {
         };
         // Result
         return CryptoJS.enc.Hex.stringify(CryptoJS.AES.decrypt(data, encKey, encIv));
-    };
-
-    /**
-     * Reveal the private key of an account or derive it from the wallet password
-     *
-     * @param {object} common- An object containing password and privateKey field
-     * @param {object} walletAccount - A wallet account object
-     * @param {WalletAlgorithm} algo - A wallet algorithm
-     *
-     * @return {object|boolean} - The account private key in and object or false
-     */
-    public static passwordToPrivateKey = (common: any, walletAccount: any, algo: WalletAlgorithm): any => {
-        // Errors
-        if (!common || !common.password || !walletAccount || !algo) {
-            throw new Error('Missing argument !');
-        }
-        // Processing
-        let r;
-        if (algo === WalletAlgorithm.Pass_6k) {
-            // Brain wallets
-            if (!walletAccount.encrypted && !walletAccount.iv) {
-                // Account private key is generated simply using a passphrase so it has no encrypted and iv
-                r = Crypto.derivePassSha(common.password, 6000);
-            } else if (!walletAccount.encrypted || !walletAccount.iv) {
-                // Else if one is missing there is a problem
-                return false;
-            } else {
-                // Else child accounts have encrypted and iv so we decrypt
-                const pass = Crypto.derivePassSha(common.password, 20);
-                const obj = {
-                    ciphertext: CryptoJS.enc.Hex.parse(walletAccount.encrypted),
-                    iv: convert.hexToUint8(walletAccount.iv),
-                    key: convert.hexToUint8(pass.priv),
-                };
-                const d = Crypto.decrypt(obj);
-                r = { priv: d };
-            }
-        } else if (algo === WalletAlgorithm.Pass_bip32) {
-            // Wallets from PRNG
-            const pass = Crypto.derivePassSha(common.password, 20);
-            const obj = {
-                ciphertext: CryptoJS.enc.Hex.parse(walletAccount.encrypted),
-                iv: convert.hexToUint8(walletAccount.iv),
-                key: convert.hexToUint8(pass.priv),
-            };
-            const d = Crypto.decrypt(obj);
-            r = { priv: d };
-        } else if (algo === WalletAlgorithm.Pass_enc) {
-            // Private Key wallets
-            const pass = Crypto.derivePassSha(common.password, 20);
-            const obj = {
-                ciphertext: CryptoJS.enc.Hex.parse(walletAccount.encrypted),
-                iv: convert.hexToUint8(walletAccount.iv),
-                key: convert.hexToUint8(pass.priv),
-            };
-            const d = Crypto.decrypt(obj);
-            r = { priv: d };
-        } else if (algo === WalletAlgorithm.Trezor) {
-            // HW wallet
-            r = { priv: '' };
-            common.isHW = true;
-        } else {
-            return false;
-        }
-        // Result
-        common.privateKey = r.priv;
-        return true;
     };
 
     /**
