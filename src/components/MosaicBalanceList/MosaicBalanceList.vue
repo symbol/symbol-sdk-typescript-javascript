@@ -22,6 +22,12 @@
           </div>
         </div>
       </TabPane>
+      <img
+        slot="extra"
+        class="asset_list pointer"
+        src="@/views/resources/img/monitor/monitorAssetList.png"
+        @click="isEditionMode = true"
+      >
     </Tabs>
     <div v-else class="searchMosaic secondary_page_animate">
       <img

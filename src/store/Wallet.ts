@@ -441,8 +441,8 @@ export default {
       }
 
       if (!options || !options.skipTransactions) {
-        dispatcher.add('REST_FETCH_TRANSACTIONS', {
-          group: 'confirmed',
+        dispatch('GET_ALL_TRANSACTIONS',{
+          group: 'all',
           pageSize: 100,
           address: address,
         })
@@ -577,6 +577,43 @@ export default {
       transactions[index] = transactions[index].addCosignatures(cosignatureMessage)
       commit('partialTransactions', transactions)
     },
+    async GET_ALL_TRANSACTIONS({dispatch},{address,pageSize,group}){
+      if (!pageSize) {
+        pageSize = 100
+      }
+
+      dispatch('app/SET_FETCHING_TRANSACTIONS', true, { root: true })
+      try {
+        if (group == 'all') {
+          await Promise.all([
+            dispatch('REST_FETCH_TRANSACTIONS', {
+              group: 'confirmed',
+              pageSize: pageSize,
+              address: address,
+            }),
+            dispatch('REST_FETCH_TRANSACTIONS', {
+              group: 'unconfirmed',
+              pageSize: pageSize,
+              address: address,
+            }),
+            dispatch('REST_FETCH_TRANSACTIONS', {
+              group: 'partial',
+              pageSize: pageSize,
+              address: address,
+            }),
+          ])
+        } else {
+          await dispatch('REST_FETCH_TRANSACTIONS', {
+            group: group,
+            pageSize: pageSize,
+            address: address,
+          })
+        }
+      } finally {
+        dispatch('app/SET_FETCHING_TRANSACTIONS', false, { root: true })
+      }
+      
+    },
     ADD_TRANSACTION({commit, getters}, transactionMessage) {
       if (!transactionMessage || !transactionMessage.group) {
         throw Error('Missing mandatory field \'group\' for action wallet/ADD_TRANSACTION.')
@@ -697,7 +734,7 @@ export default {
  * REST API
  */
     async REST_FETCH_TRANSACTIONS({dispatch, rootGetters}, {group, address, id}) {
-      dispatch('app/SET_FETCHING_TRANSACTIONS', true, {root: true})
+      
 
       if (!group || ![ 'partial', 'unconfirmed', 'confirmed' ].includes(group)) {
         group = 'confirmed'
@@ -753,9 +790,7 @@ export default {
       catch (e) {
         dispatch('diagnostic/ADD_ERROR', `An error happened while trying to fetch transactions: ${e}`, {root: true})
         return false
-      } finally {
-        dispatch('app/SET_FETCHING_TRANSACTIONS', false, {root: true})
-      }
+      } 
     },
     async REST_FETCH_BALANCES({dispatch}, address) {
       if (!address || address.length !== 40) {

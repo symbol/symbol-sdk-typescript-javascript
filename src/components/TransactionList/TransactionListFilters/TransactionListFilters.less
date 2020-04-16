@@ -1,0 +1,57 @@
+@import '../../../views/resources/css/variables.less';
+
+.transaction-list-filters-container {
+  display        : flex;
+  justify-content: flex-end;
+  padding        : .15rem 0;
+
+  .transaction-list-filter-container {
+    margin-right: .2rem;
+    min-width   : 2rem;
+
+    /deep/.ivu-select {
+      .ivu-select-selection {
+        font-size: @normalFont;
+
+        &:hover {
+          color           : @white;
+          background-color: @purpleDark;
+
+          .ivu-icon-ios-arrow-down::before {
+            color: @white  !important;
+          }
+          .ivu-select-prefix {
+            color: @white;
+          }
+        }
+
+        .ivu-select-prefix {
+          color: @purpleDark;
+        }
+      }
+
+      .ivu-select-visible {
+        .ivu-select-selection {
+          color           : @white  !important;
+          background-color: @purpleDark;
+          border          : 0.01rem solid @purpleDark;
+        }
+
+        .ivu-icon-ios-arrow-down::before {
+          color: @white  !important;
+        }
+
+        .ivu-select-prefix {
+          color: @white;
+        }
+      }
+      .ivu-select-group-title {
+        font-size: @smallerFont  !important;
+      }
+
+      .ivu-select-item {
+        font-size: @smallFont  !important;
+      }
+    }
+  }
+}

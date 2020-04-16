@@ -19,7 +19,6 @@
 .transaction-list-tabs {
   display: block;
   position: relative;
-  overflow: hidden;
   zoom: 1;
   width: 100%;
   height: 100%;
@@ -37,7 +36,6 @@
   .ivu-tabs-tabpane {
     display: block !important;
     height: 100%;
-    overflow: hidden;
     padding-left: 0.2rem;
   }
 
@@ -72,7 +70,6 @@
 .transaction-list-outer-container {
   background-color: @white;
   position: relative;
-  overflow: auto;
   height: 100%;
 
   .transaction-list-inner-container {
@@ -80,14 +77,13 @@
     display: grid;
     height: 100%;
     width: 100%;
-    overflow: auto;
     grid-template-rows: auto 0.6rem;
     grid-template-columns: 100%;
 
     .transaction-list-tabs-container {
       width: 100%;
       display: block;
-      overflow: auto;
+      overflow: hidden;
     }
 
     .transaction-list-pagination-container {
@@ -95,7 +91,6 @@
       text-align: right;
       width: 100%;
       display: block;
-      overflow: hidden;
 
       .ivu-page-item {
         min-width: 0.31rem;
@@ -138,7 +133,6 @@
   width: 100%;
   background-color: @white;
   padding: 0.05rem 0.31rem;
-  overflow: hidden;
   height: 100%;
 
   .click-to-cosign {

@@ -29,19 +29,14 @@
   width: 100%;
   grid-template-columns: 100%;
   grid-template-rows: @headerHeight auto;
-  overflow: auto;
-  padding-top: 0.2rem;
   height: 100%;
   .transaction-table-columns {
-    // grid-template-columns: 0.45rem auto 1.8rem 2rem 3.5rem;
-    grid-template-columns: 0.45rem 5.05rem 1.8rem 2rem auto;
+    grid-template-columns: 0.65rem 5.05rem 1.8rem 2rem auto;
   }
 
   .transaction-rows-outer-container {
     display: block;
     position: relative;
-    overflow: hidden;
-    overflow-y: scroll;
     width: 100%;
     padding-bottom: 0.7rem;
     max-height: 100%;
@@ -119,5 +114,4 @@
     }
   }
 }
-
 

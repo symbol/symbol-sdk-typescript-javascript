@@ -30,19 +30,18 @@ import ModalTransactionDetails from '@/views/modals/ModalTransactionDetails/Moda
 // @ts-ignore
 import PageTitle from '@/components/PageTitle/PageTitle.vue'
 // @ts-ignore
-import TransactionListOptions from '@/components/TransactionListOptions/TransactionListOptions.vue'
+import TransactionListFilters from '@/components/TransactionList/TransactionListFilters/TransactionListFilters.vue'
 // @ts-ignore
 import TransactionTable from '@/components/TransactionList/TransactionTable/TransactionTable.vue'
 
 // custom types
-type TabName = 'confirmed' | 'unconfirmed' | 'partial'
-
+export const STATUS: Array<string> = [ 'all','confirmed','unconfirmed','partial' ]
 @Component({
   components: {
     ModalTransactionCosignature,
     ModalTransactionDetails,
     PageTitle,
-    TransactionListOptions,
+    TransactionListFilters,
     TransactionTable,
   },
   computed: {...mapGetters({
@@ -129,12 +128,10 @@ export class TransactionListTs extends Vue {
    */
   public service: TransactionService
 
-  /**
-   * The current tab
-   * @var {string} One of 'confirmed', 'unconfirmed' or 'partial'
+  /** 
+   * set the default to select all
    */
-  public currentTab: TabName = 'confirmed'
-
+  public selectedOption = 'all'
   /**
    * The current page number
    * @var {number}
@@ -165,6 +162,13 @@ export class TransactionListTs extends Vue {
    */
   public isAwaitingCosignature: boolean = false
 
+  public getEmptyMessage(){
+    const status = this.selectedOption
+    if(!status.includes(status)){
+      status
+    }
+    return this.selectedOption === 'all' ? 'no_data_transactions' : `no_${this.selectedOption}_transactions`
+  }
   /**
    * Hook called when the component is mounted
    * @return {void}
@@ -180,7 +184,7 @@ export class TransactionListTs extends Vue {
   }
 
   public get totalCountItems(): number {
-    return this.getCurrentTabTransactions(this.currentTab).length
+    return this.getTransactionsByStatus(this.selectedOption).length
   }
 
   /**
@@ -189,30 +193,35 @@ export class TransactionListTs extends Vue {
    * @param {TabName} tabName
    * @returns {Transaction[]}
    */
-  public getCurrentPageTransactions(tabName: TabName): Transaction[] {
+  public getCurrentPageTransactions(): Transaction[] {
     // get current tab transactions
-    const transactions = this.getCurrentTabTransactions(tabName)
+    const transactions = this.getTransactionsByStatus(this.selectedOption)
     if (!transactions || !transactions.length) return []
 
     // get pagination params
     const start = (this.currentPage - 1) * this.pageSize
     const end = this.currentPage * this.pageSize
-    
     // slice and return
     return [...transactions].reverse().slice(start, end)
   }
 
   /**
    * Returns all the transactions,
-   * from the getter that matches the provided tab name
-   * @param {TabName} tabName
-   * @returns {Transaction[]}
+   * from the getter that matches the provided selected option
    */
-  public getCurrentTabTransactions(tabName: TabName): Transaction[] {
-    if (tabName === 'confirmed') return this.confirmedTransactions || []
-    if (tabName === 'unconfirmed') return this.unconfirmedTransactions || []
-    if (tabName === 'partial') return this.partialTransactions || []
-    return []
+  public getTransactionsByStatus(status: string): Transaction[] {
+    switch (status) {
+      case 'confirmed':
+        return this.confirmedTransactions
+      case 'unconfirmed':
+        return this.unconfirmedTransactions
+      case 'partial':
+        return this.partialTransactions
+      case 'all':
+        return [ ...this.confirmedTransactions,...this.partialTransactions,...this.unconfirmedTransactions ]
+      default:
+        return []
+    }
   }
 
   public get hasDetailModal(): boolean {
@@ -236,16 +245,11 @@ export class TransactionListTs extends Vue {
    * Refresh transaction list
    * @return {void}
    */
-  public async refresh(grp?) {
-    const group = grp ? grp : this.currentTab
-
-    this.$store.dispatch('wallet/REST_FETCH_TRANSACTIONS', {
-      group: group,
-      address: this.currentWallet.objects.address.plain(),
-      pageSize: 100,
-    })
+  public async getTransactionListByOption(filter) {
+    const isStatusFilter = STATUS.includes(filter)
+    this.selectedOption = isStatusFilter ? filter : 'all'
+    this.getCurrentPageTransactions()  
   }
-
   /**
    * Hook called when a transaction is clicked
    * @param {Transaction} transaction 
@@ -271,13 +275,6 @@ export class TransactionListTs extends Vue {
     this.activePartialTransaction = undefined
   }
 
-  /**
-   * Hook called at each tab change
-   */
-  public onTabChange(tab: TabName): void {
-    this.currentTab = tab
-    this.refresh(this.currentTab)
-  }
 
   /**
    * Hook called at each page change
@@ -285,7 +282,6 @@ export class TransactionListTs extends Vue {
   public onPageChange(page: number): void {
     if (page > this.countPages) page = this.countPages
     else if (page < 1) page = 1
-
     this.currentPage = page
   }
 }
