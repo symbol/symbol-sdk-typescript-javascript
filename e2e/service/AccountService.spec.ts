@@ -14,17 +14,11 @@
  * limitations under the License.
  */
 
-import { assert, expect } from 'chai';
-import { ReceiptRepository } from '../../src/infrastructure/ReceiptRepository';
-import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
+import { expect } from 'chai';
 import { Account } from '../../src/model/account/Account';
-import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { Deadline } from '../../src/model/transaction/Deadline';
-import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
-import { BlockService } from '../../src/service/BlockService';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 import { AccountService } from '../../src/service/AccountService';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
@@ -34,22 +28,17 @@ describe('AccountService', () => {
     const helper = new IntegrationTestHelper();
     let generationHash: string;
     let account: Account;
-    let account2: Account;
     let networkType: NetworkType;
-    let transactionHash: string;
     let accountService: AccountService;
-    let transactionRepository: TransactionRepository;
     let namespaceId: NamespaceId;
     const name = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
 
     before(() => {
         return helper.start().then(() => {
             account = helper.account;
-            account2 = helper.account2;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
             accountService = new AccountService(helper.repositoryFactory);
-            transactionRepository = helper.repositoryFactory.createTransactionRepository();
         });
     });
     before(() => {
