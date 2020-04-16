@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, withLatestFrom } from 'rxjs/operators';
 import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
 import { AccountRepository } from '../infrastructure/AccountRepository';
@@ -57,9 +57,13 @@ export class AccountService implements IAccountService {
         const distinctNames = accountInfoObservable.pipe(
             mergeMap((info) => {
                 const namespaceIds = this.getDistinctNamespaceIdFromAccountInfors(info);
-                return this.namespaceRepository.getNamespacesName(namespaceIds);
+                if (namespaceIds.length) {
+                    return this.namespaceRepository.getNamespacesName(namespaceIds);
+                }
+                return of([]);
             }),
         );
+
         return accountInfoObservable.pipe(
             withLatestFrom(distinctNames),
             map(([infos, names]) => {
