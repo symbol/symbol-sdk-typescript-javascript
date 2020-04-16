@@ -65,12 +65,12 @@ describe('AccountService', () => {
      * Setup test data
      * =========================
      */
-    describe('Create a transfer', () => {
+    describe('Create a namespace', () => {
         it('Announce NamespaceRegistrationTransaction', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 name,
-                UInt64.fromUint(9),
+                UInt64.fromUint(300000),
                 networkType,
                 helper.maxFee,
             );
@@ -85,18 +85,21 @@ describe('AccountService', () => {
      * Test
      * =========================
      */
-
-    it('accountInfoWithResolvedMosaic', async () => {
-        const info = await accountService.accountInfoWithResolvedMosaic(account.address).toPromise();
-        expect(info).to.not.be.undefined;
-        expect(info.resolvedMosaics).to.not.be.undefined;
-        expect(info.resolvedMosaics?.length).to.be.greaterThan(0);
+    describe('call accountInfoWithResolvedMosaic', () => {
+        it('accountInfoWithResolvedMosaic', async () => {
+            const info = await accountService.accountInfoWithResolvedMosaic(account.address).toPromise();
+            expect(info).to.not.be.undefined;
+            expect(info.resolvedMosaics).to.not.be.undefined;
+            expect(info.resolvedMosaics?.length).to.be.greaterThan(0);
+        });
     });
 
-    it('accountNamespacesWithName', async () => {
-        const info = await accountService.accountNamespacesWithName(account.address).toPromise();
-        expect(info).to.not.be.undefined;
-        expect(info.find((i) => i.id.equals(namespaceId))).to.not.be.undefined;
-        expect(info.find((i) => i.id.equals(namespaceId))?.namespaceName).to.be.equal(name);
+    describe('call accountNamespacesWithName', () => {
+        it('accountNamespacesWithName', async () => {
+            const info = await accountService.accountNamespacesWithName(account.address).toPromise();
+            expect(info).to.not.be.undefined;
+            expect(info.find((i) => i.id.equals(namespaceId))).to.not.be.undefined;
+            expect(info.find((i) => i.id.equals(namespaceId))?.namespaceName).to.be.equal(name);
+        });
     });
 });
