@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NEM
+ * Copyright 2020 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,9 @@ import { KeyPair } from '../../../src/core/crypto/KeyPair';
 import { Convert, Convert as convert } from '../../../src/core/format';
 import { WalletAlgorithm } from '../../../src/model/wallet/WalletAlgorithm';
 
-import CryptoJS = require('crypto-js');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const CryptoJS = require('crypto-js');
+
 describe('crypto tests', () => {
     it('Can derive a key from password and count', () => {
         // Arrange:
@@ -32,22 +34,6 @@ describe('crypto tests', () => {
 
         // Assert:
         expect(result.priv).equal(expectedKey);
-    });
-
-    it('Can encrypt a private key', () => {
-        // Arrange:
-        const password = 'TestTest';
-        const privateKey = '2a91e1d5c110a8d0105aad4683f962c2a56663a3cad46666b16d243174673d90';
-        const expectedKey = '8cd87bc513857a7079d182a6e19b370e907107d97bd3f81a85bcebcc4b5bd3b5';
-
-        // Act:
-        const result = Crypto.encodePrivateKey(privateKey, password);
-        const pass = Crypto.derivePassSha(password, 20);
-
-        // Assert:
-        expect(pass.priv).equal(expectedKey);
-        expect(result.iv.length).equal(16 * 2);
-        expect(result.ciphertext.length).equal(48 * 2);
     });
 
     it('Can decrypt a private key', () => {
@@ -67,51 +53,6 @@ describe('crypto tests', () => {
 
         // Assert:
         expect(decrypted).equal(expectedPrivateKey);
-    });
-
-    it('Can encrypt and decrypt private Key', () => {
-        // Arrange:
-        const password = 'TestTest';
-        const privateKey = '2a91e1d5c110a8d0105aad4683f962c2a56663a3cad46666b16d243174673d90';
-
-        // Act:
-        const result = Crypto.encodePrivateKey(privateKey, password);
-        const pass = Crypto.derivePassSha(password, 20);
-        const obj = {
-            ciphertext: CryptoJS.enc.Hex.parse(result.ciphertext),
-            iv: convert.hexToUint8(result.iv),
-            key: convert.hexToUint8(pass.priv),
-        };
-        const decrypted = Crypto.decrypt(obj);
-
-        // Assert:
-        expect(privateKey).equal(decrypted);
-    });
-
-    describe('Encrypt private key edge-cases', () => {
-        it('Encryption throw error if no password', () => {
-            // Arrange:
-            const password = '';
-            const privateKey = '2a91e1d5c110a8d0105aad4683f962c2a56663a3cad46666b16d243174673d90';
-
-            // Act:
-            const result = Crypto.encodePrivateKey.bind(null, privateKey, password);
-
-            // Assert:
-            expect(result).to.throw('Missing argument !');
-        });
-
-        it('Encryption throw error if no private key', () => {
-            // Arrange:
-            const password = 'TestTest';
-            const privateKey = '';
-
-            // Act
-            const result = Crypto.encodePrivateKey.bind(null, privateKey, password);
-
-            // Assert:
-            expect(result).to.throw('Missing argument !');
-        });
     });
 
     it('Can decrypt private key of pass:enc wallets', () => {

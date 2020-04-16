@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2020 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import * as CryptoJS from 'crypto-js';
 import { sha3_256, sha3_512 } from 'js-sha3';
 import { LockHashAlgorithm, LockHashAlgorithmLengthValidator } from '../../../src/model/transaction/LockHashAlgorithm';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const CryptoJS = require('crypto-js');
 
 describe('LockHashAlgorithmLengthValidator', () => {
     it('LockHashAlgorithm.SHA3_256 should be exactly 64 chars length', () => {

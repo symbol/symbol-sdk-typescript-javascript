@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2020 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import * as CryptoJS from 'crypto-js';
 import { ChronoUnit } from 'js-joda';
 import { sha3_256 } from 'js-sha3';
 import { Crypto } from '../../src/core/crypto';
@@ -67,6 +66,9 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { LockHashUtils } from '../../src/core/utils/LockHashUtils';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const CryptoJS = require('crypto-js');
 
 describe('TransactionHttp', () => {
     let transactionHash;

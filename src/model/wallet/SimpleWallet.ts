@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2020 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,39 +14,24 @@
  * limitations under the License.
  */
 
-import { LocalDateTime } from 'js-joda';
-import { Crypto, KeyPair } from '../../core/crypto';
+import { Crypto, KeyPair, AESEncryptionService } from '../../core/crypto';
 import { Convert as convert } from '../../core/format';
 import { Account } from '../account/Account';
 import { Address } from '../account/Address';
 import { NetworkType } from '../network/NetworkType';
-import { EncryptedPrivateKey } from './EncryptedPrivateKey';
 import { ISimpleWalletDTO } from './ISimpleWalletDTO';
 import { Password } from './Password';
 import { Wallet } from './Wallet';
 
-/**
- * Simple wallet model generates a private key from a PRNG
- */
 export class SimpleWallet extends Wallet {
     /**
-     * @param name
-     * @param network
-     * @param address
-     * @param creationDate
-     * @param encryptedPrivateKey
+     *Creates an instance of SimpleWallet.
+     * @param {string} name
+     * @param {Address} address
+     * @param {string} encryptedPrivateKey
      */
-    constructor(
-        name: string,
-        network: NetworkType,
-        address: Address,
-        creationDate: LocalDateTime,
-        /**
-         * The encrypted private key and information to decrypt it
-         */
-        public readonly encryptedPrivateKey: EncryptedPrivateKey,
-    ) {
-        super(name, network, address, creationDate, 'simple_v1');
+    constructor(name: string, address: Address, public readonly encryptedPrivateKey: string) {
+        super(name, address, 'simple_v2');
     }
 
     /**
@@ -64,17 +49,15 @@ export class SimpleWallet extends Wallet {
         const hashKey = convert.uint8ToHex(randomBytesArray); // TODO: derive private key correctly
 
         // Create KeyPair from hash key
-        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(hashKey);
+        const { publicKey, privateKey } = KeyPair.createKeyPairFromPrivateKeyString(hashKey);
 
         // Create address from public key
-        const address = Address.createFromPublicKey(convert.uint8ToHex(keyPair.publicKey), network);
+        const address = Address.createFromPublicKey(convert.uint8ToHex(publicKey), network);
 
         // Encrypt private key using password
-        const encrypted = Crypto.encodePrivateKey(hashKey, password.value);
+        const encryptedPrivateKey = AESEncryptionService.encrypt(convert.uint8ToHex(privateKey), password);
 
-        const encryptedPrivateKey = new EncryptedPrivateKey(encrypted.ciphertext, encrypted.iv);
-
-        return new SimpleWallet(name, network, address, LocalDateTime.now(), encryptedPrivateKey);
+        return new SimpleWallet(name, address, encryptedPrivateKey);
     }
 
     /**
@@ -93,11 +76,9 @@ export class SimpleWallet extends Wallet {
         const address = Address.createFromPublicKey(convert.uint8ToHex(keyPair.publicKey), network);
 
         // Encrypt private key using password
-        const encrypted = Crypto.encodePrivateKey(privateKey, password.value);
+        const encryptedPrivateKey = AESEncryptionService.encrypt(privateKey, password);
 
-        const encryptedPrivateKey = new EncryptedPrivateKey(encrypted.ciphertext, encrypted.iv);
-
-        return new SimpleWallet(name, network, address, LocalDateTime.now(), encryptedPrivateKey);
+        return new SimpleWallet(name, address, encryptedPrivateKey);
     }
 
     /**
@@ -108,10 +89,8 @@ export class SimpleWallet extends Wallet {
     static createFromDTO(simpleWalletDTO: ISimpleWalletDTO): SimpleWallet {
         return new SimpleWallet(
             simpleWalletDTO.name,
-            simpleWalletDTO.network,
             Address.createFromRawAddress(simpleWalletDTO.address.address),
-            LocalDateTime.now(),
-            new EncryptedPrivateKey(simpleWalletDTO.encryptedPrivateKey.encryptedKey, simpleWalletDTO.encryptedPrivateKey.iv),
+            simpleWalletDTO.encryptedPrivateKey,
         );
     }
 
@@ -129,6 +108,7 @@ export class SimpleWallet extends Wallet {
      * @returns {Account}
      */
     public open(password: Password): Account {
-        return Account.createFromPrivateKey(this.encryptedPrivateKey.decrypt(password), this.network);
+        const privateKey = AESEncryptionService.decrypt(this.encryptedPrivateKey, password);
+        return Account.createFromPrivateKey(privateKey, this.networkType);
     }
 }
