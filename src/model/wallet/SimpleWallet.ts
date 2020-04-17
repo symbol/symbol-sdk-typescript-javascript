@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Crypto, KeyPair, AESEncryptionService } from '../../core/crypto';
+import { Crypto, KeyPair } from '../../core/crypto';
 import { Convert as convert } from '../../core/format';
 import { Account } from '../account/Account';
 import { Address } from '../account/Address';
@@ -55,7 +55,7 @@ export class SimpleWallet extends Wallet {
         const address = Address.createFromPublicKey(convert.uint8ToHex(publicKey), network);
 
         // Encrypt private key using password
-        const encryptedPrivateKey = AESEncryptionService.encrypt(convert.uint8ToHex(privateKey), password.value);
+        const encryptedPrivateKey = Crypto.encrypt(convert.uint8ToHex(privateKey), password.value);
 
         return new SimpleWallet(name, address, encryptedPrivateKey);
     }
@@ -76,7 +76,7 @@ export class SimpleWallet extends Wallet {
         const address = Address.createFromPublicKey(convert.uint8ToHex(keyPair.publicKey), network);
 
         // Encrypt private key using password
-        const encryptedPrivateKey = AESEncryptionService.encrypt(privateKey, password.value);
+        const encryptedPrivateKey = Crypto.encrypt(privateKey, password.value);
 
         return new SimpleWallet(name, address, encryptedPrivateKey);
     }
@@ -108,7 +108,7 @@ export class SimpleWallet extends Wallet {
      * @returns {Account}
      */
     public open(password: Password): Account {
-        const privateKey = AESEncryptionService.decrypt(this.encryptedPrivateKey, password.value);
+        const privateKey = Crypto.decrypt(this.encryptedPrivateKey, password.value);
         return Account.createFromPrivateKey(privateKey, this.networkType);
     }
 }

@@ -17,44 +17,8 @@ import { expect } from 'chai';
 import { Crypto } from '../../../src/core/crypto';
 import { KeyPair } from '../../../src/core/crypto/KeyPair';
 import { Convert, Convert as convert } from '../../../src/core/format';
-import { WalletAlgorithm } from '../../../src/model/wallet/WalletAlgorithm';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const CryptoJS = require('crypto-js');
 
 describe('crypto tests', () => {
-    it('Can derive a key from password and count', () => {
-        // Arrange:
-        const password = 'TestTest';
-        const count = 20;
-        const expectedKey = '8cd87bc513857a7079d182a6e19b370e907107d97bd3f81a85bcebcc4b5bd3b5';
-
-        // Act:
-        const result = Crypto.derivePassSha(password, count);
-
-        // Assert:
-        expect(result.priv).equal(expectedKey);
-    });
-
-    it('Can decrypt a private key', () => {
-        // Arrange:
-        const expectedPrivateKey = '2a91e1d5c110a8d0105aad4683f962c2a56663a3cad46666b16d243174673d90';
-        const key = '8cd87bc513857a7079d182a6e19b370e907107d97bd3f81a85bcebcc4b5bd3b5';
-        const encrypted = 'c09ef3ed0cadd6ca6d3638b5dd854ac871a0afaec6b7fed791166b571a64d57f564376dc0180c851b0a1120b5896e6a0';
-        const iv = '0329814121c7a4bb11418084dbe40560';
-        const obj = {
-            ciphertext: CryptoJS.enc.Hex.parse(encrypted),
-            iv: convert.hexToUint8(iv),
-            key: convert.hexToUint8(key),
-        };
-
-        // Act:
-        const decrypted = Crypto.decrypt(obj);
-
-        // Assert:
-        expect(decrypted).equal(expectedPrivateKey);
-    });
-
     it('Can encode and decode message', () => {
         const sender = KeyPair.createKeyPairFromPrivateKeyString('E1C8521608F4896CA26A0C2DE739310EA4B06861D126CF4D6922064678A1969B');
         const recipient = KeyPair.createKeyPairFromPrivateKeyString('A22A4BBF126A2D7D7ECE823174DFD184C5DE0FDE4CB2075D30CFA409F7EF8908');
@@ -163,38 +127,6 @@ describe('crypto tests', () => {
         });
     });
 
-    it('Can encrypt and decrypt private key for mobile', () => {
-        // Arrange:
-        const privateKey = '2a91e1d5c110a8d0105aad4683f962c2a56663a3cad46666b16d243174673d90';
-        const password = 'TestTest';
-
-        // Act:
-        const result = Crypto.encryptPBKDF2(password, privateKey);
-        const encrypted = result.encrypted;
-        const salt = CryptoJS.enc.Hex.parse(result.salt);
-
-        const key = CryptoJS.PBKDF2(password, salt, {
-            keySize: 256 / 32,
-            iterations: 2000,
-        });
-
-        const iv = encrypted.substring(0, 32);
-        const encryptedPrvKey = encrypted.substring(32, 128);
-
-        const obj = {
-            ciphertext: CryptoJS.enc.Hex.parse(encryptedPrvKey),
-            iv: convert.hexToUint8(iv),
-            key: convert.hexToUint8(key.toString()),
-        };
-
-        const decrypted = Crypto.decrypt(obj);
-
-        // Assert:
-        expect(encrypted.length).equal(128);
-        expect(salt.toString().length).equal(32 * 2);
-        expect(decrypted).equal(privateKey);
-    });
-
     /**
      * @see https://github.com/nemtech/test-vectors/blob/master/4.test-cipher.json
      */
@@ -238,6 +170,48 @@ describe('crypto tests', () => {
                 // Assert:
                 expect(encoded.toUpperCase()).to.deep.equal(ivs[i].toUpperCase() + cipherText[i].toUpperCase());
             }
+        });
+    });
+
+    describe('AES Encryption', () => {
+        const cipher1 = Crypto.encrypt('a', 'password');
+        const cipher2 = Crypto.encrypt('a', 'password');
+        const knownPass = 'password';
+        const knownValue = '987654321';
+        const knownCipher = '9c3afe1b658403d7522886cda510a3714c389ce697128ab8d3877bbbb53c2ecdY+QgfP/KHmUl+wk7rPwmEQ==';
+
+        it('encrypt() should generate distinct values always', () => {
+            expect(cipher1 === cipher2).to.equal(false);
+        });
+
+        it('decrypt() should return value given valid ciphertext and password', () => {
+            const plain = Crypto.decrypt(knownCipher, knownPass);
+            expect(plain.length).to.equal(knownValue.length);
+            expect(plain).to.equal(knownValue);
+        });
+
+        it('decrypt() should return empty given invalid ciphertext', () => {
+            const cipher = '+QgfP/KHmUl+wk7rPwmEQ=='; // invalid ciphertext
+            const plain = Crypto.decrypt(cipher, knownPass);
+            expect(plain.length).to.equal(0);
+            expect(plain).to.equal('');
+        });
+
+        it('decrypt() should return empty given invalid password', () => {
+            const plain = Crypto.decrypt(knownCipher, 'password1'); // invalid password
+            expect(plain.length).to.equal(0);
+            expect(plain).to.equal('');
+        });
+
+        it('decrypt() should accept ciphertext given encrypt', () => {
+            const data = ['encrypt', 'this'];
+
+            data.map((word: string) => {
+                const pw = '1234567a';
+                const cipher = Crypto.encrypt(word, pw);
+                const plain = Crypto.decrypt(cipher, pw);
+                expect(plain).to.equal(word);
+            });
         });
     });
 });
