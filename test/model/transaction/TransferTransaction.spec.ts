@@ -35,6 +35,7 @@ import { Deadline } from '../../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
 
 describe('TransferTransaction', () => {
     let account: Account;
@@ -380,6 +381,25 @@ describe('TransferTransaction', () => {
 
         const signedTransaction = transferTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
+    });
+
+    it('Test set maxFee using multiplier to throw', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [NetworkCurrencyLocal.createAbsolute(1)],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(() => {
+            AggregateTransaction.createComplete(
+                Deadline.create(),
+                [transferTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            ).setMaxFee(2);
+        }).to.throw();
     });
 
     it('Test resolveAlias can resolve', () => {

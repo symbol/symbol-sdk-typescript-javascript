@@ -394,12 +394,31 @@ export class AggregateTransaction extends Transaction {
      * @internal
      * @returns {AggregateTransaction}
      */
-    resolveAliases(statement: Statement): AggregateTransaction {
+    public resolveAliases(statement: Statement): AggregateTransaction {
         const transactionInfo = this.checkTransactionHeightAndIndex();
         return DtoMapping.assign(this, {
             innerTransactions: this.innerTransactions
                 .map((tx) => tx.resolveAliases(statement, transactionInfo.index))
                 .sort((a, b) => a.transactionInfo!.index - b.transactionInfo!.index),
+        });
+    }
+
+    /**
+     * Set transaction maxFee using fee multiplier for **ONLY AGGREGATE TRANSACTIONS**
+     * @param feeMultiplier The fee multiplier
+     * @param requiredCosignatures Required number of cosignatures
+     * @returns {AggregateTransaction}
+     */
+    public setMaxFeeForAggregate(feeMultiplier: number, requiredCosignatures: number): AggregateTransaction {
+        if (this.type !== TransactionType.AGGREGATE_BONDED && this.type !== TransactionType.AGGREGATE_COMPLETE) {
+            throw new Error('setMaxFeeForAggregate can only be used for aggregate transactions.');
+        }
+        // Check if current cosignature count is greater than requiredCosignatures.
+        const calculatedCosignatures = requiredCosignatures > this.cosignatures.length ? requiredCosignatures : this.cosignatures.length;
+        // Remove current cosignature length and use the calculated one.
+        const calculatedSize = this.size - this.cosignatures.length * 96 + calculatedCosignatures * 96;
+        return DtoMapping.assign(this, {
+            maxFee: UInt64.fromUint(calculatedSize * feeMultiplier),
         });
     }
 }
