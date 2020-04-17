@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2020 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,19 +21,19 @@ import { Password } from '../../../src/model/wallet/Password';
 import { SimpleWallet } from '../../../src/model/wallet/SimpleWallet';
 
 describe('SimpleWallet', () => {
-    it('should createComplete a new simple wallet', () => {
+    it('should create a new simple wallet', () => {
         const simpleWallet = SimpleWallet.create('wallet-name', new Password('password'), NetworkType.MIJIN_TEST);
         expect(simpleWallet.name).to.be.equal('wallet-name');
-        expect(simpleWallet.network).to.be.equal(NetworkType.MIJIN_TEST);
-        expect(simpleWallet.schema).to.be.equal('simple_v1');
+        expect(simpleWallet.networkType).to.be.equal(NetworkType.MIJIN_TEST);
+        expect(simpleWallet.schema).to.be.equal('simple_v2');
     });
 
-    it('should createComplete a new wallet with privateKey', () => {
+    it('should create a new wallet with privateKey', () => {
         const privateKey = '5149a02ca2b2610138376717daaff8477f1639796aa108b7eee83e99e585b250';
         const account = Account.createFromPrivateKey(privateKey, NetworkType.MIJIN_TEST);
         const simpleWallet = SimpleWallet.createFromPrivateKey('wallet-name', new Password('password'), privateKey, NetworkType.MIJIN_TEST);
         expect(simpleWallet.name).to.be.equal('wallet-name');
-        expect(simpleWallet.network).to.be.equal(NetworkType.MIJIN_TEST);
+        expect(simpleWallet.networkType).to.be.equal(NetworkType.MIJIN_TEST);
         expect(simpleWallet.address.plain()).to.be.equal(account.address.plain());
     });
 

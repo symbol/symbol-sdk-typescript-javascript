@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2020 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { LocalDateTime } from 'js-joda';
 import { Account } from '../account/Account';
 import { Address } from '../account/Address';
 import { NetworkType } from '../network/NetworkType';
@@ -38,17 +37,9 @@ export abstract class Wallet {
          */
         public readonly name: string,
         /**
-         * The wallet's network
-         */
-        public readonly network: NetworkType,
-        /**
          * The wallet's address
          */
         public readonly address: Address,
-        /**
-         * The wallet's creation date
-         */
-        public readonly creationDate: LocalDateTime,
         /**
          * Wallet schema number
          */
@@ -61,4 +52,12 @@ export abstract class Wallet {
      * @returns {Account}
      */
     public abstract open(password: Password): Account;
+
+    /**
+     * The wallet's network type
+     * @type {NetworkType}
+     */
+    public get networkType(): NetworkType {
+        return this.address.networkType;
+    }
 }
