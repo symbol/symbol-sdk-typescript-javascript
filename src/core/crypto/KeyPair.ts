@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NEM
+ * Copyright 2020 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,16 +23,18 @@ export class KeyPair {
      * @param {string} privateKeyString A hex encoded private key string.
      * @returns {module:crypto/keyPair~KeyPair} The key pair.
      */
-    public static createKeyPairFromPrivateKeyString(privateKeyString: string): any {
+    public static createKeyPairFromPrivateKeyString(
+        privateKeyString: string,
+    ): {
+        privateKey: Uint8Array;
+        publicKey: Uint8Array;
+    } {
         const privateKey = convert.hexToUint8(privateKeyString);
         if (Utility.Key_Size !== privateKey.length) {
             throw Error(`private key has unexpected size: ${privateKey.length}`);
         }
-        const keyPair = nacl.sign.keyPair.fromSeed(privateKey);
-        return {
-            privateKey,
-            publicKey: keyPair.publicKey,
-        };
+        const { publicKey } = nacl.sign.keyPair.fromSeed(privateKey);
+        return { privateKey, publicKey };
     }
 
     /**

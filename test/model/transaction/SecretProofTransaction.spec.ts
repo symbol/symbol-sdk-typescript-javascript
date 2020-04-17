@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2020 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import * as CryptoJS from 'crypto-js';
 import { sha3_256 } from 'js-sha3';
 import { Convert, Convert as convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
@@ -34,6 +33,9 @@ import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/builders/EmbeddedTransactionBuilder';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const CryptoJS = require('crypto-js');
 
 describe('SecretProofTransaction', () => {
     let account: Account;
