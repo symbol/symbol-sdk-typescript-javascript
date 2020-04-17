@@ -31,7 +31,7 @@ export class RawUInt64 {
      * @returns {number|module:coders/uint64~uint64}
      * A numeric if the uint64 is no greater than Number.MAX_SAFE_INTEGER or the original uint64 value otherwise.
      */
-    public static compact = (uint64): any => {
+    public static compact = (uint64: number[]): number | number[] => {
         const low = uint64[0];
         const high = uint64[1];
 
