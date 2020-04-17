@@ -69,13 +69,6 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Simple wallet model generates a private key from a PRNG</p>
-					</div>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -103,11 +96,15 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_model_wallet_simplewallet_.simplewallet.html#address" class="tsd-kind-icon">address</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_model_wallet_simplewallet_.simplewallet.html#creationdate" class="tsd-kind-icon">creation<wbr>Date</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_wallet_simplewallet_.simplewallet.html#encryptedprivatekey" class="tsd-kind-icon">encrypted<wbr>Private<wbr>Key</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_model_wallet_simplewallet_.simplewallet.html#name" class="tsd-kind-icon">name</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_model_wallet_simplewallet_.simplewallet.html#network" class="tsd-kind-icon">network</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_model_wallet_simplewallet_.simplewallet.html#schema" class="tsd-kind-icon">schema</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-inherited">
+							<h3>Accessors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_model_wallet_simplewallet_.simplewallet.html#networktype" class="tsd-kind-icon">network<wbr>Type</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -129,17 +126,20 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Simple<wbr>Wallet<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, network<span class="tsd-signature-symbol">: </span><a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a>, address<span class="tsd-signature-symbol">: </span><a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a>, creationDate<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">LocalDateTime</span>, encryptedPrivateKey<span class="tsd-signature-symbol">: </span><a href="_model_wallet_encryptedprivatekey_.encryptedprivatekey.html" class="tsd-signature-type">EncryptedPrivateKey</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_wallet_simplewallet_.simplewallet.html" class="tsd-signature-type">SimpleWallet</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Simple<wbr>Wallet<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, address<span class="tsd-signature-symbol">: </span><a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a>, encryptedPrivateKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_wallet_simplewallet_.simplewallet.html" class="tsd-signature-type">SimpleWallet</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides Wallet.__constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/model/wallet/SimpleWallet.ts#L31">model/wallet/SimpleWallet.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/c1aab78/src/model/wallet/SimpleWallet.ts#L26">model/wallet/SimpleWallet.ts:26</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates an instance of SimpleWallet.</p>
+								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -147,16 +147,10 @@
 									<h5>name: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5>network: <a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a></h5>
-								</li>
-								<li>
 									<h5>address: <a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a></h5>
 								</li>
 								<li>
-									<h5>creationDate: <span class="tsd-signature-type">LocalDateTime</span></h5>
-								</li>
-								<li>
-									<h5>encryptedPrivateKey: <a href="_model_wallet_encryptedprivatekey_.encryptedprivatekey.html" class="tsd-signature-type">EncryptedPrivateKey</a></h5>
+									<h5>encryptedPrivateKey: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
 										</div>
@@ -177,7 +171,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_model_wallet_wallet_.wallet.html">Wallet</a>.<a href="_model_wallet_wallet_.wallet.html#address">address</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/model/wallet/Wallet.ts#L47">model/wallet/Wallet.ts:47</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/c1aab78/src/model/wallet/Wallet.ts#L42">model/wallet/Wallet.ts:42</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -186,29 +180,13 @@
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-					<a name="creationdate" class="tsd-anchor"></a>
-					<h3>creation<wbr>Date</h3>
-					<div class="tsd-signature tsd-kind-icon">creation<wbr>Date<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">LocalDateTime</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="_model_wallet_wallet_.wallet.html">Wallet</a>.<a href="_model_wallet_wallet_.wallet.html#creationdate">creationDate</a></p>
-						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/model/wallet/Wallet.ts#L51">model/wallet/Wallet.ts:51</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The wallet&#39;s creation date</p>
-						</div>
-					</div>
-				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="encryptedprivatekey" class="tsd-anchor"></a>
 					<h3>encrypted<wbr>Private<wbr>Key</h3>
-					<div class="tsd-signature tsd-kind-icon">encrypted<wbr>Private<wbr>Key<span class="tsd-signature-symbol">:</span> <a href="_model_wallet_encryptedprivatekey_.encryptedprivatekey.html" class="tsd-signature-type">EncryptedPrivateKey</a></div>
+					<div class="tsd-signature tsd-kind-icon">encrypted<wbr>Private<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/model/wallet/SimpleWallet.ts#L47">model/wallet/SimpleWallet.ts:47</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/c1aab78/src/model/wallet/SimpleWallet.ts#L33">model/wallet/SimpleWallet.ts:33</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -223,28 +201,12 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_model_wallet_wallet_.wallet.html">Wallet</a>.<a href="_model_wallet_wallet_.wallet.html#name">name</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/model/wallet/Wallet.ts#L39">model/wallet/Wallet.ts:39</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/c1aab78/src/model/wallet/Wallet.ts#L38">model/wallet/Wallet.ts:38</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>The wallet&#39;s name</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-					<a name="network" class="tsd-anchor"></a>
-					<h3>network</h3>
-					<div class="tsd-signature tsd-kind-icon">network<span class="tsd-signature-symbol">:</span> <a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a></div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="_model_wallet_wallet_.wallet.html">Wallet</a>.<a href="_model_wallet_wallet_.wallet.html#network">network</a></p>
-						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/model/wallet/Wallet.ts#L43">model/wallet/Wallet.ts:43</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The wallet&#39;s network</p>
 						</div>
 					</div>
 				</section>
@@ -255,13 +217,39 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_model_wallet_wallet_.wallet.html">Wallet</a>.<a href="_model_wallet_wallet_.wallet.html#schema">schema</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/model/wallet/Wallet.ts#L55">model/wallet/Wallet.ts:55</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/c1aab78/src/model/wallet/Wallet.ts#L46">model/wallet/Wallet.ts:46</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 						</div>
 					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+					<a name="networktype" class="tsd-anchor"></a>
+					<h3>network<wbr>Type</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> networkType<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_model_wallet_wallet_.wallet.html">Wallet</a>.<a href="_model_wallet_wallet_.wallet.html#networktype">networkType</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/c1aab78/src/model/wallet/Wallet.ts#L60">model/wallet/Wallet.ts:60</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The wallet&#39;s network type</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -277,7 +265,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_model_wallet_wallet_.wallet.html">Wallet</a>.<a href="_model_wallet_wallet_.wallet.html#open">open</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/model/wallet/SimpleWallet.ts#L131">model/wallet/SimpleWallet.ts:131</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/c1aab78/src/model/wallet/SimpleWallet.ts#L110">model/wallet/SimpleWallet.ts:110</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -308,7 +296,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/model/wallet/SimpleWallet.ts#L122">model/wallet/SimpleWallet.ts:122</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/c1aab78/src/model/wallet/SimpleWallet.ts#L101">model/wallet/SimpleWallet.ts:101</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -330,7 +318,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/model/wallet/SimpleWallet.ts#L59">model/wallet/SimpleWallet.ts:59</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/c1aab78/src/model/wallet/SimpleWallet.ts#L44">model/wallet/SimpleWallet.ts:44</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -373,7 +361,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/model/wallet/SimpleWallet.ts#L108">model/wallet/SimpleWallet.ts:108</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/c1aab78/src/model/wallet/SimpleWallet.ts#L89">model/wallet/SimpleWallet.ts:89</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -404,7 +392,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/model/wallet/SimpleWallet.ts#L88">model/wallet/SimpleWallet.ts:88</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/c1aab78/src/model/wallet/SimpleWallet.ts#L71">model/wallet/SimpleWallet.ts:71</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -469,9 +457,6 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 								<a href="_model_wallet_simplewallet_.simplewallet.html#address" class="tsd-kind-icon">address</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="_model_wallet_simplewallet_.simplewallet.html#creationdate" class="tsd-kind-icon">creation<wbr>Date</a>
-							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_model_wallet_simplewallet_.simplewallet.html#encryptedprivatekey" class="tsd-kind-icon">encrypted<wbr>Private<wbr>Key</a>
 							</li>
@@ -479,10 +464,10 @@
 								<a href="_model_wallet_simplewallet_.simplewallet.html#name" class="tsd-kind-icon">name</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="_model_wallet_simplewallet_.simplewallet.html#network" class="tsd-kind-icon">network</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 								<a href="_model_wallet_simplewallet_.simplewallet.html#schema" class="tsd-kind-icon">schema</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+								<a href="_model_wallet_simplewallet_.simplewallet.html#networktype" class="tsd-kind-icon">network<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 								<a href="_model_wallet_simplewallet_.simplewallet.html#open" class="tsd-kind-icon">open</a>

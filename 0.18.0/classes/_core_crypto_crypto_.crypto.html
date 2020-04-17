@@ -88,14 +88,9 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_core_crypto_crypto_.crypto.html#_encode" class="tsd-kind-icon">_encode</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_core_crypto_crypto_.crypto.html#decode" class="tsd-kind-icon">decode</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_core_crypto_crypto_.crypto.html#decrypt" class="tsd-kind-icon">decrypt</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_core_crypto_crypto_.crypto.html#derivepasssha" class="tsd-kind-icon">derive<wbr>Pass<wbr>Sha</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_core_crypto_crypto_.crypto.html#encode" class="tsd-kind-icon">encode</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_core_crypto_crypto_.crypto.html#encodeprivatekey" class="tsd-kind-icon">encode<wbr>Private<wbr>Key</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_core_crypto_crypto_.crypto.html#encrypt" class="tsd-kind-icon">encrypt</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_core_crypto_crypto_.crypto.html#passwordtoprivatekey" class="tsd-kind-icon">password<wbr>ToPrivate<wbr>Key</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_core_crypto_crypto_.crypto.html#randombytes" class="tsd-kind-icon">random<wbr>Bytes</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_core_crypto_crypto_.crypto.html#randomkey" class="tsd-kind-icon">random<wbr>Key</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_core_crypto_crypto_.crypto.html#tomobilekey" class="tsd-kind-icon">to<wbr>Mobile<wbr>Key</a></li>
 							</ul>
 						</section>
 					</div>
@@ -113,7 +108,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/core/crypto/Crypto.ts#L290">core/crypto/Crypto.ts:290</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/c1aab78/src/core/crypto/Crypto.ts#L138">core/crypto/Crypto.ts:138</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -173,7 +168,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/core/crypto/Crypto.ts#L242">core/crypto/Crypto.ts:242</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/c1aab78/src/core/crypto/Crypto.ts#L90">core/crypto/Crypto.ts:90</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -233,7 +228,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/core/crypto/Crypto.ts#L318">core/crypto/Crypto.ts:318</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/c1aab78/src/core/crypto/Crypto.ts#L166">core/crypto/Crypto.ts:166</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -279,13 +274,13 @@
 					<a name="decrypt" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> decrypt</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">decrypt<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+						<li class="tsd-signature tsd-kind-icon">decrypt<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, password<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/core/crypto/Crypto.ts#L119">core/crypto/Crypto.ts:119</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/c1aab78/src/core/crypto/Crypto.ts#L59">core/crypto/Crypto.ts:59</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -296,62 +291,15 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>data: <span class="tsd-signature-type">any</span></h5>
+									<h5>data: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>password: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>An encrypted data object</p>
-										</div>
 									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
-							<ul>
-								<li>The decrypted hex string</li>
-							</ul>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<a name="derivepasssha" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> derive<wbr>Pass<wbr>Sha</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">derive<wbr>Pass<wbr>Sha<span class="tsd-signature-symbol">(</span>password<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, count<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/core/crypto/Crypto.ts#L63">core/crypto/Crypto.ts:63</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Derive a private key from a password using count iterations of SHA3-256</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>password: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>A wallet password</p>
-										</div>
-									</div>
-								</li>
-								<li>
-									<h5>count: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>A number of iterations above 0</p>
-										</div>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
-							<ul>
-								<li>The derived private key</li>
-							</ul>
 						</li>
 					</ul>
 				</section>
@@ -365,7 +313,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/core/crypto/Crypto.ts#L269">core/crypto/Crypto.ts:269</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/c1aab78/src/core/crypto/Crypto.ts#L117">core/crypto/Crypto.ts:117</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -416,137 +364,35 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<a name="encodeprivatekey" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> encode<wbr>Private<wbr>Key</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">encode<wbr>Private<wbr>Key<span class="tsd-signature-symbol">(</span>privateKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, password<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/core/crypto/Crypto.ts#L217">core/crypto/Crypto.ts:217</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Encode a private key using a password</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>privateKey: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>An hex private key</p>
-										</div>
-									</div>
-								</li>
-								<li>
-									<h5>password: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>A password</p>
-										</div>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
-							<ul>
-								<li>The encoded data</li>
-							</ul>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
 					<a name="encrypt" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> encrypt</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">encrypt<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+						<li class="tsd-signature tsd-kind-icon">encrypt<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, password<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/core/crypto/Crypto.ts#L92">core/crypto/Crypto.ts:92</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/c1aab78/src/core/crypto/Crypto.ts#L31">core/crypto/Crypto.ts:31</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Encrypt hex data using a key</p>
+									<p>Encrypt data</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>data: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>An hex string</p>
-										</div>
-									</div>
 								</li>
 								<li>
-									<h5>key: <span class="tsd-signature-type">Uint8Array</span></h5>
+									<h5>password: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>An Uint8Array key</p>
-										</div>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
-							<ul>
-								<li>The encrypted data</li>
-							</ul>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<a name="passwordtoprivatekey" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> password<wbr>ToPrivate<wbr>Key</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">password<wbr>ToPrivate<wbr>Key<span class="tsd-signature-symbol">(</span>common<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, walletAccount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, algo<span class="tsd-signature-symbol">: </span><a href="../enums/_model_wallet_walletalgorithm_.walletalgorithm.html" class="tsd-signature-type">WalletAlgorithm</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/core/crypto/Crypto.ts#L142">core/crypto/Crypto.ts:142</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Reveal the private key of an account or derive it from the wallet password</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>common: <span class="tsd-signature-type">any</span></h5>
-								</li>
-								<li>
-									<h5>walletAccount: <span class="tsd-signature-type">any</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>A wallet account object</p>
-										</div>
-									</div>
-								</li>
-								<li>
-									<h5>algo: <a href="../enums/_model_wallet_walletalgorithm_.walletalgorithm.html" class="tsd-signature-type">WalletAlgorithm</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>A wallet algorithm</p>
-										</div>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
-							<ul>
-								<li>The account private key in and object or false</li>
-							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -560,7 +406,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/core/crypto/Crypto.ts#L337">core/crypto/Crypto.ts:337</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/c1aab78/src/core/crypto/Crypto.ts#L185">core/crypto/Crypto.ts:185</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -580,75 +426,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<a name="randomkey" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> random<wbr>Key</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">random<wbr>Key<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/core/crypto/Crypto.ts#L205">core/crypto/Crypto.ts:205</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Generate a random key</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Uint8Array</span></h4>
-							<ul>
-								<li>A random key</li>
-							</ul>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<a name="tomobilekey" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> to<wbr>Mobile<wbr>Key</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">to<wbr>Mobile<wbr>Key<span class="tsd-signature-symbol">(</span>password<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, privateKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a03e611/src/core/crypto/Crypto.ts#L32">core/crypto/Crypto.ts:32</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Encrypt a private key for mobile apps (AES_PBKF2)</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>password: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>A wallet password</p>
-										</div>
-									</div>
-								</li>
-								<li>
-									<h5>privateKey: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>An account private key</p>
-										</div>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
-							<ul>
-								<li>The encrypted data</li>
-							</ul>
 						</li>
 					</ul>
 				</section>
@@ -685,28 +462,13 @@
 								<a href="_core_crypto_crypto_.crypto.html#decrypt" class="tsd-kind-icon">decrypt</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-								<a href="_core_crypto_crypto_.crypto.html#derivepasssha" class="tsd-kind-icon">derive<wbr>Pass<wbr>Sha</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="_core_crypto_crypto_.crypto.html#encode" class="tsd-kind-icon">encode</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-								<a href="_core_crypto_crypto_.crypto.html#encodeprivatekey" class="tsd-kind-icon">encode<wbr>Private<wbr>Key</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="_core_crypto_crypto_.crypto.html#encrypt" class="tsd-kind-icon">encrypt</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-								<a href="_core_crypto_crypto_.crypto.html#passwordtoprivatekey" class="tsd-kind-icon">password<wbr>ToPrivate<wbr>Key</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="_core_crypto_crypto_.crypto.html#randombytes" class="tsd-kind-icon">random<wbr>Bytes</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-								<a href="_core_crypto_crypto_.crypto.html#randomkey" class="tsd-kind-icon">random<wbr>Key</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-								<a href="_core_crypto_crypto_.crypto.html#tomobilekey" class="tsd-kind-icon">to<wbr>Mobile<wbr>Key</a>
 							</li>
 						</ul>
 					</li>
