@@ -66,6 +66,12 @@ describe('Uint64', () => {
         expect(uint64Compact).to.be.equal(51110867862);
     });
 
+    it('should compact UInt64 number', () => {
+        expect(() => {
+            new UInt64([3866227606, 0x00200000 + 1]).compact();
+        }).to.throw(Error, 'Compacted value is greater than Number.Max_Value.');
+    });
+
     it('should fromUint throw exception with negative uint value', () => {
         expect(() => {
             UInt64.fromUint(-1);
