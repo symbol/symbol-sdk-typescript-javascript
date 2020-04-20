@@ -3,6 +3,29 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.18.0] - 20-Apr-2020
+
+**Milestone**: Fushicho.4(RC3 0.9.3.2)
+ Package  | Version  | Link
+---|---|---
+SDK Core| v0.18.0 | https://www.npmjs.com/package/symbol-sdk
+Catbuffer | v0.0.11 | https://www.npmjs.com/package/catbuffer-typescript
+Client Library | v0.8.9  | https://www.npmjs.com/package/symbol-openapi-typescript-node-client
+
+- **[BREAKING CHANGE]** Stopped NodeJS v8 and v9 support. From this version (`v0.18.0`) onwards, Symbol-SDK will target on Node v10+.
+- **[BREAKING CHANGE]** Removed `Keccac_256` from `LockHashAlgorithm` (enum index changed).
+- **[BREAKING CHANGE]** Updated enum name `HashType` to `LockHashAlgorithm`.
+- **[BREAKING CHANGE]** Updated property name `hashType` to `hashAlgorithm` in `SecretLockTransaction` and `SecretProofTransaction`.
+- **[BREAKING CHANGE]** Removed redundant argument `NetworkType` from `Transaction.createTransactionHash()` and `Address.isValidRawAddress()`.
+- **[BREAKING CHANGE]** Added `setMaxFeeForAggregate()` for `AggregateTransaction`. `Transaction.setMaxFee()` can only be used by standalone transaction objects.
+- **[BREAKING CHANGE]** Refactored `SimpleWallet` model and wallet private key `Encryption / Decryption` methods to patch potential security risk.
+- Added `AccountService` to resolve mosaic alias and return namespace name.
+- Migrated from `TSLint` to `ESLint`. Added `Prettier` support.
+- Removed metadata value size validation (1024 bytes).
+- Fixed `PublicAccount.verifySignature` bug when verify string in hexadecimal format.
+- Added check on `UInt64.compact()` which throw exception on over flow.
+- Added `Network currency resolver` for e2e tests.
+
 ## [0.17.4] - 07-Apr-2020
 
 **Milestone**: Fushicho.4(RC3 0.9.3.2)
@@ -437,6 +460,7 @@ Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/nem2-sdk-opena
 
 - Initial code release.
 
+[0.18.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.17.4...v0.18.0
 [0.17.4]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.17.3...v0.17.4
 [0.17.3]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.17.2...v0.17.3
 [0.17.2]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.17.1...v0.17.2
