@@ -27,6 +27,7 @@ export * from './account/MultisigAccountGraphInfo';
 export * from './account/MultisigAccountInfo';
 export * from './account/PublicAccount';
 export * from './account/AccountNames';
+export * from './account/AccountInfoResolvedMosaic';
 
 // Blockchain
 export * from './blockchain/BlockchainScore';
@@ -51,6 +52,7 @@ export * from './mosaic/NetworkCurrencyLocal';
 export * from './mosaic/NetworkCurrencyPublic';
 export * from './mosaic/NetworkHarvestLocal';
 export * from './mosaic/MosaicNames';
+export * from './mosaic/ResolvedMosaic';
 
 // Mosaic
 export * from './metadata/Metadata';
@@ -69,6 +71,7 @@ export * from './namespace/NamespaceName';
 export * from './namespace/NamespaceRegistrationType';
 export * from './namespace/AliasAction';
 export * from './namespace/EmptyAlias';
+export * from './namespace/NamespaceInfoWithName';
 
 // Network
 
