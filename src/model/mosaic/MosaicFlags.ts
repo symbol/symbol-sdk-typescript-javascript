@@ -18,7 +18,6 @@
  * Mosaic flags model
  */
 export class MosaicFlags {
-
     /**
      * The creator can choose between a definition that allows a mosaic supply change at a later point or an immutable supply.
      * Allowed values for the property are "true" and "false". The default value is "false".
@@ -60,10 +59,7 @@ export class MosaicFlags {
      * @param transferable
      * @param restrictable
      */
-    public static create(
-        supplyMutable: boolean,
-        transferable: boolean,
-        restrictable: boolean = false ): MosaicFlags {
+    public static create(supplyMutable: boolean, transferable: boolean, restrictable = false): MosaicFlags {
         const flags = (supplyMutable ? 1 : 0) + (transferable ? 2 : 0) + (restrictable ? 4 : 0);
         return new MosaicFlags(flags);
     }
@@ -79,7 +75,7 @@ export class MosaicFlags {
     /**
      * Create DTO object
      */
-    toDTO() {
+    toDTO(): any {
         return {
             flags: this.getValue(),
         };

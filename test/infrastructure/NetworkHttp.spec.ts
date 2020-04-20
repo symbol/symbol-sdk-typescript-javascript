@@ -15,28 +15,30 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
-import { NetworkRoutesApi,
-         NetworkTypeDTO,
-         NodeInfoDTO,
-         NodeRoutesApi,
-         TransactionFeesDTO,
-         RentalFeesDTO,
-         NetworkConfigurationDTO,
-         NetworkPropertiesDTO,
-         NodeIdentityEqualityStrategy,
-         ChainPropertiesDTO,
-         PluginsPropertiesDTO,
-         AccountLinkNetworkPropertiesDTO,
-         AggregateNetworkPropertiesDTO,
-         HashLockNetworkPropertiesDTO,
-         SecretLockNetworkPropertiesDTO,
-         MetadataNetworkPropertiesDTO,
-         MosaicNetworkPropertiesDTO,
-         MultisigNetworkPropertiesDTO,
-         NamespaceNetworkPropertiesDTO,
-         AccountRestrictionNetworkPropertiesDTO,
-         MosaicRestrictionNetworkPropertiesDTO,
-         TransferNetworkPropertiesDTO } from 'symbol-openapi-typescript-node-client';
+import {
+    NetworkRoutesApi,
+    NetworkTypeDTO,
+    NodeInfoDTO,
+    NodeRoutesApi,
+    TransactionFeesDTO,
+    RentalFeesDTO,
+    NetworkConfigurationDTO,
+    NetworkPropertiesDTO,
+    NodeIdentityEqualityStrategy,
+    ChainPropertiesDTO,
+    PluginsPropertiesDTO,
+    AccountLinkNetworkPropertiesDTO,
+    AggregateNetworkPropertiesDTO,
+    HashLockNetworkPropertiesDTO,
+    SecretLockNetworkPropertiesDTO,
+    MetadataNetworkPropertiesDTO,
+    MosaicNetworkPropertiesDTO,
+    MultisigNetworkPropertiesDTO,
+    NamespaceNetworkPropertiesDTO,
+    AccountRestrictionNetworkPropertiesDTO,
+    MosaicRestrictionNetworkPropertiesDTO,
+    TransferNetworkPropertiesDTO,
+} from 'symbol-openapi-typescript-node-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { NetworkHttp } from '../../src/infrastructure/NetworkHttp';
@@ -51,7 +53,7 @@ describe('NetworkHttp', () => {
     const response: http.IncomingMessage = mock();
     const nodeRoutesApi: NodeRoutesApi = mock();
     const networkRoutesApi: NetworkRoutesApi = mock();
-    const nodeHttp = DtoMapping.assign(new NodeHttp(url), {nodeRoutesApi: instance(nodeRoutesApi)});
+    const nodeHttp = DtoMapping.assign(new NodeHttp(url), { nodeRoutesApi: instance(nodeRoutesApi) });
     const networkRepository = DtoMapping.assign(new NetworkHttp(url), {
         networkRoutesApi: instance(networkRoutesApi),
         nodeHttp,
@@ -64,14 +66,13 @@ describe('NetworkHttp', () => {
     });
 
     it('getTransactionFees', async () => {
-
         const body = new TransactionFeesDTO();
         body.averageFeeMultiplier = 1;
         body.highestFeeMultiplier = 2;
         body.lowestFeeMultiplier = 3;
         body.medianFeeMultiplier = 4;
 
-        when(networkRoutesApi.getTransactionFees()).thenReturn(Promise.resolve({response, body}));
+        when(networkRoutesApi.getTransactionFees()).thenReturn(Promise.resolve({ response, body }));
 
         const networkFees = await networkRepository.getTransactionFees().toPromise();
         expect(networkFees).to.be.not.null;
@@ -82,13 +83,12 @@ describe('NetworkHttp', () => {
     });
 
     it('getRentalFees', async () => {
-
         const body = new RentalFeesDTO();
         body.effectiveChildNamespaceRentalFee = '1';
         body.effectiveMosaicRentalFee = '2';
         body.effectiveRootNamespaceRentalFeePerBlock = '3';
 
-        when(networkRoutesApi.getRentalFees()).thenReturn(Promise.resolve({response, body}));
+        when(networkRoutesApi.getRentalFees()).thenReturn(Promise.resolve({ response, body }));
 
         const rentalFees = await networkRepository.getRentalFees().toPromise();
         expect(rentalFees).to.be.not.null;
@@ -98,23 +98,21 @@ describe('NetworkHttp', () => {
     });
 
     it('getNetworkType', async () => {
-
         const body = new NodeInfoDTO();
         body.networkIdentifier = NetworkType.MIJIN_TEST;
 
-        when(nodeRoutesApi.getNodeInfo()).thenReturn(Promise.resolve({response, body}));
+        when(nodeRoutesApi.getNodeInfo()).thenReturn(Promise.resolve({ response, body }));
 
         const networkType = await networkRepository.getNetworkType().toPromise();
         expect(networkType).to.be.equals(NetworkType.MIJIN_TEST);
     });
 
     it('getNetworkName', async () => {
-
         const body = new NetworkTypeDTO();
         body.name = 'Some Name';
         body.description = 'Some Description';
 
-        when(networkRoutesApi.getNetworkType()).thenReturn(Promise.resolve({response, body}));
+        when(networkRoutesApi.getNetworkType()).thenReturn(Promise.resolve({ response, body }));
 
         const networkName = await networkRepository.getNetworkName().toPromise();
         expect(networkName.description).to.be.equals(body.description);
@@ -122,7 +120,6 @@ describe('NetworkHttp', () => {
     });
 
     it('getNetworkProperties', async () => {
-
         const body = new NetworkConfigurationDTO();
 
         const network = new NetworkPropertiesDTO();
@@ -215,7 +212,7 @@ describe('NetworkHttp', () => {
         body.network = network;
         body.plugins = plugin;
 
-        when(networkRoutesApi.getNetworkProperties()).thenReturn(Promise.resolve({response, body}));
+        when(networkRoutesApi.getNetworkProperties()).thenReturn(Promise.resolve({ response, body }));
 
         const networkProperties = await networkRepository.getNetworkProperties().toPromise();
         deepEqual(networkProperties.network, body.network);
@@ -225,7 +222,7 @@ describe('NetworkHttp', () => {
 
     it('getNetworkProperties - using rest json payload', async () => {
         const body = testResources.getDummyNetworkProperties();
-        when(networkRoutesApi.getNetworkProperties()).thenReturn(Promise.resolve({response, body}));
+        when(networkRoutesApi.getNetworkProperties()).thenReturn(Promise.resolve({ response, body }));
         const networkProperties = await networkRepository.getNetworkProperties().toPromise();
         deepEqual(networkProperties.network, body.network);
         deepEqual(networkProperties.chain, body.chain);

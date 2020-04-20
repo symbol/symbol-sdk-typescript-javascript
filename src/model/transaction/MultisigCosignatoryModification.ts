@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {PublicAccount} from '../account/PublicAccount';
-import {CosignatoryModificationAction} from './CosignatoryModificationAction';
+import { PublicAccount } from '../account/PublicAccount';
+import { CosignatoryModificationAction } from './CosignatoryModificationAction';
 
 /**
  * Multisig cosignatory modifications are part of the NEM's multisig account system.
@@ -24,28 +24,26 @@ import {CosignatoryModificationAction} from './CosignatoryModificationAction';
  *
  */
 export class MultisigCosignatoryModification {
-
     /**
      * Constructor
      * @param modificationAction
      * @param cosignatoryPublicAccount
      */
     constructor(
-                /**
-                 * Multi-signature modification type.
-                 */
-                public readonly modificationAction: CosignatoryModificationAction,
-                /**
-                 * Cosignatory public account.
-                 */
-                public readonly cosignatoryPublicAccount: PublicAccount) {
-
-    }
+        /**
+         * Multi-signature modification type.
+         */
+        public readonly modificationAction: CosignatoryModificationAction,
+        /**
+         * Cosignatory public account.
+         */
+        public readonly cosignatoryPublicAccount: PublicAccount,
+    ) {}
 
     /**
      * @internal
      */
-    toDTO() {
+    toDTO(): any {
         return {
             cosignatoryPublicKey: this.cosignatoryPublicAccount.publicKey,
             modificationAction: this.modificationAction,

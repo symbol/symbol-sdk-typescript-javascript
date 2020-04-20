@@ -15,13 +15,12 @@
  */
 
 import { NamespaceName } from '../namespace/NamespaceName';
-import {Address} from './Address';
+import { Address } from './Address';
 
 /**
  * Account with linked names
  */
 export class AccountNames {
-
     /**
      *
      */
@@ -33,7 +32,6 @@ export class AccountNames {
         /**
          * Address linked namespace Ids
          */
-        public readonly names: NamespaceName[]) {
-
-    }
+        public readonly names: NamespaceName[],
+    ) {}
 }

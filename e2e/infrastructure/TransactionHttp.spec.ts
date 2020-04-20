@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2020 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,21 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import * as CryptoJS from 'crypto-js';
 import { ChronoUnit } from 'js-joda';
-import { keccak_256, sha3_256 } from 'js-sha3';
+import { sha3_256 } from 'js-sha3';
 import { Crypto } from '../../src/core/crypto';
 import { Convert, Convert as convert } from '../../src/core/format';
 import { TransactionMapping } from '../../src/core/utils/TransactionMapping';
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
-import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
-import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
-import { Address } from '../../src/model/account/Address';
-import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
 import { MosaicSupplyChangeAction } from '../../src/model/mosaic/MosaicSupplyChangeAction';
-import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../src/model/network/NetworkType';
@@ -54,7 +48,7 @@ import { CosignatureSignedTransaction } from '../../src/model/transaction/Cosign
 import { CosignatureTransaction } from '../../src/model/transaction/CosignatureTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { HashLockTransaction } from '../../src/model/transaction/HashLockTransaction';
-import { HashType } from '../../src/model/transaction/HashType';
+import { LockHashAlgorithm } from '../../src/model/transaction/LockHashAlgorithm';
 import { LinkAction } from '../../src/model/transaction/LinkAction';
 import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
 import { MosaicAddressRestrictionTransaction } from '../../src/model/transaction/MosaicAddressRestrictionTransaction';
@@ -71,6 +65,10 @@ import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
+import { LockHashUtils } from '../../src/core/utils/LockHashUtils';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const CryptoJS = require('crypto-js');
 
 describe('TransactionHttp', () => {
     let transactionHash;
@@ -82,14 +80,7 @@ describe('TransactionHttp', () => {
     let account3: Account;
     let multisigAccount: Account;
     let cosignAccount1: Account;
-    let cosignAccount2: Account;
-    let cosignAccount3: Account;
-    let accountAddress: Address;
-    let accountPublicKey: string;
-    let publicAccount: PublicAccount;
-    let repositoryFactory: RepositoryFactory;
     let accountRepository: AccountRepository;
-    let multisigRepository: MultisigRepository;
     let namespaceRepository: NamespaceRepository;
     let generationHash: string;
     let networkType: NetworkType;
@@ -98,8 +89,11 @@ describe('TransactionHttp', () => {
     let namespaceId: NamespaceId;
     let harvestingAccount: Account;
     let transactionRepository: TransactionRepository;
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const secureRandom = require('secure-random');
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const sha256 = require('js-sha256');
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const ripemd160 = require('ripemd160');
 
     before(() => {
@@ -109,17 +103,10 @@ describe('TransactionHttp', () => {
             account3 = helper.account3;
             multisigAccount = helper.multisigAccount;
             cosignAccount1 = helper.cosignAccount1;
-            cosignAccount2 = helper.cosignAccount2;
-            cosignAccount3 = helper.cosignAccount3;
-            accountAddress = helper.account.address;
             harvestingAccount = helper.harvestingAccount;
-            accountPublicKey = helper.account.publicKey;
-            publicAccount = helper.account.publicAccount;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
-            repositoryFactory = helper.repositoryFactory;
             accountRepository = helper.repositoryFactory.createAccountRepository();
-            multisigRepository = helper.repositoryFactory.createMultisigRepository();
             namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
             transactionRepository = helper.repositoryFactory.createTransactionRepository();
         });
@@ -134,13 +121,11 @@ describe('TransactionHttp', () => {
 
     describe('Get network currency mosaic id', () => {
         it('get mosaicId', async () => {
-            NetworkCurrencyLocalId =
-                (await namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).toPromise()) as MosaicId;
+            NetworkCurrencyLocalId = (await namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).toPromise()) as MosaicId;
         });
     });
 
     describe('MosaicDefinitionTransaction', () => {
-
         it('standalone', () => {
             const nonce = MosaicNonce.createRandom();
             mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
@@ -169,7 +154,6 @@ describe('TransactionHttp', () => {
     });
 
     describe('MosaicDefinitionTransaction', () => {
-
         it('aggregate', () => {
             const nonce = MosaicNonce.createRandom();
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
@@ -182,17 +166,19 @@ describe('TransactionHttp', () => {
                 networkType,
                 helper.maxFee,
             );
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [mosaicDefinitionTransaction.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee);
+                [],
+                helper.maxFee,
+            );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
         });
     });
 
     describe('AccountMetadataTransaction', () => {
-
         it('aggregate', () => {
             const accountMetadataTransaction = AccountMetadataTransaction.create(
                 Deadline.create(),
@@ -204,7 +190,8 @@ describe('TransactionHttp', () => {
                 helper.maxFee,
             );
 
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [accountMetadataTransaction.toAggregate(account.publicAccount)],
                 networkType,
                 [],
@@ -224,7 +211,6 @@ describe('TransactionHttp', () => {
     });
 
     describe('MosaicMetadataTransaction', () => {
-
         it('aggregate', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
                 Deadline.create(),
@@ -233,13 +219,16 @@ describe('TransactionHttp', () => {
                 mosaicId,
                 10,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
 
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [mosaicMetadataTransaction.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee,
+                [],
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction).then((transaction: AggregateTransaction) => {
@@ -250,7 +239,6 @@ describe('TransactionHttp', () => {
                     expect((innerTx as MosaicMetadataTransaction).value, 'Value').not.to.be.undefined;
                     expect((innerTx as MosaicMetadataTransaction).targetMosaicId, 'TargetMosaicId').not.to.be.undefined;
                 });
-
             });
         });
     });
@@ -262,7 +250,8 @@ describe('TransactionHttp', () => {
                 Deadline.create(),
                 namespaceName,
                 UInt64.fromUint(10),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             namespaceId = new NamespaceId(namespaceName);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
@@ -275,18 +264,21 @@ describe('TransactionHttp', () => {
     });
 
     describe('NamespaceRegistrationTransaction', () => {
-
         it('aggregate', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 'root-test-namespace-' + Math.floor(Math.random() * 10000),
                 UInt64.fromUint(5),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [registerNamespaceTransaction.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee);
+                [],
+                helper.maxFee,
+            );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
         });
@@ -301,13 +293,16 @@ describe('TransactionHttp', () => {
                 namespaceId,
                 10,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
 
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [namespaceMetadataTransaction.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee,
+                [],
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction).then((transaction: AggregateTransaction) => {
@@ -332,7 +327,9 @@ describe('TransactionHttp', () => {
                 MosaicRestrictionType.NONE,
                 UInt64.fromUint(0),
                 MosaicRestrictionType.GE,
-                networkType, undefined, helper.maxFee,
+                networkType,
+                undefined,
+                helper.maxFee,
             );
             const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
@@ -348,12 +345,16 @@ describe('TransactionHttp', () => {
                 MosaicRestrictionType.GE,
                 UInt64.fromUint(1),
                 MosaicRestrictionType.GE,
-                networkType, undefined, helper.maxFee,
+                networkType,
+                undefined,
+                helper.maxFee,
             );
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [mosaicGlobalRestrictionTransaction.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee,
+                [],
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
@@ -361,7 +362,6 @@ describe('TransactionHttp', () => {
     });
 
     describe('MosaicAddressRestrictionTransaction', () => {
-
         it('aggregate', () => {
             const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
                 Deadline.create(),
@@ -369,12 +369,15 @@ describe('TransactionHttp', () => {
                 UInt64.fromUint(60641),
                 account3.address,
                 UInt64.fromUint(2),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [mosaicAddressRestrictionTransaction.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee,
+                [],
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
@@ -386,9 +389,10 @@ describe('TransactionHttp', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
-                [NetworkCurrencyLocal.createAbsolute(1)],
+                [helper.createNetworkCurrency(1, false)],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = transferTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
@@ -399,14 +403,17 @@ describe('TransactionHttp', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
-                [NetworkCurrencyLocal.createAbsolute(1)],
+                [helper.createNetworkCurrency(1, false)],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [transferTransaction.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee,
+                [],
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
@@ -419,7 +426,8 @@ describe('TransactionHttp', () => {
                 AccountRestrictionFlags.BlockOutgoingAddress,
                 [account3.address],
                 [],
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = addressModification.signWith(account, generationHash);
 
@@ -430,19 +438,21 @@ describe('TransactionHttp', () => {
         });
     });
     describe('AccountRestrictionTransaction - Outgoing Address', () => {
-
         it('aggregate', () => {
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
                 AccountRestrictionFlags.BlockOutgoingAddress,
                 [],
                 [account3.address],
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [addressModification.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee,
+                [],
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
@@ -450,14 +460,14 @@ describe('TransactionHttp', () => {
     });
 
     describe('AccountRestrictionTransaction - Incoming Address', () => {
-
         it('standalone', () => {
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
                 AccountRestrictionFlags.BlockIncomingAddress,
                 [account3.address],
                 [],
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = addressModification.signWith(account, generationHash);
             return helper.announce(signedTransaction);
@@ -470,30 +480,30 @@ describe('TransactionHttp', () => {
                 AccountRestrictionFlags.BlockIncomingAddress,
                 [],
                 [account3.address],
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [addressModification.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee,
+                [],
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
         });
     });
     describe('AccountRestrictionTransaction - Mosaic', () => {
-
         it('standalone', () => {
-            AccountRestrictionModification.createForMosaic(
-                AccountRestrictionModificationAction.Add,
-                mosaicId,
-            );
+            AccountRestrictionModification.createForMosaic(AccountRestrictionModificationAction.Add, mosaicId);
             const addressModification = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
                 Deadline.create(),
                 AccountRestrictionFlags.BlockMosaic,
                 [mosaicId],
                 [],
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = addressModification.signWith(account, generationHash);
 
@@ -505,33 +515,35 @@ describe('TransactionHttp', () => {
         });
     });
     describe('AccountRestrictionTransaction - Mosaic', () => {
-
         it('aggregate', () => {
             const addressModification = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
                 Deadline.create(),
                 AccountRestrictionFlags.BlockMosaic,
                 [],
                 [mosaicId],
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [addressModification.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee,
+                [],
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
         });
     });
     describe('AccountRestrictionTransaction - Incoming Operation', () => {
-
         it('standalone', () => {
             const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
                 Deadline.create(),
                 AccountRestrictionFlags.BlockIncomingTransactionType,
                 [TransactionType.ACCOUNT_LINK],
                 [],
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = addressModification.signWith(account3, generationHash);
 
@@ -543,19 +555,21 @@ describe('TransactionHttp', () => {
         });
     });
     describe('AccountRestrictionTransaction - Incoming Operation', () => {
-
         it('aggregate', () => {
             const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
                 Deadline.create(),
                 AccountRestrictionFlags.BlockIncomingTransactionType,
                 [],
                 [TransactionType.ACCOUNT_LINK],
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [addressModification.toAggregate(account3.publicAccount)],
                 networkType,
-                [], helper.maxFee,
+                [],
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(account3, generationHash);
             return helper.announce(signedTransaction);
@@ -563,18 +577,15 @@ describe('TransactionHttp', () => {
     });
 
     describe('AccountRestrictionTransaction - Outgoing Operation', () => {
-
         it('standalone', () => {
-            AccountRestrictionModification.createForOperation(
-                AccountRestrictionModificationAction.Add,
-                TransactionType.ACCOUNT_LINK,
-            );
+            AccountRestrictionModification.createForOperation(AccountRestrictionModificationAction.Add, TransactionType.ACCOUNT_LINK);
             const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
                 Deadline.create(),
                 AccountRestrictionFlags.BlockOutgoingTransactionType,
                 [TransactionType.ACCOUNT_LINK],
                 [],
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = addressModification.signWith(account3, generationHash);
 
@@ -583,38 +594,38 @@ describe('TransactionHttp', () => {
                 expect(transaction.restrictionDeletions, 'RestrictionDeletions').not.to.be.undefined;
                 expect(transaction.restrictionFlags, 'RestrictionFlags').not.to.be.undefined;
             });
-
         });
     });
     describe('AccountRestrictionTransaction - Outgoing Operation', () => {
-
         it('aggregate', () => {
             const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
                 Deadline.create(),
                 AccountRestrictionFlags.BlockOutgoingTransactionType,
                 [],
                 [TransactionType.ACCOUNT_LINK],
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [addressModification.toAggregate(account3.publicAccount)],
                 networkType,
-                [], helper.maxFee,
+                [],
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(account3, generationHash);
             return helper.announce(signedTransaction);
-
         });
     });
 
     describe('AccountLinkTransaction', () => {
-
         it('standalone', () => {
             const accountLinkTransaction = AccountLinkTransaction.create(
                 Deadline.create(),
                 harvestingAccount.publicKey,
                 LinkAction.Link,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
 
@@ -623,22 +634,23 @@ describe('TransactionHttp', () => {
                 expect(transaction.linkAction, 'LinkAction').not.to.be.undefined;
                 return signedTransaction;
             });
-
         });
     });
     describe('AccountLinkTransaction', () => {
-
         it('aggregate', () => {
             const accountLinkTransaction = AccountLinkTransaction.create(
                 Deadline.create(),
                 harvestingAccount.publicKey,
                 LinkAction.Unlink,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [accountLinkTransaction.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee,
+                [],
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
@@ -646,14 +658,14 @@ describe('TransactionHttp', () => {
     });
 
     describe('AddressAliasTransaction', () => {
-
         it('standalone', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
                 AliasAction.Link,
                 namespaceId,
                 account.address,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 
@@ -661,20 +673,19 @@ describe('TransactionHttp', () => {
                 expect(transaction.namespaceId, 'NamespaceId').not.to.be.undefined;
                 expect(transaction.aliasAction, 'AliasAction').not.to.be.undefined;
                 expect(transaction.address, 'Address').not.to.be.undefined;
-
             });
         });
     });
 
     describe('Transfer Transaction using address alias', () => {
-
         it('Announce TransferTransaction', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 namespaceId,
-                [NetworkCurrencyLocal.createAbsolute(1)],
+                [helper.createNetworkCurrency(1, false)],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = transferTransaction.signWith(account, generationHash);
 
@@ -683,19 +694,21 @@ describe('TransactionHttp', () => {
     });
 
     describe('AddressAliasTransaction', () => {
-
         it('aggregate', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
                 AliasAction.Unlink,
                 namespaceId,
                 account.address,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [addressAliasTransaction.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee,
+                [],
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
@@ -703,14 +716,14 @@ describe('TransactionHttp', () => {
     });
 
     describe('MosaicSupplyChangeTransaction', () => {
-
         it('standalone', () => {
             const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
                 Deadline.create(),
                 mosaicId,
                 MosaicSupplyChangeAction.Increase,
                 UInt64.fromUint(10),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction).then((transaction: MosaicSupplyChangeTransaction) => {
@@ -718,38 +731,39 @@ describe('TransactionHttp', () => {
                 expect(transaction.action, 'Action').not.to.be.undefined;
                 expect(transaction.mosaicId, 'MosaicId').not.to.be.undefined;
             });
-
         });
     });
     describe('MosaicSupplyChangeTransaction', () => {
-
         it('aggregate', () => {
             const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
                 Deadline.create(),
                 mosaicId,
                 MosaicSupplyChangeAction.Increase,
                 UInt64.fromUint(10),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [mosaicSupplyChangeTransaction.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee);
+                [],
+                helper.maxFee,
+            );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
         });
-
     });
 
     describe('MosaicAliasTransaction', () => {
-
         it('standalone', () => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
                 Deadline.create(),
                 AliasAction.Link,
                 namespaceId,
                 mosaicId,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
 
@@ -762,39 +776,38 @@ describe('TransactionHttp', () => {
     });
 
     describe('HashLockTransaction - MosaicAlias', () => {
-
         it('standalone', () => {
-            const aggregateTransaction = AggregateTransaction.createBonded(
-                Deadline.create(),
-                [],
-                networkType,
-                [], helper.maxFee,
-            );
+            const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], networkType, [], helper.maxFee);
             const signedTransaction = account.sign(aggregateTransaction, generationHash);
-            const hashLockTransaction = HashLockTransaction.create(Deadline.create(),
-                new Mosaic(new NamespaceId('cat.currency'), UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
+            const hashLockTransaction = HashLockTransaction.create(
+                Deadline.create(),
+                new Mosaic(new NamespaceId('cat.currency'), UInt64.fromUint(10 * Math.pow(10, helper.networkCurrencyDivisibility))),
                 UInt64.fromUint(10000),
                 signedTransaction,
-                networkType, helper.maxFee);
+                networkType,
+                helper.maxFee,
+            );
             const hashLockSignedTransaction = hashLockTransaction.signWith(account, generationHash);
             return helper.announce(hashLockSignedTransaction);
         });
     });
 
     describe('MosaicAliasTransaction', () => {
-
         it('aggregate', () => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
                 Deadline.create(),
                 AliasAction.Unlink,
                 namespaceId,
                 mosaicId,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [mosaicAliasTransaction.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee,
+                [],
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
@@ -802,64 +815,60 @@ describe('TransactionHttp', () => {
     });
 
     describe('LockFundsTransaction', () => {
-
         it('standalone', () => {
-            const aggregateTransaction = AggregateTransaction.createBonded(
-                Deadline.create(),
-                [],
-                networkType,
-                [], helper.maxFee,
-            );
+            const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], networkType, [], helper.maxFee);
             const signedTransaction = account.sign(aggregateTransaction, generationHash);
-            const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
-                new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
+            const lockFundsTransaction = LockFundsTransaction.create(
+                Deadline.create(),
+                new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, helper.networkCurrencyDivisibility))),
                 UInt64.fromUint(10000),
                 signedTransaction,
-                networkType, helper.maxFee);
+                networkType,
+                helper.maxFee,
+            );
 
             return helper.announce(lockFundsTransaction.signWith(account, generationHash));
         });
     });
     describe('LockFundsTransaction', () => {
-
         it('aggregate', () => {
-            const aggregateTransaction = AggregateTransaction.createBonded(
-                Deadline.create(),
-                [],
-                networkType,
-                [], helper.maxFee,
-            );
+            const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], networkType, [], helper.maxFee);
             const signedTransaction = account.sign(aggregateTransaction, generationHash);
-            const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
-                new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
+            const lockFundsTransaction = LockFundsTransaction.create(
+                Deadline.create(),
+                new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, helper.networkCurrencyDivisibility))),
                 UInt64.fromUint(10),
                 signedTransaction,
-                networkType, helper.maxFee);
-            const aggregateLockFundsTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                networkType,
+                helper.maxFee,
+            );
+            const aggregateLockFundsTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [lockFundsTransaction.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee);
+                [],
+                helper.maxFee,
+            );
             return helper.announce(aggregateLockFundsTransaction.signWith(account, generationHash));
         });
     });
 
     describe('Aggregate Complete Transaction', () => {
-
         it('should announce aggregated complete transaction', () => {
             const tx = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
                 [],
                 PlainMessage.create('Hi'),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const aggTx = AggregateTransaction.createComplete(
                 Deadline.create(),
-                [
-                    tx.toAggregate(account.publicAccount),
-                ],
+                [tx.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee,
+                [],
+                helper.maxFee,
             );
             const signedTransaction = account.sign(aggTx, generationHash);
             return helper.announce(signedTransaction);
@@ -867,168 +876,144 @@ describe('TransactionHttp', () => {
     });
 
     describe('SecretLockTransaction', () => {
-
         it('standalone', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyLocal.createAbsolute(10),
+                helper.createNetworkCurrency(10, false),
                 UInt64.fromUint(100),
-                HashType.Op_Sha3_256,
+                LockHashAlgorithm.Op_Sha3_256,
                 sha3_256.create().update(Crypto.randomBytes(20)).hex(),
                 account2.address,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = secretLockTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction).then((transaction: SecretLockTransaction) => {
                 expect(transaction.mosaic, 'Mosaic').not.to.be.undefined;
                 expect(transaction.duration, 'Duration').not.to.be.undefined;
-                expect(transaction.hashType, 'HashType').not.to.be.undefined;
+                expect(transaction.hashAlgorithm, 'HashAlgorithm').not.to.be.undefined;
                 expect(transaction.secret, 'Secret').not.to.be.undefined;
                 expect(transaction.recipientAddress, 'RecipientAddress').not.to.be.undefined;
             });
         });
     });
     describe('HashType: Op_Sha3_256', () => {
-
         it('aggregate', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyLocal.createAbsolute(10),
+                helper.createNetworkCurrency(10, false),
                 UInt64.fromUint(100),
-                HashType.Op_Sha3_256,
+                LockHashAlgorithm.Op_Sha3_256,
                 sha3_256.create().update(Crypto.randomBytes(20)).hex(),
                 account2.address,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
-            const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateSecretLockTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [secretLockTransaction.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee);
+                [],
+                helper.maxFee,
+            );
             return helper.announce(aggregateSecretLockTransaction.signWith(account, generationHash));
         });
     });
-    describe('HashType: Keccak_256', () => {
 
-        it('standalone', () => {
-            const secretLockTransaction = SecretLockTransaction.create(
-                Deadline.create(),
-                NetworkCurrencyLocal.createAbsolute(10),
-                UInt64.fromUint(100),
-                HashType.Op_Keccak_256,
-                sha3_256.create().update(Crypto.randomBytes(20)).hex(),
-                account2.address,
-                networkType, helper.maxFee,
-            );
-            return helper.announce(secretLockTransaction.signWith(account, generationHash));
-        });
-    });
-    describe('HashType: Keccak_256', () => {
-
-        it('aggregate', () => {
-            const secretLockTransaction = SecretLockTransaction.create(
-                Deadline.create(),
-                NetworkCurrencyLocal.createAbsolute(10),
-                UInt64.fromUint(100),
-                HashType.Op_Keccak_256,
-                sha3_256.create().update(Crypto.randomBytes(20)).hex(),
-                account2.address,
-                networkType, helper.maxFee,
-            );
-            const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
-                [secretLockTransaction.toAggregate(account.publicAccount)],
-                networkType,
-                [], helper.maxFee);
-            return helper.announce(aggregateSecretLockTransaction.signWith(account, generationHash));
-        });
-    });
     describe('HashType: Op_Hash_160', () => {
-
         it('standalone', () => {
             const secretSeed = String.fromCharCode.apply(null, Crypto.randomBytes(20));
             const secret = CryptoJS.RIPEMD160(CryptoJS.SHA256(secretSeed).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex);
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyLocal.createAbsolute(10),
+                helper.createNetworkCurrency(10, false),
                 UInt64.fromUint(100),
-                HashType.Op_Hash_160,
+                LockHashAlgorithm.Op_Hash_160,
                 secret,
                 account2.address,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             return helper.announce(secretLockTransaction.signWith(account, generationHash));
         });
     });
     describe('HashType: Op_Hash_160', () => {
-
         it('aggregate', () => {
             const secretSeed = String.fromCharCode.apply(null, Crypto.randomBytes(20));
             const secret = CryptoJS.RIPEMD160(CryptoJS.SHA256(secretSeed).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex);
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyLocal.createAbsolute(10),
+                helper.createNetworkCurrency(10, false),
                 UInt64.fromUint(100),
-                HashType.Op_Hash_160,
+                LockHashAlgorithm.Op_Hash_160,
                 secret,
                 account2.address,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
-            const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateSecretLockTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [secretLockTransaction.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee);
+                [],
+                helper.maxFee,
+            );
             return helper.announce(aggregateSecretLockTransaction.signWith(account, generationHash));
         });
     });
     describe('HashType: Op_Hash_256', () => {
-
         it('standalone', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyLocal.createAbsolute(10),
+                helper.createNetworkCurrency(10, false),
                 UInt64.fromUint(100),
-                HashType.Op_Hash_256,
+                LockHashAlgorithm.Op_Hash_256,
                 sha3_256.create().update(Crypto.randomBytes(20)).hex(),
                 account2.address,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             return helper.announce(secretLockTransaction.signWith(account, generationHash));
         });
     });
     describe('HashType: Op_Hash_256', () => {
-
         it('aggregate', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyLocal.createAbsolute(10),
+                helper.createNetworkCurrency(10, false),
                 UInt64.fromUint(100),
-                HashType.Op_Hash_256,
+                LockHashAlgorithm.Op_Hash_256,
                 sha3_256.create().update(Crypto.randomBytes(20)).hex(),
                 account2.address,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
-            const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateSecretLockTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [secretLockTransaction.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee);
+                [],
+                helper.maxFee,
+            );
 
             return helper.announce(aggregateSecretLockTransaction.signWith(account, generationHash));
         });
     });
     describe('SecretProofTransaction - HashType: Op_Sha3_256', () => {
-
         it('standalone', () => {
             const secretSeed = Crypto.randomBytes(20);
-            const secret = sha3_256.create().update(secretSeed).hex();
+            const secret = LockHashUtils.Op_Sha3_256(secretSeed);
             const proof = convert.uint8ToHex(secretSeed);
 
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(1, ChronoUnit.HOURS),
-                NetworkCurrencyLocal.createAbsolute(10),
+                helper.createNetworkCurrency(10, false),
                 UInt64.fromUint(11),
-                HashType.Op_Sha3_256,
+                LockHashAlgorithm.Op_Sha3_256,
                 secret,
                 account2.address,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
 
             const signedSecretLockTx = secretLockTransaction.signWith(account, generationHash);
@@ -1036,143 +1021,86 @@ describe('TransactionHttp', () => {
             return helper.announce(signedSecretLockTx).then(() => {
                 const secretProofTransaction = SecretProofTransaction.create(
                     Deadline.create(),
-                    HashType.Op_Sha3_256,
+                    LockHashAlgorithm.Op_Sha3_256,
                     secret,
                     account2.address,
                     proof,
-                    networkType, helper.maxFee,
+                    networkType,
+                    helper.maxFee,
                 );
                 const signedTx = secretProofTransaction.signWith(account2, generationHash);
                 return helper.announce(signedTx).then((transaction: SecretProofTransaction) => {
                     expect(transaction.secret, 'Secret').not.to.be.undefined;
                     expect(transaction.recipientAddress, 'RecipientAddress').not.to.be.undefined;
-                    expect(transaction.hashType, 'HashType').not.to.be.undefined;
+                    expect(transaction.hashAlgorithm, 'HashAlgorithm').not.to.be.undefined;
                     expect(transaction.proof, 'Proof').not.to.be.undefined;
                 });
             });
-
         });
     });
     describe('SecretProofTransaction - HashType: Op_Sha3_256', () => {
-
         it('aggregate', () => {
             const secretSeed = Crypto.randomBytes(20);
             const secret = sha3_256.create().update(secretSeed).hex();
             const proof = convert.uint8ToHex(secretSeed);
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyLocal.createAbsolute(10),
+                helper.createNetworkCurrency(10, false),
                 UInt64.fromUint(100),
-                HashType.Op_Sha3_256,
+                LockHashAlgorithm.Op_Sha3_256,
                 secret,
                 account2.address,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
 
             return helper.announce(secretLockTransaction.signWith(account, generationHash)).then(() => {
                 const secretProofTransaction = SecretProofTransaction.create(
                     Deadline.create(),
-                    HashType.Op_Sha3_256,
+                    LockHashAlgorithm.Op_Sha3_256,
                     secret,
                     account2.address,
                     proof,
-                    networkType, helper.maxFee,
+                    networkType,
+                    helper.maxFee,
                 );
-                const aggregateSecretProofTransaction = AggregateTransaction.createComplete(Deadline.create(),
-                    [secretProofTransaction.toAggregate(account2.publicAccount)],
-                    networkType, [], helper.maxFee);
-                return helper.announce(aggregateSecretProofTransaction.signWith(account2, generationHash));
-            });
-
-        });
-    });
-    describe('SecretProofTransaction - HashType: Op_Keccak_256', () => {
-
-        it('standalone', () => {
-            const secretSeed = Crypto.randomBytes(20);
-            const secret = keccak_256.create().update(secretSeed).hex();
-            const proof = convert.uint8ToHex(secretSeed);
-            const secretLockTransaction = SecretLockTransaction.create(
-                Deadline.create(),
-                NetworkCurrencyLocal.createAbsolute(10),
-                UInt64.fromUint(100),
-                HashType.Op_Keccak_256,
-                secret,
-                account2.address,
-                networkType, helper.maxFee,
-            );
-
-            return helper.announce(secretLockTransaction.signWith(account, generationHash)).then(() => {
-                const secretProofTransaction = SecretProofTransaction.create(
+                const aggregateSecretProofTransaction = AggregateTransaction.createComplete(
                     Deadline.create(),
-                    HashType.Op_Keccak_256,
-                    secret,
-                    account2.address,
-                    proof,
-                    networkType, helper.maxFee,
-                );
-                return helper.announce(secretProofTransaction.signWith(account2, generationHash));
-            });
-        });
-    });
-    describe('SecretProofTransaction - HashType: Op_Keccak_256', () => {
-
-        it('aggregate', () => {
-            const secretSeed = Crypto.randomBytes(20);
-            const secret = keccak_256.create().update(secretSeed).hex();
-            const proof = convert.uint8ToHex(secretSeed);
-            const secretLockTransaction = SecretLockTransaction.create(
-                Deadline.create(),
-                NetworkCurrencyLocal.createAbsolute(10),
-                UInt64.fromUint(100),
-                HashType.Op_Keccak_256,
-                secret,
-                account2.address,
-                networkType, helper.maxFee,
-            );
-            return helper.announce(secretLockTransaction.signWith(account, generationHash)).then(() => {
-                const secretProofTransaction = SecretProofTransaction.create(
-                    Deadline.create(),
-                    HashType.Op_Keccak_256,
-                    secret,
-                    account2.address,
-                    proof,
-                    networkType, helper.maxFee,
-                );
-                const aggregateSecretProofTransaction = AggregateTransaction.createComplete(Deadline.create(),
                     [secretProofTransaction.toAggregate(account2.publicAccount)],
                     networkType,
-                    [], helper.maxFee);
+                    [],
+                    helper.maxFee,
+                );
                 return helper.announce(aggregateSecretProofTransaction.signWith(account2, generationHash));
             });
         });
     });
     describe('SecretProofTransaction - HashType: Op_Hash_160', () => {
-
         it('standalone', () => {
             const randomBytes = secureRandom.randomBuffer(32);
             const secretSeed = randomBytes.toString('hex');
-            const hash = sha256(Buffer.from(secretSeed, 'hex'));
-            const secret = new ripemd160().update(Buffer.from(hash, 'hex')).digest('hex');
+            const secret = LockHashUtils.Op_Hash_160(randomBytes);
             const proof = secretSeed;
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyLocal.createAbsolute(10),
+                helper.createNetworkCurrency(10, false),
                 UInt64.fromUint(100),
-                HashType.Op_Hash_160,
+                LockHashAlgorithm.Op_Hash_160,
                 secret,
                 account2.address,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
 
             return helper.announce(secretLockTransaction.signWith(account, generationHash)).then(() => {
                 const secretProofTransaction = SecretProofTransaction.create(
                     Deadline.create(),
-                    HashType.Op_Hash_160,
+                    LockHashAlgorithm.Op_Hash_160,
                     secret,
                     account2.address,
                     proof,
-                    networkType, helper.maxFee,
+                    networkType,
+                    helper.maxFee,
                 );
                 const signedTx = secretProofTransaction.signWith(account2, generationHash);
                 return helper.announce(signedTx);
@@ -1180,7 +1108,6 @@ describe('TransactionHttp', () => {
         });
     });
     describe('SecretProofTransaction - HashType: Op_Hash_160', () => {
-
         it('aggregate', () => {
             const randomBytes = secureRandom.randomBuffer(32);
             const secretSeed = randomBytes.toString('hex');
@@ -1189,63 +1116,70 @@ describe('TransactionHttp', () => {
             const proof = secretSeed;
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyLocal.createAbsolute(10),
+                helper.createNetworkCurrency(10, false),
                 UInt64.fromUint(100),
-                HashType.Op_Hash_160,
+                LockHashAlgorithm.Op_Hash_160,
                 secret,
                 account2.address,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const secretProofTransaction = SecretProofTransaction.create(
                 Deadline.create(),
-                HashType.Op_Hash_160,
+                LockHashAlgorithm.Op_Hash_160,
                 secret,
                 account2.address,
                 proof,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
-            const aggregateSecretProofTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateSecretProofTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [secretProofTransaction.toAggregate(account2.publicAccount)],
                 networkType,
-                [], helper.maxFee);
+                [],
+                helper.maxFee,
+            );
 
-            return helper.announce(secretLockTransaction.signWith(account, generationHash)).then(
-                () => helper.announce(aggregateSecretProofTransaction.signWith(account2, generationHash)));
+            return helper
+                .announce(secretLockTransaction.signWith(account, generationHash))
+                .then(() => helper.announce(aggregateSecretProofTransaction.signWith(account2, generationHash)));
         });
     });
     describe('SecretProofTransaction - HashType: Op_Hash_256', () => {
-
         it('standalone', () => {
             const randomBytes = secureRandom.randomBuffer(32);
             const secretSeed = randomBytes.toString('hex');
-            const hash = sha256(Buffer.from(secretSeed, 'hex'));
-            const secret = sha256(Buffer.from(hash, 'hex'));
+            // const secret = sha256(Buffer.from(hash, 'hex'));
+            const secret = LockHashUtils.Op_Hash_256(randomBytes);
             const proof = secretSeed;
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyLocal.createAbsolute(10),
+                helper.createNetworkCurrency(1, false),
                 UInt64.fromUint(100),
-                HashType.Op_Hash_256,
+                LockHashAlgorithm.Op_Hash_256,
                 secret,
                 account2.address,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
 
             const secretProofTransaction = SecretProofTransaction.create(
                 Deadline.create(),
-                HashType.Op_Hash_256,
+                LockHashAlgorithm.Op_Hash_256,
                 secret,
                 account2.address,
                 proof,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
 
-            return helper.announce(secretLockTransaction.signWith(account, generationHash)).then(() =>
-                helper.announce(secretProofTransaction.signWith(account2, generationHash)));
+            return helper
+                .announce(secretLockTransaction.signWith(account, generationHash))
+                .then(() => helper.announce(secretProofTransaction.signWith(account2, generationHash)));
         });
     });
     describe('SecretProofTransaction - HashType: Op_Hash_256', () => {
-
         it('aggregate', () => {
             const randomBytes = secureRandom.randomBuffer(32);
             const secretSeed = randomBytes.toString('hex');
@@ -1254,57 +1188,71 @@ describe('TransactionHttp', () => {
             const proof = secretSeed;
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyLocal.createAbsolute(10),
+                helper.createNetworkCurrency(10, false),
                 UInt64.fromUint(100),
-                HashType.Op_Hash_256,
+                LockHashAlgorithm.Op_Hash_256,
                 secret,
                 account2.address,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const secretProofTransaction = SecretProofTransaction.create(
                 Deadline.create(),
-                HashType.Op_Hash_256,
+                LockHashAlgorithm.Op_Hash_256,
                 secret,
                 account2.address,
                 proof,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
-            const aggregateSecretProofTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateSecretProofTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [secretProofTransaction.toAggregate(account2.publicAccount)],
                 networkType,
-                [], helper.maxFee);
-            return helper.announce(secretLockTransaction.signWith(account, generationHash)).then(() =>
-                helper.announce(aggregateSecretProofTransaction.signWith(account2, generationHash)));
+                [],
+                helper.maxFee,
+            );
+            return helper
+                .announce(secretLockTransaction.signWith(account, generationHash))
+                .then(() => helper.announce(aggregateSecretProofTransaction.signWith(account2, generationHash)));
         });
     });
 
     describe('SignTransactionGivenSignatures', () => {
-
         it('Announce cosign signatures given', () => {
-
             /**
              * @see https://github.com/nemtech/symbol-sdk-typescript-javascript/issues/112
              */
-                // AliceAccount: account
-                // BobAccount: account
+            // AliceAccount: account
+            // BobAccount: account
 
-            const sendAmount = NetworkCurrencyLocal.createRelative(1000);
-            const backAmount = NetworkCurrencyLocal.createRelative(1);
+            const sendAmount = helper.createNetworkCurrency(1000);
+            const backAmount = helper.createNetworkCurrency(1);
 
-            const aliceTransferTransaction = TransferTransaction.create(Deadline.create(), account2.address, [sendAmount],
-                PlainMessage.create('payout'), networkType, helper.maxFee);
-            const bobTransferTransaction = TransferTransaction.create(Deadline.create(), account.address, [backAmount],
-                PlainMessage.create('payout'), networkType, helper.maxFee);
+            const aliceTransferTransaction = TransferTransaction.create(
+                Deadline.create(),
+                account2.address,
+                [sendAmount],
+                PlainMessage.create('payout'),
+                networkType,
+                helper.maxFee,
+            );
+            const bobTransferTransaction = TransferTransaction.create(
+                Deadline.create(),
+                account.address,
+                [backAmount],
+                PlainMessage.create('payout'),
+                networkType,
+                helper.maxFee,
+            );
 
             // 01. Alice creates the aggregated tx and sign it. Then payload send to Bob
             const aggregateTransaction = AggregateTransaction.createComplete(
                 Deadline.create(),
-                [
-                    aliceTransferTransaction.toAggregate(account.publicAccount),
-                    bobTransferTransaction.toAggregate(account2.publicAccount),
-                ],
+                [aliceTransferTransaction.toAggregate(account.publicAccount), bobTransferTransaction.toAggregate(account2.publicAccount)],
                 networkType,
-                [], helper.maxFee,
+                [],
+                helper.maxFee,
             );
 
             const aliceSignedTransaction = aggregateTransaction.signWith(account, generationHash);
@@ -1384,9 +1332,10 @@ describe('TransactionHttp', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
-                [NetworkCurrencyLocal.createAbsolute(1)],
+                [helper.createNetworkCurrency(1, false)],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = transferTransaction.signWith(account, generationHash);
             const transactionAnnounceResponse = await transactionRepository.announce(signedTransaction).toPromise();
@@ -1399,19 +1348,21 @@ describe('TransactionHttp', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
-                [NetworkCurrencyLocal.createRelative(1)],
+                [helper.createNetworkCurrency(1)],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const aggregateTransaction = AggregateTransaction.createBonded(
                 Deadline.create(2, ChronoUnit.MINUTES),
                 [transferTransaction.toAggregate(multisigAccount.publicAccount)],
                 networkType,
-                [], helper.maxFee);
+                [],
+                helper.maxFee,
+            );
             const signedTransaction = aggregateTransaction.signWith(cosignAccount1, generationHash);
             const transactionAnnounceResponse = await transactionRepository.announceAggregateBonded(signedTransaction).toPromise();
-            expect(transactionAnnounceResponse.message)
-            .to.be.equal('packet 500 was pushed to the network via /transaction/partial');
+            expect(transactionAnnounceResponse.message).to.be.equal('packet 500 was pushed to the network via /transaction/partial');
         });
     });
 

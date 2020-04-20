@@ -24,7 +24,6 @@ import { Transaction } from '../../model/transaction/Transaction';
  * Transaction Service Interface
  */
 export interface ITransactionService {
-
     /**
      * @param transactionHashes List of transaction hashes.
      * @returns {Observable<Transaction[]>}
@@ -90,7 +89,9 @@ export interface ITransactionService {
      * @param listener Websocket listener
      * @returns {Observable<AggregateTransaction>}
      */
-    announceHashLockAggregateBonded(signedHashLockTransaction: SignedTransaction,
-                                    signedAggregateTransaction: SignedTransaction,
-                                    listener: IListener): Observable<AggregateTransaction>;
+    announceHashLockAggregateBonded(
+        signedHashLockTransaction: SignedTransaction,
+        signedAggregateTransaction: SignedTransaction,
+        listener: IListener,
+    ): Observable<AggregateTransaction>;
 }

@@ -67,13 +67,9 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
      * @return Observable<MerkleProofInfo>
      */
     public getMerkleReceipts(height: UInt64, hash: string): Observable<MerkleProofInfo> {
-        return observableFrom(
-            this.receiptRoutesApi.getMerkleReceipts(height.toString(), hash)).pipe(
-                map(({body}) => new MerkleProofInfo(
-                        body.merklePath!.map(
-                            (payload) => new MerklePathItem(payload.position, payload.hash)),
-                    )),
-                catchError((error) =>  throwError(this.errorHandling(error))),
+        return observableFrom(this.receiptRoutesApi.getMerkleReceipts(height.toString(), hash)).pipe(
+            map(({ body }) => new MerkleProofInfo(body.merklePath!.map((payload) => new MerklePathItem(payload.position, payload.hash)))),
+            catchError((error) => throwError(this.errorHandling(error))),
         );
     }
 
@@ -85,10 +81,10 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
      */
     public getBlockReceipts(height: UInt64): Observable<Statement> {
         return this.networkTypeObservable.pipe(
-            mergeMap((networkType) => observableFrom(
-                this.receiptRoutesApi.getBlockReceipts(height.toString())).pipe(
-                    map(({body}) => CreateStatementFromDTO(body, networkType)),
-                    catchError((error) =>  throwError(this.errorHandling(error))),
+            mergeMap((networkType) =>
+                observableFrom(this.receiptRoutesApi.getBlockReceipts(height.toString())).pipe(
+                    map(({ body }) => CreateStatementFromDTO(body, networkType)),
+                    catchError((error) => throwError(this.errorHandling(error))),
                 ),
             ),
         );

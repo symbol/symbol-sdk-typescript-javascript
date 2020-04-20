@@ -20,23 +20,21 @@ import { AccountRestrictionModificationAction } from '../restriction/AccountRest
 import { TransactionType } from './TransactionType';
 
 export class AccountRestrictionModification<T> {
-
     /**
      * Constructor
      * @param modificationAction
      * @param value
      */
     constructor(
-                /**
-                 * Modification type.
-                 */
-                public readonly modificationAction: AccountRestrictionModificationAction,
-                /**
-                 * Modification value (Address, Mosaic or Transaction Type).
-                 */
-                public readonly value: T) {
-
-    }
+        /**
+         * Modification type.
+         */
+        public readonly modificationAction: AccountRestrictionModificationAction,
+        /**
+         * Modification value (Address, Mosaic or Transaction Type).
+         */
+        public readonly value: T,
+    ) {}
 
     /**
      * Create an address filter for account restriction modification
@@ -44,8 +42,10 @@ export class AccountRestrictionModification<T> {
      * @param value - modification value (Address)
      * @returns {AccountRestrictionModification}
      */
-    public static createForAddress(modificationAction: AccountRestrictionModificationAction,
-                                   value: Address): AccountRestrictionModification<string> {
+    public static createForAddress(
+        modificationAction: AccountRestrictionModificationAction,
+        value: Address,
+    ): AccountRestrictionModification<string> {
         return new AccountRestrictionModification<string>(modificationAction, value.plain());
     }
     /**
@@ -54,9 +54,11 @@ export class AccountRestrictionModification<T> {
      * @param value - modification value (Mosaic)
      * @returns {AccountRestrictionModification}
      */
-    public static createForMosaic(modificationAction: AccountRestrictionModificationAction,
-                                  value: MosaicId): AccountRestrictionModification<number[]> {
-    return new AccountRestrictionModification<number[]>(modificationAction, value.id.toDTO());
+    public static createForMosaic(
+        modificationAction: AccountRestrictionModificationAction,
+        value: MosaicId,
+    ): AccountRestrictionModification<number[]> {
+        return new AccountRestrictionModification<number[]>(modificationAction, value.id.toDTO());
     }
 
     /**
@@ -65,15 +67,17 @@ export class AccountRestrictionModification<T> {
      * @param operation - modification value (Transaction Type)
      * @returns {AccountRestrictionModification}
      */
-    public static createForOperation(modificationAction: AccountRestrictionModificationAction,
-                                     value: number): AccountRestrictionModification<TransactionType> {
-    return new AccountRestrictionModification<TransactionType>(modificationAction, value);
+    public static createForOperation(
+        modificationAction: AccountRestrictionModificationAction,
+        value: number,
+    ): AccountRestrictionModification<TransactionType> {
+        return new AccountRestrictionModification<TransactionType>(modificationAction, value);
     }
 
     /**
      * @internal
      */
-    toDTO() {
+    toDTO(): any {
         return {
             value: this.value,
             modificationAction: this.modificationAction,

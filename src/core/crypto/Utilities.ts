@@ -16,16 +16,17 @@
 
 import { RawArray as array } from '../format';
 import * as nacl from './nacl_catapult';
-// tslint:disable-next-line: no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 export const CryptoJS = require('crypto-js');
 export const Key_Size = 32;
 export const Signature_Size = 64;
 export const Half_Signature_Size = Signature_Size / 2;
 export const Hash_Size = 64;
 export const Half_Hash_Size = Hash_Size / 2;
-// tslint:disable-next-line: no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 export const hkdf = require('futoin-hkdf');
 import { sha512 } from 'js-sha512';
+import { WordArray } from 'crypto-js';
 
 /**
  * Convert an Uint8Array to WordArray
@@ -35,11 +36,11 @@ import { sha512 } from 'js-sha512';
  *
  * @return {WordArray}
  */
-export const ua2words = (ua, uaLength) => {
+export const ua2words = (ua, uaLength): WordArray => {
     const temp: number[] = [];
     for (let i = 0; i < uaLength; i += 4) {
         const x = ua[i] * 0x1000000 + (ua[i + 1] || 0) * 0x10000 + (ua[i + 2] || 0) * 0x100 + (ua[i + 3] || 0);
-        temp.push((x > 0x7fffffff) ? x - 0x100000000 : x);
+        temp.push(x > 0x7fffffff ? x - 0x100000000 : x);
     }
     return CryptoJS.lib.WordArray.create(temp, uaLength);
 };
@@ -52,11 +53,13 @@ export const ua2words = (ua, uaLength) => {
  *
  * @return {Uint8Array}
  */
-export const words2ua = (destUa, cryptoWords) => {
+export const words2ua = (destUa, cryptoWords): Uint8Array => {
     for (let i = 0; i < destUa.length; i += 4) {
         let v = cryptoWords.words[i / 4];
-        if (v < 0) { v += 0x100000000; }
-        destUa[i] = (v >>> 24);
+        if (v < 0) {
+            v += 0x100000000;
+        }
+        destUa[i] = v >>> 24;
         destUa[i + 1] = (v >>> 16) & 0xff;
         destUa[i + 2] = (v >>> 8) & 0xff;
         destUa[i + 3] = v & 0xff;
@@ -65,14 +68,14 @@ export const words2ua = (destUa, cryptoWords) => {
 };
 
 // custom catapult crypto functions
-export const catapult_crypto = (() => {
-    function clamp(d) {
+export const catapult_crypto = ((): any => {
+    function clamp(d): void {
         d[0] &= 248;
         d[31] &= 127;
         d[31] |= 64;
     }
 
-    function prepareForScalarMult(sk) {
+    function prepareForScalarMult(sk): Uint8Array {
         const d = new Uint8Array(64);
         const hash = sha512.arrayBuffer(sk);
         array.copy(d, array.uint8View(hash), 32);
@@ -85,7 +88,7 @@ export const catapult_crypto = (() => {
             const sharedSecret = catapult_crypto.deriveSharedSecret(privateKey, publicKey);
             const info = 'catapult';
             const hash = 'SHA-256';
-            return hkdf(sharedSecret, 32, {salt: new Uint8Array(32), info, hash});
+            return hkdf(sharedSecret, 32, { salt: new Uint8Array(32), info, hash });
         },
 
         deriveSharedSecret: (privateKey: Uint8Array, publicKey: Uint8Array): Uint8Array => {

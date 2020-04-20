@@ -16,8 +16,8 @@
 
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../../model/account/Address';
-import {PublicAccount} from '../../model/account/PublicAccount';
-import {MosaicId} from '../../model/mosaic/MosaicId';
+import { PublicAccount } from '../../model/account/PublicAccount';
+import { MosaicId } from '../../model/mosaic/MosaicId';
 import { NamespaceId } from '../../model/namespace/NamespaceId';
 import { ArtifactExpiryReceipt } from '../../model/receipt/ArtifactExpiryReceipt';
 import { BalanceChangeReceipt } from '../../model/receipt/BalanceChangeReceipt';
@@ -31,17 +31,18 @@ import { ResolutionStatement } from '../../model/receipt/ResolutionStatement';
 import { ResolutionType } from '../../model/receipt/ResolutionType';
 import { Statement } from '../../model/receipt/Statement';
 import { TransactionStatement } from '../../model/receipt/TransactionStatement';
-import {UInt64} from '../../model/UInt64';
+import { UInt64 } from '../../model/UInt64';
 
 /**
  * @interal
  * @param unresolvedAddress unresolved address
  * @returns {Address | NamespaceId}
  */
-const extractUnresolvedAddress = (unresolvedAddress: any): Address | NamespaceId => {
+const extractUnresolvedAddress = (unresolvedAddress: any): Address | NamespaceId => {
     if (typeof unresolvedAddress === 'string') {
         return UnresolvedMapping.toUnresolvedAddress(unresolvedAddress);
-    } else if (typeof unresolvedAddress === 'object') { // Is JSON object
+    } else if (typeof unresolvedAddress === 'object') {
+        // Is JSON object
         if (unresolvedAddress.hasOwnProperty('address')) {
             return Address.createFromRawAddress(unresolvedAddress.address);
         } else if (unresolvedAddress.hasOwnProperty('id')) {
@@ -66,8 +67,10 @@ const createResolutionStatement = (statementDTO, resolutionType): ResolutionStat
                 UInt64.fromNumericString(statementDTO.height),
                 extractUnresolvedAddress(statementDTO.unresolved),
                 statementDTO.resolutionEntries.map((entry) => {
-                    return new ResolutionEntry(Address.createFromEncoded(entry.resolved),
-                        new ReceiptSource(entry.source.primaryId, entry.source.secondaryId));
+                    return new ResolutionEntry(
+                        Address.createFromEncoded(entry.resolved),
+                        new ReceiptSource(entry.source.primaryId, entry.source.secondaryId),
+                    );
                 }),
             );
         case ResolutionType.Mosaic:
@@ -76,12 +79,14 @@ const createResolutionStatement = (statementDTO, resolutionType): ResolutionStat
                 UInt64.fromNumericString(statementDTO.height),
                 UnresolvedMapping.toUnresolvedMosaic(statementDTO.unresolved),
                 statementDTO.resolutionEntries.map((entry) => {
-                    return new ResolutionEntry(new MosaicId(entry.resolved),
-                        new ReceiptSource(entry.source.primaryId, entry.source.secondaryId));
+                    return new ResolutionEntry(
+                        new MosaicId(entry.resolved),
+                        new ReceiptSource(entry.source.primaryId, entry.source.secondaryId),
+                    );
                 }),
             );
         default:
-            throw new Error ('Resolution type invalid');
+            throw new Error('Resolution type invalid');
     }
 };
 
@@ -145,11 +150,7 @@ const extractArtifactId = (receiptType: ReceiptType, id: string): MosaicId | Nam
  * @constructor
  */
 const createArtifactExpiryReceipt = (receiptDTO): Receipt => {
-    return new ArtifactExpiryReceipt(
-        extractArtifactId(receiptDTO.type, receiptDTO.artifactId),
-        receiptDTO.version,
-        receiptDTO.type,
-    );
+    return new ArtifactExpiryReceipt(extractArtifactId(receiptDTO.type, receiptDTO.artifactId), receiptDTO.version, receiptDTO.type);
 };
 
 /**
@@ -190,7 +191,7 @@ export const CreateReceiptFromDTO = (receiptDTO, networkType): Receipt => {
         case ReceiptType.Mosaic_Expired:
         case ReceiptType.Namespace_Expired:
         case ReceiptType.Namespace_Deleted:
-            return  createArtifactExpiryReceipt(receiptDTO);
+            return createArtifactExpiryReceipt(receiptDTO);
         case ReceiptType.Inflation:
             return createInflationReceipt(receiptDTO);
         default:

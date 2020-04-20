@@ -13,18 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {expect} from 'chai';
-import {
-    Convert as convert,
-    RawAddress as address,
-} from '../../../src/core/format';
+import { expect } from 'chai';
+import { Convert as convert, RawAddress as address } from '../../../src/core/format';
 import { NetworkType } from '../../../src/model/model';
 
 const Address_Decoded_Size = 25;
 
 describe('address', () => {
     describe('stringToAddress', () => {
-        function assertCannotCreateAddress(encoded, message) {
+        function assertCannotCreateAddress(encoded, message): void {
             // Assert:
             expect(() => {
                 address.stringToAddress(encoded);
@@ -40,7 +37,7 @@ describe('address', () => {
             const decoded = address.stringToAddress(encoded);
 
             // Assert:
-            expect(address.isValidAddress(decoded, NetworkType.MIJIN_TEST)).to.equal(true);
+            expect(address.isValidAddress(decoded)).to.equal(true);
             expect(convert.uint8ToHex(decoded)).to.equal(expectedHex);
         });
 
@@ -72,6 +69,13 @@ describe('address', () => {
             // Assert:
             expect(encoded).to.equal(expected);
         });
+
+        it('can create encoded address from address to throw', () => {
+            // Arrange:
+            const decodedHex = '60000000C089D996585466380EDBDC19D4959184893E38CA6';
+            // Assert:
+            expect(() => address.addressToString(convert.hexToUint8(decodedHex))).to.throw();
+        });
     });
 
     describe('publicKeyToAddress', () => {
@@ -85,7 +89,7 @@ describe('address', () => {
 
             // Assert:
             expect(decoded[0]).to.equal(NetworkType.MIJIN);
-            expect(address.isValidAddress(decoded, NetworkType.MIJIN)).to.equal(true);
+            expect(address.isValidAddress(decoded)).to.equal(true);
             expect(convert.uint8ToHex(decoded)).to.equal(expectedHex);
         });
 
@@ -99,7 +103,7 @@ describe('address', () => {
 
             // Assert:
             expect(decoded[0]).to.equal(NetworkType.MIJIN_TEST);
-            expect(address.isValidAddress(decoded, NetworkType.MIJIN_TEST)).to.equal(true);
+            expect(address.isValidAddress(decoded)).to.equal(true);
             expect(convert.uint8ToHex(decoded)).to.equal(expectedHex);
         });
 
@@ -112,7 +116,7 @@ describe('address', () => {
             const decoded2 = address.publicKeyToAddress(publicKey, NetworkType.MIJIN_TEST);
 
             // Assert:
-            expect(address.isValidAddress(decoded1, NetworkType.MIJIN_TEST)).to.equal(true);
+            expect(address.isValidAddress(decoded1)).to.equal(true);
             expect(decoded1).to.deep.equal(decoded2);
         });
 
@@ -126,8 +130,8 @@ describe('address', () => {
             const decoded2 = address.publicKeyToAddress(publicKey2, NetworkType.MIJIN_TEST);
 
             // Assert:
-            expect(address.isValidAddress(decoded1, NetworkType.MIJIN_TEST)).to.equal(true);
-            expect(address.isValidAddress(decoded2, NetworkType.MIJIN_TEST)).to.equal(true);
+            expect(address.isValidAddress(decoded1)).to.equal(true);
+            expect(address.isValidAddress(decoded2)).to.equal(true);
             expect(decoded1).to.not.deep.equal(decoded2);
         });
 
@@ -140,8 +144,8 @@ describe('address', () => {
             const decoded2 = address.publicKeyToAddress(publicKey, NetworkType.TEST_NET);
 
             // Assert:
-            expect(address.isValidAddress(decoded1, NetworkType.MIJIN_TEST)).to.equal(true);
-            expect(address.isValidAddress(decoded2, NetworkType.TEST_NET)).to.equal(true);
+            expect(address.isValidAddress(decoded1)).to.equal(true);
+            expect(address.isValidAddress(decoded2)).to.equal(true);
             expect(decoded1).to.not.deep.equal(decoded2);
         });
     });
@@ -153,7 +157,7 @@ describe('address', () => {
             const decoded = convert.hexToUint8(validHex);
 
             // Assert:
-            expect(address.isValidAddress(decoded, NetworkType.MIJIN_TEST)).to.equal(true);
+            expect(address.isValidAddress(decoded)).to.equal(true);
         });
 
         it('returns false for address with invalid checksum', () => {
@@ -163,7 +167,7 @@ describe('address', () => {
             decoded[Address_Decoded_Size - 1] ^= 0xff; // ruin checksum
 
             // Assert:
-            expect(address.isValidAddress(decoded, NetworkType.MIJIN_TEST)).to.equal(false);
+            expect(address.isValidAddress(decoded)).to.equal(false);
         });
 
         it('returns false for address with invalid hash', () => {
@@ -173,7 +177,15 @@ describe('address', () => {
             decoded[5] ^= 0xff; // ruin ripemd160 hash
 
             // Assert:
-            expect(address.isValidAddress(decoded, NetworkType.MIJIN_TEST)).to.equal(false);
+            expect(address.isValidAddress(decoded)).to.equal(false);
+        });
+
+        it('returns false for address with invalid length', () => {
+            // Arrange:
+            const validHex = '6823BB7C3C089D996585466380EDBDC19D4959184893E38CA6AABB';
+            const decoded = convert.hexToUint8(validHex);
+            // Assert:
+            expect(address.isValidAddress(decoded)).to.equal(false);
         });
     });
 
@@ -208,8 +220,7 @@ describe('address', () => {
                 const expectedAddress = Addresses[i];
 
                 // Act:
-                const result = address.addressToString(
-                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MAIN_NET));
+                const result = address.addressToString(address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MAIN_NET));
 
                 // Assert:
                 const message = ` from ${publicKeyHex}`;
@@ -249,8 +260,7 @@ describe('address', () => {
                 const expectedAddress = Addresses[i];
 
                 // Act:
-                const result = address.addressToString(
-                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.TEST_NET));
+                const result = address.addressToString(address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.TEST_NET));
 
                 // Assert:
                 const message = ` from ${publicKeyHex}`;
@@ -290,8 +300,7 @@ describe('address', () => {
                 const expectedAddress = Addresses[i];
 
                 // Act:
-                const result = address.addressToString(
-                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN));
+                const result = address.addressToString(address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN));
 
                 // Assert:
                 const message = ` from ${publicKeyHex}`;
@@ -332,7 +341,8 @@ describe('address', () => {
 
                 // Act:
                 const result = address.addressToString(
-                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN_TEST));
+                    address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN_TEST),
+                );
 
                 // Assert:
                 const message = ` from ${publicKeyHex}`;

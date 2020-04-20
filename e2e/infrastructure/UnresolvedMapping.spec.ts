@@ -15,10 +15,7 @@
  */
 import { expect } from 'chai';
 import { Convert } from '../../src/core/format';
-import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
-import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { Account } from '../../src/model/account/Account';
-import { Address } from '../../src/model/account/Address';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
@@ -46,11 +43,9 @@ describe('TransactionHttp', () => {
     const helper = new IntegrationTestHelper();
     let account: Account;
     let account2: Account;
-    let namespaceRepository: NamespaceRepository;
     let generationHash: string;
     let networkType: NetworkType;
     let mosaicId: MosaicId;
-    let NetworkCurrencyLocalId: MosaicId;
     let namespaceIdAddress: NamespaceId;
     let namespaceIdMosaic: NamespaceId;
 
@@ -60,7 +55,6 @@ describe('TransactionHttp', () => {
             account2 = helper.account2;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
-            namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
         });
     });
 
@@ -77,15 +71,8 @@ describe('TransactionHttp', () => {
      * Setup test data
      * =========================
      */
-    describe('Get network currency mosaic id', () => {
-        it('get mosaicId', async () => {
-            NetworkCurrencyLocalId =
-                (await namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).toPromise()) as MosaicId;
-        });
-    });
 
     describe('MosaicDefinitionTransaction', () => {
-
         it('standalone', () => {
             const nonce = MosaicNonce.createRandom();
             mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
@@ -96,7 +83,8 @@ describe('TransactionHttp', () => {
                 MosaicFlags.create(true, true, true),
                 3,
                 UInt64.fromUint(1000),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
@@ -105,14 +93,14 @@ describe('TransactionHttp', () => {
     });
 
     describe('NamespaceRegistrationTransaction', () => {
-
         it('standalone', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
                 UInt64.fromUint(50),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             namespaceIdMosaic = new NamespaceId(namespaceName);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
@@ -122,14 +110,14 @@ describe('TransactionHttp', () => {
     });
 
     describe('NamespaceRegistrationTransaction', () => {
-
         it('standalone', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
                 UInt64.fromUint(50),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             namespaceIdAddress = new NamespaceId(namespaceName);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
@@ -139,14 +127,14 @@ describe('TransactionHttp', () => {
     });
 
     describe('AddressAliasTransaction', () => {
-
         it('standalone', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
                 AliasAction.Link,
                 namespaceIdAddress,
                 account.address,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 
@@ -155,14 +143,14 @@ describe('TransactionHttp', () => {
     });
 
     describe('MosaicAliasTransaction', () => {
-
         it('standalone', () => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
                 Deadline.create(),
                 AliasAction.Link,
                 namespaceIdMosaic,
                 mosaicId,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
 
@@ -177,7 +165,6 @@ describe('TransactionHttp', () => {
      */
 
     describe('MosaicMetadataTransaction', () => {
-
         it('aggregate', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
                 Deadline.create(),
@@ -186,12 +173,16 @@ describe('TransactionHttp', () => {
                 namespaceIdMosaic,
                 10,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
 
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [mosaicMetadataTransaction.toAggregate(account.publicAccount)],
-                networkType, [], helper.maxFee,
+                networkType,
+                [],
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
 
@@ -199,13 +190,11 @@ describe('TransactionHttp', () => {
                 transaction.innerTransactions.forEach((innerTx) => {
                     expect((innerTx as MosaicMetadataTransaction).targetMosaicId instanceof NamespaceId).to.be.true;
                 });
-
             });
         });
     });
 
     describe('MosaicGlobalRestrictionTransaction', () => {
-
         it('standalone', () => {
             const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
                 Deadline.create(),
@@ -215,19 +204,19 @@ describe('TransactionHttp', () => {
                 MosaicRestrictionType.NONE,
                 UInt64.fromUint(0),
                 MosaicRestrictionType.GE,
-                networkType, undefined, helper.maxFee,
+                networkType,
+                undefined,
+                helper.maxFee,
             );
             const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
 
             return helper.announce(signedTransaction).then((transaction: Transaction) => {
                 expect((transaction as MosaicGlobalRestrictionTransaction).mosaicId instanceof NamespaceId).to.be.true;
-
             });
         });
     });
 
     describe('MosaicAddressRestrictionTransaction', () => {
-
         it('aggregate', () => {
             const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
                 Deadline.create(),
@@ -235,12 +224,15 @@ describe('TransactionHttp', () => {
                 UInt64.fromUint(60641),
                 namespaceIdAddress,
                 UInt64.fromUint(2),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [mosaicAddressRestrictionTransaction.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee,
+                [],
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
 
@@ -254,14 +246,14 @@ describe('TransactionHttp', () => {
     });
 
     describe('TransferTransaction', () => {
-
         it('standalone', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
                 [NetworkCurrencyLocal.createAbsolute(1)],
                 PlainMessage.create('test-message'),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = transferTransaction.signWith(account, generationHash);
 
@@ -278,14 +270,14 @@ describe('TransactionHttp', () => {
      */
 
     describe('AddressAliasTransaction', () => {
-
         it('standalone', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
                 AliasAction.Unlink,
                 namespaceIdAddress,
                 account.address,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 
@@ -293,20 +285,19 @@ describe('TransactionHttp', () => {
                 expect(transaction.namespaceId, 'NamespaceId').not.to.be.undefined;
                 expect(transaction.aliasAction, 'AliasAction').not.to.be.undefined;
                 expect(transaction.address, 'Address').not.to.be.undefined;
-
             });
         });
     });
 
     describe('MosaicAliasTransaction', () => {
-
         it('standalone', () => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
                 Deadline.create(),
                 AliasAction.Unlink,
                 namespaceIdMosaic,
                 mosaicId,
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
 

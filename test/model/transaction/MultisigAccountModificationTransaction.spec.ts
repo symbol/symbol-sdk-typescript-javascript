@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {Convert} from '../../../src/core/format';
-import {Account} from '../../../src/model/account/Account';
-import {PublicAccount} from '../../../src/model/account/PublicAccount';
-import {NetworkType} from '../../../src/model/network/NetworkType';
-import {Deadline} from '../../../src/model/transaction/Deadline';
-import {MultisigAccountModificationTransaction} from '../../../src/model/transaction/MultisigAccountModificationTransaction';
-import {UInt64} from '../../../src/model/UInt64';
-import {TestingAccount} from '../../conf/conf.spec';
+import { expect } from 'chai';
+import { Convert } from '../../../src/core/format';
+import { Account } from '../../../src/model/account/Account';
+import { PublicAccount } from '../../../src/model/account/PublicAccount';
+import { NetworkType } from '../../../src/model/network/NetworkType';
+import { Deadline } from '../../../src/model/transaction/Deadline';
+import { MultisigAccountModificationTransaction } from '../../../src/model/transaction/MultisigAccountModificationTransaction';
+import { UInt64 } from '../../../src/model/UInt64';
+import { TestingAccount } from '../../conf/conf.spec';
 
 describe('MultisigAccountModificationTransaction', () => {
     let account: Account;
@@ -36,10 +36,15 @@ describe('MultisigAccountModificationTransaction', () => {
             Deadline.create(),
             2,
             1,
-            [PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
-                NetworkType.MIJIN_TEST),
-             PublicAccount.createFromPublicKey('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
-                NetworkType.MIJIN_TEST),
+            [
+                PublicAccount.createFromPublicKey(
+                    'B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
+                    NetworkType.MIJIN_TEST,
+                ),
+                PublicAccount.createFromPublicKey(
+                    'B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
+                    NetworkType.MIJIN_TEST,
+                ),
             ],
             [],
             NetworkType.MIJIN_TEST,
@@ -54,10 +59,15 @@ describe('MultisigAccountModificationTransaction', () => {
             Deadline.create(),
             2,
             1,
-            [PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
-                NetworkType.MIJIN_TEST),
-             PublicAccount.createFromPublicKey('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
-                NetworkType.MIJIN_TEST),
+            [
+                PublicAccount.createFromPublicKey(
+                    'B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
+                    NetworkType.MIJIN_TEST,
+                ),
+                PublicAccount.createFromPublicKey(
+                    'B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
+                    NetworkType.MIJIN_TEST,
+                ),
             ],
             [],
             NetworkType.MIJIN_TEST,
@@ -73,36 +83,37 @@ describe('MultisigAccountModificationTransaction', () => {
             Deadline.create(),
             2,
             1,
-            [PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
-                NetworkType.MIJIN_TEST),
-             PublicAccount.createFromPublicKey('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
-                NetworkType.MIJIN_TEST),
+            [
+                PublicAccount.createFromPublicKey(
+                    'B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
+                    NetworkType.MIJIN_TEST,
+                ),
+                PublicAccount.createFromPublicKey(
+                    'B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
+                    NetworkType.MIJIN_TEST,
+                ),
             ],
             [],
             NetworkType.MIJIN_TEST,
         );
 
-        expect(modifyMultisigAccountTransaction.minApprovalDelta)
-            .to.be.equal(2);
-        expect(modifyMultisigAccountTransaction.minRemovalDelta)
-            .to.be.equal(1);
-        expect(modifyMultisigAccountTransaction.publicKeyAdditions.length)
-            .to.be.equal(2);
-        expect(modifyMultisigAccountTransaction.publicKeyAdditions[0].publicKey)
-            .to.be.equal('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24');
-        expect(modifyMultisigAccountTransaction.publicKeyAdditions[1].publicKey)
-            .to.be.equal('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4');
-        expect(modifyMultisigAccountTransaction.publicKeyDeletions.length)
-            .to.be.equal(0);
+        expect(modifyMultisigAccountTransaction.minApprovalDelta).to.be.equal(2);
+        expect(modifyMultisigAccountTransaction.minRemovalDelta).to.be.equal(1);
+        expect(modifyMultisigAccountTransaction.publicKeyAdditions.length).to.be.equal(2);
+        expect(modifyMultisigAccountTransaction.publicKeyAdditions[0].publicKey).to.be.equal(
+            'B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
+        );
+        expect(modifyMultisigAccountTransaction.publicKeyAdditions[1].publicKey).to.be.equal(
+            'B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
+        );
+        expect(modifyMultisigAccountTransaction.publicKeyDeletions.length).to.be.equal(0);
 
         const signedTransaction = modifyMultisigAccountTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(
-            256,
-            signedTransaction.payload.length,
-        )).to.be.equal('0102020000000000B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC' +
-            '6EC24B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4');
-
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            '0102020000000000B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC' +
+                '6EC24B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
+        );
     });
 
     describe('size', () => {
@@ -111,14 +122,19 @@ describe('MultisigAccountModificationTransaction', () => {
                 Deadline.create(),
                 1,
                 1,
-                [PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
-                    NetworkType.MIJIN_TEST)],
+                [
+                    PublicAccount.createFromPublicKey(
+                        'B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
+                        NetworkType.MIJIN_TEST,
+                    ),
+                ],
                 [],
                 NetworkType.MIJIN_TEST,
             );
             expect(modifyMultisigAccountTransaction.size).to.be.equal(168);
-            expect(Convert.hexToUint8(modifyMultisigAccountTransaction.serialize()).length)
-                .to.be.equal(modifyMultisigAccountTransaction.size);
+            expect(Convert.hexToUint8(modifyMultisigAccountTransaction.serialize()).length).to.be.equal(
+                modifyMultisigAccountTransaction.size,
+            );
         });
     });
 
@@ -127,12 +143,10 @@ describe('MultisigAccountModificationTransaction', () => {
             Deadline.create(),
             1,
             1,
-            [PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
-                NetworkType.MIJIN_TEST)],
+            [PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24', NetworkType.MIJIN_TEST)],
             [],
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
-​
         expect(modifyMultisigAccountTransaction.maxFee.compact()).to.be.equal(336);
 
         const signedTransaction = modifyMultisigAccountTransaction.signWith(account, generationHash);

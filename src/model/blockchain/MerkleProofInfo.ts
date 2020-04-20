@@ -20,14 +20,13 @@ import { MerklePathItem } from './MerklePathItem';
  * The block merkle proof info
  */
 export class MerkleProofInfo {
-
     /**
      * @param merklePath - Array of merkle path items
      */
-    constructor(/**
-                 * The merkle path
-                 */
-                public readonly merklePath?: MerklePathItem[]) {
-
-    }
+    constructor(
+        /**
+         * The merkle path
+         */
+        public readonly merklePath?: MerklePathItem[],
+    ) {}
 }

@@ -26,7 +26,6 @@ import { TransactionStatusError } from '../model/transaction/TransactionStatusEr
  * Listener service
  */
 export interface IListener {
-
     /**
      * Open web socket connection.
      * @returns Promise<Void>
@@ -74,7 +73,7 @@ export interface IListener {
      * @param address address we listen when a transaction is in unconfirmed state
      * @return an observable stream of Transaction with state unconfirmed
      */
-     unconfirmedAdded(address: Address): Observable<Transaction>;
+    unconfirmedAdded(address: Address): Observable<Transaction>;
 
     /**
      * Returns an observable stream of Transaction Hashes for specific address.
@@ -126,5 +125,4 @@ export interface IListener {
      * @return an observable stream of {@link CosignatureSignedTransaction}
      */
     cosignatureAdded(address: Address): Observable<CosignatureSignedTransaction>;
-
 }

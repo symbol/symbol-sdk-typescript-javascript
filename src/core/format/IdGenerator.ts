@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {sha3_256} from 'js-sha3';
+import { sha3_256 } from 'js-sha3';
 import * as utilities from './Utilities';
-import { idGeneratorConst } from './Utilities';
 
 export class IdGenerator {
     /**
@@ -24,20 +23,20 @@ export class IdGenerator {
      * @param {object} ownerPublicId The public id.
      * @returns {module:coders/uint64~uint64} The mosaic id.
      */
-    public static generateMosaicId = (nonce, ownerPublicId) => {
+    public static generateMosaicId = (nonce: any, ownerPublicId: any): number[] => {
         const hash = sha3_256.create();
         hash.update(nonce);
         hash.update(ownerPublicId);
         const result = new Uint32Array(hash.arrayBuffer());
-        return [result[0], result[1] & 0x7FFFFFFF];
-    }
+        return [result[0], result[1] & 0x7fffffff];
+    };
 
     /**
      * Parses a unified namespace name into a path.
      * @param {string} name The unified namespace name.
      * @returns {array<module:coders/uint64~uint64>} The namespace path.
      */
-    public static generateNamespacePath = (name: string) => {
+    public static generateNamespacePath = (name: string): number[] => {
         if (0 >= name.length) {
             utilities.throwInvalidFqn('having zero length', name);
         }
@@ -45,10 +44,10 @@ export class IdGenerator {
         const path = [];
         const start = utilities.split(name, (substringStart, size) => {
             namespaceId = utilities.generateNamespaceId(namespaceId, utilities.extractPartName(name, substringStart, size));
-            utilities.append(path, namespaceId, name);
+            utilities.append(path, namespaceId);
         });
         namespaceId = utilities.generateNamespaceId(namespaceId, utilities.extractPartName(name, start, name.length - start));
-        utilities.append(path, namespaceId, name);
+        utilities.append(path, namespaceId);
         return path;
-    }
+    };
 }

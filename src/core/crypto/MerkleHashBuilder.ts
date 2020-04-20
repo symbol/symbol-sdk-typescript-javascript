@@ -16,7 +16,6 @@
 import { SHA3Hasher } from './SHA3Hasher';
 
 export class MerkleHashBuilder {
-
     /**
      * The list of hashes used to calculate root hash.
      *
@@ -28,13 +27,14 @@ export class MerkleHashBuilder {
      * Constructor
      * @param length Hash size
      */
-    constructor(/**
-                 * Length of produced merkle hash in bytes.
-                 *
-                 * @var {number}
-                 */
-                public readonly length: number) {
-    }
+    constructor(
+        /**
+         * Length of produced merkle hash in bytes.
+         *
+         * @var {number}
+         */
+        public readonly length: number,
+    ) {}
 
     /**
      * Hash inner transactions
@@ -64,7 +64,6 @@ export class MerkleHashBuilder {
      * @return {Uint8Array}
      */
     protected calculateRootHash(hashes: Uint8Array[]): Uint8Array {
-
         if (hashes.length === 0) {
             return new Uint8Array(this.length);
         }

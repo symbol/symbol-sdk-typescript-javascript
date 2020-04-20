@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NamespaceId} from '../namespace/NamespaceId';
-import {UInt64} from '../UInt64';
-import {Mosaic} from './Mosaic';
-import {MosaicId} from './MosaicId';
+import { NamespaceId } from '../namespace/NamespaceId';
+import { UInt64 } from '../UInt64';
+import { Mosaic } from './Mosaic';
 
 /**
  * NetworkHarvestLocal mosaic
@@ -27,7 +26,6 @@ import {MosaicId} from './MosaicId';
  * @since 0.10.2
  */
 export class NetworkHarvestLocal extends Mosaic {
-
     /**
      * namespaceId of `currency` namespace.
      *
@@ -74,7 +72,7 @@ export class NetworkHarvestLocal extends Mosaic {
      * @param amount
      * @returns {NetworkHarvestLocal}
      */
-    public static createRelative(amount: UInt64 | number) {
+    public static createRelative(amount: UInt64 | number): NetworkHarvestLocal {
         if (typeof amount === 'number') {
             return new NetworkHarvestLocal(UInt64.fromUint(amount * Math.pow(10, NetworkHarvestLocal.DIVISIBILITY)));
         }
@@ -88,7 +86,7 @@ export class NetworkHarvestLocal extends Mosaic {
      * @param amount
      * @returns {NetworkHarvestLocal}
      */
-    public static createAbsolute(amount: UInt64 | number) {
+    public static createAbsolute(amount: UInt64 | number): NetworkHarvestLocal {
         if (typeof amount === 'number') {
             return new NetworkHarvestLocal(UInt64.fromUint(amount));
         }

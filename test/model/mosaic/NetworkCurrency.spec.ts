@@ -14,25 +14,29 @@
  * limitations under the License.
  */
 
-import {deepEqual} from 'assert';
-import {expect} from 'chai';
-import {NetworkCurrencyLocal} from '../../../src/model/mosaic/NetworkCurrencyLocal';
+import { deepEqual } from 'assert';
+import { expect } from 'chai';
+import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
 import { NetworkCurrencyPublic } from '../../../src/model/mosaic/NetworkCurrencyPublic';
-import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { UInt64 } from '../../../src/model/UInt64';
 
 describe('NetworkCurrencyLocal', () => {
-
     it('should createComplete an NetworkCurrencyLocal object', () => {
-
         const currency = NetworkCurrencyLocal.createRelative(1000);
 
         deepEqual(currency.id.id.toHex(), '85BBEA6CC462B244'); // holds NAMESPACE_ID
         expect(currency.amount.compact()).to.be.equal(1000 * 1000000);
     });
 
-    it('should set amount in smallest unit when toDTO()', () => {
+    it('should createComplete an NetworkCurrencyLocal object', () => {
+        const currency = NetworkCurrencyLocal.createRelative(UInt64.fromUint(1000));
 
+        deepEqual(currency.id.id.toHex(), '85BBEA6CC462B244'); // holds NAMESPACE_ID
+        expect(currency.amount.compact()).to.be.equal(1000 * 1000000);
+    });
+
+    it('should set amount in smallest unit when toDTO()', () => {
         const currency = NetworkCurrencyLocal.createRelative(1000);
         expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000 * 1000000);
     });
@@ -43,19 +47,32 @@ describe('NetworkCurrencyLocal', () => {
         expect(NetworkCurrencyLocal.TRANSFERABLE).to.be.equal(true);
         expect(NetworkCurrencyLocal.SUPPLY_MUTABLE).to.be.equal(false);
     });
+
+    it('should create network currency with absolute amount', () => {
+        const currency = NetworkCurrencyLocal.createAbsolute(1000);
+        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000);
+    });
+
+    it('should create network currency with absolute amount in Uint64', () => {
+        const currency = NetworkCurrencyLocal.createAbsolute(UInt64.fromUint(1000));
+        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000);
+    });
 });
 
 describe('NetworkCurrencyPublic', () => {
-
     it('should createComplete an NetworkCurrencyPublic object', () => {
-
         const currency = NetworkCurrencyPublic.createRelative(1000);
         deepEqual(currency.id.id.toHex(), 'E74B99BA41F4AFEE'); // holds NAMESPACE_ID
         expect(currency.amount.compact()).to.be.equal(1000 * 1000000);
     });
 
-    it('should set amount in smallest unit when toDTO()', () => {
+    it('should createComplete an NetworkCurrencyPublic object', () => {
+        const currency = NetworkCurrencyPublic.createRelative(UInt64.fromUint(1000));
+        deepEqual(currency.id.id.toHex(), 'E74B99BA41F4AFEE'); // holds NAMESPACE_ID
+        expect(currency.amount.compact()).to.be.equal(1000 * 1000000);
+    });
 
+    it('should set amount in smallest unit when toDTO()', () => {
         const currency = NetworkCurrencyPublic.createRelative(1000);
         expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000 * 1000000);
     });
@@ -65,5 +82,15 @@ describe('NetworkCurrencyPublic', () => {
         expect(NetworkCurrencyPublic.DIVISIBILITY).to.be.equal(6);
         expect(NetworkCurrencyPublic.TRANSFERABLE).to.be.equal(true);
         expect(NetworkCurrencyPublic.SUPPLY_MUTABLE).to.be.equal(false);
+    });
+
+    it('should create network currency with absolute amount', () => {
+        const currency = NetworkCurrencyPublic.createAbsolute(1000);
+        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000);
+    });
+
+    it('should create network currency with absolute amount in Uint64', () => {
+        const currency = NetworkCurrencyPublic.createAbsolute(UInt64.fromUint(1000));
+        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000);
     });
 });

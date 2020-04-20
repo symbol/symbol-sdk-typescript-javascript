@@ -16,13 +16,11 @@
 
 import { expect } from 'chai';
 import { mergeMap } from 'rxjs/operators';
-import { BlockHttp } from '../../src/infrastructure/BlockHttp';
 import { BlockRepository } from '../../src/infrastructure/BlockRepository';
 import { QueryParams } from '../../src/infrastructure/QueryParams';
 import { ReceiptRepository } from '../../src/infrastructure/ReceiptRepository';
 import { Account } from '../../src/model/account/Account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { TransactionInfo } from '../../src/model/transaction/TransactionInfo';
@@ -36,8 +34,6 @@ describe('BlockHttp', () => {
     let account2: Account;
     let blockRepository: BlockRepository;
     let receiptRepository: ReceiptRepository;
-    let blockReceiptHash = '';
-    let blockTransactionHash = '';
     let chainHeight;
     let generationHash: string;
     let networkType: NetworkType;
@@ -68,12 +64,11 @@ describe('BlockHttp', () => {
      */
 
     describe('Setup Test Data', () => {
-
         it('Announce TransferTransaction', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
-                [NetworkCurrencyLocal.createAbsolute(1)],
+                [helper.createNetworkCurrency(1, false)],
                 PlainMessage.create('test-message'),
                 networkType,
                 helper.maxFee,
@@ -89,8 +84,6 @@ describe('BlockHttp', () => {
     describe('getBlockByHeight', () => {
         it('should return block info given height', async () => {
             const blockInfo = await blockRepository.getBlockByHeight(UInt64.fromUint(1)).toPromise();
-            blockReceiptHash = blockInfo.blockReceiptsHash;
-            blockTransactionHash = blockInfo.blockTransactionsHash;
             expect(blockInfo.height.lower).to.be.equal(1);
             expect(blockInfo.height.higher).to.be.equal(0);
             expect(blockInfo.timestamp.lower).to.be.equal(0);
@@ -112,8 +105,9 @@ describe('BlockHttp', () => {
         });
 
         it('should return block transactions data given height with paginated transactionId', async () => {
-            const transactions = await blockRepository.getBlockTransactions(UInt64.fromUint(1),
-                new QueryParams({ pageSize: 10, id: nextId})).toPromise();
+            const transactions = await blockRepository
+                .getBlockTransactions(UInt64.fromUint(1), new QueryParams({ pageSize: 10, id: nextId }))
+                .toPromise();
             expect(transactions[0].transactionInfo!.id).to.be.equal(firstId);
             expect(transactions.length).to.be.greaterThan(0);
         });
@@ -127,24 +121,32 @@ describe('BlockHttp', () => {
     });
     describe('getMerkleReceipts', () => {
         it('should return Merkle Receipts', async () => {
-            const merkleReceipts = await receiptRepository.getBlockReceipts(chainHeight).pipe(
-                mergeMap((_) => {
-                    return receiptRepository.getMerkleReceipts(chainHeight, _.transactionStatements[0].generateHash());
-                })).toPromise();
+            const merkleReceipts = await receiptRepository
+                .getBlockReceipts(chainHeight)
+                .pipe(
+                    mergeMap((_) => {
+                        return receiptRepository.getMerkleReceipts(chainHeight, _.transactionStatements[0].generateHash());
+                    }),
+                )
+                .toPromise();
             expect(merkleReceipts.merklePath).not.to.be.null;
         });
     });
     describe('getMerkleTransaction', () => {
         it('should return Merkle Transaction', async () => {
-            const merkleTransactionss = await blockRepository.getBlockTransactions(chainHeight).pipe(
-                mergeMap((_) => {
-                    const hash = (_[0].transactionInfo as TransactionInfo).hash;
-                    if (hash) {
-                        return blockRepository.getMerkleTransaction(chainHeight, hash);
-                    }
-                    // If reaching this line, something is not right
-                    throw new Error('Tansacation hash is undefined');
-                })).toPromise();
+            const merkleTransactionss = await blockRepository
+                .getBlockTransactions(chainHeight)
+                .pipe(
+                    mergeMap((_) => {
+                        const hash = (_[0].transactionInfo as TransactionInfo).hash;
+                        if (hash) {
+                            return blockRepository.getMerkleTransaction(chainHeight, hash);
+                        }
+                        // If reaching this line, something is not right
+                        throw new Error('Tansacation hash is undefined');
+                    }),
+                )
+                .toPromise();
             expect(merkleTransactionss.merklePath).not.to.be.null;
         });
     });

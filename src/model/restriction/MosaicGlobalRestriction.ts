@@ -21,7 +21,6 @@ import { MosaicRestrictionEntryType } from './MosaicRestrictionEntryType';
  * Mosaic global restriction structure describes restriction information for an mosaic.
  */
 export class MosaicGlobalRestriction {
-
     /**
      * Constructor
      * @param compositeHash
@@ -31,22 +30,21 @@ export class MosaicGlobalRestriction {
      * @param restrictions
      */
     constructor(
-                /**
-                 * composite hash
-                 */
-                public readonly compositeHash: string,
-                /**
-                 * Mosaic restriction entry type.
-                 */
-                public readonly entryType: MosaicRestrictionEntryType,
-                /**
-                 * Mosaic identifier.
-                 */
-                public readonly mosaicId: MosaicId,
-                /**
-                 * Mosaic restriction items
-                 */
-                public readonly restrictions: Map<string, MosaicGlobalRestrictionItem>) {
-
-    }
+        /**
+         * composite hash
+         */
+        public readonly compositeHash: string,
+        /**
+         * Mosaic restriction entry type.
+         */
+        public readonly entryType: MosaicRestrictionEntryType,
+        /**
+         * Mosaic identifier.
+         */
+        public readonly mosaicId: MosaicId,
+        /**
+         * Mosaic restriction items
+         */
+        public readonly restrictions: Map<string, MosaicGlobalRestrictionItem>,
+    ) {}
 }

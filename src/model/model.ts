@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2020 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ export * from './account/MultisigAccountGraphInfo';
 export * from './account/MultisigAccountInfo';
 export * from './account/PublicAccount';
 export * from './account/AccountNames';
+export * from './account/AccountInfoResolvedMosaic';
 
 // Blockchain
 export * from './blockchain/BlockchainScore';
@@ -51,6 +52,7 @@ export * from './mosaic/NetworkCurrencyLocal';
 export * from './mosaic/NetworkCurrencyPublic';
 export * from './mosaic/NetworkHarvestLocal';
 export * from './mosaic/MosaicNames';
+export * from './mosaic/ResolvedMosaic';
 
 // Mosaic
 export * from './metadata/Metadata';
@@ -69,6 +71,7 @@ export * from './namespace/NamespaceName';
 export * from './namespace/NamespaceRegistrationType';
 export * from './namespace/AliasAction';
 export * from './namespace/EmptyAlias';
+export * from './namespace/NamespaceInfoWithName';
 
 // Network
 
@@ -150,7 +153,7 @@ export * from './transaction/CosignatureTransaction';
 export * from './transaction/Deadline';
 export * from './transaction/PersistentDelegationRequestTransaction';
 export * from './transaction/HashLockTransaction';
-export * from './transaction/HashType';
+export * from './transaction/LockHashAlgorithm';
 export * from './transaction/InnerTransaction';
 export * from './transaction/LinkAction';
 export * from './transaction/LockFundsTransaction';
@@ -179,9 +182,7 @@ export * from './transaction/MosaicGlobalRestrictionTransaction';
 export * from './transaction/MosaicAddressRestrictionTransaction';
 
 // Wallet
-export * from './wallet/EncryptedPrivateKey';
 export * from './wallet/ISimpleWalletDTO';
 export * from './wallet/Password';
 export * from './wallet/SimpleWallet';
 export * from './wallet/Wallet';
-export * from './wallet/WalletAlgorithm';

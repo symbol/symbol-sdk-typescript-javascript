@@ -42,7 +42,7 @@ export class RawAddress {
         }
 
         return Base32.Base32Decode(encoded);
-    }
+    };
 
     /**
      * Format a namespaceId *alias* into a valid recipient field value.
@@ -57,7 +57,7 @@ export class RawAddress {
         padded.set(namespaceId.reverse(), 1);
         padded.set(Convert.hexToUint8('00'.repeat(16)), 9);
         return padded;
-    }
+    };
 
     /**
      * Converts a decoded address to an encoded address string.
@@ -69,7 +69,7 @@ export class RawAddress {
             throw Error(`${Convert.uint8ToHex(decoded)} does not represent a valid decoded address`);
         }
         return Base32.Base32Encode(decoded);
-    }
+    };
 
     /**
      * Converts a public key to a decoded address for a specific network.
@@ -77,8 +77,7 @@ export class RawAddress {
      * @param {NetworkType} networkType The network identifier.
      * @returns {Uint8Array} The decoded address corresponding to the inputs.
      */
-    public static publicKeyToAddress = (publicKey: Uint8Array,
-                                        networkType: NetworkType): Uint8Array => {
+    public static publicKeyToAddress = (publicKey: Uint8Array, networkType: NetworkType): Uint8Array => {
         // step 1: sha3 hash of the public key
         const publicKeyHash = sha3_256.arrayBuffer(publicKey);
 
@@ -93,19 +92,22 @@ export class RawAddress {
         // step 4: concatenate (3) and the checksum of (3)
         const hash = sha3_256.arrayBuffer(decodedAddress.subarray(0, RawAddress.constants.sizes.ripemd160 + 1));
 
-        RawArray.copy(decodedAddress, RawArray.uint8View(hash),
-            RawAddress.constants.sizes.checksum, RawAddress.constants.sizes.ripemd160 + 1);
+        RawArray.copy(
+            decodedAddress,
+            RawArray.uint8View(hash),
+            RawAddress.constants.sizes.checksum,
+            RawAddress.constants.sizes.ripemd160 + 1,
+        );
 
         return decodedAddress;
-    }
+    };
 
     /**
      * Determines the validity of a decoded address.
      * @param {Uint8Array} decoded The decoded address.
-     * @param {NetworkType} networkType The network identifier.
      * @returns {boolean} true if the decoded address is valid, false otherwise.
      */
-    public static isValidAddress = (decoded: Uint8Array, networkType: NetworkType): boolean => {
+    public static isValidAddress = (decoded: Uint8Array): boolean => {
         if (RawAddress.constants.sizes.addressDecoded !== decoded.length) {
             return false;
         }
@@ -115,5 +117,5 @@ export class RawAddress {
         const checksum = new Uint8Array(RawAddress.constants.sizes.checksum);
         RawArray.copy(checksum, RawArray.uint8View(hash.arrayBuffer()), RawAddress.constants.sizes.checksum);
         return RawArray.deepEqual(checksum, decoded.subarray(checksumBegin));
-    }
+    };
 }

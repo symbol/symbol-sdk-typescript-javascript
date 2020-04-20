@@ -16,8 +16,8 @@
 
 import { expect } from 'chai';
 import { ChronoUnit } from 'js-joda';
-import {of as observableOf} from 'rxjs';
-import {deepEqual, instance, mock, when} from 'ts-mockito';
+import { of as observableOf } from 'rxjs';
+import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
 
 import { Account } from '../../src/model/account/Account';
@@ -25,12 +25,15 @@ import { Address } from '../../src/model/account/Address';
 import { MultisigAccountGraphInfo } from '../../src/model/account/MultisigAccountGraphInfo';
 import { MultisigAccountInfo } from '../../src/model/account/MultisigAccountInfo';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
-import {NetworkType} from '../../src/model/network/NetworkType';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { AggregateTransactionService } from '../../src/service/AggregateTransactionService';
+import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
+import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
+import { NetworkConfigurationDTO, PluginsPropertiesDTO, AggregateNetworkPropertiesDTO } from 'symbol-openapi-typescript-node-client';
 
 /**
  * For multi level multisig scenario visit: https://github.com/nemtech/symbol-docs/issues/10
@@ -49,54 +52,126 @@ describe('AggregateTransactionService', () => {
      * Private Key:	8B0622C2CCFC5CCC5A74B500163E3C68F3AD3643DB12932FC931143EAC67280D
      */
 
-     /**
-      * Test accounts:
-      * Multisig1 (1/1): Account2, Account3
-      * Multisig2 (2/1): Account1, Multisig1
-      * Multisig3 (2/2): Account2, Account3
-      * Stranger Account: Account4
-      */
+    /**
+     * Test accounts:
+     * Multisig1 (1/1): Account2, Account3
+     * Multisig2 (2/1): Account1, Multisig1
+     * Multisig3 (2/2): Account2, Account3
+     * Stranger Account: Account4
+     */
 
-    const account1 = Account.createFromPrivateKey('82DB2528834C9926F0FCCE042466B24A266F5B685CB66D2869AF6648C043E950',
-                        NetworkType.MIJIN_TEST);
-    const multisig1 = Account.createFromPrivateKey('8B0622C2CCFC5CCC5A74B500163E3C68F3AD3643DB12932FC931143EAC67280D',
-                        NetworkType.MIJIN_TEST);
-    const multisig2 = Account.createFromPrivateKey('22A1D67F8519D1A45BD7116600BB6E857786E816FE0B45E4C5B9FFF3D64BC177',
-                        NetworkType.MIJIN_TEST);
+    const account1 = Account.createFromPrivateKey(
+        '82DB2528834C9926F0FCCE042466B24A266F5B685CB66D2869AF6648C043E950',
+        NetworkType.MIJIN_TEST,
+    );
+    const multisig1 = Account.createFromPrivateKey(
+        '8B0622C2CCFC5CCC5A74B500163E3C68F3AD3643DB12932FC931143EAC67280D',
+        NetworkType.MIJIN_TEST,
+    );
+    const multisig2 = Account.createFromPrivateKey(
+        '22A1D67F8519D1A45BD7116600BB6E857786E816FE0B45E4C5B9FFF3D64BC177',
+        NetworkType.MIJIN_TEST,
+    );
 
-    const multisig3 = Account.createFromPrivateKey('5E7812AB0E709ABC45466034E1A209099F6A12C4698748A63CDCAA9B0DDE1DBD',
-                        NetworkType.MIJIN_TEST);
-    const account2 = Account.createFromPrivateKey('A4D410270E01CECDCDEADCDE32EC79C8D9CDEA4DCD426CB1EB666EFEF148FBCE',
-                        NetworkType.MIJIN_TEST);
-    const account3 = Account.createFromPrivateKey('336AB45EE65A6AFFC0E7ADC5342F91E34BACA0B901A1D9C876FA25A1E590077E',
-                        NetworkType.MIJIN_TEST);
+    const multisig3 = Account.createFromPrivateKey(
+        '5E7812AB0E709ABC45466034E1A209099F6A12C4698748A63CDCAA9B0DDE1DBD',
+        NetworkType.MIJIN_TEST,
+    );
+    const account2 = Account.createFromPrivateKey(
+        'A4D410270E01CECDCDEADCDE32EC79C8D9CDEA4DCD426CB1EB666EFEF148FBCE',
+        NetworkType.MIJIN_TEST,
+    );
+    const account3 = Account.createFromPrivateKey(
+        '336AB45EE65A6AFFC0E7ADC5342F91E34BACA0B901A1D9C876FA25A1E590077E',
+        NetworkType.MIJIN_TEST,
+    );
 
-    const account4 = Account.createFromPrivateKey('4D8B3756592532753344E11E2B7541317BCCFBBCF4444274CDBF359D2C4AE0F1',
-                        NetworkType.MIJIN_TEST);
+    const account4 = Account.createFromPrivateKey(
+        '4D8B3756592532753344E11E2B7541317BCCFBBCF4444274CDBF359D2C4AE0F1',
+        NetworkType.MIJIN_TEST,
+    );
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
 
-    before(() => {
-        const mockedAccountRepository: MultisigRepository = mock();
+    function givenMultisig2AccountInfo(): MultisigAccountInfo {
+        return new MultisigAccountInfo(multisig2.publicAccount, 2, 1, [multisig1.publicAccount, account1.publicAccount], []);
+    }
+    function givenMultisig3AccountInfo(): MultisigAccountInfo {
+        return new MultisigAccountInfo(multisig3.publicAccount, 2, 2, [account2.publicAccount, account3.publicAccount], []);
+    }
 
-        when(mockedAccountRepository.getMultisigAccountInfo(deepEqual(account1.address)))
-            .thenReturn(observableOf(givenAccount1Info()));
-        when(mockedAccountRepository.getMultisigAccountInfo(deepEqual(account4.address)))
-            .thenReturn(observableOf(givenAccount4Info()));
-        when(mockedAccountRepository.getMultisigAccountInfo(deepEqual(multisig2.address)))
-            .thenReturn(observableOf(givenMultisig2AccountInfo()));
-        when(mockedAccountRepository.getMultisigAccountInfo(deepEqual(multisig3.address)))
-            .thenReturn(observableOf(givenMultisig3AccountInfo()));
-        when(mockedAccountRepository.getMultisigAccountGraphInfo(deepEqual(multisig2.address)))
-            .thenReturn(observableOf(givenMultisig2AccountGraphInfo()));
-        when(mockedAccountRepository.getMultisigAccountGraphInfo(deepEqual(multisig3.address)))
-            .thenReturn(observableOf(givenMultisig3AccountGraphInfo()));
-        when(mockedAccountRepository.getMultisigAccountInfo(deepEqual(account2.address)))
-            .thenReturn(observableOf(givenAccount2Info()));
-        when(mockedAccountRepository.getMultisigAccountInfo(deepEqual(account3.address)))
-            .thenReturn(observableOf(givenAccount3Info()));
+    function givenAccount1Info(): MultisigAccountInfo {
+        return new MultisigAccountInfo(account1.publicAccount, 0, 0, [], [multisig2.publicAccount]);
+    }
+    function givenAccount2Info(): MultisigAccountInfo {
+        return new MultisigAccountInfo(account2.publicAccount, 0, 0, [], [multisig2.publicAccount, multisig3.publicAccount]);
+    }
+    function givenAccount3Info(): MultisigAccountInfo {
+        return new MultisigAccountInfo(account3.publicAccount, 0, 0, [], [multisig2.publicAccount, multisig3.publicAccount]);
+    }
+    function givenAccount4Info(): MultisigAccountInfo {
+        return new MultisigAccountInfo(account4.publicAccount, 0, 0, [], []);
+    }
+
+    function givenMultisig2AccountGraphInfo(): MultisigAccountGraphInfo {
+        const map = new Map<number, MultisigAccountInfo[]>();
+        map.set(0, [new MultisigAccountInfo(multisig2.publicAccount, 2, 1, [multisig1.publicAccount, account1.publicAccount], [])]).set(1, [
+            new MultisigAccountInfo(
+                multisig1.publicAccount,
+                1,
+                1,
+                [account2.publicAccount, account3.publicAccount],
+                [multisig2.publicAccount],
+            ),
+        ]);
+
+        return new MultisigAccountGraphInfo(map);
+    }
+
+    function givenMultisig3AccountGraphInfo(): MultisigAccountGraphInfo {
+        const map = new Map<number, MultisigAccountInfo[]>();
+        map.set(0, [new MultisigAccountInfo(multisig3.publicAccount, 2, 2, [account2.publicAccount, account3.publicAccount], [])]);
+
+        return new MultisigAccountGraphInfo(map);
+    }
+
+    function getNetworkProperties(input: string): NetworkConfigurationDTO {
+        const body = new NetworkConfigurationDTO();
+        const plugin = new PluginsPropertiesDTO();
+        plugin.aggregate = new AggregateNetworkPropertiesDTO();
+        plugin.aggregate.maxCosignaturesPerAggregate = input;
+        body.plugins = plugin;
+        return body;
+    }
+
+    let mockNetworkRepository: NetworkRepository;
+    before(() => {
+        mockNetworkRepository = mock<NetworkRepository>();
+        const mockRepoFactory = mock<RepositoryFactory>();
+        const mockedAccountRepository: MultisigRepository = mock<MultisigRepository>();
+
+        when(mockedAccountRepository.getMultisigAccountInfo(deepEqual(account1.address))).thenReturn(observableOf(givenAccount1Info()));
+        when(mockedAccountRepository.getMultisigAccountInfo(deepEqual(account4.address))).thenReturn(observableOf(givenAccount4Info()));
+        when(mockedAccountRepository.getMultisigAccountInfo(deepEqual(multisig2.address))).thenReturn(
+            observableOf(givenMultisig2AccountInfo()),
+        );
+        when(mockedAccountRepository.getMultisigAccountInfo(deepEqual(multisig3.address))).thenReturn(
+            observableOf(givenMultisig3AccountInfo()),
+        );
+        when(mockedAccountRepository.getMultisigAccountGraphInfo(deepEqual(multisig2.address))).thenReturn(
+            observableOf(givenMultisig2AccountGraphInfo()),
+        );
+        when(mockedAccountRepository.getMultisigAccountGraphInfo(deepEqual(multisig3.address))).thenReturn(
+            observableOf(givenMultisig3AccountGraphInfo()),
+        );
+        when(mockedAccountRepository.getMultisigAccountInfo(deepEqual(account2.address))).thenReturn(observableOf(givenAccount2Info()));
+        when(mockedAccountRepository.getMultisigAccountInfo(deepEqual(account3.address))).thenReturn(observableOf(givenAccount3Info()));
 
         const accountRepository = instance(mockedAccountRepository);
-        aggregateTransactionService = new AggregateTransactionService(accountRepository);
+        const networkRespository = instance(mockNetworkRepository);
+        const repoFactory = instance(mockRepoFactory);
+        when(mockRepoFactory.createMultisigRepository()).thenReturn(accountRepository);
+        when(mockRepoFactory.createNetworkRepository()).thenReturn(networkRespository);
+        aggregateTransactionService = new AggregateTransactionService(repoFactory);
     });
 
     it('should return isComplete: true for aggregated complete transaction - 2 levels Multisig', () => {
@@ -120,12 +195,16 @@ describe('AggregateTransactionService', () => {
             Deadline.create(),
             [transferTransaction.toAggregate(multisig2.publicAccount)],
             NetworkType.MIJIN_TEST,
-            []);
+            [],
+        );
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account2], generationHash);
-        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
-            expect(isComplete).to.be.true;
-        });
+        aggregateTransactionService
+            .isComplete(signedTransaction)
+            .toPromise()
+            .then((isComplete) => {
+                expect(isComplete).to.be.true;
+            });
     });
 
     it('should return  isComplete: false for aggregated complete transaction - 2 levels Multisig', () => {
@@ -149,12 +228,16 @@ describe('AggregateTransactionService', () => {
             Deadline.create(),
             [transferTransaction.toAggregate(multisig2.publicAccount)],
             NetworkType.MIJIN_TEST,
-            []);
+            [],
+        );
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [], generationHash);
-        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
-            expect(isComplete).to.be.false;
-        });
+        aggregateTransactionService
+            .isComplete(signedTransaction)
+            .toPromise()
+            .then((isComplete) => {
+                expect(isComplete).to.be.false;
+            });
     });
 
     it('should return  isComplete: false for aggregated complete transaction - 2 levels Multisig', () => {
@@ -178,12 +261,16 @@ describe('AggregateTransactionService', () => {
             Deadline.create(),
             [transferTransaction.toAggregate(multisig2.publicAccount)],
             NetworkType.MIJIN_TEST,
-            []);
+            [],
+        );
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4], generationHash);
-        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
-            expect(isComplete).to.be.false;
-        });
+        aggregateTransactionService
+            .isComplete(signedTransaction)
+            .toPromise()
+            .then((isComplete) => {
+                expect(isComplete).to.be.false;
+            });
     });
 
     it('should return correct isComplete status for aggregated complete transaction - 2 levels Multisig, multi inner transaction', () => {
@@ -214,14 +301,17 @@ describe('AggregateTransactionService', () => {
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
-            [transferTransaction.toAggregate(multisig2.publicAccount),
-             transferTransaction2.toAggregate(account4.publicAccount)],
+            [transferTransaction.toAggregate(multisig2.publicAccount), transferTransaction2.toAggregate(account4.publicAccount)],
             NetworkType.MIJIN_TEST,
-            []);
+            [],
+        );
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4], generationHash);
-        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
-            expect(isComplete).to.be.false;
-        });
+        aggregateTransactionService
+            .isComplete(signedTransaction)
+            .toPromise()
+            .then((isComplete) => {
+                expect(isComplete).to.be.false;
+            });
     });
 
     it('should return correct isComplete status for aggregated complete transaction - 2 levels Multisig, multi inner transaction', () => {
@@ -252,14 +342,17 @@ describe('AggregateTransactionService', () => {
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
-            [transferTransaction.toAggregate(multisig2.publicAccount),
-             transferTransaction2.toAggregate(account4.publicAccount)],
+            [transferTransaction.toAggregate(multisig2.publicAccount), transferTransaction2.toAggregate(account4.publicAccount)],
             NetworkType.MIJIN_TEST,
-            []);
+            [],
+        );
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4, account2], generationHash);
-        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
-            expect(isComplete).to.be.true;
-        });
+        aggregateTransactionService
+            .isComplete(signedTransaction)
+            .toPromise()
+            .then((isComplete) => {
+                expect(isComplete).to.be.true;
+            });
     });
 
     it('should use minRemoval for multisig account validation if inner transaction is modify multisig remove', () => {
@@ -282,11 +375,15 @@ describe('AggregateTransactionService', () => {
             Deadline.create(),
             [modifyMultisigTransaction.toAggregate(multisig2.publicAccount)],
             NetworkType.MIJIN_TEST,
-            []);
+            [],
+        );
         const signedTransaction = aggregateTransaction.signWith(account2, generationHash);
-        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
-            expect(isComplete).to.be.true;
-        });
+        aggregateTransactionService
+            .isComplete(signedTransaction)
+            .toPromise()
+            .then((isComplete) => {
+                expect(isComplete).to.be.true;
+            });
     });
 
     it('should return correct isComplete status (false) for aggregated complete transaction - none multisig', () => {
@@ -308,12 +405,16 @@ describe('AggregateTransactionService', () => {
             Deadline.create(),
             [transferTransaction.toAggregate(account4.publicAccount)],
             NetworkType.MIJIN_TEST,
-            []);
+            [],
+        );
 
         const signedTransaction = aggregateTransaction.signWith(account1, generationHash);
-        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
-            expect(isComplete).to.be.false;
-        });
+        aggregateTransactionService
+            .isComplete(signedTransaction)
+            .toPromise()
+            .then((isComplete) => {
+                expect(isComplete).to.be.false;
+            });
     });
 
     it('should return correct isComplete status (true) for aggregated complete transaction - none multisig', () => {
@@ -336,12 +437,16 @@ describe('AggregateTransactionService', () => {
             Deadline.create(),
             [transferTransaction.toAggregate(account4.publicAccount)],
             NetworkType.MIJIN_TEST,
-            []);
+            [],
+        );
 
         const signedTransaction = aggregateTransaction.signWith(account4, generationHash);
-        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
-            expect(isComplete).to.be.true;
-        });
+        aggregateTransactionService
+            .isComplete(signedTransaction)
+            .toPromise()
+            .then((isComplete) => {
+                expect(isComplete).to.be.true;
+            });
     });
 
     it('should return correct isComplete status TRUE - multiple normal account', () => {
@@ -376,15 +481,18 @@ describe('AggregateTransactionService', () => {
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
-            [transferTransaction.toAggregate(account4.publicAccount),
-             transferTransaction2.toAggregate(account1.publicAccount)],
+            [transferTransaction.toAggregate(account4.publicAccount), transferTransaction2.toAggregate(account1.publicAccount)],
             NetworkType.MIJIN_TEST,
-            []);
+            [],
+        );
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4], generationHash);
-        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
-            expect(isComplete).to.be.true;
-        });
+        aggregateTransactionService
+            .isComplete(signedTransaction)
+            .toPromise()
+            .then((isComplete) => {
+                expect(isComplete).to.be.true;
+            });
     });
 
     it('should return correct isComplete status FALSE - multiple normal account', () => {
@@ -418,15 +526,18 @@ describe('AggregateTransactionService', () => {
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
-            [transferTransaction.toAggregate(account4.publicAccount),
-             transferTransaction2.toAggregate(account1.publicAccount)],
+            [transferTransaction.toAggregate(account4.publicAccount), transferTransaction2.toAggregate(account1.publicAccount)],
             NetworkType.MIJIN_TEST,
-            []);
+            [],
+        );
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [], generationHash);
-        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
-            expect(isComplete).to.be.false;
-        });
+        aggregateTransactionService
+            .isComplete(signedTransaction)
+            .toPromise()
+            .then((isComplete) => {
+                expect(isComplete).to.be.false;
+            });
     });
 
     it('should return correct isComplete status TRUE - multisig Single Level', () => {
@@ -447,12 +558,16 @@ describe('AggregateTransactionService', () => {
             Deadline.create(),
             [transferTransaction.toAggregate(multisig3.publicAccount)],
             NetworkType.MIJIN_TEST,
-            []);
+            [],
+        );
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account2, [account3], generationHash);
-        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
-            expect(isComplete).to.be.true;
-        });
+        aggregateTransactionService
+            .isComplete(signedTransaction)
+            .toPromise()
+            .then((isComplete) => {
+                expect(isComplete).to.be.true;
+            });
     });
 
     it('should return correct isComplete status FALSE - multisig Single Level', () => {
@@ -473,89 +588,42 @@ describe('AggregateTransactionService', () => {
             Deadline.create(),
             [transferTransaction.toAggregate(multisig3.publicAccount)],
             NetworkType.MIJIN_TEST,
-            []);
+            [],
+        );
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account2, [], generationHash);
-        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
-            expect(isComplete).to.be.false;
-        });
+        aggregateTransactionService
+            .isComplete(signedTransaction)
+            .toPromise()
+            .then((isComplete) => {
+                expect(isComplete).to.be.false;
+            });
     });
 
-    function givenMultisig2AccountInfo(): MultisigAccountInfo {
-        return new MultisigAccountInfo(multisig2.publicAccount,
-                2, 1,
-                [multisig1.publicAccount,
-                 account1.publicAccount],
-                [],
-        );
-    }
-    function givenMultisig3AccountInfo(): MultisigAccountInfo {
-        return new MultisigAccountInfo(multisig3.publicAccount,
-                2, 2,
-                [account2.publicAccount,
-                 account3.publicAccount],
-                [],
-        );
-    }
+    it('should call getNetworkMaxCosignaturesPerAggregate and returns', async () => {
+        when(mockNetworkRepository.getNetworkProperties()).thenReturn(observableOf(getNetworkProperties('15')));
+        const max = await aggregateTransactionService.getNetworkMaxCosignaturesPerAggregate().toPromise();
+        expect(max).to.be.equal(15);
+    });
 
-    function givenAccount1Info(): MultisigAccountInfo {
-        return new MultisigAccountInfo(account1.publicAccount,
-                0, 0,
-                [],
-                [multisig2.publicAccount],
-        );
-    }
-    function givenAccount2Info(): MultisigAccountInfo {
-        return new MultisigAccountInfo(account2.publicAccount,
-                0, 0,
-                [],
-                [multisig2.publicAccount,
-                 multisig3.publicAccount],
-        );
-    }
-    function givenAccount3Info(): MultisigAccountInfo {
-        return new MultisigAccountInfo(account3.publicAccount,
-                0, 0,
-                [],
-                [multisig2.publicAccount,
-                 multisig3.publicAccount],
-        );
-    }
-    function givenAccount4Info(): MultisigAccountInfo {
-        return new MultisigAccountInfo(account4.publicAccount,
-                0, 0,
-                [],
-                [],
-        );
-    }
+    it('should call getNetworkMaxCosignaturesPerAggregate and returns with single quote', async () => {
+        when(mockNetworkRepository.getNetworkProperties()).thenReturn(observableOf(getNetworkProperties(`1'000`)));
+        const max = await aggregateTransactionService.getNetworkMaxCosignaturesPerAggregate().toPromise();
+        expect(max).to.be.equal(1000);
+    });
 
-    function givenMultisig2AccountGraphInfo(): MultisigAccountGraphInfo {
-        const map = new Map<number, MultisigAccountInfo[]>();
-        map.set(0, [new MultisigAccountInfo(multisig2.publicAccount,
-                            2, 1,
-                            [multisig1.publicAccount,
-                            account1.publicAccount],
-                            [],
-                    )])
-           .set(1, [new MultisigAccountInfo(multisig1.publicAccount,
-                            1, 1,
-                            [account2.publicAccount, account3.publicAccount],
-                            [multisig2.publicAccount],
-                    )]);
+    it('should call getNetworkMaxCosignaturesPerAggregate and throw', () => {
+        when(mockNetworkRepository.getNetworkProperties()).thenReturn(observableOf(getNetworkProperties('')));
+        aggregateTransactionService
+            .getNetworkMaxCosignaturesPerAggregate()
+            .toPromise()
+            .catch((error) => {
+                expect(error).not.to.be.undefined;
+            });
+    });
 
-        return new MultisigAccountGraphInfo(map);
-    }
-
-    function givenMultisig3AccountGraphInfo(): MultisigAccountGraphInfo {
-        const map = new Map<number, MultisigAccountInfo[]>();
-        map.set(0, [new MultisigAccountInfo(multisig3.publicAccount,
-                            2, 2,
-                            [account2.publicAccount,
-                            account3.publicAccount],
-                            [],
-                    )]);
-
-        return new MultisigAccountGraphInfo(map);
-    }
-
+    it('should call getMaxCosignatures and returns', async () => {
+        const max = await aggregateTransactionService.getMaxCosignatures(multisig2.address).toPromise();
+        expect(max).to.be.equal(4);
+    });
 });

@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-import { AddressDto,
-         AddressResolutionEntryBuilder,
-         AddressResolutionStatementBuilder,
-         MosaicIdDto, MosaicResolutionEntryBuilder,
-         MosaicResolutionStatementBuilder,
-         ReceiptSourceBuilder,
-         UnresolvedAddressDto,
-         UnresolvedMosaicIdDto } from 'catbuffer-typescript';
+import {
+    AddressDto,
+    AddressResolutionEntryBuilder,
+    AddressResolutionStatementBuilder,
+    MosaicIdDto,
+    MosaicResolutionEntryBuilder,
+    MosaicResolutionStatementBuilder,
+    ReceiptSourceBuilder,
+    UnresolvedAddressDto,
+    UnresolvedMosaicIdDto,
+} from 'catbuffer-typescript';
 import { sha3_256 } from 'js-sha3';
 import { RawAddress } from '../../core/format/RawAddress';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
@@ -41,7 +44,6 @@ import { ResolutionType } from './ResolutionType';
  * - Mosaic Resolution: A mosaic alias was used in the block.
  */
 export class ResolutionStatement {
-
     /**
      * Receipt - resolution statement object
      * @param resolutionType - The resolution type
@@ -50,23 +52,23 @@ export class ResolutionStatement {
      * @param resolutionEntries - The array of resolution entries.
      */
     constructor(
-                /**
-                 * Resolution type
-                 */
-                public readonly resolutionType: ResolutionType,
-                /**
-                 * The block height.
-                 */
-                public readonly height: UInt64,
-                /**
-                 * An unresolved address or unresolved mosaicId.
-                 */
-                public readonly unresolved: Address | MosaicId | NamespaceId,
-                /**
-                 * The array of resolution entries.
-                 */
-                public readonly resolutionEntries: ResolutionEntry[]) {
-    }
+        /**
+         * Resolution type
+         */
+        public readonly resolutionType: ResolutionType,
+        /**
+         * The block height.
+         */
+        public readonly height: UInt64,
+        /**
+         * An unresolved address or unresolved mosaicId.
+         */
+        public readonly unresolved: Address | MosaicId | NamespaceId,
+        /**
+         * The array of resolution entries.
+         */
+        public readonly resolutionEntries: ResolutionEntry[],
+    ) {}
 
     /**
      * Generate receipt hash
@@ -74,23 +76,36 @@ export class ResolutionStatement {
      * @return {string} receipt hash in hex
      */
     public generateHash(networkType: NetworkType): string {
-        const type = this.resolutionType === ResolutionType.Address ? ReceiptType.Address_Alias_Resolution
-            : ReceiptType.Mosaic_Alias_Resolution;
-        const builder = this.resolutionType === ResolutionType.Address ? new AddressResolutionStatementBuilder(
-            ReceiptVersion.RESOLUTION_STATEMENT, type.valueOf(),
-            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.unresolved as Address | NamespaceId, networkType)),
-            this.resolutionEntries.map((entry) => new AddressResolutionEntryBuilder(
-                new ReceiptSourceBuilder(entry.source.primaryId, entry.source.secondaryId),
-                new AddressDto(RawAddress.stringToAddress((entry.resolved as Address).plain())),
-            )),
-        ) : new MosaicResolutionStatementBuilder(ReceiptVersion.RESOLUTION_STATEMENT,
-                type.valueOf(),
-                new UnresolvedMosaicIdDto(UInt64.fromHex((this.unresolved as MosaicId | NamespaceId).toHex()).toDTO()),
-                this.resolutionEntries.map((entry) => new MosaicResolutionEntryBuilder(
-                    new ReceiptSourceBuilder(entry.source.primaryId, entry.source.secondaryId),
-                    new MosaicIdDto((entry.resolved as MosaicId).toDTO()),
-                )),
-        );
+        const type =
+            this.resolutionType === ResolutionType.Address ? ReceiptType.Address_Alias_Resolution : ReceiptType.Mosaic_Alias_Resolution;
+        const builder =
+            this.resolutionType === ResolutionType.Address
+                ? new AddressResolutionStatementBuilder(
+                      ReceiptVersion.RESOLUTION_STATEMENT,
+                      type.valueOf(),
+                      new UnresolvedAddressDto(
+                          UnresolvedMapping.toUnresolvedAddressBytes(this.unresolved as Address | NamespaceId, networkType),
+                      ),
+                      this.resolutionEntries.map(
+                          (entry) =>
+                              new AddressResolutionEntryBuilder(
+                                  new ReceiptSourceBuilder(entry.source.primaryId, entry.source.secondaryId),
+                                  new AddressDto(RawAddress.stringToAddress((entry.resolved as Address).plain())),
+                              ),
+                      ),
+                  )
+                : new MosaicResolutionStatementBuilder(
+                      ReceiptVersion.RESOLUTION_STATEMENT,
+                      type.valueOf(),
+                      new UnresolvedMosaicIdDto(UInt64.fromHex((this.unresolved as MosaicId | NamespaceId).toHex()).toDTO()),
+                      this.resolutionEntries.map(
+                          (entry) =>
+                              new MosaicResolutionEntryBuilder(
+                                  new ReceiptSourceBuilder(entry.source.primaryId, entry.source.secondaryId),
+                                  new MosaicIdDto((entry.resolved as MosaicId).toDTO()),
+                              ),
+                      ),
+                  );
         const hasher = sha3_256.create();
         hasher.update(builder.serialize());
         return hasher.hex().toUpperCase();
@@ -139,9 +154,11 @@ export class ResolutionStatement {
             Transaction: [Inx:3(2+1), AggInx:0]
             It should return Entry: {P:2, S:0}
             */
-            return this.resolutionEntries
-                .find((entry) => entry.source.primaryId === resolvedPrimaryId &&
-                    entry.source.secondaryId === this.getMaxSecondaryIdByPrimaryId(resolvedPrimaryId));
+            return this.resolutionEntries.find(
+                (entry) =>
+                    entry.source.primaryId === resolvedPrimaryId &&
+                    entry.source.secondaryId === this.getMaxSecondaryIdByPrimaryId(resolvedPrimaryId),
+            );
         }
 
         // When transaction index matches a primaryId, get the most recent secondaryId (resolvedPrimaryId can only <= primaryId)
@@ -159,8 +176,11 @@ export class ResolutionStatement {
         */
         if (resolvedSecondaryId === 0 && resolvedSecondaryId !== secondaryId) {
             const lastPrimaryId = this.getMaxAvailablePrimaryId(resolvedPrimaryId - 1);
-            return this.resolutionEntries.find((entry) => entry.source.primaryId === lastPrimaryId &&
-                entry.source.secondaryId === this.getMaxSecondaryIdByPrimaryId(lastPrimaryId));
+            return this.resolutionEntries.find(
+                (entry) =>
+                    entry.source.primaryId === lastPrimaryId &&
+                    entry.source.secondaryId === this.getMaxSecondaryIdByPrimaryId(lastPrimaryId),
+            );
         }
 
         /*
@@ -171,8 +191,9 @@ export class ResolutionStatement {
         Transaction: [Inx:5(4+1), AggInx:6(2+1)]
         It should return Entry: {P:5, S:6}
         */
-        return this.resolutionEntries
-            .find((entry) => entry.source.primaryId === resolvedPrimaryId && entry.source.secondaryId === resolvedSecondaryId);
+        return this.resolutionEntries.find(
+            (entry) => entry.source.primaryId === resolvedPrimaryId && entry.source.secondaryId === resolvedSecondaryId,
+        );
     }
 
     /**
@@ -182,8 +203,11 @@ export class ResolutionStatement {
      * @returns {number}
      */
     private getMaxSecondaryIdByPrimaryId(primaryId: number): number {
-        return Math.max(...this.resolutionEntries.filter((entry) => entry.source.primaryId === primaryId)
-            .map((filtered) => filtered.source.secondaryId));
+        return Math.max(
+            ...this.resolutionEntries
+                .filter((entry) => entry.source.primaryId === primaryId)
+                .map((filtered) => filtered.source.secondaryId),
+        );
     }
 
     /**
@@ -193,8 +217,11 @@ export class ResolutionStatement {
      * @returns {number}
      */
     private getMaxSecondaryIdByPrimaryIdAndSecondaryId(primaryId: number, secondaryId: number): number {
-        return Math.max(...this.resolutionEntries.filter((entry) => entry.source.primaryId === primaryId)
-            .map((filtered) => secondaryId >= filtered.source.secondaryId ? filtered.source.secondaryId : 0));
+        return Math.max(
+            ...this.resolutionEntries
+                .filter((entry) => entry.source.primaryId === primaryId)
+                .map((filtered) => (secondaryId >= filtered.source.secondaryId ? filtered.source.secondaryId : 0)),
+        );
     }
 
     /**
@@ -204,7 +231,6 @@ export class ResolutionStatement {
      * @returns {number}
      */
     private getMaxAvailablePrimaryId(primaryId: number): number {
-        return Math.max(...this.resolutionEntries
-            .map((entry) => primaryId >= entry.source.primaryId ? entry.source.primaryId : 0));
+        return Math.max(...this.resolutionEntries.map((entry) => (primaryId >= entry.source.primaryId ? entry.source.primaryId : 0)));
     }
 }

@@ -33,13 +33,13 @@ export class PersistentDelegationRequestTransaction extends TransferTransaction 
      * @returns {TransferTransaction}
      */
     public static createPersistentDelegationRequestTransaction(
-                    deadline: Deadline,
-                    delegatedPrivateKey: string,
-                    recipientPublicKey: string,
-                    networkType: NetworkType,
-                    maxFee: UInt64 = new UInt64([0, 0])): PersistentDelegationRequestTransaction {
-        const message = PersistentHarvestingDelegationMessage
-            .create(delegatedPrivateKey, recipientPublicKey, networkType);
+        deadline: Deadline,
+        delegatedPrivateKey: string,
+        recipientPublicKey: string,
+        networkType: NetworkType,
+        maxFee: UInt64 = new UInt64([0, 0]),
+    ): PersistentDelegationRequestTransaction {
+        const message = PersistentHarvestingDelegationMessage.create(delegatedPrivateKey, recipientPublicKey, networkType);
         return super.create(deadline, Address.createFromPublicKey(recipientPublicKey, networkType), [], message, networkType, maxFee);
     }
 }

@@ -37,7 +37,6 @@ import { TransactionRepository } from './TransactionRepository';
  *
  */
 export interface RepositoryFactory {
-
     /**
      * @returns the network type of the network. This method is cached, the server is only called the
      * first time.
@@ -119,5 +118,4 @@ export interface RepositoryFactory {
      * @returns a newly create {@link IListener}
      */
     createListener(): IListener;
-
 }

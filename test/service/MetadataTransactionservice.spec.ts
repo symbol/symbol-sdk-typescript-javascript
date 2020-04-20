@@ -42,127 +42,12 @@ describe('MetadataTransactionService', () => {
     const value = 'TEST';
     const deltaValue = 'dalta';
     const targetIdHex = '941299B2B7E1291C';
-
-    before(() => {
-        account = TestingAccount;
-        const mockMetadataRepository: MetadataRepository = mock();
-
-        when(mockMetadataRepository
-            .getAccountMetadataByKeyAndSender(deepEqual(account.address), key.toHex(), account.publicKey))
-            .thenReturn(observableOf(mockMetadata(MetadataType.Account)));
-        when(mockMetadataRepository
-            .getMosaicMetadataByKeyAndSender(deepEqual(new MosaicId(targetIdHex)), key.toHex(), account.publicKey))
-                .thenReturn(observableOf(mockMetadata(MetadataType.Mosaic)));
-        when(mockMetadataRepository
-            .getNamespaceMetadataByKeyAndSender(deepEqual(NamespaceId.createFromEncoded(targetIdHex)), key.toHex(), account.publicKey))
-            .thenReturn(observableOf(mockMetadata(MetadataType.Namespace)));
-        const metadataRepository = instance(mockMetadataRepository);
-        metadataTransactionService = new MetadataTransactionService(metadataRepository);
-    });
-
-    it('should create AccountMetadataTransaction', (done) => {
-        metadataTransactionService.createMetadataTransaction(Deadline.create(),
-                                                             NetworkType.MIJIN_TEST,
-                                                             MetadataType.Account,
-                                                             account.publicAccount,
-                                                             key,
-                                                             value + deltaValue,
-                                                             account.publicAccount)
-            .subscribe((transaction: AccountMetadataTransaction) => {
-                expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA);
-                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
-                expect(Convert.utf8ToHex(transaction.value))
-                    .to.be.equal(Convert.xor(Convert.utf8ToUint8(value), Convert.utf8ToUint8(value + deltaValue)));
-                expect(transaction.valueSizeDelta).to.be.equal(deltaValue.length);
-                expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
-                done();
-        });
-    });
-
-    it('should create MosaicMetadataTransaction', (done) => {
-        metadataTransactionService.createMetadataTransaction(Deadline.create(),
-                                                             NetworkType.MIJIN_TEST,
-                                                             MetadataType.Mosaic,
-                                                             account.publicAccount,
-                                                             key,
-                                                             value + deltaValue,
-                                                             account.publicAccount,
-                                                             new MosaicId(targetIdHex))
-            .subscribe((transaction: MosaicMetadataTransaction) => {
-                expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
-                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
-                expect(Convert.utf8ToHex(transaction.value))
-                    .to.be.equal(Convert.xor(Convert.utf8ToUint8(value), Convert.utf8ToUint8(value + deltaValue)));
-                expect(transaction.targetMosaicId.toHex()).to.be.equal(targetIdHex);
-                expect(transaction.valueSizeDelta).to.be.equal(deltaValue.length);
-                expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
-                done();
-        });
-    });
-
-    it('should create NamespaceMetadataTransaction', (done) => {
-        metadataTransactionService.createMetadataTransaction(Deadline.create(),
-                                                             NetworkType.MIJIN_TEST,
-                                                             MetadataType.Namespace,
-                                                             account.publicAccount,
-                                                             key,
-                                                             value + deltaValue,
-                                                             account.publicAccount,
-                                                             NamespaceId.createFromEncoded(targetIdHex))
-            .subscribe((transaction: NamespaceMetadataTransaction) => {
-                expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
-                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
-                expect(Convert.utf8ToHex(transaction.value))
-                    .to.be.equal(Convert.xor(Convert.utf8ToUint8(value), Convert.utf8ToUint8(value + deltaValue)));
-                expect(transaction.targetNamespaceId.toHex()).to.be.equal(targetIdHex);
-                expect(transaction.valueSizeDelta).to.be.equal(deltaValue.length);
-                expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
-                done();
-        });
-    });
-
-    it('should throw error with invalid metadata type', () => {
-        expect(() => {
-            metadataTransactionService.createMetadataTransaction(Deadline.create(),
-                                                                NetworkType.MIJIN_TEST,
-                                                                99,
-                                                                account.publicAccount,
-                                                                key,
-                                                                value + deltaValue,
-                                                                account.publicAccount);
-        }).to.throw(Error, 'Metadata type invalid');
-    });
-
-    it('should throw error with invalid mosaicId', () => {
-        expect(() => {
-            metadataTransactionService.createMetadataTransaction(Deadline.create(),
-                                                                NetworkType.MIJIN_TEST,
-                                                                MetadataType.Mosaic,
-                                                                account.publicAccount,
-                                                                key,
-                                                                value + deltaValue,
-                                                                account.publicAccount);
-        }).to.throw(Error, 'TargetId for MosaicMetadataTransaction is invalid');
-    });
-
-    it('should throw error with invalid NamespaceId', () => {
-        expect(() => {
-            metadataTransactionService.createMetadataTransaction(Deadline.create(),
-                                                                NetworkType.MIJIN_TEST,
-                                                                MetadataType.Namespace,
-                                                                account.publicAccount,
-                                                                key,
-                                                                value + deltaValue,
-                                                                account.publicAccount);
-        }).to.throw(Error, 'TargetId for NamespaceMetadataTransaction is invalid');
-    });
-
     function mockMetadata(type: MetadataType): Metadata {
         let targetId;
 
         if (type === MetadataType.Account) {
             targetId = undefined;
-        } else  if (type === MetadataType.Mosaic) {
+        } else if (type === MetadataType.Mosaic) {
             targetId = new MosaicId(targetIdHex);
         } else if (type === MetadataType.Namespace) {
             targetId = NamespaceId.createFromEncoded(targetIdHex);
@@ -176,7 +61,144 @@ describe('MetadataTransactionService', () => {
                 key,
                 MetadataType.Account,
                 value,
-                targetId),
-            );
+                targetId,
+            ),
+        );
     }
+
+    before(() => {
+        account = TestingAccount;
+        const mockMetadataRepository: MetadataRepository = mock();
+
+        when(
+            mockMetadataRepository.getAccountMetadataByKeyAndSender(deepEqual(account.address), key.toHex(), account.publicKey),
+        ).thenReturn(observableOf(mockMetadata(MetadataType.Account)));
+        when(
+            mockMetadataRepository.getMosaicMetadataByKeyAndSender(deepEqual(new MosaicId(targetIdHex)), key.toHex(), account.publicKey),
+        ).thenReturn(observableOf(mockMetadata(MetadataType.Mosaic)));
+        when(
+            mockMetadataRepository.getNamespaceMetadataByKeyAndSender(
+                deepEqual(NamespaceId.createFromEncoded(targetIdHex)),
+                key.toHex(),
+                account.publicKey,
+            ),
+        ).thenReturn(observableOf(mockMetadata(MetadataType.Namespace)));
+        const metadataRepository = instance(mockMetadataRepository);
+        metadataTransactionService = new MetadataTransactionService(metadataRepository);
+    });
+
+    it('should create AccountMetadataTransaction', (done) => {
+        metadataTransactionService
+            .createMetadataTransaction(
+                Deadline.create(),
+                NetworkType.MIJIN_TEST,
+                MetadataType.Account,
+                account.publicAccount,
+                key,
+                value + deltaValue,
+                account.publicAccount,
+            )
+            .subscribe((transaction: AccountMetadataTransaction) => {
+                expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA);
+                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
+                expect(Convert.utf8ToHex(transaction.value)).to.be.equal(
+                    Convert.xor(Convert.utf8ToUint8(value), Convert.utf8ToUint8(value + deltaValue)),
+                );
+                expect(transaction.valueSizeDelta).to.be.equal(deltaValue.length);
+                expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
+                done();
+            });
+    });
+
+    it('should create MosaicMetadataTransaction', (done) => {
+        metadataTransactionService
+            .createMetadataTransaction(
+                Deadline.create(),
+                NetworkType.MIJIN_TEST,
+                MetadataType.Mosaic,
+                account.publicAccount,
+                key,
+                value + deltaValue,
+                account.publicAccount,
+                new MosaicId(targetIdHex),
+            )
+            .subscribe((transaction: MosaicMetadataTransaction) => {
+                expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
+                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
+                expect(Convert.utf8ToHex(transaction.value)).to.be.equal(
+                    Convert.xor(Convert.utf8ToUint8(value), Convert.utf8ToUint8(value + deltaValue)),
+                );
+                expect(transaction.targetMosaicId.toHex()).to.be.equal(targetIdHex);
+                expect(transaction.valueSizeDelta).to.be.equal(deltaValue.length);
+                expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
+                done();
+            });
+    });
+
+    it('should create NamespaceMetadataTransaction', (done) => {
+        metadataTransactionService
+            .createMetadataTransaction(
+                Deadline.create(),
+                NetworkType.MIJIN_TEST,
+                MetadataType.Namespace,
+                account.publicAccount,
+                key,
+                value + deltaValue,
+                account.publicAccount,
+                NamespaceId.createFromEncoded(targetIdHex),
+            )
+            .subscribe((transaction: NamespaceMetadataTransaction) => {
+                expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
+                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
+                expect(Convert.utf8ToHex(transaction.value)).to.be.equal(
+                    Convert.xor(Convert.utf8ToUint8(value), Convert.utf8ToUint8(value + deltaValue)),
+                );
+                expect(transaction.targetNamespaceId.toHex()).to.be.equal(targetIdHex);
+                expect(transaction.valueSizeDelta).to.be.equal(deltaValue.length);
+                expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
+                done();
+            });
+    });
+
+    it('should throw error with invalid metadata type', () => {
+        expect(() => {
+            metadataTransactionService.createMetadataTransaction(
+                Deadline.create(),
+                NetworkType.MIJIN_TEST,
+                99,
+                account.publicAccount,
+                key,
+                value + deltaValue,
+                account.publicAccount,
+            );
+        }).to.throw(Error, 'Metadata type invalid');
+    });
+
+    it('should throw error with invalid mosaicId', () => {
+        expect(() => {
+            metadataTransactionService.createMetadataTransaction(
+                Deadline.create(),
+                NetworkType.MIJIN_TEST,
+                MetadataType.Mosaic,
+                account.publicAccount,
+                key,
+                value + deltaValue,
+                account.publicAccount,
+            );
+        }).to.throw(Error, 'TargetId for MosaicMetadataTransaction is invalid');
+    });
+
+    it('should throw error with invalid NamespaceId', () => {
+        expect(() => {
+            metadataTransactionService.createMetadataTransaction(
+                Deadline.create(),
+                NetworkType.MIJIN_TEST,
+                MetadataType.Namespace,
+                account.publicAccount,
+                key,
+                value + deltaValue,
+                account.publicAccount,
+            );
+        }).to.throw(Error, 'TargetId for NamespaceMetadataTransaction is invalid');
+    });
 });

@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {expect} from 'chai';
-import { Convert as convert, RawArray as array} from '../../../src/core/format';
+import { expect } from 'chai';
+import { Convert as convert, RawArray as array } from '../../../src/core/format';
 
 describe('array', () => {
     describe('uint8View', () => {
@@ -108,7 +108,7 @@ describe('array', () => {
             expect(isZero).to.equal(true);
         });
 
-        function assertIsNonZero(length, nonZeroOffset) {
+        function assertIsNonZero(length, nonZeroOffset): void {
             // Arrange:
             const src = new Uint16Array(length);
             src[nonZeroOffset] = 2;
@@ -155,11 +155,11 @@ describe('array', () => {
             expect(isEqual2).to.equal(false);
         });
 
-        function assertNotEqual(lhs, unequalOffset) {
+        function assertNotEqual(lhs, unequalOffset): void {
             // Arrange:
             const rhs = new Uint8Array(lhs.length);
             array.copy(rhs, lhs);
-            rhs[unequalOffset] ^= 0xFF;
+            rhs[unequalOffset] ^= 0xff;
 
             // Act
             const isEqual = array.deepEqual(lhs, rhs);

@@ -16,10 +16,7 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import {
-    CreateReceiptFromDTO,
-    CreateStatementFromDTO,
-} from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
+import { CreateReceiptFromDTO, CreateStatementFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
@@ -41,7 +38,6 @@ import { UInt64 } from '../../../src/model/UInt64';
 
 describe('Receipt', () => {
     let account: Account;
-    let account2: Account;
     let transactionStatementsDTO;
     let addressResolutionStatementsDTO;
     let mosaicResolutionStatementsDTO;
@@ -50,14 +46,13 @@ describe('Receipt', () => {
 
     before(() => {
         account = Account.createFromPrivateKey('D242FB34C2C4DD36E995B9C865F93940065E326661BA5A4A247331D211FE3A3D', NetworkType.MIJIN_TEST);
-        account2 = Account.createFromPrivateKey('E5DCCEBDB01A8B03A7DB7BA5888E2E33FD4617B5F6FED48C4C09C0780F422713', NetworkType.MIJIN_TEST);
         transactionStatementsDTO = [
             {
                 statement: {
                     height: '52',
                     source: {
-                    primaryId: 0,
-                    secondaryId: 0,
+                        primaryId: 0,
+                        secondaryId: 0,
                     },
                     receipts: [
                         {
@@ -77,13 +72,13 @@ describe('Receipt', () => {
                     height: '1488',
                     unresolved: '9103B60AAF2762688300000000000000000000000000000000',
                     resolutionEntries: [
-                    {
-                        source: {
-                        primaryId: 4,
-                        secondaryId: 0,
+                        {
+                            source: {
+                                primaryId: 4,
+                                secondaryId: 0,
+                            },
+                            resolved: '917E7E29A01014C2F300000000000000000000000000000000',
                         },
-                        resolved: '917E7E29A01014C2F300000000000000000000000000000000',
-                    },
                     ],
                 },
             },
@@ -92,13 +87,13 @@ describe('Receipt', () => {
                     height: '1488',
                     unresolved: '917E7E29A01014C2F300000000000000000000000000000000',
                     resolutionEntries: [
-                    {
-                        source: {
-                        primaryId: 2,
-                        secondaryId: 0,
+                        {
+                            source: {
+                                primaryId: 2,
+                                secondaryId: 0,
+                            },
+                            resolved: '9103B60AAF2762688300000000000000000000000000000000',
                         },
-                        resolved: '9103B60AAF2762688300000000000000000000000000000000',
-                    },
                     ],
                 },
             },
@@ -109,13 +104,13 @@ describe('Receipt', () => {
                     height: '1506',
                     unresolved: '85BBEA6CC462B244',
                     resolutionEntries: [
-                    {
-                        source: {
-                        primaryId: 1,
-                        secondaryId: 0,
+                        {
+                            source: {
+                                primaryId: 1,
+                                secondaryId: 0,
+                            },
+                            resolved: '941299B2B7E1291C',
                         },
-                        resolved: '941299B2B7E1291C',
-                    },
                     ],
                 },
             },
@@ -124,13 +119,13 @@ describe('Receipt', () => {
                     height: '1506',
                     unresolved: '85BBEA6CC462B244',
                     resolutionEntries: [
-                    {
-                        source: {
-                        primaryId: 5,
-                        secondaryId: 0,
+                        {
+                            source: {
+                                primaryId: 5,
+                                secondaryId: 0,
+                            },
+                            resolved: '941299B2B7E1291C',
                         },
-                        resolved: '941299B2B7E1291C',
-                    },
                     ],
                 },
             },
@@ -151,7 +146,7 @@ describe('Receipt', () => {
             recipientAddress: '9103B60AAF2762688300000000000000000000000000000000',
             mosaicId: '941299B2B7E1291C',
             amount: '1000',
-          };
+        };
         const receipt = new BalanceTransferReceipt(
             PublicAccount.createFromPublicKey(receiptDTO.senderPublicKey, netWorkType),
             Address.createFromEncoded(receiptDTO.recipientAddress),
@@ -249,11 +244,7 @@ describe('Receipt', () => {
             artifactId: 'D525AD41D95FCF29',
         };
 
-        const receipt = new ArtifactExpiryReceipt(
-            new NamespaceId([3646934825, 3576016193]),
-            receiptDTO.version,
-            receiptDTO.type,
-        );
+        const receipt = new ArtifactExpiryReceipt(new NamespaceId([3646934825, 3576016193]), receiptDTO.version, receiptDTO.type);
 
         deepEqual(receipt.artifactId.id.toHex().toUpperCase(), receiptDTO.artifactId);
         deepEqual(receipt.type, ReceiptType.Namespace_Expired);
@@ -267,11 +258,7 @@ describe('Receipt', () => {
             artifactId: '941299B2B7E1291C',
         };
 
-        const receipt = new ArtifactExpiryReceipt(
-            new MosaicId(receiptDTO.artifactId),
-            receiptDTO.version,
-            receiptDTO.type,
-        );
+        const receipt = new ArtifactExpiryReceipt(new MosaicId(receiptDTO.artifactId), receiptDTO.version, receiptDTO.type);
         deepEqual(receipt.artifactId.toHex().toUpperCase(), receiptDTO.artifactId);
         deepEqual(receipt.type, ReceiptType.Mosaic_Expired);
         deepEqual(receipt.version, ReceiptVersion.ARTIFACT_EXPIRY);
@@ -281,9 +268,8 @@ describe('Receipt', () => {
         const statementDto = transactionStatementsDTO[0];
         const statement = new TransactionStatement(
             statementDto.statement.height,
-            new ReceiptSource( statementDto.statement.source.primaryId, statementDto.statement.source.secondaryId),
-            statementDto.statement.receipts.map((receipt) =>
-            CreateReceiptFromDTO(receipt, netWorkType)),
+            new ReceiptSource(statementDto.statement.source.primaryId, statementDto.statement.source.secondaryId),
+            statementDto.statement.receipts.map((receipt) => CreateReceiptFromDTO(receipt, netWorkType)),
         );
         deepEqual(statement.source.primaryId, statementDto.statement.source.primaryId);
         deepEqual(statement.source.secondaryId, statementDto.statement.source.secondaryId);
@@ -297,8 +283,10 @@ describe('Receipt', () => {
             statementDto.statement.height,
             new MosaicId(statementDto.statement.unresolved),
             statementDto.statement.resolutionEntries.map((resolved) => {
-                return new ResolutionEntry(new MosaicId(resolved.resolved),
-                new ReceiptSource( resolved.source.primaryId, resolved.source.secondaryId));
+                return new ResolutionEntry(
+                    new MosaicId(resolved.resolved),
+                    new ReceiptSource(resolved.source.primaryId, resolved.source.secondaryId),
+                );
             }),
         );
         deepEqual((statement.unresolved as MosaicId).toHex(), statementDto.statement.unresolved);
@@ -312,14 +300,20 @@ describe('Receipt', () => {
             statementDto.statement.height,
             Address.createFromEncoded(statementDto.statement.unresolved),
             statementDto.statement.resolutionEntries.map((resolved) => {
-                return new ResolutionEntry(Address.createFromEncoded(resolved.resolved),
-                new ReceiptSource( resolved.source.primaryId, resolved.source.secondaryId));
+                return new ResolutionEntry(
+                    Address.createFromEncoded(resolved.resolved),
+                    new ReceiptSource(resolved.source.primaryId, resolved.source.secondaryId),
+                );
             }),
         );
-        deepEqual((statement.unresolved as Address).plain(),
-            Address.createFromEncoded('9103B60AAF2762688300000000000000000000000000000000').plain());
-        deepEqual((statement.resolutionEntries[0].resolved as Address).plain(),
-            Address.createFromEncoded('917E7E29A01014C2F300000000000000000000000000000000').plain());
+        deepEqual(
+            (statement.unresolved as Address).plain(),
+            Address.createFromEncoded('9103B60AAF2762688300000000000000000000000000000000').plain(),
+        );
+        deepEqual(
+            (statement.resolutionEntries[0].resolved as Address).plain(),
+            Address.createFromEncoded('917E7E29A01014C2F300000000000000000000000000000000').plain(),
+        );
     });
 
     it('should createComplete a inflation receipt', () => {

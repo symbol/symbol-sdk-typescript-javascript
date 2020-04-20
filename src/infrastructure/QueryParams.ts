@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-import { TransactionType } from '../model/transaction/TransactionType';
-
- /**
-  * @since 0.11.3
-  */
+/**
+ * @since 0.11.3
+ */
 export enum Order {
     ASC = 'id',
     DESC = '-id',
@@ -55,15 +53,17 @@ export class QueryParams {
      *         id?: string;
      *     }} configuration arguments
      */
-    constructor(args?: {
-        pageSize?: number,
-        order?: Order,
-        id?: string;
-    }) {
+    constructor(args?: { pageSize?: number; order?: Order; id?: string }) {
         if (args) {
-            if (args.pageSize) { this.setPageSize(args.pageSize); }
-            if (args.order) { this.order = args.order; }
-            if (args.id) { this.id = args.id; }
+            if (args.pageSize) {
+                this.setPageSize(args.pageSize);
+            }
+            if (args.order) {
+                this.order = args.order;
+            }
+            if (args.id) {
+                this.id = args.id;
+            }
         }
     }
 

@@ -14,32 +14,30 @@
  * limitations under the License.
  */
 
-import {PublicAccount} from '../account/PublicAccount';
-import { NetworkType } from '../network/NetworkType';
+import { PublicAccount } from '../account/PublicAccount';
 /**
  * Model representing cosignature of an aggregate transaction.
  */
 export class AggregateTransactionCosignature {
-
     /**
      * @param signature
      * @param signer
      */
-    constructor(/**
-                 * The signature of aggregate transaction done by the cosigner.
-                 */
-                public readonly signature: string,
-                /**
-                 * The cosigner public account.
-                 */
-                public readonly signer: PublicAccount) {
-
-    }
+    constructor(
+        /**
+         * The signature of aggregate transaction done by the cosigner.
+         */
+        public readonly signature: string,
+        /**
+         * The cosigner public account.
+         */
+        public readonly signer: PublicAccount,
+    ) {}
 
     /**
      * Create DTO object
      */
-    public toDTO() {
+    public toDTO(): any {
         return {
             signature: this.signature,
             signerPublicKey: this.signer.toDTO(),

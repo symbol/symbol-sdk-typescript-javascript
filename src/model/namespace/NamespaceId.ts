@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Convert as convert} from '../../core/format';
-import {NamespaceMosaicIdGenerator} from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
-import {Id} from '../Id';
+import { Convert as convert } from '../../core/format';
+import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
+import { Id } from '../Id';
 
 /**
  * The namespace id structure describes namespace id
@@ -23,7 +23,6 @@ import {Id} from '../Id';
  * @since 1.0
  */
 export class NamespaceId {
-
     /**
      * Namespace id
      */
@@ -56,7 +55,7 @@ export class NamespaceId {
      */
     public static createFromEncoded(encoded: string): NamespaceId {
         const uint = convert.hexToUint8(encoded);
-        const hex  = convert.uint8ToHex(uint);
+        const hex = convert.uint8ToHex(uint);
         const namespace = new NamespaceId(Id.fromHex(hex).toDTO());
         return namespace;
     }
@@ -84,7 +83,7 @@ export class NamespaceId {
     /**
      * Create DTO object
      */
-    public toDTO() {
+    public toDTO(): any {
         return {
             id: this.id.toHex(),
             fullName: this.fullName ? this.fullName : '',

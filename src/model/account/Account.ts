@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-import {Crypto, KeyPair} from '../../core/crypto';
-import {SHA3Hasher} from '../../core/crypto/SHA3Hasher';
-import {Convert, RawAddress} from '../../core/format';
-import {EncryptedMessage} from '../message/EncryptedMessage';
-import {PlainMessage} from '../message/PlainMessage';
-import {NetworkType} from '../network/NetworkType';
-import {AggregateTransaction} from '../transaction/AggregateTransaction';
-import {CosignatureSignedTransaction} from '../transaction/CosignatureSignedTransaction';
-import {CosignatureTransaction} from '../transaction/CosignatureTransaction';
-import {SignedTransaction} from '../transaction/SignedTransaction';
-import {Transaction} from '../transaction/Transaction';
-import {Address} from './Address';
-import {PublicAccount} from './PublicAccount';
+import { Crypto, KeyPair } from '../../core/crypto';
+import { Convert, RawAddress } from '../../core/format';
+import { EncryptedMessage } from '../message/EncryptedMessage';
+import { PlainMessage } from '../message/PlainMessage';
+import { NetworkType } from '../network/NetworkType';
+import { AggregateTransaction } from '../transaction/AggregateTransaction';
+import { CosignatureSignedTransaction } from '../transaction/CosignatureSignedTransaction';
+import { CosignatureTransaction } from '../transaction/CosignatureTransaction';
+import { SignedTransaction } from '../transaction/SignedTransaction';
+import { Transaction } from '../transaction/Transaction';
+import { Address } from './Address';
+import { PublicAccount } from './PublicAccount';
 
 interface IKeyPair {
     privateKey: Uint8Array;
@@ -37,22 +36,21 @@ interface IKeyPair {
  * The account structure describes an account private key, public key, address and allows signing transactions.
  */
 export class Account {
-
     /**
      * @internal
      * @param address
      * @param keyPair
      */
     private constructor(
-                        /**
-                         * The account address.
-                         */
-                        public readonly address: Address,
-                        /**
-                         * The account keyPair, public and private key.
-                         */
-                        private readonly keyPair: IKeyPair) {
-    }
+        /**
+         * The account address.
+         */
+        public readonly address: Address,
+        /**
+         * The account keyPair, public and private key.
+         */
+        private readonly keyPair: IKeyPair,
+    ) {}
 
     /**
      * Create an Account from a given private key
@@ -60,15 +58,10 @@ export class Account {
      * @param networkType - Network type
      * @return {Account}
      */
-    public static createFromPrivateKey(privateKey: string,
-                                       networkType: NetworkType): Account {
+    public static createFromPrivateKey(privateKey: string, networkType: NetworkType): Account {
         const keyPair: IKeyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey);
-        const address = RawAddress.addressToString(
-            RawAddress.publicKeyToAddress(keyPair.publicKey, networkType));
-        return new Account(
-            Address.createFromRawAddress(address),
-            keyPair,
-        );
+        const address = RawAddress.addressToString(RawAddress.publicKeyToAddress(keyPair.publicKey, networkType));
+        return new Account(Address.createFromRawAddress(address), keyPair);
     }
 
     /**
@@ -95,9 +88,7 @@ export class Account {
      * @param networkType - Network type
      * @returns {EncryptedMessage}
      */
-    public encryptMessage(message: string,
-                          recipientPublicAccount: PublicAccount,
-                          networkType: NetworkType): EncryptedMessage {
+    public encryptMessage(message: string, recipientPublicAccount: PublicAccount): EncryptedMessage {
         return EncryptedMessage.create(message, recipientPublicAccount, this.privateKey);
     }
 
@@ -108,9 +99,7 @@ export class Account {
      * @param networkType - Network type
      * @returns {PlainMessage}
      */
-    public decryptMessage(encryptedMessage: EncryptedMessage,
-                          publicAccount: PublicAccount,
-                          networkType: NetworkType): PlainMessage {
+    public decryptMessage(encryptedMessage: EncryptedMessage, publicAccount: PublicAccount): PlainMessage {
         return EncryptedMessage.decrypt(encryptedMessage, this.privateKey, publicAccount);
     }
     /**
@@ -162,10 +151,12 @@ export class Account {
      * @param generationHash - Network generation hash hex
      * @return {SignedTransaction}
      */
-    public signTransactionWithCosignatories(transaction: AggregateTransaction,
-                                            cosignatories: Account[],
-                                            generationHash: string): SignedTransaction {
-    return transaction.signTransactionWithCosignatories(this, cosignatories, generationHash);
+    public signTransactionWithCosignatories(
+        transaction: AggregateTransaction,
+        cosignatories: Account[],
+        generationHash: string,
+    ): SignedTransaction {
+        return transaction.signTransactionWithCosignatories(this, cosignatories, generationHash);
     }
 
     /**
@@ -176,10 +167,12 @@ export class Account {
      * @param generationHash - Network generation hash hex
      * @return {SignedTransaction}
      */
-    public signTransactionGivenSignatures(transaction: AggregateTransaction,
-                                          cosignatureSignedTransactions: CosignatureSignedTransaction[],
-                                          generationHash: string): SignedTransaction {
-    return transaction.signTransactionGivenSignatures(this, cosignatureSignedTransactions, generationHash);
+    public signTransactionGivenSignatures(
+        transaction: AggregateTransaction,
+        cosignatureSignedTransactions: CosignatureSignedTransaction[],
+        generationHash: string,
+    ): SignedTransaction {
+        return transaction.signTransactionGivenSignatures(this, cosignatureSignedTransactions, generationHash);
     }
     /**
      * Sign aggregate signature transaction

@@ -22,7 +22,6 @@ import { AccountRestrictionsInfo } from '../../model/restriction/AccountRestrict
 import { AccountRestrictionFlags } from '../../model/restriction/AccountRestrictionType';
 
 export class DtoMapping {
-
     /**
      * Create AccountRestrictionsInfo class from Json.
      * @param {object} dataJson The account restriction json object.
@@ -31,28 +30,35 @@ export class DtoMapping {
     public static extractAccountRestrictionFromDto(accountRestrictions): AccountRestrictionsInfo {
         return new AccountRestrictionsInfo(
             accountRestrictions.meta,
-            new AccountRestrictions(Address.createFromEncoded(accountRestrictions.accountRestrictions.address),
+            new AccountRestrictions(
+                Address.createFromEncoded(accountRestrictions.accountRestrictions.address),
                 accountRestrictions.accountRestrictions.restrictions.map((prop) => {
-                        switch (prop.restrictionFlags) {
-                            case AccountRestrictionFlags.AllowIncomingAddress:
-                            case AccountRestrictionFlags.BlockIncomingAddress:
-                            case AccountRestrictionFlags.AllowOutgoingAddress:
-                            case AccountRestrictionFlags.BlockOutgoingAddress:
-                                return new AccountRestriction(prop.restrictionFlags,
-                                                            prop.values.map((value) => Address.createFromEncoded(value)));
-                            case AccountRestrictionFlags.AllowMosaic:
-                            case AccountRestrictionFlags.BlockMosaic:
-                                return new AccountRestriction(prop.restrictionFlags,
-                                                            prop.values.map((value) => new MosaicId(value)));
-                            case AccountRestrictionFlags.AllowIncomingTransactionType:
-                            case AccountRestrictionFlags.AllowOutgoingTransactionType:
-                            case AccountRestrictionFlags.BlockIncomingTransactionType:
-                            case AccountRestrictionFlags.BlockOutgoingTransactionType:
-                                return new AccountRestriction(prop.restrictionFlags, prop.values);
-                            default:
-                                throw new Error(`Invalid restriction type: ${prop.restrictionFlags}`);
-                        }
-                    })));
+                    switch (prop.restrictionFlags) {
+                        case AccountRestrictionFlags.AllowIncomingAddress:
+                        case AccountRestrictionFlags.BlockIncomingAddress:
+                        case AccountRestrictionFlags.AllowOutgoingAddress:
+                        case AccountRestrictionFlags.BlockOutgoingAddress:
+                            return new AccountRestriction(
+                                prop.restrictionFlags,
+                                prop.values.map((value) => Address.createFromEncoded(value)),
+                            );
+                        case AccountRestrictionFlags.AllowMosaic:
+                        case AccountRestrictionFlags.BlockMosaic:
+                            return new AccountRestriction(
+                                prop.restrictionFlags,
+                                prop.values.map((value) => new MosaicId(value)),
+                            );
+                        case AccountRestrictionFlags.AllowIncomingTransactionType:
+                        case AccountRestrictionFlags.AllowOutgoingTransactionType:
+                        case AccountRestrictionFlags.BlockIncomingTransactionType:
+                        case AccountRestrictionFlags.BlockOutgoingTransactionType:
+                            return new AccountRestriction(prop.restrictionFlags, prop.values);
+                        default:
+                            throw new Error(`Invalid restriction type: ${prop.restrictionFlags}`);
+                    }
+                }),
+            ),
+        );
     }
 
     /**
@@ -62,7 +68,6 @@ export class DtoMapping {
      * @returns a copy of the first object with the new attributes added.
      */
     public static assign<T>(object: T, attributes: any): T {
-        return Object.assign({__proto__: Object.getPrototypeOf(object)}, object, attributes);
+        return Object.assign({ __proto__: Object.getPrototypeOf(object) }, object, attributes);
     }
-
 }

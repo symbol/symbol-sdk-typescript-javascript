@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {expect} from 'chai';
-import {TransactionType} from '../../../src/model/transaction/TransactionType';
+import { expect } from 'chai';
+import { TransactionType } from '../../../src/model/transaction/TransactionType';
 
 describe('TransactionType', () => {
     it('Should match the specification', () => {
         expect(TransactionType.TRANSFER).to.be.equal(0x4154);
-        expect(TransactionType.NAMESPACE_REGISTRATION).to.be.equal(0x414E);
-        expect(TransactionType.MOSAIC_DEFINITION).to.be.equal(0x414D);
-        expect(TransactionType.MOSAIC_SUPPLY_CHANGE).to.be.equal(0x424D);
+        expect(TransactionType.NAMESPACE_REGISTRATION).to.be.equal(0x414e);
+        expect(TransactionType.MOSAIC_DEFINITION).to.be.equal(0x414d);
+        expect(TransactionType.MOSAIC_SUPPLY_CHANGE).to.be.equal(0x424d);
         expect(TransactionType.MULTISIG_ACCOUNT_MODIFICATION).to.be.equal(0x4155);
         expect(TransactionType.AGGREGATE_COMPLETE).to.be.equal(0x4141);
         expect(TransactionType.AGGREGATE_BONDED).to.be.equal(0x4241);

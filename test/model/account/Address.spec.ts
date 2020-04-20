@@ -19,11 +19,8 @@ import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 
-const Address_Decoded_Size = 25;
-
 describe('Address', () => {
     const publicKey = 'c2f93346e27ce6ad1a9f8f5e3066f8326593a406bdf357acb041e2f9ab402efe'.toUpperCase();
-    const NIS_PublicKey = 'c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844';
     it('createComplete an address given publicKey + NetworkType.MIJIN_TEST', () => {
         const address = Address.createFromPublicKey(publicKey, NetworkType.MIJIN_TEST);
         expect(address.plain()).to.be.equal('SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2');
@@ -115,17 +112,12 @@ describe('Address', () => {
     });
 
     describe('isValidRawAddress', () => {
-
         it('returns true for valid address when generated', () => {
             // Assert:
-            expect(Address.isValidRawAddress(
-                Account.generateNewAccount(NetworkType.MIJIN_TEST).address.plain(), NetworkType.MIJIN_TEST)).to.equal(true);
-            expect(Address.isValidRawAddress(
-                Account.generateNewAccount(NetworkType.MAIN_NET).address.plain(), NetworkType.MAIN_NET)).to.equal(true);
-            expect(Address.isValidRawAddress(
-                Account.generateNewAccount(NetworkType.MIJIN).address.plain(), NetworkType.MIJIN)).to.equal(true);
-            expect(Address.isValidRawAddress(
-                Account.generateNewAccount(NetworkType.TEST_NET).address.plain(), NetworkType.TEST_NET)).to.equal(true);
+            expect(Address.isValidRawAddress(Account.generateNewAccount(NetworkType.MIJIN_TEST).address.plain())).to.equal(true);
+            expect(Address.isValidRawAddress(Account.generateNewAccount(NetworkType.MAIN_NET).address.plain())).to.equal(true);
+            expect(Address.isValidRawAddress(Account.generateNewAccount(NetworkType.MIJIN).address.plain())).to.equal(true);
+            expect(Address.isValidRawAddress(Account.generateNewAccount(NetworkType.TEST_NET).address.plain())).to.equal(true);
         });
 
         it('returns true for valid address', () => {
@@ -133,7 +125,7 @@ describe('Address', () => {
             const rawAddress = 'SCHCZBZ6QVJAHGJTKYVPW5FBSO2IXXJQBPV5XE6P';
 
             // Assert:
-            expect(Address.isValidRawAddress(rawAddress, NetworkType.MIJIN_TEST)).to.equal(true);
+            expect(Address.isValidRawAddress(rawAddress)).to.equal(true);
         });
 
         it('returns false for address with invalid checksum', () => {
@@ -141,7 +133,7 @@ describe('Address', () => {
             const rawAddress = 'SCHCZBZ6QVJAHGJTKYAPW5FBSO2IXXJQBPV5XE6P';
 
             // Assert:
-            expect(Address.isValidRawAddress(rawAddress, NetworkType.MIJIN_TEST)).to.equal(false);
+            expect(Address.isValidRawAddress(rawAddress)).to.equal(false);
         });
 
         it('returns false for address with invalid hash', () => {
@@ -149,7 +141,7 @@ describe('Address', () => {
             const rawAddress = 'SCHCZBZ6QVJAHGJTKYVPW5FBSO2IXXJQBPV5XE7P';
 
             // Assert:
-            expect(Address.isValidRawAddress(rawAddress, NetworkType.MIJIN_TEST)).to.equal(false);
+            expect(Address.isValidRawAddress(rawAddress)).to.equal(false);
         });
 
         it('returns false for address with invalid prefix', () => {
@@ -157,22 +149,17 @@ describe('Address', () => {
             const rawAddress = 'ACHCZBZ6QVJAHGJTKYVPW5FBSO2IXXJQBPV5XE6P';
 
             // Assert:
-            expect(Address.isValidRawAddress(rawAddress, NetworkType.MIJIN_TEST)).to.equal(false);
+            expect(Address.isValidRawAddress(rawAddress)).to.equal(false);
         });
     });
 
     describe('isValidEncodedAddress', () => {
-
         it('returns true for valid address when generated', () => {
             // Assert:
-            expect(Address.isValidEncodedAddress(
-                Account.generateNewAccount(NetworkType.MIJIN_TEST).address.encoded(), NetworkType.MIJIN_TEST)).to.equal(true);
-            expect(Address.isValidEncodedAddress(
-                Account.generateNewAccount(NetworkType.MAIN_NET).address.encoded(), NetworkType.MAIN_NET)).to.equal(true);
-            expect(Address.isValidEncodedAddress(
-                Account.generateNewAccount(NetworkType.MIJIN).address.encoded(), NetworkType.MIJIN)).to.equal(true);
-            expect(Address.isValidEncodedAddress(
-                Account.generateNewAccount(NetworkType.TEST_NET).address.encoded(), NetworkType.TEST_NET)).to.equal(true);
+            expect(Address.isValidEncodedAddress(Account.generateNewAccount(NetworkType.MIJIN_TEST).address.encoded())).to.equal(true);
+            expect(Address.isValidEncodedAddress(Account.generateNewAccount(NetworkType.MAIN_NET).address.encoded())).to.equal(true);
+            expect(Address.isValidEncodedAddress(Account.generateNewAccount(NetworkType.MIJIN).address.encoded())).to.equal(true);
+            expect(Address.isValidEncodedAddress(Account.generateNewAccount(NetworkType.TEST_NET).address.encoded())).to.equal(true);
         });
 
         it('returns true for valid encoded address', () => {
@@ -180,7 +167,7 @@ describe('Address', () => {
             const encoded = '9085215E4620D383C2DF70235B9EF7507F6A28EF6D16FD7B9C';
 
             // Assert:
-            expect(Address.isValidEncodedAddress(encoded, NetworkType.MIJIN_TEST)).to.equal(true);
+            expect(Address.isValidEncodedAddress(encoded)).to.equal(true);
         });
 
         it('returns false for invalid hex encoded address', () => {
@@ -188,7 +175,7 @@ describe('Address', () => {
             const encoded = 'Z085215E4620D383C2DF70235B9EF7507F6A28EF6D16FD7B9C';
 
             // Assert:
-            expect(Address.isValidEncodedAddress(encoded, NetworkType.MIJIN_TEST)).to.equal(false);
+            expect(Address.isValidEncodedAddress(encoded)).to.equal(false);
         });
 
         it('returns false for invalid encoded address', () => {
@@ -196,7 +183,7 @@ describe('Address', () => {
             const encoded = '9085215E4620D383C2DF70235B9EF7507F6A28EF6D16FD7B9D';
 
             // Assert:
-            expect(Address.isValidEncodedAddress(encoded, NetworkType.MIJIN_TEST)).to.equal(false);
+            expect(Address.isValidEncodedAddress(encoded)).to.equal(false);
         });
 
         it('returns false for encoded address with wrong length', () => {
@@ -204,7 +191,7 @@ describe('Address', () => {
             const encoded = '9085215E4620D383C2DF70235B9EF7607F6A28EF6D16FD7B9C';
 
             // Assert:
-            expect(Address.isValidEncodedAddress(encoded, NetworkType.MIJIN_TEST)).to.equal(false);
+            expect(Address.isValidEncodedAddress(encoded)).to.equal(false);
         });
 
         it('adding leading or trailing white space invalidates encoded address', () => {
@@ -212,9 +199,9 @@ describe('Address', () => {
             const encoded = '9085215E4620D383C2DF70235B9EF7507F6A28EF6D16FD7B9C';
 
             // Assert:
-            expect(Address.isValidEncodedAddress(`   \t    ${encoded}`, NetworkType.MIJIN_TEST)).to.equal(false);
-            expect(Address.isValidEncodedAddress(`${encoded}   \t    `, NetworkType.MIJIN_TEST)).to.equal(false);
-            expect(Address.isValidEncodedAddress(`   \t    ${encoded}   \t    `, NetworkType.MIJIN_TEST)).to.equal(false);
+            expect(Address.isValidEncodedAddress(`   \t    ${encoded}`)).to.equal(false);
+            expect(Address.isValidEncodedAddress(`${encoded}   \t    `)).to.equal(false);
+            expect(Address.isValidEncodedAddress(`   \t    ${encoded}   \t    `)).to.equal(false);
         });
     });
 });

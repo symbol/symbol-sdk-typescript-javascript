@@ -33,6 +33,6 @@ export class SyncAnnounce {
         /**
          * Transaction address
          */
-        public readonly address: string) {
-    }
+        public readonly address: string,
+    ) {}
 }

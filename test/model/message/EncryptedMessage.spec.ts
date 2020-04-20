@@ -14,28 +14,29 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {Account} from '../../../src/model/account/Account';
-import {EncryptedMessage} from '../../../src/model/message/EncryptedMessage';
+import { expect } from 'chai';
+import { Account } from '../../../src/model/account/Account';
+import { EncryptedMessage } from '../../../src/model/message/EncryptedMessage';
 import { Deadline, NetworkCurrencyLocal, NetworkType, TransferTransaction } from '../../../src/model/model';
 
 describe('EncryptedMessage', () => {
-
     let sender: Account;
     let recipient: Account;
 
     let sender_nis: Account;
     let recipient_nis: Account;
     before(() => {
-        sender = Account.createFromPrivateKey('2602F4236B199B3DF762B2AAB46FC3B77D8DDB214F0B62538D3827576C46C108',
-                                              NetworkType.MIJIN_TEST);
-        recipient = Account.createFromPrivateKey('B72F2950498111BADF276D6D9D5E345F04E0D5C9B8342DA983C3395B4CF18F08',
-                                              NetworkType.MIJIN_TEST);
+        sender = Account.createFromPrivateKey('2602F4236B199B3DF762B2AAB46FC3B77D8DDB214F0B62538D3827576C46C108', NetworkType.MIJIN_TEST);
+        recipient = Account.createFromPrivateKey(
+            'B72F2950498111BADF276D6D9D5E345F04E0D5C9B8342DA983C3395B4CF18F08',
+            NetworkType.MIJIN_TEST,
+        );
 
-        sender_nis = Account.createFromPrivateKey('2602F4236B199B3DF762B2AAB46FC3B77D8DDB214F0B62538D3827576C46C108',
-                                              NetworkType.TEST_NET);
-        recipient_nis = Account.createFromPrivateKey('B72F2950498111BADF276D6D9D5E345F04E0D5C9B8342DA983C3395B4CF18F08',
-                                              NetworkType.TEST_NET);
+        sender_nis = Account.createFromPrivateKey('2602F4236B199B3DF762B2AAB46FC3B77D8DDB214F0B62538D3827576C46C108', NetworkType.TEST_NET);
+        recipient_nis = Account.createFromPrivateKey(
+            'B72F2950498111BADF276D6D9D5E345F04E0D5C9B8342DA983C3395B4CF18F08',
+            NetworkType.TEST_NET,
+        );
     });
 
     it('should create a encrypted message from a DTO', () => {
@@ -44,15 +45,15 @@ describe('EncryptedMessage', () => {
     });
 
     it('should return encrypted message dto', () => {
-        const encryptedMessage = sender.encryptMessage('test transaction', recipient.publicAccount, NetworkType.MIJIN_TEST);
-        const plainMessage = recipient.decryptMessage(encryptedMessage, sender.publicAccount, NetworkType.MIJIN_TEST);
+        const encryptedMessage = sender.encryptMessage('test transaction', recipient.publicAccount);
+        const plainMessage = recipient.decryptMessage(encryptedMessage, sender.publicAccount);
         expect(plainMessage.payload).to.be.equal('test transaction');
     });
 
     it('should decrypt message from raw encrypted message payload', () => {
-        const encryptedMessage = sender.encryptMessage('Testing simple transfer', recipient.publicAccount, NetworkType.MIJIN_TEST);
+        const encryptedMessage = sender.encryptMessage('Testing simple transfer', recipient.publicAccount);
         const payload = encryptedMessage.payload;
-        const plainMessage = recipient.decryptMessage(new EncryptedMessage(payload), sender.publicAccount, NetworkType.MIJIN_TEST);
+        const plainMessage = recipient.decryptMessage(new EncryptedMessage(payload), sender.publicAccount);
         expect(plainMessage.payload).to.be.equal('Testing simple transfer');
     });
 
@@ -62,21 +63,21 @@ describe('EncryptedMessage', () => {
             Deadline.create(),
             recipient.address,
             [NetworkCurrencyLocal.createAbsolute(1)],
-            sender.encryptMessage('Testing simple transfer', recipient.publicAccount, NetworkType.MIJIN_TEST),
+            sender.encryptMessage('Testing simple transfer', recipient.publicAccount),
             NetworkType.MIJIN_TEST,
         );
         const signedTransaction = transferTransaction.signWith(sender, generationHash);
-        const encryptMessage = EncryptedMessage
-            .createFromPayload(signedTransaction.payload.substring(354, signedTransaction.payload.length));
-        const plainMessage = recipient.decryptMessage(encryptMessage, sender.publicAccount, NetworkType.MIJIN_TEST);
+        const encryptMessage = EncryptedMessage.createFromPayload(
+            signedTransaction.payload.substring(354, signedTransaction.payload.length),
+        );
+        const plainMessage = recipient.decryptMessage(encryptMessage, sender.publicAccount);
         expect(plainMessage.payload).to.be.equal('Testing simple transfer');
     });
 
     it('should encrypt and decrypt message using NIS1 schema', () => {
-        const encryptedMessage = sender_nis.encryptMessage('Testing simple transfer', recipient_nis.publicAccount, NetworkType.TEST_NET);
+        const encryptedMessage = sender_nis.encryptMessage('Testing simple transfer', recipient_nis.publicAccount);
         const payload = encryptedMessage.payload;
-        const plainMessage = recipient_nis.decryptMessage(new EncryptedMessage(payload), sender_nis.publicAccount, NetworkType.TEST_NET);
+        const plainMessage = recipient_nis.decryptMessage(new EncryptedMessage(payload), sender_nis.publicAccount);
         expect(plainMessage.payload).to.be.equal('Testing simple transfer');
     });
-
 });

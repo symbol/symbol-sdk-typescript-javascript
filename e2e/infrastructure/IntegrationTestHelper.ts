@@ -24,6 +24,9 @@ import { SignedTransaction } from '../../src/model/transaction/SignedTransaction
 import { Transaction } from '../../src/model/transaction/Transaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
+import { NetworkCurrencyPublic } from '../../src/model/mosaic/NetworkCurrencyPublic';
+import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
+import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 
 export class IntegrationTestHelper {
     public readonly yaml = require('js-yaml');
@@ -43,24 +46,27 @@ export class IntegrationTestHelper {
     public maxFee: UInt64;
     public harvestingAccount: Account;
     public transactionService: TransactionService;
+    public networkCurrencyNamespaceId: NamespaceId;
+    public networkCurrencyDivisibility: number;
 
     start(): Promise<IntegrationTestHelper> {
-        return new Promise<IntegrationTestHelper>(
-            (resolve, reject) => {
-
-                const path = require('path');
-                require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, jsonData) => {
-                    if (err) {
-                        return reject(err);
-                    }
-                    const json = JSON.parse(jsonData);
-                    console.log(`Running tests against: ${json.apiUrl}`);
-                    this.apiUrl = json.apiUrl;
-                    this.repositoryFactory = new RepositoryFactoryHttp(json.apiUrl);
-                    this.transactionService = new TransactionService(
-                        this.repositoryFactory.createTransactionRepository(), this.repositoryFactory.createReceiptRepository());
-                    combineLatest(this.repositoryFactory.getGenerationHash(),
-                        this.repositoryFactory.getNetworkType()).subscribe(([generationHash, networkType]) => {
+        return new Promise<IntegrationTestHelper>((resolve, reject) => {
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            const path = require('path');
+            require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, jsonData) => {
+                if (err) {
+                    return reject(err);
+                }
+                const json = JSON.parse(jsonData);
+                console.log(`Running tests against: ${json.apiUrl}`);
+                this.apiUrl = json.apiUrl;
+                this.repositoryFactory = new RepositoryFactoryHttp(json.apiUrl);
+                this.transactionService = new TransactionService(
+                    this.repositoryFactory.createTransactionRepository(),
+                    this.repositoryFactory.createReceiptRepository(),
+                );
+                combineLatest(this.repositoryFactory.getGenerationHash(), this.repositoryFactory.getNetworkType()).subscribe(
+                    ([generationHash, networkType]) => {
                         this.networkType = networkType;
                         this.generationHash = generationHash;
                         this.account = this.createAccount(json.testAccount);
@@ -77,11 +83,22 @@ export class IntegrationTestHelper {
                         // What would be the best maxFee? In the future we will load the fee multiplier from rest.
                         this.maxFee = UInt64.fromUint(1000000);
 
-                        const bootstrapRoot = process.env.CATAPULT_SERVICE_BOOTSTRAP || path.resolve(__dirname, '../../../../catapult-service-bootstrap');
+                        // network Currency
+                        this.networkCurrencyNamespaceId = this.apiUrl.toLowerCase().includes('localhost')
+                            ? NetworkCurrencyLocal.NAMESPACE_ID
+                            : NetworkCurrencyPublic.NAMESPACE_ID;
+                        this.networkCurrencyDivisibility = this.apiUrl.toLowerCase().includes('localhost')
+                            ? NetworkCurrencyLocal.DIVISIBILITY
+                            : NetworkCurrencyPublic.DIVISIBILITY;
+
+                        const bootstrapRoot =
+                            process.env.CATAPULT_SERVICE_BOOTSTRAP || path.resolve(__dirname, '../../../../catapult-service-bootstrap');
                         const bootstrapPath = `${bootstrapRoot}/build/generated-addresses/addresses.yaml`;
                         require('fs').readFile(bootstrapPath, (error: any, yamlData: any) => {
                             if (error) {
-                                console.log(`catapult-service-bootstrap generated address could not be loaded from path ${bootstrapPath}. Ignoring and using accounts from network.conf.`);
+                                console.log(
+                                    `catapult-service-bootstrap generated address could not be loaded from path ${bootstrapPath}. Ignoring and using accounts from network.conf.`,
+                                );
                                 return resolve(this);
                             } else {
                                 console.log(`catapult-service-bootstrap generated address loaded from path ${bootstrapPath}.`);
@@ -96,25 +113,37 @@ export class IntegrationTestHelper {
                                 return resolve(this);
                             }
                         });
-                    }, (error) => {
+                    },
+                    (error) => {
                         console.log('There has been an error loading the configuration. ', error);
                         return reject(error);
-                    });
-                });
-
-            },
-        );
+                    },
+                );
+            });
+        });
     }
 
     createAccount(data): Account {
         return Account.createFromPrivateKey(data.privateKey ? data.privateKey : data.private, this.networkType);
     }
 
+    createNetworkCurrency(amount: number, isRelative = true): NetworkCurrencyPublic | NetworkCurrencyLocal {
+        if (this.apiUrl.toLowerCase().includes('localhost')) {
+            return isRelative ? NetworkCurrencyLocal.createRelative(amount) : NetworkCurrencyLocal.createAbsolute(amount);
+        }
+        return isRelative ? NetworkCurrencyPublic.createRelative(amount) : NetworkCurrencyPublic.createAbsolute(amount);
+    }
+
     announce(signedTransaction: SignedTransaction): Promise<Transaction> {
         console.log(`Announcing transaction: ${signedTransaction.type}`);
-        return this.transactionService.announce(signedTransaction, this.listener).pipe(map((t) => {
-            console.log(`Transaction ${signedTransaction.type} confirmed`);
-            return t;
-        })).toPromise();
+        return this.transactionService
+            .announce(signedTransaction, this.listener)
+            .pipe(
+                map((t) => {
+                    console.log(`Transaction ${signedTransaction.type} confirmed`);
+                    return t;
+                }),
+            )
+            .toPromise();
     }
 }

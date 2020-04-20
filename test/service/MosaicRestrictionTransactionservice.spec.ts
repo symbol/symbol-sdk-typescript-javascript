@@ -51,6 +51,28 @@ describe('MosaicRestrictionTransactionService', () => {
     const globalRestrictionType = MosaicRestrictionType.LE;
     const addressRestrictionValue = '10';
 
+    function mockGlobalRestriction(): MosaicGlobalRestriction {
+        return new MosaicGlobalRestriction(
+            '59DFBA84B2E9E7000135E80C',
+            MosaicRestrictionEntryType.GLOBAL,
+            mosaicId,
+            new Map<string, MosaicGlobalRestrictionItem>().set(
+                key.toString(),
+                new MosaicGlobalRestrictionItem(referenceMosaicId, globalRestrictionValue, globalRestrictionType),
+            ),
+        );
+    }
+
+    function mockAddressRestriction(): MosaicAddressRestriction {
+        return new MosaicAddressRestriction(
+            '59DFBA84B2E9E7000135E80C',
+            MosaicRestrictionEntryType.GLOBAL,
+            mosaicId,
+            account.address,
+            new Map<string, string>().set(key.toString(), addressRestrictionValue),
+        );
+    }
+
     before(() => {
         account = TestingAccount;
         mosaicId = new MosaicId('85BBEA6CC462B244');
@@ -61,36 +83,30 @@ describe('MosaicRestrictionTransactionService', () => {
         const mockRestrictionRepository = mock<RestrictionMosaicRepository>();
         const mockNamespaceRepository = mock<NamespaceRepository>();
 
-        when(mockRestrictionRepository
-            .getMosaicGlobalRestriction(deepEqual(mosaicId)))
-            .thenReturn(observableOf(mockGlobalRestriction()));
-        when(mockRestrictionRepository
-            .getMosaicGlobalRestriction(deepEqual(mosaicIdWrongKey)))
-            .thenThrow(new Error('Wrong mosaicId'));
-        when(mockRestrictionRepository
-            .getMosaicAddressRestriction(deepEqual(mosaicId), deepEqual(account.address)))
-                .thenReturn(observableOf(mockAddressRestriction()));
-        when(mockNamespaceRepository.getLinkedMosaicId(deepEqual(unresolvedMosaicId)))
-            .thenReturn(observableOf(mosaicId));
-        when(mockNamespaceRepository.getLinkedMosaicId(deepEqual(unresolvedAddress)))
-            .thenThrow(new Error('invalid namespaceId'));
-        when(mockNamespaceRepository.getLinkedAddress(deepEqual(unresolvedAddress)))
-            .thenReturn(observableOf(account.address));
-        when(mockNamespaceRepository.getLinkedAddress(deepEqual(unresolvedMosaicId)))
-            .thenThrow(new Error('invalid namespaceId'));
+        when(mockRestrictionRepository.getMosaicGlobalRestriction(deepEqual(mosaicId))).thenReturn(observableOf(mockGlobalRestriction()));
+        when(mockRestrictionRepository.getMosaicGlobalRestriction(deepEqual(mosaicIdWrongKey))).thenThrow(new Error('Wrong mosaicId'));
+        when(mockRestrictionRepository.getMosaicAddressRestriction(deepEqual(mosaicId), deepEqual(account.address))).thenReturn(
+            observableOf(mockAddressRestriction()),
+        );
+        when(mockNamespaceRepository.getLinkedMosaicId(deepEqual(unresolvedMosaicId))).thenReturn(observableOf(mosaicId));
+        when(mockNamespaceRepository.getLinkedMosaicId(deepEqual(unresolvedAddress))).thenThrow(new Error('invalid namespaceId'));
+        when(mockNamespaceRepository.getLinkedAddress(deepEqual(unresolvedAddress))).thenReturn(observableOf(account.address));
+        when(mockNamespaceRepository.getLinkedAddress(deepEqual(unresolvedMosaicId))).thenThrow(new Error('invalid namespaceId'));
         const restrictionRepository = instance(mockRestrictionRepository);
         const namespaceRepository = instance(mockNamespaceRepository);
         mosaicRestrictionTransactionService = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
     });
 
     it('should create MosaicGlobalRestriction Transaction', (done) => {
-        mosaicRestrictionTransactionService.createMosaicGlobalRestrictionTransaction(
-                                            Deadline.create(),
-                                            NetworkType.MIJIN_TEST,
-                                            mosaicId,
-                                            key,
-                                            '2000',
-                                            MosaicRestrictionType.LE)
+        mosaicRestrictionTransactionService
+            .createMosaicGlobalRestrictionTransaction(
+                Deadline.create(),
+                NetworkType.MIJIN_TEST,
+                mosaicId,
+                key,
+                '2000',
+                MosaicRestrictionType.LE,
+            )
             .subscribe((transaction: MosaicGlobalRestrictionTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
                 expect(transaction.restrictionKey.toString()).to.be.equal(key.toString());
@@ -98,18 +114,20 @@ describe('MosaicRestrictionTransactionService', () => {
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal(globalRestrictionValue);
                 expect(transaction.referenceMosaicId.toHex()).to.be.equal(new MosaicId(UInt64.fromUint(0).toDTO()).toHex());
                 done();
-        });
+            });
     });
 
     it('should create MosaicGlobalRestriction Transaction - with referenceMosaicId', (done) => {
-        mosaicRestrictionTransactionService.createMosaicGlobalRestrictionTransaction(
-                                            Deadline.create(),
-                                            NetworkType.MIJIN_TEST,
-                                            mosaicId,
-                                            key,
-                                            '2000',
-                                            MosaicRestrictionType.LE,
-                                            referenceMosaicId)
+        mosaicRestrictionTransactionService
+            .createMosaicGlobalRestrictionTransaction(
+                Deadline.create(),
+                NetworkType.MIJIN_TEST,
+                mosaicId,
+                key,
+                '2000',
+                MosaicRestrictionType.LE,
+                referenceMosaicId,
+            )
             .subscribe((transaction: MosaicGlobalRestrictionTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
                 expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
@@ -117,34 +135,31 @@ describe('MosaicRestrictionTransactionService', () => {
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal(globalRestrictionValue);
                 expect(transaction.referenceMosaicId.toHex()).to.be.equal(referenceMosaicId.toHex());
                 done();
-        });
+            });
     });
 
     it('should create MosaicAddressRestriction Transaction', (done) => {
-        mosaicRestrictionTransactionService.createMosaicAddressRestrictionTransaction(
-                                            Deadline.create(),
-                                            NetworkType.MIJIN_TEST,
-                                            mosaicId,
-                                            key,
-                                            account.address,
-                                            '2000')
+        mosaicRestrictionTransactionService
+            .createMosaicAddressRestrictionTransaction(Deadline.create(), NetworkType.MIJIN_TEST, mosaicId, key, account.address, '2000')
             .subscribe((transaction: MosaicAddressRestrictionTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ADDRESS_RESTRICTION);
                 expect(transaction.restrictionKey.toString()).to.be.equal(key.toString());
                 expect(transaction.targetAddressToString()).to.be.equal(account.address.plain());
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal(addressRestrictionValue);
                 done();
-        });
+            });
     });
 
     it('should create MosaicGlobalRestriction Transaction with unresolvedMosaicId', (done) => {
-        mosaicRestrictionTransactionService.createMosaicGlobalRestrictionTransaction(
-                                            Deadline.create(),
-                                            NetworkType.MIJIN_TEST,
-                                            unresolvedMosaicId,
-                                            key,
-                                            '2000',
-                                            MosaicRestrictionType.LE)
+        mosaicRestrictionTransactionService
+            .createMosaicGlobalRestrictionTransaction(
+                Deadline.create(),
+                NetworkType.MIJIN_TEST,
+                unresolvedMosaicId,
+                key,
+                '2000',
+                MosaicRestrictionType.LE,
+            )
             .subscribe((transaction: MosaicGlobalRestrictionTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
                 expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
@@ -152,24 +167,26 @@ describe('MosaicRestrictionTransactionService', () => {
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal(globalRestrictionValue);
                 expect(transaction.referenceMosaicId.toHex()).to.be.equal(new MosaicId(UInt64.fromUint(0).toDTO()).toHex());
                 done();
-        });
+            });
     });
 
     it('should create MosaicAddressRestriction Transaction with unresolvedAddress', (done) => {
-        mosaicRestrictionTransactionService.createMosaicAddressRestrictionTransaction(
-                                            Deadline.create(),
-                                            NetworkType.MIJIN_TEST,
-                                            unresolvedMosaicId,
-                                            key,
-                                            unresolvedAddress,
-                                            '2000')
+        mosaicRestrictionTransactionService
+            .createMosaicAddressRestrictionTransaction(
+                Deadline.create(),
+                NetworkType.MIJIN_TEST,
+                unresolvedMosaicId,
+                key,
+                unresolvedAddress,
+                '2000',
+            )
             .subscribe((transaction: MosaicAddressRestrictionTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ADDRESS_RESTRICTION);
                 expect(transaction.restrictionKey.toString()).to.be.equal(key.toString());
                 expect(transaction.targetAddressToString()).to.be.equal(unresolvedAddress.toHex());
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal(addressRestrictionValue);
                 done();
-        });
+            });
     });
 
     it('should throw error with invalid unresolvedMosaicId', () => {
@@ -180,7 +197,8 @@ describe('MosaicRestrictionTransactionService', () => {
                 unresolvedAddress,
                 key,
                 '2000',
-                MosaicRestrictionType.LE);
+                MosaicRestrictionType.LE,
+            );
         }).to.throw();
     });
 
@@ -192,70 +210,52 @@ describe('MosaicRestrictionTransactionService', () => {
                 mosaicId,
                 key,
                 unresolvedMosaicId,
-                '2000');
+                '2000',
+            );
         }).to.throw();
     });
 
     it('should throw error with invalid value / key', () => {
         expect(() => {
             mosaicRestrictionTransactionService.createMosaicGlobalRestrictionTransaction(
-                                                Deadline.create(),
-                                                NetworkType.MIJIN_TEST,
-                                                mosaicId,
-                                                key,
-                                                'wrong value',
-                                                MosaicRestrictionType.LE);
+                Deadline.create(),
+                NetworkType.MIJIN_TEST,
+                mosaicId,
+                key,
+                'wrong value',
+                MosaicRestrictionType.LE,
+            );
         }).to.throw(Error, 'RestrictionValue: wrong value is not a valid numeric string.');
 
         expect(() => {
             mosaicRestrictionTransactionService.createMosaicAddressRestrictionTransaction(
-                                                Deadline.create(),
-                                                NetworkType.MIJIN_TEST,
-                                                mosaicId,
-                                                key,
-                                                account.address,
-                                                'wrong value');
+                Deadline.create(),
+                NetworkType.MIJIN_TEST,
+                mosaicId,
+                key,
+                account.address,
+                'wrong value',
+            );
         }).to.throw(Error, 'RestrictionValue: wrong value is not a valid numeric string.');
     });
 
     it('should throw error with invalid address restriction key - MosaicAddressRestriction', () => {
-        mosaicRestrictionTransactionService.createMosaicAddressRestrictionTransaction(
-            Deadline.create(),
-            NetworkType.MIJIN_TEST,
-            mosaicIdWrongKey,
-            invalidKey,
-            account.address,
-            '2000').subscribe((t) => {}, (err) => {
-                expect(err).not.to.be.undefined;
-            });
+        mosaicRestrictionTransactionService
+            .createMosaicAddressRestrictionTransaction(
+                Deadline.create(),
+                NetworkType.MIJIN_TEST,
+                mosaicIdWrongKey,
+                invalidKey,
+                account.address,
+                '2000',
+            )
+            .subscribe(
+                () => {
+                    expect(true).to.be.false;
+                },
+                (err) => {
+                    expect(err).not.to.be.undefined;
+                },
+            );
     });
-
-    function mockGlobalRestriction(): MosaicGlobalRestriction {
-        return new MosaicGlobalRestriction(
-            '59DFBA84B2E9E7000135E80C',
-            MosaicRestrictionEntryType.GLOBAL,
-            mosaicId,
-            new Map<string, MosaicGlobalRestrictionItem>()
-                .set(key.toString(),
-                    new MosaicGlobalRestrictionItem(
-                        referenceMosaicId,
-                        globalRestrictionValue,
-                        globalRestrictionType,
-                    ),
-                ),
-        );
-    }
-
-    function mockAddressRestriction(): MosaicAddressRestriction {
-        return new MosaicAddressRestriction(
-            '59DFBA84B2E9E7000135E80C',
-            MosaicRestrictionEntryType.GLOBAL,
-            mosaicId,
-            account.address,
-            new Map<string, string>()
-                .set(key.toString(),
-                    addressRestrictionValue,
-                ),
-        );
-    }
 });

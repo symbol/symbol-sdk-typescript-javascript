@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
- import { UInt64 } from '../UInt64';
+import { UInt64 } from '../UInt64';
 
 /**
  * Rental Fees
  */
 export class RentalFees {
-    // tslint:disable: max-line-length
     /**
      * @param effectiveRootNamespaceRentalFeePerBlock - Absolute amount. An amount of 123456789 (absolute) for a mosaic with divisibility 6 means 123.456789 (relative).
      * @param effectiveChildNamespaceRentalFee - Absolute amount. An amount of 123456789 (absolute) for a mosaic with divisibility 6 means 123.456789 (relative).
      * @param effectiveMosaicRentalFee - bsolute amount. An amount of 123456789 (absolute) for a mosaic with divisibility 6 means 123.456789 (relative).
      */
-    constructor(public readonly effectiveRootNamespaceRentalFeePerBlock: UInt64,
-                public readonly effectiveChildNamespaceRentalFee: UInt64,
-                public readonly effectiveMosaicRentalFee: UInt64) {
-    }
+    constructor(
+        public readonly effectiveRootNamespaceRentalFeePerBlock: UInt64,
+        public readonly effectiveChildNamespaceRentalFee: UInt64,
+        public readonly effectiveMosaicRentalFee: UInt64,
+    ) {}
 }

@@ -24,7 +24,6 @@ import { RawAddress } from '../format/RawAddress';
  * @internal
  */
 export class UnresolvedMapping {
-
     /**
      * @internal
      * Map unresolved mosaic string to MosaicId or NamespaceId

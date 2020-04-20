@@ -21,7 +21,6 @@
  * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/ReceiptType.cpp
  */
 export enum ReceiptType {
-
     /**
      * The recipient, account and amount of fees received for harvesting a block. It is recorded when a block is harvested.
      */
@@ -29,41 +28,41 @@ export enum ReceiptType {
     /**
      * The unresolved and resolved alias. It is recorded when a transaction indicates a valid address alias instead of an address.
      */
-    Address_Alias_Resolution = 0xF143,
+    Address_Alias_Resolution = 0xf143,
     /**
      * The unresolved and resolved alias. It is recorded when a transaction indicates a valid mosaic alias instead of a mosaicId.
      */
-    Mosaic_Alias_Resolution = 0xF243,
+    Mosaic_Alias_Resolution = 0xf243,
     /**
      * A collection of state changes for a given source. It is recorded when a state change receipt is issued.
      */
-    Transaction_Group = 0xE143,
+    Transaction_Group = 0xe143,
     /**
      * The mosaicId expiring in this block. It is recorded when a mosaic expires.
      */
-    Mosaic_Expired = 0x414D,
+    Mosaic_Expired = 0x414d,
     /**
      * The sender and recipient of the levied mosaic, the mosaicId and amount. It is recorded when a transaction has a levied mosaic.
      */
-    Mosaic_Levy = 0x124D,
+    Mosaic_Levy = 0x124d,
     /**
      * The sender and recipient of the mosaicId and amount representing the cost of registering the mosaic.
      * It is recorded when a mosaic is registered.
      */
-    Mosaic_Rental_Fee = 0x124D,
+    Mosaic_Rental_Fee = 0x124d,
     /**
      * The identifier of the namespace expiring in this block. It is recorded when the namespace lifetime elapses.
      */
-    Namespace_Expired = 0x414E,
+    Namespace_Expired = 0x414e,
     /**
      * The sender and recipient of the mosaicId and amount representing the cost of extending the namespace.
      * It is recorded when a namespace is registered or its duration is extended.
      */
-    Namespace_Rental_Fee = 0x134E,
+    Namespace_Rental_Fee = 0x134e,
     /**
      * The identifier of the namespace deleted in this block. It is recorded when the namespace grace period elapses.
      */
-    Namespace_Deleted = 0x424E,
+    Namespace_Deleted = 0x424e,
     /**
      * The lockhash sender, mosaicId and amount locked. It is recorded when a valid HashLockTransaction is announced.
      */

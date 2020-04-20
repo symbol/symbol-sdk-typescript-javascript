@@ -22,26 +22,26 @@ export class SHA3Hasher {
      * Calculates the hash of data.
      * @param {Uint8Array} dest The computed hash destination.
      * @param {Uint8Array} data The data to hash.
-     * @param {numeric} length The hash length in bytes.
+     * @param {number} length The hash length in bytes.
      */
-    public static func = (dest, data, length) => {
+    public static func = (dest: Uint8Array, data: Uint8Array, length: number): void => {
         const hasher = SHA3Hasher.getHasher(length);
         const hash = hasher.arrayBuffer(data);
         array.copy(dest, array.uint8View(hash));
-    }
+    };
 
     /**
      * Creates a hasher object.
-     * @param {numeric} length The hash length in bytes.
+     * @param {number} length The hash length in bytes.
      * @returns {object} The hasher.
      */
-    public static createHasher = (length = 64) => {
+    public static createHasher = (length = 64): any => {
         let hash;
         return {
-            reset: () => {
+            reset: (): void => {
                 hash = SHA3Hasher.getHasher(length).create();
             },
-            update: (data: any) => {
+            update: (data: any): void => {
                 if (data instanceof Uint8Array) {
                     hash.update(data);
                 } else if ('string' === typeof data) {
@@ -50,21 +50,21 @@ export class SHA3Hasher {
                     throw Error('unsupported data type');
                 }
             },
-            finalize: (result: any) => {
+            finalize: (result: any): void => {
                 array.copy(result, array.uint8View(hash.arrayBuffer()));
             },
         };
-    }
+    };
 
     /**
      * Get a hasher instance.
      * @param {numeric} length The hash length in bytes.
      * @returns {object} The hasher.
      */
-    public static getHasher = (length = 64) => {
+    public static getHasher = (length = 64): any => {
         return {
             32: sha3_256,
             64: sha3_512,
-        } [length];
-    }
+        }[length];
+    };
 }

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import { NetworkConfiguration } from '../model/network/NetworkConfiguration';
 import { NetworkName } from '../model/network/NetworkName';
-import {NetworkType} from '../model/network/NetworkType';
+import { NetworkType } from '../model/network/NetworkType';
 import { RentalFees } from '../model/network/RentalFees';
 import { TransactionFees } from '../model/network/TransactionFees';
 
@@ -27,7 +27,6 @@ import { TransactionFees } from '../model/network/TransactionFees';
  * @since 1.0
  */
 export interface NetworkRepository {
-
     /**
      * Get current network type name and description
      *

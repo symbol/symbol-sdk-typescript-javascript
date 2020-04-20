@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import {deepEqual} from 'assert';
+import { deepEqual } from 'assert';
 import { Account } from '../../../src/model/account/Account';
 import { MetadataEntry } from '../../../src/model/metadata/MetadataEntry';
 import { MetadataType } from '../../../src/model/metadata/MetadataType';
 import { MosaicId, NamespaceId } from '../../../src/model/model';
-import {UInt64} from '../../../src/model/UInt64';
+import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
 describe('MetadataEntry', () => {

@@ -11,11 +11,9 @@ The Symbol SDK for TypeScript / JavaScript allows you to develop web, mobile, an
 
 ### _Fushicho_ Network Compatibility (catapult-server@0.9.3.2)
 
-**!!! Please be noted that the NEM2-SDK is rebranded to SYMBOL-SDK now**.
+Due to a network upgrade with [catapult-server@Fushicho](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.2) version, **it is recommended to use this package's 0.18.0 version and upwards to use this package with Fushicho versioned networks**.
 
-Due to a network upgrade with [catapult-server@Fushicho](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.2) version, **it is recommended to use this package's 0.17.4 version and upwards to use this package with Fushicho versioned networks**.
-
-The upgrade to this package's [version v0.17.4](https://github.com/nemtech/symbol-sdk-typescript-javascript/releases/tag/v0.17.4) is mandatory for **fushicho compatibility**.
+The upgrade to this package's [version v0.18.0](https://github.com/nemtech/symbol-sdk-typescript-javascript/releases/tag/v0.18.0) is mandatory for **fushicho compatibility**.
 
 Find the complete release notes [here](CHANGELOG.md).
 
@@ -23,9 +21,7 @@ Find the complete release notes [here](CHANGELOG.md).
 
 ### NodeJS
 
-- NodeJS 8.9.X
-- NodeJS 9.X.X
-- NodeJS 10.X.X
+- NodeJS 10.X.X and above (from v0.18.0)
 
 ## Installation
 
@@ -46,14 +42,14 @@ Use the following available resources to get help:
 
 - [Symbol Documentation][docs]
 - [Symbol SDK Typescript/Javascript Reference][sdk-ref]
-- Join the community [slack group (#sig-api)][slack] 
+- Join the community [slack group (#sig-api)][slack]
 - If you found a bug, [open a new issue][issues]
 
 ## Contributing
 
 This project is developed and maintained by NEM Foundation.
 
-Contributions are welcome and appreciated. 
+Contributions are welcome and appreciated.
 Check [CONTRIBUTING](CONTRIBUTING.md) for information on how to contribute.
 
 You can also find useful notes for developers under our documentation [guidelines][guidelines] section.

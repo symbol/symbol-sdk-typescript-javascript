@@ -21,7 +21,6 @@
  * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/ReceiptType.cpp
  */
 export class ReceiptVersion {
-
     /**
      * Balance transfer receipt version.
      * @type {number}

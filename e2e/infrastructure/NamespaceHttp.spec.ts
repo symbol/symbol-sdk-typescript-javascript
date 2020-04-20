@@ -18,7 +18,6 @@ import { expect } from 'chai';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
-import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
@@ -28,7 +27,7 @@ import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('NamespaceHttp', () => {
-    const defaultNamespaceId = NetworkCurrencyLocal.NAMESPACE_ID;
+    let defaultNamespaceId: NamespaceId;
     let namespaceId: NamespaceId;
     let namespaceRepository: NamespaceRepository;
     let account: Account;
@@ -40,6 +39,7 @@ describe('NamespaceHttp', () => {
             account = helper.account;
             generationHash = helper.generationHash;
             namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
+            defaultNamespaceId = helper.networkCurrencyNamespaceId;
         });
     });
 
@@ -52,7 +52,6 @@ describe('NamespaceHttp', () => {
     });
 
     describe('NamespaceRegistrationTransaction', () => {
-
         it('standalone', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
@@ -68,7 +67,6 @@ describe('NamespaceHttp', () => {
         });
     });
     describe('AddressAliasTransaction', () => {
-
         it('standalone', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
@@ -104,7 +102,6 @@ describe('NamespaceHttp', () => {
             const namespaces = await namespaceRepository.getNamespacesFromAccounts([account.address]).toPromise();
             deepEqual(namespaces[0].owner, account.publicAccount);
         });
-
     });
 
     describe('getNamespacesName', () => {

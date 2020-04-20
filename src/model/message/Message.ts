@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {decode} from 'utf8';
+import { decode } from 'utf8';
 
 /**
  * An abstract message class that serves as the base class of all message types.
@@ -42,20 +42,21 @@ export abstract class Message {
      * @param type
      * @param payload
      */
-    constructor(/**
-                 * Message type
-                 */
-                public readonly type: number,
-                /**
-                 * Message payload
-                 */
-                public readonly payload: string) {
-    }
+    constructor(
+        /**
+         * Message type
+         */
+        public readonly type: number,
+        /**
+         * Message payload
+         */
+        public readonly payload: string,
+    ) {}
 
     /**
      * Create DTO object
      */
-    toDTO() {
+    toDTO(): any {
         return {
             type: this.type,
             payload: this.payload,

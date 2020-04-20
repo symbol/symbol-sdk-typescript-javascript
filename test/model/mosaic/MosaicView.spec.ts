@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {PublicAccount} from '../../../src/model/account/PublicAccount';
+import { expect } from 'chai';
+import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
-import {MosaicId} from '../../../src/model/mosaic/MosaicId';
-import {MosaicInfo} from '../../../src/model/mosaic/MosaicInfo';
-import {NetworkType} from '../../../src/model/network/NetworkType';
-import {UInt64} from '../../../src/model/UInt64';
-import {MosaicView} from '../../../src/service/MosaicView';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { MosaicInfo } from '../../../src/model/mosaic/MosaicInfo';
+import { NetworkType } from '../../../src/model/network/NetworkType';
+import { UInt64 } from '../../../src/model/UInt64';
+import { MosaicView } from '../../../src/service/MosaicView';
 
 describe('MosaicView', () => {
-
     let mosaicInfo: MosaicInfo;
 
     before(() => {
@@ -36,7 +35,8 @@ describe('MosaicView', () => {
             1, // revision
             MosaicFlags.create(true, true, true),
             2,
-            UInt64.fromUint(1000));
+            UInt64.fromUint(1000),
+        );
     });
 
     it('should createComplete a Mosaic View', () => {

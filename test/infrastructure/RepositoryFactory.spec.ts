@@ -41,21 +41,20 @@ describe('RepositoryFactory', () => {
         expect(repositoryFactory.createRestrictionAccountRepository()).to.be.not.null;
         expect(repositoryFactory.createRestrictionMosaicRepository()).to.be.not.null;
         expect(repositoryFactory.createTransactionRepository()).to.be.not.null;
-
     });
 
     it('Should get GenerationHash from cache', (done) => {
-
         let counter = 0;
         const repositoryMock: BlockRepository = mock();
-        const observableOfBlockInfo = observableOf({generationHash: 'aaaa'} as BlockInfo).pipe(map((v) => {
-            counter++;
-            return v;
-        }));
+        const observableOfBlockInfo = observableOf({ generationHash: 'aaaa' } as BlockInfo).pipe(
+            map((v) => {
+                counter++;
+                return v;
+            }),
+        );
         when(repositoryMock.getBlockByHeight(deepEqual(UInt64.fromUint(1)))).thenReturn(observableOfBlockInfo);
         expect(observableOfBlockInfo).to.be.equals(observableOfBlockInfo);
         const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
-
             createBlockRepository(): BlockRepository {
                 return instance(repositoryMock);
             }
@@ -78,19 +77,19 @@ describe('RepositoryFactory', () => {
     });
 
     it('Should get NetworkType from cache', (done) => {
-
         let counter = 0;
         const repositoryMock: NetworkRepository = mock();
         const expectedNetworkType = NetworkType.MIJIN_TEST;
-        const observableOfBlockInfo = observableOf(expectedNetworkType).pipe(map((v) => {
-            counter++;
-            return v;
-        }));
+        const observableOfBlockInfo = observableOf(expectedNetworkType).pipe(
+            map((v) => {
+                counter++;
+                return v;
+            }),
+        );
         when(repositoryMock.getNetworkType()).thenReturn(observableOfBlockInfo);
 
         expect(observableOfBlockInfo).to.be.equals(observableOfBlockInfo);
 
-        // tslint:disable-next-line: max-classes-per-file
         const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
             createNetworkRepository(): NetworkRepository {
                 return instance(repositoryMock);
@@ -107,25 +106,24 @@ describe('RepositoryFactory', () => {
                 done();
             });
         });
-
     });
 
     it('Should get NetworkType from memory', (done) => {
-
         let counter = 0;
 
         const repositoryMock: NetworkRepository = mock();
 
         const expectedNetworkType = NetworkType.MIJIN_TEST;
-        const observableOfBlockInfo = observableOf(expectedNetworkType).pipe(map((v) => {
-            counter++;
-            return v;
-        }));
+        const observableOfBlockInfo = observableOf(expectedNetworkType).pipe(
+            map((v) => {
+                counter++;
+                return v;
+            }),
+        );
         when(repositoryMock.getNetworkType()).thenReturn(observableOfBlockInfo);
 
         expect(observableOfBlockInfo).to.be.equals(observableOfBlockInfo);
 
-        // tslint:disable-next-line: max-classes-per-file
         const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
             createNetworkRepository(): NetworkRepository {
                 return instance(repositoryMock);
@@ -142,7 +140,5 @@ describe('RepositoryFactory', () => {
                 done();
             });
         });
-
     });
-
 });

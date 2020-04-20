@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import {deepEqual} from 'assert';
-import {expect} from 'chai';
-import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
-import {NamespaceName} from '../../../src/model/namespace/NamespaceName';
+import { deepEqual } from 'assert';
+import { expect } from 'chai';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { NamespaceName } from '../../../src/model/namespace/NamespaceName';
 
 describe('NamespaceName', () => {
-
     it('should createComplete an NamespaceName object', () => {
         const namespaceNameDTO = {
             name: 'nem',
@@ -28,11 +27,7 @@ describe('NamespaceName', () => {
             parentId: new NamespaceId([1431234233, 1324322333]),
         };
 
-        const namespaceName = new NamespaceName(
-            namespaceNameDTO.namespaceId,
-            namespaceNameDTO.name,
-            namespaceNameDTO.parentId,
-        );
+        const namespaceName = new NamespaceName(namespaceNameDTO.namespaceId, namespaceNameDTO.name, namespaceNameDTO.parentId);
 
         deepEqual(namespaceName.namespaceId, namespaceNameDTO.namespaceId);
         deepEqual(namespaceName.parentId, namespaceNameDTO.parentId);

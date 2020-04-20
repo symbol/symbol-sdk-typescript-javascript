@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-import {NamespaceId} from '../namespace/NamespaceId';
-import {UInt64} from '../UInt64';
-import {Mosaic} from './Mosaic';
-import {MosaicId} from './MosaicId';
+import { NamespaceId } from '../namespace/NamespaceId';
+import { UInt64 } from '../UInt64';
+import { Mosaic } from './Mosaic';
 
 /**
  * NetworkCurrencyLocal mosaic for local test network (local bootstrap server)
@@ -28,7 +27,6 @@ import {MosaicId} from './MosaicId';
  * @since 0.10.2
  */
 export class NetworkCurrencyLocal extends Mosaic {
-
     /**
      * namespaceId of `currency` namespace.
      *
@@ -75,7 +73,7 @@ export class NetworkCurrencyLocal extends Mosaic {
      * @param amount
      * @returns {NetworkCurrencyLocal}
      */
-    public static createRelative(amount: UInt64 | number) {
+    public static createRelative(amount: UInt64 | number): NetworkCurrencyLocal {
         if (typeof amount === 'number') {
             return new NetworkCurrencyLocal(UInt64.fromUint(amount * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY)));
         }
@@ -89,7 +87,7 @@ export class NetworkCurrencyLocal extends Mosaic {
      * @param amount
      * @returns {NetworkCurrencyLocal}
      */
-    public static createAbsolute(amount: UInt64 | number) {
+    public static createAbsolute(amount: UInt64 | number): NetworkCurrencyLocal {
         if (typeof amount === 'number') {
             return new NetworkCurrencyLocal(UInt64.fromUint(amount));
         }

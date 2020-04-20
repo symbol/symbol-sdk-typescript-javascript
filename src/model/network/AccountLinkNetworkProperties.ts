@@ -15,10 +15,8 @@
  */
 
 export class AccountLinkNetworkProperties {
-
     /**
      * @param dummy - to trigger plugin load.
      */
-    constructor(public readonly dummy?: string) {
-    }
+    constructor(public readonly dummy?: string) {}
 }

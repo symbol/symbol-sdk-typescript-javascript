@@ -20,17 +20,18 @@ import { NodeStatusEnum } from 'symbol-openapi-typescript-node-client';
  * The node info structure describes basic information of a node health.
  */
 export class NodeHealth {
-
     /**
      * @param apiNode
      * @param db
      */
-    constructor(/**
-                 * The api node status
-                 */
-                public readonly apiNode: NodeStatusEnum,
-                /**
-                 * The database status
-                 */
-                public readonly db: NodeStatusEnum ) {}
+    constructor(
+        /**
+         * The api node status
+         */
+        public readonly apiNode: NodeStatusEnum,
+        /**
+         * The database status
+         */
+        public readonly db: NodeStatusEnum,
+    ) {}
 }

@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {ChronoUnit, Instant, LocalDateTime, ZoneId} from 'js-joda';
-import {Deadline} from '../../../src/model/transaction/Deadline';
+import { expect } from 'chai';
+import { ChronoUnit, Instant, LocalDateTime, ZoneId } from 'js-joda';
+import { Deadline } from '../../../src/model/transaction/Deadline';
 
 describe('Deadline', () => {
     it('should createComplete timestamp today', () => {
         const deadline = Deadline.create();
 
         // avoid SYSTEM and UTC differences
-        const networkTimeStamp = (new Date()).getTime();
+        const networkTimeStamp = new Date().getTime();
         const timestampLocal = LocalDateTime.ofInstant(Instant.ofEpochMilli(networkTimeStamp), ZoneId.SYSTEM);
         const reproducedDate = timestampLocal.plus(2, ChronoUnit.HOURS);
 

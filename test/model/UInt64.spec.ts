@@ -14,35 +14,28 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {UInt64} from '../../src/model/UInt64';
+import { expect } from 'chai';
+import { UInt64 } from '../../src/model/UInt64';
 
 const hexTestCases = [
     { str: '0000000000000000', value: [0, 0], description: '0' },
-    { str: '000000000000A1B2', value: [0xA1B2, 0], description: '(0, 8)' },
+    { str: '000000000000A1B2', value: [0xa1b2, 0], description: '(0, 8)' },
     { str: '0000000012345678', value: [0x12345678, 0], description: '8' },
-    { str: '0000ABCD12345678', value: [0x12345678, 0xABCD], description: '(8, 16)' },
-    { str: '1234567890ABCDEF', value: [0x90ABCDEF, 0x12345678], description: '16' },
-    { str: 'FFFFFFFFFFFFFFFF', value: [0xFFFFFFFF, 0xFFFFFFFF], description: '16 (max value)' },
+    { str: '0000ABCD12345678', value: [0x12345678, 0xabcd], description: '(8, 16)' },
+    { str: '1234567890ABCDEF', value: [0x90abcdef, 0x12345678], description: '16' },
+    { str: 'FFFFFFFFFFFFFFFF', value: [0xffffffff, 0xffffffff], description: '16 (max value)' },
 ];
 
 describe('Uint64', () => {
-
     it('should createComplete Uint64 object [0,0]', () => {
-        const uintArray = [
-            0,
-            0,
-        ];
+        const uintArray = [0, 0];
         const uint64 = new UInt64(uintArray);
         expect(uint64.lower).to.be.equal(uintArray[0]);
         expect(uint64.higher).to.be.equal(uintArray[1]);
     });
 
     it('should createComplete Uint64 object [20,30]', () => {
-        const uintArray = [
-            20,
-            30,
-        ];
+        const uintArray = [20, 30];
         const uint64 = new UInt64(uintArray);
         expect(uint64.lower).to.be.equal(uintArray[0]);
         expect(uint64.higher).to.be.equal(uintArray[1]);
@@ -71,6 +64,12 @@ describe('Uint64', () => {
     it('should compact UInt64 number', () => {
         const uint64Compact = new UInt64([3866227606, 11]).compact();
         expect(uint64Compact).to.be.equal(51110867862);
+    });
+
+    it('should compact UInt64 number', () => {
+        expect(() => {
+            new UInt64([3866227606, 0x00200000 + 1]).compact();
+        }).to.throw(Error, 'Compacted value is greater than Number.Max_Value.');
     });
 
     it('should fromUint throw exception with negative uint value', () => {
@@ -127,7 +126,9 @@ describe('Uint64', () => {
 
             it('cannot parse hex string with invalid characters into uint64', () => {
                 // Assert:
-                expect(() => { UInt64.fromHex('0000000012345G78'); }).to.throw('unrecognized hex char'); // contains 'G'
+                expect(() => {
+                    UInt64.fromHex('0000000012345G78');
+                }).to.throw('unrecognized hex char'); // contains 'G'
             });
 
             it('cannot parse hex string with invalid size into uint64', () => {
@@ -135,10 +136,18 @@ describe('Uint64', () => {
                 const errorMessage = 'hex string has unexpected size';
 
                 // Assert:
-                expect(() => { UInt64.fromHex(''); }).to.throw(errorMessage); // empty string
-                expect(() => { UInt64.fromHex('1'); }).to.throw(errorMessage); // odd number of chars
-                expect(() => { UInt64.fromHex('ABCDEF12'); }).to.throw(errorMessage); // too short
-                expect(() => { UInt64.fromHex('1234567890ABCDEF12'); }).to.throw(errorMessage); // too long
+                expect(() => {
+                    UInt64.fromHex('');
+                }).to.throw(errorMessage); // empty string
+                expect(() => {
+                    UInt64.fromHex('1');
+                }).to.throw(errorMessage); // odd number of chars
+                expect(() => {
+                    UInt64.fromHex('ABCDEF12');
+                }).to.throw(errorMessage); // too short
+                expect(() => {
+                    UInt64.fromHex('1234567890ABCDEF12');
+                }).to.throw(errorMessage); // too long
             });
         });
     });
@@ -156,8 +165,12 @@ describe('Uint64', () => {
             expect(uint64_2.higher).to.be.equal(11);
         });
         it('should throw exception when creating Uint64 object from string', () => {
-            expect(() => { UInt64.fromNumericString('000012345678'); }).to.throw('Input string is not a valid numeric string');
-            expect(() => { UInt64.fromNumericString('ABC12345678'); }).to.throw('Input string is not a valid numeric string');
+            expect(() => {
+                UInt64.fromNumericString('000012345678');
+            }).to.throw('Input string is not a valid numeric string');
+            expect(() => {
+                UInt64.fromNumericString('ABC12345678');
+            }).to.throw('Input string is not a valid numeric string');
         });
     });
 

@@ -15,14 +15,7 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
-import {
-    Mosaic,
-    MosaicRoutesApi,
-    MosaicInfoDTO,
-    MosaicDTO,
-    MosaicsInfoDTO,
-    MosaicIds,
-} from 'symbol-openapi-typescript-node-client';
+import { Mosaic, MosaicRoutesApi, MosaicInfoDTO, MosaicDTO, MosaicsInfoDTO, MosaicIds } from 'symbol-openapi-typescript-node-client';
 import { instance, mock, reset, when, deepEqual } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
@@ -32,12 +25,12 @@ import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicInfo } from '../../src/model/mosaic/MosaicInfo';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { AccountIds } from 'symbol-openapi-typescript-node-client';
-import { assert } from 'chai';
 
 describe('MosaicHttp', () => {
-
-    const publicAccount =
-        PublicAccount.createFromPublicKey('9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6', NetworkType.MIJIN_TEST);
+    const publicAccount = PublicAccount.createFromPublicKey(
+        '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6',
+        NetworkType.MIJIN_TEST,
+    );
     const address = publicAccount.address;
     const mosaicId = new MosaicId('941299B2B7E1291C');
     const mosaic = new Mosaic();
@@ -63,15 +56,16 @@ describe('MosaicHttp', () => {
     const url = 'http://someHost';
     const response: http.IncomingMessage = mock();
     const mosaicRoutesApi: MosaicRoutesApi = mock();
-    const mosaicRepository: MosaicRepository = DtoMapping.assign(new MosaicHttp(url, NetworkType.MIJIN_TEST),
-        {mosaicRoutesApi: instance(mosaicRoutesApi)});
+    const mosaicRepository: MosaicRepository = DtoMapping.assign(new MosaicHttp(url, NetworkType.MIJIN_TEST), {
+        mosaicRoutesApi: instance(mosaicRoutesApi),
+    });
 
     before(() => {
         reset(response);
         reset(mosaicRoutesApi);
     });
 
-    function assertMosaicInfo(mosaicInfo: MosaicInfo) {
+    function assertMosaicInfo(mosaicInfo: MosaicInfo): void {
         expect(mosaicInfo).to.be.not.null;
         expect(mosaicInfo.divisibility).to.be.equals(6);
         expect(mosaicInfo.duration.toString()).to.be.equals(mosaicDto.duration);
@@ -85,7 +79,7 @@ describe('MosaicHttp', () => {
     }
 
     it('getMosaic', async () => {
-        when(mosaicRoutesApi.getMosaic(mosaicId.toHex())).thenReturn(Promise.resolve({response, body: mosaicInfoDto}));
+        when(mosaicRoutesApi.getMosaic(mosaicId.toHex())).thenReturn(Promise.resolve({ response, body: mosaicInfoDto }));
         const mosaicInfo = await mosaicRepository.getMosaic(mosaicId).toPromise();
         assertMosaicInfo(mosaicInfo);
     });
@@ -93,13 +87,13 @@ describe('MosaicHttp', () => {
     it('getMosaics', async () => {
         const mosaicIds = new MosaicIds();
         mosaicIds.mosaicIds = [mosaicId.toHex()];
-        when(mosaicRoutesApi.getMosaics(deepEqual(mosaicIds))).thenReturn(Promise.resolve({response, body: [mosaicInfoDto]}));
+        when(mosaicRoutesApi.getMosaics(deepEqual(mosaicIds))).thenReturn(Promise.resolve({ response, body: [mosaicInfoDto] }));
         const mosaicInfos = await mosaicRepository.getMosaics([mosaicId]).toPromise();
         assertMosaicInfo(mosaicInfos[0]);
     });
 
     it('getMosaicsFromAccount', async () => {
-        when(mosaicRoutesApi.getMosaicsFromAccount(address.plain())).thenReturn(Promise.resolve({response, body: mosaicsInfoDto}));
+        when(mosaicRoutesApi.getMosaicsFromAccount(address.plain())).thenReturn(Promise.resolve({ response, body: mosaicsInfoDto }));
         const mosaicsInfo = await mosaicRepository.getMosaicsFromAccount(address).toPromise();
         assertMosaicInfo(mosaicsInfo[0]);
     });
@@ -107,37 +101,44 @@ describe('MosaicHttp', () => {
     it('getMosaicsFromAccounts', async () => {
         const accountIds = new AccountIds();
         accountIds.addresses = [address.plain()];
-        when(mosaicRoutesApi.getMosaicsFromAccounts(deepEqual(accountIds)))
-            .thenReturn(Promise.resolve({response, body: mosaicsInfoDto}));
+        when(mosaicRoutesApi.getMosaicsFromAccounts(deepEqual(accountIds))).thenReturn(Promise.resolve({ response, body: mosaicsInfoDto }));
         const mosaicsInfo = await mosaicRepository.getMosaicsFromAccounts([address]).toPromise();
-            assertMosaicInfo(mosaicsInfo[0]);
+        assertMosaicInfo(mosaicsInfo[0]);
     });
 
     it('getMosaic - Error', async () => {
         when(mosaicRoutesApi.getMosaic(mosaicId.toHex())).thenThrow(new Error('Mocked Error'));
-        await mosaicRepository.getMosaic(mosaicId).toPromise().catch((error) =>
-            expect(error).not.to.be.undefined);
+        await mosaicRepository
+            .getMosaic(mosaicId)
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
     });
 
     it('getMosaics - Error', async () => {
         const mosaicIds = new MosaicIds();
         mosaicIds.mosaicIds = [mosaicId.toHex()];
         when(mosaicRoutesApi.getMosaics(deepEqual(mosaicIds))).thenThrow(new Error('Mocked Error'));
-        await mosaicRepository.getMosaics([mosaicId]).toPromise().catch((error) =>
-        expect(error).not.to.be.undefined);
+        await mosaicRepository
+            .getMosaics([mosaicId])
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
     });
 
     it('getMosaicsFromAccount - Error', async () => {
         when(mosaicRoutesApi.getMosaicsFromAccount(address.plain())).thenThrow(new Error('Mocked Error'));
-        await mosaicRepository.getMosaicsFromAccount(address).toPromise().catch((error) =>
-        expect(error).not.to.be.undefined);
+        await mosaicRepository
+            .getMosaicsFromAccount(address)
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
     });
 
     it('getMosaicsFromAccounts - Error', async () => {
         const accountIds = new AccountIds();
         accountIds.addresses = [address.plain()];
         when(mosaicRoutesApi.getMosaicsFromAccounts(deepEqual(accountIds))).thenThrow(new Error('Mocked Error'));
-        await mosaicRepository.getMosaicsFromAccounts([address]).toPromise().catch((error) =>
-        expect(error).not.to.be.undefined);
+        await mosaicRepository
+            .getMosaicsFromAccounts([address])
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
     });
 });

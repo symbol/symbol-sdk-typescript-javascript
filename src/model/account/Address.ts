@@ -26,11 +26,9 @@ export class Address {
      * @param networkType - The NEM network type.
      * @returns {Address}
      */
-    public static createFromPublicKey(publicKey: string,
-                                      networkType: NetworkType): Address {
+    public static createFromPublicKey(publicKey: string, networkType: NetworkType): Address {
         const publicKeyUint8 = Convert.hexToUint8(publicKey);
-        const address = RawAddress
-        .addressToString(RawAddress.publicKeyToAddress(publicKeyUint8, networkType));
+        const address = RawAddress.addressToString(RawAddress.publicKeyToAddress(publicKeyUint8, networkType));
         return new Address(address, networkType);
     }
 
@@ -42,10 +40,7 @@ export class Address {
      */
     public static createFromRawAddress(rawAddress: string): Address {
         let networkType: NetworkType;
-        const addressTrimAndUpperCase: string = rawAddress
-        .trim()
-        .toUpperCase()
-        .replace(/-/g, '');
+        const addressTrimAndUpperCase: string = rawAddress.trim().toUpperCase().replace(/-/g, '');
         if (addressTrimAndUpperCase.length !== 40) {
             throw new Error('Address ' + addressTrimAndUpperCase + ' has to be 40 characters long');
         }
@@ -69,52 +64,50 @@ export class Address {
      * @return {Address}
      */
     public static createFromEncoded(encoded: string): Address {
-        return Address.createFromRawAddress(RawAddress
-        .addressToString(Convert.hexToUint8(encoded)));
+        return Address.createFromRawAddress(RawAddress.addressToString(Convert.hexToUint8(encoded)));
     }
 
     /**
      * Determines the validity of an raw address string.
      * @param {string} rawAddress The raw address string. Expected format SCHCZBZ6QVJAHGJTKYVPW5FBSO2IXXJQBPV5XE6P
-     * @param {NetworkType} networkType The network identifier.
      * @returns {boolean} true if the raw address string is valid, false otherwise.
      */
-    public static isValidRawAddress = (rawAddress: string, networkType: NetworkType): boolean => {
+    public static isValidRawAddress = (rawAddress: string): boolean => {
         try {
-            return RawAddress.isValidAddress(RawAddress.stringToAddress(rawAddress), networkType);
+            return RawAddress.isValidAddress(RawAddress.stringToAddress(rawAddress));
         } catch (err) {
             return false;
         }
-    }
+    };
 
     /**
      * Determines the validity of an encoded address string.
      * @param {string} encoded The encoded address string. Expected format: 9085215E4620D383C2DF70235B9EF7607F6A28EF6D16FD7B9C
-     * @param {NetworkType} networkType The network identifier.
      * @returns {boolean} true if the encoded address string is valid, false otherwise.
      */
-    public static isValidEncodedAddress = (encoded: string, networkType: NetworkType): boolean => {
+    public static isValidEncodedAddress = (encoded: string): boolean => {
         try {
-            return RawAddress.isValidAddress(Convert.hexToUint8(encoded), networkType);
+            return RawAddress.isValidAddress(Convert.hexToUint8(encoded));
         } catch (err) {
             return false;
         }
-    }
+    };
 
     /**
      * @internal
      * @param address
      * @param networkType
      */
-    private constructor(/**
-                         * The address value.
-                         */
-                        private readonly address: string,
-                        /**
-                         * The NEM network type.
-                         */
-                        public readonly networkType: NetworkType) {
-    }
+    private constructor(
+        /**
+         * The address value.
+         */
+        private readonly address: string,
+        /**
+         * The NEM network type.
+         */
+        public readonly networkType: NetworkType,
+    ) {}
 
     /**
      * Get address in plain format ex: SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3.
@@ -152,7 +145,7 @@ export class Address {
     /**
      * Create DTO object
      */
-    public toDTO() {
+    public toDTO(): any {
         return {
             address: this.address,
             networkType: this.networkType,

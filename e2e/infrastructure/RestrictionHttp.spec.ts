@@ -73,7 +73,6 @@ describe('RestrictionHttp', () => {
      * =========================
      */
     describe('MosaicDefinitionTransaction', () => {
-
         it('standalone', () => {
             const nonce = MosaicNonce.createRandom();
             mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
@@ -84,7 +83,8 @@ describe('RestrictionHttp', () => {
                 MosaicFlags.create(true, true, true),
                 3,
                 UInt64.fromUint(1000),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
@@ -92,7 +92,6 @@ describe('RestrictionHttp', () => {
     });
 
     describe('MosaicDefinitionTransaction', () => {
-
         it('standalone', () => {
             const nonce = MosaicNonce.createRandom();
             referenceMosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
@@ -103,7 +102,8 @@ describe('RestrictionHttp', () => {
                 MosaicFlags.create(true, true, true),
                 3,
                 UInt64.fromUint(1000),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
@@ -111,14 +111,14 @@ describe('RestrictionHttp', () => {
     });
 
     describe('Setup Test AccountAddressRestriction', () => {
-
         it('Announce AccountRestrictionTransaction', () => {
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
                 AccountRestrictionFlags.AllowIncomingAddress,
                 [account3.address],
                 [],
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = addressModification.signWith(account, generationHash);
             return helper.announce(signedTransaction);
@@ -126,7 +126,6 @@ describe('RestrictionHttp', () => {
     });
 
     describe('MosaicGlobalRestrictionTransaction - Reference', () => {
-
         it('standalone', () => {
             const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
                 Deadline.create(),
@@ -136,7 +135,9 @@ describe('RestrictionHttp', () => {
                 MosaicRestrictionType.NONE,
                 UInt64.fromUint(0),
                 MosaicRestrictionType.GE,
-                networkType, undefined, helper.maxFee,
+                networkType,
+                undefined,
+                helper.maxFee,
             );
             const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
 
@@ -154,7 +155,9 @@ describe('RestrictionHttp', () => {
                 MosaicRestrictionType.NONE,
                 UInt64.fromUint(0),
                 MosaicRestrictionType.GE,
-                networkType, undefined, helper.maxFee,
+                networkType,
+                undefined,
+                helper.maxFee,
                 // TODO:
                 // referenceMosaicId,
             );
@@ -164,7 +167,6 @@ describe('RestrictionHttp', () => {
     });
 
     describe('MosaicAddressRestrictionTransaction', () => {
-
         it('aggregate', () => {
             const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
                 Deadline.create(),
@@ -172,12 +174,15 @@ describe('RestrictionHttp', () => {
                 UInt64.fromUint(60641),
                 account3.address,
                 UInt64.fromUint(2),
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
                 [mosaicAddressRestrictionTransaction.toAggregate(account.publicAccount)],
                 networkType,
-                [], helper.maxFee,
+                [],
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
@@ -192,7 +197,6 @@ describe('RestrictionHttp', () => {
 
     describe('getAccountRestrictions', () => {
         it('should call getAccountRestrictions successfully', async () => {
-
             const accountRestrictions = await restrictionAccountRepository.getAccountRestrictions(accountAddress).toPromise();
             expect(accountRestrictions.length).to.be.greaterThan(0);
         });
@@ -217,8 +221,9 @@ describe('RestrictionHttp', () => {
 
     describe('getMosaicAddressRestrictions', () => {
         it('should call getMosaicAddressRestrictions successfully', async () => {
-            const mosaicRestriction =
-                await restrictionMosaicRepository.getMosaicAddressRestrictions(mosaicId, [account3.address]).toPromise();
+            const mosaicRestriction = await restrictionMosaicRepository
+                .getMosaicAddressRestrictions(mosaicId, [account3.address])
+                .toPromise();
             deepEqual(mosaicRestriction[0].mosaicId.toHex(), mosaicId.toHex());
             deepEqual(mosaicRestriction[0].entryType, MosaicRestrictionEntryType.ADDRESS);
             deepEqual(mosaicRestriction[0].targetAddress.plain(), account3.address.plain());
@@ -231,12 +236,15 @@ describe('RestrictionHttp', () => {
             const mosaicRestriction = await restrictionMosaicRepository.getMosaicGlobalRestriction(mosaicId).toPromise();
             deepEqual(mosaicRestriction.mosaicId.toHex(), mosaicId.toHex());
             deepEqual(mosaicRestriction.entryType, MosaicRestrictionEntryType.GLOBAL);
-            deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.referenceMosaicId.toHex(),
-                new MosaicId(UInt64.fromUint(0).toHex()).toHex());
-            deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.restrictionType,
-                MosaicRestrictionType.GE);
-            deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.restrictionValue.toString(),
-                UInt64.fromUint(0).toString());
+            deepEqual(
+                mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.referenceMosaicId.toHex(),
+                new MosaicId(UInt64.fromUint(0).toHex()).toHex(),
+            );
+            deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.restrictionType, MosaicRestrictionType.GE);
+            deepEqual(
+                mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.restrictionValue.toString(),
+                UInt64.fromUint(0).toString(),
+            );
         });
     });
 
@@ -245,12 +253,15 @@ describe('RestrictionHttp', () => {
             const mosaicRestriction = await restrictionMosaicRepository.getMosaicGlobalRestrictions([mosaicId]).toPromise();
             deepEqual(mosaicRestriction[0].mosaicId.toHex(), mosaicId.toHex());
             deepEqual(mosaicRestriction[0].entryType, MosaicRestrictionEntryType.GLOBAL);
-            deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.referenceMosaicId.toHex(),
-                new MosaicId(UInt64.fromUint(0).toHex()).toHex());
-            deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.restrictionType,
-                MosaicRestrictionType.GE);
-            deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.restrictionValue.toString(),
-                UInt64.fromUint(0).toString());
+            deepEqual(
+                mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.referenceMosaicId.toHex(),
+                new MosaicId(UInt64.fromUint(0).toHex()).toHex(),
+            );
+            deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.restrictionType, MosaicRestrictionType.GE);
+            deepEqual(
+                mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.restrictionValue.toString(),
+                UInt64.fromUint(0).toString(),
+            );
         });
     });
 
@@ -266,7 +277,8 @@ describe('RestrictionHttp', () => {
                 AccountRestrictionFlags.AllowIncomingAddress,
                 [],
                 [account3.address],
-                networkType, helper.maxFee,
+                networkType,
+                helper.maxFee,
             );
             const signedTransaction = addressModification.signWith(account, generationHash);
             return helper.announce(signedTransaction);

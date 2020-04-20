@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+export * from './AccountService';
 export * from './NamespaceService';
 export * from './MosaicService';
 export * from './AggregateTransactionService';
@@ -21,5 +22,6 @@ export * from './MetadataTransactionService';
 export * from './MosaicRestrictionTransactionService';
 export * from './TransactionService';
 export * from './BlockService';
+export * from './interfaces/IAccountService';
 export * from './interfaces/IBlockService';
 export * from './interfaces/ITransactionService';

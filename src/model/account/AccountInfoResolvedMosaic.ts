@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NEM
+ * Copyright 2020 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-export enum WalletAlgorithm {
-    Pass_6k = 1,
-    Pass_bip32 = 2,
-    Pass_enc = 4,
-    Trezor = 3,
-}
+import { AccountInfo } from './AccountInfo';
+import { ResolvedMosaic } from '../mosaic/ResolvedMosaic';
+
+/**
+ * Account info with resolved mosaic
+ */
+export type AccountInfoResolvedMosaic = AccountInfo & { resolvedMosaics?: ResolvedMosaic[] };

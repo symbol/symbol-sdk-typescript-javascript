@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-    expect,
-} from 'chai';
-import { Convert as convert, RawUInt64 as uint64} from '../../../src/core/format';
+import { expect } from 'chai';
+import { Convert as convert, RawUInt64 as uint64 } from '../../../src/core/format';
 
 describe('uint64', () => {
     describe('compact', () => {
@@ -30,18 +28,18 @@ describe('uint64', () => {
 
         it('can compact less than max safe integer', () => {
             // Act:
-            const result = uint64.compact([0x00ABCDEF, 0x000FDFFF]);
+            const result = uint64.compact([0x00abcdef, 0x000fdfff]);
 
             // Assert:
-            expect(result).to.equal(0xFDFFF00ABCDEF);
+            expect(result).to.equal(0xfdfff00abcdef);
         });
 
         it('can compact max safe integer', () => {
             // Sanity:
-            expect(0x1FFFFFFFFFFFFF).to.equal(Number.MAX_SAFE_INTEGER);
+            expect(0x1fffffffffffff).to.equal(Number.MAX_SAFE_INTEGER);
 
             // Act:
-            const result = uint64.compact([0xFFFFFFFF, 0x001FFFFF]);
+            const result = uint64.compact([0xffffffff, 0x001fffff]);
 
             // Assert:
             expect(result).to.equal(Number.MAX_SAFE_INTEGER);
@@ -60,10 +58,10 @@ describe('uint64', () => {
 
         it('cannot compact greater than min unsafe integer', () => {
             // Act:
-            const result = uint64.compact([0xF0000000, 0x01000D00]);
+            const result = uint64.compact([0xf0000000, 0x01000d00]);
 
             // Assert:
-            expect(result).to.deep.equal([0xF0000000, 0x01000D00]);
+            expect(result).to.deep.equal([0xf0000000, 0x01000d00]);
         });
     });
 
@@ -82,14 +80,15 @@ describe('uint64', () => {
         // 	});
         // });
 
-        const successTestCases = [{
+        const successTestCases = [
+            {
                 number: 0,
                 uint64: [0, 0],
                 description: '0',
             },
             {
-                number: 0xA1B2,
-                uint64: [0xA1B2, 0],
+                number: 0xa1b2,
+                uint64: [0xa1b2, 0],
                 description: '(0, 8)',
             },
             {
@@ -98,18 +97,18 @@ describe('uint64', () => {
                 description: '8',
             },
             {
-                number: 0xABCD12345678,
-                uint64: [0x12345678, 0xABCD],
+                number: 0xabcd12345678,
+                uint64: [0x12345678, 0xabcd],
                 description: '(8, 16)',
             },
             {
-                number: 0x0014567890ABCDEF,
-                uint64: [0x90ABCDEF, 0x00145678],
+                number: 0x0014567890abcdef,
+                uint64: [0x90abcdef, 0x00145678],
                 description: '14',
             },
             {
                 number: Number.MAX_SAFE_INTEGER,
-                uint64: [0xFFFFFFFF, 0x001FFFFF],
+                uint64: [0xffffffff, 0x001fffff],
                 description: '14 (max value)',
             },
         ];
@@ -125,14 +124,15 @@ describe('uint64', () => {
         });
     });
 
-    const hexTestCases = [{
+    const hexTestCases = [
+        {
             str: '0000000000000000',
             value: [0, 0],
             description: '0',
         },
         {
             str: '000000000000A1B2',
-            value: [0xA1B2, 0],
+            value: [0xa1b2, 0],
             description: '(0, 8)',
         },
         {
@@ -142,17 +142,17 @@ describe('uint64', () => {
         },
         {
             str: '0000ABCD12345678',
-            value: [0x12345678, 0xABCD],
+            value: [0x12345678, 0xabcd],
             description: '(8, 16)',
         },
         {
             str: '1234567890ABCDEF',
-            value: [0x90ABCDEF, 0x12345678],
+            value: [0x90abcdef, 0x12345678],
             description: '16',
         },
         {
             str: 'FFFFFFFFFFFFFFFF',
-            value: [0xFFFFFFFF, 0xFFFFFFFF],
+            value: [0xffffffff, 0xffffffff],
             description: '16 (max value)',
         },
     ];
@@ -185,14 +185,15 @@ describe('uint64', () => {
     });
 
     describe('fromBytes32', () => {
-        const fromBytes32TestCases = [{
+        const fromBytes32TestCases = [
+            {
                 str: '00000000',
                 value: [0, 0],
                 description: '0',
             },
             {
                 str: '0000A1B2',
-                value: [0xA1B2, 0],
+                value: [0xa1b2, 0],
                 description: '(0, 8)',
             },
             {
@@ -202,7 +203,7 @@ describe('uint64', () => {
             },
             {
                 str: 'FFFFFFFF',
-                value: [0xFFFFFFFF, 0],
+                value: [0xffffffff, 0],
                 description: '8 (max value)',
             },
         ];
@@ -284,7 +285,8 @@ describe('uint64', () => {
     });
 
     describe('isZero', () => {
-        const zeroTestCases = [{
+        const zeroTestCases = [
+            {
                 description: 'low and high are zero',
                 value: [0, 0],
                 isZero: true,

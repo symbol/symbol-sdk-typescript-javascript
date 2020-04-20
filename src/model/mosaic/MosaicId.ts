@@ -25,7 +25,6 @@ import { MosaicNonce } from '../mosaic/MosaicNonce';
  * @since 1.0
  */
 export class MosaicId {
-
     /**
      * Mosaic id
      */
@@ -56,7 +55,7 @@ export class MosaicId {
         if (id instanceof Array) {
             this.id = new Id(id);
         } else if (typeof id === 'string') {
-            if (! /^[0-9A-Fa-f]{16}$/i.test(id)) {
+            if (!/^[0-9A-Fa-f]{16}$/i.test(id)) {
                 throw new Error('Invalid size for MosaicId hexadecimal notation');
             }
 
@@ -88,7 +87,7 @@ export class MosaicId {
     /**
      * Create DTO object.
      */
-    toDTO() {
+    toDTO(): any {
         return this.id.toDTO();
     }
 }

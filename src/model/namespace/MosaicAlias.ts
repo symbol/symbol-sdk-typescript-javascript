@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId} from '../mosaic/MosaicId';
-import {Alias} from './Alias';
+import { MosaicId } from '../mosaic/MosaicId';
+import { Alias } from './Alias';
 import { AliasType } from './AliasType';
 
 /**
@@ -23,15 +23,16 @@ import { AliasType } from './AliasType';
  * @since 0.10.2
  */
 export class MosaicAlias extends Alias {
-
     /**
      * Create AddressAlias object
      * @param mosaicId
      */
-    constructor(/**
-                 * The alias address
-                 */
-                public readonly mosaicId: MosaicId) {
+    constructor(
+        /**
+         * The alias address
+         */
+        public readonly mosaicId: MosaicId,
+    ) {
         super(AliasType.Mosaic, undefined, mosaicId);
     }
 

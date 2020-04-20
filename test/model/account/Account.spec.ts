@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import { Convert } from '../../../src/core/format/Convert';
-import {Account} from '../../../src/model/account/Account';
-import {NetworkType} from '../../../src/model/network/NetworkType';
+import { expect } from 'chai';
+import { Account } from '../../../src/model/account/Account';
+import { NetworkType } from '../../../src/model/network/NetworkType';
+import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
+import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
+import { Deadline } from '../../../src/model/transaction/Deadline';
+import { PlainMessage } from '../../../src/model/message/PlainMessage';
+import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
+import { CosignatureTransaction } from '../../../src/model/transaction/CosignatureTransaction';
+import { CosignatureSignedTransaction } from '../../../src/model/transaction/CosignatureSignedTransaction';
+import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
 
 describe('Account', () => {
     const accountInformation = {
@@ -53,6 +60,57 @@ describe('Account', () => {
         expect(account.address).to.not.be.equal(undefined);
     });
 
+    it('should return networkType', () => {
+        const account = Account.generateNewAccount(NetworkType.TEST_NET);
+        expect(account.networkType).to.be.equal(NetworkType.TEST_NET);
+    });
+
+    it('should sign tranaction with given signature', () => {
+        const sendAmount = NetworkCurrencyLocal.createAbsolute(1000);
+        const backAmount = NetworkCurrencyLocal.createAbsolute(1);
+        const account = Account.generateNewAccount(NetworkType.TEST_NET);
+        const account2 = Account.generateNewAccount(NetworkType.TEST_NET);
+        const generationHash = 'C422CC3C9257A1568036E1726E64EB5923C8363A13D4344F9E66CD89C8789BC7';
+        const aliceTransferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            account2.address,
+            [sendAmount],
+            PlainMessage.create('payout'),
+            NetworkType.TEST_NET,
+        );
+        const bobTransferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            account.address,
+            [backAmount],
+            PlainMessage.create('payout'),
+            NetworkType.TEST_NET,
+        );
+
+        // 01. Alice creates the aggregated tx and sign it. Then payload send to Bob
+        const aggregateTransaction = AggregateTransaction.createComplete(
+            Deadline.create(),
+            [aliceTransferTransaction.toAggregate(account.publicAccount), bobTransferTransaction.toAggregate(account2.publicAccount)],
+            NetworkType.TEST_NET,
+            [],
+        );
+
+        const aliceSignedTransaction = aggregateTransaction.signWith(account, generationHash);
+
+        // 02 Bob cosigns the tx and sends it back to Alice
+        const signedTxBob = CosignatureTransaction.signTransactionPayload(account2, aliceSignedTransaction.payload, generationHash);
+
+        // 03. Alice collects the cosignatures, recreate, sign, and announces the transaction
+        const cosignatureSignedTransactions = [
+            new CosignatureSignedTransaction(signedTxBob.parentHash, signedTxBob.signature, signedTxBob.signerPublicKey),
+        ];
+        const recreatedTx = TransactionMapping.createFromPayload(aliceSignedTransaction.payload) as AggregateTransaction;
+
+        const signedTransaction = account.signTransactionGivenSignatures(recreatedTx, cosignatureSignedTransactions, generationHash);
+
+        expect(signedTransaction.payload).not.to.be.undefined;
+        expect(signedTransaction.payload.length).to.be.greaterThan(0);
+    });
+
     describe('signData', () => {
         it('utf-8', () => {
             const account = Account.createFromPrivateKey(
@@ -61,8 +119,7 @@ describe('Account', () => {
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('catapult rocks!');
-            expect(publicAccount.verifySignature('catapult rocks!', signed))
-                .to.be.true;
+            expect(publicAccount.verifySignature('catapult rocks!', signed)).to.be.true;
         });
 
         it('hexa', () => {
@@ -72,8 +129,7 @@ describe('Account', () => {
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('0xAA');
-            expect(publicAccount.verifySignature('0xAA', signed))
-                .to.be.true;
+            expect(publicAccount.verifySignature('0xAA', signed)).to.be.true;
         });
 
         it('utf-8 - NIS1', () => {
@@ -83,8 +139,7 @@ describe('Account', () => {
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('catapult rocks!');
-            expect(publicAccount.verifySignature('catapult rocks!', signed))
-                .to.be.true;
+            expect(publicAccount.verifySignature('catapult rocks!', signed)).to.be.true;
         });
 
         it('hexa - NIS1', () => {
@@ -94,8 +149,60 @@ describe('Account', () => {
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('0xAA');
-            expect(publicAccount.verifySignature('0xAA', signed))
-                .to.be.true;
+            expect(publicAccount.verifySignature('0xAA', signed)).to.be.true;
+        });
+
+        it('hexa without 0x previx', () => {
+            const account = Account.createFromPrivateKey(
+                'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
+                NetworkType.MIJIN_TEST,
+            );
+            const publicAccount = account.publicAccount;
+            const signed = account.signData('66128B29E8197352A2FEB51B50CF5D02F1D05B20D44B3F7953B98ACD2BCA15D4');
+            expect(publicAccount.verifySignature('66128B29E8197352A2FEB51B50CF5D02F1D05B20D44B3F7953B98ACD2BCA15D4', signed)).to.be.true;
+        });
+
+        it('hexa without 0x previx should be the same as with 0x', () => {
+            const account = Account.createFromPrivateKey(
+                'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
+                NetworkType.MIJIN_TEST,
+            );
+            const publicAccount = account.publicAccount;
+            const signed = account.signData('AA');
+            const signedWith0x = account.signData('0xAA');
+            expect(publicAccount.verifySignature('AA', signed)).to.be.true;
+            expect(publicAccount.verifySignature('0xAA', signedWith0x)).to.be.true;
+        });
+
+        it('hexa without 0x previx should be the same as with 0x', () => {
+            const account = Account.createFromPrivateKey(
+                'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
+                NetworkType.MIJIN_TEST,
+            );
+            const publicAccount = account.publicAccount;
+            const signed = account.signData('ff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf');
+            const signedWith0x = account.signData('0xff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf');
+            expect(
+                publicAccount.verifySignature('ff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf', signed),
+            ).to.be.true;
+            expect(
+                publicAccount.verifySignature(
+                    '0xff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf',
+                    signedWith0x,
+                ),
+            ).to.be.true;
+        });
+
+        it('sign empty', () => {
+            const account = Account.createFromPrivateKey(
+                'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
+                NetworkType.MIJIN_TEST,
+            );
+            const publicAccount = account.publicAccount;
+            const signed = account.signData('');
+            const signedWith0x = account.signData('0x');
+            expect(publicAccount.verifySignature('', signed)).to.be.true;
+            expect(publicAccount.verifySignature('0x', signedWith0x)).to.be.true;
         });
     });
 });
