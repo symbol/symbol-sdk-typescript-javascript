@@ -56,7 +56,7 @@ export class AccountService implements IAccountService {
         const accountInfoObservable = this.accountRepository.getAccountsInfo(addresses);
         const distinctNames = accountInfoObservable.pipe(
             mergeMap((info) => {
-                const namespaceIds = this.getDistinctNamespaceIdFromAccountInfors(info);
+                const namespaceIds = this.getDistinctNamespaceIdFromAccountInfos(info);
                 if (namespaceIds.length) {
                     return this.namespaceRepository.getNamespacesName(namespaceIds);
                 }
@@ -121,7 +121,7 @@ export class AccountService implements IAccountService {
      * @param accountInfos List of account infos
      * @returns {NamespaceId[]}
      */
-    private getDistinctNamespaceIdFromAccountInfors(accountInfos: AccountInfo[]): NamespaceId[] {
+    private getDistinctNamespaceIdFromAccountInfos(accountInfos: AccountInfo[]): NamespaceId[] {
         const namespaceIds: NamespaceId[] = [];
         accountInfos.forEach((info) => {
             info.mosaics.forEach((mosaic) => {
