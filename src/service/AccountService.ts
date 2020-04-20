@@ -117,13 +117,13 @@ export class AccountService implements IAccountService {
     }
 
     /**
-     * Get distinct list of namespacesIds from list of accountInfos
-     * @param accountInfo List of account infos
+     * Get distinct list of namespaces ids from list of account infos
+     * @param accountInfos List of account infos
      * @returns {NamespaceId[]}
      */
-    private getDistinctNamespaceIdFromAccountInfors(accountInfo: AccountInfo[]): NamespaceId[] {
+    private getDistinctNamespaceIdFromAccountInfors(accountInfos: AccountInfo[]): NamespaceId[] {
         const namespaceIds: NamespaceId[] = [];
-        accountInfo.forEach((info) => {
+        accountInfos.forEach((info) => {
             info.mosaics.forEach((mosaic) => {
                 if (mosaic.id instanceof NamespaceId) {
                     if (!namespaceIds.find((n) => n.equals(mosaic.id))) {
