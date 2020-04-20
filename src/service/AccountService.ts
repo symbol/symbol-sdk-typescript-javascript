@@ -97,7 +97,7 @@ export class AccountService implements IAccountService {
     }
 
     /**
-     * Resolve mosaics provides namespace names
+     * Resolve mosaics provided namespace names
      * @param mosaics unresolved mosaics
      * @return {ResolvedMosaic[]}
      */
@@ -117,8 +117,8 @@ export class AccountService implements IAccountService {
     }
 
     /**
-     * Get distince list of namespacesIds from list of accountInfos
-     * @param accountInfo List of account info
+     * Get distinct list of namespacesIds from list of accountInfos
+     * @param accountInfo List of account infos
      * @returns {NamespaceId[]}
      */
     private getDistinctNamespaceIdFromAccountInfors(accountInfo: AccountInfo[]): NamespaceId[] {
