@@ -1,0 +1,829 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>symbol-sdk</title>
+	<meta name="description" content="Documentation for symbol-sdk">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">symbol-sdk</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1>symbol-sdk</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#symbol-sdk-for-typescript-and-javascript" id="symbol-sdk-for-typescript-and-javascript" style="color: inherit; text-decoration: none;">
+					<h1>Symbol SDK for TypeScript and JavaScript</h1>
+				</a>
+				<p><a href="https://badge.fury.io/js/symbol-sdk"><img src="https://badge.fury.io/js/symbol-sdk.svg" alt="npm version"></a>
+					<a href="https://travis-ci.com/nemtech/symbol-sdk-typescript-javascript"><img src="https://api.travis-ci.com/nemtech/symbol-sdk-typescript-javascript.svg?branch=master" alt="Build Status"></a>
+					<a href="https://coveralls.io/github/nemtech/symbol-sdk-typescript-javascript?branch=travis-ci"><img src="https://coveralls.io/repos/github/nemtech/symbol-sdk-typescript-javascript/badge.svg" alt="Coverage Status"></a>
+				<a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License"></a></p>
+				<p>The Symbol SDK for TypeScript / JavaScript allows you to develop web, mobile, and Node.js applications.</p>
+				<a href="#important-notes" id="important-notes" style="color: inherit; text-decoration: none;">
+					<h2>Important Notes</h2>
+				</a>
+				<a href="#fushicho-network-compatibility-catapult-server0932" id="fushicho-network-compatibility-catapult-server0932" style="color: inherit; text-decoration: none;">
+					<h3><em>Fushicho</em> Network Compatibility (<a href="mailto:catapult-server@0.9.3.2">catapult-server@0.9.3.2</a>)</h3>
+				</a>
+				<p>Due to a network upgrade with <a href="https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.2">catapult-server@Fushicho</a> version, <strong>it is recommended to use this package&#39;s 0.18.0 version and upwards to use this package with Fushicho versioned networks</strong>.</p>
+				<p>The upgrade to this package&#39;s <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/releases/tag/v0.18.0">version v0.18.0</a> is mandatory for <strong>fushicho compatibility</strong>.</p>
+				<p>Find the complete release notes <a href="CHANGELOG.md">here</a>.</p>
+				<a href="#requirements" id="requirements" style="color: inherit; text-decoration: none;">
+					<h2>Requirements</h2>
+				</a>
+				<a href="#nodejs" id="nodejs" style="color: inherit; text-decoration: none;">
+					<h3>NodeJS</h3>
+				</a>
+				<ul>
+					<li>NodeJS 10.X.X and above (from v0.18.0)</li>
+				</ul>
+				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
+					<h2>Installation</h2>
+				</a>
+				<pre><code class="language-bash">npm install symbol-sdk rxjs</code></pre>
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h2>Usage</h2>
+				</a>
+				<p>Surf the <a href="http://nemtech.github.io/getting-started/setup-workstation.html">documentation</a> to get started into Symbol development.
+				You will find self-paced guides and useful code snippets using the TypeScript/Javascript SDK.</p>
+				<p>To get the full description of the available classes and their functions, check the <a href="https://nemtech.github.io/references/typescript-sdk.html">SDK reference</a>.</p>
+				<a href="#getting-help" id="getting-help" style="color: inherit; text-decoration: none;">
+					<h2>Getting help</h2>
+				</a>
+				<p>Use the following available resources to get help:</p>
+				<ul>
+					<li><a href="http://nemtech.github.io/getting-started/setup-workstation.html">Symbol Documentation</a></li>
+					<li><a href="https://nemtech.github.io/references/typescript-sdk.html">Symbol SDK Typescript/Javascript Reference</a></li>
+					<li>Join the community <a href="https://join.slack.com/t/nem2/shared_invite/enQtMzY4MDc2NTg0ODgyLWZmZWRiMjViYTVhZjEzOTA0MzUyMTA1NTA5OWQ0MWUzNTA4NjM5OTJhOGViOTBhNjkxYWVhMWRiZDRkOTE0YmU">slack group (#sig-api)</a></li>
+					<li>If you found a bug, <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/issues">open a new issue</a></li>
+				</ul>
+				<a href="#contributing" id="contributing" style="color: inherit; text-decoration: none;">
+					<h2>Contributing</h2>
+				</a>
+				<p>This project is developed and maintained by NEM Foundation.</p>
+				<p>Contributions are welcome and appreciated.
+				Check <a href="CONTRIBUTING.md">CONTRIBUTING</a> for information on how to contribute.</p>
+				<p>You can also find useful notes for developers under our documentation <a href="https://nemtech.github.io/contribute/contributing.html#sdk">guidelines</a> section.</p>
+				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
+					<h2>License</h2>
+				</a>
+				<p>Copyright (c) 2018-present NEM
+				Licensed under the <a href="LICENSE">Apache License 2.0</a></p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_crypto_crypto_.html">&quot;core/crypto/<wbr>Crypto&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_crypto_keypair_.html">&quot;core/crypto/<wbr>Key<wbr>Pair&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_crypto_merklehashbuilder_.html">&quot;core/crypto/<wbr>Merkle<wbr>Hash<wbr>Builder&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_crypto_sha3hasher_.html">&quot;core/crypto/SHA3<wbr>Hasher&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_crypto_utilities_.html">&quot;core/crypto/<wbr>Utilities&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_crypto_index_.html">&quot;core/crypto/index&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_crypto_nacl_catapult_.html">&quot;core/crypto/nacl_<wbr>catapult&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_format_base32_.html">&quot;core/format/<wbr>Base32&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_format_convert_.html">&quot;core/format/<wbr>Convert&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_format_idgenerator_.html">&quot;core/format/<wbr>IdGenerator&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_format_keygenerator_.html">&quot;core/format/<wbr>Key<wbr>Generator&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_format_rawaddress_.html">&quot;core/format/<wbr>Raw<wbr>Address&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_format_rawarray_.html">&quot;core/format/<wbr>Raw<wbr>Array&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_format_rawuint64_.html">&quot;core/format/<wbr>RawUInt64&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_format_utilities_.html">&quot;core/format/<wbr>Utilities&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_format_index_.html">&quot;core/format/index&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_utils_dtomapping_.html">&quot;core/utils/<wbr>Dto<wbr>Mapping&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_utils_lockhashutils_.html">&quot;core/utils/<wbr>Lock<wbr>Hash<wbr>Utils&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_utils_transactionmapping_.html">&quot;core/utils/<wbr>Transaction<wbr>Mapping&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_utils_unresolvedmapping_.html">&quot;core/utils/<wbr>Unresolved<wbr>Mapping&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_core_utils_utility_.html">&quot;core/utils/utility&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_accounthttp_.html">&quot;infrastructure/<wbr>Account<wbr>Http&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_accountrepository_.html">&quot;infrastructure/<wbr>Account<wbr>Repository&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_blockhttp_.html">&quot;infrastructure/<wbr>Block<wbr>Http&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_blockrepository_.html">&quot;infrastructure/<wbr>Block<wbr>Repository&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_chainhttp_.html">&quot;infrastructure/<wbr>Chain<wbr>Http&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_chainrepository_.html">&quot;infrastructure/<wbr>Chain<wbr>Repository&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_http_.html">&quot;infrastructure/<wbr>Http&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_ilistener_.html">&quot;infrastructure/IListener&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_listener_.html">&quot;infrastructure/<wbr>Listener&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_metadatahttp_.html">&quot;infrastructure/<wbr>Metadata<wbr>Http&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_metadatarepository_.html">&quot;infrastructure/<wbr>Metadata<wbr>Repository&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_mosaichttp_.html">&quot;infrastructure/<wbr>Mosaic<wbr>Http&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_mosaicrepository_.html">&quot;infrastructure/<wbr>Mosaic<wbr>Repository&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_multisighttp_.html">&quot;infrastructure/<wbr>Multisig<wbr>Http&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_multisigrepository_.html">&quot;infrastructure/<wbr>Multisig<wbr>Repository&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_namespacehttp_.html">&quot;infrastructure/<wbr>Namespace<wbr>Http&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_namespacerepository_.html">&quot;infrastructure/<wbr>Namespace<wbr>Repository&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_networkhttp_.html">&quot;infrastructure/<wbr>Network<wbr>Http&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_networkrepository_.html">&quot;infrastructure/<wbr>Network<wbr>Repository&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_nodehttp_.html">&quot;infrastructure/<wbr>Node<wbr>Http&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_noderepository_.html">&quot;infrastructure/<wbr>Node<wbr>Repository&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_queryparams_.html">&quot;infrastructure/<wbr>Query<wbr>Params&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_receipthttp_.html">&quot;infrastructure/<wbr>Receipt<wbr>Http&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_receiptrepository_.html">&quot;infrastructure/<wbr>Receipt<wbr>Repository&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_repositoryfactory_.html">&quot;infrastructure/<wbr>Repository<wbr>Factory&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_repositoryfactoryhttp_.html">&quot;infrastructure/<wbr>Repository<wbr>Factory<wbr>Http&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_restrictionaccounthttp_.html">&quot;infrastructure/<wbr>Restriction<wbr>Account<wbr>Http&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_restrictionaccountrepository_.html">&quot;infrastructure/<wbr>Restriction<wbr>Account<wbr>Repository&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_restrictionmosaichttp_.html">&quot;infrastructure/<wbr>Restriction<wbr>Mosaic<wbr>Http&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_restrictionmosaicrepository_.html">&quot;infrastructure/<wbr>Restriction<wbr>Mosaic<wbr>Repository&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_transactionfilter_.html">&quot;infrastructure/<wbr>Transaction<wbr>Filter&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_transactionhttp_.html">&quot;infrastructure/<wbr>Transaction<wbr>Http&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_transactionrepository_.html">&quot;infrastructure/<wbr>Transaction<wbr>Repository&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_infrastructure_.html">&quot;infrastructure/infrastructure&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_receipt_createreceiptfromdto_.html">&quot;infrastructure/receipt/<wbr>Create<wbr>Receipt<wbr>FromDTO&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_transaction_createtransactionfromdto_.html">&quot;infrastructure/transaction/<wbr>Create<wbr>Transaction<wbr>FromDTO&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_transaction_createtransactionfrompayload_.html">&quot;infrastructure/transaction/<wbr>Create<wbr>Transaction<wbr>From<wbr>Payload&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_transaction_namespacemosaicidgenerator_.html">&quot;infrastructure/transaction/<wbr>Namespace<wbr>Mosaic<wbr>IdGenerator&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_infrastructure_transaction_serializetransactiontojson_.html">&quot;infrastructure/transaction/<wbr>Serialize<wbr>Transaction<wbr>ToJSON&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_id_.html">&quot;model/<wbr>Id&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_uint64_.html">&quot;model/UInt64&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_account_account_.html">&quot;model/account/<wbr>Account&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_account_accountinfo_.html">&quot;model/account/<wbr>Account<wbr>Info&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_account_accountinforesolvedmosaic_.html">&quot;model/account/<wbr>Account<wbr>Info<wbr>Resolved<wbr>Mosaic&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_account_accountnames_.html">&quot;model/account/<wbr>Account<wbr>Names&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_account_accounttype_.html">&quot;model/account/<wbr>Account<wbr>Type&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_account_activitybucket_.html">&quot;model/account/<wbr>Activity<wbr>Bucket&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_account_address_.html">&quot;model/account/<wbr>Address&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_account_multisigaccountgraphinfo_.html">&quot;model/account/<wbr>Multisig<wbr>Account<wbr>Graph<wbr>Info&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_account_multisigaccountinfo_.html">&quot;model/account/<wbr>Multisig<wbr>Account<wbr>Info&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_account_publicaccount_.html">&quot;model/account/<wbr>Public<wbr>Account&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_blockchain_blockinfo_.html">&quot;model/blockchain/<wbr>Block<wbr>Info&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_blockchain_blockchainscore_.html">&quot;model/blockchain/<wbr>Blockchain<wbr>Score&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_blockchain_merklepathitem_.html">&quot;model/blockchain/<wbr>Merkle<wbr>Path<wbr>Item&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_blockchain_merkleproofinfo_.html">&quot;model/blockchain/<wbr>Merkle<wbr>Proof<wbr>Info&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_blockchain_storageinfo_.html">&quot;model/blockchain/<wbr>Storage<wbr>Info&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_message_encryptedmessage_.html">&quot;model/message/<wbr>Encrypted<wbr>Message&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_message_message_.html">&quot;model/message/<wbr>Message&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_message_messagemarker_.html">&quot;model/message/<wbr>Message<wbr>Marker&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_message_messagetype_.html">&quot;model/message/<wbr>Message<wbr>Type&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_message_persistentharvestingdelegationmessage_.html">&quot;model/message/<wbr>Persistent<wbr>Harvesting<wbr>Delegation<wbr>Message&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_message_plainmessage_.html">&quot;model/message/<wbr>Plain<wbr>Message&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_metadata_metadata_.html">&quot;model/metadata/<wbr>Metadata&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_metadata_metadataentry_.html">&quot;model/metadata/<wbr>Metadata<wbr>Entry&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_metadata_metadatatype_.html">&quot;model/metadata/<wbr>Metadata<wbr>Type&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_model_.html">&quot;model/model&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_mosaic_mosaic_.html">&quot;model/mosaic/<wbr>Mosaic&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_mosaic_mosaicflags_.html">&quot;model/mosaic/<wbr>Mosaic<wbr>Flags&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_mosaic_mosaicid_.html">&quot;model/mosaic/<wbr>Mosaic<wbr>Id&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_mosaic_mosaicinfo_.html">&quot;model/mosaic/<wbr>Mosaic<wbr>Info&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_mosaic_mosaicnames_.html">&quot;model/mosaic/<wbr>Mosaic<wbr>Names&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_mosaic_mosaicnonce_.html">&quot;model/mosaic/<wbr>Mosaic<wbr>Nonce&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_mosaic_mosaicsupplychangeaction_.html">&quot;model/mosaic/<wbr>Mosaic<wbr>Supply<wbr>Change<wbr>Action&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_mosaic_networkcurrencylocal_.html">&quot;model/mosaic/<wbr>Network<wbr>Currency<wbr>Local&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_mosaic_networkcurrencypublic_.html">&quot;model/mosaic/<wbr>Network<wbr>Currency<wbr>Public&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_mosaic_networkharvestlocal_.html">&quot;model/mosaic/<wbr>Network<wbr>Harvest<wbr>Local&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_mosaic_resolvedmosaic_.html">&quot;model/mosaic/<wbr>Resolved<wbr>Mosaic&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_namespace_addressalias_.html">&quot;model/namespace/<wbr>Address<wbr>Alias&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_namespace_alias_.html">&quot;model/namespace/<wbr>Alias&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_namespace_aliasaction_.html">&quot;model/namespace/<wbr>Alias<wbr>Action&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_namespace_aliastype_.html">&quot;model/namespace/<wbr>Alias<wbr>Type&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_namespace_emptyalias_.html">&quot;model/namespace/<wbr>Empty<wbr>Alias&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_namespace_mosaicalias_.html">&quot;model/namespace/<wbr>Mosaic<wbr>Alias&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_namespace_namespaceid_.html">&quot;model/namespace/<wbr>Namespace<wbr>Id&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_namespace_namespaceinfo_.html">&quot;model/namespace/<wbr>Namespace<wbr>Info&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_namespace_namespaceinfowithname_.html">&quot;model/namespace/<wbr>Namespace<wbr>Info<wbr>With<wbr>Name&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_namespace_namespacename_.html">&quot;model/namespace/<wbr>Namespace<wbr>Name&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_namespace_namespaceregistrationtype_.html">&quot;model/namespace/<wbr>Namespace<wbr>Registration<wbr>Type&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_network_accountlinknetworkproperties_.html">&quot;model/network/<wbr>Account<wbr>Link<wbr>Network<wbr>Properties&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_network_accountrestrictionnetworkproperties_.html">&quot;model/network/<wbr>Account<wbr>Restriction<wbr>Network<wbr>Properties&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_network_aggregatenetworkproperties_.html">&quot;model/network/<wbr>Aggregate<wbr>Network<wbr>Properties&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_network_chainproperties_.html">&quot;model/network/<wbr>Chain<wbr>Properties&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_network_hashlocknetworkproperties_.html">&quot;model/network/<wbr>Hash<wbr>Lock<wbr>Network<wbr>Properties&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_network_metadatanetworkproperties_.html">&quot;model/network/<wbr>Metadata<wbr>Network<wbr>Properties&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_network_mosaicnetworkproperties_.html">&quot;model/network/<wbr>Mosaic<wbr>Network<wbr>Properties&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_network_mosaicrestrictionnetworkproperties_.html">&quot;model/network/<wbr>Mosaic<wbr>Restriction<wbr>Network<wbr>Properties&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_network_multisignetworkproperties_.html">&quot;model/network/<wbr>Multisig<wbr>Network<wbr>Properties&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_network_namespacenetworkproperties_.html">&quot;model/network/<wbr>Namespace<wbr>Network<wbr>Properties&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_network_networkconfiguration_.html">&quot;model/network/<wbr>Network<wbr>Configuration&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_network_networkname_.html">&quot;model/network/<wbr>Network<wbr>Name&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_network_networkproperties_.html">&quot;model/network/<wbr>Network<wbr>Properties&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_network_networktype_.html">&quot;model/network/<wbr>Network<wbr>Type&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_network_pluginproperties_.html">&quot;model/network/<wbr>Plugin<wbr>Properties&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_network_rentalfees_.html">&quot;model/network/<wbr>Rental<wbr>Fees&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_network_secretlocknetworkproperties_.html">&quot;model/network/<wbr>Secret<wbr>Lock<wbr>Network<wbr>Properties&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_network_transactionfees_.html">&quot;model/network/<wbr>Transaction<wbr>Fees&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_network_transfernetworkproperties_.html">&quot;model/network/<wbr>Transfer<wbr>Network<wbr>Properties&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_node_nodehealth_.html">&quot;model/node/<wbr>Node<wbr>Health&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_node_nodeinfo_.html">&quot;model/node/<wbr>Node<wbr>Info&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_node_nodetime_.html">&quot;model/node/<wbr>Node<wbr>Time&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_node_roletype_.html">&quot;model/node/<wbr>Role<wbr>Type&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_node_serverinfo_.html">&quot;model/node/<wbr>Server<wbr>Info&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_receipt_artifactexpiryreceipt_.html">&quot;model/receipt/<wbr>Artifact<wbr>Expiry<wbr>Receipt&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_receipt_balancechangereceipt_.html">&quot;model/receipt/<wbr>Balance<wbr>Change<wbr>Receipt&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_receipt_balancetransferreceipt_.html">&quot;model/receipt/<wbr>Balance<wbr>Transfer<wbr>Receipt&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_receipt_inflationreceipt_.html">&quot;model/receipt/<wbr>Inflation<wbr>Receipt&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_receipt_receipt_.html">&quot;model/receipt/<wbr>Receipt&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_receipt_receiptsource_.html">&quot;model/receipt/<wbr>Receipt<wbr>Source&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_receipt_receipttype_.html">&quot;model/receipt/<wbr>Receipt<wbr>Type&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_receipt_receiptversion_.html">&quot;model/receipt/<wbr>Receipt<wbr>Version&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_receipt_resolutionentry_.html">&quot;model/receipt/<wbr>Resolution<wbr>Entry&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_receipt_resolutionstatement_.html">&quot;model/receipt/<wbr>Resolution<wbr>Statement&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_receipt_resolutiontype_.html">&quot;model/receipt/<wbr>Resolution<wbr>Type&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_receipt_statement_.html">&quot;model/receipt/<wbr>Statement&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_receipt_transactionstatement_.html">&quot;model/receipt/<wbr>Transaction<wbr>Statement&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_restriction_accountrestriction_.html">&quot;model/restriction/<wbr>Account<wbr>Restriction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_restriction_accountrestrictionmodificationaction_.html">&quot;model/restriction/<wbr>Account<wbr>Restriction<wbr>Modification<wbr>Action&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_restriction_accountrestrictiontype_.html">&quot;model/restriction/<wbr>Account<wbr>Restriction<wbr>Type&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_restriction_accountrestrictions_.html">&quot;model/restriction/<wbr>Account<wbr>Restrictions&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_restriction_accountrestrictionsinfo_.html">&quot;model/restriction/<wbr>Account<wbr>Restrictions<wbr>Info&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_restriction_mosaicaddressrestriction_.html">&quot;model/restriction/<wbr>Mosaic<wbr>Address<wbr>Restriction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_restriction_mosaicglobalrestriction_.html">&quot;model/restriction/<wbr>Mosaic<wbr>Global<wbr>Restriction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_restriction_mosaicglobalrestrictionitem_.html">&quot;model/restriction/<wbr>Mosaic<wbr>Global<wbr>Restriction<wbr>Item&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_restriction_mosaicrestrictionentrytype_.html">&quot;model/restriction/<wbr>Mosaic<wbr>Restriction<wbr>Entry<wbr>Type&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_restriction_mosaicrestrictiontype_.html">&quot;model/restriction/<wbr>Mosaic<wbr>Restriction<wbr>Type&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_accountaddressrestrictiontransaction_.html">&quot;model/transaction/<wbr>Account<wbr>Address<wbr>Restriction<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_accountlinktransaction_.html">&quot;model/transaction/<wbr>Account<wbr>Link<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_accountmetadatatransaction_.html">&quot;model/transaction/<wbr>Account<wbr>Metadata<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_accountmosaicrestrictiontransaction_.html">&quot;model/transaction/<wbr>Account<wbr>Mosaic<wbr>Restriction<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_accountoperationrestrictiontransaction_.html">&quot;model/transaction/<wbr>Account<wbr>Operation<wbr>Restriction<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_accountrestrictionmodification_.html">&quot;model/transaction/<wbr>Account<wbr>Restriction<wbr>Modification&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_accountrestrictiontransaction_.html">&quot;model/transaction/<wbr>Account<wbr>Restriction<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_addressaliastransaction_.html">&quot;model/transaction/<wbr>Address<wbr>Alias<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_aggregatetransaction_.html">&quot;model/transaction/<wbr>Aggregate<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_aggregatetransactioncosignature_.html">&quot;model/transaction/<wbr>Aggregate<wbr>Transaction<wbr>Cosignature&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_aggregatetransactioninfo_.html">&quot;model/transaction/<wbr>Aggregate<wbr>Transaction<wbr>Info&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_aliastransaction_.html">&quot;model/transaction/<wbr>Alias<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_cosignatorymodificationaction_.html">&quot;model/transaction/<wbr>Cosignatory<wbr>Modification<wbr>Action&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_cosignaturesignedtransaction_.html">&quot;model/transaction/<wbr>Cosignature<wbr>Signed<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_cosignaturetransaction_.html">&quot;model/transaction/<wbr>Cosignature<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_deadline_.html">&quot;model/transaction/<wbr>Deadline&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_hashlocktransaction_.html">&quot;model/transaction/<wbr>Hash<wbr>Lock<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_innertransaction_.html">&quot;model/transaction/<wbr>Inner<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_linkaction_.html">&quot;model/transaction/<wbr>Link<wbr>Action&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_lockfundstransaction_.html">&quot;model/transaction/<wbr>Lock<wbr>Funds<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_lockhashalgorithm_.html">&quot;model/transaction/<wbr>Lock<wbr>Hash<wbr>Algorithm&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_mosaicaddressrestrictiontransaction_.html">&quot;model/transaction/<wbr>Mosaic<wbr>Address<wbr>Restriction<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_mosaicaliastransaction_.html">&quot;model/transaction/<wbr>Mosaic<wbr>Alias<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_mosaicdefinitiontransaction_.html">&quot;model/transaction/<wbr>Mosaic<wbr>Definition<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_mosaicglobalrestrictiontransaction_.html">&quot;model/transaction/<wbr>Mosaic<wbr>Global<wbr>Restriction<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_mosaicmetadatatransaction_.html">&quot;model/transaction/<wbr>Mosaic<wbr>Metadata<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_mosaicsupplychangetransaction_.html">&quot;model/transaction/<wbr>Mosaic<wbr>Supply<wbr>Change<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_multisigaccountmodificationtransaction_.html">&quot;model/transaction/<wbr>Multisig<wbr>Account<wbr>Modification<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_multisigcosignatorymodification_.html">&quot;model/transaction/<wbr>Multisig<wbr>Cosignatory<wbr>Modification&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_namespacemetadatatransaction_.html">&quot;model/transaction/<wbr>Namespace<wbr>Metadata<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_namespaceregistrationtransaction_.html">&quot;model/transaction/<wbr>Namespace<wbr>Registration<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_persistentdelegationrequesttransaction_.html">&quot;model/transaction/<wbr>Persistent<wbr>Delegation<wbr>Request<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_secretlocktransaction_.html">&quot;model/transaction/<wbr>Secret<wbr>Lock<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_secretprooftransaction_.html">&quot;model/transaction/<wbr>Secret<wbr>Proof<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_signedtransaction_.html">&quot;model/transaction/<wbr>Signed<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_syncannounce_.html">&quot;model/transaction/<wbr>Sync<wbr>Announce&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_transaction_.html">&quot;model/transaction/<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_transactionannounceresponse_.html">&quot;model/transaction/<wbr>Transaction<wbr>Announce<wbr>Response&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_transactioninfo_.html">&quot;model/transaction/<wbr>Transaction<wbr>Info&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_transactionstatus_.html">&quot;model/transaction/<wbr>Transaction<wbr>Status&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_transactionstatuserror_.html">&quot;model/transaction/<wbr>Transaction<wbr>Status<wbr>Error&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_transactiontype_.html">&quot;model/transaction/<wbr>Transaction<wbr>Type&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_transactionversion_.html">&quot;model/transaction/<wbr>Transaction<wbr>Version&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_transaction_transfertransaction_.html">&quot;model/transaction/<wbr>Transfer<wbr>Transaction&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_wallet_isimplewalletdto_.html">&quot;model/wallet/ISimple<wbr>WalletDTO&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_wallet_password_.html">&quot;model/wallet/<wbr>Password&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_wallet_simplewallet_.html">&quot;model/wallet/<wbr>Simple<wbr>Wallet&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_model_wallet_wallet_.html">&quot;model/wallet/<wbr>Wallet&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_service_accountservice_.html">&quot;service/<wbr>Account<wbr>Service&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_service_aggregatetransactionservice_.html">&quot;service/<wbr>Aggregate<wbr>Transaction<wbr>Service&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_service_blockservice_.html">&quot;service/<wbr>Block<wbr>Service&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_service_metadatatransactionservice_.html">&quot;service/<wbr>Metadata<wbr>Transaction<wbr>Service&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_service_mosaicamountview_.html">&quot;service/<wbr>Mosaic<wbr>Amount<wbr>View&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_service_mosaicrestrictiontransactionservice_.html">&quot;service/<wbr>Mosaic<wbr>Restriction<wbr>Transaction<wbr>Service&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_service_mosaicservice_.html">&quot;service/<wbr>Mosaic<wbr>Service&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_service_mosaicview_.html">&quot;service/<wbr>Mosaic<wbr>View&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_service_namespace_.html">&quot;service/<wbr>Namespace&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_service_namespaceservice_.html">&quot;service/<wbr>Namespace<wbr>Service&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_service_transactionservice_.html">&quot;service/<wbr>Transaction<wbr>Service&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_service_interfaces_iaccountservice_.html">&quot;service/interfaces/IAccount<wbr>Service&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_service_interfaces_iblockservice_.html">&quot;service/interfaces/IBlock<wbr>Service&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_service_interfaces_itransactionservice_.html">&quot;service/interfaces/ITransaction<wbr>Service&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_service_service_.html">&quot;service/service&quot;</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
