@@ -85,7 +85,6 @@ export class Account {
      * Create a new encrypted Message
      * @param message - Plain message to be encrypted
      * @param recipientPublicAccount - Recipient public account
-     * @param networkType - Network type
      * @returns {EncryptedMessage}
      */
     public encryptMessage(message: string, recipientPublicAccount: PublicAccount): EncryptedMessage {
@@ -96,7 +95,6 @@ export class Account {
      * Decrypts an encrypted message
      * @param encryptedMessage - Encrypted message
      * @param publicAccount - The public account originally encrypted the message
-     * @param networkType - Network type
      * @returns {PlainMessage}
      */
     public decryptMessage(encryptedMessage: EncryptedMessage, publicAccount: PublicAccount): PlainMessage {
