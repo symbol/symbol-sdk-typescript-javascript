@@ -1,11 +1,11 @@
 <template>
   <div class="transaction-details-item-inner-container">
     <div
-      v-for="({ key, value, isMosaic }, index) in items"
+      v-for="(item, index) in items"
       :key="index"
       class="transaction-row-outer-container"
     >
-      <TransactionDetailRow :label="key" :value="value" :is-mosaic="isMosaic" />
+      <TransactionDetailRow :item="item" />
     </div>
   </div>
 </template>
@@ -21,6 +21,7 @@ import { AttachedMosaic } from '@/services/MosaicService'
 
 // child components
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
+import {TransactionDetailItem} from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
 
 @Component({ components: { TransactionDetailRow } })
 export default class Transfer extends Vue {
@@ -40,22 +41,15 @@ export default class Transfer extends Vue {
    * Displayed recipient
    * @var {string}
    */
-  private get recipient(): string {
-    const recipient = (this.view.transaction as TransferTransaction)
-      .recipientAddress
-    if (recipient instanceof NamespaceId) {
-      const name = (recipient as NamespaceId).fullName
-      return name && name.length ? name : (recipient as NamespaceId).toHex()
-    }
-
-    return (recipient as Address).pretty()
+  private get recipient(): Address | NamespaceId {
+    return (this.view.transaction as TransferTransaction).recipientAddress
   }
 
   /**
    * Displayed items
    * @type {({ key: string, value: string | boolean, isMosaic: boolean }[])}
    */
-  protected get items(): { key: string, value: any, isMosaic?: boolean }[] {
+  protected get items(): TransactionDetailItem[] {
     const attachedMosaics: AttachedMosaic[] = this.view.values.get('mosaics')
     const message: Message = this.view.values.get('message')
 
@@ -69,7 +63,7 @@ export default class Transfer extends Vue {
 
     return [
       { key: 'sender', value: this.sender },
-      { key: 'transfer_target', value: this.recipient },
+      { key: 'transfer_target', value: this.recipient, isAddress:true },
       ...mosaicItems,
       { key: 'message', value: message.payload || '-' },
     ]

@@ -1,23 +1,23 @@
-import {Mosaic, MosaicId, UInt64} from 'symbol-sdk'
 import {MosaicInputsManager} from '@/views/forms/FormTransferTransaction/MosaicInputsManager.ts'
+import {MosaicModel} from '@/core/database/entities/MosaicModel'
 
-export const mockMosaic1 = new Mosaic(
-  new MosaicId('619CE7E50DB644DE'),
-  UInt64.fromUint(1),
-)
+export const mockMosaic1: MosaicModel = {
+  mosaicIdHex: '619CE7E50DB644DE',
+  balance: 1,
+} as MosaicModel
 
-export const mockMosaic2 = new Mosaic(
-  new MosaicId('28A59CC8B0C9E4DD'),
-  UInt64.fromUint(1),
-)
+export const mockMosaic2: MosaicModel = {
+  mosaicIdHex: '28A59CC8B0C9E4DD',
+  balance: 1,
+} as MosaicModel
 
-export const mockMosaic3 = new Mosaic(
-  new MosaicId('2D58F9BF5F8C014D'),
-  UInt64.fromUint(1),
-)
+export const mockMosaic3: MosaicModel = {
+  mosaicIdHex: '2D58F9BF5F8C014D',
+  balance: 1,
+} as MosaicModel
 
 const mockMosaics = [ mockMosaic1, mockMosaic2, mockMosaic3 ]
-const mockMosaicHexIds = mockMosaics.map(({id}) => id.toHex())
+const mockMosaicHexIds = mockMosaics.map(({mosaicIdHex}) => mosaicIdHex)
 
 describe('components/MosaicInputManager', () => {
   describe('initialize() should', () => {

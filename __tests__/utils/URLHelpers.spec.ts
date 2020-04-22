@@ -47,7 +47,7 @@ describe('utils/URLHelpers', () => {
   describe('completeUrlWithHostAndProtocol() should', () => {
     test('add protocol and port given hostname only', () => {
       // act
-      const url = URLHelpers.completeUrlWithHostAndProtocol('localhost')
+      const url = URLHelpers.getNodeUrl('localhost')
 
       // assert
       expect(url).toBeDefined()
@@ -56,7 +56,7 @@ describe('utils/URLHelpers', () => {
 
     test('add port given protocol and hostname', () => {
       // act
-      const url = URLHelpers.completeUrlWithHostAndProtocol('http://localhost')
+      const url = URLHelpers.getNodeUrl('http://localhost')
 
       // assert
       expect(url).toBeDefined()
@@ -65,7 +65,7 @@ describe('utils/URLHelpers', () => {
 
     test('add protocol given hostname and port', () => {
       // act
-      const url = URLHelpers.completeUrlWithHostAndProtocol('localhost:3000')
+      const url = URLHelpers.getNodeUrl('localhost:3000')
 
       // assert
       expect(url).toBeDefined()

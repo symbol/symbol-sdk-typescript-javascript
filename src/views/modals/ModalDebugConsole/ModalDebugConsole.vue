@@ -22,9 +22,8 @@ v-for="(entry, index) in logs"
 
 <script lang="ts">
 // external dependencies
-import { Component, Vue, Prop } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
-
+import {Component, Prop, Vue} from 'vue-property-decorator'
+import {mapGetters} from 'vuex'
 // resources
 import './ModalDebugConsole.less'
 

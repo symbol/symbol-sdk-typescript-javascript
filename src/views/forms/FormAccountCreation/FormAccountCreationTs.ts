@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,15 +15,12 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {NetworkType, Password} from 'symbol-sdk'
-
+import {Password} from 'symbol-sdk'
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {AccountService} from '@/services/AccountService'
-import {AccountsRepository} from '@/repositories/AccountsRepository'
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
-
+import {AccountModel} from '@/core/database/entities/AccountModel'
 // child components
 import {ValidationObserver, ValidationProvider} from 'vee-validate'
 // @ts-ignore
@@ -32,9 +29,9 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
+import {NetworkTypeHelper} from '@/core/utils/NetworkTypeHelper'
 
-/// region custom types
-type NetworkNodeEntry = {value: NetworkType, label: string}
+
 /// end-region custom types
 
 @Component({
@@ -45,10 +42,12 @@ type NetworkNodeEntry = {value: NetworkType, label: string}
     FormWrapper,
     FormRow,
   },
-  computed: {...mapGetters({
-    generationHash: 'network/generationHash',
-    currentAccount: 'account/currentAccount',
-  })},
+  computed: {
+    ...mapGetters({
+      generationHash: 'network/generationHash',
+      currentAccount: 'account/currentAccount',
+    }),
+  },
 })
 export class FormAccountCreationTs extends Vue {
   /**
@@ -56,7 +55,7 @@ export class FormAccountCreationTs extends Vue {
    * @see {Store.Account}
    * @var {string}
    */
-  public currentAccount: AccountsModel
+  public currentAccount: AccountModel
 
   /**
    * Currently active network type
@@ -67,9 +66,9 @@ export class FormAccountCreationTs extends Vue {
 
   /**
    * Accounts repository
-   * @var {AccountsRepository}
+   * @var {AccountService}
    */
-  public accountsRepository = new AccountsRepository()
+  public accountService = new AccountService()
 
   /**
    * Validation rules
@@ -93,19 +92,14 @@ export class FormAccountCreationTs extends Vue {
    * Network types
    * @var {NetworkNodeEntry[]}
    */
-  public networkTypeList: NetworkNodeEntry[] = [
-    {value: NetworkType.MIJIN_TEST, label: 'MIJIN_TEST'},
-    {value: NetworkType.MAIN_NET, label: 'MAIN_NET'},
-    {value: NetworkType.TEST_NET, label: 'TEST_NET'},
-    {value: NetworkType.MIJIN, label: 'MIJIN'},
-  ]
+  public networkTypeList= NetworkTypeHelper.networkTypeList
 
   /**
-   * Type the ValidationObserver refs 
+   * Type the ValidationObserver refs
    * @type {{
-    *     observer: InstanceType<typeof ValidationObserver>
-    *   }}
-    */
+   *     observer: InstanceType<typeof ValidationObserver>
+   *   }}
+   */
   public $refs!: {
     observer: InstanceType<typeof ValidationObserver>
   }
@@ -114,6 +108,7 @@ export class FormAccountCreationTs extends Vue {
   get nextPage() {
     return this.$route.meta.nextPage
   }
+
   /// end-region computed properties getter/setter
 
   /**
@@ -135,29 +130,27 @@ export class FormAccountCreationTs extends Vue {
 
   /**
    * Persist created account and redirect to next step
-   * @return {void} 
+   * @return {void}
    */
   private persistAccountAndContinue() {
     // -  password stored as hash (never plain.)
-    const service = new AccountService(this.$store)
-    const passwordHash = service.getPasswordHash(new Password(this.formItems.password))
-    
-    // - populate model
-    const model = new AccountsModel(new Map<string, any>([
-      [ 'accountName', this.formItems.accountName ],
-      [ 'wallets', [] ],
-      [ 'password', passwordHash ],
-      [ 'hint', this.formItems.hint ],
-      [ 'networkType', this.formItems.networkType ],
-      [ 'seed', '' ],
-      [ 'generationHash', this.generationHash ],
-    ]))
+    const passwordHash = AccountService.getPasswordHash(new Password(this.formItems.password))
 
+
+    const account: AccountModel = {
+      accountName: this.formItems.accountName,
+      wallets: [],
+      seed: '',
+      password: passwordHash,
+      hint: this.formItems.hint,
+      networkType: this.formItems.networkType,
+      generationHash: this.generationHash,
+    }
     // use repository for storage
-    this.accountsRepository.create(model.values)
+    this.accountService.saveAccount(account)
 
     // execute store actions
-    this.$store.dispatch('account/SET_CURRENT_ACCOUNT', model)
+    this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)
     this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password)
     this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
 

@@ -2,11 +2,11 @@
   <div class="wallet-detail-row-3cols">
     <span class="label">{{ $t('Wallet_public_key') }}</span>
     <div class="value walletPublicKey">
-      {{ wallet.objects.publicAccount.publicKey }}
+      {{ wallet.publicKey }}
       <img
         src="@/views/resources/img/wallet/copyIcon.png"
         class="copy-icon"
-        @click="uiHelpers.copyToClipboard(wallet.objects.publicAccount.publicKey)"
+        @click="uiHelpers.copyToClipboard(wallet.publicKey)"
       >
     </div>
   </div>

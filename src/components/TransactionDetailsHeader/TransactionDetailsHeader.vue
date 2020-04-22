@@ -2,11 +2,11 @@
   <div class="transaction-details-header-outer-container">
     <div class="transaction-details-header-inner-container">
       <div
-        v-for="({ key, value, isMosaic }, index) in items"
+        v-for="(item, index) in items"
         :key="index"
         class="transaction-row-outer-container"
       >
-        <TransactionDetailRow :label="key" :value="value" :is-mosaic="isMosaic" />
+        <TransactionDetailRow :item="item" />
       </div>  
     </div>
   </div>

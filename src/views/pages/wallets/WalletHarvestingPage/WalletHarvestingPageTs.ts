@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,10 +16,8 @@
 // external dependencies
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-
 // internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
-
+import {WalletModel} from '@/core/database/entities/WalletModel'
 // child components
 // @ts-ignore
 import WalletActions from '@/components/WalletActions/WalletActions.vue'
@@ -28,15 +26,15 @@ import WalletActions from '@/components/WalletActions/WalletActions.vue'
   components: {
     WalletActions,
   },
-  computed: {...mapGetters({
-    currentWallet: 'wallet/currentWallet',
-  })},
+  computed: {
+    ...mapGetters({
+      currentWallet: 'wallet/currentWallet',
+    }),
+  },
 })
 export class WalletHarvestingPageTs extends Vue {
   /**
    * Currently active wallet
-   * @see {Store.Wallet}
-   * @var {WalletsModel}
    */
-  public currentWallet: WalletsModel
+  public currentWallet: WalletModel
 }

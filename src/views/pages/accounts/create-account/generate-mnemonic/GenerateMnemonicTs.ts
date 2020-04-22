@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Vue, Component} from 'vue-property-decorator'
+import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 import {Password} from 'symbol-sdk'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 import CryptoJS from 'crypto-js'
-
 // internal dependencies
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
 import {AESEncryptionService} from '@/services/AESEncryptionService'
 import {NotificationType} from '@/core/utils/NotificationType'
-import {AccountsRepository} from '@/repositories/AccountsRepository'
+import {AccountService} from '@/services/AccountService'
 
 @Component({
-  computed: {...mapGetters({
-    currentAccount: 'account/currentAccount',
-    currentPassword: 'temporary/password',
-  })},
+  computed: {
+    ...mapGetters({
+      currentAccount: 'account/currentAccount',
+      currentPassword: 'temporary/password',
+    }),
+  },
 })
 export default class GenerateMnemonicTs extends Vue {
   /**
@@ -37,7 +38,7 @@ export default class GenerateMnemonicTs extends Vue {
    * @see {Store.Account}
    * @var {string}
    */
-  public currentAccount: AccountsModel
+  public currentAccount: AccountModel
 
   /**
    * Previous step's password
@@ -48,9 +49,9 @@ export default class GenerateMnemonicTs extends Vue {
 
   /**
    * Accounts repository
-   * @var {AccountsRepository}
+   * @var {AccountService}
    */
-  public accounts: AccountsRepository
+  public accountService: AccountService = new AccountService()
 
   /**
    * Whether component should track mouse move
@@ -69,14 +70,6 @@ export default class GenerateMnemonicTs extends Vue {
    * @var {number}
    */
   private percent: number = 0
-
-  /**
-   * Hook called when the component is mounted
-   * @return {void}
-   */
-  public mounted() {
-    this.accounts = new AccountsRepository()
-  }
 
   /**
    * Track and handle mouse move event
@@ -112,8 +105,7 @@ export default class GenerateMnemonicTs extends Vue {
       )
 
       // update currentAccount instance and storage
-      this.currentAccount.values.set('seed', encSeed)
-      this.accounts.update(this.currentAccount.getIdentifier(), this.currentAccount.values)
+      this.accountService.updateSeed(this.currentAccount, encSeed)
 
       // update state
       await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', this.currentAccount)
@@ -122,8 +114,7 @@ export default class GenerateMnemonicTs extends Vue {
 
       // redirect
       return this.$router.push({name: 'accounts.createAccount.showMnemonic'})
-    }
-    catch (error) {
+    } catch (error) {
       console.log('An error happened while generating Mnenomic:', error)
       this.$store.dispatch('notification/ADD_ERROR', NotificationType.MNEMONIC_GENERATION_ERROR)
     }

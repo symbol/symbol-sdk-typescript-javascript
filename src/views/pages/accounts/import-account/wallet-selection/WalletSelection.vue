@@ -22,8 +22,7 @@
                 <span class="address-value">{{ formatters.miniAddress(a) }}</span>
                 <span v-if="addressMosaicMap[a.plain()]" class="address-balance overflow_ellipsis">
                   <MosaicAmountDisplay
-                    :id="networkMosaic"
-                    :relative-amount="addressMosaicMap[a.plain()]"
+                    :absolute-amount="addressMosaicMap[a.plain()]"
                   />
                 </span>
                 <span v-else class="address-balance overflow_ellipsis">
@@ -57,8 +56,7 @@
               <span class="address-value">{{ formatters.miniAddress(addressesList[index]) }}</span>
               <span v-if="addressMosaicMap[addressesList[index].plain()]" class="address-balance overflow_ellipsis">
                 <MosaicAmountDisplay
-                  :id="networkMosaic"
-                  :relative-amount="addressMosaicMap[addressesList[index].plain()]"
+                  :absolute-amount="addressMosaicMap[addressesList[index].plain()]"
                 />
               </span>
               <span v-else class="address-balance overflow_ellipsis">

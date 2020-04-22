@@ -13,8 +13,7 @@
 
 <script lang="ts">
 // external dependencies
-import {Component, Vue, Prop} from 'vue-property-decorator'
-
+import {Component, Prop, Vue} from 'vue-property-decorator'
 // child components
 import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue'
 

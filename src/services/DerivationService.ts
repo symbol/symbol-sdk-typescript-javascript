@@ -1,22 +1,19 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Store} from 'vuex'
-
 // internal dependencies
-import {AbstractService} from './AbstractService'
 import {DerivationPathValidator} from '@/core/validation/validators'
 import {WalletService} from '@/services/WalletService'
 
@@ -28,31 +25,11 @@ export enum DerivationPathLevels {
   Address = 5,
 }
 
-export class DerivationService extends AbstractService {
-  /**
-   * Service name
-   * @var {string}
-   */
-  public name: string = 'derivation'
-
-  /**
-   * Vuex Store 
-   * @var {Vuex.Store}
-   */
-  public $store: Store<any>
-
-  /**
-   * Construct a service instance around \a store
-   * @param store
-   */
-  constructor(store?: Store<any>) {
-    super()
-    this.$store = store
-  }
+export class DerivationService {
 
   /**
    * Validate derivation path
-   * @param {string} path 
+   * @param {string} path
    * @return {boolean}
    */
   public isValidPath(path: string): boolean {
@@ -61,8 +38,8 @@ export class DerivationService extends AbstractService {
 
   /**
    * Increment a derivation path level
-   * @param {string} path 
-   * @param {DerivationPathLevel} which 
+   * @param {string} path
+   * @param {DerivationPathLevel} which
    * @return {string}
    */
   public incrementPathLevel(
@@ -80,7 +57,7 @@ export class DerivationService extends AbstractService {
     // read levels and increment 
     const index = which as number
     const parts = path.split('/')
-    
+
     // calculate next index (increment)
     const next = (step <= 1 ? 1 : step) + parseInt(parts[index].replace(/'/, ''))
 
@@ -89,7 +66,7 @@ export class DerivationService extends AbstractService {
       if (idx !== index) {
         return level
       }
-      return `${next}'`
+      return '' + next + '\''
     }).join('/')
   }
 
@@ -117,9 +94,9 @@ export class DerivationService extends AbstractService {
 
     // get the first non consecutive path index
     const firstCandidate = pathsSortedByIndexes
-      // fill an array with indexes with no consecutive next index, and the last index
+    // fill an array with indexes with no consecutive next index, and the last index
       .filter(({pathIndex}, i, self) => {
-        // the last path is always a candidate
+      // the last path is always a candidate
         if (i === self.length - 1) return true
 
         // next path is not consecutive, add it to candidates
@@ -128,15 +105,15 @@ export class DerivationService extends AbstractService {
         // next path is consecutive, skip
         return false
       }).find(path => path) // find the first candidate
-    
+
     // return path incremented from the first candidate
     return this.incrementPathLevel(firstCandidate.path, DerivationPathLevels.Account)
   }
 
   /**
    * Decrement a derivation path level
-   * @param {string} path 
-   * @param {DerivationPathLevel} which 
+   * @param {string} path
+   * @param {DerivationPathLevel} which
    * @return {string}
    */
   public decrementPathLevel(
@@ -163,27 +140,27 @@ export class DerivationService extends AbstractService {
       if (idx !== index) {
         return level
       }
-      return `${next}'`
+      return '' + next + '\''
     }).join('/')
   }
 
   /**
    * Assert whether \a path is a valid derivation path
-   * @param {string} path 
+   * @param {string} path
    * @return {void}
    * @throws {Error} On \a path with invalid derivation path
    */
   public assertValidPath(path: string): void {
     if (!this.isValidPath(path)) {
-      const errorMessage = `Invalid derivation path: ${path}`
-      this.$store.dispatch('diagnostic/ADD_ERROR', errorMessage)
+      const errorMessage = 'Invalid derivation path: ' + path
+      console.error(errorMessage)
       throw new Error(errorMessage)
     }
   }
 
   /**
    * Assert whether derivation path level can be modified
-   * @param {DerivationPathLevels} which 
+   * @param {DerivationPathLevels} which
    * @return {void}
    * @throws {Error} On \a which with protected path level value
    */
@@ -194,7 +171,7 @@ export class DerivationService extends AbstractService {
     ]
     if (undefined !== protect.find(type => which === type)) {
       const errorMessage = 'Cannot modify a derivation path\'s purpose and coin type levels.'
-      this.$store.dispatch('diagnostic/ADD_ERROR', errorMessage)
+      console.error(errorMessage)
       throw new Error(errorMessage)
     }
   }

@@ -14,7 +14,7 @@
       <Button type="text">
         {{ $t('mnemonic_copy') }}
       </Button>
-    </div> 
+    </div>
   </div>
 </template>
 <script lang="ts">

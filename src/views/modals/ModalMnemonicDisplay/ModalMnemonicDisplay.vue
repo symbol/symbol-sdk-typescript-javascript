@@ -32,7 +32,8 @@
 </template>
 
 <script lang="ts">
-import { ModalMnemonicDisplayTs } from './ModalMnemonicDisplayTs'
+import {ModalMnemonicDisplayTs} from './ModalMnemonicDisplayTs'
+
 export default class ModalMnemonicDisplay extends ModalMnemonicDisplayTs {}
 </script>
 

@@ -13,11 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
-import {CosignatureSignedTransaction, Account, AggregateTransaction, AggregateTransactionCosignature} from 'symbol-sdk'
+import {Component, Prop, Vue} from 'vue-property-decorator'
+import {
+  Account,
+  AggregateTransaction,
+  AggregateTransactionCosignature,
+  CosignatureSignedTransaction,
+} from 'symbol-sdk'
 import {mapGetters} from 'vuex'
 
-import {WalletsModel, WalletType} from '@/core/database/entities/WalletsModel'
+import {WalletModel, WalletType} from '@/core/database/entities/WalletModel'
 import {TransactionService} from '@/services/TransactionService'
 import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 
@@ -51,9 +56,9 @@ export class ModalTransactionCosignatureTs extends Vue {
   /**
    * Currently active wallet
    * @see {Store.Wallet}
-   * @var {WalletsModel}
+   * @var {WalletModel}
    */
-  public currentWallet: WalletsModel
+  public currentWallet: WalletModel
 
   /// region computed properties
   /**
@@ -79,11 +84,11 @@ export class ModalTransactionCosignatureTs extends Vue {
    */
   public get isUsingHardwareWallet(): boolean {
     // XXX should use "stagedTransaction.signer" to identify wallet
-    return WalletType.TREZOR === this.currentWallet.values.get('type')
+    return WalletType.TREZOR === this.currentWallet.type
   }
 
   public get needsCosignature(): boolean {
-    const currentPubAccount = this.currentWallet.objects.publicAccount
+    const currentPubAccount = WalletModel.getObjects(this.currentWallet).publicAccount
     return !this.transaction.signedByAccount(currentPubAccount)
   }
 
@@ -106,7 +111,7 @@ export class ModalTransactionCosignatureTs extends Vue {
     const service = new TransactionService(this.$store)
 
     // - log about transaction signature success
-    this.$store.dispatch('diagnostic/ADD_INFO', `Co-signed ${transactions.length} Transaction(s) with Hardware Wallet`)
+    this.$store.dispatch('diagnostic/ADD_INFO', 'Co-signed ' + transactions.length + ' Transaction(s) with Hardware Wallet')
 
     // - broadcast signed transactions
     const results: BroadcastResult[] = await service.announceCosignatureTransactions(transactions)
@@ -134,7 +139,7 @@ export class ModalTransactionCosignatureTs extends Vue {
    */
   public async onAccountUnlocked({account}: {account: Account}) {
     // - log about unlock success
-    this.$store.dispatch('diagnostic/ADD_INFO', `Account ${account.address.plain()} unlocked successfully.`)
+    this.$store.dispatch('diagnostic/ADD_INFO', 'Account ' + account.address.plain() + ' unlocked successfully.')
 
     // - sign cosignature transaction
     const service = new TransactionService(this.$store)

@@ -4,7 +4,7 @@
       {{ $t('Wallet_name') }}
     </div>
     <div class="value">
-      <span v-if="wallet" class="walletName">{{ wallet.values.get('name') }}</span>
+      <span v-if="wallet" class="walletName">{{ wallet.name }}</span>
       <button
         type="button"
         class="button-style validation-button right-side-button edit-button"
@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { WalletNameDisplayTs } from './WalletNameDisplayTs'
+import {WalletNameDisplayTs} from './WalletNameDisplayTs'
 
 export default class WalletNameDisplay extends WalletNameDisplayTs {}
 </script>

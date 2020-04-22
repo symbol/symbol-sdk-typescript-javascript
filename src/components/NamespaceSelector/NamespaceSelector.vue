@@ -20,11 +20,11 @@
             :placeholder="$t('Select_a_namespace')"
           >
             <Option
-              v-for="(namespaceInfo) in namespaces"
-              :key="getName(namespaceInfo)"
-              :value="getName(namespaceInfo)"
+              v-for="(namespaceModel) in namespaces"
+              :key="getName(namespaceModel)"
+              :value="getName(namespaceModel)"
             >
-              {{ getName(namespaceInfo) }}
+              {{ getName(namespaceModel) }}
             </Option>
           </Select>
         </errortooltip>
@@ -34,6 +34,7 @@
 </template>
 
 <script lang="ts">
-import { NamespaceSelectorTs } from './NamespaceSelectorTs'
+import {NamespaceSelectorTs} from './NamespaceSelectorTs'
+
 export default class NamespaceSelector extends NamespaceSelectorTs {}
 </script>

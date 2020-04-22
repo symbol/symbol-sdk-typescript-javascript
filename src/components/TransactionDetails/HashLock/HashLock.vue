@@ -1,11 +1,11 @@
 <template>
   <div class="transaction-details-item-inner-container">
     <div
-      v-for="({ key, value, isMosaic }, index) in items"
+      v-for="(item, index) in items"
       :key="index"
       class="transaction-row-outer-container"
     >
-      <TransactionDetailRow :label="key" :value="value" :is-mosaic="isMosaic" />
+      <TransactionDetailRow :item="item" />
     </div>
   </div>
 </template>
@@ -19,6 +19,7 @@ import { AttachedMosaic } from '@/services/MosaicService'
 
 // child components
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
+import {TransactionDetailItem} from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
 
 @Component({ components: { TransactionDetailRow } })
 export default class HashLock extends Vue {
@@ -28,7 +29,7 @@ export default class HashLock extends Vue {
    * Displayed items
    * @type {({ key: string, value: string | boolean, isMosaic: boolean }[])}
    */
-  protected get items(): { key: string, value: any, isMosaic?: boolean }[] {
+  protected get items(): TransactionDetailItem[] {
     // get attached mosaic
     const attachedMosaic: AttachedMosaic = this.view.values.get('mosaic')
 

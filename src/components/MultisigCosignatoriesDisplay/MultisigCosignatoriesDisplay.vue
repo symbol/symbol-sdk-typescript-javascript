@@ -1,6 +1,6 @@
 <template>
   <div>
-    <FormRow 
+    <FormRow
       v-if="!(multisig && multisig.cosignatories.length) && !addModifications.length && !removeModifications.length"
     >
       <template v-slot:inputs>

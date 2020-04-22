@@ -17,13 +17,14 @@
             :key="item.publicKey"
             :value="item.publicKey"
           >
-            {{ item.label }}
+            {{ item.label }} {{ item.multisig ? $t('label_postfix_multisig') : '' }}
           </option>
         </select>
       </div>
       <div v-else class="signer-selector-single-signer-container">
         <span>
           {{ signers[0] ? signers[0].label : '' }}
+          {{ (signers[0] && signers[0].multisig) ? $t('label_postfix_multisig') : '' }}
         </span>
       </div>
     </template>

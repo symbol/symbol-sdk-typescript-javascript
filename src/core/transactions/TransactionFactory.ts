@@ -1,13 +1,13 @@
 /**
- * 
+ *
  * Copyright 2020 Grégory Saive for NEM (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,7 +30,6 @@ import {
   Transaction,
   TransferTransaction,
 } from 'symbol-sdk'
-
 // internal dependencies
 import {ViewAliasTransaction} from './ViewAliasTransaction'
 import {ViewMosaicDefinitionTransaction} from './ViewMosaicDefinitionTransaction'
@@ -49,6 +48,7 @@ type TransactionViewType = ViewAliasTransaction
 | ViewNamespaceRegistrationTransaction
 | ViewTransferTransaction
 | ViewUnknownTransaction
+
 /// end-region custom types
 
 export class TransactionFactory {
@@ -67,13 +67,13 @@ export class TransactionFactory {
   public build(view: ViewMultisigAccountModificationTransaction): MultisigAccountModificationTransaction
   public build(view: ViewNamespaceRegistrationTransaction): NamespaceRegistrationTransaction
   public build(view: ViewTransferTransaction): TransferTransaction
-  
+
   /// end-region specialised signatures
 
   /**
    * Create a REST repository instance around \a serviceOpts
    * @param {string} name
-   * @param {string} nodeUrl 
+   * @param {string} nodeUrl
    */
   public build(
     view: TransactionViewType,
@@ -93,8 +93,7 @@ export class TransactionFactory {
         networkType,
         view.values.get('maxFee'),
       )
-    }
-    else if (view instanceof ViewMosaicSupplyChangeTransaction) {
+    } else if (view instanceof ViewMosaicSupplyChangeTransaction) {
       return MosaicSupplyChangeTransaction.create(
         deadline,
         view.values.get('mosaicId'),
@@ -103,8 +102,7 @@ export class TransactionFactory {
         networkType,
         view.values.get('maxFee'),
       )
-    }
-    else if (view instanceof ViewNamespaceRegistrationTransaction) {
+    } else if (view instanceof ViewNamespaceRegistrationTransaction) {
       // - sub namespace
       if (NamespaceRegistrationType.SubNamespace === view.values.get('registrationType')) {
         return NamespaceRegistrationTransaction.createSubNamespace(
@@ -123,8 +121,7 @@ export class TransactionFactory {
         networkType,
         view.values.get('maxFee'),
       )
-    }
-    else if (view instanceof ViewTransferTransaction) {
+    } else if (view instanceof ViewTransferTransaction) {
       return TransferTransaction.create(
         deadline,
         view.values.get('recipient'),
@@ -133,8 +130,7 @@ export class TransactionFactory {
         networkType,
         view.values.get('maxFee'),
       )
-    }
-    else if (view instanceof ViewMultisigAccountModificationTransaction) {
+    } else if (view instanceof ViewMultisigAccountModificationTransaction) {
       return MultisigAccountModificationTransaction.create(
         deadline,
         parseInt(view.values.get('minApprovalDelta'), 10),
@@ -144,8 +140,7 @@ export class TransactionFactory {
         networkType,
         view.values.get('maxFee'),
       )
-    }
-    else if (view instanceof ViewAliasTransaction) {
+    } else if (view instanceof ViewAliasTransaction) {
       if (view.values.get('aliasTarget') instanceof Address) {
         return AddressAliasTransaction.create(
           deadline,

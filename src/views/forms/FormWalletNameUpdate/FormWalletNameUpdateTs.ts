@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,15 +15,11 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {NetworkType, Password} from 'symbol-sdk'
-
+import {NetworkType} from 'symbol-sdk'
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
-import {WalletsRepository} from '@/repositories/WalletsRepository'
+import {WalletModel} from '@/core/database/entities/WalletModel'
 import {NotificationType} from '@/core/utils/NotificationType'
-import {WalletService} from '@/services/WalletService'
-
 // child components
 import {ValidationObserver, ValidationProvider} from 'vee-validate'
 // @ts-ignore
@@ -44,25 +40,20 @@ import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalF
     FormRow,
     ModalFormAccountUnlock,
   },
-  computed: {...mapGetters({
-    networkType: 'network/networkType',
-    currentWallet: 'wallet/currentWallet',
-    knownWallets: 'wallet/knownWallets',
-  })},
+  computed: {
+    ...mapGetters({
+      networkType: 'network/networkType',
+      currentWallet: 'wallet/currentWallet',
+    }),
+  },
 })
 export class FormWalletNameUpdateTs extends Vue {
   /**
    * Currently active account
    * @see {Store.Wallet}
-   * @var {WalletsModel}
+   * @var {WalletModel}
    */
-  public currentWallet: WalletsModel
-
-  /**
-   * Known wallets identifiers
-   * @var {string[]}
-   */
-  public knownWallets: string[]
+  public currentWallet: WalletModel
 
   /**
    * Currently active network type
@@ -70,18 +61,6 @@ export class FormWalletNameUpdateTs extends Vue {
    * @var {NetworkType}
    */
   public networkType: NetworkType
-
-  /**
-   * Wallets repository
-   * @var {WalletService}
-   */
-  public wallets: WalletService
-
-  /**
-   * Wallets repository
-   * @var {WalletsRepository}
-   */
-  public walletsRepository: WalletsRepository
 
   /**
    * Validation rules
@@ -96,12 +75,6 @@ export class FormWalletNameUpdateTs extends Vue {
   public isUnlockingAccount: boolean = false
 
   /**
-   * Current unlocked password
-   * @var {Password}
-   */
-  public currentPassword: Password
-
-  /**
    * Form fields
    * @var {Object}
    */
@@ -110,18 +83,13 @@ export class FormWalletNameUpdateTs extends Vue {
   }
 
   /**
-   * Type the ValidationObserver refs 
+   * Type the ValidationObserver refs
    * @type {{
-    *     observer: InstanceType<typeof ValidationObserver>
-    *   }}
-    */
+   *     observer: InstanceType<typeof ValidationObserver>
+   *   }}
+   */
   public $refs!: {
     observer: InstanceType<typeof ValidationObserver>
-  }
- 
-  public created() {
-    this.wallets = new WalletService(this.$store)
-    this.walletsRepository = new WalletsRepository()
   }
 
   /// region computed properties getter/setter
@@ -132,6 +100,7 @@ export class FormWalletNameUpdateTs extends Vue {
   public set hasAccountUnlockModal(f: boolean) {
     this.isUnlockingAccount = f
   }
+
   /// end-region computed properties getter/setter
 
   /**
@@ -150,24 +119,12 @@ export class FormWalletNameUpdateTs extends Vue {
   /**
    * When account is unlocked, the sub wallet can be created
    */
-  public onAccountUnlocked() {
-    // - interpret form items
-    const values = this.formItems
-
+  public async onAccountUnlocked() {
     try {
-      // - update model values
-      this.currentWallet.values.set('name', values.name)
-
-      // - use repositories for storage
-      this.walletsRepository.update(
-        this.currentWallet.getIdentifier(),
-        this.currentWallet.values,
-      )
-
+      await this.$store.dispatch('wallet/UPDATE_CURRENT_WALLET_NAME', this.formItems.name)
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
       this.$emit('submit', this.formItems)
-    }
-    catch (e) {
+    } catch (e) {
       this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.')
       console.error(e)
     }

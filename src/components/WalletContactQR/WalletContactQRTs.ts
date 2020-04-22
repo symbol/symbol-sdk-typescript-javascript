@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Prop, Vue} from 'vue-property-decorator'
 import {ContactQR} from 'symbol-qr-library'
 import {PublicAccount} from 'symbol-sdk'
-import {of, Observable} from 'rxjs'
-import {pluck, concatMap} from 'rxjs/operators'
-
+import {Observable, of} from 'rxjs'
+import {concatMap, pluck} from 'rxjs/operators'
 // internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
-
+import {WalletModel} from '@/core/database/entities/WalletModel'
 // resources
 // @ts-ignore
 import failureIcon from '@/views/resources/img/monitor/failure.png'
-import { mapGetters } from 'vuex'
+import {mapGetters} from 'vuex'
 
 @Component({
   computed: {...mapGetters({
@@ -46,7 +44,7 @@ export class WalletContactQRTs extends Vue {
 
   @Prop({
     default: null,
-  }) wallet: WalletsModel
+  }) wallet: WalletModel
 
   /**
    * Current network's generation hash
@@ -68,9 +66,9 @@ export class WalletContactQRTs extends Vue {
     }
 
     try {
-      const publicAccount: PublicAccount = this.wallet.objects.publicAccount
+      const publicAccount: PublicAccount = WalletModel.getObjects(this.wallet).publicAccount
       return new ContactQR(
-        this.wallet.values.get('name'),
+        this.wallet.name,
         // @ts-ignore // @TODO: SDK upgrade
         publicAccount,
         publicAccount.address.networkType,

@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-
 // internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {WalletModel} from '@/core/database/entities/WalletModel'
 import {UIHelpers} from '@/core/utils/UIHelpers'
-
 // child components
 // @ts-ignore
 import ModalMnemonicDisplay from '@/views/modals/ModalMnemonicDisplay/ModalMnemonicDisplay.vue'
@@ -37,7 +35,7 @@ import ModalMnemonicDisplay from '@/views/modals/ModalMnemonicDisplay/ModalMnemo
 export class ProtectedMnemonicDisplayButtonTs extends Vue {
   @Prop({
     default: null,
-  }) wallet: WalletsModel
+  }) wallet: WalletModel
 
   /**
    * UI Helpers

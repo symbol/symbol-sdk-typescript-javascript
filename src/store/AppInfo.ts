@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,72 +14,84 @@
  * limitations under the License.
  */
 import Vue from 'vue'
-
 // internal dependencies
 import i18n from '@/language'
 import app from '@/main'
 import {AwaitLock} from './AwaitLock'
-const Lock = AwaitLock.create()
-
 // configuration
 import appConfig from '@/../config/app.conf.json'
-import feesConfig from '@/../config/fees.conf.json'
 import networkConfig from '@/../config/network.conf.json'
+import {SettingsModel} from '@/core/database/entities/SettingsModel'
+import {SettingService} from '@/services/SettingService'
+
+const Lock = AwaitLock.create()
+const settingService = new SettingService()
+const ANON_ACCOUNT_NAME = ''
+
+interface AppInfoState {
+  initialized: false
+  timezone: number
+  languages: { value: string, label: string }[]
+  hasLoadingOverlay: boolean
+  loadingOverlayMessage: string
+  loadingDisableCloseButton: false
+  hasControlsDisabled: false
+  controlsDisabledMessage: string
+  faucetUrl: string
+  settings: SettingsModel
+}
+
+const appInfoState: AppInfoState = {
+  initialized: false,
+  timezone: new Date().getTimezoneOffset() / 60,
+  languages: appConfig.languages,
+  hasLoadingOverlay: false,
+  loadingOverlayMessage: '',
+  loadingDisableCloseButton: false,
+  hasControlsDisabled: false,
+  controlsDisabledMessage: '',
+  faucetUrl: networkConfig.faucetUrl,
+  settings: settingService.getAccountSettings(ANON_ACCOUNT_NAME),
+}
+
 
 export default {
   namespaced: true,
-  state: {
-    initialized: false,
-    timezone: new Date().getTimezoneOffset() / 60,
-    languages: appConfig.languages,
-    hasLoadingOverlay: false,
-    loadingOverlayMessage: '',
-    loadingDisableCloseButton: false,
-    hasControlsDisabled: false,
-    controlsDisabledMessage: '',
-    explorerUrl: networkConfig.explorerUrl,
-    faucetUrl: networkConfig.faucetUrl,
-    defaultFee: feesConfig.normal,
-    defaultWallet: '',
-    isFetchingTransactions: false,
-  },
+  state: appInfoState,
   getters: {
-    getInitialized: (state) => state.initialized,
-    currentTimezone: (state) => state.timezone,
-    currentLanguage: () => i18n.locale,
-    languages: (state) => state.languages,
-    shouldShowLoadingOverlay: (state) => state.hasLoadingOverlay,
-    loadingOverlayMessage: (state) => state.loadingOverlayMessage,
-    loadingDisableCloseButton: (state) => state.loadingDisableCloseButton,
-    shouldDisableControls: (state) => state.hasControlsDisabled,
-    controlsDisabledMessage: (state) => state.controlsDisabledMessage,
-    explorerUrl: (state) => state.explorerUrl,
-    faucetUrl: (state) => state.faucetUrl,
-    defaultFee: (state) => state.defaultFee,
-    defaultWallet: (state) => state.defaultWallet,
-    isFetchingTransactions: (state) => state.isFetchingTransactions,
+    getInitialized: (state: AppInfoState) => state.initialized,
+    currentTimezone: (state: AppInfoState) => state.timezone,
+    language: (state: AppInfoState) => state.settings.language,
+    languages: (state: AppInfoState) => state.languages,
+    shouldShowLoadingOverlay: (state: AppInfoState) => state.hasLoadingOverlay,
+    loadingOverlayMessage: (state: AppInfoState) => state.loadingOverlayMessage,
+    loadingDisableCloseButton: (state: AppInfoState) => state.loadingDisableCloseButton,
+    shouldDisableControls: (state: AppInfoState) => state.hasControlsDisabled,
+    controlsDisabledMessage: (state: AppInfoState) => state.controlsDisabledMessage,
+    explorerUrl: (state: AppInfoState) => state.settings.explorerUrl,
+    settings: (state: AppInfoState) => state.settings,
+    faucetUrl: (state: AppInfoState) => state.faucetUrl,
+    defaultFee: (state: AppInfoState) => state.settings.defaultFee,
+    defaultWallet: (state: AppInfoState) => state.settings.defaultWallet,
   },
   mutations: {
-    setInitialized: (state, initialized) => { state.initialized = initialized },
-    timezone: (state, timezone) => Vue.set(state, 'timezone', timezone),
-    toggleControlsDisabled: (state, {disable, message}) => {
+    setInitialized: (state: AppInfoState, initialized) => { state.initialized = initialized },
+    timezone: (state: AppInfoState, timezone) => Vue.set(state, 'timezone', timezone),
+    settings: (state: AppInfoState, settings: SettingsModel) => Vue.set(state, 'settings',
+      settings),
+    toggleControlsDisabled: (state: AppInfoState, {disable, message}) => {
       Vue.set(state, 'hasControlsDisabled', disable)
       Vue.set(state, 'controlsDisabledMessage', message || '')
     },
-    toggleLoadingOverlay: (state, display) => Vue.set(state, 'hasLoadingOverlay', display),
-    setLoadingOverlayMessage: (state, message) => Vue.set(state, 'loadingOverlayMessage', message),
-    setLoadingDisableCloseButton: (state, bool) => Vue.set(state, 'loadingDisableCloseButton', bool),
-    setExplorerUrl: (state, url) => Vue.set(state, 'explorerUrl', url),
-    setCurrentLanguage: (state, lang) => {
-      i18n.locale = lang
-      window.localStorage.setItem('locale', lang)
-    },
-    setDefaultFee: (state, maxFee) => Vue.set(state, 'defaultFee', maxFee),
-    setDefaultWallet: (state, defaultWallet) => Vue.set(state, 'defaultWallet', defaultWallet),
-    setFetchingTransactions: (state, bool: boolean) => Vue.set(state, 'isFetchingTransactions', bool),
+    toggleLoadingOverlay: (state: AppInfoState, display: boolean) => Vue.set(state,
+      'hasLoadingOverlay', display),
+    setLoadingOverlayMessage: (state: AppInfoState, message: string) => Vue.set(state,
+      'loadingOverlayMessage', message),
+    setLoadingDisableCloseButton: (state: AppInfoState, bool: boolean) => Vue.set(state,
+      'loadingDisableCloseButton', bool),
   },
   actions: {
-    async initialize({ commit, getters }) {
+    async initialize({commit, getters}) {
       const callback = async () => {
         // update store
         commit('setInitialized', true)
@@ -88,7 +100,7 @@ export default {
       // acquire async lock until initialized
       await Lock.initialize(callback, {getters})
     },
-    async uninitialize({ commit, getters }) {
+    async uninitialize({commit, getters}) {
       const callback = async () => {
         commit('setInitialized', false)
       }
@@ -98,7 +110,7 @@ export default {
     SET_TIME_ZONE({commit}, timezone: number): void {
       commit('timezone', timezone)
     },
-    SET_UI_DISABLED({commit}, {isDisabled, message}: {isDisabled: boolean, message: string}) {
+    SET_UI_DISABLED({commit}, {isDisabled, message}: { isDisabled: boolean, message: string }) {
       commit('toggleControlsDisabled', {disable: isDisabled, message: message})
     },
     SET_LOADING_OVERLAY({commit}, loadingOverlay) {
@@ -108,26 +120,29 @@ export default {
       commit('setLoadingOverlayMessage', loadingOverlay.message)
       commit('setLoadingDisableCloseButton', loadingOverlay.disableCloseButton || false)
     },
-    SET_EXPLORER_URL({commit}, url: string) {
-      commit('setExplorerUrl', url)
+
+    SET_SETTINGS({commit, rootGetters}, settingsModel: SettingsModel) {
+      if (settingsModel.language) {
+        i18n.locale = settingsModel.language
+        window.localStorage.setItem('locale', settingsModel.language)
+      }
+      const currentAccount = rootGetters['account/currentAccount']
+      const accountName = currentAccount && currentAccount.accountName || ANON_ACCOUNT_NAME
+      commit('settings', settingService.changeAccountSettings(accountName, settingsModel))
     },
-    SET_LANGUAGE({commit}, language: string) {
-      commit('setCurrentLanguage', language)
+
+    SET_EXPLORER_URL({dispatch}, explorerUrl: string) {
+      dispatch('SET_SETTINGS', {explorerUrl})
     },
-    SET_DEFAULT_FEE({commit}, maxFee: number) {
-      commit('setDefaultFee', maxFee)
+
+    SET_LANGUAGE({dispatch}, language: string) {
+      dispatch('SET_SETTINGS', {language})
     },
-    SET_DEFAULT_WALLET({commit}, defaultWallet: string) {
-      commit('setDefaultWallet', defaultWallet)
+    SET_DEFAULT_FEE({dispatch}, defaultFee: number) {
+      dispatch('SET_SETTINGS', {defaultFee})
     },
-    USE_SETTINGS({commit}, settingsModel) {
-      commit('setExplorerUrl', settingsModel.values.get('explorer_url'))
-      commit('setCurrentLanguage', settingsModel.values.get('language'))
-      commit('setDefaultFee', settingsModel.values.get('default_fee'))
-      commit('setDefaultWallet', settingsModel.values.get('default_wallet'))
-    },
-    SET_FETCHING_TRANSACTIONS({commit}, bool: boolean) {
-      commit('setFetchingTransactions', bool)
+    SET_DEFAULT_WALLET({dispatch}, defaultWallet: string) {
+      dispatch('SET_SETTINGS', {defaultWallet})
     },
     /// end-region scoped actions
   },

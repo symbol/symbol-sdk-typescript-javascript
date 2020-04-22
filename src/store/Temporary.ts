@@ -15,9 +15,9 @@
  */
 import {Password} from 'symbol-sdk'
 import Vue from 'vue'
-
 // internal dependencies
 import {AwaitLock} from './AwaitLock'
+
 const Lock = AwaitLock.create()
 
 export default {

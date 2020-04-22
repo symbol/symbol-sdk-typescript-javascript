@@ -1,6 +1,6 @@
 // internal dependencies
 import Vue from 'vue'
-import {Mosaic} from 'symbol-sdk'
+import {MosaicModel} from '@/core/database/entities/MosaicModel'
 
 export class MosaicInputsManager {
   /**
@@ -12,33 +12,33 @@ export class MosaicInputsManager {
   /**
    * Initialize a new instance of MosaicInputsManager
    * @static
-   * @param {Mosaic[]} mosaics
+   * @param {MosaicModel[]} mosaics
    * @param {MosaicService} mosaicService
    * @returns {MosaicInputsManager}
    */
-  public static initialize(mosaics: Mosaic[]): MosaicInputsManager {
+  public static initialize(mosaics: MosaicModel[]): MosaicInputsManager {
     return new MosaicInputsManager(mosaics || [])
   }
 
   /**
    * Creates an instance of MosaicInputsManager.
-   * @param {Mosaic[]} mosaics
+   * @param {MosaicModel[]} mosaics
    */
-  private constructor(mosaics: Mosaic[]) {
+  private constructor(mosaics: MosaicModel[]) {
     // Set mosaicMap with null values
-    mosaics.forEach(({id}) => Vue.set(this.mosaicMap, id.toHex(), null))
+    mosaics.forEach(({mosaicIdHex}) => Vue.set(this.mosaicMap, mosaicIdHex, null))
   }
 
   /**
    * Add mosaics to the manager after initialization
-   * @param {Mosaic[]} mosaics
+   * @param {MosaicModel[]} mosaics
    */
-  public addMosaics(mosaics: Mosaic[]): void {
-    mosaics.forEach(({id}) => {
+  public addMosaics(mosaics: MosaicModel[]): void {
+    mosaics.forEach(({mosaicIdHex}) => {
       // skip if the mosaic is known
-      if (this.mosaicMap[id.toHex()]) return 
+      if (this.mosaicMap[mosaicIdHex]) return
       // add the mosaic
-      Vue.set(this.mosaicMap, id.toHex(), null)
+      Vue.set(this.mosaicMap, mosaicIdHex, null)
     })
   }
 

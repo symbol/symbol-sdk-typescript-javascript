@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 import {mapGetters} from 'vuex'
-import {Component, Vue, Prop} from 'vue-property-decorator'
-import {Transaction, MosaicId, AggregateTransaction} from 'symbol-sdk'
-
+import {Component, Prop, Vue} from 'vue-property-decorator'
+import {AggregateTransaction, MosaicId, Transaction} from 'symbol-sdk'
 // internal dependencies
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {WalletModel} from '@/core/database/entities/WalletModel'
 import {TransactionService} from '@/services/TransactionService'
-
 // child components
 // @ts-ignore
 import ModalTransactionCosignature from '@/views/modals/ModalTransactionCosignature/ModalTransactionCosignature.vue'
@@ -33,9 +30,8 @@ import PageTitle from '@/components/PageTitle/PageTitle.vue'
 import TransactionListFilters from '@/components/TransactionList/TransactionListFilters/TransactionListFilters.vue'
 // @ts-ignore
 import TransactionTable from '@/components/TransactionList/TransactionTable/TransactionTable.vue'
+import {TransactionGroup} from '@/store/Transaction'
 
-// custom types
-export const STATUS: Array<string> = [ 'all','confirmed','unconfirmed','partial' ]
 @Component({
   components: {
     ModalTransactionCosignature,
@@ -44,18 +40,18 @@ export const STATUS: Array<string> = [ 'all','confirmed','unconfirmed','partial'
     TransactionListFilters,
     TransactionTable,
   },
-  computed: {...mapGetters({
-    currentAccount: 'account/currentAccount',
-    currentWallet: 'wallet/currentWallet',
-    knownWallets: 'wallet/knownWallets',
-    networkMosaic: 'mosaic/networkMosaic',
-    currentHeight: 'network/currentHeight',
-    // use partial+unconfirmed from store because
-    // of ephemeral nature (websocket only here)
-    confirmedTransactions: 'wallet/confirmedTransactions',
-    partialTransactions: 'wallet/partialTransactions',
-    unconfirmedTransactions: 'wallet/unconfirmedTransactions',
-  })},
+  computed: {
+    ...mapGetters({
+      currentWallet: 'wallet/currentWallet',
+      networkMosaic: 'mosaic/networkMosaic',
+      currentHeight: 'network/currentHeight',
+      // use partial+unconfirmed from store because
+      // of ephemeral nature (websocket only here)
+      confirmedTransactions: 'transaction/confirmedTransactions',
+      partialTransactions: 'transaction/partialTransactions',
+      unconfirmedTransactions: 'transaction/unconfirmedTransactions',
+    }),
+  },
 })
 export class TransactionListTs extends Vue {
 
@@ -68,25 +64,11 @@ export class TransactionListTs extends Vue {
   }) pageSize: number
 
   /**
-   * Currently active account
-   * @see {Store.Account}
-   * @var {AccountsModel}
-   */
-  public currentAccount: AccountsModel
-
-  /**
    * Currently active wallet
    * @see {Store.Wallet}
-   * @var {WalletsModel}
+   * @var {WalletModel}
    */
-  public currentWallet: WalletsModel
-
-  /**
-   * Active account's wallets
-   * @see {Store.Wallet}
-   * @var {WalletsModel[]}
-   */
-  public knownWallets: WalletsModel[]
+  public currentWallet: WalletModel
 
   /**
    * Network block height
@@ -104,21 +86,16 @@ export class TransactionListTs extends Vue {
 
   /**
    * List of confirmed transactions (per-request)
-   * @var {Transaction[]}
    */
   public confirmedTransactions: Transaction[]
 
   /**
-   * List of unconfirmed transactions (websocket only)
-   * @see {Store.Wallet}
-   * @var {Transaction[]}
+   * List of unconfirmed transactions (per-request)
    */
   public unconfirmedTransactions: Transaction[]
 
   /**
-   * List of confirmed transactions (websocket only)
-   * @see {Store.Wallet}
-   * @var {Transaction[]}
+   * List of confirmed transactions (per-request)
    */
   public partialTransactions: Transaction[]
 
@@ -128,10 +105,10 @@ export class TransactionListTs extends Vue {
    */
   public service: TransactionService
 
-  /** 
+  /**
    * set the default to select all
    */
-  public selectedOption = 'all'
+  public selectedOption: TransactionGroup = TransactionGroup.all
   /**
    * The current page number
    * @var {number}
@@ -162,13 +139,10 @@ export class TransactionListTs extends Vue {
    */
   public isAwaitingCosignature: boolean = false
 
-  public getEmptyMessage(){
-    const status = this.selectedOption
-    if(!status.includes(status)){
-      status
-    }
-    return this.selectedOption === 'all' ? 'no_data_transactions' : `no_${this.selectedOption}_transactions`
+  public getEmptyMessage() {
+    return this.selectedOption === TransactionGroup.all ? 'no_data_transactions' : `no_${this.selectedOption}_transactions`
   }
+
   /**
    * Hook called when the component is mounted
    * @return {void}
@@ -184,20 +158,19 @@ export class TransactionListTs extends Vue {
   }
 
   public get totalCountItems(): number {
-    return this.getTransactionsByStatus(this.selectedOption).length
+    return this.getCurrentTabTransactions(this.selectedOption).length
   }
 
   /**
    * Returns the transactions of the current page
-   * from the getter that matches the provided tab name
+   * from the getter that matches the provided tab name.
+   * Undefined means the list is being loaded.
    * @param {TabName} tabName
    * @returns {Transaction[]}
    */
   public getCurrentPageTransactions(): Transaction[] {
     // get current tab transactions
-    const transactions = this.getTransactionsByStatus(this.selectedOption)
-    if (!transactions || !transactions.length) return []
-
+    const transactions = this.getCurrentTabTransactions(this.selectedOption)
     // get pagination params
     const start = (this.currentPage - 1) * this.pageSize
     const end = this.currentPage * this.pageSize
@@ -207,21 +180,18 @@ export class TransactionListTs extends Vue {
 
   /**
    * Returns all the transactions,
-   * from the getter that matches the provided selected option
+   * from the getter that matches the provided tab name
+   * @param {TabName} group
+   * @returns {Transaction[]}
    */
-  public getTransactionsByStatus(status: string): Transaction[] {
-    switch (status) {
-      case 'confirmed':
-        return this.confirmedTransactions
-      case 'unconfirmed':
-        return this.unconfirmedTransactions
-      case 'partial':
-        return this.partialTransactions
-      case 'all':
-        return [ ...this.confirmedTransactions,...this.partialTransactions,...this.unconfirmedTransactions ]
-      default:
-        return []
-    }
+  public getCurrentTabTransactions(group: TransactionGroup): Transaction[] {
+    if (group === TransactionGroup.confirmed) return this.confirmedTransactions
+    if (group === TransactionGroup.unconfirmed) return this.unconfirmedTransactions
+    if (group === TransactionGroup.partial) return this.partialTransactions
+    if (group === TransactionGroup.all) {return [ ...this.confirmedTransactions,
+      ...this.partialTransactions, ...this.unconfirmedTransactions ]}
+
+    return []
   }
 
   public get hasDetailModal(): boolean {
@@ -239,27 +209,26 @@ export class TransactionListTs extends Vue {
   public set hasCosignatureModal(f: boolean) {
     this.isAwaitingCosignature = f
   }
-  /// end-region computed properties getter/setter
 
+  /// end-region computed properties getter/setter
   /**
    * Refresh transaction list
    * @return {void}
    */
-  public async getTransactionListByOption(filter) {
-    const isStatusFilter = STATUS.includes(filter)
-    this.selectedOption = isStatusFilter ? filter : 'all'
-    this.getCurrentPageTransactions()  
+  public async getTransactionListByOption(filter: TransactionGroup) {
+    this.selectedOption = filter
   }
+
+
   /**
    * Hook called when a transaction is clicked
-   * @param {Transaction} transaction 
+   * @param {Transaction} transaction
    */
   public onClickTransaction(transaction: Transaction | AggregateTransaction) {
     if (transaction.hasMissingSignatures()) {
       this.activePartialTransaction = transaction as AggregateTransaction
       this.hasCosignatureModal = true
-    }
-    else {
+    } else {
       this.activeTransaction = transaction
       this.hasDetailModal = true
     }

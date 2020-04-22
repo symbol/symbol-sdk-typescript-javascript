@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,17 +15,13 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {MosaicId, NetworkType, AccountInfo, Address} from 'symbol-sdk'
+import {MosaicId, NetworkType} from 'symbol-sdk'
 import {ValidationProvider} from 'vee-validate'
-
 // internal dependencies
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {WalletsModel, WalletType} from '@/core/database/entities/WalletsModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
+import {WalletModel} from '@/core/database/entities/WalletModel'
 import {WalletService} from '@/services/WalletService'
-import {MosaicService} from '@/services/MosaicService'
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
-import {WalletsRepository} from '@/repositories/WalletsRepository'
-
 // child components
 // @ts-ignore
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
@@ -37,6 +33,8 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue'
 import ModalFormSubWalletCreation from '@/views/modals/ModalFormSubWalletCreation/ModalFormSubWalletCreation.vue'
 // @ts-ignore
 import ModalMnemonicExport from '@/views/modals/ModalMnemonicExport/ModalMnemonicExport.vue'
+import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyModel'
+import {MosaicModel} from '@/core/database/entities/MosaicModel'
 
 @Component({
   components: {
@@ -46,17 +44,26 @@ import ModalMnemonicExport from '@/views/modals/ModalMnemonicExport/ModalMnemoni
     FormLabel,
     ValidationProvider,
     ModalMnemonicExport,
-  }, 
-  computed: {...mapGetters({
-    networkType: 'network/networkType',
-    currentAccount: 'account/currentAccount',
-    currentWallet: 'wallet/currentWallet',
-    knownWallets: 'wallet/knownWallets',
-    currentWallets: 'wallet/currentWallets',
-    knownWalletsInfo: 'wallet/knownWalletsInfo',
-    networkMosaic: 'mosaic/networkMosaic',
-  })}})
+  },
+  computed: {
+    ...mapGetters({
+      currentAccount: 'account/currentAccount',
+      currentWallet: 'wallet/currentWallet',
+      knownWallets: 'wallet/knownWallets',
+      networkType: 'network/networkType',
+      mosaics: 'mosaic/mosaics',
+      networkMosaic: 'mosaic/networkMosaic',
+      networkCurrency: 'mosaic/networkCurrency',
+    }),
+  },
+})
 export class WalletSelectorPanelTs extends Vue {
+
+  /**
+   * The network currency.
+   */
+  public networkCurrency: NetworkCurrencyModel
+
   /**
    * Currently active networkType
    * @see {Store.Network}
@@ -69,33 +76,20 @@ export class WalletSelectorPanelTs extends Vue {
    * @see {Store.Account}
    * @var {AccountsModel}
    */
-  public currentAccount: AccountsModel
+  public currentAccount: AccountModel
 
   /**
    * Currently active wallet
    * @see {Store.Wallet}
-   * @var {WalletsModel}
+   * @var {WalletModel}
    */
-  public currentWallet: WalletsModel
+  public currentWallet: WalletModel
 
   /**
    * Known wallets identifiers
    * @var {string[]}
    */
-  public knownWallets: string[]
-
-  /**
-   * current wallets identifiers
-   * @var {string[]}
-   */
-  public currentWallets: string[]
-
-  /**
-   * Currently active wallet's balances
-   * @var {Mosaic[]}
-   */
-  public knownWalletsInfo: AccountInfo[]
-
+  public knownWallets: WalletModel[]
   /**
    * Networks currency mosaic
    * @var {MosaicId}
@@ -103,25 +97,27 @@ export class WalletSelectorPanelTs extends Vue {
   public networkMosaic: MosaicId
 
   /**
+   * Current wallet owned mosaics
+   * @private
+   * @type {MosaicInfo[]}
+   */
+  private mosaics: MosaicModel[]
+
+  /**
    * Wallets repository
    * @var {WalletService}
    */
-  public service: WalletService
-
-  /**
-   * Temporary storage of clicked wallets
-   * @var {WalletsModel}
-   */
-  public clickedWallet: WalletsModel
+  public walletService: WalletService
 
   /**
    * Whether user is currently adding a wallet (modal)
    * @var {boolean}
    */
-  public isAddingWallet: boolean = false/**
-  * Whether currently viewing export
-  * @var {boolean}
-  */
+  public isAddingWallet: boolean = false
+  /**
+   * Whether currently viewing export
+   * @var {boolean}
+   */
   public isViewingExportModal: boolean = false
 
   /**
@@ -130,89 +126,44 @@ export class WalletSelectorPanelTs extends Vue {
    */
   public validationRules = ValidationRuleset
 
-  public addressesBalances: any = {}
-
-  /**
-   * the toggle of the Spin
-   * @type string
-   */
-  public isLoading: boolean = true
 
   /**
    * Hook called when the component is created
    * @return {void}
    */
   public async created() {
-    this.service = new WalletService(this.$store)
-    const mosaicService = new MosaicService(this.$store)
-
-    // - read known addresses
-    const repository = new WalletsRepository()
-    const addresses = Array.from(repository.entries(
-      (w: WalletsModel) => this.knownWallets.includes(w.getIdentifier()),
-    ).values()).map(w => Address.createFromRawAddress(w.values.get('address')))
-
-    // - fetch latest accounts infos (1 request)
-    const knownWalletsInfo = await this.$store.dispatch('wallet/REST_FETCH_INFOS', addresses)
-
-    // - filter available wallets info
-    const knownWallets = knownWalletsInfo.filter(
-      info => {
-        const wallet = Array.from(repository.entries(
-          (w: WalletsModel) => info.address.plain() === w.values.get('address'),
-        ).values())
-
-        return wallet.length > 0
-      })
-
-    if (!knownWallets.length) {
-      this.isLoading = false
-    }
-
-    // - format balances
-    for (let i = 0, m = knownWallets.length; i < m; i ++) {
-      const currentInfo = knownWallets[i]
-
-      // read info and balance
-      const address = currentInfo.address.plain()
-      const netBalance = currentInfo.mosaics.find(m => m.id.equals(this.networkMosaic))
-      if(netBalance){
-        // store relative balance
-        const balance = await mosaicService.getRelativeAmount(
-          {...netBalance}.amount.compact(),
-          this.networkMosaic,
-        )
-
-        Vue.set(this.addressesBalances, address, balance)
-      }
-      // remove spin
-      this.isLoading = false
-    }
+    this.walletService = new WalletService()
   }
 
   /// region computed properties getter/setter
-  public get balances(): any {
-    return this.addressesBalances
+  public get balances(): Map<string, number> {
+    const networkMosaics = this.mosaics.filter(m => m.mosaicIdHex === this.networkMosaic.toHex())
+    return Object.assign({}, ...networkMosaics.map(s => ({[s.addressRawPlain]: s.balance})))
+    // return this.addressesBalances
   }
 
   public get currentWalletIdentifier(): string {
-    return !this.currentWallet ? '' : {...this.currentWallet}.identifier
+    return !this.currentWallet ? '' : this.currentWallet.id
   }
 
-  public set currentWalletIdentifier(identifier: string) {
-    if (!identifier || !identifier.length) {
-      return 
+  public set currentWalletIdentifier(id: string) {
+    if (!id || !id.length) {
+      return
     }
 
-    const wallet = this.service.getWallet(identifier)
+    const wallet = this.walletService.getWallet(id)
     if (!wallet) {
-      return 
+      return
     }
 
-    if (!this.currentWallet || identifier !== this.currentWallet.getIdentifier()) {
-      this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: wallet})
-      this.$emit('input', wallet.getIdentifier())
+    if (!this.currentWallet || id !== this.currentWallet.id) {
+      this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
+      this.$emit('input', wallet.id)
     }
+  }
+
+  public get currentWallets(): WalletModel[] {
+    return this.knownWallets
   }
 
   public get hasAddWalletModal(): boolean {
@@ -226,10 +177,11 @@ export class WalletSelectorPanelTs extends Vue {
   public get hasMnemonicExportModal(): boolean {
     return this.isViewingExportModal
   }
- 
+
   public set hasMnemonicExportModal(f: boolean) {
     this.isViewingExportModal = f
   }
+
   /// end-region computed properties getter/setter
 
   /**
@@ -238,19 +190,6 @@ export class WalletSelectorPanelTs extends Vue {
    * @return {boolean}
    */
   public isActiveWallet(item): boolean {
-    return item.identifier === this.currentWallet.getIdentifier()
-  }
-
-  /**
-   * Whether the wallet item is a seed wallet
-   * @param item
-   * @return {boolean}
-   */
-  public isSeedWallet(item): boolean {
-    return item.type === WalletType.SEED
-  }
-
-  public getBalance(item): number {
-    return this.addressesBalances[item.address]
+    return item.id === this.currentWallet.id
   }
 }

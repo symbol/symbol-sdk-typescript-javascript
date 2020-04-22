@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 // external dependencies
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Transaction, TransactionType, MosaicId} from 'symbol-sdk'
-
+import {MosaicId, NamespaceId, Transaction, TransactionType, TransferTransaction} from 'symbol-sdk'
 // internal dependencies
 import {TransactionService, TransactionViewType} from '@/services/TransactionService'
 import {Formatters} from '@/core/utils/Formatters'
 import {TimeHelpers} from '@/core/utils/TimeHelpers'
-
 // child components
 // @ts-ignore
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
-// @ts-ignore
-import AddressDisplay from '@/components/AddressDisplay/AddressDisplay.vue'
+
 // @ts-ignore
 import ActionDisplay from '@/components/ActionDisplay/ActionDisplay.vue'
 
@@ -39,21 +36,18 @@ import {transactionTypeToIcon, officialIcons, dashboardImages} from '@/views/res
 
 @Component({
   components: {
-    AddressDisplay,
     ActionDisplay,
     MosaicAmountDisplay,
   },
-  computed: {...mapGetters({
-    networkMosaic: 'mosaic/networkMosaic',
-  })},
+  computed: {...mapGetters({networkMosaic: 'mosaic/networkMosaic'})},
 })
 export class TransactionRowTs extends Vue {
 
-  @Prop({
-    default: [],
-  }) transaction: Transaction
-  @Prop({default: false}) isPartial: boolean
+  @Prop({default: []})
+  public transaction: Transaction
 
+  @Prop({default: false})
+  public isPartial: boolean
 
   /**
    * Transaction service
@@ -67,7 +61,7 @@ export class TransactionRowTs extends Vue {
    * @type {MosaicId}
    */
   protected networkMosaic: MosaicId
-  
+
   /**
    * Transaction type from SDK
    * @type {TransactionType}
@@ -96,12 +90,12 @@ export class TransactionRowTs extends Vue {
   public get view(): TransactionViewType {
     return this.service.getView(this.transaction as any)
   }
+
   /// end-region computed properties getter/setter
 
   /**
    * Get icon per-transaction
-   * @param {Transaction} transaction 
-   * @return {string}
+   * @return an icon.
    */
   public getIcon() {
     if (this.transaction.isConfirmed()) {
@@ -119,14 +113,13 @@ export class TransactionRowTs extends Vue {
       return transactionTypeToIcon[view.transaction.type]
     } else {
       return this.getTransactionStatusIcon()
-    }    
+    }
   }
   public getTransactionStatusIcon(): string{
     return dashboardImages.dashboardUnconfirmed
   }
   /**
    * Returns true if \a transaction is an incoming transaction
-   * @return {boolean}
    */
   public isIncomingTransaction(): boolean {
     // - read per-transaction-type details
@@ -134,20 +127,56 @@ export class TransactionRowTs extends Vue {
   }
 
   /**
-   * Returns the effective fee paid if available
-   * @return {number}
+   * Returns the amount to be shown. The first mosaic or the paid fee.
    */
-  public getFeeAmount(): number {
-    this.view.values
+  public getAmount(): number {
+    if (this.transaction.type === TransactionType.TRANSFER) {
+      // We may prefer XYM over other mosaic if XYM is 2nd+
+      const transferTransaction = this.transaction as TransferTransaction
+      return transferTransaction.mosaics.length && transferTransaction.mosaics[0].amount.compact() || 0
+    }
+    // https://github.com/nemfoundation/nem2-desktop-wallet/issues/879
+    // We may want to show N/A instead of the paid fee
+    return this.view.values.get('effectiveFee') || this.view.values.get('maxFee') || 0
+  }
 
-    if (this.view.values.get('effectiveFee') !== undefined) return this.view.values.get('effectiveFee')
-    if (this.view.values.get('maxFee') !== undefined) return this.view.values.get('maxFee')
-    return 0
+  /**
+   * Returns the color of the balance
+   */
+  public getAmountColor(): string {
+    // https://github.com/nemfoundation/nem2-desktop-wallet/issues/879
+    if (this.transaction.type === TransactionType.TRANSFER) {
+      return this.isIncomingTransaction() ? 'green' : 'red'
+    }
+    return this.getAmount() === 0 ? '' : 'red'
+  }
+
+  /**
+   * Returns the mosaic id of the balance or undefined for the network.
+   */
+  public getAmountMosaicId(): MosaicId | NamespaceId | undefined {
+    if (this.transaction.type === TransactionType.TRANSFER) {
+      // We may prefer XYM over other mosaic if XYM is 2nd+
+      const transferTransaction = this.transaction as TransferTransaction
+      return transferTransaction.mosaics.length && transferTransaction.mosaics[0].id || undefined
+    }
+    return undefined
+  }
+
+  /**
+   * Should he ticker be shown in the amount column
+   */
+  public isAmountShowTicker(): boolean {
+    // if (this.transaction.type === TransactionType.TRANSFER) {
+    //   const transferTransaction = this.transaction as TransferTransaction
+    //   return !!transferTransaction.mosaics.length
+    // }
+    // return true
+    return false
   }
 
   /**
    * Returns the transaction height or number of confirmations
-   * @param transaction 
    */
   public getHeight(): string {
     if(this.isPartial){

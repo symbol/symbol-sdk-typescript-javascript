@@ -16,10 +16,8 @@
 // external dependencies
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-
 // internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
-
+import {WalletModel} from '@/core/database/entities/WalletModel'
 // child components
 // @ts-ignore
 import WalletBackupOptions from '@/components/WalletBackupOptions/WalletBackupOptions.vue'
@@ -36,9 +34,9 @@ export class WalletBackupPageTs extends Vue {
   /**
    * Currently active wallet
    * @see {Store.Wallet}
-   * @var {WalletsModel}
+   * @var {WalletModel}
    */
-  public currentWallet: WalletsModel
+  public currentWallet: WalletModel
 
 /// region computed properties getter/setter
 /// end-region computed properties getter/setter

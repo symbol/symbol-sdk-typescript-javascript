@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
-
+import {Component, Prop, Vue} from 'vue-property-decorator'
 // internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
-import { mapGetters } from 'vuex'
+import {WalletModel} from '@/core/database/entities/WalletModel'
+import {mapGetters} from 'vuex'
 
 @Component({
   computed: {...mapGetters({
@@ -29,7 +28,7 @@ export class WalletLinksTs extends Vue {
 
   @Prop({
     default: null,
-  }) wallet: WalletsModel
+  }) wallet: WalletModel
 
   public explorerBaseUrl: string
   public faucetBaseUrl: string
@@ -38,7 +37,7 @@ export class WalletLinksTs extends Vue {
   /// end-region computed properties getter/setter
 
   public get explorerUrl() {
-    return `${this.explorerBaseUrl}/account/${this.wallet.values.get('address')}`
+    return this.explorerBaseUrl + '/account/' + this.wallet.address
   }
 
   public get faucetUrl() {

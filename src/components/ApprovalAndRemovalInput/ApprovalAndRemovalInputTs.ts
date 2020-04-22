@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,28 +14,31 @@
  * limitations under the License.
  */
 // external dependencies
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Prop, Vue} from 'vue-property-decorator'
 import {MultisigAccountInfo} from 'symbol-sdk'
-
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
-
 // child components
 import {ValidationProvider} from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
-
 // configuration
-import networkConfig from '@/../config/network.conf.json'
-const currentNetworkConfig = networkConfig.networks['testnet-publicTest']
+import {mapGetters} from 'vuex'
+import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
+
 
 @Component({
   components: {
     ValidationProvider,
     ErrorTooltip,
     FormRow,
+  },
+  computed: {
+    ...mapGetters({
+      networkConfiguration: 'network/networkConfiguration',
+    }),
   },
 })
 export class ApprovalAndRemovalInputTs extends Vue {
@@ -70,6 +73,9 @@ export class ApprovalAndRemovalInputTs extends Vue {
   @Prop({
     default: null,
   }) multisig: MultisigAccountInfo
+
+
+  private networkConfiguration: NetworkConfigurationModel
 
   /// region computed properties getter/setter
   /**
@@ -106,6 +112,7 @@ export class ApprovalAndRemovalInputTs extends Vue {
       ? 'form_label_description_min_approval'
       : 'form_label_description_min_removal'
   }
+
   /**
    * Current minApproval or minRemoval of the target account
    * @readonly
@@ -130,12 +137,12 @@ export class ApprovalAndRemovalInputTs extends Vue {
    * @protected
    * @type {{label: string, value: number}}
    */
-  protected get deltaOptions(): {value: number, newDelta: number}[] {
+  protected get deltaOptions(): { value: number, newDelta: number }[] {
     // For an account conversion, the minimum delta is 1
     const isConversion = this.operation === 'conversion'
 
     // minimum possible delta
-    const {maxCosignatoriesPerAccount} = currentNetworkConfig.properties
+    const maxCosignatoriesPerAccount = this.networkConfiguration.maxCosignatoriesPerAccount
     const minDelta = isConversion ? 1 : 0 - this.currentValue
 
     return [...Array(maxCosignatoriesPerAccount).keys()].map(
@@ -146,5 +153,6 @@ export class ApprovalAndRemovalInputTs extends Vue {
       },
     )
   }
+
   /// end-region computed properties getter/setter
 }

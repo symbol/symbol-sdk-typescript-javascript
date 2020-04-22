@@ -25,7 +25,7 @@
         </div>
         <img src="@/views/resources/img/monitor/speed.png">
         <span class="txt_info speed">
-          {{ targetBlockTime }}s
+          {{ blockGenerationTargetTime }}s
         </span>
         <span class="speed-blocks">/{{ $t('block') }}</span>
       </div>

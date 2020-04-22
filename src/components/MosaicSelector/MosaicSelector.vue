@@ -13,12 +13,12 @@
         v-focus
         class="select-size select-style"
       >
-        <option 
+        <option
           v-for="m in displayedMosaics"
-          :key="m.getIdentifier()"
-          :value="m.getIdentifier()"
+          :key="m.mosaicIdHex"
+          :value="m.mosaicIdHex"
         >
-          {{ m.values.get('name') !== '' ? m.values.get('name') : m.values.get('hexId') }} 
+          {{ m.name || m.mosaicIdHex }}
         </option>
       </select>
     </ErrorTooltip>
@@ -27,5 +27,6 @@
 
 <script lang="ts">
 import {MosaicSelectorTs} from './MosaicSelectorTs'
+
 export default class MosaicSelector extends MosaicSelectorTs {}
 </script>

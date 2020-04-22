@@ -1,24 +1,24 @@
 /**
- * 
+ *
  * Copyright 2020 Grégory Saive for NEM (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Address, Mosaic, MosaicId, NamespaceId, UInt64, RawUInt64, PlainMessage, EmptyMessage, TransferTransaction} from 'symbol-sdk'
-
+import {Address, EmptyMessage, Mosaic, MosaicId, NamespaceId, PlainMessage, RawUInt64, TransferTransaction, UInt64} from 'symbol-sdk'
 // internal dependencies
 import {TransactionView} from './TransactionView'
-import {MosaicService} from '@/services/MosaicService'
+import {AttachedMosaic} from '@/services/MosaicService'
+import {MosaicModel} from '@/core/database/entities/MosaicModel'
 
 /// region custom types
 export type TransferFormFieldsType = {
@@ -30,6 +30,7 @@ export type TransferFormFieldsType = {
   message?: string
   maxFee: UInt64
 }
+
 /// end-region custom types
 
 export class ViewTransferTransaction extends TransactionView<TransferFormFieldsType> {
@@ -58,11 +59,11 @@ export class ViewTransferTransaction extends TransactionView<TransferFormFieldsT
     if (!!formItems.mosaics && formItems.mosaics.length) {
 
       // - get known mosaics
-      const mosaicsInfo = this.$store.getters['mosaic/mosaicsInfoList']
+      const mosaicsInfo = this.$store.getters['mosaic/mosaics'] as MosaicModel[]
 
       // - prepare mosaic entries (push always ABSOLUTE amount)
       formItems.mosaics.map(spec => {
-        const info = mosaicsInfo.find(i => i.id.toHex() === spec.mosaicHex)
+        const info = mosaicsInfo.find(i => i.mosaicIdHex === spec.mosaicHex)
         const div = info ? info.divisibility : 0
 
         // - format amount to absolute
@@ -103,10 +104,16 @@ export class ViewTransferTransaction extends TransactionView<TransferFormFieldsT
     this.values.set('recipient', transaction.recipientAddress)
 
     // - set mosaics (RELATIVE amount)
-    this.values.set(
-      'mosaics',
-      new MosaicService(this.$store).getAttachedMosaicsFromMosaics(transaction.mosaics),
-    )
+    const attachedMosaics = transaction.mosaics.map(transactionMosaic => {
+      return {
+        id: transactionMosaic.id,
+        mosaicHex: transactionMosaic.id.toHex(),
+        // TODO revisit divisibility!!
+        amount: transactionMosaic.amount.compact() / Math.pow(10, 0),
+      } as AttachedMosaic
+    })
+
+    this.values.set('mosaics', attachedMosaics)
 
     // - set message
     this.values.set('message', transaction.message)

@@ -16,8 +16,7 @@
 // external dependencies
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Address, PublicAccount, NetworkType} from 'symbol-sdk'
-
+import {Address, NetworkType, PublicAccount} from 'symbol-sdk'
 // child components
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
@@ -31,7 +30,6 @@ import ButtonRemove from '@/components/ButtonRemove/ButtonRemove.vue'
   },
   computed: {
     ...mapGetters({
-      currentPeer: 'network/currentPeer',
       networkType: 'network/networkType',
     }),
   },

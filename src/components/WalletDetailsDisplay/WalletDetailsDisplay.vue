@@ -3,22 +3,22 @@
     <div class="detail-row">
       <div class="wallet-detail-row-3cols">
         <span class="label">{{ $t('Wallet_address') }}</span>
-        <span class="value walletAddress">{{ wallet.objects.address.pretty() }}</span>
+        <span class="value walletAddress">{{ WalletModel.getObjects(wallet).address.pretty() }}</span>
         <span><img
           src="@/views/resources/img/wallet/copyIcon.png"
           class="copy-icon"
-          @click="uiHelpers.copyToClipboard(wallet.objects.address.plain())"
+          @click="uiHelpers.copyToClipboard(wallet.address)"
         ></span>
       </div>
     </div>
     <div class="detail-row">
       <div class="wallet-detail-row-3cols">
         <span class="label">{{ $t('Wallet_public_key') }}</span>
-        <span class="value walletPublicKey">{{ wallet.objects.publicAccount.publicKey }}</span>
+        <span class="value walletPublicKey">{{ wallet.publicKey }}</span>
         <span><img
           src="@/views/resources/img/wallet/copyIcon.png"
           class="copy-icon"
-          @click="uiHelpers.copyToClipboard(wallet.objects.publicAccount.publicKey)"
+          @click="uiHelpers.copyToClipboard(wallet.publicKey)"
         ></span>
       </div>
     </div>

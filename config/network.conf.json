@@ -2,55 +2,29 @@
   "explorerUrl": "http://explorer.symboldev.network",
   "faucetUrl": "http://faucet-01.symboldev.network",
   "defaultNetworkType": 152,
-  "defaultNode": {
-    "protocol": "http",
-    "hostname": "api-01.us-west-1.symboldev.network",
-    "port": 3000,
-    "url": "http://api-01.us-west-1.symboldev.network:3000"
+  "defaultNodeUrl": "http://api-01.ap-northeast-1.symboldev.network:3000",
+  "networkConfigurationDefaults": {
+    "maxMosaicDivisibility": 6,
+    "namespaceGracePeriodDuration": 2592000,
+    "lockedFundsPerAggregate": "10000000",
+    "maxCosignatoriesPerAccount": 25,
+    "blockGenerationTargetTime": 15,
+    "maxNamespaceDepth": 3,
+    "maxMosaicDuration": 21024000,
+    "minNamespaceDuration": 172800,
+    "maxNamespaceDuration": 2102400,
+    "maxTransactionsPerAggregate": 1000,
+    "maxCosignedAccountsPerAccount": 25,
+    "maxMessageSize": 1024,
+    "maxMosaicAtomicUnits":  9000000000000000
   },
-  "networks": {
-    "testnet-publicTest": {
-      "generationHash": "44D2225B8932C9A96DCB13508CBCDFFA9A9663BFBA2354FEEC8FCFCB7E19846C",
-      "currencyMosaic": "symbol.xym",
-      "harvestMosaic": "symbol.xym",
-      "networkType": 152,
-      "nodes": [
-        {"friendly": "API US West 1", "roles": 2, "url": "http://api-01.us-west-1.symboldev.network:3000"},
-        {"friendly": "API AP North-East 1", "roles": 2, "url": "http://api-01.ap-northeast-1.symboldev.network:3000"},
-        {"friendly": "API AP South-East 1", "roles": 2, "url": "http://api-01.ap-southeast-1.symboldev.network:3000"},
-        {"friendly": "API EU West 1", "roles": 2, "url": "http://api-01.eu-west-1.symboldev.network:3000"},
-        {"friendly": "API EU Central 1", "roles": 2, "url": "http://api-01.eu-central-1.symboldev.network:3000"},
-        {"friendly": "Dual AP North-East 1", "roles": 3, "url": "http://api-harvest-01.ap-northeast-1.symboldev.network:3000"},
-        {"friendly": "Dual EU Central 1", "roles": 3, "url": "http://api-harvest-01.eu-central-1.symboldev.network:3000"}
-      ],
-      "properties": {
-        "reservedRootNamespaceNames": ["xem", "nem", "user", "account", "org", "com", "biz", "net", "edu", "mil", "gov", "info", "symbol", "symbl", "xym"],
-        "targetBlockTime": 15,
-        "defaultDynamicFeeMultiplier": 1000,
-        "mosaicRentalFee": 500,
-        "rootNamespaceRentalFeePerBlock": 1,
-        "childNamespaceRentalFee": 100,
-        "lockedFundsPerAggregate": 10000000,
-        "minHarvesterBalance": 10000000000,
-        "maxMosaicDuration": 21024000,
-        "minNamespaceDuration": 172800,
-        "maxNamespaceDuration": 2102400,
-        "namespaceGracePeriodDuration": 172800,
-        "maxTransactionsPerBlock": 1500,
-        "maxTransactionsPerAggregate": 1000,
-        "maxCosignaturesPerAggregate": 25,
-        "maxMosaicsPerAccount": 10000,
-        "maxMosaicDivisibility": 6,
-        "maxMultisigDepth": 3,
-        "maxCosignatoriesPerAccount": 25,
-        "maxCosignedAccountsPerAccount": 25,
-        "maxChildNamespaces": 256,
-        "maxNamespaceDepth": 3,
-        "maxAccountRestrictionValues": 512,
-        "maxMosaicRestrictionValues": 20,
-        "maxMessageSize": 1024,
-        "maxMosaicAtomicUnits":  9000000000000000
-      }
-    }
-  }
+  "nodes": [
+    {"friendlyName": "API US West 1", "roles": 2, "url": "http://api-01.us-west-1.symboldev.network:3000"},
+    {"friendlyName": "API AP North-East 1", "roles": 2, "url": "http://api-01.ap-northeast-1.symboldev.network:3000"},
+    {"friendlyName": "API AP South-East 1", "roles": 2, "url": "http://api-01.ap-southeast-1.symboldev.network:3000"},
+    {"friendlyName": "API EU West 1", "roles": 2, "url": "http://api-01.eu-west-1.symboldev.network:3000"},
+    {"friendlyName": "API EU Central 1", "roles": 2, "url": "http://api-01.eu-central-1.symboldev.network:3000"},
+    {"friendlyName": "Dual AP North-East 1", "roles": 3, "url": "http://api-harvest-01.ap-northeast-1.symboldev.network:3000"},
+    {"friendlyName": "Dual EU Central 1", "roles": 3, "url": "http://api-harvest-01.eu-central-1.symboldev.network:3000"}
+  ]
 }

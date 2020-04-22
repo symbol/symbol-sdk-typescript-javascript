@@ -1,28 +1,24 @@
 // external dependencies
 import {extend} from 'vee-validate'
 import i18n from '@/language'
-import {Address, Password, Account, NetworkType} from 'symbol-sdk'
-
+import {Account, Address, NetworkType, Password} from 'symbol-sdk'
 // internal dependencies
-import {AccountsRepository} from '@/repositories/AccountsRepository'
-import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {AccountService} from '@/services/AccountService'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {AppStore} from '@/app/AppStore'
-
 // configuration
 import networkConfig from '../../../config/network.conf.json'
 import appConfig from '../../../config/app.conf.json'
-const currentNetwork = networkConfig.networks['testnet-publicTest']
-const {MIN_PASSWORD_LENGTH} = appConfig.constants
+import {AddressValidator, AliasValidator, MaxDecimalsValidator, PublicKeyValidator, UrlValidator} from './validators'
+import {AccountModel} from '@/core/database/entities/AccountModel'
+import {WalletService} from '@/services/WalletService'
+import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
 
-import {
-  AddressValidator,
-  AliasValidator,
-  MaxDecimalsValidator,
-  UrlValidator,
-  PublicKeyValidator,
-} from './validators'
+// TODO CustomValidationRules needs to be created when the network configuration is resolved, UI
+// needs to use the resolved CustomValidationRules
+// ATM rules are using the hardcoded file
+const currentNetwork: NetworkConfigurationModel = networkConfig.networkConfigurationDefaults
+const {MIN_PASSWORD_LENGTH} = appConfig.constants
 
 export class CustomValidationRules {
   /**
@@ -84,7 +80,7 @@ export class CustomValidationRules {
 
     extend('newAccountName', {
       validate(value) {
-        return new AccountsRepository().find(value) === false
+        return !new AccountService().getAccountByName(value)
       },
       message: `${i18n.t(`${NotificationType.ACCOUNT_NAME_EXISTS_ERROR}`)}`,
     })
@@ -95,9 +91,9 @@ export class CustomValidationRules {
           return false
         }
 
-        const currentAccount = AppStore.getters['account/currentAccount']
-        const currentHash = currentAccount.values.get('password')
-        const inputHash = new AccountService(AppStore).getPasswordHash(new Password(value))
+        const currentAccount: AccountModel = AppStore.getters['account/currentAccount']
+        const currentHash = currentAccount.password
+        const inputHash = AccountService.getPasswordHash(new Password(value))
         return inputHash === currentHash
       },
       message: `${i18n.t(`${NotificationType.WRONG_PASSWORD_ERROR}`)}`,
@@ -105,18 +101,12 @@ export class CustomValidationRules {
 
     extend('accountWalletName', {
       validate(value) {
-        const accountsRepository = new AccountsRepository()
-        const walletsRepository = new WalletsRepository()
+        const walletService = new WalletService()
 
         // - fetch current account wallets
-        const currentAccount = AppStore.getters['account/currentAccount']
-        const knownWallets = Array.from(accountsRepository.fetchRelations(
-          walletsRepository,
-          currentAccount,
-          'wallets',
-        ).values())
-
-        return undefined === knownWallets.find(w => value === w.values.get('name'))
+        const currentAccount: AccountModel = AppStore.getters['account/currentAccount']
+        const knownWallets = Object.values(walletService.getKnownWallets(currentAccount.wallets))
+        return undefined === knownWallets.find(w => value === w.name)
       },
       message: `${i18n.t(`${NotificationType.ERROR_WALLET_NAME_ALREADY_EXISTS}`)}`,
     })
@@ -133,7 +123,7 @@ export class CustomValidationRules {
       },
       message: `${i18n.t(`${NotificationType.ACCOUNT_NAME_EXISTS_ERROR}`)}`,
     })
-  
+
     extend('addressOrPublicKey', {
       validate: (value) => {
         const isValidAddress = AddressValidator.validate(value)
@@ -146,9 +136,10 @@ export class CustomValidationRules {
 
     extend('maxNamespaceDuration', {
       validate: (value) => {
-        return value <= currentNetwork.properties.maxNamespaceDuration
+        return value <= currentNetwork.maxNamespaceDuration
       },
-      message: `${i18n.t('error_new_namespace_duration_max_value', {maxValue: currentNetwork.properties.maxNamespaceDuration})}`,
+      message: `${i18n.t('error_new_namespace_duration_max_value',
+        {maxValue: currentNetwork.maxNamespaceDuration})}`,
     })
 
     extend('passwordRegex', {

@@ -37,19 +37,19 @@
                 </div>
                 <div v-if="accountsClassifiedByNetworkType">
                   <div
-                    v-for="(accounts, networkType) in accountsClassifiedByNetworkType"
-                    :key="networkType"
+                    v-for="pair in accountsClassifiedByNetworkType"
+                    :key="pair.networkType"
                   >
-                    <div v-if="accounts.length">
-                      <span class="network-type-head-title">{{ getNetworkTypeLabel(networkType) }}</span>
+                    <div v-if="pair.accounts.length">
+                      <span class="network-type-head-title">{{ getNetworkTypeLabel(pair.networkType) }}</span>
                     </div>
                     <Option
-                      v-for="(accountName, index) in accounts"
-                      :key="`${accountName}${index}`"
-                      :value="accountName"
-                      :label="accountName"
+                      v-for="(account, index) in pair.accounts"
+                      :key="`${account.accountName}${index}`"
+                      :value="account.accountName"
+                      :label="account.accountName"
                     >
-                      <span>{{ accountName }}</span>
+                      <span>{{ account.accountName }}</span>
                     </Option>
                   </div>
                 </div>

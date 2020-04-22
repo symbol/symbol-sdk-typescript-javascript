@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {DerivationService, DerivationPathLevels} from '@/services/DerivationService'
+import {DerivationPathLevels, DerivationService} from '@/services/DerivationService'
 import {WalletService} from '@/services/WalletService'
+
 const {DEFAULT_WALLET_PATH} = WalletService
 
 // Standard account paths

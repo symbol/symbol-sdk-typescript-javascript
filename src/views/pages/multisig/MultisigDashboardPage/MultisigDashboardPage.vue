@@ -11,11 +11,10 @@
 <script>
 // external dependencies
 import {Component, Vue} from 'vue-property-decorator'
-
 // child components
 import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue'
 
-@Component({ 
+@Component({
   components: {NavigationTabs},
   data() {return {}},
 })

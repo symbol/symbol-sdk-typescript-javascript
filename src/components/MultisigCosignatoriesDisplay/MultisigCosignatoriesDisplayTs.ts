@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 // external dependencies
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Address, NetworkType, MultisigAccountInfo, PublicAccount} from 'symbol-sdk'
-
+import {Address, MultisigAccountInfo, NetworkType, PublicAccount} from 'symbol-sdk'
 // child components
 import {ValidationProvider} from 'vee-validate'
 // @ts-ignore

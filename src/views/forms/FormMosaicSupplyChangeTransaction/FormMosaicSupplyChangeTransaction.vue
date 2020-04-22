@@ -36,7 +36,7 @@
             <div class="row-left-message">
               <span class="pl-2">
                 {{ $t('relative') }}: {{ currentMosaicRelativeSupply }} ({{ $t('absolute') }}:
-                {{ currentMosaicInfo.supply.compact().toLocaleString() }})
+                {{ currentMosaicInfo.supply.toLocaleString() }})
               </span>
             </div>
           </template>

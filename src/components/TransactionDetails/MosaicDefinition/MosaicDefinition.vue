@@ -1,11 +1,11 @@
 <template>
   <div class="transaction-details-item-inner-container">
     <div
-      v-for="({ key, value }, index) in items"
+      v-for="(item, index) in items"
       :key="index"
       class="transaction-row-outer-container"
     >
-      <TransactionDetailRow :label="key" :value="value" />
+      <TransactionDetailRow :item="item" />
     </div>
   </div>
 </template>
@@ -20,6 +20,7 @@ import { TransactionViewType } from '@/services/TransactionService'
 
 // child components
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
+import {TransactionDetailItem} from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
 
 @Component({ components: { TransactionDetailRow } })
 export default class MosaicDefinition extends Vue {
@@ -29,7 +30,7 @@ export default class MosaicDefinition extends Vue {
    * Displayed items
    * @type {({ key: string, value: string | boolean }[])}
    */
-  get items(): { key: string, value: string | boolean }[] {
+  get items(): TransactionDetailItem[] {
     const mosaicId: MosaicId = this.view.values.get('mosaicId')
     const divisibility: number = this.view.values.get('divisibility')
     const mosaicFlags: MosaicFlags = this.view.values.get('mosaicFlags')

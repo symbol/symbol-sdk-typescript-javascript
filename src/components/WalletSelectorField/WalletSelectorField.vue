@@ -9,9 +9,9 @@
       :class="{'select-size select-style': defaultFormStyle, 'max-z-index': true }"
     >
       <i-option
-        v-for="({identifier, name}) in currentWallets"
-        :key="identifier"
-        :value="identifier"
+        v-for="({id, name}) in currentWallets"
+        :key="id"
+        :value="id"
       >
         {{ name }}
       </i-option>

@@ -1,23 +1,18 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// external dependencies
-import {Store} from 'vuex'
-
-// internal dependencies
-import {AbstractService} from '../AbstractService'
 
 /**
  * Table field to be used in a table header
@@ -63,43 +58,10 @@ export type TableFilteringOptions = {
   filteringType: FilteringTypes
 }
 
-export abstract class AssetTableService extends AbstractService {
-  /**
-   * Service name
-   * @var {string}
-   */
-  public name: string = 'asset-table'
+export abstract class AssetTableService {
 
-  /**
-   * Vuex Store 
-   * @var {Vuex.Store}
-   */
-  public $store: Store<any>
+  protected constructor(public readonly currentHeight: number) {
 
-  /**
-   * Chain height
-   * @protected
-   * @var {number}
-   */
-  protected currentHeight: number
-
-  /**
-   * Creates an instance of AssetTableService.
-   * @param {*} store
-   */
-  constructor(store?: Store<any>) {
-    super()
-    this.$store = store
-    this.currentHeight = this.getCurrentHeight()
-  }
-
-  /**
-   * Fetch current height from network store
-   * @see {Store.Network}
-   * @return {number}
-   */
-  protected getCurrentHeight(): number {
-    return this.$store.getters['network/currentHeight'] || 0
   }
 
   /**
@@ -165,13 +127,11 @@ export abstract class AssetTableService extends AbstractService {
           {numeric: true, ignorePunctuation: true},
         )
       })
-    }
-    else if ('boolean' === typeof sampleValue) {
+    } else if ('boolean' === typeof sampleValue) {
       return [...values][sortingMethod]((a, b) => {
         return (a[options.fieldName] === b[options.fieldName]) ? 0 : a[options.fieldName] ? -1 : 1
       })
-    }
-    else if ('number' === typeof sampleValue) {
+    } else if ('number' === typeof sampleValue) {
       return values[sortingMethod]((a, b) => {
         if (!b[options.fieldName] || !a[options.fieldName]) return 1
         return b[options.fieldName] - a[options.fieldName]

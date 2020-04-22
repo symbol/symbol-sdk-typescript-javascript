@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,11 +15,8 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-
 // internal dependencies
-import {SettingService} from '@/services/SettingService'
 import {NotificationType} from '@/core/utils/NotificationType'
-
 // child components
 import {ValidationObserver, ValidationProvider} from 'vee-validate'
 // @ts-ignore
@@ -40,6 +37,9 @@ import WalletSelectorField from '@/components/WalletSelectorField/WalletSelector
 import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
 // @ts-ignore
 import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import {SettingsModel} from '@/core/database/entities/SettingsModel'
+import {WalletModel} from '@/core/database/entities/WalletModel'
+
 @Component({
   components: {
     ValidationObserver,
@@ -54,53 +54,26 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue'
     ModalFormAccountUnlock,
     FormLabel,
   },
-  computed: {...mapGetters({
-    currentLanguage: 'app/currentLanguage',
-    explorerUrl: 'app/explorerUrl',
-    languageList: 'app/languages',
-    defaultFee: 'app/defaultFee',
-    defaultWallet: 'app/defaultWallet',
-    knownWallets: 'wallet/knownWallets',
-  })},
+  computed: {
+    ...mapGetters({
+      settings: 'app/settings',
+      knownWallets: 'wallet/knownWallets',
+    }),
+  },
 })
 export class FormGeneralSettingsTs extends Vue {
-  /**
-   * Currently active language
-   * @see {Store.AppInfo}
-   * @var {string}
-   */
-  public currentLanguage: string
 
   /**
-   * List of available languages
-   * @see {Store.AppInfo}
-   * @var {any[]}
+   * The current stored settings.
    */
-  public languageList: {value: string, label: string}[]
+  public settings: SettingsModel
 
-  /**
-   * Default fee setting
-   * @var {number}
-   */
-  public defaultFee: number
-
-  /**
-   * Default wallet setting
-   * @var {number}
-   */
-  public defaultWallet: string
-
-  /**
-   * Explorer url setting
-   * @var {string}
-   */
-  public explorerUrl: string
 
   /**
    * Known wallets identifiers
    * @var {string[]}
    */
-  public knownWallets: string[]
+  public knownWallets: WalletModel[]
 
   /**
    * Whether account is currently being unlocked
@@ -113,8 +86,8 @@ export class FormGeneralSettingsTs extends Vue {
    * @var {Object}
    */
   public formItems = {
-    maxFee: 0,
-    currentLanguage: '',
+    defaultFee: 0,
+    language: '',
     explorerUrl: '',
     defaultWallet: '',
   }
@@ -124,13 +97,10 @@ export class FormGeneralSettingsTs extends Vue {
   }
 
   public resetForm() {
-    this.formItems.currentLanguage = this.currentLanguage
-    this.formItems.maxFee = this.defaultFee
-    this.formItems.explorerUrl = this.explorerUrl
-    this.formItems.defaultWallet = this.defaultWallet && this.defaultWallet.length
-      ? this.defaultWallet : (this.knownWallets.length
-        ? this.knownWallets[0]
-        : '')
+    this.formItems = {...this.settings}
+    if (!this.settings.defaultWallet && this.knownWallets.length) {
+      this.formItems.defaultWallet = this.knownWallets[0].id
+    }
   }
 
   /// region computed properties getter/setter
@@ -141,6 +111,7 @@ export class FormGeneralSettingsTs extends Vue {
   public set hasAccountUnlockModal(f: boolean) {
     this.isUnlockingAccount = f
   }
+
   /// end-region computed properties getter/setter
 
   /**
@@ -150,26 +121,18 @@ export class FormGeneralSettingsTs extends Vue {
   public onSubmit() {
     this.hasAccountUnlockModal = true
   }
+
   /**
    * When account is unlocked, the sub wallet can be created
    */
-  public onAccountUnlocked() {
+  public async onAccountUnlocked() {
+
     try {
-      // - use service to bridge between database and store
-      const service = new SettingService(this.$store)
-
-      // - dispatches 3 store actions:
-      //   - app/SET_LANGUAGE
-      //   - app/SET_EXPLORER_URL
-      //   - app/SET_DEFAULT_FEE
-      //   - app/SET_DEFAULT_WALLET
-      service.saveSettingsForm(this.formItems)
-
+      await this.$store.dispatch('app/SET_SETTINGS', this.formItems)
       // - add notification and emit
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS_SETTINGS_UPDATED)
       this.$emit('submit', this.formItems)
-    }
-    catch (e) {
+    } catch (e) {
       this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.')
       console.error(e)
     }

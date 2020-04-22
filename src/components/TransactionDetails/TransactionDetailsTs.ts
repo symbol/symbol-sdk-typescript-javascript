@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,40 +15,11 @@
  */
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {
-  AccountAddressRestrictionTransaction,
-  AccountLinkTransaction,
-  AccountMetadataTransaction,
-  AccountMosaicRestrictionTransaction,
-  AccountOperationRestrictionTransaction,
-  AddressAliasTransaction,
-  AggregateTransaction,
-  HashLockTransaction,
-  MosaicAddressRestrictionTransaction,
-  MosaicAliasTransaction,
-  MosaicDefinitionTransaction,
-  MosaicGlobalRestrictionTransaction,
-  MosaicId,
-  MosaicMetadataTransaction,
-  MosaicSupplyChangeTransaction,
-  MultisigAccountModificationTransaction,
-  NamespaceMetadataTransaction,
-  NamespaceRegistrationTransaction,
-  NetworkType,
-  SecretLockTransaction,
-  SecretProofTransaction,
-  Transaction,
-  TransactionType,
-  TransferTransaction,
-} from 'symbol-sdk'
-
+import {AccountAddressRestrictionTransaction, AccountLinkTransaction, AccountMetadataTransaction, AccountMosaicRestrictionTransaction, AccountOperationRestrictionTransaction, AddressAliasTransaction, AggregateTransaction, HashLockTransaction, MosaicAddressRestrictionTransaction, MosaicAliasTransaction, MosaicDefinitionTransaction, MosaicGlobalRestrictionTransaction, MosaicId, MosaicMetadataTransaction, MosaicSupplyChangeTransaction, MultisigAccountModificationTransaction, NamespaceMetadataTransaction, NamespaceRegistrationTransaction, NetworkType, SecretLockTransaction, SecretProofTransaction, Transaction, TransactionType, TransferTransaction} from 'symbol-sdk'
 // internal dependencies
 import {TransactionService, TransactionViewType} from '@/services/TransactionService'
 import {Formatters} from '@/core/utils/Formatters'
-
 // configuration
-import networkConfig from '@/../config/network.conf.json'
-
 // child components
 // @ts-ignore
 import AccountAddressRestriction from '@/components/TransactionDetails/AccountAddressRestriction/AccountAddressRestriction.vue'
@@ -111,18 +82,20 @@ import Transfer from '@/components/TransactionDetails/Transfer/Transfer.vue'
     TransactionDetailsHeader,
     Transfer,
   },
-  computed: {...mapGetters({
-    networkType: 'network/networkType',
-    networkMosaic: 'mosaic/networkMosaic',
-    networkMosaicTicker: 'mosaic/networkMosaicTicker',
-  })},
+  computed: {
+    ...mapGetters({
+      networkType: 'network/networkType',
+      networkMosaic: 'mosaic/networkMosaic',
+      networkMosaicTicker: 'mosaic/networkMosaicTicker',
+    }),
+  },
 })
 export class TransactionDetailsTs extends Vue {
   /**
    * Transaction to render
    * @type {Transaction}
    */
-  @Prop({ default: null }) transaction: Transaction
+  @Prop({default: null}) transaction: Transaction
 
   /**
    * Current network type
@@ -144,12 +117,6 @@ export class TransactionDetailsTs extends Vue {
    * @var {string}
    */
   public networkMosaicTicker: string
-
-  /**
-   * Explorer base path
-   * @var {string}
-   */
-  public explorerBaseUrl: string = networkConfig.explorerUrl
 
   /**
    * Formatters
@@ -181,16 +148,17 @@ export class TransactionDetailsTs extends Vue {
     if (this.transaction instanceof AggregateTransaction) {
       return [
         this.getView(this.transaction),
-        ... this.transaction.innerTransactions.map(tx => this.getView(tx)),
+        ...this.transaction.innerTransactions.map(tx => this.getView(tx)),
       ]
     }
 
     return [this.getView(this.transaction)]
+    // return [this.getView(this.transaction)]
   }
 
   private getView(transaction: Transaction): TransactionViewType {
     switch (transaction.type) {
-      case TransactionType.MOSAIC_DEFINITION: 
+      case TransactionType.MOSAIC_DEFINITION:
         return this.service.getView(transaction as MosaicDefinitionTransaction)
       case TransactionType.MOSAIC_SUPPLY_CHANGE:
         return this.service.getView(transaction as MosaicSupplyChangeTransaction)
@@ -236,8 +204,9 @@ export class TransactionDetailsTs extends Vue {
 
   /**
    * Whether set transaction is of type \a type
-   * @param {TransactionType} type 
-   * @return {boolean}
+   * @param type the type
+   * @param view the view
+   * @returns Whether set transaction is of type \a type
    */
   public isType(type: TransactionType, view: TransactionViewType): boolean {
     return view.transaction.type === type

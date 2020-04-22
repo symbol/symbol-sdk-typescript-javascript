@@ -28,7 +28,7 @@
           {{ $t('about_default_node') }}
         </div>
         <div class="value">
-          <a :href="getNodeLink()" target="_blank">{{ configs.network.defaultNode.url }}</a>
+          <a :href="nodeLink" target="_blank">{{ configs.network.defaultNodeUrl }}</a>
         </div>
       </div>
 
@@ -49,7 +49,7 @@
           {{ $t('about_generation_hash') }}
         </div>
         <div class="value">
-          {{ configs.network.networks['testnet-publicTest'].generationHash }}
+          {{ generationHash }}
         </div>
       </div>
       <!-- <div class="form-row about-list"></div> -->
@@ -101,24 +101,32 @@
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator'
 import {NetworkType} from 'symbol-sdk'
-
 // child components
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 import FormLabel from '@/components/FormLabel/FormLabel.vue'
-
 // configuration
 import appConfig from '@/../config/app.conf.json'
 import feesConfig from '@/../config/fees.conf.json'
 import networkConfig from '@/../config/network.conf.json'
 import packageConfig from '@/../package.json'
+import {mapGetters} from 'vuex'
+import {NetworkModel} from '@/core/database/entities/NetworkModel'
 
 @Component({
   components: {
     FormWrapper,
     FormLabel,
   },
+  computed: {
+    ...mapGetters({
+      networkModel: 'network/networkModel',
+    }),
+  },
 })
 export default class AboutPage extends Vue {
+
+  private networkModel: NetworkModel
+
   public configs = {
     package: packageConfig,
     app: appConfig,
@@ -131,8 +139,12 @@ export default class AboutPage extends Vue {
     return networkConfig.defaultNetworkType === type
   }
 
-  public getNodeLink(): string {
-    return `${networkConfig.defaultNode.url}/node/info`
+  public get generationHash(): string {
+    return this.networkModel.generationHash
+  }
+
+  public get nodeLink(): string {
+    return `${this.configs.network.defaultNodeUrl}/node/info`
   }
 }
 </script>

@@ -21,6 +21,7 @@
 </template>
 
 <script>
-import { ProtectedMnemonicQRButtonTs } from './ProtectedMnemonicQRButtonTs'
+import {ProtectedMnemonicQRButtonTs} from './ProtectedMnemonicQRButtonTs'
+
 export default class ProtectedMnemonicQRButton extends ProtectedMnemonicQRButtonTs {}
 </script>

@@ -17,6 +17,7 @@
 
 <script lang="ts">
 import {NavigationTabsTs} from './NavigationTabsTs'
+
 export default class NavigationTabs extends NavigationTabsTs {}
 </script>
 

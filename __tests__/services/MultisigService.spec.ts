@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {multisigGraphInfo1, multisigEntries1, multisigEntries2} from '@MOCKS/multisigGraphInfo'
+import {multisigEntries1, multisigEntries2, multisigGraphInfo1} from '@MOCKS/multisigGraphInfo'
 import {MultisigService} from '@/services/MultisigService'
 
 describe('services/MultisigService', () => {

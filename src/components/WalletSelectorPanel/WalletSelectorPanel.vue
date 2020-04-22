@@ -8,17 +8,15 @@
       </div>
     </div>
     <div class="wallet-switch-body-container scroll">
-      <Spin v-show="isLoading" fix />
       <div
         v-for="(item, index) in currentWallets"
-        v-show="!isLoading"
         :key="index"
         :class="[
           'wallet-tile',
           isActiveWallet(item) ? 'active-background' : 'inactive-background',
           'pointer',
         ]"
-        @click="currentWalletIdentifier = item.identifier"
+        @click="currentWalletIdentifier = item.id"
       >
         <div class="wallet-tile-inner-container">
           <div class="wallet-tile-upper-container">
@@ -30,8 +28,7 @@
           <div class="wallet-tile-lower-container">
             <div class="wallet-amount">
               <MosaicAmountDisplay
-                :id="networkMosaic"
-                :relative-amount="balances[item.address]"
+                :absolute-amount="balances[item.address]"
                 :size="'bigger'"
               />
             </div>

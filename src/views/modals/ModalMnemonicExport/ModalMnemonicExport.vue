@@ -40,7 +40,8 @@
 </template>
 
 <script lang="ts">
-import { ModalMnemonicExportTs } from './ModalMnemonicExportTs'
+import {ModalMnemonicExportTs} from './ModalMnemonicExportTs'
+
 export default class ModalMnemonicExport extends ModalMnemonicExportTs {}
 </script>
 

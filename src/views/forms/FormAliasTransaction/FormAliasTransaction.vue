@@ -63,7 +63,7 @@
               <template v-slot:inputs>
                 <MosaicSelector
                   v-model="formItems.aliasTarget"
-                  :mosaics="linkableMosaics"
+                  :mosaic-hex-ids="linkableMosaics"
                   default-mosaic="firstInList"
                   label="form_label_link_mosaic"
                 />

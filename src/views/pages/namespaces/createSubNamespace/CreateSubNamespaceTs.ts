@@ -9,7 +9,7 @@ import { mapGetters } from 'vuex'
 @Component({
   components:{AssetFormPageWrap,FormNamespaceRegistrationTransaction},
   computed: {...mapGetters({
-    ownedNamespaces: 'wallet/currentWalletOwnedNamespaces',
+    ownedNamespaces: 'namespace/ownedNamespaces',
   })},
 })
 export class CreateSubNamespaceTs extends Vue{

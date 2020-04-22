@@ -17,7 +17,7 @@ import {Component, Vue, Prop} from 'vue-property-decorator'
 import {ValidationProvider} from 'vee-validate'
 
 // internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {WalletModel} from '@/core/database/entities/WalletModel'
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 
 // child components
@@ -40,7 +40,7 @@ export class WalletNameDisplayTs extends Vue {
 
   @Prop({
     default: null,
-  }) wallet: WalletsModel
+  }) wallet: WalletModel
 
   @Prop({
     default: false,

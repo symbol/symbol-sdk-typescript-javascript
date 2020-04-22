@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
-
+import {Component, Prop, Vue} from 'vue-property-decorator'
 // internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {WalletModel} from '@/core/database/entities/WalletModel'
 
 @Component
 export class WalletActionsTs extends Vue {
 
   @Prop({
     default: null,
-  }) wallet: WalletsModel
+  }) wallet: WalletModel
 
 /// region computed properties getter/setter
 /// end-region computed properties getter/setter

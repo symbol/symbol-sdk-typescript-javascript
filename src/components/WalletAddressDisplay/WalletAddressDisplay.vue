@@ -2,11 +2,11 @@
   <div class="wallet-detail-row-3cols">
     <span class="label">{{ $t('Wallet_address') }}</span>
     <div class="value walletAddress">
-      {{ wallet.objects.address.pretty() }}
+      {{ getWalletAddressPretty() }}
       <img
         src="@/views/resources/img/wallet/copyIcon.png"
         class="copy-icon"
-        @click="uiHelpers.copyToClipboard(wallet.objects.address.plain())"
+        @click="uiHelpers.copyToClipboard(wallet.address)"
       >
     </div>
   </div>

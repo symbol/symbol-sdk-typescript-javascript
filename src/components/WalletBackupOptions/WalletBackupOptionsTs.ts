@@ -16,8 +16,7 @@
 import {Component, Vue, Prop} from 'vue-property-decorator'
 
 // internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
-
+import {WalletModel} from '@/core/database/entities/WalletModel'
 // child components
 // @ts-ignore
 import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
@@ -36,7 +35,7 @@ export class WalletBackupOptionsTs extends Vue {
 
   @Prop({
     default: null,
-  }) wallet: WalletsModel
+  }) wallet: WalletModel
 
   /**
    * Whether account is currently being unlocked

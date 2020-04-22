@@ -1,22 +1,18 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import networkConfig from '../../../config/network.conf.json'
-
-// XXX network store getters
-const {targetBlockTime} = networkConfig.networks['testnet-publicTest'].properties
 
 export class TimeHelpers {
   public static addZero = function (number: number): string {
@@ -65,17 +61,52 @@ export class TimeHelpers {
    * eg. 15 blocks => 1s
    * @param duration in block number
    */
-  public static durationToRelativeTime = (durationInBlocks: number): string => {
+  public static durationToRelativeTime = (durationInBlocks: number, blockGenerationTargetTime: number): string => {
     try {
       const isDurationNegative = durationInBlocks < 0
       const absoluteDuration = isDurationNegative ? durationInBlocks * -1 : durationInBlocks
-      const relativeTime = TimeHelpers.formatSeconds(absoluteDuration * targetBlockTime)
+      const relativeTime = TimeHelpers.formatSeconds(absoluteDuration * blockGenerationTargetTime)
       const prefix = isDurationNegative ? '- ' : ''
       return `${prefix}${relativeTime}`
     } catch (error) {
       console.error('durationToRelativeTime -> error', error)
       return ''
     }
+  }
+
+  public static durationStringToSeconds(str: string): number {
+    return Math.floor(this.durationStringToMilliseconds(str) / 1000)
+  }
+
+  public static durationStringToMilliseconds(value: string): number {
+    let str = value
+    let total = 0
+    const milliSeconds = str.match(/(\d+)\s*ms/)
+    if (milliSeconds) {
+      str = str.replace(milliSeconds[0], '')
+      total += parseInt(milliSeconds[1])
+    }
+    const days = str.match(/(\d+)\s*d/)
+    if (days) {
+      str = str.replace(days[0], '')
+      total += parseInt(days[1]) * 24 * 60 * 60 * 1000
+    }
+    const hours = str.match(/(\d+)\s*h/)
+    if (hours) {
+      str = str.replace(hours[0], '')
+      total += parseInt(hours[1]) * 60 * 60 * 1000
+    }
+    const minutes = str.match(/(\d+)\s*m/)
+    if (minutes) {
+      str = str.replace(minutes[0], '')
+      total += parseInt(minutes[1]) * 60 * 1000
+    }
+    const seconds = str.match(/(\d+)\s*s/)
+    if (seconds) {
+      str = str.replace(seconds[0], '')
+      total += parseInt(seconds[1]) * 1000
+    }
+    return total
   }
 
   public static formatDate = (timestamp) => {

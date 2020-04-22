@@ -8,7 +8,7 @@
     <div v-if="transactions.length" class="transaction-rows-outer-container">
       <div class="transaction-rows-inner-container">
         <TransactionRow
-          v-for="transaction in transactionsList"
+          v-for="transaction in transactions"
           :key="transaction.transactionInfo.hash"
           :transaction="transaction"
           :is-partial="getTransactionStatus(transaction) === 'partial'"

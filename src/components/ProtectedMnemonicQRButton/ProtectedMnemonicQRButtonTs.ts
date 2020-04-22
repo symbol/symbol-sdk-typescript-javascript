@@ -17,7 +17,7 @@ import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {WalletModel} from '@/core/database/entities/WalletModel'
 import {UIHelpers} from '@/core/utils/UIHelpers'
 
 // child components
@@ -37,7 +37,7 @@ import ModalMnemonicExport from '@/views/modals/ModalMnemonicExport/ModalMnemoni
 export class ProtectedMnemonicQRButtonTs extends Vue {
   @Prop({
     default: null,
-  }) wallet: WalletsModel
+  }) wallet: WalletModel
 
   /**
    * UI Helpers

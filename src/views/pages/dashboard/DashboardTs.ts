@@ -16,7 +16,6 @@
 // external dependencies
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-
 // child components
 // @ts-ignore
 import AccountBalancesPanel from '@/components/AccountBalancesPanel/AccountBalancesPanel.vue'

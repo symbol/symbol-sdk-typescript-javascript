@@ -1,63 +1,52 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  MosaicId, 
-  Mosaic,
-  MultisigAccountInfo,
-  Transaction,
-  MosaicInfo,
-  PublicAccount,
-  NamespaceId,
-  NetworkType,
-} from 'symbol-sdk'
+import {MosaicId, MultisigAccountInfo, NetworkType, PublicAccount, Transaction} from 'symbol-sdk'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-
 // internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {WalletModel} from '@/core/database/entities/WalletModel'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
 import {TransactionService} from '@/services/TransactionService'
 import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 import {ValidationObserver} from 'vee-validate'
-import {MultisigService} from '@/services/MultisigService'
+import {Signer} from '@/store/Wallet'
+import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyModel'
 
 @Component({
-  computed: {...mapGetters({
-    generationHash: 'network/generationHash',
-    networkType: 'network/networkType',
-    defaultFee: 'app/defaultFee',
-    currentWallet: 'wallet/currentWallet',
-    selectedSigner: 'wallet/currentSigner',
-    currentWalletMosaics: 'wallet/currentWalletMosaics',
-    currentWalletMultisigInfo: 'wallet/currentWalletMultisigInfo',
-    isCosignatoryMode: 'wallet/isCosignatoryMode',
-    networkMosaic: 'mosaic/networkMosaic',
-    stagedTransactions: 'wallet/stagedTransactions',
-    mosaicsInfo: 'mosaic/mosaicsInfoList',
-    mosaicsInfoByHex: 'mosaic/mosaicsInfo',
-    mosaicsNames: 'mosaic/mosaicsNames',
-    namespacesNames: 'namespace/namespacesNames',
-    currentSignerMultisigInfo: 'wallet/currentSignerMultisigInfo',
-  })},
+  computed: {
+    ...mapGetters({
+      generationHash: 'network/generationHash',
+      networkType: 'network/networkType',
+      defaultFee: 'app/defaultFee',
+      currentWallet: 'wallet/currentWallet',
+      selectedSigner: 'wallet/currentSigner',
+      currentSignerMultisigInfo: 'wallet/currentSignerMultisigInfo',
+      currentWalletMultisigInfo: 'wallet/currentWalletMultisigInfo',
+      isCosignatoryMode: 'wallet/isCosignatoryMode',
+      stagedTransactions: 'wallet/stagedTransactions',
+      networkMosaic: 'mosaic/networkMosaic',
+      networkCurrency: 'mosaic/networkCurrency',
+      signers: 'wallet/signers',
+    }),
+  },
 })
 export class FormTransactionBase extends Vue {
 /// region store getters
   /**
    * Network generation hash
-   * @var {string}
    */
   public generationHash: string
 
@@ -69,27 +58,18 @@ export class FormTransactionBase extends Vue {
 
   /**
    * Default fee setting
-   * @var {number}
    */
   public defaultFee: number
 
   /**
    * Currently active wallet
-   * @var {WalletsModel}
    */
-  public currentWallet: WalletsModel
+  public currentWallet: WalletModel
 
   /**
    * Currently active signer
-   * @var {WalletsModel}
    */
-  public selectedSigner: WalletsModel
-
-  /**
-   * Currently active wallet's balances
-   * @var {Mosaic[]}
-   */
-  public currentWalletMosaics: Mosaic[]
+  public selectedSigner: Signer
 
   /**
    * Current wallet multisig info
@@ -122,37 +102,17 @@ export class FormTransactionBase extends Vue {
   public stagedTransactions: Transaction[]
 
   /**
-   * List of known mosaics
-   * @var {MosaicInfo[]}
-   */
-  public mosaicsInfo: MosaicInfo[]
-
-  /**
-   * List of known mosaics
-   * @type {Record<string, MosaicInfo>}
-   */
-  public mosaicsInfoByHex: Record<string, MosaicInfo>
-
-  /**
-   * List of known mosaics names
-   * @var {any}
-   */
-  public mosaicsNames: any
-
-  /**
-   * List of known namespaces names
-   * @var {any}
-   */
-  public namespacesNames: any
-
-  /**
    * Public key of the current signer
    * @var {any}
    */
   public currentSigner: PublicAccount
 
+  public signers: Signer[]
+
+  public networkCurrency: NetworkCurrencyModel
+
   /**
-   * Type the ValidationObserver refs 
+   * Type the ValidationObserver refs
    * @type {{
    *     observer: InstanceType<typeof ValidationObserver>
    *   }}
@@ -169,6 +129,7 @@ export class FormTransactionBase extends Vue {
     this.resetForm() // @TODO: probably not the best way
     this.resetFormValidation()
   }
+
   /// end-region property watches
 
   /**
@@ -187,25 +148,6 @@ export class FormTransactionBase extends Vue {
    * Hook called when the component is mounted
    * @return {void}
    */
-  public async mounted() {
-    if (this.currentWallet) {
-      const address = this.currentWallet.objects.address.plain()
-      try { this.$store.dispatch('wallet/REST_FETCH_OWNED_NAMESPACES', address) }
-      catch(e) { console.log('Error fetching namespaces') }
-
-      if (!this.isCosignatoryMode) {
-        this.currentSigner = this.currentWallet.objects.publicAccount
-      }
-      else {
-        this.currentSigner = this.selectedSigner.objects.publicAccount
-      }
-    }
-  }
-
-  /**
-   * Hook called when the component is mounted
-   * @return {void}
-   */
   public async created() {
     this.factory = new TransactionFactory(this.$store)
     this.resetForm()
@@ -217,14 +159,9 @@ export class FormTransactionBase extends Vue {
    */
   public beforeDestroy() {
     // reset the selected signer if it is not the current wallet
-    if (this.selectedSigner !== this.currentWallet.values.get('publicKey')) {
-      this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {model: this.currentWallet})
+    if (this.selectedSigner.publicKey !== this.currentWallet.publicKey) {
+      this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {publicKey: this.currentWallet.publicKey})
     }
-  }
-
-  /// region computed properties getter/setter
-  get signers(): {publicKey: string, label: string}[] {
-    return this.getSigners()
   }
 
   /**
@@ -232,12 +169,8 @@ export class FormTransactionBase extends Vue {
    * @readonly
    * @type {{publicKey: string, label: string}[]}
    */
-  get multisigAccounts(): {publicKey: string, label: string}[] {
-    const signers = this.getSigners()
-    if (!signers.length || !this.currentWallet) {
-      return []
-    }
-
+  get multisigAccounts(): Signer[] {
+    const signers = this.signers
     // if "self" is multisig, also return self
     if (this.currentWalletMultisigInfo && this.currentWalletMultisigInfo.isMultisig()) {
       return signers
@@ -254,6 +187,7 @@ export class FormTransactionBase extends Vue {
   set hasConfirmationModal(f: boolean) {
     this.isAwaitingSignature = f
   }
+
   /// end-region computed properties getter/setter
 
   /**
@@ -309,18 +243,11 @@ export class FormTransactionBase extends Vue {
 
   /**
    * Hook called when a signer is selected.
-   * @param {string} signerPublicKey 
+   * @param {string} publicKey
    */
-  public async onChangeSigner(signerPublicKey: string) {
-    this.currentSigner = PublicAccount.createFromPublicKey(signerPublicKey, this.networkType)
-
-    const isCosig = this.currentWallet.values.get('publicKey') !== signerPublicKey
-    const payload = !isCosig ? this.currentWallet : {
-      networkType: this.networkType,
-      publicKey: signerPublicKey,
-    }
-
-    await this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {model: payload})
+  public async onChangeSigner(publicKey: string) {
+    // this.currentSigner = PublicAccount.createFromPublicKey(publicKey, this.networkType)
+    await this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {publicKey})
   }
 
   /**
@@ -330,7 +257,7 @@ export class FormTransactionBase extends Vue {
   public async onSubmit() {
     const transactions = this.getTransactions()
 
-    this.$store.dispatch('diagnostic/ADD_DEBUG', `Adding ${transactions.length} transaction(s) to stage (prepared & unsigned)`)
+    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Adding ' + transactions.length + ' transaction(s) to stage (prepared & unsigned)')
 
     // - check whether transactions must be aggregated
     // - also set isMultisig flag in case of cosignatory mode
@@ -363,7 +290,7 @@ export class FormTransactionBase extends Vue {
     // if the form was in multisig, set the signer to be the main wallet
     // this triggers resetForm in the @Watch('currentWallet') hook
     if (this.isMultisigMode()) {
-      this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: this.currentWallet})
+      this.$store.dispatch('wallet/SET_CURRENT_WALLET', this.currentWallet)
     } else {
       this.resetForm()
     }
@@ -391,7 +318,7 @@ export class FormTransactionBase extends Vue {
     const errors = results.filter(result => false === result.success)
     if (errors.length) {
       errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
-      return 
+      return
     }
 
     // - notify about broadcast success (_transactions now unconfirmed_)
@@ -431,51 +358,5 @@ export class FormTransactionBase extends Vue {
     this.hasConfirmationModal = false
   }
 
-  /**
-   * internal helper for mosaic names
-   * @param {Mosaic} mosaic 
-   * @return {string}
-   */
-  protected getMosaicName(mosaicId: MosaicId | NamespaceId): string {
-    if (this.mosaicsNames && this.mosaicsNames[mosaicId.toHex()]) {
-      return this.mosaicsNames[mosaicId.toHex()]
-    }
-    else if (this.namespacesNames && this.namespacesNames[mosaicId.toHex()]) {
-      return this.namespacesNames[mosaicId.toHex()]
-    }
 
-    return mosaicId.toHex()
-  }
-
-  /**
-   * internal helper for mosaic divisibility
-   * @param {Mosaic} mosaic 
-   * @return {string}
-   */
-  protected getDivisibility(mosaicId: MosaicId): number {
-    const info = this.mosaicsInfo.find(i => i.id.equals(mosaicId))
-    if (undefined === info) {
-      return 6 // XXX default divisibility?
-    }
-
-    return info.divisibility
-  }
-
-  /**
-   * internal helper for absolute fee amount
-   * @param {number} fee 
-   * @return {number}
-   */
-  protected getAbsoluteFee(fee: number): number {
-    const divisibility = this.getDivisibility(this.networkMosaic)
-    return fee * Math.pow(10, divisibility)
-  }
-
-  /**
-   * Get a list of known signers given a `currentWallet`
-   * @return {{publicKey: string, label:string}[]}
-   */
-  protected getSigners(): {publicKey: string, label: string}[] {
-    return new MultisigService(this.$store, this.$i18n).getSigners()
-  }
 }

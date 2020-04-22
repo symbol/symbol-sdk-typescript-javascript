@@ -14,8 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {UInt64, Transaction} from 'symbol-sdk'
-
+import {Transaction, UInt64} from 'symbol-sdk'
 // internal dependencies
 import {TransactionView} from './TransactionView'
 

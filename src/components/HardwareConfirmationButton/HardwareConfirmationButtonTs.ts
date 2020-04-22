@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,18 +18,18 @@ import {mapGetters} from 'vuex'
 import {Transaction, SignedTransaction, NetworkType} from 'symbol-sdk'
 
 // internal dependencies
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {WalletModel} from '@/core/database/entities/WalletModel'
 import {TransactionService} from '@/services/TransactionService'
 import TrezorConnect from '@/core/utils/TrezorConnect'
 
 @Component({
-  computed: {...mapGetters({
-    networkType: 'network/networkType',
-    currentAccount: 'account/currentAccount',
-    currentWallet: 'wallet/currentWallet',
-    stagedTransactions: 'wallet/stagedTransactions',
-  })},
+  computed: {
+    ...mapGetters({
+      networkType: 'network/networkType',
+      currentWallet: 'wallet/currentWallet',
+      stagedTransactions: 'wallet/stagedTransactions',
+    }),
+  },
 })
 export class HardwareConfirmationButtonTs extends Vue {
   /**
@@ -40,18 +40,11 @@ export class HardwareConfirmationButtonTs extends Vue {
   public networkType: NetworkType
 
   /**
-   * Currently active account
-   * @see {Store.Account}
-   * @var {AccountsModel}
-   */
-  public currentAccount: AccountsModel
-
-  /**
    * Currently active wallet
    * @see {Store.Wallet}
-   * @var {WalletsModel}
+   * @var {WalletModel}
    */
-  public currentWallet: WalletsModel
+  public currentWallet: WalletModel
 
   /**
    * Staged transactions (to-be-signed)
@@ -91,10 +84,10 @@ export class HardwareConfirmationButtonTs extends Vue {
     for (let i = 0, m = transactions.length; i < m; i ++) {
       // - order matters, get first transaction on-stage
       const stagedTx = transactions.shift()
-      
+
       // - sign each transaction with TrezorConnect
       const result = await TrezorConnect.nemSignTransaction({
-        path: this.currentWallet.values.get('path'),
+        path: this.currentWallet.path,
         transaction: stagedTx,
       })
 

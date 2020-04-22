@@ -15,7 +15,6 @@
  */
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import draggable from 'vuedraggable'
-
 // internal dependencies
 import {NotificationType} from '@/core/utils/NotificationType'
 

@@ -1,32 +1,29 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Store} from 'vuex'
-import {Mosaic, UInt64, MosaicInfo} from 'symbol-sdk'
-
 // internal dependencies
 import {AssetTableService, TableField} from './AssetTableService'
-import {MosaicService} from '../MosaicService'
+import {MosaicModel} from '@/core/database/entities/MosaicModel'
+import {MosaicService} from '@/services/MosaicService'
+import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
 
 export class MosaicTableService extends AssetTableService {
-/**
-  * Creates an instance of MosaicTableService.
-  * @param {*} store
-  */
-  constructor(store?: Store<any>) {
-    super(store)
+
+  constructor(currentHeight: number, private readonly mosaics: MosaicModel[],
+    private readonly networkConfiguration: NetworkConfigurationModel) {
+    super(currentHeight)
   }
 
   /**
@@ -48,44 +45,27 @@ export class MosaicTableService extends AssetTableService {
   }
 
   /**
-  * Return table values to be displayed in a table rows
-  * @returns {MosaicTableRowValues[]}
-  */
+   * Return table values to be displayed in a table rows
+   * @returns {MosaicTableRowValues[]}
+   */
   public getTableRows(): any[] {
     // - get reactive mosaic data from the store
-    const ownedMosaics: Mosaic[] = this.$store.getters['wallet/currentWalletMosaics']
-    const mosaicsInfo: Record<string, MosaicInfo> = this.$store.getters['mosaic/mosaicsInfo']
-    const mosaicNames: Record<string, string> = this.$store.getters['mosaic/mosaicsNames']
-
-    return ownedMosaics.map((mosaic) => {
-      const hexId = mosaic.id.toHex()
-
-      // get mosaic info, return and wait for re-render if not available
-      const mosaicInfo = mosaicsInfo[hexId]
-      if (!mosaicInfo) return null
-
-      // extract useful info
-      const flags = mosaicInfo.flags
-      const balance = mosaic.amount.compact()
-      const {supply, divisibility} = mosaicInfo
-
-      // get expiration from mosaics service
-      const expiration = new MosaicService(this.$store).getExpiration(mosaicInfo)
-
+    const mosaicsInfo = this.mosaics
+    const currentHeight = this.currentHeight
+    return mosaicsInfo.map((mosaicInfo) => {
+      const expiration = MosaicService.getExpiration(mosaicInfo, currentHeight,
+        this.networkConfiguration.blockGenerationTargetTime)
       // - map table fields
       return {
-        'hexId': hexId,
-        'name': mosaicNames[hexId] || 'N/A',
-        'supply': new UInt64([ supply.lower, supply.higher ]).compact().toLocaleString(),
-        'balance': balance === 0 ? 0 : (
-          // - get relative amount
-          balance / Math.pow(10, divisibility)
-        ),
+        'hexId': mosaicInfo.mosaicIdHex,
+        'name': mosaicInfo.name || 'N/A',
+        'supply': mosaicInfo.supply.toLocaleString(),
+        'balance': (mosaicInfo.balance || 0) / Math.pow(10, mosaicInfo.divisibility),
         'expiration': expiration,
-        'divisibility': divisibility,
-        'transferable': flags.transferable,
-        'supplyMutable': flags.supplyMutable,
-        'restrictable': flags.restrictable,
+        'divisibility': mosaicInfo.divisibility,
+        'transferable': mosaicInfo.transferable,
+        'supplyMutable': mosaicInfo.supplyMutable,
+        'restrictable': mosaicInfo.restrictable,
       }
     }).filter(x => x) // filter out mosaics that are not yet available
   }

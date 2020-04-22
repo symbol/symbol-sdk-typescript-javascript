@@ -33,4 +33,10 @@ export interface IStorageBackend {
    * @param {any} value
    */
   setItem(key: string, value: any): void
+
+  /**
+   * Deletes the value for the given key
+   * @param {string} key
+   */
+  removeItem(key: string): void
 }

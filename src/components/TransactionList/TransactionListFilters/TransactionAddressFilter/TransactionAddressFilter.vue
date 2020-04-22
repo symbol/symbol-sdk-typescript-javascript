@@ -7,7 +7,7 @@
       <Icon slot="prefix" type="ios-people" size="24" />
       <OptionGroup label="Multisig accounts">
         <Option v-for="item in addresses" :key="item.publicKey" :value="item.publicKey">
-          {{ item.label }}
+          {{ item.label }} {{ item.multisig ? $t('label_postfix_multisig') : '' }}
         </Option>
       </OptionGroup>
     </Select>

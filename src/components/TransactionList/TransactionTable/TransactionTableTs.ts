@@ -1,8 +1,7 @@
 // external dependenies
-import { Component, Vue, Prop } from 'vue-property-decorator'
-import { Transaction } from 'symbol-sdk'
-import { mapGetters } from 'vuex'
-
+import {Component, Prop, Vue} from 'vue-property-decorator'
+import {Transaction} from 'symbol-sdk'
+import {mapGetters} from 'vuex'
 // child components
 // @ts-ignore
 import TransactionRow from '@/components/TransactionList/TransactionRow/TransactionRow.vue'
@@ -14,11 +13,19 @@ import TransactionListHeader from '@/components/TransactionList/TransactionListH
     TransactionRow,
     TransactionListHeader,
   },
-  computed: mapGetters({ isFetchingTransactions: 'app/isFetchingTransactions',partialTransactions:'wallet/partialTransactions'}),
+  computed: mapGetters({
+    isFetchingTransactions: 'transaction/isFetchingTransactions',
+    partialTransactions: 'transaction/partialTransactions',
+  }),
 })
 export class TransactionTableTs extends Vue {
-  @Prop({ default: [] }) transactions: Transaction[]
-  @Prop({ default: 'no_data_transactions'}) emptyMessage: string
+
+  @Prop({default: []})
+  public transactions: Transaction[]
+
+  @Prop({default: 'no_data_transactions'})
+  public emptyMessage: string
+
   public nodata = [...Array(10).keys()]
 
 
@@ -36,15 +43,13 @@ export class TransactionTableTs extends Vue {
    */
   protected isFetchingTransactions: boolean
 
-  get transactionsList(): Transaction[] {
-    return this.transactions
-  }
   public getTransactionStatus(transaction) {
     if (transaction.isConfirmed()) {
       return 'confirmed'
     } else {
       if (this.partialTransactions.length > 0 &&
-         this.partialTransactions.some((item) => item.transactionInfo.hash === transaction.transactionInfo.hash)) {
+        this.partialTransactions.some(
+          (item) => item.transactionInfo.hash === transaction.transactionInfo.hash)) {
         return 'partial'
       } else {
         return 'unconfirmed'

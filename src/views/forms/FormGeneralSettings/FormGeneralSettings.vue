@@ -14,7 +14,7 @@
             <template v-slot:inputs>
               <div class="inputs-container select-container">
                 <LanguageSelector
-                  v-model="formItems.currentLanguage"
+                  v-model="formItems.language"
                   :auto-submit="false"
                   :default-form-style="true"
                 />
@@ -28,7 +28,7 @@
             </template>
             <template v-slot:inputs>
               <div class="inputs-container select-container">
-                <MaxFeeSelector v-model="formItems.maxFee" />
+                <MaxFeeSelector v-model="formItems.defaultFee" />
               </div>
             </template>
           </FormRow>

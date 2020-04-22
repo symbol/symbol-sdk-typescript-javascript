@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 import Vue from 'vue'
-
 // internal dependencies
 import {AwaitLock} from './AwaitLock'
 import {CommunityService} from '@/services/CommunityService'
+
 const Lock = AwaitLock.create()
 
 /**

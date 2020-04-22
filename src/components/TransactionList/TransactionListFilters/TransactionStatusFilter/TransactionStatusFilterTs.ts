@@ -1,6 +1,6 @@
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
-import { WalletsModel } from '@/core/database/entities/WalletsModel'
+import {WalletModel} from '@/core/database/entities/WalletModel'
 
 
 @Component({
@@ -12,7 +12,7 @@ import { WalletsModel } from '@/core/database/entities/WalletsModel'
 })
 export class TransactionStatusFilterTs extends Vue{
   @Prop({default:''}) defaultStatus: string
-  public currentWallet: WalletsModel
+  public currentWallet: WalletModel
   public selectedStatus: string=this.defaultStatus
   public onStatusChange(){
     this.$emit('status-change',this.selectedStatus)
@@ -21,7 +21,7 @@ export class TransactionStatusFilterTs extends Vue{
   @Watch('currentWallet')
   onCurrentWalletChange(){
     this.selectedStatus = 'all'
-    this.$emit('status-change',this.currentWallet.values.get('publicKey'))
+    this.$emit('status-change',this.currentWallet.publicKey)
   }
   @Watch('defaultStatus')
   onDefaultStatus(newVal){

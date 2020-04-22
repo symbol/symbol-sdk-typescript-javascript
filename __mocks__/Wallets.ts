@@ -17,7 +17,7 @@
 import {SimpleWallet, Account, NetworkType, Password} from 'symbol-sdk';
 
 // internal dependencies
-import {WalletsModel, WalletType} from '@/core/database/entities/WalletsModel';
+import {WalletModel, WalletType} from '@/core/database/entities/WalletModel';
 
 export const wallet1Params = {
  walletName: 'wallet_name',
@@ -37,16 +37,16 @@ export const simpleWallet1 = SimpleWallet.createFromPrivateKey(
  wallet1Params.networkType,
 )
 
-export const WalletsModel1 = new WalletsModel(
- new Map<string, any>([
-  ['accountName', 'account_name'],
-  ['name', wallet1Params.walletName],
-  ['type', WalletType.fromDescriptor('Pk')],
-  ['address', simpleWallet1.address.plain()],
-  ['publicKey', wallet1Account.publicKey],
-  ['encPrivate', simpleWallet1.encryptedPrivateKey.encryptedKey],
-  ['encIv', simpleWallet1.encryptedPrivateKey.iv],
-  ['path', ''],
-  ['isMultisig', false],
- ])
-)
+export const WalletsModel1: WalletModel = {
+  id: 'someId',
+  node: '',
+  accountName: 'account_name',
+  name:  wallet1Params.walletName,
+  type: WalletType.PRIVATE_KEY,
+  address: simpleWallet1.address.plain(),
+  publicKey:  wallet1Account.publicKey,
+  encPrivate: simpleWallet1.encryptedPrivateKey.encryptedKey,
+  encIv: simpleWallet1.encryptedPrivateKey.iv,
+  path: '',
+  isMultisig: false
+}

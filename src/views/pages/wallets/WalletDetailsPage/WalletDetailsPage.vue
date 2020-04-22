@@ -1,5 +1,5 @@
 <template>
-  <div class="wallet-detail-outer-container">
+  <div class="wallet-detail-outer-container" v-show="currentWallet">
     <div class="wallet-detail-inner-container">
       <div class="left-container">
         <div class="wallet-details-grid">
@@ -11,7 +11,7 @@
           </div>
 
           <div class="detail-row">
-            <ImportanceScoreDisplay :wallet="currentWallet" />
+            <ImportanceScoreDisplay :address="currentWallet.address" />
           </div>
 
           <div class="detail-row">
@@ -27,7 +27,7 @@
           </div>
 
           <!-- default wallet flag -->
-          <div v-if="defaultWallet === currentWallet.getIdentifier()" class="detail-row">
+          <div v-if="defaultWallet === currentWallet.id" class="detail-row">
             <div class="wallet-detail-row">
               <span class="label">{{ $t('wallets_flags_default_wallet') }}</span>
               <div class="value">
@@ -37,7 +37,7 @@
           </div>
 
           <!-- simple/multisig flag -->
-          <div v-if="currentWallet.values.get('isMultisig')" class="detail-row">
+          <div v-if="currentWallet.isMultisig" class="detail-row">
             <div class="wallet-detail-row">
               <span class="label">{{ $t('wallets_flags_default_wallet') }}</span>
               <div class="value">

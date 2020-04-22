@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 import {AccountService} from '@/services/AccountService'
-import { Password } from 'symbol-sdk'
+import {Password} from 'symbol-sdk'
 
 // prepare all
-const service = new AccountService()
 
 describe('services/AccountService', () => {
   describe('getPasswordHash() should', () => {
     test('create 64 bytes hash of password', () => {
       // act
-      const hash = service.getPasswordHash(new Password('1234567a'))
+      const hash = AccountService.getPasswordHash(new Password('1234567a'))
 
       // assert
       expect(hash).toBeDefined()

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Deadline, NetworkType, UInt64, NamespaceId, AliasAction, TransactionType, MosaicId, MosaicAliasTransaction} from 'symbol-sdk'
+import {AliasAction, Deadline, MosaicAliasTransaction, MosaicId, NamespaceId, NetworkType, TransactionType, UInt64} from 'symbol-sdk'
 import {createStore} from '@MOCKS/Store'
 import {getTestAccount} from '@MOCKS/accounts'
 import {getFakeTransaction} from '@MOCKS/Transactions'

@@ -4,26 +4,38 @@
       <i class="pointer point" />
       <span v-if="isConnected" class="network_type_text">{{ networkTypeText }}</span>
       <div slot="title" class="title">
-        {{ $t('current_endpoint') }}：{{ currentPeer.url }}
+        {{ $t('current_endpoint') }}：{{ currentPeerInfo.url }} - {{ currentPeerInfo.friendlyName }}
       </div>
       <div slot="content">
+        <div class="inputs-container select-container">
+          <form class="input_point point_item node-inputs-container">
+            <input
+              v-model="formItems.filter"
+              :data-vv-as="$t('filter')"
+              data-vv-name="filter"
+              :placeholder="$t('filter_peers')"
+              style="height: 100%"
+            >
+          </form>
+        </div>
+
         <div class="node_list">
           <div id="node-list-container" class="node_list_container scroll">
             <div
-              v-for="(nodeUrl, index) in peersList"
+              v-for="({url, friendlyName}, index) in peersList"
               :key="`sep${index}`"
               class="point_item pointer"
-              @click="currentPeer.url !== nodeUrl ? switchPeer(nodeUrl) : ''"
+              @click="currentPeerInfo.url !== url ? switchPeer(url) : ''"
             >
               <img
-                :src="currentPeer.url === nodeUrl ? imageResources.selected : imageResources.unselected"
+                :src="currentPeerInfo.url === url ? imageResources.selected : imageResources.unselected"
               >
-              <span class="node_url">{{ nodeUrl }}</span>
+              <span class="node_url">{{ url }} - {{ friendlyName }}</span>
               <img
-                v-if="currentPeer.url !== nodeUrl"
+                v-if="currentPeerInfo.url !== url"
                 class="remove_icon"
                 src="@/views/resources/img/service/multisig/multisigDelete.png"
-                @click.stop="removePeer(nodeUrl)"
+                @click.stop="removePeer(url)"
               >
             </div>
           </div>
@@ -66,7 +78,8 @@
 </template>
 
 <script lang="ts">
-import { PeerSelectorTs } from './PeerSelectorTs'
+import {PeerSelectorTs} from './PeerSelectorTs'
+
 export default class PeerSelector extends PeerSelectorTs {}
 </script>
 
@@ -84,6 +97,12 @@ export default class PeerSelector extends PeerSelectorTs {}
 .endpoint-poptip {
   .ivu-poptip-body-content {
     overflow: hidden;
+  }
+  .ivu-poptip-title {
+    overflow: hidden;
+  }
+  .ivu-poptip-inner {
+    width: 1000px;
   }
 }
 </style>

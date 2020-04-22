@@ -21,6 +21,7 @@
 </template>
 
 <script>
-import { ProtectedMnemonicDisplayButtonTs } from './ProtectedMnemonicDisplayButtonTs'
+import {ProtectedMnemonicDisplayButtonTs} from './ProtectedMnemonicDisplayButtonTs'
+
 export default class ProtectedMnemonicDisplayButton extends ProtectedMnemonicDisplayButtonTs {}
 </script>

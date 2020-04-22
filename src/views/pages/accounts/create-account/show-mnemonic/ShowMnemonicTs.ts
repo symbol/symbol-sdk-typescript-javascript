@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 import {mapGetters} from 'vuex'
-import {Vue, Component} from 'vue-property-decorator'
+import {Component, Vue} from 'vue-property-decorator'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
-
 // internal dependencies
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
 
 @Component({
   computed: {...mapGetters({
@@ -32,7 +31,7 @@ export default class ShowMnemonicTs extends Vue {
    * @see {Store.Account}
    * @var {string}
    */
-  public currentAccount: AccountsModel
+  public currentAccount: AccountModel
 
   /**
    * Temporary Mnemonic pass phrase

@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,20 +15,15 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {NetworkType, Password, Account} from 'symbol-sdk'
-import { MnemonicPassPhrase } from 'symbol-hd-wallets'
-
+import {Account, NetworkType, Password} from 'symbol-sdk'
+import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {DerivationService} from '@/services/DerivationService'
 import {AESEncryptionService} from '@/services/AESEncryptionService'
-import {AccountsRepository} from '@/repositories/AccountsRepository'
-import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {WalletService} from '@/services/WalletService'
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
-
+import {WalletModel} from '@/core/database/entities/WalletModel'
 // child components
 import {ValidationObserver, ValidationProvider} from 'vee-validate'
 // @ts-ignore
@@ -39,9 +34,10 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 import FormRow from '@/components/FormRow/FormRow.vue'
 // @ts-ignore
 import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
-
 // configuration
 import appConfig from '@/../config/app.conf.json'
+import {AccountModel} from '@/core/database/entities/AccountModel'
+
 const {MAX_SEED_WALLETS_NUMBER} = appConfig.constants
 
 @Component({
@@ -53,73 +49,47 @@ const {MAX_SEED_WALLETS_NUMBER} = appConfig.constants
     FormRow,
     ModalFormAccountUnlock,
   },
-  computed: {...mapGetters({
-    networkType: 'network/networkType',
-    currentAccount: 'account/currentAccount',
-    knownWallets: 'wallet/knownWallets',
-    currentWallets: 'wallet/currentWallets',
-  })},
+  computed: {
+    ...mapGetters({
+      networkType: 'network/networkType',
+      currentAccount: 'account/currentAccount',
+      knownWallets: 'wallet/knownWallets',
+    }),
+  },
 })
 export class FormSubWalletCreationTs extends Vue {
   /**
    * Currently active account
-   * @see {Store.Account}
-   * @var {AccountsModel}
    */
-  public currentAccount: AccountsModel
+  public currentAccount: AccountModel
 
   /**
    * Known wallets identifiers
-   * @var {string[]}
    */
-  public knownWallets: string[]
-
-  /**
-   * current wallets identifiers
-   * @var {string[]}
-   */
-  public currentWallets: string[]
+  public knownWallets: WalletModel[]
 
   /**
    * Currently active network type
-   * @see {Store.Network}
-   * @var {NetworkType}
    */
   public networkType: NetworkType
 
   /**
    * Wallets repository
-   * @var {WalletService}
    */
-  public wallets: WalletService
+  public walletService: WalletService
 
   /**
    * Derivation paths service
-   * @var {DerivationService}
    */
   public paths: DerivationService
 
   /**
-   * Accounts repository
-   * @var {AccountsRepository}
-   */
-  public accountsRepository: AccountsRepository
-
-  /**
-   * Wallets repository
-   * @var {WalletsRepository}
-   */
-  public walletsRepository: WalletsRepository
-
-  /**
    * Validation rules
-   * @var {ValidationRuleset}
    */
   public validationRules = ValidationRuleset
 
   /**
    * Whether account is currently being unlocked
-   * @var {boolean}
    */
   public isUnlockingAccount: boolean = false
 
@@ -140,20 +110,18 @@ export class FormSubWalletCreationTs extends Vue {
   }
 
   /**
-   * Type the ValidationObserver refs 
+   * Type the ValidationObserver refs
    * @type {{
-    *     observer: InstanceType<typeof ValidationObserver>
-    *   }}
-    */
+   *     observer: InstanceType<typeof ValidationObserver>
+   *   }}
+   */
   public $refs!: {
     observer: InstanceType<typeof ValidationObserver>
   }
- 
+
   public created() {
-    this.wallets = new WalletService(this.$store)
-    this.paths = new DerivationService(this.$store)
-    this.accountsRepository = new AccountsRepository()
-    this.walletsRepository = new WalletsRepository()
+    this.walletService = new WalletService()
+    this.paths = new DerivationService()
   }
 
   /// region computed properties getter/setter
@@ -169,21 +137,10 @@ export class FormSubWalletCreationTs extends Vue {
     if (!this.knownWallets || !this.knownWallets.length) {
       return []
     }
-
     // filter wallets to only known wallet names
-    const knownWallets = this.wallets.getWallets(
-      (e) => this.knownWallets.includes(e.getIdentifier()),
-    )
-  
-    return [...knownWallets].map(
-      ({identifier, values}) => ({
-        identifier,
-        path: values.get('path'),
-      }),
-    ).filter(
-      w => w.path && w.path.length,
-    ).map(w => w.path)
+    return this.knownWallets.map(w => w.path).filter(p => p)
   }
+
   /// end-region computed properties getter/setter
 
   /**
@@ -213,15 +170,15 @@ export class FormSubWalletCreationTs extends Vue {
 
     try {
       // - create sub wallet (can be either derived or by private key)
-      let subWallet: WalletsModel
-      switch(type) {
+      let subWallet: WalletModel
+      switch (type) {
         default:
         case 'child_wallet':
           subWallet = this.deriveNextChildWallet(values.name)
           break
 
         case 'privatekey_wallet':
-          subWallet = this.wallets.getSubWalletByPrivateKey(
+          subWallet = this.walletService.getSubWalletByPrivateKey(
             this.currentAccount,
             this.currentPassword,
             this.formItems.name,
@@ -235,9 +192,10 @@ export class FormSubWalletCreationTs extends Vue {
       if (!subWallet) return
 
       // Verify that the import is repeated
-      const hasAddressInfo = this.currentWallets.find(w => w['address'] === subWallet.values.get('address'))
-      if (hasAddressInfo !== undefined){
-        this.$store.dispatch('notification/ADD_ERROR', `This private key already exists. The account name is ${hasAddressInfo['name']}`)
+      const hasAddressInfo = this.knownWallets.find(w => w.address === subWallet.address)
+      if (hasAddressInfo !== undefined) {
+        this.$store.dispatch('notification/ADD_ERROR',
+          `This private key already exists. The account name is ${hasAddressInfo.name}`)
         return null
       }
 
@@ -245,28 +203,15 @@ export class FormSubWalletCreationTs extends Vue {
       this.currentPassword = null
 
       // - use repositories for storage
-      const walletsRepo = new WalletsRepository()
-      walletsRepo.create(subWallet.values)
-
-      // - also add wallet to account (in storage)
-      const wallets = this.currentAccount.values.get('wallets')
-      wallets.push(subWallet.getIdentifier())
-      this.currentAccount.values.set('wallets', wallets)
-
-      const accountsRepo = new AccountsRepository()
-      accountsRepo.update(
-        this.currentAccount.getIdentifier(),
-        this.currentAccount.values,
-      )
+      this.walletService.saveWallet(subWallet)
 
       // - update app state
       await this.$store.dispatch('account/ADD_WALLET', subWallet)
-      await this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: subWallet})
-      await this.$store.dispatch('wallet/SET_KNOWN_WALLETS', wallets)
+      await this.$store.dispatch('wallet/SET_CURRENT_WALLET', subWallet)
+      await this.$store.dispatch('wallet/SET_KNOWN_WALLETS', this.currentAccount.wallets)
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
       this.$emit('submit', this.formItems)
-    }
-    catch (e) {
+    } catch (e) {
       this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.')
       console.error(e)
     }
@@ -274,15 +219,16 @@ export class FormSubWalletCreationTs extends Vue {
 
   /**
    * Use HD wallet derivation to get next child wallet
-   * @param {string} childWalletName 
-   * @return {WalletsModel}
+   * @param {string} childWalletName
+   * @return {WalletModel}
    */
-  private deriveNextChildWallet(childWalletName: string): WalletsModel | null {
+  private deriveNextChildWallet(childWalletName: string): WalletModel | null {
     // - don't allow creating more than 10 wallets
-    if (this.knownPaths.length >= MAX_SEED_WALLETS_NUMBER) { 
+    if (this.knownPaths.length >= MAX_SEED_WALLETS_NUMBER) {
       this.$store.dispatch(
         'notification/ADD_ERROR',
-        this.$t(NotificationType.TOO_MANY_SEED_WALLETS_ERROR, {maxSeedWalletsNumber: MAX_SEED_WALLETS_NUMBER}),
+        this.$t(NotificationType.TOO_MANY_SEED_WALLETS_ERROR,
+          {maxSeedWalletsNumber: MAX_SEED_WALLETS_NUMBER}),
       )
       return null
     }
@@ -290,15 +236,16 @@ export class FormSubWalletCreationTs extends Vue {
     // - get next path
     const nextPath = this.paths.getNextAccountPath(this.knownPaths)
 
-    this.$store.dispatch('diagnostic/ADD_DEBUG', `Adding child wallet with derivation path: ${nextPath}`)
+    this.$store.dispatch('diagnostic/ADD_DEBUG',
+      'Adding child wallet with derivation path: ' + nextPath)
 
     // - decrypt mnemonic
-    const encSeed = this.currentAccount.values.get('seed')
+    const encSeed = this.currentAccount.seed
     const passphrase = AESEncryptionService.decrypt(encSeed, this.currentPassword)
     const mnemonic = new MnemonicPassPhrase(passphrase)
 
     // create account by mnemonic
-    const wallet = this.wallets.getChildWalletByPath(
+    return this.walletService.getChildWalletByPath(
       this.currentAccount,
       this.currentPassword,
       mnemonic,
@@ -306,7 +253,5 @@ export class FormSubWalletCreationTs extends Vue {
       this.networkType,
       childWalletName,
     )
-
-    return wallet
   }
 }

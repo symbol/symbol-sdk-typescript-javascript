@@ -14,8 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, UInt64, MosaicSupplyChangeAction, MosaicSupplyChangeTransaction} from 'symbol-sdk'
-
+import {MosaicId, MosaicSupplyChangeAction, MosaicSupplyChangeTransaction, UInt64} from 'symbol-sdk'
 // internal dependencies
 import {TransactionView} from './TransactionView'
 

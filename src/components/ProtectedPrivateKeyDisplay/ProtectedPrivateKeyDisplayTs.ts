@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Prop, Vue} from 'vue-property-decorator'
 import {Account} from 'symbol-sdk'
-
 // internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {WalletModel} from '@/core/database/entities/WalletModel'
 import {UIHelpers} from '@/core/utils/UIHelpers'
-
 // child components
 // @ts-ignore
 import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
@@ -32,7 +30,7 @@ import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalF
 export class ProtectedPrivateKeyDisplayTs extends Vue {
   @Prop({
     default: null,
-  }) wallet: WalletsModel
+  }) wallet: WalletModel
 
   /**
    * UI Helpers

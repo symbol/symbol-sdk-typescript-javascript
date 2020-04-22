@@ -1,23 +1,23 @@
 /**
- * 
+ *
  * Copyright 2020 Grégory Saive for NEM (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {UInt64, NamespaceRegistrationType, NamespaceRegistrationTransaction} from 'symbol-sdk'
-
+import {NamespaceRegistrationTransaction, NamespaceRegistrationType, UInt64} from 'symbol-sdk'
 // internal dependencies
 import {TransactionView} from './TransactionView'
+import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
 
 /// region custom types
 export type NamespaceRegistrationFormFieldsType = {
@@ -27,6 +27,7 @@ export type NamespaceRegistrationFormFieldsType = {
   duration?: number
   maxFee: UInt64
 }
+
 /// end-region custom types
 
 export class ViewNamespaceRegistrationTransaction extends TransactionView<NamespaceRegistrationFormFieldsType> {
@@ -73,15 +74,15 @@ export class ViewNamespaceRegistrationTransaction extends TransactionView<Namesp
     // - read transaction fields
     if (NamespaceRegistrationType.RootNamespace === transaction.registrationType) {
       this.values.set('rootNamespaceName', transaction.namespaceName)
-    }
-    else {
+    } else {
       this.values.set('subNamespaceName', transaction.namespaceName)
 
       // - try to identify root namespace by id
       const parentId = transaction.parentId
-      const namespaceNames = this.$store.getters['namespace/namespacesNames']
-      if (namespaceNames && namespaceNames[parentId.toHex()]) {
-        this.values.set('rootNamespaceName', namespaceNames[parentId.toHex()])
+      const namespaces: NamespaceModel[] = this.$store.getters['namespace/namespaces']
+      const parent = namespaces.find(n => n.namespaceIdHex === parentId.toHex() && n.name)
+      if (parent) {
+        this.values.set('rootNamespaceName', parent.name)
       }
     }
 

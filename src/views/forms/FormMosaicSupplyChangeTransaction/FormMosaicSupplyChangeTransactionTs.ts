@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,23 +14,14 @@
  * limitations under the License.
  */
 // external dependencies
-import {
-  MosaicId,
-  UInt64,
-  MosaicSupplyChangeAction,
-  Transaction,
-  MosaicInfo,
-  MosaicSupplyChangeTransaction,
-} from 'symbol-sdk'
+import {MosaicId, MosaicSupplyChangeAction, MosaicSupplyChangeTransaction, Transaction, UInt64} from 'symbol-sdk'
 import {Component, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-
 // internal dependencies
-import {ViewMosaicSupplyChangeTransaction, MosaicSupplyChangeFormFieldsType} from '@/core/transactions/ViewMosaicSupplyChangeTransaction'
+import {MosaicSupplyChangeFormFieldsType, ViewMosaicSupplyChangeTransaction} from '@/core/transactions/ViewMosaicSupplyChangeTransaction'
 import {FormTransactionBase} from '@/views/forms/FormTransactionBase/FormTransactionBase'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
-
 // child components
 import {ValidationObserver, ValidationProvider} from 'vee-validate'
 // @ts-ignore
@@ -51,6 +42,7 @@ import FormRow from '@/components/FormRow/FormRow.vue'
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
 import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
+import {MosaicModel} from '@/core/database/entities/MosaicModel'
 
 @Component({
   components: {
@@ -66,14 +58,14 @@ import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
     ErrorTooltip,
     MaxFeeAndSubmit,
   },
-  computed: {...mapGetters({ownedMosaics: 'wallet/currentWalletOwnedMosaics'})},
+  computed: {...mapGetters({mosaics: 'mosaic/mosaics'})},
 })
 export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
   /**
    * Mosaic hex Id
    * @type {string}
    */
-  @Prop({ default: null, required: true }) mosaicHexId: string
+  @Prop({default: null, required: true}) mosaicHexId: string
 
   /**
    * Validation rules
@@ -102,18 +94,16 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
   /**
    * Mosaics owned by the current wallet
    * @protected
-   * @type {MosaicInfo[]}
    */
-  protected ownedMosaics: MosaicInfo[]
+  private mosaics: MosaicModel[]
 
   /**
    * Current mosaic info
    * @readonly
    * @protected
-   * @type {MosaicInfo}
    */
-  protected get currentMosaicInfo(): MosaicInfo {
-    return this.ownedMosaics.find(({id}) => id.toHex() === this.formItems.mosaicHexId)
+  protected get currentMosaicInfo(): MosaicModel {
+    return this.mosaics.find(({mosaicIdHex}) => mosaicIdHex === this.formItems.mosaicHexId)
   }
 
   /**
@@ -123,8 +113,9 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
    * @type {number}
    */
   protected get currentMosaicRelativeSupply(): string | null {
-    if (!this.currentMosaicInfo) return null
-    const relative = this.currentMosaicInfo.supply.compact() / Math.pow(10, this.currentMosaicInfo.divisibility)
+    const currentMosaicInfo = this.currentMosaicInfo
+    if (!currentMosaicInfo) return null
+    const relative = currentMosaicInfo.supply / Math.pow(10, currentMosaicInfo.divisibility)
     return isNaN(relative) ? null : relative.toLocaleString()
   }
 
@@ -135,10 +126,11 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
    * @type {(number | null)}
    */
   protected get newMosaicAbsoluteSupply(): number | null {
-    if (this.currentMosaicInfo === undefined) return null
+    const currentMosaicInfo = this.currentMosaicInfo
+    if (currentMosaicInfo === undefined) return null
     const newSupply = this.formItems.action === MosaicSupplyChangeAction.Increase
-      ? this.currentMosaicInfo.supply.compact() + Number(this.formItems.delta)
-      : this.currentMosaicInfo.supply.compact() - Number(this.formItems.delta)
+      ? currentMosaicInfo.supply + Number(this.formItems.delta)
+      : currentMosaicInfo.supply - Number(this.formItems.delta)
 
     return isNaN(newSupply) ? null : newSupply
   }

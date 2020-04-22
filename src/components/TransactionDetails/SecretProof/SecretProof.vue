@@ -1,11 +1,11 @@
 <template>
   <div class="transaction-details-item-inner-container">
     <div
-      v-for="([ key, value ], index) in Array.from(view.values.entries())"
+      v-for="(item, index) in view.items"
       :key="index"
       class="transaction-row-outer-container"
     >
-      <TransactionDetailRow :label="key" :value="value" />
+      <TransactionDetailRow :item="item" />
     </div>
   </div>
 </template>

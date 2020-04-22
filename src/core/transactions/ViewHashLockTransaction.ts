@@ -1,13 +1,13 @@
 /**
- * 
+ *
  * Copyright 2020 Grégory Saive for NEM (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 // external dependencies
-import {HashLockTransaction, SignedTransaction, MosaicId, UInt64, RawUInt64, Mosaic} from 'symbol-sdk'
-
+import {HashLockTransaction, Mosaic, MosaicId, RawUInt64, SignedTransaction, UInt64} from 'symbol-sdk'
 // internal dependencies
 import {TransactionView} from './TransactionView'
-import {AttachedMosaic, MosaicService} from '@/services/MosaicService'
+import {MosaicModel} from '@/core/database/entities/MosaicModel'
+import {AttachedMosaic} from '@/services/MosaicService'
 
 export type HashLockTransactionFormFieldsType = {
   mosaic: { mosaicHex: string, amount: number }
@@ -48,9 +48,9 @@ export class ViewHashLockTransaction extends TransactionView<HashLockTransaction
    */
   public parse(formItems: HashLockTransactionFormFieldsType): ViewHashLockTransaction {
     // - prepare mosaic entry
-    const mosaicsInfo = this.$store.getters['mosaic/mosaicsInfoList']
+    const mosaicsInfo = this.$store.getters['mosaic/mosaics'] as MosaicModel[]
     if (undefined !== mosaicsInfo) {
-      const mosaicInfo = mosaicsInfo.find(i => i.id.toHex() === formItems.mosaic.mosaicHex)
+      const mosaicInfo = mosaicsInfo.find(i => i.mosaicIdHex === formItems.mosaic.mosaicHex)
       const mosaicDivisibility = mosaicInfo ? mosaicInfo.divisibility : 0
       // - create mosaic object
       const mosaic = new Mosaic(
@@ -89,10 +89,13 @@ export class ViewHashLockTransaction extends TransactionView<HashLockTransaction
     // - populate common values
     this.initialize(transaction)
 
-    // get attached mosaic
-    const [mosaic]: AttachedMosaic[] = new MosaicService(this.$store)
-      .getAttachedMosaicsFromMosaics([transaction.mosaic])
-    
+    const mosaic: AttachedMosaic = {
+      id: transaction.mosaic.id,
+      mosaicHex: transaction.mosaic.id.toHex(),
+      // TODO revisit divisibility
+      amount: transaction.mosaic.amount.compact() / Math.pow(10, 0),
+    }
+
     // - prepare
     this.values.set('mosaic', mosaic)
     this.values.set('duration', transaction.duration.compact())

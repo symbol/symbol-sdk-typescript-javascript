@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 // external dependencies
-import {Store} from 'vuex'
-import {NamespaceInfo, AliasType} from 'symbol-sdk'
-
+import {AliasType} from 'symbol-sdk'
 // internal dependencies
 import {AssetTableService, TableField} from './AssetTableService'
-import {TimeHelpers} from '@/core/utils/TimeHelpers'
+import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
 import {NamespaceService} from '@/services/NamespaceService'
+import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
 
 export class NamespaceTableService extends AssetTableService {
-  /**
-   * Creates an instance of NamespaceTableService.
-   * @param {*} store
-   */
-  constructor(store?: Store<any>) {
-    super(store)
+
+  constructor(currentHeight: number, private readonly namespaces: NamespaceModel[],
+    private readonly networkConfiguration: NetworkConfigurationModel) {
+    super(currentHeight)
   }
 
   /**
@@ -46,77 +43,53 @@ export class NamespaceTableService extends AssetTableService {
     ]
   }
 
-  /**
-   * Return table values to be displayed in a table rows
-   * @returns {NamespaceTableRowValues}
-   */
+
   public getTableRows(): any[] {
-    // - get owned namespaces from the store
-    const ownedNamespaces: NamespaceInfo[] = this.$store.getters['wallet/currentWalletOwnedNamespaces']
+    const namespaces: NamespaceModel[] = this.namespaces
 
-    // - use service to get information about namespaces
-    const service = new NamespaceService(this.$store)
-
-    return ownedNamespaces.map((namespaceInfo) => {
-      const {expired, expiration} = this.getExpiration(namespaceInfo)
-      const model = service.getNamespaceSync(namespaceInfo.id)
-      if (!model) return null
+    return namespaces.map((namespaceModel) => {
+      const {expired, expiration} = this.getExpiration(namespaceModel)
 
       return {
-        'hexId': namespaceInfo.id.toHex(),
-        'name': model.values.get('name'),
+        'hexId': namespaceModel.namespaceIdHex,
+        'name': namespaceModel.name,
         'expiration': expiration,
         'expired': expired,
-        'aliasType': this.getAliasType(namespaceInfo),
-        'aliasIdentifier': this.getAliasIdentifier(namespaceInfo),
+        'aliasType': this.getAliasType(namespaceModel),
+        'aliasIdentifier': this.getAliasIdentifier(namespaceModel),
       }
-    }).filter(x => x) // filter out namespaces that are not yet available
+    })
   }
 
   /**
    * Gets the namespace type to be displayed in the table
    * @private
-   * @param {NamespaceInfo} namespaceInfo
+   * @param the namespace model.
    * @returns {('N/A' | 'address' | 'mosaic')}
    */
-  private getAliasType(namespaceInfo: NamespaceInfo): 'N/A' | 'address' | 'mosaic' {
-    if(!namespaceInfo.hasAlias()) return 'N/A'
-    return namespaceInfo.alias.type === AliasType.Address ? 'address' : 'mosaic'
+  private getAliasType(namespaceModel: NamespaceModel): 'N/A' | 'address' | 'mosaic' {
+    if (!namespaceModel.aliasTargetAddressRawPlain && !namespaceModel.aliasTargetMosaicIdHex) return 'N/A'
+    return namespaceModel.aliasType === AliasType.Address ? 'address' : 'mosaic'
   }
 
   /**
    * Gets the namespace identifier to be displayed in the table
    * @private
-   * @param {NamespaceInfo} namespaceInfo
+   * @param the namespace model.
    * @returns {string}
    */
-  private getAliasIdentifier(namespaceInfo: NamespaceInfo): string {
-    if(!namespaceInfo.hasAlias()) return 'N/A'
-    const {alias} = namespaceInfo
-    return alias.address ? alias.address.pretty() : alias.mosaicId.toHex()
+  private getAliasIdentifier(namespaceModel: NamespaceModel): string {
+    return namespaceModel.aliasTargetMosaicIdHex || namespaceModel.aliasTargetAddressRawPlain || 'N/A'
   }
 
   /**
    * Returns a view of a namespace expiration info
    * @public
-   * @param {NamespaceInfo} mosaicInfo
+   * @param the namespace model.
    * @returns {string}
    */
-  public getExpiration (
-    namespaceInfo: NamespaceInfo,
-  ): {expiration: string, expired: boolean} {
-    const {currentHeight} = this
-    const endHeight = namespaceInfo.endHeight.compact()
-    const networkConfig = this.$store.getters['network/config']
-    const {namespaceGracePeriodDuration} = networkConfig.networks['testnet-publicTest']
-    
-    const expired = currentHeight > endHeight - namespaceGracePeriodDuration
-    const expiredIn = endHeight - namespaceGracePeriodDuration - currentHeight
-    const deletedIn = endHeight - currentHeight
-    const expiration = expired
-      ? TimeHelpers.durationToRelativeTime(expiredIn)
-      : TimeHelpers.durationToRelativeTime(deletedIn)
-
-    return {expired, expiration}
+  private getExpiration(namespaceModel: NamespaceModel): { expiration: string, expired: boolean } {
+    return NamespaceService.getExpiration(this.networkConfiguration, this.currentHeight,
+      namespaceModel.endHeight)
   }
 }

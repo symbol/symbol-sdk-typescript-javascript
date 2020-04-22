@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Deadline, NetworkType, PlainMessage, TransferTransaction, UInt64, TransactionType} from 'symbol-sdk'
+import {Deadline, NetworkType, PlainMessage, TransactionType, TransferTransaction, UInt64} from 'symbol-sdk'
 import {createStore} from '@MOCKS/Store'
 import {getTestAccount} from '@MOCKS/accounts'
 import {getFakeTransaction} from '@MOCKS/Transactions'

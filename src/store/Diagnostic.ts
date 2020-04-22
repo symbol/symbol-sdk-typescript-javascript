@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 import Vue from 'vue'
-
 // internal dependencies
 import {LogLevels} from '@/core/utils/LogLevels'
 import {AwaitLock} from './AwaitLock'
+
 const Lock = AwaitLock.create()
 
 export default {

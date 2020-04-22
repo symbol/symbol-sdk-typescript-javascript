@@ -7,7 +7,7 @@
       :transfer="false"
     >
       <div class="transactionConfirmationBody">
-        <div 
+        <div
           v-if="!!stagedTransactions"
           class="stepItem1"
         >

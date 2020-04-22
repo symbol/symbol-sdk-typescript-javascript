@@ -10,6 +10,7 @@
 
 <script lang="ts">
 import {WalletHarvestingPageTs} from './WalletHarvestingPageTs'
+
 export default class WalletHarvestingPage extends WalletHarvestingPageTs {}
 </script>
 

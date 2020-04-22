@@ -10,27 +10,17 @@
 
     <!-- SECOND COLUMN -->
     <div class="address-cell">
-      <AddressDisplay :address="transaction.signer.address" />
       <ActionDisplay :transaction="transaction" />
     </div>
 
     <!-- THIRD COLUMN -->
     <div class="amount-cell">
-      <!-- Display details if transfer -->
-      <div v-if="transaction.type === transactionType.TRANSFER">
-        <div v-if="transaction.mosaics.length">
-          <MosaicAmountDisplay
-            :id="transaction.mosaics[0].id"
-            :absolute-amount="transaction.mosaics[0].amount.compact()"
-            :color="isIncomingTransaction() ? 'green' : 'red'"
-          />
-        </div>
-      </div>
-
-      <!-- Display fee if not transfer -->
-      <div v-else>
-        <MosaicAmountDisplay :id="networkMosaic" :amount="getFeeAmount()" :color="'red'" />
-      </div>
+      <MosaicAmountDisplay
+        :id="getAmountMosaicId()"
+        :absolute-amount="getAmount()"
+        :color="getAmountColor()"
+        :show-ticker="isAmountShowTicker()"
+      />
     </div>
 
     <!-- FOURTH COLUMN -->

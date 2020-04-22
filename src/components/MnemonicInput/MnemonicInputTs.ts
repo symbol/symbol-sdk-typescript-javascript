@@ -1,5 +1,6 @@
-import { UIHelpers } from '@/core/utils/UIHelpers.ts'
-import { Component, Vue } from 'vue-property-decorator'
+import {UIHelpers} from '@/core/utils/UIHelpers.ts'
+import {Component, Vue} from 'vue-property-decorator'
+
 // internal dependencies
 
 @Component

@@ -1,13 +1,13 @@
 /**
- * 
+ *
  * Copyright 2020 Grégory Saive for NEM (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,6 +16,7 @@
  */
 import {Store} from 'vuex'
 import {Transaction, TransactionInfo} from 'symbol-sdk'
+import {TransactionDetailItem} from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
 
 export abstract class TransactionView<FormFieldsType> {
 
@@ -66,7 +67,7 @@ export abstract class TransactionView<FormFieldsType> {
 
   /**
    * Construct a transaction view around \a store
-   * @param {Store<any>} store 
+   * @param {Store<any>} store
    */
   public constructor(store: Store<any>) {
     this.$store = store
@@ -115,5 +116,14 @@ export abstract class TransactionView<FormFieldsType> {
     this.values.set('maxFee', transaction.maxFee.compact())
 
     return this
+  }
+
+  /**
+   * It returns a list that that it easy to render when displaying TransactionDetailRow components.
+   */
+  public get items(): TransactionDetailItem[] {
+    return Array.from(this.values.entries()).map(([ key, value ]) => {
+      return {key, value}
+    })
   }
 }
