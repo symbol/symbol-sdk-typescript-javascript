@@ -10,12 +10,14 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 #### Added
 
 - Added release process compliant with NIP14
+- Added Apache v2 license (fixes #209)
 
 #### Fixed
 
 - Fixed mosaic namespace resolution inside transfers (fixes #275)
 - Fixed hardcoded network configuration properties (fixes #140) (fixes #139)
 - Fixed private key import of duplicates (fixes #214) 
+- Fixed vue-router error logs (fixes #252)
 
 ## [v0.9.8][v0.9.8] -
 
