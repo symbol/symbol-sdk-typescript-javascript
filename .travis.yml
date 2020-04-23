@@ -1,30 +1,27 @@
 language: node_js
 node_js:
   - "12"
-  - "10"
-
+os: osx
+osx_image: xcode11.3
+env:
+  global:
+    - ELECTRON_CACHE=$HOME/.cache/electron
+    - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
 cache:
   directories:
     - node_modules
-
-install:
-  - npm install
-
+    - $HOME/.cache/electron
+    - $HOME/.cache/electron-builder
+before_cache:
+  - rm -rf $HOME/.cache/electron-builder/wine
+before_script:
+  - npm run build:web
 script:
   - npm run lint:all
-  - npm run build:web
   - npm run test
-
-after_script:
-  - cd ./dist
-  - git init
-  - git config user.name "${U_NAME}"
-  - git config user.email "${U_EMAIL}"
-  - git add .
-  - git commit -m "Update tools"
-  - git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" master:${P_BRANCH}
-
-
-branches:
-  only:
-    - master
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: /bin/sh travis/release.sh
+    on:
+      branch: $RELEASE_BRANCH
