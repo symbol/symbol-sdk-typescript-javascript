@@ -64,7 +64,7 @@
             <button
               class="button-style validation-button back-button"
               type="reset"
-              @click="resetForm"
+              @click.prevent="resetForm"
             >
               {{ $t('reset') }}
             </button>
