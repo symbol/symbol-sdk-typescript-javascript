@@ -3,6 +3,20 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [v0.9.9][v0.9.9]
+
+### Milestone: [catapult-server@v0.9.3.2](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.2)
+
+#### Added
+
+- Added release process compliant with NIP14
+
+#### Fixed
+
+- Fixed mosaic namespace resolution inside transfers (fixes #275)
+- Fixed hardcoded network configuration properties (fixes #140) (fixes #139)
+- Fixed private key import of duplicates (fixes #214) 
+
 ## [v0.9.8][v0.9.8] -
 
 ### Milestone: [catapult-server@v0.9.3.2](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.2)
@@ -177,6 +191,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Mosaic definition *multi-signature* feature bug with signer selection (aggregate bonded only)
 
 
+[v0.9.9]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.8-beta1...v0.9.9
 [v0.9.8]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.8-beta1
 [v0.9.8-beta1]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.7-beta1...v0.9.8-beta1
 [v0.9.7]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.7-beta1
