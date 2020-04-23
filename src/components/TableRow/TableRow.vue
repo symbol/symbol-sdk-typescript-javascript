@@ -47,7 +47,6 @@
 
 <script lang="ts">
 import { TableRowTs } from './TableRowTs'
-import './TableRow.less'
 
 export default class TableRow extends TableRowTs {}
 </script>

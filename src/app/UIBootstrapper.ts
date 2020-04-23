@@ -40,6 +40,15 @@ export class UIBootstrapper {
         })
       },
     })
+    Vue.directive('auto-scroll', {
+      componentUpdated: function (el, { value }) {
+        if (value && value.length) {
+          const className = value.charAt(0) === '.' ? value : '.' + value
+          const offsetTop = (el.querySelector(className) as HTMLElement).offsetTop
+          el.scrollTo(0, offsetTop)
+        }
+      },
+    })
     /// end-region vue directives
 
     return app

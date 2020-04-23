@@ -7,7 +7,7 @@
         </h1>
       </div>
     </div>
-    <div class="wallet-switch-body-container scroll">
+    <div v-auto-scroll="'active-background'" class="wallet-switch-body-container scroll">
       <div
         v-for="(item, index) in currentWallets"
         :key="index"

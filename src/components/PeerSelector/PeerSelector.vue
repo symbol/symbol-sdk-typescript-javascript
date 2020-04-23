@@ -1,6 +1,6 @@
 <template>
   <div :class="[isConnected ? 'endpoint-healthy' : 'endpoint-unhealthy']">
-    <Poptip placement="bottom-end" class="endpoint-poptip">
+    <Poptip placement="bottom-end" class="endpoint-poptip" @on-popper-show="onPopTipShow">
       <i class="pointer point" />
       <span v-if="isConnected" class="network_type_text">{{ networkTypeText }}</span>
       <div slot="title" class="title">
@@ -20,11 +20,15 @@
         </div>
 
         <div class="node_list">
-          <div id="node-list-container" class="node_list_container scroll">
+          <div id="node-list-container" v-auto-scroll="'peer-selected'" class="node_list_container scroll">
             <div
               v-for="({url, friendlyName}, index) in peersList"
               :key="`sep${index}`"
-              class="point_item pointer"
+              :class="[
+                'point_item',
+                'pointer',
+                {'peer-selected':currentPeerInfo.url === url}
+              ]"
               @click="currentPeerInfo.url !== url ? switchPeer(url) : ''"
             >
               <img
@@ -83,26 +87,6 @@ import {PeerSelectorTs} from './PeerSelectorTs'
 export default class PeerSelector extends PeerSelectorTs {}
 </script>
 
-<style lang="less">
-.node-inputs-container {
-  width: 100%;
-  height: 0.5rem;
-  display: grid !important;
-  grid-template-rows: 100%;
-  grid-template-columns: auto repeat(2, 0.5rem);
-  padding: 0.1rem 0 0 0 !important;
-  margin: 0 !important;
-}
-
-.endpoint-poptip {
-  .ivu-poptip-body-content {
-    overflow: hidden;
-  }
-  .ivu-poptip-title {
-    overflow: hidden;
-  }
-  .ivu-poptip-inner {
-    width: 1000px;
-  }
-}
+<style lang="less" scoped>
+@import "./PeerSelector.less";
 </style>

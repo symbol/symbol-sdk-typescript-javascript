@@ -209,4 +209,7 @@ export class PeerSelectorTs extends Vue {
   public resetList() {
     this.$store.dispatch('network/RESET_PEERS')
   }
+  onPopTipShow(){
+    this.$forceUpdate()
+  }
 }

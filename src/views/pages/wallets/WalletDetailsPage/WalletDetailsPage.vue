@@ -1,5 +1,5 @@
 <template>
-  <div class="wallet-detail-outer-container" v-show="currentWallet">
+  <div v-show="currentWallet" class="wallet-detail-outer-container">
     <div class="wallet-detail-inner-container">
       <div class="left-container">
         <div class="wallet-details-grid">
