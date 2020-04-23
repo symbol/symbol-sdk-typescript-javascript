@@ -17,6 +17,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 // internal dependencies
 import {AccountModel} from '@/core/database/entities/AccountModel'
+import { Route } from 'vue-router'
 
 @Component({
   computed: {
@@ -40,5 +41,10 @@ export class PageNavigatorTs extends Vue {
   public async logout() {
     await this.$store.dispatch('account/LOG_OUT')
     this.$router.push({name: 'accounts.login'})
+  }
+  
+  public onPageNavigate(route: Route) {
+    const isDuplicatedRoute = this.$route.matched.map(({ path }) => path).includes(route.path)
+    !isDuplicatedRoute && this.currentAccount && this.$router.push({ name: route.name }).catch(() => {/**/ })
   }
 }

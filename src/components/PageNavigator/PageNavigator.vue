@@ -9,7 +9,7 @@
           $route.matched.map(({path}) => path).includes(route.path) ? 'active' : '',
           !currentAccount ? 'un_click' : '',
         ]"
-        @click="!currentAccount ? '' : $router.push({name: route.name})"
+        @click="onPageNavigate(route)"
       >
         <div class="navigator-icon-container">
           <img :src="route.meta.icon" class="navigator-icon">
