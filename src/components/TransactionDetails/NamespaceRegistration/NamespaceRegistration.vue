@@ -14,18 +14,27 @@
 // external dependencies
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { UInt64, NamespaceRegistrationType } from 'symbol-sdk'
-
+import {mapGetters} from 'vuex'
 // internal dependencies
 import { TransactionViewType } from '@/services/TransactionService'
-
+import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
 // child components
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
 import {TransactionDetailItem} from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
 
-@Component({ components: { TransactionDetailRow } })
+import { TimeHelpers } from '@/core/utils/TimeHelpers' 
+@Component({
+  components: { TransactionDetailRow } ,
+  computed: {
+    ...mapGetters({
+      networkConfiguration: 'network/networkConfiguration',
+    }),
+  },
+})
 export default class NamespaceRegistration extends Vue {
   @Prop({ default: null }) view: TransactionViewType
 
+  private networkConfiguration: NetworkConfigurationModel
   /**
    * Displayed items
    * @see {Store.Mosaic}
@@ -38,13 +47,13 @@ export default class NamespaceRegistration extends Vue {
       'registrationType',
     )
     const duration: UInt64 = this.view.values.get('duration')
-
+    const blockGenerationTargetTime = this.networkConfiguration.blockGenerationTargetTime
     if (registrationType === NamespaceRegistrationType.RootNamespace) {
       return [
         { key: 'namespace_name', value: rootNamespaceName },
         {
           key: 'duration',
-          value: duration.compact().toLocaleString(),
+          value: TimeHelpers.durationToRelativeTime(parseInt(duration.toString()),blockGenerationTargetTime),
         },
       ]
     }

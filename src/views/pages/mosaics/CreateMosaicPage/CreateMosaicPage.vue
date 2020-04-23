@@ -5,22 +5,46 @@
     </template>
     <template v-slot:form-description>
       <div class="asset-description-sub-title">
-        {{ $t('supply') }}
+        {{ $t('mosaic') }}
       </div>
       <div class="asset-description-emphasis">
         {{ $t('mosaic_describe_text') }}
       </div>
+      <div class="asset-description-sub-title">
+        {{ $t('supply') }}
+      </div>
       <div class="asset-description-emphasis">
-        {{ $t('supply_can_not_less_than_0') }}
+        {{ $t('flags_supply') }}
       </div>
       <div class="asset-description-sub-title">
         {{ $t('divisibility') }}
       </div>
       <div class="asset-description-emphasis">
-        {{ $t('divisibility_can_not_less_than_0') }}
+        {{ $t('flags_divisibility') }}
+      </div>
+      <div class="asset-description-sub-title">
+        {{ $t('duration_permanent') }}
       </div>
       <div class="asset-description-emphasis">
-        {{ $t('divisibility_can_not_more_than_6') }}
+        {{ $t('flags_duration_permanent') }}
+      </div>
+      <div class="asset-description-sub-title">
+        {{ $t('transferable') }}
+      </div>
+      <div class="asset-description-emphasis">
+        {{ $t('flags_transferable') }}
+      </div>
+      <div class="asset-description-sub-title">
+        {{ $t('variable_supply') }}
+      </div>
+      <div class="asset-description-emphasis">
+        {{ $t('flags_variable_supply') }}
+      </div>
+      <div class="asset-description-sub-title">
+        {{ $t('restrictable') }}
+      </div>
+      <div class="asset-description-emphasis">
+        {{ $t('flags_restrictable') }}
       </div>
     </template>
   </AssetFormPageWrap>

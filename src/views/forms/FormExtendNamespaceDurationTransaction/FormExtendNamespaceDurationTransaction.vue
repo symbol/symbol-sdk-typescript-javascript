@@ -21,6 +21,7 @@
         <DurationInput
           v-if="formItems.registrationType === typeRootNamespace"
           v-model="formItems.duration"
+          :show-relative-time="true"
           target-asset="namespace"
           label="form_label_additional_duration"
         />

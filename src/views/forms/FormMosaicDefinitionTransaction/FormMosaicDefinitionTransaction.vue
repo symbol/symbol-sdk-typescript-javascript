@@ -11,6 +11,7 @@
         <DurationInput
           v-show="!formItems.permanent"
           v-model="formItems.duration"
+          :show-relative-time="true"
           target-asset="mosaic"
         />
         
