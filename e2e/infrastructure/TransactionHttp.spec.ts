@@ -66,6 +66,8 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { LockHashUtils } from '../../src/core/utils/LockHashUtils';
+import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTransaction';
+import { VotingKeyLinkTransaction } from '../../src/model/transaction/VotingKeyLinkTransaction';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CryptoJS = require('crypto-js');
@@ -89,6 +91,7 @@ describe('TransactionHttp', () => {
     let namespaceId: NamespaceId;
     let harvestingAccount: Account;
     let transactionRepository: TransactionRepository;
+    let votingKey: string;
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const secureRandom = require('secure-random');
     // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -106,6 +109,7 @@ describe('TransactionHttp', () => {
             harvestingAccount = helper.harvestingAccount;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
+            votingKey = Convert.uint8ToHex(Crypto.randomBytes(48));
             accountRepository = helper.repositoryFactory.createAccountRepository();
             namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
             transactionRepository = helper.repositoryFactory.createTransactionRepository();
@@ -648,6 +652,84 @@ describe('TransactionHttp', () => {
             const aggregateTransaction = AggregateTransaction.createComplete(
                 Deadline.create(),
                 [accountLinkTransaction.toAggregate(account.publicAccount)],
+                networkType,
+                [],
+                helper.maxFee,
+            );
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+            return helper.announce(signedTransaction);
+        });
+    });
+
+    describe('VrfKeyLinkTransaction', () => {
+        it('standalone', () => {
+            const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
+                Deadline.create(),
+                harvestingAccount.publicKey,
+                LinkAction.Link,
+                networkType,
+                helper.maxFee,
+            );
+            const signedTransaction = vrfKeyLinkTransaction.signWith(account, generationHash);
+
+            return helper.announce(signedTransaction).then((transaction: VrfKeyLinkTransaction) => {
+                expect(transaction.linkedPublicKey, 'LinkedPublicKey').not.to.be.undefined;
+                expect(transaction.linkAction, 'LinkAction').not.to.be.undefined;
+                return signedTransaction;
+            });
+        });
+    });
+    describe('VrfKeyLinkTransaction', () => {
+        it('aggregate', () => {
+            const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
+                Deadline.create(),
+                harvestingAccount.publicKey,
+                LinkAction.Unlink,
+                networkType,
+                helper.maxFee,
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
+                [vrfKeyLinkTransaction.toAggregate(account.publicAccount)],
+                networkType,
+                [],
+                helper.maxFee,
+            );
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+            return helper.announce(signedTransaction);
+        });
+    });
+
+    describe('VotingKeyLinkTransaction', () => {
+        it('standalone', () => {
+            const votingLinkTransaction = VotingKeyLinkTransaction.create(
+                Deadline.create(),
+                votingKey,
+                LinkAction.Link,
+                networkType,
+                helper.maxFee,
+            );
+            const signedTransaction = votingLinkTransaction.signWith(account, generationHash);
+
+            return helper.announce(signedTransaction).then((transaction: VotingKeyLinkTransaction) => {
+                expect(transaction.linkedPublicKey, 'LinkedPublicKey').not.to.be.undefined;
+                expect(transaction.linkAction, 'LinkAction').not.to.be.undefined;
+                return signedTransaction;
+            });
+        });
+    });
+    describe('VotingKeyLinkTransaction', () => {
+        it('aggregate', () => {
+            const votingLinkTransaction = VotingKeyLinkTransaction.create(
+                Deadline.create(),
+                votingKey,
+                LinkAction.Unlink,
+                networkType,
+                helper.maxFee,
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
+                [votingLinkTransaction.toAggregate(account.publicAccount)],
                 networkType,
                 [],
                 helper.maxFee,

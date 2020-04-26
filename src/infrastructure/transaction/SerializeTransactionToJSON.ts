@@ -37,6 +37,8 @@ import { SecretProofTransaction } from '../../model/transaction/SecretProofTrans
 import { Transaction } from '../../model/transaction/Transaction';
 import { TransactionType } from '../../model/transaction/TransactionType';
 import { TransferTransaction } from '../../model/transaction/TransferTransaction';
+import { VrfKeyLinkTransaction } from '../../model/transaction/VrfKeyLinkTransaction';
+import { VotingKeyLinkTransaction } from '../../model/transaction/VotingKeyLinkTransaction';
 
 /**
  * @internal
@@ -249,6 +251,18 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 targetNamespaceId: namespaceMetaTx.targetNamespaceId.id.toHex(),
                 valueSize: namespaceMetaTx.value.length,
                 value: Convert.utf8ToHex(namespaceMetaTx.value),
+            };
+        case TransactionType.VRF_KEY_LINK:
+            const vrfKeyLinkTx = transaction as VrfKeyLinkTransaction;
+            return {
+                linkedPublicKey: vrfKeyLinkTx.linkedPublicKey,
+                linkAction: vrfKeyLinkTx.linkAction,
+            };
+        case TransactionType.VOTING_KEY_LINK:
+            const votingKeyLinkTx = transaction as VotingKeyLinkTransaction;
+            return {
+                linkedPublicKey: votingKeyLinkTx.linkedPublicKey,
+                linkAction: votingKeyLinkTx.linkAction,
             };
         default:
             throw new Error('Transaction type not implemented yet.');

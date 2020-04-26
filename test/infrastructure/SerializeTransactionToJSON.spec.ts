@@ -16,7 +16,7 @@
 
 import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
-import { Convert as convert } from '../../src/core/format';
+import { Convert as convert, Convert } from '../../src/core/format';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
@@ -49,6 +49,9 @@ import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TestingAccount } from '../conf/conf.spec';
+import { VrfKeyLinkTransaction } from '../../src/model/model';
+import { Crypto } from '../../src/core/crypto';
+import { VotingKeyLinkTransaction } from '../../src/model/transaction/VotingKeyLinkTransaction';
 
 describe('SerializeTransactionToJSON', () => {
     let account: Account;
@@ -365,5 +368,33 @@ describe('SerializeTransactionToJSON', () => {
         const json = registerNamespaceTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.NAMESPACE_REGISTRATION);
+    });
+
+    it('should create VrfKeyLinkTransaction', () => {
+        const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            LinkAction.Link,
+            NetworkType.MIJIN_TEST,
+        );
+        const json = vrfKeyLinkTransaction.toJSON();
+
+        expect(json.transaction.linkedPublicKey).to.be.equal(account.publicKey);
+        expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
+    });
+
+    it('should create VotingKeyLinkTransaction', () => {
+        const votingKey = Convert.uint8ToHex(Crypto.randomBytes(48));
+        const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
+            Deadline.create(),
+            votingKey,
+            LinkAction.Link,
+            NetworkType.MIJIN_TEST,
+        );
+
+        const json = votingKeyLinkTransaction.toJSON();
+
+        expect(json.transaction.linkedPublicKey).to.be.equal(votingKey);
+        expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
     });
 });

@@ -39,6 +39,8 @@ import { SecretProofTransaction } from '../../model/transaction/SecretProofTrans
 import { Transaction } from '../../model/transaction/Transaction';
 import { TransactionType } from '../../model/transaction/TransactionType';
 import { TransferTransaction } from '../../model/transaction/TransferTransaction';
+import { VrfKeyLinkTransaction } from '../../model/transaction/VrfKeyLinkTransaction';
+import { VotingKeyLinkTransaction } from '../../model/transaction/VotingKeyLinkTransaction';
 
 /**
  * @internal
@@ -91,6 +93,10 @@ export const CreateTransactionFromPayload = (payload: string, isEmbedded = false
             return MosaicMetadataTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.NAMESPACE_METADATA:
             return NamespaceMetadataTransaction.createFromPayload(payload, isEmbedded);
+        case TransactionType.VRF_KEY_LINK:
+            return VrfKeyLinkTransaction.createFromPayload(payload, isEmbedded);
+        case TransactionType.VOTING_KEY_LINK:
+            return VotingKeyLinkTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.AGGREGATE_COMPLETE:
         case TransactionType.AGGREGATE_BONDED:
             return AggregateTransaction.createFromPayload(payload);

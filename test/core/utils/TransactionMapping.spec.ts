@@ -64,6 +64,9 @@ import { TransactionType } from '../../../src/model/transaction/TransactionType'
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { VrfKeyLinkTransaction } from '../../../src/model/transaction/VrfKeyLinkTransaction';
+import { VotingKeyLinkTransaction } from '../../../src/model/transaction/VotingKeyLinkTransaction';
+import { Crypto } from '../../../src/core/crypto';
 
 describe('TransactionMapping - createFromPayload', () => {
     let account: Account;
@@ -394,6 +397,18 @@ describe('TransactionMapping - createFromPayload', () => {
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
         );
+        const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            LinkAction.Link,
+            NetworkType.MIJIN_TEST,
+        );
+        const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
+            Deadline.create(),
+            Convert.uint8ToHex(Crypto.randomBytes(48)),
+            LinkAction.Link,
+            NetworkType.MIJIN_TEST,
+        );
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
             Deadline.create(),
             'root-test-namespace',
@@ -468,6 +483,8 @@ describe('TransactionMapping - createFromPayload', () => {
             [
                 transferTransaction.toAggregate(account.publicAccount),
                 accountLinkTransaction.toAggregate(account.publicAccount),
+                vrfKeyLinkTransaction.toAggregate(account.publicAccount),
+                votingKeyLinkTransaction.toAggregate(account.publicAccount),
                 registerNamespaceTransaction.toAggregate(account.publicAccount),
                 mosaicGlobalRestrictionTransaction.toAggregate(account.publicAccount),
                 mosaicAddressRestrictionTransaction.toAggregate(account.publicAccount),
@@ -547,6 +564,32 @@ describe('TransactionMapping - createFromPayload', () => {
 
         expect(transaction.linkAction).to.be.equal(1);
         expect(transaction.remotePublicKey).to.be.equal(account.publicKey);
+    });
+
+    it('should create an VrfKeyLinkTransaction object with link action', () => {
+        const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            LinkAction.Link,
+            NetworkType.MIJIN_TEST,
+        );
+
+        const signedTransaction = vrfKeyLinkTransaction.signWith(account, generationHash);
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as VrfKeyLinkTransaction;
+
+        expect(transaction.linkAction).to.be.equal(1);
+        expect(transaction.linkedPublicKey).to.be.equal(account.publicKey);
+    });
+
+    it('should create an VotingKeyLinkTransaction object with link action', () => {
+        const key = Convert.uint8ToHex(Crypto.randomBytes(48));
+        const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(Deadline.create(), key, LinkAction.Link, NetworkType.MIJIN_TEST);
+
+        const signedTransaction = votingKeyLinkTransaction.signWith(account, generationHash);
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as VotingKeyLinkTransaction;
+
+        expect(transaction.linkAction).to.be.equal(1);
+        expect(transaction.linkedPublicKey).to.be.equal(key);
     });
 
     it('should create NamespaceRegistrationTransaction - Root', () => {
@@ -805,6 +848,29 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.linkAction).to.be.equal(LinkAction.Link);
     });
 
+    it('should create VrfKeyLinkTransaction', () => {
+        const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            LinkAction.Link,
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction = TransactionMapping.createFromDTO(vrfKeyLinkTransaction.toJSON()) as VrfKeyLinkTransaction;
+
+        expect(transaction.linkedPublicKey).to.be.equal(account.publicKey);
+        expect(transaction.linkAction).to.be.equal(LinkAction.Link);
+    });
+
+    it('should create VotingKeyLinkTransaction', () => {
+        const key = Convert.uint8ToHex(Crypto.randomBytes(48));
+        const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(Deadline.create(), key, LinkAction.Link, NetworkType.MIJIN_TEST);
+
+        const transaction = TransactionMapping.createFromDTO(votingKeyLinkTransaction.toJSON()) as VotingKeyLinkTransaction;
+
+        expect(transaction.linkedPublicKey).to.be.equal(key);
+        expect(transaction.linkAction).to.be.equal(LinkAction.Link);
+    });
     it('should create AccountRestrictionAddressTransaction', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(

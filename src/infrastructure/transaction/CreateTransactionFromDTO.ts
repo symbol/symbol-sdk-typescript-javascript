@@ -54,6 +54,8 @@ import { TransactionInfo } from '../../model/transaction/TransactionInfo';
 import { TransactionType } from '../../model/transaction/TransactionType';
 import { TransferTransaction } from '../../model/transaction/TransferTransaction';
 import { UInt64 } from '../../model/UInt64';
+import { VrfKeyLinkTransaction } from '../../model/transaction/VrfKeyLinkTransaction';
+import { VotingKeyLinkTransaction } from '../../model/transaction/VotingKeyLinkTransaction';
 
 /**
  * Extract recipientAddress value from encoded hexadecimal notation.
@@ -434,6 +436,34 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             NamespaceId.createFromEncoded(transactionDTO.targetNamespaceId),
             transactionDTO.valueSizeDelta,
             convert.decodeHex(transactionDTO.value),
+            transactionDTO.signature,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
+            transactionInfo,
+        );
+    } else if (transactionDTO.type === TransactionType.VRF_KEY_LINK) {
+        return new VrfKeyLinkTransaction(
+            transactionDTO.network,
+            transactionDTO.version,
+            Deadline.createFromDTO(transactionDTO.deadline),
+            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            transactionDTO.linkedPublicKey,
+            transactionDTO.linkAction,
+            transactionDTO.signature,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
+            transactionInfo,
+        );
+    } else if (transactionDTO.type === TransactionType.VOTING_KEY_LINK) {
+        return new VotingKeyLinkTransaction(
+            transactionDTO.network,
+            transactionDTO.version,
+            Deadline.createFromDTO(transactionDTO.deadline),
+            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            transactionDTO.linkedPublicKey,
+            transactionDTO.linkAction,
             transactionDTO.signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
