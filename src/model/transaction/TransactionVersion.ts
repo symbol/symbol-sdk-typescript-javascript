@@ -150,4 +150,16 @@ export class TransactionVersion {
      * @type {number}
      */
     public static readonly NAMESPACE_METADATA = 0x01;
+
+    /**
+     * Vrf key link transaction version.
+     * @type {number}
+     */
+    public static readonly VRF_KEY_LINK = 0x01;
+
+    /**
+     * Voting key link transaction version.
+     * @type {number}
+     */
+    public static readonly VOTING_KEY_LINK = 0x01;
 }

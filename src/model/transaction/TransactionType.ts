@@ -144,4 +144,16 @@ export enum TransactionType {
      * @type {number}
      */
     NAMESPACE_METADATA = 0x4344,
+
+    /**
+     * Link vrf key transaction
+     * @type {number}
+     */
+    VRF_KEY_LINK = 0x4243,
+
+    /**
+     * Link voting key transaction
+     * @type {number}
+     */
+    VOTING_KEY_LINK = 0x4143,
 }

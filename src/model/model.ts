@@ -180,6 +180,8 @@ export * from './transaction/MosaicMetadataTransaction';
 export * from './transaction/NamespaceMetadataTransaction';
 export * from './transaction/MosaicGlobalRestrictionTransaction';
 export * from './transaction/MosaicAddressRestrictionTransaction';
+export * from './transaction/VotingKeyLinkTransaction';
+export * from './transaction/VrfKeyLinkTransaction';
 
 // Wallet
 export * from './wallet/ISimpleWalletDTO';
