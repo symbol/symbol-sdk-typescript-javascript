@@ -26,7 +26,7 @@ import { MosaicAliasTransaction } from '../../../src/model/transaction/MosaicAli
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 import { deepEqual } from 'assert';
-import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/builders/EmbeddedTransactionBuilder';
+import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/dist/EmbeddedTransactionBuilder';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 
 describe('MosaicAliasTransaction', () => {
