@@ -1,30 +1,35 @@
-import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
-import {WalletModel} from '@/core/database/entities/WalletModel'
+import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
+import {mapGetters} from 'vuex'
+import {TransactionGroup} from '@/store/Transaction'
+import {Signer} from '@/store/Wallet'
 
 
 @Component({
-  computed:{
+  computed: {
     ...mapGetters({
-      currentWallet: 'wallet/currentWallet',
+      currentSigner: 'wallet/currentSigner',
     }),
   },
 })
-export class TransactionStatusFilterTs extends Vue{
-  @Prop({default:''}) defaultStatus: string
-  public currentWallet: WalletModel
-  public selectedStatus: string=this.defaultStatus
-  public onStatusChange(){
-    this.$emit('status-change',this.selectedStatus)
+export class TransactionStatusFilterTs extends Vue {
+  @Prop({default: TransactionGroup.all}) defaultStatus: TransactionGroup
+
+  public currentSigner: Signer
+
+  public selectedStatus: TransactionGroup = this.defaultStatus
+
+  public onStatusChange() {
+    this.$emit('status-change', this.selectedStatus)
   }
 
-  @Watch('currentWallet')
-  onCurrentWalletChange(){
-    this.selectedStatus = 'all'
-    this.$emit('status-change',this.currentWallet.publicKey)
+  @Watch('currentSigner')
+  onCurrentSignerChange() {
+    this.selectedStatus = TransactionGroup.all
+    this.$emit('status-change', this.selectedStatus)
   }
+
   @Watch('defaultStatus')
-  onDefaultStatus(newVal){
+  onDefaultStatus(newVal: TransactionGroup) {
     this.selectedStatus = newVal
   }
 }

@@ -5,7 +5,7 @@
       <TransactionStatusFilter :default-status="selectedOption" @status-change="onStatusSelectorChange" />
     </div>
     <div v-if="signers.length > 1" class="transaction-list-filter-container">
-      <TransactionAddressFilter :addresses="signers" @address-change="onSignerSelectorChange" />
+      <TransactionAddressFilter :signers="signers" @signer-change="onSignerSelectorChange" />
     </div>
   </div>
 </template>

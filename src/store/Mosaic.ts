@@ -82,7 +82,7 @@ export default {
       const ownedMosaics = mosaics.filter(
         m => m.ownerRawPlain === currentSignerAddress.plain() && m.addressRawPlain === currentSignerAddress.plain())
 
-      const holdMosaics = mosaics.filter(m => m.addressRawPlain === currentSignerAddress.plain()).sort((m1, m2)=>{
+      const holdMosaics = mosaics.filter(m => m.addressRawPlain === currentSignerAddress.plain()).sort((m1, m2) => {
         const owner1 = m1.ownerRawPlain === currentSignerAddress.plain()
         const owner2 = m2.ownerRawPlain === currentSignerAddress.plain()
         return Number(owner1) - Number(owner2)
@@ -103,7 +103,8 @@ export default {
       Vue.set(state, 'mosaics', mosaics)
       Vue.set(state, 'balanceMosaics', balanceMosaics)
       Vue.set(state, 'ownedMosaics', ownedMosaics)
-      Vue.set(state, 'holdMosaics', holdMosaics.filter(m => m.ownerRawPlain === currentSignerAddress.plain() || m.balance > 0))
+      Vue.set(state, 'holdMosaics',
+        holdMosaics.filter(m => m.ownerRawPlain === currentSignerAddress.plain() || m.balance > 0))
     },
     mosaicConfigurations: (state: MosaicState,
       mosaicConfigurations: Record<string, MosaicConfigurationModel>) => Vue.set(
@@ -132,23 +133,26 @@ export default {
     },
 
     LOAD_MOSAICS({commit, rootGetters}) {
-      const currentSignerAddress: Address = rootGetters['wallet/currentSignerAddress']
-      if (!currentSignerAddress) {
-        return
-      }
       const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory']
       const networkCurrency: NetworkCurrencyModel = rootGetters['mosaic/networkCurrency']
-      const mosaicService = new MosaicService()
       const accountsInfo: AccountInfo[] = rootGetters['wallet/accountsInfo'] || []
-
-      mosaicService.getMosaics(repositoryFactory, networkCurrency ? [networkCurrency] : [],
+      new MosaicService().getMosaics(repositoryFactory, networkCurrency ? [networkCurrency] : [],
         accountsInfo).subscribe((mosaics) => {
+        const currentSignerAddress: Address = rootGetters['wallet/currentSignerAddress']
+        if (!currentSignerAddress) {
+          return
+        }
         commit('mosaics', {mosaics: mosaics, currentSignerAddress, networkCurrency})
       })
     },
 
-    SIGNER_CHANGED({dispatch}) {
-      dispatch('LOAD_MOSAICS')
+    SIGNER_CHANGED({commit, rootGetters, getters}) {
+      const currentSignerAddress: Address = rootGetters['wallet/currentSignerAddress']
+      const networkCurrency: NetworkCurrencyModel = rootGetters['mosaic/networkCurrency']
+      if (!currentSignerAddress) {
+        return
+      }
+      commit('mosaics', {mosaics: getters['mosaics'], currentSignerAddress, networkCurrency})
     },
 
     HIDE_MOSAIC({commit}, mosaicId) {

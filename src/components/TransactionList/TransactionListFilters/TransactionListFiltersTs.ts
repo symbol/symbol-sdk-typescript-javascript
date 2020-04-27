@@ -31,7 +31,6 @@ import {TransactionGroup} from '@/store/Transaction'
   components: {TransactionAddressFilter, TransactionStatusFilter},
   computed: {
     ...mapGetters({
-      currentSigner: 'wallet/currentSigner',
       currentWallet: 'wallet/currentWallet',
       networkType: 'network/networkType',
       signers: 'wallet/signers',
@@ -54,19 +53,14 @@ export class TransactionListFiltersTs extends Vue {
   protected networkType: NetworkType
 
   /**
-   * Selected signer from the store
-   * @protected
-   * @type {string}
+   * current signers
    */
-  public currentSigner: Signer
-
-
   public signers: Signer[]
 
   /**
    * set the default to select all
    */
-  protected selectedOption: string = 'all'
+  protected selectedOption = TransactionGroup.all
 
   /**
    * Hook called when the signer selector has changed

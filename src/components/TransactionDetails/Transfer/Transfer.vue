@@ -52,11 +52,12 @@ export default class Transfer extends Vue {
   protected get items(): TransactionDetailItem[] {
     const attachedMosaics: AttachedMosaic[] = this.view.values.get('mosaics')
     const message: Message = this.view.values.get('message')
-
+    const incoming = this.view.values.get('isIncoming')
     const mosaicItems = attachedMosaics.map((mosaic, index, self) => {
+      const color = (incoming ? 'green' : 'red')
       return {
         key: `${this.$t('mosaic')} (${index + 1}/${self.length})`,
-        value: mosaic,
+        value: {...mosaic, color},
         isMosaic: true,
       }
     })

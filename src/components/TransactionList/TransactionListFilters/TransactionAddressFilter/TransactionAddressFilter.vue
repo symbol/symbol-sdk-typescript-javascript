@@ -1,12 +1,12 @@
 <template>
   <div>
     <Select
-      v-model="selectedAddress" size="large" prefix="ios-home"
-      @input="onAddressChange"
+      v-model="selectedSigner" size="large" prefix="ios-home"
+      @input="onSignerChange"
     >
       <Icon slot="prefix" type="ios-people" size="24" />
       <OptionGroup label="Multisig accounts">
-        <Option v-for="item in addresses" :key="item.publicKey" :value="item.publicKey">
+        <Option v-for="item in signers" :key="item.publicKey" :value="item.publicKey">
           {{ item.label }} {{ item.multisig ? $t('label_postfix_multisig') : '' }}
         </Option>
       </OptionGroup>

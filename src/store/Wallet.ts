@@ -260,21 +260,6 @@ export default {
       commit('currentWalletAddress', null)
     },
 
-    UPDATE_CURRENT_WALLET_NAME({commit, getters, rootGetters}, name: string) {
-      const currentWallet: WalletModel = getters.currentWallet
-      if (!currentWallet) {
-        return
-      }
-      const currentAccount: AccountModel = rootGetters['account/currentAccount']
-      if (!currentAccount) {
-        return
-      }
-      const walletService = new WalletService()
-      walletService.updateName(currentWallet, name)
-      const knownWallets = walletService.getKnownWallets(currentAccount.wallets)
-      commit('knownWallets', knownWallets)
-    },
-
     async SET_CURRENT_SIGNER({commit, dispatch, getters, rootGetters},
       {publicKey}: { publicKey: string }) {
       if (!publicKey){
@@ -296,24 +281,22 @@ export default {
       dispatch('transaction/RESET_TRANSACTIONS', {}, {root: true})
 
       const currentWalletAddress = Address.createFromRawAddress(currentWallet.address)
-      const walletService = new WalletService()
-      const knownWallets = walletService.getKnownWallets(currentAccount.wallets)
-      const knownAddresses = _.uniqBy([ currentSignerAddress,
-        ...knownWallets.map(w => Address.createFromRawAddress(w.address)) ].filter(a => a),
-      'address')
-
+      const knownWallets = new WalletService().getKnownWallets(currentAccount.wallets)
 
       commit('currentSignerAddress', currentSignerAddress)
       commit('currentWalletAddress', currentWalletAddress)
       commit('isCosignatoryMode', !currentSignerAddress.equals(currentWalletAddress))
-
       commit('knownWallets', knownWallets)
-      commit('knownAddresses', knownAddresses)
 
+      // Upgrade
       dispatch('namespace/SIGNER_CHANGED', {}, {root: true})
       dispatch('mosaic/SIGNER_CHANGED', {}, {root: true})
       dispatch('transaction/SIGNER_CHANGED', {}, {root: true})
+
       await dispatch('LOAD_ACCOUNT_INFO')
+
+      dispatch('namespace/LOAD_NAMESPACES', {}, {root: true})
+      dispatch('mosaic/LOAD_MOSAICS', {}, {root: true})
 
     },
 
@@ -323,38 +306,63 @@ export default {
       const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
       const currentSignerAddress: Address = getters.currentSignerAddress
       const currentWalletAddress: Address = getters.currentWalletAddress
-      const knownAddresses: Address[] = getters.knownAddresses
       const knownWallets: WalletModel[] = getters.knownWallets
 
       // remote calls:
-      const getAccontInfoPromise = repositoryFactory.createAccountRepository()
-        .getAccountsInfo(knownAddresses).toPromise()
 
-      const getMultisignAccountInforPromise = repositoryFactory.createMultisigRepository()
+      const getMultisigAccountGraphInfoPromise = repositoryFactory.createMultisigRepository()
         .getMultisigAccountGraphInfo(currentWalletAddress).pipe(map(g => {
           return MultisigService.getMultisigInfoFromMultisigGraphInfo(g)
         }), catchError(() => {
           return of([])
         })).toPromise()
 
-      const accountsInfo = await getAccontInfoPromise
-      const multisigAccountsInfo: MultisigAccountInfo[] = await getMultisignAccountInforPromise
+
+      // REMOTE CALL
+      const multisigAccountsInfo: MultisigAccountInfo[] = await getMultisigAccountGraphInfoPromise
 
       const currentWalletMultisigInfo = multisigAccountsInfo.find(
         m => m.account.address.equals(currentWalletAddress))
       const currentSignerMultisigInfo = multisigAccountsInfo.find(
         m => m.account.address.equals(currentSignerAddress))
-      const multisigService = new MultisigService()
-      const signers = multisigService.getSigners(networkType, knownWallets, currentWallet,
+
+      const signers = new MultisigService().getSigners(networkType, knownWallets, currentWallet,
         currentWalletMultisigInfo)
 
+      const knownAddresses = _.uniqBy([ ...signers.map(s=>s.address),
+        ...knownWallets.map(w => Address.createFromRawAddress(w.address)) ].filter(a => a),
+      'address')
+
+      commit('knownAddresses', knownAddresses)
       commit('currentSigner', signers.find(s => s.address.equals(currentSignerAddress)))
       commit('signers', signers)
-      commit('accountsInfo', accountsInfo)
       commit('multisigAccountsInfo', multisigAccountsInfo)
       commit('currentWalletMultisigInfo', currentWalletMultisigInfo)
       commit('currentSignerMultisigInfo', currentSignerMultisigInfo)
 
+      // REMOTE CALL
+      const getAccountsInfoPromise = repositoryFactory.createAccountRepository()
+        .getAccountsInfo(knownAddresses).toPromise()
+      const accountsInfo = await getAccountsInfoPromise
+
+      commit('accountsInfo', accountsInfo)
+
+    },
+
+
+    UPDATE_CURRENT_WALLET_NAME({commit, getters, rootGetters}, name: string) {
+      const currentWallet: WalletModel = getters.currentWallet
+      if (!currentWallet) {
+        return
+      }
+      const currentAccount: AccountModel = rootGetters['account/currentAccount']
+      if (!currentAccount) {
+        return
+      }
+      const walletService = new WalletService()
+      walletService.updateName(currentWallet, name)
+      const knownWallets = walletService.getKnownWallets(currentAccount.wallets)
+      commit('knownWallets', knownWallets)
     },
 
 

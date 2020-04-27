@@ -148,7 +148,7 @@ export class TransactionRowTs extends Vue {
     if (this.transaction.type === TransactionType.TRANSFER) {
       return this.isIncomingTransaction() ? 'green' : 'red'
     }
-    return this.getAmount() === 0 ? '' : 'red'
+    return 'red'
   }
 
   /**
