@@ -17,12 +17,12 @@ import {MosaicId, MultisigAccountInfo, NetworkType, PublicAccount, Transaction} 
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 // internal dependencies
-import {WalletModel} from '@/core/database/entities/WalletModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
 import {TransactionService} from '@/services/TransactionService'
 import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 import {ValidationObserver} from 'vee-validate'
-import {Signer} from '@/store/Wallet'
+import {Signer} from '@/store/Account'
 import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyModel'
 
 @Component({
@@ -31,15 +31,15 @@ import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyMode
       generationHash: 'network/generationHash',
       networkType: 'network/networkType',
       defaultFee: 'app/defaultFee',
-      currentWallet: 'wallet/currentWallet',
-      selectedSigner: 'wallet/currentSigner',
-      currentSignerMultisigInfo: 'wallet/currentSignerMultisigInfo',
-      currentWalletMultisigInfo: 'wallet/currentWalletMultisigInfo',
-      isCosignatoryMode: 'wallet/isCosignatoryMode',
-      stagedTransactions: 'wallet/stagedTransactions',
+      currentAccount: 'account/currentAccount',
+      selectedSigner: 'account/currentSigner',
+      currentSignerMultisigInfo: 'account/currentSignerMultisigInfo',
+      currentAccountMultisigInfo: 'account/currentAccountMultisigInfo',
+      isCosignatoryMode: 'account/isCosignatoryMode',
+      stagedTransactions: 'account/stagedTransactions',
       networkMosaic: 'mosaic/networkMosaic',
       networkCurrency: 'mosaic/networkCurrency',
-      signers: 'wallet/signers',
+      signers: 'account/signers',
     }),
   },
 })
@@ -62,9 +62,9 @@ export class FormTransactionBase extends Vue {
   public defaultFee: number
 
   /**
-   * Currently active wallet
+   * Currently active account
    */
-  public currentWallet: WalletModel
+  public currentAccount: AccountModel
 
   /**
    * Currently active signer
@@ -72,10 +72,10 @@ export class FormTransactionBase extends Vue {
   public selectedSigner: Signer
 
   /**
-   * Current wallet multisig info
+   * Current account multisig info
    * @type {MultisigAccountInfo}
    */
-  public currentWalletMultisigInfo: MultisigAccountInfo
+  public currentAccountMultisigInfo: MultisigAccountInfo
 
   /**
    * Current signer multisig info
@@ -124,8 +124,8 @@ export class FormTransactionBase extends Vue {
   /// end-region store getters
 
   /// region property watches
-  @Watch('currentWallet')
-  onCurrentWalletChange() {
+  @Watch('currentAccount')
+  onCurrentAccountChange() {
     this.resetForm() // @TODO: probably not the best way
     this.resetFormValidation()
   }
@@ -158,9 +158,9 @@ export class FormTransactionBase extends Vue {
    * @return {void}
    */
   public beforeDestroy() {
-    // reset the selected signer if it is not the current wallet
-    if (this.selectedSigner.publicKey !== this.currentWallet.publicKey) {
-      this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {publicKey: this.currentWallet.publicKey})
+    // reset the selected signer if it is not the current account
+    if (this.selectedSigner.publicKey !== this.currentAccount.publicKey) {
+      this.$store.dispatch('account/SET_CURRENT_SIGNER', {publicKey: this.currentAccount.publicKey})
     }
   }
 
@@ -172,11 +172,11 @@ export class FormTransactionBase extends Vue {
   get multisigAccounts(): Signer[] {
     const signers = this.signers
     // if "self" is multisig, also return self
-    if (this.currentWalletMultisigInfo && this.currentWalletMultisigInfo.isMultisig()) {
+    if (this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.isMultisig()) {
       return signers
     }
 
-    // all signers except current wallet
+    // all signers except current account
     return [...signers].splice(1)
   }
 
@@ -247,7 +247,7 @@ export class FormTransactionBase extends Vue {
    */
   public async onChangeSigner(publicKey: string) {
     // this.currentSigner = PublicAccount.createFromPublicKey(publicKey, this.networkType)
-    await this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {publicKey})
+    await this.$store.dispatch('account/SET_CURRENT_SIGNER', {publicKey})
   }
 
   /**
@@ -262,7 +262,7 @@ export class FormTransactionBase extends Vue {
     // - check whether transactions must be aggregated
     // - also set isMultisig flag in case of cosignatory mode
     if (this.isAggregateMode()) {
-      this.$store.commit('wallet/stageOptions', {
+      this.$store.commit('account/stageOptions', {
         isAggregate: true,
         isMultisig: this.isMultisigMode(),
       })
@@ -272,7 +272,7 @@ export class FormTransactionBase extends Vue {
     await Promise.all(transactions.map(
       async (transaction) => {
         await this.$store.dispatch(
-          'wallet/ADD_STAGED_TRANSACTION',
+          'account/ADD_STAGED_TRANSACTION',
           transaction,
         )
       }))
@@ -287,10 +287,10 @@ export class FormTransactionBase extends Vue {
    * @return {void}
    */
   public async onConfirmationSuccess(issuer: PublicAccount) {
-    // if the form was in multisig, set the signer to be the main wallet
-    // this triggers resetForm in the @Watch('currentWallet') hook
+    // if the form was in multisig, set the signer to be the main account
+    // this triggers resetForm in the @Watch('currentAccount') hook
     if (this.isMultisigMode()) {
-      this.$store.dispatch('wallet/SET_CURRENT_WALLET', this.currentWallet)
+      this.$store.dispatch('account/SET_CURRENT_ACCOUNT', this.currentAccount)
     } else {
       this.resetForm()
     }
@@ -301,7 +301,7 @@ export class FormTransactionBase extends Vue {
     // XXX does the user want to broadcast NOW ?
 
     // - read transaction stage options
-    const options = this.$store.getters['wallet/stageOptions']
+    const options = this.$store.getters['account/stageOptions']
     const service = new TransactionService(this.$store)
     let results: BroadcastResult[] = []
 
@@ -354,7 +354,7 @@ export class FormTransactionBase extends Vue {
    * @return {void}
    */
   public onConfirmationCancel() {
-    this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
+    this.$store.dispatch('account/RESET_TRANSACTION_STAGE')
     this.hasConfirmationModal = false
   }
 

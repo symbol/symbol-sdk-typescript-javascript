@@ -17,7 +17,7 @@ import {mapGetters} from 'vuex'
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {AggregateTransaction, MosaicId, Transaction} from 'symbol-sdk'
 // internal dependencies
-import {WalletModel} from '@/core/database/entities/WalletModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
 import {TransactionService} from '@/services/TransactionService'
 // child components
 // @ts-ignore
@@ -42,7 +42,7 @@ import {TransactionGroup} from '@/store/Transaction'
   },
   computed: {
     ...mapGetters({
-      currentWallet: 'wallet/currentWallet',
+      currentAccount: 'account/currentAccount',
       networkMosaic: 'mosaic/networkMosaic',
       currentHeight: 'network/currentHeight',
       // use partial+unconfirmed from store because
@@ -64,11 +64,11 @@ export class TransactionListTs extends Vue {
   }) pageSize: number
 
   /**
-   * Currently active wallet
-   * @see {Store.Wallet}
-   * @var {WalletModel}
+   * Currently active account
+   * @see {Store.Account}
+   * @var {AccountModel}
    */
-  public currentWallet: WalletModel
+  public currentAccount: AccountModel
 
   /**
    * Network block height

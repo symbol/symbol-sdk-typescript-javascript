@@ -15,7 +15,7 @@ import {NotificationType} from '@/core/utils/NotificationType'
 
 @Component({computed: {...mapGetters({
   networkMosaic: 'mosaic/networkMosaic',
-  currentWalletMultisigInfo: 'wallet/currentWalletMultisigInfo',
+  currentAccountMultisigInfo: 'account/currentAccountMultisigInfo',
 })}})
 export default class DisabledFormOverlay extends Vue {
   /**
@@ -31,10 +31,10 @@ export default class DisabledFormOverlay extends Vue {
   public networkMosaic: MosaicId
 
   /**
-   * Current wallet multisig info
+   * Current account multisig info
    * @type {MultisigAccountInfo}
    */
-  public currentWalletMultisigInfo: MultisigAccountInfo
+  public currentAccountMultisigInfo: MultisigAccountInfo
 
   /// region computed properties getter/setter
   /**
@@ -51,7 +51,7 @@ export default class DisabledFormOverlay extends Vue {
     }
 
     // Disable the forms to accounts with cosignatories
-    return this.currentWalletMultisigInfo && this.currentWalletMultisigInfo.cosignatories.length > 0
+    return this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.cosignatories.length > 0
   }
 
   /**

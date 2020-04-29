@@ -31,7 +31,7 @@ import {
   AggregateTransaction,
 } from 'symbol-sdk'
 import {TransactionView} from '@/core/transactions/TransactionView'
-import {getTestAccount} from '@MOCKS/accounts'
+import {getTestAccount} from '@MOCKS/profiles'
 
 /// region mocks
 export type DummyTransactionFormFields = {

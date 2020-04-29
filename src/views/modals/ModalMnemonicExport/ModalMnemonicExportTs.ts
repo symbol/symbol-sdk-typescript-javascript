@@ -15,24 +15,23 @@
  */
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Account, NetworkType, Password} from 'symbol-sdk'
+import {Account, NetworkType, Password, Crypto} from 'symbol-sdk'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 import {MnemonicQR, QRCodeGenerator} from 'symbol-qr-library'
 // internal dependencies
-import {AESEncryptionService} from '@/services/AESEncryptionService'
-import {AccountModel} from '@/core/database/entities/AccountModel'
+import {ProfileModel} from '@/core/database/entities/ProfileModel'
 // child components
 // @ts-ignore
-import FormAccountUnlock from '@/views/forms/FormAccountUnlock/FormAccountUnlock.vue'
+import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock.vue'
 // resources
 // @ts-ignore
 import failureIcon from '@/views/resources/img/monitor/failure.png'
 
 @Component({
-  components: {FormAccountUnlock},
+  components: {FormProfileUnlock},
   computed: {
     ...mapGetters({
-      currentAccount: 'account/currentAccount',
+      currentProfile: 'profile/currentProfile',
       networkType: 'network/networkType',
       generationHash: 'network/generationHash',
     }),
@@ -44,11 +43,11 @@ export class ModalMnemonicExportTs extends Vue {
   }) visible: boolean
 
   /**
-   * Currently active account
-   * @see {Store.Account}
-   * @var {AccountsModel}
+   * Currently active profile
+   * @see {Store.Profile}
+   * @var {ProfileModel}
    */
-  public currentAccount: AccountModel
+  public currentProfile: ProfileModel
 
   /**
    * Current networkType
@@ -101,8 +100,8 @@ export class ModalMnemonicExportTs extends Vue {
   public onAccountUnlocked(payload: { account: Account, password: Password }): boolean {
 
     // decrypt seed + create QR
-    const encSeed = this.currentAccount.seed
-    const plnSeed = AESEncryptionService.decrypt(encSeed, payload.password)
+    const encSeed = this.currentProfile.seed
+    const plnSeed = Crypto.decrypt(encSeed, payload.password.value)
 
     try {
       this.exportMnemonicQR = QRCodeGenerator.createExportMnemonic(
@@ -125,7 +124,7 @@ export class ModalMnemonicExportTs extends Vue {
   }
 
   /**
-   * Hook called when child component FormAccountUnlock or
+   * Hook called when child component FormProfileUnlock or
    * HardwareConfirmationButton emit the 'error' event.
    * @param {string} message
    * @return {void}
@@ -149,8 +148,8 @@ export class ModalMnemonicExportTs extends Vue {
     // - create link (<a>)
     const a = document.createElement('a')
     const event = new MouseEvent('click')
-    const accountName = this.currentAccount.accountName
-    a.download = `qr_account_mnemonic_${accountName}`
+    const profileName = this.currentProfile.profileName
+    a.download = `qr_account_mnemonic_${profileName}`
     a.href = url
     // - start download
     a.dispatchEvent(event)

@@ -5,9 +5,9 @@
     "MAX_LISTENER_RECONNECT_TRIES": 20,
     "MAX_PASSWORD_LENGTH": 64,
     "MAX_REMOTE_ACCOUNT_CHECKS": 10,
-    "MAX_SEED_WALLETS_NUMBER": 10,
+    "MAX_SEED_ACCOUNTS_NUMBER": 10,
     "MIN_PASSWORD_LENGTH": 8,
-    "SEED_WALLET_NAME_PREFIX": "SeedWallet-"
+    "SEED_ACCOUNT_NAME_PREFIX": "SeedWallet-"
   },
   "languages": [
     {"value": "en-US", "label": "English"},

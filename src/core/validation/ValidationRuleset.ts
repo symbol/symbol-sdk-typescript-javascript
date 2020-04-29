@@ -29,9 +29,9 @@ export const createValidationRuleset = ({
   minNamespaceDuration,
 }: NetworkConfigurationModel) => {
   return {
-    address: 'required|address|addressNetworkType:currentAccount',
-    accountPassword: 'required|accountPassword',
-    addressOrAlias: 'required|addressOrAlias|addressOrAliasNetworkType:currentAccount',
+    address: 'required|address|addressNetworkType:currentProfile',
+    profilePassword: 'required|profilePassword',
+    addressOrAlias: 'required|addressOrAlias|addressOrAliasNetworkType:currentProfile',
     amount: `excluded:""|is_not:0|min_value:0|maxDecimals:${maxMosaicDivisibility}|max_value:${maxMosaicAtomicUnits}`,
     confirmPassword: 'required|confirmPassword:@newPassword',
     divisibility: 'required|min_value:0|max_value:6|integer',
@@ -53,10 +53,9 @@ export const createValidationRuleset = ({
     privateKey: 'min:64|max:64|privateKey',
     recipientPublicKey: 'required|publicKey',
     supply: `required|integer|min_value: 1|max_value:${maxMosaicAtomicUnits}`,
-    walletPassword: 'required|confirmWalletPassword:wallet',
     url: 'required|url',
     newAccountName: 'required|newAccountName',
-    accountWalletName: 'required|accountWalletName',
+    profileAccountName: 'required|profileAccountName',
     addressOrPublicKey: 'addressOrPublicKey',
   }
 }

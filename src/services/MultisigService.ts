@@ -15,8 +15,8 @@
  */
 import {Address, MultisigAccountGraphInfo, MultisigAccountInfo, NetworkType} from 'symbol-sdk'
 // internal dependencies
-import {WalletModel} from '@/core/database/entities/WalletModel'
-import {Signer} from '@/store/Wallet'
+import {AccountModel} from '@/core/database/entities/AccountModel'
+import {Signer} from '@/store/Account'
 
 export class MultisigService {
 
@@ -39,36 +39,36 @@ export class MultisigService {
 
 
   public getSigners(networkType: NetworkType,
-    knownWallets: WalletModel[],
-    currentWallet: WalletModel,
-    currentWalletMultisigInfo: MultisigAccountInfo | undefined): Signer[] {
-    if (!currentWallet) return []
+    knownAccounts: AccountModel[],
+    currentAccount: AccountModel,
+    currentAccountMultisigInfo: MultisigAccountInfo | undefined): Signer[] {
+    if (!currentAccount) return []
     const self: Signer[] = [
       {
-        address: Address.createFromRawAddress(currentWallet.address),
-        publicKey: currentWallet.publicKey,
-        label: currentWallet.name,
-        multisig: currentWalletMultisigInfo && currentWalletMultisigInfo.isMultisig(),
+        address: Address.createFromRawAddress(currentAccount.address),
+        publicKey: currentAccount.publicKey,
+        label: currentAccount.name,
+        multisig: currentAccountMultisigInfo && currentAccountMultisigInfo.isMultisig(),
       },
     ]
 
-    if (!currentWalletMultisigInfo) {
+    if (!currentAccountMultisigInfo) {
       return self
     }
 
-    return self.concat(...currentWalletMultisigInfo.multisigAccounts.map(
+    return self.concat(...currentAccountMultisigInfo.multisigAccounts.map(
       ({publicKey, address}) => ({
         address,
         publicKey,
         multisig: true,
-        label: this.getWalletLabel(address, knownWallets),
+        label: this.getAccountLabel(address, knownAccounts),
       })))
 
   }
 
 
-  private getWalletLabel(address: Address, wallets: WalletModel[]): string {
-    const wallet = wallets.find(wlt => address.plain() === wlt.address)
-    return wallet && wallet.name || address.plain()
+  private getAccountLabel(address: Address, accounts: AccountModel[]): string {
+    const account = accounts.find(wlt => address.plain() === wlt.address)
+    return account && account.name || address.plain()
   }
 }

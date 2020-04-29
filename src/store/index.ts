@@ -18,8 +18,8 @@ import Vuex from 'vuex'
 import AppInfoStore from '@/store/AppInfo'
 import DatabaseStore from '@/store/Database'
 import NetworkStore from '@/store/Network'
+import ProfileStore from '@/store/Profile'
 import AccountStore from '@/store/Account'
-import WalletStore from '@/store/Wallet'
 import DiagnosticStore from '@/store/Diagnostic'
 import NotificationStore from '@/store/Notification'
 import TemporaryStore from '@/store/Temporary'
@@ -47,8 +47,8 @@ const AppStore = new Vuex.Store({
     app: AppInfoStore,
     db: DatabaseStore,
     network: NetworkStore,
+    profile: ProfileStore,
     account: AccountStore,
-    wallet: WalletStore,
     diagnostic: DiagnosticStore,
     notification: NotificationStore,
     temporary: TemporaryStore,
@@ -68,6 +68,8 @@ const AppStore = new Vuex.Store({
         await dispatch('db/initialize')
         await dispatch('diagnostic/initialize')
         await dispatch('notification/initialize')
+        // Network init must happen before Mosaic init because network currency Ids
+        // are supplied to MosaicService from the network configuration
         await dispatch('network/initialize')
         await dispatch('mosaic/initialize')
         await dispatch('namespace/initialize')
@@ -84,8 +86,8 @@ const AppStore = new Vuex.Store({
         dispatch('network/uninitialize'),
         dispatch('mosaic/uninitialize'),
         dispatch('transaction/uninitialize'),
+        dispatch('profile/uninitialize'),
         dispatch('account/uninitialize'),
-        dispatch('wallet/uninitialize'),
         dispatch('namespace/uninitialize'),
         dispatch('notification/uninitialize'),
         dispatch('temporary/uninitialize'),

@@ -105,13 +105,13 @@ export class FormAliasTransactionTs extends FormTransactionBase {
   protected aliasTargetType: 'mosaic' | 'address' = this.aliasTarget instanceof Address ? 'address' : 'mosaic'
 
   /**
-   * Current wallet owned namespaces
+   * Current account owned namespaces
    * @private
    */
   private namespaces: NamespaceModel[]
 
   /**
-   * Current wallet owned mosaics
+   * Current account owned mosaics
    * @private
    */
   private mosaics: MosaicModel[]
@@ -124,7 +124,7 @@ export class FormAliasTransactionTs extends FormTransactionBase {
   private currentHeight: number
 
   /**
-   * Current wallet namespace hex Ids that can be linked
+   * Current account namespace hex Ids that can be linked
    * @readonly
    * @protected
    * @type {string []}
@@ -136,7 +136,7 @@ export class FormAliasTransactionTs extends FormTransactionBase {
   }
 
   /**
-   * Current wallet mosaics hex Ids that can be linked
+   * Current account mosaics hex Ids that can be linked
    * @readonly
    * @protected
    */

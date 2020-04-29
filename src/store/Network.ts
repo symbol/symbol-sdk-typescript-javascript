@@ -170,14 +170,14 @@ export default {
     },
 
 
-    async CONNECT({commit, dispatch}, newCandidate: string | undefined) {
+    async CONNECT({commit, dispatch, getters}, newCandidate: string | undefined) {
       const networkService = new NetworkService()
       const {networkModel, repositoryFactory, fallback} = await networkService.getNetworkModel(newCandidate)
         .toPromise()
       if (fallback) {
         throw new Error('Connection Error.')
       }
-
+      const oldGenerationHash = getters['generationHash']
       const getNodesPromise = new NodeService().getNodes(repositoryFactory, networkModel.url).toPromise()
       const getBlockchainHeightPromise = repositoryFactory.createChainRepository()
         .getBlockchainHeight().toPromise()
@@ -201,6 +201,10 @@ export default {
       $eventBus.$emit('newConnection', currentPeer)
       // subscribe to updates
       dispatch('SUBSCRIBE')
+      if (oldGenerationHash != networkModel.generationHash) {
+        dispatch('account/NETWORK_CHANGED', {}, {root: true})
+        dispatch('statistics/LOAD', {}, {root: true})
+      }
     },
 
 
@@ -225,10 +229,10 @@ export default {
 
         await dispatch('CONNECT', currentPeerUrl)
 
-        const currentWallet = rootGetters['wallet/currentWallet']
+        const currentAccount = rootGetters['account/currentAccount']
 
         // - re-open listeners
-        dispatch('wallet/initialize', {address: currentWallet.address}, {root: true})
+        dispatch('account/initialize', {address: currentAccount.address}, {root: true})
 
       } catch (e) {
         console.log(e)
@@ -256,13 +260,13 @@ export default {
       commit('removePeer', peerUrl)
     },
 
-    async RESET_PEERS({dispatch}) {
+    async RESET_PEERS({dispatch, getters}) {
 
       const nodeService = new NodeService()
       nodeService.reset()
 
       const networkService = new NetworkService()
-      networkService.reset()
+      networkService.reset(getters['generationHash'])
 
       dispatch('SET_CURRENT_PEER', networkService.getDefaultUrl())
 

@@ -44,22 +44,10 @@ export default {
     countNodes: (state, cnt) => Vue.set(state, 'countNodes', cnt),
   },
   actions: {
-    async initialize({commit, getters, rootGetters}) {
+    async initialize({commit, getters, dispatch}) {
       const callback = async () => {
-        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
-        const nodeHttp = repositoryFactory.createNodeRepository()
-        const storageInfoPromise = nodeHttp.getStorageInfo().toPromise()
-        const nodePeersPromise = nodeHttp.getNodePeers().toPromise()
 
-        const diagnostic: StorageInfo = await storageInfoPromise
-        const nodes = await nodePeersPromise
-
-        commit('countTransactions', diagnostic.numTransactions)
-        commit('countBlocks', diagnostic.numBlocks)
-        commit('countAccounts', diagnostic.numAccounts)
-
-        commit('countNodes', nodes.length)
-
+        dispatch('LOAD')
         // update store
         commit('setInitialized', true)
       }
@@ -73,5 +61,27 @@ export default {
       }
       await Lock.uninitialize(callback, {getters})
     },
+
+    async LOAD({commit, rootGetters}){
+
+      commit('countTransactions',0)
+      commit('countBlocks', 0)
+      commit('countAccounts', 0)
+      commit('countNodes', 0)
+
+      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
+      const nodeHttp = repositoryFactory.createNodeRepository()
+      const storageInfoPromise = nodeHttp.getStorageInfo().toPromise()
+      const nodePeersPromise = nodeHttp.getNodePeers().toPromise()
+
+      const diagnostic: StorageInfo = await storageInfoPromise
+      const nodes = await nodePeersPromise
+
+      commit('countTransactions', diagnostic.numTransactions)
+      commit('countBlocks', diagnostic.numBlocks)
+      commit('countAccounts', diagnostic.numAccounts)
+      commit('countNodes', nodes.length)
+    },
+
   },
 }

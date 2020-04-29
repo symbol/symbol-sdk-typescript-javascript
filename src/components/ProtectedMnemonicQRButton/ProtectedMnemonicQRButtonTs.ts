@@ -17,7 +17,7 @@ import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
-import {WalletModel} from '@/core/database/entities/WalletModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
 import {UIHelpers} from '@/core/utils/UIHelpers'
 
 // child components
@@ -29,7 +29,7 @@ import ModalMnemonicExport from '@/views/modals/ModalMnemonicExport/ModalMnemoni
     ModalMnemonicExport,
   },
   computed: {...mapGetters({
-    currentAccount: 'account/currentAccount',
+    currentProfile: 'profile/currentProfile',
     networkType: 'network/networkType',
     generationHash: 'network/generationHash',
   })},
@@ -37,7 +37,7 @@ import ModalMnemonicExport from '@/views/modals/ModalMnemonicExport/ModalMnemoni
 export class ProtectedMnemonicQRButtonTs extends Vue {
   @Prop({
     default: null,
-  }) wallet: WalletModel
+  }) account: AccountModel
 
   /**
    * UI Helpers

@@ -61,13 +61,13 @@
               <i-col span="9">
                 <div class="imgDiv">
                   <div class="step2Img">
-                    <img src="@/views/resources/img/wallet/Step2Img.png">
+                    <img src="@/views/resources/img/account/Step2Img.png">
                   </div>
                 </div>
               </i-col>
               <i-col span="15">
                 <p class="tit">
-                  {{ $t('getting_a_mnemonic_equals_ownership_of_a_wallet_asset') }}
+                  {{ $t('getting_a_mnemonic_equals_ownership_of_a_account_asset') }}
                 </p>
                 <div class="ul1">
                   <p class="ul1Tit">
@@ -133,7 +133,7 @@
 
         <div v-if="stepIndex === 4" class="stepItem5">
           <div class="backupImg">
-            <img src="@/views/resources/img/wallet/exportSuccess.png">
+            <img src="@/views/resources/img/account/exportSuccess.png">
           </div>
           <p class="backupTxt">
             {{ $t('the_mnemonic_order_is_correct_and_the_backup_is_successful') }}

@@ -16,7 +16,7 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 // internal dependencies
-import {WalletModel} from '@/core/database/entities/WalletModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
 import {UIHelpers} from '@/core/utils/UIHelpers'
 // child components
 // @ts-ignore
@@ -27,7 +27,7 @@ import ModalMnemonicDisplay from '@/views/modals/ModalMnemonicDisplay/ModalMnemo
     ModalMnemonicDisplay,
   },
   computed: {...mapGetters({
-    currentAccount: 'account/currentAccount',
+    currentProfile: 'profile/currentProfile',
     networkType: 'network/networkType',
     generationHash: 'network/generationHash',
   })},
@@ -35,7 +35,7 @@ import ModalMnemonicDisplay from '@/views/modals/ModalMnemonicDisplay/ModalMnemo
 export class ProtectedMnemonicDisplayButtonTs extends Vue {
   @Prop({
     default: null,
-  }) wallet: WalletModel
+  }) account: AccountModel
 
   /**
    * UI Helpers

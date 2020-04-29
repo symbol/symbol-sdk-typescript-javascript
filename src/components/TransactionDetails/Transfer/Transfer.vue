@@ -33,7 +33,7 @@ export default class Transfer extends Vue {
    */
   private get sender(): string {
     if (this.view.transaction.signer) return this.view.transaction.signer.address.pretty()
-    const currentSignerAddress = this.$store.getters['wallet/currentSignerAddress']
+    const currentSignerAddress = this.$store.getters['account/currentSignerAddress']
     return currentSignerAddress ? currentSignerAddress.pretty() : ''
   }
 

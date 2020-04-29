@@ -33,7 +33,7 @@
         {{ $t('scenes_to_be_used') }}
       </div>
       <div class="asset-description-text">
-        {{ $t('Used_to_bind_a_wallet_address') }}
+        {{ $t('Used_to_bind_a_account_address') }}
       </div>
     </template>
   </AssetListPageWrap>

@@ -26,7 +26,7 @@ import {SettingService} from '@/services/SettingService'
 
 const Lock = AwaitLock.create()
 const settingService = new SettingService()
-const ANON_ACCOUNT_NAME = ''
+const ANON_PROFILE_NAME = ''
 
 interface AppInfoState {
   initialized: false
@@ -51,7 +51,7 @@ const appInfoState: AppInfoState = {
   hasControlsDisabled: false,
   controlsDisabledMessage: '',
   faucetUrl: networkConfig.faucetUrl,
-  settings: settingService.getAccountSettings(ANON_ACCOUNT_NAME),
+  settings: settingService.getProfileSettings(ANON_PROFILE_NAME),
 }
 
 
@@ -72,7 +72,7 @@ export default {
     settings: (state: AppInfoState) => state.settings,
     faucetUrl: (state: AppInfoState) => state.faucetUrl,
     defaultFee: (state: AppInfoState) => state.settings.defaultFee,
-    defaultWallet: (state: AppInfoState) => state.settings.defaultWallet,
+    defaultAccount: (state: AppInfoState) => state.settings.defaultAccount,
   },
   mutations: {
     setInitialized: (state: AppInfoState, initialized) => { state.initialized = initialized },
@@ -126,9 +126,9 @@ export default {
         i18n.locale = settingsModel.language
         window.localStorage.setItem('locale', settingsModel.language)
       }
-      const currentAccount = rootGetters['account/currentAccount']
-      const accountName = currentAccount && currentAccount.accountName || ANON_ACCOUNT_NAME
-      commit('settings', settingService.changeAccountSettings(accountName, settingsModel))
+      const currentProfile = rootGetters['profile/currentProfile']
+      const profileName = currentProfile && currentProfile.profileName || ANON_PROFILE_NAME
+      commit('settings', settingService.changeProfileSettings(profileName, settingsModel))
     },
 
     SET_EXPLORER_URL({dispatch}, explorerUrl: string) {
@@ -141,8 +141,8 @@ export default {
     SET_DEFAULT_FEE({dispatch}, defaultFee: number) {
       dispatch('SET_SETTINGS', {defaultFee})
     },
-    SET_DEFAULT_WALLET({dispatch}, defaultWallet: string) {
-      dispatch('SET_SETTINGS', {defaultWallet})
+    SET_DEFAULT_ACCOUNT({dispatch}, defaultAccount: string) {
+      dispatch('SET_SETTINGS', {defaultAccount})
     },
     /// end-region scoped actions
   },

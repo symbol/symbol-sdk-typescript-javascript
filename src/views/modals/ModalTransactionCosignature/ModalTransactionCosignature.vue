@@ -41,7 +41,7 @@
           @success="onTransactionsSigned"
           @error="onError"
         />
-        <FormAccountUnlock 
+        <FormProfileUnlock 
           v-else
           @success="onAccountUnlocked"
           @error="onError"

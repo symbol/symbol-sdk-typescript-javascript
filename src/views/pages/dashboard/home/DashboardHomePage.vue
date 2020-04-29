@@ -1,7 +1,7 @@
 <template>
   <div class="monitor-dashboard-wrapper secondary_page_animate">
     <div class="transaction-list-wrapper">
-      <TransactionList v-if="!!walletAddress" :address="walletAddress" />
+      <TransactionList v-if="!!accountAddress" :address="accountAddress" />
     </div>
   </div>
 </template>

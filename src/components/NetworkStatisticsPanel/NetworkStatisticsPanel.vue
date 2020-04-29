@@ -1,7 +1,7 @@
 <template>
   <div class="top_network_info radius">
-    <div class="top_wallet_info">
-      <div class="xym-outline wallet-info-tile">
+    <div class="top_account_info">
+      <div class="xym-outline account-info-tile">
         <div class="title">
           <span class="title_txt">{{ $t('accounts') }}</span>
         </div>
@@ -10,7 +10,7 @@
           <AnimatedNumber v-model="countAccounts" />
         </span>
       </div>
-      <div class="xym-outline wallet-info-tile">
+      <div class="xym-outline account-info-tile">
         <div class="title">
           <span class="title_txt">{{ $t('chain_height') }}</span>
         </div>
@@ -19,7 +19,7 @@
           <AnimatedNumber v-model="currentHeight" />
         </span>
       </div>
-      <div class="xym-outline wallet-info-tile">
+      <div class="xym-outline account-info-tile">
         <div class="title">
           <span class="title_txt">{{ $t('speed') }}</span>
         </div>
@@ -29,7 +29,7 @@
         </span>
         <span class="speed-blocks">/{{ $t('block') }}</span>
       </div>
-      <div class="xym-outline wallet-info-tile">
+      <div class="xym-outline account-info-tile">
         <div class="title">
           <span class="title_txt">{{ $t('peers_number') }}</span>
         </div>

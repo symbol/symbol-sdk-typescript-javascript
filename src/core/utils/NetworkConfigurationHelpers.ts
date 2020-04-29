@@ -133,4 +133,18 @@ export class NetworkConfigurationHelpers {
       Formatters.configurationNumberAsNumber(networkConfiguration.chain.maxMosaicAtomicUnits))
       || defaultValue || this.defaults.maxMosaicAtomicUnits
   }
+
+  public static currencyMosaicId(networkConfiguration: NetworkConfiguration | undefined,
+    defaultValue: string | undefined = undefined): string {
+    return (networkConfiguration && networkConfiguration.chain &&
+      Formatters.configurationStringAsString(networkConfiguration.chain.currencyMosaicId))
+      || defaultValue || this.defaults.currencyMosaicId
+  }
+
+  public static harvestingMosaicId(networkConfiguration: NetworkConfiguration | undefined,
+    defaultValue: string | undefined = undefined): string {
+    return (networkConfiguration && networkConfiguration.chain &&
+      Formatters.configurationStringAsString(networkConfiguration.chain.harvestingMosaicId))
+      || defaultValue || this.defaults.harvestingMosaicId
+  }
 }

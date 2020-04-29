@@ -1,0 +1,26 @@
+.accounts-main-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0.2rem 0 0.35rem 0.2rem;
+  display: grid;
+  grid-template-columns: 4.5rem auto;
+  grid-template-rows: 100%;
+  grid-column-gap: 0.25rem;
+}
+
+.left-container {
+  border-radius: 4px;
+}
+
+.right-container {
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 0.6rem auto;
+  background-color: white;
+  overflow: hidden;
+  &>.bottom-container{
+    height: 100%;
+    overflow-y: auto;
+  }
+}

@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-
-import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
 import {SettingsModel} from '@/core/database/entities/SettingsModel'
 
 import feesConfig from '@/../config/fees.conf.json'
 import appConfig from '@/../config/app.conf.json'
 import networkConfig from '@/../config/network.conf.json'
 import i18n from '@/language'
-
+import {SettingsModelStorage} from '@/core/database/storage/SettingsModelStorage'
 
 /**
  * Service in charge of loading and storing the SettingsModel from local storage.
@@ -29,27 +27,27 @@ import i18n from '@/language'
 export class SettingService {
 
   /**
-   * The the local storage that keeps the SettingsModel objects indexed by accountName.
+   * The the local storage that keeps the SettingsModel objects indexed by profileName.
    */
-  private readonly storage = new SimpleObjectStorage<Record<string, SettingsModel>>('settings')
+  private readonly storage = SettingsModelStorage.INSTANCE
 
-  public getAccountSettings(accountName: string): SettingsModel {
+  public getProfileSettings(profileName: string): SettingsModel {
     const storedData = this.storage.get() || {}
-    return {...this.createDefaultSettingsModel(accountName), ...storedData[accountName] || {}}
+    return {...this.createDefaultSettingsModel(profileName), ...storedData[profileName] || {}}
   }
 
-  public changeAccountSettings(accountName: string, newConfigs: any): SettingsModel {
+  public changeProfileSettings(profileName: string, newConfigs: any): SettingsModel {
     const storedData = this.storage.get() || {}
-    storedData[accountName] = {...this.getAccountSettings(accountName), ...newConfigs}
+    storedData[profileName] = {...this.getProfileSettings(profileName), ...newConfigs}
     this.storage.set(storedData)
-    return storedData[accountName]
+    return storedData[profileName]
   }
 
-  public createDefaultSettingsModel(accountName: string): SettingsModel {
+  public createDefaultSettingsModel(profileName: string): SettingsModel {
     const browserLocale = i18n.locale
     const language = appConfig.languages.find(
       l => l.value == browserLocale) ? browserLocale : appConfig.languages[0].value
-    return new SettingsModel(accountName, language, feesConfig.normal, '',
+    return new SettingsModel(profileName, language, feesConfig.normal, '',
       networkConfig.explorerUrl)
   }
 

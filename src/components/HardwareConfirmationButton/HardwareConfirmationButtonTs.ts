@@ -18,7 +18,7 @@ import {mapGetters} from 'vuex'
 import {Transaction, SignedTransaction, NetworkType} from 'symbol-sdk'
 
 // internal dependencies
-import {WalletModel} from '@/core/database/entities/WalletModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
 import {TransactionService} from '@/services/TransactionService'
 import TrezorConnect from '@/core/utils/TrezorConnect'
 
@@ -26,8 +26,8 @@ import TrezorConnect from '@/core/utils/TrezorConnect'
   computed: {
     ...mapGetters({
       networkType: 'network/networkType',
-      currentWallet: 'wallet/currentWallet',
-      stagedTransactions: 'wallet/stagedTransactions',
+      currentAccount: 'account/currentAccount',
+      stagedTransactions: 'account/stagedTransactions',
     }),
   },
 })
@@ -40,15 +40,15 @@ export class HardwareConfirmationButtonTs extends Vue {
   public networkType: NetworkType
 
   /**
-   * Currently active wallet
-   * @see {Store.Wallet}
-   * @var {WalletModel}
+   * Currently active account
+   * @see {Store.Account}
+   * @var {AccountModel}
    */
-  public currentWallet: WalletModel
+  public currentAccount: AccountModel
 
   /**
    * Staged transactions (to-be-signed)
-   * @see {Store.Wallet}
+   * @see {Store.Account}
    * @var {Transaction[]}
    */
   public stagedTransactions: Transaction[]
@@ -87,7 +87,7 @@ export class HardwareConfirmationButtonTs extends Vue {
 
       // - sign each transaction with TrezorConnect
       const result = await TrezorConnect.nemSignTransaction({
-        path: this.currentWallet.path,
+        path: this.currentAccount.path,
         transaction: stagedTx,
       })
 

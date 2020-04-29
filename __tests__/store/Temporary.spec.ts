@@ -16,7 +16,7 @@
 import TemporaryStore from '@/store/Temporary'
 import { Password } from 'symbol-sdk'
 
-describe('store/Account', () => {
+describe('store/Profile', () => {
   describe('action "RESET_STATE" should', () => {
     test('mutate password and mnemonic', () => {
       // prepare

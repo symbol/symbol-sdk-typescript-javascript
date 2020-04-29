@@ -75,7 +75,7 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
 
   protected networkConfiguration: NetworkConfigurationModel
   /**
-   * Current wallet's owned namespaces
+   * Current account's owned namespaces
    */
   public ownedNamespaces: NamespaceModel[]
 
@@ -125,7 +125,7 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
    */
   protected resetForm() {
     // - set default form values
-    this.formItems.signerPublicKey = this.currentWallet.publicKey
+    this.formItems.signerPublicKey = this.currentAccount.publicKey
     this.formItems.registrationType = this.registrationType || NamespaceRegistrationType.RootNamespace
     this.formItems.newNamespaceName = this.namespaceId ? this.namespaceId.fullName : ''
     this.formItems.parentNamespaceName = this.parentNamespaceId ? this.parentNamespaceId.fullName : ''

@@ -106,7 +106,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     // }
 
     // - set default form values
-    this.formItems.signerPublicKey = this.currentWallet.publicKey
+    this.formItems.signerPublicKey = this.currentAccount.publicKey
     this.formItems.supplyMutable = false
     this.formItems.restrictable = false
     this.formItems.permanent = false

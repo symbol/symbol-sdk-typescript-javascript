@@ -31,7 +31,7 @@ export class TransactionTableTs extends Vue {
 
   /**
    * List of confirmed transactions (websocket only)
-   * @see {Store.Wallet}
+   * @see {Store.Account}
    * @var {Transaction[]}
    */
   public partialTransactions: Transaction[]

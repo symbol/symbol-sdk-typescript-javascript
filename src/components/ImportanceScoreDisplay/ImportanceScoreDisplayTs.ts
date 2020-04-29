@@ -21,7 +21,7 @@ import {mapGetters} from 'vuex'
 @Component({
   computed: {
     ...mapGetters({
-      'accountsInfo': 'wallet/accountsInfo',
+      'accountsInfo': 'account/accountsInfo',
     }),
   },
 })

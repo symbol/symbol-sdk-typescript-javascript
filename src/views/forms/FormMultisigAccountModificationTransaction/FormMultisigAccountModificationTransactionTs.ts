@@ -136,7 +136,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     this.formItems.minApprovalDelta = !!this.minApprovalDelta ? this.minApprovalDelta : defaultMinApprovalDelta
     this.formItems.minRemovalDelta = !!this.minRemovalDelta ? this.minRemovalDelta : defaultMinRemovalDelta
     this.formItems.cosignatoryModifications = {}
-    this.formItems.signerPublicKey = this.currentWallet.publicKey
+    this.formItems.signerPublicKey = this.currentAccount.publicKey
 
     // - maxFee must be absolute
     this.formItems.maxFee = this.defaultFee
@@ -222,7 +222,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    */
   public async onChangeSigner(publicKey: string) {
     // whether the new signer is a multisig account
-    const signerIsMultisigAccount = this.currentWallet.publicKey !== publicKey
+    const signerIsMultisigAccount = this.currentAccount.publicKey !== publicKey
 
     // force update form fields
     this.formItems.minApprovalDelta = signerIsMultisigAccount ? 0 : 1
@@ -230,7 +230,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     this.formItems.signerPublicKey = publicKey
     this.formItems.cosignatoryModifications = {}
 
-    await this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {publicKey})
+    await this.$store.dispatch('account/SET_CURRENT_SIGNER', {publicKey})
     /// end-region super.onChangeSigner
 
   }

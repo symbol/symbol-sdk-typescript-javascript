@@ -35,7 +35,7 @@ import FormMosaicSupplyChangeTransaction from '@/views/forms/FormMosaicSupplyCha
 import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
 import {MosaicModel} from '@/core/database/entities/MosaicModel'
 import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
-import {WalletModel} from '@/core/database/entities/WalletModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
 
 @Component({
   components: {
@@ -48,7 +48,7 @@ import {WalletModel} from '@/core/database/entities/WalletModel'
   computed: {
     ...mapGetters({
       currentHeight: 'network/currentHeight',
-      currentWallet: 'wallet/currentWallet',
+      currentAccount: 'account/currentAccount',
       holdMosaics: 'mosaic/holdMosaics',
       ownedNamespaces: 'namespace/ownedNamespaces',
       networkConfiguration: 'network/networkConfiguration',
@@ -71,20 +71,20 @@ export class TableDisplayTs extends Vue {
   loading: boolean = false
 
   /**
-   * Current wallet owned mosaics
+   * Current account owned mosaics
    * @protected
    * @type {MosaicModel[]}
    */
   private holdMosaics: MosaicModel[]
 
   /**
-   * Current wallet owned namespaces
+   * Current account owned namespaces
    * @protected
    * @type {NamespaceModel[]}
    */
   private ownedNamespaces: NamespaceModel[]
 
-  private currentWallet: WalletModel
+  private currentAccount: AccountModel
 
   private currentHeight: number
 
@@ -120,7 +120,7 @@ export class TableDisplayTs extends Vue {
   protected get ownedAssetHexIds(): string[] {
     return this.assetType === 'namespace'
       ? this.ownedNamespaces.map(({namespaceIdHex}) => namespaceIdHex)
-      : this.holdMosaics.filter(({ownerRawPlain}) => ownerRawPlain === this.currentWallet.address)
+      : this.holdMosaics.filter(({ownerRawPlain}) => ownerRawPlain === this.currentAccount.address)
         .map(({mosaicIdHex}) => mosaicIdHex)
   }
 

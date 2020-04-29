@@ -17,7 +17,7 @@ import {Component, Prop, Vue} from 'vue-property-decorator'
 // child components
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
-import {Signer} from '@/store/Wallet'
+import {Signer} from '@/store/Account'
 
 @Component({
   components: {FormRow},

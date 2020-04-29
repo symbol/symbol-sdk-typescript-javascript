@@ -139,9 +139,9 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     // - set default form values
     this.formItems.signerPublicKey = this.selectedSigner.publicKey
     this.formItems.selectedMosaicHex = this.networkMosaic.toHex()
-    // default currentWallet Address to recipientRaw
+    // default currentAccount Address to recipientRaw
     if (this.$route.path.indexOf('invoice') > -1) {
-      this.formItems.recipientRaw = this.currentWallet.address || ''
+      this.formItems.recipientRaw = this.currentAccount.address || ''
     } else {
       this.formItems.recipientRaw = !!this.recipient ? this.recipient.plain() : ''
     }
@@ -185,7 +185,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
   }
 
   /**
-   * Returns the mosaic list of the current wallet or current signer
+   * Returns the mosaic list of the current account or current signer
    * depending on the multisig situation
    * @protected
    * @returns

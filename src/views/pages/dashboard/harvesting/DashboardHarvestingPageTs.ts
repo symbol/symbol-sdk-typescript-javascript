@@ -17,7 +17,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
-import {WalletModel} from '@/core/database/entities/WalletModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
 // child components
 // @ts-ignore
 import FormTransferTransaction from '@/views/forms/FormTransferTransaction/FormTransferTransaction.vue'
@@ -27,15 +27,15 @@ import FormTransferTransaction from '@/views/forms/FormTransferTransaction/FormT
     FormTransferTransaction,
   },
   computed: {...mapGetters({
-    currentWallet: 'wallet/currentWallet',
+    currentAccount: 'account/currentAccount',
   })},
 })
 export class DashboardHarvestingPageTs extends Vue {
 
   /**
-   * Currently active wallet
-   * @see {Store.Wallet}
-   * @var {WalletModel}
+   * Currently active account
+   * @see {Store.Account}
+   * @var {AccountModel}
    */
-  public currentWallet: WalletModel
+  public currentAccount: AccountModel
 }

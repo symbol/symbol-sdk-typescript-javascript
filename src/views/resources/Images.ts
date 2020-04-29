@@ -85,7 +85,7 @@ import accountRestrictionAlt from '@/views/resources/img/icons/account-restricti
 // @ts-ignore
 import accountRestriction from '@/views/resources/img/icons/account-restriction.png'
 // @ts-ignore
-import addAccount from '@/views/resources/img/icons/add-account.png'
+import addAccount from '@/views/resources/img/icons/add-profile.png'
 // @ts-ignore
 import addAggregate from '@/views/resources/img/icons/add-aggregate.png'
 // @ts-ignore

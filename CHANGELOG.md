@@ -5,12 +5,17 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ## [v0.9.9][v0.9.9]
 
-### Milestone: [catapult-server@v0.9.3.2](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.2)
+### Milestone: [catapult-server@v0.9.4.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.4.1)
 
 #### Added
 
 - Added release process compliant with NIP14
 - Added Apache v2 license (fixes #209)
+- upgrade SDK to v0.18.0, (fixes #276)
+- remove AESEncryptionService, (fixes #277)
+- Testnet upgrade, (fixes #292)
+- Move user data storage folder to /home/.symbol-desktop-wallet
+- Rename accounts to profiles, wallets to accounts (fixes #304)
 
 #### Fixed
 

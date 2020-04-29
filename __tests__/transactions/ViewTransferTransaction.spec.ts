@@ -15,7 +15,7 @@
  */
 import {Deadline, NetworkType, PlainMessage, TransactionType, TransferTransaction, UInt64} from 'symbol-sdk'
 import {createStore} from '@MOCKS/Store'
-import {getTestAccount} from '@MOCKS/accounts'
+import {getTestAccount} from '@MOCKS/profiles'
 import {getFakeTransaction} from '@MOCKS/Transactions'
 import {TransferFormFieldsType, ViewTransferTransaction} from '@/core/transactions/ViewTransferTransaction'
 

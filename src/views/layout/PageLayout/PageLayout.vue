@@ -13,7 +13,7 @@
       </Alert>
     </div>
 
-    <PageNavigator v-if="!$route.matched.map(({name}) => name).includes('accounts')" />
+    <PageNavigator v-if="!$route.matched.map(({name}) => name).includes('profiles')" />
 
     <div class="top_window">
       <AppLogo />
@@ -29,7 +29,7 @@
 
           <PeerSelector />
           <LanguageSelector />
-          <WalletSelectorField @input="onChangeWallet" />
+          <AccountSelectorField @input="onChangeAccount" />
         </div>
       </div>
     </div>

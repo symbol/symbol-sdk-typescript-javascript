@@ -1,10 +1,10 @@
 <template>
-  <div class="wallet-detail-row-3cols">
+  <div class="account-detail-row-3cols">
     <span class="label">{{ $t('privatekey') }}</span>
     <div v-if="hasPlainPrivateKey" class="value">
       {{ plainInformation }}
       <img
-        src="@/views/resources/img/wallet/copyIcon.png"
+        src="@/views/resources/img/account/copyIcon.png"
         class="copy-icon"
         @click="uiHelpers.copyToClipboard(plainInformation)"
       >
@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <ModalFormAccountUnlock
+    <ModalFormProfileUnlock
       v-if="hasAccountUnlockModal"
       :visible="hasAccountUnlockModal"
       :on-success="onAccountUnlocked"

@@ -7,7 +7,7 @@
         :class="[
           'navigator-item-container',
           $route.matched.map(({path}) => path).includes(route.path) ? 'active' : '',
-          !currentAccount ? 'un_click' : '',
+          !currentProfile ? 'un_click' : '',
         ]"
         @click="onPageNavigate(route)"
       >
@@ -20,7 +20,7 @@
       </div>
     </div>
 
-    <div v-if="!!currentAccount" class="logout-item-container" @click="logout">
+    <div v-if="!!currentProfile" class="logout-item-container" @click="logout">
       <div class="navigator-item-container">
         <div class="navigator-icon-container">
           <Icon :type="'md-log-out'" class="navigator-icon" />

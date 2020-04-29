@@ -135,7 +135,7 @@ export class TransactionRowTs extends Vue {
       const transferTransaction = this.transaction as TransferTransaction
       return transferTransaction.mosaics.length && transferTransaction.mosaics[0].amount.compact() || 0
     }
-    // https://github.com/nemfoundation/nem2-desktop-wallet/issues/879
+    // https://github.com/nemfoundation/nem2-desktop-account/issues/879
     // We may want to show N/A instead of the paid fee
     return this.view.values.get('effectiveFee') || this.view.values.get('maxFee') || 0
   }
@@ -144,7 +144,7 @@ export class TransactionRowTs extends Vue {
    * Returns the color of the balance
    */
   public getAmountColor(): string {
-    // https://github.com/nemfoundation/nem2-desktop-wallet/issues/879
+    // https://github.com/nemfoundation/nem2-desktop-account/issues/879
     if (this.transaction.type === TransactionType.TRANSFER) {
       return this.isIncomingTransaction() ? 'green' : 'red'
     }

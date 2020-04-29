@@ -1,12 +1,12 @@
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
-import {Signer} from '@/store/Wallet'
+import {Signer} from '@/store/Account'
 import {mapGetters} from 'vuex'
 
 
 @Component({
   computed: {
     ...mapGetters({
-      currentSigner: 'wallet/currentSigner',
+      currentSigner: 'account/currentSigner',
     }),
   },
 })

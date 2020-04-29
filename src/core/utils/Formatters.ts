@@ -82,6 +82,10 @@ export class Formatters {
     return value ? value.replace(/'/g, '') : '0'
   }
 
+  public static configurationStringAsString(value: string | undefined): string {
+    return value ? value.replace(/'/g, '').substring(2) : ''
+  }
+
   public static configurationNumberAsNumber(value: string | undefined): number {
     return parseInt(this.configurationNumberAsString(value))
   }

@@ -32,13 +32,13 @@ import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue
 // @ts-ignore
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
 // @ts-ignore
-import WalletSelectorField from '@/components/WalletSelectorField/WalletSelectorField.vue'
+import AccountSelectorField from '@/components/AccountSelectorField/AccountSelectorField.vue'
 // @ts-ignore
-import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
+import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue'
 // @ts-ignore
 import FormLabel from '@/components/FormLabel/FormLabel.vue'
 import {SettingsModel} from '@/core/database/entities/SettingsModel'
-import {WalletModel} from '@/core/database/entities/WalletModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
 
 @Component({
   components: {
@@ -50,14 +50,14 @@ import {WalletModel} from '@/core/database/entities/WalletModel'
     ExplorerUrlSetter,
     LanguageSelector,
     MaxFeeSelector,
-    WalletSelectorField,
-    ModalFormAccountUnlock,
+    AccountSelectorField,
+    ModalFormProfileUnlock,
     FormLabel,
   },
   computed: {
     ...mapGetters({
       settings: 'app/settings',
-      knownWallets: 'wallet/knownWallets',
+      knownAccounts: 'account/knownAccounts',
     }),
   },
 })
@@ -70,10 +70,10 @@ export class FormGeneralSettingsTs extends Vue {
 
 
   /**
-   * Known wallets identifiers
+   * Known accounts identifiers
    * @var {string[]}
    */
-  public knownWallets: WalletModel[]
+  public knownAccounts: AccountModel[]
 
   /**
    * Whether account is currently being unlocked
@@ -89,7 +89,7 @@ export class FormGeneralSettingsTs extends Vue {
     defaultFee: 0,
     language: '',
     explorerUrl: '',
-    defaultWallet: '',
+    defaultAccount: '',
   }
 
   public created() {
@@ -98,8 +98,8 @@ export class FormGeneralSettingsTs extends Vue {
 
   public resetForm() {
     this.formItems = {...this.settings}
-    if (!this.settings.defaultWallet && this.knownWallets.length) {
-      this.formItems.defaultWallet = this.knownWallets[0].id
+    if (!this.settings.defaultAccount && this.knownAccounts.length) {
+      this.formItems.defaultAccount = this.knownAccounts[0].id
     }
   }
 
@@ -123,7 +123,7 @@ export class FormGeneralSettingsTs extends Vue {
   }
 
   /**
-   * When account is unlocked, the sub wallet can be created
+   * When account is unlocked, the sub account can be created
    */
   public async onAccountUnlocked() {
 

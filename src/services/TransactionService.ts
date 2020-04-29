@@ -17,7 +17,7 @@ import {Store} from 'vuex'
 import {Account, AccountAddressRestrictionTransaction, AccountLinkTransaction, AccountMetadataTransaction, AccountMosaicRestrictionTransaction, AccountOperationRestrictionTransaction, AddressAliasTransaction, AggregateTransaction, BlockInfo, CosignatureSignedTransaction, CosignatureTransaction, Deadline, HashLockTransaction, LockFundsTransaction, Mosaic, MosaicAddressRestrictionTransaction, MosaicAliasTransaction, MosaicDefinitionTransaction, MosaicGlobalRestrictionTransaction, MosaicMetadataTransaction, MosaicSupplyChangeTransaction, MultisigAccountModificationTransaction, NamespaceMetadataTransaction, NamespaceRegistrationTransaction, PublicAccount, SecretLockTransaction, SecretProofTransaction, SignedTransaction, Transaction, TransactionType, TransferTransaction, UInt64} from 'symbol-sdk'
 // internal dependencies
 import {AbstractService} from './AbstractService'
-import {WalletModel} from '@/core/database/entities/WalletModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
 import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 import {ViewMosaicDefinitionTransaction} from '@/core/transactions/ViewMosaicDefinitionTransaction'
 import {ViewMosaicSupplyChangeTransaction} from '@/core/transactions/ViewMosaicSupplyChangeTransaction'
@@ -97,7 +97,7 @@ export class TransactionService extends AbstractService {
    */
   public getView(transaction: Transaction): TransactionViewType {
     // - store shortcuts
-    const currentWallet: WalletModel = this.$store.getters['wallet/currentWallet']
+    const currentAccount: AccountModel = this.$store.getters['account/currentAccount']
     const knownBlocks: BlockInfo[] = this.$store.getters['transaction/blocks']
 
     // - interpret transaction type and initialize view
@@ -186,7 +186,7 @@ export class TransactionService extends AbstractService {
     if (TransactionType.TRANSFER === transaction.type) {
       const transfer = transaction as TransferTransaction
       view.values.set('isIncoming',
-        transfer.recipientAddress.equals(WalletModel.getObjects(currentWallet).address))
+        transfer.recipientAddress.equals(AccountModel.getObjects(currentAccount).address))
     }
 
     return view
@@ -251,7 +251,7 @@ export class TransactionService extends AbstractService {
    */
   public signStagedTransactions(account: Account): SignedTransaction[] {
     // - shortcuts
-    const transactions = this.$store.getters['wallet/stagedTransactions']
+    const transactions = this.$store.getters['account/stagedTransactions']
     const generationHash = this.$store.getters['network/generationHash']
     const signedTransactions = []
 
@@ -262,7 +262,7 @@ export class TransactionService extends AbstractService {
 
       // - sign transaction with \a account
       const signedTx = account.sign(staged, generationHash)
-      this.$store.commit('wallet/addSignedTransaction', signedTx)
+      this.$store.commit('account/addSignedTransaction', signedTx)
       signedTransactions.push(signedTx)
 
       // - notify diagnostics
@@ -288,7 +288,7 @@ export class TransactionService extends AbstractService {
   public signAggregateStagedTransactions(account: Account): SignedTransaction[] {
     // - shortcuts
     const networkType = this.$store.getters['network/networkType']
-    const transactions = this.$store.getters['wallet/stagedTransactions']
+    const transactions = this.$store.getters['account/stagedTransactions']
     const generationHash = this.$store.getters['network/generationHash']
     const defaultFee = this.$store.getters['app/defaultFee']
     const signedTransactions = []
@@ -305,7 +305,7 @@ export class TransactionService extends AbstractService {
 
     // - sign aggregate transaction
     const signedTx = account.sign(aggregateTx, generationHash)
-    this.$store.commit('wallet/addSignedTransaction', signedTx)
+    this.$store.commit('account/addSignedTransaction', signedTx)
     signedTransactions.push(signedTx)
 
     // - notify diagnostics
@@ -338,7 +338,7 @@ export class TransactionService extends AbstractService {
   ): SignedTransaction[] {
     // - shortcuts
     const networkType = this.$store.getters['network/networkType']
-    const transactions = this.$store.getters['wallet/stagedTransactions']
+    const transactions = this.$store.getters['account/stagedTransactions']
     const generationHash = this.$store.getters['network/generationHash']
     const defaultFee = this.$store.getters['app/defaultFee']
     const signedTransactions = []
@@ -361,8 +361,8 @@ export class TransactionService extends AbstractService {
     const signedLock = cosignatoryAccount.sign(hashLock, generationHash)
 
     // - push signed transactions (order matters)
-    this.$store.commit('wallet/addSignedTransaction', signedLock)
-    this.$store.commit('wallet/addSignedTransaction', signedTx)
+    this.$store.commit('account/addSignedTransaction', signedLock)
+    this.$store.commit('account/addSignedTransaction', signedTx)
     signedTransactions.push(signedLock)
     signedTransactions.push(signedTx)
 
@@ -387,7 +387,7 @@ export class TransactionService extends AbstractService {
    */
   public async announceSignedTransactions(): Promise<BroadcastResult[]> {
     // - shortcuts
-    const signedTransactions = this.$store.getters['wallet/signedTransactions']
+    const signedTransactions = this.$store.getters['account/signedTransactions']
 
     // - simple transactions only
     const transactions = signedTransactions.filter(
@@ -399,12 +399,12 @@ export class TransactionService extends AbstractService {
     const results: BroadcastResult[] = []
     for (let i = 0, m = transactions.length; i < m; i ++) {
       const transaction = transactions[i]
-      const result = await this.$store.dispatch('wallet/REST_ANNOUNCE_TRANSACTION', transaction)
+      const result = await this.$store.dispatch('account/REST_ANNOUNCE_TRANSACTION', transaction)
       results.push(result)
     }
 
     // - reset signature flow
-    this.$store.commit('wallet/stageOptions', {
+    this.$store.commit('account/stageOptions', {
       isAggregate: false,
       isMultisig: false,
     })
@@ -424,7 +424,7 @@ export class TransactionService extends AbstractService {
    */
   public async announcePartialTransactions(issuer: PublicAccount): Promise<BroadcastResult[]> {
     // - shortcuts
-    const signedTransactions = this.$store.getters['wallet/signedTransactions']
+    const signedTransactions = this.$store.getters['account/signedTransactions']
 
     // - read transactions
     const hashLockTransaction = signedTransactions.find(tx => TransactionType.HASH_LOCK === tx.type)
@@ -438,14 +438,14 @@ export class TransactionService extends AbstractService {
     }
 
     // - announce lock, await confirmation and announce partial
-    const result = await this.$store.dispatch('wallet/REST_ANNOUNCE_PARTIAL', {
+    const result = await this.$store.dispatch('account/REST_ANNOUNCE_PARTIAL', {
       issuer: issuer.address.plain(),
       signedLock: hashLockTransaction,
       signedPartial: aggregateTransaction,
     })
 
     // - reset signature flow
-    this.$store.commit('wallet/stageOptions', {
+    this.$store.commit('account/stageOptions', {
       isAggregate: false,
       isMultisig: false,
     })
@@ -465,7 +465,7 @@ export class TransactionService extends AbstractService {
     const results: BroadcastResult[] = []
     for (let i = 0, m = cosignatures.length; i < m; i ++) {
       const cosignature = cosignatures[i]
-      const result = await this.$store.dispatch('wallet/REST_ANNOUNCE_COSIGNATURE', cosignature)
+      const result = await this.$store.dispatch('account/REST_ANNOUNCE_COSIGNATURE', cosignature)
       results.push(result)
     }
 

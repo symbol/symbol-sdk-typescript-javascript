@@ -7,12 +7,12 @@
       :transfer="false"
     >
       <div class="form-unlock">
-        <FormAccountUnlock v-if="!hasMnemonicInfo" @success="onAccountUnlocked" @error="onError" />
+        <FormProfileUnlock v-if="!hasMnemonicInfo" @success="onAccountUnlocked" @error="onError" />
       </div>
       <div v-if="hasMnemonicInfo" class="body">
         <div class="explain">
-          <span class="subtitle">{{ $t('wallets_backup_title_mnemonic') }}</span>
-          <p>{{ $t('wallets_backup_mnemonic_explain_p3', {num: mnemonic.plain.split(' ').length}) }}</p>
+          <span class="subtitle">{{ $t('accounts_backup_title_mnemonic') }}</span>
+          <p>{{ $t('accounts_backup_mnemonic_explain_p3', {num: mnemonic.plain.split(' ').length}) }}</p>
         </div>
 
         <MnemonicDisplay :words="words" />

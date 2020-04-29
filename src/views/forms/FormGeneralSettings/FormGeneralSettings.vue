@@ -41,12 +41,12 @@
 
           <FormRow>
             <template v-slot:label>
-              {{ $t('form_label_default_wallet') }}:
+              {{ $t('form_label_default_account') }}:
             </template>
             <template v-slot:inputs>
               <div class="inputs-container select-container">
-                <WalletSelectorField
-                  v-model="formItems.defaultWallet"
+                <AccountSelectorField
+                  v-model="formItems.defaultAccount"
                   :default-form-style="true"
                 />
               </div>
@@ -73,7 +73,7 @@
       </ValidationObserver>
     </FormWrapper>
 
-    <ModalFormAccountUnlock
+    <ModalFormProfileUnlock
       v-if="hasAccountUnlockModal"
       :visible="hasAccountUnlockModal"
       :on-success="onAccountUnlocked"

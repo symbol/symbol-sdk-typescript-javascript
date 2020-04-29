@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <AccountBalancesPanel />
+    <ProfileBalancesPanel />
     <div class="dashboard-right-outer-container">
       <div class="dashboard-right-container">
         <NetworkStatisticsPanel />

@@ -14,107 +14,529 @@
  * limitations under the License.
  */
 import Vue from 'vue'
+import {AccountInfo, Address, CosignatureSignedTransaction, IListener, MultisigAccountInfo, NetworkType, RepositoryFactory, SignedTransaction, Transaction} from 'symbol-sdk'
+import {of, Subscription} from 'rxjs'
 // internal dependencies
 import {$eventBus} from '../events'
+import {RESTService} from '@/services/RESTService'
 import {AwaitLock} from './AwaitLock'
-import {SettingService} from '@/services/SettingService'
+import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 import {AccountModel} from '@/core/database/entities/AccountModel'
-import {WalletModel} from '@/core/database/entities/WalletModel'
+import {MultisigService} from '@/services/MultisigService'
+import * as _ from 'lodash'
+import {ProfileModel} from '@/core/database/entities/ProfileModel'
 import {AccountService} from '@/services/AccountService'
+import {catchError, map} from 'rxjs/operators'
+
 
 /// region globals
 const Lock = AwaitLock.create()
-
 /// end-region globals
 
+/**
+ * Type SubscriptionType for account Store
+ * @type {SubscriptionType}
+ */
+type SubscriptionType = {
+  listener: IListener
+  subscriptions: Subscription[]
+}
+
+export type Signer = { label: string, publicKey: string, address: Address, multisig: boolean }
+
+// Account state typing
 interface AccountState {
   initialized: boolean
   currentAccount: AccountModel
-  isAuthenticated: boolean
+  currentAccountAddress: Address
+  currentAccountMultisigInfo: MultisigAccountInfo
+  isCosignatoryMode: boolean
+  signers: Signer[]
+  currentSigner: Signer
+  currentSignerAddress: Address
+  currentSignerMultisigInfo: MultisigAccountInfo
+  // Known accounts database identifiers
+  knownAccounts: AccountModel[]
+  knownAddresses: Address[]
+  accountsInfo: AccountInfo[]
+  multisigAccountsInfo: MultisigAccountInfo[]
+
+  stageOptions: { isAggregate: boolean, isMultisig: boolean }
+  stagedTransactions: Transaction[]
+  signedTransactions: SignedTransaction[]
+  // Subscriptions to webSocket channels
+  subscriptions: Record<string, SubscriptionType[][]>
 }
 
+// account state initial definition
 const accountState: AccountState = {
   initialized: false,
   currentAccount: null,
-  isAuthenticated: false,
+  currentAccountAddress: null,
+  currentAccountMultisigInfo: null,
+  isCosignatoryMode: false,
+  signers: [],
+  currentSigner: null,
+  currentSignerAddress: null,
+  currentSignerMultisigInfo: null,
+  knownAccounts: [],
+  knownAddresses: [],
+  accountsInfo: [],
+  multisigAccountsInfo: [],
+  stageOptions: {
+    isAggregate: false,
+    isMultisig: false,
+  },
+  stagedTransactions: [],
+  signedTransactions: [],
+  // Subscriptions to websocket channels.
+  subscriptions: {},
 }
+
+/**
+ * Account Store
+ */
 export default {
   namespaced: true,
   state: accountState,
   getters: {
     getInitialized: (state: AccountState) => state.initialized,
-    currentAccount: (state: AccountState) => state.currentAccount,
-    isAuthenticated: (state: AccountState) => state.isAuthenticated,
+    currentAccount: (state: AccountState): AccountModel => {
+      return state.currentAccount
+    },
+    signers: (state: AccountState): Signer[] => state.signers,
+    currentSigner: (state: AccountState): Signer => state.currentSigner,
+    currentAccountAddress: (state: AccountState) => state.currentAccountAddress,
+    knownAddresses: (state: AccountState) => state.knownAddresses,
+    currentAccountMultisigInfo: (state: AccountState) => state.currentAccountMultisigInfo,
+    currentSignerMultisigInfo: (state: AccountState) => state.currentSignerMultisigInfo,
+    isCosignatoryMode: (state: AccountState) => state.isCosignatoryMode,
+    currentSignerAddress: (state: AccountState) => state.currentSignerAddress,
+    knownAccounts: (state: AccountState) => state.knownAccounts,
+    accountsInfo: (state: AccountState) => state.accountsInfo,
+    multisigAccountsInfo: (state: AccountState) => state.multisigAccountsInfo,
+    getSubscriptions: (state: AccountState) => state.subscriptions,
+    stageOptions: (state: AccountState) => state.stageOptions,
+    stagedTransactions: (state: AccountState) => state.stagedTransactions,
+    signedTransactions: (state: AccountState) => state.signedTransactions,
   },
   mutations: {
     setInitialized: (state: AccountState, initialized: boolean) => { state.initialized = initialized },
-    currentAccount: (state: AccountState, currentAccount: AccountModel) => Vue.set(state,
-      'currentAccount', currentAccount),
-    setAuthenticated: (state: AccountState, isAuthenticated: boolean) => Vue.set(state,
-      'isAuthenticated', isAuthenticated),
-  },
-  actions: {
-    async initialize({commit, getters}) {
-      const callback = async () => {
-        commit('setInitialized', true)
+    currentAccount: (state: AccountState, accountModel: AccountModel) => { state.currentAccount = accountModel },
+    currentAccountAddress: (state: AccountState, accountAddress: Address) =>
+    { state.currentAccountAddress = accountAddress },
+    currentSigner: (state: AccountState, currentSigner: Signer) =>
+    { state.currentSigner = currentSigner },
+    signers: (state: AccountState, signers: Signer[]) => { state.signers = signers },
+    currentSignerAddress: (state: AccountState, signerAddress) =>
+    { state.currentSignerAddress = signerAddress },
+    knownAccounts: (state: AccountState, knownAccounts: AccountModel[]) =>
+    { state.knownAccounts = knownAccounts },
+    knownAddresses: (state: AccountState, knownAddresses: Address[]) =>
+    { state.knownAddresses = knownAddresses },
+    isCosignatoryMode: (state: AccountState, isCosignatoryMode: boolean) =>
+    { state.isCosignatoryMode = isCosignatoryMode },
+    accountsInfo: (state: AccountState, accountsInfo) => { state.accountsInfo = accountsInfo },
+    multisigAccountsInfo: (state: AccountState, multisigAccountsInfo) =>
+    { state.multisigAccountsInfo = multisigAccountsInfo },
+    currentAccountMultisigInfo: (state: AccountState, currentAccountMultisigInfo) =>
+    { state.currentAccountMultisigInfo = currentAccountMultisigInfo },
+    currentSignerMultisigInfo: (state: AccountState, currentSignerMultisigInfo) =>
+    { state.currentSignerMultisigInfo = currentSignerMultisigInfo },
+
+    setSubscriptions: (state: AccountState, subscriptions: Record<string, SubscriptionType[][]>) =>
+    { state.subscriptions = subscriptions },
+    addSubscriptions: (state: AccountState,
+      payload: { address: string, subscriptions: SubscriptionType }) => {
+      const {address, subscriptions} = payload
+      // skip when subscriptions is an empty array
+      if (!subscriptions.subscriptions.length) return
+      // get current subscriptions from state
+      const oldSubscriptions = state.subscriptions[address] || []
+      // update subscriptions
+      const newSubscriptions = [ ...oldSubscriptions, subscriptions ]
+      // update state
+      Vue.set(state.subscriptions, address, newSubscriptions)
+    },
+
+    stageOptions: (state: AccountState, options) => Vue.set(state, 'stageOptions', options),
+    setStagedTransactions: (state: AccountState, transactions: Transaction[]) => Vue.set(state,
+      'stagedTransactions', transactions),
+    addStagedTransaction: (state: AccountState, transaction: Transaction) => {
+      // - get previously staged transactions
+      const staged = state.stagedTransactions
+
+      // - push transaction on stage (order matters)
+      staged.push(transaction)
+
+      // - update state
+      return Vue.set(state, 'stagedTransactions', staged)
+    },
+    clearStagedTransaction: (state) => Vue.set(state, 'stagedTransactions', []),
+    addSignedTransaction: (state: AccountState, transaction: SignedTransaction) => {
+      // - get previously signed transactions
+      const signed = state.signedTransactions
+
+      // - update state
+      signed.push(transaction)
+      return Vue.set(state, 'signedTransactions', signed)
+    },
+    removeSignedTransaction: (state: AccountState, transaction: SignedTransaction) => {
+      // - get previously signed transactions
+      const signed = state.signedTransactions
+
+      // - find transaction by hash and delete
+      const idx = signed.findIndex(tx => tx.hash === transaction.hash)
+      if (undefined === idx) {
+        return
       }
 
-      // aquire async lock until initialized
+      // skip `idx`
+      const remaining = signed.splice(0, idx).concat(
+        signed.splice(idx + 1, signed.length - idx - 1),
+      )
+
+      // - use Array.from to reset indexes
+      return Vue.set(state, 'signedTransactions', Array.from(remaining))
+    },
+  },
+  actions: {
+    /**
+     * Possible `options` values include:
+     * @type {
+     *    skipTransactions: boolean,
+     * }
+     */
+    async initialize({commit, dispatch, getters}, {address}) {
+      const callback = async () => {
+        if (!address || !address.length) return
+        commit('setInitialized', true)
+      }
       await Lock.initialize(callback, {getters})
     },
-    async uninitialize({commit, dispatch, getters}) {
+    async uninitialize({commit, dispatch, getters}, {address}) {
       const callback = async () => {
-        await dispatch('RESET_STATE')
+        // close websocket connections
+        await dispatch('UNSUBSCRIBE', address)
+        await dispatch('transaction/RESET_TRANSACTIONS', {}, {root: true})
         commit('setInitialized', false)
       }
       await Lock.uninitialize(callback, {getters})
     },
-    /// region scoped actions
-    RESET_STATE({commit}) {
-      commit('currentAccount', null)
-      commit('setAuthenticated', false)
-    },
-    async LOG_OUT({dispatch, rootGetters}): Promise<void> {
-      const currentWallet = rootGetters['wallet/currentWallet']
-      await dispatch('wallet/uninitialize', {address: currentWallet.address}, {root: true})
-      await dispatch('wallet/SET_KNOWN_WALLETS', [], {root: true})
-      await dispatch('wallet/RESET_CURRENT_WALLET', undefined, {root: true})
-      await dispatch('RESET_STATE')
-    },
-    async SET_CURRENT_ACCOUNT({commit, dispatch}, currentAccount: AccountModel) {
 
-      // update state
+    /**
+     * Possible `options` values include:
+     * @type {
+     *    isCosignatoryMode: boolean,
+     * }
+     */
+    async SET_CURRENT_ACCOUNT({commit, dispatch, getters}, currentAccount: AccountModel) {
+      const previous: AccountModel = getters.currentAccount
+      if (previous && previous.address === currentAccount.address) return
+
+      const currentAccountAddress: Address = Address.createFromRawAddress(currentAccount.address)
+      dispatch('diagnostic/ADD_DEBUG',
+        'Store action account/SET_CURRENT_ACCOUNT dispatched with ' + currentAccountAddress.plain(),
+        {root: true})
+
+      // set current account
       commit('currentAccount', currentAccount)
-      commit('setAuthenticated', true)
 
-      dispatch('diagnostic/ADD_DEBUG', 'Changing current account to ' + currentAccount.accountName,
-        {root: true})
 
-      const settings = new SettingService().getAccountSettings(currentAccount.accountName)
-      dispatch('app/SET_SETTINGS', settings, {root: true})
-
-      dispatch('diagnostic/ADD_DEBUG', 'Using account settings ' + Object.values(settings),
-        {root: true})
-
-      // reset store + re-initialize
-      await dispatch('initialize')
-      $eventBus.$emit('onAccountChange', currentAccount.accountName)
+      // reset current signer
+      await dispatch('SET_CURRENT_SIGNER', {publicKey: currentAccount.publicKey})
+      await dispatch('initialize', {address: currentAccountAddress.plain()})
+      $eventBus.$emit('onAccountChange', currentAccountAddress.plain())
     },
 
-    ADD_WALLET({dispatch, getters}, walletModel: WalletModel) {
-      const currentAccount: AccountModel = getters['currentAccount']
+    async RESET_CURRENT_ACCOUNT({commit, dispatch}) {
+      dispatch('diagnostic/ADD_DEBUG', 'Store action account/RESET_CURRENT_ACCOUNT dispatched',
+        {root: true})
+      commit('currentAccount', null)
+      commit('currentAccountAddress', null)
+      commit('currentSignerAddress', null)
+    },
+
+    async SET_CURRENT_SIGNER({commit, dispatch, getters, rootGetters},
+      {publicKey}: { publicKey: string }) {
+      if (!publicKey){
+        throw new Error('Public Key must be provided when calling account/SET_CURRENT_SIGNER!')
+      }
+      const networkType: NetworkType = rootGetters['network/networkType']
+      const currentProfile: ProfileModel = rootGetters['profile/currentProfile']
+      const currentAccount: AccountModel = getters.currentAccount
+      const previousSignerAddress: Address = getters.currentSignerAddress
+
+      const currentSignerAddress: Address = Address.createFromPublicKey(publicKey, networkType)
+
+      if (previousSignerAddress && previousSignerAddress.equals(currentSignerAddress)) return
+
+      dispatch('diagnostic/ADD_DEBUG',
+        'Store action account/SET_CURRENT_SIGNER dispatched with ' + currentSignerAddress.plain(),
+        {root: true})
+
+      dispatch('transaction/RESET_TRANSACTIONS', {}, {root: true})
+
+      const currentAccountAddress = Address.createFromRawAddress(currentAccount.address)
+      const knownAccounts = new AccountService().getKnownAccounts(currentProfile.accounts)
+
+      commit('currentSignerAddress', currentSignerAddress)
+      commit('currentAccountAddress', currentAccountAddress)
+      commit('isCosignatoryMode', !currentSignerAddress.equals(currentAccountAddress))
+      commit('knownAccounts', knownAccounts)
+
+      // Upgrade
+      dispatch('namespace/SIGNER_CHANGED', {}, {root: true})
+      dispatch('mosaic/SIGNER_CHANGED', {}, {root: true})
+      dispatch('transaction/SIGNER_CHANGED', {}, {root: true})
+
+      // open / close websocket connections
+      if (previousSignerAddress) await dispatch('UNSUBSCRIBE', previousSignerAddress)
+      await dispatch('SUBSCRIBE', currentSignerAddress)
+
+      await dispatch('LOAD_ACCOUNT_INFO')
+
+      dispatch('namespace/LOAD_NAMESPACES', {}, {root: true})
+      dispatch('mosaic/LOAD_MOSAICS', {}, {root: true})
+    },
+
+    async NETWORK_CHANGED({dispatch}) {
+      dispatch('transaction/RESET_TRANSACTIONS', {}, {root: true})
+      dispatch('namespace/RESET_NAMESPACES', {}, {root: true})
+      dispatch('mosaic/RESET_MOSAICS', {}, {root: true})
+      dispatch('transaction/LOAD_TRANSACTIONS', undefined, {root: true})
+      await dispatch('LOAD_ACCOUNT_INFO')
+      dispatch('namespace/LOAD_NAMESPACES', {}, {root: true})
+      await dispatch('mosaic/LOAD_NETWORK_CURRENCIES', undefined, {root: true})
+      dispatch('mosaic/LOAD_MOSAICS', {}, {root: true})
+    },
+
+    async LOAD_ACCOUNT_INFO({commit, getters, rootGetters}) {
+      const networkType: NetworkType = rootGetters['network/networkType']
+      const currentAccount: AccountModel = getters.currentAccount
+      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
+      const currentSignerAddress: Address = getters.currentSignerAddress
+      const currentAccountAddress: Address = getters.currentAccountAddress
+      const knownAccounts: AccountModel[] = getters.knownAccounts
+
+      // remote calls:
+
+      const getMultisigAccountGraphInfoPromise = repositoryFactory.createMultisigRepository()
+        .getMultisigAccountGraphInfo(currentAccountAddress).pipe(map(g => {
+          return MultisigService.getMultisigInfoFromMultisigGraphInfo(g)
+        }), catchError(() => {
+          return of([])
+        })).toPromise()
+
+
+      // REMOTE CALL
+      const multisigAccountsInfo: MultisigAccountInfo[] = await getMultisigAccountGraphInfoPromise
+
+      const currentAccountMultisigInfo = multisigAccountsInfo.find(
+        m => m.account.address.equals(currentAccountAddress))
+      const currentSignerMultisigInfo = multisigAccountsInfo.find(
+        m => m.account.address.equals(currentSignerAddress))
+
+      const signers = new MultisigService().getSigners(networkType, knownAccounts, currentAccount,
+        currentAccountMultisigInfo)
+
+      const knownAddresses = _.uniqBy([ ...signers.map(s=>s.address),
+        ...knownAccounts.map(w => Address.createFromRawAddress(w.address)) ].filter(a => a),
+      'address')
+
+      commit('knownAddresses', knownAddresses)
+      commit('currentSigner', signers.find(s => s.address.equals(currentSignerAddress)))
+      commit('signers', signers)
+      commit('multisigAccountsInfo', multisigAccountsInfo)
+      commit('currentAccountMultisigInfo', currentAccountMultisigInfo)
+      commit('currentSignerMultisigInfo', currentSignerMultisigInfo)
+
+      // REMOTE CALL
+      const getAccountsInfoPromise = repositoryFactory.createAccountRepository()
+        .getAccountsInfo(knownAddresses).toPromise()
+      const accountsInfo = await getAccountsInfoPromise
+
+      commit('accountsInfo', accountsInfo)
+
+    },
+
+
+    UPDATE_CURRENT_ACCOUNT_NAME({commit, getters, rootGetters}, name: string) {
+      const currentAccount: AccountModel = getters.currentAccount
       if (!currentAccount) {
         return
       }
-      dispatch('diagnostic/ADD_DEBUG',
-        'Adding wallet to account: ' + currentAccount.accountName + ' with: ' + walletModel.address,
-        {root: true})
-      if (!currentAccount.wallets.includes(walletModel.id)) {
-        new AccountService().updateWallets(currentAccount,
-          [ ...currentAccount.wallets, walletModel.id ])
+      const currentProfile: ProfileModel = rootGetters['profile/currentProfile']
+      if (!currentProfile) {
+        return
       }
-      return dispatch('SET_CURRENT_ACCOUNT', currentAccount)
+      const accountService = new AccountService()
+      accountService.updateName(currentAccount, name)
+      const knownAccounts = accountService.getKnownAccounts(currentProfile.accounts)
+      commit('knownAccounts', knownAccounts)
     },
-    /// end-region scoped actions
+
+
+    SET_KNOWN_ACCOUNTS({commit}, accounts: string[]) {
+      commit('knownAccounts', new AccountService().getKnownAccounts(accounts))
+    },
+
+    RESET_SUBSCRIPTIONS({commit}) {
+      commit('setSubscriptions', {})
+    },
+
+    ADD_STAGED_TRANSACTION({commit}, stagedTransaction: Transaction) {
+      commit('addStagedTransaction', stagedTransaction)
+    },
+    CLEAR_STAGED_TRANSACTIONS({commit}) {
+      commit('clearStagedTransaction')
+    },
+    RESET_TRANSACTION_STAGE({commit}) {
+      commit('setStagedTransactions', [])
+    },
+    /**
+     * Websocket API
+     */
+    // Subscribe to latest account transactions.
+    async SUBSCRIBE({commit, dispatch, rootGetters}, address: Address) {
+      if (!address) return
+
+      // use RESTService to open websocket channel subscriptions
+      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
+      const subscriptions: SubscriptionType = await RESTService.subscribeTransactionChannels(
+        {commit, dispatch},
+        repositoryFactory,
+        address.plain(),
+      )
+
+      // update state of listeners & subscriptions
+      commit('addSubscriptions', {address, subscriptions})
+    },
+
+    // Unsubscribe from all open websocket connections
+    async UNSUBSCRIBE({dispatch, getters}, address) {
+      const subscriptions = getters.getSubscriptions
+      const currentAccount: AccountModel = getters.currentAccount
+
+      if (!address && currentAccount) {
+        address = currentAccount.address
+      }
+
+      const subsByAddress = subscriptions && subscriptions[address] || []
+      for (let i = 0, m = subsByAddress.length; i < m; i ++) {
+        const subscription = subsByAddress[i]
+
+        // subscribers
+        for (let j = 0, n = subscription.subscriptions; j < n; j ++) {
+          await subscription.subscriptions[j].unsubscribe()
+        }
+
+        await subscription.listener.close()
+      }
+
+      // update state
+      dispatch('RESET_SUBSCRIPTIONS', address)
+    },
+
+    async REST_ANNOUNCE_PARTIAL(
+      {commit, dispatch, rootGetters},
+      {issuer, signedLock, signedPartial},
+    ): Promise<BroadcastResult> {
+
+      if (!issuer || issuer.length !== 40) {
+        return
+      }
+
+      dispatch('diagnostic/ADD_DEBUG',
+        'Store action account/REST_ANNOUNCE_PARTIAL dispatched with: ' + JSON.stringify({
+          issuer: issuer,
+          signedLockHash: signedLock.hash,
+          signedPartialHash: signedPartial.hash,
+        }), {root: true})
+
+      try {
+        // - prepare REST parameters
+        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
+        const transactionHttp = repositoryFactory.createTransactionRepository()
+
+        // - prepare scoped *confirmation listener*
+        const listener = repositoryFactory.createListener()
+        await listener.open()
+
+
+        // - announce hash lock transaction and await confirmation
+        transactionHttp.announce(signedLock)
+
+        // - listen for hash lock confirmation
+        return new Promise((resolve, reject) => {
+          const address = Address.createFromRawAddress(issuer)
+          return listener.confirmed(address).subscribe(
+            async () => {
+              // - hash lock confirmed, now announce partial
+              await transactionHttp.announceAggregateBonded(signedPartial)
+              commit('removeSignedTransaction', signedLock)
+              commit('removeSignedTransaction', signedPartial)
+              return resolve(new BroadcastResult(signedPartial, true))
+            },
+            () => {
+              commit('removeSignedTransaction', signedLock)
+              commit('removeSignedTransaction', signedPartial)
+              reject(new BroadcastResult(signedPartial, false))
+            },
+          )
+        })
+      } catch (e) {
+        return new BroadcastResult(signedPartial, false, e.toString())
+      }
+    },
+    async REST_ANNOUNCE_TRANSACTION(
+      {commit, dispatch, rootGetters},
+      signedTransaction: SignedTransaction,
+    ): Promise<BroadcastResult> {
+      dispatch('diagnostic/ADD_DEBUG',
+        'Store action account/REST_ANNOUNCE_TRANSACTION dispatched with: ' + JSON.stringify({
+          hash: signedTransaction.hash,
+          payload: signedTransaction.payload,
+        }), {root: true})
+
+      try {
+        // prepare REST parameters
+        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
+        const transactionHttp = repositoryFactory.createTransactionRepository()
+
+        // prepare symbol-sdk TransactionService
+        await transactionHttp.announce(signedTransaction)
+        commit('removeSignedTransaction', signedTransaction)
+        return new BroadcastResult(signedTransaction, true)
+      } catch (e) {
+        commit('removeSignedTransaction', signedTransaction)
+        return new BroadcastResult(signedTransaction, false, e.toString())
+      }
+    },
+    async REST_ANNOUNCE_COSIGNATURE({dispatch, rootGetters}, cosignature: CosignatureSignedTransaction):
+    Promise<BroadcastResult> {
+
+      dispatch('diagnostic/ADD_DEBUG',
+        'Store action account/REST_ANNOUNCE_COSIGNATURE dispatched with: ' + JSON.stringify({
+          hash: cosignature.parentHash,
+          signature: cosignature.signature,
+          signerPublicKey: cosignature.signerPublicKey,
+        }), {root: true})
+
+      try {
+        // prepare REST parameters
+        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
+        const transactionHttp = repositoryFactory.createTransactionRepository()
+
+        // prepare symbol-sdk TransactionService
+        await transactionHttp.announceAggregateBondedCosignature(cosignature)
+        return new BroadcastResult(cosignature, true)
+      } catch (e) {
+        return new BroadcastResult(cosignature, false, e.toString())
+      }
+    },
+
   },
+
+
 }

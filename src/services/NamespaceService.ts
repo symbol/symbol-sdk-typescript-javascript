@@ -14,15 +14,15 @@
  *
  */
 
-import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
 import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
 import {Address, NamespaceName, RepositoryFactory} from 'symbol-sdk'
-import {Observable} from 'rxjs'
+import {Observable, of} from 'rxjs' 
 import {flatMap, map, tap} from 'rxjs/operators'
 import {ObservableHelpers} from '@/core/utils/ObservableHelpers'
 import * as _ from 'lodash'
 import {TimeHelpers} from '@/core/utils/TimeHelpers'
 import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
+import {NamespaceModelStorage} from '@/core/database/storage/NamespaceModelStorage'
 
 /**
  * The service in charge of loading and caching anything related to Namepsaces from Rest.
@@ -33,8 +33,7 @@ export class NamespaceService {
   /**
    * The namespace information local cache.
    */
-  private readonly namespaceModelStorage = new SimpleObjectStorage<NamespaceModel[]>(
-    'namespaceModel')
+  private readonly namespaceModelStorage = NamespaceModelStorage.INSTANCE
 
   /**
    * This method loads and caches the namespace information for the given accounts.
@@ -42,11 +41,14 @@ export class NamespaceService {
    * information (if possible).
    *
    * @param repositoryFactory the repository factory
+   * @param generationHash the current network generation hash.
    * @param addresses the current addresses.
    */
-  public getNamespaces(repositoryFactory: RepositoryFactory,
+  public getNamespaces(repositoryFactory: RepositoryFactory, generationHash: string,
     addresses: Address[]): Observable<NamespaceModel[]> {
-    const namespaceModelList = this.namespaceModelStorage.get()
+    if (!addresses.length) return of([])
+
+    const namespaceModelList = this.namespaceModelStorage.get(generationHash) || []
     const namespaceRepository = repositoryFactory.createNamespaceRepository()
     return namespaceRepository.getNamespacesFromAccounts(addresses)
       .pipe(flatMap(namespaceInfos => {
@@ -59,7 +61,7 @@ export class NamespaceService {
                 NamespaceService.getFullNameFromNamespaceNames(reference, names))
             })
           }))
-      })).pipe(tap(d => this.namespaceModelStorage.set(d)),
+      })).pipe(tap(d => this.namespaceModelStorage.set(generationHash, d)),
         ObservableHelpers.defaultFirst(namespaceModelList))
   }
 

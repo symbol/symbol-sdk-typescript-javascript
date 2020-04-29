@@ -15,7 +15,7 @@
  */
 import {AliasAction, Deadline, MosaicAliasTransaction, MosaicId, NamespaceId, NetworkType, TransactionType, UInt64} from 'symbol-sdk'
 import {createStore} from '@MOCKS/Store'
-import {getTestAccount} from '@MOCKS/accounts'
+import {getTestAccount} from '@MOCKS/profiles'
 import {getFakeTransaction} from '@MOCKS/Transactions'
 import {AliasFormFieldsType, ViewAliasTransaction} from '@/core/transactions/ViewAliasTransaction'
 

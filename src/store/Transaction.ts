@@ -131,7 +131,7 @@ export default {
 
     LOAD_TRANSACTIONS({commit, rootGetters, dispatch}, {group}:
     { group: TransactionGroup } = {group: TransactionGroup.all}) {
-      const currentSignerAddress: Address = rootGetters['wallet/currentSignerAddress']
+      const currentSignerAddress: Address = rootGetters['account/currentSignerAddress']
       if (!currentSignerAddress) {
         return
       }
@@ -156,16 +156,16 @@ export default {
       commit('isFetchingTransactions', true)
 
       const queryParams = new QueryParams({pageSize: 100})
-      if (group === TransactionGroup.all || group === TransactionGroup.confirmed) {
+      if (group == undefined || group === TransactionGroup.all || group === TransactionGroup.confirmed) {
         subscriptions.push(subscribeTransactions(TransactionGroup.confirmed,
           accountRepository.getAccountTransactions(currentSignerAddress, queryParams)))
       }
-      if (group === TransactionGroup.all || group === TransactionGroup.unconfirmed) {
+      if (group == undefined || group === TransactionGroup.all || group === TransactionGroup.unconfirmed) {
         subscriptions.push(subscribeTransactions(TransactionGroup.unconfirmed,
           accountRepository.getAccountUnconfirmedTransactions(currentSignerAddress, queryParams)))
       }
 
-      if (group === TransactionGroup.all || group === TransactionGroup.partial) {
+      if (group == undefined || group === TransactionGroup.all || group === TransactionGroup.partial) {
         subscriptions.push(subscribeTransactions(TransactionGroup.partial,
           accountRepository.getAccountPartialTransactions(currentSignerAddress, queryParams)))
       }
@@ -265,7 +265,7 @@ export default {
         transactions.filter(t => t.transactionInfo.hash !== transactionHash))
     },
 
-    ON_NEW_TRANSACTION({dispatch}, transaction: Transaction): void {
+    async ON_NEW_TRANSACTION({dispatch}, transaction: Transaction) {
       if (!transaction) return
 
       // extract transaction types from the transaction
@@ -282,16 +282,9 @@ export default {
       ].some(a => transactionTypes.some(b => b === a))) {
         dispatch('namespace/LOAD_NAMESPACES', {}, {root: true})
       }
-      if ([
-        TransactionType.MOSAIC_DEFINITION,
-        TransactionType.MOSAIC_SUPPLY_CHANGE,
-      ].some(a => transactionTypes.some(b => b === a))) {
-        dispatch('mosaic/LOAD_MOSAICS', {}, {root: true})
-      }
-
-      if (transactionTypes.includes(TransactionType.MULTISIG_ACCOUNT_MODIFICATION)) {
-        dispatch('wallet/LOAD_ACCOUNT_INFO', {}, {root: true})
-      }
+      // Reloading Balances
+      await dispatch('account/LOAD_ACCOUNT_INFO', {}, {root: true})
+      dispatch('mosaic/LOAD_MOSAICS', {}, {root: true})
 
     },
     /// end-region scoped actions

@@ -13,7 +13,7 @@ Symbol Desktop Wallet is available for Mac, Windows, and as a web application.
 
 2. Launch the executable file and follow the installation instructions.
 
-3. Create an account. Remember to save the mnemonic somewhere safe (offline).
+3. Create a profile. Remember to save the mnemonic somewhere safe (offline).
 
 **NOTE**: This program is currently in development and only available for the Symbol test network. Do not use it for other purposes.
 

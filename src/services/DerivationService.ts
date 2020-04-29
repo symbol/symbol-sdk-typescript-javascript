@@ -15,12 +15,12 @@
  */
 // internal dependencies
 import {DerivationPathValidator} from '@/core/validation/validators'
-import {WalletService} from '@/services/WalletService'
+import {AccountService} from '@/services/AccountService'
 
 export enum DerivationPathLevels {
   Purpose = 1,
   CoinType = 2,
-  Account = 3,
+  Profile = 3,
   Remote = 4, // BIP44=change
   Address = 5,
 }
@@ -44,7 +44,7 @@ export class DerivationService {
    */
   public incrementPathLevel(
     path: string,
-    which: DerivationPathLevels = DerivationPathLevels.Account,
+    which: DerivationPathLevels = DerivationPathLevels.Profile,
     step: number = 1,
   ): string {
 
@@ -76,7 +76,7 @@ export class DerivationService {
    * @returns {string}
    */
   public getNextAccountPath(paths: string[]): string {
-    const defaultPath = WalletService.DEFAULT_WALLET_PATH
+    const defaultPath = AccountService.DEFAULT_ACCOUNT_PATH
 
     // return the default path if no path in the array
     if (!paths.length) return defaultPath
@@ -88,7 +88,7 @@ export class DerivationService {
     const pathsSortedByIndexes = paths
       .map(path => ({
         path,
-        pathIndex: parseInt(path.split('/')[DerivationPathLevels.Account], 10),
+        pathIndex: parseInt(path.split('/')[DerivationPathLevels.Profile], 10),
       }))
       .sort((a, b) => a.pathIndex - b.pathIndex)
 
@@ -107,7 +107,7 @@ export class DerivationService {
       }).find(path => path) // find the first candidate
 
     // return path incremented from the first candidate
-    return this.incrementPathLevel(firstCandidate.path, DerivationPathLevels.Account)
+    return this.incrementPathLevel(firstCandidate.path, DerivationPathLevels.Profile)
   }
 
   /**
@@ -118,7 +118,7 @@ export class DerivationService {
    */
   public decrementPathLevel(
     path: string,
-    which: DerivationPathLevels = DerivationPathLevels.Account,
+    which: DerivationPathLevels = DerivationPathLevels.Profile,
     step: number = 1,
   ): string {
     // make sure derivation path is valid

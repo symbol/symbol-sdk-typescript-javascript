@@ -20,7 +20,7 @@ import {routes} from '@/router/routes'
 import {AppRoute} from './AppRoute'
 import {TabEntry} from './TabEntry'
 import {AppStore} from '@/app/AppStore'
-import {AccountService} from '@/services/AccountService'
+import {ProfileService} from '@/services/ProfileService'
 
 /**
  * Extension of Vue Router
@@ -37,22 +37,22 @@ export class AppRouter extends Router {
     super(options)
     this.routes = options.routes
     this.beforeEach((to, from, next) => {
-      const service = new AccountService()
-      const hasAccounts = service.getAccounts().length > 0
+      const service = new ProfileService()
+      const hasAccounts = service.getProfiles().length > 0
 
       // No account when app is opened: redirect to create account page
-      const skipRedirect: string[] = ['accounts.importAccount.importStrategy']
+      const skipRedirect: string[] = ['profiles.importProfile.importStrategy']
       if (!from.name && !hasAccounts && !skipRedirect.includes(to.name)) {
-        return next({name: 'accounts.importAccount.importStrategy'})
+        return next({name: 'profiles.importProfile.importStrategy'})
       }
 
       if (!to.meta.protected) {
         return next(/* no-redirect */)
       }
 
-      const isAuthenticated = AppStore.getters['account/isAuthenticated'] === true
+      const isAuthenticated = AppStore.getters['profile/isAuthenticated'] === true
       if (!isAuthenticated) {
-        return next({name: 'accounts.login'})
+        return next({name: 'profiles.login'})
       }
 
       return next()
@@ -107,7 +107,7 @@ export class AppRouter extends Router {
       'multisig',
       'namespaces',
       'settings',
-      'wallets',
+      'accounts',
       'community',
     ]
 

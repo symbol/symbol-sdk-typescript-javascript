@@ -21,10 +21,10 @@
 export class SettingsModel {
 
   constructor(
-    public readonly accountName: string,
+    public readonly profileName: string,
     public readonly language: string,
     public readonly defaultFee: number,
-    public readonly defaultWallet: string,
+    public readonly defaultAccount: string,
     public readonly explorerUrl: string,
   ) {
 

@@ -15,7 +15,6 @@
  */
 
 export class NetworkConfigurationModel {
-
   public readonly maxMosaicDivisibility: number
   public readonly namespaceGracePeriodDuration: number
   public readonly lockedFundsPerAggregate: string
@@ -29,4 +28,6 @@ export class NetworkConfigurationModel {
   public readonly maxCosignedAccountsPerAccount: number
   public readonly maxMessageSize: number
   public readonly maxMosaicAtomicUnits: number
+  public readonly currencyMosaicId: string
+  public readonly harvestingMosaicId: string
 }

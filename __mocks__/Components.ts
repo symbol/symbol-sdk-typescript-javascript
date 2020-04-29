@@ -46,7 +46,7 @@ export const getComponent = (
       getters: storeModules[k].getters,
     })
   })).reduce((obj, item) => {
-    // - reducer to get {wallet: x, account: y} format
+    // - reducer to get {profile: x, account: y} format
     const key = Object.keys(item).shift()
     obj[key] = item[key]
     return obj

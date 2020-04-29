@@ -16,35 +16,35 @@
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 // internal dependencies
-import {AccountModel} from '@/core/database/entities/AccountModel'
+import {ProfileModel} from '@/core/database/entities/ProfileModel'
 import { Route } from 'vue-router'
 
 @Component({
   computed: {
     ...mapGetters({
-      currentAccount: 'account/currentAccount',
+      currentProfile: 'profile/currentProfile',
     }),
   },
 })
 export class PageNavigatorTs extends Vue {
   /**
-   * Currently active account
-   * @see {Store.Account}
+   * Currently active profile
+   * @see {Store.Profile}
    * @var {string}
    */
-  public currentAccount: AccountModel
+  public currentProfile: ProfileModel
 
   /**
    * Executes action of logout
    * @return {void}
    */
   public async logout() {
-    await this.$store.dispatch('account/LOG_OUT')
-    this.$router.push({name: 'accounts.login'})
+    await this.$store.dispatch('profile/LOG_OUT')
+    this.$router.push({name: 'profiles.login'})
   }
   
   public onPageNavigate(route: Route) {
     const isDuplicatedRoute = this.$route.matched.map(({ path }) => path).includes(route.path)
-    !isDuplicatedRoute && this.currentAccount && this.$router.push({ name: route.name }).catch(() => {/**/ })
+    !isDuplicatedRoute && this.currentProfile && this.$router.push({ name: route.name }).catch(() => {/**/ })
   }
 }

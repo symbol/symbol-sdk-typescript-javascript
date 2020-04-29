@@ -92,7 +92,7 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
   }
 
   /**
-   * Mosaics owned by the current wallet
+   * Mosaics owned by the current account
    * @protected
    */
   private mosaics: MosaicModel[]

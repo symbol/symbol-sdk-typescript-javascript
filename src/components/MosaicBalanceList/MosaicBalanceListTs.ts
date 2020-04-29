@@ -86,7 +86,7 @@ export class MosaicBalanceListTs extends Vue {
 
   /// region computed properties getter/setter
   /**
-   * Balance entries from the currently active wallet's mosaics
+   * Balance entries from the currently active account's mosaics
    * @readonly
    * @type {BalanceEntry}
    */

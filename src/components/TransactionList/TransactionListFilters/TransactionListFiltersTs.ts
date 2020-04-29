@@ -22,8 +22,8 @@ import {NetworkType} from 'symbol-sdk'
 import TransactionAddressFilter from '@/components/TransactionList/TransactionListFilters/TransactionAddressFilter/TransactionAddressFilter.vue'
 // @ts-ignore
 import TransactionStatusFilter from '@/components/TransactionList/TransactionListFilters/TransactionStatusFilter/TransactionStatusFilter.vue'
-import {Signer} from '@/store/Wallet'
-import {WalletModel} from '@/core/database/entities/WalletModel'
+import {Signer} from '@/store/Account'
+import {AccountModel} from '@/core/database/entities/AccountModel'
 import {TransactionGroup} from '@/store/Transaction'
 
 
@@ -31,9 +31,9 @@ import {TransactionGroup} from '@/store/Transaction'
   components: {TransactionAddressFilter, TransactionStatusFilter},
   computed: {
     ...mapGetters({
-      currentWallet: 'wallet/currentWallet',
+      currentAccount: 'account/currentAccount',
       networkType: 'network/networkType',
-      signers: 'wallet/signers',
+      signers: 'account/signers',
     }),
   },
 })
@@ -41,10 +41,10 @@ import {TransactionGroup} from '@/store/Transaction'
 export class TransactionListFiltersTs extends Vue {
   @Prop({default: TransactionGroup.confirmed}) currentTab: TransactionGroup
   /**
-   * Currently active wallet
-   * @var {WalletModel}
+   * Currently active account
+   * @var {AccountModel}
    */
-  protected currentWallet: WalletModel
+  protected currentAccount: AccountModel
 
   /**
    * Network type
@@ -69,7 +69,7 @@ export class TransactionListFiltersTs extends Vue {
   protected onSignerSelectorChange(publicKey: string): void {
     // clear previous account transactions
     if (publicKey)
-    {this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {publicKey})}
+    {this.$store.dispatch('account/SET_CURRENT_SIGNER', {publicKey})}
   }
 
   protected onStatusSelectorChange(filter: TransactionGroup) {
@@ -80,9 +80,9 @@ export class TransactionListFiltersTs extends Vue {
    * Hook called before the component is destroyed
    */
   beforeDestroy(): void {
-    // reset the selected signer if it is not the current wallet
-    if (this.currentWallet) {
-      this.onSignerSelectorChange(this.currentWallet.publicKey)
+    // reset the selected signer if it is not the current account
+    if (this.currentAccount) {
+      this.onSignerSelectorChange(this.currentAccount.publicKey)
     }
   }
 }

@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
+// external dependencies
+import {Convert, Crypto, SHA3Hasher} from 'symbol-sdk'
 
+// internal dependencies
 import {IStorageBackend} from '@/core/database/backends/IStorageBackend'
 import {LocalStorageBackend} from '@/core/database/backends/LocalStorageBackend'
 import {ObjectStorageBackend} from '@/core/database/backends/ObjectStorageBackend'
-import {AESEncryptionService} from '@/services/AESEncryptionService'
-import {Convert, SHA3Hasher} from 'symbol-sdk'
+import {IStorage} from '@/core/database/backends/IStorage'
 
 /**
  * A super simple object storage that keeps one object in a local storage table.
@@ -27,7 +29,7 @@ import {Convert, SHA3Hasher} from 'symbol-sdk'
  * The object could be a simple object, an array or a Map/Record with key->value.
  *
  */
-export class SimpleObjectStorage<E> {
+export class SimpleObjectStorage<E> implements IStorage<E>{
 
   /**
    * The Storage backend, if localStorage is not available the storage will be in memory.
@@ -72,7 +74,7 @@ export class SimpleObjectStorage<E> {
     const raw = {
       ...{
         time: new Date().valueOf(),
-        seed: AESEncryptionService.generateRandomBytes(8),
+        seed: Crypto.randomBytes(8),
       }, ...(object || {}),
     }
     // to-json

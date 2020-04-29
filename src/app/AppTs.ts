@@ -25,7 +25,7 @@ import SpinnerLoading from '@/components/SpinnerLoading/SpinnerLoading.vue'
   computed: {
     ...mapGetters({
       hasLoadingOverlay: 'app/shouldShowLoadingOverlay',
-      currentAccount: 'account/currentAccount',
+      currentProfile: 'profile/currentProfile',
     }),
   },
   components: {
@@ -35,11 +35,11 @@ import SpinnerLoading from '@/components/SpinnerLoading/SpinnerLoading.vue'
 })
 export class AppTs extends Vue {
   /**
-   * Currently active account
-   * @see {Store.Account}
+   * Currently active profile
+   * @see {Store.Profile}
    * @var {string}
    */
-  public currentAccount: string
+  public currentProfile: string
 
   /**
    * Whether a loading overlay must be displayed

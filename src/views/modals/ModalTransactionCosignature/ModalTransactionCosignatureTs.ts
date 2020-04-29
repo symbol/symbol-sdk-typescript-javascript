@@ -22,7 +22,7 @@ import {
 } from 'symbol-sdk'
 import {mapGetters} from 'vuex'
 
-import {WalletModel, WalletType} from '@/core/database/entities/WalletModel'
+import {AccountModel, AccountType} from '@/core/database/entities/AccountModel'
 import {TransactionService} from '@/services/TransactionService'
 import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 
@@ -30,18 +30,18 @@ import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 // @ts-ignore
 import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue'
 // @ts-ignore
-import FormAccountUnlock from '@/views/forms/FormAccountUnlock/FormAccountUnlock.vue'
+import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock.vue'
 // @ts-ignore
 import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/HardwareConfirmationButton.vue'
 
 @Component({
   components: {
     TransactionDetails,
-    FormAccountUnlock,
+    FormProfileUnlock,
     HardwareConfirmationButton,
   },
   computed: {...mapGetters({
-    currentWallet: 'wallet/currentWallet',
+    currentAccount: 'account/currentAccount',
   })},
 })
 export class ModalTransactionCosignatureTs extends Vue {
@@ -54,11 +54,11 @@ export class ModalTransactionCosignatureTs extends Vue {
   }) transaction: AggregateTransaction
 
   /**
-   * Currently active wallet
-   * @see {Store.Wallet}
-   * @var {WalletModel}
+   * Currently active account
+   * @see {Store.Account}
+   * @var {AccountModel}
    */
-  public currentWallet: WalletModel
+  public currentAccount: AccountModel
 
   /// region computed properties
   /**
@@ -79,16 +79,16 @@ export class ModalTransactionCosignatureTs extends Vue {
   }
 
   /**
-   * Returns whether current wallets is a hardware wallet
+   * Returns whether current account is a hardware wallet
    * @return {boolean}
    */
   public get isUsingHardwareWallet(): boolean {
-    // XXX should use "stagedTransaction.signer" to identify wallet
-    return WalletType.TREZOR === this.currentWallet.type
+    // XXX should use "stagedTransaction.signer" to identify account
+    return AccountType.TREZOR === this.currentAccount.type
   }
 
   public get needsCosignature(): boolean {
-    const currentPubAccount = WalletModel.getObjects(this.currentWallet).publicAccount
+    const currentPubAccount = AccountModel.getObjects(this.currentAccount).publicAccount
     return !this.transaction.signedByAccount(currentPubAccount)
   }
 
@@ -127,7 +127,7 @@ export class ModalTransactionCosignatureTs extends Vue {
   }
 
   /**
-   * Hook called when child component FormAccountUnlock emits
+   * Hook called when child component FormProfileUnlock emits
    * the 'success' event.
    *
    * This hook shall *sign transactions* with the \a account
@@ -159,7 +159,7 @@ export class ModalTransactionCosignatureTs extends Vue {
   }
 
   /**
-   * Hook called when child component FormAccountUnlock or
+   * Hook called when child component FormProfileUnlock or
    * HardwareConfirmationButton emit the 'error' event.
    * @param {string} message
    * @return {void}
