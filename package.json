@@ -2,7 +2,7 @@
   "name": "symbol-desktop-wallet",
   "description": "Symbol Wallet",
   "homepage": "https://github.com/nemfoundation/symbol-desktop-wallet",
-  "version": "0.9.9",
+  "version": "0.9.10",
   "author": {
     "name": "NEM Foundation",
     "email": "devs@nem.foundation"
