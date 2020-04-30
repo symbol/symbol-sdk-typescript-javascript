@@ -207,7 +207,7 @@ export default {
      *    skipTransactions: boolean,
      * }
      */
-    async initialize({commit, dispatch, getters}, {address}) {
+    async initialize({commit, getters}, {address}) {
       const callback = async () => {
         if (!address || !address.length) return
         commit('setInitialized', true)

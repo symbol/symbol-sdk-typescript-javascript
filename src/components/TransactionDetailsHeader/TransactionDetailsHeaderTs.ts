@@ -76,7 +76,20 @@ export class TransactionDetailsHeaderTs extends Vue {
    */
   public getFeeAmount(): number {
     if (!this.view) return 0
-    return this.view.values.get('effectiveFee') || this.view.values.get('maxFee') || 0
+    const effectiveFee = this.view.values.get('effectiveFee')
+    if (effectiveFee !== undefined)
+    {return effectiveFee}
+    const maxFee = this.view.values.get('maxFee')
+    if (maxFee !== undefined)
+    {return maxFee}
+    return 0
+  }
+
+  public getFeeKey(): string {
+    if (this.view && this.view.values.get('effectiveFee') != undefined){
+      return 'paid_fee'
+    }
+    return 'max_fee'
   }
 
   /**
@@ -96,7 +109,7 @@ export class TransactionDetailsHeaderTs extends Vue {
         value: this.view.info ? this.view.info.hash : '-',
       },
       {
-        key: `${this.view.info ? 'paid_fee' : 'max_fee'}`,
+        key: this.getFeeKey(),
         value: {
           id: this.networkMosaic,
           mosaicHex: this.networkMosaicTicker,

@@ -137,7 +137,14 @@ export class TransactionRowTs extends Vue {
     }
     // https://github.com/nemfoundation/nem2-desktop-account/issues/879
     // We may want to show N/A instead of the paid fee
-    return this.view.values.get('effectiveFee') || this.view.values.get('maxFee') || 0
+    if (!this.view) return 0
+    const effectiveFee = this.view.values.get('effectiveFee')
+    if (effectiveFee !== undefined)
+    {return effectiveFee}
+    const maxFee = this.view.values.get('maxFee')
+    if (maxFee !== undefined)
+    {return maxFee}
+    return 0
   }
 
   /**

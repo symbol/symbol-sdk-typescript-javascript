@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {Account, AccountAddressRestrictionTransaction, AccountLinkTransaction, AccountMetadataTransaction, AccountMosaicRestrictionTransaction, AccountOperationRestrictionTransaction, AddressAliasTransaction, AggregateTransaction, BlockInfo, CosignatureSignedTransaction, CosignatureTransaction, Deadline, HashLockTransaction, LockFundsTransaction, Mosaic, MosaicAddressRestrictionTransaction, MosaicAliasTransaction, MosaicDefinitionTransaction, MosaicGlobalRestrictionTransaction, MosaicMetadataTransaction, MosaicSupplyChangeTransaction, MultisigAccountModificationTransaction, NamespaceMetadataTransaction, NamespaceRegistrationTransaction, PublicAccount, SecretLockTransaction, SecretProofTransaction, SignedTransaction, Transaction, TransactionType, TransferTransaction, UInt64} from 'symbol-sdk'
+import {Account, AccountAddressRestrictionTransaction, AccountLinkTransaction, AccountMetadataTransaction, AccountMosaicRestrictionTransaction, AccountOperationRestrictionTransaction, AddressAliasTransaction, AggregateTransaction, BlockInfo, CosignatureSignedTransaction, CosignatureTransaction, Deadline, HashLockTransaction, LockFundsTransaction, Mosaic, MosaicAddressRestrictionTransaction, MosaicAliasTransaction, MosaicDefinitionTransaction, MosaicGlobalRestrictionTransaction, MosaicId, MosaicMetadataTransaction, MosaicSupplyChangeTransaction, MultisigAccountModificationTransaction, NamespaceMetadataTransaction, NamespaceRegistrationTransaction, NetworkType, PublicAccount, SecretLockTransaction, SecretProofTransaction, SignedTransaction, Transaction, TransactionType, TransferTransaction, UInt64} from 'symbol-sdk'
 // internal dependencies
 import {AbstractService} from './AbstractService'
 import {AccountModel} from '@/core/database/entities/AccountModel'
@@ -166,19 +166,13 @@ export class TransactionService extends AbstractService {
     const height = transaction.transactionInfo ? transaction.transactionInfo.height : undefined
     const block: BlockInfo = !height ? undefined : knownBlocks.find(k => k.height.equals(height))
 
-    const isAggregate = [
-      TransactionType.AGGREGATE_BONDED,
-      TransactionType.AGGREGATE_COMPLETE,
-    ].includes(transaction.type)
-
     // - set helper fields
     view.values.set('isIncoming', false)
     view.values.set('hasBlockInfo', undefined !== block)
 
     // - initialize fee fields
-    view.values.set('maxFee', isAggregate ? 0 : transaction.maxFee.compact())
-    view.values.set('effectiveFee', 0)
-    if (!isAggregate && view.values.get('hasBlockInfo')) {
+    view.values.set('maxFee', transaction.maxFee.compact())
+    if (block) {
       view.values.set('effectiveFee', transaction.size * block.feeMultiplier)
     }
 
@@ -197,14 +191,14 @@ export class TransactionService extends AbstractService {
    * transactions \a aggregateTx
    *
    * @param {SignedTransaction} aggregateTx
+   * @param {UInt64} the lock max fee.
    * @return {LockFundsTransaction}
    */
-  public createHashLockTransaction(aggregateTx: SignedTransaction): LockFundsTransaction {
+  public createHashLockTransaction(aggregateTx: SignedTransaction, maxFee: UInt64): LockFundsTransaction {
     // - shortcuts
-    const networkMosaic = this.$store.getters['mosaic/networkMosaic']
-    const networkType = this.$store.getters['network/networkType']
-    const networkConfiguration = this.$store.getters['network/networkConfiguration'] as NetworkConfigurationModel
-    const defaultFee = this.$store.getters['app/defaultFee']
+    const networkMosaic: MosaicId = this.$store.getters['mosaic/networkMosaic']
+    const networkType: NetworkType = this.$store.getters['network/networkType']
+    const networkConfiguration: NetworkConfigurationModel = this.$store.getters['network/networkConfiguration']
 
     // - create hash lock
     return LockFundsTransaction.create(
@@ -216,7 +210,7 @@ export class TransactionService extends AbstractService {
       UInt64.fromUint(1000), // duration=1000
       aggregateTx,
       networkType,
-      UInt64.fromUint(defaultFee),
+      maxFee,
     )
   }
 
@@ -251,10 +245,9 @@ export class TransactionService extends AbstractService {
    */
   public signStagedTransactions(account: Account): SignedTransaction[] {
     // - shortcuts
-    const transactions = this.$store.getters['account/stagedTransactions']
-    const generationHash = this.$store.getters['network/generationHash']
+    const transactions: Transaction[] = this.$store.getters['account/stagedTransactions']
+    const generationHash: string = this.$store.getters['network/generationHash']
     const signedTransactions = []
-
     // - iterate transaction that are "on stage"
     for (let i = 0, m = transactions.length; i < m; i ++) {
       // - read transaction from stage
@@ -287,11 +280,17 @@ export class TransactionService extends AbstractService {
    */
   public signAggregateStagedTransactions(account: Account): SignedTransaction[] {
     // - shortcuts
-    const networkType = this.$store.getters['network/networkType']
-    const transactions = this.$store.getters['account/stagedTransactions']
-    const generationHash = this.$store.getters['network/generationHash']
-    const defaultFee = this.$store.getters['app/defaultFee']
+    const networkType: NetworkType = this.$store.getters['network/networkType']
+    const transactions: Transaction[] = this.$store.getters['account/stagedTransactions']
+    const generationHash: string = this.$store.getters['network/generationHash']
     const signedTransactions = []
+
+    if (!transactions.length){
+      return signedTransactions
+    }
+
+    // - aggregate staged transactions
+    const maxFee = transactions.sort((a, b) => a.maxFee.compare(b.maxFee))[0].maxFee
 
     // - aggregate staged transactions
     const aggregateTx = AggregateTransaction.createComplete(
@@ -300,7 +299,7 @@ export class TransactionService extends AbstractService {
       transactions.map(t => t.toAggregate(account.publicAccount)),
       networkType,
       [],
-      UInt64.fromUint(defaultFee),
+      maxFee,
     )
 
     // - sign aggregate transaction
@@ -337,25 +336,30 @@ export class TransactionService extends AbstractService {
     cosignatoryAccount: Account,
   ): SignedTransaction[] {
     // - shortcuts
-    const networkType = this.$store.getters['network/networkType']
-    const transactions = this.$store.getters['account/stagedTransactions']
-    const generationHash = this.$store.getters['network/generationHash']
-    const defaultFee = this.$store.getters['app/defaultFee']
+    const networkType: NetworkType = this.$store.getters['network/networkType']
+    const transactions: Transaction[] = this.$store.getters['account/stagedTransactions']
+    const generationHash: string = this.$store.getters['network/generationHash']
     const signedTransactions = []
 
+    if (!transactions.length){
+      return signedTransactions
+    }
+
     // - aggregate staged transactions
+    const maxFee = transactions.sort((a, b) => a.maxFee.compare(b.maxFee))[0].maxFee
+
     const aggregateTx = AggregateTransaction.createBonded(
       Deadline.create(),
       // - format as `InnerTransaction`
       transactions.map(t => t.toAggregate(multisigAccount)),
       networkType,
       [],
-      UInt64.fromUint(defaultFee),
+      maxFee,
     )
 
     // - sign aggregate transaction and create lock
     const signedTx = cosignatoryAccount.sign(aggregateTx, generationHash)
-    const hashLock = this.createHashLockTransaction(signedTx)
+    const hashLock = this.createHashLockTransaction(signedTx, maxFee)
 
     // - sign hash lock and push
     const signedLock = cosignatoryAccount.sign(hashLock, generationHash)
