@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import {RepositoryFactoryHttp} from 'symbol-sdk'
-import {NodeService} from '@/services/NodeService'
-import {toArray} from 'rxjs/operators'
-
+import { RepositoryFactoryHttp } from 'symbol-sdk'
+import { NodeService } from '@/services/NodeService'
+import { toArray } from 'rxjs/operators'
 
 const nodeService = new NodeService()
 const realUrl = 'http://api-01.us-west-1.symboldev.network:3000'

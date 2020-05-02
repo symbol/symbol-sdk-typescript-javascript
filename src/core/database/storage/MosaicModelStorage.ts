@@ -14,11 +14,10 @@
  *
  */
 
-import {VersionedNetworkBasedObjectStorage} from '@/core/database/backends/VersionedNetworkBasedObjectStorage'
-import {MosaicModel} from '@/core/database/entities/MosaicModel'
+import { VersionedNetworkBasedObjectStorage } from '@/core/database/backends/VersionedNetworkBasedObjectStorage'
+import { MosaicModel } from '@/core/database/entities/MosaicModel'
 
 export class MosaicModelStorage extends VersionedNetworkBasedObjectStorage<MosaicModel[]> {
-
   /**
    * Singleton instance as we want to run the migration just once
    */
@@ -27,5 +26,4 @@ export class MosaicModelStorage extends VersionedNetworkBasedObjectStorage<Mosai
   private constructor() {
     super('mosaicCache')
   }
-
 }

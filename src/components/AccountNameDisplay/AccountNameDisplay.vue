@@ -14,16 +14,12 @@
       </button>
     </div>
 
-    <ModalFormAccountNameUpdate
-      v-if="hasNameFormModal"
-      :visible="hasNameFormModal"
-      @close="hasNameFormModal = false"
-    />
+    <ModalFormAccountNameUpdate v-if="hasNameFormModal" :visible="hasNameFormModal" @close="hasNameFormModal = false" />
   </div>
 </template>
 
 <script lang="ts">
-import {AccountNameDisplayTs} from './AccountNameDisplayTs'
+import { AccountNameDisplayTs } from './AccountNameDisplayTs'
 
 export default class AccountNameDisplay extends AccountNameDisplayTs {}
 </script>

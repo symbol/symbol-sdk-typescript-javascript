@@ -1,17 +1,17 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
 // external dependencies
 import {
@@ -25,7 +25,7 @@ import {
   Transaction,
   UInt64,
 } from 'symbol-sdk'
-import {Component} from 'vue-property-decorator'
+import { Component } from 'vue-property-decorator'
 // internal dependencies
 import {
   MosaicDefinitionFormFieldsType,
@@ -35,10 +35,10 @@ import {
   MosaicSupplyChangeFormFieldsType,
   ViewMosaicSupplyChangeTransaction,
 } from '@/core/transactions/ViewMosaicSupplyChangeTransaction'
-import {FormTransactionBase} from '@/views/forms/FormTransactionBase/FormTransactionBase'
-import {TransactionFactory} from '@/core/transactions/TransactionFactory'
+import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase'
+import { TransactionFactory } from '@/core/transactions/TransactionFactory'
 // child components
-import {ValidationObserver, ValidationProvider} from 'vee-validate'
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
@@ -170,10 +170,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
       supplyChangeView = supplyChangeView.parse(supplyChangeData)
 
       // - prepare mosaic definition and supply change
-      return [
-        this.factory.build(definitionView),
-        this.factory.build(supplyChangeView),
-      ]
+      return [this.factory.build(definitionView), this.factory.build(supplyChangeView)]
     } catch (error) {
       console.error('Error happened in FormMosaicDefinitionTransaction.transactions(): ', error)
     }

@@ -34,15 +34,17 @@
 
 <script lang="ts">
 // external dependencies
-import {Component, Vue} from 'vue-property-decorator'
-import {NamespaceRegistrationType} from 'symbol-sdk'
+import { Component, Vue } from 'vue-property-decorator'
+import { NamespaceRegistrationType } from 'symbol-sdk'
 // child components
 import AssetFormPageWrap from '@/views/pages/assets/AssetFormPageWrap/AssetFormPageWrap.vue'
 import FormNamespaceRegistrationTransaction from '@/views/forms/FormNamespaceRegistrationTransaction/FormNamespaceRegistrationTransaction.vue'
 // @ts-ignore
 @Component({
-  components: {AssetFormPageWrap, FormNamespaceRegistrationTransaction},
-  data() {return {NamespaceRegistrationType}},
+  components: { AssetFormPageWrap, FormNamespaceRegistrationTransaction },
+  data() {
+    return { NamespaceRegistrationType }
+  },
 })
 export default class CreateNamespacePage extends Vue {}
 </script>

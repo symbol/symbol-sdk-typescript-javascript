@@ -1,8 +1,6 @@
 <template>
   <FormRow>
-    <template v-slot:label>
-      {{ $t('set_explorer_link') }}:
-    </template>
+    <template v-slot:label> {{ $t('set_explorer_link') }}: </template>
     <template v-slot:inputs>
       <ValidationProvider
         v-slot="{ errors }"
@@ -27,6 +25,6 @@
 </template>
 
 <script>
-import {ExplorerUrlSetterTs} from './ExplorerUrlSetterTs'
+import { ExplorerUrlSetterTs } from './ExplorerUrlSetterTs'
 export default class ExplorerUrlSetter extends ExplorerUrlSetterTs {}
 </script>

@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import {NetworkBasedObjectStorage} from '@/core/database/backends/NetworkBasedObjectStorage'
-import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
+import { NetworkBasedObjectStorage } from '@/core/database/backends/NetworkBasedObjectStorage'
+import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage'
 
 const getStorage = () => new NetworkBasedObjectStorage<number>(new SimpleObjectStorage('SomeStorageKey'))
 
@@ -41,7 +41,7 @@ describe('database/NetworkBasedObjectStorage.spec ==>', () => {
   })
 
   function delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) )
+    return new Promise((resolve) => setTimeout(resolve, ms))
   }
 
   test('Get/Set/Delete same generation hash different generation hash', async () => {
@@ -77,6 +77,5 @@ describe('database/NetworkBasedObjectStorage.spec ==>', () => {
     storage.remove(generationHash2)
     storage.remove(generationHash2)
     expect(storage.get(generationHash2)).toBeUndefined()
-
   })
 })

@@ -1,26 +1,21 @@
 <template>
   <div class="transaction-details-item-inner-container">
-    <div
-      v-for="(item, index) in items"
-      :key="index"
-      class="transaction-row-outer-container"
-    >
+    <div v-for="(item, index) in items" :key="index" class="transaction-row-outer-container">
       <TransactionDetailRow :item="item" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {Address, AliasAction, MosaicId, NamespaceId} from 'symbol-sdk'
-import {TransactionViewType} from '@/services/TransactionService'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Address, AliasAction, MosaicId, NamespaceId } from 'symbol-sdk'
+import { TransactionViewType } from '@/services/TransactionService'
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
-import {TransactionDetailItem} from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
+import { TransactionDetailItem } from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
 
 @Component({ components: { TransactionDetailRow } })
 export default class Alias extends Vue {
   @Prop({ default: null }) view: TransactionViewType
-
 
   /**
    * Displayed items
@@ -36,8 +31,11 @@ export default class Alias extends Vue {
     const targetValue = aliasTarget instanceof Address ? aliasTarget.pretty() : aliasTarget.toHex()
 
     return [
-      { key: 'namespace', value: name || namespaceId.toHex()},
-      { key: 'action', value: aliasAction === AliasAction.Link ? 'Link' : 'Unlink' },
+      { key: 'namespace', value: name || namespaceId.toHex() },
+      {
+        key: 'action',
+        value: aliasAction === AliasAction.Link ? 'Link' : 'Unlink',
+      },
       { key: targetKey, value: targetValue },
     ]
   }

@@ -14,22 +14,21 @@
  *
  */
 
-import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
-import {Address, NamespaceName, RepositoryFactory} from 'symbol-sdk'
-import {Observable, of} from 'rxjs' 
-import {flatMap, map, tap} from 'rxjs/operators'
-import {ObservableHelpers} from '@/core/utils/ObservableHelpers'
+import { NamespaceModel } from '@/core/database/entities/NamespaceModel'
+import { Address, NamespaceName, RepositoryFactory } from 'symbol-sdk'
+import { Observable, of } from 'rxjs'
+import { flatMap, map, tap } from 'rxjs/operators'
+import { ObservableHelpers } from '@/core/utils/ObservableHelpers'
 import * as _ from 'lodash'
-import {TimeHelpers} from '@/core/utils/TimeHelpers'
-import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
-import {NamespaceModelStorage} from '@/core/database/storage/NamespaceModelStorage'
+import { TimeHelpers } from '@/core/utils/TimeHelpers'
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
+import { NamespaceModelStorage } from '@/core/database/storage/NamespaceModelStorage'
 
 /**
  * The service in charge of loading and caching anything related to Namepsaces from Rest.
  * The cache is done by storing the payloads in SimpleObjectStorage.
  */
 export class NamespaceService {
-
   /**
    * The namespace information local cache.
    */
@@ -44,41 +43,54 @@ export class NamespaceService {
    * @param generationHash the current network generation hash.
    * @param addresses the current addresses.
    */
-  public getNamespaces(repositoryFactory: RepositoryFactory, generationHash: string,
-    addresses: Address[]): Observable<NamespaceModel[]> {
+  public getNamespaces(
+    repositoryFactory: RepositoryFactory,
+    generationHash: string,
+    addresses: Address[],
+  ): Observable<NamespaceModel[]> {
     if (!addresses.length) return of([])
 
     const namespaceModelList = this.namespaceModelStorage.get(generationHash) || []
     const namespaceRepository = repositoryFactory.createNamespaceRepository()
-    return namespaceRepository.getNamespacesFromAccounts(addresses)
-      .pipe(flatMap(namespaceInfos => {
-        return namespaceRepository.getNamespacesName(namespaceInfos.map(info => info.id))
-          .pipe(map(names => {
-            return namespaceInfos.map(namespaceInfo => {
-              const reference = _.first(
-                names.filter(n => n.namespaceId.toHex() === namespaceInfo.id.toHex()))
-              return new NamespaceModel(namespaceInfo,
-                NamespaceService.getFullNameFromNamespaceNames(reference, names))
-            })
-          }))
-      })).pipe(tap(d => this.namespaceModelStorage.set(generationHash, d)),
-        ObservableHelpers.defaultFirst(namespaceModelList))
+    return namespaceRepository
+      .getNamespacesFromAccounts(addresses)
+      .pipe(
+        flatMap((namespaceInfos) => {
+          return namespaceRepository.getNamespacesName(namespaceInfos.map((info) => info.id)).pipe(
+            map((names) => {
+              return namespaceInfos.map((namespaceInfo) => {
+                const reference = _.first(names.filter((n) => n.namespaceId.toHex() === namespaceInfo.id.toHex()))
+                return new NamespaceModel(
+                  namespaceInfo,
+                  NamespaceService.getFullNameFromNamespaceNames(reference, names),
+                )
+              })
+            }),
+          )
+        }),
+      )
+      .pipe(
+        tap((d) => this.namespaceModelStorage.set(generationHash, d)),
+        ObservableHelpers.defaultFirst(namespaceModelList),
+      )
   }
 
-
-  public static getExpiration(networkConfiguration: NetworkConfigurationModel,
+  public static getExpiration(
+    networkConfiguration: NetworkConfigurationModel,
     currentHeight: number,
-    endHeight: number): { expiration: string, expired: boolean } {
+    endHeight: number,
+  ): { expiration: string; expired: boolean } {
     const blockGenerationTargetTime = networkConfiguration.blockGenerationTargetTime
     const namespaceGracePeriodBlocks = Math.floor(
-      networkConfiguration.namespaceGracePeriodDuration / blockGenerationTargetTime)
+      networkConfiguration.namespaceGracePeriodDuration / blockGenerationTargetTime,
+    )
     const expired = currentHeight > endHeight - namespaceGracePeriodBlocks
     const expiredIn = endHeight - namespaceGracePeriodBlocks - currentHeight
     const deletedIn = endHeight - currentHeight
     const expiration = expired
       ? TimeHelpers.durationToRelativeTime(expiredIn, blockGenerationTargetTime)
       : TimeHelpers.durationToRelativeTime(deletedIn, blockGenerationTargetTime)
-    return {expired, expiration}
+    return { expired, expiration }
   }
 
   /**
@@ -88,13 +100,14 @@ export class NamespaceService {
    * @param {NamespaceName[]} namespaceNames
    * @returns the full namespace name.
    */
-  public static getFullNameFromNamespaceNames(reference: NamespaceName,
-    namespaceNames: NamespaceName[]): string {
-    if (!reference) {return ''}
+  public static getFullNameFromNamespaceNames(reference: NamespaceName, namespaceNames: NamespaceName[]): string {
+    if (!reference) {
+      return ''
+    }
     if (!reference.parentId) return reference.name
 
     const parent = namespaceNames.find(
-      namespaceName => namespaceName.namespaceId.toHex() === reference.parentId.toHex(),
+      (namespaceName) => namespaceName.namespaceId.toHex() === reference.parentId.toHex(),
     )
     if (parent === undefined) return reference.name
     const parentName = NamespaceService.getFullNameFromNamespaceNames(parent, namespaceNames)

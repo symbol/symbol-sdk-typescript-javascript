@@ -1,8 +1,6 @@
 <template>
   <FormRow>
-    <template v-slot:label>
-      {{ $t(label) }}:
-    </template>
+    <template v-slot:label> {{ $t(label) }}: </template>
     <template v-slot:inputs>
       <ValidationProvider
         v-slot="{ errors }"
@@ -13,11 +11,7 @@
         class="inputs-container"
       >
         <ErrorTooltip :errors="errors">
-          <input
-            v-model="chosenValue"
-            class="input-style input-size"
-            type="number"
-          >
+          <input v-model="chosenValue" class="input-style input-size" type="number" />
         </ErrorTooltip>
       </ValidationProvider>
     </template>
@@ -25,6 +19,6 @@
 </template>
 
 <script lang="ts">
-import {SupplyInputTs} from './SupplyInputTs'
+import { SupplyInputTs } from './SupplyInputTs'
 export default class SupplyInput extends SupplyInputTs {}
 </script>

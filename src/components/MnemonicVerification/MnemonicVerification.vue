@@ -21,27 +21,19 @@
     </div>
     <div class="buttons clear">
       <div class="flex-container mt-3">
-        <button
-          type="button"
-          class="button-style back-button" 
-          @click="$emit('cancelled')"
-        >
+        <button type="button" class="button-style back-button" @click="$emit('cancelled')">
           {{ $t('previous') }}
         </button>
-        <button
-          type="submit"
-          class="button-style validation-button" 
-          @click="processVerification()"
-        >
+        <button type="submit" class="button-style validation-button" @click="processVerification()">
           {{ $t('next') }}
-        </button>   
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {MnemonicVerificationTs} from './MnemonicVerificationTs'
+import { MnemonicVerificationTs } from './MnemonicVerificationTs'
 import './MnemonicVerification.less'
 export default class MnemonicVerification extends MnemonicVerificationTs {}
 </script>

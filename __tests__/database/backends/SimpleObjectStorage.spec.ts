@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
+import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage'
 
 const getStorage = () => new SimpleObjectStorage<number>('SomeStorageKey')
 
@@ -35,6 +35,4 @@ describe('database/SimpleObjectStorage.spec ==>', () => {
       expect(storage.get()).toBeUndefined()
     })
   })
-
-
 })

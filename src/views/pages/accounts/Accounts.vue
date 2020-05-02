@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import {AccountsTs} from './AccountsTs'
+import { AccountsTs } from './AccountsTs'
 export default class Accounts extends AccountsTs {}
 </script>
 

@@ -17,9 +17,9 @@
       <FormRow v-if="cosignatories && cosignatories.length">
         <template v-slot:inputs>
           <div
-            v-for="({publicKey, address}, index) in cosignatories"
+            v-for="({ publicKey, address }, index) in cosignatories"
             :key="index"
-            :class="[ 
+            :class="[
               'row-cosignatory-modification-display',
               'inputs-container',
               'accent-pink-background',
@@ -44,7 +44,7 @@
         </template>
         <template v-slot:inputs>
           <div
-            v-for="({publicKey, address}, index) in removeModifications"
+            v-for="({ publicKey, address }, index) in removeModifications"
             :key="index"
             :class="[
               'row-cosignatory-modification-display',
@@ -70,7 +70,7 @@
         </template>
         <template v-slot:inputs>
           <div
-            v-for="({publicKey, address}, index) in addModifications"
+            v-for="({ publicKey, address }, index) in addModifications"
             :key="index"
             :class="[
               'row-cosignatory-modification-display',
@@ -89,10 +89,7 @@
         </template>
       </FormRow>
 
-      <AddCosignatoryInput
-        v-if="isAddingCosignatory"
-        @added="onAddCosignatory"
-      />
+      <AddCosignatoryInput v-if="isAddingCosignatory" @added="onAddCosignatory" />
       <div v-if="!isAddingCosignatory" class="row-cosignatory-modification-display inputs-container link mx-1">
         <a href="#" @click="isAddingCosignatory = true">{{ $t('form_label_add_cosignatory') }}</a>
       </div>
@@ -101,7 +98,7 @@
 </template>
 
 <script lang="ts">
-import {MultisigCosignatoriesDisplayTs} from './MultisigCosignatoriesDisplayTs'
+import { MultisigCosignatoriesDisplayTs } from './MultisigCosignatoriesDisplayTs'
 
 export default class MultisigCosignatoriesDisplay extends MultisigCosignatoriesDisplayTs {}
 </script>

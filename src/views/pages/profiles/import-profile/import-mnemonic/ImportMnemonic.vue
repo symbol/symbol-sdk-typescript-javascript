@@ -37,5 +37,5 @@ import ImportMnemonicTs from './ImportMnemonicTs'
 export default class ImportMnemonic extends ImportMnemonicTs {}
 </script>
 <style lang="less" scoped>
-@import "./ImportMnemonic.less";
+@import './ImportMnemonic.less';
 </style>

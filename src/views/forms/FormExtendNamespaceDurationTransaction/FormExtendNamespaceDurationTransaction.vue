@@ -1,14 +1,9 @@
 <template>
   <FormWrapper>
     <ValidationObserver ref="observer" v-slot="{ handleSubmit }" slim>
-      <form
-        onsubmit="event.preventDefault()"
-        class="form-container"
-      >
+      <form onsubmit="event.preventDefault()" class="form-container">
         <FormRow>
-          <template v-slot:label>
-            {{ $t('form_label_namespace_name') }}:
-          </template>
+          <template v-slot:label> {{ $t('form_label_namespace_name') }}: </template>
           <template v-slot:inputs>
             <div class="row-left-message">
               <span class="pl-2">
@@ -34,16 +29,14 @@
             <div class="row-left-message">
               <span class="pl-2">
                 {{ currentExpirationInfoView.expiration }}
-                ({{ $t('at_block', {blockNumber: currentNamespaceEndHeight}) }})
+                ({{ $t('at_block', { blockNumber: currentNamespaceEndHeight }) }})
               </span>
             </div>
           </template>
         </FormRow>
 
         <FormRow>
-          <template v-slot:label>
-            {{ $t('form_label_new_expiration_time') }}:
-          </template>
+          <template v-slot:label> {{ $t('form_label_new_expiration_time') }}: </template>
           <template v-slot:inputs>
             <ValidationProvider
               v-slot="{ validate, errors }"
@@ -53,11 +46,11 @@
               :immediate="true"
               slim
             >
-              <input v-show="false" v-model="newDuration" @change="validate">
+              <input v-show="false" v-model="newDuration" @change="validate" />
               <ErrorTooltip :errors="errors">
                 <div class="row-left-message">
-                  <span :class="[ errors.length ? 'red' : '', 'pl-2' ]">
-                    {{ newExpirationInfoView }} ({{ $t('at_block', {blockNumber: newEndHeight}) }})
+                  <span :class="[errors.length ? 'red' : '', 'pl-2']">
+                    {{ newExpirationInfoView }} ({{ $t('at_block', { blockNumber: newEndHeight }) }})
                   </span>
                 </div>
               </ErrorTooltip>
@@ -65,11 +58,7 @@
           </template>
         </FormRow>
 
-
-        <MaxFeeAndSubmit
-          v-model="formItems.maxFee"
-          @button-clicked="handleSubmit(onSubmit)"
-        />
+        <MaxFeeAndSubmit v-model="formItems.maxFee" @button-clicked="handleSubmit(onSubmit)" />
       </form>
     </ValidationObserver>
     <ModalTransactionConfirmation

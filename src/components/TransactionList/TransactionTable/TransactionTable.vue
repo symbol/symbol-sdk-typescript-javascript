@@ -1,10 +1,7 @@
 <template>
   <div class="transaction-table-container">
     <TransactionListHeader />
-    <Spin
-      v-if="isFetchingTransactions" size="large" fix
-      class="absolute"
-    />
+    <Spin v-if="isFetchingTransactions" size="large" fix class="absolute" />
     <div v-if="transactions.length" class="transaction-rows-outer-container">
       <div class="transaction-rows-inner-container">
         <TransactionRow
@@ -16,7 +13,7 @@
         />
       </div>
     </div>
-    <div v-if=" !transactions.length && !isFetchingTransactions" class="no-data-outer-container">
+    <div v-if="!transactions.length && !isFetchingTransactions" class="no-data-outer-container">
       <div class="no-data-message-container">
         <div>{{ $t(emptyMessage) }}</div>
       </div>
@@ -31,10 +28,10 @@
 
 <script lang="ts">
 // @ts-ignore
-import {TransactionTableTs} from './TransactionTableTs'
-export default class TransactionTable extends TransactionTableTs{}
+import { TransactionTableTs } from './TransactionTableTs'
+export default class TransactionTable extends TransactionTableTs {}
 </script>
 
 <style lang="less">
-@import "./TransactionTable.less";
+@import './TransactionTable.less';
 </style>

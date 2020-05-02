@@ -1,29 +1,29 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {MosaicId, MultisigAccountInfo, NetworkType, PublicAccount, Transaction} from 'symbol-sdk'
-import {Component, Vue, Watch} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { MosaicId, MultisigAccountInfo, NetworkType, PublicAccount, Transaction } from 'symbol-sdk'
+import { Component, Vue, Watch } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // internal dependencies
-import {AccountModel} from '@/core/database/entities/AccountModel'
-import {TransactionFactory} from '@/core/transactions/TransactionFactory'
-import {TransactionService} from '@/services/TransactionService'
-import {BroadcastResult} from '@/core/transactions/BroadcastResult'
-import {ValidationObserver} from 'vee-validate'
-import {Signer} from '@/store/Account'
-import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyModel'
+import { AccountModel } from '@/core/database/entities/AccountModel'
+import { TransactionFactory } from '@/core/transactions/TransactionFactory'
+import { TransactionService } from '@/services/TransactionService'
+import { BroadcastResult } from '@/core/transactions/BroadcastResult'
+import { ValidationObserver } from 'vee-validate'
+import { Signer } from '@/store/Account'
+import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel'
 
 @Component({
   computed: {
@@ -44,7 +44,7 @@ import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyMode
   },
 })
 export class FormTransactionBase extends Vue {
-/// region store getters
+  /// region store getters
   /**
    * Network generation hash
    */
@@ -160,7 +160,9 @@ export class FormTransactionBase extends Vue {
   public beforeDestroy() {
     // reset the selected signer if it is not the current account
     if (this.selectedSigner.publicKey !== this.currentAccount.publicKey) {
-      this.$store.dispatch('account/SET_CURRENT_SIGNER', {publicKey: this.currentAccount.publicKey})
+      this.$store.dispatch('account/SET_CURRENT_SIGNER', {
+        publicKey: this.currentAccount.publicKey,
+      })
     }
   }
 
@@ -195,7 +197,7 @@ export class FormTransactionBase extends Vue {
    * @throws {Error} If not overloaded in derivate component
    */
   protected resetForm() {
-    throw new Error('Method \'resetForm()\' must be overloaded in derivate components.')
+    throw new Error("Method 'resetForm()' must be overloaded in derivate components.")
   }
 
   /**
@@ -203,7 +205,7 @@ export class FormTransactionBase extends Vue {
    * @throws {Error} If not overloaded in derivate component
    */
   protected isAggregateMode(): boolean {
-    throw new Error('Method \'isAggregateMode()\' must be overloaded in derivate components.')
+    throw new Error("Method 'isAggregateMode()' must be overloaded in derivate components.")
   }
 
   /**
@@ -219,7 +221,7 @@ export class FormTransactionBase extends Vue {
    * @throws {Error} If not overloaded in derivate component
    */
   protected getTransactions(): Transaction[] {
-    throw new Error('Getter method \'getTransactions()\' must be overloaded in derivate components.')
+    throw new Error("Getter method 'getTransactions()' must be overloaded in derivate components.")
   }
 
   /**
@@ -247,7 +249,7 @@ export class FormTransactionBase extends Vue {
    */
   public async onChangeSigner(publicKey: string) {
     // this.currentSigner = PublicAccount.createFromPublicKey(publicKey, this.networkType)
-    await this.$store.dispatch('account/SET_CURRENT_SIGNER', {publicKey})
+    await this.$store.dispatch('account/SET_CURRENT_SIGNER', { publicKey })
   }
 
   /**
@@ -257,7 +259,10 @@ export class FormTransactionBase extends Vue {
   public async onSubmit() {
     const transactions = this.getTransactions()
 
-    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Adding ' + transactions.length + ' transaction(s) to stage (prepared & unsigned)')
+    this.$store.dispatch(
+      'diagnostic/ADD_DEBUG',
+      'Adding ' + transactions.length + ' transaction(s) to stage (prepared & unsigned)',
+    )
 
     // - check whether transactions must be aggregated
     // - also set isMultisig flag in case of cosignatory mode
@@ -269,13 +274,11 @@ export class FormTransactionBase extends Vue {
     }
 
     // - add transactions to stage (to be signed)
-    await Promise.all(transactions.map(
-      async (transaction) => {
-        await this.$store.dispatch(
-          'account/ADD_STAGED_TRANSACTION',
-          transaction,
-        )
-      }))
+    await Promise.all(
+      transactions.map(async (transaction) => {
+        await this.$store.dispatch('account/ADD_STAGED_TRANSACTION', transaction)
+      }),
+    )
 
     // - open signature modal
     this.onShowConfirmationModal()
@@ -315,16 +318,14 @@ export class FormTransactionBase extends Vue {
     }
 
     // - notify about errors and exit
-    const errors = results.filter(result => false === result.success)
+    const errors = results.filter((result) => false === result.success)
     if (errors.length) {
-      errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
+      errors.map((result) => this.$store.dispatch('notification/ADD_ERROR', result.error))
       return
     }
 
     // - notify about broadcast success (_transactions now unconfirmed_)
-    const message = options.isMultisig
-      ? 'success_transaction_partial_announced'
-      : 'success_transactions_announced'
+    const message = options.isMultisig ? 'success_transaction_partial_announced' : 'success_transactions_announced'
     this.$store.dispatch('notification/ADD_SUCCESS', message)
 
     // Reset form validation
@@ -357,6 +358,4 @@ export class FormTransactionBase extends Vue {
     this.$store.dispatch('account/RESET_TRANSACTION_STAGE')
     this.hasConfirmationModal = false
   }
-
-
 }

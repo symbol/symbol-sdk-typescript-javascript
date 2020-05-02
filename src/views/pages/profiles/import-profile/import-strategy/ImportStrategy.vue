@@ -7,21 +7,15 @@
         </p>
         <p class="title-tips">
           {{ $t('existing_profile') }}
-          <span
-            class="create-profile"
-            @click="$router.push({name:'profiles.login'})"
-          >
+          <span class="create-profile" @click="$router.push({ name: 'profiles.login' })">
             {{ $t('go_to_login') }}
           </span>
         </p>
       </div>
       <div class="profile-type">
-        <div
-          v-for="(item,index) in importInfoList" :key="index" class="profile-item"
-          @click="redirect(item.route)"
-        >
+        <div v-for="(item, index) in importInfoList" :key="index" class="profile-item" @click="redirect(item.route)">
           <div class="img-box radius">
-            <img :src="item.image">
+            <img :src="item.image" />
           </div>
           <p class="access-name">
             {{ $t(item.title) }}
@@ -31,9 +25,7 @@
           </p>
         </div>
       </div>
-      <div class="bottom-text">
-        {{ $t('More_Access_Tool_is_working') }}...
-      </div>
+      <div class="bottom-text">{{ $t('More_Access_Tool_is_working') }}...</div>
     </div>
   </div>
 </template>

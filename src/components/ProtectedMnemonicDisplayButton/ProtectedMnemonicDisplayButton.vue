@@ -2,7 +2,7 @@
   <div>
     <div class="backup-item" @click="onClickDisplay">
       <div class="img-box radius">
-        <img src="@/views/resources/img/symbol/EncryptedMessage.png">
+        <img src="@/views/resources/img/symbol/EncryptedMessage.png" />
       </div>
       <p class="access-name">
         {{ $t('accounts_backup_tile_mnemonic') }}
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import {ProtectedMnemonicDisplayButtonTs} from './ProtectedMnemonicDisplayButtonTs'
+import { ProtectedMnemonicDisplayButtonTs } from './ProtectedMnemonicDisplayButtonTs'
 
 export default class ProtectedMnemonicDisplayButton extends ProtectedMnemonicDisplayButtonTs {}
 </script>

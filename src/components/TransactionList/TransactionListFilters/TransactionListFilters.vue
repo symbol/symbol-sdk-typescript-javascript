@@ -14,9 +14,9 @@
 // @ts-ignore
 import { TransactionListFiltersTs } from './TransactionListFiltersTs'
 
-export default class TransactionListFilters extends TransactionListFiltersTs { }
+export default class TransactionListFilters extends TransactionListFiltersTs {}
 </script>
 
 <style lang="less" scoped>
-@import "./TransactionListFilters.less";
+@import './TransactionListFilters.less';
 </style>

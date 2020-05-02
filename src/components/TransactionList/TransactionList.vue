@@ -4,16 +4,13 @@
       <div class="transaction-list-tabs-container">
         <TransactionListFilters @option-change="getTransactionListByOption" />
         <TransactionTable
-          :transactions="getCurrentPageTransactions()" :empty-message="getEmptyMessage()"
+          :transactions="getCurrentPageTransactions()"
+          :empty-message="getEmptyMessage()"
           @click="onClickTransaction"
         />
       </div>
       <div class="transaction-list-pagination-container">
-        <Page
-          :total="totalCountItems"
-          class="page_content"
-          @on-change="onPageChange"
-        />
+        <Page :total="totalCountItems" class="page_content" @on-change="onPageChange" />
       </div>
     </div>
 

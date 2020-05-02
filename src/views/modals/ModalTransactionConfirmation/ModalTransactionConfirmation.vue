@@ -7,28 +7,13 @@
       :transfer="false"
     >
       <div class="transactionConfirmationBody">
-        <div
-          v-if="!!stagedTransactions"
-          class="stepItem1"
-        >
-          <div
-            v-for="(transaction, index) in stagedTransactions"
-            :key="index"
-            class="info_container"
-          >
+        <div v-if="!!stagedTransactions" class="stepItem1">
+          <div v-for="(transaction, index) in stagedTransactions" :key="index" class="info_container">
             <TransactionDetails :transaction="transaction" />
           </div>
 
-          <HardwareConfirmationButton 
-            v-if="isUsingHardwareWallet" 
-            @success="onTransactionsSigned"
-            @error="onError"
-          />
-          <FormProfileUnlock 
-            v-else
-            @success="onAccountUnlocked"
-            @error="onError"
-          />
+          <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onTransactionsSigned" @error="onError" />
+          <FormProfileUnlock v-else @success="onAccountUnlocked" @error="onError" />
         </div>
       </div>
 
@@ -36,7 +21,10 @@
         <div v-if="stagedTransactions && stagedTransactions.length > 1">
           <span
             class="clear-staged-transactions"
-            @click="$store.dispatch('account/CLEAR_STAGED_TRANSACTIONS'); show = false"
+            @click="
+              $store.dispatch('account/CLEAR_STAGED_TRANSACTIONS')
+              show = false
+            "
           >
             {{ $t('clear_staged_transactions') }}
           </span>
@@ -47,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import {ModalTransactionConfirmationTs} from './ModalTransactionConfirmationTs'
+import { ModalTransactionConfirmationTs } from './ModalTransactionConfirmationTs'
 export default class ModalTransactionConfirmation extends ModalTransactionConfirmationTs {}
 </script>
 
@@ -62,7 +50,7 @@ export default class ModalTransactionConfirmation extends ModalTransactionConfir
   .ivu-modal {
     width: 12rem !important;
   }
-  
+
   .ivu-modal-content {
     width: 100%;
     max-height: 80vh;

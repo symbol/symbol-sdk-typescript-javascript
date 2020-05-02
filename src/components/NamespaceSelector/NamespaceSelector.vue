@@ -1,8 +1,6 @@
 <template>
   <FormRow>
-    <template v-slot:label>
-      {{ $t(label) }}:
-    </template>
+    <template v-slot:label> {{ $t(label) }}: </template>
     <template v-slot:inputs>
       <ValidationProvider
         v-slot="{ errors }"
@@ -14,27 +12,23 @@
         class="inputs-container select-container"
       >
         <ErrorTooltip :errors="errors">
-          <Select
-            v-model="chosenValue"
-            class="select-size select-style"
-            :placeholder="$t('Select_a_namespace')"
-          >
+          <Select v-model="chosenValue" class="select-size select-style" :placeholder="$t('Select_a_namespace')">
             <Option
-              v-for="(namespaceModel) in namespaces"
+              v-for="namespaceModel in namespaces"
               :key="getName(namespaceModel)"
               :value="getName(namespaceModel)"
             >
               {{ getName(namespaceModel) }}
             </Option>
           </Select>
-        </errortooltip>
+        </ErrorTooltip>
       </ValidationProvider>
     </template>
   </FormRow>
 </template>
 
 <script lang="ts">
-import {NamespaceSelectorTs} from './NamespaceSelectorTs'
+import { NamespaceSelectorTs } from './NamespaceSelectorTs'
 
 export default class NamespaceSelector extends NamespaceSelectorTs {}
 </script>

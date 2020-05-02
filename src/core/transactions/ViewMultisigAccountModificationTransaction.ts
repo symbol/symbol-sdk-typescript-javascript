@@ -1,24 +1,23 @@
-/**
- * 
- * Copyright 2020 Grégory Saive for NEM (https://nem.io)
- * 
+/*
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
 // external dependencies
-import {PublicAccount, MultisigAccountModificationTransaction, UInt64} from 'symbol-sdk'
+import { PublicAccount, MultisigAccountModificationTransaction, UInt64 } from 'symbol-sdk'
 
 // internal dependencies
-import {TransactionView} from './TransactionView'
+import { TransactionView } from './TransactionView'
 
 /// region custom types
 export interface CosignatoryModification {
@@ -40,7 +39,9 @@ export type MultisigAccountModificationFormFieldsType = {
 /// end-region custom types
 
 // eslint-disable-next-line max-len
-export class ViewMultisigAccountModificationTransaction extends TransactionView<MultisigAccountModificationFormFieldsType> {
+export class ViewMultisigAccountModificationTransaction extends TransactionView<
+  MultisigAccountModificationFormFieldsType
+> {
   /**
    * Fields that are specific to transfer transactions
    * @var {string[]}
@@ -64,16 +65,13 @@ export class ViewMultisigAccountModificationTransaction extends TransactionView<
     this.values.set('minRemovalDelta', formItems.minRemovalDelta)
 
     // get public keys additions and deletions
-    const publicKeyAdditions = Object
-      .values(formItems.cosignatoryModifications)
-      .filter(({addOrRemove}) => addOrRemove === 'add')
-      .map(({cosignatory}) => cosignatory)
+    const publicKeyAdditions = Object.values(formItems.cosignatoryModifications)
+      .filter(({ addOrRemove }) => addOrRemove === 'add')
+      .map(({ cosignatory }) => cosignatory)
 
-    const publicKeyDeletions = Object
-      .values(formItems.cosignatoryModifications)
-      .filter(({addOrRemove}) => addOrRemove === 'remove')
-      .map(({cosignatory}) => cosignatory)
-
+    const publicKeyDeletions = Object.values(formItems.cosignatoryModifications)
+      .filter(({ addOrRemove }) => addOrRemove === 'remove')
+      .map(({ cosignatory }) => cosignatory)
 
     // set public keys additions and deletions
     this.values.set('publicKeyAdditions', publicKeyAdditions)

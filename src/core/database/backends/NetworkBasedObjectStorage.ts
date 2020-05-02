@@ -14,8 +14,8 @@
  *
  */
 
-import {NetworkBasedEntryModel, NetworkBasedModel} from '@/core/database/entities/NetworkBasedModel'
-import {IStorage} from '@/core/database/backends/IStorage'
+import { NetworkBasedEntryModel, NetworkBasedModel } from '@/core/database/entities/NetworkBasedModel'
+import { IStorage } from '@/core/database/backends/IStorage'
 
 /**
  * A storage save the data per generation hash
@@ -34,7 +34,7 @@ export class NetworkBasedObjectStorage<E> {
    */
   public get(generationHash: string): E | undefined {
     const map = this.delegate.get() || {}
-    return map[generationHash] && map[generationHash].data || undefined
+    return (map[generationHash] && map[generationHash].data) || undefined
   }
 
   /**
@@ -44,8 +44,10 @@ export class NetworkBasedObjectStorage<E> {
   public getLatest(): E | undefined {
     const map = this.delegate.get() || {}
     const latest = Object.values(map).reduce(
-      (prev, current) => (prev && prev.timestamp > current.timestamp) ? prev : current, undefined)
-    return latest && latest.data || undefined
+      (prev, current) => (prev && prev.timestamp > current.timestamp ? prev : current),
+      undefined,
+    )
+    return (latest && latest.data) || undefined
   }
 
   /**
@@ -69,5 +71,4 @@ export class NetworkBasedObjectStorage<E> {
     delete map[generationHash]
     this.delegate.set(map)
   }
-
 }

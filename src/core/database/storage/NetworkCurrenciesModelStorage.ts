@@ -14,11 +14,10 @@
  *
  */
 
-import {NetworkCurrenciesModel} from '@/core/database/entities/NetworkCurrenciesModel'
-import {VersionedNetworkBasedObjectStorage} from '@/core/database/backends/VersionedNetworkBasedObjectStorage'
+import { NetworkCurrenciesModel } from '@/core/database/entities/NetworkCurrenciesModel'
+import { VersionedNetworkBasedObjectStorage } from '@/core/database/backends/VersionedNetworkBasedObjectStorage'
 
 export class NetworkCurrenciesModelStorage extends VersionedNetworkBasedObjectStorage<NetworkCurrenciesModel> {
-
   /**
    * Singleton instance as we want to run the migration just once
    */
@@ -27,5 +26,4 @@ export class NetworkCurrenciesModelStorage extends VersionedNetworkBasedObjectSt
   private constructor() {
     super('networkCurrencyCache')
   }
-
 }

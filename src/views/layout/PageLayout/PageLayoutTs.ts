@@ -1,24 +1,24 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {NetworkType} from 'symbol-sdk'
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { NetworkType } from 'symbol-sdk'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // internal dependencies
-import {ProfileModel} from '@/core/database/entities/ProfileModel'
-import {AccountService} from '@/services/AccountService'
+import { ProfileModel } from '@/core/database/entities/ProfileModel'
+import { AccountService } from '@/services/AccountService'
 // child components
 // @ts-ignore
 import AppLogo from '@/components/AppLogo/AppLogo.vue'
@@ -36,7 +36,7 @@ import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue
 import AccountSelectorField from '@/components/AccountSelectorField/AccountSelectorField.vue'
 // @ts-ignore
 import ModalDebugConsole from '@/views/modals/ModalDebugConsole/ModalDebugConsole.vue'
-import {URLInfo} from '@/core/utils/URLInfo'
+import { URLInfo } from '@/core/utils/URLInfo'
 
 @Component({
   components: {
@@ -114,28 +114,37 @@ export class PageLayoutTs extends Vue {
    * Holds alert message
    * @var {Object}
    */
-  get alert(): { show: boolean, message: string } {
+  get alert(): { show: boolean; message: string } {
     if (!this.currentPeer || !this.isConnected) {
-      return {show: true, message: 'Node_not_available_please_check_your_node_or_network_settings'}
+      return {
+        show: true,
+        message: 'Node_not_available_please_check_your_node_or_network_settings',
+      }
     }
 
     if (this.currentProfile && this.currentProfile.networkType !== this.networkType) {
-      return {show: true, message: 'account_network_type_does_not_match_current_network_type'}
+      return {
+        show: true,
+        message: 'account_network_type_does_not_match_current_network_type',
+      }
     }
 
     if (this.currentProfile && this.currentProfile.generationHash !== this.generationHash) {
-      return {show: true, message: 'account_network_does_not_match_current_network_type'}
+      return {
+        show: true,
+        message: 'account_network_does_not_match_current_network_type',
+      }
     }
 
-    return {show: false, message: ''}
+    return { show: false, message: '' }
   }
 
-  get info(): { show: boolean, message: string } {
+  get info(): { show: boolean; message: string } {
     if (this.isCosignatoryMode) {
-      return {show: true, message: 'info_active_cosignatory_mode'}
+      return { show: true, message: 'info_active_cosignatory_mode' }
     }
 
-    return {show: false, message: ''}
+    return { show: false, message: '' }
   }
 
   get hasDebugConsoleModal(): boolean {

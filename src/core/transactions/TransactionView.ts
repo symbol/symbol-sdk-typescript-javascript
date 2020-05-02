@@ -1,25 +1,23 @@
-/**
- *
- * Copyright 2020 Grégory Saive for NEM (https://nem.io)
+/*
+ * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {Store} from 'vuex'
-import {Transaction, TransactionInfo} from 'symbol-sdk'
-import {TransactionDetailItem} from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
+import { Store } from 'vuex'
+import { Transaction, TransactionInfo } from 'symbol-sdk'
+import { TransactionDetailItem } from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
 
 export abstract class TransactionView<FormFieldsType> {
-
   /**
    * Fields that are common to all transaction types
    * @var {string[]}
@@ -122,8 +120,8 @@ export abstract class TransactionView<FormFieldsType> {
    * It returns a list that that it easy to render when displaying TransactionDetailRow components.
    */
   public get items(): TransactionDetailItem[] {
-    return Array.from(this.values.entries()).map(([ key, value ]) => {
-      return {key, value}
+    return Array.from(this.values.entries()).map(([key, value]) => {
+      return { key, value }
     })
   }
 }

@@ -25,5 +25,5 @@ export default class TransactionListHeader extends Vue {}
 </script>
 
 <style scoped lang="less">
-@import "./TransactionListHeader.less";
+@import './TransactionListHeader.less';
 </style>

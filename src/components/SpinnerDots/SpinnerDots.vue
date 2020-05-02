@@ -7,9 +7,9 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue} from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import './SpinnerDots.less'
 
 @Component
-export default class SpinnerDots extends Vue { }
+export default class SpinnerDots extends Vue {}
 </script>

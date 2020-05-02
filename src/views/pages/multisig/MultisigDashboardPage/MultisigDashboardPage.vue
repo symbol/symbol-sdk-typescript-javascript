@@ -10,13 +10,15 @@
 </template>
 <script>
 // external dependencies
-import {Component, Vue} from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 // child components
 import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue'
 
 @Component({
-  components: {NavigationTabs},
-  data() {return {}},
+  components: { NavigationTabs },
+  data() {
+    return {}
+  },
 })
 export default class MultisigDashboardPage extends Vue {}
 </script>
@@ -27,7 +29,7 @@ export default class MultisigDashboardPage extends Vue {}
   width: 100%;
   height: 100%;
   padding: 0.2rem 0 0.35rem 0.2rem;
-  .multisig-inner-container{
+  .multisig-inner-container {
     width: 100%;
     height: 100%;
     background: transparent;

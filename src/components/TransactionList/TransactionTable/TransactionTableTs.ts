@@ -1,7 +1,7 @@
 // external dependenies
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {Transaction} from 'symbol-sdk'
-import {mapGetters} from 'vuex'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Transaction } from 'symbol-sdk'
+import { mapGetters } from 'vuex'
 // child components
 // @ts-ignore
 import TransactionRow from '@/components/TransactionList/TransactionRow/TransactionRow.vue'
@@ -19,15 +19,13 @@ import TransactionListHeader from '@/components/TransactionList/TransactionListH
   }),
 })
 export class TransactionTableTs extends Vue {
-
-  @Prop({default: []})
+  @Prop({ default: [] })
   public transactions: Transaction[]
 
-  @Prop({default: 'no_data_transactions'})
+  @Prop({ default: 'no_data_transactions' })
   public emptyMessage: string
 
   public nodata = [...Array(10).keys()]
-
 
   /**
    * List of confirmed transactions (websocket only)
@@ -47,9 +45,10 @@ export class TransactionTableTs extends Vue {
     if (transaction.isConfirmed()) {
       return 'confirmed'
     } else {
-      if (this.partialTransactions.length > 0 &&
-        this.partialTransactions.some(
-          (item) => item.transactionInfo.hash === transaction.transactionInfo.hash)) {
+      if (
+        this.partialTransactions.length > 0 &&
+        this.partialTransactions.some((item) => item.transactionInfo.hash === transaction.transactionInfo.hash)
+      ) {
         return 'partial'
       } else {
         return 'unconfirmed'

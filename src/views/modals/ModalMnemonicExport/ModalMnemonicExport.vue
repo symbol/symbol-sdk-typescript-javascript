@@ -15,10 +15,7 @@
           <p>{{ $t('accounts_backup_mnemonic_explain_qrcode') }}</p>
         </div>
 
-        <img
-          id="qrImg" class="qr-image" :src="qrBase64"
-          alt="Mnemonic QR code"
-        >
+        <img id="qrImg" class="qr-image" :src="qrBase64" alt="Mnemonic QR code" />
 
         <button class="button-style validation-button download-button" type="button" @click="onDownloadQR">
           <Icon :type="'md-download'" size="20" />
@@ -27,11 +24,7 @@
       </div>
 
       <div slot="footer" class="modal-footer">
-        <button
-          type="submit"
-          class="centered-button button-style back-button float-right"
-          @click="show = false"
-        >
+        <button type="submit" class="centered-button button-style back-button float-right" @click="show = false">
           {{ $t('close') }}
         </button>
       </div>
@@ -40,11 +33,11 @@
 </template>
 
 <script lang="ts">
-import {ModalMnemonicExportTs} from './ModalMnemonicExportTs'
+import { ModalMnemonicExportTs } from './ModalMnemonicExportTs'
 
 export default class ModalMnemonicExport extends ModalMnemonicExportTs {}
 </script>
 
 <style lang="less" scoped>
-@import "./ModalMnemonicExport.less";
+@import './ModalMnemonicExport.less';
 </style>

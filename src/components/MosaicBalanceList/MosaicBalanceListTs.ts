@@ -1,30 +1,30 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {MosaicId, NamespaceId} from 'symbol-sdk'
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { MosaicId, NamespaceId } from 'symbol-sdk'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // internal dependencies
 // @ts-ignore
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
 // resources
-import {dashboardImages} from '@/views/resources/Images'
-import {MosaicService} from '@/services/MosaicService'
-import {MosaicConfigurationModel} from '@/core/database/entities/MosaicConfigurationModel'
-import {MosaicModel} from '@/core/database/entities/MosaicModel'
-import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
+import { dashboardImages } from '@/views/resources/Images'
+import { MosaicService } from '@/services/MosaicService'
+import { MosaicConfigurationModel } from '@/core/database/entities/MosaicConfigurationModel'
+import { MosaicModel } from '@/core/database/entities/MosaicModel'
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
 
 export interface BalanceEntry {
   id: MosaicId
@@ -48,7 +48,6 @@ export interface BalanceEntry {
   },
 })
 export class MosaicBalanceListTs extends Vue {
-
   /**
    * Dashboard images
    * @var {any}
@@ -83,7 +82,6 @@ export class MosaicBalanceListTs extends Vue {
 
   private networkConfiguration: NetworkConfigurationModel
 
-
   /// region computed properties getter/setter
   /**
    * Balance entries from the currently active account's mosaics
@@ -91,11 +89,11 @@ export class MosaicBalanceListTs extends Vue {
    * @type {BalanceEntry}
    */
   get balanceEntries(): BalanceEntry[] {
-    return this.balanceMosaics.map(mosaic => {
+    return this.balanceMosaics.map((mosaic) => {
       return {
         id: new MosaicId(mosaic.mosaicIdHex),
         name: mosaic.name || mosaic.mosaicIdHex,
-        amount: (mosaic.balance || 0),
+        amount: mosaic.balance || 0,
         mosaic: mosaic,
       }
     })
@@ -109,8 +107,11 @@ export class MosaicBalanceListTs extends Vue {
   get allBalanceEntries(): BalanceEntry[] {
     return this.balanceEntries.filter((entry) => {
       // calculate expiration
-      const expiration = MosaicService.getExpiration(entry.mosaic, this.currentHeight,
-        this.networkConfiguration.blockGenerationTargetTime)
+      const expiration = MosaicService.getExpiration(
+        entry.mosaic,
+        this.currentHeight,
+        this.networkConfiguration.blockGenerationTargetTime,
+      )
       // skip if mosaic is expired
       return expiration !== 'expired'
     })
@@ -123,11 +124,9 @@ export class MosaicBalanceListTs extends Vue {
    */
   get filteredBalanceEntries(): BalanceEntry[] {
     // filter out hidden mosaics
-    return this.allBalanceEntries.filter(
-      entry => {
-        return !this.isMosaicHidden(entry.id)
-      },
-    )
+    return this.allBalanceEntries.filter((entry) => {
+      return !this.isMosaicHidden(entry.id)
+    })
   }
 
   /// end-region computed properties getter/setter
@@ -147,7 +146,7 @@ export class MosaicBalanceListTs extends Vue {
    * @returns {boolean}
    */
   public areAllMosaicsShown(): boolean {
-    return !Object.values(this.mosaicConfigurations).find(c => c.hidden)
+    return !Object.values(this.mosaicConfigurations).find((c) => c.hidden)
   }
 
   /**
@@ -164,8 +163,8 @@ export class MosaicBalanceListTs extends Vue {
 
     // - update state
     const action = this.areAllMosaicsShown() ? 'HIDE_MOSAIC' : 'SHOW_MOSAIC'
-    return this.balanceMosaics.forEach(
-      mosaic => this.$store.dispatch('mosaic/' + action, new MosaicId(mosaic.mosaicIdHex)),
+    return this.balanceMosaics.forEach((mosaic) =>
+      this.$store.dispatch('mosaic/' + action, new MosaicId(mosaic.mosaicIdHex)),
     )
   }
 }

@@ -1,5 +1,5 @@
-import {MosaicInputsManager} from '@/views/forms/FormTransferTransaction/MosaicInputsManager.ts'
-import {MosaicModel} from '@/core/database/entities/MosaicModel'
+import { MosaicInputsManager } from '@/views/forms/FormTransferTransaction/MosaicInputsManager.ts'
+import { MosaicModel } from '@/core/database/entities/MosaicModel'
 
 export const mockMosaic1: MosaicModel = {
   mosaicIdHex: '619CE7E50DB644DE',
@@ -16,8 +16,8 @@ export const mockMosaic3: MosaicModel = {
   balance: 1,
 } as MosaicModel
 
-const mockMosaics = [ mockMosaic1, mockMosaic2, mockMosaic3 ]
-const mockMosaicHexIds = mockMosaics.map(({mosaicIdHex}) => mosaicIdHex)
+const mockMosaics = [mockMosaic1, mockMosaic2, mockMosaic3]
+const mockMosaicHexIds = mockMosaics.map(({ mosaicIdHex }) => mosaicIdHex)
 
 describe('components/MosaicInputManager', () => {
   describe('initialize() should', () => {
@@ -73,16 +73,16 @@ describe('components/MosaicInputManager', () => {
       const slot1Mosaics = mosaicInputsManager.getMosaicsBySlot(1)
       const slot2Mosaics = mosaicInputsManager.getMosaicsBySlot(2)
 
-      expect(slot1Mosaics).toStrictEqual([ mockMosaicHexIds[0], mockMosaicHexIds[2] ])
-      expect(slot2Mosaics).toStrictEqual([ mockMosaicHexIds[1], mockMosaicHexIds[0], mockMosaicHexIds[2] ])
+      expect(slot1Mosaics).toStrictEqual([mockMosaicHexIds[0], mockMosaicHexIds[2]])
+      expect(slot2Mosaics).toStrictEqual([mockMosaicHexIds[1], mockMosaicHexIds[0], mockMosaicHexIds[2]])
 
       mosaicInputsManager.unsetSlot(2)
       mosaicInputsManager.setSlot(mockMosaicHexIds[1], 1)
       const slot1Mosaics2 = mosaicInputsManager.getMosaicsBySlot(1)
       const slot2Mosaics2 = mosaicInputsManager.getMosaicsBySlot(2)
 
-      expect(slot1Mosaics2).toStrictEqual([ mockMosaicHexIds[1], mockMosaicHexIds[0], mockMosaicHexIds[2] ])
-      expect(slot2Mosaics2).toStrictEqual([ mockMosaicHexIds[0], mockMosaicHexIds[2] ])
+      expect(slot1Mosaics2).toStrictEqual([mockMosaicHexIds[1], mockMosaicHexIds[0], mockMosaicHexIds[2]])
+      expect(slot2Mosaics2).toStrictEqual([mockMosaicHexIds[0], mockMosaicHexIds[2]])
     })
   })
 })

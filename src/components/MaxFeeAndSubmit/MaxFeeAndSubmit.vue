@@ -1,8 +1,6 @@
 <template>
   <FormRow>
-    <template v-slot:label>
-      {{ $t('fee') }}:
-    </template>
+    <template v-slot:label> {{ $t('fee') }}: </template>
     <template v-slot:inputs>
       <div class="row-75-25 inputs-container">
         <MaxFeeSelector v-model="maxFee" />
@@ -22,7 +20,7 @@
 
 <script lang="ts">
 // extenal dependencies
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator'
 
 // child components
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'

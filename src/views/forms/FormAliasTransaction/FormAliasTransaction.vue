@@ -1,18 +1,18 @@
 <template>
   <FormWrapper>
     <ValidationObserver ref="observer" v-slot="{ handleSubmit }" slim>
-      <form
-        onsubmit="event.preventDefault()"
-        class="form-container"
-      >
+      <form onsubmit="event.preventDefault()" class="form-container">
         <!-- UNLINK alias action -->
         <FormRow v-if="aliasAction === AliasAction.Unlink">
           <template v-slot:inputs>
             <div class="row-left-message">
               <span>
-                {{ $t('unlink_namespace_from', {
-                  aliasTarget: formItems.aliasTarget, namespaceName: namespaceId.fullName,
-                }) }}
+                {{
+                  $t('unlink_namespace_from', {
+                    aliasTarget: formItems.aliasTarget,
+                    namespaceName: namespaceId.fullName,
+                  })
+                }}
               </span>
             </div>
           </template>
@@ -21,9 +21,7 @@
         <!-- LINK alias action -->
         <div v-else>
           <FormRow>
-            <template v-slot:label>
-              {{ $t('form_label_alias_type') }}:
-            </template>
+            <template v-slot:label> {{ $t('form_label_alias_type') }}: </template>
             <template v-slot:inputs>
               <ValidationProvider
                 :name="$t('registrationType')"
@@ -33,11 +31,7 @@
                 tag="div"
                 class="inputs-container select-container"
               >
-                <select
-                  v-model="aliasTargetType"
-                  class="select-size select-style"
-                  @change="formItems.aliasTarget = ''"
-                >
+                <select v-model="aliasTargetType" class="select-size select-style" @change="formItems.aliasTarget = ''">
                   <option value="mosaic">
                     {{ $t('option_link_mosaic') }}
                   </option>
@@ -57,9 +51,7 @@
             />
 
             <FormRow v-if="aliasTargetType === 'mosaic'">
-              <template v-slot:label>
-                {{ $t('mosaic') }}:
-              </template>
+              <template v-slot:label> {{ $t('mosaic') }}: </template>
               <template v-slot:inputs>
                 <MosaicSelector
                   v-model="formItems.aliasTarget"
@@ -108,10 +100,10 @@ export default class FormAliasTransaction extends FormAliasTransactionTs {}
   clear: both;
   min-height: 1rem;
 }
-.row-left-message{
+.row-left-message {
   padding-left: 0.1rem;
 }
-.select-container{
+.select-container {
   padding-left: 0.1rem;
 }
 </style>

@@ -1,5 +1,5 @@
-import {UIHelpers} from '@/core/utils/UIHelpers.ts'
-import {Component, Vue} from 'vue-property-decorator'
+import { UIHelpers } from '@/core/utils/UIHelpers.ts'
+import { Component, Vue } from 'vue-property-decorator'
 
 // internal dependencies
 
@@ -11,7 +11,7 @@ export class MnemonicInputTs extends Vue {
   public wordsArray = []
 
   /**
-   * @description: status of isEditing 
+   * @description: status of isEditing
    */
   public isEditing: boolean = false
 
@@ -24,7 +24,7 @@ export class MnemonicInputTs extends Vue {
    * @description: watch the inputform
    */
   public inputWord: string = ''
-  
+
   public get userInput(): string {
     return this.inputWord
   }
@@ -55,7 +55,6 @@ export class MnemonicInputTs extends Vue {
         this.inputWord = ''
         this.initInput()
       }
-
     }
   }
 
@@ -105,7 +104,7 @@ export class MnemonicInputTs extends Vue {
   }
   copyToClipboard() {
     const pasteDataStr: string = this.wordsArray.join(' ')
-    if(pasteDataStr){
+    if (pasteDataStr) {
       UIHelpers.copyToClipboard(pasteDataStr)
     }
   }
@@ -116,5 +115,4 @@ export class MnemonicInputTs extends Vue {
     this.isNeedPressDelTwice = true
     this.isEditing = false
   }
-
 }

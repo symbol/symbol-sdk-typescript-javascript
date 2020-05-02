@@ -26,7 +26,7 @@ import TableDisplay from '@/components/TableDisplay/TableDisplay.vue'
     TableDisplay,
   },
 })
-export default class MosaicListPage extends Vue { }
+export default class MosaicListPage extends Vue {}
 </script>
 
 <style scoped lang="css">

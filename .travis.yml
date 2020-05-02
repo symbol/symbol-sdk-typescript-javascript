@@ -17,7 +17,7 @@ before_cache:
 before_script:
   - npm run build:web
 script:
-  - npm run lint:all
+  - npm run lint
   - npm run test
 deploy:
   - provider: script

@@ -14,10 +14,8 @@
  *
  */
 
-
-import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyModel'
+import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel'
 
 export class NetworkCurrenciesModel {
-  constructor(public networkCurrency: NetworkCurrencyModel,
-    public harvestCurrency: NetworkCurrencyModel) {}
+  constructor(public networkCurrency: NetworkCurrencyModel, public harvestCurrency: NetworkCurrencyModel) {}
 }

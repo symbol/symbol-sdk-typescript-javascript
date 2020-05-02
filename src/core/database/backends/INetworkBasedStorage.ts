@@ -17,7 +17,6 @@
  * Storage
  */
 export interface INetworkBasedStorage<E> {
-
   /**
    * it gets the stored value for the specific generation hash.
    *
@@ -45,5 +44,4 @@ export interface INetworkBasedStorage<E> {
    * @param generationHash the generation hash.
    */
   remove(generationHash: string): void
-
 }

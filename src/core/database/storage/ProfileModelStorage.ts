@@ -14,11 +14,10 @@
  *
  */
 
-import {VersionedObjectStorage} from '@/core/database/backends/VersionedObjectStorage'
-import {ProfileModel} from '@/core/database/entities/ProfileModel'
+import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage'
+import { ProfileModel } from '@/core/database/entities/ProfileModel'
 
 export class ProfileModelStorage extends VersionedObjectStorage<Record<string, ProfileModel>> {
-
   /**
    * Singleton instance as we want to run the migration just once
    */

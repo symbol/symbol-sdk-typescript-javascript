@@ -14,20 +14,20 @@
  *
  */
 
-import {NetworkModel} from '@/core/database/entities/NetworkModel'
-import {Listener, NetworkConfiguration, RepositoryFactory, RepositoryFactoryHttp} from 'symbol-sdk'
-import {URLHelpers} from '@/core/utils/URLHelpers'
-import {combineLatest, defer, EMPTY, Observable} from 'rxjs'
-import {catchError, concatMap, flatMap, map, take, tap} from 'rxjs/operators'
+import { NetworkModel } from '@/core/database/entities/NetworkModel'
+import { Listener, NetworkConfiguration, RepositoryFactory, RepositoryFactoryHttp } from 'symbol-sdk'
+import { URLHelpers } from '@/core/utils/URLHelpers'
+import { combineLatest, defer, EMPTY, Observable } from 'rxjs'
+import { catchError, concatMap, flatMap, map, take, tap } from 'rxjs/operators'
 import * as _ from 'lodash'
 
-import {ObservableHelpers} from '@/core/utils/ObservableHelpers'
+import { ObservableHelpers } from '@/core/utils/ObservableHelpers'
 
 import networkConfig from '../../config/network.conf.json'
-import {fromIterable} from 'rxjs/internal-compatibility'
-import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
-import {NetworkConfigurationHelpers} from '@/core/utils/NetworkConfigurationHelpers'
-import {NetworkModelStorage} from '@/core/database/storage/NetworkModelStorage'
+import { fromIterable } from 'rxjs/internal-compatibility'
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
+import { NetworkConfigurationHelpers } from '@/core/utils/NetworkConfigurationHelpers'
+import { NetworkModelStorage } from '@/core/database/storage/NetworkModelStorage'
 
 /**
  * The service in charge of loading and caching anything related to Network from Rest.
@@ -44,8 +44,7 @@ export class NetworkService {
    */
   public getDefaultUrl(): string {
     const storedNetworkModel = this.storage.getLatest()
-    return URLHelpers.formatUrl(
-      storedNetworkModel && storedNetworkModel.url || networkConfig.defaultNodeUrl).url
+    return URLHelpers.formatUrl((storedNetworkModel && storedNetworkModel.url) || networkConfig.defaultNodeUrl).url
   }
 
   /**
@@ -54,53 +53,73 @@ export class NetworkService {
    *
    * @param candidateUrl the new url.
    */
-  public getNetworkModel(candidateUrl: string | undefined):
-  Observable<{ fallback: boolean, networkModel: NetworkModel, repositoryFactory: RepositoryFactory }> {
+  public getNetworkModel(
+    candidateUrl: string | undefined,
+  ): Observable<{
+    fallback: boolean
+    networkModel: NetworkModel
+    repositoryFactory: RepositoryFactory
+  }> {
     const possibleUrls = this.resolveCandidates(candidateUrl, this.storage.getLatest())
     const repositoryFactoryObservable = fromIterable(possibleUrls)
-      .pipe(concatMap(url => this.createRepositoryFactory(url)))
+      .pipe(concatMap((url) => this.createRepositoryFactory(url)))
       .pipe(take(1))
-    return repositoryFactoryObservable.pipe(flatMap(({url, repositoryFactory}) => {
-      return repositoryFactory.getGenerationHash().pipe(flatMap((generationHash => {
-        const storedNetworkModel = this.storage.get(generationHash)
-        const networkRepository = repositoryFactory.createNetworkRepository()
-        const nodeRepository = repositoryFactory.createNodeRepository()
-        return combineLatest([
-          repositoryFactory.getNetworkType().pipe(ObservableHelpers.defaultLast(
-            storedNetworkModel && storedNetworkModel.networkType || networkConfig.defaultNetworkType)),
-          repositoryFactory.getGenerationHash().pipe(ObservableHelpers.defaultLast(
-            storedNetworkModel && storedNetworkModel.generationHash)),
-          networkRepository.getNetworkProperties().pipe(map(d => this.toNetworkConfigurationModel(d)),
-            ObservableHelpers.defaultLast(
-              storedNetworkModel && storedNetworkModel.networkConfiguration)),
-          nodeRepository.getNodeInfo().pipe(ObservableHelpers.defaultLast(
-            storedNetworkModel && storedNetworkModel.nodeInfo)),
-        ]).pipe(map(restData => {
-          return {
-            fallback: !!candidateUrl && candidateUrl !== url,
-            networkModel: new NetworkModel(url, restData[0], restData[1], restData[2], restData[3]),
-            repositoryFactory,
-          }
-        }), tap(p => this.storage.set(generationHash, p.networkModel)))
-      })))
-
-    }))
+    return repositoryFactoryObservable.pipe(
+      flatMap(({ url, repositoryFactory }) => {
+        return repositoryFactory.getGenerationHash().pipe(
+          flatMap((generationHash) => {
+            const storedNetworkModel = this.storage.get(generationHash)
+            const networkRepository = repositoryFactory.createNetworkRepository()
+            const nodeRepository = repositoryFactory.createNodeRepository()
+            return combineLatest([
+              repositoryFactory
+                .getNetworkType()
+                .pipe(
+                  ObservableHelpers.defaultLast(
+                    (storedNetworkModel && storedNetworkModel.networkType) || networkConfig.defaultNetworkType,
+                  ),
+                ),
+              repositoryFactory
+                .getGenerationHash()
+                .pipe(ObservableHelpers.defaultLast(storedNetworkModel && storedNetworkModel.generationHash)),
+              networkRepository.getNetworkProperties().pipe(
+                map((d) => this.toNetworkConfigurationModel(d)),
+                ObservableHelpers.defaultLast(storedNetworkModel && storedNetworkModel.networkConfiguration),
+              ),
+              nodeRepository
+                .getNodeInfo()
+                .pipe(ObservableHelpers.defaultLast(storedNetworkModel && storedNetworkModel.nodeInfo)),
+            ]).pipe(
+              map((restData) => {
+                return {
+                  fallback: !!candidateUrl && candidateUrl !== url,
+                  networkModel: new NetworkModel(url, restData[0], restData[1], restData[2], restData[3]),
+                  repositoryFactory,
+                }
+              }),
+              tap((p) => this.storage.set(generationHash, p.networkModel)),
+            )
+          }),
+        )
+      }),
+    )
   }
 
-
-  private createRepositoryFactory(url: string): Observable<{ url: string, repositoryFactory: RepositoryFactory }> {
-
+  private createRepositoryFactory(url: string): Observable<{ url: string; repositoryFactory: RepositoryFactory }> {
     console.log(`Testing ${url}`)
     const repositoryFactory = NetworkService.createRepositoryFactory(url)
     return defer(() => {
       return repositoryFactory.getGenerationHash()
-    }).pipe(map(() => {
-      console.log(`Peer ${url} seems OK`)
-      return {url, repositoryFactory}
-    }), catchError(e => {
-      console.log(`Peer ${url} seems down. Ignoring. Error: ${e.message}`, e)
-      return EMPTY
-    }))
+    }).pipe(
+      map(() => {
+        console.log(`Peer ${url} seems OK`)
+        return { url, repositoryFactory }
+      }),
+      catchError((e) => {
+        console.log(`Peer ${url} seems down. Ignoring. Error: ${e.message}`, e)
+        return EMPTY
+      }),
+    )
   }
 
   private toNetworkConfigurationModel(dto: NetworkConfiguration): NetworkConfigurationModel {
@@ -122,16 +141,19 @@ export class NetworkService {
       currencyMosaicId: NetworkConfigurationHelpers.currencyMosaicId(dto),
       harvestingMosaicId: NetworkConfigurationHelpers.harvestingMosaicId(dto),
     }
-    return {...fileDefaults, ...fromDto}
+    return { ...fileDefaults, ...fromDto }
   }
 
-
-  private resolveCandidates(newUrl: string | undefined,
-    storedNetworkModel: NetworkModel | undefined): string[] {
+  private resolveCandidates(newUrl: string | undefined, storedNetworkModel: NetworkModel | undefined): string[] {
     // Should we load cached candidates in the node tables?
     return _.uniq(
-      [ newUrl, storedNetworkModel && storedNetworkModel.url, networkConfig.defaultNodeUrl,
-        ...networkConfig.nodes.map(n => n.url) ].filter(p => p))
+      [
+        newUrl,
+        storedNetworkModel && storedNetworkModel.url,
+        networkConfig.defaultNodeUrl,
+        ...networkConfig.nodes.map((n) => n.url),
+      ].filter((p) => p),
+    )
   }
 
   public reset(generationHash: string) {

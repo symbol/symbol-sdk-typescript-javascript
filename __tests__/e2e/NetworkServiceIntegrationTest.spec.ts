@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import {NetworkService} from '@/services/NetworkService'
+import { NetworkService } from '@/services/NetworkService'
 
 import networkConfig from '../../config/network.conf.json'
 

@@ -1,17 +1,13 @@
 <template>
   <div class="transaction-row-inner-container">
     <div class="transaction-details-row-label-container">
-      <span>
-        {{ $t(label) }}:
-      </span>
+      <span> {{ $t(label) }}: </span>
     </div>
     <div class="transaction-details-row-value-container">
       <span v-if="label === 'hash' || label === 'inner_transaction_hash'">
-        <a
-          class="url_text"
-          target="_blank"
-          :href="(explorerBaseUrl + '/transaction/' + item.value)"
-        >{{ item.value }}</a>
+        <a class="url_text" target="_blank" :href="(explorerBaseUrl + '/transaction/' + item.value)">{{
+          item.value
+        }}</a>
       </span>
       <span v-else-if="item.isMosaic">
         <MosaicAmountDisplay
@@ -41,15 +37,14 @@ import networkConfig from '@/../config/network.conf.json'
 // child components
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
 import AddressDisplay from '@/components/AddressDisplay/AddressDisplay.vue'
-import {TransactionDetailItem} from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
+import { TransactionDetailItem } from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
 
-@Component({ components: { MosaicAmountDisplay, AddressDisplay }})
+@Component({ components: { MosaicAmountDisplay, AddressDisplay } })
 export default class TransactionDetailRow extends Vue {
   @Prop({ required: true }) item: TransactionDetailItem
 
-  
-  private get label(): string{
-    return this.item && this.item.key || ''
+  private get label(): string {
+    return (this.item && this.item.key) || ''
   }
   /**
    * Explorer base path
@@ -59,6 +54,6 @@ export default class TransactionDetailRow extends Vue {
 }
 </script>
 
-<style lang="less" >
+<style lang="less">
 @import '../TransactionDetails.less';
 </style>

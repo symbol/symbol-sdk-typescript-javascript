@@ -1,28 +1,38 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {Address, AddressAliasTransaction, AliasAction, AliasTransaction, AliasType, MosaicAliasTransaction, MosaicId, NamespaceId, UInt64} from 'symbol-sdk'
-import {Component, Prop} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import {
+  Address,
+  AddressAliasTransaction,
+  AliasAction,
+  AliasTransaction,
+  AliasType,
+  MosaicAliasTransaction,
+  MosaicId,
+  NamespaceId,
+  UInt64,
+} from 'symbol-sdk'
+import { Component, Prop } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // internal dependencies
-import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
-import {FormTransactionBase} from '../FormTransactionBase/FormTransactionBase'
-import {TransactionFactory} from '@/core/transactions/TransactionFactory'
-import {ViewAliasTransaction} from '@/core/transactions/ViewAliasTransaction'
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
+import { FormTransactionBase } from '../FormTransactionBase/FormTransactionBase'
+import { TransactionFactory } from '@/core/transactions/TransactionFactory'
+import { ViewAliasTransaction } from '@/core/transactions/ViewAliasTransaction'
 // child components
-import {ValidationObserver, ValidationProvider} from 'vee-validate'
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
@@ -41,8 +51,8 @@ import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
 // @ts-ignore
 import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
-import {MosaicModel} from '@/core/database/entities/MosaicModel'
-import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
+import { MosaicModel } from '@/core/database/entities/MosaicModel'
+import { NamespaceModel } from '@/core/database/entities/NamespaceModel'
 
 @Component({
   components: {
@@ -67,15 +77,15 @@ import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
   },
 })
 export class FormAliasTransactionTs extends FormTransactionBase {
-  @Prop({default: null}) namespaceId: NamespaceId
-  @Prop({default: null}) aliasTarget: MosaicId | Address
-  @Prop({default: null, required: true}) aliasAction: AliasAction
-  @Prop({default: false}) disableSubmit: boolean
+  @Prop({ default: null }) namespaceId: NamespaceId
+  @Prop({ default: null }) aliasTarget: MosaicId | Address
+  @Prop({ default: null, required: true }) aliasAction: AliasAction
+  @Prop({ default: false }) disableSubmit: boolean
   /**
    * Type of assets shown in the form alias
    * @type {string}
    */
-  @Prop({default: 'namespace'}) assetType: string
+  @Prop({ default: 'namespace' }) assetType: string
   /**
    * Alias action
    * @protected
@@ -130,9 +140,7 @@ export class FormAliasTransactionTs extends FormTransactionBase {
    * @type {string []}
    */
   protected get linkableNamespaces(): NamespaceModel[] {
-    return this.namespaces.filter(
-      ({aliasType}) => aliasType === AliasType.None,
-    )
+    return this.namespaces.filter(({ aliasType }) => aliasType === AliasType.None)
   }
 
   /**
@@ -143,7 +151,7 @@ export class FormAliasTransactionTs extends FormTransactionBase {
   protected get linkableMosaics(): string[] {
     return this.mosaics
       .filter((mosaicInfo) => {
-      // no mosaics with names
+        // no mosaics with names
         const mosaicName = mosaicInfo.name
         if (mosaicName && mosaicName.length) return false
 
@@ -151,7 +159,7 @@ export class FormAliasTransactionTs extends FormTransactionBase {
         if (mosaicInfo.duration == 0) return true
         return mosaicInfo.height + mosaicInfo.duration > this.currentHeight
       })
-      .map(({mosaicIdHex}) => mosaicIdHex)
+      .map(({ mosaicIdHex }) => mosaicIdHex)
   }
 
   /**
@@ -207,9 +215,10 @@ export class FormAliasTransactionTs extends FormTransactionBase {
       let view = new ViewAliasTransaction(this.$store)
 
       // instantiate the alias target
-      const instantiatedAliasTarget = this.aliasTargetType === 'address'
-        ? Address.createFromRawAddress(this.formItems.aliasTarget)
-        : new MosaicId(this.formItems.aliasTarget)
+      const instantiatedAliasTarget =
+        this.aliasTargetType === 'address'
+          ? Address.createFromRawAddress(this.formItems.aliasTarget)
+          : new MosaicId(this.formItems.aliasTarget)
 
       view = view.parse({
         namespaceId: new NamespaceId(this.formItems.namespaceFullName),

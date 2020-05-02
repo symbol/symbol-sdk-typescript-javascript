@@ -1,20 +1,19 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
- 
-@import "../../resources/css/variables.less";
+@import '../../resources/css/variables.less';
 
 .main-outer-container {
   display: block;
@@ -71,7 +70,6 @@
     -webkit-app-region: no-drag;
   }
 
-
   .input_point {
     padding-top: 20px;
 
@@ -98,7 +96,7 @@
       display: inline-block;
       text-align: center;
       font-size: 35px;
-      line-height: 40px;  
+      line-height: 40px;
       height: 40px !important;
       width: 40px !important;
       background-color: @purpleLight;
@@ -116,7 +114,7 @@
         width: 40px !important;
         background-color: transparent !important;
       }
-      i:before{
+      i:before {
         right: 8px;
       }
     }
@@ -184,7 +182,8 @@
           position: relative;
         }
 
-        .endpoint-healthy, .endpoint-unhealthy {
+        .endpoint-healthy,
+        .endpoint-unhealthy {
           cursor: pointer;
           -webkit-app-region: no-drag;
 
@@ -232,13 +231,11 @@
           // float: left;
           // height: .6rem;
           // padding-top: 0.17rem;
-          padding-right: .04rem;
+          padding-right: 0.04rem;
         }
       }
     }
-
   }
-
 
   .right_content {
     width: 100%;
@@ -246,13 +243,13 @@
   }
 
   .fade-enter-active {
-    transition: all .2s ease;
-    -webkit-transition: all .2s ease;
+    transition: all 0.2s ease;
+    -webkit-transition: all 0.2s ease;
   }
 
   .fade-leave-active {
-    transition: all .3s ease;
-    -webkit-transition: all .3s ease;
+    transition: all 0.3s ease;
+    -webkit-transition: all 0.3s ease;
   }
 
   .fade-enter {
@@ -271,8 +268,7 @@
   }
 
   .remove_icon:hover {
-    opacity: .5;
-
+    opacity: 0.5;
   }
 
   .ivu-poptip-popper {
@@ -288,7 +284,8 @@
       background-color: #f3f3f3;
     }
 
-    .ivu-select-item-selected, .ivu-select-item-selected:hover {
+    .ivu-select-item-selected,
+    .ivu-select-item-selected:hover {
       background-color: #f3f3f3;
     }
   }

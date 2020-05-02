@@ -1,25 +1,25 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
-import {Account, NetworkType, PublicAccount, SignedTransaction, Transaction} from 'symbol-sdk'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
+import { Account, NetworkType, PublicAccount, SignedTransaction, Transaction } from 'symbol-sdk'
 // internal dependencies
-import {AccountModel, AccountType} from '@/core/database/entities/AccountModel'
-import {TransactionService} from '@/services/TransactionService'
-import {BroadcastResult} from '@/core/transactions/BroadcastResult'
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
+import { TransactionService } from '@/services/TransactionService'
+import { BroadcastResult } from '@/core/transactions/BroadcastResult'
 // child components
 // @ts-ignore
 import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue'
@@ -27,7 +27,7 @@ import TransactionDetails from '@/components/TransactionDetails/TransactionDetai
 import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock.vue'
 // @ts-ignore
 import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/HardwareConfirmationButton.vue'
-import {Signer} from '@/store/Account'
+import { Signer } from '@/store/Account'
 
 @Component({
   components: {
@@ -46,10 +46,10 @@ import {Signer} from '@/store/Account'
   },
 })
 export class ModalTransactionConfirmationTs extends Vue {
-
   @Prop({
     default: false,
-  }) visible: boolean
+  })
+  visible: boolean
 
   /**
    * Network generation hash
@@ -134,10 +134,13 @@ export class ModalTransactionConfirmationTs extends Vue {
     const service = new TransactionService(this.$store)
 
     // - log about transaction signature success
-    this.$store.dispatch('diagnostic/ADD_INFO', `Signed ${transactions.length} Transaction(s) on stage with Hardware Wallet`)
+    this.$store.dispatch(
+      'diagnostic/ADD_INFO',
+      `Signed ${transactions.length} Transaction(s) on stage with Hardware Wallet`,
+    )
 
     // - transactions are ready to be announced
-    for (let i = 0, m = transactions.length; i < m; i ++) {
+    for (let i = 0, m = transactions.length; i < m; i++) {
       const signed = transactions[i]
       this.$store.commit('account/addSignedTransaction', signed)
     }
@@ -149,9 +152,9 @@ export class ModalTransactionConfirmationTs extends Vue {
     const results: BroadcastResult[] = await service.announceSignedTransactions()
 
     // - notify about errors
-    const errors = results.filter(result => false === result.success)
+    const errors = results.filter((result) => false === result.success)
     if (errors.length) {
-      return errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
+      return errors.map((result) => this.$store.dispatch('notification/ADD_ERROR', result.error))
     }
 
     this.$emit('success')
@@ -167,7 +170,7 @@ export class ModalTransactionConfirmationTs extends Vue {
    * the signed transaction.
    *
    */
-  public async onAccountUnlocked({account}: {account: Account}): Promise<void> {
+  public async onAccountUnlocked({ account }: { account: Account }): Promise<void> {
     // - log about unlock success
     this.$store.dispatch('diagnostic/ADD_INFO', `Account ${account.address.plain()} unlocked successfully.`)
 
@@ -181,10 +184,7 @@ export class ModalTransactionConfirmationTs extends Vue {
     if (options.isMultisig) {
       // - multisig account "issues" aggregate bonded
       const currentSigner: Signer = this.$store.getters['account/currentSigner']
-      const multisigAccount = PublicAccount.createFromPublicKey(
-        currentSigner.publicKey,
-        this.networkType,
-      )
+      const multisigAccount = PublicAccount.createFromPublicKey(currentSigner.publicKey, this.networkType)
       // - use multisig public account and cosignatory to sign
       signedTransactions = service.signMultisigStagedTransactions(multisigAccount, account)
     }

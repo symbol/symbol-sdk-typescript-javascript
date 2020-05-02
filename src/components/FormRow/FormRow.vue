@@ -1,5 +1,5 @@
 <template>
-  <div :class="[ 'form-row', className ]">
+  <div :class="['form-row', className]">
     <div
       :class="{
         'form-row-inner-container': !noLabel,
@@ -19,12 +19,12 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator'
 
 // child components
 import FormLabel from '@/components/FormLabel/FormLabel.vue'
 
-@Component({ components: { FormLabel }})
+@Component({ components: { FormLabel } })
 export default class FormRow extends Vue {
   @Prop({ default: '' }) className: 'emphasis'
   @Prop({ default: false }) noLabel: boolean

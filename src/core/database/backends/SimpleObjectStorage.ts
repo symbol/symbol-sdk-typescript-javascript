@@ -14,13 +14,13 @@
  *
  */
 // external dependencies
-import {Convert, Crypto, SHA3Hasher} from 'symbol-sdk'
+import { Convert, Crypto, SHA3Hasher } from 'symbol-sdk'
 
 // internal dependencies
-import {IStorageBackend} from '@/core/database/backends/IStorageBackend'
-import {LocalStorageBackend} from '@/core/database/backends/LocalStorageBackend'
-import {ObjectStorageBackend} from '@/core/database/backends/ObjectStorageBackend'
-import {IStorage} from '@/core/database/backends/IStorage'
+import { IStorageBackend } from '@/core/database/backends/IStorageBackend'
+import { LocalStorageBackend } from '@/core/database/backends/LocalStorageBackend'
+import { ObjectStorageBackend } from '@/core/database/backends/ObjectStorageBackend'
+import { IStorage } from '@/core/database/backends/IStorage'
 
 /**
  * A super simple object storage that keeps one object in a local storage table.
@@ -29,16 +29,13 @@ import {IStorage} from '@/core/database/backends/IStorage'
  * The object could be a simple object, an array or a Map/Record with key->value.
  *
  */
-export class SimpleObjectStorage<E> implements IStorage<E>{
-
+export class SimpleObjectStorage<E> implements IStorage<E> {
   /**
    * The Storage backend, if localStorage is not available the storage will be in memory.
    */
   private readonly storageBackend: IStorageBackend
 
-  public constructor(
-    private readonly storageKey,
-  ) {
+  public constructor(private readonly storageKey) {
     this.storageBackend = !!localStorage ? new LocalStorageBackend() : new ObjectStorageBackend()
   }
 
@@ -75,7 +72,8 @@ export class SimpleObjectStorage<E> implements IStorage<E>{
       ...{
         time: new Date().valueOf(),
         seed: Crypto.randomBytes(8),
-      }, ...(object || {}),
+      },
+      ...(object || {}),
     }
     // to-json
     const json = JSON.stringify(raw)

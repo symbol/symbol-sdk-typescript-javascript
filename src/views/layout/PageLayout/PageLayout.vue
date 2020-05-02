@@ -13,7 +13,7 @@
       </Alert>
     </div>
 
-    <PageNavigator v-if="!$route.matched.map(({name}) => name).includes('profiles')" />
+    <PageNavigator v-if="!$route.matched.map(({ name }) => name).includes('profiles')" />
 
     <div class="top_window">
       <AppLogo />
@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import {PageLayoutTs} from './PageLayoutTs'
+import { PageLayoutTs } from './PageLayoutTs'
 import './PageLayout.common.less'
 import './PageLayout.mac.less'
 

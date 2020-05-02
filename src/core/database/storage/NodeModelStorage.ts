@@ -14,11 +14,10 @@
  *
  */
 
-import {VersionedObjectStorage} from '@/core/database/backends/VersionedObjectStorage'
-import {NodeModel} from '@/core/database/entities/NodeModel'
+import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage'
+import { NodeModel } from '@/core/database/entities/NodeModel'
 
 export class NodeModelStorage extends VersionedObjectStorage<NodeModel[]> {
-
   /**
    * Singleton instance as we want to run the migration just once
    */

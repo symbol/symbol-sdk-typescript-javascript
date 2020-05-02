@@ -1,17 +1,17 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -28,9 +28,9 @@ import NamespaceStore from '@/store/Namespace'
 import TransactionStore from '@/store/Transaction'
 import StatisticsStore from '@/store/Statistics'
 import CommunityStore from '@/store/Community'
-import {onPeerConnection} from '@/store/plugins/onPeerConnection'
+import { onPeerConnection } from '@/store/plugins/onPeerConnection'
 // use AwaitLock for initialization routines
-import {AwaitLock} from '@/store/AwaitLock'
+import { AwaitLock } from '@/store/AwaitLock'
 
 const Lock = AwaitLock.create()
 
@@ -58,11 +58,9 @@ const AppStore = new Vuex.Store({
     statistics: StatisticsStore,
     community: CommunityStore,
   },
-  plugins: [
-    onPeerConnection,
-  ],
+  plugins: [onPeerConnection],
   actions: {
-    async initialize({dispatch, getters}) {
+    async initialize({ dispatch, getters }) {
       const callback = async () => {
         await dispatch('app/initialize')
         await dispatch('db/initialize')
@@ -77,10 +75,10 @@ const AppStore = new Vuex.Store({
       }
 
       // aquire async lock until initialized
-      await Lock.initialize(callback, {getters})
+      await Lock.initialize(callback, { getters })
     },
     // Uninitialize the stores (call on app destroyed).
-    async uninitialize({dispatch}) {
+    async uninitialize({ dispatch }) {
       await Promise.all([
         dispatch('app/uninitialize'),
         dispatch('network/uninitialize'),

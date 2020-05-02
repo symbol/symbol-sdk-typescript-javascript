@@ -14,7 +14,7 @@
           :show-relative-time="true"
           target-asset="mosaic"
         />
-        
+
         <FormRow>
           <template v-slot:inputs>
             <div class="inputs-container checkboxes">
@@ -34,10 +34,7 @@
           </template>
         </FormRow>
 
-        <MaxFeeAndSubmit
-          v-model="formItems.maxFee"
-          @button-clicked="handleSubmit(onSubmit)"
-        />
+        <MaxFeeAndSubmit v-model="formItems.maxFee" @button-clicked="handleSubmit(onSubmit)" />
       </form>
     </ValidationObserver>
 
@@ -53,7 +50,7 @@
 
 <script lang="ts">
 // @ts-ignore
-import {FormMosaicDefinitionTransactionTs} from './FormMosaicDefinitionTransactionTs'
+import { FormMosaicDefinitionTransactionTs } from './FormMosaicDefinitionTransactionTs'
 export default class FormMosaicDefinitionTransaction extends FormMosaicDefinitionTransactionTs {}
 </script>
 
@@ -61,7 +58,7 @@ export default class FormMosaicDefinitionTransaction extends FormMosaicDefinitio
 .checkboxes {
   margin: 0.25rem 0 0.3rem 0;
   display: grid;
-  grid-auto-flow: column; 
+  grid-auto-flow: column;
   align-items: baseline;
 }
 </style>

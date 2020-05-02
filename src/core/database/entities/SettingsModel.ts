@@ -19,14 +19,11 @@
  * The object is serialized and deserialized to/from JSON. no method or complex attributes can be fined.
  */
 export class SettingsModel {
-
   constructor(
     public readonly profileName: string,
     public readonly language: string,
     public readonly defaultFee: number,
     public readonly defaultAccount: string,
     public readonly explorerUrl: string,
-  ) {
-
-  }
+  ) {}
 }

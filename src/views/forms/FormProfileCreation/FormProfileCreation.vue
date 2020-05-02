@@ -18,9 +18,7 @@
           </div>
 
           <FormRow>
-            <template v-slot:label>
-              {{ $t('Set_account_name') }}:
-            </template>
+            <template v-slot:label> {{ $t('Set_account_name') }}: </template>
             <template v-slot:inputs>
               <ValidationProvider
                 v-slot="{ errors }"
@@ -36,16 +34,14 @@
                     v-model="formItems.profileName"
                     class="input-size input-style"
                     type="text"
-                  > 
+                  />
                 </ErrorTooltip>
               </ValidationProvider>
             </template>
           </FormRow>
 
           <FormRow>
-            <template v-slot:label>
-              {{ $t('Set_network_type') }}:
-            </template>
+            <template v-slot:label> {{ $t('Set_network_type') }}: </template>
             <template v-slot:inputs>
               <div class="inputs-container select-container">
                 <select
@@ -53,19 +49,17 @@
                   :placeholder="$t('choose_network')"
                   class="select-size select-style"
                 >
-                  <option v-for="(item,index) in networkTypeList" :key="index" :value="item.value">
+                  <option v-for="(item, index) in networkTypeList" :key="index" :value="item.value">
                     {{ item.label }}
                   </option>
                 </select>
               </div>
             </template>
           </FormRow>
-          
+
           <!-- @TODO: Place hint(should contain at least 8 characters, 1 letter and 1 number) -->
           <FormRow>
-            <template v-slot:label>
-              {{ $t('new_password_label') }}:
-            </template>
+            <template v-slot:label> {{ $t('new_password_label') }}: </template>
             <template v-slot:inputs>
               <ValidationProvider
                 v-slot="{ errors }"
@@ -83,17 +77,14 @@
                     class="input-size input-style"
                     :placeholder="$t('please_enter_your_account_password')"
                     type="password"
-                  >
+                  />
                 </ErrorTooltip>
-              </validationprovider>
+              </ValidationProvider>
             </template>
           </FormRow>
 
-
           <FormRow>
-            <template v-slot:label>
-              {{ $t('repeat_password_label') }}:
-            </template>
+            <template v-slot:label> {{ $t('repeat_password_label') }}: </template>
             <template v-slot:inputs>
               <ValidationProvider
                 v-slot="{ errors }"
@@ -110,17 +101,14 @@
                     data-vv-name="confirmPassword"
                     :placeholder="$t('please_enter_your_new_password_again')"
                     type="password"
-                  >
+                  />
                 </ErrorTooltip>
               </ValidationProvider>
             </template>
           </FormRow>
 
-
           <FormRow>
-            <template v-slot:label>
-              {{ $t('Password_hint') }}:
-            </template>
+            <template v-slot:label> {{ $t('Password_hint') }}: </template>
             <template v-slot:inputs>
               <ValidationProvider
                 v-slot="{ errors }"
@@ -131,34 +119,21 @@
                 class="inputs-container items-container"
               >
                 <ErrorTooltip :errors="errors">
-                  <input
-                    v-model="formItems.hint"
-                    class="input-size input-style"
-                  >
+                  <input v-model="formItems.hint" class="input-size input-style" />
                 </ErrorTooltip>
               </ValidationProvider>
             </template>
           </FormRow>
 
-
           <div class="form-line-container form-row">
             <div class="flex-container mt-3">
-              <button
-                type="button"
-                class="button-style back-button" 
-                @click="$router.back(-1)"
-              >
+              <button type="button" class="button-style back-button" @click="$router.back(-1)">
                 {{ $t('back') }}
               </button>
-              <button
-                type="submit"
-                class="button-style validation-button" 
-                @click="handleSubmit(submit)"
-              >
-                {{ $t(nextPage === 'profiles.importProfile.importMnemonic'
-                  ? 'Restore_Mnemonic'
-                  : 'Generating_mnemonic'
-                ) }}
+              <button type="submit" class="button-style validation-button" @click="handleSubmit(submit)">
+                {{
+                  $t(nextPage === 'profiles.importProfile.importMnemonic' ? 'Restore_Mnemonic' : 'Generating_mnemonic')
+                }}
               </button>
             </div>
           </div>
@@ -170,10 +145,10 @@
       <p class="text1">
         {{ $t('profile_description') }}
       </p>
-      <p class=" text">
+      <p class="text">
         {{ $t('profile_description_tips1') }}
       </p>
-      <p class=" text">
+      <p class="text">
         {{ $t('profile_description_tips2') }}
       </p>
       <p class="text red">
@@ -184,7 +159,7 @@
 </template>
 
 <script lang="ts">
-import {FormProfileCreationTs} from './FormProfileCreationTs'
+import { FormProfileCreationTs } from './FormProfileCreationTs'
 export default class FormProfileCreation extends FormProfileCreationTs {}
 </script>
 
@@ -192,7 +167,7 @@ export default class FormProfileCreation extends FormProfileCreationTs {}
 .right-hints-section {
   display: block;
   width: 5rem;
-  padding: .5rem;
+  padding: 0.5rem;
 }
 
 .form-account-creation-container {

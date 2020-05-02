@@ -1,5 +1,5 @@
 <template>
-  <div class="create-mnemonic-sec" @keyup.enter="$router.push({name: 'profiles.createProfile.verifyMnemonic'})">
+  <div class="create-mnemonic-sec" @keyup.enter="$router.push({ name: 'profiles.createProfile.verifyMnemonic' })">
     <p class="set-title">
       {{ $t('Backup_mnemonic') }}
     </p>
@@ -7,11 +7,8 @@
       <div class="create-mnemonic-left">
         <div class="mnemonic-container">
           <div v-if="!showMnemonic" class="show-mnemonic">
-            <img src="@/views/resources/img/invisible.png">
-            <button
-              class="button-style validation-button"
-              @click="showMnemonic = true"
-            >
+            <img src="@/views/resources/img/invisible.png" />
+            <button class="button-style validation-button" @click="showMnemonic = true">
               {{ $t('Display_mnemonic') }}
             </button>
           </div>
@@ -21,20 +18,16 @@
         </div>
         <div class="form-line-container button-container">
           <div class="flex-container mt-3">
-            <button
-              type="button"
-              class="button-style back-button" 
-              @click="$router.back()"
-            >
+            <button type="button" class="button-style back-button" @click="$router.back()">
               {{ $t('back') }}
             </button>
             <button
               type="submit"
-              class="button-style validation-button" 
-              @click="$router.push({name: 'profiles.createProfile.verifyMnemonic'})"
+              class="button-style validation-button"
+              @click="$router.push({ name: 'profiles.createProfile.verifyMnemonic' })"
             >
               {{ $t('Verify_backup_mnemonics') }}
-            </button>   
+            </button>
           </div>
         </div>
       </div>
@@ -56,5 +49,5 @@
 <script lang="ts">
 import ShowMnemonicTs from './ShowMnemonicTs'
 import './ShowMnemonic.less'
-export default class ShowMnemonic extends ShowMnemonicTs { }
+export default class ShowMnemonic extends ShowMnemonicTs {}
 </script>

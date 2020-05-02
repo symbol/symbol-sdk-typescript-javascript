@@ -1,30 +1,30 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
-import {Account, NetworkType, Password, Crypto} from 'symbol-sdk'
-import {MnemonicPassPhrase} from 'symbol-hd-wallets'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
+import { Account, NetworkType, Password, Crypto } from 'symbol-sdk'
+import { MnemonicPassPhrase } from 'symbol-hd-wallets'
 // internal dependencies
-import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
-import {DerivationService} from '@/services/DerivationService'
-import {NotificationType} from '@/core/utils/NotificationType'
-import {AccountService} from '@/services/AccountService'
-import {AccountModel} from '@/core/database/entities/AccountModel'
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
+import { DerivationService } from '@/services/DerivationService'
+import { NotificationType } from '@/core/utils/NotificationType'
+import { AccountService } from '@/services/AccountService'
+import { AccountModel } from '@/core/database/entities/AccountModel'
 // child components
-import {ValidationObserver, ValidationProvider} from 'vee-validate'
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
@@ -35,9 +35,9 @@ import FormRow from '@/components/FormRow/FormRow.vue'
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue'
 // configuration
 import appConfig from '@/../config/app.conf.json'
-import {ProfileModel} from '@/core/database/entities/ProfileModel'
+import { ProfileModel } from '@/core/database/entities/ProfileModel'
 
-const {MAX_SEED_ACCOUNTS_NUMBER} = appConfig.constants
+const { MAX_SEED_ACCOUNTS_NUMBER } = appConfig.constants
 
 @Component({
   components: {
@@ -137,7 +137,7 @@ export class FormSubAccountCreationTs extends Vue {
       return []
     }
     // filter accounts to only known account names
-    return this.knownAccounts.map(a => a.path).filter(p => p)
+    return this.knownAccounts.map((a) => a.path).filter((p) => p)
   }
 
   /// end-region computed properties getter/setter
@@ -162,10 +162,9 @@ export class FormSubAccountCreationTs extends Vue {
     this.currentPassword = password
 
     // - interpret form items
-    const values = {...this.formItems}
-    const type = values.type && [ 'child_account', 'privatekey_account' ].includes(values.type)
-      ? values.type
-      : 'child_account'
+    const values = { ...this.formItems }
+    const type =
+      values.type && ['child_account', 'privatekey_account'].includes(values.type) ? values.type : 'child_account'
 
     try {
       // - create sub account (can be either derived or by private key)
@@ -191,10 +190,12 @@ export class FormSubAccountCreationTs extends Vue {
       if (!subAccount) return
 
       // Verify that the import is repeated
-      const hasAddressInfo = this.knownAccounts.find(w => w.address === subAccount.address)
+      const hasAddressInfo = this.knownAccounts.find((w) => w.address === subAccount.address)
       if (hasAddressInfo !== undefined) {
-        this.$store.dispatch('notification/ADD_ERROR',
-          `This private key already exists. The account name is ${hasAddressInfo.name}`)
+        this.$store.dispatch(
+          'notification/ADD_ERROR',
+          `This private key already exists. The account name is ${hasAddressInfo.name}`,
+        )
         return null
       }
 
@@ -226,8 +227,9 @@ export class FormSubAccountCreationTs extends Vue {
     if (this.knownPaths.length >= MAX_SEED_ACCOUNTS_NUMBER) {
       this.$store.dispatch(
         'notification/ADD_ERROR',
-        this.$t(NotificationType.TOO_MANY_SEED_ACCOUNTS_ERROR,
-          {maxSeedAccountsNumber: MAX_SEED_ACCOUNTS_NUMBER}),
+        this.$t(NotificationType.TOO_MANY_SEED_ACCOUNTS_ERROR, {
+          maxSeedAccountsNumber: MAX_SEED_ACCOUNTS_NUMBER,
+        }),
       )
       return null
     }
@@ -235,8 +237,7 @@ export class FormSubAccountCreationTs extends Vue {
     // - get next path
     const nextPath = this.paths.getNextAccountPath(this.knownPaths)
 
-    this.$store.dispatch('diagnostic/ADD_DEBUG',
-      'Adding child account with derivation path: ' + nextPath)
+    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Adding child account with derivation path: ' + nextPath)
 
     // - decrypt mnemonic
     const encSeed = this.currentProfile.seed

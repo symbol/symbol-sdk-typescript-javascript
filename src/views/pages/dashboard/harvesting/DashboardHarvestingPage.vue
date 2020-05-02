@@ -12,7 +12,7 @@
 
 <script lang="ts">
 // @ts-ignore
-import {DashboardHarvestingPageTs} from './DashboardHarvestingPageTs'
+import { DashboardHarvestingPageTs } from './DashboardHarvestingPageTs'
 import './DashboardHarvestingPage.less'
 
 export default class DashboardHarvestingPage extends DashboardHarvestingPageTs {}

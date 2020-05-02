@@ -2,7 +2,7 @@
   <div>
     <div class="backup-item" @click="onClickDisplay">
       <div class="img-box radius">
-        <img src="@/views/resources/img/symbol/QRcode.png">
+        <img src="@/views/resources/img/symbol/QRcode.png" />
       </div>
       <p class="access-name">
         {{ $t('accounts_backup_tile_title') }}
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import {ProtectedMnemonicQRButtonTs} from './ProtectedMnemonicQRButtonTs'
+import { ProtectedMnemonicQRButtonTs } from './ProtectedMnemonicQRButtonTs'
 
 export default class ProtectedMnemonicQRButton extends ProtectedMnemonicQRButtonTs {}
 </script>

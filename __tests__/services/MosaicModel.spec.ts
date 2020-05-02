@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import {Address, MosaicFlags, MosaicId, MosaicInfo, NetworkType, PublicAccount, UInt64} from 'symbol-sdk'
-import {MosaicModel} from '@/core/database/entities/MosaicModel'
+import { Address, MosaicFlags, MosaicId, MosaicInfo, NetworkType, PublicAccount, UInt64 } from 'symbol-sdk'
+import { MosaicModel } from '@/core/database/entities/MosaicModel'
 
 describe('services/MosaicData', () => {
   describe('serialization', () => {
@@ -25,9 +25,12 @@ describe('services/MosaicData', () => {
       const id = new MosaicId('85BBEA6CC462B244')
       const mosaicInfo = new MosaicInfo(
         id, // mosaicId
-        new UInt64([ 3403414400, 2095475 ]), // supply
-        new UInt64([ 1, 0 ]), // height
-        PublicAccount.createFromPublicKey('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF', NetworkType.MIJIN_TEST),
+        new UInt64([3403414400, 2095475]), // supply
+        new UInt64([1, 0]), // height
+        PublicAccount.createFromPublicKey(
+          'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+          NetworkType.MIJIN_TEST,
+        ),
         1, // revision
         MosaicFlags.create(true, true, true),
         3,
@@ -51,7 +54,6 @@ describe('services/MosaicData', () => {
       expect(deserializedMosaicInfo).not.toBeNull()
       expect(deserializedMosaicInfo.id.toHex).toBe(undefined)
       expect(deserializedMosaicInfo.duration.compact).toBe(undefined)
-
     })
   })
 })

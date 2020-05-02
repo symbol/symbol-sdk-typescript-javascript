@@ -1,4 +1,4 @@
-@import "../../views/resources/css/variables.less";
+@import '../../views/resources/css/variables.less';
 
 .table-row-container {
   display: grid;
@@ -13,18 +13,19 @@
     cursor: pointer;
   }
 }
-.namespace-columns,.mosaic-columns{
-  .table-cell>div{
+.namespace-columns,
+.mosaic-columns {
+  .table-cell > div {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 }
-.mosaic-columns ::v-deep{
-  .normal{
-    font-size: .16rem ;
+.mosaic-columns ::v-deep {
+  .normal {
+    font-size: 0.16rem;
   }
-  .integer-part{
+  .integer-part {
     opacity: 1;
   }
 }
@@ -40,7 +41,6 @@
   text-align: right;
 }
 
-
 .edit-icon-cell {
   text-align: center;
   cursor: pointer;
@@ -51,9 +51,9 @@
   }
 }
 
-.asset-action-section{
+.asset-action-section {
   text-align: left;
   p {
     font-size: @normalFont;
   }
-} 
+}

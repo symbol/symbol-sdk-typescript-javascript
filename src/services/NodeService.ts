@@ -14,21 +14,20 @@
  *
  */
 
-import {NodeInfo, RepositoryFactory} from 'symbol-sdk'
-import {Observable} from 'rxjs'
-import {ObservableHelpers} from '@/core/utils/ObservableHelpers'
-import {map, tap} from 'rxjs/operators'
-import {NodeModel} from '@/core/database/entities/NodeModel'
+import { NodeInfo, RepositoryFactory } from 'symbol-sdk'
+import { Observable } from 'rxjs'
+import { ObservableHelpers } from '@/core/utils/ObservableHelpers'
+import { map, tap } from 'rxjs/operators'
+import { NodeModel } from '@/core/database/entities/NodeModel'
 import * as _ from 'lodash'
 import networkConfig from '@/../config/network.conf.json'
-import {NodeModelStorage} from '@/core/database/storage/NodeModelStorage'
+import { NodeModelStorage } from '@/core/database/storage/NodeModelStorage'
 
 /**
  * The service in charge of loading and caching anything related to Node and Peers from Rest.
  * The cache is done by storing the payloads in SimpleObjectStorage.
  */
 export class NodeService {
-
   /**
    * The peer information local cache.
    */
@@ -41,22 +40,23 @@ export class NodeService {
     return nodeRepository.getNodeInfo().pipe(
       map((dto: NodeInfo) => this.createNodeModel(repositoryFactoryUrl, dto.friendlyName)),
       ObservableHelpers.defaultLast(this.createNodeModel(repositoryFactoryUrl)),
-      map(currentNode => _.uniqBy([ currentNode, ...storedNodes ], 'url')),
-      tap(p => this.saveNodes(p)),
+      map((currentNode) => _.uniqBy([currentNode, ...storedNodes], 'url')),
+      tap((p) => this.saveNodes(p)),
     )
   }
 
   private loadStaticNodes(): NodeModel[] {
-    return networkConfig.nodes.map(n => {
+    return networkConfig.nodes.map((n) => {
       return this.createNodeModel(n.url, n.friendlyName, true)
     })
   }
 
-  private createNodeModel(url: string,
+  private createNodeModel(
+    url: string,
     friendlyName: string | undefined = undefined,
-    isDefault: boolean | undefined = undefined): NodeModel {
-    return new NodeModel(url, friendlyName || '', isDefault
-      || !!networkConfig.nodes.find(n => n.url === url))
+    isDefault: boolean | undefined = undefined,
+  ): NodeModel {
+    return new NodeModel(url, friendlyName || '', isDefault || !!networkConfig.nodes.find((n) => n.url === url))
   }
 
   private loadNodes(): NodeModel[] {

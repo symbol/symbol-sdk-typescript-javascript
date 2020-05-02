@@ -21,9 +21,7 @@
             <div v-if="multisigOperationType === 'conversion'">
               {{ $t('form_label_account_to_be_converted') }}
             </div>
-            <div v-else>
-              {{ $t('form_label_multisig_account') }}:
-            </div>
+            <div v-else>{{ $t('form_label_multisig_account') }}:</div>
           </template>
           <template v-slot:inputs>
             <SignerSelector
@@ -35,10 +33,7 @@
           </template>
         </FormRow>
 
-        <FormRow
-          v-if="multisigOperationType === 'modification' && currentMultisigInfo"
-          :class-name="'emphasis'"
-        >
+        <FormRow v-if="multisigOperationType === 'modification' && currentMultisigInfo" :class-name="'emphasis'">
           <template v-slot:label>
             {{ $t('form_label_multisig_current_info') }}
           </template>
@@ -46,16 +41,22 @@
           <template v-slot:inputs>
             <div class="row-left-message">
               <span class="pl-2">
-                {{ $t('label_of', {
-                  min: currentMultisigInfo.minApproval,
-                  max: currentMultisigInfo.cosignatories.length
-                }) }} {{ $t('label_for_approvals') }}
+                {{
+                  $t('label_of', {
+                    min: currentMultisigInfo.minApproval,
+                    max: currentMultisigInfo.cosignatories.length,
+                  })
+                }}
+                {{ $t('label_for_approvals') }}
               </span>
               <span class="pl-2">
-                {{ $t('label_of', {
-                  min: currentMultisigInfo.minRemoval,
-                  max: currentMultisigInfo.cosignatories.length
-                }) }} {{ $t('label_for_removals') }}
+                {{
+                  $t('label_of', {
+                    min: currentMultisigInfo.minRemoval,
+                    max: currentMultisigInfo.cosignatories.length,
+                  })
+                }}
+                {{ $t('label_for_removals') }}
               </span>
             </div>
           </template>
@@ -86,14 +87,17 @@
 
         <!-- global form input validation -->
         <ValidationProvider rules="required|is:OK">
-          <input v-show="false" v-model="areInputsValid">
+          <input v-show="false" v-model="areInputsValid" />
         </ValidationProvider>
 
         <!-- Transaction fee selector -->
         <MaxFeeAndSubmit
           v-model="formItems.maxFee"
           :disable-submit="disableSubmit"
-          @button-clicked="disableSubmit ? '' : handleSubmit(onSubmit); showErrorNotification()"
+          @button-clicked="
+            disableSubmit ? '' : handleSubmit(onSubmit)
+            showErrorNotification()
+          "
         />
       </form>
     </ValidationObserver>

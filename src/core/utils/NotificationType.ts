@@ -1,17 +1,17 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
 export enum NotificationType {
   PROFILE_NAME_EXISTS_ERROR = 'profile_name_already_exists',
@@ -84,7 +84,7 @@ export enum NotificationType {
   OPERATION_SUCCESS = 'successful_operation',
   PASSWORD_CREATE_ERROR = 'createLockPWRemind',
   PASSWORD_HIT_SETTING_ERROR = 'createLockPWTxtRemind',
-  PASSWORD_IS_INVALID_ERROR ='password_is_invalid',
+  PASSWORD_IS_INVALID_ERROR = 'password_is_invalid',
   PASSWORDS_NOT_MATCHING = 'passwords_not_matching',
   PLEASE_ENTER_A_CORRECT_NUMBER = 'Please_enter_a_correct_number',
   PLEASE_ENTER_MNEMONIC_INFO = 'Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct',
@@ -97,7 +97,7 @@ export enum NotificationType {
   REMOTE_PUBLIC_KEY_MISSING = 'remote_public_key_missing_error',
   ROOT_NAMESPACE_TOO_LONG_ERROR = 'The_root_namespace_cannot_be_longer_than_16',
   SEED_ACCOUNT_OVERFLOW_ERROR = 'seed_account_can_not_be_more_than_10',
-  SET_DEFAULT_EXPLORER ='set_default_explorer',
+  SET_DEFAULT_EXPLORER = 'set_default_explorer',
   SUB_NAMESPACE_LENGTH_LONGER_THAN_64_ERROR = 'The_sub_namespace_cannot_be_longer_than_16',
   SUCCESS = 'success',
   SUCCESS_ACCOUNT_UNLOCKED = 'success_account_unlocked',

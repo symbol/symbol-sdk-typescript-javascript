@@ -1,31 +1,31 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {Address, Message, Mosaic, MosaicId, NamespaceId, TransferTransaction, UInt64} from 'symbol-sdk'
-import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { Address, Message, Mosaic, MosaicId, NamespaceId, TransferTransaction, UInt64 } from 'symbol-sdk'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // internal dependencies
-import {Formatters} from '@/core/utils/Formatters'
-import {TransferFormFieldsType, ViewTransferTransaction} from '@/core/transactions/ViewTransferTransaction'
-import {FormTransactionBase} from '@/views/forms/FormTransactionBase/FormTransactionBase'
-import {TransactionFactory} from '@/core/transactions/TransactionFactory'
-import {AddressValidator, AliasValidator} from '@/core/validation/validators'
-import {MosaicInputsManager} from './MosaicInputsManager'
-import {ITransactionEntry} from '@/views/pages/dashboard/invoice/DashboardInvoicePageTs'
+import { Formatters } from '@/core/utils/Formatters'
+import { TransferFormFieldsType, ViewTransferTransaction } from '@/core/transactions/ViewTransferTransaction'
+import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase'
+import { TransactionFactory } from '@/core/transactions/TransactionFactory'
+import { AddressValidator, AliasValidator } from '@/core/validation/validators'
+import { MosaicInputsManager } from './MosaicInputsManager'
+import { ITransactionEntry } from '@/views/pages/dashboard/invoice/DashboardInvoicePageTs'
 // child components
-import {ValidationObserver} from 'vee-validate'
+import { ValidationObserver } from 'vee-validate'
 // @ts-ignore
 import AmountInput from '@/components/AmountInput/AmountInput.vue'
 // @ts-ignore
@@ -46,9 +46,9 @@ import SignerSelector from '@/components/SignerSelector/SignerSelector.vue'
 import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
-import {MosaicService} from '@/services/MosaicService'
-import {MosaicModel} from '@/core/database/entities/MosaicModel'
-import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
+import { MosaicService } from '@/services/MosaicService'
+import { MosaicModel } from '@/core/database/entities/MosaicModel'
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
 
 export interface MosaicAttachment {
   mosaicHex: string
@@ -81,22 +81,25 @@ export interface MosaicAttachment {
   },
 })
 export class FormTransferTransactionTs extends FormTransactionBase {
+  @Prop({
+    default: null,
+  })
+  recipient: Address
 
   @Prop({
     default: null,
-  }) recipient: Address
-
-  @Prop({
-    default: null,
-  }) message: Message
+  })
+  message: Message
 
   @Prop({
     default: false,
-  }) disableSubmit: boolean
+  })
+  disableSubmit: boolean
 
   @Prop({
     default: false,
-  }) hideSigner: boolean
+  })
+  hideSigner: boolean
   /// end-region component properties
 
   /**
@@ -149,13 +152,15 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
     const currentMosaics = this.currentMosaicList()
 
-    const attachedMosaics: MosaicAttachment[] = [{
-      id: new MosaicId(this.networkCurrency.mosaicIdHex),
-      mosaicHex: this.networkCurrency.mosaicIdHex,
-      name: this.networkCurrency.namespaceIdFullname,
-      amount: 0,
-      uid: Math.floor(Math.random() * 10e6), // used to index dynamic inputs
-    }]
+    const attachedMosaics: MosaicAttachment[] = [
+      {
+        id: new MosaicId(this.networkCurrency.mosaicIdHex),
+        mosaicHex: this.networkCurrency.mosaicIdHex,
+        name: this.networkCurrency.namespaceIdFullname,
+        amount: 0,
+        uid: Math.floor(Math.random() * 10e6), // used to index dynamic inputs
+      },
+    ]
 
     this.formItems.messagePlain = !!this.message ? Formatters.hexToUtf8(this.message.payload) : ''
     // - maxFee must be absolute
@@ -165,12 +170,10 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
     // - set attachedMosaics and allocate slots
     Vue.nextTick(() => {
-      attachedMosaics.forEach(
-        (attachedMosaic, index) => {
-          this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid)
-          Vue.set(this.formItems.attachedMosaics, index, attachedMosaic)
-        },
-      )
+      attachedMosaics.forEach((attachedMosaic, index) => {
+        this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid)
+        Vue.set(this.formItems.attachedMosaics, index, attachedMosaic)
+      })
     })
     this.triggerChange()
   }
@@ -192,10 +195,13 @@ export class FormTransferTransactionTs extends FormTransactionBase {
    */
   protected currentMosaicList(): MosaicModel[] {
     // filter out expired mosaics
-    return this.balanceMosaics.filter(mosaicInfo => {
+    return this.balanceMosaics.filter((mosaicInfo) => {
       // calculate expiration
-      const expiration = MosaicService.getExpiration(mosaicInfo, this.currentHeight,
-        this.networkConfiguration.blockGenerationTargetTime)
+      const expiration = MosaicService.getExpiration(
+        mosaicInfo,
+        this.currentHeight,
+        this.networkConfiguration.blockGenerationTargetTime,
+      )
       // skip if mosaic is expired
       return expiration !== 'expired'
     })
@@ -213,11 +219,13 @@ export class FormTransferTransactionTs extends FormTransactionBase {
       const data: TransferFormFieldsType = {
         recipient: this.instantiatedRecipient,
         mosaics: this.formItems.attachedMosaics
-          .filter(({uid}) => uid) // filter out null values
-          .map((spec: MosaicAttachment): MosaicAttachment => ({
-            mosaicHex: spec.mosaicHex,
-            amount: spec.amount, // amount is relative
-          })),
+          .filter(({ uid }) => uid) // filter out null values
+          .map(
+            (spec: MosaicAttachment): MosaicAttachment => ({
+              mosaicHex: spec.mosaicHex,
+              amount: spec.amount, // amount is relative
+            }),
+          ),
         message: this.formItems.messagePlain,
         maxFee: UInt64.fromUint(this.formItems.maxFee),
       }
@@ -244,9 +252,10 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     const transaction = transactions.shift()
 
     // - populate recipient
-    this.formItems.recipientRaw = transaction.recipientAddress instanceof Address
-      ? transaction.recipientAddress.plain()
-      : (transaction.recipientAddress as NamespaceId).fullName
+    this.formItems.recipientRaw =
+      transaction.recipientAddress instanceof Address
+        ? transaction.recipientAddress.plain()
+        : (transaction.recipientAddress as NamespaceId).fullName
 
     // - populate attached mosaics
     this.formItems.attachedMosaics = this.mosaicsToAttachments(transaction.mosaics)
@@ -266,7 +275,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
    * @type {(Address | NamespaceId)}
    */
   protected get instantiatedRecipient(): Address | NamespaceId {
-    const {recipientRaw} = this.formItems
+    const { recipientRaw } = this.formItems
     if (AddressValidator.validate(recipientRaw)) {
       return Address.createFromRawAddress(recipientRaw)
     } else if (AliasValidator.validate(recipientRaw)) {
@@ -284,8 +293,9 @@ export class FormTransferTransactionTs extends FormTransactionBase {
    * @return {void}
    */
   public onDeleteMosaic(id: MosaicId) {
-    const updatedAttachedMosaics = [...this.formItems.attachedMosaics]
-      .filter(({mosaicHex}) => mosaicHex !== id.toHex())
+    const updatedAttachedMosaics = [...this.formItems.attachedMosaics].filter(
+      ({ mosaicHex }) => mosaicHex !== id.toHex(),
+    )
 
     // fixes reactivity on attachedMosaics (observer resolution)
     Vue.set(this.formItems, 'attachedMosaics', updatedAttachedMosaics)
@@ -296,18 +306,15 @@ export class FormTransferTransactionTs extends FormTransactionBase {
    * the event 'click'
    * @return {void}
    */
-  protected onMosaicInputChange(payload: {
-    mosaicAttachment: MosaicAttachment
-    inputIndex: number
-  }): void {
-    const {mosaicAttachment, inputIndex} = payload
+  protected onMosaicInputChange(payload: { mosaicAttachment: MosaicAttachment; inputIndex: number }): void {
+    const { mosaicAttachment, inputIndex } = payload
 
     // set slot
     this.mosaicInputsManager.setSlot(mosaicAttachment.mosaicHex, inputIndex)
 
     // update formItems
     const newAttachedMosaics = [...this.formItems.attachedMosaics]
-    const indexToUpdate = newAttachedMosaics.findIndex(({uid}) => uid == inputIndex)
+    const indexToUpdate = newAttachedMosaics.findIndex(({ uid }) => uid == inputIndex)
     newAttachedMosaics[indexToUpdate] = mosaicAttachment
     Vue.set(this.formItems, 'attachedMosaics', newAttachedMosaics)
     this.triggerChange()
@@ -323,9 +330,9 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     this.mosaicInputsManager.unsetSlot(index)
 
     // update formItems, set input uid to null
-    const indexToUpdate = this.formItems.attachedMosaics.findIndex(({uid}) => uid == index)
-    Vue.set(this.formItems.attachedMosaics, indexToUpdate, {uid: null})
-    // delete the last one in order to re-render the list 
+    const indexToUpdate = this.formItems.attachedMosaics.findIndex(({ uid }) => uid == index)
+    Vue.set(this.formItems.attachedMosaics, indexToUpdate, { uid: null })
+    // delete the last one in order to re-render the list
     this.formItems.attachedMosaics.pop()
     this.triggerChange()
   }
@@ -338,9 +345,9 @@ export class FormTransferTransactionTs extends FormTransactionBase {
    * @return {MosaicAttachment[]}
    */
   private mosaicsToAttachments(mosaics: Mosaic[]): MosaicAttachment[] {
-    return mosaics.map(
-      mosaic => {
-        const info = this.balanceMosaics.find(m => mosaic.id.toHex() === m.mosaicIdHex)
+    return mosaics
+      .map((mosaic) => {
+        const info = this.balanceMosaics.find((m) => mosaic.id.toHex() === m.mosaicIdHex)
         if (!info) {
           return null
         }
@@ -352,9 +359,9 @@ export class FormTransferTransactionTs extends FormTransactionBase {
           amount: mosaic.amount.compact() / Math.pow(10, info.divisibility),
           uid: Math.floor(Math.random() * 10e6), // used to index dynamic inputs
         }
-      }).filter(a => a)
+      })
+      .filter((a) => a)
   }
-
 
   /**
    *  Hook called when adding a new mosaic attachment input

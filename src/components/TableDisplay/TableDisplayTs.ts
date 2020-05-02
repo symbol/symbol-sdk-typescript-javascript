@@ -1,26 +1,33 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
 // external dependencies
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
-import {Address, AliasAction, MosaicId, NamespaceId} from 'symbol-sdk'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
+import { Address, AliasAction, MosaicId, NamespaceId } from 'symbol-sdk'
 // internal dependencies
-import {AssetTableService, FilteringTypes, SortingDirections, TableField, TableFilteringOptions, TableSortingOptions} from '@/services/AssetTableService/AssetTableService'
-import {MosaicTableService} from '@/services/AssetTableService/MosaicTableService'
-import {NamespaceTableService} from '@/services/AssetTableService/NamespaceTableService'
+import {
+  AssetTableService,
+  FilteringTypes,
+  SortingDirections,
+  TableField,
+  TableFilteringOptions,
+  TableSortingOptions,
+} from '@/services/AssetTableService/AssetTableService'
+import { MosaicTableService } from '@/services/AssetTableService/MosaicTableService'
+import { NamespaceTableService } from '@/services/AssetTableService/NamespaceTableService'
 // child components
 // @ts-ignore
 import TableRow from '@/components/TableRow/TableRow.vue'
@@ -32,10 +39,10 @@ import FormAliasTransaction from '@/views/forms/FormAliasTransaction/FormAliasTr
 import FormExtendNamespaceDurationTransaction from '@/views/forms/FormExtendNamespaceDurationTransaction/FormExtendNamespaceDurationTransaction.vue'
 // @ts-ignore
 import FormMosaicSupplyChangeTransaction from '@/views/forms/FormMosaicSupplyChangeTransaction/FormMosaicSupplyChangeTransaction.vue'
-import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
-import {MosaicModel} from '@/core/database/entities/MosaicModel'
-import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
-import {AccountModel} from '@/core/database/entities/AccountModel'
+import { NamespaceModel } from '@/core/database/entities/NamespaceModel'
+import { MosaicModel } from '@/core/database/entities/MosaicModel'
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
+import { AccountModel } from '@/core/database/entities/AccountModel'
 
 @Component({
   components: {
@@ -62,7 +69,8 @@ export class TableDisplayTs extends Vue {
    */
   @Prop({
     default: 'mosaic',
-  }) assetType: string
+  })
+  assetType: string
 
   /**
    * Loading state of the data to be shown in the table
@@ -94,13 +102,19 @@ export class TableDisplayTs extends Vue {
    * Current table sorting state
    * @var {TableSortingOptions}
    */
-  public sortedBy: TableSortingOptions = {fieldName: undefined, direction: undefined}
+  public sortedBy: TableSortingOptions = {
+    fieldName: undefined,
+    direction: undefined,
+  }
 
   /**
    * Current table filtering state
    * @var {TableFilteringOptions}
    */
-  public filteredBy: TableFilteringOptions = {fieldName: undefined, filteringType: undefined}
+  public filteredBy: TableFilteringOptions = {
+    fieldName: undefined,
+    filteringType: undefined,
+  }
 
   /**
    * Pagination page size
@@ -116,12 +130,12 @@ export class TableDisplayTs extends Vue {
 
   public nodata = [...new Array(this.pageSize).keys()]
 
-
   protected get ownedAssetHexIds(): string[] {
     return this.assetType === 'namespace'
-      ? this.ownedNamespaces.map(({namespaceIdHex}) => namespaceIdHex)
-      : this.holdMosaics.filter(({ownerRawPlain}) => ownerRawPlain === this.currentAccount.address)
-        .map(({mosaicIdHex}) => mosaicIdHex)
+      ? this.ownedNamespaces.map(({ namespaceIdHex }) => namespaceIdHex)
+      : this.holdMosaics
+          .filter(({ ownerRawPlain }) => ownerRawPlain === this.currentAccount.address)
+          .map(({ mosaicIdHex }) => mosaicIdHex)
   }
 
   /**
@@ -173,11 +187,9 @@ export class TableDisplayTs extends Vue {
    */
   protected getService(): AssetTableService {
     if ('mosaic' === this.assetType) {
-      return new MosaicTableService(this.currentHeight, this.holdMosaics,
-        this.networkConfiguration)
+      return new MosaicTableService(this.currentHeight, this.holdMosaics, this.networkConfiguration)
     } else if ('namespace' === this.assetType) {
-      return new NamespaceTableService(this.currentHeight, this.ownedNamespaces,
-        this.networkConfiguration)
+      return new NamespaceTableService(this.currentHeight, this.ownedNamespaces, this.networkConfiguration)
     }
     throw new Error(`Asset type '${this.assetType}' does not exist in TableDisplay.`)
   }
@@ -197,10 +209,7 @@ export class TableDisplayTs extends Vue {
    * @return {TableRowValues[]}
    */
   get displayedValues(): any[] {
-    return this.getService().sort(
-      this.getService().filter(this.tableRows, this.filteredBy),
-      this.sortedBy,
-    )
+    return this.getService().sort(this.getService().filter(this.tableRows, this.filteredBy), this.sortedBy)
   }
 
   /**
@@ -218,10 +227,7 @@ export class TableDisplayTs extends Vue {
    * @return {TableRowValues[]}
    */
   get currentPageRows(): any[] {
-    return this.displayedValues.slice(
-      (this.currentPage - 1) * this.pageSize,
-      this.currentPage * this.pageSize,
-    )
+    return this.displayedValues.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize)
   }
 
   /**
@@ -242,8 +248,7 @@ export class TableDisplayTs extends Vue {
    * @protected
    */
   protected get aliasModalTitle(): string {
-    return this.modalFormsProps.aliasAction === AliasAction.Link
-      ? 'modal_title_link_alias' : 'modal_title_unlink_alias'
+    return this.modalFormsProps.aliasAction === AliasAction.Link ? 'modal_title_link_alias' : 'modal_title_unlink_alias'
   }
 
   /// end-region getters and setters
@@ -308,11 +313,11 @@ export class TableDisplayTs extends Vue {
    * @param {TableFieldNames} fieldName
    */
   public setFilteredBy(fieldName: string): void {
-    const filteredBy = {...this.filteredBy}
-    const filteringType: FilteringTypes = filteredBy.fieldName === fieldName
-    && filteredBy.filteringType === 'show' ? 'hide' : 'show'
+    const filteredBy = { ...this.filteredBy }
+    const filteringType: FilteringTypes =
+      filteredBy.fieldName === fieldName && filteredBy.filteringType === 'show' ? 'hide' : 'show'
 
-    this.filteredBy = {fieldName, filteringType}
+    this.filteredBy = { fieldName, filteringType }
   }
 
   /**
@@ -320,12 +325,11 @@ export class TableDisplayTs extends Vue {
    * @param {TableFieldNames} fieldName
    */
   public setSortedBy(fieldName: string): void {
-    const sortedBy = {...this.sortedBy}
-    const direction: SortingDirections = sortedBy.fieldName === fieldName
-    && sortedBy.direction === 'asc'
-      ? 'desc' : 'asc'
+    const sortedBy = { ...this.sortedBy }
+    const direction: SortingDirections =
+      sortedBy.fieldName === fieldName && sortedBy.direction === 'asc' ? 'desc' : 'asc'
 
-    Vue.set(this, 'sortedBy', {fieldName, direction})
+    Vue.set(this, 'sortedBy', { fieldName, direction })
   }
 
   /**
@@ -345,8 +349,7 @@ export class TableDisplayTs extends Vue {
   protected showAliasForm(rowValues: Record<string, string>): void {
     // populate asset form modal props if asset is a mosaic
     if (this.assetType === 'mosaic') {
-      this.modalFormsProps.namespaceId = rowValues.name !== 'N/A' ? new NamespaceId(
-        rowValues.name) : null
+      this.modalFormsProps.namespaceId = rowValues.name !== 'N/A' ? new NamespaceId(rowValues.name) : null
       this.modalFormsProps.aliasTarget = new MosaicId(rowValues.hexId)
       this.modalFormsProps.aliasAction = rowValues.name !== 'N/A' ? AliasAction.Unlink : AliasAction.Link
     }
@@ -364,9 +367,13 @@ export class TableDisplayTs extends Vue {
 
     // populate asset form modal props if asset is a namespace
     if (this.assetType === 'namespace') {
-      this.modalFormsProps.namespaceId = new NamespaceId(rowValues.name),
-      this.modalFormsProps.aliasTarget = rowValues.aliasIdentifier === 'N/A' ? null : rowValues.aliasIdentifier
-        ? getInstantiatedAlias(rowValues.aliasType, rowValues.aliasIdentifier) : null
+      ;(this.modalFormsProps.namespaceId = new NamespaceId(rowValues.name)),
+        (this.modalFormsProps.aliasTarget =
+          rowValues.aliasIdentifier === 'N/A'
+            ? null
+            : rowValues.aliasIdentifier
+            ? getInstantiatedAlias(rowValues.aliasType, rowValues.aliasIdentifier)
+            : null)
       this.modalFormsProps.aliasAction = rowValues.aliasIdentifier === 'N/A' ? AliasAction.Link : AliasAction.Unlink
     }
 

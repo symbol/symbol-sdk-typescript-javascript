@@ -1,24 +1,24 @@
 // external dependencies
-import {extend} from 'vee-validate'
+import { extend } from 'vee-validate'
 import i18n from '@/language'
-import {Account, Address, NetworkType, Password} from 'symbol-sdk'
+import { Account, Address, NetworkType, Password } from 'symbol-sdk'
 // internal dependencies
-import {ProfileService} from '@/services/ProfileService'
-import {NotificationType} from '@/core/utils/NotificationType'
-import {AppStore} from '@/app/AppStore'
+import { ProfileService } from '@/services/ProfileService'
+import { NotificationType } from '@/core/utils/NotificationType'
+import { AppStore } from '@/app/AppStore'
 // configuration
 import networkConfig from '../../../config/network.conf.json'
 import appConfig from '../../../config/app.conf.json'
-import {AddressValidator, AliasValidator, MaxDecimalsValidator, PublicKeyValidator, UrlValidator} from './validators'
-import {ProfileModel} from '@/core/database/entities/ProfileModel'
-import {AccountService} from '@/services/AccountService'
-import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
+import { AddressValidator, AliasValidator, MaxDecimalsValidator, PublicKeyValidator, UrlValidator } from './validators'
+import { ProfileModel } from '@/core/database/entities/ProfileModel'
+import { AccountService } from '@/services/AccountService'
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
 
 // TODO CustomValidationRules needs to be created when the network configuration is resolved, UI
 // needs to use the resolved CustomValidationRules
 // ATM rules are using the hardcoded file
 const currentNetwork: NetworkConfigurationModel = networkConfig.networkConfigurationDefaults
-const {MIN_PASSWORD_LENGTH} = appConfig.constants
+const { MIN_PASSWORD_LENGTH } = appConfig.constants
 
 export class CustomValidationRules {
   /**
@@ -35,7 +35,7 @@ export class CustomValidationRules {
 
     extend('maxDecimals', {
       validate: (value, args: any) => {
-        const {maxDecimalNumber} = args
+        const { maxDecimalNumber } = args
         return MaxDecimalsValidator.validate(value, maxDecimalNumber)
       },
       message: `${i18n.t('max_decimal_number_error')}`,
@@ -54,7 +54,7 @@ export class CustomValidationRules {
 
     extend('addressOrAliasNetworkType', {
       validate: (value, args: any) => {
-        const {networkType} = args
+        const { networkType } = args
         if (!AddressValidator.validate(value)) return true
         return Address.createFromRawAddress(value).networkType == networkType
       },
@@ -71,7 +71,7 @@ export class CustomValidationRules {
 
     extend('confirmPassword', {
       validate(value, args: any) {
-        const {target} = args
+        const { target } = args
         return value === target
       },
       message: `${i18n.t(`${NotificationType.PASSWORDS_NOT_MATCHING}`)}`,
@@ -106,7 +106,7 @@ export class CustomValidationRules {
         // - fetch current profile accounts
         const currentProfile: ProfileModel = AppStore.getters['profile/currentProfile']
         const knownAccounts = Object.values(accountService.getKnownAccounts(currentProfile.accounts))
-        return undefined === knownAccounts.find(w => value === w.name)
+        return undefined === knownAccounts.find((w) => value === w.name)
       },
       message: `${i18n.t(`${NotificationType.ERROR_ACCOUNT_NAME_ALREADY_EXISTS}`)}`,
     })
@@ -116,8 +116,7 @@ export class CustomValidationRules {
         try {
           Account.createFromPrivateKey(value, NetworkType.MIJIN_TEST)
           return true
-        }
-        catch (e) {
+        } catch (e) {
           return false
         }
       },
@@ -138,8 +137,9 @@ export class CustomValidationRules {
       validate: (value) => {
         return value <= currentNetwork.maxNamespaceDuration
       },
-      message: `${i18n.t('error_new_namespace_duration_max_value',
-        {maxValue: currentNetwork.maxNamespaceDuration})}`,
+      message: `${i18n.t('error_new_namespace_duration_max_value', {
+        maxValue: currentNetwork.maxNamespaceDuration,
+      })}`,
     })
 
     extend('passwordRegex', {
@@ -150,4 +150,3 @@ export class CustomValidationRules {
     })
   }
 }
-

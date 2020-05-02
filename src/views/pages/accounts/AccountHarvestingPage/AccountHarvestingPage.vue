@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import {AccountHarvestingPageTs} from './AccountHarvestingPageTs'
+import { AccountHarvestingPageTs } from './AccountHarvestingPageTs'
 
 export default class AccountHarvestingPage extends AccountHarvestingPageTs {}
 </script>

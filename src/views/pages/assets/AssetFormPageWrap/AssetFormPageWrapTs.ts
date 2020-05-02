@@ -7,7 +7,7 @@ import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue'
 
 @Component({ components: { NavigationTabs } })
 export class AssetFormPageWrapTs extends Vue {
-  public isViewingHelpModal: boolean=false
+  public isViewingHelpModal: boolean = false
 
   public get hasHelpModal(): boolean {
     return this.isViewingHelpModal

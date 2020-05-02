@@ -1,10 +1,6 @@
 <template>
   <div class="transaction-details-item-inner-container">
-    <div
-      v-for="(item, index) in items"
-      :key="index"
-      class="transaction-row-outer-container"
-    >
+    <div v-for="(item, index) in items" :key="index" class="transaction-row-outer-container">
       <TransactionDetailRow :item="item" />
     </div>
   </div>
@@ -21,7 +17,7 @@ import { AttachedMosaic } from '@/services/MosaicService'
 
 // child components
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
-import {TransactionDetailItem} from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
+import { TransactionDetailItem } from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
 
 @Component({ components: { TransactionDetailRow } })
 export default class Transfer extends Vue {
@@ -54,17 +50,17 @@ export default class Transfer extends Vue {
     const message: Message = this.view.values.get('message')
     const incoming = this.view.values.get('isIncoming')
     const mosaicItems = attachedMosaics.map((mosaic, index, self) => {
-      const color = (incoming ? 'green' : 'red')
+      const color = incoming ? 'green' : 'red'
       return {
         key: `${this.$t('mosaic')} (${index + 1}/${self.length})`,
-        value: {...mosaic, color},
+        value: { ...mosaic, color },
         isMosaic: true,
       }
     })
 
     return [
       { key: 'sender', value: this.sender },
-      { key: 'transfer_target', value: this.recipient, isAddress:true },
+      { key: 'transfer_target', value: this.recipient, isAddress: true },
       ...mosaicItems,
       { key: 'message', value: message.payload || '-' },
     ]
@@ -73,5 +69,5 @@ export default class Transfer extends Vue {
 </script>
 
 <style lang="less" scoped>
-@import "../TransactionDetails.less";
+@import '../TransactionDetails.less';
 </style>

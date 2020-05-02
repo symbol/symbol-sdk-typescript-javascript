@@ -1,24 +1,24 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // internal dependencies
-import {NotificationType} from '@/core/utils/NotificationType'
+import { NotificationType } from '@/core/utils/NotificationType'
 // child components
-import {ValidationObserver, ValidationProvider} from 'vee-validate'
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
@@ -37,8 +37,8 @@ import AccountSelectorField from '@/components/AccountSelectorField/AccountSelec
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue'
 // @ts-ignore
 import FormLabel from '@/components/FormLabel/FormLabel.vue'
-import {SettingsModel} from '@/core/database/entities/SettingsModel'
-import {AccountModel} from '@/core/database/entities/AccountModel'
+import { SettingsModel } from '@/core/database/entities/SettingsModel'
+import { AccountModel } from '@/core/database/entities/AccountModel'
 
 @Component({
   components: {
@@ -62,12 +62,10 @@ import {AccountModel} from '@/core/database/entities/AccountModel'
   },
 })
 export class FormGeneralSettingsTs extends Vue {
-
   /**
    * The current stored settings.
    */
   public settings: SettingsModel
-
 
   /**
    * Known accounts identifiers
@@ -97,7 +95,7 @@ export class FormGeneralSettingsTs extends Vue {
   }
 
   public resetForm() {
-    this.formItems = {...this.settings}
+    this.formItems = { ...this.settings }
     if (!this.settings.defaultAccount && this.knownAccounts.length) {
       this.formItems.defaultAccount = this.knownAccounts[0].id
     }
@@ -126,7 +124,6 @@ export class FormGeneralSettingsTs extends Vue {
    * When account is unlocked, the sub account can be created
    */
   public async onAccountUnlocked() {
-
     try {
       await this.$store.dispatch('app/SET_SETTINGS', this.formItems)
       // - add notification and emit

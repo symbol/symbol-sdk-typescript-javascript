@@ -6,7 +6,7 @@
           <slot name="form-section" />
         </div>
       </div>
-    <!-- <div class="right-container xym-outline">
+      <!-- <div class="right-container xym-outline">
       <slot name="right-section" />
     </div> -->
     </div>
@@ -14,7 +14,7 @@
 </template>
 <script>
 // external dependencies
-import {Component, Vue} from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 
 @Component
 export default class MultisigFormPage extends Vue {}
@@ -29,7 +29,7 @@ export default class MultisigFormPage extends Vue {}
   display: grid;
   grid-template-columns: 12.7rem auto;
   grid-template-rows: 100%;
-  .main-out-container{
+  .main-out-container {
     position: relative;
     width: 100%;
     height: 100%;

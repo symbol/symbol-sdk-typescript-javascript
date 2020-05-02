@@ -1,8 +1,6 @@
 <template>
   <FormRow class-name="emphasis">
-    <template v-slot:label>
-      {{ $t('transfer_target') }}:
-    </template>
+    <template v-slot:label> {{ $t('transfer_target') }}: </template>
     <template v-slot:inputs>
       <ValidationProvider
         v-slot="{ errors }"
@@ -20,8 +18,8 @@
             class="input-size input-style"
             :placeholder="$t('placeholder_address_or_alias')"
             type="text"
-          >
-        </ErrorTooltip> 
+          />
+        </ErrorTooltip>
       </ValidationProvider>
     </template>
   </FormRow>

@@ -3,7 +3,7 @@
     <template v-slot:form-section>
       <FormNamespaceRegistrationTransaction v-if="ownedNamespaces.length > 0" :registration-type="1" />
       <div v-else class="no-data">
-        {{ $t("no_data_namespace_tips") }}
+        {{ $t('no_data_namespace_tips') }}
       </div>
     </template>
     <template v-slot:form-description>
@@ -30,9 +30,8 @@
 </template>
 <script lang="ts">
 import { CreateSubNamespaceTs } from './CreateSubNamespaceTs'
-export default class CreateSubNamespace extends CreateSubNamespaceTs { }
-
+export default class CreateSubNamespace extends CreateSubNamespaceTs {}
 </script>
 <style lang="less" scoped>
-  @import "./CreateSubNamespace.less";
+@import './CreateSubNamespace.less';
 </style>

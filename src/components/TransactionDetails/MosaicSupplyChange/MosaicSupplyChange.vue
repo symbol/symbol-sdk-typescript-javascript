@@ -1,10 +1,6 @@
 <template>
   <div class="transaction-details-item-inner-container">
-    <div
-      v-for="(item, index) in items"
-      :key="index"
-      class="transaction-row-outer-container"
-    >
+    <div v-for="(item, index) in items" :key="index" class="transaction-row-outer-container">
       <TransactionDetailRow :item="item" />
     </div>
   </div>
@@ -20,7 +16,7 @@ import { TransactionViewType } from '@/services/TransactionService'
 
 // child components
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
-import {TransactionDetailItem} from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
+import { TransactionDetailItem } from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
 
 @Component({ components: { TransactionDetailRow } })
 export default class MosaicSupplyChange extends Vue {
@@ -40,9 +36,7 @@ export default class MosaicSupplyChange extends Vue {
       { key: 'mosaicId', value: mosaicId.toHex() },
       {
         key: 'direction',
-        value: `${this.$t(
-          action === MosaicSupplyChangeAction.Increase ? 'Increase' : 'Decrease',
-        )}`,
+        value: `${this.$t(action === MosaicSupplyChangeAction.Increase ? 'Increase' : 'Decrease')}`,
       },
       {
         key: 'delta',
@@ -54,7 +48,5 @@ export default class MosaicSupplyChange extends Vue {
 </script>
 
 <style lang="less" scoped>
-@import "../TransactionDetails.less";
+@import '../TransactionDetails.less';
 </style>
-
-

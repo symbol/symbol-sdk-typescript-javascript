@@ -1,40 +1,40 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {mapGetters} from 'vuex'
-import {Component, Vue} from 'vue-property-decorator'
-import {NetworkType, Password} from 'symbol-sdk'
+import { mapGetters } from 'vuex'
+import { Component, Vue } from 'vue-property-decorator'
+import { NetworkType, Password } from 'symbol-sdk'
 // internal dependencies
-import {$eventBus} from '@/events'
-import {NotificationType} from '@/core/utils/NotificationType'
-import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
-import {ProfileModel} from '@/core/database/entities/ProfileModel'
-import {AccountModel} from '@/core/database/entities/AccountModel'
-import {ProfileService} from '@/services/ProfileService'
+import { $eventBus } from '@/events'
+import { NotificationType } from '@/core/utils/NotificationType'
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
+import { ProfileModel } from '@/core/database/entities/ProfileModel'
+import { AccountModel } from '@/core/database/entities/AccountModel'
+import { ProfileService } from '@/services/ProfileService'
 // child components
 // @ts-ignore
-import {ValidationObserver, ValidationProvider} from 'vee-validate'
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
 import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue'
 // configuration
-import {SettingService} from '@/services/SettingService'
-import {SettingsModel} from '@/core/database/entities/SettingsModel'
-import {AccountService} from '@/services/AccountService'
-import {NetworkTypeHelper} from '@/core/utils/NetworkTypeHelper'
+import { SettingService } from '@/services/SettingService'
+import { SettingsModel } from '@/core/database/entities/SettingsModel'
+import { AccountService } from '@/services/AccountService'
+import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper'
 
 @Component({
   computed: {
@@ -50,7 +50,6 @@ import {NetworkTypeHelper} from '@/core/utils/NetworkTypeHelper'
     LanguageSelector,
   },
 })
-
 export default class LoginPageTs extends Vue {
   /**
    * All known profiles
@@ -60,7 +59,10 @@ export default class LoginPageTs extends Vue {
   /**
    * Profiles indexed by network type
    */
-  private profilesClassifiedByNetworkType: { networkType: NetworkType, profiles: ProfileModel[] }[]
+  private profilesClassifiedByNetworkType: {
+    networkType: NetworkType
+    profiles: ProfileModel[]
+  }[]
   /**
    * Currently active profile
    * @see {Store.Profile}
@@ -100,15 +102,16 @@ export default class LoginPageTs extends Vue {
   public created() {
     this.profiles = this.profileService.getProfiles()
 
-    const reducer = (accumulator: { networkType: NetworkType, profiles: ProfileModel[] }[],
-      currentValue: ProfileModel) => {
-
-      const currentAccumulator = accumulator.find(a => a.networkType == currentValue.networkType)
+    const reducer = (
+      accumulator: { networkType: NetworkType; profiles: ProfileModel[] }[],
+      currentValue: ProfileModel,
+    ) => {
+      const currentAccumulator = accumulator.find((a) => a.networkType == currentValue.networkType)
       if (currentAccumulator) {
         currentAccumulator.profiles.push(currentValue)
         return accumulator
       } else {
-        return [ ...accumulator, {networkType: currentValue.networkType, profiles: [currentValue]}]
+        return [...accumulator, { networkType: currentValue.networkType, profiles: [currentValue] }]
       }
     }
 
@@ -137,7 +140,7 @@ export default class LoginPageTs extends Vue {
   public getPasswordHint(): string {
     const profileName = this.formItems.currentProfileName
     const profile = this.profileService.getProfileByName(profileName)
-    return profile && profile.hint || ''
+    return (profile && profile.hint) || ''
   }
 
   /**
@@ -191,8 +194,13 @@ export default class LoginPageTs extends Vue {
     if (!profile.seed) {
       this.$store.dispatch('profile/SET_CURRENT_PROFILE', profile)
       this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password)
-      this.$store.dispatch('diagnostic/ADD_WARNING', 'Profile has not setup mnemonic pass phrase, redirecting: ' + currentProfileName)
-      return this.$router.push({name: 'profiles.createProfile.generateMnemonic'})
+      this.$store.dispatch(
+        'diagnostic/ADD_WARNING',
+        'Profile has not setup mnemonic pass phrase, redirecting: ' + currentProfileName,
+      )
+      return this.$router.push({
+        name: 'profiles.createProfile.generateMnemonic',
+      })
     }
 
     // read default account from settings
@@ -200,7 +208,7 @@ export default class LoginPageTs extends Vue {
     if (!defaultAccountId) {
       throw new Error('defaultAccountId could not be resolved')
     }
-    const defaultAccount = knownAccounts.find(w => w.id == defaultAccountId)
+    const defaultAccount = knownAccounts.find((w) => w.id == defaultAccountId)
     if (!defaultAccount) {
       throw new Error(`defaultAccount could not be resolved from id ${defaultAccountId}`)
     }
@@ -209,9 +217,12 @@ export default class LoginPageTs extends Vue {
     await this.$store.dispatch('profile/SET_CURRENT_PROFILE', profile)
     await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', defaultAccount)
     this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', profile.accounts)
-    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Profile login successful with currentProfileName: ' + currentProfileName)
+    this.$store.dispatch(
+      'diagnostic/ADD_DEBUG',
+      'Profile login successful with currentProfileName: ' + currentProfileName,
+    )
 
     $eventBus.$emit('onLogin', currentProfileName)
-    return this.$router.push({name: 'dashboard'})
+    return this.$router.push({ name: 'dashboard' })
   }
 }

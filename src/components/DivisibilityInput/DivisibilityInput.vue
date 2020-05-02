@@ -1,8 +1,6 @@
 <template>
   <FormRow>
-    <template v-slot:label>
-      {{ $t('divisibility') }}:
-    </template>
+    <template v-slot:label> {{ $t('divisibility') }}: </template>
     <template v-slot:inputs>
       <ValidationProvider
         v-slot="{ errors }"
@@ -14,11 +12,7 @@
         class="inputs-container"
       >
         <ErrorTooltip :errors="errors">
-          <input
-            v-model="chosenValue"
-            class="input-style input-size"
-            type="number"
-          >
+          <input v-model="chosenValue" class="input-style input-size" type="number" />
         </ErrorTooltip>
       </ValidationProvider>
     </template>
@@ -26,6 +20,6 @@
 </template>
 
 <script lang="ts">
-import {DivisibilityInputTs} from './DivisibilityInputTs'
+import { DivisibilityInputTs } from './DivisibilityInputTs'
 export default class DivisibilityInput extends DivisibilityInputTs {}
 </script>

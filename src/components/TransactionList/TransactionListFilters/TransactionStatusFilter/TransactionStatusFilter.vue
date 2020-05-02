@@ -22,8 +22,8 @@
 <script lang="ts">
 // @ts-ignore
 import { TransactionStatusFilterTs } from './TransactionStatusFilterTs'
-export default class TransactionStatusFilter extends TransactionStatusFilterTs { }
+export default class TransactionStatusFilter extends TransactionStatusFilterTs {}
 </script>
 <style lang="less" scoped>
-  @import "./TransactionStatusFilter.less";
+@import './TransactionStatusFilter.less';
 </style>

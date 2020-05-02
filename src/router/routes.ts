@@ -1,27 +1,27 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {createStepImage, importStepImage, officialIcons} from '@/views/resources/Images'
-import {AppRoute} from './AppRoute'
+import { createStepImage, importStepImage, officialIcons } from '@/views/resources/Images'
+import { AppRoute } from './AppRoute'
 
 export const routes: AppRoute[] = [
   {
     path: '/',
     name: 'home',
     meta: { protected: false },
-    redirect: {name: 'profiles.login'},
+    redirect: { name: 'profiles.login' },
     // @ts-ignore
     component: () => import('@/views/layout/PageLayout/PageLayout.vue'),
     /// region PageLayout children
@@ -56,11 +56,12 @@ export const routes: AppRoute[] = [
                 meta: {
                   protected: false,
                   icon: createStepImage.createStepImage1,
-                  nextPage:'profiles.createProfile.generateMnemonic',
+                  nextPage: 'profiles.createProfile.generateMnemonic',
                 },
                 // @ts-ignore
                 component: () => import('@/views/forms/FormProfileCreation/FormProfileCreation.vue'),
-              }, {
+              },
+              {
                 path: 'generateMnemonic',
                 name: 'profiles.createProfile.generateMnemonic',
                 meta: {
@@ -69,7 +70,8 @@ export const routes: AppRoute[] = [
                 },
                 // @ts-ignore
                 component: () => import('@/views/pages/profiles/create-profile/generate-mnemonic/GenerateMnemonic.vue'),
-              }, {
+              },
+              {
                 path: 'showMnemonic',
                 name: 'profiles.createProfile.showMnemonic',
                 meta: {
@@ -78,7 +80,8 @@ export const routes: AppRoute[] = [
                 },
                 // @ts-ignore
                 component: () => import('@/views/pages/profiles/create-profile/show-mnemonic/ShowMnemonic.vue'),
-              }, {
+              },
+              {
                 path: 'verifyMnemonic',
                 name: 'profiles.createProfile.verifyMnemonic',
                 meta: {
@@ -87,7 +90,8 @@ export const routes: AppRoute[] = [
                 },
                 // @ts-ignore
                 component: () => import('@/views/pages/profiles/create-profile/verify-mnemonic/VerifyMnemonic.vue'),
-              }, {
+              },
+              {
                 path: 'finishCreate',
                 name: 'profiles.createProfile.finalize',
                 meta: {
@@ -96,7 +100,8 @@ export const routes: AppRoute[] = [
                 },
                 // @ts-ignore
                 component: () => import('@/views/pages/profiles/create-profile/finalize/Finalize.vue'),
-              }],
+              },
+            ],
           },
           {
             path: 'import',
@@ -104,44 +109,49 @@ export const routes: AppRoute[] = [
             meta: { protected: false },
             // @ts-ignore
             component: () => import('@/views/pages/profiles/import-profile/ImportProfile.vue'),
-            children: [{
-              path: 'inputAccountInfo',
-              name: 'profiles.importProfile.info',
-              meta: {
-                protected: false,
-                icon: importStepImage.importStepImage1,
-                nextPage:'profiles.importProfile.importMnemonic',
+            children: [
+              {
+                path: 'inputAccountInfo',
+                name: 'profiles.importProfile.info',
+                meta: {
+                  protected: false,
+                  icon: importStepImage.importStepImage1,
+                  nextPage: 'profiles.importProfile.importMnemonic',
+                },
+                // @ts-ignore
+                component: () => import('@/views/forms/FormProfileCreation/FormProfileCreation.vue'),
               },
-              // @ts-ignore
-              component: () => import('@/views/forms/FormProfileCreation/FormProfileCreation.vue'),
-            },{
-              path: 'importMnemonic',
-              name: 'profiles.importProfile.importMnemonic',
-              meta: {
-                protected: false,
-                icon: importStepImage.importStepImage2,
+              {
+                path: 'importMnemonic',
+                name: 'profiles.importProfile.importMnemonic',
+                meta: {
+                  protected: false,
+                  icon: importStepImage.importStepImage2,
+                },
+                // @ts-ignore
+                component: () => import('@/views/pages/profiles/import-profile/import-mnemonic/ImportMnemonic.vue'),
               },
-              // @ts-ignore
-              component: () => import('@/views/pages/profiles/import-profile/import-mnemonic/ImportMnemonic.vue'),
-            }, {
-              path: 'walletChoose',
-              name: 'profiles.importProfile.walletSelection',
-              meta: {
-                protected: false,
-                icon: importStepImage.importStepImage3,
+              {
+                path: 'walletChoose',
+                name: 'profiles.importProfile.walletSelection',
+                meta: {
+                  protected: false,
+                  icon: importStepImage.importStepImage3,
+                },
+                // @ts-ignore
+                component: () => import('@/views/pages/profiles/import-profile/account-selection/AccountSelection.vue'),
               },
-              // @ts-ignore
-              component: () => import('@/views/pages/profiles/import-profile/account-selection/AccountSelection.vue'),
-            }, {
-              path: 'finishImport',
-              name: 'profiles.importProfile.finalize',
-              meta: {
-                protected: false,
-                icon: importStepImage.importStepImage4,
+              {
+                path: 'finishImport',
+                name: 'profiles.importProfile.finalize',
+                meta: {
+                  protected: false,
+                  icon: importStepImage.importStepImage4,
+                },
+                // @ts-ignore
+                component: () => import('@/views/pages/profiles/import-profile/finalize/Finalize.vue'),
               },
-              // @ts-ignore
-              component: () => import('@/views/pages/profiles/import-profile/finalize/Finalize.vue'),
-            }],
+            ],
           },
         ],
       },
@@ -167,7 +177,8 @@ export const routes: AppRoute[] = [
             },
             // @ts-ignore
             component: () => import('@/views/pages/dashboard/home/DashboardHomePage.vue'),
-          }, {
+          },
+          {
             path: '/transfer',
             name: 'dashboard.transfer',
             meta: {
@@ -176,7 +187,8 @@ export const routes: AppRoute[] = [
             },
             // @ts-ignore
             component: () => import('@/views/pages/dashboard/transfer/DashboardTransferPage.vue'),
-          }, {
+          },
+          {
             path: '/invoice',
             name: 'dashboard.invoice',
             meta: {
@@ -242,7 +254,8 @@ export const routes: AppRoute[] = [
           //   component: () => import('@/views/pages/accounts/AccountHarvestingPage/AccountHarvestingPage.vue'),
           // },
         ],
-      }, {
+      },
+      {
         path: '/mosaics',
         name: 'mosaics',
         redirect: '/mosaicList',
@@ -264,7 +277,8 @@ export const routes: AppRoute[] = [
             },
             // @ts-ignore
             component: () => import('@/views/pages/mosaics/MosaicListPage/MosaicListPage.vue'),
-          }, {
+          },
+          {
             path: '/createMosaic',
             name: 'mosaics.create',
             meta: {
@@ -320,7 +334,8 @@ export const routes: AppRoute[] = [
             component: () => import('@/views/pages/namespaces/createSubNamespace/CreateSubNamespace.vue'),
           },
         ],
-      }, {
+      },
+      {
         path: '/multisig',
         name: 'multisig',
         meta: {
@@ -344,7 +359,8 @@ export const routes: AppRoute[] = [
             component: () => import('@/views/pages/multisig/ManageAccountPage/ManageAccountPage.vue'),
           },
         ],
-      }, {
+      },
+      {
         path: '/communityPanel',
         name: 'community',
         redirect: '/information',
@@ -360,7 +376,7 @@ export const routes: AppRoute[] = [
           {
             path: '/information',
             name: 'community.index',
-            meta: { protected: true},
+            meta: { protected: true },
             // @ts-ignore
             component: () => import('@/views/pages/community/information/Information.vue'),
           },
@@ -415,7 +431,8 @@ export const routes: AppRoute[] = [
       },
     ],
     /// end-region PageLayout children
-  }, {
+  },
+  {
     path: '/login',
     name: 'profiles.login',
     meta: { protected: false },

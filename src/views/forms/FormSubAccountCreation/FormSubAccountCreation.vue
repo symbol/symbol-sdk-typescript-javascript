@@ -1,26 +1,12 @@
 <template>
   <div>
-    <FormWrapper
-      ref="observer"
-      class="sub-account-creation-container"
-      :whitelisted="true"
-      slim
-    >
+    <FormWrapper ref="observer" class="sub-account-creation-container" :whitelisted="true" slim>
       <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
-        <form
-          class="form-container mt-3"
-          onsubmit="event.preventDefault()"
-          autocomplete="off"
-        >
+        <form class="form-container mt-3" onsubmit="event.preventDefault()" autocomplete="off">
           <FormRow>
-            <template v-slot:label>
-              {{ $t('form_label_new_account_type') }}:
-            </template>
+            <template v-slot:label> {{ $t('form_label_new_account_type') }}: </template>
             <template v-slot:inputs>
-              <select 
-                v-model="formItems.type"
-                class="input-size input-style"
-              >
+              <select v-model="formItems.type" class="input-size input-style">
                 <option value="child_account">
                   {{ $t('option_child_account') }}
                 </option>
@@ -32,9 +18,7 @@
           </FormRow>
 
           <FormRow>
-            <template v-slot:label>
-              {{ $t('form_label_new_account_name') }}:
-            </template>
+            <template v-slot:label> {{ $t('form_label_new_account_name') }}: </template>
             <template v-slot:inputs>
               <ValidationProvider
                 v-slot="{ errors }"
@@ -52,17 +36,14 @@
                     name="name"
                     class="input-size input-style"
                     autocomplete="new-password"
-                  >
+                  />
                 </ErrorTooltip>
               </ValidationProvider>
             </template>
           </FormRow>
 
-
           <FormRow v-if="formItems.type === 'privatekey_account'">
-            <template v-slot:label>
-              {{ $t('form_label_private_key') }}:
-            </template>
+            <template v-slot:label> {{ $t('form_label_private_key') }}: </template>
             <template v-slot:inputs>
               <ValidationProvider
                 v-slot="{ errors }"
@@ -80,7 +61,7 @@
                     name="privateKey"
                     class="input-size input-style"
                     autocomplete="new-password"
-                  >
+                  />
                 </ErrorTooltip>
               </ValidationProvider>
             </template>
@@ -124,4 +105,3 @@ export default class FormSubAccountCreation extends FormSubAccountCreationTs {}
   min-height: 1rem;
 }
 </style>
-

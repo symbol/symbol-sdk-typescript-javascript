@@ -18,7 +18,7 @@ export default class ModalFormWrap extends Vue {
    * @type {string}
    */
   @Prop({ default: '' }) title: string
-  
+
   /**
    * Modal visibility state from parent
    * @type {string}

@@ -15,12 +15,12 @@
 
 <script lang="ts">
 // external dependencies
-import {Component, Vue} from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 
 // child components
 import Information from './information/Information.vue'
 
-@Component({ components: {Information} })
+@Component({ components: { Information } })
 export default class Community extends Vue {}
 </script>
 

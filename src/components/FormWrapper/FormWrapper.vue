@@ -7,12 +7,12 @@
 
 <script lang="ts">
 // external dependencies
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator'
 
 // child components
 import DisabledFormOverlay from '@/components/DisabledFormOverlay/DisabledFormOverlay.vue'
 
-@Component({ components: {DisabledFormOverlay} })
+@Component({ components: { DisabledFormOverlay } })
 export default class FormWrapper extends Vue {
   /**
    * Overrides checks in disabled form overlay

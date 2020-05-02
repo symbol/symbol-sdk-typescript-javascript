@@ -14,15 +14,13 @@
  *
  */
 
-import {EMPTY, merge, MonoTypeOperatorFunction, of, throwError} from 'rxjs'
-import {catchError} from 'rxjs/operators'
-
+import { EMPTY, merge, MonoTypeOperatorFunction, of, throwError } from 'rxjs'
+import { catchError } from 'rxjs/operators'
 
 /**
  * Custom observable pipe style operations.
  */
 export class ObservableHelpers {
-
   /**
    * This pipe operation concatenates the default values first when provided on top what the
    * current observable resolves. if the defaultValue is provided and the current observable fails,
@@ -36,14 +34,19 @@ export class ObservableHelpers {
    * @param defaultValue the default value to be piped first before the observable.
    */
   public static defaultFirst<T>(defaultValue: T | undefined): MonoTypeOperatorFunction<T> {
-    return observable => merge(defaultValue ? of(defaultValue) : EMPTY,
-      observable.pipe(catchError(e => {
-        if (defaultValue) {
-          return EMPTY
-        } else {
-          return throwError(e)
-        }
-      })))
+    return (observable) =>
+      merge(
+        defaultValue ? of(defaultValue) : EMPTY,
+        observable.pipe(
+          catchError((e) => {
+            if (defaultValue) {
+              return EMPTY
+            } else {
+              return throwError(e)
+            }
+          }),
+        ),
+      )
   }
 
   /**
@@ -58,12 +61,15 @@ export class ObservableHelpers {
    */
 
   public static defaultLast<T>(defaultValue: T | undefined = undefined): MonoTypeOperatorFunction<T> {
-    return observable => observable.pipe(catchError(e => {
-      if (defaultValue) {
-        return of(defaultValue)
-      } else {
-        return throwError(e)
-      }
-    }))
+    return (observable) =>
+      observable.pipe(
+        catchError((e) => {
+          if (defaultValue) {
+            return of(defaultValue)
+          } else {
+            return throwError(e)
+          }
+        }),
+      )
   }
 }

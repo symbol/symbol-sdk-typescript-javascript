@@ -14,7 +14,7 @@
  *
  */
 
-import {NamespaceInfo} from 'symbol-sdk'
+import { NamespaceInfo } from 'symbol-sdk'
 
 /**
  * Stored POJO that holds namespace information.
@@ -26,7 +26,6 @@ import {NamespaceInfo} from 'symbol-sdk'
  *
  */
 export class NamespaceModel {
-
   public readonly namespaceIdHex: string
   public readonly name: string
   public readonly isRoot: boolean
@@ -39,21 +38,19 @@ export class NamespaceModel {
   public readonly endHeight: number
   public readonly depth: number
 
-
   constructor(namespaceInfo: NamespaceInfo, name: string) {
     this.namespaceIdHex = namespaceInfo.id.toHex()
     this.name = name
     this.isRoot = namespaceInfo.isRoot()
     this.aliasType = namespaceInfo.alias.type
     this.ownerAddressRawPlain = namespaceInfo.owner.address.plain()
-    this.aliasTargetAddressRawPlain = namespaceInfo.alias && namespaceInfo.alias.address &&
-      namespaceInfo.alias.address.plain() || undefined
-    this.aliasTargetMosaicIdHex = namespaceInfo.alias && namespaceInfo.alias.mosaicId &&
-      namespaceInfo.alias.mosaicId.toHex() || undefined
+    this.aliasTargetAddressRawPlain =
+      (namespaceInfo.alias && namespaceInfo.alias.address && namespaceInfo.alias.address.plain()) || undefined
+    this.aliasTargetMosaicIdHex =
+      (namespaceInfo.alias && namespaceInfo.alias.mosaicId && namespaceInfo.alias.mosaicId.toHex()) || undefined
     this.parentNamespaceIdHex = this.isRoot ? undefined : namespaceInfo.parentNamespaceId().toHex()
     this.startHeight = namespaceInfo.startHeight.compact()
     this.endHeight = namespaceInfo.endHeight.compact()
     this.depth = namespaceInfo.depth
   }
-
 }

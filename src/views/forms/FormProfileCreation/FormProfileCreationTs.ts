@@ -1,36 +1,35 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
-import {Password} from 'symbol-sdk'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
+import { Password } from 'symbol-sdk'
 // internal dependencies
-import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
-import {NotificationType} from '@/core/utils/NotificationType'
-import {ProfileService} from '@/services/ProfileService'
-import {ProfileModel} from '@/core/database/entities/ProfileModel'
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
+import { NotificationType } from '@/core/utils/NotificationType'
+import { ProfileService } from '@/services/ProfileService'
+import { ProfileModel } from '@/core/database/entities/ProfileModel'
 // child components
-import {ValidationObserver, ValidationProvider} from 'vee-validate'
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
-import {NetworkTypeHelper} from '@/core/utils/NetworkTypeHelper'
-
+import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper'
 
 /// end-region custom types
 
@@ -92,7 +91,7 @@ export class FormProfileCreationTs extends Vue {
    * Network types
    * @var {NetworkNodeEntry[]}
    */
-  public networkTypeList= NetworkTypeHelper.networkTypeList
+  public networkTypeList = NetworkTypeHelper.networkTypeList
 
   /**
    * Type the ValidationObserver refs
@@ -122,9 +121,10 @@ export class FormProfileCreationTs extends Vue {
   }
 
   /**
-   *  resets form validation    
-   */ 
-  public resetValidations(): void{
+   *  resets form validation
+   */
+
+  public resetValidations(): void {
     this.$refs && this.$refs.observer && this.$refs.observer.reset()
   }
 
@@ -135,7 +135,6 @@ export class FormProfileCreationTs extends Vue {
   private persistAccountAndContinue() {
     // -  password stored as hash (never plain.)
     const passwordHash = ProfileService.getPasswordHash(new Password(this.formItems.password))
-
 
     const account: ProfileModel = {
       profileName: this.formItems.profileName,
@@ -155,6 +154,6 @@ export class FormProfileCreationTs extends Vue {
     this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
 
     // flush and continue
-    this.$router.push({name: this.nextPage})
+    this.$router.push({ name: this.nextPage })
   }
 }

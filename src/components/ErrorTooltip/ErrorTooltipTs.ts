@@ -1,4 +1,4 @@
-import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 
 @Component
 export class ErrorTooltipTs extends Vue {
@@ -6,7 +6,7 @@ export class ErrorTooltipTs extends Vue {
    * Tooltip placement
    * @type {string}
    */
-  @Prop({default: 'top-end'}) placementOverride!: string
+  @Prop({ default: 'top-end' }) placementOverride!: string
 
   /**
    * Errors returned by the Validation Provider
@@ -46,7 +46,7 @@ export class ErrorTooltipTs extends Vue {
    * it must not switch to a falsy value or an empty string)
    * @param {string} newValue
    */
-  @Watch('fieldError', {immediate: true})
+  @Watch('fieldError', { immediate: true })
   onFieldErrorChanged(newValue: string) {
     if (newValue && newValue !== '') this.displayedError = newValue
   }

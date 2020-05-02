@@ -8,7 +8,7 @@
 
 <script lang="ts">
 // @ts-ignore
-import {DashboardHomePageTs} from './DashboardHomePageTs'
+import { DashboardHomePageTs } from './DashboardHomePageTs'
 import './DashboardHomePage.less'
 
 export default class DashboardHomePage extends DashboardHomePageTs {}

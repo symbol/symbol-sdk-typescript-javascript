@@ -18,8 +18,8 @@
 </template>
 
 <script lang="ts">
-import {AssetFormPageWrapTs} from './AssetFormPageWrapTs'
-export default class AssetFormPageWrap extends AssetFormPageWrapTs { }
+import { AssetFormPageWrapTs } from './AssetFormPageWrapTs'
+export default class AssetFormPageWrap extends AssetFormPageWrapTs {}
 </script>
 
 <style lang="less" scoped>

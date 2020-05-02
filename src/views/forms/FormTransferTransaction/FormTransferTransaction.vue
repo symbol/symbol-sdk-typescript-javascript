@@ -4,14 +4,14 @@
       <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
         <form onsubmit="event.preventDefault()">
           <!-- Transaction signer selector -->
-          <SignerSelector 
+          <SignerSelector
             v-if="!hideSigner"
             v-model="formItems.signerPublicKey"
             :signers="signers"
             @input="onChangeSigner"
           />
 
-          <!-- Transfer recipient input field --> 
+          <!-- Transfer recipient input field -->
           <RecipientInput v-model="formItems.recipientRaw" @input="onChangeRecipient" />
 
           <!-- Mosaics attachments input fields -->

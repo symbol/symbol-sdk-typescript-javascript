@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import {IStorage} from '@/core/database/backends/IStorage'
-import {VersionedModel} from '@/core/database/entities/VersionedModel'
-import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
+import { IStorage } from '@/core/database/backends/IStorage'
+import { VersionedModel } from '@/core/database/entities/VersionedModel'
+import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage'
 
 /**
  * The operation to migrate the data.
  */
 export interface Migration {
-
   readonly description: string
 
   migrate(from: any): any
@@ -33,7 +32,6 @@ export interface Migration {
  *
  */
 export class VersionedObjectStorage<E> implements IStorage<E> {
-
   private readonly delegate: IStorage<VersionedModel<E>>
 
   private readonly currentVersion: number
@@ -65,7 +63,7 @@ export class VersionedObjectStorage<E> implements IStorage<E> {
 
   get(): E | undefined {
     const versioned = this.delegate.get()
-    return versioned && versioned.data || undefined
+    return (versioned && versioned.data) || undefined
   }
 
   remove(): void {
@@ -78,7 +76,6 @@ export class VersionedObjectStorage<E> implements IStorage<E> {
 
   getVersion(): E | number {
     const versioned = this.delegate.get()
-    return versioned && versioned.version || undefined
+    return (versioned && versioned.version) || undefined
   }
-
 }

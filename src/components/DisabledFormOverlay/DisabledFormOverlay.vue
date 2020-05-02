@@ -8,15 +8,19 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue, Prop} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
-import {MosaicId, MultisigAccountInfo} from 'symbol-sdk'
-import {NotificationType} from '@/core/utils/NotificationType'
+import { Component, Vue, Prop } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
+import { MosaicId, MultisigAccountInfo } from 'symbol-sdk'
+import { NotificationType } from '@/core/utils/NotificationType'
 
-@Component({computed: {...mapGetters({
-  networkMosaic: 'mosaic/networkMosaic',
-  currentAccountMultisigInfo: 'account/currentAccountMultisigInfo',
-})}})
+@Component({
+  computed: {
+    ...mapGetters({
+      networkMosaic: 'mosaic/networkMosaic',
+      currentAccountMultisigInfo: 'account/currentAccountMultisigInfo',
+    }),
+  },
+})
 export default class DisabledFormOverlay extends Vue {
   /**
    * Overrides checks
@@ -45,8 +49,7 @@ export default class DisabledFormOverlay extends Vue {
     // Don't disable form when the form is multisig-friendly
     const multisigFriendlyRouteNames = ['dashboard.invoice']
 
-    if (multisigFriendlyRouteNames.some(
-      a => this.$route.matched.map(({name}) => name).some(b => b === a))) {
+    if (multisigFriendlyRouteNames.some((a) => this.$route.matched.map(({ name }) => name).some((b) => b === a))) {
       return false
     }
 
@@ -67,10 +70,10 @@ export default class DisabledFormOverlay extends Vue {
     }
     return ''
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 }
 </script>
 
 <style lang="less" scoped>
-@import "./DisabledFormOverlay.less";
+@import './DisabledFormOverlay.less';
 </style>

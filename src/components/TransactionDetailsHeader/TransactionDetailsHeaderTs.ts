@@ -1,29 +1,29 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
-import {MosaicId, NetworkType} from 'symbol-sdk'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
+import { MosaicId, NetworkType } from 'symbol-sdk'
 // internal dependencies
-import {TransactionViewType} from '@/services/TransactionService'
-import {Formatters} from '@/core/utils/Formatters'
+import { TransactionViewType } from '@/services/TransactionService'
+import { Formatters } from '@/core/utils/Formatters'
 // configuration
 // child components
 // @ts-ignore
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
-import {TransactionDetailItem} from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
+import { TransactionDetailItem } from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
 
 @Component({
   components: {
@@ -38,10 +38,10 @@ import {TransactionDetailItem} from '@/components/TransactionDetails/Transaction
   },
 })
 export class TransactionDetailsHeaderTs extends Vue {
-
   @Prop({
     default: null,
-  }) view: TransactionViewType
+  })
+  view: TransactionViewType
 
   /**
    * Current network type
@@ -77,16 +77,18 @@ export class TransactionDetailsHeaderTs extends Vue {
   public getFeeAmount(): number {
     if (!this.view) return 0
     const effectiveFee = this.view.values.get('effectiveFee')
-    if (effectiveFee !== undefined)
-    {return effectiveFee}
+    if (effectiveFee !== undefined) {
+      return effectiveFee
+    }
     const maxFee = this.view.values.get('maxFee')
-    if (maxFee !== undefined)
-    {return maxFee}
+    if (maxFee !== undefined) {
+      return maxFee
+    }
     return 0
   }
 
   public getFeeKey(): string {
-    if (this.view && this.view.values.get('effectiveFee') != undefined){
+    if (this.view && this.view.values.get('effectiveFee') != undefined) {
       return 'paid_fee'
     }
     return 'max_fee'
@@ -99,7 +101,10 @@ export class TransactionDetailsHeaderTs extends Vue {
    */
   get items(): TransactionDetailItem[] {
     return [
-      {key: 'status', value: `${this.$t(this.view.info ? 'confirmed' : 'unconfirmed')}`},
+      {
+        key: 'status',
+        value: `${this.$t(this.view.info ? 'confirmed' : 'unconfirmed')}`,
+      },
       {
         key: 'transaction_type',
         value: `${this.$t(`transaction_descriptor_${this.view.transaction.type}`)}`,
@@ -124,8 +129,9 @@ export class TransactionDetailsHeaderTs extends Vue {
       },
       {
         key: 'deadline',
-        value: `${this.view.values.get('deadline').value.toLocalDate()} ${this.view.values.get(
-          'deadline').value.toLocalTime()}`,
+        value: `${this.view.values.get('deadline').value.toLocalDate()} ${this.view.values
+          .get('deadline')
+          .value.toLocalTime()}`,
       },
     ]
   }

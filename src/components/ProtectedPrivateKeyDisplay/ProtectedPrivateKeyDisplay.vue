@@ -7,15 +7,15 @@
         src="@/views/resources/img/account/copyIcon.png"
         class="copy-icon"
         @click="uiHelpers.copyToClipboard(plainInformation)"
-      >
-      <span class="timer-span"> &nbsp; ({{ $t('x_seconds', {seconds: secondsCounter}) }})</span>
+      />
+      <span class="timer-span"> &nbsp; ({{ $t('x_seconds', { seconds: secondsCounter }) }})</span>
     </div>
     <div v-else>
       <div class="value">
         ********
         <button
           type="button"
-          class="button-style validation-button right-side-button eye-button" 
+          class="button-style validation-button right-side-button eye-button"
           @click="onClickDisplay"
         >
           <Icon type="md-eye" />
@@ -39,9 +39,9 @@ export default class ProtectedPrivateKeyDisplay extends ProtectedPrivateKeyDispl
 
 <style lang="less" scoped>
 .copy-icon {
-  width: .24rem;
-  height: .24rem;
-  margin-left: .18rem;
+  width: 0.24rem;
+  height: 0.24rem;
+  margin-left: 0.18rem;
   cursor: pointer;
 }
 .eye-button {

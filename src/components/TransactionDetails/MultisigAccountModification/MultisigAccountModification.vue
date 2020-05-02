@@ -1,10 +1,6 @@
 <template>
   <div class="transaction-details-item-inner-container">
-    <div
-      v-for="(item, index) in items"
-      :key="index"
-      class="transaction-row-outer-container"
-    >
+    <div v-for="(item, index) in items" :key="index" class="transaction-row-outer-container">
       <TransactionDetailRow :item="item" />
     </div>
   </div>
@@ -12,20 +8,20 @@
 
 <script lang="ts">
 // extenrnal dependencies
-import {PublicAccount, NetworkType, Address} from 'symbol-sdk'
-import {mapGetters} from 'vuex'
-import {Component, Prop, Vue} from 'vue-property-decorator'
+import { PublicAccount, NetworkType, Address } from 'symbol-sdk'
+import { mapGetters } from 'vuex'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
 // internal dependencies
-import {TransactionViewType} from '@/services/TransactionService'
+import { TransactionViewType } from '@/services/TransactionService'
 
 // child components
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
-import {TransactionDetailItem} from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
+import { TransactionDetailItem } from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
 
 @Component({
   components: { TransactionDetailRow },
-  computed: {...mapGetters({ networkType: 'network/networkType' })},
+  computed: { ...mapGetters({ networkType: 'network/networkType' }) },
 })
 export default class MultisigAccountModification extends Vue {
   @Prop({ default: null }) view: TransactionViewType
@@ -45,19 +41,19 @@ export default class MultisigAccountModification extends Vue {
 
     // push approval and removal deltas to view items
     const items = [
-      { key: 'minApprovalDelta', value: `${minApprovalDelta}`},
-      { key: 'minRemovalDelta', value: `${minRemovalDelta}`},
+      { key: 'minApprovalDelta', value: `${minApprovalDelta}` },
+      { key: 'minRemovalDelta', value: `${minRemovalDelta}` },
     ]
 
     // render views for public key additions and deletions
-    const additions = publicKeyAdditions.map(({publicKey}, index, self) => {
+    const additions = publicKeyAdditions.map(({ publicKey }, index, self) => {
       return {
         key: `${this.$t('public_key_addition')} (${index + 1}/${self.length})`,
         value: Address.createFromPublicKey(publicKey, this.networkType).pretty(),
       }
     })
 
-    const deletions = publicKeyDeletions.map(({publicKey}, index, self) => {
+    const deletions = publicKeyDeletions.map(({ publicKey }, index, self) => {
       return {
         key: `${this.$t('public_key_deletion')} (${index + 1}/${self.length})`,
         value: Address.createFromPublicKey(publicKey, this.networkType).pretty(),

@@ -20,7 +20,6 @@
  *
  */
 export class NetworkCurrencyModel {
-
   constructor(
     /**
      * Mosaic id of this currency. This value is optional if the user only wants to provide the
@@ -57,6 +56,5 @@ export class NetworkCurrencyModel {
      * The ticket name like XYM when namespace fullname is symbol.xym
      */
     public readonly ticker: string | undefined,
-  ) {
-  }
+  ) {}
 }

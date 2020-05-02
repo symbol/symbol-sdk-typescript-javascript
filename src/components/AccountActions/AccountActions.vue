@@ -9,7 +9,7 @@
       <div class="harvesting-options">
         <div class="harvesting-item">
           <div class="img-box radius">
-            <img src="@/views/resources/img/symbol/Link.png">
+            <img src="@/views/resources/img/symbol/Link.png" />
           </div>
           <p class="access-name">
             {{ $t('accounts_harvesting_tile_remote') }}
@@ -29,7 +29,7 @@
       <div class="harvesting-options">
         <div class="harvesting-item">
           <div class="img-box radius">
-            <img src="@/views/resources/img/symbol/DelegatedHarvesting.png">
+            <img src="@/views/resources/img/symbol/DelegatedHarvesting.png" />
           </div>
           <p class="access-name">
             {{ $t('accounts_harvesting_tile_request') }}
@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import {AccountActionsTs} from './AccountActionsTs'
+import { AccountActionsTs } from './AccountActionsTs'
 import './AccountActions.less'
 
 export default class AccountActions extends AccountActionsTs {}

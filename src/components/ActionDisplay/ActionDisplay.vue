@@ -2,7 +2,8 @@
   <div>
     <span class="col2-item overflow_ellipsis"><AddressDisplay :address="transaction.signer.address" /></span>
     <span class="col2-item bottom overflow_ellipsis">
-      <span v-if="transaction.type === transactionType.TRANSFER"> ->
+      <span v-if="transaction.type === transactionType.TRANSFER">
+        ->
         <AddressDisplay :address="transaction.recipientAddress" />
       </span>
       <span v-else>{{ $t(`transaction_descriptor_${transaction.type}`) }}</span>

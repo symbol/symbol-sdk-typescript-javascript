@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import {AccountLinksTs} from './AccountLinksTs'
+import { AccountLinksTs } from './AccountLinksTs'
 import './AccountLinks.less'
 
 export default class AccountLinks extends AccountLinksTs {}

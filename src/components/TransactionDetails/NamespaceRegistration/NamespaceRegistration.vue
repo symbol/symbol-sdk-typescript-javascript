@@ -1,10 +1,6 @@
 <template>
   <div class="transaction-details-item-inner-container">
-    <div
-      v-for="(item, index) in items"
-      :key="index"
-      class="transaction-row-outer-container"
-    >
+    <div v-for="(item, index) in items" :key="index" class="transaction-row-outer-container">
       <TransactionDetailRow :item="item" />
     </div>
   </div>
@@ -14,17 +10,17 @@
 // external dependencies
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { UInt64, NamespaceRegistrationType } from 'symbol-sdk'
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 // internal dependencies
 import { TransactionViewType } from '@/services/TransactionService'
-import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
 // child components
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
-import {TransactionDetailItem} from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
+import { TransactionDetailItem } from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
 
-import { TimeHelpers } from '@/core/utils/TimeHelpers' 
+import { TimeHelpers } from '@/core/utils/TimeHelpers'
 @Component({
-  components: { TransactionDetailRow } ,
+  components: { TransactionDetailRow },
   computed: {
     ...mapGetters({
       networkConfiguration: 'network/networkConfiguration',
@@ -43,9 +39,7 @@ export default class NamespaceRegistration extends Vue {
   get items(): TransactionDetailItem[] {
     const rootNamespaceName: string = this.view.values.get('rootNamespaceName')
     const subNamespaceName: string = this.view.values.get('subNamespaceName')
-    const registrationType: NamespaceRegistrationType = this.view.values.get(
-      'registrationType',
-    )
+    const registrationType: NamespaceRegistrationType = this.view.values.get('registrationType')
     const duration: UInt64 = this.view.values.get('duration')
     const blockGenerationTargetTime = this.networkConfiguration.blockGenerationTargetTime
     if (registrationType === NamespaceRegistrationType.RootNamespace) {
@@ -53,7 +47,7 @@ export default class NamespaceRegistration extends Vue {
         { key: 'namespace_name', value: rootNamespaceName },
         {
           key: 'duration',
-          value: TimeHelpers.durationToRelativeTime(parseInt(duration.toString()),blockGenerationTargetTime),
+          value: TimeHelpers.durationToRelativeTime(parseInt(duration.toString()), blockGenerationTargetTime),
         },
       ]
     }
@@ -70,6 +64,5 @@ export default class NamespaceRegistration extends Vue {
 </script>
 
 <style lang="less" scoped>
-@import "../TransactionDetails.less";
+@import '../TransactionDetails.less';
 </style>
-

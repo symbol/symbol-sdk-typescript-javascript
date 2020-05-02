@@ -16,17 +16,13 @@
       <div class="asset-description-sub-title">
         {{ $t('define') }}
       </div>
-      <div
-        class="asset-description-emphasis"
-      >
+      <div class="asset-description-emphasis">
         {{ $t('A_namespace_starts_with_a_name_that_you_choose_similar_to_an_internet_domain_name') }}
       </div>
       <div class="asset-description-sub-title">
         {{ $t('Namespace_description') }}
       </div>
-      <div
-        class="asset-description-emphasis"
-      >
+      <div class="asset-description-emphasis">
         {{ $t('The_name_must_appear_as_unique_in_the_network_and_may_have_a_maximum_length_of_64_characters') }}
       </div>
       <div class="asset-description-sub-title">
@@ -53,7 +49,7 @@ import TableDisplay from '@/components/TableDisplay/TableDisplay.vue'
     TableDisplay,
   },
 })
-export default class NamespaceListPage extends Vue { }
+export default class NamespaceListPage extends Vue {}
 </script>
 
 <style scoped lang="css">

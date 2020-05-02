@@ -11,11 +11,7 @@
       <div
         v-for="(item, index) in currentAccounts"
         :key="index"
-        :class="[
-          'account-tile',
-          isActiveAccount(item) ? 'active-background' : 'inactive-background',
-          'pointer',
-        ]"
+        :class="['account-tile', isActiveAccount(item) ? 'active-background' : 'inactive-background', 'pointer']"
         @click="currentAccountIdentifier = item.id"
       >
         <div class="account-tile-inner-container">
@@ -27,10 +23,7 @@
 
           <div class="account-tile-lower-container">
             <div class="account-amount">
-              <MosaicAmountDisplay
-                :absolute-amount="balances[item.address]"
-                :size="'bigger'"
-              />
+              <MosaicAmountDisplay :absolute-amount="balances[item.address]" :size="'bigger'" />
             </div>
           </div>
         </div>
@@ -43,7 +36,7 @@
       </span>
       <div class="account-switch-header-right-container" @click="hasMnemonicExportModal = true">
         <span>
-          <img src="@/views/resources/img/back-up.png" alt="">
+          <img src="@/views/resources/img/back-up.png" alt="" />
         </span>
         <span class="back-up pointer">{{ $t('backup_mnemonic') }}</span>
       </div>

@@ -1,33 +1,42 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
 import Vue from 'vue'
-import {AccountInfo, Address, CosignatureSignedTransaction, IListener, MultisigAccountInfo, NetworkType, RepositoryFactory, SignedTransaction, Transaction} from 'symbol-sdk'
-import {of, Subscription} from 'rxjs'
+import {
+  AccountInfo,
+  Address,
+  CosignatureSignedTransaction,
+  IListener,
+  MultisigAccountInfo,
+  NetworkType,
+  RepositoryFactory,
+  SignedTransaction,
+  Transaction,
+} from 'symbol-sdk'
+import { of, Subscription } from 'rxjs'
 // internal dependencies
-import {$eventBus} from '../events'
-import {RESTService} from '@/services/RESTService'
-import {AwaitLock} from './AwaitLock'
-import {BroadcastResult} from '@/core/transactions/BroadcastResult'
-import {AccountModel} from '@/core/database/entities/AccountModel'
-import {MultisigService} from '@/services/MultisigService'
+import { $eventBus } from '../events'
+import { RESTService } from '@/services/RESTService'
+import { AwaitLock } from './AwaitLock'
+import { BroadcastResult } from '@/core/transactions/BroadcastResult'
+import { AccountModel } from '@/core/database/entities/AccountModel'
+import { MultisigService } from '@/services/MultisigService'
 import * as _ from 'lodash'
-import {ProfileModel} from '@/core/database/entities/ProfileModel'
-import {AccountService} from '@/services/AccountService'
-import {catchError, map} from 'rxjs/operators'
-
+import { ProfileModel } from '@/core/database/entities/ProfileModel'
+import { AccountService } from '@/services/AccountService'
+import { catchError, map } from 'rxjs/operators'
 
 /// region globals
 const Lock = AwaitLock.create()
@@ -42,7 +51,12 @@ type SubscriptionType = {
   subscriptions: Subscription[]
 }
 
-export type Signer = { label: string, publicKey: string, address: Address, multisig: boolean }
+export type Signer = {
+  label: string
+  publicKey: string
+  address: Address
+  multisig: boolean
+}
 
 // Account state typing
 interface AccountState {
@@ -61,7 +75,7 @@ interface AccountState {
   accountsInfo: AccountInfo[]
   multisigAccountsInfo: MultisigAccountInfo[]
 
-  stageOptions: { isAggregate: boolean, isMultisig: boolean }
+  stageOptions: { isAggregate: boolean; isMultisig: boolean }
   stagedTransactions: Transaction[]
   signedTransactions: SignedTransaction[]
   // Subscriptions to webSocket channels
@@ -121,47 +135,64 @@ export default {
     signedTransactions: (state: AccountState) => state.signedTransactions,
   },
   mutations: {
-    setInitialized: (state: AccountState, initialized: boolean) => { state.initialized = initialized },
-    currentAccount: (state: AccountState, accountModel: AccountModel) => { state.currentAccount = accountModel },
-    currentAccountAddress: (state: AccountState, accountAddress: Address) =>
-    { state.currentAccountAddress = accountAddress },
-    currentSigner: (state: AccountState, currentSigner: Signer) =>
-    { state.currentSigner = currentSigner },
-    signers: (state: AccountState, signers: Signer[]) => { state.signers = signers },
-    currentSignerAddress: (state: AccountState, signerAddress) =>
-    { state.currentSignerAddress = signerAddress },
-    knownAccounts: (state: AccountState, knownAccounts: AccountModel[]) =>
-    { state.knownAccounts = knownAccounts },
-    knownAddresses: (state: AccountState, knownAddresses: Address[]) =>
-    { state.knownAddresses = knownAddresses },
-    isCosignatoryMode: (state: AccountState, isCosignatoryMode: boolean) =>
-    { state.isCosignatoryMode = isCosignatoryMode },
-    accountsInfo: (state: AccountState, accountsInfo) => { state.accountsInfo = accountsInfo },
-    multisigAccountsInfo: (state: AccountState, multisigAccountsInfo) =>
-    { state.multisigAccountsInfo = multisigAccountsInfo },
-    currentAccountMultisigInfo: (state: AccountState, currentAccountMultisigInfo) =>
-    { state.currentAccountMultisigInfo = currentAccountMultisigInfo },
-    currentSignerMultisigInfo: (state: AccountState, currentSignerMultisigInfo) =>
-    { state.currentSignerMultisigInfo = currentSignerMultisigInfo },
+    setInitialized: (state: AccountState, initialized: boolean) => {
+      state.initialized = initialized
+    },
+    currentAccount: (state: AccountState, accountModel: AccountModel) => {
+      state.currentAccount = accountModel
+    },
+    currentAccountAddress: (state: AccountState, accountAddress: Address) => {
+      state.currentAccountAddress = accountAddress
+    },
+    currentSigner: (state: AccountState, currentSigner: Signer) => {
+      state.currentSigner = currentSigner
+    },
+    signers: (state: AccountState, signers: Signer[]) => {
+      state.signers = signers
+    },
+    currentSignerAddress: (state: AccountState, signerAddress) => {
+      state.currentSignerAddress = signerAddress
+    },
+    knownAccounts: (state: AccountState, knownAccounts: AccountModel[]) => {
+      state.knownAccounts = knownAccounts
+    },
+    knownAddresses: (state: AccountState, knownAddresses: Address[]) => {
+      state.knownAddresses = knownAddresses
+    },
+    isCosignatoryMode: (state: AccountState, isCosignatoryMode: boolean) => {
+      state.isCosignatoryMode = isCosignatoryMode
+    },
+    accountsInfo: (state: AccountState, accountsInfo) => {
+      state.accountsInfo = accountsInfo
+    },
+    multisigAccountsInfo: (state: AccountState, multisigAccountsInfo) => {
+      state.multisigAccountsInfo = multisigAccountsInfo
+    },
+    currentAccountMultisigInfo: (state: AccountState, currentAccountMultisigInfo) => {
+      state.currentAccountMultisigInfo = currentAccountMultisigInfo
+    },
+    currentSignerMultisigInfo: (state: AccountState, currentSignerMultisigInfo) => {
+      state.currentSignerMultisigInfo = currentSignerMultisigInfo
+    },
 
-    setSubscriptions: (state: AccountState, subscriptions: Record<string, SubscriptionType[][]>) =>
-    { state.subscriptions = subscriptions },
-    addSubscriptions: (state: AccountState,
-      payload: { address: string, subscriptions: SubscriptionType }) => {
-      const {address, subscriptions} = payload
+    setSubscriptions: (state: AccountState, subscriptions: Record<string, SubscriptionType[][]>) => {
+      state.subscriptions = subscriptions
+    },
+    addSubscriptions: (state: AccountState, payload: { address: string; subscriptions: SubscriptionType }) => {
+      const { address, subscriptions } = payload
       // skip when subscriptions is an empty array
       if (!subscriptions.subscriptions.length) return
       // get current subscriptions from state
       const oldSubscriptions = state.subscriptions[address] || []
       // update subscriptions
-      const newSubscriptions = [ ...oldSubscriptions, subscriptions ]
+      const newSubscriptions = [...oldSubscriptions, subscriptions]
       // update state
       Vue.set(state.subscriptions, address, newSubscriptions)
     },
 
     stageOptions: (state: AccountState, options) => Vue.set(state, 'stageOptions', options),
-    setStagedTransactions: (state: AccountState, transactions: Transaction[]) => Vue.set(state,
-      'stagedTransactions', transactions),
+    setStagedTransactions: (state: AccountState, transactions: Transaction[]) =>
+      Vue.set(state, 'stagedTransactions', transactions),
     addStagedTransaction: (state: AccountState, transaction: Transaction) => {
       // - get previously staged transactions
       const staged = state.stagedTransactions
@@ -186,15 +217,13 @@ export default {
       const signed = state.signedTransactions
 
       // - find transaction by hash and delete
-      const idx = signed.findIndex(tx => tx.hash === transaction.hash)
+      const idx = signed.findIndex((tx) => tx.hash === transaction.hash)
       if (undefined === idx) {
         return
       }
 
       // skip `idx`
-      const remaining = signed.splice(0, idx).concat(
-        signed.splice(idx + 1, signed.length - idx - 1),
-      )
+      const remaining = signed.splice(0, idx).concat(signed.splice(idx + 1, signed.length - idx - 1))
 
       // - use Array.from to reset indexes
       return Vue.set(state, 'signedTransactions', Array.from(remaining))
@@ -207,21 +236,21 @@ export default {
      *    skipTransactions: boolean,
      * }
      */
-    async initialize({commit, getters}, {address}) {
+    async initialize({ commit, getters }, { address }) {
       const callback = async () => {
         if (!address || !address.length) return
         commit('setInitialized', true)
       }
-      await Lock.initialize(callback, {getters})
+      await Lock.initialize(callback, { getters })
     },
-    async uninitialize({commit, dispatch, getters}, {address}) {
+    async uninitialize({ commit, dispatch, getters }, { address }) {
       const callback = async () => {
         // close websocket connections
         await dispatch('UNSUBSCRIBE', address)
-        await dispatch('transaction/RESET_TRANSACTIONS', {}, {root: true})
+        await dispatch('transaction/RESET_TRANSACTIONS', {}, { root: true })
         commit('setInitialized', false)
       }
-      await Lock.uninitialize(callback, {getters})
+      await Lock.uninitialize(callback, { getters })
     },
 
     /**
@@ -230,36 +259,39 @@ export default {
      *    isCosignatoryMode: boolean,
      * }
      */
-    async SET_CURRENT_ACCOUNT({commit, dispatch, getters}, currentAccount: AccountModel) {
+    async SET_CURRENT_ACCOUNT({ commit, dispatch, getters }, currentAccount: AccountModel) {
       const previous: AccountModel = getters.currentAccount
       if (previous && previous.address === currentAccount.address) return
 
       const currentAccountAddress: Address = Address.createFromRawAddress(currentAccount.address)
-      dispatch('diagnostic/ADD_DEBUG',
+      dispatch(
+        'diagnostic/ADD_DEBUG',
         'Store action account/SET_CURRENT_ACCOUNT dispatched with ' + currentAccountAddress.plain(),
-        {root: true})
+        {
+          root: true,
+        },
+      )
 
       // set current account
       commit('currentAccount', currentAccount)
 
-
       // reset current signer
-      await dispatch('SET_CURRENT_SIGNER', {publicKey: currentAccount.publicKey})
-      await dispatch('initialize', {address: currentAccountAddress.plain()})
+      await dispatch('SET_CURRENT_SIGNER', {
+        publicKey: currentAccount.publicKey,
+      })
+      await dispatch('initialize', { address: currentAccountAddress.plain() })
       $eventBus.$emit('onAccountChange', currentAccountAddress.plain())
     },
 
-    async RESET_CURRENT_ACCOUNT({commit, dispatch}) {
-      dispatch('diagnostic/ADD_DEBUG', 'Store action account/RESET_CURRENT_ACCOUNT dispatched',
-        {root: true})
+    async RESET_CURRENT_ACCOUNT({ commit, dispatch }) {
+      dispatch('diagnostic/ADD_DEBUG', 'Store action account/RESET_CURRENT_ACCOUNT dispatched', { root: true })
       commit('currentAccount', null)
       commit('currentAccountAddress', null)
       commit('currentSignerAddress', null)
     },
 
-    async SET_CURRENT_SIGNER({commit, dispatch, getters, rootGetters},
-      {publicKey}: { publicKey: string }) {
-      if (!publicKey){
+    async SET_CURRENT_SIGNER({ commit, dispatch, getters, rootGetters }, { publicKey }: { publicKey: string }) {
+      if (!publicKey) {
         throw new Error('Public Key must be provided when calling account/SET_CURRENT_SIGNER!')
       }
       const networkType: NetworkType = rootGetters['network/networkType']
@@ -271,11 +303,15 @@ export default {
 
       if (previousSignerAddress && previousSignerAddress.equals(currentSignerAddress)) return
 
-      dispatch('diagnostic/ADD_DEBUG',
+      dispatch(
+        'diagnostic/ADD_DEBUG',
         'Store action account/SET_CURRENT_SIGNER dispatched with ' + currentSignerAddress.plain(),
-        {root: true})
+        {
+          root: true,
+        },
+      )
 
-      dispatch('transaction/RESET_TRANSACTIONS', {}, {root: true})
+      dispatch('transaction/RESET_TRANSACTIONS', {}, { root: true })
 
       const currentAccountAddress = Address.createFromRawAddress(currentAccount.address)
       const knownAccounts = new AccountService().getKnownAccounts(currentProfile.accounts)
@@ -286,9 +322,9 @@ export default {
       commit('knownAccounts', knownAccounts)
 
       // Upgrade
-      dispatch('namespace/SIGNER_CHANGED', {}, {root: true})
-      dispatch('mosaic/SIGNER_CHANGED', {}, {root: true})
-      dispatch('transaction/SIGNER_CHANGED', {}, {root: true})
+      dispatch('namespace/SIGNER_CHANGED', {}, { root: true })
+      dispatch('mosaic/SIGNER_CHANGED', {}, { root: true })
+      dispatch('transaction/SIGNER_CHANGED', {}, { root: true })
 
       // open / close websocket connections
       if (previousSignerAddress) await dispatch('UNSUBSCRIBE', previousSignerAddress)
@@ -296,22 +332,24 @@ export default {
 
       await dispatch('LOAD_ACCOUNT_INFO')
 
-      dispatch('namespace/LOAD_NAMESPACES', {}, {root: true})
-      dispatch('mosaic/LOAD_MOSAICS', {}, {root: true})
+      dispatch('namespace/LOAD_NAMESPACES', {}, { root: true })
+      dispatch('mosaic/LOAD_MOSAICS', {}, { root: true })
     },
 
-    async NETWORK_CHANGED({dispatch}) {
-      dispatch('transaction/RESET_TRANSACTIONS', {}, {root: true})
-      dispatch('namespace/RESET_NAMESPACES', {}, {root: true})
-      dispatch('mosaic/RESET_MOSAICS', {}, {root: true})
-      dispatch('transaction/LOAD_TRANSACTIONS', undefined, {root: true})
+    async NETWORK_CHANGED({ dispatch }) {
+      dispatch('transaction/RESET_TRANSACTIONS', {}, { root: true })
+      dispatch('namespace/RESET_NAMESPACES', {}, { root: true })
+      dispatch('mosaic/RESET_MOSAICS', {}, { root: true })
+      dispatch('transaction/LOAD_TRANSACTIONS', undefined, { root: true })
       await dispatch('LOAD_ACCOUNT_INFO')
-      dispatch('namespace/LOAD_NAMESPACES', {}, {root: true})
-      await dispatch('mosaic/LOAD_NETWORK_CURRENCIES', undefined, {root: true})
-      dispatch('mosaic/LOAD_MOSAICS', {}, {root: true})
+      dispatch('namespace/LOAD_NAMESPACES', {}, { root: true })
+      await dispatch('mosaic/LOAD_NETWORK_CURRENCIES', undefined, {
+        root: true,
+      })
+      dispatch('mosaic/LOAD_MOSAICS', {}, { root: true })
     },
 
-    async LOAD_ACCOUNT_INFO({commit, getters, rootGetters}) {
+    async LOAD_ACCOUNT_INFO({ commit, getters, rootGetters }) {
       const networkType: NetworkType = rootGetters['network/networkType']
       const currentAccount: AccountModel = getters.currentAccount
       const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
@@ -321,47 +359,62 @@ export default {
 
       // remote calls:
 
-      const getMultisigAccountGraphInfoPromise = repositoryFactory.createMultisigRepository()
-        .getMultisigAccountGraphInfo(currentAccountAddress).pipe(map(g => {
-          return MultisigService.getMultisigInfoFromMultisigGraphInfo(g)
-        }), catchError(() => {
-          return of([])
-        })).toPromise()
-
+      const getMultisigAccountGraphInfoPromise = repositoryFactory
+        .createMultisigRepository()
+        .getMultisigAccountGraphInfo(currentAccountAddress)
+        .pipe(
+          map((g) => {
+            return MultisigService.getMultisigInfoFromMultisigGraphInfo(g)
+          }),
+          catchError(() => {
+            return of([])
+          }),
+        )
+        .toPromise()
 
       // REMOTE CALL
       const multisigAccountsInfo: MultisigAccountInfo[] = await getMultisigAccountGraphInfoPromise
 
-      const currentAccountMultisigInfo = multisigAccountsInfo.find(
-        m => m.account.address.equals(currentAccountAddress))
-      const currentSignerMultisigInfo = multisigAccountsInfo.find(
-        m => m.account.address.equals(currentSignerAddress))
+      const currentAccountMultisigInfo = multisigAccountsInfo.find((m) =>
+        m.account.address.equals(currentAccountAddress),
+      )
+      const currentSignerMultisigInfo = multisigAccountsInfo.find((m) => m.account.address.equals(currentSignerAddress))
 
-      const signers = new MultisigService().getSigners(networkType, knownAccounts, currentAccount,
-        currentAccountMultisigInfo)
+      const signers = new MultisigService().getSigners(
+        networkType,
+        knownAccounts,
+        currentAccount,
+        currentAccountMultisigInfo,
+      )
 
-      const knownAddresses = _.uniqBy([ ...signers.map(s=>s.address),
-        ...knownAccounts.map(w => Address.createFromRawAddress(w.address)) ].filter(a => a),
-      'address')
+      const knownAddresses = _.uniqBy(
+        [...signers.map((s) => s.address), ...knownAccounts.map((w) => Address.createFromRawAddress(w.address))].filter(
+          (a) => a,
+        ),
+        'address',
+      )
 
       commit('knownAddresses', knownAddresses)
-      commit('currentSigner', signers.find(s => s.address.equals(currentSignerAddress)))
+      commit(
+        'currentSigner',
+        signers.find((s) => s.address.equals(currentSignerAddress)),
+      )
       commit('signers', signers)
       commit('multisigAccountsInfo', multisigAccountsInfo)
       commit('currentAccountMultisigInfo', currentAccountMultisigInfo)
       commit('currentSignerMultisigInfo', currentSignerMultisigInfo)
 
       // REMOTE CALL
-      const getAccountsInfoPromise = repositoryFactory.createAccountRepository()
-        .getAccountsInfo(knownAddresses).toPromise()
+      const getAccountsInfoPromise = repositoryFactory
+        .createAccountRepository()
+        .getAccountsInfo(knownAddresses)
+        .toPromise()
       const accountsInfo = await getAccountsInfoPromise
 
       commit('accountsInfo', accountsInfo)
-
     },
 
-
-    UPDATE_CURRENT_ACCOUNT_NAME({commit, getters, rootGetters}, name: string) {
+    UPDATE_CURRENT_ACCOUNT_NAME({ commit, getters, rootGetters }, name: string) {
       const currentAccount: AccountModel = getters.currentAccount
       if (!currentAccount) {
         return
@@ -376,45 +429,44 @@ export default {
       commit('knownAccounts', knownAccounts)
     },
 
-
-    SET_KNOWN_ACCOUNTS({commit}, accounts: string[]) {
+    SET_KNOWN_ACCOUNTS({ commit }, accounts: string[]) {
       commit('knownAccounts', new AccountService().getKnownAccounts(accounts))
     },
 
-    RESET_SUBSCRIPTIONS({commit}) {
+    RESET_SUBSCRIPTIONS({ commit }) {
       commit('setSubscriptions', {})
     },
 
-    ADD_STAGED_TRANSACTION({commit}, stagedTransaction: Transaction) {
+    ADD_STAGED_TRANSACTION({ commit }, stagedTransaction: Transaction) {
       commit('addStagedTransaction', stagedTransaction)
     },
-    CLEAR_STAGED_TRANSACTIONS({commit}) {
+    CLEAR_STAGED_TRANSACTIONS({ commit }) {
       commit('clearStagedTransaction')
     },
-    RESET_TRANSACTION_STAGE({commit}) {
+    RESET_TRANSACTION_STAGE({ commit }) {
       commit('setStagedTransactions', [])
     },
     /**
      * Websocket API
      */
     // Subscribe to latest account transactions.
-    async SUBSCRIBE({commit, dispatch, rootGetters}, address: Address) {
+    async SUBSCRIBE({ commit, dispatch, rootGetters }, address: Address) {
       if (!address) return
 
       // use RESTService to open websocket channel subscriptions
       const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
       const subscriptions: SubscriptionType = await RESTService.subscribeTransactionChannels(
-        {commit, dispatch},
+        { commit, dispatch },
         repositoryFactory,
         address.plain(),
       )
 
       // update state of listeners & subscriptions
-      commit('addSubscriptions', {address, subscriptions})
+      commit('addSubscriptions', { address, subscriptions })
     },
 
     // Unsubscribe from all open websocket connections
-    async UNSUBSCRIBE({dispatch, getters}, address) {
+    async UNSUBSCRIBE({ dispatch, getters }, address) {
       const subscriptions = getters.getSubscriptions
       const currentAccount: AccountModel = getters.currentAccount
 
@@ -422,12 +474,12 @@ export default {
         address = currentAccount.address
       }
 
-      const subsByAddress = subscriptions && subscriptions[address] || []
-      for (let i = 0, m = subsByAddress.length; i < m; i ++) {
+      const subsByAddress = (subscriptions && subscriptions[address]) || []
+      for (let i = 0, m = subsByAddress.length; i < m; i++) {
         const subscription = subsByAddress[i]
 
         // subscribers
-        for (let j = 0, n = subscription.subscriptions; j < n; j ++) {
+        for (let j = 0, n = subscription.subscriptions; j < n; j++) {
           await subscription.subscriptions[j].unsubscribe()
         }
 
@@ -439,20 +491,23 @@ export default {
     },
 
     async REST_ANNOUNCE_PARTIAL(
-      {commit, dispatch, rootGetters},
-      {issuer, signedLock, signedPartial},
+      { commit, dispatch, rootGetters },
+      { issuer, signedLock, signedPartial },
     ): Promise<BroadcastResult> {
-
       if (!issuer || issuer.length !== 40) {
         return
       }
 
-      dispatch('diagnostic/ADD_DEBUG',
-        'Store action account/REST_ANNOUNCE_PARTIAL dispatched with: ' + JSON.stringify({
-          issuer: issuer,
-          signedLockHash: signedLock.hash,
-          signedPartialHash: signedPartial.hash,
-        }), {root: true})
+      dispatch(
+        'diagnostic/ADD_DEBUG',
+        'Store action account/REST_ANNOUNCE_PARTIAL dispatched with: ' +
+          JSON.stringify({
+            issuer: issuer,
+            signedLockHash: signedLock.hash,
+            signedPartialHash: signedPartial.hash,
+          }),
+        { root: true },
+      )
 
       try {
         // - prepare REST parameters
@@ -462,7 +517,6 @@ export default {
         // - prepare scoped *confirmation listener*
         const listener = repositoryFactory.createListener()
         await listener.open()
-
 
         // - announce hash lock transaction and await confirmation
         transactionHttp.announce(signedLock)
@@ -490,14 +544,18 @@ export default {
       }
     },
     async REST_ANNOUNCE_TRANSACTION(
-      {commit, dispatch, rootGetters},
+      { commit, dispatch, rootGetters },
       signedTransaction: SignedTransaction,
     ): Promise<BroadcastResult> {
-      dispatch('diagnostic/ADD_DEBUG',
-        'Store action account/REST_ANNOUNCE_TRANSACTION dispatched with: ' + JSON.stringify({
-          hash: signedTransaction.hash,
-          payload: signedTransaction.payload,
-        }), {root: true})
+      dispatch(
+        'diagnostic/ADD_DEBUG',
+        'Store action account/REST_ANNOUNCE_TRANSACTION dispatched with: ' +
+          JSON.stringify({
+            hash: signedTransaction.hash,
+            payload: signedTransaction.payload,
+          }),
+        { root: true },
+      )
 
       try {
         // prepare REST parameters
@@ -513,15 +571,20 @@ export default {
         return new BroadcastResult(signedTransaction, false, e.toString())
       }
     },
-    async REST_ANNOUNCE_COSIGNATURE({dispatch, rootGetters}, cosignature: CosignatureSignedTransaction):
-    Promise<BroadcastResult> {
-
-      dispatch('diagnostic/ADD_DEBUG',
-        'Store action account/REST_ANNOUNCE_COSIGNATURE dispatched with: ' + JSON.stringify({
-          hash: cosignature.parentHash,
-          signature: cosignature.signature,
-          signerPublicKey: cosignature.signerPublicKey,
-        }), {root: true})
+    async REST_ANNOUNCE_COSIGNATURE(
+      { dispatch, rootGetters },
+      cosignature: CosignatureSignedTransaction,
+    ): Promise<BroadcastResult> {
+      dispatch(
+        'diagnostic/ADD_DEBUG',
+        'Store action account/REST_ANNOUNCE_COSIGNATURE dispatched with: ' +
+          JSON.stringify({
+            hash: cosignature.parentHash,
+            signature: cosignature.signature,
+            signerPublicKey: cosignature.signerPublicKey,
+          }),
+        { root: true },
+      )
 
       try {
         // prepare REST parameters
@@ -535,8 +598,5 @@ export default {
         return new BroadcastResult(cosignature, false, e.toString())
       }
     },
-
   },
-
-
 }

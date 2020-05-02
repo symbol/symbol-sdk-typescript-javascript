@@ -14,20 +14,19 @@
  *
  */
 /// region custom types
-import {NetworkType} from 'symbol-sdk'
+import { NetworkType } from 'symbol-sdk'
 
-type NetworkNodeEntry = { value: NetworkType, label: string }
+type NetworkNodeEntry = { value: NetworkType; label: string }
 
 export class NetworkTypeHelper {
-
   /**
    * Network types with their names
    */
   public static networkTypeList: NetworkNodeEntry[] = [
-    {value: NetworkType.MIJIN_TEST, label: 'MIJIN_TEST'},
-    {value: NetworkType.MAIN_NET, label: 'MAIN_NET'},
-    {value: NetworkType.TEST_NET, label: 'TEST_NET'},
-    {value: NetworkType.MIJIN, label: 'MIJIN'},
+    { value: NetworkType.MIJIN_TEST, label: 'MIJIN_TEST' },
+    { value: NetworkType.MAIN_NET, label: 'MAIN_NET' },
+    { value: NetworkType.TEST_NET, label: 'TEST_NET' },
+    { value: NetworkType.MIJIN, label: 'MIJIN' },
   ]
 
   /**
@@ -36,12 +35,10 @@ export class NetworkTypeHelper {
    * @return {string}
    */
   public static getNetworkTypeLabel(networkType: NetworkType): string {
-    const findType = NetworkTypeHelper.networkTypeList.find(n => n.value === networkType)
+    const findType = NetworkTypeHelper.networkTypeList.find((n) => n.value === networkType)
     if (findType === undefined) {
       return ''
     }
     return findType.label
   }
-
-
 }

@@ -7,11 +7,11 @@ import AssetFormPageWrap from '@/views/pages/assets/AssetFormPageWrap/AssetFormP
 import FormNamespaceRegistrationTransaction from '@/views/forms/FormNamespaceRegistrationTransaction/FormNamespaceRegistrationTransaction.vue'
 import { mapGetters } from 'vuex'
 @Component({
-  components:{AssetFormPageWrap,FormNamespaceRegistrationTransaction},
-  computed: {...mapGetters({
-    ownedNamespaces: 'namespace/ownedNamespaces',
-  })},
+  components: { AssetFormPageWrap, FormNamespaceRegistrationTransaction },
+  computed: {
+    ...mapGetters({
+      ownedNamespaces: 'namespace/ownedNamespaces',
+    }),
+  },
 })
-export class CreateSubNamespaceTs extends Vue{
-    
-}
+export class CreateSubNamespaceTs extends Vue {}

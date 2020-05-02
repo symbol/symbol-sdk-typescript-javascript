@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import {SettingsTs} from './SettingsTs'
+import { SettingsTs } from './SettingsTs'
 
 export default class Settings extends SettingsTs {}
 </script>

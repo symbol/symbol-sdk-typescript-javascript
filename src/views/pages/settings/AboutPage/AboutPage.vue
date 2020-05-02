@@ -5,9 +5,7 @@
         <div class="label">
           {{ $t('about_app_release') }}
         </div>
-        <div class="value">
-          {{ configs.package.description }} v{{ configs.package.version }}
-        </div>
+        <div class="value">{{ configs.package.description }} v{{ configs.package.version }}</div>
       </div>
       <div class="form-row about-list">
         <div class="label">
@@ -99,8 +97,8 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue} from 'vue-property-decorator'
-import {NetworkType} from 'symbol-sdk'
+import { Component, Vue } from 'vue-property-decorator'
+import { NetworkType } from 'symbol-sdk'
 // child components
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 import FormLabel from '@/components/FormLabel/FormLabel.vue'
@@ -109,8 +107,8 @@ import appConfig from '@/../config/app.conf.json'
 import feesConfig from '@/../config/fees.conf.json'
 import networkConfig from '@/../config/network.conf.json'
 import packageConfig from '@/../package.json'
-import {mapGetters} from 'vuex'
-import {NetworkModel} from '@/core/database/entities/NetworkModel'
+import { mapGetters } from 'vuex'
+import { NetworkModel } from '@/core/database/entities/NetworkModel'
 
 @Component({
   components: {
@@ -124,7 +122,6 @@ import {NetworkModel} from '@/core/database/entities/NetworkModel'
   },
 })
 export default class AboutPage extends Vue {
-
   private networkModel: NetworkModel
 
   public configs = {
@@ -181,4 +178,3 @@ export default class AboutPage extends Vue {
   }
 }
 </style>
-

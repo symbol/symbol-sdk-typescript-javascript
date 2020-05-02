@@ -1,30 +1,30 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {Component, Prop, Vue} from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import {
   Account,
   AggregateTransaction,
   AggregateTransactionCosignature,
   CosignatureSignedTransaction,
 } from 'symbol-sdk'
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 
-import {AccountModel, AccountType} from '@/core/database/entities/AccountModel'
-import {TransactionService} from '@/services/TransactionService'
-import {BroadcastResult} from '@/core/transactions/BroadcastResult'
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
+import { TransactionService } from '@/services/TransactionService'
+import { BroadcastResult } from '@/core/transactions/BroadcastResult'
 
 // child components
 // @ts-ignore
@@ -40,18 +40,22 @@ import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/
     FormProfileUnlock,
     HardwareConfirmationButton,
   },
-  computed: {...mapGetters({
-    currentAccount: 'account/currentAccount',
-  })},
+  computed: {
+    ...mapGetters({
+      currentAccount: 'account/currentAccount',
+    }),
+  },
 })
 export class ModalTransactionCosignatureTs extends Vue {
   @Prop({
     default: false,
-  }) visible: boolean
+  })
+  visible: boolean
 
   @Prop({
     default: null,
-  }) transaction: AggregateTransaction
+  })
+  transaction: AggregateTransaction
 
   /**
    * Currently active account
@@ -111,15 +115,18 @@ export class ModalTransactionCosignatureTs extends Vue {
     const service = new TransactionService(this.$store)
 
     // - log about transaction signature success
-    this.$store.dispatch('diagnostic/ADD_INFO', 'Co-signed ' + transactions.length + ' Transaction(s) with Hardware Wallet')
+    this.$store.dispatch(
+      'diagnostic/ADD_INFO',
+      'Co-signed ' + transactions.length + ' Transaction(s) with Hardware Wallet',
+    )
 
     // - broadcast signed transactions
     const results: BroadcastResult[] = await service.announceCosignatureTransactions(transactions)
 
     // - notify about errors
-    const errors = results.filter(result => false === result.success)
+    const errors = results.filter((result) => false === result.success)
     if (errors.length) {
-      return errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
+      return errors.map((result) => this.$store.dispatch('notification/ADD_ERROR', result.error))
     }
 
     this.$emit('success')
@@ -134,10 +141,10 @@ export class ModalTransactionCosignatureTs extends Vue {
    * that has been unlocked. Subsequently it will also announce
    * the signed transaction.
    *
-   * @param {Password} password 
+   * @param {Password} password
    * @return {void}
    */
-  public async onAccountUnlocked({account}: {account: Account}) {
+  public async onAccountUnlocked({ account }: { account: Account }) {
     // - log about unlock success
     this.$store.dispatch('diagnostic/ADD_INFO', 'Account ' + account.address.plain() + ' unlocked successfully.')
 
@@ -149,9 +156,9 @@ export class ModalTransactionCosignatureTs extends Vue {
     const results: BroadcastResult[] = await service.announceCosignatureTransactions([cosignature])
 
     // - notify about errors
-    const errors = results.filter(result => false === result.success)
+    const errors = results.filter((result) => false === result.success)
     if (errors.length) {
-      return errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
+      return errors.map((result) => this.$store.dispatch('notification/ADD_ERROR', result.error))
     }
 
     this.$emit('success', account.publicAccount)

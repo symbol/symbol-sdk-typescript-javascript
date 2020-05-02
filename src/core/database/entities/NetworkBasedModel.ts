@@ -21,7 +21,5 @@ export type NetworkBasedModel<E> = Record<string, NetworkBasedEntryModel<E>>
 export class NetworkBasedEntryModel<E> {
   public readonly timestamp = Date.now()
 
-  constructor(public readonly generationHash: string, public readonly data: E) {
-
-  }
+  constructor(public readonly generationHash: string, public readonly data: E) {}
 }

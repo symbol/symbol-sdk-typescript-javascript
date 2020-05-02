@@ -1,8 +1,6 @@
 <template>
   <FormRow>
-    <template v-slot:label>
-      {{ $t(label) }}:
-    </template>
+    <template v-slot:label> {{ $t(label) }}: </template>
     <template v-slot:inputs>
       <ValidationProvider
         v-slot="{ errors }"
@@ -19,7 +17,7 @@
             class="input-size input-style"
             :placeholder="$t('placeholder_address')"
             type="text"
-          >
+          />
         </ErrorTooltip>
       </ValidationProvider>
     </template>

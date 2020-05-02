@@ -19,4 +19,3 @@
 import { MosaicAttachmentInputTs } from './MosaicAttachmentInputTs'
 export default class MosaicAttachmentInput extends MosaicAttachmentInputTs {}
 </script>
-

@@ -29,7 +29,7 @@ export default class SpinnerLoading extends Vue {
   open() {
     // @ts-ignore
     this.$Spin.show({
-      render: h => {
+      render: (h) => {
         return h('div', [
           h(
             'div',
@@ -40,19 +40,19 @@ export default class SpinnerLoading extends Vue {
           ),
           !this.disableCloseButton
             ? h('i', {
-              class: 'ivu-icon ivu-icon-ios-close-circle icon close-icon',
-              size: '45px',
-            })
+                class: 'ivu-icon ivu-icon-ios-close-circle icon close-icon',
+                size: '45px',
+              })
             : '',
           !this.disableCloseButton
             ? h(
-              'a',
-              {
-                on: { click: this.closeScreen },
-                class: 'close-text',
-              },
-              'close',
-            )
+                'a',
+                {
+                  on: { click: this.closeScreen },
+                  class: 'close-text',
+                },
+                'close',
+              )
             : '',
         ])
       },
@@ -72,10 +72,10 @@ export default class SpinnerLoading extends Vue {
     })
   }
 }
-</script> 
+</script>
 
 <style lang="less">
-@import "../../views/resources/css/variables.less";
+@import '../../views/resources/css/variables.less';
 
 .demo-spin-icon-load {
   animation: ani-demo-spin 1s linear infinite;

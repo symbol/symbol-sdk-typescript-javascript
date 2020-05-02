@@ -14,7 +14,7 @@
  *
  */
 
-import {NetworkType} from 'symbol-sdk'
+import { NetworkType } from 'symbol-sdk'
 
 /**
  * Stored POJO that holds profile information.

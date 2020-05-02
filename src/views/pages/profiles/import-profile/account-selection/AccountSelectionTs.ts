@@ -1,35 +1,35 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
-import {AccountInfo, Address, MosaicId, Password, RepositoryFactory, SimpleWallet} from 'symbol-sdk'
-import {MnemonicPassPhrase} from 'symbol-hd-wallets'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
+import { AccountInfo, Address, MosaicId, Password, RepositoryFactory, SimpleWallet } from 'symbol-sdk'
+import { MnemonicPassPhrase } from 'symbol-hd-wallets'
 // internal dependencies
-import {AccountModel, AccountType} from '@/core/database/entities/AccountModel'
-import {DerivationPathLevels, DerivationService} from '@/services/DerivationService'
-import {AccountService} from '@/services/AccountService'
-import {NotificationType} from '@/core/utils/NotificationType'
-import {Formatters} from '@/core/utils/Formatters'
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
+import { DerivationPathLevels, DerivationService } from '@/services/DerivationService'
+import { AccountService } from '@/services/AccountService'
+import { NotificationType } from '@/core/utils/NotificationType'
+import { Formatters } from '@/core/utils/Formatters'
 // child components
 // @ts-ignore
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
-import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyModel'
-import {ProfileModel} from '@/core/database/entities/ProfileModel'
-import {ProfileService} from '@/services/ProfileService'
-import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
+import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel'
+import { ProfileModel } from '@/core/database/entities/ProfileModel'
+import { ProfileService } from '@/services/ProfileService'
+import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage'
 
 @Component({
   computed: {
@@ -42,7 +42,7 @@ import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
       currentMnemonic: 'temporary/mnemonic',
     }),
   },
-  components: {MosaicAmountDisplay},
+  components: { MosaicAmountDisplay },
 })
 export default class AccountSelectionTs extends Vue {
   /**
@@ -138,10 +138,7 @@ export default class AccountSelectionTs extends Vue {
   public submit() {
     // cannot submit without selecting at least one account
     if (!this.selectedAccounts.length) {
-      return this.$store.dispatch(
-        'notification/ADD_ERROR',
-        NotificationType.INPUT_EMPTY_ERROR,
-      )
+      return this.$store.dispatch('notification/ADD_ERROR', NotificationType.INPUT_EMPTY_ERROR)
     }
 
     try {
@@ -159,23 +156,19 @@ export default class AccountSelectionTs extends Vue {
       })
 
       // get accounts identifiers
-      const accountIdentifiers = accounts.map(account => account.id)
+      const accountIdentifiers = accounts.map((account) => account.id)
 
       // set known accounts
       this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', accountIdentifiers)
 
       this.profileService.updateAccounts(this.currentProfile, accountIdentifiers)
 
-
       // execute store actions
       this.$store.dispatch('temporary/RESET_STATE')
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
-      return this.$router.push({name: 'profiles.importProfile.finalize'})
+      return this.$router.push({ name: 'profiles.importProfile.finalize' })
     } catch (error) {
-      return this.$store.dispatch(
-        'notification/ADD_ERROR',
-        error,
-      )
+      return this.$store.dispatch('notification/ADD_ERROR', error)
     }
   }
 
@@ -192,32 +185,33 @@ export default class AccountSelectionTs extends Vue {
     )
     const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory
     // fetch accounts info
-    const accountsInfo = await repositoryFactory.createAccountRepository()
-      .getAccountsInfo(this.addressesList).toPromise()
+    const accountsInfo = await repositoryFactory
+      .createAccountRepository()
+      .getAccountsInfo(this.addressesList)
+      .toPromise()
     if (!accountsInfo) return
     // map balances
-    this.addressMosaicMap = this.mapBalanceByAddress(
-      accountsInfo,
-      this.networkMosaic,
-    )
+    this.addressMosaicMap = this.mapBalanceByAddress(accountsInfo, this.networkMosaic)
   }
 
   public mapBalanceByAddress(accountsInfo: AccountInfo[], mosaic: MosaicId): Record<string, number> {
-    return accountsInfo.map(({mosaics, address}) => {
-      // - check balance
-      const hasNetworkMosaic = mosaics.find(mosaicOwned => mosaicOwned.id.equals(mosaic))
+    return accountsInfo
+      .map(({ mosaics, address }) => {
+        // - check balance
+        const hasNetworkMosaic = mosaics.find((mosaicOwned) => mosaicOwned.id.equals(mosaic))
 
-      // - account doesn't hold network mosaic
-      if (hasNetworkMosaic === undefined) {
-        return null
-      }
-      // - map balance to address
-      const balance = hasNetworkMosaic.amount.compact()
-      return {
-        address: address.plain(),
-        balance: balance,
-      }
-    }).reduce((acc, {address, balance}) => ({...acc, [address]: balance}), {})
+        // - account doesn't hold network mosaic
+        if (hasNetworkMosaic === undefined) {
+          return null
+        }
+        // - map balance to address
+        const balance = hasNetworkMosaic.amount.compact()
+        return {
+          address: address.plain(),
+          balance: balance,
+        }
+      })
+      .reduce((acc, { address, balance }) => ({ ...acc, [address]: balance }), {})
   }
 
   /**
@@ -225,7 +219,7 @@ export default class AccountSelectionTs extends Vue {
    * @return {AccountModel}
    */
   private createAccountsFromPathIndexes(indexes: number[]): AccountModel[] {
-    const paths = indexes.map(index => {
+    const paths = indexes.map((index) => {
       if (index == 0) return AccountService.DEFAULT_ACCOUNT_PATH
 
       return this.derivation.incrementPathLevel(
@@ -234,7 +228,6 @@ export default class AccountSelectionTs extends Vue {
         index,
       )
     })
-
 
     const accounts = this.accountService.generateAccountsFromPaths(
       new MnemonicPassPhrase(this.currentMnemonic),
@@ -248,7 +241,8 @@ export default class AccountSelectionTs extends Vue {
         this.currentPassword,
         account.privateKey,
         this.currentProfile.networkType,
-      ))
+      ),
+    )
 
     return simpleWallets.map((simpleWallet, i) => {
       return {
@@ -287,5 +281,4 @@ export default class AccountSelectionTs extends Vue {
     selectedAccounts.splice(indexToDelete, 1)
     this.selectedAccounts = selectedAccounts
   }
-
 }

@@ -2,30 +2,18 @@
   <div>
     <FormWrapper class="general-settings-container" :whitelisted="true">
       <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
-        <form
-          class="form-container mt-3"
-          onsubmit="event.preventDefault()"
-          autocomplete="off"
-        >
+        <form class="form-container mt-3" onsubmit="event.preventDefault()" autocomplete="off">
           <FormRow>
-            <template v-slot:label>
-              {{ $t('form_label_language') }}:
-            </template>
+            <template v-slot:label> {{ $t('form_label_language') }}: </template>
             <template v-slot:inputs>
               <div class="inputs-container select-container">
-                <LanguageSelector
-                  v-model="formItems.language"
-                  :auto-submit="false"
-                  :default-form-style="true"
-                />
+                <LanguageSelector v-model="formItems.language" :auto-submit="false" :default-form-style="true" />
               </div>
             </template>
           </FormRow>
 
           <FormRow>
-            <template v-slot:label>
-              {{ $t('form_label_default_max_fee') }}:
-            </template>
+            <template v-slot:label> {{ $t('form_label_default_max_fee') }}: </template>
             <template v-slot:inputs>
               <div class="inputs-container select-container">
                 <MaxFeeSelector v-model="formItems.defaultFee" />
@@ -33,22 +21,13 @@
             </template>
           </FormRow>
 
-          <ExplorerUrlSetter
-            v-model="formItems.explorerUrl"
-            :auto-submit="false"
-          />
-
+          <ExplorerUrlSetter v-model="formItems.explorerUrl" :auto-submit="false" />
 
           <FormRow>
-            <template v-slot:label>
-              {{ $t('form_label_default_account') }}:
-            </template>
+            <template v-slot:label> {{ $t('form_label_default_account') }}: </template>
             <template v-slot:inputs>
               <div class="inputs-container select-container">
-                <AccountSelectorField
-                  v-model="formItems.defaultAccount"
-                  :default-form-style="true"
-                />
+                <AccountSelectorField v-model="formItems.defaultAccount" :default-form-style="true" />
               </div>
             </template>
           </FormRow>
@@ -61,11 +40,7 @@
             >
               {{ $t('confirm') }}
             </button>
-            <button
-              class="button-style validation-button back-button"
-              type="reset"
-              @click.prevent="resetForm"
-            >
+            <button class="button-style validation-button back-button" type="reset" @click.prevent="resetForm">
               {{ $t('reset') }}
             </button>
           </div>
@@ -100,9 +75,8 @@ export default class FormGeneralSettings extends FormGeneralSettingsTs {}
   margin-top: 25px;
   flex-flow: row-reverse;
 
-  button[type="reset"] {
+  button[type='reset'] {
     margin-right: 35px;
   }
 }
 </style>
-

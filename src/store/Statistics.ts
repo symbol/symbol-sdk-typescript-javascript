@@ -1,22 +1,22 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {RepositoryFactory, StorageInfo} from 'symbol-sdk'
+import { RepositoryFactory, StorageInfo } from 'symbol-sdk'
 import Vue from 'vue'
 // internal dependencies
-import {AwaitLock} from './AwaitLock'
+import { AwaitLock } from './AwaitLock'
 
 const Lock = AwaitLock.create()
 
@@ -30,41 +30,41 @@ export default {
     countNodes: 0,
   },
   getters: {
-    getInitialized: state => state.initialized,
-    countBlocks: state => state.countBlocks,
-    countTransactions: state => state.countTransactions,
-    countAccounts: state => state.countAccounts,
-    countNodes: state => state.countNodes,
+    getInitialized: (state) => state.initialized,
+    countBlocks: (state) => state.countBlocks,
+    countTransactions: (state) => state.countTransactions,
+    countAccounts: (state) => state.countAccounts,
+    countNodes: (state) => state.countNodes,
   },
   mutations: {
-    setInitialized: (state, initialized) => { state.initialized = initialized },
+    setInitialized: (state, initialized) => {
+      state.initialized = initialized
+    },
     countBlocks: (state, cnt) => Vue.set(state, 'countBlocks', cnt),
     countTransactions: (state, cnt) => Vue.set(state, 'countTransactions', cnt),
     countAccounts: (state, cnt) => Vue.set(state, 'countAccounts', cnt),
     countNodes: (state, cnt) => Vue.set(state, 'countNodes', cnt),
   },
   actions: {
-    async initialize({commit, getters, dispatch}) {
+    async initialize({ commit, getters, dispatch }) {
       const callback = async () => {
-
         dispatch('LOAD')
         // update store
         commit('setInitialized', true)
       }
 
       // aquire async lock until initialized
-      await Lock.initialize(callback, {getters})
+      await Lock.initialize(callback, { getters })
     },
-    async uninitialize({commit, getters}) {
+    async uninitialize({ commit, getters }) {
       const callback = async () => {
         commit('setInitialized', false)
       }
-      await Lock.uninitialize(callback, {getters})
+      await Lock.uninitialize(callback, { getters })
     },
 
-    async LOAD({commit, rootGetters}){
-
-      commit('countTransactions',0)
+    async LOAD({ commit, rootGetters }) {
+      commit('countTransactions', 0)
       commit('countBlocks', 0)
       commit('countAccounts', 0)
       commit('countNodes', 0)
@@ -82,6 +82,5 @@ export default {
       commit('countAccounts', diagnostic.numAccounts)
       commit('countNodes', nodes.length)
     },
-
   },
 }

@@ -1,34 +1,34 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {NetworkType, RepositoryFactory} from 'symbol-sdk'
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { NetworkType, RepositoryFactory } from 'symbol-sdk'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // internal dependencies
-import {URLHelpers} from '@/core/utils/URLHelpers'
-import {NotificationType} from '@/core/utils/NotificationType'
+import { URLHelpers } from '@/core/utils/URLHelpers'
+import { NotificationType } from '@/core/utils/NotificationType'
 // internal dependencies
-import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
 // child components
-import {ValidationObserver, ValidationProvider} from 'vee-validate'
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // resources
-import {dashboardImages} from '@/views/resources/Images'
-import {NodeModel} from '@/core/database/entities/NodeModel'
-import {NetworkTypeHelper} from '@/core/utils/NetworkTypeHelper'
+import { dashboardImages } from '@/views/resources/Images'
+import { NodeModel } from '@/core/database/entities/NodeModel'
+import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper'
 import * as _ from 'lodash'
 
 @Component({
@@ -42,7 +42,7 @@ import * as _ from 'lodash'
       knowNodes: 'network/knowNodes',
     }),
   },
-  components: {ValidationObserver, ValidationProvider, ErrorTooltip},
+  components: { ValidationObserver, ValidationProvider, ErrorTooltip },
 })
 export class PeerSelectorTs extends Vue {
   /**
@@ -115,16 +115,22 @@ export class PeerSelectorTs extends Vue {
 
   /// region computed properties getter/setter
   get peersList(): NodeModel[] {
-    const nodeModels = this.knowNodes.filter(p => {
+    const nodeModels = this.knowNodes.filter((p) => {
       if (!this.formItems.filter) {
         return true
       } else {
-        return p.url.includes(this.formItems.filter)
-          || (p.friendlyName && p.friendlyName.includes(this.formItems.filter))
-          || this.currentPeerInfo.url === p.url
+        return (
+          p.url.includes(this.formItems.filter) ||
+          (p.friendlyName && p.friendlyName.includes(this.formItems.filter)) ||
+          this.currentPeerInfo.url === p.url
+        )
       }
     })
-    return _.sortBy(nodeModels, (a) => a.isDefault !== true, (a) => a.url)
+    return _.sortBy(
+      nodeModels,
+      (a) => a.isDefault !== true,
+      (a) => a.url,
+    )
   }
 
   get networkTypeText(): string {
@@ -147,19 +153,17 @@ export class PeerSelectorTs extends Vue {
    * @return {void}
    */
   public async addPeer() {
-
     // validate and parse input
     const nodeUrl = URLHelpers.getNodeUrl(this.formItems.nodeUrl)
 
     // return if node already exists in the database
-    if (this.knowNodes.find(node => node.url === nodeUrl)) {
+    if (this.knowNodes.find((node) => node.url === nodeUrl)) {
       this.$store.dispatch('notification/ADD_ERROR', NotificationType.NODE_EXISTS_ERROR)
       return
     }
 
     // read network type from node pre-saving
     try {
-
       // hide loading overlay
       this.$store.dispatch('network/ADD_KNOWN_PEER', nodeUrl)
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
@@ -209,7 +213,7 @@ export class PeerSelectorTs extends Vue {
   public resetList() {
     this.$store.dispatch('network/RESET_PEERS')
   }
-  onPopTipShow(){
+  onPopTipShow() {
     this.$forceUpdate()
   }
 }

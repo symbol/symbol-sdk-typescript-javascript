@@ -13,28 +13,21 @@
       </div>
       <div class="ModalMnemonicBackupWizardBody">
         <div v-if="stepIndex !== 4" class="steps">
-          <img :src="fourStepsPictureList[stepIndex]">
+          <img :src="fourStepsPictureList[stepIndex]" />
           <div class="steps-text-container">
             <span
-              v-for="(title,index) in stringOfSteps"
+              v-for="(title, index) in stringOfSteps"
               :key="index"
-              :class="[ 'stepItem',stepIndex >= index ? 'before' : 'after' ]"
-            >{{ $t(title) }}</span>
+              :class="['stepItem', stepIndex >= index ? 'before' : 'after']"
+            >
+              {{ $t(title) }}
+            </span>
           </div>
         </div>
 
         <div v-if="stepIndex === 0" class="stepItem1">
-          <form
-            class="centered"
-            onsubmit="event.preventDefault()"
-            @keyup.enter="submit"
-          >
-            <input
-              v-model="cipher"
-              v-validate="'required'"
-              data-vv-name="cipher"
-              style="display:none"
-            >
+          <form class="centered" onsubmit="event.preventDefault()" @keyup.enter="submit">
+            <input v-model="cipher" v-validate="'required'" data-vv-name="cipher" style="display: none;" />
             <ErrorTooltip field-name="password">
               <input
                 v-model.lazy="password"
@@ -43,14 +36,14 @@
                 type="password"
                 data-vv-name="password"
                 :data-vv-as="$t('password')"
-              >
+              />
             </ErrorTooltip>
             <div class="buttons_container">
               <Button class="button_arrow" type="success" @click="submit">
                 {{ $t('next') }}
                 <Icon type="ios-arrow-forward" />
               </Button>
-              <input v-if="false" type="text">
+              <input v-if="false" type="text" />
             </div>
           </form>
         </div>
@@ -61,7 +54,7 @@
               <i-col span="9">
                 <div class="imgDiv">
                   <div class="step2Img">
-                    <img src="@/views/resources/img/account/Step2Img.png">
+                    <img src="@/views/resources/img/account/Step2Img.png" />
                   </div>
                 </div>
               </i-col>
@@ -70,17 +63,13 @@
                   {{ $t('getting_a_mnemonic_equals_ownership_of_a_account_asset') }}
                 </p>
                 <div class="ul1">
-                  <p class="ul1Tit">
-                    <span class="point" /> {{ $t('backup_mnemonic') }}
-                  </p>
+                  <p class="ul1Tit"><span class="point" /> {{ $t('backup_mnemonic') }}</p>
                   <p class="ul1Txt">
                     {{ $t('use_paper_and_pen_to_correctly_copy_mnemonics') }}
                   </p>
                 </div>
                 <div class="ul2">
-                  <p class="ul2Tit">
-                    <span class="point" /> {{ $t('offline_storage') }}
-                  </p>
+                  <p class="ul2Tit"><span class="point" /> {{ $t('offline_storage') }}</p>
                   <p class="ul2Txt">
                     {{ $t('keep_it_in_a_safe_place_on_the_isolated_network_mnemonics') }}
                   </p>
@@ -89,10 +78,7 @@
             </Row>
           </div>
           <div class="buttons_container">
-            <Button
-              v-focus class="button_arrow" type="success"
-              @click="stepIndex = 2"
-            >
+            <Button v-focus class="button_arrow" type="success" @click="stepIndex = 2">
               {{ $t('next') }}
               <Icon type="ios-arrow-forward" />
             </Button>
@@ -133,7 +119,7 @@
 
         <div v-if="stepIndex === 4" class="stepItem5">
           <div class="backupImg">
-            <img src="@/views/resources/img/account/exportSuccess.png">
+            <img src="@/views/resources/img/account/exportSuccess.png" />
           </div>
           <p class="backupTxt">
             {{ $t('the_mnemonic_order_is_correct_and_the_backup_is_successful') }}
@@ -146,19 +132,15 @@
         </div>
         <div v-if="stepIndex === 5" class="stepItem6">
           <div class="backupImg">
-            <img :src="qrCode$">
+            <img :src="qrCode$" />
           </div>
           <div class="buttons_container">
             <Button class="button_arrow" type="success" @click="stepIndex = 2">
               {{ $t('back') }}
             </Button>
             <Button class="button_arrow" type="success">
-              <a
-                :href="qrCode$"
-                download="qrCode.png"
-              >
+              <a :href="qrCode$" download="qrCode.png">
                 {{ $t('Download') }}
-
               </a>
             </Button>
           </div>
@@ -169,7 +151,7 @@
 </template>
 
 <script lang="ts">
-import {ModalMnemonicBackupWizardTs} from './ModalMnemonicBackupWizardTs'
+import { ModalMnemonicBackupWizardTs } from './ModalMnemonicBackupWizardTs'
 import './ModalMnemonicBackupWizard.less'
 
 export default class ModalMnemonicBackupWizard extends ModalMnemonicBackupWizardTs {}

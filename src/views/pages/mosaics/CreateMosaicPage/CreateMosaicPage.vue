@@ -52,13 +52,15 @@
 
 <script lang="ts">
 // external dependencies
-import {Component, Vue} from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 
 // child components
 import AssetFormPageWrap from '@/views/pages/assets/AssetFormPageWrap/AssetFormPageWrap.vue'
 import FormMosaicDefinitionTransaction from '@/views/forms/FormMosaicDefinitionTransaction/FormMosaicDefinitionTransaction.vue'
 
 // @ts-ignore
-@Component({ components: {AssetFormPageWrap, FormMosaicDefinitionTransaction} })
+@Component({
+  components: { AssetFormPageWrap, FormMosaicDefinitionTransaction },
+})
 export default class CreateMosaicPage extends Vue {}
 </script>

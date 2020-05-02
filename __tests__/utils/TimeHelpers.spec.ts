@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import {TimeHelpers} from '@/core/utils/TimeHelpers'
+import { TimeHelpers } from '@/core/utils/TimeHelpers'
 
 describe('utils/TimeHelpers', () => {
   describe('durationStringToSeconds', () => {
@@ -29,7 +29,9 @@ describe('utils/TimeHelpers', () => {
       expect(TimeHelpers.durationStringToSeconds('2d')).toBe(24 * 60 * 60 * 2)
       expect(TimeHelpers.durationStringToSeconds('20ms')).toBe(0)
       expect(TimeHelpers.durationStringToSeconds('2010ms')).toBe(2)
-      expect(TimeHelpers.durationStringToSeconds('2d 2h 10m 50s 20ms')).toBe(24 * 60 * 60 * 2 + 60 * 60 * 2 + 60 * 10 + 50)
+      expect(TimeHelpers.durationStringToSeconds('2d 2h 10m 50s 20ms')).toBe(
+        24 * 60 * 60 * 2 + 60 * 60 * 2 + 60 * 10 + 50,
+      )
     })
   })
 
@@ -46,9 +48,9 @@ describe('utils/TimeHelpers', () => {
       expect(TimeHelpers.durationStringToMilliseconds('2d')).toBe(1000 * 24 * 60 * 60 * 2)
       expect(TimeHelpers.durationStringToMilliseconds('20ms')).toBe(20)
       expect(TimeHelpers.durationStringToMilliseconds('2010ms')).toBe(2010)
-      expect(TimeHelpers.durationStringToMilliseconds('2d 2h 10m 50s 20ms')).toBe(1000 * (24 * 60 * 60 * 2 + 60 * 60 * 2 + 60 * 10 + 50) + 20)
+      expect(TimeHelpers.durationStringToMilliseconds('2d 2h 10m 50s 20ms')).toBe(
+        1000 * (24 * 60 * 60 * 2 + 60 * 60 * 2 + 60 * 10 + 50) + 20,
+      )
     })
   })
-
-
 })

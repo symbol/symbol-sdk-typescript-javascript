@@ -1,7 +1,6 @@
-import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
-import {Signer} from '@/store/Account'
-import {mapGetters} from 'vuex'
-
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Signer } from '@/store/Account'
+import { mapGetters } from 'vuex'
 
 @Component({
   computed: {
@@ -11,8 +10,7 @@ import {mapGetters} from 'vuex'
   },
 })
 export class TransactionAddressFilterTs extends Vue {
-
-  @Prop({default: []})
+  @Prop({ default: [] })
   public signers: Signer[]
 
   /**
@@ -22,8 +20,8 @@ export class TransactionAddressFilterTs extends Vue {
    */
   public currentSigner: Signer
 
-  public selectedSigner = this.currentSigner && this.currentSigner.publicKey
-    || this.signers.length && this.signers[0].publicKey || ''
+  public selectedSigner =
+    (this.currentSigner && this.currentSigner.publicKey) || (this.signers.length && this.signers[0].publicKey) || ''
 
   /**
    * onAddressChange
@@ -31,7 +29,6 @@ export class TransactionAddressFilterTs extends Vue {
   public onSignerChange() {
     this.$emit('signer-change', this.selectedSigner)
   }
-
 
   @Watch('currentSigner')
   onCurrentSignerChange() {

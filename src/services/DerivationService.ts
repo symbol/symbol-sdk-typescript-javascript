@@ -1,21 +1,21 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
 // internal dependencies
-import {DerivationPathValidator} from '@/core/validation/validators'
-import {AccountService} from '@/services/AccountService'
+import { DerivationPathValidator } from '@/core/validation/validators'
+import { AccountService } from '@/services/AccountService'
 
 export enum DerivationPathLevels {
   Purpose = 1,
@@ -26,7 +26,6 @@ export enum DerivationPathLevels {
 }
 
 export class DerivationService {
-
   /**
    * Validate derivation path
    * @param {string} path
@@ -47,14 +46,13 @@ export class DerivationService {
     which: DerivationPathLevels = DerivationPathLevels.Profile,
     step: number = 1,
   ): string {
-
     // make sure derivation path is valid
     this.assertValidPath(path)
 
     // purpose and coin type cannot be changed
     this.assertCanModifyLevel(which)
 
-    // read levels and increment 
+    // read levels and increment
     const index = which as number
     const parts = path.split('/')
 
@@ -62,12 +60,14 @@ export class DerivationService {
     const next = (step <= 1 ? 1 : step) + parseInt(parts[index].replace(/'/, ''))
 
     // modify affected level only
-    return parts.map((level, idx) => {
-      if (idx !== index) {
-        return level
-      }
-      return '' + next + '\''
-    }).join('/')
+    return parts
+      .map((level, idx) => {
+        if (idx !== index) {
+          return level
+        }
+        return `${next}'`
+      })
+      .join('/')
   }
 
   /**
@@ -86,7 +86,7 @@ export class DerivationService {
 
     // get the sorted path indexes for the given derivation path level
     const pathsSortedByIndexes = paths
-      .map(path => ({
+      .map((path) => ({
         path,
         pathIndex: parseInt(path.split('/')[DerivationPathLevels.Profile], 10),
       }))
@@ -94,9 +94,9 @@ export class DerivationService {
 
     // get the first non consecutive path index
     const firstCandidate = pathsSortedByIndexes
-    // fill an array with indexes with no consecutive next index, and the last index
-      .filter(({pathIndex}, i, self) => {
-      // the last path is always a candidate
+      // fill an array with indexes with no consecutive next index, and the last index
+      .filter(({ pathIndex }, i, self) => {
+        // the last path is always a candidate
         if (i === self.length - 1) return true
 
         // next path is not consecutive, add it to candidates
@@ -104,7 +104,8 @@ export class DerivationService {
 
         // next path is consecutive, skip
         return false
-      }).find(path => path) // find the first candidate
+      })
+      .find((path) => path) // find the first candidate
 
     // return path incremented from the first candidate
     return this.incrementPathLevel(firstCandidate.path, DerivationPathLevels.Profile)
@@ -127,7 +128,7 @@ export class DerivationService {
     // purpose and coin type cannot be changed
     this.assertCanModifyLevel(which)
 
-    // read levels and increment 
+    // read levels and increment
     const index = which as number
     const parts = path.split('/')
 
@@ -136,12 +137,14 @@ export class DerivationService {
     if (next < 0) next = 0
 
     // modify affected level only
-    return parts.map((level, idx) => {
-      if (idx !== index) {
-        return level
-      }
-      return '' + next + '\''
-    }).join('/')
+    return parts
+      .map((level, idx) => {
+        if (idx !== index) {
+          return level
+        }
+        return `${next}'`
+      })
+      .join('/')
   }
 
   /**
@@ -165,12 +168,9 @@ export class DerivationService {
    * @throws {Error} On \a which with protected path level value
    */
   public assertCanModifyLevel(which: DerivationPathLevels): void {
-    const protect = [
-      DerivationPathLevels.Purpose,
-      DerivationPathLevels.CoinType,
-    ]
-    if (undefined !== protect.find(type => which === type)) {
-      const errorMessage = 'Cannot modify a derivation path\'s purpose and coin type levels.'
+    const protect = [DerivationPathLevels.Purpose, DerivationPathLevels.CoinType]
+    if (undefined !== protect.find((type) => which === type)) {
+      const errorMessage = "Cannot modify a derivation path's purpose and coin type levels."
       console.error(errorMessage)
       throw new Error(errorMessage)
     }

@@ -1,44 +1,80 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {Store} from 'vuex'
-import {Account, AccountAddressRestrictionTransaction, AccountLinkTransaction, AccountMetadataTransaction, AccountMosaicRestrictionTransaction, AccountOperationRestrictionTransaction, AddressAliasTransaction, AggregateTransaction, BlockInfo, CosignatureSignedTransaction, CosignatureTransaction, Deadline, HashLockTransaction, LockFundsTransaction, Mosaic, MosaicAddressRestrictionTransaction, MosaicAliasTransaction, MosaicDefinitionTransaction, MosaicGlobalRestrictionTransaction, MosaicId, MosaicMetadataTransaction, MosaicSupplyChangeTransaction, MultisigAccountModificationTransaction, NamespaceMetadataTransaction, NamespaceRegistrationTransaction, NetworkType, PublicAccount, SecretLockTransaction, SecretProofTransaction, SignedTransaction, Transaction, TransactionType, TransferTransaction, UInt64} from 'symbol-sdk'
+import { Store } from 'vuex'
+import {
+  Account,
+  AccountAddressRestrictionTransaction,
+  AccountLinkTransaction,
+  AccountMetadataTransaction,
+  AccountMosaicRestrictionTransaction,
+  AccountOperationRestrictionTransaction,
+  AddressAliasTransaction,
+  AggregateTransaction,
+  BlockInfo,
+  CosignatureSignedTransaction,
+  CosignatureTransaction,
+  Deadline,
+  HashLockTransaction,
+  LockFundsTransaction,
+  Mosaic,
+  MosaicAddressRestrictionTransaction,
+  MosaicAliasTransaction,
+  MosaicDefinitionTransaction,
+  MosaicGlobalRestrictionTransaction,
+  MosaicId,
+  MosaicMetadataTransaction,
+  MosaicSupplyChangeTransaction,
+  MultisigAccountModificationTransaction,
+  NamespaceMetadataTransaction,
+  NamespaceRegistrationTransaction,
+  NetworkType,
+  PublicAccount,
+  SecretLockTransaction,
+  SecretProofTransaction,
+  SignedTransaction,
+  Transaction,
+  TransactionType,
+  TransferTransaction,
+  UInt64,
+} from 'symbol-sdk'
 // internal dependencies
-import {AbstractService} from './AbstractService'
-import {AccountModel} from '@/core/database/entities/AccountModel'
-import {BroadcastResult} from '@/core/transactions/BroadcastResult'
-import {ViewMosaicDefinitionTransaction} from '@/core/transactions/ViewMosaicDefinitionTransaction'
-import {ViewMosaicSupplyChangeTransaction} from '@/core/transactions/ViewMosaicSupplyChangeTransaction'
-import {ViewNamespaceRegistrationTransaction} from '@/core/transactions/ViewNamespaceRegistrationTransaction'
-import {ViewTransferTransaction} from '@/core/transactions/ViewTransferTransaction'
-import {ViewAliasTransaction} from '@/core/transactions/ViewAliasTransaction'
-import {ViewMultisigAccountModificationTransaction} from '@/core/transactions/ViewMultisigAccountModificationTransaction'
-import {ViewHashLockTransaction} from '@/core/transactions/ViewHashLockTransaction'
-import {ViewUnknownTransaction} from '@/core/transactions/ViewUnknownTransaction'
-import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
+import { AbstractService } from './AbstractService'
+import { AccountModel } from '@/core/database/entities/AccountModel'
+import { BroadcastResult } from '@/core/transactions/BroadcastResult'
+import { ViewMosaicDefinitionTransaction } from '@/core/transactions/ViewMosaicDefinitionTransaction'
+import { ViewMosaicSupplyChangeTransaction } from '@/core/transactions/ViewMosaicSupplyChangeTransaction'
+import { ViewNamespaceRegistrationTransaction } from '@/core/transactions/ViewNamespaceRegistrationTransaction'
+import { ViewTransferTransaction } from '@/core/transactions/ViewTransferTransaction'
+import { ViewAliasTransaction } from '@/core/transactions/ViewAliasTransaction'
+import { ViewMultisigAccountModificationTransaction } from '@/core/transactions/ViewMultisigAccountModificationTransaction'
+import { ViewHashLockTransaction } from '@/core/transactions/ViewHashLockTransaction'
+import { ViewUnknownTransaction } from '@/core/transactions/ViewUnknownTransaction'
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
 
 /// region custom types
-export type TransactionViewType = ViewMosaicDefinitionTransaction
-| ViewMosaicSupplyChangeTransaction
-| ViewNamespaceRegistrationTransaction
-| ViewTransferTransaction
-| ViewUnknownTransaction
-| ViewAliasTransaction
-| ViewAliasTransaction
-| ViewMultisigAccountModificationTransaction
-| ViewHashLockTransaction
+export type TransactionViewType =
+  | ViewMosaicDefinitionTransaction
+  | ViewMosaicSupplyChangeTransaction
+  | ViewNamespaceRegistrationTransaction
+  | ViewTransferTransaction
+  | ViewUnknownTransaction
+  | ViewAliasTransaction
+  | ViewAliasTransaction
+  | ViewMultisigAccountModificationTransaction
+  | ViewHashLockTransaction
 
 /// end-region custom types
 
@@ -63,7 +99,6 @@ export class TransactionService extends AbstractService {
     super()
     this.$store = store
   }
-
 
   /// region specialised signatures
   public getView(transaction: MosaicDefinitionTransaction): ViewMosaicDefinitionTransaction
@@ -157,14 +192,13 @@ export class TransactionService extends AbstractService {
         break
       default:
         // - throw on transaction view not implemented
-        this.$store.dispatch('diagnostic/ADD_ERROR',
-          `View not implemented for transaction type '${transaction.type}'`)
+        this.$store.dispatch('diagnostic/ADD_ERROR', `View not implemented for transaction type '${transaction.type}'`)
         throw new Error(`View not implemented for transaction type '${transaction.type}'`)
     }
 
     // - try to find block for fee information
     const height = transaction.transactionInfo ? transaction.transactionInfo.height : undefined
-    const block: BlockInfo = !height ? undefined : knownBlocks.find(k => k.height.equals(height))
+    const block: BlockInfo = !height ? undefined : knownBlocks.find((k) => k.height.equals(height))
 
     // - set helper fields
     view.values.set('isIncoming', false)
@@ -179,8 +213,7 @@ export class TransactionService extends AbstractService {
     // - update helper fields by transaction type
     if (TransactionType.TRANSFER === transaction.type) {
       const transfer = transaction as TransferTransaction
-      view.values.set('isIncoming',
-        transfer.recipientAddress.equals(AccountModel.getObjects(currentAccount).address))
+      view.values.set('isIncoming', transfer.recipientAddress.equals(AccountModel.getObjects(currentAccount).address))
     }
 
     return view
@@ -203,10 +236,7 @@ export class TransactionService extends AbstractService {
     // - create hash lock
     return LockFundsTransaction.create(
       Deadline.create(),
-      new Mosaic(
-        networkMosaic,
-        UInt64.fromNumericString(networkConfiguration.lockedFundsPerAggregate),
-      ),
+      new Mosaic(networkMosaic, UInt64.fromNumericString(networkConfiguration.lockedFundsPerAggregate)),
       UInt64.fromUint(1000), // duration=1000
       aggregateTx,
       networkType,
@@ -227,12 +257,13 @@ export class TransactionService extends AbstractService {
     const signedCosig = account.signCosignatureTransaction(cosignature)
 
     // - notify diagnostics
-    this.$store.dispatch('diagnostic/ADD_DEBUG',
-      `Co-signed transaction with account ${account.address.plain()} and result: ${JSON.stringify(
-        {
-          parentHash: signedCosig.parentHash,
-          signature: signedCosig.signature,
-        })}`)
+    this.$store.dispatch(
+      'diagnostic/ADD_DEBUG',
+      `Co-signed transaction with account ${account.address.plain()} and result: ${JSON.stringify({
+        parentHash: signedCosig.parentHash,
+        signature: signedCosig.signature,
+      })}`,
+    )
 
     return signedCosig
   }
@@ -249,7 +280,7 @@ export class TransactionService extends AbstractService {
     const generationHash: string = this.$store.getters['network/generationHash']
     const signedTransactions = []
     // - iterate transaction that are "on stage"
-    for (let i = 0, m = transactions.length; i < m; i ++) {
+    for (let i = 0, m = transactions.length; i < m; i++) {
       // - read transaction from stage
       const staged = transactions[i]
 
@@ -259,12 +290,13 @@ export class TransactionService extends AbstractService {
       signedTransactions.push(signedTx)
 
       // - notify diagnostics
-      this.$store.dispatch('diagnostic/ADD_DEBUG',
-        `Signed transaction with account ${account.address.plain()} and result: ${JSON.stringify(
-          {
-            hash: signedTx.hash,
-            payload: signedTx.payload,
-          })}`)
+      this.$store.dispatch(
+        'diagnostic/ADD_DEBUG',
+        `Signed transaction with account ${account.address.plain()} and result: ${JSON.stringify({
+          hash: signedTx.hash,
+          payload: signedTx.payload,
+        })}`,
+      )
     }
 
     return signedTransactions
@@ -285,7 +317,7 @@ export class TransactionService extends AbstractService {
     const generationHash: string = this.$store.getters['network/generationHash']
     const signedTransactions = []
 
-    if (!transactions.length){
+    if (!transactions.length) {
       return signedTransactions
     }
 
@@ -296,7 +328,7 @@ export class TransactionService extends AbstractService {
     const aggregateTx = AggregateTransaction.createComplete(
       Deadline.create(),
       // - format as `InnerTransaction`
-      transactions.map(t => t.toAggregate(account.publicAccount)),
+      transactions.map((t) => t.toAggregate(account.publicAccount)),
       networkType,
       [],
       maxFee,
@@ -308,12 +340,13 @@ export class TransactionService extends AbstractService {
     signedTransactions.push(signedTx)
 
     // - notify diagnostics
-    this.$store.dispatch('diagnostic/ADD_DEBUG',
-      `Signed aggregate transaction with account ${account.address.plain()} and result: ${JSON.stringify(
-        {
-          hash: signedTx.hash,
-          payload: signedTx.payload,
-        })}`)
+    this.$store.dispatch(
+      'diagnostic/ADD_DEBUG',
+      `Signed aggregate transaction with account ${account.address.plain()} and result: ${JSON.stringify({
+        hash: signedTx.hash,
+        payload: signedTx.payload,
+      })}`,
+    )
 
     return signedTransactions
   }
@@ -341,7 +374,7 @@ export class TransactionService extends AbstractService {
     const generationHash: string = this.$store.getters['network/generationHash']
     const signedTransactions = []
 
-    if (!transactions.length){
+    if (!transactions.length) {
       return signedTransactions
     }
 
@@ -351,7 +384,7 @@ export class TransactionService extends AbstractService {
     const aggregateTx = AggregateTransaction.createBonded(
       Deadline.create(),
       // - format as `InnerTransaction`
-      transactions.map(t => t.toAggregate(multisigAccount)),
+      transactions.map((t) => t.toAggregate(multisigAccount)),
       networkType,
       [],
       maxFee,
@@ -371,12 +404,15 @@ export class TransactionService extends AbstractService {
     signedTransactions.push(signedTx)
 
     // - notify diagnostics
-    this.$store.dispatch('diagnostic/ADD_DEBUG',
+    this.$store.dispatch(
+      'diagnostic/ADD_DEBUG',
       `Signed hash lock and aggregate bonded for account ${multisigAccount.address.plain()} with cosignatory ${cosignatoryAccount.address.plain()} and result: ${JSON.stringify(
         {
           hashLockTransactionHash: signedTransactions[0].hash,
           aggregateTransactionHash: signedTransactions[1].hash,
-        })}`)
+        },
+      )}`,
+    )
 
     return signedTransactions
   }
@@ -395,13 +431,11 @@ export class TransactionService extends AbstractService {
 
     // - simple transactions only
     const transactions = signedTransactions.filter(
-      tx => ![
-        TransactionType.AGGREGATE_BONDED,
-        TransactionType.HASH_LOCK,
-      ].includes(tx.type))
+      (tx) => ![TransactionType.AGGREGATE_BONDED, TransactionType.HASH_LOCK].includes(tx.type),
+    )
 
     const results: BroadcastResult[] = []
-    for (let i = 0, m = transactions.length; i < m; i ++) {
+    for (let i = 0, m = transactions.length; i < m; i++) {
       const transaction = transactions[i]
       const result = await this.$store.dispatch('account/REST_ANNOUNCE_TRANSACTION', transaction)
       results.push(result)
@@ -431,14 +465,12 @@ export class TransactionService extends AbstractService {
     const signedTransactions = this.$store.getters['account/signedTransactions']
 
     // - read transactions
-    const hashLockTransaction = signedTransactions.find(tx => TransactionType.HASH_LOCK === tx.type)
-    const aggregateTransaction = signedTransactions.find(
-      tx => TransactionType.AGGREGATE_BONDED === tx.type)
+    const hashLockTransaction = signedTransactions.find((tx) => TransactionType.HASH_LOCK === tx.type)
+    const aggregateTransaction = signedTransactions.find((tx) => TransactionType.AGGREGATE_BONDED === tx.type)
 
     // - validate hash lock availability
     if (undefined === hashLockTransaction) {
-      throw new Error(
-        'Partial transactions (aggregate bonded) must be preceeded by a hash lock transaction.')
+      throw new Error('Partial transactions (aggregate bonded) must be preceeded by a hash lock transaction.')
     }
 
     // - announce lock, await confirmation and announce partial
@@ -464,10 +496,11 @@ export class TransactionService extends AbstractService {
    * @return {Observable<BroadcastResult[]>}
    * @throws {Error}  On missing signed hash lock transaction.
    */
-  public async announceCosignatureTransactions(cosignatures: CosignatureSignedTransaction[]):
-  Promise<BroadcastResult[]> {
+  public async announceCosignatureTransactions(
+    cosignatures: CosignatureSignedTransaction[],
+  ): Promise<BroadcastResult[]> {
     const results: BroadcastResult[] = []
-    for (let i = 0, m = cosignatures.length; i < m; i ++) {
+    for (let i = 0, m = cosignatures.length; i < m; i++) {
       const cosignature = cosignatures[i]
       const result = await this.$store.dispatch('account/REST_ANNOUNCE_COSIGNATURE', cosignature)
       results.push(result)

@@ -22,15 +22,17 @@ v-for="(entry, index) in logs"
 
 <script lang="ts">
 // external dependencies
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // resources
 import './ModalDebugConsole.less'
 
 @Component({
-  computed: {...mapGetters({
-    logs: 'diagnostic/logs',
-  })},
+  computed: {
+    ...mapGetters({
+      logs: 'diagnostic/logs',
+    }),
+  },
 })
 export default class ModalDebugConsole extends Vue {
   /**
@@ -38,7 +40,7 @@ export default class ModalDebugConsole extends Vue {
    * @type {string}
    */
   @Prop({ default: '' }) title: string
-  
+
   /**
    * Modal visibility state from parent
    * @type {string}
@@ -63,10 +65,7 @@ export default class ModalDebugConsole extends Vue {
   }
 
   public getLevel(entry): string {
-    return entry.level === 1
-      ? 'INFO' : (entry.level === 2
-        ? 'DEBUG' : (entry.level === 3
-          ? 'WARNING' : 'ERROR')) 
+    return entry.level === 1 ? 'INFO' : entry.level === 2 ? 'DEBUG' : entry.level === 3 ? 'WARNING' : 'ERROR'
   }
 
   public getTime(entry): string {
@@ -78,7 +77,7 @@ export default class ModalDebugConsole extends Vue {
    */
   mounted() {
     // Scrolls logs div to bottom
-    Vue.nextTick().then(() =>{
+    Vue.nextTick().then(() => {
       const container = this.$el.querySelector('#logs-container')
       container.scrollTop = container.scrollHeight
     })

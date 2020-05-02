@@ -14,7 +14,7 @@
  *
  */
 
-import {MosaicInfo} from 'symbol-sdk'
+import { MosaicInfo } from 'symbol-sdk'
 
 /**
  * Stored POJO that holds mosaic information.
@@ -25,7 +25,6 @@ import {MosaicInfo} from 'symbol-sdk'
  *
  */
 export class MosaicModel {
-
   public readonly mosaicIdHex: string
   public readonly divisibility: number
   public readonly transferable: boolean
@@ -51,6 +50,5 @@ export class MosaicModel {
     this.duration = mosaicInfo.duration.compact()
     this.height = mosaicInfo.height.compact()
     this.supply = mosaicInfo.supply.compact()
-
   }
 }

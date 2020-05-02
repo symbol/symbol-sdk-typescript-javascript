@@ -1,17 +1,13 @@
 <template>
   <div class="transaction-details-item-inner-container">
-    <div
-      v-for="(item, index) in items"
-      :key="index"
-      class="transaction-row-outer-container"
-    >
+    <div v-for="(item, index) in items" :key="index" class="transaction-row-outer-container">
       <TransactionDetailRow :item="item" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
 // internal dependencies
 import { ViewHashLockTransaction } from '../../../core/transactions/ViewHashLockTransaction'
@@ -19,7 +15,7 @@ import { AttachedMosaic } from '@/services/MosaicService'
 
 // child components
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
-import {TransactionDetailItem} from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
+import { TransactionDetailItem } from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
 
 @Component({ components: { TransactionDetailRow } })
 export default class HashLock extends Vue {
@@ -34,9 +30,16 @@ export default class HashLock extends Vue {
     const attachedMosaic: AttachedMosaic = this.view.values.get('mosaic')
 
     return [
-      { key: `${this.$t('locked_mosaic')}`, value: attachedMosaic, isMosaic: true },
+      {
+        key: `${this.$t('locked_mosaic')}`,
+        value: attachedMosaic,
+        isMosaic: true,
+      },
       { key: 'duration', value: this.view.values.get('duration') },
-      { key: 'inner_transaction_hash', value: this.view.values.get('signedTransaction').hash },
+      {
+        key: 'inner_transaction_hash',
+        value: this.view.values.get('signedTransaction').hash,
+      },
     ]
   }
 }

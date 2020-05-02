@@ -1,15 +1,6 @@
 <template>
-  <div
-    :class="[
-      'table-row-container',
-      assetType === 'mosaic' ? 'mosaic-columns' : 'namespace-columns',
-    ]"
-  >
-    <div
-      v-for="(value, name, index) in rowValues"
-      :key="index"
-      :class="[ 'table-cell', `${name}-cell` ]"
-    >
+  <div :class="['table-row-container', assetType === 'mosaic' ? 'mosaic-columns' : 'namespace-columns']">
+    <div v-for="(value, name, index) in rowValues" :key="index" :class="['table-cell', `${name}-cell`]">
       <div v-if="name === 'balance'">
         <AmountDisplay :value="value" />
       </div>
@@ -52,6 +43,6 @@ export default class TableRow extends TableRowTs {}
 </script>
 
 <style scoped lang="less">
-@import "../TableDisplay/TableDisplay.less";
-@import "./TableRow.less";
+@import '../TableDisplay/TableDisplay.less';
+@import './TableRow.less';
 </style>

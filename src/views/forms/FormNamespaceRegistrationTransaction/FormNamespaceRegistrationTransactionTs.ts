@@ -1,28 +1,37 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
 // external dependencies
-import {NamespaceId, NamespaceRegistrationTransaction, NamespaceRegistrationType, Transaction, UInt64} from 'symbol-sdk'
-import {Component, Prop} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import {
+  NamespaceId,
+  NamespaceRegistrationTransaction,
+  NamespaceRegistrationType,
+  Transaction,
+  UInt64,
+} from 'symbol-sdk'
+import { Component, Prop } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // internal dependencies
-import {NamespaceRegistrationFormFieldsType, ViewNamespaceRegistrationTransaction} from '@/core/transactions/ViewNamespaceRegistrationTransaction'
-import {FormTransactionBase} from '@/views/forms/FormTransactionBase/FormTransactionBase'
-import {TransactionFactory} from '@/core/transactions/TransactionFactory'
+import {
+  NamespaceRegistrationFormFieldsType,
+  ViewNamespaceRegistrationTransaction,
+} from '@/core/transactions/ViewNamespaceRegistrationTransaction'
+import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase'
+import { TransactionFactory } from '@/core/transactions/TransactionFactory'
 // child components
-import {ValidationObserver, ValidationProvider} from 'vee-validate'
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
@@ -40,9 +49,9 @@ import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 // @ts-ignore
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
 // configuration
-import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
-import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
-import {NamespaceService} from '@/services/NamespaceService'
+import { NamespaceModel } from '@/core/database/entities/NamespaceModel'
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
+import { NamespaceService } from '@/services/NamespaceService'
 
 @Component({
   components: {
@@ -66,12 +75,11 @@ import {NamespaceService} from '@/services/NamespaceService'
   },
 })
 export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase {
-  @Prop({default: null}) signer: string
-  @Prop({default: null}) registrationType: NamespaceRegistrationType
-  @Prop({default: null}) namespaceId: NamespaceId
-  @Prop({default: null}) parentNamespaceId: NamespaceId
-  @Prop({default: null}) duration: number
-
+  @Prop({ default: null }) signer: string
+  @Prop({ default: null }) registrationType: NamespaceRegistrationType
+  @Prop({ default: null }) namespaceId: NamespaceId
+  @Prop({ default: null }) parentNamespaceId: NamespaceId
+  @Prop({ default: null }) duration: number
 
   protected networkConfiguration: NetworkConfigurationModel
   /**
@@ -116,7 +124,7 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
    */
   protected get fertileNamespaces(): NamespaceModel[] {
     const maxNamespaceDepth = this.networkConfiguration.maxNamespaceDepth
-    return this.ownedNamespaces.filter(({depth}) => depth < maxNamespaceDepth)
+    return this.ownedNamespaces.filter(({ depth }) => depth < maxNamespaceDepth)
   }
 
   /**
@@ -155,12 +163,14 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
       // - read form for definition
       const data: NamespaceRegistrationFormFieldsType = {
         registrationType: this.formItems.registrationType,
-        rootNamespaceName: NamespaceRegistrationType.RootNamespace === this.formItems.registrationType
-          ? this.formItems.newNamespaceName
-          : this.formItems.parentNamespaceName,
-        subNamespaceName: NamespaceRegistrationType.SubNamespace === this.formItems.registrationType
-          ? this.formItems.newNamespaceName
-          : '',
+        rootNamespaceName:
+          NamespaceRegistrationType.RootNamespace === this.formItems.registrationType
+            ? this.formItems.newNamespaceName
+            : this.formItems.parentNamespaceName,
+        subNamespaceName:
+          NamespaceRegistrationType.SubNamespace === this.formItems.registrationType
+            ? this.formItems.newNamespaceName
+            : '',
         duration: this.formItems.duration,
         maxFee: UInt64.fromUint(this.formItems.maxFee),
       }
@@ -172,8 +182,7 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
       // - return instantiated Transaction
       return [this.factory.build(view)]
     } catch (error) {
-      console.error('Error happened in FormNamespaceRegistrationTransaction.transactions(): ',
-        error)
+      console.error('Error happened in FormNamespaceRegistrationTransaction.transactions(): ', error)
     }
   }
 
@@ -200,12 +209,13 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
   public relativeTimetoParent = ''
 
   public getTimeByparentNamespaceName() {
-    const selectedNamespace = this.ownedNamespaces.find((item) =>
-      item.name === this.formItems.parentNamespaceName,
-    )
+    const selectedNamespace = this.ownedNamespaces.find((item) => item.name === this.formItems.parentNamespaceName)
 
-    this.relativeTimetoParent = NamespaceService.getExpiration(this.networkConfiguration,
-      this.currentHeight, selectedNamespace.endHeight).expiration
+    this.relativeTimetoParent = NamespaceService.getExpiration(
+      this.networkConfiguration,
+      this.currentHeight,
+      selectedNamespace.endHeight,
+    ).expiration
   }
 
   setParentNamespaceName(val) {

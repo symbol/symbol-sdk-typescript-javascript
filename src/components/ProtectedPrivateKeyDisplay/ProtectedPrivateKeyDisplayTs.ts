@@ -1,23 +1,23 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
-import {Account} from 'symbol-sdk'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Account } from 'symbol-sdk'
 // internal dependencies
-import {AccountModel} from '@/core/database/entities/AccountModel'
-import {UIHelpers} from '@/core/utils/UIHelpers'
+import { AccountModel } from '@/core/database/entities/AccountModel'
+import { UIHelpers } from '@/core/utils/UIHelpers'
 // child components
 // @ts-ignore
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue'
@@ -31,7 +31,8 @@ const defaultTimerDuration: number = 1000
 export class ProtectedPrivateKeyDisplayTs extends Vue {
   @Prop({
     default: null,
-  }) account: AccountModel
+  })
+  account: AccountModel
 
   /**
    * UI Helpers
@@ -90,7 +91,7 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
   }
   /// end-region computed properties getter/setter
 
-  public reset(){
+  public reset() {
     this.hasPlainPrivateKey = false
     this.secondsCounter = defaultCount
     this.countInterval && clearInterval(this.countInterval)
@@ -103,12 +104,13 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
    * @return {void}
    */
   public onStartCounter() {
-    !this.countInterval && (this.countInterval = setInterval(() => {
-      this.secondsCounter--
-      if (this.secondsCounter < 0) {
-        this.reset()
-      }
-    }, defaultTimerDuration))
+    !this.countInterval &&
+      (this.countInterval = setInterval(() => {
+        this.secondsCounter--
+        if (this.secondsCounter < 0) {
+          this.reset()
+        }
+      }, defaultTimerDuration))
   }
   /**
    * Hook called when the account unlock modal must open
@@ -120,7 +122,7 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
 
   /**
    * Hook called when the account has been unlocked
-   * @param {Account} account 
+   * @param {Account} account
    * @return {boolean}
    */
   public onAccountUnlocked(account: Account): boolean {
@@ -131,10 +133,10 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
   }
 
   @Watch('account')
-  onAccountChange(){
+  onAccountChange() {
     this.reset()
   }
-  public destroyed(){
+  public destroyed() {
     this.reset()
   }
 }

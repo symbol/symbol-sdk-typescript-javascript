@@ -17,10 +17,7 @@
     <div v-else>
       &nbsp;
     </div>
-    <Icon
-      type="md-refresh" class="refresh-button" size="30"
-      @click="refresh"
-    />
+    <Icon type="md-refresh" class="refresh-button" size="30" @click="refresh" />
   </div>
 </template>
 
@@ -39,7 +36,7 @@ export default class TransactionListOptions extends TransactionListOptionsTs {}
   width: 4.8rem;
   display: grid;
   padding-top: 0.15rem;
-  
+
   .transaction-list-options-container {
     width: 100%;
     display: grid;

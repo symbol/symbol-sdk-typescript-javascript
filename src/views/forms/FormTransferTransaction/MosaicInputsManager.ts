@@ -1,6 +1,6 @@
 // internal dependencies
 import Vue from 'vue'
-import {MosaicModel} from '@/core/database/entities/MosaicModel'
+import { MosaicModel } from '@/core/database/entities/MosaicModel'
 
 export class MosaicInputsManager {
   /**
@@ -26,7 +26,7 @@ export class MosaicInputsManager {
    */
   private constructor(mosaics: MosaicModel[]) {
     // Set mosaicMap with null values
-    mosaics.forEach(({mosaicIdHex}) => Vue.set(this.mosaicMap, mosaicIdHex, null))
+    mosaics.forEach(({ mosaicIdHex }) => Vue.set(this.mosaicMap, mosaicIdHex, null))
   }
 
   /**
@@ -34,7 +34,7 @@ export class MosaicInputsManager {
    * @param {MosaicModel[]} mosaics
    */
   public addMosaics(mosaics: MosaicModel[]): void {
-    mosaics.forEach(({mosaicIdHex}) => {
+    mosaics.forEach(({ mosaicIdHex }) => {
       // skip if the mosaic is known
       if (this.mosaicMap[mosaicIdHex]) return
       // add the mosaic
@@ -48,7 +48,7 @@ export class MosaicInputsManager {
    * @returns {boolean}
    */
   public hasFreeSlots(): boolean {
-    return Object.values(this.mosaicMap).find(values => values === null) !== undefined
+    return Object.values(this.mosaicMap).find((values) => values === null) !== undefined
   }
 
   /**
@@ -104,12 +104,10 @@ export class MosaicInputsManager {
 
     // get non-allocated entries
     const nonAllocatedEntries = Object.entries(this.mosaicMap)
-      .filter(([ , slot ]) => slot === null)
+      .filter(([, slot]) => slot === null)
       .map(([hex]) => hex)
 
-    return allocatedEntry
-      ? [ allocatedEntry[0], ...nonAllocatedEntries ]
-      : nonAllocatedEntries
+    return allocatedEntry ? [allocatedEntry[0], ...nonAllocatedEntries] : nonAllocatedEntries
   }
 
   /**
@@ -119,6 +117,6 @@ export class MosaicInputsManager {
    * @returns {([string, number] | undefined)}
    */
   private getEntryBySlot(index: number): [string, number] | undefined {
-    return Object.entries(this.mosaicMap).find(([ , slot ]) => slot == index)
+    return Object.entries(this.mosaicMap).find(([, slot]) => slot == index)
   }
 }

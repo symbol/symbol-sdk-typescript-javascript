@@ -22,11 +22,5 @@
  *
  */
 export class NodeModel {
-  constructor(
-    public readonly url: string,
-    public readonly friendlyName: string,
-    public readonly isDefault: boolean,
-  ) {
-
-  }
+  constructor(public readonly url: string, public readonly friendlyName: string, public readonly isDefault: boolean) {}
 }

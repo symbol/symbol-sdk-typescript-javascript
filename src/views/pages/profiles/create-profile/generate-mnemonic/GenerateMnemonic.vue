@@ -1,6 +1,6 @@
 <template>
   <div class="step-2-wrapper" @mouseover="shouldTrackMouse && handleMousemove($event)">
-    <img src="@/views/resources/img/back.png">
+    <img src="@/views/resources/img/back.png" />
     <div class="progress-bar">
       {{ $t('Move_your_mouse') }}
     </div>
@@ -11,5 +11,5 @@
 <script lang="ts">
 import GenerateMnemonicTs from './GenerateMnemonicTs'
 import './GenerateMnemonic.less'
-export default class GenerateMnemonic extends GenerateMnemonicTs { }
+export default class GenerateMnemonic extends GenerateMnemonicTs {}
 </script>

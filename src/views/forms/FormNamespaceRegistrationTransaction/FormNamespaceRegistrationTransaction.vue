@@ -3,15 +3,9 @@
     <FormWrapper>
       <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
         <form onsubmit="event.preventDefault()" class="form-container mt-3 create-namespace-form">
-          <SignerSelector
-            v-model="formItems.signerPublicKey"
-            :signers="signers"
-            @input="onChangeSigner"
-          />
+          <SignerSelector v-model="formItems.signerPublicKey" :signers="signers" @input="onChangeSigner" />
           <FormRow>
-            <template v-slot:label>
-              {{ $t('form_label_registration_type') }}:
-            </template>
+            <template v-slot:label> {{ $t('form_label_registration_type') }}: </template>
             <template v-slot:inputs>
               <div class="inputs-container">
                 <div
@@ -45,9 +39,7 @@
             :namespace-registration-type="formItems.registrationType"
           />
           <FormRow v-if="formItems.registrationType === typeSubNamespace">
-            <template v-slot:label>
-              {{ $t('current_validity') }}:
-            </template>
+            <template v-slot:label> {{ $t('current_validity') }}: </template>
             <template v-slot:inputs>
               <div class="inputs-container">
                 <div class="display-value">
@@ -64,10 +56,7 @@
             :show-relative-time="true"
           />
 
-          <MaxFeeAndSubmit
-            v-model="formItems.maxFee"
-            @button-clicked="handleSubmit(onSubmit)"
-          />
+          <MaxFeeAndSubmit v-model="formItems.maxFee" @button-clicked="handleSubmit(onSubmit)" />
         </form>
       </ValidationObserver>
 
@@ -85,8 +74,8 @@
 <script lang="ts">
 // @ts-ignore
 import { FormNamespaceRegistrationTransactionTs } from './FormNamespaceRegistrationTransactionTs'
-export default class FormNamespaceRegistrationTransaction extends FormNamespaceRegistrationTransactionTs { }
+export default class FormNamespaceRegistrationTransaction extends FormNamespaceRegistrationTransactionTs {}
 </script>
 <style lang="less" scoped>
-  @import "./FormNamespaceRegistrationTransaction.less";
+@import './FormNamespaceRegistrationTransaction.less';
 </style>

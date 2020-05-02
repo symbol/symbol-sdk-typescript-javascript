@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import {MnemonicDisplayTs} from './MnemonicDisplayTs'
+import { MnemonicDisplayTs } from './MnemonicDisplayTs'
 import './MnemonicDisplay.less'
 export default class MnemonicDisplay extends MnemonicDisplayTs {}
 </script>

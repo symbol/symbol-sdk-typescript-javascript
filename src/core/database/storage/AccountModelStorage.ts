@@ -14,11 +14,10 @@
  *
  */
 
-import {VersionedObjectStorage} from '@/core/database/backends/VersionedObjectStorage'
-import {AccountModel} from '@/core/database/entities/AccountModel'
+import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage'
+import { AccountModel } from '@/core/database/entities/AccountModel'
 
 export class AccountModelStorage extends VersionedObjectStorage<Record<string, AccountModel>> {
-
   /**
    * Singleton instance as we want to run the migration just once
    */

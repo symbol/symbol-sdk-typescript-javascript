@@ -1,17 +1,17 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
 
 /**
@@ -59,10 +59,7 @@ export type TableFilteringOptions = {
 }
 
 export abstract class AssetTableService {
-
-  protected constructor(public readonly currentHeight: number) {
-
-  }
+  protected constructor(public readonly currentHeight: number) {}
 
   /**
    * Return table fields to be displayed in a table header
@@ -88,7 +85,7 @@ export abstract class AssetTableService {
     }
 
     if (filter.fieldName === 'expiration') {
-      return values.filter(({expiration}) => expiration !== 'expired')
+      return values.filter(({ expiration }) => expiration !== 'expired')
     }
 
     if (filter.fieldName === 'expired') {
@@ -121,15 +118,16 @@ export abstract class AssetTableService {
     // - sorting method depends on type
     if ('string' === typeof sampleValue) {
       return [...values][sortingMethod]((a, b) => {
-        return a[options.fieldName].toLowerCase().localeCompare(
-          b[options.fieldName].toLowerCase(),
-          navigator.languages[0] || navigator.language,
-          {numeric: true, ignorePunctuation: true},
-        )
+        return a[options.fieldName]
+          .toLowerCase()
+          .localeCompare(b[options.fieldName].toLowerCase(), navigator.languages[0] || navigator.language, {
+            numeric: true,
+            ignorePunctuation: true,
+          })
       })
     } else if ('boolean' === typeof sampleValue) {
       return [...values][sortingMethod]((a, b) => {
-        return (a[options.fieldName] === b[options.fieldName]) ? 0 : a[options.fieldName] ? -1 : 1
+        return a[options.fieldName] === b[options.fieldName] ? 0 : a[options.fieldName] ? -1 : 1
       })
     } else if ('number' === typeof sampleValue) {
       return values[sortingMethod]((a, b) => {

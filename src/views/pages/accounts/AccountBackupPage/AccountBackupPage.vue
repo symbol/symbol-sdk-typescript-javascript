@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import {AccountBackupPageTs} from './AccountBackupPageTs'
+import { AccountBackupPageTs } from './AccountBackupPageTs'
 export default class AccountBackupPage extends AccountBackupPageTs {}
 </script>
 

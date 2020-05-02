@@ -14,11 +14,10 @@
  *
  */
 
-import {VersionedNetworkBasedObjectStorage} from '@/core/database/backends/VersionedNetworkBasedObjectStorage'
-import {NetworkModel} from '@/core/database/entities/NetworkModel'
+import { VersionedNetworkBasedObjectStorage } from '@/core/database/backends/VersionedNetworkBasedObjectStorage'
+import { NetworkModel } from '@/core/database/entities/NetworkModel'
 
 export class NetworkModelStorage extends VersionedNetworkBasedObjectStorage<NetworkModel> {
-
   /**
    * Singleton instance as we want to run the migration just once
    */
@@ -27,5 +26,4 @@ export class NetworkModelStorage extends VersionedNetworkBasedObjectStorage<Netw
   private constructor() {
     super('networkCache')
   }
-
 }

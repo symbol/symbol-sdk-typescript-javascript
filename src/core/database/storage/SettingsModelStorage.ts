@@ -14,11 +14,10 @@
  *
  */
 
-import {VersionedObjectStorage} from '@/core/database/backends/VersionedObjectStorage'
-import {SettingsModel} from '@/core/database/entities/SettingsModel'
+import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage'
+import { SettingsModel } from '@/core/database/entities/SettingsModel'
 
 export class SettingsModelStorage extends VersionedObjectStorage<Record<string, SettingsModel>> {
-
   /**
    * Singleton instance as we want to run the migration just once
    */

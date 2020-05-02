@@ -14,7 +14,7 @@
  *
  */
 
-import {Address, PublicAccount} from 'symbol-sdk'
+import { Address, PublicAccount } from 'symbol-sdk'
 
 export class AccountType {
   public static readonly SEED: number = 1
@@ -37,14 +37,12 @@ export class AccountType {
   }
 }
 
-
 /**
  * Stored POJO that holds user provided account information.
  *
  * The object is serialized and deserialized to/from JSON. no method or complex attributes can be fined.
  */
 export class AccountModel {
-
   public readonly id: string
   public readonly name: string
   public readonly profileName: string
@@ -60,9 +58,9 @@ export class AccountModel {
    * Permits to return specific field's mapped object instances
    * @return any
    */
-  public static getObjects(model: AccountModel): { address: Address, publicAccount: PublicAccount } {
+  public static getObjects(model: AccountModel): { address: Address; publicAccount: PublicAccount } {
     const address = Address.createFromRawAddress(model.address)
     const publicAccount = PublicAccount.createFromPublicKey(model.publicKey, address.networkType)
-    return {address, publicAccount}
+    return { address, publicAccount }
   }
 }

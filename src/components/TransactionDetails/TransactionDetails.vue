@@ -9,10 +9,7 @@
       </span>
     </div>
     <div class="transaction-details-outer-container">
-      <div
-        v-for="(view, key) in views"
-        :key="key"
-      >
+      <div v-for="(view, key) in views" :key="key">
         <AccountAddressRestriction v-if="isType(types.ACCOUNT_ADDRESS_RESTRICTION, view)" :view="view" />
         <AccountLink v-if="isType(types.ACCOUNT_LINK, view)" :view="view" />
         <AccountMetadata v-if="isType(types.ACCOUNT_METADATA, view)" :view="view" />
@@ -42,5 +39,5 @@ export default class TransactionDetails extends TransactionDetailsTs {}
 </script>
 
 <style lang="less">
-@import "./TransactionDetails.less";
+@import './TransactionDetails.less';
 </style>

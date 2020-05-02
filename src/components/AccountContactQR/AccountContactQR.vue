@@ -5,7 +5,7 @@
     </div>
 
     <div class="clearfix centered">
-      <img class="qr-code-image" :src="qrCode$">
+      <img class="qr-code-image" :src="qrCode$" />
     </div>
   </div>
 </template>

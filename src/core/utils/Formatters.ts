@@ -1,32 +1,31 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {Address} from 'symbol-sdk'
-import {decode} from 'utf8'
+import { Address } from 'symbol-sdk'
+import { decode } from 'utf8'
 // configuration
 import networkConfig from '../../../config/network.conf.json'
 
 export class Formatters {
   public static formatNumber = (number: number): string => {
     if (number <= 1) return `${number}`
-    if (number === Number(number.toFixed(0))) return number.toLocaleString('en-US', {minimumFractionDigits: 0})
+    if (number === Number(number.toFixed(0))) return number.toLocaleString('en-US', { minimumFractionDigits: 0 })
 
     const stringOfNumber = `${number}`
     const minimumFractionDigits = stringOfNumber.length - stringOfNumber.indexOf('.') - 1
-    return number.toLocaleString('en-US', {minimumFractionDigits})
-
+    return number.toLocaleString('en-US', { minimumFractionDigits })
   }
 
   public static formatAddress = function (address: string): string {

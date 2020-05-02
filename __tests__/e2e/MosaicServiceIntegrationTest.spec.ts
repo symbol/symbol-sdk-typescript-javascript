@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import {Address, RepositoryFactoryHttp} from 'symbol-sdk'
-import {MosaicService} from '@/services/MosaicService'
+import { Address, RepositoryFactoryHttp } from 'symbol-sdk'
+import { MosaicService } from '@/services/MosaicService'
 import networkConfig from '../../config/network.conf.json'
 
 const address1 = Address.createFromRawAddress('TDH3WI3AXBZJQMFI5XPTWRABTWVEDR54DMTHAB6I')
@@ -30,37 +30,40 @@ const realRepositoryFactory = new RepositoryFactoryHttp(realUrl)
 describe.skip('services/MosaicService', () => {
   test('getMosaics all addresses', async () => {
     const generationHash = await realRepositoryFactory.getGenerationHash().toPromise()
-    const {networkCurrency} = await mosaicService.getNetworkCurrencies(
-      realRepositoryFactory, generationHash, networkConfig.networkConfigurationDefaults,
-    ).toPromise()
-    const addresses: Address[] = [ address1, address2, address3, address4, address5 ]
+    const { networkCurrency } = await mosaicService
+      .getNetworkCurrencies(realRepositoryFactory, generationHash, networkConfig.networkConfigurationDefaults)
+      .toPromise()
+    const addresses: Address[] = [address1, address2, address3, address4, address5]
     const accountInfos = await realRepositoryFactory.createAccountRepository().getAccountsInfo(addresses).toPromise()
-    const result = await mosaicService.getMosaics(realRepositoryFactory, generationHash, networkCurrency,
-      accountInfos).toPromise()
+    const result = await mosaicService
+      .getMosaics(realRepositoryFactory, generationHash, networkCurrency, accountInfos)
+      .toPromise()
     console.log(JSON.stringify(result, null, 2))
   })
 
   test('getMosaics account 1 addresses', async () => {
     const generationHash = await realRepositoryFactory.getGenerationHash().toPromise()
-    const {networkCurrency} = await mosaicService.getNetworkCurrencies(
-      realRepositoryFactory, generationHash, networkConfig.networkConfigurationDefaults,
-    ).toPromise()
+    const { networkCurrency } = await mosaicService
+      .getNetworkCurrencies(realRepositoryFactory, generationHash, networkConfig.networkConfigurationDefaults)
+      .toPromise()
     const addresses: Address[] = [address1]
     const accountInfos = await realRepositoryFactory.createAccountRepository().getAccountsInfo(addresses).toPromise()
-    const result = await mosaicService.getMosaics(realRepositoryFactory, generationHash, networkCurrency,
-      accountInfos).toPromise()
+    const result = await mosaicService
+      .getMosaics(realRepositoryFactory, generationHash, networkCurrency, accountInfos)
+      .toPromise()
     console.log(JSON.stringify(result, null, 2))
   })
 
   test('getMosaics account 3 addresses', async () => {
     const generationHash = await realRepositoryFactory.getGenerationHash().toPromise()
-    const {networkCurrency} = await mosaicService.getNetworkCurrencies(
-      realRepositoryFactory, generationHash, networkConfig.networkConfigurationDefaults,
-    ).toPromise()
+    const { networkCurrency } = await mosaicService
+      .getNetworkCurrencies(realRepositoryFactory, generationHash, networkConfig.networkConfigurationDefaults)
+      .toPromise()
     const addresses: Address[] = [address3]
     const accountInfos = await realRepositoryFactory.createAccountRepository().getAccountsInfo(addresses).toPromise()
-    const result = await mosaicService.getMosaics(realRepositoryFactory, generationHash, networkCurrency,
-      accountInfos).toPromise()
+    const result = await mosaicService
+      .getMosaics(realRepositoryFactory, generationHash, networkCurrency, accountInfos)
+      .toPromise()
     console.log(JSON.stringify(result, null, 2))
   })
 })

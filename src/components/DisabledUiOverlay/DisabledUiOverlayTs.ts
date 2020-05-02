@@ -1,10 +1,9 @@
-import {mapState} from 'vuex'
-import {Component, Vue} from 'vue-property-decorator'
+import { mapState } from 'vuex'
+import { Component, Vue } from 'vue-property-decorator'
 
 @Component({
-  computed: {...mapState({app: 'app'})},
+  computed: { ...mapState({ app: 'app' }) },
 })
-
 export class DisabledUiOverlayTs extends Vue {
   app: any
 

@@ -1,27 +1,32 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
 // external dependencies
-import {MultisigAccountInfo, MultisigAccountModificationTransaction, PublicAccount, TransactionType} from 'symbol-sdk'
-import {Component, Prop, Vue} from 'vue-property-decorator'
+import { MultisigAccountInfo, MultisigAccountModificationTransaction, PublicAccount, TransactionType } from 'symbol-sdk'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 // internal dependencies
-import {FormTransactionBase} from '@/views/forms/FormTransactionBase/FormTransactionBase'
-import {TransactionFactory} from '@/core/transactions/TransactionFactory'
-import {CosignatoryModification, CosignatoryModifications, MultisigAccountModificationFormFieldsType, ViewMultisigAccountModificationTransaction} from '@/core/transactions/ViewMultisigAccountModificationTransaction'
+import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase'
+import { TransactionFactory } from '@/core/transactions/TransactionFactory'
+import {
+  CosignatoryModification,
+  CosignatoryModifications,
+  MultisigAccountModificationFormFieldsType,
+  ViewMultisigAccountModificationTransaction,
+} from '@/core/transactions/ViewMultisigAccountModificationTransaction'
 // child components
-import {ValidationObserver, ValidationProvider} from 'vee-validate'
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
@@ -42,8 +47,8 @@ import CosignatoryModificationsDisplay from '@/components/CosignatoryModificatio
 import ApprovalAndRemovalInput from '@/components/ApprovalAndRemovalInput/ApprovalAndRemovalInput.vue'
 // @ts-ignore
 import MultisigCosignatoriesDisplay from '@/components/MultisigCosignatoriesDisplay/MultisigCosignatoriesDisplay.vue'
-import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
-import {mapGetters} from 'vuex'
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
+import { mapGetters } from 'vuex'
 
 @Component({
   components: {
@@ -70,19 +75,23 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
   /// region component properties
   @Prop({
     default: '',
-  }) signer: string
+  })
+  signer: string
 
   @Prop({
     default: null,
-  }) minApprovalDelta: number
+  })
+  minApprovalDelta: number
 
   @Prop({
     default: null,
-  }) minRemovalDelta: number
+  })
+  minRemovalDelta: number
 
   @Prop({
     default: false,
-  }) disableSubmit: boolean
+  })
+  disableSubmit: boolean
   /// end-region component properties
 
   /**
@@ -98,7 +107,6 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
   }
 
   private networkConfiguration: NetworkConfigurationModel
-
 
   public get multisigOperationType(): 'conversion' | 'modification' {
     if (this.isCosignatoryMode) {
@@ -120,7 +128,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     // - re-populate form if transaction staged
     if (this.stagedTransactions.length) {
       const transaction = this.stagedTransactions.find(
-        staged => staged.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION,
+        (staged) => staged.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION,
       )
       if (transaction === undefined) return
       this.setTransactions([transaction as MultisigAccountModificationTransaction])
@@ -196,17 +204,23 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
   private getCosignatoryModificationsFromTransaction(
     transaction: MultisigAccountModificationTransaction,
   ): CosignatoryModifications {
-    const additions: CosignatoryModification[] = transaction.publicKeyAdditions.map(
-      publicAccount => ({addOrRemove: 'add', cosignatory: publicAccount}),
-    )
+    const additions: CosignatoryModification[] = transaction.publicKeyAdditions.map((publicAccount) => ({
+      addOrRemove: 'add',
+      cosignatory: publicAccount,
+    }))
 
-    const deletions: CosignatoryModification[] = transaction.publicKeyDeletions.map(
-      publicAccount => ({addOrRemove: 'remove', cosignatory: publicAccount}),
-    )
+    const deletions: CosignatoryModification[] = transaction.publicKeyDeletions.map((publicAccount) => ({
+      addOrRemove: 'remove',
+      cosignatory: publicAccount,
+    }))
 
-    return [ ...additions, ...deletions ].reduce((acc, modification) => ({
-      ...acc, [modification.cosignatory.publicKey]: modification,
-    }), {})
+    return [...additions, ...deletions].reduce(
+      (acc, modification) => ({
+        ...acc,
+        [modification.cosignatory.publicKey]: modification,
+      }),
+      {},
+    )
   }
 
   /**
@@ -230,9 +244,8 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     this.formItems.signerPublicKey = publicKey
     this.formItems.cosignatoryModifications = {}
 
-    await this.$store.dispatch('account/SET_CURRENT_SIGNER', {publicKey})
+    await this.$store.dispatch('account/SET_CURRENT_SIGNER', { publicKey })
     /// end-region super.onChangeSigner
-
   }
 
   /**
@@ -252,11 +265,10 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     // - in case public key is part of "cosignatories", register modification
     else {
       const publicAccount = PublicAccount.createFromPublicKey(publicKey, this.networkType)
-      Vue.set(
-        this.formItems.cosignatoryModifications,
-        publicKey,
-        {cosignatory: publicAccount, addOrRemove: 'remove'},
-      )
+      Vue.set(this.formItems.cosignatoryModifications, publicKey, {
+        cosignatory: publicAccount,
+        addOrRemove: 'remove',
+      })
     }
   }
 
@@ -267,11 +279,10 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    * @param {PublicAccount} publicAccount
    */
   public onClickAdd(publicAccount: PublicAccount) {
-    Vue.set(
-      this.formItems.cosignatoryModifications,
-      publicAccount.publicKey,
-      {cosignatory: publicAccount, addOrRemove: 'add'},
-    )
+    Vue.set(this.formItems.cosignatoryModifications, publicAccount.publicKey, {
+      cosignatory: publicAccount,
+      addOrRemove: 'add',
+    })
   }
 
   public onClickUndo(publicKey: string) {
@@ -307,7 +318,9 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
 
     // calculate the delta of added cosigners
     const modificationNumber = Object.keys(this.formItems.cosignatoryModifications).length
-    const removalsNumber = Object.values(this.formItems.cosignatoryModifications).filter(({addOrRemove}) => addOrRemove === 'remove').length
+    const removalsNumber = Object.values(this.formItems.cosignatoryModifications).filter(
+      ({ addOrRemove }) => addOrRemove === 'remove',
+    ).length
     const numberOfAddedCosigners = modificationNumber - removalsNumber
 
     const newCosignatoryNumber = this.currentMultisigInfo
@@ -328,12 +341,13 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    * @return {'OK' | false}
    */
   protected get areInputsValid(): 'OK' | false {
-    const {minApproval, minRemoval, cosignatoryNumber} = this.newMultisigProperties
+    const { minApproval, minRemoval, cosignatoryNumber } = this.newMultisigProperties
     const maxCosignatoriesPerAccount = this.networkConfiguration.maxCosignatoriesPerAccount
-    return cosignatoryNumber >= minApproval
-    && cosignatoryNumber >= minRemoval
-    && cosignatoryNumber <= maxCosignatoriesPerAccount
-      ? 'OK' : false
+    return cosignatoryNumber >= minApproval &&
+      cosignatoryNumber >= minRemoval &&
+      cosignatoryNumber <= maxCosignatoriesPerAccount
+      ? 'OK'
+      : false
   }
 
   protected showErrorNotification(): void {
@@ -350,18 +364,22 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    * @return {string}
    */
   protected get errorMessage(): string {
-    const {minApproval, minRemoval, cosignatoryNumber} = this.newMultisigProperties
+    const { minApproval, minRemoval, cosignatoryNumber } = this.newMultisigProperties
     const maxCosignatoriesPerAccount = this.networkConfiguration.maxCosignatoriesPerAccount
 
     // no message if inputs are OK
     if (this.areInputsValid === 'OK') return
 
     if (cosignatoryNumber < minApproval) {
-      return `${this.$t('approval_greater_than_cosignatories', {delta: minApproval - cosignatoryNumber})}`
+      return `${this.$t('approval_greater_than_cosignatories', {
+        delta: minApproval - cosignatoryNumber,
+      })}`
     }
 
     if (cosignatoryNumber < minRemoval) {
-      return `${this.$t('removal_greater_than_cosignatories', {delta: minRemoval - cosignatoryNumber})}`
+      return `${this.$t('removal_greater_than_cosignatories', {
+        delta: minRemoval - cosignatoryNumber,
+      })}`
     }
 
     if (cosignatoryNumber > maxCosignatoriesPerAccount) {

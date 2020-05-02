@@ -1,19 +1,19 @@
-/**
+/*
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {TransactionType} from 'symbol-sdk'
+import { TransactionType } from 'symbol-sdk'
 
 // @ts-ignore
 import createImg from '@/views/resources/img/login/create.png'
@@ -331,26 +331,26 @@ export const officialIcons = {
 }
 
 export const transactionTypeToIcon = {
-  [TransactionType.NAMESPACE_REGISTRATION] : officialIcons.namespace,
-  [TransactionType.ADDRESS_ALIAS] : officialIcons.alias,
-  [TransactionType.MOSAIC_ALIAS] : officialIcons.namespace,
-  [TransactionType.MOSAIC_DEFINITION] : officialIcons.mosaic,
-  [TransactionType.MOSAIC_SUPPLY_CHANGE] : officialIcons.mosaic,
-  [TransactionType.MULTISIG_ACCOUNT_MODIFICATION] : officialIcons.multipleParties,
-  [TransactionType.AGGREGATE_COMPLETE] : officialIcons.aggregateTransaction,
-  [TransactionType.AGGREGATE_BONDED] : officialIcons.aggregateTransaction,
-  [TransactionType.HASH_LOCK] : officialIcons.lock,
-  [TransactionType.SECRET_LOCK] : officialIcons.lock,
-  [TransactionType.SECRET_PROOF] : officialIcons.lock,
-  [TransactionType.ACCOUNT_ADDRESS_RESTRICTION] : officialIcons.accountRestriction,
-  [TransactionType.ACCOUNT_MOSAIC_RESTRICTION] : officialIcons.mosaicRestriction,
-  [TransactionType.ACCOUNT_OPERATION_RESTRICTION] : officialIcons.accountRestrictionAlt,
-  [TransactionType.ACCOUNT_LINK] : officialIcons.publicChain,
-  [TransactionType.MOSAIC_ADDRESS_RESTRICTION] : officialIcons.mosaicRestriction,
-  [TransactionType.MOSAIC_GLOBAL_RESTRICTION] : officialIcons.mosaicRestriction,
-  [TransactionType.ACCOUNT_METADATA] : officialIcons.metadata,
-  [TransactionType.MOSAIC_METADATA] : officialIcons.metadata,
-  [TransactionType.NAMESPACE_METADATA] : officialIcons.metadata,
+  [TransactionType.NAMESPACE_REGISTRATION]: officialIcons.namespace,
+  [TransactionType.ADDRESS_ALIAS]: officialIcons.alias,
+  [TransactionType.MOSAIC_ALIAS]: officialIcons.namespace,
+  [TransactionType.MOSAIC_DEFINITION]: officialIcons.mosaic,
+  [TransactionType.MOSAIC_SUPPLY_CHANGE]: officialIcons.mosaic,
+  [TransactionType.MULTISIG_ACCOUNT_MODIFICATION]: officialIcons.multipleParties,
+  [TransactionType.AGGREGATE_COMPLETE]: officialIcons.aggregateTransaction,
+  [TransactionType.AGGREGATE_BONDED]: officialIcons.aggregateTransaction,
+  [TransactionType.HASH_LOCK]: officialIcons.lock,
+  [TransactionType.SECRET_LOCK]: officialIcons.lock,
+  [TransactionType.SECRET_PROOF]: officialIcons.lock,
+  [TransactionType.ACCOUNT_ADDRESS_RESTRICTION]: officialIcons.accountRestriction,
+  [TransactionType.ACCOUNT_MOSAIC_RESTRICTION]: officialIcons.mosaicRestriction,
+  [TransactionType.ACCOUNT_OPERATION_RESTRICTION]: officialIcons.accountRestrictionAlt,
+  [TransactionType.ACCOUNT_LINK]: officialIcons.publicChain,
+  [TransactionType.MOSAIC_ADDRESS_RESTRICTION]: officialIcons.mosaicRestriction,
+  [TransactionType.MOSAIC_GLOBAL_RESTRICTION]: officialIcons.mosaicRestriction,
+  [TransactionType.ACCOUNT_METADATA]: officialIcons.metadata,
+  [TransactionType.MOSAIC_METADATA]: officialIcons.metadata,
+  [TransactionType.NAMESPACE_METADATA]: officialIcons.metadata,
 }
 
 /// end-region exported image objects

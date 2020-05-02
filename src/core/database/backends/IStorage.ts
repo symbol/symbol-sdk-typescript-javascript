@@ -18,20 +18,19 @@
  * Generic interface for simple stored objects.
  */
 export interface IStorage<E> {
+  /**
+   * @return the stored value or undefined
+   */
+  get(): E | undefined
 
   /**
-    * @return the stored value or undefined
-    */
-  get(): E | undefined
- 
-  /**
-    * Stores the provided value.
-    * @param value to be stored
-    */
+   * Stores the provided value.
+   * @param value to be stored
+   */
   set(value: E): void
- 
+
   /**
-    * Deletes the stored value.
-    */
+   * Deletes the stored value.
+   */
   remove(): void
 }

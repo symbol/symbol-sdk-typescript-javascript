@@ -4,10 +4,7 @@
       <div class="left-container">
         <div class="account-details-grid">
           <div class="detail-row">
-            <AccountNameDisplay 
-              :account="currentAccount"
-              :editable="true"
-            />
+            <AccountNameDisplay :account="currentAccount" :editable="true" />
           </div>
 
           <div class="detail-row">
@@ -69,7 +66,7 @@
 </template>
 
 <script lang="ts">
-import {AccountDetailsPageTs} from './AccountDetailsPageTs'
+import { AccountDetailsPageTs } from './AccountDetailsPageTs'
 export default class AccountDetailsPage extends AccountDetailsPageTs {}
 </script>
 

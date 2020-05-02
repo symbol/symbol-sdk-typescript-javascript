@@ -1,24 +1,33 @@
-/**
- *
- * Copyright 2020 Grégory Saive for NEM (https://nem.io)
+/*
+ * Copyright 2020 NEM Foundation (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
-import {Address, EmptyMessage, Mosaic, MosaicId, NamespaceId, PlainMessage, RawUInt64, TransferTransaction, UInt64} from 'symbol-sdk'
+import {
+  Address,
+  EmptyMessage,
+  Mosaic,
+  MosaicId,
+  NamespaceId,
+  PlainMessage,
+  RawUInt64,
+  TransferTransaction,
+  UInt64,
+} from 'symbol-sdk'
 // internal dependencies
-import {TransactionView} from './TransactionView'
-import {AttachedMosaic} from '@/services/MosaicService'
-import {MosaicModel} from '@/core/database/entities/MosaicModel'
+import { TransactionView } from './TransactionView'
+import { AttachedMosaic } from '@/services/MosaicService'
+import { MosaicModel } from '@/core/database/entities/MosaicModel'
 
 /// region custom types
 export type TransferFormFieldsType = {
@@ -38,12 +47,7 @@ export class ViewTransferTransaction extends TransactionView<TransferFormFieldsT
    * Fields that are specific to transfer transactions
    * @var {string[]}
    */
-  protected readonly fields: string[] = [
-    'recipient',
-    'mosaics',
-    'message',
-    'maxFee',
-  ]
+  protected readonly fields: string[] = ['recipient', 'mosaics', 'message', 'maxFee']
 
   /**
    * Parse form items and return a ViewTransferTransaction
@@ -57,13 +61,12 @@ export class ViewTransferTransaction extends TransactionView<TransferFormFieldsT
     // - set mosaics from form fields (requires divisibility info)
     const mosaics: Mosaic[] = []
     if (!!formItems.mosaics && formItems.mosaics.length) {
-
       // - get known mosaics
       const mosaicsInfo = this.$store.getters['mosaic/mosaics'] as MosaicModel[]
 
       // - prepare mosaic entries (push always ABSOLUTE amount)
-      formItems.mosaics.map(spec => {
-        const info = mosaicsInfo.find(i => i.mosaicIdHex === spec.mosaicHex)
+      formItems.mosaics.map((spec) => {
+        const info = mosaicsInfo.find((i) => i.mosaicIdHex === spec.mosaicHex)
         const div = info ? info.divisibility : 0
 
         // - format amount to absolute
@@ -104,7 +107,7 @@ export class ViewTransferTransaction extends TransactionView<TransferFormFieldsT
     this.values.set('recipient', transaction.recipientAddress)
 
     // - set mosaics (RELATIVE amount)
-    const attachedMosaics = transaction.mosaics.map(transactionMosaic => {
+    const attachedMosaics = transaction.mosaics.map((transactionMosaic) => {
       return {
         id: transactionMosaic.id,
         mosaicHex: transactionMosaic.id.toHex(),

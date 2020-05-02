@@ -1,14 +1,8 @@
 <template>
   <FormWrapper class="account-unlock-container" :whitelisted="true">
-    <form
-      action="processSubmit"
-      onsubmit="event.preventDefault()"
-      class="form-line-container mt-3"
-    >
+    <form action="processSubmit" onsubmit="event.preventDefault()" class="form-line-container mt-3">
       <FormRow>
-        <template v-slot:label>
-          {{ $t('form_label_password') }}:
-        </template>
+        <template v-slot:label> {{ $t('form_label_password') }}: </template>
         <template v-slot:inputs>
           <div class="row-75-25 inputs-container">
             <ValidationProvider
@@ -26,14 +20,10 @@
                   type="password"
                   class="input-size input-style"
                   :placeholder="$t('please_enter_your_account_password')"
-                >
+                />
               </ErrorTooltip>
             </ValidationProvider>
-            <button
-              class="button-style validation-button right-side-button"
-              type="submit"
-              @click="processVerification"
-            >
+            <button class="button-style validation-button right-side-button" type="submit" @click="processVerification">
               {{ $t('confirm') }}
             </button>
           </div>
@@ -44,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import {FormProfileUnlockTs} from './FormProfileUnlockTs'
+import { FormProfileUnlockTs } from './FormProfileUnlockTs'
 export default class FormProfileUnlock extends FormProfileUnlockTs {}
 </script>
 

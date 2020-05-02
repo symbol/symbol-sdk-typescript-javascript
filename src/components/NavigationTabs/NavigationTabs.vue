@@ -1,14 +1,10 @@
 <template>
-  <div :class="[ direction === 'horizontal' ? 'tabs' : '',direction ]">
+  <div :class="[direction === 'horizontal' ? 'tabs' : '', direction]">
     <span
       v-for="(tabEntry, index) in tabEntries"
       :key="index"
-      :class="[
-        'tab-item',
-        tabEntry.isActive($route) ? 'active' : '',
-      ]"
-      @click="tabEntry.isActive($route)
-        ? '' : $router.push({name: tabEntry.route}).catch(err => {})"
+      :class="['tab-item', tabEntry.isActive($route) ? 'active' : '']"
+      @click="tabEntry.isActive($route) ? '' : $router.push({ name: tabEntry.route }).catch((err) => {})"
     >
       {{ $t(tabEntry.title) }}
     </span>
@@ -16,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import {NavigationTabsTs} from './NavigationTabsTs'
+import { NavigationTabsTs } from './NavigationTabsTs'
 
 export default class NavigationTabs extends NavigationTabsTs {}
 </script>

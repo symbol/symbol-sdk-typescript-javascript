@@ -1,11 +1,8 @@
 <template>
-  <div
-    class="transaction-row-container transaction-table-columns"
-    @click="$emit('click', transaction)"
-  >
+  <div class="transaction-row-container transaction-table-columns" @click="$emit('click', transaction)">
     <!-- FIRST COLUMN -->
     <div class="icon-cell">
-      <img :src="getIcon()" class="icon-cell-image">
+      <img :src="getIcon()" class="icon-cell-image" />
     </div>
 
     <!-- SECOND COLUMN -->
@@ -35,7 +32,9 @@
           class="url_text"
           target="_blank"
           :href="(explorerBaseUrl + '/transaction/' + transaction.transactionInfo.hash)"
-        >{{ formatters.miniHash(transaction.transactionInfo.hash) }}</a>
+        >
+          {{ formatters.miniHash(transaction.transactionInfo.hash) }}
+        </a>
       </span>
       <span class="hash-cell-time">
         <!-- @TODO: Should be transaction time instead of deadline -->

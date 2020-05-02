@@ -1,19 +1,9 @@
 <template>
   <FormWrapper class="account-name-update-container" :whitelisted="true">
-    <ValidationObserver
-      v-slot="{ handleSubmit }"
-      ref="observer"
-      class="account-name-update-container"
-      slim
-    >
-      <form
-        class="form-line-container mt-3"
-        onsubmit="event.preventDefault()"
-      >
+    <ValidationObserver v-slot="{ handleSubmit }" ref="observer" class="account-name-update-container" slim>
+      <form class="form-line-container mt-3" onsubmit="event.preventDefault()">
         <FormRow>
-          <template v-slot:label>
-            {{ $t('form_label_new_account_name') }}:
-          </template>
+          <template v-slot:label> {{ $t('form_label_new_account_name') }}: </template>
           <template v-slot:inputs>
             <div class="row-75-25 inputs-container">
               <ValidationProvider
@@ -25,13 +15,7 @@
                 slim
               >
                 <ErrorTooltip :errors="errors">
-                  <input
-                    v-model="formItems.name"
-                    v-focus
-                    type="text"
-                    name="name"
-                    class="input-size input-style"
-                  >
+                  <input v-model="formItems.name" v-focus type="text" name="name" class="input-size input-style" />
                 </ErrorTooltip>
               </ValidationProvider>
 
@@ -70,4 +54,3 @@ export default class FormAccountNameUpdate extends FormAccountNameUpdateTs {}
   min-height: 1rem;
 }
 </style>
-

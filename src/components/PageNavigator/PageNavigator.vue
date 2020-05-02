@@ -6,13 +6,13 @@
         :key="index"
         :class="[
           'navigator-item-container',
-          $route.matched.map(({path}) => path).includes(route.path) ? 'active' : '',
+          $route.matched.map(({ path }) => path).includes(route.path) ? 'active' : '',
           !currentProfile ? 'un_click' : '',
         ]"
         @click="onPageNavigate(route)"
       >
         <div class="navigator-icon-container">
-          <img :src="route.meta.icon" class="navigator-icon">
+          <img :src="route.meta.icon" class="navigator-icon" />
         </div>
         <div class="navigator-text-container">
           <div>{{ $t(route.meta.title) }}</div>
@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import {PageNavigatorTs} from './PageNavigatorTs'
+import { PageNavigatorTs } from './PageNavigatorTs'
 import './PageNavigator.less'
 export default class PageNavigator extends PageNavigatorTs {}
 </script>

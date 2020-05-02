@@ -1,15 +1,9 @@
 <template>
   <FormWrapper class="password-settings-container" :whitelisted="true">
     <ValidationObserver ref="observer" v-slot="{ handleSubmit }" slim>
-      <form
-        class="form-container mt-3"
-        onsubmit="event.preventDefault()"
-        autocomplete="off"
-      >
+      <form class="form-container mt-3" onsubmit="event.preventDefault()" autocomplete="off">
         <FormRow>
-          <template v-slot:label>
-            {{ $t('form_label_new_password') }}:
-          </template>
+          <template v-slot:label> {{ $t('form_label_new_password') }}: </template>
           <template v-slot:inputs>
             <ValidationProvider
               v-slot="{ errors }"
@@ -27,17 +21,14 @@
                   class="input-size input-style"
                   :placeholder="$t('form_label_new_password')"
                   type="password"
-                >
+                />
               </ErrorTooltip>
             </ValidationProvider>
           </template>
         </FormRow>
- 
 
         <FormRow>
-          <template v-slot:label>
-            {{ $t('form_label_new_password_confirm') }}:
-          </template>
+          <template v-slot:label> {{ $t('form_label_new_password_confirm') }}: </template>
           <template v-slot:inputs>
             <ValidationProvider
               v-slot="{ errors }"
@@ -55,16 +46,14 @@
                   class="input-size input-style"
                   :placeholder="$t('form_label_new_password_confirm')"
                   type="password"
-                >
+                />
               </ErrorTooltip>
             </ValidationProvider>
           </template>
         </FormRow>
 
         <FormRow>
-          <template v-slot:label>
-            {{ $t('form_label_new_password_hint') }}:
-          </template>
+          <template v-slot:label> {{ $t('form_label_new_password_hint') }}: </template>
           <template v-slot:inputs>
             <ValidationProvider
               v-slot="{ errors }"
@@ -79,7 +68,7 @@
                   v-model="formItems.passwordHint"
                   class="input-size input-style"
                   :placeholder="$t('form_label_new_password_hint')"
-                >
+                />
               </ErrorTooltip>
             </ValidationProvider>
           </template>
@@ -117,8 +106,7 @@ export default class FormProfilePasswordUpdate extends FormProfilePasswordUpdate
   clear: both;
   min-height: 1rem;
 }
-.text-right{
+.text-right {
   text-align: right;
 }
 </style>
-
