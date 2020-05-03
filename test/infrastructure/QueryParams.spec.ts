@@ -22,14 +22,14 @@ describe('QueryParams', () => {
     it('should create QueryParams', () => {
         const queryParam = new QueryParams();
         expect(queryParam.id).to.be.undefined;
-        expect(queryParam.order.toString()).to.be.equal('-id');
+        expect(queryParam.order.toString()).to.be.equal('desc');
         expect(queryParam.pageSize).to.be.equal(10);
     });
 
     it('should create QueryParams with arg', () => {
         const queryParam = new QueryParams({ id: '1', order: Order.Asc, pageSize: 25 });
         expect(queryParam.id).to.be.equal('1');
-        expect(queryParam.order.toString()).to.be.equal('id');
+        expect(queryParam.order.toString()).to.be.equal('asc');
         expect(queryParam.pageSize).to.be.equal(25);
     });
 

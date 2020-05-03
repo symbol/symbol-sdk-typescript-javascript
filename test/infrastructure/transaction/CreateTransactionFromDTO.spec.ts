@@ -118,11 +118,11 @@ describe('CreateTransactionFromDTO', () => {
                     signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
                     transactions: [
                         {
+                            id: '5A0069D83F17CF0001777E56',
                             meta: {
                                 aggregateHash: '3D28C804EDD07D5A728E5C5FFEC01AB07AFA5766AE6997B38526D36015A4D006',
                                 aggregateId: '5A0069D83F17CF0001777E55',
                                 height: '1860',
-                                id: '5A0069D83F17CF0001777E56',
                                 index: 0,
                             },
                             transaction: {
@@ -215,11 +215,11 @@ describe('CreateTransactionFromDTO', () => {
                         signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
                         transactions: [
                             {
+                                id: '5A0069D83F17CF0001777E56',
                                 meta: {
                                     aggregateHash: '3D28C804EDD07D5A728E5C5FFEC01AB07AFA5766AE6997B38526D36015A4D006',
                                     aggregateId: '5A0069D83F17CF0001777E55',
                                     height: '1860',
-                                    id: '5A0069D83F17CF0001777E56',
                                     index: 0,
                                 },
                                 transaction: {

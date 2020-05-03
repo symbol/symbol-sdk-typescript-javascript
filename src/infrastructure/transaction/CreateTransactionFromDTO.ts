@@ -460,7 +460,7 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
                 ? new AggregateTransactionInfo(
                       UInt64.fromNumericString(innerTransactionDTO.meta.height),
                       innerTransactionDTO.meta.index,
-                      innerTransactionDTO.meta.id,
+                      innerTransactionDTO.id,
                       innerTransactionDTO.meta.aggregateHash,
                       innerTransactionDTO.meta.aggregateId,
                   )
