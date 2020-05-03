@@ -69,37 +69,4 @@ export class SearchCriteria {
     public setPageNumber(pageNumber: number): void {
         this.pageNumber = pageNumber;
     }
-
-    /**
-     * Sets the order builder style.
-     *
-     * @param order the order.
-     * @return this object.
-     */
-    public buildOrder(order: Order): SearchCriteria {
-        this.orderBy = order;
-        return this;
-    }
-
-    /**
-     * Sets the page size builder style.
-     *
-     * @param pageSize the page size.
-     * @return this object.
-     */
-    public buildPageSize(pageSize: number): SearchCriteria {
-        this.pageSize = pageSize;
-        return this;
-    }
-
-    /**
-     * Sets the page number builder style.
-     *
-     * @param pageNumber the page number.
-     * @return this objects.
-     */
-    public buildPageNumber(pageNumber: number): SearchCriteria {
-        this.pageNumber = pageNumber;
-        return this;
-    }
 }

@@ -17,7 +17,6 @@
 import { expect } from 'chai';
 import { mergeMap } from 'rxjs/operators';
 import { BlockRepository } from '../../src/infrastructure/BlockRepository';
-import { QueryParams } from '../../src/infrastructure/QueryParams';
 import { ReceiptRepository } from '../../src/infrastructure/ReceiptRepository';
 import { Account } from '../../src/model/account/Account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';

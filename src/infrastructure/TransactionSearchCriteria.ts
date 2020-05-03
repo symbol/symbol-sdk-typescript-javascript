@@ -20,6 +20,7 @@ import { UInt64 } from '../model/UInt64';
 import { TransactionType } from '../model/transaction/TransactionType';
 import { TransactionGroupSubsetEnum } from 'symbol-openapi-typescript-node-client/dist/model/transactionGroupSubsetEnum';
 import { TransactionTypeEnum } from 'symbol-openapi-typescript-node-client/dist/model/transactionTypeEnum';
+import { Order } from 'symbol-openapi-typescript-node-client';
 
 /**
  * Defines the params used to search transactions. With this criteria, you can sort and filter
@@ -196,6 +197,21 @@ export class TransactionSearchCriteria extends SearchCriteria {
 
     public buildEmbedded(embedded: boolean): TransactionSearchCriteria {
         this.embedded = embedded;
+        return this;
+    }
+
+    public buildOrder(order: Order): TransactionSearchCriteria {
+        super.setOrder(order);
+        return this;
+    }
+
+    public buildPageSize(pageSize: number): TransactionSearchCriteria {
+        super.setPageSize(pageSize);
+        return this;
+    }
+
+    public buildPageNumber(pageNumber: number): TransactionSearchCriteria {
+        super.setPageNumber(pageNumber);
         return this;
     }
 }
