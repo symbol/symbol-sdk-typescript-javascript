@@ -493,7 +493,7 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
                 ? new TransactionInfo(
                       UInt64.fromNumericString(transactionDTO.meta.height),
                       transactionDTO.meta.index,
-                      transactionDTO.meta.id,
+                      transactionDTO.id,
                       transactionDTO.meta.hash,
                       transactionDTO.meta.merkleComponentHash,
                   )
@@ -504,7 +504,7 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
             ? new TransactionInfo(
                   UInt64.fromNumericString(transactionDTO.meta.height),
                   transactionDTO.meta.index,
-                  transactionDTO.meta.id,
+                  transactionDTO.id,
                   transactionDTO.meta.hash,
                   transactionDTO.meta.merkleComponentHash,
               )

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import { QueryParams, Order } from '../../src/infrastructure/QueryParams';
+import { QueryParams } from '../../src/infrastructure/QueryParams';
 import { expect } from 'chai';
+import { Order } from 'symbol-openapi-typescript-node-client/dist/model/order';
 
 describe('QueryParams', () => {
     it('should create QueryParams', () => {
@@ -26,13 +27,13 @@ describe('QueryParams', () => {
     });
 
     it('should create QueryParams with arg', () => {
-        const queryParam = new QueryParams({ id: '1', order: Order.ASC, pageSize: 25 });
+        const queryParam = new QueryParams({ id: '1', order: Order.Asc, pageSize: 25 });
         expect(queryParam.id).to.be.equal('1');
         expect(queryParam.order.toString()).to.be.equal('id');
         expect(queryParam.pageSize).to.be.equal(25);
     });
 
     it('should not set pageSize > 100', () => {
-        expect(() => new QueryParams({ id: '1', order: Order.ASC, pageSize: 200 })).to.throw();
+        expect(() => new QueryParams({ id: '1', order: Order.Asc, pageSize: 200 })).to.throw();
     });
 });

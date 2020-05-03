@@ -88,7 +88,7 @@
         "ripemd160": "^2.0.2",
         "rxjs": "^6.5.3",
         "rxjs-compat": "^6.5.3",
-        "symbol-openapi-typescript-node-client": "0.8.10-SNAPSHOT.202005011113",
+        "symbol-openapi-typescript-node-client": "0.8.10-SNAPSHOT.202005012007",
         "tweetnacl": "^1.0.3",
         "utf8": "^3.0.0",
         "ws": "^7.2.3"
