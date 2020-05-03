@@ -20,6 +20,8 @@ import { SignedTransaction } from '../model/transaction/SignedTransaction';
 import { Transaction } from '../model/transaction/Transaction';
 import { TransactionAnnounceResponse } from '../model/transaction/TransactionAnnounceResponse';
 import { TransactionStatus } from '../model/transaction/TransactionStatus';
+import { Page } from './Page';
+import { TransactionSearchCriteria } from './TransactionSearchCriteria';
 
 /**
  * Transaction interface repository.
@@ -39,7 +41,7 @@ export interface TransactionRepository {
      * @param transactionIds - Array of transactions id and/or hash.
      * @returns Observable<Transaction[]>
      */
-    getTransactions(transactionIds: string[]): Observable<Transaction[]>;
+    getTransactionsById(transactionIds: string[]): Observable<Transaction[]>;
 
     /**
      * Gets a transaction status for a transaction hash
@@ -82,4 +84,12 @@ export interface TransactionRepository {
      * @returns Observable<TransactionAnnounceResponse>
      */
     announceAggregateBondedCosignature(cosignatureSignedTransaction: CosignatureSignedTransaction): Observable<TransactionAnnounceResponse>;
+
+    /**
+     * Search transactions based on the criteria's filtering and sorting returning a page.
+     *
+     * @param criteria the criteria
+     * @return a page of transactions.
+     */
+    searchTransactions(criteria: TransactionSearchCriteria): Observable<Page<Transaction>>;
 }

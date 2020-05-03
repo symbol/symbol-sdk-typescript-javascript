@@ -38,9 +38,9 @@ describe('AccountInfo', () => {
                 activityBucket: [
                     {
                         startHeight: '1000',
-                        totalFeesPaid: 100,
+                        totalFeesPaid: '100',
                         beneficiaryCount: 1,
-                        rawScore: 20,
+                        rawScore: '20',
                     },
                 ],
                 mosaics: [
@@ -62,7 +62,13 @@ describe('AccountInfo', () => {
             accountInfoDTO.account.accountType,
             accountInfoDTO.account.linkedAccountKey,
             accountInfoDTO.account.activityBucket.map(
-                (bucket) => new ActivityBucket(bucket.startHeight, bucket.totalFeesPaid, bucket.beneficiaryCount, bucket.rawScore),
+                (bucket) =>
+                    new ActivityBucket(
+                        bucket.startHeight,
+                        UInt64.fromNumericString(bucket.totalFeesPaid),
+                        bucket.beneficiaryCount,
+                        UInt64.fromNumericString(bucket.rawScore),
+                    ),
             ),
             accountInfoDTO.account.mosaics.map((mosaicDTO) => new Mosaic(mosaicDTO.id, mosaicDTO.amount)),
             accountInfoDTO.account.importance,

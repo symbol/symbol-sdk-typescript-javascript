@@ -19,9 +19,9 @@ import http = require('http');
 import {
     BlockRoutesApi,
     TransactionRoutesApi,
-    TransactionStateTypeEnum,
+    TransactionGroupEnum,
     TransactionStatusDTO,
-    TransactionStatusTypeEnum,
+    TransactionStatusEnum,
 } from 'symbol-openapi-typescript-node-client';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 
@@ -76,10 +76,10 @@ describe('TransactionHttp', () => {
     it('Test getTransactionStatus method', async () => {
         const hash = 'abc';
         const transactionStatusDTO = new TransactionStatusDTO();
-        transactionStatusDTO.code = TransactionStatusTypeEnum.FailureAccountLinkInvalidAction;
+        transactionStatusDTO.code = TransactionStatusEnum.FailureAccountLinkInvalidAction;
         transactionStatusDTO.deadline = '1234';
         transactionStatusDTO.hash = hash;
-        transactionStatusDTO.group = TransactionStateTypeEnum.Failed;
+        transactionStatusDTO.group = TransactionGroupEnum.Failed;
         transactionStatusDTO.height = '567';
 
         when(transactionRoutesApi.getTransactionStatus(deepEqual(hash))).thenReturn(
@@ -97,10 +97,10 @@ describe('TransactionHttp', () => {
     it('Test getTransactionsStatuses method', async () => {
         const hash = 'abc';
         const transactionStatusDTO = new TransactionStatusDTO();
-        transactionStatusDTO.code = TransactionStatusTypeEnum.FailureAccountLinkInvalidAction;
+        transactionStatusDTO.code = TransactionStatusEnum.FailureAccountLinkInvalidAction;
         transactionStatusDTO.deadline = '1234';
         transactionStatusDTO.hash = hash;
-        transactionStatusDTO.group = TransactionStateTypeEnum.Failed;
+        transactionStatusDTO.group = TransactionGroupEnum.Failed;
         transactionStatusDTO.height = '567';
         when(transactionRoutesApi.getTransactionsStatuses(deepEqual({ hashes: [hash] }))).thenReturn(
             Promise.resolve({ response: instance(clientResponse), body: [transactionStatusDTO] }),

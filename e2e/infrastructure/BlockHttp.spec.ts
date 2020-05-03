@@ -23,7 +23,6 @@ import { Account } from '../../src/model/account/Account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { Deadline } from '../../src/model/transaction/Deadline';
-import { TransactionInfo } from '../../src/model/transaction/TransactionInfo';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
@@ -37,6 +36,7 @@ describe('BlockHttp', () => {
     let chainHeight;
     let generationHash: string;
     let networkType: NetworkType;
+    let transactionHash;
 
     before(() => {
         return helper.start().then(() => {
@@ -76,6 +76,7 @@ describe('BlockHttp', () => {
             const signedTransaction = transferTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction).then((transaction) => {
                 chainHeight = transaction.transactionInfo!.height.toString();
+                transactionHash = transaction.transactionInfo?.hash?.toString();
                 return chainHeight;
             });
         });
@@ -90,26 +91,6 @@ describe('BlockHttp', () => {
             expect(blockInfo.timestamp.higher).to.be.equal(0);
             expect(blockInfo.beneficiaryPublicKey).not.to.be.undefined;
             expect(blockInfo.numStatements).not.to.be.undefined;
-        });
-    });
-
-    describe('getBlockTransactions', () => {
-        let nextId: string;
-        let firstId: string;
-
-        it('should return block transactions data given height', async () => {
-            const transactions = await blockRepository.getBlockTransactions(UInt64.fromUint(1)).toPromise();
-            nextId = transactions[0].transactionInfo!.id;
-            firstId = transactions[1].transactionInfo!.id;
-            expect(transactions.length).to.be.greaterThan(0);
-        });
-
-        it('should return block transactions data given height with paginated transactionId', async () => {
-            const transactions = await blockRepository
-                .getBlockTransactions(UInt64.fromUint(1), new QueryParams({ pageSize: 10, id: nextId }))
-                .toPromise();
-            expect(transactions[0].transactionInfo!.id).to.be.equal(firstId);
-            expect(transactions.length).to.be.greaterThan(0);
         });
     });
 
@@ -134,19 +115,7 @@ describe('BlockHttp', () => {
     });
     describe('getMerkleTransaction', () => {
         it('should return Merkle Transaction', async () => {
-            const merkleTransactionss = await blockRepository
-                .getBlockTransactions(chainHeight)
-                .pipe(
-                    mergeMap((_) => {
-                        const hash = (_[0].transactionInfo as TransactionInfo).hash;
-                        if (hash) {
-                            return blockRepository.getMerkleTransaction(chainHeight, hash);
-                        }
-                        // If reaching this line, something is not right
-                        throw new Error('Tansacation hash is undefined');
-                    }),
-                )
-                .toPromise();
+            const merkleTransactionss = await blockRepository.getMerkleTransaction(chainHeight, transactionHash).toPromise();
             expect(merkleTransactionss.merklePath).not.to.be.null;
         });
     });

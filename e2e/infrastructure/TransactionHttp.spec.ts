@@ -80,7 +80,6 @@ describe('TransactionHttp', () => {
     let account3: Account;
     let multisigAccount: Account;
     let cosignAccount1: Account;
-    let accountRepository: AccountRepository;
     let namespaceRepository: NamespaceRepository;
     let generationHash: string;
     let networkType: NetworkType;
@@ -106,7 +105,6 @@ describe('TransactionHttp', () => {
             harvestingAccount = helper.harvestingAccount;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
-            accountRepository = helper.repositoryFactory.createAccountRepository();
             namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
             transactionRepository = helper.repositoryFactory.createTransactionRepository();
         });
@@ -1272,15 +1270,6 @@ describe('TransactionHttp', () => {
         });
     });
 
-    describe('transactions', () => {
-        it('should call transactions successfully', async () => {
-            const transactions = await accountRepository.getAccountTransactions(account.publicAccount.address).toPromise();
-            const transaction = transactions[0];
-            transactionId = transaction.transactionInfo!.id;
-            transactionHash = transaction.transactionInfo!.hash;
-        });
-    });
-
     describe('getTransaction', () => {
         it('should return transaction info given transactionHash', async () => {
             const transaction = await transactionRepository.getTransaction(transactionHash).toPromise();
@@ -1297,13 +1286,13 @@ describe('TransactionHttp', () => {
 
     describe('getTransactions', () => {
         it('should return transaction info given array of transactionHash', async () => {
-            const transactions = await transactionRepository.getTransactions([transactionHash]).toPromise();
+            const transactions = await transactionRepository.getTransactionsById([transactionHash]).toPromise();
             expect(transactions[0].transactionInfo!.hash).to.be.equal(transactionHash);
             expect(transactions[0].transactionInfo!.id).to.be.equal(transactionId);
         });
 
         it('should return transaction info given array of transactionId', async () => {
-            const transactions = await transactionRepository.getTransactions([transactionId]).toPromise();
+            const transactions = await transactionRepository.getTransactionsById([transactionId]).toPromise();
             expect(transactions[0].transactionInfo!.hash).to.be.equal(transactionHash);
             expect(transactions[0].transactionInfo!.id).to.be.equal(transactionId);
         });

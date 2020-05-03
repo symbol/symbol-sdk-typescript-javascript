@@ -31,7 +31,6 @@ import { BlockHttp } from '../../src/infrastructure/BlockHttp';
 import { BlockRepository } from '../../src/infrastructure/BlockRepository';
 import { BlockInfo } from '../../src/model/blockchain/BlockInfo';
 import { MerklePathItem } from '../../src/model/blockchain/MerklePathItem';
-import { Transaction } from '../../src/model/transaction/Transaction';
 import { UInt64 } from '../../src/model/UInt64';
 
 describe('BlockHttp', () => {
@@ -67,35 +66,6 @@ describe('BlockHttp', () => {
         blockRoutesApi: instance(blockRoutesApi),
     });
 
-    const transactionInfoDTO = {
-        meta: {
-            hash: '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96',
-            height: '18160',
-            id: '5A0069D83F17CF0001777E55',
-            index: 0,
-            merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
-        },
-        transaction: {
-            deadline: '1000',
-            maxFee: '0',
-            signature:
-                '939673209A13FF82397578D22CC96EB8516A6760C894D9B7535E3A1E0680' +
-                '07B9255CFA9A914C97142A7AE18533E381C846B69D2AE0D60D1DC8A55AD120E2B606',
-            signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
-            minApprovalDelta: 1,
-            minRemovalDelta: 1,
-            modifications: [
-                {
-                    cosignatoryPublicKey: '589B73FBC22063E9AE6FBAC67CB9C6EA865EF556E5' + 'FB8B7310D45F77C1250B97',
-                    modificationAction: 0,
-                },
-            ],
-            type: 16725,
-            version: 1,
-            network: 144,
-        },
-    };
-
     before(() => {
         reset(response);
         reset(blockRoutesApi);
@@ -122,12 +92,6 @@ describe('BlockHttp', () => {
         expect(blockInfo.totalFee.toString()).to.be.equals(blockInfoDto.meta.totalFee);
     }
 
-    function assertTransaction(transaction: Transaction): void {
-        expect(transaction).to.be.not.null;
-        expect(transaction.type).to.be.equals(transactionInfoDTO.transaction.type);
-        expect(transaction.deadline.toString()).to.be.equals(transactionInfoDTO.transaction.deadline);
-    }
-
     it('getBlockInfo', async () => {
         when(blockRoutesApi.getBlockByHeight('1')).thenReturn(Promise.resolve({ response, body: blockInfoDto }));
         const blockInfo = await blockRepository.getBlockByHeight(UInt64.fromUint(1)).toPromise();
@@ -143,17 +107,6 @@ describe('BlockHttp', () => {
         );
         const blockInfos = await blockRepository.getBlocksByHeightWithLimit(UInt64.fromUint(2), 10).toPromise();
         assertBlockInfo(blockInfos[0]);
-    });
-
-    it('getBlockTransactions', async () => {
-        when(blockRoutesApi.getBlockTransactions('2', undefined, undefined, undefined)).thenReturn(
-            Promise.resolve({
-                response,
-                body: [transactionInfoDTO],
-            }),
-        );
-        const transactions = await blockRepository.getBlockTransactions(UInt64.fromUint(2)).toPromise();
-        assertTransaction(transactions[0]);
     });
 
     it('getMerkleTransaction', async () => {

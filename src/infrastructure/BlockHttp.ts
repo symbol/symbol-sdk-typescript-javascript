@@ -20,12 +20,9 @@ import { PublicAccount } from '../model/account/PublicAccount';
 import { BlockInfo } from '../model/blockchain/BlockInfo';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
-import { Transaction } from '../model/transaction/Transaction';
 import { UInt64 } from '../model/UInt64';
 import { BlockRepository } from './BlockRepository';
 import { Http } from './Http';
-import { QueryParams } from './QueryParams';
-import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
 
 /**
  * Blockchain http repository.
@@ -56,27 +53,6 @@ export class BlockHttp extends Http implements BlockRepository {
      */
     public getBlockByHeight(height: UInt64): Observable<BlockInfo> {
         return this.call(this.blockRoutesApi.getBlockByHeight(height.toString()), (body) => this.toBlockInfo(body));
-    }
-
-    /**
-     * Gets array of transactions included in a block for a block height
-     * @param height - Block height
-     * @param queryParams - (Optional) Query params
-     * @returns Observable<Transaction[]>
-     */
-    public getBlockTransactions(height: UInt64, queryParams?: QueryParams): Observable<Transaction[]> {
-        return this.call(
-            this.blockRoutesApi.getBlockTransactions(
-                height.toString(),
-                this.queryParams(queryParams).pageSize,
-                this.queryParams(queryParams).id,
-                this.queryParams(queryParams).ordering,
-            ),
-            (body) =>
-                body.map((transactionDTO) => {
-                    return CreateTransactionFromDTO(transactionDTO);
-                }),
-        );
     }
 
     /**

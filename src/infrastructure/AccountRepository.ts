@@ -17,10 +17,6 @@
 import { Observable } from 'rxjs';
 import { AccountInfo } from '../model/account/AccountInfo';
 import { Address } from '../model/account/Address';
-import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
-import { Transaction } from '../model/transaction/Transaction';
-import { QueryParams } from './QueryParams';
-import { TransactionFilter } from './TransactionFilter';
 
 /**
  * Account interface repository.
@@ -41,70 +37,4 @@ export interface AccountRepository {
      * @returns Observable<AccountInfo[]>
      */
     getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]>;
-
-    /**
-     * Gets an array of confirmed transactions for which an account is signer or receiver.
-     * @param address - * Address can be created rawAddress or publicKey
-     * @param queryParams - (Optional) Query params
-     * @param transactionFilter - (Optional) Transaction fitler
-     * @returns Observable<Transaction[]>
-     */
-    getAccountTransactions(address: Address, queryParams?: QueryParams, transactionFilter?: TransactionFilter): Observable<Transaction[]>;
-
-    /**
-     * Gets an array of transactions for which an account is the recipient of a transaction.
-     * A transaction is said to be incoming with respect to an account if the account is the recipient of a transaction.
-     * @param address - * Address can be created rawAddress or publicKey
-     * @param queryParams - (Optional) Query params
-     * @param transactionFilter - (Optional) Transaction fitler
-     * @returns Observable<Transaction[]>
-     */
-    getAccountIncomingTransactions(
-        address: Address,
-        queryParams?: QueryParams,
-        transactionFilter?: TransactionFilter,
-    ): Observable<Transaction[]>;
-
-    /**
-     * Gets an array of transactions for which an account is the sender a transaction.
-     * A transaction is said to be outgoing with respect to an account if the account is the sender of a transaction.
-     * @param address - * Address can be created rawAddress or publicKey
-     * @param queryParams - (Optional) Query params
-     * @param transactionFilter - (Optional) Transaction fitler
-     * @returns Observable<Transaction[]>
-     */
-    getAccountOutgoingTransactions(
-        address: Address,
-        queryParams?: QueryParams,
-        transactionFilter?: TransactionFilter,
-    ): Observable<Transaction[]>;
-
-    /**
-     * Gets the array of transactions for which an account is the sender or receiver and which have not yet been included in a block.
-     * Unconfirmed transactions are those transactions that have not yet been included in a block.
-     * Unconfirmed transactions are not guaranteed to be included in any block.
-     * @param address - * Address can be created rawAddress or publicKey
-     * @param queryParams - (Optional) Query params
-     * @param transactionFilter - (Optional) Transaction fitler
-     * @returns Observable<Transaction[]>
-     */
-    getAccountUnconfirmedTransactions(
-        address: Address,
-        queryParams?: QueryParams,
-        transactionFilter?: TransactionFilter,
-    ): Observable<Transaction[]>;
-
-    /**
-     * Gets an array of transactions for which an account is the sender or has sign the transaction.
-     * A transaction is said to be aggregate bonded with respect to an account if there are missing signatures.
-     * @param address - * Address can be created rawAddress or publicKey
-     * @param queryParams - (Optional) Query params
-     * @param transactionFilter - (Optional) Transaction fitler
-     * @returns Observable<AggregateTransaction[]>
-     */
-    getAccountPartialTransactions(
-        address: Address,
-        queryParams?: QueryParams,
-        transactionFilter?: TransactionFilter,
-    ): Observable<AggregateTransaction[]>;
 }
