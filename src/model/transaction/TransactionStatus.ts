@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { TransactionStateTypeEnum, TransactionStatusTypeEnum } from 'symbol-openapi-typescript-node-client';
+import { TransactionGroupEnum, TransactionStatusEnum } from 'symbol-openapi-typescript-node-client';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 
@@ -33,7 +33,7 @@ export class TransactionStatus {
         /**
          * The transaction status group "failed", "unconfirmed", "confirmed", etc...
          */
-        public readonly group: TransactionStateTypeEnum,
+        public readonly group: TransactionGroupEnum,
         /**
          * The transaction hash.
          */
@@ -45,7 +45,7 @@ export class TransactionStatus {
         /**
          * The transaction status code being the error name in case of failure and success otherwise.
          */
-        public readonly code?: TransactionStatusTypeEnum,
+        public readonly code?: TransactionStatusEnum,
         /**
          * The height of the block at which it was confirmed or rejected.
          */

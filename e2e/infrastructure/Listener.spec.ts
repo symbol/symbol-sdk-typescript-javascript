@@ -16,7 +16,6 @@
 import { assert, expect } from 'chai';
 import { ChronoUnit } from 'js-joda';
 import { filter } from 'rxjs/operators';
-import { AccountRepository } from '../../src/infrastructure/AccountRepository';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
@@ -29,6 +28,8 @@ import { Deadline } from '../../src/model/transaction/Deadline';
 import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
+import { TransactionSearchCriteria } from '../../src/infrastructure/TransactionSearchCriteria';
+import { TransactionGroupSubsetEnum } from 'symbol-openapi-typescript-node-client';
 
 describe('Listener', () => {
     const helper = new IntegrationTestHelper();
@@ -38,7 +39,6 @@ describe('Listener', () => {
     let cosignAccount1: Account;
     let cosignAccount2: Account;
     let cosignAccount3: Account;
-    let accountRepository: AccountRepository;
     let generationHash: string;
     let networkType: NetworkType;
     const NetworkCurrencyLocalId: NamespaceId = helper.networkCurrencyNamespaceId;
@@ -54,7 +54,6 @@ describe('Listener', () => {
             cosignAccount3 = helper.cosignAccount3;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
-            accountRepository = helper.repositoryFactory.createAccountRepository();
             transactionRepository = helper.repositoryFactory.createTransactionRepository();
         });
     });
@@ -250,7 +249,10 @@ describe('Listener', () => {
                     done();
                 });
                 helper.listener.aggregateBondedAdded(cosignAccount1.address).subscribe(() => {
-                    accountRepository.getAccountPartialTransactions(cosignAccount1.publicAccount.address).subscribe((transactions) => {
+                    const criteria = new TransactionSearchCriteria()
+                        .buildAddress(cosignAccount1.publicAccount.address)
+                        .buildGroup(TransactionGroupSubsetEnum.Partial);
+                    transactionRepository.searchTransactions(criteria).subscribe((transactions) => {
                         const transactionToCosign = transactions[0];
                         const cosignatureTransaction = CosignatureTransaction.create(transactionToCosign);
                         const cosignatureSignedTransaction = cosignAccount2.signCosignatureTransaction(cosignatureTransaction);
@@ -281,7 +283,10 @@ describe('Listener', () => {
                 done();
             });
             helper.listener.aggregateBondedAdded(cosignAccount1.address).subscribe(() => {
-                accountRepository.getAccountPartialTransactions(cosignAccount1.publicAccount.address).subscribe((transactions) => {
+                const criteria = new TransactionSearchCriteria()
+                    .buildAddress(cosignAccount1.publicAccount.address)
+                    .buildGroup(TransactionGroupSubsetEnum.Partial);
+                transactionRepository.searchTransactions(criteria).subscribe((transactions) => {
                     const transactionToCosign = transactions[0];
                     const cosignatureTransaction = CosignatureTransaction.create(transactionToCosign);
                     const cosignatureSignedTransaction = cosignAccount2.signCosignatureTransaction(cosignatureTransaction);

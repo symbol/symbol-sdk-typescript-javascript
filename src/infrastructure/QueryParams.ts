@@ -14,13 +14,7 @@
  * limitations under the License.
  */
 
-/**
- * @since 0.11.3
- */
-export enum Order {
-    ASC = 'id',
-    DESC = '-id',
-}
+import { Order } from 'symbol-openapi-typescript-node-client/dist/model/order';
 
 /**
  * The query params structure describes pagination params for requests.
@@ -38,7 +32,7 @@ export class QueryParams {
      * ASC. Older to newer.
      */
 
-    public order: Order = Order.DESC;
+    public order: Order = Order.Desc;
 
     /**
      * Id after which we want objects to be returned

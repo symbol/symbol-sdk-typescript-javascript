@@ -58,7 +58,7 @@ describe('AccountService', () => {
                 UInt64.fromUint(100),
                 AccountType.Main,
                 '0',
-                [new ActivityBucket('0', 1, 1, 1)],
+                [new ActivityBucket('0', UInt64.fromNumericString('1'), 1, UInt64.fromNumericString('1'))],
                 mosaics,
                 UInt64.fromUint(100),
                 UInt64.fromUint(100),
