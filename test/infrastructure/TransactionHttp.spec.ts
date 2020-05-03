@@ -22,6 +22,13 @@ import {
     TransactionGroupEnum,
     TransactionStatusDTO,
     TransactionStatusEnum,
+    TransactionPage,
+    TransactionInfoExtendedDTO,
+    TransactionMetaDTO,
+    Pagination,
+    TransferTransactionDTO,
+    NetworkTypeEnum,
+    Order,
 } from 'symbol-openapi-typescript-node-client';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 
@@ -33,6 +40,9 @@ import { AggregateTransaction } from '../../src/model/transaction/AggregateTrans
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { NIS2_URL, TestingAccount } from '../conf/conf.spec';
+import { TransactionSearchCriteria } from '../../src/infrastructure/infrastructure';
+import { TransactionTypeEnum } from 'symbol-openapi-typescript-node-client/dist/model/transactionTypeEnum';
+import { TransactionType } from '../../src/model/transaction/TransactionType';
 
 describe('TransactionHttp', () => {
     const account = TestingAccount;
@@ -114,5 +124,70 @@ describe('TransactionHttp', () => {
         expect(transactionStatus.hash).to.be.equal(hash);
         expect(transactionStatus.code).to.be.equal('Failure_AccountLink_Invalid_Action');
         expect(transactionStatus.group).to.be.equal('failed');
+    });
+
+    it('Test searchTransaction method', async () => {
+        const page = new TransactionPage();
+        const paginationDto = new Pagination();
+        paginationDto.pageNumber = 1;
+        paginationDto.pageSize = 1;
+        paginationDto.totalEntries = 1;
+        paginationDto.totalPages = 1;
+
+        const transactionInfoDto = new TransactionInfoExtendedDTO();
+        const metaDto = new TransactionMetaDTO();
+        metaDto.hash = 'hash';
+        metaDto.height = '1';
+        metaDto.index = 0;
+        metaDto.merkleComponentHash = 'merkleHash';
+
+        const transactionDto = new TransferTransactionDTO();
+        transactionDto.deadline = '1';
+        transactionDto.maxFee = '1';
+        transactionDto.mosaics = [];
+        transactionDto.network = NetworkTypeEnum.NUMBER_104;
+        transactionDto.recipientAddress = '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB';
+        transactionDto.type = TransactionType.TRANSFER.valueOf();
+        transactionDto.version = 1;
+
+        transactionInfoDto.id = 'id';
+        transactionInfoDto.meta = metaDto;
+        transactionInfoDto.transaction = transactionDto;
+
+        page.data = [transactionInfoDto];
+        page.pagination = paginationDto;
+
+        when(
+            transactionRoutesApi.searchTransactions(
+                deepEqual(account.address.plain()),
+                undefined,
+                undefined,
+                undefined,
+                10,
+                1,
+                undefined,
+                undefined,
+                deepEqual(Order.Desc),
+                undefined,
+                undefined,
+            ),
+        ).thenReturn(Promise.resolve({ response: instance(clientResponse), body: page }));
+
+        const transactions = await transactionHttp
+            .searchTransactions(new TransactionSearchCriteria().buildAddress(account.address))
+            .toPromise();
+
+        expect(transactions.getData().length).to.be.equal(1);
+        expect(transactions.getData()[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
+        expect(((transactions.getData()[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
+            Address.createFromEncoded('906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB').plain(),
+        );
+        expect(transactions.getData()[0].transactionInfo?.id).to.be.equal('id');
+        expect(transactions.getData()[0].transactionInfo?.hash).to.be.equal('hash');
+
+        expect(transactions.getPageNumber()).to.be.equal(1);
+        expect(transactions.getPageSize()).to.be.equal(1);
+        expect(transactions.getTotalEntries()).to.be.equal(1);
+        expect(transactions.getTotalPages()).to.be.equal(1);
     });
 });
