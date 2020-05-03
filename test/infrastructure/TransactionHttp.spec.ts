@@ -41,7 +41,6 @@ import { Deadline } from '../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { NIS2_URL, TestingAccount } from '../conf/conf.spec';
 import { TransactionSearchCriteria } from '../../src/infrastructure/infrastructure';
-import { TransactionTypeEnum } from 'symbol-openapi-typescript-node-client/dist/model/transactionTypeEnum';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
 
 describe('TransactionHttp', () => {
