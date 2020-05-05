@@ -20,7 +20,6 @@ import { catchError, map, shareReplay } from 'rxjs/operators';
 import { NodeRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { NetworkType } from '../model/network/NetworkType';
 import { QueryParams } from './QueryParams';
-import { TransactionFilter } from './TransactionFilter';
 
 /**
  * Http extended by all http services
@@ -56,12 +55,6 @@ export abstract class Http {
             pageSize: queryParams ? queryParams.pageSize : undefined,
             id: queryParams ? queryParams.id : undefined,
             ordering: queryParams ? queryParams.order : undefined,
-        };
-    }
-
-    transactionFilter(filter?: TransactionFilter): any {
-        return {
-            type: filter ? filter.types : undefined,
         };
     }
 

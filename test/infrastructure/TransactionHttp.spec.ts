@@ -28,7 +28,6 @@ import {
     Pagination,
     TransferTransactionDTO,
     NetworkTypeEnum,
-    Order,
 } from 'symbol-openapi-typescript-node-client';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 
