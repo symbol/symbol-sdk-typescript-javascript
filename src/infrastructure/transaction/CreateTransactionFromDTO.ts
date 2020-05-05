@@ -460,7 +460,7 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
                 ? new AggregateTransactionInfo(
                       UInt64.fromNumericString(innerTransactionDTO.meta.height),
                       innerTransactionDTO.meta.index,
-                      innerTransactionDTO.meta.id,
+                      innerTransactionDTO.id,
                       innerTransactionDTO.meta.aggregateHash,
                       innerTransactionDTO.meta.aggregateId,
                   )
@@ -493,7 +493,7 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
                 ? new TransactionInfo(
                       UInt64.fromNumericString(transactionDTO.meta.height),
                       transactionDTO.meta.index,
-                      transactionDTO.meta.id,
+                      transactionDTO.id,
                       transactionDTO.meta.hash,
                       transactionDTO.meta.merkleComponentHash,
                   )
@@ -504,7 +504,7 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
             ? new TransactionInfo(
                   UInt64.fromNumericString(transactionDTO.meta.height),
                   transactionDTO.meta.index,
-                  transactionDTO.meta.id,
+                  transactionDTO.id,
                   transactionDTO.meta.hash,
                   transactionDTO.meta.merkleComponentHash,
               )

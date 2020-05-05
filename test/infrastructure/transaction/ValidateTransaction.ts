@@ -28,7 +28,7 @@ const ValidateTransaction = {
         expect(transaction.transactionInfo.hash).to.be.equal(transactionDTO.meta.hash);
         expect(transaction.transactionInfo.merkleComponentHash).to.be.equal(transactionDTO.meta.merkleComponentHash);
         expect(transaction.transactionInfo.index).to.be.equal(transactionDTO.meta.index);
-        expect(transaction.transactionInfo.id).to.be.equal(transactionDTO.meta.id);
+        expect(transaction.transactionInfo.id).to.be.equal(transactionDTO.id);
 
         expect(transaction.signature).to.be.equal(transactionDTO.transaction.signature);
         expect(transaction.signer.publicKey).to.be.equal(transactionDTO.transaction.signerPublicKey);
@@ -55,7 +55,7 @@ const ValidateTransaction = {
         expect(aggregateTransaction.transactionInfo.hash).to.be.equal(aggregateTransactionDTO.meta.hash);
         expect(aggregateTransaction.transactionInfo.merkleComponentHash).to.be.equal(aggregateTransactionDTO.meta.merkleComponentHash);
         expect(aggregateTransaction.transactionInfo.index).to.be.equal(aggregateTransactionDTO.meta.index);
-        expect(aggregateTransaction.transactionInfo.id).to.be.equal(aggregateTransactionDTO.meta.id);
+        expect(aggregateTransaction.transactionInfo.id).to.be.equal(aggregateTransactionDTO.id);
 
         expect(aggregateTransaction.signature).to.be.equal(aggregateTransactionDTO.transaction.signature);
         expect(aggregateTransaction.signer.publicKey).to.be.equal(aggregateTransactionDTO.transaction.signerPublicKey);

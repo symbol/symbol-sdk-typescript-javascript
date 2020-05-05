@@ -19,7 +19,6 @@ import { sha3_256 } from 'js-sha3';
 import { Crypto } from '../../src/core/crypto';
 import { Convert, Convert as convert } from '../../src/core/format';
 import { TransactionMapping } from '../../src/core/utils/TransactionMapping';
-import { AccountRepository } from '../../src/infrastructure/AccountRepository';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
@@ -66,6 +65,7 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { LockHashUtils } from '../../src/core/utils/LockHashUtils';
+import { TransactionSearchCriteria } from '../../src/infrastructure/infrastructure';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CryptoJS = require('crypto-js');
@@ -80,7 +80,6 @@ describe('TransactionHttp', () => {
     let account3: Account;
     let multisigAccount: Account;
     let cosignAccount1: Account;
-    let accountRepository: AccountRepository;
     let namespaceRepository: NamespaceRepository;
     let generationHash: string;
     let networkType: NetworkType;
@@ -106,7 +105,6 @@ describe('TransactionHttp', () => {
             harvestingAccount = helper.harvestingAccount;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
-            accountRepository = helper.repositoryFactory.createAccountRepository();
             namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
             transactionRepository = helper.repositoryFactory.createTransactionRepository();
         });
@@ -1272,15 +1270,6 @@ describe('TransactionHttp', () => {
         });
     });
 
-    describe('transactions', () => {
-        it('should call transactions successfully', async () => {
-            const transactions = await accountRepository.getAccountTransactions(account.publicAccount.address).toPromise();
-            const transaction = transactions[0];
-            transactionId = transaction.transactionInfo!.id;
-            transactionHash = transaction.transactionInfo!.hash;
-        });
-    });
-
     describe('getTransaction', () => {
         it('should return transaction info given transactionHash', async () => {
             const transaction = await transactionRepository.getTransaction(transactionHash).toPromise();
@@ -1295,15 +1284,15 @@ describe('TransactionHttp', () => {
         });
     });
 
-    describe('getTransactions', () => {
+    describe('getTransactionsById', () => {
         it('should return transaction info given array of transactionHash', async () => {
-            const transactions = await transactionRepository.getTransactions([transactionHash]).toPromise();
+            const transactions = await transactionRepository.getTransactionsById([transactionHash]).toPromise();
             expect(transactions[0].transactionInfo!.hash).to.be.equal(transactionHash);
             expect(transactions[0].transactionInfo!.id).to.be.equal(transactionId);
         });
 
         it('should return transaction info given array of transactionId', async () => {
-            const transactions = await transactionRepository.getTransactions([transactionId]).toPromise();
+            const transactions = await transactionRepository.getTransactionsById([transactionId]).toPromise();
             expect(transactions[0].transactionInfo!.hash).to.be.equal(transactionHash);
             expect(transactions[0].transactionInfo!.id).to.be.equal(transactionId);
         });
@@ -1379,6 +1368,21 @@ describe('TransactionHttp', () => {
             const effectiveFee = await transactionRepository.getTransactionEffectiveFee(transactionHash).toPromise();
             expect(effectiveFee).to.not.be.undefined;
             expect(effectiveFee).to.be.equal(0);
+        });
+    });
+
+    describe('searchTransactions', () => {
+        it('should return transaction info given address', async () => {
+            const transactions = await transactionRepository
+                .searchTransactions({ address: account.address } as TransactionSearchCriteria)
+                .toPromise();
+            expect(transactions.getData().length).to.be.greaterThan(0);
+        });
+        it('should return transaction info given height', async () => {
+            const transactions = await transactionRepository
+                .searchTransactions({ height: UInt64.fromUint(1) } as TransactionSearchCriteria)
+                .toPromise();
+            expect(transactions.getData().length).to.be.greaterThan(0);
         });
     });
 });

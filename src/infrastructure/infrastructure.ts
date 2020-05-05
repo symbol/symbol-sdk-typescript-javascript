@@ -47,4 +47,6 @@ export * from './RepositoryFactory';
 export * from './RestrictionAccountRepository';
 export * from './RestrictionMosaicRepository';
 export * from './TransactionRepository';
-export * from './TransactionFilter';
+export * from './Page';
+export * from './TransactionSearchCriteria';
+export * from './SearchCriteria';

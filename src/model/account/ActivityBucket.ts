@@ -1,4 +1,5 @@
 /*
+import { UInt64 } from '../UInt64';
  * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +15,8 @@
  * limitations under the License.
  */
 
+import { UInt64 } from '../UInt64';
+
 /**
  * Account activity bucket.
  */
@@ -27,11 +30,11 @@ export class ActivityBucket {
         /**
          * Start height
          */
-        public readonly startHeight: string,
+        public readonly startHeight: UInt64,
         /**
          * Total fees paid.
          */
-        public readonly totalFeesPaid: number,
+        public readonly totalFeesPaid: UInt64,
         /**
          * Beneficiary count.
          */
@@ -39,6 +42,6 @@ export class ActivityBucket {
         /**
          * Raw score.
          */
-        public readonly rawScore: number,
+        public readonly rawScore: UInt64,
     ) {}
 }

@@ -32,6 +32,7 @@ import { Metadata } from '../../src/model/metadata/Metadata';
 import { MetadataType } from '../../src/model/metadata/MetadataType';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { Order } from 'symbol-openapi-typescript-node-client/dist/model/order';
 
 describe('MetadataHttp', () => {
     const address = Address.createFromRawAddress('MCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPR72DYSX');
@@ -109,7 +110,7 @@ describe('MetadataHttp', () => {
     }
 
     it('getAccountMetadata', async () => {
-        when(metadataRoutesApi.getAccountMetadata(address.plain(), 1, 'a', '-id')).thenReturn(
+        when(metadataRoutesApi.getAccountMetadata(address.plain(), 1, Order.Desc, 'a')).thenReturn(
             Promise.resolve({
                 response,
                 body: metadataEntriesDTO,
@@ -155,7 +156,7 @@ describe('MetadataHttp', () => {
     });
 
     it('getMosaicMetadata', async () => {
-        when(metadataRoutesApi.getMosaicMetadata(mosaicId.toHex(), 1, 'a', '-id')).thenReturn(
+        when(metadataRoutesApi.getMosaicMetadata(mosaicId.toHex(), 1, 'a', Order.Desc)).thenReturn(
             Promise.resolve({
                 response,
                 body: metadataEntriesDTO,
@@ -201,7 +202,7 @@ describe('MetadataHttp', () => {
     });
 
     it('getNamespaceMetadata', async () => {
-        when(metadataRoutesApi.getNamespaceMetadata(namespaceId.toHex(), 2, 'a', '-id')).thenReturn(
+        when(metadataRoutesApi.getNamespaceMetadata(namespaceId.toHex(), 2, 'a', Order.Desc)).thenReturn(
             Promise.resolve({
                 response,
                 body: metadataEntriesDTO,
