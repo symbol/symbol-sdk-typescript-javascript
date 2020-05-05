@@ -84,7 +84,7 @@ export class AccountHttp extends Http implements AccountRepository {
             dto.account.linkedAccountKey,
             dto.account.activityBuckets.map((bucket) => {
                 return new ActivityBucket(
-                    bucket.startHeight,
+                    UInt64.fromNumericString(bucket.startHeight),
                     UInt64.fromNumericString(bucket.totalFeesPaid),
                     bucket.beneficiaryCount,
                     UInt64.fromNumericString(bucket.rawScore),

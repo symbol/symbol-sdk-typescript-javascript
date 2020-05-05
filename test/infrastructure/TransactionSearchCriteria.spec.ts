@@ -25,75 +25,78 @@ describe('TransactionSearchCriteria', () => {
     const account = TestingAccount;
 
     it('should create TransactionSearchCriteria', () => {
-        const criteria = new TransactionSearchCriteria()
-            .buildOrder(Order.Asc)
-            .buildPageNumber(1)
-            .buildPageSize(1)
-            .buildAddress(account.address)
-            .buildEmbedded(true)
-            .buildGroup(TransactionGroupSubsetEnum.Confirmed)
-            .buildHeight(UInt64.fromUint(1))
-            .buildId('12345')
-            .buildOffset('6789')
-            .buildRecipientAddress(account.address)
-            .buildSignerPublicKey(account.publicKey)
-            .buildTransactionTypes([TransactionType.ACCOUNT_ADDRESS_RESTRICTION]);
+        let criteria: TransactionSearchCriteria = {
+            orderBy: Order.Asc,
+            pageNumber: 1,
+            pageSize: 1,
+            address: account.address,
+            embedded: true,
+            group: TransactionGroupSubsetEnum.Confirmed,
+            height: UInt64.fromUint(1),
+            id: '12345',
+            offset: '6789',
+            recipientAddress: account.address,
+            signerPublicKey: account.publicKey,
+            transactionTypes: [TransactionType.ACCOUNT_ADDRESS_RESTRICTION],
+        };
 
-        expect(criteria.getOrder().valueOf()).to.be.equal('asc');
-        expect(criteria.getPageNumber()).to.be.equal(1);
-        expect(criteria.getPageSize()).to.be.equal(1);
-        expect(criteria.getAddress()).to.be.equal(account.address.plain());
-        expect(criteria.getEmbedded()).to.be.equal(true);
-        expect(criteria.getGroup()).to.be.equal(TransactionGroupSubsetEnum.Confirmed);
-        expect(criteria.getHeight()).to.be.equal('1');
-        expect(criteria.getId()).to.be.equal('12345');
-        expect(criteria.getOffset()).to.be.equal('6789');
-        expect(criteria.getRecipientAddress()).to.be.equal(account.address.plain());
-        expect(criteria.getSignerPublicKey()).to.be.equal(account.publicKey);
-        deepEqual(criteria.getTransactionTypes(), [TransactionType.ACCOUNT_ADDRESS_RESTRICTION]);
+        expect(criteria.orderBy?.valueOf()).to.be.equal('asc');
+        expect(criteria.pageNumber).to.be.equal(1);
+        expect(criteria.pageSize).to.be.equal(1);
+        expect(criteria.address?.plain()).to.be.equal(account.address.plain());
+        expect(criteria.embedded).to.be.equal(true);
+        expect(criteria.group).to.be.equal(TransactionGroupSubsetEnum.Confirmed);
+        expect(criteria.height?.toString()).to.be.equal('1');
+        expect(criteria.id).to.be.equal('12345');
+        expect(criteria.offset).to.be.equal('6789');
+        expect(criteria.recipientAddress?.plain()).to.be.equal(account.address.plain());
+        expect(criteria.signerPublicKey).to.be.equal(account.publicKey);
+        deepEqual(criteria.transactionTypes, [TransactionType.ACCOUNT_ADDRESS_RESTRICTION]);
 
         const address = Address.createFromRawAddress('MCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPR72DYSX');
-        criteria.setOrder(Order.Desc);
-        criteria.setPageNumber(2);
-        criteria.setPageSize(2);
-        criteria.setAddress(address);
-        criteria.setEmbedded(false);
-        criteria.setGroup(TransactionGroupSubsetEnum.Unconfirmed);
-        criteria.setHeight(UInt64.fromUint(2));
-        criteria.setId('aaa');
-        criteria.setOffset('bbb');
-        criteria.setRecipientAddress(address);
-        criteria.setSignerPublicKey('publicKey');
-        criteria.setTransactionTypes([TransactionType.TRANSFER]);
+        criteria = {
+            orderBy: Order.Desc,
+            pageNumber: 2,
+            pageSize: 2,
+            address: address,
+            embedded: false,
+            group: TransactionGroupSubsetEnum.Unconfirmed,
+            height: UInt64.fromUint(2),
+            id: 'aaa',
+            offset: 'bbb',
+            recipientAddress: address,
+            signerPublicKey: 'publicKey',
+            transactionTypes: [TransactionType.TRANSFER],
+        };
 
-        expect(criteria.getOrder().valueOf()).to.be.equal('desc');
-        expect(criteria.getPageNumber()).to.be.equal(2);
-        expect(criteria.getPageSize()).to.be.equal(2);
-        expect(criteria.getAddress()).to.be.equal(address.plain());
-        expect(criteria.getEmbedded()).to.be.equal(false);
-        expect(criteria.getGroup()).to.be.equal(TransactionGroupSubsetEnum.Unconfirmed);
-        expect(criteria.getHeight()).to.be.equal('2');
-        expect(criteria.getId()).to.be.equal('aaa');
-        expect(criteria.getOffset()).to.be.equal('bbb');
-        expect(criteria.getRecipientAddress()).to.be.equal(address.plain());
-        expect(criteria.getSignerPublicKey()).to.be.equal('publicKey');
-        deepEqual(criteria.getTransactionTypes(), [TransactionType.TRANSFER]);
+        expect(criteria.orderBy?.valueOf()).to.be.equal('desc');
+        expect(criteria.pageNumber).to.be.equal(2);
+        expect(criteria.pageSize).to.be.equal(2);
+        expect(criteria.address?.plain()).to.be.equal(address.plain());
+        expect(criteria.embedded).to.be.equal(false);
+        expect(criteria.group).to.be.equal(TransactionGroupSubsetEnum.Unconfirmed);
+        expect(criteria.height?.toString()).to.be.equal('2');
+        expect(criteria.id).to.be.equal('aaa');
+        expect(criteria.offset).to.be.equal('bbb');
+        expect(criteria.recipientAddress?.plain()).to.be.equal(address.plain());
+        expect(criteria.signerPublicKey).to.be.equal('publicKey');
+        deepEqual(criteria.transactionTypes, [TransactionType.TRANSFER]);
     });
 
     it('should create TransactionSearchCriteria - default', () => {
-        const criteria = new TransactionSearchCriteria();
+        const criteria: TransactionSearchCriteria = {};
 
-        expect(criteria.getOrder().valueOf()).to.be.equal('desc');
-        expect(criteria.getPageNumber()).to.be.equal(1);
-        expect(criteria.getPageSize()).to.be.equal(10);
-        expect(criteria.getAddress()).to.be.undefined;
-        expect(criteria.getEmbedded()).to.be.undefined;
-        expect(criteria.getGroup()).to.be.undefined;
-        expect(criteria.getHeight()).to.be.undefined;
-        expect(criteria.getId()).to.be.undefined;
-        expect(criteria.getOffset()).to.be.undefined;
-        expect(criteria.getRecipientAddress()).to.be.undefined;
-        expect(criteria.getSignerPublicKey()).to.be.undefined;
-        expect(criteria.getTransactionTypes()).to.be.undefined;
+        expect(criteria.orderBy).to.be.undefined;
+        expect(criteria.address).to.be.undefined;
+        expect(criteria.embedded).to.be.undefined;
+        expect(criteria.group).to.be.undefined;
+        expect(criteria.height).to.be.undefined;
+        expect(criteria.id).to.be.undefined;
+        expect(criteria.offset).to.be.undefined;
+        expect(criteria.pageNumber).to.be.undefined;
+        expect(criteria.pageSize).to.be.undefined;
+        expect(criteria.recipientAddress).to.be.undefined;
+        expect(criteria.signerPublicKey).to.be.undefined;
+        expect(criteria.transactionTypes).to.be.undefined;
     });
 });

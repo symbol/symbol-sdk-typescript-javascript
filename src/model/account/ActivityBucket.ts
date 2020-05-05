@@ -30,7 +30,7 @@ export class ActivityBucket {
         /**
          * Start height
          */
-        public readonly startHeight: string,
+        public readonly startHeight: UInt64,
         /**
          * Total fees paid.
          */

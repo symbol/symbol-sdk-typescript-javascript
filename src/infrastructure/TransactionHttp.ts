@@ -204,17 +204,17 @@ export class TransactionHttp extends Http implements TransactionRepository {
     public searchTransactions(criteria: TransactionSearchCriteria): Observable<Page<Transaction>> {
         return this.call(
             this.transactionRoutesApi.searchTransactions(
-                criteria.getAddress(),
-                criteria.getRecipientAddress(),
-                criteria.getSignerPublicKey(),
-                criteria.getHeight(),
-                criteria.getPageSize(),
-                criteria.getPageNumber(),
-                criteria.getOffset(),
-                criteria.getGroup(),
-                criteria.getOrder(),
-                criteria.getTransactionTypes(),
-                criteria.getEmbedded(),
+                criteria.address?.plain(),
+                criteria.recipientAddress?.plain(),
+                criteria.signerPublicKey,
+                criteria.height?.toString(),
+                criteria.pageSize,
+                criteria.pageNumber,
+                criteria.offset,
+                criteria.group,
+                criteria.orderBy,
+                criteria.transactionTypes?.map((type) => type.valueOf()),
+                criteria.embedded,
             ),
             (body) => this.toPage(body),
         );

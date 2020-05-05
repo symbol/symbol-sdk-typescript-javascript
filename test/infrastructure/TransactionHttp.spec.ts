@@ -162,18 +162,18 @@ describe('TransactionHttp', () => {
                 undefined,
                 undefined,
                 undefined,
-                10,
-                1,
                 undefined,
                 undefined,
-                deepEqual(Order.Desc),
+                undefined,
+                undefined,
+                undefined,
                 undefined,
                 undefined,
             ),
         ).thenReturn(Promise.resolve({ response: instance(clientResponse), body: page }));
 
         const transactions = await transactionHttp
-            .searchTransactions(new TransactionSearchCriteria().buildAddress(account.address))
+            .searchTransactions({ address: account.address } as TransactionSearchCriteria)
             .toPromise();
 
         expect(transactions.getData().length).to.be.equal(1);

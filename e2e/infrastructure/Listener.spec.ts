@@ -249,9 +249,10 @@ describe('Listener', () => {
                     done();
                 });
                 helper.listener.aggregateBondedAdded(cosignAccount1.address).subscribe(() => {
-                    const criteria = new TransactionSearchCriteria()
-                        .buildAddress(cosignAccount1.publicAccount.address)
-                        .buildGroup(TransactionGroupSubsetEnum.Partial);
+                    const criteria: TransactionSearchCriteria = {
+                        address: cosignAccount1.publicAccount.address,
+                        group: TransactionGroupSubsetEnum.Partial,
+                    };
                     transactionRepository.searchTransactions(criteria).subscribe((transactions) => {
                         const transactionToCosign = transactions[0];
                         const cosignatureTransaction = CosignatureTransaction.create(transactionToCosign);
@@ -283,9 +284,10 @@ describe('Listener', () => {
                 done();
             });
             helper.listener.aggregateBondedAdded(cosignAccount1.address).subscribe(() => {
-                const criteria = new TransactionSearchCriteria()
-                    .buildAddress(cosignAccount1.publicAccount.address)
-                    .buildGroup(TransactionGroupSubsetEnum.Partial);
+                const criteria: TransactionSearchCriteria = {
+                    address: cosignAccount1.publicAccount.address,
+                    group: TransactionGroupSubsetEnum.Partial,
+                };
                 transactionRepository.searchTransactions(criteria).subscribe((transactions) => {
                     const transactionToCosign = transactions[0];
                     const cosignatureTransaction = CosignatureTransaction.create(transactionToCosign);

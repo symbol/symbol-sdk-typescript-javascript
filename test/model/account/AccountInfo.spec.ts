@@ -64,7 +64,7 @@ describe('AccountInfo', () => {
             accountInfoDTO.account.activityBucket.map(
                 (bucket) =>
                     new ActivityBucket(
-                        bucket.startHeight,
+                        UInt64.fromNumericString(bucket.startHeight),
                         UInt64.fromNumericString(bucket.totalFeesPaid),
                         bucket.beneficiaryCount,
                         UInt64.fromNumericString(bucket.rawScore),

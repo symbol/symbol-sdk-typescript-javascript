@@ -1374,13 +1374,13 @@ describe('TransactionHttp', () => {
     describe('searchTransactions', () => {
         it('should return transaction info given address', async () => {
             const transactions = await transactionRepository
-                .searchTransactions(new TransactionSearchCriteria().buildAddress(account.address))
+                .searchTransactions({ address: account.address } as TransactionSearchCriteria)
                 .toPromise();
             expect(transactions.getData().length).to.be.greaterThan(0);
         });
         it('should return transaction info given height', async () => {
             const transactions = await transactionRepository
-                .searchTransactions(new TransactionSearchCriteria().buildHeight(UInt64.fromUint(1)))
+                .searchTransactions({ height: UInt64.fromUint(1) } as TransactionSearchCriteria)
                 .toPromise();
             expect(transactions.getData().length).to.be.greaterThan(0);
         });

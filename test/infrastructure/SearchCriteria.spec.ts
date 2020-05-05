@@ -20,18 +20,16 @@ import { Order } from 'symbol-openapi-typescript-node-client';
 
 describe('SearchCriteria', () => {
     it('should create SearchCriteria', () => {
-        const criteria = new SearchCriteria();
+        let criteria: SearchCriteria = {};
 
-        expect(criteria.getOrder().valueOf()).to.be.equal('desc');
-        expect(criteria.getPageNumber()).to.be.equal(1);
-        expect(criteria.getPageSize()).to.be.equal(10);
+        expect(criteria.orderBy).to.be.undefined;
+        expect(criteria.pageNumber).to.be.undefined;
+        expect(criteria.pageSize).to.be.undefined;
 
-        criteria.setOrder(Order.Asc);
-        criteria.setPageNumber(2);
-        criteria.setPageSize(2);
+        criteria = { orderBy: Order.Asc, pageNumber: 2, pageSize: 2 };
 
-        expect(criteria.getOrder().valueOf()).to.be.equal('asc');
-        expect(criteria.getPageNumber()).to.be.equal(2);
-        expect(criteria.getPageSize()).to.be.equal(2);
+        expect(criteria.orderBy?.valueOf()).to.be.equal('asc');
+        expect(criteria.pageNumber).to.be.equal(2);
+        expect(criteria.pageSize).to.be.equal(2);
     });
 });

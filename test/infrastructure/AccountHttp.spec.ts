@@ -89,7 +89,7 @@ describe('AccountHttp', () => {
         expect(accountInfo.activityBucket.length).to.be.equals(1);
         expect(accountInfo.activityBucket[0].beneficiaryCount).to.be.equals(activityBucketDTO.beneficiaryCount);
         expect(accountInfo.activityBucket[0].rawScore.toString()).to.be.equals(activityBucketDTO.rawScore);
-        expect(accountInfo.activityBucket[0].startHeight).to.be.equals(activityBucketDTO.startHeight);
+        expect(accountInfo.activityBucket[0].startHeight.toString()).to.be.equals(activityBucketDTO.startHeight);
         expect(accountInfo.activityBucket[0].totalFeesPaid.toString()).to.be.equals(activityBucketDTO.totalFeesPaid);
     }
 
