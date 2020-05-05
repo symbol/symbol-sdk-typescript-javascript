@@ -115,7 +115,7 @@ export interface RepositoryFactory {
     createRestrictionMosaicRepository(): RestrictionMosaicRepository;
 
     /**
-     * @returns a newly create {@link IListener}
+     * @returns a newly created {@link IListener}
      */
     createListener(): IListener;
 }
