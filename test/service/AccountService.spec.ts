@@ -191,7 +191,6 @@ describe('AccountService', () => {
     it('should return empty resolved namespaceInfo', async () => {
         when(mockAccountRepository.getAccountsInfo(deepEqual([account2.address]))).thenReturn(observableOf(mockAccountInfo(true, true)));
         const result = await accountService.accountInfoWithResolvedMosaic([account2.address]).toPromise();
-        console.log(result[0].resolvedMosaics);
         expect(result).to.not.be.undefined;
         expect(result.length).to.be.greaterThan(0);
         expect(result![0].resolvedMosaics?.length).to.be.equal(1);
