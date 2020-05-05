@@ -58,7 +58,7 @@ export class AccountInfo {
          */
         public readonly activityBucket: ActivityBucket[],
         /**
-         * Mosaics hold by the account.
+         * Mosaics held by the account.
          */
         public readonly mosaics: Mosaic[],
         /**
