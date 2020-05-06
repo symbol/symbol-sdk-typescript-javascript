@@ -162,4 +162,10 @@ export class TransactionVersion {
      * @type {number}
      */
     public static readonly VOTING_KEY_LINK = 0x01;
+
+    /**
+     * Node key link transaction version.
+     * @type {number}
+     */
+    public static readonly NODE_KEY_LINK = 0x01;
 }

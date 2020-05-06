@@ -56,6 +56,7 @@ import { TransferTransaction } from '../../model/transaction/TransferTransaction
 import { UInt64 } from '../../model/UInt64';
 import { VrfKeyLinkTransaction } from '../../model/transaction/VrfKeyLinkTransaction';
 import { VotingKeyLinkTransaction } from '../../model/transaction/VotingKeyLinkTransaction';
+import { NodeKeyLinkTransaction } from '../../model/transaction/NodeKeyLinkTransaction';
 
 /**
  * Extract recipientAddress value from encoded hexadecimal notation.
@@ -444,6 +445,20 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
         );
     } else if (transactionDTO.type === TransactionType.VRF_KEY_LINK) {
         return new VrfKeyLinkTransaction(
+            transactionDTO.network,
+            transactionDTO.version,
+            Deadline.createFromDTO(transactionDTO.deadline),
+            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            transactionDTO.linkedPublicKey,
+            transactionDTO.linkAction,
+            transactionDTO.signature,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
+            transactionInfo,
+        );
+    } else if (transactionDTO.type === TransactionType.NODE_KEY_LINK) {
+        return new NodeKeyLinkTransaction(
             transactionDTO.network,
             transactionDTO.version,
             Deadline.createFromDTO(transactionDTO.deadline),

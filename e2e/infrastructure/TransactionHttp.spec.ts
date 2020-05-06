@@ -68,6 +68,7 @@ import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { LockHashUtils } from '../../src/core/utils/LockHashUtils';
 import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTransaction';
 import { VotingKeyLinkTransaction } from '../../src/model/transaction/VotingKeyLinkTransaction';
+import { NodeKeyLinkTransaction } from '../../src/model/transaction/NodeKeyLinkTransaction';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CryptoJS = require('crypto-js');
@@ -691,6 +692,45 @@ describe('TransactionHttp', () => {
             const aggregateTransaction = AggregateTransaction.createComplete(
                 Deadline.create(),
                 [vrfKeyLinkTransaction.toAggregate(account.publicAccount)],
+                networkType,
+                [],
+                helper.maxFee,
+            );
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+            return helper.announce(signedTransaction);
+        });
+    });
+
+    describe('NodeKeyLinkTransaction', () => {
+        it('standalone', () => {
+            const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
+                Deadline.create(),
+                harvestingAccount.publicKey,
+                LinkAction.Link,
+                networkType,
+                helper.maxFee,
+            );
+            const signedTransaction = nodeKeyLinkTransaction.signWith(account, generationHash);
+
+            return helper.announce(signedTransaction).then((transaction: NodeKeyLinkTransaction) => {
+                expect(transaction.linkedPublicKey, 'LinkedPublicKey').not.to.be.undefined;
+                expect(transaction.linkAction, 'LinkAction').not.to.be.undefined;
+                return signedTransaction;
+            });
+        });
+    });
+    describe('NodeKeyLinkTransaction', () => {
+        it('aggregate', () => {
+            const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
+                Deadline.create(),
+                harvestingAccount.publicKey,
+                LinkAction.Unlink,
+                networkType,
+                helper.maxFee,
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
+                [nodeKeyLinkTransaction.toAggregate(account.publicAccount)],
                 networkType,
                 [],
                 helper.maxFee,

@@ -49,9 +49,10 @@ import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TestingAccount } from '../conf/conf.spec';
-import { VrfKeyLinkTransaction } from '../../src/model/model';
 import { Crypto } from '../../src/core/crypto';
 import { VotingKeyLinkTransaction } from '../../src/model/transaction/VotingKeyLinkTransaction';
+import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTransaction';
+import { NodeKeyLinkTransaction } from '../../src/model/transaction/NodeKeyLinkTransaction';
 
 describe('SerializeTransactionToJSON', () => {
     let account: Account;
@@ -378,6 +379,19 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.MIJIN_TEST,
         );
         const json = vrfKeyLinkTransaction.toJSON();
+
+        expect(json.transaction.linkedPublicKey).to.be.equal(account.publicKey);
+        expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
+    });
+
+    it('should create NodeKeyLinkTransaction', () => {
+        const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            LinkAction.Link,
+            NetworkType.MIJIN_TEST,
+        );
+        const json = nodeKeyLinkTransaction.toJSON();
 
         expect(json.transaction.linkedPublicKey).to.be.equal(account.publicKey);
         expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);

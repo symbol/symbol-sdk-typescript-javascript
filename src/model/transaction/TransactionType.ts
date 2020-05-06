@@ -156,4 +156,10 @@ export enum TransactionType {
      * @type {number}
      */
     VOTING_KEY_LINK = 0x4143,
+
+    /**
+     * Link node key transaction
+     * @type {number}
+     */
+    NODE_KEY_LINK = 0x424c,
 }

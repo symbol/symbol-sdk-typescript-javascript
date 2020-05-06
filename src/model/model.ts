@@ -182,6 +182,7 @@ export * from './transaction/MosaicGlobalRestrictionTransaction';
 export * from './transaction/MosaicAddressRestrictionTransaction';
 export * from './transaction/VotingKeyLinkTransaction';
 export * from './transaction/VrfKeyLinkTransaction';
+export * from './transaction/NodeKeyLinkTransaction';
 
 // Wallet
 export * from './wallet/ISimpleWalletDTO';

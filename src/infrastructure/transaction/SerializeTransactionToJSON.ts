@@ -39,6 +39,7 @@ import { TransactionType } from '../../model/transaction/TransactionType';
 import { TransferTransaction } from '../../model/transaction/TransferTransaction';
 import { VrfKeyLinkTransaction } from '../../model/transaction/VrfKeyLinkTransaction';
 import { VotingKeyLinkTransaction } from '../../model/transaction/VotingKeyLinkTransaction';
+import { NodeKeyLinkTransaction } from '../../model/transaction/NodeKeyLinkTransaction';
 
 /**
  * @internal
@@ -257,6 +258,12 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             return {
                 linkedPublicKey: vrfKeyLinkTx.linkedPublicKey,
                 linkAction: vrfKeyLinkTx.linkAction,
+            };
+        case TransactionType.NODE_KEY_LINK:
+            const nodeKeyLinkTx = transaction as NodeKeyLinkTransaction;
+            return {
+                linkedPublicKey: nodeKeyLinkTx.linkedPublicKey,
+                linkAction: nodeKeyLinkTx.linkAction,
             };
         case TransactionType.VOTING_KEY_LINK:
             const votingKeyLinkTx = transaction as VotingKeyLinkTransaction;
