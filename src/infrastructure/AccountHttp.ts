@@ -86,9 +86,14 @@ export class AccountHttp extends Http implements AccountRepository {
             dto.account.publicKey,
             UInt64.fromNumericString(dto.account.publicKeyHeight),
             dto.account.accountType.valueOf(),
-            dto.account.linkedAccountKey,
+            dto.account.linkedPublicKey,
             dto.account.activityBuckets.map((bucket) => {
-                return new ActivityBucket(bucket.startHeight, bucket.totalFeesPaid, bucket.beneficiaryCount, bucket.rawScore);
+                return new ActivityBucket(
+                    UInt64.fromNumericString(bucket.startHeight),
+                    UInt64.fromNumericString(bucket.totalFeesPaid),
+                    bucket.beneficiaryCount,
+                    UInt64.fromNumericString(bucket.rawScore),
+                );
             }),
             dto.account.mosaics.map((mosaicDTO) => new Mosaic(new MosaicId(mosaicDTO.id), UInt64.fromNumericString(mosaicDTO.amount))),
             UInt64.fromNumericString(dto.account.importance),

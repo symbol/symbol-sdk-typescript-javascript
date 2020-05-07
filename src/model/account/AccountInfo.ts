@@ -52,7 +52,7 @@ export class AccountInfo {
         /**
          * Linked account key
          */
-        public readonly linkedAccountKey: string,
+        public readonly linkedPublicKey: string,
         /**
          * Account activity bucket
          */

@@ -24,6 +24,7 @@ import {
     MerkleProofInfoDTO,
     NetworkTypeEnum,
     PositionEnum,
+    TransactionInfoDTO,
 } from 'symbol-openapi-typescript-node-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
@@ -149,7 +150,7 @@ describe('BlockHttp', () => {
         when(blockRoutesApi.getBlockTransactions('2', undefined, undefined, undefined)).thenReturn(
             Promise.resolve({
                 response,
-                body: [transactionInfoDTO],
+                body: [Object.assign(new TransactionInfoDTO(), transactionInfoDTO)],
             }),
         );
         const transactions = await blockRepository.getBlockTransactions(UInt64.fromUint(2)).toPromise();
