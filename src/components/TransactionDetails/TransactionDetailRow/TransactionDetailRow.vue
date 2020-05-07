@@ -30,16 +30,17 @@
 <script lang="ts">
 // external dependencies
 import { Component, Prop, Vue } from 'vue-property-decorator'
-
-// configuration
-import networkConfig from '@/../config/network.conf.json'
+import { mapGetters } from 'vuex'
 
 // child components
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
 import AddressDisplay from '@/components/AddressDisplay/AddressDisplay.vue'
 import { TransactionDetailItem } from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
 
-@Component({ components: { MosaicAmountDisplay, AddressDisplay } })
+@Component({
+  components: { MosaicAmountDisplay, AddressDisplay },
+  computed: mapGetters({ explorerBaseUrl: 'app/explorerUrl' }),
+})
 export default class TransactionDetailRow extends Vue {
   @Prop({ required: true }) item: TransactionDetailItem
 
@@ -48,9 +49,8 @@ export default class TransactionDetailRow extends Vue {
   }
   /**
    * Explorer base path
-   * @var {string}
    */
-  protected explorerBaseUrl: string = networkConfig.explorerUrl
+  protected explorerBaseUrl: string
 }
 </script>
 

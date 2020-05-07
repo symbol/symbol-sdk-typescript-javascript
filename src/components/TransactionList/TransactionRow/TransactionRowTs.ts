@@ -28,9 +28,6 @@ import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDi
 // @ts-ignore
 import ActionDisplay from '@/components/ActionDisplay/ActionDisplay.vue'
 
-// configuration
-import networkConfig from '@/../config/network.conf.json'
-
 // resources
 import { transactionTypeToIcon, officialIcons, dashboardImages } from '@/views/resources/Images'
 
@@ -39,7 +36,10 @@ import { transactionTypeToIcon, officialIcons, dashboardImages } from '@/views/r
     ActionDisplay,
     MosaicAmountDisplay,
   },
-  computed: { ...mapGetters({ networkMosaic: 'mosaic/networkMosaic' }) },
+  computed: mapGetters({
+    networkMosaic: 'mosaic/networkMosaic',
+    explorerBaseUrl: 'app/explorerUrl',
+  }),
 })
 export class TransactionRowTs extends Vue {
   @Prop({ default: [] })
@@ -49,41 +49,35 @@ export class TransactionRowTs extends Vue {
   public isPartial: boolean
 
   /**
+   * Explorer base path
+   */
+  protected explorerBaseUrl: string
+
+  /**
    * Transaction service
-   * @var {TransactionService}
    */
   public service: TransactionService = new TransactionService(this.$store)
 
   /**
    * Network mosaic id
    * @private
-   * @type {MosaicId}
    */
   protected networkMosaic: MosaicId
 
   /**
    * Transaction type from SDK
-   * @type {TransactionType}
    */
   private transactionType = TransactionType
 
   /**
    * Formatters
-   * @var {Formatters}
    */
   public formatters: Formatters = Formatters
 
   /**
    * Time helpers
-   * @var {Formatters}
    */
   protected timeHelpers: TimeHelpers = TimeHelpers
-
-  /**
-   * Explorer base path
-   * @var {string}
-   */
-  public explorerBaseUrl: string = networkConfig.explorerUrl
 
   /// region computed properties getter/setter
   public get view(): TransactionViewType {
