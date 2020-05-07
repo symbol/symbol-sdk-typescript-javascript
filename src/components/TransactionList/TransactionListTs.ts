@@ -44,7 +44,6 @@ import { TransactionGroup } from '@/store/Transaction'
     ...mapGetters({
       currentAccount: 'account/currentAccount',
       networkMosaic: 'mosaic/networkMosaic',
-      currentHeight: 'network/currentHeight',
       // use partial+unconfirmed from store because
       // of ephemeral nature (websocket only here)
       confirmedTransactions: 'transaction/confirmedTransactions',
@@ -70,13 +69,6 @@ export class TransactionListTs extends Vue {
    * @var {AccountModel}
    */
   public currentAccount: AccountModel
-
-  /**
-   * Network block height
-   * @see {Store.Network}
-   * @var {number}
-   */
-  public currentHeight: number
 
   /**
    * Network mosaic id

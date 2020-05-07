@@ -41,72 +41,20 @@ import {
   TransactionType,
   TransferTransaction,
 } from 'symbol-sdk'
+
 // internal dependencies
 import { TransactionService, TransactionViewType } from '@/services/TransactionService'
 import { Formatters } from '@/core/utils/Formatters'
-// configuration
+
 // child components
 // @ts-ignore
-import AccountAddressRestriction from '@/components/TransactionDetails/AccountAddressRestriction/AccountAddressRestriction.vue'
-// @ts-ignore
-import AccountLink from '@/components/TransactionDetails/AccountLink/AccountLink.vue'
-// @ts-ignore
-import AccountMetadata from '@/components/TransactionDetails/AccountMetadata/AccountMetadata.vue'
-// @ts-ignore
-import AccountMosaicRestriction from '@/components/TransactionDetails/AccountMosaicRestriction/AccountMosaicRestriction.vue'
-// @ts-ignore
-import AccountOperationRestriction from '@/components/TransactionDetails/AccountOperationRestriction/AccountOperationRestriction.vue'
-// @ts-ignore
-import Alias from '@/components/TransactionDetails/Alias/Alias.vue'
-// @ts-ignore
-import HashLock from '@/components/TransactionDetails/HashLock/HashLock.vue'
-// @ts-ignore
-import MosaicAddressRestriction from '@/components/TransactionDetails/MosaicAddressRestriction/MosaicAddressRestriction.vue'
-// @ts-ignore
-import MosaicDefinition from '@/components/TransactionDetails/MosaicDefinition/MosaicDefinition.vue'
-// @ts-ignore
-import MosaicGlobalRestriction from '@/components/TransactionDetails/MosaicGlobalRestriction/MosaicGlobalRestriction.vue'
-// @ts-ignore
-import MosaicMetadata from '@/components/TransactionDetails/MosaicMetadata/MosaicMetadata.vue'
-// @ts-ignore
-import MosaicSupplyChange from '@/components/TransactionDetails/MosaicSupplyChange/MosaicSupplyChange.vue'
-// @ts-ignore
-import MultisigAccountModification from '@/components/TransactionDetails/MultisigAccountModification/MultisigAccountModification.vue'
-// @ts-ignore
-import NamespaceMetadata from '@/components/TransactionDetails/NamespaceMetadata/NamespaceMetadata.vue'
-// @ts-ignore
-import NamespaceRegistration from '@/components/TransactionDetails/NamespaceRegistration/NamespaceRegistration.vue'
-// @ts-ignore
-import SecretLock from '@/components/TransactionDetails/SecretLock/SecretLock.vue'
-// @ts-ignore
-import SecretProof from '@/components/TransactionDetails/SecretProof/SecretProof.vue'
+import DetailView from './DetailView.vue'
 // @ts-ignore
 import TransactionDetailsHeader from '@/components/TransactionDetailsHeader/TransactionDetailsHeader.vue'
-// @ts-ignore
-import Transfer from '@/components/TransactionDetails/Transfer/Transfer.vue'
 
+//@ts-ignore
 @Component({
-  components: {
-    AccountAddressRestriction,
-    AccountLink,
-    AccountMetadata,
-    AccountMosaicRestriction,
-    AccountOperationRestriction,
-    Alias,
-    HashLock,
-    MosaicAddressRestriction,
-    MosaicDefinition,
-    MosaicGlobalRestriction,
-    MosaicMetadata,
-    MosaicSupplyChange,
-    MultisigAccountModification,
-    NamespaceMetadata,
-    NamespaceRegistration,
-    SecretLock,
-    SecretProof,
-    TransactionDetailsHeader,
-    Transfer,
-  },
+  components: { DetailView, TransactionDetailsHeader },
   computed: {
     ...mapGetters({
       networkType: 'network/networkType',
@@ -121,6 +69,8 @@ export class TransactionDetailsTs extends Vue {
    * @type {Transaction}
    */
   @Prop({ default: null }) transaction: Transaction
+
+  protected views: TransactionViewType[] = []
 
   /**
    * Current network type
@@ -167,15 +117,15 @@ export class TransactionDetailsTs extends Vue {
    */
   public types = TransactionType
 
-  protected get views(): TransactionViewType[] {
+  public mounted() {
     this.service = new TransactionService(this.$store)
 
     if (this.transaction instanceof AggregateTransaction) {
-      return [this.getView(this.transaction), ...this.transaction.innerTransactions.map((tx) => this.getView(tx))]
+      this.views = [this.getView(this.transaction), ...this.transaction.innerTransactions.map((tx) => this.getView(tx))]
+      return
     }
 
-    return [this.getView(this.transaction)]
-    // return [this.getView(this.transaction)]
+    this.views = [this.getView(this.transaction)]
   }
 
   private getView(transaction: Transaction): TransactionViewType {
@@ -222,15 +172,5 @@ export class TransactionDetailsTs extends Vue {
       case TransactionType.SECRET_PROOF:
         return this.service.getView(transaction as SecretProofTransaction)
     }
-  }
-
-  /**
-   * Whether set transaction is of type \a type
-   * @param type the type
-   * @param view the view
-   * @returns Whether set transaction is of type \a type
-   */
-  public isType(type: TransactionType, view: TransactionViewType): boolean {
-    return view.transaction.type === type
   }
 }
