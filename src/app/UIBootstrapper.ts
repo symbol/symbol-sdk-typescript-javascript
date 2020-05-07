@@ -30,7 +30,7 @@ export class UIBootstrapper {
     /// region vue directives
     Vue.directive('focus', {
       inserted: function (el) {
-        el.focus()
+        Vue.nextTick(() => el.focus())
       },
     })
     Vue.directive('click-focus', {
