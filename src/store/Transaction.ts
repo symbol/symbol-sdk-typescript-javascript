@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
+//external dependencies
 import {
   Address,
   AggregateTransaction,
@@ -23,12 +24,15 @@ import {
   Transaction,
   TransactionType,
   UInt64,
+  PublicAccount,
+  AggregateTransactionCosignature,
 } from 'symbol-sdk'
+import { combineLatest, Observable } from 'rxjs'
+import { map } from 'rxjs/operators'
+import * as _ from 'lodash'
+
 // internal dependencies
 import { AwaitLock } from './AwaitLock'
-import { combineLatest, Observable } from 'rxjs'
-import * as _ from 'lodash'
-import { map } from 'rxjs/operators'
 
 const Lock = AwaitLock.create()
 
@@ -321,12 +325,12 @@ export default {
     },
     /// end-region scoped actions
 
-    ADD_COSIGNATURE({ commit, getters }, transaction: CosignatureSignedTransaction) {
+    ADD_COSIGNATURE({ commit, getters, rootGetters }, transaction: CosignatureSignedTransaction) {
       if (!transaction || !transaction.parentHash) {
         throw Error("Missing mandatory field 'parentHash' for action transaction/ADD_COSIGNATURE.")
       }
       const transactionAttribute = transactionGroupToStateVariable(TransactionGroup.partial)
-      const transactions = getters[transactionAttribute] || []
+      const transactions: AggregateTransaction[] = getters[transactionAttribute] || []
 
       // return if no transactions
       if (!transactions.length) return
@@ -336,7 +340,13 @@ export default {
       // partial tx unknown, @TODO: handle this case (fetch partials)
       if (index === -1) return
 
-      transactions[index] = transactions[index].addCosignatures(transaction)
+      // convert CosignatureSignedTransaction to AggregateTransactionCosignature
+      const generationHash = rootGetters['network/generationHash']
+      const cosigner = PublicAccount.createFromPublicKey(transaction.signerPublicKey, generationHash)
+      const cosignature = new AggregateTransactionCosignature(transaction.signature, cosigner)
+
+      // update the partial transaction cosignatures
+      transactions[index] = transactions[index].addCosignatures([cosignature])
       commit('partialTransactions', transactions)
     },
   },
