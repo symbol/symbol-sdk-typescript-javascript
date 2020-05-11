@@ -29,6 +29,7 @@ import { Http } from './Http';
 import { QueryParams } from './QueryParams';
 import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
 import { TransactionFilter } from './TransactionFilter';
+import { AccountKey } from '../model/account/AccountKey';
 
 /**
  * Account http repository.
@@ -86,7 +87,7 @@ export class AccountHttp extends Http implements AccountRepository {
             dto.account.publicKey,
             UInt64.fromNumericString(dto.account.publicKeyHeight),
             dto.account.accountType.valueOf(),
-            dto.account.linkedPublicKey,
+            dto.account.supplementalAccountKeys.map((key) => new AccountKey(key.keyType.valueOf(), key.key)),
             dto.account.activityBuckets.map((bucket) => {
                 return new ActivityBucket(
                     UInt64.fromNumericString(bucket.startHeight),

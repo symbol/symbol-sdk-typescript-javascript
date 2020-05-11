@@ -28,6 +28,8 @@ export * from './account/MultisigAccountInfo';
 export * from './account/PublicAccount';
 export * from './account/AccountNames';
 export * from './account/AccountInfoResolvedMosaic';
+export * from './account/AccountKeyType';
+export * from './account/AccountKey';
 
 // Blockchain
 export * from './blockchain/BlockchainScore';

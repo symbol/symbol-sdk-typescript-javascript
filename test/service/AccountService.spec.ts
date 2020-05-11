@@ -36,6 +36,8 @@ import { MosaicAlias } from '../../src/model/namespace/MosaicAlias';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NamespaceName } from '../../src/model/namespace/NamespaceName';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
+import { AccountKey } from '../../src/model/account/AccountKey';
+import { AccountKeyType } from '../../src/model/account/AccountKeyType';
 
 describe('AccountService', () => {
     let accountService: AccountService;
@@ -57,7 +59,7 @@ describe('AccountService', () => {
                 account.publicKey,
                 UInt64.fromUint(100),
                 AccountType.Main,
-                '0',
+                [new AccountKey(AccountKeyType.Linked, '0')],
                 [new ActivityBucket(UInt64.fromUint(0), UInt64.fromUint(1), 1, UInt64.fromUint(1))],
                 mosaics,
                 UInt64.fromUint(100),
