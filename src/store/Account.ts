@@ -79,7 +79,7 @@ interface AccountState {
   stagedTransactions: Transaction[]
   signedTransactions: SignedTransaction[]
   // Subscriptions to webSocket channels
-  subscriptions: Record<string, SubscriptionType[][]>
+  subscriptions: Record<string, SubscriptionType[]>
 }
 
 // account state initial definition
@@ -175,17 +175,22 @@ export default {
       state.currentSignerMultisigInfo = currentSignerMultisigInfo
     },
 
-    setSubscriptions: (state: AccountState, subscriptions: Record<string, SubscriptionType[][]>) => {
+    setSubscriptions: (state: AccountState, subscriptions: Record<string, SubscriptionType[]>) => {
       state.subscriptions = subscriptions
     },
-    addSubscriptions: (state: AccountState, payload: { address: string; subscriptions: SubscriptionType }) => {
+    updateSubscriptions: (state: AccountState, payload: { address: string; subscriptions: SubscriptionType }) => {
       const { address, subscriptions } = payload
-      // skip when subscriptions is an empty array
-      if (!subscriptions.subscriptions.length) return
+
+      // if subscriptions are empty, unset the address subscriptions
+      if (!subscriptions) {
+        Vue.delete(state.subscriptions, address)
+        return
+      }
+
       // get current subscriptions from state
       const oldSubscriptions = state.subscriptions[address] || []
       // update subscriptions
-      const newSubscriptions = [...oldSubscriptions, subscriptions]
+      const newSubscriptions: SubscriptionType[] = [...oldSubscriptions, subscriptions]
       // update state
       Vue.set(state.subscriptions, address, newSubscriptions)
     },
@@ -327,7 +332,7 @@ export default {
       dispatch('transaction/SIGNER_CHANGED', {}, { root: true })
 
       // open / close websocket connections
-      if (previousSignerAddress) await dispatch('UNSUBSCRIBE', previousSignerAddress)
+      if (previousSignerAddress) await dispatch('UNSUBSCRIBE', previousSignerAddress.plain())
       await dispatch('SUBSCRIBE', currentSignerAddress)
 
       await dispatch('LOAD_ACCOUNT_INFO')
@@ -433,10 +438,6 @@ export default {
       commit('knownAccounts', new AccountService().getKnownAccounts(accounts))
     },
 
-    RESET_SUBSCRIPTIONS({ commit }) {
-      commit('setSubscriptions', {})
-    },
-
     ADD_STAGED_TRANSACTION({ commit }, stagedTransaction: Transaction) {
       commit('addStagedTransaction', stagedTransaction)
     },
@@ -453,41 +454,42 @@ export default {
     async SUBSCRIBE({ commit, dispatch, rootGetters }, address: Address) {
       if (!address) return
 
+      const plainAddress = address.plain()
+
       // use RESTService to open websocket channel subscriptions
       const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
       const subscriptions: SubscriptionType = await RESTService.subscribeTransactionChannels(
         { commit, dispatch },
         repositoryFactory,
-        address.plain(),
+        plainAddress,
       )
-
+      const payload: { address: string; subscriptions: SubscriptionType } = { address: plainAddress, subscriptions }
       // update state of listeners & subscriptions
-      commit('addSubscriptions', { address, subscriptions })
+      commit('updateSubscriptions', payload)
     },
 
-    // Unsubscribe from all open websocket connections
-    async UNSUBSCRIBE({ dispatch, getters }, address) {
-      const subscriptions = getters.getSubscriptions
-      const currentAccount: AccountModel = getters.currentAccount
+    // Unsubscribe an address open websocket connections
+    async UNSUBSCRIBE({ commit, getters }, plainAddress: string) {
+      // get all subscriptions
+      const subscriptions: Record<string, SubscriptionType[]> = getters.getSubscriptions
+      // subscriptions to close
+      const subscriptionTypes = (subscriptions && subscriptions[plainAddress]) || []
 
-      if (!address && currentAccount) {
-        address = currentAccount.address
+      if (!subscriptionTypes.length) return
+
+      // close subscriptions
+      for (const subscriptionType of subscriptionTypes) {
+        const { listener, subscriptions } = subscriptionType
+        for (const subscription of subscriptions) subscription.unsubscribe()
+        listener.close()
       }
 
-      const subsByAddress = (subscriptions && subscriptions[address]) || []
-      for (let i = 0, m = subsByAddress.length; i < m; i++) {
-        const subscription = subsByAddress[i]
-
-        // subscribers
-        for (let j = 0, n = subscription.subscriptions; j < n; j++) {
-          await subscription.subscriptions[j].unsubscribe()
-        }
-
-        await subscription.listener.close()
+      // update state of listeners & subscriptions
+      const payload: { address: string; subscriptions: SubscriptionType } = {
+        address: plainAddress,
+        subscriptions: null,
       }
-
-      // update state
-      dispatch('RESET_SUBSCRIPTIONS', address)
+      commit('updateSubscriptions', payload)
     },
 
     async REST_ANNOUNCE_PARTIAL(
