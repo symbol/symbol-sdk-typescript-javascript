@@ -16,13 +16,13 @@
 import { Address } from 'symbol-sdk'
 import { Component, Vue } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
-// internal dependencies
-import { UIHelpers } from '@/core/utils/UIHelpers'
 // child components
 // @ts-ignore
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
 // @ts-ignore
 import MosaicBalanceList from '@/components/MosaicBalanceList/MosaicBalanceList.vue'
+//@ts-ignore
+import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue'
 import { MosaicModel } from '@/core/database/entities/MosaicModel'
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel'
 
@@ -30,6 +30,7 @@ import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyMo
   components: {
     MosaicAmountDisplay,
     MosaicBalanceList,
+    ButtonCopyToClipboard,
   },
   computed: {
     ...mapGetters({
@@ -64,12 +65,6 @@ export class ProfileBalancesPanelTs extends Vue {
    * @var {MosaicId}
    */
   public networkCurrency: NetworkCurrencyModel
-
-  /**
-   * UI Helpers
-   * @var {UIHelpers}
-   */
-  public uiHelpers = UIHelpers
 
   public async created() {
     this.$store.dispatch('mosaic/LOAD_MOSAICS')

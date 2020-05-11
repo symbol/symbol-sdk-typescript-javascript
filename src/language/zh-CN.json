@@ -1079,5 +1079,6 @@
   "rules_describe": "规则描述",
   "Estimated_period_of_validity": "预估有效期",
   "no_data_namespace_tips": "您还没有父命名空间，请先创建一个父命名空间",
-  "current_validity": "当前有效期"
+  "current_validity": "当前有效期",
+  "copy_failed": "复制失败"
 }

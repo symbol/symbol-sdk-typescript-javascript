@@ -109,5 +109,6 @@ export enum NotificationType {
   VALUE_TOO_BIG = 'value_too_big',
   ACCOUNT_NAME_INPUT_ERROR = 'account_name_input_error',
   WRONG_PASSWORD_ERROR = 'password_error',
-  WRONG_ACCOUNT_NAME_ERROR = 'wrong_account_name_error',
+  WRONG_WALLET_NAME_ERROR = 'wrong_wallet_name_error',
+  COPY_FAILED = 'copy_failed',
 }

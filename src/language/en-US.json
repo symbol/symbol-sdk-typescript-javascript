@@ -1128,5 +1128,6 @@
   "rules_describe": "Rules description",
   "Estimated_period_of_validity": "Estimated Period Of Validity",
   "no_data_namespace_tips": "You do not have a namespace, please create one first",
-  "current_validity": "Expires in"
+  "current_validity": "Expires in",
+  "copy_failed": "Copy failed"
 }

@@ -5,17 +5,22 @@
     </p>
     <div class="create-mnemonic-col">
       <div class="create-mnemonic-left">
-        <div class="mnemonic-container">
-          <div v-if="!showMnemonic" class="show-mnemonic">
-            <img src="@/views/resources/img/invisible.png" />
-            <button class="button-style validation-button" @click="showMnemonic = true">
-              {{ $t('Display_mnemonic') }}
-            </button>
+        <MnemonicDisplay :words="mnemonicWordsList">
+          <div slot class="mnemonic-container">
+            <div v-if="!showMnemonic" class="show-mnemonic">
+              <img src="@/views/resources/img/invisible.png" />
+              <button class="button-style validation-button" @click="showMnemonic = true">
+                {{ $t('Display_mnemonic') }}
+              </button>
+            </div>
+            <div v-else>
+              <div class="mnemonic-list">
+                <span v-for="(m, index) in mnemonicWordsList" :key="index">{{ m }}</span>
+              </div>
+              <ButtonCopyToClipboard v-model="waitingCopyString" class="copy-button" />
+            </div>
           </div>
-          <div v-else class="mnemonic-list">
-            <span v-for="(m, index) in mnemonicWordsList" :key="index">{{ m }}</span>
-          </div>
-        </div>
+        </MnemonicDisplay>
         <div class="form-line-container button-container">
           <div class="flex-container mt-3">
             <button type="button" class="button-style back-button" @click="$router.back()">

@@ -16,20 +16,19 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 // internal dependencies
 import { AccountModel } from '@/core/database/entities/AccountModel'
-import { UIHelpers } from '@/core/utils/UIHelpers'
+//@ts-ignore
+import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue'
 
-@Component
+@Component({
+  components: {
+    ButtonCopyToClipboard,
+  },
+})
 export class AccountAddressDisplayTs extends Vue {
   @Prop({
     default: null,
   })
   account: AccountModel
-
-  /**
-   * UI Helpers
-   * @var {UIHelpers}
-   */
-  public uiHelpers = UIHelpers
 
   public getAccountPrettyAddress(): string {
     return (this.account && AccountModel.getObjects(this.account).address.pretty()) || ''

@@ -3,11 +3,9 @@
     <span class="label">{{ $t('account_public_key') }}</span>
     <div class="value accountPublicKey">
       {{ account.publicKey }}
-      <img
-        src="@/views/resources/img/account/copyIcon.png"
-        class="copy-icon"
-        @click="uiHelpers.copyToClipboard(account.publicKey)"
-      />
+      <ButtonCopyToClipboard v-model="account.publicKey">
+        <img src="@/views/resources/img/account/copyIcon.png" class="copy-icon" />
+      </ButtonCopyToClipboard>
     </div>
   </div>
 </template>

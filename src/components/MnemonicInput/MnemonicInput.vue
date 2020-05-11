@@ -14,11 +14,7 @@
         @keyup.delete="deleteWord"
       />
     </div>
-    <div class="copy-button" @click="copyToClipboard">
-      <Button type="text">
-        {{ $t('mnemonic_copy') }}
-      </Button>
-    </div>
+    <ButtonCopyToClipboard v-model="waitingCopyString" class="copy-button" />
   </div>
 </template>
 <script lang="ts">

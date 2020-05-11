@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { AppStore } from '@/app/AppStore'
-import i18n from '@/language'
 
 export class UIHelpers {
   /**
@@ -33,9 +31,6 @@ export class UIHelpers {
       // use DOM commands
       input.select()
       document.execCommand('copy')
-
-      // notify
-      AppStore.dispatch('notification/ADD_SUCCESS', i18n.t('successful_copy'))
 
       // flush
       document.body.removeChild(input)

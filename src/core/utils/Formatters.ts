@@ -88,4 +88,14 @@ export class Formatters {
   public static configurationNumberAsNumber(value: string | undefined): number {
     return parseInt(this.configurationNumberAsString(value))
   }
+  public static splitArrayByDelimiter(arr: Array<string>, delimiter?: string) {
+    delimiter = delimiter ? delimiter : ' '
+    if (!Array.isArray(arr)) {
+      throw Error(`${arr} is not an Array`)
+    }
+    if (arr.some((e) => typeof e !== 'string')) {
+      throw Error(`Type of the element in ${arr} should be string`)
+    }
+    return arr.join(delimiter)
+  }
 }

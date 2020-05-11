@@ -16,10 +16,15 @@
 import { mapGetters } from 'vuex'
 import { Component, Vue } from 'vue-property-decorator'
 import { MnemonicPassPhrase } from 'symbol-hd-wallets'
-// internal dependencies
+// @ts-ignore
+import MnemonicDisplay from '@/components/MnemonicDisplay/MnemonicDisplay.vue'
+// @ts-ignore
+import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue'
+import { Formatters } from '@/core/utils/Formatters'
 import { ProfileModel } from '@/core/database/entities/ProfileModel'
 
 @Component({
+  components: { MnemonicDisplay, ButtonCopyToClipboard },
   computed: {
     ...mapGetters({
       currentProfile: 'profile/currentProfile',
@@ -50,6 +55,9 @@ export default class ShowMnemonicTs extends Vue {
   /// region computed properties getter/setter
   get mnemonicWordsList() {
     return this.currentMnemonic.plain.split(' ')
+  }
+  public get waitingCopyString(): string {
+    return Formatters.splitArrayByDelimiter(this.mnemonicWordsList)
   }
   /// end-region computed properties getter/setter
 }

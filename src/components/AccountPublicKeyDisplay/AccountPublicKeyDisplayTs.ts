@@ -16,20 +16,19 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 // internal dependencies
 import { AccountModel } from '@/core/database/entities/AccountModel'
-import { UIHelpers } from '@/core/utils/UIHelpers'
+//@ts-ignore
+import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue'
 
-@Component
+@Component({
+  components: {
+    ButtonCopyToClipboard,
+  },
+})
 export class AccountPublicKeyDisplayTs extends Vue {
   @Prop({
     default: null,
   })
   account: AccountModel
-
-  /**
-   * UI Helpers
-   * @var {UIHelpers}
-   */
-  public uiHelpers = UIHelpers
 
   /// region computed properties getter/setter
   /// end-region computed properties getter/setter

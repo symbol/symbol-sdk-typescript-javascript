@@ -14,11 +14,9 @@
           <span class="address">
             {{ currentSignerAddress.plain() }}
           </span>
-          <img
-            class="pointer"
-            src="@/views/resources/img/monitor/monitorCopyAddress.png"
-            @click="uiHelpers.copyToClipboard(currentSignerAddress.plain())"
-          />
+          <ButtonCopyToClipboard :value="currentSignerAddress.plain()">
+            <img class="pointer" src="@/views/resources/img/monitor/monitorCopyAddress.png" />
+          </ButtonCopyToClipboard>
         </div>
         <div v-if="networkCurrency" class="XEM_amount overflow_ellipsis">
           <div>{{ networkCurrency.ticker }}</div>

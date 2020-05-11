@@ -5,11 +5,9 @@
         <span class="label">{{ $t('account_address') }}</span>
         <span class="value accountAddress">{{ AccountModel.getObjects(account).address.pretty() }}</span>
         <span>
-          <img
-            src="@/views/resources/img/account/copyIcon.png"
-            class="copy-icon"
-            @click="uiHelpers.copyToClipboard(account.address)"
-          />
+          <ButtonCopyToClipboard v-model="account.address">
+            <img src="@/views/resources/img/account/copyIcon.png" class="copy-icon" />
+          </ButtonCopyToClipboard>
         </span>
       </div>
     </div>
@@ -18,11 +16,9 @@
         <span class="label">{{ $t('account_public_key') }}</span>
         <span class="value accountPublicKey">{{ account.publicKey }}</span>
         <span>
-          <img
-            src="@/views/resources/img/account/copyIcon.png"
-            class="copy-icon"
-            @click="uiHelpers.copyToClipboard(account.publicKey)"
-          />
+          <ButtonCopyToClipboard v-model="account.publicKey">
+            <img src="@/views/resources/img/account/copyIcon.png" class="copy-icon" />
+          </ButtonCopyToClipboard>
         </span>
       </div>
     </div>

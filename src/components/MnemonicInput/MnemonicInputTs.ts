@@ -1,9 +1,13 @@
-import { UIHelpers } from '@/core/utils/UIHelpers.ts'
 import { Component, Vue } from 'vue-property-decorator'
 
 // internal dependencies
 
-@Component
+// @ts-ignore
+import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue'
+import { Formatters } from '@/core/utils/Formatters'
+@Component({
+  components: { ButtonCopyToClipboard },
+})
 export class MnemonicInputTs extends Vue {
   /**
    * @description: wordsArray
@@ -43,6 +47,9 @@ export class MnemonicInputTs extends Vue {
         this.isEditing = true
       }
     }
+  }
+  public get waitingCopyString(): string {
+    return Formatters.splitArrayByDelimiter(this.wordsArray)
   }
 
   /**
@@ -101,12 +108,6 @@ export class MnemonicInputTs extends Vue {
         this.handleWordsArray(pasteData)
       }
     })
-  }
-  copyToClipboard() {
-    const pasteDataStr: string = this.wordsArray.join(' ')
-    if (pasteDataStr) {
-      UIHelpers.copyToClipboard(pasteDataStr)
-    }
   }
   /**
    * @description: init input

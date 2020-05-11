@@ -3,11 +3,9 @@
     <span class="label">{{ $t('account_address') }}</span>
     <div class="value accountAddress">
       {{ getAccountPrettyAddress() }}
-      <img
-        src="@/views/resources/img/account/copyIcon.png"
-        class="copy-icon"
-        @click="uiHelpers.copyToClipboard(account.address)"
-      />
+      <ButtonCopyToClipboard v-model="account.address">
+        <img src="@/views/resources/img/account/copyIcon.png" class="copy-icon" />
+      </ButtonCopyToClipboard>
     </div>
   </div>
 </template>
