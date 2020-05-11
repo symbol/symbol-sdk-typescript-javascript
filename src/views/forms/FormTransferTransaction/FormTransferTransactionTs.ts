@@ -425,7 +425,6 @@ export class FormTransferTransactionTs extends FormTransactionBase {
    * Is necessary to make the mosaic inputs reactive
    */
   @Watch('selectedSigner')
-  @Watch('balanceMosaics')
   onSelectedSignerChange() {
     if (this.isMultisigMode) this.resetForm()
   }
