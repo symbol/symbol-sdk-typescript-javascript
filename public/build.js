@@ -234,7 +234,7 @@ function initialize() {
       title: app.getName(),
       titleBarStyle: 'hiddenInset',
       webPreferences: {
-        nodeIntegration: true,
+        nodeIntegration: false,
       },
       resizable: true,
     }
