@@ -126,7 +126,7 @@ describe('NetworkHttp', () => {
         network.identifier = 'id';
         network.nodeEqualityStrategy = NodeIdentityEqualityStrategy.Host;
         network.publicKey = 'pubKey';
-        network.generationHash = 'genHash';
+        network.generationHashSeed = 'genHash';
         network.epochAdjustment = '123456';
 
         const chain = new ChainPropertiesDTO();

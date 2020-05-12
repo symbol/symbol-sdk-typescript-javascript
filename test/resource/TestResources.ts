@@ -4,7 +4,7 @@ export const getDummyNetworkProperties = (): any => {
         "identifier": "public-test",
         "nodeEqualityStrategy": "public-key",
         "publicKey": "86E8FDE6F3FE540ADC1B3A78DFA9B9E735736FC520E0D9C9CD4ADD3255CD9605",
-        "generationHash": "E759C7C56FD20021C8F0CC7FF5F108A2FEBA3312F6EC6D6A702DF87657FEC55C",
+        "generationHashSeed": "E759C7C56FD20021C8F0CC7FF5F108A2FEBA3312F6EC6D6A702DF87657FEC55C",
         "epochAdjustment": "1573430400s"
       },
       "chain": {

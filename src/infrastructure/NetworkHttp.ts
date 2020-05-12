@@ -141,7 +141,7 @@ export class NetworkHttp extends Http implements NetworkRepository {
                 dto.network.identifier,
                 dto.network.nodeEqualityStrategy,
                 dto.network.publicKey,
-                dto.network.generationHash,
+                dto.network.generationHashSeed,
                 dto.network.epochAdjustment,
             ),
             new ChainProperties(
