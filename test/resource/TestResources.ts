@@ -14,6 +14,7 @@ export const getDummyNetworkProperties = (): any => {
         "harvestingMosaicId": "0x501C'4C79'2FEB'D419",
         "blockGenerationTargetTime": "15s",
         "blockTimeSmoothingFactor": "3000",
+        "blockFinalizationInterval": "30",
         "importanceGrouping": "1433",
         "importanceActivityPercentage": "5",
         "maxRollbackBlocks": "398",
@@ -26,7 +27,10 @@ export const getDummyNetworkProperties = (): any => {
         "totalChainImportance": "15'000'000",
         "minHarvesterBalance": "500",
         "maxHarvesterBalance": "50'000'000'000'000",
+        "minVoterBalance": "50'000",
         "harvestBeneficiaryPercentage": "10",
+        "harvestNetworkPercentage": "5",
+        "harvestNetworkFeeSinkPublicKey": "FF5563F1C5824EE0CD868799FBE8744B46D5549973FDA499939C952D951494E4",
         "blockPruneInterval": "360",
         "maxTransactionsPerBlock": "6'000"
       },
