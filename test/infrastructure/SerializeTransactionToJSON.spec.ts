@@ -30,7 +30,7 @@ import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { AccountRestrictionFlags } from '../../src/model/restriction/AccountRestrictionType';
-import { AccountLinkTransaction } from '../../src/model/transaction/AccountLinkTransaction';
+import { AccountKeyLinkTransaction } from '../../src/model/transaction/AccountKeyLinkTransaction';
 import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
@@ -61,8 +61,8 @@ describe('SerializeTransactionToJSON', () => {
         account = TestingAccount;
     });
 
-    it('should create AccountLinkTransaction', () => {
-        const accountLinkTransaction = AccountLinkTransaction.create(
+    it('should create AccountKeyLinkTransaction', () => {
+        const accountLinkTransaction = AccountKeyLinkTransaction.create(
             Deadline.create(),
             account.publicKey,
             LinkAction.Link,

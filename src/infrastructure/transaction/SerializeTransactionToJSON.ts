@@ -16,7 +16,7 @@
 
 import { Convert } from '../../core/format/Convert';
 import { AccountAddressRestrictionTransaction } from '../../model/transaction/AccountAddressRestrictionTransaction';
-import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
+import { AccountKeyLinkTransaction } from '../../model/transaction/AccountKeyLinkTransaction';
 import { AccountMetadataTransaction } from '../../model/transaction/AccountMetadataTransaction';
 import { AccountMosaicRestrictionTransaction } from '../../model/transaction/AccountMosaicRestrictionTransaction';
 import { AccountOperationRestrictionTransaction } from '../../model/transaction/AccountOperationRestrictionTransaction';
@@ -49,8 +49,8 @@ import { NodeKeyLinkTransaction } from '../../model/transaction/NodeKeyLinkTrans
  */
 export const SerializeTransactionToJSON = (transaction: Transaction): any => {
     switch (transaction.type) {
-        case TransactionType.ACCOUNT_LINK:
-            const accountLinkTx = transaction as AccountLinkTransaction;
+        case TransactionType.ACCOUNT_KEY_LINK:
+            const accountLinkTx = transaction as AccountKeyLinkTransaction;
             return {
                 remotePublicKey: accountLinkTx.remotePublicKey,
                 linkAction: accountLinkTx.linkAction,

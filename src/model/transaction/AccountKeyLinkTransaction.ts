@@ -15,9 +15,9 @@
  */
 
 import {
-    AccountLinkTransactionBuilder,
+    AccountKeyLinkTransactionBuilder,
     AmountDto,
-    EmbeddedAccountLinkTransactionBuilder,
+    EmbeddedAccountKeyLinkTransactionBuilder,
     EmbeddedTransactionBuilder,
     KeyDto,
     SignatureDto,
@@ -36,10 +36,10 @@ import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
 /**
- * Announce an AccountLinkTransaction to delegate the account importance to a proxy account.
+ * Announce an AccountKeyLinkTransaction to delegate the account importance to a proxy account.
  * By doing so, you can enable delegated harvesting
  */
-export class AccountLinkTransaction extends Transaction {
+export class AccountKeyLinkTransaction extends Transaction {
     /**
      * Create a link account transaction object
      * @param deadline - The deadline to include the transaction.
@@ -54,8 +54,15 @@ export class AccountLinkTransaction extends Transaction {
         linkAction: LinkAction,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
-    ): AccountLinkTransaction {
-        return new AccountLinkTransaction(networkType, TransactionVersion.ACCOUNT_LINK, deadline, maxFee, remotePublicKey, linkAction);
+    ): AccountKeyLinkTransaction {
+        return new AccountKeyLinkTransaction(
+            networkType,
+            TransactionVersion.ACCOUNT_KEY_LINK,
+            deadline,
+            maxFee,
+            remotePublicKey,
+            linkAction,
+        );
     }
 
     /**
@@ -86,7 +93,7 @@ export class AccountLinkTransaction extends Transaction {
         signer?: PublicAccount,
         transactionInfo?: TransactionInfo,
     ) {
-        super(TransactionType.ACCOUNT_LINK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+        super(TransactionType.ACCOUNT_KEY_LINK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
@@ -97,16 +104,16 @@ export class AccountLinkTransaction extends Transaction {
      */
     public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
-            ? EmbeddedAccountLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
-            : AccountLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+            ? EmbeddedAccountKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : AccountKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
-        const transaction = AccountLinkTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AccountLinkTransactionBuilder).getDeadline().timestamp),
+        const transaction = AccountKeyLinkTransaction.create(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AccountKeyLinkTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getRemotePublicKey().key),
             builder.getLinkAction().valueOf(),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountLinkTransactionBuilder).fee.amount),
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountKeyLinkTransactionBuilder).fee.amount),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -135,12 +142,12 @@ export class AccountLinkTransaction extends Transaction {
         const signerBuffer = new Uint8Array(32);
         const signatureBuffer = new Uint8Array(64);
 
-        const transactionBuilder = new AccountLinkTransactionBuilder(
+        const transactionBuilder = new AccountKeyLinkTransactionBuilder(
             new SignatureDto(signatureBuffer),
             new KeyDto(signerBuffer),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.ACCOUNT_LINK.valueOf(),
+            TransactionType.ACCOUNT_KEY_LINK.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
             new KeyDto(Convert.hexToUint8(this.remotePublicKey)),
@@ -154,11 +161,11 @@ export class AccountLinkTransaction extends Transaction {
      * @returns {EmbeddedTransactionBuilder}
      */
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
-        return new EmbeddedAccountLinkTransactionBuilder(
+        return new EmbeddedAccountKeyLinkTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.ACCOUNT_LINK.valueOf(),
+            TransactionType.ACCOUNT_KEY_LINK.valueOf(),
             new KeyDto(Convert.hexToUint8(this.remotePublicKey)),
             this.linkAction.valueOf(),
         );
@@ -166,9 +173,9 @@ export class AccountLinkTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {AccountLinkTransaction}
+     * @returns {AccountKeyLinkTransaction}
      */
-    resolveAliases(): AccountLinkTransaction {
+    resolveAliases(): AccountKeyLinkTransaction {
         return this;
     }
 }

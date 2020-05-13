@@ -38,7 +38,7 @@ import { NetworkType } from '../../../src/model/network/NetworkType';
 import { AccountRestrictionFlags } from '../../../src/model/restriction/AccountRestrictionType';
 import { MosaicRestrictionType } from '../../../src/model/restriction/MosaicRestrictionType';
 import { AccountAddressRestrictionTransaction } from '../../../src/model/transaction/AccountAddressRestrictionTransaction';
-import { AccountLinkTransaction } from '../../../src/model/transaction/AccountLinkTransaction';
+import { AccountKeyLinkTransaction } from '../../../src/model/transaction/AccountKeyLinkTransaction';
 import { AccountMetadataTransaction } from '../../../src/model/transaction/AccountMetadataTransaction';
 import { AccountMosaicRestrictionTransaction } from '../../../src/model/transaction/AccountMosaicRestrictionTransaction';
 import { AccountOperationRestrictionTransaction } from '../../../src/model/transaction/AccountOperationRestrictionTransaction';
@@ -392,7 +392,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const accountLinkTransaction = AccountLinkTransaction.create(
+        const accountLinkTransaction = AccountKeyLinkTransaction.create(
             Deadline.create(),
             account.publicKey,
             LinkAction.Link,
@@ -559,8 +559,8 @@ describe('TransactionMapping - createFromPayload', () => {
         expect(transaction.hash).to.be.equal(signedTransaction.hash);
     });
 
-    it('should create an AccountLinkTransaction object with link action', () => {
-        const accountLinkTransaction = AccountLinkTransaction.create(
+    it('should create an AccountKeyLinkTransaction object with link action', () => {
+        const accountLinkTransaction = AccountKeyLinkTransaction.create(
             Deadline.create(),
             account.publicKey,
             LinkAction.Link,
@@ -568,7 +568,7 @@ describe('TransactionMapping - createFromPayload', () => {
         );
 
         const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AccountLinkTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AccountKeyLinkTransaction;
 
         expect(transaction.linkAction).to.be.equal(1);
         expect(transaction.remotePublicKey).to.be.equal(account.publicKey);
@@ -857,15 +857,15 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.message.type).to.be.equal(MessageType.EncryptedMessage);
     });
 
-    it('should create AccountLinkTransaction', () => {
-        const accountLinkTransaction = AccountLinkTransaction.create(
+    it('should create AccountKeyLinkTransaction', () => {
+        const accountLinkTransaction = AccountKeyLinkTransaction.create(
             Deadline.create(),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(accountLinkTransaction.toJSON()) as AccountLinkTransaction;
+        const transaction = TransactionMapping.createFromDTO(accountLinkTransaction.toJSON()) as AccountKeyLinkTransaction;
 
         expect(transaction.remotePublicKey).to.be.equal(account.publicKey);
         expect(transaction.linkAction).to.be.equal(LinkAction.Link);

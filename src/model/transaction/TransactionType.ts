@@ -113,7 +113,7 @@ export enum TransactionType {
      * Link account transaction type
      * @type {number}
      */
-    ACCOUNT_LINK = 0x414c,
+    ACCOUNT_KEY_LINK = 0x414c,
 
     /**
      * Mosaic address restriction type

@@ -139,7 +139,7 @@ export * from './message/MessageMarker';
 export * from './message/MessageType';
 
 // Transaction
-export * from './transaction/AccountLinkTransaction';
+export * from './transaction/AccountKeyLinkTransaction';
 export * from './transaction/AccountRestrictionTransaction';
 export * from './transaction/AccountAddressRestrictionTransaction';
 export * from './transaction/AccountMosaicRestrictionTransaction';

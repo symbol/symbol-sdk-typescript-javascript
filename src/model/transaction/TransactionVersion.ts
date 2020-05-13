@@ -131,7 +131,7 @@ export class TransactionVersion {
      * Link account transaction version
      * @type {number}
      */
-    public static readonly ACCOUNT_LINK = 0x01;
+    public static readonly ACCOUNT_KEY_LINK = 0x01;
 
     /**
      * Account metadata transaction version

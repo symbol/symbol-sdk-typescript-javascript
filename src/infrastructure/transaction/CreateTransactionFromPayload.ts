@@ -18,7 +18,7 @@ import { EmbeddedTransactionBuilder, TransactionBuilder } from 'catbuffer-typesc
 import { Convert as convert } from '../../core/format';
 import { InnerTransaction } from '../../model/model';
 import { AccountAddressRestrictionTransaction } from '../../model/transaction/AccountAddressRestrictionTransaction';
-import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
+import { AccountKeyLinkTransaction } from '../../model/transaction/AccountKeyLinkTransaction';
 import { AccountMetadataTransaction } from '../../model/transaction/AccountMetadataTransaction';
 import { AccountMosaicRestrictionTransaction } from '../../model/transaction/AccountMosaicRestrictionTransaction';
 import { AccountOperationRestrictionTransaction } from '../../model/transaction/AccountOperationRestrictionTransaction';
@@ -62,8 +62,8 @@ export const CreateTransactionFromPayload = (payload: string, isEmbedded = false
             return AccountMosaicRestrictionTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
             return AccountOperationRestrictionTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.ACCOUNT_LINK:
-            return AccountLinkTransaction.createFromPayload(payload, isEmbedded);
+        case TransactionType.ACCOUNT_KEY_LINK:
+            return AccountKeyLinkTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.ADDRESS_ALIAS:
             return AddressAliasTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.MOSAIC_ALIAS:

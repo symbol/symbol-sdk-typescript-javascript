@@ -165,7 +165,7 @@ export class TransactionService implements ITransactionService {
      */
     private checkShouldResolve(transaction: Transaction): boolean {
         switch (transaction.type) {
-            case TransactionType.ACCOUNT_LINK:
+            case TransactionType.ACCOUNT_KEY_LINK:
             case TransactionType.ACCOUNT_METADATA:
             case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
             case TransactionType.ADDRESS_ALIAS:

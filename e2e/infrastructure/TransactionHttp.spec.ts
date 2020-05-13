@@ -36,7 +36,7 @@ import { AccountRestrictionModificationAction } from '../../src/model/restrictio
 import { AccountRestrictionFlags } from '../../src/model/restriction/AccountRestrictionType';
 import { MosaicRestrictionType } from '../../src/model/restriction/MosaicRestrictionType';
 import { AccountAddressRestrictionTransaction } from '../../src/model/transaction/AccountAddressRestrictionTransaction';
-import { AccountLinkTransaction } from '../../src/model/transaction/AccountLinkTransaction';
+import { AccountKeyLinkTransaction } from '../../src/model/transaction/AccountKeyLinkTransaction';
 import { AccountMetadataTransaction } from '../../src/model/transaction/AccountMetadataTransaction';
 import { AccountMosaicRestrictionTransaction } from '../../src/model/transaction/AccountMosaicRestrictionTransaction';
 import { AccountOperationRestrictionTransaction } from '../../src/model/transaction/AccountOperationRestrictionTransaction';
@@ -545,7 +545,7 @@ describe('TransactionHttp', () => {
             const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
                 Deadline.create(),
                 AccountRestrictionFlags.BlockIncomingTransactionType,
-                [TransactionType.ACCOUNT_LINK],
+                [TransactionType.ACCOUNT_KEY_LINK],
                 [],
                 networkType,
                 helper.maxFee,
@@ -565,7 +565,7 @@ describe('TransactionHttp', () => {
                 Deadline.create(),
                 AccountRestrictionFlags.BlockIncomingTransactionType,
                 [],
-                [TransactionType.ACCOUNT_LINK],
+                [TransactionType.ACCOUNT_KEY_LINK],
                 networkType,
                 helper.maxFee,
             );
@@ -583,11 +583,11 @@ describe('TransactionHttp', () => {
 
     describe('AccountRestrictionTransaction - Outgoing Operation', () => {
         it('standalone', () => {
-            AccountRestrictionModification.createForOperation(AccountRestrictionModificationAction.Add, TransactionType.ACCOUNT_LINK);
+            AccountRestrictionModification.createForOperation(AccountRestrictionModificationAction.Add, TransactionType.ACCOUNT_KEY_LINK);
             const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
                 Deadline.create(),
                 AccountRestrictionFlags.BlockOutgoingTransactionType,
-                [TransactionType.ACCOUNT_LINK],
+                [TransactionType.ACCOUNT_KEY_LINK],
                 [],
                 networkType,
                 helper.maxFee,
@@ -607,7 +607,7 @@ describe('TransactionHttp', () => {
                 Deadline.create(),
                 AccountRestrictionFlags.BlockOutgoingTransactionType,
                 [],
-                [TransactionType.ACCOUNT_LINK],
+                [TransactionType.ACCOUNT_KEY_LINK],
                 networkType,
                 helper.maxFee,
             );
@@ -623,9 +623,9 @@ describe('TransactionHttp', () => {
         });
     });
 
-    describe('AccountLinkTransaction', () => {
+    describe('AccountKeyLinkTransaction', () => {
         it('standalone', () => {
-            const accountLinkTransaction = AccountLinkTransaction.create(
+            const accountLinkTransaction = AccountKeyLinkTransaction.create(
                 Deadline.create(),
                 harvestingAccount.publicKey,
                 LinkAction.Link,
@@ -634,16 +634,16 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
 
-            return helper.announce(signedTransaction).then((transaction: AccountLinkTransaction) => {
+            return helper.announce(signedTransaction).then((transaction: AccountKeyLinkTransaction) => {
                 expect(transaction.remotePublicKey, 'RemotePublicKey').not.to.be.undefined;
                 expect(transaction.linkAction, 'LinkAction').not.to.be.undefined;
                 return signedTransaction;
             });
         });
     });
-    describe('AccountLinkTransaction', () => {
+    describe('AccountKeyLinkTransaction', () => {
         it('aggregate', () => {
-            const accountLinkTransaction = AccountLinkTransaction.create(
+            const accountLinkTransaction = AccountKeyLinkTransaction.create(
                 Deadline.create(),
                 harvestingAccount.publicKey,
                 LinkAction.Unlink,

@@ -27,7 +27,7 @@ import { MosaicId } from '../../model/mosaic/MosaicId';
 import { MosaicNonce } from '../../model/mosaic/MosaicNonce';
 import { NamespaceId } from '../../model/namespace/NamespaceId';
 import { AccountAddressRestrictionTransaction } from '../../model/transaction/AccountAddressRestrictionTransaction';
-import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
+import { AccountKeyLinkTransaction } from '../../model/transaction/AccountKeyLinkTransaction';
 import { AccountMetadataTransaction } from '../../model/transaction/AccountMetadataTransaction';
 import { AccountMosaicRestrictionTransaction } from '../../model/transaction/AccountMosaicRestrictionTransaction';
 import { AccountOperationRestrictionTransaction } from '../../model/transaction/AccountOperationRestrictionTransaction';
@@ -343,8 +343,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.ACCOUNT_LINK) {
-        return new AccountLinkTransaction(
+    } else if (transactionDTO.type === TransactionType.ACCOUNT_KEY_LINK) {
+        return new AccountKeyLinkTransaction(
             transactionDTO.network,
             transactionDTO.version,
             Deadline.createFromDTO(transactionDTO.deadline),
