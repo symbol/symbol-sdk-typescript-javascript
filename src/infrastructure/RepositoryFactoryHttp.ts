@@ -68,9 +68,9 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
         this.networkType = networkType ? observableOf(networkType) : this.createNetworkRepository().getNetworkType().pipe(shareReplay(1));
         this.generationHash = generationHash
             ? observableOf(generationHash)
-            : this.createBlockRepository()
-                  .getBlockByHeight(UInt64.fromUint(1))
-                  .pipe(map((b) => b.generationHash))
+            : this.createNodeRepository()
+                  .getNodeInfo()
+                  .pipe(map((b) => b.networkGenerationHash))
                   .pipe(shareReplay(1));
     }
 
