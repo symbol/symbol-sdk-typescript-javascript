@@ -16,13 +16,12 @@
 import { expect } from 'chai';
 import { of as observableOf } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { deepEqual, instance, mock, when } from 'ts-mockito';
-import { BlockRepository } from '../../src/infrastructure/BlockRepository';
+import { instance, mock, when } from 'ts-mockito';
 import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
 import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
-import { BlockInfo } from '../../src/model/blockchain/BlockInfo';
 import { NetworkType } from '../../src/model/network/NetworkType';
-import { UInt64 } from '../../src/model/UInt64';
+import { NodeRepository } from '../../src/infrastructure/NodeRepository';
+import { NodeInfo } from '../../src/model/node/NodeInfo';
 
 describe('RepositoryFactory', () => {
     it('Should create repositories', () => {
@@ -45,17 +44,17 @@ describe('RepositoryFactory', () => {
 
     it('Should get GenerationHash from cache', (done) => {
         let counter = 0;
-        const repositoryMock: BlockRepository = mock();
-        const observableOfBlockInfo = observableOf({ generationHash: 'aaaa' } as BlockInfo).pipe(
+        const repositoryMock: NodeRepository = mock();
+        const observableOfNodeInfo = observableOf({ networkGenerationHash: 'aaaa' } as NodeInfo).pipe(
             map((v) => {
                 counter++;
                 return v;
             }),
         );
-        when(repositoryMock.getBlockByHeight(deepEqual(UInt64.fromUint(1)))).thenReturn(observableOfBlockInfo);
-        expect(observableOfBlockInfo).to.be.equals(observableOfBlockInfo);
+        when(repositoryMock.getNodeInfo()).thenReturn(observableOfNodeInfo);
+        expect(observableOfNodeInfo).to.be.equals(observableOfNodeInfo);
         const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
-            createBlockRepository(): BlockRepository {
+            createNodeRepository(): NodeRepository {
                 return instance(repositoryMock);
             }
         })('http://localhost:3000', NetworkType.MIJIN_TEST);
