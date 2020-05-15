@@ -483,6 +483,7 @@ Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/nem2-sdk-opena
 
 - Initial code release.
 
+[0.19.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.18.0...v0.19.0
 [0.18.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.17.4...v0.18.0
 [0.17.4]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.17.3...v0.17.4
 [0.17.3]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.17.2...v0.17.3
