@@ -115,12 +115,9 @@ export class AccountRestrictionTransaction {
         maxFee: UInt64 = new UInt64([0, 0]),
     ): AccountOperationRestrictionTransaction {
         if (
-            ![
-                AccountRestrictionFlags.AllowIncomingTransactionType,
-                AccountRestrictionFlags.AllowOutgoingTransactionType,
-                AccountRestrictionFlags.BlockIncomingTransactionType,
-                AccountRestrictionFlags.BlockOutgoingTransactionType,
-            ].includes(restrictionFlags)
+            ![AccountRestrictionFlags.AllowOutgoingTransactionType, AccountRestrictionFlags.BlockOutgoingTransactionType].includes(
+                restrictionFlags,
+            )
         ) {
             throw new Error('Restriction type is not allowed.');
         }

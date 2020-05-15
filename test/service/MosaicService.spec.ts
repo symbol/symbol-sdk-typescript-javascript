@@ -54,7 +54,7 @@ describe('MosaicService', () => {
             TestingAccount.publicKey,
             UInt64.fromUint(1),
             AccountType.Main,
-            '',
+            [],
             [],
             isEmptyMosaic ? [] : [new Mosaic(mosaicId, UInt64.fromUint(100))],
             UInt64.fromUint(1),

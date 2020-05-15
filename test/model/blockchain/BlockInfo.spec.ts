@@ -28,6 +28,9 @@ describe('BlockInfo', () => {
                 blockReceiptsHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
                 stateHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
                 difficulty: new UInt64([276447232, 23283]),
+                proofGamma: 'AC1A6E1D8DE5B17D2C6B1293F1CAD3829EEACF38D09311BB3C8E5A880092DE26',
+                proofScalar: 'AC1A6E1D8DE5B17D2C6B1293F1CAD3829EEACF38D09311BB3C8E5A880092DE26',
+                proofVerificationHash: 'AC1A6E1D8DE5B17D2C6B1293F1CAD382',
                 feeMultiplier: 1,
                 height: new UInt64([1, 0]),
                 previousBlockHash: '0000000000000000000000000000000000000000000000000000000000000000',
@@ -68,6 +71,9 @@ describe('BlockInfo', () => {
             blockDTO.block.blockTransactionsHash,
             blockDTO.block.blockReceiptsHash,
             blockDTO.block.stateHash,
+            blockDTO.block.proofGamma,
+            blockDTO.block.proofScalar,
+            blockDTO.block.proofVerificationHash,
             PublicAccount.createFromPublicKey(blockDTO.block.beneficiaryPublicKey, blockDTO.block.network),
             blockDTO.meta.numStatements,
         );
@@ -91,5 +97,8 @@ describe('BlockInfo', () => {
         expect(blockInfo.stateHash).to.be.equal(blockDTO.block.stateHash);
         expect((blockInfo.beneficiaryPublicKey as PublicAccount).publicKey).to.be.equal(blockDTO.block.beneficiaryPublicKey);
         expect(blockInfo.numStatements).to.be.equal(blockDTO.meta.numStatements);
+        expect(blockInfo.proofGamma).to.be.equal(blockDTO.block.proofGamma);
+        expect(blockInfo.proofScalar).to.be.equal(blockDTO.block.proofScalar);
+        expect(blockInfo.proofVerificationHash).to.be.equal(blockDTO.block.proofVerificationHash);
     });
 });

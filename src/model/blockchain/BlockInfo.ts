@@ -35,6 +35,9 @@ export class BlockInfo {
      * @param height
      * @param timestamp
      * @param difficulty
+     * @param proofGamma
+     * @param proofScalar
+     * @param proofVerificationHash
      * @param feeMultiplier
      * @param previousBlockHash
      * @param blockTransactionsHash
@@ -115,6 +118,18 @@ export class BlockInfo {
          * The state hash.
          */
         public readonly stateHash: string,
+        /**
+         * The proof gamma.
+         */
+        public readonly proofGamma: string,
+        /**
+         * The proof scalar.
+         */
+        public readonly proofScalar: string,
+        /**
+         * The proof verification hash.
+         */
+        public readonly proofVerificationHash: string,
         /**
          * The beneficiary public key.
          */

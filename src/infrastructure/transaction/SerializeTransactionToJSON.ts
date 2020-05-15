@@ -16,7 +16,7 @@
 
 import { Convert } from '../../core/format/Convert';
 import { AccountAddressRestrictionTransaction } from '../../model/transaction/AccountAddressRestrictionTransaction';
-import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
+import { AccountKeyLinkTransaction } from '../../model/transaction/AccountKeyLinkTransaction';
 import { AccountMetadataTransaction } from '../../model/transaction/AccountMetadataTransaction';
 import { AccountMosaicRestrictionTransaction } from '../../model/transaction/AccountMosaicRestrictionTransaction';
 import { AccountOperationRestrictionTransaction } from '../../model/transaction/AccountOperationRestrictionTransaction';
@@ -37,6 +37,9 @@ import { SecretProofTransaction } from '../../model/transaction/SecretProofTrans
 import { Transaction } from '../../model/transaction/Transaction';
 import { TransactionType } from '../../model/transaction/TransactionType';
 import { TransferTransaction } from '../../model/transaction/TransferTransaction';
+import { VrfKeyLinkTransaction } from '../../model/transaction/VrfKeyLinkTransaction';
+import { VotingKeyLinkTransaction } from '../../model/transaction/VotingKeyLinkTransaction';
+import { NodeKeyLinkTransaction } from '../../model/transaction/NodeKeyLinkTransaction';
 
 /**
  * @internal
@@ -46,8 +49,8 @@ import { TransferTransaction } from '../../model/transaction/TransferTransaction
  */
 export const SerializeTransactionToJSON = (transaction: Transaction): any => {
     switch (transaction.type) {
-        case TransactionType.ACCOUNT_LINK:
-            const accountLinkTx = transaction as AccountLinkTransaction;
+        case TransactionType.ACCOUNT_KEY_LINK:
+            const accountLinkTx = transaction as AccountKeyLinkTransaction;
             return {
                 remotePublicKey: accountLinkTx.remotePublicKey,
                 linkAction: accountLinkTx.linkAction,
@@ -249,6 +252,24 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 targetNamespaceId: namespaceMetaTx.targetNamespaceId.id.toHex(),
                 valueSize: namespaceMetaTx.value.length,
                 value: Convert.utf8ToHex(namespaceMetaTx.value),
+            };
+        case TransactionType.VRF_KEY_LINK:
+            const vrfKeyLinkTx = transaction as VrfKeyLinkTransaction;
+            return {
+                linkedPublicKey: vrfKeyLinkTx.linkedPublicKey,
+                linkAction: vrfKeyLinkTx.linkAction,
+            };
+        case TransactionType.NODE_KEY_LINK:
+            const nodeKeyLinkTx = transaction as NodeKeyLinkTransaction;
+            return {
+                linkedPublicKey: nodeKeyLinkTx.linkedPublicKey,
+                linkAction: nodeKeyLinkTx.linkAction,
+            };
+        case TransactionType.VOTING_KEY_LINK:
+            const votingKeyLinkTx = transaction as VotingKeyLinkTransaction;
+            return {
+                linkedPublicKey: votingKeyLinkTx.linkedPublicKey,
+                linkAction: votingKeyLinkTx.linkAction,
             };
         default:
             throw new Error('Transaction type not implemented yet.');

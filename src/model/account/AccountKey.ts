@@ -1,5 +1,4 @@
 /*
-import { UInt64 } from '../UInt64';
  * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,33 +14,23 @@ import { UInt64 } from '../UInt64';
  * limitations under the License.
  */
 
-import { UInt64 } from '../UInt64';
+import { AccountKeyType } from './AccountKeyType';
 
 /**
- * Account activity bucket.
+ * Account key
  */
-export class ActivityBucket {
+export class AccountKey {
     /**
-     * Constructor
-     * @param meta
-     * @param accountRestrictions
+     *
      */
     constructor(
         /**
-         * Start height
+         * Account key type
          */
-        public readonly startHeight: UInt64,
+        public readonly keyType: AccountKeyType,
         /**
-         * Total fees paid.
+         * Key
          */
-        public readonly totalFeesPaid: UInt64,
-        /**
-         * Beneficiary count.
-         */
-        public readonly beneficiaryCount: number,
-        /**
-         * Raw score.
-         */
-        public readonly rawScore: UInt64,
+        public readonly key: string,
     ) {}
 }

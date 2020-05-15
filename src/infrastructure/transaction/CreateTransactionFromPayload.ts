@@ -18,7 +18,7 @@ import { EmbeddedTransactionBuilder, TransactionBuilder } from 'catbuffer-typesc
 import { Convert as convert } from '../../core/format';
 import { InnerTransaction } from '../../model/model';
 import { AccountAddressRestrictionTransaction } from '../../model/transaction/AccountAddressRestrictionTransaction';
-import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
+import { AccountKeyLinkTransaction } from '../../model/transaction/AccountKeyLinkTransaction';
 import { AccountMetadataTransaction } from '../../model/transaction/AccountMetadataTransaction';
 import { AccountMosaicRestrictionTransaction } from '../../model/transaction/AccountMosaicRestrictionTransaction';
 import { AccountOperationRestrictionTransaction } from '../../model/transaction/AccountOperationRestrictionTransaction';
@@ -39,6 +39,9 @@ import { SecretProofTransaction } from '../../model/transaction/SecretProofTrans
 import { Transaction } from '../../model/transaction/Transaction';
 import { TransactionType } from '../../model/transaction/TransactionType';
 import { TransferTransaction } from '../../model/transaction/TransferTransaction';
+import { VrfKeyLinkTransaction } from '../../model/transaction/VrfKeyLinkTransaction';
+import { VotingKeyLinkTransaction } from '../../model/transaction/VotingKeyLinkTransaction';
+import { NodeKeyLinkTransaction } from '../../model/transaction/NodeKeyLinkTransaction';
 
 /**
  * @internal
@@ -59,8 +62,8 @@ export const CreateTransactionFromPayload = (payload: string, isEmbedded = false
             return AccountMosaicRestrictionTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
             return AccountOperationRestrictionTransaction.createFromPayload(payload, isEmbedded);
-        case TransactionType.ACCOUNT_LINK:
-            return AccountLinkTransaction.createFromPayload(payload, isEmbedded);
+        case TransactionType.ACCOUNT_KEY_LINK:
+            return AccountKeyLinkTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.ADDRESS_ALIAS:
             return AddressAliasTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.MOSAIC_ALIAS:
@@ -91,6 +94,12 @@ export const CreateTransactionFromPayload = (payload: string, isEmbedded = false
             return MosaicMetadataTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.NAMESPACE_METADATA:
             return NamespaceMetadataTransaction.createFromPayload(payload, isEmbedded);
+        case TransactionType.VRF_KEY_LINK:
+            return VrfKeyLinkTransaction.createFromPayload(payload, isEmbedded);
+        case TransactionType.NODE_KEY_LINK:
+            return NodeKeyLinkTransaction.createFromPayload(payload, isEmbedded);
+        case TransactionType.VOTING_KEY_LINK:
+            return VotingKeyLinkTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.AGGREGATE_COMPLETE:
         case TransactionType.AGGREGATE_BONDED:
             return AggregateTransaction.createFromPayload(payload);

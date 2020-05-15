@@ -45,11 +45,6 @@ export enum AccountRestrictionFlags {
     AllowMosaic = AccountRestrictionTypeEnum.Mosaic,
 
     /**
-     * Allow only outgoing transactions with a given transaction type.
-     */
-    AllowIncomingTransactionType = AccountRestrictionTypeEnum.TransactionType,
-
-    /**
      * Allow only outgoing transactions to a given address.
      */
     AllowOutgoingAddress = AccountRestrictionTypeEnum.Address + AccountRestrictionTypeEnum.Outgoing,
@@ -68,11 +63,6 @@ export enum AccountRestrictionFlags {
      * Block incoming transactions containing a given mosaic identifier.
      */
     BlockMosaic = AccountRestrictionTypeEnum.Mosaic + AccountRestrictionTypeEnum.Block,
-
-    /**
-     * Block incoming transactions with a given transaction type.
-     */
-    BlockIncomingTransactionType = AccountRestrictionTypeEnum.TransactionType + AccountRestrictionTypeEnum.Block,
 
     /**
      * Block outgoing transactions from a given address.

@@ -28,6 +28,8 @@ export * from './account/MultisigAccountInfo';
 export * from './account/PublicAccount';
 export * from './account/AccountNames';
 export * from './account/AccountInfoResolvedMosaic';
+export * from './account/AccountKeyType';
+export * from './account/AccountKey';
 
 // Blockchain
 export * from './blockchain/BlockchainScore';
@@ -137,7 +139,7 @@ export * from './message/MessageMarker';
 export * from './message/MessageType';
 
 // Transaction
-export * from './transaction/AccountLinkTransaction';
+export * from './transaction/AccountKeyLinkTransaction';
 export * from './transaction/AccountRestrictionTransaction';
 export * from './transaction/AccountAddressRestrictionTransaction';
 export * from './transaction/AccountMosaicRestrictionTransaction';
@@ -180,6 +182,9 @@ export * from './transaction/MosaicMetadataTransaction';
 export * from './transaction/NamespaceMetadataTransaction';
 export * from './transaction/MosaicGlobalRestrictionTransaction';
 export * from './transaction/MosaicAddressRestrictionTransaction';
+export * from './transaction/VotingKeyLinkTransaction';
+export * from './transaction/VrfKeyLinkTransaction';
+export * from './transaction/NodeKeyLinkTransaction';
 
 // Wallet
 export * from './wallet/ISimpleWalletDTO';

@@ -157,6 +157,9 @@ export class Listener implements IListener {
                     message.block.blockTransactionsHash,
                     message.block.blockReceiptsHash,
                     message.block.stateHash,
+                    message.block.proofGamma,
+                    message.block.proofScalar,
+                    message.block.proofVerificationHash,
                     message.block.beneficiaryPublicKey,
                 ),
             });

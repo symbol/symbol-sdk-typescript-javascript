@@ -27,7 +27,7 @@ import {
     NodeIdentityEqualityStrategy,
     ChainPropertiesDTO,
     PluginsPropertiesDTO,
-    AccountLinkNetworkPropertiesDTO,
+    AccountKeyLinkNetworkPropertiesDTO,
     AggregateNetworkPropertiesDTO,
     HashLockNetworkPropertiesDTO,
     SecretLockNetworkPropertiesDTO,
@@ -126,7 +126,7 @@ describe('NetworkHttp', () => {
         network.identifier = 'id';
         network.nodeEqualityStrategy = NodeIdentityEqualityStrategy.Host;
         network.publicKey = 'pubKey';
-        network.generationHash = 'genHash';
+        network.generationHashSeed = 'genHash';
         network.epochAdjustment = '123456';
 
         const chain = new ChainPropertiesDTO();
@@ -151,9 +151,13 @@ describe('NetworkHttp', () => {
         chain.maxTransactionsPerBlock = '1';
         chain.minHarvesterBalance = '1';
         chain.totalChainImportance = '1';
+        chain.harvestNetworkPercentage = '1';
+        chain.harvestNetworkFeeSinkPublicKey = 'key';
+        chain.blockFinalizationInterval = '1';
+        chain.minVoterBalance = '1';
 
         const plugin = new PluginsPropertiesDTO();
-        plugin.accountlink = new AccountLinkNetworkPropertiesDTO();
+        plugin.accountlink = new AccountKeyLinkNetworkPropertiesDTO();
         plugin.accountlink.dummy = 'dummy';
 
         plugin.aggregate = new AggregateNetworkPropertiesDTO();

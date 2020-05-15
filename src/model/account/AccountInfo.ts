@@ -20,6 +20,7 @@ import { AccountType } from './AccountType';
 import { ActivityBucket } from './ActivityBucket';
 import { Address } from './Address';
 import { PublicAccount } from './PublicAccount';
+import { AccountKey } from './AccountKey';
 
 /**
  * The account info structure describes basic information for an account.
@@ -50,9 +51,9 @@ export class AccountInfo {
          */
         public readonly accountType: AccountType,
         /**
-         * Linked account key
+         * Account keys
          */
-        public readonly linkedAccountKey: string,
+        public readonly supplementalAccountKeys: AccountKey[],
         /**
          * Account activity bucket
          */

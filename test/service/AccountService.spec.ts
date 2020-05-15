@@ -36,6 +36,8 @@ import { MosaicAlias } from '../../src/model/namespace/MosaicAlias';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NamespaceName } from '../../src/model/namespace/NamespaceName';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
+import { AccountKey } from '../../src/model/account/AccountKey';
+import { AccountKeyType } from '../../src/model/account/AccountKeyType';
 
 describe('AccountService', () => {
     let accountService: AccountService;
@@ -57,8 +59,8 @@ describe('AccountService', () => {
                 account.publicKey,
                 UInt64.fromUint(100),
                 AccountType.Main,
-                '0',
-                [new ActivityBucket('0', 1, 1, 1)],
+                [new AccountKey(AccountKeyType.Linked, '0')],
+                [new ActivityBucket(UInt64.fromUint(0), UInt64.fromUint(1), 1, UInt64.fromUint(1))],
                 mosaics,
                 UInt64.fromUint(100),
                 UInt64.fromUint(100),
@@ -191,7 +193,6 @@ describe('AccountService', () => {
     it('should return empty resolved namespaceInfo', async () => {
         when(mockAccountRepository.getAccountsInfo(deepEqual([account2.address]))).thenReturn(observableOf(mockAccountInfo(true, true)));
         const result = await accountService.accountInfoWithResolvedMosaic([account2.address]).toPromise();
-        console.log(result[0].resolvedMosaics);
         expect(result).to.not.be.undefined;
         expect(result.length).to.be.greaterThan(0);
         expect(result![0].resolvedMosaics?.length).to.be.equal(1);

@@ -24,6 +24,7 @@ import {
     ActivityBucketDTO,
     Mosaic,
     TransactionTypeEnum,
+    TransactionInfoDTO,
 } from 'symbol-openapi-typescript-node-client';
 import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
@@ -36,6 +37,7 @@ import { AccountType } from '../../src/model/account/AccountType';
 import { Address } from '../../src/model/account/Address';
 import { Transaction } from '../../src/model/transaction/Transaction';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
+import { AccountKeyDTO } from 'symbol-openapi-typescript-node-client/dist/model/accountKeyDTO';
 
 describe('AccountHttp', () => {
     const address = Address.createFromRawAddress('MCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPR72DYSX');
@@ -46,9 +48,9 @@ describe('AccountHttp', () => {
 
     const activityBucketDTO = new ActivityBucketDTO();
     activityBucketDTO.beneficiaryCount = 1;
-    activityBucketDTO.rawScore = 2;
+    activityBucketDTO.rawScore = '2';
     activityBucketDTO.startHeight = '3';
-    activityBucketDTO.totalFeesPaid = 4;
+    activityBucketDTO.totalFeesPaid = '4';
 
     const accountDTO = new AccountDTO();
     accountDTO.accountType = AccountTypeEnum.NUMBER_1;
@@ -57,7 +59,10 @@ describe('AccountHttp', () => {
     accountDTO.importance = '222';
     accountDTO.importanceHeight = '333';
     accountDTO.publicKeyHeight = '444';
-    accountDTO.linkedAccountKey = 'abc';
+    const accountKeyDto = new AccountKeyDTO();
+    accountKeyDto.key = 'abc';
+    accountKeyDto.keyType = 1;
+    accountDTO.supplementalAccountKeys = [accountKeyDto];
     accountDTO.publicKey = 'AAA';
     accountDTO.activityBuckets = [];
     accountDTO.mosaics = [mosaic];
@@ -115,16 +120,19 @@ describe('AccountHttp', () => {
         expect(accountInfo.importanceHeight.toString()).to.be.equals(accountDTO.importanceHeight);
         expect(accountInfo.publicKeyHeight.toString()).to.be.equals(accountDTO.publicKeyHeight);
         expect(accountInfo.publicKey).to.be.equals(accountDTO.publicKey);
-        expect(accountInfo.linkedAccountKey).to.be.equals(accountDTO.linkedAccountKey);
+        expect(accountInfo.supplementalAccountKeys[0].key).to.be.equals(accountDTO.supplementalAccountKeys[0].key);
+        expect(accountInfo.supplementalAccountKeys[0].keyType.valueOf()).to.be.equals(
+            accountDTO.supplementalAccountKeys[0].keyType.valueOf(),
+        );
         expect(accountInfo.mosaics.length).to.be.equals(1);
         expect(accountInfo.mosaics[0].id.id.toHex()).to.be.equals(mosaic.id);
         expect(accountInfo.mosaics[0].amount.toString()).to.be.equals(mosaic.amount);
 
         expect(accountInfo.activityBucket.length).to.be.equals(1);
         expect(accountInfo.activityBucket[0].beneficiaryCount).to.be.equals(activityBucketDTO.beneficiaryCount);
-        expect(accountInfo.activityBucket[0].rawScore).to.be.equals(activityBucketDTO.rawScore);
-        expect(accountInfo.activityBucket[0].startHeight).to.be.equals(activityBucketDTO.startHeight);
-        expect(accountInfo.activityBucket[0].totalFeesPaid).to.be.equals(activityBucketDTO.totalFeesPaid);
+        expect(accountInfo.activityBucket[0].rawScore.toString()).to.be.equals(activityBucketDTO.rawScore);
+        expect(accountInfo.activityBucket[0].startHeight.toString()).to.be.equals(activityBucketDTO.startHeight);
+        expect(accountInfo.activityBucket[0].totalFeesPaid.toString()).to.be.equals(activityBucketDTO.totalFeesPaid);
     }
 
     function assertTransaction(transaction: Transaction): void {
@@ -153,7 +161,7 @@ describe('AccountHttp', () => {
         ).thenReturn(
             Promise.resolve({
                 response,
-                body: [transactionInfoDTO],
+                body: [Object.assign(new TransactionInfoDTO(), transactionInfoDTO)],
             }),
         );
         const transactions = await accountRepository
@@ -173,7 +181,7 @@ describe('AccountHttp', () => {
         when(accountRoutesApi.getAccountConfirmedTransactions(address.plain(), undefined, undefined, undefined, undefined)).thenReturn(
             Promise.resolve({
                 response,
-                body: [transactionInfoDTO],
+                body: [Object.assign(new TransactionInfoDTO(), transactionInfoDTO)],
             }),
         );
         const transactions = await accountRepository.getAccountTransactions(address).toPromise();
@@ -186,7 +194,7 @@ describe('AccountHttp', () => {
         ).thenReturn(
             Promise.resolve({
                 response,
-                body: [transactionInfoDTO],
+                body: [Object.assign(new TransactionInfoDTO(), transactionInfoDTO)],
             }),
         );
         const transactions = await accountRepository
@@ -208,7 +216,7 @@ describe('AccountHttp', () => {
         ).thenReturn(
             Promise.resolve({
                 response,
-                body: [transactionInfoDTO],
+                body: [Object.assign(new TransactionInfoDTO(), transactionInfoDTO)],
             }),
         );
         const transactions = await accountRepository
@@ -230,7 +238,7 @@ describe('AccountHttp', () => {
         ).thenReturn(
             Promise.resolve({
                 response,
-                body: [transactionInfoDTO],
+                body: [Object.assign(new TransactionInfoDTO(), transactionInfoDTO)],
             }),
         );
         const transactions = await accountRepository
@@ -258,7 +266,7 @@ describe('AccountHttp', () => {
         ).thenReturn(
             Promise.resolve({
                 response,
-                body: [transactionInfoDTO],
+                body: [Object.assign(new TransactionInfoDTO(), transactionInfoDTO)],
             }),
         );
         const transactions = await accountRepository
@@ -280,7 +288,7 @@ describe('AccountHttp', () => {
         ).thenReturn(
             Promise.resolve({
                 response,
-                body: [transactionInfoDTO],
+                body: [Object.assign(new TransactionInfoDTO(), transactionInfoDTO)],
             }),
         );
         const transactions = await accountRepository

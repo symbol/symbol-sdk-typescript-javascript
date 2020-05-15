@@ -36,7 +36,7 @@ import { AccountRestrictionModificationAction } from '../../src/model/restrictio
 import { AccountRestrictionFlags } from '../../src/model/restriction/AccountRestrictionType';
 import { MosaicRestrictionType } from '../../src/model/restriction/MosaicRestrictionType';
 import { AccountAddressRestrictionTransaction } from '../../src/model/transaction/AccountAddressRestrictionTransaction';
-import { AccountLinkTransaction } from '../../src/model/transaction/AccountLinkTransaction';
+import { AccountKeyLinkTransaction } from '../../src/model/transaction/AccountKeyLinkTransaction';
 import { AccountMetadataTransaction } from '../../src/model/transaction/AccountMetadataTransaction';
 import { AccountMosaicRestrictionTransaction } from '../../src/model/transaction/AccountMosaicRestrictionTransaction';
 import { AccountOperationRestrictionTransaction } from '../../src/model/transaction/AccountOperationRestrictionTransaction';
@@ -66,6 +66,9 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { LockHashUtils } from '../../src/core/utils/LockHashUtils';
+import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTransaction';
+import { VotingKeyLinkTransaction } from '../../src/model/transaction/VotingKeyLinkTransaction';
+import { NodeKeyLinkTransaction } from '../../src/model/transaction/NodeKeyLinkTransaction';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CryptoJS = require('crypto-js');
@@ -89,6 +92,7 @@ describe('TransactionHttp', () => {
     let namespaceId: NamespaceId;
     let harvestingAccount: Account;
     let transactionRepository: TransactionRepository;
+    let votingKey: string;
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const secureRandom = require('secure-random');
     // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -106,6 +110,7 @@ describe('TransactionHttp', () => {
             harvestingAccount = helper.harvestingAccount;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
+            votingKey = Convert.uint8ToHex(Crypto.randomBytes(48));
             accountRepository = helper.repositoryFactory.createAccountRepository();
             namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
             transactionRepository = helper.repositoryFactory.createTransactionRepository();
@@ -370,6 +375,7 @@ describe('TransactionHttp', () => {
                 account3.address,
                 UInt64.fromUint(2),
                 networkType,
+                undefined,
                 helper.maxFee,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(
@@ -535,54 +541,14 @@ describe('TransactionHttp', () => {
             return helper.announce(signedTransaction);
         });
     });
-    describe('AccountRestrictionTransaction - Incoming Operation', () => {
-        it('standalone', () => {
-            const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
-                Deadline.create(),
-                AccountRestrictionFlags.BlockIncomingTransactionType,
-                [TransactionType.ACCOUNT_LINK],
-                [],
-                networkType,
-                helper.maxFee,
-            );
-            const signedTransaction = addressModification.signWith(account3, generationHash);
-
-            return helper.announce(signedTransaction).then((transaction: AccountOperationRestrictionTransaction) => {
-                expect(transaction.restrictionAdditions, 'RestrictionAdditions').not.to.be.undefined;
-                expect(transaction.restrictionDeletions, 'RestrictionDeletions').not.to.be.undefined;
-                expect(transaction.restrictionFlags, 'RestrictionFlags').not.to.be.undefined;
-            });
-        });
-    });
-    describe('AccountRestrictionTransaction - Incoming Operation', () => {
-        it('aggregate', () => {
-            const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
-                Deadline.create(),
-                AccountRestrictionFlags.BlockIncomingTransactionType,
-                [],
-                [TransactionType.ACCOUNT_LINK],
-                networkType,
-                helper.maxFee,
-            );
-            const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(),
-                [addressModification.toAggregate(account3.publicAccount)],
-                networkType,
-                [],
-                helper.maxFee,
-            );
-            const signedTransaction = aggregateTransaction.signWith(account3, generationHash);
-            return helper.announce(signedTransaction);
-        });
-    });
 
     describe('AccountRestrictionTransaction - Outgoing Operation', () => {
         it('standalone', () => {
-            AccountRestrictionModification.createForOperation(AccountRestrictionModificationAction.Add, TransactionType.ACCOUNT_LINK);
+            AccountRestrictionModification.createForOperation(AccountRestrictionModificationAction.Add, TransactionType.ACCOUNT_KEY_LINK);
             const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
                 Deadline.create(),
                 AccountRestrictionFlags.BlockOutgoingTransactionType,
-                [TransactionType.ACCOUNT_LINK],
+                [TransactionType.ACCOUNT_KEY_LINK],
                 [],
                 networkType,
                 helper.maxFee,
@@ -602,7 +568,7 @@ describe('TransactionHttp', () => {
                 Deadline.create(),
                 AccountRestrictionFlags.BlockOutgoingTransactionType,
                 [],
-                [TransactionType.ACCOUNT_LINK],
+                [TransactionType.ACCOUNT_KEY_LINK],
                 networkType,
                 helper.maxFee,
             );
@@ -618,27 +584,66 @@ describe('TransactionHttp', () => {
         });
     });
 
-    describe('AccountLinkTransaction', () => {
+    describe('AccountKeyLinkTransaction', () => {
         it('standalone', () => {
-            const accountLinkTransaction = AccountLinkTransaction.create(
+            const accountLinkTransaction = AccountKeyLinkTransaction.create(
                 Deadline.create(),
-                harvestingAccount.publicKey,
+                account3.publicKey,
                 LinkAction.Link,
                 networkType,
                 helper.maxFee,
             );
             const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
 
-            return helper.announce(signedTransaction).then((transaction: AccountLinkTransaction) => {
+            return helper.announce(signedTransaction).then((transaction: AccountKeyLinkTransaction) => {
                 expect(transaction.remotePublicKey, 'RemotePublicKey').not.to.be.undefined;
                 expect(transaction.linkAction, 'LinkAction').not.to.be.undefined;
                 return signedTransaction;
             });
         });
     });
-    describe('AccountLinkTransaction', () => {
+    describe('AccountKeyLinkTransaction', () => {
         it('aggregate', () => {
-            const accountLinkTransaction = AccountLinkTransaction.create(
+            const accountLinkTransaction = AccountKeyLinkTransaction.create(
+                Deadline.create(),
+                account3.publicKey,
+                LinkAction.Unlink,
+                networkType,
+                helper.maxFee,
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
+                [accountLinkTransaction.toAggregate(account.publicAccount)],
+                networkType,
+                [],
+                helper.maxFee,
+            );
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+            return helper.announce(signedTransaction);
+        });
+    });
+
+    describe('VrfKeyLinkTransaction', () => {
+        it('standalone', () => {
+            const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
+                Deadline.create(),
+                harvestingAccount.publicKey,
+                LinkAction.Link,
+                networkType,
+                helper.maxFee,
+            );
+            const signedTransaction = vrfKeyLinkTransaction.signWith(account, generationHash);
+
+            return helper.announce(signedTransaction).then((transaction: VrfKeyLinkTransaction) => {
+                expect(transaction.linkedPublicKey, 'LinkedPublicKey').not.to.be.undefined;
+                expect(transaction.linkAction, 'LinkAction').not.to.be.undefined;
+                return signedTransaction;
+            });
+        });
+    });
+    describe('VrfKeyLinkTransaction', () => {
+        it('aggregate', () => {
+            const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
                 Deadline.create(),
                 harvestingAccount.publicKey,
                 LinkAction.Unlink,
@@ -647,7 +652,85 @@ describe('TransactionHttp', () => {
             );
             const aggregateTransaction = AggregateTransaction.createComplete(
                 Deadline.create(),
-                [accountLinkTransaction.toAggregate(account.publicAccount)],
+                [vrfKeyLinkTransaction.toAggregate(account.publicAccount)],
+                networkType,
+                [],
+                helper.maxFee,
+            );
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+            return helper.announce(signedTransaction);
+        });
+    });
+
+    describe('NodeKeyLinkTransaction', () => {
+        it('standalone', () => {
+            const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
+                Deadline.create(),
+                harvestingAccount.publicKey,
+                LinkAction.Link,
+                networkType,
+                helper.maxFee,
+            );
+            const signedTransaction = nodeKeyLinkTransaction.signWith(account, generationHash);
+
+            return helper.announce(signedTransaction).then((transaction: NodeKeyLinkTransaction) => {
+                expect(transaction.linkedPublicKey, 'LinkedPublicKey').not.to.be.undefined;
+                expect(transaction.linkAction, 'LinkAction').not.to.be.undefined;
+                return signedTransaction;
+            });
+        });
+    });
+    describe('NodeKeyLinkTransaction', () => {
+        it('aggregate', () => {
+            const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
+                Deadline.create(),
+                harvestingAccount.publicKey,
+                LinkAction.Unlink,
+                networkType,
+                helper.maxFee,
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
+                [nodeKeyLinkTransaction.toAggregate(account.publicAccount)],
+                networkType,
+                [],
+                helper.maxFee,
+            );
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+            return helper.announce(signedTransaction);
+        });
+    });
+
+    describe('VotingKeyLinkTransaction', () => {
+        it('standalone', () => {
+            const votingLinkTransaction = VotingKeyLinkTransaction.create(
+                Deadline.create(),
+                votingKey,
+                LinkAction.Link,
+                networkType,
+                helper.maxFee,
+            );
+            const signedTransaction = votingLinkTransaction.signWith(account, generationHash);
+
+            return helper.announce(signedTransaction).then((transaction: VotingKeyLinkTransaction) => {
+                expect(transaction.linkedPublicKey, 'LinkedPublicKey').not.to.be.undefined;
+                expect(transaction.linkAction, 'LinkAction').not.to.be.undefined;
+                return signedTransaction;
+            });
+        });
+    });
+    describe('VotingKeyLinkTransaction', () => {
+        it('aggregate', () => {
+            const votingLinkTransaction = VotingKeyLinkTransaction.create(
+                Deadline.create(),
+                votingKey,
+                LinkAction.Unlink,
+                networkType,
+                helper.maxFee,
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
+                [votingLinkTransaction.toAggregate(account.publicAccount)],
                 networkType,
                 [],
                 helper.maxFee,
@@ -1378,7 +1461,7 @@ describe('TransactionHttp', () => {
         it('should return effective paid fee given transactionHash', async () => {
             const effectiveFee = await transactionRepository.getTransactionEffectiveFee(transactionHash).toPromise();
             expect(effectiveFee).to.not.be.undefined;
-            expect(effectiveFee).to.be.equal(0);
+            expect(effectiveFee).not.to.be.equal(0);
         });
     });
 });

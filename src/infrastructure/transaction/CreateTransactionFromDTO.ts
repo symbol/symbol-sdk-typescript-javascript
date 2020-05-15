@@ -27,7 +27,7 @@ import { MosaicId } from '../../model/mosaic/MosaicId';
 import { MosaicNonce } from '../../model/mosaic/MosaicNonce';
 import { NamespaceId } from '../../model/namespace/NamespaceId';
 import { AccountAddressRestrictionTransaction } from '../../model/transaction/AccountAddressRestrictionTransaction';
-import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
+import { AccountKeyLinkTransaction } from '../../model/transaction/AccountKeyLinkTransaction';
 import { AccountMetadataTransaction } from '../../model/transaction/AccountMetadataTransaction';
 import { AccountMosaicRestrictionTransaction } from '../../model/transaction/AccountMosaicRestrictionTransaction';
 import { AccountOperationRestrictionTransaction } from '../../model/transaction/AccountOperationRestrictionTransaction';
@@ -54,6 +54,9 @@ import { TransactionInfo } from '../../model/transaction/TransactionInfo';
 import { TransactionType } from '../../model/transaction/TransactionType';
 import { TransferTransaction } from '../../model/transaction/TransferTransaction';
 import { UInt64 } from '../../model/UInt64';
+import { VrfKeyLinkTransaction } from '../../model/transaction/VrfKeyLinkTransaction';
+import { VotingKeyLinkTransaction } from '../../model/transaction/VotingKeyLinkTransaction';
+import { NodeKeyLinkTransaction } from '../../model/transaction/NodeKeyLinkTransaction';
 
 /**
  * Extract recipientAddress value from encoded hexadecimal notation.
@@ -340,8 +343,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.ACCOUNT_LINK) {
-        return new AccountLinkTransaction(
+    } else if (transactionDTO.type === TransactionType.ACCOUNT_KEY_LINK) {
+        return new AccountKeyLinkTransaction(
             transactionDTO.network,
             transactionDTO.version,
             Deadline.createFromDTO(transactionDTO.deadline),
@@ -434,6 +437,48 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             NamespaceId.createFromEncoded(transactionDTO.targetNamespaceId),
             transactionDTO.valueSizeDelta,
             convert.decodeHex(transactionDTO.value),
+            transactionDTO.signature,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
+            transactionInfo,
+        );
+    } else if (transactionDTO.type === TransactionType.VRF_KEY_LINK) {
+        return new VrfKeyLinkTransaction(
+            transactionDTO.network,
+            transactionDTO.version,
+            Deadline.createFromDTO(transactionDTO.deadline),
+            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            transactionDTO.linkedPublicKey,
+            transactionDTO.linkAction,
+            transactionDTO.signature,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
+            transactionInfo,
+        );
+    } else if (transactionDTO.type === TransactionType.NODE_KEY_LINK) {
+        return new NodeKeyLinkTransaction(
+            transactionDTO.network,
+            transactionDTO.version,
+            Deadline.createFromDTO(transactionDTO.deadline),
+            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            transactionDTO.linkedPublicKey,
+            transactionDTO.linkAction,
+            transactionDTO.signature,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
+            transactionInfo,
+        );
+    } else if (transactionDTO.type === TransactionType.VOTING_KEY_LINK) {
+        return new VotingKeyLinkTransaction(
+            transactionDTO.network,
+            transactionDTO.version,
+            Deadline.createFromDTO(transactionDTO.deadline),
+            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            transactionDTO.linkedPublicKey,
+            transactionDTO.linkAction,
             transactionDTO.signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
