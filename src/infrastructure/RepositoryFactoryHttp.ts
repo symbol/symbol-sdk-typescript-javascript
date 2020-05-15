@@ -70,7 +70,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
             ? observableOf(generationHash)
             : this.createNodeRepository()
                   .getNodeInfo()
-                  .pipe(map((b) => b.networkGenerationHash))
+                  .pipe(map((b) => b.networkGenerationHashSeed))
                   .pipe(shareReplay(1));
     }
 

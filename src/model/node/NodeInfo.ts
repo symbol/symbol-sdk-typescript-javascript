@@ -21,7 +21,7 @@ import { RoleType } from './RoleType';
 export class NodeInfo {
     /**
      * @param publicKey
-     * @param networkGenerationHash
+     * @param networkGenerationHashSeed
      * @param port
      * @param networkIdentifier
      * @param version
@@ -35,9 +35,9 @@ export class NodeInfo {
          */
         public readonly publicKey: string,
         /**
-         * The network generation hash
+         * The network generation hash seed
          */
-        public readonly networkGenerationHash: string,
+        public readonly networkGenerationHashSeed: string,
         /**
          * The port used for the communication.
          */

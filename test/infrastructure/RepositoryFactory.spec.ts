@@ -45,7 +45,7 @@ describe('RepositoryFactory', () => {
     it('Should get GenerationHash from cache', (done) => {
         let counter = 0;
         const repositoryMock: NodeRepository = mock();
-        const observableOfNodeInfo = observableOf({ networkGenerationHash: 'aaaa' } as NodeInfo).pipe(
+        const observableOfNodeInfo = observableOf({ networkGenerationHashSeed: 'aaaa' } as NodeInfo).pipe(
             map((v) => {
                 counter++;
                 return v;

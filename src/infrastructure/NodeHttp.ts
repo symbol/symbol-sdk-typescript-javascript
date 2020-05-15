@@ -119,7 +119,7 @@ export class NodeHttp extends Http implements NodeRepository {
     private toNodeInfo(nodeInfo: NodeInfoDTO): NodeInfo {
         return new NodeInfo(
             nodeInfo.publicKey,
-            nodeInfo.networkGenerationHash,
+            nodeInfo.networkGenerationHashSeed,
             nodeInfo.port,
             nodeInfo.networkIdentifier,
             nodeInfo.version,
