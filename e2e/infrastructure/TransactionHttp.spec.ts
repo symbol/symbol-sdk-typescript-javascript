@@ -375,6 +375,7 @@ describe('TransactionHttp', () => {
                 account3.address,
                 UInt64.fromUint(2),
                 networkType,
+                undefined,
                 helper.maxFee,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(
@@ -540,46 +541,6 @@ describe('TransactionHttp', () => {
             return helper.announce(signedTransaction);
         });
     });
-    describe('AccountRestrictionTransaction - Incoming Operation', () => {
-        it('standalone', () => {
-            const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
-                Deadline.create(),
-                AccountRestrictionFlags.BlockIncomingTransactionType,
-                [TransactionType.ACCOUNT_KEY_LINK],
-                [],
-                networkType,
-                helper.maxFee,
-            );
-            const signedTransaction = addressModification.signWith(account3, generationHash);
-
-            return helper.announce(signedTransaction).then((transaction: AccountOperationRestrictionTransaction) => {
-                expect(transaction.restrictionAdditions, 'RestrictionAdditions').not.to.be.undefined;
-                expect(transaction.restrictionDeletions, 'RestrictionDeletions').not.to.be.undefined;
-                expect(transaction.restrictionFlags, 'RestrictionFlags').not.to.be.undefined;
-            });
-        });
-    });
-    describe('AccountRestrictionTransaction - Incoming Operation', () => {
-        it('aggregate', () => {
-            const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
-                Deadline.create(),
-                AccountRestrictionFlags.BlockIncomingTransactionType,
-                [],
-                [TransactionType.ACCOUNT_KEY_LINK],
-                networkType,
-                helper.maxFee,
-            );
-            const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(),
-                [addressModification.toAggregate(account3.publicAccount)],
-                networkType,
-                [],
-                helper.maxFee,
-            );
-            const signedTransaction = aggregateTransaction.signWith(account3, generationHash);
-            return helper.announce(signedTransaction);
-        });
-    });
 
     describe('AccountRestrictionTransaction - Outgoing Operation', () => {
         it('standalone', () => {
@@ -627,7 +588,7 @@ describe('TransactionHttp', () => {
         it('standalone', () => {
             const accountLinkTransaction = AccountKeyLinkTransaction.create(
                 Deadline.create(),
-                harvestingAccount.publicKey,
+                account3.publicKey,
                 LinkAction.Link,
                 networkType,
                 helper.maxFee,
@@ -645,7 +606,7 @@ describe('TransactionHttp', () => {
         it('aggregate', () => {
             const accountLinkTransaction = AccountKeyLinkTransaction.create(
                 Deadline.create(),
-                harvestingAccount.publicKey,
+                account3.publicKey,
                 LinkAction.Unlink,
                 networkType,
                 helper.maxFee,
@@ -1500,7 +1461,7 @@ describe('TransactionHttp', () => {
         it('should return effective paid fee given transactionHash', async () => {
             const effectiveFee = await transactionRepository.getTransactionEffectiveFee(transactionHash).toPromise();
             expect(effectiveFee).to.not.be.undefined;
-            expect(effectiveFee).to.be.equal(0);
+            expect(effectiveFee).not.to.be.equal(0);
         });
     });
 });

@@ -117,7 +117,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const operation = TransactionType.ADDRESS_ALIAS;
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowIncomingTransactionType,
+            AccountRestrictionFlags.AllowOutgoingTransactionType,
             [operation],
             [],
             NetworkType.MIJIN_TEST,
@@ -126,7 +126,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AccountOperationRestrictionTransaction;
-        expect(transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowIncomingTransactionType);
+        expect(transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowOutgoingTransactionType);
         expect(transaction.restrictionAdditions[0]).to.be.equal(operation);
         expect(transaction.restrictionDeletions.length).to.be.equal(0);
     });
@@ -941,25 +941,6 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_MOSAIC_RESTRICTION);
         expect(transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowMosaic);
-        expect(transaction.restrictionAdditions.length).to.be.equal(1);
-    });
-
-    it('should create AccountRestrictionOperationTransaction', () => {
-        const operation = TransactionType.ADDRESS_ALIAS;
-        const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
-            Deadline.create(),
-            AccountRestrictionFlags.AllowIncomingTransactionType,
-            [operation],
-            [],
-            NetworkType.MIJIN_TEST,
-        );
-
-        const transaction = TransactionMapping.createFromDTO(
-            operationRestrictionTransaction.toJSON(),
-        ) as AccountMosaicRestrictionTransaction;
-
-        expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_OPERATION_RESTRICTION);
-        expect(transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowIncomingTransactionType);
         expect(transaction.restrictionAdditions.length).to.be.equal(1);
     });
 

@@ -175,6 +175,7 @@ describe('RestrictionHttp', () => {
                 account3.address,
                 UInt64.fromUint(2),
                 networkType,
+                UInt64.fromHex('FFFFFFFFFFFFFFFF'),
                 helper.maxFee,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(

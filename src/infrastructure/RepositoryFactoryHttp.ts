@@ -17,7 +17,6 @@
 import { Observable, of as observableOf } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { NetworkType } from '../model/network/NetworkType';
-import { UInt64 } from '../model/UInt64';
 import { AccountHttp } from './AccountHttp';
 import { AccountRepository } from './AccountRepository';
 import { BlockHttp } from './BlockHttp';

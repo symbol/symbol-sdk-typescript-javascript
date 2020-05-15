@@ -86,18 +86,6 @@ describe('AccountRestrictionTransaction', () => {
             );
             expect(mosaicRestrictionTransaction.size).to.be.equal(144);
         });
-
-        it('should return 138 for AccountOperationRestrictionTransaction transaction byte size with 1 modification', () => {
-            const operation = TransactionType.ADDRESS_ALIAS;
-            const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
-                Deadline.create(),
-                AccountRestrictionFlags.AllowIncomingTransactionType,
-                [operation],
-                [],
-                NetworkType.MIJIN_TEST,
-            );
-            expect(operationRestrictionTransaction.size).to.be.equal(138);
-        });
     });
 
     it('should default maxFee field be set to 0', () => {
@@ -149,10 +137,8 @@ describe('AccountRestrictionTransaction', () => {
     it('should throw exception when create address restriction transaction with wrong type', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const invalidType = [
-            AccountRestrictionFlags.AllowIncomingTransactionType,
             AccountRestrictionFlags.AllowMosaic,
             AccountRestrictionFlags.AllowOutgoingTransactionType,
-            AccountRestrictionFlags.BlockIncomingTransactionType,
             AccountRestrictionFlags.BlockMosaic,
             AccountRestrictionFlags.BlockOutgoingTransactionType,
         ];
@@ -187,10 +173,8 @@ describe('AccountRestrictionTransaction', () => {
     it('should throw exception when create account mosaic restriction transaction with wrong type', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const invalidType = [
-            AccountRestrictionFlags.AllowIncomingTransactionType,
             AccountRestrictionFlags.AllowIncomingAddress,
             AccountRestrictionFlags.AllowOutgoingTransactionType,
-            AccountRestrictionFlags.BlockIncomingTransactionType,
             AccountRestrictionFlags.AllowOutgoingAddress,
             AccountRestrictionFlags.BlockOutgoingTransactionType,
             AccountRestrictionFlags.BlockIncomingAddress,
@@ -207,21 +191,6 @@ describe('AccountRestrictionTransaction', () => {
                 );
             }).to.throw(Error, 'Restriction type is not allowed.');
         });
-    });
-
-    it('should create operation restriction transaction', () => {
-        const operation = TransactionType.ADDRESS_ALIAS;
-        const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
-            Deadline.create(),
-            AccountRestrictionFlags.AllowIncomingTransactionType,
-            [operation],
-            [],
-            NetworkType.MIJIN_TEST,
-        );
-
-        const signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
-
-        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal('04000100000000004E42');
     });
 
     it('should throw exception when create account operation restriction transaction with wrong type', () => {

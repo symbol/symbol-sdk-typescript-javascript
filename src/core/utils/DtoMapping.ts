@@ -48,9 +48,7 @@ export class DtoMapping {
                                 prop.restrictionFlags,
                                 prop.values.map((value) => new MosaicId(value)),
                             );
-                        case AccountRestrictionFlags.AllowIncomingTransactionType:
                         case AccountRestrictionFlags.AllowOutgoingTransactionType:
-                        case AccountRestrictionFlags.BlockIncomingTransactionType:
                         case AccountRestrictionFlags.BlockOutgoingTransactionType:
                             return new AccountRestriction(prop.restrictionFlags, prop.values);
                         default:

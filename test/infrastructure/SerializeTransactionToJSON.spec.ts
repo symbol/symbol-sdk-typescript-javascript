@@ -109,23 +109,6 @@ describe('SerializeTransactionToJSON', () => {
         expect(json.transaction.restrictionAdditions.length).to.be.equal(1);
     });
 
-    it('should create AccountRestrictionOperationTransaction', () => {
-        const operation = TransactionType.ADDRESS_ALIAS;
-        const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
-            Deadline.create(),
-            AccountRestrictionFlags.AllowIncomingTransactionType,
-            [operation],
-            [],
-            NetworkType.MIJIN_TEST,
-        );
-
-        const json = operationRestrictionTransaction.toJSON();
-
-        expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_OPERATION_RESTRICTION);
-        expect(json.transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowIncomingTransactionType);
-        expect(json.transaction.restrictionAdditions.length).to.be.equal(1);
-    });
-
     it('should create AddressAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
