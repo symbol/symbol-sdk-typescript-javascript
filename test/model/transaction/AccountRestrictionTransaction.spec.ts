@@ -88,6 +88,18 @@ describe('AccountRestrictionTransaction', () => {
         });
     });
 
+    it('should return 138 for AccountOperationRestrictionTransaction transaction byte size with 1 modification', () => {
+        const operation = TransactionType.ADDRESS_ALIAS;
+        const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
+            Deadline.create(),
+            AccountRestrictionFlags.AllowOutgoingTransactionType,
+            [operation],
+            [],
+            NetworkType.MIJIN_TEST,
+        );
+        expect(operationRestrictionTransaction.size).to.be.equal(138);
+    });
+
     it('should default maxFee field be set to 0', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
@@ -191,6 +203,21 @@ describe('AccountRestrictionTransaction', () => {
                 );
             }).to.throw(Error, 'Restriction type is not allowed.');
         });
+    });
+
+    it('should create operation restriction transaction', () => {
+        const operation = TransactionType.ADDRESS_ALIAS;
+        const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
+            Deadline.create(),
+            AccountRestrictionFlags.AllowOutgoingTransactionType,
+            [operation],
+            [],
+            NetworkType.MIJIN_TEST,
+        );
+
+        const signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
+
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal('04400100000000004E42');
     });
 
     it('should throw exception when create account operation restriction transaction with wrong type', () => {
