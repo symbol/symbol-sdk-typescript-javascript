@@ -17,6 +17,9 @@ import { NamespaceRegistrationTransaction, NamespaceRegistrationType, UInt64 } f
 // internal dependencies
 import { TransactionView } from './TransactionView'
 import { NamespaceModel } from '@/core/database/entities/NamespaceModel'
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
+import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
+import { TimeHelpers } from '@/core/utils/TimeHelpers'
 
 /// region custom types
 export type NamespaceRegistrationFormFieldsType = {
@@ -89,5 +92,34 @@ export class ViewNamespaceRegistrationTransaction extends TransactionView<Namesp
     this.values.set('registrationType', transaction.registrationType)
     this.values.set('duration', transaction.duration || null)
     return this
+  }
+
+  /**
+   * Displayed items
+   */
+  public resolveDetailItems(): TransactionDetailItem[] {
+    const rootNamespaceName: string = this.values.get('rootNamespaceName')
+    const subNamespaceName: string = this.values.get('subNamespaceName')
+    const registrationType: NamespaceRegistrationType = this.values.get('registrationType')
+    const duration: UInt64 = this.values.get('duration')
+    const networkConfiguration: NetworkConfigurationModel = this.$store.getters['network/networkConfiguration']
+    const blockGenerationTargetTime = networkConfiguration.blockGenerationTargetTime
+    if (registrationType === NamespaceRegistrationType.RootNamespace) {
+      return [
+        { key: 'namespace_name', value: rootNamespaceName },
+        {
+          key: 'duration',
+          value: TimeHelpers.durationToRelativeTime(parseInt(duration.toString()), blockGenerationTargetTime),
+        },
+      ]
+    }
+
+    return [
+      { key: 'namespace_name', value: subNamespaceName },
+      {
+        key: 'parent_namespace',
+        value: rootNamespaceName,
+      },
+    ]
   }
 }

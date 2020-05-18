@@ -24,6 +24,7 @@ import DiagnosticStore from '@/store/Diagnostic'
 import NotificationStore from '@/store/Notification'
 import TemporaryStore from '@/store/Temporary'
 import MosaicStore from '@/store/Mosaic'
+import BlockStore from '@/store/Block'
 import NamespaceStore from '@/store/Namespace'
 import TransactionStore from '@/store/Transaction'
 import StatisticsStore from '@/store/Statistics'
@@ -57,6 +58,7 @@ const AppStore = new Vuex.Store({
     transaction: TransactionStore,
     statistics: StatisticsStore,
     community: CommunityStore,
+    block: BlockStore,
   },
   plugins: [onPeerConnection],
   actions: {

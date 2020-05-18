@@ -16,34 +16,22 @@
 import { Store } from 'vuex'
 import {
   Account,
-  AccountAddressRestrictionTransaction,
-  AccountLinkTransaction,
-  AccountMetadataTransaction,
-  AccountMosaicRestrictionTransaction,
-  AccountOperationRestrictionTransaction,
   AddressAliasTransaction,
   AggregateTransaction,
-  BlockInfo,
   CosignatureSignedTransaction,
   CosignatureTransaction,
   Deadline,
   HashLockTransaction,
   LockFundsTransaction,
   Mosaic,
-  MosaicAddressRestrictionTransaction,
   MosaicAliasTransaction,
   MosaicDefinitionTransaction,
-  MosaicGlobalRestrictionTransaction,
   MosaicId,
-  MosaicMetadataTransaction,
   MosaicSupplyChangeTransaction,
   MultisigAccountModificationTransaction,
-  NamespaceMetadataTransaction,
   NamespaceRegistrationTransaction,
   NetworkType,
   PublicAccount,
-  SecretLockTransaction,
-  SecretProofTransaction,
   SignedTransaction,
   Transaction,
   TransactionType,
@@ -78,6 +66,12 @@ export type TransactionViewType =
 
 /// end-region custom types
 
+export enum TransactionStatus {
+  confirmed = 'confirmed',
+  unconfirmed = 'unconfirmed',
+  partial = 'partial',
+}
+
 export class TransactionService extends AbstractService {
   /**
    * Service name
@@ -100,30 +94,6 @@ export class TransactionService extends AbstractService {
     this.$store = store
   }
 
-  /// region specialised signatures
-  public getView(transaction: MosaicDefinitionTransaction): ViewMosaicDefinitionTransaction
-  public getView(transaction: MosaicSupplyChangeTransaction): ViewMosaicSupplyChangeTransaction
-  public getView(transaction: NamespaceRegistrationTransaction): ViewNamespaceRegistrationTransaction
-  public getView(transaction: TransferTransaction): ViewTransferTransaction
-  public getView(transaction: MosaicAliasTransaction): ViewAliasTransaction
-  public getView(transaction: AddressAliasTransaction): ViewAliasTransaction
-  public getView(transaction: MultisigAccountModificationTransaction): ViewMultisigAccountModificationTransaction
-  public getView(transaction: HashLockTransaction): ViewHashLockTransaction
-  // XXX not implemented yet
-  public getView(transaction: AccountAddressRestrictionTransaction): ViewUnknownTransaction
-  public getView(transaction: AccountLinkTransaction): ViewUnknownTransaction
-  public getView(transaction: AccountMetadataTransaction): ViewUnknownTransaction
-  public getView(transaction: AccountMosaicRestrictionTransaction): ViewUnknownTransaction
-  public getView(transaction: AccountOperationRestrictionTransaction): ViewUnknownTransaction
-  public getView(transaction: AggregateTransaction): ViewUnknownTransaction
-  public getView(transaction: MosaicAddressRestrictionTransaction): ViewUnknownTransaction
-  public getView(transaction: MosaicGlobalRestrictionTransaction): ViewUnknownTransaction
-  public getView(transaction: MosaicMetadataTransaction): ViewUnknownTransaction
-  public getView(transaction: NamespaceMetadataTransaction): ViewUnknownTransaction
-  public getView(transaction: SecretLockTransaction): ViewUnknownTransaction
-  public getView(transaction: SecretProofTransaction): ViewUnknownTransaction
-  /// end-region specialised signatures
-
   /**
    * Returns true when \a transaction is an incoming transaction
    * @param {Transaction} transaction
@@ -133,82 +103,15 @@ export class TransactionService extends AbstractService {
   public getView(transaction: Transaction): TransactionViewType {
     // - store shortcuts
     const currentAccount: AccountModel = this.$store.getters['account/currentAccount']
-    const knownBlocks: BlockInfo[] = this.$store.getters['transaction/blocks']
 
     // - interpret transaction type and initialize view
-    let view: TransactionViewType
-
-    switch (transaction.type) {
-      /// region XXX views for transaction types not yet implemented
-      case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
-      case TransactionType.ACCOUNT_LINK:
-      case TransactionType.ACCOUNT_METADATA:
-      case TransactionType.ACCOUNT_MOSAIC_RESTRICTION:
-      case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
-      case TransactionType.AGGREGATE_BONDED:
-      case TransactionType.AGGREGATE_COMPLETE:
-      case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
-      case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
-      case TransactionType.MOSAIC_METADATA:
-      case TransactionType.NAMESPACE_METADATA:
-      case TransactionType.SECRET_LOCK:
-      case TransactionType.SECRET_PROOF:
-        view = new ViewUnknownTransaction(this.$store)
-        view = view.use(transaction)
-        break
-
-      /// end-region XXX views for transaction types not yet implemented
-      case TransactionType.HASH_LOCK:
-        view = new ViewHashLockTransaction(this.$store)
-        view = view.use(transaction as HashLockTransaction)
-        break
-      case TransactionType.MULTISIG_ACCOUNT_MODIFICATION:
-        view = new ViewMultisigAccountModificationTransaction(this.$store)
-        view = view.use(transaction as MultisigAccountModificationTransaction)
-        break
-      case TransactionType.MOSAIC_DEFINITION:
-        view = new ViewMosaicDefinitionTransaction(this.$store)
-        view = view.use(transaction as MosaicDefinitionTransaction)
-        break
-      case TransactionType.MOSAIC_SUPPLY_CHANGE:
-        view = new ViewMosaicSupplyChangeTransaction(this.$store)
-        view = view.use(transaction as MosaicSupplyChangeTransaction)
-        break
-      case TransactionType.NAMESPACE_REGISTRATION:
-        view = new ViewNamespaceRegistrationTransaction(this.$store)
-        view = view.use(transaction as NamespaceRegistrationTransaction)
-        break
-      case TransactionType.TRANSFER:
-        view = new ViewTransferTransaction(this.$store)
-        view = view.use(transaction as TransferTransaction)
-        break
-      case TransactionType.MOSAIC_ALIAS:
-        view = new ViewAliasTransaction(this.$store)
-        view = view.use(transaction as MosaicAliasTransaction)
-        break
-      case TransactionType.ADDRESS_ALIAS:
-        view = new ViewAliasTransaction(this.$store)
-        view = view.use(transaction as AddressAliasTransaction)
-        break
-      default:
-        // - throw on transaction view not implemented
-        this.$store.dispatch('diagnostic/ADD_ERROR', `View not implemented for transaction type '${transaction.type}'`)
-        throw new Error(`View not implemented for transaction type '${transaction.type}'`)
-    }
-
-    // - try to find block for fee information
-    const height = transaction.transactionInfo ? transaction.transactionInfo.height : undefined
-    const block: BlockInfo = !height ? undefined : knownBlocks.find((k) => k.height.equals(height))
+    const view: TransactionViewType = this.createView(transaction)
 
     // - set helper fields
     view.values.set('isIncoming', false)
-    view.values.set('hasBlockInfo', undefined !== block)
 
     // - initialize fee fields
     view.values.set('maxFee', transaction.maxFee.compact())
-    if (block) {
-      view.values.set('effectiveFee', transaction.size * block.feeMultiplier)
-    }
 
     // - update helper fields by transaction type
     if (TransactionType.TRANSFER === transaction.type) {
@@ -242,6 +145,16 @@ export class TransactionService extends AbstractService {
       networkType,
       maxFee,
     )
+  }
+
+  public static getTransactionStatus(transaction: Transaction): TransactionStatus {
+    if (transaction.isConfirmed()) {
+      return TransactionStatus.confirmed
+    } else if (transaction.isUnconfirmed()) {
+      return TransactionStatus.unconfirmed
+    } else {
+      return TransactionStatus.partial
+    }
   }
 
   /**
@@ -507,5 +420,56 @@ export class TransactionService extends AbstractService {
     }
 
     return results
+  }
+
+  /**
+   * It creates the view for the given transaction.
+   *
+   * @param transaction the transaction.
+   */
+  private createView(transaction: Transaction): TransactionViewType {
+    switch (transaction.type) {
+      /// region XXX views for transaction types not yet implemented
+      case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
+      case TransactionType.ACCOUNT_LINK:
+      case TransactionType.ACCOUNT_METADATA:
+      case TransactionType.ACCOUNT_MOSAIC_RESTRICTION:
+      case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
+      case TransactionType.AGGREGATE_BONDED:
+      case TransactionType.AGGREGATE_COMPLETE:
+      case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
+      case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
+      case TransactionType.MOSAIC_METADATA:
+      case TransactionType.NAMESPACE_METADATA:
+      case TransactionType.SECRET_LOCK:
+      case TransactionType.SECRET_PROOF:
+        return new ViewUnknownTransaction(this.$store).use(transaction)
+
+      /// end-region XXX views for transaction types not yet implemented
+      case TransactionType.HASH_LOCK:
+        return new ViewHashLockTransaction(this.$store).use(transaction as HashLockTransaction)
+      case TransactionType.MULTISIG_ACCOUNT_MODIFICATION:
+        return new ViewMultisigAccountModificationTransaction(this.$store).use(
+          transaction as MultisigAccountModificationTransaction,
+        )
+      case TransactionType.MOSAIC_DEFINITION:
+        return new ViewMosaicDefinitionTransaction(this.$store).use(transaction as MosaicDefinitionTransaction)
+      case TransactionType.MOSAIC_SUPPLY_CHANGE:
+        return new ViewMosaicSupplyChangeTransaction(this.$store).use(transaction as MosaicSupplyChangeTransaction)
+      case TransactionType.NAMESPACE_REGISTRATION:
+        return new ViewNamespaceRegistrationTransaction(this.$store).use(
+          transaction as NamespaceRegistrationTransaction,
+        )
+      case TransactionType.TRANSFER:
+        return new ViewTransferTransaction(this.$store).use(transaction as TransferTransaction)
+      case TransactionType.MOSAIC_ALIAS:
+        return new ViewAliasTransaction(this.$store).use(transaction as MosaicAliasTransaction)
+      case TransactionType.ADDRESS_ALIAS:
+        return new ViewAliasTransaction(this.$store).use(transaction as AddressAliasTransaction)
+      default:
+        // - throw on transaction view not implemented
+        this.$store.dispatch('diagnostic/ADD_ERROR', `View not implemented for transaction type '${transaction.type}'`)
+        throw new Error(`View not implemented for transaction type '${transaction.type}'`)
+    }
   }
 }

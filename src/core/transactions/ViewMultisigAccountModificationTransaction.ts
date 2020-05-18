@@ -14,11 +14,12 @@
  *
  */
 // external dependencies
-import { PublicAccount, MultisigAccountModificationTransaction, UInt64 } from 'symbol-sdk'
+import { PublicAccount, MultisigAccountModificationTransaction, UInt64, Address } from 'symbol-sdk'
 
 // internal dependencies
 import { TransactionView } from './TransactionView'
-
+import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
+import i18n from '@/language'
 /// region custom types
 export interface CosignatoryModification {
   addOrRemove: 'add' | 'remove'
@@ -103,5 +104,41 @@ export class ViewMultisigAccountModificationTransaction extends TransactionView<
     this.values.set('publicKeyDeletions', transaction.publicKeyDeletions)
 
     return this
+  }
+
+  public resolveDetailItems(): TransactionDetailItem[] {
+    // get data from view values
+    const networkType = this.$store.getters['network/networkType']
+    const minApprovalDelta: number = this.values.get('minApprovalDelta')
+    const minRemovalDelta: number = this.values.get('minRemovalDelta')
+    const publicKeyAdditions: PublicAccount[] = this.values.get('publicKeyAdditions')
+    const publicKeyDeletions: PublicAccount[] = this.values.get('publicKeyDeletions')
+
+    // push approval and removal deltas to view items
+    const items = [
+      { key: 'minApprovalDelta', value: `${minApprovalDelta}` },
+      { key: 'minRemovalDelta', value: `${minRemovalDelta}` },
+    ]
+
+    // render views for public key additions and deletions
+    const additions = publicKeyAdditions.map(({ publicKey }, index, self) => {
+      return {
+        key: `${i18n.t('public_key_addition')} (${index + 1}/${self.length})`,
+        value: Address.createFromPublicKey(publicKey, networkType).pretty(),
+      }
+    })
+
+    const deletions = publicKeyDeletions.map(({ publicKey }, index, self) => {
+      return {
+        key: `${i18n.t('public_key_deletion')} (${index + 1}/${self.length})`,
+        value: Address.createFromPublicKey(publicKey, networkType).pretty(),
+      }
+    })
+
+    // push rendered public key additions and deletions to the view items
+    if (additions.length) items.push(...additions)
+    if (deletions.length) items.push(...deletions)
+
+    return items
   }
 }

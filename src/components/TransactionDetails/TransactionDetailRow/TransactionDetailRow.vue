@@ -17,6 +17,9 @@
           :show-ticker="true"
         />
       </span>
+      <span v-else-if="item.isPaidFee">
+        <PaidFeeDisplay :transaction="item.value" />
+      </span>
       <span v-else-if="item.isAddress">
         <AddressDisplay :address="item.value" />
       </span>
@@ -33,12 +36,16 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 
 // child components
+// @ts-ignore
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
+// @ts-ignore
 import AddressDisplay from '@/components/AddressDisplay/AddressDisplay.vue'
-import { TransactionDetailItem } from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
+// @ts-ignore
+import PaidFeeDisplay from '@/components/PaidFeeDisplay/PaidFeeDisplay.vue'
+import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
 
 @Component({
-  components: { MosaicAmountDisplay, AddressDisplay },
+  components: { MosaicAmountDisplay, AddressDisplay, PaidFeeDisplay },
   computed: mapGetters({ explorerBaseUrl: 'app/explorerUrl' }),
 })
 export default class TransactionDetailRow extends Vue {

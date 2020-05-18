@@ -17,13 +17,11 @@
 import {
   Address,
   AggregateTransaction,
-  BlockInfo,
   CosignatureSignedTransaction,
   QueryParams,
   RepositoryFactory,
   Transaction,
   TransactionType,
-  UInt64,
   PublicAccount,
   AggregateTransactionCosignature,
 } from 'symbol-sdk'
@@ -81,7 +79,6 @@ interface TransactionState {
   confirmedTransactions: Transaction[]
   unconfirmedTransactions: Transaction[]
   partialTransactions: Transaction[]
-  blocks: BlockInfo[]
 }
 
 const transactionState: TransactionState = {
@@ -90,7 +87,6 @@ const transactionState: TransactionState = {
   confirmedTransactions: [],
   unconfirmedTransactions: [],
   partialTransactions: [],
-  blocks: [],
 }
 export default {
   namespaced: true,
@@ -101,7 +97,6 @@ export default {
     confirmedTransactions: (state: TransactionState) => state.confirmedTransactions,
     unconfirmedTransactions: (state: TransactionState) => state.unconfirmedTransactions,
     partialTransactions: (state: TransactionState) => state.partialTransactions,
-    blocks: (state: TransactionState) => state.blocks,
   },
   mutations: {
     setInitialized: (state: TransactionState, initialized: boolean) => {
@@ -118,9 +113,6 @@ export default {
     },
     partialTransactions: (state: TransactionState, partialTransactions: Transaction[] | undefined) => {
       state.partialTransactions = conditionalSort(partialTransactions, transactionComparator)
-    },
-    blocks: (state: TransactionState, blocks: BlockInfo[]) => {
-      state.blocks = _.uniqBy(blocks, (b) => b.height.compact())
     },
   },
   actions: {
@@ -142,7 +134,7 @@ export default {
     },
 
     LOAD_TRANSACTIONS(
-      { commit, rootGetters, dispatch },
+      { commit, rootGetters },
       { group }: { group: TransactionGroup } = { group: TransactionGroup.all },
     ) {
       const currentSignerAddress: Address = rootGetters['account/currentSignerAddress']
@@ -160,13 +152,6 @@ export default {
         return transactionCall.pipe(
           map((transactions) => {
             commit(attributeName, transactions)
-            const heights = _.uniqBy(
-              transactions
-                .filter((t) => t.transactionInfo && t.transactionInfo.height)
-                .map((t) => t.transactionInfo.height),
-              (h) => h.compact(),
-            )
-            dispatch('LOAD_BLOCKS', heights)
             return transactions
           }),
         )
@@ -219,43 +204,6 @@ export default {
       })
     },
 
-    ADD_BLOCK({ commit, getters }, block: BlockInfo) {
-      const blocks: BlockInfo[] = getters['blocks']
-      commit('blocks', [block, ...blocks])
-    },
-
-    async LOAD_BLOCKS({ commit, getters, rootGetters }, heights: UInt64[]) {
-      if (!heights || !heights.length) {
-        return
-      }
-
-      let blocks: BlockInfo[] = getters['blocks']
-      const isUnknownBlock = (h) => !blocks.find((block) => block.height.equals(h))
-      const heightsToBeLoaded = heights.filter(isUnknownBlock).sort((a, b) => a.compare(b))
-      if (!heightsToBeLoaded.length) {
-        return
-      }
-
-      const asyncForEach = async (array, callback) => {
-        for (let index = 0; index < array.length; index++) {
-          await callback(array[index], index, array)
-        }
-      }
-
-      const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory']
-      const blockRepository = repositoryFactory.createBlockRepository()
-
-      await asyncForEach(heightsToBeLoaded, async (start: UInt64) => {
-        // Async one by one sequentially so we can reuse a previous loading if the height has been
-        // found.
-        if (isUnknownBlock(start)) {
-          const infos = await blockRepository.getBlocksByHeightWithLimit(start, 100).toPromise()
-          blocks = blocks.concat(infos)
-          commit('blocks', blocks)
-        }
-      })
-    },
-
     ADD_TRANSACTION(
       { commit, getters },
       { group, transaction }: { group: TransactionGroup; transaction: Transaction },
@@ -277,6 +225,7 @@ export default {
         commit(transactionAttribute, [transaction, ...transactions])
       }
     },
+
     REMOVE_TRANSACTION(
       { commit, getters },
       { group, transactionHash }: { group: TransactionGroup; transactionHash: string },

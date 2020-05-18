@@ -15,7 +15,6 @@ import TransactionListHeader from '@/components/TransactionList/TransactionListH
   },
   computed: mapGetters({
     isFetchingTransactions: 'transaction/isFetchingTransactions',
-    partialTransactions: 'transaction/partialTransactions',
   }),
 })
 export class TransactionTableTs extends Vue {
@@ -28,31 +27,9 @@ export class TransactionTableTs extends Vue {
   public nodata = [...Array(10).keys()]
 
   /**
-   * List of confirmed transactions (websocket only)
-   * @see {Store.Account}
-   * @var {Transaction[]}
-   */
-  public partialTransactions: Transaction[]
-
-  /**
    * Whether transactios are currently being fetched
    * @protected
    * @type {boolean}
    */
   protected isFetchingTransactions: boolean
-
-  public getTransactionStatus(transaction) {
-    if (transaction.isConfirmed()) {
-      return 'confirmed'
-    } else {
-      if (
-        this.partialTransactions.length > 0 &&
-        this.partialTransactions.some((item) => item.transactionInfo.hash === transaction.transactionInfo.hash)
-      ) {
-        return 'partial'
-      } else {
-        return 'unconfirmed'
-      }
-    }
-  }
 }

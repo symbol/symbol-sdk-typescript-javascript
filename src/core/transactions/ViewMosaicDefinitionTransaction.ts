@@ -16,6 +16,7 @@
 import { MosaicDefinitionTransaction, MosaicFlags, MosaicId, MosaicNonce, UInt64 } from 'symbol-sdk'
 // internal dependencies
 import { TransactionView } from './TransactionView'
+import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
 
 /// region custom types
 export type MosaicDefinitionFormFieldsType = {
@@ -76,5 +77,34 @@ export class ViewMosaicDefinitionTransaction extends TransactionView<MosaicDefin
     const isPermanent = 0 === transaction.duration.compact()
     this.values.set('duration', isPermanent ? undefined : transaction.duration)
     return this
+  }
+
+  /**
+   * Displayed items
+   */
+  public resolveDetailItems(): TransactionDetailItem[] {
+    const mosaicId: MosaicId = this.values.get('mosaicId')
+    const divisibility: number = this.values.get('divisibility')
+    const mosaicFlags: MosaicFlags = this.values.get('mosaicFlags')
+
+    return [
+      { key: 'mosaicId', value: mosaicId.toHex() },
+      {
+        key: 'table_header_divisibility',
+        value: `${divisibility}`,
+      },
+      {
+        key: 'table_header_transferable',
+        value: mosaicFlags.transferable,
+      },
+      {
+        key: 'table_header_supply_mutable',
+        value: mosaicFlags.supplyMutable,
+      },
+      {
+        key: 'table_header_restrictable',
+        value: mosaicFlags.restrictable,
+      },
+    ]
   }
 }

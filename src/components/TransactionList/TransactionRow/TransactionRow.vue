@@ -13,11 +13,13 @@
     <!-- THIRD COLUMN -->
     <div class="amount-cell">
       <MosaicAmountDisplay
+        v-if="getAmount() !== undefined"
         :id="getAmountMosaicId()"
         :absolute-amount="getAmount()"
         :color="getAmountColor()"
         :show-ticker="isAmountShowTicker()"
       />
+      <span v-else>N/A</span>
     </div>
 
     <!-- FOURTH COLUMN -->

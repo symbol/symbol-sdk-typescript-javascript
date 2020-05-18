@@ -16,6 +16,8 @@
 import { MosaicId, MosaicSupplyChangeAction, MosaicSupplyChangeTransaction, UInt64 } from 'symbol-sdk'
 // internal dependencies
 import { TransactionView } from './TransactionView'
+import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
+import i18n from '@/language'
 
 /// region custom types
 export type MosaicSupplyChangeFormFieldsType = {
@@ -66,5 +68,26 @@ export class ViewMosaicSupplyChangeTransaction extends TransactionView<MosaicSup
     this.values.set('action', transaction.action)
     this.values.set('delta', transaction.delta)
     return this
+  }
+
+  /**
+   * Displayed items
+   */
+  public resolveDetailItems(): TransactionDetailItem[] {
+    const mosaicId: MosaicId = this.values.get('mosaicId')
+    const action: MosaicSupplyChangeAction = this.values.get('action')
+    const delta: UInt64 = this.values.get('delta')
+
+    return [
+      { key: 'mosaicId', value: mosaicId.toHex() },
+      {
+        key: 'direction',
+        value: `${i18n.t(action === MosaicSupplyChangeAction.Increase ? 'Increase' : 'Decrease')}`,
+      },
+      {
+        key: 'delta',
+        value: delta.compact().toLocaleString(),
+      },
+    ]
   }
 }

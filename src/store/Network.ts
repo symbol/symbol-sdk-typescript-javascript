@@ -287,7 +287,6 @@ export default {
       const listener = getters['listener'] as Listener
       const subscription = listener.newBlock().subscribe((block: BlockInfo) => {
         dispatch('SET_CURRENT_HEIGHT', block.height.compact())
-        dispatch('transaction/ADD_BLOCK', block, { root: true })
         dispatch('diagnostic/ADD_INFO', 'New block height: ' + block.height.compact(), { root: true })
       })
       // update state of listeners & subscriptions

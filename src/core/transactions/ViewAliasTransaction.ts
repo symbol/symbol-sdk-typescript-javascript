@@ -25,6 +25,7 @@ import {
 
 // internal dependencies
 import { TransactionView } from './TransactionView'
+import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
 
 /// region custom types
 export type AliasFormFieldsType = {
@@ -85,5 +86,27 @@ export class ViewAliasTransaction extends TransactionView<AliasFormFieldsType> {
     }
 
     return this
+  }
+
+  /**
+   * Displayed items
+   */
+  public resolveDetailItems(): TransactionDetailItem[] {
+    const namespaceId: NamespaceId = this.values.get('namespaceId')
+    const name: string = this.values.get('name')
+    const aliasTarget: Address | MosaicId = this.values.get('aliasTarget')
+    const aliasAction: AliasAction = this.values.get('aliasAction')
+
+    const targetKey = aliasTarget instanceof Address ? 'address' : 'mosaic'
+    const targetValue = aliasTarget instanceof Address ? aliasTarget.pretty() : aliasTarget.toHex()
+
+    return [
+      { key: 'namespace', value: name || namespaceId.toHex() },
+      {
+        key: 'action',
+        value: aliasAction === AliasAction.Link ? 'Link' : 'Unlink',
+      },
+      { key: targetKey, value: targetValue },
+    ]
   }
 }

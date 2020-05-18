@@ -15,7 +15,7 @@
  */
 import { Store } from 'vuex'
 import { Transaction, TransactionInfo } from 'symbol-sdk'
-import { TransactionDetailItem } from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
+import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
 
 export abstract class TransactionView<FormFieldsType> {
   /**
@@ -119,7 +119,7 @@ export abstract class TransactionView<FormFieldsType> {
   /**
    * It returns a list that that it easy to render when displaying TransactionDetailRow components.
    */
-  public get items(): TransactionDetailItem[] {
+  public resolveDetailItems(): TransactionDetailItem[] {
     return Array.from(this.values.entries()).map(([key, value]) => {
       return { key, value }
     })

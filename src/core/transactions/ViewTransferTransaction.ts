@@ -16,6 +16,7 @@
 import {
   Address,
   EmptyMessage,
+  Message,
   Mosaic,
   MosaicId,
   NamespaceId,
@@ -28,6 +29,8 @@ import {
 import { TransactionView } from './TransactionView'
 import { AttachedMosaic } from '@/services/MosaicService'
 import { MosaicModel } from '@/core/database/entities/MosaicModel'
+import i18n from '@/language'
+import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
 
 /// region custom types
 export type TransferFormFieldsType = {
@@ -106,13 +109,12 @@ export class ViewTransferTransaction extends TransactionView<TransferFormFieldsT
     // - map recipient
     this.values.set('recipient', transaction.recipientAddress)
 
-    // - set mosaics (RELATIVE amount)
+    // - set mosaics (Absolute amount)
     const attachedMosaics = transaction.mosaics.map((transactionMosaic) => {
       return {
         id: transactionMosaic.id,
         mosaicHex: transactionMosaic.id.toHex(),
-        // TODO revisit divisibility!!
-        amount: transactionMosaic.amount.compact() / Math.pow(10, 0),
+        amount: transactionMosaic.amount.compact(),
       } as AttachedMosaic
     })
 
@@ -121,5 +123,47 @@ export class ViewTransferTransaction extends TransactionView<TransferFormFieldsT
     // - set message
     this.values.set('message', transaction.message)
     return this
+  }
+  /**
+   * Displayed sender
+   * @var {string}
+   */
+  private get sender(): string {
+    if (this.transaction.signer) return this.transaction.signer.address.pretty()
+    const currentSignerAddress = this.$store.getters['account/currentSignerAddress']
+    return currentSignerAddress ? currentSignerAddress.pretty() : ''
+  }
+
+  /**
+   * Displayed recipient
+   * @var {string}
+   */
+  private get recipient(): Address | NamespaceId {
+    return (this.transaction as TransferTransaction).recipientAddress
+  }
+
+  /**
+   * Displayed items
+   */
+  public resolveDetailItems(): TransactionDetailItem[] {
+    const attachedMosaics: AttachedMosaic[] = this.values.get('mosaics')
+    const message: Message = this.values.get('message')
+    const incoming = this.values.get('isIncoming')
+    const mosaicItems = attachedMosaics.map((mosaic, index, self) => {
+      const color = incoming ? 'green' : 'red'
+      const mosaicLabel = i18n.t('mosaic')
+      return {
+        key: `${mosaicLabel} (${index + 1}/${self.length})`,
+        value: { ...mosaic, color },
+        isMosaic: true,
+      }
+    })
+
+    return [
+      { key: 'sender', value: this.sender },
+      { key: 'transfer_target', value: this.recipient, isAddress: true },
+      ...mosaicItems,
+      { key: 'message', value: message.payload || '-' },
+    ]
   }
 }

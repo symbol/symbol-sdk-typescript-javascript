@@ -8,7 +8,6 @@
           v-for="(transaction, index) in transactions"
           :key="index"
           :transaction="transaction"
-          :is-partial="getTransactionStatus(transaction) === 'partial'"
           @click="$emit('click', transaction)"
         />
       </div>

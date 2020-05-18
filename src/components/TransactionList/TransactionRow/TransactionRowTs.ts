@@ -18,18 +18,16 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 import { MosaicId, NamespaceId, Transaction, TransactionType, TransferTransaction } from 'symbol-sdk'
 // internal dependencies
-import { TransactionService, TransactionViewType } from '@/services/TransactionService'
+import { TransactionService, TransactionStatus, TransactionViewType } from '@/services/TransactionService'
 import { Formatters } from '@/core/utils/Formatters'
 import { TimeHelpers } from '@/core/utils/TimeHelpers'
 // child components
 // @ts-ignore
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
-
 // @ts-ignore
 import ActionDisplay from '@/components/ActionDisplay/ActionDisplay.vue'
-
 // resources
-import { transactionTypeToIcon, officialIcons, dashboardImages } from '@/views/resources/Images'
+import { dashboardImages, officialIcons, transactionTypeToIcon } from '@/views/resources/Images'
 
 @Component({
   components: {
@@ -44,9 +42,6 @@ import { transactionTypeToIcon, officialIcons, dashboardImages } from '@/views/r
 export class TransactionRowTs extends Vue {
   @Prop({ default: [] })
   public transaction: Transaction
-
-  @Prop({ default: false })
-  public isPartial: boolean
 
   /**
    * Explorer base path
@@ -126,18 +121,7 @@ export class TransactionRowTs extends Vue {
       const transferTransaction = this.transaction as TransferTransaction
       return (transferTransaction.mosaics.length && transferTransaction.mosaics[0].amount.compact()) || 0
     }
-    // https://github.com/nemfoundation/nem2-desktop-account/issues/879
-    // We may want to show N/A instead of the paid fee
-    if (!this.view) return 0
-    const effectiveFee = this.view.values.get('effectiveFee')
-    if (effectiveFee !== undefined) {
-      return effectiveFee
-    }
-    const maxFee = this.view.values.get('maxFee')
-    if (maxFee !== undefined) {
-      return maxFee
-    }
-    return 0
+    return undefined
   }
 
   /**
@@ -148,7 +132,7 @@ export class TransactionRowTs extends Vue {
     if (this.transaction.type === TransactionType.TRANSFER) {
       return this.isIncomingTransaction() ? 'green' : 'red'
     }
-    return 'red'
+    return undefined
   }
 
   /**
@@ -175,14 +159,19 @@ export class TransactionRowTs extends Vue {
     return false
   }
 
+  public getTransactionStatus(transaction: Transaction) {
+    return TransactionService.getTransactionStatus(transaction)
+  }
+
   /**
    * Returns the transaction height or number of confirmations
    */
   public getHeight(): string {
-    if (this.isPartial) {
-      return 'partial'
+    const transactionStatus = this.getTransactionStatus(this.transaction)
+    if (transactionStatus == TransactionStatus.confirmed) {
+      return this.view.info?.height.compact().toLocaleString()
     } else {
-      return this.view.info?.height.compact().toLocaleString() || this.$t('unconfirmed').toString()
+      return this.$t(`transaction_status_${transactionStatus}`).toString()
     }
   }
 }

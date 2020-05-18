@@ -19,6 +19,7 @@ import { HashLockTransaction, Mosaic, MosaicId, RawUInt64, SignedTransaction, UI
 import { TransactionView } from './TransactionView'
 import { MosaicModel } from '@/core/database/entities/MosaicModel'
 import { AttachedMosaic } from '@/services/MosaicService'
+import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
 
 export type HashLockTransactionFormFieldsType = {
   mosaic: { mosaicHex: string; amount: number }
@@ -72,7 +73,7 @@ export class ViewHashLockTransaction extends TransactionView<HashLockTransaction
   }
 
   /**
-   * Use a transaction object and return a ViewTransferTransaction
+   * Use a transaction object and return a ViewHashLockTransaction
    * @param {ViewHashLockTransaction} transaction
    * @returns {ViewHashLockTransaction}
    */
@@ -86,8 +87,7 @@ export class ViewHashLockTransaction extends TransactionView<HashLockTransaction
     const mosaic: AttachedMosaic = {
       id: transaction.mosaic.id,
       mosaicHex: transaction.mosaic.id.toHex(),
-      // TODO revisit divisibility
-      amount: transaction.mosaic.amount.compact() / Math.pow(10, 0),
+      amount: transaction.mosaic.amount.compact(),
     }
 
     // - prepare
@@ -96,5 +96,25 @@ export class ViewHashLockTransaction extends TransactionView<HashLockTransaction
     this.values.set('signedTransaction', transaction.signedTransaction)
 
     return this
+  }
+
+  /**
+   * Displayed items
+   */
+  public resolveDetailItems(): TransactionDetailItem[] {
+    // get attached mosaic
+    const attachedMosaic: AttachedMosaic = this.values.get('mosaic')
+    return [
+      {
+        key: `locked_mosaic`,
+        value: attachedMosaic,
+        isMosaic: true,
+      },
+      { key: 'duration', value: this.values.get('duration') },
+      {
+        key: 'inner_transaction_hash',
+        value: this.values.get('signedTransaction').hash,
+      },
+    ]
   }
 }

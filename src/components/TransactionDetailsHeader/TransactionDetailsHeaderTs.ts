@@ -14,27 +14,20 @@
  *
  */
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
-import { MosaicId, NetworkType } from 'symbol-sdk'
+
 // internal dependencies
-import { TransactionViewType } from '@/services/TransactionService'
+import { TransactionService, TransactionViewType } from '@/services/TransactionService'
 import { Formatters } from '@/core/utils/Formatters'
 // configuration
 // child components
 // @ts-ignore
+import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
+// @ts-ignore
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
-import { TransactionDetailItem } from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
 
 @Component({
   components: {
     TransactionDetailRow,
-  },
-  computed: {
-    ...mapGetters({
-      networkType: 'network/networkType',
-      networkMosaic: 'mosaic/networkMosaic',
-      networkMosaicTicker: 'mosaic/networkMosaicTicker',
-    }),
   },
 })
 export class TransactionDetailsHeaderTs extends Vue {
@@ -44,54 +37,28 @@ export class TransactionDetailsHeaderTs extends Vue {
   view: TransactionViewType
 
   /**
-   * Current network type
-   * @see {Store.Network}
-   * @var {NetworkType}
-   */
-  public networkType: NetworkType
-
-  /**
-   * Network mosaic id
-   * @see {Store.Mosaic}
-   * @var {MosaicId}
-   */
-  public networkMosaic: MosaicId
-
-  /**
-   * Current network currency mosaic ticker
-   * @see {Store.Mosaic}
-   * @var {string}
-   */
-  public networkMosaicTicker: string
-
-  /**
    * Formatters
    * @var {Formatters}
    */
   public formatters = Formatters
 
-  /**
-   * Returns the absolute effective fee paid if available
-   * @return {number}
-   */
-  public getFeeAmount(): number {
-    if (!this.view) return 0
-    const effectiveFee = this.view.values.get('effectiveFee')
-    if (effectiveFee !== undefined) {
-      return effectiveFee
+  private getFeeDetailItem(): TransactionDetailItem {
+    if (this.view.transaction.isConfirmed()) {
+      return {
+        key: 'paid_fee',
+        value: this.view.transaction,
+        isPaidFee: true,
+      }
+    } else {
+      return {
+        key: 'max_fee',
+        value: {
+          amount: this.view.values.get('maxFee') || 0,
+          color: 'red',
+        },
+        isMosaic: true,
+      }
     }
-    const maxFee = this.view.values.get('maxFee')
-    if (maxFee !== undefined) {
-      return maxFee
-    }
-    return 0
-  }
-
-  public getFeeKey(): string {
-    if (this.view && this.view.values.get('effectiveFee') != undefined) {
-      return 'paid_fee'
-    }
-    return 'max_fee'
   }
 
   /**
@@ -103,7 +70,7 @@ export class TransactionDetailsHeaderTs extends Vue {
     return [
       {
         key: 'status',
-        value: `${this.$t(this.view.info ? 'confirmed' : 'unconfirmed')}`,
+        value: this.$t(`transaction_status_${TransactionService.getTransactionStatus(this.view.transaction)}`),
       },
       {
         key: 'transaction_type',
@@ -113,16 +80,7 @@ export class TransactionDetailsHeaderTs extends Vue {
         key: 'hash',
         value: this.view.info ? this.view.info.hash : '-',
       },
-      {
-        key: this.getFeeKey(),
-        value: {
-          id: this.networkMosaic,
-          mosaicHex: this.networkMosaicTicker,
-          amount: this.getFeeAmount(),
-          color: 'red',
-        },
-        isMosaic: true,
-      },
+      this.getFeeDetailItem(),
       {
         key: 'block_height',
         value: this.view.info ? `${this.$t('block')} #${this.view.info.height.compact()}` : '-',
