@@ -93,8 +93,12 @@ export default class LoginPageTs extends Vue {
     hasHint: false,
   }
 
-  /// end-region computed properties getter/setter
-
+  /**
+   * All known profiles names
+   */
+  protected get profileNames(): string[] {
+    return this.profiles.map(({ profileName }) => profileName)
+  }
   /**
    * Hook called when the page is mounted
    * @return {void}

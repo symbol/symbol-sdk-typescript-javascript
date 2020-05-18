@@ -147,6 +147,13 @@ export class CustomValidationRules {
         return new RegExp(`(?=.*[0-9])(?=.*[a-zA-Z])(.{${MIN_PASSWORD_LENGTH},})$`).test(value)
       },
       message: `${i18n.t('error_new_password_format')}`,
-    })
+    }),
+      extend('in', {
+        validate: (value, array: string[]) => {
+          if (!array) return false
+          return array.includes(value)
+        },
+        message: `${i18n.t('error_not_exist')}`,
+      })
   }
 }
