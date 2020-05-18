@@ -129,4 +129,16 @@ describe('NamespaceRegistrationTransaction', () => {
         const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
     });
+
+    it('Notify Account', () => {
+        const tx = NamespaceRegistrationTransaction.createRootNamespace(
+            Deadline.create(),
+            'root-test-namespace',
+            UInt64.fromUint(1000),
+            NetworkType.MIJIN_TEST,
+        );
+
+        Object.assign(tx, { signer: account.publicAccount });
+        expect(tx.NotifyAccount(account.address)).to.be.true;
+    });
 });

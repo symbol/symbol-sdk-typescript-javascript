@@ -30,6 +30,7 @@ import { TransactionType } from '../../../src/model/transaction/TransactionType'
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 
 describe('Transaction', () => {
     let account: Account;
@@ -48,6 +49,11 @@ describe('Transaction', () => {
         }
 
         public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
+            throw new Error('Not implemented');
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        public NotifyAccount(address: Address, alias: NamespaceId[]): boolean {
             throw new Error('Not implemented');
         }
         resolveAliases(): TransferTransaction {

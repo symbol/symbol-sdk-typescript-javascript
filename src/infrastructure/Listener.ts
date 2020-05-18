@@ -15,24 +15,21 @@
  */
 
 import { Observable, Subject } from 'rxjs';
-import { filter, map, share } from 'rxjs/operators';
+import { filter, map, share, withLatestFrom } from 'rxjs/operators';
 import * as WebSocket from 'ws';
 import { Address } from '../model/account/Address';
 import { PublicAccount } from '../model/account/PublicAccount';
 import { BlockInfo } from '../model/blockchain/BlockInfo';
-import { NamespaceId } from '../model/namespace/NamespaceId';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
-import { AggregateTransactionCosignature } from '../model/transaction/AggregateTransactionCosignature';
 import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
 import { Deadline } from '../model/transaction/Deadline';
-import { InnerTransaction } from '../model/transaction/InnerTransaction';
-import { MultisigAccountModificationTransaction } from '../model/transaction/MultisigAccountModificationTransaction';
 import { Transaction } from '../model/transaction/Transaction';
 import { TransactionStatusError } from '../model/transaction/TransactionStatusError';
-import { TransferTransaction } from '../model/transaction/TransferTransaction';
 import { UInt64 } from '../model/UInt64';
 import { IListener } from './IListener';
 import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
+import { NamespaceRepository } from './NamespaceRepository';
+import { NamespaceName } from '../model/namespace/NamespaceName';
 
 enum ListenerChannelName {
     block = 'block',
@@ -82,6 +79,10 @@ export class Listener implements IListener {
          * Listener configuration.
          */
         private config: string,
+        /**
+         * Namespace repository for resolving account alias
+         */
+        private namespaceRepository: NamespaceRepository,
         /**
          * WebSocket injected when using listeners in client.
          */
@@ -236,18 +237,26 @@ export class Listener implements IListener {
     public confirmed(address: Address, transactionHash?: string): Observable<Transaction> {
         this.subscribeTo(`confirmedAdded/${address.plain()}`);
         return this.messageSubject.asObservable().pipe(
-            filter((_) => _.channelName === ListenerChannelName.confirmedAdded),
-            filter((_) => _.message instanceof Transaction),
-            map((_) => _.message as Transaction),
-            filter((_) => this.transactionFromAddress(_, address)),
+            withLatestFrom(this.namespaceRepository.getAccountsNames([address])),
+            filter((_) => _[0].channelName === ListenerChannelName.confirmedAdded),
+            filter((_) => _[0].message instanceof Transaction),
+            filter((_) =>
+                (_[0].message as Transaction).NotifyAccount(
+                    address,
+                    ([] as NamespaceName[])
+                        .concat(...Array.from(_[1].map((accountName) => accountName.names)))
+                        .map((name) => name.namespaceId),
+                ),
+            ),
             filter((_) => {
                 if (transactionHash === undefined) {
                     return true;
                 } else {
-                    const metaHash = _.transactionInfo!.hash;
+                    const metaHash = (_[0].message as Transaction).transactionInfo!.hash;
                     return metaHash !== undefined ? metaHash.toUpperCase() === transactionHash.toUpperCase() : false;
                 }
             }),
+            map((_) => _[0].message as Transaction),
         );
     }
 
@@ -262,10 +271,18 @@ export class Listener implements IListener {
     public unconfirmedAdded(address: Address): Observable<Transaction> {
         this.subscribeTo(`unconfirmedAdded/${address.plain()}`);
         return this.messageSubject.asObservable().pipe(
-            filter((_) => _.channelName === ListenerChannelName.unconfirmedAdded),
-            filter((_) => _.message instanceof Transaction),
-            map((_) => _.message as Transaction),
-            filter((_) => this.transactionFromAddress(_, address)),
+            withLatestFrom(this.namespaceRepository.getAccountsNames([address])),
+            filter((_) => _[0].channelName === ListenerChannelName.unconfirmedAdded),
+            filter((_) => _[0].message instanceof Transaction),
+            filter((_) =>
+                (_[0].message as Transaction).NotifyAccount(
+                    address,
+                    ([] as NamespaceName[])
+                        .concat(...Array.from(_[1].map((accountName) => accountName.names)))
+                        .map((name) => name.namespaceId),
+                ),
+            ),
+            map((_) => _[0].message as Transaction),
         );
     }
 
@@ -298,18 +315,26 @@ export class Listener implements IListener {
     public aggregateBondedAdded(address: Address, transactionHash?: string): Observable<AggregateTransaction> {
         this.subscribeTo(`partialAdded/${address.plain()}`);
         return this.messageSubject.asObservable().pipe(
-            filter((_) => _.channelName === ListenerChannelName.aggregateBondedAdded),
-            filter((_) => _.message instanceof AggregateTransaction),
-            map((_) => _.message as AggregateTransaction),
-            filter((_) => this.transactionFromAddress(_, address)),
+            withLatestFrom(this.namespaceRepository.getAccountsNames([address])),
+            filter((_) => _[0].channelName === ListenerChannelName.aggregateBondedAdded),
+            filter((_) => _[0].message instanceof AggregateTransaction),
+            filter((_) =>
+                (_[0].message as AggregateTransaction).NotifyAccount(
+                    address,
+                    ([] as NamespaceName[])
+                        .concat(...Array.from(_[1].map((accountName) => accountName.names)))
+                        .map((name) => name.namespaceId),
+                ),
+            ),
             filter((_) => {
                 if (transactionHash === undefined) {
                     return true;
                 } else {
-                    const metaHash = _.transactionInfo!.hash;
+                    const metaHash = (_[0].message as AggregateTransaction).transactionInfo!.hash;
                     return metaHash !== undefined ? metaHash.toUpperCase() === transactionHash.toUpperCase() : false;
                 }
             }),
+            map((_) => _[0].message as AggregateTransaction),
         );
     }
 
@@ -376,67 +401,5 @@ export class Listener implements IListener {
             subscribe: channel,
         };
         this.webSocket.send(JSON.stringify(subscriptionMessage));
-    }
-
-    /**
-     * @internal
-     * Filters if a transaction has been initiated or signed by an address
-     * @param transaction - Transaction object
-     * @param address - Address
-     * @returns boolean
-     */
-    private transactionFromAddress(transaction: Transaction, address: Address): boolean {
-        let transactionFromAddress = this.transactionHasSignerOrReceptor(transaction, address);
-
-        if (transaction instanceof AggregateTransaction) {
-            transaction.cosignatures.map((_: AggregateTransactionCosignature) => {
-                if (_.signer.address.equals(address)) {
-                    transactionFromAddress = true;
-                }
-            });
-            transaction.innerTransactions.map((innerTransaction: InnerTransaction) => {
-                if (
-                    this.transactionHasSignerOrReceptor(innerTransaction, address) ||
-                    this.accountAddedToMultiSig(innerTransaction, address)
-                ) {
-                    transactionFromAddress = true;
-                }
-            });
-        }
-        return transactionFromAddress;
-    }
-
-    /**
-     * @internal
-     * @param transaction
-     * @param address
-     * @returns {boolean}
-     */
-    private transactionHasSignerOrReceptor(transaction: Transaction, address: Address | NamespaceId): boolean {
-        if (address instanceof NamespaceId) {
-            return transaction instanceof TransferTransaction && (transaction.recipientAddress as NamespaceId).equals(address);
-        }
-
-        return (
-            transaction.signer!.address.equals(address) ||
-            (transaction instanceof TransferTransaction && (transaction.recipientAddress as Address).equals(address))
-        );
-    }
-
-    /**
-     * @internal
-     * Filters if an account has been added to multi signatories
-     * @param transaction - Transaction object
-     * @param address - Address
-     * @returns boolean
-     */
-    private accountAddedToMultiSig(transaction: Transaction, address: Address): boolean {
-        if (transaction instanceof MultisigAccountModificationTransaction) {
-            return (
-                transaction.publicKeyAdditions.find((_: PublicAccount) => _.address.equals(address)) !== undefined ||
-                transaction.publicKeyDeletions.find((_: PublicAccount) => _.address.equals(address)) !== undefined
-            );
-        }
-        return false;
     }
 }

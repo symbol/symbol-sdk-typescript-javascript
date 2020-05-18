@@ -299,4 +299,38 @@ describe('SecretProofTransaction', () => {
         expect(secretBytes).not.to.be.undefined;
         expect(Convert.uint8ToHex(secretBytes)).to.be.equal('9B3155B37159DA50AA52D5967C509B410F5A36A3B1E31ECB5AC76675D79B4A5E');
     });
+
+    it('Notify Account', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const tx = SecretProofTransaction.create(
+            Deadline.create(),
+            LockHashAlgorithm.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            account.address,
+            proof,
+            NetworkType.MIJIN_TEST,
+        );
+        let canNotify = tx.NotifyAccount(account.address, []);
+        expect(canNotify).to.be.true;
+
+        canNotify = tx.NotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
+        expect(canNotify).to.be.false;
+
+        Object.assign(tx, { signer: account.publicAccount });
+        expect(tx.NotifyAccount(account.address, [])).to.be.true;
+    });
+
+    it('Notify Account with alias', () => {
+        const namespaceId = new NamespaceId('test');
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const canNotify = SecretProofTransaction.create(
+            Deadline.create(),
+            LockHashAlgorithm.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            account.address,
+            proof,
+            NetworkType.MIJIN_TEST,
+        ).NotifyAccount(account.address, [namespaceId]);
+        expect(canNotify).to.be.true;
+    });
 });

@@ -23,6 +23,7 @@ import { Deadline } from '../../../src/model/transaction/Deadline';
 import { LinkAction } from '../../../src/model/transaction/LinkAction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { Address } from '../../../src/model/account/Address';
 
 describe('VotingKeyLinkTransaction', () => {
     let account: Account;
@@ -118,5 +119,17 @@ describe('VotingKeyLinkTransaction', () => {
 
         const signedTransaction = votingKeyLinkTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
+    });
+
+    it('Notify Account', () => {
+        const tx = VotingKeyLinkTransaction.create(Deadline.create(), account.publicKey, LinkAction.Unlink, NetworkType.MIJIN_TEST);
+        let canNotify = tx.NotifyAccount(account.address);
+        expect(canNotify).to.be.true;
+
+        canNotify = tx.NotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'));
+        expect(canNotify).to.be.false;
+
+        Object.assign(tx, { signer: account.publicAccount });
+        expect(tx.NotifyAccount(account.address)).to.be.true;
     });
 });

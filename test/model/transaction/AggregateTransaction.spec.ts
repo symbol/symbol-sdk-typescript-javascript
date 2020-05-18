@@ -668,4 +668,52 @@ describe('AggregateTransaction', () => {
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
     });
+
+    it('Notify Account', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(1, ChronoUnit.HOURS),
+            account.address,
+            [new Mosaic(unresolvedMosaicId, UInt64.fromUint(1))],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+        const tx = AggregateTransaction.createComplete(
+            Deadline.create(),
+            [transferTransaction.toAggregate(account.publicAccount)],
+            NetworkType.MIJIN_TEST,
+            [],
+        );
+        let canNotify = tx.NotifyAccount(account.address, []);
+        expect(canNotify).to.be.true;
+
+        canNotify = tx.NotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
+        expect(canNotify).to.be.false;
+
+        Object.assign(tx, { signer: account.publicAccount });
+        expect(tx.NotifyAccount(account.address, [])).to.be.true;
+    });
+
+    it('Notify Account with alias', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(1, ChronoUnit.HOURS),
+            unresolvedAddress,
+            [new Mosaic(unresolvedMosaicId, UInt64.fromUint(1))],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+        const tx = AggregateTransaction.createComplete(
+            Deadline.create(),
+            [transferTransaction.toAggregate(account.publicAccount)],
+            NetworkType.MIJIN_TEST,
+            [],
+        );
+        let canNotify = tx.NotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), [unresolvedAddress]);
+        expect(canNotify).to.be.true;
+
+        canNotify = tx.NotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
+        expect(canNotify).to.be.false;
+
+        Object.assign(tx, { signer: account.publicAccount });
+        expect(tx.NotifyAccount(account.address, [])).to.be.true;
+    });
 });

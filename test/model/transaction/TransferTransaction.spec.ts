@@ -423,4 +423,36 @@ describe('TransferTransaction', () => {
         const signedTransaction = transferTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
     });
+
+    it('Notify Account', () => {
+        const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        const tx = TransferTransaction.create(
+            Deadline.create(),
+            address,
+            [NetworkCurrencyLocal.createAbsolute(1)],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+        let canNotify = tx.NotifyAccount(address, []);
+        expect(canNotify).to.be.true;
+
+        canNotify = tx.NotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
+        expect(canNotify).to.be.false;
+
+        Object.assign(tx, { signer: account.publicAccount });
+        expect(tx.NotifyAccount(account.address, [])).to.be.true;
+    });
+
+    it('Notify Account with alias', () => {
+        const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        const namespaceId = new NamespaceId('test');
+        const canNotify = TransferTransaction.create(
+            Deadline.create(),
+            namespaceId,
+            [NetworkCurrencyLocal.createAbsolute(1)],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        ).NotifyAccount(address, [namespaceId]);
+        expect(canNotify).to.be.true;
+    });
 });

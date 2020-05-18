@@ -115,4 +115,19 @@ describe('AddressAliasTransaction', () => {
         ).setMaxFee(2);
         expect(addressAliasTransaction.maxFee.compact()).to.be.equal(324);
     });
+
+    it('Notify Account', () => {
+        const namespaceId = new NamespaceId([33347626, 3779697293]);
+        const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        const tx = AddressAliasTransaction.create(Deadline.create(), AliasAction.Link, namespaceId, address, NetworkType.MIJIN_TEST);
+
+        let canNotify = tx.NotifyAccount(address);
+        expect(canNotify).to.be.true;
+
+        canNotify = tx.NotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'));
+        expect(canNotify).to.be.false;
+
+        Object.assign(tx, { signer: account.publicAccount });
+        expect(tx.NotifyAccount(account.address)).to.be.true;
+    });
 });

@@ -31,7 +31,7 @@ import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo'
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 import { EmbeddedTransactionBuilder } from 'catbuffer-typescript';
-import { TransactionType } from '../../../src/model/model';
+import { TransactionType, Address } from '../../../src/model/model';
 
 describe('MosaicMetadataTransaction', () => {
     let account: Account;
@@ -194,5 +194,25 @@ describe('MosaicMetadataTransaction', () => {
         expect(embedded).to.be.instanceOf(EmbeddedTransactionBuilder);
         expect(Convert.uint8ToHex(embedded.signerPublicKey.key)).to.be.equal(account.publicKey);
         expect(embedded.type.valueOf()).to.be.equal(TransactionType.MOSAIC_METADATA.valueOf());
+    });
+
+    it('Notify Account', () => {
+        const tx = MosaicMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            new MosaicId([2262289484, 3405110546]),
+            1,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        );
+        let canNotify = tx.NotifyAccount(account.address);
+        expect(canNotify).to.be.true;
+
+        canNotify = tx.NotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'));
+        expect(canNotify).to.be.false;
+
+        Object.assign(tx, { signer: account.publicAccount });
+        expect(tx.NotifyAccount(account.address)).to.be.true;
     });
 });

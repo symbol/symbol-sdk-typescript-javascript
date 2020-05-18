@@ -35,6 +35,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { Address } from '../account/Address';
 
 export class VotingKeyLinkTransaction extends Transaction {
     /**
@@ -167,5 +168,18 @@ export class VotingKeyLinkTransaction extends Transaction {
      */
     resolveAliases(): VotingKeyLinkTransaction {
         return this;
+    }
+
+    /**
+     * @internal
+     * Check a given address should be notified in websocket channels
+     * @param address address to be notified
+     * @returns {boolean}
+     */
+    public NotifyAccount(address: Address): boolean {
+        return (
+            (this.signer !== undefined && this.signer!.address.equals(address)) ||
+            Address.createFromPublicKey(this.linkedPublicKey, this.networkType).equals(address)
+        );
     }
 }

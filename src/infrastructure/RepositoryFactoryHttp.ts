@@ -134,6 +134,6 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     }
 
     createListener(): IListener {
-        return new Listener(this.url);
+        return new Listener(this.url, this.createNamespaceRepository());
     }
 }

@@ -168,4 +168,19 @@ describe('MosaicDefinitionTransaction', () => {
         const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
     });
+
+    it('Notify Account', () => {
+        const tx = MosaicDefinitionTransaction.create(
+            Deadline.create(),
+            MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
+            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            MosaicFlags.create(false, false, false),
+            3,
+            UInt64.fromUint(0),
+            NetworkType.MIJIN_TEST,
+        );
+
+        Object.assign(tx, { signer: account.publicAccount });
+        expect(tx.NotifyAccount(account.address)).to.be.true;
+    });
 });

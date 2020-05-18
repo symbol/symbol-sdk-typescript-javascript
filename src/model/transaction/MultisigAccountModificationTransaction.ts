@@ -33,6 +33,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { Address } from '../account/Address';
 
 /**
  * Modify multisig account transactions are part of the NEM's multisig account system.
@@ -231,5 +232,19 @@ export class MultisigAccountModificationTransaction extends Transaction {
      */
     resolveAliases(): MultisigAccountModificationTransaction {
         return this;
+    }
+
+    /**
+     * @internal
+     * Check a given address should be notified in websocket channels
+     * @param address address to be notified
+     * @returns {boolean}
+     */
+    public NotifyAccount(address: Address): boolean {
+        return (
+            (this.signer !== undefined && this.signer!.address.equals(address)) ||
+            this.publicKeyAdditions.find((_: PublicAccount) => _.address.equals(address)) !== undefined ||
+            this.publicKeyDeletions.find((_: PublicAccount) => _.address.equals(address)) !== undefined
+        );
     }
 }

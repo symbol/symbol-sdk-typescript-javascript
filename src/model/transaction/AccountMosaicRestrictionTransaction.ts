@@ -40,6 +40,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { Address } from '../account/Address';
 
 export class AccountMosaicRestrictionTransaction extends Transaction {
     /**
@@ -218,5 +219,15 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
                 statement.resolveMosaicId(deletion, transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
             ),
         });
+    }
+
+    /**
+     * @internal
+     * Check a given address should be notified in websocket channels
+     * @param address address to be notified
+     * @returns {boolean}
+     */
+    public NotifyAccount(address: Address): boolean {
+        return this.signer !== undefined && this.signer!.address.equals(address);
     }
 }

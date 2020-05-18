@@ -20,17 +20,37 @@ import { Listener } from '../../src/infrastructure/Listener';
 import { Address } from '../../src/model/account/Address';
 import { TransactionStatusError } from '../../src/model/transaction/TransactionStatusError';
 import { UInt64 } from '../../src/model/UInt64';
+import { instance, mock, when } from 'ts-mockito';
+import { of as observableOf } from 'rxjs';
+import { NetworkType } from '../../src/model/network/NetworkType';
+import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
+import { Account } from '../../src/model/account/Account';
+import { AccountNames } from '../../src/model/account/AccountNames';
+import { NamespaceName, NamespaceId } from '../../src/model/model';
 
 describe('Listener', () => {
+    const account = Account.createFromPrivateKey(
+        '26b64cb10f005e5988a36744ca19e20d835ccc7c105aaa5f3b212da593180930',
+        NetworkType.MIJIN_TEST,
+    );
+    let namespaceRepo: NamespaceRepository;
+    before(() => {
+        const namespaceRepoMock: NamespaceRepository = mock();
+        when(namespaceRepoMock.getAccountsNames([account.address])).thenReturn(
+            observableOf([new AccountNames(account.address, [new NamespaceName(new NamespaceId('test'), 'test')])]),
+        );
+        namespaceRepo = instance(namespaceRepoMock);
+    });
+
     it('should createComplete a WebSocket instance given url parameter', () => {
-        const listener = new Listener('ws://localhost:3000');
-        expect('ws://localhost:3000/ws').to.be.equal(listener.url);
+        const listener = new Listener('http://localhost:3000', namespaceRepo);
+        expect('http://localhost:3000/ws').to.be.equal(listener.url);
         listener.close();
     });
 
     describe('isOpen', () => {
         it('should return false when listener is created and not opened', () => {
-            const listener = new Listener('ws://localhost:3000');
+            const listener = new Listener('http://localhost:3000', namespaceRepo);
             expect(listener.isOpen()).to.be.false;
             listener.close();
         });
@@ -57,7 +77,7 @@ describe('Listener', () => {
                 code: 'error-message',
             };
 
-            const listener = new Listener('ws://localhost:3000', WebSocketMock);
+            const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
 
             listener.open();
 
@@ -99,7 +119,7 @@ describe('Listener', () => {
                 status: 'error-message',
             };
 
-            const listener = new Listener('ws://localhost:3000', WebSocketMock);
+            const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
 
             listener.open();
 
@@ -117,7 +137,7 @@ describe('Listener', () => {
 
     describe('onerror', () => {
         it('should reject because of wrong server url', async () => {
-            const listener = new Listener('https://notcorrecturl:0000');
+            const listener = new Listener('https://notcorrecturl:0000', namespaceRepo);
             await listener
                 .open()
                 .then(() => {

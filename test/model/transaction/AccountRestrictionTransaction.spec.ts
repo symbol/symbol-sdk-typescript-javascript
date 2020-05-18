@@ -28,6 +28,7 @@ import { Deadline } from '../../../src/model/transaction/Deadline';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 
 describe('AccountRestrictionTransaction', () => {
     let account: Account;
@@ -299,5 +300,75 @@ describe('AccountRestrictionTransaction', () => {
         signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal('04C00100000000004E42');
+    });
+
+    it('Notify Account', () => {
+        const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        const tx = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
+            Deadline.create(),
+            AccountRestrictionFlags.AllowOutgoingAddress,
+            [address],
+            [],
+            NetworkType.MIJIN_TEST,
+        );
+        let canNotify = tx.NotifyAccount(address, []);
+        expect(canNotify).to.be.true;
+
+        canNotify = tx.NotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
+        expect(canNotify).to.be.false;
+
+        Object.assign(tx, { signer: account.publicAccount });
+        expect(tx.NotifyAccount(account.address, [])).to.be.true;
+
+        const txDeletion = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
+            Deadline.create(),
+            AccountRestrictionFlags.AllowOutgoingAddress,
+            [],
+            [address],
+            NetworkType.MIJIN_TEST,
+        );
+        let canNotifyDeletion = txDeletion.NotifyAccount(address, []);
+        expect(canNotifyDeletion).to.be.true;
+
+        canNotifyDeletion = txDeletion.NotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
+        expect(canNotifyDeletion).to.be.false;
+
+        Object.assign(txDeletion, { signer: account.publicAccount });
+        expect(txDeletion.NotifyAccount(account.address, [])).to.be.true;
+    });
+
+    it('Notify Account with alias', () => {
+        const address = new NamespaceId('test');
+        const tx = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
+            Deadline.create(),
+            AccountRestrictionFlags.AllowOutgoingAddress,
+            [address],
+            [],
+            NetworkType.MIJIN_TEST,
+        );
+        let canNotify = tx.NotifyAccount(account.address, [address]);
+        expect(canNotify).to.be.true;
+
+        canNotify = tx.NotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
+        expect(canNotify).to.be.false;
+
+        Object.assign(tx, { signer: account.publicAccount });
+        expect(tx.NotifyAccount(account.address, [])).to.be.true;
+
+        const txDeletion = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
+            Deadline.create(),
+            AccountRestrictionFlags.AllowOutgoingAddress,
+            [],
+            [address],
+            NetworkType.MIJIN_TEST,
+        );
+        let canNotifyDeletion = txDeletion.NotifyAccount(account.address, [address]);
+        expect(canNotifyDeletion).to.be.true;
+
+        canNotifyDeletion = txDeletion.NotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
+        expect(canNotifyDeletion).to.be.false;
+
+        Object.assign(txDeletion, { signer: account.publicAccount });
+        expect(txDeletion.NotifyAccount(account.address, [])).to.be.true;
     });
 });

@@ -300,4 +300,41 @@ describe('SecretLockTransaction', () => {
         const signedTransaction = secretLockTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
     });
+
+    it('Notify Account', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
+        const tx = SecretLockTransaction.create(
+            Deadline.create(),
+            NetworkCurrencyLocal.createAbsolute(10),
+            UInt64.fromUint(100),
+            LockHashAlgorithm.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            recipientAddress,
+            NetworkType.MIJIN_TEST,
+        );
+        let canNotify = tx.NotifyAccount(recipientAddress, []);
+        expect(canNotify).to.be.true;
+
+        canNotify = tx.NotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
+        expect(canNotify).to.be.false;
+
+        Object.assign(tx, { signer: account.publicAccount });
+        expect(tx.NotifyAccount(account.address, [])).to.be.true;
+    });
+
+    it('Notify Account with alias', () => {
+        const namespaceId = new NamespaceId('test');
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const canNotify = SecretLockTransaction.create(
+            Deadline.create(),
+            NetworkCurrencyLocal.createAbsolute(10),
+            UInt64.fromUint(100),
+            LockHashAlgorithm.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            account.address,
+            NetworkType.MIJIN_TEST,
+        ).NotifyAccount(account.address, [namespaceId]);
+        expect(canNotify).to.be.true;
+    });
 });
