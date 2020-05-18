@@ -1,4 +1,5 @@
 import i18n from '@/language/index'
+import Vuex from 'vuex'
 //@ts-ignore
 import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
@@ -7,6 +8,7 @@ const localVue = createLocalVue()
 
 const options = {
   localVue,
+  Vuex,
   i18n,
   propsData: {
     value: '123',

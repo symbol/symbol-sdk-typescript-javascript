@@ -2,7 +2,7 @@
   <div class="transaction-list-outer-container">
     <div class="transaction-list-inner-container">
       <div class="transaction-list-tabs-container">
-        <TransactionListFilters @option-change="getTransactionListByOption" />
+        <TransactionListFilters />
         <TransactionTable
           :transactions="getCurrentPageTransactions()"
           :empty-message="getEmptyMessage()"

@@ -1,4 +1,4 @@
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 import { TransactionGroup } from '@/store/Transaction'
 import { Signer } from '@/store/Account'
@@ -7,28 +7,23 @@ import { Signer } from '@/store/Account'
   computed: {
     ...mapGetters({
       currentSigner: 'account/currentSigner',
+      displayedTransactionStatus: 'transaction/displayedTransactionStatus',
     }),
   },
 })
 export class TransactionStatusFilterTs extends Vue {
-  @Prop({ default: TransactionGroup.all }) defaultStatus: TransactionGroup
-
   public currentSigner: Signer
+  public displayedTransactionStatus: TransactionGroup
 
-  public selectedStatus: TransactionGroup = this.defaultStatus
-
-  public onStatusChange() {
-    this.$emit('status-change', this.selectedStatus)
+  public get selectedStatus(): TransactionGroup {
+    return this.displayedTransactionStatus
+  }
+  public set selectedStatus(status: TransactionGroup) {
+    this.$emit('status-change', status)
   }
 
   @Watch('currentSigner')
   onCurrentSignerChange() {
-    this.selectedStatus = TransactionGroup.all
-    this.$emit('status-change', this.selectedStatus)
-  }
-
-  @Watch('defaultStatus')
-  onDefaultStatus(newVal: TransactionGroup) {
-    this.selectedStatus = newVal
+    this.$store.commit('transaction/setDisplayedTransactionStatus', TransactionGroup.all)
   }
 }

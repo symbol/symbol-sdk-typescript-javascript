@@ -76,13 +76,12 @@
     display: grid;
     height: 100%;
     width: 100%;
-    grid-template-rows: auto 0.6rem;
+    grid-template-rows: calc(100% - 0.6rem) 0.6rem;
     grid-template-columns: 100%;
 
     .transaction-list-tabs-container {
       width: 100%;
       display: block;
-      overflow: hidden;
     }
 
     .transaction-list-pagination-container {
@@ -155,4 +154,9 @@
     color: @primary;
     z-index: 1;
   }
+}
+.transaction-list-filters-container {
+  position: absolute;
+  right: 0.2rem;
+  top: -0.7rem;
 }

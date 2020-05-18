@@ -15,29 +15,28 @@
  */
 // external dependencies
 import { mapGetters } from 'vuex'
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { NetworkType } from 'symbol-sdk'
+import { Component, Vue } from 'vue-property-decorator'
 // child components
 // @ts-ignore
 import TransactionAddressFilter from '@/components/TransactionList/TransactionListFilters/TransactionAddressFilter/TransactionAddressFilter.vue'
 // @ts-ignore
 import TransactionStatusFilter from '@/components/TransactionList/TransactionListFilters/TransactionStatusFilter/TransactionStatusFilter.vue'
+//@ts-ignore
+import ButtonRefresh from '@/components/ButtonRefresh/ButtonRefresh.vue'
 import { Signer } from '@/store/Account'
 import { AccountModel } from '@/core/database/entities/AccountModel'
 import { TransactionGroup } from '@/store/Transaction'
 
 @Component({
-  components: { TransactionAddressFilter, TransactionStatusFilter },
+  components: { TransactionAddressFilter, TransactionStatusFilter, ButtonRefresh },
   computed: {
     ...mapGetters({
       currentAccount: 'account/currentAccount',
-      networkType: 'network/networkType',
       signers: 'account/signers',
     }),
   },
 })
 export class TransactionListFiltersTs extends Vue {
-  @Prop({ default: TransactionGroup.confirmed }) currentTab: TransactionGroup
   /**
    * Currently active account
    * @var {AccountModel}
@@ -45,20 +44,9 @@ export class TransactionListFiltersTs extends Vue {
   protected currentAccount: AccountModel
 
   /**
-   * Network type
-   * @var {NetworkType}
-   */
-  protected networkType: NetworkType
-
-  /**
    * current signers
    */
   public signers: Signer[]
-
-  /**
-   * set the default to select all
-   */
-  protected selectedOption = TransactionGroup.all
 
   /**
    * Hook called when the signer selector has changed
@@ -72,7 +60,10 @@ export class TransactionListFiltersTs extends Vue {
   }
 
   protected onStatusSelectorChange(filter: TransactionGroup) {
-    this.$emit('option-change', filter)
+    this.$store.commit('transaction/setDisplayedTransactionStatus', filter)
+  }
+  public refresh() {
+    this.$store.dispatch('transaction/LOAD_TRANSACTIONS')
   }
 
   /**

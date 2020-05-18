@@ -49,6 +49,7 @@ import { TransactionGroup } from '@/store/Transaction'
       confirmedTransactions: 'transaction/confirmedTransactions',
       partialTransactions: 'transaction/partialTransactions',
       unconfirmedTransactions: 'transaction/unconfirmedTransactions',
+      displayedTransactionStatus: 'transaction/displayedTransactionStatus',
     }),
   },
 })
@@ -101,7 +102,7 @@ export class TransactionListTs extends Vue {
   /**
    * set the default to select all
    */
-  public selectedOption: TransactionGroup = TransactionGroup.all
+  public displayedTransactionStatus: TransactionGroup
   /**
    * The current page number
    * @var {number}
@@ -133,9 +134,9 @@ export class TransactionListTs extends Vue {
   public isAwaitingCosignature: boolean = false
 
   public getEmptyMessage() {
-    return this.selectedOption === TransactionGroup.all
+    return this.displayedTransactionStatus === TransactionGroup.all
       ? 'no_data_transactions'
-      : `no_${this.selectedOption}_transactions`
+      : `no_${this.displayedTransactionStatus}_transactions`
   }
 
   /**
@@ -153,7 +154,7 @@ export class TransactionListTs extends Vue {
   }
 
   public get totalCountItems(): number {
-    return this.getCurrentTabTransactions(this.selectedOption).length
+    return this.getCurrentTabTransactions(this.displayedTransactionStatus).length
   }
 
   /**
@@ -165,7 +166,7 @@ export class TransactionListTs extends Vue {
    */
   public getCurrentPageTransactions(): Transaction[] {
     // get current tab transactions
-    const transactions = this.getCurrentTabTransactions(this.selectedOption)
+    const transactions = this.getCurrentTabTransactions(this.displayedTransactionStatus)
     // get pagination params
     const start = (this.currentPage - 1) * this.pageSize
     const end = this.currentPage * this.pageSize
@@ -211,9 +212,9 @@ export class TransactionListTs extends Vue {
    * Refresh transaction list
    * @return {void}
    */
-  public async getTransactionListByOption(filter: TransactionGroup) {
+  /* public async getTransactionListByOption(filter: TransactionGroup) {
     this.selectedOption = filter
-  }
+  } */
 
   /**
    * Hook called when a transaction is clicked

@@ -1,11 +1,13 @@
 <template>
   <div class="transaction-list-filters-container">
     <div class="transaction-list-filter-container">
-      <!--       <TransactionStatusFilter :defaultStatus="selectedOption" @status-change="onStatusSelectorChange"/> -->
-      <TransactionStatusFilter :default-status="selectedOption" @status-change="onStatusSelectorChange" />
+      <TransactionStatusFilter @status-change="onStatusSelectorChange" />
     </div>
     <div v-if="signers.length > 1" class="transaction-list-filter-container">
       <TransactionAddressFilter :signers="signers" @signer-change="onSignerSelectorChange" />
+    </div>
+    <div class="button-refresh-container">
+      <ButtonRefresh @click="refresh" />
     </div>
   </div>
 </template>

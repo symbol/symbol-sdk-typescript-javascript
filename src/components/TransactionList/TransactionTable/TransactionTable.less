@@ -27,9 +27,9 @@
 .transaction-table-container {
   display: grid;
   width: 100%;
-  grid-template-columns: 100%;
-  grid-template-rows: @headerHeight auto;
   height: 100%;
+  grid-template-columns: 100%;
+  grid-template-rows: @headerHeight calc(100% - @headerHeight);
   .transaction-table-columns {
     grid-template-columns: 0.65rem 5.05rem 1.8rem 2rem auto;
   }
@@ -38,7 +38,6 @@
     display: block;
     position: relative;
     width: 100%;
-    padding-bottom: 0.7rem;
     max-height: 100%;
     overflow-y: auto;
   }

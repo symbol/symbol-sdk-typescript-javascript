@@ -21,12 +21,9 @@
       .right-bottom-container {
         position: relative;
         display: grid;
-        grid-template-rows: 0.6rem auto;
+        grid-template-rows: 0.7rem calc(100% - 0.7rem);
         grid-template-columns: 100%;
         overflow-y: hidden;
-        & > div {
-          overflow: hidden;
-        }
       }
     }
   }

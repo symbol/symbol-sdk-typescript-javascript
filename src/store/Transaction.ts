@@ -79,6 +79,7 @@ interface TransactionState {
   confirmedTransactions: Transaction[]
   unconfirmedTransactions: Transaction[]
   partialTransactions: Transaction[]
+  displayedTransactionStatus: TransactionGroup
 }
 
 const transactionState: TransactionState = {
@@ -87,6 +88,7 @@ const transactionState: TransactionState = {
   confirmedTransactions: [],
   unconfirmedTransactions: [],
   partialTransactions: [],
+  displayedTransactionStatus: TransactionGroup.all,
 }
 export default {
   namespaced: true,
@@ -97,6 +99,7 @@ export default {
     confirmedTransactions: (state: TransactionState) => state.confirmedTransactions,
     unconfirmedTransactions: (state: TransactionState) => state.unconfirmedTransactions,
     partialTransactions: (state: TransactionState) => state.partialTransactions,
+    displayedTransactionStatus: (state: TransactionState) => state.displayedTransactionStatus,
   },
   mutations: {
     setInitialized: (state: TransactionState, initialized: boolean) => {
@@ -113,6 +116,9 @@ export default {
     },
     partialTransactions: (state: TransactionState, partialTransactions: Transaction[] | undefined) => {
       state.partialTransactions = conditionalSort(partialTransactions, transactionComparator)
+    },
+    setDisplayedTransactionStatus: (state: TransactionState, displayedTransactionStatus: TransactionGroup) => {
+      state.displayedTransactionStatus = displayedTransactionStatus
     },
   },
   actions: {
