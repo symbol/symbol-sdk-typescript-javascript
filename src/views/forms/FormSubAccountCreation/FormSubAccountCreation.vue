@@ -36,6 +36,7 @@
                     name="name"
                     class="input-size input-style"
                     autocomplete="new-password"
+                    @input="stripTagsAccountName"
                   />
                 </ErrorTooltip>
               </ValidationProvider>

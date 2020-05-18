@@ -17,6 +17,7 @@
                 :placeholder="$t('placeholder_address_or_public_key')"
                 class="input-style input-size"
                 type="text"
+                @input="stripTagsCosignatory"
               />
             </ErrorTooltip>
           </div>

@@ -15,7 +15,14 @@
                 slim
               >
                 <ErrorTooltip :errors="errors">
-                  <input v-model="formItems.name" v-focus type="text" name="name" class="input-size input-style" />
+                  <input
+                    v-model="formItems.name"
+                    v-focus
+                    type="text"
+                    name="name"
+                    class="input-size input-style"
+                    @input="stripTagsAccountName"
+                  />
                 </ErrorTooltip>
               </ValidationProvider>
 

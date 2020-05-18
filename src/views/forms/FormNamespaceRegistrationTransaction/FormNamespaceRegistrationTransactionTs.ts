@@ -52,6 +52,7 @@ import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirm
 import { NamespaceModel } from '@/core/database/entities/NamespaceModel'
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
 import { NamespaceService } from '@/services/NamespaceService'
+import { FilterHelpers } from '@/core/utils/FilterHelpers'
 
 @Component({
   components: {
@@ -221,5 +222,11 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
   setParentNamespaceName(val) {
     this.formItems.parentNamespaceName = val
     this.getTimeByparentNamespaceName()
+  }
+  /**
+   * filter tags
+   */
+  public stripTagsNamesapceName() {
+    this.formItems.newNamespaceName = FilterHelpers.stripFilter(this.formItems.newNamespaceName)
   }
 }

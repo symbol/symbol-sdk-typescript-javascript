@@ -23,7 +23,7 @@
               <ValidationProvider
                 v-slot="{ errors }"
                 vid="newAccountName"
-                :name="$t('newAccountName')"
+                :name="$t('newProfileName')"
                 :rules="validationRules.newAccountName"
                 tag="div"
                 class="inputs-container items-container"
@@ -34,6 +34,7 @@
                     v-model="formItems.profileName"
                     class="input-size input-style"
                     type="text"
+                    @input="stripTagsProfile"
                   />
                 </ErrorTooltip>
               </ValidationProvider>
@@ -119,7 +120,7 @@
                 class="inputs-container items-container"
               >
                 <ErrorTooltip :errors="errors">
-                  <input v-model="formItems.hint" class="input-size input-style" />
+                  <input v-model="formItems.hint" class="input-size input-style" @input="stripTagsProfile" />
                 </ErrorTooltip>
               </ValidationProvider>
             </template>

@@ -30,6 +30,7 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
 import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper'
+import { FilterHelpers } from '@/core/utils/FilterHelpers'
 
 /// end-region custom types
 
@@ -155,5 +156,13 @@ export class FormProfileCreationTs extends Vue {
 
     // flush and continue
     this.$router.push({ name: this.nextPage })
+  }
+
+  /**
+   * filter tags
+   */
+  public stripTagsProfile() {
+    this.formItems.profileName = FilterHelpers.stripFilter(this.formItems.profileName)
+    this.formItems.hint = FilterHelpers.stripFilter(this.formItems.hint)
   }
 }

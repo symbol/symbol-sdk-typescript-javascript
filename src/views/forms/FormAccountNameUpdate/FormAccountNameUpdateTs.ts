@@ -30,6 +30,7 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 import FormRow from '@/components/FormRow/FormRow.vue'
 // @ts-ignore
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue'
+import { FilterHelpers } from '@/core/utils/FilterHelpers'
 
 @Component({
   components: {
@@ -128,5 +129,11 @@ export class FormAccountNameUpdateTs extends Vue {
       this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.')
       console.error(e)
     }
+  }
+  /**
+   * filter tags
+   */
+  public stripTagsAccountName() {
+    this.formItems.name = FilterHelpers.stripFilter(this.formItems.name)
   }
 }

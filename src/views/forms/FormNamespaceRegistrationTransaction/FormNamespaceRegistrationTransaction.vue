@@ -37,6 +37,7 @@
             v-model="formItems.newNamespaceName"
             :is-need-auto-focus="false"
             :namespace-registration-type="formItems.registrationType"
+            @input="stripTagsNamesapceName"
           />
           <FormRow v-if="formItems.registrationType === typeSubNamespace">
             <template v-slot:label> {{ $t('current_validity') }}: </template>

@@ -30,6 +30,7 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 import FormRow from '@/components/FormRow/FormRow.vue'
 // @ts-ignore
 import ButtonAdd from '@/components/ButtonAdd/ButtonAdd.vue'
+import { FilterHelpers } from '@/core/utils/FilterHelpers'
 
 @Component({
   components: {
@@ -137,5 +138,11 @@ export class AddCosignatoryInputTs extends Vue {
           this.$store.dispatch('notification/ADD_WARNING', `${this.$t(NotificationType.ADDRESS_UNKNOWN)}`)
         },
       )
+  }
+  /**
+   * filter tags
+   */
+  public stripTagsCosignatory() {
+    this.cosignatory = FilterHelpers.stripFilter(this.cosignatory)
   }
 }

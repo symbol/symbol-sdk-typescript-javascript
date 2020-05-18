@@ -49,6 +49,7 @@ import FormRow from '@/components/FormRow/FormRow.vue'
 import { MosaicService } from '@/services/MosaicService'
 import { MosaicModel } from '@/core/database/entities/MosaicModel'
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
+import { FilterHelpers } from '@/core/utils/FilterHelpers'
 
 export interface MosaicAttachment {
   mosaicHex: string
@@ -390,6 +391,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
    * Handler when changing recipient
    */
   onChangeRecipient() {
+    // filter tags
+    this.formItems.recipientRaw = FilterHelpers.stripFilter(this.formItems.recipientRaw)
     this.triggerChange()
   }
 

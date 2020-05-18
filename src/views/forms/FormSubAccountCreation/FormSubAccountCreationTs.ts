@@ -36,6 +36,7 @@ import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalF
 // configuration
 import appConfig from '@/../config/app.conf.json'
 import { ProfileModel } from '@/core/database/entities/ProfileModel'
+import { FilterHelpers } from '@/core/utils/FilterHelpers'
 
 const { MAX_SEED_ACCOUNTS_NUMBER } = appConfig.constants
 
@@ -253,5 +254,11 @@ export class FormSubAccountCreationTs extends Vue {
       this.networkType,
       childAccountName,
     )
+  }
+  /**
+   * filter tags
+   */
+  public stripTagsAccountName() {
+    this.formItems.name = FilterHelpers.stripFilter(this.formItems.name)
   }
 }
