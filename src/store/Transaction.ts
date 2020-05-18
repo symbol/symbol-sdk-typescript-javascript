@@ -63,7 +63,7 @@ const confirmedTransactionComparator = (t1, t2) => {
   const info1 = t1.transactionInfo
   const info2 = t2.transactionInfo
   // - confirmed sorted by height then index
-  const diffHeight = info1.height.compact() - info2.height.compact()
+  const diffHeight = info2.height.compact() - info1.height.compact()
   const diffIndex = info1.index - info2.index
   return diffHeight !== 0 ? diffHeight : diffIndex
 }

@@ -170,7 +170,7 @@ export class TransactionListTs extends Vue {
     const start = (this.currentPage - 1) * this.pageSize
     const end = this.currentPage * this.pageSize
     // slice and return
-    return [...transactions].reverse().slice(start, end)
+    return [...transactions].slice(start, end)
   }
 
   /**
@@ -184,7 +184,7 @@ export class TransactionListTs extends Vue {
     if (group === TransactionGroup.unconfirmed) return this.unconfirmedTransactions
     if (group === TransactionGroup.partial) return this.partialTransactions
     if (group === TransactionGroup.all) {
-      return [...this.confirmedTransactions, ...this.partialTransactions, ...this.unconfirmedTransactions]
+      return [...this.unconfirmedTransactions, ...this.partialTransactions, ...this.confirmedTransactions]
     }
 
     return []
