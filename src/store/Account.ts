@@ -24,8 +24,12 @@ import {
   RepositoryFactory,
   SignedTransaction,
   Transaction,
+  TransactionService,
 } from 'symbol-sdk'
 import { of, Subscription } from 'rxjs'
+import { catchError, map, timeoutWith, tap, mapTo } from 'rxjs/operators'
+import * as _ from 'lodash'
+
 // internal dependencies
 import { $eventBus } from '../events'
 import { RESTService } from '@/services/RESTService'
@@ -33,15 +37,16 @@ import { AwaitLock } from './AwaitLock'
 import { BroadcastResult } from '@/core/transactions/BroadcastResult'
 import { AccountModel } from '@/core/database/entities/AccountModel'
 import { MultisigService } from '@/services/MultisigService'
-import * as _ from 'lodash'
 import { ProfileModel } from '@/core/database/entities/ProfileModel'
 import { AccountService } from '@/services/AccountService'
-import { catchError, map } from 'rxjs/operators'
+
+// configuration
+import appConfig from '@/../config/app.conf.json'
+const { AGGREGATE_BROADCAST_TIMEOUT } = appConfig.constants
 
 /// region globals
 const Lock = AwaitLock.create()
 /// end-region globals
-
 /**
  * Type SubscriptionType for account Store
  * @type {SubscriptionType}
@@ -511,39 +516,29 @@ export default {
         { root: true },
       )
 
-      try {
-        // - prepare REST parameters
-        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
-        const transactionHttp = repositoryFactory.createTransactionRepository()
+      // - prepare REST parameters
+      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
+      const transactionHttp = repositoryFactory.createTransactionRepository()
+      const receiptsHttp = repositoryFactory.createReceiptRepository()
+      const transactionService = new TransactionService(transactionHttp, receiptsHttp)
+      // - prepare scoped *confirmation listener*
+      const listener = rootGetters['network/listener']
 
-        // - prepare scoped *confirmation listener*
-        const listener = repositoryFactory.createListener()
-        await listener.open()
-
-        // - announce hash lock transaction and await confirmation
-        transactionHttp.announce(signedLock)
-
-        // - listen for hash lock confirmation
-        return new Promise((resolve, reject) => {
-          const address = Address.createFromRawAddress(issuer)
-          return listener.confirmed(address).subscribe(
-            async () => {
-              // - hash lock confirmed, now announce partial
-              await transactionHttp.announceAggregateBonded(signedPartial)
-              commit('removeSignedTransaction', signedLock)
-              commit('removeSignedTransaction', signedPartial)
-              return resolve(new BroadcastResult(signedPartial, true))
-            },
-            () => {
-              commit('removeSignedTransaction', signedLock)
-              commit('removeSignedTransaction', signedPartial)
-              reject(new BroadcastResult(signedPartial, false))
-            },
-          )
-        })
-      } catch (e) {
-        return new BroadcastResult(signedPartial, false, e.toString())
-      }
+      return transactionService
+        .announceHashLockAggregateBonded(signedLock, signedPartial, listener)
+        .pipe(
+          catchError((error) => of(new BroadcastResult(signedPartial, false, error))),
+          mapTo(new BroadcastResult(signedPartial, true)),
+          timeoutWith(
+            AGGREGATE_BROADCAST_TIMEOUT,
+            of(new BroadcastResult(signedPartial, false, 'Aggregate transaction broadcast timed out')),
+          ),
+          tap(() => {
+            commit('removeSignedTransaction', signedLock)
+            commit('removeSignedTransaction', signedPartial)
+          }),
+        )
+        .toPromise()
     },
     async REST_ANNOUNCE_TRANSACTION(
       { commit, dispatch, rootGetters },
