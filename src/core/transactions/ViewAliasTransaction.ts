@@ -93,7 +93,7 @@ export class ViewAliasTransaction extends TransactionView<AliasFormFieldsType> {
    */
   public resolveDetailItems(): TransactionDetailItem[] {
     const namespaceId: NamespaceId = this.values.get('namespaceId')
-    const name: string = this.values.get('name')
+    const displayName = namespaceId.fullName ? `${namespaceId.fullName} (${namespaceId.toHex()})` : namespaceId.toHex()
     const aliasTarget: Address | MosaicId = this.values.get('aliasTarget')
     const aliasAction: AliasAction = this.values.get('aliasAction')
 
@@ -101,7 +101,7 @@ export class ViewAliasTransaction extends TransactionView<AliasFormFieldsType> {
     const targetValue = aliasTarget instanceof Address ? aliasTarget.pretty() : aliasTarget.toHex()
 
     return [
-      { key: 'namespace', value: name || namespaceId.toHex() },
+      { key: 'namespace', value: displayName },
       {
         key: 'action',
         value: aliasAction === AliasAction.Link ? 'Link' : 'Unlink',
