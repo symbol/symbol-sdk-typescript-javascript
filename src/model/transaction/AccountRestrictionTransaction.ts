@@ -18,7 +18,6 @@ import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
-import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
 import { UInt64 } from '../UInt64';
 import { AccountAddressRestrictionTransaction } from './AccountAddressRestrictionTransaction';
 import { AccountMosaicRestrictionTransaction } from './AccountMosaicRestrictionTransaction';
@@ -26,6 +25,9 @@ import { AccountOperationRestrictionTransaction } from './AccountOperationRestri
 import { Deadline } from './Deadline';
 import { TransactionType } from './TransactionType';
 import { PublicAccount } from '../account/PublicAccount';
+import { AddressRestrictionFlag } from '../restriction/AddressRestrictionFlag';
+import { MosaicRestrictionFlag } from '../restriction/MosaicRestrictionFlag';
+import { OperationRestrictionFlag } from '../restriction/OperationRestrictionFlag';
 
 export class AccountRestrictionTransaction {
     /**
@@ -42,7 +44,7 @@ export class AccountRestrictionTransaction {
      */
     public static createAddressRestrictionModificationTransaction(
         deadline: Deadline,
-        restrictionFlags: AccountRestrictionFlags,
+        restrictionFlags: AddressRestrictionFlag,
         restrictionAdditions: (Address | NamespaceId)[],
         restrictionDeletions: (Address | NamespaceId)[],
         networkType: NetworkType,
@@ -50,16 +52,6 @@ export class AccountRestrictionTransaction {
         signature?: string,
         signer?: PublicAccount,
     ): AccountAddressRestrictionTransaction {
-        if (
-            ![
-                AccountRestrictionFlags.AllowIncomingAddress,
-                AccountRestrictionFlags.AllowOutgoingAddress,
-                AccountRestrictionFlags.BlockOutgoingAddress,
-                AccountRestrictionFlags.BlockIncomingAddress,
-            ].includes(restrictionFlags)
-        ) {
-            throw new Error('Restriction type is not allowed.');
-        }
         return AccountAddressRestrictionTransaction.create(
             deadline,
             restrictionFlags,
@@ -86,7 +78,7 @@ export class AccountRestrictionTransaction {
      */
     public static createMosaicRestrictionModificationTransaction(
         deadline: Deadline,
-        restrictionFlags: AccountRestrictionFlags,
+        restrictionFlags: MosaicRestrictionFlag,
         restrictionAdditions: (MosaicId | NamespaceId)[],
         restrictionDeletions: (MosaicId | NamespaceId)[],
         networkType: NetworkType,
@@ -94,9 +86,6 @@ export class AccountRestrictionTransaction {
         signature?: string,
         signer?: PublicAccount,
     ): AccountMosaicRestrictionTransaction {
-        if (![AccountRestrictionFlags.AllowMosaic, AccountRestrictionFlags.BlockMosaic].includes(restrictionFlags)) {
-            throw new Error('Restriction type is not allowed.');
-        }
         return AccountMosaicRestrictionTransaction.create(
             deadline,
             restrictionFlags,
@@ -123,7 +112,7 @@ export class AccountRestrictionTransaction {
      */
     public static createOperationRestrictionModificationTransaction(
         deadline: Deadline,
-        restrictionFlags: AccountRestrictionFlags,
+        restrictionFlags: OperationRestrictionFlag,
         restrictionAdditions: TransactionType[],
         restrictionDeletions: TransactionType[],
         networkType: NetworkType,
@@ -131,13 +120,6 @@ export class AccountRestrictionTransaction {
         signature?: string,
         signer?: PublicAccount,
     ): AccountOperationRestrictionTransaction {
-        if (
-            ![AccountRestrictionFlags.AllowOutgoingTransactionType, AccountRestrictionFlags.BlockOutgoingTransactionType].includes(
-                restrictionFlags,
-            )
-        ) {
-            throw new Error('Restriction type is not allowed.');
-        }
         return AccountOperationRestrictionTransaction.create(
             deadline,
             restrictionFlags,

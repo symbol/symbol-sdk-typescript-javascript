@@ -29,7 +29,6 @@ import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLoca
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../src/model/network/NetworkType';
-import { AccountRestrictionFlags } from '../../src/model/restriction/AccountRestrictionType';
 import { AccountKeyLinkTransaction } from '../../src/model/transaction/AccountKeyLinkTransaction';
 import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
@@ -53,6 +52,7 @@ import { Crypto } from '../../src/core/crypto';
 import { VotingKeyLinkTransaction } from '../../src/model/transaction/VotingKeyLinkTransaction';
 import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTransaction';
 import { NodeKeyLinkTransaction } from '../../src/model/transaction/NodeKeyLinkTransaction';
+import { AddressRestrictionFlag, MosaicRestrictionFlag, OperationRestrictionFlag } from '../../src/model/model';
 
 describe('SerializeTransactionToJSON', () => {
     let account: Account;
@@ -79,7 +79,7 @@ describe('SerializeTransactionToJSON', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowIncomingAddress,
+            AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
             NetworkType.MIJIN_TEST,
@@ -88,7 +88,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = addressRestrictionTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_ADDRESS_RESTRICTION);
-        expect(json.transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowIncomingAddress);
+        expect(json.transaction.restrictionFlags).to.be.equal(AddressRestrictionFlag.AllowIncomingAddress);
         expect(json.transaction.restrictionAdditions.length).to.be.equal(1);
     });
 
@@ -96,7 +96,7 @@ describe('SerializeTransactionToJSON', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowMosaic,
+            MosaicRestrictionFlag.AllowMosaic,
             [mosaicId],
             [],
             NetworkType.MIJIN_TEST,
@@ -105,7 +105,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = mosaicRestrictionTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_MOSAIC_RESTRICTION);
-        expect(json.transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowMosaic);
+        expect(json.transaction.restrictionFlags).to.be.equal(MosaicRestrictionFlag.AllowMosaic);
         expect(json.transaction.restrictionAdditions.length).to.be.equal(1);
     });
 
@@ -113,7 +113,7 @@ describe('SerializeTransactionToJSON', () => {
         const operation = TransactionType.ADDRESS_ALIAS;
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowOutgoingTransactionType,
+            OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
             NetworkType.MIJIN_TEST,
@@ -122,7 +122,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = operationRestrictionTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_OPERATION_RESTRICTION);
-        expect(json.transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowOutgoingTransactionType);
+        expect(json.transaction.restrictionFlags).to.be.equal(OperationRestrictionFlag.AllowOutgoingTransactionType);
         expect(json.transaction.restrictionAdditions.length).to.be.equal(1);
     });
 

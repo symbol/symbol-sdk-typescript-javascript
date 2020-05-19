@@ -21,13 +21,13 @@ import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { AccountRestrictionModificationAction } from '../../../src/model/restriction/AccountRestrictionModificationAction';
-import { AccountRestrictionFlags } from '../../../src/model/restriction/AccountRestrictionType';
 import { AccountRestrictionModification } from '../../../src/model/transaction/AccountRestrictionModification';
 import { AccountRestrictionTransaction } from '../../../src/model/transaction/AccountRestrictionTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { AddressRestrictionFlag, OperationRestrictionFlag, MosaicRestrictionFlag } from '../../../src/model/model';
 
 describe('AccountRestrictionTransaction', () => {
     let account: Account;
@@ -65,7 +65,7 @@ describe('AccountRestrictionTransaction', () => {
             const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
             const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionFlags.AllowIncomingAddress,
+                AddressRestrictionFlag.AllowIncomingAddress,
                 [address],
                 [],
                 NetworkType.MIJIN_TEST,
@@ -79,7 +79,7 @@ describe('AccountRestrictionTransaction', () => {
             const mosaicId = new MosaicId([2262289484, 3405110546]);
             const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionFlags.AllowMosaic,
+                MosaicRestrictionFlag.AllowMosaic,
                 [mosaicId],
                 [],
                 NetworkType.MIJIN_TEST,
@@ -92,7 +92,7 @@ describe('AccountRestrictionTransaction', () => {
         const operation = TransactionType.ADDRESS_ALIAS;
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowOutgoingTransactionType,
+            OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
             NetworkType.MIJIN_TEST,
@@ -104,7 +104,7 @@ describe('AccountRestrictionTransaction', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowIncomingAddress,
+            AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
             NetworkType.MIJIN_TEST,
@@ -118,7 +118,7 @@ describe('AccountRestrictionTransaction', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowIncomingAddress,
+            AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
             NetworkType.MIJIN_TEST,
@@ -133,7 +133,7 @@ describe('AccountRestrictionTransaction', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowIncomingAddress,
+            AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
             NetworkType.MIJIN_TEST,
@@ -146,32 +146,11 @@ describe('AccountRestrictionTransaction', () => {
         );
     });
 
-    it('should throw exception when create address restriction transaction with wrong type', () => {
-        const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        const invalidType = [
-            AccountRestrictionFlags.AllowMosaic,
-            AccountRestrictionFlags.AllowOutgoingTransactionType,
-            AccountRestrictionFlags.BlockMosaic,
-            AccountRestrictionFlags.BlockOutgoingTransactionType,
-        ];
-        invalidType.forEach((type) => {
-            expect(() => {
-                AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-                    Deadline.create(),
-                    type,
-                    [address],
-                    [],
-                    NetworkType.MIJIN_TEST,
-                );
-            }).to.throw(Error, 'Restriction type is not allowed.');
-        });
-    });
-
     it('should create mosaic restriction transaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowMosaic,
+            MosaicRestrictionFlag.AllowMosaic,
             [mosaicId],
             [],
             NetworkType.MIJIN_TEST,
@@ -182,34 +161,11 @@ describe('AccountRestrictionTransaction', () => {
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal('02000100000000004CCCD78612DDF5CA');
     });
 
-    it('should throw exception when create account mosaic restriction transaction with wrong type', () => {
-        const mosaicId = new MosaicId([2262289484, 3405110546]);
-        const invalidType = [
-            AccountRestrictionFlags.AllowIncomingAddress,
-            AccountRestrictionFlags.AllowOutgoingTransactionType,
-            AccountRestrictionFlags.AllowOutgoingAddress,
-            AccountRestrictionFlags.BlockOutgoingTransactionType,
-            AccountRestrictionFlags.BlockIncomingAddress,
-            AccountRestrictionFlags.BlockOutgoingAddress,
-        ];
-        invalidType.forEach((type) => {
-            expect(() => {
-                AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
-                    Deadline.create(),
-                    type,
-                    [mosaicId],
-                    [],
-                    NetworkType.MIJIN_TEST,
-                );
-            }).to.throw(Error, 'Restriction type is not allowed.');
-        });
-    });
-
     it('should create operation restriction transaction', () => {
         const operation = TransactionType.ADDRESS_ALIAS;
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowOutgoingTransactionType,
+            OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
             NetworkType.MIJIN_TEST,
@@ -220,34 +176,11 @@ describe('AccountRestrictionTransaction', () => {
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal('04400100000000004E42');
     });
 
-    it('should throw exception when create account operation restriction transaction with wrong type', () => {
-        const operation = TransactionType.ADDRESS_ALIAS;
-        const invalidType = [
-            AccountRestrictionFlags.AllowIncomingAddress,
-            AccountRestrictionFlags.AllowMosaic,
-            AccountRestrictionFlags.BlockMosaic,
-            AccountRestrictionFlags.AllowOutgoingAddress,
-            AccountRestrictionFlags.BlockIncomingAddress,
-            AccountRestrictionFlags.BlockOutgoingAddress,
-        ];
-        invalidType.forEach((type) => {
-            expect(() => {
-                AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
-                    Deadline.create(),
-                    type,
-                    [operation],
-                    [],
-                    NetworkType.MIJIN_TEST,
-                );
-            }).to.throw(Error, 'Restriction type is not allowed.');
-        });
-    });
-
     it('should create outgoing address restriction transaction', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         let addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowOutgoingAddress,
+            AddressRestrictionFlag.AllowOutgoingAddress,
             [address],
             [],
             NetworkType.MIJIN_TEST,
@@ -261,7 +194,7 @@ describe('AccountRestrictionTransaction', () => {
 
         addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.BlockOutgoingAddress,
+            AddressRestrictionFlag.BlockOutgoingAddress,
             [address],
             [],
             NetworkType.MIJIN_TEST,
@@ -278,7 +211,7 @@ describe('AccountRestrictionTransaction', () => {
         const operation = TransactionType.ADDRESS_ALIAS;
         let operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowOutgoingTransactionType,
+            OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
             NetworkType.MIJIN_TEST,
@@ -290,7 +223,7 @@ describe('AccountRestrictionTransaction', () => {
 
         operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.BlockOutgoingTransactionType,
+            OperationRestrictionFlag.BlockOutgoingTransactionType,
             [operation],
             [],
             NetworkType.MIJIN_TEST,

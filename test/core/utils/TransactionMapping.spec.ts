@@ -35,7 +35,6 @@ import { AliasAction } from '../../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NamespaceRegistrationType } from '../../../src/model/namespace/NamespaceRegistrationType';
 import { NetworkType } from '../../../src/model/network/NetworkType';
-import { AccountRestrictionFlags } from '../../../src/model/restriction/AccountRestrictionType';
 import { MosaicRestrictionType } from '../../../src/model/restriction/MosaicRestrictionType';
 import { AccountAddressRestrictionTransaction } from '../../../src/model/transaction/AccountAddressRestrictionTransaction';
 import { AccountKeyLinkTransaction } from '../../../src/model/transaction/AccountKeyLinkTransaction';
@@ -68,6 +67,7 @@ import { VrfKeyLinkTransaction } from '../../../src/model/transaction/VrfKeyLink
 import { VotingKeyLinkTransaction } from '../../../src/model/transaction/VotingKeyLinkTransaction';
 import { Crypto } from '../../../src/core/crypto';
 import { NodeKeyLinkTransaction } from '../../../src/model/transaction/NodeKeyLinkTransaction';
+import { AddressRestrictionFlag, MosaicRestrictionFlag, OperationRestrictionFlag } from '../../../src/model/model';
 
 describe('TransactionMapping - createFromPayload', () => {
     let account: Account;
@@ -80,7 +80,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowIncomingAddress,
+            AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
             NetworkType.MIJIN_TEST,
@@ -90,7 +90,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AccountAddressRestrictionTransaction;
 
-        expect(transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowIncomingAddress);
+        expect(transaction.restrictionFlags).to.be.equal(AddressRestrictionFlag.AllowIncomingAddress);
         expect((transaction.restrictionAdditions[0] as Address).plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         expect(transaction.restrictionDeletions.length).to.be.equal(0);
     });
@@ -99,7 +99,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowMosaic,
+            MosaicRestrictionFlag.AllowMosaic,
             [mosaicId],
             [],
             NetworkType.MIJIN_TEST,
@@ -108,7 +108,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const signedTransaction = mosaicRestrictionTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AccountMosaicRestrictionTransaction;
-        expect(transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowMosaic);
+        expect(transaction.restrictionFlags).to.be.equal(MosaicRestrictionFlag.AllowMosaic);
         expect((transaction.restrictionAdditions[0] as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
         expect(transaction.restrictionDeletions.length).to.be.equal(0);
     });
@@ -117,7 +117,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const operation = TransactionType.ADDRESS_ALIAS;
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowOutgoingTransactionType,
+            OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
             NetworkType.MIJIN_TEST,
@@ -126,7 +126,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AccountOperationRestrictionTransaction;
-        expect(transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowOutgoingTransactionType);
+        expect(transaction.restrictionFlags).to.be.equal(OperationRestrictionFlag.AllowOutgoingTransactionType);
         expect(transaction.restrictionAdditions[0]).to.be.equal(operation);
         expect(transaction.restrictionDeletions.length).to.be.equal(0);
     });
@@ -912,7 +912,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowIncomingAddress,
+            AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
             NetworkType.MIJIN_TEST,
@@ -923,7 +923,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         ) as AccountAddressRestrictionTransaction;
 
         expect((transaction.restrictionAdditions[0] as Address).plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        expect(transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowIncomingAddress);
+        expect(transaction.restrictionFlags).to.be.equal(AddressRestrictionFlag.AllowIncomingAddress);
         expect(transaction.restrictionDeletions.length).to.be.equal(0);
     });
 
@@ -931,7 +931,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowMosaic,
+            MosaicRestrictionFlag.AllowMosaic,
             [mosaicId],
             [],
             NetworkType.MIJIN_TEST,
@@ -940,7 +940,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const transaction = TransactionMapping.createFromDTO(mosaicRestrictionTransaction.toJSON()) as AccountMosaicRestrictionTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_MOSAIC_RESTRICTION);
-        expect(transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowMosaic);
+        expect(transaction.restrictionFlags).to.be.equal(MosaicRestrictionFlag.AllowMosaic);
         expect(transaction.restrictionAdditions.length).to.be.equal(1);
     });
 
@@ -948,7 +948,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const operation = TransactionType.ADDRESS_ALIAS;
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowOutgoingTransactionType,
+            OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
             NetworkType.MIJIN_TEST,
@@ -959,7 +959,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         ) as AccountMosaicRestrictionTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_OPERATION_RESTRICTION);
-        expect(transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowOutgoingTransactionType);
+        expect(transaction.restrictionFlags).to.be.equal(OperationRestrictionFlag.AllowOutgoingTransactionType);
         expect(transaction.restrictionAdditions.length).to.be.equal(1);
     });
 
