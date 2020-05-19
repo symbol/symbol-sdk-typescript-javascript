@@ -5,6 +5,7 @@
       class-name="modal-transaction-confirmation"
       :title="$t('modal_title_transaction_confirmation')"
       :transfer="false"
+      :footer-hide="true"
     >
       <div class="transactionConfirmationBody">
         <div v-if="!!stagedTransactions" class="stepItem1">
