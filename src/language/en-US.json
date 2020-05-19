@@ -1104,7 +1104,7 @@
   "label_multisig_operation_modification": "Modifying account multisig properties",
   "label_add_cosignatory": "Add a cosignatory",
   "transaction_needs_cosignature": "Transaction awaiting co-signature(s)",
-  "transaction_needs_cosignature_explain": "This transaction needs multiple parties to approve by sending co-signature. Please, unlock your account to send a co-signature transaction now.",
+  "transaction_needs_cosignature_explain": "This multisignature transaction needs multiple parties to sign it before it is approved. Please enter your password and confirm to add your signature.",
   "transaction_needs_cosignature_explain_signed": "This transaction needs multiple parties to approve by sending co-signature. You have already send a co-signature for this transaction. Please, wait until other co-signatories approve.",
   "transaction_has_cosignature": "Co-signatures received",
   "label_signed_by": "Signed by co-signatory: ",
