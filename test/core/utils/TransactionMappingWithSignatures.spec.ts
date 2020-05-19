@@ -32,7 +32,6 @@ import { AliasAction } from '../../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NamespaceRegistrationType } from '../../../src/model/namespace/NamespaceRegistrationType';
 import { NetworkType } from '../../../src/model/network/NetworkType';
-import { AccountRestrictionFlags } from '../../../src/model/restriction/AccountRestrictionType';
 import { MosaicRestrictionType } from '../../../src/model/restriction/MosaicRestrictionType';
 import { AccountAddressRestrictionTransaction } from '../../../src/model/transaction/AccountAddressRestrictionTransaction';
 import { AccountKeyLinkTransaction } from '../../../src/model/transaction/AccountKeyLinkTransaction';
@@ -65,6 +64,9 @@ import { VrfKeyLinkTransaction } from '../../../src/model/transaction/VrfKeyLink
 import { VotingKeyLinkTransaction } from '../../../src/model/transaction/VotingKeyLinkTransaction';
 import { Crypto } from '../../../src/core/crypto';
 import { NodeKeyLinkTransaction } from '../../../src/model/transaction/NodeKeyLinkTransaction';
+import { AddressRestrictionFlag } from '../../../src/model/restriction/AddressRestrictionFlag';
+import { MosaicRestrictionFlag } from '../../../src/model/restriction/MosaicRestrictionFlag';
+import { OperationRestrictionFlag } from '../../../src/model/restriction/OperationRestrictionFlag';
 
 describe('TransactionMapping - createFromPayload with optional sigature and signer', () => {
     let account: Account;
@@ -80,7 +82,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowIncomingAddress,
+            AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
             NetworkType.MIJIN_TEST,
@@ -92,7 +94,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let transaction = TransactionMapping.createFromPayload(signedTransaction) as AccountAddressRestrictionTransaction;
 
-        expect(transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowIncomingAddress);
+        expect(transaction.restrictionFlags).to.be.equal(AddressRestrictionFlag.AllowIncomingAddress);
         expect((transaction.restrictionAdditions[0] as Address).plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         expect(transaction.restrictionDeletions.length).to.be.equal(0);
         expect(transaction.signature).to.be.equal(testSignature);
@@ -110,7 +112,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowMosaic,
+            MosaicRestrictionFlag.AllowMosaic,
             [mosaicId],
             [],
             NetworkType.MIJIN_TEST,
@@ -122,7 +124,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         let signedTransaction = mosaicRestrictionTransaction.serialize();
 
         let transaction = TransactionMapping.createFromPayload(signedTransaction) as AccountMosaicRestrictionTransaction;
-        expect(transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowMosaic);
+        expect(transaction.restrictionFlags).to.be.equal(MosaicRestrictionFlag.AllowMosaic);
         expect((transaction.restrictionAdditions[0] as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
         expect(transaction.restrictionDeletions.length).to.be.equal(0);
         expect(transaction.signature).to.be.equal(testSignature);
@@ -140,7 +142,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         const operation = TransactionType.ADDRESS_ALIAS;
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowOutgoingTransactionType,
+            OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
             NetworkType.MIJIN_TEST,
@@ -152,7 +154,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         let signedTransaction = operationRestrictionTransaction.serialize();
 
         let transaction = TransactionMapping.createFromPayload(signedTransaction) as AccountOperationRestrictionTransaction;
-        expect(transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowOutgoingTransactionType);
+        expect(transaction.restrictionFlags).to.be.equal(OperationRestrictionFlag.AllowOutgoingTransactionType);
         expect(transaction.restrictionAdditions[0]).to.be.equal(operation);
         expect(transaction.restrictionDeletions.length).to.be.equal(0);
 

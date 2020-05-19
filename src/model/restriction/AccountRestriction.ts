@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { AccountRestrictionFlags } from './AccountRestrictionType';
+import { OperationRestrictionFlag } from './OperationRestrictionFlag';
+import { AddressRestrictionFlag } from './AddressRestrictionFlag';
+import { MosaicRestrictionFlag } from './MosaicRestrictionFlag';
+
 /**
  * Account restriction structure describes restriction information.
  */
@@ -26,9 +29,9 @@ export class AccountRestriction {
      */
     constructor(
         /**
-         * Account restriction type
+         * Account restriction flag
          */
-        public readonly restrictionFlags: AccountRestrictionFlags,
+        public readonly restrictionFlags: AddressRestrictionFlag | MosaicRestrictionFlag | OperationRestrictionFlag,
         /**
          * Restriction values.
          */

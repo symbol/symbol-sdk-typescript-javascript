@@ -26,7 +26,6 @@ import {
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../network/NetworkType';
-import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -35,6 +34,7 @@ import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 import { Address } from '../account/Address';
+import { OperationRestrictionFlag } from '../restriction/OperationRestrictionFlag';
 
 export class AccountOperationRestrictionTransaction extends Transaction {
     /**
@@ -51,7 +51,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
      */
     public static create(
         deadline: Deadline,
-        restrictionFlags: AccountRestrictionFlags,
+        restrictionFlags: OperationRestrictionFlag,
         restrictionAdditions: TransactionType[],
         restrictionDeletions: TransactionType[],
         networkType: NetworkType,
@@ -89,7 +89,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
         version: number,
         deadline: Deadline,
         maxFee: UInt64,
-        public readonly restrictionFlags: AccountRestrictionFlags,
+        public readonly restrictionFlags: OperationRestrictionFlag,
         public readonly restrictionAdditions: TransactionType[],
         public readonly restrictionDeletions: TransactionType[],
         signature?: string,
