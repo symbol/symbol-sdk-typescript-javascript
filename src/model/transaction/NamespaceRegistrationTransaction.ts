@@ -52,6 +52,8 @@ export class NamespaceRegistrationTransaction extends Transaction {
      * @param duration - The duration of the namespace.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @returns {NamespaceRegistrationTransaction}
      */
     public static createRootNamespace(
@@ -60,6 +62,8 @@ export class NamespaceRegistrationTransaction extends Transaction {
         duration: UInt64,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): NamespaceRegistrationTransaction {
         return new NamespaceRegistrationTransaction(
             networkType,
@@ -70,6 +74,9 @@ export class NamespaceRegistrationTransaction extends Transaction {
             namespaceName,
             new NamespaceId(namespaceName),
             duration,
+            undefined,
+            signature,
+            signer,
         );
     }
 
@@ -80,6 +87,8 @@ export class NamespaceRegistrationTransaction extends Transaction {
      * @param parentNamespace - The parent namespace name.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
+     * @param signature - Transaction signature
+     * @param signer - Signer public account
      * @returns {NamespaceRegistrationTransaction}
      */
     public static createSubNamespace(
@@ -88,6 +97,8 @@ export class NamespaceRegistrationTransaction extends Transaction {
         parentNamespace: string | NamespaceId,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): NamespaceRegistrationTransaction {
         let parentId: NamespaceId;
         if (typeof parentNamespace === 'string') {
@@ -107,6 +118,8 @@ export class NamespaceRegistrationTransaction extends Transaction {
                 : new NamespaceId(NamespaceMosaicIdGenerator.namespaceId(namespaceName)),
             undefined,
             parentId,
+            signature,
+            signer,
         );
     }
 
@@ -170,6 +183,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
         const registrationType = builder.getRegistrationType().valueOf();
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
+        const signature = payload.substring(16, 144);
         const transaction =
             registrationType === NamespaceRegistrationType.RootNamespace
                 ? NamespaceRegistrationTransaction.createRootNamespace(
@@ -180,6 +194,8 @@ export class NamespaceRegistrationTransaction extends Transaction {
                       new UInt64(builder.getDuration()!.blockDuration),
                       networkType,
                       isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
+                      isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+                      signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
                   )
                 : NamespaceRegistrationTransaction.createSubNamespace(
                       isEmbedded
@@ -189,6 +205,8 @@ export class NamespaceRegistrationTransaction extends Transaction {
                       new NamespaceId(builder.getParentId()!.namespaceId),
                       networkType,
                       isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
+                      isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+                      signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
                   );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -219,8 +237,8 @@ export class NamespaceRegistrationTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-        const signatureBuffer = new Uint8Array(64);
+        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
+        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
         let transactionBuilder: NamespaceRegistrationTransactionBuilder;
         if (this.registrationType === NamespaceRegistrationType.RootNamespace) {
             transactionBuilder = new NamespaceRegistrationTransactionBuilder(

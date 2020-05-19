@@ -53,7 +53,8 @@ export class SecretProofTransaction extends Transaction {
      * @param proof - The seed proof.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
-     *
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @return a SecretProofTransaction instance
      */
     public static create(
@@ -64,6 +65,8 @@ export class SecretProofTransaction extends Transaction {
         proof: string,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): SecretProofTransaction {
         return new SecretProofTransaction(
             networkType,
@@ -74,6 +77,8 @@ export class SecretProofTransaction extends Transaction {
             secret,
             recipientAddress,
             proof,
+            signature,
+            signer,
         );
     }
 
@@ -121,6 +126,7 @@ export class SecretProofTransaction extends Transaction {
             : SecretProofTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
+        const signature = payload.substring(16, 144);
         const transaction = SecretProofTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as SecretProofTransactionBuilder).getDeadline().timestamp),
             builder.getHashAlgorithm().valueOf(),
@@ -129,6 +135,8 @@ export class SecretProofTransaction extends Transaction {
             Convert.uint8ToHex(builder.getProof()),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as SecretProofTransactionBuilder).fee.amount),
+            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -177,8 +185,8 @@ export class SecretProofTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-        const signatureBuffer = new Uint8Array(64);
+        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
+        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
         const transactionBuilder = new SecretProofTransactionBuilder(
             new SignatureDto(signatureBuffer),

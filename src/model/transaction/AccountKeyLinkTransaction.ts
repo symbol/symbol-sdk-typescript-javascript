@@ -47,6 +47,8 @@ export class AccountKeyLinkTransaction extends Transaction {
      * @param remotePublicKey - The public key of the remote account.
      * @param linkAction - The account link action.
      * @param maxFee - (Optional) Max fee defined by the sender
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @returns {AccountLinkTransaction}
      */
     public static create(
@@ -55,6 +57,8 @@ export class AccountKeyLinkTransaction extends Transaction {
         linkAction: LinkAction,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): AccountKeyLinkTransaction {
         return new AccountKeyLinkTransaction(
             networkType,
@@ -63,6 +67,8 @@ export class AccountKeyLinkTransaction extends Transaction {
             maxFee,
             remotePublicKey,
             linkAction,
+            signature,
+            signer,
         );
     }
 
@@ -109,12 +115,15 @@ export class AccountKeyLinkTransaction extends Transaction {
             : AccountKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
+        const signature = payload.substring(16, 144);
         const transaction = AccountKeyLinkTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AccountKeyLinkTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getRemotePublicKey().key),
             builder.getLinkAction().valueOf(),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountKeyLinkTransactionBuilder).fee.amount),
+            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -140,8 +149,8 @@ export class AccountKeyLinkTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-        const signatureBuffer = new Uint8Array(64);
+        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
+        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
         const transactionBuilder = new AccountKeyLinkTransactionBuilder(
             new SignatureDto(signatureBuffer),
