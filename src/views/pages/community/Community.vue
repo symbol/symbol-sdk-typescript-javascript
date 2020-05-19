@@ -3,7 +3,7 @@
     <div class="inner-container xym-outline">
       <div class="top-container">
         <h1 class="page-title">
-          {{ $t('news') }}
+          {{ $t('latest_news_articles') }}
         </h1>
       </div>
       <div class="bottom-container">

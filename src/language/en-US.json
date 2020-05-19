@@ -1131,6 +1131,9 @@
   "no_data_namespace_tips": "You do not have a namespace, please create one first",
   "current_validity": "Expires in",
   "copy_failed": "Copy failed",
+  "news_read_more": "Read more",
+  "latest_news_articles": "Latest news articles",
+  "article_by": "By {creator}",
   "current_network": "Current Network",
   "node_list": "Node list"
 }

@@ -16,7 +16,7 @@
 import Vue from 'vue'
 // internal dependencies
 import { AwaitLock } from './AwaitLock'
-import { CommunityService } from '@/services/CommunityService'
+import { CommunityService, ArticleEntry } from '@/services/CommunityService'
 
 const Lock = AwaitLock.create()
 
@@ -27,34 +27,26 @@ export default {
   namespaced: true,
   state: {
     initialized: false,
-    currentArticle: '',
     articles: [],
   },
   getters: {
     getInitialized: (state) => state.initialized,
-    currentArticle: (state) => state.currentArticle,
     latestArticles: (state) => state.articles,
   },
   mutations: {
     setInitialized: (state, initialized) => {
       state.initialized = initialized
     },
-    currentArticle: (state, activeArticle) => Vue.set(state, 'currentArticle', activeArticle),
-    addArticle: (state, article) => {
-      const articles = state.articles
-
-      // order by DESC
-      articles.unshift(article)
-      Vue.set(state, 'articles', articles)
-      return article
+    addArticles: (state, articles: ArticleEntry[]): void => {
+      const newArticles = [...articles, ...state.articles]
+      Vue.set(state, 'articles', newArticles)
     },
   },
   actions: {
-    async initialize({ state, commit, dispatch, getters }) {
+    async initialize({ commit, dispatch, getters }) {
       const callback = async () => {
         // fetch news
         await dispatch('FETCH_ARTICLES')
-        commit('currentArticle', [...state.articles].shift())
         commit('setInitialized', true)
       }
       await Lock.initialize(callback, { getters })
@@ -67,16 +59,12 @@ export default {
       await Lock.uninitialize(callback, { getters })
     },
     /// region scoped actions
-    SET_CURRENT_ARTICLE({ commit }, article) {
-      commit('currentArticle', article)
-    },
     async FETCH_ARTICLES({ commit }) {
       // fetch articles from external feed
       try {
         const service = new CommunityService()
-        const articles = await service.getLatestArticles()
-
-        return articles.map((article) => commit('addArticle', article))
+        const articles: ArticleEntry[] = await service.getLatestArticles()
+        commit('addArticles', articles)
       } catch (e) {
         // forward error
         throw new Error(e)

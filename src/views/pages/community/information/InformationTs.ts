@@ -20,42 +20,19 @@ import { mapGetters } from 'vuex'
 import { ArticleEntry } from '@/services/CommunityService'
 
 @Component({
-  computed: {
-    ...mapGetters({
-      currentArticle: 'community/currentArticle',
-      latestArticles: 'community/latestArticles',
-    }),
-  },
+  computed: mapGetters({
+    latestArticles: 'community/latestArticles',
+  }),
 })
 export class InformationTs extends Vue {
   /**
-   * Currently active article
-   * @var {string}
-   */
-  public currentArticle: string
-
-  public currentArticleIndex: number = 0
-  /**
    * List of latest articles
-   * @var {ArticleEntry[]}
    */
-  public latestArticles: ArticleEntry[]
-
+  protected latestArticles: ArticleEntry[]
   /**
    * Hook called when the component is mounted
-   * @return {void}
    */
   public async mounted() {
     await this.$store.dispatch('community/initialize')
-  }
-
-  /**
-   * Switch the active article
-   * @param {string} title
-   * @return {void}
-   */
-  public switchArticle(article: ArticleEntry, index: number) {
-    this.currentArticleIndex = index
-    this.$store.dispatch('community/SET_CURRENT_ARTICLE', article)
   }
 }

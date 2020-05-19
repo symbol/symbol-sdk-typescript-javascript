@@ -15,10 +15,8 @@
  */
 import RSSParser from 'rss-parser'
 import axios from 'axios'
-import * as XSSSanitizer from 'xss'
 // internal dependencies
 import { AbstractService } from './AbstractService'
-import { Formatters } from '@/core/utils/Formatters'
 // configuration
 import appConfig from '@/../config/app.conf.json'
 
@@ -43,24 +41,24 @@ const request = async (): Promise<string> => {
 export interface ArticleEntry {
   /**
    * Publication date
-   * @var {string}
    */
   pubDate: string
   /**
    * Article creator
-   * @var {string}
    */
   creator: string
   /**
    * Article title
-   * @var {string}
    */
   title: string
   /**
-   * Article content
-   * @var {string}
+   * Article excerpt
    */
-  content: string
+  contentSnippet: string
+  /**
+   * Article link
+   */
+  link: string
 }
 
 export class CommunityService extends AbstractService {
@@ -68,25 +66,16 @@ export class CommunityService extends AbstractService {
    * Get latest articles from RSS feed
    * @return {Promise<ArticleEntry[]}
    */
-  public async getLatestArticles(): Promise<any[]> {
+  public async getLatestArticles(): Promise<ArticleEntry[]> {
     const data = await request()
-    const parser = new RSSParser()
+    const parsedStream = await new RSSParser().parseString(data)
 
-    return new Promise((resolve, reject) => {
-      parser.parseString(data, (err, parsed) => {
-        if (err) {
-          return reject(`Error occured while parsing RSS Feed ${err.toString()}`)
-        }
-
-        // - parse item and sanitize content
-        const articles = parsed.items.map((item) => {
-          return Object.assign({}, item, {
-            content: XSSSanitizer.filterXSS(item['content:encoded']),
-            pubDate: Formatters.formatDate(Date.parse(item.pubDate)),
-          })
-        })
-        return resolve(articles)
-      })
-    })
+    return parsedStream.items.map(({ pubDate, creator, title, contentSnippet, link }) => ({
+      pubDate,
+      creator,
+      title,
+      contentSnippet,
+      link,
+    }))
   }
 }
