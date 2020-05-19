@@ -49,6 +49,8 @@ export class AccountMetadataTransaction extends Transaction {
      *                You can calculate value as xor(previous-value, new-value).
      *                If there is no previous value, use directly the new value.
      * @param maxFee - (Optional) Max fee defined by the sender
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @returns {AccountMetadataTransaction}
      */
     public static create(
@@ -59,6 +61,8 @@ export class AccountMetadataTransaction extends Transaction {
         value: string,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): AccountMetadataTransaction {
         return new AccountMetadataTransaction(
             networkType,
@@ -69,6 +73,8 @@ export class AccountMetadataTransaction extends Transaction {
             scopedMetadataKey,
             valueSizeDelta,
             value,
+            signature,
+            signer,
         );
     }
 
@@ -126,6 +132,7 @@ export class AccountMetadataTransaction extends Transaction {
             : AccountMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
+        const signature = payload.substring(16, 144);
         const transaction = AccountMetadataTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AccountMetadataTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getTargetPublicKey().key),
@@ -134,6 +141,8 @@ export class AccountMetadataTransaction extends Transaction {
             Convert.uint8ToUtf8(builder.getValue()),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountMetadataTransactionBuilder).fee.amount),
+            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -161,8 +170,8 @@ export class AccountMetadataTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-        const signatureBuffer = new Uint8Array(64);
+        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
+        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
         const transactionBuilder = new AccountMetadataTransactionBuilder(
             new SignatureDto(signatureBuffer),

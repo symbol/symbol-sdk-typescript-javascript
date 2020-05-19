@@ -54,6 +54,8 @@ export class MosaicSupplyChangeTransaction extends Transaction {
      * @param delta - The supply change in units for the mosaic.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @returns {MosaicSupplyChangeTransaction}
      */
     public static create(
@@ -63,6 +65,8 @@ export class MosaicSupplyChangeTransaction extends Transaction {
         delta: UInt64,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): MosaicSupplyChangeTransaction {
         return new MosaicSupplyChangeTransaction(
             networkType,
@@ -72,6 +76,8 @@ export class MosaicSupplyChangeTransaction extends Transaction {
             mosaicId,
             action,
             delta,
+            signature,
+            signer,
         );
     }
 
@@ -123,6 +129,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
             : MosaicSupplyChangeTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
+        const signature = payload.substring(16, 144);
         const transaction = MosaicSupplyChangeTransaction.create(
             isEmbedded
                 ? Deadline.create()
@@ -132,6 +139,8 @@ export class MosaicSupplyChangeTransaction extends Transaction {
             new UInt64(builder.getDelta().amount),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicSupplyChangeTransactionBuilder).fee.amount),
+            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -158,8 +167,8 @@ export class MosaicSupplyChangeTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-        const signatureBuffer = new Uint8Array(64);
+        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
+        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
         const transactionBuilder = new MosaicSupplyChangeTransactionBuilder(
             new SignatureDto(signatureBuffer),

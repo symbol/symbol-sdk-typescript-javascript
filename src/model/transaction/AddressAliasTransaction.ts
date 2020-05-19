@@ -52,6 +52,8 @@ export class AddressAliasTransaction extends Transaction {
      * @param address - The address.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @returns {AddressAliasTransaction}
      */
     public static create(
@@ -61,6 +63,8 @@ export class AddressAliasTransaction extends Transaction {
         address: Address,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): AddressAliasTransaction {
         return new AddressAliasTransaction(
             networkType,
@@ -70,6 +74,8 @@ export class AddressAliasTransaction extends Transaction {
             aliasAction,
             namespaceId,
             address,
+            signature,
+            signer,
         );
     }
 
@@ -121,6 +127,7 @@ export class AddressAliasTransaction extends Transaction {
             : AddressAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
+        const signature = payload.substring(16, 144);
         const transaction = AddressAliasTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AddressAliasTransactionBuilder).getDeadline().timestamp),
             builder.getAliasAction().valueOf(),
@@ -128,6 +135,8 @@ export class AddressAliasTransaction extends Transaction {
             Address.createFromEncoded(Convert.uint8ToHex(builder.getAddress().address)),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AddressAliasTransactionBuilder).fee.amount),
+            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -154,8 +163,8 @@ export class AddressAliasTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-        const signatureBuffer = new Uint8Array(64);
+        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
+        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
         const transactionBuilder = new AddressAliasTransactionBuilder(
             new SignatureDto(signatureBuffer),

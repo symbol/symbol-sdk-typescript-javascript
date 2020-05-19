@@ -66,6 +66,8 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
      * @param networkType - The network type.
      * @param referenceMosaicId - (Optional) The unresolved mosaic identifier providing the restriction key.
      * @param maxFee - (Optional) Max fee defined by the sender
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @returns {MosaicGlobalRestrictionTransaction}
      */
     public static create(
@@ -79,6 +81,8 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
         networkType: NetworkType,
         referenceMosaicId: MosaicId | NamespaceId = UnresolvedMapping.toUnresolvedMosaic(UInt64.fromUint(0).toHex()),
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): MosaicGlobalRestrictionTransaction {
         return new MosaicGlobalRestrictionTransaction(
             networkType,
@@ -92,6 +96,8 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
             previousRestrictionType,
             newRestrictionValue,
             newRestrictionType,
+            signature,
+            signer,
         );
     }
 
@@ -163,6 +169,7 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
             : MosaicGlobalRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
+        const signature = payload.substring(16, 144);
         const transaction = MosaicGlobalRestrictionTransaction.create(
             isEmbedded
                 ? Deadline.create()
@@ -176,6 +183,8 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
             networkType,
             UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getReferenceMosaicId().unresolvedMosaicId).toHex()),
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicGlobalRestrictionTransactionBuilder).fee.amount),
+            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -215,8 +224,8 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-        const signatureBuffer = new Uint8Array(64);
+        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
+        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
         const transactionBuilder = new MosaicGlobalRestrictionTransactionBuilder(
             new SignatureDto(signatureBuffer),

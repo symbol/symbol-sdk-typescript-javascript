@@ -24,6 +24,7 @@ import { AddressAliasTransaction } from './AddressAliasTransaction';
 import { Deadline } from './Deadline';
 import { MosaicAliasTransaction } from './MosaicAliasTransaction';
 import { Transaction } from './Transaction';
+import { PublicAccount } from '../account/PublicAccount';
 
 export abstract class AliasTransaction extends Transaction {
     /**
@@ -34,6 +35,8 @@ export abstract class AliasTransaction extends Transaction {
      * @param address - The address.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @returns {AddressAliasTransaction}
      */
     public static createForAddress(
@@ -43,8 +46,10 @@ export abstract class AliasTransaction extends Transaction {
         address: Address,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): AliasTransaction {
-        return AddressAliasTransaction.create(deadline, aliasAction, namespaceId, address, networkType, maxFee);
+        return AddressAliasTransaction.create(deadline, aliasAction, namespaceId, address, networkType, maxFee, signature, signer);
     }
 
     /**
@@ -55,6 +60,8 @@ export abstract class AliasTransaction extends Transaction {
      * @param mosaicId - The mosaic id.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @returns {MosaicAliasTransaction}
      */
     public static createForMosaic(
@@ -64,7 +71,9 @@ export abstract class AliasTransaction extends Transaction {
         mosaicId: MosaicId,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): AliasTransaction {
-        return MosaicAliasTransaction.create(deadline, aliasAction, namespaceId, mosaicId, networkType, maxFee);
+        return MosaicAliasTransaction.create(deadline, aliasAction, namespaceId, mosaicId, networkType, maxFee, signature, signer);
     }
 }
