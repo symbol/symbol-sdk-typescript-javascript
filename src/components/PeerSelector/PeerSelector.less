@@ -1,43 +1,68 @@
-.node-inputs-container {
-  width: 100%;
-  height: 0.5rem;
-  display: grid !important;
-  grid-template-rows: 100%;
-  grid-template-columns: auto repeat(2, 0.5rem);
-  padding: 0.1rem 0 0 0 !important;
-  margin: 0 !important;
+@import '../../views/resources/css/variables.less';
+
+.node-selector-container {
+  width: 7.9rem;
+  min-height: 3.5rem;
+  padding-top: 0.2rem;
 }
 
-.endpoint-poptip {
-  /deep/.ivu-poptip-body-content {
-    overflow: hidden;
-  }
-  i.ivu-icon-md-refresh {
-    margin-left: 0 !important;
+.network-text {
+  color: @white;
+  font-size: @smallerFont;
+}
+
+.current-node-info {
+  color: @purpleDark;
+  font-size: @smallFont;
+  font-weight: bold;
+
+  .ivu-row {
+    &:nth-child(1) {
+      margin-bottom: 0.1rem;
+    }
   }
 }
 
-.node_list {
-  position: relative;
-}
-.node-inputs-container {
-  width: 100%;
-  height: 0.5rem;
-  display: grid !important;
-  grid-template-rows: 100%;
-  grid-template-columns: auto repeat(2, 0.5rem);
-  padding: 0.1rem 0 0 0 !important;
-  margin: 0 !important;
+.node-list-container {
+  margin-top: 0.24rem;
+
+  .node-list-head {
+    font-size: @smallFont;
+    color: @purpleDark;
+    font-weight: 500;
+  }
+
+  .node-list-content {
+    margin-top: 0.1rem;
+    border: 0.02rem solid @line;
+    height: 2.2rem;
+    padding: 0.1rem 0;
+
+    ul {
+      overflow-x: hidden;
+      overflow-y: auto;
+      height: 100%;
+    }
+
+    .list-item {
+      font-size: @smallerFont;
+      padding: 0.04rem 0.22rem;
+      width: 100%;
+      overflow: hidden;
+
+      &.active {
+        background-color: @listItemBackgroundColor;
+      }
+    }
+  }
 }
 
-.endpoint-poptip {
-  .ivu-poptip-body-content {
-    overflow: hidden;
-  }
-  .ivu-poptip-title {
-    overflow: hidden;
-  }
-  .ivu-poptip-inner {
-    width: 1000px;
+.node-list-text {
+  margin: 0.08rem 0 0.25rem 0;
+  color: @tipFontColor;
+  font-size: @minimumFont;
+
+  .ivu-icon-ios-help-circle-outline {
+    margin-right: 0.03rem;
   }
 }

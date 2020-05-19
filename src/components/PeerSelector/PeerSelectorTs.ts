@@ -112,6 +112,7 @@ export class PeerSelectorTs extends Vue {
   public $refs!: {
     observer: InstanceType<typeof ValidationObserver>
   }
+  public poptipVisible: boolean = false
 
   /// region computed properties getter/setter
   get peersList(): NodeModel[] {
@@ -215,5 +216,9 @@ export class PeerSelectorTs extends Vue {
   }
   onPopTipShow() {
     this.$forceUpdate()
+  }
+  goSetting() {
+    this.poptipVisible = false
+    this.$router.push({ name: 'settings' })
   }
 }

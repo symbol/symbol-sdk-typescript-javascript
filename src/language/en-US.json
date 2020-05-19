@@ -667,7 +667,7 @@
   "please_input_divisibility": "Please enter a divisibility (0-6)",
   "PRIVATE_KEY_INVALID_ERROR": "This private key is invalid.",
   "address_unknown": "This address is unknown to the network, please try with its public key instead",
-  "please_enter_a_custom_nod_address": "Enter a custom node URL",
+  "please_enter_a_custom_node_address": "Enter a custom node URL",
   "filter_peers": "Filter peers",
   "cosigners": "Co-signatories",
   "address_invalid": "This address is invalid",
@@ -1130,5 +1130,7 @@
   "Estimated_period_of_validity": "Estimated Period Of Validity",
   "no_data_namespace_tips": "You do not have a namespace, please create one first",
   "current_validity": "Expires in",
-  "copy_failed": "Copy failed"
+  "copy_failed": "Copy failed",
+  "current_network": "Current Network",
+  "node_list": "Node list"
 }

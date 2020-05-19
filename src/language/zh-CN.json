@@ -271,7 +271,7 @@
   "create_profile": "创建钱包",
   "hash": "hash",
   "switch_point": "选择节点",
-  "current_endpoint": "当前节点",
+  "current_endpoint": "当前连接节点地址",
   "point_null_error": "节点数据不可为空",
   "please_choose": "请选择",
   "Accumulated_delegated_harvesting_income_is_not_yet_open": " 暂不可获取远程账户相关信息",
@@ -705,7 +705,7 @@
   "helper": "帮助",
   "inner": "内部交易",
   "PRIVATE_KEY_INVALID_ERROR": "该私钥不合法。",
-  "please_enter_a_custom_nod_address": "请输入节点完整URL",
+  "please_enter_a_custom_node_address": "请输入节点完整URL",
   "address_invalid": "地址错误",
   "passwords_not_matching": "密码不匹配",
   "value_too_big": "输入的值太大",
@@ -1080,5 +1080,7 @@
   "Estimated_period_of_validity": "预估有效期",
   "no_data_namespace_tips": "您还没有父命名空间，请先创建一个父命名空间",
   "current_validity": "当前有效期",
-  "copy_failed": "复制失败"
+  "copy_failed": "复制失败",
+  "current_network": "当前网络类型",
+  "node_list": "节点列表"
 }
