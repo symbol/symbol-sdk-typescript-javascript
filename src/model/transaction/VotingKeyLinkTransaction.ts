@@ -43,6 +43,8 @@ export class VotingKeyLinkTransaction extends Transaction {
      * @param linkedPublicKey - The public key for voting (48 bytes).
      * @param linkAction - The account link action.
      * @param maxFee - (Optional) Max fee defined by the sender
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @returns {VotingKeyLinkTransaction}
      */
     public static create(
@@ -51,8 +53,19 @@ export class VotingKeyLinkTransaction extends Transaction {
         linkAction: LinkAction,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): VotingKeyLinkTransaction {
-        return new VotingKeyLinkTransaction(networkType, TransactionVersion.VOTING_KEY_LINK, deadline, maxFee, linkedPublicKey, linkAction);
+        return new VotingKeyLinkTransaction(
+            networkType,
+            TransactionVersion.VOTING_KEY_LINK,
+            deadline,
+            maxFee,
+            linkedPublicKey,
+            linkAction,
+            signature,
+            signer,
+        );
     }
 
     /**
@@ -98,12 +111,15 @@ export class VotingKeyLinkTransaction extends Transaction {
             : VotingKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
+        const signature = payload.substring(16, 144);
         const transaction = VotingKeyLinkTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as VotingKeyLinkTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getLinkedPublicKey().votingKey),
             builder.getLinkAction().valueOf(),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as VotingKeyLinkTransactionBuilder).fee.amount),
+            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -129,8 +145,8 @@ export class VotingKeyLinkTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-        const signatureBuffer = new Uint8Array(64);
+        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
+        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
         const transactionBuilder = new VotingKeyLinkTransactionBuilder(
             new SignatureDto(signatureBuffer),

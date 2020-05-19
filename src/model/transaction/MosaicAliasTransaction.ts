@@ -48,6 +48,8 @@ export class MosaicAliasTransaction extends Transaction {
      * @param mosaicId - The mosaic id.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @returns {MosaicAliasTransaction}
      */
     public static create(
@@ -57,6 +59,8 @@ export class MosaicAliasTransaction extends Transaction {
         mosaicId: MosaicId,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): MosaicAliasTransaction {
         return new MosaicAliasTransaction(
             networkType,
@@ -66,6 +70,8 @@ export class MosaicAliasTransaction extends Transaction {
             aliasAction,
             namespaceId,
             mosaicId,
+            signature,
+            signer,
         );
     }
 
@@ -117,6 +123,7 @@ export class MosaicAliasTransaction extends Transaction {
             : MosaicAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
+        const signature = payload.substring(16, 144);
         const transaction = MosaicAliasTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as MosaicAliasTransactionBuilder).getDeadline().timestamp),
             builder.getAliasAction().valueOf(),
@@ -124,6 +131,8 @@ export class MosaicAliasTransaction extends Transaction {
             new MosaicId(builder.getMosaicId().mosaicId),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicAliasTransactionBuilder).fee.amount),
+            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -150,8 +159,8 @@ export class MosaicAliasTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-        const signatureBuffer = new Uint8Array(64);
+        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
+        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
         const transactionBuilder = new MosaicAliasTransactionBuilder(
             new SignatureDto(signatureBuffer),
