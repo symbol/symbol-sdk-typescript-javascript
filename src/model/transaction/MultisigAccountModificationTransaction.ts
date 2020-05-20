@@ -249,9 +249,9 @@ export class MultisigAccountModificationTransaction extends Transaction {
      * @param address address to be notified
      * @returns {boolean}
      */
-    public NotifyAccount(address: Address): boolean {
+    public shouldNotifiAccount(address: Address): boolean {
         return (
-            (this.signer !== undefined && this.signer!.address.equals(address)) ||
+            super.isSigned(address) ||
             this.publicKeyAdditions.find((_: PublicAccount) => _.address.equals(address)) !== undefined ||
             this.publicKeyDeletions.find((_: PublicAccount) => _.address.equals(address)) !== undefined
         );

@@ -68,6 +68,6 @@ describe('HashLockTransaction', () => {
         );
 
         Object.assign(tx, { signer: account.publicAccount });
-        expect(tx.NotifyAccount(account.address)).to.be.true;
+        expect(tx.shouldNotifiAccount(account.address)).to.be.true;
     });
 });

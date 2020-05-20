@@ -168,14 +168,14 @@ describe('MultisigAccountModificationTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        let canNotify = txAddition.NotifyAccount(publicAccount.address);
+        let canNotify = txAddition.shouldNotifiAccount(publicAccount.address);
         expect(canNotify).to.be.true;
 
-        canNotify = txAddition.NotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'));
+        canNotify = txAddition.shouldNotifiAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'));
         expect(canNotify).to.be.false;
 
         Object.assign(txAddition, { signer: account.publicAccount });
-        expect(txAddition.NotifyAccount(account.address)).to.be.true;
+        expect(txAddition.shouldNotifiAccount(account.address)).to.be.true;
 
         const txDeletion = MultisigAccountModificationTransaction.create(
             Deadline.create(),
@@ -186,13 +186,13 @@ describe('MultisigAccountModificationTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        let canNotifyDeletion = txDeletion.NotifyAccount(publicAccount.address);
+        let canNotifyDeletion = txDeletion.shouldNotifiAccount(publicAccount.address);
         expect(canNotifyDeletion).to.be.true;
 
-        canNotifyDeletion = txDeletion.NotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'));
+        canNotifyDeletion = txDeletion.shouldNotifiAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'));
         expect(canNotifyDeletion).to.be.false;
 
         Object.assign(txDeletion, { signer: account.publicAccount });
-        expect(txDeletion.NotifyAccount(account.address)).to.be.true;
+        expect(txDeletion.shouldNotifiAccount(account.address)).to.be.true;
     });
 });

@@ -192,10 +192,7 @@ export class VotingKeyLinkTransaction extends Transaction {
      * @param address address to be notified
      * @returns {boolean}
      */
-    public NotifyAccount(address: Address): boolean {
-        return (
-            (this.signer !== undefined && this.signer!.address.equals(address)) ||
-            Address.createFromPublicKey(this.linkedPublicKey, this.networkType).equals(address)
-        );
+    public shouldNotifiAccount(address: Address): boolean {
+        return super.isSigned(address) || Address.createFromPublicKey(this.linkedPublicKey, this.networkType).equals(address);
     }
 }

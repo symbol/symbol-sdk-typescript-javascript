@@ -433,14 +433,14 @@ describe('TransferTransaction', () => {
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
         );
-        let canNotify = tx.NotifyAccount(address, []);
+        let canNotify = tx.shouldNotifiAccount(address, []);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.NotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
+        canNotify = tx.shouldNotifiAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
-        expect(tx.NotifyAccount(account.address, [])).to.be.true;
+        expect(tx.shouldNotifiAccount(account.address, [])).to.be.true;
     });
 
     it('Notify Account with alias', () => {
@@ -452,7 +452,7 @@ describe('TransferTransaction', () => {
             [NetworkCurrencyLocal.createAbsolute(1)],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
-        ).NotifyAccount(address, [namespaceId]);
+        ).shouldNotifiAccount(address, [namespaceId]);
         expect(canNotify).to.be.true;
     });
 });

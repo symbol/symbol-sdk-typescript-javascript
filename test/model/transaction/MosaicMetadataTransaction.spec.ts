@@ -206,13 +206,13 @@ describe('MosaicMetadataTransaction', () => {
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
         );
-        let canNotify = tx.NotifyAccount(account.address);
+        let canNotify = tx.shouldNotifiAccount(account.address);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.NotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'));
+        canNotify = tx.shouldNotifiAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'));
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
-        expect(tx.NotifyAccount(account.address)).to.be.true;
+        expect(tx.shouldNotifiAccount(account.address)).to.be.true;
     });
 });

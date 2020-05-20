@@ -236,9 +236,9 @@ export class AccountAddressRestrictionTransaction extends Transaction {
      * @param alias address alias (names)
      * @returns {boolean}
      */
-    public NotifyAccount(address: Address, alias: NamespaceId[]): boolean {
+    public shouldNotifiAccount(address: Address, alias: NamespaceId[]): boolean {
         return (
-            (this.signer !== undefined && this.signer!.address.equals(address)) ||
+            super.isSigned(address) ||
             this.restrictionAdditions.find((_) => _.equals(address)) !== undefined ||
             this.restrictionDeletions.find((_) => _.equals(address)) !== undefined ||
             this.restrictionAdditions.find((_: NamespaceId) => alias.find((name) => name.equals(_) !== undefined)) !== undefined ||

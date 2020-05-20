@@ -440,5 +440,14 @@ export abstract class Transaction {
      * @param alias address alias (names)
      * @returns {boolean}
      */
-    public abstract NotifyAccount(address: Address, alias?: NamespaceId[]): boolean;
+    public abstract shouldNotifiAccount(address: Address, alias?: NamespaceId[]): boolean;
+
+    /**
+     * @internal
+     * Checks if the transaction is signer by an address.
+     * @param address the address.
+     */
+    public isSigned(address: Address): boolean {
+        return this.signer !== undefined && this.signer!.address.equals(address);
+    }
 }

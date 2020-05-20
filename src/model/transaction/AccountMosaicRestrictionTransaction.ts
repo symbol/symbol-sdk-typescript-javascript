@@ -236,7 +236,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
      * @param address address to be notified
      * @returns {boolean}
      */
-    public NotifyAccount(address: Address): boolean {
+    public shouldNotifiAccount(address: Address): boolean {
         return this.signer !== undefined && this.signer!.address.equals(address);
     }
 }

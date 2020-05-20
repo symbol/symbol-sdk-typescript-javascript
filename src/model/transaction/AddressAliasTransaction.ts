@@ -211,7 +211,7 @@ export class AddressAliasTransaction extends Transaction {
      * @param address address to be notified
      * @returns {boolean}
      */
-    public NotifyAccount(address: Address): boolean {
-        return (this.signer !== undefined && this.signer!.address.equals(address)) || this.address.equals(address);
+    public shouldNotifiAccount(address: Address): boolean {
+        return super.isSigned(address) || this.address.equals(address);
     }
 }

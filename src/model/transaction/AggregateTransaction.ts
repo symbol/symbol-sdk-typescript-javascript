@@ -449,11 +449,11 @@ export class AggregateTransaction extends Transaction {
      * @param alias address alias (names)
      * @returns {boolean}
      */
-    public NotifyAccount(address: Address, alias: NamespaceId[]): boolean {
+    public shouldNotifiAccount(address: Address, alias: NamespaceId[]): boolean {
         return (
-            (this.signer !== undefined && this.signer!.address.equals(address)) ||
+            super.isSigned(address) ||
             this.cosignatures.find((_) => _.signer.address.equals(address)) !== undefined ||
-            this.innerTransactions.find((innerTransaction: InnerTransaction) => innerTransaction.NotifyAccount(address, alias)) !==
+            this.innerTransactions.find((innerTransaction: InnerTransaction) => innerTransaction.shouldNotifiAccount(address, alias)) !==
                 undefined
         );
     }

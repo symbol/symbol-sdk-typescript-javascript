@@ -358,7 +358,7 @@ export class Listener implements IListener {
         return (transactionObservable): Observable<T> => {
             return transactionObservable.pipe(
                 flatMap((transaction) => {
-                    if (this.isSigned(transaction, address)) {
+                    if (transaction.isSigned(address)) {
                         return of(transaction);
                     }
                     const namespaceIdsObservable = this.namespaceRepository.getAccountsNames([address]).pipe(
@@ -369,21 +369,12 @@ export class Listener implements IListener {
                         }),
                     );
                     return namespaceIdsObservable.pipe(
-                        filter((namespaceIds) => transaction.NotifyAccount(address, namespaceIds)),
+                        filter((namespaceIds) => transaction.shouldNotifiAccount(address, namespaceIds)),
                         map(() => transaction),
                     );
                 }),
             );
         };
-    }
-
-    /**
-     * Checks if the transaction is signer by an address.
-     * @param transition the transaction
-     * @param address the address.
-     */
-    private isSigned(transition: Transaction, address: Address): boolean {
-        return transition.signer !== undefined && transition.signer!.address.equals(address);
     }
 
     /**

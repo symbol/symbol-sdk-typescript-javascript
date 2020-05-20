@@ -313,14 +313,14 @@ describe('SecretLockTransaction', () => {
             recipientAddress,
             NetworkType.MIJIN_TEST,
         );
-        let canNotify = tx.NotifyAccount(recipientAddress, []);
+        let canNotify = tx.shouldNotifiAccount(recipientAddress, []);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.NotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
+        canNotify = tx.shouldNotifiAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
-        expect(tx.NotifyAccount(account.address, [])).to.be.true;
+        expect(tx.shouldNotifiAccount(account.address, [])).to.be.true;
     });
 
     it('Notify Account with alias', () => {
@@ -334,7 +334,7 @@ describe('SecretLockTransaction', () => {
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,
             NetworkType.MIJIN_TEST,
-        ).NotifyAccount(account.address, [namespaceId]);
+        ).shouldNotifiAccount(account.address, [namespaceId]);
         expect(canNotify).to.be.true;
     });
 });

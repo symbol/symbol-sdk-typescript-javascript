@@ -278,9 +278,9 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      * @param alias address alias (names)
      * @returns {boolean}
      */
-    public NotifyAccount(address: Address, alias: NamespaceId[]): boolean {
+    public shouldNotifiAccount(address: Address, alias: NamespaceId[]): boolean {
         return (
-            (this.signer !== undefined && this.signer!.address.equals(address)) ||
+            super.isSigned(address) ||
             (this.targetAddress as Address).equals(address) ||
             alias.find((name) => (this.targetAddress as NamespaceId).equals(name)) !== undefined
         );
