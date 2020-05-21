@@ -239,7 +239,7 @@ describe('AccountRestrictionTransaction', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const tx = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowOutgoingAddress,
+            AddressRestrictionFlag.AllowOutgoingAddress,
             [address],
             [],
             NetworkType.MIJIN_TEST,
@@ -255,7 +255,7 @@ describe('AccountRestrictionTransaction', () => {
 
         const txDeletion = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowOutgoingAddress,
+            AddressRestrictionFlag.AllowOutgoingAddress,
             [],
             [address],
             NetworkType.MIJIN_TEST,
@@ -274,7 +274,7 @@ describe('AccountRestrictionTransaction', () => {
         const address = new NamespaceId('test');
         const tx = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowOutgoingAddress,
+            AddressRestrictionFlag.AllowOutgoingAddress,
             [address],
             [],
             NetworkType.MIJIN_TEST,
@@ -290,7 +290,7 @@ describe('AccountRestrictionTransaction', () => {
 
         const txDeletion = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowOutgoingAddress,
+            AddressRestrictionFlag.AllowOutgoingAddress,
             [],
             [address],
             NetworkType.MIJIN_TEST,
