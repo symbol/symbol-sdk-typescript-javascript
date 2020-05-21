@@ -25,6 +25,7 @@ import { TestingAccount } from '../../conf/conf.spec';
 import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/dist/EmbeddedTransactionBuilder';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import { deepEqual } from 'assert';
+import { Address } from '../../../src/model/account/Address';
 
 describe('AccountMetadataTransaction', () => {
     let account: Account;
@@ -131,5 +132,25 @@ describe('AccountMetadataTransaction', () => {
 
         expect(resolved).to.be.instanceOf(AccountMetadataTransaction);
         deepEqual(accountMetadataTransaction, resolved);
+    });
+
+    it('Notify Account', () => {
+        const tx = AccountMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            1,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        );
+
+        let canNotify = tx.shouldNotifyAccount(account.address);
+        expect(canNotify).to.be.true;
+
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'));
+        expect(canNotify).to.be.false;
+
+        Object.assign(tx, { signer: account.publicAccount });
+        expect(tx.shouldNotifyAccount(account.address)).to.be.true;
     });
 });

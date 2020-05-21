@@ -71,9 +71,10 @@ export interface IListener {
      * it emits a new Transaction in the event stream.
      *
      * @param address address we listen when a transaction is in unconfirmed state
+     * @param transactionHash transactionHash for filtering multiple transactions
      * @return an observable stream of Transaction with state unconfirmed
      */
-    unconfirmedAdded(address: Address): Observable<Transaction>;
+    unconfirmedAdded(address: Address, transactionHash?: string): Observable<Transaction>;
 
     /**
      * Returns an observable stream of Transaction Hashes for specific address.
@@ -81,9 +82,10 @@ export interface IListener {
      * it emits a new message with the transaction hash in the event stream.
      *
      * @param address address we listen when a transaction is removed from unconfirmed state
+     * @param transactionHash the transaction hash filter.
      * @return an observable stream of Strings with the transaction hash
      */
-    unconfirmedRemoved(address: Address): Observable<string>;
+    unconfirmedRemoved(address: Address, transactionHash?: string): Observable<string>;
 
     /**
      * Return an observable of {@link AggregateTransaction} for specific address.
@@ -102,9 +104,10 @@ export interface IListener {
      * it emits a new message with the transaction hash in the event stream.
      *
      * @param address address we listen when a transaction is confirmed or rejected
+     * @param transactionHash the transaction hash filter.
      * @return an observable stream of Strings with the transaction hash
      */
-    aggregateBondedRemoved(address: Address): Observable<string>;
+    aggregateBondedRemoved(address: Address, transactionHash?: string): Observable<string>;
 
     /**
      * Returns an observable stream of {@link TransactionStatusError} for specific address.
@@ -112,9 +115,10 @@ export interface IListener {
      * it emits a new message with the transaction status error in the event stream.
      *
      * @param address address we listen to be notified when some error happened
+     * @param transactionHash transactionHash for filtering multiple transactions
      * @return an observable stream of {@link TransactionStatusError}
      */
-    status(address: Address): Observable<TransactionStatusError>;
+    status(address: Address, transactionHash?: string): Observable<TransactionStatusError>;
 
     /**
      * Returns an observable stream of {@link CosignatureSignedTransaction} for specific address.

@@ -40,6 +40,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { Address } from '../account/Address';
 
 /**
  * In case a mosaic has the flag 'supplyMutable' set to true, the creator of the mosaic can change the supply,
@@ -217,5 +218,15 @@ export class MosaicSupplyChangeTransaction extends Transaction {
                 aggregateTransactionIndex,
             ),
         });
+    }
+
+    /**
+     * @internal
+     * Check a given address should be notified in websocket channels
+     * @param address address to be notified
+     * @returns {boolean}
+     */
+    public shouldNotifyAccount(address: Address): boolean {
+        return super.isSigned(address);
     }
 }

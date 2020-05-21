@@ -95,7 +95,7 @@ describe('TransactionService', () => {
             observableOf(transferTransaction),
         );
 
-        when(listener.status(deepEqual(account.address))).thenReturn(EMPTY);
+        when(listener.status(deepEqual(account.address), signedTransaction.hash)).thenReturn(EMPTY);
 
         const service = new TransactionService(instance(transactionRepositoryMock), instance(mockedReceiptRepository));
 
@@ -114,7 +114,7 @@ describe('TransactionService', () => {
 
         when(listener.confirmed(deepEqual(account.address), deepEqual(signedTransaction.hash))).thenReturn(EMPTY);
         const statusError = new TransactionStatusError(account.address, signedTransaction.hash, 'Some Error', Deadline.create());
-        when(listener.status(deepEqual(account.address))).thenReturn(observableOf(statusError));
+        when(listener.status(deepEqual(account.address), signedTransaction.hash)).thenReturn(observableOf(statusError));
 
         const service = new TransactionService(instance(transactionRepositoryMock), instance(mockedReceiptRepository));
 
@@ -139,7 +139,7 @@ describe('TransactionService', () => {
         when(listener.aggregateBondedAdded(deepEqual(account.address), deepEqual(signedTransaction.hash))).thenReturn(
             observableOf(aggregateCompleteTransaction),
         );
-        when(listener.status(deepEqual(account.address))).thenReturn(EMPTY);
+        when(listener.status(deepEqual(account.address), signedTransaction.hash)).thenReturn(EMPTY);
 
         const service = new TransactionService(instance(transactionRepositoryMock), instance(mockedReceiptRepository));
 
@@ -160,7 +160,7 @@ describe('TransactionService', () => {
 
         when(listener.aggregateBondedAdded(deepEqual(account.address), deepEqual(signedTransaction.hash))).thenReturn(EMPTY);
         const statusError = new TransactionStatusError(account.address, signedTransaction.hash, 'Some Error', Deadline.create());
-        when(listener.status(deepEqual(account.address))).thenReturn(observableOf(statusError));
+        when(listener.status(deepEqual(account.address), signedTransaction.hash)).thenReturn(observableOf(statusError));
 
         const service = new TransactionService(instance(transactionRepositoryMock), instance(mockedReceiptRepository));
 
@@ -196,7 +196,7 @@ describe('TransactionService', () => {
             observableOf(aggregateBondedTransaction),
         );
 
-        when(listener.status(deepEqual(account.address))).thenReturn(EMPTY);
+        when(listener.status(deepEqual(account.address), hashLockSignedTransaction.hash)).thenReturn(EMPTY);
 
         const service = new TransactionService(instance(transactionRepositoryMock), instance(mockedReceiptRepository));
 

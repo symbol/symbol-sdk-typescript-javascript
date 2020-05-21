@@ -39,6 +39,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { Address } from '../account/Address';
 
 /**
  * Announce an mosaic metadata transaction to associate a key-value state to an account.
@@ -240,5 +241,15 @@ export class MosaicMetadataTransaction extends Transaction {
                 aggregateTransactionIndex,
             ),
         });
+    }
+
+    /**
+     * @internal
+     * Check a given address should be notified in websocket channels
+     * @param address address to be notified
+     * @returns {boolean}
+     */
+    public shouldNotifyAccount(address: Address): boolean {
+        return super.isSigned(address) || Address.createFromPublicKey(this.targetPublicKey, this.networkType).equals(address);
     }
 }

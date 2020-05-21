@@ -45,6 +45,8 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { Address } from '../account/Address';
+import { NamespaceId } from '../namespace/NamespaceId';
 
 /**
  * Aggregate innerTransactions contain multiple innerTransactions that can be initiated by different accounts.
@@ -438,5 +440,21 @@ export class AggregateTransaction extends Transaction {
         return DtoMapping.assign(this, {
             maxFee: UInt64.fromUint(calculatedSize * feeMultiplier),
         });
+    }
+
+    /**
+     * @internal
+     * Check a given address should be notified in websocket channels
+     * @param address address to be notified
+     * @param alias address alias (names)
+     * @returns {boolean}
+     */
+    public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
+        return (
+            super.isSigned(address) ||
+            this.cosignatures.find((_) => _.signer.address.equals(address)) !== undefined ||
+            this.innerTransactions.find((innerTransaction: InnerTransaction) => innerTransaction.shouldNotifyAccount(address, alias)) !==
+                undefined
+        );
     }
 }

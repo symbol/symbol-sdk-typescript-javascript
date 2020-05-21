@@ -204,4 +204,14 @@ export class AddressAliasTransaction extends Transaction {
     resolveAliases(): AddressAliasTransaction {
         return this;
     }
+
+    /**
+     * @internal
+     * Check a given address should be notified in websocket channels
+     * @param address address to be notified
+     * @returns {boolean}
+     */
+    public shouldNotifyAccount(address: Address): boolean {
+        return super.isSigned(address) || this.address.equals(address);
+    }
 }

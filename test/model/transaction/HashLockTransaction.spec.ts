@@ -55,4 +55,19 @@ describe('HashLockTransaction', () => {
             );
         }).to.throw(Error);
     });
+
+    it('Notify Account', () => {
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
+        const signedTransaction = account.sign(aggregateTransaction, generationHash);
+        const tx = HashLockTransaction.create(
+            Deadline.create(),
+            NetworkCurrencyLocal.createRelative(10),
+            UInt64.fromUint(10),
+            signedTransaction,
+            NetworkType.MIJIN_TEST,
+        );
+
+        Object.assign(tx, { signer: account.publicAccount });
+        expect(tx.shouldNotifyAccount(account.address)).to.be.true;
+    });
 });

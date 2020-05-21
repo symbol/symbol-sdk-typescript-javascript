@@ -39,6 +39,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { Address } from '../account/Address';
 
 /**
  * Before a mosaic can be created or transferred, a corresponding definition of the mosaic has to be created and published to the network.
@@ -239,5 +240,15 @@ export class MosaicDefinitionTransaction extends Transaction {
      */
     resolveAliases(): MosaicDefinitionTransaction {
         return this;
+    }
+
+    /**
+     * @internal
+     * Check a given address should be notified in websocket channels
+     * @param address address to be notified
+     * @returns {boolean}
+     */
+    public shouldNotifyAccount(address: Address): boolean {
+        return super.isSigned(address);
     }
 }
