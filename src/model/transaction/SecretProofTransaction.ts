@@ -246,7 +246,7 @@ export class SecretProofTransaction extends Transaction {
      * @param alias address alias (names)
      * @returns {boolean}
      */
-    public shouldNotifiAccount(address: Address, alias: NamespaceId[]): boolean {
+    public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
         return (
             super.isSigned(address) ||
             (this.recipientAddress as Address).equals(address) ||

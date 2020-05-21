@@ -369,7 +369,7 @@ export class Listener implements IListener {
                         }),
                     );
                     return namespaceIdsObservable.pipe(
-                        filter((namespaceIds) => transaction.shouldNotifiAccount(address, namespaceIds)),
+                        filter((namespaceIds) => transaction.shouldNotifyAccount(address, namespaceIds)),
                         map(() => transaction),
                     );
                 }),

@@ -195,7 +195,7 @@ export class AccountKeyLinkTransaction extends Transaction {
      * @param address address to be notified
      * @returns {boolean}
      */
-    public shouldNotifiAccount(address: Address): boolean {
+    public shouldNotifyAccount(address: Address): boolean {
         return super.isSigned(address) || Address.createFromPublicKey(this.remotePublicKey, this.networkType).equals(address);
     }
 }

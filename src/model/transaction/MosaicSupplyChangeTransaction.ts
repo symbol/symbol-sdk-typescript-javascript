@@ -226,7 +226,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
      * @param address address to be notified
      * @returns {boolean}
      */
-    public shouldNotifiAccount(address: Address): boolean {
+    public shouldNotifyAccount(address: Address): boolean {
         return this.signer !== undefined && this.signer!.address.equals(address);
     }
 }

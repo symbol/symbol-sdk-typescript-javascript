@@ -54,7 +54,7 @@ describe('Transaction', () => {
         }
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        public shouldNotifiAccount(address: Address, alias: NamespaceId[]): boolean {
+        public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
             throw new Error('Not implemented');
         }
         resolveAliases(): TransferTransaction {

@@ -311,14 +311,14 @@ describe('AccountRestrictionTransaction', () => {
             [],
             NetworkType.MIJIN_TEST,
         );
-        let canNotify = tx.shouldNotifiAccount(address, []);
+        let canNotify = tx.shouldNotifyAccount(address, []);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifiAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
-        expect(tx.shouldNotifiAccount(account.address, [])).to.be.true;
+        expect(tx.shouldNotifyAccount(account.address, [])).to.be.true;
 
         const txDeletion = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
@@ -327,14 +327,14 @@ describe('AccountRestrictionTransaction', () => {
             [address],
             NetworkType.MIJIN_TEST,
         );
-        let canNotifyDeletion = txDeletion.shouldNotifiAccount(address, []);
+        let canNotifyDeletion = txDeletion.shouldNotifyAccount(address, []);
         expect(canNotifyDeletion).to.be.true;
 
-        canNotifyDeletion = txDeletion.shouldNotifiAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
+        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
         expect(canNotifyDeletion).to.be.false;
 
         Object.assign(txDeletion, { signer: account.publicAccount });
-        expect(txDeletion.shouldNotifiAccount(account.address, [])).to.be.true;
+        expect(txDeletion.shouldNotifyAccount(account.address, [])).to.be.true;
     });
 
     it('Notify Account with alias', () => {
@@ -346,14 +346,14 @@ describe('AccountRestrictionTransaction', () => {
             [],
             NetworkType.MIJIN_TEST,
         );
-        let canNotify = tx.shouldNotifiAccount(account.address, [address]);
+        let canNotify = tx.shouldNotifyAccount(account.address, [address]);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifiAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
-        expect(tx.shouldNotifiAccount(account.address, [])).to.be.true;
+        expect(tx.shouldNotifyAccount(account.address, [])).to.be.true;
 
         const txDeletion = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
@@ -362,13 +362,13 @@ describe('AccountRestrictionTransaction', () => {
             [address],
             NetworkType.MIJIN_TEST,
         );
-        let canNotifyDeletion = txDeletion.shouldNotifiAccount(account.address, [address]);
+        let canNotifyDeletion = txDeletion.shouldNotifyAccount(account.address, [address]);
         expect(canNotifyDeletion).to.be.true;
 
-        canNotifyDeletion = txDeletion.shouldNotifiAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
+        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
         expect(canNotifyDeletion).to.be.false;
 
         Object.assign(txDeletion, { signer: account.publicAccount });
-        expect(txDeletion.shouldNotifiAccount(account.address, [])).to.be.true;
+        expect(txDeletion.shouldNotifyAccount(account.address, [])).to.be.true;
     });
 });

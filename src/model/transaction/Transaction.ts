@@ -440,7 +440,7 @@ export abstract class Transaction {
      * @param alias address alias (names)
      * @returns {boolean}
      */
-    public abstract shouldNotifiAccount(address: Address, alias?: NamespaceId[]): boolean;
+    public abstract shouldNotifyAccount(address: Address, alias?: NamespaceId[]): boolean;
 
     /**
      * @internal
