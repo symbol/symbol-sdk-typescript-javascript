@@ -249,6 +249,6 @@ export class MosaicDefinitionTransaction extends Transaction {
      * @returns {boolean}
      */
     public shouldNotifyAccount(address: Address): boolean {
-        return this.signer !== undefined && this.signer!.address.equals(address);
+        return super.isSigned(address);
     }
 }
