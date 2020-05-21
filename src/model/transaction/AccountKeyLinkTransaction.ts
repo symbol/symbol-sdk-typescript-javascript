@@ -44,7 +44,7 @@ export class AccountKeyLinkTransaction extends Transaction {
     /**
      * Create a link account transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param linkePublicKey - The public key of the remote account.
+     * @param linkedPublicKey - The public key of the remote account.
      * @param linkAction - The account link action.
      * @param maxFee - (Optional) Max fee defined by the sender
      * @param signature - (Optional) Transaction signature
@@ -53,7 +53,7 @@ export class AccountKeyLinkTransaction extends Transaction {
      */
     public static create(
         deadline: Deadline,
-        linkePublicKey: string,
+        linkedPublicKey: string,
         linkAction: LinkAction,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
@@ -65,7 +65,7 @@ export class AccountKeyLinkTransaction extends Transaction {
             TransactionVersion.ACCOUNT_KEY_LINK,
             deadline,
             maxFee,
-            linkePublicKey,
+            linkedPublicKey,
             linkAction,
             signature,
             signer,
@@ -77,7 +77,7 @@ export class AccountKeyLinkTransaction extends Transaction {
      * @param version
      * @param deadline
      * @param maxFee
-     * @param linkePublicKey
+     * @param linkedPublicKey
      * @param linkAction
      * @param signature
      * @param signer
@@ -91,7 +91,7 @@ export class AccountKeyLinkTransaction extends Transaction {
         /**
          * The public key of the remote account.
          */
-        public readonly linkePublicKey: string,
+        public readonly linkedPublicKey: string,
         /**
          * The account link action.
          */
@@ -160,7 +160,7 @@ export class AccountKeyLinkTransaction extends Transaction {
             TransactionType.ACCOUNT_KEY_LINK.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            new KeyDto(Convert.hexToUint8(this.linkePublicKey)),
+            new KeyDto(Convert.hexToUint8(this.linkedPublicKey)),
             this.linkAction.valueOf(),
         );
         return transactionBuilder.serialize();
@@ -176,7 +176,7 @@ export class AccountKeyLinkTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ACCOUNT_KEY_LINK.valueOf(),
-            new KeyDto(Convert.hexToUint8(this.linkePublicKey)),
+            new KeyDto(Convert.hexToUint8(this.linkedPublicKey)),
             this.linkAction.valueOf(),
         );
     }
@@ -196,6 +196,6 @@ export class AccountKeyLinkTransaction extends Transaction {
      * @returns {boolean}
      */
     public shouldNotifyAccount(address: Address): boolean {
-        return super.isSigned(address) || Address.createFromPublicKey(this.remotePublicKey, this.networkType).equals(address);
+        return super.isSigned(address) || Address.createFromPublicKey(this.linkedPublicKey, this.networkType).equals(address);
     }
 }
