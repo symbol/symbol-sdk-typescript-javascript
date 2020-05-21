@@ -596,7 +596,7 @@ describe('TransactionHttp', () => {
             const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
 
             return helper.announce(signedTransaction).then((transaction: AccountKeyLinkTransaction) => {
-                expect(transaction.remotePublicKey, 'RemotePublicKey').not.to.be.undefined;
+                expect(transaction.linkePublicKey, 'linkePublicKey').not.to.be.undefined;
                 expect(transaction.linkAction, 'LinkAction').not.to.be.undefined;
                 return signedTransaction;
             });

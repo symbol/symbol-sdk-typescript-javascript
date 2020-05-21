@@ -43,7 +43,7 @@ export class AccountKeyLinkTransaction extends Transaction {
     /**
      * Create a link account transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param remotePublicKey - The public key of the remote account.
+     * @param linkePublicKey - The public key of the remote account.
      * @param linkAction - The account link action.
      * @param maxFee - (Optional) Max fee defined by the sender
      * @param signature - (Optional) Transaction signature
@@ -52,7 +52,7 @@ export class AccountKeyLinkTransaction extends Transaction {
      */
     public static create(
         deadline: Deadline,
-        remotePublicKey: string,
+        linkePublicKey: string,
         linkAction: LinkAction,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
@@ -64,7 +64,7 @@ export class AccountKeyLinkTransaction extends Transaction {
             TransactionVersion.ACCOUNT_KEY_LINK,
             deadline,
             maxFee,
-            remotePublicKey,
+            linkePublicKey,
             linkAction,
             signature,
             signer,
@@ -76,7 +76,7 @@ export class AccountKeyLinkTransaction extends Transaction {
      * @param version
      * @param deadline
      * @param maxFee
-     * @param remotePublicKey
+     * @param linkePublicKey
      * @param linkAction
      * @param signature
      * @param signer
@@ -90,7 +90,7 @@ export class AccountKeyLinkTransaction extends Transaction {
         /**
          * The public key of the remote account.
          */
-        public readonly remotePublicKey: string,
+        public readonly linkePublicKey: string,
         /**
          * The account link action.
          */
@@ -117,7 +117,7 @@ export class AccountKeyLinkTransaction extends Transaction {
         const signature = payload.substring(16, 144);
         const transaction = AccountKeyLinkTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AccountKeyLinkTransactionBuilder).getDeadline().timestamp),
-            Convert.uint8ToHex(builder.getRemotePublicKey().key),
+            Convert.uint8ToHex(builder.getLinkedPublicKey().key),
             builder.getLinkAction().valueOf(),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountKeyLinkTransactionBuilder).fee.amount),
@@ -159,7 +159,7 @@ export class AccountKeyLinkTransaction extends Transaction {
             TransactionType.ACCOUNT_KEY_LINK.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            new KeyDto(Convert.hexToUint8(this.remotePublicKey)),
+            new KeyDto(Convert.hexToUint8(this.linkePublicKey)),
             this.linkAction.valueOf(),
         );
         return transactionBuilder.serialize();
@@ -175,7 +175,7 @@ export class AccountKeyLinkTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ACCOUNT_KEY_LINK.valueOf(),
-            new KeyDto(Convert.hexToUint8(this.remotePublicKey)),
+            new KeyDto(Convert.hexToUint8(this.linkePublicKey)),
             this.linkAction.valueOf(),
         );
     }

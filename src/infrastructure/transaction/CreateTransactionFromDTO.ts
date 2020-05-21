@@ -349,7 +349,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.version,
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
-            transactionDTO.remotePublicKey,
+            transactionDTO.linkePublicKey,
             transactionDTO.linkAction,
             transactionDTO.signature,
             transactionDTO.signerPublicKey

@@ -691,7 +691,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         let transaction = TransactionMapping.createFromPayload(signedTransaction) as AccountKeyLinkTransaction;
 
         expect(transaction.linkAction).to.be.equal(1);
-        expect(transaction.remotePublicKey).to.be.equal(account.publicKey);
+        expect(transaction.linkePublicKey).to.be.equal(account.publicKey);
         expect(transaction.signature).to.be.equal(testSignature);
         expect(transaction.signer?.publicKey).to.be.equal(account.publicKey);
 

@@ -571,7 +571,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AccountKeyLinkTransaction;
 
         expect(transaction.linkAction).to.be.equal(1);
-        expect(transaction.remotePublicKey).to.be.equal(account.publicKey);
+        expect(transaction.linkePublicKey).to.be.equal(account.publicKey);
     });
 
     it('should create an VrfKeyLinkTransaction object with link action', () => {
@@ -867,7 +867,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const transaction = TransactionMapping.createFromDTO(accountLinkTransaction.toJSON()) as AccountKeyLinkTransaction;
 
-        expect(transaction.remotePublicKey).to.be.equal(account.publicKey);
+        expect(transaction.linkePublicKey).to.be.equal(account.publicKey);
         expect(transaction.linkAction).to.be.equal(LinkAction.Link);
     });
 
