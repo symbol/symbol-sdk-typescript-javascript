@@ -30,6 +30,8 @@ import { InnerTransaction } from './InnerTransaction';
 import { SignedTransaction } from './SignedTransaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
+import { NamespaceId } from '../namespace/NamespaceId';
+import { Address } from '../account/Address';
 
 /**
  * An abstract transaction class that serves as the base class of all NEM transactions.
@@ -429,5 +431,23 @@ export abstract class Transaction {
             throw new Error('Transaction height or index undefined');
         }
         return this.transactionInfo;
+    }
+
+    /**
+     * @internal
+     * Check a given address should be notified in websocket channels
+     * @param address address to be notified
+     * @param alias address alias (names)
+     * @returns {boolean}
+     */
+    public abstract shouldNotifyAccount(address: Address, alias?: NamespaceId[]): boolean;
+
+    /**
+     * @internal
+     * Checks if the transaction is signer by an address.
+     * @param address the address.
+     */
+    public isSigned(address: Address): boolean {
+        return this.signer !== undefined && this.signer!.address.equals(address);
     }
 }

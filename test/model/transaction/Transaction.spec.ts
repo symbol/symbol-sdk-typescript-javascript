@@ -30,6 +30,8 @@ import { TransactionType } from '../../../src/model/transaction/TransactionType'
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
 
 describe('Transaction', () => {
     let account: Account;
@@ -48,6 +50,11 @@ describe('Transaction', () => {
         }
 
         public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
+            throw new Error('Not implemented');
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
             throw new Error('Not implemented');
         }
         resolveAliases(): TransferTransaction {
@@ -379,5 +386,21 @@ describe('Transaction', () => {
             expect(hash1).to.equal(hashTamperedBody);
             expect(hash1).to.not.equal(hashTamperedMerkle);
         });
+    });
+
+    it('is signed', () => {
+        let tx = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        ) as Transaction;
+
+        expect(tx.isSigned(account.address)).to.be.false;
+        const signed = tx.signWith(account, '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6');
+        tx = TransactionMapping.createFromPayload(signed.payload) as Transaction;
+        expect((tx as Transaction).isSigned(account.address)).to.be.true;
+        expect((tx as Transaction).isSigned(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYZC'))).to.be.false;
     });
 });

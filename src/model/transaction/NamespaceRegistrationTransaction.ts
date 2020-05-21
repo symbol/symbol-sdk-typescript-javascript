@@ -38,6 +38,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { Address } from '../account/Address';
 
 /**
  * Accounts can rent a namespace for an amount of blocks and after a this renew the contract.
@@ -306,5 +307,15 @@ export class NamespaceRegistrationTransaction extends Transaction {
      */
     resolveAliases(): NamespaceRegistrationTransaction {
         return this;
+    }
+
+    /**
+     * @internal
+     * Check a given address should be notified in websocket channels
+     * @param address address to be notified
+     * @returns {boolean}
+     */
+    public shouldNotifyAccount(address: Address): boolean {
+        return super.isSigned(address);
     }
 }

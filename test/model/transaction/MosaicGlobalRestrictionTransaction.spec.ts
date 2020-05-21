@@ -190,4 +190,23 @@ describe('MosaicGlobalRestrictionTransaction', () => {
         const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
     });
+
+    it('Notify Account', () => {
+        const mosaicId = new MosaicId(UInt64.fromUint(1).toDTO());
+        const referenceMosaicId = new MosaicId(UInt64.fromUint(2).toDTO());
+        const tx = MosaicGlobalRestrictionTransaction.create(
+            Deadline.create(),
+            mosaicId,
+            UInt64.fromUint(1),
+            UInt64.fromUint(9),
+            MosaicRestrictionType.EQ,
+            UInt64.fromUint(8),
+            MosaicRestrictionType.GE,
+            NetworkType.MIJIN_TEST,
+            referenceMosaicId,
+        );
+
+        Object.assign(tx, { signer: account.publicAccount });
+        expect(tx.shouldNotifyAccount(account.address)).to.be.true;
+    });
 });

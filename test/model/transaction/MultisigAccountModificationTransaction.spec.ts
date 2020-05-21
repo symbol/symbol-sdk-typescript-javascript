@@ -23,6 +23,7 @@ import { Deadline } from '../../../src/model/transaction/Deadline';
 import { MultisigAccountModificationTransaction } from '../../../src/model/transaction/MultisigAccountModificationTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { Address } from '../../../src/model/account/Address';
 
 describe('MultisigAccountModificationTransaction', () => {
     let account: Account;
@@ -151,5 +152,47 @@ describe('MultisigAccountModificationTransaction', () => {
 
         const signedTransaction = modifyMultisigAccountTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
+    });
+
+    it('Notify Account', () => {
+        const publicAccount = PublicAccount.createFromPublicKey(
+            'B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
+            NetworkType.MIJIN_TEST,
+        );
+        const txAddition = MultisigAccountModificationTransaction.create(
+            Deadline.create(),
+            1,
+            1,
+            [publicAccount],
+            [],
+            NetworkType.MIJIN_TEST,
+        );
+
+        let canNotify = txAddition.shouldNotifyAccount(publicAccount.address);
+        expect(canNotify).to.be.true;
+
+        canNotify = txAddition.shouldNotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'));
+        expect(canNotify).to.be.false;
+
+        Object.assign(txAddition, { signer: account.publicAccount });
+        expect(txAddition.shouldNotifyAccount(account.address)).to.be.true;
+
+        const txDeletion = MultisigAccountModificationTransaction.create(
+            Deadline.create(),
+            1,
+            1,
+            [],
+            [publicAccount],
+            NetworkType.MIJIN_TEST,
+        );
+
+        let canNotifyDeletion = txDeletion.shouldNotifyAccount(publicAccount.address);
+        expect(canNotifyDeletion).to.be.true;
+
+        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'));
+        expect(canNotifyDeletion).to.be.false;
+
+        Object.assign(txDeletion, { signer: account.publicAccount });
+        expect(txDeletion.shouldNotifyAccount(account.address)).to.be.true;
     });
 });

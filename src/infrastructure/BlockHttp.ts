@@ -55,7 +55,7 @@ export class BlockHttp extends Http implements BlockRepository {
      * @returns Observable<BlockInfo>
      */
     public getBlockByHeight(height: UInt64): Observable<BlockInfo> {
-        return this.call(this.blockRoutesApi.getBlockByHeight(height.toString()), (body) => this.toBlockInfo(body));
+        return this.call(this.blockRoutesApi.getBlockByHeight(height.toString()), (body) => BlockHttp.toBlockInfo(body));
     }
 
     /**
@@ -87,7 +87,7 @@ export class BlockHttp extends Http implements BlockRepository {
      */
     public getBlocksByHeightWithLimit(height: UInt64, limit: number): Observable<BlockInfo[]> {
         return this.call(this.blockRoutesApi.getBlocksByHeightWithLimit(height.toString(), limit), (body) =>
-            body.map((blockDTO) => this.toBlockInfo(blockDTO)),
+            body.map((blockDTO) => BlockHttp.toBlockInfo(blockDTO)),
         );
     }
 
@@ -98,7 +98,7 @@ export class BlockHttp extends Http implements BlockRepository {
      * @param {BlockInfoDTO} dto the dto object from rest.
      * @returns {BlockInfo} a BlockInfo model
      */
-    private toBlockInfo(dto: BlockInfoDTO): BlockInfo {
+    public static toBlockInfo(dto: BlockInfoDTO): BlockInfo {
         const networkType = dto.block.network.valueOf();
         return new BlockInfo(
             dto.meta.hash,
